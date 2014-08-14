@@ -184,8 +184,7 @@
     <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">data</span><span class="special">&gt;</span> <span class="identifier">data</span><span class="special">;</span>
 <span class="special">};</span>
 
-<span class="keyword">class</span> <span class="identifier">state_machine_</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">state_machine_def</span><span class="special">&lt;</span><span class="identifier">state_machine_</span><span class="special">&gt;</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
+<span class="keyword">struct</span> <span class="identifier">state_machine_</span> <span class="special">:</span> <span class="identifier">state_machine_def</span><span class="special">&lt;</span><span class="identifier">state_machine_</span><span class="special">&gt;</span> <span class="special">{</span>
     <span class="keyword">using</span> <span class="identifier">initial_state</span> <span class="special">=</span> <span class="identifier">state1</span><span class="special">;</span>
 
     <span class="identifier">BOOST_MSM_EUML_DECLARE_TRANSITION_TABLE</span><span class="special">((</span>
@@ -228,6 +227,54 @@
               was added
             </li>
 </ul></div>
+<p>
+          Such approach allows to easy test State Machine by simulating actions/guards
+          behaviour.
+        </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">state_machine_</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">state_machine_def</span><span class="special">&lt;</span><span class="identifier">state_machine_</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">using</span> <span class="identifier">initial_state</span> <span class="special">=</span> <span class="identifier">state1</span><span class="special">;</span>
+
+    <span class="identifier">BOOST_MSM_EUML_DECLARE_TRANSITION_TABLE</span><span class="special">((</span>
+        <span class="identifier">state2</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">state1</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">event1</span><span class="special">()</span> <span class="special">[</span><span class="identifier">guard</span><span class="special">()]</span> <span class="special">/</span> <span class="identifier">action</span><span class="special">()</span>
+      <span class="special">,</span> <span class="identifier">state1</span><span class="special">()</span> <span class="special">==</span> <span class="identifier">state2</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">event2</span><span class="special">()</span> <span class="special">[</span><span class="identifier">guard</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="identifier">guard2</span><span class="special">()]</span> <span class="special">/</span> <span class="special">(</span><span class="identifier">action</span><span class="special">(),</span> <span class="identifier">action2</span><span class="special">())</span>
+    <span class="special">),</span> <span class="identifier">transition_table</span><span class="special">)</span>
+<span class="special">};</span>
+
+<span class="keyword">using</span> <span class="identifier">state_machine</span> <span class="special">=</span> <span class="identifier">back</span><span class="special">::</span><span class="identifier">state_machine</span><span class="special">&lt;</span>
+    <span class="identifier">state_machine_</span>
+  <span class="special">,</span> <span class="identifier">back</span><span class="special">::</span><span class="identifier">use_dependency_injection_for_test</span> <span class="comment">// Boost.DI dependency injection policy for tests</span>
+<span class="special">&gt;;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">state_machine</span> <span class="identifier">sm</span><span class="special">;</span>
+
+    <span class="comment">// test transition to state2 after event1 when</span>
+    <span class="comment">// guard returns true with action</span>
+    <span class="special">{</span>
+        <span class="identifier">test</span><span class="special">::</span><span class="identifier">expectations</span><span class="special">&lt;</span><span class="identifier">state_machine</span><span class="special">&gt;</span> <span class="identifier">ex</span><span class="special">(</span><span class="identifier">sm</span><span class="special">);</span>
+        <span class="identifier">ex</span><span class="special">.</span><span class="identifier">call</span><span class="special">&lt;</span><span class="identifier">guard</span><span class="special">&gt;().</span><span class="identifier">will_return</span><span class="special">(</span><span class="keyword">true</span><span class="special">);</span>
+        <span class="identifier">ex</span><span class="special">.</span><span class="identifier">call</span><span class="special">&lt;</span><span class="identifier">action</span><span class="special">&gt;().</span><span class="identifier">times</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+        <span class="identifier">ex</span><span class="special">.</span><span class="identifier">state</span><span class="special">&lt;</span><span class="identifier">state2</span><span class="special">&gt;();</span>
+
+        <span class="identifier">sm</span><span class="special">.</span><span class="identifier">process_event</span><span class="special">(</span><span class="identifier">event1</span><span class="special">());</span>
+    <span class="special">}</span>
+
+    <span class="comment">// test transition back to state1 after event2 when</span>
+    <span class="comment">// guard and guard2 return true with action and action2</span>
+    <span class="special">{</span>
+        <span class="identifier">test</span><span class="special">::</span><span class="identifier">expectations</span><span class="special">&lt;</span><span class="identifier">state_machine</span><span class="special">&gt;</span> <span class="identifier">ex</span><span class="special">(</span><span class="identifier">sm</span><span class="special">);</span>
+        <span class="identifier">ex</span><span class="special">.</span><span class="identifier">call</span><span class="special">&lt;</span><span class="identifier">guard</span><span class="special">&gt;().</span><span class="identifier">will_return</span><span class="special">(</span><span class="keyword">true</span><span class="special">);</span>
+        <span class="identifier">ex</span><span class="special">.</span><span class="identifier">call</span><span class="special">&lt;</span><span class="identifier">guard2</span><span class="special">&gt;().</span><span class="identifier">will_return</span><span class="special">(</span><span class="keyword">true</span><span class="special">);</span>
+        <span class="identifier">ex</span><span class="special">.</span><span class="identifier">call</span><span class="special">&lt;</span><span class="identifier">action</span><span class="special">&gt;().</span><span class="identifier">times</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+        <span class="identifier">ex</span><span class="special">.</span><span class="identifier">call</span><span class="special">&lt;</span><span class="identifier">action2</span><span class="special">&gt;().</span><span class="identifier">times</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+        <span class="identifier">ex</span><span class="special">.</span><span class="identifier">state</span><span class="special">&lt;</span><span class="identifier">state1</span><span class="special">&gt;();</span>
+
+        <span class="identifier">sm</span><span class="special">.</span><span class="identifier">process_event</span><span class="special">(</span><span class="identifier">event2</span><span class="special">());</span>
+    <span class="special">}</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
 <div class="note"><table border="0" summary="Note">
 <tr>
 <td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../../doc/src/images/note.png"></td>

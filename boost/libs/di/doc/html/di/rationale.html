@@ -206,32 +206,15 @@
       - how to make constructor injection as less intrusive as possible (avoid macros/registration/reflection)?.
       Problem was solved purely in <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span></code>.
     </p>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
-<li class="listitem">
-          Verifying how many arguments constructor has using <code class="computeroutput"><span class="identifier">has_ctor</span></code>
-        </li>
-<li class="listitem">
-          Conversion to requested type using <code class="computeroutput"><span class="identifier">type</span>
-          <span class="identifier">conversion</span> <span class="keyword">operator</span></code>
-        </li>
-</ul></div>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">any_type</span> <span class="special">{</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="keyword">operator</span> <span class="identifier">U</span><span class="special">();</span>
-<span class="special">};</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">has_ctor</span> <span class="special">{</span>
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span> <span class="keyword">static</span> <span class="identifier">yes_tag</span> <span class="identifier">test</span><span class="special">(</span><span class="keyword">decltype</span><span class="special">(</span><span class="identifier">U</span><span class="special">(</span><span class="identifier">TArgs</span><span class="special">()...)*);</span>
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">&gt;</span> <span class="keyword">static</span> <span class="identifier">no_tag</span> <span class="identifier">test</span><span class="special">(...);</span>
-
-    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> <span class="identifier">value</span> <span class="special">=</span> <span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">test</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="number">0</span><span class="special">))</span> <span class="special">==</span> <span class="keyword">sizeof</span><span class="special">(</span><span class="identifier">yes_tag</span><span class="special">);</span>
 <span class="special">};</span>
 
 <span class="keyword">class</span> <span class="identifier">injector</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
-    <span class="identifier">T</span> <span class="identifier">create</span><span class="special">(</span><span class="identifier">enable_if</span><span class="special">&lt;</span><span class="identifier">has_ctor</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">any_type</span><span class="special">...&gt;&gt;::</span><span class="identifier">type</span><span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="identifier">T</span><span class="special">(</span><span class="identifier">any_type</span><span class="special">()...);</span>
+    <span class="identifier">T</span> <span class="identifier">create</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">enable_if</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">is_constructible</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">any_type</span><span class="special">...&gt;::</span><span class="identifier">value</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">*</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">T</span><span class="special">(</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">any_type</span><span class="special">&gt;()...);</span>
     <span class="special">}</span>
 <span class="special">};</span>
 
@@ -270,7 +253,7 @@
               </li>
 <li class="listitem">
                 if T has constructor with N parameters (which might be converted
-                using <code class="computeroutput"><span class="identifier">conversion</span> <span class="keyword">operator</span></code> / see <code class="computeroutput"><span class="identifier">has_ctor</span></code>)
+                using <code class="computeroutput"><span class="identifier">conversion</span> <span class="keyword">operator</span></code> / <a class="link" href="concepts/injections/ctor_traits.html" title="ctor_traits">ctor_traits</a>)
                 then goto <code class="computeroutput"><span class="number">2</span></code>
               </li>
 </ol></div>
