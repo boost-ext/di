@@ -73,27 +73,16 @@ please refer to commits history.]
 Having above in mind, main concern was - how to make constructor injection as less intrusive as possible (avoid macros/registration/reflection)?.
 Problem was solved purely in `C++`.
 
-* Verifying how many arguments constructor has using `has_ctor`
-* Conversion to requested type using `type conversion operator`
-
 ```
 struct any_type {
     template<typename U> operator U();
 };
 
-template<typename T, typename... TArgs>
-struct has_ctor {
-    template<typename U> static yes_tag test(decltype(U(TArgs()...)*);
-    template<typename> static no_tag test(...);
-
-    static const bool value = sizeof(test<T>(0)) == sizeof(yes_tag);
-};
-
 class injector {
 public:
     template<typename T>
-    T create(enable_if<has_ctor<T, any_type...>>::type* = 0) const {
-        return T(any_type()...);
+    T create(std::enable_if<std::is_constructible<T, any_type...>::value>::type* = 0) const {
+        return T(create<any_type>()...);
     }
 };
 
@@ -111,7 +100,7 @@ Approach presented above although meet all the requirements cause tricky issues 
 
 # for type T
     # for N = 1 to [link di.overview.configuration BOOST_DI_CFG_CTOR_LIMIT_SIZE]
-    # if T has constructor with N parameters (which might be converted using `conversion operator` / see `has_ctor`) then goto `2`
+    # if T has constructor with N parameters (which might be converted using `conversion operator` / __injections_ctor_traits__) then goto `2`
 # generate list of `any_type` with N elements which represents constructor parameters (notice that `any_type` is convertible to actual constructor parameter)
 
 [table

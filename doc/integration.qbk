@@ -134,8 +134,7 @@ easier life - `actions`/`guards` can be easily tested in separation. `FSM` doesn
             shared_ptr<data> data;
         };
 
-        class state_machine_ : public state_machine_def<state_machine_> {
-        public:
+        struct state_machine_ : state_machine_def<state_machine_> {
             using initial_state = state1;
 
             BOOST_MSM_EUML_DECLARE_TRANSITION_TABLE((
@@ -167,6 +166,55 @@ In order to support dependency injection, few changes to `Boost.MSM` were made.
 * List of `actions`/`guards` was generated from transition table
 * Generated list was passed into state machine constructor
 * Policy `use_dependency_injection` was added
+
+Such approach allows to easy test State Machine by simulating actions/guards behaviour.
+
+```
+    struct state_machine_ : public state_machine_def<state_machine_> {
+        using initial_state = state1;
+
+        BOOST_MSM_EUML_DECLARE_TRANSITION_TABLE((
+            state2() == state1() + event1() [guard()] / action()
+          , state1() == state2() + event2() [guard() && guard2()] / (action(), action2())
+        ), transition_table)
+    };
+
+    using state_machine = back::state_machine<
+        state_machine_
+      , back::use_dependency_injection_for_test // Boost.DI dependency injection policy for tests
+    >;
+
+    int main() {
+        state_machine sm;
+
+        // test transition to state2 after event1 when
+        // guard returns true with action
+        {
+            test::expectations<state_machine> ex(sm);
+            ex.call<guard>().will_return(true);
+            ex.call<action>().times(1);
+            ex.state<state2>();
+
+            sm.process_event(event1());
+        }
+
+        // test transition back to state1 after event2 when
+        // guard and guard2 return true with action and action2
+        {
+            test::expectations<state_machine> ex(sm);
+            ex.call<guard>().will_return(true);
+            ex.call<guard2>().will_return(true);
+            ex.call<action>().times(1);
+            ex.call<action2>().times(1);
+            ex.state<state1>();
+
+            sm.process_event(event2());
+        }
+
+        return 0;
+    }
+
+```
 
 [note Only `Boost.MSM-eUML` front end was tested and adopted to this approach.]
 
