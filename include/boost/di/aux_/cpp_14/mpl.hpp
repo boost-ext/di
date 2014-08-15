@@ -116,7 +116,7 @@ struct greatest_impl<R, 0, T, Ts...>
 template<typename R, int I, typename T, typename... Ts>
 struct greatest_impl<R, I, T, Ts...>
 {
-    using type = typename std::conditional<(R::second::value > R::second::value), typename greatest_impl<T, I - 1, Ts...>::type, typename greatest_impl<R, I-1, Ts...>::type>::type;
+    using type = typename std::conditional<(T::second::value > R::second::value), typename greatest_impl<T, I - 1, Ts...>::type, typename greatest_impl<R, I-1, Ts...>::type>::type;
 };
 
 template<typename T, typename... Ts>
@@ -130,7 +130,6 @@ struct greatest<T>
 { };
 
 }}
-
 
 //TO BE REMOVED
 
