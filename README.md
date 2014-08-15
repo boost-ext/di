@@ -79,8 +79,6 @@ void test_hello_world_when_run_with_value_true_then_log_and_do_it() {
 * Type safe
 * Header only
 * Supports C++03/C++11/C++14 standards
-* Architecture independent (tested on x86/x86-64)
-* Supports all POSIX and Windows operating systems (tested on Linux 3.8/Windows 7/8)
 * Exception safe guaranty
 * Thread safe guaranty
 * Compile time creation guaranty - no exceptions - if application compiles all dependencies will be be created accurately
