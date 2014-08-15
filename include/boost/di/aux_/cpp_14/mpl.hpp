@@ -129,6 +129,19 @@ struct greatest<T>
     : T::first
 { };
 
+template<typename...>
+struct sum;
+
+template<>
+struct sum<>
+	: int_<1>
+{ };
+
+template<typename T, typename... Ts>
+struct sum<T, Ts...>
+	: int_<10* T::value * sum<Ts...>::value>
+{ };
+
 }}
 
 //TO BE REMOVED

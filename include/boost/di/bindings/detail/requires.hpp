@@ -17,40 +17,17 @@ namespace detail {
 template<typename... Ts>
 class requires_
 {
-    template<
-        typename TBind
-      , typename T
-    >
-    struct apply_bind
-        : TBind::template apply<T>::type
-    { };
+	template<typename T, typename TBind>
+	using apply_bind = typename TBind::template apply<T>::type;
 
 public:
-    typedef requires_ type;
+	typedef requires_ type;
 
-    template<
-        typename T
-      , typename TMultiplicationFactor = aux::mpl::integral_c<long, 10>
-    >
-    struct apply
-        : aux::mpl::second<
-              typename aux::mpl::fold<
-                  aux::mpl::vector<Ts...>
-                , aux::mpl::pair<aux::mpl::integral_c<long, 1>, aux::mpl::integral_c<long, 1> >
-                , aux::mpl::pair<
-                      aux::mpl::times<
-                          aux::mpl::first<aux::mpl::_1>
-                        , TMultiplicationFactor
-                      >
-                    , aux::mpl::times<
-                          aux::mpl::first<aux::mpl::_1>
-                        , aux::mpl::second<aux::mpl::_1>
-                        , apply_bind<aux::mpl::_2, T>
-                      >
-                  >
-              >::type
-          >
-    { };
+	template<
+		typename T
+	  , typename TMultiplicationFactor = int_<10>
+	>
+	using apply = sum<typename apply_bind<T, Ts>::type...>;
 };
 
 } // namespace detail
