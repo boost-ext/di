@@ -15,19 +15,18 @@ namespace bindings {
 namespace detail {
 
 template<typename... Ts>
-class requires_
-{
+class requires_ {
 	template<typename T, typename TBind>
 	using apply_bind = typename TBind::template apply<T>::type;
 
 public:
-	typedef requires_ type;
+	using type = requires_;
 
 	template<
 		typename T
 	  , typename TMultiplicationFactor = int_<10>
 	>
-	using apply = sum<typename apply_bind<T, Ts>::type...>;
+	using apply = sum<TMultiplicationFactor, typename apply_bind<T, Ts>::type...>;
 };
 
 } // namespace detail

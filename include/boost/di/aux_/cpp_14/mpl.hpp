@@ -129,17 +129,17 @@ struct greatest<T>
     : T::first
 { };
 
-template<typename...>
+template<typename, typename...>
 struct sum;
 
-template<>
-struct sum<>
+template<typename TMultiplicationFactor>
+struct sum<TMultiplicationFactor>
 	: int_<1>
 { };
 
-template<typename T, typename... Ts>
-struct sum<T, Ts...>
-	: int_<10* T::value * sum<Ts...>::value>
+template<typename TMultiplicationFactor, typename T, typename... Ts>
+struct sum<TMultiplicationFactor, T, Ts...>
+	: int_<TMultiplicationFactor::value * T::value * sum<TMultiplicationFactor, Ts...>::value>
 { };
 
 }}
