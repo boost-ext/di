@@ -6,43 +6,36 @@
 #ifndef BOOST_DI_CORE_BINDER_HPP
 #define BOOST_DI_CORE_BINDER_HPP
 
+#include "boost/di/aux_/config.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
-#include "boost/di/type_traits/remove_accessors.hpp"
-#include "boost/di/wrappers/universal.hpp"
 #include "boost/di/bindings/dependency.hpp"
 #include "boost/di/scopes/deduce.hpp"
-
 
 namespace boost {
 namespace di {
 namespace core {
 
-template<typename TDependecies>
-class binder
+template<
+    typename T
+  , typename TCallStack
+  , typename TDependency
+>
+struct data
 {
-    template<
-        typename T
-      , typename TCallStack
-      , typename TDependency
-    >
-    struct data
-    {
-        typedef T type;
-        typedef TCallStack call_stack;
-        typedef TDependency dependency;
-    };
+    typedef T type;
+    typedef TCallStack call_stack;
+    typedef TDependency dependency;
+};
 
-    template<
-        typename TDependency
-      , typename T
-      , typename TCallStack
-    >
-    struct apply
-        : TDependency::bind::template apply<
-              data<T, TCallStack, TDependency>
-          >::type
-    { };
+template<typename T, typename TCallStack, typename _>
+using calculate = pair<_, typename _::bind::template apply<data<T, TCallStack, _>>::type>;
 
+template<typename>
+class binder;
+
+template<typename... Ts>
+class binder<type_list<Ts...>>
+{
 public:
     template<
         typename T
@@ -53,29 +46,9 @@ public:
               , typename type_traits::make_plain<T>::type
             >
     >
-    struct resolve
-        : aux::mpl::deref<
-              aux::mpl::second<
-                  typename aux::mpl::fold<
-                      TDependecies
-                    , aux::mpl::pair<aux::mpl::int_<0>, TDefault>
-                    , aux::mpl::if_<
-                          aux::mpl::greater<
-                              apply<
-                                  aux::mpl::_2
-                                , T
-                                , TCallStack
-                              >
-                            , aux::mpl::first<aux::mpl::_1>
-                          >
-                        , aux::mpl::pair<apply<aux::mpl::_2, T, TCallStack>, aux::mpl::_2>
-                        , aux::mpl::_1
-                      >
-                  >::type
-              >
-          >::type::template
-              rebind<typename scopes::deduce::rebind<T>::other>::other
-    { };
+    using resolve = typename
+        greatest<pair<TDefault, int_<0>>, calculate<T, TCallStack, Ts>...>::type
+              ::template rebind<typename scopes::deduce::rebind<T>::other>::other;
 };
 
 } // namespace core

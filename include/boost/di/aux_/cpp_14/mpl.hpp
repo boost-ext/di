@@ -12,6 +12,19 @@
 namespace boost {
 namespace di {
 
+template<int N>
+struct int_ {
+    static const int value = N;
+    using type = int_;
+};
+
+template<typename T, typename E>
+struct pair
+{
+    using first = T;
+    using second = E;
+};
+
 template<unsigned...> struct seq{ using type = seq; };
 
 template<class T> using Invoke = typename T::type;
@@ -91,6 +104,31 @@ struct longest_impl<R, I, T, Ts...>
 template<typename... Ts>
 using longest = longest_impl<type_list<>, sizeof...(Ts) - 1, Ts...>;
 
+template<typename, int I, typename... Ts>
+struct greatest_impl;
+
+template<typename R, typename T, typename... Ts>
+struct greatest_impl<R, 0, T, Ts...>
+{
+    using type = typename std::conditional<(T::second::value > R::second::value), typename T::first, typename R::first>::type;
+};
+
+template<typename R, int I, typename T, typename... Ts>
+struct greatest_impl<R, I, T, Ts...>
+{
+    using type = typename std::conditional<(R::second::value > R::second::value), typename greatest_impl<T, I - 1, Ts...>::type, typename greatest_impl<R, I-1, Ts...>::type>::type;
+};
+
+template<typename T, typename... Ts>
+struct greatest
+    : greatest_impl<T, sizeof...(Ts) - 1, Ts...>
+{ };
+
+template<typename T>
+struct greatest<T>
+    : T::first
+{ };
+
 }}
 
 
@@ -155,12 +193,29 @@ namespace x11 {
        : vector< TTypes..., X >
     { };
 
+    template < class T, class R >
+    struct normalize_type_list_;
+
+    template < class... TTypes, class X >
+    struct normalize_type_list_< di::type_list< TTypes... >, X >
+       : di::type_list< TTypes..., X >
+    { };
+
     template<typename TSeq>
     struct normalize_vector
         : fold<
               TSeq
             , vector<>
             , normalize<_1, _2>
+          >::type
+    { };
+
+    template<typename TSeq>
+    struct normalize_type_list
+        : fold<
+              TSeq
+            , di::type_list<>
+            , normalize_type_list_<_1, _2>
           >::type
     { };
 
