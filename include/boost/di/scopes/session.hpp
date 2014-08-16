@@ -17,20 +17,14 @@ class session_entry { };
 class session_exit { };
 
 template<template<typename> class TWrapper = wrappers::shared>
-class session
-{
+class session {
 public:
-    typedef int_<0> priority;
+    using priority = int_<0>;
 
     template<typename TExpected>
-    class scope
-    {
+    class scope {
     public:
-        typedef TWrapper<TExpected> result_type;
-
-        scope()
-            : in_scope_(false)
-        { }
+        using result_type = TWrapper<TExpected>;
 
         void call(const session_entry&) {
             in_scope_ = true;
@@ -50,7 +44,7 @@ public:
 
     private:
         result_type object_;
-        bool in_scope_;
+        bool in_scope_ = false;
     };
 };
 

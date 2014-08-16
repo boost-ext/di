@@ -8,24 +8,20 @@
 #define BOOST_DI_WRAPPERS_COPY_HPP
 
 #include "boost/di/aux_/memory.hpp"
+#include "boost/di/aux_/mpl.hpp"
 
-#include <boost/type.hpp>
 #include <functional>
-#include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/is_polymorphic.hpp>
 
 namespace boost {
 namespace di {
 namespace wrappers {
 
 template<typename T>
-class copy
-{
+class copy {
     typedef std::function<T*()> value_t;
 
     template<typename I>
-    class scoped_ptr
-    {
+    class scoped_ptr {
     public:
         explicit scoped_ptr(I* ptr)
             : ptr_(ptr)
@@ -45,7 +41,7 @@ public:
     { }
 
     template<typename I>
-    I operator()(const type<I>&, typename disable_if<is_polymorphic<I> >::type* = 0) const {
+    I operator()(const type<I>&, typename std::enable_if<!std::is_polymorphic<I>::value>::type* = 0) const {
         scoped_ptr<I> ptr(value_());
         return *ptr;
     }

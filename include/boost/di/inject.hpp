@@ -9,8 +9,6 @@
 
 #include "boost/di/aux_/config.hpp"
 
-#include <boost/config.hpp>
-
 #if !defined(BOOST_DI_CFG_INJECT_VA_ARGS) && !defined(BOOST_DI_CFG_INJECT_BRACKET)
     #if (__cplusplus >= 201100L) || defined(BOOST_MSVC)
         #define BOOST_DI_CFG_INJECT_VA_ARGS

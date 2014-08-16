@@ -7,10 +7,8 @@
 #ifndef BOOST_DI_TYPE_TRAITS_MAKE_PLAIN_HPP
 #define BOOST_DI_TYPE_TRAITS_MAKE_PLAIN_HPP
 
-#include "boost/di/aux_/config.hpp"
+#include "boost/di/aux_/mpl.hpp"
 #include "boost/di/type_traits/remove_accessors.hpp"
-
-#include <boost/utility/enable_if.hpp>
 
 namespace boost {
 namespace di {
@@ -29,13 +27,13 @@ struct deref_type
 };
 
 template<typename T>
-struct deref_type<T, typename enable_if<has_element_type<T> >::type>
+struct deref_type<T, typename std::enable_if<has_element_type<T>::value>::type>
 {
     typedef typename T::element_type type;
 };
 
 template<typename T>
-struct deref_type<T, typename enable_if<has_named_type<T> >::type>
+struct deref_type<T, typename std::enable_if<has_named_type<T>::value>::type>
 {
     typedef typename make_plain<typename T::named_type>::type type;
 };

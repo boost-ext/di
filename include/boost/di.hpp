@@ -10,30 +10,7 @@
 #include "boost/di/aux_/config.hpp"
 
 #if !defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)
-    #include <boost/preprocessor/cat.hpp>
-    #include <boost/preprocessor/stringize.hpp>
-
-    #if (BOOST_DI_CFG_STD_ == 3) &&                     \
-        (BOOST_DI_CFG_CTOR_LIMIT_SIZE == 10) &&         \
-        (BOOST_MPL_LIMIT_VECTOR_SIZE >= 20 &&           \
-         BOOST_MPL_LIMIT_VECTOR_SIZE <= 50 &&           \
-         BOOST_MPL_LIMIT_VECTOR_SIZE % 10 == 0)
-
-        #include BOOST_PP_STRINGIZE(                    \
-            BOOST_PP_CAT(boost/di/preprocessed/di_,     \
-            BOOST_PP_CAT(BOOST_DI_CFG_CTOR_LIMIT_SIZE,  \
-            BOOST_PP_CAT(_,                             \
-            BOOST_PP_CAT(BOOST_MPL_LIMIT_VECTOR_SIZE,   \
-            BOOST_PP_CAT(_,                             \
-            BOOST_PP_CAT(BOOST_DI_CFG_STD, _c.hpp       \
-        )))))))
-    #else
-        #include BOOST_PP_STRINGIZE(                    \
-            BOOST_PP_CAT(boost/di/preprocessed/di_,     \
-            BOOST_PP_CAT(BOOST_DI_CFG_STD, _c.hpp       \
-        )))
-    #endif
-
+    //TODO
 #else
 
     // injections

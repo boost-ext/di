@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_CORE_POOL_HPP
 #define BOOST_DI_CORE_POOL_HPP
 
-#include "boost/di/aux_/config.hpp"
+#include "boost/di/aux_/mpl.hpp"
 
 namespace boost {
 namespace di {

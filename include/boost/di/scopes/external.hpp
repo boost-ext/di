@@ -10,46 +10,40 @@
 #include "boost/di/wrappers/value.hpp"
 #include "boost/di/type_traits/has_call_operator.hpp"
 
+#include <functional>
 #include <boost/ref.hpp>
-#include <boost/utility/enable_if.hpp>
 
-BOOST_DI_FEATURE(CPP_11_FUNCTIONAL)(
-    namespace boost {
+namespace boost {
 
-    template<typename T>
-    class is_reference_wrapper< ::std::reference_wrapper<T> >
-        : public ::std::true_type
-    { };
+template<typename T>
+class is_reference_wrapper< ::std::reference_wrapper<T> >
+    : public ::std::true_type
+{ };
 
-    template<typename T>
-    class unwrap_reference< ::std::reference_wrapper<T> >
-    {
-    public:
-        typedef T type;
-    };
+template<typename T>
+class unwrap_reference< ::std::reference_wrapper<T> > {
+public:
+    using type = T;
+};
 
-    } // namespace
-)
+} // namespace boost
 
 namespace boost {
 namespace di {
 namespace scopes {
 
 template<template<typename> class TWrapper = wrappers::value>
-class external
-{
+class external {
 public:
-    typedef int_<1> priority;
+    using priority = int_<1>;
 
     template<typename TExpected>
-    class scope
-    {
+    class scope {
     public:
-        typedef TWrapper<TExpected> result_type;
+        using result_type = TWrapper<TExpected>;
 
     private:
-        class result_type_holder
-        {
+        class result_type_holder {
         public:
             template<typename T>
             explicit result_type_holder(const T& object)
@@ -65,13 +59,13 @@ public:
         };
 
         template<typename TValueType, typename T>
-        typename disable_if<type_traits::has_call_operator<TValueType>, std::function<result_type()> >::type
+        typename std::enable_if<!type_traits::has_call_operator<TValueType>::value, std::function<result_type()> >::type
         convert_when_function(const T& object) {
             return object;
         }
 
         template<typename TValueType, typename T>
-        typename enable_if<type_traits::has_call_operator<TValueType>, result_type_holder>::type
+        typename std::enable_if<type_traits::has_call_operator<TValueType>::value, result_type_holder>::type
         convert_when_function(const T& object) {
             return result_type_holder(object);
         }
@@ -79,18 +73,17 @@ public:
     public:
         template<typename T>
         explicit scope(const T& object
-                     , typename enable_if_c<
-                           type_traits::has_call_operator<T>::value &&
-                           !is_reference_wrapper<T>::value
+                     , typename std::enable_if<
+                           type_traits::has_call_operator<T>::value && !is_reference_wrapper<T>::value
                        >::type* = 0)
             : object_(convert_when_function<TExpected>(object))
         { }
 
         template<typename T>
         explicit scope(const T& object
-                     , typename disable_if_c<
+                     , typename std::enable_if<!(
                            type_traits::has_call_operator<T>::value &&
-                           !is_reference_wrapper<T>::value
+                           !is_reference_wrapper<T>::value)
                        >::type* = 0)
             : object_(result_type_holder(object))
         { }

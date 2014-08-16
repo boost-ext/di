@@ -7,15 +7,14 @@
 #ifndef BOOST_DI_WRAPPERS_REFERENCE_HPP
 #define BOOST_DI_WRAPPERS_REFERENCE_HPP
 
-#include <boost/type.hpp>
+#include "boost/di/aux_/mpl.hpp"
 
 namespace boost {
 namespace di {
 namespace wrappers {
 
 template<typename T>
-class reference
-{
+class reference {
     reference& operator=(const reference&);
 
 public:

@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_BINDINGS_HPP
 #define BOOST_DI_BINDINGS_HPP
 
-#include "boost/di/aux_/config.hpp"
+#include "boost/di/aux_/mpl.hpp"
 #include "boost/di/bindings/bind.hpp"
 #include "boost/di/bindings/call_stack.hpp"
 #include "boost/di/bindings/dependency.hpp"

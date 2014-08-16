@@ -7,8 +7,8 @@
 #ifndef BOOST_DI_SCOPES_DEDUCE_HPP
 #define BOOST_DI_SCOPES_DEDUCE_HPP
 
+#include "boost/di/aux_/mpl.hpp"
 #include "boost/di/type_traits/scope_traits.hpp"
-
 
 namespace boost {
 namespace di {
@@ -18,21 +18,18 @@ namespace scopes {
  * virtual scope -> converted to the other scope
  * accordingly to the given type using scope_traits
  */
-class deduce
-{
+class deduce {
 public:
-    typedef int_<0> priority;
+    using priority = int_<0>;
 
     template<typename>
-    struct scope
-    {
-        typedef void result_type;
+    struct scope {
+        using result_type = none_t;
     };
 
     template<typename T>
-    struct rebind
-    {
-        typedef typename type_traits::scope_traits<T>::type other;
+    struct rebind {
+        using other = typename type_traits::scope_traits<T>::type;
     };
 };
 

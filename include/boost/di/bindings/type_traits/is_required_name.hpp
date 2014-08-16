@@ -7,10 +7,8 @@
 #ifndef BOOST_DI_BINDINGS_TYPE_TRAITS_IS_REQUIRED_NAME_HPP
 #define BOOST_DI_BINDINGS_TYPE_TRAITS_IS_REQUIRED_NAME_HPP
 
+#include "boost/di/aux_/mpl.hpp"
 #include "boost/di/type_traits/remove_accessors.hpp"
-
-#include <boost/type_traits/is_same.hpp>
-#include <boost/utility/enable_if.hpp>
 
 namespace boost {
 namespace di {
@@ -28,15 +26,15 @@ class is_required_name {
     };
 
     template<typename T>
-    struct get_name<T, typename enable_if<
-        has_name<typename di::type_traits::remove_accessors<T>::type> >::type
+    struct get_name<T, typename std::enable_if<
+        has_name<typename di::type_traits::remove_accessors<T>::type>::value>::type
     > {
         using type = typename di::type_traits::remove_accessors<T>::type::name;
     };
 
 public:
     template<typename T>
-    using apply = int_<is_same<typename get_name<typename T::type>::type, TName>::value>;
+    using apply = int_<std::is_same<typename get_name<typename T::type>::type, TName>::value>;
 };
 
 } // namespace type_traits

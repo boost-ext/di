@@ -8,6 +8,7 @@
 #define BOOST_DI_BINDINGS_DETAIL_REQUIRES_HPP
 
 #include "boost/di/aux_/config.hpp"
+#include "boost/di/aux_/mpl.hpp"
 
 namespace boost {
 namespace di {

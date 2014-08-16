@@ -7,15 +7,14 @@
 #ifndef BOOST_DI_TYPE_TRAITS_IS_SAME_BASE_OF_HPP
 #define BOOST_DI_TYPE_TRAITS_IS_SAME_BASE_OF_HPP
 
-#include <boost/type_traits/is_base_of.hpp>
-#include <boost/type_traits/is_same.hpp>
+#include "boost/di/aux_/mpl.hpp"
 
 namespace boost {
 namespace di {
 namespace type_traits {
 
 template<typename T, typename U>
-using is_same_base_of = bool_<is_base_of<U, T>::value || is_same<U, T>::value>;
+using is_same_base_of = bool_<std::is_base_of<U, T>::value || std::is_same<U, T>::value>;
 
 } // namespace type_traits
 } // namespace di

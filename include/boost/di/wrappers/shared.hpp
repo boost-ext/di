@@ -9,19 +9,14 @@
 
 #include "boost/di/aux_/memory.hpp"
 
-#include <boost/type.hpp>
-#include <boost/config.hpp>
-
 namespace boost {
 namespace di {
 namespace wrappers {
 
 template<typename T>
-class shared
-{
+class shared {
     template<typename U, typename TShared = aux::shared_ptr<U> >
-    class sp_holder
-    {
+    class sp_holder {
     public:
         explicit sp_holder(const TShared& value)
             : value_(value)

@@ -8,8 +8,8 @@
 #define BOOST_DI_BINDINGS_CALL_STACK_HPP
 
 #include "boost/di/aux_/config.hpp"
+#include "boost/di/aux_/mpl.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
-
 
 namespace boost {
 namespace di {

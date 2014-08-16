@@ -7,20 +7,15 @@
 #ifndef BOOST_DI_WRAPPERS_VALUE_HPP
 #define BOOST_DI_WRAPPERS_VALUE_HPP
 
-#include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
-
-#include <utility>
-#include <boost/type.hpp>
-#include <boost/config.hpp>
+#include "boost/di/aux_/mpl.hpp"
 
 namespace boost {
 namespace di {
 namespace wrappers {
 
 template<typename T>
-class value
-{
+class value {
 public:
     value(const T& value) // non explicit
         : value_(value)
@@ -38,11 +33,9 @@ public:
         return new T(value_);
     }
 
-    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-        T&& operator()(const type<T&&>&) {
-            return std::move(value_);
-        }
-    )
+    T&& operator()(const type<T&&>&) {
+        return std::move(value_);
+    }
 
     template<typename I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {

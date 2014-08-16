@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_BINDINGS_TYPE_TRAITS_IS_REQUIRED_PRIORITY_HPP
 #define BOOST_DI_BINDINGS_TYPE_TRAITS_IS_REQUIRED_PRIORITY_HPP
 
+#include "boost/di/aux_/mpl.hpp"
 
 namespace boost {
 namespace di {

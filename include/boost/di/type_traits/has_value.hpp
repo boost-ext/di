@@ -7,22 +7,18 @@
 #ifndef BOOST_DI_TYPE_TRAITS_HAS_VALUE_HPP
 #define BOOST_DI_TYPE_TRAITS_HAS_VALUE_HPP
 
-#include "boost/di/aux_/config.hpp"
-
-#include <boost/type_traits/is_class.hpp>
-#include <boost/non_type.hpp>
+#include "boost/di/aux_/mpl.hpp"
 
 namespace boost {
 namespace di {
 namespace type_traits {
 
 template<typename T>
-class has_value
-{
+class has_value {
     struct base_impl { int value; };
     struct base
         : base_impl
-        , std::conditional<is_class<T>::value, T, void_>::type
+        , std::conditional<std::is_class<T>::value, T, void_>::type
     { base() { } };
 
     template<typename U>
@@ -34,12 +30,7 @@ class has_value
     static yes_tag test(...);
 
 public:
-    typedef has_value type;
-
-    BOOST_STATIC_CONSTANT(
-        bool
-      , value = sizeof(test((base*)0)) == sizeof(yes_tag)
-    );
+    static constexpr bool value = sizeof(test((base*)0)) == sizeof(yes_tag);
 };
 
 } // namespace type_traits

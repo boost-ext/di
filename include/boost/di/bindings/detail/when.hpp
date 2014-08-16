@@ -7,6 +7,8 @@
 #ifndef BOOST_DI_BINDINGS_DETAIL_WHEN_HPP
 #define BOOST_DI_BINDINGS_DETAIL_WHEN_HPP
 
+#include "boost/di/aux_/mpl.hpp"
+
 namespace boost {
 namespace di {
 namespace bindings {

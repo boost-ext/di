@@ -6,7 +6,7 @@
 #ifndef BOOST_DI_CORE_BINDER_HPP
 #define BOOST_DI_CORE_BINDER_HPP
 
-#include "boost/di/aux_/config.hpp"
+#include "boost/di/aux_/mpl.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/bindings/dependency.hpp"
 #include "boost/di/scopes/deduce.hpp"

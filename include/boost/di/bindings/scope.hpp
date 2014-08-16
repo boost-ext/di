@@ -8,6 +8,7 @@
 #define BOOST_DI_BINDINGS_SCOPE_HPP
 
 #include "boost/di/aux_/config.hpp"
+#include "boost/di/aux_/mpl.hpp"
 #include "boost/di/bindings/detail/requires.hpp"
 #include "boost/di/bindings/type_traits/is_required_type.hpp"
 #include "boost/di/bindings/type_traits/is_required_priority.hpp"

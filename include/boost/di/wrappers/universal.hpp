@@ -9,14 +9,12 @@
 
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
+#include "boost/di/aux_/mpl.hpp"
 #include "boost/di/named.hpp"
 #include "boost/di/type_traits/is_convertible_to_ref.hpp"
 
 #include <vector>
 #include <functional>
-#include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/is_copy_constructible.hpp>
-#include <boost/type.hpp>
 
 namespace boost {
 namespace di {
@@ -25,16 +23,15 @@ namespace wrappers {
 namespace detail {
 
 template<typename TResult, typename T, typename TValueType>
-inline typename disable_if<is_copy_constructible<T>, const TResult&>::type
+inline typename std::enable_if<!std::is_copy_constructible<T>::value, const TResult&>::type
 copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
-    aux::shared_ptr<TResult> object(value(boost::type<T*>()));
+    aux::shared_ptr<TResult> object(value(type<T*>()));
     refs.push_back(object);
     return *object;
 }
 
 template<typename T>
-struct holder
-{
+struct holder {
     explicit holder(const T& value)
         : held(value)
     { }
@@ -43,20 +40,19 @@ struct holder
 };
 
 template<typename TResult, typename T, typename TValueType>
-inline typename enable_if<is_copy_constructible<T>, const TResult&>::type
+inline typename std::enable_if<std::is_copy_constructible<T>::value, const TResult&>::type
 copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
-    aux::shared_ptr<holder<TResult> > object(new holder<TResult>(value(boost::type<T>())));
+    aux::shared_ptr<holder<TResult> > object(new holder<TResult>(value(type<T>())));
     refs.push_back(object);
     return object->held;
 }
 
 template<typename T>
-class universal_impl
-{
+class universal_impl {
 public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >&, const TValueType& value)
-        : value_(std::bind<T>(value, boost::type<T>()))
+        : value_(std::bind<T>(value, type<T>()))
     { }
 
     operator T() const {
@@ -68,12 +64,11 @@ private:
 };
 
 template<typename T>
-class universal_impl<aux::auto_ptr<T> >
-{
+class universal_impl<aux::auto_ptr<T> > {
 public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value)
-        : value_(new aux::auto_ptr<T>(value(boost::type<aux::auto_ptr<T> >()).release()))
+        : value_(new aux::auto_ptr<T>(value(type<aux::auto_ptr<T> >()).release()))
     {
         refs.push_back(aux::shared_ptr<aux::auto_ptr<T> >(value_));
     }
@@ -87,20 +82,19 @@ private:
 };
 
 template<typename T>
-class universal_impl<const T&>
-{
+class universal_impl<const T&> {
 public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >&
                  , const TValueType& value
-                 , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : value_(std::bind<const T&>(value, boost::type<const T&>()))
+                 , typename std::enable_if<type_traits::is_convertible_to_ref<TValueType, T>::value>::type* = 0)
+        : value_(std::bind<const T&>(value, type<const T&>()))
     { }
 
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TValueType& value
-                 , typename disable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
+                 , typename std::enable_if<!type_traits::is_convertible_to_ref<TValueType, T>::value>::type* = 0)
         : value_(std::bind(&copy<T, T, TValueType>, std::ref(refs), value))
     { }
 
@@ -113,12 +107,11 @@ private:
 };
 
 template<typename T, typename TName>
-class universal_impl<named<T, TName> >
-{
+class universal_impl<named<T, TName> > {
 public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >&, const TValueType& value)
-        : value_(std::bind<T>(value, boost::type<T>()))
+        : value_(std::bind<T>(value, type<T>()))
     { }
 
     operator T() const {
@@ -134,20 +127,19 @@ private:
 };
 
 template<typename T, typename TName>
-class universal_impl<named<const T&, TName> >
-{
+class universal_impl<named<const T&, TName> > {
 public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >&
                  , const TValueType& value
-                 , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : value_(std::bind<const T&>(value, boost::type<const T&>()))
+                 , typename std::enable_if<type_traits::is_convertible_to_ref<TValueType, T>::value>::type* = 0)
+        : value_(std::bind<const T&>(value, type<const T&>()))
     { }
 
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TValueType& value
-                 , typename disable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
+                 , typename std::enable_if<!type_traits::is_convertible_to_ref<TValueType, T>::value>::type* = 0)
         : value_(std::bind(&copy<T, T, TValueType>, std::ref(refs), value))
     { }
 
@@ -160,8 +152,7 @@ private:
 };
 
 template<typename T, typename TName>
-class universal_impl<const named<T, TName>&>
-{
+class universal_impl<const named<T, TName>&> {
 public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
@@ -178,23 +169,22 @@ private:
 };
 
 template<typename T, typename TName>
-class universal_impl<const named<const T&, TName>&>
-{
+class universal_impl<const named<const T&, TName>&> {
     universal_impl& operator=(const universal_impl&);
 
 public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TValueType& value
-                 , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
+                 , typename std::enable_if<type_traits::is_convertible_to_ref<TValueType, T>::value>::type* = 0)
         : refs_(refs)
-        , value_(std::bind<const T&>(value, boost::type<const T&>()))
+        , value_(std::bind<const T&>(value, type<const T&>()))
     { }
 
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void> >& refs
                  , const TValueType& value
-                 , typename disable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
+                 , typename std::enable_if<!type_traits::is_convertible_to_ref<TValueType, T>::value>::type* = 0)
         : refs_(refs)
         , value_(std::bind(&copy<T, T, TValueType>, std::ref(refs), value))
     { }
@@ -215,11 +205,10 @@ private:
 } // namespace detail
 
 template<typename T>
-class universal : public detail::universal_impl<T>
-{
+class universal : public detail::universal_impl<T> {
 public:
-    typedef universal type;
-    typedef T element_type;
+    using type = universal;
+    using element_type = T;
 
     template<typename TValueType>
     universal(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value)

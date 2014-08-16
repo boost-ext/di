@@ -102,19 +102,17 @@ struct scope_traits<const aux::unique_ptr<T>&>
     typedef scopes::unique<> type;
 };
 
-BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-    template<typename T>
-    struct scope_traits<T&&>
-    {
-        typedef scopes::unique<> type;
-    };
+template<typename T>
+struct scope_traits<T&&>
+{
+    typedef scopes::unique<> type;
+};
 
-    template<typename T>
-    struct scope_traits<const T&&>
-    {
-        typedef scopes::unique<> type;
-    };
-)
+template<typename T>
+struct scope_traits<const T&&>
+{
+    typedef scopes::unique<> type;
+};
 
 template<typename T, typename TName>
 struct scope_traits<named<T, TName> >

@@ -8,11 +8,10 @@
 
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
+#include "boost/di/aux_/mpl.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/type_traits/is_same_base_of.hpp"
 
-#include <boost/none_t.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_integral.hpp>
 
 namespace boost {
@@ -29,13 +28,12 @@ template<
   , typename TVisitor = none_t
   , typename TPolicies = none_t
 >
-class any_type
-{
+class any_type {
     any_type& operator=(const any_type&);
 
     template<typename TValueType, typename TRefType>
     using ref_type = std::conditional<
-          is_same<TValueType, none_t>::value
+          std::is_same<TValueType, none_t>::value
         , TValueType
         , TRefType
       >;
@@ -69,14 +67,12 @@ public:
 
     template<
         typename U
-        BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-            , typename = typename disable_if<
-                type_traits::is_same_base_of<
-                    typename type_traits::make_plain<U>::type
-                  , typename type_traits::make_plain<T>::type
-                >
-            >::type
-        )
+      , typename = typename std::enable_if<
+            !type_traits::is_same_base_of<
+                typename type_traits::make_plain<U>::type
+              , typename type_traits::make_plain<T>::type
+            >::value
+        >::type
     >
     operator const U&() const {
         return creator_.template create<const U&, none_t, TCallStack>(
@@ -86,14 +82,12 @@ public:
 
     template<
         typename U
-        BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-            , typename = typename disable_if<
-                type_traits::is_same_base_of<
-                    typename type_traits::make_plain<U>::type
-                  , typename type_traits::make_plain<T>::type
-                >
-            >::type
-        )
+      , typename = typename std::enable_if<
+            !type_traits::is_same_base_of<
+                typename type_traits::make_plain<U>::type
+              , typename type_traits::make_plain<T>::type
+            >::value
+        >::type
     >
     operator U&() const {
         return creator_.template create<U&, none_t, TCallStack>(
@@ -120,14 +114,12 @@ public:
     BOOST_DI_WKND(NO_MSVC)(
         template<
             typename U
-            BOOST_DI_FEATURE(FUNCTION_TEMPLATE_DEFAULT_ARGS)(
-                , typename = typename disable_if<
-                    type_traits::is_same_base_of<
-                        typename type_traits::make_plain<U>::type
-                      , typename type_traits::make_plain<T>::type
-                    >
-                >::type
-            )
+          , typename = typename std::enable_if<
+                !type_traits::is_same_base_of<
+                    typename type_traits::make_plain<U>::type
+                  , typename type_traits::make_plain<T>::type
+                >::value
+            >::type
         >
         operator U() {
             return creator_.template create<U, none_t, TCallStack>(
@@ -173,34 +165,32 @@ struct is_integral<
 
 } // namespace boost
 
-BOOST_DI_FEATURE(CPP_11_TYPE_TRAITS)(
-    namespace std {
+namespace std {
 
-    template<
-        typename T
-      , typename TCallStack
-      , typename TCreator
-      , typename TAllocator
-      , typename TDeps
-      , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
+template<
+    typename T
+  , typename TCallStack
+  , typename TCreator
+  , typename TAllocator
+  , typename TDeps
+  , typename TRefs
+  , typename TVisitor
+  , typename TPolicies
+>
+struct is_integral<
+    boost::di::core::any_type<
+        T
+      , TCallStack
+      , TCreator
+      , TAllocator
+      , TDeps
+      , TRefs
+      , TVisitor
+      , TPolicies
     >
-    struct is_integral<
-        boost::di::core::any_type<
-            T
-          , TCallStack
-          , TCreator
-          , TAllocator
-          , TDeps
-          , TRefs
-          , TVisitor
-          , TPolicies
-        >
-    > : ::std::true_type { };
+> : ::std::true_type { };
 
-    } // namespace std
-)
+} // namespace std
 
 #endif
 

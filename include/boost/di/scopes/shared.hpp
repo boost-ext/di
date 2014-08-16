@@ -17,13 +17,12 @@ template<template<typename> class TWrapper = wrappers::shared>
 class shared
 {
 public:
-    typedef int_<0> priority;
+    using priority = int_<0>;
 
     template<typename TExpected>
-    class scope
-    {
+    class scope {
     public:
-        typedef TWrapper<TExpected> result_type;
+        using result_type = TWrapper<TExpected>;
 
         result_type create(const std::function<TExpected*()>& f) {
             if (!object_) {

@@ -7,23 +7,20 @@
 #ifndef BOOST_DI_TYPE_TRAITS_HAS_INJECTOR_HPP
 #define BOOST_DI_TYPE_TRAITS_HAS_INJECTOR_HPP
 
-#include "boost/di/aux_/config.hpp"
+#include "boost/di/aux_/mpl.hpp"
 
 #include <boost/preprocessor/cat.hpp>
-#include <boost/type_traits/is_class.hpp>
-#include <boost/non_type.hpp>
 
 namespace boost {
 namespace di {
 namespace type_traits {
 
 template<typename T>
-class BOOST_PP_CAT(has_, BOOST_DI_INJECTOR)
-{
+class BOOST_PP_CAT(has_, BOOST_DI_INJECTOR) {
     struct base_impl { void BOOST_DI_INJECTOR(...) { } };
     struct base
         : base_impl
-        , std::conditional<is_class<T>::value, T, void_>::type
+        , std::conditional<std::is_class<T>::value, T, void_>::type
     { base() { } };
 
     template<typename U>
@@ -35,12 +32,7 @@ class BOOST_PP_CAT(has_, BOOST_DI_INJECTOR)
     static yes_tag test(...);
 
 public:
-    typedef BOOST_PP_CAT(has_, BOOST_DI_INJECTOR) type;
-
-    BOOST_STATIC_CONSTANT(
-        bool
-      , value = sizeof(test((base*)0)) == sizeof(yes_tag)
-    );
+    static constexpr bool value =sizeof(test((base*)0)) == sizeof(yes_tag);
 };
 
 } // namespace type_traits

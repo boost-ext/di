@@ -7,15 +7,10 @@
 #ifndef BOOST_DI_NAMED_HPP
 #define BOOST_DI_NAMED_HPP
 
-#include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
+#include "boost/di/aux_/mpl.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/type_traits/remove_accessors.hpp"
-
-#include <utility>
-#include <boost/type_traits/is_polymorphic.hpp>
-#include <boost/type_traits/remove_reference.hpp>
-#include <boost/utility/enable_if.hpp>
 
 namespace boost {
 namespace di {
@@ -27,8 +22,7 @@ template<
   , typename TName = no_name
   , typename = void
 >
-class named
-{
+class named {
     named& operator=(const named&);
 
 public:
@@ -55,8 +49,7 @@ template<
     typename T
   , typename TName
 >
-class named<const T&, TName>
-{
+class named<const T&, TName> {
     named& operator=(const named&);
 
 public:
@@ -83,8 +76,7 @@ template<
     typename T
   , typename TName
 >
-class named<T&, TName>
-{
+class named<T&, TName> {
     named& operator=(const named&);
 
 public:
@@ -107,57 +99,51 @@ private:
     T& object_;
 };
 
-BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-    template<
-        typename T
-      , typename TName
-    >
-    class named<T&&, TName>
-    {
-        named& operator=(const named&);
+template<
+    typename T
+  , typename TName
+>
+class named<T&&, TName> {
+    named& operator=(const named&);
 
-    public:
-        typedef T&& named_type;
-        typedef TName name;
+public:
+    typedef T&& named_type;
+    typedef TName name;
 
-        named(T&& object) // non explicit
-            : object_(std::move(object))
-        { }
+    named(T&& object) // non explicit
+        : object_(std::move(object))
+    { }
 
-        named(const named& other)
-            : object_(other.object_)
-        { }
+    named(const named& other)
+        : object_(other.object_)
+    { }
 
-        operator T&&() {
-            return std::move(object_);
-        }
+    operator T&&() {
+        return std::move(object_);
+    }
 
-    private:
-        T object_;
-    };
-)
+private:
+    T object_;
+};
 
 template<
     typename T
   , typename TName
 >
-class named<aux::unique_ptr<T>, TName>
-{
+class named<aux::unique_ptr<T>, TName> {
     named& operator=(const named&);
 
 public:
     typedef aux::unique_ptr<T> named_type;
     typedef TName name;
 
-    BOOST_DI_FEATURE(RVALUE_REFERENCES)(
-        named(aux::unique_ptr<T> object) // non explicit
-            : object_(std::move(object))
-        { }
+    named(aux::unique_ptr<T> object) // non explicit
+        : object_(std::move(object))
+    { }
 
-        operator aux::unique_ptr<T>() {
-            return std::move(object_);
-        }
-    )
+    operator aux::unique_ptr<T>() {
+        return std::move(object_);
+    }
 
     named(const named& other)
         : object_(new T(*other.object_))
@@ -174,11 +160,8 @@ template<
 class named<
     T
   , TName
-  , typename enable_if<
-        is_polymorphic<typename type_traits::remove_accessors<T>::type>
-    >::type
->
-{
+  , typename std::enable_if<std::is_polymorphic<typename type_traits::remove_accessors<T>::type>::value>::type
+> {
 public:
     typedef T named_type;
     typedef TName name;

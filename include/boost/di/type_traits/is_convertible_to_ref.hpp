@@ -8,10 +8,7 @@
 #ifndef BOOST_DI_TYPE_TRAITS_IS_CONVERTIBLE_TO_REF_HPP
 #define BOOST_DI_TYPE_TRAITS_IS_CONVERTIBLE_TO_REF_HPP
 
-#include "boost/di/aux_/config.hpp"
-
-#include <boost/type.hpp>
-#include <boost/non_type.hpp>
+#include "boost/di/aux_/mpl.hpp"
 
 namespace boost {
 namespace di {
@@ -19,10 +16,7 @@ namespace type_traits {
 
 namespace detail {
 
-template<
-    typename T
-  , typename TSignature
->
+template<typename T, typename TSignature>
 class is_convertible
 {
     template<typename U>
@@ -32,23 +26,13 @@ class is_convertible
     static no_tag test(...);
 
 public:
-    typedef is_convertible type;
-
-    BOOST_STATIC_CONSTANT(
-        bool
-      , value = sizeof(test<T>(0)) == sizeof(yes_tag)
-    );
+    static constexpr bool value = sizeof(test<T>(0)) == sizeof(yes_tag);
 };
 
 } // namespace detail
 
-template<
-    typename TValueType
-  , typename T
->
-struct is_convertible_to_ref
-    : detail::is_convertible<TValueType, const T&(TValueType::*)(const boost::type<const T&>&) const>
-{ };
+template<typename TValueType, typename T>
+using is_convertible_to_ref = detail::is_convertible<TValueType, const T&(TValueType::*)(const type<const T&>&) const>;
 
 } // namespace type_traits
 } // namespace di

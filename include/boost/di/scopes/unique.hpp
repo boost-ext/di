@@ -14,16 +14,14 @@ namespace di {
 namespace scopes {
 
 template<template<typename> class TWrapper = wrappers::copy>
-class unique
-{
+class unique {
 public:
-    typedef int_<0> priority;
+    using priority = int_<0>;
 
     template<typename TExpected>
-    class scope
-    {
+    class scope {
     public:
-        typedef TWrapper<TExpected> result_type;
+        using result_type = TWrapper<TExpected>;
 
         result_type create(const std::function<TExpected*()>& f) {
             return f;

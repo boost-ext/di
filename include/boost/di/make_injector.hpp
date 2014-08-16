@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_MAKE_INJECTOR_HPP
 #define BOOST_DI_MAKE_INJECTOR_HPP
 
-#include "boost/di/aux_/config.hpp"
 #include "boost/di/injector.hpp"
 
 namespace boost {

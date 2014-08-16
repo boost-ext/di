@@ -7,10 +7,9 @@
 #ifndef BOOST_DI_BINDINGS_TYPE_TRAITS_IS_REQUIRED_TYPE_HPP
 #define BOOST_DI_BINDINGS_TYPE_TRAITS_IS_REQUIRED_TYPE_HPP
 
+#include "boost/di/aux_/mpl.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/type_traits/is_same_base_of.hpp"
-
-#include <boost/utility/enable_if.hpp>
 
 namespace boost {
 namespace di {
