@@ -176,7 +176,7 @@ private:
             refs
           , acquire<TDependency>(deps).create(
               [&] {
-                typedef typename type_traits::ctor_traits<typename TDependency::given>::type ctor_type;
+                using ctor_type = typename type_traits::ctor_traits<typename TDependency::given>::type;
 
                 //BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
                     //using call_stack_type = typename add<TCallStack, T>::type;
