@@ -14,7 +14,9 @@ namespace di {
 namespace type_traits {
 
 template<typename T, typename U>
-using is_same_base_of = bool_<std::is_base_of<U, T>::value || std::is_same<U, T>::value>;
+using is_same_base_of = bool_<
+    std::is_base_of<U, T>::value || std::is_same<U, T>::value
+>;
 
 } // namespace type_traits
 } // namespace di

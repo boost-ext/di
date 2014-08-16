@@ -9,9 +9,6 @@
 
 #include "boost/di/aux_/mpl.hpp"
 
-#include <boost/non_type.hpp>
-#include <boost/type_traits/is_same.hpp>
-
 namespace boost {
 namespace di {
 namespace type_traits {
@@ -58,7 +55,7 @@ class has_call {
 
     template<typename TDummy>
     struct base_call<std::true_type, TDummy>
-        : is_same<
+        : std::is_same<
               decltype(
                  ((((base*)0)->call(*(TAction*)0)), void_<T>())
               )

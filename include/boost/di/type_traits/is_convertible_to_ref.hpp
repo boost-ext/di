@@ -17,8 +17,7 @@ namespace type_traits {
 namespace detail {
 
 template<typename T, typename TSignature>
-class is_convertible
-{
+class is_convertible {
     template<typename U>
     static yes_tag test(non_type<TSignature, &U::operator()>*);
 
@@ -32,7 +31,9 @@ public:
 } // namespace detail
 
 template<typename TValueType, typename T>
-using is_convertible_to_ref = detail::is_convertible<TValueType, const T&(TValueType::*)(const type<const T&>&) const>;
+using is_convertible_to_ref = detail::is_convertible<
+    TValueType, const T&(TValueType::*)(const type<const T&>&) const
+>;
 
 } // namespace type_traits
 } // namespace di

@@ -101,7 +101,7 @@ public:
     }
 
 private:
-/*        template<typename TSeq, typename T, typename TAction>*/
+    //template<typename TSeq, typename T, typename TAction>
     //typename std::enable_if<aux::mpl::empty<TSeq>>::type call_impl(T&, const TAction&) { }
 
     //template<typename TSeq, typename T, typename TAction>
@@ -125,7 +125,7 @@ private:
     //>::type
     //call_impl(T& deps, const TAction& action) {
         //call_impl<typename aux::mpl::pop_front<TSeq>::type>(deps, action);
-    /*}*/
+    //}
 
     creator<TDeps> creator_;
 };

@@ -19,111 +19,93 @@ namespace di {
 namespace type_traits {
 
 template<typename T>
-struct scope_traits
-{
-    typedef scopes::unique<> type;
+struct scope_traits {
+    using type = scopes::unique<>;
 };
 
 template<typename T>
-struct scope_traits<T&>
-{
-    typedef scopes::external<> type;
+struct scope_traits<T&> {
+    using type = scopes::external<>;
 };
 
 template<typename T>
-struct scope_traits<const T&>
-{
-    typedef scopes::unique<> type;
+struct scope_traits<const T&> {
+    using type = scopes::unique<>;
 };
 
 template<typename T>
-struct scope_traits<T*>
-{
-    typedef scopes::unique<> type;
+struct scope_traits<T*> {
+    using type = scopes::unique<>;
 };
 
 template<typename T>
-struct scope_traits<const T*>
-{
-    typedef scopes::unique<> type;
+struct scope_traits<const T*> {
+    using type = scopes::unique<>;
 };
 
 template<typename T>
-struct scope_traits<aux::auto_ptr<T>>
-{
-    typedef scopes::unique<> type;
+struct scope_traits<aux::auto_ptr<T>> {
+    using type = scopes::unique<>;
 };
 
 template<typename T>
-struct scope_traits<aux::shared_ptr<T>>
-{
-    typedef scopes::shared<> type;
+struct scope_traits<aux::shared_ptr<T>> {
+    using type = scopes::shared<>;
 };
 
 template<typename T>
-struct scope_traits<const aux::shared_ptr<T>&>
-{
-    typedef scopes::shared<> type;
+struct scope_traits<const aux::shared_ptr<T>&> {
+    using type = scopes::shared<>;
 };
 
 template<typename T>
-struct scope_traits<aux_::shared_ptr<T>>
-{
-    typedef scopes::shared<> type;
+struct scope_traits<aux_::shared_ptr<T>> {
+    using type = scopes::shared<>;
 };
 
 template<typename T>
-struct scope_traits<const aux_::shared_ptr<T>&>
-{
-    typedef scopes::shared<> type;
+struct scope_traits<const aux_::shared_ptr<T>&> {
+    using type = scopes::shared<>;
 };
 
 template<typename T>
-struct scope_traits<aux::weak_ptr<T>>
-{
-    typedef scopes::shared<> type;
+struct scope_traits<aux::weak_ptr<T>> {
+    using type = scopes::shared<>;
 };
 
 template<typename T>
-struct scope_traits<const aux::weak_ptr<T>&>
-{
-    typedef scopes::shared<> type;
+struct scope_traits<const aux::weak_ptr<T>&> {
+    using type = scopes::shared<>;
 };
 
 template<typename T>
-struct scope_traits<aux::unique_ptr<T>>
-{
-    typedef scopes::unique<> type;
+struct scope_traits<aux::unique_ptr<T>> {
+    using type = scopes::unique<>;
 };
 
 template<typename T>
-struct scope_traits<const aux::unique_ptr<T>&>
-{
-    typedef scopes::unique<> type;
+struct scope_traits<const aux::unique_ptr<T>&> {
+    using type = scopes::unique<>;
 };
 
 template<typename T>
-struct scope_traits<T&&>
-{
-    typedef scopes::unique<> type;
+struct scope_traits<T&&> {
+    using type = scopes::unique<>;
 };
 
 template<typename T>
-struct scope_traits<const T&&>
-{
-    typedef scopes::unique<> type;
+struct scope_traits<const T&&> {
+    using type = scopes::unique<>;
 };
 
 template<typename T, typename TName>
-struct scope_traits<named<T, TName>>
-{
-    typedef typename scope_traits<T>::type type;
+struct scope_traits<named<T, TName>> {
+    using type = typename scope_traits<T>::type;
 };
 
 template<typename T, typename TName>
-struct scope_traits<const named<T, TName>&>
-{
-    typedef typename scope_traits<T>::type type;
+struct scope_traits<const named<T, TName>&> {
+    using type = typename scope_traits<T>::type;
 };
 
 } // namespace type_traits

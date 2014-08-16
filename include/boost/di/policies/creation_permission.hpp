@@ -9,8 +9,6 @@
 
 #include "boost/di/aux_/config.hpp"
 
-#include <boost/type_traits/is_same.hpp>
-
 namespace boost {
 namespace di {
 namespace policies {

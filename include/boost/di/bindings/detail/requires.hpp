@@ -23,10 +23,7 @@ class requires_ {
 public:
 	using type = requires_;
 
-	template<
-		typename T
-	  , typename TMultiplicationFactor = int_<10>
-	>
+	template<typename T, typename TMultiplicationFactor = int_<10>>
 	using apply = sum<TMultiplicationFactor, typename apply_bind<T, Ts>::type...>;
 };
 

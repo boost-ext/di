@@ -7,22 +7,18 @@
 #ifndef BOOST_DI_TYPE_TRAITS_REMOVE_ACCESSORS_HPP
 #define BOOST_DI_TYPE_TRAITS_REMOVE_ACCESSORS_HPP
 
-#include <boost/type_traits/remove_reference.hpp>
-#include <boost/type_traits/remove_pointer.hpp>
-#include <boost/type_traits/remove_cv.hpp>
+#include <type_traits>
 
 namespace boost {
 namespace di {
 namespace type_traits {
 
 template<typename T>
-struct remove_accessors
-    : remove_cv<
-         typename remove_pointer<
-             typename remove_reference<T>::type
-         >::type
-      >
-{ };
+using remove_accessors = std::remove_cv<
+   typename std::remove_pointer<
+       typename std::remove_reference<T>::type
+   >::type
+>;
 
 } // namespace type_traits
 } // namespace di

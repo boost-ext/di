@@ -10,6 +10,8 @@
 #include "boost/di/aux_/mpl.hpp"
 #include "boost/di/type_traits/remove_accessors.hpp"
 
+#include <type_traits>
+
 namespace boost {
 namespace di {
 namespace type_traits {
@@ -21,32 +23,29 @@ BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(named_type)
 
 template<typename T, typename = void>
-struct deref_type
-{
-    typedef T type;
+struct deref_type {
+    using type = T;
 };
 
 template<typename T>
-struct deref_type<T, typename std::enable_if<has_element_type<T>::value>::type>
-{
-    typedef typename T::element_type type;
+struct deref_type<T, typename std::enable_if<has_element_type<T>::value>::type> {
+    using type = typename T::element_type;
 };
 
 template<typename T>
-struct deref_type<T, typename std::enable_if<has_named_type<T>::value>::type>
-{
-    typedef typename make_plain<typename T::named_type>::type type;
+struct deref_type<T, typename std::enable_if<has_named_type<T>::value>::type> {
+    using type = typename make_plain<typename T::named_type>::type;
 };
 
 template<typename T>
 struct make_plain
     : deref_type<
-        typename remove_accessors<
-            typename deref_type<
-                typename remove_accessors<T>::type
-            >::type
-        >::type
-    >
+          typename remove_accessors<
+              typename deref_type<
+                  typename remove_accessors<T>::type
+              >::type
+          >::type
+      >
 { };
 
 } // namespace type_traits

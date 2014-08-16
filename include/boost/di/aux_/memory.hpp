@@ -25,16 +25,14 @@
     namespace boost {
     namespace di {
     namespace aux {
-
-    using ::std::auto_ptr;
-    using ::std::unique_ptr;
-    using ::std::shared_ptr;
-    using ::std::weak_ptr;
-
+        using ::std::auto_ptr;
+        using ::std::unique_ptr;
+        using ::std::shared_ptr;
+        using ::std::weak_ptr;
     } // namespace aux
 
     namespace aux_ {
-    using ::boost::shared_ptr;
+        using ::boost::shared_ptr;
     } // namespace aux_
 
     } // namespace boost
@@ -45,27 +43,14 @@
     namespace boost {
     namespace di {
     namespace aux {
-
-    using ::std::auto_ptr;
-    using ::boost::shared_ptr;
-    using ::boost::weak_ptr;
-
-    #if defined(BOOST_NO_CXX11_SMART_PTR)
-        template<typename> struct unique_ptr { };
-    #else
+        using ::std::auto_ptr;
+        using ::boost::shared_ptr;
+        using ::boost::weak_ptr;
         using ::std::unique_ptr;
-    #endif
-
     } // namespace aux
 
     namespace aux_ {
-
-    #if defined(BOOST_NO_CXX11_SMART_PTR)
-        template<typename T> struct shared_ptr { };
-    #else
         using ::std::shared_ptr;
-    #endif
-
     } // namespace aux_
 
 } // namespace boost

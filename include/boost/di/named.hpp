@@ -26,8 +26,8 @@ class named {
     named& operator=(const named&);
 
 public:
-    typedef T named_type;
-    typedef TName name;
+    using named_type = T;
+    using name = TName;
 
     named(T object) // non explicit
         : object_(object)
@@ -53,8 +53,8 @@ class named<const T&, TName> {
     named& operator=(const named&);
 
 public:
-    typedef const T& named_type;
-    typedef TName name;
+    using named_type = const T&;
+    using name = TName;
 
     named(const T& object) // non explicit
         : object_(object)
@@ -80,8 +80,8 @@ class named<T&, TName> {
     named& operator=(const named&);
 
 public:
-    typedef T& named_type;
-    typedef TName name;
+    using named_type = T&;
+    using name = TName;
 
     named(T& object) // non explicit
         : object_(object)
@@ -107,8 +107,8 @@ class named<T&&, TName> {
     named& operator=(const named&);
 
 public:
-    typedef T&& named_type;
-    typedef TName name;
+    using named_type = T&&;
+    using name = TName;
 
     named(T&& object) // non explicit
         : object_(std::move(object))
@@ -134,8 +134,8 @@ class named<aux::unique_ptr<T>, TName> {
     named& operator=(const named&);
 
 public:
-    typedef aux::unique_ptr<T> named_type;
-    typedef TName name;
+    using named_type = aux::unique_ptr<T>;
+    using name = TName;
 
     named(aux::unique_ptr<T> object) // non explicit
         : object_(std::move(object))
@@ -163,8 +163,8 @@ class named<
   , typename std::enable_if<std::is_polymorphic<typename type_traits::remove_accessors<T>::type>::value>::type
 > {
 public:
-    typedef T named_type;
-    typedef TName name;
+    using named_type = T;
+    using name = TName;
 };
 
 } // namespace di
