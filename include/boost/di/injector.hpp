@@ -18,7 +18,7 @@
 namespace boost {
 namespace di {
 
-BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
+BOOST_DI_HAS_MEMBER_TYPE(deps);
 BOOST_DI_HAS_MEMBER_FUNCTION(configure, configure);
 
 namespace detail {

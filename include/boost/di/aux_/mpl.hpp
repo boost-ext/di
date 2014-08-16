@@ -8,7 +8,6 @@
 #define BOOST_DI_AUX_MPL_HPP
 
 #include <type_traits>
-#include <boost/mpl/has_xxx.hpp>// tmp
 
 #define BOOST_DI_HAS_MEMBER_IMPL(name, member, declaration, signature)                  \
     template<typename T>                                                                \
@@ -33,6 +32,8 @@
 #define BOOST_DI_HAS_MEMBER(name) \
     BOOST_DI_HAS_MEMBER_IMPL(name, name, int name, int base_impl::*)
 
+#define BOOST_DI_HAS_MEMBER_TYPE(name) BOOST_DI_HAS_MEMBER(name)
+
 namespace boost {
 namespace di {
 
@@ -51,8 +52,7 @@ template<bool N>
 using bool_ = std::integral_constant<bool, N>;
 
 template<typename T, typename E>
-struct pair
-{
+struct pair {
     using first = T;
     using second = E;
 };

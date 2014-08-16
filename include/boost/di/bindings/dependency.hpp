@@ -23,7 +23,7 @@ namespace boost {
 namespace di {
 namespace bindings {
 
-BOOST_MPL_HAS_XXX_TRAIT_DEF(result_type)
+BOOST_DI_HAS_MEMBER_TYPE(result_type);
 
 template<
     typename TScope

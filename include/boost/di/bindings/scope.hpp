@@ -27,7 +27,7 @@ template<
     > class TDependency
 >
 class scope {
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(given)
+    BOOST_DI_HAS_MEMBER_TYPE(given);
 
     template<typename T>
     using is_dependency = has_given<T>;

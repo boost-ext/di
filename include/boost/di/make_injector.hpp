@@ -7,12 +7,13 @@
 #ifndef BOOST_DI_MAKE_INJECTOR_HPP
 #define BOOST_DI_MAKE_INJECTOR_HPP
 
+#include "boost/di/aux_/mpl.hpp"
 #include "boost/di/injector.hpp"
 
 namespace boost {
 namespace di {
 
-//BOOST_MPL_HAS_XXX_TRAIT_DEF(scope)
+//BOOST_DI_HAS_MEMBER_TYPE(scope);
 
 template<typename... TArgs>
 injector<typename detail::bindings<TArgs...>::type>

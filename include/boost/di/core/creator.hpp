@@ -23,7 +23,7 @@ namespace boost {
 namespace di {
 namespace core {
 
-BOOST_MPL_HAS_XXX_TRAIT_DEF(any)
+BOOST_DI_HAS_MEMBER_TYPE(any);
 
 template<typename TDeps_>
 class creator {

@@ -21,11 +21,10 @@ namespace boost {
 namespace di {
 namespace policies {
 
-BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
-BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type)
+BOOST_DI_HAS_MEMBER_TYPE(element_type);
+BOOST_DI_HAS_MEMBER_TYPE(value_type);
 
-struct allow_smart_ptrs
-{
+struct allow_smart_ptrs {
     template<typename T>
     struct allow
         : has_element_type<typename type_traits::remove_accessors<T>::type>

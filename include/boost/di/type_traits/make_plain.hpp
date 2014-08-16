@@ -19,8 +19,8 @@ namespace type_traits {
 template<typename>
 struct make_plain;
 
-BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
-BOOST_MPL_HAS_XXX_TRAIT_DEF(named_type)
+BOOST_DI_HAS_MEMBER_TYPE(element_type);
+BOOST_DI_HAS_MEMBER_TYPE(named_type);
 
 template<typename T, typename = void>
 struct deref_type {

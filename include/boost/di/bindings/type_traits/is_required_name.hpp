@@ -15,7 +15,7 @@ namespace di {
 namespace bindings {
 namespace type_traits {
 
-BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
+BOOST_DI_HAS_MEMBER_TYPE(name);
 
 template<typename TName>
 class is_required_name {
