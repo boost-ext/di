@@ -250,6 +250,13 @@ struct contains<type_list<>, T>
     : bool_<false>
 { };
 
+template<typename, typename> struct add;
+
+template<typename... Ts, typename T>
+struct add<type_list<Ts...>, T> {
+    using type = type_list<Ts..., T>;
+};
+
 } // namespace di
 } // namespace boost
 
