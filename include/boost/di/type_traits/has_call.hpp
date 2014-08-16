@@ -13,26 +13,7 @@ namespace boost {
 namespace di {
 namespace type_traits {
 
-template<typename, typename = void>
-class has_call;
-
-template<typename T>
-class has_call<T, void> {
-    struct base_impl { void call() { } };
-    struct base : T, base_impl { base() { } };
-
-    template<typename U>
-    static no_tag test(
-        U*
-      , non_type<void (base_impl::*)(), &U::call>* = 0
-    );
-
-    template<typename>
-    static yes_tag test(...);
-
-public:
-    static constexpr bool value = sizeof(test<base>(0)) == sizeof(yes_tag);
-};
+BOOST_DI_HAS_MEMBER_FUNCTION(call_impl, call);
 
 template<typename T, typename TAction>
 class has_call {
@@ -64,7 +45,7 @@ class has_call {
     { };
 
 public :
-    static constexpr bool value = base_call<bool_<has_call<T>::value>>::value;
+    static constexpr bool value = base_call<bool_<has_call_impl<T>::value>>::value;
 };
 
 } // namespace type_traits

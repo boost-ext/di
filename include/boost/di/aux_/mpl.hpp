@@ -10,7 +10,7 @@
 #include <type_traits>
 
 #define BOOST_DI_HAS_MEMBER_IMPL(name, member, declaration, signature)                  \
-    template<typename T>                                                                \
+    template<typename T, typename = void>                                               \
     class has_##name {                                                                  \
         struct base_impl { declaration; };                                              \
         struct base                                                                     \
