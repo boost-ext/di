@@ -26,20 +26,20 @@ class has_call<T, void>
     struct base : T, base_impl { base() { } };
 
     template<typename U>
-    static aux::mpl::aux::no_tag test(
+    static no_tag test(
         U*
       , non_type<void (base_impl::*)(), &U::call>* = 0
     );
 
     template<typename>
-    static aux::mpl::aux::yes_tag test(...);
+    static yes_tag test(...);
 
 public:
     typedef has_call type;
 
     BOOST_STATIC_CONSTANT(
         bool
-      , value = sizeof(test<base>(0)) == sizeof(aux::mpl::aux::yes_tag)
+      , value = sizeof(test<base>(0)) == sizeof(yes_tag)
     );
 };
 
@@ -55,16 +55,16 @@ class has_call
     struct base : T
     {
         using T::call;
-        aux::mpl::aux::no_tag call(...) const;
+        no_tag call(...) const;
     };
 
     template<typename, typename = void>
     struct base_call
-        : aux::mpl::false_
+        : std::false_type
     { };
 
     template<typename TDummy>
-    struct base_call<aux::mpl::true_, TDummy>
+    struct base_call<std::true_type, TDummy>
         : is_same<
               BOOST_DI_FEATURE_DECLTYPE(
                  ((((base*)0)->call(*(TAction*)0)), void_<T>())
@@ -78,7 +78,7 @@ public :
 
     BOOST_STATIC_CONSTANT(
         bool
-      , value = base_call<aux::mpl::bool_<has_call<T>::value> >::value
+      , value = base_call<bool_<has_call<T>::value> >::value
     );
 };
 

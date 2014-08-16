@@ -14,13 +14,8 @@ namespace boost {
 namespace di {
 namespace type_traits {
 
-template<typename T, typename U = aux::mpl::_1>
-struct is_same_base_of
-    : aux::mpl::or_<
-          is_base_of<U, T>
-        , is_same<U, T>
-      >
-{ };
+template<typename T, typename U>
+using is_same_base_of = bool_<is_base_of<U, T>::value || is_same<U, T>::value>;
 
 } // namespace type_traits
 } // namespace di

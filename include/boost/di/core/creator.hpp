@@ -8,8 +8,6 @@
 
     #ifndef BOOST_DI_CORE_CREATOR_HPP
     #define BOOST_DI_CORE_CREATOR_HPP
-#include <iostream>
-#include <boost/units/detail/utility.hpp>
 
     #include "boost/di/aux_/config.hpp"
     #include "boost/di/aux_/memory.hpp"
@@ -34,64 +32,41 @@
 
     BOOST_MPL_HAS_XXX_TRAIT_DEF(any)
 
-    template<
-        typename TDependecies = aux::mpl::vector<>
-      , template<typename> class TBinder = binder
-      , template<
-            typename = ::boost::none_t
-          , typename = ::boost::none_t
-          , typename = ::boost::none_t
-          , typename = ::boost::none_t
-          , typename = ::boost::none_t
-          , typename = ::boost::none_t
-          , typename = ::boost::none_t
-          , typename = ::boost::none_t
-        >
-        class TAnyType = ::boost::di::core::any_type
-    >
-    class creator
-    {
-        using deps_t = typename aux::mpl::normalize_type_list<TDependecies>::type;
+    template<typename TDeps_>
+    class creator {
+        using binder_t = binder<TDeps_>;
 
         template<typename TDependency>
-        struct scope_create
-            : type_traits::function_traits<
-                  BOOST_DI_FEATURE_DECLTYPE(&TDependency::create)
-              >::type
-        { };
+        using scope_create = typename type_traits::function_traits<
+              BOOST_DI_FEATURE_DECLTYPE(&TDependency::create)
+          >::type;
 
-        class type_comparator
-        {
+        class type_comparator {
         public:
             bool operator()(const std::type_info* lhs, const std::type_info* rhs) const {
                 return lhs->before(*rhs);
             }
         };
 
-        typedef std::map<
+        using scopes_type = std::map<
             const std::type_info*
           , aux::shared_ptr<void>
           , type_comparator
-        > scopes_type;
+        >;
 
         template<
             typename T
           , typename TCallStack
           , typename TDependency
         >
-        struct data
-        {
-            typedef T type;
-            typedef TCallStack call_stack;
-            typedef TDependency dependency;
-            typedef TBinder<deps_t> binder;
+        struct data {
+            using type = T;
+            using call_stack = TCallStack;
+            using dependency = TDependency;
+            using binder = binder_t;
         };
 
     public:
-        explicit creator(const TBinder<deps_t>& binder = TBinder<deps_t>())
-            : binder_(binder)
-        { }
-
         template<
             typename T
           , typename TParent // ignore copy/move ctor
@@ -104,7 +79,7 @@
         >
         typename enable_if<
             has_any<T>
-          , TAnyType<
+          , any_type<
                 TParent
               , TCallStack
               , creator
@@ -120,7 +95,7 @@
              , TRefs& refs
              , const TVisitor& visitor
              , const TPolicies& policies) {
-            return TAnyType<
+            return any_type<
                 TParent
               , TCallStack
               , creator
@@ -148,8 +123,8 @@
              , TRefs& refs
              , const TVisitor& visitor
              , const TPolicies& policies) {
-            typedef typename TBinder<deps_t>::template
-                resolve<T, TCallStack>::type dependency_type;
+            using dependency_type = typename binder_t::template
+                resolve<T, TCallStack>::type;
 
             //typedef data<T, call_stack_type, dependency_type> data_type;
             //assert_policies<typename TPolicies::types, data_type>(policies);
@@ -214,30 +189,30 @@
                   [&] {
                     typedef typename type_traits::ctor_traits<typename TDependency::given>::type ctor_type;
 
-                    BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
-                        typedef typename aux::mpl::push_back<TCallStack, T>::type call_stack_type;
-                    )
+                    //BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
+                        //typedef typename aux::mpl::push_back<TCallStack, T>::type call_stack_type;
+                    //)
 
-                    BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
-                        typedef TCallStack call_stack_type;
-                    )
+                    //BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
+                        using call_stack_type = TCallStack;
+                    //)
 
                     return create_impl<T, TDependency, call_stack_type>(allocator, deps, refs, visitor, policies, ctor_type());}
                 )
             );
         }
 
-        template<typename TSeq, typename, typename TPolicies>
-        static typename enable_if<aux::mpl::empty<TSeq> >::type
-        assert_policies(const TPolicies&) { }
+/*        template<typename TSeq, typename, typename TPolicies>*/
+        //static typename enable_if<aux::mpl::empty<TSeq> >::type
+        //assert_policies(const TPolicies&) { }
 
-        template<typename TSeq, typename T, typename TPolicies>
-        static typename disable_if<aux::mpl::empty<TSeq> >::type
-        assert_policies(const TPolicies& policies) {
-            typedef typename aux::mpl::front<TSeq>::type policy;
-            static_cast<const policy&>(policies).template assert_policy<T>();
-            assert_policies<typename aux::mpl::pop_front<TSeq>::type, T>(policies);
-        }
+        //template<typename TSeq, typename T, typename TPolicies>
+        //static typename disable_if<aux::mpl::empty<TSeq> >::type
+        //assert_policies(const TPolicies& policies) {
+            //typedef typename aux::mpl::front<TSeq>::type policy;
+            //static_cast<const policy&>(policies).template assert_policy<T>();
+            //assert_policies<typename aux::mpl::pop_front<TSeq>::type, T>(policies);
+        /*}*/
 
         template<typename TDependency, typename TDeps>
         typename enable_if<is_base_of<TDependency, TDeps>, TDependency&>::type
@@ -258,7 +233,7 @@
             return *dependency;
         }
 
-        TBinder<deps_t> binder_;
+        binder_t binder_;
         scopes_type scopes_;
     };
 
@@ -288,7 +263,6 @@
               , const TVisitor& visitor
               , const TPolicies& policies
               , const type_list<BOOST_DI_TYPES_PASS(TArgs)>&) {
-            std::cout << units::detail::demangle(typeid(T).name()) << " - " << units::detail::demangle(typeid(TCallStack).name()) << std::endl;
         return allocator.template
             allocate<typename TDependency::expected, typename TDependency::given>(
                 create<TArgs, T, TCallStack>(allocator, deps, refs, visitor, policies)...

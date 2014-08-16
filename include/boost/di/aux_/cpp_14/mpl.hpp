@@ -8,12 +8,16 @@
 #define BOOST_DI_AUX_CPP_14_MPL_HPP
 
 #include <type_traits>
+#include <boost/mpl/has_xxx.hpp>// tmp
 
 namespace boost {
 namespace di {
 
 template<int N>
 using int_ = std::integral_constant<int, N>;
+
+template<bool N>
+using bool_ = std::integral_constant<bool, N>;
 
 template<typename T, typename E>
 struct pair
@@ -168,12 +172,73 @@ struct is_type_list<type_list<Ts...>>
     : std::true_type
 { };
 
+template <typename...> struct join;
+
+template<>
+struct join<>
+{
+    using type = type_list<>;
+};
+
+template <typename... TArgs> struct join<type_list<TArgs...>>
+{
+    using type = type_list<TArgs...>;
+};
+
+template <typename ...Args1,
+          typename ...Args2>
+struct join<type_list<Args1...>, type_list<Args2...>>
+{
+    typedef type_list<Args1..., Args2...> type;
+};
+
+template <typename ...Args1,
+          typename ...Args2,
+          typename ...Tail>
+struct join<type_list<Args1...>, type_list<Args2...>, Tail...>
+{
+     typedef typename join<type_list<Args1..., Args2...>, Tail...>::type type;
+};
+
+template<bool...> struct bool_seq {
+    using type = bool_seq;
+};
+
+template<bool B, bool... Ts>
+struct contains_impl
+    : bool_<B || contains_impl<Ts...>::value>
+{ };
+
+template<bool B>
+struct contains_impl<B>
+    : bool_<B>
+{ };
+
+template<typename, typename> struct contains;
+
+template<typename T, typename... Ts>
+struct contains<type_list<Ts...>, T>
+    : contains_impl<std::is_same<T, Ts>::value...>
+{ };
+
+template<typename T>
+struct contains<type_list<>, T>
+    : bool_<false>
+{ };
+
+typedef char (&no_tag)[1];
+typedef char (&yes_tag)[2];
+
+struct void_ {};
 //is_smart_ptr
+//NAMED(int, "my_name")
+//has table with typeid hash
 
 }}
 
 //TO BE REMOVED
 
+/*
 #include <boost/mpl/x11/if.hpp>
 #include <boost/mpl/x11/advance.hpp>
 #include <boost/mpl/x11/range_c.hpp>
@@ -271,6 +336,7 @@ namespace di {
 namespace aux {
     namespace mpl = ::boost::mpl::x11;
 }}}
+*/
 
 #endif
 

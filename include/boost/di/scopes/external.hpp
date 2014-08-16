@@ -18,7 +18,7 @@ BOOST_DI_FEATURE(CPP_11_FUNCTIONAL)(
 
     template<typename T>
     class is_reference_wrapper< ::std::reference_wrapper<T> >
-        : public ::boost::di::aux::mpl::true_
+        : public ::std::true_type
     { };
 
     template<typename T>
@@ -39,7 +39,7 @@ template<template<typename> class TWrapper = wrappers::value>
 class external
 {
 public:
-    typedef aux::mpl::int_<1> priority;
+    typedef int_<1> priority;
 
     template<typename TExpected>
     class scope

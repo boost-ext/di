@@ -22,9 +22,9 @@ template<
 >
 struct data
 {
-    typedef T type;
-    typedef TCallStack call_stack;
-    typedef TDependency dependency;
+    using type = T;
+    using call_stack = TCallStack;
+    using dependency = TDependency;
 };
 
 template<typename T, typename TCallStack, typename _>
@@ -34,8 +34,7 @@ template<typename>
 struct binder;
 
 template<typename... Ts>
-struct binder<type_list<Ts...>>
-{
+struct binder<type_list<Ts...>> {
     template<
         typename T
       , typename TCallStack

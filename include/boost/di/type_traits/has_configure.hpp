@@ -22,24 +22,24 @@ class has_configure
     struct base_impl { void configure() { } };
     struct base
         : base_impl
-        , aux::mpl::if_<is_class<T>, T, aux::mpl::void_>::type
+        , std::conditional<is_class<T>::value, T, void_>::type
     { base() { } };
 
     template<typename U>
-    static aux::mpl::aux::no_tag test(
+    static no_tag test(
         U*
       , non_type<void (base_impl::*)(), &U::configure>* = 0
     );
 
     template<typename>
-    static aux::mpl::aux::yes_tag test(...);
+    static yes_tag test(...);
 
 public:
     typedef has_configure type;
 
     BOOST_STATIC_CONSTANT(
         bool
-      , value = sizeof(test<base>(0)) == sizeof(aux::mpl::aux::yes_tag)
+      , value = sizeof(test<base>(0)) == sizeof(yes_tag)
     );
 };
 

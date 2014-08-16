@@ -17,7 +17,7 @@ template<template<typename> class TWrapper = wrappers::shared>
 class shared
 {
 public:
-    typedef aux::mpl::int_<0> priority;
+    typedef int_<0> priority;
 
     template<typename TExpected>
     class scope

@@ -27,90 +27,62 @@
 
     namespace detail {
 
-    template<typename T>
-    struct default_scope
-        : scope<scopes::deduce>::bind<T>
-    { };
-
     BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
 
     template<typename T>
     struct is_module
-        : aux::mpl::or_<
-              has_deps<T>
-            , type_traits::has_configure<T>
-          >
+        : bool_<has_deps<T>::value || type_traits::has_configure<T>::value>
     { };
 
     template<typename T, typename = void>
-    struct get_module
-    {
-        typedef T type;
+    struct get_module {
+        using type = T;
     };
 
     template<typename T>
-    struct get_module<T, typename enable_if<type_traits::has_configure<T> >::type>
-    {
-        typedef typename type_traits::function_traits<
+    struct get_module<T, typename std::enable_if<type_traits::has_configure<T>::value>::type> {
+        using type = typename type_traits::function_traits<
             BOOST_DI_FEATURE_DECLTYPE(&T::configure)
-        >::result_type type;
+        >::result_type;
     };
 
     template<typename T, typename = void>
-    struct get_deps
-    {
-        typedef typename T::deps type;
+    struct get_deps {
+        using type = typename T::deps;
     };
 
     template<typename T>
-    struct get_deps<T, typename enable_if<type_traits::has_configure<T> >::type>
-    {
-        typedef typename get_module<T>::type::deps type;
+    struct get_deps<T, typename std::enable_if<type_traits::has_configure<T>::value>::type> {
+        using type = typename get_module<T>::type::deps;
     };
 
-    template<
-        typename TSeq
-      , typename TDefaultScope = default_scope<aux::mpl::_2>
-    >
-    struct concepts
-        : aux::mpl::fold<
-              TSeq
-            , aux::mpl::vector<>
-            , aux::mpl::copy<
-                  aux::mpl::if_<
-                      aux::mpl::is_sequence<aux::mpl::_2>
-                    , aux::mpl::_2
-                    , aux::mpl::if_<
-                          is_module<aux::mpl::_2>
-                        , get_deps<aux::mpl::_2>
-                        , TDefaultScope
-                      >
-                  >
-                , aux::mpl::back_inserter<aux::mpl::_1>
-              >
-          >::type
-    { };
+    template<typename T, typename = typename is_type_list<T>::type, typename = typename is_module<T>::type>
+    struct add_type_list;
+
+    template<typename T, typename Any>
+    struct add_type_list<T, std::true_type, Any> {
+        using type = T;
+    };
+
+    template<typename T>
+    struct add_type_list<T, std::false_type, std::true_type> {
+        using type = typename get_deps<T>::type;
+    };
+
+    template<typename T>
+    struct add_type_list<T, std::false_type, std::false_type> {
+        using type = scope<scopes::deduce>::bind<T>;
+    };
+
+    template<typename... Ts>
+    using bindings = typename join<typename add_type_list<Ts>::type...>::type;
 
     } // namespace detail
 
-    template<BOOST_DI_TYPES_DEFAULT_MPL(T)>
+    template<typename... Ts>
     class injector
-        : public core::module<
-              typename detail::concepts<
-                  BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)
-              >::type
-          >
+        : public core::module<typename detail::bindings<Ts...>::type>
     {
-        template<typename TSeq = aux::mpl::vector<> >
-        struct joint_concepts
-            : detail::concepts<
-                  aux::mpl::joint_view<
-                      BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T)
-                    , TSeq
-                  >
-              >::type
-        { };
-
     public:
         injector() { }
 
@@ -120,15 +92,14 @@
 
     private:
         template<typename T>
-        const T& pass_arg(const T& arg
-                        , typename disable_if<type_traits::has_configure<T> >::type* = 0) const {
+        typename std::enable_if<!type_traits::has_configure<T>::value, const T&>::type
+        pass_arg(const T& arg) const {
             return arg;
         }
 
         template<typename T>
-        typename detail::get_module<T>::type
-        pass_arg(const T& arg
-               , typename enable_if<type_traits::has_configure<T> >::type* = 0) const {
+        typename std::enable_if<type_traits::has_configure<T>::value, typename detail::get_module<T>::type>::type
+        pass_arg(const T& arg) const {
             return arg.configure();
         }
     };
@@ -139,15 +110,10 @@
     #endif
 
 #else
-
-    template<BOOST_DI_TYPES(TArgs)>
-    explicit injector(BOOST_DI_ARGS(TArgs, args))
-        : core::module<typename joint_concepts<>::type>(
-              BOOST_DI_ARGS_CALL(args, pass_arg)
-          )
+    template<typename... TArgs>
+    explicit injector(const TArgs&... args)
+        : core::module<typename detail::bindings<Ts...>::type>(pass_arg(args)...)
     { }
-
-    #undef BOOST_DI_PASS_ARG
 
 #endif
 

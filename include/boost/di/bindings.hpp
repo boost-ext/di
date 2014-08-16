@@ -26,7 +26,7 @@ template<typename TExpected, typename TGiven = TExpected>
 using bind = bindings::bind<TExpected, TGiven, bindings::dependency>;
 
 template<bool V>
-using bind_bool = bind<bool, aux::mpl::bool_<V>>;
+using bind_bool = bind<bool, bool_<V>>;
 
 template<int N>
 using bind_int = bind<int, int_<N>>;

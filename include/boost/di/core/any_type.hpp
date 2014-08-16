@@ -34,13 +34,11 @@ class any_type
     any_type& operator=(const any_type&);
 
     template<typename TValueType, typename TRefType>
-    struct ref_type
-        : aux::mpl::if_<
-              is_same<TValueType, none_t>
-            , TValueType
-            , TRefType
-          >
-    { };
+    using ref_type = std::conditional<
+          is_same<TValueType, none_t>::value
+        , TValueType
+        , TRefType
+      >;
 
 public:
     typedef void any;
@@ -171,7 +169,7 @@ struct is_integral<
       , TVisitor
       , TPolicies
    >
-> : ::boost::di::aux::mpl::true_ { };
+> : ::std::true_type { };
 
 } // namespace boost
 
@@ -199,7 +197,7 @@ BOOST_DI_FEATURE(CPP_11_TYPE_TRAITS)(
           , TVisitor
           , TPolicies
         >
-    > : ::boost::di::aux::mpl::true_ { };
+    > : ::std::true_type { };
 
     } // namespace std
 )

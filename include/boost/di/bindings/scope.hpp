@@ -25,8 +25,7 @@ template<
       , typename
     > class TDependency
 >
-class scope
-{
+class scope {
     BOOST_MPL_HAS_XXX_TRAIT_DEF(given)
 
     template<typename T>
@@ -58,7 +57,7 @@ class scope
 
 public:
     template<typename... Ts>
-    using bind = aux::mpl::vector<typename bind_impl<Ts>::type...>;
+    using bind = type_list<typename bind_impl<Ts>::type...>;
 };
 
 } // namespace bindings

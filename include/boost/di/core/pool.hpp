@@ -4,114 +4,73 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#if !BOOST_PP_IS_ITERATING
+#ifndef BOOST_DI_CORE_POOL_HPP
+#define BOOST_DI_CORE_POOL_HPP
 
-    #ifndef BOOST_DI_CORE_POOL_HPP
-    #define BOOST_DI_CORE_POOL_HPP
+#include "boost/di/aux_/config.hpp"
 
-    #include "boost/di/aux_/config.hpp"
+namespace boost {
+namespace di {
+namespace core {
 
-    #include <boost/preprocessor/iteration/local.hpp>
-    #include <boost/preprocessor/repetition/repeat.hpp>
-    #include <boost/preprocessor/punctuation/comma_if.hpp>
-    #include <boost/preprocessor/repetition/enum_params.hpp>
-    #include <boost/preprocessor/repetition/enum_binary_params.hpp>
-    #include <boost/utility/enable_if.hpp>
-    #include <boost/config.hpp>
+BOOST_MPL_HAS_XXX_TRAIT_DEF(types)
 
-    #if defined(BOOST_GCC) || defined(BOOST_CLANG)
-        #pragma GCC diagnostic ignored "-Wreorder"
-    #endif
+class init { };
 
-    namespace boost {
-    namespace di {
-    namespace core {
-
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(types)
-
-    class init { };
-
+struct never {
     template<typename>
-    struct never
-        : aux::mpl::false_
-    { };
+    struct apply : std::false_type { };
+};
 
-    template<
-        typename = aux::mpl::vector<>
-      , typename = never<aux::mpl::_1>
-      , typename = void
-    >
-    class pool;
+template<typename = type_list<>, typename = never>
+class pool;
 
-    #define BOOST_PP_FILENAME_1 "boost/di/core/pool.hpp"
-    #define BOOST_PP_ITERATION_LIMITS BOOST_DI_TYPES_MPL_LIMIT_FROM(1)
-    #include BOOST_PP_ITERATE()
-
-    } // namespace core
-    } // namespace di
-    } // namespace boost
-
-    #endif
-
-#else
-    template<typename TIgnore, typename... TArgs>
-    class pool<aux::mpl::vector<TArgs...>, TIgnore>
-        : public TArgs...
-    {
-        template<typename T, typename = void>
-        struct pool_type
-        {
-            typedef aux::mpl::vector<T> type;
-        };
-
-        template<typename T>
-        struct pool_type<T, typename enable_if<has_types<T> >::type>
-        {
-            typedef typename T::types type;
-        };
-
-        template<typename T>
-        struct pool_type<T, typename enable_if<
-            typename aux::mpl::apply<TIgnore, T>::type>::type>
-        {
-            typedef void type; // ignore type
-        };
-
-    public:
-        typedef pool type;
-
-        struct types
-            : aux::mpl::fold<
-                  aux::mpl::vector<TArgs...>
-                , aux::mpl::vector<>
-                , aux::mpl::copy<
-                      pool_type<aux::mpl::_2>
-                    , aux::mpl::back_inserter<aux::mpl::_1>
-                  >
-              >::type
-        { };
-
-        template<typename... T>
-        explicit pool(const T&... args)
-            : T(args)...
-        { }
-
-        template<typename TPool>
-        pool(const TPool& p, const init&)
-            : pool(p, typename aux::mpl::normalize_vector<typename TPool::types>::type(), init())
-        { }
-
-        template<typename T>
-        const T& get() const {
-            return static_cast<const T&>(*this);
-        }
-
-    private:
-        template<typename TPool, typename... T>
-        pool(const TPool& p, const aux::mpl::vector<T...>&, const init&)
-            : T(p.template get<T>())...
-        { }
+template<typename TIgnore, typename... TArgs>
+class pool<type_list<TArgs...>, TIgnore> : public TArgs...  {
+    template<typename T, typename = void>
+    struct pool_type {
+        using type = type_list<T>;
     };
+
+    template<typename T>
+    struct pool_type<T, typename std::enable_if<has_types<T>::value>::type> {
+        using type = typename T::types;
+    };
+
+    template<typename T>
+    struct pool_type<T, typename std::enable_if<TIgnore::template apply<T>::value>::type> {
+        using type = type_list<>;
+    };
+
+public:
+    using type = pool;
+    using types = typename join<typename pool_type<TArgs>::type...>::type;
+
+    template<typename... T>
+    explicit pool(const T&... args)
+        : T(args)...
+    { }
+
+    template<typename TPool>
+    pool(const TPool& p, const init&)
+        : pool(p, typename TPool::types(), init())
+    { }
+
+    template<typename T>
+    const T& get() const {
+        return static_cast<const T&>(*this);
+    }
+
+private:
+    template<typename TPool, typename... T>
+    pool(const TPool& p, const type_list<T...>&, const init&)
+        : T(p.template get<T>())...
+    { }
+};
+
+} // namespace core
+} // namespace di
+} // namespace boost
 
 #endif
 

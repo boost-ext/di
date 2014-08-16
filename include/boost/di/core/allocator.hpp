@@ -23,24 +23,18 @@
 
     template<typename, typename = void>
     struct is_mpl_string
-        : aux::mpl::false_
+        : std::false_type
     { };
+
+    //template<typename T>
+    //struct is_mpl_string<T, typename enable_if<has_tag<T> >::type>
+        //: is_same<aux::mpl::string_tag, typename T::tag>
+    //{ };
 
     template<typename T>
-    struct is_mpl_string<T, typename enable_if<has_tag<T> >::type>
-        : is_same<aux::mpl::string_tag, typename T::tag>
-    { };
+    using is_explicit = bool_<type_traits::has_value<T>::value || is_mpl_string<T>::value>;
 
-    template<typename T>
-    struct is_explicit
-        : aux::mpl::or_<
-              type_traits::has_value<T>
-            , is_mpl_string<T>
-          >
-    { };
-
-    class allocator
-    {
+    class allocator {
     public:
         template<typename TExpected, typename TGiven>
         typename disable_if<is_explicit<TGiven>, TExpected*>::type
@@ -54,11 +48,11 @@
             return new TExpected(TGiven::value);
         }
 
-        template<typename TExpected, typename TGiven>
-        typename enable_if<is_mpl_string<TGiven>, TExpected*>::type
-        allocate() const {
-            return new TExpected(aux::mpl::c_str<TGiven>::value);
-        }
+        //template<typename TExpected, typename TGiven>
+        //typename enable_if<is_mpl_string<TGiven>, TExpected*>::type
+        //allocate() const {
+            //return new TExpected(aux::mpl::c_str<TGiven>::value);
+        //}
 
         #define BOOST_PP_FILENAME_1 "boost/di/core/allocator.hpp"
         #define BOOST_PP_ITERATION_LIMITS BOOST_DI_CTOR_LIMIT_FROM_FORCE(1)
