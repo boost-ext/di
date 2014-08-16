@@ -10,7 +10,7 @@
 #include <type_traits>
 
 #define BOOST_DI_HAS_MEMBER_IMPL(name, member, declaration, signature)                  \
-    template<typename T, typename = void>                                               \
+    template<typename T>                                                                \
     class has_##name {                                                                  \
         struct base_impl { declaration; };                                              \
         struct base                                                                     \
@@ -26,13 +26,23 @@
         static constexpr bool value = sizeof(test((base*)0)) == sizeof(yes_tag);        \
     }
 
-#define BOOST_DI_HAS_MEMBER_FUNCTION(name, func) \
+#define BOOST_DI_HAS_MEMBER_TYPE_IMPL(name)                                             \
+    template<typename T>                                                                \
+    class has_##name {                                                                  \
+        template <typename U> static yes_tag test(typename U::name*);                   \
+        template <typename> static no_tag test(...);                                    \
+                                                                                        \
+    public:                                                                             \
+        static constexpr bool value = sizeof(test<T>(0)) == sizeof(yes_tag);            \
+    }
+
+#define BOOST_DI_HAS_MEMBER_FUNCTION(name, func)                                        \
     BOOST_DI_HAS_MEMBER_IMPL(name, func, void func(...) { }, void (base_impl::*)(...))
 
-#define BOOST_DI_HAS_MEMBER(name) \
+#define BOOST_DI_HAS_MEMBER(name)                                                       \
     BOOST_DI_HAS_MEMBER_IMPL(name, name, int name, int base_impl::*)
 
-#define BOOST_DI_HAS_MEMBER_TYPE(name) BOOST_DI_HAS_MEMBER(name)
+#define BOOST_DI_HAS_MEMBER_TYPE(name) BOOST_DI_HAS_MEMBER_TYPE_IMPL(name)
 
 namespace boost {
 namespace di {
