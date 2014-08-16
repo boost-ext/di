@@ -13,15 +13,9 @@ namespace di {
 namespace bindings {
 namespace type_traits {
 
-struct is_required_priority
-{
+struct is_required_priority {
     template<typename T>
-    struct apply
-        : aux::mpl::plus<
-              aux::mpl::int_<1>
-            , typename T::dependency::scope::priority // lowest = 0, highest = N
-          >
-    { };
+    using apply = int_<1 + T::dependency::scope::priority::value>; // lowest = 0, highest = N
 };
 
 } // namespace type_traits

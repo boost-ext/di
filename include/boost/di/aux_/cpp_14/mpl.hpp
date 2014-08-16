@@ -13,10 +13,7 @@ namespace boost {
 namespace di {
 
 template<int N>
-struct int_ {
-    static const int value = N;
-    using type = int_;
-};
+using int_ = std::integral_constant<int, N>;
 
 template<typename T, typename E>
 struct pair
@@ -129,6 +126,25 @@ struct greatest<T>
     : T::first
 { };
 
+template<typename, int I, typename... Ts>
+struct max_impl;
+
+template<typename R, typename T, typename... Ts>
+struct max_impl<R, 0, T, Ts...>
+{
+    using type = typename std::conditional<(R::value > T::value), R, T>::type;
+};
+
+template<typename R, int I, typename T, typename... Ts>
+struct max_impl<R, I, T, Ts...>
+{
+    using type = typename std::conditional<(R::value > T::value), typename max_impl<R, I - 1, Ts...>::type, typename max_impl<T, I-1, Ts...>::type>::type;
+};
+
+template<typename T, typename... Ts>
+using max = max_impl<T, sizeof...(Ts) - 1, Ts...>;
+
+
 template<typename, typename...>
 struct sum;
 
@@ -141,6 +157,18 @@ template<typename TMultiplicationFactor, typename T, typename... Ts>
 struct sum<TMultiplicationFactor, T, Ts...>
 	: int_<TMultiplicationFactor::value * T::value * sum<TMultiplicationFactor, Ts...>::value>
 { };
+
+template<typename>
+struct is_type_list
+    : std::false_type
+{ };
+
+template<typename... Ts>
+struct is_type_list<type_list<Ts...>>
+    : std::true_type
+{ };
+
+//is_smart_ptr
 
 }}
 

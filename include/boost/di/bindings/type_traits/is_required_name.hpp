@@ -20,31 +20,23 @@ namespace type_traits {
 BOOST_MPL_HAS_XXX_TRAIT_DEF(name)
 
 template<typename TName>
-class is_required_name
-{
+class is_required_name {
     template<typename T, typename = void>
-    struct get_name
-    {
+    struct get_name {
         struct no_name { };
-        typedef no_name type;
+        using type = no_name;
     };
 
     template<typename T>
     struct get_name<T, typename enable_if<
         has_name<typename di::type_traits::remove_accessors<T>::type> >::type
-    >
-    {
-        typedef typename di::type_traits::remove_accessors<T>::type::name type;
+    > {
+        using type = typename di::type_traits::remove_accessors<T>::type::name;
     };
 
 public:
     template<typename T>
-    struct apply
-        : aux::mpl::integral_c<
-              long
-            , is_same<typename get_name<typename T::type>::type, TName>::value
-          >
-    { };
+    using apply = int_<is_same<typename get_name<typename T::type>::type, TName>::value>;
 };
 
 } // namespace type_traits

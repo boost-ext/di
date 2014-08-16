@@ -12,33 +12,19 @@ namespace di {
 namespace bindings {
 namespace detail {
 
-template<typename... Ts>
-class when_
-{
-    template<
-        typename TBind
-      , typename T
-    >
-    struct apply_bind
-        : TBind::template apply<T>::type
-    { };
+template<typename T, typename TBind>
+using apply_for_all = typename TBind::template apply<T>::type;
 
-public:
+template<typename... Ts>
+struct when_ {
     template<typename T>
-    struct apply
-        : aux::mpl::if_<
-              aux::mpl::empty<aux::mpl::vector<Ts...>>
-            , aux::mpl::int_<1>
-            , typename aux::mpl::deref<
-                  aux::mpl::max_element<
-                      aux::mpl::transform_view<
-                          aux::mpl::vector<Ts...>
-                        , apply_bind<aux::mpl::_1, T>
-                      >
-                  >
-              >::type
-          >::type
-    { };
+    using apply = typename max<int_<0>, typename apply_for_all<T, Ts>::type...>::type;
+};
+
+template<>
+struct when_<> {
+    template<typename T>
+    using apply = int_<1>;
 };
 
 } // namespace detail

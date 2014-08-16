@@ -39,27 +39,24 @@ template<
 >
 class dependency : public TScope::template scope<TExpected>
 {
-    typedef typename TScope::template scope<TExpected> scope_type;
-    typedef scopes::external<wrappers::reference> ref_type;
-    typedef scopes::external<wrappers::shared> shared_type;
-    typedef scopes::external<wrappers::value> value_type;
+    using scope_type = typename TScope::template scope<TExpected>;
+    using ref_type = scopes::external<wrappers::reference>;
+    using shared_type = scopes::external<wrappers::shared>;
+    using value_type = scopes::external<wrappers::value>;
 
     template<typename, typename = void>
-    struct get_wrapper_impl
-    {
-        typedef value_type type;
+    struct get_wrapper_impl {
+        using type = value_type;
     };
 
     template<typename T>
-    struct get_wrapper_impl<aux::shared_ptr<T> >
-    {
-        typedef shared_type type;
+    struct get_wrapper_impl<aux::shared_ptr<T> > {
+        using type = shared_type;
     };
 
     template<typename T>
-    struct get_wrapper_impl<T, typename enable_if<is_reference_wrapper<T> >::type>
-    {
-        typedef ref_type type;
+    struct get_wrapper_impl<T, typename std::enable_if<is_reference_wrapper<T>::value>::type> {
+        using type = ref_type;
     };
 
     template<
@@ -68,20 +65,19 @@ class dependency : public TScope::template scope<TExpected>
       , typename = void
       , typename = void
     >
-    struct get_wrapper
-    {
-        typedef T type;
+    struct get_wrapper {
+        using type = T;
     };
 
     template<typename T>
-    struct get_wrapper<T, typename enable_if<has_result_type<T> >::type>
+    struct get_wrapper<T, typename std::enable_if<has_result_type<T>::value>::type>
         : get_wrapper_impl<typename T::result_type>
     { };
 
     template<typename T>
-    struct get_wrapper<T, typename enable_if<di::type_traits::has_call_operator<T> >::type
-                        , typename disable_if<has_result_type<T> >::type
-                        , typename disable_if<is_reference_wrapper<T> >::type>
+    struct get_wrapper<T, typename std::enable_if<di::type_traits::has_call_operator<T>::value>::type
+                        , typename std::enable_if<!has_result_type<T>::value>::type
+                        , typename std::enable_if<!is_reference_wrapper<T>::value>::type>
         : get_wrapper_impl<
               typename di::type_traits::function_traits<
                   BOOST_DI_FEATURE_DECLTYPE(&T::operator())
@@ -90,25 +86,25 @@ class dependency : public TScope::template scope<TExpected>
     { };
 
 public:
-    typedef dependency type;
-    typedef TScope scope;
-    typedef TExpected expected;
-    typedef TGiven given;
-    typedef TBind bind;
+    using type = dependency;
+    using scope = TScope;
+    using expected = TExpected;
+    using given = TGiven;
+    using bind = TBind;
 
     template<typename T>
     struct rebind
     {
-        typedef dependency<
-            typename aux::mpl::if_<
-                is_same<scope, scopes::deduce>
+        using other = dependency<
+            typename std::conditional<
+                is_same<scope, scopes::deduce>::value
               , T
               , TScope
             >::type
           , TExpected
           , TGiven
           , TBind
-        > other;
+        >;
     };
 
     dependency() { }

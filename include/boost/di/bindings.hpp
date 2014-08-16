@@ -29,7 +29,7 @@ template<bool V>
 using bind_bool = bind<bool, aux::mpl::bool_<V>>;
 
 template<int N>
-using bind_int = bind<int, aux::mpl::int_<N>>;
+using bind_int = bind<int, int_<N>>;
 
 template<typename T>
 using bind_string = bind<std::string, T>;

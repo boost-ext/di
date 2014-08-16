@@ -21,28 +21,23 @@ template<typename TValueType, typename = void>
 struct is_required_type
 {
     template<typename T>
-    struct apply
-        : di::type_traits::is_same_base_of<
-              TValueType
-            , typename di::type_traits::make_plain<typename T::type>::type
-          >
-    { };
+    using apply = di::type_traits::is_same_base_of<
+          TValueType
+        , typename di::type_traits::make_plain<typename T::type>::type
+      >;
 };
 
-template<typename TValueType>
-struct is_required_type<TValueType, typename enable_if<aux::mpl::is_sequence<TValueType> >::type>
-{
-    template<typename T>
-    struct apply
-        : aux::mpl::count_if<
-              TValueType
-            , di::type_traits::is_same_base_of<
-                  typename di::type_traits::make_plain<typename T::type>::type
-                , aux::mpl::_
-              >
-          >
-    { };
-};
+/*template<typename TValueType>*/
+//struct is_required_type<TValueType, typename std::enable_if<is_type_list<TValueType>::value>::type> {
+    //template<typename T>
+    //using apply = aux::mpl::count_if<
+              //TValueType
+            //, di::type_traits::is_same_base_of<
+                  //typename di::type_traits::make_plain<typename T::type>::type
+                //, aux::mpl::_
+              //>
+          //>;
+/*};*/
 
 } // namespace type_traits
 } // namespace bindings

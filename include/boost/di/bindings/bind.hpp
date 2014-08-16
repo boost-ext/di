@@ -23,13 +23,11 @@ namespace bindings {
 namespace detail {
 
 template<typename TExpected, typename TGiven>
-struct get_expected
-    : aux::mpl::if_<
-          aux::mpl::is_sequence<TExpected>
+using get_expected = typename std::conditional<
+          is_type_list<TExpected>::value
         , TGiven
         , TExpected
-      >
-{ };
+      >;
 
 } // namespace detail
 

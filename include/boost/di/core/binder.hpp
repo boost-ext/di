@@ -31,12 +31,11 @@ template<typename T, typename TCallStack, typename _>
 using calculate = pair<_, typename _::bind::template apply<data<T, TCallStack, _>>::type>;
 
 template<typename>
-class binder;
+struct binder;
 
 template<typename... Ts>
-class binder<type_list<Ts...>>
+struct binder<type_list<Ts...>>
 {
-public:
     template<
         typename T
       , typename TCallStack
