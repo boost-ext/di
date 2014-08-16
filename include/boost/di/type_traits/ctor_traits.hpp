@@ -21,6 +21,9 @@ namespace di {
 
 BOOST_DI_HAS_MEMBER_FUNCTION(BOOST_DI_INJECTOR, BOOST_DI_INJECTOR);
 
+template<typename T, typename Q>
+struct ctor_traits_impl;
+
 template<typename T, unsigned... Args>
 struct ctor_traits_impl<T, seq<Args...>>
     : longest<typename genn<T, core::any_type<T>, Args>::type...>
@@ -28,7 +31,7 @@ struct ctor_traits_impl<T, seq<Args...>>
 
 template<typename T>
 struct ctor_traits
-    : ctor_traits_impl<T, typename gen_seq<BOOST_DI_CFG_CTOR_LIMIT_SIZE>::type>
+    : ctor_traits_impl<T, typename gen_seq<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>::type>
 { };
 
 template<typename T>

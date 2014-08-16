@@ -1586,6 +1586,9 @@ namespace di {
 
 BOOST_DI_HAS_MEMBER_FUNCTION(boost_di_injector__, boost_di_injector__);
 
+template<typename T, typename Q>
+struct ctor_traits_impl;
+
 template<typename T, unsigned... Args>
 struct ctor_traits_impl<T, seq<Args...>>
     : longest<typename genn<T, core::any_type<T>, Args>::type...>
@@ -1593,7 +1596,7 @@ struct ctor_traits_impl<T, seq<Args...>>
 
 template<typename T>
 struct ctor_traits
-    : ctor_traits_impl<T, typename gen_seq<10>::type>
+    : ctor_traits_impl<T, typename gen_seq<10 + 1>::type>
 { };
 
 template<typename T>

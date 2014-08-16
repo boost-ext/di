@@ -77,9 +77,6 @@ struct gen_seq
 template<> struct gen_seq<0> : seq<>{};
 template<> struct gen_seq<1> : seq<1>{};
 
-template<typename T, typename Q>
-struct ctor_traits_impl;
-
 template<typename...>
 struct type_list
 {
