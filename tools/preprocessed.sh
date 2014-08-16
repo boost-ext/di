@@ -19,9 +19,9 @@ dump_file() {
         elif [[ "$include" =~ "di/aux_" ]] ||
            [[ "$include" =~ "inject.hpp" ]] ||
            [[ "$include" =~ "di.hpp" ]]; then
-            echo $include >> $tmp_dir/includes.hpp
+            echo -e "$include" >> $tmp_dir/includes.hpp
         else
-            echo $include | sed "s/boost\/di\//boost\/$3\//g" >> $tmp_dir/includes.hpp
+            echo -e "$include" | sed "s/boost\/di\//boost\/$3\//g" >> $tmp_dir/includes.hpp
         fi
 
         file=`echo $include | sed "s/[^<^\"]*[\"<]\([^>\"]*\)[\">].*/\1/"`
@@ -29,10 +29,18 @@ dump_file() {
         touch $tmp/$file
     done
 
+    file="boost/config.hpp"
+    mkdir -p $tmp/`dirname $file`
+    touch $tmp/$file
+
+    file="boost/preprocessor/cat.hpp"
+    mkdir -p $tmp/`dirname $file`
+    touch $tmp/$file
+
     mkdir -p $tmp/`dirname $1`
     cp $1 $tmp/$1
 
-    $CXX -E $1 -I$tmp -include $2 $args | grep -v "^#" | sed '/\/\*.*\*\// d; /\/\*/,/\*\// d' | grep -v "^/" | cat -s
+    $CXX -nostdinc -CC -E $1 -I$tmp -include $2 $args | grep -v "^#" | sed '/\/\*.*\*\// d; /\/\*/,/\*\// d' | grep -v "^/" | cat -s
 
     rm -rf $tmp
 }
@@ -44,12 +52,36 @@ guard_begin() {
     echo "// Distributed under the Boost Software License, Version 1.0."
     echo "// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)"
     echo "//"
-    echo "// Preprocessed version of \"boost::di\""
-    echo "// DO NOT modify by hand!"
-    echo "//"
 
-    echo "#ifndef BOOST_DI_PREPROCESSED_`echo $1 | tr '[:lower:]' '[:upper:]' | tr '.' '_'`"
-    echo "#define BOOST_DI_PREPROCESSED_`echo $1 | tr '[:lower:]' '[:upper:]' | tr '.' '_'`"
+    echo "#ifndef BOOST_DI_HPP"
+    echo "#define BOOST_DI_HPP"
+    echo
+    echo "#include \"boost/di/aux_/config.hpp\""
+    echo "#include \"boost/di/inject.hpp\""
+    echo
+    echo "#if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)"
+    echo
+    echo "// annotations"
+    echo "#include \"boost/di/named.hpp\""
+    echo
+    echo "// scopes"
+    echo "#include \"boost/di/scopes/deduce.hpp\""
+    echo "#include \"boost/di/scopes/external.hpp\""
+    echo "#include \"boost/di/scopes/session.hpp\""
+    echo "#include \"boost/di/scopes/shared.hpp\""
+    echo "#include \"boost/di/scopes/unique.hpp\""
+    echo
+    echo "// bindings"
+    echo "#include \"boost/di/bindings.hpp"\"
+    echo
+    echo "// injectors"
+    echo "#include \"boost/di/injector.hpp\""
+    echo "#include \"boost/di/make_injector.hpp\""
+    echo
+    echo "//utilities"
+    echo "#include \"boost/di/provider.hpp\""
+    echo
+    echo "#else"
     echo
 }
 
@@ -57,10 +89,12 @@ guard_end() {
     echo
     echo "#endif"
     echo
+    echo "#endif"
+    echo
 }
 
 includes() {
-    echo "#include \"boost/di/aux_/config.hpp\"" >> $tmp_dir/includes.hpp
+    echo -e "#include \"boost/di/aux_/config.hpp\"" >> $tmp_dir/includes.hpp
     cat $tmp_dir/includes.hpp | grep -v preprocess | sort -u -r
 }
 
@@ -78,19 +112,13 @@ genereate_files() {
     done
 }
 
-generate_name() {
-    echo " BOOST_DI_CFG_CTOR_LIMIT_SIZE BOOST_MPL_LIMIT_VECTOR_SIZE STD" > $tmp_dir/name.hpp
-    $CXX -E -P $@ $tmp_dir/name.hpp | tr ' ' '_' | xargs -i% echo di%_c.hpp
-}
-
 generate_preprocessed() {
     args=${@:4}
-    name=`generate_name $args`
+    name="boost/di.hpp"
 
     rm -f $tmp_dir/includes.hpp $tmp_dir/dump.hpp
-    mkdir -p boost/di/preprocessed 2>/dev/null
 
-    guard_begin $name > boost/di/preprocessed/$name
+    guard_begin $name > $name
 
     echo -n .
     for file in `cat $tmp_dir/files.hpp`; do
@@ -103,19 +131,19 @@ generate_preprocessed() {
         echo -n .
         dump_file $file $3 $2 $args >> $tmp_dir/dump.hpp
     done
-    includes >> boost/di/preprocessed/$name
-    cat $tmp_dir/dump.hpp >> boost/di/preprocessed/$name
+    includes >> $name
+    cat $tmp_dir/dump.hpp >> $name
 
-    guard_end >> boost/di/preprocessed/$name
+    guard_end >> $name
 }
 
 generate_pph() {
     generate_preprocessed "boost" "di\/preprocessed" "$1" ${@:2}
-    echo "done -> boost/di/preprocessed/$name"
+    echo "done -> $name"
 }
 
 generate_cpp_11() {
-    generate_pph `readlink -f $PWD`/boost/di/aux_/config.hpp -DBOOST_DI_CFG_CTOR_LIMIT_SIZE='' -DBOOST_MPL_LIMIT_VECTOR_SIZE='' -DBOOST_DI_INJECTOR=boost_di_injector__ -DSTD=cpp_11
+    generate_pph `readlink -f $PWD`/boost/di/aux_/config.hpp -DBOOST_DI_INJECTOR=boost_di_injector__
 }
 
 cleanup() {
