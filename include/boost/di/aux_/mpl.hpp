@@ -13,6 +13,14 @@
 namespace boost {
 namespace di {
 
+typedef char (&no_tag)[1];
+typedef char (&yes_tag)[2];
+
+struct void_ {};
+struct none_t {};
+template<typename T, T> struct non_type { };
+template<typename> struct type { };
+
 template<int N>
 using int_ = std::integral_constant<int, N>;
 
@@ -84,7 +92,7 @@ struct size;
 template<typename... T>
 struct size<type_list<T...>>
 {
-    static const bool value = sizeof...(T);
+    static constexpr bool value = sizeof...(T);
 };
 
 template<typename, int I, typename... Ts>
@@ -189,7 +197,7 @@ template <typename ...Args1,
           typename ...Args2>
 struct join<type_list<Args1...>, type_list<Args2...>>
 {
-    typedef type_list<Args1..., Args2...> type;
+    using type = type_list<Args1..., Args2...>;
 };
 
 template <typename ...Args1,
@@ -197,7 +205,7 @@ template <typename ...Args1,
           typename ...Tail>
 struct join<type_list<Args1...>, type_list<Args2...>, Tail...>
 {
-     typedef typename join<type_list<Args1..., Args2...>, Tail...>::type type;
+     using type = typename join<type_list<Args1..., Args2...>, Tail...>::type;
 };
 
 template<bool...> struct bool_seq {
@@ -226,13 +234,6 @@ struct contains<type_list<>, T>
     : bool_<false>
 { };
 
-typedef char (&no_tag)[1];
-typedef char (&yes_tag)[2];
-
-struct void_ {};
-struct none_t {};
-template<typename T, T> struct non_type { };
-template<typename> struct type { };
 //is_smart_ptr
 //NAMED(int, "my_name")
 //has table with typeid hash
