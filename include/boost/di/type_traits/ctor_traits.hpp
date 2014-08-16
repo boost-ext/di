@@ -14,7 +14,6 @@
 #include "boost/di/type_traits/function_traits.hpp"
 
 #include <string>
-#include <boost/preprocessor/cat.hpp>
 
 namespace boost {
 namespace di {
@@ -47,12 +46,12 @@ struct ctor_traits
 { };
 
 template<typename T>
-struct ctor_traits<T, typename std::enable_if<BOOST_PP_CAT(has_, BOOST_DI_INJECTOR)<di::ctor_traits<T>>::value>::type>
+struct ctor_traits<T, typename std::enable_if<BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<di::ctor_traits<T>>::value>::type>
     : function_traits<decltype(&di::ctor_traits<T>::BOOST_DI_INJECTOR)>::type
 { };
 
 template<typename T>
-struct ctor_traits<T, typename std::enable_if<BOOST_PP_CAT(has_, BOOST_DI_INJECTOR)<T>::value>::type>
+struct ctor_traits<T, typename std::enable_if<BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<T>::value>::type>
     : function_traits<decltype(&T::BOOST_DI_INJECTOR)>::type
 { };
 

@@ -179,7 +179,7 @@ private:
                 typedef typename type_traits::ctor_traits<typename TDependency::given>::type ctor_type;
 
                 //BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
-                    //typedef typename aux::mpl::push_back<TCallStack, T>::type call_stack_type;
+                    //using call_stack_type = typename add<TCallStack, T>::type;
                 //)
 
                 //BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(

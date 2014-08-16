@@ -36,13 +36,17 @@
         static constexpr bool value = sizeof(test<T>(0)) == sizeof(yes_tag);            \
     }
 
+#define BOOST_DI_CAT_IMPL(A, B) A ## B
+#define BOOST_DI_CAT(A, B) BOOST_DI_CAT_IMPL(A, B)
+
 #define BOOST_DI_HAS_MEMBER_FUNCTION(name, func)                                        \
     BOOST_DI_HAS_MEMBER_IMPL(name, func, void func(...) { }, void (base_impl::*)(...))
 
 #define BOOST_DI_HAS_MEMBER(name)                                                       \
     BOOST_DI_HAS_MEMBER_IMPL(name, name, int name, int base_impl::*)
 
-#define BOOST_DI_HAS_MEMBER_TYPE(name) BOOST_DI_HAS_MEMBER_TYPE_IMPL(name)
+//#define BOOST_DI_HAS_MEMBER_TYPE(name) BOOST_DI_HAS_MEMBER_TYPE_IMPL(name)
+#define BOOST_DI_HAS_MEMBER_TYPE(name) BOOST_DI_HAS_MEMBER(name)
 
 namespace boost {
 namespace di {
