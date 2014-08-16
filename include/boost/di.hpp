@@ -9,9 +9,7 @@
 
 #include "boost/di/aux_/config.hpp"
 
-#if !defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)
-    //TODO
-#else
+#if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)
 
     // injections
     #include "boost/di/inject.hpp"
@@ -35,6 +33,8 @@
 
     //utilities
     #include "boost/di/provider.hpp"
+
+#else
 
 #endif
 

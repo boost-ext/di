@@ -10,11 +10,7 @@
 #include "boost/di/aux_/config.hpp"
 
 #if !defined(BOOST_DI_CFG_INJECT_VA_ARGS) && !defined(BOOST_DI_CFG_INJECT_BRACKET)
-    #if (__cplusplus >= 201100L) || defined(BOOST_MSVC)
-        #define BOOST_DI_CFG_INJECT_VA_ARGS
-    #else
-        #define BOOST_DI_CFG_INJECT_BRACKET
-    #endif
+    #define BOOST_DI_CFG_INJECT_VA_ARGS
 #endif
 
 #if defined(BOOST_MSVC)
@@ -26,10 +22,6 @@
 #endif
 
 #if defined(BOOST_DI_CFG_INJECT_VA_ARGS)
-    #if defined(BOOST_GCC) || defined(BOOST_CLANG)
-        #pragma GCC diagnostic ignored "-Wvariadic-macros"
-    #endif
-
     #define BOOST_DI_INJECT_TRAITS(...)                 \
         static void BOOST_DI_INJECTOR(__VA_ARGS__)
 
