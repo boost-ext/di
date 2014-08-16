@@ -44,11 +44,7 @@ rule run-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
     }
 
     if $(ctor) {
-        if $(std) = c++03 {
-            defines += <define>BOOST_DI_CFG_INJECT_BRACKET ;
-        } else {
-            defines += <define>BOOST_DI_CFG_TEST_CTOR ;
-        }
+        defines += <define>BOOST_DI_CFG_TEST_CTOR ;
     }
 
     if ! $(preprocessed_headers) {
@@ -68,11 +64,7 @@ rule compile-fail-test ( std * : src + : ctor * : defines * : preprocessed_heade
     ;
 
     if $(ctor) {
-        if $(std) = c++03 {
-            defines += <define>BOOST_DI_CFG_INJECT_BRACKET ;
-        } else {
-            defines += <define>BOOST_DI_CFG_TEST_CTOR ;
-        }
+        defines += <define>BOOST_DI_CFG_TEST_CTOR ;
     }
 
     if ! $(preprocessed_headers) {
@@ -83,7 +75,6 @@ rule compile-fail-test ( std * : src + : ctor * : defines * : preprocessed_heade
 }
 
 test-suite vt : # verification tests
-    [ run-test c++03 : vt/compiler_support_vt.cpp : compiler_support_cpp_03 ]
     [ run-test c++11 : vt/compiler_support_vt.cpp : compiler_support_cpp_11 ]
 ;
 
@@ -115,22 +106,9 @@ test-suite ut : # unit tests
     [ run-test c++11 : ut/scopes/unique_ut.cpp : scope_unique_ut ]
 
     [ run-test c++11 : ut/type_traits/ctor_traits_ut.cpp : ctor_traits_ut_cpp_11 ]
-    [ run-test c++03 : ut/type_traits/ctor_traits_ut.cpp : ctor_traits_ut_cpp_03 ]
     [ run-test c++11 : ut/type_traits/function_traits_ut.cpp ]
-    [ run-test c++11 : ut/type_traits/has_call_operator_ut.cpp : has_call_operator_ut_cpp_11 ]
-    [ run-test c++03 : ut/type_traits/has_call_operator_ut.cpp : has_call_operator_ut_cpp_03 ]
     [ run-test c++11 : ut/type_traits/has_call_ut.cpp : has_call_ut_cpp_11 ]
-    [ run-test c++03 : ut/type_traits/has_call_ut.cpp : has_call_ut_cpp_03 ]
-    [ run-test c++11 : ut/type_traits/has_configure_ut.cpp : has_configure_ut_cpp_11 ]
-    [ run-test c++03 : ut/type_traits/has_configure_ut.cpp : has_configure_ut_cpp_03 ]
-    [ run-test c++11 : ut/type_traits/has_ctor_ut.cpp : has_ctor_ut_cpp_11 ]
-    [ run-test c++03 : ut/type_traits/has_ctor_ut.cpp : has_ctor_ut_cpp_03 ]
-    [ run-test c++11 : ut/type_traits/has_injector_ut.cpp : has_injector_ut_cpp_11 ]
-    [ run-test c++03 : ut/type_traits/has_injector_ut.cpp : has_injector_ut_cpp_03 ]
-    [ run-test c++11 : ut/type_traits/has_value_ut.cpp : has_value_ut_cpp_11 ]
-    [ run-test c++03 : ut/type_traits/has_value_ut.cpp : has_value_ut_cpp_03 ]
     [ run-test c++11 : ut/type_traits/is_convertible_to_ref_ut.cpp : is_convertible_to_ref_ut_cpp_11 ]
-    [ run-test c++03 : ut/type_traits/is_convertible_to_ref_ut.cpp : is_convertible_to_ref_ut_cpp_03 ]
     [ run-test c++11 : ut/type_traits/is_same_base_of_ut.cpp ]
     [ run-test c++11 : ut/type_traits/make_plain_ut.cpp ]
     [ run-test c++11 : ut/type_traits/remove_accessors_ut.cpp ]
@@ -170,8 +148,8 @@ test-suite ft : # functional tests
     [ run-test c++11 : ft/di_ft_cpp_11.cpp : di_ft_cpp_11_cpp_03 : <define>BOOST_DI_CFG_STD=cpp_03 ]
     [ run-test c++11 : ft/di_ft_cpp_11.cpp : ctor_di_ft_cpp_11_cpp_03 : <define>BOOST_DI_CFG_STD=cpp_03 ]
 
-    [ run-test c++03 : ft/di_ft_cpp_03.cpp : di_ft_cpp_03_bracket : <define>BOOST_DI_CFG_INJECT_BRACKET ]
-    [ run-test c++03 : ft/di_ft_cpp_03.cpp : ctor_di_ft_cpp_03 ]
+    [ run-test c++11 : ft/di_ft_cpp_03.cpp : di_ft_cpp_03_bracket : <define>BOOST_DI_CFG_INJECT_BRACKET ]
+    [ run-test c++11 : ft/di_ft_cpp_03.cpp : ctor_di_ft_cpp_03 ]
 ;
 
 test-suite fail : # compile fail tests
@@ -184,15 +162,12 @@ test-suite fail : # compile fail tests
     [ compile-fail-test c++11 : fail/policies/scopes_permission_fail.cpp : ]
     [ compile-fail-test c++11 : fail/injector_ctor_ambiguous_fail.cpp ]
     [ compile-fail-test c++11 : fail/injector_ctor_ambiguous_fail.cpp : ctor_injector_ctor_ambiguous_fail ]
-    [ compile-fail-test c++03 : fail/injector_ctor_one_arg_fail_cpp_03.cpp ]
     [ compile-fail-test c++11 : fail/injector_shared_by_copy_fail.cpp ]
     [ compile-fail-test c++11 : fail/injector_shared_by_copy_fail.cpp : ctor_injector_shared_by_copy_fail ]
     [ compile-fail-test c++11 : fail/make_injector_wrong_arg_fail.cpp : make_injector_wrong_arg_fail_cpp_11 ]
-    [ compile-fail-test c++03 : fail/make_injector_wrong_arg_fail.cpp : make_injector_wrong_arg_fail_cpp_03 ]
 ;
 
 test-suite pt : # performane tests
     [ run-test c++11 : pt/di_pt.cpp : preprocessed_di_pt_cpp_11 : <define>BOOST_DI_CFG_TEST_LEVELS_LIMIT_SIZE=5 : preprocessed_headers ]
-    [ run-test c++03 : pt/di_pt.cpp : preprocessed_di_pt_cpp_03 : <define>BOOST_DI_CFG_TEST_LEVELS_LIMIT_SIZE=5 : preprocessed_headers ]
 ;
 

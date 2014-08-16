@@ -8,11 +8,9 @@
 #define BOOST_DI_HPP
 
 #include "boost/di/aux_/config.hpp"
+#include "boost/di/inject.hpp"
 
 #if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)
-
-    // injections
-    #include "boost/di/inject.hpp"
 
     // annotations
     #include "boost/di/named.hpp"

@@ -87,14 +87,12 @@ struct type_list
 };
 
 template<typename T, typename... TArgs>
-struct is_constructible
-{
+struct is_constructible {
     using type = typename std::conditional<std::is_constructible<T, TArgs...>::value, type_list<TArgs...>, type_list<>>::type;
 };
 
 template<typename T, int>
-struct type_
-{
+struct type_ {
     using type = T;
 };
 
@@ -113,8 +111,7 @@ template<typename>
 struct size;
 
 template<typename... T>
-struct size<type_list<T...>>
-{
+struct size<type_list<T...>> {
     static constexpr bool value = sizeof...(T);
 };
 
@@ -122,14 +119,12 @@ template<typename, int I, typename... Ts>
 struct longest_impl;
 
 template<typename R, typename T, typename... Ts>
-struct longest_impl<R, 0, T, Ts...>
-{
+struct longest_impl<R, 0, T, Ts...> {
     using type = R;
 };
 
 template<typename R, int I, typename T, typename... Ts>
-struct longest_impl<R, I, T, Ts...>
-{
+struct longest_impl<R, I, T, Ts...> {
     using type = typename std::conditional<(size<R>::value > size<T>::value), typename longest_impl<R, I - 1, Ts...>::type, typename longest_impl<T, I-1, Ts...>::type>::type;
 };
 
@@ -140,14 +135,12 @@ template<typename, int I, typename... Ts>
 struct greatest_impl;
 
 template<typename R, typename T, typename... Ts>
-struct greatest_impl<R, 0, T, Ts...>
-{
+struct greatest_impl<R, 0, T, Ts...> {
     using type = typename std::conditional<(T::second::value > R::second::value), typename T::first, typename R::first>::type;
 };
 
 template<typename R, int I, typename T, typename... Ts>
-struct greatest_impl<R, I, T, Ts...>
-{
+struct greatest_impl<R, I, T, Ts...> {
     using type = typename std::conditional<(T::second::value > R::second::value), typename greatest_impl<T, I - 1, Ts...>::type, typename greatest_impl<R, I-1, Ts...>::type>::type;
 };
 
@@ -165,20 +158,17 @@ template<typename, int I, typename... Ts>
 struct max_impl;
 
 template<typename R, typename T, typename... Ts>
-struct max_impl<R, 0, T, Ts...>
-{
+struct max_impl<R, 0, T, Ts...> {
     using type = typename std::conditional<(R::value > T::value), R, T>::type;
 };
 
 template<typename R, int I, typename T, typename... Ts>
-struct max_impl<R, I, T, Ts...>
-{
+struct max_impl<R, I, T, Ts...> {
     using type = typename std::conditional<(R::value > T::value), typename max_impl<R, I - 1, Ts...>::type, typename max_impl<T, I-1, Ts...>::type>::type;
 };
 
 template<typename T, typename... Ts>
 using max = max_impl<T, sizeof...(Ts) - 1, Ts...>;
-
 
 template<typename, typename...>
 struct sum;
@@ -206,28 +196,24 @@ struct is_type_list<type_list<Ts...>>
 template <typename...> struct join;
 
 template<>
-struct join<>
-{
+struct join<> {
     using type = type_list<>;
 };
 
-template <typename... TArgs> struct join<type_list<TArgs...>>
-{
+template <typename... TArgs> struct join<type_list<TArgs...>> {
     using type = type_list<TArgs...>;
 };
 
 template <typename ...Args1,
           typename ...Args2>
-struct join<type_list<Args1...>, type_list<Args2...>>
-{
+struct join<type_list<Args1...>, type_list<Args2...>> {
     using type = type_list<Args1..., Args2...>;
 };
 
 template <typename ...Args1,
           typename ...Args2,
           typename ...Tail>
-struct join<type_list<Args1...>, type_list<Args2...>, Tail...>
-{
+struct join<type_list<Args1...>, type_list<Args2...>, Tail...> {
      using type = typename join<type_list<Args1..., Args2...>, Tail...>::type;
 };
 
@@ -257,11 +243,8 @@ struct contains<type_list<>, T>
     : bool_<false>
 { };
 
-//is_smart_ptr
-//NAMED(int, "my_name")
-//has table with typeid hash
-
-}}
+} // namespace di
+} // namespace boost
 
 #endif
 
