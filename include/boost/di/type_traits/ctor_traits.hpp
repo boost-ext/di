@@ -11,7 +11,6 @@
 #include "boost/di/aux_/mpl.hpp"
 #include "boost/di/inject.hpp"
 #include "boost/di/core/any_type.hpp"
-#include "boost/di/type_traits/has_injector.hpp"
 #include "boost/di/type_traits/function_traits.hpp"
 
 #include <string>
@@ -19,6 +18,8 @@
 
 namespace boost {
 namespace di {
+
+BOOST_DI_HAS_MEMBER_FUNCTION(BOOST_DI_INJECTOR, BOOST_DI_INJECTOR);
 
 template<typename T, unsigned... Args>
 struct ctor_traits_impl<T, seq<Args...>>

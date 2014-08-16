@@ -9,13 +9,13 @@
 
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/mpl.hpp"
-#include "boost/di/type_traits/has_value.hpp"
 
 namespace boost {
 namespace di {
 namespace core {
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(tag)
+BOOST_DI_HAS_MEMBER(value);
 
 template<typename, typename = void>
 struct is_mpl_string
@@ -28,7 +28,7 @@ struct is_mpl_string
 //{ };
 
 template<typename T>
-using is_explicit = bool_<type_traits::has_value<T>::value || is_mpl_string<T>::value>;
+using is_explicit = bool_<has_value<T>::value || is_mpl_string<T>::value>;
 
 class allocator {
 public:
@@ -39,7 +39,7 @@ public:
     }
 
     template<typename TExpected, typename TGiven>
-    typename std::enable_if<type_traits::has_value<TGiven>::value, TExpected*>::type
+    typename std::enable_if<has_value<TGiven>::value, TExpected*>::type
     allocate() const {
         return new TExpected(TGiven::value);
     }

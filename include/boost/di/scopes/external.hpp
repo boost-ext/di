@@ -8,7 +8,6 @@
 #define BOOST_DI_SCOPES_EXTERNAL_HPP
 
 #include "boost/di/wrappers/value.hpp"
-#include "boost/di/type_traits/has_call_operator.hpp"
 
 #include <functional>
 #include <boost/ref.hpp>
@@ -30,6 +29,9 @@ public:
 
 namespace boost {
 namespace di {
+
+BOOST_DI_HAS_MEMBER_FUNCTION(call_operator, operator());
+
 namespace scopes {
 
 template<template<typename> class TWrapper = wrappers::value>
@@ -59,13 +61,13 @@ public:
         };
 
         template<typename TValueType, typename T>
-        typename std::enable_if<!type_traits::has_call_operator<TValueType>::value, std::function<result_type()>>::type
+        typename std::enable_if<!has_call_operator<TValueType>::value, std::function<result_type()>>::type
         convert_when_function(const T& object) {
             return object;
         }
 
         template<typename TValueType, typename T>
-        typename std::enable_if<type_traits::has_call_operator<TValueType>::value, result_type_holder>::type
+        typename std::enable_if<has_call_operator<TValueType>::value, result_type_holder>::type
         convert_when_function(const T& object) {
             return result_type_holder(object);
         }
@@ -73,18 +75,13 @@ public:
     public:
         template<typename T>
         explicit scope(const T& object
-                     , typename std::enable_if<
-                           type_traits::has_call_operator<T>::value && !is_reference_wrapper<T>::value
-                       >::type* = 0)
+                     , typename std::enable_if<has_call_operator<T>::value && !is_reference_wrapper<T>::value>::type* = 0)
             : object_(convert_when_function<TExpected>(object))
         { }
 
         template<typename T>
         explicit scope(const T& object
-                     , typename std::enable_if<!(
-                           type_traits::has_call_operator<T>::value &&
-                           !is_reference_wrapper<T>::value)
-                       >::type* = 0)
+                     , typename std::enable_if<!(has_call_operator<T>::value && !is_reference_wrapper<T>::value)>::type* = 0)
             : object_(result_type_holder(object))
         { }
 

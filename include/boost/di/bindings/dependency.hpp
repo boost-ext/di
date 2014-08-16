@@ -14,7 +14,6 @@
 #include "boost/di/wrappers/value.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/scopes/deduce.hpp"
-#include "boost/di/type_traits/has_call_operator.hpp"
 #include "boost/di/type_traits/function_traits.hpp"
 #include "boost/di/bindings/detail/requires.hpp"
 #include "boost/di/bindings/type_traits/is_required_priority.hpp"
@@ -74,7 +73,7 @@ class dependency : public TScope::template scope<TExpected>
     { };
 
     template<typename T>
-    struct get_wrapper<T, typename std::enable_if<di::type_traits::has_call_operator<T>::value>::type
+    struct get_wrapper<T, typename std::enable_if<has_call_operator<T>::value>::type
                         , typename std::enable_if<!has_result_type<T>::value>::type
                         , typename std::enable_if<!is_reference_wrapper<T>::value>::type>
         : get_wrapper_impl<
@@ -116,7 +115,7 @@ public:
     template<typename T>
     static dependency<value_type, expected, T, TBind>
     to(const T& object, typename std::enable_if<!is_reference_wrapper<T>::value>::type* = 0
-                      , typename std::enable_if<!di::type_traits::has_call_operator<T>::value>::type* = 0) {
+                      , typename std::enable_if<!has_call_operator<T>::value>::type* = 0) {
         return dependency<value_type, expected, T, TBind>(object);
     }
 
@@ -129,7 +128,7 @@ public:
     template<typename T>
     static dependency<typename get_wrapper<T>::type, expected, T, TBind>
     to(const T& object, typename std::enable_if<!is_reference_wrapper<T>::value>::type* = 0
-                      , typename std::enable_if<di::type_traits::has_call_operator<T>::value>::type* = 0) {
+                      , typename std::enable_if<has_call_operator<T>::value>::type* = 0) {
         return dependency<typename get_wrapper<T>::type, expected, T, TBind>(object);
     }
 

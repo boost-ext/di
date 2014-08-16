@@ -32,7 +32,7 @@ dump_file() {
     mkdir -p $tmp/`dirname $1`
     cp $1 $tmp/$1
 
-    $CXX -E $1 -CC -I$tmp -include $2 $args | grep -v "^#" | sed '/\/\*.*\*\// d; /\/\*/,/\*\// d' | grep -v "^/" | cat -s
+    $CXX -E $1 -I$tmp -include $2 $args | grep -v "^#" | sed '/\/\*.*\*\// d; /\/\*/,/\*\// d' | grep -v "^/" | cat -s
 
     rm -rf $tmp
 }

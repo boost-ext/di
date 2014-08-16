@@ -10,6 +10,29 @@
 #include <type_traits>
 #include <boost/mpl/has_xxx.hpp>// tmp
 
+#define BOOST_DI_HAS_MEMBER_IMPL(name, member, declaration, signature)                  \
+    template<typename T>                                                                \
+    class has_##name {                                                                  \
+        struct base_impl { declaration; };                                              \
+        struct base                                                                     \
+            : base_impl                                                                 \
+            , std::conditional<std::is_class<T>::value, T, void_>::type                 \
+        { base() { } };                                                                 \
+                                                                                        \
+        template<typename U>                                                            \
+        static no_tag test(U*, non_type<signature, &U::member>* = 0);                   \
+        static yes_tag test(...);                                                       \
+                                                                                        \
+    public:                                                                             \
+        static constexpr bool value = sizeof(test((base*)0)) == sizeof(yes_tag);        \
+    }
+
+#define BOOST_DI_HAS_MEMBER_FUNCTION(name, func) \
+    BOOST_DI_HAS_MEMBER_IMPL(name, func, void func(...) { }, void (base_impl::*)(...))
+
+#define BOOST_DI_HAS_MEMBER(name) \
+    BOOST_DI_HAS_MEMBER_IMPL(name, name, int name, int base_impl::*)
+
 namespace boost {
 namespace di {
 

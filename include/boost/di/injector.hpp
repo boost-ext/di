@@ -13,19 +13,19 @@
 #include "boost/di/core/pool.hpp"
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/bindings.hpp"
-#include "boost/di/type_traits/has_configure.hpp"
 #include "boost/di/type_traits/function_traits.hpp"
 
 namespace boost {
 namespace di {
 
-namespace detail {
-
 BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
+BOOST_DI_HAS_MEMBER_FUNCTION(configure, configure);
+
+namespace detail {
 
 template<typename T>
 struct is_module
-    : bool_<has_deps<T>::value || type_traits::has_configure<T>::value>
+    : bool_<has_deps<T>::value || has_configure<T>::value>
 { };
 
 template<typename T, typename = void>
@@ -34,7 +34,7 @@ struct get_module {
 };
 
 template<typename T>
-struct get_module<T, typename std::enable_if<type_traits::has_configure<T>::value>::type> {
+struct get_module<T, typename std::enable_if<has_configure<T>::value>::type> {
     using type = typename type_traits::function_traits<
         decltype(&T::configure)
     >::result_type;
@@ -46,7 +46,7 @@ struct get_deps {
 };
 
 template<typename T>
-struct get_deps<T, typename std::enable_if<type_traits::has_configure<T>::value>::type> {
+struct get_deps<T, typename std::enable_if<has_configure<T>::value>::type> {
     using type = typename get_module<T>::type::deps;
 };
 
@@ -85,13 +85,13 @@ public:
 
 private:
     template<typename T>
-    typename std::enable_if<!type_traits::has_configure<T>::value, const T&>::type
+    typename std::enable_if<!has_configure<T>::value, const T&>::type
     pass_arg(const T& arg) const {
         return arg;
     }
 
     template<typename T>
-    typename std::enable_if<type_traits::has_configure<T>::value, typename detail::get_module<T>::type>::type
+    typename std::enable_if<has_configure<T>::value, typename detail::get_module<T>::type>::type
     pass_arg(const T& arg) const {
         return arg.configure();
     }
