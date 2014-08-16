@@ -23,7 +23,7 @@ struct is_mpl_string
 { };
 
 //template<typename T>
-//struct is_mpl_string<T, typename enable_if<has_tag<T> >::type>
+//struct is_mpl_string<T, typename enable_if<has_tag<T>>::type>
     //: is_same<aux::mpl::string_tag, typename T::tag>
 //{ };
 

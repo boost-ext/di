@@ -55,7 +55,7 @@ public:
     T create(const TPolicies&... policies) {
         using call_stack = type_list<>;
         pool<type_list<TPolicies...>> policies_(policies...);
-        std::vector<aux::shared_ptr<void> > refs_;
+        std::vector<aux::shared_ptr<void>> refs_;
 
         return creator_.template create<T, T, call_stack>(
             allocator()
@@ -70,7 +70,7 @@ public:
     T allocate(const TAllocator& allocator, const TPolicies&... policies) {
         using call_stack = type_list<>;
         pool<type_list<TPolicies...>> policies_(policies...);
-        std::vector<aux::shared_ptr<void> > refs_;
+        std::vector<aux::shared_ptr<void>> refs_;
 
         return creator_.template create<T, T, call_stack>(
             allocator
@@ -84,7 +84,7 @@ public:
     template<typename T, typename TVisitor>
     T visit(const TVisitor& visitor) {
         using call_stack = type_list<>;
-        std::vector<aux::shared_ptr<void> > refs_;
+        std::vector<aux::shared_ptr<void>> refs_;
 
         return creator_.template create<T, T, call_stack>(
             allocator()
@@ -102,12 +102,12 @@ public:
 
 private:
 /*        template<typename TSeq, typename T, typename TAction>*/
-    //typename std::enable_if<aux::mpl::empty<TSeq> >::type call_impl(T&, const TAction&) { }
+    //typename std::enable_if<aux::mpl::empty<TSeq>>::type call_impl(T&, const TAction&) { }
 
     //template<typename TSeq, typename T, typename TAction>
     //typename std::enable_if<
         //aux::mpl::and_<
-            //aux::mpl::not_<aux::mpl::empty<TSeq> >
+            //aux::mpl::not_<aux::mpl::empty<TSeq>>
           //, type_traits::has_call<typename aux::mpl::front<TSeq>::type, TAction>
         //>
     //>::type

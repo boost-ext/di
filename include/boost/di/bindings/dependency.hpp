@@ -49,7 +49,7 @@ class dependency : public TScope::template scope<TExpected>
     };
 
     template<typename T>
-    struct get_wrapper_impl<aux::shared_ptr<T> > {
+    struct get_wrapper_impl<aux::shared_ptr<T>> {
         using type = shared_type;
     };
 

@@ -67,7 +67,7 @@ class has_call {
     { };
 
 public :
-    static constexpr bool value = base_call<bool_<has_call<T>::value> >::value;
+    static constexpr bool value = base_call<bool_<has_call<T>::value>>::value;
 };
 
 } // namespace type_traits

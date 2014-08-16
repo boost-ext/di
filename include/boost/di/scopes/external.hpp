@@ -16,12 +16,12 @@
 namespace boost {
 
 template<typename T>
-class is_reference_wrapper< ::std::reference_wrapper<T> >
+class is_reference_wrapper< ::std::reference_wrapper<T>>
     : public ::std::true_type
 { };
 
 template<typename T>
-class unwrap_reference< ::std::reference_wrapper<T> > {
+class unwrap_reference< ::std::reference_wrapper<T>> {
 public:
     using type = T;
 };
@@ -59,7 +59,7 @@ public:
         };
 
         template<typename TValueType, typename T>
-        typename std::enable_if<!type_traits::has_call_operator<TValueType>::value, std::function<result_type()> >::type
+        typename std::enable_if<!type_traits::has_call_operator<TValueType>::value, std::function<result_type()>>::type
         convert_when_function(const T& object) {
             return object;
         }

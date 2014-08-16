@@ -31,7 +31,7 @@ struct ctor_traits
 { };
 
 template<typename T>
-struct ctor_traits<std::basic_string<T> > {
+struct ctor_traits<std::basic_string<T>> {
     static void BOOST_DI_INJECTOR();
 };
 

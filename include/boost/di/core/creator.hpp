@@ -110,7 +110,7 @@ public:
       , typename TVisitor
       , typename TPolicies
     >
-    typename std::enable_if<!has_any<T>::value, wrappers::universal<T> >::type
+    typename std::enable_if<!has_any<T>::value, wrappers::universal<T>>::type
     create(const TAllocator& allocator
          , TDeps& deps
          , TRefs& refs
@@ -165,7 +165,7 @@ private:
     >
     typename std::enable_if<
         size<typename scope_create<TDependency>::type>::value
-      , wrappers::universal<T> >::type
+      , wrappers::universal<T>>::type
     create_impl(const TAllocator& allocator
               , TDeps& deps
               , TRefs& refs
@@ -216,11 +216,11 @@ private:
     }
 
 /*        template<typename TSeq, typename, typename TPolicies>*/
-    //static typename enable_if<aux::mpl::empty<TSeq> >::type
+    //static typename enable_if<aux::mpl::empty<TSeq>>::type
     //assert_policies(const TPolicies&) { }
 
     //template<typename TSeq, typename T, typename TPolicies>
-    //static typename disable_if<aux::mpl::empty<TSeq> >::type
+    //static typename disable_if<aux::mpl::empty<TSeq>>::type
     //assert_policies(const TPolicies& policies) {
         //typedef typename aux::mpl::front<TSeq>::type policy;
         //static_cast<const policy&>(policies).template assert_policy<T>();

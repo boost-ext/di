@@ -37,7 +37,7 @@ struct allow_refs
     template<typename T>
     struct allow
         : aux::mpl::and_<
-              aux::mpl::not_<is_const<typename remove_reference<T>::type> >
+              aux::mpl::not_<is_const<typename remove_reference<T>::type>>
             , is_reference<T>
             , aux::mpl::not_<
                   has_element_type<typename type_traits::remove_accessors<T>::type>
@@ -81,10 +81,10 @@ struct allow_copies
     template<typename T>
     struct allow
         : aux::mpl::and_<
-               aux::mpl::not_<is_reference<T> >
-             , aux::mpl::not_<is_pointer<T> >
-             , aux::mpl::not_<is_rvalue_reference<T> >
-             , aux::mpl::not_<has_element_type<typename type_traits::remove_accessors<T>::type> >
+               aux::mpl::not_<is_reference<T>>
+             , aux::mpl::not_<is_pointer<T>>
+             , aux::mpl::not_<is_rvalue_reference<T>>
+             , aux::mpl::not_<has_element_type<typename type_traits::remove_accessors<T>::type>>
           >
     { };
 };
@@ -124,7 +124,7 @@ BOOST_DI_WKND(NO_MSVC)(
         struct is_parameter_permitted_nested_impl<
             TAllow
           , T
-          , typename enable_if<has_value_type<T> >::type
+          , typename enable_if<has_value_type<T>>::type
         >
             : TAllow::template allow<typename value_type<T>::type>
         { };

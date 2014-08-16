@@ -38,22 +38,22 @@ public:
     }
 
     template<typename I>
-    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
+    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I>>&) const {
         return aux::shared_ptr<I>(new I(value_));
     }
 
     template<typename I>
-    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const {
+    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I>>&) const {
         return aux_::shared_ptr<I>(new I(value_));
     }
 
     template<typename I>
-    aux::auto_ptr<I> operator()(const type<aux::auto_ptr<I> >&) const {
+    aux::auto_ptr<I> operator()(const type<aux::auto_ptr<I>>&) const {
         return aux::auto_ptr<I>(new I(value_));
     }
 
     template<typename I>
-    aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I> >&) const {
+    aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I>>&) const {
         return aux::unique_ptr<I>(new I(value_));
     }
 

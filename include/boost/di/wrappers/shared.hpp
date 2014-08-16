@@ -15,7 +15,7 @@ namespace wrappers {
 
 template<typename T>
 class shared {
-    template<typename U, typename TShared = aux::shared_ptr<U> >
+    template<typename U, typename TShared = aux::shared_ptr<U>>
     class sp_holder {
     public:
         explicit sp_holder(const TShared& value)
@@ -42,18 +42,18 @@ public:
     }
 
     template<typename I>
-    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I> >&) const {
+    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I>>&) const {
         return value_;
     }
 
     template<typename I>
-    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I> >&) const {
-        aux_::shared_ptr<sp_holder<T> > sp(new sp_holder<T>(value_));
+    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I>>&) const {
+        aux_::shared_ptr<sp_holder<T>> sp(new sp_holder<T>(value_));
         return aux_::shared_ptr<T>(sp, value_.get());
     }
 
     template<typename I>
-    aux::weak_ptr<I> operator()(const type<aux::weak_ptr<I> >&) const {
+    aux::weak_ptr<I> operator()(const type<aux::weak_ptr<I>>&) const {
         return value_;
     }
 

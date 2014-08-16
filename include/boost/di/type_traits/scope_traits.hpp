@@ -49,13 +49,13 @@ struct scope_traits<const T*>
 };
 
 template<typename T>
-struct scope_traits<aux::auto_ptr<T> >
+struct scope_traits<aux::auto_ptr<T>>
 {
     typedef scopes::unique<> type;
 };
 
 template<typename T>
-struct scope_traits<aux::shared_ptr<T> >
+struct scope_traits<aux::shared_ptr<T>>
 {
     typedef scopes::shared<> type;
 };
@@ -67,7 +67,7 @@ struct scope_traits<const aux::shared_ptr<T>&>
 };
 
 template<typename T>
-struct scope_traits<aux_::shared_ptr<T> >
+struct scope_traits<aux_::shared_ptr<T>>
 {
     typedef scopes::shared<> type;
 };
@@ -79,7 +79,7 @@ struct scope_traits<const aux_::shared_ptr<T>&>
 };
 
 template<typename T>
-struct scope_traits<aux::weak_ptr<T> >
+struct scope_traits<aux::weak_ptr<T>>
 {
     typedef scopes::shared<> type;
 };
@@ -91,7 +91,7 @@ struct scope_traits<const aux::weak_ptr<T>&>
 };
 
 template<typename T>
-struct scope_traits<aux::unique_ptr<T> >
+struct scope_traits<aux::unique_ptr<T>>
 {
     typedef scopes::unique<> type;
 };
@@ -115,7 +115,7 @@ struct scope_traits<const T&&>
 };
 
 template<typename T, typename TName>
-struct scope_traits<named<T, TName> >
+struct scope_traits<named<T, TName>>
 {
     typedef typename scope_traits<T>::type type;
 };
