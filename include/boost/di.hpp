@@ -40,9 +40,7 @@
 #include <typeinfo>
 #include <typeindex>
 #include <string>
-#include <iostream>
 #include <functional>
-#include <boost/units/detail/utility.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include "boost/di/inject.hpp"
 #include "boost/di/aux_/ref.hpp"
@@ -1047,10 +1045,18 @@ struct take_last<type_list<>, N>
     : type_list<>
 { };
 
+template<typename, typename>
+struct is_same_call_stack;
+
+template<typename... Ts, typename T>
+struct is_same_call_stack<type_list<Ts...>, T>
+    : std::conditional<std::is_same<type_list<Ts...>, T>::value, int_<sizeof...(Ts) + 1>, int_<0>>
+{ };
+
 template<typename... Ts>
 struct call_stack {
     template<typename T>
-    using apply = std::is_same<
+    using apply = is_same_call_stack<
         typename make_plain<
             typename take_last<
                 typename T::call_stack
@@ -1061,9 +1067,9 @@ struct call_stack {
     >;
 
     template<typename T>
-    using eval = typename match<
-        typename make_plain<typename T::call_stack>::type, type_list<Ts...>
-    >::type;
+    using eval = int_<
+        match<typename make_plain<typename T::call_stack>::type, type_list<Ts...>>::value
+    >;
 };
 
 } // namespace bindings
@@ -1345,8 +1351,6 @@ using any_of = type_list<Ts...>;
 
 } // namespace di
 } // namespace boost
-
-    //#pragma GCC diagnostic ignored "-Wreorder"
 
 namespace boost {
 namespace di {
@@ -2004,9 +2008,6 @@ public:
         >::type;
         using eval_type = typename binder_t::template eval<T, call_stack>::type;
         using dependency_type = typename binder_t::template resolve<T, call_stack>::type;
-
-    std::cout << boost::units::detail::demangle(typeid(T).name()) << std::endl;
-    std::cout << boost::units::detail::demangle(typeid(call_stack).name()) << std::endl;
 
         //typedef data<T, call_stack_type, dependency_type> data_type;
         //assert_policies<typename TPolicies::types, data_type>(policies);
