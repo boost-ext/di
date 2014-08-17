@@ -5,7 +5,7 @@
 This is not an official Boost library yet and there is no guarantee it will ever be!
 
 ### Introduction
-Boost.DI is C++03/C++11/C++14 header only library providing type safe, compile time, macro free constructor dependency injection.
+Boost.DI is C++11/C++14 header only library providing type safe, compile time, macro free constructor dependency injection.
 
 * [Documentation](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html)
 * [Todo/Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
@@ -78,7 +78,7 @@ void test_hello_world_when_run_with_value_true_then_log_and_do_it() {
 ### Features
 * Type safe
 * Header only
-* Supports C++03/C++11/C++14 standards
+* Supports C++11/C++14 standards
 * Architecture independent (tested on x86/x86-64)
 * Supports all POSIX and Windows operating systems (tested on Linux 3.8/Windows 7/8)
 * Exception safe guaranty
