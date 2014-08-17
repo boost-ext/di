@@ -35,10 +35,11 @@
 #else
 
 #include <vector>
+#include <unordered_map>
 #include <type_traits>
 #include <typeinfo>
+#include <typeindex>
 #include <string>
-#include <map>
 #include <functional>
 #include <boost/type_traits/is_integral.hpp>
 #include "boost/di/inject.hpp"
@@ -977,8 +978,7 @@ namespace di {
 namespace bindings {
 
 template<typename... Ts>
-class call_stack
-{
+class call_stack {
 
     //template<typename TContext, typename TCallStack>
     //struct equal
@@ -1400,9 +1400,10 @@ struct binder<type_list<Ts...>> {
               , typename type_traits::make_plain<T>::type
             >
     >
-    using resolve = typename
-        greatest<pair<TDefault, int_<0>>, calculate<T, TCallStack, Ts>...>::type
-              ::template rebind<typename scopes::deduce::rebind<T>::other>::other;
+    using resolve = typename greatest<
+        pair<TDefault, int_<0>>
+      , calculate<T, TCallStack, Ts>...
+    >::type::template rebind<typename scopes::deduce::rebind<T>::other>::other;
 };
 
 } // namespace core
@@ -1590,19 +1591,30 @@ struct ctor_traits<std::basic_string<T>> {
 
 namespace type_traits {
 
-template<typename T, typename = void>
-struct ctor_traits
-    : di::ctor_traits<T>::type
+template<typename T, typename = bool_<BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<T>::value>>
+struct ctor_traits;
+
+template<typename T, typename = bool_<BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<di::ctor_traits<T>>::value>>
+struct ctor_traits_impl;
+
+template<typename T>
+struct ctor_traits<T, std::true_type>
+    : function_traits<decltype(&T::BOOST_DI_INJECTOR)>::type
 { };
 
 template<typename T>
-struct ctor_traits<T, typename std::enable_if<BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<di::ctor_traits<T>>::value>::type>
+struct ctor_traits<T, std::false_type>
+    : ctor_traits_impl<T>::type
+{ };
+
+template<typename T>
+struct ctor_traits_impl<T, std::true_type>
     : function_traits<decltype(&di::ctor_traits<T>::BOOST_DI_INJECTOR)>::type
 { };
 
 template<typename T>
-struct ctor_traits<T, typename std::enable_if<BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<T>::value>::type>
-    : function_traits<decltype(&T::BOOST_DI_INJECTOR)>::type
+struct ctor_traits_impl<T, std::false_type>
+    : di::ctor_traits<T>::type
 { };
 
 } // namespace type_traits
@@ -1859,17 +1871,9 @@ class creator {
           decltype(&TDependency::create)
       >::type;
 
-    class type_comparator {
-    public:
-        bool operator()(const std::type_info* lhs, const std::type_info* rhs) const {
-            return lhs->before(*rhs);
-        }
-    };
-
-    using scopes_type = std::map<
-        const std::type_info*
+    using scopes_type = std::unordered_map<
+        std::type_index
       , aux::shared_ptr<void>
-      , type_comparator
     >;
 
     template<
@@ -1941,8 +1945,7 @@ public:
          , TRefs& refs
          , const TVisitor& visitor
          , const TPolicies& policies) {
-        using dependency_type = typename binder_t::template
-            resolve<T, TCallStack>::type;
+        using dependency_type = typename binder_t::template resolve<T, TCallStack>::type;
 
         //typedef data<T, call_stack_type, dependency_type> data_type;
         //assert_policies<typename TPolicies::types, data_type>(policies);
@@ -1996,22 +1999,20 @@ private:
               , TRefs& refs
               , const TVisitor& visitor
               , const TPolicies& policies) {
-
         return wrappers::universal<T>(
             refs
-          , acquire<TDependency>(deps).create(
-              [&] {
-                using ctor_type = typename type_traits::ctor_traits<typename TDependency::given>::type;
+          , acquire<TDependency>(deps).create([&]{
+                using ctor_type =
+                    typename type_traits::ctor_traits<typename TDependency::given>::type;
 
-                //BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
-                    //using call_stack_type = typename add<TCallStack, T>::type;
-                //)
-
-                //BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
-                    using call_stack_type = TCallStack;
-                //)
-
-                return create_impl<T, TDependency, call_stack_type>(allocator, deps, refs, visitor, policies, ctor_type());
+                return create_impl<T, TDependency, TCallStack>(
+                    allocator
+                  , deps
+                  , refs
+                  , visitor
+                  , policies
+                  , ctor_type()
+                );
             })
         );
     }
@@ -2034,6 +2035,7 @@ private:
               , const TVisitor& visitor
               , const TPolicies& policies
               , const type_list<TArgs...>&) {
+                    using call_stack_type = typename add<TCallStack, T>::type;
         return allocator.template
             allocate<typename TDependency::expected, typename TDependency::given>(
                 create<TArgs, T, TCallStack>(allocator, deps, refs, visitor, policies)...
@@ -2059,17 +2061,16 @@ private:
     template<typename TDependency, typename TDeps>
     typename std::enable_if<!std::is_base_of<TDependency, TDeps>::value, TDependency&>::type
     acquire(TDeps&) {
-        typename scopes_type::const_iterator it = scopes_.find(&typeid(TDependency));
+        auto it = scopes_.find(std::type_index(typeid(TDependency)));
         if (it != scopes_.end()) {
             return *static_cast<TDependency*>(it->second.get());
         }
 
         aux::shared_ptr<TDependency> dependency(new TDependency());
-        scopes_[&typeid(TDependency)] = dependency;
+        scopes_[std::type_index(typeid(TDependency))] = dependency;
         return *dependency;
     }
 
-    binder_t binder_;
     scopes_type scopes_;
 };
 
