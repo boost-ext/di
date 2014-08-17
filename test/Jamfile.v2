@@ -130,8 +130,8 @@ test-suite ut : # unit tests
 ;
 
 test-suite mt : # module tests
-    #[ run-test c++11 : mt/core/module_mt.cpp ]
-    #[ run-test c++11 : mt/core/module_mt.cpp : ctor_module_mt ]
+    [ run-test c++11 : mt/core/module_mt.cpp ]
+    [ run-test c++11 : mt/core/module_mt.cpp : ctor_module_mt ]
 
     [ run-test c++11 : mt/injector_mt.cpp ]
     [ run-test c++11 : mt/injector_mt.cpp : ctor_injector_mt ]

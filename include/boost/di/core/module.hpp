@@ -22,7 +22,7 @@ namespace core {
 
 BOOST_DI_HAS_MEMBER_FUNCTION(call, call);
 
-template<typename TDeps>
+template<typename TDeps = type_list<>>
 class module : public pool<TDeps> {
     template<typename> friend class module;
     using pool_t = pool<TDeps>;

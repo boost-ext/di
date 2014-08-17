@@ -6,14 +6,10 @@
 //
 #if !BOOST_PP_IS_ITERATING
 
-#include <utility>
-#include <boost/type.hpp>
-#include <boost/function.hpp>
-#include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/is_same.hpp>
+#include <functional>
 
 #include "boost/di/aux_/memory.hpp"
-#include "boost/di/type_traits/ctor_traits.hpp"
+#include "boost/di/aux_/mpl.hpp"
 
 namespace boost {
 namespace di {
@@ -22,8 +18,7 @@ struct fake_scope_entry { };
 struct fake_scope_exit { };
 
 template<bool Priority = false>
-struct fake_scope
-{
+struct fake_scope {
     static constexpr bool priority = Priority;
 
     template<typename T>
@@ -67,7 +62,7 @@ struct fake_scope
             ++exit_calls();
         }
 
-        result_type create(const function<T*()>& f) {
+        result_type create(const std::function<T*()>& f) {
             if (entry_calls() > exit_calls()) {
                 return aux::shared_ptr<T>(f());
             }

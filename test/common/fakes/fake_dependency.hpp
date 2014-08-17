@@ -20,39 +20,44 @@
 namespace boost {
 namespace di {
 
-template<typename T, typename TName, typename TCallStack>
-struct get_bind
+template<typename, typename, typename>
+struct get_bind;
+
+template<typename T, typename TName, typename... Ts>
+struct get_bind<T, TName, type_list<Ts...>>
     : bindings::detail::requires_<
           bindings::type_traits::is_required_priority
         , bindings::type_traits::is_required_type<T>
         , bindings::type_traits::is_required_name<TName>
-        , bindings::detail::when_<TCallStack>
+        , bindings::detail::when_<Ts...>
       >
 { };
 
 template<typename T, typename TName>
-struct get_bind<T, TName, aux::mpl::vector<>>
+struct get_bind<T, TName, type_list<>>
     : bindings::detail::requires_<
           bindings::type_traits::is_required_priority
         , bindings::type_traits::is_required_type<T>
         , bindings::type_traits::is_required_name<TName>
+        , bindings::detail::when_<>
       >
 { };
 
-template<typename T, typename TCallStack>
-struct get_bind<T, no_name, TCallStack>
+template<typename T, typename... Ts>
+struct get_bind<T, no_name, type_list<Ts...>>
     : bindings::detail::requires_<
           bindings::type_traits::is_required_priority
         , bindings::type_traits::is_required_type<T>
-        , bindings::detail::when_<TCallStack>
+        , bindings::detail::when_<Ts...>
       >
 { };
 
 template<typename T>
-struct get_bind<T, no_name, aux::mpl::vector<>>
+struct get_bind<T, no_name, type_list<>>
     : bindings::detail::requires_<
           bindings::type_traits::is_required_priority
         , bindings::type_traits::is_required_type<T>
+        , bindings::detail::when_<>
       >
 { };
 
@@ -61,11 +66,10 @@ template<
   , typename TExpected
   , typename TGiven = TExpected
   , typename TName = no_name
-  , typename TContext = aux::mpl::vector<>
+  , typename TContext = type_list<>
   , typename TBind = typename get_bind<TExpected, TName, TContext>::type
 >
-struct fake_dependency
-{
+struct fake_dependency {
     typedef TScope scope;
     typedef TExpected expected;
     typedef TGiven given;
@@ -82,12 +86,11 @@ struct fake_dependency
         typename Expected = void
       , typename Given = void
     >
-    struct rebind
-    {
+    struct rebind {
         typedef fake_dependency<
             TScope
-          , typename aux::mpl::if_<is_same<Given, void>, TExpected, Expected>::type
-          , typename aux::mpl::if_<is_same<Given, void>, TGiven, Given>::type
+          , typename std::conditional<std::is_same<Given, void>::value, TExpected, Expected>::type
+          , typename std::conditional<std::is_same<Given, void>::value, TGiven, Given>::type
         > other;
     };
 };

@@ -10,8 +10,7 @@
 //<-
 #include <cassert>
 #include <memory>
-#include <boost/function.hpp>
-#include <boost/type.hpp>
+#include <functional>
 //->
 #include <boost/di.hpp>
 
@@ -45,7 +44,7 @@ public:
 
             /*<<conversion operator to shared_ptr>>*/
             const std::shared_ptr<T>&
-            operator()(const boost::type<std::shared_ptr<T>>&) const {
+            operator()(const di::type<std::shared_ptr<T>>&) const {
                 return object_;
             }
 
@@ -68,7 +67,7 @@ public:
         }
 
         /*<<create shared_ptr when in scope out of provider pointer>>*/
-        result_type create(const boost::function<T*()>& f) const {
+        result_type create(const std::function<T*()>& f) const {
             if (in_scope_) {
                 return std::shared_ptr<T>(f());
             }
