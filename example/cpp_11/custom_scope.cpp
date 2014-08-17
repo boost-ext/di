@@ -28,7 +28,7 @@ struct example {
 /*<define scope class>*/
 class custom_scope {
 public:
-    using priority = di::aux::mpl::int_<0>; // lowest = 0, highest = N
+    static const bool priority = false;
 
     /*<define `entry`, `exit` actions>*/
     class entry { };

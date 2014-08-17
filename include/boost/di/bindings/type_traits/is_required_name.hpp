@@ -26,15 +26,22 @@ class is_required_name {
     };
 
     template<typename T>
-    struct get_name<T, typename std::enable_if<
-        has_name<typename di::type_traits::remove_accessors<T>::type>::value>::type
-    > {
-        using type = typename di::type_traits::remove_accessors<T>::type::name;
+    struct get_name<T, typename std::enable_if<has_name<T>::value>::type> {
+        using type = typename T::name;
     };
 
 public:
     template<typename T>
-    using apply = int_<std::is_same<typename get_name<typename T::type>::type, TName>::value>;
+    using apply = int_<
+        std::is_same<
+            typename get_name<
+                typename di::type_traits::remove_accessors<
+                    typename T::type
+                 >::type
+            >::type
+          , TName
+        >::value
+    >;
 
     template<typename>
     using eval = int_<1>;

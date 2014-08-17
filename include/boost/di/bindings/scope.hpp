@@ -33,10 +33,7 @@ class scope {
     using is_dependency = has_given<T>;
 
     template<typename T>
-    using dependency = TDependency<
-          TScope
-        , T
-        , T
+    using dependency = TDependency<TScope, T, T
         , detail::requires_<
               type_traits::is_required_priority
             , type_traits::is_required_type<T>

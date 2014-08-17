@@ -251,7 +251,11 @@ template<
 class named<
     T
   , TName
-  , typename std::enable_if<std::is_polymorphic<typename type_traits::remove_accessors<T>::type>::value>::type
+  , typename std::enable_if<
+        std::is_polymorphic<
+            typename type_traits::remove_accessors<T>::type
+        >::value
+    >::type
 > {
 public:
     using named_type = T;
@@ -813,15 +817,22 @@ class is_required_name {
     };
 
     template<typename T>
-    struct get_name<T, typename std::enable_if<
-        has_name<typename di::type_traits::remove_accessors<T>::type>::value>::type
-    > {
-        using type = typename di::type_traits::remove_accessors<T>::type::name;
+    struct get_name<T, typename std::enable_if<has_name<T>::value>::type> {
+        using type = typename T::name;
     };
 
 public:
     template<typename T>
-    using apply = int_<std::is_same<typename get_name<typename T::type>::type, TName>::value>;
+    using apply = int_<
+        std::is_same<
+            typename get_name<
+                typename di::type_traits::remove_accessors<
+                    typename T::type
+                 >::type
+            >::type
+          , TName
+        >::value
+    >;
 
     template<typename>
     using eval = int_<1>;
@@ -1208,8 +1219,7 @@ public:
     using bind = TBind;
 
     template<typename T>
-    struct rebind
-    {
+    struct rebind {
         using other = dependency<
             typename std::conditional<
                 std::is_same<scope, scopes::deduce>::value
@@ -1281,10 +1291,7 @@ class scope {
     using is_dependency = has_given<T>;
 
     template<typename T>
-    using dependency = TDependency<
-          TScope
-        , T
-        , T
+    using dependency = TDependency<TScope, T, T
         , detail::requires_<
               type_traits::is_required_priority
             , type_traits::is_required_type<T>
