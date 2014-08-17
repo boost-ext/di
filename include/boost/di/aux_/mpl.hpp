@@ -71,31 +71,41 @@ struct pair {
     using second = E;
 };
 
-template<unsigned...> struct seq{ using type = seq; };
-
-template<class T> using Invoke = typename T::type;
-
-template<class S1, class S2> struct concat;
-
-template<unsigned... I1, unsigned... I2>
-struct concat<seq<I1...>, seq<I2...>>
-  : seq<I1..., (sizeof...(I1)+I2)...>
-{ };
-
-template<unsigned N> struct gen_seq;
-
-template<unsigned N>
-struct gen_seq
-    : Invoke<concat<Invoke<gen_seq<N/2>>, Invoke<gen_seq<N - N/2>>>>{};
-
-template<> struct gen_seq<0> : seq<>{};
-template<> struct gen_seq<1> : seq<1>{};
-
 template<typename...>
-struct type_list
-{
+struct type_list {
     using type = type_list;
 };
+
+template<std::size_t...>
+struct index_sequence {
+    using type = index_sequence;
+};
+
+template<typename, typename>
+struct concat;
+
+template<std::size_t... I1, std::size_t... I2>
+struct concat<index_sequence<I1...>, index_sequence<I2...>>
+    : index_sequence<I1..., (sizeof...(I1) + I2)...>
+{ };
+
+template<std::size_t N>
+struct make_index_sequence
+    : concat<
+          typename make_index_sequence<N/2>::type
+        , typename make_index_sequence<N - N/2>::type
+      >::type
+{ };
+
+template<>
+struct make_index_sequence<0>
+    : index_sequence<>
+{ };
+
+template<>
+struct make_index_sequence<1>
+    : index_sequence<1>
+{ };
 
 template<typename T, typename... TArgs>
 struct is_constructible {
@@ -111,12 +121,12 @@ template<typename, typename T, typename>
 struct gen_type;
 
 template<typename R, typename T, unsigned... TArgs>
-struct gen_type<R, T, seq<TArgs...>>
+struct gen_type<R, T, index_sequence<TArgs...>>
     : is_constructible<R, typename type_<T, TArgs>::type...>
 { };
 
-template<typename R, typename T, int N>
-using genn = gen_type<R, T, typename gen_seq<N>::type>;
+template<typename R, typename T, std::size_t N>
+using genn = gen_type<R, T, typename make_index_sequence<N>::type>;
 
 template<typename>
 struct size;
@@ -126,7 +136,7 @@ struct size<type_list<T...>> {
     static constexpr bool value = sizeof...(T);
 };
 
-template<typename, int I, typename... Ts>
+template<typename, std::size_t I, typename... Ts>
 struct longest_impl;
 
 template<typename R, typename T, typename... Ts>
@@ -134,7 +144,7 @@ struct longest_impl<R, 0, T, Ts...> {
     using type = R;
 };
 
-template<typename R, int I, typename T, typename... Ts>
+template<typename R, std::size_t I, typename T, typename... Ts>
 struct longest_impl<R, I, T, Ts...> {
     using type = typename std::conditional<(size<R>::value > size<T>::value), typename longest_impl<R, I - 1, Ts...>::type, typename longest_impl<T, I-1, Ts...>::type>::type;
 };
@@ -142,7 +152,7 @@ struct longest_impl<R, I, T, Ts...> {
 template<typename... Ts>
 using longest = longest_impl<type_list<>, sizeof...(Ts) - 1, Ts...>;
 
-template<typename, int I, typename... Ts>
+template<typename, std::size_t I, typename... Ts>
 struct greatest_impl;
 
 template<typename R, typename T, typename... Ts>
@@ -150,7 +160,7 @@ struct greatest_impl<R, 0, T, Ts...> {
     using type = typename std::conditional<(T::second::value > R::second::value), typename T::first, typename R::first>::type;
 };
 
-template<typename R, int I, typename T, typename... Ts>
+template<typename R, std::size_t I, typename T, typename... Ts>
 struct greatest_impl<R, I, T, Ts...> {
     using type = typename std::conditional<(T::second::value > R::second::value), typename greatest_impl<T, I - 1, Ts...>::type, typename greatest_impl<R, I-1, Ts...>::type>::type;
 };
@@ -165,7 +175,7 @@ struct greatest<T>
     : T::first
 { };
 
-template<typename, int I, typename... Ts>
+template<typename, std::size_t I, typename... Ts>
 struct max_impl;
 
 template<typename R, typename T, typename... Ts>
@@ -173,7 +183,7 @@ struct max_impl<R, 0, T, Ts...> {
     using type = typename std::conditional<(R::value > T::value), R, T>::type;
 };
 
-template<typename R, int I, typename T, typename... Ts>
+template<typename R, std::size_t I, typename T, typename... Ts>
 struct max_impl<R, I, T, Ts...> {
     using type = typename std::conditional<(R::value > T::value), typename max_impl<R, I - 1, Ts...>::type, typename max_impl<T, I-1, Ts...>::type>::type;
 };

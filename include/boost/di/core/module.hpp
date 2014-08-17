@@ -13,13 +13,14 @@
 #include "boost/di/core/pool.hpp"
 #include "boost/di/core/creator.hpp"
 #include "boost/di/core/allocator.hpp"
-#include "boost/di/type_traits/has_call.hpp"
 
 #include <vector>
 
 namespace boost {
 namespace di {
 namespace core {
+
+BOOST_DI_HAS_MEMBER_FUNCTION(call, call);
 
 template<typename TDeps>
 class module : public pool<TDeps> {
@@ -108,7 +109,7 @@ private:
     //typename std::enable_if<
         //aux::mpl::and_<
             //aux::mpl::not_<aux::mpl::empty<TSeq>>
-          //, type_traits::has_call<typename aux::mpl::front<TSeq>::type, TAction>
+          //, has_call<typename aux::mpl::front<TSeq>::type, TAction>
         //>
     //>::type
     //call_impl(T& deps, const TAction& action) {
@@ -120,7 +121,7 @@ private:
     //typename disable_if<
         //aux::mpl::or_<
             //aux::mpl::empty<TSeq>
-          //, type_traits::has_call<typename aux::mpl::front<TSeq>::type, TAction>
+          //, has_call<typename aux::mpl::front<TSeq>::type, TAction>
         //>
     //>::type
     //call_impl(T& deps, const TAction& action) {

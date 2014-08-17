@@ -1589,14 +1589,14 @@ BOOST_DI_HAS_MEMBER_FUNCTION(BOOST_DI_INJECTOR, BOOST_DI_INJECTOR);
 template<typename T, typename Q>
 struct ctor_traits_impl;
 
-template<typename T, unsigned... Args>
-struct ctor_traits_impl<T, seq<Args...>>
+template<typename T, std::size_t... Args>
+struct ctor_traits_impl<T, index_sequence<Args...>>
     : longest<typename genn<T, core::any_type<T>, Args>::type...>
 { };
 
 template<typename T>
 struct ctor_traits
-    : ctor_traits_impl<T, typename gen_seq<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>::type>
+    : ctor_traits_impl<T, typename make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>::type>
 { };
 
 template<typename T>
@@ -2141,53 +2141,12 @@ public:
 } // namespace di
 } // namespace boost
 
-namespace boost {
-namespace di {
-namespace type_traits {
-
-BOOST_DI_HAS_MEMBER_FUNCTION(call_impl, call);
-
-template<typename T, typename TAction>
-class has_call {
-    template<typename>
-    struct void_ { };
-
-    template<typename S, typename U>
-    friend U& operator,(const U&, void_<S>);
-
-    struct base : T
-    {
-        using T::call;
-        no_tag call(...) const;
-    };
-
-    template<typename, typename = void>
-    struct base_call
-        : std::false_type
-    { };
-
-    template<typename TDummy>
-    struct base_call<std::true_type, TDummy>
-        : std::is_same<
-              decltype(
-                 ((((base*)0)->call(*(TAction*)0)), void_<T>())
-              )
-            , void_<T>
-          >
-    { };
-
-public :
-    static constexpr bool value = base_call<bool_<has_call_impl<T>::value>>::value;
-};
-
-} // namespace type_traits
-} // namespace di
-} // namespace boost
-
 
 namespace boost {
 namespace di {
 namespace core {
+
+BOOST_DI_HAS_MEMBER_FUNCTION(call, call);
 
 template<typename TDeps>
 class module : public pool<TDeps> {
@@ -2276,7 +2235,7 @@ private:
     //typename std::enable_if<
         //aux::mpl::and_<
             //aux::mpl::not_<aux::mpl::empty<TSeq>>
-          //, type_traits::has_call<typename aux::mpl::front<TSeq>::type, TAction>
+          //, has_call<typename aux::mpl::front<TSeq>::type, TAction>
         //>
     //>::type
     //call_impl(T& deps, const TAction& action) {
@@ -2288,7 +2247,7 @@ private:
     //typename disable_if<
         //aux::mpl::or_<
             //aux::mpl::empty<TSeq>
-          //, type_traits::has_call<typename aux::mpl::front<TSeq>::type, TAction>
+          //, has_call<typename aux::mpl::front<TSeq>::type, TAction>
         //>
     //>::type
     //call_impl(T& deps, const TAction& action) {
