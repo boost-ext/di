@@ -9,10 +9,6 @@
 
 #include "boost/di/aux_/config.hpp"
 
-#if !defined(BOOST_DI_CFG_INJECT_VA_ARGS) && !defined(BOOST_DI_CFG_INJECT_BRACKET)
-    #define BOOST_DI_CFG_INJECT_VA_ARGS
-#endif
-
 #if defined(BOOST_MSVC)
     #pragma warning(disable:4822) // local class member function does not have a body
 #endif

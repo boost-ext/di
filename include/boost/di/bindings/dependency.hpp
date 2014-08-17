@@ -9,6 +9,7 @@
 
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/mpl.hpp"
+#include "boost/di/aux_/ref.hpp"
 #include "boost/di/wrappers/shared.hpp"
 #include "boost/di/wrappers/reference.hpp"
 #include "boost/di/wrappers/value.hpp"
@@ -53,7 +54,7 @@ class dependency : public TScope::template scope<TExpected>
     };
 
     template<typename T>
-    struct get_wrapper_impl<T, typename std::enable_if<is_reference_wrapper<T>::value>::type> {
+    struct get_wrapper_impl<T, typename std::enable_if<aux::is_reference_wrapper<T>::value>::type> {
         using type = ref_type;
     };
 
@@ -75,7 +76,7 @@ class dependency : public TScope::template scope<TExpected>
     template<typename T>
     struct get_wrapper<T, typename std::enable_if<has_call_operator<T>::value>::type
                         , typename std::enable_if<!has_result_type<T>::value>::type
-                        , typename std::enable_if<!is_reference_wrapper<T>::value>::type>
+                        , typename std::enable_if<!aux::is_reference_wrapper<T>::value>::type>
         : get_wrapper_impl<
               typename di::type_traits::function_traits<
                   decltype(&T::operator())
@@ -114,20 +115,20 @@ public:
 
     template<typename T>
     static dependency<value_type, expected, T, TBind>
-    to(const T& object, typename std::enable_if<!is_reference_wrapper<T>::value>::type* = 0
+    to(const T& object, typename std::enable_if<!aux::is_reference_wrapper<T>::value>::type* = 0
                       , typename std::enable_if<!has_call_operator<T>::value>::type* = 0) {
         return dependency<value_type, expected, T, TBind>(object);
     }
 
     template<typename T>
-    static dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>
-    to(const T& object, typename std::enable_if<is_reference_wrapper<T>::value>::type* = 0) {
-        return dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>(object);
+    static dependency<ref_type, typename aux::unwrap_reference<T>::type, T, TBind>
+    to(const T& object, typename std::enable_if<aux::is_reference_wrapper<T>::value>::type* = 0) {
+        return dependency<ref_type, typename aux::unwrap_reference<T>::type, T, TBind>(object);
     }
 
     template<typename T>
     static dependency<typename get_wrapper<T>::type, expected, T, TBind>
-    to(const T& object, typename std::enable_if<!is_reference_wrapper<T>::value>::type* = 0
+    to(const T& object, typename std::enable_if<!aux::is_reference_wrapper<T>::value>::type* = 0
                       , typename std::enable_if<has_call_operator<T>::value>::type* = 0) {
         return dependency<typename get_wrapper<T>::type, expected, T, TBind>(object);
     }

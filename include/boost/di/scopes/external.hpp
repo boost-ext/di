@@ -7,25 +7,8 @@
 #ifndef BOOST_DI_SCOPES_EXTERNAL_HPP
 #define BOOST_DI_SCOPES_EXTERNAL_HPP
 
+#include "boost/di/aux_/ref.hpp"
 #include "boost/di/wrappers/value.hpp"
-
-#include <functional>
-#include <boost/ref.hpp>
-
-namespace boost {
-
-template<typename T>
-class is_reference_wrapper< ::std::reference_wrapper<T>>
-    : public ::std::true_type
-{ };
-
-template<typename T>
-class unwrap_reference< ::std::reference_wrapper<T>> {
-public:
-    using type = T;
-};
-
-} // namespace boost
 
 namespace boost {
 namespace di {
@@ -75,13 +58,13 @@ public:
     public:
         template<typename T>
         explicit scope(const T& object
-                     , typename std::enable_if<has_call_operator<T>::value && !is_reference_wrapper<T>::value>::type* = 0)
+                     , typename std::enable_if<has_call_operator<T>::value && !aux::is_reference_wrapper<T>::value>::type* = 0)
             : object_(convert_when_function<TExpected>(object))
         { }
 
         template<typename T>
         explicit scope(const T& object
-                     , typename std::enable_if<!(has_call_operator<T>::value && !is_reference_wrapper<T>::value)>::type* = 0)
+                     , typename std::enable_if<!(has_call_operator<T>::value && !aux::is_reference_wrapper<T>::value)>::type* = 0)
             : object_(result_type_holder(object))
         { }
 

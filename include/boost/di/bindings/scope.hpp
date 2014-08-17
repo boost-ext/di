@@ -17,6 +17,8 @@ namespace boost {
 namespace di {
 namespace bindings {
 
+BOOST_DI_HAS_MEMBER_TYPE(given);
+
 template<
     typename TScope
   , template<
@@ -27,8 +29,6 @@ template<
     > class TDependency
 >
 class scope {
-    BOOST_DI_HAS_MEMBER_TYPE(given);
-
     template<typename T>
     using is_dependency = has_given<T>;
 

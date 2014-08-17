@@ -214,31 +214,31 @@ struct is_type_list<type_list<Ts...>>
     : std::true_type
 { };
 
-template <typename...> struct join;
+template <typename...>
+struct join;
 
 template<>
 struct join<> {
     using type = type_list<>;
 };
 
-template <typename... TArgs> struct join<type_list<TArgs...>> {
+template<typename... TArgs>
+struct join<type_list<TArgs...>> {
     using type = type_list<TArgs...>;
 };
 
-template <typename ...Args1,
-          typename ...Args2>
+template<typename... Args1, typename... Args2>
 struct join<type_list<Args1...>, type_list<Args2...>> {
     using type = type_list<Args1..., Args2...>;
 };
 
-template <typename ...Args1,
-          typename ...Args2,
-          typename ...Tail>
+template<typename... Args1, typename... Args2, typename... Tail>
 struct join<type_list<Args1...>, type_list<Args2...>, Tail...> {
      using type = typename join<type_list<Args1..., Args2...>, Tail...>::type;
 };
 
-template<bool...> struct bool_seq {
+template<bool...>
+struct bool_seq {
     using type = bool_seq;
 };
 
@@ -264,7 +264,8 @@ struct contains<type_list<>, T>
     : bool_<false>
 { };
 
-template<typename, typename> struct add;
+template<typename, typename>
+struct add;
 
 template<typename... Ts, typename T>
 struct add<type_list<Ts...>, T> {
