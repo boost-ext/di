@@ -196,12 +196,12 @@ struct sum;
 
 template<typename TMultiplicationFactor>
 struct sum<TMultiplicationFactor>
-	: int_<1>
+    : int_<1>
 { };
 
 template<typename TMultiplicationFactor, typename T, typename... Ts>
 struct sum<TMultiplicationFactor, T, Ts...>
-	: int_<TMultiplicationFactor::value * T::value * sum<TMultiplicationFactor, Ts...>::value>
+    : int_<TMultiplicationFactor::value * T::value * sum<TMultiplicationFactor, Ts...>::value>
 { };
 
 template<typename>

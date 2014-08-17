@@ -17,20 +17,20 @@ namespace detail {
 
 template<typename... Ts>
 class requires_ {
-	template<typename T, typename TBind>
-	using apply_bind = typename TBind::template apply<T>::type;
+    template<typename T, typename TBind>
+    using apply_bind = typename TBind::template apply<T>::type;
 
-	template<typename T, typename TBind>
-	using eval_bind = typename TBind::template eval<T>::type;
+    template<typename T, typename TBind>
+    using eval_bind = typename TBind::template eval<T>::type;
 
 public:
-	using type = requires_;
+    using type = requires_;
 
-	template<typename T, typename TMultiplicationFactor = int_<10>>
-	using apply = sum<TMultiplicationFactor, typename apply_bind<T, Ts>::type...>;
+    template<typename T, typename TMultiplicationFactor = int_<10>>
+    using apply = sum<TMultiplicationFactor, typename apply_bind<T, Ts>::type...>;
 
-	template<typename T>
-	using eval = sum<int_<1>, typename eval_bind<T, Ts>::type...>;
+    template<typename T>
+    using eval = sum<int_<1>, typename eval_bind<T, Ts>::type...>;
 };
 
 } // namespace detail
