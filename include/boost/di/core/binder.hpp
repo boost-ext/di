@@ -43,9 +43,10 @@ struct binder<type_list<Ts...>> {
               , typename type_traits::make_plain<T>::type
             >
     >
-    using resolve = typename
-        greatest<pair<TDefault, int_<0>>, calculate<T, TCallStack, Ts>...>::type
-              ::template rebind<typename scopes::deduce::rebind<T>::other>::other;
+    using resolve = typename greatest<
+        pair<TDefault, int_<0>>
+      , calculate<T, TCallStack, Ts>...
+    >::type::template rebind<typename scopes::deduce::rebind<T>::other>::other;
 };
 
 } // namespace core

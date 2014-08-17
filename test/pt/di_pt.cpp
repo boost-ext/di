@@ -21,7 +21,7 @@ struct level0
     template<int>                                       \
     struct level##n                                     \
     {                                                   \
-        level##n(                                       \
+        BOOST_DI_INJECT(level##n,                       \
             BOOST_PP_REPEAT(                            \
                 BOOST_DI_CFG_TEST_LEVELS_LIMIT_SIZE     \
               , BOOST_DI_LEVEL_GEN                      \
