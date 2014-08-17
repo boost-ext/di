@@ -92,8 +92,7 @@ public:
     using bind = TBind;
 
     template<typename T>
-    struct rebind
-    {
+    struct rebind {
         using other = dependency<
             typename std::conditional<
                 std::is_same<scope, scopes::deduce>::value

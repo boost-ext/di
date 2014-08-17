@@ -160,7 +160,11 @@ template<
 class named<
     T
   , TName
-  , typename std::enable_if<std::is_polymorphic<typename type_traits::remove_accessors<T>::type>::value>::type
+  , typename std::enable_if<
+        std::is_polymorphic<
+            typename type_traits::remove_accessors<T>::type
+        >::value
+    >::type
 > {
 public:
     using named_type = T;
