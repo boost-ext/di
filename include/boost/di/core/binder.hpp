@@ -27,7 +27,7 @@ struct data {
 };
 
 template<typename T, typename TCallStack, typename _>
-using calculate = pair<_, typename _::bind::template apply<data<T, TCallStack, _>>::type>;
+using eval_impl = pair<_, typename _::bind::template apply<data<T, TCallStack, _>>::type>;
 
 template<typename>
 struct binder;
@@ -45,7 +45,7 @@ struct binder<type_list<Ts...>> {
     >
     using resolve = typename greatest<
         pair<TDefault, int_<0>>
-      , calculate<T, TCallStack, Ts>...
+      , eval_impl<T, TCallStack, Ts>...
     >::type::template rebind<typename scopes::deduce::rebind<T>::other>::other;
 };
 

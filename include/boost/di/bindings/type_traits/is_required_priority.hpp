@@ -16,7 +16,7 @@ namespace type_traits {
 
 struct is_required_priority {
     template<typename T>
-    using apply = int_<1 + T::dependency::scope::priority::value>; // lowest = 0, highest = N
+    using apply = int_<1 + T::dependency::scope::priority>;
 };
 
 } // namespace type_traits

@@ -20,10 +20,10 @@ template<typename TValueType, typename = void>
 struct is_required_type
 {
     template<typename T>
-    using apply = di::type_traits::is_same_base_of<
+    using apply = int_<di::type_traits::is_same_base_of<
           TValueType
         , typename di::type_traits::make_plain<typename T::type>::type
-      >;
+      >::value>;
 };
 
 /*template<typename TValueType>*/

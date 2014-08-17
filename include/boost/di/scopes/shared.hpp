@@ -14,10 +14,9 @@ namespace di {
 namespace scopes {
 
 template<template<typename> class TWrapper = wrappers::shared>
-class shared
-{
+class shared {
 public:
-    using priority = int_<0>;
+    static const bool priority = false;
 
     template<typename TExpected>
     class scope {

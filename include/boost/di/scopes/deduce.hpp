@@ -20,7 +20,7 @@ namespace scopes {
  */
 class deduce {
 public:
-    using priority = int_<0>;
+    static const bool priority = false;
 
     template<typename>
     struct scope {

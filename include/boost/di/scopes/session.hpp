@@ -19,7 +19,7 @@ class session_exit { };
 template<template<typename> class TWrapper = wrappers::shared>
 class session {
 public:
-    using priority = int_<0>;
+    static const bool priority = false;
 
     template<typename TExpected>
     class scope {

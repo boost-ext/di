@@ -16,7 +16,7 @@ namespace scopes {
 template<template<typename> class TWrapper = wrappers::copy>
 class unique {
 public:
-    using priority = int_<0>;
+    static const bool priority = false;
 
     template<typename TExpected>
     class scope {

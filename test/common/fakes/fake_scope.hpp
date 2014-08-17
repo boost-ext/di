@@ -21,14 +21,13 @@ namespace di {
 struct fake_scope_entry { };
 struct fake_scope_exit { };
 
-template<int Priority = 0>
+template<bool Priority = false>
 struct fake_scope
 {
-    typedef aux::mpl::int_<Priority> priority;
+    static constexpr bool priority = Priority;
 
     template<typename T>
-    class wrapper
-    {
+    class wrapper {
     public:
         wrapper(const aux::shared_ptr<T>& obj) // non explicit
             : obj_(obj)
@@ -51,8 +50,7 @@ struct fake_scope
     };
 
     template<typename T>
-    class scope
-    {
+    class scope {
     public:
         typedef scope type;
         typedef wrapper<T> result_type;

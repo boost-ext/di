@@ -20,7 +20,7 @@ namespace scopes {
 template<template<typename> class TWrapper = wrappers::value>
 class external {
 public:
-    using priority = int_<1>;
+    static const bool priority = true;
 
     template<typename TExpected>
     class scope {

@@ -199,7 +199,8 @@ private:
               , const TVisitor& visitor
               , const TPolicies& policies
               , const type_list<TArgs...>&) {
-                    using call_stack_type = typename add<TCallStack, T>::type;
+        //using call_stack_type = typename binder_t::template call_stack<T, TCallStack>::type;
+
         return allocator.template
             allocate<typename TDependency::expected, typename TDependency::given>(
                 create<TArgs, T, TCallStack>(allocator, deps, refs, visitor, policies)...
