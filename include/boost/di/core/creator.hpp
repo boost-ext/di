@@ -17,7 +17,8 @@
 #include "boost/di/wrappers/universal.hpp"
 
 #include <typeinfo>
-#include <map>
+#include <typeindex>
+#include <unordered_map>
 
 namespace boost {
 namespace di {
@@ -34,17 +35,9 @@ class creator {
           decltype(&TDependency::create)
       >::type;
 
-    class type_comparator {
-    public:
-        bool operator()(const std::type_info* lhs, const std::type_info* rhs) const {
-            return lhs->before(*rhs);
-        }
-    };
-
-    using scopes_type = std::map<
-        const std::type_info*
+    using scopes_type = std::unordered_map<
+        std::type_index
       , aux::shared_ptr<void>
-      , type_comparator
     >;
 
     template<
@@ -234,13 +227,13 @@ private:
     template<typename TDependency, typename TDeps>
     typename std::enable_if<!std::is_base_of<TDependency, TDeps>::value, TDependency&>::type
     acquire(TDeps&) {
-        typename scopes_type::const_iterator it = scopes_.find(&typeid(TDependency));
+        auto it = scopes_.find(std::type_index(typeid(TDependency)));
         if (it != scopes_.end()) {
             return *static_cast<TDependency*>(it->second.get());
         }
 
         aux::shared_ptr<TDependency> dependency(new TDependency());
-        scopes_[&typeid(TDependency)] = dependency;
+        scopes_[std::type_index(typeid(TDependency))] = dependency;
         return *dependency;
     }
 
