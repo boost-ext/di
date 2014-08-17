@@ -25,7 +25,7 @@ class is_convertible {
     static no_tag test(...);
 
 public:
-    static constexpr bool value = sizeof(test<T>(0)) == sizeof(yes_tag);
+    static const bool value = sizeof(test<T>(0)) == sizeof(yes_tag);
 };
 
 } // namespace detail

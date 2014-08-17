@@ -23,7 +23,7 @@
         static yes_tag test(...);                                                       \
                                                                                         \
     public:                                                                             \
-        static constexpr bool value = sizeof(test((base*)0)) == sizeof(yes_tag);        \
+        static const bool value = sizeof(test((base*)0)) == sizeof(yes_tag);            \
     }
 
 #define BOOST_DI_HAS_MEMBER_TYPE_IMPL(name)                                             \
@@ -33,7 +33,7 @@
         template <typename> static no_tag test(...);                                    \
                                                                                         \
     public:                                                                             \
-        static constexpr bool value = sizeof(test<T>(0)) == sizeof(yes_tag);            \
+        static const bool value = sizeof(test<T>(0)) == sizeof(yes_tag);                \
     }
 
 #define BOOST_DI_CAT_IMPL(A, B) A ## B
@@ -133,7 +133,7 @@ struct size;
 
 template<typename... Ts>
 struct size<type_list<Ts...>> {
-    static constexpr std::size_t value = sizeof...(Ts);
+    static const std::size_t value = sizeof...(Ts);
 };
 
 template<typename, std::size_t I, typename... Ts>
