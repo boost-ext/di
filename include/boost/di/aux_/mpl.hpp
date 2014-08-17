@@ -120,7 +120,7 @@ struct type_ {
 template<typename, typename T, typename>
 struct gen_type;
 
-template<typename R, typename T, unsigned... TArgs>
+template<typename R, typename T, std::size_t... TArgs>
 struct gen_type<R, T, index_sequence<TArgs...>>
     : is_constructible<R, typename type_<T, TArgs>::type...>
 { };
