@@ -20,8 +20,7 @@ template<
   , typename TCallStack
   , typename TDependency
 >
-struct data
-{
+struct data {
     using type = T;
     using call_stack = TCallStack;
     using dependency = TDependency;

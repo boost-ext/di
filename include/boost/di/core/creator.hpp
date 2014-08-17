@@ -179,15 +179,15 @@ private:
                 using ctor_type = typename type_traits::ctor_traits<typename TDependency::given>::type;
 
                 //BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
-                    //using call_stack_type = typename add<TCallStack, T>::type;
+                    using call_stack_type = typename add<TCallStack, T>::type;
                 //)
 
                 //BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
-                    using call_stack_type = TCallStack;
+                    //using call_stack_type = TCallStack;
                 //)
 
-                return create_impl<T, TDependency, call_stack_type>(allocator, deps, refs, visitor, policies, ctor_type());}
-            )
+                return create_impl<T, TDependency, call_stack_type>(allocator, deps, refs, visitor, policies, ctor_type());
+            })
         );
     }
 
