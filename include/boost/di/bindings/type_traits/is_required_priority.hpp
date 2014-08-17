@@ -17,6 +17,9 @@ namespace type_traits {
 struct is_required_priority {
     template<typename T>
     using apply = int_<1 + T::dependency::scope::priority>;
+
+    template<typename T>
+    using eval = int_<1>;
 };
 
 } // namespace type_traits

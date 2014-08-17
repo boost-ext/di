@@ -24,6 +24,9 @@ struct is_required_type
           TValueType
         , typename di::type_traits::make_plain<typename T::type>::type
       >::value>;
+
+    template<typename>
+    using eval = int_<1>;
 };
 
 /*template<typename TValueType>*/

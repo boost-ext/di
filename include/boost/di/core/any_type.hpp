@@ -75,7 +75,7 @@ public:
         >::type
     >
     operator const U&() const {
-        return creator_.template create<const U&, none_t, TCallStack>(
+        return creator_.template create<const U&, T, TCallStack>(
             allocator_, deps_, refs_, visitor_, policies_
         );
     }
@@ -90,14 +90,14 @@ public:
         >::type
     >
     operator U&() const {
-        return creator_.template create<U&, none_t, TCallStack>(
+        return creator_.template create<U&, T, TCallStack>(
             allocator_, deps_, refs_, visitor_, policies_
         );
     }
 
     template<typename U>
     operator aux::auto_ptr<U>&() {
-        return creator_.template create<aux::auto_ptr<U>, none_t, TCallStack>(
+        return creator_.template create<aux::auto_ptr<U>, T, TCallStack>(
             allocator_, deps_, refs_, visitor_, policies_
         );
     }
@@ -105,7 +105,7 @@ public:
     BOOST_DI_WKND(MSVC)(
         template<typename U>
         operator aux::unique_ptr<U>() {
-            return creator_.template create<aux::unique_ptr<U>, none_t, TCallStack>(
+            return creator_.template create<aux::unique_ptr<U>, T, TCallStack>(
                 allocator_, deps_, refs_, visitor_, policies_
             );
         }
@@ -122,7 +122,7 @@ public:
             >::type
         >
         operator U() {
-            return creator_.template create<U, none_t, TCallStack>(
+            return creator_.template create<U, T, TCallStack>(
                 allocator_, deps_, refs_, visitor_, policies_
             );
         }

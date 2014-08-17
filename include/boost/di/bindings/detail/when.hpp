@@ -17,16 +17,25 @@ namespace detail {
 template<typename T, typename TBind>
 using apply_for_all = typename TBind::template apply<T>::type;
 
+template<typename T, typename TBind>
+using eval_for_all = typename TBind::template eval<T>::type;
+
 template<typename... Ts>
 struct when_ {
     template<typename T>
     using apply = typename max<int_<0>, typename apply_for_all<T, Ts>::type...>::type;
+
+    template<typename T>
+    using eval = typename max<int_<0>, typename eval_for_all<T, Ts>::type...>::type;
 };
 
 template<>
 struct when_<> {
     template<typename T>
     using apply = int_<1>;
+
+    template<typename>
+    using eval = int_<0>;
 };
 
 } // namespace detail

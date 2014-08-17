@@ -95,7 +95,7 @@ public:
 
     template<
         typename T
-      , typename // TParent - not used
+      , typename TParent
       , typename TCallStack
       , typename TAllocator
       , typename TDeps
@@ -109,13 +109,15 @@ public:
          , TRefs& refs
          , const TVisitor& visitor
          , const TPolicies& policies) {
-        using dependency_type = typename binder_t::template resolve<T, TCallStack>::type;
+        using call_stack = typename add<TCallStack, TParent>::type;
+        using eval_type = typename binder_t::template eval<T, call_stack>::type;
+        using dependency_type = typename binder_t::template resolve<T, call_stack>::type;
 
         //typedef data<T, call_stack_type, dependency_type> data_type;
         //assert_policies<typename TPolicies::types, data_type>(policies);
         //(visitor)(data_type());
 
-        return create_impl<T, dependency_type, TCallStack>(
+        return create_impl<T, dependency_type, typename std::conditional<eval_type::value, call_stack, TCallStack>::type>(
             allocator, deps, refs, visitor, policies
         );
     }
@@ -199,8 +201,6 @@ private:
               , const TVisitor& visitor
               , const TPolicies& policies
               , const type_list<TArgs...>&) {
-        //using call_stack_type = typename binder_t::template call_stack<T, TCallStack>::type;
-
         return allocator.template
             allocate<typename TDependency::expected, typename TDependency::given>(
                 create<TArgs, T, TCallStack>(allocator, deps, refs, visitor, policies)...

@@ -35,6 +35,9 @@ class is_required_name {
 public:
     template<typename T>
     using apply = int_<std::is_same<typename get_name<typename T::type>::type, TName>::value>;
+
+    template<typename>
+    using eval = int_<1>;
 };
 
 } // namespace type_traits

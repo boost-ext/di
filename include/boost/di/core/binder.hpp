@@ -27,7 +27,10 @@ struct data {
 };
 
 template<typename T, typename TCallStack, typename _>
-using eval_impl = pair<_, typename _::bind::template apply<data<T, TCallStack, _>>::type>;
+using resolve_impl = pair<_, typename _::bind::template apply<data<T, TCallStack, _>>::type>;
+
+template<typename T, typename TCallStack, typename _>
+using eval_impl = typename _::bind::template eval<data<T, TCallStack, _>>::type;
 
 template<typename>
 struct binder;
@@ -45,8 +48,14 @@ struct binder<type_list<Ts...>> {
     >
     using resolve = typename greatest<
         pair<TDefault, int_<0>>
-      , eval_impl<T, TCallStack, Ts>...
+      , resolve_impl<T, TCallStack, Ts>...
     >::type::template rebind<typename scopes::deduce::rebind<T>::other>::other;
+
+    template<
+        typename T
+      , typename TCallStack
+    >
+    using eval = typename or_<eval_impl<T, TCallStack, Ts>...>::type;
 };
 
 } // namespace core

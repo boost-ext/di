@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_BINDINGS_CALL_STACK_HPP
 #define BOOST_DI_BINDINGS_CALL_STACK_HPP
 
-#include "boost/di/aux_/config.hpp"
+#include <type_traits>
 #include "boost/di/aux_/mpl.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
 
@@ -15,55 +15,36 @@ namespace boost {
 namespace di {
 namespace bindings {
 
+template<typename, typename>
+struct match;
+
+template<typename T1, typename... Ts1, typename T2, typename... Ts2>
+struct match<type_list<T1, Ts1...>, type_list<T2, Ts2...>>
+    : bool_<std::is_same<T1, T2>::value && match<type_list<Ts1...>, type_list<Ts2...>>::value>
+{ };
+
+template<>
+struct match<type_list<>, type_list<>>
+    : std::true_type
+{ };
+
 template<typename... Ts>
-class call_stack {
-/*    typedef BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T) context_type;*/
+struct match<type_list<>, type_list<Ts...>>
+    : std::true_type
+{ };
 
-    //template<typename TContext, typename TCallStack>
-    //struct equal
-        //: aux::mpl::equal<
-              //aux::mpl::iterator_range<
-                  //typename aux::mpl::advance<
-                      //typename aux::mpl::begin<TCallStack>::type
-                    //, typename aux::mpl::max<
-                          //aux::mpl::int_<0>
-                        //, aux::mpl::minus<
-                              //aux::mpl::size<TCallStack>
-                            //, aux::mpl::size<TContext>
-                          //>
-                      //>::type
-                  //>::type
-                //, typename aux::mpl::end<TCallStack>::type
-              //>
-            //, TContext
-          //>
-    //{ };
+template<typename... Ts>
+struct match<type_list<Ts...>, type_list<>>
+    : std::false_type
+{ };
 
-    //template<typename TContext, typename TCallStack>
-    //struct apply_impl
-        //: aux::mpl::if_<
-              //aux::mpl::empty<TCallStack>
-            //, aux::mpl::int_<0>
-            //, aux::mpl::if_<
-                  //equal<TContext, TCallStack>
-                //, aux::mpl::size<TContext>
-                //, aux::mpl::int_<0>
-              //>
-          //>
-    //{ };
-
-public:
+template<typename... Ts>
+struct call_stack {
     template<typename T>
-    struct apply
-        : std::false_type
-/*        : apply_impl<*/
-              //context_type
-            //, typename aux::mpl::transform<
-                  //typename T::call_stack
-                //, di::type_traits::make_plain<aux::mpl::_>
-              //>::type
-          /*>::type*/
-    { };
+    using apply = std::is_same<typename T::call_stack, type_list<Ts...>>;
+
+    template<typename T>
+    using eval = typename match<typename T::call_stack, type_list<Ts...>>::type;
 };
 
 } // namespace bindings

@@ -49,6 +49,7 @@ struct bind
         , detail::requires_<
               type_traits::is_required_priority
             , type_traits::is_required_type<TExpected>
+            , detail::when_<>
           >
       >
 {
@@ -91,6 +92,7 @@ struct bind
                   type_traits::is_required_priority
                 , type_traits::is_required_type<TExpected>
                 , type_traits::is_required_name<TName>
+                , detail::when_<>
               >
           >
     {
