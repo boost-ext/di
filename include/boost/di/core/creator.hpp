@@ -47,7 +47,6 @@ class creator {
     >
     struct data {
         using type = T;
-        using call_stack = TCallStack;
         using dependency = TDependency;
         using binder = binder_t;
     };
@@ -116,12 +115,12 @@ public:
         >::type;
         using eval_type = typename binder_t::template eval<T, call_stack>::type;
         using dependency_type = typename binder_t::template resolve<T, call_stack>::type;
-
-        //typedef data<T, call_stack_type, dependency_type> data_type;
+        using propagate_call_stack = typename std::conditional<eval_type::value, call_stack, TCallStack>::type;
+        //typedef data<T, dependency_type> data_type;
         //assert_policies<typename TPolicies::types, data_type>(policies);
         //(visitor)(data_type());
 
-        return create_impl<T, dependency_type, typename std::conditional<eval_type::value, call_stack, TCallStack>::type>(
+        return create_impl<T, dependency_type, propagate_call_stack>(
             allocator, deps, refs, visitor, policies
         );
     }

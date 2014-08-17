@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE(create_shared_context) {
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-/*BOOST_AUTO_TEST_CASE(create_unique_shared_context_order) {*/
+//BOOST_AUTO_TEST_CASE(create_unique_shared_context_order) {
     //module<
         //type_list<
             //fake_dependency<scopes::unique<>, if0, c0if0>::type
@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE(create_shared_context) {
     //BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->i);
     //BOOST_CHECK_EQUAL(0.0, c8_->c7_->c6_->c5_.c2_->d);
     //BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
-/*}*/
+//}
 
 /*BOOST_AUTO_TEST_CASE(create_unique_shared_context_mix) {*/
     //module<
