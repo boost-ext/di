@@ -16,8 +16,7 @@ namespace di {
 namespace bindings {
 
 template<typename... Ts>
-class call_stack
-{
+class call_stack {
 /*    typedef BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(T) context_type;*/
 
     //template<typename TContext, typename TCallStack>

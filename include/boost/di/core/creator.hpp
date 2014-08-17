@@ -116,8 +116,7 @@ public:
          , TRefs& refs
          , const TVisitor& visitor
          , const TPolicies& policies) {
-        using dependency_type = typename binder_t::template
-            resolve<T, TCallStack>::type;
+        using dependency_type = typename binder_t::template resolve<T, TCallStack>::type;
 
         //typedef data<T, call_stack_type, dependency_type> data_type;
         //assert_policies<typename TPolicies::types, data_type>(policies);
@@ -171,22 +170,20 @@ private:
               , TRefs& refs
               , const TVisitor& visitor
               , const TPolicies& policies) {
-
         return wrappers::universal<T>(
             refs
-          , acquire<TDependency>(deps).create(
-              [&] {
-                using ctor_type = typename type_traits::ctor_traits<typename TDependency::given>::type;
+          , acquire<TDependency>(deps).create([&]{
+                using ctor_type =
+                    typename type_traits::ctor_traits<typename TDependency::given>::type;
 
-                //BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
-                    using call_stack_type = typename add<TCallStack, T>::type;
-                //)
-
-                //BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
-                    //using call_stack_type = TCallStack;
-                //)
-
-                return create_impl<T, TDependency, call_stack_type>(allocator, deps, refs, visitor, policies, ctor_type());
+                return create_impl<T, TDependency, TCallStack>(
+                    allocator
+                  , deps
+                  , refs
+                  , visitor
+                  , policies
+                  , ctor_type()
+                );
             })
         );
     }
@@ -209,6 +206,7 @@ private:
               , const TVisitor& visitor
               , const TPolicies& policies
               , const type_list<TArgs...>&) {
+                    using call_stack_type = typename add<TCallStack, T>::type;
         return allocator.template
             allocate<typename TDependency::expected, typename TDependency::given>(
                 create<TArgs, T, TCallStack>(allocator, deps, refs, visitor, policies)...

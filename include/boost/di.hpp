@@ -41,8 +41,8 @@
 #include <map>
 #include <functional>
 #include <boost/type_traits/is_integral.hpp>
-#include <boost/ref.hpp>
 #include "boost/di/inject.hpp"
+#include "boost/di/aux_/ref.hpp"
 #include "boost/di/aux_/mpl.hpp"
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/config.hpp"
@@ -499,21 +499,6 @@ private:
 } // namespace boost
 
 namespace boost {
-
-template<typename T>
-class is_reference_wrapper< ::std::reference_wrapper<T>>
-    : public ::std::true_type
-{ };
-
-template<typename T>
-class unwrap_reference< ::std::reference_wrapper<T>> {
-public:
-    using type = T;
-};
-
-} // namespace boost
-
-namespace boost {
 namespace di {
 
 BOOST_DI_HAS_MEMBER_FUNCTION(call_operator, operator());
@@ -561,13 +546,13 @@ public:
     public:
         template<typename T>
         explicit scope(const T& object
-                     , typename std::enable_if<has_call_operator<T>::value && !is_reference_wrapper<T>::value>::type* = 0)
+                     , typename std::enable_if<has_call_operator<T>::value && !aux::is_reference_wrapper<T>::value>::type* = 0)
             : object_(convert_when_function<TExpected>(object))
         { }
 
         template<typename T>
         explicit scope(const T& object
-                     , typename std::enable_if<!(has_call_operator<T>::value && !is_reference_wrapper<T>::value)>::type* = 0)
+                     , typename std::enable_if<!(has_call_operator<T>::value && !aux::is_reference_wrapper<T>::value)>::type* = 0)
             : object_(result_type_holder(object))
         { }
 
@@ -1138,7 +1123,7 @@ class dependency : public TScope::template scope<TExpected>
     };
 
     template<typename T>
-    struct get_wrapper_impl<T, typename std::enable_if<is_reference_wrapper<T>::value>::type> {
+    struct get_wrapper_impl<T, typename std::enable_if<aux::is_reference_wrapper<T>::value>::type> {
         using type = ref_type;
     };
 
@@ -1160,7 +1145,7 @@ class dependency : public TScope::template scope<TExpected>
     template<typename T>
     struct get_wrapper<T, typename std::enable_if<has_call_operator<T>::value>::type
                         , typename std::enable_if<!has_result_type<T>::value>::type
-                        , typename std::enable_if<!is_reference_wrapper<T>::value>::type>
+                        , typename std::enable_if<!aux::is_reference_wrapper<T>::value>::type>
         : get_wrapper_impl<
               typename di::type_traits::function_traits<
                   decltype(&T::operator())
@@ -1199,20 +1184,20 @@ public:
 
     template<typename T>
     static dependency<value_type, expected, T, TBind>
-    to(const T& object, typename std::enable_if<!is_reference_wrapper<T>::value>::type* = 0
+    to(const T& object, typename std::enable_if<!aux::is_reference_wrapper<T>::value>::type* = 0
                       , typename std::enable_if<!has_call_operator<T>::value>::type* = 0) {
         return dependency<value_type, expected, T, TBind>(object);
     }
 
     template<typename T>
-    static dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>
-    to(const T& object, typename std::enable_if<is_reference_wrapper<T>::value>::type* = 0) {
-        return dependency<ref_type, typename unwrap_reference<T>::type, T, TBind>(object);
+    static dependency<ref_type, typename aux::unwrap_reference<T>::type, T, TBind>
+    to(const T& object, typename std::enable_if<aux::is_reference_wrapper<T>::value>::type* = 0) {
+        return dependency<ref_type, typename aux::unwrap_reference<T>::type, T, TBind>(object);
     }
 
     template<typename T>
     static dependency<typename get_wrapper<T>::type, expected, T, TBind>
-    to(const T& object, typename std::enable_if<!is_reference_wrapper<T>::value>::type* = 0
+    to(const T& object, typename std::enable_if<!aux::is_reference_wrapper<T>::value>::type* = 0
                       , typename std::enable_if<has_call_operator<T>::value>::type* = 0) {
         return dependency<typename get_wrapper<T>::type, expected, T, TBind>(object);
     }
@@ -1233,6 +1218,8 @@ namespace boost {
 namespace di {
 namespace bindings {
 
+BOOST_DI_HAS_MEMBER_TYPE(given);
+
 template<
     typename TScope
   , template<
@@ -1243,8 +1230,6 @@ template<
     > class TDependency
 >
 class scope {
-    BOOST_DI_HAS_MEMBER_TYPE(given);
-
     template<typename T>
     using is_dependency = has_given<T>;
 
@@ -1392,8 +1377,7 @@ template<
   , typename TCallStack
   , typename TDependency
 >
-struct data
-{
+struct data {
     using type = T;
     using call_stack = TCallStack;
     using dependency = TDependency;
@@ -2027,8 +2011,8 @@ private:
                     using call_stack_type = TCallStack;
                 //)
 
-                return create_impl<T, TDependency, call_stack_type>(allocator, deps, refs, visitor, policies, ctor_type());}
-            )
+                return create_impl<T, TDependency, call_stack_type>(allocator, deps, refs, visitor, policies, ctor_type());
+            })
         );
     }
 
