@@ -75,11 +75,11 @@ rule compile-fail-test ( std * : src + : ctor * : defines * : preprocessed_heade
 }
 
 test-suite vt : # verification tests
-    #[ run-test c++11 : vt/compiler_support_vt.cpp : compiler_support_cpp_11 ]
+    [ run-test c++11 : vt/compiler_support_vt.cpp : compiler_support_cpp_11 ]
 ;
 
 test-suite ut : # unit tests
-#    [ run-test c++11 : ut/bindings_ut.cpp ]
+    #[ run-test c++11 : ut/bindings_ut.cpp ]
     #[ run-test c++11 : ut/bindings/detail/requires_ut.cpp ]
     #[ run-test c++11 : ut/bindings/detail/when_ut.cpp ]
     #[ run-test c++11 : ut/bindings/type_traits/is_required_name_ut.cpp ]
@@ -89,7 +89,7 @@ test-suite ut : # unit tests
     #[ run-test c++11 : ut/bindings/dependency_ut.cpp ]
 
     #[ run-test c++11 : ut/core/allocator_ut.cpp ]
-    #[ run-test c++11 : ut/core/any_type_ut.cpp ]
+    [ run-test c++11 : ut/core/any_type_ut.cpp ]
     #[ run-test c++11 : ut/core/binder_ut.cpp ]
     #[ run-test c++11 : ut/core/creator_ut.cpp ]
     #[ run-test c++11 : ut/core/pool_ut.cpp ]
@@ -99,34 +99,34 @@ test-suite ut : # unit tests
     #[ run-test c++11 : ut/policies/parameters_permission_ut.cpp ]
     #[ run-test c++11 : ut/policies/scopes_permission_ut.cpp ]
 
-    #[ run-test c++11 : ut/scopes/deduce_ut.cpp : scope_deduce_ut ]
-    #[ run-test c++11 : ut/scopes/external_ut.cpp : scope_external_ut ]
-    #[ run-test c++11 : ut/scopes/session_ut.cpp : scope_session_ut ]
-    #[ run-test c++11 : ut/scopes/shared_ut.cpp : scope_shared_ut ]
-    #[ run-test c++11 : ut/scopes/unique_ut.cpp : scope_unique_ut ]
+    [ run-test c++11 : ut/scopes/deduce_ut.cpp : scope_deduce_ut ]
+    [ run-test c++11 : ut/scopes/external_ut.cpp : scope_external_ut ]
+    [ run-test c++11 : ut/scopes/session_ut.cpp : scope_session_ut ]
+    [ run-test c++11 : ut/scopes/shared_ut.cpp : scope_shared_ut ]
+    [ run-test c++11 : ut/scopes/unique_ut.cpp : scope_unique_ut ]
 
     #[ run-test c++11 : ut/type_traits/ctor_traits_ut.cpp : ctor_traits_ut_cpp_11 ]
     #[ run-test c++11 : ut/type_traits/function_traits_ut.cpp ]
     #[ run-test c++11 : ut/type_traits/has_call_ut.cpp : has_call_ut_cpp_11 ]
     #[ run-test c++11 : ut/type_traits/is_convertible_to_ref_ut.cpp : is_convertible_to_ref_ut_cpp_11 ]
-    #[ run-test c++11 : ut/type_traits/is_same_base_of_ut.cpp ]
-    #[ run-test c++11 : ut/type_traits/make_plain_ut.cpp ]
-    #[ run-test c++11 : ut/type_traits/remove_accessors_ut.cpp ]
-    #[ run-test c++11 : ut/type_traits/scope_traits_ut.cpp ]
+    [ run-test c++11 : ut/type_traits/is_same_base_of_ut.cpp ]
+    [ run-test c++11 : ut/type_traits/make_plain_ut.cpp ]
+    [ run-test c++11 : ut/type_traits/remove_accessors_ut.cpp ]
+    [ run-test c++11 : ut/type_traits/scope_traits_ut.cpp ]
 
-    #[ run-test c++11 : ut/wrappers/copy_ut.cpp : wrapper_copy_ut ]
-    #[ run-test c++11 : ut/wrappers/reference_ut.cpp : wrapper_reference_ut ]
-    #[ run-test c++11 : ut/wrappers/shared_ut.cpp : wrapper_shared_ut ]
-    #[ run-test c++11 : ut/wrappers/universal_ut.cpp : universal_ut ]
-    #[ run-test c++11 : ut/wrappers/value_ut.cpp : wrapper_value_ut ]
+    [ run-test c++11 : ut/wrappers/copy_ut.cpp : wrapper_copy_ut ]
+    [ run-test c++11 : ut/wrappers/reference_ut.cpp : wrapper_reference_ut ]
+    [ run-test c++11 : ut/wrappers/shared_ut.cpp : wrapper_shared_ut ]
+    [ run-test c++11 : ut/wrappers/universal_ut.cpp : universal_ut ]
+    [ run-test c++11 : ut/wrappers/value_ut.cpp : wrapper_value_ut ]
 
-    #[ run-test c++11 : ut/inject_bracket_ut.cpp ]
-    #[ run-test c++11 : ut/inject_va_args_ut.cpp ]
+    [ run-test c++11 : ut/inject_bracket_ut.cpp ]
+    [ run-test c++11 : ut/inject_va_args_ut.cpp ]
 
     #[ run-test c++11 : ut/injector_ut.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
     #[ run-test c++11 : ut/injector_ut.cpp : ctor_injector_ut : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
 
-    #[ run-test c++11 : ut/named_ut.cpp ]
+    [ run-test c++11 : ut/named_ut.cpp ]
 ;
 
 test-suite mt : # module tests
@@ -167,7 +167,7 @@ test-suite mt : # module tests
     #[ compile-fail-test c++11 : fail/make_injector_wrong_arg_fail.cpp : make_injector_wrong_arg_fail_cpp_11 ]
 #;
 
-#test-suite pt : # performane tests
-    #[ run-test c++11 : pt/di_pt.cpp : preprocessed_di_pt_cpp_11 : <define>BOOST_DI_CFG_TEST_LEVELS_LIMIT_SIZE=5 : preprocessed_headers ]
-#;
+test-suite pt : # performane tests
+    [ run-test c++11 : pt/di_pt.cpp : preprocessed_di_pt_cpp_11 : <define>BOOST_DI_CFG_TEST_LEVELS_LIMIT_SIZE=5 : preprocessed_headers ]
+;
 

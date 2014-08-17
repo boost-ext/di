@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_CASE(conversion_to_const_ref) {
 
     BOOST_CHECK_EQUAL(
         0
-      , type(any_type<void, aux::mpl::vector<>, fake_creator<type>, fake_allocator>(
+      , type(any_type<void, type_list<>, fake_creator<type>, fake_allocator>(
             creator, allocator, deps, refs, none_t(), none_t())
         )
     );
@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE(conversion_to_ref) {
     fake_allocator allocator;
     none_t deps;
     none_t refs;
-    type i = any_type<void, aux::mpl::vector<>, fake_creator<type>, fake_allocator>(
+    type i = any_type<void, type_list<>, fake_creator<type>, fake_allocator>(
         creator, allocator, deps, refs, none_t(), none_t()
     );
 
@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE(conversion_to_copy) {
 
     BOOST_CHECK_EQUAL(
         0
-      , type(any_type<void, aux::mpl::vector<>, fake_creator<type>, fake_allocator>(
+      , type(any_type<void, type_list<>, fake_creator<type>, fake_allocator>(
             creator, allocator, deps, refs, none_t(), none_t())
         )
     );

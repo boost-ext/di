@@ -4,7 +4,9 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#include <type_traits>
 #include "boost/di/aux_/config.hpp"
+#include "boost/di/aux_/mpl.hpp"
 
 #include <memory>
 #include <boost/test/unit_test.hpp>
@@ -35,26 +37,9 @@ struct any_type {
     }
 };
 
-template<typename T>
-struct ctor {
-    template<typename U>
-    static aux::mpl::aux::yes_tag test(BOOST_DI_FEATURE_DECLTYPE(
-        U(any_type(), any_type(), any_type(), any_type(), any_type(), any_type()))*
-    );
-
-    template<typename>
-    static aux::mpl::aux::no_tag test(...);
-
-    BOOST_STATIC_CONSTANT(
-        bool
-      , value = sizeof(test<T>(0)) == sizeof(aux::mpl::aux::yes_tag)
-    );
-};
-
 struct empty { };
 struct app {
-    app(int, const int&, int&, std::auto_ptr<int>, int*, const int*)
-    { }
+    app(int, const int&, int&, std::auto_ptr<int>, int*, const int*) { }
 };
 
 BOOST_AUTO_TEST_CASE(conversion) {
@@ -62,8 +47,8 @@ BOOST_AUTO_TEST_CASE(conversion) {
 }
 
 BOOST_AUTO_TEST_CASE(constructor) {
-    BOOST_CHECK(!ctor<empty>::value);
-    BOOST_CHECK(ctor<app>::value);
+    BOOST_CHECK((!std::is_constructible<empty, any_type, any_type, any_type, any_type, any_type, any_type>::value));
+    BOOST_CHECK((std::is_constructible<app, any_type, any_type, any_type, any_type, any_type, any_type>::value));
 }
 
 } // namespace di
