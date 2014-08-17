@@ -7,23 +7,16 @@
 #ifndef BOOST_DI_TEST_CONFIG_HPP
 #define BOOST_DI_TEST_CONFIG_HPP
 
-#include <boost/config.hpp>
-#include <boost/version.hpp>
-
-#if defined(BOOST_GCC) || defined(BOOST_CLANG)
+#if defined(__GNUC__)
     #pragma GCC diagnostic ignored "-Wdeprecated-declarations" // std::aux::auto_ptr
 #endif
 
-#if defined(BOOST_INTEL)
+#if defined(__INTEL_COMPILER)
     #pragma warning(disable:1478) // class "std::aux::auto_ptr<...>" was declared deprecated
 #endif
 
-#if defined(BOOST_MSVC)
+#if defined(_MSC_VER)
     #pragma warning(disable:4127) // conditional expression is constant
-
-    #if (BOOST_VERSION < 105500)
-        #undef BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS
-    #endif
 #endif
 
 #if defined(BOOST_DI_CFG_TEST_CTOR)
