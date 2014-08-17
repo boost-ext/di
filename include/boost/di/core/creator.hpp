@@ -244,7 +244,6 @@ private:
         return *dependency;
     }
 
-    binder_t binder_;
     scopes_type scopes_;
 };
 
