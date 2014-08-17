@@ -120,7 +120,8 @@ public:
         using eval_type = typename binder_t::template eval<T, call_stack>::type;
         using dependency_type = typename binder_t::template resolve<T, call_stack>::type;
 
-    std::cout << boost::units::detail::demangle(typeid(T).name()) << std::endl;
+    //std::cout << boost::units::detail::demangle(typeid(T).name()) << std::endl;
+    std::cout << boost::units::detail::demangle(typeid(eval_type).name()) << std::endl;
     std::cout << boost::units::detail::demangle(typeid(call_stack).name()) << std::endl;
 
         //typedef data<T, call_stack_type, dependency_type> data_type;

@@ -59,10 +59,18 @@ struct take_last<type_list<>, N>
     : type_list<>
 { };
 
+template<typename, typename>
+struct is_same_call_stack;
+
+template<typename... Ts, typename T>
+struct is_same_call_stack<type_list<Ts...>, T>
+    : std::conditional<std::is_same<type_list<Ts...>, T>::value, int_<sizeof...(Ts) + 1>, int_<0>>
+{ };
+
 template<typename... Ts>
 struct call_stack {
     template<typename T>
-    using apply = std::is_same<
+    using apply = is_same_call_stack<
         typename make_plain<
             typename take_last<
                 typename T::call_stack
@@ -73,9 +81,9 @@ struct call_stack {
     >;
 
     template<typename T>
-    using eval = typename match<
-        typename make_plain<typename T::call_stack>::type, type_list<Ts...>
-    >::type;
+    using eval = int_<
+        match<typename make_plain<typename T::call_stack>::type, type_list<Ts...>>::value
+    >;
 };
 
 } // namespace bindings

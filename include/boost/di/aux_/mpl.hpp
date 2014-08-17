@@ -45,8 +45,8 @@
 #define BOOST_DI_HAS_MEMBER(name)                                                       \
     BOOST_DI_HAS_MEMBER_IMPL(name, name, int name, int base_impl::*)
 
-#define BOOST_DI_HAS_MEMBER_TYPE(name) BOOST_DI_HAS_MEMBER_TYPE_IMPL(name)
-//#define BOOST_DI_HAS_MEMBER_TYPE(name) BOOST_DI_HAS_MEMBER(name)
+//#define BOOST_DI_HAS_MEMBER_TYPE(name) BOOST_DI_HAS_MEMBER_TYPE_IMPL(name)
+#define BOOST_DI_HAS_MEMBER_TYPE(name) BOOST_DI_HAS_MEMBER(name)
 
 namespace boost {
 namespace di {
