@@ -195,32 +195,32 @@ using one_injector_types = mpl::vector<
   , injector<decltype(injector_1)>
 >;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(one_injector, TInjector, one_injector_types) {
-    TInjector injector;
-    check(injector.template create<c8>());
-}
+//BOOST_AUTO_TEST_CASE_TEMPLATE(one_injector, TInjector, one_injector_types) {
+    //TInjector injector;
+    //check(injector.template create<c8>());
+//}
 
-using multiple_injectors_types = mpl::vector<
-    injector<injector_2_t, injector_3_t>
-  , injector<injector_3_t, injector_2_t>
-  , injector<decltype(injector_2), decltype(injector_3)>
-  , injector<decltype(injector_3), decltype(injector_2)>
->;
+//using multiple_injectors_types = mpl::vector<
+    //injector<injector_2_t, injector_3_t>
+  //, injector<injector_3_t, injector_2_t>
+  //, injector<decltype(injector_2), decltype(injector_3)>
+  //, injector<decltype(injector_3), decltype(injector_2)>
+//>;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_injectors, TInjector, multiple_injectors_types) {
-    TInjector injector;
-    check(injector.template create<aux::shared_ptr<c8>>());
-}
+//BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_injectors, TInjector, multiple_injectors_types) {
+    //TInjector injector;
+    //check(injector.template create<aux::shared_ptr<c8>>());
+//}
 
-using mix_injectors_types = mpl::vector<
-    injector<injector_2_t, decltype(injector_2)>
-  , injector<decltype(injector_2), injector_2_t>
->;
+//using mix_injectors_types = mpl::vector<
+    //injector<injector_2_t, decltype(injector_2)>
+  //, injector<decltype(injector_2), injector_2_t>
+//>;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(mix_injectors, TInjector, mix_injectors_types) {
-    TInjector injector;
-    check(injector.template create<aux::shared_ptr<c8>>());
-}
+//BOOST_AUTO_TEST_CASE_TEMPLATE(mix_injectors, TInjector, mix_injectors_types) {
+    //TInjector injector;
+    //check(injector.template create<aux::shared_ptr<c8>>());
+//}
 
 using basic_provider_types = mpl::vector<
     injector<injector_provider_t>
@@ -253,25 +253,25 @@ using basic_visitor_types = mpl::vector<
     //injector.template visit<transaction_usage>(visitor);
 //}
 
-using basic_call_types = mpl::vector<
-    injector<injector_custom_scope_t>
-  , injector<decltype(injector_custom_scope)>
->;
+//using basic_call_types = mpl::vector<
+    //injector<injector_custom_scope_t>
+  //, injector<decltype(injector_custom_scope)>
+//>;
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(basic_call, TInjector, basic_call_types) {
-    fake_scope<>::entry_calls() = 0;
-    fake_scope<>::exit_calls() = 0;
+//BOOST_AUTO_TEST_CASE_TEMPLATE(basic_call, TInjector, basic_call_types) {
+    //fake_scope<>::entry_calls() = 0;
+    //fake_scope<>::exit_calls() = 0;
 
-    TInjector injector;
+    //TInjector injector;
 
-    BOOST_CHECK(!injector.template create<aux::shared_ptr<c3>>());
+    //BOOST_CHECK(!injector.template create<aux::shared_ptr<c3>>());
 
-    injector.call(fake_scope_entry());
-    BOOST_CHECK(injector.template create<aux::shared_ptr<c3>>());
+    //injector.call(fake_scope_entry());
+    //BOOST_CHECK(injector.template create<aux::shared_ptr<c3>>());
 
-    injector.call(fake_scope_exit());
-    BOOST_CHECK(!injector.template create<aux::shared_ptr<c3>>());
-}
+    //injector.call(fake_scope_exit());
+    //BOOST_CHECK(!injector.template create<aux::shared_ptr<c3>>());
+//}
 
 BOOST_AUTO_TEST_CASE(basic_injector_externals) {
     injector<decltype(injector_externals_2)> injector_(injector_externals_2);
@@ -292,31 +292,32 @@ BOOST_AUTO_TEST_CASE(externals_priority) {
     BOOST_CHECK_EQUAL(i, injector.create<c3>().i);
 }
 
-BOOST_AUTO_TEST_CASE(externals_mix) {
-    injector<
-        decltype(injector_externals_1)
-      , decltype(injector_externals_2)
-    > injector_(injector_externals_2, injector_externals_1);
+//BOOST_AUTO_TEST_CASE(externals_mix) {
+    //injector<
+        //decltype(injector_externals_1)
+      //, decltype(injector_externals_2)
+    //> injector_(injector_externals_2, injector_externals_1);
 
-    auto c8_ = injector_.create<aux::shared_ptr<c8>>();
+    //auto c8_ = injector_.create<aux::shared_ptr<c8>>();
 
-    BOOST_CHECK_EQUAL(4, c8_->i);
-    BOOST_CHECK_EQUAL(3, c8_->c7_->c6_->c4_->i1);
-    BOOST_CHECK_EQUAL(42, c8_->c7_->c6_->c4_->i2);
-    BOOST_CHECK_EQUAL(42, c8_->c7_->c6_->c3_->i);
-    BOOST_CHECK_EQUAL(42, c8_->c7_->c6_->c5_.c2_->i);
-    BOOST_CHECK_EQUAL(87.0, c8_->c7_->c6_->c5_.c2_->d);
-    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
-    BOOST_CHECK_EQUAL(67, dynamic_cast<c3if0&>(*c8_->c7_->c6_->c5_.if0_).i);
-    BOOST_CHECK_EQUAL(78.0, dynamic_cast<c3if0&>(*c8_->c7_->c6_->c5_.if0_).d);
-    BOOST_CHECK_EQUAL(67, dynamic_cast<c3if0&>(*c8_->c7_->if0_).i);
-}
+    //BOOST_CHECK_EQUAL(4, c8_->i);
+    //BOOST_CHECK_EQUAL(3, c8_->c7_->c6_->c4_->i1);
+    //BOOST_CHECK_EQUAL(42, c8_->c7_->c6_->c4_->i2);
+    //BOOST_CHECK_EQUAL(42, c8_->c7_->c6_->c3_->i);
+    //BOOST_CHECK_EQUAL(42, c8_->c7_->c6_->c5_.c2_->i);
+    //BOOST_CHECK_EQUAL(87.0, c8_->c7_->c6_->c5_.c2_->d);
+    //BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
+    //BOOST_CHECK_EQUAL(67, dynamic_cast<c3if0&>(*c8_->c7_->c6_->c5_.if0_).i);
+    //BOOST_CHECK_EQUAL(78.0, dynamic_cast<c3if0&>(*c8_->c7_->c6_->c5_.if0_).d);
+    //BOOST_CHECK_EQUAL(67, dynamic_cast<c3if0&>(*c8_->c7_->if0_).i);
+//}
 
 BOOST_AUTO_TEST_CASE(ctor) {
     injector<decltype(injector_1)> injector(injector_1);
     check(injector.create<c8>());
 }
 
+#if 0
 BOOST_AUTO_TEST_CASE(ctor_mix) {
     injector<injector_2_t, decltype(injector_2)> injector(injector_2);
     check(injector.create<aux::shared_ptr<c8>>());
@@ -459,32 +460,32 @@ BOOST_AUTO_TEST_CASE(inject_priority) {
     BOOST_CHECK_EQUAL(0.0, c28_.f_);
 }
 
-BOOST_AUTO_TEST_CASE(session_scope) {
-    injector<
-        session<c0if0>
-    > injector_;
+//BOOST_AUTO_TEST_CASE(session_scope) {
+    //injector<
+        //session<c0if0>
+    //> injector_;
 
-    {
-    auto c20_ = injector_.create<c20>();
-    BOOST_CHECK(nullptr == c20_.if0_.get());
-    BOOST_CHECK(nullptr == c20_.if0__.get());
-    }
+    //{
+    //auto c20_ = injector_.create<c20>();
+    //BOOST_CHECK(nullptr == c20_.if0_.get());
+    //BOOST_CHECK(nullptr == c20_.if0__.get());
+    //}
 
-    {
-    injector_.call(scopes::session_entry());
-    auto c20_ = injector_.create<c20>();
-    BOOST_CHECK(dynamic_cast<c0if0*>(c20_.if0_.get()));
-    BOOST_CHECK(dynamic_cast<c0if0*>(c20_.if0__.get()));
-    BOOST_CHECK(c20_.if0_ == c20_.if0__);
-    }
+    //{
+    //injector_.call(scopes::session_entry());
+    //auto c20_ = injector_.create<c20>();
+    //BOOST_CHECK(dynamic_cast<c0if0*>(c20_.if0_.get()));
+    //BOOST_CHECK(dynamic_cast<c0if0*>(c20_.if0__.get()));
+    //BOOST_CHECK(c20_.if0_ == c20_.if0__);
+    //}
 
-    {
-    injector_.call(scopes::session_exit());
-    auto c20_ = injector_.create<c20>();
-    BOOST_CHECK(nullptr == c20_.if0_.get());
-    BOOST_CHECK(nullptr == c20_.if0__.get());
-    }
-}
+    //{
+    //injector_.call(scopes::session_exit());
+    //auto c20_ = injector_.create<c20>();
+    //BOOST_CHECK(nullptr == c20_.if0_.get());
+    //BOOST_CHECK(nullptr == c20_.if0__.get());
+    //}
+//}
 
 BOOST_AUTO_TEST_CASE(scoped_injector_create) {
     aux::shared_ptr<int> i1;
@@ -591,6 +592,7 @@ BOOST_AUTO_TEST_CASE(named_parameters_all_externals) {
       //, creation_permission<>()
     //);
 //}
+#endif
 
 } // namespace di
 } // namespace boost

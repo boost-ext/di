@@ -9,9 +9,9 @@
 
 #include "boost/di/aux_/mpl.hpp"
 
-#if defined(__GNUC__)
-    #pragma GCC diagnostic ignored "-Wreorder"
-#endif
+//#if defined(__GNUC__)
+    //#pragma GCC diagnostic ignored "-Wreorder"
+//#endif
 
 namespace boost {
 namespace di {

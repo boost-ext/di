@@ -46,13 +46,36 @@ struct make_plain<type_list<Ts...>>
     : type_list<typename di::type_traits::make_plain<Ts>::type...>
 { };
 
+template<typename, std::size_t>
+struct take_last;
+
+template<std::size_t N, typename T, typename... Ts>
+struct take_last<type_list<T, Ts...>, N>
+    : std::conditional<!N, type_list<T, Ts...>, typename take_last<type_list<Ts...>, N-1>::type>::type
+{ };
+
+template<std::size_t N>
+struct take_last<type_list<>, N>
+    : type_list<>
+{ };
+
 template<typename... Ts>
 struct call_stack {
     template<typename T>
-    using apply = std::is_same<typename make_plain<typename T::call_stack>::type, type_list<Ts...>>;
+    using apply = std::is_same<
+        typename make_plain<
+            typename take_last<
+                typename T::call_stack
+              , size<typename T::call_stack>::value - sizeof...(Ts)
+            >::type
+        >::type
+      , type_list<Ts...>
+    >;
 
     template<typename T>
-    using eval = typename match<typename make_plain<typename T::call_stack>::type, type_list<Ts...>>::type;
+    using eval = typename match<
+        typename make_plain<typename T::call_stack>::type, type_list<Ts...>
+    >::type;
 };
 
 } // namespace bindings

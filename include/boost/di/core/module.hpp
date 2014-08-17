@@ -58,7 +58,7 @@ public:
         pool<type_list<TPolicies...>> policies_(policies...);
         std::vector<aux::shared_ptr<void>> refs_;
 
-        return creator_.template create<T, T, call_stack>(
+        return creator_.template create<T, none_t, call_stack>(
             allocator()
           , static_cast<pool_t&>(*this)
           , refs_
@@ -73,7 +73,7 @@ public:
         pool<type_list<TPolicies...>> policies_(policies...);
         std::vector<aux::shared_ptr<void>> refs_;
 
-        return creator_.template create<T, T, call_stack>(
+        return creator_.template create<T, none_t, call_stack>(
             allocator
           , static_cast<pool_t&>(*this)
           , refs_
@@ -87,7 +87,7 @@ public:
         using call_stack = type_list<>;
         std::vector<aux::shared_ptr<void>> refs_;
 
-        return creator_.template create<T, T, call_stack>(
+        return creator_.template create<T, none_t, call_stack>(
             allocator()
           , static_cast<pool_t&>(*this)
           , refs_

@@ -40,7 +40,9 @@
 #include <typeinfo>
 #include <typeindex>
 #include <string>
+#include <iostream>
 #include <functional>
+#include <boost/units/detail/utility.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include "boost/di/inject.hpp"
 #include "boost/di/aux_/ref.hpp"
@@ -340,7 +342,7 @@ namespace scopes {
 template<template<typename> class TWrapper = wrappers::copy>
 class unique {
 public:
-    using priority = int_<0>;
+    static const bool priority = false;
 
     template<typename TExpected>
     class scope {
@@ -418,10 +420,9 @@ namespace di {
 namespace scopes {
 
 template<template<typename> class TWrapper = wrappers::shared>
-class shared
-{
+class shared {
 public:
-    using priority = int_<0>;
+    static const bool priority = false;
 
     template<typename TExpected>
     class scope {
@@ -509,7 +510,7 @@ namespace scopes {
 template<template<typename> class TWrapper = wrappers::value>
 class external {
 public:
-    using priority = int_<1>;
+    static const bool priority = true;
 
     template<typename TExpected>
     class scope {
@@ -675,7 +676,7 @@ namespace scopes {
 
 class deduce {
 public:
-    using priority = int_<0>;
+    static const bool priority = false;
 
     template<typename>
     struct scope {
@@ -702,7 +703,7 @@ class session_exit { };
 template<template<typename> class TWrapper = wrappers::shared>
 class session {
 public:
-    using priority = int_<0>;
+    static const bool priority = false;
 
     template<typename TExpected>
     class scope {
@@ -746,11 +747,17 @@ class requires_ {
  template<typename T, typename TBind>
  using apply_bind = typename TBind::template apply<T>::type;
 
+ template<typename T, typename TBind>
+ using eval_bind = typename TBind::template eval<T>::type;
+
 public:
  using type = requires_;
 
  template<typename T, typename TMultiplicationFactor = int_<10>>
  using apply = sum<TMultiplicationFactor, typename apply_bind<T, Ts>::type...>;
+
+ template<typename T>
+ using eval = sum<int_<1>, typename eval_bind<T, Ts>::type...>;
 };
 
 } // namespace detail
@@ -766,16 +773,25 @@ namespace detail {
 template<typename T, typename TBind>
 using apply_for_all = typename TBind::template apply<T>::type;
 
+template<typename T, typename TBind>
+using eval_for_all = typename TBind::template eval<T>::type;
+
 template<typename... Ts>
 struct when_ {
     template<typename T>
     using apply = typename max<int_<0>, typename apply_for_all<T, Ts>::type...>::type;
+
+    template<typename T>
+    using eval = typename max<int_<0>, typename eval_for_all<T, Ts>::type...>::type;
 };
 
 template<>
 struct when_<> {
     template<typename T>
     using apply = int_<1>;
+
+    template<typename>
+    using eval = int_<0>;
 };
 
 } // namespace detail
@@ -808,6 +824,9 @@ class is_required_name {
 public:
     template<typename T>
     using apply = int_<std::is_same<typename get_name<typename T::type>::type, TName>::value>;
+
+    template<typename>
+    using eval = int_<1>;
 };
 
 } // namespace type_traits
@@ -822,7 +841,10 @@ namespace type_traits {
 
 struct is_required_priority {
     template<typename T>
-    using apply = int_<1 + T::dependency::scope::priority::value>; // lowest = 0, highest = N
+    using apply = int_<1 + T::dependency::scope::priority>;
+
+    template<typename T>
+    using eval = int_<1>;
 };
 
 } // namespace type_traits
@@ -852,10 +874,13 @@ template<typename TValueType, typename = void>
 struct is_required_type
 {
     template<typename T>
-    using apply = di::type_traits::is_same_base_of<
+    using apply = int_<di::type_traits::is_same_base_of<
           TValueType
         , typename di::type_traits::make_plain<typename T::type>::type
-      >;
+      >::value>;
+
+    template<typename>
+    using eval = int_<1>;
 };
 
     //template<typename T>
@@ -906,6 +931,7 @@ struct bind
         , detail::requires_<
               type_traits::is_required_priority
             , type_traits::is_required_type<TExpected>
+            , detail::when_<>
           >
       >
 {
@@ -948,6 +974,7 @@ struct bind
                   type_traits::is_required_priority
                 , type_traits::is_required_type<TExpected>
                 , type_traits::is_required_name<TName>
+                , detail::when_<>
               >
           >
     {
@@ -972,57 +999,71 @@ struct bind
 } // namespace di
 } // namespace boost
 
-
 namespace boost {
 namespace di {
 namespace bindings {
 
+template<typename, typename>
+struct match;
+
+template<typename T1, typename... Ts1, typename T2, typename... Ts2>
+struct match<type_list<T1, Ts1...>, type_list<T2, Ts2...>>
+    : bool_<std::is_same<T1, T2>::value && match<type_list<Ts1...>, type_list<Ts2...>>::value>
+{ };
+
+template<>
+struct match<type_list<>, type_list<>>
+    : std::true_type
+{ };
+
 template<typename... Ts>
-class call_stack {
+struct match<type_list<>, type_list<Ts...>>
+    : std::true_type
+{ };
 
-    //template<typename TContext, typename TCallStack>
-    //struct equal
-        //: aux::mpl::equal<
-              //aux::mpl::iterator_range<
-                  //typename aux::mpl::advance<
-                      //typename aux::mpl::begin<TCallStack>::type
-                    //, typename aux::mpl::max<
-                          //aux::mpl::int_<0>
-                        //, aux::mpl::minus<
-                              //aux::mpl::size<TCallStack>
-                            //, aux::mpl::size<TContext>
-                          //>
-                      //>::type
-                  //>::type
-                //, typename aux::mpl::end<TCallStack>::type
-              //>
-            //, TContext
-          //>
-    //{ };
+template<typename... Ts>
+struct match<type_list<Ts...>, type_list<>>
+    : std::false_type
+{ };
 
-    //template<typename TContext, typename TCallStack>
-    //struct apply_impl
-        //: aux::mpl::if_<
-              //aux::mpl::empty<TCallStack>
-            //, aux::mpl::int_<0>
-            //, aux::mpl::if_<
-                  //equal<TContext, TCallStack>
-                //, aux::mpl::size<TContext>
-                //, aux::mpl::int_<0>
-              //>
-          //>
-    //{ };
+template<typename T>
+struct make_plain;
 
-public:
+template<typename... Ts>
+struct make_plain<type_list<Ts...>>
+    : type_list<typename di::type_traits::make_plain<Ts>::type...>
+{ };
+
+template<typename, std::size_t>
+struct take_last;
+
+template<std::size_t N, typename T, typename... Ts>
+struct take_last<type_list<T, Ts...>, N>
+    : std::conditional<!N, type_list<T, Ts...>, typename take_last<type_list<Ts...>, N-1>::type>::type
+{ };
+
+template<std::size_t N>
+struct take_last<type_list<>, N>
+    : type_list<>
+{ };
+
+template<typename... Ts>
+struct call_stack {
     template<typename T>
-    struct apply
-        : std::false_type
-              //context_type
-            //, typename aux::mpl::transform<
-                  //typename T::call_stack
-                //, di::type_traits::make_plain<aux::mpl::_>
-              //>::type
-    { };
+    using apply = std::is_same<
+        typename make_plain<
+            typename take_last<
+                typename T::call_stack
+              , size<typename T::call_stack>::value - sizeof...(Ts)
+            >::type
+        >::type
+      , type_list<Ts...>
+    >;
+
+    template<typename T>
+    using eval = typename match<
+        typename make_plain<typename T::call_stack>::type, type_list<Ts...>
+    >::type;
 };
 
 } // namespace bindings
@@ -1305,6 +1346,8 @@ using any_of = type_list<Ts...>;
 } // namespace di
 } // namespace boost
 
+    //#pragma GCC diagnostic ignored "-Wreorder"
+
 namespace boost {
 namespace di {
 namespace core {
@@ -1384,7 +1427,10 @@ struct data {
 };
 
 template<typename T, typename TCallStack, typename _>
-using calculate = pair<_, typename _::bind::template apply<data<T, TCallStack, _>>::type>;
+using resolve_impl = pair<_, typename _::bind::template apply<data<T, TCallStack, _>>::type>;
+
+template<typename T, typename TCallStack, typename _>
+using eval_impl = typename _::bind::template eval<data<T, TCallStack, _>>::type;
 
 template<typename>
 struct binder;
@@ -1402,8 +1448,14 @@ struct binder<type_list<Ts...>> {
     >
     using resolve = typename greatest<
         pair<TDefault, int_<0>>
-      , calculate<T, TCallStack, Ts>...
+      , resolve_impl<T, TCallStack, Ts>...
     >::type::template rebind<typename scopes::deduce::rebind<T>::other>::other;
+
+    template<
+        typename T
+      , typename TCallStack
+    >
+    using eval = typename or_<eval_impl<T, TCallStack, Ts>...>::type;
 };
 
 } // namespace core
@@ -1472,7 +1524,7 @@ public:
         >::type
     >
     operator const U&() const {
-        return creator_.template create<const U&, none_t, TCallStack>(
+        return creator_.template create<const U&, T, TCallStack>(
             allocator_, deps_, refs_, visitor_, policies_
         );
     }
@@ -1487,20 +1539,20 @@ public:
         >::type
     >
     operator U&() const {
-        return creator_.template create<U&, none_t, TCallStack>(
+        return creator_.template create<U&, T, TCallStack>(
             allocator_, deps_, refs_, visitor_, policies_
         );
     }
 
     template<typename U>
     operator aux::auto_ptr<U>&() {
-        return creator_.template create<aux::auto_ptr<U>, none_t, TCallStack>(
+        return creator_.template create<aux::auto_ptr<U>, T, TCallStack>(
             allocator_, deps_, refs_, visitor_, policies_
         );
     }
 
    
-    template< typename U , typename = typename std::enable_if< !type_traits::is_same_base_of< typename type_traits::make_plain<U>::type , typename type_traits::make_plain<T>::type >::value >::type > operator U() { return creator_.template create<U, none_t, TCallStack>( allocator_, deps_, refs_, visitor_, policies_ ); }
+    template< typename U , typename = typename std::enable_if< !type_traits::is_same_base_of< typename type_traits::make_plain<U>::type , typename type_traits::make_plain<T>::type >::value >::type > operator U() { return creator_.template create<U, T, TCallStack>( allocator_, deps_, refs_, visitor_, policies_ ); }
 private:
     typename ref_type<TCreator, TCreator&>::type creator_;
     typename ref_type<TAllocator, const TAllocator&>::type allocator_;
@@ -1931,7 +1983,7 @@ public:
 
     template<
         typename T
-      , typename // TParent - not used
+      , typename TParent
       , typename TCallStack
       , typename TAllocator
       , typename TDeps
@@ -1945,13 +1997,22 @@ public:
          , TRefs& refs
          , const TVisitor& visitor
          , const TPolicies& policies) {
-        using dependency_type = typename binder_t::template resolve<T, TCallStack>::type;
+        using call_stack = typename std::conditional<
+            std::is_same<TParent, none_t>::value
+          , TCallStack
+          , typename add<TCallStack, TParent>::type
+        >::type;
+        using eval_type = typename binder_t::template eval<T, call_stack>::type;
+        using dependency_type = typename binder_t::template resolve<T, call_stack>::type;
+
+    std::cout << boost::units::detail::demangle(typeid(T).name()) << std::endl;
+    std::cout << boost::units::detail::demangle(typeid(call_stack).name()) << std::endl;
 
         //typedef data<T, call_stack_type, dependency_type> data_type;
         //assert_policies<typename TPolicies::types, data_type>(policies);
         //(visitor)(data_type());
 
-        return create_impl<T, dependency_type, TCallStack>(
+        return create_impl<T, dependency_type, typename std::conditional<eval_type::value, call_stack, TCallStack>::type>(
             allocator, deps, refs, visitor, policies
         );
     }
@@ -2035,7 +2096,6 @@ private:
               , const TVisitor& visitor
               , const TPolicies& policies
               , const type_list<TArgs...>&) {
-                    using call_stack_type = typename add<TCallStack, T>::type;
         return allocator.template
             allocate<typename TDependency::expected, typename TDependency::given>(
                 create<TArgs, T, TCallStack>(allocator, deps, refs, visitor, policies)...
@@ -2169,7 +2229,7 @@ public:
         pool<type_list<TPolicies...>> policies_(policies...);
         std::vector<aux::shared_ptr<void>> refs_;
 
-        return creator_.template create<T, T, call_stack>(
+        return creator_.template create<T, none_t, call_stack>(
             allocator()
           , static_cast<pool_t&>(*this)
           , refs_
@@ -2184,7 +2244,7 @@ public:
         pool<type_list<TPolicies...>> policies_(policies...);
         std::vector<aux::shared_ptr<void>> refs_;
 
-        return creator_.template create<T, T, call_stack>(
+        return creator_.template create<T, none_t, call_stack>(
             allocator
           , static_cast<pool_t&>(*this)
           , refs_
@@ -2198,7 +2258,7 @@ public:
         using call_stack = type_list<>;
         std::vector<aux::shared_ptr<void>> refs_;
 
-        return creator_.template create<T, T, call_stack>(
+        return creator_.template create<T, none_t, call_stack>(
             allocator()
           , static_cast<pool_t&>(*this)
           , refs_
