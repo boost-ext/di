@@ -143,7 +143,7 @@ generate_pph() {
 }
 
 generate_cpp_11() {
-    generate_pph `readlink -f $PWD`/boost/di/aux_/config.hpp -DBOOST_DI_INJECTOR=boost_di_injector__
+    generate_pph `readlink -f $PWD`/boost/di/aux_/config.hpp -DBOOST_DI_INJECTOR=BOOST_DI_INJECTOR -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=BOOST_DI_CFG_CTOR_LIMIT_SIZE
 }
 
 cleanup() {

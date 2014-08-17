@@ -1584,7 +1584,7 @@ struct is_integral<
 namespace boost {
 namespace di {
 
-BOOST_DI_HAS_MEMBER_FUNCTION(boost_di_injector__, boost_di_injector__);
+BOOST_DI_HAS_MEMBER_FUNCTION(BOOST_DI_INJECTOR, BOOST_DI_INJECTOR);
 
 template<typename T, typename Q>
 struct ctor_traits_impl;
@@ -1596,12 +1596,12 @@ struct ctor_traits_impl<T, seq<Args...>>
 
 template<typename T>
 struct ctor_traits
-    : ctor_traits_impl<T, typename gen_seq<10 + 1>::type>
+    : ctor_traits_impl<T, typename gen_seq<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>::type>
 { };
 
 template<typename T>
 struct ctor_traits<std::basic_string<T>> {
-    static void boost_di_injector__();
+    static void BOOST_DI_INJECTOR();
 };
 
 namespace type_traits {
@@ -1612,13 +1612,13 @@ struct ctor_traits
 { };
 
 template<typename T>
-struct ctor_traits<T, typename std::enable_if<BOOST_PP_CAT(has_, boost_di_injector__)<di::ctor_traits<T>>::value>::type>
-    : function_traits<decltype(&di::ctor_traits<T>::boost_di_injector__)>::type
+struct ctor_traits<T, typename std::enable_if<BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<di::ctor_traits<T>>::value>::type>
+    : function_traits<decltype(&di::ctor_traits<T>::BOOST_DI_INJECTOR)>::type
 { };
 
 template<typename T>
-struct ctor_traits<T, typename std::enable_if<BOOST_PP_CAT(has_, boost_di_injector__)<T>::value>::type>
-    : function_traits<decltype(&T::boost_di_injector__)>::type
+struct ctor_traits<T, typename std::enable_if<BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<T>::value>::type>
+    : function_traits<decltype(&T::BOOST_DI_INJECTOR)>::type
 { };
 
 } // namespace type_traits
@@ -2017,10 +2017,10 @@ private:
             refs
           , acquire<TDependency>(deps).create(
               [&] {
-                typedef typename type_traits::ctor_traits<typename TDependency::given>::type ctor_type;
+                using ctor_type = typename type_traits::ctor_traits<typename TDependency::given>::type;
 
                 //BOOST_DI_FEATURE_EXAMINE_CALL_STACK(
-                    //typedef typename aux::mpl::push_back<TCallStack, T>::type call_stack_type;
+                    //using call_stack_type = typename add<TCallStack, T>::type;
                 //)
 
                 //BOOST_DI_FEATURE_NO_EXAMINE_CALL_STACK(
