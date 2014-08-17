@@ -20,9 +20,6 @@
 #include "common/fakes/fake_allocator.hpp"
 #include "common/data.hpp"
 
-
-#include <iostream>
-#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 
@@ -391,24 +388,24 @@ BOOST_AUTO_TEST_CASE(named_parameters_with_unique_scope) {
     BOOST_CHECK(nameds_.n2_ != injector.create<aux::shared_ptr<i>>());
 }
 
-//BOOST_AUTO_TEST_CASE(call_stack_with_shared_ptr_type) {
-    //const int i1 = 42;
-    //const int i2 = 43;
+BOOST_AUTO_TEST_CASE(call_stack_with_shared_ptr_type) {
+    const int i1 = 42;
+    const int i2 = 43;
 
-    //auto injector = make_injector(
-        //bind_int<i1>::when<call_stack<call_stack_with_shared_ptr, call_stack_nested>>()
-      //, bind<int>::when<call_stack<call_stack_with_shared_ptr, call_stack_nested>>::named<b>::to(i2)
-    //);
+    auto injector = make_injector(
+        bind_int<i1>::when<call_stack<call_stack_with_shared_ptr, call_stack_nested>>()
+      , bind<int>::when<call_stack<call_stack_with_shared_ptr, call_stack_nested>>::named<b>::to(i2)
+    );
 
-    //auto call_stack_ = injector.create<call_stack_with_shared_ptr>();
+    auto call_stack_ = injector.create<call_stack_with_shared_ptr>();
 
-    //BOOST_CHECK_EQUAL(0, call_stack_.i_);
-    //BOOST_CHECK_EQUAL(0, call_stack_.ia_);
-    //BOOST_CHECK_EQUAL(0, call_stack_.ib_);
-    //BOOST_CHECK_EQUAL(i1, call_stack_.nested_->i_);
-    //BOOST_CHECK_EQUAL(i1, call_stack_.nested_->ia_);
-    //BOOST_CHECK_EQUAL(i2, call_stack_.nested_->ib_);
-//}
+    BOOST_CHECK_EQUAL(0, call_stack_.i_);
+    BOOST_CHECK_EQUAL(0, call_stack_.ia_);
+    BOOST_CHECK_EQUAL(0, call_stack_.ib_);
+    BOOST_CHECK_EQUAL(i1, call_stack_.nested_->i_);
+    BOOST_CHECK_EQUAL(i1, call_stack_.nested_->ia_);
+    BOOST_CHECK_EQUAL(i2, call_stack_.nested_->ib_);
+}
 
 BOOST_AUTO_TEST_CASE(create_with_default_values) {
     const int i = 42;

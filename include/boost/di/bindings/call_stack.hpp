@@ -38,13 +38,21 @@ struct match<type_list<Ts...>, type_list<>>
     : std::false_type
 { };
 
+template<typename T>
+struct make_plain;
+
+template<typename... Ts>
+struct make_plain<type_list<Ts...>>
+    : type_list<typename di::type_traits::make_plain<Ts>::type...>
+{ };
+
 template<typename... Ts>
 struct call_stack {
     template<typename T>
-    using apply = std::is_same<typename T::call_stack, type_list<Ts...>>;
+    using apply = std::is_same<typename make_plain<typename T::call_stack>::type, type_list<Ts...>>;
 
     template<typename T>
-    using eval = typename match<typename T::call_stack, type_list<Ts...>>::type;
+    using eval = typename match<typename make_plain<typename T::call_stack>::type, type_list<Ts...>>::type;
 };
 
 } // namespace bindings
