@@ -40,12 +40,8 @@ class creator {
       , aux::shared_ptr<void>
     >;
 
-    template<
-        typename T
-      , typename TCallStack
-      , typename TDependency
-    >
-    struct data {
+    template<typename T, typename TDependency>
+    struct data_visitor {
         using type = T;
         using dependency = TDependency;
         using binder = binder_t;
@@ -116,9 +112,9 @@ public:
         using eval_type = typename binder_t::template eval<T, call_stack>::type;
         using dependency_type = typename binder_t::template resolve<T, call_stack>::type;
         using propagate_call_stack = typename std::conditional<eval_type::value, call_stack, TCallStack>::type;
-        //typedef data<T, dependency_type> data_type;
+
         //assert_policies<typename TPolicies::types, data_type>(policies);
-        //(visitor)(data_type());
+        (visitor)(data_visitor<T, dependency_type>());
 
         return create_impl<T, dependency_type, propagate_call_stack>(
             allocator, deps, refs, visitor, policies
