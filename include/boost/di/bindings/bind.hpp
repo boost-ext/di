@@ -22,12 +22,15 @@ namespace bindings {
 
 namespace detail {
 
-template<typename TExpected, typename TGiven>
-using get_expected = typename std::conditional<
-    is_type_list<TExpected>::value
-  , TGiven
-  , TExpected
->;
+template<typename TExpected, typename>
+struct get_expected {
+    using type = TExpected;
+};
+
+template<typename... Ts, typename TGiven>
+struct get_expected<type_list<Ts...>, TGiven> {
+    using type = TGiven;
+};
 
 } // namespace detail
 

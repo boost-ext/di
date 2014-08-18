@@ -84,7 +84,7 @@ test-suite ut : # unit tests
     #[ run-test c++11 : ut/bindings/detail/when_ut.cpp ]
     #[ run-test c++11 : ut/bindings/type_traits/is_required_name_ut.cpp ]
     #[ run-test c++11 : ut/bindings/type_traits/is_required_priority_ut.cpp ]
-    #[ run-test c++11 : ut/bindings/type_traits/is_required_type_ut.cpp ]
+    [ run-test c++11 : ut/bindings/type_traits/is_required_type_ut.cpp ]
     #[ run-test c++11 : ut/bindings/call_stack_ut.cpp ]
     #[ run-test c++11 : ut/bindings/dependency_ut.cpp ]
 

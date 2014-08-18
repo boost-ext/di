@@ -27,10 +27,10 @@ public:
     using type = requires_;
 
     template<typename T, typename TMultiplicationFactor = int_<10>>
-    using apply = sum<TMultiplicationFactor, typename apply_bind<T, Ts>::type...>;
+    using apply = times<TMultiplicationFactor, typename apply_bind<T, Ts>::type...>;
 
     template<typename T>
-    using eval = sum<int_<1>, typename eval_bind<T, Ts>::type...>;
+    using eval = times<int_<1>, typename eval_bind<T, Ts>::type...>;
 };
 
 } // namespace detail

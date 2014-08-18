@@ -412,7 +412,7 @@ BOOST_AUTO_TEST_CASE(smart_ptr_auto_ptr) {
 
 using bind_multiple_interfaces_to_the_same_impl_types = mpl::vector<
     cif0if1
-  //, bind<any_of<if0, if1>, cif0if1>
+  , bind<any_of<if0, if1>, cif0if1>
   , deduce<cif0if1>
 >;
 

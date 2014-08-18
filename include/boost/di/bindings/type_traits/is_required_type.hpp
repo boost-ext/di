@@ -16,30 +16,33 @@ namespace di {
 namespace bindings {
 namespace type_traits {
 
-template<typename TValueType, typename = void>
-struct is_required_type
-{
+template<typename TValueType>
+struct is_required_type {
     template<typename T>
-    using apply = int_<di::type_traits::is_same_base_of<
-          TValueType
-        , typename di::type_traits::make_plain<typename T::type>::type
-      >::value>;
+    using apply = int_<
+        di::type_traits::is_same_base_of<
+            TValueType
+          , typename di::type_traits::make_plain<typename T::type>::type
+        >::value
+    >;
 
     template<typename>
     using eval = int_<1>;
 };
 
-/*template<typename TValueType>*/
-//struct is_required_type<TValueType, typename std::enable_if<is_type_list<TValueType>::value>::type> {
-    //template<typename T>
-    //using apply = aux::mpl::count_if<
-              //TValueType
-            //, di::type_traits::is_same_base_of<
-                  //typename di::type_traits::make_plain<typename T::type>::type
-                //, aux::mpl::_
-              //>
-          //>;
-/*};*/
+template<typename... Ts>
+struct is_required_type<type_list<Ts...>> {
+    template<typename T>
+    using apply = sum<
+        di::type_traits::is_same_base_of<
+            typename di::type_traits::make_plain<typename T::type>::type
+          , Ts
+        >::value...
+    >;
+
+    template<typename>
+    using eval = int_<1>;
+};
 
 } // namespace type_traits
 } // namespace bindings

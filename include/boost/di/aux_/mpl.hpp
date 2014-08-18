@@ -192,16 +192,29 @@ template<typename T, typename... Ts>
 using max = max_impl<T, sizeof...(Ts) - 1, Ts...>;
 
 template<typename, typename...>
-struct sum;
+struct times;
 
 template<typename TMultiplicationFactor>
-struct sum<TMultiplicationFactor>
+struct times<TMultiplicationFactor>
     : int_<1>
 { };
 
 template<typename TMultiplicationFactor, typename T, typename... Ts>
-struct sum<TMultiplicationFactor, T, Ts...>
-    : int_<TMultiplicationFactor::value * T::value * sum<TMultiplicationFactor, Ts...>::value>
+struct times<TMultiplicationFactor, T, Ts...>
+    : int_<TMultiplicationFactor::value * T::value * times<TMultiplicationFactor, Ts...>::value>
+{ };
+
+template<std::size_t...>
+struct sum;
+
+template<>
+struct sum<>
+    : int_<0>
+{ };
+
+template<std::size_t N, std::size_t... Ts>
+struct sum<N, Ts...>
+    : int_<N + sum<Ts...>::value>
 { };
 
 template<typename>
@@ -214,7 +227,7 @@ struct is_type_list<type_list<Ts...>>
     : std::true_type
 { };
 
-template <typename...>
+template<typename...>
 struct join;
 
 template<>
