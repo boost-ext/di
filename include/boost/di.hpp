@@ -756,10 +756,10 @@ public:
     using type = requires_;
 
     template<typename T, typename TMultiplicationFactor = int_<10>>
-    using apply = sum<TMultiplicationFactor, typename apply_bind<T, Ts>::type...>;
+    using apply = times<TMultiplicationFactor, typename apply_bind<T, Ts>::type...>;
 
     template<typename T>
-    using eval = sum<int_<1>, typename eval_bind<T, Ts>::type...>;
+    using eval = times<int_<1>, typename eval_bind<T, Ts>::type...>;
 };
 
 } // namespace detail
@@ -879,27 +879,33 @@ namespace di {
 namespace bindings {
 namespace type_traits {
 
-template<typename TValueType, typename = void>
-struct is_required_type
-{
+template<typename TValueType>
+struct is_required_type {
     template<typename T>
-    using apply = int_<di::type_traits::is_same_base_of<
-          TValueType
-        , typename di::type_traits::make_plain<typename T::type>::type
-      >::value>;
+    using apply = int_<
+        di::type_traits::is_same_base_of<
+            TValueType
+          , typename di::type_traits::make_plain<typename T::type>::type
+        >::value
+    >;
 
     template<typename>
     using eval = int_<1>;
 };
 
-    //template<typename T>
-    //using apply = aux::mpl::count_if<
-              //TValueType
-            //, di::type_traits::is_same_base_of<
-                  //typename di::type_traits::make_plain<typename T::type>::type
-                //, aux::mpl::_
-              //>
-          //>;
+template<typename... Ts>
+struct is_required_type<type_list<Ts...>> {
+    template<typename T>
+    using apply = sum<
+        di::type_traits::is_same_base_of<
+            typename di::type_traits::make_plain<typename T::type>::type
+          , Ts
+        >::value...
+    >;
+
+    template<typename>
+    using eval = int_<1>;
+};
 
 } // namespace type_traits
 } // namespace bindings
@@ -913,12 +919,15 @@ namespace bindings {
 
 namespace detail {
 
-template<typename TExpected, typename TGiven>
-using get_expected = typename std::conditional<
-    is_type_list<TExpected>::value
-  , TGiven
-  , TExpected
->;
+template<typename TExpected, typename>
+struct get_expected {
+    using type = TExpected;
+};
+
+template<typename... Ts, typename TGiven>
+struct get_expected<type_list<Ts...>, TGiven> {
+    using type = TGiven;
+};
 
 } // namespace detail
 
@@ -1020,11 +1029,6 @@ struct match<type_list<T1, Ts1...>, type_list<T2, Ts2...>>
     : bool_<std::is_same<T1, T2>::value && match<type_list<Ts1...>, type_list<Ts2...>>::value>
 { };
 
-template<>
-struct match<type_list<>, type_list<>>
-    : std::true_type
-{ };
-
 template<typename... Ts>
 struct match<type_list<>, type_list<Ts...>>
     : std::true_type
@@ -1032,6 +1036,11 @@ struct match<type_list<>, type_list<Ts...>>
 
 template<typename... Ts>
 struct match<type_list<Ts...>, type_list<>>
+    : std::false_type
+{ };
+
+template<>
+struct match<type_list<>, type_list<>>
     : std::false_type
 { };
 
@@ -1939,12 +1948,8 @@ class creator {
       , aux::shared_ptr<void>
     >;
 
-    template<
-        typename T
-      , typename TCallStack
-      , typename TDependency
-    >
-    struct data {
+    template<typename T, typename TDependency>
+    struct data_visitor {
         using type = T;
         using dependency = TDependency;
         using binder = binder_t;
@@ -1953,7 +1958,7 @@ class creator {
 public:
     template<
         typename T
-      , typename TParent // ignore copy/move ctor
+      , typename TParent
       , typename TCallStack
       , typename TAllocator
       , typename TDeps
@@ -2015,9 +2020,9 @@ public:
         using eval_type = typename binder_t::template eval<T, call_stack>::type;
         using dependency_type = typename binder_t::template resolve<T, call_stack>::type;
         using propagate_call_stack = typename std::conditional<eval_type::value, call_stack, TCallStack>::type;
-        //typedef data<T, dependency_type> data_type;
+
         //assert_policies<typename TPolicies::types, data_type>(policies);
-        //(visitor)(data_type());
+        (visitor)(data_visitor<T, dependency_type>());
 
         return create_impl<T, dependency_type, propagate_call_stack>(
             allocator, deps, refs, visitor, policies
@@ -2147,6 +2152,12 @@ private:
 
 
 namespace boost {
+
+namespace mpl {
+    struct string_tag;
+    template<typename> struct c_str;
+} // namespace mpl
+
 namespace di {
 namespace core {
 
@@ -2158,7 +2169,10 @@ struct is_mpl_string
     : std::false_type
 { };
 
-    //: is_same<aux::mpl::string_tag, typename T::tag>
+template<typename T>
+struct is_mpl_string<T, typename std::enable_if<has_tag<T>::value>::type>
+    : std::is_same<mpl::string_tag, typename T::tag>
+{ };
 
 template<typename T>
 using is_explicit = bool_<has_value<T>::value || is_mpl_string<T>::value>;
@@ -2177,11 +2191,11 @@ public:
         return new TExpected(TGiven::value);
     }
 
-    //template<typename TExpected, typename TGiven>
-    //typename std::enable_if<is_mpl_string<TGiven>::value, TExpected*>::type
-    //allocate() const {
-        //return new TExpected(aux::mpl::c_str<TGiven>::value);
-    //}
+    template<typename TExpected, typename TGiven>
+    typename std::enable_if<is_mpl_string<TGiven>::value, TExpected*>::type
+    allocate() const {
+        return new TExpected(mpl::c_str<TGiven>::value);
+    }
 
     template<typename TExpected, typename TGiven, typename... TArgs>
     TExpected* allocate(TArgs&&... args) const {
@@ -2276,35 +2290,25 @@ public:
 
     template<typename TAction>
     void call(const TAction& action) {
-        //call_impl<deps>(static_cast<pool<deps>&>(*this), action);
+        call_impl(static_cast<pool<deps>&>(*this), action, deps());
     }
 
 private:
-    //template<typename TSeq, typename T, typename TAction>
-    //typename std::enable_if<aux::mpl::empty<TSeq>>::type call_impl(T&, const TAction&) { }
+    template<typename TDeps_, typename TAction, typename... Ts>
+    void call_impl(TDeps_& deps, const TAction& action, const type_list<Ts...>&) {
+        int dummy[]{0, (call_impl<Ts>(deps, action), 0)...};
+        (void)dummy;
+    }
 
-    //template<typename TSeq, typename T, typename TAction>
-    //typename std::enable_if<
-        //aux::mpl::and_<
-            //aux::mpl::not_<aux::mpl::empty<TSeq>>
-          //, has_call<typename aux::mpl::front<TSeq>::type, TAction>
-        //>
-    //>::type
-    //call_impl(T& deps, const TAction& action) {
-        //static_cast<typename aux::mpl::front<TSeq>::type&>(deps).call(action);
-        //call_impl<typename aux::mpl::pop_front<TSeq>::type>(deps, action);
-    //}
+    template<typename T, typename TDeps_, typename TAction>
+    typename std::enable_if<has_call<T>::value>::type
+    call_impl(TDeps_& deps, const TAction& action) {
+        static_cast<T&>(deps).call(action);
+    }
 
-    //template<typename TSeq, typename T, typename TAction>
-    //typename disable_if<
-        //aux::mpl::or_<
-            //aux::mpl::empty<TSeq>
-          //, has_call<typename aux::mpl::front<TSeq>::type, TAction>
-        //>
-    //>::type
-    //call_impl(T& deps, const TAction& action) {
-        //call_impl<typename aux::mpl::pop_front<TSeq>::type>(deps, action);
-    //}
+    template<typename T, typename TDeps_, typename TAction>
+    typename std::enable_if<!has_call<T>::value>::type
+    call_impl(TDeps_& deps, const TAction& action) { }
 
     creator<TDeps> creator_;
 };
