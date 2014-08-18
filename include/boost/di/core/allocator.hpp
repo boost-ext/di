@@ -10,7 +10,15 @@
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/mpl.hpp"
 
+#include <type_traits>
+
 namespace boost {
+
+namespace mpl {
+    struct string_tag;
+    template<typename> struct c_str;
+} // namespace mpl
+
 namespace di {
 namespace core {
 
@@ -22,10 +30,10 @@ struct is_mpl_string
     : std::false_type
 { };
 
-//template<typename T>
-//struct is_mpl_string<T, typename enable_if<has_tag<T>>::type>
-    //: is_same<aux::mpl::string_tag, typename T::tag>
-//{ };
+template<typename T>
+struct is_mpl_string<T, typename std::enable_if<has_tag<T>::value>::type>
+    : std::is_same<mpl::string_tag, typename T::tag>
+{ };
 
 template<typename T>
 using is_explicit = bool_<has_value<T>::value || is_mpl_string<T>::value>;
@@ -44,11 +52,11 @@ public:
         return new TExpected(TGiven::value);
     }
 
-    //template<typename TExpected, typename TGiven>
-    //typename std::enable_if<is_mpl_string<TGiven>::value, TExpected*>::type
-    //allocate() const {
-        //return new TExpected(aux::mpl::c_str<TGiven>::value);
-    //}
+    template<typename TExpected, typename TGiven>
+    typename std::enable_if<is_mpl_string<TGiven>::value, TExpected*>::type
+    allocate() const {
+        return new TExpected(mpl::c_str<TGiven>::value);
+    }
 
     template<typename TExpected, typename TGiven, typename... TArgs>
     TExpected* allocate(TArgs&&... args) const {

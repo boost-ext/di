@@ -407,31 +407,31 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr_if_with_not_trivial_ctor) {
     BOOST_CHECK_EQUAL(0.0, if0_->d);
 }
 
-/*BOOST_AUTO_TEST_CASE(externals_create_by_explicit_value) {*/
-    //const int i = 42;
-    //const double d = 21.0;
-    //const char c = 'x';
+BOOST_AUTO_TEST_CASE(externals_create_by_explicit_value) {
+    const int i = 42;
+    const double d = 21.0;
+    const char c = 'x';
 
-    //fake_dependency<scopes::external<>, int>::type i_(i);
-    //fake_dependency<scopes::external<>, double>::type d_(d);
-    //fake_dependency<scopes::external<>, char>::type c_(c);
+    fake_dependency<scopes::external<>, int>::type i_(i);
+    fake_dependency<scopes::external<>, double>::type d_(d);
+    fake_dependency<scopes::external<>, char>::type c_(c);
 
-    //module<
-        //type_list<
-            //fake_dependency<scopes::unique<>, std::string, mpl::string<'s'>>::type
-          //, fake_dependency<scopes::external<>, int>::type
-          //, fake_dependency<scopes::external<>, double>::type
-          //, fake_dependency<scopes::external<>, char>::type
-        //>
-    //> module_(i_, d_, c_);
+    module<
+        type_list<
+            fake_dependency<scopes::unique<>, std::string, mpl::string<'s'>>::type
+          , fake_dependency<scopes::external<>, int>::type
+          , fake_dependency<scopes::external<>, double>::type
+          , fake_dependency<scopes::external<>, char>::type
+        >
+    > module_(i_, d_, c_);
 
-    //auto obj = module_.create<c9>();
+    auto obj = module_.create<c9>();
 
-    //BOOST_CHECK_EQUAL(i, obj.i);
-    //BOOST_CHECK_EQUAL(d, obj.d);
-    //BOOST_CHECK_EQUAL(c, obj.c);
-    //BOOST_CHECK_EQUAL("s", obj.s);
-/*}*/
+    BOOST_CHECK_EQUAL(i, obj.i);
+    BOOST_CHECK_EQUAL(d, obj.d);
+    BOOST_CHECK_EQUAL(c, obj.c);
+    BOOST_CHECK_EQUAL("s", obj.s);
+}
 
 BOOST_AUTO_TEST_CASE(externals_create_with_non_trivial_ctor) {
     const int i = 42;
