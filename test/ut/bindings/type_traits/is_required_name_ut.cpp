@@ -20,7 +20,7 @@ struct simple_name { };
 
 template<typename T>
 struct fake_data {
-    typedef T type;
+    using type = T;
 };
 
 BOOST_AUTO_TEST_CASE(no_name) {

@@ -18,7 +18,7 @@ namespace type_traits {
 template<typename TScope>
 struct fake_data {
     struct dependency {
-        typedef TScope scope;
+        using scope = TScope;
     };
 };
 
