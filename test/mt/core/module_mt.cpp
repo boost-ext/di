@@ -18,7 +18,7 @@
 
 #include "common/fakes/fake_allocator.hpp"
 #include "common/fakes/fake_dependency.hpp"
-//#include "common/fakes/fake_visitor.hpp"
+#include "common/fakes/fake_visitor.hpp"
 #include "common/fakes/fake_scope.hpp"
 #include "common/fakes/fake_policy.hpp"
 #include "common/data.hpp"
@@ -506,48 +506,44 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(externals_create_priority, TModule, externals_prio
     BOOST_CHECK_EQUAL(i2, obj.i2);
 }
 
-//BOOST_AUTO_TEST_CASE(visit) {
-    //module<
-        //type_list<
-            //fake_dependency<scopes::unique<>, transaction_provider, transaction_provider>::type
-          //, fake_dependency<scopes::unique<>, int, int_<0>>::type
-        //>
-    //> module_;
+BOOST_AUTO_TEST_CASE(visit) {
+    module<
+        type_list<
+            fake_dependency<scopes::unique<>, transaction_provider, transaction_provider>::type
+          , fake_dependency<scopes::unique<>, int, int_<0>>::type
+        >
+    > module_;
 
-    //fake_visitor<
-        //type_list<
-            //transaction_usage
-          //, aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
-          //, aux::shared_ptr<c3>
-          //, int
-        //>
-    //> visitor;
+    fake_visitor<
+        transaction_usage
+      , aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
+      , aux::shared_ptr<c3>
+      , int
+    > visitor;
 
-    //module_.visit<transaction_usage>(visitor);
-//}
+    module_.visit<transaction_usage>(visitor);
+}
 
-//BOOST_AUTO_TEST_CASE(visit_external) {
-    //c3 c3_;
-    //fake_dependency<scopes::external<wrappers::reference>, c3>::type e3(boost::ref(c3_));
+BOOST_AUTO_TEST_CASE(visit_external) {
+    c3 c3_;
+    fake_dependency<scopes::external<wrappers::reference>, c3>::type e3(boost::ref(c3_));
 
-    //module<
-        //type_list<
-            //fake_dependency<scopes::external<wrappers::reference>, c3>::type
-        //>
-    //> module_(e3);
+    module<
+        type_list<
+            fake_dependency<scopes::external<wrappers::reference>, c3>::type
+        >
+    > module_(e3);
 
-    //fake_visitor<
-        //type_list<
-            //pair<c18, scopes::unique<>>
-          //, pair<c0, scopes::unique<>>
-          //, pair<aux::shared_ptr<c1>, scopes::shared<>>
-          //, pair<int, scopes::unique<>>
-          //, pair<c3&, scopes::external<wrappers::reference>>
-        //>
-    //> visitor;
+    fake_visitor<
+        pair<c18, scopes::unique<>>
+      , pair<c0, scopes::unique<>>
+      , pair<aux::shared_ptr<c1>, scopes::shared<>>
+      , pair<int, scopes::unique<>>
+      , pair<c3&, scopes::external<wrappers::reference>>
+    > visitor;
 
-    //module_.visit<c18>(visitor);
-//}
+    module_.visit<c18>(visitor);
+}
 
 BOOST_AUTO_TEST_CASE(call) {
     fake_scope<>::entry_calls() = 0;
