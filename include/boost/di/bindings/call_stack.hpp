@@ -23,11 +23,6 @@ struct match<type_list<T1, Ts1...>, type_list<T2, Ts2...>>
     : bool_<std::is_same<T1, T2>::value && match<type_list<Ts1...>, type_list<Ts2...>>::value>
 { };
 
-template<>
-struct match<type_list<>, type_list<>>
-    : std::true_type
-{ };
-
 template<typename... Ts>
 struct match<type_list<>, type_list<Ts...>>
     : std::true_type
@@ -35,6 +30,11 @@ struct match<type_list<>, type_list<Ts...>>
 
 template<typename... Ts>
 struct match<type_list<Ts...>, type_list<>>
+    : std::false_type
+{ };
+
+template<>
+struct match<type_list<>, type_list<>>
     : std::false_type
 { };
 

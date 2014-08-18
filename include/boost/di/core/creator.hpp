@@ -54,7 +54,7 @@ class creator {
 public:
     template<
         typename T
-      , typename TParent // ignore copy/move ctor
+      , typename TParent
       , typename TCallStack
       , typename TAllocator
       , typename TDeps

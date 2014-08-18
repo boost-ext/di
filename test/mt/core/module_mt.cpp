@@ -144,66 +144,66 @@ BOOST_AUTO_TEST_CASE(create_shared_context) {
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-//BOOST_AUTO_TEST_CASE(create_unique_shared_context_order) {
-    //module<
-        //type_list<
-            //fake_dependency<scopes::unique<>, if0, c0if0>::type
-          //, fake_dependency<scopes::unique<>, if0, c1if0, no_name, type_list<call_stack<c6, c5>>>::type
-          //, fake_dependency<scopes::unique<>, if0, c2if0, no_name, type_list<call_stack<c7>>>::type
-          //, fake_dependency<scopes::shared<>, c3>::type
-        //>
-    //> module_;
+BOOST_AUTO_TEST_CASE(create_unique_shared_context_order) {
+    module<
+        type_list<
+            fake_dependency<scopes::unique<>, if0, c0if0>::type
+          , fake_dependency<scopes::unique<>, if0, c1if0, no_name, type_list<call_stack<c6, c5>>>::type
+          , fake_dependency<scopes::unique<>, if0, c2if0, no_name, type_list<call_stack<c7>>>::type
+          , fake_dependency<scopes::shared<>, c3>::type
+        >
+    > module_;
 
-    //auto c8_ = module_.create<aux::shared_ptr<c8>>();
+    auto c8_ = module_.create<aux::shared_ptr<c8>>();
 
-    //BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
-    //BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
-    //BOOST_CHECK(c8_->c7_->if0_ != c8_->c7_->c6_->c5_.if0_);
+    BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
+    BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
+    BOOST_CHECK(c8_->c7_->if0_ != c8_->c7_->c6_->c5_.if0_);
 
-    //BOOST_CHECK(dynamic_cast<c1if0*>(c8_->c7_->c6_->c5_.if0_.get()));
-    //BOOST_CHECK(dynamic_cast<c2if0*>(c8_->c7_->if0_.get()));
+    BOOST_CHECK(dynamic_cast<c1if0*>(c8_->c7_->c6_->c5_.if0_.get()));
+    BOOST_CHECK(dynamic_cast<c2if0*>(c8_->c7_->if0_.get()));
 
-    //BOOST_CHECK_EQUAL(0, c8_->i);
-    //BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c4_->i1);
-    //BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c4_->i2);
-    //BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c3_->i);
-    //BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->i);
-    //BOOST_CHECK_EQUAL(0.0, c8_->c7_->c6_->c5_.c2_->d);
-    //BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
-//}
+    BOOST_CHECK_EQUAL(0, c8_->i);
+    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c4_->i1);
+    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c4_->i2);
+    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c3_->i);
+    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->i);
+    BOOST_CHECK_EQUAL(0.0, c8_->c7_->c6_->c5_.c2_->d);
+    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
+}
 
-/*BOOST_AUTO_TEST_CASE(create_unique_shared_context_mix) {*/
-    //module<
-        //type_list<
-            //fake_dependency<scopes::unique<>, if0, c0if0>::type
-          //, fake_dependency<scopes::unique<>, if0, c1if0, no_name, type_list<call_stack<c6, c5>>>::type
-          //, fake_dependency<scopes::unique<>, if0, c2if0, no_name, type_list<call_stack<c7>>>::type
-          //, fake_dependency<scopes::shared<>, c3>::type
-          //, fake_dependency<scopes::unique<>, int, int_<1>>::type
-          //, fake_dependency<scopes::unique<>, int, int_<2>, no_name, type_list<call_stack<c8>>>::type
-          //, fake_dependency<scopes::unique<>, int, int_<3>, mpl::string<'1'>, type_list<call_stack<c7, c6, c4>>>::type
-          //, fake_dependency<scopes::unique<>, int, int_<4>, mpl::string<'2'>, type_list<call_stack<c7, c6, c4>>>::type
-          //, fake_dependency<scopes::unique<>, int, int_<5>, no_name, type_list<call_stack<c2>>>::type
-        //>
-    //> module_;
+BOOST_AUTO_TEST_CASE(create_unique_shared_context_mix) {
+    module<
+        type_list<
+            fake_dependency<scopes::unique<>, if0, c0if0>::type
+          , fake_dependency<scopes::unique<>, if0, c1if0, no_name, type_list<call_stack<c6, c5>>>::type
+          , fake_dependency<scopes::unique<>, if0, c2if0, no_name, type_list<call_stack<c7>>>::type
+          , fake_dependency<scopes::shared<>, c3>::type
+          , fake_dependency<scopes::unique<>, int, int_<1>>::type
+          , fake_dependency<scopes::unique<>, int, int_<2>, no_name, type_list<call_stack<c8>>>::type
+          , fake_dependency<scopes::unique<>, int, int_<3>, mpl::string<'1'>, type_list<call_stack<c7, c6, c4>>>::type
+          , fake_dependency<scopes::unique<>, int, int_<4>, mpl::string<'2'>, type_list<call_stack<c7, c6, c4>>>::type
+          , fake_dependency<scopes::unique<>, int, int_<5>, no_name, type_list<call_stack<c2>>>::type
+        >
+    > module_;
 
-    //auto c8_ = module_.create<aux::shared_ptr<c8>>();
+    auto c8_ = module_.create<aux::shared_ptr<c8>>();
 
-    //BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
-    //BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
-    //BOOST_CHECK(c8_->c7_->if0_ != c8_->c7_->c6_->c5_.if0_);
+    BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
+    BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
+    BOOST_CHECK(c8_->c7_->if0_ != c8_->c7_->c6_->c5_.if0_);
 
-    //BOOST_CHECK(dynamic_cast<c1if0*>(c8_->c7_->c6_->c5_.if0_.get()));
-    //BOOST_CHECK(dynamic_cast<c2if0*>(c8_->c7_->if0_.get()));
+    BOOST_CHECK(dynamic_cast<c1if0*>(c8_->c7_->c6_->c5_.if0_.get()));
+    BOOST_CHECK(dynamic_cast<c2if0*>(c8_->c7_->if0_.get()));
 
-    //BOOST_CHECK_EQUAL(2, c8_->i);
-    //BOOST_CHECK_EQUAL(3, c8_->c7_->c6_->c4_->i1);
-    //BOOST_CHECK_EQUAL(4, c8_->c7_->c6_->c4_->i2);
-    //BOOST_CHECK_EQUAL(1, c8_->c7_->c6_->c3_->i);
-    //BOOST_CHECK_EQUAL(5, c8_->c7_->c6_->c5_.c2_->i);
-    //BOOST_CHECK_EQUAL(0.0, c8_->c7_->c6_->c5_.c2_->d);
-    //BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
-/*}*/
+    BOOST_CHECK_EQUAL(2, c8_->i);
+    BOOST_CHECK_EQUAL(3, c8_->c7_->c6_->c4_->i1);
+    BOOST_CHECK_EQUAL(4, c8_->c7_->c6_->c4_->i2);
+    BOOST_CHECK_EQUAL(1, c8_->c7_->c6_->c3_->i);
+    BOOST_CHECK_EQUAL(5, c8_->c7_->c6_->c5_.c2_->i);
+    BOOST_CHECK_EQUAL(0.0, c8_->c7_->c6_->c5_.c2_->d);
+    BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
+}
 
 BOOST_AUTO_TEST_CASE(create_shared_impl) {
     module<
@@ -318,20 +318,20 @@ BOOST_AUTO_TEST_CASE(base_of) {
     BOOST_CHECK_EQUAL(0, c8_->c7_->c6_->c5_.c2_->c);
 }
 
-//BOOST_AUTO_TEST_CASE(multiple_calls) {
-    //module<
-        //type_list<
-            //fake_dependency<scopes::unique<>, c0if0, c0if0>::type
-          //, fake_dependency<scopes::shared<>, c3, c3, no_name, type_list<call_stack<c15>, call_stack<c6, c4>>>::type
-          //, fake_dependency<scopes::shared<>, c3, c3, no_name, type_list<call_stack<c6>>>::type
-        //>
-    //> module_;
+BOOST_AUTO_TEST_CASE(multiple_calls) {
+    module<
+        type_list<
+            fake_dependency<scopes::unique<>, c0if0, c0if0>::type
+          , fake_dependency<scopes::shared<>, c3, c3, no_name, type_list<call_stack<c15>, call_stack<c6, c4>>>::type
+          , fake_dependency<scopes::shared<>, c3, c3, no_name, type_list<call_stack<c6>>>::type
+        >
+    > module_;
 
-    //auto c15_ = module_.create<aux::shared_ptr<c15>>();
+    auto c15_ = module_.create<aux::shared_ptr<c15>>();
 
-    //BOOST_CHECK(c15_->c3_ == c15_->c6_.c4_->c3_);
-    //BOOST_CHECK(c15_->c3_ != c15_->c6_.c3_);
-//}
+    BOOST_CHECK(c15_->c3_ == c15_->c6_.c4_->c3_);
+    BOOST_CHECK(c15_->c3_ != c15_->c6_.c3_);
+}
 
 BOOST_AUTO_TEST_CASE(base_of_interface_not_trivial_ctor) {
     module<
