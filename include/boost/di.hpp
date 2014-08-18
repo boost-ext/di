@@ -744,15 +744,14 @@ namespace di {
 namespace bindings {
 namespace detail {
 
+template<typename T, typename TBind>
+using apply_bind = typename TBind::template apply<T>::type;
+
+template<typename T, typename TBind>
+using eval_bind = typename TBind::template eval<T>::type;
+
 template<typename... Ts>
-class requires_ {
-    template<typename T, typename TBind>
-    using apply_bind = typename TBind::template apply<T>::type;
-
-    template<typename T, typename TBind>
-    using eval_bind = typename TBind::template eval<T>::type;
-
-public:
+struct requires_ {
     using type = requires_;
 
     template<typename T, typename TMultiplicationFactor = int_<10>>
@@ -780,6 +779,8 @@ using eval_for_all = typename TBind::template eval<T>::type;
 
 template<typename... Ts>
 struct when_ {
+    using type = when_;
+
     template<typename T>
     using apply = typename max<int_<0>, typename apply_for_all<T, Ts>::type...>::type;
 
@@ -789,6 +790,8 @@ struct when_ {
 
 template<>
 struct when_<> {
+    using type = when_;
+
     template<typename T>
     using apply = int_<1>;
 
@@ -1300,7 +1303,8 @@ class scope {
     using is_dependency = has_given<T>;
 
     template<typename T>
-    using dependency = TDependency<TScope, T, T
+    using dependency = TDependency<TScope
+        , T, T
         , detail::requires_<
               type_traits::is_required_priority
             , type_traits::is_required_type<T>

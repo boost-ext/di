@@ -15,15 +15,14 @@ namespace di {
 namespace bindings {
 namespace detail {
 
+template<typename T, typename TBind>
+using apply_bind = typename TBind::template apply<T>::type;
+
+template<typename T, typename TBind>
+using eval_bind = typename TBind::template eval<T>::type;
+
 template<typename... Ts>
-class requires_ {
-    template<typename T, typename TBind>
-    using apply_bind = typename TBind::template apply<T>::type;
-
-    template<typename T, typename TBind>
-    using eval_bind = typename TBind::template eval<T>::type;
-
-public:
+struct requires_ {
     using type = requires_;
 
     template<typename T, typename TMultiplicationFactor = int_<10>>

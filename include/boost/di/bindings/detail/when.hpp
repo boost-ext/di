@@ -22,6 +22,8 @@ using eval_for_all = typename TBind::template eval<T>::type;
 
 template<typename... Ts>
 struct when_ {
+    using type = when_;
+
     template<typename T>
     using apply = typename max<int_<0>, typename apply_for_all<T, Ts>::type...>::type;
 
@@ -31,6 +33,8 @@ struct when_ {
 
 template<>
 struct when_<> {
+    using type = when_;
+
     template<typename T>
     using apply = int_<1>;
 
