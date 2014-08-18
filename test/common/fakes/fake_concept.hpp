@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_FAKE_CONCEPT_HPP
 #define BOOST_DI_FAKE_CONCEPT_HPP
 
+#include "boost/di/aux_/mpl.hpp"
 
 namespace boost {
 namespace di {
@@ -15,9 +16,10 @@ template<int Value>
 struct fake_concept
 {
     template<typename>
-    struct apply
-        : aux::mpl::int_<Value>
-    { };
+    using apply = int_<Value>;
+
+    template<typename>
+    using eval = int_<Value>;
 };
 
 } // namespace di

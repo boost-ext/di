@@ -16,10 +16,10 @@ template<
   , typename TScope
 >
 struct fake_data {
-    typedef T type;
-    typedef TCallStack call_stack;
+    using type = T;
+    using call_stack = TCallStack;
     struct dependency {
-        typedef TScope scope;
+        using scope = TScope;
     };
 };
 
