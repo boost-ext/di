@@ -253,25 +253,25 @@ using basic_visitor_types = mpl::vector<
     //injector.template visit<transaction_usage>(visitor);
 //}
 
-//using basic_call_types = mpl::vector<
-    //injector<injector_custom_scope_t>
-  //, injector<decltype(injector_custom_scope)>
-//>;
+using basic_call_types = mpl::vector<
+    injector<injector_custom_scope_t>
+  , injector<decltype(injector_custom_scope)>
+>;
 
-//BOOST_AUTO_TEST_CASE_TEMPLATE(basic_call, TInjector, basic_call_types) {
-    //fake_scope<>::entry_calls() = 0;
-    //fake_scope<>::exit_calls() = 0;
+BOOST_AUTO_TEST_CASE_TEMPLATE(basic_call, TInjector, basic_call_types) {
+    fake_scope<>::entry_calls() = 0;
+    fake_scope<>::exit_calls() = 0;
 
-    //TInjector injector;
+    TInjector injector;
 
-    //BOOST_CHECK(!injector.template create<aux::shared_ptr<c3>>());
+    BOOST_CHECK(!injector.template create<aux::shared_ptr<c3>>());
 
-    //injector.call(fake_scope_entry());
-    //BOOST_CHECK(injector.template create<aux::shared_ptr<c3>>());
+    injector.call(fake_scope_entry());
+    BOOST_CHECK(injector.template create<aux::shared_ptr<c3>>());
 
-    //injector.call(fake_scope_exit());
-    //BOOST_CHECK(!injector.template create<aux::shared_ptr<c3>>());
-//}
+    injector.call(fake_scope_exit());
+    BOOST_CHECK(!injector.template create<aux::shared_ptr<c3>>());
+}
 
 BOOST_AUTO_TEST_CASE(basic_injector_externals) {
     injector<decltype(injector_externals_2)> injector_(injector_externals_2);
@@ -459,32 +459,32 @@ BOOST_AUTO_TEST_CASE(inject_priority) {
     BOOST_CHECK_EQUAL(0.0, c28_.f_);
 }
 
-//BOOST_AUTO_TEST_CASE(session_scope) {
-    //injector<
-        //session<c0if0>
-    //> injector_;
+BOOST_AUTO_TEST_CASE(session_scope) {
+    injector<
+        session<c0if0>
+    > injector_;
 
-    //{
-    //auto c20_ = injector_.create<c20>();
-    //BOOST_CHECK(nullptr == c20_.if0_.get());
-    //BOOST_CHECK(nullptr == c20_.if0__.get());
-    //}
+    {
+    auto c20_ = injector_.create<c20>();
+    BOOST_CHECK(nullptr == c20_.if0_.get());
+    BOOST_CHECK(nullptr == c20_.if0__.get());
+    }
 
-    //{
-    //injector_.call(scopes::session_entry());
-    //auto c20_ = injector_.create<c20>();
-    //BOOST_CHECK(dynamic_cast<c0if0*>(c20_.if0_.get()));
-    //BOOST_CHECK(dynamic_cast<c0if0*>(c20_.if0__.get()));
-    //BOOST_CHECK(c20_.if0_ == c20_.if0__);
-    //}
+    {
+    injector_.call(scopes::session_entry());
+    auto c20_ = injector_.create<c20>();
+    BOOST_CHECK(dynamic_cast<c0if0*>(c20_.if0_.get()));
+    BOOST_CHECK(dynamic_cast<c0if0*>(c20_.if0__.get()));
+    BOOST_CHECK(c20_.if0_ == c20_.if0__);
+    }
 
-    //{
-    //injector_.call(scopes::session_exit());
-    //auto c20_ = injector_.create<c20>();
-    //BOOST_CHECK(nullptr == c20_.if0_.get());
-    //BOOST_CHECK(nullptr == c20_.if0__.get());
-    //}
-//}
+    {
+    injector_.call(scopes::session_exit());
+    auto c20_ = injector_.create<c20>();
+    BOOST_CHECK(nullptr == c20_.if0_.get());
+    BOOST_CHECK(nullptr == c20_.if0__.get());
+    }
+}
 
 BOOST_AUTO_TEST_CASE(scoped_injector_create) {
     aux::shared_ptr<int> i1;

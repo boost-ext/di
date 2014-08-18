@@ -549,30 +549,30 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(externals_create_priority, TModule, externals_prio
     //module_.visit<c18>(visitor);
 //}
 
-//BOOST_AUTO_TEST_CASE(call) {
-    //fake_scope<>::entry_calls() = 0;
-    //fake_scope<>::exit_calls() = 0;
+BOOST_AUTO_TEST_CASE(call) {
+    fake_scope<>::entry_calls() = 0;
+    fake_scope<>::exit_calls() = 0;
 
-    //module<
-        //type_list<
-            //fake_dependency<fake_scope<>, c0if0, c0if0>::type
-        //>
-    //> module_;
+    module<
+        type_list<
+            fake_dependency<fake_scope<>, c0if0, c0if0>::type
+        >
+    > module_;
 
-    //BOOST_CHECK_EQUAL(0, fake_scope<>::entry_calls());
-    //BOOST_CHECK_EQUAL(0, fake_scope<>::exit_calls());
+    BOOST_CHECK_EQUAL(0, fake_scope<>::entry_calls());
+    BOOST_CHECK_EQUAL(0, fake_scope<>::exit_calls());
 
-    //module_.call(fake_scope_entry());
-    //BOOST_CHECK_EQUAL(1, fake_scope<>::entry_calls());
-    //BOOST_CHECK_EQUAL(0, fake_scope<>::exit_calls());
+    module_.call(fake_scope_entry());
+    BOOST_CHECK_EQUAL(1, fake_scope<>::entry_calls());
+    BOOST_CHECK_EQUAL(0, fake_scope<>::exit_calls());
 
-    //fake_scope<>::entry_calls() = 0;
-    //fake_scope<>::exit_calls() = 0;
+    fake_scope<>::entry_calls() = 0;
+    fake_scope<>::exit_calls() = 0;
 
-    //module_.call(fake_scope_exit());
-    //BOOST_CHECK_EQUAL(0, fake_scope<>::entry_calls());
-    //BOOST_CHECK_EQUAL(1, fake_scope<>::exit_calls());
-//}
+    module_.call(fake_scope_exit());
+    BOOST_CHECK_EQUAL(0, fake_scope<>::entry_calls());
+    BOOST_CHECK_EQUAL(1, fake_scope<>::exit_calls());
+}
 
 //BOOST_AUTO_TEST_CASE(create_with_policies) {
     //module<> module_;

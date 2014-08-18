@@ -98,35 +98,25 @@ public:
 
     template<typename TAction>
     void call(const TAction& action) {
-        //call_impl<deps>(static_cast<pool<deps>&>(*this), action);
+        call_impl(static_cast<pool<deps>&>(*this), action, deps());
     }
 
 private:
-    //template<typename TSeq, typename T, typename TAction>
-    //typename std::enable_if<aux::mpl::empty<TSeq>>::type call_impl(T&, const TAction&) { }
+    template<typename TDeps_, typename TAction, typename... Ts>
+    void call_impl(TDeps_& deps, const TAction& action, const type_list<Ts...>&) {
+         int dummy[]{0, (call_impl<Ts>(deps, action), 0)...};
+         (void)dummy;
+    }
 
-    //template<typename TSeq, typename T, typename TAction>
-    //typename std::enable_if<
-        //aux::mpl::and_<
-            //aux::mpl::not_<aux::mpl::empty<TSeq>>
-          //, has_call<typename aux::mpl::front<TSeq>::type, TAction>
-        //>
-    //>::type
-    //call_impl(T& deps, const TAction& action) {
-        //static_cast<typename aux::mpl::front<TSeq>::type&>(deps).call(action);
-        //call_impl<typename aux::mpl::pop_front<TSeq>::type>(deps, action);
-    //}
+    template<typename T, typename TDeps_, typename TAction>
+    typename std::enable_if<has_call<T>::value>::type
+    call_impl(TDeps_& deps, const TAction& action) {
+        static_cast<T&>(deps).call(action);
+    }
 
-    //template<typename TSeq, typename T, typename TAction>
-    //typename disable_if<
-        //aux::mpl::or_<
-            //aux::mpl::empty<TSeq>
-          //, has_call<typename aux::mpl::front<TSeq>::type, TAction>
-        //>
-    //>::type
-    //call_impl(T& deps, const TAction& action) {
-        //call_impl<typename aux::mpl::pop_front<TSeq>::type>(deps, action);
-    //}
+    template<typename T, typename TDeps_, typename TAction>
+    typename std::enable_if<!has_call<T>::value>::type
+    call_impl(TDeps_& deps, const TAction& action) { }
 
     creator<TDeps> creator_;
 };
