@@ -104,8 +104,8 @@ public:
 private:
     template<typename TDeps_, typename TAction, typename... Ts>
     void call_impl(TDeps_& deps, const TAction& action, const type_list<Ts...>&) {
-         int dummy[]{0, (call_impl<Ts>(deps, action), 0)...};
-         (void)dummy;
+        int dummy[]{0, (call_impl<Ts>(deps, action), 0)...};
+        (void)dummy;
     }
 
     template<typename T, typename TDeps_, typename TAction>

@@ -7,11 +7,12 @@
 #ifndef BOOST_DI_FAKE_VISITOR_HPP
 #define BOOST_DI_FAKE_VISITOR_HPP
 
+#include "boost/di/aux_/mpl.hpp"
+
 #include <boost/test/unit_test.hpp>
 #include <typeinfo>
 #include <vector>
 #include <string>
-#include <boost/utility/enable_if.hpp>
 
 #include <iostream>
 #include <boost/units/detail/utility.hpp>
@@ -19,13 +20,11 @@
 namespace boost {
 namespace di {
 
-template<typename TSeq = aux::mpl::vector<>>
-class fake_visitor
-{
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(first)
+BOOST_DI_HAS_MEMBER_TYPE(first);
 
-    struct element
-    {
+template<typename... Ts>
+class fake_visitor {
+    struct element {
         element(const std::type_info* type, const std::type_info* scope)
             : type(type), scope(scope)
         { }
@@ -38,8 +37,9 @@ class fake_visitor
 
 public:
     ~fake_visitor() {
-        BOOST_CHECK_EQUAL(visits.size(), static_cast<std::size_t>(aux::mpl::size<TSeq>::value));
-        verify<TSeq>();
+        BOOST_CHECK_EQUAL(visits.size(), static_cast<std::size_t>(sizeof...(Ts)));
+        int dummy[]{0, (verify<Ts>(), 0)...};
+        (void)dummy;
     }
 
     template<typename T>
@@ -51,24 +51,14 @@ public:
     }
 
 private:
-    template<typename Seq>
-    void verify(typename enable_if<aux::mpl::empty<Seq>>::type* = 0) { }
-
-    template<typename Seq>
-    void verify(typename disable_if<aux::mpl::empty<Seq>>::type* = 0) {
-        typedef typename aux::mpl::front<Seq>::type type;
-        verify_impl<type>();
-        verify<typename aux::mpl::pop_front<Seq>::type>();
-    }
-
     template<typename T>
-    typename enable_if<has_first<T>>::type verify_impl() {
+    typename std::enable_if<has_first<T>::value>::type verify() {
         verify_type<typename T::first>();
         verify_type<typename T::second>();
     }
 
     template<typename T>
-    typename disable_if<has_first<T>>::type verify_impl() {
+    typename std::enable_if<!has_first<T>::value>::type verify() {
         verify_type<T>();
     }
 
