@@ -27,13 +27,6 @@ class module : public pool<TDeps> {
     template<typename> friend class module;
     using pool_t = pool<TDeps>;
 
-    struct has_bindings {
-        template<typename T>
-        struct apply
-            : bool_<!(has_types<T>::value || contains<TDeps, T>::value)>
-        { };
-    };
-
     class empty_visitor {
     public:
         template<typename T>
@@ -49,7 +42,7 @@ public:
 
     template<typename... TArgs>
     explicit module(const TArgs&... args)
-        : pool_t(pool<type_list<TArgs...>, has_bindings>(args...), init())
+        : pool_t(init(), args...)
     { }
 
     template<typename T, typename... TPolicies>

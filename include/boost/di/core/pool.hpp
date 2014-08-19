@@ -13,47 +13,24 @@ namespace boost {
 namespace di {
 namespace core {
 
-BOOST_DI_HAS_MEMBER_TYPE(types);
+struct init { };
 
-class init { };
-
-struct never {
-    template<typename>
-    struct apply : std::false_type { };
-};
-
-template<typename = type_list<>, typename = never>
+template<typename = type_list<>>
 class pool;
 
-template<typename TIgnore, typename... TArgs>
-class pool<type_list<TArgs...>, TIgnore> : public TArgs...  {
-    template<typename T, typename = void>
-    struct pool_type {
-        using type = type_list<T>;
-    };
-
-    template<typename T>
-    struct pool_type<T, typename std::enable_if<has_types<T>::value>::type> {
-        using type = typename T::types;
-    };
-
-    template<typename T>
-    struct pool_type<T, typename std::enable_if<TIgnore::template apply<T>::value>::type> {
-        using type = type_list<>;
-    };
-
+template<typename... TArgs>
+class pool<type_list<TArgs...>> : public TArgs... {
 public:
     using type = pool;
-    using types = typename join<typename pool_type<TArgs>::type...>::type;
 
-    template<typename... T>
-    explicit pool(const T&... args)
-        : T(args)...
+    template<typename... Ts>
+    explicit pool(const Ts&... args)
+        : Ts(args)...
     { }
 
-    template<typename TPool>
-    pool(const TPool& p, const init&)
-        : pool(p, typename TPool::types(), init())
+    template<typename... Ts>
+    pool(const init&, const Ts&... args)
+        : pool(get<TArgs>(pool<type_list<Ts...>>(args...))...)
     { }
 
     template<typename T>
@@ -62,10 +39,23 @@ public:
     }
 
 private:
-    template<typename TPool, typename... T>
-    pool(const TPool& p, const type_list<T...>&, const init&)
-        : T(p.template get<T>())...
-    { }
+    template<typename T, typename TPool>
+    typename std::enable_if<std::is_base_of<T, pool>::value && std::is_base_of<T, TPool>::value, T>::type
+    get(const TPool& p) {
+        return p.template get<T>();
+    }
+
+    template<typename T, typename TPool>
+    typename std::enable_if<std::is_base_of<T, pool>::value && !std::is_base_of<T, TPool>::value, T>::type
+    get(const TPool&) {
+        return T();
+    }
+
+    template<typename T, typename TPool>
+    typename std::enable_if<!std::is_base_of<T, pool>::value, const T&>::type
+    get(const TPool&) {
+        return T();
+    }
 };
 
 } // namespace core
