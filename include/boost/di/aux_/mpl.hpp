@@ -112,7 +112,7 @@ struct is_constructible {
     using type = typename std::conditional<std::is_constructible<T, TArgs...>::value, type_list<TArgs...>, type_list<>>::type;
 };
 
-template<typename T, int>
+template<typename T, std::size_t>
 struct type_ {
     using type = T;
 };
