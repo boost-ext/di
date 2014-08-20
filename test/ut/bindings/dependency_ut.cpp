@@ -33,6 +33,7 @@ BOOST_AUTO_TEST_CASE(default_value) {
         detail::requires_<
             bindings::type_traits::is_required_priority
           , bindings::type_traits::is_required_type<int>
+          , bindings::detail::when_<>
         >
       , dependency_t::bind
     >::value));
@@ -45,13 +46,13 @@ BOOST_AUTO_TEST_CASE(rebind_scope) {
                 fake_scope<1>
               , int
               , int
-              , detail::requires_<is_same<aux::mpl::_1, int>>
+              , detail::requires_<>
             >
           , dependency<
                 scopes::deduce
               , int
               , int
-              , detail::requires_<is_same<aux::mpl::_1, int>>
+              , detail::requires_<>
             >::rebind<fake_scope<1>>::other
         >::value
     ));
