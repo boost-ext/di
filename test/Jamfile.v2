@@ -143,10 +143,7 @@ test-suite mt : # module tests
     #[ run-test c++11 : ft/di_ft_cpp_11.cpp : di_ft_cpp_11 ]
     #[ run-test c++11 : ft/di_ft_cpp_11.cpp : ctor_di_ft_cpp_11 ]
 
-    #[ run-test c++11 : ft/di_ft_cpp_11.cpp : di_ft_cpp_11_cpp_03 : <define>BOOST_DI_CFG_STD=cpp_03 ]
-    #[ run-test c++11 : ft/di_ft_cpp_11.cpp : ctor_di_ft_cpp_11_cpp_03 : <define>BOOST_DI_CFG_STD=cpp_03 ]
-
-    #[ run-test c++11 : ft/di_ft_cpp_03.cpp : di_ft_cpp_03_bracket : <define>BOOST_DI_CFG_INJECT_BRACKET ]
+    #[ run-test c++11 : ft/di_ft_cpp_03.cpp : di_ft_cpp_03 ]
     #[ run-test c++11 : ft/di_ft_cpp_03.cpp : ctor_di_ft_cpp_03 ]
 #;
 
