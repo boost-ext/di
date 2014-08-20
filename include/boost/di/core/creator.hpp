@@ -115,7 +115,7 @@ public:
         using dependency_type = typename binder_t::template resolve<T, call_stack>::type;
         using propagate_call_stack = typename std::conditional<eval_type::value, call_stack, TCallStack>::type;
 
-        //assert_policies<typename TPolicies::types, data_type>(policies);
+        assert_policies<data_visitor<T, dependency_type>>(policies);
         (visitor)(data_visitor<T, dependency_type>());
 
         return create_impl<T, dependency_type, propagate_call_stack>(
@@ -209,17 +209,16 @@ private:
         );
     }
 
-/*        template<typename TSeq, typename, typename TPolicies>*/
-    //static typename enable_if<aux::mpl::empty<TSeq>>::type
-    //assert_policies(const TPolicies&) { }
+    template<typename T, typename... TPolicies>
+    static void assert_policies(const pool<type_list<TPolicies...>>& policies) {
+        int dummy[]{0, (assert_policy<TPolicies, T>(policies), 0)...};
+        (void)dummy;
+    }
 
-    //template<typename TSeq, typename T, typename TPolicies>
-    //static typename disable_if<aux::mpl::empty<TSeq>>::type
-    //assert_policies(const TPolicies& policies) {
-        //typedef typename aux::mpl::front<TSeq>::type policy;
-        //static_cast<const policy&>(policies).template assert_policy<T>();
-        //assert_policies<typename aux::mpl::pop_front<TSeq>::type, T>(policies);
-    /*}*/
+    template<typename TPolicy, typename T, typename TPolicies>
+    static void assert_policy(const TPolicies& policies) {
+        static_cast<const TPolicy&>(policies).template assert_policy<T>();
+    }
 
     template<typename TDependency, typename TDeps>
     typename std::enable_if<std::is_base_of<TDependency, TDeps>::value, TDependency&>::type
