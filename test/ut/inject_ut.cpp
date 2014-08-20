@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#define BOOST_DI_CFG_INJECT_VA_ARGS
 #include "boost/di/inject.hpp"
 
 #include <boost/test/unit_test.hpp>
@@ -125,35 +124,31 @@ BOOST_AUTO_TEST_CASE(function) {
     BOOST_CHECK_EQUAL(d, c_.d);
 }
 
-#if !defined(BOOST_INTEL) &&                                                    \
-    !defined(BOOST_MSVC) &&                                                     \
-    !(defined(BOOST_GCC) && (BOOST_GCC < 40800)) &&                             \
-    !(defined(BOOST_CLANG) && (__clang_major__ >= 3) && (__clang_minor__ < 3))
+#if !defined(__INTEL_COMPILER) && !defined(_MSC_VER)
+    BOOST_AUTO_TEST_CASE(inheriting_ctors) {
+        const int i = 1;
+        const double d = 2.0;
 
-BOOST_AUTO_TEST_CASE(inheriting_ctors) {
-    const int i = 1;
-    const double d = 2.0;
+        struct c0
+        {
+            BOOST_DI_INJECT(c0, int i, double d)
+                : i(i), d(d)
+            { }
 
-    struct c0
-    {
-        BOOST_DI_INJECT(c0, int i, double d)
-            : i(i), d(d)
-        { }
+            int i = 0;
+            double d = 0.0;
+        };
 
-        int i = 0;
-        double d = 0.0;
-    };
+        struct c1 : public c0
+        {
+            using c0::c0;
+        };
 
-    struct c1 : public c0
-    {
-        using c0::c0;
-    };
+        c1 c1_(i, d);
 
-    c1 c1_(i, d);
-
-    BOOST_CHECK_EQUAL(i, c1_.i);
-    BOOST_CHECK_EQUAL(d, c1_.d);
-}
+        BOOST_CHECK_EQUAL(i, c1_.i);
+        BOOST_CHECK_EQUAL(d, c1_.d);
+    }
 #endif
 
 } // namespace di

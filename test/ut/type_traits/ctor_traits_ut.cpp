@@ -17,6 +17,7 @@
 
 #include <iostream>
 #include <boost/units/detail/utility.hpp>
+
 namespace boost {
 namespace di {
 
@@ -81,12 +82,10 @@ struct ctor_inject_named
     ctor_inject_named(int, int);
 };
 
-#if !defined(BOOST_NO_RVALUE_REFERENCES)
-    struct rvalue
-    {
-        rvalue(int&&) { };
-    };
-#endif
+struct rvalue
+{
+    rvalue(int&&) { };
+};
 
 BOOST_AUTO_TEST_CASE(ctors) {
     BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<>, ctor_traits<empty>::type>::value));
@@ -104,17 +103,9 @@ BOOST_AUTO_TEST_CASE(ctors) {
       , ctor_traits<ctor_inject_named>::type>::value
     ));
 
-#if defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS)
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<>, ctor_traits<ctor1>::type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<>, ctor_traits<ctor_auto_ptr>::type>::value));
-#else
     BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<core::any_type<ctor1> >, ctor_traits<ctor1>::type>::value));
     BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<core::any_type<ctor_auto_ptr> >, ctor_traits<ctor_auto_ptr>::type>::value));
-#endif
-
-#if !defined(BOOST_NO_RVALUE_REFERENCES) && !defined(BOOST_MSVC)
     BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<core::any_type<rvalue> >, ctor_traits<rvalue>::type>::value));
-#endif
 }
 
 #if (__cplusplus >= 201100L) &&                                             \

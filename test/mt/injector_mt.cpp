@@ -385,9 +385,7 @@ BOOST_AUTO_TEST_CASE(smart_ptr_weak_ptr) {
 
 using creation_special_cases_types = mpl::vector<
     noncopyable_const_ref
-#if !defined(BOOST_MSVC)
   , rvalue
-#endif
 >;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(creation_special_cases, T, creation_special_cases_types) {
