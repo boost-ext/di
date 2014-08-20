@@ -15,10 +15,10 @@ namespace bindings {
 namespace detail {
 
 template<typename T, typename TBind>
-struct apply_for_all :  TBind::template apply<T>::type {};
+struct apply_for_all :  TBind::template apply<T>::type { };
 
 template<typename T, typename TBind>
-struct eval_for_all : TBind::template eval<T>::type {};
+struct eval_for_all : TBind::template eval<T>::type { };
 
 template<typename... Ts>
 struct when_ {
