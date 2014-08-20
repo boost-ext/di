@@ -42,7 +42,6 @@
 #include <string>
 #include <functional>
 #include <boost/type_traits/is_integral.hpp>
-#include "boost/di/inject.hpp"
 #include "boost/di/aux_/ref.hpp"
 #include "boost/di/aux_/mpl.hpp"
 #include "boost/di/aux_/memory.hpp"
@@ -573,7 +572,6 @@ public:
 } // namespace di
 } // namespace boost
 
-
 namespace boost {
 namespace di {
 namespace type_traits {
@@ -737,7 +735,6 @@ public:
 } // namespace scopes
 } // namespace di
 } // namespace boost
-
 
 namespace boost {
 namespace di {
@@ -914,7 +911,6 @@ struct is_required_type<type_list<Ts...>> {
 } // namespace bindings
 } // namespace di
 } // namespace boost
-
 
 namespace boost {
 namespace di {
@@ -1282,7 +1278,6 @@ public:
 } // namespace di
 } // namespace boost
 
-
 namespace boost {
 namespace di {
 namespace bindings {
@@ -1391,9 +1386,9 @@ public:
         : Ts(args)...
     { }
 
-    template<typename... Ts>
-    pool(const init&, const Ts&... args)
-        : pool(get<TArgs>(pool<type_list<Ts...>>(args...))...)
+    template<typename TPool>
+    pool(const init&, const TPool& p)
+        : pool(get<TArgs>(p)...)
     { }
 
     template<typename T>
@@ -1475,7 +1470,6 @@ struct binder<type_list<Ts...>> {
 } // namespace core
 } // namespace di
 } // namespace boost
-
 
 namespace boost {
 namespace di {
@@ -1565,8 +1559,32 @@ public:
         );
     }
 
-   
-    template< typename U , typename = typename std::enable_if< !type_traits::is_same_base_of< typename type_traits::make_plain<U>::type , typename type_traits::make_plain<T>::type >::value >::type > operator U() { return creator_.template create<U, T, TCallStack>( allocator_, deps_, refs_, visitor_, policies_ ); }
+    BOOST_DI_WKND(MSVC)(
+        template<typename U>
+        operator aux::unique_ptr<U>() {
+            return creator_.template create<aux::unique_ptr<U>, T, TCallStack>(
+                allocator_, deps_, refs_, visitor_, policies_
+            );
+        }
+    )
+
+    BOOST_DI_WKND(NO_MSVC)(
+        template<
+            typename U
+          , typename = typename std::enable_if<
+                !type_traits::is_same_base_of<
+                    typename type_traits::make_plain<U>::type
+                  , typename type_traits::make_plain<T>::type
+                >::value
+            >::type
+        >
+        operator U() {
+            return creator_.template create<U, T, TCallStack>(
+                allocator_, deps_, refs_, visitor_, policies_
+            );
+        }
+    )
+
 private:
     typename ref_type<TCreator, TCreator&>::type creator_;
     typename ref_type<TAllocator, const TAllocator&>::type allocator_;
@@ -1630,7 +1648,6 @@ struct is_integral<
 > : ::std::true_type { };
 
 } // namespace std
-
 
 namespace boost {
 namespace di {
@@ -1715,7 +1732,6 @@ using is_convertible_to_ref = detail::is_convertible<
 } // namespace type_traits
 } // namespace di
 } // namespace boost
-
 
 namespace boost {
 namespace di {
@@ -1921,7 +1937,6 @@ public:
 } // namespace di
 } // namespace boost
 
-
 namespace boost {
 namespace di {
 namespace core {
@@ -2102,6 +2117,7 @@ private:
               , const TVisitor& visitor
               , const TPolicies& policies
               , const type_list<TArgs...>&) {
+        (void)allocator; (void)deps; (void)refs; (void)visitor; (void)policies;
         return allocator.template
             allocate<typename TDependency::expected, typename TDependency::given>(
                 create<TArgs, T, TCallStack>(allocator, deps, refs, visitor, policies)...
@@ -2143,7 +2159,6 @@ private:
 } // namespace core
 } // namespace di
 } // namespace boost
-
 
 namespace boost {
 
@@ -2201,7 +2216,6 @@ public:
 } // namespace di
 } // namespace boost
 
-
 namespace boost {
 namespace di {
 namespace core {
@@ -2228,7 +2242,7 @@ public:
 
     template<typename... TArgs>
     explicit module(const TArgs&... args)
-        : pool_t(init(), args...)
+        : pool_t(init(), pool<type_list<TArgs...>>(args...))
     { }
 
     template<typename T, typename... TPolicies>
@@ -2303,7 +2317,6 @@ private:
 } // namespace core
 } // namespace di
 } // namespace boost
-
 
 namespace boost {
 namespace di {

@@ -19,7 +19,7 @@ struct fake_scope_exit { };
 
 template<bool Priority = false>
 struct fake_scope {
-    static constexpr bool priority = Priority;
+    static const bool priority = Priority;
 
     template<typename T>
     class wrapper {

@@ -9,11 +9,11 @@
 
 #include "boost/di/aux_/config.hpp"
 
-#if defined(BOOST_MSVC)
+#if defined(_MSC_VER)
     #pragma warning(disable:4822) // local class member function does not have a body
 #endif
 
-#if defined(BOOST_INTEL)
+#if defined(__INTEL_COMPILER)
     #pragma warning(disable:177) //function "..." was declared but never referenced
 #endif
 

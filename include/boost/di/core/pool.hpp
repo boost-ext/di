@@ -9,6 +9,8 @@
 
 #include "boost/di/aux_/mpl.hpp"
 
+#include <type_traits>
+
 namespace boost {
 namespace di {
 namespace core {
@@ -28,9 +30,9 @@ public:
         : Ts(args)...
     { }
 
-    template<typename... Ts>
-    pool(const init&, const Ts&... args)
-        : pool(get<TArgs>(pool<type_list<Ts...>>(args...))...)
+    template<typename TPool>
+    pool(const init&, const TPool& p)
+        : pool(get<TArgs>(p)...)
     { }
 
     template<typename T>

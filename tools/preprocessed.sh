@@ -13,15 +13,11 @@ dump_file() {
     args=${@:4}
     tmp=`mktemp -d`
 
-    cat $1 | grep "#include" | grep -v PP_ | grep -v "preprocess" | while read include; do
-        if [[ "$include" =~ "di/aux_/config.hpp" ]]; then
-            echo
-        elif [[ "$include" =~ "di/aux_" ]] ||
-           [[ "$include" =~ "inject.hpp" ]] ||
-           [[ "$include" =~ "di.hpp" ]]; then
+    cat $1 | grep "#include" | while read include; do
+        if [[ "$include" =~ "boost/di/aux_" ]]; then
             echo -e "$include" >> $tmp_dir/includes.hpp
-        else
-            echo -e "$include" | sed "s/boost\/di\//boost\/$3\//g" >> $tmp_dir/includes.hpp
+        elif ! [[ "$include" =~ "boost/di" ]]; then
+            echo -e "$include" >> $tmp_dir/includes.hpp
         fi
 
         file=`echo $include | sed "s/[^<^\"]*[\"<]\([^>\"]*\)[\">].*/\1/"`
@@ -33,14 +29,10 @@ dump_file() {
     mkdir -p $tmp/`dirname $file`
     touch $tmp/$file
 
-    file="boost/preprocessor/cat.hpp"
-    mkdir -p $tmp/`dirname $file`
-    touch $tmp/$file
-
     mkdir -p $tmp/`dirname $1`
     cp $1 $tmp/$1
 
-    $CXX -nostdinc -CC -E $1 -I$tmp -include $2 $args | grep -v "^#" | sed '/\/\*.*\*\// d; /\/\*/,/\*\// d' | grep -v "^/" | cat -s
+    $CXX -nostdinc -CC -E $1 -I$tmp $args | grep -v "^#" | sed '/\/\*.*\*\// d; /\/\*/,/\*\// d' | grep -v "^/" | cat -s
 
     rm -rf $tmp
 }
@@ -95,11 +87,11 @@ guard_end() {
 
 includes() {
     echo -e "#include \"boost/di/aux_/config.hpp\"" >> $tmp_dir/includes.hpp
-    cat $tmp_dir/includes.hpp | grep -v preprocess | sort -u -r
+    cat $tmp_dir/includes.hpp | sort -u -r
 }
 
 genereate_files() {
-    cat $1 | grep "#include" | grep "boost\/di" | grep -v PP_ | grep -v "preprocess" | while read include; do
+    cat $1 | grep "#include" | grep "boost\/di" | while read include; do
         file=`echo $include | sed "s/[^<^\"]*[\"<]\([^>\"]*\)[\">].*/\1/"`
         if [[ "$file" =~ "di/aux_" ]] ||
            [[ "$file" =~ "inject.hpp" ]] ||
@@ -138,7 +130,7 @@ generate_preprocessed() {
 }
 
 generate_pph() {
-    generate_preprocessed "boost" "di\/preprocessed" "$1" ${@:2}
+    generate_preprocessed "boost" "" "$1" ${@:2}
     echo "done -> $name"
 }
 

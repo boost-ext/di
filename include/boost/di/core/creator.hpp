@@ -200,6 +200,7 @@ private:
               , const TVisitor& visitor
               , const TPolicies& policies
               , const type_list<TArgs...>&) {
+        (void)allocator; (void)deps; (void)refs; (void)visitor; (void)policies;
         return allocator.template
             allocate<typename TDependency::expected, typename TDependency::given>(
                 create<TArgs, T, TCallStack>(allocator, deps, refs, visitor, policies)...
