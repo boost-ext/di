@@ -12,7 +12,7 @@
 #include <boost/type_traits/is_same.hpp>
 
 #include "boost/di/aux_/memory.hpp"
-#include "common/fakes/fake_allocator.hpp"
+#include "common/fakes/fake_provider.hpp"
 #include "common/fakes/fake_dependency.hpp"
 #include "common/fakes/fake_binder.hpp"
 #include "common/fakes/fake_visitor.hpp"
@@ -24,17 +24,17 @@ namespace di {
 namespace core {
 
 BOOST_AUTO_TEST_CASE(create_pod) {
-    const int i = 42;
+    const auto i = 42;
 
-    typedef fake_dependency<scopes::unique<>, int, int_<i>>::type dependency_type;
-    fake_allocator allocator;
+    using dependency_type = fake_dependency<scopes::unique<>, int, int_<i>>::type;
+    fake_provider provider;
     fake_pool<dependency_type> deps;
     std::vector<aux::shared_ptr<void>> refs;
 
     BOOST_CHECK_EQUAL(i, (
         creator<type_list<dependency_type>>().create<
             int, int, type_list<>
-        >(allocator, deps, refs, fake_visitor<type_list<int>>(), fake_pool<>())
+        >(provider, deps, refs, fake_visitor<int>(), fake_pool<>())
     ));
 }
 

@@ -7,15 +7,11 @@
 #ifndef BOOST_DI_FAKE_POOL_HPP
 #define BOOST_DI_FAKE_POOL_HPP
 
-
 namespace boost {
 namespace di {
 
 template<typename... T>
-struct fake_pool : T...
-{
-    typedef aux::mpl::vector<T...> types;
-};
+struct fake_pool : T...  { };
 
 } // namespace di
 } // namespace boost
