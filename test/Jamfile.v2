@@ -105,7 +105,7 @@ test-suite ut : # unit tests
     [ run-test c++11 : ut/scopes/shared_ut.cpp : scope_shared_ut ]
     [ run-test c++11 : ut/scopes/unique_ut.cpp : scope_unique_ut ]
 
-    #[ run-test c++11 : ut/type_traits/ctor_traits_ut.cpp : ctor_traits_ut_cpp_11 ]
+    [ run-test c++11 : ut/type_traits/ctor_traits_ut.cpp : ctor_traits_ut_cpp_11 ]
     #[ run-test c++11 : ut/type_traits/function_traits_ut.cpp ]
     #[ run-test c++11 : ut/type_traits/has_call_ut.cpp : has_call_ut_cpp_11 ]
     #[ run-test c++11 : ut/type_traits/is_convertible_to_ref_ut.cpp : is_convertible_to_ref_ut_cpp_11 ]

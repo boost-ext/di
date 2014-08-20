@@ -7,8 +7,9 @@
 #include "boost/di/type_traits/ctor_traits.hpp"
 
 #include <boost/test/unit_test.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/config.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/string.hpp>
 
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/core/any_type.hpp"
@@ -75,8 +76,8 @@ struct ctor_auto_ptr
 struct ctor_inject_named
 {
     static void BOOST_DI_INJECTOR(
-        named<int, aux::mpl::string<'1'> >
-      , named<int, aux::mpl::string<'2'> >
+        named<int, mpl::string<'1'> >
+      , named<int, mpl::string<'2'> >
     );
 
     ctor_inject_named(int, int);
@@ -88,50 +89,46 @@ struct rvalue
 };
 
 BOOST_AUTO_TEST_CASE(ctors) {
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<>, ctor_traits<empty>::type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<>, ctor_traits<traits>::type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<>, ctor_traits<ctor0>::type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<int, double>, ctor_traits<int_double>::type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<char*, const int&>, ctor_traits<extensions>::type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<core::any_type<ctor2>, core::any_type<ctor2> >, ctor_traits<ctor2>::type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex> >, ctor_traits<ctor_complex>::type>::value));
-    BOOST_CHECK((aux::mpl::equal<
-        aux::mpl::vector<
-            named<int, aux::mpl::string<'1'> >
-          , named<int, aux::mpl::string<'2'> >
+    BOOST_CHECK((std::is_same<type_list<>, ctor_traits<empty>::type>::value));
+    BOOST_CHECK((std::is_same<type_list<>, ctor_traits<traits>::type>::value));
+    BOOST_CHECK((std::is_same<type_list<>, ctor_traits<ctor0>::type>::value));
+    BOOST_CHECK((std::is_same<type_list<int, double>, ctor_traits<int_double>::type>::value));
+    BOOST_CHECK((std::is_same<type_list<char*, const int&>, ctor_traits<extensions>::type>::value));
+    BOOST_CHECK((std::is_same<type_list<core::any_type<ctor2>, core::any_type<ctor2> >, ctor_traits<ctor2>::type>::value));
+    BOOST_CHECK((std::is_same<type_list<core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex> >, ctor_traits<ctor_complex>::type>::value));
+    BOOST_CHECK((std::is_same<
+        type_list<
+            named<int, mpl::string<'1'> >
+          , named<int, mpl::string<'2'> >
         >
       , ctor_traits<ctor_inject_named>::type>::value
     ));
 
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<core::any_type<ctor1> >, ctor_traits<ctor1>::type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<core::any_type<ctor_auto_ptr> >, ctor_traits<ctor_auto_ptr>::type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<core::any_type<rvalue> >, ctor_traits<rvalue>::type>::value));
+    BOOST_CHECK((std::is_same<type_list<core::any_type<ctor1> >, ctor_traits<ctor1>::type>::value));
+    BOOST_CHECK((std::is_same<type_list<core::any_type<ctor_auto_ptr> >, ctor_traits<ctor_auto_ptr>::type>::value));
+    BOOST_CHECK((std::is_same<type_list<core::any_type<rvalue> >, ctor_traits<rvalue>::type>::value));
 }
 
-#if (__cplusplus >= 201100L) &&                                             \
-    !defined(BOOST_INTEL) &&                                                \
-    !(defined(BOOST_GCC) && (BOOST_GCC < 40800)) &&                         \
-    !(defined(BOOST_CLANG) && __clang_major__ >= 3 && __clang_minor__ < 3)
+#if !defined(__INTEL_COMPILER) && !defined(_MSC_VER)
+    BOOST_AUTO_TEST_CASE(inheriting_ctors) {
+        struct c0 { c0(int, double) { } };
+        struct c1 : public c0 { using c0::c0; };
 
-BOOST_AUTO_TEST_CASE(inheriting_ctors) {
-    struct c0 { c0(int, double) { } };
-    struct c1 : public c0 { using c0::c0; };
+        BOOST_CHECK((std::is_same<type_list<core::any_type<c0>, core::any_type<c0> >, ctor_traits<c0>::type>::value));
+        BOOST_CHECK((std::is_same<type_list<core::any_type<c1>, core::any_type<c1> >, ctor_traits<c1>::type>::value));
+    }
 
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<core::any_type<c0>, core::any_type<c0> >, ctor_traits<c0>::type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<core::any_type<c1>, core::any_type<c1> >, ctor_traits<c1>::type>::value));
-}
+    BOOST_AUTO_TEST_CASE(inheriting_ctors_inject) {
+        struct c0 { c0(int, double) { } static void BOOST_DI_INJECTOR(int, double); };
+        struct c1 : public c0 { using c0::c0; };
+        struct c2 : public c0 { };
+        struct c3 : public c0 { static void BOOST_DI_INJECTOR(); };
 
-BOOST_AUTO_TEST_CASE(inheriting_ctors_inject) {
-    struct c0 { c0(int, double) { } static void BOOST_DI_INJECTOR(int, double); };
-    struct c1 : public c0 { using c0::c0; };
-    struct c2 : public c0 { };
-    struct c3 : public c0 { static void BOOST_DI_INJECTOR(); };
-
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<int, double>, ctor_traits<c0>::type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<int, double>, ctor_traits<c1>::type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<int, double>, ctor_traits<c2>::type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<>, ctor_traits<c3>::type>::value));
-}
+        BOOST_CHECK((std::is_same<type_list<int, double>, ctor_traits<c0>::type>::value));
+        BOOST_CHECK((std::is_same<type_list<int, double>, ctor_traits<c1>::type>::value));
+        BOOST_CHECK((std::is_same<type_list<int, double>, ctor_traits<c2>::type>::value));
+        BOOST_CHECK((std::is_same<type_list<>, ctor_traits<c3>::type>::value));
+    }
 #endif
 
 } // namespace type_traits
