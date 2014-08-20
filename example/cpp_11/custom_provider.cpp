@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[custom_allocator_cpp_11
+//[custom_provider_cpp_11
 //````C++11```
 //<-
 #include <cassert>
@@ -30,15 +30,15 @@ struct example {
     }
 };
 
-/*<define `custom allocator` with allocate emethod>*/
-class custom_allocator {
+/*<define `custom provider` with get method>*/
+class custom_provider {
 public:
     template<typename TExpected, typename TGiven, typename... TArgs>
-    TExpected* allocate(TArgs&&... args) const {
+    TExpected* get(TArgs&&... args) const {
         return new TGiven(std::forward<TArgs>(args)...);
     }
 
-    /*<to support `bind_int<interface>()`, `bind_string<"s">()` allocate needs support types with `value` or when `mpl::string`>*/
+    /*<to support `bind_int<interface>()`, `bind_string<"s">()` get needs support types with `value` or when `mpl::string`>*/
 };
 
 int main() {
@@ -48,8 +48,8 @@ int main() {
       , di::bind<interface, implementation>()
     );
 
-    /*<<create `example` using `custom_allocator`>>*/
-    injector.allocate<example>(custom_allocator());
+    /*<<create `example` using `custom_provider`>>*/
+    injector.allocate<example>(custom_provider());
 }
 
 //]

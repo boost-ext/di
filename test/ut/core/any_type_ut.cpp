@@ -9,7 +9,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "common/fakes/fake_creator.hpp"
-#include "common/fakes/fake_allocator.hpp"
+#include "common/fakes/fake_provider.hpp"
 
 #include "boost/di/aux_/memory.hpp"
 
@@ -24,14 +24,14 @@ BOOST_AUTO_TEST_CASE(default_ctor) {
 BOOST_AUTO_TEST_CASE(conversion_to_const_ref) {
     using type = const int&;
     fake_creator<type> creator;
-    fake_allocator allocator;
+    fake_provider provider;
     none_t deps;
     none_t refs;
 
     BOOST_CHECK_EQUAL(
         0
-      , type(any_type<void, type_list<>, fake_creator<type>, fake_allocator>(
-            creator, allocator, deps, refs, none_t(), none_t())
+      , type(any_type<void, type_list<>, fake_creator<type>, fake_provider>(
+            creator, provider, deps, refs, none_t(), none_t())
         )
     );
 }
@@ -39,11 +39,11 @@ BOOST_AUTO_TEST_CASE(conversion_to_const_ref) {
 BOOST_AUTO_TEST_CASE(conversion_to_ref) {
     using type = int&;
     fake_creator<type> creator;
-    fake_allocator allocator;
+    fake_provider provider;
     none_t deps;
     none_t refs;
-    type i = any_type<void, type_list<>, fake_creator<type>, fake_allocator>(
-        creator, allocator, deps, refs, none_t(), none_t()
+    type i = any_type<void, type_list<>, fake_creator<type>, fake_provider>(
+        creator, provider, deps, refs, none_t(), none_t()
     );
 
     BOOST_CHECK_EQUAL(0, i);
@@ -52,14 +52,14 @@ BOOST_AUTO_TEST_CASE(conversion_to_ref) {
 BOOST_AUTO_TEST_CASE(conversion_to_copy) {
     using type = int;
     fake_creator<type> creator;
-    fake_allocator allocator;
+    fake_provider provider;
     none_t deps;
     none_t refs;
 
     BOOST_CHECK_EQUAL(
         0
-      , type(any_type<void, type_list<>, fake_creator<type>, fake_allocator>(
-            creator, allocator, deps, refs, none_t(), none_t())
+      , type(any_type<void, type_list<>, fake_creator<type>, fake_provider>(
+            creator, provider, deps, refs, none_t(), none_t())
         )
     );
 }

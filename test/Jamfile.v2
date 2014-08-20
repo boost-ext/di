@@ -120,8 +120,7 @@ test-suite ut : # unit tests
     [ run-test c++11 : ut/wrappers/universal_ut.cpp : universal_ut ]
     [ run-test c++11 : ut/wrappers/value_ut.cpp : wrapper_value_ut ]
 
-    [ run-test c++11 : ut/inject_bracket_ut.cpp ]
-    [ run-test c++11 : ut/inject_va_args_ut.cpp ]
+    [ run-test c++11 : ut/inject_ut.cpp ]
 
     #[ run-test c++11 : ut/injector_ut.cpp ]
     #[ run-test c++11 : ut/injector_ut.cpp : ctor_injector_ut ]
