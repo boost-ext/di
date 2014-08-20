@@ -742,10 +742,10 @@ namespace bindings {
 namespace detail {
 
 template<typename T, typename TBind>
-using apply_bind = typename TBind::template apply<T>::type;
+struct apply_bind : TBind::template apply<T>::type { };
 
 template<typename T, typename TBind>
-using eval_bind = typename TBind::template eval<T>::type;
+struct eval_bind : TBind::template eval<T>::type { };
 
 template<typename... Ts>
 struct requires_ {
@@ -769,10 +769,10 @@ namespace bindings {
 namespace detail {
 
 template<typename T, typename TBind>
-using apply_for_all = typename TBind::template apply<T>::type;
+struct apply_for_all : TBind::template apply<T>::type { };
 
 template<typename T, typename TBind>
-using eval_for_all = typename TBind::template eval<T>::type;
+struct eval_for_all : TBind::template eval<T>::type { };
 
 template<typename... Ts>
 struct when_ {
@@ -1389,7 +1389,7 @@ public:
     template<typename TPool>
     pool(const init&, const TPool& p)
         : pool(get<TArgs>(p)...)
-    { }
+    { (void)p; }
 
     template<typename T>
     inline const T& get() const {
@@ -1948,9 +1948,11 @@ class creator {
     using binder_t = binder<TDeps_>;
 
     template<typename TDependency>
-    using scope_create = typename type_traits::function_traits<
-          decltype(&TDependency::create)
-      >::type;
+    struct scope_create
+        : type_traits::function_traits<
+              decltype(&TDependency::create)
+          >::type
+    { };
 
     using scopes_type = std::unordered_map<
         std::type_index
@@ -2324,8 +2326,6 @@ namespace di {
 BOOST_DI_HAS_MEMBER_TYPE(deps);
 BOOST_DI_HAS_MEMBER_FUNCTION(configure, configure);
 
-namespace detail {
-
 template<typename T>
 struct is_module
     : bool_<has_deps<T>::value || has_configure<T>::value>
@@ -2372,18 +2372,16 @@ struct add_type_list<T, std::false_type, std::false_type> {
 };
 
 template<typename... Ts>
-using bindings = typename join<typename add_type_list<Ts>::type...>::type;
-
-} // namespace detail
+using get_bindings = typename join<typename add_type_list<Ts>::type...>::type;
 
 template<typename... Ts>
 class injector
-    : public core::module<typename detail::bindings<Ts...>::type>
+    : public core::module<typename get_bindings<Ts...>::type>
 {
 public:
     template<typename... TArgs>
     explicit injector(const TArgs&... args)
-        : core::module<typename detail::bindings<Ts...>::type>(pass_arg(args)...)
+        : core::module<typename get_bindings<Ts...>::type>(pass_arg(args)...)
     { }
 
 private:
@@ -2394,7 +2392,7 @@ private:
     }
 
     template<typename T>
-    typename std::enable_if<has_configure<T>::value, typename detail::get_module<T>::type>::type
+    typename std::enable_if<has_configure<T>::value, typename get_module<T>::type>::type
     pass_arg(const T& arg) const {
         return arg.configure();
     }
@@ -2407,10 +2405,10 @@ namespace boost {
 namespace di {
 
 template<typename... TArgs>
-injector<typename detail::bindings<TArgs...>::type>
+injector<typename get_bindings<TArgs...>::type>
 inline make_injector(const TArgs&... args) {
     return injector<
-        typename detail::bindings<
+        typename get_bindings<
             TArgs...
           //, aux::mpl::if_<
                 //has_scope<aux::mpl::_2>
