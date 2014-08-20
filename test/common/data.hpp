@@ -18,10 +18,15 @@
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/inject.hpp"
 #include "boost/di/named.hpp"
-#include "boost/di/provider.hpp"
 
 namespace boost {
 namespace di {
+
+template<typename T>
+struct provider {
+    virtual ~provider() { }
+    virtual T get() const = 0;
+};
 
 class a { };
 class b { };

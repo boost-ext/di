@@ -17,7 +17,7 @@
 #include "boost/di/bindings.hpp"
 //#include "boost/di/policies/circular_dependencies.hpp"
 
-#include "common/fakes/fake_allocator.hpp"
+#include "common/fakes/fake_provider.hpp"
 #include "common/data.hpp"
 
 namespace boost {
@@ -140,21 +140,21 @@ BOOST_AUTO_TEST_CASE(create_mix) {
 
 BOOST_AUTO_TEST_CASE(allocate) {
     auto injector = make_injector();
-    fake_allocator::allocate_calls() = 0;
-    auto i = injector.allocate<int>(fake_allocator());
+    fake_provider::get_calls() = 0;
+    auto i = injector.allocate<int>(fake_provider());
     BOOST_CHECK_EQUAL(0, i);
-    BOOST_CHECK_EQUAL(1, fake_allocator::allocate_calls());
+    BOOST_CHECK_EQUAL(1, fake_provider::get_calls());
 }
 
 BOOST_AUTO_TEST_CASE(allocate_with_policies) {
     auto injector = make_injector();
-    fake_allocator::allocate_calls() = 0;
+    fake_provider::get_calls() = 0;
     auto i = injector.allocate<int>(
-        fake_allocator()
+        fake_provider()
       //, policies::circular_dependencies()
     );
     BOOST_CHECK_EQUAL(0, i);
-    BOOST_CHECK_EQUAL(1, fake_allocator::allocate_calls());
+    BOOST_CHECK_EQUAL(1, fake_provider::get_calls());
 }
 
 BOOST_AUTO_TEST_CASE(externals_return_from_function) {

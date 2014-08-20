@@ -29,9 +29,6 @@
 #include "boost/di/injector.hpp"
 #include "boost/di/make_injector.hpp"
 
-//utilities
-#include "boost/di/provider.hpp"
-
 #else
 
 #include <vector>
@@ -1484,7 +1481,7 @@ template<
     typename T = none_t
   , typename TCallStack = none_t
   , typename TCreator = none_t
-  , typename TAllocator = none_t
+  , typename TProvider = none_t
   , typename TDeps = none_t
   , typename TRefs = none_t
   , typename TVisitor = none_t
@@ -1505,13 +1502,13 @@ public:
     any_type() { }
 
     any_type(TCreator& creator
-           , const TAllocator& allocator
+           , const TProvider& provider
            , TDeps& deps
            , TRefs& refs
            , const TVisitor& visitor
            , const TPolicies& policies)
         : creator_(creator)
-        , allocator_(allocator)
+        , provider_(provider)
         , deps_(deps)
         , refs_(refs)
         , visitor_(visitor)
@@ -1520,7 +1517,7 @@ public:
 
     any_type(const any_type& other)
         : creator_(other.creator_)
-        , allocator_(other.allocator_)
+        , provider_(other.provider_)
         , deps_(other.deps_)
         , refs_(other.refs_)
         , visitor_(other.visitor_)
@@ -1538,7 +1535,7 @@ public:
     >
     operator const U&() const {
         return creator_.template create<const U&, T, TCallStack>(
-            allocator_, deps_, refs_, visitor_, policies_
+            provider_, deps_, refs_, visitor_, policies_
         );
     }
 
@@ -1553,14 +1550,14 @@ public:
     >
     operator U&() const {
         return creator_.template create<U&, T, TCallStack>(
-            allocator_, deps_, refs_, visitor_, policies_
+            provider_, deps_, refs_, visitor_, policies_
         );
     }
 
     template<typename U>
     operator aux::auto_ptr<U>&() {
         return creator_.template create<aux::auto_ptr<U>, T, TCallStack>(
-            allocator_, deps_, refs_, visitor_, policies_
+            provider_, deps_, refs_, visitor_, policies_
         );
     }
 
@@ -1568,7 +1565,7 @@ public:
         template<typename U>
         operator aux::unique_ptr<U>() {
             return creator_.template create<aux::unique_ptr<U>, T, TCallStack>(
-                allocator_, deps_, refs_, visitor_, policies_
+                provider_, deps_, refs_, visitor_, policies_
             );
         }
     )
@@ -1585,14 +1582,14 @@ public:
         >
         operator U() {
             return creator_.template create<U, T, TCallStack>(
-                allocator_, deps_, refs_, visitor_, policies_
+                provider_, deps_, refs_, visitor_, policies_
             );
         }
     )
 
 private:
     typename ref_type<TCreator, TCreator&>::type creator_;
-    typename ref_type<TAllocator, const TAllocator&>::type allocator_;
+    typename ref_type<TProvider, const TProvider&>::type provider_;
     typename ref_type<TDeps, TDeps&>::type deps_;
     typename ref_type<TRefs, TRefs&>::type refs_;
     typename ref_type<TVisitor, const TVisitor&>::type visitor_;
@@ -1606,7 +1603,7 @@ template<
     typename T
   , typename TCallStack
   , typename TCreator
-  , typename TAllocator
+  , typename TProvider
   , typename TDeps
   , typename TRefs
   , typename TVisitor
@@ -1617,7 +1614,7 @@ struct is_integral<
         T
       , TCallStack
       , TCreator
-      , TAllocator
+      , TProvider
       , TDeps
       , TRefs
       , TVisitor
@@ -1633,7 +1630,7 @@ template<
     typename T
   , typename TCallStack
   , typename TCreator
-  , typename TAllocator
+  , typename TProvider
   , typename TDeps
   , typename TRefs
   , typename TVisitor
@@ -1644,7 +1641,7 @@ struct is_integral<
         T
       , TCallStack
       , TCreator
-      , TAllocator
+      , TProvider
       , TDeps
       , TRefs
       , TVisitor
@@ -1976,7 +1973,7 @@ public:
         typename T
       , typename TParent
       , typename TCallStack
-      , typename TAllocator
+      , typename TProvider
       , typename TDeps
       , typename TRefs
       , typename TVisitor
@@ -1988,14 +1985,14 @@ public:
             TParent
           , TCallStack
           , creator
-          , TAllocator
+          , TProvider
           , TDeps
           , TRefs
           , TVisitor
           , TPolicies
         >
     >::type
-    create(const TAllocator& allocator
+    create(const TProvider& provider
          , TDeps& deps
          , TRefs& refs
          , const TVisitor& visitor
@@ -2004,26 +2001,26 @@ public:
             TParent
           , TCallStack
           , creator
-          , TAllocator
+          , TProvider
           , TDeps
           , TRefs
           , TVisitor
           , TPolicies
-        >(*this, allocator, deps, refs, visitor, policies);
+        >(*this, provider, deps, refs, visitor, policies);
     }
 
     template<
         typename T
       , typename TParent
       , typename TCallStack
-      , typename TAllocator
+      , typename TProvider
       , typename TDeps
       , typename TRefs
       , typename TVisitor
       , typename TPolicies
     >
     typename std::enable_if<!has_any<T>::value, wrappers::universal<T>>::type
-    create(const TAllocator& allocator
+    create(const TProvider& provider
          , TDeps& deps
          , TRefs& refs
          , const TVisitor& visitor
@@ -2041,7 +2038,7 @@ public:
         (visitor)(data_visitor<T, dependency_type>());
 
         return create_impl<T, dependency_type, propagate_call_stack>(
-            allocator, deps, refs, visitor, policies
+            provider, deps, refs, visitor, policies
         );
     }
 
@@ -2050,7 +2047,7 @@ private:
         typename T
       , typename TDependency
       , typename TCallStack
-      , typename TAllocator
+      , typename TProvider
       , typename TDeps
       , typename TRefs
       , typename TVisitor
@@ -2060,7 +2057,7 @@ private:
         !size<typename scope_create<TDependency>::type>::value
       , wrappers::universal<T>
     >::type
-    create_impl(const TAllocator&
+    create_impl(const TProvider&
               , TDeps& deps
               , TRefs& refs
               , const TVisitor&
@@ -2074,7 +2071,7 @@ private:
         typename T
       , typename TDependency
       , typename TCallStack
-      , typename TAllocator
+      , typename TProvider
       , typename TDeps
       , typename TRefs
       , typename TVisitor
@@ -2083,7 +2080,7 @@ private:
     typename std::enable_if<
         size<typename scope_create<TDependency>::type>::value
       , wrappers::universal<T>>::type
-    create_impl(const TAllocator& allocator
+    create_impl(const TProvider& provider
               , TDeps& deps
               , TRefs& refs
               , const TVisitor& visitor
@@ -2095,7 +2092,7 @@ private:
                     typename type_traits::ctor_traits<typename TDependency::given>::type;
 
                 return create_impl<T, TDependency, TCallStack>(
-                    allocator
+                    provider
                   , deps
                   , refs
                   , visitor
@@ -2110,7 +2107,7 @@ private:
         typename T
       , typename TDependency
       , typename TCallStack
-      , typename TAllocator
+      , typename TProvider
       , typename TDeps
       , typename TRefs
       , typename TVisitor
@@ -2118,16 +2115,16 @@ private:
       , typename... TArgs
     >
     typename TDependency::expected*
-    create_impl(const TAllocator& allocator
+    create_impl(const TProvider& provider
               , TDeps& deps
               , TRefs& refs
               , const TVisitor& visitor
               , const TPolicies& policies
               , const type_list<TArgs...>&) {
-        (void)allocator; (void)deps; (void)refs; (void)visitor; (void)policies;
-        return allocator.template
-            allocate<typename TDependency::expected, typename TDependency::given>(
-                create<TArgs, T, TCallStack>(allocator, deps, refs, visitor, policies)...
+        (void)provider; (void)deps; (void)refs; (void)visitor; (void)policies;
+        return provider.template
+            get<typename TDependency::expected, typename TDependency::given>(
+                create<TArgs, T, TCallStack>(provider, deps, refs, visitor, policies)...
         );
     }
 
@@ -2193,28 +2190,28 @@ struct is_mpl_string<T, typename std::enable_if<has_tag<T>::value>::type>
 template<typename T>
 using is_explicit = bool_<has_value<T>::value || is_mpl_string<T>::value>;
 
-class allocator {
+class provider {
 public:
     template<typename TExpected, typename TGiven>
     typename std::enable_if<!is_explicit<TGiven>::value, TExpected*>::type
-    allocate() const {
+    get() const {
         return new TGiven();
     }
 
     template<typename TExpected, typename TGiven>
     typename std::enable_if<has_value<TGiven>::value, TExpected*>::type
-    allocate() const {
+    get() const {
         return new TExpected(TGiven::value);
     }
 
     template<typename TExpected, typename TGiven>
     typename std::enable_if<is_mpl_string<TGiven>::value, TExpected*>::type
-    allocate() const {
+    get() const {
         return new TExpected(mpl::c_str<TGiven>::value);
     }
 
     template<typename TExpected, typename TGiven, typename... TArgs>
-    TExpected* allocate(TArgs&&... args) const {
+    TExpected* get(TArgs&&... args) const {
         return new TGiven(std::forward<TArgs>(args)...);
     }
 };
@@ -2259,7 +2256,7 @@ public:
         std::vector<aux::shared_ptr<void>> refs_;
 
         return creator_.template create<T, none_t, call_stack>(
-            allocator()
+            provider()
           , static_cast<pool_t&>(*this)
           , refs_
           , empty_visitor()
@@ -2267,14 +2264,14 @@ public:
         );
     }
 
-    template<typename T, typename TAllocator, typename... TPolicies>
-    T allocate(const TAllocator& allocator, const TPolicies&... policies) {
+    template<typename T, typename Tprovider, typename... TPolicies>
+    T allocate(const Tprovider& provider, const TPolicies&... policies) {
         using call_stack = type_list<>;
         pool<type_list<TPolicies...>> policies_(policies...);
         std::vector<aux::shared_ptr<void>> refs_;
 
         return creator_.template create<T, none_t, call_stack>(
-            allocator
+            provider
           , static_cast<pool_t&>(*this)
           , refs_
           , empty_visitor()
@@ -2288,7 +2285,7 @@ public:
         std::vector<aux::shared_ptr<void>> refs_;
 
         return creator_.template create<T, none_t, call_stack>(
-            allocator()
+            provider()
           , static_cast<pool_t&>(*this)
           , refs_
           , visitor
@@ -2412,31 +2409,8 @@ namespace di {
 template<typename... TArgs>
 injector<typename get_bindings<TArgs...>::type>
 inline make_injector(const TArgs&... args) {
-    return injector<
-        typename get_bindings<
-            TArgs...
-          //, aux::mpl::if_<
-                //has_scope<aux::mpl::_2>
-              //, detail::default_scope<aux::mpl::_2>
-              //, aux::mpl::_2 // argument not supported
-            //>
-        >::type
-    >(args...);
+    return injector<typename get_bindings<TArgs...>::type>(args...);
 }
-
-} // namespace di
-} // namespace boost
-
-namespace boost {
-namespace di {
-
-template<typename T>
-class provider
-{
-public:
-    virtual ~provider() { }
-    virtual T get() const = 0;
-};
 
 } // namespace di
 } // namespace boost

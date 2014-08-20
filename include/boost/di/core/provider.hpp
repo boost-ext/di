@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_CORE_ALLOCATOR_HPP
-#define BOOST_DI_CORE_ALLOCATOR_HPP
+#ifndef BOOST_DI_CORE_getR_HPP
+#define BOOST_DI_CORE_getR_HPP
 
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/mpl.hpp"
@@ -38,28 +38,28 @@ struct is_mpl_string<T, typename std::enable_if<has_tag<T>::value>::type>
 template<typename T>
 using is_explicit = bool_<has_value<T>::value || is_mpl_string<T>::value>;
 
-class allocator {
+class provider {
 public:
     template<typename TExpected, typename TGiven>
     typename std::enable_if<!is_explicit<TGiven>::value, TExpected*>::type
-    allocate() const {
+    get() const {
         return new TGiven();
     }
 
     template<typename TExpected, typename TGiven>
     typename std::enable_if<has_value<TGiven>::value, TExpected*>::type
-    allocate() const {
+    get() const {
         return new TExpected(TGiven::value);
     }
 
     template<typename TExpected, typename TGiven>
     typename std::enable_if<is_mpl_string<TGiven>::value, TExpected*>::type
-    allocate() const {
+    get() const {
         return new TExpected(mpl::c_str<TGiven>::value);
     }
 
     template<typename TExpected, typename TGiven, typename... TArgs>
-    TExpected* allocate(TArgs&&... args) const {
+    TExpected* get(TArgs&&... args) const {
         return new TGiven(std::forward<TArgs>(args)...);
     }
 };

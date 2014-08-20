@@ -22,7 +22,7 @@ template<
     typename T = none_t
   , typename TCallStack = none_t
   , typename TCreator = none_t
-  , typename TAllocator = none_t
+  , typename TProvider = none_t
   , typename TDeps = none_t
   , typename TRefs = none_t
   , typename TVisitor = none_t
@@ -43,13 +43,13 @@ public:
     any_type() { }
 
     any_type(TCreator& creator
-           , const TAllocator& allocator
+           , const TProvider& provider
            , TDeps& deps
            , TRefs& refs
            , const TVisitor& visitor
            , const TPolicies& policies)
         : creator_(creator)
-        , allocator_(allocator)
+        , provider_(provider)
         , deps_(deps)
         , refs_(refs)
         , visitor_(visitor)
@@ -58,7 +58,7 @@ public:
 
     any_type(const any_type& other)
         : creator_(other.creator_)
-        , allocator_(other.allocator_)
+        , provider_(other.provider_)
         , deps_(other.deps_)
         , refs_(other.refs_)
         , visitor_(other.visitor_)
@@ -76,7 +76,7 @@ public:
     >
     operator const U&() const {
         return creator_.template create<const U&, T, TCallStack>(
-            allocator_, deps_, refs_, visitor_, policies_
+            provider_, deps_, refs_, visitor_, policies_
         );
     }
 
@@ -91,14 +91,14 @@ public:
     >
     operator U&() const {
         return creator_.template create<U&, T, TCallStack>(
-            allocator_, deps_, refs_, visitor_, policies_
+            provider_, deps_, refs_, visitor_, policies_
         );
     }
 
     template<typename U>
     operator aux::auto_ptr<U>&() {
         return creator_.template create<aux::auto_ptr<U>, T, TCallStack>(
-            allocator_, deps_, refs_, visitor_, policies_
+            provider_, deps_, refs_, visitor_, policies_
         );
     }
 
@@ -106,7 +106,7 @@ public:
         template<typename U>
         operator aux::unique_ptr<U>() {
             return creator_.template create<aux::unique_ptr<U>, T, TCallStack>(
-                allocator_, deps_, refs_, visitor_, policies_
+                provider_, deps_, refs_, visitor_, policies_
             );
         }
     )
@@ -123,14 +123,14 @@ public:
         >
         operator U() {
             return creator_.template create<U, T, TCallStack>(
-                allocator_, deps_, refs_, visitor_, policies_
+                provider_, deps_, refs_, visitor_, policies_
             );
         }
     )
 
 private:
     typename ref_type<TCreator, TCreator&>::type creator_;
-    typename ref_type<TAllocator, const TAllocator&>::type allocator_;
+    typename ref_type<TProvider, const TProvider&>::type provider_;
     typename ref_type<TDeps, TDeps&>::type deps_;
     typename ref_type<TRefs, TRefs&>::type refs_;
     typename ref_type<TVisitor, const TVisitor&>::type visitor_;
@@ -144,7 +144,7 @@ template<
     typename T
   , typename TCallStack
   , typename TCreator
-  , typename TAllocator
+  , typename TProvider
   , typename TDeps
   , typename TRefs
   , typename TVisitor
@@ -155,7 +155,7 @@ struct is_integral<
         T
       , TCallStack
       , TCreator
-      , TAllocator
+      , TProvider
       , TDeps
       , TRefs
       , TVisitor
@@ -171,7 +171,7 @@ template<
     typename T
   , typename TCallStack
   , typename TCreator
-  , typename TAllocator
+  , typename TProvider
   , typename TDeps
   , typename TRefs
   , typename TVisitor
@@ -182,7 +182,7 @@ struct is_integral<
         T
       , TCallStack
       , TCreator
-      , TAllocator
+      , TProvider
       , TDeps
       , TRefs
       , TVisitor

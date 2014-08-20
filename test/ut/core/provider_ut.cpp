@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/core/allocator.hpp"
+#include "boost/di/core/provider.hpp"
 
 #include <memory>
 #include <utility>
@@ -30,24 +30,24 @@ struct ctor
 };
 
 BOOST_AUTO_TEST_CASE(create_empty) {
-    aux::unique_ptr<empty> empty_(allocator().allocate<empty, empty>());
+    aux::unique_ptr<empty> empty_(provider().allocate<empty, empty>());
     BOOST_CHECK(empty_.get());
 }
 
 BOOST_AUTO_TEST_CASE(create_ctor) {
     fake_wrapper<int> i(42);
     fake_wrapper<double> d(42.0);
-    aux::unique_ptr<ctor> ctor_(allocator().allocate<ctor, ctor, decltype(i), decltype(d)>(std::move(i), std::move(d)));
+    aux::unique_ptr<ctor> ctor_(provider().allocate<ctor, ctor, decltype(i), decltype(d)>(std::move(i), std::move(d)));
     BOOST_CHECK(ctor_.get());
 }
 
 BOOST_AUTO_TEST_CASE(create_int_value) {
-    aux::unique_ptr<int> i(allocator().allocate<int, aux::mpl::int_<42>>());
+    aux::unique_ptr<int> i(provider().allocate<int, aux::mpl::int_<42>>());
     BOOST_CHECK_EQUAL(42, *i);
 }
 
 BOOST_AUTO_TEST_CASE(create_string_value) {
-    aux::unique_ptr<std::string> s(allocator().allocate<std::string, aux::mpl::string<'s'>>());
+    aux::unique_ptr<std::string> s(provider().allocate<std::string, aux::mpl::string<'s'>>());
     BOOST_CHECK_EQUAL("s", *s);
 }
 

@@ -70,9 +70,6 @@ guard_begin() {
     echo "#include \"boost/di/injector.hpp\""
     echo "#include \"boost/di/make_injector.hpp\""
     echo
-    echo "//utilities"
-    echo "#include \"boost/di/provider.hpp\""
-    echo
     echo "#else"
     echo
 }

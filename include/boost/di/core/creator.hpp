@@ -54,7 +54,7 @@ public:
         typename T
       , typename TParent
       , typename TCallStack
-      , typename TAllocator
+      , typename TProvider
       , typename TDeps
       , typename TRefs
       , typename TVisitor
@@ -66,14 +66,14 @@ public:
             TParent
           , TCallStack
           , creator
-          , TAllocator
+          , TProvider
           , TDeps
           , TRefs
           , TVisitor
           , TPolicies
         >
     >::type
-    create(const TAllocator& allocator
+    create(const TProvider& provider
          , TDeps& deps
          , TRefs& refs
          , const TVisitor& visitor
@@ -82,26 +82,26 @@ public:
             TParent
           , TCallStack
           , creator
-          , TAllocator
+          , TProvider
           , TDeps
           , TRefs
           , TVisitor
           , TPolicies
-        >(*this, allocator, deps, refs, visitor, policies);
+        >(*this, provider, deps, refs, visitor, policies);
     }
 
     template<
         typename T
       , typename TParent
       , typename TCallStack
-      , typename TAllocator
+      , typename TProvider
       , typename TDeps
       , typename TRefs
       , typename TVisitor
       , typename TPolicies
     >
     typename std::enable_if<!has_any<T>::value, wrappers::universal<T>>::type
-    create(const TAllocator& allocator
+    create(const TProvider& provider
          , TDeps& deps
          , TRefs& refs
          , const TVisitor& visitor
@@ -119,7 +119,7 @@ public:
         (visitor)(data_visitor<T, dependency_type>());
 
         return create_impl<T, dependency_type, propagate_call_stack>(
-            allocator, deps, refs, visitor, policies
+            provider, deps, refs, visitor, policies
         );
     }
 
@@ -128,7 +128,7 @@ private:
         typename T
       , typename TDependency
       , typename TCallStack
-      , typename TAllocator
+      , typename TProvider
       , typename TDeps
       , typename TRefs
       , typename TVisitor
@@ -138,7 +138,7 @@ private:
         !size<typename scope_create<TDependency>::type>::value
       , wrappers::universal<T>
     >::type
-    create_impl(const TAllocator&
+    create_impl(const TProvider&
               , TDeps& deps
               , TRefs& refs
               , const TVisitor&
@@ -152,7 +152,7 @@ private:
         typename T
       , typename TDependency
       , typename TCallStack
-      , typename TAllocator
+      , typename TProvider
       , typename TDeps
       , typename TRefs
       , typename TVisitor
@@ -161,7 +161,7 @@ private:
     typename std::enable_if<
         size<typename scope_create<TDependency>::type>::value
       , wrappers::universal<T>>::type
-    create_impl(const TAllocator& allocator
+    create_impl(const TProvider& provider
               , TDeps& deps
               , TRefs& refs
               , const TVisitor& visitor
@@ -173,7 +173,7 @@ private:
                     typename type_traits::ctor_traits<typename TDependency::given>::type;
 
                 return create_impl<T, TDependency, TCallStack>(
-                    allocator
+                    provider
                   , deps
                   , refs
                   , visitor
@@ -188,7 +188,7 @@ private:
         typename T
       , typename TDependency
       , typename TCallStack
-      , typename TAllocator
+      , typename TProvider
       , typename TDeps
       , typename TRefs
       , typename TVisitor
@@ -196,16 +196,16 @@ private:
       , typename... TArgs
     >
     typename TDependency::expected*
-    create_impl(const TAllocator& allocator
+    create_impl(const TProvider& provider
               , TDeps& deps
               , TRefs& refs
               , const TVisitor& visitor
               , const TPolicies& policies
               , const type_list<TArgs...>&) {
-        (void)allocator; (void)deps; (void)refs; (void)visitor; (void)policies;
-        return allocator.template
-            allocate<typename TDependency::expected, typename TDependency::given>(
-                create<TArgs, T, TCallStack>(allocator, deps, refs, visitor, policies)...
+        (void)provider; (void)deps; (void)refs; (void)visitor; (void)policies;
+        return provider.template
+            get<typename TDependency::expected, typename TDependency::given>(
+                create<TArgs, T, TCallStack>(provider, deps, refs, visitor, policies)...
         );
     }
 
