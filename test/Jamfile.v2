@@ -89,7 +89,7 @@ test-suite ut : # unit tests
     #[ run-test c++11 : ut/bindings/dependency_ut.cpp ]
 
     [ run-test c++11 : ut/core/any_type_ut.cpp ]
-    #[ run-test c++11 : ut/core/binder_ut.cpp ]
+    [ run-test c++11 : ut/core/binder_ut.cpp ]
     #[ run-test c++11 : ut/core/creator_ut.cpp ]
     #[ run-test c++11 : ut/core/pool_ut.cpp ]
     #[ run-test c++11 : ut/core/provider_ut.cpp ]
