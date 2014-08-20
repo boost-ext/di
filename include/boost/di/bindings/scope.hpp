@@ -45,18 +45,23 @@ class scope {
     using rebind = typename T::template rebind<U>::other;
 
     template<typename T, typename = void>
-    struct bind_impl
+    struct get_binding
         : dependency<T>
     { };
 
     template<typename T>
-    struct bind_impl<T, typename std::enable_if<is_dependency<T>::value>::type>
+    struct get_binding<T, typename std::enable_if<is_dependency<T>::value>::type>
         : rebind<T, TScope>
+    { };
+
+    template<typename... Ts>
+    struct bind_impl
+        : type_list<typename get_binding<Ts>::type...>
     { };
 
 public:
     template<typename... Ts>
-    using bind = type_list<typename bind_impl<Ts>::type...>;
+    using bind = typename bind_impl<Ts...>::type;
 };
 
 } // namespace bindings
