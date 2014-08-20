@@ -16,10 +16,10 @@ namespace di {
 //BOOST_DI_HAS_MEMBER_TYPE(scope);
 
 template<typename... TArgs>
-injector<typename detail::bindings<TArgs...>::type>
+injector<typename get_bindings<TArgs...>::type>
 inline make_injector(const TArgs&... args) {
     return injector<
-        typename detail::bindings<
+        typename get_bindings<
             TArgs...
           //, aux::mpl::if_<
                 //has_scope<aux::mpl::_2>

@@ -273,48 +273,48 @@ BOOST_AUTO_TEST_CASE(modules_mix_make_injector) {
     BOOST_CHECK_EQUAL(s, injector_.create<std::string>());
 }
 
-BOOST_AUTO_TEST_CASE(wrappers_types_mix) {
-    const int i1 = 42;
-    const int i2 = 43;
-    const float f1 = 123.0;
-    const float f2 = 124.0;
-    const double d1 = 87.0;
-    const double d2 = 88.0;
-    const short s1 = 1;
-    const short s2 = 2;
-    const char ch1 = '0';
-    const char ch2 = '1';
-    const long l = 77;
+/*BOOST_AUTO_TEST_CASE(wrappers_types_mix) {*/
+    //const int i1 = 42;
+    //const int i2 = 43;
+    //const float f1 = 123.0;
+    //const float f2 = 124.0;
+    //const double d1 = 87.0;
+    //const double d2 = 88.0;
+    //const short s1 = 1;
+    //const short s2 = 2;
+    //const char ch1 = '0';
+    //const char ch2 = '1';
+    //const long l = 77;
 
-    auto injector_ = make_injector(
-        bind_int<i1>()
-      , bind_int<i2>::named<a>()
-      , bind<float>::to(f1)
-      , bind<float>::named<b>::to(f2)
-      , bind<double>::to(d1)
-      , bind<double>::named<c>::to(d2)
-      , bind<short>::to(s1)
-      , bind<short>::named<d>::to(s2)
-      , bind<char>::to(ch1)
-      , bind<char>::named<e>::to(ch2)
-      , bind<long>::to(l)
-    );
+    //auto injector_ = make_injector(
+        //bind_int<i1>()
+      //, bind_int<i2>::named<a>()
+      //, bind<float>::to(f1)
+      //, bind<float>::named<b>::to(f2)
+      //, bind<double>::to(d1)
+      //, bind<double>::named<c>::to(d2)
+      //, bind<short>::to(s1)
+      //, bind<short>::named<d>::to(s2)
+      //, bind<char>::to(ch1)
+      //, bind<char>::named<e>::to(ch2)
+      //, bind<long>::to(l)
+    //);
 
-    auto wrappers_ = injector_.create<aux::unique_ptr<wrappers_types>>();
+    //auto wrappers_ = injector_.create<aux::unique_ptr<wrappers_types>>();
 
-    BOOST_CHECK_EQUAL(i1, wrappers_->i_);
-    BOOST_CHECK_EQUAL(i2, wrappers_->ii_);
-    BOOST_CHECK_EQUAL(f1, *wrappers_->f_);
-    BOOST_CHECK_EQUAL(f2, *wrappers_->ff_);
-    BOOST_CHECK_EQUAL(d1, *wrappers_->d_);
-    BOOST_CHECK_EQUAL(d2, *wrappers_->dd_);
-    BOOST_CHECK_EQUAL(s1, *wrappers_->s_);
-    BOOST_CHECK_EQUAL(s2, *wrappers_->ss_);
-    BOOST_CHECK_EQUAL(ch1, wrappers_->c_);
-    BOOST_CHECK_EQUAL(ch2, wrappers_->cc_);
-    BOOST_CHECK_EQUAL(l, wrappers_->l_);
-    BOOST_CHECK_EQUAL(l, wrappers_->ll_);
-}
+    //BOOST_CHECK_EQUAL(i1, wrappers_->i_);
+    //BOOST_CHECK_EQUAL(i2, wrappers_->ii_);
+    //BOOST_CHECK_EQUAL(f1, *wrappers_->f_);
+    //BOOST_CHECK_EQUAL(f2, *wrappers_->ff_);
+    //BOOST_CHECK_EQUAL(d1, *wrappers_->d_);
+    //BOOST_CHECK_EQUAL(d2, *wrappers_->dd_);
+    //BOOST_CHECK_EQUAL(s1, *wrappers_->s_);
+    //BOOST_CHECK_EQUAL(s2, *wrappers_->ss_);
+    //BOOST_CHECK_EQUAL(ch1, wrappers_->c_);
+    //BOOST_CHECK_EQUAL(ch2, wrappers_->cc_);
+    //BOOST_CHECK_EQUAL(l, wrappers_->l_);
+    //BOOST_CHECK_EQUAL(l, wrappers_->ll_);
+/*}*/
 
 BOOST_AUTO_TEST_CASE(externals_ref_cref) {
     int i = 42;

@@ -33,7 +33,7 @@ public:
     template<typename TPool>
     pool(const init&, const TPool& p)
         : pool(get<TArgs>(p)...)
-    { }
+    { (void)p; }
 
     template<typename T>
     inline const T& get() const {

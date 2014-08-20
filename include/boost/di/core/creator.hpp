@@ -31,9 +31,9 @@ class creator {
     using binder_t = binder<TDeps_>;
 
     template<typename TDependency>
-    using scope_create = typename type_traits::function_traits<
+    struct scope_create : type_traits::function_traits<
           decltype(&TDependency::create)
-      >::type;
+      >::type {};
 
     using scopes_type = std::unordered_map<
         std::type_index

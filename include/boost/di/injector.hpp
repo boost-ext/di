@@ -21,8 +21,6 @@ namespace di {
 BOOST_DI_HAS_MEMBER_TYPE(deps);
 BOOST_DI_HAS_MEMBER_FUNCTION(configure, configure);
 
-namespace detail {
-
 template<typename T>
 struct is_module
     : bool_<has_deps<T>::value || has_configure<T>::value>
@@ -69,18 +67,16 @@ struct add_type_list<T, std::false_type, std::false_type> {
 };
 
 template<typename... Ts>
-using bindings = typename join<typename add_type_list<Ts>::type...>::type;
-
-} // namespace detail
+using get_bindings = typename join<typename add_type_list<Ts>::type...>::type;
 
 template<typename... Ts>
 class injector
-    : public core::module<typename detail::bindings<Ts...>::type>
+    : public core::module<typename get_bindings<Ts...>::type>
 {
 public:
     template<typename... TArgs>
     explicit injector(const TArgs&... args)
-        : core::module<typename detail::bindings<Ts...>::type>(pass_arg(args)...)
+        : core::module<typename get_bindings<Ts...>::type>(pass_arg(args)...)
     { }
 
 private:
@@ -91,7 +87,7 @@ private:
     }
 
     template<typename T>
-    typename std::enable_if<has_configure<T>::value, typename detail::get_module<T>::type>::type
+    typename std::enable_if<has_configure<T>::value, typename get_module<T>::type>::type
     pass_arg(const T& arg) const {
         return arg.configure();
     }

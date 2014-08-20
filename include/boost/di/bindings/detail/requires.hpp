@@ -16,10 +16,10 @@ namespace bindings {
 namespace detail {
 
 template<typename T, typename TBind>
-using apply_bind = typename TBind::template apply<T>::type;
+struct apply_bind : TBind::template apply<T>::type {};
 
 template<typename T, typename TBind>
-using eval_bind = typename TBind::template eval<T>::type;
+struct eval_bind : TBind::template eval<T>::type {};
 
 template<typename... Ts>
 struct requires_ {
