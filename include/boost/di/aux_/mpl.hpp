@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_AUX_MPL_HPP
 #define BOOST_DI_AUX_MPL_HPP
 
+#include "boost/di/aux_/config.hpp"
 #include <type_traits>
 
 #define BOOST_DI_HAS_MEMBER_IMPL(name, member, declaration, signature)                  \
@@ -314,19 +315,43 @@ struct add<type_list<Ts...>, T> {
     using type = type_list<Ts..., T>;
 };
 
-template<typename... Ts>
-using and_ = std::is_same<
-    bool_seq<Ts::value...>,
-    bool_seq<(Ts::value, true)...>
->;
+BOOST_DI_WKND(NO_MSVC)(
+    template<typename... Ts>
+    using and_ = std::is_same<
+        bool_seq<Ts::value...>,
+        bool_seq<(Ts::value, true)...>
+    >;
 
-template<typename... Ts>
-using or_ = bool_<
-	!std::is_same<
-		bool_seq<Ts::value...>,
-		bool_seq<(Ts::value, false)...>
-	>::value
->;
+    template<typename... Ts>
+    using or_ = bool_<
+        !std::is_same<
+            bool_seq<Ts::value...>,
+            bool_seq<(Ts::value, false)...>
+        >::value
+    >;
+)
+
+BOOST_DI_WKND(MSVC)(
+    template<typename T, typename... Ts>
+    struct or_impl
+        : bool_<(T::value != 0) || or_impl<Ts...>::value>
+    { };
+
+    template<typename T>
+    struct or_impl<T>
+        : bool_<T::value != 0>
+    { };
+
+    template<typename... Ts>
+    struct or_
+        : or_impl<Ts...>
+    { };
+
+    template<>
+    struct or_<>
+        : std::false_type
+    { };
+)
 
 } // namespace di
 } // namespace boost
