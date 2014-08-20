@@ -13,21 +13,10 @@
 namespace boost {
 namespace di {
 
-//BOOST_DI_HAS_MEMBER_TYPE(scope);
-
 template<typename... TArgs>
 injector<typename get_bindings<TArgs...>::type>
 inline make_injector(const TArgs&... args) {
-    return injector<
-        typename get_bindings<
-            TArgs...
-          //, aux::mpl::if_<
-                //has_scope<aux::mpl::_2>
-              //, detail::default_scope<aux::mpl::_2>
-              //, aux::mpl::_2 // argument not supported
-            //>
-        >::type
-    >(args...);
+    return injector<typename get_bindings<TArgs...>::type>(args...);
 }
 
 } // namespace di

@@ -11,8 +11,7 @@ namespace boost {
 namespace di {
 
 template<typename T>
-class provider
-{
+class provider {
 public:
     virtual ~provider() { }
     virtual T get() const = 0;
