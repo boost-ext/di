@@ -36,26 +36,26 @@ public:
     { }
 
     template<typename T>
-    const T& get() const {
+    inline const T& get() const {
         return static_cast<const T&>(*this);
     }
 
 private:
     template<typename T, typename TPool>
     typename std::enable_if<std::is_base_of<T, pool>::value && std::is_base_of<T, TPool>::value, T>::type
-    get(const TPool& p) {
+    inline get(const TPool& p) const {
         return p.template get<T>();
     }
 
     template<typename T, typename TPool>
     typename std::enable_if<std::is_base_of<T, pool>::value && !std::is_base_of<T, TPool>::value, T>::type
-    get(const TPool&) {
+    inline get(const TPool&) const {
         return T();
     }
 
     template<typename T, typename TPool>
     typename std::enable_if<!std::is_base_of<T, pool>::value, const T&>::type
-    get(const TPool&) {
+    inline get(const TPool&) const {
         return T();
     }
 };
