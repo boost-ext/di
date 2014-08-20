@@ -110,7 +110,7 @@ template<
   , typename = void
 >
 class named {
-    named& operator=(const named&);
+    named& operator=(const named&) = delete;
 
 public:
     using named_type = T;
@@ -137,7 +137,7 @@ template<
   , typename TName
 >
 class named<const T&, TName> {
-    named& operator=(const named&);
+    named& operator=(const named&) = delete;
 
 public:
     using named_type = const T&;
@@ -164,7 +164,7 @@ template<
   , typename TName
 >
 class named<T&, TName> {
-    named& operator=(const named&);
+    named& operator=(const named&) = delete;
 
 public:
     using named_type = T&;
@@ -191,7 +191,7 @@ template<
   , typename TName
 >
 class named<T&&, TName> {
-    named& operator=(const named&);
+    named& operator=(const named&) = delete;
 
 public:
     using named_type = T&&;
@@ -218,7 +218,7 @@ template<
   , typename TName
 >
 class named<aux::unique_ptr<T>, TName> {
-    named& operator=(const named&);
+    named& operator=(const named&) = delete;
 
 public:
     using named_type = aux::unique_ptr<T>;

@@ -8,11 +8,7 @@
 #define BOOST_DI_AUX_MEMORY_HPP
 
 #if !defined(BOOST_DI_CFG_STD_SMART_PTR) && !defined(BOOST_DI_CFG_BOOST_SMART_PTR)
-    #if (__cplusplus >= 201100L)
-        #define BOOST_DI_CFG_STD_SMART_PTR
-    #else
-        #define BOOST_DI_CFG_BOOST_SMART_PTR
-    #endif
+    #define BOOST_DI_CFG_STD_SMART_PTR
 #endif
 
 #if defined(BOOST_DI_CFG_STD_SMART_PTR)
