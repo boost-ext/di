@@ -78,6 +78,7 @@ BOOST_AUTO_TEST_CASE(named_shared_ptr) {
     BOOST_CHECK_EQUAL(i_.get(), static_cast<aux::shared_ptr<int>>(named_).get());
 }
 
+#if !defined(_MSC_VER)
 BOOST_AUTO_TEST_CASE(named_unique_ptr) {
     const int i = 42;
     aux::unique_ptr<int> ptr(new int(i));
@@ -86,6 +87,7 @@ BOOST_AUTO_TEST_CASE(named_unique_ptr) {
     BOOST_CHECK_EQUAL(i, *static_cast<aux::unique_ptr<int>>(named_));
     BOOST_CHECK_EQUAL(ptr.get(), static_cast<aux::unique_ptr<int>>(named_).get());
 }
+#endif
 
 } // namespace di
 } // namespace boost

@@ -273,6 +273,7 @@ BOOST_AUTO_TEST_CASE(modules_mix_make_injector) {
     BOOST_CHECK_EQUAL(s, injector_.create<std::string>());
 }
 
+#if !defined(_MSC_VER)
 BOOST_AUTO_TEST_CASE(wrappers_types_mix) {
     const int i1 = 42;
     const int i2 = 43;
@@ -315,6 +316,7 @@ BOOST_AUTO_TEST_CASE(wrappers_types_mix) {
     BOOST_CHECK_EQUAL(l, wrappers_->l_);
     BOOST_CHECK_EQUAL(l, wrappers_->ll_);
 }
+#endif
 
 BOOST_AUTO_TEST_CASE(externals_ref_cref) {
     int i = 42;

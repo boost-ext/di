@@ -520,6 +520,7 @@ struct multiple_interfaces
     aux::shared_ptr<if1> if1_;
 };
 
+#if !defined(_MSC_VER)
 struct wrappers_types
 {
     BOOST_DI_INJECT(wrappers_types
@@ -573,6 +574,7 @@ struct wrappers_types
     long l_ = 0;
     long ll_ = 0;
 };
+#endif
 
 struct refs
 {

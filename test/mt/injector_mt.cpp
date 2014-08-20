@@ -372,11 +372,13 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(scope_deduction_if, TInjector, deduce_injectors_ty
     BOOST_CHECK(c20_->if0_ == c20_->if0__);
 }
 
+#if !defined(_MSC_VER)
 BOOST_AUTO_TEST_CASE_TEMPLATE(shared_ptr_unique_ptr, TInjector, deduce_injectors_types) {
     TInjector injector;
     auto c21_ = injector.template create<aux::shared_ptr<c21>>();
     BOOST_CHECK(c21_->if0__ == c21_->if0__);
 }
+#endif
 
 BOOST_AUTO_TEST_CASE(smart_ptr_weak_ptr) {
     auto c25_ = injector<>().create<c25>();
@@ -385,7 +387,9 @@ BOOST_AUTO_TEST_CASE(smart_ptr_weak_ptr) {
 
 using creation_special_cases_types = mpl::vector<
     noncopyable_const_ref
+#if !defined(_MSC_VER)
   , rvalue
+#endif
 >;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(creation_special_cases, T, creation_special_cases_types) {

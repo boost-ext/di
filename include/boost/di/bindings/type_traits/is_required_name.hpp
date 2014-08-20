@@ -17,20 +17,19 @@ namespace type_traits {
 
 BOOST_DI_HAS_MEMBER_TYPE(name);
 
+template<typename T, typename = void>
+struct get_name {
+    struct no_name { };
+    using type = no_name;
+};
+
+template<typename T>
+struct get_name<T, typename std::enable_if<has_name<T>::value>::type> {
+    using type = typename T::name;
+};
+
 template<typename TName>
-class is_required_name {
-    template<typename T, typename = void>
-    struct get_name {
-        struct no_name { };
-        using type = no_name;
-    };
-
-    template<typename T>
-    struct get_name<T, typename std::enable_if<has_name<T>::value>::type> {
-        using type = typename T::name;
-    };
-
-public:
+struct is_required_name {
     template<typename T>
     using apply = int_<
         std::is_same<
