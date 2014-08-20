@@ -122,8 +122,8 @@ test-suite ut : # unit tests
 
     [ run-test c++11 : ut/inject_ut.cpp ]
 
-    #[ run-test c++11 : ut/injector_ut.cpp ]
-    #[ run-test c++11 : ut/injector_ut.cpp : ctor_injector_ut ]
+    [ run-test c++11 : ut/injector_ut.cpp ]
+    [ run-test c++11 : ut/injector_ut.cpp : ctor_injector_ut ]
 
     [ run-test c++11 : ut/named_ut.cpp ]
 ;

@@ -15,7 +15,7 @@
         struct base_impl { declaration; };                                              \
         struct base                                                                     \
             : base_impl                                                                 \
-            , std::conditional<std::is_class<T>::value, T, void_>::type                 \
+            , std::conditional<std::is_class<T>::value, T, none_t>::type                \
         { base() { } };                                                                 \
                                                                                         \
         template<typename U>                                                            \
@@ -54,10 +54,13 @@ namespace di {
 typedef char (&no_tag)[1];
 typedef char (&yes_tag)[2];
 
-struct void_ {};
 struct none_t {};
-template<typename T, T> struct non_type { };
-template<typename> struct type { };
+
+template<typename T, T>
+struct non_type { };
+
+template<typename>
+struct type { };
 
 template<int N>
 using int_ = std::integral_constant<int, N>;
@@ -109,7 +112,11 @@ struct make_index_sequence<1>
 
 template<typename T, typename... TArgs>
 struct is_constructible {
-    using type = typename std::conditional<std::is_constructible<T, TArgs...>::value, type_list<TArgs...>, type_list<>>::type;
+    using type = typename std::conditional<
+        std::is_constructible<T, TArgs...>::value
+      , type_list<TArgs...>
+      , type_list<>
+    >::type;
 };
 
 template<typename T, std::size_t>
@@ -146,7 +153,11 @@ struct longest_impl<R, 0, T, Ts...> {
 
 template<typename R, std::size_t I, typename T, typename... Ts>
 struct longest_impl<R, I, T, Ts...> {
-    using type = typename std::conditional<(size<R>::value > size<T>::value), typename longest_impl<R, I - 1, Ts...>::type, typename longest_impl<T, I-1, Ts...>::type>::type;
+    using type = typename std::conditional<
+        (size<R>::value > size<T>::value)
+      , typename longest_impl<R, I - 1, Ts...>::type
+      , typename longest_impl<T, I-1, Ts...>::type
+    >::type;
 };
 
 template<typename... Ts>
@@ -157,12 +168,20 @@ struct greatest_impl;
 
 template<typename R, typename T, typename... Ts>
 struct greatest_impl<R, 0, T, Ts...> {
-    using type = typename std::conditional<(T::second::value > R::second::value), typename T::first, typename R::first>::type;
+    using type = typename std::conditional<
+        (T::second::value > R::second::value)
+      , typename T::first
+      , typename R::first
+    >::type;
 };
 
 template<typename R, std::size_t I, typename T, typename... Ts>
 struct greatest_impl<R, I, T, Ts...> {
-    using type = typename std::conditional<(T::second::value > R::second::value), typename greatest_impl<T, I - 1, Ts...>::type, typename greatest_impl<R, I-1, Ts...>::type>::type;
+    using type = typename std::conditional<
+        (T::second::value > R::second::value)
+      , typename greatest_impl<T, I - 1, Ts...>::type
+      , typename greatest_impl<R, I-1, Ts...>::type
+    >::type;
 };
 
 template<typename T, typename... Ts>
@@ -180,12 +199,18 @@ struct max_impl;
 
 template<typename R, typename T, typename... Ts>
 struct max_impl<R, 0, T, Ts...> {
-    using type = typename std::conditional<(R::value > T::value), R, T>::type;
+    using type = typename std::conditional<
+        (R::value > T::value), R, T
+    >::type;
 };
 
 template<typename R, std::size_t I, typename T, typename... Ts>
 struct max_impl<R, I, T, Ts...> {
-    using type = typename std::conditional<(R::value > T::value), typename max_impl<R, I - 1, Ts...>::type, typename max_impl<T, I-1, Ts...>::type>::type;
+    using type = typename std::conditional<
+        (R::value > T::value)
+      , typename max_impl<R, I - 1, Ts...>::type
+      , typename max_impl<T, I-1, Ts...>::type
+    >::type;
 };
 
 template<typename T, typename... Ts>
@@ -201,7 +226,11 @@ struct times<TMultiplicationFactor>
 
 template<typename TMultiplicationFactor, typename T, typename... Ts>
 struct times<TMultiplicationFactor, T, Ts...>
-    : int_<TMultiplicationFactor::value * T::value * times<TMultiplicationFactor, Ts...>::value>
+    : int_<
+        TMultiplicationFactor::value *
+        T::value *
+        times<TMultiplicationFactor, Ts...>::value
+      >
 { };
 
 template<std::size_t...>
