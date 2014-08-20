@@ -10,6 +10,7 @@
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/mpl.hpp"
 
+#include <utility>
 #include <type_traits>
 
 namespace boost {

@@ -7,7 +7,6 @@
 #include "boost/di/type_traits/function_traits.hpp"
 
 #include <boost/test/unit_test.hpp>
-#include <boost/type_traits/is_same.hpp>
 
 namespace boost {
 namespace di {
@@ -33,40 +32,40 @@ struct c2
 
 BOOST_AUTO_TEST_CASE(parameters_type_functions) {
     BOOST_CHECK((is_same<void, typename function_traits<decltype(&f1)>::result_type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<>, typename function_traits<decltype(&f1)>::type>::value));
+    BOOST_CHECK((std::is_same<type_list<>, typename function_traits<decltype(&f1)>::type>::value));
 
     BOOST_CHECK((is_same<int, typename function_traits<decltype(&f2)>::result_type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<int>, typename function_traits<decltype(&f2)>::type>::value));
+    BOOST_CHECK((std::is_same<type_list<int>, typename function_traits<decltype(&f2)>::type>::value));
 
     BOOST_CHECK((is_same<int, typename function_traits<decltype(&f3)>::result_type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<int, const double&>, typename function_traits<decltype(&f3)>::type>::value));
+    BOOST_CHECK((std::is_same<type_list<int, const double&>, typename function_traits<decltype(&f3)>::type>::value));
 }
 
 BOOST_AUTO_TEST_CASE(parameters_type_methods) {
     BOOST_CHECK((is_same<void, typename function_traits<decltype(&c1::f1)>::result_type>::value));
     BOOST_CHECK((is_same<c1, typename function_traits<decltype(&c1::f1)>::base_type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<>, typename function_traits<decltype(&c1::f1)>::type>::value));
+    BOOST_CHECK((std::is_same<type_list<>, typename function_traits<decltype(&c1::f1)>::type>::value));
 
     BOOST_CHECK((is_same<int, typename function_traits<decltype(&c1::f2)>::result_type>::value));
     BOOST_CHECK((is_same<c1, typename function_traits<decltype(&c1::f2)>::base_type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<int>, typename function_traits<decltype(&c1::f2)>::type>::value));
+    BOOST_CHECK((std::is_same<type_list<int>, typename function_traits<decltype(&c1::f2)>::type>::value));
 
     BOOST_CHECK((is_same<int, typename function_traits<decltype(&c1::f3)>::result_type>::value));
     BOOST_CHECK((is_same<c1, typename function_traits<decltype(&c1::f3)>::base_type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<int, const double&>, typename function_traits<decltype(&c1::f3)>::type>::value));
+    BOOST_CHECK((std::is_same<type_list<int, const double&>, typename function_traits<decltype(&c1::f3)>::type>::value));
 }
 
 BOOST_AUTO_TEST_CASE(parameters_type_const_methods) {
     BOOST_CHECK((is_same<void, typename function_traits<decltype(&c2::f1)>::result_type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<>, typename function_traits<decltype(&c2::f1)>::type>::value));
+    BOOST_CHECK((std::is_same<type_list<>, typename function_traits<decltype(&c2::f1)>::type>::value));
 
     BOOST_CHECK((is_same<int, typename function_traits<decltype(&c2::f2)>::result_type>::value));
     BOOST_CHECK((is_same<c2, typename function_traits<decltype(&c2::f2)>::base_type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<int>, typename function_traits<decltype(&c2::f2)>::type>::value));
+    BOOST_CHECK((std::is_same<type_list<int>, typename function_traits<decltype(&c2::f2)>::type>::value));
 
     BOOST_CHECK((is_same<int, typename function_traits<decltype(&c2::f3)>::result_type>::value));
     BOOST_CHECK((is_same<c2, typename function_traits<decltype(&c2::f3)>::base_type>::value));
-    BOOST_CHECK((aux::mpl::equal<aux::mpl::vector<int, const double&>, typename function_traits<decltype(&c2::f3)>::type>::value));
+    BOOST_CHECK((std::is_same<type_list<int, const double&>, typename function_traits<decltype(&c2::f3)>::type>::value));
 }
 
 } // namespace type_traits

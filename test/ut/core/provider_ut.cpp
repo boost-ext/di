@@ -9,6 +9,7 @@
 #include <memory>
 #include <utility>
 #include <boost/test/unit_test.hpp>
+#include <boost/mpl/string.hpp>
 
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/inject.hpp"
@@ -30,24 +31,24 @@ struct ctor
 };
 
 BOOST_AUTO_TEST_CASE(create_empty) {
-    aux::unique_ptr<empty> empty_(provider().allocate<empty, empty>());
+    aux::unique_ptr<empty> empty_(provider().get<empty, empty>());
     BOOST_CHECK(empty_.get());
 }
 
 BOOST_AUTO_TEST_CASE(create_ctor) {
     fake_wrapper<int> i(42);
     fake_wrapper<double> d(42.0);
-    aux::unique_ptr<ctor> ctor_(provider().allocate<ctor, ctor, decltype(i), decltype(d)>(std::move(i), std::move(d)));
+    aux::unique_ptr<ctor> ctor_(provider().get<ctor, ctor, decltype(i), decltype(d)>(std::move(i), std::move(d)));
     BOOST_CHECK(ctor_.get());
 }
 
 BOOST_AUTO_TEST_CASE(create_int_value) {
-    aux::unique_ptr<int> i(provider().allocate<int, aux::mpl::int_<42>>());
+    aux::unique_ptr<int> i(provider().get<int, mpl::int_<42>>());
     BOOST_CHECK_EQUAL(42, *i);
 }
 
 BOOST_AUTO_TEST_CASE(create_string_value) {
-    aux::unique_ptr<std::string> s(provider().allocate<std::string, aux::mpl::string<'s'>>());
+    aux::unique_ptr<std::string> s(provider().get<std::string, mpl::string<'s'>>());
     BOOST_CHECK_EQUAL("s", *s);
 }
 
