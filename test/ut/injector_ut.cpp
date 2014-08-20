@@ -77,12 +77,10 @@ BOOST_AUTO_TEST_CASE(visit) {
     { } injector_;
 
     fake_visitor<
-        type_list<
-            transaction_usage
-          , aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
-          , aux::shared_ptr<c3>
-          , int
-        >
+        transaction_usage
+      , aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
+      , aux::shared_ptr<c3>
+      , int
     > visitor;
 
     injector_.visit<transaction_usage>(visitor);
@@ -502,12 +500,10 @@ BOOST_AUTO_TEST_CASE(visit_injector) {
     >();
 
     fake_visitor<
-        type_list<
-            transaction_usage
-          , aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
-          , aux::shared_ptr<c3>
-          , int
-        >
+        transaction_usage
+      , aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
+      , aux::shared_ptr<c3>
+      , int
     > visitor;
 
     injector_.visit<transaction_usage>(visitor);
