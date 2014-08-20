@@ -139,13 +139,13 @@ test-suite mt : # module tests
     [ run-test c++11 : mt/injector_limit_size_mt.cpp : : <define>BOOST_DI_CFG_CTOR_LIMIT_SIZE=20 ]
 ;
 
-#test-suite ft : # functional tests
-    #[ run-test c++11 : ft/di_ft_cpp_11.cpp : di_ft_cpp_11 ]
-    #[ run-test c++11 : ft/di_ft_cpp_11.cpp : ctor_di_ft_cpp_11 ]
+test-suite ft : # functional tests
+    [ run-test c++11 : ft/di_ft_cpp_11.cpp : di_ft_cpp_11 ]
+    [ run-test c++11 : ft/di_ft_cpp_11.cpp : ctor_di_ft_cpp_11 ]
 
-    #[ run-test c++11 : ft/di_ft_cpp_03.cpp : di_ft_cpp_03 ]
-    #[ run-test c++11 : ft/di_ft_cpp_03.cpp : ctor_di_ft_cpp_03 ]
-#;
+    [ run-test c++11 : ft/di_ft_cpp_03.cpp : di_ft_cpp_03 ]
+    [ run-test c++11 : ft/di_ft_cpp_03.cpp : ctor_di_ft_cpp_03 ]
+;
 
 #test-suite fail : # compile fail tests
     #[ compile-fail-test c++11 : fail/detail/module_externals_fail.cpp ]

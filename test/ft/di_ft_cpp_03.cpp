@@ -29,7 +29,7 @@ struct impl : i
 
 struct c1
 {
-    BOOST_DI_INJECT(explicit c1, (int i_ = 0, double d_ = 0.0))
+    BOOST_DI_INJECT(explicit c1, int i_ = 0, double d_ = 0.0)
         : i_(i_), d_(d_)
     { }
 
@@ -39,7 +39,7 @@ struct c1
 
 struct c2
 {
-    BOOST_DI_INJECT(c2, (boost::shared_ptr<c1> c1_, std::auto_ptr<i> p_))
+    BOOST_DI_INJECT(c2, boost::shared_ptr<c1> c1_, std::auto_ptr<i> p_)
       : c1_(c1_), p_(p_)
     { }
 
@@ -49,12 +49,11 @@ struct c2
 
 struct c3
 {
-    BOOST_DI_INJECT(c3, (
+    BOOST_DI_INJECT(c3,
         boost::shared_ptr<c1> c1_
       , boost::shared_ptr<c2> c2_
       , c1 c1__
       , const std::vector<int>& v_)
-    )
         : c1_(c1_), c2_(c2_), c1__(c1__), v_(v_)
     { }
 
@@ -89,15 +88,15 @@ BOOST_AUTO_TEST_CASE(create_complex) {
     ));
 
     boost::shared_ptr<c3> c3_ = injector_.create<boost::shared_ptr<c3> >(
-        di::policies::circular_dependencies()
-        BOOST_DI_WKND(NO_MSVC)(
-         , di::policies::parameters_permission<
-               di::policies::allow_smart_ptrs
-             , di::policies::allow_copies
-             , di::policies::allow_const_refs
-             , di::policies::allow_refs
-           >()
-        )
+        //di::policies::circular_dependencies()
+        //BOOST_DI_WKND(NO_MSVC)(
+         //, di::policies::parameters_permission<
+               //di::policies::allow_smart_ptrs
+             //, di::policies::allow_copies
+             //, di::policies::allow_const_refs
+             //, di::policies::allow_refs
+           //>()
+        //)
     );
 
     BOOST_CHECK(dynamic_cast<impl*>(c3_->c2_->p_.get()));
