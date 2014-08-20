@@ -16,27 +16,27 @@ namespace di {
 namespace bindings {
 
 BOOST_AUTO_TEST_CASE(empty_call_stack) {
-    BOOST_CHECK_EQUAL(0, (call_stack<>::apply<fake_data<int, aux::mpl::vector<>, fake_scope<>>>::type::value));
+    BOOST_CHECK_EQUAL(0, (call_stack<>::apply<fake_data<int, type_list<>, fake_scope<>>>::type::value));
 }
 
 BOOST_AUTO_TEST_CASE(equal_call_stack) {
-    BOOST_CHECK_EQUAL(2, (call_stack<int, double>::apply<fake_data<int, aux::mpl::vector<int, double>, fake_scope<>>>::type::value));
+    BOOST_CHECK_EQUAL(2, (call_stack<int, double>::apply<fake_data<int, type_list<int, double>, fake_scope<>>>::type::value));
 }
 
 BOOST_AUTO_TEST_CASE(not_equal_different_size) {
-    BOOST_CHECK_EQUAL(0, (call_stack<int>::apply<fake_data<int, aux::mpl::vector<int, double>, fake_scope<>>>::type::value));
+    BOOST_CHECK_EQUAL(0, (call_stack<int>::apply<fake_data<int, type_list<int, double>, fake_scope<>>>::type::value));
 }
 
 BOOST_AUTO_TEST_CASE(equal_call_stack_not_plain_type) {
-    BOOST_CHECK_EQUAL(2, (call_stack<int, double>::apply<fake_data<int, aux::mpl::vector<const int&, double>, fake_scope<>>>::type::value));
+    BOOST_CHECK_EQUAL(2, (call_stack<int, double>::apply<fake_data<int, type_list<const int&, double>, fake_scope<>>>::type::value));
 }
 
 BOOST_AUTO_TEST_CASE(not_equal_call_stack_advance) {
-    BOOST_CHECK_EQUAL(0, (call_stack<int, double>::apply<fake_data<int, aux::mpl::vector<int, double, float>, fake_scope<>>>::type::value));
+    BOOST_CHECK_EQUAL(0, (call_stack<int, double>::apply<fake_data<int, type_list<int, double, float>, fake_scope<>>>::type::value));
 }
 
 BOOST_AUTO_TEST_CASE(equal_call_stack_advance) {
-    BOOST_CHECK_EQUAL(3, (call_stack<int, double, float>::apply<fake_data<int, aux::mpl::vector<char, int, double, float>, fake_scope<>>>::type::value));
+    BOOST_CHECK_EQUAL(3, (call_stack<int, double, float>::apply<fake_data<int, type_list<char, int, double, float>, fake_scope<>>>::type::value));
 }
 
 } // namespace bindings
