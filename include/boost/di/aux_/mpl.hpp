@@ -333,6 +333,26 @@ BOOST_DI_WKND(NO_MSVC)(
 
 BOOST_DI_WKND(MSVC)(
     template<typename T, typename... Ts>
+    struct and_impl
+        : bool_<(T::value != 0) && and_impl<Ts...>::value>
+    { };
+
+    template<typename T>
+    struct and_impl<T>
+        : bool_<T::value != 0>
+    { };
+
+    template<typename... Ts>
+    struct and_
+        : and_impl<Ts...>
+    { };
+
+    template<>
+    struct and_<>
+        : std::true_type
+    { };
+
+    template<typename T, typename... Ts>
     struct or_impl
         : bool_<(T::value != 0) || or_impl<Ts...>::value>
     { };
