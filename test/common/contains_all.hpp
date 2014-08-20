@@ -7,42 +7,21 @@
 #ifndef BOOST_DI_CONTAINS_ALL_HPP
 #define BOOST_DI_CONTAINS_ALL_HPP
 
-#include <boost/utility/enable_if.hpp>
+#include "boost/di/aux_/mpl.hpp"
 
 namespace boost {
 namespace di {
 
-template<
-    typename TSrc
-  , typename TDst
-  , typename = void
->
-struct contains_all
-    : aux::mpl::empty<
-          typename aux::mpl::fold<
-              TSrc
-            , aux::mpl::vector<>
-            , aux::mpl::if_<
-                  aux::mpl::contains<TDst, aux::mpl::_2>
-                , aux::mpl::_1
-                , aux::mpl::push_back<aux::mpl::_1, aux::mpl::_2>
-              >
-          >::type
-      >
-{ };
+template<typename, typename>
+struct contains_all;
 
-template<typename TSrc, typename TDst>
-struct contains_all<
-    TSrc
-  , TDst
-  , typename enable_if<
-        aux::mpl::not_equal_to<
-            aux::mpl::size<TSrc>
-          , aux::mpl::size<TDst>
-        >
-    >::type
->
-    : aux::mpl::false_
+template<typename... Ts1, typename... Ts2>
+struct contains_all<type_list<Ts1...>, type_list<Ts2...>>
+    : std::conditional<
+		  sizeof...(Ts1) != sizeof...(Ts2)
+        , std::false_type
+	    , and_<bool_<contains<type_list<Ts2...>, Ts1>::value>...>
+	  >::type
 { };
 
 } // namespace di

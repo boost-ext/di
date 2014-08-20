@@ -314,25 +314,19 @@ struct add<type_list<Ts...>, T> {
     using type = type_list<Ts..., T>;
 };
 
-template<typename T, typename... Ts>
-struct or_impl
-    : bool_<(T::value != 0) || or_impl<Ts...>::value>
-{ };
-
-template<typename T>
-struct or_impl<T>
-    : bool_<T::value != 0>
-{ };
+template<typename... Ts>
+using and_ = std::is_same<
+    bool_seq<Ts::value...>,
+    bool_seq<(Ts::value, true)...>
+>;
 
 template<typename... Ts>
-struct or_
-    : or_impl<Ts...>
-{ };
-
-template<>
-struct or_<>
-    : std::false_type
-{ };
+using or_ = bool_<
+	!std::is_same<
+		bool_seq<Ts::value...>,
+		bool_seq<(Ts::value, false)...>
+	>::value
+>;
 
 } // namespace di
 } // namespace boost
