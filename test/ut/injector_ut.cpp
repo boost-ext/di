@@ -22,6 +22,8 @@
 #include "common/contains_all.hpp"
 #include "common/data.hpp"
 
+#include <boost/units/detail/utility.hpp>
+
 namespace boost {
 namespace di {
 

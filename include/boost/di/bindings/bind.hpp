@@ -9,6 +9,7 @@
 
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/mpl.hpp"
+#include "boost/di/bindings/dependency.hpp"
 #include "boost/di/bindings/detail/requires.hpp"
 #include "boost/di/bindings/detail/when.hpp"
 #include "boost/di/bindings/type_traits/is_required_name.hpp"
@@ -37,15 +38,9 @@ struct get_expected<type_list<Ts...>, TGiven> {
 template<
     typename TExpected
   , typename TGiven
-  , template<
-        typename
-      , typename
-      , typename
-      , typename
-    > class TDependency
 >
 struct bind
-    : TDependency<
+    : dependency<
           scopes::deduce
         , typename detail::get_expected<TExpected, TGiven>::type
         , TGiven
@@ -58,7 +53,7 @@ struct bind
 {
     template<typename... Ts>
     struct when
-        : TDependency<
+        : dependency<
               scopes::deduce
             , typename detail::get_expected<TExpected, TGiven>::type
             , TGiven
@@ -71,7 +66,7 @@ struct bind
     {
         template<typename TName>
         struct named
-            : TDependency<
+            : dependency<
                   scopes::deduce
                 , typename detail::get_expected<TExpected, TGiven>::type
                 , TGiven
@@ -87,7 +82,7 @@ struct bind
 
     template<typename TName>
     struct named
-        : TDependency<
+        : dependency<
               scopes::deduce
             , typename detail::get_expected<TExpected, TGiven>::type
             , TGiven
@@ -101,7 +96,7 @@ struct bind
     {
         template<typename... Ts>
         struct when
-            : TDependency<
+            : dependency<
                   scopes::deduce
                 , typename detail::get_expected<TExpected, TGiven>::type
                 , TGiven

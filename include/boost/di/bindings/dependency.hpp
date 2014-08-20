@@ -17,6 +17,7 @@
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/type_traits/function_traits.hpp"
 #include "boost/di/bindings/detail/requires.hpp"
+#include "boost/di/bindings/detail/when.hpp"
 #include "boost/di/bindings/type_traits/is_required_priority.hpp"
 #include "boost/di/bindings/type_traits/is_required_type.hpp"
 
@@ -32,8 +33,9 @@ template<
   , typename TGiven = TExpected
   , typename TBind =
         detail::requires_<
-            bindings::type_traits::is_required_priority
-          , bindings::type_traits::is_required_type<TExpected>
+            type_traits::is_required_priority
+          , type_traits::is_required_type<TExpected>
+          , detail::when_<>
         >
 >
 class dependency : public TScope::template scope<TExpected>

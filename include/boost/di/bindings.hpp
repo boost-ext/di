@@ -10,7 +10,6 @@
 #include "boost/di/aux_/mpl.hpp"
 #include "boost/di/bindings/bind.hpp"
 #include "boost/di/bindings/call_stack.hpp"
-#include "boost/di/bindings/dependency.hpp"
 #include "boost/di/bindings/scope.hpp"
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/session.hpp"
@@ -23,7 +22,7 @@ namespace boost {
 namespace di {
 
 template<typename TExpected, typename TGiven = TExpected>
-using bind = bindings::bind<TExpected, TGiven, bindings::dependency>;
+using bind = bindings::bind<TExpected, TGiven>;
 
 template<bool V>
 using bind_bool = bind<bool, bool_<V>>;
@@ -35,7 +34,7 @@ template<typename T>
 using bind_string = bind<std::string, T>;
 
 template<typename TScope>
-using scope = bindings::scope<TScope, bindings::dependency>;
+using scope = bindings::scope<TScope>;
 
 template<typename... Ts>
 using deduce = scope<scopes::deduce>::bind<Ts...>;

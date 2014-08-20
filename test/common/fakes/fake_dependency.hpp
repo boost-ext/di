@@ -16,7 +16,6 @@
 #include "boost/di/bindings/type_traits/is_required_priority.hpp"
 #include "boost/di/bindings/type_traits/is_required_type.hpp"
 
-
 namespace boost {
 namespace di {
 

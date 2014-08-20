@@ -7,11 +7,7 @@
 #ifndef BOOST_DI_BINDINGS_SCOPE_HPP
 #define BOOST_DI_BINDINGS_SCOPE_HPP
 
-#include "boost/di/aux_/config.hpp"
-#include "boost/di/aux_/mpl.hpp"
-#include "boost/di/bindings/detail/requires.hpp"
-#include "boost/di/bindings/type_traits/is_required_type.hpp"
-#include "boost/di/bindings/type_traits/is_required_priority.hpp"
+#include "boost/di/bindings/dependency.hpp"
 
 namespace boost {
 namespace di {
@@ -19,39 +15,19 @@ namespace bindings {
 
 BOOST_DI_HAS_MEMBER_TYPE(given);
 
-template<
-    typename TScope
-  , template<
-        typename
-      , typename
-      , typename
-      , typename
-    > class TDependency
->
+template<typename TScope>
 class scope {
     template<typename T>
     using is_dependency = has_given<T>;
 
-    template<typename T>
-    using dependency = TDependency<TScope
-        , T, T
-        , detail::requires_<
-              type_traits::is_required_priority
-            , type_traits::is_required_type<T>
-          >
-      >;
-
-    template<typename T, typename U>
-    using rebind = typename T::template rebind<U>::other;
-
     template<typename T, typename = void>
     struct get_binding
-        : dependency<T>
+        : dependency<TScope, T, T>
     { };
 
     template<typename T>
     struct get_binding<T, typename std::enable_if<is_dependency<T>::value>::type>
-        : rebind<T, TScope>
+        : T::template rebind<TScope>::other
     { };
 
     template<typename... Ts>
