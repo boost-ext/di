@@ -20,11 +20,7 @@
 #endif
 
 #if defined(BOOST_DI_CFG_TEST_CTOR)
-    #if defined(BOOST_DI_CFG_INJECT_BRACKET)
-        #define BOOST_DI_INJECT(type, args) type args
-    #else
-        #define BOOST_DI_INJECT(type, ...) type(__VA_ARGS__)
-    #endif
+    #define BOOST_DI_INJECT(type, ...) type(__VA_ARGS__)
 #endif
 
 #endif
