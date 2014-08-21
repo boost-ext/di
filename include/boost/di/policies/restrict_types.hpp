@@ -84,11 +84,11 @@ struct allow_scope<scopes::deduce>; // disabled
 
 class reject_when_not_bound {
     struct not_resolved {
-        typedef not_resolved type;
+        using type = not_resolved;
 
         template<typename>
         struct rebind {
-            typedef not_resolved other;
+            using other = not_resolved;
         };
     };
 
