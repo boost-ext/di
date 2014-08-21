@@ -94,7 +94,7 @@ test-suite ut : # unit tests
     [ run-test c++11 : ut/core/pool_ut.cpp ]
     [ run-test c++11 : ut/core/provider_ut.cpp ]
 
-    #[ run-test c++11 : ut/policies/restrict_types_ut.cpp ]
+    [ run-test c++11 : ut/policies/restrict_types_ut.cpp ]
 
     [ run-test c++11 : ut/scopes/deduce_ut.cpp : scope_deduce_ut ]
     [ run-test c++11 : ut/scopes/external_ut.cpp : scope_external_ut ]
