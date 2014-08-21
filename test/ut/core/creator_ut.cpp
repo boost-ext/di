@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(create_pod) {
     BOOST_CHECK_EQUAL(i, (
         creator<type_list<dependency_type>>().create<
             int, int, type_list<>
-        >(provider, deps, refs, fake_visitor<int>(), fake_pool<>())
+        >(provider, deps, refs, fake_visitor<int>(), pool<>())
     ));
 }
 

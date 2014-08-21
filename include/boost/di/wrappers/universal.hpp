@@ -11,7 +11,6 @@
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/mpl.hpp"
 #include "boost/di/named.hpp"
-#include "boost/di/type_traits/is_convertible_to_ref.hpp"
 
 #include <vector>
 #include <functional>
@@ -21,6 +20,15 @@ namespace di {
 namespace wrappers {
 
 namespace detail {
+
+BOOST_DI_HAS_MEMBER_IMPL(
+    convertible_to_ref
+  , operator()
+  , void ignore__() { }
+  , const TDst&(T::*)(const type<const TDst&>&) const
+  , no_tag
+  , typename TDst
+);
 
 template<typename TResult, typename T, typename TValueType>
 inline typename std::enable_if<!std::is_copy_constructible<T>::value, const TResult&>::type
@@ -87,14 +95,14 @@ public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void>>&
                  , const TValueType& value
-                 , typename std::enable_if<type_traits::is_convertible_to_ref<TValueType, T>::value>::type* = 0)
+                 , typename std::enable_if<detail::has_convertible_to_ref<TValueType, T>::value>::type* = 0)
         : value_(std::bind<const T&>(value, type<const T&>()))
     { }
 
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void>>& refs
                  , const TValueType& value
-                 , typename std::enable_if<!type_traits::is_convertible_to_ref<TValueType, T>::value>::type* = 0)
+                 , typename std::enable_if<!detail::has_convertible_to_ref<TValueType, T>::value>::type* = 0)
         : value_(std::bind(&copy<T, T, TValueType>, std::ref(refs), value))
     { }
 
@@ -132,14 +140,14 @@ public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void>>&
                  , const TValueType& value
-                 , typename std::enable_if<type_traits::is_convertible_to_ref<TValueType, T>::value>::type* = 0)
+                 , typename std::enable_if<detail::has_convertible_to_ref<TValueType, T>::value>::type* = 0)
         : value_(std::bind<const T&>(value, type<const T&>()))
     { }
 
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void>>& refs
                  , const TValueType& value
-                 , typename std::enable_if<!type_traits::is_convertible_to_ref<TValueType, T>::value>::type* = 0)
+                 , typename std::enable_if<!detail::has_convertible_to_ref<TValueType, T>::value>::type* = 0)
         : value_(std::bind(&copy<T, T, TValueType>, std::ref(refs), value))
     { }
 
@@ -176,7 +184,7 @@ public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void>>& refs
                  , const TValueType& value
-                 , typename std::enable_if<type_traits::is_convertible_to_ref<TValueType, T>::value>::type* = 0)
+                 , typename std::enable_if<detail::has_convertible_to_ref<TValueType, T>::value>::type* = 0)
         : refs_(refs)
         , value_(std::bind<const T&>(value, type<const T&>()))
     { }
@@ -184,7 +192,7 @@ public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void>>& refs
                  , const TValueType& value
-                 , typename std::enable_if<!type_traits::is_convertible_to_ref<TValueType, T>::value>::type* = 0)
+                 , typename std::enable_if<!detail::has_convertible_to_ref<TValueType, T>::value>::type* = 0)
         : refs_(refs)
         , value_(std::bind(&copy<T, T, TValueType>, std::ref(refs), value))
     { }

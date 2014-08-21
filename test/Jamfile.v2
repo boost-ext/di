@@ -94,10 +94,7 @@ test-suite ut : # unit tests
     #[ run-test c++11 : ut/core/pool_ut.cpp ]
     [ run-test c++11 : ut/core/provider_ut.cpp ]
 
-    #[ run-test c++11 : ut/policies/circular_dependencies_ut.cpp ]
-    #[ run-test c++11 : ut/policies/creation_permission_ut.cpp ]
-    #[ run-test c++11 : ut/policies/parameters_permission_ut.cpp ]
-    #[ run-test c++11 : ut/policies/scopes_permission_ut.cpp ]
+    #[ run-test c++11 : ut/policies/restrict_types_ut.cpp ]
 
     [ run-test c++11 : ut/scopes/deduce_ut.cpp : scope_deduce_ut ]
     [ run-test c++11 : ut/scopes/external_ut.cpp : scope_external_ut ]
@@ -107,7 +104,6 @@ test-suite ut : # unit tests
 
     [ run-test c++11 : ut/type_traits/ctor_traits_ut.cpp  ]
     [ run-test c++11 : ut/type_traits/function_traits_ut.cpp ]
-    #[ run-test c++11 : ut/type_traits/is_convertible_to_ref_ut.cpp ]
     [ run-test c++11 : ut/type_traits/is_same_base_of_ut.cpp ]
     [ run-test c++11 : ut/type_traits/make_plain_ut.cpp ]
     [ run-test c++11 : ut/type_traits/remove_accessors_ut.cpp ]

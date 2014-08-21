@@ -17,6 +17,33 @@ namespace boost {
 namespace di {
 namespace wrappers {
 
+struct empty { };
+
+struct convertible_to_int {
+    int operator()() { return 0; }
+};
+
+struct convertible_to_int_const {
+    int operator()() const { return 0; }
+};
+
+struct convertible_to_int_ref {
+    int& operator()(const type<int&>&) const { static int i = 0; return i; }
+};
+
+struct convertible_to_const_int_ref {
+    const int& operator()(const type<const int&>&) const { static int i = 0; return i; }
+};
+
+BOOST_AUTO_TEST_CASE(convertible) {
+    BOOST_CHECK((detail::has_convertible_to_ref<convertible_to_const_int_ref, int>::value));
+
+    BOOST_CHECK((!detail::has_convertible_to_ref<convertible_to_int_ref, int>::value));
+    BOOST_CHECK((!detail::has_convertible_to_ref<empty, int>::value));
+    BOOST_CHECK((!detail::has_convertible_to_ref<convertible_to_int_const, int>::value));
+    BOOST_CHECK((!detail::has_convertible_to_ref<convertible_to_int, int>::value));
+}
+
 BOOST_AUTO_TEST_CASE(convert_to_value_type) {
     const int i = 42;
     std::vector<aux::shared_ptr<void>> refs;

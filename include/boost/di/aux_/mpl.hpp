@@ -10,8 +10,8 @@
 #include "boost/di/aux_/config.hpp"
 #include <type_traits>
 
-#define BOOST_DI_HAS_MEMBER_IMPL(name, member, declaration, signature)                  \
-    template<typename T>                                                                \
+#define BOOST_DI_HAS_MEMBER_IMPL(name, member, declaration, signature, Tag, Type)       \
+    template<typename T, Type>                                                          \
     class has_##name {                                                                  \
         struct base_impl { declaration; };                                              \
         struct base                                                                     \
@@ -24,27 +24,41 @@
         static yes_tag test(...);                                                       \
                                                                                         \
     public:                                                                             \
-        static const bool value = sizeof(test((base*)0)) == sizeof(yes_tag);            \
+        static const bool value = sizeof(test((base*)0)) == sizeof(Tag);                \
     }
 
 #define BOOST_DI_HAS_MEMBER_TYPE_IMPL(name)                                             \
     template<typename T>                                                                \
     class has_##name {                                                                  \
-        template <typename U> static yes_tag test(typename U::name*);                   \
-        template <typename> static no_tag test(...);                                    \
+        template<typename U> static yes_tag test(typename U::name*);                    \
+        template<typename>   static no_tag test(...);                                   \
                                                                                         \
     public:                                                                             \
-        static const bool value = sizeof(test<T>(0)) == sizeof(yes_tag);                \
+        static const bool value = sizeof(test<T>(0)) == sizeof(Tag);                    \
     }
 
 #define BOOST_DI_CAT_IMPL(A, B) A ## B
 #define BOOST_DI_CAT(A, B) BOOST_DI_CAT_IMPL(A, B)
 
 #define BOOST_DI_HAS_MEMBER_FUNCTION(name, func)                                        \
-    BOOST_DI_HAS_MEMBER_IMPL(name, func, void func(...) { }, void (base_impl::*)(...))
+    BOOST_DI_HAS_MEMBER_IMPL(                                                           \
+        name                                                                            \
+      , func                                                                            \
+      , void func(...) { }                                                              \
+      , void (base_impl::*)(...)                                                        \
+      , yes_tag                                                                         \
+      , typename = void                                                                 \
+    )
 
 #define BOOST_DI_HAS_MEMBER(name)                                                       \
-    BOOST_DI_HAS_MEMBER_IMPL(name, name, int name, int base_impl::*)
+    BOOST_DI_HAS_MEMBER_IMPL(                                                           \
+        name                                                                            \
+      , name                                                                            \
+      , int name                                                                        \
+      , int base_impl::*                                                                \
+      , yes_tag                                                                         \
+      , typename = void                                                                 \
+    )
 
 //#define BOOST_DI_HAS_MEMBER_TYPE(name) BOOST_DI_HAS_MEMBER_TYPE_IMPL(name)
 #define BOOST_DI_HAS_MEMBER_TYPE(name) BOOST_DI_HAS_MEMBER(name)

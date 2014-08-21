@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_POLICIES_CREATION_PERMISSION_HPP
-#define BOOST_DI_POLICIES_CREATION_PERMISSION_HPP
+#ifndef BOOST_DI_POLICIES_PERMISSIONS_HPP
+#define BOOST_DI_POLICIES_PERMISSIONS_HPP
 
 #include "boost/di/aux_/config.hpp"
 
@@ -13,9 +13,70 @@ namespace boost {
 namespace di {
 namespace policies {
 
+BOOST_DI_HAS_MEMBER_TYPE(element_type);
+BOOST_DI_HAS_MEMBER_TYPE(value_type);
+
+struct allow_smart_ptrs {
+    template<typename T>
+    struct allow
+        : has_element_type<typename type_traits::remove_accessors<T>::type>
+    { };
+};
+
+struct allow_refs {
+    template<typename T>
+    struct allow
+        : aux::mpl::and_<
+              aux::mpl::not_<is_const<typename remove_reference<T>::type>>
+            , is_reference<T>
+            , aux::mpl::not_<
+                  has_element_type<typename type_traits::remove_accessors<T>::type>
+              >
+          >
+    { };
+};
+
+struct allow_const_refs {
+    template<typename T>
+    struct allow
+        : aux::mpl::and_<
+              is_const<typename remove_reference<T>::type>
+            , is_reference<T>
+            , aux::mpl::not_<
+                  has_element_type<typename type_traits::remove_accessors<T>::type>
+              >
+          >
+    { };
+};
+
+struct allow_rvalue_refs {
+    template<typename T>
+    struct allow
+        : is_rvalue_reference<T>
+    { };
+};
+
+struct allow_ptrs {
+    template<typename T>
+    struct allow
+        : is_pointer<T>
+    { };
+};
+
+struct allow_copies {
+    template<typename T>
+    struct allow
+        : aux::mpl::and_<
+               aux::mpl::not_<is_reference<T>>
+             , aux::mpl::not_<is_pointer<T>>
+             , aux::mpl::not_<is_rvalue_reference<T>>
+             , aux::mpl::not_<has_element_type<typename type_traits::remove_accessors<T>::type>>
+          >
+    { };
+};
+
 template<typename TValueType>
-struct allow_type
-{
+struct allow_type {
     template<typename T>
     struct allow
         : is_same<T, TValueType>
@@ -23,24 +84,24 @@ struct allow_type
 };
 
 template<typename TExpr>
-struct allow_type_expr
-{
+struct allow_type_expr {
     template<typename T>
     struct allow
         : aux::mpl::apply<TExpr, T>::type
     { };
 };
 
-/**
- * @code
- * using namespace di::policies;
- *
- * di::make_injector().create<int>(creation_permission<>()); // compile error
- * di::make_injector(di::bind_int<42>()).create<int>(creation_permission<>()); // compile ok
- * di::make_injector().create<int>(creation_permission<allow_type<int>>()); // compile ok
- * di::make_injector().create<int>(creation_permission<allow_type_expr<is_pod<aux::mpl::_>>>()); // compile ok
- * @endcode
- */
+template<typename TScope>
+struct allow_scope {
+    template<typename T>
+    struct allow
+        : is_same<T, TScope>
+    { };
+};
+
+template<>
+struct allow_scope<scopes::deduce>; // disabled
+
 template<BOOST_DI_TYPES_DEFAULT_MPL(TArgs)>
 class creation_permission
 {
@@ -100,4 +161,5 @@ public:
 } // namespace boost
 
 #endif
+
 
