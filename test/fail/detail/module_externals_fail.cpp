@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_CASE(module_externals_fail) {
     bindings::dependency<scopes::external<>, int> i_(42);
 
     module<
-        aux::mpl::vector<
+        type_list<
             bindings::dependency<scopes::external<>, int>
           , bindings::dependency<scopes::external<>, double>
         >
