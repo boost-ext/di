@@ -28,7 +28,7 @@ struct fake_dependency {
 
         template<typename>
         struct rebind {
-            typedef resolved other;
+            using other = resolved;
         };
     };
 
@@ -38,9 +38,11 @@ struct fake_dependency {
           , typename
           , typename TDefault
         >
-        struct resolve
-            : std::conditional<TResolve::value, resolved, TDefault>::type
-        { };
+        using resolve = typename std::conditional<
+            TResolve::value
+          , resolved
+          , TDefault
+        >::type;
     };
 };
 
