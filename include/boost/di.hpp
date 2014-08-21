@@ -1364,7 +1364,7 @@ public:
     { }
 
     template<typename TPool>
-    pool(const init&, const TPool& p)
+    pool(const TPool& p, const init&)
         : pool(get<TArgs>(p)...)
     { (void)p; }
 
@@ -1402,57 +1402,6 @@ namespace di {
 namespace core {
 
 template<
-    typename T
-  , typename TCallStack
-  , typename TDependency
->
-struct data {
-    using type = T;
-    using call_stack = TCallStack;
-    using dependency = TDependency;
-};
-
-template<typename T, typename TCallStack, typename _>
-using resolve_impl = pair<_, typename _::bind::template apply<data<T, TCallStack, _>>::type>;
-
-template<typename T, typename TCallStack, typename _>
-using eval_impl = typename _::bind::template eval<data<T, TCallStack, _>>::type;
-
-template<typename>
-struct binder;
-
-template<typename... Ts>
-struct binder<type_list<Ts...>> {
-    template<
-        typename T
-      , typename TCallStack
-      , typename TDefault =
-            bindings::dependency<
-                scopes::deduce
-              , typename type_traits::make_plain<T>::type
-            >
-    >
-    using resolve = typename greatest<
-        pair<TDefault, int_<0>>
-      , resolve_impl<T, TCallStack, Ts>...
-    >::type::template rebind<typename scopes::deduce::rebind<T>::other>::other;
-
-    template<
-        typename T
-      , typename TCallStack
-    >
-    using eval = typename or_<eval_impl<T, TCallStack, Ts>...>::type;
-};
-
-} // namespace core
-} // namespace di
-} // namespace boost
-
-namespace boost {
-namespace di {
-namespace core {
-
-template<
     typename T = none_t
   , typename TCallStack = none_t
   , typename TCreator = none_t
@@ -1473,7 +1422,8 @@ class any_type {
       >;
 
 public:
-    typedef void any;
+    using any = any_type;
+
     any_type() { }
 
     any_type(TCreator& creator
@@ -1628,6 +1578,57 @@ struct is_integral<
 
 namespace boost {
 namespace di {
+namespace core {
+
+template<
+    typename T
+  , typename TCallStack
+  , typename TDependency
+>
+struct data {
+    using type = T;
+    using call_stack = TCallStack;
+    using dependency = TDependency;
+};
+
+template<typename T, typename TCallStack, typename _>
+using resolve_impl = pair<_, typename _::bind::template apply<data<T, TCallStack, _>>::type>;
+
+template<typename T, typename TCallStack, typename _>
+using eval_impl = typename _::bind::template eval<data<T, TCallStack, _>>::type;
+
+template<typename>
+struct binder;
+
+template<typename... Ts>
+struct binder<type_list<Ts...>> {
+    template<
+        typename T
+      , typename TCallStack
+      , typename TDefault =
+            bindings::dependency<
+                scopes::deduce
+              , typename type_traits::make_plain<T>::type
+            >
+    >
+    using resolve = typename greatest<
+        pair<TDefault, int_<0>>
+      , resolve_impl<T, TCallStack, Ts>...
+    >::type::template rebind<typename scopes::deduce::rebind<T>::other>::other;
+
+    template<
+        typename T
+      , typename TCallStack
+    >
+    using eval = typename or_<eval_impl<T, TCallStack, Ts>...>::type;
+};
+
+} // namespace core
+} // namespace di
+} // namespace boost
+
+namespace boost {
+namespace di {
 
 BOOST_DI_HAS_MEMBER_FUNCTION(BOOST_DI_INJECTOR, BOOST_DI_INJECTOR);
 
@@ -1683,38 +1684,18 @@ struct ctor_traits_impl<T, std::false_type>
 
 namespace boost {
 namespace di {
-namespace type_traits {
-
-namespace detail {
-
-template<typename T, typename TSignature>
-class is_convertible {
-    template<typename U>
-    static yes_tag test(non_type<TSignature, &U::operator()>*);
-
-    template<typename>
-    static no_tag test(...);
-
-public:
-    static const bool value = sizeof(test<T>(0)) == sizeof(yes_tag);
-};
-
-} // namespace detail
-
-template<typename TValueType, typename T>
-using is_convertible_to_ref = detail::is_convertible<
-    TValueType, const T&(TValueType::*)(const type<const T&>&) const
->;
-
-} // namespace type_traits
-} // namespace di
-} // namespace boost
-
-namespace boost {
-namespace di {
 namespace wrappers {
 
 namespace detail {
+
+BOOST_DI_HAS_MEMBER_IMPL(
+    convertible_to_ref
+  , operator()
+  , void dummy() { }
+  , const TDst&(T::*)(const type<const TDst&>&) const
+  , no_tag
+  , typename TDst
+);
 
 template<typename TResult, typename T, typename TValueType>
 inline typename std::enable_if<!std::is_copy_constructible<T>::value, const TResult&>::type
@@ -1781,14 +1762,14 @@ public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void>>&
                  , const TValueType& value
-                 , typename std::enable_if<type_traits::is_convertible_to_ref<TValueType, T>::value>::type* = 0)
+                 , typename std::enable_if<detail::has_convertible_to_ref<TValueType, T>::value>::type* = 0)
         : value_(std::bind<const T&>(value, type<const T&>()))
     { }
 
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void>>& refs
                  , const TValueType& value
-                 , typename std::enable_if<!type_traits::is_convertible_to_ref<TValueType, T>::value>::type* = 0)
+                 , typename std::enable_if<!detail::has_convertible_to_ref<TValueType, T>::value>::type* = 0)
         : value_(std::bind(&copy<T, T, TValueType>, std::ref(refs), value))
     { }
 
@@ -1826,14 +1807,14 @@ public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void>>&
                  , const TValueType& value
-                 , typename std::enable_if<type_traits::is_convertible_to_ref<TValueType, T>::value>::type* = 0)
+                 , typename std::enable_if<detail::has_convertible_to_ref<TValueType, T>::value>::type* = 0)
         : value_(std::bind<const T&>(value, type<const T&>()))
     { }
 
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void>>& refs
                  , const TValueType& value
-                 , typename std::enable_if<!type_traits::is_convertible_to_ref<TValueType, T>::value>::type* = 0)
+                 , typename std::enable_if<!detail::has_convertible_to_ref<TValueType, T>::value>::type* = 0)
         : value_(std::bind(&copy<T, T, TValueType>, std::ref(refs), value))
     { }
 
@@ -1870,7 +1851,7 @@ public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void>>& refs
                  , const TValueType& value
-                 , typename std::enable_if<type_traits::is_convertible_to_ref<TValueType, T>::value>::type* = 0)
+                 , typename std::enable_if<detail::has_convertible_to_ref<TValueType, T>::value>::type* = 0)
         : refs_(refs)
         , value_(std::bind<const T&>(value, type<const T&>()))
     { }
@@ -1878,7 +1859,7 @@ public:
     template<typename TValueType>
     universal_impl(std::vector<aux::shared_ptr<void>>& refs
                  , const TValueType& value
-                 , typename std::enable_if<!type_traits::is_convertible_to_ref<TValueType, T>::value>::type* = 0)
+                 , typename std::enable_if<!detail::has_convertible_to_ref<TValueType, T>::value>::type* = 0)
         : refs_(refs)
         , value_(std::bind(&copy<T, T, TValueType>, std::ref(refs), value))
     { }
@@ -2222,7 +2203,7 @@ public:
 
     template<typename... TArgs>
     explicit module(const TArgs&... args)
-        : pool_t(init(), pool<type_list<TArgs...>>(args...))
+        : pool_t(pool<type_list<TArgs...>>(args...), init())
     { }
 
     template<typename T, typename... TPolicies>

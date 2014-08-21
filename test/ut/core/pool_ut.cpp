@@ -14,8 +14,7 @@ namespace di {
 namespace core {
 
 template<typename T>
-struct allocator
-{
+struct allocator {
     allocator(T* object) // non explicit
         : object(object)
     { }
@@ -23,143 +22,83 @@ struct allocator
     aux::shared_ptr<T> object;
 };
 
-struct trivial_ctor
-{
+struct trivial_ctor {
     trivial_ctor()
         : i(0)
     { }
 
-    int i;
+    int i = 0;
 };
 
-struct default_ctor
-{
+struct default_ctor {
     explicit default_ctor(int i = 0)
         : i(i)
     { }
 
-    int i;
+    int i = 0;
 };
 
-struct custom_ctor
-{
+struct custom_ctor {
     explicit custom_ctor(int i)
         : i(i)
     { }
 
-    int i;
+    int i = 0;
 };
 
-struct custom_ctor_other
-{
+struct custom_ctor_other {
     explicit custom_ctor_other(int i)
         : i(i)
     { }
 
-    int i;
+    int i = 0;
 };
 
 BOOST_AUTO_TEST_CASE(empty) {
-    typedef pool<aux::mpl::vector<>> pool_type;
+    using pool_type = pool<type_list<>>;
 
     pool_type pool_;
-
-    BOOST_CHECK((
-        aux::mpl::equal<
-            aux::mpl::vector<>
-          , pool_type::types
-        >::value
-    ));
-
     (void)pool_;
 }
 
 BOOST_AUTO_TEST_CASE(ctor_order) {
-    typedef pool<
-        aux::mpl::vector<
-            trivial_ctor
-          , default_ctor
+    using pool_type = pool<
+        type_list<
+            default_ctor
+          , trivial_ctor
         >
-    > pool_type;
+    >;
 
     default_ctor default_ctor_;
     trivial_ctor trivial_ctor_;
 
     pool_type pool_(default_ctor_, trivial_ctor_);
-
-    BOOST_CHECK((
-        aux::mpl::equal<
-            aux::mpl::vector<
-                trivial_ctor
-              , default_ctor
-            >
-          , pool_type::types
-        >::value
-    ));
-
-    (void)pool_;
-}
-
-BOOST_AUTO_TEST_CASE(ctor_order_reverse) {
-    typedef pool<
-        aux::mpl::vector<
-            trivial_ctor
-          , default_ctor
-        >
-    > pool_type;
-
-    default_ctor default_ctor_;
-    trivial_ctor trivial_ctor_;
-
-    pool_type pool_(trivial_ctor_, default_ctor_);
-
-    BOOST_CHECK((
-        aux::mpl::equal<
-            aux::mpl::vector<
-                trivial_ctor
-              , default_ctor
-            >
-          , pool_type::types
-        >::value
-    ));
-
     (void)pool_;
 }
 
 BOOST_AUTO_TEST_CASE(default_ctor_base) {
-    typedef pool<
-        aux::mpl::vector<
+    using pool_type = pool<
+        type_list<
             trivial_ctor
           , default_ctor
         >
-    > pool_type;
+    >;
 
     pool_type pool_;
-
-    BOOST_CHECK((
-        aux::mpl::equal<
-            aux::mpl::vector<
-                trivial_ctor
-              , default_ctor
-            >
-          , pool_type::types
-        >::value
-    ));
-
     (void)pool_;
 }
 
 BOOST_AUTO_TEST_CASE(get) {
-    typedef allocator<custom_ctor> custom_ctor_type;
-    typedef allocator<trivial_ctor> trivial_ctor_type;
-    typedef allocator<default_ctor> default_ctor_type;
-    typedef pool<
-        aux::mpl::vector<
-            trivial_ctor_type
+    using custom_ctor_type = allocator<custom_ctor>;
+    using trivial_ctor_type = allocator<trivial_ctor>;
+    using default_ctor_type = allocator<default_ctor>;
+    using pool_type = pool<
+        type_list<
+            custom_ctor_type
+          , trivial_ctor_type
           , default_ctor_type
-          , custom_ctor_type
         >
-    > pool_type;
+    >;
 
     custom_ctor_type custom_ctor_(new custom_ctor(0));
     trivial_ctor_type trivial_ctor_(new trivial_ctor);
@@ -182,11 +121,11 @@ BOOST_AUTO_TEST_CASE(get) {
 }
 
 BOOST_AUTO_TEST_CASE(pool_of_pools) {
-    typedef allocator<trivial_ctor> trivial_ctor_type;
-    typedef allocator<default_ctor> default_ctor_type;
-    typedef pool<aux::mpl::vector<default_ctor_type>> pool_1_type;
-    typedef pool<aux::mpl::vector<trivial_ctor_type>> pool_2_type;
-    typedef pool<aux::mpl::vector<pool_1_type, pool_2_type>> pool_type;
+    using trivial_ctor_type = allocator<trivial_ctor>;
+    using default_ctor_type = allocator<default_ctor>;
+    using pool_1_type = pool<type_list<default_ctor_type>>;
+    using pool_2_type = pool<type_list<trivial_ctor_type>>;
+    using pool_type = pool<type_list<pool_1_type, pool_2_type>>;
     default_ctor_type default_ctor_(new default_ctor);
     trivial_ctor_type trivial_ctor_(new trivial_ctor);
 
@@ -195,15 +134,6 @@ BOOST_AUTO_TEST_CASE(pool_of_pools) {
 
     pool_type pool_(pool_1_, pool_2_);
 
-    BOOST_CHECK((
-        aux::mpl::equal<
-            aux::mpl::vector<
-                default_ctor_type
-              , trivial_ctor_type
-            >
-          , pool_type::types
-        >::value
-    ));
     BOOST_CHECK_EQUAL(
         trivial_ctor_.object
       , pool_.get<trivial_ctor_type>().object
@@ -215,27 +145,27 @@ BOOST_AUTO_TEST_CASE(pool_of_pools) {
 }
 
 BOOST_AUTO_TEST_CASE(init_pool_from_other_empty_pool) {
-    pool<aux::mpl::vector<>> pool_empty_;
-    pool<aux::mpl::vector<default_ctor>> pool_(pool_empty_, init());
+    pool<type_list<>> pool_empty_;
+    pool<type_list<default_ctor>> pool_(pool_empty_, init());
 
     BOOST_CHECK_EQUAL(0, pool_.get<default_ctor>().i);
 }
 
 BOOST_AUTO_TEST_CASE(init_pool_from_other_subset_pool) {
-    typedef pool<
-        aux::mpl::vector<
+    using pool_all_type = pool<
+        type_list<
             trivial_ctor
           , default_ctor
           , custom_ctor
         >
-    > pool_all_type;
+    >;
 
-    typedef pool<
-        aux::mpl::vector<
+    using pool_subset_type = pool<
+        type_list<
             trivial_ctor
           , custom_ctor
         >
-    > pool_subset_type;
+    >;
 
     trivial_ctor trivial_ctor_;
     custom_ctor custom_ctor_(42);
@@ -259,38 +189,9 @@ BOOST_AUTO_TEST_CASE(init_pool_from_other_subset_pool) {
     );
 }
 
-struct ignored
-{
-    typedef void ignore;
-};
-
-BOOST_MPL_HAS_XXX_TRAIT_DEF(ignore)
-
-BOOST_AUTO_TEST_CASE(init_pool_from_other_subset_pool_with_ignore) {
-    typedef pool<
-        aux::mpl::vector<
-            trivial_ctor
-          , default_ctor
-          , custom_ctor
-        >
-    > pool_all_type;
-
-    typedef pool<
-        aux::mpl::vector<
-            trivial_ctor
-          , custom_ctor
-          , ignored
-        >
-      , has_ignore<aux::mpl::arg<0>>
-    > pool_subset_type;
-
-    pool_subset_type pool_subset_(trivial_ctor(), custom_ctor(0), ignored());
-    pool_all_type pool_all_(pool_subset_, init());
-}
-
 BOOST_AUTO_TEST_CASE(pool_from_pool_of_pools) {
-    typedef pool<aux::mpl::vector<custom_ctor>> pool_type;
-    typedef pool<aux::mpl::vector<pool_type>> pool_pool_type;
+    using pool_type = pool<type_list<custom_ctor>>;
+    using pool_pool_type = pool<type_list<pool_type>> ;
     const int i = 42;
 
     custom_ctor ctor(i);
@@ -301,8 +202,8 @@ BOOST_AUTO_TEST_CASE(pool_from_pool_of_pools) {
 }
 
 BOOST_AUTO_TEST_CASE(pool_from_pool_of_pools_many) {
-    typedef pool<aux::mpl::vector<custom_ctor, default_ctor>> pool_type;
-    typedef pool<aux::mpl::vector<pool_type>> pool_pool_type;
+    using pool_type = pool<type_list<custom_ctor, default_ctor>>;
+    using pool_pool_type = pool<type_list<pool_type>>;
     const int i = 42;
 
     custom_ctor c(i);
@@ -314,16 +215,13 @@ BOOST_AUTO_TEST_CASE(pool_from_pool_of_pools_many) {
     BOOST_CHECK_EQUAL(0, p2.get<default_ctor>().i);
 }
 
-template<typename T1, typename T2>
-class base : public T1, public T2
-{
-public:
-    typedef aux::mpl::vector<T1, T2> types;
-};
+template<typename... Ts>
+struct base : Ts...
+{ };
 
 BOOST_AUTO_TEST_CASE(pool_flatten) {
-    typedef pool<aux::mpl::vector<trivial_ctor, custom_ctor, default_ctor>> pool_flatten_type;
-    typedef pool<aux::mpl::vector<custom_ctor, base<trivial_ctor, default_ctor>>> pool_type;
+    using pool_flatten_type = pool<type_list<trivial_ctor, custom_ctor, default_ctor>>;
+    using pool_type = pool<type_list<custom_ctor, base<trivial_ctor, default_ctor>>>;
     const int i = 42;
 
     custom_ctor c(i);

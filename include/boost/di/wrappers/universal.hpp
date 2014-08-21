@@ -24,7 +24,7 @@ namespace detail {
 BOOST_DI_HAS_MEMBER_IMPL(
     convertible_to_ref
   , operator()
-  , void ignore__() { }
+  , void dummy() { }
   , const TDst&(T::*)(const type<const TDst&>&) const
   , no_tag
   , typename TDst

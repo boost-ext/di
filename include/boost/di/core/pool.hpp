@@ -31,7 +31,7 @@ public:
     { }
 
     template<typename TPool>
-    pool(const init&, const TPool& p)
+    pool(const TPool& p, const init&)
         : pool(get<TArgs>(p)...)
     { (void)p; }
 

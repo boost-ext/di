@@ -18,22 +18,16 @@ BOOST_DI_HAS_MEMBER_TYPE(value_type);
 
 struct allow_smart_ptrs {
     template<typename T>
-    struct allow
-        : has_element_type<typename type_traits::remove_accessors<T>::type>
-    { };
+    using allow = has_element_type<typename type_traits::remove_accessors<T>::type>;
 };
 
 struct allow_refs {
     template<typename T>
-    struct allow
-        : aux::mpl::and_<
-              aux::mpl::not_<is_const<typename remove_reference<T>::type>>
-            , is_reference<T>
-            , aux::mpl::not_<
-                  has_element_type<typename type_traits::remove_accessors<T>::type>
-              >
-          >
-    { };
+    using allow = and_<
+        !std::is_const<typename std::remove_reference<T>::type>::value
+        std::is_reference<T>::value
+        !has_element_type<typename type_traits::remove_accessors<T>::type>::value
+    >;
 };
 
 struct allow_const_refs {
@@ -102,18 +96,14 @@ struct allow_scope {
 template<>
 struct allow_scope<scopes::deduce>; // disabled
 
-template<BOOST_DI_TYPES_DEFAULT_MPL(TArgs)>
-class creation_permission
+template<typename... Ts>
+class restrict_types
 {
-    typedef BOOST_DI_MPL_VECTOR_TYPES_PASS_MPL(TArgs) permitted_types;
-
-    struct not_resolved
-    {
+    struct not_resolved {
         typedef not_resolved type;
 
         template<typename>
-        struct rebind
-        {
+        struct rebind {
             typedef not_resolved other;
         };
     };
@@ -148,11 +138,7 @@ class creation_permission
 public:
     template<typename T>
     void assert_policy() const {
-       BOOST_DI_ASSERT_MSG(
-            is_type_permitted<T>::value
-          , TYPE_HAS_TO_BE_EXPLICITLY_BINDED
-          , typename T::type
-        );
+        static_assert(is_type_restricted<T>::value, "Type is not allowed");
     }
 };
 

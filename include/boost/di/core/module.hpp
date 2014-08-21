@@ -42,7 +42,7 @@ public:
 
     template<typename... TArgs>
     explicit module(const TArgs&... args)
-        : pool_t(init(), pool<type_list<TArgs...>>(args...))
+        : pool_t(pool<type_list<TArgs...>>(args...), init())
     { }
 
     template<typename T, typename... TPolicies>
