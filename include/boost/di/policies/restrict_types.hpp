@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_POLICIES_PERMISSIONS_HPP
-#define BOOST_DI_POLICIES_PERMISSIONS_HPP
+#ifndef BOOS_DI_POLICIES_RESTRICT_TYPES_HPP
+#define BOOS_DI_POLICIES_RESTRICT_TYPES_HPP
 
 #include "boost/di/aux_/mpl.hpp"
 #include "boost/di/type_traits/remove_accessors.hpp"
@@ -19,12 +19,12 @@ BOOST_DI_HAS_MEMBER_TYPE(element_type);
 BOOST_DI_HAS_MEMBER_TYPE(value_type);
 
 struct allow_smart_ptrs {
-    template<typename T>
+    template<typename _, typename T = typename _::type>
     using allow = has_element_type<typename type_traits::remove_accessors<T>::type>;
 };
 
 struct allow_refs {
-    template<typename T>
+    template<typename _, typename T = typename _::type>
     using allow = bool_<
         std::is_reference<T>::value &&
         !std::is_const<typename std::remove_reference<T>::type>::value &&
@@ -33,7 +33,7 @@ struct allow_refs {
 };
 
 struct allow_const_refs {
-    template<typename T>
+    template<typename _, typename T = typename _::type>
     using allow = bool_<
         std::is_const<typename std::remove_reference<T>::type>::value &&
         std::is_reference<T>::value &&
@@ -42,17 +42,17 @@ struct allow_const_refs {
 };
 
 struct allow_rvalue_refs {
-    template<typename T>
+    template<typename _, typename T = typename _::type>
     using allow = std::is_rvalue_reference<T>;
 };
 
 struct allow_ptrs {
-    template<typename T>
+    template<typename _, typename T = typename _::type>
     using allow = std::is_pointer<T>;
 };
 
 struct allow_copies {
-    template<typename T>
+    template<typename _, typename T = typename _::type>
     using allow = bool_<
         !std::is_reference<T>::value &&
         !std::is_pointer<T>::value &&
@@ -63,27 +63,26 @@ struct allow_copies {
 
 template<typename TValueType>
 struct allow_type {
-    template<typename T>
+    template<typename _, typename T = typename _::type>
     using allow = std::is_same<T, TValueType>;
 };
 
 template<typename TExpr>
 struct allow_type_expr {
-    //template<typename T>
+    //template<typename _, typename T = typename _::type>
     //using allow = ::mpl::apply<TExpr, T>::type;
 };
 
 template<typename TScope>
 struct allow_scope {
-    template<typename T>
+    template<typename _, typename T = typename _::type>
     using allow = std::is_same<T, TScope>;
 };
 
 template<>
 struct allow_scope<scopes::deduce>; // disabled
 
-template<typename... Ts>
-class restrict_types {
+class reject_when_not_bound {
     struct not_resolved {
         typedef not_resolved type;
 
@@ -105,6 +104,13 @@ class restrict_types {
         >::value
     >;
 
+public:
+    template<typename T>
+    using allow = is_resolvable<T>;
+};
+
+template<typename... Ts>
+class restrict_types {
     template<typename T, typename TAllow>
     struct is_type_restricted
         : TAllow::template allow<T>
@@ -112,7 +118,7 @@ class restrict_types {
 
     template<typename T>
     using assert_types = or_<
-        bool_<is_type_restricted<typename T::type, Ts>::value>...
+        bool_<is_type_restricted<T, Ts>::value>...
     >;
 
 public:
