@@ -8,11 +8,15 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "boost/di/scopes/unique.hpp"
+#include "common/fakes/fake_data.hpp"
+
 namespace boost {
 namespace di {
 namespace policies {
 
 BOOST_AUTO_TEST_CASE(dummy) {
+    restrict_types<allow_copies, allow_ptrs>().assert_policy<fake_data<int*, type_list<>, scopes::unique<>>>();
 }
 
 } // namespace policies

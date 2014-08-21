@@ -83,48 +83,42 @@ template<>
 struct allow_scope<scopes::deduce>; // disabled
 
 template<typename... Ts>
-class restrict_types
-{
-/*    struct not_resolved {*/
-        //typedef not_resolved type;
+class restrict_types {
+    struct not_resolved {
+        typedef not_resolved type;
 
-        //template<typename>
-        //struct rebind {
-            //typedef not_resolved other;
-        //};
-    //};
+        template<typename>
+        struct rebind {
+            typedef not_resolved other;
+        };
+    };
 
-    //template<typename TAllow, typename T>
-    //struct is_type_permitted_impl
-        //: TAllow::template allow<T>
-    //{ };
+    template<typename T>
+    using is_resolvable = bool_<
+        !std::is_same<
+            typename T::binder::template resolve<
+                typename T::type
+              , type_list<>
+              , not_resolved
+            >::type
+          , not_resolved
+        >::value
+    >;
 
-    //template<typename T>
-    //struct is_type_permitted
-        //: aux::mpl::or_<
-              //aux::mpl::not_<
-                  //is_same<
-                      //typename T::binder::template resolve<
-                          //typename T::type
-                        //, aux::mpl::vector<>
-                        //, not_resolved
-                      //>::type
-                    //, not_resolved
-                  //>
-              //>
-            //, aux::mpl::bool_<
-                  //aux::mpl::count_if<
-                      //permitted_types
-                    //, is_type_permitted_impl<aux::mpl::_, typename T::type>
-                  //>::value != 0
-              //>
-          //>
-    /*{ };*/
+    template<typename T, typename TAllow>
+    struct is_type_restricted
+        : TAllow::template allow<T>
+    { };
+
+    template<typename T>
+    using assert_types = or_<
+        bool_<is_type_restricted<typename T::type, Ts>::value>...
+    >;
 
 public:
     template<typename T>
     void assert_policy() const {
-        //static_assert(is_type_restricted<T>::value, "Type is not allowed");
+        static_assert(assert_types<T>::value, "Type is not allowed");
     }
 };
 
