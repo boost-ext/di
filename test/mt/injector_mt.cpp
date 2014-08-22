@@ -243,7 +243,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic_visitor, TInjector, basic_visitor_types) {
 
     fake_visitor<
         transaction_usage
-      , aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
+      , aux::shared_ptr<iprovider<aux::shared_ptr<transaction>>>
       , aux::shared_ptr<c3>
       , int
     > visitor;

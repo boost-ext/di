@@ -71,7 +71,7 @@ See [link Notes] for further information.
   [[Issue][GCC][Clang][Intel][MSVC]]
   [[Rvalue References][supported][supported][supported][not supported]]
   [[std::function/boost::function][supported][supported][supported][supported (boost::function supported when pass by const reference)]]
-  [[[link di.concepts.policies.parameters_permission Parameters Permission Policy]][supported][supported][supported][not supported]]
+  [[[link di.concepts.policies Parameters Permission Policy]][supported][supported][supported][not supported]]
 ]
 
 [table

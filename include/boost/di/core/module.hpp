@@ -12,7 +12,7 @@
 #include "boost/di/aux_/mpl.hpp"
 #include "boost/di/core/pool.hpp"
 #include "boost/di/core/creator.hpp"
-#include "boost/di/core/provider.hpp"
+#include "boost/di/provider.hpp"
 
 #include <vector>
 
@@ -60,8 +60,8 @@ public:
         );
     }
 
-    template<typename T, typename Tprovider, typename... TPolicies>
-    T allocate(const Tprovider& provider, const TPolicies&... policies) {
+    template<typename T, typename TProvider, typename... TPolicies>
+    T allocate(const TProvider& provider, const TPolicies&... policies) {
         using call_stack = type_list<>;
         pool<type_list<TPolicies...>> policies_(policies...);
         std::vector<aux::shared_ptr<void>> refs_;

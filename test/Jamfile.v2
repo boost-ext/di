@@ -92,7 +92,6 @@ test-suite ut : # unit tests
     [ run-test c++11 : ut/core/binder_ut.cpp ]
     [ run-test c++11 : ut/core/creator_ut.cpp ]
     [ run-test c++11 : ut/core/pool_ut.cpp ]
-    [ run-test c++11 : ut/core/provider_ut.cpp ]
 
     [ run-test c++11 : ut/policies/allow_types_ut.cpp ]
 
@@ -121,6 +120,7 @@ test-suite ut : # unit tests
     [ run-test c++11 : ut/injector_ut.cpp : ctor_injector_ut ]
 
     [ run-test c++11 : ut/named_ut.cpp ]
+    [ run-test c++11 : ut/provider_ut.cpp ]
 ;
 
 test-suite mt : # module tests

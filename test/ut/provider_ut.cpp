@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/core/provider.hpp"
+#include "boost/di/provider.hpp"
 
 #include <memory>
 #include <utility>
@@ -18,7 +18,6 @@
 
 namespace boost {
 namespace di {
-namespace core {
 
 struct empty { };
 
@@ -52,7 +51,6 @@ BOOST_AUTO_TEST_CASE(create_string_value) {
     BOOST_CHECK_EQUAL("s", *s);
 }
 
-} // namespace core
 } // namespace di
 } // namespace boost
 

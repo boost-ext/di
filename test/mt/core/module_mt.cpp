@@ -336,7 +336,7 @@ BOOST_AUTO_TEST_CASE(multiple_calls) {
 BOOST_AUTO_TEST_CASE(base_of_interface_not_trivial_ctor) {
     module<
         type_list<
-            fake_dependency<scopes::unique<>, transaction_provider, transaction_provider>::type
+            fake_dependency<scopes::unique<>, transaction_provider>::type
         >
     > module_;
 
@@ -516,7 +516,7 @@ BOOST_AUTO_TEST_CASE(visit) {
 
     fake_visitor<
         transaction_usage
-      , aux::shared_ptr<di::provider<aux::shared_ptr<transaction>>>
+      , aux::shared_ptr<di::iprovider<aux::shared_ptr<transaction>>>
       , aux::shared_ptr<c3>
       , int
     > visitor;

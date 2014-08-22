@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(visit) {
 
     fake_visitor<
         transaction_usage
-      , aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
+      , aux::shared_ptr<iprovider<aux::shared_ptr<transaction>>>
       , aux::shared_ptr<c3>
       , int
     > visitor;
@@ -501,7 +501,7 @@ BOOST_AUTO_TEST_CASE(visit_injector) {
 
     fake_visitor<
         transaction_usage
-      , aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
+      , aux::shared_ptr<iprovider<aux::shared_ptr<transaction>>>
       , aux::shared_ptr<c3>
       , int
     > visitor;

@@ -9,6 +9,7 @@
 
 #include "boost/di/aux_/mpl.hpp"
 #include "boost/di/type_traits/remove_accessors.hpp"
+#include "boost/di/type_traits/make_plain.hpp"
 #include "boost/di/scopes/deduce.hpp"
 
 namespace boost {
@@ -105,7 +106,7 @@ struct is_copy {
 template<typename TValueType>
 struct is_type {
     template<typename _, typename T = typename _::type>
-    using allow = std::is_same<T, TValueType>;
+    using allow = std::is_same<typename type_traits::make_plain<T>::type, TValueType>;
 };
 
 template<typename TExpr>
@@ -156,9 +157,9 @@ class allow_types_impl {
     using assert_types = typename TExpr::template allow<T>;
 
 public:
-    template<typename TData>
+    template<typename T>
     void assert_policy() const {
-        static_assert(assert_types<TData>::value, "Type is not allowed");
+        static_assert(assert_types<T>::value, "Type is not allowed");
     }
 };
 

@@ -72,7 +72,22 @@ Policies will be verified using `and` semantic, which means that each type to be
 * __policies_parameters_permission__
 * __policies_scopes_permission__
 
-[section circular_dependencies]
+[section allow_types]
+
+[section is_type]
+[endsect]
+
+[section is_smart_ptr]
+[endsect]
+
+[section is_copy]
+[endsect]
+
+[section is_scope]
+[endsect]
+
+[section is_bound]
+[endsect]
 
 [heading Description]
 Verifies constructor parameters overlapping.
@@ -121,10 +136,6 @@ Verifies constructor parameters overlapping.
 * __policies_creation_permission__
 * __policies_parameters_permission__
 * __policies_scopes_permission__
-
-[endsect]
-
-[section creation_permission]
 
 [heading Description]
 Limits default constructible types not be created unless they are explicitly bound or allowed.
@@ -193,10 +204,6 @@ Limits default constructible types not be created unless they are explicitly bou
 * __policies_circular_dependencies__
 * __policies_parameters_permission__
 * __policies_scopes_permission__
-
-[endsect]
-
-[section parameters_permission]
 
 [heading Description]
 Limits allowed constructor parameters. By default, if used, all parameters are disallowed.
@@ -280,10 +287,6 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
 * __policies_circular_dependencies__
 * __policies_creation_permission__
 * __policies_scopes_permission__
-
-[endsect]
-
-[section scopes_permission]
 
 [heading Description]
 Limits allowed scopes to be used whilst binding. By default, if used, all scopes are disallowed.

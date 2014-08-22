@@ -99,7 +99,7 @@ Using `Boost.DI` has many advantages over `manual dependency injection`.
 * [*[link di.concepts.injections.automatic Macro free]] - by default - no need to specify constructor traits or register anything (less intrusive)
 * [*[link di.concepts.scopes.deduce Scopes deduction]] - [link di.concepts.scopes scopes] are deduced based on type semantic
 * Automatic conversion between [link di.concepts.scopes.shared std/boost smart pointers]
-* Compile time [link di.concepts.policies policies] - to detect [link di.concepts.policies.circular_dependencies circular dependencies] or limit [link di.concepts.policies.parameters_permission supported types] only to specified
+* Compile time [link di.concepts.policies policies] - to detect [link di.concepts.policies circular dependencies] or limit [link di.concepts.policies supported types] only to specified
 * Supports `C++03`/`C++11`/`C++14`
 
 [heading See Also]

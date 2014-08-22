@@ -23,8 +23,8 @@ namespace boost {
 namespace di {
 
 template<typename T>
-struct provider {
-    virtual ~provider() { }
+struct iprovider {
+    virtual ~iprovider() { }
     virtual T get() const = 0;
 };
 
@@ -749,7 +749,7 @@ struct transaction
 };
 
 struct transaction_provider
-    : provider<aux::shared_ptr<transaction>>
+    : iprovider<aux::shared_ptr<transaction>>
 {
     BOOST_DI_INJECT(transaction_provider
                   , aux::shared_ptr<c3> c3_)
@@ -767,11 +767,10 @@ struct transaction_provider
 struct transaction_usage
 {
     BOOST_DI_INJECT(transaction_usage
-        , aux::shared_ptr<provider<aux::shared_ptr<transaction>>> p
-    ) : p(p)
-    { }
+        , aux::shared_ptr<iprovider<aux::shared_ptr<transaction>>> p
+    ) : p(p) { }
 
-    aux::shared_ptr<provider<aux::shared_ptr<transaction>>> p;
+    aux::shared_ptr<iprovider<aux::shared_ptr<transaction>>> p;
 };
 
 template<>
