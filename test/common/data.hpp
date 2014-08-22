@@ -629,9 +629,9 @@ struct nameds
     aux::shared_ptr<i> n2_;
 };
 
-struct call_stack_nested
+struct context_nested
 {
-    BOOST_DI_INJECT(call_stack_nested
+    BOOST_DI_INJECT(context_nested
         , int i
         , named<int, a> ia
         , named<int, b> ib
@@ -646,10 +646,10 @@ struct call_stack_nested
     int ib_ = 0;
 };
 
-struct call_stack_with_shared_ptr
+struct context_with_shared_ptr
 {
-    BOOST_DI_INJECT(call_stack_with_shared_ptr
-        , const aux::shared_ptr<call_stack_nested>& nested
+    BOOST_DI_INJECT(context_with_shared_ptr
+        , const aux::shared_ptr<context_nested>& nested
         , int i
         , named<int, a> ia
         , named<int, b> ib
@@ -660,7 +660,7 @@ struct call_stack_with_shared_ptr
         , ib_(ib)
     { }
 
-    aux::shared_ptr<call_stack_nested> nested_;
+    aux::shared_ptr<context_nested> nested_;
     int i_ = 0;
     int ia_ = 0;
     int ib_ = 0;

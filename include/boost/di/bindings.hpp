@@ -9,7 +9,7 @@
 
 #include "boost/di/aux_/mpl.hpp"
 #include "boost/di/bindings/bind.hpp"
-#include "boost/di/bindings/call_stack.hpp"
+#include "boost/di/bindings/context.hpp"
 #include "boost/di/bindings/scope.hpp"
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/session.hpp"
@@ -49,7 +49,7 @@ template<typename... Ts>
 using session = scope<scopes::session<>>::bind<Ts...>;
 
 template<typename... Ts>
-using call_stack = bindings::call_stack<Ts...>;
+using context = bindings::context<Ts...>;
 
 template<typename... Ts>
 using any_of = type_list<Ts...>;

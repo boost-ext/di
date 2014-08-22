@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE(create_shared_context) {
     module<
         type_list<
             fake_dependency<scopes::unique<>, if0, c0if0>::type
-          , fake_dependency<scopes::unique<>, if0, c1if0, no_name, type_list<call_stack<c6, c5>>>::type
+          , fake_dependency<scopes::unique<>, if0, c1if0, no_name, type_list<context<c6, c5>>>::type
           , fake_dependency<scopes::shared<>, c3>::type
         >
     >
@@ -148,8 +148,8 @@ BOOST_AUTO_TEST_CASE(create_unique_shared_context_order) {
     module<
         type_list<
             fake_dependency<scopes::unique<>, if0, c0if0>::type
-          , fake_dependency<scopes::unique<>, if0, c1if0, no_name, type_list<call_stack<c6, c5>>>::type
-          , fake_dependency<scopes::unique<>, if0, c2if0, no_name, type_list<call_stack<c7>>>::type
+          , fake_dependency<scopes::unique<>, if0, c1if0, no_name, type_list<context<c6, c5>>>::type
+          , fake_dependency<scopes::unique<>, if0, c2if0, no_name, type_list<context<c7>>>::type
           , fake_dependency<scopes::shared<>, c3>::type
         >
     > module_;
@@ -176,14 +176,14 @@ BOOST_AUTO_TEST_CASE(create_unique_shared_context_mix) {
     module<
         type_list<
             fake_dependency<scopes::unique<>, if0, c0if0>::type
-          , fake_dependency<scopes::unique<>, if0, c1if0, no_name, type_list<call_stack<c6, c5>>>::type
-          , fake_dependency<scopes::unique<>, if0, c2if0, no_name, type_list<call_stack<c7>>>::type
+          , fake_dependency<scopes::unique<>, if0, c1if0, no_name, type_list<context<c6, c5>>>::type
+          , fake_dependency<scopes::unique<>, if0, c2if0, no_name, type_list<context<c7>>>::type
           , fake_dependency<scopes::shared<>, c3>::type
           , fake_dependency<scopes::unique<>, int, int_<1>>::type
-          , fake_dependency<scopes::unique<>, int, int_<2>, no_name, type_list<call_stack<c8>>>::type
-          , fake_dependency<scopes::unique<>, int, int_<3>, mpl::string<'1'>, type_list<call_stack<c7, c6, c4>>>::type
-          , fake_dependency<scopes::unique<>, int, int_<4>, mpl::string<'2'>, type_list<call_stack<c7, c6, c4>>>::type
-          , fake_dependency<scopes::unique<>, int, int_<5>, no_name, type_list<call_stack<c2>>>::type
+          , fake_dependency<scopes::unique<>, int, int_<2>, no_name, type_list<context<c8>>>::type
+          , fake_dependency<scopes::unique<>, int, int_<3>, mpl::string<'1'>, type_list<context<c7, c6, c4>>>::type
+          , fake_dependency<scopes::unique<>, int, int_<4>, mpl::string<'2'>, type_list<context<c7, c6, c4>>>::type
+          , fake_dependency<scopes::unique<>, int, int_<5>, no_name, type_list<context<c2>>>::type
         >
     > module_;
 
@@ -293,10 +293,10 @@ BOOST_AUTO_TEST_CASE(base_of) {
     module<
         type_list<
             fake_dependency<scopes::unique<>, int, int_<1>>::type
-          , fake_dependency<scopes::unique<>, int, int_<4>, mpl::string<'2'>, type_list<call_stack<c7, c6, c4>>>::type
-          , fake_dependency<scopes::unique<>, int, int_<5>, no_name, type_list<call_stack<c2>>>::type
+          , fake_dependency<scopes::unique<>, int, int_<4>, mpl::string<'2'>, type_list<context<c7, c6, c4>>>::type
+          , fake_dependency<scopes::unique<>, int, int_<5>, no_name, type_list<context<c2>>>::type
           , fake_dependency<scopes::unique<>, c0if0, c0if0>::type
-          , fake_dependency<scopes::unique<>, int, int_<3>, mpl::string<'1'>, type_list<call_stack<c7, c6, c4>>>::type
+          , fake_dependency<scopes::unique<>, int, int_<3>, mpl::string<'1'>, type_list<context<c7, c6, c4>>>::type
         >
     > module_;
 
@@ -322,8 +322,8 @@ BOOST_AUTO_TEST_CASE(multiple_calls) {
     module<
         type_list<
             fake_dependency<scopes::unique<>, c0if0, c0if0>::type
-          , fake_dependency<scopes::shared<>, c3, c3, no_name, type_list<call_stack<c15>, call_stack<c6, c4>>>::type
-          , fake_dependency<scopes::shared<>, c3, c3, no_name, type_list<call_stack<c6>>>::type
+          , fake_dependency<scopes::shared<>, c3, c3, no_name, type_list<context<c15>, context<c6, c4>>>::type
+          , fake_dependency<scopes::shared<>, c3, c3, no_name, type_list<context<c6>>>::type
         >
     > module_;
 

@@ -390,23 +390,23 @@ BOOST_AUTO_TEST_CASE(named_parameters_with_unique_scope) {
     BOOST_CHECK(nameds_.n2_ != injector.create<aux::shared_ptr<i>>());
 }
 
-BOOST_AUTO_TEST_CASE(call_stack_with_shared_ptr_type) {
+BOOST_AUTO_TEST_CASE(context_with_shared_ptr_type) {
     const int i1 = 42;
     const int i2 = 43;
 
     auto injector = make_injector(
-        bind_int<i1>::when<call_stack<call_stack_with_shared_ptr, call_stack_nested>>()
-      , bind<int>::when<call_stack<call_stack_with_shared_ptr, call_stack_nested>>::named<b>::to(i2)
+        bind_int<i1>::when<context<context_with_shared_ptr, context_nested>>()
+      , bind<int>::when<context<context_with_shared_ptr, context_nested>>::named<b>::to(i2)
     );
 
-    auto call_stack_ = injector.create<call_stack_with_shared_ptr>();
+    auto context_ = injector.create<context_with_shared_ptr>();
 
-    BOOST_CHECK_EQUAL(0, call_stack_.i_);
-    BOOST_CHECK_EQUAL(0, call_stack_.ia_);
-    BOOST_CHECK_EQUAL(0, call_stack_.ib_);
-    BOOST_CHECK_EQUAL(i1, call_stack_.nested_->i_);
-    BOOST_CHECK_EQUAL(i1, call_stack_.nested_->ia_);
-    BOOST_CHECK_EQUAL(i2, call_stack_.nested_->ib_);
+    BOOST_CHECK_EQUAL(0, context_.i_);
+    BOOST_CHECK_EQUAL(0, context_.ia_);
+    BOOST_CHECK_EQUAL(0, context_.ib_);
+    BOOST_CHECK_EQUAL(i1, context_.nested_->i_);
+    BOOST_CHECK_EQUAL(i1, context_.nested_->ia_);
+    BOOST_CHECK_EQUAL(i2, context_.nested_->ib_);
 }
 
 BOOST_AUTO_TEST_CASE(create_with_default_values) {

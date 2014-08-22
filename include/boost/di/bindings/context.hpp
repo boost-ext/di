@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_BINDINGS_CALL_STACK_HPP
-#define BOOST_DI_BINDINGS_CALL_STACK_HPP
+#ifndef BOOST_DI_BINDINGS_CONTEXT_HPP
+#define BOOST_DI_BINDINGS_CONTEXT_HPP
 
 #include <type_traits>
 #include "boost/di/aux_/mpl.hpp"
@@ -60,17 +60,17 @@ struct take_last<type_list<>, N>
 { };
 
 template<typename, typename>
-struct is_same_call_stack;
+struct is_same_context;
 
 template<typename... Ts, typename T>
-struct is_same_call_stack<type_list<Ts...>, T>
+struct is_same_context<type_list<Ts...>, T>
     : std::conditional<std::is_same<type_list<Ts...>, T>::value, int_<sizeof...(Ts) + 1>, int_<0>>
 { };
 
 template<typename... Ts>
-struct call_stack {
+struct context {
     template<typename T>
-    using apply = is_same_call_stack<
+    using apply = is_same_context<
         typename make_plain<
             typename take_last<
                 typename T::call_stack

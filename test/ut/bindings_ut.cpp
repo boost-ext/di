@@ -67,10 +67,10 @@ BOOST_AUTO_TEST_CASE(bind_int_value_when) {
     BOOST_CHECK((
         contains_all<
             scope<fake_scope<>>::bind<
-                bind_int<i>::when<call_stack<c0>>::type
+                bind_int<i>::when<context<c0>>::type
             >
           , type_list<
-                fake_dependency<fake_scope<>, int, int_<i>, no_name, type_list<call_stack<c0>>>::type
+                fake_dependency<fake_scope<>, int, int_<i>, no_name, type_list<context<c0>>>::type
             >
         >::value
     ));
@@ -81,10 +81,10 @@ BOOST_AUTO_TEST_CASE(bind_int_value_named_when) {
     BOOST_CHECK((
         contains_all<
             scope<fake_scope<>>::bind<
-                bind_int<i>::named<void>::when<call_stack<c0>>::type
+                bind_int<i>::named<void>::when<context<c0>>::type
             >
           , type_list<
-                fake_dependency<fake_scope<>, int, int_<i>, void, type_list<call_stack<c0>>>::type
+                fake_dependency<fake_scope<>, int, int_<i>, void, type_list<context<c0>>>::type
             >
         >::value
     ));
@@ -95,10 +95,10 @@ BOOST_AUTO_TEST_CASE(bind_int_value_when_named) {
     BOOST_CHECK((
         contains_all<
             scope<fake_scope<>>::bind<
-                bind_int<i>::when<call_stack<c0>>::named<void>::type
+                bind_int<i>::when<context<c0>>::named<void>::type
             >
           , type_list<
-                fake_dependency<fake_scope<>, int, int_<i>, void, type_list<call_stack<c0>>>::type
+                fake_dependency<fake_scope<>, int, int_<i>, void, type_list<context<c0>>>::type
             >
         >::value
     ));
@@ -137,10 +137,10 @@ BOOST_AUTO_TEST_CASE(bind_bool_value_when) {
     BOOST_CHECK((
         contains_all<
             scope<fake_scope<>>::bind<
-                bind_bool<b>::when<call_stack<c0>>::type
+                bind_bool<b>::when<context<c0>>::type
             >
           , type_list<
-                fake_dependency<fake_scope<>, bool, bool_<b>, no_name, type_list<call_stack<c0>>>::type
+                fake_dependency<fake_scope<>, bool, bool_<b>, no_name, type_list<context<c0>>>::type
             >
         >::value
     ));
@@ -151,10 +151,10 @@ BOOST_AUTO_TEST_CASE(bind_bool_value_named_when) {
     BOOST_CHECK((
         contains_all<
             scope<fake_scope<>>::bind<
-                bind_bool<b>::named<void>::when<call_stack<c0>>::type
+                bind_bool<b>::named<void>::when<context<c0>>::type
             >
           , type_list<
-                fake_dependency<fake_scope<>, bool, bool_<b>, void, type_list<call_stack<c0>>>::type
+                fake_dependency<fake_scope<>, bool, bool_<b>, void, type_list<context<c0>>>::type
             >
         >::value
     ));
@@ -165,10 +165,10 @@ BOOST_AUTO_TEST_CASE(bind_bool_value_when_named) {
     BOOST_CHECK((
         contains_all<
             scope<fake_scope<>>::bind<
-                bind_bool<b>::when<call_stack<c0>>::named<void>::type
+                bind_bool<b>::when<context<c0>>::named<void>::type
             >
           , type_list<
-                fake_dependency<fake_scope<>, bool, bool_<b>, void, type_list<call_stack<c0>>>::type
+                fake_dependency<fake_scope<>, bool, bool_<b>, void, type_list<context<c0>>>::type
             >
         >::value
     ));
@@ -207,10 +207,10 @@ BOOST_AUTO_TEST_CASE(bind_string_value_named_when) {
     BOOST_CHECK((
         contains_all<
             scope<fake_scope<>>::bind<
-                bind_string<s>::named<void>::when<call_stack<c0>, call_stack<c1>>::type
+                bind_string<s>::named<void>::when<context<c0>, context<c1>>::type
             >
           , type_list<
-                fake_dependency<fake_scope<>, std::string, s, void, type_list<call_stack<c0>, call_stack<c1>>>::type
+                fake_dependency<fake_scope<>, std::string, s, void, type_list<context<c0>, context<c1>>>::type
             >
         >::value
     ));
@@ -221,10 +221,10 @@ BOOST_AUTO_TEST_CASE(bind_string_value_when_named) {
     BOOST_CHECK((
         contains_all<
             scope<fake_scope<>>::bind<
-                bind_string<s>::when<call_stack<c0>, call_stack<c1>>::named<void>::type
+                bind_string<s>::when<context<c0>, context<c1>>::named<void>::type
             >
           , type_list<
-                fake_dependency<fake_scope<>, std::string, s, void, type_list<call_stack<c0>, call_stack<c1>>>::type
+                fake_dependency<fake_scope<>, std::string, s, void, type_list<context<c0>, context<c1>>>::type
             >
         >::value
     ));
@@ -235,10 +235,10 @@ BOOST_AUTO_TEST_CASE(bind_string_value_when) {
     BOOST_CHECK((
         contains_all<
             scope<fake_scope<>>::bind<
-                bind_string<s>::when<call_stack<c0>>::type
+                bind_string<s>::when<context<c0>>::type
             >
           , type_list<
-                fake_dependency<fake_scope<>, std::string, s, no_name, type_list<call_stack<c0>>>::type
+                fake_dependency<fake_scope<>, std::string, s, no_name, type_list<context<c0>>>::type
             >
         >::value
     ));
@@ -335,14 +335,14 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(scope_many, T, scope_many_types) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(scope_with_call_stack) {
+BOOST_AUTO_TEST_CASE(scope_with_context) {
     BOOST_CHECK((
         contains_all<
             scope<fake_scope<>>::bind<
-                bind<i, impl>::when<call_stack<c0, c1>>::type
+                bind<i, impl>::when<context<c0, c1>>::type
             >
           , type_list<
-                fake_dependency<fake_scope<>, i, impl, no_name, type_list<call_stack<c0, c1>>>::type
+                fake_dependency<fake_scope<>, i, impl, no_name, type_list<context<c0, c1>>>::type
             >
         >::value
     ));
