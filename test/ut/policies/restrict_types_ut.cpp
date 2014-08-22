@@ -47,9 +47,9 @@ struct fake_dependency {
 };
 
 BOOST_AUTO_TEST_CASE(dummy) {
-    restrict_types<allow_copies, allow_ptrs>().assert_policy<fake_data<int*, type_list<>, scopes::unique<>>>();
-    restrict_types<allow_type<int>>().assert_policy<fake_dependency<int, std::true_type>>();
-    restrict_types<reject_when_not_bound>().assert_policy<fake_dependency<int, std::true_type>>();
+    restrict_types(allow_copies() || allow_ptrs()).assert_policy<fake_data<int*, type_list<>, scopes::unique<>>>();
+    restrict_types(allow_type<int>()).assert_policy<fake_dependency<int, std::true_type>>();
+    restrict_types(reject_when_not_bound()).assert_policy<fake_dependency<int, std::true_type>>();
 }
 
 } // namespace policies

@@ -329,6 +329,9 @@ struct add<type_list<Ts...>, T> {
     using type = type_list<Ts..., T>;
 };
 
+template<typename T>
+using not_ = bool_<!T::value>;
+
 BOOST_DI_WKND(NO_MSVC)(
     template<typename... Ts>
     using and_ = std::is_same<

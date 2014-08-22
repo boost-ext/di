@@ -18,6 +18,47 @@ namespace policies {
 BOOST_DI_HAS_MEMBER_TYPE(element_type);
 BOOST_DI_HAS_MEMBER_TYPE(value_type);
 
+template<typename... Ts>
+struct and_ {
+	template<typename T>
+	using allow = std::is_same<
+		bool_seq<Ts::template allow<T>::value...>,
+		bool_seq<(Ts::template allow<T>::value, true)...>
+	>;
+};
+
+template<typename... Ts>
+struct or_ {
+	template<typename T>
+	using allow = bool_<
+        !std::is_same<
+            bool_seq<Ts::template allow<T>::value...>,
+            bool_seq<(Ts::template allow<T>::value, false)...>
+        >::value
+    >;
+};
+
+template<typename X>
+struct not_ {
+	template<typename T>
+	using allow = bool_<!X::template allow<T>::value>;
+};
+
+template<typename X, typename Y>
+and_<X, Y> operator&&(const X&, const Y&) {
+    return and_<X, Y>();
+}
+
+template<typename X, typename Y>
+or_<X, Y> operator||(const X&, const Y&) {
+    return or_<X, Y>();
+}
+
+template<typename T>
+not_<T> operator!(const T&) {
+    return not_<T>();
+}
+
 struct allow_smart_ptrs {
     template<typename _, typename T = typename _::type>
     using allow = has_element_type<typename type_traits::remove_accessors<T>::type>;
@@ -109,24 +150,22 @@ public:
     using allow = is_resolvable<T>;
 };
 
-template<typename... Ts>
-class restrict_types {
-    template<typename T, typename TAllow>
-    struct is_type_restricted
-        : TAllow::template allow<T>
-    { };
-
+template<typename TExpr>
+class restrict_types_impl {
     template<typename T>
-    using assert_types = or_<
-        bool_<is_type_restricted<T, Ts>::value>...
-    >;
+    using assert_types = typename TExpr::template allow<T>;
 
 public:
-    template<typename T>
+    template<typename TData>
     void assert_policy() const {
-        static_assert(assert_types<T>::value, "Type is not allowed");
+        static_assert(assert_types<TData>::value, "Type is not allowed");
     }
 };
+
+template<typename T>
+inline restrict_types_impl<T> restrict_types(const T&) {
+    return restrict_types_impl<T>();
+}
 
 } // namespace policies
 } // namespace di
