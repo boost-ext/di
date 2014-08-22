@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/policies/restrict_types.hpp"
+#include "boost/di/policies/allow_types.hpp"
 
 #include <type_traits>
 #include <boost/test/unit_test.hpp>
@@ -47,9 +47,9 @@ struct fake_dependency {
 };
 
 BOOST_AUTO_TEST_CASE(dummy) {
-    restrict_types(allow_copies() || allow_ptrs()).assert_policy<fake_data<int*, type_list<>, scopes::unique<>>>();
-    restrict_types(allow_type<int>()).assert_policy<fake_dependency<int, std::true_type>>();
-    restrict_types(reject_when_not_bound()).assert_policy<fake_dependency<int, std::true_type>>();
+    allow_types(is_copy() || is_ptr()).assert_policy<fake_data<int*, type_list<>, scopes::unique<>>>();
+    allow_types(is_type<int>()).assert_policy<fake_dependency<int, std::true_type>>();
+    allow_types(is_bound()).assert_policy<fake_dependency<int, std::true_type>>();
 }
 
 } // namespace policies

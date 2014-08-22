@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOS_DI_POLICIES_RESTRICT_TYPES_HPP
-#define BOOS_DI_POLICIES_RESTRICT_TYPES_HPP
+#ifndef BOOS_DI_POLICIES_ALLOW_TYPES_HPP
+#define BOOS_DI_POLICIES_ALLOW_TYPES_HPP
 
 #include "boost/di/aux_/mpl.hpp"
 #include "boost/di/type_traits/remove_accessors.hpp"
@@ -59,12 +59,12 @@ not_<T> operator!(const T&) {
     return not_<T>();
 }
 
-struct allow_smart_ptrs {
+struct is_smart_ptr {
     template<typename _, typename T = typename _::type>
     using allow = has_element_type<typename type_traits::remove_accessors<T>::type>;
 };
 
-struct allow_refs {
+struct is_ref {
     template<typename _, typename T = typename _::type>
     using allow = bool_<
         std::is_reference<T>::value &&
@@ -73,7 +73,7 @@ struct allow_refs {
     >;
 };
 
-struct allow_const_refs {
+struct is_const_ref {
     template<typename _, typename T = typename _::type>
     using allow = bool_<
         std::is_const<typename std::remove_reference<T>::type>::value &&
@@ -82,17 +82,17 @@ struct allow_const_refs {
     >;
 };
 
-struct allow_rvalue_refs {
+struct is_rvalue {
     template<typename _, typename T = typename _::type>
     using allow = std::is_rvalue_reference<T>;
 };
 
-struct allow_ptrs {
+struct is_ptr {
     template<typename _, typename T = typename _::type>
     using allow = std::is_pointer<T>;
 };
 
-struct allow_copies {
+struct is_copy {
     template<typename _, typename T = typename _::type>
     using allow = bool_<
         !std::is_reference<T>::value &&
@@ -103,27 +103,27 @@ struct allow_copies {
 };
 
 template<typename TValueType>
-struct allow_type {
+struct is_type {
     template<typename _, typename T = typename _::type>
     using allow = std::is_same<T, TValueType>;
 };
 
 template<typename TExpr>
-struct allow_type_expr {
+struct is_type_expr {
     //template<typename _, typename T = typename _::type>
     //using allow = ::mpl::apply<TExpr, T>::type;
 };
 
 template<typename TScope>
-struct allow_scope {
+struct is_scope {
     template<typename _, typename T = typename _::type>
     using allow = std::is_same<T, TScope>;
 };
 
 template<>
-struct allow_scope<scopes::deduce>; // disabled
+struct is_scope<scopes::deduce>; // disabled
 
-class reject_when_not_bound {
+class is_bound {
     struct not_resolved {
         using type = not_resolved;
 
@@ -151,7 +151,7 @@ public:
 };
 
 template<typename TExpr>
-class restrict_types_impl {
+class allow_types_impl {
     template<typename T>
     using assert_types = typename TExpr::template allow<T>;
 
@@ -163,8 +163,8 @@ public:
 };
 
 template<typename T>
-inline restrict_types_impl<T> restrict_types(const T&) {
-    return restrict_types_impl<T>();
+inline allow_types_impl<T> allow_types(const T&) {
+    return allow_types_impl<T>();
 }
 
 } // namespace policies
