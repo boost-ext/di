@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE(create_complex) {
     typedef di::injector<impl> injector_c0;
 
     BOOST_AUTO(injector_c1, di::make_injector(
-        di::bind_int<i>()
+        di::bind<int>::to(i)
       , di::bind<std::vector<int> >::to(boost::cref(v))
     ));
 

@@ -13,7 +13,6 @@ namespace boost {
 namespace di {
 namespace scopes {
 
-template<template<typename> class TWrapper = wrappers::copy>
 class unique {
 public:
     static const bool priority = false;
@@ -21,7 +20,7 @@ public:
     template<typename TExpected>
     class scope {
     public:
-        using result_type = TWrapper<TExpected>;
+        using result_type = wrappers::copy<TExpected>;
 
         result_type create(const std::function<TExpected*()>& f) {
             return f;

@@ -15,19 +15,16 @@ namespace di = boost::di;
 
 namespace {
 
-struct i
-{
+struct i {
     virtual ~i() { }
     virtual void dummy() = 0;
 };
 
-struct impl : i
-{
+struct impl : i {
     virtual void dummy() { }
 };
 
-struct c1
-{
+struct c1 {
     BOOST_DI_INJECT(explicit c1, int i_ = 0, double d_ = 0.0)
         : i_(i_), d_(d_)
     { }
@@ -36,8 +33,7 @@ struct c1
     double d_ = 0.0;
 };
 
-struct c2
-{
+struct c2 {
     BOOST_DI_INJECT(c2
         , std::shared_ptr<c1> c1_
         , std::unique_ptr<i> p_)
@@ -48,8 +44,7 @@ struct c2
     std::unique_ptr<i> p_;
 };
 
-struct c3
-{
+struct c3 {
     BOOST_DI_INJECT(c3
         , std::shared_ptr<c1> c1_
         , std::shared_ptr<c2> c2_
@@ -74,7 +69,7 @@ BOOST_AUTO_TEST_CASE(create_complex) {
     using injector_c0 = di::injector<impl>;
 
     auto injector_c1 = di::make_injector(
-        di::bind_int<i_>()
+        di::bind<int>::to(i_)
       , di::bind<std::vector<int>>::to(boost::cref(v))
     );
 

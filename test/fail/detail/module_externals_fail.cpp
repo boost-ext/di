@@ -21,8 +21,8 @@ BOOST_AUTO_TEST_CASE(module_externals_fail) {
 
     module<
         type_list<
-            bindings::dependency<scopes::external<>, int>
-          , bindings::dependency<scopes::external<>, double>
+            bindings::dependency<scopes::external, int>
+          , bindings::dependency<scopes::external, double>
         >
     > module_(i_); // missing double external
 

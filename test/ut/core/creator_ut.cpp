@@ -26,7 +26,7 @@ namespace core {
 BOOST_AUTO_TEST_CASE(create_pod) {
     const auto i = 42;
 
-    using dependency_type = fake_dependency<scopes::unique<>, int, int_<i>>::type;
+    using dependency_type = fake_dependency<scopes::unique, int, int_<i>>::type;
     fake_provider provider;
     fake_pool<dependency_type> deps;
     std::vector<aux::shared_ptr<void>> refs;

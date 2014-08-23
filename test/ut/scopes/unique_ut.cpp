@@ -24,7 +24,7 @@ double double_value::value = 0.0;
 auto new_int = []{ return new int(); };
 
 BOOST_AUTO_TEST_CASE(create) {
-    unique<>::scope<int> unique_;
+    unique::scope<int> unique_;
 
     BOOST_CHECK((
         (unique_.create(new_int))(type<aux::shared_ptr<int>>())
@@ -35,20 +35,20 @@ BOOST_AUTO_TEST_CASE(create) {
 
 BOOST_AUTO_TEST_CASE(create_value_mpl_int) {
     const int i = 42;
-    auto i_ = unique<>::scope<int>().create([&]{return new int(i); });
+    auto i_ = unique::scope<int>().create([&]{return new int(i); });
     BOOST_CHECK_EQUAL(i, i_(type<int>()));
 }
 
 BOOST_AUTO_TEST_CASE(create_value_mpl_string) {
     const std::string s = "s";
-    auto s_ = unique<>::scope<std::string>().create([&]{return new std::string(s);});
+    auto s_ = unique::scope<std::string>().create([&]{return new std::string(s);});
     BOOST_CHECK_EQUAL(s, s_(type<std::string>()));
 }
 
 BOOST_AUTO_TEST_CASE(create_value_has_value_type) {
     const double d = 42.0;
     double_value::value = d;
-    auto d_ = unique<>::scope<double>().create([&]{return new double(double_value::value);});
+    auto d_ = unique::scope<double>().create([&]{return new double(double_value::value);});
     BOOST_CHECK_EQUAL(double_value::value, d_(type<double>()));
 }
 

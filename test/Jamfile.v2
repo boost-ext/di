@@ -124,15 +124,15 @@ test-suite ut : # unit tests
 ;
 
 test-suite mt : # module tests
-    [ run-test c++11 : mt/core/module_mt.cpp ]
-    [ run-test c++11 : mt/core/module_mt.cpp : ctor_module_mt ]
+    #[ run-test c++11 : mt/core/module_mt.cpp ]
+    #[ run-test c++11 : mt/core/module_mt.cpp : ctor_module_mt ]
 
-    [ run-test c++11 : mt/injector_mt.cpp ]
-    [ run-test c++11 : mt/injector_mt.cpp : ctor_injector_mt ]
+    #[ run-test c++11 : mt/injector_mt.cpp ]
+    #[ run-test c++11 : mt/injector_mt.cpp : ctor_injector_mt ]
 
     [ run-test c++11 : mt/make_injector_mt.cpp : : <define>BOOST_DI_CFG_CTOR_LIMIT_SIZE=20 ]
-    [ run-test c++11 : mt/make_injector_mt.cpp : ctor_make_injector_mt : <define>BOOST_DI_CFG_CTOR_LIMIT_SIZE=20 ]
-    [ run-test c++11 : mt/injector_limit_size_mt.cpp : : <define>BOOST_DI_CFG_CTOR_LIMIT_SIZE=20 ]
+    [ run-test c++1z : mt/make_injector_mt.cpp : ctor_make_injector_mt : <define>BOOST_DI_CFG_CTOR_LIMIT_SIZE=20 ]
+    #[ run-test c++11 : mt/injector_limit_size_mt.cpp : : <define>BOOST_DI_CFG_CTOR_LIMIT_SIZE=20 ]
 ;
 
 test-suite ft : # functional tests

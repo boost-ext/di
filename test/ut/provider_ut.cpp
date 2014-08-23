@@ -21,8 +21,7 @@ namespace di {
 
 struct empty { };
 
-struct ctor
-{
+struct ctor {
     BOOST_DI_INJECT(ctor, int i, double d) {
         BOOST_CHECK_EQUAL(42, i);
         BOOST_CHECK_EQUAL(42.0, d);
@@ -39,16 +38,6 @@ BOOST_AUTO_TEST_CASE(create_ctor) {
     fake_wrapper<double> d(42.0);
     aux::unique_ptr<ctor> ctor_(provider().get<ctor, ctor, decltype(i), decltype(d)>(std::move(i), std::move(d)));
     BOOST_CHECK(ctor_.get());
-}
-
-BOOST_AUTO_TEST_CASE(create_int_value) {
-    aux::unique_ptr<int> i(provider().get<int, mpl::int_<42>>());
-    BOOST_CHECK_EQUAL(42, *i);
-}
-
-BOOST_AUTO_TEST_CASE(create_string_value) {
-    aux::unique_ptr<std::string> s(provider().get<std::string, mpl::string<'s'>>());
-    BOOST_CHECK_EQUAL("s", *s);
 }
 
 } // namespace di

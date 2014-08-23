@@ -11,8 +11,7 @@
 namespace di = boost::di;
 
 template<int>
-struct level0
-{ };
+struct level0 { };
 
 #define BOOST_DI_LEVEL_GEN(_, n, level)                 \
     BOOST_PP_COMMA_IF(n) level<n>

@@ -18,8 +18,8 @@ namespace scopes {
 auto new_int = []{ return new int(); };
 
 BOOST_AUTO_TEST_CASE(create) {
-    session<>::scope<int> session1;
-    session<>::scope<int> session2;
+    session::scope<int> session1;
+    session::scope<int> session2;
 
     BOOST_CHECK((
         (session1.create(new_int))(type<aux::shared_ptr<int>>())
@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(create) {
 }
 
 BOOST_AUTO_TEST_CASE(call) {
-    session<>::scope<int> session_;
+    session::scope<int> session_;
 
     session_.call(session_entry());
     BOOST_CHECK((aux::shared_ptr<int>() != (session_.create(new_int))(type<aux::shared_ptr<int>>())));

@@ -16,7 +16,6 @@ namespace scopes {
 class session_entry { };
 class session_exit { };
 
-template<template<typename> class TWrapper = wrappers::shared>
 class session {
 public:
     static const bool priority = false;
@@ -24,7 +23,7 @@ public:
     template<typename TExpected>
     class scope {
     public:
-        using result_type = TWrapper<TExpected>;
+        using result_type = wrappers::shared<TExpected>;
 
         void call(const session_entry&) {
             in_scope_ = true;

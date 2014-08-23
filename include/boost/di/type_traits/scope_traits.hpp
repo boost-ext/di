@@ -20,7 +20,7 @@ namespace type_traits {
 
 template<typename T>
 struct scope_traits {
-    using type = scopes::unique<>;
+    using type = scopes::unique;
 };
 
 template<typename T>
@@ -30,72 +30,72 @@ struct scope_traits<T&> {
 
 template<typename T>
 struct scope_traits<const T&> {
-    using type = scopes::unique<>;
+    using type = scopes::unique;
 };
 
 template<typename T>
 struct scope_traits<T*> {
-    using type = scopes::unique<>;
+    using type = scopes::unique;
 };
 
 template<typename T>
 struct scope_traits<const T*> {
-    using type = scopes::unique<>;
+    using type = scopes::unique;
 };
 
 template<typename T>
 struct scope_traits<aux::auto_ptr<T>> {
-    using type = scopes::unique<>;
+    using type = scopes::unique;
 };
 
 template<typename T>
 struct scope_traits<aux::shared_ptr<T>> {
-    using type = scopes::shared<>;
+    using type = scopes::shared;
 };
 
 template<typename T>
 struct scope_traits<const aux::shared_ptr<T>&> {
-    using type = scopes::shared<>;
+    using type = scopes::shared;
 };
 
 template<typename T>
 struct scope_traits<aux_::shared_ptr<T>> {
-    using type = scopes::shared<>;
+    using type = scopes::shared;
 };
 
 template<typename T>
 struct scope_traits<const aux_::shared_ptr<T>&> {
-    using type = scopes::shared<>;
+    using type = scopes::shared;
 };
 
 template<typename T>
 struct scope_traits<aux::weak_ptr<T>> {
-    using type = scopes::shared<>;
+    using type = scopes::shared;
 };
 
 template<typename T>
 struct scope_traits<const aux::weak_ptr<T>&> {
-    using type = scopes::shared<>;
+    using type = scopes::shared;
 };
 
 template<typename T>
 struct scope_traits<aux::unique_ptr<T>> {
-    using type = scopes::unique<>;
+    using type = scopes::unique;
 };
 
 template<typename T>
 struct scope_traits<const aux::unique_ptr<T>&> {
-    using type = scopes::unique<>;
+    using type = scopes::unique;
 };
 
 template<typename T>
 struct scope_traits<T&&> {
-    using type = scopes::unique<>;
+    using type = scopes::unique;
 };
 
 template<typename T>
 struct scope_traits<const T&&> {
-    using type = scopes::unique<>;
+    using type = scopes::unique;
 };
 
 template<typename T, typename TName>

@@ -47,7 +47,7 @@ using injector_2_t = injector<
     shared<
         c3
     >
-  , scope<scopes::unique<>>::bind<
+  , scope<scopes::unique>::bind<
         bind_int<0>::named<mpl::string<'1'>>
       , bind_int<1>
       , bind_bool<true>
@@ -560,11 +560,11 @@ BOOST_AUTO_TEST_CASE(named_parameters_all_externals) {
       //, creation_permission<allow_type<int>>()
         //BOOST_DI_WKND(MSVC)()
         //BOOST_DI_WKND(NO_MSVC)(, parameters_permission<allow_copies>())
-      //, scopes_permission<allow_scope<scopes::unique<>>>()
+      //, scopes_permission<allow_scope<scopes::unique>>()
     //);
 
     //di::make_injector(di::bind_int<42>()).create<aux::shared_ptr<int>>(
-        //scopes_permission<allow_scope<scopes::unique<>>, allow_scope<scopes::shared<>>>()
+        //scopes_permission<allow_scope<scopes::unique>, allow_scope<scopes::shared>>()
       //, creation_permission<>()
       //, circular_dependencies()
         //BOOST_DI_WKND(MSVC)()
@@ -580,11 +580,11 @@ BOOST_AUTO_TEST_CASE(named_parameters_all_externals) {
       //, creation_permission<allow_type<int>>()
         //BOOST_DI_WKND(MSVC)()
         //BOOST_DI_WKND(NO_MSVC)(, parameters_permission<allow_copies>())
-      //, scopes_permission<allow_scope<scopes::unique<>>>()
+      //, scopes_permission<allow_scope<scopes::unique>>()
     //);
 
     //di::make_injector(di::bind_int<42>()).allocate<aux::shared_ptr<int>>(core::allocator()
-      //, scopes_permission<allow_scope<scopes::unique<>>, allow_scope<scopes::shared<>>>()
+      //, scopes_permission<allow_scope<scopes::unique>, allow_scope<scopes::shared>>()
       //, circular_dependencies()
         //BOOST_DI_WKND(MSVC)()
         //BOOST_DI_WKND(NO_MSVC)(, parameters_permission<allow_copies, allow_ptrs, allow_smart_ptrs, allow_const_refs>())

@@ -16,22 +16,11 @@
 #include "boost/di/scopes/shared.hpp"
 #include "boost/di/scopes/unique.hpp"
 
-#include <string>
-
 namespace boost {
 namespace di {
 
 template<typename TExpected, typename TGiven = TExpected>
 using bind = bindings::bind<TExpected, TGiven>;
-
-template<bool V>
-using bind_bool = bind<bool, bool_<V>>;
-
-template<int N>
-using bind_int = bind<int, int_<N>>;
-
-template<typename T>
-using bind_string = bind<std::string, T>;
 
 template<typename TScope>
 using scope = bindings::scope<TScope>;
@@ -40,13 +29,13 @@ template<typename... Ts>
 using deduce = scope<scopes::deduce>::bind<Ts...>;
 
 template<typename... Ts>
-using unique = scope<scopes::unique<>>::bind<Ts...>;
+using unique = scope<scopes::unique>::bind<Ts...>;
 
 template<typename... Ts>
-using shared = scope<scopes::shared<>>::bind<Ts...>;
+using shared = scope<scopes::shared>::bind<Ts...>;
 
 template<typename... Ts>
-using session = scope<scopes::session<>>::bind<Ts...>;
+using session = scope<scopes::session>::bind<Ts...>;
 
 template<typename... Ts>
 using context = bindings::context<Ts...>;

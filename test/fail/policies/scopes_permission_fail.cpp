@@ -17,7 +17,7 @@ namespace policies {
 
 BOOST_AUTO_TEST_CASE(scopes_permission_fail) {
     injector<>().create<c24>(
-        scopes_permission<allow_scope<scopes::unique<>>>() // allow_scope<scopes::shared<>>
+        scopes_permission<allow_scope<scopes::unique>>() // allow_scope<scopes::shared>
     );
 }
 

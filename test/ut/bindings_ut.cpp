@@ -34,216 +34,6 @@ BOOST_AUTO_TEST_CASE(bind_impl) {
     ));
 }
 
-BOOST_AUTO_TEST_CASE(bind_int_value) {
-    const int i = 42;
-    BOOST_CHECK((
-        contains_all<
-            scope<fake_scope<>>::bind<
-                bind_int<i>::type
-            >
-          , type_list<
-                fake_dependency<fake_scope<>, int, int_<i>>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(bind_int_value_named) {
-    const int i = 42;
-    BOOST_CHECK((
-        contains_all<
-            scope<fake_scope<>>::bind<
-                bind_int<i>::named<void>::type
-            >
-          , type_list<
-                fake_dependency<fake_scope<>, int, int_<i>, void>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(bind_int_value_when) {
-    const int i = 42;
-    BOOST_CHECK((
-        contains_all<
-            scope<fake_scope<>>::bind<
-                bind_int<i>::when<context<c0>>::type
-            >
-          , type_list<
-                fake_dependency<fake_scope<>, int, int_<i>, no_name, type_list<context<c0>>>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(bind_int_value_named_when) {
-    const int i = 42;
-    BOOST_CHECK((
-        contains_all<
-            scope<fake_scope<>>::bind<
-                bind_int<i>::named<void>::when<context<c0>>::type
-            >
-          , type_list<
-                fake_dependency<fake_scope<>, int, int_<i>, void, type_list<context<c0>>>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(bind_int_value_when_named) {
-    const int i = 42;
-    BOOST_CHECK((
-        contains_all<
-            scope<fake_scope<>>::bind<
-                bind_int<i>::when<context<c0>>::named<void>::type
-            >
-          , type_list<
-                fake_dependency<fake_scope<>, int, int_<i>, void, type_list<context<c0>>>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(bind_bool_value) {
-    const bool b = true;
-    BOOST_CHECK((
-        contains_all<
-            scope<fake_scope<>>::bind<
-                bind_bool<b>::type
-            >
-          , type_list<
-                fake_dependency<fake_scope<>, bool, bool_<b>>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(bind_bool_value_named) {
-    const bool b = true;
-    BOOST_CHECK((
-        contains_all<
-            scope<fake_scope<>>::bind<
-                bind_bool<b>::named<void>::type
-            >
-          , type_list<
-                fake_dependency<fake_scope<>, bool, bool_<b>, void>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(bind_bool_value_when) {
-    const bool b = true;
-    BOOST_CHECK((
-        contains_all<
-            scope<fake_scope<>>::bind<
-                bind_bool<b>::when<context<c0>>::type
-            >
-          , type_list<
-                fake_dependency<fake_scope<>, bool, bool_<b>, no_name, type_list<context<c0>>>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(bind_bool_value_named_when) {
-    const bool b = true;
-    BOOST_CHECK((
-        contains_all<
-            scope<fake_scope<>>::bind<
-                bind_bool<b>::named<void>::when<context<c0>>::type
-            >
-          , type_list<
-                fake_dependency<fake_scope<>, bool, bool_<b>, void, type_list<context<c0>>>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(bind_bool_value_when_named) {
-    const bool b = true;
-    BOOST_CHECK((
-        contains_all<
-            scope<fake_scope<>>::bind<
-                bind_bool<b>::when<context<c0>>::named<void>::type
-            >
-          , type_list<
-                fake_dependency<fake_scope<>, bool, bool_<b>, void, type_list<context<c0>>>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(bind_string_value) {
-    using s = mpl::string<'s'>;
-    BOOST_CHECK((
-        contains_all<
-            scope<fake_scope<>>::bind<
-                bind_string<s>::type
-            >
-          , type_list<
-                fake_dependency<fake_scope<>, std::string, s>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(bind_string_value_named) {
-    using s = mpl::string<'s'>;
-    BOOST_CHECK((
-        contains_all<
-            scope<fake_scope<>>::bind<
-                bind_string<s>::named<void>::type
-            >
-          , type_list<
-                fake_dependency<fake_scope<>, std::string, s, void>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(bind_string_value_named_when) {
-    using s = mpl::string<'s'>;
-    BOOST_CHECK((
-        contains_all<
-            scope<fake_scope<>>::bind<
-                bind_string<s>::named<void>::when<context<c0>, context<c1>>::type
-            >
-          , type_list<
-                fake_dependency<fake_scope<>, std::string, s, void, type_list<context<c0>, context<c1>>>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(bind_string_value_when_named) {
-    using s = mpl::string<'s'>;
-    BOOST_CHECK((
-        contains_all<
-            scope<fake_scope<>>::bind<
-                bind_string<s>::when<context<c0>, context<c1>>::named<void>::type
-            >
-          , type_list<
-                fake_dependency<fake_scope<>, std::string, s, void, type_list<context<c0>, context<c1>>>::type
-            >
-        >::value
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(bind_string_value_when) {
-    using s = mpl::string<'s'>;
-    BOOST_CHECK((
-        contains_all<
-            scope<fake_scope<>>::bind<
-                bind_string<s>::when<context<c0>>::type
-            >
-          , type_list<
-                fake_dependency<fake_scope<>, std::string, s, no_name, type_list<context<c0>>>::type
-            >
-        >::value
-    ));
-}
-
 BOOST_AUTO_TEST_CASE(bind_any) {
     BOOST_CHECK((
         contains_all<
@@ -299,9 +89,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(scope_empty, TScope, scope_empty_types) {
 
 using scope_one_types = mpl::vector<
     pair<scopes::deduce, deduce<int>>
-  , pair<scopes::unique<>, unique<int>>
-  , pair<scopes::shared<>, shared<int>>
-  , pair<scopes::session<>, session<int>>
+  , pair<scopes::unique, unique<int>>
+  , pair<scopes::shared, shared<int>>
+  , pair<scopes::session, session<int>>
 >;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(scope_one, T, scope_one_types) {
@@ -317,9 +107,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(scope_one, T, scope_one_types) {
 
 using scope_many_types = mpl::vector<
     pair<scopes::deduce, deduce<int, double, float>>
-  , pair<scopes::unique<>, unique<int, double, float>>
-  , pair<scopes::shared<>, shared<int, double, float>>
-  , pair<scopes::session<>, session<int, double, float>>
+  , pair<scopes::unique, unique<int, double, float>>
+  , pair<scopes::shared, shared<int, double, float>>
+  , pair<scopes::session, session<int, double, float>>
 >;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(scope_many, T, scope_many_types) {

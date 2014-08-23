@@ -338,7 +338,6 @@ namespace boost {
 namespace di {
 namespace scopes {
 
-template<template<typename> class TWrapper = wrappers::copy>
 class unique {
 public:
     static const bool priority = false;
@@ -346,7 +345,7 @@ public:
     template<typename TExpected>
     class scope {
     public:
-        using result_type = TWrapper<TExpected>;
+        using result_type = wrappers::copy<TExpected>;
 
         result_type create(const std::function<TExpected*()>& f) {
             return f;
@@ -418,7 +417,6 @@ namespace boost {
 namespace di {
 namespace scopes {
 
-template<template<typename> class TWrapper = wrappers::shared>
 class shared {
 public:
     static const bool priority = false;
@@ -426,7 +424,7 @@ public:
     template<typename TExpected>
     class scope {
     public:
-        using result_type = TWrapper<TExpected>;
+        using result_type = wrappers::shared<TExpected>;
 
         result_type create(const std::function<TExpected*()>& f) {
             if (!object_) {
@@ -576,7 +574,7 @@ namespace type_traits {
 
 template<typename T>
 struct scope_traits {
-    using type = scopes::unique<>;
+    using type = scopes::unique;
 };
 
 template<typename T>
@@ -586,72 +584,72 @@ struct scope_traits<T&> {
 
 template<typename T>
 struct scope_traits<const T&> {
-    using type = scopes::unique<>;
+    using type = scopes::unique;
 };
 
 template<typename T>
 struct scope_traits<T*> {
-    using type = scopes::unique<>;
+    using type = scopes::unique;
 };
 
 template<typename T>
 struct scope_traits<const T*> {
-    using type = scopes::unique<>;
+    using type = scopes::unique;
 };
 
 template<typename T>
 struct scope_traits<aux::auto_ptr<T>> {
-    using type = scopes::unique<>;
+    using type = scopes::unique;
 };
 
 template<typename T>
 struct scope_traits<aux::shared_ptr<T>> {
-    using type = scopes::shared<>;
+    using type = scopes::shared;
 };
 
 template<typename T>
 struct scope_traits<const aux::shared_ptr<T>&> {
-    using type = scopes::shared<>;
+    using type = scopes::shared;
 };
 
 template<typename T>
 struct scope_traits<aux_::shared_ptr<T>> {
-    using type = scopes::shared<>;
+    using type = scopes::shared;
 };
 
 template<typename T>
 struct scope_traits<const aux_::shared_ptr<T>&> {
-    using type = scopes::shared<>;
+    using type = scopes::shared;
 };
 
 template<typename T>
 struct scope_traits<aux::weak_ptr<T>> {
-    using type = scopes::shared<>;
+    using type = scopes::shared;
 };
 
 template<typename T>
 struct scope_traits<const aux::weak_ptr<T>&> {
-    using type = scopes::shared<>;
+    using type = scopes::shared;
 };
 
 template<typename T>
 struct scope_traits<aux::unique_ptr<T>> {
-    using type = scopes::unique<>;
+    using type = scopes::unique;
 };
 
 template<typename T>
 struct scope_traits<const aux::unique_ptr<T>&> {
-    using type = scopes::unique<>;
+    using type = scopes::unique;
 };
 
 template<typename T>
 struct scope_traits<T&&> {
-    using type = scopes::unique<>;
+    using type = scopes::unique;
 };
 
 template<typename T>
 struct scope_traits<const T&&> {
-    using type = scopes::unique<>;
+    using type = scopes::unique;
 };
 
 template<typename T, typename TName>
@@ -698,7 +696,6 @@ namespace scopes {
 class session_entry { };
 class session_exit { };
 
-template<template<typename> class TWrapper = wrappers::shared>
 class session {
 public:
     static const bool priority = false;
@@ -706,7 +703,7 @@ public:
     template<typename TExpected>
     class scope {
     public:
-        using result_type = TWrapper<TExpected>;
+        using result_type = wrappers::shared<TExpected>;
 
         void call(const session_entry&) {
             in_scope_ = true;
@@ -1240,17 +1237,17 @@ struct take_last<type_list<>, N>
 { };
 
 template<typename, typename>
-struct is_same_call_stack;
+struct is_same_context;
 
 template<typename... Ts, typename T>
-struct is_same_call_stack<type_list<Ts...>, T>
+struct is_same_context<type_list<Ts...>, T>
     : std::conditional<std::is_same<type_list<Ts...>, T>::value, int_<sizeof...(Ts) + 1>, int_<0>>
 { };
 
 template<typename... Ts>
-struct call_stack {
+struct context {
     template<typename T>
-    using apply = is_same_call_stack<
+    using apply = is_same_context<
         typename make_plain<
             typename take_last<
                 typename T::call_stack
@@ -1311,15 +1308,6 @@ namespace di {
 template<typename TExpected, typename TGiven = TExpected>
 using bind = bindings::bind<TExpected, TGiven>;
 
-template<bool V>
-using bind_bool = bind<bool, bool_<V>>;
-
-template<int N>
-using bind_int = bind<int, int_<N>>;
-
-template<typename T>
-using bind_string = bind<std::string, T>;
-
 template<typename TScope>
 using scope = bindings::scope<TScope>;
 
@@ -1327,16 +1315,16 @@ template<typename... Ts>
 using deduce = scope<scopes::deduce>::bind<Ts...>;
 
 template<typename... Ts>
-using unique = scope<scopes::unique<>>::bind<Ts...>;
+using unique = scope<scopes::unique>::bind<Ts...>;
 
 template<typename... Ts>
-using shared = scope<scopes::shared<>>::bind<Ts...>;
+using shared = scope<scopes::shared>::bind<Ts...>;
 
 template<typename... Ts>
-using session = scope<scopes::session<>>::bind<Ts...>;
+using session = scope<scopes::session>::bind<Ts...>;
 
 template<typename... Ts>
-using call_stack = bindings::call_stack<Ts...>;
+using context = bindings::context<Ts...>;
 
 template<typename... Ts>
 using any_of = type_list<Ts...>;
@@ -2122,58 +2110,16 @@ private:
 } // namespace boost
 
 namespace boost {
-
-namespace mpl {
-    struct string_tag;
-    template<typename> struct c_str;
-} // namespace mpl
-
 namespace di {
-namespace core {
-
-BOOST_DI_HAS_MEMBER_TYPE(tag);
-BOOST_DI_HAS_MEMBER(value);
-
-template<typename, typename = void>
-struct is_mpl_string
-    : std::false_type
-{ };
-
-template<typename T>
-struct is_mpl_string<T, typename std::enable_if<has_tag<T>::value>::type>
-    : std::is_same<mpl::string_tag, typename T::tag>
-{ };
-
-template<typename T>
-using is_explicit = bool_<has_value<T>::value || is_mpl_string<T>::value>;
 
 class provider {
 public:
-    template<typename TExpected, typename TGiven>
-    typename std::enable_if<!is_explicit<TGiven>::value, TExpected*>::type
-    get() const {
-        return new TGiven();
-    }
-
-    template<typename TExpected, typename TGiven>
-    typename std::enable_if<has_value<TGiven>::value, TExpected*>::type
-    get() const {
-        return new TExpected(TGiven::value);
-    }
-
-    template<typename TExpected, typename TGiven>
-    typename std::enable_if<is_mpl_string<TGiven>::value, TExpected*>::type
-    get() const {
-        return new TExpected(mpl::c_str<TGiven>::value);
-    }
-
     template<typename TExpected, typename TGiven, typename... TArgs>
     TExpected* get(TArgs&&... args) const {
         return new TGiven(std::forward<TArgs>(args)...);
     }
 };
 
-} // namespace core
 } // namespace di
 } // namespace boost
 
@@ -2221,8 +2167,8 @@ public:
         );
     }
 
-    template<typename T, typename Tprovider, typename... TPolicies>
-    T allocate(const Tprovider& provider, const TPolicies&... policies) {
+    template<typename T, typename TProvider, typename... TPolicies>
+    T allocate(const TProvider& provider, const TPolicies&... policies) {
         using call_stack = type_list<>;
         pool<type_list<TPolicies...>> policies_(policies...);
         std::vector<aux::shared_ptr<void>> refs_;

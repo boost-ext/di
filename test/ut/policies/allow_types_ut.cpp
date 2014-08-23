@@ -47,7 +47,7 @@ struct fake_dependency {
 };
 
 BOOST_AUTO_TEST_CASE(dummy) {
-    allow_types(is_copy() || is_ptr()).assert_policy<fake_data<int*, type_list<>, scopes::unique<>>>();
+    allow_types(is_copy() || is_ptr()).assert_policy<fake_data<int*, type_list<>, scopes::unique>>();
     allow_types(is_type<int>()).assert_policy<fake_dependency<int, std::true_type>>();
     allow_types(is_bound() && is_ptr() && is_type<int>()).assert_policy<fake_dependency<int*, std::true_type>>();
 }
@@ -333,11 +333,11 @@ BOOST_AUTO_TEST_CASE(dummy) {
     //BOOST_REQUIRE_EXCEPTION(
         //(
             //scopes_permission<>().assert_policy<
-                //fake_scope<scopes::unique<>>
+                //fake_scope<scopes::unique>
             //>()
         //)
       //, assert_exception
-      //, verify_assert_exception<scopes::unique<>>
+      //, verify_assert_exception<scopes::unique>
     //);
 //}
 
@@ -345,22 +345,22 @@ BOOST_AUTO_TEST_CASE(dummy) {
     //BOOST_REQUIRE_EXCEPTION(
         //(
             //scopes_permission<
-                //allow_scope<scopes::unique<>>
-              //, allow_scope<scopes::shared<>>
+                //allow_scope<scopes::unique>
+              //, allow_scope<scopes::shared>
             //>().assert_policy<
-                //fake_scope<scopes::session<>>
+                //fake_scope<scopes::session>
             //>()
         //)
       //, assert_exception
-      //, verify_assert_exception<scopes::session<>>
+      //, verify_assert_exception<scopes::session>
     //);
 //}
 
 //BOOST_AUTO_TEST_CASE(allow_unique) {
     //BOOST_CHECK_NO_THROW(
         //(
-            //scopes_permission<allow_scope<scopes::unique<>>>().assert_policy<
-                //fake_scope<scopes::unique<>>
+            //scopes_permission<allow_scope<scopes::unique>>().assert_policy<
+                //fake_scope<scopes::unique>
             //>()
         //)
     //);
@@ -369,8 +369,8 @@ BOOST_AUTO_TEST_CASE(dummy) {
 //BOOST_AUTO_TEST_CASE(allow_shared) {
     //BOOST_CHECK_NO_THROW(
         //(
-            //scopes_permission<allow_scope<scopes::shared<>>>().assert_policy<
-                //fake_scope<scopes::shared<>>
+            //scopes_permission<allow_scope<scopes::shared>>().assert_policy<
+                //fake_scope<scopes::shared>
             //>()
         //)
     //);
