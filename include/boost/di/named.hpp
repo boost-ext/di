@@ -29,7 +29,7 @@ public:
     using named_type = T;
     using name = TName;
 
-    named(T object) // non explicit
+    named(const T& object = T()) // non explicit
         : object_(object)
     { }
 
@@ -56,7 +56,7 @@ public:
     using named_type = const T&;
     using name = TName;
 
-    named(const T& object) // non explicit
+    named(const T& object = T()) // non explicit
         : object_(object)
     { }
 
@@ -137,7 +137,7 @@ public:
     using named_type = aux::unique_ptr<T>;
     using name = TName;
 
-    named(aux::unique_ptr<T> object) // non explicit
+    named(aux::unique_ptr<T> object = aux::unique_ptr<T>(new T())) // non explicit
         : object_(std::move(object))
     { }
 

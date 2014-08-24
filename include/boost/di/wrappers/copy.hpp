@@ -20,20 +20,6 @@ template<typename T>
 class copy {
     using value_t = std::function<T*()>;
 
-    template<typename I>
-    class scoped_ptr {
-    public:
-        explicit scoped_ptr(I* ptr)
-            : ptr_(ptr)
-        { }
-
-        ~scoped_ptr() { delete ptr_; }
-        I& operator*() const { return *ptr_; }
-
-    private:
-        I* ptr_;
-    };
-
 public:
     template<typename TValueType>
     copy(const TValueType& value) // non explicit
@@ -42,7 +28,7 @@ public:
 
     template<typename I>
     I operator()(const type<I>&, typename std::enable_if<!std::is_polymorphic<I>::value>::type* = 0) const {
-        scoped_ptr<I> ptr(value_());
+        std::unique_ptr<I> ptr(value_());
         return *ptr;
     }
 

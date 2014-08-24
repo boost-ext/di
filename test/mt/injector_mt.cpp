@@ -34,12 +34,12 @@ using injector_1_t = injector<
         c0if0
       , bind<c1if0>::when<context<c6, c5>>
       , bind<c2if0>::when<context<c7>>
-      , bind_int<1>
-      , bind_int<2>::when<context<c8>>
-      , bind_int<3>::named<mpl::string<'1'>>::when<context<c7, c6, c4>>
-      , bind_int<4>::named<mpl::string<'2'>>::when<context<c7, c6, c4>>
-      , bind_int<5>::when<context<c2>>
-      , bind_bool<true>
+      //, bind_int<1>
+      //, bind_int<2>::when<context<c8>>
+      //, bind_int<3>::named<mpl::string<'1'>>::when<context<c7, c6, c4>>
+      //, bind_int<4>::named<mpl::string<'2'>>::when<context<c7, c6, c4>>
+      //, bind_int<5>::when<context<c2>>
+      //, bind_bool<true>
     >
 >;
 
@@ -48,9 +48,9 @@ using injector_2_t = injector<
         c3
     >
   , scope<scopes::unique>::bind<
-        bind_int<0>::named<mpl::string<'1'>>
-      , bind_int<1>
-      , bind_bool<true>
+        //bind_int<0>::named<mpl::string<'1'>>
+      //, bind_int<1>
+      //, bind_bool<true>
     >
 >;
 
@@ -59,8 +59,8 @@ using injector_3_t = injector<
         c0if0
     >
   , unique<
-        bind_int<2>::when<context<c8>>
-      , bind_int<3>::named<mpl::string<'2'>>
+        //bind_int<2>::when<context<c8>>
+      //, bind_int<3>::named<mpl::string<'2'>>
     >
 >;
 
@@ -89,34 +89,30 @@ auto injector_1 = make_injector(
         c0if0
       , bind<c1if0>::when<context<c6, c5>>
       , bind<c2if0>::when<context<c7>>
-      , bind_int<1>
-      , bind_int<2>::when<context<c8>>
-      , bind_int<3>::named<mpl::string<'1'>>::when<context<c7, c6, c4>>
-      , bind_int<4>::named<mpl::string<'2'>>::when<context<c7, c6, c4>>
-      , bind_int<5>::when<context<c2>>
-      , bind_bool<true>
     >()
+  , bind<int>::to(1)
+  , bind<int>::when<context<c8>>::to(2)
+  , bind<int>::named<mpl::string<'1'>>::when<context<c7, c6, c4>>::to(3)
+  , bind<int>::named<mpl::string<'2'>>::when<context<c7, c6, c4>>::to(4)
+  , bind<int>::when<context<c2>>::to(5)
+  , bind<bool>::to(true)
 );
 
 auto injector_2 = make_injector(
     shared<
         c0if0
     >()
-  , unique<
-        bind_int<2>::when<context<c8>>
-      , bind_int<3>::named<mpl::string<'2'>>
-    >()
+  , bind<int>::when<context<c8>>::to(2)
+  , bind<int>::named<mpl::string<'2'>>::to(3)
 );
 
 auto injector_3 = make_injector(
     shared<
         c3
     >()
-  , unique<
-        bind_int<0>::named<mpl::string<'1'>>
-      , bind_int<1>
-      , bind_bool<true>
-    >()
+  , bind<int>::named<mpl::string<'1'>>::to(0)
+  , bind<int>::to(1)
+  , bind<bool>::to(true)
 );
 
 auto injector_custom_scope = make_injector(
@@ -280,14 +276,12 @@ BOOST_AUTO_TEST_CASE(basic_injector_externals) {
 }
 
 BOOST_AUTO_TEST_CASE(externals_priority) {
-    const int i = 87;
-
     auto injector = make_injector(
-        bind_int<42>()
-      , bind<int>::to(i)
+        bind<if0, c0if0>()
+      , bind<if0>::to(aux::shared_ptr<if0>(new c1if0()))
     );
 
-    BOOST_CHECK_EQUAL(i, injector.create<c3>().i);
+    BOOST_CHECK(dynamic_cast<c1if0*>(injector.create<aux::shared_ptr<if0>>().get()));
 }
 
 BOOST_AUTO_TEST_CASE(externals_mix) {
@@ -394,19 +388,19 @@ using creation_special_cases_types = mpl::vector<
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(creation_special_cases, T, creation_special_cases_types) {
     const int i = 42;
-    auto obj_ = injector<bind_int<i>>().create<T>();
+    auto obj_ = di::make_injector(bind<int>::to(i)).create<T>();
     BOOST_CHECK_EQUAL(i, obj_.i_);
 }
 
 BOOST_AUTO_TEST_CASE(stored_ref_created_by_injector) {
     const int i = 42;
-    auto ref_sp_int_ = injector<bind_int<i>>().create<ref_sp_int>();
+    auto ref_sp_int_ = di::make_injector(bind<int>::to(i)).create<ref_sp_int>();
     BOOST_CHECK(ref_sp_int_.i_);
 }
 
 BOOST_AUTO_TEST_CASE(smart_ptr_auto_ptr) {
     const int i = 42;
-    auto auto_ptr_int_ = injector<bind_int<i>>().create<aux::auto_ptr<auto_ptr_int>>();
+    auto auto_ptr_int_ = di::make_injector(di::bind<int>::to(i)).create<aux::auto_ptr<auto_ptr_int>>();
     BOOST_CHECK_EQUAL(i, *auto_ptr_int_->i_);
 }
 
