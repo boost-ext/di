@@ -47,9 +47,9 @@ BOOST_AUTO_TEST_CASE(types) {
     BOOST_CHECK((is_same<scopes::shared, scope_traits<const aux::weak_ptr<int>&>::type>::value));
     BOOST_CHECK((is_same<scopes::shared, scope_traits<named<aux::weak_ptr<int>>>::type>::value));
     BOOST_CHECK((is_same<scopes::shared, scope_traits<const named<aux::weak_ptr<int>>&>::type>::value));
-    BOOST_CHECK((is_same<scopes::external<>, scope_traits<int&>::type>::value));
-    BOOST_CHECK((is_same<scopes::external<>, scope_traits<named<int&>>::type>::value));
-    BOOST_CHECK((is_same<scopes::external<>, scope_traits<const named<int&>&>::type>::value));
+    BOOST_CHECK((is_same<scopes::external<wrappers::reference>, scope_traits<int&>::type>::value));
+    BOOST_CHECK((is_same<scopes::external<wrappers::reference>, scope_traits<named<int&>>::type>::value));
+    BOOST_CHECK((is_same<scopes::external<wrappers::reference>, scope_traits<const named<int&>&>::type>::value));
 
 #if !defined(BOOST_NO_CXX11_SMART_PTR)
     BOOST_CHECK((is_same<scopes::unique, scope_traits<aux::unique_ptr<int>>::type>::value));

@@ -4,7 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/injector.hpp"
+#include "boost/di/make_injector.hpp"
 #include "boost/di/named.hpp"
 
 #include <boost/test/unit_test.hpp>
@@ -53,15 +53,15 @@ struct limit
 };
 
 BOOST_AUTO_TEST_CASE(di_limit_size) {
-    limit limit_ = injector<
-        #define BOOST_DI_BIND_NAMED_GEN(_, n, arg) BOOST_PP_COMMA_IF(n) bind_int<n>::named<name##n>
+    limit limit_ = make_injector(
+        #define BOOST_DI_BIND_NAMED_GEN(_, n, arg) BOOST_PP_COMMA_IF(n) bind<int>::named<name##n>::to(n)
             BOOST_PP_REPEAT(
                 BOOST_DI_CFG_CTOR_LIMIT_SIZE
               , BOOST_DI_BIND_NAMED_GEN
               , name
             )
         #undef BOOST_DI_BIND_NAMED_GEN
-    >().create<limit>();
+    ).create<limit>();
 
     #define BOOST_DI_CHECK_EQUAL(_, n, arg) BOOST_CHECK_EQUAL(n, limit_.arg##n);
         BOOST_PP_REPEAT(

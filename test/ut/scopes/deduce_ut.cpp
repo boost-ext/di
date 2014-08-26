@@ -47,9 +47,9 @@ BOOST_AUTO_TEST_CASE(types) {
     BOOST_CHECK((is_same<shared, deduce::rebind<const aux::weak_ptr<int>&>::other>::value));
     BOOST_CHECK((is_same<shared, deduce::rebind<named<aux::weak_ptr<int>>>::other>::value));
     BOOST_CHECK((is_same<shared, deduce::rebind<const named<aux::weak_ptr<int>>&>::other>::value));
-    BOOST_CHECK((is_same<external<>, deduce::rebind<int&>::other>::value));
-    BOOST_CHECK((is_same<external<>, deduce::rebind<named<int&>>::other>::value));
-    BOOST_CHECK((is_same<external<>, deduce::rebind<const named<int&>&>::other>::value));
+    BOOST_CHECK((is_same<external<wrappers::reference>, deduce::rebind<int&>::other>::value));
+    BOOST_CHECK((is_same<external<wrappers::reference>, deduce::rebind<named<int&>>::other>::value));
+    BOOST_CHECK((is_same<external<wrappers::reference>, deduce::rebind<const named<int&>&>::other>::value));
 
 #if !defined(BOOST_NO_CXX11_SMART_PTR)
     BOOST_CHECK((is_same<unique, deduce::rebind<aux::unique_ptr<int>>::other>::value));
