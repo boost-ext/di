@@ -18,8 +18,6 @@ namespace wrappers {
 
 template<typename T>
 class copy {
-    using value_t = std::function<T*()>;
-
 public:
     template<typename TValueType>
     copy(const TValueType& value) // non explicit
@@ -28,42 +26,42 @@ public:
 
     template<typename I>
     I operator()(const type<I>&, typename std::enable_if<!std::is_polymorphic<I>::value>::type* = 0) const {
-        std::unique_ptr<I> ptr(value_());
+        std::unique_ptr<I> ptr(value_);
         return *ptr;
     }
 
     template<typename I>
     I* operator()(const type<I*>&) const {
-        return value_(); // ownership transfer
+        return value_; // ownership transfer
     }
 
     template<typename I>
     const I* operator()(const type<const I*>&) const {
-        return value_(); // ownership transfer
+        return value_; // ownership transfer
     }
 
     template<typename I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I>>&) const {
-        return aux::shared_ptr<I>(value_());
+        return aux::shared_ptr<I>(value_);
     }
 
     template<typename I>
     aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I>>&) const {
-        return aux_::shared_ptr<I>(value_());
+        return aux_::shared_ptr<I>(value_);
     }
 
     template<typename I>
     aux::auto_ptr<I> operator()(const type<aux::auto_ptr<I>>&) const {
-        return aux::auto_ptr<I>(value_());
+        return aux::auto_ptr<I>(value_);
     }
 
     template<typename I>
     aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I>>&) const {
-        return aux::unique_ptr<I>(value_());
+        return aux::unique_ptr<I>(value_);
     }
 
 private:
-    value_t value_;
+    T* value_;
 };
 
 } // namespace wrappers

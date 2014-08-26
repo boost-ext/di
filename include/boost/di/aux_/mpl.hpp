@@ -83,11 +83,14 @@ using int_ = std::integral_constant<int, N>;
 template<bool N>
 using bool_ = std::integral_constant<bool, N>;
 
-template<typename T, typename E>
-struct pair {
-    using first = T;
-    using second = E;
-};
+template<typename, typename>
+struct pair { };
+
+template <typename x>
+struct no_decay { using type = x; };
+
+template <typename ...xs>
+struct inherit : xs... { };
 
 template<typename...>
 struct type_list {
@@ -389,6 +392,21 @@ BOOST_DI_WKND(MSVC)(
         : std::false_type
     { };
 )
+
+template <typename d, typename key>
+static no_decay<d> lookup(...);
+
+template <typename, typename key, typename value>
+static no_decay<value> lookup(pair<key, value>*);
+
+template <typename d, typename key, typename ...pairs>
+using at_key = decltype(lookup<d, key>((inherit<pairs...>*)0));
+
+template<typename T>
+struct type__ { static void id() { } };
+
+template<typename T>
+std::size_t type_id() { return reinterpret_cast<std::size_t>(&type__<T>::id); }
 
 } // namespace di
 } // namespace boost

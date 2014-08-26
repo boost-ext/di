@@ -17,8 +17,6 @@
 #include "boost/di/type_traits/function_traits.hpp"
 #include "boost/di/wrappers/universal.hpp"
 
-#include <typeinfo>
-#include <typeindex>
 #include <unordered_map>
 
 namespace boost {
@@ -38,10 +36,7 @@ class creator {
           >::type
     { };
 
-    using scopes_type = std::unordered_map<
-        std::type_index
-      , aux::shared_ptr<void>
-    >;
+    using scopes_type = std::unordered_map<int, aux::shared_ptr<void>>;
 
     template<typename T, typename TDependency>
     struct data_visitor {
@@ -167,21 +162,22 @@ private:
               , TRefs& refs
               , const TVisitor& visitor
               , const TPolicies& policies) {
+
+        using ctor_type =
+            typename type_traits::ctor_traits<typename TDependency::given>::type;
+
         return wrappers::universal<T>(
             refs
-          , acquire<TDependency>(deps).create([&]{
-                using ctor_type =
-                    typename type_traits::ctor_traits<typename TDependency::given>::type;
-
-                return create_impl<T, TDependency, TCallStack>(
+          , acquire<TDependency>(deps).create(
+                create_impl<T, TDependency, TCallStack>(
                     provider
                   , deps
                   , refs
                   , visitor
                   , policies
                   , ctor_type()
-                );
-            })
+                )
+            )
         );
     }
 
@@ -230,13 +226,13 @@ private:
     template<typename TDependency, typename TDeps>
     typename std::enable_if<!std::is_base_of<TDependency, TDeps>::value, TDependency&>::type
     acquire(TDeps&) {
-        auto it = scopes_.find(std::type_index(typeid(TDependency)));
+        auto it = scopes_.find(type_id<TDependency>());
         if (it != scopes_.end()) {
             return *static_cast<TDependency*>(it->second.get());
         }
 
         aux::shared_ptr<TDependency> dependency(new TDependency());
-        scopes_[std::type_index(typeid(TDependency))] = dependency;
+        scopes_.insert(std::make_pair(type_id<TDependency>(), dependency));
         return *dependency;
     }
 

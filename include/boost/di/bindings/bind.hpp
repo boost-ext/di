@@ -13,7 +13,6 @@
 #include "boost/di/bindings/detail/requires.hpp"
 #include "boost/di/bindings/detail/when.hpp"
 #include "boost/di/bindings/type_traits/is_required_name.hpp"
-#include "boost/di/bindings/type_traits/is_required_priority.hpp"
 #include "boost/di/bindings/type_traits/is_required_type.hpp"
 #include "boost/di/scopes/deduce.hpp"
 
@@ -44,11 +43,7 @@ struct bind
           scopes::deduce
         , typename detail::get_expected<TExpected, TGiven>::type
         , TGiven
-        , detail::requires_<
-              type_traits::is_required_priority
-            , type_traits::is_required_type<TExpected>
-            , detail::when_<>
-          >
+        , type_traits::is_required_type<TExpected>
       >
 {
     template<typename... Ts>
@@ -58,8 +53,7 @@ struct bind
             , typename detail::get_expected<TExpected, TGiven>::type
             , TGiven
             , detail::requires_<
-                  type_traits::is_required_priority
-                , type_traits::is_required_type<TExpected>
+                  type_traits::is_required_type<TExpected>
                 , detail::when_<Ts...>
               >
           >
@@ -71,8 +65,7 @@ struct bind
                 , typename detail::get_expected<TExpected, TGiven>::type
                 , TGiven
                 , detail::requires_<
-                      type_traits::is_required_priority
-                    , type_traits::is_required_type<TExpected>
+                      type_traits::is_required_type<TExpected>
                     , type_traits::is_required_name<TName>
                     , detail::when_<Ts...>
                   >
@@ -87,10 +80,8 @@ struct bind
             , typename detail::get_expected<TExpected, TGiven>::type
             , TGiven
             , detail::requires_<
-                  type_traits::is_required_priority
-                , type_traits::is_required_type<TExpected>
+                  type_traits::is_required_type<TExpected>
                 , type_traits::is_required_name<TName>
-                , detail::when_<>
               >
           >
     {
@@ -101,8 +92,7 @@ struct bind
                 , typename detail::get_expected<TExpected, TGiven>::type
                 , TGiven
                 , detail::requires_<
-                      type_traits::is_required_priority
-                    , type_traits::is_required_type<TExpected>
+                      type_traits::is_required_type<TExpected>
                     , type_traits::is_required_name<TName>
                     , detail::when_<Ts...>
                   >

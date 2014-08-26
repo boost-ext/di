@@ -213,15 +213,18 @@ private:
 } // namespace detail
 
 template<typename T>
-class universal : public detail::universal_impl<T> {
+class universal {
 public:
-    using type = universal;
-    using element_type = T;
-
     template<typename TValueType>
     universal(std::vector<aux::shared_ptr<void>>& refs, const TValueType& value)
-        : detail::universal_impl<T>(refs, value)
-    { }
+        : value_(value(type<T>()))
+     { }
+
+    operator T() const {
+        return value_;
+    }
+
+    T value_;
 };
 
 } // namespace wrappers

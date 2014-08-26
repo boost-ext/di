@@ -27,7 +27,7 @@ struct data {
 };
 
 template<typename T, typename TCallStack, typename _>
-using resolve_impl = pair<_, typename _::bind::template apply<data<T, TCallStack, _>>::type>;
+using resolve_impl = pair<typename _::bind::template apply<data<T, TCallStack, _>>::type, _>;
 
 template<typename T, typename TCallStack, typename _>
 using eval_impl = typename _::bind::template eval<data<T, TCallStack, _>>::type;
@@ -46,10 +46,8 @@ struct binder<type_list<Ts...>> {
               , typename type_traits::make_plain<T>::type
             >
     >
-    using resolve = typename greatest<
-        pair<TDefault, int_<0>>
-      , resolve_impl<T, TCallStack, Ts>...
-    >::type::template rebind<typename scopes::deduce::rebind<T>::other>::other;
+    using resolve = typename at_key<TDefault, std::true_type, resolve_impl<T, TCallStack, Ts>...>::type::
+        template rebind<typename scopes::deduce::rebind<T>::other>::other;
 
     template<
         typename T

@@ -18,7 +18,6 @@
 #include "boost/di/type_traits/function_traits.hpp"
 #include "boost/di/bindings/detail/requires.hpp"
 #include "boost/di/bindings/detail/when.hpp"
-#include "boost/di/bindings/type_traits/is_required_priority.hpp"
 #include "boost/di/bindings/type_traits/is_required_type.hpp"
 
 namespace boost {
@@ -31,12 +30,7 @@ template<
     typename TScope
   , typename TExpected
   , typename TGiven = TExpected
-  , typename TBind =
-        detail::requires_<
-            type_traits::is_required_priority
-          , type_traits::is_required_type<TExpected>
-          , detail::when_<>
-        >
+  , typename TBind = type_traits::is_required_type<TExpected>
 >
 class dependency : public TScope::template scope<TExpected>
 {

@@ -25,11 +25,11 @@ template<typename... Ts>
 struct requires_ {
     using type = requires_;
 
-    template<typename T, typename TMultiplicationFactor = int_<10>>
-    using apply = times<TMultiplicationFactor, typename apply_bind<T, Ts>::type...>;
+    template<typename T>
+    using apply = and_<typename apply_bind<T, Ts>::type...>;
 
     template<typename T>
-    using eval = times<int_<1>, typename eval_bind<T, Ts>::type...>;
+    using eval = and_<typename eval_bind<T, Ts>::type...>;
 };
 
 } // namespace detail

@@ -31,19 +31,17 @@ struct get_name<T, typename std::enable_if<has_name<T>::value>::type> {
 template<typename TName>
 struct is_required_name {
     template<typename T>
-    using apply = int_<
-        std::is_same<
-            typename get_name<
-                typename di::type_traits::remove_accessors<
-                    typename T::type
-                 >::type
-            >::type
-          , TName
-        >::value
+    using apply = std::is_same<
+        typename get_name<
+            typename di::type_traits::remove_accessors<
+                typename T::type
+             >::type
+        >::type
+      , TName
     >;
 
     template<typename>
-    using eval = int_<1>;
+    using eval = std::true_type;
 };
 
 } // namespace type_traits

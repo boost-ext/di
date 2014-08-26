@@ -22,7 +22,7 @@ public:
     public:
         using result_type = wrappers::copy<TExpected>;
 
-        result_type create(const std::function<TExpected*()>& f) {
+        result_type create(TExpected* f) {
             return f;
         }
     };
