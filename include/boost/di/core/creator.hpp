@@ -107,15 +107,14 @@ public:
           , TCallStack
           , typename add<TCallStack, TParent>::type
         >::type;
-        //using eval_type = typename binder_t::template eval<T, call_stack>::type;
-        using dependency_type = typename binder_t::template resolve<T, TCallStack>::type;
-        //using propagate_call_stack = typename std::conditional<eval_type::value, call_stack, TCallStack>::type;
+        using eval_type = typename binder_t::template eval<T, call_stack>::type;
+        using dependency_type = typename binder_t::template resolve<T, call_stack>::type;
+        using propagate_call_stack = typename std::conditional<eval_type::value, call_stack, TCallStack>::type;
 
         assert_policies<data_visitor<T, dependency_type>>(policies);
         (visitor)(data_visitor<T, dependency_type>());
 
-        return create_impl<T, dependency_type, TCallStack>(
-        //return create_impl<T, dependency_type, propagate_call_stack>(
+        return create_impl<T, dependency_type, propagate_call_stack>(
             provider, deps, refs, visitor, policies
         );
     }

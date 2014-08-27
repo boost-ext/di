@@ -24,7 +24,7 @@ struct is_required_type {
     >;
 
     template<typename>
-    using eval = std::true_type;
+    using eval = std::false_type;
 };
 
 template<typename... Ts, template<typename...> class TComparator>
@@ -38,7 +38,7 @@ struct is_required_type<type_list<Ts...>, TComparator> {
     >;
 
     template<typename>
-    using eval = std::true_type;
+    using eval = std::false_type;
 };
 
 } // namespace type_traits
