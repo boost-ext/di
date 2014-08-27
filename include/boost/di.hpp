@@ -35,10 +35,7 @@
 #include <utility>
 #include <unordered_map>
 #include <type_traits>
-#include <typeinfo>
-#include <typeindex>
 #include <string>
-#include <functional>
 #include <boost/type_traits/is_integral.hpp>
 #include "boost/di/aux_/ref.hpp"
 #include "boost/di/aux_/mpl.hpp"
@@ -117,7 +114,7 @@ public:
     using named_type = T;
     using name = TName;
 
-    named(T object) // non explicit
+    named(const T& object = T()) // non explicit
         : object_(object)
     { }
 
@@ -144,7 +141,7 @@ public:
     using named_type = const T&;
     using name = TName;
 
-    named(const T& object) // non explicit
+    named(const T& object = T()) // non explicit
         : object_(object)
     { }
 
@@ -225,7 +222,7 @@ public:
     using named_type = aux::unique_ptr<T>;
     using name = TName;
 
-    named(aux::unique_ptr<T> object) // non explicit
+    named(aux::unique_ptr<T> object = aux::unique_ptr<T>(new T())) // non explicit
         : object_(std::move(object))
     { }
 
@@ -268,22 +265,6 @@ namespace wrappers {
 
 template<typename T>
 class copy {
-    using value_t = std::function<T*()>;
-
-    template<typename I>
-    class scoped_ptr {
-    public:
-        explicit scoped_ptr(I* ptr)
-            : ptr_(ptr)
-        { }
-
-        ~scoped_ptr() { delete ptr_; }
-        I& operator*() const { return *ptr_; }
-
-    private:
-        I* ptr_;
-    };
-
 public:
     template<typename TValueType>
     copy(const TValueType& value) // non explicit
@@ -292,42 +273,42 @@ public:
 
     template<typename I>
     I operator()(const type<I>&, typename std::enable_if<!std::is_polymorphic<I>::value>::type* = 0) const {
-        scoped_ptr<I> ptr(value_());
+        std::unique_ptr<I> ptr(value_);
         return *ptr;
     }
 
     template<typename I>
     I* operator()(const type<I*>&) const {
-        return value_(); // ownership transfer
+        return value_; // ownership transfer
     }
 
     template<typename I>
     const I* operator()(const type<const I*>&) const {
-        return value_(); // ownership transfer
+        return value_; // ownership transfer
     }
 
     template<typename I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I>>&) const {
-        return aux::shared_ptr<I>(value_());
+        return aux::shared_ptr<I>(value_);
     }
 
     template<typename I>
     aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I>>&) const {
-        return aux_::shared_ptr<I>(value_());
+        return aux_::shared_ptr<I>(value_);
     }
 
     template<typename I>
     aux::auto_ptr<I> operator()(const type<aux::auto_ptr<I>>&) const {
-        return aux::auto_ptr<I>(value_());
+        return aux::auto_ptr<I>(value_);
     }
 
     template<typename I>
     aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I>>&) const {
-        return aux::unique_ptr<I>(value_());
+        return aux::unique_ptr<I>(value_);
     }
 
 private:
-    value_t value_;
+    T* value_;
 };
 
 } // namespace wrappers
@@ -347,7 +328,7 @@ public:
     public:
         using result_type = wrappers::copy<TExpected>;
 
-        result_type create(const std::function<TExpected*()>& f) {
+        result_type create(TExpected* f) {
             return f;
         }
     };
@@ -570,6 +551,35 @@ public:
 
 namespace boost {
 namespace di {
+namespace wrappers {
+
+template<typename T>
+class reference {
+    reference& operator=(const reference&);
+
+public:
+    reference(T& value) // non explicit
+        : value_(value)
+    { }
+
+    reference(const reference& other)
+        : value_(other.value_)
+    { }
+
+    T& operator()(const type<T&>&) const {
+        return value_;
+    }
+
+private:
+    T& value_;
+};
+
+} // namespace wrappers
+} // namespace di
+} // namespace boost
+
+namespace boost {
+namespace di {
 namespace type_traits {
 
 template<typename T>
@@ -579,7 +589,7 @@ struct scope_traits {
 
 template<typename T>
 struct scope_traits<T&> {
-    using type = scopes::external<>;
+    using type = scopes::external<wrappers::reference>;
 };
 
 template<typename T>
@@ -733,35 +743,6 @@ public:
 
 namespace boost {
 namespace di {
-namespace wrappers {
-
-template<typename T>
-class reference {
-    reference& operator=(const reference&);
-
-public:
-    reference(T& value) // non explicit
-        : value_(value)
-    { }
-
-    reference(const reference& other)
-        : value_(other.value_)
-    { }
-
-    T& operator()(const type<T&>&) const {
-        return value_;
-    }
-
-private:
-    T& value_;
-};
-
-} // namespace wrappers
-} // namespace di
-} // namespace boost
-
-namespace boost {
-namespace di {
 namespace type_traits {
 
 template<typename>
@@ -806,11 +787,11 @@ template<typename... Ts>
 struct requires_ {
     using type = requires_;
 
-    template<typename T, typename TMultiplicationFactor = int_<10>>
-    using apply = times<TMultiplicationFactor, typename apply_bind<T, Ts>::type...>;
+    template<typename T>
+    using apply = and_<typename apply_bind<T, Ts>::type...>;
 
     template<typename T>
-    using eval = times<int_<1>, typename eval_bind<T, Ts>::type...>;
+    using eval = and_<typename eval_bind<T, Ts>::type...>;
 };
 
 } // namespace detail
@@ -831,24 +812,22 @@ struct eval_for_all : TBind::template eval<T>::type { };
 
 template<typename... Ts>
 struct when_ {
-    using type = when_;
+    //using type = when_;
 
-    template<typename T>
-    using apply = typename max<int_<0>, typename apply_for_all<T, Ts>::type...>::type;
+    //template<typename T>
+    //using apply = typename max<int_<0>, typename apply_for_all<T, Ts>::type...>::type;
 
-    template<typename T>
-    using eval = typename max<int_<0>, typename eval_for_all<T, Ts>::type...>::type;
+    //template<typename T>
+    //using eval = typename max<int_<0>, typename eval_for_all<T, Ts>::type...>::type;
 };
 
 template<>
 struct when_<> {
-    using type = when_;
-
-    template<typename T>
-    using apply = int_<1>;
+    template<typename>
+    using apply = std::true_type;
 
     template<typename>
-    using eval = int_<0>;
+    using eval = std::false_type;
 };
 
 } // namespace detail
@@ -861,63 +840,30 @@ namespace di {
 namespace bindings {
 namespace type_traits {
 
-struct is_required_priority {
-    template<typename T>
-    using apply = int_<1 + T::dependency::scope::priority>;
-
-    template<typename T>
-    using eval = int_<1>;
-};
-
-} // namespace type_traits
-} // namespace bindings
-} // namespace di
-} // namespace boost
-
-namespace boost {
-namespace di {
-namespace type_traits {
-
-template<typename T, typename U>
-using is_same_base_of = bool_<
-    std::is_base_of<U, T>::value || std::is_same<U, T>::value
->;
-
-} // namespace type_traits
-} // namespace di
-} // namespace boost
-
-namespace boost {
-namespace di {
-namespace bindings {
-namespace type_traits {
-
-template<typename TValueType>
+template<typename TValueType, template<typename...> class TComparator = std::is_same>
 struct is_required_type {
     template<typename T>
-    using apply = int_<
-        di::type_traits::is_same_base_of<
-            TValueType
-          , typename di::type_traits::make_plain<typename T::type>::type
-        >::value
+    using apply = TComparator<
+        TValueType
+      , typename di::type_traits::make_plain<typename T::type>::type
     >;
 
     template<typename>
-    using eval = int_<1>;
+    using eval = std::false_type;
 };
 
-template<typename... Ts>
-struct is_required_type<type_list<Ts...>> {
+template<typename... Ts, template<typename...> class TComparator>
+struct is_required_type<type_list<Ts...>, TComparator> {
     template<typename T>
-    using apply = sum<
-        di::type_traits::is_same_base_of<
+    using apply = or_<
+        TComparator<
             typename di::type_traits::make_plain<typename T::type>::type
           , Ts
-        >::value...
+        >...
     >;
 
     template<typename>
-    using eval = int_<1>;
+    using eval = std::false_type;
 };
 
 } // namespace type_traits
@@ -935,12 +881,7 @@ template<
     typename TScope
   , typename TExpected
   , typename TGiven = TExpected
-  , typename TBind =
-        detail::requires_<
-            type_traits::is_required_priority
-          , type_traits::is_required_type<TExpected>
-          , detail::when_<>
-        >
+  , typename TBind = type_traits::is_required_type<TExpected>
 >
 class dependency : public TScope::template scope<TExpected>
 {
@@ -1070,19 +1011,17 @@ struct get_name<T, typename std::enable_if<has_name<T>::value>::type> {
 template<typename TName>
 struct is_required_name {
     template<typename T>
-    using apply = int_<
-        std::is_same<
-            typename get_name<
-                typename di::type_traits::remove_accessors<
-                    typename T::type
-                 >::type
-            >::type
-          , TName
-        >::value
+    using apply = std::is_same<
+        typename get_name<
+            typename di::type_traits::remove_accessors<
+                typename T::type
+             >::type
+        >::type
+      , TName
     >;
 
     template<typename>
-    using eval = int_<1>;
+    using eval = std::true_type;
 };
 
 } // namespace type_traits
@@ -1106,6 +1045,14 @@ struct get_expected<type_list<Ts...>, TGiven> {
     using type = TGiven;
 };
 
+template<typename TExpected, typename TGiven>
+struct is_required_type : type_traits::is_required_type<TExpected, std::is_same>
+{ };
+
+template<typename T>
+struct is_required_type<T, T> : type_traits::is_required_type<T, std::is_base_of>
+{ };
+
 } // namespace detail
 
 template<
@@ -1117,11 +1064,7 @@ struct bind
           scopes::deduce
         , typename detail::get_expected<TExpected, TGiven>::type
         , TGiven
-        , detail::requires_<
-              type_traits::is_required_priority
-            , type_traits::is_required_type<TExpected>
-            , detail::when_<>
-          >
+        , detail::is_required_type<TExpected, TGiven>
       >
 {
     template<typename... Ts>
@@ -1131,8 +1074,7 @@ struct bind
             , typename detail::get_expected<TExpected, TGiven>::type
             , TGiven
             , detail::requires_<
-                  type_traits::is_required_priority
-                , type_traits::is_required_type<TExpected>
+                  detail::is_required_type<TExpected, TGiven>
                 , detail::when_<Ts...>
               >
           >
@@ -1144,8 +1086,7 @@ struct bind
                 , typename detail::get_expected<TExpected, TGiven>::type
                 , TGiven
                 , detail::requires_<
-                      type_traits::is_required_priority
-                    , type_traits::is_required_type<TExpected>
+                      detail::is_required_type<TExpected, TGiven>
                     , type_traits::is_required_name<TName>
                     , detail::when_<Ts...>
                   >
@@ -1160,10 +1101,8 @@ struct bind
             , typename detail::get_expected<TExpected, TGiven>::type
             , TGiven
             , detail::requires_<
-                  type_traits::is_required_priority
-                , type_traits::is_required_type<TExpected>
+                  type_traits::is_required_type<TExpected>
                 , type_traits::is_required_name<TName>
-                , detail::when_<>
               >
           >
     {
@@ -1174,8 +1113,7 @@ struct bind
                 , typename detail::get_expected<TExpected, TGiven>::type
                 , TGiven
                 , detail::requires_<
-                      type_traits::is_required_priority
-                    , type_traits::is_required_type<TExpected>
+                      detail::is_required_type<TExpected, TGiven>
                     , type_traits::is_required_name<TName>
                     , detail::when_<Ts...>
                   >
@@ -1440,7 +1378,7 @@ public:
     template<
         typename U
       , typename = typename std::enable_if<
-            !type_traits::is_same_base_of<
+            !std::is_base_of<
                 typename type_traits::make_plain<U>::type
               , typename type_traits::make_plain<T>::type
             >::value
@@ -1455,7 +1393,7 @@ public:
     template<
         typename U
       , typename = typename std::enable_if<
-            !type_traits::is_same_base_of<
+            !std::is_base_of<
                 typename type_traits::make_plain<U>::type
               , typename type_traits::make_plain<T>::type
             >::value
@@ -1487,7 +1425,7 @@ public:
         template<
             typename U
           , typename = typename std::enable_if<
-                !type_traits::is_same_base_of<
+                !std::is_base_of<
                     typename type_traits::make_plain<U>::type
                   , typename type_traits::make_plain<T>::type
                 >::value
@@ -1580,7 +1518,7 @@ struct data {
 };
 
 template<typename T, typename TCallStack, typename _>
-using resolve_impl = pair<_, typename _::bind::template apply<data<T, TCallStack, _>>::type>;
+using resolve_impl = pair<typename _::bind::template apply<data<T, TCallStack, _>>::type, _>;
 
 template<typename T, typename TCallStack, typename _>
 using eval_impl = typename _::bind::template eval<data<T, TCallStack, _>>::type;
@@ -1599,10 +1537,8 @@ struct binder<type_list<Ts...>> {
               , typename type_traits::make_plain<T>::type
             >
     >
-    using resolve = typename greatest<
-        pair<TDefault, int_<0>>
-      , resolve_impl<T, TCallStack, Ts>...
-    >::type::template rebind<typename scopes::deduce::rebind<T>::other>::other;
+    using resolve = typename at_key<TDefault, std::true_type, resolve_impl<T, TCallStack, Ts>...>::type::
+        template rebind<typename scopes::deduce::rebind<T>::other>::other;
 
     template<
         typename T
@@ -1685,27 +1621,27 @@ BOOST_DI_HAS_MEMBER_IMPL(
   , typename TDst
 );
 
-template<typename TResult, typename T, typename TValueType>
-inline typename std::enable_if<!std::is_copy_constructible<T>::value, const TResult&>::type
-copy(std::vector<aux::shared_ptr<void>>& refs, const TValueType& value) {
-    aux::shared_ptr<TResult> object(value(type<T*>()));
+template<typename TResult, typename T, typename TWrapper>
+inline typename std::enable_if<!std::is_copy_constructible<T>::wrapper, const TResult&>::type
+copy(std::vector<aux::shared_ptr<void>>& refs, const TWrapper& wrapper) {
+    aux::shared_ptr<TResult> object(wrapper(type<T*>()));
     refs.push_back(object);
     return *object;
 }
 
 template<typename T>
 struct holder {
-    explicit holder(const T& value)
-        : held(value)
+    explicit holder(const T& wrapper)
+        : held(wrapper)
     { }
 
     T held;
 };
 
-template<typename TResult, typename T, typename TValueType>
-inline typename std::enable_if<std::is_copy_constructible<T>::value, const TResult&>::type
-copy(std::vector<aux::shared_ptr<void>>& refs, const TValueType& value) {
-    aux::shared_ptr<holder<TResult>> object(new holder<TResult>(value(type<T>())));
+template<typename TResult, typename T, typename TWrapper>
+inline typename std::enable_if<std::is_copy_constructible<T>::wrapper, const TResult&>::type
+copy(std::vector<aux::shared_ptr<void>>& refs, const TWrapper& wrapper) {
+    aux::shared_ptr<holder<TResult>> object(new holder<TResult>(wrapper(type<T>())));
     refs.push_back(object);
     return object->held;
 }
@@ -1713,170 +1649,137 @@ copy(std::vector<aux::shared_ptr<void>>& refs, const TValueType& value) {
 template<typename T>
 class universal_impl {
 public:
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void>>&, const TValueType& value)
-        : value_(std::bind<T>(value, type<T>()))
+    template<typename TWrapper>
+    universal_impl(std::vector<aux::shared_ptr<void>>&, const TWrapper& wrapper)
+        : wrapper_(wrapper(type<T>()))
     { }
 
     operator T() const {
-        return value_();
+        return wrapper_;
     }
 
 private:
-    std::function<T()> value_;
+    T wrapper_;
 };
 
-template<typename T>
-class universal_impl<aux::auto_ptr<T>> {
-public:
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void>>& refs, const TValueType& value)
-        : value_(new aux::auto_ptr<T>(value(type<aux::auto_ptr<T>>()).release()))
-    {
-        refs.push_back(aux::shared_ptr<aux::auto_ptr<T>>(value_));
-    }
+    //template<typename TWrapper>
+    //universal_impl(std::vector<aux::shared_ptr<void>>& refs, const TWrapper& wrapper)
+        //: wrapper_(new aux::auto_ptr<T>(wrapper(type<aux::auto_ptr<T>>()).release()))
+    //{
+        //refs.push_back(aux::shared_ptr<aux::auto_ptr<T>>(wrapper_));
+    //}
 
-    operator aux::auto_ptr<T>&() {
-        return *value_;
-    }
+    //operator aux::auto_ptr<T>&() {
+        //return *wrapper_;
+    //}
 
-private:
-    aux::auto_ptr<T>* value_; // weak
-};
+    //aux::auto_ptr<T>* wrapper_; // weak
 
-template<typename T>
-class universal_impl<const T&> {
-public:
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void>>&
-                 , const TValueType& value
-                 , typename std::enable_if<detail::has_convertible_to_ref<TValueType, T>::value>::type* = 0)
-        : value_(std::bind<const T&>(value, type<const T&>()))
-    { }
+    //template<typename TWrapper>
+    //universal_impl(std::vector<aux::shared_ptr<void>>&
+                 //, const TWrapper& wrapper
+                 //, typename std::enable_if<detail::has_convertible_to_ref<TWrapper, T>::wrapper>::type* = 0)
+        //: wrapper_(std::bind<const T&>(wrapper, type<const T&>()))
+    //{ }
 
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void>>& refs
-                 , const TValueType& value
-                 , typename std::enable_if<!detail::has_convertible_to_ref<TValueType, T>::value>::type* = 0)
-        : value_(std::bind(&copy<T, T, TValueType>, std::ref(refs), value))
-    { }
+    //template<typename TWrapper>
+    //universal_impl(std::vector<aux::shared_ptr<void>>& refs
+                 //, const TWrapper& wrapper
+                 //, typename std::enable_if<!detail::has_convertible_to_ref<TWrapper, T>::wrapper>::type* = 0)
+        //: wrapper_(std::bind(&copy<T, T, TWrapper>, std::ref(refs), wrapper))
+    //{ }
 
-    operator const T&() const {
-        return value_();
-    }
+    //operator const T&() const {
+        //return wrapper_();
+    //}
 
-private:
-    std::function<const T&()> value_;
-};
+    //std::function<const T&()> wrapper_;
 
-template<typename T, typename TName>
-class universal_impl<named<T, TName>> {
-public:
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void>>&, const TValueType& value)
-        : value_(std::bind<T>(value, type<T>()))
-    { }
+    //template<typename TWrapper>
+    //universal_impl(std::vector<aux::shared_ptr<void>>&, const TWrapper& wrapper)
+        //: wrapper_(std::bind<T>(wrapper, type<T>()))
+    //{ }
 
-    operator T() const {
-        return value_();
-    }
+    //operator T() const {
+        //return wrapper_();
+    //}
 
-    operator named<T, TName>() const {
-        return value_();
-    }
+    //operator named<T, TName>() const {
+        //return wrapper_();
+    //}
 
-private:
-    std::function<T()> value_;
-};
+    //std::function<T()> wrapper_;
 
-template<typename T, typename TName>
-class universal_impl<named<const T&, TName>> {
-public:
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void>>&
-                 , const TValueType& value
-                 , typename std::enable_if<detail::has_convertible_to_ref<TValueType, T>::value>::type* = 0)
-        : value_(std::bind<const T&>(value, type<const T&>()))
-    { }
+    //template<typename TWrapper>
+    //universal_impl(std::vector<aux::shared_ptr<void>>&
+                 //, const TWrapper& wrapper
+                 //, typename std::enable_if<detail::has_convertible_to_ref<TWrapper, T>::wrapper>::type* = 0)
+        //: wrapper_(std::bind<const T&>(wrapper, type<const T&>()))
+    //{ }
 
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void>>& refs
-                 , const TValueType& value
-                 , typename std::enable_if<!detail::has_convertible_to_ref<TValueType, T>::value>::type* = 0)
-        : value_(std::bind(&copy<T, T, TValueType>, std::ref(refs), value))
-    { }
+    //template<typename TWrapper>
+    //universal_impl(std::vector<aux::shared_ptr<void>>& refs
+                 //, const TWrapper& wrapper
+                 //, typename std::enable_if<!detail::has_convertible_to_ref<TWrapper, T>::wrapper>::type* = 0)
+        //: wrapper_(std::bind(&copy<T, T, TWrapper>, std::ref(refs), wrapper))
+    //{ }
 
-    operator named<const T&, TName>() const {
-        return value_();
-    }
+    //operator named<const T&, TName>() const {
+        //return wrapper_();
+    //}
 
-private:
-    std::function<named<const T&, TName>()> value_;
-};
+    //std::function<named<const T&, TName>()> wrapper_;
 
-template<typename T, typename TName>
-class universal_impl<const named<T, TName>&> {
-public:
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void>>& refs
-                 , const TValueType& value)
-        : value_(std::bind(&copy<named<T, TName>, T, TValueType>, std::ref(refs), value))
-    { }
+    //template<typename TWrapper>
+    //universal_impl(std::vector<aux::shared_ptr<void>>& refs
+                 //, const TWrapper& wrapper)
+        //: wrapper_(std::bind(&copy<named<T, TName>, T, TWrapper>, std::ref(refs), wrapper))
+    //{ }
 
-    operator const named<T, TName>&() const {
-        return value_();
-    }
+    //operator const named<T, TName>&() const {
+        //return wrapper_();
+    //}
 
-private:
-    std::function<const named<T, TName>&()> value_;
-};
+    //std::function<const named<T, TName>&()> wrapper_;
 
-template<typename T, typename TName>
-class universal_impl<const named<const T&, TName>&> {
-    universal_impl& operator=(const universal_impl&);
+    //universal_impl& operator=(const universal_impl&);
 
-public:
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void>>& refs
-                 , const TValueType& value
-                 , typename std::enable_if<detail::has_convertible_to_ref<TValueType, T>::value>::type* = 0)
-        : refs_(refs)
-        , value_(std::bind<const T&>(value, type<const T&>()))
-    { }
+    //template<typename TWrapper>
+    //universal_impl(std::vector<aux::shared_ptr<void>>& refs
+                 //, const TWrapper& wrapper
+                 //, typename std::enable_if<detail::has_convertible_to_ref<TWrapper, T>::wrapper>::type* = 0)
+        //: refs_(refs)
+        //, wrapper_(std::bind<const T&>(wrapper, type<const T&>()))
+    //{ }
 
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void>>& refs
-                 , const TValueType& value
-                 , typename std::enable_if<!detail::has_convertible_to_ref<TValueType, T>::value>::type* = 0)
-        : refs_(refs)
-        , value_(std::bind(&copy<T, T, TValueType>, std::ref(refs), value))
-    { }
+    //template<typename TWrapper>
+    //universal_impl(std::vector<aux::shared_ptr<void>>& refs
+                 //, const TWrapper& wrapper
+                 //, typename std::enable_if<!detail::has_convertible_to_ref<TWrapper, T>::wrapper>::type* = 0)
+        //: refs_(refs)
+        //, wrapper_(std::bind(&copy<T, T, TWrapper>, std::ref(refs), wrapper))
+    //{ }
 
-    operator const named<const T&, TName>&() const {
-        aux::shared_ptr<holder<named<const T&, TName>>> object(
-            new holder<named<const T&, TName>>(value_())
-        );
-        refs_.push_back(object);
-        return object->held;
-    }
+    //operator const named<const T&, TName>&() const {
+        //aux::shared_ptr<holder<named<const T&, TName>>> object(
+            //new holder<named<const T&, TName>>(wrapper_())
+        //);
+        //refs_.push_back(object);
+        //return object->held;
+    //}
 
-private:
-    std::vector<aux::shared_ptr<void>>& refs_;
-    std::function<named<const T&, TName>()> value_;
-};
+    //std::vector<aux::shared_ptr<void>>& refs_;
+    //std::function<named<const T&, TName>()> wrapper_;
 
 } // namespace detail
 
 template<typename T>
-class universal : public detail::universal_impl<T> {
+class universal : public detail::universal_impl<T>{
 public:
-    using type = universal;
-    using element_type = T;
-
-    template<typename TValueType>
-    universal(std::vector<aux::shared_ptr<void>>& refs, const TValueType& value)
-        : detail::universal_impl<T>(refs, value)
-    { }
+    template<typename TWrapper>
+    universal(std::vector<aux::shared_ptr<void>>& refs, const TWrapper& wrapper)
+        : detail::universal_impl<T>(refs, wrapper)
+     { }
 };
 
 } // namespace wrappers
@@ -1900,10 +1803,7 @@ class creator {
           >::type
     { };
 
-    using scopes_type = std::unordered_map<
-        std::type_index
-      , aux::shared_ptr<void>
-    >;
+    using scopes_type = std::unordered_map<int, aux::shared_ptr<void>>;
 
     template<typename T, typename TDependency>
     struct data_visitor {
@@ -2029,21 +1929,22 @@ private:
               , TRefs& refs
               , const TVisitor& visitor
               , const TPolicies& policies) {
+
+        using ctor_type =
+            typename type_traits::ctor_traits<typename TDependency::given>::type;
+
         return wrappers::universal<T>(
             refs
-          , acquire<TDependency>(deps).create([&]{
-                using ctor_type =
-                    typename type_traits::ctor_traits<typename TDependency::given>::type;
-
-                return create_impl<T, TDependency, TCallStack>(
+          , acquire<TDependency>(deps).create(
+                create_impl<T, TDependency, TCallStack>(
                     provider
                   , deps
                   , refs
                   , visitor
                   , policies
                   , ctor_type()
-                );
-            })
+                )
+            )
         );
     }
 
@@ -2092,13 +1993,13 @@ private:
     template<typename TDependency, typename TDeps>
     typename std::enable_if<!std::is_base_of<TDependency, TDeps>::value, TDependency&>::type
     acquire(TDeps&) {
-        auto it = scopes_.find(std::type_index(typeid(TDependency)));
+        auto it = scopes_.find(type_id<TDependency>());
         if (it != scopes_.end()) {
             return *static_cast<TDependency*>(it->second.get());
         }
 
         aux::shared_ptr<TDependency> dependency(new TDependency());
-        scopes_[std::type_index(typeid(TDependency))] = dependency;
+        scopes_.insert(std::make_pair(type_id<TDependency>(), dependency));
         return *dependency;
     }
 
