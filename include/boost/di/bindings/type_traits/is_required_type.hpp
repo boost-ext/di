@@ -19,7 +19,7 @@ namespace type_traits {
 template<typename TValueType>
 struct is_required_type {
     template<typename T>
-    using apply = di::type_traits::is_same_base_of<
+    using apply = std::is_same<
         TValueType
       , typename di::type_traits::make_plain<typename T::type>::type
     >;
