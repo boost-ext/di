@@ -9,17 +9,16 @@
 
 #include "boost/di/aux_/mpl.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
-#include "boost/di/type_traits/is_same_base_of.hpp"
 
 namespace boost {
 namespace di {
 namespace bindings {
 namespace type_traits {
 
-template<typename TValueType>
+template<typename TValueType, template<typename...> class TComparator = std::is_same>
 struct is_required_type {
     template<typename T>
-    using apply = std::is_same<
+    using apply = TComparator<
         TValueType
       , typename di::type_traits::make_plain<typename T::type>::type
     >;
@@ -28,11 +27,11 @@ struct is_required_type {
     using eval = std::true_type;
 };
 
-template<typename... Ts>
-struct is_required_type<type_list<Ts...>> {
+template<typename... Ts, template<typename...> class TComparator>
+struct is_required_type<type_list<Ts...>, TComparator> {
     template<typename T>
     using apply = or_<
-        di::type_traits::is_same_base_of<
+        TComparator<
             typename di::type_traits::make_plain<typename T::type>::type
           , Ts
         >...

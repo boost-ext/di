@@ -10,7 +10,6 @@
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/mpl.hpp"
 #include "boost/di/type_traits/make_plain.hpp"
-#include "boost/di/type_traits/is_same_base_of.hpp"
 
 #include <boost/type_traits/is_integral.hpp>
 
@@ -69,7 +68,7 @@ public:
     template<
         typename U
       , typename = typename std::enable_if<
-            !type_traits::is_same_base_of<
+            !std::is_base_of<
                 typename type_traits::make_plain<U>::type
               , typename type_traits::make_plain<T>::type
             >::value
@@ -84,7 +83,7 @@ public:
     template<
         typename U
       , typename = typename std::enable_if<
-            !type_traits::is_same_base_of<
+            !std::is_base_of<
                 typename type_traits::make_plain<U>::type
               , typename type_traits::make_plain<T>::type
             >::value
@@ -116,7 +115,7 @@ public:
         template<
             typename U
           , typename = typename std::enable_if<
-                !type_traits::is_same_base_of<
+                !std::is_base_of<
                     typename type_traits::make_plain<U>::type
                   , typename type_traits::make_plain<T>::type
                 >::value

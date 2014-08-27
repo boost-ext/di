@@ -32,6 +32,14 @@ struct get_expected<type_list<Ts...>, TGiven> {
     using type = TGiven;
 };
 
+template<typename TExpected, typename TGiven>
+struct is_required_type : type_traits::is_required_type<TExpected, std::is_same>
+{ };
+
+template<typename T>
+struct is_required_type<T, T> : type_traits::is_required_type<T, std::is_base_of>
+{ };
+
 } // namespace detail
 
 template<
@@ -43,7 +51,7 @@ struct bind
           scopes::deduce
         , typename detail::get_expected<TExpected, TGiven>::type
         , TGiven
-        , type_traits::is_required_type<TExpected>
+        , detail::is_required_type<TExpected, TGiven>
       >
 {
     template<typename... Ts>
@@ -53,7 +61,7 @@ struct bind
             , typename detail::get_expected<TExpected, TGiven>::type
             , TGiven
             , detail::requires_<
-                  type_traits::is_required_type<TExpected>
+                  detail::is_required_type<TExpected, TGiven>
                 , detail::when_<Ts...>
               >
           >
@@ -65,7 +73,7 @@ struct bind
                 , typename detail::get_expected<TExpected, TGiven>::type
                 , TGiven
                 , detail::requires_<
-                      type_traits::is_required_type<TExpected>
+                      detail::is_required_type<TExpected, TGiven>
                     , type_traits::is_required_name<TName>
                     , detail::when_<Ts...>
                   >
@@ -92,7 +100,7 @@ struct bind
                 , typename detail::get_expected<TExpected, TGiven>::type
                 , TGiven
                 , detail::requires_<
-                      type_traits::is_required_type<TExpected>
+                      detail::is_required_type<TExpected, TGiven>
                     , type_traits::is_required_name<TName>
                     , detail::when_<Ts...>
                   >
