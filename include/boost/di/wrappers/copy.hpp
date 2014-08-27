@@ -10,8 +10,6 @@
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/mpl.hpp"
 
-#include <functional>
-
 namespace boost {
 namespace di {
 namespace wrappers {
