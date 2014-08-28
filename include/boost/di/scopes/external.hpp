@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_SCOPES_EXTERNAL_HPP
 #define BOOST_DI_SCOPES_EXTERNAL_HPP
 
-#include "boost/di/aux_/ref.hpp"
+#include "boost/di/aux_/utility.hpp"
 #include "boost/di/wrappers/value.hpp"
 
 namespace boost {
