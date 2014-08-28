@@ -37,7 +37,7 @@
 #include <type_traits>
 #include <string>
 #include <boost/type_traits/is_integral.hpp>
-#include "boost/di/aux_/ref.hpp"
+#include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/mpl.hpp"
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/config.hpp"
@@ -775,116 +775,16 @@ struct function_traits<R(T::*)(TArgs...) const> {
 namespace boost {
 namespace di {
 namespace bindings {
-namespace detail {
-
-template<typename T, typename TBind>
-struct apply_bind : TBind::template apply<T>::type { };
-
-template<typename T, typename TBind>
-struct eval_bind : TBind::template eval<T>::type { };
-
-template<typename... Ts>
-struct requires_ {
-    using type = requires_;
-
-    template<typename T>
-    using apply = and_<typename apply_bind<T, Ts>::type...>;
-
-    template<typename T>
-    using eval = and_<typename eval_bind<T, Ts>::type...>;
-};
-
-} // namespace detail
-} // namespace bindings
-} // namespace di
-} // namespace boost
-
-namespace boost {
-namespace di {
-namespace bindings {
-namespace detail {
-
-template<typename T, typename TBind>
-struct apply_for_all : TBind::template apply<T>::type { };
-
-template<typename T, typename TBind>
-struct eval_for_all : TBind::template eval<T>::type { };
-
-template<typename... Ts>
-struct when_ {
-    //using type = when_;
-
-    //template<typename T>
-    //using apply = typename max<int_<0>, typename apply_for_all<T, Ts>::type...>::type;
-
-    //template<typename T>
-    //using eval = typename max<int_<0>, typename eval_for_all<T, Ts>::type...>::type;
-};
-
-template<>
-struct when_<> {
-    template<typename>
-    using apply = std::true_type;
-
-    template<typename>
-    using eval = std::false_type;
-};
-
-} // namespace detail
-} // namespace bindings
-} // namespace di
-} // namespace boost
-
-namespace boost {
-namespace di {
-namespace bindings {
-namespace type_traits {
-
-template<typename TValueType, template<typename...> class TComparator = std::is_same>
-struct is_required_type {
-    template<typename T>
-    using apply = TComparator<
-        TValueType
-      , typename di::type_traits::make_plain<typename T::type>::type
-    >;
-
-    template<typename>
-    using eval = std::false_type;
-};
-
-template<typename... Ts, template<typename...> class TComparator>
-struct is_required_type<type_list<Ts...>, TComparator> {
-    template<typename T>
-    using apply = or_<
-        TComparator<
-            typename di::type_traits::make_plain<typename T::type>::type
-          , Ts
-        >...
-    >;
-
-    template<typename>
-    using eval = std::false_type;
-};
-
-} // namespace type_traits
-} // namespace bindings
-} // namespace di
-} // namespace boost
-
-namespace boost {
-namespace di {
-namespace bindings {
 
 BOOST_DI_HAS_MEMBER_TYPE(result_type);
 
 template<
     typename TScope
   , typename TExpected
-  , typename TGiven = TExpected
-  , typename TBind = type_traits::is_required_type<TExpected>
+  , typename TGiven
+  , typename TBind
 >
-class dependency : public TScope::template scope<TExpected>
-{
+class dependency : public TScope::template scope<TExpected> {
     using scope_type = typename TScope::template scope<TExpected>;
     using ref_type = scopes::external<wrappers::reference>;
     using shared_type = scopes::external<wrappers::shared>;
@@ -993,7 +893,71 @@ public:
 namespace boost {
 namespace di {
 namespace bindings {
-namespace type_traits {
+namespace detail {
+
+template<typename T, typename TBind>
+struct apply_bind : TBind::template apply<T>::type { };
+
+template<typename T, typename TBind>
+struct eval_bind : TBind::template eval<T>::type { };
+
+template<typename... Ts>
+struct requires_ {
+    using type = requires_;
+
+    template<typename T>
+    using apply = and_<typename apply_bind<T, Ts>::type...>;
+
+    template<typename T>
+    using eval = and_<typename eval_bind<T, Ts>::type...>;
+};
+
+} // namespace detail
+} // namespace bindings
+} // namespace di
+} // namespace boost
+
+namespace boost {
+namespace di {
+namespace bindings {
+namespace detail {
+
+template<typename T, typename TBind>
+struct apply_for_all : TBind::template apply<T>::type { };
+
+template<typename T, typename TBind>
+struct eval_for_all : TBind::template eval<T>::type { };
+
+template<typename... Ts>
+struct when_ {
+    //using type = when_;
+
+    //template<typename T>
+    //using apply = typename max<int_<0>, typename apply_for_all<T, Ts>::type...>::type;
+
+    //template<typename T>
+    //using eval = typename max<int_<0>, typename eval_for_all<T, Ts>::type...>::type;
+};
+
+template<>
+struct when_<> {
+    template<typename>
+    using apply = std::true_type;
+
+    template<typename>
+    using eval = std::false_type;
+};
+
+} // namespace detail
+} // namespace bindings
+} // namespace di
+} // namespace boost
+
+namespace boost {
+namespace di {
+namespace bindings {
+
+namespace detail {
 
 BOOST_DI_HAS_MEMBER_TYPE(name);
 
@@ -1024,16 +988,31 @@ struct is_required_name {
     using eval = std::true_type;
 };
 
-} // namespace type_traits
-} // namespace bindings
-} // namespace di
-} // namespace boost
+template<typename TValueType, template<typename...> class TComparator = std::is_same>
+struct is_required_type {
+    template<typename T>
+    using apply = TComparator<
+        TValueType
+      , typename di::type_traits::make_plain<typename T::type>::type
+    >;
 
-namespace boost {
-namespace di {
-namespace bindings {
+    template<typename>
+    using eval = std::false_type;
+};
 
-namespace detail {
+template<typename... Ts, template<typename...> class TComparator>
+struct is_required_type<type_list<Ts...>, TComparator> {
+    template<typename T>
+    using apply = or_<
+        TComparator<
+            typename di::type_traits::make_plain<typename T::type>::type
+          , Ts
+        >...
+    >;
+
+    template<typename>
+    using eval = std::false_type;
+};
 
 template<typename TExpected, typename>
 struct get_expected {
@@ -1046,11 +1025,11 @@ struct get_expected<type_list<Ts...>, TGiven> {
 };
 
 template<typename TExpected, typename TGiven>
-struct is_required_type : type_traits::is_required_type<TExpected, std::is_same>
+struct is_required_type_ : is_required_type<TExpected, std::is_same>
 { };
 
 template<typename T>
-struct is_required_type<T, T> : type_traits::is_required_type<T, std::is_base_of>
+struct is_required_type_<T, T> : is_required_type<T, std::is_base_of>
 { };
 
 } // namespace detail
@@ -1064,7 +1043,7 @@ struct bind
           scopes::deduce
         , typename detail::get_expected<TExpected, TGiven>::type
         , TGiven
-        , detail::is_required_type<TExpected, TGiven>
+        , detail::is_required_type_<TExpected, TGiven>
       >
 {
     template<typename... Ts>
@@ -1074,7 +1053,7 @@ struct bind
             , typename detail::get_expected<TExpected, TGiven>::type
             , TGiven
             , detail::requires_<
-                  detail::is_required_type<TExpected, TGiven>
+                  detail::is_required_type_<TExpected, TGiven>
                 , detail::when_<Ts...>
               >
           >
@@ -1086,8 +1065,8 @@ struct bind
                 , typename detail::get_expected<TExpected, TGiven>::type
                 , TGiven
                 , detail::requires_<
-                      detail::is_required_type<TExpected, TGiven>
-                    , type_traits::is_required_name<TName>
+                      detail::is_required_type_<TExpected, TGiven>
+                    , detail::is_required_name<TName>
                     , detail::when_<Ts...>
                   >
               >
@@ -1101,8 +1080,8 @@ struct bind
             , typename detail::get_expected<TExpected, TGiven>::type
             , TGiven
             , detail::requires_<
-                  type_traits::is_required_type<TExpected>
-                , type_traits::is_required_name<TName>
+                  detail::is_required_type_<TExpected, TGiven>
+                , detail::is_required_name<TName>
               >
           >
     {
@@ -1113,8 +1092,8 @@ struct bind
                 , typename detail::get_expected<TExpected, TGiven>::type
                 , TGiven
                 , detail::requires_<
-                      detail::is_required_type<TExpected, TGiven>
-                    , type_traits::is_required_name<TName>
+                      detail::is_required_type_<TExpected, TGiven>
+                    , detail::is_required_name<TName>
                     , detail::when_<Ts...>
                   >
               >
@@ -1218,7 +1197,7 @@ class scope {
 
     template<typename T, typename = void>
     struct get_binding
-        : dependency<TScope, T, T>
+        : dependency<TScope, T, T, detail::is_required_type<T>>
     { };
 
     template<typename T>
@@ -1535,6 +1514,8 @@ struct binder<type_list<Ts...>> {
             bindings::dependency<
                 scopes::deduce
               , typename type_traits::make_plain<T>::type
+              , typename type_traits::make_plain<T>::type
+              , bindings::detail::is_required_type<typename type_traits::make_plain<T>::type>
             >
     >
     using resolve = typename at_key<TDefault, std::true_type, resolve_impl<T, TCallStack, Ts>...>::type::
@@ -1556,12 +1537,32 @@ namespace di {
 
 BOOST_DI_HAS_MEMBER_FUNCTION(BOOST_DI_INJECTOR, BOOST_DI_INJECTOR);
 
-template<typename T, typename Q>
+template<typename T, std::size_t>
+struct get_type {
+    using type = T;
+};
+
+template<typename, typename, typename>
+struct ctor_impl;
+
+template<typename R, typename T, std::size_t... TArgs>
+struct ctor_impl<R, T, index_sequence<TArgs...>>
+    : pair<
+          typename std::is_constructible<R, typename get_type<T, TArgs>::type...>::type
+        , type_list<typename get_type<T, TArgs>::type...>
+      >
+{ };
+
+template<typename, typename>
 struct ctor_traits_impl;
 
 template<typename T, std::size_t... Args>
 struct ctor_traits_impl<T, index_sequence<Args...>>
-    : longest<typename genn<T, core::any_type<T>, Args>::type...>
+    : at_key<
+          type_list<>
+        , std::true_type
+        , typename ctor_impl<T, core::any_type<T>, typename make_index_sequence<Args>::type>::type...
+      >
 { };
 
 template<typename T>
@@ -1993,13 +1994,13 @@ private:
     template<typename TDependency, typename TDeps>
     typename std::enable_if<!std::is_base_of<TDependency, TDeps>::value, TDependency&>::type
     acquire(TDeps&) {
-        auto it = scopes_.find(type_id<TDependency>());
+        auto it = scopes_.find(aux::type_id<TDependency>());
         if (it != scopes_.end()) {
             return *static_cast<TDependency*>(it->second.get());
         }
 
         aux::shared_ptr<TDependency> dependency(new TDependency());
-        scopes_.insert(std::make_pair(type_id<TDependency>(), dependency));
+        scopes_.insert(std::make_pair(aux::type_id<TDependency>(), dependency));
         return *dependency;
     }
 
@@ -2178,7 +2179,7 @@ struct add_type_list<T, std::false_type, std::false_type> {
 };
 
 template<typename... Ts>
-using get_bindings = typename join<typename add_type_list<Ts>::type...>::type;
+using get_bindings = typename sort<typename join<typename add_type_list<Ts>::type...>::type>::type;
 
 template<typename... Ts>
 class injector
