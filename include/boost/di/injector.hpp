@@ -67,7 +67,7 @@ struct add_type_list<T, std::false_type, std::false_type> {
 };
 
 template<typename... Ts>
-using get_bindings = typename join<typename add_type_list<Ts>::type...>::type;
+using get_bindings = typename sort<typename join<typename add_type_list<Ts>::type...>::type>::type;
 
 template<typename... Ts>
 class injector
