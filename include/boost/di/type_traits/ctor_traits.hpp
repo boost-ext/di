@@ -20,12 +20,32 @@ namespace di {
 
 BOOST_DI_HAS_MEMBER_FUNCTION(BOOST_DI_INJECTOR, BOOST_DI_INJECTOR);
 
-template<typename T, typename Q>
+template<typename T, std::size_t>
+struct get_type {
+    using type = T;
+};
+
+template<typename, typename, typename>
+struct ctor_impl;
+
+template<typename R, typename T, std::size_t... TArgs>
+struct ctor_impl<R, T, index_sequence<TArgs...>>
+    : pair<
+          typename std::is_constructible<R, typename get_type<T, TArgs>::type...>::type
+        , type_list<typename get_type<T, TArgs>::type...>
+      >
+{ };
+
+template<typename, typename>
 struct ctor_traits_impl;
 
 template<typename T, std::size_t... Args>
 struct ctor_traits_impl<T, index_sequence<Args...>>
-    : longest<typename genn<T, core::any_type<T>, Args>::type...>
+    : at_key<
+          type_list<>
+        , std::true_type
+        , typename ctor_impl<T, core::any_type<T>, typename make_index_sequence<Args>::type>::type...
+      >
 { };
 
 template<typename T>

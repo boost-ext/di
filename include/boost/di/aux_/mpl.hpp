@@ -84,7 +84,9 @@ template<bool N>
 using bool_ = std::integral_constant<bool, N>;
 
 template<typename, typename>
-struct pair { };
+struct pair {
+    using type = pair;
+};
 
 template <typename x>
 struct no_decay { using type = x; };
@@ -106,6 +108,14 @@ template<typename... Ts>
 struct is_type_list<type_list<Ts...>>
     : std::true_type
 { };
+
+template<typename>
+struct size;
+
+template<typename... Ts>
+struct size<type_list<Ts...>> {
+    static const std::size_t value = sizeof...(Ts);
+};
 
 template<std::size_t...>
 struct index_sequence {

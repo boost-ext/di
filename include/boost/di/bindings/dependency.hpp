@@ -9,7 +9,7 @@
 
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/mpl.hpp"
-#include "boost/di/aux_/ref.hpp"
+#include "boost/di/aux_/utility.hpp"
 #include "boost/di/wrappers/shared.hpp"
 #include "boost/di/wrappers/reference.hpp"
 #include "boost/di/wrappers/value.hpp"

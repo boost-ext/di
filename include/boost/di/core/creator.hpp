@@ -10,6 +10,7 @@
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/mpl.hpp"
+#include "boost/di/aux_/utility.hpp"
 #include "boost/di/core/any_type.hpp"
 #include "boost/di/core/binder.hpp"
 #include "boost/di/core/pool.hpp"
@@ -226,13 +227,13 @@ private:
     template<typename TDependency, typename TDeps>
     typename std::enable_if<!std::is_base_of<TDependency, TDeps>::value, TDependency&>::type
     acquire(TDeps&) {
-        auto it = scopes_.find(type_id<TDependency>());
+        auto it = scopes_.find(aux::type_id<TDependency>());
         if (it != scopes_.end()) {
             return *static_cast<TDependency*>(it->second.get());
         }
 
         aux::shared_ptr<TDependency> dependency(new TDependency());
-        scopes_.insert(std::make_pair(type_id<TDependency>(), dependency));
+        scopes_.insert(std::make_pair(aux::type_id<TDependency>(), dependency));
         return *dependency;
     }
 
