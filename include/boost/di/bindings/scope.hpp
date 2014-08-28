@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_BINDINGS_SCOPE_HPP
 #define BOOST_DI_BINDINGS_SCOPE_HPP
 
+#include "boost/di/bindings/bind.hpp"
 #include "boost/di/bindings/dependency.hpp"
 
 namespace boost {
@@ -22,7 +23,7 @@ class scope {
 
     template<typename T, typename = void>
     struct get_binding
-        : dependency<TScope, T, T>
+        : dependency<TScope, T, T, detail::is_required_type<T>>
     { };
 
     template<typename T>

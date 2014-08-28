@@ -12,8 +12,6 @@
 #include "boost/di/bindings/dependency.hpp"
 #include "boost/di/bindings/detail/requires.hpp"
 #include "boost/di/bindings/detail/when.hpp"
-#include "boost/di/bindings/type_traits/is_required_name.hpp"
-#include "boost/di/bindings/type_traits/is_required_type.hpp"
 #include "boost/di/scopes/deduce.hpp"
 
 namespace boost {
@@ -21,6 +19,61 @@ namespace di {
 namespace bindings {
 
 namespace detail {
+
+BOOST_DI_HAS_MEMBER_TYPE(name);
+
+template<typename T, typename = void>
+struct get_name {
+    struct no_name { };
+    using type = no_name;
+};
+
+template<typename T>
+struct get_name<T, typename std::enable_if<has_name<T>::value>::type> {
+    using type = typename T::name;
+};
+
+template<typename TName>
+struct is_required_name {
+    template<typename T>
+    using apply = std::is_same<
+        typename get_name<
+            typename di::type_traits::remove_accessors<
+                typename T::type
+             >::type
+        >::type
+      , TName
+    >;
+
+    template<typename>
+    using eval = std::true_type;
+};
+
+template<typename TValueType, template<typename...> class TComparator = std::is_same>
+struct is_required_type {
+    template<typename T>
+    using apply = TComparator<
+        TValueType
+      , typename di::type_traits::make_plain<typename T::type>::type
+    >;
+
+    template<typename>
+    using eval = std::false_type;
+};
+
+template<typename... Ts, template<typename...> class TComparator>
+struct is_required_type<type_list<Ts...>, TComparator> {
+    template<typename T>
+    using apply = or_<
+        TComparator<
+            typename di::type_traits::make_plain<typename T::type>::type
+          , Ts
+        >...
+    >;
+
+    template<typename>
+    using eval = std::false_type;
+};
 
 template<typename TExpected, typename>
 struct get_expected {
@@ -33,11 +86,11 @@ struct get_expected<type_list<Ts...>, TGiven> {
 };
 
 template<typename TExpected, typename TGiven>
-struct is_required_type : type_traits::is_required_type<TExpected, std::is_same>
+struct is_required_type_ : is_required_type<TExpected, std::is_same>
 { };
 
 template<typename T>
-struct is_required_type<T, T> : type_traits::is_required_type<T, std::is_base_of>
+struct is_required_type_<T, T> : is_required_type<T, std::is_base_of>
 { };
 
 } // namespace detail
@@ -51,7 +104,7 @@ struct bind
           scopes::deduce
         , typename detail::get_expected<TExpected, TGiven>::type
         , TGiven
-        , detail::is_required_type<TExpected, TGiven>
+        , detail::is_required_type_<TExpected, TGiven>
       >
 {
     template<typename... Ts>
@@ -61,7 +114,7 @@ struct bind
             , typename detail::get_expected<TExpected, TGiven>::type
             , TGiven
             , detail::requires_<
-                  detail::is_required_type<TExpected, TGiven>
+                  detail::is_required_type_<TExpected, TGiven>
                 , detail::when_<Ts...>
               >
           >
@@ -73,8 +126,8 @@ struct bind
                 , typename detail::get_expected<TExpected, TGiven>::type
                 , TGiven
                 , detail::requires_<
-                      detail::is_required_type<TExpected, TGiven>
-                    , type_traits::is_required_name<TName>
+                      detail::is_required_type_<TExpected, TGiven>
+                    , detail::is_required_name<TName>
                     , detail::when_<Ts...>
                   >
               >
@@ -88,8 +141,8 @@ struct bind
             , typename detail::get_expected<TExpected, TGiven>::type
             , TGiven
             , detail::requires_<
-                  type_traits::is_required_type<TExpected>
-                , type_traits::is_required_name<TName>
+                  detail::is_required_type_<TExpected, TGiven>
+                , detail::is_required_name<TName>
               >
           >
     {
@@ -100,8 +153,8 @@ struct bind
                 , typename detail::get_expected<TExpected, TGiven>::type
                 , TGiven
                 , detail::requires_<
-                      detail::is_required_type<TExpected, TGiven>
-                    , type_traits::is_required_name<TName>
+                      detail::is_required_type_<TExpected, TGiven>
+                    , detail::is_required_name<TName>
                     , detail::when_<Ts...>
                   >
               >

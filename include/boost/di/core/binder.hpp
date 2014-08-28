@@ -44,6 +44,8 @@ struct binder<type_list<Ts...>> {
             bindings::dependency<
                 scopes::deduce
               , typename type_traits::make_plain<T>::type
+              , typename type_traits::make_plain<T>::type
+              , bindings::detail::is_required_type<typename type_traits::make_plain<T>::type>
             >
     >
     using resolve = typename at_key<TDefault, std::true_type, resolve_impl<T, TCallStack, Ts>...>::type::

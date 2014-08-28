@@ -16,9 +16,6 @@
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/type_traits/function_traits.hpp"
-#include "boost/di/bindings/detail/requires.hpp"
-#include "boost/di/bindings/detail/when.hpp"
-#include "boost/di/bindings/type_traits/is_required_type.hpp"
 
 namespace boost {
 namespace di {
@@ -29,11 +26,10 @@ BOOST_DI_HAS_MEMBER_TYPE(result_type);
 template<
     typename TScope
   , typename TExpected
-  , typename TGiven = TExpected
-  , typename TBind = type_traits::is_required_type<TExpected>
+  , typename TGiven
+  , typename TBind
 >
-class dependency : public TScope::template scope<TExpected>
-{
+class dependency : public TScope::template scope<TExpected> {
     using scope_type = typename TScope::template scope<TExpected>;
     using ref_type = scopes::external<wrappers::reference>;
     using shared_type = scopes::external<wrappers::shared>;
