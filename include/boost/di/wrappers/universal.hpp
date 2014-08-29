@@ -70,155 +70,149 @@ private:
     T wrapper_;
 };
 
-/*template<typename T>*/
-//class universal_impl<aux::auto_ptr<T>> {
-//public:
-    //template<typename TWrapper>
-    //universal_impl(std::vector<aux::shared_ptr<void>>& refs, const TWrapper& wrapper)
-        //: wrapper_(new aux::auto_ptr<T>(wrapper(type<aux::auto_ptr<T>>()).release()))
-    //{
-        //refs.push_back(aux::shared_ptr<aux::auto_ptr<T>>(wrapper_));
-    //}
+template<typename T>
+class universal_impl<aux::auto_ptr<T>> {
+public:
+    template<typename TWrapper>
+    universal_impl(std::vector<aux::shared_ptr<void>>& refs, const TWrapper& wrapper)
+        : wrapper_(new aux::auto_ptr<T>(wrapper(type<aux::auto_ptr<T>>()).release()))
+    {
+        refs.push_back(aux::shared_ptr<aux::auto_ptr<T>>(wrapper_));
+    }
 
-    //operator aux::auto_ptr<T>&() {
-        //return *wrapper_;
-    //}
+    operator aux::auto_ptr<T>&() {
+        return *wrapper_;
+    }
 
-//private:
-    //aux::auto_ptr<T>* wrapper_; // weak
-//};
+private:
+    aux::auto_ptr<T>* wrapper_; // weak
+};
 
-//template<typename T>
-//class universal_impl<const T&> {
-//public:
-    //template<typename TWrapper>
-    //universal_impl(std::vector<aux::shared_ptr<void>>&
-                 //, const TWrapper& wrapper
-                 //, typename std::enable_if<detail::has_convertible_to_ref<TWrapper, T>::wrapper>::type* = 0)
-        //: wrapper_(std::bind<const T&>(wrapper, type<const T&>()))
-    //{ }
+template<typename T>
+class universal_impl<const T&> {
+public:
+    template<typename TWrapper>
+    universal_impl(std::vector<aux::shared_ptr<void>>&
+                 , const TWrapper& wrapper
+                 , typename std::enable_if<has_convertible_to_ref<TWrapper, T>::wrapper>::type* = 0)
+        : wrapper_(wrapper(type<const T&>()))
+    { }
 
-    //template<typename TWrapper>
-    //universal_impl(std::vector<aux::shared_ptr<void>>& refs
-                 //, const TWrapper& wrapper
-                 //, typename std::enable_if<!detail::has_convertible_to_ref<TWrapper, T>::wrapper>::type* = 0)
-        //: wrapper_(std::bind(&copy<T, T, TWrapper>, std::ref(refs), wrapper))
-    //{ }
+    template<typename TWrapper>
+    universal_impl(std::vector<aux::shared_ptr<void>>& refs
+                 , const TWrapper& wrapper
+                 , typename std::enable_if<!has_convertible_to_ref<TWrapper, T>::wrapper>::type* = 0)
+        : wrapper_(copy<T, T, TWrapper>(refs, wrapper))
+    { }
 
-    //operator const T&() const {
-        //return wrapper_();
-    //}
+    operator const T&() const {
+        return wrapper_;
+    }
 
-//private:
-    //std::function<const T&()> wrapper_;
-//};
+private:
+    std::reference_wrapper<const T> wrapper_;
+};
 
-//template<typename T, typename TName>
-//class universal_impl<named<T, TName>> {
-//public:
-    //template<typename TWrapper>
-    //universal_impl(std::vector<aux::shared_ptr<void>>&, const TWrapper& wrapper)
-        //: wrapper_(std::bind<T>(wrapper, type<T>()))
-    //{ }
+template<typename T, typename TName>
+class universal_impl<named<T, TName>> {
+public:
+    template<typename TWrapper>
+    universal_impl(std::vector<aux::shared_ptr<void>>&, const TWrapper& wrapper)
+        : wrapper_(wrapper(type<T>()))
+    { }
 
-    //operator T() const {
-        //return wrapper_();
-    //}
+    operator T() const {
+        return wrapper_;
+    }
 
-    //operator named<T, TName>() const {
-        //return wrapper_();
-    //}
+    operator named<T, TName>() const {
+        return wrapper_;
+    }
 
-//private:
-    //std::function<T()> wrapper_;
-//};
+private:
+    T wrapper_;
+};
 
-//template<typename T, typename TName>
-//class universal_impl<named<const T&, TName>> {
-//public:
-    //template<typename TWrapper>
-    //universal_impl(std::vector<aux::shared_ptr<void>>&
-                 //, const TWrapper& wrapper
-                 //, typename std::enable_if<detail::has_convertible_to_ref<TWrapper, T>::wrapper>::type* = 0)
-        //: wrapper_(std::bind<const T&>(wrapper, type<const T&>()))
-    //{ }
+template<typename T, typename TName>
+class universal_impl<named<const T&, TName>> {
+public:
+    template<typename TWrapper>
+    universal_impl(std::vector<aux::shared_ptr<void>>&
+                 , const TWrapper& wrapper
+                 , typename std::enable_if<has_convertible_to_ref<TWrapper, T>::wrapper>::type* = 0)
+        : wrapper_(wrapper(type<const T&>()))
+    { }
 
-    //template<typename TWrapper>
-    //universal_impl(std::vector<aux::shared_ptr<void>>& refs
-                 //, const TWrapper& wrapper
-                 //, typename std::enable_if<!detail::has_convertible_to_ref<TWrapper, T>::wrapper>::type* = 0)
-        //: wrapper_(std::bind(&copy<T, T, TWrapper>, std::ref(refs), wrapper))
-    //{ }
+    template<typename TWrapper>
+    universal_impl(std::vector<aux::shared_ptr<void>>& refs
+                 , const TWrapper& wrapper
+                 , typename std::enable_if<!has_convertible_to_ref<TWrapper, T>::wrapper>::type* = 0)
+        : wrapper_(copy<T, T, TWrapper>(refs, wrapper))
+    { }
 
-    //operator named<const T&, TName>() const {
-        //return wrapper_();
-    //}
+    operator named<const T&, TName>() const {
+        return wrapper_;
+    }
 
-//private:
-    //std::function<named<const T&, TName>()> wrapper_;
-//};
+private:
+    named<const T&, TName> wrapper_;
+};
 
-//template<typename T, typename TName>
-//class universal_impl<const named<T, TName>&> {
-//public:
-    //template<typename TWrapper>
-    //universal_impl(std::vector<aux::shared_ptr<void>>& refs
-                 //, const TWrapper& wrapper)
-        //: wrapper_(std::bind(&copy<named<T, TName>, T, TWrapper>, std::ref(refs), wrapper))
-    //{ }
+template<typename T, typename TName>
+class universal_impl<const named<T, TName>&> {
+public:
+    template<typename TWrapper>
+    universal_impl(std::vector<aux::shared_ptr<void>>& refs
+                 , const TWrapper& wrapper)
+        : wrapper_(copy<named<T, TName>, T, TWrapper>(refs, wrapper))
+    { }
 
-    //operator const named<T, TName>&() const {
-        //return wrapper_();
-    //}
+    operator const named<T, TName>&() const {
+        return wrapper_;
+    }
 
-//private:
-    //std::function<const named<T, TName>&()> wrapper_;
-//};
+private:
+    std::reference_wrapper<const named<T, TName>> wrapper_;
+};
 
-//template<typename T, typename TName>
-//class universal_impl<const named<const T&, TName>&> {
-    //universal_impl& operator=(const universal_impl&);
+template<typename T, typename TName>
+class universal_impl<const named<const T&, TName>&> {
+    universal_impl& operator=(const universal_impl&);
 
-//public:
-    //template<typename TWrapper>
-    //universal_impl(std::vector<aux::shared_ptr<void>>& refs
-                 //, const TWrapper& wrapper
-                 //, typename std::enable_if<detail::has_convertible_to_ref<TWrapper, T>::wrapper>::type* = 0)
-        //: refs_(refs)
-        //, wrapper_(std::bind<const T&>(wrapper, type<const T&>()))
-    //{ }
+public:
+    template<typename TWrapper>
+    universal_impl(std::vector<aux::shared_ptr<void>>& refs
+                 , const TWrapper& wrapper
+                 , typename std::enable_if<has_convertible_to_ref<TWrapper, T>::wrapper>::type* = 0)
+        : refs_(refs)
+        , wrapper_(wrapper(type<const T&>()))
+    { }
 
-    //template<typename TWrapper>
-    //universal_impl(std::vector<aux::shared_ptr<void>>& refs
-                 //, const TWrapper& wrapper
-                 //, typename std::enable_if<!detail::has_convertible_to_ref<TWrapper, T>::wrapper>::type* = 0)
-        //: refs_(refs)
-        //, wrapper_(std::bind(&copy<T, T, TWrapper>, std::ref(refs), wrapper))
-    //{ }
+    template<typename TWrapper>
+    universal_impl(std::vector<aux::shared_ptr<void>>& refs
+                 , const TWrapper& wrapper
+                 , typename std::enable_if<!has_convertible_to_ref<TWrapper, T>::wrapper>::type* = 0)
+        : refs_(refs)
+        , wrapper_(copy<T, T, TWrapper>(refs, wrapper))
+    { }
 
-    //operator const named<const T&, TName>&() const {
-        //aux::shared_ptr<holder<named<const T&, TName>>> object(
-            //new holder<named<const T&, TName>>(wrapper_())
-        //);
-        //refs_.push_back(object);
-        //return object->held;
-    //}
+    operator const named<const T&, TName>&() const {
+        aux::shared_ptr<holder<named<const T&, TName>>> object(
+            new holder<named<const T&, TName>>(wrapper_)
+        );
+        refs_.push_back(object);
+        return object->held;
+    }
 
-//private:
-    //std::vector<aux::shared_ptr<void>>& refs_;
-    //std::function<named<const T&, TName>()> wrapper_;
-/*};*/
+private:
+    std::vector<aux::shared_ptr<void>>& refs_;
+    named<const T&, TName> wrapper_;
+};
 
 } // namespace detail
 
 template<typename T>
-class universal : public detail::universal_impl<T>{
-public:
-    template<typename TWrapper>
-    universal(std::vector<aux::shared_ptr<void>>& refs, const TWrapper& wrapper)
-        : detail::universal_impl<T>(refs, wrapper)
-     { }
-};
+using universal = detail::universal_impl<T>;
 
 } // namespace wrappers
 } // namespace di
