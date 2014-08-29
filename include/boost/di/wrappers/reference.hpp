@@ -22,16 +22,12 @@ public:
         : value_(value)
     { }
 
-    reference(const reference& other)
-        : value_(other.value_)
-    { }
-
     T& operator()(const type<T&>&) const {
         return value_;
     }
 
 private:
-    T& value_;
+    std::reference_wrapper<T> value_;
 };
 
 } // namespace wrappers

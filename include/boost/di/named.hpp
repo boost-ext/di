@@ -69,7 +69,7 @@ public:
     }
 
 private:
-    const T& object_;
+    std::reference_wrapper<const T> object_;
 };
 
 template<
@@ -96,7 +96,7 @@ public:
     }
 
 private:
-    T& object_;
+    std::reference_wrapper<T> object_;
 };
 
 template<
