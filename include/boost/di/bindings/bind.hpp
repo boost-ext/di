@@ -105,8 +105,7 @@ struct bind
         , typename detail::get_expected<TExpected, TGiven>::type
         , TGiven
         , detail::is_required_type_<TExpected, TGiven>
-      >
-{
+      > {
     template<typename... Ts>
     struct when
         : dependency<
@@ -117,8 +116,7 @@ struct bind
                   detail::is_required_type_<TExpected, TGiven>
                 , detail::when_<Ts...>
               >
-          >
-    {
+          > {
         template<typename TName>
         struct named
             : dependency<
@@ -144,8 +142,7 @@ struct bind
                   detail::is_required_type_<TExpected, TGiven>
                 , detail::is_required_name<TName>
               >
-          >
-    {
+          > {
         template<typename... Ts>
         struct when
             : dependency<

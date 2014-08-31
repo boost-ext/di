@@ -23,8 +23,6 @@ struct eval_bind : TBind::template eval<T>::type { };
 
 template<typename... Ts>
 struct requires_ {
-    using type = requires_;
-
     template<typename T>
     using apply = and_<typename apply_bind<T, Ts>::type...>;
 
