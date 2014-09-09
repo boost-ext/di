@@ -68,7 +68,7 @@ public:
     template<
         typename U
       , typename = typename std::enable_if<
-            !std::is_base_of<
+            !std::is_same<
                 typename type_traits::make_plain<U>::type
               , typename type_traits::make_plain<T>::type
             >::value
@@ -83,7 +83,7 @@ public:
     template<
         typename U
       , typename = typename std::enable_if<
-            !std::is_base_of<
+            !std::is_same<
                 typename type_traits::make_plain<U>::type
               , typename type_traits::make_plain<T>::type
             >::value
@@ -115,7 +115,7 @@ public:
         template<
             typename U
           , typename = typename std::enable_if<
-                !std::is_base_of<
+                !std::is_same<
                     typename type_traits::make_plain<U>::type
                   , typename type_traits::make_plain<T>::type
                 >::value

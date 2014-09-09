@@ -18,19 +18,17 @@ namespace core {
 template<
     typename T
   , typename TCallStack
-  , typename TDependency
 >
 struct data {
     using type = T;
     using call_stack = TCallStack;
-    using dependency = TDependency;
 };
 
 template<typename T, typename TCallStack, typename _>
-using resolve_impl = pair<typename _::bind::template apply<data<T, TCallStack, _>>::type, _>;
+using resolve_impl = pair<typename _::bind::template apply<data<T, TCallStack>>::type, _>;
 
 template<typename T, typename TCallStack, typename _>
-using eval_impl = typename _::bind::template eval<data<T, TCallStack, _>>::type;
+using eval_impl = typename _::bind::template eval<data<T, TCallStack>>::type;
 
 template<typename>
 struct binder;
@@ -48,7 +46,7 @@ struct binder<type_list<Ts...>> {
               , bindings::detail::is_required_type<typename type_traits::make_plain<T>::type>
             >
     >
-    using resolve = typename at_key<TDefault, std::true_type, resolve_impl<T, TCallStack, Ts>...>::type::
+    using resolve = typename at_key<void, std::true_type, resolve_impl<T, TCallStack, Ts>...>::type::
         template rebind<typename scopes::deduce::rebind<T>::other>::other;
 
     template<

@@ -12,7 +12,7 @@
 #endif
 
 #if !defined(BOOST_DI_CFG_CTOR_LIMIT_SIZE)
-    #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
+    #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 256
 #endif
 
 #if !defined(BOOST_DI_CFG_INJECT_VA_ARGS) && !defined(BOOST_DI_CFG_INJECT_BRACKET)

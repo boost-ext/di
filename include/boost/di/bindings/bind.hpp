@@ -61,8 +61,20 @@ struct is_required_type {
     using eval = std::false_type;
 };
 
+template<typename TValueType, template<typename...> class TComparator = std::is_same>
+struct is_required_type__ {
+    template<typename T>
+    using apply = TComparator<
+        TValueType
+      , typename di::type_traits::make_plain<T>::type
+    >;
+
+    template<typename>
+    using eval = std::false_type;
+};
+
 template<typename... Ts, template<typename...> class TComparator>
-struct is_required_type<type_list<Ts...>, TComparator> {
+struct is_required_type__<type_list<Ts...>, TComparator> {
     template<typename T>
     using apply = or_<
         TComparator<
@@ -86,11 +98,11 @@ struct get_expected<type_list<Ts...>, TGiven> {
 };
 
 template<typename TExpected, typename TGiven>
-struct is_required_type_ : is_required_type<TExpected, std::is_same>
+struct is_required_type_ : is_required_type__<TExpected, std::is_same>
 { };
 
 template<typename T>
-struct is_required_type_<T, T> : is_required_type<T, std::is_base_of>
+struct is_required_type_<T, T> : is_required_type__<T, std::is_base_of>
 { };
 
 } // namespace detail
