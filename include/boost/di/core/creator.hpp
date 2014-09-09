@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_CORE_CREATOR_HPP
 #define BOOST_DI_CORE_CREATOR_HPP
 
+#include <unordered_map>
 #include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/mpl.hpp"
@@ -18,8 +19,6 @@
 #include "boost/di/type_traits/function_traits.hpp"
 #include "boost/di/wrappers/universal.hpp"
 
-#include <unordered_map>
-
 namespace boost {
 namespace di {
 namespace core {
@@ -29,15 +28,12 @@ BOOST_DI_HAS_MEMBER_TYPE(any);
 template<typename TDeps_>
 class creator {
     using binder_t = binder<TDeps_>;
+    using scopes_type = std::unordered_map<int, aux::shared_ptr<void>>;
 
     template<typename TDependency>
-    struct scope_create
-        : type_traits::function_traits<
-              decltype(&TDependency::create)
-          >::type
-    { };
-
-    using scopes_type = std::unordered_map<int, aux::shared_ptr<void>>;
+    using scope_create = typename type_traits::function_traits<
+        decltype(&TDependency::create)
+    >::type;
 
     template<typename T, typename TDependency>
     struct data_visitor {
@@ -132,7 +128,7 @@ private:
       , typename TPolicies
     >
     typename std::enable_if<
-        !size<typename scope_create<TDependency>::type>::value
+        !size<scope_create<TDependency>>::value
       , wrappers::universal<T>
     >::type
     create_impl(const TProvider&
@@ -156,7 +152,7 @@ private:
       , typename TPolicies
     >
     typename std::enable_if<
-        size<typename scope_create<TDependency>::type>::value
+        size<scope_create<TDependency>>::value
       , wrappers::universal<T>>::type
     create_impl(const TProvider& provider
               , TDeps& deps

@@ -46,7 +46,7 @@ struct binder<type_list<Ts...>> {
               , bindings::detail::is_required_type<typename type_traits::make_plain<T>::type>
             >
     >
-    using resolve = typename at_key<void, std::true_type, resolve_impl<T, TCallStack, Ts>...>::type::
+    using resolve = typename at_key<TDefault, std::true_type, resolve_impl<T, TCallStack, Ts>...>::type::
         template rebind<typename scopes::deduce::rebind<T>::other>::other;
 
     template<
