@@ -17,7 +17,7 @@ namespace di {
 struct any_type {
     BOOST_DI_WKND(NO_MSVC)(
         template<typename T> operator T() {
-            return T();
+            return {};
         }
     )
 
@@ -32,8 +32,8 @@ struct any_type {
     }
 
     template<typename T> operator std::auto_ptr<T>&() {
-        static std::auto_ptr<T> t;
-        return t;
+        static std::auto_ptr<T> ap;
+        return ap;
     }
 };
 
