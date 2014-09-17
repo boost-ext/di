@@ -27,7 +27,7 @@ bool verify_assert_exception(const assert_exception& e) {
 template<typename T, typename TResolve = mpl::false_>
 struct fake_dependency
 {
-    typedef T type;
+    typedef T original_type;
 
     struct resolved
     {

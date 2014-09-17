@@ -81,9 +81,11 @@
         >
         struct data
         {
-            typedef T type;
+            typedef T original_type;
+            typedef typename TDependency::expected expected_type;
+            typedef typename TDependency::given given_type;
+            typedef typename TDependency::scope scope;
             typedef TCallStack call_stack;
-            typedef TDependency dependency;
             typedef TBinder<TDependecies> binder;
         };
 
@@ -321,14 +323,15 @@
               , TCallStack                              \
             >(allocator, deps, refs, visitor, policies)
 
-        return allocator.template
-            allocate<typename TDependency::expected, typename TDependency::given>(
-                BOOST_PP_REPEAT(
-                    BOOST_PP_ITERATION()
-                  , BOOST_DI_CREATOR_CREATE
-                  , create
-                )
-            );
+        typedef data<T, TCallStack, TDependency> data_type;
+
+        return allocator.template allocate<data_type>(
+            BOOST_PP_REPEAT(
+                BOOST_PP_ITERATION()
+              , BOOST_DI_CREATOR_CREATE
+              , create
+            )
+        );
 
         #undef BOOST_DI_CREATOR_CREATE
       }

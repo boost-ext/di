@@ -27,10 +27,7 @@ bool verify_assert_exception(const assert_exception& e) {
 template<typename TScope>
 struct fake_scope
 {
-    struct dependency
-    {
-        typedef TScope scope;
-    };
+    typedef TScope scope;
 };
 
 BOOST_AUTO_TEST_CASE(value) {

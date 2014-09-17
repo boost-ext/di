@@ -164,9 +164,9 @@ BOOST_DI_WKND(NO_MSVC)(
         template<typename T>
         void assert_policy() const {
             BOOST_DI_ASSERT_MSG(
-                is_parameter_permitted<typename T::type>::value
+                is_parameter_permitted<typename T::original_type>::value
               , PARAMETER_NOT_PERMITTED
-              , typename T::type
+              , typename T::original_type
             );
         }
     };

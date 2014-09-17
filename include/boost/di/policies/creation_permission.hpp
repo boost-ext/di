@@ -76,7 +76,7 @@ class creation_permission
               mpl::not_<
                   is_same<
                       typename T::binder::template resolve<
-                          typename T::type
+                          typename T::original_type
                         , mpl::vector0<>
                         , not_resolved
                       >::type
@@ -86,7 +86,7 @@ class creation_permission
             , mpl::bool_<
                   mpl::count_if<
                       permitted_types
-                    , is_type_permitted_impl<mpl::_, typename T::type>
+                    , is_type_permitted_impl<mpl::_, typename T::original_type>
                   >::value != 0
               >
           >
@@ -98,7 +98,7 @@ public:
        BOOST_DI_ASSERT_MSG(
             is_type_permitted<T>::value
           , TYPE_HAS_TO_BE_EXPLICITLY_BINDED
-          , typename T::type
+          , typename T::original_type
         );
     }
 };

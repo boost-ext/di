@@ -51,22 +51,22 @@
     class allocator
     {
     public:
-        template<typename TExpected, typename TGiven>
-        typename disable_if<is_explicit<TGiven>, TExpected*>::type
+        template<typename T>
+        typename disable_if<is_explicit<typename T::given_type>, typename T::expected_type*>::type
         allocate() const {
-            return new TGiven();
+            return new typename T::given_type();
         }
 
-        template<typename TExpected, typename TGiven>
-        typename enable_if<type_traits::has_value<TGiven>, TExpected*>::type
+        template<typename T>
+        typename enable_if<type_traits::has_value<typename T::given_type>, typename T::expected_type*>::type
         allocate() const {
-            return new TExpected(TGiven::value);
+            return new typename T::expected_type(T::given_type::value);
         }
 
-        template<typename TExpected, typename TGiven>
-        typename enable_if<is_mpl_string<TGiven>, TExpected*>::type
+        template<typename T>
+        typename enable_if<is_mpl_string<typename T::given_type>, typename T::expected_type*>::type
         allocate() const {
-            return new TExpected(mpl::c_str<TGiven>::value);
+            return new typename T::expected_type(mpl::c_str<typename T::given_type>::value);
         }
 
         #define BOOST_PP_FILENAME_1 "boost/di/core/allocator.hpp"
@@ -82,9 +82,9 @@
 
 #else
 
-    template<typename TExpected, typename TGiven, BOOST_DI_TYPES(TArgs)>
-    TExpected* allocate(BOOST_DI_FORWARD_ARGS(TArgs, args)) const {
-        return new TGiven(BOOST_DI_ARGS_FORWARD(args));
+    template<typename T, BOOST_DI_TYPES(TArgs)>
+    typename T::expected_type* allocate(BOOST_DI_FORWARD_ARGS(TArgs, args)) const {
+        return new typename T::given_type(BOOST_DI_ARGS_FORWARD(args));
     }
 
 #endif

@@ -5257,262 +5257,6 @@ struct any_of
     } // namespace di
     } // namespace boost
 
-
-namespace boost {
-namespace di {
-namespace type_traits {
-
-namespace detail {
-
-template<
-    typename T
-  , typename TSignature
->
-class is_convertible
-{
-    template<typename U>
-    static mpl::aux::yes_tag test(non_type<TSignature, &U::operator()>*);
-
-    template<typename>
-    static mpl::aux::no_tag test(...);
-
-public:
-    typedef is_convertible type;
-
-    BOOST_STATIC_CONSTANT(
-        bool
-      , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
-    );
-};
-
-} // namespace detail
-
-template<
-    typename TValueType
-  , typename T
->
-struct is_convertible_to_ref
-    : detail::is_convertible<TValueType, const T&(TValueType::*)(const boost::type<const T&>&) const>
-{ };
-
-} // namespace type_traits
-} // namespace di
-} // namespace boost
-
-
-namespace boost {
-namespace di {
-namespace wrappers {
-
-namespace detail {
-
-template<typename TResult, typename T, typename TValueType>
-inline typename disable_if<is_copy_constructible<T>, const TResult&>::type
-copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
-    aux::shared_ptr<TResult> object(value(boost::type<T*>()));
-    refs.push_back(object);
-    return *object;
-}
-
-template<typename T>
-struct holder
-{
-    explicit holder(const T& value)
-        : held(value)
-    { }
-
-    T held;
-};
-
-template<typename TResult, typename T, typename TValueType>
-inline typename enable_if<is_copy_constructible<T>, const TResult&>::type
-copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
-    aux::shared_ptr<holder<TResult> > object(new holder<TResult>(value(boost::type<T>())));
-    refs.push_back(object);
-    return object->held;
-}
-
-template<typename T>
-class universal_impl
-{
-public:
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >&, const TValueType& value)
-        : value_(boost::bind<T>(value, boost::type<T>()))
-    { }
-
-    operator T() const {
-        return value_();
-    }
-
-private:
-    function<T()> value_;
-};
-
-template<typename T>
-class universal_impl<aux::auto_ptr<T> >
-{
-public:
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value)
-        : value_(new aux::auto_ptr<T>(value(boost::type<aux::auto_ptr<T> >()).release()))
-    {
-        refs.push_back(aux::shared_ptr<aux::auto_ptr<T> >(value_));
-    }
-
-    operator aux::auto_ptr<T>&() {
-        return *value_;
-    }
-
-private:
-    aux::auto_ptr<T>* value_; // weak
-};
-
-template<typename T>
-class universal_impl<const T&>
-{
-public:
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >&
-                 , const TValueType& value
-                 , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : value_(boost::bind<const T&>(value, boost::type<const T&>()))
-    { }
-
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >& refs
-                 , const TValueType& value
-                 , typename disable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : value_(boost::bind(&copy<T, T, TValueType>, boost::ref(refs), value))
-    { }
-
-    operator const T&() const {
-        return value_();
-    }
-
-private:
-    function<const T&()> value_;
-};
-
-template<typename T, typename TName>
-class universal_impl<named<T, TName> >
-{
-public:
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >&, const TValueType& value)
-        : value_(boost::bind<T>(value, boost::type<T>()))
-    { }
-
-    operator T() const {
-        return value_();
-    }
-
-    operator named<T, TName>() const {
-        return value_();
-    }
-
-private:
-    function<T()> value_;
-};
-
-template<typename T, typename TName>
-class universal_impl<named<const T&, TName> >
-{
-public:
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >&
-                 , const TValueType& value
-                 , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : value_(boost::bind<const T&>(value, boost::type<const T&>()))
-    { }
-
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >& refs
-                 , const TValueType& value
-                 , typename disable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : value_(boost::bind(&copy<T, T, TValueType>, boost::ref(refs), value))
-    { }
-
-    operator named<const T&, TName>() const {
-        return value_();
-    }
-
-private:
-    function<named<const T&, TName>()> value_;
-};
-
-template<typename T, typename TName>
-class universal_impl<const named<T, TName>&>
-{
-public:
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >& refs
-                 , const TValueType& value)
-        : value_(boost::bind(&copy<named<T, TName>, T, TValueType>, boost::ref(refs), value))
-    { }
-
-    operator const named<T, TName>&() const {
-        return value_();
-    }
-
-private:
-    function<const named<T, TName>&()> value_;
-};
-
-template<typename T, typename TName>
-class universal_impl<const named<const T&, TName>&>
-{
-    universal_impl& operator=(const universal_impl&);
-
-public:
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >& refs
-                 , const TValueType& value
-                 , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : refs_(refs)
-        , value_(boost::bind<const T&>(value, boost::type<const T&>()))
-    { }
-
-    template<typename TValueType>
-    universal_impl(std::vector<aux::shared_ptr<void> >& refs
-                 , const TValueType& value
-                 , typename disable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
-        : refs_(refs)
-        , value_(boost::bind(&copy<T, T, TValueType>, boost::ref(refs), value))
-    { }
-
-    operator const named<const T&, TName>&() const {
-        aux::shared_ptr<holder<named<const T&, TName> > > object(
-            new holder<named<const T&, TName> >(value_())
-        );
-        refs_.push_back(object);
-        return object->held;
-    }
-
-private:
-    std::vector<aux::shared_ptr<void> >& refs_;
-    function<named<const T&, TName>()> value_;
-};
-
-} // namespace detail
-
-template<typename T>
-class universal : public detail::universal_impl<T>
-{
-public:
-    typedef universal type;
-    typedef T element_type;
-
-    template<typename TValueType>
-    universal(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value)
-        : detail::universal_impl<T>(refs, value)
-    { }
-};
-
-} // namespace wrappers
-} // namespace di
-} // namespace boost
-
 namespace boost {
 namespace di {
 namespace core {
@@ -6112,6 +5856,262 @@ struct ctor_traits<T, typename enable_if<has_boost_di_injector__<T> >::type>
 } // namespace boost
 
 
+namespace boost {
+namespace di {
+namespace type_traits {
+
+namespace detail {
+
+template<
+    typename T
+  , typename TSignature
+>
+class is_convertible
+{
+    template<typename U>
+    static mpl::aux::yes_tag test(non_type<TSignature, &U::operator()>*);
+
+    template<typename>
+    static mpl::aux::no_tag test(...);
+
+public:
+    typedef is_convertible type;
+
+    BOOST_STATIC_CONSTANT(
+        bool
+      , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
+    );
+};
+
+} // namespace detail
+
+template<
+    typename TValueType
+  , typename T
+>
+struct is_convertible_to_ref
+    : detail::is_convertible<TValueType, const T&(TValueType::*)(const boost::type<const T&>&) const>
+{ };
+
+} // namespace type_traits
+} // namespace di
+} // namespace boost
+
+
+namespace boost {
+namespace di {
+namespace wrappers {
+
+namespace detail {
+
+template<typename TResult, typename T, typename TValueType>
+inline typename disable_if<is_copy_constructible<T>, const TResult&>::type
+copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
+    aux::shared_ptr<TResult> object(value(boost::type<T*>()));
+    refs.push_back(object);
+    return *object;
+}
+
+template<typename T>
+struct holder
+{
+    explicit holder(const T& value)
+        : held(value)
+    { }
+
+    T held;
+};
+
+template<typename TResult, typename T, typename TValueType>
+inline typename enable_if<is_copy_constructible<T>, const TResult&>::type
+copy(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value) {
+    aux::shared_ptr<holder<TResult> > object(new holder<TResult>(value(boost::type<T>())));
+    refs.push_back(object);
+    return object->held;
+}
+
+template<typename T>
+class universal_impl
+{
+public:
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >&, const TValueType& value)
+        : value_(boost::bind<T>(value, boost::type<T>()))
+    { }
+
+    operator T() const {
+        return value_();
+    }
+
+private:
+    function<T()> value_;
+};
+
+template<typename T>
+class universal_impl<aux::auto_ptr<T> >
+{
+public:
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value)
+        : value_(new aux::auto_ptr<T>(value(boost::type<aux::auto_ptr<T> >()).release()))
+    {
+        refs.push_back(aux::shared_ptr<aux::auto_ptr<T> >(value_));
+    }
+
+    operator aux::auto_ptr<T>&() {
+        return *value_;
+    }
+
+private:
+    aux::auto_ptr<T>* value_; // weak
+};
+
+template<typename T>
+class universal_impl<const T&>
+{
+public:
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >&
+                 , const TValueType& value
+                 , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
+        : value_(boost::bind<const T&>(value, boost::type<const T&>()))
+    { }
+
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >& refs
+                 , const TValueType& value
+                 , typename disable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
+        : value_(boost::bind(&copy<T, T, TValueType>, boost::ref(refs), value))
+    { }
+
+    operator const T&() const {
+        return value_();
+    }
+
+private:
+    function<const T&()> value_;
+};
+
+template<typename T, typename TName>
+class universal_impl<named<T, TName> >
+{
+public:
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >&, const TValueType& value)
+        : value_(boost::bind<T>(value, boost::type<T>()))
+    { }
+
+    operator T() const {
+        return value_();
+    }
+
+    operator named<T, TName>() const {
+        return value_();
+    }
+
+private:
+    function<T()> value_;
+};
+
+template<typename T, typename TName>
+class universal_impl<named<const T&, TName> >
+{
+public:
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >&
+                 , const TValueType& value
+                 , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
+        : value_(boost::bind<const T&>(value, boost::type<const T&>()))
+    { }
+
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >& refs
+                 , const TValueType& value
+                 , typename disable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
+        : value_(boost::bind(&copy<T, T, TValueType>, boost::ref(refs), value))
+    { }
+
+    operator named<const T&, TName>() const {
+        return value_();
+    }
+
+private:
+    function<named<const T&, TName>()> value_;
+};
+
+template<typename T, typename TName>
+class universal_impl<const named<T, TName>&>
+{
+public:
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >& refs
+                 , const TValueType& value)
+        : value_(boost::bind(&copy<named<T, TName>, T, TValueType>, boost::ref(refs), value))
+    { }
+
+    operator const named<T, TName>&() const {
+        return value_();
+    }
+
+private:
+    function<const named<T, TName>&()> value_;
+};
+
+template<typename T, typename TName>
+class universal_impl<const named<const T&, TName>&>
+{
+    universal_impl& operator=(const universal_impl&);
+
+public:
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >& refs
+                 , const TValueType& value
+                 , typename enable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
+        : refs_(refs)
+        , value_(boost::bind<const T&>(value, boost::type<const T&>()))
+    { }
+
+    template<typename TValueType>
+    universal_impl(std::vector<aux::shared_ptr<void> >& refs
+                 , const TValueType& value
+                 , typename disable_if<type_traits::is_convertible_to_ref<TValueType, T> >::type* = 0)
+        : refs_(refs)
+        , value_(boost::bind(&copy<T, T, TValueType>, boost::ref(refs), value))
+    { }
+
+    operator const named<const T&, TName>&() const {
+        aux::shared_ptr<holder<named<const T&, TName> > > object(
+            new holder<named<const T&, TName> >(value_())
+        );
+        refs_.push_back(object);
+        return object->held;
+    }
+
+private:
+    std::vector<aux::shared_ptr<void> >& refs_;
+    function<named<const T&, TName>()> value_;
+};
+
+} // namespace detail
+
+template<typename T>
+class universal : public detail::universal_impl<T>
+{
+public:
+    typedef universal type;
+    typedef T element_type;
+
+    template<typename TValueType>
+    universal(std::vector<aux::shared_ptr<void> >& refs, const TValueType& value)
+        : detail::universal_impl<T>(refs, value)
+    { }
+};
+
+} // namespace wrappers
+} // namespace di
+} // namespace boost
+
+
     namespace boost {
     namespace di {
     namespace core {
@@ -6274,11 +6274,12 @@ struct ctor_traits<T, typename enable_if<has_boost_di_injector__<T> >::type>
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template
-            allocate<typename TDependency::expected, typename TDependency::given>(
-               
+        typedef data<T, TCallStack, TDependency> data_type;
 
-            );
+        return allocator.template allocate<data_type>(
+           
+
+        );
 
       }
 
@@ -6306,11 +6307,12 @@ struct ctor_traits<T, typename enable_if<has_boost_di_injector__<T> >::type>
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template
-            allocate<typename TDependency::expected, typename TDependency::given>(
-                create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+        typedef data<T, TCallStack, TDependency> data_type;
 
-            );
+        return allocator.template allocate<data_type>(
+            create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+
+        );
 
       }
 
@@ -6338,11 +6340,12 @@ struct ctor_traits<T, typename enable_if<has_boost_di_injector__<T> >::type>
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template
-            allocate<typename TDependency::expected, typename TDependency::given>(
-                create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+        typedef data<T, TCallStack, TDependency> data_type;
 
-            );
+        return allocator.template allocate<data_type>(
+            create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+
+        );
 
       }
 
@@ -6370,11 +6373,12 @@ struct ctor_traits<T, typename enable_if<has_boost_di_injector__<T> >::type>
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template
-            allocate<typename TDependency::expected, typename TDependency::given>(
-                create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+        typedef data<T, TCallStack, TDependency> data_type;
 
-            );
+        return allocator.template allocate<data_type>(
+            create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+
+        );
 
       }
 
@@ -6402,11 +6406,12 @@ struct ctor_traits<T, typename enable_if<has_boost_di_injector__<T> >::type>
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template
-            allocate<typename TDependency::expected, typename TDependency::given>(
-                create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+        typedef data<T, TCallStack, TDependency> data_type;
 
-            );
+        return allocator.template allocate<data_type>(
+            create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+
+        );
 
       }
 
@@ -6434,11 +6439,12 @@ struct ctor_traits<T, typename enable_if<has_boost_di_injector__<T> >::type>
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template
-            allocate<typename TDependency::expected, typename TDependency::given>(
-                create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+        typedef data<T, TCallStack, TDependency> data_type;
 
-            );
+        return allocator.template allocate<data_type>(
+            create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+
+        );
 
       }
 
@@ -6466,11 +6472,12 @@ struct ctor_traits<T, typename enable_if<has_boost_di_injector__<T> >::type>
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template
-            allocate<typename TDependency::expected, typename TDependency::given>(
-                create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+        typedef data<T, TCallStack, TDependency> data_type;
 
-            );
+        return allocator.template allocate<data_type>(
+            create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+
+        );
 
       }
 
@@ -6498,11 +6505,12 @@ struct ctor_traits<T, typename enable_if<has_boost_di_injector__<T> >::type>
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template
-            allocate<typename TDependency::expected, typename TDependency::given>(
-                create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+        typedef data<T, TCallStack, TDependency> data_type;
 
-            );
+        return allocator.template allocate<data_type>(
+            create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+
+        );
 
       }
 
@@ -6530,11 +6538,12 @@ struct ctor_traits<T, typename enable_if<has_boost_di_injector__<T> >::type>
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template
-            allocate<typename TDependency::expected, typename TDependency::given>(
-                create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+        typedef data<T, TCallStack, TDependency> data_type;
 
-            );
+        return allocator.template allocate<data_type>(
+            create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+
+        );
 
       }
 
@@ -6562,11 +6571,12 @@ struct ctor_traits<T, typename enable_if<has_boost_di_injector__<T> >::type>
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template
-            allocate<typename TDependency::expected, typename TDependency::given>(
-                create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+        typedef data<T, TCallStack, TDependency> data_type;
 
-            );
+        return allocator.template allocate<data_type>(
+            create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+
+        );
 
       }
 
@@ -6594,11 +6604,12 @@ struct ctor_traits<T, typename enable_if<has_boost_di_injector__<T> >::type>
         (void)refs;
         (void)visitor;
         (void)policies;
-        return allocator.template
-            allocate<typename TDependency::expected, typename TDependency::given>(
-                create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 9>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+        typedef data<T, TCallStack, TDependency> data_type;
 
-            );
+        return allocator.template allocate<data_type>(
+            create< typename mpl::at_c<TCtor, 0>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 1>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 2>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 3>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 4>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 5>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 6>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 7>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 8>::type , T , TCallStack >(allocator, deps, refs, visitor, policies) , create< typename mpl::at_c<TCtor, 9>::type , T , TCallStack >(allocator, deps, refs, visitor, policies)
+
+        );
 
       }
 
@@ -6782,72 +6793,72 @@ public:
     class allocator
     {
     public:
-        template<typename TExpected, typename TGiven>
-        typename disable_if<is_explicit<TGiven>, TExpected*>::type
+        template<typename T>
+        typename disable_if<is_explicit<typename T::dependency::given>, typename T::dependency::expected*>::type
         allocate() const {
-            return new TGiven();
+            return new typename T::dependency::given();
         }
 
-        template<typename TExpected, typename TGiven>
-        typename enable_if<type_traits::has_value<TGiven>, TExpected*>::type
+        template<typename T>
+        typename enable_if<type_traits::has_value<typename T::dependency::given>, typename T::dependency::expected*>::type
         allocate() const {
-            return new TExpected(TGiven::value);
+            return new typename T::dependency::expected(T::dependency::given::value);
         }
 
-        template<typename TExpected, typename TGiven>
-        typename enable_if<is_mpl_string<TGiven>, TExpected*>::type
+        template<typename T>
+        typename enable_if<is_mpl_string<typename T::dependency::given>, typename T::dependency::expected*>::type
         allocate() const {
-            return new TExpected(mpl::c_str<TGiven>::value);
+            return new typename T::dependency::expected(mpl::c_str<typename T::dependency::given>::value);
         }
 
-    template<typename TExpected, typename TGiven, typename TArgs0>
-    TExpected* allocate( TArgs0 args0) const {
-        return new TGiven( args0);
+    template<typename T, typename TArgs0>
+    typename T::dependency::expected* allocate( TArgs0 args0) const {
+        return new typename T::dependency::given( args0);
     }
 
-    template<typename TExpected, typename TGiven, typename TArgs0 , typename TArgs1>
-    TExpected* allocate( TArgs0 args0 , TArgs1 args1) const {
-        return new TGiven( args0 , args1);
+    template<typename T, typename TArgs0 , typename TArgs1>
+    typename T::dependency::expected* allocate( TArgs0 args0 , TArgs1 args1) const {
+        return new typename T::dependency::given( args0 , args1);
     }
 
-    template<typename TExpected, typename TGiven, typename TArgs0 , typename TArgs1 , typename TArgs2>
-    TExpected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2) const {
-        return new TGiven( args0 , args1 , args2);
+    template<typename T, typename TArgs0 , typename TArgs1 , typename TArgs2>
+    typename T::dependency::expected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2) const {
+        return new typename T::dependency::given( args0 , args1 , args2);
     }
 
-    template<typename TExpected, typename TGiven, typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3>
-    TExpected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2 , TArgs3 args3) const {
-        return new TGiven( args0 , args1 , args2 , args3);
+    template<typename T, typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3>
+    typename T::dependency::expected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2 , TArgs3 args3) const {
+        return new typename T::dependency::given( args0 , args1 , args2 , args3);
     }
 
-    template<typename TExpected, typename TGiven, typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4>
-    TExpected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2 , TArgs3 args3 , TArgs4 args4) const {
-        return new TGiven( args0 , args1 , args2 , args3 , args4);
+    template<typename T, typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4>
+    typename T::dependency::expected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2 , TArgs3 args3 , TArgs4 args4) const {
+        return new typename T::dependency::given( args0 , args1 , args2 , args3 , args4);
     }
 
-    template<typename TExpected, typename TGiven, typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5>
-    TExpected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2 , TArgs3 args3 , TArgs4 args4 , TArgs5 args5) const {
-        return new TGiven( args0 , args1 , args2 , args3 , args4 , args5);
+    template<typename T, typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5>
+    typename T::dependency::expected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2 , TArgs3 args3 , TArgs4 args4 , TArgs5 args5) const {
+        return new typename T::dependency::given( args0 , args1 , args2 , args3 , args4 , args5);
     }
 
-    template<typename TExpected, typename TGiven, typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6>
-    TExpected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2 , TArgs3 args3 , TArgs4 args4 , TArgs5 args5 , TArgs6 args6) const {
-        return new TGiven( args0 , args1 , args2 , args3 , args4 , args5 , args6);
+    template<typename T, typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6>
+    typename T::dependency::expected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2 , TArgs3 args3 , TArgs4 args4 , TArgs5 args5 , TArgs6 args6) const {
+        return new typename T::dependency::given( args0 , args1 , args2 , args3 , args4 , args5 , args6);
     }
 
-    template<typename TExpected, typename TGiven, typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7>
-    TExpected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2 , TArgs3 args3 , TArgs4 args4 , TArgs5 args5 , TArgs6 args6 , TArgs7 args7) const {
-        return new TGiven( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7);
+    template<typename T, typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7>
+    typename T::dependency::expected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2 , TArgs3 args3 , TArgs4 args4 , TArgs5 args5 , TArgs6 args6 , TArgs7 args7) const {
+        return new typename T::dependency::given( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7);
     }
 
-    template<typename TExpected, typename TGiven, typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8>
-    TExpected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2 , TArgs3 args3 , TArgs4 args4 , TArgs5 args5 , TArgs6 args6 , TArgs7 args7 , TArgs8 args8) const {
-        return new TGiven( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8);
+    template<typename T, typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8>
+    typename T::dependency::expected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2 , TArgs3 args3 , TArgs4 args4 , TArgs5 args5 , TArgs6 args6 , TArgs7 args7 , TArgs8 args8) const {
+        return new typename T::dependency::given( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8);
     }
 
-    template<typename TExpected, typename TGiven, typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9>
-    TExpected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2 , TArgs3 args3 , TArgs4 args4 , TArgs5 args5 , TArgs6 args6 , TArgs7 args7 , TArgs8 args8 , TArgs9 args9) const {
-        return new TGiven( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9);
+    template<typename T, typename TArgs0 , typename TArgs1 , typename TArgs2 , typename TArgs3 , typename TArgs4 , typename TArgs5 , typename TArgs6 , typename TArgs7 , typename TArgs8 , typename TArgs9>
+    typename T::dependency::expected* allocate( TArgs0 args0 , TArgs1 args1 , TArgs2 args2 , TArgs3 args3 , TArgs4 args4 , TArgs5 args5 , TArgs6 args6 , TArgs7 args7 , TArgs8 args8 , TArgs9 args9) const {
+        return new typename T::dependency::given( args0 , args1 , args2 , args3 , args4 , args5 , args6 , args7 , args8 , args9);
     }
     };
 

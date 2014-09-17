@@ -63,9 +63,9 @@ public:
     template<typename T>
     void assert_policy() const {
         BOOST_DI_ASSERT_MSG(
-            is_scope_permitted<typename T::dependency::scope>::value
+            is_scope_permitted<typename T::scope>::value
           , SCOPE_NOT_PERMITTED
-          , typename T::dependency::scope
+          , typename T::scope
         );
     }
 };
