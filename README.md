@@ -109,6 +109,9 @@ void test_hello_world_when_run_with_value_true_then_log_and_do_it() {
 [![Build Status](https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic)](https://ci.appveyor.com/project/krzysztof-jusiak/di)
 [![Coverage Status](https://coveralls.io/repos/krzysztof-jusiak/di/badge.png?branch=master)](https://coveralls.io/r/krzysztof-jusiak/di?branch=master)
 
+### Status
+[![Stories in Ready](https://badge.waffle.io/krzysztof-jusiak/di.svg?label=ready&title=Ready)](http://waffle.io/krzysztof-jusiak/di)
+
 ### Other Dependency Injection Frameworks for C++
  * [https://bitbucket.org/cheez/dicpp](https://bitbucket.org/cheez/dicpp)
  * [https://github.com/google/fruit](https://github.com/google/fruit)
