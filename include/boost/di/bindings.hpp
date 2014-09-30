@@ -34,8 +34,8 @@ using unique = scope<scopes::unique>::bind<Ts...>;
 template<typename... Ts>
 using shared = scope<scopes::shared>::bind<Ts...>;
 
-template<typename... Ts>
-using session = scope<scopes::session>::bind<Ts...>;
+template<typename T, typename... Ts>
+using session = scope<scopes::session<T>>::bind<Ts...>;
 
 template<typename... Ts>
 using context = bindings::context<Ts...>;

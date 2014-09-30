@@ -13,9 +13,13 @@ namespace boost {
 namespace di {
 namespace scopes {
 
+template<typename>
 class session_entry { };
+
+template<typename>
 class session_exit { };
 
+template<typename T>
 class session {
 public:
     static const bool priority = false;
@@ -25,11 +29,11 @@ public:
     public:
         using result_type = wrappers::shared<TExpected>;
 
-        void call(const session_entry&) {
+        void call(const session_entry<T>&) {
             in_scope_ = true;
         }
 
-        void call(const session_exit&) {
+        void call(const session_exit<T>&) {
             in_scope_ = false;
             object_.reset();
         }
