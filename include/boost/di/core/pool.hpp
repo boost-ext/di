@@ -42,19 +42,19 @@ public:
 
 private:
     template<typename T, typename TPool>
-    typename std::enable_if<std::is_base_of<T, pool>::value && std::is_base_of<T, TPool>::value, T>::type
+    std::enable_if_t<std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}, T>
     inline get(const TPool& p) const {
         return p.template get<T>();
     }
 
     template<typename T, typename TPool>
-    typename std::enable_if<std::is_base_of<T, pool>::value && !std::is_base_of<T, TPool>::value, T>::type
+    std::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, T>
     inline get(const TPool&) const {
         return T();
     }
 
     template<typename T, typename TPool>
-    typename std::enable_if<!std::is_base_of<T, pool>::value, const T&>::type
+    std::enable_if_t<!std::is_base_of<T, pool>{}, const T&>
     inline get(const TPool&) const {
         return T();
     }

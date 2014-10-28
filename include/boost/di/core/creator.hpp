@@ -46,18 +46,16 @@ public:
     template<
         typename T
       , typename TParent
-      , typename TCallStack
       , typename TProvider
       , typename TDeps
       , typename TRefs
       , typename TVisitor
       , typename TPolicies
     >
-    typename std::enable_if<
-        has_any<T>::value
+    std::enable_if_t<
+        has_any<T>{}
       , any_type<
             TParent
-          , TCallStack
           , creator
           , TProvider
           , TDeps
@@ -65,7 +63,7 @@ public:
           , TVisitor
           , TPolicies
         >
-    >::type
+    >
     create(const TProvider& provider
          , TDeps& deps
          , TRefs& refs
@@ -73,7 +71,6 @@ public:
          , const TPolicies& policies) {
         return any_type<
             TParent
-          , TCallStack
           , creator
           , TProvider
           , TDeps
@@ -86,32 +83,23 @@ public:
     template<
         typename T
       , typename TParent
-      , typename TCallStack
       , typename TProvider
       , typename TDeps
       , typename TRefs
       , typename TVisitor
       , typename TPolicies
     >
-    typename std::enable_if<!has_any<T>::value, wrappers::universal<T>>::type
+    std::enable_if_t<!has_any<T>{}, wrappers::universal<T>>
     create(const TProvider& provider
          , TDeps& deps
          , TRefs& refs
          , const TVisitor& visitor
          , const TPolicies& policies) {
-        using call_stack = typename std::conditional<
-            std::is_same<TParent, none_t>::value
-          , TCallStack
-          , typename add<TCallStack, TParent>::type
-        >::type;
-        using eval_type = typename binder_t::template eval<T, call_stack>::type;
-        using dependency_type = typename binder_t::template resolve<T, call_stack>::type;
-        using propagate_call_stack = typename std::conditional<eval_type::value, call_stack, TCallStack>::type;
-
+        using dependency_type = typename binder_t::template resolve<T>::type;
         assert_policies<data_visitor<T, dependency_type>>(policies);
         (visitor)(data_visitor<T, dependency_type>());
 
-        return create_impl<T, dependency_type, propagate_call_stack>(
+        return create_impl<T, dependency_type>(
             provider, deps, refs, visitor, policies
         );
     }
@@ -120,17 +108,13 @@ private:
     template<
         typename T
       , typename TDependency
-      , typename TCallStack
       , typename TProvider
       , typename TDeps
       , typename TRefs
       , typename TVisitor
       , typename TPolicies
     >
-    typename std::enable_if<
-        !size<scope_create<TDependency>>::value
-      , wrappers::universal<T>
-    >::type
+    std::enable_if_t<!size<scope_create<TDependency>>{}, wrappers::universal<T>>
     create_impl(const TProvider&
               , TDeps& deps
               , TRefs& refs
@@ -144,16 +128,13 @@ private:
     template<
         typename T
       , typename TDependency
-      , typename TCallStack
       , typename TProvider
       , typename TDeps
       , typename TRefs
       , typename TVisitor
       , typename TPolicies
     >
-    typename std::enable_if<
-        size<scope_create<TDependency>>::value
-      , wrappers::universal<T>>::type
+    std::enable_if_t<size<scope_create<TDependency>>{}, wrappers::universal<T>>
     create_impl(const TProvider& provider
               , TDeps& deps
               , TRefs& refs
@@ -166,7 +147,7 @@ private:
         return wrappers::universal<T>(
             refs
           , acquire<TDependency>(deps).create(
-                create_impl<T, TDependency, TCallStack>(
+                create_impl<T, TDependency>(
                     provider
                   , deps
                   , refs
@@ -181,7 +162,6 @@ private:
     template<
         typename T
       , typename TDependency
-      , typename TCallStack
       , typename TProvider
       , typename TDeps
       , typename TRefs
@@ -199,7 +179,7 @@ private:
         (void)provider; (void)deps; (void)refs; (void)visitor; (void)policies;
         return provider.template
             get<typename TDependency::expected, typename TDependency::given>(
-                create<TArgs, T, TCallStack>(provider, deps, refs, visitor, policies)...
+                create<TArgs, T>(provider, deps, refs, visitor, policies)...
         );
     }
 
@@ -215,13 +195,13 @@ private:
     }
 
     template<typename TDependency, typename TDeps>
-    typename std::enable_if<std::is_base_of<TDependency, TDeps>::value, TDependency&>::type
+    std::enable_if_t<std::is_base_of<TDependency, TDeps>{}, TDependency&>
     acquire(TDeps& deps) {
         return static_cast<TDependency&>(deps);
     }
 
     template<typename TDependency, typename TDeps>
-    typename std::enable_if<!std::is_base_of<TDependency, TDeps>::value, TDependency&>::type
+    std::enable_if_t<!std::is_base_of<TDependency, TDeps>{}, TDependency&>
     acquire(TDeps&) {
         auto it = scopes_.find(aux::type_id<TDependency>());
         if (it != scopes_.end()) {

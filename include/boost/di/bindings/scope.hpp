@@ -22,18 +22,18 @@ class scope {
     using is_dependency = has_given<T>;
 
     template<typename T, typename = void>
-    struct get_binding
+    struct binding
         : dependency<TScope, T, T, detail::is_required_type<T>>
     { };
 
     template<typename T>
-    struct get_binding<T, typename std::enable_if<is_dependency<T>::value>::type>
+    struct binding<T, std::enable_if_t<is_dependency<T>{}>>
         : T::template rebind<TScope>::other
     { };
 
     template<typename... Ts>
     struct bind_impl
-        : type_list<typename get_binding<Ts>::type...>
+        : type_list<typename binding<Ts>::type...>
     { };
 
 public:

@@ -19,7 +19,6 @@ namespace core {
 
 template<
     typename T = none_t
-  , typename TCallStack = none_t
   , typename TCreator = none_t
   , typename TProvider = none_t
   , typename TDeps = none_t
@@ -32,7 +31,7 @@ class any_type {
 
     template<typename TValueType, typename TRefType>
     using ref_type = std::conditional<
-          std::is_same<TValueType, none_t>::value
+          std::is_same<TValueType, none_t>{}
         , TValueType
         , TRefType
       >;
@@ -67,37 +66,37 @@ public:
 
     template<
         typename U
-      , typename = typename std::enable_if<
+      , typename = std::enable_if_t<
             !std::is_same<
                 typename type_traits::make_plain<U>::type
               , typename type_traits::make_plain<T>::type
-            >::value
-        >::type
+            >{}
+        >
     >
     operator const U&() const {
-        return creator_.template create<const U&, T, TCallStack>(
+        return creator_.template create<const U&, T>(
             provider_, deps_, refs_, visitor_, policies_
         );
     }
 
     template<
         typename U
-      , typename = typename std::enable_if<
+      , typename = std::enable_if_t<
             !std::is_same<
                 typename type_traits::make_plain<U>::type
               , typename type_traits::make_plain<T>::type
-            >::value
-        >::type
+            >{}
+        >
     >
     operator U&() const {
-        return creator_.template create<U&, T, TCallStack>(
+        return creator_.template create<U&, T>(
             provider_, deps_, refs_, visitor_, policies_
         );
     }
 
     template<typename U>
     operator aux::auto_ptr<U>&() {
-        return creator_.template create<aux::auto_ptr<U>, T, TCallStack>(
+        return creator_.template create<aux::auto_ptr<U>, T>(
             provider_, deps_, refs_, visitor_, policies_
         );
     }
@@ -105,7 +104,7 @@ public:
     BOOST_DI_WKND(MSVC)(
         template<typename U>
         operator aux::unique_ptr<U>() {
-            return creator_.template create<aux::unique_ptr<U>, T, TCallStack>(
+            return creator_.template create<aux::unique_ptr<U>, T>(
                 provider_, deps_, refs_, visitor_, policies_
             );
         }
@@ -114,15 +113,15 @@ public:
     BOOST_DI_WKND(NO_MSVC)(
         template<
             typename U
-          , typename = typename std::enable_if<
+          , typename = std::enable_if_t<
                 !std::is_same<
                     typename type_traits::make_plain<U>::type
                   , typename type_traits::make_plain<T>::type
-                >::value
-            >::type
+                >{}
+            >
         >
         operator U() {
-            return creator_.template create<U, T, TCallStack>(
+            return creator_.template create<U, T>(
                 provider_, deps_, refs_, visitor_, policies_
             );
         }
@@ -142,7 +141,6 @@ private:
 
 template<
     typename T
-  , typename TCallStack
   , typename TCreator
   , typename TProvider
   , typename TDeps
@@ -153,7 +151,6 @@ template<
 struct is_integral<
     di::core::any_type<
         T
-      , TCallStack
       , TCreator
       , TProvider
       , TDeps
@@ -169,7 +166,6 @@ namespace std {
 
 template<
     typename T
-  , typename TCallStack
   , typename TCreator
   , typename TProvider
   , typename TDeps
@@ -180,7 +176,6 @@ template<
 struct is_integral<
     boost::di::core::any_type<
         T
-      , TCallStack
       , TCreator
       , TProvider
       , TDeps

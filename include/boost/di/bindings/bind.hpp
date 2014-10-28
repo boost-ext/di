@@ -29,7 +29,7 @@ struct get_name {
 };
 
 template<typename T>
-struct get_name<T, typename std::enable_if<has_name<T>::value>::type> {
+struct get_name<T, std::enable_if<has_name<T>{}>> {
     using type = typename T::name;
 };
 
@@ -117,33 +117,8 @@ struct bind
         , typename detail::get_expected<TExpected, TGiven>::type
         , TGiven
         , detail::is_required_type_<TExpected, TGiven>
-      > {
-    template<typename... Ts>
-    struct when
-        : dependency<
-              scopes::deduce
-            , typename detail::get_expected<TExpected, TGiven>::type
-            , TGiven
-            , detail::requires_<
-                  detail::is_required_type_<TExpected, TGiven>
-                , detail::when_<Ts...>
-              >
-          > {
-        template<typename TName>
-        struct named
-            : dependency<
-                  scopes::deduce
-                , typename detail::get_expected<TExpected, TGiven>::type
-                , TGiven
-                , detail::requires_<
-                      detail::is_required_type_<TExpected, TGiven>
-                    , detail::is_required_name<TName>
-                    , detail::when_<Ts...>
-                  >
-              >
-        { };
-    };
-
+      >
+{
     template<typename TName>
     struct named
         : dependency<
@@ -154,21 +129,8 @@ struct bind
                   detail::is_required_type_<TExpected, TGiven>
                 , detail::is_required_name<TName>
               >
-          > {
-        template<typename... Ts>
-        struct when
-            : dependency<
-                  scopes::deduce
-                , typename detail::get_expected<TExpected, TGiven>::type
-                , TGiven
-                , detail::requires_<
-                      detail::is_required_type_<TExpected, TGiven>
-                    , detail::is_required_name<TName>
-                    , detail::when_<Ts...>
-                  >
-              >
-        { };
-    };
+          >
+    { };
 };
 
 } // namespace bindings

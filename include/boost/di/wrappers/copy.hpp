@@ -23,7 +23,7 @@ public:
     { }
 
     template<typename I>
-    I operator()(const type<I>&, typename std::enable_if<!std::is_polymorphic<I>::value>::type* = 0) const {
+    I operator()(const type<I>&,  std::enable_if_t<!std::is_polymorphic<I>{}>* = 0) const {
         std::unique_ptr<I> ptr(value_);
         return *ptr;
     }

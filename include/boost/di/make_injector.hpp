@@ -14,9 +14,8 @@ namespace boost {
 namespace di {
 
 template<typename... TArgs>
-injector<typename get_bindings<TArgs...>::type>
-inline make_injector(const TArgs&... args) {
-    return injector<typename get_bindings<TArgs...>::type>(args...);
+inline auto make_injector(const TArgs&... args) {
+    return injector<typename bindings<TArgs...>::type>(args...);
 }
 
 } // namespace di

@@ -27,8 +27,7 @@ class module : public pool<TDeps> {
     template<typename> friend class module;
     using pool_t = pool<TDeps>;
 
-    class empty_visitor {
-    public:
+    struct empty_visitor {
         template<typename T>
         void operator()(const T&) const { }
     };
@@ -47,11 +46,10 @@ public:
 
     template<typename T, typename... TPolicies>
     T create(const TPolicies&... policies) {
-        using call_stack = type_list<>;
         pool<type_list<TPolicies...>> policies_(policies...);
         std::vector<aux::shared_ptr<void>> refs_;
 
-        return creator_.template create<T, none_t, call_stack>(
+        return creator_.template create<T, none_t>(
             provider()
           , static_cast<pool_t&>(*this)
           , refs_
@@ -62,11 +60,10 @@ public:
 
     template<typename T, typename TProvider, typename... TPolicies>
     T allocate(const TProvider& provider, const TPolicies&... policies) {
-        using call_stack = type_list<>;
         pool<type_list<TPolicies...>> policies_(policies...);
         std::vector<aux::shared_ptr<void>> refs_;
 
-        return creator_.template create<T, none_t, call_stack>(
+        return creator_.template create<T, none_t>(
             provider
           , static_cast<pool_t&>(*this)
           , refs_
@@ -77,10 +74,9 @@ public:
 
     template<typename T, typename TVisitor>
     T visit(const TVisitor& visitor) {
-        using call_stack = type_list<>;
         std::vector<aux::shared_ptr<void>> refs_;
 
-        return creator_.template create<T, none_t, call_stack>(
+        return creator_.template create<T, none_t>(
             provider()
           , static_cast<pool_t&>(*this)
           , refs_
@@ -102,14 +98,12 @@ private:
     }
 
     template<typename T, typename TDeps_, typename TAction>
-    typename std::enable_if<has_call<T>::value>::type
-    call_impl(TDeps_& deps, const TAction& action) {
+    std::enable_if_t<has_call<T>{}> call_impl(TDeps_& deps, const TAction& action) {
         static_cast<T&>(deps).call(action);
     }
 
     template<typename T, typename TDeps_, typename TAction>
-    typename std::enable_if<!has_call<T>::value>::type
-    call_impl(TDeps_& deps, const TAction& action) { }
+    std::enable_if_t<!has_call<T>{}> call_impl(TDeps_& deps, const TAction& action) { }
 
     creator<TDeps> creator_;
 };

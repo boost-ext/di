@@ -14,9 +14,9 @@ namespace di {
 
 class provider {
 public:
-    template<typename TExpected, typename TGiven, typename... TArgs>
-    TExpected* get(TArgs&&... args) const {
-        return new TGiven(std::forward<TArgs>(args)...);
+    template<typename TDependency, typename... TArgs>
+    typename TDependency::expected* get(TArgs&&... args) const {
+        return new typename TDependency::given(std::forward<TArgs>(args)...);
     }
 };
 

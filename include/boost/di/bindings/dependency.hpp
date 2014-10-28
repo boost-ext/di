@@ -46,7 +46,7 @@ class dependency : public TScope::template scope<TExpected> {
     };
 
     template<typename T>
-    struct get_wrapper_impl<T, typename std::enable_if<aux::is_reference_wrapper<T>::value>::type> {
+    struct get_wrapper_impl<T, std::enable_if_t<aux::is_reference_wrapper<T>{}>> {
         using type = ref_type;
     };
 
@@ -61,14 +61,14 @@ class dependency : public TScope::template scope<TExpected> {
     };
 
     template<typename T>
-    struct get_wrapper<T, typename std::enable_if<has_result_type<T>::value>::type>
+    struct get_wrapper<T, std::enable_if_t<has_result_type<T>{}>>
         : get_wrapper_impl<typename T::result_type>
     { };
 
     template<typename T>
-    struct get_wrapper<T, typename std::enable_if<has_call_operator<T>::value>::type
-                        , typename std::enable_if<!has_result_type<T>::value>::type
-                        , typename std::enable_if<!aux::is_reference_wrapper<T>::value>::type>
+    struct get_wrapper<T, std::enable_if_t<has_call_operator<T>{}>
+                        , std::enable_if_t<!has_result_type<T>{}>
+                        , std::enable_if_t<!aux::is_reference_wrapper<T>{}>>
         : get_wrapper_impl<
               typename di::type_traits::function_traits<
                   decltype(&T::operator())
@@ -86,11 +86,11 @@ public:
     template<typename T>
     struct rebind {
         using other = dependency<
-            typename std::conditional<
-                std::is_same<scope, scopes::deduce>::value
+            std::conditional_t<
+                std::is_same<scope, scopes::deduce>{}
               , T
               , TScope
-            >::type
+            >
           , TExpected
           , TGiven
           , TBind
@@ -106,21 +106,21 @@ public:
 
     template<typename T>
     static dependency<value_type, expected, T, TBind>
-    to(const T& object, typename std::enable_if<!aux::is_reference_wrapper<T>::value>::type* = 0
-                      , typename std::enable_if<!has_call_operator<T>::value>::type* = 0) {
+    to(const T& object, std::enable_if_t<!aux::is_reference_wrapper<T>{}>* = 0
+                      , std::enable_if_t<!has_call_operator<T>{}>* = 0) {
         return dependency<value_type, expected, T, TBind>(object);
     }
 
     template<typename T>
     static dependency<ref_type, typename aux::unwrap_reference<T>::type, T, TBind>
-    to(const T& object, typename std::enable_if<aux::is_reference_wrapper<T>::value>::type* = 0) {
+    to(const T& object, std::enable_if_t<aux::is_reference_wrapper<T>{}>* = 0) {
         return dependency<ref_type, typename aux::unwrap_reference<T>::type, T, TBind>(object);
     }
 
     template<typename T>
     static dependency<typename get_wrapper<T>::type, expected, T, TBind>
-    to(const T& object, typename std::enable_if<!aux::is_reference_wrapper<T>::value>::type* = 0
-                      , typename std::enable_if<has_call_operator<T>::value>::type* = 0) {
+    to(const T& object, std::enable_if_t<!aux::is_reference_wrapper<T>{}>* = 0
+                      , std::enable_if_t<has_call_operator<T>{}>* = 0) {
         return dependency<typename get_wrapper<T>::type, expected, T, TBind>(object);
     }
 
