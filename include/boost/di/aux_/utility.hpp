@@ -4,64 +4,112 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_AUX_REF_HPP
-#define BOOST_DI_AUX_REF_HPP
+#ifndef BOOST_DI_AUX_MPL_HPP
+#define BOOST_DI_AUX_MPL_HPP
 
 #include "boost/di/aux_/config.hpp"
-#include "boost/di/aux_/mpl.hpp"
-#include <functional>
-
-#if !defined(BOOST_DI_CFG_NO_BOOST)
-    #include <boost/ref.hpp>
-#endif
+#include <type_traits>
 
 namespace boost {
 namespace di {
-namespace aux {
 
-template<typename T>
-struct type__ { static void id() { } };
+struct none_t {};
 
-template<typename T>
-std::size_t type_id() { return reinterpret_cast<std::size_t>(&type__<T>::id); }
+template<typename T, T>
+struct non_type { };
 
 template<typename>
-struct is_reference_wrapper
+struct type { };
+
+template<int N>
+using int_ = std::integral_constant<int, N>;
+
+template<bool N>
+using bool_ = std::integral_constant<bool, N>;
+
+template<typename, typename>
+struct pair {
+    using type = pair;
+};
+
+template <typename x>
+struct no_decay { using type = x; };
+
+template <typename ...xs>
+struct inherit : xs... { };
+
+template<typename...>
+struct type_list {
+    using type = type_list;
+};
+
+template<typename>
+struct is_type_list
     : std::false_type
 { };
 
-template<typename T>
-struct is_reference_wrapper<::std::reference_wrapper<T>>
+template<typename... Ts>
+struct is_type_list<type_list<Ts...>>
     : std::true_type
 { };
 
-#if !defined(BOOST_DI_CFG_NO_BOOST)
-    template<typename T>
-    struct is_reference_wrapper<::boost::reference_wrapper<T>>
-        : std::true_type
-    { };
-#endif
+template<typename>
+struct size;
 
-template<typename T>
-struct unwrap_reference {
-    using type = T;
+template<typename... Ts>
+struct size<type_list<Ts...>> {
+    static constexpr std::size_t value = sizeof...(Ts);
+};
+
+template<bool...>
+struct bool_seq {
+    using type = bool_seq;
+};
+
+template<typename...>
+struct join;
+
+template<>
+struct join<> {
+    using type = type_list<>;
+};
+
+template<typename... TArgs>
+struct join<type_list<TArgs...>> {
+    using type = type_list<TArgs...>;
+};
+
+template<typename... Args1, typename... Args2>
+struct join<type_list<Args1...>, type_list<Args2...>> {
+    using type = type_list<Args1..., Args2...>;
+};
+
+template<typename... Args1, typename... Args2, typename... Tail>
+struct join<type_list<Args1...>, type_list<Args2...>, Tail...> {
+     using type = typename join<type_list<Args1..., Args2...>, Tail...>::type;
 };
 
 template<typename T>
-struct unwrap_reference<::std::reference_wrapper<T>> {
-    using type = T;
-};
+using not_ = bool_<!T{}>;
 
-#if !defined(BOOST_DI_CFG_NO_BOOST)
-    template<typename T>
-    struct unwrap_reference<::boost::reference_wrapper<T>> {
-        using type = T;
-    };
-#endif
+template<typename... Ts>
+using and_ = std::is_same<bool_seq<Ts{}...>, bool_seq<(Ts{}, true)...>>;
 
-} // namespace aux
-} // namespace boost
+template<typename... Ts>
+using or_ = not_<std::is_same<bool_seq<Ts{}...>, bool_seq<(Ts{}, false)...>>>;
+
+template <typename d, typename key>
+static no_decay<d> lookup(...);
+
+template <typename, typename key, typename value>
+static no_decay<value> lookup(pair<key, value>*);
+
+template <typename d, typename key, typename ...pairs>
+using at_key = decltype(lookup<d, key>((inherit<pairs...>*)0));
+
+
 } // namespace di
+} // namespace boost
 
 #endif
 

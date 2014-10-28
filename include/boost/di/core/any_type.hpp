@@ -30,11 +30,11 @@ class any_type {
     any_type& operator=(const any_type&);
 
     template<typename TValueType, typename TRefType>
-    using ref_type = std::conditional<
+    using ref_type_t = typename std::conditional<
           std::is_same<TValueType, none_t>{}
         , TValueType
         , TRefType
-      >;
+      >::type;
 
 public:
     using any = any_type;
@@ -101,39 +101,28 @@ public:
         );
     }
 
-    BOOST_DI_WKND(MSVC)(
-        template<typename U>
-        operator aux::unique_ptr<U>() {
-            return creator_.template create<aux::unique_ptr<U>, T>(
-                provider_, deps_, refs_, visitor_, policies_
-            );
-        }
-    )
-
-    BOOST_DI_WKND(NO_MSVC)(
-        template<
-            typename U
-          , typename = std::enable_if_t<
-                !std::is_same<
-                    typename type_traits::make_plain<U>::type
-                  , typename type_traits::make_plain<T>::type
-                >{}
-            >
+    template<
+        typename U
+      , typename = std::enable_if_t<
+            !std::is_same<
+                typename type_traits::make_plain<U>::type
+              , typename type_traits::make_plain<T>::type
+            >{}
         >
-        operator U() {
-            return creator_.template create<U, T>(
-                provider_, deps_, refs_, visitor_, policies_
-            );
-        }
-    )
+    >
+    operator U() {
+        return creator_.template create<U, T>(
+            provider_, deps_, refs_, visitor_, policies_
+        );
+    }
 
 private:
-    typename ref_type<TCreator, TCreator&>::type creator_;
-    typename ref_type<TProvider, const TProvider&>::type provider_;
-    typename ref_type<TDeps, TDeps&>::type deps_;
-    typename ref_type<TRefs, TRefs&>::type refs_;
-    typename ref_type<TVisitor, const TVisitor&>::type visitor_;
-    typename ref_type<TPolicies, const TPolicies&>::type policies_;
+    ref_type_t<TCreator, TCreator&> creator_;
+    ref_type_t<TProvider, const TProvider&> provider_;
+    ref_type_t<TDeps, TDeps&> deps_;
+    ref_type_t<TRefs, TRefs&> refs_;
+    ref_type_t<TVisitor, const TVisitor&> visitor_;
+    ref_type_t<TPolicies, const TPolicies&> policies_;
 };
 
 } // namespace core

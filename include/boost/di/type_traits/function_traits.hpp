@@ -36,6 +36,8 @@ struct function_traits<R(T::*)(TArgs...) const> {
     using type = type_list<TArgs...>;
 };
 
+is_smart_ptr
+
 } // namespace type_traits
 } // namespace di
 } // namespace boost

@@ -15,7 +15,7 @@ namespace di {
 
 template<typename... TArgs>
 inline auto make_injector(const TArgs&... args) {
-    return injector<typename bindings<TArgs...>::type>(args...);
+    return injector<bindings_t<TArgs...>>(args...);
 }
 
 } // namespace di

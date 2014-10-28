@@ -8,6 +8,7 @@
 #define BOOST_DI_PROVIDER_HPP
 
 #include <utility>
+#include <new>
 
 namespace boost {
 namespace di {
@@ -15,8 +16,8 @@ namespace di {
 class provider {
 public:
     template<typename TDependency, typename... TArgs>
-    typename TDependency::expected* get(TArgs&&... args) const {
-        return new typename TDependency::given(std::forward<TArgs>(args)...);
+    typename TDependency::expected* get(TArgs&&... args) const noexcept {
+        return new (std::nothrow) typename TDependency::given(std::forward<TArgs>(args)...);
     }
 };
 
@@ -24,3 +25,4 @@ public:
 } // namespace boost
 
 #endif
+
