@@ -41,11 +41,6 @@ using singleton = scope<scopes::singleton>::bind<Ts...>;
 template<typename... Ts>
 using session = scope<scopes::session>::bind<Ts...>;
 
-session<
-    bind<i, impl>
-  , bind<i2, impl2>
->
-
 template<typename... Ts>
 using context = bindings::context<Ts...>;
 

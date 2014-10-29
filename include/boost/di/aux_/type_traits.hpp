@@ -92,27 +92,30 @@ struct make_plain
       >
 { };
 
-template<typename>
+template<typename T>
 struct function_traits;
+    : function_traits<decltype(&T::operator())>
+{ };
 
 template<typename R, typename... TArgs>
 struct function_traits<R(*)(TArgs...)> {
     using result_type = R;
-    using type = type_list<TArgs...>;
+    using base_type = none_t;
+    using args = type_list<TArgs...>;
 };
 
 template<typename R, typename T, typename... TArgs>
 struct function_traits<R(T::*)(TArgs...)> {
     using result_type = R;
     using base_type = T;
-    using type = type_list<TArgs...>;
+    using args = type_list<TArgs...>;
 };
 
 template<typename R, typename T, typename... TArgs>
 struct function_traits<R(T::*)(TArgs...) const> {
     using result_type = R;
     using base_type = T;
-    using type = type_list<TArgs...>;
+    using args = type_list<TArgs...>;
 };
 
 template<typename T, typename... Args>
