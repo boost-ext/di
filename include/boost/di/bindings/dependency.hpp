@@ -42,9 +42,9 @@ template<
           , bindings::type_traits::is_required_type<TExpected>
         >
 >
-class dependency : public TScope::template scope<TExpected, TGiven>
+class dependency : public TScope::template scope<TExpected>
 {
-    typedef typename TScope::template scope<TExpected, TGiven> scope_type;
+    typedef typename TScope::template scope<TExpected> scope_type;
     typedef scopes::external<wrappers::reference> ref_type;
     typedef scopes::external<wrappers::shared> shared_type;
     typedef scopes::external<wrappers::value> value_type;
@@ -72,7 +72,6 @@ class dependency : public TScope::template scope<TExpected, TGiven>
       , typename = void
       , typename = void
       , typename = void
-      , typename = void
     >
     struct get_wrapper
     {
@@ -87,22 +86,10 @@ class dependency : public TScope::template scope<TExpected, TGiven>
     template<typename T>
     struct get_wrapper<T, typename enable_if<di::type_traits::has_call_operator<T> >::type
                         , typename disable_if<has_result_type<T> >::type
-                        , typename disable_if<is_reference_wrapper<T> >::type
-                        , typename disable_if<has_lambda<T, dummy&> >::type>
-        : get_wrapper_impl<
-              typename di::type_traits::function_traits<
-                  BOOST_DI_FEATURE_DECLTYPE(&T::operator())
-              >::result_type
-          >
-    { };
-
-    template<typename T>
-    struct get_wrapper<T, typename enable_if<has_lambda<T, dummy&> >::type
-                        , typename disable_if<has_result_type<T> >::type
                         , typename disable_if<is_reference_wrapper<T> >::type>
         : get_wrapper_impl<
               typename di::type_traits::function_traits<
-                  BOOST_DI_FEATURE_DECLTYPE(&T::template operator()<dummy>)
+                  BOOST_DI_FEATURE_DECLTYPE(&T::operator())
               >::result_type
           >
     { };
@@ -134,11 +121,6 @@ public:
     template<typename T>
     explicit dependency(const T& object)
         : scope_type(object)
-    { }
-
-    template<typename T, typename TInjector>
-    dependency(const T& object, TInjector& injector)
-        : scope_type(object, injector)
     { }
 
     template<typename T>

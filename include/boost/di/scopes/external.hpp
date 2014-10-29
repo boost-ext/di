@@ -35,21 +35,6 @@ BOOST_DI_FEATURE(CPP_11_FUNCTIONAL)(
 
 namespace boost {
 namespace di {
-
-struct dummy {
-    template<typename T> T create();
-};
-
-template<typename C, typename U>
-decltype(std::declval<C>().operator()(std::declval<U>()), std::true_type{}) test_has_call_operator(void*);
-
-template<typename, typename>
-std::false_type test_has_call_operator(...);
-
-template<typename T, typename U>
-struct has_lambda : decltype(test_has_call_operator<T, U>(0))
-{ };
-
 namespace scopes {
 
 template<template<typename> class TWrapper = wrappers::value>
@@ -58,7 +43,7 @@ class external
 public:
     typedef mpl::int_<1> priority;
 
-    template<typename TExpected, typename TGiven>
+    template<typename TExpected>
     class scope
     {
     public:
@@ -96,30 +81,20 @@ public:
     public:
         template<typename T>
         explicit scope(const T& object
-                     , typename enable_if_c<type_traits::has_call_operator<T>::value && !is_reference_wrapper<T>::value>::type* = 0
-                     , typename disable_if<has_lambda<T, dummy&>>::type* = 0
-                     )
+                     , typename enable_if_c<
+                           type_traits::has_call_operator<T>::value &&
+                           !is_reference_wrapper<T>::value
+                       >::type* = 0)
             : object_(convert_when_function<TExpected>(object))
         { }
 
         template<typename T>
         explicit scope(const T& object
-                     , typename disable_if_c<type_traits::has_call_operator<T>::value && !is_reference_wrapper<T>::value>::type* = 0
-                     , typename disable_if<has_lambda<T, dummy&>>::type* = 0
-                     )
+                     , typename disable_if_c<
+                           type_traits::has_call_operator<T>::value &&
+                           !is_reference_wrapper<T>::value
+                       >::type* = 0)
             : object_(result_type_holder(object))
-        { }
-
-        template<typename T>
-        explicit scope(const T& object
-                     , typename enable_if<has_lambda<T, dummy&>>::type* = 0
-                     )
-            : given_(new T(object))
-        { }
-
-        template<typename T, typename TInjector>
-        scope(const T& object, TInjector& injector)
-            : object_([&]{ return (*object.given_)(injector); })
         { }
 
         result_type create() {
@@ -128,7 +103,6 @@ public:
 
     private:
         function<result_type()> object_;
-        std::shared_ptr<TGiven> given_;
     };
 };
 

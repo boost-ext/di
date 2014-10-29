@@ -32,9 +32,6 @@
     #include <boost/mpl/placeholders.hpp>
     #include <boost/mpl/has_xxx.hpp>
 
-#include <iostream>
-#include <typeinfo>
-
     namespace boost {
     namespace di {
 
@@ -133,22 +130,15 @@
 
     private:
         template<typename T>
-        T pass_arg(const T& arg
-                , typename disable_if<type_traits::has_configure<T> >::type* = 0
-                , typename enable_if<has_lambda<typename T::given, dummy&> >::type* = 0) {
-            return T{arg, *this};
-        }
-
-        template<typename T>
         const T& pass_arg(const T& arg
-                        , typename disable_if<type_traits::has_configure<T> >::type* = 0
-                        , typename disable_if<has_lambda<typename T::given, dummy&> >::type* = 0) {
+                        , typename disable_if<type_traits::has_configure<T> >::type* = 0) const {
             return arg;
         }
 
         template<typename T>
         typename detail::get_module<T>::type
-        pass_arg(const T& arg, typename enable_if<type_traits::has_configure<T> >::type* = 0) {
+        pass_arg(const T& arg
+               , typename enable_if<type_traits::has_configure<T> >::type* = 0) const {
             return arg.configure();
         }
     };

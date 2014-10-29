@@ -25,7 +25,7 @@ class session
 public:
     typedef mpl::int_<0> priority;
 
-    template<typename TExpected, typename>
+    template<typename TExpected>
     class scope
     {
     public:
