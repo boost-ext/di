@@ -68,8 +68,8 @@ public:
         typename U
       , typename = std::enable_if_t<
             !std::is_same<
-                typename type_traits::make_plain<U>::type
-              , typename type_traits::make_plain<T>::type
+                type_traits::make_plain_t<U>
+              , type_traits::make_plain_t<T>
             >{}
         >
     >
@@ -83,8 +83,8 @@ public:
         typename U
       , typename = std::enable_if_t<
             !std::is_same<
-                typename type_traits::make_plain<U>::type
-              , typename type_traits::make_plain<T>::type
+                type_traits::make_plain_t<U>
+              , type_traits::make_plain_t<T>
             >{}
         >
     >
@@ -105,8 +105,8 @@ public:
         typename U
       , typename = std::enable_if_t<
             !std::is_same<
-                typename type_traits::make_plain<U>::type
-              , typename type_traits::make_plain<T>::type
+                type_traits::make_plain_t<U>
+              , type_traits::make_plain_t<T>
             >{}
         >
     >

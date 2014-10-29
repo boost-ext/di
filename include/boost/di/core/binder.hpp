@@ -28,12 +28,12 @@ struct binder<type_list<Ts...>> {
       , typename TDefault =
             bindings::dependency<
                 scopes::deduce
-              , typename type_traits::make_plain<T>::type
-              , typename type_traits::make_plain<T>::type
-              , bindings::detail::is_required_type<typename type_traits::make_plain<T>::type>
+              , type_traits::make_plain_t<T>
+              , type_traits::make_plain_t<T>
+              , bindings::detail::is_required_type<type_traits::make_plain_t<T>>
             >
     >
-    using resolve = typename at_key<TDefault, std::true_type, resolve_impl<T, Ts>...>::type::
+    using resolve = at_key_t<TDefault, std::true_type, resolve_impl<T, Ts>...>::
         template rebind<typename scopes::deduce::rebind<T>::other>::other;
 };
 

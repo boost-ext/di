@@ -13,6 +13,7 @@
 #include "boost/di/bindings/scope.hpp"
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/session.hpp"
+#include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/shared.hpp"
 #include "boost/di/scopes/unique.hpp"
 
@@ -35,7 +36,15 @@ template<typename... Ts>
 using shared = scope<scopes::shared>::bind<Ts...>;
 
 template<typename... Ts>
+using singleton = scope<scopes::singleton>::bind<Ts...>;
+
+template<typename... Ts>
 using session = scope<scopes::session>::bind<Ts...>;
+
+session<
+    bind<i, impl>
+  , bind<i2, impl2>
+>
 
 template<typename... Ts>
 using context = bindings::context<Ts...>;

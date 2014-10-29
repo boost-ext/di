@@ -107,7 +107,6 @@ static no_decay<value> lookup(pair<key, value>*);
 template <typename d, typename key, typename ...pairs>
 using at_key = decltype(lookup<d, key>((inherit<pairs...>*)0));
 
-
 } // namespace di
 } // namespace boost
 
