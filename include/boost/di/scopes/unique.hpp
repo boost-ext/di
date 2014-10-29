@@ -22,7 +22,7 @@ class unique
 public:
     typedef mpl::int_<0> priority;
 
-    template<typename TExpected>
+    template<typename TExpected, typename>
     class scope
     {
     public:
