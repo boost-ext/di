@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/krzysztof-jusiak/di.png?label=ready&title=Ready)](https://waffle.io/krzysztof-jusiak/di)
 ### C++ Dependency Injection
 > "Don't call us, we'll call you", Hollywood principle
 
