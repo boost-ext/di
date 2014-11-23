@@ -11,7 +11,6 @@
 #include "boost/di/scopes/unique.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/external.hpp"
-#include "boost/di/wrappers/reference.hpp"
 #include "boost/di/named.hpp"
 
 namespace boost {
@@ -25,7 +24,7 @@ struct scope_traits {
 
 template<typename T>
 struct scope_traits<T&> {
-    using type = scopes::external<wrappers::reference>;
+    using type = scopes::external<T&>;
 };
 
 template<typename T>

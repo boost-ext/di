@@ -27,8 +27,6 @@ namespace boost {
 namespace di {
 namespace core {
 
-BOOST_MPL_HAS_XXX_TRAIT_DEF(result_type)
-
 template<typename TExpected, typename TName>
 struct dependency_concept { };
 
@@ -47,67 +45,12 @@ template<
   , typename TGiven = TExpected
   , typename TName = no_name
 >
-class dependency : public TScope::template scope<TGiven>,
-                   public dependency_impl<dependency_concept<TExpected, TName>, dependency<TScope, TExpected, TGiven, TName>> {
-    using scope_type = typename TScope::template scope<TGiven>;
-    using ref_type = scopes::external<wrappers::reference>;
-    using shared_type = scopes::external<wrappers::shared>;
-    using value_type = scopes::external<wrappers::value>;
-
-    template<typename, typename = void>
-    struct get_wrapper_impl
-    {
-        typedef value_type type;
-    };
-
-    template<typename T>
-    struct get_wrapper_impl<aux::shared_ptr<T> >
-    {
-        typedef shared_type type;
-    };
-
-    template<typename T>
-    struct get_wrapper_impl<T, typename enable_if<is_reference_wrapper<T> >::type>
-    {
-        typedef ref_type type;
-    };
-
-    template<
-        typename T
-      , typename = void
-      , typename = void
-      , typename = void
-      , typename = void
-    >
-    struct get_wrapper
-    {
-        typedef T type;
-    };
-
-    template<typename T>
-    struct get_wrapper<T, typename enable_if<has_result_type<T> >::type>
-        : get_wrapper_impl<typename T::result_type>
-    { };
-
-    template<typename T>
-    struct get_wrapper<T, typename enable_if<aux::has_call_operator<T> >::type
-                        , typename disable_if<has_result_type<T> >::type
-                        , typename disable_if<aux::is_reference_wrapper<T> >::type
-                        , typename disable_if<aux::has_lambda<T, fwd::injector&> >::type>
-        : get_wrapper_impl<typename aux::function_traits<decltype(&T::operator())>::result_type>
-    { };
-
-    template<typename T>
-    struct get_wrapper<T, typename enable_if<aux::has_lambda<T, fwd::injector&> >::type
-                        , typename disable_if<has_result_type<T> >::type
-                        , typename disable_if<aux::is_reference_wrapper<T> >::type>
-        : get_wrapper_impl<
-              typename aux::function_traits<
-                  decltype(&T::template operator()<fwd::injector>)
-              >::result_type
-          >
-    { };
-
+class dependency
+    : public TScope::template scope<TGiven>
+    , public dependency_impl<
+          dependency_concept<TExpected, TName>
+        , dependency<TScope, TExpected, TGiven, TName>
+      > {
 public:
     using type = dependency;
     using scope = TScope;
@@ -132,49 +75,29 @@ public:
     dependency() { }
 
     template<typename T>
-    explicit dependency(const T& object)
-        : scope_type(object)
+    explicit dependency(T&& object)
+        : TScope::template scope<TGiven>(std::forward<T>(object))
     { }
 
     template<typename T, typename TInjector>
-    dependency(const T& object, TInjector& injector)
-        : scope_type(object, injector)
+    dependency(T&& object, TInjector& injector)
+        : TScope::template scope<TGiven>(std::forward<T>(object), injector)
     { }
 
     template<typename T>
-    dependency<value_type, expected, T, TName>
-    to(const T& object, typename disable_if<aux::is_reference_wrapper<T> >::type* = 0
-                      , typename disable_if<aux::has_call_operator<T> >::type* = 0) {
-        return dependency<value_type, expected, T, TName>(object);
+    auto named(const T&) {
+        return dependency<TScope, TExpected, TGiven, T>{};
     }
 
     template<typename T>
-    dependency<ref_type, typename unwrap_reference<T>::type, T, TName>
-    to(const T& object, typename enable_if<aux::is_reference_wrapper<T> >::type* = 0) {
-        return dependency<ref_type, typename unwrap_reference<T>::type, T, TName>(object);
+    auto in(const T&) {
+        return dependency<T, TExpected, TGiven, TName>{};
     }
 
     template<typename T>
-    dependency<typename get_wrapper<T>::type, expected, T, TName>
-    to(const T& object, typename disable_if<aux::is_reference_wrapper<T> >::type* = 0
-                      , typename enable_if<aux::has_call_operator<T> >::type* = 0) {
-        return dependency<typename get_wrapper<T>::type, expected, T, TName>(object);
+    auto to(T&& object) {
+        return dependency<scopes::external<T>, TExpected, TExpected, TName>{std::forward<T>(object)};
     }
-
-    template<typename T>
-    dependency<shared_type, expected, T, TName>
-    to(const aux::shared_ptr<T>& object) {
-        return dependency<shared_type, expected, T, TName>(object);
-    }
-
-    template<typename TNam>
-    dependency<TScope, TExpected, TGiven, TNam>
-    named(const TNam&) { return {}; }
-
-    template<typename TSc>
-    dependency<TSc, TExpected, TGiven, TName>
-    in(const TSc&) { return {}; }
-
 };
 
 } // namespace core

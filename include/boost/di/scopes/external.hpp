@@ -8,6 +8,8 @@
 #define BOOST_DI_SCOPES_EXTERNAL_HPP
 
 #include "boost/di/wrappers/value.hpp"
+#include "boost/di/wrappers/shared.hpp"
+#include "boost/di/wrappers/reference.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 
 #include <boost/ref.hpp>
@@ -26,7 +28,7 @@ struct injector {
 
 namespace scopes {
 
-template<template<typename> class TWrapper = wrappers::value>
+template<typename TT>
 class external {
 public:
     static constexpr auto priority = 1; // 0 - lowest, N - highest
@@ -34,7 +36,7 @@ public:
     template<typename T, typename = void>
     class scope
     {
-        using result_type = TWrapper<T>;
+        using result_type = wrappers::value<T>;
 
     public:
         explicit scope(const T& object)
@@ -59,7 +61,7 @@ public:
                     !aux::has_lambda<T, fwd::injector&>::value
                 >::type>
     {
-        using result_type = TWrapper<T>;
+        using result_type = wrappers::value<T>;
 
     public:
         explicit scope(const T& object)
@@ -79,7 +81,7 @@ public:
     template<typename T>
     class scope<T, aux::enable_if_t<aux::has_lambda<T, fwd::injector&>{}>>
     {
-        using result_type = TWrapper<T>;
+        using result_type = wrappers::value<T>;
         scope& operator=(const scope&) = delete;
 
     public:
