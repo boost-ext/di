@@ -31,12 +31,13 @@ struct binder {
 	template<typename T>
 	using get_name_t = typename get_name<T>::type;
 
-	template<typename T>
-	using rebind_t = typename T::template rebind<typename scopes::deduce::rebind<T>::other>::other;
+	template<typename TDependency, typename T>
+	using rebind_t = typename TDependency::template rebind<T>::other;
 
     template<typename T, typename TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>>
     using resolve = rebind_t<
         at_key_t<TDefault, dependency_concept<aux::make_plain_t<T>, get_name_t<aux::remove_accessors_t<T>>>, TDeps>
+      , T
 	>;
 };
 

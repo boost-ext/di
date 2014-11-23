@@ -17,6 +17,11 @@ class unique {
 public:
     static constexpr auto priority = 0; // 0 - lowest, N - highest
 
+    template<typename>
+    struct rebind {
+        using other = unique;
+    };
+
     template<typename T>
     class scope {
     public:

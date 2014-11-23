@@ -1,4 +1,3 @@
-//
 // Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
 //
 // Distributed under the Boost Software License, Version 1.0.
@@ -21,13 +20,13 @@ class deduce {
 public:
     static constexpr auto priority = 0; // 0 - lowest, N - highest
 
-    template<typename>
-    struct scope { };
-
     template<typename T>
     struct rebind {
         using other = type_traits::scope_traits_t<T>;
     };
+
+    template<typename>
+    struct scope { };
 };
 
 } // namespace scopes

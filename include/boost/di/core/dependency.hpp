@@ -61,11 +61,7 @@ public:
     template<typename T>
     struct rebind {
         using other = dependency<
-            aux::conditional_t<
-                std::is_same<scope, scopes::deduce>{}
-              , T
-              , TScope
-            >
+            typename TScope::template rebind<T>::other
           , TExpected
           , TGiven
           , TName

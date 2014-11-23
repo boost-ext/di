@@ -17,6 +17,11 @@ class singleton {
 public:
     static constexpr auto priority = 0; // 0 - lowest, N - highest
 
+    template<typename>
+    struct rebind {
+        using other = singleton;
+    };
+
     template<typename T>
     class scope {
         using result_type = wrappers::shared<T>;
