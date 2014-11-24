@@ -18,8 +18,7 @@ template<
   , typename TInjector = none_t
   , typename TProvider = none_t
   , typename TRefs = none_t
-  , typename TVisitor = none_t
-  , typename TPolicies = none_t
+  , typename TVisitors = none_t
 >
 class any_type {
     template<typename TValueType, typename TRefType>
@@ -43,36 +42,33 @@ public:
     any_type(TInjector& creator
            , const TProvider& provider
            , TRefs& refs
-           , const TVisitor& visitor
-           , const TPolicies& policies)
+           , const TVisitors& visitors)
         : creator_(creator)
         , provider_(provider)
         , refs_(refs)
-        , visitor_(visitor)
-        , policies_(policies)
+        , visitors_(visitors)
     { }
 
     template<typename U, typename = is_not_same_t<U>>
     operator const U&() const {
-        return creator_.template create<const U&, T>(provider_, refs_, visitor_, policies_);
+        return creator_.template create<const U&, T>(provider_, refs_, visitors_);
     }
 
     template<typename U, typename = is_not_same_t<U>>
     operator U&() const {
-        return creator_.template create<U&, T>(provider_, refs_, visitor_, policies_);
+        return creator_.template create<U&, T>(provider_, refs_, visitors_);
     }
 
     template<typename U, typename = is_not_same_t<U>>
     operator U() {
-        return creator_.template create<U, T>(provider_, refs_, visitor_, policies_);
+        return creator_.template create<U, T>(provider_, refs_, visitors_);
     }
 
 private:
     ref_type_t<TInjector, TInjector&> creator_;
     ref_type_t<TProvider, const TProvider&> provider_;
     ref_type_t<TRefs, TRefs&> refs_;
-    ref_type_t<TVisitor, const TVisitor&> visitor_;
-    ref_type_t<TPolicies, const TPolicies&> policies_;
+    ref_type_t<TVisitors, const TVisitors&> visitors_;
 };
 
 } // namespace core
@@ -83,8 +79,7 @@ private:
   //, typename TInjector
   //, typename TProvider
   //, typename TRefs
-  //, typename TVisitor
-  //, typename TPolicies
+  //, typename TVisitors
 //>
 //struct is_integral<
     //di::core::any_type<
@@ -92,8 +87,7 @@ private:
       //, TInjector
       //, TProvider
       //, TRefs
-      //, TVisitor
-      //, TPolicies
+      //, TVisitors
    //>
 /*> : ::std::true_type { };*/
 
@@ -106,8 +100,7 @@ template<
   , typename TInjector
   , typename TProvider
   , typename TRefs
-  , typename TVisitor
-  , typename TPolicies
+  , typename TVisitors
 >
 struct is_integral<
     boost::di::core::any_type<
@@ -115,8 +108,7 @@ struct is_integral<
       , TInjector
       , TProvider
       , TRefs
-      , TVisitor
-      , TPolicies
+      , TVisitors
     >
 > : ::std::true_type { };
 

@@ -77,11 +77,6 @@ template<typename TDeps = type_list<>, typename TDefaultProvider = providers::no
 class injector : public pool<TDeps> {
     using pool_t = pool<TDeps>;
 
-    struct empty_visitor {
-        template<typename T>
-        void operator()(const T&) const { }
-    };
-
     template<typename TDependency>
     using scope_create = typename aux::function_traits<
         decltype(&TDependency::create3)
@@ -108,16 +103,16 @@ public:
 
     template<typename T, typename... TArgs>
     T create(const TArgs&... args) {
-        //TODO check if there is a provider or visitor within args?
-        pool<type_list<TArgs...>> policies_(args...);
+        pool<type_list<TArgs...>> visitors(args...);
         std::vector<aux::shared_ptr<void>> refs_;
+        return create<T, none_t>(TDefaultProvider{}, refs_, visitors);
+    }
 
-        return create<T, none_t>(
-            TDefaultProvider{}
-          , refs_
-          , empty_visitor{}
-          , policies_
-        );
+    template<typename T, typename TProvider, typename... TArgs>
+    T provide(const TProvider& provider, const TArgs&... args) {
+        pool<type_list<TArgs...>> visitors(args...);
+        std::vector<aux::shared_ptr<void>> refs_;
+        return create<T, none_t>(provider, refs_, visitors);
     }
 
     template<typename TAction>
@@ -131,19 +126,17 @@ private:
       , typename TParent
       , typename TProvider
       , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
+      , typename TVisitors
     >
     aux::enable_if_t<
         has_any<T>::value
-      , any_type<TParent, injector, TProvider, TRefs, TVisitor, TPolicies>
+      , any_type<TParent, injector, TProvider, TRefs, TVisitors>
     >
     create(const TProvider& provider
          , TRefs& refs
-         , const TVisitor& visitor
-         , const TPolicies& policies) {
-        return any_type<TParent, injector, TProvider, TRefs, TVisitor, TPolicies>(
-            *this, provider, refs, visitor, policies
+         , const TVisitors& visitors) {
+        return any_type<TParent, injector, TProvider, TRefs, TVisitors>(
+            *this, provider, refs, visitors
         );
     }
 
@@ -152,16 +145,12 @@ private:
       , typename TParent
       , typename TProvider
       , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
+      , typename TVisitors
     >
     aux::enable_if_t<!has_any<T>::value, wrappers::universal<T>>
-    create(const TProvider& provider, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+    create(const TProvider& provider, TRefs& refs, const TVisitors& visitors) {
 		using dependency_type = typename binder<pool_t>::template resolve<T>;
-		//std::cout << boost::units::detail::demangle(typeid(dependency_type).name()) << std::endl;
-        //assert_policies<data_visitor<T, dependency_type>>(policies);
-        (visitor)(data_visitor<T, dependency_type>());
-        return create_impl<T, dependency_type>(provider, refs, visitor, policies);
+        return create_impl<T, dependency_type>(provider, refs, visitors);
     }
 
     template<
@@ -169,8 +158,7 @@ private:
       , typename TDependency
       , typename TProvider
       , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
+      , typename TVisitors
     >
     //aux::enable_if_t<!size<scope_create<TDependency>>{} && !has_create2<TDependency>{}, wrappers::universal<T>>
     typename enable_if_c<
@@ -178,7 +166,7 @@ private:
         !has_create2<TDependency>::value
       , wrappers::universal<T>
     >::type
-    create_impl(const TProvider&, TRefs& refs, const TVisitor&, const TPolicies&) {
+    create_impl(const TProvider&, TRefs& refs, const TVisitors&) {
         return wrappers::universal<T>(refs, acquire<TDependency>(static_cast<pool_t&>(*this)).create());
     }
 
@@ -187,15 +175,14 @@ private:
           , typename TDependency
           , typename TProvider
           , typename TRefs
-          , typename TVisitor
-          , typename TPolicies
+          , typename TVisitors
         >
     typename enable_if_c<
         /*mpl::*/size<scope_create<TDependency> >::value &&
         has_create2<TDependency>::value
       , wrappers::universal<T>
     >::type
-    create_impl(const TProvider&, TRefs& refs, const TVisitor&, const TPolicies&) {
+    create_impl(const TProvider&, TRefs& refs, const TVisitors&) {
         return {refs, acquire<TDependency>(static_cast<pool_t&>(*this)).create_(*this)};
     }
 
@@ -204,8 +191,7 @@ private:
       , typename TDependency
       , typename TProvider
       , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
+      , typename TVisitors
     >
     //aux::enable_if_t<size<scope_create<TDependency>>{}, wrappers::universal<T>>
         typename enable_if_c<
@@ -214,8 +200,7 @@ private:
           , wrappers::universal<T> >::type
     create_impl(const TProvider& provider
               , TRefs& refs
-              , const TVisitor& visitor
-              , const TPolicies& policies) {
+              , const TVisitors& visitors) {
 
         using ctor_type =
             typename type_traits::ctor_traits<typename TDependency::given>::type;
@@ -223,13 +208,7 @@ private:
         return {
             refs
           , acquire<TDependency>(static_cast<pool_t&>(*this)).create(
-                create_impl<T, TDependency>(
-                    provider
-                  , refs
-                  , visitor
-                  , policies
-                  , ctor_type()
-                )
+                create_impl<T, TDependency>(provider, refs, visitors, ctor_type())
             )
         };
     }
@@ -239,28 +218,26 @@ private:
       , typename TDependency
       , typename TProvider
       , typename TRefs
-      , typename TVisitor
-      , typename TPolicies
+      , typename TVisitors
       , typename... TArgs
     >
     auto create_impl(const TProvider& provider
               , TRefs& refs
-              , const TVisitor& visitor
-              , const TPolicies& policies
+              , const TVisitors& visitors
               , const type_list<TArgs...>&) {
 		//TODO will be always called
-        return provider.template get<TDependency>(create<TArgs, T>(provider, refs, visitor, policies)...);
+        return provider.template get<TDependency>(create<TArgs, T>(provider, refs, visitors)...);
     }
 
-    template<typename T, typename... TPolicies>
-    static void assert_policies(const pool<type_list<TPolicies...>>& policies) {
-        int dummy[]{0, (assert_policy<TPolicies, T>(policies), 0)...};
+    template<typename T, typename... TVisitors>
+    static void assert_visitors(const pool<type_list<TVisitors...>>& visitors) {
+        int dummy[]{0, (assert_policy<TVisitors, T>(visitors), 0)...};
         (void)dummy;
     }
 
-    template<typename TPolicy, typename T, typename TPolicies>
-    static void assert_policy(const TPolicies& policies) {
-        static_cast<const TPolicy&>(policies).template assert_policy<T>();
+    template<typename TPolicy, typename T, typename TVisitors>
+    static void assert_policy(const TVisitors& visitors) {
+        static_cast<const TPolicy&>(visitors).template assert_policy<T>();
     }
 
     template<typename TDependency, typename TDeps_>
