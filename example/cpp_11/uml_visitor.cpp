@@ -90,7 +90,7 @@ public:
     /*<<Definition of the visitor call operator requirement>>*/
     template<typename T>
     void operator()(const T&) const {
-        auto call_stack_size = di::aux::mpl::size<typename T::call_stack>::value;
+        auto call_stack_size = mpl::size<typename T::call_stack>::value;
 
         while (!context_.empty() && context_.back().context_size >= call_stack_size) {
             context_.pop_back();

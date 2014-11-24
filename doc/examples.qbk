@@ -15,6 +15,11 @@
 [table
     [[Full code example: [@example/cpp_11/hello_world.cpp]]]
 ]
+[import ../example/cpp_03/hello_world.cpp]
+[hello_world_cpp_03]
+[table
+    [[Full code example: [@example/cpp_03/hello_world.cpp]]]
+]
 [endsect]
 
 [section Constructor Injection]
@@ -52,6 +57,11 @@
 [table
     [[Full code example: [@example/cpp_14/modules.cpp]]]
 ]
+[import ../example/cpp_03/modules.cpp]
+[modules_cpp_03]
+[table
+    [[Full code example: [@example/cpp_03/modules.cpp]]]
+]
 [endsect]
 
 [section Deduce Scope]
@@ -70,11 +80,11 @@
 ]
 [endsect]
 
-[section Custom Provider]
-[import ../example/cpp_11/custom_provider.cpp]
-[custom_provider_cpp_11]
+[section Custom Allocator]
+[import ../example/cpp_11/custom_allocator.cpp]
+[custom_allocator_cpp_11]
 [table
-    [[Full code example: [@example/cpp_11/custom_provider.cpp]]]
+    [[Full code example: [@example/cpp_11/custom_allocator.cpp]]]
 ]
 [endsect]
 

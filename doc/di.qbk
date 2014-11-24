@@ -61,7 +61,7 @@
 [def __bindings_scope_shared__                          [link di.concepts.bindings.scope.shared shared]]
 [def __bindings_scope_session__                         [link di.concepts.bindings.scope.session unique]]
 [def __bindings_when__                                  [link di.concepts.bindings.when when]]
-[def __bindings_when_context__                          [link di.concepts.bindings.when.context context]]
+[def __bindings_when_call_stack__                       [link di.concepts.bindings.when.call_stack call_stack]]
 [def __bindings_named__                                 [link di.concepts.bindings.named named]]
 
 [def __core__                                           [link di.concepts.injectors Core]]
@@ -71,10 +71,14 @@
 
 [def __modules__                                        [link di.concepts.modules Modules]]
 
+[def __utilities_allocator__                            [link di.concepts.utilities.allocator allocator]]
 [def __utilities_provider__                             [link di.concepts.utilities.provider provider]]
 
 [def __policies__                                       [link di.concepts.policies Policies]]
-[def __policies_allow_types__                           [link di.concepts.policies.allow_types allow_types]]
+[def __policies_circular_dependencies__                 [link di.concepts.policies.circular_dependencies circular_dependencies]]
+[def __policies_creation_permission__                   [link di.concepts.policies.creation_permission creation_permission]]
+[def __policies_parameters_permission__                 [link di.concepts.policies.parameters_permission parameters_permission]]
+[def __policies_scopes_permission__                     [link di.concepts.policies.scopes_permission scopes_permission]]
 
 [def __rationale__                                      [link di.rationale Rationale]]
 [def __rationale_constructor_parameters_deduction__     [link di.rationale.constructor_parameters_deduction Constructor Parameters Deduction]]
@@ -87,7 +91,7 @@
 [def __examples_constructor_injection__                 [link di.examples.constructor_injection Constructor Injection]]
 [def __examples_constructor_signature__                 [link di.examples.constructor_signature Constructor Signature]]
 [def __examples_modules__                               [link di.examples.modules Modules]]
-[def __examples_custom_provider__                       [link di.examples.custom_provider Custom Provider]]
+[def __examples_custom_allocator__                      [link di.examples.custom_allocator Custom Allocator]]
 [def __examples_constructor_traits_generator__          [link di.examples.constructor_traits_generator Constructor Traits Generator]]
 [def __examples_custom_policy__                         [link di.examples.custom_policy Custom Policy]]
 [def __examples_custom_scope__                          [link di.examples.custom_scope Custom Scope]]
@@ -107,10 +111,14 @@
 [def __binding_model__                                  [link di.concepts.bindings.synopsis Binding Model]]
 [def __dependency_model__                               [link di.concepts.bindings.synopsis Dependency Model]]
 [def __scope_model__                                    [link di.concepts.scopes.synopsis Scope Model]]
+[def __allocator_model__                                [link di.concepts.utilities.allocator Allocator Model]]
 [def __policy_model__                                   [link di.concepts.policies Policy Model]]
 [def __visitor_model__                                  [link di.concepts.injectors.injector.visitor_model Visitor Model]]
 [def __type_model__                                     [link di.concepts.injectors.injector.type_model Type Model]]
 [def __wrapper_model__                                  [link di.concepts.scopes.wrapper_model Wrapper Model]]
+[def __allow_type_model__                               [link di.concepts.policies.creation_permission.allow_type_model Allow Type Model]]
+[def __allow_parameter_model__                          [link di.concepts.policies.parameters_permission.allow_parameter_model Allow Parameter Model]]
+[def __allow_scope_model__                              [link di.concepts.policies.scopes_permission.allow_scope_model Allow Scope Model]]
 [def __data_model__                                     [link di.concepts.policies.data_model Data Model]]
 
 [def __di_named__                                       [link di.concepts.annotations.named di::named]]

@@ -15,16 +15,18 @@ namespace scopes {
 
 class shared {
 public:
-    static const bool priority = false;
+    static constexpr auto priority = 0; // 0 - lowest, N - highest
 
-    template<typename TExpected>
+    template<typename T>
     class scope {
-    public:
-        using result_type = wrappers::shared<TExpected>;
+        using result_type = wrappers::shared<T>;
 
-        result_type create(const std::function<TExpected*()>& f) {
+    public:
+        void create3(int);
+
+        result_type create(T* ptr) {
             if (!object_) {
-                object_.reset(f());
+                object_.reset(ptr);
             }
             return object_;
         }

@@ -8,20 +8,14 @@
 #define BOOST_DI_NAMED_HPP
 
 #include "boost/di/aux_/memory.hpp"
-#include "boost/di/aux_/mpl.hpp"
-#include "boost/di/type_traits/make_plain.hpp"
-#include "boost/di/type_traits/remove_accessors.hpp"
+#include "boost/di/aux_/type_traits.hpp"
 
 namespace boost {
 namespace di {
 
 struct no_name { };
 
-template<
-    typename T
-  , typename TName = no_name
-  , typename = void
->
+template<typename T, typename TName = no_name, typename = void>
 class named {
     named& operator=(const named&) = delete;
 
@@ -45,10 +39,7 @@ private:
     T object_;
 };
 
-template<
-    typename T
-  , typename TName
->
+template<typename T, typename TName>
 class named<const T&, TName> {
     named& operator=(const named&) = delete;
 
@@ -72,10 +63,7 @@ private:
     std::reference_wrapper<const T> object_;
 };
 
-template<
-    typename T
-  , typename TName
->
+template<typename T, typename TName>
 class named<T&, TName> {
     named& operator=(const named&) = delete;
 
@@ -99,10 +87,7 @@ private:
     std::reference_wrapper<T> object_;
 };
 
-template<
-    typename T
-  , typename TName
->
+template<typename T, typename TName>
 class named<T&&, TName> {
     named& operator=(const named&) = delete;
 
@@ -126,10 +111,7 @@ private:
     T object_;
 };
 
-template<
-    typename T
-  , typename TName
->
+template<typename T, typename TName>
 class named<aux::unique_ptr<T>, TName> {
     named& operator=(const named&) = delete;
 
@@ -137,7 +119,7 @@ public:
     using named_type = aux::unique_ptr<T>;
     using name = TName;
 
-    named(aux::unique_ptr<T> object = aux::unique_ptr<T>(new T())) // non explicit
+    named(aux::unique_ptr<T> object = aux::unique_ptr<T>(new T{})) // non explicit
         : object_(std::move(object))
     { }
 
@@ -153,19 +135,8 @@ private:
     aux::unique_ptr<T> object_;
 };
 
-template<
-    typename T
-  , typename TName
->
-class named<
-    T
-  , TName
-  , std::enable_if_t<
-        std::is_polymorphic<
-            typename type_traits::remove_accessors<T>::type
-        >{}
-    >
-> {
+template<typename T, typename TName>
+class named<T, TName, aux::enable_if_t<std::is_polymorphic<aux::remove_accessors_t<T>>{}>> {
 public:
     using named_type = T;
     using name = TName;

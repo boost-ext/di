@@ -5,7 +5,7 @@
 This is not an official Boost library yet and there is no guarantee it will ever be!
 
 ### Introduction
-Boost.DI is C++11/C++14 header only library providing type safe, compile time, macro free constructor dependency injection.
+Boost.DI is C++03/C++11/C++14 header only library providing type safe, compile time, macro free constructor dependency injection.
 
 * [Documentation](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html)
 * [Todo/Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
@@ -78,7 +78,7 @@ void test_hello_world_when_run_with_value_true_then_log_and_do_it() {
 ### Features
 * Type safe
 * Header only
-* Supports C++11/C++14 standards
+* Supports C++03/C++11/C++14 standards
 * Exception safe guaranty
 * Thread safe guaranty
 * Compile time creation guaranty - no exceptions - if application compiles all dependencies will be be created accurately
@@ -108,6 +108,9 @@ void test_hello_world_when_run_with_value_true_then_log_and_do_it() {
 [![Build Status](https://travis-ci.org/krzysztof-jusiak/di.png?branch=master)](https://travis-ci.org/krzysztof-jusiak/di)
 [![Build Status](https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic)](https://ci.appveyor.com/project/krzysztof-jusiak/di)
 [![Coverage Status](https://coveralls.io/repos/krzysztof-jusiak/di/badge.png?branch=master)](https://coveralls.io/r/krzysztof-jusiak/di?branch=master)
+
+### Status
+[![Stories in Ready](https://badge.waffle.io/krzysztof-jusiak/di.svg?label=ready&title=Ready)](http://waffle.io/krzysztof-jusiak/di)
 
 ### Other Dependency Injection Frameworks for C++
  * [https://bitbucket.org/cheez/dicpp](https://bitbucket.org/cheez/dicpp)

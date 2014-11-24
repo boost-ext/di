@@ -15,16 +15,15 @@ namespace scopes {
 
 class unique {
 public:
-    static const bool priority = false;
+    static constexpr auto priority = 0; // 0 - lowest, N - highest
 
-    template<typename TExpected>
+    template<typename T>
     class scope {
     public:
-        using result_type = wrappers::copy<TExpected>;
+        void create3(int);
 
-        result_type create(TExpected* f) {
-            return f;
-        }
+        wrappers::copy<T*> create(T* ptr) { return ptr; }
+        wrappers::copy<T> create(T&& ptr) { return std::move(ptr); }
     };
 };
 

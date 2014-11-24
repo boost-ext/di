@@ -7,18 +7,17 @@
 #ifndef BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 
-#include "boost/di/aux_/config.hpp"
-#include "boost/di/aux_/mpl.hpp"
-#include "boost/di/inject.hpp"
-#include "boost/di/core/any_type.hpp"
-#include "boost/di/type_traits/function_traits.hpp"
-
 #include <string>
+
+#include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/aux_/utility.hpp"
+#include "boost/di/core/any_type.hpp"
+#include "boost/di/inject.hpp"
 
 namespace boost {
 namespace di {
 
-BOOST_DI_HAS_MEMBER_FUNCTION(BOOST_DI_INJECTOR, BOOST_DI_INJECTOR);
+namespace detail {
 
 template<typename T, std::size_t>
 struct get_type {
@@ -29,28 +28,23 @@ template<typename, typename, typename>
 struct ctor_impl;
 
 template<typename R, typename T, std::size_t... TArgs>
-struct ctor_impl<R, T, index_sequence<TArgs...>>
-    : pair<
-          typename std::is_constructible<R, typename get_type<T, TArgs>::type...>::type
-        , type_list<typename get_type<T, TArgs>::type...>
-      >
+struct ctor_impl<R, T, aux::index_sequence<TArgs...>>
+    : pair<aux::is_constructible_t<R, typename get_type<T, TArgs>::type...>, type_list<typename get_type<T, TArgs>::type...>>
 { };
 
 template<typename, typename>
 struct ctor_traits_impl;
 
 template<typename T, std::size_t... Args>
-struct ctor_traits_impl<T, index_sequence<Args...>>
-    : at_key<
-          type_list<>
-        , std::true_type
-        , typename ctor_impl<T, core::any_type<T>, typename make_index_sequence<Args>::type>::type...
-      >
+struct ctor_traits_impl<T, aux::index_sequence<Args...>>
+    : at_key<type_list<>, std::true_type, inherit<ctor_impl<T, core::any_type<T>, aux::make_index_sequence<Args>>...>>
 { };
+
+} // namespace detail
 
 template<typename T>
 struct ctor_traits
-    : ctor_traits_impl<T, typename make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>::type>
+    : detail::ctor_traits_impl<T, aux::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>>
 { };
 
 template<typename T>
@@ -60,15 +54,15 @@ struct ctor_traits<std::basic_string<T>> {
 
 namespace type_traits {
 
-template<typename T, typename = bool_<BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<T>::value>>
+template<typename T, typename = typename BOOST_DI_CAT(aux::has_, BOOST_DI_INJECTOR)<T>::type>
 struct ctor_traits;
 
-template<typename T, typename = bool_<BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<di::ctor_traits<T>>::value>>
+template<typename T, typename = typename BOOST_DI_CAT(aux::has_, BOOST_DI_INJECTOR)<di::ctor_traits<T>>::type>
 struct ctor_traits_impl;
 
 template<typename T>
 struct ctor_traits<T, std::true_type>
-    : function_traits<decltype(&T::BOOST_DI_INJECTOR)>::type
+    : aux::function_traits<decltype(&T::BOOST_DI_INJECTOR)>::args
 { };
 
 template<typename T>
@@ -78,7 +72,7 @@ struct ctor_traits<T, std::false_type>
 
 template<typename T>
 struct ctor_traits_impl<T, std::true_type>
-    : function_traits<decltype(&di::ctor_traits<T>::BOOST_DI_INJECTOR)>::type
+    : aux::function_traits<decltype(&di::ctor_traits<T>::BOOST_DI_INJECTOR)>::args
 { };
 
 template<typename T>

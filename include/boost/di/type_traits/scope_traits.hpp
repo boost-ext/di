@@ -7,10 +7,9 @@
 #ifndef BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 
-#include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/scopes/unique.hpp"
-#include "boost/di/scopes/shared.hpp"
+#include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/wrappers/reference.hpp"
 #include "boost/di/named.hpp"
@@ -45,38 +44,33 @@ struct scope_traits<const T*> {
 };
 
 template<typename T>
-struct scope_traits<aux::auto_ptr<T>> {
-    using type = scopes::unique;
-};
-
-template<typename T>
 struct scope_traits<aux::shared_ptr<T>> {
-    using type = scopes::shared;
+    using type = scopes::singleton;
 };
 
 template<typename T>
 struct scope_traits<const aux::shared_ptr<T>&> {
-    using type = scopes::shared;
+    using type = scopes::singleton;
 };
 
 template<typename T>
 struct scope_traits<aux_::shared_ptr<T>> {
-    using type = scopes::shared;
+    using type = scopes::singleton;
 };
 
 template<typename T>
 struct scope_traits<const aux_::shared_ptr<T>&> {
-    using type = scopes::shared;
+    using type = scopes::singleton;
 };
 
 template<typename T>
 struct scope_traits<aux::weak_ptr<T>> {
-    using type = scopes::shared;
+    using type = scopes::singleton;
 };
 
 template<typename T>
 struct scope_traits<const aux::weak_ptr<T>&> {
-    using type = scopes::shared;
+    using type = scopes::singleton;
 };
 
 template<typename T>
@@ -108,6 +102,9 @@ template<typename T, typename TName>
 struct scope_traits<const named<T, TName>&> {
     using type = typename scope_traits<T>::type;
 };
+
+template<typename T>
+using scope_traits_t = typename scope_traits<T>::type;
 
 } // namespace type_traits
 } // namespace di

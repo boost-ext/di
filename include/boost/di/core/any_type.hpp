@@ -6,12 +6,8 @@
 #ifndef BOOST_DI_CORE_ANY_TYPE_HPP
 #define BOOST_DI_CORE_ANY_TYPE_HPP
 
-#include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
-#include "boost/di/aux_/mpl.hpp"
-#include "boost/di/type_traits/make_plain.hpp"
-
-#include <boost/type_traits/is_integral.hpp>
+#include "boost/di/aux_/type_traits.hpp"
 
 namespace boost {
 namespace di {
@@ -27,14 +23,15 @@ template<
   , typename TPolicies = none_t
 >
 class any_type {
-    any_type& operator=(const any_type&);
-
     template<typename TValueType, typename TRefType>
-    using ref_type_t = typename std::conditional<
+    using ref_type_t = aux::conditional_t<
           std::is_same<TValueType, none_t>{}
         , TValueType
         , TRefType
-      >::type;
+      >;
+
+    any_type& operator=(const any_type&) = delete;
+    //any_type(const any_type&) = delete;
 
 public:
     using any = any_type;
@@ -55,22 +52,10 @@ public:
         , policies_(policies)
     { }
 
-    any_type(const any_type& other)
-        : creator_(other.creator_)
-        , provider_(other.provider_)
-        , deps_(other.deps_)
-        , refs_(other.refs_)
-        , visitor_(other.visitor_)
-        , policies_(other.policies_)
-    { }
-
     template<
         typename U
-      , typename = std::enable_if_t<
-            !std::is_same<
-                type_traits::make_plain_t<U>
-              , type_traits::make_plain_t<T>
-            >{}
+      , typename = aux::enable_if_t<
+            !std::is_same<aux::make_plain_t<U>, aux::make_plain_t<T>>{}
         >
     >
     operator const U&() const {
@@ -81,11 +66,8 @@ public:
 
     template<
         typename U
-      , typename = std::enable_if_t<
-            !std::is_same<
-                type_traits::make_plain_t<U>
-              , type_traits::make_plain_t<T>
-            >{}
+      , typename = aux::enable_if_t<
+            !std::is_same<aux::make_plain_t<U>, aux::make_plain_t<T>>{}
         >
     >
     operator U&() const {
@@ -94,20 +76,10 @@ public:
         );
     }
 
-    template<typename U>
-    operator aux::auto_ptr<U>&() {
-        return creator_.template create<aux::auto_ptr<U>, T>(
-            provider_, deps_, refs_, visitor_, policies_
-        );
-    }
-
     template<
         typename U
-      , typename = std::enable_if_t<
-            !std::is_same<
-                type_traits::make_plain_t<U>
-              , type_traits::make_plain_t<T>
-            >{}
+      , typename = aux::enable_if_t<
+            !std::is_same<aux::make_plain_t<U>, aux::make_plain_t<T>>{}
         >
     >
     operator U() {
@@ -128,26 +100,26 @@ private:
 } // namespace core
 } // namespace di
 
-template<
-    typename T
-  , typename TCreator
-  , typename TProvider
-  , typename TDeps
-  , typename TRefs
-  , typename TVisitor
-  , typename TPolicies
->
-struct is_integral<
-    di::core::any_type<
-        T
-      , TCreator
-      , TProvider
-      , TDeps
-      , TRefs
-      , TVisitor
-      , TPolicies
-   >
-> : ::std::true_type { };
+/*template<*/
+    //typename T
+  //, typename TCreator
+  //, typename TProvider
+  //, typename TDeps
+  //, typename TRefs
+  //, typename TVisitor
+  //, typename TPolicies
+//>
+//struct is_integral<
+    //di::core::any_type<
+        //T
+      //, TCreator
+      //, TProvider
+      //, TDeps
+      //, TRefs
+      //, TVisitor
+      //, TPolicies
+   //>
+/*> : ::std::true_type { };*/
 
 } // namespace boost
 

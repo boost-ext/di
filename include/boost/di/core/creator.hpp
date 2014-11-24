@@ -7,42 +7,42 @@
 #ifndef BOOST_DI_CORE_CREATOR_HPP
 #define BOOST_DI_CORE_CREATOR_HPP
 
-#include <unordered_map>
-#include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/memory.hpp"
-#include "boost/di/aux_/mpl.hpp"
+#include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/core/any_type.hpp"
 #include "boost/di/core/binder.hpp"
 #include "boost/di/core/pool.hpp"
-#include "boost/di/type_traits/ctor_traits.hpp"
-#include "boost/di/type_traits/function_traits.hpp"
 #include "boost/di/wrappers/universal.hpp"
+#include "boost/di/type_traits/ctor_traits.hpp"
 
 namespace boost {
 namespace di {
 namespace core {
 
-BOOST_DI_HAS_MEMBER_TYPE(any);
+BOOST_MPL_HAS_XXX_TRAIT_DEF(any)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(create2)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(create3)
 
-template<typename TDeps_>
+template<typename TInjector>
 class creator {
-    using binder_t = binder<TDeps_>;
-    using scopes_type = std::unordered_map<int, aux::shared_ptr<void>>;
-
     template<typename TDependency>
-    using scope_create = typename type_traits::function_traits<
-        decltype(&TDependency::create)
-    >::type;
+    using scope_create = typename aux::function_traits<
+        decltype(&TDependency::create3)
+    >::args;
 
     template<typename T, typename TDependency>
     struct data_visitor {
         using type = T;
         using dependency = TDependency;
-        using binder = binder_t;
+        //using binder = binder_t;
     };
 
 public:
+    explicit creator(TInjector& injector)
+        : injector_(injector)
+    { }
+
     template<
         typename T
       , typename TParent
@@ -52,32 +52,18 @@ public:
       , typename TVisitor
       , typename TPolicies
     >
-    std::enable_if_t<
-        has_any<T>{}
-      , any_type<
-            TParent
-          , creator
-          , TProvider
-          , TDeps
-          , TRefs
-          , TVisitor
-          , TPolicies
-        >
+    aux::enable_if_t<
+        has_any<T>::value
+      , any_type<TParent, creator, TProvider, TDeps, TRefs, TVisitor, TPolicies>
     >
     create(const TProvider& provider
          , TDeps& deps
          , TRefs& refs
          , const TVisitor& visitor
          , const TPolicies& policies) {
-        return any_type<
-            TParent
-          , creator
-          , TProvider
-          , TDeps
-          , TRefs
-          , TVisitor
-          , TPolicies
-        >(*this, provider, deps, refs, visitor, policies);
+        return any_type<TParent, creator, TProvider, TDeps, TRefs, TVisitor, TPolicies>(
+            *this, provider, deps, refs, visitor, policies
+        );
     }
 
     template<
@@ -89,19 +75,13 @@ public:
       , typename TVisitor
       , typename TPolicies
     >
-    std::enable_if_t<!has_any<T>{}, wrappers::universal<T>>
-    create(const TProvider& provider
-         , TDeps& deps
-         , TRefs& refs
-         , const TVisitor& visitor
-         , const TPolicies& policies) {
-        using dependency_type = typename binder_t::template resolve<T>::type;
-        assert_policies<data_visitor<T, dependency_type>>(policies);
+    aux::enable_if_t<!has_any<T>::value, wrappers::universal<T>>
+    create(const TProvider& provider, TDeps& deps, TRefs& refs, const TVisitor& visitor, const TPolicies& policies) {
+		using dependency_type = typename binder<TDeps>::template resolve<T>;
+		//std::cout << boost::units::detail::demangle(typeid(dependency_type).name()) << std::endl;
+        //assert_policies<data_visitor<T, dependency_type>>(policies);
         (visitor)(data_visitor<T, dependency_type>());
-
-        return create_impl<T, dependency_type>(
-            provider, deps, refs, visitor, policies
-        );
+        return create_impl<T, dependency_type>(provider, deps, refs, visitor, policies);
     }
 
 private:
@@ -114,15 +94,32 @@ private:
       , typename TVisitor
       , typename TPolicies
     >
-    std::enable_if_t<!size<scope_create<TDependency>>{}, wrappers::universal<T>>
-    create_impl(const TProvider&
-              , TDeps& deps
-              , TRefs& refs
-              , const TVisitor&
-              , const TPolicies&) {
-        return wrappers::universal<T>(
-            refs, acquire<TDependency>(deps).create()
-        );
+    //aux::enable_if_t<!size<scope_create<TDependency>>{} && !has_create2<TDependency>{}, wrappers::universal<T>>
+    typename enable_if_c<
+        !/*mpl::*/size<scope_create<TDependency> >::value &&
+        !has_create2<TDependency>::value
+      , wrappers::universal<T>
+    >::type
+    create_impl(const TProvider&, TDeps& deps, TRefs& refs, const TVisitor&, const TPolicies&) {
+        return wrappers::universal<T>(refs, acquire<TDependency>(deps).create());
+    }
+
+     template<
+            typename T
+          , typename TDependency
+          , typename TProvider
+          , typename TDeps
+          , typename TRefs
+          , typename TVisitor
+          , typename TPolicies
+        >
+    typename enable_if_c<
+        /*mpl::*/size<scope_create<TDependency> >::value &&
+        has_create2<TDependency>::value
+      , wrappers::universal<T>
+    >::type
+    create_impl(const TProvider&, TDeps& deps, TRefs& refs, const TVisitor&, const TPolicies&) {
+        return {refs, acquire<TDependency>(deps).create_(injector_)};
     }
 
     template<
@@ -134,7 +131,11 @@ private:
       , typename TVisitor
       , typename TPolicies
     >
-    std::enable_if_t<size<scope_create<TDependency>>{}, wrappers::universal<T>>
+    //aux::enable_if_t<size<scope_create<TDependency>>{}, wrappers::universal<T>>
+        typename enable_if_c<
+            /*mpl::*/size<scope_create<TDependency> >::value &&
+            !has_create2<TDependency>::value
+          , wrappers::universal<T> >::type
     create_impl(const TProvider& provider
               , TDeps& deps
               , TRefs& refs
@@ -144,7 +145,7 @@ private:
         using ctor_type =
             typename type_traits::ctor_traits<typename TDependency::given>::type;
 
-        return wrappers::universal<T>(
+        return {
             refs
           , acquire<TDependency>(deps).create(
                 create_impl<T, TDependency>(
@@ -156,7 +157,7 @@ private:
                   , ctor_type()
                 )
             )
-        );
+        };
     }
 
     template<
@@ -169,18 +170,14 @@ private:
       , typename TPolicies
       , typename... TArgs
     >
-    typename TDependency::expected*
-    create_impl(const TProvider& provider
+    auto create_impl(const TProvider& provider
               , TDeps& deps
               , TRefs& refs
               , const TVisitor& visitor
               , const TPolicies& policies
               , const type_list<TArgs...>&) {
-        (void)provider; (void)deps; (void)refs; (void)visitor; (void)policies;
-        return provider.template
-            get<typename TDependency::expected, typename TDependency::given>(
-                create<TArgs, T>(provider, deps, refs, visitor, policies)...
-        );
+		//TODO will be always called
+        return provider.template get<TDependency>(create<TArgs, T>(provider, deps, refs, visitor, policies)...);
     }
 
     template<typename T, typename... TPolicies>
@@ -195,25 +192,18 @@ private:
     }
 
     template<typename TDependency, typename TDeps>
-    std::enable_if_t<std::is_base_of<TDependency, TDeps>{}, TDependency&>
+    aux::enable_if_t<std::is_base_of<TDependency, TDeps>{}, TDependency&>
     acquire(TDeps& deps) {
         return static_cast<TDependency&>(deps);
     }
 
     template<typename TDependency, typename TDeps>
-    std::enable_if_t<!std::is_base_of<TDependency, TDeps>{}, TDependency&>
+    aux::enable_if_t<!std::is_base_of<TDependency, TDeps>{}, TDependency>
     acquire(TDeps&) {
-        auto it = scopes_.find(aux::type_id<TDependency>());
-        if (it != scopes_.end()) {
-            return *static_cast<TDependency*>(it->second.get());
-        }
-
-        aux::shared_ptr<TDependency> dependency(new TDependency());
-        scopes_.insert(std::make_pair(aux::type_id<TDependency>(), dependency));
-        return *dependency;
+        return TDependency{};
     }
 
-    scopes_type scopes_;
+    TInjector& injector_;
 };
 
 } // namespace core

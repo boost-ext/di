@@ -10,7 +10,8 @@
 //<-
 #include <cassert>
 #include <memory>
-#include <functional>
+#include <boost/function.hpp>
+#include <boost/type.hpp>
 //->
 #include <boost/di.hpp>
 
@@ -27,7 +28,7 @@ struct example {
 /*<define scope class>*/
 class custom_scope {
 public:
-    static const bool priority = false;
+    using priority = boost::mpl::int_<0>; // lowest = 0, highest = N
 
     /*<define `entry`, `exit` actions>*/
     class entry { };
@@ -44,7 +45,7 @@ public:
 
             /*<<conversion operator to shared_ptr>>*/
             const std::shared_ptr<T>&
-            operator()(const di::type<std::shared_ptr<T>>&) const {
+            operator()(const boost::type<std::shared_ptr<T>>&) const {
                 return object_;
             }
 
@@ -67,7 +68,7 @@ public:
         }
 
         /*<<create shared_ptr when in scope out of provider pointer>>*/
-        result_type create(const std::function<T*()>& f) const {
+        result_type create(const boost::function<T*()>& f) const {
             if (in_scope_) {
                 return std::shared_ptr<T>(f());
             }

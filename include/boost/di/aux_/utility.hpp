@@ -4,14 +4,53 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_AUX_MPL_HPP
-#define BOOST_DI_AUX_MPL_HPP
+#ifndef BOOST_DI_AUX_CPP_14_UTILITY_HPP
+#define BOOST_DI_AUX_CPP_14_UTILITY_HPP
 
-#include "boost/di/aux_/config.hpp"
 #include <type_traits>
+
+#define BOOST_DI_CAT_IMPL(A, B) A ## B
+#define BOOST_DI_CAT(A, B) BOOST_DI_CAT_IMPL(A, B)
 
 namespace boost {
 namespace di {
+namespace aux {
+
+template<std::size_t...>
+struct index_sequence {
+    using type = index_sequence;
+};
+
+template<typename, typename>
+struct concat;
+
+template<std::size_t... I1, std::size_t... I2>
+struct concat<index_sequence<I1...>, index_sequence<I2...>>
+    : index_sequence<I1..., (sizeof...(I1) + I2)...>
+{ };
+
+template<std::size_t N>
+struct make_index_sequence_impl
+    : concat<
+          typename make_index_sequence_impl<N/2>::type
+        , typename make_index_sequence_impl<N - N/2>::type
+      >::type
+{ };
+
+template<>
+struct make_index_sequence_impl<0>
+    : index_sequence<>
+{ };
+
+template<>
+struct make_index_sequence_impl<1>
+    : index_sequence<1>
+{ };
+
+template<std::size_t N>
+using make_index_sequence = typename make_index_sequence_impl<N>::type;
+
+} // namespace aux
 
 struct none_t {};
 
@@ -28,9 +67,7 @@ template<bool N>
 using bool_ = std::integral_constant<bool, N>;
 
 template<typename, typename>
-struct pair {
-    using type = pair;
-};
+struct pair { };
 
 template <typename x>
 struct no_decay { using type = x; };
@@ -58,12 +95,7 @@ struct size;
 
 template<typename... Ts>
 struct size<type_list<Ts...>> {
-    static constexpr std::size_t value = sizeof...(Ts);
-};
-
-template<bool...>
-struct bool_seq {
-    using type = bool_seq;
+    static constexpr auto value = sizeof...(Ts);
 };
 
 template<typename...>
@@ -86,26 +118,20 @@ struct join<type_list<Args1...>, type_list<Args2...>> {
 
 template<typename... Args1, typename... Args2, typename... Tail>
 struct join<type_list<Args1...>, type_list<Args2...>, Tail...> {
-     using type = typename join<type_list<Args1..., Args2...>, Tail...>::type;
+    using type = typename join<type_list<Args1..., Args2...>, Tail...>::type;
 };
 
-template<typename T>
-using not_ = bool_<!T{}>;
+template<typename TDefault, typename>
+static no_decay<TDefault> lookup(...);
 
-template<typename... Ts>
-using and_ = std::is_same<bool_seq<Ts{}...>, bool_seq<(Ts{}, true)...>>;
+template<typename, typename TKey, typename TValue>
+static no_decay<TValue> lookup(pair<TKey, TValue>*);
 
-template<typename... Ts>
-using or_ = not_<std::is_same<bool_seq<Ts{}...>, bool_seq<(Ts{}, false)...>>>;
+template<typename TDefault, typename TKey, typename T>
+using at_key = decltype(lookup<TDefault, TKey>((T*)nullptr));
 
-template <typename d, typename key>
-static no_decay<d> lookup(...);
-
-template <typename, typename key, typename value>
-static no_decay<value> lookup(pair<key, value>*);
-
-template <typename d, typename key, typename ...pairs>
-using at_key = decltype(lookup<d, key>((inherit<pairs...>*)0));
+template<typename TDefault, typename TKey, typename T>
+using at_key_t = typename at_key<TDefault, TKey, T>::type;
 
 } // namespace di
 } // namespace boost

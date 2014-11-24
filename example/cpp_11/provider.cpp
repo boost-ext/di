@@ -13,20 +13,11 @@
 //->
 #include <boost/di.hpp>
 
-//<-
-template<typename T>
-class provider {
-public:
-    virtual ~provider() { }
-    virtual T get() const = 0;
-};
-//->
-
 namespace di = boost::di;
 
 /*<<`transaction` provider>>*/
-struct transaction : provider<int> {
-    /*<<implementation of `provider` requirement >>*/
+struct transaction : di::provider<int> {
+    /*<<implementation of `di::provider` requirement >>*/
     virtual int get() const {
         return next();
     }
@@ -39,7 +30,7 @@ struct transaction : provider<int> {
 
 /*<<example `usage ` class>>*/
 struct usage {
-    usage(int i, std::auto_ptr<provider<int> > p) {
+    usage(int i, std::auto_ptr<di::provider<int> > p) {
         assert(i == 0);
         assert(p->get() == 1);
         assert(p->get() == 2);

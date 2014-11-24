@@ -8,7 +8,6 @@
 #define BOOST_DI_WRAPPERS_VALUE_HPP
 
 #include "boost/di/aux_/memory.hpp"
-#include "boost/di/aux_/mpl.hpp"
 
 namespace boost {
 namespace di {
@@ -45,11 +44,6 @@ public:
     template<typename I>
     aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I>>&) const {
         return aux_::shared_ptr<I>(new I(value_));
-    }
-
-    template<typename I>
-    aux::auto_ptr<I> operator()(const type<aux::auto_ptr<I>>&) const {
-        return aux::auto_ptr<I>(new I(value_));
     }
 
     template<typename I>

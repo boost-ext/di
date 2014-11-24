@@ -195,6 +195,161 @@ Allows to bind multiple interfaces to one instance.
 
 [endsect]
 
+[section bind_bool]
+
+[heading Description]
+Allows to bind compile time bool values.
+
+[heading Synopsis]
+    template<bool Value>
+    struct bind_bool;
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`Value`][Boolean value][Value to be bound to `bool` parameters]]
+]
+
+[heading Expression Semantics]
+    di::bind_bool<true>()
+
+[*Return type]: __dependency_model__
+
+[heading Header]
+    #include <__di_hpp__>
+
+[heading Examples]
+[table
+    [[Binding][Description]]
+    [[```di::bind_bool<true>())```][Bind `true` value to `bool` parameters]]
+    [[```di::bind_bool<true>::__di_bind_named__<my_bool>())```][Bind `true` value to `bool` parameters named `my_bool`]]
+]
+
+    auto injector = __di_make_injector__(
+        di::bind_bool<true>()
+    );
+
+    assert(true == injector.__di_injector_create__<bool>());
+
+[heading More Examples]
+    ``__examples_binding__``
+
+[heading Tests]
+    ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
+
+[heading See Also]
+
+* __bindings__
+* __bindings_bind__
+* __bindings_bind_any_of__
+* __bindings_bind_bind_int__
+* __bindings_bind_bind_string__
+
+[endsect]
+
+[section bind_int]
+
+[heading Description]
+Allows to bind compile time integer values.
+
+[heading Synopsis]
+    template<int N>
+    struct bind_int;
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`N`][Integer number][Value to be bound to `int` parameters]]
+]
+
+[heading Expression Semantics]
+    di::bind_int<42>()
+
+[*Return type]: __dependency_model__
+
+[heading Header]
+    #include <__di_hpp__>
+
+[heading Examples]
+[table
+    [[Binding][Description]]
+    [[```di::bind_int<42>())```][Bind `42` to `int` parameters]]
+    [[```di::bind_int<42>::__di_bind_named__<my_int>()```][Bind `42` value to `int` parameters named `my_int`]]
+]
+
+    auto injector = __di_make_injector__(
+        di::bind_int<42>()
+    );
+
+    assert(42 == injector.__di_injector_create__<int>());
+
+[heading More Examples]
+    ``__examples_binding__``
+
+[heading Tests]
+    ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
+
+[heading See Also]
+
+* __bindings__
+* __bindings_bind__
+* __bindings_bind_any_of__
+* __bindings_bind_bind_bool__
+* __bindings_bind_bind_string__
+
+[endsect]
+
+[section bind_string]
+
+[heading Description]
+Allows to bind compile time string values.
+
+[heading Synopsis]
+    template<typename T>
+    struct bind_string;
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`T`][`mpl::string` type][Value to be bound to `std::string` parameters]]
+]
+
+[heading Expression Semantics]
+    di::bind_string<mpl::string<'str'>>()
+
+[*Return type]: __dependency_model__
+
+[heading Header]
+    #include <__di_hpp__>
+
+[heading Examples]
+[table
+    [[Binding][Description]]
+    [[```di::bind_string<mpl::string<'str'>>())```][Bind `str` to `std::string` parameters]]
+    [[```di::bind_string<mpl::string<'str'>>::__di_bind_named__<my_string>()```][Bind `str` value to `std::string` parameters named `my_string`]]
+]
+
+    auto injector = __di_make_injector__(
+        di::bind_string<mpl::string<'str'>>()
+    );
+
+    assert("str" == injector.__di_injector_create__<std::string>());
+
+[heading More Examples]
+    ``__examples_binding__``
+
+[heading Tests]
+    ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
+
+[heading See Also]
+
+* __bindings__
+* __bindings_bind__
+* __bindings_bind_any_of__
+* __bindings_bind_bind_bool__
+* __bindings_bind_bind_int__
+
+[endsect]
+
+[endsect]
+
 [section scope]
 
 [heading Description]
@@ -478,7 +633,7 @@ Allows to bind other bindings in __scopes_session__.
 [section when]
 
 [heading Description]
-`Boost.DI` bindings DSL allows to create contextual bindings, which might be applied with `when` syntax.
+`Boost.DI` bindings DSL allows to create context requirements, which might be applied with `when` syntax.
 `when` allows to apply contextual binding. To implement custom requirement `apply` class with return compile time integer value has to be defined.
 Given value will influence how dependencies will be resolved. Current algorithm might be found in __rationale_binding_resolution_algorithm__.
 
@@ -500,16 +655,16 @@ Given value will influence how dependencies will be resolved. Current algorithm 
     #include <__di_hpp__>
 
 [heading Examples]
-    struct longer_context_first {
+    struct longer_call_stack_first {
         template<typename TDependency>
         struct apply
-            : mpl::size<typename TDependency::context>
+            : mpl::size<typename TDependency::call_stack>
         { };
     }
 
     auto injector = __di_make_injector__(
         __di_bind__<int>::to(1)
-      , __di_bind__<int>::when<longer_context_first>::to(42)
+      , __di_bind__<int>::when<longer_call_stack_first>::to(42)
     );
 
     struct example {
@@ -526,17 +681,17 @@ Given value will influence how dependencies will be resolved. Current algorithm 
 [heading See Also]
 
 * __bindings__
-* __bindings_when_context__
+* __bindings_when_call_stack__
 * __bindings_named__
 
-[section context]
+[section call_stack]
 
 [heading Description]
 Allows to choose binding accordingly to the call stack object was created in.
 
 [heading Synopsis]
     template<typename... TArgs>
-    struct context {
+    struct call_stack {
         template<typename T>
         struct apply;
     };
@@ -548,9 +703,9 @@ Allows to choose binding accordingly to the call stack object was created in.
 ]
 
 [heading Expression Semantics]
-    di::context<c1, c2, ..., cN>
+    di::call_stack<c1, c2, ..., cN>
 
-[*Semantics]: only last N objects are taken into account during `call stack` resolution, where N represents number of elements in `di::context`.
+[*Semantics]: only last N objects are taken into account during `call stack` resolution, where N represents number of elements in `di::call_stack`.
 
 [*Return type]: `mpl::vector`
 
@@ -564,7 +719,7 @@ Allows to choose binding accordingly to the call stack object was created in.
     [
         [
             ```
-                di::context<c1, c2>
+                di::call_stack<c1, c2>
             ```
         ]
         [
@@ -582,7 +737,7 @@ Allows to choose binding accordingly to the call stack object was created in.
     [
         [
             ```
-                di::context<c1, c2>
+                di::call_stack<c1, c2>
             ```
         ]
         [
@@ -592,7 +747,7 @@ Allows to choose binding accordingly to the call stack object was created in.
         ]
         [
             ```
-                di::context<c1, c2>
+                di::call_stack<c1, c2>
             ```
         ]
     ]
@@ -600,7 +755,7 @@ Allows to choose binding accordingly to the call stack object was created in.
     [
         [
             ```
-                di::context<c3>
+                di::call_stack<c3>
             ```
         ]
         [
@@ -610,7 +765,7 @@ Allows to choose binding accordingly to the call stack object was created in.
         ]
         [
             ```
-                di::context<c3>
+                di::call_stack<c3>
             ```
         ]
     ]
@@ -618,8 +773,8 @@ Allows to choose binding accordingly to the call stack object was created in.
     [
         [
             ```
-                di::context<c2, c3>
-                di::context<c1, c2, c3>
+                di::call_stack<c2, c3>
+                di::call_stack<c1, c2, c3>
             ```
         ]
         [
@@ -629,7 +784,7 @@ Allows to choose binding accordingly to the call stack object was created in.
         ]
         [
             ```
-                di::context<c2, c3>
+                di::call_stack<c2, c3>
             ```
         ]
     ]
@@ -637,9 +792,9 @@ Allows to choose binding accordingly to the call stack object was created in.
 
 [table
     [[Binding][Description]]
-    [[```__di_bind_int__<42>::__di_bind_when__<di::context<c1, c2>>()```][Bind `int` parameter to `42` when class was created with `..., c1, c2` context]]
-    [[```__di_bind__<interface, implementation>::__di_bind_named__<my_interface>::__di_bind_when__<di::context<c1, c2>>()```][Bind `interface` to `implementation` when parameter named `my_interface` is called within `c1, c2` context]]
-    [[```__di_bind__<interface, implementation>::__di_bind_when__<di::context<c1, c2>>::__di_bind_named__<my_interface>()```][Same as above]]
+    [[```__di_bind_int__<42>::__di_bind_when__<di::call_stack<c1, c2>>()```][Bind `int` parameter to `42` when class was created with `..., c1, c2` context]]
+    [[```__di_bind__<interface, implementation>::__di_bind_named__<my_interface>::__di_bind_when__<di::call_stack<c1, c2>>()```][Bind `interface` to `implementation` when parameter named `my_interface` is called within `c1, c2` context]]
+    [[```__di_bind__<interface, implementation>::__di_bind_when__<di::call_stack<c1, c2>>::__di_bind_named__<my_interface>()```][Same as above]]
 ]
 
     struct c2 {
@@ -660,22 +815,22 @@ Allows to choose binding accordingly to the call stack object was created in.
     };
 
     auto injector = __di_make_injector__(
-        __di_bind__<interface, implementation>::__di_bind_when__<di::context<c1, c2>>()
+        __di_bind__<interface, implementation>::__di_bind_when__<di::call_stack<c1, c2>>()
     );
 
     assert(0 == injector.__di_injector_create__<c1>().i);
     assert(42 == injector.__di_injector_create__<c1>().c.i);
 
-[note [link di.overview.configuration BOOST_DI_CFG_EXAMINE_context] has to be defined to enable __bindings_when_context__ feature.]
-[note First type passed to `context` should be type to be created.]
-[warning Types passed to `context` should reflects constructor parameters - __di_named__ is not supported.]
+[note [link di.overview.configuration BOOST_DI_CFG_EXAMINE_CALL_STACK] has to be defined to enable __bindings_when_call_stack__ feature.]
+[note First type passed to `call_stack` should be type to be created.]
+[warning Types passed to `call_stack` should reflects constructor parameters - __di_named__ is not supported.]
 [tip __bindings_named__ and __bindings_when__ might be used alternately - order is not specified.]
 
 [heading More Examples]
     ``__examples_binding__``
 
 [heading Tests]
-    ``[@test/ut/concepts/context_ut.cpp]`` | ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
+    ``[@test/ut/concepts/call_stack_ut.cpp]`` | ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
 
 [heading See Also]
 

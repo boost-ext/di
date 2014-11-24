@@ -29,8 +29,8 @@ public:
     }
 
 private:
-    int i1;
-    int i2;
+    int i1 = 0;
+    int i2 = 0;
 };
 
 int main() {

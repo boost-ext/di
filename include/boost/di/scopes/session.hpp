@@ -13,30 +13,36 @@ namespace boost {
 namespace di {
 namespace scopes {
 
+template<typename /*TName*/>
 class session_entry { };
+
+template<typename /*TName*/>
 class session_exit { };
 
+template<typename /*TName*/>
 class session {
 public:
-    static const bool priority = false;
+    static constexpr auto priority = 0; // 0 - lowest, N - highest
 
-    template<typename TExpected>
+    template<typename T>
     class scope {
-    public:
-        using result_type = wrappers::shared<TExpected>;
+        using result_type = wrappers::shared<T>;
 
-        void call(const session_entry&) {
+    public:
+        template<typename TName>
+        void call(const session_entry<TName>&) {
             in_scope_ = true;
         }
 
-        void call(const session_exit&) {
+        template<typename TName>
+        void call(const session_exit<TName>&) {
             in_scope_ = false;
             object_.reset();
         }
 
-        result_type create(const std::function<TExpected*()>& f) {
+        result_type create(T* ptr) {
             if (in_scope_ && !object_) {
-                object_.reset(f());
+                object_.reset(ptr);
             }
             return object_;
         }

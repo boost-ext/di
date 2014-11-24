@@ -7,9 +7,8 @@
 #ifndef BOOST_DI_CORE_POOL_HPP
 #define BOOST_DI_CORE_POOL_HPP
 
-#include "boost/di/aux_/mpl.hpp"
-
-#include <type_traits>
+#include "boost/di/aux_/utility.hpp"
+#include "boost/di/aux_/type_traits.hpp"
 
 namespace boost {
 namespace di {
@@ -23,8 +22,6 @@ class pool;
 template<typename... TArgs>
 class pool<type_list<TArgs...>> : public TArgs... {
 public:
-    using type = pool;
-
     template<typename... Ts>
     explicit pool(const Ts&... args)
         : Ts(args)...
@@ -33,7 +30,7 @@ public:
     template<typename TPool>
     pool(const TPool& p, const init&)
         : pool(get<TArgs>(p)...)
-    { (void)p; }
+    { }
 
     template<typename T>
     inline const T& get() const {
@@ -42,22 +39,16 @@ public:
 
 private:
     template<typename T, typename TPool>
-    std::enable_if_t<std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}, T>
-    inline get(const TPool& p) const {
-        return p.template get<T>();
-    }
+    aux::enable_if_t<std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}, T>
+    inline get(const TPool& p) const { return p.template get<T>(); }
 
     template<typename T, typename TPool>
-    std::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, T>
-    inline get(const TPool&) const {
-        return T();
-    }
+    aux::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, T>
+    inline get(const TPool&) const { return {}; }
 
     template<typename T, typename TPool>
-    std::enable_if_t<!std::is_base_of<T, pool>{}, const T&>
-    inline get(const TPool&) const {
-        return T();
-    }
+    aux::enable_if_t<!std::is_base_of<T, pool>{}, const T&>
+    inline get(const TPool&) const { return {}; }
 };
 
 } // namespace core

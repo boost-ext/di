@@ -7,26 +7,12 @@
 #ifndef BOOST_DI_INJECT_HPP
 #define BOOST_DI_INJECT_HPP
 
-#include "boost/di/aux_/config.hpp"
-
 #if !defined(BOOST_DI_INJECTOR)
     #define BOOST_DI_INJECTOR boost_di_injector__
 #endif
 
 #if !defined(BOOST_DI_CFG_CTOR_LIMIT_SIZE)
     #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
-#endif
-
-#if !defined(BOOST_DI_CFG_INJECT_VA_ARGS) && !defined(BOOST_DI_CFG_INJECT_BRACKET)
-    #define BOOST_DI_CFG_INJECT_VA_ARGS
-#endif
-
-#if defined(_MSC_VER)
-    #pragma warning(disable:4822) // local class member function does not have a body
-#endif
-
-#if defined(__INTEL_COMPILER)
-    #pragma warning(disable:177) //function "..." was declared but never referenced
 #endif
 
 #define BOOST_DI_INJECT_TRAITS(...)             \

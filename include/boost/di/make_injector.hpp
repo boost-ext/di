@@ -7,15 +7,14 @@
 #ifndef BOOST_DI_MAKE_INJECTOR_HPP
 #define BOOST_DI_MAKE_INJECTOR_HPP
 
-#include "boost/di/aux_/mpl.hpp"
 #include "boost/di/injector.hpp"
 
 namespace boost {
 namespace di {
 
 template<typename... TArgs>
-inline auto make_injector(const TArgs&... args) {
-    return injector<bindings_t<TArgs...>>(args...);
+inline auto make_injector(const TArgs&... args) noexcept {
+    return injector<TArgs...>(args...);
 }
 
 } // namespace di

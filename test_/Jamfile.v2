@@ -1,0 +1,183 @@
+#
+# Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+#
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#
+
+import testing ;
+import feature : extend-feature compose ;
+
+extend-feature variant : coverage ;
+compose <variant>coverage :
+    <cxxflags>"-fprofile-arcs"
+    <cxxflags>"-ftest-coverage"
+    <linkflags>"-fprofile-arcs"
+    <optimization>off
+;
+
+extend-feature variant : analyze ;
+compose <variant>analyze :
+    <cxxflags>"--analyze -Xanalyzer -analyzer-output=text -fsanitize=address -fsanitize=memory -fsanitize=undefined"
+;
+
+project :
+    requirements
+        <include>.
+        <include>../include
+        <library>/boost/test//boost_unit_test_framework/<link>static
+        <warnings>all
+        <define>BOOST_TEST_MODULE=di_test
+;
+
+rule run-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
+    common_toolset = ;
+
+    if $(std) {
+        common_toolset +=
+            <toolset>gcc:<cxxflags>"-std=$(std) -include common/config.hpp"
+            <toolset>clang:<cxxflags>"-std=$(std) -include common/config.hpp"
+            <toolset>darwin:<cxxflags>"-std=$(std) -include common/config.hpp"
+            <toolset>intel:<cxxflags>"-std=$(std) -include common/config.hpp"
+            <toolset>msvc:<cxxflags>"/FI common/config.hpp"
+        ;
+    }
+
+    if $(ctor) {
+        if $(std) = c++03 {
+            defines += <define>BOOST_DI_CFG_INJECT_BRACKET ;
+        } else {
+            defines += <define>BOOST_DI_CFG_TEST_CTOR ;
+        }
+    }
+
+    if ! $(preprocessed_headers) {
+        defines += <define>BOOST_DI_CFG_NO_PREPROCESSED_HEADERS ;
+    }
+
+    run $(src) : : : $(common_toolset) $(defines) : $(ctor) ;
+}
+
+rule compile-fail-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
+    common_toolset =
+        <toolset>gcc:<cxxflags>"-std=$(std) -include common/config.hpp -Wfatal-errors"
+        <toolset>clang:<cxxflags>"-std=$(std) -include common/config.hpp -Wfatal-errors"
+        <toolset>darwin:<cxxflags>"-std=$(std) -include common/config.hpp -Wfatal-errors"
+        <toolset>intel:<cxxflags>"-std=$(std) -include common/config.hpp -Wfatal-errors"
+        <toolset>msvc:<cxxflags>"/FI common/config.hpp"
+    ;
+
+    if $(ctor) {
+        if $(std) = c++03 {
+            defines += <define>BOOST_DI_CFG_INJECT_BRACKET ;
+        } else {
+            defines += <define>BOOST_DI_CFG_TEST_CTOR ;
+        }
+    }
+
+    if ! $(preprocessed_headers) {
+        defines += <define>BOOST_DI_CFG_NO_PREPROCESSED_HEADERS ;
+    }
+
+    compile-fail $(src) : $(common_toolset) $(defines) : $(ctor) ;
+}
+
+#test-suite vt : # verification tests
+    #[ run-test c++03 : vt/compiler_support_vt.cpp : compiler_support_cpp_03 ]
+    #[ run-test c++11 : vt/compiler_support_vt.cpp : compiler_support_cpp_11 ]
+#;
+
+#test-suite ut : # unit tests
+    #[ run-test c++11 : ut/aux_/type_traits_ut.cpp : type_traits_ut_cpp_11 ]
+    #[ run-test c++03 : ut/aux_/type_traits_ut.cpp : type_traits_ut_cpp_03 ]
+
+    #[ run-test c++11 : ut/bindings_ut.cpp ]
+    #[ run-test c++11 : ut/bindings/detail/requires_ut.cpp ]
+    #[ run-test c++11 : ut/bindings/detail/when_ut.cpp ]
+    #[ run-test c++11 : ut/bindings/type_traits/is_required_name_ut.cpp ]
+    #[ run-test c++11 : ut/bindings/type_traits/is_required_priority_ut.cpp ]
+    #[ run-test c++11 : ut/bindings/type_traits/is_required_type_ut.cpp ]
+    #[ run-test c++11 : ut/bindings/call_stack_ut.cpp ]
+    #[ run-test c++11 : ut/bindings/dependency_ut.cpp ]
+
+    #[ run-test c++11 : ut/core/allocator_ut.cpp ]
+    #[ run-test c++11 : ut/core/any_type_ut.cpp ]
+    #[ run-test c++11 : ut/core/binder_ut.cpp ]
+    #[ run-test c++11 : ut/core/creator_ut.cpp ]
+    #[ run-test c++11 : ut/core/pool_ut.cpp ]
+
+    #[ run-test c++11 : ut/policies/circular_dependencies_ut.cpp ]
+    #[ run-test c++11 : ut/policies/creation_permission_ut.cpp ]
+    #[ run-test c++11 : ut/policies/parameters_permission_ut.cpp ]
+    #[ run-test c++11 : ut/policies/scopes_permission_ut.cpp ]
+
+    #[ run-test c++11 : ut/scopes/deduce_ut.cpp : scope_deduce_ut ]
+    #[ run-test c++11 : ut/scopes/external_ut.cpp : scope_external_ut ]
+    #[ run-test c++11 : ut/scopes/session_ut.cpp : scope_session_ut ]
+    #[ run-test c++11 : ut/scopes/shared_ut.cpp : scope_shared_ut ]
+    #[ run-test c++11 : ut/scopes/unique_ut.cpp : scope_unique_ut ]
+
+    #[ run-test c++11 : ut/type_traits/ctor_traits_ut.cpp : ctor_traits_ut_cpp_11 ]
+    #[ run-test c++03 : ut/type_traits/ctor_traits_ut.cpp : ctor_traits_ut_cpp_03 ]
+    #[ run-test c++11 : ut/type_traits/scope_traits_ut.cpp ]
+
+    #[ run-test c++11 : ut/wrappers/copy_ut.cpp : wrapper_copy_ut ]
+    #[ run-test c++11 : ut/wrappers/reference_ut.cpp : wrapper_reference_ut ]
+    #[ run-test c++11 : ut/wrappers/shared_ut.cpp : wrapper_shared_ut ]
+    #[ run-test c++11 : ut/wrappers/universal_ut.cpp : universal_ut ]
+    #[ run-test c++11 : ut/wrappers/value_ut.cpp : wrapper_value_ut ]
+
+    #[ run-test c++11 : ut/inject_bracket_ut.cpp ]
+    #[ run-test c++11 : ut/inject_va_args_ut.cpp ]
+
+    #[ run-test c++11 : ut/injector_ut.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+    #[ run-test c++11 : ut/injector_ut.cpp : ctor_injector_ut : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+
+    #[ run-test c++11 : ut/named_ut.cpp ]
+#;
+
+test-suite mt : # module tests
+    #[ run-test c++11 : mt/core/module_mt.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+    #[ run-test c++11 : mt/core/module_mt.cpp : ctor_module_mt : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+
+    #[ run-test c++11 : mt/injector_mt.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+    #[ run-test c++11 : mt/injector_mt.cpp : ctor_injector_mt : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+
+    #[ run-test c++1y : mt/make_injector_mt.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK <define>BOOST_DI_CFG_CTOR_LIMIT_SIZE=20 ]
+    [ run-test c++1y : mt/make_injector_mt.cpp : ctor_make_injector_mt : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK <define>BOOST_DI_CFG_CTOR_LIMIT_SIZE=20 ]
+    #[ run-test c++11 : mt/injector_limit_size_mt.cpp : : <define>BOOST_DI_CFG_CTOR_LIMIT_SIZE=20 ]
+;
+
+#test-suite ft : # functional tests
+    #[ run-test c++11 : ft/di_ft_cpp_11.cpp : di_ft_cpp_11 ]
+    #[ run-test c++11 : ft/di_ft_cpp_11.cpp : ctor_di_ft_cpp_11 ]
+
+    #[ run-test c++11 : ft/di_ft_cpp_11.cpp : di_ft_cpp_11_cpp_03 : <define>BOOST_DI_CFG_STD=cpp_03 ]
+    #[ run-test c++11 : ft/di_ft_cpp_11.cpp : ctor_di_ft_cpp_11_cpp_03 : <define>BOOST_DI_CFG_STD=cpp_03 ]
+
+    #[ run-test c++03 : ft/di_ft_cpp_03.cpp : di_ft_cpp_03_bracket : <define>BOOST_DI_CFG_INJECT_BRACKET ]
+    #[ run-test c++03 : ft/di_ft_cpp_03.cpp : ctor_di_ft_cpp_03 ]
+#;
+
+#test-suite fail : # compile fail tests
+    #[ compile-fail-test c++11 : fail/detail/module_externals_fail.cpp ]
+    #[ compile-fail-test c++11 : fail/policies/circular_dependencies_fail.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+    #[ compile-fail-test c++11 : fail/policies/circular_dependencies_fail.cpp : ctor_circular_dependencies_fail : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+    #[ compile-fail-test c++11 : fail/policies/creation_permission_fail.cpp : : <define>BOOST_DI_CFG_EXAMINE_CALL_STACK ]
+    #[ compile-fail-test c++11 : fail/policies/parameters_permission_fail.cpp ]
+    #[ compile-fail-test c++11 : fail/policies/parameters_permission_fail.cpp : ctor_parameters_permission_fail ]
+    #[ compile-fail-test c++11 : fail/policies/scopes_permission_fail.cpp : ]
+    #[ compile-fail-test c++11 : fail/injector_ctor_ambiguous_fail.cpp ]
+    #[ compile-fail-test c++11 : fail/injector_ctor_ambiguous_fail.cpp : ctor_injector_ctor_ambiguous_fail ]
+    #[ compile-fail-test c++03 : fail/injector_ctor_one_arg_fail_cpp_03.cpp ]
+    #[ compile-fail-test c++11 : fail/injector_shared_by_copy_fail.cpp ]
+    #[ compile-fail-test c++11 : fail/injector_shared_by_copy_fail.cpp : ctor_injector_shared_by_copy_fail ]
+    #[ compile-fail-test c++11 : fail/make_injector_wrong_arg_fail.cpp : make_injector_wrong_arg_fail_cpp_11 ]
+    #[ compile-fail-test c++03 : fail/make_injector_wrong_arg_fail.cpp : make_injector_wrong_arg_fail_cpp_03 ]
+#;
+
+#test-suite pt : # performane tests
+    #[ run-test c++11 : pt/di_pt.cpp : preprocessed_di_pt_cpp_11 : <define>BOOST_DI_CFG_TEST_LEVELS_LIMIT_SIZE=5 : preprocessed_headers ]
+    #[ run-test c++03 : pt/di_pt.cpp : preprocessed_di_pt_cpp_03 : <define>BOOST_DI_CFG_TEST_LEVELS_LIMIT_SIZE=5 : preprocessed_headers ]
+#;
+

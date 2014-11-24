@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_SCOPES_DEDUCE_HPP
 #define BOOST_DI_SCOPES_DEDUCE_HPP
 
-#include "boost/di/aux_/mpl.hpp"
 #include "boost/di/type_traits/scope_traits.hpp"
 
 namespace boost {
@@ -20,16 +19,14 @@ namespace scopes {
  */
 class deduce {
 public:
-    static const bool priority = false;
+    static constexpr auto priority = 0; // 0 - lowest, N - highest
 
     template<typename>
-    struct scope {
-        using result_type = none_t;
-    };
+    struct scope { };
 
     template<typename T>
     struct rebind {
-        using other = typename type_traits::scope_traits<T>::type;
+        using other = type_traits::scope_traits_t<T>;
     };
 };
 

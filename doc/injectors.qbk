@@ -155,7 +155,7 @@ Injector is a component used for creating dependencies configuration using [link
 [note In `C++03` `BOOST_TYPEOF_TPL` has to be used instead of `decltype`.]
 
 [heading More Examples]
-    ``__examples_hello_world__`` | ``__examples_modules__`` | ``__examples_uml_visitor__`` | ``__examples_custom_provider__`` | ``__examples_custom_scope__``
+    ``__examples_hello_world__`` | ``__examples_modules__`` | ``__examples_uml_visitor__`` | ``__examples_custom_allocator__`` | ``__examples_custom_scope__``
 
 [heading Tests]
     ``[@test/ut/injector_ut.cpp]`` | ``[@test/mt/injector_mt.cpp]`` | ``[@test/mt/core/module_mt.cpp]``
@@ -238,7 +238,7 @@ Creates [link di.concepts.injectors.injector injector] type. Allows to bind dyna
     assert(dynamic_cast<implementation*>(injector.__di_injector_create__<unique_ptr<interface>>().get()));
 
 [heading More Examples]
-    ``__examples_hello_world__`` | ``__examples_modules__`` | ``__examples_uml_visitor__`` | ``__examples_custom_provider__`` | ``__examples_custom_scope__`` | ``__examples_custom_policy__``
+    ``__examples_hello_world__`` | ``__examples_modules__`` | ``__examples_uml_visitor__`` | ``__examples_custom_allocator__`` | ``__examples_custom_scope__`` | ``__examples_custom_policy__``
 
 
 [heading Tests]

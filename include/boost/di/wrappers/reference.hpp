@@ -1,4 +1,5 @@
 //
+//
 // Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
 //
 // Distributed under the Boost Software License, Version 1.0.
@@ -7,7 +8,7 @@
 #ifndef BOOST_DI_WRAPPERS_REFERENCE_HPP
 #define BOOST_DI_WRAPPERS_REFERENCE_HPP
 
-#include "boost/di/aux_/mpl.hpp"
+#include "boost/di/aux_/utility.hpp"
 
 namespace boost {
 namespace di {
@@ -15,7 +16,7 @@ namespace wrappers {
 
 template<typename T>
 class reference {
-    reference& operator=(const reference&);
+    reference& operator=(const reference&) = delete;
 
 public:
     reference(T& value) // non explicit
