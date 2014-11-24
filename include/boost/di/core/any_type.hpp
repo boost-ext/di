@@ -15,7 +15,7 @@ namespace core {
 
 template<
     typename T = none_t
-  , typename TCreator = none_t
+  , typename TInjector = none_t
   , typename TProvider = none_t
   , typename TRefs = none_t
   , typename TVisitor = none_t
@@ -32,12 +32,15 @@ class any_type {
     any_type& operator=(const any_type&) = delete;
     //any_type(const any_type&) = delete;
 
+    template<typename U>
+    using is_not_same_t = aux::enable_if_t<!std::is_same<aux::make_plain_t<U>, aux::make_plain_t<T>>::value>;
+
 public:
     using any = any_type;
 
     any_type() { }
 
-    any_type(TCreator& creator
+    any_type(TInjector& creator
            , const TProvider& provider
            , TRefs& refs
            , const TVisitor& visitor
@@ -49,44 +52,23 @@ public:
         , policies_(policies)
     { }
 
-    template<
-        typename U
-      , typename = aux::enable_if_t<
-            !std::is_same<aux::make_plain_t<U>, aux::make_plain_t<T>>{}
-        >
-    >
+    template<typename U, typename = is_not_same_t<U>>
     operator const U&() const {
-        return creator_.template create<const U&, T>(
-            provider_, refs_, visitor_, policies_
-        );
+        return creator_.template create<const U&, T>(provider_, refs_, visitor_, policies_);
     }
 
-    template<
-        typename U
-      , typename = aux::enable_if_t<
-            !std::is_same<aux::make_plain_t<U>, aux::make_plain_t<T>>{}
-        >
-    >
+    template<typename U, typename = is_not_same_t<U>>
     operator U&() const {
-        return creator_.template create<U&, T>(
-            provider_, refs_, visitor_, policies_
-        );
+        return creator_.template create<U&, T>(provider_, refs_, visitor_, policies_);
     }
 
-    template<
-        typename U
-      , typename = aux::enable_if_t<
-            !std::is_same<aux::make_plain_t<U>, aux::make_plain_t<T>>{}
-        >
-    >
+    template<typename U, typename = is_not_same_t<U>>
     operator U() {
-        return creator_.template create<U, T>(
-            provider_, refs_, visitor_, policies_
-        );
+        return creator_.template create<U, T>(provider_, refs_, visitor_, policies_);
     }
 
 private:
-    ref_type_t<TCreator, TCreator&> creator_;
+    ref_type_t<TInjector, TInjector&> creator_;
     ref_type_t<TProvider, const TProvider&> provider_;
     ref_type_t<TRefs, TRefs&> refs_;
     ref_type_t<TVisitor, const TVisitor&> visitor_;
@@ -98,7 +80,7 @@ private:
 
 /*template<*/
     //typename T
-  //, typename TCreator
+  //, typename TInjector
   //, typename TProvider
   //, typename TRefs
   //, typename TVisitor
@@ -107,7 +89,7 @@ private:
 //struct is_integral<
     //di::core::any_type<
         //T
-      //, TCreator
+      //, TInjector
       //, TProvider
       //, TRefs
       //, TVisitor
@@ -121,7 +103,7 @@ namespace std {
 
 template<
     typename T
-  , typename TCreator
+  , typename TInjector
   , typename TProvider
   , typename TRefs
   , typename TVisitor
@@ -130,7 +112,7 @@ template<
 struct is_integral<
     boost::di::core::any_type<
         T
-      , TCreator
+      , TInjector
       , TProvider
       , TRefs
       , TVisitor
