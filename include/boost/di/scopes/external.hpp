@@ -62,7 +62,6 @@ public:
     class scope<T
               , class enable_if_c<
                      aux::has_call_operator<T>::value &&
-                    !aux::is_reference_wrapper<T>::value &&
                     !aux::has_lambda<T, fwd::injector&>::value
                 >::type>
     {

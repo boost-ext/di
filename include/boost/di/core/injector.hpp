@@ -24,10 +24,10 @@ namespace boost {
 namespace di {
 namespace core {
 
-BOOST_MPL_HAS_XXX_TRAIT_DEF(any)
-BOOST_MPL_HAS_XXX_TRAIT_DEF(create2)
-BOOST_MPL_HAS_XXX_TRAIT_DEF(create3)
-BOOST_MPL_HAS_XXX_TRAIT_DEF(deps)
+BOOST_DI_HAS_TYPE(any);
+BOOST_DI_HAS_TYPE(create2);
+BOOST_DI_HAS_TYPE(create3);
+BOOST_DI_HAS_TYPE(deps);
 
 template<class T>
 using is_injector = bool_<has_deps<T>::value || aux::has_configure<T>::value>;

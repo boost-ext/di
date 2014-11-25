@@ -8,30 +8,20 @@
 #define BOOST_DI_AUX_CPP_14_TYPE_TRAITS_HPP
 
 #include "boost/di/aux_/utility.hpp"
-#include <functional>
 
-#include <boost/mpl/has_xxx.hpp>
-    #include <boost/type.hpp>
-    #include <boost/non_type.hpp>
-    #include <boost/utility/enable_if.hpp>
-    #include <boost/type_traits/is_same.hpp>
-    #include <boost/type_traits/is_base_of.hpp>
-    #include <boost/type_traits/remove_reference.hpp>
-    #include <boost/type_traits/remove_pointer.hpp>
-    #include <boost/type_traits/remove_cv.hpp>
-    #include <boost/type_traits/is_class.hpp>
-    #include <boost/mpl/vector.hpp>
-    #include <boost/mpl/bool.hpp>
-    #include <boost/mpl/size.hpp>
-    #include <boost/mpl/at.hpp>
-    #include <boost/mpl/or.hpp>
-    #include <boost/mpl/placeholders.hpp>
-    #include <boost/mpl/aux_/yes_no.hpp>
-    #include <boost/ref.hpp>
+#include <type_traits>
+#include <boost/mpl/aux_/yes_no.hpp>
+
+#define BOOST_DI_HAS_TYPE(type)                                                 \
+    template<class  > std::false_type has_##type##_impl(...);                   \
+    template<class T> std::true_type has_##type##_impl(typename T::type*);      \
+    template<class T> struct has_##type : decltype(has_##type##_impl<T>(0)) { }
 
 namespace boost {
 namespace di {
 namespace aux {
+
+    struct void_ {};
 
 template <bool b, class T=void>
   using enable_if_t       = typename std::enable_if<b,T>::type;  // C++14
@@ -48,40 +38,6 @@ using remove_pointer_t = typename std::remove_pointer<T>::type;
 template<class T>
 using remove_reference_t = typename std::remove_reference<T>::type;
 
-template<class>
-struct is_reference_wrapper
-    : std::false_type
-{ };
-
-template<class T>
-struct is_reference_wrapper<::std::reference_wrapper<T>>
-    : std::true_type
-{ };
-
-#if !defined(BOOST_DI_CFG_NO_BOOST)
-    template<class T>
-    struct is_reference_wrapper<::boost::reference_wrapper<T>>
-        : std::true_type
-    { };
-#endif
-
-template<class T>
-struct unwrap_reference {
-    using type = T;
-};
-
-template<class T>
-struct unwrap_reference<::std::reference_wrapper<T>> {
-    using type = T;
-};
-
-#if !defined(BOOST_DI_CFG_NO_BOOST)
-    template<class T>
-    struct unwrap_reference<::boost::reference_wrapper<T>> {
-        using type = T;
-    };
-#endif
-
 template<class T>
 using remove_accessors = std::remove_cv<aux::remove_pointer_t<aux::remove_reference_t<T>>>;
 
@@ -91,11 +47,8 @@ using remove_accessors_t = typename remove_accessors<T>::type;
 template<class>
 struct make_plain;
 
-//BOOST_DI_HAS_MEMBER_TYPE(element_type);
-//BOOST_DI_HAS_MEMBER_TYPE(named_type);
-
-BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
-BOOST_MPL_HAS_XXX_TRAIT_DEF(named_type)
+BOOST_DI_HAS_TYPE(element_type);
+BOOST_DI_HAS_TYPE(named_type);
 
 template<class T, class = void>
 struct deref_type {
@@ -152,26 +105,13 @@ struct function_traits<R(T::*)(TArgs...) const> {
     using args = type_list<TArgs...>;
 };
 
-template<class T, class... Args>
-decltype(void(T{std::declval<Args>()...}), std::true_type()) test(int);
-
-template<class, class...>
-std::false_type test(...);
-
-template<class T, class... Args>
-struct is_braces_constructible : decltype(test<T, Args...>(0))
-{ };
-
-
-
-
     template<class T>
     class has_configure
     {
         struct base_impl { void configure() { } };
         struct base
             : base_impl
-            , mpl::if_<is_class<T>, T, mpl::void_>::type
+            , std::conditional<std::is_class<T>::value, T, void_>::type
         { base() { } };
 
         template<class U>
@@ -197,12 +137,12 @@ struct is_braces_constructible : decltype(test<T, Args...>(0))
     #endif
 
     template<class T>
-    class BOOST_PP_CAT(has_, BOOST_DI_INJECTOR)
+    class BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)
     {
         struct base_impl { void BOOST_DI_INJECTOR(...) { } };
         struct base
             : base_impl
-            , mpl::if_<is_class<T>, T, mpl::void_>::type
+            , std::conditional<std::is_class<T>::value, T, void_>::type
         { base() { } };
 
         template<class U>
@@ -228,7 +168,7 @@ struct is_braces_constructible : decltype(test<T, Args...>(0))
         struct base_impl { void operator()(...) { } };
         struct base
             : base_impl
-            , mpl::if_<is_class<T>, T, mpl::void_>::type
+            , std::conditional<std::is_class<T>::value, T, void_>::type
         { base() { } };
 
         template<class U>
@@ -254,7 +194,7 @@ struct is_braces_constructible : decltype(test<T, Args...>(0))
         struct base_impl { int value; };
         struct base
             : base_impl
-            , mpl::if_<is_class<T>, T, mpl::void_>::type
+            , std::conditional<std::is_class<T>::value, T, void_>::type
         { base() { } };
 
         template<class U>
@@ -280,7 +220,7 @@ struct is_braces_constructible : decltype(test<T, Args...>(0))
     template<class, class>
     std::false_type test_has_call_operator(...);
 
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(result_type)
+    BOOST_DI_HAS_TYPE(result_type);
 
     template<class T, class U>
     using has_lambda = bool_<decltype(test_has_call_operator<T, U>(0))::value && !has_result_type<T>::value>;
@@ -315,17 +255,8 @@ struct is_braces_constructible : decltype(test<T, Args...>(0))
       , class T
     >
     struct is_convertible_to_ref
-        : detail::is_convertible<TValueType, const T&(TValueType::*)(const boost::type<const T&>&) const>
+        : detail::is_convertible<TValueType, const T&(TValueType::*)(const type<const T&>&) const>
     { };
-
-    template<class T, class U = mpl::_1>
-    struct is_same_base_of
-        : mpl::or_<
-              is_base_of<U, T>
-            , is_same<U, T>
-          >
-    { };
-
 
     template<class, class = void>
     class has_call;
@@ -371,12 +302,12 @@ struct is_braces_constructible : decltype(test<T, Args...>(0))
 
         template<class, class = void>
         struct base_call
-            : mpl::false_
+            : std::false_type
         { };
 
         template<class TDummy>
-        struct base_call<mpl::true_, TDummy>
-            : is_same<
+        struct base_call<std::true_type, TDummy>
+            : std::is_same<
                   decltype(
                      ((((base*)0)->call(*(TAction*)0)), void_<T>())
                   )
@@ -389,7 +320,7 @@ struct is_braces_constructible : decltype(test<T, Args...>(0))
 
         BOOST_STATIC_CONSTANT(
             bool
-          , value = base_call<mpl::bool_<has_call<T>::value> >::value
+          , value = base_call<bool_<has_call<T>::value> >::value
         );
     };
 
