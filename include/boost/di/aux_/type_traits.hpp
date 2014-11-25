@@ -12,10 +12,21 @@
 #include <type_traits>
 #include <boost/mpl/aux_/yes_no.hpp>
 
-#define BOOST_DI_HAS_TYPE(type)                                                 \
-    template<class  > std::false_type has_##type##_impl(...);                   \
-    template<class T> std::true_type has_##type##_impl(typename T::type*);      \
-    template<class T> struct has_##type : decltype(has_##type##_impl<T>(0)) { }
+#define BOOST_DI_HAS_TYPE(name) BOOST_DI_HAS_TYPE_IMPL(name)
+
+#define BOOST_DI_HAS_TYPE_IMPL(name)                                            \
+    template<class  > std::false_type has_##name##_impl(...);                   \
+    template<class T> std::true_type has_##name##_impl(typename T::name*);      \
+    template<class T> struct has_##name : decltype(has_##name##_impl<T>(0)) { }
+
+#define BOOST_DI_HAS_METHOD(name) BOOST_DI_HAS_METHOD_IMPL(name)
+
+#define BOOST_DI_HAS_METHOD_IMPL(name)                                                                              \
+    struct has_##name##_impl { void name() { } };                                                                   \
+    template<class T> std::false_type test(T*, non_type<void (has_##name##_impl::*)(), &T::name>* = 0);             \
+    template<class> std::true_type test(...);                                                                       \
+    template<class T, typename = void> struct has_##name : decltype(test<inherit<T, has_##name##_impl>>(0)) { };    \
+    template<class T> struct has_##name<T, std::enable_if_t<!std::is_class<T>::value>> : std::false_type { }        \
 
 namespace boost {
 namespace di {
@@ -106,63 +117,6 @@ struct function_traits<R(T::*)(TArgs...) const> {
 };
 
     template<class T>
-    class has_configure
-    {
-        struct base_impl { void configure() { } };
-        struct base
-            : base_impl
-            , std::conditional<std::is_class<T>::value, T, void_>::type
-        { base() { } };
-
-        template<class U>
-        static mpl::aux::no_tag test(
-            U*
-          , non_type<void (base_impl::*)(), &U::configure>* = 0
-        );
-
-        template<class>
-        static mpl::aux::yes_tag test(...);
-
-    public:
-        typedef has_configure type;
-
-        BOOST_STATIC_CONSTANT(
-            bool
-          , value = sizeof(test<base>(0)) == sizeof(mpl::aux::yes_tag)
-        );
-    };
-
-    #if !defined(BOOST_DI_INJECTOR)
-        #define BOOST_DI_INJECTOR boost_di_injector__
-    #endif
-
-    template<class T>
-    class BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)
-    {
-        struct base_impl { void BOOST_DI_INJECTOR(...) { } };
-        struct base
-            : base_impl
-            , std::conditional<std::is_class<T>::value, T, void_>::type
-        { base() { } };
-
-        template<class U>
-        static mpl::aux::no_tag test(
-            U*
-          , non_type<void (base_impl::*)(...), &U::BOOST_DI_INJECTOR>* = 0
-        );
-
-        static mpl::aux::yes_tag test(...);
-
-    public:
-        BOOST_STATIC_CONSTANT(
-            bool
-          , value = sizeof(test((base*)0)) == sizeof(mpl::aux::yes_tag)
-        );
-
-        typedef bool_<value> type;
-    };
-
-    template<class T>
     class has_call_operator
     {
         struct base_impl { void operator()(...) { } };
@@ -181,32 +135,6 @@ struct function_traits<R(T::*)(TArgs...) const> {
 
     public:
         typedef has_call_operator type;
-
-        BOOST_STATIC_CONSTANT(
-            bool
-          , value = sizeof(test((base*)0)) == sizeof(mpl::aux::yes_tag)
-        );
-    };
-
-    template<class T>
-    class has_value
-    {
-        struct base_impl { int value; };
-        struct base
-            : base_impl
-            , std::conditional<std::is_class<T>::value, T, void_>::type
-        { base() { } };
-
-        template<class U>
-        static mpl::aux::no_tag test(
-            U*
-          , non_type<int base_impl::*, &U::value>* = 0
-        );
-
-        static mpl::aux::yes_tag test(...);
-
-    public:
-        typedef has_value type;
 
         BOOST_STATIC_CONSTANT(
             bool

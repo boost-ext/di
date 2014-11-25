@@ -19,6 +19,8 @@ namespace di {
 
 namespace detail {
 
+BOOST_DI_HAS_METHOD(BOOST_DI_INJECTOR);
+
 template<class T, std::size_t>
 struct get_type {
     using type = T;
@@ -54,10 +56,10 @@ struct ctor_traits<std::basic_string<T>> {
 
 namespace type_traits {
 
-template<class T, class = typename BOOST_DI_CAT(aux::has_, BOOST_DI_INJECTOR)<T>::type>
+template<class T, class = typename BOOST_DI_CAT(detail::has_, BOOST_DI_INJECTOR)<T>::type>
 struct ctor_traits;
 
-template<class T, class = typename BOOST_DI_CAT(aux::has_, BOOST_DI_INJECTOR)<di::ctor_traits<T>>::type>
+template<class T, class = typename BOOST_DI_CAT(detail::has_, BOOST_DI_INJECTOR)<di::ctor_traits<T>>::type>
 struct ctor_traits_impl;
 
 template<class T>

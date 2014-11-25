@@ -61,7 +61,7 @@
     namespace aux_ {
 
     #if defined(BOOST_NO_CXX11_SMART_PTR)
-        template<class T> struct shared_ptr { };
+        template<class> struct shared_ptr { };
     #else
         using ::std::shared_ptr;
     #endif

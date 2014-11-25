@@ -28,9 +28,10 @@ BOOST_DI_HAS_TYPE(any);
 BOOST_DI_HAS_TYPE(create2);
 BOOST_DI_HAS_TYPE(create3);
 BOOST_DI_HAS_TYPE(deps);
+BOOST_DI_HAS_METHOD(configure);
 
 template<class T>
-using is_injector = bool_<has_deps<T>::value || aux::has_configure<T>::value>;
+using is_injector = bool_<has_deps<T>::value || has_configure<T>::value>;
 
 template<class T, class = void>
 struct get_injector {
@@ -38,7 +39,7 @@ struct get_injector {
 };
 
 template<class T>
-struct get_injector<T, aux::enable_if_t<aux::has_configure<T>{}>> {
+struct get_injector<T, aux::enable_if_t<has_configure<T>{}>> {
     using type = typename aux::function_traits<decltype(&T::configure)>::result_type;
 };
 
@@ -48,7 +49,7 @@ struct get_deps {
 };
 
 template<class T>
-struct get_deps<T, aux::enable_if_t<aux::has_configure<T>{}>> {
+struct get_deps<T, aux::enable_if_t<has_configure<T>{}>> {
     using type = typename get_injector<T>::type::deps;
 };
 
@@ -194,13 +195,13 @@ private:
     aux::enable_if_t<!aux::has_call<T>{}> call_impl(TDeps_&, const TAction&) { }
 
     template<class T>
-    aux::enable_if_t<!aux::has_configure<T>::value, const T&>
+    aux::enable_if_t<!has_configure<T>::value, const T&>
     pass_arg(const T& arg) const {
         return arg;
     }
 
     template<class T>
-    aux::enable_if_t<aux::has_configure<T>::value, typename get_injector<T>::type>
+    aux::enable_if_t<has_configure<T>::value, typename get_injector<T>::type>
     pass_arg(const T& arg) const {
         return arg.configure();
     }
