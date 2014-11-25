@@ -28,6 +28,12 @@ struct injector {
 
 namespace scopes {
 
+BOOST_DI_HAS_METHOD_(call_operator, operator());
+BOOST_DI_HAS_TYPE(result_type);
+
+template<class T, class U>
+using has_lambda = bool_<has_call_operator<T, U>::value && !has_result_type<T>::value>;
+
 template<class TT>
 class external {
 public:
@@ -60,9 +66,9 @@ public:
 
     template<class T>
     class scope<T
-              , class enable_if_c<
-                     aux::has_call_operator<T>::value &&
-                    !aux::has_lambda<T, fwd::injector&>::value
+              , typename enable_if_c<
+                     has_call_operator<T>::value &&
+                    !has_lambda<T, fwd::injector&>::value
                 >::type>
     {
         using result_type = wrappers::value<T>;
@@ -83,7 +89,7 @@ public:
     };
 
     template<class T>
-    class scope<T, aux::enable_if_t<aux::has_lambda<T, fwd::injector&>{}>>
+    class scope<T, aux::enable_if_t<has_lambda<T, fwd::injector&>{}>>
     {
         using result_type = wrappers::value<T>;
         scope& operator=(const scope&) = delete;

@@ -18,17 +18,19 @@
     template<class T> std::true_type has_##name##_impl(typename T::name*);      \
     template<class T> struct has_##name : decltype(has_##name##_impl<T>(0)) { }
 
-#define BOOST_DI_HAS_METHOD(name) BOOST_DI_HAS_METHOD_IMPL(name)
-#define BOOST_DI_HAS_METHOD_IMPL(name)                                                                      \
+#define BOOST_DI_HAS_METHOD(name) BOOST_DI_HAS_METHOD_IMPL(name, name)
+#define BOOST_DI_HAS_METHOD_(name, f) BOOST_DI_HAS_METHOD_IMPL(name, f)
+#define BOOST_DI_HAS_METHOD_IMPL(name, f)                                                                   \
 	template<class T, class... TArgs>                                                                       \
-    decltype(std::declval<T>().name(std::declval<TArgs>()...), std::true_type()) has_##name##_impl(int);    \
+    decltype(std::declval<T>().f(std::declval<TArgs>()...), std::true_type()) has_##name##_impl(int);       \
 	template<class, class...> std::false_type has_##name##_impl(...);                                       \
 	template<class T, class... TArgs> struct has_##name : decltype(has_##name##_impl<T, TArgs...>(0)) { }
 
-#define BOOST_DI_HAS_METHOD_NAME(name) BOOST_DI_HAS_METHOD_NAME_IMPL(name)
-#define BOOST_DI_HAS_METHOD_NAME_IMPL(name)                                                                         \
-    struct has_##name##_impl { void name() { } };                                                                   \
-    template<class T> std::false_type test(T*, non_type<void (has_##name##_impl::*)(), &T::name>* = 0);             \
+#define BOOST_DI_HAS_METHOD_NAME(name) BOOST_DI_HAS_METHOD_NAME_IMPL(name, name)
+#define BOOST_DI_HAS_METHOD_NAME_(name, f) BOOST_DI_HAS_METHOD_NAME_IMPL(name, f)
+#define BOOST_DI_HAS_METHOD_NAME_IMPL(name, f)                                                                      \
+    struct has_##name##_impl { void f() { } };                                                                      \
+    template<class T> std::false_type test(T*, non_type<void (has_##name##_impl::*)(), &T::f>* = 0);                \
     template<class> std::true_type test(...);                                                                       \
     template<class T, typename = void> struct has_##name : decltype(test<inherit<T, has_##name##_impl>>(0)) { };    \
     template<class T> struct has_##name<T, std::enable_if_t<!std::is_class<T>::value>> : std::false_type { }        \
@@ -36,8 +38,6 @@
 namespace boost {
 namespace di {
 namespace aux {
-
-    struct void_ {};
 
 template <bool b, class T=void>
   using enable_if_t       = typename std::enable_if<b,T>::type;  // C++14
@@ -121,75 +121,39 @@ struct function_traits<R(T::*)(TArgs...) const> {
     using args = type_list<TArgs...>;
 };
 
-    template<class T>
-    class has_call_operator
-    {
-        struct base_impl { void operator()(...) { } };
-        struct base
-            : base_impl
-            , std::conditional<std::is_class<T>::value, T, void_>::type
-        { base() { } };
 
-        template<class U>
-        static mpl::aux::no_tag test(
-            U*
-          , non_type<void (base_impl::*)(...), &U::operator()>* = 0
-        );
+namespace detail {
 
-        static mpl::aux::yes_tag test(...);
+template<
+    class T
+  , class TSignature
+>
+class is_convertible
+{
+    template<class U>
+    static mpl::aux::yes_tag test(non_type<TSignature, &U::operator()>*);
 
-    public:
-        typedef has_call_operator type;
+    template<class>
+    static mpl::aux::no_tag test(...);
 
-        BOOST_STATIC_CONSTANT(
-            bool
-          , value = sizeof(test((base*)0)) == sizeof(mpl::aux::yes_tag)
-        );
-    };
+public:
+    typedef is_convertible type;
 
-    template<class C, class U>
-    decltype(std::declval<C>().operator()(std::declval<U>()), std::true_type{}) test_has_call_operator(void*);
+    BOOST_STATIC_CONSTANT(
+        bool
+      , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
+    );
+};
 
-    template<class, class>
-    std::false_type test_has_call_operator(...);
+} // namespace detail
 
-    BOOST_DI_HAS_TYPE(result_type);
-
-    template<class T, class U>
-    using has_lambda = bool_<decltype(test_has_call_operator<T, U>(0))::value && !has_result_type<T>::value>;
-
-    namespace detail {
-
-    template<
-        class T
-      , class TSignature
-    >
-    class is_convertible
-    {
-        template<class U>
-        static mpl::aux::yes_tag test(non_type<TSignature, &U::operator()>*);
-
-        template<class>
-        static mpl::aux::no_tag test(...);
-
-    public:
-        typedef is_convertible type;
-
-        BOOST_STATIC_CONSTANT(
-            bool
-          , value = sizeof(test<T>(0)) == sizeof(mpl::aux::yes_tag)
-        );
-    };
-
-    } // namespace detail
-
-    template<
-        class TValueType
-      , class T
-    >
-    struct is_convertible_to_ref
-        : detail::is_convertible<TValueType, const T&(TValueType::*)(const type<const T&>&) const>
-    { };
+template<
+    class TValueType
+  , class T
+>
+struct is_convertible_to_ref
+    : detail::is_convertible<TValueType, const T&(TValueType::*)(const type<const T&>&) const>
+{ };
 
 } // namespace aux
 } // namespace boost
