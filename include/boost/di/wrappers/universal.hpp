@@ -9,6 +9,7 @@
 
 #include <vector>
 
+#include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/named.hpp"
 
@@ -17,6 +18,11 @@ namespace di {
 namespace wrappers {
 
 namespace detail {
+
+BOOST_DI_HAS_METHOD_SIGN_(call_operator, opeartor());
+
+template<class TValueType, class T>
+using is_convertible_to_ref = has_call_operator<TValueType, const T&(TValueType::*)(const type<const T&>&) const>;
 
 template<class TResult, class T, class TWrapper>
 inline aux::enable_if_t<!std::is_copy_constructible<T>{}, const TResult&>
@@ -69,14 +75,14 @@ public:
     template<class TWrapper>
     universal_impl(std::vector<aux::shared_ptr<void>>&
                  , const TWrapper& wrapper
-                 , aux::enable_if_t<aux::is_convertible_to_ref<TWrapper, T>{}>* = 0)
+                 , aux::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0)
         : object_(wrapper(type<const T&>()))
     { }
 
     template<class TWrapper>
     universal_impl(std::vector<aux::shared_ptr<void>>& refs
                  , const TWrapper& wrapper
-                 , aux::enable_if_t<!aux::is_convertible_to_ref<TWrapper, T>{}>* = 0)
+                 , aux::enable_if_t<!is_convertible_to_ref<TWrapper, T>{}>* = 0)
         : object_(copy<T, T, TWrapper>(refs, wrapper))
     { }
 
@@ -114,14 +120,14 @@ public:
     template<class TWrapper>
     universal_impl(std::vector<aux::shared_ptr<void>>&
                  , const TWrapper& wrapper
-                 , aux::enable_if_t<aux::is_convertible_to_ref<TWrapper, T>{}>* = 0)
+                 , aux::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0)
         : object_(wrapper(type<const T&>()))
     { }
 
     template<class TWrapper>
     universal_impl(std::vector<aux::shared_ptr<void>>& refs
                  , const TWrapper& wrapper
-                 , aux::enable_if_t<!aux::is_convertible_to_ref<TWrapper, T>{}>* = 0)
+                 , aux::enable_if_t<!is_convertible_to_ref<TWrapper, T>{}>* = 0)
         : object_(copy<T, T, TWrapper>(refs, wrapper))
     { }
 
@@ -158,7 +164,7 @@ public:
     template<class TWrapper>
     universal_impl(std::vector<aux::shared_ptr<void>>& refs
                  , const TWrapper& wrapper
-                 , aux::enable_if_t<aux::is_convertible_to_ref<TWrapper, T>{}>* = 0)
+                 , aux::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0)
         : refs_(refs)
         , object_(wrapper(type<const T&>()))
     { }
@@ -166,7 +172,7 @@ public:
     template<class TWrapper>
     universal_impl(std::vector<aux::shared_ptr<void>>& refs
                  , const TWrapper& wrapper
-                 , aux::enable_if_t<!aux::is_convertible_to_ref<TWrapper, T>{}>* = 0)
+                 , aux::enable_if_t<!is_convertible_to_ref<TWrapper, T>{}>* = 0)
         : refs_(refs)
         , object_(copy<T, T, TWrapper>(refs, wrapper))
     { }

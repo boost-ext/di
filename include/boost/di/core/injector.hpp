@@ -28,7 +28,7 @@ BOOST_DI_HAS_TYPE(any);
 BOOST_DI_HAS_TYPE(create2);
 BOOST_DI_HAS_TYPE(create3);
 BOOST_DI_HAS_TYPE(deps);
-BOOST_DI_HAS_METHOD_NAME(configure);
+BOOST_DI_HAS_METHOD_CALL(configure);
 BOOST_DI_HAS_METHOD(call);
 
 template<class T>
