@@ -12,7 +12,7 @@
 
 #define BOOST_DI_HAS_TYPE(name) BOOST_DI_HAS_TYPE_IMPL(name)
 #define BOOST_DI_HAS_TYPE_IMPL(name)                            \
-    template<class >                                            \
+    template<class>                                             \
     std::false_type has_##name##_impl(...);                     \
                                                                 \
     template<class T>                                           \

@@ -130,13 +130,14 @@ private:
     template<class T, class TParent, class TProvider, class TRefs, class TVisitors>
     aux::enable_if_t<!has_any<T>::value, wrappers::universal<T>>
     create(const TProvider& provider, TRefs& refs, const TVisitors& visitors) {
-        return create_impl<T, typename binder<pool_t>::template resolve<T>>(provider, refs, visitors);
+        using dependency = typename binder<pool_t>::template resolve<T>;
+        return create_impl<T, dependency>(provider, refs, visitors);
     }
 
     template<class T, class TDependency, class TProvider, class TRefs, class TVisitors>
     aux::enable_if_t<!size<scope_create<TDependency>>::value && !has_create2<TDependency>::value, wrappers::universal<T>>
     create_impl(const TProvider&, TRefs& refs, const TVisitors&) {
-        return wrappers::universal<T>(refs, acquire<TDependency>(static_cast<pool_t&>(*this)).create());
+        return {refs, acquire<TDependency>(static_cast<pool_t&>(*this)).create()};
     }
 
     template<class T, class TDependency, class TProvider, class TRefs, class TVisitors>
@@ -148,14 +149,17 @@ private:
     template<class T, class TDependency, class TProvider, class TRefs, class TVisitors>
     aux::enable_if_t<size<scope_create<TDependency>>::value && !has_create2<TDependency>::value, wrappers::universal<T>>
     create_impl(const TProvider& provider, TRefs& refs, const TVisitors& visitors) {
+        using ctor = typename type_traits::ctor_traits<typename TDependency::given>::type;
         return { refs, acquire<TDependency>(static_cast<pool_t&>(*this)).create(
-            create_impl<T, TDependency>(provider, refs, visitors, typename type_traits::ctor_traits<typename TDependency::given>::type{}))
+            create_impl<T, TDependency>(provider, refs, visitors, ctor{}))
         };
     }
 
     template<class T, class TDependency, class TProvider, class TRefs, class TVisitors, class... TArgs>
     auto create_impl(const TProvider& provider, TRefs& refs, const TVisitors& visitors, const type_list<TArgs...>&) {
-        return provider.template get<TDependency>(create<TArgs, T>(provider, refs, visitors)...);
+        return provider.template get<TDependency>(
+            create<TArgs, T>(provider, refs, visitors)...
+        );
     }
 
     template<class T, class... TVisitors>
