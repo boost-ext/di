@@ -14,39 +14,39 @@ namespace boost {
 namespace di {
 namespace wrappers {
 
-template<typename T>
+template<class T>
 class copy {
 public:
     copy(const T& value) // non explicit
         : value_(value)
     { }
 
-    template<typename I>
+    template<class I>
     I operator()(const type<I>&, aux::enable_if_t<!std::is_polymorphic<I>::value>* = 0) const {
         return value_;
     }
 
-    template<typename I>
+    template<class I>
     I* operator()(const type<I*>&) const {
         return new I(value_); // ownership transfer
     }
 
-    template<typename I>
+    template<class I>
     const I* operator()(const type<const I*>&) const {
         return I(value_); // ownership transfer
     }
 
-    template<typename I>
+    template<class I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I>>&) const {
         return aux::shared_ptr<I>(new I(value_));
     }
 
-    template<typename I>
+    template<class I>
     aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I>>&) const {
         return aux_::shared_ptr<I>(new I(value_));
     }
 
-    template<typename I>
+    template<class I>
     aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I>>&) const {
         return aux::unique_ptr<I>(new I(value_));
     }
@@ -55,40 +55,40 @@ private:
     T value_;
 };
 
-template<typename T>
+template<class T>
 class copy<T*> {
 public:
     copy(T* value) // non explicit
         : value_(value)
     { }
 
-    template<typename I>
+    template<class I>
     I operator()(const type<I>&, aux::enable_if_t<!std::is_polymorphic<I>::value>* = 0) const {
 		std::unique_ptr<I> ptr(value_);
 		return *ptr;
     }
 
-    template<typename I>
+    template<class I>
     I* operator()(const type<I*>&) const {
         return value_; // ownership transfer
     }
 
-    template<typename I>
+    template<class I>
     const I* operator()(const type<const I*>&) const {
         return value_; // ownership transfer
     }
 
-    template<typename I>
+    template<class I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I>>&) const {
         return aux::shared_ptr<I>(value_);
     }
 
-    template<typename I>
+    template<class I>
     aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I>>&) const {
         return aux_::shared_ptr<I>(value_);
     }
 
-    template<typename I>
+    template<class I>
     aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I>>&) const {
         return aux::unique_ptr<I>(value_);
     }

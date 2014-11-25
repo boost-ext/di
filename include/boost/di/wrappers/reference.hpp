@@ -14,7 +14,7 @@ namespace boost {
 namespace di {
 namespace wrappers {
 
-template<typename T>
+template<class T>
 class reference {
     reference& operator=(const reference&) = delete;
 

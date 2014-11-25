@@ -12,7 +12,7 @@
 namespace boost {
 namespace di {
 
-template<typename... Ts>
+template<class... Ts>
 using injector = core::injector<core::bindings_t<Ts...>>;
 
 } // namespace di

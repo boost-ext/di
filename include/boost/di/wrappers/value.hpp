@@ -13,7 +13,7 @@ namespace boost {
 namespace di {
 namespace wrappers {
 
-template<typename T>
+template<class T>
 class value {
 public:
     value(const T& value) // non explicit
@@ -36,17 +36,17 @@ public:
         return std::move(value_);
     }
 
-    template<typename I>
+    template<class I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I>>&) const {
         return aux::shared_ptr<I>(new I(value_));
     }
 
-    template<typename I>
+    template<class I>
     aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I>>&) const {
         return aux_::shared_ptr<I>(new I(value_));
     }
 
-    template<typename I>
+    template<class I>
     aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I>>&) const {
         return aux::unique_ptr<I>(new I(value_));
     }

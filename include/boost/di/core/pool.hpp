@@ -16,37 +16,37 @@ namespace core {
 
 struct init { };
 
-template<typename = type_list<>>
+template<class = type_list<>>
 class pool;
 
-template<typename... TArgs>
+template<class... TArgs>
 class pool<type_list<TArgs...>> : public TArgs... {
 public:
-    template<typename... Ts>
+    template<class... Ts>
     explicit pool(const Ts&... args)
         : Ts(args)...
     { }
 
-    template<typename TPool>
+    template<class TPool>
     pool(const TPool& p, const init&)
         : pool(get<TArgs>(p)...)
     { }
 
-    template<typename T>
+    template<class T>
     inline const T& get() const {
         return static_cast<const T&>(*this);
     }
 
 private:
-    template<typename T, typename TPool>
+    template<class T, class TPool>
     aux::enable_if_t<std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}, T>
     inline get(const TPool& p) const { return p.template get<T>(); }
 
-    template<typename T, typename TPool>
+    template<class T, class TPool>
     aux::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, T>
     inline get(const TPool&) const { return {}; }
 
-    template<typename T, typename TPool>
+    template<class T, class TPool>
     aux::enable_if_t<!std::is_base_of<T, pool>{}, const T&>
     inline get(const TPool&) const { return {}; }
 };

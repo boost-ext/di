@@ -27,23 +27,23 @@ namespace boost {
 namespace di {
 namespace core {
 
-template<typename TExpected, typename TName>
+template<class TExpected, class TName>
 struct dependency_concept { };
 
-template<typename T, typename TDependency>
+template<class T, class TDependency>
 struct dependency_impl : pair<T, TDependency>
 { };
 
-template<typename... Ts, typename TName, typename TDependency>
+template<class... Ts, class TName, class TDependency>
 struct dependency_impl<dependency_concept<type_list<Ts...>, TName>, TDependency>
 	: pair<dependency_concept<Ts, TName>, TDependency>...
 { };
 
 template<
-    typename TScope
-  , typename TExpected
-  , typename TGiven = TExpected
-  , typename TName = no_name
+    class TScope
+  , class TExpected
+  , class TGiven = TExpected
+  , class TName = no_name
 >
 class dependency
     : public TScope::template scope<TGiven>
@@ -58,7 +58,7 @@ public:
     using given = TGiven;
     using name = TName;
 
-    template<typename T>
+    template<class T>
     struct rebind {
         using other = dependency<
             typename TScope::template rebind<T>::other
@@ -70,27 +70,27 @@ public:
 
     dependency() { }
 
-    template<typename T>
+    template<class T>
     explicit dependency(T&& object)
         : TScope::template scope<TGiven>(std::forward<T>(object))
     { }
 
-    template<typename T, typename TInjector>
+    template<class T, class TInjector>
     dependency(T&& object, TInjector& injector)
         : TScope::template scope<TGiven>(std::forward<T>(object), injector)
     { }
 
-    template<typename T>
+    template<class T>
     auto named(const T&) {
         return dependency<TScope, TExpected, TGiven, T>{};
     }
 
-    template<typename T>
+    template<class T>
     auto in(const T&) {
         return dependency<T, TExpected, TGiven, TName>{};
     }
 
-    template<typename T>
+    template<class T>
     auto to(T&& object) {
         return dependency<scopes::external<T>, TExpected, TExpected, TName>{std::forward<T>(object)};
     }

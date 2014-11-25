@@ -21,7 +21,7 @@ struct index_sequence {
     using type = index_sequence;
 };
 
-template<typename, typename>
+template<class, class>
 struct concat;
 
 template<std::size_t... I1, std::size_t... I2>
@@ -54,10 +54,10 @@ using make_index_sequence = typename make_index_sequence_impl<N>::type;
 
 struct none_t {};
 
-template<typename T, T>
+template<class T, T>
 struct non_type { };
 
-template<typename>
+template<class>
 struct type { };
 
 template<int N>
@@ -66,39 +66,39 @@ using int_ = std::integral_constant<int, N>;
 template<bool N>
 using bool_ = std::integral_constant<bool, N>;
 
-template<typename, typename>
+template<class, class>
 struct pair { };
 
-template <typename x>
+template <class x>
 struct no_decay { using type = x; };
 
-template <typename ...xs>
+template <class ...xs>
 struct inherit : xs... { };
 
-template<typename...>
+template<class...>
 struct type_list {
     using type = type_list;
 };
 
-template<typename>
+template<class>
 struct is_type_list
     : std::false_type
 { };
 
-template<typename... Ts>
+template<class... Ts>
 struct is_type_list<type_list<Ts...>>
     : std::true_type
 { };
 
-template<typename>
+template<class>
 struct size;
 
-template<typename... Ts>
+template<class... Ts>
 struct size<type_list<Ts...>> {
     static constexpr auto value = sizeof...(Ts);
 };
 
-template<typename...>
+template<class...>
 struct join;
 
 template<>
@@ -106,31 +106,31 @@ struct join<> {
     using type = type_list<>;
 };
 
-template<typename... TArgs>
+template<class... TArgs>
 struct join<type_list<TArgs...>> {
     using type = type_list<TArgs...>;
 };
 
-template<typename... Args1, typename... Args2>
+template<class... Args1, class... Args2>
 struct join<type_list<Args1...>, type_list<Args2...>> {
     using type = type_list<Args1..., Args2...>;
 };
 
-template<typename... Args1, typename... Args2, typename... Tail>
+template<class... Args1, class... Args2, class... Tail>
 struct join<type_list<Args1...>, type_list<Args2...>, Tail...> {
     using type = typename join<type_list<Args1..., Args2...>, Tail...>::type;
 };
 
-template<typename TDefault, typename>
+template<class TDefault, class>
 static no_decay<TDefault> lookup(...);
 
-template<typename, typename TKey, typename TValue>
+template<class, class TKey, class TValue>
 static no_decay<TValue> lookup(pair<TKey, TValue>*);
 
-template<typename TDefault, typename TKey, typename T>
+template<class TDefault, class TKey, class T>
 using at_key = decltype(lookup<TDefault, TKey>((T*)nullptr));
 
-template<typename TDefault, typename TKey, typename T>
+template<class TDefault, class TKey, class T>
 using at_key_t = typename at_key<TDefault, TKey, T>::type;
 
 } // namespace di

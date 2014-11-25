@@ -13,33 +13,33 @@ namespace boost {
 namespace di {
 namespace scopes {
 
-template<typename /*TName*/>
+template<class /*TName*/>
 class session_entry { };
 
-template<typename /*TName*/>
+template<class /*TName*/>
 class session_exit { };
 
-template<typename /*TName*/>
+template<class /*TName*/>
 class session {
 public:
     static constexpr auto priority = 0; // 0 - lowest, N - highest
 
-    template<typename>
+    template<class>
     struct rebind {
         using other = session;
     };
 
-    template<typename T>
+    template<class T>
     class scope {
         using result_type = wrappers::shared<T>;
 
     public:
-        template<typename TName>
+        template<class TName>
         void call(const session_entry<TName>&) {
             in_scope_ = true;
         }
 
-        template<typename TName>
+        template<class TName>
         void call(const session_exit<TName>&) {
             in_scope_ = false;
             object_.reset();

@@ -15,7 +15,7 @@ namespace di {
 
 struct no_name { };
 
-template<typename T, typename TName = no_name, typename = void>
+template<class T, class TName = no_name, class = void>
 class named {
     named& operator=(const named&) = delete;
 
@@ -39,7 +39,7 @@ private:
     T object_;
 };
 
-template<typename T, typename TName>
+template<class T, class TName>
 class named<const T&, TName> {
     named& operator=(const named&) = delete;
 
@@ -63,7 +63,7 @@ private:
     std::reference_wrapper<const T> object_;
 };
 
-template<typename T, typename TName>
+template<class T, class TName>
 class named<T&, TName> {
     named& operator=(const named&) = delete;
 
@@ -87,7 +87,7 @@ private:
     std::reference_wrapper<T> object_;
 };
 
-template<typename T, typename TName>
+template<class T, class TName>
 class named<T&&, TName> {
     named& operator=(const named&) = delete;
 
@@ -111,7 +111,7 @@ private:
     T object_;
 };
 
-template<typename T, typename TName>
+template<class T, class TName>
 class named<aux::unique_ptr<T>, TName> {
     named& operator=(const named&) = delete;
 
@@ -135,7 +135,7 @@ private:
     aux::unique_ptr<T> object_;
 };
 
-template<typename T, typename TName>
+template<class T, class TName>
 class named<T, TName, aux::enable_if_t<std::is_polymorphic<aux::remove_accessors_t<T>>{}>> {
 public:
     using named_type = T;

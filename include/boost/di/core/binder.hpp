@@ -16,25 +16,25 @@ namespace boost {
 namespace di {
 namespace core {
 
-template<typename TDeps>
+template<class TDeps>
 struct binder {
-	template<typename>
+	template<class>
 	struct get_name {
 		using type = no_name;
 	};
 
-	template<typename T, typename TName>
+	template<class T, class TName>
 	struct get_name<named<T, TName>> {
 		using type = TName;
 	};
 
-	template<typename T>
+	template<class T>
 	using get_name_t = typename get_name<T>::type;
 
-	template<typename TDependency, typename T>
+	template<class TDependency, class T>
 	using rebind_t = typename TDependency::template rebind<T>::other;
 
-    template<typename T, typename TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>>
+    template<class T, class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>>
     using resolve = rebind_t<
         at_key_t<TDefault, dependency_concept<aux::make_plain_t<T>, get_name_t<aux::remove_accessors_t<T>>>, TDeps>
       , T

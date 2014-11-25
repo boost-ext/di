@@ -13,9 +13,9 @@ namespace boost {
 namespace di {
 namespace wrappers {
 
-template<typename T>
+template<class T>
 class shared {
-    template<typename U, typename TShared = aux::shared_ptr<U>>
+    template<class U, class TShared = aux::shared_ptr<U>>
     class sp_holder {
     public:
         explicit sp_holder(const TShared& value)
@@ -41,18 +41,18 @@ public:
         return value_.reset(ptr);
     }
 
-    template<typename I>
+    template<class I>
     aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I>>&) const {
         return value_;
     }
 
-    template<typename I>
+    template<class I>
     aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I>>&) const {
         aux_::shared_ptr<sp_holder<T>> sp(new sp_holder<T>(value_));
         return aux_::shared_ptr<T>(sp, value_.get());
     }
 
-    template<typename I>
+    template<class I>
     aux::weak_ptr<I> operator()(const type<aux::weak_ptr<I>>&) const {
         return value_;
     }

@@ -14,14 +14,14 @@ namespace di {
 namespace core {
 
 template<
-    typename T = none_t
-  , typename TInjector = none_t
-  , typename TProvider = none_t
-  , typename TRefs = none_t
-  , typename TVisitors = none_t
+    class T = none_t
+  , class TInjector = none_t
+  , class TProvider = none_t
+  , class TRefs = none_t
+  , class TVisitors = none_t
 >
 class any_type {
-    template<typename TValueType, typename TRefType>
+    template<class TValueType, class TRefType>
     using ref_type_t = aux::conditional_t<
           std::is_same<TValueType, none_t>{}
         , TValueType
@@ -31,7 +31,7 @@ class any_type {
     any_type& operator=(const any_type&) = delete;
     //any_type(const any_type&) = delete;
 
-    template<typename U>
+    template<class U>
     using is_not_same_t = aux::enable_if_t<!std::is_same<aux::make_plain_t<U>, aux::make_plain_t<T>>::value>;
 
 public:
@@ -49,17 +49,17 @@ public:
         , visitors_(visitors)
     { }
 
-    template<typename U, typename = is_not_same_t<U>>
+    template<class U, class = is_not_same_t<U>>
     operator const U&() const {
         return creator_.template create<const U&, T>(provider_, refs_, visitors_);
     }
 
-    template<typename U, typename = is_not_same_t<U>>
+    template<class U, class = is_not_same_t<U>>
     operator U&() const {
         return creator_.template create<U&, T>(provider_, refs_, visitors_);
     }
 
-    template<typename U, typename = is_not_same_t<U>>
+    template<class U, class = is_not_same_t<U>>
     operator U() {
         return creator_.template create<U, T>(provider_, refs_, visitors_);
     }
@@ -75,11 +75,11 @@ private:
 } // namespace di
 
 /*template<*/
-    //typename T
-  //, typename TInjector
-  //, typename TProvider
-  //, typename TRefs
-  //, typename TVisitors
+    //class T
+  //, class TInjector
+  //, class TProvider
+  //, class TRefs
+  //, class TVisitors
 //>
 //struct is_integral<
     //di::core::any_type<
@@ -96,11 +96,11 @@ private:
 namespace std {
 
 template<
-    typename T
-  , typename TInjector
-  , typename TProvider
-  , typename TRefs
-  , typename TVisitors
+    class T
+  , class TInjector
+  , class TProvider
+  , class TRefs
+  , class TVisitors
 >
 struct is_integral<
     boost::di::core::any_type<

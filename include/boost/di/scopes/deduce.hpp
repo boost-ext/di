@@ -20,12 +20,12 @@ class deduce {
 public:
     static constexpr auto priority = 0; // 0 - lowest, N - highest
 
-    template<typename T>
+    template<class T>
     struct rebind {
         using other = type_traits::scope_traits_t<T>;
     };
 
-    template<typename>
+    template<class>
     struct scope { };
 };
 

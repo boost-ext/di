@@ -17,10 +17,10 @@
 namespace boost {
 namespace di {
 
-template<typename TExpected, typename TGiven = TExpected>
+template<class TExpected, class TGiven = TExpected>
 core::dependency<scopes::deduce, TExpected, TGiven> bind{};
 
-template<typename TName>
+template<class TName>
 constexpr scopes::session<TName> session(const TName&) { return {}; }
 
 extern constexpr scopes::deduce deduce{};
@@ -28,7 +28,7 @@ extern constexpr scopes::unique unique{};
 extern constexpr scopes::shared shared{};
 extern constexpr scopes::singleton singleton{};
 
-template<typename... Ts>
+template<class... Ts>
 using any_of = type_list<Ts...>;
 
 } // namespace di

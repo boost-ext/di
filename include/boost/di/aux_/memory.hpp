@@ -51,7 +51,7 @@
     using ::boost::weak_ptr;
 
     #if defined(BOOST_NO_CXX11_SMART_PTR)
-        template<typename> struct unique_ptr { };
+        template<class> struct unique_ptr { };
     #else
         using ::std::unique_ptr;
     #endif
@@ -61,7 +61,7 @@
     namespace aux_ {
 
     #if defined(BOOST_NO_CXX11_SMART_PTR)
-        template<typename T> struct shared_ptr { };
+        template<class T> struct shared_ptr { };
     #else
         using ::std::shared_ptr;
     #endif

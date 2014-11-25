@@ -12,7 +12,7 @@
 namespace boost {
 namespace di {
 
-template<typename... TArgs>
+template<class... TArgs>
 inline auto make_injector(const TArgs&... args) noexcept {
     return injector<TArgs...>(args...);
 }
