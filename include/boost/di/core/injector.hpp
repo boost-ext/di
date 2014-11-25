@@ -28,7 +28,8 @@ BOOST_DI_HAS_TYPE(any);
 BOOST_DI_HAS_TYPE(create2);
 BOOST_DI_HAS_TYPE(create3);
 BOOST_DI_HAS_TYPE(deps);
-BOOST_DI_HAS_METHOD(configure);
+BOOST_DI_HAS_METHOD_NAME(configure);
+BOOST_DI_HAS_METHOD(call);
 
 template<class T>
 using is_injector = bool_<has_deps<T>::value || has_configure<T>::value>;
@@ -187,12 +188,12 @@ private:
     }
 
     template<class T, class TDeps_, class TAction>
-    aux::enable_if_t<aux::has_call<T>{}> call_impl(TDeps_& deps, const TAction& action) {
+    aux::enable_if_t<has_call<T, TAction>::value> call_impl(TDeps_& deps, const TAction& action) {
         static_cast<T&>(deps).call(action);
     }
 
     template<class T, class TDeps_, class TAction>
-    aux::enable_if_t<!aux::has_call<T>{}> call_impl(TDeps_&, const TAction&) { }
+    aux::enable_if_t<!has_call<T, TAction>::value> call_impl(TDeps_&, const TAction&) { }
 
     template<class T>
     aux::enable_if_t<!has_configure<T>::value, const T&>

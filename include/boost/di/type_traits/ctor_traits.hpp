@@ -19,7 +19,7 @@ namespace di {
 
 namespace detail {
 
-BOOST_DI_HAS_METHOD(BOOST_DI_INJECTOR);
+BOOST_DI_HAS_METHOD_NAME(BOOST_DI_INJECTOR);
 
 template<class T, std::size_t>
 struct get_type {
