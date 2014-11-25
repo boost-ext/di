@@ -132,39 +132,22 @@ private:
     }
 
     template<class T, class TDependency, class TProvider, class TRefs, class TVisitors>
-    //aux::enable_if_t<!size<scope_create<TDependency>>{} && !has_create2<TDependency>{}, wrappers::universal<T>>
-    typename enable_if_c<
-        !/*mpl::*/size<scope_create<TDependency> >::value &&
-        !has_create2<TDependency>::value
-      , wrappers::universal<T>
-    >::type
+    aux::enable_if_t<!size<scope_create<TDependency>>::value && !has_create2<TDependency>::value, wrappers::universal<T>>
     create_impl(const TProvider&, TRefs& refs, const TVisitors&) {
         return wrappers::universal<T>(refs, acquire<TDependency>(static_cast<pool_t&>(*this)).create());
     }
 
     template<class T, class TDependency, class TProvider, class TRefs, class TVisitors>
-    typename enable_if_c<
-        /*mpl::*/size<scope_create<TDependency> >::value &&
-        has_create2<TDependency>::value
-      , wrappers::universal<T>
-    >::type
+    aux::enable_if_t<size<scope_create<TDependency>>::value && has_create2<TDependency>::value, wrappers::universal<T>>
     create_impl(const TProvider&, TRefs& refs, const TVisitors&) {
         return {refs, acquire<TDependency>(static_cast<pool_t&>(*this)).create_(*this)};
     }
 
     template<class T, class TDependency, class TProvider, class TRefs, class TVisitors>
-    //aux::enable_if_t<size<scope_create<TDependency>>{}, wrappers::universal<T>>
-        typename enable_if_c<
-            /*mpl::*/size<scope_create<TDependency> >::value &&
-            !has_create2<TDependency>::value
-          , wrappers::universal<T> >::type
+    aux::enable_if_t<size<scope_create<TDependency>>::value && !has_create2<TDependency>::value, wrappers::universal<T>>
     create_impl(const TProvider& provider, TRefs& refs, const TVisitors& visitors) {
-        using ctor_type =
-            typename type_traits::ctor_traits<typename TDependency::given>::type;
-
         return { refs, acquire<TDependency>(static_cast<pool_t&>(*this)).create(
-                create_impl<T, TDependency>(provider, refs, visitors, ctor_type())
-            )
+            create_impl<T, TDependency>(provider, refs, visitors, typename type_traits::ctor_traits<typename TDependency::given>::type{}))
         };
     }
 
