@@ -49,7 +49,7 @@ public:
       , typename TDependency::given*
     >
     get(TArgs&&...) const noexcept {
-        return static_cast<core::dependency<scopes::deduce, typename TDependency::given>&>(deps).ptr;
+        return static_cast<core::dependency<scopes::deduce, typename TDependency::given>&>(deps).create();
     }
 
 private:

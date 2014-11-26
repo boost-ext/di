@@ -26,14 +26,16 @@ public:
     };
 
     template<class T>
-    struct scope {
-        scope() { }
-
-        scope(T* ptr)
+    class scope {
+    public:
+        explicit scope(T* ptr = nullptr)
             : ptr(ptr)
         { }
 
-        T*ptr = nullptr;
+        T* create() const { return ptr; }
+
+    private:
+        T* ptr = nullptr;
     };
 };
 
