@@ -19,7 +19,7 @@ namespace wrappers {
 
 namespace detail {
 
-BOOST_DI_HAS_METHOD_SIGN_(call_operator, opeartor());
+BOOST_DI_HAS_METHOD_SIGN(call_operator, opeartor());
 
 template<class TValueType, class T>
 using is_convertible_to_ref = has_call_operator<TValueType, const T&(TValueType::*)(const type<const T&>&) const>;

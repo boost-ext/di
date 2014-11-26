@@ -28,8 +28,8 @@ struct injector {
 
 namespace scopes {
 
-BOOST_DI_HAS_METHOD_(call_operator, operator());
 BOOST_DI_HAS_TYPE(result_type);
+BOOST_DI_HAS_METHOD(call_operator, operator());
 
 template<class T, class U>
 using has_lambda = bool_<has_call_operator<T, U>::value && !has_result_type<T>::value>;

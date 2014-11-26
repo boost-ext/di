@@ -9,8 +9,9 @@
 
 #include <type_traits>
 
-#define BOOST_DI_CAT_IMPL(A, B) A ## B
-#define BOOST_DI_CAT(A, B) BOOST_DI_CAT_IMPL(A, B)
+#define BOOST_DI_CAT_IMPL(a, b) a ## b
+#define BOOST_DI_CAT(a, b) BOOST_DI_CAT_IMPL(a, b)
+#define BOOST_DI_CALL(m, ...) m(__VA_ARGS__)
 
 namespace boost {
 namespace di {

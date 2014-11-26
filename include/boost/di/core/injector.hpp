@@ -28,8 +28,8 @@ BOOST_DI_HAS_TYPE(any);
 BOOST_DI_HAS_TYPE(create2);
 BOOST_DI_HAS_TYPE(create3);
 BOOST_DI_HAS_TYPE(deps);
-BOOST_DI_HAS_METHOD_CALL(configure);
-BOOST_DI_HAS_METHOD(call);
+BOOST_DI_HAS_METHOD_CALL(configure, configure);
+BOOST_DI_HAS_METHOD(call, call);
 
 template<class T>
 using is_injector = bool_<has_deps<T>::value || has_configure<T>::value>;
