@@ -144,6 +144,19 @@ struct function_traits<R(T::*)(TArgs...) const> {
     using args = type_list<TArgs...>;
 };
 
+template<class T, class... TArgs>
+decltype(void(T{std::declval<TArgs>()...}), std::true_type())
+test_is_braces_constructible(int);
+
+template<class, class...>
+std::false_type test_is_braces_constructible(...);
+
+template<class T, class... TArgs>
+using is_braces_constructible = decltype(test_is_braces_constructible<T, TArgs...>(0));
+
+template<class T, class... TArgs>
+using is_braces_constructible_t = typename is_braces_constructible<T, TArgs...>::type;
+
 }}} // namespace aux::boost::di
 
 #endif
