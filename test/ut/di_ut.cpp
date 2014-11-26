@@ -16,7 +16,22 @@ struct impl1 : i1 { void dummy1() override { } };
 struct impl2 : i2 { void dummy2() override { } };
 struct impl1_2 : i1, i2 { void dummy1() override { } void dummy2() override { } };
 struct impl4 : impl1_2 { };
-struct complex1 { complex1(std::shared_ptr<i1>) { } };
+struct complex1 {
+    explicit complex1(const std::shared_ptr<i1>& i1)
+        : i1(i1)
+    { }
+
+    std::shared_ptr<i1> i1;
+};
+
+struct complex2 {
+    complex2(int i, complex1 c1)
+        : i(i), c1(c1)
+    { }
+
+    int i = 0;
+    complex1 c1;
+};
 
 test named_params = [] {
 	constexpr auto i = 42;
@@ -73,22 +88,41 @@ test external_with_scope = [] {
 		di::bind<int>.in(di::shared).to(i)
 	);
 
-	expect_eq(42, injector.create<int>());
+	expect_eq(i, injector.create<int>());
 };
 
-test lazy_scope = [] {
+test injectors_mix = [] {
+    auto injector = di::make_injector(
+        di::make_injector(
+            di::bind<i1, impl1>
+        )
+    );
+
+    auto object = injector.create<std::shared_ptr<complex1>>();
+    expect(object->i1.get());
+};
+
+test exposed_type = [] {
+	constexpr auto i = 42;
+
     di::injector<complex1> injector1 = di::make_injector(
         di::bind<i1, impl1>
     );
 
-    std::cout << boost::units::detail::demangle(typeid(decltype(injector1)::deps).name()) << std::endl;
-    //expect(injector1.create<complex1*>());
+    {
+    auto object = injector1.create<std::shared_ptr<complex1>>();
+	expect(dynamic_cast<i1*>(object->i1.get()));
+    }
 
-    //auto injector = di::make_injector(
-        //di::core::dependency<di::scopes::deduce, i1>{injector1.create<i1*>()}
-    //);
+    auto injector = di::make_injector(
+        injector1
+      , di::bind<int>.to(i)
+    );
 
-    //auto object = injector.create<std::shared_ptr<i1>>();
-    //expect(object.get());
+    auto object = injector.create<std::shared_ptr<complex2>>();
+	expect(dynamic_cast<i1*>(object->c1.i1.get()));
+	expect_eq(i, object->i);
 };
+
+test scopes_priority = [] { };
 

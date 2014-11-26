@@ -20,6 +20,7 @@
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/scopes/deduce.hpp"
 
+#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 namespace core {
@@ -50,7 +51,7 @@ struct get_injector<T, aux::enable_if_t<has_configure<T>{}>> {
 
 template<class T, class = void>
 struct get_deps {
-    using type = class T::deps;
+    using type = typename T::deps;
 };
 
 template<class T>
@@ -61,8 +62,8 @@ struct get_deps<T, aux::enable_if_t<has_configure<T>{}>> {
 template<class T, class = typename is_injector<T>::type, class = typename is_dependency<T>::type>
 struct add_type_list;
 
-template<class T>
-struct add_type_list<T, std::true_type, std::false_type> {
+template<class T, class TAny>
+struct add_type_list<T, std::true_type, TAny> {
     using type = typename get_deps<T>::type;
 };
 
@@ -108,10 +109,9 @@ public:
     { }
 
     template<class T>
-    injector(const injector<T>& injector) // non explicit
-        //: pool_t(pool<type_list<TArgs...>>(pass_arg(args)...), init{})
-    {
-    }
+    injector(injector<T> injector) // non explicit
+        : pool_t(create(injector, TDeps{}), init{})
+    { }
 
     template<class T, class... TArgs>
     T create(const TArgs&... args) {
@@ -272,6 +272,16 @@ private:
     aux::enable_if_t<has_configure<T>::value, typename get_injector<T>::type>
     pass_arg(const T& arg) const {
         return arg.configure();
+    }
+
+    template<typename T, typename... Ts>
+    auto create(injector<T>& injector, const type_list<Ts...>&) {
+        return pool<TDeps>(create_impl<Ts>(injector)...);
+    }
+
+    template<typename TDependency, typename T>
+    auto create_impl(injector<T>& injector) {
+        return TDependency{injector.template create<typename TDependency::given*>()};
     }
 };
 

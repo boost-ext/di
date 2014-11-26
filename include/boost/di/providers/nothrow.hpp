@@ -24,7 +24,7 @@ public:
 
     template<class TDependency, class... TArgs>
 	aux::enable_if_t<
-        std::is_polymorphic<typename TDependency::given>::value &&
+        //std::is_polymorphic<typename TDependency::given>::value &&
         !std::is_base_of<core::dependency<scopes::deduce, typename TDependency::given>, TDeps>::value
       , typename TDependency::given*
     >
@@ -32,24 +32,25 @@ public:
         return new (std::nothrow) typename TDependency::given{std::forward<TArgs>(args)...};
     }
 
-	template<class TDependency, class... TArgs>
-	aux::enable_if_t<
-        !std::is_polymorphic<typename TDependency::given>::value &&
-        !std::is_base_of<core::dependency<scopes::deduce, typename TDependency::given>, TDeps>::value
-      , typename TDependency::given&&
-    >
-    get(TArgs&&... args) const noexcept {
-		return std::move(typename TDependency::given{std::forward<TArgs>(args)...});
-	}
+    //singleton requires ptr
+   /* template<class TDependency, class... TArgs>*/
+	//aux::enable_if_t<
+        //!std::is_polymorphic<typename TDependency::given>::value &&
+        //!std::is_base_of<core::dependency<scopes::deduce, typename TDependency::given>, TDeps>::value
+      //, typename TDependency::given&&
+    //>
+    //get(TArgs&&... args) const noexcept {
+		//return std::move(typename TDependency::given{std::forward<TArgs>(args)...});
+	/*}*/
 
-	template<class TDependency, class... TArgs>
-	aux::enable_if_t<
+    template<class TDependency, class... TArgs>
+    aux::enable_if_t<
         std::is_base_of<core::dependency<scopes::deduce, typename TDependency::given>, TDeps>::value
       , typename TDependency::given*
     >
-    get(TArgs&&... args) const noexcept {
+    get(TArgs&&...) const noexcept {
         return static_cast<core::dependency<scopes::deduce, typename TDependency::given>&>(deps).ptr;
-	}
+    }
 
 private:
     TDeps& deps;
