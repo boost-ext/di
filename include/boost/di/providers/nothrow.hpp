@@ -15,17 +15,44 @@ namespace boost {
 namespace di {
 namespace providers {
 
+template<typename TDeps>
 class nothrow {
 public:
+    explicit nothrow(TDeps& deps)
+        : deps(deps)
+    { }
+
     template<class TDependency, class... TArgs>
-	aux::enable_if_t<std::is_polymorphic<typename TDependency::given>::value, typename TDependency::given*> get(TArgs&&... args) const noexcept {
+	aux::enable_if_t<
+        std::is_polymorphic<typename TDependency::given>::value &&
+        !std::is_base_of<core::dependency<scopes::deduce, typename TDependency::given>, TDeps>::value
+      , typename TDependency::given*
+    >
+    get(TArgs&&... args) const noexcept {
         return new (std::nothrow) typename TDependency::given{std::forward<TArgs>(args)...};
     }
 
 	template<class TDependency, class... TArgs>
-	aux::enable_if_t<!std::is_polymorphic<typename TDependency::given>::value, typename TDependency::given&&> get(TArgs&&... args) const noexcept {
+	aux::enable_if_t<
+        !std::is_polymorphic<typename TDependency::given>::value &&
+        !std::is_base_of<core::dependency<scopes::deduce, typename TDependency::given>, TDeps>::value
+      , typename TDependency::given&&
+    >
+    get(TArgs&&... args) const noexcept {
 		return std::move(typename TDependency::given{std::forward<TArgs>(args)...});
 	}
+
+	template<class TDependency, class... TArgs>
+	aux::enable_if_t<
+        std::is_base_of<core::dependency<scopes::deduce, typename TDependency::given>, TDeps>::value
+      , typename TDependency::given*
+    >
+    get(TArgs&&... args) const noexcept {
+        return static_cast<core::dependency<scopes::deduce, typename TDependency::given>&>(deps).ptr;
+	}
+
+private:
+    TDeps& deps;
 };
 
 } // namespace providers

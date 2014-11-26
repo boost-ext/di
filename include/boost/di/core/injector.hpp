@@ -28,11 +28,15 @@ BOOST_DI_HAS_TYPE(any);
 BOOST_DI_HAS_TYPE(create2);
 BOOST_DI_HAS_TYPE(create3);
 BOOST_DI_HAS_TYPE(deps);
+BOOST_DI_HAS_TYPE(given);
 BOOST_DI_HAS_METHOD_CALL(configure, configure);
 BOOST_DI_HAS_METHOD(call, call);
 
 template<class T>
 using is_injector = bool_<has_deps<T>::value || has_configure<T>::value>;
+
+template<class T>
+using is_dependency = has_given<T>;
 
 template<class T, class = void>
 struct get_injector {
@@ -54,29 +58,31 @@ struct get_deps<T, aux::enable_if_t<has_configure<T>{}>> {
     using type = typename get_injector<T>::type::deps;
 };
 
-template<class T, class = typename is_type_list<T>::type, class = typename is_injector<T>::type>
+template<class T, class = typename is_injector<T>::type, class = typename is_dependency<T>::type>
 struct add_type_list;
 
-template<class T, class TAny>
-struct add_type_list<T, std::true_type, TAny> {
-    using type = T;
-};
-
 template<class T>
-struct add_type_list<T, std::false_type, std::true_type> {
+struct add_type_list<T, std::true_type, std::false_type> {
     using type = typename get_deps<T>::type;
 };
 
 template<class T>
+struct add_type_list<T, std::false_type, std::true_type> {
+    using type = type_list<T>;
+};
+
+template<class T>
 struct add_type_list<T, std::false_type, std::false_type> {
-    using type = type_list<T>; //scope<scopes::deduce>::bind<T>;
+    using type = type_list<dependency<scopes::deduce, T>>;
 };
 
 template<class... Ts>
 using bindings_t = typename join<typename add_type_list<Ts>::type...>::type;
 
-template<class TDeps = type_list<>, class TDefaultProvider = providers::nothrow>
+template<class TDeps = type_list<>>
 class injector : public pool<TDeps> {
+    template<class, class, class, class, class> friend class any_type;
+
     using pool_t = pool<TDeps>;
 
     template<class TDependency>
@@ -101,11 +107,17 @@ public:
         : pool_t(pool<type_list<TArgs...>>(pass_arg(args)...), init{})
     { }
 
+    template<class T>
+    injector(const injector<T>& injector) // non explicit
+        //: pool_t(pool<type_list<TArgs...>>(pass_arg(args)...), init{})
+    {
+    }
+
     template<class T, class... TArgs>
     T create(const TArgs&... args) {
         pool<type_list<TArgs...>> visitors(args...);
         std::vector<aux::shared_ptr<void>> refs_;
-        return create<T, none_t>(TDefaultProvider{}, refs_, visitors);
+        return create<T, none_t>(providers::nothrow<pool_t>{static_cast<pool<deps>&>(*this)}, refs_, visitors);
     }
 
     template<class T, class TProvider, class... TArgs>

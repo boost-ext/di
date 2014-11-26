@@ -82,16 +82,6 @@ struct type_list {
 };
 
 template<class>
-struct is_type_list
-    : std::false_type
-{ };
-
-template<class... Ts>
-struct is_type_list<type_list<Ts...>>
-    : std::true_type
-{ };
-
-template<class>
 struct size;
 
 template<class... Ts>

@@ -25,8 +25,16 @@ public:
         using other = type_traits::scope_traits_t<T>;
     };
 
-    template<class>
-    struct scope { };
+    template<class T>
+    struct scope {
+        scope() { }
+
+        scope(T* ptr)
+            : ptr(ptr)
+        { }
+
+        T*ptr = nullptr;
+    };
 };
 
 } // namespace scopes
