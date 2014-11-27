@@ -29,9 +29,10 @@ public:
     public:
         void create3(int);
 
-        result_type create(T* ptr) {
+        template<typename TProvider>
+        result_type create(const TProvider& provider) {
             if (!object_) {
-                object_.reset(ptr);
+                object_.reset(provider.get());
             }
             return object_;
         }

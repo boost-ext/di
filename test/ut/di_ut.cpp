@@ -108,28 +108,28 @@ struct component {
     };}
 };
 
-test exposed_type = [] {
-	constexpr auto i = 42;
+//test exposed_type = [] {
+    //constexpr auto i = 42;
 
-    di::injector<complex1> injector1 = di::make_injector(
-        di::bind<i1, impl1>
-    );
+    //di::injector<complex1> injector1 = di::make_injector(
+        //di::bind<i1, impl1>
+    //);
 
-    {
-    auto object = injector1.create<std::shared_ptr<complex1>>();
-	expect(dynamic_cast<i1*>(object->i1.get()));
-    }
+    //{
+    //auto object = injector1.create<std::shared_ptr<complex1>>();
+    //expect(dynamic_cast<i1*>(object->i1.get()));
+    //}
 
-    auto injector = di::make_injector(
-        injector1
-         //component{}
-      , di::bind<int>.to(i)
-    );
+    //auto injector = di::make_injector(
+            //component{}
+        ////injector1
+      //, di::bind<int>.to(i)
+    //);
 
-    auto object = injector.create<std::shared_ptr<complex2>>();
-	expect(dynamic_cast<i1*>(object->c1.i1.get()));
-	expect_eq(i, object->i);
-};
+    ////auto object = injector.create<std::shared_ptr<complex2>>();
+//[>    expect(dynamic_cast<i1*>(object->c1.i1.get()));<]
+    //[>expect_eq(i, object->i);<]
+//};
 
 test scopes_priority = [] { };
 

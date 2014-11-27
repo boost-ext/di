@@ -40,23 +40,13 @@ template<class T>
 using is_dependency = has_given<T>;
 
 template<class T, class = void>
-struct get_injector {
-    using type = T;
-};
-
-template<class T>
-struct get_injector<T, aux::enable_if_t<has_configure<T>{}>> {
-    using type = typename aux::function_traits<decltype(&T::configure)>::result_type;
-};
-
-template<class T, class = void>
 struct get_deps {
     using type = typename T::deps;
 };
 
 template<class T>
 struct get_deps<T, aux::enable_if_t<has_configure<T>{}>> {
-    using type = typename get_injector<T>::type::deps;
+    using type = typename aux::function_traits<decltype(&T::configure)>::result_type::deps;
 };
 
 template<class T, class = typename is_injector<T>::type, class = typename is_dependency<T>::type>
@@ -90,10 +80,47 @@ class injector : public pool<TDeps> {
     using scope_create = typename aux::function_traits<decltype(&TDependency::create3)>::args;
 
     template<class T, class TDependency>
-    struct data_visitor {
+    struct data {
         using type = T;
         using dependency = TDependency;
-        //using binder = binder_t;
+        using binder = binder<TDeps>;
+    };
+
+    template<
+        class T
+      , class TDependency
+      , class TProvider
+      , class TRefs
+      , class TVisitors
+      , class... TArgs
+    >
+    struct provider;
+
+    template<
+        class T
+      , class TDependency
+      , class TProvider
+      , class TRefs
+      , class TVisitors
+      , class... TArgs
+    >
+    class provider<T, TDependency, TProvider, TRefs, TVisitors, type_list<TArgs...>> {
+    public:
+        provider(injector& inj, const TProvider& provider, TRefs& refs, const TVisitors& visitors)
+            : injector_(inj), provider_(provider), refs_(refs), visitors_(visitors)
+        { }
+
+        auto get() const {
+            return provider_.template get<TDependency>(
+                injector_.create<TArgs, T>(provider_, refs_, visitors_)...
+            );
+        }
+
+    private:
+        injector& injector_;
+        const TProvider& provider_;
+        TRefs& refs_;
+        const TVisitors& visitors_;
     };
 
 public:
@@ -105,7 +132,7 @@ public:
 
     template<class... TArgs>
     injector(const TArgs&... args)
-        : pool_t(pool<type_list<TArgs...>>(pass_arg(args)...), init{})
+        : injector(init{}, pass_arg(args)...)
     { }
 
     template<class T>
@@ -133,6 +160,11 @@ public:
     }
 
 private:
+    template<class... TArgs>
+    injector(const init&, const TArgs&... args)
+        : pool_t(pool<type_list<TArgs...>>(args...), init{})
+    { }
+
     template<
         class T
       , class TParent
@@ -204,26 +236,13 @@ private:
         !has_create2<TDependency>::value
       , wrappers::universal<T>
     >
-    create_impl(const TProvider& provider, TRefs& refs, const TVisitors& visitors) {
+    create_impl(const TProvider& provider_, TRefs& refs, const TVisitors& visitors) {
         using ctor = typename type_traits::ctor_traits<typename TDependency::given>::type;
         return { refs, acquire<TDependency>(static_cast<pool_t&>(*this)).create(
-            create_impl<T, TDependency>(provider, refs, visitors, ctor{}))
-        };
+            provider<T, TDependency, TProvider, TRefs, TVisitors, ctor>{*this, provider_, refs, visitors}
+        )};
     }
 
-    template<
-        class T
-      , class TDependency
-      , class TProvider
-      , class TRefs
-      , class TVisitors
-      , class... TArgs
-    >
-    auto create_impl(const TProvider& provider, TRefs& refs, const TVisitors& visitors, const type_list<TArgs...>&) {
-        return provider.template get<TDependency>(
-            create<TArgs, T>(provider, refs, visitors)...
-        );
-    }
 
     template<class T, class... TVisitors>
     static void assert_visitors(const pool<type_list<TVisitors...>>& visitors) {
@@ -263,14 +282,12 @@ private:
     aux::enable_if_t<!has_call<T, TAction>::value> call_impl(TDeps_&, const TAction&) { }
 
     template<class T>
-    aux::enable_if_t<!has_configure<T>::value, const T&>
-    pass_arg(const T& arg) const {
+    const auto& pass_arg(const T& arg, aux::enable_if_t<!has_configure<T>::value>* = 0) const {
         return arg;
     }
 
     template<class T>
-    aux::enable_if_t<has_configure<T>::value, typename get_injector<T>::type>
-    pass_arg(const T& arg) const {
+    auto pass_arg(const T& arg, aux::enable_if_t<has_configure<T>{}>* = 0) const {
         return arg.configure();
     }
 

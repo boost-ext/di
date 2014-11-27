@@ -27,8 +27,10 @@ public:
     public:
         void create3(int);
 
-        wrappers::copy<T*> create(T* ptr) { return ptr; }
-        wrappers::copy<T> create(T&& ptr) { return std::move(ptr); }
+        template<typename TProvider>
+        wrappers::copy<T*> create(const TProvider& provider) { return provider.get(); }
+
+        //wrappers:provider.get():copy<T> create(T&& ptr) { return std::move(provider.get()); }
     };
 };
 

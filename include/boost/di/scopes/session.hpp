@@ -45,9 +45,10 @@ public:
             object_.reset();
         }
 
-        result_type create(T* ptr) {
+        template<typename TProvider>
+        result_type create(const TProvider& provider) {
             if (in_scope_ && !object_) {
-                object_.reset(ptr);
+                object_.reset(provider.get());
             }
             return object_;
         }
