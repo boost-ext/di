@@ -3,8 +3,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_SCOPES_INTERNAL_HPP
-#define BOOST_DI_SCOPES_INTERNAL_HPP
+#ifndef BOOST_DI_SCOPES_EXPOSED_HPP
+#define BOOST_DI_SCOPES_EXPOSED_HPP
 
 #include "boost/di/type_traits/scope_traits.hpp"
 
@@ -12,7 +12,7 @@ namespace boost {
 namespace di {
 namespace scopes {
 
-class internal {
+class exposed {
 public:
     static constexpr auto priority = 0; // 0 - lowest, N - highest
 

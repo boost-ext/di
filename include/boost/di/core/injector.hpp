@@ -18,7 +18,7 @@
 #include "boost/di/providers/nothrow.hpp"
 #include "boost/di/wrappers/universal.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
-#include "boost/di/scopes/internal.hpp"
+#include "boost/di/scopes/exposed.hpp"
 
 #include <boost/units/detail/utility.hpp>
 namespace boost {
@@ -64,7 +64,7 @@ struct add_type_list<T, std::false_type, std::true_type> {
 
 template<class T>
 struct add_type_list<T, std::false_type, std::false_type> {
-    using type = type_list<dependency<scopes::internal, T>>;
+    using type = type_list<dependency<scopes::exposed, T>>;
 };
 
 template<class... Ts>
