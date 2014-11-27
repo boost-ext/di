@@ -102,6 +102,12 @@ test injectors_mix = [] {
     expect(object->i1.get());
 };
 
+struct component {
+    di::injector<complex1> configure() const { return {
+        di::bind<i1, impl1>
+    };}
+};
+
 test exposed_type = [] {
 	constexpr auto i = 42;
 
@@ -116,6 +122,7 @@ test exposed_type = [] {
 
     auto injector = di::make_injector(
         injector1
+         //component{}
       , di::bind<int>.to(i)
     );
 

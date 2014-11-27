@@ -64,7 +64,9 @@
         : std::false_type                                                       \
     { }
 
-namespace boost { namespace di { namespace aux {
+namespace boost {
+namespace di {
+namespace aux {
 
 template<bool b, class T = void>
 using enable_if_t = typename std::enable_if<b, T>::type;
@@ -157,7 +159,7 @@ using is_braces_constructible = decltype(test_is_braces_constructible<T, TArgs..
 template<class T, class... TArgs>
 using is_braces_constructible_t = typename is_braces_constructible<T, TArgs...>::type;
 
-}}} // namespace aux::boost::di
+}}} // namespace boost::di::aux
 
 #endif
 
