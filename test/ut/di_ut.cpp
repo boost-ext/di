@@ -149,5 +149,24 @@ test exposed_type_by_component = [] {
     expect_eq(i, object->i);
 };
 
+test exposed_type_by_component_twice = [] {
+    struct component {
+        di::injector<complex1> configure() const {
+            return di::make_injector(di::bind<i1, impl1>);
+        }
+    };
+
+    constexpr auto i = 42;
+
+    di::injector<complex2> injector = di::make_injector(
+        component{}
+      , di::bind<int>.to(i)
+    );
+
+    auto object = injector.create<std::shared_ptr<complex2>>();
+    expect(dynamic_cast<i1*>(object->c1.i1.get()));
+    expect_eq(i, object->i);
+};
+
 test scopes_priority = [] { };
 
