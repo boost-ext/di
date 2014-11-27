@@ -189,6 +189,7 @@ test exposed_type_by_component_mix = [] {
         component2{}
     );
 
+    //auto object = injector.create<std::shared_ptr<complex3>>();
     auto object = injector.create<std::shared_ptr<complex2>>();
     expect(object.get());
 };
