@@ -24,8 +24,6 @@ public:
 
         template<class, class TProvider>
         wrappers::copy<T*> create(const TProvider& provider) { return provider.get(); }
-
-        //wrappers:provider.get():copy<T> create(T&& ptr) { return std::move(provider.get()); }
     };
 };
 

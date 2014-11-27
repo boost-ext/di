@@ -103,9 +103,9 @@ test injectors_mix = [] {
 };
 
 struct component {
-    di::injector<complex1> configure() const { return {
-        di::bind<i1, impl1>
-    };}
+    di::injector<complex1> configure() const {
+        return { di::bind<i1, impl1> };
+    }
 };
 
 test exposed_type = [] {
@@ -121,13 +121,13 @@ test exposed_type = [] {
     }
 
     auto injector = di::make_injector(
-            //component{}
-        injector1
+            component{}
+        //injector1
       , di::bind<int>.to(i)
     );
 
     auto object = injector.create<std::shared_ptr<complex2>>();
-   expect(dynamic_cast<i1*>(object->c1.i1.get()));
+    expect(dynamic_cast<i1*>(object->c1.i1.get()));
     expect_eq(i, object->i);
 };
 

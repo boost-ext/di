@@ -13,13 +13,13 @@ namespace boost {
 namespace di {
 namespace scopes {
 
-template<class /*TName*/>
+template<class>
 class session_entry { };
 
-template<class /*TName*/>
+template<class>
 class session_exit { };
 
-template<class /*TName*/>
+template<class>
 class session {
 public:
     static constexpr auto priority = 0; // 0 - lowest, N - highest

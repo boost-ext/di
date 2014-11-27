@@ -20,7 +20,6 @@
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/scopes/exposed.hpp"
 
-#include <boost/units/detail/utility.hpp>
 namespace boost {
 namespace di {
 namespace core {
