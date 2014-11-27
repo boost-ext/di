@@ -116,19 +116,19 @@ test exposed_type = [] {
     );
 
     {
-    //auto object = injector1.create<std::shared_ptr<complex1>>();
-    //expect(dynamic_cast<i1*>(object->i1.get()));
+    auto object = injector1.create<std::shared_ptr<complex1>>();
+    expect(dynamic_cast<i1*>(object->i1.get()));
     }
 
-/*    auto injector = di::make_injector(*/
+    auto injector = di::make_injector(
             //component{}
-        ////injector1
-      //, di::bind<int>.to(i)
-    /*);*/
+        injector1
+      , di::bind<int>.to(i)
+    );
 
-    //auto object = injector.create<std::shared_ptr<complex2>>();
-/*    expect(dynamic_cast<i1*>(object->c1.i1.get()));*/
-    /*expect_eq(i, object->i);*/
+    auto object = injector.create<std::shared_ptr<complex2>>();
+   expect(dynamic_cast<i1*>(object->c1.i1.get()));
+    expect_eq(i, object->i);
 };
 
 test scopes_priority = [] { };

@@ -18,7 +18,7 @@
 #include "boost/di/providers/nothrow.hpp"
 #include "boost/di/wrappers/universal.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
-#include "boost/di/scopes/deduce.hpp"
+#include "boost/di/scopes/internal.hpp"
 
 #include <boost/units/detail/utility.hpp>
 namespace boost {
@@ -64,7 +64,7 @@ struct add_type_list<T, std::false_type, std::true_type> {
 
 template<class T>
 struct add_type_list<T, std::false_type, std::false_type> {
-    using type = type_list<dependency<scopes::deduce, T>>;
+    using type = type_list<dependency<scopes::internal, T>>;
 };
 
 template<class... Ts>
@@ -86,14 +86,7 @@ class injector : public pool<TDeps> {
         using binder = binder<TDeps>;
     };
 
-    template<
-        class T
-      , class TDependency
-      , class TProvider
-      , class TRefs
-      , class TVisitors
-      , class... TArgs
-    >
+    template<class...>
     struct provider;
 
     template<
@@ -104,23 +97,17 @@ class injector : public pool<TDeps> {
       , class TVisitors
       , class... TArgs
     >
-    class provider<T, TDependency, TProvider, TRefs, TVisitors, type_list<TArgs...>> {
-    public:
-        provider(injector& inj, const TProvider& provider, TRefs& refs, const TVisitors& visitors)
-            : injector_(inj), provider_(provider), refs_(refs), visitors_(visitors)
-        { }
+    struct provider<T, TDependency, TProvider, TRefs, TVisitors, type_list<TArgs...>> {
+        injector& injector_;
+        const TProvider& provider_;
+        TRefs& refs_;
+        const TVisitors& visitors_;
 
         auto get() const {
             return provider_.template get<TDependency>(
                 injector_.create<TArgs, T>(provider_, refs_, visitors_)...
             );
         }
-
-    private:
-        injector& injector_;
-        const TProvider& provider_;
-        TRefs& refs_;
-        const TVisitors& visitors_;
     };
 
 public:
@@ -290,14 +277,23 @@ private:
         return arg.configure();
     }
 
-    template<typename T, typename... Ts>
+    template<class T, class... Ts>
     auto create(injector<T>& injector, const type_list<Ts...>&) {
         return pool<TDeps>(create_impl<Ts>(injector)...);
     }
 
-    template<typename TDependency, typename T>
-    auto create_impl(injector<T>& injector) {
-        return TDependency{injector.template create<typename TDependency::given*>()};
+    template<class TInjector, class TDependency>
+    struct provider_ {
+        TInjector& injector_;
+
+        auto get() const {
+            return injector_.template create<typename TDependency::given*>();
+        }
+    };
+
+    template<class TDependency, class TInjector>
+    auto create_impl(TInjector& injector) {
+        return TDependency{provider_<TInjector, TDependency>{injector}};
     }
 };
 
