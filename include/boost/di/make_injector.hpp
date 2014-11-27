@@ -14,7 +14,7 @@ namespace di {
 
 template<class... TArgs>
 inline auto make_injector(const TArgs&... args) noexcept {
-    return injector<TArgs...>(args...);
+    return injector<TArgs...>( args...);
 }
 
 } // namespace di

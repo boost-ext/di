@@ -33,6 +33,7 @@ struct complex2 {
     complex1 c1{};
 };
 
+#if 0
 test named_params = [] {
 	constexpr auto i = 42;
 	auto injector = di::make_injector(
@@ -101,28 +102,49 @@ test injectors_mix = [] {
     auto object = injector.create<std::shared_ptr<complex1>>();
     expect(object->i1.get());
 };
-
-struct component {
-    di::injector<complex1> configure() const {
-        return { di::bind<i1, impl1> };
-    }
-};
+#endif
 
 test exposed_type = [] {
+    di::injector<complex1> injector = di::make_injector(
+        di::bind<i1, impl1>
+    );
+
+    auto object = injector.create<std::shared_ptr<complex1>>();
+    expect(dynamic_cast<i1*>(object->i1.get()));
+};
+
+test exposed_type_by_injector = [] {
     constexpr auto i = 42;
 
     di::injector<complex1> injector1 = di::make_injector(
         di::bind<i1, impl1>
     );
 
-    {
-    auto object = injector1.create<std::shared_ptr<complex1>>();
-    expect(dynamic_cast<i1*>(object->i1.get()));
-    }
+    auto injector = di::make_injector(
+        injector1
+      , di::bind<int>.to(i)
+    );
+
+    auto object = injector.create<std::shared_ptr<complex2>>();
+    expect(dynamic_cast<i1*>(object->c1.i1.get()));
+    expect_eq(i, object->i);
+};
+
+test exposed_type_by_component = [] {
+    struct component {
+        di::injector<complex1> configure() const {
+            return di::make_injector(di::bind<i1, impl1>);
+        }
+    };
+
+    constexpr auto i = 42;
+
+    di::injector<complex1> injector1 = di::make_injector(
+        di::bind<i1, impl1>
+    );
 
     auto injector = di::make_injector(
-            component{}
-        //injector1
+        component{}
       , di::bind<int>.to(i)
     );
 

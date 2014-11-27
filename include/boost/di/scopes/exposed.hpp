@@ -18,11 +18,16 @@ public:
 
     template<class T>
     struct provider {
-        T* ptr = nullptr;
+        provider() {}
 
-        auto get() const {
-            return ptr;
-        }
+        template<typename TProvider>
+        explicit provider(const TProvider& provider)
+            : f([&]{ return provider.get(); })
+        { }
+
+        T* get() const { return f(); }
+
+        std::function<T*()> f;
     };
 
     template<class T>
@@ -34,11 +39,11 @@ public:
 
         template<class TProvider>
         explicit scope(const TProvider& provider)
-            : provider_{provider.get()}
+            : provider_{provider}
         { }
 
         template<class TExpected, class TProvider>
-        auto create(const TProvider& provider) {
+        auto create(const TProvider&) {
             using scope = typename type_traits::scope_traits_t<TExpected>::template scope<T>;
             return scope{}.template create<T>(provider_);
         }
