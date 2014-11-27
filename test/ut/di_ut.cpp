@@ -139,10 +139,6 @@ test exposed_type_by_component = [] {
 
     constexpr auto i = 42;
 
-    di::injector<complex1> injector1 = di::make_injector(
-        di::bind<i1, impl1>
-    );
-
     auto injector = di::make_injector(
         component{}
       , di::bind<int>.to(i)
