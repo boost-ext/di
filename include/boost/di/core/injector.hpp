@@ -191,7 +191,7 @@ private:
       , wrappers::universal<T>
     >
     create_impl(const TProvider&, TRefs& refs, const TVisitors&) {
-        return {refs, acquire<TDependency>(static_cast<pool_t&>(*this)).create()};
+        return {refs, acquire<TDependency>(static_cast<pool_t&>(*this)).template create<T>()};
     }
 
     template<

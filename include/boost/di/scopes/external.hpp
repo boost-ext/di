@@ -51,6 +51,7 @@ public:
 
         void create3();
 
+        template<class>
         result_type create() {
             return object_;
         }
@@ -75,6 +76,7 @@ public:
 
         void create3();
 
+        template<class>
         result_type create() {
             return object_();
         }
