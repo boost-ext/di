@@ -24,11 +24,6 @@ class session {
 public:
     static constexpr auto priority = 0; // 0 - lowest, N - highest
 
-    template<class>
-    struct rebind {
-        using other = session;
-    };
-
     template<class T>
     class scope {
         using result_type = wrappers::shared<T>;
@@ -45,7 +40,7 @@ public:
             object_.reset();
         }
 
-        template<typename TProvider>
+        template<class, class TProvider>
         result_type create(const TProvider& provider) {
             if (in_scope_ && !object_) {
                 object_.reset(provider.get());

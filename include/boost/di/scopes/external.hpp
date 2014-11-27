@@ -39,11 +39,6 @@ class external {
 public:
     static constexpr auto priority = 1; // 0 - lowest, N - highest
 
-    template<class>
-    struct rebind {
-        using other = external;
-    };
-
     template<class T, class = void>
     class scope
     {

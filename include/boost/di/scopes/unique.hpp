@@ -17,17 +17,12 @@ class unique {
 public:
     static constexpr auto priority = 0; // 0 - lowest, N - highest
 
-    template<class>
-    struct rebind {
-        using other = unique;
-    };
-
     template<class T>
     class scope {
     public:
         void create3(int);
 
-        template<typename TProvider>
+        template<class, class TProvider>
         wrappers::copy<T*> create(const TProvider& provider) { return provider.get(); }
 
         //wrappers:provider.get():copy<T> create(T&& ptr) { return std::move(provider.get()); }

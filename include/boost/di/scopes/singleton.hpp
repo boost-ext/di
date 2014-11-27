@@ -17,11 +17,6 @@ class singleton {
 public:
     static constexpr auto priority = 0; // 0 - lowest, N - highest
 
-    template<class>
-    struct rebind {
-        using other = singleton;
-    };
-
     template<class T>
     class scope {
         using result_type = wrappers::shared<T>;
@@ -29,7 +24,7 @@ public:
     public:
         void create3(int);
 
-        template<typename TProvider>
+        template<class, class TProvider>
         result_type create(const TProvider& provider) {
             if (!get_instance()) {
                 get_instance().reset(provider.get());

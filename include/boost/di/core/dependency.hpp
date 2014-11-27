@@ -58,16 +58,6 @@ public:
     using given = TGiven;
     using name = TName;
 
-    template<class T>
-    struct rebind {
-        using other = dependency<
-            typename TScope::template rebind<T>::other
-          , TExpected
-          , TGiven
-          , TName
-        >;
-    };
-
     dependency() { }
 
     template<class T>

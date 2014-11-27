@@ -21,21 +21,24 @@ public:
     static constexpr auto priority = 0; // 0 - lowest, N - highest
 
     template<class T>
-    struct rebind {
-        using other = type_traits::scope_traits_t<T>;
-    };
-
-    template<class T>
     class scope {
     public:
+        void create3(int);
+
+        template<class TExpected, class TProvider>
+        auto create(const TProvider& provider) {
+            using scope = typename type_traits::scope_traits_t<TExpected>::template scope<T>;
+            return scope{}.template create<T>(provider);
+        }
+
         explicit scope(T* ptr = nullptr)
-            : ptr(ptr)
+            //: ptr(ptr)
         { }
 
-        T* create() const { return ptr; }
+        //T* create() const { return ptr; }
 
-    private:
-        T* ptr = nullptr;
+    //private:
+        //T* ptr = nullptr;
     };
 };
 

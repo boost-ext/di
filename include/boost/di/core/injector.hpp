@@ -70,7 +70,7 @@ struct add_type_list<T, std::false_type, std::false_type> {
 template<class... Ts>
 using bindings_t = typename join<typename add_type_list<Ts>::type...>::type;
 
-template<class TDeps = type_list<>>
+template<class TDeps = type_list<>, typename TDefaultProvider = providers::nothrow>
 class injector : public pool<TDeps> {
     template<class, class, class, class, class> friend class any_type;
 
@@ -144,7 +144,7 @@ public:
     T create(const TArgs&... args) {
         pool<type_list<TArgs...>> visitors(args...);
         std::vector<aux::shared_ptr<void>> refs_;
-        return create<T, none_t>(providers::nothrow<pool_t>{static_cast<pool<deps>&>(*this)}, refs_, visitors);
+        return create<T, none_t>(TDefaultProvider{}, refs_, visitors);
     }
 
     template<class T, class TProvider, class... TArgs>
@@ -238,11 +238,10 @@ private:
     >
     create_impl(const TProvider& provider_, TRefs& refs, const TVisitors& visitors) {
         using ctor = typename type_traits::ctor_traits<typename TDependency::given>::type;
-        return { refs, acquire<TDependency>(static_cast<pool_t&>(*this)).create(
+        return { refs, acquire<TDependency>(static_cast<pool_t&>(*this)).template create<T>(
             provider<T, TDependency, TProvider, TRefs, TVisitors, ctor>{*this, provider_, refs, visitors}
         )};
     }
-
 
     template<class T, class... TVisitors>
     static void assert_visitors(const pool<type_list<TVisitors...>>& visitors) {

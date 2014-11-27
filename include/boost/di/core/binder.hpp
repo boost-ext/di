@@ -31,14 +31,12 @@ struct binder {
 	template<class T>
 	using get_name_t = typename get_name<T>::type;
 
-	template<class TDependency, class T>
-	using rebind_t = typename TDependency::template rebind<T>::other;
-
     template<class T, class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>>
-    using resolve = rebind_t<
-        at_key_t<TDefault, dependency_concept<aux::make_plain_t<T>, get_name_t<aux::remove_accessors_t<T>>>, TDeps>
-      , T
-	>;
+    using resolve = at_key_t<
+        TDefault
+      , dependency_concept<aux::make_plain_t<T>, get_name_t<aux::remove_accessors_t<T>>>
+      , TDeps
+    >;
 };
 
 } // namespace core
