@@ -33,7 +33,10 @@ struct complex2 {
     complex1 c1{};
 };
 
-#if 0
+struct complex3 {
+    complex2 c2{};
+};
+
 test named_params = [] {
 	constexpr auto i = 42;
 	auto injector = di::make_injector(
@@ -102,7 +105,6 @@ test injectors_mix = [] {
     auto object = injector.create<std::shared_ptr<complex1>>();
     expect(object->i1.get());
 };
-#endif
 
 test exposed_type = [] {
     di::injector<complex1> injector = di::make_injector(
@@ -166,6 +168,29 @@ test exposed_type_by_component_twice = [] {
     auto object = injector.create<std::shared_ptr<complex2>>();
     expect(dynamic_cast<i1*>(object->c1.i1.get()));
     expect_eq(i, object->i);
+};
+
+test exposed_type_by_component_mix = [] {
+    static constexpr auto i = 42;
+
+    struct component1 {
+        di::injector<complex1> configure() const {
+            return di::make_injector(di::bind<i1, impl1>);
+        }
+    };
+
+    struct component2 {
+        di::injector<complex2> configure() const {
+            return di::make_injector(di::bind<int>.to(i), component1{});
+        }
+    };
+
+    auto injector = di::make_injector(
+        component2{}
+    );
+
+    auto object = injector.create<std::shared_ptr<complex2>>();
+    expect(object.get());
 };
 
 test scopes_priority = [] { };
