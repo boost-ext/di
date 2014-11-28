@@ -25,6 +25,7 @@ public:
             : f([=]{ return provider.get(); })
         { }
 
+        T* get_ptr() const noexcept { return f(); }
         T* get() const noexcept { return f(); }
 
         std::function<T*()> f;

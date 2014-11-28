@@ -23,7 +23,7 @@ public:
         void create3(int);
 
         template<class, class TProvider>
-        wrappers::copy<T*> create(const TProvider& provider) const noexcept {
+        auto create(const TProvider& provider) const noexcept -> wrappers::copy<decltype(provider.get())> {
             return provider.get();
         }
     };

@@ -104,6 +104,13 @@ class injector : public pool<TDeps> {
                 injector_.create_impl<TArgs, T>(provider_, v, visitors_)...
             );
         }
+
+        decltype(auto) get_ptr() const noexcept {
+            aux::shared_ptr<void> v;
+            return provider_.template get_ptr<TDependency>(
+                injector_.create_impl<TArgs, T>(provider_, v, visitors_)...
+            );
+        }
     };
 
 public:

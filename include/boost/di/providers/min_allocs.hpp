@@ -18,25 +18,32 @@ namespace providers {
 class min_allocs {
 public:
     template<class TDependency, class... TArgs>
-	//aux::enable_if_t<
-        //std::is_polymorphic<typename TDependency::given>::value &&
-       typename TDependency::given*
-    //>
-    get(TArgs&&... args) const noexcept {
+    inline typename TDependency::given* get_ptr(TArgs&&... args) const noexcept {
         return new (std::nothrow) typename TDependency::given{std::forward<TArgs>(args)...};
     }
 
-    //singleton requires ptr
-   /* template<class TDependency, class... TArgs>*/
-	//aux::enable_if_t<
-        //!std::is_polymorphic<typename TDependency::given>::value &&
-        //!std::is_base_of<core::dependency<scopes::deduce, typename TDependency::given>, TDeps>::value
-      //, typename TDependency::given&&
-    //>
-    //get(TArgs&&... args) const noexcept {
-		//return std::move(typename TDependency::given{std::forward<TArgs>(args)...});
-	/*}*/
-    //}
+    template<class TDependency, class... TArgs>
+    inline typename TDependency::given get_value(TArgs&&... args) const noexcept {
+        return typename TDependency::given{std::forward<TArgs>(args)...};
+    }
+
+    template<class TDependency, class... TArgs>
+    inline aux::enable_if_t<
+        std::is_polymorphic<typename TDependency::given>{}
+      , typename TDependency::given*
+    >
+    get(TArgs&&... args) const noexcept {
+        return get_ptr<TDependency>(std::forward<TArgs>(args)...);
+    }
+
+    template<class TDependency, class... TArgs>
+    inline aux::enable_if_t<
+        !std::is_polymorphic<typename TDependency::given>{}
+      , typename TDependency::given
+    >
+    get(TArgs&&... args) const noexcept {
+        return get_value<TDependency>(std::forward<TArgs>(args)...);
+    }
 };
 
 } // namespace providers
