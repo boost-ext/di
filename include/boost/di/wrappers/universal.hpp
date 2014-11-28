@@ -7,8 +7,6 @@
 #ifndef BOOST_DI_WRAPPERS_UNIVERSAL_HPP
 #define BOOST_DI_WRAPPERS_UNIVERSAL_HPP
 
-#include <vector>
-
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/named.hpp"
@@ -26,10 +24,9 @@ using is_convertible_to_ref = has_call_operator<TValueType, const T&(TValueType:
 
 template<class TResult, class T, class TWrapper>
 inline aux::enable_if_t<!std::is_copy_constructible<T>{}, const TResult&>
-copy(std::vector<aux::shared_ptr<void>>& refs, const TWrapper& wrapper) noexcept {
-    aux::shared_ptr<TResult> object(wrapper(type<T*>()));
-    refs.push_back(object);
-    return *object;
+copy(aux::shared_ptr<void>& refs, const TWrapper& wrapper) noexcept {
+    refs.reset(wrapper(type<T*>()));
+    return *refs;
 }
 
 template<class T>
@@ -43,17 +40,17 @@ struct holder {
 
 template<class TResult, class T, class TWrapper>
 inline aux::enable_if_t<std::is_copy_constructible<T>{}, const TResult&>
-copy(std::vector<aux::shared_ptr<void>>& refs, const TWrapper& wrapper) noexcept {
-    aux::shared_ptr<holder<TResult>> object(new holder<TResult>(wrapper(type<T>())));
-    refs.push_back(object);
-    return object->held;
+copy(aux::shared_ptr<void>& refs, const TWrapper& wrapper) noexcept {
+    aux::shared_ptr<holder<TResult>> sp(new holder<TResult>(wrapper(type<T>())));
+    refs = sp;
+    return sp->held;
 }
 
 template<class T>
 class universal_impl {
 public:
     template<class TWrapper>
-    universal_impl(std::vector<aux::shared_ptr<void>>&, const TWrapper& wrapper) noexcept
+    universal_impl(aux::shared_ptr<void>&, const TWrapper& wrapper) noexcept
         : object_(wrapper(type<T>()))
     { }
 
@@ -73,14 +70,14 @@ template<class T>
 class universal_impl<const T&> {
 public:
     template<class TWrapper>
-    universal_impl(std::vector<aux::shared_ptr<void>>&
+    universal_impl(aux::shared_ptr<void>&
                  , const TWrapper& wrapper
                  , aux::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
         : object_(wrapper(type<const T&>()))
     { }
 
     template<class TWrapper>
-    universal_impl(std::vector<aux::shared_ptr<void>>& refs
+    universal_impl(aux::shared_ptr<void>& refs
                  , const TWrapper& wrapper
                  , aux::enable_if_t<!is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
         : object_(copy<T, T, TWrapper>(refs, wrapper))
@@ -98,7 +95,7 @@ template<class T, class TName>
 class universal_impl<named<T, TName>> {
 public:
     template<class TWrapper>
-    universal_impl(std::vector<aux::shared_ptr<void>>&, const TWrapper& wrapper) noexcept
+    universal_impl(aux::shared_ptr<void>&, const TWrapper& wrapper) noexcept
         : object_(wrapper(type<T>()))
     { }
 
@@ -118,14 +115,14 @@ template<class T, class TName>
 class universal_impl<named<const T&, TName>> {
 public:
     template<class TWrapper>
-    universal_impl(std::vector<aux::shared_ptr<void>>&
+    universal_impl(aux::shared_ptr<void>&
                  , const TWrapper& wrapper
                  , aux::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
         : object_(wrapper(type<const T&>()))
     { }
 
     template<class TWrapper>
-    universal_impl(std::vector<aux::shared_ptr<void>>& refs
+    universal_impl(aux::shared_ptr<void>& refs
                  , const TWrapper& wrapper
                  , aux::enable_if_t<!is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
         : object_(copy<T, T, TWrapper>(refs, wrapper))
@@ -143,7 +140,7 @@ template<class T, class TName>
 class universal_impl<const named<T, TName>&> {
 public:
     template<class TWrapper>
-    universal_impl(std::vector<aux::shared_ptr<void>>& refs
+    universal_impl(aux::shared_ptr<void>& refs
                  , const TWrapper& wrapper) noexcept
         : object_(copy<named<T, TName>, T, TWrapper>(refs, wrapper))
     { }
@@ -162,7 +159,7 @@ class universal_impl<const named<const T&, TName>&> {
 
 public:
     template<class TWrapper>
-    universal_impl(std::vector<aux::shared_ptr<void>>& refs
+    universal_impl(aux::shared_ptr<void>& refs
                  , const TWrapper& wrapper
                  , aux::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
         : refs_(refs)
@@ -170,7 +167,7 @@ public:
     { }
 
     template<class TWrapper>
-    universal_impl(std::vector<aux::shared_ptr<void>>& refs
+    universal_impl(aux::shared_ptr<void>& refs
                  , const TWrapper& wrapper
                  , aux::enable_if_t<!is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
         : refs_(refs)
@@ -181,12 +178,12 @@ public:
         aux::shared_ptr<holder<named<const T&, TName>>> object(
             new holder<named<const T&, TName>>(object_)
         );
-        refs_.push_back(object);
+        refs_ = object;
         return object->held;
     }
 
 private:
-    std::vector<aux::shared_ptr<void>>& refs_;
+    aux::shared_ptr<void>& refs_;
     named<const T&, TName> object_;
 };
 
