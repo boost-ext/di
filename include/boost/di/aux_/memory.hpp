@@ -8,7 +8,6 @@
 #define BOOST_DI_AUX_MEMORY_HPP
 
 #include <memory>
-#include <boost/config.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 

@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_AUX_TYPE_TRAITS_HPP
 #define BOOST_DI_AUX_TYPE_TRAITS_HPP
 
-#include <type_traits>
 #include "boost/di/aux_/utility.hpp"
 
 #define BOOST_DI_HAS_TYPE(name)                                                 \
