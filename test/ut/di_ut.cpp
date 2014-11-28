@@ -17,24 +17,20 @@ struct impl2 : i2 { void dummy2() override { } };
 struct impl1_2 : i1, i2 { void dummy1() override { } void dummy2() override { } };
 struct impl4 : impl1_2 { };
 struct complex1 {
-    //explicit complex1(const std::shared_ptr<i1>& i1)
-        //: i1(i1)
-    //{ }
+    explicit complex1(const std::shared_ptr<i1>& i1)
+        : i1(i1)
+    { }
 
     std::shared_ptr<i1> i1;
 };
 
 struct complex2 {
-    //complex2(int i, complex1 c1)
-        //: i(i), c1(c1)
-    //{ }
-
-    int i{};
-    complex1 c1{};
+    int i;
+    complex1 c1;
 };
 
 struct complex3 {
-    complex2 c2{};
+    complex2 c2;
 };
 
 test named_params = [] {
