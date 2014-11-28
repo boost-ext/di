@@ -43,7 +43,7 @@ public:
         { }
 
         template<class TExpected>
-        auto create() const noexcept {
+        decltype(auto) create() const noexcept {
             using scope = typename type_traits::scope_traits_t<TExpected>::template scope<T>;
             return scope{}.template create<T>(provider_);
         }

@@ -13,8 +13,8 @@ namespace boost {
 namespace di {
 
 template<class... TArgs>
-inline auto make_injector(const TArgs&... args) noexcept {
-    return injector<TArgs...>( args...);
+inline decltype(auto) make_injector(const TArgs&... args) noexcept {
+    return injector<TArgs...>(args...);
 }
 
 } // namespace di
