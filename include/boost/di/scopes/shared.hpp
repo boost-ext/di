@@ -19,13 +19,11 @@ public:
 
     template<class T>
     class scope {
-        using result_type = wrappers::shared<T>;
-
     public:
         void create3(int);
 
         template<class, class TProvider>
-        result_type create(const TProvider& provider) const noexcept {
+        decltype(auto) create(const TProvider& provider) const noexcept {
             if (!object_) {
                 object_.reset(provider.get());
             }
@@ -33,7 +31,7 @@ public:
         }
 
     private:
-        mutable result_type object_;
+        mutable wrappers::shared<T> object_;
     };
 };
 

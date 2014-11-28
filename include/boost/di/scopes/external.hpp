@@ -39,10 +39,7 @@ public:
     static constexpr auto priority = 1; // 0 - lowest, N - highest
 
     template<class T, class = void>
-    class scope
-    {
-        using result_type = wrappers::value<T>;
-
+    class scope {
     public:
         explicit scope(const T& object) noexcept
             : object_(object)
@@ -51,12 +48,12 @@ public:
         void create3();
 
         template<class>
-        result_type create() const noexcept {
+        decltype(auto) create() const noexcept {
             return object_;
         }
 
     private:
-        result_type object_;
+        wrappers::value<T> object_;
     };
 
     template<class T>
@@ -66,8 +63,6 @@ public:
                     !has_lambda<T, fwd::injector&>::value
                 >::type>
     {
-        using result_type = wrappers::value<T>;
-
     public:
         explicit scope(const T& object) noexcept
             : object_(object)
@@ -76,7 +71,7 @@ public:
         void create3();
 
         template<class>
-        result_type create() const noexcept {
+        wrappers::value<T> create() const noexcept {
             return object_();
         }
 
@@ -87,7 +82,6 @@ public:
     template<class T>
     class scope<T, aux::enable_if_t<has_lambda<T, fwd::injector&>{}>>
     {
-        using result_type = wrappers::value<T>;
         scope& operator=(const scope&) = delete;
 
     public:
@@ -101,11 +95,11 @@ public:
 
         typedef void create2;
 
-        result_type create(double);
+        void create(double);
         void create3();
 
         template<class TInjector>
-        result_type create_(TInjector& injector) const noexcept {
+        wrappers::value<T> create_(TInjector& injector) const noexcept {
             return (given_)(injector);
         }
 

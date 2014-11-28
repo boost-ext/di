@@ -26,8 +26,6 @@ public:
 
     template<class T>
     class scope {
-        using result_type = wrappers::shared<T>;
-
     public:
         template<class TName>
         void call(const session_entry<TName>&) noexcept {
@@ -41,7 +39,7 @@ public:
         }
 
         template<class, class TProvider>
-        result_type create(const TProvider& provider) const noexcept {
+        decltype(auto) create(const TProvider& provider) const noexcept {
             if (in_scope_ && !object_) {
                 object_.reset(provider.get());
             }
@@ -49,7 +47,7 @@ public:
         }
 
     private:
-        result_type object_;
+        mutable wrappers::shared<T> object_;
         bool in_scope_ = false;
     };
 };

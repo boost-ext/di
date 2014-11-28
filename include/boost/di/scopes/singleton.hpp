@@ -19,13 +19,11 @@ public:
 
     template<class T>
     class scope {
-        using result_type = wrappers::shared<T>;
-
     public:
         void create3(int);
 
         template<class, class TProvider>
-        result_type create(const TProvider& provider) const noexcept {
+        decltype(auto) create(const TProvider& provider) const noexcept {
             if (!get_instance()) {
                 get_instance().reset(provider.get());
             }
@@ -33,8 +31,8 @@ public:
         }
 
     private:
-        static result_type& get_instance() noexcept {
-            static result_type object;
+        static wrappers::shared<T>& get_instance() noexcept {
+            static wrappers::shared<T> object;
             return object;
         }
     };
