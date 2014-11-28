@@ -7,14 +7,12 @@
 #ifndef BOOST_DI_SCOPES_EXTERNAL_HPP
 #define BOOST_DI_SCOPES_EXTERNAL_HPP
 
+#include "boost/di/aux_/type_traits.hpp"
+
 #include "boost/di/wrappers/value.hpp"
 #include "boost/di/wrappers/shared.hpp"
 #include "boost/di/wrappers/reference.hpp"
 #include "boost/di/aux_/type_traits.hpp"
-
-#include <boost/ref.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/utility/enable_if.hpp>
 
 namespace boost {
 namespace di {
@@ -58,10 +56,10 @@ public:
 
     template<class T>
     class scope<T
-              , typename enable_if_c<
+              , aux::enable_if_t<
                      has_call_operator<T>::value &&
                     !has_lambda<T, fwd::injector&>::value
-                >::type>
+                >>
     {
     public:
         explicit scope(const T& object) noexcept

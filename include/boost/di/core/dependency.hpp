@@ -16,13 +16,6 @@
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/named.hpp"
 
-#include <boost/utility/enable_if.hpp>
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/not.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/has_xxx.hpp>
-
 namespace boost {
 namespace di {
 namespace core {

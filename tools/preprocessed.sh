@@ -48,7 +48,6 @@ guard_begin() {
     echo "#ifndef BOOST_DI_HPP"
     echo "#define BOOST_DI_HPP"
     echo
-    echo "#include \"boost/di/aux_/config.hpp\""
     echo "#include \"boost/di/inject.hpp\""
     echo
     echo "#if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)"
@@ -59,7 +58,9 @@ guard_begin() {
     echo "// scopes"
     echo "#include \"boost/di/scopes/deduce.hpp\""
     echo "#include \"boost/di/scopes/external.hpp\""
+    echo "#include \"boost/di/scopes/exposed.hpp\""
     echo "#include \"boost/di/scopes/session.hpp\""
+    echo "#include \"boost/di/scopes/singleton.hpp\""
     echo "#include \"boost/di/scopes/shared.hpp\""
     echo "#include \"boost/di/scopes/unique.hpp\""
     echo
@@ -83,7 +84,6 @@ guard_end() {
 }
 
 includes() {
-    echo -e "#include \"boost/di/aux_/config.hpp\"" >> $tmp_dir/includes.hpp
     cat $tmp_dir/includes.hpp | sort -u -r
 }
 

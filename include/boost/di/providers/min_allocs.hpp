@@ -7,9 +7,9 @@
 #ifndef BOOST_DI_PROVIDERS_MIN_ALLOCS_HPP
 #define BOOST_DI_PROVIDERS_MIN_ALLOCS_HPP
 
-#include <utility>
 #include <new>
-#include <boost/di/aux_/utility.hpp>
+#include <utility>
+#include "boost/di/aux_/utility.hpp"
 
 namespace boost {
 namespace di {
