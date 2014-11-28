@@ -19,16 +19,16 @@ class reference {
     reference& operator=(const reference&) = delete;
 
 public:
-    reference(T& value) // non explicit
+    reference(T& value) noexcept // non explicit
         : value_(value)
     { }
 
-    T& operator()(const type<T&>&) const {
+    inline T& operator()(const type<T&>&) const noexcept {
         return value_;
     }
 
 private:
-    std::reference_wrapper<T> value_;
+    T& value_;
 };
 
 } // namespace wrappers

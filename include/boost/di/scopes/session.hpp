@@ -30,18 +30,18 @@ public:
 
     public:
         template<class TName>
-        void call(const session_entry<TName>&) {
+        void call(const session_entry<TName>&) noexcept {
             in_scope_ = true;
         }
 
         template<class TName>
-        void call(const session_exit<TName>&) {
+        void call(const session_exit<TName>&) noexcept {
             in_scope_ = false;
             object_.reset();
         }
 
         template<class, class TProvider>
-        result_type create(const TProvider& provider) {
+        result_type create(const TProvider& provider) const noexcept {
             if (in_scope_ && !object_) {
                 object_.reset(provider.get());
             }

@@ -22,7 +22,7 @@ public:
         void create3(int);
 
         template<class TExpected, class TProvider>
-        auto create(const TProvider& provider) {
+        auto create(const TProvider& provider) const noexcept {
             using scope = typename type_traits::scope_traits_t<TExpected>::template scope<T>;
             return scope{}.template create<T>(provider);
         }

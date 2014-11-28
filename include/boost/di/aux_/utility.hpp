@@ -53,28 +53,28 @@ using make_index_sequence = typename make_index_sequence_impl<N>::type;
 
 } // namespace aux
 
+template<class>
+struct type { };
+
 struct none_t {};
 
 template<class T, T>
 struct non_type { };
 
-template<class>
-struct type { };
+template<class, class>
+struct pair { };
+
+template<class T>
+struct no_decay { using type = T; };
+
+template<class... TArgs>
+struct inherit : TArgs... { };
 
 template<int N>
 using int_ = std::integral_constant<int, N>;
 
 template<bool N>
 using bool_ = std::integral_constant<bool, N>;
-
-template<class, class>
-struct pair { };
-
-template <class x>
-struct no_decay { using type = x; };
-
-template <class ...xs>
-struct inherit : xs... { };
 
 template<class...>
 struct type_list {

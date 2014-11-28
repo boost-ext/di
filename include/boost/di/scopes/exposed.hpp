@@ -18,14 +18,14 @@ public:
 
     template<class T>
     struct provider {
-        provider() {}
+        provider() noexcept {}
 
         template<typename TProvider>
-        explicit provider(const TProvider& provider)
-            : f([&]{ return provider.get(); })
+        explicit provider(const TProvider& provider) noexcept
+            : f([=]{ return provider.get(); })
         { }
 
-        T* get() const { return f(); }
+        T* get() const noexcept { return f(); }
 
         std::function<T*()> f;
     };
@@ -35,15 +35,15 @@ public:
     public:
         void create3();
 
-        scope() {}
+        scope() noexcept { }
 
         template<class TProvider>
-        explicit scope(const TProvider& provider)
+        explicit scope(const TProvider& provider) noexcept
             : provider_{provider}
         { }
 
         template<class TExpected>
-        auto create() {
+        auto create() const noexcept {
             using scope = typename type_traits::scope_traits_t<TExpected>::template scope<T>;
             return scope{}.template create<T>(provider_);
         }

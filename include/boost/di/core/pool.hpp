@@ -23,32 +23,32 @@ template<class... TArgs>
 class pool<type_list<TArgs...>> : public TArgs... {
 public:
     template<class... Ts>
-    explicit pool(const Ts&... args)
+    explicit pool(const Ts&... args) noexcept
         : Ts(args)...
     { }
 
     template<class TPool>
-    pool(const TPool& p, const init&)
+    pool(const TPool& p, const init&) noexcept
         : pool(get<TArgs>(p)...)
     { }
 
     template<class T>
-    inline const T& get() const {
+    inline const T& get() const noexcept {
         return static_cast<const T&>(*this);
     }
 
 private:
     template<class T, class TPool>
     aux::enable_if_t<std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}, T>
-    inline get(const TPool& p) const { return p.template get<T>(); }
+    inline get(const TPool& p) const noexcept { return p.template get<T>(); }
 
     template<class T, class TPool>
     aux::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, T>
-    inline get(const TPool&) const { return {}; }
+    inline get(const TPool&) const noexcept { return {}; }
 
     template<class T, class TPool>
     aux::enable_if_t<!std::is_base_of<T, pool>{}, const T&>
-    inline get(const TPool&) const { return {}; }
+    inline get(const TPool&) const noexcept { return {}; }
 };
 
 } // namespace core

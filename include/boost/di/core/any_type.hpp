@@ -37,12 +37,12 @@ class any_type {
 public:
     using any = any_type;
 
-    any_type() { }
+    any_type() noexcept { }
 
-    any_type(TInjector& creator
+    any_type(const TInjector& creator
            , const TProvider& provider
            , TRefs& refs
-           , const TVisitors& visitors)
+           , const TVisitors& visitors) noexcept
         : creator_(creator)
         , provider_(provider)
         , refs_(refs)
@@ -50,22 +50,22 @@ public:
     { }
 
     template<class U, class = is_not_same_t<U>>
-    operator const U&() const {
+    operator const U&() const noexcept {
         return creator_.template create<const U&, T>(provider_, refs_, visitors_);
     }
 
     template<class U, class = is_not_same_t<U>>
-    operator U&() const {
+    operator U&() const noexcept {
         return creator_.template create<U&, T>(provider_, refs_, visitors_);
     }
 
     template<class U, class = is_not_same_t<U>>
-    operator U() {
+    operator U() noexcept {
         return creator_.template create<U, T>(provider_, refs_, visitors_);
     }
 
 private:
-    ref_type_t<TInjector, TInjector&> creator_;
+    ref_type_t<TInjector, const TInjector&> creator_;
     ref_type_t<TProvider, const TProvider&> provider_;
     ref_type_t<TRefs, TRefs&> refs_;
     ref_type_t<TVisitors, const TVisitors&> visitors_;

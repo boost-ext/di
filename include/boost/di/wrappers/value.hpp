@@ -16,38 +16,38 @@ namespace wrappers {
 template<class T>
 class value {
 public:
-    value(const T& value) // non explicit
+    value(const T& value) noexcept // non explicit
         : value_(value)
     { }
 
-    T operator()(const type<T>&) const {
+    inline T operator()(const type<T>&) const noexcept {
         return value_;
     }
 
-    T* operator()(const type<T*>&) const {
+    inline T* operator()(const type<T*>&) const noexcept {
         return new T(value_);
     }
 
-    const T* operator()(const type<const T*>&) const {
+    inline const T* operator()(const type<const T*>&) const noexcept {
         return new T(value_);
     }
 
-    T&& operator()(const type<T&&>&) {
+    inline T&& operator()(const type<T&&>&) noexcept {
         return std::move(value_);
     }
 
     template<class I>
-    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I>>&) const {
+    inline aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I>>&) const noexcept {
         return aux::shared_ptr<I>(new I(value_));
     }
 
     template<class I>
-    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I>>&) const {
+    inline aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I>>&) const noexcept {
         return aux_::shared_ptr<I>(new I(value_));
     }
 
     template<class I>
-    aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I>>&) const {
+    inline aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I>>&) const noexcept {
         return aux::unique_ptr<I>(new I(value_));
     }
 

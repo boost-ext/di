@@ -28,7 +28,7 @@
 #include "boost/di/make_injector.hpp"
 
 //providers
-#include "boost/di/providers/nothrow.hpp"
+#include "boost/di/providers/min_allocs.hpp"
 
 #endif
 

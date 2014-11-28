@@ -25,7 +25,7 @@ public:
         void create3(int);
 
         template<class, class TProvider>
-        result_type create(const TProvider& provider) {
+        result_type create(const TProvider& provider) const noexcept {
             if (!get_instance()) {
                 get_instance().reset(provider.get());
             }
@@ -33,7 +33,7 @@ public:
         }
 
     private:
-        static result_type& get_instance() {
+        static result_type& get_instance() noexcept {
             static result_type object;
             return object;
         }

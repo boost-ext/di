@@ -21,8 +21,7 @@ namespace di {
 
 namespace fwd {
 struct injector {
-    template<class T>
-    T create();
+    template<class T> T create();
 };
 } // namespace fwd
 
@@ -45,14 +44,14 @@ public:
         using result_type = wrappers::value<T>;
 
     public:
-        explicit scope(const T& object)
+        explicit scope(const T& object) noexcept
             : object_(object)
         { }
 
         void create3();
 
         template<class>
-        result_type create() {
+        result_type create() const noexcept {
             return object_;
         }
 
@@ -70,14 +69,14 @@ public:
         using result_type = wrappers::value<T>;
 
     public:
-        explicit scope(const T& object)
+        explicit scope(const T& object) noexcept
             : object_(object)
         { }
 
         void create3();
 
         template<class>
-        result_type create() {
+        result_type create() const noexcept {
             return object_();
         }
 
@@ -92,11 +91,11 @@ public:
         scope& operator=(const scope&) = delete;
 
     public:
-        explicit scope(const T& object)
+        explicit scope(const T& object) noexcept
             : given_(object)
         { }
 
-        scope(const scope& other)
+        scope(const scope& other) noexcept
             : given_(other.given_)
         { }
 
@@ -106,7 +105,7 @@ public:
         void create3();
 
         template<class TInjector>
-        result_type create_(TInjector& injector) {
+        result_type create_(TInjector& injector) const noexcept {
             return (given_)(injector);
         }
 

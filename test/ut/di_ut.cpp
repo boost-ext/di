@@ -44,7 +44,7 @@ test named_params = [] {
 	);
 	expect(0 == injector.create<int>());
 	expect(i == injector.create<di::named<int, name>>());
-	//expect(i == injector.create<const di::named<int, name>&>());
+    //expect(i == injector.create<const di::named<int, name>&>());
 };
 
 test any_of = [] {
@@ -189,9 +189,15 @@ test exposed_type_by_component_mix = [] {
         component2{}
     );
 
-    //auto object = injector.create<std::shared_ptr<complex3>>();
+    {
     auto object = injector.create<std::shared_ptr<complex2>>();
     expect(object.get());
+    }
+
+    {
+    auto object = injector.create<std::shared_ptr<complex3>>();
+    expect(object.get());
+    }
 };
 
 test scopes_priority = [] { };

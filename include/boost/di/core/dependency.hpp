@@ -58,30 +58,30 @@ public:
     using given = TGiven;
     using name = TName;
 
-    dependency() { }
+    dependency() noexcept { }
 
     template<class T>
-    explicit dependency(T&& object)
+    explicit dependency(T&& object) noexcept
         : TScope::template scope<TGiven>(std::forward<T>(object))
     { }
 
     template<class T, class TInjector>
-    dependency(T&& object, TInjector& injector)
+    dependency(T&& object, TInjector& injector) noexcept
         : TScope::template scope<TGiven>(std::forward<T>(object), injector)
     { }
 
     template<class T>
-    auto named(const T&) {
+    auto named(const T&) const noexcept {
         return dependency<TScope, TExpected, TGiven, T>{};
     }
 
     template<class T>
-    auto in(const T&) {
+    auto in(const T&) const noexcept {
         return dependency<T, TExpected, TGiven, TName>{};
     }
 
     template<class T>
-    auto to(T&& object) {
+    auto to(T&& object) const noexcept {
         return dependency<scopes::external<T>, TExpected, TExpected, TName>{std::forward<T>(object)};
     }
 };

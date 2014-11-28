@@ -15,7 +15,7 @@
 #include "boost/di/core/pool.hpp"
 #include "boost/di/core/any_type.hpp"
 #include "boost/di/core/binder.hpp"
-#include "boost/di/providers/nothrow.hpp"
+#include "boost/di/providers/min_allocs.hpp"
 #include "boost/di/wrappers/universal.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/scopes/exposed.hpp"
@@ -69,7 +69,7 @@ struct add_type_list<T, std::false_type, std::false_type> {
 template<class... Ts>
 using bindings_t = typename join<typename add_type_list<Ts>::type...>::type;
 
-template<class TDeps = type_list<>, typename TDefaultProvider = providers::nothrow>
+template<class TDeps = type_list<>, typename TDefaultProvider = providers::min_allocs>
 class injector : public pool<TDeps> {
     template<class, class, class, class, class> friend class any_type;
 
@@ -97,12 +97,12 @@ class injector : public pool<TDeps> {
       , class... TArgs
     >
     struct provider<T, TDependency, TProvider, TRefs, TVisitors, type_list<TArgs...>> {
-        injector& injector_;
+        const injector& injector_;
         const TProvider& provider_;
         TRefs& refs_;
         const TVisitors& visitors_;
 
-        auto get() const {
+        decltype(auto) get() const noexcept {
             return provider_.template get<TDependency>(
                 injector_.create<TArgs, T>(provider_, refs_, visitors_)...
             );
@@ -117,37 +117,37 @@ public:
     // dependency<...>  -> pass
 
     template<class... TArgs>
-    injector(const TArgs&... args)
+    injector(const TArgs&... args) noexcept
         : injector(init{}, pass_arg(args)...)
     { }
 
     template<class T>
-    injector(injector<T> injector) // non explicit
+    injector(injector<T> injector) noexcept // non explicit
         : pool_t(create(injector, TDeps{}), init{})
     { }
 
     template<class T, class... TArgs>
-    T create(const TArgs&... args) {
+    T create(const TArgs&... args) const noexcept {
         pool<type_list<TArgs...>> visitors(args...);
         std::vector<aux::shared_ptr<void>> refs_;
         return create<T, none_t>(TDefaultProvider{}, refs_, visitors);
     }
 
     template<class T, class TProvider, class... TArgs>
-    T provide(const TProvider& provider, const TArgs&... args) {
+    T provide(const TProvider& provider, const TArgs&... args) const noexcept {
         pool<type_list<TArgs...>> visitors(args...);
         std::vector<aux::shared_ptr<void>> refs_;
         return create<T, none_t>(provider, refs_, visitors);
     }
 
     template<class TAction>
-    void call(const TAction& action) {
+    void call(const TAction& action) const noexcept {
         call_impl(static_cast<pool<deps>&>(*this), action, deps{});
     }
 
 private:
     template<class... TArgs>
-    injector(const init&, const TArgs&... args)
+    injector(const init&, const TArgs&... args) noexcept
         : pool_t(pool<type_list<TArgs...>>(args...), init{})
     { }
 
@@ -159,7 +159,7 @@ private:
       , class TVisitors
     >
     aux::enable_if_t<has_any<T>::value , any_type<TParent, injector, TProvider, TRefs, TVisitors> >
-    create(const TProvider& provider, TRefs& refs, const TVisitors& visitors) {
+    create(const TProvider& provider, TRefs& refs, const TVisitors& visitors) const noexcept {
         return any_type<TParent, injector, TProvider, TRefs, TVisitors>(
             *this, provider, refs, visitors
         );
@@ -173,7 +173,7 @@ private:
       , class TVisitors
     >
     aux::enable_if_t<!has_any<T>::value, wrappers::universal<T>>
-    create(const TProvider& provider, TRefs& refs, const TVisitors& visitors) {
+    create(const TProvider& provider, TRefs& refs, const TVisitors& visitors) const noexcept {
         using dependency = typename binder<pool_t>::template resolve<T>;
         return create_impl<T, dependency>(provider, refs, visitors);
     }
@@ -190,8 +190,8 @@ private:
         !has_create2<TDependency>::value
       , wrappers::universal<T>
     >
-    create_impl(const TProvider&, TRefs& refs, const TVisitors&) {
-        return {refs, acquire<TDependency>(static_cast<pool_t&>(*this)).template create<T>()};
+    create_impl(const TProvider&, TRefs& refs, const TVisitors&) const noexcept {
+        return {refs, acquire<TDependency>(static_cast<const pool_t&>(*this)).template create<T>()};
     }
 
     template<
@@ -206,8 +206,8 @@ private:
         has_create2<TDependency>::value
       , wrappers::universal<T>
     >
-    create_impl(const TProvider&, TRefs& refs, const TVisitors&) {
-        return {refs, acquire<TDependency>(static_cast<pool_t&>(*this)).create_(*this)};
+    create_impl(const TProvider&, TRefs& refs, const TVisitors&) const noexcept {
+        return {refs, acquire<TDependency>(static_cast<const pool_t&>(*this)).create_(*this)};
     }
 
     template<
@@ -222,76 +222,78 @@ private:
         !has_create2<TDependency>::value
       , wrappers::universal<T>
     >
-    create_impl(const TProvider& provider_, TRefs& refs, const TVisitors& visitors) {
+    create_impl(const TProvider& provider_, TRefs& refs, const TVisitors& visitors) const noexcept {
         using ctor = typename type_traits::ctor_traits<typename TDependency::given>::type;
-        return { refs, acquire<TDependency>(static_cast<pool_t&>(*this)).template create<T>(
+        return { refs, acquire<TDependency>(static_cast<const pool_t&>(*this)).template create<T>(
             provider<T, TDependency, TProvider, TRefs, TVisitors, ctor>{*this, provider_, refs, visitors}
         )};
     }
 
     template<class T, class... TVisitors>
-    static void assert_visitors(const pool<type_list<TVisitors...>>& visitors) {
+    static void assert_visitors(const pool<type_list<TVisitors...>>& visitors) noexcept {
         int dummy[]{0, (assert_policy<TVisitors, T>(visitors), 0)...};
         (void)dummy;
     }
 
     template<class TPolicy, class T, class TVisitors>
-    static void assert_policy(const TVisitors& visitors) {
+    static void assert_policy(const TVisitors& visitors) noexcept {
         static_cast<const TPolicy&>(visitors).template assert_policy<T>();
     }
 
     template<class TDependency, class TDeps_>
-    aux::enable_if_t<std::is_base_of<TDependency, TDeps_>{}, TDependency&>
-    acquire(TDeps_& deps) {
-        return static_cast<TDependency&>(deps);
+    aux::enable_if_t<std::is_base_of<TDependency, TDeps_>{}, const TDependency&>
+    acquire(TDeps_& deps) const noexcept {
+        return static_cast<const TDependency&>(deps);
     }
 
     template<class TDependency, class TDeps_>
     aux::enable_if_t<!std::is_base_of<TDependency, TDeps_>{}, TDependency>
-    acquire(TDeps_&) {
+    acquire(TDeps_&) const noexcept {
         return TDependency{};
     }
 
     template<class TDeps_, class TAction, class... Ts>
-    void call_impl(TDeps_& deps, const TAction& action, const type_list<Ts...>&) {
+    void call_impl(TDeps_& deps, const TAction& action, const type_list<Ts...>&) const noexcept {
         int dummy[]{0, (call_impl<Ts>(deps, action), 0)...};
         (void)dummy;
     }
 
     template<class T, class TDeps_, class TAction>
-    aux::enable_if_t<has_call<T, TAction>::value> call_impl(TDeps_& deps, const TAction& action) {
+    aux::enable_if_t<has_call<T, TAction>::value>
+    call_impl(TDeps_& deps, const TAction& action) const noexcept {
         static_cast<T&>(deps).call(action);
     }
 
     template<class T, class TDeps_, class TAction>
-    aux::enable_if_t<!has_call<T, TAction>::value> call_impl(TDeps_&, const TAction&) { }
+    aux::enable_if_t<!has_call<T, TAction>::value>
+    call_impl(TDeps_&, const TAction&) const noexcept { }
 
     template<class T>
-    const auto& pass_arg(const T& arg, aux::enable_if_t<!has_configure<T>::value>* = 0) const {
+    decltype(auto) pass_arg(const T& arg, aux::enable_if_t<!has_configure<T>::value>* = 0) const noexcept {
         return arg;
     }
 
     template<class T>
-    auto pass_arg(const T& arg, aux::enable_if_t<has_configure<T>{}>* = 0) const {
+    decltype(auto) pass_arg(const T& arg, aux::enable_if_t<has_configure<T>{}>* = 0) const noexcept {
         return arg.configure();
     }
 
     template<class T, class... Ts>
-    auto create(injector<T>& injector, const type_list<Ts...>&) {
+    decltype(auto) create(const injector<T>& injector, const type_list<Ts...>&) const noexcept {
         return pool<TDeps>(create_impl<Ts>(injector)...);
     }
 
     template<class TInjector, class TDependency>
     struct provider_ {
-        TInjector& injector_;
+        TInjector injector_;
 
-        auto get() const {
+        decltype(auto) get() const noexcept {
             return injector_.template create<typename TDependency::given*>();
         }
     };
 
     template<class TDependency, class TInjector>
-    auto create_impl(TInjector& injector) {
+    decltype(auto) create_impl(const TInjector& injector) const noexcept {
         return TDependency{provider_<TInjector, TDependency>{injector}};
     }
 };

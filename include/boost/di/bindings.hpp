@@ -21,7 +21,7 @@ template<class TExpected, class TGiven = TExpected>
 core::dependency<scopes::deduce, TExpected, TGiven> bind{};
 
 template<class TName>
-constexpr scopes::session<TName> session(const TName&) { return {}; }
+constexpr scopes::session<TName> session(const TName&) noexcept { return {}; }
 
 extern constexpr scopes::deduce deduce{};
 extern constexpr scopes::unique unique{};

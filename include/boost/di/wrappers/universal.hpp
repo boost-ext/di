@@ -26,7 +26,7 @@ using is_convertible_to_ref = has_call_operator<TValueType, const T&(TValueType:
 
 template<class TResult, class T, class TWrapper>
 inline aux::enable_if_t<!std::is_copy_constructible<T>{}, const TResult&>
-copy(std::vector<aux::shared_ptr<void>>& refs, const TWrapper& wrapper) {
+copy(std::vector<aux::shared_ptr<void>>& refs, const TWrapper& wrapper) noexcept {
     aux::shared_ptr<TResult> object(wrapper(type<T*>()));
     refs.push_back(object);
     return *object;
@@ -34,7 +34,7 @@ copy(std::vector<aux::shared_ptr<void>>& refs, const TWrapper& wrapper) {
 
 template<class T>
 struct holder {
-    explicit holder(const T& wrapper)
+    explicit holder(const T& wrapper) noexcept
         : held(wrapper)
     { }
 
@@ -43,7 +43,7 @@ struct holder {
 
 template<class TResult, class T, class TWrapper>
 inline aux::enable_if_t<std::is_copy_constructible<T>{}, const TResult&>
-copy(std::vector<aux::shared_ptr<void>>& refs, const TWrapper& wrapper) {
+copy(std::vector<aux::shared_ptr<void>>& refs, const TWrapper& wrapper) noexcept {
     aux::shared_ptr<holder<TResult>> object(new holder<TResult>(wrapper(type<T>())));
     refs.push_back(object);
     return object->held;
@@ -53,15 +53,15 @@ template<class T>
 class universal_impl {
 public:
     template<class TWrapper>
-    universal_impl(std::vector<aux::shared_ptr<void>>&, const TWrapper& wrapper)
+    universal_impl(std::vector<aux::shared_ptr<void>>&, const TWrapper& wrapper) noexcept
         : object_(wrapper(type<T>()))
     { }
 
-    operator T() const {
+    inline operator T() const noexcept {
         return object_;
     }
 
-	operator T&&() {
+	inline operator T&&() noexcept {
 		return std::move(object_);
 	}
 
@@ -75,18 +75,18 @@ public:
     template<class TWrapper>
     universal_impl(std::vector<aux::shared_ptr<void>>&
                  , const TWrapper& wrapper
-                 , aux::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0)
+                 , aux::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
         : object_(wrapper(type<const T&>()))
     { }
 
     template<class TWrapper>
     universal_impl(std::vector<aux::shared_ptr<void>>& refs
                  , const TWrapper& wrapper
-                 , aux::enable_if_t<!is_convertible_to_ref<TWrapper, T>{}>* = 0)
+                 , aux::enable_if_t<!is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
         : object_(copy<T, T, TWrapper>(refs, wrapper))
     { }
 
-    operator const T&() const {
+    inline operator const T&() const noexcept {
         return object_;
     }
 
@@ -98,15 +98,15 @@ template<class T, class TName>
 class universal_impl<named<T, TName>> {
 public:
     template<class TWrapper>
-    universal_impl(std::vector<aux::shared_ptr<void>>&, const TWrapper& wrapper)
+    universal_impl(std::vector<aux::shared_ptr<void>>&, const TWrapper& wrapper) noexcept
         : object_(wrapper(type<T>()))
     { }
 
-    operator T() const {
+    inline operator T() const noexcept {
         return object_;
     }
 
-    operator named<T, TName>() const {
+    inline operator named<T, TName>() const noexcept {
         return object_;
     }
 
@@ -120,18 +120,18 @@ public:
     template<class TWrapper>
     universal_impl(std::vector<aux::shared_ptr<void>>&
                  , const TWrapper& wrapper
-                 , aux::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0)
+                 , aux::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
         : object_(wrapper(type<const T&>()))
     { }
 
     template<class TWrapper>
     universal_impl(std::vector<aux::shared_ptr<void>>& refs
                  , const TWrapper& wrapper
-                 , aux::enable_if_t<!is_convertible_to_ref<TWrapper, T>{}>* = 0)
+                 , aux::enable_if_t<!is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
         : object_(copy<T, T, TWrapper>(refs, wrapper))
     { }
 
-    operator named<const T&, TName>() const {
+    inline operator named<const T&, TName>() const noexcept {
         return object_;
     }
 
@@ -144,11 +144,11 @@ class universal_impl<const named<T, TName>&> {
 public:
     template<class TWrapper>
     universal_impl(std::vector<aux::shared_ptr<void>>& refs
-                 , const TWrapper& wrapper)
+                 , const TWrapper& wrapper) noexcept
         : object_(copy<named<T, TName>, T, TWrapper>(refs, wrapper))
     { }
 
-    operator const named<T, TName>&() const {
+    inline operator const named<T, TName>&() const noexcept {
         return object_;
     }
 
@@ -164,7 +164,7 @@ public:
     template<class TWrapper>
     universal_impl(std::vector<aux::shared_ptr<void>>& refs
                  , const TWrapper& wrapper
-                 , aux::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0)
+                 , aux::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
         : refs_(refs)
         , object_(wrapper(type<const T&>()))
     { }
@@ -172,12 +172,12 @@ public:
     template<class TWrapper>
     universal_impl(std::vector<aux::shared_ptr<void>>& refs
                  , const TWrapper& wrapper
-                 , aux::enable_if_t<!is_convertible_to_ref<TWrapper, T>{}>* = 0)
+                 , aux::enable_if_t<!is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
         : refs_(refs)
         , object_(copy<T, T, TWrapper>(refs, wrapper))
     { }
 
-    operator const named<const T&, TName>&() const {
+    inline operator const named<const T&, TName>&() const noexcept {
         aux::shared_ptr<holder<named<const T&, TName>>> object(
             new holder<named<const T&, TName>>(object_)
         );

@@ -23,7 +23,9 @@ public:
         void create3(int);
 
         template<class, class TProvider>
-        wrappers::copy<T*> create(const TProvider& provider) { return provider.get(); }
+        wrappers::copy<T*> create(const TProvider& provider) const noexcept {
+            return provider.get();
+        }
     };
 };
 

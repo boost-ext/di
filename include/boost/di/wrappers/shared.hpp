@@ -29,31 +29,31 @@ class shared {
 public:
     shared() { }
 
-    shared(const aux::shared_ptr<T>& value) // non explicit
+    shared(const aux::shared_ptr<T>& value) noexcept // non explicit
         : value_(value)
     { }
 
-    bool operator!() const {
+    inline bool operator!() const noexcept {
         return !value_;
     }
 
-    void reset(T* ptr = 0) {
+    inline void reset(T* ptr = 0) noexcept {
         return value_.reset(ptr);
     }
 
     template<class I>
-    aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I>>&) const {
+    inline aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I>>&) const noexcept {
         return value_;
     }
 
     template<class I>
-    aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I>>&) const {
+    inline aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I>>&) const noexcept {
         aux_::shared_ptr<sp_holder<T>> sp(new sp_holder<T>(value_));
         return aux_::shared_ptr<T>(sp, value_.get());
     }
 
     template<class I>
-    aux::weak_ptr<I> operator()(const type<aux::weak_ptr<I>>&) const {
+    inline aux::weak_ptr<I> operator()(const type<aux::weak_ptr<I>>&) const noexcept {
         return value_;
     }
 
