@@ -228,7 +228,7 @@ public:
 
     template<class I>
     inline I operator()(const type<I>&, aux::enable_if_t<!std::is_polymorphic<I>::value>* = 0) const noexcept {
-  std::unique_ptr<I> ptr(value_);
+  aux::unique_ptr<I> ptr(value_);
   return *ptr;
     }
 
@@ -1502,7 +1502,7 @@ private:
       , class TRefs
       , class TVisitors
     >
-    aux::enable_if_t<has_any<T>::value , any_type<TParent, injector, TProvider, TRefs, TVisitors> >
+    aux::enable_if_t<has_any<T>::value , any_type<TParent, injector, TProvider, TRefs, TVisitors>>
     create_impl(const TProvider& provider, TRefs& refs, const TVisitors& visitors) const noexcept {
         return any_type<TParent, injector, TProvider, TRefs, TVisitors>(
             *this, provider, refs, visitors
@@ -1569,6 +1569,7 @@ private:
     create_from_dep_impl(const TProvider& provider_, TRefs& refs, const TVisitors& visitors) const noexcept {
         using ctor = typename type_traits::ctor_traits<typename TDependency::given>::type;
         return { refs, acquire<TDependency>(static_cast<const pool_t&>(*this)).template create<T>(
+            provider<T, TDependency, TProvider, TVisitors, ctor>{*this, provider_, visitors}
         )};
     }
 

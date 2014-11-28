@@ -64,7 +64,7 @@ public:
 
     template<class I>
     inline I operator()(const type<I>&, aux::enable_if_t<!std::is_polymorphic<I>::value>* = 0) const noexcept {
-		std::unique_ptr<I> ptr(value_);
+		aux::unique_ptr<I> ptr(value_);
 		return *ptr;
     }
 
