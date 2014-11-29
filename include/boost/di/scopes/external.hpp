@@ -16,13 +16,6 @@
 
 namespace boost {
 namespace di {
-
-namespace fwd {
-struct injector {
-    template<class T> T create();
-};
-} // namespace fwd
-
 namespace scopes {
 
 BOOST_DI_HAS_TYPE(result_type);
@@ -33,6 +26,10 @@ using has_lambda = bool_<has_call_operator<T, U>::value && !has_result_type<T>::
 
 template<class TT>
 class external {
+    struct injector {
+        template<class T> T create();
+    };
+
 public:
     static constexpr auto priority = 1; // 0 - lowest, N - highest
 
@@ -58,7 +55,7 @@ public:
     class scope<T
               , aux::enable_if_t<
                      has_call_operator<T>::value &&
-                    !has_lambda<T, fwd::injector&>::value
+                    !has_lambda<T, injector&>::value
                 >>
     {
     public:
@@ -78,7 +75,7 @@ public:
     };
 
     template<class T>
-    class scope<T, aux::enable_if_t<has_lambda<T, fwd::injector&>{}>>
+    class scope<T, aux::enable_if_t<has_lambda<T, injector&>{}>>
     {
         scope& operator=(const scope&) = delete;
 
