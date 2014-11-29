@@ -200,12 +200,13 @@ test scopes_priority = [] {
     auto injector = di::make_injector(
         di::bind<int>.to(41)
       , di::bind<int>.to([]{return 42;})
+      //, di::bind<int>.to(40)
     );
 
     expect_eq(42, injector.create<int>());
 };
 
-test scopes_injector = [] {
+test scopes_injector_lambda_injector = [] {
     constexpr short s = 42;
     auto injector = di::make_injector(
         di::bind<short>.to(s)
@@ -213,5 +214,15 @@ test scopes_injector = [] {
     );
 
     expect_eq(s, injector.create<int>());
+};
+
+test scopes_external_ref = [] {
+    int i = 42;
+
+    auto injector = di::make_injector(
+        di::bind<int>.to(i) //ref
+    );
+
+    (void)injector;
 };
 
