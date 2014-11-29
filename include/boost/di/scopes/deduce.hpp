@@ -14,7 +14,7 @@ namespace scopes {
 
 class deduce {
 public:
-    static constexpr auto priority = 0; // 0 - lowest, N - highest
+    static constexpr auto priority = false;
 
     template<class TExpected, class T>
     class scope {

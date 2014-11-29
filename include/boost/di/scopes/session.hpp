@@ -23,7 +23,7 @@ class session_exit { };
 template<class = no_name>
 class session {
 public:
-    static constexpr auto priority = 0; // 0 - lowest, N - highest
+    static constexpr auto priority = false;
 
     template<class, class T>
     class scope {

@@ -216,9 +216,19 @@ test exposed_type_by_component_mix = [] {
 
 test scopes_priority = [] {
     auto injector = di::make_injector(
+        di::bind<int>.to(12)
+      , di::bind<int, di::int_<42>>
+    );
+
+    auto object = injector.create<int>();
+
+    expect_eq(12, object);
+};
+
+test scopes_order = [] {
+    auto injector = di::make_injector(
         di::bind<int>.to(41)
       , di::bind<int>.to([]{return 42;})
-      //, di::bind<int>.to(40)
     );
 
     expect_eq(42, injector.create<int>());

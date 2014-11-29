@@ -37,12 +37,13 @@ template<
   , class TExpected
   , class TGiven = TExpected
   , class TName = no_name
+  , bool  TPriority = TScope::priority
 >
 class dependency
     : public TScope::template scope<TExpected, TGiven>
     , public dependency_impl<
           dependency_concept<TExpected, TName>
-        , dependency<TScope, TExpected, TGiven, TName>
+        , dependency<TScope, TExpected, TGiven, TName, TPriority>
       > {
 public:
     using type = dependency;
@@ -75,7 +76,8 @@ public:
 
     template<class T>
     auto to(T&& object) const noexcept {
-        return dependency<scopes::external, TExpected, aux::remove_accessors_t<T>, TName>{std::forward<T>(object)};
+        using dep = dependency<scopes::external, TExpected, aux::remove_accessors_t<T>, TName>;
+        return dep{std::forward<T>(object)};
     }
 };
 

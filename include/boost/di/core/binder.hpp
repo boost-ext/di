@@ -31,6 +31,21 @@ struct binder {
     template<class T>
     using get_name_t = typename get_name<T>::type;
 
+    template<class TDefault, class>
+    static no_decay<TDefault> lookup(...);
+
+    template<class, class TKey, class TValue>
+    static no_decay<TValue> lookup(pair<TKey, TValue>*);
+
+    template<class, class TKey, class TScope, class TExpected , class TGiven, class TName>
+    static no_decay<dependency<TScope, TExpected, TGiven, TName, true>> lookup(pair<TKey, dependency<TScope, TExpected, TGiven, TName, true>>*);
+
+    template<class TDefault, class TKey, class T>
+    using at_key = decltype(lookup<TDefault, TKey>((T*)nullptr));
+
+    template<class TDefault, class TKey, class T>
+    using at_key_t = typename at_key<TDefault, TKey, T>::type;
+
     template<class T, class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>>
     using resolve = at_key_t<
         TDefault

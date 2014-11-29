@@ -31,7 +31,7 @@ class external {
     };
 
 public:
-    static constexpr auto priority = 1; // 0 - lowest, N - highest
+    static constexpr auto priority = true;
 
     template<class TT, class T, class = void>
     class scope {
