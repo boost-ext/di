@@ -8,23 +8,24 @@
 #define BOOST_DI_SCOPES_SESSION_HPP
 
 #include "boost/di/wrappers/shared.hpp"
+#include "boost/di/named.hpp"
 
 namespace boost {
 namespace di {
 namespace scopes {
 
-template<class>
+template<class = no_name>
 class session_entry { };
 
-template<class>
+template<class = no_name>
 class session_exit { };
 
-template<class>
+template<class = no_name>
 class session {
 public:
     static constexpr auto priority = 0; // 0 - lowest, N - highest
 
-    template<class T>
+    template<class, class T>
     class scope {
     public:
         template<class TName>

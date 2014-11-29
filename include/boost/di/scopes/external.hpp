@@ -24,16 +24,16 @@ BOOST_DI_HAS_METHOD(call_operator, operator());
 template<class T, class U>
 using has_lambda = bool_<has_call_operator<T, U>::value && !has_result_type<T>::value>;
 
-template<class TT>
 class external {
     struct injector {
-        template<class T> T create();
+        template<class T>
+        T create() const;
     };
 
 public:
     static constexpr auto priority = 1; // 0 - lowest, N - highest
 
-    template<class T, class = void>
+    template<class TT, class T, class = void>
     class scope {
     public:
         explicit scope(const T& object) noexcept
@@ -51,11 +51,11 @@ public:
         wrappers::value<T> object_;
     };
 
-    template<class T>
-    class scope<T
+    template<class TT, class T>
+    class scope<TT, T
               , aux::enable_if_t<
                      has_call_operator<T>::value &&
-                    !has_lambda<T, injector&>::value
+                    !has_lambda<T, const injector&>::value
                 >>
     {
     public:
@@ -74,8 +74,8 @@ public:
         T object_;
     };
 
-    template<class T>
-    class scope<T, aux::enable_if_t<has_lambda<T, injector&>{}>>
+    template<class TT, class T>
+    class scope<TT, T, aux::enable_if_t<has_lambda<T, const injector&>{}>>
     {
         scope& operator=(const scope&) = delete;
 
@@ -92,7 +92,7 @@ public:
         void create3(int);
 
         template<class TInjector>
-        wrappers::value<TT> create_(TInjector& injector) const noexcept {
+        wrappers::value<TT> create_(const TInjector& injector) const noexcept {
             return (given_)(injector);
         }
 

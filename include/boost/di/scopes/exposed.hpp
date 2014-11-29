@@ -31,7 +31,7 @@ public:
         std::function<T*()> f;
     };
 
-    template<class T>
+    template<class TExpected, class T>
     class scope {
     public:
         void create3();
@@ -43,10 +43,10 @@ public:
             : provider_{provider}
         { }
 
-        template<class TExpected>
+        template<class TDst>
         decltype(auto) create() const noexcept {
-            using scope = typename type_traits::scope_traits_t<TExpected>::template scope<T>;
-            return scope{}.template create<T>(provider_);
+            using scope = typename type_traits::scope_traits_t<TDst>::template scope<TExpected, T>;
+            return scope{}.template create<TDst>(provider_);
         }
 
     private:

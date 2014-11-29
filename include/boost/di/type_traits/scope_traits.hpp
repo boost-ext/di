@@ -24,7 +24,7 @@ struct scope_traits {
 
 template<class T>
 struct scope_traits<T&> {
-    using type = scopes::external<T&>;
+    using type = scopes::external;
 };
 
 template<class T>

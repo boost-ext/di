@@ -17,7 +17,7 @@ class singleton {
 public:
     static constexpr auto priority = 0; // 0 - lowest, N - highest
 
-    template<class T>
+    template<class, class T>
     class scope {
     public:
         void create3(int);

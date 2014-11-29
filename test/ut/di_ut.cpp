@@ -71,6 +71,24 @@ test any_of_with_scope = [] {
 	test(di::singleton, true);
 };
 
+test any_of_with_scope_split = [] {
+	auto test = [](auto scope, auto same) {
+		auto injector = di::make_injector(
+			di::bind<i1, impl1_2>.in(scope)
+	      , di::bind<i2, impl1_2>.in(scope)
+		);
+
+		auto object_1 = injector.template create<std::shared_ptr<i1>>();
+		auto object_2 = injector.template create<std::shared_ptr<i2>>();
+		auto result = dynamic_cast<impl1_2*>(object_1.get()) == dynamic_cast<impl1_2*>(object_2.get());
+		expect_eq(result, same);
+	};
+
+	test(di::unique, false);
+	test(di::shared, false);
+	test(di::singleton, false);
+};
+
 test any_of_unique = [] {
 	auto injector = di::make_injector(
 		di::bind<di::any_of<i1, i2>, impl1_2>.in(di::unique)
@@ -210,7 +228,7 @@ test scopes_injector_lambda_injector = [] {
     constexpr short s = 42;
     auto injector = di::make_injector(
         di::bind<short>.to(s)
-      , di::bind<int>.to([](auto& injector){ return injector.template create<short>(); })
+      , di::bind<int>.to([](const auto& injector){ return injector.template create<short>(); })
     );
 
     expect_eq(s, injector.create<int>());

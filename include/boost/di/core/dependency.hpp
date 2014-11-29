@@ -39,7 +39,7 @@ template<
   , class TName = no_name
 >
 class dependency
-    : public TScope::template scope<TGiven>
+    : public TScope::template scope<TExpected, TGiven>
     , public dependency_impl<
           dependency_concept<TExpected, TName>
         , dependency<TScope, TExpected, TGiven, TName>
@@ -55,12 +55,12 @@ public:
 
     template<class T>
     explicit dependency(T&& object) noexcept
-        : TScope::template scope<TGiven>(std::forward<T>(object))
+        : TScope::template scope<TExpected, TGiven>(std::forward<T>(object))
     { }
 
     template<class T, class TInjector>
-    dependency(T&& object, TInjector& injector) noexcept
-        : TScope::template scope<TGiven>(std::forward<T>(object), injector)
+    dependency(T&& object, const TInjector& injector) noexcept
+        : TScope::template scope<TExpected, TGiven>(std::forward<T>(object), injector)
     { }
 
     template<class T>
@@ -75,7 +75,7 @@ public:
 
     template<class T>
     auto to(T&& object) const noexcept {
-        return dependency<scopes::external<TExpected>, TExpected, aux::remove_accessors_t<T>, TName>{std::forward<T>(object)};
+        return dependency<scopes::external, TExpected, aux::remove_accessors_t<T>, TName>{std::forward<T>(object)};
     }
 };
 

@@ -273,7 +273,7 @@ class unique {
 public:
     static constexpr auto priority = 0; // 0 - lowest, N - highest
 
-    template<class T>
+    template<class, class T>
     class scope {
     public:
         void create3(int);
@@ -353,7 +353,7 @@ class singleton {
 public:
     static constexpr auto priority = 0; // 0 - lowest, N - highest
 
-    template<class T>
+    template<class, class T>
     class scope {
     public:
         void create3(int);
@@ -455,13 +455,6 @@ private:
 
 namespace boost {
 namespace di {
-
-namespace fwd {
-struct injector {
-    template<class T> T create();
-};
-} // namespace fwd
-
 namespace scopes {
 
 BOOST_DI_HAS_TYPE(result_type);
@@ -470,12 +463,16 @@ BOOST_DI_HAS_METHOD(call_operator, operator());
 template<class T, class U>
 using has_lambda = bool_<has_call_operator<T, U>::value && !has_result_type<T>::value>;
 
-template<class TT>
 class external {
+    struct injector {
+        template<class T>
+        T create() const;
+    };
+
 public:
     static constexpr auto priority = 1; // 0 - lowest, N - highest
 
-    template<class T, class = void>
+    template<class TT, class T, class = void>
     class scope {
     public:
         explicit scope(const T& object) noexcept
@@ -493,11 +490,11 @@ public:
         wrappers::value<T> object_;
     };
 
-    template<class T>
-    class scope<T
+    template<class TT, class T>
+    class scope<TT, T
               , aux::enable_if_t<
                      has_call_operator<T>::value &&
-                    !has_lambda<T, fwd::injector&>::value
+                    !has_lambda<T, const injector&>::value
                 >>
     {
     public:
@@ -516,8 +513,8 @@ public:
         T object_;
     };
 
-    template<class T>
-    class scope<T, aux::enable_if_t<has_lambda<T, fwd::injector&>{}>>
+    template<class TT, class T>
+    class scope<TT, T, aux::enable_if_t<has_lambda<T, const injector&>{}>>
     {
         scope& operator=(const scope&) = delete;
 
@@ -534,7 +531,7 @@ public:
         void create3(int);
 
         template<class TInjector>
-        wrappers::value<TT> create_(TInjector& injector) const noexcept {
+        wrappers::value<TT> create_(const TInjector& injector) const noexcept {
             return (given_)(injector);
         }
 
@@ -558,7 +555,7 @@ struct scope_traits {
 
 template<class T>
 struct scope_traits<T&> {
-    using type = scopes::external<T&>;
+    using type = scopes::external;
 };
 
 template<class T>
@@ -651,14 +648,14 @@ class deduce {
 public:
     static constexpr auto priority = 0; // 0 - lowest, N - highest
 
-    template<class T>
+    template<class TExpected, class T>
     class scope {
     public:
         void create3(int);
 
-        template<class TExpected, class TProvider>
+        template<class TDst, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
-            using scope = typename type_traits::scope_traits_t<TExpected>::template scope<T>;
+            using scope = typename type_traits::scope_traits_t<TDst>::template scope<TExpected, T>;
             return scope{}.template create<T>(provider);
         }
     };
@@ -691,7 +688,7 @@ public:
         std::function<T*()> f;
     };
 
-    template<class T>
+    template<class TExpected, class T>
     class scope {
     public:
         void create3();
@@ -703,10 +700,10 @@ public:
             : provider_{provider}
         { }
 
-        template<class TExpected>
+        template<class TDst>
         decltype(auto) create() const noexcept {
-            using scope = typename type_traits::scope_traits_t<TExpected>::template scope<T>;
-            return scope{}.template create<T>(provider_);
+            using scope = typename type_traits::scope_traits_t<TDst>::template scope<TExpected, T>;
+            return scope{}.template create<TDst>(provider_);
         }
 
     private:
@@ -733,7 +730,7 @@ class session {
 public:
     static constexpr auto priority = 0; // 0 - lowest, N - highest
 
-    template<class T>
+    template<class, class T>
     class scope {
     public:
         template<class TName>
@@ -773,7 +770,7 @@ class shared {
 public:
     static constexpr auto priority = 0; // 0 - lowest, N - highest
 
-    template<class T>
+    template<class, class T>
     class scope {
     public:
         void create3(int);
@@ -818,7 +815,7 @@ template<
   , class TName = no_name
 >
 class dependency
-    : public TScope::template scope<TGiven>
+    : public TScope::template scope<TExpected, TGiven>
     , public dependency_impl<
           dependency_concept<TExpected, TName>
         , dependency<TScope, TExpected, TGiven, TName>
@@ -834,12 +831,12 @@ public:
 
     template<class T>
     explicit dependency(T&& object) noexcept
-        : TScope::template scope<TGiven>(std::forward<T>(object))
+        : TScope::template scope<TExpected, TGiven>(std::forward<T>(object))
     { }
 
     template<class T, class TInjector>
-    dependency(T&& object, TInjector& injector) noexcept
-        : TScope::template scope<TGiven>(std::forward<T>(object), injector)
+    dependency(T&& object, const TInjector& injector) noexcept
+        : TScope::template scope<TExpected, TGiven>(std::forward<T>(object), injector)
     { }
 
     template<class T>
@@ -854,7 +851,7 @@ public:
 
     template<class T>
     auto to(T&& object) const noexcept {
-        return dependency<scopes::external<TExpected>, TExpected, aux::remove_accessors_t<T>, TName>{std::forward<T>(object)};
+        return dependency<scopes::external, TExpected, aux::remove_accessors_t<T>, TName>{std::forward<T>(object)};
     }
 };
 
