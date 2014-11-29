@@ -69,7 +69,7 @@ public:
         void create3();
 
         template<class>
-        wrappers::value<T> create() const noexcept {
+        wrappers::value<TT> create() const noexcept {
             return object_();
         }
 
@@ -92,12 +92,10 @@ public:
         { }
 
         typedef void create2;
-
-        void create(double);
-        void create3();
+        void create3(int);
 
         template<class TInjector>
-        wrappers::value<T> create_(TInjector& injector) const noexcept {
+        wrappers::value<TT> create_(TInjector& injector) const noexcept {
             return (given_)(injector);
         }
 

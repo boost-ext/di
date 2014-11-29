@@ -196,5 +196,22 @@ test exposed_type_by_component_mix = [] {
     }
 };
 
-test scopes_priority = [] { };
+test scopes_priority = [] {
+    auto injector = di::make_injector(
+        di::bind<int>.to(41)
+      , di::bind<int>.to([]{return 42;})
+    );
+
+    expect_eq(42, injector.create<int>());
+};
+
+test scopes_injector = [] {
+    constexpr short s = 42;
+    auto injector = di::make_injector(
+        di::bind<short>.to(s)
+      , di::bind<int>.to([](auto& injector){ return injector.template create<short>(); })
+    );
+
+    expect_eq(s, injector.create<int>());
+};
 

@@ -75,7 +75,7 @@ public:
 
     template<class T>
     auto to(T&& object) const noexcept {
-        return dependency<scopes::external<T>, TExpected, TExpected, TName>{std::forward<T>(object)};
+        return dependency<scopes::external<TExpected>, TExpected, aux::remove_accessors_t<T>, TName>{std::forward<T>(object)};
     }
 };
 
