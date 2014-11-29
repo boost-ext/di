@@ -102,14 +102,14 @@ struct join<type_list<TArgs...>> {
     using type = type_list<TArgs...>;
 };
 
-template<class... Args1, class... Args2>
-struct join<type_list<Args1...>, type_list<Args2...>> {
-    using type = type_list<Args1..., Args2...>;
+template<class... TArgs1, class... TArgs2>
+struct join<type_list<TArgs1...>, type_list<TArgs2...>> {
+    using type = type_list<TArgs1..., TArgs2...>;
 };
 
-template<class... Args1, class... Args2, class... Tail>
-struct join<type_list<Args1...>, type_list<Args2...>, Tail...> {
-    using type = typename join<type_list<Args1..., Args2...>, Tail...>::type;
+template<class... TArgs1, class... TArgs2, class... Ts>
+struct join<type_list<TArgs1...>, type_list<TArgs2...>, Ts...> {
+    using type = typename join<type_list<TArgs1..., TArgs2...>, Ts...>::type;
 };
 
 template<class TDefault, class>

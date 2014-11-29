@@ -8,8 +8,7 @@
 #define BOOST_DI_PROVIDERS_MIN_ALLOCS_HPP
 
 #include <new>
-#include <utility>
-#include "boost/di/aux_/utility.hpp"
+#include "boost/di/aux_/type_traits.hpp"
 
 namespace boost {
 namespace di {
