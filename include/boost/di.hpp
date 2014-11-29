@@ -228,8 +228,8 @@ public:
 
     template<class I>
     inline I operator()(const type<I>&, aux::enable_if_t<!std::is_polymorphic<I>::value>* = 0) const noexcept {
-  aux::unique_ptr<I> ptr(value_);
-  return *ptr;
+        aux::unique_ptr<I> ptr(value_);
+        return *ptr;
     }
 
     template<class I>
@@ -258,7 +258,7 @@ public:
     }
 
 private:
- T* value_ = nullptr;
+    T* value_ = nullptr;
 };
 
 } // namespace wrappers
@@ -508,7 +508,7 @@ public:
         void create3();
 
         template<class>
-        wrappers::value<T> create() const noexcept {
+        wrappers::value<TT> create() const noexcept {
             return object_();
         }
 
@@ -531,12 +531,10 @@ public:
         { }
 
         typedef void create2;
-
-        void create(double);
-        void create3();
+        void create3(int);
 
         template<class TInjector>
-        wrappers::value<T> create_(TInjector& injector) const noexcept {
+        wrappers::value<TT> create_(TInjector& injector) const noexcept {
             return (given_)(injector);
         }
 
@@ -810,7 +808,7 @@ struct dependency_impl : pair<T, TDependency>
 
 template<class... Ts, class TName, class TDependency>
 struct dependency_impl<dependency_concept<type_list<Ts...>, TName>, TDependency>
- : pair<dependency_concept<Ts, TName>, TDependency>...
+    : pair<dependency_concept<Ts, TName>, TDependency>...
 { };
 
 template<
@@ -856,7 +854,7 @@ public:
 
     template<class T>
     auto to(T&& object) const noexcept {
-        return dependency<scopes::external<T>, TExpected, TExpected, TName>{std::forward<T>(object)};
+        return dependency<scopes::external<TExpected>, TExpected, aux::remove_accessors_t<T>, TName>{std::forward<T>(object)};
     }
 };
 
@@ -1036,18 +1034,18 @@ namespace core {
 
 template<class TDeps>
 struct binder {
- template<class>
- struct get_name {
-  using type = no_name;
- };
+    template<class>
+    struct get_name {
+        using type = no_name;
+    };
 
- template<class T, class TName>
- struct get_name<named<T, TName>> {
-  using type = TName;
- };
+    template<class T, class TName>
+    struct get_name<named<T, TName>> {
+        using type = TName;
+    };
 
- template<class T>
- using get_name_t = typename get_name<T>::type;
+    template<class T>
+    using get_name_t = typename get_name<T>::type;
 
     template<class T, class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>>
     using resolve = at_key_t<
@@ -1147,9 +1145,9 @@ public:
         return object_;
     }
 
- inline operator T&&() noexcept {
-  return std::move(object_);
- }
+    inline operator T&&() noexcept {
+        return std::move(object_);
+    }
 
 private:
     T object_;

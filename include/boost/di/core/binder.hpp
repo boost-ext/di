@@ -18,18 +18,18 @@ namespace core {
 
 template<class TDeps>
 struct binder {
-	template<class>
-	struct get_name {
-		using type = no_name;
-	};
+    template<class>
+    struct get_name {
+        using type = no_name;
+    };
 
-	template<class T, class TName>
-	struct get_name<named<T, TName>> {
-		using type = TName;
-	};
+    template<class T, class TName>
+    struct get_name<named<T, TName>> {
+        using type = TName;
+    };
 
-	template<class T>
-	using get_name_t = typename get_name<T>::type;
+    template<class T>
+    using get_name_t = typename get_name<T>::type;
 
     template<class T, class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>>
     using resolve = at_key_t<

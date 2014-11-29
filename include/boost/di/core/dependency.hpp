@@ -29,7 +29,7 @@ struct dependency_impl : pair<T, TDependency>
 
 template<class... Ts, class TName, class TDependency>
 struct dependency_impl<dependency_concept<type_list<Ts...>, TName>, TDependency>
-	: pair<dependency_concept<Ts, TName>, TDependency>...
+    : pair<dependency_concept<Ts, TName>, TDependency>...
 { };
 
 template<

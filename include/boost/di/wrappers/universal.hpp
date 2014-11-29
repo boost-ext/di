@@ -58,9 +58,9 @@ public:
         return object_;
     }
 
-	inline operator T&&() noexcept {
-		return std::move(object_);
-	}
+    inline operator T&&() noexcept {
+        return std::move(object_);
+    }
 
 private:
     T object_;

@@ -20,14 +20,14 @@
     using has_##name = decltype(has_##name##_impl<T>(0))
 
 #define BOOST_DI_HAS_METHOD(name, f)                                            \
-	template<class T, class... TArgs>                                           \
+    template<class T, class... TArgs>                                           \
     decltype(std::declval<T>().f(std::declval<TArgs>()...), std::true_type())   \
     has_##name##_impl(int);                                                     \
                                                                                 \
-	template<class, class...>                                                   \
+    template<class, class...>                                                   \
     std::false_type has_##name##_impl(...);                                     \
                                                                                 \
-	template<class T, class... TArgs>                                           \
+    template<class T, class... TArgs>                                           \
     using has_##name = decltype(has_##name##_impl<T, TArgs...>(0))
 
 #define BOOST_DI_HAS_METHOD_SIGN(name, f)                                       \
