@@ -287,18 +287,17 @@ private:
         return pool<TDeps>(create_dep<Ts>(injector)...);
     }
 
-    template<class TInjector, class TDependency>
-    struct provider_ {
-        TInjector injector_;
-
-        decltype(auto) get() const noexcept {
-            return injector_.template create<typename TDependency::given*>();
-        }
-    };
-
     template<class TDependency, class TInjector>
     decltype(auto) create_dep(const TInjector& injector) const noexcept {
-        return TDependency{provider_<TInjector, TDependency>{injector}};
+        struct provider {
+            TInjector injector_;
+
+            decltype(auto) get() const noexcept {
+                return injector_.template create<typename TDependency::given*>();
+            }
+        };
+
+        return TDependency{provider{injector}};
     }
 };
 
