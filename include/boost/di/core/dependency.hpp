@@ -37,7 +37,7 @@ template<
   , class TExpected
   , class TGiven = TExpected
   , class TName = no_name
-  , bool TPriority = TScope::priority
+  , bool  TPriority = TScope::priority
 >
 class dependency
     : public TScope::template scope<TExpected, TGiven>
@@ -80,6 +80,20 @@ public:
         return dep{std::forward<T>(object)};
     }
 };
+
+template<class>
+struct is_dependency : std::false_type { };
+
+template<
+    class TScope
+  , class TExpected
+  , class TGiven
+  , class TName
+  , bool  TPriority
+>
+struct is_dependency<
+    dependency<TScope, TExpected, TGiven, TName, TPriority>
+> : std::true_type { };
 
 } // namespace core
 } // namespace di

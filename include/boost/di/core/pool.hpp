@@ -28,7 +28,7 @@ public:
     { }
 
     template<class TPool>
-    pool(const TPool& p, const init&) noexcept
+    pool(const init&, const TPool& p) noexcept
         : pool(get<TArgs>(p)...)
     { }
 

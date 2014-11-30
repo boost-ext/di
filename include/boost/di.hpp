@@ -839,6 +839,20 @@ public:
     }
 };
 
+template<class>
+struct is_dependency : std::false_type { };
+
+template<
+    class TScope
+  , class TExpected
+  , class TGiven
+  , class TName
+  , bool TPriority
+>
+struct is_dependency<
+    dependency<TScope, TExpected, TGiven, TName, TPriority>
+> : std::true_type { };
+
 } // namespace core
 } // namespace di
 } // namespace boost
@@ -881,7 +895,7 @@ public:
     { }
 
     template<class TPool>
-    pool(const TPool& p, const init&) noexcept
+    pool(const init&, const TPool& p) noexcept
         : pool(get<TArgs>(p)...)
     { }
 
@@ -934,8 +948,6 @@ class any_type {
     using is_not_same_t = aux::enable_if_t<!std::is_same<aux::make_plain_t<U>, aux::make_plain_t<T>>::value>;
 
 public:
-    using any = any_type;
-
     any_type() noexcept { }
 
     any_type(const TInjector& creator
@@ -969,6 +981,12 @@ private:
     ref_type_t<TRefs, TRefs&> refs_;
     ref_type_t<TVisitors, const TVisitors&> visitors_;
 };
+
+template<class>
+struct is_any_type : std::false_type { };
+
+template<class... TArgs>
+struct is_any_type<any_type<TArgs...>> : std::true_type { };
 
 } // namespace core
 } // namespace di
@@ -1358,17 +1376,12 @@ namespace boost {
 namespace di {
 namespace core {
 
-BOOST_DI_HAS_TYPE(any);
 BOOST_DI_HAS_TYPE(deps);
-BOOST_DI_HAS_TYPE(given);
-BOOST_DI_HAS_METHOD_CALL(configure, configure);
+BOOST_DI_HAS_METHOD(configure, configure);
 BOOST_DI_HAS_METHOD(call, call);
 
 template<class T>
-using is_injector = bool_<has_deps<T>::value || has_configure<T>::value>;
-
-template<class T>
-using is_dependency = has_given<T>;
+using is_injector = bool_<has_deps<T>{} || has_configure<T>{}>;
 
 template<class T, class = void>
 struct get_deps {
@@ -1403,7 +1416,8 @@ using bindings_t = typename join<typename add_type_list<Ts>::type...>::type;
 
 template<class TDeps = type_list<>, typename TDefaultProvider = providers::min_allocs>
 class injector : public pool<TDeps> {
-    template<class, class, class, class, class> friend class any_type;
+    template<class, class, class, class, class>
+    friend class any_type;
 
     using pool_t = pool<TDeps>;
 
@@ -1452,13 +1466,13 @@ public:
     // dependency<...>  -> pass
 
     template<class... TArgs>
-    injector(const TArgs&... args) noexcept
+    explicit injector(const TArgs&... args) noexcept
         : injector(init{}, pass_arg(args)...)
     { }
 
     template<class T>
-    injector(injector<T> injector) noexcept // non explicit
-        : pool_t(create_from_injector(injector, TDeps{}), init{})
+    injector(const injector<T>& injector) noexcept // non explicit
+        : pool_t{init{}, create_from_injector(injector, TDeps{})}
     { }
 
     template<class T, class... TArgs>
@@ -1483,7 +1497,7 @@ public:
 private:
     template<class... TArgs>
     injector(const init&, const TArgs&... args) noexcept
-        : pool_t(pool<type_list<TArgs...>>(args...), init{})
+        : pool_t{init{}, pool<type_list<TArgs...>>{args...}}
     { }
 
     template<
@@ -1493,11 +1507,12 @@ private:
       , class TRefs
       , class TVisitors
     >
-    aux::enable_if_t<has_any<T>::value , any_type<TParent, injector, TProvider, TRefs, TVisitors>>
-    create_impl(const TProvider& provider, TRefs& refs, const TVisitors& visitors) const noexcept {
-        return any_type<TParent, injector, TProvider, TRefs, TVisitors>(
+    decltype(auto)
+    create_impl(const TProvider& provider, TRefs& refs, const TVisitors& visitors
+              , aux::enable_if_t<is_any_type<T>{}>* = 0) const noexcept {
+        return any_type<TParent, injector, TProvider, TRefs, TVisitors>{
             *this, provider, refs, visitors
-        );
+        };
     }
 
     template<
@@ -1507,8 +1522,9 @@ private:
       , class TRefs
       , class TVisitors
     >
-    aux::enable_if_t<!has_any<T>::value, wrappers::universal<T>>
-    create_impl(const TProvider& provider, TRefs& refs, const TVisitors& visitors) const noexcept {
+    decltype(auto)
+    create_impl(const TProvider& provider, TRefs& refs, const TVisitors& visitors
+              , aux::enable_if_t<!is_any_type<T>{}>* = 0) const noexcept {
         return create_from_dep_impl<T>(provider, refs, visitors);
     }
 
@@ -1518,13 +1534,16 @@ private:
       , class TRefs
       , class TVisitors
     >
-    wrappers::universal<T>
+    decltype(auto)
     create_from_dep_impl(const TProvider& provider, TRefs& refs, const TVisitors& visitors) const noexcept {
         using dependency = typename binder<pool_t>::template resolve<T>;
         using ctor = typename type_traits::ctor_traits<typename dependency::given>::type;
-        return { refs, acquire<dependency>(static_cast<const pool_t&>(*this)).template create<T>(
-            provider_impl<T, dependency, TProvider, TVisitors, ctor>{*this, provider, visitors}
-        )};
+        return wrappers::universal<T>{
+            refs
+          , acquire<dependency>(static_cast<const pool_t&>(*this)).template create<T>(
+                provider_impl<T, dependency, TProvider, TVisitors, ctor>{*this, provider, visitors}
+            )
+        };
     }
 
     template<class T, class... TVisitors>
@@ -1602,8 +1621,8 @@ private:
 namespace boost {
 namespace di {
 
-template<class... Ts>
-using injector = core::injector<core::bindings_t<Ts...>>;
+template<class... TArgs>
+using injector = core::injector<core::bindings_t<TArgs...>>;
 
 } // namespace di
 } // namespace boost

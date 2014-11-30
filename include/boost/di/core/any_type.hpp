@@ -35,8 +35,6 @@ class any_type {
     using is_not_same_t = aux::enable_if_t<!std::is_same<aux::make_plain_t<U>, aux::make_plain_t<T>>::value>;
 
 public:
-    using any = any_type;
-
     any_type() noexcept { }
 
     any_type(const TInjector& creator
@@ -70,6 +68,12 @@ private:
     ref_type_t<TRefs, TRefs&> refs_;
     ref_type_t<TVisitors, const TVisitors&> visitors_;
 };
+
+template<class>
+struct is_any_type : std::false_type { };
+
+template<class... TArgs>
+struct is_any_type<any_type<TArgs...>> : std::true_type { };
 
 } // namespace core
 } // namespace di
