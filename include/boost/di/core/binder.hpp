@@ -17,7 +17,7 @@ namespace di {
 namespace core {
 
 template<class TDeps>
-struct binder {
+class binder {
     template<class>
     struct get_name {
         using type = no_name;
@@ -31,6 +31,7 @@ struct binder {
     template<class T>
     using get_name_t = typename get_name<T>::type;
 
+public:
     template<class TDefault, class>
     static no_decay<TDefault> lookup(...);
 
@@ -46,6 +47,7 @@ struct binder {
     template<class TDefault, class TKey, class T>
     using at_key_t = typename at_key<TDefault, TKey, T>::type;
 
+public:
     template<class T, class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>>
     using resolve = at_key_t<
         TDefault

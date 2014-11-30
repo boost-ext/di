@@ -23,8 +23,6 @@ namespace di {
 namespace core {
 
 BOOST_DI_HAS_TYPE(any);
-BOOST_DI_HAS_TYPE(create2);
-BOOST_DI_HAS_TYPE(create3);
 BOOST_DI_HAS_TYPE(deps);
 BOOST_DI_HAS_TYPE(given);
 BOOST_DI_HAS_METHOD_CALL(configure, configure);
@@ -72,9 +70,6 @@ class injector : public pool<TDeps> {
     template<class, class, class, class, class> friend class any_type;
 
     using pool_t = pool<TDeps>;
-
-    template<class TDependency>
-    using scope_create = typename aux::function_traits<decltype(&TDependency::create3)>::args;
 
     template<class T, class TDependency>
     struct data {
@@ -178,58 +173,21 @@ private:
     >
     aux::enable_if_t<!has_any<T>::value, wrappers::universal<T>>
     create_impl(const TProvider& provider, TRefs& refs, const TVisitors& visitors) const noexcept {
-        using dependency = typename binder<pool_t>::template resolve<T>;
-        return create_from_dep_impl<T, dependency>(provider, refs, visitors);
+        return create_from_dep_impl<T>(provider, refs, visitors);
     }
 
     template<
         class T
-      , class TDependency
       , class TProvider
       , class TRefs
       , class TVisitors
     >
-    aux::enable_if_t<
-        !size<scope_create<TDependency>>::value &&
-        !has_create2<TDependency>::value
-      , wrappers::universal<T>
-    >
-    create_from_dep_impl(const TProvider&, TRefs& refs, const TVisitors&) const noexcept {
-        return {refs, acquire<TDependency>(static_cast<const pool_t&>(*this)).template create<T>()};
-    }
-
-    template<
-        class T
-      , class TDependency
-      , class TProvider
-      , class TRefs
-      , class TVisitors
-    >
-    aux::enable_if_t<
-        size<scope_create<TDependency>>::value &&
-        has_create2<TDependency>::value
-      , wrappers::universal<T>
-    >
-    create_from_dep_impl(const TProvider&, TRefs& refs, const TVisitors&) const noexcept {
-        return {refs, acquire<TDependency>(static_cast<const pool_t&>(*this)).create_(*this)};
-    }
-
-    template<
-        class T
-      , class TDependency
-      , class TProvider
-      , class TRefs
-      , class TVisitors
-    >
-    aux::enable_if_t<
-        size<scope_create<TDependency>>::value &&
-        !has_create2<TDependency>::value
-      , wrappers::universal<T>
-    >
+    wrappers::universal<T>
     create_from_dep_impl(const TProvider& provider_, TRefs& refs, const TVisitors& visitors) const noexcept {
-        using ctor = typename type_traits::ctor_traits<typename TDependency::given>::type;
-        return { refs, acquire<TDependency>(static_cast<const pool_t&>(*this)).template create<T>(
-            provider<T, TDependency, TProvider, TVisitors, ctor>{*this, provider_, visitors}
+        using dependency = typename binder<pool_t>::template resolve<T>;
+        using ctor = typename type_traits::ctor_traits<typename dependency::given>::type;
+        return { refs, acquire<dependency>(static_cast<const pool_t&>(*this)).template create<T>(
+            provider<T, dependency, TProvider, TVisitors, ctor>{*this, provider_, visitors}
         )};
     }
 

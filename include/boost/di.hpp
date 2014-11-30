@@ -270,13 +270,11 @@ namespace scopes {
 
 class unique {
 public:
-    static constexpr auto priority = 0; // 0 - lowest, N - highest
+    static constexpr auto priority = false;
 
     template<class, class T>
     class scope {
     public:
-        void create3(int);
-
         template<class, class TProvider>
         auto create(const TProvider& provider) const noexcept -> wrappers::copy<decltype(provider.get())> {
             return provider.get();
@@ -350,13 +348,11 @@ namespace scopes {
 
 class singleton {
 public:
-    static constexpr auto priority = 0; // 0 - lowest, N - highest
+    static constexpr auto priority = false;
 
     template<class, class T>
     class scope {
     public:
-        void create3(int);
-
         template<class, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
             if (!get_instance()) {
@@ -469,7 +465,7 @@ class external {
     };
 
 public:
-    static constexpr auto priority = 1; // 0 - lowest, N - highest
+    static constexpr auto priority = true;
 
     template<class TT, class T, class = void>
     class scope {
@@ -478,10 +474,8 @@ public:
             : object_(object)
         { }
 
-        void create3();
-
-        template<class>
-        decltype(auto) create() const noexcept {
+        template<class, class TProvider>
+        decltype(auto) create(const TProvider&) const noexcept {
             return object_;
         }
 
@@ -501,10 +495,8 @@ public:
             : object_(object)
         { }
 
-        void create3();
-
-        template<class>
-        wrappers::value<TT> create() const noexcept {
+        template<class, class TProvider>
+        wrappers::value<TT> create(const TProvider&) const noexcept {
             return object_();
         }
 
@@ -526,12 +518,9 @@ public:
             : given_(other.given_)
         { }
 
-        typedef void create2;
-        void create3(int);
-
-        template<class TInjector>
-        wrappers::value<TT> create_(const TInjector& injector) const noexcept {
-            return (given_)(injector);
+        template<class, class TProvider>
+        wrappers::value<TT> create(const TProvider& provider) const noexcept {
+            return (given_)(provider.injector_);
         }
 
     private:
@@ -645,13 +634,11 @@ namespace scopes {
 
 class deduce {
 public:
-    static constexpr auto priority = 0; // 0 - lowest, N - highest
+    static constexpr auto priority = false;
 
     template<class TExpected, class T>
     class scope {
     public:
-        void create3(int);
-
         template<class TDst, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
             using scope = typename type_traits::scope_traits_t<TDst>::template scope<TExpected, T>;
@@ -670,7 +657,7 @@ namespace scopes {
 
 class exposed {
 public:
-    static constexpr auto priority = 0; // 0 - lowest, N - highest
+    static constexpr auto priority = false;
 
     template<class T>
     struct provider {
@@ -690,8 +677,6 @@ public:
     template<class TExpected, class T>
     class scope {
     public:
-        void create3();
-
         scope() noexcept { }
 
         template<class TProvider>
@@ -699,8 +684,8 @@ public:
             : provider_{provider}
         { }
 
-        template<class TDst>
-        decltype(auto) create() const noexcept {
+        template<class TDst, class TProvider>
+        decltype(auto) create(const TProvider&) const noexcept {
             using scope = typename type_traits::scope_traits_t<TDst>::template scope<TExpected, T>;
             return scope{}.template create<TDst>(provider_);
         }
@@ -727,7 +712,7 @@ class session_exit { };
 template<class = no_name>
 class session {
 public:
-    static constexpr auto priority = 0; // 0 - lowest, N - highest
+    static constexpr auto priority = false;
 
     template<class, class T>
     class scope {
@@ -767,13 +752,11 @@ namespace scopes {
 
 class shared {
 public:
-    static constexpr auto priority = 0; // 0 - lowest, N - highest
+    static constexpr auto priority = false;
 
     template<class, class T>
     class scope {
     public:
-        void create3(int);
-
         template<class, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
             if (!object_) {
@@ -812,12 +795,13 @@ template<
   , class TExpected
   , class TGiven = TExpected
   , class TName = no_name
+  , bool TPriority = TScope::priority
 >
 class dependency
     : public TScope::template scope<TExpected, TGiven>
     , public dependency_impl<
           dependency_concept<TExpected, TName>
-        , dependency<TScope, TExpected, TGiven, TName>
+        , dependency<TScope, TExpected, TGiven, TName, TPriority>
       > {
 public:
     using type = dependency;
@@ -850,7 +834,8 @@ public:
 
     template<class T>
     auto to(T&& object) const noexcept {
-        return dependency<scopes::external, TExpected, aux::remove_accessors_t<T>, TName>{std::forward<T>(object)};
+        using dep = dependency<scopes::external, TExpected, aux::remove_accessors_t<T>, TName>;
+        return dep{std::forward<T>(object)};
     }
 };
 
@@ -1029,7 +1014,7 @@ namespace di {
 namespace core {
 
 template<class TDeps>
-struct binder {
+class binder {
     template<class>
     struct get_name {
         using type = no_name;
@@ -1043,6 +1028,23 @@ struct binder {
     template<class T>
     using get_name_t = typename get_name<T>::type;
 
+public:
+    template<class TDefault, class>
+    static no_decay<TDefault> lookup(...);
+
+    template<class, class TKey, class TValue>
+    static no_decay<TValue> lookup(pair<TKey, TValue>*);
+
+    template<class, class TKey, class TScope, class TExpected , class TGiven, class TName>
+    static no_decay<dependency<TScope, TExpected, TGiven, TName, true>> lookup(pair<TKey, dependency<TScope, TExpected, TGiven, TName, true>>*);
+
+    template<class TDefault, class TKey, class T>
+    using at_key = decltype(lookup<TDefault, TKey>((T*)nullptr));
+
+    template<class TDefault, class TKey, class T>
+    using at_key_t = typename at_key<TDefault, TKey, T>::type;
+
+public:
     template<class T, class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>>
     using resolve = at_key_t<
         TDefault
@@ -1357,8 +1359,6 @@ namespace di {
 namespace core {
 
 BOOST_DI_HAS_TYPE(any);
-BOOST_DI_HAS_TYPE(create2);
-BOOST_DI_HAS_TYPE(create3);
 BOOST_DI_HAS_TYPE(deps);
 BOOST_DI_HAS_TYPE(given);
 BOOST_DI_HAS_METHOD_CALL(configure, configure);
@@ -1406,9 +1406,6 @@ class injector : public pool<TDeps> {
     template<class, class, class, class, class> friend class any_type;
 
     using pool_t = pool<TDeps>;
-
-    template<class TDependency>
-    using scope_create = typename aux::function_traits<decltype(&TDependency::create3)>::args;
 
     template<class T, class TDependency>
     struct data {
@@ -1512,58 +1509,21 @@ private:
     >
     aux::enable_if_t<!has_any<T>::value, wrappers::universal<T>>
     create_impl(const TProvider& provider, TRefs& refs, const TVisitors& visitors) const noexcept {
-        using dependency = typename binder<pool_t>::template resolve<T>;
-        return create_from_dep_impl<T, dependency>(provider, refs, visitors);
+        return create_from_dep_impl<T>(provider, refs, visitors);
     }
 
     template<
         class T
-      , class TDependency
       , class TProvider
       , class TRefs
       , class TVisitors
     >
-    aux::enable_if_t<
-        !size<scope_create<TDependency>>::value &&
-        !has_create2<TDependency>::value
-      , wrappers::universal<T>
-    >
-    create_from_dep_impl(const TProvider&, TRefs& refs, const TVisitors&) const noexcept {
-        return {refs, acquire<TDependency>(static_cast<const pool_t&>(*this)).template create<T>()};
-    }
-
-    template<
-        class T
-      , class TDependency
-      , class TProvider
-      , class TRefs
-      , class TVisitors
-    >
-    aux::enable_if_t<
-        size<scope_create<TDependency>>::value &&
-        has_create2<TDependency>::value
-      , wrappers::universal<T>
-    >
-    create_from_dep_impl(const TProvider&, TRefs& refs, const TVisitors&) const noexcept {
-        return {refs, acquire<TDependency>(static_cast<const pool_t&>(*this)).create_(*this)};
-    }
-
-    template<
-        class T
-      , class TDependency
-      , class TProvider
-      , class TRefs
-      , class TVisitors
-    >
-    aux::enable_if_t<
-        size<scope_create<TDependency>>::value &&
-        !has_create2<TDependency>::value
-      , wrappers::universal<T>
-    >
+    wrappers::universal<T>
     create_from_dep_impl(const TProvider& provider_, TRefs& refs, const TVisitors& visitors) const noexcept {
-        using ctor = typename type_traits::ctor_traits<typename TDependency::given>::type;
-        return { refs, acquire<TDependency>(static_cast<const pool_t&>(*this)).template create<T>(
-            provider<T, TDependency, TProvider, TVisitors, ctor>{*this, provider_, visitors}
+        using dependency = typename binder<pool_t>::template resolve<T>;
+        using ctor = typename type_traits::ctor_traits<typename dependency::given>::type;
+        return { refs, acquire<dependency>(static_cast<const pool_t&>(*this)).template create<T>(
+            provider<T, dependency, TProvider, TVisitors, ctor>{*this, provider_, visitors}
         )};
     }
 

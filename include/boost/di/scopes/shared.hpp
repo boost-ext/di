@@ -20,8 +20,6 @@ public:
     template<class, class T>
     class scope {
     public:
-        void create3(int);
-
         template<class, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
             if (!object_) {

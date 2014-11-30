@@ -20,8 +20,6 @@ public:
     template<class, class T>
     class scope {
     public:
-        void create3(int);
-
         template<class, class TProvider>
         auto create(const TProvider& provider) const noexcept -> wrappers::copy<decltype(provider.get())> {
             return provider.get();

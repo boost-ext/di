@@ -37,7 +37,7 @@ template<
   , class TExpected
   , class TGiven = TExpected
   , class TName = no_name
-  , bool  TPriority = TScope::priority
+  , bool TPriority = TScope::priority
 >
 class dependency
     : public TScope::template scope<TExpected, TGiven>

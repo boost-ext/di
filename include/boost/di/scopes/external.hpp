@@ -40,10 +40,8 @@ public:
             : object_(object)
         { }
 
-        void create3();
-
-        template<class>
-        decltype(auto) create() const noexcept {
+        template<class, class TProvider>
+        decltype(auto) create(const TProvider&) const noexcept {
             return object_;
         }
 
@@ -63,10 +61,8 @@ public:
             : object_(object)
         { }
 
-        void create3();
-
-        template<class>
-        wrappers::value<TT> create() const noexcept {
+        template<class, class TProvider>
+        wrappers::value<TT> create(const TProvider&) const noexcept {
             return object_();
         }
 
@@ -88,12 +84,9 @@ public:
             : given_(other.given_)
         { }
 
-        typedef void create2;
-        void create3(int);
-
-        template<class TInjector>
-        wrappers::value<TT> create_(const TInjector& injector) const noexcept {
-            return (given_)(injector);
+        template<class, class TProvider>
+        wrappers::value<TT> create(const TProvider& provider) const noexcept {
+            return (given_)(provider.injector_);
         }
 
     private:

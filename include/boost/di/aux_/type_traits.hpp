@@ -19,9 +19,10 @@
     template<class T>                                                           \
     using has_##name = decltype(has_##name##_impl<T>(0))
 
-#define BOOST_DI_HAS_METHOD(name, f)                                            \
+#define BOOST_DI_HAS_METHOD(name, call_name)                                    \
     template<class T, class... TArgs>                                           \
-    decltype(std::declval<T>().f(std::declval<TArgs>()...), std::true_type())   \
+    decltype(std::declval<T>().call_name(std::declval<TArgs>()...)              \
+           , std::true_type())                                                  \
     has_##name##_impl(int);                                                     \
                                                                                 \
     template<class, class...>                                                   \
@@ -30,9 +31,9 @@
     template<class T, class... TArgs>                                           \
     using has_##name = decltype(has_##name##_impl<T, TArgs...>(0))
 
-#define BOOST_DI_HAS_METHOD_SIGN(name, f)                                       \
+#define BOOST_DI_HAS_METHOD_SIGN(name, call_name)                               \
     template<class T, class TSign>                                              \
-    std::true_type has_##name##_impl(non_type<TSign, &T::f>* = 0);              \
+    std::true_type has_##name##_impl(non_type<TSign, &T::call_name>* = 0);      \
                                                                                 \
     template<class, class>                                                      \
     std::false_type has_##name##_impl(...);                                     \
@@ -40,14 +41,14 @@
     template<class T, class TSign>                                              \
     using has_##name = decltype(has_##name##_impl<T, TSign>(0))
 
-#define BOOST_DI_HAS_METHOD_CALL(name, f)                                       \
+#define BOOST_DI_HAS_METHOD_CALL(name, call_name)                               \
     struct has_##name##_base {                                                  \
-        void f();                                                               \
+        void call_name();                                                       \
     };                                                                          \
                                                                                 \
     template<class T>                                                           \
     std::false_type has_##name##_impl(                                          \
-        T*, non_type<void (has_##name##_base::*)(), &T::f>* = 0                 \
+        T*, non_type<void (has_##name##_base::*)(), &T::call_name>* = 0         \
     );                                                                          \
                                                                                 \
     template<class>                                                             \

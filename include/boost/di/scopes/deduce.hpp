@@ -19,8 +19,6 @@ public:
     template<class TExpected, class T>
     class scope {
     public:
-        void create3(int);
-
         template<class TDst, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
             using scope = typename type_traits::scope_traits_t<TDst>::template scope<TExpected, T>;
