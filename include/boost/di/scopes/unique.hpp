@@ -9,9 +9,7 @@
 
 #include "boost/di/wrappers/copy.hpp"
 
-namespace boost {
-namespace di {
-namespace scopes {
+namespace boost { namespace di { namespace scopes {
 
 class unique {
 public:
@@ -27,9 +25,7 @@ public:
     };
 };
 
-} // namespace scopes
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::scopes
 
 #endif
 

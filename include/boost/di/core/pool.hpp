@@ -10,9 +10,7 @@
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 
-namespace boost {
-namespace di {
-namespace core {
+namespace boost { namespace di { namespace core {
 
 struct init { };
 
@@ -51,9 +49,7 @@ private:
     inline get(const TPool&) const noexcept { return {}; }
 };
 
-} // namespace core
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::core
 
 #endif
 

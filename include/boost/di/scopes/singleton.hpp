@@ -9,9 +9,7 @@
 
 #include "boost/di/wrappers/shared.hpp"
 
-namespace boost {
-namespace di {
-namespace scopes {
+namespace boost { namespace di { namespace scopes {
 
 class singleton {
 public:
@@ -36,9 +34,7 @@ public:
     };
 };
 
-} // namespace scopes
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::scopes
 
 #endif
 

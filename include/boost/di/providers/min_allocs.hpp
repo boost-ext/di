@@ -10,9 +10,7 @@
 #include <new>
 #include "boost/di/aux_/type_traits.hpp"
 
-namespace boost {
-namespace di {
-namespace providers {
+namespace boost { namespace di { namespace providers {
 
 class min_allocs {
 public:
@@ -39,9 +37,7 @@ public:
     }
 };
 
-} // namespace providers
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::providers
 
 #endif
 

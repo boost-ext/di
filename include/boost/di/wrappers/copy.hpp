@@ -10,9 +10,7 @@
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 
-namespace boost {
-namespace di {
-namespace wrappers {
+namespace boost { namespace di { namespace wrappers {
 
 template<class T>
 class copy {
@@ -97,9 +95,7 @@ private:
     T* value_ = nullptr;
 };
 
-} // namespace wrappers
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::wrappers
 
 #endif
 

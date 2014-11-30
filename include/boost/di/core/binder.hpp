@@ -12,9 +12,7 @@
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/named.hpp"
 
-namespace boost {
-namespace di {
-namespace core {
+namespace boost { namespace di { namespace core {
 
 class binder {
     template<class>
@@ -70,9 +68,7 @@ public:
     }
 };
 
-} // namespace core
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::core
 
 #endif
 

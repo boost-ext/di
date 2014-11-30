@@ -39,8 +39,7 @@
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/memory.hpp"
 
-namespace boost {
-namespace di {
+namespace boost { namespace di {
 
 struct no_name { };
 
@@ -171,12 +170,9 @@ public:
     using name = TName;
 };
 
-} // namespace di
-} // namespace boost
+}} // namespace boost::di
 
-namespace boost {
-namespace di {
-namespace wrappers {
+namespace boost { namespace di { namespace wrappers {
 
 template<class T>
 class copy {
@@ -261,13 +257,9 @@ private:
     T* value_ = nullptr;
 };
 
-} // namespace wrappers
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::wrappers
 
-namespace boost {
-namespace di {
-namespace scopes {
+namespace boost { namespace di { namespace scopes {
 
 class unique {
 public:
@@ -283,13 +275,9 @@ public:
     };
 };
 
-} // namespace scopes
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::scopes
 
-namespace boost {
-namespace di {
-namespace wrappers {
+namespace boost { namespace di { namespace wrappers {
 
 template<class T>
 class shared {
@@ -339,13 +327,9 @@ private:
     aux::shared_ptr<T> value_;
 };
 
-} // namespace wrappers
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::wrappers
 
-namespace boost {
-namespace di {
-namespace scopes {
+namespace boost { namespace di { namespace scopes {
 
 class singleton {
 public:
@@ -370,13 +354,9 @@ public:
     };
 };
 
-} // namespace scopes
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::scopes
 
-namespace boost {
-namespace di {
-namespace wrappers {
+namespace boost { namespace di { namespace wrappers {
 
 template<class T>
 class value {
@@ -420,13 +400,9 @@ private:
     T value_;
 };
 
-} // namespace wrappers
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::wrappers
 
-namespace boost {
-namespace di {
-namespace wrappers {
+namespace boost { namespace di { namespace wrappers {
 
 template<class T>
 class reference {
@@ -445,13 +421,9 @@ private:
     T& value_;
 };
 
-} // namespace wrappers
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::wrappers
 
-namespace boost {
-namespace di {
-namespace scopes {
+namespace boost { namespace di { namespace scopes {
 
 BOOST_DI_HAS_TYPE(result_type);
 BOOST_DI_HAS_METHOD(call_operator, operator());
@@ -530,13 +502,9 @@ public:
     };
 };
 
-} // namespace scopes
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::scopes
 
-namespace boost {
-namespace di {
-namespace type_traits {
+namespace boost { namespace di { namespace type_traits {
 
 template<class T>
 struct scope_traits {
@@ -626,13 +594,9 @@ struct scope_traits<const named<T, TName>&> {
 template<class T>
 using scope_traits_t = typename scope_traits<T>::type;
 
-} // namespace type_traits
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::type_traits
 
-namespace boost {
-namespace di {
-namespace scopes {
+namespace boost { namespace di { namespace scopes {
 
 class deduce {
 public:
@@ -649,13 +613,9 @@ public:
     };
 };
 
-} // namespace scopes
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::scopes
 
-namespace boost {
-namespace di {
-namespace scopes {
+namespace boost { namespace di { namespace scopes {
 
 class exposed {
 public:
@@ -697,13 +657,9 @@ public:
     };
 };
 
-} // namespace scopes
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::scopes
 
-namespace boost {
-namespace di {
-namespace scopes {
+namespace boost { namespace di { namespace scopes {
 
 template<class = no_name>
 class session_entry { };
@@ -742,13 +698,9 @@ public:
     };
 };
 
-} // namespace scopes
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::scopes
 
-namespace boost {
-namespace di {
-namespace scopes {
+namespace boost { namespace di { namespace scopes {
 
 class shared {
 public:
@@ -770,13 +722,9 @@ public:
     };
 };
 
-} // namespace scopes
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::scopes
 
-namespace boost {
-namespace di {
-namespace core {
+namespace boost { namespace di { namespace core {
 
 template<class TExpected, class TName>
 struct dependency_concept { };
@@ -853,12 +801,9 @@ struct is_dependency<
     dependency<TScope, TExpected, TGiven, TName, TPriority>
 > : std::true_type { };
 
-} // namespace core
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::core
 
-namespace boost {
-namespace di {
+namespace boost { namespace di {
 
 template<class... Ts>
 using any_of = aux::type_list<Ts...>;
@@ -883,12 +828,9 @@ template<class TName>
 constexpr scopes::session_exit<TName>
 session_exit(const TName&) noexcept { return {}; }
 
-} // namespace di
-} // namespace boost
+}} // namespace boost::di
 
-namespace boost {
-namespace di {
-namespace core {
+namespace boost { namespace di { namespace core {
 
 template<
     class T = aux::none_t
@@ -955,48 +897,9 @@ struct is_any_type : std::false_type { };
 template<class... TArgs>
 struct is_any_type<any_type<TArgs...>> : std::true_type { };
 
-} // namespace core
-} // namespace di
+}}} // namespace boost::di::core
 
-    //class T
-  //, class TInjector
-  //, class TProvider
-  //, class TRefs
-  //, class TPolicies
-    //di::core::any_type<
-        //T
-      //, TInjector
-      //, TProvider
-      //, TRefs
-      //, TPolicies
-   //>
-
-} // namespace boost
-
-namespace std {
-
-template<
-    class T
-  , class TInjector
-  , class TProvider
-  , class TRefs
-  , class TPolicies
->
-struct is_integral<
-    boost::di::core::any_type<
-        T
-      , TInjector
-      , TProvider
-      , TRefs
-      , TPolicies
-    >
-> : ::std::true_type { };
-
-} // namespace std
-
-namespace boost {
-namespace di {
-namespace core {
+namespace boost { namespace di { namespace core {
 
 class binder {
     template<class>
@@ -1052,13 +955,9 @@ public:
     }
 };
 
-} // namespace core
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::core
 
-namespace boost {
-namespace di {
-namespace core {
+namespace boost { namespace di { namespace core {
 
 struct init { };
 
@@ -1097,13 +996,9 @@ private:
     inline get(const TPool&) const noexcept { return {}; }
 };
 
-} // namespace core
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::core
 
-namespace boost {
-namespace di {
-namespace providers {
+namespace boost { namespace di { namespace providers {
 
 class min_allocs {
 public:
@@ -1130,14 +1025,9 @@ public:
     }
 };
 
-} // namespace providers
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::providers
 
-namespace boost {
-namespace di {
-
-namespace detail {
+namespace boost { namespace di { namespace detail {
 
 BOOST_DI_CALL(BOOST_DI_HAS_METHOD_CALL, BOOST_DI_INJECTOR, BOOST_DI_INJECTOR);
 
@@ -1218,15 +1108,9 @@ struct ctor_traits_impl<T, std::false_type>
     : di::ctor_traits<T>::type
 { };
 
-} // namespace type_traits
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::type_traits
 
-namespace boost {
-namespace di {
-namespace wrappers {
-
-namespace detail {
+namespace boost { namespace di { namespace wrappers { namespace detail {
 
 BOOST_DI_HAS_METHOD_SIGN(call_operator, opeartor());
 
@@ -1404,13 +1288,9 @@ private:
 template<class T>
 using universal = detail::universal_impl<T>;
 
-} // namespace wrappers
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::wrappers
 
-namespace boost {
-namespace di {
-namespace core {
+namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_METHOD(configure, configure);
 BOOST_DI_HAS_METHOD(call, call);
@@ -1600,14 +1480,9 @@ private:
     }
 };
 
-} // namespace core
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::core
 
-namespace boost {
-namespace di {
-
-namespace detail {
+namespace boost { namespace di { namespace detail {
 
 BOOST_DI_HAS_TYPE(deps);
 
@@ -1657,19 +1532,16 @@ using bindings_t = typename aux::join<typename add_type_list<Ts>::type...>::type
 template<class... TArgs>
 using injector = core::injector<detail::bindings_t<TArgs...>>;
 
-} // namespace di
-} // namespace boost
+}} // namespace boost::di
 
-namespace boost {
-namespace di {
+namespace boost { namespace di {
 
 template<class... TArgs>
 inline decltype(auto) make_injector(const TArgs&... args) noexcept {
     return injector<TArgs...>(args...);
 }
 
-} // namespace di
-} // namespace boost
+}} // namespace boost::di
 
 #endif
 

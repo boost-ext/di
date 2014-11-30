@@ -14,8 +14,7 @@
 #include "boost/di/scopes/shared.hpp"
 #include "boost/di/scopes/unique.hpp"
 
-namespace boost {
-namespace di {
+namespace boost { namespace di {
 
 template<class... Ts>
 using any_of = aux::type_list<Ts...>;
@@ -40,8 +39,7 @@ template<class TName>
 constexpr scopes::session_exit<TName>
 session_exit(const TName&) noexcept { return {}; }
 
-} // namespace di
-} // namespace boost
+}} // namespace boost::di
 
 #endif
 

@@ -14,9 +14,7 @@
 #include "boost/di/wrappers/reference.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 
-namespace boost {
-namespace di {
-namespace scopes {
+namespace boost { namespace di { namespace scopes {
 
 BOOST_DI_HAS_TYPE(result_type);
 BOOST_DI_HAS_METHOD(call_operator, operator());
@@ -95,9 +93,7 @@ public:
     };
 };
 
-} // namespace scopes
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::scopes
 
 #endif
 

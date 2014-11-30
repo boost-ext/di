@@ -10,9 +10,7 @@
 
 #include "boost/di/aux_/utility.hpp"
 
-namespace boost {
-namespace di {
-namespace wrappers {
+namespace boost { namespace di { namespace wrappers {
 
 template<class T>
 class reference {
@@ -31,9 +29,7 @@ private:
     T& value_;
 };
 
-} // namespace wrappers
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::wrappers
 
 #endif
 

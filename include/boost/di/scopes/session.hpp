@@ -10,9 +10,7 @@
 #include "boost/di/wrappers/shared.hpp"
 #include "boost/di/named.hpp"
 
-namespace boost {
-namespace di {
-namespace scopes {
+namespace boost { namespace di { namespace scopes {
 
 template<class = no_name>
 class session_entry { };
@@ -51,9 +49,7 @@ public:
     };
 };
 
-} // namespace scopes
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::scopes
 
 #endif
 

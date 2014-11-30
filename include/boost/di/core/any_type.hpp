@@ -9,9 +9,7 @@
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 
-namespace boost {
-namespace di {
-namespace core {
+namespace boost { namespace di { namespace core {
 
 template<
     class T = aux::none_t
@@ -78,48 +76,7 @@ struct is_any_type : std::false_type { };
 template<class... TArgs>
 struct is_any_type<any_type<TArgs...>> : std::true_type { };
 
-} // namespace core
-} // namespace di
-
-/*template<*/
-    //class T
-  //, class TInjector
-  //, class TProvider
-  //, class TRefs
-  //, class TPolicies
-//>
-//struct is_integral<
-    //di::core::any_type<
-        //T
-      //, TInjector
-      //, TProvider
-      //, TRefs
-      //, TPolicies
-   //>
-/*> : ::std::true_type { };*/
-
-} // namespace boost
-
-namespace std {
-
-template<
-    class T
-  , class TInjector
-  , class TProvider
-  , class TRefs
-  , class TPolicies
->
-struct is_integral<
-    boost::di::core::any_type<
-        T
-      , TInjector
-      , TProvider
-      , TRefs
-      , TPolicies
-    >
-> : ::std::true_type { };
-
-} // namespace std
+}}} // namespace boost::di::core
 
 #endif
 

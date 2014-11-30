@@ -9,9 +9,7 @@
 #include "boost/di/type_traits/scope_traits.hpp"
 #include <functional>
 
-namespace boost {
-namespace di {
-namespace scopes {
+namespace boost { namespace di { namespace scopes {
 
 class exposed {
 public:
@@ -53,9 +51,7 @@ public:
     };
 };
 
-} // namespace scopes
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::scopes
 
 #endif
 

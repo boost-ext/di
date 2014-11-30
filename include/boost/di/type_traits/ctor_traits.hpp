@@ -14,10 +14,7 @@
 #include "boost/di/core/any_type.hpp"
 #include "boost/di/inject.hpp"
 
-namespace boost {
-namespace di {
-
-namespace detail {
+namespace boost { namespace di { namespace detail {
 
 BOOST_DI_CALL(BOOST_DI_HAS_METHOD_CALL, BOOST_DI_INJECTOR, BOOST_DI_INJECTOR);
 
@@ -98,9 +95,7 @@ struct ctor_traits_impl<T, std::false_type>
     : di::ctor_traits<T>::type
 { };
 
-} // namespace type_traits
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::type_traits
 
 #endif
 

@@ -14,9 +14,7 @@
 #define BOOST_DI_CAT(a, b) BOOST_DI_CAT_IMPL(a, b)
 #define BOOST_DI_CALL(m, ...) m(__VA_ARGS__)
 
-namespace boost {
-namespace di {
-namespace aux {
+namespace boost { namespace di { namespace aux {
 
 template<class>
 struct type { };
@@ -75,9 +73,7 @@ using at_key = decltype(lookup<TDefault, TKey>((inherit<Ts...>*)0));
 template<class TDefault, class TKey, class T>
 using at_key_t = typename at_key<TDefault, TKey, T>::type;
 
-} // namespace aux
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::aux
 
 #endif
 

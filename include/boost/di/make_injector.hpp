@@ -9,16 +9,14 @@
 
 #include "boost/di/injector.hpp"
 
-namespace boost {
-namespace di {
+namespace boost { namespace di {
 
 template<class... TArgs>
 inline decltype(auto) make_injector(const TArgs&... args) noexcept {
     return injector<TArgs...>(args...);
 }
 
-} // namespace di
-} // namespace boost
+}} // namespace boost::di
 
 #endif
 

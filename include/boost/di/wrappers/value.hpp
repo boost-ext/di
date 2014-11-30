@@ -9,9 +9,7 @@
 
 #include "boost/di/aux_/memory.hpp"
 
-namespace boost {
-namespace di {
-namespace wrappers {
+namespace boost { namespace di { namespace wrappers {
 
 template<class T>
 class value {
@@ -55,9 +53,7 @@ private:
     T value_;
 };
 
-} // namespace wrappers
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::wrappers
 
 #endif
 

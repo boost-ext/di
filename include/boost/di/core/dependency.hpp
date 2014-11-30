@@ -16,9 +16,7 @@
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/named.hpp"
 
-namespace boost {
-namespace di {
-namespace core {
+namespace boost { namespace di { namespace core {
 
 template<class TExpected, class TName>
 struct dependency_concept { };
@@ -95,9 +93,7 @@ struct is_dependency<
     dependency<TScope, TExpected, TGiven, TName, TPriority>
 > : std::true_type { };
 
-} // namespace core
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::core
 
 #endif
 

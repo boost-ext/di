@@ -10,8 +10,7 @@
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 
-namespace boost {
-namespace di {
+namespace boost { namespace di {
 
 struct no_name { };
 
@@ -142,8 +141,7 @@ public:
     using name = TName;
 };
 
-} // namespace di
-} // namespace boost
+}} // namespace boost::di
 
 #endif
 

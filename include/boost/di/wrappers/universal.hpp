@@ -11,11 +11,7 @@
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/named.hpp"
 
-namespace boost {
-namespace di {
-namespace wrappers {
-
-namespace detail {
+namespace boost { namespace di { namespace wrappers { namespace detail {
 
 BOOST_DI_HAS_METHOD_SIGN(call_operator, opeartor());
 
@@ -193,9 +189,7 @@ private:
 template<class T>
 using universal = detail::universal_impl<T>;
 
-} // namespace wrappers
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::wrappers
 
 #endif
 

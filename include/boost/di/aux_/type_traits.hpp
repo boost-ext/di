@@ -71,9 +71,7 @@
         : std::false_type                                                       \
     { }
 
-namespace boost {
-namespace di {
-namespace aux {
+namespace boost { namespace di { namespace aux {
 
 template<class T, class... TArgs>
 decltype(void(T{std::declval<TArgs>()...}), std::true_type())

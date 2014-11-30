@@ -8,9 +8,7 @@
 
 #include "boost/di/type_traits/scope_traits.hpp"
 
-namespace boost {
-namespace di {
-namespace scopes {
+namespace boost { namespace di { namespace scopes {
 
 class deduce {
 public:
@@ -27,9 +25,7 @@ public:
     };
 };
 
-} // namespace scopes
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::scopes
 
 #endif
 

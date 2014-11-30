@@ -17,9 +17,7 @@
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/wrappers/universal.hpp"
 
-namespace boost {
-namespace di {
-namespace core {
+namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_METHOD(configure, configure);
 BOOST_DI_HAS_METHOD(call, call);
@@ -209,9 +207,7 @@ private:
     }
 };
 
-} // namespace core
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::core
 
 #endif
 

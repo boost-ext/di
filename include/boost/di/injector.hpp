@@ -11,10 +11,7 @@
 #include "boost/di/core/dependency.hpp"
 #include "boost/di/scopes/exposed.hpp"
 
-namespace boost {
-namespace di {
-
-namespace detail {
+namespace boost { namespace di { namespace detail {
 
 BOOST_DI_HAS_TYPE(deps);
 
@@ -64,8 +61,7 @@ using bindings_t = typename aux::join<typename add_type_list<Ts>::type...>::type
 template<class... TArgs>
 using injector = core::injector<detail::bindings_t<TArgs...>>;
 
-} // namespace di
-} // namespace boost
+}} // namespace boost::di
 
 #endif
 

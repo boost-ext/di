@@ -13,9 +13,7 @@
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/named.hpp"
 
-namespace boost {
-namespace di {
-namespace type_traits {
+namespace boost { namespace di { namespace type_traits {
 
 template<class T>
 struct scope_traits {
@@ -105,9 +103,7 @@ struct scope_traits<const named<T, TName>&> {
 template<class T>
 using scope_traits_t = typename scope_traits<T>::type;
 
-} // namespace type_traits
-} // namespace di
-} // namespace boost
+}}} // namespace boost::di::type_traits
 
 #endif
 
