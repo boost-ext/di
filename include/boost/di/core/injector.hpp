@@ -79,7 +79,7 @@ class injector : public pool<TDeps> {
     };
 
     template<class...>
-    struct provider;
+    struct provider_impl;
 
     template<
         class T
@@ -88,7 +88,7 @@ class injector : public pool<TDeps> {
       , class TVisitors
       , class... TArgs
     >
-    struct provider<T, TDependency, TProvider, TVisitors, type_list<TArgs...>> {
+    struct provider_impl<T, TDependency, TProvider, TVisitors, type_list<TArgs...>> {
         const injector& injector_;
         const TProvider& provider_;
         const TVisitors& visitors_;
@@ -183,11 +183,11 @@ private:
       , class TVisitors
     >
     wrappers::universal<T>
-    create_from_dep_impl(const TProvider& provider_, TRefs& refs, const TVisitors& visitors) const noexcept {
+    create_from_dep_impl(const TProvider& provider, TRefs& refs, const TVisitors& visitors) const noexcept {
         using dependency = typename binder<pool_t>::template resolve<T>;
         using ctor = typename type_traits::ctor_traits<typename dependency::given>::type;
         return { refs, acquire<dependency>(static_cast<const pool_t&>(*this)).template create<T>(
-            provider<T, dependency, TProvider, TVisitors, ctor>{*this, provider_, visitors}
+            provider_impl<T, dependency, TProvider, TVisitors, ctor>{*this, provider, visitors}
         )};
     }
 
