@@ -73,20 +73,12 @@ struct inherit : TArgs... { };
 template<int N>
 using int_ = std::integral_constant<int, N>;
 
-template<bool N>
-using bool_ = std::integral_constant<bool, N>;
+template<bool V>
+using bool_ = std::integral_constant<bool, V>;
 
 template<class...>
 struct type_list {
     using type = type_list;
-};
-
-template<class>
-struct size;
-
-template<class... Ts>
-struct size<type_list<Ts...>> {
-    static constexpr auto value = sizeof...(Ts);
 };
 
 template<class...>
@@ -118,8 +110,8 @@ static no_decay<TDefault> lookup(...);
 template<class, class TKey, class TValue>
 static no_decay<TValue> lookup(pair<TKey, TValue>*);
 
-template<class TDefault, class TKey, class T>
-using at_key = decltype(lookup<TDefault, TKey>((T*)nullptr));
+template<class TDefault, class TKey, class... Ts>
+using at_key = decltype(lookup<TDefault, TKey>((inherit<Ts...>*)0));
 
 template<class TDefault, class TKey, class T>
 using at_key_t = typename at_key<TDefault, TKey, T>::type;

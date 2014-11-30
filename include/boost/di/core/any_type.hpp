@@ -32,7 +32,10 @@ class any_type {
     //any_type(const any_type&) = delete;
 
     template<class U>
-    using is_not_same_t = aux::enable_if_t<!std::is_same<aux::make_plain_t<U>, aux::make_plain_t<T>>::value>;
+    using is_not_same_t = aux::enable_if_t<
+        !std::is_same<aux::make_plain_t<U>
+      , aux::make_plain_t<T>>::value
+    >;
 
 public:
     any_type() noexcept { }

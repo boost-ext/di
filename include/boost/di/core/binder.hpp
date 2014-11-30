@@ -31,12 +31,13 @@ class binder {
     using get_name_t = typename get_name<T>::type;
 
     template<class TDefault, class>
-    static decltype(auto) resolve_impl(...) noexcept {
-        return TDefault{};
+    static TDefault resolve_impl(...) noexcept {
+        return {};
     }
 
     template<class, class TConcept, class TDependency>
-    static const TDependency& resolve_impl(const pair<TConcept, TDependency>* dep) noexcept {
+    static const TDependency&
+    resolve_impl(const pair<TConcept, TDependency>* dep) noexcept {
         return static_cast<const TDependency&>(*dep);
     }
 
@@ -48,7 +49,7 @@ class binder {
       , class TGiven
       , class TName
     >
-    static decltype(auto)
+    static decltype(auto) // priority scope
     resolve_impl(const pair<TConcept, dependency<TScope, TExpected, TGiven, TName, true>>* dep) noexcept {
         return static_cast<const dependency<TScope, TExpected, TGiven, TName, true>&>(*dep);
     }
@@ -60,7 +61,11 @@ public:
       , class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>
     >
     static decltype(auto) resolve(const TDeps* deps) noexcept {
-        using dependency = dependency_concept<aux::make_plain_t<T>, get_name_t<aux::remove_accessors_t<T>>>;
+        using dependency = dependency_concept<
+            aux::make_plain_t<T>
+          , get_name_t<aux::remove_accessors_t<T>>
+        >;
+
         return resolve_impl<TDefault, dependency>(deps);
     }
 };

@@ -207,13 +207,13 @@ private:
     }
 
     template<class T, class TDeps_, class TAction>
-    aux::enable_if_t<has_call<T, TAction>::value>
+    aux::enable_if_t<has_call<T, TAction>{}>
     call_impl(TDeps_& deps, const TAction& action) const noexcept {
         static_cast<T&>(deps).call(action);
     }
 
     template<class T, class TDeps_, class TAction>
-    aux::enable_if_t<!has_call<T, TAction>::value>
+    aux::enable_if_t<!has_call<T, TAction>{}>
     call_impl(TDeps_&, const TAction&) const noexcept { }
 
     template<class T>

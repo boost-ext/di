@@ -945,7 +945,10 @@ class any_type {
     //any_type(const any_type&) = delete;
 
     template<class U>
-    using is_not_same_t = aux::enable_if_t<!std::is_same<aux::make_plain_t<U>, aux::make_plain_t<T>>::value>;
+    using is_not_same_t = aux::enable_if_t<
+        !std::is_same<aux::make_plain_t<U>
+      , aux::make_plain_t<T>>::value
+    >;
 
 public:
     any_type() noexcept { }
@@ -1046,12 +1049,13 @@ class binder {
     using get_name_t = typename get_name<T>::type;
 
     template<class TDefault, class>
-    static decltype(auto) resolve_impl(...) noexcept {
-        return TDefault{};
+    static TDefault resolve_impl(...) noexcept {
+        return {};
     }
 
     template<class, class TConcept, class TDependency>
-    static const TDependency& resolve_impl(const pair<TConcept, TDependency>* dep) noexcept {
+    static const TDependency&
+    resolve_impl(const pair<TConcept, TDependency>* dep) noexcept {
         return static_cast<const TDependency&>(*dep);
     }
 
@@ -1075,7 +1079,11 @@ public:
       , class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>
     >
     static decltype(auto) resolve(const TDeps* deps) noexcept {
-        using dependency = dependency_concept<aux::make_plain_t<T>, get_name_t<aux::remove_accessors_t<T>>>;
+        using dependency = dependency_concept<
+            aux::make_plain_t<T>
+          , get_name_t<aux::remove_accessors_t<T>>
+        >;
+
         return resolve_impl<TDefault, dependency>(deps);
     }
 };
@@ -1334,7 +1342,7 @@ struct ctor_traits_impl;
 
 template<class T, std::size_t... Args>
 struct ctor_traits_impl<T, aux::index_sequence<Args...>>
-    : at_key<type_list<>, std::true_type, inherit<ctor_impl<T, core::any_type<T>, aux::make_index_sequence<Args>>...>>
+    : at_key<type_list<>, std::true_type, ctor_impl<T, core::any_type<T>, aux::make_index_sequence<Args>>...>
 { };
 
 } // namespace detail
@@ -1570,13 +1578,13 @@ private:
     }
 
     template<class T, class TDeps_, class TAction>
-    aux::enable_if_t<has_call<T, TAction>::value>
+    aux::enable_if_t<has_call<T, TAction>{}>
     call_impl(TDeps_& deps, const TAction& action) const noexcept {
         static_cast<T&>(deps).call(action);
     }
 
     template<class T, class TDeps_, class TAction>
-    aux::enable_if_t<!has_call<T, TAction>::value>
+    aux::enable_if_t<!has_call<T, TAction>{}>
     call_impl(TDeps_&, const TAction&) const noexcept { }
 
     template<class T>

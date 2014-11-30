@@ -40,7 +40,7 @@ struct ctor_traits_impl;
 
 template<class T, std::size_t... Args>
 struct ctor_traits_impl<T, aux::index_sequence<Args...>>
-    : at_key<type_list<>, std::true_type, inherit<ctor_impl<T, core::any_type<T>, aux::make_index_sequence<Args>>...>>
+    : at_key<type_list<>, std::true_type, ctor_impl<T, core::any_type<T>, aux::make_index_sequence<Args>>...>
 { };
 
 } // namespace detail
