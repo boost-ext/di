@@ -1570,12 +1570,12 @@ private:
     }
 
     template<class T, class... TPolicies>
-    static void call_policies(const pool<type_list<TPolicies...>>& policies) noexcept {
+    void call_policies(const pool<type_list<TPolicies...>>& policies) const noexcept {
         void(call_policies_impl<TPolicies, T>(policies)...);
     }
 
     template<class TPolicy, class T, class TPolicies>
-    static void call_policies_impl(const TPolicies& policies) noexcept {
+    void call_policies_impl(const TPolicies& policies) const noexcept {
         (static_cast<const TPolicy&>(policies))(T{});
     }
 
