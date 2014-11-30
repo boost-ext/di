@@ -16,7 +16,6 @@ namespace boost {
 namespace di {
 namespace core {
 
-template<class TDeps>
 class binder {
     template<class>
     struct get_name {
@@ -31,29 +30,39 @@ class binder {
     template<class T>
     using get_name_t = typename get_name<T>::type;
 
-public:
     template<class TDefault, class>
-    static no_decay<TDefault> lookup(...);
+    static decltype(auto) resolve_impl(...) noexcept {
+        return TDefault{};
+    }
 
-    template<class, class TKey, class TValue>
-    static no_decay<TValue> lookup(pair<TKey, TValue>*);
+    template<class, class TConcept, class TDependency>
+    static const TDependency& resolve_impl(const pair<TConcept, TDependency>* dep) noexcept {
+        return static_cast<const TDependency&>(*dep);
+    }
 
-    template<class, class TKey, class TScope, class TExpected , class TGiven, class TName>
-    static no_decay<dependency<TScope, TExpected, TGiven, TName, true>> lookup(pair<TKey, dependency<TScope, TExpected, TGiven, TName, true>>*);
-
-    template<class TDefault, class TKey, class T>
-    using at_key = decltype(lookup<TDefault, TKey>((T*)nullptr));
-
-    template<class TDefault, class TKey, class T>
-    using at_key_t = typename at_key<TDefault, TKey, T>::type;
+    template<
+        class
+      , class TConcept
+      , class TScope
+      , class TExpected
+      , class TGiven
+      , class TName
+    >
+    static decltype(auto)
+    resolve_impl(const pair<TConcept, dependency<TScope, TExpected, TGiven, TName, true>>* dep) noexcept {
+        return static_cast<const dependency<TScope, TExpected, TGiven, TName, true>&>(*dep);
+    }
 
 public:
-    template<class T, class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>>
-    using resolve = at_key_t<
-        TDefault
-      , dependency_concept<aux::make_plain_t<T>, get_name_t<aux::remove_accessors_t<T>>>
-      , TDeps
-    >;
+    template<
+        class T
+      , class TDeps
+      , class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>
+    >
+    static decltype(auto) resolve(const TDeps* deps) noexcept {
+        using dependency = dependency_concept<aux::make_plain_t<T>, get_name_t<aux::remove_accessors_t<T>>>;
+        return resolve_impl<TDefault, dependency>(deps);
+    }
 };
 
 } // namespace core

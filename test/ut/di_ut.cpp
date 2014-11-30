@@ -66,9 +66,9 @@ test any_of_with_scope = [] {
 		expect_eq(result, same);
 	};
 
-	test(di::unique, false);
-	test(di::shared, true);
-	test(di::singleton, true);
+    test(di::unique, false);
+    test(di::shared, true);
+    test(di::singleton, true);
 };
 
 test any_of_with_scope_split = [] {

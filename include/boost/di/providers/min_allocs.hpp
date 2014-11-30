@@ -16,32 +16,32 @@ namespace providers {
 
 class min_allocs {
 public:
-    template<class TDependency, class... TArgs>
-    inline typename TDependency::given* get_ptr(TArgs&&... args) const noexcept {
-        return new (std::nothrow) typename TDependency::given{std::forward<TArgs>(args)...};
+    template<class T, class... TArgs>
+    inline T* get_ptr(TArgs&&... args) const noexcept {
+        return new (std::nothrow) T{std::forward<TArgs>(args)...};
     }
 
-    template<class TDependency, class... TArgs>
-    inline typename TDependency::given get_value(TArgs&&... args) const noexcept {
-        return typename TDependency::given{std::forward<TArgs>(args)...};
+    template<class T, class... TArgs>
+    inline T get_value(TArgs&&... args) const noexcept {
+        return T{std::forward<TArgs>(args)...};
     }
 
-    template<class TDependency, class... TArgs>
+    template<class T, class... TArgs>
     inline aux::enable_if_t<
-        std::is_polymorphic<typename TDependency::given>{}
-      , typename TDependency::given*
+        std::is_polymorphic<T>{}
+      , T*
     >
     get(TArgs&&... args) const noexcept {
-        return get_ptr<TDependency>(std::forward<TArgs>(args)...);
+        return get_ptr<T>(std::forward<TArgs>(args)...);
     }
 
-    template<class TDependency, class... TArgs>
+    template<class T, class... TArgs>
     inline aux::enable_if_t<
-        !std::is_polymorphic<typename TDependency::given>{}
-      , typename TDependency::given
+        !std::is_polymorphic<T>{}
+      , T
     >
     get(TArgs&&... args) const noexcept {
-        return get_value<TDependency>(std::forward<TArgs>(args)...);
+        return get_value<T>(std::forward<TArgs>(args)...);
     }
 };
 

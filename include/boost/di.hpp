@@ -1031,7 +1031,6 @@ namespace boost {
 namespace di {
 namespace core {
 
-template<class TDeps>
 class binder {
     template<class>
     struct get_name {
@@ -1046,29 +1045,39 @@ class binder {
     template<class T>
     using get_name_t = typename get_name<T>::type;
 
-public:
     template<class TDefault, class>
-    static no_decay<TDefault> lookup(...);
+    static decltype(auto) resolve_impl(...) noexcept {
+        return TDefault{};
+    }
 
-    template<class, class TKey, class TValue>
-    static no_decay<TValue> lookup(pair<TKey, TValue>*);
+    template<class, class TConcept, class TDependency>
+    static const TDependency& resolve_impl(const pair<TConcept, TDependency>* dep) noexcept {
+        return static_cast<const TDependency&>(*dep);
+    }
 
-    template<class, class TKey, class TScope, class TExpected , class TGiven, class TName>
-    static no_decay<dependency<TScope, TExpected, TGiven, TName, true>> lookup(pair<TKey, dependency<TScope, TExpected, TGiven, TName, true>>*);
-
-    template<class TDefault, class TKey, class T>
-    using at_key = decltype(lookup<TDefault, TKey>((T*)nullptr));
-
-    template<class TDefault, class TKey, class T>
-    using at_key_t = typename at_key<TDefault, TKey, T>::type;
+    template<
+        class
+      , class TConcept
+      , class TScope
+      , class TExpected
+      , class TGiven
+      , class TName
+    >
+    static decltype(auto)
+    resolve_impl(const pair<TConcept, dependency<TScope, TExpected, TGiven, TName, true>>* dep) noexcept {
+        return static_cast<const dependency<TScope, TExpected, TGiven, TName, true>&>(*dep);
+    }
 
 public:
-    template<class T, class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>>
-    using resolve = at_key_t<
-        TDefault
-      , dependency_concept<aux::make_plain_t<T>, get_name_t<aux::remove_accessors_t<T>>>
-      , TDeps
-    >;
+    template<
+        class T
+      , class TDeps
+      , class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>
+    >
+    static decltype(auto) resolve(const TDeps* deps) noexcept {
+        using dependency = dependency_concept<aux::make_plain_t<T>, get_name_t<aux::remove_accessors_t<T>>>;
+        return resolve_impl<TDefault, dependency>(deps);
+    }
 };
 
 } // namespace core
@@ -1081,32 +1090,32 @@ namespace providers {
 
 class min_allocs {
 public:
-    template<class TDependency, class... TArgs>
-    inline typename TDependency::given* get_ptr(TArgs&&... args) const noexcept {
-        return new (std::nothrow) typename TDependency::given{std::forward<TArgs>(args)...};
+    template<class T, class... TArgs>
+    inline T* get_ptr(TArgs&&... args) const noexcept {
+        return new (std::nothrow) T{std::forward<TArgs>(args)...};
     }
 
-    template<class TDependency, class... TArgs>
-    inline typename TDependency::given get_value(TArgs&&... args) const noexcept {
-        return typename TDependency::given{std::forward<TArgs>(args)...};
+    template<class T, class... TArgs>
+    inline T get_value(TArgs&&... args) const noexcept {
+        return T{std::forward<TArgs>(args)...};
     }
 
-    template<class TDependency, class... TArgs>
+    template<class T, class... TArgs>
     inline aux::enable_if_t<
-        std::is_polymorphic<typename TDependency::given>{}
-      , typename TDependency::given*
+        std::is_polymorphic<T>{}
+      , T*
     >
     get(TArgs&&... args) const noexcept {
-        return get_ptr<TDependency>(std::forward<TArgs>(args)...);
+        return get_ptr<T>(std::forward<TArgs>(args)...);
     }
 
-    template<class TDependency, class... TArgs>
+    template<class T, class... TArgs>
     inline aux::enable_if_t<
-        !std::is_polymorphic<typename TDependency::given>{}
-      , typename TDependency::given
+        !std::is_polymorphic<T>{}
+      , T
     >
     get(TArgs&&... args) const noexcept {
-        return get_value<TDependency>(std::forward<TArgs>(args)...);
+        return get_value<T>(std::forward<TArgs>(args)...);
     }
 };
 
@@ -1425,7 +1434,6 @@ class injector : public pool<TDeps> {
     struct data {
         using type = T;
         using dependency = TDependency;
-        using binder = binder<TDeps>;
     };
 
     template<class...>
@@ -1536,13 +1544,11 @@ private:
     >
     decltype(auto)
     create_from_dep_impl(const TProvider& provider, TRefs& refs, const TVisitors& visitors) const noexcept {
-        using dependency = typename binder<pool_t>::template resolve<T>;
-        using ctor = typename type_traits::ctor_traits<typename dependency::given>::type;
-        return wrappers::universal<T>{
-            refs
-          , acquire<dependency>(static_cast<const pool_t&>(*this)).template create<T>(
-                provider_impl<T, dependency, TProvider, TVisitors, ctor>{*this, provider, visitors}
-            )
+        const auto& dependency = binder::resolve<T>(this);
+        using type = typename aux::remove_reference_t<decltype(dependency)>::given;;
+        using ctor = typename type_traits::ctor_traits<type>::type;
+        return wrappers::universal<T>{refs, dependency.template create<T>(
+            provider_impl<T, type, TProvider, TVisitors, ctor>{*this, provider, visitors})
         };
     }
 
@@ -1555,18 +1561,6 @@ private:
     template<class TPolicy, class T, class TVisitors>
     static void assert_policy(const TVisitors& visitors) noexcept {
         static_cast<const TPolicy&>(visitors).template assert_policy<T>();
-    }
-
-    template<class TDependency, class TDeps_>
-    aux::enable_if_t<std::is_base_of<TDependency, TDeps_>{}, const TDependency&>
-    acquire(TDeps_& deps) const noexcept {
-        return static_cast<const TDependency&>(deps);
-    }
-
-    template<class TDependency, class TDeps_>
-    aux::enable_if_t<!std::is_base_of<TDependency, TDeps_>{}, TDependency>
-    acquire(TDeps_&) const noexcept {
-        return TDependency{};
     }
 
     template<class TDeps_, class TAction, class... Ts>
@@ -1586,7 +1580,7 @@ private:
     call_impl(TDeps_&, const TAction&) const noexcept { }
 
     template<class T>
-    decltype(auto) pass_arg(const T& arg, aux::enable_if_t<!has_configure<T>::value>* = 0) const noexcept {
+    decltype(auto) pass_arg(const T& arg, aux::enable_if_t<!has_configure<T>{}>* = 0) const noexcept {
         return arg;
     }
 
