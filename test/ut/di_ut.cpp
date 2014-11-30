@@ -290,6 +290,14 @@ test call_policies = [] {
 test ctor_with_initializator_list = [] {
 };
 
+test string_creation = [] {
+    struct string {
+        std::string str;
+    };
+
+    expect_eq("", di::make_injector().create<string>().str);
+};
+
 test scopes_external_ref = [] {
     int i = 42;
 

@@ -38,7 +38,7 @@
 
 #else
 
-#include <string>
+//#include <string>
 #include <new>
 #include <functional>
 #include "boost/di/aux_/utility.hpp"
@@ -178,34 +178,205 @@ public:
 
 }} // namespace boost::di
 
-namespace boost { namespace di { namespace providers {
+namespace boost { namespace di { namespace wrappers {
 
-class min_allocs {
+template<class T>
+class shared {
+    template<class U, class TShared = aux::shared_ptr<U>>
+    class sp_holder {
+    public:
+        explicit sp_holder(const TShared& value)
+            : value_(value)
+        { }
+
+    private:
+        TShared value_;
+    };
+
 public:
-    template<class T, class... TArgs>
-    inline T* get_ptr(TArgs&&... args) const noexcept {
-        return new (std::nothrow) T{std::forward<TArgs>(args)...};
+    shared() { }
+
+    shared(const aux::shared_ptr<T>& value) noexcept // non explicit
+        : value_(value)
+    { }
+
+    inline bool operator!() const noexcept {
+        return !value_;
     }
 
-    template<class T, class... TArgs>
-    inline T get_value(TArgs&&... args) const noexcept {
-        return T{std::forward<TArgs>(args)...};
+    inline void reset(T* ptr = 0) noexcept {
+        return value_.reset(ptr);
     }
 
-    template<class T, class... TArgs>
-    inline std::enable_if_t<std::is_polymorphic<T>{}, T*>
-    get(TArgs&&... args) const noexcept {
-        return get_ptr<T>(std::forward<TArgs>(args)...);
+    template<class I>
+    inline aux::shared_ptr<I> operator()(const aux::type<aux::shared_ptr<I>>&) const noexcept {
+        return value_;
     }
 
-    template<class T, class... TArgs>
-    inline std::enable_if_t<!std::is_polymorphic<T>{}, T>
-    get(TArgs&&... args) const noexcept {
-        return get_value<T>(std::forward<TArgs>(args)...);
+    template<class I>
+    inline aux_::shared_ptr<I> operator()(const aux::type<aux_::shared_ptr<I>>&) const noexcept {
+        aux_::shared_ptr<sp_holder<T>> sp(new sp_holder<T>(value_));
+        return aux_::shared_ptr<T>(sp, value_.get());
     }
+
+    template<class I>
+    inline aux::weak_ptr<I> operator()(const aux::type<aux::weak_ptr<I>>&) const noexcept {
+        return value_;
+    }
+
+private:
+    aux::shared_ptr<T> value_;
 };
 
-}}} // namespace boost::di::providers
+}}} // namespace boost::di::wrappers
+
+namespace boost { namespace di { namespace wrappers {
+
+template<class T>
+class reference {
+    reference& operator=(const reference&) = delete;
+
+public:
+    reference(T& value) noexcept // non explicit
+        : value_(value)
+    { }
+
+    inline T& operator()(const aux::type<T&>&) const noexcept {
+        return value_;
+    }
+
+private:
+    std::reference_wrapper<T> value_;
+};
+
+}}} // namespace boost::di::wrappers
+
+namespace boost { namespace di { namespace wrappers {
+
+template<class T>
+class value {
+public:
+    value(const T& value) noexcept // non explicit
+        : value_(value)
+    { }
+
+    inline T operator()(const aux::type<T>&) const noexcept {
+        return value_;
+    }
+
+    inline T* operator()(const aux::type<T*>&) const noexcept {
+        return new T(value_);
+    }
+
+    inline const T* operator()(const aux::type<const T*>&) const noexcept {
+        return new T(value_);
+    }
+
+    inline T&& operator()(const aux::type<T&&>&) noexcept {
+        return std::move(value_);
+    }
+
+    template<class I>
+    inline aux::shared_ptr<I> operator()(const aux::type<aux::shared_ptr<I>>&) const noexcept {
+        return aux::shared_ptr<I>(new I(value_));
+    }
+
+    template<class I>
+    inline aux_::shared_ptr<I> operator()(const aux::type<aux_::shared_ptr<I>>&) const noexcept {
+        return aux_::shared_ptr<I>(new I(value_));
+    }
+
+    template<class I>
+    inline aux::unique_ptr<I> operator()(const aux::type<aux::unique_ptr<I>>&) const noexcept {
+        return aux::unique_ptr<I>(new I(value_));
+    }
+
+private:
+    T value_;
+};
+
+}}} // namespace boost::di::wrappers
+
+namespace boost { namespace di { namespace scopes {
+
+BOOST_DI_HAS_TYPE(result_type);
+BOOST_DI_HAS_METHOD(call_operator, operator());
+
+template<class T, class U>
+using has_lambda =
+    std::integral_constant<bool, has_call_operator<T, U>::value && !has_result_type<T>::value>;
+
+class external {
+    struct injector {
+        template<class T>
+        T create() const;
+    };
+
+public:
+    static constexpr auto priority = true;
+
+    template<class TT, class T, class = void>
+    class scope {
+    public:
+        explicit scope(const T& object) noexcept
+            : object_(object)
+        { }
+
+        template<class, class TProvider>
+        decltype(auto) create(const TProvider&) const noexcept {
+            return object_;
+        }
+
+    private:
+        wrappers::value<T> object_;
+    };
+
+    template<class TT, class T>
+    class scope<TT, T
+              , std::enable_if_t<
+                     has_call_operator<T>::value &&
+                    !has_lambda<T, const injector&>::value
+                >>
+    {
+    public:
+        explicit scope(const T& object) noexcept
+            : object_(object)
+        { }
+
+        template<class, class TProvider>
+        wrappers::value<TT> create(const TProvider&) const noexcept {
+            return object_();
+        }
+
+    private:
+        T object_;
+    };
+
+    template<class TT, class T>
+    class scope<TT, T, std::enable_if_t<has_lambda<T, const injector&>{}>>
+    {
+        scope& operator=(const scope&) = delete;
+
+    public:
+        explicit scope(const T& object) noexcept
+            : given_(object)
+        { }
+
+        scope(const scope& other) noexcept
+            : given_(other.given_)
+        { }
+
+        template<class, class TProvider>
+        wrappers::value<TT> create(const TProvider& provider) const noexcept {
+            return (given_)(provider.injector_);
+        }
+
+    private:
+        const T& given_;
+    };
+};
+
+}}} // namespace boost::di::scopes
 
 namespace boost { namespace di { namespace wrappers {
 
@@ -312,58 +483,6 @@ public:
 
 }}} // namespace boost::di::scopes
 
-namespace boost { namespace di { namespace wrappers {
-
-template<class T>
-class shared {
-    template<class U, class TShared = aux::shared_ptr<U>>
-    class sp_holder {
-    public:
-        explicit sp_holder(const TShared& value)
-            : value_(value)
-        { }
-
-    private:
-        TShared value_;
-    };
-
-public:
-    shared() { }
-
-    shared(const aux::shared_ptr<T>& value) noexcept // non explicit
-        : value_(value)
-    { }
-
-    inline bool operator!() const noexcept {
-        return !value_;
-    }
-
-    inline void reset(T* ptr = 0) noexcept {
-        return value_.reset(ptr);
-    }
-
-    template<class I>
-    inline aux::shared_ptr<I> operator()(const aux::type<aux::shared_ptr<I>>&) const noexcept {
-        return value_;
-    }
-
-    template<class I>
-    inline aux_::shared_ptr<I> operator()(const aux::type<aux_::shared_ptr<I>>&) const noexcept {
-        aux_::shared_ptr<sp_holder<T>> sp(new sp_holder<T>(value_));
-        return aux_::shared_ptr<T>(sp, value_.get());
-    }
-
-    template<class I>
-    inline aux::weak_ptr<I> operator()(const aux::type<aux::weak_ptr<I>>&) const noexcept {
-        return value_;
-    }
-
-private:
-    aux::shared_ptr<T> value_;
-};
-
-}}} // namespace boost::di::wrappers
-
 namespace boost { namespace di { namespace scopes {
 
 class singleton {
@@ -386,154 +505,6 @@ public:
             static wrappers::shared<T> object;
             return object;
         }
-    };
-};
-
-}}} // namespace boost::di::scopes
-
-namespace boost { namespace di { namespace wrappers {
-
-template<class T>
-class value {
-public:
-    value(const T& value) noexcept // non explicit
-        : value_(value)
-    { }
-
-    inline T operator()(const aux::type<T>&) const noexcept {
-        return value_;
-    }
-
-    inline T* operator()(const aux::type<T*>&) const noexcept {
-        return new T(value_);
-    }
-
-    inline const T* operator()(const aux::type<const T*>&) const noexcept {
-        return new T(value_);
-    }
-
-    inline T&& operator()(const aux::type<T&&>&) noexcept {
-        return std::move(value_);
-    }
-
-    template<class I>
-    inline aux::shared_ptr<I> operator()(const aux::type<aux::shared_ptr<I>>&) const noexcept {
-        return aux::shared_ptr<I>(new I(value_));
-    }
-
-    template<class I>
-    inline aux_::shared_ptr<I> operator()(const aux::type<aux_::shared_ptr<I>>&) const noexcept {
-        return aux_::shared_ptr<I>(new I(value_));
-    }
-
-    template<class I>
-    inline aux::unique_ptr<I> operator()(const aux::type<aux::unique_ptr<I>>&) const noexcept {
-        return aux::unique_ptr<I>(new I(value_));
-    }
-
-private:
-    T value_;
-};
-
-}}} // namespace boost::di::wrappers
-
-namespace boost { namespace di { namespace wrappers {
-
-template<class T>
-class reference {
-    reference& operator=(const reference&) = delete;
-
-public:
-    reference(T& value) noexcept // non explicit
-        : value_(value)
-    { }
-
-    inline T& operator()(const aux::type<T&>&) const noexcept {
-        return value_;
-    }
-
-private:
-    std::reference_wrapper<T> value_;
-};
-
-}}} // namespace boost::di::wrappers
-
-namespace boost { namespace di { namespace scopes {
-
-BOOST_DI_HAS_TYPE(result_type);
-BOOST_DI_HAS_METHOD(call_operator, operator());
-
-template<class T, class U>
-using has_lambda =
-    std::integral_constant<bool, has_call_operator<T, U>::value && !has_result_type<T>::value>;
-
-class external {
-    struct injector {
-        template<class T>
-        T create() const;
-    };
-
-public:
-    static constexpr auto priority = true;
-
-    template<class TT, class T, class = void>
-    class scope {
-    public:
-        explicit scope(const T& object) noexcept
-            : object_(object)
-        { }
-
-        template<class, class TProvider>
-        decltype(auto) create(const TProvider&) const noexcept {
-            return object_;
-        }
-
-    private:
-        wrappers::value<T> object_;
-    };
-
-    template<class TT, class T>
-    class scope<TT, T
-              , std::enable_if_t<
-                     has_call_operator<T>::value &&
-                    !has_lambda<T, const injector&>::value
-                >>
-    {
-    public:
-        explicit scope(const T& object) noexcept
-            : object_(object)
-        { }
-
-        template<class, class TProvider>
-        wrappers::value<TT> create(const TProvider&) const noexcept {
-            return object_();
-        }
-
-    private:
-        T object_;
-    };
-
-    template<class TT, class T>
-    class scope<TT, T, std::enable_if_t<has_lambda<T, const injector&>{}>>
-    {
-        scope& operator=(const scope&) = delete;
-
-    public:
-        explicit scope(const T& object) noexcept
-            : given_(object)
-        { }
-
-        scope(const scope& other) noexcept
-            : given_(other.given_)
-        { }
-
-        template<class, class TProvider>
-        wrappers::value<TT> create(const TProvider& provider) const noexcept {
-            return (given_)(provider.injector_);
-        }
-
-    private:
-        const T& given_;
     };
 };
 
@@ -650,115 +621,6 @@ public:
 
 }}} // namespace boost::di::scopes
 
-namespace boost { namespace di { namespace scopes {
-
-class exposed {
-public:
-    static constexpr auto priority = false;
-
-    template<class T>
-    struct provider {
-        provider() noexcept {}
-
-        template<typename TProvider>
-        explicit provider(const TProvider& provider) noexcept
-            : f([=]{ return provider.get(); })
-        { }
-
-        T* get_ptr() const noexcept { return f(); }
-        T* get() const noexcept { return f(); }
-
-        std::function<T*()> f;
-    };
-
-    template<class TExpected, class T>
-    class scope {
-    public:
-        scope() noexcept { }
-
-        template<class TProvider>
-        explicit scope(const TProvider& provider) noexcept
-            : provider_{provider}
-        { }
-
-        template<class TDst, class TProvider>
-        decltype(auto) create(const TProvider&) const noexcept {
-            using scope = typename type_traits::scope_traits_t<TDst>::template scope<TExpected, T>;
-            return scope{}.template create<TDst>(provider_);
-        }
-
-    private:
-        provider<T> provider_;
-    };
-};
-
-}}} // namespace boost::di::scopes
-
-namespace boost { namespace di { namespace scopes {
-
-template<class = no_name>
-class session_entry { };
-
-template<class = no_name>
-class session_exit { };
-
-template<class TName = no_name>
-class session {
-public:
-    static constexpr auto priority = false;
-
-    template<class, class T>
-    class scope {
-    public:
-        void call(const session_entry<TName>&) noexcept {
-            in_scope_ = true;
-        }
-
-        void call(const session_exit<TName>&) noexcept {
-            in_scope_ = false;
-            object_.reset();
-        }
-
-        template<class, class TProvider>
-        decltype(auto) create(const TProvider& provider) const noexcept {
-            if (in_scope_ && !object_) {
-                object_.reset(provider.get());
-            }
-            return object_;
-        }
-
-    private:
-        mutable wrappers::shared<T> object_;
-        bool in_scope_ = false;
-    };
-};
-
-}}} // namespace boost::di::scopes
-
-namespace boost { namespace di { namespace scopes {
-
-class shared {
-public:
-    static constexpr auto priority = false;
-
-    template<class, class T>
-    class scope {
-    public:
-        template<class, class TProvider>
-        decltype(auto) create(const TProvider& provider) const noexcept {
-            if (!object_) {
-                object_.reset(provider.get_ptr());
-            }
-            return object_;
-        }
-
-    private:
-        mutable wrappers::shared<T> object_;
-    };
-};
-
-}}} // namespace boost::di::scopes
-
 namespace boost { namespace di { namespace core {
 
 template<class TExpected, class TName>
@@ -837,6 +699,71 @@ struct is_dependency<
 > : std::true_type { };
 
 }}} // namespace boost::di::core
+
+namespace boost { namespace di { namespace scopes {
+
+template<class = no_name>
+class session_entry { };
+
+template<class = no_name>
+class session_exit { };
+
+template<class TName = no_name>
+class session {
+public:
+    static constexpr auto priority = false;
+
+    template<class, class T>
+    class scope {
+    public:
+        void call(const session_entry<TName>&) noexcept {
+            in_scope_ = true;
+        }
+
+        void call(const session_exit<TName>&) noexcept {
+            in_scope_ = false;
+            object_.reset();
+        }
+
+        template<class, class TProvider>
+        decltype(auto) create(const TProvider& provider) const noexcept {
+            if (in_scope_ && !object_) {
+                object_.reset(provider.get());
+            }
+            return object_;
+        }
+
+    private:
+        mutable wrappers::shared<T> object_;
+        bool in_scope_ = false;
+    };
+};
+
+}}} // namespace boost::di::scopes
+
+namespace boost { namespace di { namespace scopes {
+
+class shared {
+public:
+    static constexpr auto priority = false;
+
+    template<class, class T>
+    class scope {
+    public:
+        template<class, class TProvider>
+        decltype(auto) create(const TProvider& provider) const noexcept {
+            if (!object_) {
+                object_.reset(provider.get_ptr());
+            }
+            return object_;
+        }
+
+    private:
+        mutable wrappers::shared<T> object_;
+    };
+};
+
+}}} // namespace boost::di::scopes
 
 namespace boost { namespace di {
 
@@ -1103,10 +1030,7 @@ struct ctor_traits
       >
 { };
 
-template<class T>
-struct ctor_traits<std::basic_string<T>> {
-    static void BOOST_DI_INJECTOR();
-};
+    //static void BOOST_DI_INJECTOR();
 
 namespace type_traits {
 
@@ -1515,6 +1439,50 @@ private:
 };
 
 }}} // namespace boost::di::core
+
+namespace boost { namespace di { namespace scopes {
+
+class exposed {
+public:
+    static constexpr auto priority = false;
+
+    template<class T>
+    struct provider {
+        provider() noexcept {}
+
+        template<typename TProvider>
+        explicit provider(const TProvider& provider) noexcept
+            : f([=]{ return provider.get(); })
+        { }
+
+        T* get_ptr() const noexcept { return f(); }
+        T* get() const noexcept { return f(); }
+
+        std::function<T*()> f;
+    };
+
+    template<class TExpected, class T>
+    class scope {
+    public:
+        scope() noexcept { }
+
+        template<class TProvider>
+        explicit scope(const TProvider& provider) noexcept
+            : provider_{provider}
+        { }
+
+        template<class TDst, class TProvider>
+        decltype(auto) create(const TProvider&) const noexcept {
+            using scope = typename type_traits::scope_traits_t<TDst>::template scope<TExpected, T>;
+            return scope{}.template create<TDst>(provider_);
+        }
+
+    private:
+        provider<T> provider_;
+    };
+};
+
+}}} // namespace boost::di::scopes
 
 namespace boost { namespace di { namespace detail {
 

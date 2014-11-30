@@ -56,8 +56,12 @@ struct ctor_traits
       >
 { };
 
-template<class T>
-struct ctor_traits<std::basic_string<T>> {
+template<
+    class T
+  , class Traits
+  , class TAllocator
+>
+struct ctor_traits<std::basic_string<T, Traits, TAllocator>> {
     static void BOOST_DI_INJECTOR();
 };
 
