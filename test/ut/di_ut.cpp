@@ -40,7 +40,6 @@ test named_params = [] {
 	);
 	expect(0 == injector.create<int>());
 	expect(i == injector.create<di::named<int, name>>());
-    //expect(i == injector.create<const di::named<int, name>&>());
 };
 
 test any_of = [] {
@@ -217,7 +216,7 @@ test exposed_type_by_component_mix = [] {
 test scopes_priority = [] {
     auto injector = di::make_injector(
         di::bind<int>.to(12)
-      , di::bind<int, di::int_<42>>
+      , di::bind<int, std::integral_constant<int, 42>>
     );
 
     auto object = injector.create<int>();
@@ -286,6 +285,9 @@ test call_policies = [] {
     auto injector = di::make_injector();
     injector.create<int>(policy{called});
     expect(called);
+};
+
+test ctor_with_initializator_list = [] {
 };
 
 test scopes_external_ref = [] {

@@ -51,8 +51,6 @@ struct make_index_sequence_impl<1>
 template<std::size_t N>
 using make_index_sequence = typename make_index_sequence_impl<N>::type;
 
-} // namespace aux
-
 template<class>
 struct type { };
 
@@ -116,6 +114,7 @@ using at_key = decltype(lookup<TDefault, TKey>((inherit<Ts...>*)0));
 template<class TDefault, class TKey, class T>
 using at_key_t = typename at_key<TDefault, TKey, T>::type;
 
+} // namespace aux
 } // namespace di
 } // namespace boost
 

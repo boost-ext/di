@@ -23,7 +23,7 @@ public:
         : value_(value)
     { }
 
-    inline T& operator()(const type<T&>&) const noexcept {
+    inline T& operator()(const aux::type<T&>&) const noexcept {
         return value_;
     }
 

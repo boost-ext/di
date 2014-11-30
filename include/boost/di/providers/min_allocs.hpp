@@ -27,19 +27,13 @@ public:
     }
 
     template<class T, class... TArgs>
-    inline aux::enable_if_t<
-        std::is_polymorphic<T>{}
-      , T*
-    >
+    inline aux::enable_if_t<std::is_polymorphic<T>{}, T*>
     get(TArgs&&... args) const noexcept {
         return get_ptr<T>(std::forward<TArgs>(args)...);
     }
 
     template<class T, class... TArgs>
-    inline aux::enable_if_t<
-        !std::is_polymorphic<T>{}
-      , T
-    >
+    inline aux::enable_if_t<!std::is_polymorphic<T>{}, T>
     get(TArgs&&... args) const noexcept {
         return get_value<T>(std::forward<TArgs>(args)...);
     }

@@ -16,11 +16,11 @@ namespace core {
 
 struct init { };
 
-template<class = type_list<>>
+template<class = aux::type_list<>>
 class pool;
 
 template<class... TArgs>
-class pool<type_list<TArgs...>> : public TArgs... {
+class pool<aux::type_list<TArgs...>> : public TArgs... {
 public:
     template<class... Ts>
     explicit pool(const Ts&... args) noexcept

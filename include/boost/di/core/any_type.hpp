@@ -14,16 +14,16 @@ namespace di {
 namespace core {
 
 template<
-    class T = none_t
-  , class TInjector = none_t
-  , class TProvider = none_t
-  , class TRefs = none_t
-  , class TPolicies = none_t
+    class T = aux::none_t
+  , class TInjector = aux::none_t
+  , class TProvider = aux::none_t
+  , class TRefs = aux::none_t
+  , class TPolicies = aux::none_t
 >
 class any_type {
     template<class TValueType, class TRefType>
     using ref_type_t = aux::conditional_t<
-          std::is_same<TValueType, none_t>{}
+          std::is_same<TValueType, aux::none_t>{}
         , TValueType
         , TRefType
       >;

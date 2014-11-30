@@ -37,7 +37,7 @@ class binder {
 
     template<class, class TConcept, class TDependency>
     static const TDependency&
-    resolve_impl(const pair<TConcept, TDependency>* dep) noexcept {
+    resolve_impl(const aux::pair<TConcept, TDependency>* dep) noexcept {
         return static_cast<const TDependency&>(*dep);
     }
 
@@ -50,7 +50,7 @@ class binder {
       , class TName
     >
     static decltype(auto) // priority scope
-    resolve_impl(const pair<TConcept, dependency<TScope, TExpected, TGiven, TName, true>>* dep) noexcept {
+    resolve_impl(const aux::pair<TConcept, dependency<TScope, TExpected, TGiven, TName, true>>* dep) noexcept {
         return static_cast<const dependency<TScope, TExpected, TGiven, TName, true>&>(*dep);
     }
 

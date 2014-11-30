@@ -18,7 +18,7 @@ namespace boost {
 namespace di {
 
 template<class... Ts>
-using any_of = type_list<Ts...>;
+using any_of = aux::type_list<Ts...>;
 
 template<class TExpected, class TGiven = TExpected>
 core::dependency<scopes::deduce, TExpected, TGiven> bind{};

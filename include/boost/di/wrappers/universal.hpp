@@ -20,12 +20,13 @@ namespace detail {
 BOOST_DI_HAS_METHOD_SIGN(call_operator, opeartor());
 
 template<class TValueType, class T>
-using is_convertible_to_ref = has_call_operator<TValueType, const T&(TValueType::*)(const type<const T&>&) const>;
+using is_convertible_to_ref =
+    has_call_operator<TValueType, const T&(TValueType::*)(const aux::type<const T&>&) const>;
 
 template<class TResult, class T, class TWrapper>
 inline aux::enable_if_t<!std::is_copy_constructible<T>{}, const TResult&>
 copy(aux::shared_ptr<void>& refs, const TWrapper& wrapper) noexcept {
-    refs.reset(wrapper(type<T*>()));
+    refs.reset(wrapper(aux::type<T*>()));
     return *refs;
 }
 
@@ -41,7 +42,7 @@ struct holder {
 template<class TResult, class T, class TWrapper>
 inline aux::enable_if_t<std::is_copy_constructible<T>{}, const TResult&>
 copy(aux::shared_ptr<void>& refs, const TWrapper& wrapper) noexcept {
-    aux::shared_ptr<holder<TResult>> sp(new holder<TResult>(wrapper(type<T>())));
+    aux::shared_ptr<holder<TResult>> sp(new holder<TResult>(wrapper(aux::type<T>())));
     refs = sp;
     return sp->held;
 }
@@ -51,7 +52,7 @@ class universal_impl {
 public:
     template<class TWrapper>
     universal_impl(aux::shared_ptr<void>&, const TWrapper& wrapper) noexcept
-        : object_(wrapper(type<T>()))
+        : object_(wrapper(aux::type<T>()))
     { }
 
     inline operator T() const noexcept {
@@ -73,7 +74,7 @@ public:
     universal_impl(aux::shared_ptr<void>&
                  , const TWrapper& wrapper
                  , aux::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
-        : object_(wrapper(type<const T&>()))
+        : object_(wrapper(aux::type<const T&>()))
     { }
 
     template<class TWrapper>
@@ -96,7 +97,7 @@ class universal_impl<named<T, TName>> {
 public:
     template<class TWrapper>
     universal_impl(aux::shared_ptr<void>&, const TWrapper& wrapper) noexcept
-        : object_(wrapper(type<T>()))
+        : object_(wrapper(aux::type<T>()))
     { }
 
     inline operator T() const noexcept {
@@ -118,7 +119,7 @@ public:
     universal_impl(aux::shared_ptr<void>&
                  , const TWrapper& wrapper
                  , aux::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
-        : object_(wrapper(type<const T&>()))
+        : object_(wrapper(aux::type<const T&>()))
     { }
 
     template<class TWrapper>
@@ -163,7 +164,7 @@ public:
                  , const TWrapper& wrapper
                  , aux::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
         : refs_(refs)
-        , object_(wrapper(type<const T&>()))
+        , object_(wrapper(aux::type<const T&>()))
     { }
 
     template<class TWrapper>

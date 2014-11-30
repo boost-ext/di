@@ -8,12 +8,60 @@
 #define BOOST_DI_INJECTOR_HPP
 
 #include "boost/di/core/injector.hpp"
+#include "boost/di/core/dependency.hpp"
+#include "boost/di/scopes/exposed.hpp"
 
 namespace boost {
 namespace di {
 
+namespace detail {
+
+BOOST_DI_HAS_TYPE(deps);
+
+template<class T>
+using is_injector = aux::bool_<has_deps<T>{} || core::has_configure<T>{}>;
+
+template<class T, class = void>
+struct get_deps {
+    using type = typename T::deps;
+};
+
+template<class T>
+struct get_deps<T, aux::enable_if_t<core::has_configure<T>{}>> {
+    using type = typename aux::function_traits<
+        decltype(&T::configure)
+    >::result_type::deps;
+};
+
+template<
+    class T
+  , class = typename is_injector<T>::type
+  , class = typename core::is_dependency<T>::type
+>
+struct add_type_list;
+
+template<class T, class TAny>
+struct add_type_list<T, std::true_type, TAny> {
+    using type = typename get_deps<T>::type;
+};
+
+template<class T>
+struct add_type_list<T, std::false_type, std::true_type> {
+    using type = aux::type_list<T>;
+};
+
+template<class T>
+struct add_type_list<T, std::false_type, std::false_type> {
+    using type = aux::type_list<core::dependency<scopes::exposed, T>>;
+};
+
+template<class... Ts>
+using bindings_t = typename aux::join<typename add_type_list<Ts>::type...>::type;
+
+} // detail
+
 template<class... TArgs>
-using injector = core::injector<core::bindings_t<TArgs...>>;
+using injector = core::injector<detail::bindings_t<TArgs...>>;
 
 } // namespace di
 } // namespace boost

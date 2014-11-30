@@ -20,34 +20,34 @@ public:
         : value_(value)
     { }
 
-    inline T operator()(const type<T>&) const noexcept {
+    inline T operator()(const aux::type<T>&) const noexcept {
         return value_;
     }
 
-    inline T* operator()(const type<T*>&) const noexcept {
+    inline T* operator()(const aux::type<T*>&) const noexcept {
         return new T(value_);
     }
 
-    inline const T* operator()(const type<const T*>&) const noexcept {
+    inline const T* operator()(const aux::type<const T*>&) const noexcept {
         return new T(value_);
     }
 
-    inline T&& operator()(const type<T&&>&) noexcept {
+    inline T&& operator()(const aux::type<T&&>&) noexcept {
         return std::move(value_);
     }
 
     template<class I>
-    inline aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I>>&) const noexcept {
+    inline aux::shared_ptr<I> operator()(const aux::type<aux::shared_ptr<I>>&) const noexcept {
         return aux::shared_ptr<I>(new I(value_));
     }
 
     template<class I>
-    inline aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I>>&) const noexcept {
+    inline aux_::shared_ptr<I> operator()(const aux::type<aux_::shared_ptr<I>>&) const noexcept {
         return aux_::shared_ptr<I>(new I(value_));
     }
 
     template<class I>
-    inline aux::unique_ptr<I> operator()(const type<aux::unique_ptr<I>>&) const noexcept {
+    inline aux::unique_ptr<I> operator()(const aux::type<aux::unique_ptr<I>>&) const noexcept {
         return aux::unique_ptr<I>(new I(value_));
     }
 

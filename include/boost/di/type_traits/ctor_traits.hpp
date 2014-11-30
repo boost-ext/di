@@ -31,8 +31,10 @@ struct ctor_impl;
 
 template<class R, class T, std::size_t... TArgs>
 struct ctor_impl<R, T, aux::index_sequence<TArgs...>>
-    : pair<aux::is_braces_constructible_t<R, typename get_type<T, TArgs>::type...>, type_list<typename get_type<T, TArgs>::type...>>
-    //: pair<aux::is_constructible_t<R, typename get_type<T, TArgs>::type...>, type_list<typename get_type<T, TArgs>::type...>>
+    : aux::pair<
+          aux::is_braces_constructible_t<R, typename get_type<T, TArgs>::type...>
+        , aux::type_list<typename get_type<T, TArgs>::type...>
+      >
 { };
 
 template<class, class>
@@ -40,14 +42,21 @@ struct ctor_traits_impl;
 
 template<class T, std::size_t... Args>
 struct ctor_traits_impl<T, aux::index_sequence<Args...>>
-    : at_key<type_list<>, std::true_type, ctor_impl<T, core::any_type<T>, aux::make_index_sequence<Args>>...>
+    : aux::at_key<
+          aux::type_list<>
+        , std::true_type
+        , ctor_impl<T, core::any_type<T>, aux::make_index_sequence<Args>>...
+      >
 { };
 
 } // namespace detail
 
 template<class T>
 struct ctor_traits
-    : detail::ctor_traits_impl<T, aux::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>>
+    : detail::ctor_traits_impl<
+          T
+        , aux::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>
+      >
 { };
 
 template<class T>
@@ -57,10 +66,16 @@ struct ctor_traits<std::basic_string<T>> {
 
 namespace type_traits {
 
-template<class T, class = typename BOOST_DI_CAT(detail::has_, BOOST_DI_INJECTOR)<T>::type>
+template<
+    class T
+  , class = typename BOOST_DI_CAT(detail::has_, BOOST_DI_INJECTOR)<T>::type
+>
 struct ctor_traits;
 
-template<class T, class = typename BOOST_DI_CAT(detail::has_, BOOST_DI_INJECTOR)<di::ctor_traits<T>>::type>
+template<
+    class T
+  , class = typename BOOST_DI_CAT(detail::has_, BOOST_DI_INJECTOR)<di::ctor_traits<T>>::type
+>
 struct ctor_traits_impl;
 
 template<class T>

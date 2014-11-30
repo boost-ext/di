@@ -42,18 +42,18 @@ public:
     }
 
     template<class I>
-    inline aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I>>&) const noexcept {
+    inline aux::shared_ptr<I> operator()(const aux::type<aux::shared_ptr<I>>&) const noexcept {
         return value_;
     }
 
     template<class I>
-    inline aux_::shared_ptr<I> operator()(const type<aux_::shared_ptr<I>>&) const noexcept {
+    inline aux_::shared_ptr<I> operator()(const aux::type<aux_::shared_ptr<I>>&) const noexcept {
         aux_::shared_ptr<sp_holder<T>> sp(new sp_holder<T>(value_));
         return aux_::shared_ptr<T>(sp, value_.get());
     }
 
     template<class I>
-    inline aux::weak_ptr<I> operator()(const type<aux::weak_ptr<I>>&) const noexcept {
+    inline aux::weak_ptr<I> operator()(const aux::type<aux::weak_ptr<I>>&) const noexcept {
         return value_;
     }
 

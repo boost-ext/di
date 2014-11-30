@@ -10,57 +10,21 @@
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
-#include "boost/di/core/pool.hpp"
 #include "boost/di/core/any_type.hpp"
 #include "boost/di/core/binder.hpp"
+#include "boost/di/core/pool.hpp"
 #include "boost/di/providers/min_allocs.hpp"
-#include "boost/di/wrappers/universal.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
-#include "boost/di/scopes/exposed.hpp"
+#include "boost/di/wrappers/universal.hpp"
 
 namespace boost {
 namespace di {
 namespace core {
 
-BOOST_DI_HAS_TYPE(deps);
 BOOST_DI_HAS_METHOD(configure, configure);
 BOOST_DI_HAS_METHOD(call, call);
 
-template<class T>
-using is_injector = bool_<has_deps<T>{} || has_configure<T>{}>;
-
-template<class T, class = void>
-struct get_deps {
-    using type = typename T::deps;
-};
-
-template<class T>
-struct get_deps<T, aux::enable_if_t<has_configure<T>{}>> {
-    using type = typename aux::function_traits<decltype(&T::configure)>::result_type::deps;
-};
-
-template<class T, class = typename is_injector<T>::type, class = typename is_dependency<T>::type>
-struct add_type_list;
-
-template<class T, class TAny>
-struct add_type_list<T, std::true_type, TAny> {
-    using type = typename get_deps<T>::type;
-};
-
-template<class T>
-struct add_type_list<T, std::false_type, std::true_type> {
-    using type = type_list<T>;
-};
-
-template<class T>
-struct add_type_list<T, std::false_type, std::false_type> {
-    using type = type_list<dependency<scopes::exposed, T>>;
-};
-
-template<class... Ts>
-using bindings_t = typename join<typename add_type_list<Ts>::type...>::type;
-
-template<class TDeps = type_list<>, typename TDefaultProvider = providers::min_allocs>
+template<class TDeps = aux::type_list<>, typename TDefaultProvider = providers::min_allocs>
 class injector : public pool<TDeps> {
     template<class, class, class, class, class>
     friend class any_type;
@@ -84,7 +48,7 @@ class injector : public pool<TDeps> {
       , class TPolicies
       , class... TArgs
     >
-    struct provider_impl<T, TDependency, TProvider, TPolicies, type_list<TArgs...>> {
+    struct provider_impl<T, TDependency, TProvider, TPolicies, aux::type_list<TArgs...>> {
         const injector& injector_;
         const TProvider& provider_;
         const TPolicies& policies_;
@@ -123,16 +87,16 @@ public:
 
     template<class T, class... TArgs>
     T create(const TArgs&... args) const noexcept {
-        pool<type_list<TArgs...>> policies(args...);
+        pool<aux::type_list<TArgs...>> policies(args...);
         aux::shared_ptr<void> v;
-        return create_impl<T, none_t>(TDefaultProvider{}, v, policies);
+        return create_impl<T, aux::none_t>(TDefaultProvider{}, v, policies);
     }
 
     template<class T, class TProvider, class... TArgs>
     T provide(const TProvider& provider, const TArgs&... args) const noexcept {
-        pool<type_list<TArgs...>> policies(args...);
+        pool<aux::type_list<TArgs...>> policies(args...);
         aux::shared_ptr<void> v;
-        return create_impl<T, none_t>(provider, v, policies);
+        return create_impl<T, aux::none_t>(provider, v, policies);
     }
 
     template<class TAction>
@@ -143,7 +107,7 @@ public:
 private:
     template<class... TArgs>
     injector(const init&, const TArgs&... args) noexcept
-        : pool_t{init{}, pool<type_list<TArgs...>>{args...}}
+        : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
     { }
 
     template<
@@ -192,7 +156,7 @@ private:
     }
 
     template<class T, class... TPolicies>
-    void call_policies(const pool<type_list<TPolicies...>>& policies) const noexcept {
+    void call_policies(const pool<aux::type_list<TPolicies...>>& policies) const noexcept {
         void(call_policies_impl<TPolicies, T>(policies)...);
     }
 
@@ -202,7 +166,7 @@ private:
     }
 
     template<class TAction, class... Ts>
-    void call_impl(const TAction& action, const type_list<Ts...>&) noexcept {
+    void call_impl(const TAction& action, const aux::type_list<Ts...>&) noexcept {
         void(call_impl<Ts>(action)...);
     }
 
@@ -227,7 +191,7 @@ private:
     }
 
     template<class T, class... Ts>
-    decltype(auto) create_from_injector(const injector<T>& injector, const type_list<Ts...>&) const noexcept {
+    decltype(auto) create_from_injector(const injector<T>& injector, const aux::type_list<Ts...>&) const noexcept {
         return pool<TDeps>(create_dep<Ts>(injector)...);
     }
 
