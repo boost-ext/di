@@ -244,6 +244,50 @@ test scopes_injector_lambda_injector = [] {
     expect_eq(s, injector.create<int>());
 };
 
+BOOST_DI_HAS_METHOD(call, call);
+
+test session_call = [] {
+    struct name { };
+    auto injector = di::make_injector(
+        di::bind<i1, impl1>.in(di::session(name{}))
+    );
+
+    {
+    injector.call(di::session_entry(name{}));
+    auto object = injector.create<std::shared_ptr<i1>>();
+    expect(object.get());
+	expect(dynamic_cast<i1*>(object.get()));
+    }
+
+    {
+    injector.call(di::session_exit(int{}));
+    auto object = injector.create<std::shared_ptr<i1>>();
+    expect(object.get());
+    }
+
+    {
+    injector.call(di::session_exit(name{}));
+    auto object = injector.create<std::shared_ptr<i1>>();
+    expect(!object.get());
+    }
+};
+
+struct policy {
+    bool& called;
+
+    template<typename T>
+    void operator()(const T&) const {
+        called = true;
+    }
+};
+
+test call_policies = [] {
+    auto called = false;
+    auto injector = di::make_injector();
+    injector.create<int>(policy{called});
+    expect(called);
+};
+
 test scopes_external_ref = [] {
     int i = 42;
 

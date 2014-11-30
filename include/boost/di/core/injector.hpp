@@ -71,6 +71,7 @@ class injector : public pool<TDeps> {
     struct data {
         using type = T;
         using dependency = TDependency;
+        using binder = core::binder;
     };
 
     template<class...>
@@ -80,25 +81,25 @@ class injector : public pool<TDeps> {
         class T
       , class TDependency
       , class TProvider
-      , class TVisitors
+      , class TPolicies
       , class... TArgs
     >
-    struct provider_impl<T, TDependency, TProvider, TVisitors, type_list<TArgs...>> {
+    struct provider_impl<T, TDependency, TProvider, TPolicies, type_list<TArgs...>> {
         const injector& injector_;
         const TProvider& provider_;
-        const TVisitors& visitors_;
+        const TPolicies& policies_;
 
         decltype(auto) get() const noexcept {
             aux::shared_ptr<void> v;
             return provider_.template get<TDependency>(
-                injector_.create_impl<TArgs, T>(provider_, v, visitors_)...
+                injector_.create_impl<TArgs, T>(provider_, v, policies_)...
             );
         }
 
         decltype(auto) get_ptr() const noexcept {
             aux::shared_ptr<void> v;
             return provider_.template get_ptr<TDependency>(
-                injector_.create_impl<TArgs, T>(provider_, v, visitors_)...
+                injector_.create_impl<TArgs, T>(provider_, v, policies_)...
             );
         }
     };
@@ -122,21 +123,21 @@ public:
 
     template<class T, class... TArgs>
     T create(const TArgs&... args) const noexcept {
-        pool<type_list<TArgs...>> visitors(args...);
+        pool<type_list<TArgs...>> policies(args...);
         aux::shared_ptr<void> v;
-        return create_impl<T, none_t>(TDefaultProvider{}, v, visitors);
+        return create_impl<T, none_t>(TDefaultProvider{}, v, policies);
     }
 
     template<class T, class TProvider, class... TArgs>
     T provide(const TProvider& provider, const TArgs&... args) const noexcept {
-        pool<type_list<TArgs...>> visitors(args...);
+        pool<type_list<TArgs...>> policies(args...);
         aux::shared_ptr<void> v;
-        return create_impl<T, none_t>(provider, v, visitors);
+        return create_impl<T, none_t>(provider, v, policies);
     }
 
     template<class TAction>
-    void call(const TAction& action) const noexcept {
-        call_impl(static_cast<pool<deps>&>(*this), action, deps{});
+    void call(const TAction& action) noexcept {
+        call_impl(action, deps{});
     }
 
 private:
@@ -150,13 +151,13 @@ private:
       , class TParent
       , class TProvider
       , class TRefs
-      , class TVisitors
+      , class TPolicies
     >
     decltype(auto)
-    create_impl(const TProvider& provider, TRefs& refs, const TVisitors& visitors
+    create_impl(const TProvider& provider, TRefs& refs, const TPolicies& policies
               , aux::enable_if_t<is_any_type<T>{}>* = 0) const noexcept {
-        return any_type<TParent, injector, TProvider, TRefs, TVisitors>{
-            *this, provider, refs, visitors
+        return any_type<TParent, injector, TProvider, TRefs, TPolicies>{
+            *this, provider, refs, policies
         };
     }
 
@@ -165,56 +166,55 @@ private:
       , class TParent
       , class TProvider
       , class TRefs
-      , class TVisitors
+      , class TPolicies
     >
     decltype(auto)
-    create_impl(const TProvider& provider, TRefs& refs, const TVisitors& visitors
+    create_impl(const TProvider& provider, TRefs& refs, const TPolicies& policies
               , aux::enable_if_t<!is_any_type<T>{}>* = 0) const noexcept {
-        return create_from_dep_impl<T>(provider, refs, visitors);
+        return create_from_dep_impl<T>(provider, refs, policies);
     }
 
     template<
         class T
       , class TProvider
       , class TRefs
-      , class TVisitors
+      , class TPolicies
     >
     decltype(auto)
-    create_from_dep_impl(const TProvider& provider, TRefs& refs, const TVisitors& visitors) const noexcept {
+    create_from_dep_impl(const TProvider& provider, TRefs& refs, const TPolicies& policies) const noexcept {
         const auto& dependency = binder::resolve<T>(this);
         using type = typename aux::remove_reference_t<decltype(dependency)>::given;;
         using ctor = typename type_traits::ctor_traits<type>::type;
+        call_policies<data<T, type>>(policies);
         return wrappers::universal<T>{refs, dependency.template create<T>(
-            provider_impl<T, type, TProvider, TVisitors, ctor>{*this, provider, visitors})
+            provider_impl<T, type, TProvider, TPolicies, ctor>{*this, provider, policies})
         };
     }
 
-    template<class T, class... TVisitors>
-    static void assert_visitors(const pool<type_list<TVisitors...>>& visitors) noexcept {
-        int dummy[]{0, (assert_policy<TVisitors, T>(visitors), 0)...};
-        (void)dummy;
+    template<class T, class... TPolicies>
+    static void call_policies(const pool<type_list<TPolicies...>>& policies) noexcept {
+        void(call_policies_impl<TPolicies, T>(policies)...);
     }
 
-    template<class TPolicy, class T, class TVisitors>
-    static void assert_policy(const TVisitors& visitors) noexcept {
-        static_cast<const TPolicy&>(visitors).template assert_policy<T>();
+    template<class TPolicy, class T, class TPolicies>
+    static void call_policies_impl(const TPolicies& policies) noexcept {
+        (static_cast<const TPolicy&>(policies))(T{});
     }
 
-    template<class TDeps_, class TAction, class... Ts>
-    void call_impl(TDeps_& deps, const TAction& action, const type_list<Ts...>&) const noexcept {
-        int dummy[]{0, (call_impl<Ts>(deps, action), 0)...};
-        (void)dummy;
+    template<class TAction, class... Ts>
+    void call_impl(const TAction& action, const type_list<Ts...>&) noexcept {
+        void(call_impl<Ts>(action)...);
     }
 
-    template<class T, class TDeps_, class TAction>
-    aux::enable_if_t<has_call<T, TAction>{}>
-    call_impl(TDeps_& deps, const TAction& action) const noexcept {
-        static_cast<T&>(deps).call(action);
+    template<class T, class TAction>
+    aux::enable_if_t<has_call<T, const TAction&>{}>
+    call_impl(const TAction& action) noexcept {
+        static_cast<T&>(*this).call(action);
     }
 
-    template<class T, class TDeps_, class TAction>
-    aux::enable_if_t<!has_call<T, TAction>{}>
-    call_impl(TDeps_&, const TAction&) const noexcept { }
+    template<class T, class TAction>
+    aux::enable_if_t<!has_call<T, const TAction&>{}>
+    call_impl(const TAction&) noexcept { }
 
     template<class T>
     decltype(auto) pass_arg(const T& arg, aux::enable_if_t<!has_configure<T>{}>* = 0) const noexcept {

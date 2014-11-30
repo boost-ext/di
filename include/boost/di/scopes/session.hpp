@@ -20,7 +20,7 @@ class session_entry { };
 template<class = no_name>
 class session_exit { };
 
-template<class = no_name>
+template<class TName = no_name>
 class session {
 public:
     static constexpr auto priority = false;
@@ -28,12 +28,10 @@ public:
     template<class, class T>
     class scope {
     public:
-        template<class TName>
         void call(const session_entry<TName>&) noexcept {
             in_scope_ = true;
         }
 
-        template<class TName>
         void call(const session_exit<TName>&) noexcept {
             in_scope_ = false;
             object_.reset();

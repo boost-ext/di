@@ -33,7 +33,8 @@
 
 #define BOOST_DI_HAS_METHOD_SIGN(name, call_name)                               \
     template<class T, class TSign>                                              \
-    std::true_type has_##name##_impl(non_type<TSign, &T::call_name>* = 0);      \
+    std::true_type                                                              \
+    has_##name##_impl(boost::di::non_type<TSign, &T::call_name>* = 0);          \
                                                                                 \
     template<class, class>                                                      \
     std::false_type has_##name##_impl(...);                                     \
@@ -48,7 +49,8 @@
                                                                                 \
     template<class T>                                                           \
     std::false_type has_##name##_impl(                                          \
-        T*, non_type<void (has_##name##_base::*)(), &T::call_name>* = 0         \
+        T*                                                                      \
+      , boost::di::non_type<void (has_##name##_base::*)(), &T::call_name>* = 0  \
     );                                                                          \
                                                                                 \
     template<class>                                                             \
@@ -56,7 +58,9 @@
                                                                                 \
     template<class T, typename = void>                                          \
     struct has_##name                                                           \
-        : decltype(has_##name##_impl<inherit<T, has_##name##_base>>(0))         \
+        : decltype(has_##name##_impl<                                           \
+              boost::di::inherit<T, has_##name##_base>                          \
+          >(0))                                                                 \
     { };                                                                        \
                                                                                 \
     template<class T>                                                           \

@@ -18,7 +18,7 @@ template<
   , class TInjector = none_t
   , class TProvider = none_t
   , class TRefs = none_t
-  , class TVisitors = none_t
+  , class TPolicies = none_t
 >
 class any_type {
     template<class TValueType, class TRefType>
@@ -43,33 +43,33 @@ public:
     any_type(const TInjector& creator
            , const TProvider& provider
            , TRefs& refs
-           , const TVisitors& visitors) noexcept
+           , const TPolicies& policies) noexcept
         : creator_(creator)
         , provider_(provider)
         , refs_(refs)
-        , visitors_(visitors)
+        , policies_(policies)
     { }
 
     template<class U, class = is_not_same_t<U>>
     operator const U&() const noexcept {
-        return creator_.template create_impl<const U&, T>(provider_, refs_, visitors_);
+        return creator_.template create_impl<const U&, T>(provider_, refs_, policies_);
     }
 
     template<class U, class = is_not_same_t<U>>
     operator U&() const noexcept {
-        return creator_.template create_impl<U&, T>(provider_, refs_, visitors_);
+        return creator_.template create_impl<U&, T>(provider_, refs_, policies_);
     }
 
     template<class U, class = is_not_same_t<U>>
     operator U() noexcept {
-        return creator_.template create_impl<U, T>(provider_, refs_, visitors_);
+        return creator_.template create_impl<U, T>(provider_, refs_, policies_);
     }
 
 private:
     ref_type_t<TInjector, const TInjector&> creator_;
     ref_type_t<TProvider, const TProvider&> provider_;
     ref_type_t<TRefs, TRefs&> refs_;
-    ref_type_t<TVisitors, const TVisitors&> visitors_;
+    ref_type_t<TPolicies, const TPolicies&> policies_;
 };
 
 template<class>
@@ -86,7 +86,7 @@ struct is_any_type<any_type<TArgs...>> : std::true_type { };
   //, class TInjector
   //, class TProvider
   //, class TRefs
-  //, class TVisitors
+  //, class TPolicies
 //>
 //struct is_integral<
     //di::core::any_type<
@@ -94,7 +94,7 @@ struct is_any_type<any_type<TArgs...>> : std::true_type { };
       //, TInjector
       //, TProvider
       //, TRefs
-      //, TVisitors
+      //, TPolicies
    //>
 /*> : ::std::true_type { };*/
 
@@ -107,7 +107,7 @@ template<
   , class TInjector
   , class TProvider
   , class TRefs
-  , class TVisitors
+  , class TPolicies
 >
 struct is_integral<
     boost::di::core::any_type<
@@ -115,7 +115,7 @@ struct is_integral<
       , TInjector
       , TProvider
       , TRefs
-      , TVisitors
+      , TPolicies
     >
 > : ::std::true_type { };
 
