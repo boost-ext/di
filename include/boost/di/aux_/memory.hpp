@@ -8,22 +8,24 @@
 #define BOOST_DI_AUX_MEMORY_HPP
 
 #include <memory>
-#include <boost/shared_ptr.hpp>
 
-namespace boost {
-namespace di {
-namespace aux {
+namespace boost { namespace di { namespace aux {
     using ::std::unique_ptr;
     using ::std::shared_ptr;
     using ::std::weak_ptr;
-} // namespace aux
+}}} // namespace boost::di::aux_
 
-namespace aux_ {
-    using ::boost::shared_ptr;
-} // namespace aux_
+#if defined(BOOST_DI_CFG_CONV_TO_BOOST_SMART_PTR)
+    #include <boost/shared_ptr.hpp>
 
-} // namespace boost
-} // namespace di
+    namespace boost { namespace di { namespace aux_ {
+        using ::boost::shared_ptr;
+    }}} // namespace boost::di::aux_
+#else
+    namespace boost { namespace di { namespace aux_ {
+        template<class> struct shared_ptr { };
+    }}} // namespace boost::di::aux_
+#endif
 
 #endif
 

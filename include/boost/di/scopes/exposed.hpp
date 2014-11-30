@@ -7,6 +7,7 @@
 #define BOOST_DI_SCOPES_EXPOSED_HPP
 
 #include "boost/di/type_traits/scope_traits.hpp"
+#include <functional>
 
 namespace boost {
 namespace di {

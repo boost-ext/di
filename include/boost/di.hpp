@@ -34,6 +34,7 @@
 
 #include <string>
 #include <new>
+#include <functional>
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/memory.hpp"
