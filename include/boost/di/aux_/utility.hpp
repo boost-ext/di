@@ -35,12 +35,6 @@ struct no_decay { using type = T; };
 template<class... TArgs>
 struct inherit : TArgs... { };
 
-template<int N>
-using int_ = std::integral_constant<int, N>;
-
-template<bool V>
-using bool_ = std::integral_constant<bool, V>;
-
 template<class...>
 struct type_list {
     using type = type_list;

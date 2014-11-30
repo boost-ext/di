@@ -22,7 +22,8 @@ BOOST_DI_HAS_TYPE(result_type);
 BOOST_DI_HAS_METHOD(call_operator, operator());
 
 template<class T, class U>
-using has_lambda = aux::bool_<has_call_operator<T, U>::value && !has_result_type<T>::value>;
+using has_lambda =
+    std::integral_constant<bool, has_call_operator<T, U>::value && !has_result_type<T>::value>;
 
 class external {
     struct injector {

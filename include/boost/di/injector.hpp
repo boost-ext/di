@@ -19,7 +19,8 @@ namespace detail {
 BOOST_DI_HAS_TYPE(deps);
 
 template<class T>
-using is_injector = aux::bool_<has_deps<T>{} || core::has_configure<T>{}>;
+using is_injector =
+    std::integral_constant<bool, has_deps<T>{} || core::has_configure<T>{}>;
 
 template<class T, class = void>
 struct get_deps {
