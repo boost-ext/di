@@ -27,7 +27,7 @@ struct get_deps {
 };
 
 template<class T>
-struct get_deps<T, aux::enable_if_t<core::has_configure<T>{}>> {
+struct get_deps<T, std::enable_if_t<core::has_configure<T>{}>> {
     using type = typename aux::function_traits<
         decltype(&T::configure)
     >::result_type::deps;

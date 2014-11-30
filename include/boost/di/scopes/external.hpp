@@ -51,7 +51,7 @@ public:
 
     template<class TT, class T>
     class scope<TT, T
-              , aux::enable_if_t<
+              , std::enable_if_t<
                      has_call_operator<T>::value &&
                     !has_lambda<T, const injector&>::value
                 >>
@@ -71,7 +71,7 @@ public:
     };
 
     template<class TT, class T>
-    class scope<TT, T, aux::enable_if_t<has_lambda<T, const injector&>{}>>
+    class scope<TT, T, std::enable_if_t<has_lambda<T, const injector&>{}>>
     {
         scope& operator=(const scope&) = delete;
 

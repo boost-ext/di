@@ -136,7 +136,7 @@ private:
 };
 
 template<class T, class TName>
-class named<T, TName, aux::enable_if_t<std::is_polymorphic<aux::remove_accessors_t<T>>{}>> {
+class named<T, TName, std::enable_if_t<std::is_polymorphic<aux::remove_accessors_t<T>>{}>> {
 public:
     using named_type = T;
     using name = TName;

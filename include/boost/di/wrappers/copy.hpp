@@ -22,7 +22,7 @@ public:
     { }
 
     template<class I>
-    inline I operator()(const aux::type<I>&, aux::enable_if_t<!std::is_polymorphic<I>::value>* = 0) const noexcept {
+    inline I operator()(const aux::type<I>&, std::enable_if_t<!std::is_polymorphic<I>::value>* = 0) const noexcept {
         return value_;
     }
 
@@ -63,7 +63,7 @@ public:
     { }
 
     template<class I>
-    inline I operator()(const aux::type<I>&, aux::enable_if_t<!std::is_polymorphic<I>::value>* = 0) const noexcept {
+    inline I operator()(const aux::type<I>&, std::enable_if_t<!std::is_polymorphic<I>::value>* = 0) const noexcept {
         aux::unique_ptr<I> ptr(value_);
         return *ptr;
     }

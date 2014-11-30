@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_AUX_CPP_14_UTILITY_HPP
 #define BOOST_DI_AUX_CPP_14_UTILITY_HPP
 
+#include <utility>
 #include <type_traits>
 
 #define BOOST_DI_CAT_IMPL(a, b) a ## b
@@ -16,40 +17,6 @@
 namespace boost {
 namespace di {
 namespace aux {
-
-template<std::size_t...>
-struct index_sequence {
-    using type = index_sequence;
-};
-
-template<class, class>
-struct concat;
-
-template<std::size_t... I1, std::size_t... I2>
-struct concat<index_sequence<I1...>, index_sequence<I2...>>
-    : index_sequence<I1..., (sizeof...(I1) + I2)...>
-{ };
-
-template<std::size_t N>
-struct make_index_sequence_impl
-    : concat<
-          typename make_index_sequence_impl<N/2>::type
-        , typename make_index_sequence_impl<N - N/2>::type
-      >::type
-{ };
-
-template<>
-struct make_index_sequence_impl<0>
-    : index_sequence<>
-{ };
-
-template<>
-struct make_index_sequence_impl<1>
-    : index_sequence<1>
-{ };
-
-template<std::size_t N>
-using make_index_sequence = typename make_index_sequence_impl<N>::type;
 
 template<class>
 struct type { };

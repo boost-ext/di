@@ -119,7 +119,7 @@ private:
     >
     decltype(auto)
     create_impl(const TProvider& provider, TRefs& refs, const TPolicies& policies
-              , aux::enable_if_t<is_any_type<T>{}>* = 0) const noexcept {
+              , std::enable_if_t<is_any_type<T>{}>* = 0) const noexcept {
         return any_type<TParent, injector, TProvider, TRefs, TPolicies>{
             *this, provider, refs, policies
         };
@@ -134,7 +134,7 @@ private:
     >
     decltype(auto)
     create_impl(const TProvider& provider, TRefs& refs, const TPolicies& policies
-              , aux::enable_if_t<!is_any_type<T>{}>* = 0) const noexcept {
+              , std::enable_if_t<!is_any_type<T>{}>* = 0) const noexcept {
         return create_from_dep_impl<T>(provider, refs, policies);
     }
 
@@ -147,7 +147,7 @@ private:
     decltype(auto)
     create_from_dep_impl(const TProvider& provider, TRefs& refs, const TPolicies& policies) const noexcept {
         const auto& dependency = binder::resolve<T>(this);
-        using type = typename aux::remove_reference_t<decltype(dependency)>::given;;
+        using type = typename std::remove_reference_t<decltype(dependency)>::given;;
         using ctor = typename type_traits::ctor_traits<type>::type;
         call_policies<data<T, type>>(policies);
         return wrappers::universal<T>{refs, dependency.template create<T>(
@@ -171,22 +171,22 @@ private:
     }
 
     template<class T, class TAction>
-    aux::enable_if_t<has_call<T, const TAction&>{}>
+    std::enable_if_t<has_call<T, const TAction&>{}>
     call_impl(const TAction& action) noexcept {
         static_cast<T&>(*this).call(action);
     }
 
     template<class T, class TAction>
-    aux::enable_if_t<!has_call<T, const TAction&>{}>
+    std::enable_if_t<!has_call<T, const TAction&>{}>
     call_impl(const TAction&) noexcept { }
 
     template<class T>
-    decltype(auto) pass_arg(const T& arg, aux::enable_if_t<!has_configure<T>{}>* = 0) const noexcept {
+    decltype(auto) pass_arg(const T& arg, std::enable_if_t<!has_configure<T>{}>* = 0) const noexcept {
         return arg;
     }
 
     template<class T>
-    decltype(auto) pass_arg(const T& arg, aux::enable_if_t<has_configure<T>{}>* = 0) const noexcept {
+    decltype(auto) pass_arg(const T& arg, std::enable_if_t<has_configure<T>{}>* = 0) const noexcept {
         return arg.configure();
     }
 

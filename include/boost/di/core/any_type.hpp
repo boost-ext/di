@@ -22,7 +22,7 @@ template<
 >
 class any_type {
     template<class TValueType, class TRefType>
-    using ref_type_t = aux::conditional_t<
+    using ref_type_t = std::conditional_t<
           std::is_same<TValueType, aux::none_t>{}
         , TValueType
         , TRefType
@@ -32,7 +32,7 @@ class any_type {
     //any_type(const any_type&) = delete;
 
     template<class U>
-    using is_not_same_t = aux::enable_if_t<
+    using is_not_same_t = std::enable_if_t<
         !std::is_same<aux::make_plain_t<U>
       , aux::make_plain_t<T>>::value
     >;

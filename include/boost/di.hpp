@@ -164,7 +164,7 @@ private:
 };
 
 template<class T, class TName>
-class named<T, TName, aux::enable_if_t<std::is_polymorphic<aux::remove_accessors_t<T>>{}>> {
+class named<T, TName, std::enable_if_t<std::is_polymorphic<aux::remove_accessors_t<T>>{}>> {
 public:
     using named_type = T;
     using name = TName;
@@ -185,7 +185,7 @@ public:
     { }
 
     template<class I>
-    inline I operator()(const aux::type<I>&, aux::enable_if_t<!std::is_polymorphic<I>::value>* = 0) const noexcept {
+    inline I operator()(const aux::type<I>&, std::enable_if_t<!std::is_polymorphic<I>::value>* = 0) const noexcept {
         return value_;
     }
 
@@ -226,7 +226,7 @@ public:
     { }
 
     template<class I>
-    inline I operator()(const aux::type<I>&, aux::enable_if_t<!std::is_polymorphic<I>::value>* = 0) const noexcept {
+    inline I operator()(const aux::type<I>&, std::enable_if_t<!std::is_polymorphic<I>::value>* = 0) const noexcept {
         aux::unique_ptr<I> ptr(value_);
         return *ptr;
     }
@@ -485,7 +485,7 @@ public:
 
     template<class TT, class T>
     class scope<TT, T
-              , aux::enable_if_t<
+              , std::enable_if_t<
                      has_call_operator<T>::value &&
                     !has_lambda<T, const injector&>::value
                 >>
@@ -505,7 +505,7 @@ public:
     };
 
     template<class TT, class T>
-    class scope<TT, T, aux::enable_if_t<has_lambda<T, const injector&>{}>>
+    class scope<TT, T, std::enable_if_t<has_lambda<T, const injector&>{}>>
     {
         scope& operator=(const scope&) = delete;
 
@@ -897,7 +897,7 @@ template<
 >
 class any_type {
     template<class TValueType, class TRefType>
-    using ref_type_t = aux::conditional_t<
+    using ref_type_t = std::conditional_t<
           std::is_same<TValueType, aux::none_t>{}
         , TValueType
         , TRefType
@@ -907,7 +907,7 @@ class any_type {
     //any_type(const any_type&) = delete;
 
     template<class U>
-    using is_not_same_t = aux::enable_if_t<
+    using is_not_same_t = std::enable_if_t<
         !std::is_same<aux::make_plain_t<U>
       , aux::make_plain_t<T>>::value
     >;
@@ -1083,15 +1083,15 @@ public:
 
 private:
     template<class T, class TPool>
-    aux::enable_if_t<std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}, T>
+    std::enable_if_t<std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}, T>
     inline get(const TPool& p) const noexcept { return p.template get<T>(); }
 
     template<class T, class TPool>
-    aux::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, T>
+    std::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, T>
     inline get(const TPool&) const noexcept { return {}; }
 
     template<class T, class TPool>
-    aux::enable_if_t<!std::is_base_of<T, pool>{}, const T&>
+    std::enable_if_t<!std::is_base_of<T, pool>{}, const T&>
     inline get(const TPool&) const noexcept { return {}; }
 };
 
@@ -1116,13 +1116,13 @@ public:
     }
 
     template<class T, class... TArgs>
-    inline aux::enable_if_t<std::is_polymorphic<T>{}, T*>
+    inline std::enable_if_t<std::is_polymorphic<T>{}, T*>
     get(TArgs&&... args) const noexcept {
         return get_ptr<T>(std::forward<TArgs>(args)...);
     }
 
     template<class T, class... TArgs>
-    inline aux::enable_if_t<!std::is_polymorphic<T>{}, T>
+    inline std::enable_if_t<!std::is_polymorphic<T>{}, T>
     get(TArgs&&... args) const noexcept {
         return get_value<T>(std::forward<TArgs>(args)...);
     }
@@ -1148,7 +1148,7 @@ template<class, class, class>
 struct ctor_impl;
 
 template<class R, class T, std::size_t... TArgs>
-struct ctor_impl<R, T, aux::index_sequence<TArgs...>>
+struct ctor_impl<R, T, std::index_sequence<TArgs...>>
     : aux::pair<
           aux::is_braces_constructible_t<R, typename get_type<T, TArgs>::type...>
         , aux::type_list<typename get_type<T, TArgs>::type...>
@@ -1159,11 +1159,11 @@ template<class, class>
 struct ctor_traits_impl;
 
 template<class T, std::size_t... Args>
-struct ctor_traits_impl<T, aux::index_sequence<Args...>>
+struct ctor_traits_impl<T, std::index_sequence<Args...>>
     : aux::at_key<
           aux::type_list<>
         , std::true_type
-        , ctor_impl<T, core::any_type<T>, aux::make_index_sequence<Args>>...
+        , ctor_impl<T, core::any_type<T>, std::make_index_sequence<Args>>...
       >
 { };
 
@@ -1173,7 +1173,7 @@ template<class T>
 struct ctor_traits
     : detail::ctor_traits_impl<
           T
-        , aux::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>
+        , std::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>
       >
 { };
 
@@ -1233,7 +1233,7 @@ using is_convertible_to_ref =
     has_call_operator<TValueType, const T&(TValueType::*)(const aux::type<const T&>&) const>;
 
 template<class TResult, class T, class TWrapper>
-inline aux::enable_if_t<!std::is_copy_constructible<T>{}, const TResult&>
+inline std::enable_if_t<!std::is_copy_constructible<T>{}, const TResult&>
 copy(aux::shared_ptr<void>& refs, const TWrapper& wrapper) noexcept {
     refs.reset(wrapper(aux::type<T*>()));
     return *refs;
@@ -1249,7 +1249,7 @@ struct holder {
 };
 
 template<class TResult, class T, class TWrapper>
-inline aux::enable_if_t<std::is_copy_constructible<T>{}, const TResult&>
+inline std::enable_if_t<std::is_copy_constructible<T>{}, const TResult&>
 copy(aux::shared_ptr<void>& refs, const TWrapper& wrapper) noexcept {
     aux::shared_ptr<holder<TResult>> sp(new holder<TResult>(wrapper(aux::type<T>())));
     refs = sp;
@@ -1282,14 +1282,14 @@ public:
     template<class TWrapper>
     universal_impl(aux::shared_ptr<void>&
                  , const TWrapper& wrapper
-                 , aux::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
+                 , std::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
         : object_(wrapper(aux::type<const T&>()))
     { }
 
     template<class TWrapper>
     universal_impl(aux::shared_ptr<void>& refs
                  , const TWrapper& wrapper
-                 , aux::enable_if_t<!is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
+                 , std::enable_if_t<!is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
         : object_(copy<T, T, TWrapper>(refs, wrapper))
     { }
 
@@ -1327,14 +1327,14 @@ public:
     template<class TWrapper>
     universal_impl(aux::shared_ptr<void>&
                  , const TWrapper& wrapper
-                 , aux::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
+                 , std::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
         : object_(wrapper(aux::type<const T&>()))
     { }
 
     template<class TWrapper>
     universal_impl(aux::shared_ptr<void>& refs
                  , const TWrapper& wrapper
-                 , aux::enable_if_t<!is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
+                 , std::enable_if_t<!is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
         : object_(copy<T, T, TWrapper>(refs, wrapper))
     { }
 
@@ -1371,7 +1371,7 @@ public:
     template<class TWrapper>
     universal_impl(aux::shared_ptr<void>& refs
                  , const TWrapper& wrapper
-                 , aux::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
+                 , std::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
         : refs_(refs)
         , object_(wrapper(aux::type<const T&>()))
     { }
@@ -1379,7 +1379,7 @@ public:
     template<class TWrapper>
     universal_impl(aux::shared_ptr<void>& refs
                  , const TWrapper& wrapper
-                 , aux::enable_if_t<!is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
+                 , std::enable_if_t<!is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
         : refs_(refs)
         , object_(copy<T, T, TWrapper>(refs, wrapper))
     { }
@@ -1508,7 +1508,7 @@ private:
     >
     decltype(auto)
     create_impl(const TProvider& provider, TRefs& refs, const TPolicies& policies
-              , aux::enable_if_t<is_any_type<T>{}>* = 0) const noexcept {
+              , std::enable_if_t<is_any_type<T>{}>* = 0) const noexcept {
         return any_type<TParent, injector, TProvider, TRefs, TPolicies>{
             *this, provider, refs, policies
         };
@@ -1523,7 +1523,7 @@ private:
     >
     decltype(auto)
     create_impl(const TProvider& provider, TRefs& refs, const TPolicies& policies
-              , aux::enable_if_t<!is_any_type<T>{}>* = 0) const noexcept {
+              , std::enable_if_t<!is_any_type<T>{}>* = 0) const noexcept {
         return create_from_dep_impl<T>(provider, refs, policies);
     }
 
@@ -1536,7 +1536,7 @@ private:
     decltype(auto)
     create_from_dep_impl(const TProvider& provider, TRefs& refs, const TPolicies& policies) const noexcept {
         const auto& dependency = binder::resolve<T>(this);
-        using type = typename aux::remove_reference_t<decltype(dependency)>::given;;
+        using type = typename std::remove_reference_t<decltype(dependency)>::given;;
         using ctor = typename type_traits::ctor_traits<type>::type;
         call_policies<data<T, type>>(policies);
         return wrappers::universal<T>{refs, dependency.template create<T>(
@@ -1560,22 +1560,22 @@ private:
     }
 
     template<class T, class TAction>
-    aux::enable_if_t<has_call<T, const TAction&>{}>
+    std::enable_if_t<has_call<T, const TAction&>{}>
     call_impl(const TAction& action) noexcept {
         static_cast<T&>(*this).call(action);
     }
 
     template<class T, class TAction>
-    aux::enable_if_t<!has_call<T, const TAction&>{}>
+    std::enable_if_t<!has_call<T, const TAction&>{}>
     call_impl(const TAction&) noexcept { }
 
     template<class T>
-    decltype(auto) pass_arg(const T& arg, aux::enable_if_t<!has_configure<T>{}>* = 0) const noexcept {
+    decltype(auto) pass_arg(const T& arg, std::enable_if_t<!has_configure<T>{}>* = 0) const noexcept {
         return arg;
     }
 
     template<class T>
-    decltype(auto) pass_arg(const T& arg, aux::enable_if_t<has_configure<T>{}>* = 0) const noexcept {
+    decltype(auto) pass_arg(const T& arg, std::enable_if_t<has_configure<T>{}>* = 0) const noexcept {
         return arg.configure();
     }
 
@@ -1618,7 +1618,7 @@ struct get_deps {
 };
 
 template<class T>
-struct get_deps<T, aux::enable_if_t<core::has_configure<T>{}>> {
+struct get_deps<T, std::enable_if_t<core::has_configure<T>{}>> {
     using type = typename aux::function_traits<
         decltype(&T::configure)
     >::result_type::deps;

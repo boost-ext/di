@@ -75,23 +75,21 @@ namespace boost {
 namespace di {
 namespace aux {
 
-template<bool b, class T = void>
-using enable_if_t = typename std::enable_if<b, T>::type;
+template<class T, class... TArgs>
+decltype(void(T{std::declval<TArgs>()...}), std::true_type())
+test_is_braces_constructible(int);
 
-template<bool b, class T, class F>
-using conditional_t = typename std::conditional<b, T, F>::type;
+template<class, class...>
+std::false_type test_is_braces_constructible(...);
 
 template<class T, class... TArgs>
-using is_constructible_t = typename std::is_constructible<T, TArgs...>::type;
+using is_braces_constructible = decltype(test_is_braces_constructible<T, TArgs...>(0));
+
+template<class T, class... TArgs>
+using is_braces_constructible_t = typename is_braces_constructible<T, TArgs...>::type;
 
 template<class T>
-using remove_pointer_t = typename std::remove_pointer<T>::type;
-
-template<class T>
-using remove_reference_t = typename std::remove_reference<T>::type;
-
-template<class T>
-using remove_accessors = std::remove_cv<aux::remove_pointer_t<aux::remove_reference_t<T>>>;
+using remove_accessors = std::remove_cv<std::remove_pointer_t<std::remove_reference_t<T>>>;
 
 template<class T>
 using remove_accessors_t = typename remove_accessors<T>::type;
@@ -116,14 +114,14 @@ struct deref_type {
 BOOST_DI_HAS_TYPE(element_type);
 
 template<class T>
-struct deref_type<T, enable_if_t<has_element_type<T>::value>> {
+struct deref_type<T, std::enable_if_t<has_element_type<T>::value>> {
     using type = typename T::element_type;
 };
 
 BOOST_DI_HAS_TYPE(named_type);
 
 template<class T>
-struct deref_type<T, enable_if_t<has_named_type<T>::value>> {
+struct deref_type<T, std::enable_if_t<has_named_type<T>::value>> {
     using type = make_plain_t<typename T::named_type>;
 };
 
@@ -152,19 +150,6 @@ struct function_traits<R(T::*)(TArgs...) const> {
     using base_type = T;
     using args = type_list<TArgs...>;
 };
-
-template<class T, class... TArgs>
-decltype(void(T{std::declval<TArgs>()...}), std::true_type())
-test_is_braces_constructible(int);
-
-template<class, class...>
-std::false_type test_is_braces_constructible(...);
-
-template<class T, class... TArgs>
-using is_braces_constructible = decltype(test_is_braces_constructible<T, TArgs...>(0));
-
-template<class T, class... TArgs>
-using is_braces_constructible_t = typename is_braces_constructible<T, TArgs...>::type;
 
 }}} // namespace boost::di::aux
 

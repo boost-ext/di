@@ -30,7 +30,7 @@ template<class, class, class>
 struct ctor_impl;
 
 template<class R, class T, std::size_t... TArgs>
-struct ctor_impl<R, T, aux::index_sequence<TArgs...>>
+struct ctor_impl<R, T, std::index_sequence<TArgs...>>
     : aux::pair<
           aux::is_braces_constructible_t<R, typename get_type<T, TArgs>::type...>
         , aux::type_list<typename get_type<T, TArgs>::type...>
@@ -41,11 +41,11 @@ template<class, class>
 struct ctor_traits_impl;
 
 template<class T, std::size_t... Args>
-struct ctor_traits_impl<T, aux::index_sequence<Args...>>
+struct ctor_traits_impl<T, std::index_sequence<Args...>>
     : aux::at_key<
           aux::type_list<>
         , std::true_type
-        , ctor_impl<T, core::any_type<T>, aux::make_index_sequence<Args>>...
+        , ctor_impl<T, core::any_type<T>, std::make_index_sequence<Args>>...
       >
 { };
 
@@ -55,7 +55,7 @@ template<class T>
 struct ctor_traits
     : detail::ctor_traits_impl<
           T
-        , aux::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>
+        , std::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>
       >
 { };
 
