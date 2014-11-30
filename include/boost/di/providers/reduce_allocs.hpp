@@ -12,7 +12,7 @@
 
 namespace boost { namespace di { namespace providers {
 
-class min_allocs {
+class reduce_allocs {
 public:
     template<class T, class... TArgs>
     inline T* get_ptr(TArgs&&... args) const noexcept {

@@ -14,6 +14,13 @@
 // annotations
 #include "boost/di/named.hpp"
 
+// bindings
+#include "boost/di/bindings.hpp"
+
+// injectors
+#include "boost/di/injector.hpp"
+#include "boost/di/make_injector.hpp"
+
 // policies
 #include "boost/di/policies/permit_types.hpp"
 
@@ -28,13 +35,6 @@
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/shared.hpp"
 #include "boost/di/scopes/unique.hpp"
-
-// bindings
-#include "boost/di/bindings.hpp"
-
-// injectors
-#include "boost/di/injector.hpp"
-#include "boost/di/make_injector.hpp"
 
 #else
 
@@ -177,6 +177,35 @@ public:
 };
 
 }} // namespace boost::di
+
+namespace boost { namespace di { namespace providers {
+
+class min_allocs {
+public:
+    template<class T, class... TArgs>
+    inline T* get_ptr(TArgs&&... args) const noexcept {
+        return new (std::nothrow) T{std::forward<TArgs>(args)...};
+    }
+
+    template<class T, class... TArgs>
+    inline T get_value(TArgs&&... args) const noexcept {
+        return T{std::forward<TArgs>(args)...};
+    }
+
+    template<class T, class... TArgs>
+    inline std::enable_if_t<std::is_polymorphic<T>{}, T*>
+    get(TArgs&&... args) const noexcept {
+        return get_ptr<T>(std::forward<TArgs>(args)...);
+    }
+
+    template<class T, class... TArgs>
+    inline std::enable_if_t<!std::is_polymorphic<T>{}, T>
+    get(TArgs&&... args) const noexcept {
+        return get_value<T>(std::forward<TArgs>(args)...);
+    }
+};
+
+}}} // namespace boost::di::providers
 
 namespace boost { namespace di { namespace wrappers {
 

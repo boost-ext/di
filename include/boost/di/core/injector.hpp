@@ -13,7 +13,7 @@
 #include "boost/di/core/any_type.hpp"
 #include "boost/di/core/binder.hpp"
 #include "boost/di/core/pool.hpp"
-#include "boost/di/providers/min_allocs.hpp"
+#include "boost/di/providers/reduce_allocs.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/wrappers/universal.hpp"
 

@@ -55,6 +55,13 @@ guard_begin() {
     echo "// annotations"
     echo "#include \"boost/di/named.hpp\""
     echo
+    echo "// bindings"
+    echo "#include \"boost/di/bindings.hpp"\"
+    echo
+    echo "// injectors"
+    echo "#include \"boost/di/injector.hpp\""
+    echo "#include \"boost/di/make_injector.hpp\""
+    echo
     echo "// policies"
     echo "#include \"boost/di/policies/permit_types.hpp\""
     echo
@@ -69,13 +76,6 @@ guard_begin() {
     echo "#include \"boost/di/scopes/singleton.hpp\""
     echo "#include \"boost/di/scopes/shared.hpp\""
     echo "#include \"boost/di/scopes/unique.hpp\""
-    echo
-    echo "// bindings"
-    echo "#include \"boost/di/bindings.hpp"\"
-    echo
-    echo "// injectors"
-    echo "#include \"boost/di/injector.hpp\""
-    echo "#include \"boost/di/make_injector.hpp\""
     echo
     echo "#else"
     echo
