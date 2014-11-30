@@ -55,6 +55,12 @@ guard_begin() {
     echo "// annotations"
     echo "#include \"boost/di/named.hpp\""
     echo
+    echo "// policies"
+    echo "#include \"boost/di/policies/permit_types.hpp\""
+    echo
+    echo "// providers"
+    echo "#include \"boost/di/providers/reduce_allocs.hpp\""
+    echo
     echo "// scopes"
     echo "#include \"boost/di/scopes/deduce.hpp\""
     echo "#include \"boost/di/scopes/external.hpp\""

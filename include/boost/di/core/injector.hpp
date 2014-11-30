@@ -22,7 +22,7 @@ namespace boost { namespace di { namespace core {
 BOOST_DI_HAS_METHOD(configure, configure);
 BOOST_DI_HAS_METHOD(call, call);
 
-template<class TDeps = aux::type_list<>, typename TDefaultProvider = providers::min_allocs>
+template<class TDeps = aux::type_list<>, typename TDefaultProvider = providers::reduce_allocs>
 class injector : public pool<TDeps> {
     template<class, class, class, class, class>
     friend class any_type;

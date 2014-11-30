@@ -63,7 +63,6 @@ public:
             aux::make_plain_t<T>
           , get_name_t<aux::remove_accessors_t<T>>
         >;
-
         return resolve_impl<TDefault, dependency>(deps);
     }
 };

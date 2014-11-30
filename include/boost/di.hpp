@@ -14,6 +14,12 @@
 // annotations
 #include "boost/di/named.hpp"
 
+// policies
+#include "boost/di/policies/permit_types.hpp"
+
+// providers
+#include "boost/di/providers/reduce_allocs.hpp"
+
 // scopes
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/external.hpp"
@@ -418,7 +424,7 @@ public:
     }
 
 private:
-    T& value_;
+    std::reference_wrapper<T> value_;
 };
 
 }}} // namespace boost::di::wrappers
@@ -950,7 +956,6 @@ public:
             aux::make_plain_t<T>
           , get_name_t<aux::remove_accessors_t<T>>
         >;
-
         return resolve_impl<TDefault, dependency>(deps);
     }
 };
@@ -1000,7 +1005,7 @@ private:
 
 namespace boost { namespace di { namespace providers {
 
-class min_allocs {
+class reduce_allocs {
 public:
     template<class T, class... TArgs>
     inline T* get_ptr(TArgs&&... args) const noexcept {
@@ -1295,7 +1300,7 @@ namespace boost { namespace di { namespace core {
 BOOST_DI_HAS_METHOD(configure, configure);
 BOOST_DI_HAS_METHOD(call, call);
 
-template<class TDeps = aux::type_list<>, typename TDefaultProvider = providers::min_allocs>
+template<class TDeps = aux::type_list<>, typename TDefaultProvider = providers::reduce_allocs>
 class injector : public pool<TDeps> {
     template<class, class, class, class, class>
     friend class any_type;

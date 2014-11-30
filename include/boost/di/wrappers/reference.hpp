@@ -26,7 +26,7 @@ public:
     }
 
 private:
-    T& value_;
+    std::reference_wrapper<T> value_;
 };
 
 }}} // namespace boost::di::wrappers
