@@ -40,8 +40,7 @@ using wrapper_traits_t = typename wrapper_traits<T>::type;
 
 class external {
     struct injector {
-        template<class T>
-        T create() const;
+        template<class T> T create() const;
     };
 
 public:
