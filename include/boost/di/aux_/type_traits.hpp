@@ -56,14 +56,14 @@
     { };                                                                        \
                                                                                 \
     template<class T>                                                           \
-    struct has_##name<T, std::enable_if_t<!std::is_class<T>::value>>            \
+    struct has_##name<T, std::enable_if_t<!std::is_class<T>{}>>                 \
         : std::false_type                                                       \
     { }
 
 namespace boost { namespace di { namespace aux {
 
 template<class T, class... TArgs>
-decltype(void(T{std::declval<TArgs>()...}), std::true_type())
+decltype(void(T{std::declval<TArgs>()...}), std::true_type{})
 test_is_braces_constructible(int);
 
 template<class, class...>
@@ -108,14 +108,14 @@ struct deref_type {
 BOOST_DI_HAS_TYPE(element_type);
 
 template<class T>
-struct deref_type<T, std::enable_if_t<has_element_type<T>::value>> {
+struct deref_type<T, std::enable_if_t<has_element_type<T>{}>> {
     using type = typename T::element_type;
 };
 
 BOOST_DI_HAS_TYPE(named_type);
 
 template<class T>
-struct deref_type<T, std::enable_if_t<has_named_type<T>::value>> {
+struct deref_type<T, std::enable_if_t<has_named_type<T>{}>> {
     using type = make_plain_t<typename T::named_type>;
 };
 
