@@ -7,11 +7,10 @@
 #ifndef BOOST_DI_SCOPES_EXTERNAL_HPP
 #define BOOST_DI_SCOPES_EXTERNAL_HPP
 
+#include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/type_traits.hpp"
-
 #include "boost/di/wrappers/value.hpp"
 #include "boost/di/wrappers/shared.hpp"
-#include "boost/di/aux_/type_traits.hpp"
 
 namespace boost { namespace di { namespace scopes {
 
@@ -20,7 +19,24 @@ BOOST_DI_HAS_METHOD(call_operator, operator());
 
 template<class T, class U>
 using has_lambda =
-    std::integral_constant<bool, has_call_operator<T, U>::value && !has_result_type<T>::value>;
+    std::integral_constant<
+        bool
+      , has_call_operator<T, U>::value &&
+       !has_result_type<T>::value
+    >;
+
+template<class T>
+struct wrapper_traits {
+    using type = wrappers::value<T>;
+};
+
+template<class T>
+struct wrapper_traits<std::shared_ptr<T>> {
+    using type = wrappers::shared<T>;
+};
+
+template<class T>
+using wrapper_traits_t = typename wrapper_traits<T>::type;
 
 class external {
     struct injector {
@@ -31,7 +47,7 @@ class external {
 public:
     static constexpr auto priority = true;
 
-    template<class TT, class T, class = void>
+    template<class TExpected, class T, class = void>
     class scope {
     public:
         explicit scope(const T& object) noexcept
@@ -47,32 +63,45 @@ public:
         wrappers::value<T> object_;
     };
 
-    template<class TT, class T>
-    class scope<TT, T
-              , std::enable_if_t<
-                     has_call_operator<T>::value &&
-                    !has_lambda<T, const injector&>::value
-                >>
-    {
+    template<class TExpected, class T>
+    class scope<TExpected, std::shared_ptr<T>> {
+    public:
+        explicit scope(const std::shared_ptr<T>& object) noexcept
+            : object_(object)
+        { }
+
+        template<class, class TProvider>
+        decltype(auto) create(const TProvider&) const noexcept {
+            return object_;
+        }
+
+    private:
+        wrappers::shared<T> object_;
+    };
+
+    template<class TExpected, class T>
+    class scope<
+        TExpected
+      , T
+      , std::enable_if_t<has_call_operator<T>{} && !has_lambda<T, const injector&>{}>
+    > {
     public:
         explicit scope(const T& object) noexcept
             : object_(object)
         { }
 
         template<class, class TProvider>
-        wrappers::value<TT> create(const TProvider&) const noexcept {
-            return object_();
+        decltype(auto) create(const TProvider&) const noexcept {
+            using wrapper = wrapper_traits_t<decltype(std::declval<T>()())>;
+            return wrapper{object_()};
         }
 
     private:
         T object_;
     };
 
-    template<class TT, class T>
-    class scope<TT, T, std::enable_if_t<has_lambda<T, const injector&>{}>>
-    {
-        scope& operator=(const scope&) = delete;
-
+    template<class TExpected, class T>
+    class scope<TExpected, T, std::enable_if_t<has_lambda<T, const injector&>{}>> {
     public:
         explicit scope(const T& object) noexcept
             : given_(object)
@@ -83,8 +112,9 @@ public:
         { }
 
         template<class, class TProvider>
-        wrappers::value<TT> create(const TProvider& provider) const noexcept {
-            return (given_)(provider.injector_);
+        decltype(auto) create(const TProvider& provider) const noexcept {
+            using wrapper = wrapper_traits_t<decltype((given_)(provider.injector_))>;
+            return wrapper{(given_)(provider.injector_)};
         }
 
     private:

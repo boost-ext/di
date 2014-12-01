@@ -17,15 +17,15 @@ public:
     template<class TExpected, class T>
     class scope {
         struct provider {
-            struct ifun {
-                virtual ~ifun() = default;
+            struct ifunction {
+                virtual ~ifunction() = default;
                 virtual T* operator()() = 0;
             };
 
             template<typename TInjector>
-            class fun : public ifun {
+            class function : public ifunction {
             public:
-                explicit fun(const TInjector& injector)
+                explicit function(const TInjector& injector)
                     : injector_(injector)
                 { }
 
@@ -39,13 +39,13 @@ public:
 
             template<typename TInjector>
             explicit provider(const TInjector& injector) noexcept
-                : f(new fun<TInjector>(injector))
+                : f_(new function<TInjector>(injector))
             { }
 
-            T* get_ptr() const noexcept { return (*f)(); }
-            T* get() const noexcept { return (*f)(); }
+            T* get_ptr() const noexcept { return (*f_)(); }
+            T* get() const noexcept { return (*f_)(); }
 
-            std::shared_ptr<ifun> f;
+            std::shared_ptr<ifunction> f_;
         };
 
     public:

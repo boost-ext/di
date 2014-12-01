@@ -237,7 +237,7 @@ test scopes_injector_lambda_injector = [] {
     constexpr short s = 42;
     auto injector = di::make_injector(
         di::bind<short>.to(s)
-      , di::bind<int>.to([](const auto& injector){ return injector.template create<short>(); })
+      , di::bind<int>.to([](const auto& injector){ return static_cast<int>(injector.template create<short>()); })
     );
 
     expect_eq(s, injector.create<int>());
@@ -298,13 +298,63 @@ test string_creation = [] {
     expect_eq("", di::make_injector().create<string>().str);
 };
 
-test scopes_external_ref = [] {
-    int i = 42;
+test scopes_external_shared = [] {
+    auto i = std::make_shared<int>(42);
 
     auto injector = di::make_injector(
-        di::bind<int>.to(i) //ref
+        di::bind<int>.to(i)
     );
 
-    (void)injector;
+    {
+    auto object = injector.create<std::shared_ptr<int>>();
+    expect_eq(i.get(), object.get());
+    expect_eq(42, *i);
+    }
+
+    {
+    ++*i;
+    auto object = injector.create<std::shared_ptr<int>>();
+    expect_eq(43, *i);
+    }
+};
+
+test scopes_external_lambda = [] {
+    auto i = std::make_shared<int>(42);
+
+    auto injector = di::make_injector(
+        di::bind<int>.to([&i]{return i;})
+    );
+
+    {
+    auto object = injector.create<std::shared_ptr<int>>();
+    expect_eq(i.get(), object.get());
+    expect_eq(42, *i);
+    }
+
+    {
+    ++*i;
+    auto object = injector.create<std::shared_ptr<int>>();
+    expect_eq(43, *i);
+    }
+};
+
+test scopes_external_lambda_injector = [] {
+    auto i = std::make_shared<int>(42);
+
+    auto injector = di::make_injector(
+        di::bind<int>.to([&i](const auto&){return i;})
+    );
+
+    {
+    auto object = injector.create<std::shared_ptr<int>>();
+    expect_eq(i.get(), object.get());
+    expect_eq(42, *i);
+    }
+
+    {
+    ++*i;
+    auto object = injector.create<std::shared_ptr<int>>();
+    expect_eq(43, *i);
+    }
 };
 
