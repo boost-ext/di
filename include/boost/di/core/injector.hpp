@@ -151,7 +151,8 @@ private:
         using type = typename std::remove_reference_t<decltype(dependency)>::given;
         using ctor = typename type_traits::ctor_traits<type>::type;
         call_policies<data<T, type>>(policies);
-        auto&& ctor_provider = provider_impl<T, type, TProvider, TPolicies, ctor>{*this, provider, policies};
+        using provider_impl_type = provider_impl<T, type, TProvider, TPolicies, ctor>;
+        auto&& ctor_provider = provider_impl_type{*this, provider, policies};
         using wrapper = decltype(dependency.template create<T>(ctor_provider));
         return wrappers::universal<T, wrapper>{dependency.template create<T>(ctor_provider)};
     }
