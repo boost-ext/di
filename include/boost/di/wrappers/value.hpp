@@ -26,7 +26,8 @@ public:
         return new T(value_);
     }
 
-    inline const T* operator()(const aux::type<const T*>&) const noexcept {
+    inline const T*
+    operator()(const aux::type<const T*>&) const noexcept {
         return new T(value_);
     }
 
@@ -35,17 +36,20 @@ public:
     }
 
     template<class I>
-    inline aux::shared_ptr<I> operator()(const aux::type<aux::shared_ptr<I>>&) const noexcept {
+    inline aux::shared_ptr<I>
+    operator()(const aux::type<aux::shared_ptr<I>>&) const noexcept {
         return aux::shared_ptr<I>(new I(value_));
     }
 
     template<class I>
-    inline aux_::shared_ptr<I> operator()(const aux::type<aux_::shared_ptr<I>>&) const noexcept {
+    inline aux_::shared_ptr<I>
+    operator()(const aux::type<aux_::shared_ptr<I>>&) const noexcept {
         return aux_::shared_ptr<I>(new I(value_));
     }
 
     template<class I>
-    inline aux::unique_ptr<I> operator()(const aux::type<aux::unique_ptr<I>>&) const noexcept {
+    inline aux::unique_ptr<I>
+    operator()(const aux::type<aux::unique_ptr<I>>&) const noexcept {
         return aux::unique_ptr<I>(new I(value_));
     }
 
