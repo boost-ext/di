@@ -38,9 +38,8 @@
 
 #else
 
-//#include <string>
+#include <string>
 #include <new>
-#include <functional>
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/memory.hpp"
@@ -475,7 +474,8 @@ public:
     class scope {
     public:
         template<class, class TProvider>
-        auto create(const TProvider& provider) const noexcept -> wrappers::copy<decltype(provider.get())> {
+        auto create(const TProvider& provider) const noexcept
+        -> wrappers::copy<decltype(provider.get())> {
             return provider.get();
         }
     };
@@ -613,7 +613,8 @@ public:
     public:
         template<class TDst, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
-            using scope = typename type_traits::scope_traits_t<TDst>::template scope<TExpected, T>;
+            using scope_traits = type_traits::scope_traits_t<TDst>;
+            using scope = typename scope_traits::template scope<TExpected, T>;
             return scope{}.template create<T>(provider);
         }
     };
@@ -631,8 +632,10 @@ struct dependency_impl : aux::pair<T, TDependency>
 { };
 
 template<class... Ts, class TName, class TDependency>
-struct dependency_impl<dependency_concept<aux::type_list<Ts...>, TName>, TDependency>
-    : aux::pair<dependency_concept<Ts, TName>, TDependency>...
+struct dependency_impl<
+    dependency_concept<aux::type_list<Ts...>, TName>
+  , TDependency
+> : aux::pair<dependency_concept<Ts, TName>, TDependency>...
 { };
 
 template<
@@ -795,27 +798,23 @@ session_exit(const TName&) noexcept { return {}; }
 namespace boost { namespace di { namespace core {
 
 template<
-    class T = aux::none_t
+    class TParent = aux::none_t
   , class TInjector = aux::none_t
   , class TProvider = aux::none_t
   , class TRefs = aux::none_t
   , class TPolicies = aux::none_t
 >
 class any_type {
-    template<class TValueType, class TRefType>
-    using ref_type_t = std::conditional_t<
-          std::is_same<TValueType, aux::none_t>{}
-        , TValueType
-        , TRefType
-      >;
+    template<class T, class TRef>
+    using ref_type_t =
+        std::conditional_t<std::is_same<T, aux::none_t>{}, T, TRef>;
 
     any_type& operator=(const any_type&) = delete;
-    //any_type(const any_type&) = delete;
 
-    template<class U>
+    template<class T>
     using is_not_same_t = std::enable_if_t<
-        !std::is_same<aux::make_plain_t<U>
-      , aux::make_plain_t<T>>::value
+        !std::is_same<aux::make_plain_t<T>
+      , aux::make_plain_t<TParent>>::value
     >;
 
 public:
@@ -831,19 +830,22 @@ public:
         , policies_(policies)
     { }
 
-    template<class U, class = is_not_same_t<U>>
-    operator const U&() const noexcept {
-        return creator_.template create_impl<const U&, T>(provider_, refs_, policies_);
+    template<class T, class = is_not_same_t<T>>
+    operator const T&() const noexcept {
+        return creator_.template
+            create_impl<const T&, TParent>(provider_, refs_, policies_);
     }
 
-    template<class U, class = is_not_same_t<U>>
-    operator U&() const noexcept {
-        return creator_.template create_impl<U&, T>(provider_, refs_, policies_);
+    template<class T, class = is_not_same_t<T>>
+    operator T&() const noexcept {
+        return creator_.template
+            create_impl<T&, TParent>(provider_, refs_, policies_);
     }
 
-    template<class U, class = is_not_same_t<U>>
-    operator U() noexcept {
-        return creator_.template create_impl<U, T>(provider_, refs_, policies_);
+    template<class T, class = is_not_same_t<T>>
+    operator T() noexcept {
+        return creator_.template
+            create_impl<T, TParent>(provider_, refs_, policies_);
     }
 
 private:
@@ -897,7 +899,8 @@ class binder {
       , class TName
     >
     static decltype(auto) // priority scope
-    resolve_impl(const aux::pair<TConcept, dependency<TScope, TExpected, TGiven, TName, true>>* dep) noexcept {
+    resolve_impl(const aux::pair<TConcept
+               , dependency<TScope, TExpected, TGiven, TName, true>>* dep) noexcept {
         return static_cast<const dependency<TScope, TExpected, TGiven, TName, true>&>(*dep);
     }
 
@@ -1030,7 +1033,14 @@ struct ctor_traits
       >
 { };
 
-    //static void BOOST_DI_INJECTOR();
+template<
+    class T
+  , class Traits
+  , class TAllocator
+>
+struct ctor_traits<std::basic_string<T, Traits, TAllocator>> {
+    static void BOOST_DI_INJECTOR();
+};
 
 namespace type_traits {
 
@@ -1253,7 +1263,10 @@ namespace boost { namespace di { namespace core {
 BOOST_DI_HAS_METHOD(configure, configure);
 BOOST_DI_HAS_METHOD(call, call);
 
-template<class TDeps = aux::type_list<>, typename TDefaultProvider = providers::reduce_allocs>
+template<
+    class TDeps = aux::type_list<>
+  , class TDefaultProvider = providers::reduce_allocs
+>
 class injector : public pool<TDeps> {
     template<class, class, class, class, class>
     friend class any_type;
@@ -1277,7 +1290,13 @@ class injector : public pool<TDeps> {
       , class TPolicies
       , class... TArgs
     >
-    struct provider_impl<T, TDependency, TProvider, TPolicies, aux::type_list<TArgs...>> {
+    struct provider_impl<
+        T
+      , TDependency
+      , TProvider
+      , TPolicies
+      , aux::type_list<TArgs...>
+    > {
         const injector& injector_;
         const TProvider& provider_;
         const TPolicies& policies_;
@@ -1347,7 +1366,9 @@ private:
       , class TPolicies
     >
     decltype(auto)
-    create_impl(const TProvider& provider, TRefs& refs, const TPolicies& policies
+    create_impl(const TProvider& provider
+              , TRefs& refs
+              , const TPolicies& policies
               , std::enable_if_t<is_any_type<T>{}>* = 0) const noexcept {
         return any_type<TParent, injector, TProvider, TRefs, TPolicies>{
             *this, provider, refs, policies
@@ -1362,7 +1383,9 @@ private:
       , class TPolicies
     >
     decltype(auto)
-    create_impl(const TProvider& provider, TRefs& refs, const TPolicies& policies
+    create_impl(const TProvider& provider
+              , TRefs& refs
+              , const TPolicies& policies
               , std::enable_if_t<!is_any_type<T>{}>* = 0) const noexcept {
         return create_from_dep_impl<T>(provider, refs, policies);
     }
@@ -1374,7 +1397,9 @@ private:
       , class TPolicies
     >
     decltype(auto)
-    create_from_dep_impl(const TProvider& provider, TRefs& refs, const TPolicies& policies) const noexcept {
+    create_from_dep_impl(const TProvider& provider
+                       , TRefs& refs
+                       , const TPolicies& policies) const noexcept {
         const auto& dependency = binder::resolve<T>(this);
         using type = typename std::remove_reference_t<decltype(dependency)>::given;;
         using ctor = typename type_traits::ctor_traits<type>::type;
@@ -1410,31 +1435,30 @@ private:
     call_impl(const TAction&) noexcept { }
 
     template<class T>
-    decltype(auto) pass_arg(const T& arg, std::enable_if_t<!has_configure<T>{}>* = 0) const noexcept {
+    decltype(auto)
+    pass_arg(const T& arg
+           , std::enable_if_t<!has_configure<T>{}>* = 0) const noexcept {
         return arg;
     }
 
     template<class T>
-    decltype(auto) pass_arg(const T& arg, std::enable_if_t<has_configure<T>{}>* = 0) const noexcept {
+    decltype(auto)
+    pass_arg(const T& arg
+           , std::enable_if_t<has_configure<T>{}>* = 0) const noexcept {
         return arg.configure();
     }
 
     template<class T, class... Ts>
-    decltype(auto) create_from_injector(const injector<T>& injector, const aux::type_list<Ts...>&) const noexcept {
+    decltype(auto)
+    create_from_injector(const injector<T>& injector
+                       , const aux::type_list<Ts...>&) const noexcept {
         return pool<TDeps>(create_dep<Ts>(injector)...);
     }
 
     template<class TDependency, class TInjector>
-    decltype(auto) create_dep(const TInjector& injector) const noexcept {
-        struct provider {
-            TInjector injector_;
-
-            decltype(auto) get() const noexcept {
-                return injector_.template create<typename TDependency::given*>();
-            }
-        };
-
-        return TDependency{provider{injector}};
+    decltype(auto)
+    create_dep(const TInjector& injector) const noexcept {
+        return TDependency{injector};
     }
 };
 
@@ -1446,29 +1470,44 @@ class exposed {
 public:
     static constexpr auto priority = false;
 
-    template<class T>
-    struct provider {
-        provider() noexcept {}
-
-        template<typename TProvider>
-        explicit provider(const TProvider& provider) noexcept
-            : f([=]{ return provider.get(); })
-        { }
-
-        T* get_ptr() const noexcept { return f(); }
-        T* get() const noexcept { return f(); }
-
-        std::function<T*()> f;
-    };
-
     template<class TExpected, class T>
     class scope {
-    public:
-        scope() noexcept { }
+        struct provider {
+            struct ifun {
+                virtual ~ifun() = default;
+                virtual T* operator()() = 0;
+            };
 
-        template<class TProvider>
-        explicit scope(const TProvider& provider) noexcept
-            : provider_{provider}
+            template<typename TInjector>
+            class fun : public ifun {
+            public:
+                explicit fun(const TInjector& injector)
+                    : injector_(injector)
+                { }
+
+                T* operator()() override {
+                    return injector_.template create<T*>();
+                }
+
+            private:
+                TInjector injector_;
+            };
+
+            template<typename TInjector>
+            explicit provider(const TInjector& injector) noexcept
+                : f(new fun<TInjector>(injector))
+            { }
+
+            T* get_ptr() const noexcept { return (*f)(); }
+            T* get() const noexcept { return (*f)(); }
+
+            std::shared_ptr<ifun> f;
+        };
+
+    public:
+        template<class TInjector>
+        explicit scope(const TInjector& injector) noexcept
+            : provider_{injector}
         { }
 
         template<class TDst, class TProvider>
@@ -1478,7 +1517,7 @@ public:
         }
 
     private:
-        provider<T> provider_;
+        provider provider_;
     };
 };
 

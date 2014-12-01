@@ -19,7 +19,8 @@ public:
     class scope {
     public:
         template<class, class TProvider>
-        auto create(const TProvider& provider) const noexcept -> wrappers::copy<decltype(provider.get())> {
+        auto create(const TProvider& provider) const noexcept
+        -> wrappers::copy<decltype(provider.get())> {
             return provider.get();
         }
     };

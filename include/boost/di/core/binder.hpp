@@ -48,7 +48,8 @@ class binder {
       , class TName
     >
     static decltype(auto) // priority scope
-    resolve_impl(const aux::pair<TConcept, dependency<TScope, TExpected, TGiven, TName, true>>* dep) noexcept {
+    resolve_impl(const aux::pair<TConcept
+               , dependency<TScope, TExpected, TGiven, TName, true>>* dep) noexcept {
         return static_cast<const dependency<TScope, TExpected, TGiven, TName, true>&>(*dep);
     }
 

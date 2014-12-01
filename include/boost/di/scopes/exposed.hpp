@@ -7,7 +7,6 @@
 #define BOOST_DI_SCOPES_EXPOSED_HPP
 
 #include "boost/di/type_traits/scope_traits.hpp"
-#include <functional>
 
 namespace boost { namespace di { namespace scopes {
 
@@ -15,29 +14,44 @@ class exposed {
 public:
     static constexpr auto priority = false;
 
-    template<class T>
-    struct provider {
-        provider() noexcept {}
-
-        template<typename TProvider>
-        explicit provider(const TProvider& provider) noexcept
-            : f([=]{ return provider.get(); })
-        { }
-
-        T* get_ptr() const noexcept { return f(); }
-        T* get() const noexcept { return f(); }
-
-        std::function<T*()> f;
-    };
-
     template<class TExpected, class T>
     class scope {
-    public:
-        scope() noexcept { }
+        struct provider {
+            struct ifun {
+                virtual ~ifun() = default;
+                virtual T* operator()() = 0;
+            };
 
-        template<class TProvider>
-        explicit scope(const TProvider& provider) noexcept
-            : provider_{provider}
+            template<typename TInjector>
+            class fun : public ifun {
+            public:
+                explicit fun(const TInjector& injector)
+                    : injector_(injector)
+                { }
+
+                T* operator()() override {
+                    return injector_.template create<T*>();
+                }
+
+            private:
+                TInjector injector_;
+            };
+
+            template<typename TInjector>
+            explicit provider(const TInjector& injector) noexcept
+                : f(new fun<TInjector>(injector))
+            { }
+
+            T* get_ptr() const noexcept { return (*f)(); }
+            T* get() const noexcept { return (*f)(); }
+
+            std::shared_ptr<ifun> f;
+        };
+
+    public:
+        template<class TInjector>
+        explicit scope(const TInjector& injector) noexcept
+            : provider_{injector}
         { }
 
         template<class TDst, class TProvider>
@@ -47,7 +61,7 @@ public:
         }
 
     private:
-        provider<T> provider_;
+        provider provider_;
     };
 };
 

@@ -22,7 +22,10 @@ namespace boost { namespace di { namespace core {
 BOOST_DI_HAS_METHOD(configure, configure);
 BOOST_DI_HAS_METHOD(call, call);
 
-template<class TDeps = aux::type_list<>, typename TDefaultProvider = providers::reduce_allocs>
+template<
+    class TDeps = aux::type_list<>
+  , class TDefaultProvider = providers::reduce_allocs
+>
 class injector : public pool<TDeps> {
     template<class, class, class, class, class>
     friend class any_type;
@@ -46,7 +49,13 @@ class injector : public pool<TDeps> {
       , class TPolicies
       , class... TArgs
     >
-    struct provider_impl<T, TDependency, TProvider, TPolicies, aux::type_list<TArgs...>> {
+    struct provider_impl<
+        T
+      , TDependency
+      , TProvider
+      , TPolicies
+      , aux::type_list<TArgs...>
+    > {
         const injector& injector_;
         const TProvider& provider_;
         const TPolicies& policies_;
@@ -116,7 +125,9 @@ private:
       , class TPolicies
     >
     decltype(auto)
-    create_impl(const TProvider& provider, TRefs& refs, const TPolicies& policies
+    create_impl(const TProvider& provider
+              , TRefs& refs
+              , const TPolicies& policies
               , std::enable_if_t<is_any_type<T>{}>* = 0) const noexcept {
         return any_type<TParent, injector, TProvider, TRefs, TPolicies>{
             *this, provider, refs, policies
@@ -131,7 +142,9 @@ private:
       , class TPolicies
     >
     decltype(auto)
-    create_impl(const TProvider& provider, TRefs& refs, const TPolicies& policies
+    create_impl(const TProvider& provider
+              , TRefs& refs
+              , const TPolicies& policies
               , std::enable_if_t<!is_any_type<T>{}>* = 0) const noexcept {
         return create_from_dep_impl<T>(provider, refs, policies);
     }
@@ -143,7 +156,9 @@ private:
       , class TPolicies
     >
     decltype(auto)
-    create_from_dep_impl(const TProvider& provider, TRefs& refs, const TPolicies& policies) const noexcept {
+    create_from_dep_impl(const TProvider& provider
+                       , TRefs& refs
+                       , const TPolicies& policies) const noexcept {
         const auto& dependency = binder::resolve<T>(this);
         using type = typename std::remove_reference_t<decltype(dependency)>::given;;
         using ctor = typename type_traits::ctor_traits<type>::type;
@@ -179,31 +194,30 @@ private:
     call_impl(const TAction&) noexcept { }
 
     template<class T>
-    decltype(auto) pass_arg(const T& arg, std::enable_if_t<!has_configure<T>{}>* = 0) const noexcept {
+    decltype(auto)
+    pass_arg(const T& arg
+           , std::enable_if_t<!has_configure<T>{}>* = 0) const noexcept {
         return arg;
     }
 
     template<class T>
-    decltype(auto) pass_arg(const T& arg, std::enable_if_t<has_configure<T>{}>* = 0) const noexcept {
+    decltype(auto)
+    pass_arg(const T& arg
+           , std::enable_if_t<has_configure<T>{}>* = 0) const noexcept {
         return arg.configure();
     }
 
     template<class T, class... Ts>
-    decltype(auto) create_from_injector(const injector<T>& injector, const aux::type_list<Ts...>&) const noexcept {
+    decltype(auto)
+    create_from_injector(const injector<T>& injector
+                       , const aux::type_list<Ts...>&) const noexcept {
         return pool<TDeps>(create_dep<Ts>(injector)...);
     }
 
     template<class TDependency, class TInjector>
-    decltype(auto) create_dep(const TInjector& injector) const noexcept {
-        struct provider {
-            TInjector injector_;
-
-            decltype(auto) get() const noexcept {
-                return injector_.template create<typename TDependency::given*>();
-            }
-        };
-
-        return TDependency{provider{injector}};
+    decltype(auto)
+    create_dep(const TInjector& injector) const noexcept {
+        return TDependency{injector};
     }
 };
 

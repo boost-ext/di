@@ -12,27 +12,23 @@
 namespace boost { namespace di { namespace core {
 
 template<
-    class T = aux::none_t
+    class TParent = aux::none_t
   , class TInjector = aux::none_t
   , class TProvider = aux::none_t
   , class TRefs = aux::none_t
   , class TPolicies = aux::none_t
 >
 class any_type {
-    template<class TValueType, class TRefType>
-    using ref_type_t = std::conditional_t<
-          std::is_same<TValueType, aux::none_t>{}
-        , TValueType
-        , TRefType
-      >;
+    template<class T, class TRef>
+    using ref_type_t =
+        std::conditional_t<std::is_same<T, aux::none_t>{}, T, TRef>;
 
     any_type& operator=(const any_type&) = delete;
-    //any_type(const any_type&) = delete;
 
-    template<class U>
+    template<class T>
     using is_not_same_t = std::enable_if_t<
-        !std::is_same<aux::make_plain_t<U>
-      , aux::make_plain_t<T>>::value
+        !std::is_same<aux::make_plain_t<T>
+      , aux::make_plain_t<TParent>>::value
     >;
 
 public:
@@ -48,19 +44,22 @@ public:
         , policies_(policies)
     { }
 
-    template<class U, class = is_not_same_t<U>>
-    operator const U&() const noexcept {
-        return creator_.template create_impl<const U&, T>(provider_, refs_, policies_);
+    template<class T, class = is_not_same_t<T>>
+    operator const T&() const noexcept {
+        return creator_.template
+            create_impl<const T&, TParent>(provider_, refs_, policies_);
     }
 
-    template<class U, class = is_not_same_t<U>>
-    operator U&() const noexcept {
-        return creator_.template create_impl<U&, T>(provider_, refs_, policies_);
+    template<class T, class = is_not_same_t<T>>
+    operator T&() const noexcept {
+        return creator_.template
+            create_impl<T&, TParent>(provider_, refs_, policies_);
     }
 
-    template<class U, class = is_not_same_t<U>>
-    operator U() noexcept {
-        return creator_.template create_impl<U, T>(provider_, refs_, policies_);
+    template<class T, class = is_not_same_t<T>>
+    operator T() noexcept {
+        return creator_.template
+            create_impl<T, TParent>(provider_, refs_, policies_);
     }
 
 private:
