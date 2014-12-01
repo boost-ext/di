@@ -147,8 +147,8 @@ private:
     decltype(auto)
     create_from_dep_impl(const TProvider& provider
                        , const TPolicies& policies) const noexcept {
-        const auto& dependency = binder::resolve<T>(this);
-        using type = typename std::remove_reference_t<decltype(dependency)>::given;;
+        decltype(auto) dependency = binder::resolve<T>((injector*)this);
+        using type = typename std::remove_reference_t<decltype(dependency)>::given;
         using ctor = typename type_traits::ctor_traits<type>::type;
         call_policies<data<T, type>>(policies);
         return wrappers::universal<T>{dependency.template create<T>(

@@ -36,7 +36,7 @@ public:
         }
 
         template<class, class TProvider>
-        decltype(auto) create(const TProvider& provider) const noexcept {
+        decltype(auto) create(const TProvider& provider) noexcept {
             if (in_scope_ && !object_) {
                 object_.reset(provider.get());
             }
@@ -44,7 +44,7 @@ public:
         }
 
     private:
-        mutable wrappers::shared<T> object_;
+        wrappers::shared<T> object_;
         bool in_scope_ = false;
     };
 };

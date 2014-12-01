@@ -19,7 +19,7 @@ public:
     class scope {
     public:
         template<class, class TProvider>
-        decltype(auto) create(const TProvider& provider) const noexcept {
+        decltype(auto) create(const TProvider& provider) noexcept {
             if (!object_) {
                 object_.reset(provider.get_ptr());
             }
@@ -27,7 +27,7 @@ public:
         }
 
     private:
-        mutable wrappers::shared<T> object_;
+        wrappers::shared<T> object_;
     };
 };
 

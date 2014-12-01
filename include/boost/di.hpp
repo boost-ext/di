@@ -708,7 +708,7 @@ public:
         }
 
         template<class, class TProvider>
-        decltype(auto) create(const TProvider& provider) const noexcept {
+        decltype(auto) create(const TProvider& provider) noexcept {
             if (in_scope_ && !object_) {
                 object_.reset(provider.get());
             }
@@ -716,7 +716,7 @@ public:
         }
 
     private:
-        mutable wrappers::shared<T> object_;
+        wrappers::shared<T> object_;
         bool in_scope_ = false;
     };
 };
@@ -733,7 +733,7 @@ public:
     class scope {
     public:
         template<class, class TProvider>
-        decltype(auto) create(const TProvider& provider) const noexcept {
+        decltype(auto) create(const TProvider& provider) noexcept {
             if (!object_) {
                 object_.reset(provider.get_ptr());
             }
@@ -741,7 +741,7 @@ public:
         }
 
     private:
-        mutable wrappers::shared<T> object_;
+        wrappers::shared<T> object_;
     };
 };
 
@@ -838,9 +838,9 @@ class binder {
     }
 
     template<class, class TConcept, class TDependency>
-    static const TDependency&
-    resolve_impl(const aux::pair<TConcept, TDependency>* dep) noexcept {
-        return static_cast<const TDependency&>(*dep);
+    static TDependency&
+    resolve_impl(aux::pair<TConcept, TDependency>* dep) noexcept {
+        return static_cast<TDependency&>(*dep);
     }
 
     template<
@@ -852,9 +852,9 @@ class binder {
       , class TName
     >
     static decltype(auto) // priority scope
-    resolve_impl(const aux::pair<TConcept
+    resolve_impl(aux::pair<TConcept
                , dependency<TScope, TExpected, TGiven, TName, true>>* dep) noexcept {
-        return static_cast<const dependency<TScope, TExpected, TGiven, TName, true>&>(*dep);
+        return static_cast<dependency<TScope, TExpected, TGiven, TName, true>&>(*dep);
     }
 
 public:
@@ -863,7 +863,7 @@ public:
       , class TDeps
       , class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>
     >
-    static decltype(auto) resolve(const TDeps* deps) noexcept {
+    static decltype(auto) resolve(TDeps* deps) noexcept {
         using dependency = dependency_concept<
             aux::make_plain_t<T>
           , get_name_t<aux::remove_accessors_t<T>>
@@ -1205,8 +1205,8 @@ private:
     decltype(auto)
     create_from_dep_impl(const TProvider& provider
                        , const TPolicies& policies) const noexcept {
-        const auto& dependency = binder::resolve<T>(this);
-        using type = typename std::remove_reference_t<decltype(dependency)>::given;;
+        decltype(auto) dependency = binder::resolve<T>((injector*)this);
+        using type = typename std::remove_reference_t<decltype(dependency)>::given;
         using ctor = typename type_traits::ctor_traits<type>::type;
         call_policies<data<T, type>>(policies);
         return wrappers::universal<T>{dependency.template create<T>(
