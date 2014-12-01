@@ -1,6 +1,7 @@
 #include <boost/di.hpp>
 #include <iostream>
 #include <memory>
+#include <boost/shared_ptr.hpp>
 
 #include <boost/units/detail/utility.hpp>
 
@@ -356,5 +357,32 @@ test scopes_external_lambda_injector = [] {
     auto object = injector.create<std::shared_ptr<int>>();
     expect_eq(43, *i);
     }
+};
+
+test conversion_to_boost_shared_ptr = [] {
+    struct c {
+        boost::shared_ptr<int> sp;
+    };
+
+    auto injector = di::make_injector(
+        di::bind<int>.in(di::shared)
+    );
+
+    auto object = injector.create<c>();
+    expect(object.sp.get());
+};
+
+test one_arg_class = [] {
+    struct c {
+        c(int i) : i(i) { }
+        int i = 0;
+    };
+
+    auto injector = di::make_injector(
+        di::bind<int>.in(di::unique)
+    );
+
+    auto object = injector.create<c>();
+    expect_eq(0, object.i);
 };
 

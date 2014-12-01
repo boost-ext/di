@@ -13,13 +13,8 @@ namespace boost { namespace di { namespace wrappers {
 
 template<class T>
 class shared {
-    template<class U, class TShared = aux::shared_ptr<U>>
-    struct sp_holder {
-        TShared value_;
-    };
-
 public:
-    shared() { }
+    shared() noexcept { }
 
     shared(const aux::shared_ptr<T>& value) noexcept // non explicit
         : value_(value)
@@ -34,21 +29,18 @@ public:
     }
 
     template<class I>
-    inline aux::shared_ptr<I>
-    operator()(const aux::type<aux::shared_ptr<I>>&) const noexcept {
+    inline operator aux::shared_ptr<I>() const noexcept {
         return value_;
     }
 
     template<class I>
-    inline aux_::shared_ptr<I>
-    operator()(const aux::type<aux_::shared_ptr<I>>&) const noexcept {
-        auto sp = std::make_shared<sp_holder<T>>(value_);
-        return {sp, value_.get()};
+    inline operator aux_::shared_ptr<I>() const noexcept {
+        using sp = aux::shared_ptr<T>;
+        return {aux_::shared_ptr<sp>{new sp{value_}}, value_.get()};
     }
 
     template<class I>
-    inline aux::weak_ptr<I>
-    operator()(const aux::type<aux::weak_ptr<I>>&) const noexcept {
+    inline operator aux::weak_ptr<I>() const noexcept {
         return value_;
     }
 

@@ -13,44 +13,26 @@
 
 namespace boost { namespace di { namespace wrappers {
 
-template<class T>
-class universal {
-public:
-    template<class TWrapper>
-    explicit universal(const TWrapper& wrapper) noexcept
-        : object_(wrapper(aux::type<T>()))
-    { }
+template<class T, class TWrapper>
+struct universal {
+    TWrapper wrapper_;
 
     inline operator T() const noexcept {
-        return object_;
+        return wrapper_;
     }
-
-    inline operator T&&() noexcept {
-        return std::move(object_);
-    }
-
-private:
-    T object_;
 };
 
-template<class T, class TName>
-class universal<named<T, TName>> {
-public:
-    template<class TWrapper>
-    explicit universal(const TWrapper& wrapper) noexcept
-        : object_(wrapper(aux::type<T>()))
-    { }
+template<class TWrapper, class T, class TName>
+struct universal<named<T, TName>, TWrapper> {
+    TWrapper wrapper_;
 
     inline operator T() const noexcept {
-        return object_;
+        return wrapper_;
     }
 
     inline operator named<T, TName>() const noexcept {
-        return object_;
+        return static_cast<T>(wrapper_);
     }
-
-private:
-    T object_;
 };
 
 }}} // namespace boost::di::wrappers

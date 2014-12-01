@@ -147,13 +147,13 @@ private:
     decltype(auto)
     create_from_dep_impl(const TProvider& provider
                        , const TPolicies& policies) const noexcept {
-        decltype(auto) dependency = binder::resolve<T>((injector*)this);
+        auto&& dependency = binder::resolve<T>((injector*)this);
         using type = typename std::remove_reference_t<decltype(dependency)>::given;
         using ctor = typename type_traits::ctor_traits<type>::type;
         call_policies<data<T, type>>(policies);
-        return wrappers::universal<T>{dependency.template create<T>(
-            provider_impl<T, type, TProvider, TPolicies, ctor>{*this, provider, policies})
-        };
+        auto&& ctor_provider = provider_impl<T, type, TProvider, TPolicies, ctor>{*this, provider, policies};
+        using wrapper = decltype(dependency.template create<T>(ctor_provider));
+        return wrappers::universal<T, wrapper>{dependency.template create<T>(ctor_provider)};
     }
 
     template<class T, class... TPolicies>
