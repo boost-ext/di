@@ -180,6 +180,52 @@ public:
 namespace boost { namespace di { namespace wrappers {
 
 template<class T>
+class value {
+public:
+    value(const T& value) noexcept // non explicit
+        : value_(value)
+    { }
+
+    inline T operator()(const aux::type<T>&) const noexcept {
+        return value_;
+    }
+
+    inline T* operator()(const aux::type<T*>&) const noexcept {
+        return new T(value_);
+    }
+
+    inline const T* operator()(const aux::type<const T*>&) const noexcept {
+        return new T(value_);
+    }
+
+    inline T&& operator()(const aux::type<T&&>&) noexcept {
+        return std::move(value_);
+    }
+
+    template<class I>
+    inline aux::shared_ptr<I> operator()(const aux::type<aux::shared_ptr<I>>&) const noexcept {
+        return aux::shared_ptr<I>(new I(value_));
+    }
+
+    template<class I>
+    inline aux_::shared_ptr<I> operator()(const aux::type<aux_::shared_ptr<I>>&) const noexcept {
+        return aux_::shared_ptr<I>(new I(value_));
+    }
+
+    template<class I>
+    inline aux::unique_ptr<I> operator()(const aux::type<aux::unique_ptr<I>>&) const noexcept {
+        return aux::unique_ptr<I>(new I(value_));
+    }
+
+private:
+    T value_;
+};
+
+}}} // namespace boost::di::wrappers
+
+namespace boost { namespace di { namespace wrappers {
+
+template<class T>
 class shared {
     template<class U, class TShared = aux::shared_ptr<U>>
     class sp_holder {
@@ -225,73 +271,6 @@ public:
 
 private:
     aux::shared_ptr<T> value_;
-};
-
-}}} // namespace boost::di::wrappers
-
-namespace boost { namespace di { namespace wrappers {
-
-template<class T>
-class reference {
-    reference& operator=(const reference&) = delete;
-
-public:
-    reference(T& value) noexcept // non explicit
-        : value_(value)
-    { }
-
-    inline T& operator()(const aux::type<T&>&) const noexcept {
-        return value_;
-    }
-
-private:
-    std::reference_wrapper<T> value_;
-};
-
-}}} // namespace boost::di::wrappers
-
-namespace boost { namespace di { namespace wrappers {
-
-template<class T>
-class value {
-public:
-    value(const T& value) noexcept // non explicit
-        : value_(value)
-    { }
-
-    inline T operator()(const aux::type<T>&) const noexcept {
-        return value_;
-    }
-
-    inline T* operator()(const aux::type<T*>&) const noexcept {
-        return new T(value_);
-    }
-
-    inline const T* operator()(const aux::type<const T*>&) const noexcept {
-        return new T(value_);
-    }
-
-    inline T&& operator()(const aux::type<T&&>&) noexcept {
-        return std::move(value_);
-    }
-
-    template<class I>
-    inline aux::shared_ptr<I> operator()(const aux::type<aux::shared_ptr<I>>&) const noexcept {
-        return aux::shared_ptr<I>(new I(value_));
-    }
-
-    template<class I>
-    inline aux_::shared_ptr<I> operator()(const aux::type<aux_::shared_ptr<I>>&) const noexcept {
-        return aux_::shared_ptr<I>(new I(value_));
-    }
-
-    template<class I>
-    inline aux::unique_ptr<I> operator()(const aux::type<aux::unique_ptr<I>>&) const noexcept {
-        return aux::unique_ptr<I>(new I(value_));
-    }
-
-private:
-    T value_;
 };
 
 }}} // namespace boost::di::wrappers
@@ -376,6 +355,87 @@ public:
 };
 
 }}} // namespace boost::di::scopes
+
+namespace boost { namespace di { namespace core {
+
+template<class TExpected, class TName>
+struct dependency_concept { };
+
+template<class T, class TDependency>
+struct dependency_impl : aux::pair<T, TDependency>
+{ };
+
+template<class... Ts, class TName, class TDependency>
+struct dependency_impl<
+    dependency_concept<aux::type_list<Ts...>, TName>
+  , TDependency
+> : aux::pair<dependency_concept<Ts, TName>, TDependency>...
+{ };
+
+template<
+    class TScope
+  , class TExpected
+  , class TGiven = TExpected
+  , class TName = no_name
+  , bool TPriority = TScope::priority
+>
+class dependency
+    : public TScope::template scope<TExpected, TGiven>
+    , public dependency_impl<
+          dependency_concept<TExpected, TName>
+        , dependency<TScope, TExpected, TGiven, TName, TPriority>
+      > {
+public:
+    using type = dependency;
+    using scope = TScope;
+    using expected = TExpected;
+    using given = TGiven;
+    using name = TName;
+
+    dependency() noexcept { }
+
+    template<class T>
+    explicit dependency(T&& object) noexcept
+        : TScope::template scope<TExpected, TGiven>(std::forward<T>(object))
+    { }
+
+    template<class T, class TInjector>
+    dependency(T&& object, const TInjector& injector) noexcept
+        : TScope::template scope<TExpected, TGiven>(std::forward<T>(object), injector)
+    { }
+
+    template<class T>
+    auto named(const T&) const noexcept {
+        return dependency<TScope, TExpected, TGiven, T>{};
+    }
+
+    template<class T>
+    auto in(const T&) const noexcept {
+        return dependency<T, TExpected, TGiven, TName>{};
+    }
+
+    template<class T>
+    auto to(T&& object) const noexcept {
+        using dep = dependency<scopes::external, TExpected, aux::remove_accessors_t<T>, TName>;
+        return dep{std::forward<T>(object)};
+    }
+};
+
+template<class>
+struct is_dependency : std::false_type { };
+
+template<
+    class TScope
+  , class TExpected
+  , class TGiven
+  , class TName
+  , bool TPriority
+>
+struct is_dependency<
+    dependency<TScope, TExpected, TGiven, TName, TPriority>
+> : std::true_type { };
+
+}}} // namespace boost::di::core
 
 namespace boost { namespace di { namespace wrappers {
 
@@ -475,7 +535,7 @@ public:
     public:
         template<class, class TProvider>
         auto create(const TProvider& provider) const noexcept
-        -> wrappers::copy<decltype(provider.get())> {
+            -> wrappers::copy<decltype(provider.get())> {
             return provider.get();
         }
     };
@@ -622,87 +682,6 @@ public:
 
 }}} // namespace boost::di::scopes
 
-namespace boost { namespace di { namespace core {
-
-template<class TExpected, class TName>
-struct dependency_concept { };
-
-template<class T, class TDependency>
-struct dependency_impl : aux::pair<T, TDependency>
-{ };
-
-template<class... Ts, class TName, class TDependency>
-struct dependency_impl<
-    dependency_concept<aux::type_list<Ts...>, TName>
-  , TDependency
-> : aux::pair<dependency_concept<Ts, TName>, TDependency>...
-{ };
-
-template<
-    class TScope
-  , class TExpected
-  , class TGiven = TExpected
-  , class TName = no_name
-  , bool TPriority = TScope::priority
->
-class dependency
-    : public TScope::template scope<TExpected, TGiven>
-    , public dependency_impl<
-          dependency_concept<TExpected, TName>
-        , dependency<TScope, TExpected, TGiven, TName, TPriority>
-      > {
-public:
-    using type = dependency;
-    using scope = TScope;
-    using expected = TExpected;
-    using given = TGiven;
-    using name = TName;
-
-    dependency() noexcept { }
-
-    template<class T>
-    explicit dependency(T&& object) noexcept
-        : TScope::template scope<TExpected, TGiven>(std::forward<T>(object))
-    { }
-
-    template<class T, class TInjector>
-    dependency(T&& object, const TInjector& injector) noexcept
-        : TScope::template scope<TExpected, TGiven>(std::forward<T>(object), injector)
-    { }
-
-    template<class T>
-    auto named(const T&) const noexcept {
-        return dependency<TScope, TExpected, TGiven, T>{};
-    }
-
-    template<class T>
-    auto in(const T&) const noexcept {
-        return dependency<T, TExpected, TGiven, TName>{};
-    }
-
-    template<class T>
-    auto to(T&& object) const noexcept {
-        using dep = dependency<scopes::external, TExpected, aux::remove_accessors_t<T>, TName>;
-        return dep{std::forward<T>(object)};
-    }
-};
-
-template<class>
-struct is_dependency : std::false_type { };
-
-template<
-    class TScope
-  , class TExpected
-  , class TGiven
-  , class TName
-  , bool TPriority
->
-struct is_dependency<
-    dependency<TScope, TExpected, TGiven, TName, TPriority>
-> : std::true_type { };
-
-}}} // namespace boost::di::core
-
 namespace boost { namespace di { namespace scopes {
 
 template<class = no_name>
@@ -801,58 +780,32 @@ template<
     class TParent = aux::none_t
   , class TInjector = aux::none_t
   , class TProvider = aux::none_t
-  , class TRefs = aux::none_t
   , class TPolicies = aux::none_t
 >
 class any_type {
-    template<class T, class TRef>
-    using ref_type_t =
-        std::conditional_t<std::is_same<T, aux::none_t>{}, T, TRef>;
-
-    any_type& operator=(const any_type&) = delete;
-
     template<class T>
     using is_not_same_t = std::enable_if_t<
-        !std::is_same<aux::make_plain_t<T>
-      , aux::make_plain_t<TParent>>::value
+        !std::is_same<aux::make_plain_t<T>, aux::make_plain_t<TParent>>::value
     >;
 
 public:
-    any_type() noexcept { }
-
     any_type(const TInjector& creator
            , const TProvider& provider
-           , TRefs& refs
            , const TPolicies& policies) noexcept
         : creator_(creator)
         , provider_(provider)
-        , refs_(refs)
         , policies_(policies)
     { }
 
     template<class T, class = is_not_same_t<T>>
-    operator const T&() const noexcept {
-        return creator_.template
-            create_impl<const T&, TParent>(provider_, refs_, policies_);
-    }
-
-    template<class T, class = is_not_same_t<T>>
-    operator T&() const noexcept {
-        return creator_.template
-            create_impl<T&, TParent>(provider_, refs_, policies_);
-    }
-
-    template<class T, class = is_not_same_t<T>>
     operator T() noexcept {
-        return creator_.template
-            create_impl<T, TParent>(provider_, refs_, policies_);
+        return creator_.template create_impl<T, TParent>(provider_, policies_);
     }
 
 private:
-    ref_type_t<TInjector, const TInjector&> creator_;
-    ref_type_t<TProvider, const TProvider&> provider_;
-    ref_type_t<TRefs, TRefs&> refs_;
-    ref_type_t<TPolicies, const TPolicies&> policies_;
+    const TInjector& creator_;
+    const TProvider& provider_;
+    const TPolicies& policies_;
 };
 
 template<class>
@@ -1078,43 +1031,13 @@ struct ctor_traits_impl<T, std::false_type>
 
 }}} // namespace boost::di::type_traits
 
-namespace boost { namespace di { namespace wrappers { namespace detail {
-
-BOOST_DI_HAS_METHOD_SIGN(call_operator, opeartor());
-
-template<class TValueType, class T>
-using is_convertible_to_ref =
-    has_call_operator<TValueType, const T&(TValueType::*)(const aux::type<const T&>&) const>;
-
-template<class TResult, class T, class TWrapper>
-inline std::enable_if_t<!std::is_copy_constructible<T>{}, const TResult&>
-copy(aux::shared_ptr<void>& refs, const TWrapper& wrapper) noexcept {
-    refs.reset(wrapper(aux::type<T*>()));
-    return *refs;
-}
+namespace boost { namespace di { namespace wrappers {
 
 template<class T>
-struct holder {
-    explicit holder(const T& wrapper) noexcept
-        : held(wrapper)
-    { }
-
-    T held;
-};
-
-template<class TResult, class T, class TWrapper>
-inline std::enable_if_t<std::is_copy_constructible<T>{}, const TResult&>
-copy(aux::shared_ptr<void>& refs, const TWrapper& wrapper) noexcept {
-    aux::shared_ptr<holder<TResult>> sp(new holder<TResult>(wrapper(aux::type<T>())));
-    refs = sp;
-    return sp->held;
-}
-
-template<class T>
-class universal_impl {
+class universal {
 public:
     template<class TWrapper>
-    universal_impl(aux::shared_ptr<void>&, const TWrapper& wrapper) noexcept
+    explicit universal(const TWrapper& wrapper) noexcept
         : object_(wrapper(aux::type<T>()))
     { }
 
@@ -1130,36 +1053,11 @@ private:
     T object_;
 };
 
-template<class T>
-class universal_impl<const T&> {
-public:
-    template<class TWrapper>
-    universal_impl(aux::shared_ptr<void>&
-                 , const TWrapper& wrapper
-                 , std::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
-        : object_(wrapper(aux::type<const T&>()))
-    { }
-
-    template<class TWrapper>
-    universal_impl(aux::shared_ptr<void>& refs
-                 , const TWrapper& wrapper
-                 , std::enable_if_t<!is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
-        : object_(copy<T, T, TWrapper>(refs, wrapper))
-    { }
-
-    inline operator const T&() const noexcept {
-        return object_;
-    }
-
-private:
-    std::reference_wrapper<const T> object_;
-};
-
 template<class T, class TName>
-class universal_impl<named<T, TName>> {
+class universal<named<T, TName>> {
 public:
     template<class TWrapper>
-    universal_impl(aux::shared_ptr<void>&, const TWrapper& wrapper) noexcept
+    explicit universal(const TWrapper& wrapper) noexcept
         : object_(wrapper(aux::type<T>()))
     { }
 
@@ -1175,87 +1073,6 @@ private:
     T object_;
 };
 
-template<class T, class TName>
-class universal_impl<named<const T&, TName>> {
-public:
-    template<class TWrapper>
-    universal_impl(aux::shared_ptr<void>&
-                 , const TWrapper& wrapper
-                 , std::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
-        : object_(wrapper(aux::type<const T&>()))
-    { }
-
-    template<class TWrapper>
-    universal_impl(aux::shared_ptr<void>& refs
-                 , const TWrapper& wrapper
-                 , std::enable_if_t<!is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
-        : object_(copy<T, T, TWrapper>(refs, wrapper))
-    { }
-
-    inline operator named<const T&, TName>() const noexcept {
-        return object_;
-    }
-
-private:
-    named<const T&, TName> object_;
-};
-
-template<class T, class TName>
-class universal_impl<const named<T, TName>&> {
-public:
-    template<class TWrapper>
-    universal_impl(aux::shared_ptr<void>& refs
-                 , const TWrapper& wrapper) noexcept
-        : object_(copy<named<T, TName>, T, TWrapper>(refs, wrapper))
-    { }
-
-    inline operator const named<T, TName>&() const noexcept {
-        return object_;
-    }
-
-private:
-    std::reference_wrapper<const named<T, TName>> object_;
-};
-
-template<class T, class TName>
-class universal_impl<const named<const T&, TName>&> {
-    universal_impl& operator=(const universal_impl&);
-
-public:
-    template<class TWrapper>
-    universal_impl(aux::shared_ptr<void>& refs
-                 , const TWrapper& wrapper
-                 , std::enable_if_t<is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
-        : refs_(refs)
-        , object_(wrapper(aux::type<const T&>()))
-    { }
-
-    template<class TWrapper>
-    universal_impl(aux::shared_ptr<void>& refs
-                 , const TWrapper& wrapper
-                 , std::enable_if_t<!is_convertible_to_ref<TWrapper, T>{}>* = 0) noexcept
-        : refs_(refs)
-        , object_(copy<T, T, TWrapper>(refs, wrapper))
-    { }
-
-    inline operator const named<const T&, TName>&() const noexcept {
-        aux::shared_ptr<holder<named<const T&, TName>>> object(
-            new holder<named<const T&, TName>>(object_)
-        );
-        refs_ = object;
-        return object->held;
-    }
-
-private:
-    aux::shared_ptr<void>& refs_;
-    named<const T&, TName> object_;
-};
-
-} // namespace detail
-
-template<class T>
-using universal = detail::universal_impl<T>;
-
 }}} // namespace boost::di::wrappers
 
 namespace boost { namespace di { namespace core {
@@ -1268,7 +1085,7 @@ template<
   , class TDefaultProvider = providers::reduce_allocs
 >
 class injector : public pool<TDeps> {
-    template<class, class, class, class, class>
+    template<class, class, class, class>
     friend class any_type;
 
     using pool_t = pool<TDeps>;
@@ -1302,16 +1119,14 @@ class injector : public pool<TDeps> {
         const TPolicies& policies_;
 
         decltype(auto) get() const noexcept {
-            aux::shared_ptr<void> v;
             return provider_.template get<TDependency>(
-                injector_.create_impl<TArgs, T>(provider_, v, policies_)...
+                injector_.create_impl<TArgs, T>(provider_, policies_)...
             );
         }
 
         decltype(auto) get_ptr() const noexcept {
-            aux::shared_ptr<void> v;
             return provider_.template get_ptr<TDependency>(
-                injector_.create_impl<TArgs, T>(provider_, v, policies_)...
+                injector_.create_impl<TArgs, T>(provider_, policies_)...
             );
         }
     };
@@ -1336,15 +1151,13 @@ public:
     template<class T, class... TArgs>
     T create(const TArgs&... args) const noexcept {
         pool<aux::type_list<TArgs...>> policies(args...);
-        aux::shared_ptr<void> v;
-        return create_impl<T, aux::none_t>(TDefaultProvider{}, v, policies);
+        return create_impl<T, aux::none_t>(TDefaultProvider{}, policies);
     }
 
     template<class T, class TProvider, class... TArgs>
     T provide(const TProvider& provider, const TArgs&... args) const noexcept {
         pool<aux::type_list<TArgs...>> policies(args...);
-        aux::shared_ptr<void> v;
-        return create_impl<T, aux::none_t>(provider, v, policies);
+        return create_impl<T, aux::none_t>(provider, policies);
     }
 
     template<class TAction>
@@ -1362,49 +1175,41 @@ private:
         class T
       , class TParent
       , class TProvider
-      , class TRefs
       , class TPolicies
     >
     decltype(auto)
     create_impl(const TProvider& provider
-              , TRefs& refs
               , const TPolicies& policies
               , std::enable_if_t<is_any_type<T>{}>* = 0) const noexcept {
-        return any_type<TParent, injector, TProvider, TRefs, TPolicies>{
-            *this, provider, refs, policies
-        };
+        return any_type<TParent, injector, TProvider, TPolicies>{*this, provider, policies};
     }
 
     template<
         class T
       , class TParent
       , class TProvider
-      , class TRefs
       , class TPolicies
     >
     decltype(auto)
     create_impl(const TProvider& provider
-              , TRefs& refs
               , const TPolicies& policies
               , std::enable_if_t<!is_any_type<T>{}>* = 0) const noexcept {
-        return create_from_dep_impl<T>(provider, refs, policies);
+        return create_from_dep_impl<T>(provider, policies);
     }
 
     template<
         class T
       , class TProvider
-      , class TRefs
       , class TPolicies
     >
     decltype(auto)
     create_from_dep_impl(const TProvider& provider
-                       , TRefs& refs
                        , const TPolicies& policies) const noexcept {
         const auto& dependency = binder::resolve<T>(this);
         using type = typename std::remove_reference_t<decltype(dependency)>::given;;
         using ctor = typename type_traits::ctor_traits<type>::type;
         call_policies<data<T, type>>(policies);
-        return wrappers::universal<T>{refs, dependency.template create<T>(
+        return wrappers::universal<T>{dependency.template create<T>(
             provider_impl<T, type, TProvider, TPolicies, ctor>{*this, provider, policies})
         };
     }
@@ -1512,7 +1317,8 @@ public:
 
         template<class TDst, class TProvider>
         decltype(auto) create(const TProvider&) const noexcept {
-            using scope = typename type_traits::scope_traits_t<TDst>::template scope<TExpected, T>;
+            using scope_traits = type_traits::scope_traits_t<TDst>;
+            using scope = typename scope_traits::template scope<TExpected, T>;
             return scope{}.template create<TDst>(provider_);
         }
 

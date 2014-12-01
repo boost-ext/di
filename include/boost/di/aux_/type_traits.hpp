@@ -31,17 +31,6 @@
     template<class T, class... TArgs>                                           \
     using has_##name = decltype(has_##name##_impl<T, TArgs...>(0))
 
-#define BOOST_DI_HAS_METHOD_SIGN(name, call_name)                               \
-    template<class T, class TSign>                                              \
-    std::true_type                                                              \
-    has_##name##_impl(boost::di::aux::non_type<TSign, &T::call_name>* = 0);     \
-                                                                                \
-    template<class, class>                                                      \
-    std::false_type has_##name##_impl(...);                                     \
-                                                                                \
-    template<class T, class TSign>                                              \
-    using has_##name = decltype(has_##name##_impl<T, TSign>(0))
-
 #define BOOST_DI_HAS_METHOD_CALL(name, call_name)                               \
     struct has_##name##_base {                                                  \
         void call_name();                                                       \

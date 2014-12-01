@@ -11,7 +11,6 @@
 
 #include "boost/di/wrappers/value.hpp"
 #include "boost/di/wrappers/shared.hpp"
-#include "boost/di/wrappers/reference.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 
 namespace boost { namespace di { namespace scopes {

@@ -27,7 +27,7 @@ template<
   , class TDefaultProvider = providers::reduce_allocs
 >
 class injector : public pool<TDeps> {
-    template<class, class, class, class, class>
+    template<class, class, class, class>
     friend class any_type;
 
     using pool_t = pool<TDeps>;
@@ -61,16 +61,14 @@ class injector : public pool<TDeps> {
         const TPolicies& policies_;
 
         decltype(auto) get() const noexcept {
-            aux::shared_ptr<void> v;
             return provider_.template get<TDependency>(
-                injector_.create_impl<TArgs, T>(provider_, v, policies_)...
+                injector_.create_impl<TArgs, T>(provider_, policies_)...
             );
         }
 
         decltype(auto) get_ptr() const noexcept {
-            aux::shared_ptr<void> v;
             return provider_.template get_ptr<TDependency>(
-                injector_.create_impl<TArgs, T>(provider_, v, policies_)...
+                injector_.create_impl<TArgs, T>(provider_, policies_)...
             );
         }
     };
@@ -95,15 +93,13 @@ public:
     template<class T, class... TArgs>
     T create(const TArgs&... args) const noexcept {
         pool<aux::type_list<TArgs...>> policies(args...);
-        aux::shared_ptr<void> v;
-        return create_impl<T, aux::none_t>(TDefaultProvider{}, v, policies);
+        return create_impl<T, aux::none_t>(TDefaultProvider{}, policies);
     }
 
     template<class T, class TProvider, class... TArgs>
     T provide(const TProvider& provider, const TArgs&... args) const noexcept {
         pool<aux::type_list<TArgs...>> policies(args...);
-        aux::shared_ptr<void> v;
-        return create_impl<T, aux::none_t>(provider, v, policies);
+        return create_impl<T, aux::none_t>(provider, policies);
     }
 
     template<class TAction>
@@ -121,49 +117,41 @@ private:
         class T
       , class TParent
       , class TProvider
-      , class TRefs
       , class TPolicies
     >
     decltype(auto)
     create_impl(const TProvider& provider
-              , TRefs& refs
               , const TPolicies& policies
               , std::enable_if_t<is_any_type<T>{}>* = 0) const noexcept {
-        return any_type<TParent, injector, TProvider, TRefs, TPolicies>{
-            *this, provider, refs, policies
-        };
+        return any_type<TParent, injector, TProvider, TPolicies>{*this, provider, policies};
     }
 
     template<
         class T
       , class TParent
       , class TProvider
-      , class TRefs
       , class TPolicies
     >
     decltype(auto)
     create_impl(const TProvider& provider
-              , TRefs& refs
               , const TPolicies& policies
               , std::enable_if_t<!is_any_type<T>{}>* = 0) const noexcept {
-        return create_from_dep_impl<T>(provider, refs, policies);
+        return create_from_dep_impl<T>(provider, policies);
     }
 
     template<
         class T
       , class TProvider
-      , class TRefs
       , class TPolicies
     >
     decltype(auto)
     create_from_dep_impl(const TProvider& provider
-                       , TRefs& refs
                        , const TPolicies& policies) const noexcept {
         const auto& dependency = binder::resolve<T>(this);
         using type = typename std::remove_reference_t<decltype(dependency)>::given;;
         using ctor = typename type_traits::ctor_traits<type>::type;
         call_policies<data<T, type>>(policies);
-        return wrappers::universal<T>{refs, dependency.template create<T>(
+        return wrappers::universal<T>{dependency.template create<T>(
             provider_impl<T, type, TProvider, TPolicies, ctor>{*this, provider, policies})
         };
     }

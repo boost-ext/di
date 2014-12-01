@@ -15,58 +15,32 @@ template<
     class TParent = aux::none_t
   , class TInjector = aux::none_t
   , class TProvider = aux::none_t
-  , class TRefs = aux::none_t
   , class TPolicies = aux::none_t
 >
 class any_type {
-    template<class T, class TRef>
-    using ref_type_t =
-        std::conditional_t<std::is_same<T, aux::none_t>{}, T, TRef>;
-
-    any_type& operator=(const any_type&) = delete;
-
     template<class T>
     using is_not_same_t = std::enable_if_t<
-        !std::is_same<aux::make_plain_t<T>
-      , aux::make_plain_t<TParent>>::value
+        !std::is_same<aux::make_plain_t<T>, aux::make_plain_t<TParent>>::value
     >;
 
 public:
-    any_type() noexcept { }
-
     any_type(const TInjector& creator
            , const TProvider& provider
-           , TRefs& refs
            , const TPolicies& policies) noexcept
         : creator_(creator)
         , provider_(provider)
-        , refs_(refs)
         , policies_(policies)
     { }
 
     template<class T, class = is_not_same_t<T>>
-    operator const T&() const noexcept {
-        return creator_.template
-            create_impl<const T&, TParent>(provider_, refs_, policies_);
-    }
-
-    template<class T, class = is_not_same_t<T>>
-    operator T&() const noexcept {
-        return creator_.template
-            create_impl<T&, TParent>(provider_, refs_, policies_);
-    }
-
-    template<class T, class = is_not_same_t<T>>
     operator T() noexcept {
-        return creator_.template
-            create_impl<T, TParent>(provider_, refs_, policies_);
+        return creator_.template create_impl<T, TParent>(provider_, policies_);
     }
 
 private:
-    ref_type_t<TInjector, const TInjector&> creator_;
-    ref_type_t<TProvider, const TProvider&> provider_;
-    ref_type_t<TRefs, TRefs&> refs_;
-    ref_type_t<TPolicies, const TPolicies&> policies_;
+    const TInjector& creator_;
+    const TProvider& provider_;
+    const TPolicies& policies_;
 };
 
 template<class>

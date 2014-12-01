@@ -6,14 +6,8 @@
 #ifndef BOOST_DI_CORE_DEPENDENCY_HPP
 #define BOOST_DI_CORE_DEPENDENCY_HPP
 
-#include "boost/di/aux_/memory.hpp"
-#include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
-#include "boost/di/wrappers/shared.hpp"
-#include "boost/di/wrappers/reference.hpp"
-#include "boost/di/wrappers/value.hpp"
 #include "boost/di/scopes/external.hpp"
-#include "boost/di/scopes/deduce.hpp"
 #include "boost/di/named.hpp"
 
 namespace boost { namespace di { namespace core {

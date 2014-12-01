@@ -20,7 +20,7 @@ public:
     public:
         template<class, class TProvider>
         auto create(const TProvider& provider) const noexcept
-        -> wrappers::copy<decltype(provider.get())> {
+            -> wrappers::copy<decltype(provider.get())> {
             return provider.get();
         }
     };
