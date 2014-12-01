@@ -28,7 +28,7 @@ template<
 >
 class injector : public pool<TDeps> {
     template<class, class, class, class>
-    friend class any_type;
+    friend struct any_type;
 
     using pool_t = pool<TDeps>;
 

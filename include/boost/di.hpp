@@ -565,9 +565,9 @@ public:
     class scope {
     public:
         template<class, class TProvider>
-        auto create(const TProvider& provider) const noexcept
-            -> wrappers::copy<decltype(provider.get())> {
-            return provider.get();
+        decltype(auto) create(const TProvider& provider) const noexcept {
+            using wrapper = wrappers::copy<decltype(provider.get())>;
+            return wrapper{provider.get()};
         }
     };
 };
@@ -813,27 +813,17 @@ template<
   , class TProvider = aux::none_t
   , class TPolicies = aux::none_t
 >
-class any_type {
+struct any_type {
     template<class T>
     using is_not_same_t = std::enable_if_t<
         !std::is_same<aux::make_plain_t<T>, aux::make_plain_t<TParent>>::value
     >;
-
-public:
-    any_type(const TInjector& creator
-           , const TProvider& provider
-           , const TPolicies& policies) noexcept
-        : creator_(creator)
-        , provider_(provider)
-        , policies_(policies)
-    { }
 
     template<class T, class = is_not_same_t<T>>
     operator T() noexcept {
         return creator_.template create_impl<T, TParent>(provider_, policies_);
     }
 
-private:
     const TInjector& creator_;
     const TProvider& provider_;
     const TPolicies& policies_;
@@ -1117,7 +1107,7 @@ template<
 >
 class injector : public pool<TDeps> {
     template<class, class, class, class>
-    friend class any_type;
+    friend struct any_type;
 
     using pool_t = pool<TDeps>;
 
@@ -1403,7 +1393,8 @@ struct add_type_list<T, std::false_type, std::false_type> {
 };
 
 template<class... Ts>
-using bindings_t = typename aux::join<typename add_type_list<Ts>::type...>::type;
+using bindings_t =
+    typename aux::join<typename add_type_list<Ts>::type...>::type;
 
 } // detail
 
