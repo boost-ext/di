@@ -25,7 +25,7 @@
 #include "boost/di/policies/permit_types.hpp"
 
 // providers
-#include "boost/di/providers/reduce_allocs.hpp"
+#include "boost/di/providers/nothrow_reduce_heap_usage.hpp"
 
 // scopes
 #include "boost/di/scopes/deduce.hpp"
@@ -191,11 +191,11 @@ public:
     }
 
     inline operator T*() const noexcept {
-        return new T{value_}; // transfer ownership
+        return T{value_}; // transfer ownership
     }
 
     inline operator const T*() const noexcept {
-        return new T{value_}; // transfer ownership
+        return new (std::nothrow) T{value_}; // transfer ownership
     }
 
     inline operator T&&() noexcept {
@@ -204,17 +204,17 @@ public:
 
     template<class I>
     inline operator aux::shared_ptr<I>() const noexcept {
-        return new I{value_};
+        return aux::shared_ptr<I>{new (std::nothrow) I{value_}};
     }
 
     template<class I>
     inline operator aux_::shared_ptr<I>() const noexcept {
-        return new I{value_};
+        return aux_::shared_ptr<I>{new (std::nothrow) I{value_}};
     }
 
     template<class I>
     inline operator aux::unique_ptr<I>() const noexcept {
-        return new I{value_};
+        return aux::unique_ptr<I>{new (std::nothrow) I{value_}};
     }
 
 private:
@@ -227,19 +227,8 @@ namespace boost { namespace di { namespace wrappers {
 
 template<class T>
 class shared {
-    template<class U, class TShared = aux::shared_ptr<U>>
-    class sp_holder {
-    public:
-        explicit sp_holder(const TShared& value)
-            : value_(value)
-        { }
-
-    private:
-        TShared value_;
-    };
-
 public:
-    shared() { }
+    shared() noexcept { }
 
     shared(const aux::shared_ptr<T>& value) noexcept // non explicit
         : value_(value)
@@ -260,8 +249,8 @@ public:
 
     template<class I>
     inline operator aux_::shared_ptr<I>() const noexcept {
-        aux_::shared_ptr<sp_holder<T>> sp(new sp_holder<T>(value_));
-        return {sp, value_.get()};
+        using sp = aux::shared_ptr<T>;
+        return {aux_::shared_ptr<sp>{new (std::nothrow) sp{value_}}, value_.get()};
     }
 
     template<class I>
@@ -303,8 +292,7 @@ using wrapper_traits_t = typename wrapper_traits<T>::type;
 
 class external {
     struct injector {
-        template<class T>
-        T create() const;
+        template<class T> T create() const;
     };
 
 public:
@@ -416,6 +404,8 @@ class dependency
           dependency_concept<TExpected, TName>
         , dependency<TScope, TExpected, TGiven, TName, TPriority>
       > {
+    using scope_type = typename TScope::template scope<TExpected, TGiven>;
+
 public:
     using type = dependency;
     using scope = TScope;
@@ -427,12 +417,12 @@ public:
 
     template<class T>
     explicit dependency(T&& object) noexcept
-        : TScope::template scope<TExpected, TGiven>(std::forward<T>(object))
+        : scope_type(std::forward<T>(object))
     { }
 
     template<class T, class TInjector>
     dependency(T&& object, const TInjector& injector) noexcept
-        : TScope::template scope<TExpected, TGiven>(std::forward<T>(object), injector)
+        : scope_type(std::forward<T>(object), injector)
     { }
 
     template<class T>
@@ -447,8 +437,10 @@ public:
 
     template<class T>
     auto to(T&& object) const noexcept {
-        using dep = dependency<scopes::external, TExpected, aux::remove_accessors_t<T>, TName>;
-        return dep{std::forward<T>(object)};
+        using dependency = dependency<
+            scopes::external, TExpected, aux::remove_accessors_t<T>, TName
+        >;
+        return dependency{std::forward<T>(object)};
     }
 };
 
@@ -484,27 +476,27 @@ public:
 
     template<class I>
     inline operator I*() const noexcept {
-        return new I(value_); // ownership transfer
+        return new (std::nothrow) I(value_); // ownership transfer
     }
 
     template<class I>
     inline operator const I*() const noexcept {
-        return new I{value_}; // ownership transfer
+        return new (std::nothrow) I{value_}; // ownership transfer
     }
 
     template<class I>
     inline operator aux::shared_ptr<I>() const noexcept {
-        return aux::shared_ptr<I>{new I{value_}};
+        return aux::shared_ptr<I>{new (std::nothrow) I{value_}};
     }
 
     template<class I>
     inline operator aux_::shared_ptr<I>() const noexcept {
-        return aux_::shared_ptr<I>{new I{value_}};
+        return aux_::shared_ptr<I>{new (std::nothrow) I{value_}};
     }
 
     template<class I>
     inline operator aux::unique_ptr<I>() const noexcept {
-        return aux::unique_ptr<I>{new I{value_}};
+        return aux::unique_ptr<I>{new (std::nothrow) I{value_}};
     }
 
 private:
@@ -937,7 +929,7 @@ private:
 
 namespace boost { namespace di { namespace providers {
 
-class reduce_allocs {
+class nothrow_reduce_heap_usage {
 public:
     template<class T, class... TArgs>
     inline T* get_ptr(TArgs&&... args) const noexcept {
@@ -1012,7 +1004,7 @@ template<
   , class TAllocator
 >
 struct ctor_traits<std::basic_string<T, Traits, TAllocator>> {
-    static void BOOST_DI_INJECTOR();
+    BOOST_DI_INJECT_TRAITS();
 };
 
 namespace type_traits {
@@ -1084,7 +1076,7 @@ BOOST_DI_HAS_METHOD(call, call);
 
 template<
     class TDeps = aux::type_list<>
-  , class TDefaultProvider = providers::reduce_allocs
+  , class TDefaultProvider = providers::nothrow_reduce_heap_usage
 >
 class injector : public pool<TDeps> {
     template<class, class, class, class>
@@ -1207,15 +1199,17 @@ private:
     decltype(auto)
     create_from_dep_impl(const TProvider& provider
                        , const TPolicies& policies) const noexcept {
-        decltype(auto) dependency = binder::resolve<T>((injector*)this);
+        auto&& dependency = binder::resolve<T>((injector*)this);
         using type = typename std::remove_reference_t<decltype(dependency)>::given;
         using ctor = typename type_traits::ctor_traits<type>::type;
-        using wrapper = decltype(dependency.template create<T>(
-            provider_impl<T, type, TProvider, TPolicies, ctor>{*this, provider, policies}));
+
         call_policies<data<T, type>>(policies);
-        return wrappers::universal<T, wrapper>{dependency.template create<T>(
-            provider_impl<T, type, TProvider, TPolicies, ctor>{*this, provider, policies})
-        };
+
+        using provider_impl_type = provider_impl<T, type, TProvider, TPolicies, ctor>;
+        auto&& ctor_provider = provider_impl_type{*this, provider, policies};
+        using wrapper = decltype(dependency.template create<T>(ctor_provider));
+
+        return wrappers::universal<T, wrapper>{dependency.template create<T>(ctor_provider)};
     }
 
     template<class T, class... TPolicies>
@@ -1304,13 +1298,13 @@ public:
 
             template<typename TInjector>
             explicit provider(const TInjector& injector) noexcept
-                : f_(new function<TInjector>(injector))
+                : create_(new function<TInjector>(injector))
             { }
 
-            T* get_ptr() const noexcept { return (*f_)(); }
-            T* get() const noexcept { return (*f_)(); }
+            T* get_ptr() const noexcept { return (*create_)(); }
+            T* get() const noexcept { return (*create_)(); }
 
-            std::shared_ptr<ifunction> f_;
+            std::shared_ptr<ifunction> create_;
         };
 
     public:

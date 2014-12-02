@@ -66,7 +66,7 @@ guard_begin() {
     echo "#include \"boost/di/policies/permit_types.hpp\""
     echo
     echo "// providers"
-    echo "#include \"boost/di/providers/reduce_allocs.hpp\""
+    echo "#include \"boost/di/providers/nothrow_reduce_heap_usage.hpp\""
     echo
     echo "// scopes"
     echo "#include \"boost/di/scopes/deduce.hpp\""

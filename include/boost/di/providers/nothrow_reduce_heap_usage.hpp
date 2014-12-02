@@ -4,15 +4,15 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_PROVIDERS_MIN_ALLOCS_HPP
-#define BOOST_DI_PROVIDERS_MIN_ALLOCS_HPP
+#ifndef BOOST_DI_PROVIDERS_NOTHROW_REDUCE_HEAP_USAGE_HPP
+#define BOOST_DI_PROVIDERS_NOTHROW_REDUCE_HEAP_USAGE_HPP
 
 #include <new>
 #include "boost/di/aux_/type_traits.hpp"
 
 namespace boost { namespace di { namespace providers {
 
-class reduce_allocs {
+class nothrow_reduce_heap_usage {
 public:
     template<class T, class... TArgs>
     inline T* get_ptr(TArgs&&... args) const noexcept {

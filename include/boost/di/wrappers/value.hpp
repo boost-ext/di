@@ -23,11 +23,11 @@ public:
     }
 
     inline operator T*() const noexcept {
-        return new T{value_}; // transfer ownership
+        return  T{value_}; // transfer ownership
     }
 
     inline operator const T*() const noexcept {
-        return new T{value_}; // transfer ownership
+        return new (std::nothrow) T{value_}; // transfer ownership
     }
 
     inline operator T&&() noexcept {
@@ -36,17 +36,17 @@ public:
 
     template<class I>
     inline operator aux::shared_ptr<I>() const noexcept {
-        return new I{value_};
+        return aux::shared_ptr<I>{new (std::nothrow) I{value_}};
     }
 
     template<class I>
     inline operator aux_::shared_ptr<I>() const noexcept {
-        return new I{value_};
+        return aux_::shared_ptr<I>{new (std::nothrow) I{value_}};
     }
 
     template<class I>
     inline operator aux::unique_ptr<I>() const noexcept {
-        return new I{value_};
+        return aux::unique_ptr<I>{new (std::nothrow) I{value_}};
     }
 
 private:

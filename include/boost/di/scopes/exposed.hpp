@@ -39,13 +39,13 @@ public:
 
             template<typename TInjector>
             explicit provider(const TInjector& injector) noexcept
-                : f_(new function<TInjector>(injector))
+                : create_(new function<TInjector>(injector))
             { }
 
-            T* get_ptr() const noexcept { return (*f_)(); }
-            T* get() const noexcept { return (*f_)(); }
+            T* get_ptr() const noexcept { return (*create_)(); }
+            T* get() const noexcept { return (*create_)(); }
 
-            std::shared_ptr<ifunction> f_;
+            std::shared_ptr<ifunction> create_;
         };
 
     public:

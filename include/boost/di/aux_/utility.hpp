@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_AUX_CPP_14_UTILITY_HPP
-#define BOOST_DI_AUX_CPP_14_UTILITY_HPP
+#ifndef BOOST_DI_AUX_UTILITY_HPP
+#define BOOST_DI_AUX_UTILITY_HPP
 
 #include <utility>
 #include <type_traits>
@@ -16,10 +16,7 @@
 
 namespace boost { namespace di { namespace aux {
 
-template<class>
-struct type { };
-
-struct none_t {};
+struct none_t { };
 
 template<class T, T>
 struct non_type { };

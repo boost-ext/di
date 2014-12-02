@@ -62,7 +62,7 @@ template<
   , class TAllocator
 >
 struct ctor_traits<std::basic_string<T, Traits, TAllocator>> {
-    static void BOOST_DI_INJECTOR();
+    BOOST_DI_INJECT_TRAITS();
 };
 
 namespace type_traits {

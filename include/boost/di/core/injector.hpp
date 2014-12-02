@@ -13,7 +13,7 @@
 #include "boost/di/core/any_type.hpp"
 #include "boost/di/core/binder.hpp"
 #include "boost/di/core/pool.hpp"
-#include "boost/di/providers/reduce_allocs.hpp"
+#include "boost/di/providers/nothrow_reduce_heap_usage.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/wrappers/universal.hpp"
 
@@ -24,7 +24,7 @@ BOOST_DI_HAS_METHOD(call, call);
 
 template<
     class TDeps = aux::type_list<>
-  , class TDefaultProvider = providers::reduce_allocs
+  , class TDefaultProvider = providers::nothrow_reduce_heap_usage
 >
 class injector : public pool<TDeps> {
     template<class, class, class, class>
@@ -150,10 +150,13 @@ private:
         auto&& dependency = binder::resolve<T>((injector*)this);
         using type = typename std::remove_reference_t<decltype(dependency)>::given;
         using ctor = typename type_traits::ctor_traits<type>::type;
+
         call_policies<data<T, type>>(policies);
+
         using provider_impl_type = provider_impl<T, type, TProvider, TPolicies, ctor>;
         auto&& ctor_provider = provider_impl_type{*this, provider, policies};
         using wrapper = decltype(dependency.template create<T>(ctor_provider));
+
         return wrappers::universal<T, wrapper>{dependency.template create<T>(ctor_provider)};
     }
 

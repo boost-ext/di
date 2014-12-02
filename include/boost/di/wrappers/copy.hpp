@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_WRAPPERS_COPY_HPP
 #define BOOST_DI_WRAPPERS_COPY_HPP
 
+#include <new>
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 
@@ -26,27 +27,27 @@ public:
 
     template<class I>
     inline operator I*() const noexcept {
-        return new I(value_); // ownership transfer
+        return new (std::nothrow) I(value_); // ownership transfer
     }
 
     template<class I>
     inline operator const I*() const noexcept {
-        return new I{value_}; // ownership transfer
+        return new (std::nothrow) I{value_}; // ownership transfer
     }
 
     template<class I>
     inline operator aux::shared_ptr<I>() const noexcept {
-        return aux::shared_ptr<I>{new I{value_}};
+        return aux::shared_ptr<I>{new (std::nothrow) I{value_}};
     }
 
     template<class I>
     inline operator aux_::shared_ptr<I>() const noexcept {
-        return aux_::shared_ptr<I>{new I{value_}};
+        return aux_::shared_ptr<I>{new (std::nothrow) I{value_}};
     }
 
     template<class I>
     inline operator aux::unique_ptr<I>() const noexcept {
-        return aux::unique_ptr<I>{new I{value_}};
+        return aux::unique_ptr<I>{new (std::nothrow) I{value_}};
     }
 
 private:

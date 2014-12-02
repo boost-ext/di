@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_WRAPPERS_SHARED_HPP
 #define BOOST_DI_WRAPPERS_SHARED_HPP
 
+#include <new>
 #include "boost/di/aux_/memory.hpp"
 
 namespace boost { namespace di { namespace wrappers {
@@ -36,7 +37,7 @@ public:
     template<class I>
     inline operator aux_::shared_ptr<I>() const noexcept {
         using sp = aux::shared_ptr<T>;
-        return {aux_::shared_ptr<sp>{new sp{value_}}, value_.get()};
+        return {aux_::shared_ptr<sp>{new (std::nothrow) sp{value_}}, value_.get()};
     }
 
     template<class I>
