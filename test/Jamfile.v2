@@ -23,7 +23,6 @@ compose <variant>analyze :
 
 project :
     requirements
-        <include>common
         <include>../include
         <warnings>all
 ;
@@ -33,12 +32,12 @@ rule run-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
 
     if $(std) {
         common_toolset +=
-            <toolset>clang:<cxxflags>"-std=$(std)"
+            <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp"
         ;
     }
 
     if $(ctor) {
-        defines += <define>BOOST_DI_INJECT(type, ...)=type(__VA_ARGS__) ;
+        defines += <define>\"BOOST_DI_INJECT(type,...)=type(__VA_ARGS__)\" ;
     }
 
     if ! $(preprocessed_headers) {
@@ -54,7 +53,7 @@ rule compile-fail-test ( std * : src + : ctor * : defines * : preprocessed_heade
     ;
 
     if $(ctor) {
-        defines += <define>BOOST_DI_INJECT(type, ...)=type(__VA_ARGS__) ;
+        defines += <define>\"BOOST_DI_INJECT(type,...)=type(__VA_ARGS__)\" ;
     }
 
     if ! $(preprocessed_headers) {
@@ -64,17 +63,14 @@ rule compile-fail-test ( std * : src + : ctor * : defines * : preprocessed_heade
     compile-fail $(src) : $(common_toolset) $(defines) : $(ctor) ;
 }
 
-#test-suite ut : # unit tests
-#    [ run-test c++11 : ut/bindings_ut.cpp ]
-#;
-
-test-suite it : # integration tests
-    [ run-test c++1y : it/di.cpp : : <define>BOOST_DI_CFG_CONV_TO_BOOST_SMART_PTR ]
+test-suite ut : # unit tests
+    [ run-test c++1y : ut/inject.cpp ]
+    [ run-test c++1y : ut/inject.cpp : ctor_inject ]
 ;
 
-#test-suite ft : # functional tests
-    #[ run-test c++11 : ft/di_ft_cpp_03.cpp : ctor_di_ft_cpp_03 ]
-#;
+test-suite ft : # functional tests
+    [ run-test c++1y : ft/di.cpp : : <define>BOOST_DI_CFG_CONV_TO_BOOST_SMART_PTR ]
+;
 
 #test-suite fail : # compile fail tests
     #[ compile-fail-test c++11 : fail/detail/module_externals_fail.cpp ]

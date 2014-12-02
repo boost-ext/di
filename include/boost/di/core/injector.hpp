@@ -13,7 +13,7 @@
 #include "boost/di/core/any_type.hpp"
 #include "boost/di/core/binder.hpp"
 #include "boost/di/core/pool.hpp"
-#include "boost/di/providers/nothrow_reduce_heap_usage.hpp"
+#include "boost/di/providers/nothrow_heap.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/wrappers/universal.hpp"
 
@@ -24,7 +24,7 @@ BOOST_DI_HAS_METHOD(call, call);
 
 template<
     class TDeps = aux::type_list<>
-  , class TDefaultProvider = providers::nothrow_reduce_heap_usage
+  , class TDefaultProvider = providers::nothrow_heap
 >
 class injector : public pool<TDeps> {
     template<class, class, class, class>

@@ -5,8 +5,6 @@
 
 #include <boost/units/detail/utility.hpp>
 
-#include "test.hpp"
-
 namespace di = boost::di;
 
 struct name{};

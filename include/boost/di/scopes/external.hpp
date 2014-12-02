@@ -9,7 +9,7 @@
 
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/type_traits.hpp"
-#include "boost/di/wrappers/value.hpp"
+#include "boost/di/wrappers/unique.hpp"
 #include "boost/di/wrappers/shared.hpp"
 
 namespace boost { namespace di { namespace scopes {
@@ -27,7 +27,7 @@ using has_lambda =
 
 template<class T>
 struct wrapper_traits {
-    using type = wrappers::value<T>;
+    using type = wrappers::unique<T>;
 };
 
 template<class T>
@@ -59,7 +59,7 @@ public:
         }
 
     private:
-        wrappers::value<T> object_;
+        wrappers::unique<T> object_;
     };
 
     template<class TExpected, class T>

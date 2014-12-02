@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_SCOPES_UNIQUE_HPP
 #define BOOST_DI_SCOPES_UNIQUE_HPP
 
-#include "boost/di/wrappers/copy.hpp"
+#include "boost/di/wrappers/unique.hpp"
 
 namespace boost { namespace di { namespace scopes {
 
@@ -20,7 +20,7 @@ public:
     public:
         template<class, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
-            using wrapper = wrappers::copy<decltype(provider.get())>;
+            using wrapper = wrappers::unique<decltype(provider.get())>;
             return wrapper{provider.get()};
         }
     };

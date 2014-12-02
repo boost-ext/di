@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_TEST_HPP
 #define BOOST_DI_TEST_HPP
 
+#undef NDEBUG
 #include <cassert>
 
 #define expect(...) assert((__VA_ARGS__))

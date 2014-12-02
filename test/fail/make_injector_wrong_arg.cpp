@@ -20,4 +20,3 @@ BOOST_AUTO_TEST_CASE(wrong_arg_fail) {
 } // namespace di
 } // namespace boost
 
-
