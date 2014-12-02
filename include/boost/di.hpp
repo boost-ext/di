@@ -191,6 +191,11 @@ public:
         return value_;
     }
 
+    template<class I>
+    inline operator I*() const noexcept {
+        return new (std::nothrow) I(value_); // ownership transfer
+    }
+
 private:
     T value_;
 };
@@ -858,7 +863,7 @@ private:
 
 namespace boost { namespace di { namespace providers {
 
-class nothrow_heap {
+class nothrow_reduce_heap_usage {
 public:
     template<class T, class... TArgs>
     inline T* get_ptr(TArgs&&... args) const noexcept {
@@ -866,8 +871,20 @@ public:
     }
 
     template<class T, class... TArgs>
-    T* get(TArgs&&... args) const noexcept {
+    inline T get_value(TArgs&&... args) const noexcept {
+        return T{std::forward<TArgs>(args)...};
+    }
+
+    template<class T, class... TArgs>
+    inline std::enable_if_t<std::is_polymorphic<T>{}, T*>
+    get(TArgs&&... args) const noexcept {
         return get_ptr<T>(std::forward<TArgs>(args)...);
+    }
+
+    template<class T, class... TArgs>
+    inline std::enable_if_t<!std::is_polymorphic<T>{}, T>
+    get(TArgs&&... args) const noexcept {
+        return get_value<T>(std::forward<TArgs>(args)...);
     }
 };
 
@@ -993,7 +1010,7 @@ BOOST_DI_HAS_METHOD(call, call);
 
 template<
     class TDeps = aux::type_list<>
-  , class TDefaultProvider = providers::nothrow_heap
+  , class TDefaultProvider = providers::nothrow_reduce_heap_usage
 >
 class injector : public pool<TDeps> {
     template<class, class, class, class>
@@ -1184,6 +1201,23 @@ private:
 
 }}} // namespace boost::di::core
 
+namespace boost { namespace di { namespace providers {
+
+class nothrow_heap {
+public:
+    template<class T, class... TArgs>
+    inline T* get_ptr(TArgs&&... args) const noexcept {
+        return new (std::nothrow) T{std::forward<TArgs>(args)...};
+    }
+
+    template<class T, class... TArgs>
+    T* get(TArgs&&... args) const noexcept {
+        return get_ptr<T>(std::forward<TArgs>(args)...);
+    }
+};
+
+}}} // namespace boost::di::providers
+
 namespace boost { namespace di { namespace scopes {
 
 class exposed {
@@ -1206,7 +1240,8 @@ public:
                 { }
 
                 T* operator()() override {
-                    return injector_.template create<T*>();
+                    //create_impl like in any_type with provider and policies
+                    return injector_.template provide<T*>(providers::nothrow_heap{});
                 }
 
             private:
@@ -1231,7 +1266,7 @@ public:
         { }
 
         template<class TDst, class TProvider>
-        decltype(auto) create(const TProvider&) const noexcept {
+        decltype(auto) create(const TProvider& pr) const noexcept {
             using scope_traits = type_traits::scope_traits_t<TDst>;
             using scope = typename scope_traits::template scope<TExpected, T>;
             return scope{}.template create<TDst>(provider_);
@@ -1305,35 +1340,6 @@ inline decltype(auto) make_injector(const TArgs&... args) noexcept {
 }
 
 }} // namespace boost::di
-
-namespace boost { namespace di { namespace providers {
-
-class nothrow_reduce_heap_usage {
-public:
-    template<class T, class... TArgs>
-    inline T* get_ptr(TArgs&&... args) const noexcept {
-        return new (std::nothrow) T{std::forward<TArgs>(args)...};
-    }
-
-    template<class T, class... TArgs>
-    inline T get_value(TArgs&&... args) const noexcept {
-        return T{std::forward<TArgs>(args)...};
-    }
-
-    template<class T, class... TArgs>
-    inline std::enable_if_t<std::is_polymorphic<T>{}, T*>
-    get(TArgs&&... args) const noexcept {
-        return get_ptr<T>(std::forward<TArgs>(args)...);
-    }
-
-    template<class T, class... TArgs>
-    inline std::enable_if_t<!std::is_polymorphic<T>{}, T>
-    get(TArgs&&... args) const noexcept {
-        return get_value<T>(std::forward<TArgs>(args)...);
-    }
-};
-
-}}} // namespace boost::di::providers
 
 #endif
 

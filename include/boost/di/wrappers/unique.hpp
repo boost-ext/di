@@ -24,6 +24,12 @@ public:
         return value_;
     }
 
+    //todo fixme
+    template<class I>
+    inline operator I*() const noexcept {
+        return new (std::nothrow) I(value_); // ownership transfer
+    }
+
 private:
     T value_;
 };
