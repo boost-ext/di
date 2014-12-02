@@ -180,45 +180,60 @@ public:
 namespace boost { namespace di { namespace wrappers {
 
 template<class T>
-class value {
+class unique {
 public:
-    value(const T& value) noexcept // non explicit
+    unique(const T& value) noexcept // non explicit
         : value_(value)
     { }
 
-    inline operator T() const noexcept {
+    template<class I>
+    inline operator I() const noexcept {
         return value_;
-    }
-
-    inline operator T*() const noexcept {
-        return T{value_}; // transfer ownership
-    }
-
-    inline operator const T*() const noexcept {
-        return new (std::nothrow) T{value_}; // transfer ownership
-    }
-
-    inline operator T&&() noexcept {
-        return std::move(value_);
-    }
-
-    template<class I>
-    inline operator aux::shared_ptr<I>() const noexcept {
-        return aux::shared_ptr<I>{new (std::nothrow) I{value_}};
-    }
-
-    template<class I>
-    inline operator aux_::shared_ptr<I>() const noexcept {
-        return aux_::shared_ptr<I>{new (std::nothrow) I{value_}};
-    }
-
-    template<class I>
-    inline operator aux::unique_ptr<I>() const noexcept {
-        return aux::unique_ptr<I>{new (std::nothrow) I{value_}};
     }
 
 private:
     T value_;
+};
+
+template<class T>
+class unique<T*> {
+public:
+    unique(T* value) noexcept // non explicit
+        : value_(value)
+    { }
+
+    template<class I, class = std::enable_if_t<!std::is_polymorphic<I>{}>>
+    inline operator I() const noexcept {
+        return *aux::unique_ptr<I>(value_);
+    }
+
+    template<class I>
+    inline operator I*() const noexcept {
+        return value_; // ownership transfer
+    }
+
+    template<class I>
+    inline operator const I*() const noexcept {
+        return value_; // ownership transfer
+    }
+
+    template<class I>
+    inline operator aux::shared_ptr<I>() const noexcept {
+        return aux::shared_ptr<I>{value_};
+    }
+
+    template<class I>
+    inline operator aux_::shared_ptr<I>() const noexcept {
+        return aux_::shared_ptr<I>{value_};
+    }
+
+    template<class I>
+    inline operator aux::unique_ptr<I>() const noexcept {
+        return aux::unique_ptr<I>{value_};
+    }
+
+private:
+    T* value_ = nullptr;
 };
 
 }}} // namespace boost::di::wrappers
@@ -279,7 +294,7 @@ using has_lambda =
 
 template<class T>
 struct wrapper_traits {
-    using type = wrappers::value<T>;
+    using type = wrappers::unique<T>;
 };
 
 template<class T>
@@ -311,7 +326,7 @@ public:
         }
 
     private:
-        wrappers::value<T> object_;
+        wrappers::unique<T> object_;
     };
 
     template<class TExpected, class T>
@@ -460,92 +475,6 @@ struct is_dependency<
 
 }}} // namespace boost::di::core
 
-namespace boost { namespace di { namespace wrappers {
-
-template<class T>
-class copy {
-public:
-    copy(const T& value) noexcept // non explicit
-        : value_(value)
-    { }
-
-    template<class I, class = std::enable_if_t<!std::is_polymorphic<I>{}>>
-    inline operator I() const noexcept {
-        return value_;
-    }
-
-    template<class I>
-    inline operator I*() const noexcept {
-        return new (std::nothrow) I(value_); // ownership transfer
-    }
-
-    template<class I>
-    inline operator const I*() const noexcept {
-        return new (std::nothrow) I{value_}; // ownership transfer
-    }
-
-    template<class I>
-    inline operator aux::shared_ptr<I>() const noexcept {
-        return aux::shared_ptr<I>{new (std::nothrow) I{value_}};
-    }
-
-    template<class I>
-    inline operator aux_::shared_ptr<I>() const noexcept {
-        return aux_::shared_ptr<I>{new (std::nothrow) I{value_}};
-    }
-
-    template<class I>
-    inline operator aux::unique_ptr<I>() const noexcept {
-        return aux::unique_ptr<I>{new (std::nothrow) I{value_}};
-    }
-
-private:
-    T value_;
-};
-
-template<class T>
-class copy<T*> {
-public:
-    copy(T* value) noexcept // non explicit
-        : value_(value)
-    { }
-
-    template<class I, class = std::enable_if_t<!std::is_polymorphic<I>{}>>
-    inline operator I() const noexcept {
-        return *aux::unique_ptr<I>(value_);
-    }
-
-    template<class I>
-    inline operator I*() const noexcept {
-        return value_; // ownership transfer
-    }
-
-    template<class I>
-    inline operator const I*() const noexcept {
-        return value_; // ownership transfer
-    }
-
-    template<class I>
-    inline operator aux::shared_ptr<I>() const noexcept {
-        return aux::shared_ptr<I>{value_};
-    }
-
-    template<class I>
-    inline operator aux_::shared_ptr<I>() const noexcept {
-        return aux_::shared_ptr<I>{value_};
-    }
-
-    template<class I>
-    inline operator aux::unique_ptr<I>() const noexcept {
-        return aux::unique_ptr<I>{value_};
-    }
-
-private:
-    T* value_ = nullptr;
-};
-
-}}} // namespace boost::di::wrappers
-
 namespace boost { namespace di { namespace scopes {
 
 class unique {
@@ -557,7 +486,7 @@ public:
     public:
         template<class, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
-            using wrapper = wrappers::copy<decltype(provider.get())>;
+            using wrapper = wrappers::unique<decltype(provider.get())>;
             return wrapper{provider.get()};
         }
     };
@@ -929,7 +858,7 @@ private:
 
 namespace boost { namespace di { namespace providers {
 
-class nothrow_reduce_heap_usage {
+class nothrow_heap {
 public:
     template<class T, class... TArgs>
     inline T* get_ptr(TArgs&&... args) const noexcept {
@@ -937,20 +866,8 @@ public:
     }
 
     template<class T, class... TArgs>
-    inline T get_value(TArgs&&... args) const noexcept {
-        return T{std::forward<TArgs>(args)...};
-    }
-
-    template<class T, class... TArgs>
-    inline std::enable_if_t<std::is_polymorphic<T>{}, T*>
-    get(TArgs&&... args) const noexcept {
+    T* get(TArgs&&... args) const noexcept {
         return get_ptr<T>(std::forward<TArgs>(args)...);
-    }
-
-    template<class T, class... TArgs>
-    inline std::enable_if_t<!std::is_polymorphic<T>{}, T>
-    get(TArgs&&... args) const noexcept {
-        return get_value<T>(std::forward<TArgs>(args)...);
     }
 };
 
@@ -1076,7 +993,7 @@ BOOST_DI_HAS_METHOD(call, call);
 
 template<
     class TDeps = aux::type_list<>
-  , class TDefaultProvider = providers::nothrow_reduce_heap_usage
+  , class TDefaultProvider = providers::nothrow_heap
 >
 class injector : public pool<TDeps> {
     template<class, class, class, class>
@@ -1388,6 +1305,35 @@ inline decltype(auto) make_injector(const TArgs&... args) noexcept {
 }
 
 }} // namespace boost::di
+
+namespace boost { namespace di { namespace providers {
+
+class nothrow_reduce_heap_usage {
+public:
+    template<class T, class... TArgs>
+    inline T* get_ptr(TArgs&&... args) const noexcept {
+        return new (std::nothrow) T{std::forward<TArgs>(args)...};
+    }
+
+    template<class T, class... TArgs>
+    inline T get_value(TArgs&&... args) const noexcept {
+        return T{std::forward<TArgs>(args)...};
+    }
+
+    template<class T, class... TArgs>
+    inline std::enable_if_t<std::is_polymorphic<T>{}, T*>
+    get(TArgs&&... args) const noexcept {
+        return get_ptr<T>(std::forward<TArgs>(args)...);
+    }
+
+    template<class T, class... TArgs>
+    inline std::enable_if_t<!std::is_polymorphic<T>{}, T>
+    get(TArgs&&... args) const noexcept {
+        return get_value<T>(std::forward<TArgs>(args)...);
+    }
+};
+
+}}} // namespace boost::di::providers
 
 #endif
 

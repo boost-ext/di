@@ -385,9 +385,6 @@ test one_arg_class = [] {
 };
 
 #if 0
-test fail_when_make_injector_with_non_dependency_type = [] {
-    struct c { };
-    auto injector = di::make_injector(c{});
-};
+
 #endif
 

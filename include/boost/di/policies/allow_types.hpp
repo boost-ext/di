@@ -8,10 +8,6 @@
 #define BOOS_DI_POLICIES_ALLOW_TYPES_HPP
 
 #if 0
-#include "boost/di/aux_/mpl.hpp"
-#include "boost/di/type_traits/remove_accessors.hpp"
-#include "boost/di/type_traits/make_plain.hpp"
-#include "boost/di/scopes/deduce.hpp"
 
 namespace boost {
 namespace di {

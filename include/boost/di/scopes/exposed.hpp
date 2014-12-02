@@ -7,6 +7,7 @@
 #define BOOST_DI_SCOPES_EXPOSED_HPP
 
 #include "boost/di/type_traits/scope_traits.hpp"
+#include "boost/di/providers/nothrow_heap.hpp"
 
 namespace boost { namespace di { namespace scopes {
 
@@ -30,7 +31,8 @@ public:
                 { }
 
                 T* operator()() override {
-                    return injector_.template create<T*>();
+                    //create_impl like in any_type with provider and policies
+                    return injector_.template provide<T*>(providers::nothrow_heap{});
                 }
 
             private:
@@ -55,7 +57,7 @@ public:
         { }
 
         template<class TDst, class TProvider>
-        decltype(auto) create(const TProvider&) const noexcept {
+        decltype(auto) create(const TProvider& pr) const noexcept {
             using scope_traits = type_traits::scope_traits_t<TDst>;
             using scope = typename scope_traits::template scope<TExpected, T>;
             return scope{}.template create<TDst>(provider_);

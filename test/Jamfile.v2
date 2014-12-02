@@ -49,7 +49,7 @@ rule run-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
 
 rule compile-fail-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
     common_toolset =
-        <toolset>clang:<cxxflags>"-std=$(std) -Wfatal-errors"
+        <toolset>clang:<cxxflags>"-std=$(std) -Wfatal-errors -include common/test.hpp"
     ;
 
     if $(ctor) {
@@ -72,11 +72,11 @@ test-suite ft : # functional tests
     [ run-test c++1y : ft/di.cpp : : <define>BOOST_DI_CFG_CONV_TO_BOOST_SMART_PTR ]
 ;
 
-#test-suite fail : # compile fail tests
-    #[ compile-fail-test c++11 : fail/detail/module_externals_fail.cpp ]
-#;
+test-suite fail : # compile fail tests
+    #[ compile-fail-test c++1y : fail/make_injector_wrong_arg.cpp ]
+;
 
-#test-suite pt : # performane tests
+test-suite pt : # performane tests
     #[ run-test c++11 : pt/di_pt.cpp : preprocessed_di_pt_cpp_11 : <define>BOOST_DI_CFG_TEST_LEVELS_LIMIT_SIZE=5 : preprocessed_headers ]
-#;
+;
 
