@@ -21,7 +21,7 @@ public:
         template<class, class TProvider>
         decltype(auto) create(const TProvider& provider) noexcept {
             if (!object_) {
-                object_.reset(provider.get_ptr());
+                object_.reset(provider.get());
             }
             return object_;
         }

@@ -14,14 +14,9 @@ namespace boost { namespace di { namespace providers {
 
 class nothrow_heap {
 public:
-    template<class TDependency, class, class T = typename TDependency::given, class... TArgs>
-    inline auto* get_ptr(TArgs&&... args) const noexcept {
-        return new (std::nothrow) T{std::forward<TArgs>(args)...};
-    }
-
     template<class TDependency, class TDst, class T = typename TDependency::given, class... TArgs>
-    inline decltype(auto) get(TArgs&&... args) const noexcept {
-        return get_ptr<TDependency, TDst>(std::forward<TArgs>(args)...);
+    inline auto* get(TArgs&&... args) const noexcept {
+        return new (std::nothrow) T{std::forward<TArgs>(args)...};
     }
 };
 

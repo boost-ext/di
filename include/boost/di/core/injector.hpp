@@ -62,12 +62,6 @@ class injector : public pool<TDeps> {
                 injector_.create_impl<TArgs, T>(provider_, policies_)...
             );
         }
-
-        decltype(auto) get_ptr() const noexcept {
-            return provider_.template get_ptr<TDependency, T>(
-                injector_.create_impl<TArgs, T>(provider_, policies_)...
-            );
-        }
     };
 
 public:

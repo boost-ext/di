@@ -45,7 +45,6 @@ public:
                 : create_(new function<T, TInjector>(injector))
             { }
 
-            T* get_ptr() const noexcept { return (*create_)(); }
             T* get() const noexcept { return (*create_)(); }
 
             std::shared_ptr<ifunction<T>> create_;
