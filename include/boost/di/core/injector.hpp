@@ -27,9 +27,6 @@ template<
   , class TDefaultProvider = providers::nothrow_reduce_heap_usage
 >
 class injector : public pool<TDeps> {
-    template<class, class, class, class>
-    friend struct any_type;
-
     using pool_t = pool<TDeps>;
 
     template<class T, class TDependency>
@@ -107,7 +104,7 @@ public:
         call_impl(action, deps{});
     }
 
-private:
+//private:
     template<class... TArgs>
     injector(const init&, const TArgs&... args) noexcept
         : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}

@@ -384,7 +384,3 @@ test one_arg_class = [] {
     expect_eq(0, object.i);
 };
 
-#if 0
-
-#endif
-

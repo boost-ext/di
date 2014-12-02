@@ -11,6 +11,28 @@
 
 namespace boost { namespace di { namespace scopes {
 
+template<class T>
+struct ifunction {
+    virtual ~ifunction() = default;
+    virtual T* operator()() = 0;
+};
+
+template<class T, class TInjector>
+class function : public ifunction<T> {
+public:
+    explicit function(const TInjector& injector)
+        : injector_(injector)
+    { }
+
+    T* operator()() override {
+        return injector_.template
+            create_impl<T*, T>(providers::nothrow_heap{}, core::pool<>{});
+    }
+
+private:
+    TInjector injector_;
+};
+
 class exposed {
 public:
     static constexpr auto priority = false;
@@ -18,36 +40,15 @@ public:
     template<class TExpected, class T>
     class scope {
         struct provider {
-            struct ifunction {
-                virtual ~ifunction() = default;
-                virtual T* operator()() = 0;
-            };
-
-            template<typename TInjector>
-            class function : public ifunction {
-            public:
-                explicit function(const TInjector& injector)
-                    : injector_(injector)
-                { }
-
-                T* operator()() override {
-                    //create_impl like in any_type with provider and policies
-                    return injector_.template provide<T*>(providers::nothrow_heap{});
-                }
-
-            private:
-                TInjector injector_;
-            };
-
             template<typename TInjector>
             explicit provider(const TInjector& injector) noexcept
-                : create_(new function<TInjector>(injector))
+                : create_(new function<T, TInjector>(injector))
             { }
 
             T* get_ptr() const noexcept { return (*create_)(); }
             T* get() const noexcept { return (*create_)(); }
 
-            std::shared_ptr<ifunction> create_;
+            std::shared_ptr<ifunction<T>> create_;
         };
 
     public:
