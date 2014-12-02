@@ -22,7 +22,7 @@
 #include "boost/di/make_injector.hpp"
 
 // policies
-#include "boost/di/policies/permit_types.hpp"
+#include "boost/di/policies/allow_types.hpp"
 
 // providers
 #include "boost/di/providers/nothrow_reduce_heap_usage.hpp"
