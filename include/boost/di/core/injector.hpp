@@ -58,13 +58,13 @@ class injector : public pool<TDeps> {
         const TPolicies& policies_;
 
         decltype(auto) get() const noexcept {
-            return provider_.template get<TDependency>(
+            return provider_.template get<TDependency, T>(
                 injector_.create_impl<TArgs, T>(provider_, policies_)...
             );
         }
 
         decltype(auto) get_ptr() const noexcept {
-            return provider_.template get_ptr<TDependency>(
+            return provider_.template get_ptr<TDependency, T>(
                 injector_.create_impl<TArgs, T>(provider_, policies_)...
             );
         }
@@ -144,17 +144,18 @@ public:
     decltype(auto)
     create_from_dep_impl(const TProvider& provider
                        , const TPolicies& policies) const noexcept {
-        auto&& dependency = binder::resolve<T>((injector*)this);
-        using type = typename std::remove_reference_t<decltype(dependency)>::given;
+        auto&& scope = binder::resolve<T>((injector*)this);
+        using dependency = typename std::remove_reference_t<decltype(scope)>;
+        using type = typename dependency::given;
         using ctor = typename type_traits::ctor_traits<type>::type;
 
-        call_policies<data<T, type>>(policies);
+        call_policies<data<T, dependency>>(policies);
 
-        using provider_impl_type = provider_impl<T, type, TProvider, TPolicies, ctor>;
+        using provider_impl_type = provider_impl<T, dependency, TProvider, TPolicies, ctor>;
         auto&& ctor_provider = provider_impl_type{*this, provider, policies};
-        using wrapper = decltype(dependency.template create<T>(ctor_provider));
+        using wrapper = decltype(scope.template create<T>(ctor_provider));
 
-        return wrappers::universal<T, wrapper>{dependency.template create<T>(ctor_provider)};
+        return wrappers::universal<T, wrapper>{scope.template create<T>(ctor_provider)};
     }
 
     template<class T, class... TPolicies>
