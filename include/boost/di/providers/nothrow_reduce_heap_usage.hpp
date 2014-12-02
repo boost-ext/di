@@ -25,21 +25,16 @@ public:
     }
 
     template<class TDependency, class TDst, class T = typename TDependency::given, class... TArgs>
-    inline decltype(auto) get(TArgs&&... args) const noexcept {
+    inline std::enable_if_t<((std::is_pointer<TDst>{} || aux::has_element_type<TDst>{} ) && std::is_same<typename TDependency::scope, scopes::unique>{}) || !std::is_same<typename TDependency::scope, scopes::unique>{}, T*>
+    get(TArgs&&... args) const noexcept {
         return get_ptr<TDependency, TDst>(std::forward<TArgs>(args)...);
     }
 
-/*    template<class TDependency, class TDst, class T = typename TDependency::given, class... TArgs>*/
-    //inline std::enable_if_t<(std::is_pointer<TDst>{} || aux::has_element_type<TDst>{} ) && std::is_same<typename TDependency::scope, scopes::unique>{}, T*>
-    //get(TArgs&&... args) const noexcept {
-        //return get_ptr<TDependency, TDst>(std::forward<TArgs>(args)...);
-    //}
-
-    //template<class TDependency, class TDst, class T = typename TDependency::given, class... TArgs>
-    //inline std::enable_if_t<!std::is_same<typename TDependency::scope, scopes::unique>{}, T>
-    //get(TArgs&&... args) const noexcept {
-        //return get_value<TDependency, TDst>(std::forward<TArgs>(args)...);
-    /*}*/
+    template<class TDependency, class TDst, class T = typename TDependency::given, class... TArgs>
+    inline std::enable_if_t<(!std::is_pointer<TDst>{} && !aux::has_element_type<TDst>{} ) && std::is_same<typename TDependency::scope, scopes::unique>{}, T>
+    get(TArgs&&... args) const noexcept {
+        return get_value<TDependency, TDst>(std::forward<TArgs>(args)...);
+    }
 
 };
 

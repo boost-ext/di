@@ -191,11 +191,6 @@ public:
         return value_;
     }
 
-    template<class I>
-    inline operator I*() const noexcept {
-        return new (std::nothrow) I(value_); // ownership transfer
-    }
-
 private:
     T value_;
 };
@@ -865,27 +860,28 @@ namespace boost { namespace di { namespace providers {
 
 class nothrow_reduce_heap_usage {
 public:
-    template<class T, class... TArgs>
-    inline T* get_ptr(TArgs&&... args) const noexcept {
+    template<class TDependency, class, class T = typename TDependency::given, class... TArgs>
+    inline auto* get_ptr(TArgs&&... args) const noexcept {
         return new (std::nothrow) T{std::forward<TArgs>(args)...};
     }
 
-    template<class T, class... TArgs>
-    inline T get_value(TArgs&&... args) const noexcept {
+    template<class TDependency, class, class T = typename TDependency::given, class... TArgs>
+    inline auto get_value(TArgs&&... args) const noexcept {
         return T{std::forward<TArgs>(args)...};
     }
 
-    template<class T, class... TArgs>
-    inline std::enable_if_t<std::is_polymorphic<T>{}, T*>
+    template<class TDependency, class TDst, class T = typename TDependency::given, class... TArgs>
+    inline std::enable_if_t<((std::is_pointer<TDst>{} || aux::has_element_type<TDst>{} ) && std::is_same<typename TDependency::scope, scopes::unique>{}) || !std::is_same<typename TDependency::scope, scopes::unique>{}, T*>
     get(TArgs&&... args) const noexcept {
-        return get_ptr<T>(std::forward<TArgs>(args)...);
+        return get_ptr<TDependency, TDst>(std::forward<TArgs>(args)...);
     }
 
-    template<class T, class... TArgs>
-    inline std::enable_if_t<!std::is_polymorphic<T>{}, T>
+    template<class TDependency, class TDst, class T = typename TDependency::given, class... TArgs>
+    inline std::enable_if_t<(!std::is_pointer<TDst>{} && !aux::has_element_type<TDst>{} ) && std::is_same<typename TDependency::scope, scopes::unique>{}, T>
     get(TArgs&&... args) const noexcept {
-        return get_value<T>(std::forward<TArgs>(args)...);
+        return get_value<TDependency, TDst>(std::forward<TArgs>(args)...);
     }
+
 };
 
 }}} // namespace boost::di::providers
@@ -1013,9 +1009,6 @@ template<
   , class TDefaultProvider = providers::nothrow_reduce_heap_usage
 >
 class injector : public pool<TDeps> {
-    template<class, class, class, class>
-    friend struct any_type;
-
     using pool_t = pool<TDeps>;
 
     template<class T, class TDependency>
@@ -1047,13 +1040,13 @@ class injector : public pool<TDeps> {
         const TPolicies& policies_;
 
         decltype(auto) get() const noexcept {
-            return provider_.template get<TDependency>(
+            return provider_.template get<TDependency, T>(
                 injector_.create_impl<TArgs, T>(provider_, policies_)...
             );
         }
 
         decltype(auto) get_ptr() const noexcept {
-            return provider_.template get_ptr<TDependency>(
+            return provider_.template get_ptr<TDependency, T>(
                 injector_.create_impl<TArgs, T>(provider_, policies_)...
             );
         }
@@ -1093,7 +1086,6 @@ public:
         call_impl(action, deps{});
     }
 
-private:
     template<class... TArgs>
     injector(const init&, const TArgs&... args) noexcept
         : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
@@ -1133,17 +1125,18 @@ private:
     decltype(auto)
     create_from_dep_impl(const TProvider& provider
                        , const TPolicies& policies) const noexcept {
-        auto&& dependency = binder::resolve<T>((injector*)this);
-        using type = typename std::remove_reference_t<decltype(dependency)>::given;
+        auto&& scope = binder::resolve<T>((injector*)this);
+        using dependency = typename std::remove_reference_t<decltype(scope)>;
+        using type = typename dependency::given;
         using ctor = typename type_traits::ctor_traits<type>::type;
 
-        call_policies<data<T, type>>(policies);
+        call_policies<data<T, dependency>>(policies);
 
-        using provider_impl_type = provider_impl<T, type, TProvider, TPolicies, ctor>;
+        using provider_impl_type = provider_impl<T, dependency, TProvider, TPolicies, ctor>;
         auto&& ctor_provider = provider_impl_type{*this, provider, policies};
-        using wrapper = decltype(dependency.template create<T>(ctor_provider));
+        using wrapper = decltype(scope.template create<T>(ctor_provider));
 
-        return wrappers::universal<T, wrapper>{dependency.template create<T>(ctor_provider)};
+        return wrappers::universal<T, wrapper>{scope.template create<T>(ctor_provider)};
     }
 
     template<class T, class... TPolicies>
@@ -1205,20 +1198,42 @@ namespace boost { namespace di { namespace providers {
 
 class nothrow_heap {
 public:
-    template<class T, class... TArgs>
-    inline T* get_ptr(TArgs&&... args) const noexcept {
+    template<class TDependency, class, class T = typename TDependency::given, class... TArgs>
+    inline auto* get_ptr(TArgs&&... args) const noexcept {
         return new (std::nothrow) T{std::forward<TArgs>(args)...};
     }
 
-    template<class T, class... TArgs>
-    T* get(TArgs&&... args) const noexcept {
-        return get_ptr<T>(std::forward<TArgs>(args)...);
+    template<class TDependency, class TDst, class T = typename TDependency::given, class... TArgs>
+    inline decltype(auto) get(TArgs&&... args) const noexcept {
+        return get_ptr<TDependency, TDst>(std::forward<TArgs>(args)...);
     }
 };
 
 }}} // namespace boost::di::providers
 
 namespace boost { namespace di { namespace scopes {
+
+template<class T>
+struct ifunction {
+    virtual ~ifunction() = default;
+    virtual T* operator()() = 0;
+};
+
+template<class T, class TInjector>
+class function : public ifunction<T> {
+public:
+    explicit function(const TInjector& injector)
+        : injector_(injector)
+    { }
+
+    T* operator()() override {
+        return injector_.template
+            create_impl<T*, T>(providers::nothrow_heap{}, core::pool<>{});
+    }
+
+private:
+    TInjector injector_;
+};
 
 class exposed {
 public:
@@ -1227,36 +1242,15 @@ public:
     template<class TExpected, class T>
     class scope {
         struct provider {
-            struct ifunction {
-                virtual ~ifunction() = default;
-                virtual T* operator()() = 0;
-            };
-
-            template<typename TInjector>
-            class function : public ifunction {
-            public:
-                explicit function(const TInjector& injector)
-                    : injector_(injector)
-                { }
-
-                T* operator()() override {
-                    //create_impl like in any_type with provider and policies
-                    return injector_.template provide<T*>(providers::nothrow_heap{});
-                }
-
-            private:
-                TInjector injector_;
-            };
-
             template<typename TInjector>
             explicit provider(const TInjector& injector) noexcept
-                : create_(new function<TInjector>(injector))
+                : create_(new function<T, TInjector>(injector))
             { }
 
             T* get_ptr() const noexcept { return (*create_)(); }
             T* get() const noexcept { return (*create_)(); }
 
-            std::shared_ptr<ifunction> create_;
+            std::shared_ptr<ifunction<T>> create_;
         };
 
     public:
