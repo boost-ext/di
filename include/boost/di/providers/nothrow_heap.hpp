@@ -8,14 +8,13 @@
 #define BOOST_DI_PROVIDERS_NOTHROW_HEAP_HPP
 
 #include <new>
-#include "boost/di/aux_/type_traits.hpp"
 
 namespace boost { namespace di { namespace providers {
 
 class nothrow_heap {
 public:
-    template<class TDependency, class TDst, class T = typename TDependency::given, class... TArgs>
-    inline auto* get(TArgs&&... args) const noexcept {
+    template<class T, class TExpr, class... TArgs>
+    auto* get(const TExpr&, TArgs&&... args) const noexcept {
         return new (std::nothrow) T{std::forward<TArgs>(args)...};
     }
 };

@@ -384,9 +384,10 @@ test one_arg_class = [] {
     expect_eq(0, object.i);
 };
 
-test ptr_and_value = [] {
+test requrest_value_and_ptr_in_unique = [] {
     struct c {
-        c(int, int*) { }
+        int i = 0;
+        int* ptr = nullptr;
     };
 
     auto injector = di::make_injector(

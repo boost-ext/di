@@ -21,7 +21,7 @@ public:
         decltype(auto) create(const TProvider& provider) const noexcept {
             using scope_traits = type_traits::scope_traits_t<TDst>;
             using scope = typename scope_traits::template scope<TExpected, T>;
-            return scope{}.template create<T>(provider);
+            return scope{}.template create<TDst>(provider);
         }
     };
 };

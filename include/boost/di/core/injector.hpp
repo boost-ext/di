@@ -15,6 +15,7 @@
 #include "boost/di/core/pool.hpp"
 #include "boost/di/providers/nothrow_reduce_heap_usage.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
+#include "boost/di/type_traits/expr_traits.hpp"
 #include "boost/di/wrappers/universal.hpp"
 
 namespace boost { namespace di { namespace core {
@@ -41,14 +42,14 @@ class injector : public pool<TDeps> {
 
     template<
         class T
-      , class TDependency
+      , class TGiven
       , class TProvider
       , class TPolicies
       , class... TArgs
     >
     struct provider_impl<
         T
-      , TDependency
+      , TGiven
       , TProvider
       , TPolicies
       , aux::type_list<TArgs...>
@@ -57,9 +58,10 @@ class injector : public pool<TDeps> {
         const TProvider& provider_;
         const TPolicies& policies_;
 
-        decltype(auto) get() const noexcept {
-            return provider_.template get<TDependency, T>(
-                injector_.create_impl<TArgs, T>(provider_, policies_)...
+        template<class TExpr = type_traits::ptr>
+        decltype(auto) get(const TExpr& expr = TExpr{}) const noexcept {
+            return provider_.template get<TGiven>(
+                expr, injector_.create_impl<TArgs, T>(provider_, policies_)...
             );
         }
     };
@@ -138,18 +140,18 @@ public:
     decltype(auto)
     create_from_dep_impl(const TProvider& provider
                        , const TPolicies& policies) const noexcept {
-        auto&& scope = binder::resolve<T>((injector*)this);
-        using dependency = typename std::remove_reference_t<decltype(scope)>;
-        using type = typename dependency::given;
-        using ctor = typename type_traits::ctor_traits<type>::type;
+        auto&& dependency = binder::resolve<T>((injector*)this);
+        using dependency_t = typename std::remove_reference_t<decltype(dependency)>;
+        using given_t = typename dependency_t::given;
+        using ctor_t = typename type_traits::ctor_traits<given_t>::type;
 
-        call_policies<data<T, dependency>>(policies);
+        call_policies<data<T, dependency_t>>(policies);
 
-        using provider_impl_type = provider_impl<T, dependency, TProvider, TPolicies, ctor>;
+        using provider_impl_type = provider_impl<T, given_t, TProvider, TPolicies, ctor_t>;
         auto&& ctor_provider = provider_impl_type{*this, provider, policies};
-        using wrapper = decltype(scope.template create<T>(ctor_provider));
+        using wrapper_t = decltype(dependency.template create<T>(ctor_provider));
 
-        return wrappers::universal<T, wrapper>{scope.template create<T>(ctor_provider)};
+        return wrappers::universal<T, wrapper_t>{dependency.template create<T>(ctor_provider)};
     }
 
     template<class T, class... TPolicies>

@@ -506,7 +506,7 @@ public:
         template<class, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
             if (!get_instance()) {
-                get_instance().reset(provider.get_ptr());
+                get_instance().reset(provider.get());
             }
             return get_instance();
         }
@@ -686,7 +686,7 @@ public:
         template<class, class TProvider>
         decltype(auto) create(const TProvider& provider) noexcept {
             if (!object_) {
-                object_.reset(provider.get_ptr());
+                object_.reset(provider.get());
             }
             return object_;
         }
@@ -860,26 +860,16 @@ namespace boost { namespace di { namespace providers {
 
 class nothrow_reduce_heap_usage {
 public:
-    template<class TDependency, class, class T = typename TDependency::given, class... TArgs>
-    inline auto* get_ptr(TArgs&&... args) const noexcept {
-        return new (std::nothrow) T{std::forward<TArgs>(args)...};
-    }
-
-    template<class TDependency, class, class T = typename TDependency::given, class... TArgs>
-    inline auto get_value(TArgs&&... args) const noexcept {
-        return T{std::forward<TArgs>(args)...};
-    }
-
     template<class TDependency, class TDst, class T = typename TDependency::given, class... TArgs>
     inline std::enable_if_t<((std::is_pointer<TDst>{} || aux::has_element_type<TDst>{} ) && std::is_same<typename TDependency::scope, scopes::unique>{}) || !std::is_same<typename TDependency::scope, scopes::unique>{}, T*>
     get(TArgs&&... args) const noexcept {
-        return get_ptr<TDependency, TDst>(std::forward<TArgs>(args)...);
+        return new (std::nothrow) T{std::forward<TArgs>(args)...};
     }
 
     template<class TDependency, class TDst, class T = typename TDependency::given, class... TArgs>
     inline std::enable_if_t<(!std::is_pointer<TDst>{} && !aux::has_element_type<TDst>{} ) && std::is_same<typename TDependency::scope, scopes::unique>{}, T>
     get(TArgs&&... args) const noexcept {
-        return get_value<TDependency, TDst>(std::forward<TArgs>(args)...);
+        return T{std::forward<TArgs>(args)...};
     }
 
 };
@@ -1044,12 +1034,6 @@ class injector : public pool<TDeps> {
                 injector_.create_impl<TArgs, T>(provider_, policies_)...
             );
         }
-
-        decltype(auto) get_ptr() const noexcept {
-            return provider_.template get_ptr<TDependency, T>(
-                injector_.create_impl<TArgs, T>(provider_, policies_)...
-            );
-        }
     };
 
 public:
@@ -1198,14 +1182,9 @@ namespace boost { namespace di { namespace providers {
 
 class nothrow_heap {
 public:
-    template<class TDependency, class, class T = typename TDependency::given, class... TArgs>
-    inline auto* get_ptr(TArgs&&... args) const noexcept {
-        return new (std::nothrow) T{std::forward<TArgs>(args)...};
-    }
-
     template<class TDependency, class TDst, class T = typename TDependency::given, class... TArgs>
-    inline decltype(auto) get(TArgs&&... args) const noexcept {
-        return get_ptr<TDependency, TDst>(std::forward<TArgs>(args)...);
+    inline auto* get(TArgs&&... args) const noexcept {
+        return new (std::nothrow) T{std::forward<TArgs>(args)...};
     }
 };
 
@@ -1247,7 +1226,6 @@ public:
                 : create_(new function<T, TInjector>(injector))
             { }
 
-            T* get_ptr() const noexcept { return (*create_)(); }
             T* get() const noexcept { return (*create_)(); }
 
             std::shared_ptr<ifunction<T>> create_;

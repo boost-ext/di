@@ -8,24 +8,21 @@
 #define BOOST_DI_PROVIDERS_NOTHROW_REDUCE_HEAP_USAGE_HPP
 
 #include <new>
-#include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/type_traits/expr_traits.hpp"
 
 namespace boost { namespace di { namespace providers {
 
 class nothrow_reduce_heap_usage {
 public:
-    template<class TDependency, class TDst, class T = typename TDependency::given, class... TArgs>
-    inline std::enable_if_t<((std::is_pointer<TDst>{} || aux::has_element_type<TDst>{} ) && std::is_same<typename TDependency::scope, scopes::unique>{}) || !std::is_same<typename TDependency::scope, scopes::unique>{}, T*>
-    get(TArgs&&... args) const noexcept {
+    template<class T, class... TArgs>
+    auto* get(const type_traits::ptr&, TArgs&&... args) const noexcept {
         return new (std::nothrow) T{std::forward<TArgs>(args)...};
     }
 
-    template<class TDependency, class TDst, class T = typename TDependency::given, class... TArgs>
-    inline std::enable_if_t<(!std::is_pointer<TDst>{} && !aux::has_element_type<TDst>{} ) && std::is_same<typename TDependency::scope, scopes::unique>{}, T>
-    get(TArgs&&... args) const noexcept {
+    template<class T, class... TArgs>
+    auto get(const type_traits::value&, TArgs&&... args) const noexcept {
         return T{std::forward<TArgs>(args)...};
     }
-
 };
 
 }}} // namespace boost::di::providers

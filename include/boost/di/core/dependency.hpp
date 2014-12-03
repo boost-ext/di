@@ -39,7 +39,7 @@ class dependency
           dependency_concept<TExpected, TName>
         , dependency<TScope, TExpected, TGiven, TName, TPriority>
       > {
-    using scope_type = typename TScope::template scope<TExpected, TGiven>;
+    using scope_t = typename TScope::template scope<TExpected, TGiven>;
 
 public:
     using type = dependency;
@@ -52,12 +52,12 @@ public:
 
     template<class T>
     explicit dependency(T&& object) noexcept
-        : scope_type(std::forward<T>(object))
+        : scope_t(std::forward<T>(object))
     { }
 
     template<class T, class TInjector>
     dependency(T&& object, const TInjector& injector) noexcept
-        : scope_type(std::forward<T>(object), injector)
+        : scope_t(std::forward<T>(object), injector)
     { }
 
     template<class T>

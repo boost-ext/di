@@ -7,6 +7,7 @@
 #define BOOST_DI_SCOPES_EXPOSED_HPP
 
 #include "boost/di/type_traits/scope_traits.hpp"
+#include "boost/di/type_traits/expr_traits.hpp"
 #include "boost/di/providers/nothrow_heap.hpp"
 
 namespace boost { namespace di { namespace scopes {
@@ -45,7 +46,8 @@ public:
                 : create_(new function<T, TInjector>(injector))
             { }
 
-            T* get() const noexcept { return (*create_)(); }
+            template<typename TExpr = type_traits::ptr>
+            T* get(const TExpr& = TExpr{}) const noexcept { return (*create_)(); }
 
             std::shared_ptr<ifunction<T>> create_;
         };
@@ -57,7 +59,7 @@ public:
         { }
 
         template<class TDst, class TProvider>
-        decltype(auto) create(const TProvider& pr) const noexcept {
+        decltype(auto) create(const TProvider&) const noexcept {
             using scope_traits = type_traits::scope_traits_t<TDst>;
             using scope = typename scope_traits::template scope<TExpected, T>;
             return scope{}.template create<TDst>(provider_);
