@@ -40,7 +40,6 @@ template<
         using dependency = TDependency;
         using binder = core::binder;
     };
-    void dupa() {}
 
     template<class...>
     struct provider_impl;
@@ -60,6 +59,8 @@ template<
       , TPolicies
       , aux::pair<TInitialization, aux::type_list<TArgs...>>
     > {
+        using parent = T;
+
         const injector& injector_;
         const TProvider& provider_;
         const TPolicies& policies_;
