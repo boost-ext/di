@@ -8,6 +8,7 @@
 #define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 
 #include <string>
+#include <initializer_list>
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/core/any_type.hpp"
@@ -35,7 +36,7 @@ template<
   , std::size_t... TArgs
 > struct ctor_args<TIsConstructible, T, TAny, std::index_sequence<TArgs...>>
     : aux::pair<
-          TIsConstructible<T, typename get_type<TAny, TArgs>::type...>
+          typename TIsConstructible<T, typename get_type<TAny, TArgs>::type...>::type
         , aux::type_list<typename get_type<TAny, TArgs>::type...>
       >
 { };
@@ -102,19 +103,22 @@ struct ctor_traits<std::basic_string<T, Traits, TAllocator>> {
     BOOST_DI_INJECT_TRAITS();
 };
 
+template<class T>
+struct ctor_traits<std::initializer_list<T>> {
+    BOOST_DI_INJECT_TRAITS();
+};
+
 namespace type_traits {
 
 template<
     class T
   , class = typename BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<T>::type
->
-struct ctor_traits;
+> struct ctor_traits;
 
 template<
     class T
   , class = typename BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<di::ctor_traits<T>>::type
->
-struct ctor_traits_impl;
+> struct ctor_traits_impl;
 
 template<class T>
 struct ctor_traits<T, std::true_type>

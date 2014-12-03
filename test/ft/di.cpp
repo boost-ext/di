@@ -286,9 +286,6 @@ test call_policies = [] {
     expect(called);
 };
 
-test ctor_with_initializator_list = [] {
-};
-
 test string_creation = [] {
     struct string {
         std::string str;
@@ -384,7 +381,7 @@ test one_arg_class = [] {
     expect_eq(0, object.i);
 };
 
-test requrest_value_and_ptr_in_unique = [] {
+test request_value_and_ptr_in_unique = [] {
     struct c {
         int i = 0;
         int* ptr = nullptr;
@@ -395,5 +392,78 @@ test requrest_value_and_ptr_in_unique = [] {
     );
 
     injector.create<c>();
+};
+
+test inject = [] {
+    constexpr auto i = 42;
+
+    struct c {
+        c(std::initializer_list<int>) { }
+
+        c(int, double, float) { }
+
+        BOOST_DI_INJECT(c, int i, double d)
+            : i(i), d(d)
+        { }
+
+        int i = 0;
+        double d = 0.0;
+    };
+
+    auto injector = di::make_injector(
+        di::bind<int>.to(i)
+    );
+
+    auto object = injector.create<c>();
+
+    expect_eq(i, object.i);
+    expect_eq(0.0, object.d);
+};
+
+test automatic_inject = [] {
+    constexpr auto i = 42;
+
+    struct c {
+        c(std::initializer_list<int>) { }
+
+        c(int i, double d)
+            : i(i), d(d)
+        { }
+
+        int i = 0;
+        double d = 0.0;
+    };
+
+    auto injector = di::make_injector(
+        di::bind<int>.to(i)
+    );
+
+    auto object = injector.create<c>();
+
+    expect_eq(i, object.i);
+    expect_eq(0.0, object.d);
+};
+
+
+test automatic_inject_with_initializer_list = [] {
+    constexpr auto i = 42;
+
+    struct c {
+        c(int i, std::initializer_list<int> il)
+            : i(i), il(il)
+        { }
+
+        int i = 0;
+        std::initializer_list<int> il;
+    };
+
+    auto injector = di::make_injector(
+        di::bind<int>.to(i)
+    );
+
+    auto object = injector.create<c>();
+
+    expect_eq(i, object.i);
+    expect_eq(0, object.il.size());
 };
 
