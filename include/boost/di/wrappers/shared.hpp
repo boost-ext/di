@@ -14,6 +14,15 @@ namespace boost { namespace di { namespace wrappers {
 
 template<class T>
 class shared {
+    template<class TSharedPtr>
+    struct sp_holder {
+        TSharedPtr object;
+
+        void operator ()(...) noexcept {
+            object.reset();
+        }
+    };
+
 public:
     shared() noexcept { }
 
@@ -36,8 +45,12 @@ public:
 
     template<class I>
     inline operator aux_::shared_ptr<I>() const noexcept {
-        using sp = aux::shared_ptr<T>;
-        return {aux_::shared_ptr<sp>{new (std::nothrow) sp{value_}}, value_.get()};
+        using sp = sp_holder<aux_::shared_ptr<I>>;
+        if (auto* deleter = std::get_deleter<sp, I>(value_)) {
+            return deleter->object;
+        } else {
+            return {value_.get(), sp_holder<aux::shared_ptr<T>>{value_}};
+        }
     }
 
     template<class I>
