@@ -66,7 +66,7 @@ template<
         const TPolicies& policies_;
 
         template<class TMemory = type_traits::heap>
-        decltype(auto) get(const TMemory& memory = TMemory{}) const noexcept {
+        decltype(auto) get(const TMemory& memory = {}) const noexcept {
             return provider_.template get<TGiven>(
                 TInitialization{}
               , memory
