@@ -15,7 +15,7 @@
 #include "boost/di/core/pool.hpp"
 #include "boost/di/providers/nothrow_reduce_heap_usage.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
-#include "boost/di/type_traits/expr_traits.hpp"
+#include "boost/di/type_traits/memory_traits.hpp"
 #include "boost/di/wrappers/universal.hpp"
 
 namespace boost { namespace di { namespace core {
@@ -59,10 +59,12 @@ class injector : public pool<TDeps> {
         const TProvider& provider_;
         const TPolicies& policies_;
 
-        template<class TExpr = type_traits::ptr>
-        decltype(auto) get(const TExpr& expr = TExpr{}) const noexcept {
+        template<class TMemory = type_traits::heap>
+        decltype(auto) get(const TMemory& memory = TMemory{}) const noexcept {
             return provider_.template get<TGiven>(
-                expr, injector_.create_impl<TArgs, T>(provider_, policies_)...
+                TInitialization{}
+              , memory
+              , injector_.create_impl<TArgs, T>(provider_, policies_)...
             );
         }
     };

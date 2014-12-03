@@ -8,13 +8,23 @@
 #define BOOST_DI_PROVIDERS_NOTHROW_HEAP_HPP
 
 #include <new>
+#include "boost/di/type_traits/ctor_traits.hpp"
 
 namespace boost { namespace di { namespace providers {
 
 class nothrow_heap {
 public:
     template<class T, class TExpr, class... TArgs>
-    auto* get(const TExpr&, TArgs&&... args) const noexcept {
+    auto* get(const type_traits::direct&
+            , const TExpr&
+            , TArgs&&... args) const noexcept {
+        return new (std::nothrow) T(std::forward<TArgs>(args)...);
+    }
+
+    template<class T, class TExpr, class... TArgs>
+    auto* get(const type_traits::aggregate&
+            , const TExpr&
+            , TArgs&&... args) const noexcept {
         return new (std::nothrow) T{std::forward<TArgs>(args)...};
     }
 };

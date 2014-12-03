@@ -26,34 +26,46 @@ struct get_type {
     using type = T;
 };
 
-template<class, class, class>
+template<template<class...> class, class, class, class>
 struct ctor_impl;
 
-template<class R, class T, std::size_t... TArgs>
-struct ctor_impl<R, T, std::index_sequence<TArgs...>>
+template<template<class...> class Is, class T, class TAny, std::size_t... TArgs>
+struct ctor_impl<Is, T, TAny, std::index_sequence<TArgs...>>
     : aux::pair<
-          aux::is_braces_constructible_t<R, typename get_type<T, TArgs>::type...>
-        , aux::type_list<typename get_type<T, TArgs>::type...>
+          Is<T, typename get_type<TAny, TArgs>::type...>
+        , aux::type_list<typename get_type<TAny, TArgs>::type...>
       >
 { };
 
-template<class, class>
+template<template<class...> class, class, class>
 struct ctor;
 
-template<class T, std::size_t... Args>
-struct ctor<T, std::index_sequence<Args...>>
-    : aux::pair<direct, aux::at_key_t<
+template<template<class...> class Is, class T, std::size_t... Args>
+struct ctor<Is, T, std::index_sequence<Args...>>
+    : aux::at_key_t<
           aux::type_list<>
         , std::true_type
-        , ctor_impl<T, core::any_type<T>, std::make_index_sequence<Args>>...
-      >>
+        , ctor_impl<Is, T, core::any_type<T>, std::make_index_sequence<Args>>...
+      >
 { };
 
 } // namespace type_traits
 
-template<class T>
+template<class>
+struct size;
+
+template<class... Ts>
+struct size<aux::type_list<Ts...>> {
+    static constexpr auto value = sizeof...(Ts);
+};
+
+template<class T, class TR = typename type_traits::ctor<std::is_constructible, T, std::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>>::type>
 struct ctor_traits
-    : type_traits::ctor<T, std::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>>
+    : std::conditional_t<
+            (size<TR>::value > 0)
+          , aux::pair<type_traits::direct, TR>
+          , aux::pair<type_traits::aggregate, typename type_traits::ctor<aux::is_braces_constructible, T, std::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>>::type>
+      >
 { };
 
 template<

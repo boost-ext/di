@@ -8,7 +8,7 @@
 #define BOOST_DI_SCOPES_UNIQUE_HPP
 
 #include "boost/di/wrappers/unique.hpp"
-#include "boost/di/type_traits/expr_traits.hpp"
+#include "boost/di/type_traits/memory_traits.hpp"
 
 namespace boost { namespace di { namespace scopes {
 
@@ -21,9 +21,9 @@ public:
     public:
         template<class TDst, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
-            using expr = type_traits::expr_traits_t<TDst>;
-            using wrapper = wrappers::unique<decltype(provider.get(expr{}))>;
-            return wrapper{provider.get(expr{})};
+            using memory = type_traits::memory_traits_t<TDst>;
+            using wrapper = wrappers::unique<decltype(provider.get(memory{}))>;
+            return wrapper{provider.get(memory{})};
         }
     };
 };
