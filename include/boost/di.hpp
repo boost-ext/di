@@ -419,7 +419,7 @@ class dependency
           dependency_concept<TExpected, TName>
         , dependency<TScope, TExpected, TGiven, TName, TPriority>
       > {
-    using scope_type = typename TScope::template scope<TExpected, TGiven>;
+    using scope_t = typename TScope::template scope<TExpected, TGiven>;
 
 public:
     using type = dependency;
@@ -432,12 +432,12 @@ public:
 
     template<class T>
     explicit dependency(T&& object) noexcept
-        : scope_type(std::forward<T>(object))
+        : scope_t(std::forward<T>(object))
     { }
 
     template<class T, class TInjector>
     dependency(T&& object, const TInjector& injector) noexcept
-        : scope_type(std::forward<T>(object), injector)
+        : scope_t(std::forward<T>(object), injector)
     { }
 
     template<class T>
@@ -475,6 +475,101 @@ struct is_dependency<
 
 }}} // namespace boost::di::core
 
+namespace boost { namespace di { namespace type_traits {
+
+struct ptr { };
+struct value { };
+
+template<class T>
+struct expr_traits {
+    using type = value;
+};
+
+template<class T>
+struct expr_traits<T&> {
+    using type = value;
+};
+
+template<class T>
+struct expr_traits<const T&> {
+    using type = value;
+};
+
+template<class T>
+struct expr_traits<T*> {
+    using type = ptr;
+};
+
+template<class T>
+struct expr_traits<const T*> {
+    using type = ptr;
+};
+
+template<class T>
+struct expr_traits<aux::shared_ptr<T>> {
+    using type = ptr;
+};
+
+template<class T>
+struct expr_traits<const aux::shared_ptr<T>&> {
+    using type = ptr;
+};
+
+template<class T>
+struct expr_traits<aux_::shared_ptr<T>> {
+    using type = ptr;
+};
+
+template<class T>
+struct expr_traits<const aux_::shared_ptr<T>&> {
+    using type = ptr;
+};
+
+template<class T>
+struct expr_traits<aux::weak_ptr<T>> {
+    using type = ptr;
+};
+
+template<class T>
+struct expr_traits<const aux::weak_ptr<T>&> {
+    using type = ptr;
+};
+
+template<class T>
+struct expr_traits<aux::unique_ptr<T>> {
+    using type = ptr;
+};
+
+template<class T>
+struct expr_traits<const aux::unique_ptr<T>&> {
+    using type = ptr;
+};
+
+template<class T>
+struct expr_traits<T&&> {
+    using type = value;
+};
+
+template<class T>
+struct expr_traits<const T&&> {
+    using type = value;
+};
+
+template<class T, class TName>
+struct expr_traits<named<T, TName>> {
+    using type = typename expr_traits<T>::type;
+};
+
+template<class T, class TName>
+struct expr_traits<const named<T, TName>&> {
+    using type = typename expr_traits<T>::type;
+};
+
+template<class T>
+using expr_traits_t = typename expr_traits<T>::type;
+
+}}} // namespace boost::di::type_traits
+
 namespace boost { namespace di { namespace scopes {
 
 class unique {
@@ -484,10 +579,11 @@ public:
     template<class, class T>
     class scope {
     public:
-        template<class, class TProvider>
+        template<class TDst, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
-            using wrapper = wrappers::unique<decltype(provider.get())>;
-            return wrapper{provider.get()};
+            using expr = type_traits::expr_traits_t<TDst>;
+            using wrapper = wrappers::unique<decltype(provider.get(expr{}))>;
+            return wrapper{provider.get(expr{})};
         }
     };
 };
@@ -626,7 +722,7 @@ public:
         decltype(auto) create(const TProvider& provider) const noexcept {
             using scope_traits = type_traits::scope_traits_t<TDst>;
             using scope = typename scope_traits::template scope<TExpected, T>;
-            return scope{}.template create<T>(provider);
+            return scope{}.template create<TDst>(provider);
         }
     };
 };
@@ -860,18 +956,15 @@ namespace boost { namespace di { namespace providers {
 
 class nothrow_reduce_heap_usage {
 public:
-    template<class TDependency, class TDst, class T = typename TDependency::given, class... TArgs>
-    inline std::enable_if_t<((std::is_pointer<TDst>{} || aux::has_element_type<TDst>{} ) && std::is_same<typename TDependency::scope, scopes::unique>{}) || !std::is_same<typename TDependency::scope, scopes::unique>{}, T*>
-    get(TArgs&&... args) const noexcept {
+    template<class T, class... TArgs>
+    auto* get(const type_traits::ptr&, TArgs&&... args) const noexcept {
         return new (std::nothrow) T{std::forward<TArgs>(args)...};
     }
 
-    template<class TDependency, class TDst, class T = typename TDependency::given, class... TArgs>
-    inline std::enable_if_t<(!std::is_pointer<TDst>{} && !aux::has_element_type<TDst>{} ) && std::is_same<typename TDependency::scope, scopes::unique>{}, T>
-    get(TArgs&&... args) const noexcept {
+    template<class T, class... TArgs>
+    auto get(const type_traits::value&, TArgs&&... args) const noexcept {
         return T{std::forward<TArgs>(args)...};
     }
-
 };
 
 }}} // namespace boost::di::providers
@@ -1013,14 +1106,14 @@ class injector : public pool<TDeps> {
 
     template<
         class T
-      , class TDependency
+      , class TGiven
       , class TProvider
       , class TPolicies
       , class... TArgs
     >
     struct provider_impl<
         T
-      , TDependency
+      , TGiven
       , TProvider
       , TPolicies
       , aux::type_list<TArgs...>
@@ -1029,9 +1122,10 @@ class injector : public pool<TDeps> {
         const TProvider& provider_;
         const TPolicies& policies_;
 
-        decltype(auto) get() const noexcept {
-            return provider_.template get<TDependency, T>(
-                injector_.create_impl<TArgs, T>(provider_, policies_)...
+        template<class TExpr = type_traits::ptr>
+        decltype(auto) get(const TExpr& expr = TExpr{}) const noexcept {
+            return provider_.template get<TGiven>(
+                expr, injector_.create_impl<TArgs, T>(provider_, policies_)...
             );
         }
     };
@@ -1109,18 +1203,18 @@ public:
     decltype(auto)
     create_from_dep_impl(const TProvider& provider
                        , const TPolicies& policies) const noexcept {
-        auto&& scope = binder::resolve<T>((injector*)this);
-        using dependency = typename std::remove_reference_t<decltype(scope)>;
-        using type = typename dependency::given;
-        using ctor = typename type_traits::ctor_traits<type>::type;
+        auto&& dependency = binder::resolve<T>((injector*)this);
+        using dependency_t = typename std::remove_reference_t<decltype(dependency)>;
+        using given_t = typename dependency_t::given;
+        using ctor_t = typename type_traits::ctor_traits<given_t>::type;
 
-        call_policies<data<T, dependency>>(policies);
+        call_policies<data<T, dependency_t>>(policies);
 
-        using provider_impl_type = provider_impl<T, dependency, TProvider, TPolicies, ctor>;
+        using provider_impl_type = provider_impl<T, given_t, TProvider, TPolicies, ctor_t>;
         auto&& ctor_provider = provider_impl_type{*this, provider, policies};
-        using wrapper = decltype(scope.template create<T>(ctor_provider));
+        using wrapper_t = decltype(dependency.template create<T>(ctor_provider));
 
-        return wrappers::universal<T, wrapper>{scope.template create<T>(ctor_provider)};
+        return wrappers::universal<T, wrapper_t>{dependency.template create<T>(ctor_provider)};
     }
 
     template<class T, class... TPolicies>
@@ -1182,8 +1276,8 @@ namespace boost { namespace di { namespace providers {
 
 class nothrow_heap {
 public:
-    template<class TDependency, class TDst, class T = typename TDependency::given, class... TArgs>
-    inline auto* get(TArgs&&... args) const noexcept {
+    template<class T, class TExpr, class... TArgs>
+    auto* get(const TExpr&, TArgs&&... args) const noexcept {
         return new (std::nothrow) T{std::forward<TArgs>(args)...};
     }
 };
@@ -1226,7 +1320,8 @@ public:
                 : create_(new function<T, TInjector>(injector))
             { }
 
-            T* get() const noexcept { return (*create_)(); }
+            template<typename TExpr = type_traits::ptr>
+            T* get(const TExpr& = TExpr{}) const noexcept { return (*create_)(); }
 
             std::shared_ptr<ifunction<T>> create_;
         };
@@ -1238,7 +1333,7 @@ public:
         { }
 
         template<class TDst, class TProvider>
-        decltype(auto) create(const TProvider& pr) const noexcept {
+        decltype(auto) create(const TProvider&) const noexcept {
             using scope_traits = type_traits::scope_traits_t<TDst>;
             using scope = typename scope_traits::template scope<TExpected, T>;
             return scope{}.template create<TDst>(provider_);
