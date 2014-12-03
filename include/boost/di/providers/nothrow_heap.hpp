@@ -14,16 +14,16 @@ namespace boost { namespace di { namespace providers {
 
 class nothrow_heap {
 public:
-    template<class T, class TExpr, class... TArgs>
+    template<class T, class TMemory, class... TArgs>
     auto* get(const type_traits::direct&
-            , const TExpr&
+            , const TMemory&
             , TArgs&&... args) const noexcept {
         return new (std::nothrow) T(std::forward<TArgs>(args)...);
     }
 
-    template<class T, class TExpr, class... TArgs>
+    template<class T, class TMemory, class... TArgs>
     auto* get(const type_traits::aggregate&
-            , const TExpr&
+            , const TMemory&
             , TArgs&&... args) const noexcept {
         return new (std::nothrow) T{std::forward<TArgs>(args)...};
     }

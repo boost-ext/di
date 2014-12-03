@@ -26,8 +26,7 @@ BOOST_DI_HAS_METHOD(call, call);
 template<
     class TDeps = aux::type_list<>
   , class TDefaultProvider = providers::nothrow_reduce_heap_usage
->
-class injector : public pool<TDeps> {
+> class injector : public pool<TDeps> {
     using pool_t = pool<TDeps>;
 
     template<class T, class TDependency>

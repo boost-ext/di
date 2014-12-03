@@ -8,7 +8,6 @@
 #define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 
 #include <string>
-
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/core/any_type.hpp"
@@ -27,45 +26,71 @@ struct get_type {
 };
 
 template<template<class...> class, class, class, class>
-struct ctor_impl;
+struct ctor_args;
 
-template<template<class...> class Is, class T, class TAny, std::size_t... TArgs>
-struct ctor_impl<Is, T, TAny, std::index_sequence<TArgs...>>
+template<
+    template<class...> class TIsConstructible
+  , class T
+  , class TAny
+  , std::size_t... TArgs
+> struct ctor_args<TIsConstructible, T, TAny, std::index_sequence<TArgs...>>
     : aux::pair<
-          Is<T, typename get_type<TAny, TArgs>::type...>
+          TIsConstructible<T, typename get_type<TAny, TArgs>::type...>
         , aux::type_list<typename get_type<TAny, TArgs>::type...>
       >
 { };
 
 template<template<class...> class, class, class>
-struct ctor;
+struct ctor_impl;
 
-template<template<class...> class Is, class T, std::size_t... Args>
-struct ctor<Is, T, std::index_sequence<Args...>>
+template<
+    template<class...> class TIsConstructible
+  , class T
+  , std::size_t... TArgs
+> struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>>
     : aux::at_key_t<
           aux::type_list<>
         , std::true_type
-        , ctor_impl<Is, T, core::any_type<T>, std::make_index_sequence<Args>>...
+        , ctor_args<
+              TIsConstructible
+            , T
+            , core::any_type<T>
+            , std::make_index_sequence<TArgs>
+          >...
       >
+{ };
+
+template<
+    template<class...> class TIsConstructible
+  , class T
+> using ctor_impl_t =
+    typename ctor_impl<
+        TIsConstructible
+      , T
+      , std::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>
+    >::type;
+
+template<class...>
+struct ctor;
+
+template<class T>
+struct ctor<T, aux::type_list<>>
+    : aux::pair<
+          aggregate
+        , ctor_impl_t<aux::is_braces_constructible, T>
+      >
+{ };
+
+template<class T, class... TArgs>
+struct ctor<T, aux::type_list<TArgs...>>
+    : aux::pair<direct, aux::type_list<TArgs...>>
 { };
 
 } // namespace type_traits
 
-template<class>
-struct size;
-
-template<class... Ts>
-struct size<aux::type_list<Ts...>> {
-    static constexpr auto value = sizeof...(Ts);
-};
-
-template<class T, class TR = typename type_traits::ctor<std::is_constructible, T, std::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>>::type>
+template<class T>
 struct ctor_traits
-    : std::conditional_t<
-            (size<TR>::value > 0)
-          , aux::pair<type_traits::direct, TR>
-          , aux::pair<type_traits::aggregate, typename type_traits::ctor<aux::is_braces_constructible, T, std::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>>::type>
-      >
+    : type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>
 { };
 
 template<
@@ -93,7 +118,12 @@ struct ctor_traits_impl;
 
 template<class T>
 struct ctor_traits<T, std::true_type>
-    : aux::pair<direct, typename aux::function_traits<decltype(&T::BOOST_DI_INJECTOR)>::args>
+    : aux::pair<
+          direct
+        , typename aux::function_traits<
+              decltype(&T::BOOST_DI_INJECTOR)
+          >::args
+      >
 { };
 
 template<class T>
@@ -103,7 +133,12 @@ struct ctor_traits<T, std::false_type>
 
 template<class T>
 struct ctor_traits_impl<T, std::true_type>
-    : aux::pair<direct, typename aux::function_traits<decltype(&di::ctor_traits<T>::BOOST_DI_INJECTOR)>::args>
+    : aux::pair<
+          direct
+        , typename aux::function_traits<
+              decltype(&di::ctor_traits<T>::BOOST_DI_INJECTOR)
+          >::args
+      >
 { };
 
 template<class T>

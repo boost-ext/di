@@ -22,9 +22,7 @@ template<class T, T>
 struct non_type { };
 
 template<class, class>
-struct pair {
-    using type = pair;
-};
+struct pair { using type = pair; };
 
 template<class T>
 struct no_decay { using type = T; };
@@ -33,17 +31,13 @@ template<class... TArgs>
 struct inherit : TArgs... { };
 
 template<class...>
-struct type_list {
-    using type = type_list;
-};
+struct type_list { using type = type_list; };
 
 template<class...>
 struct join;
 
 template<>
-struct join<> {
-    using type = type_list<>;
-};
+struct join<> { using type = type_list<>; };
 
 template<class... TArgs>
 struct join<type_list<TArgs...>> {
