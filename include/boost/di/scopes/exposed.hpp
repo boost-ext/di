@@ -8,14 +8,15 @@
 
 #include "boost/di/type_traits/scope_traits.hpp"
 #include "boost/di/type_traits/expr_traits.hpp"
-#include "boost/di/providers/nothrow_heap.hpp"
+#include "boost/di/providers/nothrow_reduce_heap_usage.hpp"
 
 namespace boost { namespace di { namespace scopes {
 
 template<class T>
 struct ifunction {
     virtual ~ifunction() = default;
-    virtual T* operator()() = 0;
+    virtual T* operator()(type_traits::ptr) const noexcept = 0;
+    virtual T  operator()(type_traits::value) const noexcept = 0;
 };
 
 template<class T, class TInjector>
@@ -25,9 +26,14 @@ public:
         : injector_(injector)
     { }
 
-    T* operator()() override {
+    T* operator()(type_traits::ptr) const noexcept override {
         return injector_.template
-            create_impl<T*, T>(providers::nothrow_heap{}, core::pool<>{});
+            create_impl<T*, T>(providers::nothrow_reduce_heap_usage{}, core::pool<>{});
+    }
+
+    T operator()(type_traits::value) const noexcept override {
+        return injector_.template
+            create_impl<T, T>(providers::nothrow_reduce_heap_usage{}, core::pool<>{});
     }
 
 private:
@@ -47,7 +53,9 @@ public:
             { }
 
             template<typename TExpr = type_traits::ptr>
-            T* get(const TExpr& = TExpr{}) const noexcept { return (*create_)(); }
+            decltype(auto) get(const TExpr& expr = TExpr{}) const noexcept {
+                return (*create_)(expr);
+            }
 
             std::shared_ptr<ifunction<T>> create_;
         };
