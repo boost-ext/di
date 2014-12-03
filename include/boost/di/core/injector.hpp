@@ -23,6 +23,11 @@ namespace boost { namespace di { namespace core {
 BOOST_DI_HAS_METHOD(configure, configure);
 BOOST_DI_HAS_METHOD(call, call);
 
+template<class TInjector>
+struct injector_impl : TInjector {
+    using TInjector::create_impl;
+};
+
 template<
     class TDeps = aux::type_list<>
   , class TDefaultProvider = providers::nothrow_reduce_heap_usage
@@ -35,6 +40,7 @@ template<
         using dependency = TDependency;
         using binder = core::binder;
     };
+    void dupa() {}
 
     template<class...>
     struct provider_impl;
@@ -102,7 +108,7 @@ public:
         call_impl(action, deps{});
     }
 
-//private:
+protected:
     template<class... TArgs>
     injector(const init&, const TArgs&... args) noexcept
         : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
@@ -118,7 +124,10 @@ public:
     create_impl(const TProvider& provider
               , const TPolicies& policies
               , std::enable_if_t<is_any_type<T>{}>* = 0) const noexcept {
-        return any_type<TParent, injector, TProvider, TPolicies>{*this, provider, policies};
+        using injector_t = injector_impl<injector>;
+        return any_type<TParent, injector_t, TProvider, TPolicies>{
+            static_cast<const injector_t&>(*this), provider, policies
+        };
     }
 
     template<
@@ -205,7 +214,9 @@ public:
     template<class TDependency, class TInjector>
     decltype(auto)
     create_dep(const TInjector& injector) const noexcept {
-        return TDependency{injector};
+        return TDependency{
+            static_cast<const injector_impl<TInjector>&>(injector)
+        };
     }
 };
 
