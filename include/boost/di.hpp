@@ -247,7 +247,7 @@ class shared {
     struct sp_holder {
         TSharedPtr object;
 
-        void operator ()(...) noexcept {
+        void operator()(...) noexcept {
             object.reset();
         }
     };
@@ -1026,10 +1026,7 @@ struct ctor;
 
 template<class T>
 struct ctor<T, aux::type_list<>>
-    : aux::pair<
-          aggregate
-        , ctor_impl_t<aux::is_braces_constructible, T>
-      >
+    : aux::pair<aggregate, ctor_impl_t<aux::is_braces_constructible, T>>
 { };
 
 template<class T, class... TArgs>
