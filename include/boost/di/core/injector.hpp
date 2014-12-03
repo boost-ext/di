@@ -45,6 +45,7 @@ class injector : public pool<TDeps> {
       , class TGiven
       , class TProvider
       , class TPolicies
+      , class TInitialization
       , class... TArgs
     >
     struct provider_impl<
@@ -52,7 +53,7 @@ class injector : public pool<TDeps> {
       , TGiven
       , TProvider
       , TPolicies
-      , aux::type_list<TArgs...>
+      , aux::pair<TInitialization, aux::type_list<TArgs...>>
     > {
         const injector& injector_;
         const TProvider& provider_;

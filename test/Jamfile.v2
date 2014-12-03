@@ -77,6 +77,7 @@ test-suite fail : # compile fail tests
 ;
 
 test-suite pt : # performane tests
-    #[ run-test c++11 : pt/di_pt.cpp : preprocessed_di_pt_cpp_11 : <define>BOOST_DI_CFG_TEST_LEVELS_LIMIT_SIZE=5 : preprocessed_headers ]
+    #[ run-test c++1y : pt/di.cpp : : : pph ]
+    #[ run-test c++1y : pt/di.cpp : ctor_di : : pph ]
 ;
 

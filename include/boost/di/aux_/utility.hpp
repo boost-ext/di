@@ -22,7 +22,9 @@ template<class T, T>
 struct non_type { };
 
 template<class, class>
-struct pair { };
+struct pair {
+    using type = pair;
+};
 
 template<class T>
 struct no_decay { using type = T; };
@@ -67,8 +69,8 @@ static no_decay<TValue> lookup(pair<TKey, TValue>*);
 template<class TDefault, class TKey, class... Ts>
 using at_key = decltype(lookup<TDefault, TKey>((inherit<Ts...>*)0));
 
-template<class TDefault, class TKey, class T>
-using at_key_t = typename at_key<TDefault, TKey, T>::type;
+template<class TDefault, class TKey, class... Ts>
+using at_key_t = typename at_key<TDefault, TKey, Ts...>::type;
 
 }}} // namespace boost::di::aux
 
