@@ -61,10 +61,8 @@ template<
       >
 { };
 
-template<
-    template<class...> class TIsConstructible
-  , class T
-> using ctor_impl_t =
+template<template<class...> class TIsConstructible, class T>
+using ctor_impl_t =
     typename ctor_impl<
         TIsConstructible
       , T

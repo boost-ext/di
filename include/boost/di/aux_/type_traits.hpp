@@ -9,55 +9,55 @@
 
 #include "boost/di/aux_/utility.hpp"
 
-#define BOOST_DI_HAS_TYPE(name)                                                 \
-    template<class>                                                             \
-    std::false_type has_##name##_impl(...);                                     \
-                                                                                \
-    template<class T>                                                           \
-    std::true_type has_##name##_impl(typename T::name*);                        \
-                                                                                \
-    template<class T>                                                           \
+#define BOOST_DI_HAS_TYPE(name)                                     \
+    template<class>                                                 \
+    std::false_type has_##name##_impl(...);                         \
+                                                                    \
+    template<class T>                                               \
+    std::true_type has_##name##_impl(typename T::name*);            \
+                                                                    \
+    template<class T>                                               \
     using has_##name = decltype(has_##name##_impl<T>(0))
 
-#define BOOST_DI_HAS_METHOD(name, call_name)                                    \
-    template<class T, class... TArgs>                                           \
-    decltype(std::declval<T>().call_name(std::declval<TArgs>()...)              \
-           , std::true_type())                                                  \
-    has_##name##_impl(int);                                                     \
-                                                                                \
-    template<class, class...>                                                   \
-    std::false_type has_##name##_impl(...);                                     \
-                                                                                \
-    template<class T, class... TArgs>                                           \
+#define BOOST_DI_HAS_METHOD(name, call_name)                        \
+    template<class T, class... TArgs>                               \
+    decltype(std::declval<T>().call_name(std::declval<TArgs>()...)  \
+           , std::true_type())                                      \
+    has_##name##_impl(int);                                         \
+                                                                    \
+    template<class, class...>                                       \
+    std::false_type has_##name##_impl(...);                         \
+                                                                    \
+    template<class T, class... TArgs>                               \
     using has_##name = decltype(has_##name##_impl<T, TArgs...>(0))
 
-#define BOOST_DI_HAS_METHOD_CALL(name, call_name)                               \
-    struct has_##name##_base {                                                  \
-        void call_name();                                                       \
-    };                                                                          \
-                                                                                \
-    template<class T>                                                           \
-    std::false_type has_##name##_impl(                                          \
-        T*                                                                      \
-      , boost::di::aux::non_type<                                               \
-            void (has_##name##_base::*)()                                       \
-          , &T::call_name                                                       \
-        >* = 0                                                                  \
-    );                                                                          \
-                                                                                \
-    template<class>                                                             \
-    std::true_type has_##name##_impl(...);                                      \
-                                                                                \
-    template<class T, typename = void>                                          \
-    struct has_##name                                                           \
-        : decltype(has_##name##_impl<                                           \
-              boost::di::aux::inherit<T, has_##name##_base>                     \
-          >(0))                                                                 \
-    { };                                                                        \
-                                                                                \
-    template<class T>                                                           \
-    struct has_##name<T, std::enable_if_t<!std::is_class<T>{}>>                 \
-        : std::false_type                                                       \
+#define BOOST_DI_HAS_METHOD_CALL(name, call_name)                   \
+    struct has_##name##_base {                                      \
+        void call_name();                                           \
+    };                                                              \
+                                                                    \
+    template<class T>                                               \
+    std::false_type has_##name##_impl(                              \
+        T*                                                          \
+      , boost::di::aux::non_type<                                   \
+            void (has_##name##_base::*)()                           \
+          , &T::call_name                                           \
+        >* = 0                                                      \
+    );                                                              \
+                                                                    \
+    template<class>                                                 \
+    std::true_type has_##name##_impl(...);                          \
+                                                                    \
+    template<class T, typename = void>                              \
+    struct has_##name                                               \
+        : decltype(has_##name##_impl<                               \
+              boost::di::aux::inherit<T, has_##name##_base>         \
+          >(0))                                                     \
+    { };                                                            \
+                                                                    \
+    template<class T>                                               \
+    struct has_##name<T, std::enable_if_t<!std::is_class<T>{}>>     \
+        : std::false_type                                           \
     { }
 
 namespace boost { namespace di { namespace aux {
