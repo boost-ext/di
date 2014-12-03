@@ -18,7 +18,7 @@ class shared {
     struct sp_holder {
         TSharedPtr object;
 
-        void operator ()(...) noexcept {
+        void operator()(...) noexcept {
             object.reset();
         }
     };
