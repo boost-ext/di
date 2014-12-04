@@ -498,7 +498,10 @@ test named_polymorphic = [] {
 };
 
 test allow_types_policy = [] {
-    di::make_injector(di::bind<int>.to(42)).create<int>(di::allow_types{});
+    using namespace di::policies::operators;
+    di::make_injector(di::bind<int>.to(42)).create<int>(
+        di::allow_ctor_types(std::is_same<di::_, int>{}/* && di::is_bound{}*/)
+    );
 };
 
 #if 0

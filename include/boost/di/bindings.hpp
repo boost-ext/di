@@ -28,16 +28,20 @@ extern constexpr scopes::shared shared{};
 extern constexpr scopes::singleton singleton{};
 
 template<class TName>
-constexpr scopes::session<TName>
-session(const TName&) noexcept { return {}; }
+constexpr auto
+session(const TName&) noexcept {
+    return scopes::session<TName>{};
+}
 
 template<class TName>
-constexpr scopes::session_entry<TName>
-session_entry(const TName&) noexcept { return {}; }
+constexpr auto session_entry(const TName&) noexcept {
+    return scopes::session_entry<TName>{};
+}
 
 template<class TName>
-constexpr scopes::session_exit<TName>
-session_exit(const TName&) noexcept { return {}; }
+constexpr auto session_exit(const TName&) noexcept {
+    return scopes::session_exit<TName>{};
+}
 
 }} // namespace boost::di
 
