@@ -35,8 +35,7 @@ template<
     class T
   , class = typename is_injector<T>::type
   , class = typename core::is_dependency<T>::type
->
-struct add_type_list;
+> struct add_type_list;
 
 template<class T, class TAny>
 struct add_type_list<T, std::true_type, TAny> {

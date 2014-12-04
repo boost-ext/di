@@ -93,8 +93,7 @@ template<
     class T
   , class Traits
   , class TAllocator
->
-struct ctor_traits<std::basic_string<T, Traits, TAllocator>> {
+> struct ctor_traits<std::basic_string<T, Traits, TAllocator>> {
     BOOST_DI_INJECT_TRAITS();
 };
 

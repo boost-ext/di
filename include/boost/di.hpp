@@ -894,8 +894,7 @@ class binder {
       , class TExpected
       , class TGiven
       , class TName
-    >
-    static decltype(auto) // priority scope
+    > static decltype(auto) // priority scope
     resolve_impl(aux::pair<TConcept
                , dependency<TScope, TExpected, TGiven, TName, true>>* dep) noexcept {
         return static_cast<dependency<TScope, TExpected, TGiven, TName, true>&>(*dep);
@@ -904,10 +903,9 @@ class binder {
 public:
     template<
         class T
-      , class TDeps
       , class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>
-    >
-    static decltype(auto) resolve(TDeps* deps) noexcept {
+      , class TDeps = void
+    > static decltype(auto) resolve(TDeps* deps) noexcept {
         using dependency = dependency_concept<
             aux::make_plain_t<T>
           , get_name_t<aux::remove_accessors_t<T>>
@@ -1038,8 +1036,7 @@ template<
     class T
   , class Traits
   , class TAllocator
->
-struct ctor_traits<std::basic_string<T, Traits, TAllocator>> {
+> struct ctor_traits<std::basic_string<T, Traits, TAllocator>> {
     BOOST_DI_INJECT_TRAITS();
 };
 
@@ -1169,11 +1166,17 @@ template<
 > class injector : public pool<TDeps> {
     using pool_t = pool<TDeps>;
 
-    template<class T, class TDependency>
+    template<class TDst, class TDependency>
     struct data {
-        using type = T;
-        using dependency = TDependency;
-        using binder = core::binder;
+        using type = TDst;
+
+        TDependency&& dep;
+        pool_t& deps;
+
+        template<class T, class TDefault>
+        decltype(auto) resolve() const noexcept {
+            return binder::template resolve<T, TDefault>(&deps);
+        }
     };
 
     template<class...>
@@ -1186,8 +1189,7 @@ template<
       , class TPolicies
       , class TInitialization
       , class... TArgs
-    >
-    struct provider_impl<
+    > struct provider_impl<
         T
       , TGiven
       , TProvider
@@ -1255,8 +1257,7 @@ protected:
       , class TParent
       , class TProvider
       , class TPolicies
-    >
-    decltype(auto)
+    > decltype(auto)
     create_impl(const TProvider& provider
               , const TPolicies& policies
               , std::enable_if_t<is_any_type<T>{}>* = 0) const noexcept {
@@ -1271,8 +1272,7 @@ protected:
       , class TParent
       , class TProvider
       , class TPolicies
-    >
-    decltype(auto)
+    > decltype(auto)
     create_impl(const TProvider& provider
               , const TPolicies& policies
               , std::enable_if_t<!is_any_type<T>{}>* = 0) const noexcept {
@@ -1283,32 +1283,43 @@ protected:
         class T
       , class TProvider
       , class TPolicies
-    >
-    decltype(auto)
+    > decltype(auto)
     create_from_dep_impl(const TProvider& provider
                        , const TPolicies& policies) const noexcept {
         auto&& dependency = binder::resolve<T>((injector*)this);
         using dependency_t = typename std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-
-        call_policies<data<T, dependency_t>>(policies);
-
+        call_policies<given_t>(policies, dependency);
         using provider_impl_type = provider_impl<T, given_t, TProvider, TPolicies, ctor_t>;
         auto&& ctor_provider = provider_impl_type{*this, provider, policies};
         using wrapper_t = decltype(dependency.template create<T>(ctor_provider));
-
         return wrappers::universal<T, wrapper_t>{dependency.template create<T>(ctor_provider)};
     }
 
-    template<class T, class... TPolicies>
-    void call_policies(const pool<aux::type_list<TPolicies...>>& policies) const noexcept {
-        void(call_policies_impl<TPolicies, T>(policies)...);
+    template<
+        class T
+      , class TDependency
+      , class... TPolicies
+    > void call_policies(const pool<aux::type_list<TPolicies...>>& policies
+                       , TDependency&& dependency) const noexcept {
+        void(call_policies_impl<TPolicies, T>(
+            policies, std::forward<TDependency>(dependency))...
+        );
     }
 
-    template<class TPolicy, class T, class TPolicies>
-    void call_policies_impl(const TPolicies& policies) const noexcept {
-        (static_cast<const TPolicy&>(policies))(T{});
+    template<
+        class TPolicy
+      , class T
+      , class TPolicies
+      , class TDependency
+    > void call_policies_impl(const TPolicies& policies
+                            , TDependency&& dependency) const noexcept {
+        auto&& injections = data<T, TDependency>{
+            std::forward<TDependency>(dependency)
+          , (injector&)*this
+        };
+        (static_cast<const TPolicy&>(policies))(injections);
     }
 
     template<class TAction, class... Ts>
@@ -1437,8 +1448,7 @@ template<
     class T
   , class = typename is_injector<T>::type
   , class = typename core::is_dependency<T>::type
->
-struct add_type_list;
+> struct add_type_list;
 
 template<class T, class TAny>
 struct add_type_list<T, std::true_type, TAny> {
@@ -1474,6 +1484,23 @@ inline decltype(auto) make_injector(const TArgs&... args) noexcept {
 }
 
 }} // namespace boost::di
+
+namespace boost { namespace di { inline namespace policies {
+
+template<class T>
+struct is_bound
+{ };
+
+struct allow_types {
+    template<class T>
+    void operator()(const T& data) const noexcept {
+        //using type = typename T::type;
+        //struct not_resolved { };
+        //auto dep = data.template resolve<type, not_resolved>();
+    }
+};
+
+}}} // namespace boost::di::policies
 
 #endif
 

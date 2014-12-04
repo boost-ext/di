@@ -497,3 +497,13 @@ test named_polymorphic = [] {
 	expect(dynamic_cast<impl1*>(object.sp.get()));
 };
 
+test allow_types_policy = [] {
+    di::make_injector(di::bind<int>.to(42)).create<int>(di::allow_types{});
+};
+
+#if 0
+test bind_not_compatibile_types = [] {
+    di::make_injector(di::bind<int, impl1>).create<int>();
+};
+#endif
+
