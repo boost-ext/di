@@ -242,8 +242,6 @@ test scopes_injector_lambda_injector = [] {
     expect_eq(s, injector.create<int>());
 };
 
-BOOST_DI_HAS_METHOD(call, call);
-
 test session_call = [] {
     struct name { };
     auto injector = di::make_injector(
@@ -466,7 +464,7 @@ test automatic_inject_with_initializer_list = [] {
     expect_eq(0, object.il.size());
 };
 
-test named_polymorphic = [] {
+test named_polymorphic_agreggate = [] {
     struct c {
         di::named<std::shared_ptr<i1>, name> sp;
     };
@@ -479,5 +477,23 @@ test named_polymorphic = [] {
     auto sp = static_cast<std::shared_ptr<i1>>(object.sp);
 
 	expect(dynamic_cast<impl1*>(sp.get()));
+};
+
+test named_polymorphic = [] {
+    struct c {
+        explicit c(di::named<std::shared_ptr<i1>, name> sp)
+            : sp(sp)
+        { }
+
+        std::shared_ptr<i1> sp;
+    };
+
+    auto injector = di::make_injector(
+        di::bind<i1, impl1>.named(name{})
+    );
+
+    auto object = injector.create<c>();
+
+	expect(dynamic_cast<impl1*>(object.sp.get()));
 };
 

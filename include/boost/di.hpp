@@ -49,7 +49,7 @@ namespace boost { namespace di {
 
 struct no_name { };
 
-template<class T, class TName = no_name, class = void>
+template<class T, class TName = no_name>
 class named {
     named& operator=(const named&) = delete;
 
@@ -167,13 +167,6 @@ public:
 
 private:
     aux::unique_ptr<T> object_;
-};
-
-template<class T, class TName>
-class named<T, TName, std::enable_if_t<std::is_polymorphic<aux::remove_accessors_t<T>>{}>> {
-public:
-    using named_type = T;
-    using name = TName;
 };
 
 }} // namespace boost::di
