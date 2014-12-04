@@ -444,7 +444,6 @@ test automatic_inject = [] {
     expect_eq(0.0, object.d);
 };
 
-
 test automatic_inject_with_initializer_list = [] {
     constexpr auto i = 42;
 
@@ -465,5 +464,20 @@ test automatic_inject_with_initializer_list = [] {
 
     expect_eq(i, object.i);
     expect_eq(0, object.il.size());
+};
+
+test named_polymorphic = [] {
+    struct c {
+        di::named<std::shared_ptr<i1>, name> sp;
+    };
+
+    auto injector = di::make_injector(
+        di::bind<i1, impl1>.named(name{})
+    );
+
+    auto object = injector.create<c>();
+    auto sp = static_cast<std::shared_ptr<i1>>(object.sp);
+
+	expect(dynamic_cast<impl1*>(sp.get()));
 };
 

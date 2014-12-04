@@ -1182,7 +1182,6 @@ template<
         using dependency = TDependency;
         using binder = core::binder;
     };
-    void dupa() {}
 
     template<class...>
     struct provider_impl;
@@ -1202,12 +1201,14 @@ template<
       , TPolicies
       , aux::pair<TInitialization, aux::type_list<TArgs...>>
     > {
+        using parent = T;
+
         const injector& injector_;
         const TProvider& provider_;
         const TPolicies& policies_;
 
         template<class TMemory = type_traits::heap>
-        decltype(auto) get(const TMemory& memory = TMemory{}) const noexcept {
+        decltype(auto) get(const TMemory& memory = {}) const noexcept {
             return provider_.template get<TGiven>(
                 TInitialization{}
               , memory
@@ -1366,69 +1367,54 @@ protected:
 
 namespace boost { namespace di { namespace scopes {
 
-template<class T>
-struct ifunction {
-    virtual ~ifunction() = default;
-    virtual T* operator()(const type_traits::heap&) const noexcept = 0;
-    virtual T operator()(const type_traits::stack&) const noexcept = 0;
-};
-
-template<class T, class TInjector>
-class function : public ifunction<T> {
-public:
-    explicit function(const TInjector& injector)
-        : injector_(injector)
-    { }
-
-    T* operator()(const type_traits::heap&) const noexcept override {
-        return injector_.template
-            create_impl<T*, T>(providers::nothrow_reduce_heap_usage{}, core::pool<>{});
-    }
-
-    T operator()(const type_traits::stack&) const noexcept override {
-        return injector_.template
-            create_impl<T, T>(providers::nothrow_reduce_heap_usage{}, core::pool<>{});
-    }
-
-private:
-    TInjector injector_;
-};
-
 class exposed {
 public:
     static constexpr auto priority = false;
 
     template<class TExpected, class T>
     class scope {
-        struct provider {
-            template<typename TInjector>
-            explicit provider(const TInjector& injector) noexcept
-                : create_(new function<T, TInjector>(injector))
+        struct iprovider {
+            virtual ~iprovider() = default;
+            virtual T* get(const type_traits::heap& = {}) const noexcept = 0;
+            virtual T get(const type_traits::stack&) const noexcept = 0;
+        };
+
+        template<typename TInjector>
+        class provider : public iprovider {
+        public:
+            explicit provider(const TInjector& injector)
+                : injector_(injector)
             { }
 
-            template<typename TMemory = type_traits::heap>
-            decltype(auto) get(const TMemory& memory = TMemory{}) const noexcept {
-                return (*create_)(memory);
+            T* get(const type_traits::heap&) const noexcept override {
+                return injector_.template
+                    create_impl<T*, T>(providers::nothrow_reduce_heap_usage{}, core::pool<>{});
             }
 
-            std::shared_ptr<ifunction<T>> create_;
+            T get(const type_traits::stack&) const noexcept override {
+                return injector_.template
+                    create_impl<T, T>(providers::nothrow_reduce_heap_usage{}, core::pool<>{});
+            }
+
+        private:
+            TInjector injector_;
         };
 
     public:
         template<class TInjector>
         explicit scope(const TInjector& injector) noexcept
-            : provider_{injector}
+            : provider_{std::make_shared<provider<TInjector>>(injector)}
         { }
 
         template<class TDst, class TProvider>
         decltype(auto) create(const TProvider&) const noexcept {
             using scope_traits = type_traits::scope_traits_t<TDst>;
             using scope = typename scope_traits::template scope<TExpected, T>;
-            return scope{}.template create<TDst>(provider_);
+            return scope{}.template create<TDst>(*provider_);
         }
 
     private:
-        provider provider_;
+        std::shared_ptr<iprovider> provider_;
     };
 };
 
