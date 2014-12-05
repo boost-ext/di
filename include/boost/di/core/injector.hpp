@@ -17,6 +17,7 @@
 #include "boost/di/core/provider.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/wrappers/universal.hpp"
+#include "boost/di/defaults.hpp"
 
 namespace boost { namespace di { namespace core {
 
@@ -92,7 +93,8 @@ private:
         using dependency_t = typename std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-        //call_policies<given_t>(policies, dependency);
+        auto&& policies = injector_defaults<project_scope>::policies();
+        call_policies<given_t>(policies, dependency);
         using provider_type = provider<T, given_t, ctor_t, injector>;
         auto&& ctor_provider = provider_type{*this};
         using wrapper_t = decltype(dependency.template create<T>(ctor_provider));

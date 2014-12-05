@@ -268,22 +268,6 @@ test session_call = [] {
     }
 };
 
-struct policy {
-    bool& called;
-
-    template<typename T>
-    void operator()(const T&) const {
-        called = true;
-    }
-};
-
-/*test call_policies = [] {*/
-    //auto called = false;
-    //auto injector = di::make_injector();
-    //injector.create<int>(policy{called});
-    //expect(called);
-/*};*/
-
 test string_creation = [] {
     struct string {
         std::string str;
@@ -496,13 +480,6 @@ test named_polymorphic = [] {
 
 	expect(dynamic_cast<impl1*>(object.sp.get()));
 };
-
-/*test allow_types_policy = [] {*/
-    //using namespace di::policies::operators;
-    //di::make_injector(di::bind<int>.to(42)).create<int>(
-        //di::allow_ctor_types(std::is_same<di::_, int>{}[> && di::is_bound{}<])
-    //);
-/*};*/
 
 #if 0
 test bind_not_compatibile_types = [] {

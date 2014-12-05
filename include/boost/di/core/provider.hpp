@@ -8,7 +8,7 @@
 
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
-#include "boost/di/providers/nothrow_reduce_heap_usage.hpp"
+#include "boost/di/defaults.hpp"
 
 namespace boost { namespace di { namespace core {
 
@@ -29,7 +29,7 @@ template<
 > {
     template<class TMemory = type_traits::heap>
     decltype(auto) get(const TMemory& memory = {}) const noexcept {
-        return providers::nothrow_reduce_heap_usage{}.get<TGiven>(
+        return injector_defaults<project_scope>::provider().get<TGiven>(
             TInitialization{}
           , memory
           , injector_.template create<TArgs, T>()...

@@ -18,7 +18,7 @@ BOOST_DI_HAS_TYPE(result_type);
 BOOST_DI_HAS_METHOD(call_operator, operator());
 
 template<class T, class U>
-using has_lambda =
+using is_lambda_expr =
     std::integral_constant<
         bool
       , has_call_operator<T, U>::value &&
@@ -82,7 +82,7 @@ public:
     class scope<
         TExpected
       , T
-      , std::enable_if_t<has_call_operator<T>{} && !has_lambda<T, const injector&>{}>
+      , std::enable_if_t<has_call_operator<T>{} && !is_lambda_expr<T, const injector&>{}>
     > {
     public:
         explicit scope(const T& object) noexcept
@@ -100,7 +100,7 @@ public:
     };
 
     template<class TExpected, class T>
-    class scope<TExpected, T, std::enable_if_t<has_lambda<T, const injector&>{}>> {
+    class scope<TExpected, T, std::enable_if_t<is_lambda_expr<T, const injector&>{}>> {
     public:
         explicit scope(const T& object) noexcept
             : given_(object)

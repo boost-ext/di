@@ -58,6 +58,9 @@ guard_begin() {
     echo "// bindings"
     echo "#include \"boost/di/bindings.hpp"\"
     echo
+    echo "// defaults"
+    echo "#include \"boost/di/defaults.hpp"\"
+    echo
     echo "// injectors"
     echo "#include \"boost/di/injector.hpp\""
     echo "#include \"boost/di/make_injector.hpp\""
