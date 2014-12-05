@@ -32,13 +32,11 @@ public:
             { }
 
             T* get(const type_traits::heap&) const noexcept override {
-                return injector_.template
-                    create_impl<T*, T>(providers::nothrow_reduce_heap_usage{}, core::pool<>{});
+                return injector_.template create<T*>();
             }
 
             T get(const type_traits::stack&) const noexcept override {
-                return injector_.template
-                    create_impl<T, T>(providers::nothrow_reduce_heap_usage{}, core::pool<>{});
+                return injector_.template create<T>();
             }
 
         private:

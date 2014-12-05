@@ -21,13 +21,11 @@ public:
     using named_type = T;
     using name = TName;
 
-    named(const T& object = T{}) noexcept // non explicit
+    named(const T& object = {}) noexcept // non explicit
         : object_(object)
     { }
 
-    named(const named& other) noexcept
-        : object_(other.object_)
-    { }
+    named(const named&) noexcept = default;
 
     operator T() const noexcept {
         return object_;
@@ -45,12 +43,8 @@ public:
     using named_type = const T&;
     using name = TName;
 
-    named(const T& object = T{}) noexcept // non explicit
+    named(const T& object) noexcept // non explicit
         : object_(object)
-    { }
-
-    named(const named& other) noexcept
-        : object_(other.object_)
     { }
 
     operator const T&() const noexcept {
@@ -73,10 +67,6 @@ public:
         : object_(object)
     { }
 
-    named(const named& other) noexcept
-        : object_(other.object_)
-    { }
-
     operator T&() noexcept {
         return object_;
     }
@@ -88,6 +78,7 @@ private:
 template<class T, class TName>
 class named<T&&, TName> {
     named& operator=(const named&) = delete;
+    named(const named&) noexcept = delete;
 
 public:
     using named_type = T&&;
@@ -95,10 +86,6 @@ public:
 
     named(T&& object) noexcept // non explicit
         : object_(std::move(object))
-    { }
-
-    named(const named& other) noexcept
-        : object_(other.object_)
     { }
 
     operator T&&() noexcept {
@@ -117,17 +104,13 @@ public:
     using named_type = aux::unique_ptr<T>;
     using name = TName;
 
-    named(aux::unique_ptr<T> object = aux::unique_ptr<T>(new T{})) noexcept // non explicit
+    named(aux::unique_ptr<T> object) noexcept // non explicit
         : object_(std::move(object))
     { }
 
     operator aux::unique_ptr<T>() noexcept {
         return std::move(object_);
     }
-
-    named(const named& other) noexcept
-        : object_(new T(*other.object_))
-    { }
 
 private:
     aux::unique_ptr<T> object_;

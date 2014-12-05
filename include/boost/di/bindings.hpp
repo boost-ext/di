@@ -28,8 +28,7 @@ extern constexpr scopes::shared shared{};
 extern constexpr scopes::singleton singleton{};
 
 template<class TName>
-constexpr auto
-session(const TName&) noexcept {
+constexpr auto session(const TName&) noexcept {
     return scopes::session<TName>{};
 }
 

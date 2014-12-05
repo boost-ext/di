@@ -11,12 +11,7 @@
 
 namespace boost { namespace di { namespace core {
 
-template<
-    class TParent = aux::none_t
-  , class TInjector = aux::none_t
-  , class TProvider = aux::none_t
-  , class TPolicies = aux::none_t
->
+template<class TParent = aux::none_t, class TInjector = aux::none_t>
 struct any_type {
     template<class T>
     using is_not_same_t = std::enable_if_t<
@@ -25,12 +20,10 @@ struct any_type {
 
     template<class T, class = is_not_same_t<T>>
     operator T() noexcept {
-        return creator_.template create_impl<T, TParent>(provider_, policies_);
+        return injector_.template create<T, TParent>();
     }
 
-    const TInjector& creator_;
-    const TProvider& provider_;
-    const TPolicies& policies_;
+    const TInjector& injector_;
 };
 
 template<class>
