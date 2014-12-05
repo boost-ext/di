@@ -65,12 +65,6 @@ guard_begin() {
     echo "#include \"boost/di/injector.hpp\""
     echo "#include \"boost/di/make_injector.hpp\""
     echo
-    echo "// policies"
-    echo "#include \"boost/di/policies/allow_ctor_types.hpp\""
-    echo
-    echo "// providers"
-    echo "#include \"boost/di/providers/nothrow_reduce_heap_usage.hpp\""
-    echo
     echo "// scopes"
     echo "#include \"boost/di/scopes/deduce.hpp\""
     echo "#include \"boost/di/scopes/external.hpp\""

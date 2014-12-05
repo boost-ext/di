@@ -17,15 +17,12 @@
 // bindings
 #include "boost/di/bindings.hpp"
 
+// defaults
+#include "boost/di/defaults.hpp"
+
 // injectors
 #include "boost/di/injector.hpp"
 #include "boost/di/make_injector.hpp"
-
-// policies
-#include "boost/di/policies/allow_ctor_types.hpp"
-
-// providers
-#include "boost/di/providers/nothrow_reduce_heap_usage.hpp"
 
 // scopes
 #include "boost/di/scopes/deduce.hpp"
@@ -275,7 +272,7 @@ BOOST_DI_HAS_TYPE(result_type);
 BOOST_DI_HAS_METHOD(call_operator, operator());
 
 template<class T, class U>
-using has_lambda =
+using is_lambda_expr =
     std::integral_constant<
         bool
       , has_call_operator<T, U>::value &&
@@ -339,7 +336,7 @@ public:
     class scope<
         TExpected
       , T
-      , std::enable_if_t<has_call_operator<T>{} && !has_lambda<T, const injector&>{}>
+      , std::enable_if_t<has_call_operator<T>{} && !is_lambda_expr<T, const injector&>{}>
     > {
     public:
         explicit scope(const T& object) noexcept
@@ -357,7 +354,7 @@ public:
     };
 
     template<class TExpected, class T>
-    class scope<TExpected, T, std::enable_if_t<has_lambda<T, const injector&>{}>> {
+    class scope<TExpected, T, std::enable_if_t<is_lambda_expr<T, const injector&>{}>> {
     public:
         explicit scope(const T& object) noexcept
             : given_(object)
@@ -816,6 +813,47 @@ constexpr auto session_exit(const TName&) noexcept {
 
 namespace boost { namespace di { namespace core {
 
+struct init { };
+
+template<class = aux::type_list<>>
+class pool;
+
+template<class... TArgs>
+class pool<aux::type_list<TArgs...>> : public TArgs... {
+public:
+    template<class... Ts>
+    explicit pool(const Ts&... args) noexcept
+        : Ts(args)...
+    { }
+
+    template<class TPool>
+    pool(const init&, const TPool& p) noexcept
+        : pool(get<TArgs>(p)...)
+    { }
+
+    template<class T>
+    inline const T& get() const noexcept {
+        return static_cast<const T&>(*this);
+    }
+
+private:
+    template<class T, class TPool>
+    std::enable_if_t<std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}, T>
+    inline get(const TPool& p) const noexcept { return p.template get<T>(); }
+
+    template<class T, class TPool>
+    std::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, T>
+    inline get(const TPool&) const noexcept { return {}; }
+
+    template<class T, class TPool>
+    std::enable_if_t<!std::is_base_of<T, pool>{}, const T&>
+    inline get(const TPool&) const noexcept { return {}; }
+};
+
+}}} // namespace boost::di::core
+
+namespace boost { namespace di { namespace core {
+
 template<class TParent = aux::none_t, class TInjector = aux::none_t>
 struct any_type {
     template<class T>
@@ -1006,6 +1044,29 @@ public:
 
 }}} // namespace boost::di::providers
 
+namespace boost { namespace di {
+
+template<class... TArgs>
+inline auto make_policies(const TArgs&... args) noexcept {
+    return core::pool<aux::type_list<TArgs...>>(args...);
+}
+
+struct project_scope { };
+struct global_scope { };
+
+template<class = global_scope>
+struct injector_defaults {
+ static auto policies() noexcept {
+        return make_policies();
+ }
+
+ static auto provider() noexcept {
+        return providers::nothrow_reduce_heap_usage{};
+ }
+};
+
+}} // namespace boost::di
+
 namespace boost { namespace di { namespace core {
 
 template<class...>
@@ -1025,7 +1086,7 @@ template<
 > {
     template<class TMemory = type_traits::heap>
     decltype(auto) get(const TMemory& memory = {}) const noexcept {
-        return providers::nothrow_reduce_heap_usage{}.get<TGiven>(
+        return injector_defaults<project_scope>::provider().get<TGiven>(
             TInitialization{}
           , memory
           , injector_.template create<TArgs, T>()...
@@ -1089,47 +1150,6 @@ public:
         >;
         return resolve_impl<TDefault, dependency>(deps);
     }
-};
-
-}}} // namespace boost::di::core
-
-namespace boost { namespace di { namespace core {
-
-struct init { };
-
-template<class = aux::type_list<>>
-class pool;
-
-template<class... TArgs>
-class pool<aux::type_list<TArgs...>> : public TArgs... {
-public:
-    template<class... Ts>
-    explicit pool(const Ts&... args) noexcept
-        : Ts(args)...
-    { }
-
-    template<class TPool>
-    pool(const init&, const TPool& p) noexcept
-        : pool(get<TArgs>(p)...)
-    { }
-
-    template<class T>
-    inline const T& get() const noexcept {
-        return static_cast<const T&>(*this);
-    }
-
-private:
-    template<class T, class TPool>
-    std::enable_if_t<std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}, T>
-    inline get(const TPool& p) const noexcept { return p.template get<T>(); }
-
-    template<class T, class TPool>
-    std::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, T>
-    inline get(const TPool&) const noexcept { return {}; }
-
-    template<class T, class TPool>
-    std::enable_if_t<!std::is_base_of<T, pool>{}, const T&>
-    inline get(const TPool&) const noexcept { return {}; }
 };
 
 }}} // namespace boost::di::core
@@ -1234,7 +1254,8 @@ private:
         using dependency_t = typename std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-        //call_policies<given_t>(policies, dependency);
+        auto&& policies = injector_defaults<project_scope>::policies();
+        call_policies<given_t>(policies, dependency);
         using provider_type = provider<T, given_t, ctor_t, injector>;
         auto&& ctor_provider = provider_type{*this};
         using wrapper_t = decltype(dependency.template create<T>(ctor_provider));
