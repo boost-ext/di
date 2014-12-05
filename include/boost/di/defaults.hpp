@@ -13,13 +13,13 @@
 
 namespace boost { namespace di {
 
+struct project_scope { };
+struct global_scope { };
+
 template<class... TArgs>
 inline auto make_policies(const TArgs&... args) noexcept {
     return core::pool<aux::type_list<TArgs...>>(args...);
 }
-
-struct project_scope { };
-struct global_scope { };
 
 template<class = global_scope>
 struct injector_defaults {

@@ -212,6 +212,30 @@ test exposed_type_by_component_mix = [] {
     }
 };
 
+test exposed_many = [] {
+    constexpr auto i = 42;
+
+    di::injector<complex1, i1> injector1 = di::make_injector(
+        di::bind<i1, impl1>
+    );
+
+    auto injector = di::make_injector(
+        injector1
+      , di::bind<int>.to(i)
+    );
+
+    {
+    auto object = injector.create<std::shared_ptr<complex2>>();
+    expect(dynamic_cast<i1*>(object->c1.i1.get()));
+    expect_eq(i, object->i);
+    }
+
+    {
+    auto object = injector.create<std::shared_ptr<i1>>();
+    expect(dynamic_cast<impl1*>(object.get()));
+    }
+};
+
 test scopes_priority = [] {
     auto injector = di::make_injector(
         di::bind<int>.to(12)
