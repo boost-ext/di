@@ -14,25 +14,29 @@
 namespace boost { namespace di {
 
 struct project_scope { };
-struct global_scope { };
 
 template<class... TArgs>
 inline auto make_policies(const TArgs&... args) noexcept {
     return core::pool<aux::type_list<TArgs...>>(args...);
 }
 
-template<class = global_scope>
-struct injector_defaults {
-	static auto policies() noexcept {
-        return make_policies();
-	}
-
-	static auto provider() noexcept {
-        return providers::nothrow_reduce_heap_usage{};
-	}
-};
-
 }} // namespace boost::di
+
+#if !defined(BOOST_DI_POLICIES)
+    #define BOOST_DI_POLICIES boost_di_policies__
+#endif
+
+inline auto BOOST_DI_POLICIES(...) noexcept {
+    return boost::di::make_policies();
+}
+
+#if !defined(BOOST_DI_PROVIDER)
+    #define BOOST_DI_PROVIDER boost_di_provider__
+#endif
+
+inline auto BOOST_DI_PROVIDER(...) noexcept {
+    return boost::di::providers::nothrow_reduce_heap_usage{};
+}
 
 #endif
 

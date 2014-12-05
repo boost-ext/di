@@ -1047,25 +1047,21 @@ public:
 namespace boost { namespace di {
 
 struct project_scope { };
-struct global_scope { };
 
 template<class... TArgs>
 inline auto make_policies(const TArgs&... args) noexcept {
     return core::pool<aux::type_list<TArgs...>>(args...);
 }
 
-template<class = global_scope>
-struct injector_defaults {
- static auto policies() noexcept {
-        return make_policies();
- }
-
- static auto provider() noexcept {
-        return providers::nothrow_reduce_heap_usage{};
- }
-};
-
 }} // namespace boost::di
+
+inline auto boost_di_policies__(...) noexcept {
+    return boost::di::make_policies();
+}
+
+inline auto boost_di_provider__(...) noexcept {
+    return boost::di::providers::nothrow_reduce_heap_usage{};
+}
 
 namespace boost { namespace di { namespace core {
 
@@ -1086,7 +1082,7 @@ template<
 > {
     template<class TMemory = type_traits::heap>
     decltype(auto) get(const TMemory& memory = {}) const noexcept {
-        return injector_defaults<project_scope>::provider().get<TGiven>(
+        return boost_di_provider__(project_scope{}).get<TGiven>(
             TInitialization{}
           , memory
           , injector_.template create<TArgs, T>()...
@@ -1254,7 +1250,7 @@ private:
         using dependency_t = typename std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-        auto&& policies = injector_defaults<project_scope>::policies();
+        auto&& policies = boost_di_policies__(project_scope{});
         call_policies<given_t>(policies, dependency);
         using provider_type = provider<T, given_t, ctor_t, injector>;
         auto&& ctor_provider = provider_type{*this};

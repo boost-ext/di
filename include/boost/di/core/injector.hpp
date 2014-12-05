@@ -93,7 +93,7 @@ private:
         using dependency_t = typename std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-        auto&& policies = injector_defaults<project_scope>::policies();
+        auto&& policies = BOOST_DI_POLICIES(project_scope{});
         call_policies<given_t>(policies, dependency);
         using provider_type = provider<T, given_t, ctor_t, injector>;
         auto&& ctor_provider = provider_type{*this};

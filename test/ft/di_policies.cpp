@@ -1,32 +1,21 @@
 #include <boost/di/defaults.hpp>
 
-auto called = false;
+namespace di = boost::di;
 
-namespace boost { namespace di {
+auto called = false;
 
 struct policy {
     template<typename T>
-    void operator()(const T&) const {
+    void operator()(const T&) const noexcept {
         called = true;
     }
 };
 
-template<>
-struct injector_defaults<project_scope> {
-	static auto policies() noexcept {
-        return make_policies(policy{});
-	}
-
-	static auto provider() noexcept {
-        return providers::nothrow_reduce_heap_usage{};
-	}
-};
-
-}} // namespace boost::di
+auto BOOST_DI_POLICIES(const di::project_scope&) noexcept {
+    return di::make_policies(policy{});
+}
 
 #include <boost/di.hpp>
-
-namespace di = boost::di;
 
 test call_policies = [] {
     auto injector = di::make_injector();

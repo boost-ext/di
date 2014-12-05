@@ -29,7 +29,7 @@ template<
 > {
     template<class TMemory = type_traits::heap>
     decltype(auto) get(const TMemory& memory = {}) const noexcept {
-        return injector_defaults<project_scope>::provider().get<TGiven>(
+        return BOOST_DI_PROVIDER(project_scope{}).get<TGiven>(
             TInitialization{}
           , memory
           , injector_.template create<TArgs, T>()...
