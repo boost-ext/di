@@ -7,7 +7,7 @@
  /
  /]
 
-[section Utilities]
+[section Providers]
 
 [heading Description]
 Provides common `Boost.DI` functionality to be externally implemented.
@@ -16,7 +16,7 @@ Provides common `Boost.DI` functionality to be externally implemented.
 * __utilities_allocator__
 * __utilities_provider__
 
-[section allocator]
+[section nothrow_heap]
 
 [heading Description]
 Allocate and create objects. By default objects are allocated on heap using `new` operator.
@@ -77,56 +77,7 @@ Allocate and create objects. By default objects are allocated on heap using `new
 
 [endsect]
 
-[section provider]
-
-[heading Description]
-With normal dependency injection, each type gets exactly one instance of each of its dependent types.
-Sometimes it's required to get many different instances. Then providers become handy.
-They create a new value whenever get() method is invoked.
-
-[heading Synopsis]
-    template<typename T>
-    class provider {
-    public:
-        virtual ~provider() { }
-        virtual T get() const = 0;
-    };
-
-[table Parameters
-    [[Parameter][Requirement][Description][Returns][Throw]]
-    [[`T`][None][Type to be provided]]
-    [[`get()`][None][Returns type to be provided][`T` instance][Does not throw]]
-]
-
-[heading Header]
-    #include <__di_hpp__>
-
-[heading Example]
-    class provider : iprovider<int> {
-    public:
-        int get() const override {
-            static int i = 0;
-            return i++;
-        }
-    };
-
-    class example {
-    public:
-        example(provider<int> p) {
-            assert(p.get() != p.get());
-        }
-    };
-
-[heading More Examples]
-    ``__more_examples_provider__``
-
-[heading Tests]
-    ``[@test/ut/provider_ut.cpp]``
-
-[heading See Also]
-
-* __utilities_allocator__
-
+[section nothrow_reduce_heap_usage]
 [endsect]
 
 [endsect]

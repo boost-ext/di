@@ -72,59 +72,7 @@ Policies will be verified using `and` semantic, which means that each type to be
 * __policies_parameters_permission__
 * __policies_scopes_permission__
 
-[section circular_dependencies]
-
-[heading Description]
-Verifies constructor parameters overlapping.
-
-[heading Synopsis]
-    class circular_dependencies {
-    public:
-        template<typename T>
-        void assert_policy() const;
-    };
-
-[table Parameters
-    [[Parameter][Requirement][Description][Throw]]
-    [[`T`][__data_model__ type][Data to be verified]]
-    [[`assert_policy()`][None][Verify policy requirements][Does not throw]]
-]
-
-[heading Expression Semantics]
-    di::policies::circular_dependencies()
-
-[*Result]: static assert with `CIRCULAR_DEPENDENCIES_ARE_NOT_ALLOWED` message or clean compilation.
-
-[heading Header]
-    #include <__di_hpp__>
-
-[heading Namespace]
-    boost::di::policies
-
-[heading Examples]
-    __di_make_injector__().__di_injector_create__<int>(di::policies::circular_dependencies()); // compile ok
-
-    struct cd2;
-    struct cd1 { cd1(cd2*); };
-    struct cd2 { cd2(cd1*); };
-
-    __di_make_injector__().__di_injector_create__<cd1>(di::policies::circular_dependencies()); // compile error
-
-[note Requires [link di.overview.configuration BOOST_DI_CFG_EXAMINE_CALL_STACK] to be defined.]
-
-[heading Tests]
-    ``[@test/ut/policies/circular_dependencies_ut.cpp]``
-
-[heading See Also]
-
-* __policies__
-* __policies_creation_permission__
-* __policies_parameters_permission__
-* __policies_scopes_permission__
-
-[endsect]
-
-[section creation_permission]
+[section allow_ctor_types]
 
 [heading Description]
 Limits default constructible types not be created unless they are explicitly bound or allowed.
@@ -193,10 +141,6 @@ Limits default constructible types not be created unless they are explicitly bou
 * __policies_circular_dependencies__
 * __policies_parameters_permission__
 * __policies_scopes_permission__
-
-[endsect]
-
-[section parameters_permission]
 
 [heading Description]
 Limits allowed constructor parameters. By default, if used, all parameters are disallowed.
@@ -280,10 +224,6 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
 * __policies_circular_dependencies__
 * __policies_creation_permission__
 * __policies_scopes_permission__
-
-[endsect]
-
-[section scopes_permission]
 
 [heading Description]
 Limits allowed scopes to be used whilst binding. By default, if used, all scopes are disallowed.

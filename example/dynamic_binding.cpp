@@ -5,8 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[dynamic_binding_cpp_14
-//````C++14```
+//[dynamic_binding
 //<-
 #include <cassert>
 #include <memory>

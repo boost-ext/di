@@ -5,7 +5,7 @@
 This is not an official Boost library yet and there is no guarantee it will ever be!
 
 ### Introduction
-Boost.DI is C++03/C++11/C++14 header only library providing type safe, compile time, macro free constructor dependency injection.
+Boost.DI is C++14 header only library providing type safe, compile time, macro free constructor dependency injection.
 
 * [Documentation](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html)
 * [Todo/Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
@@ -45,9 +45,9 @@ public:
 int main() {
     // dependency injection configuration
     auto injector = di::make_injector(
-        di::bind<ilogger, logger>()
-      , di::bind<ilogic, logic>()
-      , di::bind<bool>::to(true)
+        di::bind<ilogger, logger>
+      , di::bind<ilogic, logic>
+      , di::bind<bool>.to(true)
     );
 
     // composition root
@@ -78,28 +78,30 @@ void test_hello_world_when_run_with_value_true_then_log_and_do_it() {
 ### Features
 * Type safe
 * Header only
-* Supports C++03/C++11/C++14 standards
-* Exception safe guaranty
+* Minimal runtime overhead
+* Really quick compilation times
+* Requires C++14 standard compliant compiler (STL headers: memory/new/type\_traits)
+* No Boost libraries requirements (optional requirement to support Boost Smart Pointers)
+* Easily extendible (custom scopes/providers including allocation strategy)
+* Exception safety strong guaranty
 * Thread safe guaranty
 * Compile time creation guaranty - no exceptions - if application compiles all dependencies will be be created accurately
 * Macro free - by default no need to specify constructor traits or register anything (less intrusive)
 * Scopes deduction - scopes are deduced based on type semantic
 * Automatic conversion between std/boost smart pointers
 * Dependencies life time management (scopes: deduce, external, unique, shared, session + custom scopes)
-* Compile time policies - ex. to detect circular dependencies or limit supported types only to specified
+* Compile time policies - ex. to limit supported types only to specified
 * Supports copies, references, pointers, boost and std smart pointers / rvalue references(C++11)
 * Supports annotations (di::named\<int, my\_int\>)
 * Runtime visitor throughout created objects (useful for generation dependency diagrams)
 
 ### Tested compilers (100% test code coverage)
 * Linux (x86/x86-64)
-   * Clang 3.2/3.3/3.4/3.5/3.6+ (clean with Clang Static Analyzer and Valgrind)
-   * GCC 4.7/4.8/4.9+ (clean with Valgrind)
-   * Intel C++ 14.0+ (clean with Valgrind)
+   * Clang 3.4/3.5/3.6+ (clean with Clang Static Analyzer and Valgrind)
+   * GCC 5.0+ (clean with Valgrind)
 
 * Windows (x86/x86-64)
-   * MinGW 4.7/4.8/4.9+
-   * Visual Studio 2013+ (clean with DrMemory)
+   * MinGW 5.0+
 
 * Darwin/Mac OS (x86-64)
    * Clang 503+

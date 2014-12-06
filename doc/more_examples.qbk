@@ -17,64 +17,38 @@
 * __more_examples_modules_hpp_cpp__
 
 [h6 Named Parameters]
-[import ../example/cpp_11/named.cpp]
-[named_cpp_11]
+[import ../example/named.cpp]
+[named]
 [table
-    [[Full code example: [@example/cpp_11/named.cpp]]]
+    [[Full code example: [@example/named.cpp]]]
 ]
 
 [h6 Provider]
-[import ../example/cpp_11/provider.cpp]
-[provider_cpp_11]
+[import ../example/provider.cpp]
+[provider]
 [table
-    [[Full code example: [@example/cpp_11/provider.cpp]]]
+    [[Full code example: [@example/provider.cpp]]]
 ]
 
 [h6 Externals]
-[import ../example/cpp_11/externals.cpp]
-[externals_cpp_11]
+[import ../example/externals.cpp]
+[externals]
 [table
-    [[Full code example: [@example/cpp_11/externals.cpp]]]
+    [[Full code example: [@example/externals.cpp]]]
 ]
 
 [h6 Multiple Interfaces]
-[import ../example/cpp_11/multiple_interfaces.cpp]
-[multiple_interfaces_cpp_11]
+[import ../example/multiple_interfaces.cpp]
+[multiple_interfaces]
 [table
-    [[Full code example: [@example/cpp_11/multiple_interfaces.cpp]]]
+    [[Full code example: [@example/multiple_interfaces.cpp]]]
 ]
 
 [h6 Text Visitor]
-[import ../example/cpp_11/text_visitor.cpp]
-[text_visitor_cpp_11]
+[import ../example/text_visitor.cpp]
+[text_visitor]
 [table
-    [[Full code example: [@example/cpp_11/text_visitor.cpp]]]
-]
-
-[h6:modules_hpp_cpp Modules - hpp/cpp]
-[import ../example/cpp_11/modules/app.hpp]
-[app_hpp_cpp_11]
-
-[import ../example/cpp_11/modules/app.cpp]
-[app_cpp_cpp_11]
-
-[import ../example/cpp_11/modules/module1.hpp]
-[module1_hpp_cpp_11]
-
-[import ../example/cpp_11/modules/module1.cpp]
-[module1_cpp_cpp_11]
-
-[import ../example/cpp_11/modules/module2.hpp]
-[module2_hpp_cpp_11]
-
-[import ../example/cpp_11/modules/module2.cpp]
-[module2_cpp_cpp_11]
-
-[import ../example/cpp_11/modules/main.cpp]
-[main_cpp_cpp_11]
-
-[table
-    [[Full code example: [@example/cpp_11/modules/data.hpp] | [@example/cpp_11/modules/app.hpp] | [@example/cpp_11/modules/app.cpp] | [@example/cpp_11/modules/module1.hpp] | [@example/cpp_11/modules/module1.cpp] | [@example/cpp_11/modules/module2.hpp] | [@example/cpp_11/modules/module2.cpp] | [@example/cpp_11/modules/main.cpp]]]
+    [[Full code example: [@example/text_visitor.cpp]]]
 ]
 
 [endsect]

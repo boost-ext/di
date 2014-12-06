@@ -5,8 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[uml_visitor_cpp_11
-//````C++11```
+//[uml_visitor
 //<-
 #include <iostream>
 #include <sstream>

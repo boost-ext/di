@@ -5,8 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[xml_injector_cpp_14
-//````C++14```
+//[xml_injector
 //<-
 #include <cassert>
 #include <boost/units/detail/utility.hpp>

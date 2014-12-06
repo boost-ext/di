@@ -260,6 +260,9 @@ Default scope which will be converted to one of the scopes __scopes_external__ /
 
 [endsect]
 
+[section exposed]
+[endsect]
+
 [section external]
 
 [heading Description]
@@ -515,6 +518,9 @@ Scope representing shared value which will be shared between all instances.
 * __scopes_unique__
 * __scopes_session__
 
+[endsect]
+
+[section singleton]
 [endsect]
 
 [section session]

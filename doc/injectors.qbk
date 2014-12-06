@@ -45,8 +45,6 @@ Main component responsible for configuration is `injector`.
 * __injectors_injector__
 * __injectors_make_injector__
 
-[section injector]
-
 [heading Description]
 Injector is a component used for creating dependencies configuration using [link di.concepts.bindings bindings].
 
@@ -167,8 +165,6 @@ Injector is a component used for creating dependencies configuration using [link
 * __modules__
 * __policies__
 * __utilities_allocator__
-
-[endsect]
 
 [section make_injector]
 

@@ -5,8 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[custom_allocator_cpp_11
-//````C++11```
+//[custom_allocator
 //<-
 #include <cassert>
 #include <memory>
@@ -23,8 +22,7 @@ struct implementation : interface { };
 
 /*<define `example` class as usual>*/
 struct example {
-    explicit example(long l, std::unique_ptr<interface> up)
-    {
+    explicit example(long l, std::unique_ptr<interface> up) {
         assert(l == 42l);
         assert(dynamic_cast<implementation*>(up.get()));
     }

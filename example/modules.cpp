@@ -5,8 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[modules_cpp_14
-//````C++14```
+//[modules
 //<-
 #include <memory>
 #include <cassert>

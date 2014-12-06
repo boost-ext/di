@@ -13,7 +13,7 @@ For the purposes of this tutorial we are going to implement simple application w
 "hello_world" using our logger implementation from [link di.motivation Motivation] when first command line argument is not equal 0.
 
 [table
-    [[Logger/Fake logger implementation: [@example/cpp_14/tutorial/ilogger.hpp] | [@example/cpp_14/tutorial/logger.hpp]]]
+    [[Logger/Fake logger implementation: [@example/tutorial/ilogger.hpp] | [@example/tutorial/logger.hpp]]]
 ]
 
 Having logger in place let's write basic implementation. Let's assume we have test written already, so let's
@@ -70,7 +70,7 @@ Thats all, our application should compile and don't print anything.
 `value` should be `false` and `text` should be an `empty string`.
 
 [table
-    [[Full code example: [@example/cpp_14/tutorial/tutorial1.cpp]]]
+    [[Full code example: [@example/tutorial/tutorial1.cpp]]]
 ]
 
 So far everything seems to be really easy, so the next step will be
@@ -90,7 +90,7 @@ auto injector = __di_make_injector__(
 );
 ```
 [table
-    [[Full code example: [@example/cpp_14/tutorial/tutorial2.cpp]]]
+    [[Full code example: [@example/tutorial/tutorial2.cpp]]]
 ]
 
 So, right now we have [link di.concepts.injectors.injector injector] configured and the output of our example application
@@ -109,7 +109,7 @@ int main(int argc, char** argv) {
 }
 ```
 [table
-    [[Full code example: [@example/cpp_14/tutorial/tutorial3.cpp]]]
+    [[Full code example: [@example/tutorial/tutorial3.cpp]]]
 ]
 
 Great! Seems like our example application is working the way was required.
@@ -117,10 +117,10 @@ Great! Seems like our example application is working the way was required.
 But well, we aren't happy with that example, are we? We haven't used our `logger` implementation yet and because of that tests are hard to write.
 So, let's try again with our `logger` instead.
 
-[import ../example/cpp_14/tutorial/ilogger.hpp]
+[import ../example/tutorial/ilogger.hpp]
 [ilogger]
 
-[import ../example/cpp_14/tutorial/logger.hpp]
+[import ../example/tutorial/logger.hpp]
 [logger]
 
 Having a `logger` implementation, we just have to add it to our example application:
@@ -172,7 +172,7 @@ will be actually instantiated by `logger`. There is nothing easier, we just have
     injector.__di_injector_create__<std::unique_ptr<app>>()->start(); // unique_ptr is not copyable
 ```
 [table
-    [[Full code example: [@example/cpp_14/tutorial/tutorial4.cpp]]]
+    [[Full code example: [@example/tutorial/tutorial4.cpp]]]
 ]
 
 Yay, everything is working again. But oh, we wanted to use mock framework for tests, but we can't to do it,
@@ -231,7 +231,7 @@ int main(int argc, char** argv) {
 ```
 
 [table
-    [[Full code example: [@example/cpp_14/tutorial/tutorial5.cpp]]]
+    [[Full code example: [@example/tutorial/tutorial5.cpp]]]
 ]
 
 But in our company we have our `string` implementation, but we still want to support `std::string` as well, how to achieve that?
@@ -314,7 +314,7 @@ Right now, if we want to bind `value1` and `value2` we just need to use __di_bin
 With such configuration `value1` will be set to first `int` command line argument and `value2` to `0`.
 
 [table
-    [[Full code example: [@example/cpp_14/tutorial/tutorial6.cpp]]]
+    [[Full code example: [@example/tutorial/tutorial6.cpp]]]
 ]
 
 That's pretty much it. Hope this tutorial helped you a bit with understanding
@@ -342,7 +342,7 @@ will generate requires mocks for us! So, we don't have to change the implementat
 ```
 
 [table
-    [[Full code example: [@example/cpp_14/tutorial/tutorial_ut.cpp]]]
+    [[Full code example: [@example/tutorial/tutorial_ut.cpp]]]
 ]
 
 [heading See Also]

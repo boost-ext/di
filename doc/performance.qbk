@@ -7,7 +7,7 @@
  /
  /]
 
-[h6 Performance]
+[section Performance]
 
 [h6 Compilation time]
 
@@ -52,4 +52,6 @@ Runtime execution speed was one of the concerns taken into account whilst implem
 Compile time approach was chosen not only, because of the safety (non exception driven) reasons,
 but also because of the runtime performance.
 `Boost.DI` library obviously introduces overhead on creating objects, but the effort was taken to make the overhead as small as possible.
+
+[endsect]
 

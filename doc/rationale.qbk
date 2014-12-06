@@ -141,7 +141,5 @@ Approach presented above although meet all the requirements cause tricky issues 
     [[Tests: [@test/ut/core/creator_ut.cpp] | [@test/ut/injector_ut.cpp] | [@test/mt/core/module_mt.cpp] | [@test/mt/injector_mt.cpp] | [@test/mt/make_injector_mt.cpp]]]
 ]
 
-[include performance.qbk]
-
 [endsect]
 
