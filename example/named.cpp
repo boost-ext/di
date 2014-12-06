@@ -9,19 +9,18 @@
 //````C++11```
 //<-
 #include <cassert>
-#include <boost/mpl/string.hpp>
 //->
 #include <boost/di.hpp>
 
-//<-
-namespace mpl = boost::mpl;
-//->
 namespace di = boost::di;
+
+struct int_1 { };
+struct int_2 { };
 
 class named {
 public:
     /*<<Constructor with named parameters of the same `int` type>>*/
-    named(di::named<int, mpl::string<'1'> > i1, di::named<int, mpl::string<'2'> > i2)
+    named(di::named<int, int_1> i1, di::named<int, int_2> i2)
         : i1(i1), i2(i2)
     {
         assert(i1 == 42);
@@ -36,8 +35,8 @@ private:
 int main() {
     /*<<make injector and bind named parameters>>*/
     auto injector = di::make_injector(
-        di::bind_int<42>::named<mpl::string<'1'> >()
-      , di::bind_int<87>::named<mpl::string<'2'> >()
+        di::bind<int>.named(int_1{}).to(42)
+      , di::bind<int>.named(int_2{}).to(87)
     );
 
     /*<<create `named`>>*/

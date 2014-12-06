@@ -31,14 +31,14 @@ struct example {
 int main() {
     /*<<create injector with `interface` binding to `implementation1`>>*/
     auto config = di::make_injector(
-        di::bind<interface, implementation1>()
+        di::bind<interface, implementation1>
     );
 
     /*<<create injector with external `interface` binding to `implementation2`>>*/
     auto injector = di::make_injector(
         config
-      , di::bind<int>::to(42)
-      , di::bind<interface>::to(std::make_shared<implementation2>()) // external has priority
+      , di::bind<int>.to(42)
+      , di::bind<interface>.to(std::make_shared<implementation2>()) // external has priority
     );
 
     /*<<create `example`>>*/

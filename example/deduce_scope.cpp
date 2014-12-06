@@ -17,7 +17,7 @@
 namespace di = boost::di;
 
 //<-
-struct interface { virtual ~interface() { } virtual void dummy() = 0; };
+struct interface { virtual ~interface() = default; virtual void dummy() = 0; };
 struct implementation : interface { void dummy() override { } };
 //->
 
@@ -55,21 +55,11 @@ int main() {
     {
         /*<<create injector with deduced `interface`>>*/
         auto injector = di::make_injector(
-            di::deduce<implementation>()
+            di::bind<interface, implementation> // => di::bind<interface, implementation>.in(di::deduce)
         );
 
         /*<<create `example`>>*/
         injector.create<example>();
-    }
-
-    {
-        /*<<create injector with deduced `interface`>>*/
-        using injector = di::injector<
-            implementation
-        >;
-
-        /*<<create `example`>>*/
-        injector().create<example>();
     }
 
     return 0;

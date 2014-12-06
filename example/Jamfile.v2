@@ -28,6 +28,15 @@ rule run-example ( std : src + : cxxflags * : property * ) {
 
 test-suite example :
     [ run-example c++1y : xml_injection.cpp ]
+    [ run-example c++1y : externals.cpp ]
+    [ run-example c++1y : multiple_interfaces.cpp ]
+    [ run-example c++1y : named.cpp ]
+    [ run-example c++1y : provider.cpp ]
+    [ run-example c++1y : hello_world.cpp ]
+    [ run-example c++1y : modules.cpp ]
+    [ run-example c++1y : constructor_injection.cpp ]
+    [ run-example c++1y : constructor_signature.cpp ]
+    #[ run-example c++1y : deduce_scope.cpp : -DBOOST_DI_CFG_CONV_TO_BOOST_SMART_PTR ]
 ;
 
 test-suite tutorial :

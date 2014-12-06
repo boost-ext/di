@@ -68,9 +68,9 @@ public:
 int main() {
     /*<<make injector configuration>>*/
     auto injector = di::make_injector(
-        di::bind<ilogger, logger>() // or di::deduce<logger>()
-      , di::bind<ilogic, logic>()   // or di::deduce<logic>()
-      , di::bind<bool>::to(true)    // or di::bind_bool<true>()
+        di::bind<ilogger, logger>
+      , di::bind<ilogic, logic>
+      , di::bind<bool>.to(true)
     );
 
     /*<<create `hello_world` and run [pre

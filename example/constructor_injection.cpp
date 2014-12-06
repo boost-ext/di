@@ -73,7 +73,7 @@ struct ctor_traits<ctor_di_traits> {
 int main() {
     /*<<make injector>>*/
     auto injector = di::make_injector(
-        di::bind_int<42>::named<name>()
+        di::bind<int>.named(name{}).to(42)
     );
 
     /*<<create dependencies>>*/

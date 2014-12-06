@@ -15,8 +15,8 @@
 
 namespace di = boost::di;
 //<-
-struct interface1 { virtual ~interface1() { } };
-struct interface2 { virtual ~interface2() { } };
+struct interface1 { virtual ~interface1() = default; };
+struct interface2 { virtual ~interface2() = default; };
 struct implementation1 : interface1 { };
 struct implementation2 : interface2 { };
 //->
@@ -24,7 +24,7 @@ struct implementation2 : interface2 { };
 /*<define `example` class as usual>*/
 class example {
 public:
-    example(std::unique_ptr<interface1> up, std::shared_ptr<interface2> sp,  int i)
+    example(std::unique_ptr<interface1> up, std::shared_ptr<interface2> sp, int i)
     {
         assert(dynamic_cast<implementation1*>(up.get()));
         assert(dynamic_cast<implementation2*>(sp.get()));
@@ -60,9 +60,9 @@ public:
 int main() {
     /*<<make injector>>*/
     auto injector = di::make_injector(
-        di::bind<interface1, implementation1>() // or di::deduce<implementation1>()
-      , di::bind<interface2, implementation2>() // or di::deduce<implementation2>()
-      , di::bind_int<42>()
+        di::bind<interface1, implementation1>
+      , di::bind<interface2, implementation2>
+      , di::bind<int>.to(42)
     );
 
     /*<create different examples using the same injector configuration>*/

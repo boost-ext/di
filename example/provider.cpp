@@ -15,9 +15,16 @@
 
 namespace di = boost::di;
 
+template<typename T>
+class provider {
+public:
+    virtual ~provider() = default;
+    virtual T get() const = 0;
+};
+
 /*<<`transaction` provider>>*/
-struct transaction : di::provider<int> {
-    /*<<implementation of `di::provider` requirement >>*/
+struct transaction : provider<int> {
+    /*<<implementation of `provider` requirement >>*/
     virtual int get() const {
         return next();
     }
@@ -30,7 +37,7 @@ struct transaction : di::provider<int> {
 
 /*<<example `usage ` class>>*/
 struct usage {
-    usage(int i, std::auto_ptr<di::provider<int> > p) {
+    usage(int i, std::unique_ptr<provider<int>> p) {
         assert(i == 0);
         assert(p->get() == 1);
         assert(p->get() == 2);
@@ -39,7 +46,9 @@ struct usage {
 
 int main() {
     /*<<define injector>>*/
-    di::injector<transaction> injector;
+    auto injector = di::make_injector(
+        di::bind<provider<int>, transaction>
+    );
 
     /*<<create `usage`>>*/
     injector.create<usage>();

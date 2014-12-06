@@ -13,9 +13,6 @@
 //->
 #include <boost/di.hpp>
 
-//<-
-namespace mpl = boost::mpl;
-//->
 namespace di  = boost::di;
 
 //<-
@@ -34,28 +31,12 @@ public:
 };
 
 int main() {
-    {
-        /*<<create injector with binding `implementation` to deduced interface>>*/
-        di::injector<implementation>().create<multiple_interfaces>();
-    }
+    /*<<create injector with binding `implementation` to `interface1` and `interface2` using `di::any_of`>>*/
+    auto injector = di::make_injector(
+        di::bind<di::any_of<interface1, interface2>, implementation>
+    );
 
-    {
-        /*<<create injector with binding `implementation` to deduced interface using `di::deduce`>>*/
-        auto injector = di::make_injector(
-            di::deduce<implementation>()
-        );
-
-        injector.create<multiple_interfaces>();
-    }
-
-    {
-        /*<<create injector with binding `implementation` to `interface1` and `interface2` using `di::any_of`>>*/
-        auto injector = di::make_injector(
-            di::bind<di::any_of<interface1, interface2>, implementation>()
-        );
-
-        injector.create<multiple_interfaces>();
-    }
+    injector.create<multiple_interfaces>();
 
     return 0;
 }

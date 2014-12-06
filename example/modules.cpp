@@ -9,6 +9,7 @@
 //````C++14```
 //<-
 #include <memory>
+#include <cassert>
 #include <utility>
 //->
 
@@ -17,7 +18,7 @@
 namespace di = boost::di;
 
 //<-
-struct interface { virtual ~interface() { } };
+struct interface { virtual ~interface() = default; };
 struct implementation : interface { };
 //->
 
@@ -33,7 +34,7 @@ public:
     /*<<module configuration>>*/
     auto configure() const {
         return di::make_injector(
-            di::bind<interface, implementation>()
+            di::bind<interface, implementation>
         );
     }
 };
@@ -47,7 +48,7 @@ public:
     /*<<module configuration>>*/
     auto configure() const {
         return di::make_injector(
-            di::bind<int>::to(i_)
+            di::bind<int>.to(i_)
         );
     }
 
@@ -59,7 +60,7 @@ int main() {
     const int i = 42;
 
     /*<<create injector and pass `module1`, `module2`>>*/
-    auto injector = di::make_injector(module1(), module2(i));
+    auto injector = di::make_injector(module1{}, module2{i});
 
     /*<<create `app`>>*/
     injector.create<app>();
