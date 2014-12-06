@@ -7,76 +7,93 @@
 #ifndef BOOS_DI_POLICIES_ALLOW_TYPES_HPP
 #define BOOS_DI_POLICIES_ALLOW_TYPES_HPP
 
-namespace boost { namespace di { inline namespace policies {
+namespace boost { namespace di { namespace policies {
 
 struct _ { };
 struct type_op {};
 
-template<class T, class>
+template<class T, class = void>
 struct apply_impl {
-	using type = T;
+    template<class TData>
+    static auto apply(const TData&) noexcept {
+        return T{};
+    }
+};
+
+template<template<class...> class T, class... Ts>
+struct apply_impl<T<Ts...>, std::enable_if_t<!std::is_base_of<type_op, T<Ts...>>{}>> {
+    template<class TOp, class>
+    struct apply_placeholder_impl {
+        using type = TOp;
+    };
+
+    template<class TOp>
+    struct apply_placeholder_impl<_, TOp> {
+        using type = TOp;
+    };
+
+    template<template<class...> class TExpr, class TOp, class... TArgs>
+    struct apply_placeholder {
+        using type = TExpr<typename apply_placeholder_impl<TArgs, TOp>::type...>;
+    };
+
+    template<class TData>
+    static auto apply(const TData& data) noexcept {
+        using type = typename TData::type;
+        return typename apply_placeholder<T, type, Ts...>::type{};
+    }
 };
 
 template<class T>
-struct apply_impl<_, T> {
-	using type = T;
+struct apply_impl<T, std::enable_if_t<std::is_base_of<type_op, T>{}>> {
+    template<class TData>
+    static auto apply(const TData& data) noexcept {
+        return T::apply(data);
+    }
 };
-
-template<template<class...> class X, class T, class... Ts>
-struct apply_ {
-	using type = X<typename apply_impl<Ts, T>::type...>;
-};
-
-template<class, class T, class = void>
-struct apply {
-    using type = T;
-};
-
-template<class X, template<class...> class T, class... Ts>
-struct apply<X, T<Ts...>, std::enable_if_t<!std::is_base_of<type_op, T<Ts...>>{}>> {
-	using type = typename apply_<T, X, Ts...>::type;
-};
-
-template<class X, class T>
-struct apply<X, T, std::enable_if_t<std::is_base_of<type_op, T>{}>> {
-	using type = decltype(T::apply(X{}));
-};
-
-template<class T, class X>
-using apply_t = typename apply<T, X>::type;
 
 template<bool...>
 struct bool_seq { };
 
-template<typename X>
+template<class T>
 struct not_ : type_op {
-	template<class T>
-	static auto apply(const T&) noexcept {
-		return std::integral_constant<bool, !apply_t<T, X>{}>{};
-	}
+	template<class TData>
+    static auto apply(const TData& data) noexcept {
+        return std::integral_constant<bool
+          , !decltype(apply_impl<T>::apply(data)){}
+        >{};
+    }
 };
 
-template<typename... Ts>
+template<class... Ts>
 struct and_ : type_op {
-	template<class T>
-	static auto apply(const T&) noexcept {
-		return std::is_same<bool_seq<apply_t<T, Ts>{}...>, bool_seq<(apply_t<T, Ts>{}, true)...>>{};
-	}
+	template<class TData>
+    static auto apply(const TData& data) noexcept {
+        return std::is_same<
+            bool_seq<decltype(apply_impl<Ts>::apply(data)){}...>
+          , bool_seq<(decltype(apply_impl<Ts>::apply(data)){}, true)...>
+        >{};
+    }
 };
 
-template<typename... Ts>
+template<class... Ts>
 struct or_ : type_op {
-	template<class T>
-	static auto apply(const T&) noexcept {
-		return std::integral_constant<bool, !std::is_same<bool_seq<apply_t<T, Ts>{}...>, bool_seq<(apply_t<T, Ts>{}, false)...>>{}>{};
-	}
+	template<class TData>
+    static auto apply(const TData& data) noexcept {
+        return std::integral_constant<bool
+          , !std::is_same<
+                bool_seq<decltype(apply_impl<Ts>::apply(data)){}...>
+              , bool_seq<(decltype(apply_impl<Ts>::apply(data)){}, false)...>
+            >{}
+        >{};
+    }
 };
 
-template<class X>
+template<class T>
 struct always : type_op {
-	template<class T>
-	static auto apply(const T&) noexcept {
-		return apply_t<T, X>{};
+	template<class TData>
+	static auto apply(const TData& data) noexcept {
+		return apply_impl<T>::apply(data);
 	}
 };
 
@@ -86,7 +103,9 @@ struct is_bound : type_op {
         struct not_resolved { };
         using type = typename TData::type;
         auto dep = data.template resolve<type, not_resolved>();
-        return std::is_same<decltype(dep), not_resolved>{};
+        return std::integral_constant<bool
+            , !std::is_same<decltype(dep), not_resolved>{}
+        >{};
     }
 };
 
@@ -94,27 +113,26 @@ namespace operators {
 
 template<class X, class Y>
 inline auto operator||(const X&, const Y&) {
-	return or_<X, Y>{};
+    return or_<X, Y>{};
 }
 
 template<class X, class Y>
 inline auto operator&&(const X&, const Y&) {
-	return and_<X, Y>{};
+    return and_<X, Y>{};
 }
 
 template<class X>
 inline auto operator!(const X&) {
-	return not_<X>{};
+    return not_<X>{};
 }
 
 } // namespace operators
 
-template<typename T>
+template<class T>
 struct allow_ctor_types_impl {
     template<class TData>
     void operator()(const TData& data) const noexcept {
-        using type = typename TData::type;
-		static_assert(decltype(T::apply(type{})){}, "Type T is not allowed");
+		static_assert(decltype(T::apply(data)){}, "Type T is not allowed");
     }
 };
 
