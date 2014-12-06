@@ -28,8 +28,8 @@ private:
 
 int main() {
     auto injector = di::make_injector(
-        di::bind_int<1>() // static value
-      , di::bind<std::string>::to("hello world") // dynamic value
+        di::bind<int, std::integral_constant<int, 1>> // static value
+      , di::bind<std::string>.to("hello world") // dynamic value
     );
 
     injector.create<app>().run();

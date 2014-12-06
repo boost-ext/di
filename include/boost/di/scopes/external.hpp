@@ -59,7 +59,7 @@ public:
         }
 
     private:
-        wrappers::unique<T> object_;
+        wrappers::unique<TExpected> object_;
     };
 
     template<class TExpected, class T>

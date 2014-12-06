@@ -34,9 +34,9 @@ private:
 
 int main(int argc, char** argv) {
     auto injector = di::make_injector(
-        di::bind<ilogger, logger>()
-      , di::bind<int>::to(argc > 1 ? std::atoi(argv[1]) : 0)
-      , di::bind<std::string>::to("hello world")
+        di::bind<ilogger, logger>
+      , di::bind<int>.to(argc > 1 ? std::atoi(argv[1]) : 0)
+      , di::bind<std::string>.to("hello world")
     );
 
     injector.create<std::unique_ptr<app>>()->run();

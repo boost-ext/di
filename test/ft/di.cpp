@@ -505,6 +505,14 @@ test named_polymorphic = [] {
 	expect(dynamic_cast<impl1*>(object.sp.get()));
 };
 
+test bind_chars_to_string = [] {
+    auto injector = di::make_injector(
+        di::bind<std::string>.to("str")
+    );
+
+    expect_eq("str", injector.create<std::string>());
+};
+
 #if 0
 test bind_not_compatibile_types = [] {
     di::make_injector(di::bind<int, impl1>).create<int>();

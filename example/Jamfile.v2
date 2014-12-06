@@ -31,11 +31,11 @@ test-suite example :
 ;
 
 test-suite tutorial :
-    #[ run-example c++1y : cpp_14/tutorial/tutorial1.cpp : tutorial1_cpp_14 : -Icpp_14/tutorial ]
-    #[ run-example c++1y : cpp_14/tutorial/tutorial2.cpp : tutorial2_cpp_14 : -Icpp_14/tutorial ]
-    #[ run-example c++1y : cpp_14/tutorial/tutorial3.cpp : tutorial3_cpp_14 : -Icpp_14/tutorial ]
-    #[ run-example c++1y : cpp_14/tutorial/tutorial4.cpp : tutorial4_cpp_14 : -Icpp_14/tutorial ]
-    #[ run-example c++1y : cpp_14/tutorial/tutorial5.cpp : tutorial5_cpp_14 : -Icpp_14/tutorial ]
-    #[ run-example c++1y : cpp_14/tutorial/tutorial6.cpp : tutorial6_cpp_14 : -Icpp_14/tutorial ]
+    [ run-example c++1y : tutorial/tutorial1.cpp : -Itutorial ]
+    [ run-example c++1y : tutorial/tutorial2.cpp : -Itutorial ]
+    [ run-example c++1y : tutorial/tutorial3.cpp : -Itutorial ]
+    [ run-example c++1y : tutorial/tutorial4.cpp : -Itutorial ]
+    [ run-example c++1y : tutorial/tutorial5.cpp : -Itutorial ]
+    [ run-example c++1y : tutorial/tutorial6.cpp : -Itutorial ]
 ;
 

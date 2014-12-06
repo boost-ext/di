@@ -15,8 +15,7 @@
 
 namespace di = boost::di;
 
-class app
-{
+class app {
 public:
     app(int value, const std::string& text, std::shared_ptr<ilogger> logger)
         : value_(value), text_(text), logger_(logger)
@@ -34,8 +33,7 @@ private:
     std::shared_ptr<ilogger> logger_;
 };
 
-class module
-{
+class module {
 public:
     explicit module(int i)
         : i_(i)
@@ -43,9 +41,9 @@ public:
 
     auto configure() const {
         return di::make_injector(
-            di::deduce<logger>() // we can deduce the interface as well!
-          , di::bind<int>::to(i_)
-          , di::bind<std::string>::to("hello world")
+            di::bind<ilogger, logger>
+          , di::bind<int>.to(i_)
+          , di::bind<std::string>.to("hello world")
         );
     }
 
