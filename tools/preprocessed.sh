@@ -6,37 +6,6 @@
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
 
-[ -z "$CXX" ] && CXX="g++"
-tmp_dir=`mktemp -d`
-
-dump_file() {
-    args=${@:4}
-    tmp=`mktemp -d`
-
-    cat $1 | grep "#include" | while read include; do
-        if [[ "$include" =~ "boost/di/aux_" ]]; then
-            echo -e "$include" >> $tmp_dir/includes.hpp
-        elif ! [[ "$include" =~ "boost/di" ]]; then
-            echo -e "$include" >> $tmp_dir/includes.hpp
-        fi
-
-        file=`echo $include | sed "s/[^<^\"]*[\"<]\([^>\"]*\)[\">].*/\1/"`
-        mkdir -p $tmp/`dirname $file`
-        touch $tmp/$file
-    done
-
-    file="boost/config.hpp"
-    mkdir -p $tmp/`dirname $file`
-    touch $tmp/$file
-
-    mkdir -p $tmp/`dirname $1`
-    cp $1 $tmp/$1
-
-    $CXX -nostdinc -CC -E $1 -I$tmp $args | grep -v "^#" | sed '/\/\*.*\*\// d; /\/\*/,/\*\// d' | grep -v "^/" | cat -s
-
-    rm -rf $tmp
-}
-
 guard_begin() {
     echo "//"
     echo "// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)"
@@ -47,8 +16,6 @@ guard_begin() {
 
     echo "#ifndef BOOST_DI_HPP"
     echo "#define BOOST_DI_HPP"
-    echo
-    echo "#include \"boost/di/inject.hpp\""
     echo
     echo "#if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)"
     echo
@@ -61,7 +28,8 @@ guard_begin() {
     echo "// defaults"
     echo "#include \"boost/di/defaults.hpp"\"
     echo
-    echo "// injectors"
+    echo "// injections"
+    echo "#include \"boost/di/inject.hpp\""
     echo "#include \"boost/di/injector.hpp\""
     echo "#include \"boost/di/make_injector.hpp\""
     echo
@@ -86,68 +54,29 @@ guard_end() {
     echo
 }
 
-includes() {
-    cat $tmp_dir/includes.hpp | sort -u -r
-}
-
-genereate_files() {
+genereate_pph() {
+    echo $1 >> $tmp_dir/pph.hpp
     cat $1 | grep "#include" | grep "boost\/di" | while read include; do
         file=`echo $include | sed "s/[^<^\"]*[\"<]\([^>\"]*\)[\">].*/\1/"`
-        if [[ "$file" =~ "di/aux_" ]] ||
-           [[ "$file" =~ "inject.hpp" ]] ||
-           [[ "$file" =~ "di.hpp" ]]; then
-            continue;
-        fi
 
-        genereate_files $file
-        echo $file
+        if [[ "`cat $tmp_dir/pph.hpp | grep $file`" == "" ]]; then
+            genereate_pph $file
+            cat $file | egrep "^#include" | grep -v  "boost\/di" >> $tmp_dir/includes.hpp
+            tail -n +10 $file | head -n -3 | egrep -v "^#include"
+        fi
     done
 }
 
-generate_preprocessed() {
-    args=${@:4}
-    name="boost/di.hpp"
-
-    rm -f $tmp_dir/includes.hpp $tmp_dir/dump.hpp
-
-    guard_begin $name > $name
-
-    echo -n .
-    for file in `cat $tmp_dir/files.hpp`; do
-        if [[ "$file" =~ "di/aux_" ]] ||
-           [[ "$file" =~ "inject.hpp" ]] ||
-           [[ "$file" =~ "di.hpp" ]]; then
-            continue;
-        fi
-
-        echo -n .
-        dump_file $file $3 $2 $args >> $tmp_dir/dump.hpp
-    done
-    includes >> $name
-    cat $tmp_dir/dump.hpp >> $name
-
-    guard_end >> $name
-}
-
-generate_pph() {
-    generate_preprocessed "boost" "" "$1" ${@:2}
-    echo "done -> $name"
-}
-
-generate_cpp_11() {
-    generate_pph `readlink -f $PWD`/boost/di/aux_/config.hpp -DBOOST_DI_INJECTOR=BOOST_DI_INJECTOR -DBOOST_DI_CFG_CTOR_LIMIT_SIZE=BOOST_DI_CFG_CTOR_LIMIT_SIZE
-}
-
-cleanup() {
-    rm -rf $tmp_dir
-}
-
+[ -z "$CXX" ] && CXX="g++"
+tmp_dir=`mktemp -d`
 dir=`readlink -f \`dirname $0\``
 cd $dir/../include
+guard_begin > $tmp_dir/di.hpp
+genereate_pph "boost/di.hpp" >> $tmp_dir/tmp.hpp
+cat $tmp_dir/includes.hpp | sort -u >> $tmp_dir/di.hpp
+cat $tmp_dir/tmp.hpp >> $tmp_dir/di.hpp
+guard_end >> $tmp_dir/di.hpp
+cp $tmp_dir/di.hpp  $dir/../include/boost/di.hpp
 
-genereate_files "boost/di.hpp" | cat -n | sort -uk2 | sort -nk1 | cut -f2- > $tmp_dir/files.hpp
-
-generate_cpp_11
-
-cleanup
+rm -rf $tmp_dir
 

@@ -26,9 +26,5 @@
         type(__VA_ARGS__)
 #endif
 
-#if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)
-    #include "boost/di/type_traits/ctor_traits.hpp"
-#endif
-
 #endif
 

@@ -7,9 +7,6 @@
 #ifndef BOOST_DI_AUX_UTILITY_HPP
 #define BOOST_DI_AUX_UTILITY_HPP
 
-#include <utility>
-#include <type_traits>
-
 #define BOOST_DI_CAT_IMPL(a, b) a ## b
 #define BOOST_DI_CAT(a, b) BOOST_DI_CAT_IMPL(a, b)
 #define BOOST_DI_CALL(m, ...) m(__VA_ARGS__)

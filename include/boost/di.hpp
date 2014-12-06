@@ -7,8 +7,6 @@
 #ifndef BOOST_DI_HPP
 #define BOOST_DI_HPP
 
-#include "boost/di/inject.hpp"
-
 #if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)
 
 // annotations
@@ -20,7 +18,8 @@
 // defaults
 #include "boost/di/defaults.hpp"
 
-// injectors
+// injections
+#include "boost/di/inject.hpp"
 #include "boost/di/injector.hpp"
 #include "boost/di/make_injector.hpp"
 
@@ -35,12 +34,28 @@
 
 #else
 
-#include <string>
-#include <new>
 #include <initializer_list>
-#include "boost/di/aux_/utility.hpp"
-#include "boost/di/aux_/type_traits.hpp"
-#include "boost/di/aux_/memory.hpp"
+#include <memory>
+#include <new>
+#include <string>
+
+namespace boost { namespace di { namespace aux {
+    using ::std::unique_ptr;
+    using ::std::shared_ptr;
+    using ::std::weak_ptr;
+}}} // namespace boost::di::aux
+
+#if defined(BOOST_DI_CFG_CONV_TO_BOOST_SMART_PTR)
+    #include <boost/shared_ptr.hpp>
+
+    namespace boost { namespace di { namespace aux_ {
+        using ::boost::shared_ptr;
+    }}} // namespace boost::di::aux_
+#else
+    namespace boost { namespace di { namespace aux_ {
+        template<class> struct shared_ptr { };
+    }}} // namespace boost::di::aux_
+#endif
 
 namespace boost { namespace di {
 
@@ -150,6 +165,201 @@ private:
 };
 
 }} // namespace boost::di
+#define BOOST_DI_CAT_IMPL(a, b) a ## b
+#define BOOST_DI_CAT(a, b) BOOST_DI_CAT_IMPL(a, b)
+#define BOOST_DI_CALL(m, ...) m(__VA_ARGS__)
+
+namespace boost { namespace di { namespace aux {
+
+struct none_t { };
+
+template<class T, T>
+struct non_type { };
+
+template<class, class>
+struct pair { using type = pair; };
+
+template<class T>
+struct no_decay { using type = T; };
+
+template<class... TArgs>
+struct inherit : TArgs... { };
+
+template<class...>
+struct type_list { using type = type_list; };
+
+template<class...>
+struct join;
+
+template<>
+struct join<> { using type = type_list<>; };
+
+template<class... TArgs>
+struct join<type_list<TArgs...>> {
+    using type = type_list<TArgs...>;
+};
+
+template<class... TArgs1, class... TArgs2>
+struct join<type_list<TArgs1...>, type_list<TArgs2...>> {
+    using type = type_list<TArgs1..., TArgs2...>;
+};
+
+template<class... TArgs1, class... TArgs2, class... Ts>
+struct join<type_list<TArgs1...>, type_list<TArgs2...>, Ts...> {
+    using type = typename join<type_list<TArgs1..., TArgs2...>, Ts...>::type;
+};
+
+template<class TDefault, class>
+static no_decay<TDefault> lookup(...);
+
+template<class, class TKey, class TValue>
+static no_decay<TValue> lookup(pair<TKey, TValue>*);
+
+template<class TDefault, class TKey, class... Ts>
+using at_key = decltype(lookup<TDefault, TKey>((inherit<Ts...>*)0));
+
+template<class TDefault, class TKey, class... Ts>
+using at_key_t = typename at_key<TDefault, TKey, Ts...>::type;
+
+}}} // namespace boost::di::aux
+
+#define BOOST_DI_HAS_TYPE(name)                                     \
+    template<class>                                                 \
+    std::false_type has_##name##_impl(...);                         \
+                                                                    \
+    template<class T>                                               \
+    std::true_type has_##name##_impl(typename T::name*);            \
+                                                                    \
+    template<class T>                                               \
+    using has_##name = decltype(has_##name##_impl<T>(0))
+
+#define BOOST_DI_HAS_METHOD(name, call_name)                        \
+    template<class T, class... TArgs>                               \
+    decltype(std::declval<T>().call_name(std::declval<TArgs>()...)  \
+           , std::true_type())                                      \
+    has_##name##_impl(int);                                         \
+                                                                    \
+    template<class, class...>                                       \
+    std::false_type has_##name##_impl(...);                         \
+                                                                    \
+    template<class T, class... TArgs>                               \
+    using has_##name = decltype(has_##name##_impl<T, TArgs...>(0))
+
+#define BOOST_DI_HAS_METHOD_CALL(name, call_name)                   \
+    struct has_##name##_base {                                      \
+        void call_name();                                           \
+    };                                                              \
+                                                                    \
+    template<class T>                                               \
+    std::false_type has_##name##_impl(                              \
+        T*                                                          \
+      , boost::di::aux::non_type<                                   \
+            void (has_##name##_base::*)()                           \
+          , &T::call_name                                           \
+        >* = 0                                                      \
+    );                                                              \
+                                                                    \
+    template<class>                                                 \
+    std::true_type has_##name##_impl(...);                          \
+                                                                    \
+    template<class T, typename = void>                              \
+    struct has_##name                                               \
+        : decltype(has_##name##_impl<                               \
+              boost::di::aux::inherit<T, has_##name##_base>         \
+          >(0))                                                     \
+    { };                                                            \
+                                                                    \
+    template<class T>                                               \
+    struct has_##name<T, std::enable_if_t<!std::is_class<T>{}>>     \
+        : std::false_type                                           \
+    { }
+
+namespace boost { namespace di { namespace aux {
+
+template<class T, class... TArgs>
+decltype(void(T{std::declval<TArgs>()...}), std::true_type{})
+test_is_braces_constructible(int);
+
+template<class, class...>
+std::false_type test_is_braces_constructible(...);
+
+template<class T, class... TArgs>
+using is_braces_constructible =
+    decltype(test_is_braces_constructible<T, TArgs...>(0));
+
+template<class T, class... TArgs>
+using is_braces_constructible_t =
+    typename is_braces_constructible<T, TArgs...>::type;
+
+template<class T>
+using remove_accessors =
+    std::remove_cv<std::remove_pointer_t<std::remove_reference_t<T>>>;
+
+template<class T>
+using remove_accessors_t =
+    typename remove_accessors<T>::type;
+
+template<class T, class = void>
+struct deref_type;
+
+template<typename T>
+using deref_type_t =
+    typename deref_type<T>::type;
+
+template<class T>
+using make_plain =
+    deref_type<remove_accessors_t<deref_type_t<remove_accessors_t<T>>>>;
+
+template<class T>
+using make_plain_t =
+    typename make_plain<T>::type;
+
+template<class T, class>
+struct deref_type {
+    using type = T;
+};
+
+BOOST_DI_HAS_TYPE(element_type);
+
+template<class T>
+struct deref_type<T, std::enable_if_t<has_element_type<T>{}>> {
+    using type = typename T::element_type;
+};
+
+BOOST_DI_HAS_TYPE(named_type);
+
+template<class T>
+struct deref_type<T, std::enable_if_t<has_named_type<T>{}>> {
+    using type = make_plain_t<typename T::named_type>;
+};
+
+template<class T>
+struct function_traits
+    : function_traits<decltype(&T::operator())>
+{ };
+
+template<class R, class... TArgs>
+struct function_traits<R(*)(TArgs...)> {
+    using result_type = R;
+    using base_type = none_t;
+    using args = type_list<TArgs...>;
+};
+
+template<class R, class T, class... TArgs>
+struct function_traits<R(T::*)(TArgs...)> {
+    using result_type = R;
+    using base_type = T;
+    using args = type_list<TArgs...>;
+};
+
+template<class R, class T, class... TArgs>
+struct function_traits<R(T::*)(TArgs...) const> {
+    using result_type = R;
+    using base_type = T;
+    using args = type_list<TArgs...>;
+};
+
+}}} // namespace boost::di::aux
 
 namespace boost { namespace di { namespace wrappers {
 
@@ -398,7 +608,7 @@ template<
   , class TExpected
   , class TGiven = TExpected
   , class TName = no_name
-  , bool TPriority = TScope::priority
+  , bool  TPriority = TScope::priority
 >
 class dependency
     : public TScope::template scope<TExpected, TGiven>
@@ -454,7 +664,7 @@ template<
   , class TExpected
   , class TGiven
   , class TName
-  , bool TPriority
+  , bool  TPriority
 >
 struct is_dependency<
     dependency<TScope, TExpected, TGiven, TName, TPriority>
@@ -876,6 +1086,24 @@ template<class... TArgs>
 struct is_any_type<any_type<TArgs...>> : std::true_type { };
 
 }}} // namespace boost::di::core
+#if !defined(BOOST_DI_INJECTOR)
+    #define BOOST_DI_INJECTOR boost_di_injector__
+#endif
+
+#if !defined(BOOST_DI_CFG_CTOR_LIMIT_SIZE)
+    #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
+#endif
+
+#if !defined(BOOST_DI_INJECT_TRAITS)
+    #define BOOST_DI_INJECT_TRAITS(...)             \
+        static void BOOST_DI_INJECTOR(__VA_ARGS__)
+#endif
+
+#if !defined(BOOST_DI_INJECT)
+    #define BOOST_DI_INJECT(type, ...)              \
+        BOOST_DI_INJECT_TRAITS(__VA_ARGS__);        \
+        type(__VA_ARGS__)
+#endif
 
 namespace boost { namespace di { namespace type_traits {
 
@@ -1055,11 +1283,19 @@ inline auto make_policies(const TArgs&... args) noexcept {
 
 }} // namespace boost::di
 
-inline auto boost_di_policies__(...) noexcept {
+#if !defined(BOOST_DI_POLICIES)
+    #define BOOST_DI_POLICIES boost_di_policies__
+#endif
+
+inline auto BOOST_DI_POLICIES(...) noexcept {
     return boost::di::make_policies();
 }
 
-inline auto boost_di_provider__(...) noexcept {
+#if !defined(BOOST_DI_PROVIDER)
+    #define BOOST_DI_PROVIDER boost_di_provider__
+#endif
+
+inline auto BOOST_DI_PROVIDER(...) noexcept {
     return boost::di::providers::nothrow_reduce_heap_usage{};
 }
 
@@ -1082,7 +1318,7 @@ template<
 > {
     template<class TMemory = type_traits::heap>
     decltype(auto) get(const TMemory& memory = {}) const noexcept {
-        return boost_di_provider__(project_scope{}).get<TGiven>(
+        return BOOST_DI_PROVIDER(project_scope{}).get<TGiven>(
             TInitialization{}
           , memory
           , injector_.template create<TArgs, T>()...
@@ -1250,7 +1486,7 @@ private:
         using dependency_t = typename std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-        auto&& policies = boost_di_policies__(project_scope{});
+        auto&& policies = BOOST_DI_POLICIES(project_scope{});
         call_policies<given_t>(policies, dependency);
         using provider_type = provider<T, given_t, ctor_t, injector>;
         auto&& ctor_provider = provider_type{*this};
@@ -1339,7 +1575,7 @@ public:
         struct iprovider {
             virtual ~iprovider() = default;
             virtual T* get(const type_traits::heap& = {}) const noexcept = 0;
-            virtual T get(const type_traits::stack&) const noexcept = 0;
+            virtual T  get(const type_traits::stack&) const noexcept = 0;
         };
 
         template<typename TInjector>
