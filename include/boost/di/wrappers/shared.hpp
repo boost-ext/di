@@ -62,7 +62,7 @@ private:
     aux::shared_ptr<T> value_;
 };
 
-}}} // namespace boost::di::wrappers
+}}} // boost::di::wrappers
 
 #endif
 

@@ -38,23 +38,24 @@
 #include <memory>
 #include <new>
 #include <string>
+#include <type_traits>
 
 namespace boost { namespace di { namespace aux {
     using ::std::unique_ptr;
     using ::std::shared_ptr;
     using ::std::weak_ptr;
-}}} // namespace boost::di::aux
+}}} // boost::di::aux
 
 #if defined(BOOST_DI_CFG_CONV_TO_BOOST_SMART_PTR)
     #include <boost/shared_ptr.hpp>
 
     namespace boost { namespace di { namespace aux_ {
         using ::boost::shared_ptr;
-    }}} // namespace boost::di::aux_
+    }}} // boost::di::aux_
 #else
     namespace boost { namespace di { namespace aux_ {
         template<class> struct shared_ptr { };
-    }}} // namespace boost::di::aux_
+    }}} // boost::di::aux_
 #endif
 
 namespace boost { namespace di {
@@ -164,7 +165,7 @@ private:
     aux::unique_ptr<T> object_;
 };
 
-}} // namespace boost::di
+}} // boost::di
 #define BOOST_DI_CAT_IMPL(a, b) a ## b
 #define BOOST_DI_CAT(a, b) BOOST_DI_CAT_IMPL(a, b)
 #define BOOST_DI_CALL(m, ...) m(__VA_ARGS__)
@@ -221,7 +222,7 @@ using at_key = decltype(lookup<TDefault, TKey>((inherit<Ts...>*)0));
 template<class TDefault, class TKey, class... Ts>
 using at_key_t = typename at_key<TDefault, TKey, Ts...>::type;
 
-}}} // namespace boost::di::aux
+}}} // boost::di::aux
 
 #define BOOST_DI_HAS_TYPE(name)                                     \
     template<class>                                                 \
@@ -359,7 +360,7 @@ struct function_traits<R(T::*)(TArgs...) const> {
     using args = type_list<TArgs...>;
 };
 
-}}} // namespace boost::di::aux
+}}} // boost::di::aux
 
 namespace boost { namespace di { namespace wrappers {
 
@@ -420,7 +421,7 @@ private:
     T* value_ = nullptr;
 };
 
-}}} // namespace boost::di::wrappers
+}}} // boost::di::wrappers
 
 namespace boost { namespace di { namespace wrappers {
 
@@ -474,7 +475,7 @@ private:
     aux::shared_ptr<T> value_;
 };
 
-}}} // namespace boost::di::wrappers
+}}} // boost::di::wrappers
 
 namespace boost { namespace di { namespace scopes {
 
@@ -585,7 +586,7 @@ public:
     };
 };
 
-}}} // namespace boost::di::scopes
+}}} // boost::di::scopes
 
 namespace boost { namespace di { namespace core {
 
@@ -670,7 +671,7 @@ struct is_dependency<
     dependency<TScope, TExpected, TGiven, TName, TPriority>
 > : std::true_type { };
 
-}}} // namespace boost::di::core
+}}} // boost::di::core
 
 namespace boost { namespace di { namespace type_traits {
 
@@ -765,7 +766,7 @@ struct memory_traits<const named<T, TName>&> {
 template<class T>
 using memory_traits_t = typename memory_traits<T>::type;
 
-}}} // namespace boost::di::type_traits
+}}} // boost::di::type_traits
 
 namespace boost { namespace di { namespace scopes {
 
@@ -785,7 +786,7 @@ public:
     };
 };
 
-}}} // namespace boost::di::scopes
+}}} // boost::di::scopes
 
 namespace boost { namespace di { namespace scopes {
 
@@ -812,7 +813,7 @@ public:
     };
 };
 
-}}} // namespace boost::di::scopes
+}}} // boost::di::scopes
 
 namespace boost { namespace di { namespace type_traits {
 
@@ -904,7 +905,7 @@ struct scope_traits<const named<T, TName>&> {
 template<class T>
 using scope_traits_t = typename scope_traits<T>::type;
 
-}}} // namespace boost::di::type_traits
+}}} // boost::di::type_traits
 
 namespace boost { namespace di { namespace scopes {
 
@@ -924,7 +925,7 @@ public:
     };
 };
 
-}}} // namespace boost::di::scopes
+}}} // boost::di::scopes
 
 namespace boost { namespace di { namespace scopes {
 
@@ -965,7 +966,7 @@ public:
     };
 };
 
-}}} // namespace boost::di::scopes
+}}} // boost::di::scopes
 
 namespace boost { namespace di { namespace scopes {
 
@@ -989,7 +990,7 @@ public:
     };
 };
 
-}}} // namespace boost::di::scopes
+}}} // boost::di::scopes
 
 namespace boost { namespace di {
 
@@ -1019,7 +1020,7 @@ constexpr auto session_exit(const TName&) noexcept {
     return scopes::session_exit<TName>{};
 }
 
-}} // namespace boost::di
+}} // boost::di
 
 namespace boost { namespace di { namespace core {
 
@@ -1060,7 +1061,7 @@ private:
     inline get(const TPool&) const noexcept { return {}; }
 };
 
-}}} // namespace boost::di::core
+}}} // boost::di::core
 
 namespace boost { namespace di { namespace core {
 
@@ -1068,7 +1069,7 @@ template<class TParent = aux::none_t, class TInjector = aux::none_t>
 struct any_type {
     template<class T>
     using is_not_same_t = std::enable_if_t<
-        !std::is_same<aux::make_plain_t<T>, aux::make_plain_t<TParent>>::value
+        !std::is_same<aux::make_plain_t<T>, aux::make_plain_t<TParent>>{}
     >;
 
     template<class T, class = is_not_same_t<T>>
@@ -1085,7 +1086,7 @@ struct is_any_type : std::false_type { };
 template<class... TArgs>
 struct is_any_type<any_type<TArgs...>> : std::true_type { };
 
-}}} // namespace boost::di::core
+}}} // boost::di::core
 #if !defined(BOOST_DI_INJECTOR)
     #define BOOST_DI_INJECTOR boost_di_injector__
 #endif
@@ -1173,7 +1174,7 @@ struct ctor<T, aux::type_list<TArgs...>>
     : aux::pair<direct, aux::type_list<TArgs...>>
 { };
 
-} // namespace type_traits
+} // type_traits
 
 template<class T>
 struct ctor_traits
@@ -1235,7 +1236,7 @@ struct ctor_traits_impl<T, std::false_type>
     : di::ctor_traits<T>
 { };
 
-}}} // namespace boost::di::type_traits
+}}} // boost::di::type_traits
 
 namespace boost { namespace di { namespace providers {
 
@@ -1270,7 +1271,7 @@ public:
     }
 };
 
-}}} // namespace boost::di::providers
+}}} // boost::di::providers
 
 namespace boost { namespace di {
 
@@ -1281,7 +1282,7 @@ inline auto make_policies(const TArgs&... args) noexcept {
     return core::pool<aux::type_list<TArgs...>>(args...);
 }
 
-}} // namespace boost::di
+}} // boost::di
 
 #if !defined(BOOST_DI_POLICIES)
     #define BOOST_DI_POLICIES boost_di_policies__
@@ -1328,7 +1329,7 @@ template<
     const TInjector& injector_;
 };
 
-}}} // namespace boost::di::core
+}}} // boost::di::core
 
 namespace boost { namespace di { namespace core {
 
@@ -1384,7 +1385,7 @@ public:
     }
 };
 
-}}} // namespace boost::di::core
+}}} // boost::di::core
 
 namespace boost { namespace di { namespace wrappers {
 
@@ -1410,7 +1411,7 @@ struct universal<named<T, TName>, TWrapper> {
     }
 };
 
-}}} // namespace boost::di::wrappers
+}}} // boost::di::wrappers
 
 namespace boost { namespace di { namespace core {
 
@@ -1562,7 +1563,7 @@ private:
     }
 };
 
-}}} // namespace boost::di::core
+}}} // boost::di::core
 
 namespace boost { namespace di { namespace scopes {
 
@@ -1615,7 +1616,7 @@ public:
     };
 };
 
-}}} // namespace boost::di::scopes
+}}} // boost::di::scopes
 
 namespace boost { namespace di { namespace detail {
 
@@ -1667,7 +1668,7 @@ using bindings_t =
 template<class... TArgs>
 using injector = core::injector<detail::bindings_t<TArgs...>>;
 
-}} // namespace boost::di
+}} // boost::di
 
 namespace boost { namespace di {
 
@@ -1676,7 +1677,7 @@ inline decltype(auto) make_injector(const TArgs&... args) noexcept {
     return injector<TArgs...>(args...);
 }
 
-}} // namespace boost::di
+}} // boost::di
 
 #endif
 

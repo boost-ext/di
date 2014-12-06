@@ -13,18 +13,18 @@ namespace boost { namespace di { namespace aux {
     using ::std::unique_ptr;
     using ::std::shared_ptr;
     using ::std::weak_ptr;
-}}} // namespace boost::di::aux
+}}} // boost::di::aux
 
 #if defined(BOOST_DI_CFG_CONV_TO_BOOST_SMART_PTR)
     #include <boost/shared_ptr.hpp>
 
     namespace boost { namespace di { namespace aux_ {
         using ::boost::shared_ptr;
-    }}} // namespace boost::di::aux_
+    }}} // boost::di::aux_
 #else
     namespace boost { namespace di { namespace aux_ {
         template<class> struct shared_ptr { };
-    }}} // namespace boost::di::aux_
+    }}} // boost::di::aux_
 #endif
 
 #endif

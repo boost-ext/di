@@ -103,7 +103,7 @@ struct scope_traits<const named<T, TName>&> {
 template<class T>
 using scope_traits_t = typename scope_traits<T>::type;
 
-}}} // namespace boost::di::type_traits
+}}} // boost::di::type_traits
 
 #endif
 

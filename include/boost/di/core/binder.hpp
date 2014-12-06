@@ -66,7 +66,7 @@ public:
     }
 };
 
-}}} // namespace boost::di::core
+}}} // boost::di::core
 
 #endif
 

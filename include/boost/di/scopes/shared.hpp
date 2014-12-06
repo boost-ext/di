@@ -31,7 +31,7 @@ public:
     };
 };
 
-}}} // namespace boost::di::scopes
+}}} // boost::di::scopes
 
 #endif
 

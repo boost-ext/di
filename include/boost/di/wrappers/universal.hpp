@@ -35,7 +35,7 @@ struct universal<named<T, TName>, TWrapper> {
     }
 };
 
-}}} // namespace boost::di::wrappers
+}}} // boost::di::wrappers
 
 #endif
 

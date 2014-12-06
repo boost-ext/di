@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_AUX_TYPE_TRAITS_HPP
 #define BOOST_DI_AUX_TYPE_TRAITS_HPP
 
+#include <type_traits>
 #include "boost/di/aux_/utility.hpp"
 
 #define BOOST_DI_HAS_TYPE(name)                                     \
@@ -145,7 +146,7 @@ struct function_traits<R(T::*)(TArgs...) const> {
     using args = type_list<TArgs...>;
 };
 
-}}} // namespace boost::di::aux
+}}} // boost::di::aux
 
 #endif
 

@@ -61,7 +61,7 @@ using bindings_t =
 template<class... TArgs>
 using injector = core::injector<detail::bindings_t<TArgs...>>;
 
-}} // namespace boost::di
+}} // boost::di
 
 #endif
 

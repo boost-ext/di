@@ -93,7 +93,7 @@ struct is_dependency<
     dependency<TScope, TExpected, TGiven, TName, TPriority>
 > : std::true_type { };
 
-}}} // namespace boost::di::core
+}}} // boost::di::core
 
 #endif
 

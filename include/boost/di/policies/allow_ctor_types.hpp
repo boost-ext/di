@@ -129,7 +129,7 @@ inline auto operator!(const T&) {
     return not_<T>{};
 }
 
-} // namespace operators
+} // operators
 
 template<class T>
 struct allow_ctor_types_impl {
@@ -144,7 +144,7 @@ inline auto allow_ctor_types(const T& = {}) noexcept {
 	return allow_ctor_types_impl<always<T>>{};
 };
 
-}}} // namespace boost::di::policies
+}}} // boost::di::policies
 
 #endif
 

@@ -116,7 +116,7 @@ private:
     aux::unique_ptr<T> object_;
 };
 
-}} // namespace boost::di
+}} // boost::di
 
 #endif
 

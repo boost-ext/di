@@ -16,7 +16,7 @@ inline decltype(auto) make_injector(const TArgs&... args) noexcept {
     return injector<TArgs...>(args...);
 }
 
-}} // namespace boost::di
+}} // boost::di
 
 #endif
 

@@ -29,7 +29,7 @@ public:
     }
 };
 
-}}} // namespace boost::di::providers
+}}} // boost::di::providers
 
 #endif
 

@@ -32,7 +32,7 @@ struct is_any_type : std::false_type { };
 template<class... TArgs>
 struct is_any_type<any_type<TArgs...>> : std::true_type { };
 
-}}} // namespace boost::di::core
+}}} // boost::di::core
 
 #endif
 

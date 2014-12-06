@@ -63,7 +63,7 @@ using at_key = decltype(lookup<TDefault, TKey>((inherit<Ts...>*)0));
 template<class TDefault, class TKey, class... Ts>
 using at_key_t = typename at_key<TDefault, TKey, Ts...>::type;
 
-}}} // namespace boost::di::aux
+}}} // boost::di::aux
 
 #endif
 

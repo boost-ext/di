@@ -82,7 +82,7 @@ struct ctor<T, aux::type_list<TArgs...>>
     : aux::pair<direct, aux::type_list<TArgs...>>
 { };
 
-} // namespace type_traits
+} // type_traits
 
 template<class T>
 struct ctor_traits
@@ -144,7 +144,7 @@ struct ctor_traits_impl<T, std::false_type>
     : di::ctor_traits<T>
 { };
 
-}}} // namespace boost::di::type_traits
+}}} // boost::di::type_traits
 
 #endif
 

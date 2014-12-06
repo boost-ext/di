@@ -49,7 +49,7 @@ private:
     inline get(const TPool&) const noexcept { return {}; }
 };
 
-}}} // namespace boost::di::core
+}}} // boost::di::core
 
 #endif
 

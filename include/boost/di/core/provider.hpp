@@ -39,7 +39,7 @@ template<
     const TInjector& injector_;
 };
 
-}}} // namespace boost::di::core
+}}} // boost::di::core
 
 #endif
 

@@ -20,7 +20,7 @@ inline auto make_policies(const TArgs&... args) noexcept {
     return core::pool<aux::type_list<TArgs...>>(args...);
 }
 
-}} // namespace boost::di
+}} // boost::di
 
 #if !defined(BOOST_DI_POLICIES)
     #define BOOST_DI_POLICIES boost_di_policies__

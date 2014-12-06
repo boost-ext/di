@@ -42,7 +42,7 @@ constexpr auto session_exit(const TName&) noexcept {
     return scopes::session_exit<TName>{};
 }
 
-}} // namespace boost::di
+}} // boost::di
 
 #endif
 

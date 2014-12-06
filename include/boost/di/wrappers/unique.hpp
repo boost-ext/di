@@ -69,7 +69,7 @@ private:
     T* value_ = nullptr;
 };
 
-}}} // namespace boost::di::wrappers
+}}} // boost::di::wrappers
 
 #endif
 
