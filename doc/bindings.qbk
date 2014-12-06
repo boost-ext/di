@@ -76,6 +76,8 @@ the only thing which has to be in mind is to return `mpl::vector` of __dependenc
 * __bindings_when__
 * __bindings_named__
 
+[section bind]
+
 [heading Description]
 Allows to bind interface to implementation and associate value with __dependency_model__.
 
@@ -508,6 +510,8 @@ Allows to connect __annotations_named__ annotation parameters with binding confi
 
 * __bindings__
 * __bindings_when__
+
+[endsect]
 
 [endsect]
 
