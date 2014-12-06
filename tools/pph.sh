@@ -9,7 +9,7 @@
 main() {
     genereate_pph() {
         echo $1 >> $2/tmp.hpp
-        cat $1 | grep "#include" | grep "boost\/di" | while read include; do
+        cat $1 | egrep "^#include" | grep "boost\/di" | while read include; do
             file=`echo $include | sed "s/[^<^\"]*[\"<]\([^>\"]*\)[\">].*/\1/"`
 
             if [[ "`cat $2/tmp.hpp | grep $file`" == "" ]]; then

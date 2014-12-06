@@ -7,8 +7,6 @@
 #ifndef BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 
-#include <string>
-#include <initializer_list>
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/core/any_type.hpp"
@@ -89,19 +87,6 @@ struct ctor_traits
     : type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>
 { };
 
-template<
-    class T
-  , class Traits
-  , class TAllocator
-> struct ctor_traits<std::basic_string<T, Traits, TAllocator>> {
-    BOOST_DI_INJECT_TRAITS();
-};
-
-template<class T>
-struct ctor_traits<std::initializer_list<T>> {
-    BOOST_DI_INJECT_TRAITS();
-};
-
 namespace type_traits {
 
 template<
@@ -145,6 +130,33 @@ struct ctor_traits_impl<T, std::false_type>
 { };
 
 }}} // boost::di::type_traits
+
+#if (__has_include(<string>))
+    #include <string>
+
+    namespace boost { namespace di {
+        template<
+            class T
+          , class Traits
+          , class TAllocator
+        > struct ctor_traits<std::basic_string<T, Traits, TAllocator>> {
+            BOOST_DI_INJECT_TRAITS();
+        };
+    }} // boost::di
+
+#endif
+
+#if (__has_include(<initializer_list>))
+    #include <initializer_list>
+
+    namespace boost { namespace di {
+        template<class T>
+        struct ctor_traits<std::initializer_list<T>> {
+            BOOST_DI_INJECT_TRAITS();
+        };
+    }} // boost::di
+
+#endif
 
 #endif
 
