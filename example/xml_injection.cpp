@@ -41,55 +41,49 @@ struct xml_parser_stub : ixml_parser {
 };
 
 template<typename... Ts>
-struct xml {
-    using type = xml;
-};
+struct xml_list { };
 
-template<typename TIf, typename TImpl>
+template<class TIf, typename TImpl>
 class inject_from_xml {
 public:
-    template<typename TInjector>
-    std::shared_ptr<interface> operator()(TInjector& injector) const {
+    template<class TInjector>
+    auto operator()(TInjector& injector) const {
         auto parser = injector.template create<std::unique_ptr<ixml_parser>>();
         auto parsed = parser->parse(boost::units::detail::demangle(typeid(TIf).name()));
         return create_impl(injector, parsed, TImpl{});
     }
 
 private:
-    template<typename TInjector, typename T, typename... Ts>
+    template<class TInjector, typename T, typename... Ts>
     std::shared_ptr<interface> create_impl(TInjector& injector
                                          , const std::string& parsed
-                                         , const xml<T, Ts...>&) const {
+                                         , const xml_list<T, Ts...>&) const {
         auto impl = boost::units::detail::demangle(typeid(T).name());
         if (impl == parsed) {
             return injector.template create<std::shared_ptr<T>>();
         }
 
-        return create_impl(injector, parsed, xml<Ts...>{});
+        return create_impl(injector, parsed, xml_list<Ts...>{});
     }
 
-    template<typename TInjector>
+    template<class TInjector>
     std::shared_ptr<interface> create_impl(TInjector&
                                          , const std::string&
-                                         , const xml<>&) const {
+                                         , const xml_list<>&) const {
         return nullptr;
     }
 };
-//->
 
-template<typename TIf>
-struct bind {
-    template<typename... Ts>
-    static auto from_xml() {
-        return di::bind<TIf>::to(inject_from_xml<TIf, xml<Ts...>>{});
-    }
-};
+template<class TIf, class... TImpl>
+inject_from_xml<TIf, xml_list<TImpl...>> xml{};
+
+//->
 
 class module {
 public:
     auto configure() const {
         return di::make_injector(
-            di::bind<ixml_parser, xml_parser_stub>{}
+            di::bind<ixml_parser, xml_parser_stub>
         );
     }
 };
@@ -98,7 +92,7 @@ class xml_module {
 public:
     auto configure() const {
         return di::make_injector(
-            bind<interface>::from_xml<implementation1, implementation2>()
+            di::bind<interface>.to(xml<interface, implementation1, implementation2>)
         );
     }
 };
