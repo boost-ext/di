@@ -7,6 +7,8 @@
 #ifndef BOOS_DI_POLICIES_ALLOW_TYPES_HPP
 #define BOOS_DI_POLICIES_ALLOW_TYPES_HPP
 
+#include <type_traits>
+
 namespace boost { namespace di { namespace policies {
 
 struct _ { };
@@ -97,14 +99,15 @@ struct always : type_op {
 	}
 };
 
+template<class T>
 struct is_bound : type_op {
 	template<class TData>
 	static auto apply(const TData& data) noexcept {
         struct not_resolved { };
-        using type = typename TData::type;
+        using type = std::conditional_t<std::is_same<T, _>{}, typename TData::type, T>;
         auto dep = data.template resolve<type, not_resolved>();
         return std::integral_constant<bool
-            , !std::is_same<decltype(dep), not_resolved>{}
+          , !std::is_same<decltype(dep), not_resolved>{}
         >{};
     }
 };
@@ -121,9 +124,9 @@ inline auto operator&&(const X&, const Y&) {
     return and_<X, Y>{};
 }
 
-template<class X>
-inline auto operator!(const X&) {
-    return not_<X>{};
+template<class T>
+inline auto operator!(const T&) {
+    return not_<T>{};
 }
 
 } // namespace operators

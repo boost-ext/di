@@ -9,14 +9,14 @@ auto BOOST_DI_POLICIES(const di::project_scope&) noexcept {
     using namespace di::policies::operators;
     return di::make_policies(
         allow_ctor_types(
-            std::is_same<_, int>{} && is_bound{})
+            std::is_same<_, int>{} && is_bound<_>{})
     );
 }
 
 #include <boost/di.hpp>
 
 test allow_types_policy = [] {
-    auto injector = di::make_injector(di::bind<int>.to(42));
+    auto injector = di::make_injector(di::bind<int>.to(0));
     injector.create<int>();
 };
 
