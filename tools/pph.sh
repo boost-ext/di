@@ -6,14 +6,28 @@
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
 
-guard_begin() {
+main() {
+    genereate_pph() {
+        echo $1 >> $2/tmp.hpp
+        cat $1 | grep "#include" | grep "boost\/di" | while read include; do
+            file=`echo $include | sed "s/[^<^\"]*[\"<]\([^>\"]*\)[\">].*/\1/"`
+
+            if [[ "`cat $2/tmp.hpp | grep $file`" == "" ]]; then
+                genereate_pph $file $2
+                cat $file | egrep "^#include" | grep -v "boost\/di" >> $2/includes.hpp
+                tail -n +10 $file | head -n -3 | egrep -v "^#include" >> $2/pph.hpp
+            fi
+        done
+    }
+
+    tmp_dir=`mktemp -d`
+
     echo "//"
     echo "// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)"
     echo "//"
     echo "// Distributed under the Boost Software License, Version 1.0."
     echo "// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)"
     echo "//"
-
     echo "#ifndef BOOST_DI_HPP"
     echo "#define BOOST_DI_HPP"
     echo
@@ -44,39 +58,17 @@ guard_begin() {
     echo
     echo "#else"
     echo
-}
-
-guard_end() {
+    genereate_pph "boost/di.hpp" "$tmp_dir"
+    cat $tmp_dir/includes.hpp | sort -u
+    cat $tmp_dir/pph.hpp
     echo
     echo "#endif"
     echo
     echo "#endif"
     echo
+
+    rm -rf $tmp_dir
 }
 
-genereate_pph() {
-    echo $1 >> $tmp_dir/pph.hpp
-    cat $1 | grep "#include" | grep "boost\/di" | while read include; do
-        file=`echo $include | sed "s/[^<^\"]*[\"<]\([^>\"]*\)[\">].*/\1/"`
-
-        if [[ "`cat $tmp_dir/pph.hpp | grep $file`" == "" ]]; then
-            genereate_pph $file
-            cat $file | egrep "^#include" | grep -v  "boost\/di" >> $tmp_dir/includes.hpp
-            tail -n +10 $file | head -n -3 | egrep -v "^#include"
-        fi
-    done
-}
-
-[ -z "$CXX" ] && CXX="g++"
-tmp_dir=`mktemp -d`
-dir=`readlink -f \`dirname $0\``
-cd $dir/../include
-guard_begin > $tmp_dir/di.hpp
-genereate_pph "boost/di.hpp" >> $tmp_dir/tmp.hpp
-cat $tmp_dir/includes.hpp | sort -u >> $tmp_dir/di.hpp
-cat $tmp_dir/tmp.hpp >> $tmp_dir/di.hpp
-guard_end >> $tmp_dir/di.hpp
-cp $tmp_dir/di.hpp  $dir/../include/boost/di.hpp
-
-rm -rf $tmp_dir
+cd "`readlink -f \`dirname $0\``/../include" && main "boost/di.hpp" > "boost/di.hpp"
 
