@@ -73,7 +73,7 @@ public:
     template<class T>
     auto to(T&& object) const noexcept {
         using dependency = dependency<
-            scopes::external, TExpected, T, TName
+            scopes::external, TExpected, std::remove_reference_t<T>, TName
         >;
         return dependency{std::forward<T>(object)};
     }

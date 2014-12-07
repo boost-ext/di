@@ -26,6 +26,7 @@ public:
     template<class, class T>
     class scope {
     public:
+    static constexpr auto yes = false;
         void call(const session_entry<TName>&) noexcept {
             in_scope_ = true;
         }

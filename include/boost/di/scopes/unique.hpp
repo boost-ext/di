@@ -19,6 +19,7 @@ public:
     template<class, class T>
     class scope {
     public:
+    static constexpr auto yes = false;
         template<class TDst, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
             using memory = type_traits::memory_traits_t<TDst>;

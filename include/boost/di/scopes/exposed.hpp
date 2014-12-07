@@ -44,6 +44,7 @@ public:
         };
 
     public:
+    static constexpr auto yes = false;
         template<class TInjector>
         explicit scope(const TInjector& injector) noexcept
             : provider_{std::make_shared<provider<TInjector>>(injector)}

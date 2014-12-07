@@ -81,8 +81,8 @@ int main() {
       , di::bind<interface2, implementation2>
       , di::bind<int>.to(42)
       , di::bind<std::string>.named(some_name{}).to("some_name")
-      , di::bind<float>.to(f)
-      , di::bind<double>.to(d)
+      , di::bind<float>.to(std::ref(f))
+      , di::bind<double>.to(std::cref(d))
       , di::bind<std::function<int()>>.to([]{return 87;})
       , di::bind<int>.named(int_name{}).to(123)
     );

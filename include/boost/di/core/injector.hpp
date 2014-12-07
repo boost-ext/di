@@ -100,7 +100,7 @@ private:
         using wrapper_t = decltype(dependency.template create<T>(ctor_provider));
         using type = std::conditional_t<
             std::is_reference<T>{} &&
-            std::is_same<scopes::external, typename dependency_t::scope>{}
+            dependency_t::yes
           , T
           , std::remove_reference_t<T>
         >;

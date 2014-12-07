@@ -554,7 +554,7 @@ test ctor_refs = [] {
         const std::shared_ptr<i1>& sp;
         int& i;
         const double& d;
-        const std::string& str;
+        std::string str; // possible ref to copy
         short s;
     };
 
@@ -562,11 +562,10 @@ test ctor_refs = [] {
         auto i = 0;
         constexpr auto d = 0.0;
 
-        std::string str = "str";
         auto injector = di::make_injector(
-            di::bind<int>.to(i)
-          , di::bind<double>.to(d)
-          , di::bind<std::string>.to(str)
+            di::bind<int>.to(std::ref(i))
+          , di::bind<double>.to(std::cref(d))
+          , di::bind<std::string>.to("str")
           , bind_i1
           , di::bind<short>.to(42)
         );

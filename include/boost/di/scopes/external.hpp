@@ -49,6 +49,7 @@ public:
     template<class TExpected, class T, class = void>
     class scope {
     public:
+    static constexpr auto yes = false;
         explicit scope(const T& object) noexcept
             : object_(object)
         { }
@@ -59,13 +60,14 @@ public:
         }
 
     private:
-        wrappers::unique<T> object_;
+        wrappers::unique<TExpected> object_;
     };
 
     template<class TExpected, class T>
-    class scope<TExpected, T&> {
+    class scope<TExpected, std::reference_wrapper<T>> {
     public:
-        explicit scope(T& object) noexcept
+    static constexpr auto yes = true;
+        explicit scope(const std::reference_wrapper<T>& object) noexcept
             : object_(object)
         { }
 
@@ -75,28 +77,13 @@ public:
         }
 
     private:
-        T& object_;
-    };
-
-    template<class TExpected, class T>
-    class scope<TExpected, const T&> {
-    public:
-        explicit scope(const T& object) noexcept
-            : object_(object)
-        { }
-
-        template<class, class TProvider>
-        decltype(auto) create(const TProvider&) const noexcept {
-            return object_;
-        }
-
-    private:
-        const T& object_;
+        std::reference_wrapper<T> object_;
     };
 
     template<class TExpected, class T>
     class scope<TExpected, std::shared_ptr<T>> {
     public:
+    static constexpr auto yes = false;
         explicit scope(const std::shared_ptr<T>& object) noexcept
             : object_(object)
         { }
@@ -117,6 +104,7 @@ public:
       , std::enable_if_t<has_call_operator<T>{} && !is_lambda_expr<T, const injector&>{}>
     > {
     public:
+    static constexpr auto yes = false;
         explicit scope(const T& object) noexcept
             : object_(object)
         { }
@@ -134,6 +122,7 @@ public:
     template<class TExpected, class T>
     class scope<TExpected, T, std::enable_if_t<is_lambda_expr<T, const injector&>{}>> {
     public:
+    static constexpr auto yes = false;
         explicit scope(const T& object) noexcept
             : given_(object)
         { }

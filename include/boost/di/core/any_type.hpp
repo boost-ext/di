@@ -23,12 +23,11 @@ struct any_type {
     template<class T>
     using scope = typename std::remove_reference_t<
         decltype(binder::resolve<T>((TInjector*)nullptr))
-    >::scope;
+    >;
 
     template<class T>
     using is_external = std::enable_if_t<
-        std::is_same<TInjector, aux::none_t>{} ||
-        std::is_same<scopes::external, scope<T>>{}
+        std::is_same<TInjector, aux::none_t>{} || scope<T>::yes
     >;
 
     template<class T, class = is_not_same_t<T>>
