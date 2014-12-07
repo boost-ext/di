@@ -26,6 +26,11 @@ struct test_skip {
     test_skip(const Test&) { }
 };
 
+template<class T>
+struct test_type {
+    using type = T;
+};
+
 int main() { }
 
 #endif
