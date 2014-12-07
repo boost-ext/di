@@ -1557,13 +1557,13 @@ private:
         using provider_type = provider<T, given_t, ctor_t, injector>;
         auto&& ctor_provider = provider_type{*this};
         using wrapper_t = decltype(dependency.template create<T>(ctor_provider));
-        using t = std::conditional_t<
+        using type = std::conditional_t<
             std::is_reference<T>{} &&
             std::is_same<scopes::external, typename dependency_t::scope>{}
           , T
           , std::remove_reference_t<T>
         >;
-        return wrappers::universal<t, wrapper_t>{dependency.template create<T>(ctor_provider)};
+        return wrappers::universal<type, wrapper_t>{dependency.template create<T>(ctor_provider)};
     }
 
     template<
