@@ -397,7 +397,8 @@ test request_value_and_ptr_in_unique = [] {
         di::bind<int>.in(di::unique)
     );
 
-    injector.create<c>();
+    auto object = injector.create<c>();
+    delete object.ptr;
 };
 
 test inject = [] {
