@@ -32,6 +32,7 @@ struct complex3 {
     complex2 c2;
 };
 
+#if 0
 test named_params = [] {
 	constexpr auto i = 42;
 	auto injector = di::make_injector(
@@ -511,6 +512,75 @@ test bind_chars_to_string = [] {
     );
 
     expect_eq("str", injector.create<std::string>());
+};
+#endif
+
+test ctor_refs_local = [] {
+    struct c {
+        c(const std::shared_ptr<i1>& sp, int& i) : i(i) { sp->dummy1(); }
+        int& i;
+    };
+
+    std::shared_ptr<i1> sp = std::make_shared<impl1>();
+
+    int i = 0;
+    auto injector = di::make_injector(
+           di::bind<int>.to(i)
+         , di::bind<i1, impl1>
+    );
+    auto object = injector.create<c>();
+    expect_eq(&i, &object.i);
+};
+
+test ctor_refs_external = [] {
+    struct c {
+        c(const std::shared_ptr<i1>& sp, int& i) : i(i) { sp->dummy1(); }
+        int& i;
+    };
+
+    std::shared_ptr<i1> sp = std::make_shared<impl1>();
+
+    int i = 0;
+    auto injector = di::make_injector(
+           di::bind<int>.to(i)
+         , di::bind<i1>.to(sp)
+    );
+    auto object = injector.create<c>();
+    expect_eq(&i, &object.i);
+};
+
+test inject_refs_local = [] {
+    struct c {
+        BOOST_DI_INJECT(c, const std::shared_ptr<i1>& sp, int& i) : i(i) { sp->dummy1(); }
+        int& i;
+    };
+
+    std::shared_ptr<i1> sp = std::make_shared<impl1>();
+
+    int i = 0;
+    auto injector = di::make_injector(
+           di::bind<int>.to(i)
+         , di::bind<i1, impl1>
+    );
+    auto object = injector.create<c>();
+    expect_eq(&i, &object.i);
+};
+
+test inject_refs_external = [] {
+    struct c {
+        BOOST_DI_INJECT(c, const std::shared_ptr<i1>& sp, int& i) : i(i) { sp->dummy1(); }
+        int& i;
+    };
+
+    std::shared_ptr<i1> sp = std::make_shared<impl1>();
+
+    int i = 0;
+    auto injector = di::make_injector(
+           di::bind<int>.to(i)
+         , di::bind<i1>.to(sp)
+    );
+    auto object = injector.create<c>();
+    expect_eq(&i, &object.i);
 };
 
 #if 0

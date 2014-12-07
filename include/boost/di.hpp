@@ -522,7 +522,39 @@ public:
         }
 
     private:
-        wrappers::unique<TExpected> object_;
+        wrappers::unique<T> object_;
+    };
+
+    template<class TExpected, class T>
+    class scope<TExpected, T&> {
+    public:
+        explicit scope(T& object) noexcept
+            : object_(object)
+        { }
+
+        template<class, class TProvider>
+        decltype(auto) create(const TProvider&) const noexcept {
+            return object_;
+        }
+
+    private:
+        T& object_;
+    };
+
+    template<class TExpected, class T>
+    class scope<TExpected, const T&> {
+    public:
+        explicit scope(const T& object) noexcept
+            : object_(object)
+        { }
+
+        template<class, class TProvider>
+        decltype(auto) create(const TProvider&) const noexcept {
+            return object_;
+        }
+
+    private:
+        const T& object_;
     };
 
     template<class TExpected, class T>
@@ -649,7 +681,7 @@ public:
     template<class T>
     auto to(T&& object) const noexcept {
         using dependency = dependency<
-            scopes::external, TExpected, aux::remove_accessors_t<T>, TName
+            scopes::external, TExpected, T, TName
         >;
         return dependency{std::forward<T>(object)};
     }
@@ -1063,6 +1095,62 @@ private:
 
 namespace boost { namespace di { namespace core {
 
+class binder {
+    template<class>
+    struct get_name {
+        using type = no_name;
+    };
+
+    template<class T, class TName>
+    struct get_name<named<T, TName>> {
+        using type = TName;
+    };
+
+    template<class T>
+    using get_name_t = typename get_name<T>::type;
+
+    template<class TDefault, class>
+    static TDefault resolve_impl(...) noexcept {
+        return {};
+    }
+
+    template<class, class TConcept, class TDependency>
+    static TDependency&
+    resolve_impl(aux::pair<TConcept, TDependency>* dep) noexcept {
+        return static_cast<TDependency&>(*dep);
+    }
+
+    template<
+        class
+      , class TConcept
+      , class TScope
+      , class TExpected
+      , class TGiven
+      , class TName
+    > static decltype(auto) // priority scope
+    resolve_impl(aux::pair<TConcept
+               , dependency<TScope, TExpected, TGiven, TName, true>>* dep) noexcept {
+        return static_cast<dependency<TScope, TExpected, TGiven, TName, true>&>(*dep);
+    }
+
+public:
+    template<
+        class T
+      , class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>
+      , class TDeps = void
+    > static decltype(auto) resolve(TDeps* deps) noexcept {
+        using dependency = dependency_concept<
+            aux::make_plain_t<T>
+          , get_name_t<aux::remove_accessors_t<T>>
+        >;
+        return resolve_impl<TDefault, dependency>(deps);
+    }
+};
+
+}}} // boost::di::core
+
+namespace boost { namespace di { namespace core {
+
 template<class TParent = aux::none_t, class TInjector = aux::none_t>
 struct any_type {
     template<class T>
@@ -1070,9 +1158,30 @@ struct any_type {
         !std::is_same<aux::make_plain_t<T>, aux::make_plain_t<TParent>>{}
     >;
 
+    template<class T>
+    using scope = typename std::remove_reference_t<
+        decltype(binder::resolve<T>((TInjector*)nullptr))
+    >::scope;
+
+    template<class T>
+    using is_external = std::enable_if_t<
+        std::is_same<TInjector, aux::none_t>{} ||
+        std::is_same<scopes::external, scope<T>>{}
+    >;
+
     template<class T, class = is_not_same_t<T>>
     operator T() noexcept {
         return injector_.template create<T, TParent>();
+    }
+
+    template<class T, class = is_not_same_t<T>, class = is_external<T>>
+    operator T&() const noexcept {
+        return injector_.template create<T&, TParent>();
+    }
+
+    template<class T, class = is_not_same_t<T>, class = is_external<T>>
+    operator const T&() const noexcept {
+        return injector_.template create<const T&, TParent>();
     }
 
     const TInjector& injector_;
@@ -1343,62 +1452,6 @@ template<
 
 }}} // boost::di::core
 
-namespace boost { namespace di { namespace core {
-
-class binder {
-    template<class>
-    struct get_name {
-        using type = no_name;
-    };
-
-    template<class T, class TName>
-    struct get_name<named<T, TName>> {
-        using type = TName;
-    };
-
-    template<class T>
-    using get_name_t = typename get_name<T>::type;
-
-    template<class TDefault, class>
-    static TDefault resolve_impl(...) noexcept {
-        return {};
-    }
-
-    template<class, class TConcept, class TDependency>
-    static TDependency&
-    resolve_impl(aux::pair<TConcept, TDependency>* dep) noexcept {
-        return static_cast<TDependency&>(*dep);
-    }
-
-    template<
-        class
-      , class TConcept
-      , class TScope
-      , class TExpected
-      , class TGiven
-      , class TName
-    > static decltype(auto) // priority scope
-    resolve_impl(aux::pair<TConcept
-               , dependency<TScope, TExpected, TGiven, TName, true>>* dep) noexcept {
-        return static_cast<dependency<TScope, TExpected, TGiven, TName, true>&>(*dep);
-    }
-
-public:
-    template<
-        class T
-      , class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>
-      , class TDeps = void
-    > static decltype(auto) resolve(TDeps* deps) noexcept {
-        using dependency = dependency_concept<
-            aux::make_plain_t<T>
-          , get_name_t<aux::remove_accessors_t<T>>
-        >;
-        return resolve_impl<TDefault, dependency>(deps);
-    }
-};
-
-}}} // boost::di::core
-
 namespace boost { namespace di { namespace wrappers {
 
 template<class T, class TWrapper>
@@ -1504,7 +1557,13 @@ private:
         using provider_type = provider<T, given_t, ctor_t, injector>;
         auto&& ctor_provider = provider_type{*this};
         using wrapper_t = decltype(dependency.template create<T>(ctor_provider));
-        return wrappers::universal<T, wrapper_t>{dependency.template create<T>(ctor_provider)};
+        using t = std::conditional_t<
+            std::is_reference<T>{} &&
+            std::is_same<scopes::external, typename dependency_t::scope>{}
+          , T
+          , std::remove_reference_t<T>
+        >;
+        return wrappers::universal<t, wrapper_t>{dependency.template create<T>(ctor_provider)};
     }
 
     template<

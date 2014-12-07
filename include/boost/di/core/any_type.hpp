@@ -8,6 +8,8 @@
 
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/core/binder.hpp"
+#include "boost/di/scopes/external.hpp"
 
 namespace boost { namespace di { namespace core {
 
@@ -18,9 +20,30 @@ struct any_type {
         !std::is_same<aux::make_plain_t<T>, aux::make_plain_t<TParent>>{}
     >;
 
+    template<class T>
+    using scope = typename std::remove_reference_t<
+        decltype(binder::resolve<T>((TInjector*)nullptr))
+    >::scope;
+
+    template<class T>
+    using is_external = std::enable_if_t<
+        std::is_same<TInjector, aux::none_t>{} ||
+        std::is_same<scopes::external, scope<T>>{}
+    >;
+
     template<class T, class = is_not_same_t<T>>
     operator T() noexcept {
         return injector_.template create<T, TParent>();
+    }
+
+    template<class T, class = is_not_same_t<T>, class = is_external<T>>
+    operator T&() const noexcept {
+        return injector_.template create<T&, TParent>();
+    }
+
+    template<class T, class = is_not_same_t<T>, class = is_external<T>>
+    operator const T&() const noexcept {
+        return injector_.template create<const T&, TParent>();
     }
 
     const TInjector& injector_;

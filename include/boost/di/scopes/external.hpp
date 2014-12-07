@@ -59,7 +59,39 @@ public:
         }
 
     private:
-        wrappers::unique<TExpected> object_;
+        wrappers::unique<T> object_;
+    };
+
+    template<class TExpected, class T>
+    class scope<TExpected, T&> {
+    public:
+        explicit scope(T& object) noexcept
+            : object_(object)
+        { }
+
+        template<class, class TProvider>
+        decltype(auto) create(const TProvider&) const noexcept {
+            return object_;
+        }
+
+    private:
+        T& object_;
+    };
+
+    template<class TExpected, class T>
+    class scope<TExpected, const T&> {
+    public:
+        explicit scope(const T& object) noexcept
+            : object_(object)
+        { }
+
+        template<class, class TProvider>
+        decltype(auto) create(const TProvider&) const noexcept {
+            return object_;
+        }
+
+    private:
+        const T& object_;
     };
 
     template<class TExpected, class T>
