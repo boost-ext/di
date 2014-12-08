@@ -1151,7 +1151,7 @@ struct any_type {
     >;
 
     template<class T>
-    using is_ref = std::enable_if_t<
+    using is_ref_t = std::enable_if_t<
         std::is_same<TInjector, aux::none_t>{} || has_is_ref<dependency<T>>{}
     >;
 
@@ -1160,12 +1160,12 @@ struct any_type {
         return injector_.template create<T, TParent>();
     }
 
-    template<class T, class = is_not_same_t<T>, class = is_ref<T>>
+    template<class T, class = is_not_same_t<T>, class = is_ref_t<T>>
     operator T&() const noexcept {
         return injector_.template create<T&, TParent>();
     }
 
-    template<class T, class = is_not_same_t<T>, class = is_ref<T>>
+    template<class T, class = is_not_same_t<T>, class = is_ref_t<T>>
     operator const T&() const noexcept {
         return injector_.template create<const T&, TParent>();
     }
