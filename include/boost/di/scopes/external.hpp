@@ -125,17 +125,17 @@ public:
     class scope<TExpected, T, std::enable_if_t<is_lambda_expr<T, const injector&>{}>> {
     public:
         explicit scope(const T& object) noexcept
-            : given_(object)
+            : object_(object)
         { }
 
         template<class, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
-            using wrapper = wrapper_traits_t<decltype((given_)(provider.injector_))>;
-            return wrapper{(given_)(provider.injector_)};
+            using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_))>;
+            return wrapper{(object_)(provider.injector_)};
         }
 
     private:
-        T given_;
+        T object_;
     };
 };
 

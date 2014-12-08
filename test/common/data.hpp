@@ -631,19 +631,6 @@ struct functions
     function<long()> fl_;
 };
 
-struct nameds
-{
-    BOOST_DI_INJECT(nameds
-        , named<aux::shared_ptr<i>, a> n1
-        , named<aux::shared_ptr<i>, b> n2
-    )
-        : n1_(n1)
-        , n2_(n2)
-    { }
-
-    aux::shared_ptr<i> n1_;
-    aux::shared_ptr<i> n2_;
-};
 
 struct call_stack_nested
 {
