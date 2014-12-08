@@ -9,7 +9,7 @@
 #include "boost/di/aux_/memory.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/core/binder.hpp"
-#include "boost/di/scopes/external.hpp"
+#include "boost/di/named.hpp"
 
 namespace boost { namespace di { namespace core {
 
