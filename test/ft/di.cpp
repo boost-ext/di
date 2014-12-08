@@ -599,11 +599,11 @@ test ctor_refs = [] {
     };
 
 
-    //test(test_type<c>{}, di::bind<i1, impl1>);
+    test(test_type<c>{}, di::bind<i1, impl1>);
     test(test_type<c_inject>{}, di::bind<i1, impl1>);
     test(test_type<c_aggregate>{}, di::bind<i1, impl1>);
 
-    //test(test_type<c>{}, di::bind<i1>.to(std::make_shared<impl1>()));
+    test(test_type<c>{}, di::bind<i1>.to(std::make_shared<impl1>()));
     test(test_type<c_inject>{}, di::bind<i1>.to(std::make_shared<impl1>()));
     test(test_type<c_aggregate>{}, di::bind<i1>.to(std::make_shared<impl1>()));
 };
