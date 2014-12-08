@@ -26,9 +26,13 @@ template<class TWrapper, class T, class TName>
 struct universal<named<T, TName>, TWrapper> {
     TWrapper wrapper_;
 
-    inline operator named<T, TName>() const noexcept {
-        return wrapper_.operator T();
+    inline operator T() const noexcept {
+        return wrapper_;
     }
+
+     inline operator named<T, TName>() const noexcept {
+        return wrapper_.operator T();
+     }
 };
 
 }}} // boost::di::wrappers
