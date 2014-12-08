@@ -27,13 +27,13 @@ struct example {
 /*<define scope class>*/
 class custom_scope {
 public:
-    using priority = boost::mpl::int_<0>; // lowest = 0, highest = N
+    static constexpr auto priority = false;
 
     /*<define `entry`, `exit` actions>*/
     class entry { };
     class exit { };
 
-    template<typename T>
+    template<class T, class>
     class scope {
         /*<define wrapper for shared_ptr conversion>*/
         class custom_wrapper {
@@ -43,8 +43,7 @@ public:
             { }
 
             /*<<conversion operator to shared_ptr>>*/
-            const std::shared_ptr<T>&
-            operator()(const boost::type<std::shared_ptr<T>>&) const {
+            inline operator std::shared_ptr<T>() const noexcept {
                 return object_;
             }
 
@@ -55,9 +54,6 @@ public:
         /*<<define result_type>>*/
         using result_type = custom_wrapper;
 
-        /*<<di::wrappers::shared<T> might be used as well>>*/
-        //using result_type = di::wrappers::shared<T>;
-
         void call(const entry&) {
             in_scope_ = true;
         }
@@ -67,12 +63,13 @@ public:
         }
 
         /*<<create shared_ptr when in scope out of provider pointer>>*/
-        result_type create(const boost::function<T*()>& f) const {
+        template<class, class TProvider>
+        custom_wrapper create(const TProvider& provider) const noexcept {
             if (in_scope_) {
-                return std::shared_ptr<T>(f());
+                return std::shared_ptr<T>{provider.get()};
             }
 
-            return std::shared_ptr<T>();
+            return std::shared_ptr<T>{};
         }
 
     private:
@@ -83,7 +80,7 @@ public:
 int main() {
     /*<<create injector with `int` in `custom scope`>>*/
     auto injector = di::make_injector(
-        di::scope<custom_scope>::bind<int>()
+        di::bind<int>.in(custom_scope{})
     );
 
     /*<<not in scope>>*/

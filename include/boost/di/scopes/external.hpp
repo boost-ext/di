@@ -128,10 +128,6 @@ public:
             : given_(object)
         { }
 
-        scope(const scope& other) noexcept
-            : given_(other.given_)
-        { }
-
         template<class, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
             using wrapper = wrapper_traits_t<decltype((given_)(provider.injector_))>;
@@ -139,7 +135,7 @@ public:
         }
 
     private:
-        const T& given_;
+        T given_;
     };
 };
 

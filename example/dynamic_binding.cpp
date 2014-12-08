@@ -12,9 +12,6 @@
 //->
 #include <boost/di.hpp>
 
-//<-
-namespace mpl = boost::mpl;
-//->
 namespace di  = boost::di;
 
 //<-
@@ -32,20 +29,16 @@ public:
         : id(id)
     { }
 
-    dynamic_binding(const dynamic_binding& other)
-        : id(other.id)
-    { }
-
     /*<<module configuration>>*/
     auto configure() const {
         return di::make_injector(
             /*<<bind `interface` to lazy lambda expression>>*/
-            di::bind<interface>::to(
-                [&]() -> std::shared_ptr<interface> {
+            di::bind<interface>.to(
+                [&](const auto& injector) -> std::shared_ptr<interface> {
                     switch(id) {
                         default: return nullptr;
-                        case e1: return std::make_shared<implementation1>();
-                        case e2: return std::make_shared<implementation2>();
+                        case e1: return injector.template create<std::shared_ptr<implementation1>>();
+                        case e2: return injector.template create<std::shared_ptr<implementation2>>();
                     }
 
                     return nullptr;
@@ -62,7 +55,7 @@ int main() {
     auto id = e1;
 
     /*<<create interface with `id = e1`>>*/
-    auto injector = di::make_injector(dynamic_binding(id));
+    auto injector = di::make_injector(dynamic_binding{id});
     assert(dynamic_cast<implementation1*>(injector.create<std::shared_ptr<interface>>().get()));
 
     id = e2;
