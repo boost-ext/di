@@ -522,8 +522,9 @@ test ctor_refs = [] {
         , const std::string& str
         , di::named<const std::string&, name> nstr
         , std::function<int()> f
+        , long&& l
         , short s)
-            : i(i), d(d), str(str), nstr(nstr), f(f), s(s)
+            : i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)
         {
             sp->dummy1();
         }
@@ -533,7 +534,8 @@ test ctor_refs = [] {
         std::string str;
         std::string nstr;
         std::function<int()> f;
-        short s;
+        long l = 0;
+        short s = 0;
     };
 
     struct c_inject {
@@ -544,8 +546,9 @@ test ctor_refs = [] {
                       , const std::string& str
                       , di::named<const std::string&, name> nstr
                       , std::function<int()> f
+                      , long&& l
                       , short s)
-            : i(i), d(d), str(str), nstr(nstr), f(f), s(s)
+            : i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)
         {
             sp->dummy1();
         }
@@ -555,7 +558,8 @@ test ctor_refs = [] {
         std::string str;
         std::string nstr;
         std::function<int()> f;
-        short s;
+        long l = 0;
+        short s = 0;
     };
 
     struct c_aggregate {
@@ -565,7 +569,8 @@ test ctor_refs = [] {
         std::string str; // possible ref to copy with const std::string&
         di::named<std::string, name> nstr; // possible ref to copy with const std::string&
         std::function<int()> f;
-        short s;
+        long l = 0;
+        short s = 0;
     };
 
 	auto test = [](auto type, const auto& bind_i1) {
@@ -579,6 +584,7 @@ test ctor_refs = [] {
           , di::bind<std::string>.named(name{}).to("named str")
           , bind_i1
           , di::bind<short>.to(42)
+          , di::bind<long>.to(123)
           , di::bind<std::function<int()>>.to([]{return 87;})
         );
 
@@ -589,6 +595,7 @@ test ctor_refs = [] {
         expect_eq("named str", static_cast<const std::string&>(object.nstr));
         expect_eq(42, object.s);
         expect_eq(87, object.f());
+        expect_eq(123, object.l);
     };
 
 
