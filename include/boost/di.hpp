@@ -72,7 +72,7 @@ public:
         : object_(object)
     { }
 
-    named(const named&) noexcept = default;
+    named(const named&) = default;
 
     operator T() const noexcept {
         return object_;
@@ -563,7 +563,11 @@ public:
     class scope<
         TExpected
       , T
-      , std::enable_if_t<has_call_operator<T>{} && !is_lambda_expr<T, const injector&>{}>
+      , std::enable_if_t<
+            !is_lambda_expr<T, const injector&>{} &&
+            !has_call_operator<TExpected>{} &&
+            has_call_operator<T>{}
+        >
     > {
     public:
         explicit scope(const T& object) noexcept
@@ -1459,7 +1463,7 @@ struct universal<named<T, TName>, TWrapper> {
     }
 
     inline operator named<T, TName>() const noexcept {
-        return static_cast<T>(wrapper_);
+        return static_cast<const T&>(wrapper_);
     }
 };
 

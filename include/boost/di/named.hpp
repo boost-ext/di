@@ -25,7 +25,7 @@ public:
         : object_(object)
     { }
 
-    named(const named&) noexcept = default;
+    named(const named&) = default;
 
     operator T() const noexcept {
         return object_;

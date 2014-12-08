@@ -100,7 +100,11 @@ public:
     class scope<
         TExpected
       , T
-      , std::enable_if_t<has_call_operator<T>{} && !is_lambda_expr<T, const injector&>{}>
+      , std::enable_if_t<
+            !is_lambda_expr<T, const injector&>{} &&
+            !has_call_operator<TExpected>{} &&
+            has_call_operator<T>{}
+        >
     > {
     public:
         explicit scope(const T& object) noexcept

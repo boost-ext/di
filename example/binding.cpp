@@ -29,14 +29,14 @@ struct service {
     service(const std::shared_ptr<interface1>& sp
           , bool b
           , int i
-          //, std::function<int()> f
+          , std::function<int()> f
           , const di::named<int, int_name> ni)
         : sp(sp)
     {
         assert(dynamic_cast<implementation1*>(sp.get()));
         assert(!b); // default initialization
         assert(i == 42);
-        //assert(f() == 87);
+        assert(f() == 87);
         assert(ni == 123);
     }
 
@@ -45,30 +45,31 @@ struct service {
 
 struct app {
     app(service copy
-      //, std::shared_ptr<interface1> sp
-      //, std::unique_ptr<interface2> ap
-      //, int i
+      , std::shared_ptr<interface1> sp
+      , std::unique_ptr<interface2> ap
+      , int i
+      , di::named<std::string, some_name> s
       //, di::named<const std::string&, some_name> s
       , float& f
       , const double& d)
-      //: str(s)
-      //, f(f)
-      //, d(d)
+      : str(s)
+      , f(f)
+      , d(d)
     {
-        //assert(dynamic_cast<implementation2*>(ap.get()));
-        //assert(dynamic_cast<implementation1*>(sp.get()));
-        //assert(copy.sp.get() == sp.get());
-        //assert(i == 42);
-        //assert(str == "some_name");
-        //assert(f == 0.f);
-        //assert(d == 0.f);
+        assert(dynamic_cast<implementation2*>(ap.get()));
+        assert(dynamic_cast<implementation1*>(sp.get()));
+        assert(copy.sp.get() == sp.get());
+        assert(i == 42);
+        assert(str == "some_name");
+        assert(f == 0.f);
+        assert(d == 0.f);
     }
 
     app& operator=(const app&) = delete;
 
-    //std::string str;
-    //float& f;
-    //const double& d;
+    std::string str;
+    float& f;
+    const double& d;
 };
 
 int main() {
@@ -88,14 +89,14 @@ int main() {
     );
 
     /*<<create `service_app`>>*/
-    /*auto service_app = */injector.create<app>();
+    auto service_app = injector.create<app>();
 
     /*<<verify parameter `f` affection by `service_app`>>*/
-    //service_app.f = 42.f;
-    //assert(f == 42.f);
+    service_app.f = 42.f;
+    assert(f == 42.f);
 
-    //d = 42.f;
-    //assert(service_app.d == 42.f);
+    d = 42.f;
+    assert(service_app.d == 42.f);
 
     return 0;
 }

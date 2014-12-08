@@ -520,8 +520,9 @@ test ctor_refs = [] {
         , int& i
         , const double& d
         , const std::string& str
+        , std::function<int()> f
         , short s)
-            : i(i), d(d), str(str), s(s)
+            : i(i), d(d), str(str), f(f), s(s)
         {
             sp->dummy1();
         }
@@ -529,6 +530,7 @@ test ctor_refs = [] {
         int& i;
         const double& d;
         std::string str;
+        std::function<int()> f;
         short s;
     };
 
@@ -538,8 +540,9 @@ test ctor_refs = [] {
                       , int& i
                       , const double& d
                       , const std::string& str
+                      , std::function<int()> f
                       , short s)
-            : i(i), d(d), str(str), s(s)
+            : i(i), d(d), str(str), f(f), s(s)
         {
             sp->dummy1();
         }
@@ -547,6 +550,7 @@ test ctor_refs = [] {
         int& i;
         const double& d;
         std::string str;
+        std::function<int()> f;
         short s;
     };
 
@@ -555,6 +559,7 @@ test ctor_refs = [] {
         int& i;
         const double& d;
         std::string str; // possible ref to copy
+        std::function<int()> f;
         short s;
     };
 
@@ -568,6 +573,7 @@ test ctor_refs = [] {
           , di::bind<std::string>.to("str")
           , bind_i1
           , di::bind<short>.to(42)
+          , di::bind<std::function<int()>>.to([]{return 87;})
         );
 
         auto object = injector.template create<typename decltype(type)::type>();
@@ -576,6 +582,7 @@ test ctor_refs = [] {
         expect_eq(&d, &object.d);
         expect_eq("str", object.str);
         expect_eq(42, object.s);
+        expect_eq(87, object.f());
     };
 
     test(test_type<c>{}, di::bind<i1, impl1>);

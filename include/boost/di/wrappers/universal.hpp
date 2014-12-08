@@ -31,7 +31,7 @@ struct universal<named<T, TName>, TWrapper> {
     }
 
     inline operator named<T, TName>() const noexcept {
-        return static_cast<T>(wrapper_);
+        return static_cast<const T&>(wrapper_);
     }
 };
 
