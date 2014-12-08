@@ -99,7 +99,8 @@ public:
     }
 
 private:
-    std::reference_wrapper<const T> object_;
+    //std::reference_wrapper<const T> object_;
+    T object_;
 };
 
 template<class T, class TName>
