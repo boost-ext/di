@@ -49,7 +49,6 @@ public:
     template<class TExpected, class T, class = void>
     class scope {
     public:
-    static constexpr auto yes = false;
         explicit scope(const T& object) noexcept
             : object_(object)
         { }
@@ -66,7 +65,8 @@ public:
     template<class TExpected, class T>
     class scope<TExpected, std::reference_wrapper<T>> {
     public:
-    static constexpr auto yes = true;
+        using is_ref = void;
+
         explicit scope(const std::reference_wrapper<T>& object) noexcept
             : object_(object)
         { }
@@ -83,7 +83,6 @@ public:
     template<class TExpected, class T>
     class scope<TExpected, std::shared_ptr<T>> {
     public:
-    static constexpr auto yes = false;
         explicit scope(const std::shared_ptr<T>& object) noexcept
             : object_(object)
         { }
@@ -104,7 +103,6 @@ public:
       , std::enable_if_t<has_call_operator<T>{} && !is_lambda_expr<T, const injector&>{}>
     > {
     public:
-    static constexpr auto yes = false;
         explicit scope(const T& object) noexcept
             : object_(object)
         { }
@@ -122,7 +120,6 @@ public:
     template<class TExpected, class T>
     class scope<TExpected, T, std::enable_if_t<is_lambda_expr<T, const injector&>{}>> {
     public:
-    static constexpr auto yes = false;
         explicit scope(const T& object) noexcept
             : given_(object)
         { }

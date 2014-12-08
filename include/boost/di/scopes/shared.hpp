@@ -18,7 +18,6 @@ public:
     template<class, class T>
     class scope {
     public:
-    static constexpr auto yes = false;
         template<class, class TProvider>
         decltype(auto) create(const TProvider& provider) noexcept {
             if (!object_) {

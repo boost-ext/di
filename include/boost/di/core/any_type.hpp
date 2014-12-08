@@ -13,6 +13,8 @@
 
 namespace boost { namespace di { namespace core {
 
+BOOST_DI_HAS_TYPE(is_ref);
+
 template<class TParent = aux::none_t, class TInjector = aux::none_t>
 struct any_type {
     template<class T>
@@ -21,13 +23,13 @@ struct any_type {
     >;
 
     template<class T>
-    using scope = typename std::remove_reference_t<
+    using dependency = typename std::remove_reference_t<
         decltype(binder::resolve<T>((TInjector*)nullptr))
     >;
 
     template<class T>
-    using is_external = std::enable_if_t<
-        std::is_same<TInjector, aux::none_t>{} || scope<T>::yes
+    using is_ref = std::enable_if_t<
+        std::is_same<TInjector, aux::none_t>{} || has_is_ref<dependency<T>>{}
     >;
 
     template<class T, class = is_not_same_t<T>>
@@ -35,12 +37,12 @@ struct any_type {
         return injector_.template create<T, TParent>();
     }
 
-    template<class T, class = is_not_same_t<T>, class = is_external<T>>
+    template<class T, class = is_not_same_t<T>, class = is_ref<T>>
     operator T&() const noexcept {
         return injector_.template create<T&, TParent>();
     }
 
-    template<class T, class = is_not_same_t<T>, class = is_external<T>>
+    template<class T, class = is_not_same_t<T>, class = is_ref<T>>
     operator const T&() const noexcept {
         return injector_.template create<const T&, TParent>();
     }

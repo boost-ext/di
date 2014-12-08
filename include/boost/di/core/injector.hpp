@@ -99,8 +99,7 @@ private:
         auto&& ctor_provider = provider_type{*this};
         using wrapper_t = decltype(dependency.template create<T>(ctor_provider));
         using type = std::conditional_t<
-            std::is_reference<T>{} &&
-            dependency_t::yes
+            std::is_reference<T>{} && has_is_ref<dependency_t>{}
           , T
           , std::remove_reference_t<T>
         >;

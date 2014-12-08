@@ -512,7 +512,6 @@ public:
     template<class TExpected, class T, class = void>
     class scope {
     public:
-    static constexpr auto yes = false;
         explicit scope(const T& object) noexcept
             : object_(object)
         { }
@@ -529,7 +528,8 @@ public:
     template<class TExpected, class T>
     class scope<TExpected, std::reference_wrapper<T>> {
     public:
-    static constexpr auto yes = true;
+        using is_ref = void;
+
         explicit scope(const std::reference_wrapper<T>& object) noexcept
             : object_(object)
         { }
@@ -546,7 +546,6 @@ public:
     template<class TExpected, class T>
     class scope<TExpected, std::shared_ptr<T>> {
     public:
-    static constexpr auto yes = false;
         explicit scope(const std::shared_ptr<T>& object) noexcept
             : object_(object)
         { }
@@ -567,7 +566,6 @@ public:
       , std::enable_if_t<has_call_operator<T>{} && !is_lambda_expr<T, const injector&>{}>
     > {
     public:
-    static constexpr auto yes = false;
         explicit scope(const T& object) noexcept
             : object_(object)
         { }
@@ -585,7 +583,6 @@ public:
     template<class TExpected, class T>
     class scope<TExpected, T, std::enable_if_t<is_lambda_expr<T, const injector&>{}>> {
     public:
-    static constexpr auto yes = false;
         explicit scope(const T& object) noexcept
             : given_(object)
         { }
@@ -796,7 +793,6 @@ public:
     template<class, class T>
     class scope {
     public:
-    static constexpr auto yes = false;
         template<class TDst, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
             using memory = type_traits::memory_traits_t<TDst>;
@@ -817,7 +813,6 @@ public:
     template<class, class T>
     class scope {
     public:
-    static constexpr auto yes = false;
         template<class, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
             if (!get_instance()) {
@@ -937,8 +932,6 @@ public:
     template<class TExpected, class T>
     class scope {
     public:
-    static constexpr auto yes = false;
-
         template<class TDst, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
             using scope_traits = type_traits::scope_traits_t<TDst>;
@@ -966,7 +959,6 @@ public:
     template<class, class T>
     class scope {
     public:
-    static constexpr auto yes = false;
         void call(const session_entry<TName>&) noexcept {
             in_scope_ = true;
         }
@@ -1001,7 +993,6 @@ public:
     template<class, class T>
     class scope {
     public:
-    static constexpr auto yes = false;
         template<class, class TProvider>
         decltype(auto) create(const TProvider& provider) noexcept {
             if (!object_) {
@@ -1146,6 +1137,8 @@ public:
 
 namespace boost { namespace di { namespace core {
 
+BOOST_DI_HAS_TYPE(is_ref);
+
 template<class TParent = aux::none_t, class TInjector = aux::none_t>
 struct any_type {
     template<class T>
@@ -1154,13 +1147,13 @@ struct any_type {
     >;
 
     template<class T>
-    using scope = typename std::remove_reference_t<
+    using dependency = typename std::remove_reference_t<
         decltype(binder::resolve<T>((TInjector*)nullptr))
     >;
 
     template<class T>
-    using is_external = std::enable_if_t<
-        std::is_same<TInjector, aux::none_t>{} || scope<T>::yes
+    using is_ref = std::enable_if_t<
+        std::is_same<TInjector, aux::none_t>{} || has_is_ref<dependency<T>>{}
     >;
 
     template<class T, class = is_not_same_t<T>>
@@ -1168,12 +1161,12 @@ struct any_type {
         return injector_.template create<T, TParent>();
     }
 
-    template<class T, class = is_not_same_t<T>, class = is_external<T>>
+    template<class T, class = is_not_same_t<T>, class = is_ref<T>>
     operator T&() const noexcept {
         return injector_.template create<T&, TParent>();
     }
 
-    template<class T, class = is_not_same_t<T>, class = is_external<T>>
+    template<class T, class = is_not_same_t<T>, class = is_ref<T>>
     operator const T&() const noexcept {
         return injector_.template create<const T&, TParent>();
     }
@@ -1552,8 +1545,7 @@ private:
         auto&& ctor_provider = provider_type{*this};
         using wrapper_t = decltype(dependency.template create<T>(ctor_provider));
         using type = std::conditional_t<
-            std::is_reference<T>{} &&
-            dependency_t::yes
+            std::is_reference<T>{} && has_is_ref<dependency_t>{}
           , T
           , std::remove_reference_t<T>
         >;
@@ -1664,7 +1656,6 @@ public:
         };
 
     public:
-    static constexpr auto yes = false;
         template<class TInjector>
         explicit scope(const TInjector& injector) noexcept
             : provider_{std::make_shared<provider<TInjector>>(injector)}
