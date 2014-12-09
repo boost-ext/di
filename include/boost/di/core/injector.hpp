@@ -14,7 +14,6 @@
 #include "boost/di/core/provider.hpp"
 #include "boost/di/core/binder.hpp"
 #include "boost/di/core/pool.hpp"
-#include "boost/di/core/provider.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/wrappers/universal.hpp"
 #include "boost/di/config.hpp"
