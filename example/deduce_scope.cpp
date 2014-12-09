@@ -9,7 +9,6 @@
 //<-
 #include <cassert>
 #include <memory>
-#include <boost/shared_ptr.hpp>
 //->
 #include <boost/di.hpp>
 
@@ -21,20 +20,18 @@ struct implementation : interface { void dummy() override { } };
 //->
 
 struct dependency1 {
-    dependency1(std::shared_ptr<interface> spi /*shared*/, const boost::shared_ptr<interface>& spi_ /*shared*/)
-        : spi_(spi), spi__(spi_)
-    {
+    dependency1(std::shared_ptr<interface> spi /*shared*/, const std::shared_ptr<interface>& spi_ /*shared*/)
+        : spi_(spi), spi__(spi_) {
         assert(spi.get() == spi_.get());
     }
 
     std::shared_ptr<interface> spi_;
-    boost::shared_ptr<interface> spi__;
+    std::shared_ptr<interface> spi__;
 };
 
 struct dependency2 {
     dependency2(std::shared_ptr<interface> spi/*shared*/, int i/*unique*/)
-        : spi_(spi)
-    {
+        : spi_(spi) {
         assert(i == 0);
     }
 
@@ -51,15 +48,13 @@ struct example {
 };
 
 int main() {
-    {
-        /*<<create injector with deduced `interface`>>*/
-        auto injector = di::make_injector(
-            di::bind<interface, implementation> // => di::bind<interface, implementation>.in(di::deduce)
-        );
+    /*<<create injector with deduced `interface`>>*/
+    auto injector = di::make_injector(
+        di::bind<interface, implementation> // => di::bind<interface, implementation>.in(di::deduce)
+    );
 
-        /*<<create `example`>>*/
-        injector.create<example>();
-    }
+    /*<<create `example`>>*/
+    injector.create<example>();
 
     return 0;
 }
