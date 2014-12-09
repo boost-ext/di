@@ -1,19 +1,19 @@
-#include <type_traits>
-#include <boost/di/config.hpp>
+#define BOOST_DI_CFG_CUSTOM_POLICIES
+#include <boost/di.hpp>
 #include <boost/di/policies/allow_ctor_types.hpp>
 
 namespace di = boost::di;
 
-auto BOOST_DI_POLICIES(const di::project_scope&) noexcept {
-    using namespace di::policies;
-    using namespace di::policies::operators;
-    return di::make_policies(
-        allow_ctor_types(
-            std::is_same<_, int>{} && is_bound<_>{})
-    );
+namespace boost { namespace di {
+
+template<class T, class TDependency, class TDeps>
+void custom_policies(TDependency& dep, TDeps& deps) noexcept {
+    using namespace policies;
+    using namespace policies::operators;
+    return call_policies<T>(dep, deps, allow_ctor_types(std::is_same<_, int>{} && is_bound<_>{}));
 }
 
-#include <boost/di.hpp>
+}} // boost::di
 
 test allow_types_policy = [] {
     auto injector = di::make_injector(di::bind<int>.to(0));

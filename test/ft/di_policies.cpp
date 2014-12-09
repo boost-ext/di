@@ -1,4 +1,5 @@
-#include <boost/di/config.hpp>
+#define BOOST_DI_CFG_CUSTOM_POLICIES
+#include <boost/di.hpp>
 
 namespace di = boost::di;
 
@@ -11,11 +12,15 @@ struct policy {
     }
 };
 
-auto BOOST_DI_POLICIES(const di::project_scope&) noexcept {
-    return di::make_policies(policy{});
+namespace boost { namespace di {
+
+
+template<class T, class TDependency, class TDeps>
+void custom_policies(TDependency& dep, TDeps& deps) noexcept {
+    call_policies<T>(dep, deps, policy{});
 }
 
-#include <boost/di.hpp>
+}} // boost::di
 
 test call_policies = [] {
     auto injector = di::make_injector();

@@ -31,19 +31,6 @@ class injector : public pool<TDeps> {
 
     using pool_t = pool<TDeps>;
 
-    template<class TDst, class TDependency>
-    struct data {
-        using type = TDst;
-
-        TDependency&& dep;
-        pool_t& deps;
-
-        template<class T, class TDefault>
-        decltype(auto) resolve() const noexcept {
-            return binder::template resolve<T, TDefault>(&deps);
-        }
-    };
-
 public:
     using deps = TDeps;
 
@@ -93,8 +80,7 @@ private:
         using dependency_t = typename std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-        auto&& policies = BOOST_DI_POLICIES(project_scope{});
-        call_policies<given_t>(policies, dependency);
+        custom_policies<given_t>(dependency, (injector&)*this);
         using provider_type = provider<given_t, T, ctor_t, injector>;
         auto&& ctor_provider = provider_type{*this};
         using wrapper_t = decltype(dependency.template create<T>(ctor_provider));
@@ -103,32 +89,9 @@ private:
           , T
           , std::remove_reference_t<T>
         >;
-        return wrappers::universal<type, wrapper_t>{dependency.template create<T>(ctor_provider)};
-    }
-
-    template<
-        class T
-      , class TDependency
-      , class... TPolicies
-    > void call_policies(const pool<aux::type_list<TPolicies...>>& policies
-                       , TDependency&& dependency) const noexcept {
-        void(call_policies_impl<TPolicies, T>(
-            policies, std::forward<TDependency>(dependency))...
-        );
-    }
-
-    template<
-        class TPolicy
-      , class T
-      , class TPolicies
-      , class TDependency
-    > void call_policies_impl(const TPolicies& policies
-                            , TDependency&& dependency) const noexcept {
-        auto&& injections = data<T, TDependency>{
-            std::forward<TDependency>(dependency)
-          , (injector&)*this
+        return wrappers::universal<type, wrapper_t>{
+            dependency.template create<T>(ctor_provider)
         };
-        (static_cast<const TPolicy&>(policies))(injections);
     }
 
     template<class TAction, class... Ts>
@@ -147,16 +110,14 @@ private:
     call_impl(const TAction&) noexcept { }
 
     template<class T>
-    decltype(auto)
-    pass_arg(const T& arg
-           , std::enable_if_t<!has_configure<T>{}>* = 0) const noexcept {
+    decltype(auto) pass_arg(const T& arg
+                          , std::enable_if_t<!has_configure<T>{}>* = 0) const noexcept {
         return arg;
     }
 
     template<class T>
-    decltype(auto)
-    pass_arg(const T& arg
-           , std::enable_if_t<has_configure<T>{}>* = 0) const noexcept {
+    decltype(auto) pass_arg(const T& arg
+                          , std::enable_if_t<has_configure<T>{}>* = 0) const noexcept {
         return arg.configure();
     }
 
@@ -168,8 +129,7 @@ private:
     }
 
     template<class TDependency, class TInjector>
-    decltype(auto)
-    create_dep(const TInjector& injector) const noexcept {
+    decltype(auto) create_dep(const TInjector& injector) const noexcept {
         return TDependency{injector};
     }
 };
