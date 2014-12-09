@@ -46,10 +46,10 @@ class external {
 public:
     static constexpr auto priority = true;
 
-    template<class TExpected, class T, class = void>
+    template<class TExpected, class TGiven, class = void>
     class scope {
     public:
-        explicit scope(const T& object) noexcept
+        explicit scope(const TGiven& object) noexcept
             : object_(object)
         { }
 
@@ -62,12 +62,12 @@ public:
         wrappers::unique<TExpected> object_;
     };
 
-    template<class TExpected, class T>
-    class scope<TExpected, std::reference_wrapper<T>> {
+    template<class TExpected, class TGiven>
+    class scope<TExpected, std::reference_wrapper<TGiven>> {
     public:
         using is_ref = void;
 
-        explicit scope(const std::reference_wrapper<T>& object) noexcept
+        explicit scope(const std::reference_wrapper<TGiven>& object) noexcept
             : object_(object)
         { }
 
@@ -77,13 +77,13 @@ public:
         }
 
     private:
-        std::reference_wrapper<T> object_;
+        std::reference_wrapper<TGiven> object_;
     };
 
-    template<class TExpected, class T>
-    class scope<TExpected, std::shared_ptr<T>> {
+    template<class TExpected, class TGiven>
+    class scope<TExpected, std::shared_ptr<TGiven>> {
     public:
-        explicit scope(const std::shared_ptr<T>& object) noexcept
+        explicit scope(const std::shared_ptr<TGiven>& object) noexcept
             : object_(object)
         { }
 
@@ -93,38 +93,38 @@ public:
         }
 
     private:
-        wrappers::shared<T> object_;
+        wrappers::shared<TGiven> object_;
     };
 
-    template<class TExpected, class T>
+    template<class TExpected, class TGiven>
     class scope<
         TExpected
-      , T
+      , TGiven
       , std::enable_if_t<
-            !is_lambda_expr<T, const injector&>{} &&
+            !is_lambda_expr<TGiven, const injector&>{} &&
             !has_call_operator<TExpected>{} &&
-            has_call_operator<T>{}
+             has_call_operator<TGiven>{}
         >
     > {
     public:
-        explicit scope(const T& object) noexcept
+        explicit scope(const TGiven& object) noexcept
             : object_(object)
         { }
 
         template<class, class TProvider>
         decltype(auto) create(const TProvider&) const noexcept {
-            using wrapper = wrapper_traits_t<decltype(std::declval<T>()())>;
+            using wrapper = wrapper_traits_t<decltype(std::declval<TGiven>()())>;
             return wrapper{object_()};
         }
 
     private:
-        T object_;
+        TGiven object_;
     };
 
-    template<class TExpected, class T>
-    class scope<TExpected, T, std::enable_if_t<is_lambda_expr<T, const injector&>{}>> {
+    template<class TExpected, class TGiven>
+    class scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&>{}>> {
     public:
-        explicit scope(const T& object) noexcept
+        explicit scope(const TGiven& object) noexcept
             : object_(object)
         { }
 
@@ -135,7 +135,7 @@ public:
         }
 
     private:
-        T object_;
+        TGiven object_;
     };
 };
 

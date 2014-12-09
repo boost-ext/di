@@ -16,12 +16,12 @@ class unique {
 public:
     static constexpr auto priority = false;
 
-    template<class, class T>
+    template<class, class>
     class scope {
     public:
-        template<class TDst, class TProvider>
+        template<class T, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
-            using memory = type_traits::memory_traits_t<TDst>;
+            using memory = type_traits::memory_traits_t<T>;
             using wrapper = wrappers::unique<decltype(provider.get(memory{}))>;
             return wrapper{provider.get(memory{})};
         }

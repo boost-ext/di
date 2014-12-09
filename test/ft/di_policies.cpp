@@ -1,4 +1,4 @@
-#include <boost/di/defaults.hpp>
+#include <boost/di/config.hpp>
 
 namespace di = boost::di;
 

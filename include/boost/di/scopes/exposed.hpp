@@ -16,12 +16,12 @@ class exposed {
 public:
     static constexpr auto priority = false;
 
-    template<class TExpected, class T>
+    template<class TExpected, class TGiven>
     class scope {
         struct iprovider {
             virtual ~iprovider() = default;
-            virtual T* get(const type_traits::heap& = {}) const noexcept = 0;
-            virtual T  get(const type_traits::stack&) const noexcept = 0;
+            virtual TGiven* get(const type_traits::heap& = {}) const noexcept = 0;
+            virtual TGiven  get(const type_traits::stack&) const noexcept = 0;
         };
 
         template<typename TInjector>
@@ -31,12 +31,12 @@ public:
                 : injector_(injector)
             { }
 
-            T* get(const type_traits::heap&) const noexcept override {
-                return injector_.template create<T*>();
+            TGiven* get(const type_traits::heap&) const noexcept override {
+                return injector_.template create<TGiven*>();
             }
 
-            T get(const type_traits::stack&) const noexcept override {
-                return injector_.template create<T>();
+            TGiven get(const type_traits::stack&) const noexcept override {
+                return injector_.template create<TGiven>();
             }
 
         private:
@@ -49,11 +49,11 @@ public:
             : provider_{std::make_shared<provider<TInjector>>(injector)}
         { }
 
-        template<class TDst, class TProvider>
+        template<class T, class TProvider>
         decltype(auto) create(const TProvider&) const noexcept {
-            using scope_traits = type_traits::scope_traits_t<TDst>;
-            using scope = typename scope_traits::template scope<TExpected, T>;
-            return scope{}.template create<TDst>(*provider_);
+            using scope_traits = type_traits::scope_traits_t<T>;
+            using scope = typename scope_traits::template scope<TExpected, TGiven>;
+            return scope{}.template create<T>(*provider_);
         }
 
     private:

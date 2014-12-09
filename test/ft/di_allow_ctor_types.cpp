@@ -1,5 +1,5 @@
 #include <type_traits>
-#include <boost/di/defaults.hpp>
+#include <boost/di/config.hpp>
 #include <boost/di/policies/allow_ctor_types.hpp>
 
 namespace di = boost::di;

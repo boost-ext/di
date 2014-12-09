@@ -33,14 +33,14 @@ main() {
     echo
     echo "#if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)"
     echo
+    echo "// config"
+    echo "#include \"boost/di/config.hpp"\"
+    echo
     echo "// annotations"
     echo "#include \"boost/di/named.hpp\""
     echo
     echo "// bindings"
     echo "#include \"boost/di/bindings.hpp"\"
-    echo
-    echo "// defaults"
-    echo "#include \"boost/di/defaults.hpp"\"
     echo
     echo "// injections"
     echo "#include \"boost/di/inject.hpp\""

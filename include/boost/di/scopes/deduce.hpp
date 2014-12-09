@@ -14,14 +14,14 @@ class deduce {
 public:
     static constexpr auto priority = false;
 
-    template<class TExpected, class T>
+    template<class TExpected, class TGiven>
     class scope {
     public:
-        template<class TDst, class TProvider>
+        template<class T, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
-            using scope_traits = type_traits::scope_traits_t<TDst>;
-            using scope = typename scope_traits::template scope<TExpected, T>;
-            return scope{}.template create<TDst>(provider);
+            using scope_traits = type_traits::scope_traits_t<T>;
+            using scope = typename scope_traits::template scope<TExpected, TGiven>;
+            return scope{}.template create<T>(provider);
         }
     };
 };

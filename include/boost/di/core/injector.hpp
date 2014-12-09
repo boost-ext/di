@@ -17,7 +17,7 @@
 #include "boost/di/core/provider.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/wrappers/universal.hpp"
-#include "boost/di/defaults.hpp"
+#include "boost/di/config.hpp"
 
 namespace boost { namespace di { namespace core {
 

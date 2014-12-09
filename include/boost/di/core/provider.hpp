@@ -8,7 +8,7 @@
 
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
-#include "boost/di/defaults.hpp"
+#include "boost/di/config.hpp"
 
 namespace boost { namespace di { namespace core {
 
@@ -23,7 +23,7 @@ template<
   , class... TArgs
 > struct provider<
     T
-  , TGiven
+  , TParent
   , aux::pair<TInitialization, aux::type_list<TArgs...>>
   , TInjector
 > {

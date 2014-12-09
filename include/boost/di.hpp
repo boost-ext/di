@@ -9,14 +9,14 @@
 
 #if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)
 
+// config
+#include "boost/di/config.hpp"
+
 // annotations
 #include "boost/di/named.hpp"
 
 // bindings
 #include "boost/di/bindings.hpp"
-
-// defaults
-#include "boost/di/defaults.hpp"
 
 // injections
 #include "boost/di/inject.hpp"
@@ -37,6 +37,63 @@
 #include <memory>
 #include <new>
 #include <type_traits>
+#define BOOST_DI_CAT_IMPL(a, b) a ## b
+#define BOOST_DI_CAT(a, b) BOOST_DI_CAT_IMPL(a, b)
+#define BOOST_DI_CALL(m, ...) m(__VA_ARGS__)
+
+namespace boost { namespace di { namespace aux {
+
+struct none_t { };
+
+template<class T, T>
+struct non_type { };
+
+template<class, class>
+struct pair { using type = pair; };
+
+template<class T>
+struct no_decay { using type = T; };
+
+template<class... TArgs>
+struct inherit : TArgs... { };
+
+template<class...>
+struct type_list { using type = type_list; };
+
+template<class...>
+struct join;
+
+template<>
+struct join<> { using type = type_list<>; };
+
+template<class... TArgs>
+struct join<type_list<TArgs...>> {
+    using type = type_list<TArgs...>;
+};
+
+template<class... TArgs1, class... TArgs2>
+struct join<type_list<TArgs1...>, type_list<TArgs2...>> {
+    using type = type_list<TArgs1..., TArgs2...>;
+};
+
+template<class... TArgs1, class... TArgs2, class... Ts>
+struct join<type_list<TArgs1...>, type_list<TArgs2...>, Ts...> {
+    using type = typename join<type_list<TArgs1..., TArgs2...>, Ts...>::type;
+};
+
+template<class TDefault, class>
+static no_decay<TDefault> lookup(...);
+
+template<class, class TKey, class TValue>
+static no_decay<TValue> lookup(pair<TKey, TValue>*);
+
+template<class TDefault, class TKey, class... Ts>
+using at_key = decltype(lookup<TDefault, TKey>((inherit<Ts...>*)0));
+
+template<class TDefault, class TKey, class... Ts>
+using at_key_t = typename at_key<TDefault, TKey, Ts...>::type;
+
+}}} // boost::di::aux
 
 namespace boost { namespace di { namespace aux {
     using ::std::unique_ptr;
@@ -165,63 +222,6 @@ private:
 };
 
 }} // boost::di
-#define BOOST_DI_CAT_IMPL(a, b) a ## b
-#define BOOST_DI_CAT(a, b) BOOST_DI_CAT_IMPL(a, b)
-#define BOOST_DI_CALL(m, ...) m(__VA_ARGS__)
-
-namespace boost { namespace di { namespace aux {
-
-struct none_t { };
-
-template<class T, T>
-struct non_type { };
-
-template<class, class>
-struct pair { using type = pair; };
-
-template<class T>
-struct no_decay { using type = T; };
-
-template<class... TArgs>
-struct inherit : TArgs... { };
-
-template<class...>
-struct type_list { using type = type_list; };
-
-template<class...>
-struct join;
-
-template<>
-struct join<> { using type = type_list<>; };
-
-template<class... TArgs>
-struct join<type_list<TArgs...>> {
-    using type = type_list<TArgs...>;
-};
-
-template<class... TArgs1, class... TArgs2>
-struct join<type_list<TArgs1...>, type_list<TArgs2...>> {
-    using type = type_list<TArgs1..., TArgs2...>;
-};
-
-template<class... TArgs1, class... TArgs2, class... Ts>
-struct join<type_list<TArgs1...>, type_list<TArgs2...>, Ts...> {
-    using type = typename join<type_list<TArgs1..., TArgs2...>, Ts...>::type;
-};
-
-template<class TDefault, class>
-static no_decay<TDefault> lookup(...);
-
-template<class, class TKey, class TValue>
-static no_decay<TValue> lookup(pair<TKey, TValue>*);
-
-template<class TDefault, class TKey, class... Ts>
-using at_key = decltype(lookup<TDefault, TKey>((inherit<Ts...>*)0));
-
-template<class TDefault, class TKey, class... Ts>
-using at_key_t = typename at_key<TDefault, TKey, Ts...>::type;
-
-}}} // boost::di::aux
 
 #define BOOST_DI_HAS_TYPE(name)                                     \
     template<class>                                                 \
@@ -358,6 +358,47 @@ struct function_traits<R(T::*)(TArgs...) const> {
 };
 
 }}} // boost::di::aux
+
+namespace boost { namespace di { namespace core {
+
+struct init { };
+
+template<class = aux::type_list<>>
+class pool;
+
+template<class... TArgs>
+class pool<aux::type_list<TArgs...>> : public TArgs... {
+public:
+    template<class... Ts>
+    explicit pool(const Ts&... args) noexcept
+        : Ts(args)...
+    { }
+
+    template<class TPool>
+    pool(const init&, const TPool& p) noexcept
+        : pool(get<TArgs>(p)...)
+    { }
+
+    template<class T>
+    inline const T& get() const noexcept {
+        return static_cast<const T&>(*this);
+    }
+
+private:
+    template<class T, class TPool>
+    std::enable_if_t<std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}, T>
+    inline get(const TPool& p) const noexcept { return p.template get<T>(); }
+
+    template<class T, class TPool>
+    std::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, T>
+    inline get(const TPool&) const noexcept { return {}; }
+
+    template<class T, class TPool>
+    std::enable_if_t<!std::is_base_of<T, pool>{}, const T&>
+    inline get(const TPool&) const noexcept { return {}; }
+};
+
+}}} // boost::di::core
 
 namespace boost { namespace di { namespace wrappers {
 
@@ -508,10 +549,10 @@ class external {
 public:
     static constexpr auto priority = true;
 
-    template<class TExpected, class T, class = void>
+    template<class TExpected, class TGiven, class = void>
     class scope {
     public:
-        explicit scope(const T& object) noexcept
+        explicit scope(const TGiven& object) noexcept
             : object_(object)
         { }
 
@@ -524,12 +565,12 @@ public:
         wrappers::unique<TExpected> object_;
     };
 
-    template<class TExpected, class T>
-    class scope<TExpected, std::reference_wrapper<T>> {
+    template<class TExpected, class TGiven>
+    class scope<TExpected, std::reference_wrapper<TGiven>> {
     public:
         using is_ref = void;
 
-        explicit scope(const std::reference_wrapper<T>& object) noexcept
+        explicit scope(const std::reference_wrapper<TGiven>& object) noexcept
             : object_(object)
         { }
 
@@ -539,13 +580,13 @@ public:
         }
 
     private:
-        std::reference_wrapper<T> object_;
+        std::reference_wrapper<TGiven> object_;
     };
 
-    template<class TExpected, class T>
-    class scope<TExpected, std::shared_ptr<T>> {
+    template<class TExpected, class TGiven>
+    class scope<TExpected, std::shared_ptr<TGiven>> {
     public:
-        explicit scope(const std::shared_ptr<T>& object) noexcept
+        explicit scope(const std::shared_ptr<TGiven>& object) noexcept
             : object_(object)
         { }
 
@@ -555,38 +596,38 @@ public:
         }
 
     private:
-        wrappers::shared<T> object_;
+        wrappers::shared<TGiven> object_;
     };
 
-    template<class TExpected, class T>
+    template<class TExpected, class TGiven>
     class scope<
         TExpected
-      , T
+      , TGiven
       , std::enable_if_t<
-            !is_lambda_expr<T, const injector&>{} &&
+            !is_lambda_expr<TGiven, const injector&>{} &&
             !has_call_operator<TExpected>{} &&
-            has_call_operator<T>{}
+             has_call_operator<TGiven>{}
         >
     > {
     public:
-        explicit scope(const T& object) noexcept
+        explicit scope(const TGiven& object) noexcept
             : object_(object)
         { }
 
         template<class, class TProvider>
         decltype(auto) create(const TProvider&) const noexcept {
-            using wrapper = wrapper_traits_t<decltype(std::declval<T>()())>;
+            using wrapper = wrapper_traits_t<decltype(std::declval<TGiven>()())>;
             return wrapper{object_()};
         }
 
     private:
-        T object_;
+        TGiven object_;
     };
 
-    template<class TExpected, class T>
-    class scope<TExpected, T, std::enable_if_t<is_lambda_expr<T, const injector&>{}>> {
+    template<class TExpected, class TGiven>
+    class scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&>{}>> {
     public:
-        explicit scope(const T& object) noexcept
+        explicit scope(const TGiven& object) noexcept
             : object_(object)
         { }
 
@@ -597,7 +638,7 @@ public:
         }
 
     private:
-        T object_;
+        TGiven object_;
     };
 };
 
@@ -789,12 +830,12 @@ class unique {
 public:
     static constexpr auto priority = false;
 
-    template<class, class T>
+    template<class, class>
     class scope {
     public:
-        template<class TDst, class TProvider>
+        template<class T, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
-            using memory = type_traits::memory_traits_t<TDst>;
+            using memory = type_traits::memory_traits_t<T>;
             using wrapper = wrappers::unique<decltype(provider.get(memory{}))>;
             return wrapper{provider.get(memory{})};
         }
@@ -928,155 +969,19 @@ class deduce {
 public:
     static constexpr auto priority = false;
 
-    template<class TExpected, class T>
+    template<class TExpected, class TGiven>
     class scope {
     public:
-        template<class TDst, class TProvider>
+        template<class T, class TProvider>
         decltype(auto) create(const TProvider& provider) const noexcept {
-            using scope_traits = type_traits::scope_traits_t<TDst>;
-            using scope = typename scope_traits::template scope<TExpected, T>;
-            return scope{}.template create<TDst>(provider);
+            using scope_traits = type_traits::scope_traits_t<T>;
+            using scope = typename scope_traits::template scope<TExpected, TGiven>;
+            return scope{}.template create<T>(provider);
         }
     };
 };
 
 }}} // boost::di::scopes
-
-namespace boost { namespace di { namespace scopes {
-
-template<class = no_name>
-class session_entry { };
-
-template<class = no_name>
-class session_exit { };
-
-template<class TName = no_name>
-class session {
-public:
-    static constexpr auto priority = false;
-
-    template<class, class T>
-    class scope {
-    public:
-        void call(const session_entry<TName>&) noexcept {
-            in_scope_ = true;
-        }
-
-        void call(const session_exit<TName>&) noexcept {
-            in_scope_ = false;
-            object_.reset();
-        }
-
-        template<class, class TProvider>
-        decltype(auto) create(const TProvider& provider) noexcept {
-            if (in_scope_ && !object_) {
-                object_.reset(provider.get());
-            }
-            return object_;
-        }
-
-    private:
-        wrappers::shared<T> object_;
-        bool in_scope_ = false;
-    };
-};
-
-}}} // boost::di::scopes
-
-namespace boost { namespace di { namespace scopes {
-
-class shared {
-public:
-    static constexpr auto priority = false;
-
-    template<class, class T>
-    class scope {
-    public:
-        template<class, class TProvider>
-        decltype(auto) create(const TProvider& provider) noexcept {
-            if (!object_) {
-                object_.reset(provider.get());
-            }
-            return object_;
-        }
-
-    private:
-        wrappers::shared<T> object_;
-    };
-};
-
-}}} // boost::di::scopes
-
-namespace boost { namespace di {
-
-template<class... Ts>
-using any_of = aux::type_list<Ts...>;
-
-template<class TExpected, class TGiven = TExpected>
-core::dependency<scopes::deduce, TExpected, TGiven> bind{};
-
-extern constexpr scopes::deduce deduce{};
-extern constexpr scopes::unique unique{};
-extern constexpr scopes::shared shared{};
-extern constexpr scopes::singleton singleton{};
-
-template<class TName>
-constexpr auto session(const TName&) noexcept {
-    return scopes::session<TName>{};
-}
-
-template<class TName>
-constexpr auto session_entry(const TName&) noexcept {
-    return scopes::session_entry<TName>{};
-}
-
-template<class TName>
-constexpr auto session_exit(const TName&) noexcept {
-    return scopes::session_exit<TName>{};
-}
-
-}} // boost::di
-
-namespace boost { namespace di { namespace core {
-
-struct init { };
-
-template<class = aux::type_list<>>
-class pool;
-
-template<class... TArgs>
-class pool<aux::type_list<TArgs...>> : public TArgs... {
-public:
-    template<class... Ts>
-    explicit pool(const Ts&... args) noexcept
-        : Ts(args)...
-    { }
-
-    template<class TPool>
-    pool(const init&, const TPool& p) noexcept
-        : pool(get<TArgs>(p)...)
-    { }
-
-    template<class T>
-    inline const T& get() const noexcept {
-        return static_cast<const T&>(*this);
-    }
-
-private:
-    template<class T, class TPool>
-    std::enable_if_t<std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}, T>
-    inline get(const TPool& p) const noexcept { return p.template get<T>(); }
-
-    template<class T, class TPool>
-    std::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, T>
-    inline get(const TPool&) const noexcept { return {}; }
-
-    template<class T, class TPool>
-    std::enable_if_t<!std::is_base_of<T, pool>{}, const T&>
-    inline get(const TPool&) const noexcept { return {}; }
-};
-
-}}} // boost::di::core
 
 namespace boost { namespace di { namespace core {
 
@@ -1407,6 +1312,101 @@ inline auto BOOST_DI_PROVIDER(...) noexcept {
     return boost::di::providers::nothrow_reduce_heap_usage{};
 }
 
+namespace boost { namespace di { namespace scopes {
+
+template<class = no_name>
+class session_entry { };
+
+template<class = no_name>
+class session_exit { };
+
+template<class TName = no_name>
+class session {
+public:
+    static constexpr auto priority = false;
+
+    template<class, class T>
+    class scope {
+    public:
+        void call(const session_entry<TName>&) noexcept {
+            in_scope_ = true;
+        }
+
+        void call(const session_exit<TName>&) noexcept {
+            in_scope_ = false;
+            object_.reset();
+        }
+
+        template<class, class TProvider>
+        decltype(auto) create(const TProvider& provider) noexcept {
+            if (in_scope_ && !object_) {
+                object_.reset(provider.get());
+            }
+            return object_;
+        }
+
+    private:
+        wrappers::shared<T> object_;
+        bool in_scope_ = false;
+    };
+};
+
+}}} // boost::di::scopes
+
+namespace boost { namespace di { namespace scopes {
+
+class shared {
+public:
+    static constexpr auto priority = false;
+
+    template<class, class T>
+    class scope {
+    public:
+        template<class, class TProvider>
+        decltype(auto) create(const TProvider& provider) noexcept {
+            if (!object_) {
+                object_.reset(provider.get());
+            }
+            return object_;
+        }
+
+    private:
+        wrappers::shared<T> object_;
+    };
+};
+
+}}} // boost::di::scopes
+
+namespace boost { namespace di {
+
+template<class... Ts>
+using any_of = aux::type_list<Ts...>;
+
+template<class TExpected, class TGiven = TExpected>
+core::dependency<scopes::deduce, TExpected, TGiven> bind{};
+
+extern constexpr scopes::deduce deduce{};
+extern constexpr scopes::unique unique{};
+extern constexpr scopes::shared shared{};
+extern constexpr scopes::singleton singleton{};
+
+template<class TName>
+constexpr auto session(const TName&) noexcept {
+    return scopes::session<TName>{};
+}
+
+template<class TName>
+constexpr auto session_entry(const TName&) noexcept {
+    return scopes::session_entry<TName>{};
+}
+
+template<class TName>
+constexpr auto session_exit(const TName&) noexcept {
+    return scopes::session_exit<TName>{};
+}
+
+}} // boost::di
+
 namespace boost { namespace di { namespace core {
 
 template<class...>
@@ -1414,22 +1414,22 @@ struct provider;
 
 template<
     class T
-  , class TGiven
+  , class TParent
   , class TInjector
   , class TInitialization
   , class... TArgs
 > struct provider<
     T
-  , TGiven
+  , TParent
   , aux::pair<TInitialization, aux::type_list<TArgs...>>
   , TInjector
 > {
     template<class TMemory = type_traits::heap>
     decltype(auto) get(const TMemory& memory = {}) const noexcept {
-        return BOOST_DI_PROVIDER(project_scope{}).get<TGiven>(
+        return BOOST_DI_PROVIDER(project_scope{}).get<T>(
             TInitialization{}
           , memory
-          , injector_.template create<TArgs, T>()...
+          , injector_.template create<TArgs, TParent>()...
         );
     }
 
@@ -1540,7 +1540,7 @@ private:
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         auto&& policies = BOOST_DI_POLICIES(project_scope{});
         call_policies<given_t>(policies, dependency);
-        using provider_type = provider<T, given_t, ctor_t, injector>;
+        using provider_type = provider<given_t, T, ctor_t, injector>;
         auto&& ctor_provider = provider_type{*this};
         using wrapper_t = decltype(dependency.template create<T>(ctor_provider));
         using type = std::conditional_t<
@@ -1627,12 +1627,12 @@ class exposed {
 public:
     static constexpr auto priority = false;
 
-    template<class TExpected, class T>
+    template<class TExpected, class TGiven>
     class scope {
         struct iprovider {
             virtual ~iprovider() = default;
-            virtual T* get(const type_traits::heap& = {}) const noexcept = 0;
-            virtual T  get(const type_traits::stack&) const noexcept = 0;
+            virtual TGiven* get(const type_traits::heap& = {}) const noexcept = 0;
+            virtual TGiven  get(const type_traits::stack&) const noexcept = 0;
         };
 
         template<typename TInjector>
@@ -1642,12 +1642,12 @@ public:
                 : injector_(injector)
             { }
 
-            T* get(const type_traits::heap&) const noexcept override {
-                return injector_.template create<T*>();
+            TGiven* get(const type_traits::heap&) const noexcept override {
+                return injector_.template create<TGiven*>();
             }
 
-            T get(const type_traits::stack&) const noexcept override {
-                return injector_.template create<T>();
+            TGiven get(const type_traits::stack&) const noexcept override {
+                return injector_.template create<TGiven>();
             }
 
         private:
@@ -1660,11 +1660,11 @@ public:
             : provider_{std::make_shared<provider<TInjector>>(injector)}
         { }
 
-        template<class TDst, class TProvider>
+        template<class T, class TProvider>
         decltype(auto) create(const TProvider&) const noexcept {
-            using scope_traits = type_traits::scope_traits_t<TDst>;
-            using scope = typename scope_traits::template scope<TExpected, T>;
-            return scope{}.template create<TDst>(*provider_);
+            using scope_traits = type_traits::scope_traits_t<T>;
+            using scope = typename scope_traits::template scope<TExpected, TGiven>;
+            return scope{}.template create<T>(*provider_);
         }
 
     private:
