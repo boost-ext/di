@@ -41,10 +41,6 @@ inline void call_policies(TDependency& dependency
 #if defined(BOOST_DI_CFG_CUSTOM_POLICIES)
     template<class T, class TDependency, class TDeps>
     void custom_policies(TDependency&, TDeps&) noexcept;
-#else
-    template<class T, class TDependency, class TDeps>
-    void custom_policies(TDependency&, TDeps&) noexcept
-    { }
 #endif
 
 #if defined(BOOST_DI_CFG_CUSTOM_PROVIDER)
