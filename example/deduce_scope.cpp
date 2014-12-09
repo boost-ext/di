@@ -20,7 +20,8 @@ struct implementation : interface { void dummy() override { } };
 //->
 
 struct dependency1 {
-    dependency1(std::shared_ptr<interface> spi /*shared*/, const std::shared_ptr<interface>& spi_ /*shared*/)
+    dependency1(std::shared_ptr<interface> spi /*shared*/
+              , const std::shared_ptr<interface>& spi_ /*shared*/)
         : spi_(spi), spi__(spi_) {
         assert(spi.get() == spi_.get());
     }
@@ -40,7 +41,7 @@ struct dependency2 {
 
 struct example {
     example(std::unique_ptr<dependency1> dependency1_ /*unique*/
-     , const dependency2& dependency2_ /*unique temporary*/)
+          , const dependency2& dependency2_ /*unique temporary*/)
     {
         assert(dependency2_.spi_.get() == dependency1_->spi_.get());
         assert(dependency2_.spi_.get() == dependency1_->spi__.get());

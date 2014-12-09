@@ -95,7 +95,7 @@ private:
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         auto&& policies = BOOST_DI_POLICIES(project_scope{});
         call_policies<given_t>(policies, dependency);
-        using provider_type = provider<T, given_t, ctor_t, injector>;
+        using provider_type = provider<given_t, T, ctor_t, injector>;
         auto&& ctor_provider = provider_type{*this};
         using wrapper_t = decltype(dependency.template create<T>(ctor_provider));
         using type = std::conditional_t<

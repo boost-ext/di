@@ -17,7 +17,7 @@ struct provider;
 
 template<
     class T
-  , class TGiven
+  , class TParent
   , class TInjector
   , class TInitialization
   , class... TArgs
@@ -29,10 +29,10 @@ template<
 > {
     template<class TMemory = type_traits::heap>
     decltype(auto) get(const TMemory& memory = {}) const noexcept {
-        return BOOST_DI_PROVIDER(project_scope{}).get<TGiven>(
+        return BOOST_DI_PROVIDER(project_scope{}).get<T>(
             TInitialization{}
           , memory
-          , injector_.template create<TArgs, T>()...
+          , injector_.template create<TArgs, TParent>()...
         );
     }
 
