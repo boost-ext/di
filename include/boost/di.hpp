@@ -1276,14 +1276,10 @@ inline void call_policies(TDependency& dependency
 #if defined(BOOST_DI_CFG_CUSTOM_POLICIES)
     template<class T, class TDependency, class TDeps>
     void custom_policies(TDependency&, TDeps&) noexcept;
-#else
-    template<class T, class TDependency, class TDeps>
-    void custom_policies(TDependency&, TDeps&) noexcept
-    { }
 #endif
 
 #if defined(BOOST_DI_CFG_CUSTOM_PROVIDER)
-    BOOST_DI_CFG_PROVIDER custom_provider() noexcept;
+    BOOST_DI_CFG_CUSTOM_PROVIDER custom_provider() noexcept;
 #else
     auto custom_provider() noexcept {
         return providers::nothrow_reduce_heap_usage{};
@@ -1546,11 +1542,6 @@ private:
         using dependency_t = typename std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-
-        #if defined(BOOST_DI_CFG_CUSTOM_POLICIES)
-            custom_policies<given_t>(dependency, (injector&)*this);
-        #endif
-
         using provider_type = provider<given_t, T, ctor_t, injector>;
         auto&& ctor_provider = provider_type{*this};
         using wrapper_t = decltype(dependency.template create<T>(ctor_provider));
@@ -1559,6 +1550,11 @@ private:
           , T
           , std::remove_reference_t<T>
         >;
+
+        #if defined(BOOST_DI_CFG_CUSTOM_POLICIES)
+            custom_policies<given_t>(dependency, (injector&)*this);
+        #endif
+
         return wrappers::universal<type, wrapper_t>{
             dependency.template create<T>(ctor_provider)
         };

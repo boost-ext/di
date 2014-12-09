@@ -44,7 +44,7 @@ inline void call_policies(TDependency& dependency
 #endif
 
 #if defined(BOOST_DI_CFG_CUSTOM_PROVIDER)
-    BOOST_DI_CFG_PROVIDER custom_provider() noexcept;
+    BOOST_DI_CFG_CUSTOM_PROVIDER custom_provider() noexcept;
 #else
     auto custom_provider() noexcept {
         return providers::nothrow_reduce_heap_usage{};

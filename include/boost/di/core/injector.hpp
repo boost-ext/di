@@ -80,11 +80,6 @@ private:
         using dependency_t = typename std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-
-        #if defined(BOOST_DI_CFG_CUSTOM_POLICIES)
-            custom_policies<given_t>(dependency, (injector&)*this);
-        #endif
-
         using provider_type = provider<given_t, T, ctor_t, injector>;
         auto&& ctor_provider = provider_type{*this};
         using wrapper_t = decltype(dependency.template create<T>(ctor_provider));
@@ -93,6 +88,11 @@ private:
           , T
           , std::remove_reference_t<T>
         >;
+
+        #if defined(BOOST_DI_CFG_CUSTOM_POLICIES)
+            custom_policies<given_t>(dependency, (injector&)*this);
+        #endif
+
         return wrappers::universal<type, wrapper_t>{
             dependency.template create<T>(ctor_provider)
         };

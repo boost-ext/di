@@ -14,7 +14,6 @@ struct policy {
 
 namespace boost { namespace di {
 
-
 template<class T, class TDependency, class TDeps>
 void custom_policies(TDependency& dep, TDeps& deps) noexcept {
     call_policies<T>(dep, deps, policy{});
