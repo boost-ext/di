@@ -22,10 +22,10 @@ using any_of = aux::type_list<Ts...>;
 template<class TExpected, class TGiven = TExpected>
 core::dependency<scopes::deduce, TExpected, TGiven> bind{};
 
-extern constexpr scopes::deduce deduce{};
-extern constexpr scopes::unique unique{};
-extern constexpr scopes::shared shared{};
-extern constexpr scopes::singleton singleton{};
+constexpr scopes::deduce deduce{};
+constexpr scopes::unique unique{};
+constexpr scopes::shared shared{};
+constexpr scopes::singleton singleton{};
 
 template<class TName>
 constexpr auto session(const TName&) noexcept {
