@@ -390,11 +390,11 @@ private:
     inline get(const TPool& p) const noexcept { return p.template get<T>(); }
 
     template<class T, class TPool>
-    std::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, const T&>
+    std::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, T>
     inline get(const TPool&) const noexcept { return {}; }
 
     template<class T, class TPool>
-    std::enable_if_t<!std::is_base_of<T, pool>{}, const T&>
+    std::enable_if_t<!std::is_base_of<T, pool>{}, T>
     inline get(const TPool&) const noexcept { return {}; }
 };
 
@@ -1729,7 +1729,7 @@ using injector = core::injector<detail::bindings_t<TArgs...>, TConfig>;
 } // detail
 
 template<class... TArgs>
-using injector = core::injector<detail::bindings_t<TArgs...>, ::BOOST_DI_CFG>;
+using injector = core::injector<detail::bindings_t<TArgs...>, config>;
 
 }} // boost::di
 
