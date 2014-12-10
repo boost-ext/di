@@ -128,6 +128,8 @@ public:
         static auto s = di::make_policies(uml_visitor<plant_uml>{stream_});
         return s;
     }
+
+    uml_config
 };
 
 int main() {

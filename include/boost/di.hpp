@@ -1480,16 +1480,16 @@ class injector : public pool<TDeps> {
 
     using pool_t = pool<TDeps>;
 
-    template<class TDst, class TDependency>
+    template<class T, class TDependency>
     struct data {
-        using type = TDst;
+        using type = T;
 
         TDependency&& dep;
         pool_t& deps;
 
-        template<class T, class TDefault>
+        template<class U, class TDefault>
         decltype(auto) resolve() const noexcept {
-            return binder::template resolve<T, TDefault>(&deps);
+            return binder::template resolve<U, TDefault>(&deps);
         }
     };
 
@@ -1550,7 +1550,7 @@ private:
           , T
           , std::remove_reference_t<T>
         >;
-        call_policies<given_t>(config_.policies(), dependency);
+        call_policies<T>(config_.policies(), dependency);
         return wrappers::universal<type, wrapper_t>{
             dependency.template create<T>(ctor_provider)
         };

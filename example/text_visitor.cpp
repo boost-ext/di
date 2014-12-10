@@ -9,22 +9,18 @@
 //<-
 #include <iostream>
 #include <memory>
-#include <boost/shared_ptr.hpp>
-#include <boost/mpl/size.hpp>
-#include <boost/mpl/int.hpp>
 #include <boost/units/detail/utility.hpp>
 //->
 #include <boost/di.hpp>
 
 //<-
-namespace mpl = boost::mpl;
 namespace utils = boost::units::detail;
 
 struct i0 { virtual ~i0() { }; };
 struct c0 : i0 { };
-struct c1 { c1(boost::shared_ptr<i0>, int) { } };
+struct c1 { c1(std::shared_ptr<i0>, int) { } };
 struct c2 { c2(int, double, char) { } };
-struct c3 { c3(boost::shared_ptr<c1>, boost::shared_ptr<c2>) { } };
+struct c3 { c3(std::shared_ptr<c1>, std::shared_ptr<c2>) { } };
 //->
 namespace di = boost::di;
 
@@ -34,7 +30,8 @@ public:
     /*<<Definition of the visitor call operator requirement>>*/
     template<typename T>
     void operator()(const T&) const {
-        auto size = mpl::size<typename T::call_stack>::value;
+        //auto size = mpl::size<typename T::call_stack>::value;
+        auto size = 1;
         while(--size) {
             std::clog << "\t";
         }
@@ -42,12 +39,21 @@ public:
     }
 };
 
+class local_config : public di::config {
+public:
+    auto policies() const noexcept {
+        return di::make_policies(text_visitor{});
+    }
+};
+
 int main() {
     /*<<define injector>>*/
-    di::injector<c0> injector; // or auto injector = di::make_injector<di::deduce<c0>>();
+    auto injector = di::make_injector<local_config>(
+        di::bind<i0, c0>
+    );
 
     /*<<iterate through created objects with `text_visitor`>>*/
-    injector.visit<c3>(text_visitor());
+    injector.create<c3>();
 
     /*<< output [pre
     c3
