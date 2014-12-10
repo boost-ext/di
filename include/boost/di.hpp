@@ -1429,7 +1429,8 @@ template<
 > {
     template<class TMemory = type_traits::heap>
     decltype(auto) get(const TMemory& memory = {}) const noexcept {
-        return injector_.config_.provider().template get<T>(
+        auto&& config = injector_.config_;
+        return config.provider().template get<T>(
             TInitialization{}
           , memory
           , injector_.template create<TArgs, TParent>()...

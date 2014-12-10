@@ -120,17 +120,14 @@ public:
     mutable std::vector<dependency> context_;
 };
 
+std::stringstream stream_;
+
 class uml_config : public di::config {
 public:
-    auto policies() noexcept {
-        return di::make_policies(uml_visitor<plant_uml>{stream_});
+    auto& policies() const noexcept {
+        static auto s = di::make_policies(uml_visitor<plant_uml>{stream_});
+        return s;
     }
-
-    ~uml_config() {
-        std::clog << stream_.str() << std::endl;
-    }
-
-    std::stringstream stream_;
 };
 
 int main() {
@@ -141,6 +138,7 @@ int main() {
 
     /*<<iterate through created objects with `uml_visitor`>>*/
     injector.create<c3>();
+    std::clog << stream_.str();
 
     /*<<output [@images/uml_visitor.png [$images/uml_visitor.png [width 75%] [height 75%] ]]>>*/
     return 0;

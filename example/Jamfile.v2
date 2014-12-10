@@ -40,7 +40,7 @@ test-suite example :
     [ run-example c++1y : custom_scope.cpp ]
     [ run-example c++1y : dynamic_binding.cpp ]
     [ run-example c++1y : deduce_scope.cpp : -DBOOST_DI_CFG_CONV_TO_BOOST_SMART_PTR ]
-    #[ run-example c++1y : uml_visitor.cpp ]
+    [ run-example c++1y : uml_visitor.cpp ]
     #[ run-example c++1y : text_visitor.cpp ]
     #[ run-example c++1y : pool_provider.cpp ]
     #[ run-example c++1y : custom_provider.cpp ]
