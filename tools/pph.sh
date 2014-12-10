@@ -15,6 +15,7 @@ main() {
             if [[ "`cat $2/tmp.hpp | grep $file`" == "" ]]; then
                 genereate_pph $file $2
                 cat $file | egrep "^#include" | grep -v "boost\/di" >> $2/includes.hpp
+                head -n 8 $file | tail -n 1 >> $2/pph.hpp
                 tail -n +10 $file | head -n -3 | egrep -v "^#include" >> $2/pph.hpp
             fi
         done
