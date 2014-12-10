@@ -8,7 +8,6 @@
 
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
-#include "boost/di/config.hpp"
 
 namespace boost { namespace di { namespace core {
 
@@ -29,7 +28,7 @@ template<
 > {
     template<class TMemory = type_traits::heap>
     decltype(auto) get(const TMemory& memory = {}) const noexcept {
-        return custom_provider().get<T>(
+        return injector_.config_.provider().template get<T>(
             TInitialization{}
           , memory
           , injector_.template create<TArgs, TParent>()...

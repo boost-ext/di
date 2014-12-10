@@ -10,6 +10,7 @@
 #include "boost/di/core/injector.hpp"
 #include "boost/di/core/dependency.hpp"
 #include "boost/di/scopes/exposed.hpp"
+#include "boost/di/config.hpp"
 
 namespace boost { namespace di { namespace detail {
 
@@ -59,7 +60,10 @@ using bindings_t =
 } // detail
 
 template<class... TArgs>
-using injector = core::injector<detail::bindings_t<TArgs...>>;
+using injector = core::injector<detail::bindings_t<TArgs...>, BOOST_DI_CFG>;
+
+template<class TConfig, class... TArgs>
+using injector_cfg = core::injector<detail::bindings_t<TArgs...>, TConfig>;
 
 }} // boost::di
 

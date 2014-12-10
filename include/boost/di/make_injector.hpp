@@ -8,12 +8,13 @@
 #define BOOST_DI_MAKE_INJECTOR_HPP
 
 #include "boost/di/injector.hpp"
+#include "boost/di/config.hpp"
 
 namespace boost { namespace di {
 
-template<class... TArgs>
+template<class TConfig = BOOST_DI_CFG, class... TArgs>
 inline decltype(auto) make_injector(const TArgs&... args) noexcept {
-    return injector<TArgs...>(args...);
+    return injector_cfg<TConfig, TArgs...>(args...);
 }
 
 }} // boost::di

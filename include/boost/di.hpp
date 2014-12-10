@@ -359,6 +359,47 @@ struct function_traits<R(T::*)(TArgs...) const> {
 
 }}} // boost::di::aux
 
+namespace boost { namespace di { namespace core {
+
+struct init { };
+
+template<class = aux::type_list<>>
+class pool;
+
+template<class... TArgs>
+class pool<aux::type_list<TArgs...>> : public TArgs... {
+public:
+    template<class... Ts>
+    explicit pool(const Ts&... args) noexcept
+        : Ts(args)...
+    { }
+
+    template<class TPool>
+    pool(const init&, const TPool& p) noexcept
+        : pool(get<TArgs>(p)...)
+    { }
+
+    template<class T>
+    inline const T& get() const noexcept {
+        return static_cast<const T&>(*this);
+    }
+
+private:
+    template<class T, class TPool>
+    std::enable_if_t<std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}, const T&>
+    inline get(const TPool& p) const noexcept { return p.template get<T>(); }
+
+    template<class T, class TPool>
+    std::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, const T&>
+    inline get(const TPool&) const noexcept { return {}; }
+
+    template<class T, class TPool>
+    std::enable_if_t<!std::is_base_of<T, pool>{}, const T&>
+    inline get(const TPool&) const noexcept { return {}; }
+};
+
+}}} // boost::di::core
+
 namespace boost { namespace di { namespace wrappers {
 
 template<class T>
@@ -1244,47 +1285,28 @@ public:
 
 }}} // boost::di::providers
 
+#if defined(BOOST_DI_CFG)
+    struct BOOST_DI_CFG;
+#else
+    #define BOOST_DI_CFG ::boost::di::config
+#endif
+
 namespace boost { namespace di {
 
-template<class T, class TDependency, class TDeps>
-struct data {
-    using type = T;
-
-    TDependency& dep;
-    TDeps& deps;
-
-    template<class U, class TDefault>
-    decltype(auto) resolve() const noexcept {
-        return core::binder::template resolve<U, TDefault>(&deps);
-    }
-};
-
-template<class T, class TDependency, class TDeps, class TPolicy>
-inline void call_policies_impl(TDependency& dependency
-                             , TDeps& deps
-                             , const TPolicy& policy) noexcept {
-    policy(data<T, TDependency, TDeps>{dependency, deps});
+template<class... TArgs>
+inline auto make_policies(const TArgs&... args) noexcept {
+    return core::pool<aux::type_list<TArgs...>>(args...);
 }
 
-template<class T, class TDependency, class TDeps, class... TPolicies>
-inline void call_policies(TDependency& dependency
-                        , TDeps& deps
-                        , const TPolicies&... policies) noexcept {
-    void(call_policies_impl<T>(dependency, deps, policies)...);
-}
-
-#if defined(BOOST_DI_CFG_CUSTOM_POLICIES)
-    template<class T, class TDependency, class TDeps>
-    void custom_policies(TDependency&, TDeps&) noexcept;
-#endif
-
-#if defined(BOOST_DI_CFG_CUSTOM_PROVIDER)
-    BOOST_DI_CFG_CUSTOM_PROVIDER custom_provider() noexcept;
-#else
-    auto custom_provider() noexcept {
+struct config {
+    auto provider() const noexcept {
         return providers::nothrow_reduce_heap_usage{};
     }
-#endif
+
+    auto policies() const noexcept {
+        return make_policies();
+    }
+};
 
 }} // boost::di
 
@@ -1402,7 +1424,7 @@ template<
 > {
     template<class TMemory = type_traits::heap>
     decltype(auto) get(const TMemory& memory = {}) const noexcept {
-        return custom_provider().get<T>(
+        return injector_.config_.provider().template get<T>(
             TInitialization{}
           , memory
           , injector_.template create<TArgs, TParent>()...
@@ -1410,47 +1432,6 @@ template<
     }
 
     const TInjector& injector_;
-};
-
-}}} // boost::di::core
-
-namespace boost { namespace di { namespace core {
-
-struct init { };
-
-template<class = aux::type_list<>>
-class pool;
-
-template<class... TArgs>
-class pool<aux::type_list<TArgs...>> : public TArgs... {
-public:
-    template<class... Ts>
-    explicit pool(const Ts&... args) noexcept
-        : Ts(args)...
-    { }
-
-    template<class TPool>
-    pool(const init&, const TPool& p) noexcept
-        : pool(get<TArgs>(p)...)
-    { }
-
-    template<class T>
-    inline const T& get() const noexcept {
-        return static_cast<const T&>(*this);
-    }
-
-private:
-    template<class T, class TPool>
-    std::enable_if_t<std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}, const T&>
-    inline get(const TPool& p) const noexcept { return p.template get<T>(); }
-
-    template<class T, class TPool>
-    std::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, const T&>
-    inline get(const TPool&) const noexcept { return {}; }
-
-    template<class T, class TPool>
-    std::enable_if_t<!std::is_base_of<T, pool>{}, const T&>
-    inline get(const TPool&) const noexcept { return {}; }
 };
 
 }}} // boost::di::core
@@ -1486,12 +1467,25 @@ namespace boost { namespace di { namespace core {
 BOOST_DI_HAS_METHOD(configure, configure);
 BOOST_DI_HAS_METHOD(call, call);
 
-template<class TDeps = aux::type_list<>>
+template<class TDeps, class TConfig>
 class injector : public pool<TDeps> {
     template<class, class> friend struct any_type;
     template<class...> friend struct provider;
 
     using pool_t = pool<TDeps>;
+
+    template<class TDst, class TDependency>
+    struct data {
+        using type = TDst;
+
+        TDependency&& dep;
+        pool_t& deps;
+
+        template<class T, class TDefault>
+        decltype(auto) resolve() const noexcept {
+            return binder::template resolve<T, TDefault>(&deps);
+        }
+    };
 
 public:
     using deps = TDeps;
@@ -1506,7 +1500,7 @@ public:
     { }
 
     template<class T>
-    injector(const injector<T>& injector) noexcept // non explicit
+    injector(const injector<T, TConfig>& injector) noexcept // non explicit
         : pool_t{init{}, create_from_injector(injector, TDeps{})}
     { }
 
@@ -1550,14 +1544,35 @@ private:
           , T
           , std::remove_reference_t<T>
         >;
-
-        #if defined(BOOST_DI_CFG_CUSTOM_POLICIES)
-            custom_policies<given_t>(dependency, (injector&)*this);
-        #endif
-
+        call_policies<given_t>(config_.policies(), dependency);
         return wrappers::universal<type, wrapper_t>{
             dependency.template create<T>(ctor_provider)
         };
+    }
+
+    template<
+        class T
+      , class TDependency
+      , class... TPolicies
+    > void call_policies(const pool<aux::type_list<TPolicies...>>& policies
+                       , TDependency&& dependency) const noexcept {
+        void(call_policies_impl<TPolicies, T>(
+            policies, std::forward<TDependency>(dependency))...
+        );
+    }
+
+    template<
+        class TPolicy
+      , class T
+      , class TPolicies
+      , class TDependency
+    > void call_policies_impl(const TPolicies& policies
+                            , TDependency&& dependency) const noexcept {
+        auto&& injections = data<T, TDependency>{
+            std::forward<TDependency>(dependency)
+          , (injector&)*this
+        };
+        (static_cast<const TPolicy&>(policies))(injections);
     }
 
     template<class TAction, class... Ts>
@@ -1589,7 +1604,7 @@ private:
 
     template<class T, class... Ts>
     decltype(auto)
-    create_from_injector(const injector<T>& injector
+    create_from_injector(const injector<T, TConfig>& injector
                        , const aux::type_list<Ts...>&) const noexcept {
         return pool<TDeps>(create_dep<Ts>(injector)...);
     }
@@ -1598,6 +1613,8 @@ private:
     decltype(auto) create_dep(const TInjector& injector) const noexcept {
         return TDependency{injector};
     }
+
+    TConfig config_;
 };
 
 }}} // boost::di::core
@@ -1703,15 +1720,18 @@ using bindings_t =
 } // detail
 
 template<class... TArgs>
-using injector = core::injector<detail::bindings_t<TArgs...>>;
+using injector = core::injector<detail::bindings_t<TArgs...>, BOOST_DI_CFG>;
+
+template<class TConfig, class... TArgs>
+using injector_cfg = core::injector<detail::bindings_t<TArgs...>, TConfig>;
 
 }} // boost::di
 
 namespace boost { namespace di {
 
-template<class... TArgs>
+template<class TConfig = BOOST_DI_CFG, class... TArgs>
 inline decltype(auto) make_injector(const TArgs&... args) noexcept {
-    return injector<TArgs...>(args...);
+    return injector_cfg<TConfig, TArgs...>(args...);
 }
 
 }} // boost::di

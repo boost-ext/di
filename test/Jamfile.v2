@@ -72,6 +72,7 @@ test-suite ft : # functional tests
     [ run-test c++1y : ft/di.cpp : : <define>BOOST_DI_CFG_CONV_TO_BOOST_SMART_PTR ]
     [ run-test c++1y : ft/di_allow_ctor_types.cpp ]
     [ run-test c++1y : ft/di_custom_policies.cpp ]
+    [ run-test c++1y : ft/di_custom_policies_global.cpp ]
     #[ run-test c++1y : ft/di_custom_provider.cpp ]
 ;
 
