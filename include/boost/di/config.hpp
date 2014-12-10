@@ -14,7 +14,7 @@
 #if defined(BOOST_DI_CFG)
     class BOOST_DI_CFG;
 #else
-    #define BOOST_DI_CFG ::boost::di::config
+    #define BOOST_DI_CFG boost::di::config
 #endif
 
 namespace boost { namespace di {

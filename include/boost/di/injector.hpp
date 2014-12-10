@@ -63,7 +63,7 @@ using injector = core::injector<detail::bindings_t<TArgs...>, TConfig>;
 } // detail
 
 template<class... TArgs>
-using injector = core::injector<detail::bindings_t<TArgs...>, BOOST_DI_CFG>;
+using injector = core::injector<detail::bindings_t<TArgs...>, ::BOOST_DI_CFG>;
 
 }} // boost::di
 

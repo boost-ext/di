@@ -13,7 +13,7 @@ public:
 };
 
 test allow_types_policy = [] {
-    auto injector = di::make_injector<config>(di::bind<int>.to(0));
+    auto injector = di::make_injector<config>(di::bind<int>.to(42));
     injector.create<int>();
 };
 

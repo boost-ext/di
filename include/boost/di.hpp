@@ -1292,7 +1292,7 @@ public:
 #if defined(BOOST_DI_CFG)
     class BOOST_DI_CFG;
 #else
-    #define BOOST_DI_CFG ::boost::di::config
+    #define BOOST_DI_CFG boost::di::config
 #endif
 
 namespace boost { namespace di {
@@ -1729,13 +1729,13 @@ using injector = core::injector<detail::bindings_t<TArgs...>, TConfig>;
 } // detail
 
 template<class... TArgs>
-using injector = core::injector<detail::bindings_t<TArgs...>, BOOST_DI_CFG>;
+using injector = core::injector<detail::bindings_t<TArgs...>, ::BOOST_DI_CFG>;
 
 }} // boost::di
 
 namespace boost { namespace di {
 
-template<class TConfig = BOOST_DI_CFG, class... TArgs>
+template<class TConfig = ::BOOST_DI_CFG, class... TArgs>
 inline decltype(auto) make_injector(const TArgs&... args) noexcept {
     return detail::injector<TConfig, TArgs...>(args...);
 }
