@@ -2,7 +2,7 @@
 #define MODEL_HPP
 
 #include <memory>
-#include <boost/di.hpp>
+#include <boost/di/fwd.hpp>
 #include "common.hpp"
 
 namespace di = boost::di;

@@ -1,15 +1,11 @@
 #ifndef MODULE_VIEW_HPP
 #define MODULE_VIEW_HPP
-#include <boost/di.hpp>
 
-class view;
-
-//namespace boost { namespace di {
-//template<class...>
-//class injector;
-//}}
+#include <boost/di/fwd.hpp>
 
 namespace di = boost::di;
+
+class view;
 
 class module_view {
 public:

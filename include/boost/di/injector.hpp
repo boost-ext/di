@@ -53,8 +53,7 @@ struct add_type_list<T, std::false_type, std::false_type> {
 };
 
 template<class... Ts>
-using bindings_t =
-    typename aux::join<typename add_type_list<Ts>::type...>::type;
+using bindings_t = typename aux::join<typename add_type_list<Ts>::type...>::type;
 
 template<class TConfig, class... TArgs>
 using injector = core::injector<detail::bindings_t<TArgs...>, TConfig>;
@@ -62,7 +61,9 @@ using injector = core::injector<detail::bindings_t<TArgs...>, TConfig>;
 } // detail
 
 template<class... TArgs>
-using injector = core::injector<detail::bindings_t<TArgs...>, config>;
+class injector : public core::injector<detail::bindings_t<TArgs...>, config> {
+    using core::injector<detail::bindings_t<TArgs...>, config>::injector;
+};
 
 }} // boost::di
 

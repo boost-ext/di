@@ -1,4 +1,5 @@
 #include <cassert>
+#include <boost/di.hpp>
 #include "model.hpp"
 
 model::model(di::named<int, rows> r, di::named<int, colls> c, std::unique_ptr<iboard> b) {

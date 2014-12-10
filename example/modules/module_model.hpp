@@ -1,11 +1,11 @@
 #ifndef MODULE_MODEL_HPP
 #define MODULE_MODEL_HPP
 
-#include <boost/di.hpp>
-
-class model;
+#include <boost/di/fwd.hpp>
 
 namespace di = boost::di;
+
+class model;
 
 class module_model {
 public:
