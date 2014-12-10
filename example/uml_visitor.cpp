@@ -10,21 +10,19 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
-#include <boost/shared_ptr.hpp>
-#include <boost/mpl/size.hpp>
+#include <memory>
 #include <boost/units/detail/utility.hpp>
 //->
 #include <boost/di.hpp>
 
 //<-
-namespace mpl = boost::mpl;
 namespace utils = boost::units::detail;
 
 struct i0 { virtual ~i0() { }; };
 struct c0 : i0 { };
-struct c1 { c1(boost::shared_ptr<i0>, int) { } };
+struct c1 { c1(std::shared_ptr<i0>, int) { } };
 struct c2 { c2(int, double, char) { } };
-struct c3 { c3(boost::shared_ptr<c1>, boost::shared_ptr<c2>) { } };
+struct c3 { c3(std::shared_ptr<c1>, std::shared_ptr<c2>) { } };
 //->
 namespace di = boost::di;
 
@@ -88,25 +86,28 @@ public:
 
     /*<<Definition of the visitor call operator requirement>>*/
     template<typename T>
-    void operator()(const T&) const {
-        auto call_stack_size = mpl::size<typename T::call_stack>::value;
+    void operator()(const T& data) const {
+        //auto call_stack_size = mpl::size<typename T::call_stack>::value;
+        auto call_stack_size = 0;
 
-        while (!context_.empty() && context_.back().context_size >= call_stack_size) {
-            context_.pop_back();
-        }
+/*        while (!context_.empty() && context_.back().context_size >= call_stack_size) {*/
+            //context_.pop_back();
+        /*}*/
 
-        context_.push_back(
+        using dependency_t = std::remove_reference_t<decltype(data.dep)>;
+
+        context_.emplace_back(
             dependency(
-                utils::demangle(typeid(typename T::dependency::expected).name())
-              , utils::demangle(typeid(typename T::dependency::given).name())
-              , utils::demangle(typeid(typename T::dependency::scope).name())
+                utils::demangle(typeid(typename dependency_t::expected).name())
+              , utils::demangle(typeid(typename dependency_t::given).name())
+              , utils::demangle(typeid(typename dependency_t::scope).name())
               , call_stack_size
             )
         );
 
         auto context_size = context_.size();
 
-        if (context_size > 1 && context_size > (call_stack_size - 2)) {
+        if (context_size > 1 /*&& context_size > (call_stack_size - 2)*/) {
             this->on_call(
                 stream_
               , context_[context_size - 2]
@@ -119,14 +120,27 @@ public:
     mutable std::vector<dependency> context_;
 };
 
+class uml_config : public di::config {
+public:
+    auto policies() noexcept {
+        return di::make_policies(uml_visitor<plant_uml>{stream_});
+    }
+
+    ~uml_config() {
+        std::clog << stream_.str() << std::endl;
+    }
+
+    std::stringstream stream_;
+};
+
 int main() {
     /*<<define injector>>*/
-    di::injector<c0> injector;
+    auto injector = di::make_injector<uml_config>(
+        di::bind<i0, c0>
+    );
 
     /*<<iterate through created objects with `uml_visitor`>>*/
-    std::stringstream stream;
-    injector.visit<c3>(uml_visitor<plant_uml>(stream));
-    std::clog << stream.str();
+    injector.create<c3>();
 
     /*<<output [@images/uml_visitor.png [$images/uml_visitor.png [width 75%] [height 75%] ]]>>*/
     return 0;

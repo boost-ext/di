@@ -414,6 +414,10 @@ public:
         return value_;
     }
 
+    //todo
+    template<class I>
+    inline operator I*() const noexcept { return nullptr; }
+
 private:
     T value_;
 };
@@ -1286,7 +1290,7 @@ public:
 }}} // boost::di::providers
 
 #if defined(BOOST_DI_CFG)
-    struct BOOST_DI_CFG;
+    class BOOST_DI_CFG;
 #else
     #define BOOST_DI_CFG ::boost::di::config
 #endif
@@ -1298,7 +1302,8 @@ inline auto make_policies(const TArgs&... args) noexcept {
     return core::pool<aux::type_list<TArgs...>>(args...);
 }
 
-struct config {
+class config {
+public:
     auto provider() const noexcept {
         return providers::nothrow_reduce_heap_usage{};
     }
@@ -1717,13 +1722,13 @@ template<class... Ts>
 using bindings_t =
     typename aux::join<typename add_type_list<Ts>::type...>::type;
 
+template<class TConfig, class... TArgs>
+using injector = core::injector<detail::bindings_t<TArgs...>, TConfig>;
+
 } // detail
 
 template<class... TArgs>
 using injector = core::injector<detail::bindings_t<TArgs...>, BOOST_DI_CFG>;
-
-template<class TConfig, class... TArgs>
-using injector_cfg = core::injector<detail::bindings_t<TArgs...>, TConfig>;
 
 }} // boost::di
 
@@ -1731,7 +1736,7 @@ namespace boost { namespace di {
 
 template<class TConfig = BOOST_DI_CFG, class... TArgs>
 inline decltype(auto) make_injector(const TArgs&... args) noexcept {
-    return injector_cfg<TConfig, TArgs...>(args...);
+    return detail::injector<TConfig, TArgs...>(args...);
 }
 
 }} // boost::di

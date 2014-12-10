@@ -12,7 +12,7 @@
 #include "boost/di/providers/nothrow_reduce_heap_usage.hpp"
 
 #if defined(BOOST_DI_CFG)
-    struct BOOST_DI_CFG;
+    class BOOST_DI_CFG;
 #else
     #define BOOST_DI_CFG ::boost::di::config
 #endif
@@ -24,7 +24,8 @@ inline auto make_policies(const TArgs&... args) noexcept {
     return core::pool<aux::type_list<TArgs...>>(args...);
 }
 
-struct config {
+class config {
+public:
     auto provider() const noexcept {
         return providers::nothrow_reduce_heap_usage{};
     }

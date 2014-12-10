@@ -3,7 +3,8 @@
 
 namespace di = boost::di;
 
-struct config : di::config {
+class config : public di::config {
+public:
     auto policies() const noexcept {
         using namespace di::policies;
         using namespace di::policies::operators;

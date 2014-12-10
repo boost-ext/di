@@ -14,7 +14,7 @@ namespace boost { namespace di {
 
 template<class TConfig = BOOST_DI_CFG, class... TArgs>
 inline decltype(auto) make_injector(const TArgs&... args) noexcept {
-    return injector_cfg<TConfig, TArgs...>(args...);
+    return detail::injector<TConfig, TArgs...>(args...);
 }
 
 }} // boost::di

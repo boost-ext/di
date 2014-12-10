@@ -11,7 +11,8 @@ struct policy {
     }
 };
 
-struct custom_policies : di::config {
+class custom_policies : public di::config {
+public:
     auto policies() const noexcept {
         return di::make_policies(policy{});
     }

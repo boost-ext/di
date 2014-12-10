@@ -5,7 +5,8 @@ namespace di = boost::di;
 
 auto called = 0;
 
-struct config : di::config {
+class config : public di::config {
+public:
     auto provider() const noexcept {
         ++called;
         return di::providers::nothrow_heap{};

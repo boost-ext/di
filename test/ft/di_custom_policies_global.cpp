@@ -20,13 +20,15 @@ struct global_policy {
     }
 };
 
-struct custom_policies : di::config {
+class custom_policies : public di::config {
+public:
     auto policies() const noexcept {
         return di::make_policies(custom_policy{});
     }
 };
 
-struct global_policies : di::config {
+class global_policies : public di::config {
+public:
     auto policies() const noexcept {
         return di::make_policies(global_policy{});
     }

@@ -24,6 +24,10 @@ public:
         return value_;
     }
 
+    //todo
+    template<class I>
+    inline operator I*() const noexcept { return nullptr; }
+
 private:
     T value_;
 };

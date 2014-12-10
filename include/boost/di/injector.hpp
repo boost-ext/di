@@ -57,13 +57,13 @@ template<class... Ts>
 using bindings_t =
     typename aux::join<typename add_type_list<Ts>::type...>::type;
 
+template<class TConfig, class... TArgs>
+using injector = core::injector<detail::bindings_t<TArgs...>, TConfig>;
+
 } // detail
 
 template<class... TArgs>
 using injector = core::injector<detail::bindings_t<TArgs...>, BOOST_DI_CFG>;
-
-template<class TConfig, class... TArgs>
-using injector_cfg = core::injector<detail::bindings_t<TArgs...>, TConfig>;
 
 }} // boost::di
 

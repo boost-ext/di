@@ -236,6 +236,16 @@ test exposed_many = [] {
     }
 };
 
+test exposed_with_external = [] {
+    constexpr auto i = 42;
+
+    di::injector<int> injector = di::make_injector(
+        di::bind<int>.to(i)
+    );
+
+    expect_eq(i, injector.create<int>());
+};
+
 test scopes_priority = [] {
     auto injector = di::make_injector(
         di::bind<int>.to(12)
