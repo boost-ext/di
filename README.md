@@ -10,7 +10,7 @@ This is not an official Boost library yet and there is no guarantee it will ever
 ### Introduction
 Boost.DI is C++14 header only library providing type safe, compile time, macro free constructor dependency injection.
 
-* [Documentation](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html)
+* [Documentation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
 * [Todo/Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
 * [Boost Library Incubator](http://rrsd.com/blincubator.com/bi_library/di-dependency-injection-2)
 * [Boost Library Proposal](http://boost.2283326.n4.nabble.com/Is-there-any-interest-in-a-dependency-injection-library-td4665526.html)
