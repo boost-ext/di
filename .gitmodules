@@ -1,3 +1,6 @@
 [submodule "scripts/clang"]
 	path = scripts/clang
 	url = https://github.com/kennytm/clang-cindex-python3.git
+[submodule "build"]
+	path = build
+	url = https://github.com/boostorg/build.git

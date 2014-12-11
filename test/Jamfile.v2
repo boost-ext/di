@@ -23,6 +23,7 @@ compose <variant>analyze :
 
 project :
     requirements
+        <include>.
         <include>../include
         <warnings>all
 ;
