@@ -51,7 +51,7 @@ test-suite example :
                           modules/module_view.cpp
                           modules/controller.cpp
                           modules/main.cpp
-      : -Imodules
+      : -Imodules -DBOOST_DI_CFG=config
     ]
 ;
 

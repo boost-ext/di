@@ -2,6 +2,7 @@
 #include "module_view.hpp"
 #include "common.hpp"
 #include "view.hpp"
+#include "config.hpp"
 
 namespace di = boost::di;
 
