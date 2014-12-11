@@ -643,6 +643,20 @@ test named_parameters_with_shared_scope = [] {
     expect(object.n2 == static_cast<std::shared_ptr<i1>>(injector.create<di::named<std::shared_ptr<i1>, b>>()));
 };
 
+test call_policy_lambda = [] {
+    static auto called = false;
+    class config : public di::config {
+    public:
+        auto policies() const noexcept {
+            return di::make_policies([](auto){called = true;});
+        }
+    };
+
+    auto injector = di::make_injector<config>();
+
+    expect_eq(0, injector.create<int>());
+    expect(called);
+};
 
 //struct empty_module {
     //auto configure() const {
