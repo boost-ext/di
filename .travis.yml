@@ -5,7 +5,6 @@ os:
   - osx
 
 compiler:
-  - gcc
   - clang
 
 matrix:
@@ -46,7 +45,7 @@ after_success:
 
 branches:
   only:
-    - master
+    - cpp14
 
 notifications:
   recipients:
