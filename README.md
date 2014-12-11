@@ -1,5 +1,5 @@
 ### Versions
-> [C++14](https://github.com/krzysztof-jusiak/di/tree/master) | [C++03/C++11](https://github.com/krzysztof-jusiak/di/tree/v1)
+> [C++14](https://github.com/krzysztof-jusiak/di/tree/master) | C++03/11
 
 ### C++ Dependency Injection
 > "Don't call us, we'll call you", Hollywood principle
@@ -8,7 +8,7 @@
 This is not an official Boost library yet and there is no guarantee it will ever be!
 
 ### Introduction
-Boost.DI is C++03/C++11 header only library providing type safe, compile time, macro free constructor dependency injection.
+Boost.DI is C++03/11 header only library providing type safe, compile time, macro free constructor dependency injection.
 
 * [Documentation](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html)
 * [Todo/Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
