@@ -1,5 +1,5 @@
 ### Versions
-> [C++14](https://github.com/krzysztof-jusiak/di/tree/master) | C++03/11
+> *C++03/11* | [C++14](https://github.com/krzysztof-jusiak/di/tree/master)
 
 ### C++ Dependency Injection
 > "Don't call us, we'll call you", Hollywood principle
