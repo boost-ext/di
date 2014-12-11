@@ -30,12 +30,12 @@ struct example {
     }
 };
 
-/*<define `custom allocator` with allocate emethod>*/
+/*<define `custom allocator` with allocate method>*/
 class custom_allocator {
 public:
-    template<typename TExpected, typename TGiven, typename... TArgs>
-    TExpected* allocate(TArgs&&... args) const {
-        return new TGiven(std::forward<TArgs>(args)...);
+    template<typename T, typename... TArgs>
+    typename T::expected_typeected* allocate(TArgs&&... args) const {
+        return new typename T::given_type(std::forward<TArgs>(args)...);
     }
 
     /*<to support `bind_int<interface>()`, `bind_string<"s">()` allocate needs support types with `value` or when `mpl::string`>*/

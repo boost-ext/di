@@ -44,9 +44,9 @@
 <a class="co" name="di.examples.custom_allocator.c2" href="custom_allocator.html#di.examples.custom_allocator.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a>
 <span class="keyword">class</span> <span class="identifier">custom_allocator</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">TGiven</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
-    <span class="identifier">TExpected</span><span class="special">*</span> <span class="identifier">allocate</span><span class="special">(</span><span class="identifier">TArgs</span><span class="special">&amp;&amp;...</span> <span class="identifier">args</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="keyword">new</span> <span class="identifier">TGiven</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">TArgs</span><span class="special">&gt;(</span><span class="identifier">args</span><span class="special">)...);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span><span class="special">...</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
+    <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">::</span><span class="identifier">expected_typeected</span><span class="special">*</span> <span class="identifier">allocate</span><span class="special">(</span><span class="identifier">TArgs</span><span class="special">&amp;&amp;...</span> <span class="identifier">args</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">::</span><span class="identifier">given_type</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">TArgs</span><span class="special">&gt;(</span><span class="identifier">args</span><span class="special">)...);</span>
     <span class="special">}</span>
 
     <a class="co" name="di.examples.custom_allocator.c4" href="custom_allocator.html#di.examples.custom_allocator.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a>
@@ -73,7 +73,7 @@
 <td width="5%" valign="top" align="left"><p><a name="di.examples.custom_allocator.c3"></a><a href="#di.examples.custom_allocator.c2"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             define <code class="computeroutput"><span class="identifier">custom</span> <span class="identifier">allocator</span></code>
-            with allocate emethod
+            with allocate method
           </p></td>
 </tr>
 <tr>
@@ -110,9 +110,11 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright &#169; 2014 Krzysztof Jusiak<p>
-        Distributed under the Boost Software License, Version 1.0. (See accompanying
-        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+<td align="right"><div class="copyright-footer">Copyright &#169; 2014 Krzysztof Jusiak | Distributed under the Boost Software
+      License, Version 1.0.<p>
+        <a href="https://github.com/krzysztof-jusiak/di/tree/cpp03" target="_top">C++03/11 Repository</a>
+        | <a href="http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html" target="_top">C++14
+        Version</a>
       </p>
 </div></td>
 </tr></table>
