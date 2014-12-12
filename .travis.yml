@@ -11,7 +11,7 @@ before_install:
   - cd build && ./bootstrap.sh --with-toolset=clang
 
 script:
-  - ./b2 -toolset=clang -j4 -q ../example ../test
+  - ./b2 -j4 -q --toolset=clang ../example ../test
 
 after_success:
 
