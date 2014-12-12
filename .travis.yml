@@ -7,41 +7,14 @@ os:
 compiler:
   - clang
 
-matrix:
-  exclude:
-    - compiler: gcc
-      os: osx
-
 before_install:
-  - rm -rf boost
-  - git clone --quiet --depth=1 --recursive --single-branch https://github.com/boostorg/boost.git > /dev/null
-  - mkdir boost/libs/di
-  - cp -r doc example include test boost/libs/di
-  - git clone https://github.com/krzysztof-jusiak/gcov-coveralls.git
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo cp gcov-coveralls/gcov-coveralls.sh /usr/bin; fi
-  - cd boost
-  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update -qq; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get -qq install valgrind; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo apt-get install -qq g++-4.8; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90; fi
-  - if [ "$CXX" == "g++" ]; then ./bootstrap.sh --with-toolset=gcc; fi
-  - if [ "$CXX" == "clang++" ]; then ./bootstrap.sh --with-toolset=clang; fi
-  - ./b2 headers
+  - git submodule init && git submodule update
+  - cd build && ./bootstrap.sh --with-toolset=clang
 
 script:
-  - pushd .
-  - if [ "$CXX" == "g++" ]; then cd libs/di/example && ../../../b2 -j2 -q cpp_03; fi
-  - if [ "$CXX" == "clang++" ]; then cd libs/di/example && ../../../b2 -j2 -q cxxflags="-Wno-c99-extensions -Wno-variadic-macros" ; fi
-  - popd
-  - pushd .
-  - if [ "$CXX" == "g++" ]; then cd libs/di/test && ../../../b2 -q coverage ; fi
-  - if [ "$CXX" == "clang++" ]; then cd libs/di/test && ../../../b2 -q cxxflags="-Wno-c99-extensions -Wno-variadic-macros"; fi
-  - popd
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then find bin.v2/libs/di -type f -executable | xargs -i% valgrind --quiet --error-exitcode=-1 % >/dev/null; fi
+  - ./bjam ../example ../test
 
 after_success:
-  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then gcov-coveralls.sh "/usr/bin/gcov-4.8" "libs/di/test" "bin.v2/libs/di/test" "boost/di/" "L0bLvIumNdzR0XiKdKJSHgKopNnnO9mul" ; fi
 
 branches:
   only:
