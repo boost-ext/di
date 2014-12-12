@@ -57,10 +57,10 @@ int main() {
 
     /*<< output [pre
     c3
-        boost::shared_ptr<c1>
-            boost::shared_ptr<i0>
+        std::shared_ptr<c1>
+            std::shared_ptr<i0>
             int
-        boost::shared_ptr<c2>
+        std::shared_ptr<c2>
             int
             double
             char

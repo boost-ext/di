@@ -10,7 +10,6 @@
 #include <cassert>
 #include <memory>
 #include <functional>
-#include <boost/function.hpp>
 //->
 #include <boost/di.hpp>
 
