@@ -6,12 +6,13 @@ os:
 
 compiler:
   - clang
+#  - gcc
 
 before_install:
   - cd build && ./bootstrap.sh --with-toolset=clang
 
 script:
-  - ./b2 -j4 -q --toolset=clang ../example ../test
+  - ./b2 -j4 -q --toolset=clang ../test ../example
 
 after_success:
 
