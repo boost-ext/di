@@ -40,7 +40,7 @@ struct apply_impl<T<Ts...>, std::enable_if_t<!std::is_base_of<type_op, T<Ts...>>
     };
 
     template<class TData>
-    static auto apply(const TData& data) noexcept {
+    static auto apply(const TData&) noexcept {
         using type = typename TData::type;
         return typename apply_placeholder<T, type, Ts...>::type{};
     }
