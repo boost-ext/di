@@ -8,11 +8,10 @@ compiler:
   - clang
 
 before_install:
-  - git submodule init && git submodule update
   - cd build && ./bootstrap.sh --with-toolset=clang
 
 script:
-  - ./b2 -j4 -q ../example ../test
+  - ./b2 -toolset=clang -j4 -q ../example ../test
 
 after_success:
 
