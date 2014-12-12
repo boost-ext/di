@@ -12,7 +12,7 @@ before_install:
   - cd build && ./bootstrap.sh --with-toolset=clang
 
 script:
-  - ./bjam ../example ../test
+  - ./b2 -j4 -q ../example ../test
 
 after_success:
 
