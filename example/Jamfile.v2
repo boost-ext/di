@@ -16,13 +16,9 @@ project di :
 
 rule run-example ( std : src + : cxxflags * : property * ) {
     if $(cxxflags) {
-        run $(src) : : :
-            <toolset>clang:<cxxflags>"-std=$(std) $(cxxflags)"
-        : $(property) ;
+        run $(src) : : : <cxxflags>"-std=$(std) $(cxxflags)" : $(property) ;
     } else {
-        run $(src) : : :
-            <toolset>clang:<cxxflags>"-std=$(std)"
-        : $(property) ;
+        run $(src) : : : <cxxflags>"-std=$(std)" : $(property) ;
     }
 }
 

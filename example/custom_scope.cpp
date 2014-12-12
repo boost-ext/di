@@ -9,8 +9,6 @@
 //<-
 #include <cassert>
 #include <memory>
-#include <boost/function.hpp>
-#include <boost/type.hpp>
 //->
 #include <boost/di.hpp>
 
