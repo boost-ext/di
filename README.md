@@ -45,20 +45,28 @@ Boost.DI is header only library which requires C++14 compliant compiler(Clang-3.
 
 | Example | Description |
 | ------------- | ------------- |
-| make\_injector() | creates injector with empty bindings |
-| make\_injector(...) | creates injector with bindings |
+| `make\_injector()` | creates injector with empty bindings |
+| `make\_injector(bindings...)` | creates injector with bindings |
 | |
-| bind\<i, impl\> | binds `impl` to interface `i` in `deduce` (default) scope |
-| bind\<i, impl\>.in(deduce) | binds `impl` to interface `i` in `deduce` scope |
-| bind\<i, impl\>.in(unique) | binds `impl` to interface `i` in `unique` scope |
-| bind\<i, impl\>.in(shared) | binds `impl` to interface `i` in `shared` scope |
-| bind\<i, impl\>.in(singleton) | binds `impl` to interface `i` in `singleton` scope |
-| bind\<i, impl\>.in(session(name{})) | binds `impl` to interface `i` in `session` scope with name `name` |
-| bind\<i, impl\>.named(name{}) | binds `impl` to interface `i` named `name`(named\<std::unique_ptr\<i\>, name\>) |
-| bind\<i, impl\>.named(name{}).in(shared) | binds `impl` to interface `i` named `name`(named\<std::shared_ptr\<i\>, name\>) in shared scope |
-| bind\<int\>.to(42) | binds `ints` to 42 |
-| bind\<int\>.named(name{}).to(42) | binds `ints` named `name` to 42 (named\<int, name\>) |
+| `bind\<i, impl\>` | binds `impl` to interface `i` in `deduce` (default) scope |
+| `bind\<i, impl\>.in(deduce)` | binds `impl` to interface `i` in `deduce` scope |
+| `bind\<i, impl\>.in(unique)` | binds `impl` to interface `i` in `unique` scope |
+| `bind\<i, impl\>.in(shared)` | binds `impl` to interface `i` in `shared` scope |
+| `bind\<i, impl\>.in(singleton)` | binds `impl` to interface `i` in `singleton` scope |
+| `bind\<i, impl\>.in(session(name{}))` | binds `impl` to interface `i` in `session` scope with name `name` |
+| `bind\<i, impl\>.named(name{})` | binds `impl` to interface `i` named `name`(named\<std::unique_ptr\<i\>, name\>) |
+| `bind\<i, impl\>.named(name{}).in(shared)` | binds `impl` to interface `i` named `name`(named\<std::shared_ptr\<i\>, name\>) in shared scope |
+| `bind\<int\>.to(42)` | binds `ints` to 42 |
+| `bind\<int\>.named(name{}).to(42)` | binds `ints` named `name` to 42 (named\<int, name\>) |
 | |
+| `struct module {
+    auto configure() const noexcept {
+        return make_injector(
+            bind<i, impl>
+          , bind<int>.to(42)
+        );
+    }
+  };` | module |
 
 **Hello World**
 
