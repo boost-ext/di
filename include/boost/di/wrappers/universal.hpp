@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_WRAPPERS_UNIVERSAL_HPP
 #define BOOST_DI_WRAPPERS_UNIVERSAL_HPP
 
-#include "boost/di/aux_/type_traits.hpp"
 #include <memory>
 #include "boost/di/named.hpp"
 

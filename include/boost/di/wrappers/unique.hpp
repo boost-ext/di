@@ -8,6 +8,9 @@
 #define BOOST_DI_WRAPPERS_UNIQUE_HPP
 
 #include <memory>
+#if (__has_include(<boost/shared_ptr.hpp>))
+    #include <boost/shared_ptr.hpp>
+#endif
 #include "boost/di/aux_/type_traits.hpp"
 
 namespace boost { namespace di { namespace wrappers {
@@ -41,7 +44,7 @@ public:
 
     template<class I, class = std::enable_if_t<!std::is_polymorphic<I>{}>>
     inline operator I() const noexcept {
-        return *aux::unique_ptr<I>(value_);
+        return *std::unique_ptr<I>(value_);
     }
 
     template<class I>
@@ -55,18 +58,20 @@ public:
     }
 
     template<class I>
-    inline operator aux::shared_ptr<I>() const noexcept {
-        return aux::shared_ptr<I>{value_};
+    inline operator std::shared_ptr<I>() const noexcept {
+        return std::shared_ptr<I>{value_};
     }
 
+#if (__has_include(<boost/shared_ptr.hpp>))
     template<class I>
-    inline operator aux_::shared_ptr<I>() const noexcept {
-        return aux_::shared_ptr<I>{value_};
+    inline operator boost::shared_ptr<I>() const noexcept {
+        return boost::shared_ptr<I>{value_};
     }
+#endif
 
     template<class I>
-    inline operator aux::unique_ptr<I>() const noexcept {
-        return aux::unique_ptr<I>{value_};
+    inline operator std::unique_ptr<I>() const noexcept {
+        return std::unique_ptr<I>{value_};
     }
 
 private:

@@ -8,6 +8,9 @@
 #define BOOST_DI_TYPE_TRAITS_MEMORY_TRAITS_HPP
 
 #include <memory>
+#if (__has_include(<boost/shared_ptr.hpp>))
+    #include <boost/shared_ptr.hpp>
+#endif
 #include "boost/di/named.hpp"
 
 namespace boost { namespace di { namespace type_traits {
@@ -41,42 +44,44 @@ struct memory_traits<const T*> {
 };
 
 template<class T>
-struct memory_traits<aux::shared_ptr<T>> {
+struct memory_traits<std::shared_ptr<T>> {
     using type = heap;
 };
 
 template<class T>
-struct memory_traits<const aux::shared_ptr<T>&> {
+struct memory_traits<const std::shared_ptr<T>&> {
+    using type = heap;
+};
+
+#if (__has_include(<boost/shared_ptr.hpp>))
+    template<class T>
+    struct memory_traits<boost::shared_ptr<T>> {
+        using type = heap;
+    };
+
+    template<class T>
+    struct memory_traits<const boost::shared_ptr<T>&> {
+        using type = heap;
+    };
+#endif
+
+template<class T>
+struct memory_traits<std::weak_ptr<T>> {
     using type = heap;
 };
 
 template<class T>
-struct memory_traits<aux_::shared_ptr<T>> {
+struct memory_traits<const std::weak_ptr<T>&> {
     using type = heap;
 };
 
 template<class T>
-struct memory_traits<const aux_::shared_ptr<T>&> {
+struct memory_traits<std::unique_ptr<T>> {
     using type = heap;
 };
 
 template<class T>
-struct memory_traits<aux::weak_ptr<T>> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<const aux::weak_ptr<T>&> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<aux::unique_ptr<T>> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<const aux::unique_ptr<T>&> {
+struct memory_traits<const std::unique_ptr<T>&> {
     using type = heap;
 };
 

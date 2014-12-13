@@ -22,21 +22,21 @@ BOOST_AUTO_TEST_CASE(create) {
     session<>::scope<int> session2;
 
     BOOST_CHECK((
-        (session1.create(new_int))(type<aux::shared_ptr<int>>())
+        (session1.create(new_int))(type<std::shared_ptr<int>>())
         ==
-        (session1.create(new_int))(type<aux::shared_ptr<int>>())
+        (session1.create(new_int))(type<std::shared_ptr<int>>())
     ));
 
     BOOST_CHECK((
-        (session2.create(new_int))(type<aux::shared_ptr<int>>())
+        (session2.create(new_int))(type<std::shared_ptr<int>>())
         ==
-        (session2.create(new_int))(type<aux::shared_ptr<int>>())
+        (session2.create(new_int))(type<std::shared_ptr<int>>())
     ));
 
     BOOST_CHECK((
-        (session1.create(new_int))(type<aux::shared_ptr<int>>())
+        (session1.create(new_int))(type<std::shared_ptr<int>>())
         ==
-        (session2.create(new_int))(type<aux::shared_ptr<int>>())
+        (session2.create(new_int))(type<std::shared_ptr<int>>())
     ));
 }
 
@@ -44,16 +44,16 @@ BOOST_AUTO_TEST_CASE(call) {
     session<>::scope<int> session_;
 
     session_.call(session_entry());
-    BOOST_CHECK((aux::shared_ptr<int>() != (session_.create(new_int))(type<aux::shared_ptr<int>>())));
+    BOOST_CHECK((std::shared_ptr<int>() != (session_.create(new_int))(type<std::shared_ptr<int>>())));
 
     session_.call(session_exit());
-    BOOST_CHECK((aux::shared_ptr<int>() == (session_.create(new_int))(type<aux::shared_ptr<int>>())));
+    BOOST_CHECK((std::shared_ptr<int>() == (session_.create(new_int))(type<std::shared_ptr<int>>())));
 
     session_.call(session_entry());
-    BOOST_CHECK((aux::shared_ptr<int>() != (session_.create(new_int))(type<aux::shared_ptr<int>>())));
+    BOOST_CHECK((std::shared_ptr<int>() != (session_.create(new_int))(type<std::shared_ptr<int>>())));
 
     session_.call(session_exit());
-    BOOST_CHECK((aux::shared_ptr<int>() == (session_.create(new_int))(type<aux::shared_ptr<int>>())));
+    BOOST_CHECK((std::shared_ptr<int>() == (session_.create(new_int))(type<std::shared_ptr<int>>())));
 }
 
 } // namespace scopes

@@ -22,7 +22,7 @@ struct allocator
         : object(object)
     { }
 
-    aux::shared_ptr<T> object;
+    std::shared_ptr<T> object;
 };
 
 struct trivial_ctor

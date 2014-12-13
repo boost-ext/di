@@ -21,9 +21,9 @@ BOOST_AUTO_TEST_CASE(create) {
     shared<>::scope<int> shared_;
 
     BOOST_CHECK((
-        (shared_.create(new_int))(type<aux::shared_ptr<int>>())
+        (shared_.create(new_int))(type<std::shared_ptr<int>>())
         ==
-        (shared_.create(new_int))(type<aux::shared_ptr<int>>())
+        (shared_.create(new_int))(type<std::shared_ptr<int>>())
     ));
 }
 

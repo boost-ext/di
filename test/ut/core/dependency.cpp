@@ -121,14 +121,14 @@ BOOST_AUTO_TEST_CASE(to_std_ref) {
 
 BOOST_AUTO_TEST_CASE(to_shared_ptr) {
     using expected = scopes::external<wrappers::shared>;
-    using external = decltype(dependency<fake_scope<>, int>::to(aux::shared_ptr<int>()));
+    using external = decltype(dependency<fake_scope<>, int>::to(std::shared_ptr<int>()));
     using given = external::scope;
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
 }
 
 BOOST_AUTO_TEST_CASE(to_lambda_shared_ptr) {
     using expected = scopes::external<wrappers::shared>;
-    auto given = dependency<fake_scope<>, int>::to([]{ return aux::shared_ptr<int>(); });
+    auto given = dependency<fake_scope<>, int>::to([]{ return std::shared_ptr<int>(); });
     using external = decltype(given);
     BOOST_CHECK_EQUAL(&typeid(expected), &typeid(external::scope));
 }

@@ -8,6 +8,9 @@
 #define BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 
 #include <memory>
+#if (__has_include(<boost/shared_ptr.hpp>))
+    #include <boost/shared_ptr.hpp>
+#endif
 #include "boost/di/scopes/unique.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/external.hpp"
@@ -41,42 +44,44 @@ struct scope_traits<const T*> {
 };
 
 template<class T>
-struct scope_traits<aux::shared_ptr<T>> {
+struct scope_traits<std::shared_ptr<T>> {
     using type = scopes::singleton;
 };
 
 template<class T>
-struct scope_traits<const aux::shared_ptr<T>&> {
+struct scope_traits<const std::shared_ptr<T>&> {
+    using type = scopes::singleton;
+};
+
+#if (__has_include(<boost/shared_ptr.hpp>))
+    template<class T>
+    struct scope_traits<boost::shared_ptr<T>> {
+        using type = scopes::singleton;
+    };
+
+    template<class T>
+    struct scope_traits<const boost::shared_ptr<T>&> {
+        using type = scopes::singleton;
+    };
+#endif
+
+template<class T>
+struct scope_traits<std::weak_ptr<T>> {
     using type = scopes::singleton;
 };
 
 template<class T>
-struct scope_traits<aux_::shared_ptr<T>> {
+struct scope_traits<const std::weak_ptr<T>&> {
     using type = scopes::singleton;
 };
 
 template<class T>
-struct scope_traits<const aux_::shared_ptr<T>&> {
-    using type = scopes::singleton;
-};
-
-template<class T>
-struct scope_traits<aux::weak_ptr<T>> {
-    using type = scopes::singleton;
-};
-
-template<class T>
-struct scope_traits<const aux::weak_ptr<T>&> {
-    using type = scopes::singleton;
-};
-
-template<class T>
-struct scope_traits<aux::unique_ptr<T>> {
+struct scope_traits<std::unique_ptr<T>> {
     using type = scopes::unique;
 };
 
 template<class T>
-struct scope_traits<const aux::unique_ptr<T>&> {
+struct scope_traits<const std::unique_ptr<T>&> {
     using type = scopes::unique;
 };
 

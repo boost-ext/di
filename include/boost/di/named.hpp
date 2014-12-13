@@ -98,23 +98,23 @@ private:
 };
 
 template<class T, class TName>
-class named<aux::unique_ptr<T>, TName> {
+class named<std::unique_ptr<T>, TName> {
     named& operator=(const named&) = delete;
 
 public:
-    using named_type = aux::unique_ptr<T>;
+    using named_type = std::unique_ptr<T>;
     using name = TName;
 
-    named(aux::unique_ptr<T> object) noexcept // non explicit
+    named(std::unique_ptr<T> object) noexcept // non explicit
         : object_(std::move(object))
     { }
 
-    operator aux::unique_ptr<T>() noexcept {
+    operator std::unique_ptr<T>() noexcept {
         return std::move(object_);
     }
 
 private:
-    aux::unique_ptr<T> object_;
+    std::unique_ptr<T> object_;
 };
 
 }} // boost::di

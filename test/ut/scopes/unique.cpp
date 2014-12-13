@@ -27,9 +27,9 @@ BOOST_AUTO_TEST_CASE(create) {
     unique<>::scope<int> unique_;
 
     BOOST_CHECK((
-        (unique_.create(new_int))(type<aux::shared_ptr<int>>())
+        (unique_.create(new_int))(type<std::shared_ptr<int>>())
         !=
-        (unique_.create(new_int))(type<aux::shared_ptr<int>>())
+        (unique_.create(new_int))(type<std::shared_ptr<int>>())
     ));
 }
 

@@ -444,7 +444,7 @@ BOOST_AUTO_TEST_CASE(complex_type) {
         is_same<
             fake_dependency<fake_scope<>, int>::type
           , binder_resolve<
-                aux::shared_ptr<int>
+                std::shared_ptr<int>
               , mpl::vector0<>
               , mpl::vector<
                     fake_dependency<fake_scope<>, int>::type
@@ -460,7 +460,7 @@ BOOST_AUTO_TEST_CASE(named_int_type) {
         is_same<
             fake_dependency<fake_scope<>, named<int, mpl::_1>, int>::type
           , binder_resolve<
-                named<aux::shared_ptr<int>, mpl::_1>
+                named<std::shared_ptr<int>, mpl::_1>
               , mpl::vector0<>
               , mpl::vector0<>
               , fake_dependency<fake_scope<>, named<int, mpl::_1>, int>::type

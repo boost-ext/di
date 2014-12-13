@@ -30,12 +30,12 @@ struct fake_scope
     class wrapper
     {
     public:
-        wrapper(const aux::shared_ptr<T>& obj) // non explicit
+        wrapper(const std::shared_ptr<T>& obj) // non explicit
             : obj_(obj)
         { }
 
         template<typename I>
-        aux::shared_ptr<I> operator()(const type<aux::shared_ptr<I>>&) const {
+        std::shared_ptr<I> operator()(const type<std::shared_ptr<I>>&) const {
             return obj_;
         }
 
@@ -47,7 +47,7 @@ struct fake_scope
         }
 
     private:
-        aux::shared_ptr<T> obj_;
+        std::shared_ptr<T> obj_;
     };
 
     template<typename T, typename>
@@ -71,10 +71,10 @@ struct fake_scope
 
         result_type create(const function<T*()>& f) {
             if (entry_calls() > exit_calls()) {
-                return aux::shared_ptr<T>(f());
+                return std::shared_ptr<T>(f());
             }
 
-            return result_type(aux::shared_ptr<T>());
+            return result_type(std::shared_ptr<T>());
         }
     };
 

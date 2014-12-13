@@ -45,17 +45,17 @@ test ctors = [] {
     struct ctor_complex {
         ctor_complex(int
                    , double&
-                   , aux::shared_ptr<int>
+                   , std::shared_ptr<int>
                    , float&
                    , const char*
                    , const std::string&
                    , void*
-                   , aux::unique_ptr<int>)
+                   , std::unique_ptr<int>)
         { }
     };
 
     struct ctor_unique_ptr {
-        ctor_unique_ptr(aux::unique_ptr<int>) { }
+        ctor_unique_ptr(std::unique_ptr<int>) { }
     };
 
     struct int_1 { };

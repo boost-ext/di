@@ -1,9 +1,8 @@
 #include <boost/di.hpp>
-#include <iostream>
 #include <memory>
-#include <boost/shared_ptr.hpp>
-
-#include <boost/units/detail/utility.hpp>
+#if (__has_include(<boost/shared_ptr.hpp>))
+    #include <boost/shared_ptr.hpp>
+#endif
 
 namespace di = boost::di;
 
@@ -370,18 +369,20 @@ test scopes_external_lambda_injector = [] {
     }
 };
 
-test conversion_to_boost_shared_ptr = [] {
-    struct c {
-        boost::shared_ptr<int> sp;
+#if (__has_include(<boost/shared_ptr.hpp>))
+    test conversion_to_boost_shared_ptr = [] {
+        struct c {
+            boost::shared_ptr<int> sp;
+        };
+
+        auto injector = di::make_injector(
+            di::bind<int>.in(di::shared)
+        );
+
+        auto object = injector.create<c>();
+        expect(object.sp.get());
     };
-
-    auto injector = di::make_injector(
-        di::bind<int>.in(di::shared)
-    );
-
-    auto object = injector.create<c>();
-    expect(object.sp.get());
-};
+#endif
 
 test one_arg_class = [] {
     struct c {
@@ -689,7 +690,7 @@ test call_policy_lambda = [] {
         //c0if0
     //>;
 
-    //aux::shared_ptr<c5> c5_ = injector_c0().create<aux::shared_ptr<c5>>();
+    //std::shared_ptr<c5> c5_ = injector_c0().create<std::shared_ptr<c5>>();
     //BOOST_CHECK_EQUAL(0, c5_->c2_->i);
 //}
 
@@ -709,7 +710,7 @@ test call_policy_lambda = [] {
       //, bind<int>::to(i)
     //);
 
-    //aux::shared_ptr<c5> c5_ = injector_c0_int_.create<aux::shared_ptr<c5>>();
+    //std::shared_ptr<c5> c5_ = injector_c0_int_.create<std::shared_ptr<c5>>();
     //BOOST_CHECK_EQUAL(i, c5_->c2_->i);
 //}
 
@@ -723,16 +724,16 @@ test call_policy_lambda = [] {
 
     //auto all = make_injector(
         //common
-      //, bind<i>::to([&]() -> aux::shared_ptr<i> {
+      //, bind<i>::to([&]() -> std::shared_ptr<i> {
             //if (debug_property) {
-                //return aux::shared_ptr<i>(new fake());
+                //return std::shared_ptr<i>(new fake());
             //}
 
-            //return common.create<aux::shared_ptr<impl>>();
+            //return common.create<std::shared_ptr<impl>>();
         //})
     //);
 
-    //auto i_ = all.create<aux::shared_ptr<i>>();
+    //auto i_ = all.create<std::shared_ptr<i>>();
 
     //BOOST_CHECK(dynamic_cast<impl*>(i_.get()));
     //BOOST_CHECK_EQUAL(value, dynamic_cast<impl*>(i_.get())->i);
@@ -748,16 +749,16 @@ test call_policy_lambda = [] {
 
     //auto all = make_injector(
         //common
-      //, bind<i>::to([&]() -> aux::shared_ptr<i> {
+      //, bind<i>::to([&]() -> std::shared_ptr<i> {
             //if (debug_property) {
-                //return aux::shared_ptr<i>(new fake());
+                //return std::shared_ptr<i>(new fake());
             //}
 
-            //return common.create<aux::shared_ptr<impl>>();
+            //return common.create<std::shared_ptr<impl>>();
         //})
     //);
 
-    //auto i_ = all.create<aux::shared_ptr<i>>();
+    //auto i_ = all.create<std::shared_ptr<i>>();
 
     //BOOST_CHECK(dynamic_cast<fake*>(i_.get()));
 //}
@@ -833,7 +834,7 @@ test call_policy_lambda = [] {
       //, bind<long>::to(l)
     //);
 
-    //auto wrappers_ = injector_.create<aux::unique_ptr<wrappers_types>>();
+    //auto wrappers_ = injector_.create<std::unique_ptr<wrappers_types>>();
 
     //BOOST_CHECK_EQUAL(i1, wrappers_->i_);
     //BOOST_CHECK_EQUAL(i2, wrappers_->ii_);
@@ -898,14 +899,14 @@ test call_policy_lambda = [] {
 //BOOST_AUTO_TEST_CASE(named_parameters_with_unique_scope) {
     //auto injector = make_injector(
         //unique<impl>()
-      //, bind<i>::named<b>::to(aux::shared_ptr<impl>(new impl()))
+      //, bind<i>::named<b>::to(std::shared_ptr<impl>(new impl()))
     //);
 
     //auto nameds_ = injector.create<nameds>();
     //BOOST_CHECK(nameds_.n1_ != nameds_.n2_);
 
-    //BOOST_CHECK(nameds_.n1_ != injector.create<aux::shared_ptr<i>>());
-    //BOOST_CHECK(nameds_.n2_ != injector.create<aux::shared_ptr<i>>());
+    //BOOST_CHECK(nameds_.n1_ != injector.create<std::shared_ptr<i>>());
+    //BOOST_CHECK(nameds_.n2_ != injector.create<std::shared_ptr<i>>());
 //}
 
 //BOOST_AUTO_TEST_CASE(create_with_default_values) {
@@ -926,24 +927,24 @@ test call_policy_lambda = [] {
     //auto b = false;
     //auto injector = di::make_injector(
        //di::bind<int>::to(42)
-     //, di::bind<if0>::to([&](auto& injector) -> aux::shared_ptr<if0> {
+     //, di::bind<if0>::to([&](auto& injector) -> std::shared_ptr<if0> {
           //if (b) {
-            //return injector.template create<aux::shared_ptr<c0if0>>();
+            //return injector.template create<std::shared_ptr<c0if0>>();
           //}
 
-          //return injector.template create<aux::shared_ptr<c3if0>>();
+          //return injector.template create<std::shared_ptr<c3if0>>();
        //})
     //);
 
     //{
-    //auto object = injector.create<aux::shared_ptr<if0>>();
+    //auto object = injector.create<std::shared_ptr<if0>>();
     //BOOST_CHECK(dynamic_cast<c3if0*>(object.get()));
     //BOOST_CHECK_EQUAL(42, dynamic_cast<c3if0*>(object.get())->i);
     //}
 
     //b = true;
     //{
-    //auto object = injector.create<aux::shared_ptr<if0>>();
+    //auto object = injector.create<std::shared_ptr<if0>>();
     //BOOST_CHECK(dynamic_cast<c0if0*>(object.get()));
     //}
 //}
@@ -951,14 +952,14 @@ test call_policy_lambda = [] {
 //BOOST_AUTO_TEST_CASE(dynamic_binding_using_polymorphic_lambdas_with_interfaces) {
     //auto b = false;
     //auto module = di::make_injector(
-        //di::bind<if0>::to([&](auto& injector) -> aux::shared_ptr<if0> {
-            //BOOST_CHECK(dynamic_cast<cif0if1*>(injector.template create<aux::unique_ptr<if1>>().get()));
+        //di::bind<if0>::to([&](auto& injector) -> std::shared_ptr<if0> {
+            //BOOST_CHECK(dynamic_cast<cif0if1*>(injector.template create<std::unique_ptr<if1>>().get()));
 
             //if (b) {
-              //return injector.template create<aux::shared_ptr<c0if0>>();
+              //return injector.template create<std::shared_ptr<c0if0>>();
             //}
 
-            //return injector.template create<aux::shared_ptr<c3if0>>();
+            //return injector.template create<std::shared_ptr<c3if0>>();
         //})
     //);
 
@@ -969,14 +970,14 @@ test call_policy_lambda = [] {
     //);
 
     //{
-    //auto object = injector.create<aux::shared_ptr<if0>>();
+    //auto object = injector.create<std::shared_ptr<if0>>();
     //BOOST_CHECK(dynamic_cast<c3if0*>(object.get()));
     //BOOST_CHECK_EQUAL(42, dynamic_cast<c3if0*>(object.get())->i);
     //}
 
     //b = true;
     //{
-    //auto object = injector.create<aux::shared_ptr<if0>>();
+    //auto object = injector.create<std::shared_ptr<if0>>();
     //BOOST_CHECK(dynamic_cast<c0if0*>(object.get()));
     //}
 //}
@@ -984,22 +985,22 @@ test call_policy_lambda = [] {
 //BOOST_AUTO_TEST_CASE(dynamic_binding_using_polymorphic_lambdas_with_dependend_interfaces) {
     //auto b = false;
     //auto module1 = di::make_injector(
-        //di::bind<if0>::to([&](auto& injector) -> aux::shared_ptr<if0> {
+        //di::bind<if0>::to([&](auto& injector) -> std::shared_ptr<if0> {
             //if (b) {
-              //return injector.template create<aux::shared_ptr<c3if0>>();
+              //return injector.template create<std::shared_ptr<c3if0>>();
             //}
 
-            //return injector.template create<aux::shared_ptr<c4if0>>();
+            //return injector.template create<std::shared_ptr<c4if0>>();
         //})
     //);
 
     //auto module2 = di::make_injector(
-        //di::bind<if1>::to([&](auto& injector) -> aux::shared_ptr<if1> {
+        //di::bind<if1>::to([&](auto& injector) -> std::shared_ptr<if1> {
             //if (b) {
-              //return injector.template create<aux::shared_ptr<c1if1>>();
+              //return injector.template create<std::shared_ptr<c1if1>>();
             //}
 
-            //return injector.template create<aux::shared_ptr<cif0if1>>();
+            //return injector.template create<std::shared_ptr<cif0if1>>();
         //})
     //);
 
@@ -1009,16 +1010,16 @@ test call_policy_lambda = [] {
     //);
 
     //{
-    //auto object1 = dynamic_cast<c4if0*>(injector.create<aux::shared_ptr<if0>>().get());
-    //auto object2 = dynamic_cast<cif0if1*>(injector.create<aux::shared_ptr<if1>>().get());
+    //auto object1 = dynamic_cast<c4if0*>(injector.create<std::shared_ptr<if0>>().get());
+    //auto object2 = dynamic_cast<cif0if1*>(injector.create<std::shared_ptr<if1>>().get());
     //BOOST_CHECK(object1 && object2);
     //BOOST_CHECK_EQUAL(dynamic_cast<cif0if1*>(object1->if1_.get()), object2);
     //}
 
     //b = true;
     //{
-    //BOOST_CHECK(dynamic_cast<c3if0*>(injector.create<aux::shared_ptr<if0>>().get()));
-    //BOOST_CHECK(dynamic_cast<c1if1*>(injector.create<aux::shared_ptr<if1>>().get()));
+    //BOOST_CHECK(dynamic_cast<c3if0*>(injector.create<std::shared_ptr<if0>>().get()));
+    //BOOST_CHECK(dynamic_cast<c1if1*>(injector.create<std::shared_ptr<if1>>().get()));
     //}
 //}
 
@@ -1026,12 +1027,12 @@ test call_policy_lambda = [] {
     //bool& b;
 
     //template<typename TInjector>
-    //aux::shared_ptr<if0> operator()(TInjector& injector) const {
+    //std::shared_ptr<if0> operator()(TInjector& injector) const {
         //if (b) {
-            //return injector.template create<aux::shared_ptr<c0if0>>();
+            //return injector.template create<std::shared_ptr<c0if0>>();
         //}
 
-        //return injector.template create<aux::shared_ptr<c3if0>>();
+        //return injector.template create<std::shared_ptr<c3if0>>();
     //}
 //};
 
@@ -1043,14 +1044,14 @@ test call_policy_lambda = [] {
     //);
 
     //{
-    //auto object = injector.create<aux::shared_ptr<if0>>();
+    //auto object = injector.create<std::shared_ptr<if0>>();
     //BOOST_CHECK(dynamic_cast<c3if0*>(object.get()));
     //BOOST_CHECK_EQUAL(42, dynamic_cast<c3if0*>(object.get())->i);
     //}
 
     //b = true;
     //{
-    //auto object = injector.create<aux::shared_ptr<if0>>();
+    //auto object = injector.create<std::shared_ptr<if0>>();
     //BOOST_CHECK(dynamic_cast<c0if0*>(object.get()));
     //}
 //}
@@ -1163,13 +1164,13 @@ test call_policy_lambda = [] {
 
 //auto injector_externals = make_injector(
     //bind<double>::to(7.0)
-  //, bind<if0>::to(aux::shared_ptr<c3if0>(new c3if0(67, 78.0)))
+  //, bind<if0>::to(std::shared_ptr<c3if0>(new c3if0(67, 78.0)))
   //, bind<int>::named<mpl::string<'1'>>::when<call_stack<c7, c6, c4>>::to(3)
   //, bind<int>::when<call_stack<c8>>::to(4)
 //);
 
 //auto injector_externals_1 = make_injector(
-    //bind<if0>::to(aux::shared_ptr<c3if0>(new c3if0(67, 78.0)))
+    //bind<if0>::to(std::shared_ptr<c3if0>(new c3if0(67, 78.0)))
   //, bind<int>::named<mpl::string<'1'>>::when<call_stack<c7, c6, c4>>::to(3)
   //, bind<int>::when<call_stack<c8>>::to(4)
 //);
@@ -1204,7 +1205,7 @@ test call_policy_lambda = [] {
     //BOOST_CHECK_EQUAL(true, c8_.c7_->c6_->c5_.c2_->b);
 //}
 
-//void check(const aux::shared_ptr<c8>& c8_) {
+//void check(const std::shared_ptr<c8>& c8_) {
     //BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     //BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
     //BOOST_CHECK(c8_->c7_->if0_ == c8_->c7_->c6_->c5_.if0_);
@@ -1241,7 +1242,7 @@ test call_policy_lambda = [] {
 
 //BOOST_AUTO_TEST_CASE_TEMPLATE(multiple_injectors, TInjector, multiple_injectors_types) {
     //TInjector injector;
-    //check(injector.template create<aux::shared_ptr<c8>>());
+    //check(injector.template create<std::shared_ptr<c8>>());
 //}
 
 //using mix_injectors_types = mpl::vector<
@@ -1251,7 +1252,7 @@ test call_policy_lambda = [] {
 
 //BOOST_AUTO_TEST_CASE_TEMPLATE(mix_injectors, TInjector, mix_injectors_types) {
     //TInjector injector;
-    //check(injector.template create<aux::shared_ptr<c8>>());
+    //check(injector.template create<std::shared_ptr<c8>>());
 //}
 
 //using basic_provider_types = mpl::vector<
@@ -1276,8 +1277,8 @@ test call_policy_lambda = [] {
     //fake_visitor<
         //mpl::vector<
             //transaction_usage
-          //, aux::shared_ptr<provider<aux::shared_ptr<transaction>>>
-          //, aux::shared_ptr<c3>
+          //, std::shared_ptr<provider<std::shared_ptr<transaction>>>
+          //, std::shared_ptr<c3>
           //, int
         //>
     //> visitor;
@@ -1296,18 +1297,18 @@ test call_policy_lambda = [] {
 
     //TInjector injector;
 
-    //BOOST_CHECK(!injector.template create<aux::shared_ptr<c3>>());
+    //BOOST_CHECK(!injector.template create<std::shared_ptr<c3>>());
 
     //injector.call(fake_scope_entry());
-    //BOOST_CHECK(injector.template create<aux::shared_ptr<c3>>());
+    //BOOST_CHECK(injector.template create<std::shared_ptr<c3>>());
 
     //injector.call(fake_scope_exit());
-    //BOOST_CHECK(!injector.template create<aux::shared_ptr<c3>>());
+    //BOOST_CHECK(!injector.template create<std::shared_ptr<c3>>());
 //}
 
 //BOOST_AUTO_TEST_CASE(basic_injector_externals) {
     //injector<decltype(injector_externals_2)> injector_(injector_externals_2);
-    //auto c9_ = injector_.create<aux::shared_ptr<c9>>();
+    //auto c9_ = injector_.create<std::shared_ptr<c9>>();
 
     //BOOST_CHECK_EQUAL(42, c9_->i);
     //BOOST_CHECK_EQUAL(87.0, c9_->d);
@@ -1330,7 +1331,7 @@ test call_policy_lambda = [] {
       //, decltype(injector_externals_2)
     //> injector_(injector_externals_2, injector_externals_1);
 
-    //auto c8_ = injector_.create<aux::shared_ptr<c8>>();
+    //auto c8_ = injector_.create<std::shared_ptr<c8>>();
 
     //BOOST_CHECK_EQUAL(4, c8_->i);
     //BOOST_CHECK_EQUAL(3, c8_->c7_->c6_->c4_->i1);
@@ -1351,12 +1352,12 @@ test call_policy_lambda = [] {
 
 //BOOST_AUTO_TEST_CASE(ctor_mix) {
     //injector<injector_2_t, decltype(injector_2)> injector(injector_2);
-    //check(injector.create<aux::shared_ptr<c8>>());
+    //check(injector.create<std::shared_ptr<c8>>());
 //}
 
 //BOOST_AUTO_TEST_CASE(ctor_mix_order) {
     //injector<decltype(injector_2), injector_2_t> injector(injector_2);
-    //check(injector.create<aux::shared_ptr<c8>>());
+    //check(injector.create<std::shared_ptr<c8>>());
 //}
 
 //BOOST_AUTO_TEST_CASE(ctor_mix_explicit) {
@@ -1364,7 +1365,7 @@ test call_policy_lambda = [] {
         //injector_2_t
       //, decltype(injector_2)
     //> injector(injector_2_t(), injector_2);
-    //check(injector.create<aux::shared_ptr<c8>>());
+    //check(injector.create<std::shared_ptr<c8>>());
 //}
 
 //BOOST_AUTO_TEST_CASE(ctor_mix_explicit_order) {
@@ -1372,26 +1373,26 @@ test call_policy_lambda = [] {
         //decltype(injector_2)
       //, injector_2_t
     //> injector(injector_2, injector_2_t());
-    //check(injector.create<aux::shared_ptr<c8>>());
+    //check(injector.create<std::shared_ptr<c8>>());
 //}
 
 //BOOST_AUTO_TEST_CASE(install) {
     //injector<injector_2_t, injector_3_t> injector_((injector_2_t(), injector_3_t()));
-    //check(injector_.create<aux::shared_ptr<c8>>());
+    //check(injector_.create<std::shared_ptr<c8>>());
 //}
 
 //BOOST_AUTO_TEST_CASE(install_mix) {
     //injector<injector_2_t, decltype(injector_2)> injector_((injector_2_t(), injector_2));
-    //check(injector_.create<aux::shared_ptr<c8>>());
+    //check(injector_.create<std::shared_ptr<c8>>());
 //}
 
 //BOOST_AUTO_TEST_CASE(scope_deduction) {
-    //auto c19_ = injector<>().create<aux::shared_ptr<c19>>();
+    //auto c19_ = injector<>().create<std::shared_ptr<c19>>();
     //BOOST_CHECK(c19_->c1_ == c19_->c1__);
 //}
 
 //BOOST_AUTO_TEST_CASE(scope_deduction_named_shared_ptr) {
-    //auto c22_ = injector<>().create<aux::shared_ptr<c22>>();
+    //auto c22_ = injector<>().create<std::shared_ptr<c22>>();
     //BOOST_CHECK(c22_->i == c22_->c11_->i);
 //}
 
@@ -1402,13 +1403,13 @@ test call_policy_lambda = [] {
 
 //BOOST_AUTO_TEST_CASE_TEMPLATE(scope_deduction_if, TInjector, deduce_injectors_types) {
     //TInjector injector;
-    //auto c20_ = injector.template create<aux::shared_ptr<c20>>();
+    //auto c20_ = injector.template create<std::shared_ptr<c20>>();
     //BOOST_CHECK(c20_->if0_ == c20_->if0__);
 //}
 
 //BOOST_AUTO_TEST_CASE_TEMPLATE(shared_ptr_unique_ptr, TInjector, deduce_injectors_types) {
     //TInjector injector;
-    //auto c21_ = injector.template create<aux::shared_ptr<c21>>();
+    //auto c21_ = injector.template create<std::shared_ptr<c21>>();
     //BOOST_CHECK(c21_->if0__ == c21_->if0__);
 //}
 
@@ -1519,15 +1520,15 @@ test call_policy_lambda = [] {
 //}
 
 //BOOST_AUTO_TEST_CASE(scoped_injector_create) {
-    //aux::shared_ptr<int> i1;
-    //aux::shared_ptr<int> i2;
-    //aux::shared_ptr<int> i3;
+    //std::shared_ptr<int> i1;
+    //std::shared_ptr<int> i2;
+    //std::shared_ptr<int> i3;
 
     //{
     //injector<shared<int>> i;
 
-    //i1 = i.create<aux::shared_ptr<int>>();
-    //i2 = i.create<aux::shared_ptr<int>>();
+    //i1 = i.create<std::shared_ptr<int>>();
+    //i2 = i.create<std::shared_ptr<int>>();
 
     //BOOST_CHECK(i1 == i2);
     //}
@@ -1535,7 +1536,7 @@ test call_policy_lambda = [] {
     //{
     //injector<shared<int>> i;
 
-    //i3 = i.create<aux::shared_ptr<int>>();
+    //i3 = i.create<std::shared_ptr<int>>();
 
     //BOOST_CHECK(i3 != i1);
     //BOOST_CHECK(i3 != i2);
@@ -1543,15 +1544,15 @@ test call_policy_lambda = [] {
 //}
 
 //BOOST_AUTO_TEST_CASE(scoped_injector_create_with_deduced_scope) {
-    //aux::shared_ptr<c27> i1;
-    //aux::shared_ptr<c27> i2;
-    //aux::shared_ptr<c27> i3;
+    //std::shared_ptr<c27> i1;
+    //std::shared_ptr<c27> i2;
+    //std::shared_ptr<c27> i3;
 
     //{
     //injector<> i;
 
-    //i1 = i.create<aux::shared_ptr<c27>>();
-    //i2 = i.create<aux::shared_ptr<c27>>();
+    //i1 = i.create<std::shared_ptr<c27>>();
+    //i2 = i.create<std::shared_ptr<c27>>();
 
     //BOOST_CHECK(i1->d_ == i2->d_);
     //}
@@ -1559,7 +1560,7 @@ test call_policy_lambda = [] {
     //{
     //injector<> i;
 
-    //i3 = i.create<aux::shared_ptr<c27>>();
+    //i3 = i.create<std::shared_ptr<c27>>();
 
     //BOOST_CHECK(i3->d_ != i1->d_);
     //BOOST_CHECK(i3->d_ != i2->d_);
@@ -1571,8 +1572,8 @@ test call_policy_lambda = [] {
     //const int i2 = 43;
 
     //auto injector = make_injector(
-         //bind<i>::named<a>::to(aux::shared_ptr<impl>(new impl(i1)))
-       //, bind<i>::named<b>::to(aux::shared_ptr<impl>(new impl(i2)))
+         //bind<i>::named<a>::to(std::shared_ptr<impl>(new impl(i1)))
+       //, bind<i>::named<b>::to(std::shared_ptr<impl>(new impl(i2)))
     //);
 
     //auto nameds_ = injector.create<nameds>();
@@ -1595,7 +1596,7 @@ test call_policy_lambda = [] {
       //, scopes_permission<allow_scope<scopes::unique<>>>()
     //);
 
-    //di::make_injector(di::bind_int<42>()).create<aux::shared_ptr<int>>(
+    //di::make_injector(di::bind_int<42>()).create<std::shared_ptr<int>>(
         //scopes_permission<allow_scope<scopes::unique<>>, allow_scope<scopes::shared<>>>()
       //, creation_permission<>()
       //, circular_dependencies()
@@ -1615,7 +1616,7 @@ test call_policy_lambda = [] {
       //, scopes_permission<allow_scope<scopes::unique<>>>()
     //);
 
-    //di::make_injector(di::bind_int<42>()).allocate<aux::shared_ptr<int>>(core::provider()
+    //di::make_injector(di::bind_int<42>()).allocate<std::shared_ptr<int>>(core::provider()
       //, scopes_permission<allow_scope<scopes::unique<>>, allow_scope<scopes::shared<>>>()
       //, circular_dependencies()
         //BOOST_DI_WKND(MSVC)()
@@ -1644,7 +1645,7 @@ test call_policy_lambda = [] {
 
 //BOOST_AUTO_TEST_CASE(create_using_shared_ptr) {
     //module<> module_;
-    //auto obj = module_.create<aux::shared_ptr<c0>>();
+    //auto obj = module_.create<std::shared_ptr<c0>>();
     //BOOST_CHECK(obj);
 //}
 
@@ -1654,7 +1655,7 @@ test call_policy_lambda = [] {
 //}
 
 //BOOST_AUTO_TEST_CASE(create_noncopyable) {
-    //module<>().create<aux::shared_ptr<c1>>();
+    //module<>().create<std::shared_ptr<c1>>();
 //}
 
 //BOOST_AUTO_TEST_CASE(empty) {
@@ -1669,7 +1670,7 @@ test call_policy_lambda = [] {
         //>
     //> module_;
 
-    //aux::shared_ptr<c8> c8_ = module_.create<aux::shared_ptr<c8>>();
+    //std::shared_ptr<c8> c8_ = module_.create<std::shared_ptr<c8>>();
 
     //BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     //BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -1695,7 +1696,7 @@ test call_policy_lambda = [] {
         //>
     //> module_;
 
-    //aux::shared_ptr<c8> c8_ = module_.create<aux::shared_ptr<c8>>();
+    //std::shared_ptr<c8> c8_ = module_.create<std::shared_ptr<c8>>();
 
     //BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     //BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -1723,7 +1724,7 @@ test call_policy_lambda = [] {
     //>
     //module_;
 
-    //aux::shared_ptr<c8> c8_ = module_.create<aux::shared_ptr<c8>>();
+    //std::shared_ptr<c8> c8_ = module_.create<std::shared_ptr<c8>>();
 
     //BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     //BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -1751,7 +1752,7 @@ test call_policy_lambda = [] {
         //>
     //> module_;
 
-    //auto c8_ = module_.create<aux::shared_ptr<c8>>();
+    //auto c8_ = module_.create<std::shared_ptr<c8>>();
 
     //BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     //BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -1784,7 +1785,7 @@ test call_policy_lambda = [] {
         //>
     //> module_;
 
-    //auto c8_ = module_.create<aux::shared_ptr<c8>>();
+    //auto c8_ = module_.create<std::shared_ptr<c8>>();
 
     //BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     //BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -1809,7 +1810,7 @@ test call_policy_lambda = [] {
         //>
     //> module_;
 
-    //auto c8_ = module_.create<aux::shared_ptr<c8>>();
+    //auto c8_ = module_.create<std::shared_ptr<c8>>();
 
     //BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     //BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -1836,7 +1837,7 @@ test call_policy_lambda = [] {
         //>
     //> module_;
 
-    //auto c8_ = module_.create<aux::shared_ptr<c8>>();
+    //auto c8_ = module_.create<std::shared_ptr<c8>>();
 
     //BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     //BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -1897,7 +1898,7 @@ test call_policy_lambda = [] {
         //>
     //> module_;
 
-    //auto c8_ = module_.create<aux::shared_ptr<c8>>();
+    //auto c8_ = module_.create<std::shared_ptr<c8>>();
 
     //BOOST_CHECK(c8_->c1_ == c8_->c7_->c6_->c5_.c1_);
     //BOOST_CHECK(c8_->c7_->c6_->c4_->c3_ == c8_->c7_->c6_->c3_);
@@ -1924,7 +1925,7 @@ test call_policy_lambda = [] {
         //>
     //> module_;
 
-    //auto c15_ = module_.create<aux::shared_ptr<c15>>();
+    //auto c15_ = module_.create<std::shared_ptr<c15>>();
 
     //BOOST_CHECK(c15_->c3_ == c15_->c6_.c4_->c3_); BOOST_CHECK(c15_->c3_ != c15_->c6_.c3_);
 //}
@@ -2036,7 +2037,7 @@ test call_policy_lambda = [] {
     //const bool b = true;
 
     //using external_shared = scopes::external<wrappers::shared>;
-    //fake_dependency<external_shared, c2>::type c2_(aux::shared_ptr<c2>(new c2(i, d, c, b)));
+    //fake_dependency<external_shared, c2>::type c2_(std::shared_ptr<c2>(new c2(i, d, c, b)));
 
     //module<
         //mpl::vector<
@@ -2044,7 +2045,7 @@ test call_policy_lambda = [] {
         //>
     //> module_(c2_);
 
-    //auto obj = module_.create<aux::shared_ptr<c2>>();
+    //auto obj = module_.create<std::shared_ptr<c2>>();
 
     //BOOST_CHECK_EQUAL(i, obj->i);
     //BOOST_CHECK_EQUAL(d, obj->d);
@@ -2113,8 +2114,8 @@ test call_policy_lambda = [] {
     //fake_visitor<
         //mpl::vector<
             //transaction_usage
-          //, aux::shared_ptr<di::provider<aux::shared_ptr<transaction>>>
-          //, aux::shared_ptr<c3>
+          //, std::shared_ptr<di::provider<std::shared_ptr<transaction>>>
+          //, std::shared_ptr<c3>
           //, int
         //>
     //> visitor;
@@ -2136,7 +2137,7 @@ test call_policy_lambda = [] {
         //mpl::vector<
             //mpl::pair<c18, scopes::unique<>>
           //, mpl::pair<c0, scopes::unique<>>
-          //, mpl::pair<aux::shared_ptr<c1>, scopes::shared<>>
+          //, mpl::pair<std::shared_ptr<c1>, scopes::shared<>>
           //, mpl::pair<int, scopes::unique<>>
           //, mpl::pair<c3&, scopes::external<wrappers::reference>>
         //>

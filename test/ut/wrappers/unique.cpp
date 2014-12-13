@@ -15,27 +15,27 @@ struct implementation : public interface { virtual void dummy() { }; };
 constexpr auto i = 42;
 
 test to_interface = [] {
-    //aux::unique_ptr<interface> object(unique<interface*>(new implementation{}));
+    //std::unique_ptr<interface> object(unique<interface*>(new implementation{}));
     //expect(dynamic_cast<implementation*>(object.get()));
 };
 
 test to_ptr = [] {
-    aux::unique_ptr<int> object{static_cast<int*>(unique<int*>{new int{i}})};
+    std::unique_ptr<int> object{static_cast<int*>(unique<int*>{new int{i}})};
     expect_eq(i, *object);
 };
 
 //test to_const_ptr = [] {
-    //aux::unique_ptr<const int> object{unique<int*>(new int{i})};
+    //std::unique_ptr<const int> object{unique<int*>(new int{i})};
     //expect_eq(i, *object);
 //};
 
 //test to_shared_ptr = [] {
-    //aux::shared_ptr<int> object((unique<int*>(i)));
+    //std::shared_ptr<int> object((unique<int*>(i)));
     //expect_eq(i, *object);
 //};
 
 //test to_shared_ptr_other = [] {
-    //aux_::shared_ptr<int> object((unique<int*>(i)));
+    //boost::shared_ptr<int> object((unique<int*>(i)));
     //expect_eq(i, *object);
 //};
 
@@ -45,7 +45,7 @@ test to_ptr = [] {
 //};
 
 //test to_unique_ptr = [] {
-    //aux::unique_ptr<int> object((unique<int*>(i)));
+    //std::unique_ptr<int> object((unique<int*>(i)));
     //expect_eq(i, *object);
 //};
 

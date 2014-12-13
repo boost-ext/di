@@ -101,26 +101,6 @@ using at_key_t = typename at_key<TDefault, TKey, Ts...>::type;
 
 }}} // boost::di::aux
 
-#define BOOST_DI_AUX_MEMORY_HPP
-
-namespace boost { namespace di { namespace aux {
-    using ::std::unique_ptr;
-    using ::std::shared_ptr;
-    using ::std::weak_ptr;
-}}} // boost::di::aux
-
-#if defined(BOOST_DI_CFG_CONV_TO_BOOST_SMART_PTR)
-    #include <boost/shared_ptr.hpp>
-
-    namespace boost { namespace di { namespace aux_ {
-        using ::boost::shared_ptr;
-    }}} // boost::di::aux_
-#else
-    namespace boost { namespace di { namespace aux_ {
-        template<class> struct shared_ptr { };
-    }}} // boost::di::aux_
-#endif
-
 #define BOOST_DI_NAMED_HPP
 
 namespace boost { namespace di {
@@ -212,23 +192,23 @@ private:
 };
 
 template<class T, class TName>
-class named<aux::unique_ptr<T>, TName> {
+class named<std::unique_ptr<T>, TName> {
     named& operator=(const named&) = delete;
 
 public:
-    using named_type = aux::unique_ptr<T>;
+    using named_type = std::unique_ptr<T>;
     using name = TName;
 
-    named(aux::unique_ptr<T> object) noexcept // non explicit
+    named(std::unique_ptr<T> object) noexcept // non explicit
         : object_(std::move(object))
     { }
 
-    operator aux::unique_ptr<T>() noexcept {
+    operator std::unique_ptr<T>() noexcept {
         return std::move(object_);
     }
 
 private:
-    aux::unique_ptr<T> object_;
+    std::unique_ptr<T> object_;
 };
 
 }} // boost::di
@@ -414,6 +394,10 @@ private:
 
 #define BOOST_DI_WRAPPERS_UNIQUE_HPP
 
+#if (__has_include(<boost/shared_ptr.hpp>))
+    #include <boost/shared_ptr.hpp>
+#endif
+
 namespace boost { namespace di { namespace wrappers {
 
 template<class T>
@@ -445,7 +429,7 @@ public:
 
     template<class I, class = std::enable_if_t<!std::is_polymorphic<I>{}>>
     inline operator I() const noexcept {
-        return *aux::unique_ptr<I>(value_);
+        return *std::unique_ptr<I>(value_);
     }
 
     template<class I>
@@ -459,18 +443,20 @@ public:
     }
 
     template<class I>
-    inline operator aux::shared_ptr<I>() const noexcept {
-        return aux::shared_ptr<I>{value_};
+    inline operator std::shared_ptr<I>() const noexcept {
+        return std::shared_ptr<I>{value_};
     }
 
+#if (__has_include(<boost/shared_ptr.hpp>))
     template<class I>
-    inline operator aux_::shared_ptr<I>() const noexcept {
-        return aux_::shared_ptr<I>{value_};
+    inline operator boost::shared_ptr<I>() const noexcept {
+        return boost::shared_ptr<I>{value_};
     }
+#endif
 
     template<class I>
-    inline operator aux::unique_ptr<I>() const noexcept {
-        return aux::unique_ptr<I>{value_};
+    inline operator std::unique_ptr<I>() const noexcept {
+        return std::unique_ptr<I>{value_};
     }
 
 private:
@@ -481,23 +467,18 @@ private:
 
 #define BOOST_DI_WRAPPERS_SHARED_HPP
 
+#if (__has_include(<boost/shared_ptr.hpp>))
+    #include <boost/shared_ptr.hpp>
+#endif
+
 namespace boost { namespace di { namespace wrappers {
 
 template<class T>
 class shared {
-    template<class TSharedPtr>
-    struct sp_holder {
-        TSharedPtr object;
-
-        void operator()(...) noexcept {
-            object.reset();
-        }
-    };
-
 public:
     shared() noexcept { }
 
-    shared(const aux::shared_ptr<T>& value) noexcept // non explicit
+    shared(const std::shared_ptr<T>& value) noexcept // non explicit
         : value_(value)
     { }
 
@@ -510,27 +491,38 @@ public:
     }
 
     template<class I>
-    inline operator aux::shared_ptr<I>() const noexcept {
+    inline operator std::shared_ptr<I>() const noexcept {
         return value_;
     }
 
+#if (__has_include(<boost/shared_ptr.hpp>))
+    template<class TSharedPtr>
+    struct sp_holder {
+        TSharedPtr object;
+
+        void operator()(...) noexcept {
+            object.reset();
+        }
+    };
+
     template<class I>
-    inline operator aux_::shared_ptr<I>() const noexcept {
-        using sp = sp_holder<aux_::shared_ptr<I>>;
+    inline operator boost::shared_ptr<I>() const noexcept {
+        using sp = sp_holder<boost::shared_ptr<I>>;
         if (auto* deleter = std::get_deleter<sp, I>(value_)) {
             return deleter->object;
         } else {
-            return {value_.get(), sp_holder<aux::shared_ptr<T>>{value_}};
+            return {value_.get(), sp_holder<std::shared_ptr<T>>{value_}};
         }
     }
+#endif
 
     template<class I>
-    inline operator aux::weak_ptr<I>() const noexcept {
+    inline operator std::weak_ptr<I>() const noexcept {
         return value_;
     }
 
 private:
-    aux::shared_ptr<T> value_;
+    std::shared_ptr<T> value_;
 };
 
 }}} // boost::di::wrappers
@@ -754,6 +746,10 @@ struct is_dependency<
 
 #define BOOST_DI_TYPE_TRAITS_MEMORY_TRAITS_HPP
 
+#if (__has_include(<boost/shared_ptr.hpp>))
+    #include <boost/shared_ptr.hpp>
+#endif
+
 namespace boost { namespace di { namespace type_traits {
 
 struct heap { };
@@ -785,42 +781,44 @@ struct memory_traits<const T*> {
 };
 
 template<class T>
-struct memory_traits<aux::shared_ptr<T>> {
+struct memory_traits<std::shared_ptr<T>> {
     using type = heap;
 };
 
 template<class T>
-struct memory_traits<const aux::shared_ptr<T>&> {
+struct memory_traits<const std::shared_ptr<T>&> {
+    using type = heap;
+};
+
+#if (__has_include(<boost/shared_ptr.hpp>))
+    template<class T>
+    struct memory_traits<boost::shared_ptr<T>> {
+        using type = heap;
+    };
+
+    template<class T>
+    struct memory_traits<const boost::shared_ptr<T>&> {
+        using type = heap;
+    };
+#endif
+
+template<class T>
+struct memory_traits<std::weak_ptr<T>> {
     using type = heap;
 };
 
 template<class T>
-struct memory_traits<aux_::shared_ptr<T>> {
+struct memory_traits<const std::weak_ptr<T>&> {
     using type = heap;
 };
 
 template<class T>
-struct memory_traits<const aux_::shared_ptr<T>&> {
+struct memory_traits<std::unique_ptr<T>> {
     using type = heap;
 };
 
 template<class T>
-struct memory_traits<aux::weak_ptr<T>> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<const aux::weak_ptr<T>&> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<aux::unique_ptr<T>> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<const aux::unique_ptr<T>&> {
+struct memory_traits<const std::unique_ptr<T>&> {
     using type = heap;
 };
 
@@ -902,6 +900,10 @@ public:
 
 #define BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 
+#if (__has_include(<boost/shared_ptr.hpp>))
+    #include <boost/shared_ptr.hpp>
+#endif
+
 namespace boost { namespace di { namespace type_traits {
 
 template<class T>
@@ -930,42 +932,44 @@ struct scope_traits<const T*> {
 };
 
 template<class T>
-struct scope_traits<aux::shared_ptr<T>> {
+struct scope_traits<std::shared_ptr<T>> {
     using type = scopes::singleton;
 };
 
 template<class T>
-struct scope_traits<const aux::shared_ptr<T>&> {
+struct scope_traits<const std::shared_ptr<T>&> {
+    using type = scopes::singleton;
+};
+
+#if (__has_include(<boost/shared_ptr.hpp>))
+    template<class T>
+    struct scope_traits<boost::shared_ptr<T>> {
+        using type = scopes::singleton;
+    };
+
+    template<class T>
+    struct scope_traits<const boost::shared_ptr<T>&> {
+        using type = scopes::singleton;
+    };
+#endif
+
+template<class T>
+struct scope_traits<std::weak_ptr<T>> {
     using type = scopes::singleton;
 };
 
 template<class T>
-struct scope_traits<aux_::shared_ptr<T>> {
+struct scope_traits<const std::weak_ptr<T>&> {
     using type = scopes::singleton;
 };
 
 template<class T>
-struct scope_traits<const aux_::shared_ptr<T>&> {
-    using type = scopes::singleton;
-};
-
-template<class T>
-struct scope_traits<aux::weak_ptr<T>> {
-    using type = scopes::singleton;
-};
-
-template<class T>
-struct scope_traits<const aux::weak_ptr<T>&> {
-    using type = scopes::singleton;
-};
-
-template<class T>
-struct scope_traits<aux::unique_ptr<T>> {
+struct scope_traits<std::unique_ptr<T>> {
     using type = scopes::unique;
 };
 
 template<class T>
-struct scope_traits<const aux::unique_ptr<T>&> {
+struct scope_traits<const std::unique_ptr<T>&> {
     using type = scopes::unique;
 };
 
