@@ -41,6 +41,13 @@ Boost.DI is header only library which requires C++14 compliant compiler(Clang-3.
     ./b2 -j4 ../test ../example
 ```
 
+**Quick User Guide**
+
+| First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+
 **Hello World**
 
 ```cpp
