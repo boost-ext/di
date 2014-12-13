@@ -47,10 +47,10 @@ Boost.DI is header only library which requires C++14 compliant compiler(Clang-3.
 | ------------- | ------------- |
 | di::make\_injector() | creates injector with empty bindings |
 | di::make\_injector(...) | creates injector with bindings |
-| ------------- |
+| -------------------------- |
 | bind\<i, impl\> | binds `impl` to interface `i` |
 | bind\<int\>.to(42) | binds `ints` to 42 |
-| bind\<int\>.to(42).named(name{}) | binds `ints` named `name` to 42 (di::named\<int, name\>)|
+| bind\<int\>.named(name{}).to(42) | binds `ints` named `name` to 42 (di::named\<int, name\>)|
 | ------------- |
 
 **Hello World**
