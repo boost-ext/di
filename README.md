@@ -16,7 +16,7 @@ Boost.DI is C++14 header only library providing type safe, compile time, macro f
 * [Boost Library Proposal](http://boost.2283326.n4.nabble.com/Is-there-any-interest-in-a-dependency-injection-library-td4665526.html)
 
 ### Instalation
-Boost.DI is header only library which requires C++14 compliant compiler(Clang-3.4+, GCC-5.0+) with STL (memory, new, type\_traits). There are no Boost libraries requirements (optically Boost.Smart\_Ptr).
+Boost.DI is header only library which requires C++14 compliant compiler(Clang-3.4+, GCC-5.0+) with STL (memory, new, type\_traits). There are no Boost libraries requirements (optionally Boost.Smart\_Ptr).
 
 > To get started the only file you need is `di.hpp`:
 
@@ -36,7 +36,7 @@ Boost.DI is header only library which requires C++14 compliant compiler(Clang-3.
 
 ```sh
     git clone --recursive https://github.com/krzysztof-jusiak/di.git
-    cd build
+    cd di/build
     ./bootstrap.sh --with-toolset=clang
     ./b2 -j4 ../test ../example
 ```
