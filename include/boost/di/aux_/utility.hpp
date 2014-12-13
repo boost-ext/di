@@ -51,6 +51,9 @@ struct join<type_list<TArgs1...>, type_list<TArgs2...>, Ts...> {
     using type = typename join<type_list<TArgs1..., TArgs2...>, Ts...>::type;
 };
 
+template<class... TArgs>
+using join_t = typename join<TArgs...>::type;
+
 template<class TDefault, class>
 static no_decay<TDefault> lookup(...);
 

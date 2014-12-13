@@ -53,7 +53,7 @@ struct add_type_list<T, std::false_type, std::false_type> {
 };
 
 template<class... Ts>
-using bindings_t = typename aux::join<typename add_type_list<Ts>::type...>::type;
+using bindings_t = aux::join_t<typename add_type_list<Ts>::type...>;
 
 template<class TConfig, class... TArgs>
 using injector = core::injector<detail::bindings_t<TArgs...>, TConfig>;

@@ -84,23 +84,13 @@ using remove_accessors =
     std::remove_cv<std::remove_pointer_t<std::remove_reference_t<T>>>;
 
 template<class T>
-using remove_accessors_t =
-    typename remove_accessors<T>::type;
+using remove_accessors_t = typename remove_accessors<T>::type;
 
-template<class T, class = void>
+template<class, class = void>
 struct deref_type;
 
 template<typename T>
-using deref_type_t =
-    typename deref_type<T>::type;
-
-template<class T>
-using make_plain =
-    deref_type<remove_accessors_t<deref_type_t<remove_accessors_t<T>>>>;
-
-template<class T>
-using make_plain_t =
-    typename make_plain<T>::type;
+using deref_type_t = typename deref_type<T>::type;
 
 template<class T, class>
 struct deref_type {
@@ -118,6 +108,14 @@ template<class T>
 struct deref_type<T, std::enable_if_t<has_element_type<T>{}>> {
     using type = typename T::element_type;
 };
+
+template<class T>
+using make_plain =
+    deref_type<remove_accessors_t<deref_type_t<remove_accessors_t<T>>>>;
+
+template<class T>
+using make_plain_t =
+    typename make_plain<T>::type;
 
 template<class T>
 struct function_traits
