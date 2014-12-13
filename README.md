@@ -45,18 +45,19 @@ Boost.DI is header only library which requires C++14 compliant compiler(Clang-3.
 
 | Example | Description |
 | ------------- | ------------- |
-| di::make\_injector() | creates injector with empty bindings |
-| di::make\_injector(...) | creates injector with bindings |
+| make\_injector() | creates injector with empty bindings |
+| make\_injector(...) | creates injector with bindings |
 | |
-| di::bind\<i, impl\> | binds `impl` to interface `i` in `deduce` (default) scope |
-| di::bind\<i, impl\>.in(scopes::deduce) | binds `impl` to interface `i` in `deduce` scope |
-| di::bind\<i, impl\>.in(scopes::unique) | binds `impl` to interface `i` in `unique` scope |
-| di::bind\<i, impl\>.in(scopes::shared) | binds `impl` to interface `i` in `shared` scope |
-| di::bind\<i, impl\>.in(scopes::singleton) | binds `impl` to interface `i` in `singleton` scope |
-| di::bind\<i, impl\>.in(scopes::session(name{})) | binds `impl` to interface `i` in `session` scope with name `name` |
-| di::bind\<i, impl\>.named(name{}) | binds `impl` to interface `i` named `name`(di::named\<std::unique_ptr\<i\>, name\>) |
-| di::bind\<int\>.to(42) | binds `ints` to 42 |
-| di::bind\<int\>.named(name{}).to(42) | binds `ints` named `name` to 42 (di::named\<int, name\>) |
+| bind\<i, impl\> | binds `impl` to interface `i` in `deduce` (default) scope |
+| bind\<i, impl\>.in(deduce) | binds `impl` to interface `i` in `deduce` scope |
+| bind\<i, impl\>.in(unique) | binds `impl` to interface `i` in `unique` scope |
+| bind\<i, impl\>.in(shared) | binds `impl` to interface `i` in `shared` scope |
+| bind\<i, impl\>.in(singleton) | binds `impl` to interface `i` in `singleton` scope |
+| bind\<i, impl\>.in(session(name{})) | binds `impl` to interface `i` in `session` scope with name `name` |
+| bind\<i, impl\>.named(name{}) | binds `impl` to interface `i` named `name`(named\<std::unique_ptr\<i\>, name\>) |
+| bind\<i, impl\>.named(name{}).in(shared) | binds `impl` to interface `i` named `name`(named\<std::shared_ptr\<i\>, name\>) in shared scope |
+| bind\<int\>.to(42) | binds `ints` to 42 |
+| bind\<int\>.named(name{}).to(42) | binds `ints` named `name` to 42 (named\<int, name\>) |
 | |
 
 **Hello World**
