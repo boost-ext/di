@@ -10,6 +10,7 @@
 #include "boost/di/core/injector.hpp"
 #include "boost/di/core/dependency.hpp"
 #include "boost/di/scopes/exposed.hpp"
+#include "boost/di/config.hpp"
 
 namespace boost { namespace di { namespace detail {
 

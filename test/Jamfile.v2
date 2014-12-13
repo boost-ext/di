@@ -69,6 +69,9 @@ test-suite ut : # unit tests
     [ run-test c++1y : ut/type_traits/scope_traits.cpp ]
     [ run-test c++1y : ut/type_traits/memory_traits.cpp ]
     [ run-test c++1y : ut/wrappers/unique.cpp ]
+    [ run-test c++1y : ut/bindings.cpp ]
+    [ run-test c++1y : ut/config.cpp ]
+    [ run-test c++1y : ut/make_injector.cpp ]
     [ run-test c++1y : ut/named.cpp ]
 ;
 
