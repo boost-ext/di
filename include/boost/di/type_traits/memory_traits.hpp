@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_TYPE_TRAITS_MEMORY_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_MEMORY_TRAITS_HPP
 
-#include "boost/di/aux_/memory.hpp"
+#include <memory>
 #include "boost/di/named.hpp"
 
 namespace boost { namespace di { namespace type_traits {

@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_SCOPES_EXTERNAL_HPP
 #define BOOST_DI_SCOPES_EXTERNAL_HPP
 
-#include "boost/di/aux_/memory.hpp"
+#include <memory>
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/wrappers/unique.hpp"
 #include "boost/di/wrappers/shared.hpp"

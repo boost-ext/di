@@ -8,7 +8,7 @@
 #define BOOST_DI_WRAPPERS_SHARED_HPP
 
 #include <new>
-#include "boost/di/aux_/memory.hpp"
+#include <memory>
 
 namespace boost { namespace di { namespace wrappers {
 

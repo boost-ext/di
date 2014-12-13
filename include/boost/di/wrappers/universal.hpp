@@ -8,7 +8,7 @@
 #define BOOST_DI_WRAPPERS_UNIVERSAL_HPP
 
 #include "boost/di/aux_/type_traits.hpp"
-#include "boost/di/aux_/memory.hpp"
+#include <memory>
 #include "boost/di/named.hpp"
 
 namespace boost { namespace di { namespace wrappers {

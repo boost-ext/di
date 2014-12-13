@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_WRAPPERS_UNIQUE_HPP
 #define BOOST_DI_WRAPPERS_UNIQUE_HPP
 
-#include "boost/di/aux_/memory.hpp"
+#include <memory>
 #include "boost/di/aux_/type_traits.hpp"
 
 namespace boost { namespace di { namespace wrappers {

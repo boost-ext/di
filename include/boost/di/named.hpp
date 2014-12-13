@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_NAMED_HPP
 #define BOOST_DI_NAMED_HPP
 
-#include "boost/di/aux_/memory.hpp"
+#include <memory>
 
 namespace boost { namespace di {
 
