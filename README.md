@@ -20,9 +20,7 @@ Boost.DI is C++14 header only library providing type safe, compile time, macro f
 
 > To get started the only file you need is `di.hpp`:
 
-```
 [https://github.com/krzysztof-jusiak/di/blob/cpp14/include/boost/di.hpp](https://github.com/krzysztof-jusiak/di/blob/cpp14/include/boost/di.hpp)
-```
 
 ```cpp
     // main.cpp
