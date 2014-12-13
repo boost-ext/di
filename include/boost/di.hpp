@@ -84,6 +84,9 @@ struct join<type_list<TArgs1...>, type_list<TArgs2...>, Ts...> {
     using type = typename join<type_list<TArgs1..., TArgs2...>, Ts...>::type;
 };
 
+template<class... TArgs>
+using join_t = typename join<TArgs...>::type;
+
 template<class TDefault, class>
 static no_decay<TDefault> lookup(...);
 
@@ -305,23 +308,13 @@ using remove_accessors =
     std::remove_cv<std::remove_pointer_t<std::remove_reference_t<T>>>;
 
 template<class T>
-using remove_accessors_t =
-    typename remove_accessors<T>::type;
+using remove_accessors_t = typename remove_accessors<T>::type;
 
-template<class T, class = void>
+template<class, class = void>
 struct deref_type;
 
 template<typename T>
-using deref_type_t =
-    typename deref_type<T>::type;
-
-template<class T>
-using make_plain =
-    deref_type<remove_accessors_t<deref_type_t<remove_accessors_t<T>>>>;
-
-template<class T>
-using make_plain_t =
-    typename make_plain<T>::type;
+using deref_type_t = typename deref_type<T>::type;
 
 template<class T, class>
 struct deref_type {
@@ -339,6 +332,14 @@ template<class T>
 struct deref_type<T, std::enable_if_t<has_element_type<T>{}>> {
     using type = typename T::element_type;
 };
+
+template<class T>
+using make_plain =
+    deref_type<remove_accessors_t<deref_type_t<remove_accessors_t<T>>>>;
+
+template<class T>
+using make_plain_t =
+    typename make_plain<T>::type;
 
 template<class T>
 struct function_traits
@@ -1772,7 +1773,7 @@ struct add_type_list<T, std::false_type, std::false_type> {
 };
 
 template<class... Ts>
-using bindings_t = typename aux::join<typename add_type_list<Ts>::type...>::type;
+using bindings_t = aux::join_t<typename add_type_list<Ts>::type...>;
 
 template<class TConfig, class... TArgs>
 using injector = core::injector<detail::bindings_t<TArgs...>, TConfig>;

@@ -6,8 +6,7 @@
 //
 #include "boost/di/inject.hpp"
 
-namespace boost {
-namespace di {
+namespace boost { namespace di {
 
 test empty_ctor = [] {
     struct c {
@@ -137,6 +136,5 @@ test inheriting_ctors = [] {
     expect_eq(d, c1_.d);
 };
 
-} // namespace di
-} // namespace boost
+}} // boost::di
 

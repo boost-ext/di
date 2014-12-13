@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[text_visitor
+//[types_dumper
 //<-
 #include <iostream>
 #include <memory>
@@ -25,7 +25,7 @@ struct c3 { c3(std::shared_ptr<c1>, std::shared_ptr<c2>) { } };
 namespace di = boost::di;
 
 /*<<Definition of text visitor>>*/
-class text_visitor {
+class types_dumper {
 public:
     /*<<Definition of the visitor call operator requirement>>*/
     template<typename T>
@@ -42,7 +42,7 @@ public:
 class local_config : public di::config {
 public:
     auto policies() const noexcept {
-        return di::make_policies(text_visitor{});
+        return di::make_policies(types_dumper{});
     }
 };
 
@@ -52,7 +52,7 @@ int main() {
         di::bind<i0, c0>
     );
 
-    /*<<iterate through created objects with `text_visitor`>>*/
+    /*<<iterate through created objects with `types_dumper`>>*/
     injector.create<c3>();
 
     /*<< output [pre
