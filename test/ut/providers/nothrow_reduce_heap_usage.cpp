@@ -1,0 +1,44 @@
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+#include "boost/di/providers/nothrow_reduce_heap_usage.hpp"
+
+namespace boost { namespace di { namespace providers {
+
+auto test_heap = [](auto type, auto init, auto... args) {
+    using T = typename decltype(type)::type;
+    std::unique_ptr<T> object{nothrow_reduce_heap_usage{}.get<T>(init, type_traits::heap{}, args...)};
+    expect(object.get());
+};
+
+auto test_stack = [](auto type, auto init, auto... args) {
+    using T = typename decltype(type)::type;
+    T object = nothrow_reduce_heap_usage{}.get<T>(init, type_traits::stack{}, args...);
+    (void)object;
+};
+
+test get_no_args = [] {
+    struct c { };
+    test_stack(test_type<int>{}, type_traits::direct{});
+    test_heap(test_type<int>{}, type_traits::aggregate{});
+    test_stack(test_type<int>{}, type_traits::aggregate{});
+    test_heap(test_type<c>{}, type_traits::direct{});
+    test_stack(test_type<c>{}, type_traits::direct{});
+    test_heap(test_type<c>{}, type_traits::aggregate{});
+    test_stack(test_type<c>{}, type_traits::aggregate{});
+};
+
+test get_with_args = [] {
+    struct direct { direct(int, double) { } };
+    struct aggregate { int i = 0; double d = 0.0; };
+    test_stack(test_type<direct>{}, type_traits::direct{}, int{}, double{});
+    test_heap(test_type<direct>{}, type_traits::aggregate{}, int{}, double{});
+    test_heap(test_type<aggregate>{}, type_traits::aggregate{}, int{}, double{});
+};
+
+}}} // boost::di::providers
+
+
