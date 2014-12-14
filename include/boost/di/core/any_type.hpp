@@ -19,7 +19,8 @@ template<class TParent = aux::none_t, class TInjector = aux::none_t>
 struct any_type {
     template<class T>
     using is_not_same_t = std::enable_if_t<
-        !std::is_same<aux::make_plain_t<T>, aux::make_plain_t<TParent>>{}
+        !std::is_same<aux::make_plain_t<T>, aux::make_plain_t<TParent>>{} &&
+        !std::is_base_of<aux::make_plain_t<TParent>, aux::make_plain_t<T>>{}
     >;
 
     template<class T>

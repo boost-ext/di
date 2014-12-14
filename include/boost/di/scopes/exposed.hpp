@@ -7,7 +7,6 @@
 #define BOOST_DI_SCOPES_EXPOSED_HPP
 
 #include "boost/di/type_traits/scope_traits.hpp"
-#include "boost/di/type_traits/memory_traits.hpp"
 #include "boost/di/providers/nothrow_reduce_heap_usage.hpp"
 
 namespace boost { namespace di { namespace scopes {

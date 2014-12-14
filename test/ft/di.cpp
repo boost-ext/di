@@ -96,6 +96,17 @@ test any_of_unique = [] {
     expect(dynamic_cast<impl1_2*>(object_1.get()) != dynamic_cast<impl1_2*>(object_2.get()));
 };
 
+test create_interface_when_impl_with_one_arg_ctor = [] {
+    struct impl : i1 { impl(int) { } void dummy1() override { } };
+
+    auto injector = di::make_injector(
+        di::bind<i1, impl>
+    );
+
+    auto object = injector.create<std::unique_ptr<i1>>();
+    expect(object.get());
+};
+
 test external_with_scope = [] {
     constexpr auto i = 42;
 
