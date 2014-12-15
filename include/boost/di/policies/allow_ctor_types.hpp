@@ -134,13 +134,13 @@ inline auto operator!(const T&) {
 template<class T>
 struct allow_ctor_types_impl {
     template<class TData>
-    void operator()(const TData& data) const noexcept {
+    void operator()(const TData& data) const {
 		static_assert(decltype(T::apply(data)){}, "Type T is not allowed");
     }
 };
 
 template<class T = std::false_type>
-inline auto allow_ctor_types(const T& = {}) noexcept {
+inline auto allow_ctor_types(const T& = {}) {
 	return allow_ctor_types_impl<always<T>>{};
 };
 

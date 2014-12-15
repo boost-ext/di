@@ -7,24 +7,23 @@
 #ifndef BOOST_DI_FAKE_DATA_HPP
 #define BOOST_DI_FAKE_DATA_HPP
 
-namespace boost {
-namespace di {
+namespace boost { namespace di {
 
-template<
-    typename T
-  , typename TCallStack
-  , typename TScope
->
+template<class T, class TDependency>
 struct fake_data {
-    typedef T type;
-    typedef TCallStack call_stack;
-    struct dependency {
-        typedef TScope scope;
-    };
+    using type = T;
+
+    TDependency&& dep;
+    //pool_t& deps;
+
+    template<class U, class TDefault>
+    decltype(auto) resolve() const noexcept {
+        //return binder::template resolve<U, TDefault>(&deps);
+        return 0;
+    }
 };
 
-} // namespace di
-} // namespace boost
+}} // boost::di
 
 #endif
 

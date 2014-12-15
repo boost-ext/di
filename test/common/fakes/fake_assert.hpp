@@ -7,31 +7,24 @@
 #ifndef BOOST_DI_FAKE_ASSERT_HPP
 #define BOOST_DI_FAKE_ASSERT_HPP
 
-#include <typeinfo>
 #include <stdexcept>
-#include <boost/config.hpp>
 
-#define BOOST_DI_ASSERT_MSG(c, msg, type)                           \
-    if (!c) {                                                       \
-        throw ::boost::di::assert_exception(#msg, &typeid(type));   \
-    }
+#define static_assert(c, msg) \
+    if (!c) { throw ::boost::di::assert_exception(#msg); }
 
 namespace boost {
 namespace di {
 
-class assert_exception : public std::exception
-{
+class assert_exception : public std::exception {
 public:
-    assert_exception(const char* msg, const std::type_info* type)
-        : msg_(msg), type_(type)
+    assert_exception(const char* msg)
+        : msg_(msg)
     { }
 
-    const char* what() const BOOST_NOEXCEPT_OR_NOTHROW override { return msg_; }
-    const std::type_info& get_type() const { return *type_; }
+    const char* what() const noexcept override { return msg_; }
 
 private:
     const char* msg_;
-    const std::type_info* type_;
 };
 
 } // namespace di
