@@ -72,6 +72,8 @@ test-suite ut : # unit tests
     [ run-test c++1y : ut/providers/nothrow_heap.cpp ]
     [ run-test c++1y : ut/providers/nothrow_reduce_heap_usage.cpp ]
     [ run-test c++1y : ut/scopes/unique.cpp ]
+    [ run-test c++1y : ut/scopes/singleton.cpp ]
+    [ run-test c++1y : ut/scopes/session.cpp ]
     [ run-test c++1y : ut/scopes/shared.cpp ]
     [ run-test c++1y : ut/type_traits/ctor_traits.cpp ]
     [ run-test c++1y : ut/type_traits/scope_traits.cpp ]

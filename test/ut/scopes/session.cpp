@@ -4,59 +4,47 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/cpp_0x/scopes/session.hpp"
+#include "boost/di/scopes/session.hpp"
+#include "common/fakes/fake_provider.hpp"
 
-#include <boost/test/unit_test.hpp>
-#include <boost/type.hpp>
+namespace boost { namespace di { namespace scopes {
 
-#include "boost/di/cpp_0x/aux_/memory.hpp"
+test create = [] {
+    session<>::scope<int, int> session1;
+    session<>::scope<int, int> session2;
 
-namespace boost {
-namespace di {
-namespace scopes {
+    {
+    std::shared_ptr<int> object1 = session1.create<int>(fake_provider<int>{});
+    std::shared_ptr<int> object2 = session1.create<int>(fake_provider<int>{});
+    expect_eq(object1, object2);
+    }
 
-auto new_int = []{ return new int(); };
+    {
+    std::shared_ptr<int> object1 = session2.create<int>(fake_provider<int>{});
+    std::shared_ptr<int> object2 = session2.create<int>(fake_provider<int>{});
+    expect_eq(object1, object2);
+    }
 
-BOOST_AUTO_TEST_CASE(create) {
-    session<>::scope<int> session1;
-    session<>::scope<int> session2;
+    {
+    std::shared_ptr<int> object1 = session1.create<int>(fake_provider<int>{});
+    std::shared_ptr<int> object2 = session2.create<int>(fake_provider<int>{});
+    expect_eq(object1, object2);
+    }
+};
 
-    BOOST_CHECK((
-        (session1.create(new_int))(type<std::shared_ptr<int>>())
-        ==
-        (session1.create(new_int))(type<std::shared_ptr<int>>())
-    ));
+test call = [] {
+    struct name { };
+    session<name>::scope<int, int> s;
+    expect_eq(nullptr, static_cast<std::shared_ptr<int>>(s.create<int>(fake_provider<int>{})));
+    s.call(session_entry<name>{});
+    expect_neq(nullptr, static_cast<std::shared_ptr<int>>(s.create<int>(fake_provider<int>{})));
+    s.call(session_exit<name>{});
+    expect_eq(nullptr, static_cast<std::shared_ptr<int>>(s.create<int>(fake_provider<int>{})));
+    s.call(session_entry<name>{});
+    expect_neq(nullptr, static_cast<std::shared_ptr<int>>(s.create<int>(fake_provider<int>{})));
+    s.call(session_exit<name>{});
+    expect_eq(nullptr, static_cast<std::shared_ptr<int>>(s.create<int>(fake_provider<int>{})));
+};
 
-    BOOST_CHECK((
-        (session2.create(new_int))(type<std::shared_ptr<int>>())
-        ==
-        (session2.create(new_int))(type<std::shared_ptr<int>>())
-    ));
-
-    BOOST_CHECK((
-        (session1.create(new_int))(type<std::shared_ptr<int>>())
-        ==
-        (session2.create(new_int))(type<std::shared_ptr<int>>())
-    ));
-}
-
-BOOST_AUTO_TEST_CASE(call) {
-    session<>::scope<int> session_;
-
-    session_.call(session_entry());
-    BOOST_CHECK((std::shared_ptr<int>() != (session_.create(new_int))(type<std::shared_ptr<int>>())));
-
-    session_.call(session_exit());
-    BOOST_CHECK((std::shared_ptr<int>() == (session_.create(new_int))(type<std::shared_ptr<int>>())));
-
-    session_.call(session_entry());
-    BOOST_CHECK((std::shared_ptr<int>() != (session_.create(new_int))(type<std::shared_ptr<int>>())));
-
-    session_.call(session_exit());
-    BOOST_CHECK((std::shared_ptr<int>() == (session_.create(new_int))(type<std::shared_ptr<int>>())));
-}
-
-} // namespace scopes
-} // namespace di
-} // namespace boost
+}}} // boost::di::scopes
 
