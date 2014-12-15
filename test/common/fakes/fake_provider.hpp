@@ -11,9 +11,11 @@ namespace boost { namespace di {
 
 template<class T>
 class fake_provider {
+    struct memory { };
+
 public:
-    template<class TMemory>
-    T* get(const TMemory&) const noexcept {
+    template<class TMemory = memory>
+    T* get(const TMemory& = {}) const noexcept {
         ++provide_calls();
         return new (std::nothrow) T{};
     }
