@@ -40,26 +40,78 @@ test type_is_not_allowed = [] {
     test(c{});
 };
 
-test type_is_allowed_operator_or = [] {
-    auto test = [](auto type1, auto type2, auto allowed) {
+test operator_not = [] {
+    auto test_okay = [](auto type, auto allowed) {
+        using namespace operators;
+        allow_ctor_types(!std::is_same<_, decltype(type)>{})(fake_data<decltype(allowed)>{});
+    };
+
+    auto test_throw = [](auto type, auto allowed) {
+        using namespace operators;
+        try { allow_ctor_types(
+            !std::is_same<_, decltype(type)>{})(fake_data<decltype(allowed)>{});
+        } catch(const assert_exception&) { }
+    };
+
+    struct c { };
+    test_okay(double{}, int{});
+    test_throw(c{}, c{});
+    test_throw(int{}, int{});
+    test_throw(double{}, double{});
+};
+
+test operator_or = [] {
+    auto test_okay = [](auto type1, auto type2, auto allowed) {
         using namespace operators;
         allow_ctor_types(std::is_same<decltype(type1), _>{} || std::is_same<_, decltype(type2)>{})(fake_data<decltype(allowed)>{});
     };
 
-    test(int{}, double{}, int{});
-    test(double{}, int{}, int{});
-};
-
-test type_is_not_allowed_operator_or = [] {
-    auto test = [](auto type1, auto type2, auto allowed) {
+    auto test_throw = [](auto type1, auto type2, auto allowed) {
         using namespace operators;
         try { allow_ctor_types(
             std::is_same<decltype(type1), _>{} || std::is_same<_, decltype(type2)>{})(fake_data<decltype(allowed)>{});
         } catch(const assert_exception&) { }
     };
 
-    test(int{}, double{}, float{});
-    test(double{}, int{}, float{});
+    test_okay(int{}, double{}, int{});
+    test_okay(double{}, int{}, int{});
+    test_throw(int{}, double{}, float{});
+    test_throw(double{}, int{}, float{});
+};
+
+test operator_and = [] {
+    auto test_okay = [](auto type, auto allowed) {
+        using namespace operators;
+        allow_ctor_types(std::is_integral<_>{} && std::is_same<_, decltype(type)>{})(fake_data<decltype(allowed)>{});
+    };
+
+    auto test_throw = [](auto type, auto allowed) {
+        using namespace operators;
+        try { allow_ctor_types(
+            std::is_integral<_>{} && std::is_same<_, decltype(type)>{})(fake_data<decltype(allowed)>{});
+        } catch(const assert_exception&) { }
+    };
+
+    struct c { };
+    test_okay(int{}, int{});
+    test_throw(c{}, c{});
+    test_throw(int{}, float{});
+    test_throw(double{}, float{});
+};
+
+test is_type_bound = [] {
+    allow_ctor_types(is_bound<_>{})(fake_data<void, aux::none_t, aux::none_t, true>{});
+    try { allow_ctor_types(is_bound<_>{})(fake_data<void, aux::none_t, aux::none_t, false>{}); } catch(const assert_exception&) { }
+};
+
+test complex_opeartors = [] {
+    using namespace operators;
+    auto test = [](auto data) { allow_ctor_types((std::is_integral<_>{} && std::is_same<_, int>{}) || is_bound<_>{})(data); };
+    try { test(fake_data<void, aux::none_t, aux::none_t, false>{}); } catch(const assert_exception&) { }
+    try { test(fake_data<double, aux::none_t, aux::none_t, false>{}); } catch(const assert_exception&) { }
+    test(fake_data<int, aux::none_t, aux::none_t, false>{});
+    test(fake_data<int, aux::none_t, aux::none_t, true>{});
+    test(fake_data<double, aux::none_t, aux::none_t, true>{});
 };
 
 }}} // boost::di::policies
