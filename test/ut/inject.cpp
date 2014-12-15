@@ -62,8 +62,8 @@ test params = [] {
         double d = 0.0;
     };
 
-    constexpr int i = 1;
-    constexpr double d = 2.0;
+    constexpr auto i = 1;
+    constexpr auto d = 2.0;
 
     c c_(i, d);
 
@@ -72,8 +72,8 @@ test params = [] {
 };
 
 test traits = [] {
-    constexpr int i = 1;
-    constexpr double d = 2.0;
+    constexpr auto i = 1;
+    constexpr auto d = 2.0;
 
     struct c {
         BOOST_DI_INJECT_TRAITS(int i, double d);
@@ -93,8 +93,8 @@ test traits = [] {
 };
 
 test function = [] {
-    constexpr int i = 1;
-    constexpr double d = 2.0;
+    constexpr auto i = 1;
+    constexpr auto d = 2.0;
 
     struct c {
         static void BOOST_DI_INJECTOR(int i, double d);
@@ -114,8 +114,8 @@ test function = [] {
 };
 
 test inheriting_ctors = [] {
-    constexpr int i = 1;
-    constexpr double d = 2.0;
+    constexpr auto i = 1;
+    constexpr auto d = 2.0;
 
     struct c0 {
         BOOST_DI_INJECT(c0, int i, double d)
