@@ -24,6 +24,7 @@ compose <variant>analyze :
 project :
     requirements
         <include>.
+        <include>..
         <include>../include
         <warnings>all
 ;
@@ -65,6 +66,8 @@ test-suite ut : # unit tests
     [ run-test c++1y : ut/inject.cpp : ctor_inject ]
     [ run-test c++1y : ut/aux_/type_traits.cpp ]
     [ run-test c++1y : ut/aux_/utility.cpp ]
+    [ run-test c++1y : ut/core/any_type.cpp ]
+    [ run-test c++1y : ut/core/pool.cpp ]
     [ run-test c++1y : ut/providers/nothrow_heap.cpp ]
     [ run-test c++1y : ut/providers/nothrow_reduce_heap_usage.cpp ]
     [ run-test c++1y : ut/type_traits/ctor_traits.cpp ]
