@@ -816,8 +816,6 @@ int main() {
     result+=(injector.create<std::unique_ptr<x98>>().get() != nullptr);
     result+=(injector.create<std::unique_ptr<x99>>().get() != nullptr);
 
-    std::cout << boost::di::core::i << std::endl;
-
     return result;
 }
 
