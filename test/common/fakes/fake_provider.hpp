@@ -7,27 +7,15 @@
 #ifndef BOOST_DI_FAKE_PROVIDER_HPP
 #define BOOST_DI_FAKE_PROVIDER_HPP
 
-#include "boost/di/aux_/type_traits.hpp"
+namespace boost { namespace di {
 
-#include <utility>
-#include <boost/utility/enable_if.hpp>
-
-namespace boost {
-namespace di {
-
-class fake_provider
-{
+template<class T>
+class fake_provider {
 public:
-    template<typename TExpected, typename TGiven>
-    typename enable_if<type_traits::has_value<TGiven>, TExpected*>::type provide() const {
+    template<class TMemory>
+    T* get(const TMemory&) const noexcept {
         ++provide_calls();
-        return new TExpected(TGiven::value);
-    }
-
-    template<typename TExpected, typename TGiven, typename... TArgs>
-    TExpected* provide(TArgs&&... args) const {
-        ++provide_calls();
-        return new TGiven(std::forward<TArgs>(args)...);
+        return new (std::nothrow) T{};
     }
 
     static int& provide_calls() {
@@ -36,8 +24,7 @@ public:
     }
 };
 
-} // namespace di
-} // namespace boost
+}} // boost::di
 
 #endif
 
