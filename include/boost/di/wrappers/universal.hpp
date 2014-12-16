@@ -19,20 +19,25 @@ struct universal {
     inline operator T() const noexcept {
         return wrapper_;
     }
+
+    //template<class Q, class TName>
+     //inline operator const named<Q, TName>&() const noexcept {
+        //return wrapper_.operator T();
+     //}
 };
 
-template<class TWrapper, class T, class TName>
-struct universal<named<T, TName>, TWrapper> {
-    TWrapper wrapper_;
+/*template<class TWrapper, class T, class TName>*/
+//struct universal<const named<T, TName>&, TWrapper> {
+    //TWrapper wrapper_;
 
-    inline operator T() const noexcept {
-        return wrapper_;
-    }
+    //inline operator T() const noexcept {
+        //return wrapper_;
+    //}
 
-     inline operator named<T, TName>() const noexcept {
-        return wrapper_.operator T();
-     }
-};
+     //inline operator named<T, TName>() const noexcept {
+        //return wrapper_.operator const T&();
+     //}
+/*};*/
 
 }}} // boost::di::wrappers
 
