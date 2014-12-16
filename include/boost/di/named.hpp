@@ -36,6 +36,28 @@ public:
     /*T object_;*/
 };
 
+template<class TName>
+class named<int, TName> {
+/*    named& operator=(const named&) = delete;*/
+
+public:
+    using named_type = int;
+    using name = TName;
+
+   named(const int& object = {}) noexcept // non explicit
+        : object_(object)
+    { }
+
+    //named(const named&) = default;
+
+    operator const int&() const noexcept {
+        return object_;;
+    }
+
+//private:
+    int object_;
+};
+
 }} // boost::di
 
 #endif

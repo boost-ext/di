@@ -624,21 +624,27 @@ test ctor_refs = [] {
     /*};*/
 
     std::string ref = "named str";
+    int i = 42;
     auto injector = di::make_injector(
-        //di::bind<std::string>.named(name{}).to(std::ref(ref))
-        di::bind<std::string>.named(name{}).to("named str")
+        di::bind<std::string>.named(name{}).to(std::ref(ref))
+        //di::bind<std::string>.named(name{}).to("named str")
+      //, di::bind<int>.named(name{}).to(42)
+      , di::bind<int>.named(name{}).to(std::cref(i))
     );
 
     struct cc {
         //BOOST_DI_INJECT(cc, const di::named<std::string, name>& s) : str(s) {
         //}
 
-        cc(const di::named<std::string, name>& s) : str(s) {
+        cc(const di::named<int, name>& i, const di::named<std::string, name>& s) : str(s) , i(i){
         }
         std::string str;
+        int i;
     };
 
-    std::cout << "result: |" << injector.create<cc>().str << "| " << std::endl;
+    auto object =  injector.create<cc>();
+    std::cout << "result: |" << object.str << "| " << std::endl;
+    std::cout << "result: |" << object.i << "| " << std::endl;
     //expect_eq("named str", static_cast<const std::string&>(injector.create<cc>().str));
 
 
