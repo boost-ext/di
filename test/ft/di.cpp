@@ -625,22 +625,21 @@ test ctor_refs = [] {
 
     std::string ref = "named str";
     auto injector = di::make_injector(
-        di::bind<std::string>.named(name{}).to(std::cref(ref))
-        //di::bind<std::string>.named(name{}).to("named str")
+        //di::bind<std::string>.named(name{}).to(std::cref(ref))
+        di::bind<std::string>.named(name{}).to("named str")
     );
 
     struct cc {
-        //BOOST_DI_INJECT(cc, const di::named<std::string, name>& s) : str(s) {
-        //}
-
-        cc(const di::named<std::string, name>& s) : str(s) {
+        BOOST_DI_INJECT(cc, const di::named<std::string, name>& s) : str(s) {
         }
+
+        //cc(const di::named<std::string, name>& s) : str(s) {
+        //}
         std::string str;
     };
 
     std::cout << "result: |" << static_cast<const std::string&>(injector.create<cc>().str) << "| " << std::endl;
     //expect_eq("named str", static_cast<const std::string&>(injector.create<cc>().str));
-    assert(false);
 
 
     //test(test_type<c>{}, di::bind<i1, impl1>);

@@ -45,7 +45,7 @@ struct any_type {
 
     template<class T, class = is_not_same_t<T>, class = is_ref_t<T>>
     operator const T&() const noexcept {
-        return reinterpret_cast<const T&>(injector_.template create<const T&, TParent>().operator const typename T::named_type&());
+        return static_cast<const T&>(injector_.template create<const T&, TParent>().operator const typename T::named_type&());
     }
 
     const TInjector& injector_;

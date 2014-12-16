@@ -28,9 +28,9 @@ public:
 
     //named(const named&) = default;
 
-    //operator const T&() const noexcept {
-        //return *this;;
-    //}
+    operator const T&() const noexcept {
+        return *this;;
+    }
 
 //private:
     /*T object_;*/

@@ -100,6 +100,16 @@ private:
         using type = T;
     };
 
+    template<class T>
+    struct get_type<const T&, std::true_type> {
+        using type = const T&;
+    };
+
+    template<class T>
+    struct get_type<const T&, std::false_type> {
+        using type = T;
+    };
+
     template<class T, class TName>
     struct get_type<const di::named<T, TName>&, std::true_type> {
         using type = const T&;
@@ -120,6 +130,9 @@ private:
         using type = T;
     };
 
+    template<class>
+    struct tt{};
+
     template<class T>
     decltype(auto) create_impl() const noexcept {
         auto&& dependency = binder::resolve<T>((injector*)this);
@@ -128,11 +141,22 @@ private:
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_type = provider<given_t, T, ctor_t, injector>;
         const auto& ctor_provider = provider_type{*this};
-        //using wrapper_t = decltype(dependency.template create<T>(ctor_provider));
         using type = typename get_type<T, has_is_ref<dependency_t>>::type;
         call_policies<T>(config_.policies(), dependency);
-        return dependency.template create<type>(ctor_provider);
+        //return dependency.template create<T>(ctor_provider);
+        return blah(tt<T>{}, tt<type>{}, dependency, ctor_provider);
     }
+
+    template<class T, class X, class D, class C>
+    decltype(auto) blah(tt<T>, tt<X>, const D& d, const C& c) const noexcept {
+        return d.template create<T>(c);
+    }
+
+    template<class T, class X, class D, class C>
+    decltype(auto) blah(tt<const T&>, tt<const X&>, const D& d, const C& c) const noexcept {
+        return static_cast<const T&>(d.template create<T>(c).operator const typename T::named_type&());
+    }
+
 
     template<
         class T
