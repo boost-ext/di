@@ -144,7 +144,13 @@ private:
         using type = typename get_type<T, has_is_ref<dependency_t>>::type;
         call_policies<T>(config_.policies(), dependency);
         //return dependency.template create<T>(ctor_provider);
-        return blah(tt<T>{}, tt<type>{}, dependency, ctor_provider);
+
+        using wrapper_t = decltype(dependency.template create<T>(ctor_provider));
+        //return blah(tt<T>{}, tt<type>{}, dependency, ctor_provider);
+
+        return wrappers::universal<type, wrapper_t>{
+            dependency.template create<type>(ctor_provider)
+        };
     }
 
     template<class T, class X, class D, class C>

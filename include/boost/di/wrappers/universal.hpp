@@ -20,24 +20,39 @@ struct universal {
         return wrapper_;
     }
 
-    //template<class Q, class TName>
-     //inline operator const named<Q, TName>&() const noexcept {
-        //return wrapper_.operator T();
-     //}
+    template<class TName>
+     inline operator named<T, TName>() const noexcept {
+        return wrapper_;
+     }
 };
 
-/*template<class TWrapper, class T, class TName>*/
-//struct universal<const named<T, TName>&, TWrapper> {
-    //TWrapper wrapper_;
+template<class TWrapper, class T>
+struct universal<const T&, TWrapper> {
+    TWrapper wrapper_;
 
-    //inline operator T() const noexcept {
-        //return wrapper_;
-    //}
+    inline operator const T&() const noexcept {
+        return wrapper_;
+    }
 
-     //inline operator named<T, TName>() const noexcept {
-        //return wrapper_.operator const T&();
-     //}
-/*};*/
+    template<class TName>
+     inline operator const named<T, TName>&() const noexcept {
+        return static_cast<const named<T, TName>&>(static_cast<const T&>(wrapper_));
+     }
+};
+
+template<class TWrapper, class T>
+struct universal<T&, TWrapper> {
+    TWrapper wrapper_;
+
+    inline operator T&() const noexcept {
+        return wrapper_;
+    }
+
+    template<class TName>
+     inline operator named<T, TName>&() const noexcept {
+        return static_cast<named<T, TName>&>(static_cast<T&>(wrapper_));
+     }
+};
 
 }}} // boost::di::wrappers
 
