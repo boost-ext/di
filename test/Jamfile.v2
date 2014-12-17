@@ -61,36 +61,36 @@ rule compile-fail-test ( std * : src + : ctor * : defines * : preprocessed_heade
     compile-fail $(src) : $(common_toolset) $(defines) : $(ctor) ;
 }
 
-#test-suite ut : # unit tests
-    #[ run-test c++1y : ut/inject.cpp ]
-    #[ run-test c++1y : ut/inject.cpp : ctor_inject ]
-    #[ run-test c++1y : ut/aux_/type_traits.cpp ]
-    #[ run-test c++1y : ut/aux_/utility.cpp ]
-    #[ run-test c++1y : ut/core/any_type.cpp ]
-    #[ run-test c++1y : ut/core/pool.cpp ]
-    #[ run-test c++1y : ut/policies/allow_ctor_types.cpp ]
-    #[ run-test c++1y : ut/providers/nothrow_heap.cpp ]
-    #[ run-test c++1y : ut/providers/nothrow_reduce_heap_usage.cpp ]
-    #[ run-test c++1y : ut/scopes/unique.cpp ]
-    #[ run-test c++1y : ut/scopes/singleton.cpp ]
-    #[ run-test c++1y : ut/scopes/session.cpp ]
-    #[ run-test c++1y : ut/scopes/shared.cpp ]
-    #[ run-test c++1y : ut/type_traits/ctor_traits.cpp ]
-    #[ run-test c++1y : ut/type_traits/scope_traits.cpp ]
-    #[ run-test c++1y : ut/type_traits/memory_traits.cpp ]
-    ##[ run-test c++1y : ut/wrappers/unique.cpp ]
-    #[ run-test c++1y : ut/bindings.cpp ]
-    #[ run-test c++1y : ut/config.cpp ]
-    #[ run-test c++1y : ut/make_injector.cpp ]
+test-suite ut : # unit tests
+    [ run-test c++1y : ut/inject.cpp ]
+    [ run-test c++1y : ut/inject.cpp : ctor_inject ]
+    [ run-test c++1y : ut/aux_/type_traits.cpp ]
+    [ run-test c++1y : ut/aux_/utility.cpp ]
+    [ run-test c++1y : ut/core/any_type.cpp ]
+    [ run-test c++1y : ut/core/pool.cpp ]
+    [ run-test c++1y : ut/policies/allow_ctor_types.cpp ]
+    [ run-test c++1y : ut/providers/nothrow_heap.cpp ]
+    [ run-test c++1y : ut/providers/nothrow_reduce_heap_usage.cpp ]
+    [ run-test c++1y : ut/scopes/unique.cpp ]
+    [ run-test c++1y : ut/scopes/singleton.cpp ]
+    [ run-test c++1y : ut/scopes/session.cpp ]
+    [ run-test c++1y : ut/scopes/shared.cpp ]
+    [ run-test c++1y : ut/type_traits/ctor_traits.cpp ]
+    [ run-test c++1y : ut/type_traits/scope_traits.cpp ]
+    [ run-test c++1y : ut/type_traits/memory_traits.cpp ]
+    #[ run-test c++1y : ut/wrappers/unique.cpp ]
+    [ run-test c++1y : ut/bindings.cpp ]
+    [ run-test c++1y : ut/config.cpp ]
+    [ run-test c++1y : ut/make_injector.cpp ]
     #[ run-test c++1y : ut/named.cpp ]
-#;
+;
 
 test-suite ft : # functional tests
     [ run-test c++1y : ft/di.cpp ]
-    #[ run-test c++1y : ft/di_allow_ctor_types.cpp ]
-    #[ run-test c++1y : ft/di_custom_policies.cpp ]
-    #[ run-test c++1y : ft/di_custom_policies_global.cpp ]
-    #[ run-test c++1y : ft/di_custom_provider.cpp ]
+    [ run-test c++1y : ft/di_allow_ctor_types.cpp ]
+    [ run-test c++1y : ft/di_custom_policies.cpp ]
+    [ run-test c++1y : ft/di_custom_policies_global.cpp ]
+    [ run-test c++1y : ft/di_custom_provider.cpp ]
 ;
 
 test-suite fail : # compile fail tests

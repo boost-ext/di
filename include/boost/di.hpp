@@ -107,108 +107,52 @@ namespace boost { namespace di {
 
 struct no_name { };
 
-template<class T, class TName = no_name>
-class named {
-    named& operator=(const named&) = delete;
+namespace detail {
 
+template<class T, class TName = no_name, class = void>
+class named_impl : public T {
 public:
     using named_type = T;
     using name = TName;
 
-    named(const T& object = {}) noexcept // non explicit
-        : object_(object)
-    { }
+    using T::T;
 
-    named(const named&) = default;
-
-    operator T() const noexcept {
-        return object_;
-    }
-
-private:
-    T object_;
-};
-
-template<class T, class TName>
-class named<const T&, TName> {
-    named& operator=(const named&) = delete;
-
-public:
-    using named_type = const T&;
-    using name = TName;
-
-    named(const T& object) noexcept // non explicit
-        : object_(object)
+    named_impl(const T& object = {}) noexcept // non explicit
+        : T(object)
     { }
 
     operator const T&() const noexcept {
-        return object_;
+        return *this;;
     }
-
-private:
-    //std::reference_wrapper<const T> object_;
-    T object_;
 };
 
 template<class T, class TName>
-class named<T&, TName> {
-    named& operator=(const named&) = delete;
-
+class named_impl<T, TName, std::enable_if_t<!std::is_class<T>{}>> {
 public:
-    using named_type = T&;
+    using named_type = T;
     using name = TName;
 
-    named(T& object) noexcept // non explicit
+    named_impl(const T& object = {}) noexcept // non explicit
         : object_(object)
     { }
 
     operator T&() noexcept {
-        return object_;
+        return object_;;
     }
 
-private:
-    std::reference_wrapper<T> object_;
-};
-
-template<class T, class TName>
-class named<T&&, TName> {
-    named& operator=(const named&) = delete;
-    named(const named&) noexcept = delete;
-
-public:
-    using named_type = T&&;
-    using name = TName;
-
-    named(T&& object) noexcept // non explicit
-        : object_(std::move(object))
-    { }
-
-    operator T&&() noexcept {
-        return std::move(object_);
+    operator const T&() const noexcept {
+        return object_;;
     }
 
 private:
     T object_;
 };
 
-template<class T, class TName>
-class named<std::unique_ptr<T>, TName> {
-    named& operator=(const named&) = delete;
+} // namespace detail
 
-public:
-    using named_type = std::unique_ptr<T>;
-    using name = TName;
-
-    named(std::unique_ptr<T> object) noexcept // non explicit
-        : object_(std::move(object))
-    { }
-
-    operator std::unique_ptr<T>() noexcept {
-        return std::move(object_);
-    }
-
-private:
-    std::unique_ptr<T> object_;
+template<class T, class TName = no_name>
+class named : public detail::named_impl<T, TName> {
+    using detail::named_impl<T, TName>::named_impl;
 };
 
 }} // boost::di
@@ -307,9 +251,10 @@ struct deref_type<named<T, TName>> {
 };
 
 BOOST_DI_HAS_TYPE(element_type);
+BOOST_DI_HAS_TYPE(named_type);
 
 template<class T>
-struct deref_type<T, std::enable_if_t<has_element_type<T>{}>> {
+struct deref_type<T, std::enable_if_t<has_element_type<T>{} && !has_named_type<T>{}>> {
     using type = typename T::element_type;
 };
 
@@ -1507,17 +1452,52 @@ struct universal {
     }
 };
 
+template<class T, class TWrapper>
+struct universal<T&, TWrapper> {
+    TWrapper wrapper_;
+
+    inline operator T&() const noexcept {
+        return static_cast<T&>(wrapper_);
+    }
+};
+
 template<class TWrapper, class T, class TName>
-struct universal<named<T, TName>, TWrapper> {
+struct universal<di::named<T, TName>, TWrapper> {
     TWrapper wrapper_;
 
     inline operator T() const noexcept {
         return wrapper_;
     }
 
-     inline operator named<T, TName>() const noexcept {
-        return wrapper_.operator T();
-     }
+    inline operator named<T, TName>() const noexcept {
+       return wrapper_.operator T();
+    }
+};
+
+template<class TWrapper, class T, class TName>
+struct universal<const di::named<T, TName>&, TWrapper> {
+    TWrapper wrapper_;
+
+    inline operator const T&() const noexcept {
+        return wrapper_;
+    }
+
+    inline operator const named<T, TName>&() const noexcept {
+        return reinterpret_cast<const named<T, TName>&>(static_cast<const T&>(wrapper_));
+    }
+};
+
+template<class TWrapper, class T, class TName>
+struct universal<di::named<T, TName>&, TWrapper> {
+    TWrapper wrapper_;
+
+    inline operator T&() const noexcept {
+        return wrapper_;
+    }
+
+    inline operator named<T, TName>&() const noexcept {
+        return reinterpret_cast<named<T, TName>&>(static_cast<T&>(wrapper_));
+    }
 };
 
 }}} // boost::di::wrappers

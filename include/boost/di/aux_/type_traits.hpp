@@ -103,9 +103,10 @@ struct deref_type<named<T, TName>> {
 };
 
 BOOST_DI_HAS_TYPE(element_type);
+BOOST_DI_HAS_TYPE(named_type);
 
 template<class T>
-struct deref_type<T, std::enable_if_t<has_element_type<T>{}>> {
+struct deref_type<T, std::enable_if_t<has_element_type<T>{} && !has_named_type<T>{}>> {
     using type = typename T::element_type;
 };
 

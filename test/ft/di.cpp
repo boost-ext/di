@@ -7,6 +7,8 @@
 namespace di = boost::di;
 
 struct name{};
+struct other_name{};
+
 struct i1 { virtual ~i1() = default; virtual void dummy1() = 0; };
 struct i2 { virtual ~i2() = default; virtual void dummy2() = 0; };
 struct i3 { virtual ~i3() = default; virtual void dummy3() = 0; };
@@ -31,7 +33,6 @@ struct complex3 {
     complex2 c2;
 };
 
-#if 0
 test named_params = [] {
     constexpr auto i = 42;
     auto injector = di::make_injector(
@@ -537,127 +538,197 @@ test bind_chars_to_string = [] {
     expect_eq("str", injector.create<std::string>());
 };
 
-#endif
-
 test ctor_refs = [] {
-/*    struct c {*/
-        //c(const std::shared_ptr<i1>& sp
-        //, int& i
-        //, const double& d
-        //, const std::string& str
-        //, di::named<const std::string&, name> nstr
-        //, std::function<int()> f
-        //, long&& l
-        //, short s)
-            //: i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)
-        //{
-            //sp->dummy1();
-        //}
-
-        //int& i;
-        //const double& d;
-        //std::string str;
-        //std::string nstr;
-        //std::function<int()> f;
-        //long l = 0;
-        //short s = 0;
-    //};
-
-    //struct c_inject {
-        //BOOST_DI_INJECT(c_inject
-                      //, const std::shared_ptr<i1>& sp
-                      //, int& i
-                      //, const double& d
-                      //, const std::string& str
-                      //, di::named<const std::string&, name> nstr
-                      //, std::function<int()> f
-                      //, long&& l
-                      //, short s)
-            //: i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)
-        //{
-            //sp->dummy1();
-        //}
-
-        //int& i;
-        //const double& d;
-        //std::string str;
-        //std::string nstr;
-        //std::function<int()> f;
-        //long l = 0;
-        //short s = 0;
-    //};
-
-    //struct c_aggregate {
-        //const std::shared_ptr<i1>& sp;
-        //int& i;
-        //const double& d;
-        //std::string str; // possible ref to copy with const std::string&
-        //di::named<std::string, name> nstr; // possible ref to copy with const std::string&
-        //std::function<int()> f;
-        //long l = 0;
-        //short s = 0;
-    //};
-
-	//auto test = [](auto type, const auto& bind_i1) {
-        //auto i = 0;
-        //constexpr auto d = 0.0;
-
-        //auto injector = di::make_injector(
-            //di::bind<int>.to(std::ref(i))
-          //, di::bind<double>.to(std::cref(d))
-          //, di::bind<std::string>.to("str")
-          //, di::bind<std::string>.named(name{}).to("named str")
-          //, bind_i1
-          //, di::bind<short>.to(42)
-          //, di::bind<long>.to(123)
-          //, di::bind<std::function<int()>>.to([]{return 87;})
-        //);
-
-        //auto object = injector.template create<typename decltype(type)::type>();
-        //expect_eq(&i, &object.i);
-        //expect_eq(&d, &object.d);
-        //expect_eq("str", object.str);
-        //expect_eq("named str", static_cast<const std::string&>(object.nstr));
-        //expect_eq(42, object.s);
-        //expect_eq(87, object.f());
-        //expect_eq(123, object.l);
-    /*};*/
-
-    std::string ref = "named str";
-    int i = 42;
-    auto injector = di::make_injector(
-        di::bind<std::string>.named(name{}).to(std::ref(ref))
-        //di::bind<std::string>.named(name{}).to("named str")
-      //, di::bind<int>.named(name{}).to(42)
-      , di::bind<int>.named(name{}).to(std::cref(i))
-    );
-
-    struct cc {
-        //BOOST_DI_INJECT(cc, const di::named<std::string, name>& s) : str(s) {
-        //}
-
-        cc(const di::named<int, name>& i, const di::named<std::string, name>& s) : str(s) , i(i){
+    struct c {
+        c(const std::shared_ptr<i1>& sp
+        , int& i
+        , const double& d
+        , const std::string& str
+        , const di::named<std::string, name>& nstr
+        , std::function<int()> f
+        , long&& l
+        , short s)
+            : i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)
+        {
+            sp->dummy1();
         }
+
+        int& i;
+        const double& d;
         std::string str;
-        int i;
+        std::string nstr;
+        std::function<int()> f;
+        long l = 0;
+        short s = 0;
     };
 
-    auto object =  injector.create<cc>();
-    std::cout << "result: |" << object.str << "| " << std::endl;
-    std::cout << "result: |" << object.i << "| " << std::endl;
-    //expect_eq("named str", static_cast<const std::string&>(injector.create<cc>().str));
+    struct c_inject {
+        BOOST_DI_INJECT(c_inject
+                      , const std::shared_ptr<i1>& sp
+                      , int& i
+                      , const double& d
+                      , const std::string& str
+                      , const di::named<std::string, name>& nstr
+                      , std::function<int()> f
+                      , long&& l
+                      , short s)
+            : i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)
+        {
+            sp->dummy1();
+        }
 
+        int& i;
+        const double& d;
+        std::string str;
+        std::string nstr;
+        std::function<int()> f;
+        long l = 0;
+        short s = 0;
+    };
 
-    //test(test_type<c>{}, di::bind<i1, impl1>);
-    //test(test_type<c_inject>{}, di::bind<i1, impl1>);
-    //test(test_type<c_aggregate>{}, di::bind<i1, impl1>);
+    struct c_aggregate {
+        const std::shared_ptr<i1>& sp;
+        int& i;
+        const double& d;
+        std::string str; // possible ref to copy with const std::string&
+        di::named<std::string, name> nstr; // possible ref to copy with const std::string&
+        std::function<int()> f;
+        long l = 0;
+        short s = 0;
+    };
 
-    //test(test_type<c>{}, di::bind<i1>.to(std::make_shared<impl1>()));
-    //test(test_type<c_inject>{}, di::bind<i1>.to(std::make_shared<impl1>()));
-    /*test(test_type<c_aggregate>{}, di::bind<i1>.to(std::make_shared<impl1>()));*/
+    auto test = [](auto type, const auto& bind_i1) {
+        auto i = 0;
+        constexpr auto d = 0.0;
+
+        auto injector = di::make_injector(
+            di::bind<int>.to(std::ref(i))
+          , di::bind<double>.to(std::cref(d))
+          , di::bind<std::string>.to("str")
+          , di::bind<std::string>.named(name{}).to("named str")
+          , bind_i1
+          , di::bind<short>.to(42)
+          , di::bind<long>.to(123)
+          , di::bind<std::function<int()>>.to([]{return 87;})
+        );
+
+        auto object = injector.template create<typename decltype(type)::type>();
+        expect_eq(&i, &object.i);
+        expect_eq(&d, &object.d);
+        expect_eq("str", object.str);
+        expect_eq("named str", static_cast<const std::string&>(object.nstr));
+        expect_eq(42, object.s);
+        expect_eq(87, object.f());
+        expect_eq(123, object.l);
+    };
+
+    test(test_type<c>{}, di::bind<i1, impl1>);
+    test(test_type<c_inject>{}, di::bind<i1, impl1>);
+    test(test_type<c_aggregate>{}, di::bind<i1, impl1>);
+
+    test(test_type<c>{}, di::bind<i1>.to(std::make_shared<impl1>()));
+    test(test_type<c_inject>{}, di::bind<i1>.to(std::make_shared<impl1>()));
+    test(test_type<c_aggregate>{}, di::bind<i1>.to(std::make_shared<impl1>()));
 };
 
-#if 0
+test refs_vs_copy = [] {
+    struct cc {
+        cc(const di::named<int, name>& i
+         , const di::named<std::string, name>& s
+         , di::named<int, other_name>& i_ref
+         , int& ii)
+            : str(s), i(i), i_ref(static_cast<int&>(i_ref)), ii(ii)
+        { }
+
+        std::string str;
+        int i = 0;
+        int& i_ref;
+        int& ii;
+    };
+
+    struct cc_inject {
+        BOOST_DI_INJECT(cc_inject
+                      , const di::named<int, name>& i
+                      , const di::named<std::string, name>& s
+                      , di::named<int, other_name>& i_ref
+                      , int& ii)
+            : str(s), i(i), i_ref(static_cast<int&>(i_ref)), ii(ii)
+        { }
+
+        std::string str;
+        int i = 0;
+        int& i_ref;
+        int& ii;
+    };
+
+    std::string ref = "named str";
+    auto i = 42;
+
+    {
+    auto injector = di::make_injector(
+        di::bind<std::string>.named(name{}).to(std::ref(ref))
+      , di::bind<int>.named(name{}).to(std::cref(i))
+      , di::bind<int>.named(other_name{}).to(std::ref(i))
+      , di::bind<int>.to(std::ref(i))
+    );
+    auto object = injector.create<cc>();
+    expect_eq(ref, object.str);
+    expect_eq(i, object.i);
+    expect_eq(i, object.i_ref);
+    expect_eq(&i, &object.i_ref);
+    expect_eq(i, object.ii);
+    expect_eq(&i, &object.ii);
+    }
+
+    {
+    auto injector = di::make_injector(
+        di::bind<std::string>.named(name{}).to(std::ref(ref))
+      , di::bind<int>.named(name{}).to(std::cref(i))
+      , di::bind<int>.named(other_name{}).to(std::ref(i))
+      , di::bind<int>.to(std::ref(i))
+    );
+    auto object = injector.create<cc_inject>();
+    expect_eq(ref, object.str);
+    expect_eq(i, object.i);
+    expect_eq(i, object.i_ref);
+    expect_eq(&i, &object.i_ref);
+    expect_eq(i, object.ii);
+    expect_eq(&i, &object.ii);
+    }
+
+    {
+    auto injector = di::make_injector(
+        di::bind<std::string>.named(name{}).to(ref)
+      , di::bind<int>.named(name{}).to(i)
+      , di::bind<int>.named(other_name{}).to(std::ref(i))
+      , di::bind<int>.to(std::ref(i))
+    );
+    auto object = injector.create<cc>();
+    expect_eq(ref, object.str);
+    expect_eq(i, object.i);
+    expect_eq(i, object.i_ref);
+    expect_eq(&i, &object.i_ref);
+    expect_eq(i, object.ii);
+    expect_eq(&i, &object.ii);
+    }
+
+    {
+    auto injector = di::make_injector(
+        di::bind<std::string>.named(name{}).to(ref)
+      , di::bind<int>.named(name{}).to(i)
+      , di::bind<int>.named(other_name{}).to(std::ref(i))
+      , di::bind<int>.to(std::ref(i))
+    );
+    auto object = injector.create<cc_inject>();
+    expect_eq(ref, object.str);
+    expect_eq(i, object.i);
+    expect_eq(i, object.i_ref);
+    expect_eq(&i, &object.i_ref);
+    expect_eq(i, object.ii);
+    expect_eq(&i, &object.ii);
+    }
+};
+
 test named_parameters_with_shared_scope = [] {
     struct a { };
     struct b { };
@@ -697,7 +768,6 @@ test call_policy_lambda = [] {
     expect_eq(0, injector.create<int>());
     expect(called);
 };
-#endif
 
 //struct empty_module {
     //auto configure() const {
