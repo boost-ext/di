@@ -11,11 +11,9 @@
 
 namespace boost { namespace di {
 
-struct no_name { };
-
 namespace detail {
 
-template<class T, class TName = no_name, class = void>
+template<class T, class TName, class = void>
 class named_impl : public T {
 public:
     using named_type = T;
@@ -55,6 +53,8 @@ private:
 };
 
 } // namespace detail
+
+struct no_name { };
 
 template<class T, class TName = no_name>
 class named : public detail::named_impl<T, TName> {

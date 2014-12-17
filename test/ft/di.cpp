@@ -734,7 +734,7 @@ test named_parameters_with_shared_scope = [] {
     struct b { };
 
     struct c {
-        c(di::named<std::shared_ptr<i1>, a> n1, di::named<std::shared_ptr<i1>, b> n2)
+        c(const di::named<std::shared_ptr<i1>, a>& n1, di::named<std::shared_ptr<i1>, b> n2)
             : n1(n1), n2(n2)
         { }
 
