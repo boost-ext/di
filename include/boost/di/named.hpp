@@ -61,6 +61,24 @@ class named : public detail::named_impl<T, TName> {
     using detail::named_impl<T, TName>::named_impl;
 };
 
+template<class T, class TName>
+struct named_traits {
+    using type = named<T, TName>;
+};
+
+template<class T, class TName>
+struct named_traits<const T&, TName> {
+	using type = const named<T, TName>&;
+};
+
+template<class T, class TName>
+struct named_traits<T&, TName> {
+	using type = named<T, TName>&;
+};
+
+template<class TName, class T>
+using named_ = typename named_traits<T, TName>::type;
+
 }} // boost::di
 
 #endif

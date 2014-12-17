@@ -633,9 +633,9 @@ test ctor_refs = [] {
 
 test refs_vs_copy = [] {
     struct cc {
-        cc(const di::named<int, name>& i
-         , const di::named<std::string, name>& s
-         , di::named<int, other_name>& i_ref
+        cc(di::named_<name, const int&> i
+         , di::named_<name, const std::string&> s
+         , di::named_<other_name, int&> i_ref
          , int& ii)
             : str(s), i(i), i_ref(static_cast<int&>(i_ref)), ii(ii)
         { }
