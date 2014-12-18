@@ -13,6 +13,7 @@
 namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_TYPE(is_ref);
+
 template<class T>
 struct is_blah : std::false_type{};
 
@@ -62,7 +63,7 @@ struct any_type {
     using t = const T&(*)(Name);
 
     template<class T, class Name, class = is_not_same<T>, class = is_ref<T>>
-    operator t<T, Name>() {
+    operator t<T, Name>() const {
         static auto fx = [this]() -> decltype(auto) { return injector_.template create_impl<const T&, Name>(); };
         struct c { static const T& f(Name) { return fx(); } };
         return c::fx;
@@ -72,12 +73,11 @@ struct any_type {
     using t2 = T(*)(Name);
 
     template<class T, class Name, class = is_not_same<T>>
-    operator t2<T, Name>() {
-        static auto fx = [this]() -> decltype(auto) { return injector_.template create_impl<T, Name>(); };
+    operator t2<T, Name>() const {
+        static auto fx = [this]() -> T { return injector_.template create_impl<T, Name>(); };
         struct c { static T f(Name) { return fx(); } };
         return c::f;
     }
-
 
     const TInjector& injector_;
 };
