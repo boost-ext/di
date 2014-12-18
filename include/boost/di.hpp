@@ -1044,6 +1044,11 @@ public:
 namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_TYPE(is_ref);
+template<class T>
+struct is_blah : std::false_type{};
+
+template<class T, class N>
+struct is_blah<T(*)(N)> : std::true_type {};
 
 template<class TParent = aux::none_t, class TInjector = aux::none_t>
 struct any_type {
@@ -1055,13 +1060,15 @@ struct any_type {
     };
 
     template<class T>
-    using is_not_same = std::enable_if_t<!is_not_same_impl<T>::value>;
+    using is_not_same = std::enable_if_t<!is_not_same_impl<T>::value && !is_blah<T>::value>;
 
     template<class T>
     struct is_ref_impl {
         static constexpr auto value =
             std::is_same<TInjector, aux::none_t>::value ||
-            has_is_ref<std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>>::value;
+            has_is_ref<
+                std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>
+            >::value;
     };
 
     template<class T>
@@ -1082,6 +1089,38 @@ struct any_type {
         return injector_.template create<const T&, TParent>();
     }
 
+    template<class T, class Name>
+    using t = const T&(*)(Name);
+
+    template<class T, class Name, class = is_not_same<T>, class = is_ref<T>>
+    operator t<T, Name>() {
+        static auto fx = [this]() -> decltype(auto) { return injector_.template create<const T&, TParent>(); };
+
+        struct c {
+            static const T& f(Name) {
+                return fx();
+            }
+        };
+
+        return c::fx;
+    }
+
+    template<class T, class Name>
+    using t2 = T(*)(Name);
+
+    template<class T, class Name, class = is_not_same<T>>
+    operator t2<T, Name>() {
+        static auto fx = [this]() -> decltype(auto) { return injector_.template create<T, TParent>(); };
+
+        struct c {
+            static T f(Name) {
+                return fx();
+            }
+        };
+
+        return c::fx;
+    }
+
     const TInjector& injector_;
 };
 
@@ -1092,7 +1131,6 @@ template<class... TArgs>
 struct is_any_type<any_type<TArgs...>> : std::true_type { };
 
 }}} // boost::di::core
-
 
 #define BOOST_DI_INJECT_HPP
 
@@ -1600,7 +1638,7 @@ private:
           , T
           , std::remove_reference_t<T>
         >;
-        call_policies<T>(config_.policies(), dependency);
+        //call_policies<T>(config_.policies(), dependency);
         return wrappers::universal<type, wrapper_t>{
             dependency.template create<T>(ctor_provider)
         };

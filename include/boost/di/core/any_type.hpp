@@ -14,6 +14,11 @@
 namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_TYPE(is_ref);
+template<class T>
+struct is_blah : std::false_type{};
+
+template<class T, class N>
+struct is_blah<T(*)(N)> : std::true_type {};
 
 template<class TParent = aux::none_t, class TInjector = aux::none_t>
 struct any_type {
@@ -25,14 +30,14 @@ struct any_type {
     };
 
     template<class T>
-    using is_not_same = std::enable_if_t<!is_not_same_impl<T>::value>;
+    using is_not_same = std::enable_if_t<!is_not_same_impl<T>::value && !is_blah<T>::value>;
 
-    template<class T>
+    template<class T, class Name = no_name>
     struct is_ref_impl {
         static constexpr auto value =
             std::is_same<TInjector, aux::none_t>::value ||
             has_is_ref<
-                std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>
+                std::remove_reference_t<decltype(binder::resolve<T, Name>((TInjector*)nullptr))>
             >::value;
     };
 
@@ -53,6 +58,34 @@ struct any_type {
     operator const T&() const noexcept {
         return injector_.template create<const T&, TParent>();
     }
+
+    template<class T, class Name>
+    using t = const T&(*)(Name);
+
+    template<class T, class Name, class = is_not_same<T>, class = is_ref<T>>
+    operator t<T, Name>() {
+        static auto fx = [this]() -> decltype(auto) { return injector_.template create<const T&, TParent>(); };
+
+        struct c {
+            static const T& f(Name) {
+                return fx();
+            }
+        };
+
+        return c::fx;
+    }
+
+
+    template<class T, class Name>
+    using t2 = T(*)(Name);
+
+    template<class T, class Name, class = is_not_same<T>>
+    operator t2<T, Name>() {
+        static auto fx = [this]() -> decltype(auto) { return injector_.template create_impl<T, Name>(); };
+        struct c { static T f(Name) { return fx(); } };
+        return c::f;
+    }
+
 
     const TInjector& injector_;
 };

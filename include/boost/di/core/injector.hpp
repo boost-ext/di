@@ -85,9 +85,9 @@ private:
         return create_impl<T>();
     }
 
-    template<class T>
+    template<class T, class TName = no_name>
     decltype(auto) create_impl() const noexcept {
-        auto&& dependency = binder::resolve<T>((injector*)this);
+        auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = typename std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
@@ -99,7 +99,7 @@ private:
           , T
           , std::remove_reference_t<T>
         >;
-        call_policies<T>(config_.policies(), dependency);
+        //call_policies<T>(config_.policies(), dependency);
         return wrappers::universal<type, wrapper_t>{
             dependency.template create<T>(ctor_provider)
         };

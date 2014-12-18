@@ -15,19 +15,6 @@
 namespace boost { namespace di { namespace core {
 
 class binder {
-    template<class>
-    struct get_name {
-        using type = no_name;
-    };
-
-    template<class T, class TName>
-    struct get_name<named<T, TName>> {
-        using type = TName;
-    };
-
-    template<class T>
-    using get_name_t = typename get_name<T>::type;
-
     template<class TDefault, class>
     static TDefault resolve_impl(...) noexcept {
         return {};
@@ -55,12 +42,13 @@ class binder {
 public:
     template<
         class T
+      , class TName
       , class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>
       , class TDeps = void
     > static decltype(auto) resolve(TDeps* deps) noexcept {
         using dependency = dependency_concept<
             aux::make_plain_t<T>
-          , get_name_t<aux::remove_accessors_t<T>>
+          , TName
         >;
         return resolve_impl<TDefault, dependency>(deps);
     }
