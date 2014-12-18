@@ -1061,7 +1061,9 @@ struct any_type {
     struct is_ref_impl {
         static constexpr auto value =
             std::is_same<TInjector, aux::none_t>::value ||
-            has_is_ref<std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>>::value;
+            has_is_ref<
+                std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>
+            >::value;
     };
 
     template<class T>
@@ -1069,17 +1071,17 @@ struct any_type {
 
     template<class T, class = is_not_same<T>>
     operator T() noexcept {
-        return injector_.template create<T, TParent>();
+        return injector_.template create_impl<T>();
     }
 
     template<class T, class = is_not_same<T>, class = is_ref<T>>
     operator T&() const noexcept {
-        return injector_.template create<T&, TParent>();
+        return injector_.template create_impl<T&>();
     }
 
     template<class T, class = is_not_same<T>, class = is_ref<T>>
     operator const T&() const noexcept {
-        return injector_.template create<const T&, TParent>();
+        return injector_.template create_impl<const T&>();
     }
 
     const TInjector& injector_;
@@ -1092,7 +1094,6 @@ template<class... TArgs>
 struct is_any_type<any_type<TArgs...>> : std::true_type { };
 
 }}} // boost::di::core
-
 
 #define BOOST_DI_INJECT_HPP
 
