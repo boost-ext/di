@@ -18,32 +18,38 @@ BOOST_DI_HAS_TYPE(is_ref);
 template<class TParent = aux::none_t, class TInjector = aux::none_t>
 struct any_type {
     template<class T>
-    using is_not_same_t = std::enable_if_t<
-        !std::is_same<aux::make_plain_t<T>, aux::make_plain_t<TParent>>{} &&
-        !std::is_base_of<aux::make_plain_t<TParent>, aux::make_plain_t<T>>{}
-    >;
+    struct is_not_same_impl {
+        static constexpr auto value =
+            std::is_same<aux::make_plain_t<T>, aux::make_plain_t<TParent>>::value ||
+            std::is_base_of<aux::make_plain_t<TParent>, aux::make_plain_t<T>>::value;
+    };
 
     template<class T>
-    using dependency = typename std::remove_reference_t<
-        decltype(binder::resolve<T>((TInjector*)nullptr))
-    >;
+    using is_not_same = std::enable_if_t<!is_not_same_impl<T>::value>;
 
     template<class T>
-    using is_ref_t = std::enable_if_t<
-        std::is_same<TInjector, aux::none_t>{} || has_is_ref<dependency<T>>{}
-    >;
+    struct is_ref_impl {
+        static constexpr auto value =
+            std::is_same<TInjector, aux::none_t>::value ||
+            has_is_ref<
+                std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>
+            >::value;
+    };
 
-    template<class T, class = is_not_same_t<T>>
+    template<class T>
+    using is_ref = std::enable_if_t<is_ref_impl<T>::value>;
+
+    template<class T, class = is_not_same<T>>
     operator T() noexcept {
         return injector_.template create<T, TParent>();
     }
 
-    template<class T, class = is_not_same_t<T>, class = is_ref_t<T>>
+    template<class T, class = is_not_same<T>, class = is_ref<T>>
     operator T&() const noexcept {
         return injector_.template create<T&, TParent>();
     }
 
-    template<class T, class = is_not_same_t<T>, class = is_ref_t<T>>
+    template<class T, class = is_not_same<T>, class = is_ref<T>>
     operator const T&() const noexcept {
         return injector_.template create<const T&, TParent>();
     }

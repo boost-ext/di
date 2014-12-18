@@ -105,11 +105,9 @@ using at_key_t = typename at_key<TDefault, TKey, Ts...>::type;
 
 namespace boost { namespace di {
 
-struct no_name { };
-
 namespace detail {
 
-template<class T, class TName = no_name, class = void>
+template<class T, class TName, class = void>
 class named_impl : public T {
 public:
     using named_type = T;
@@ -150,10 +148,30 @@ private:
 
 } // namespace detail
 
+struct no_name { };
+
 template<class T, class TName = no_name>
 class named : public detail::named_impl<T, TName> {
     using detail::named_impl<T, TName>::named_impl;
 };
+
+template<class T, class TName>
+struct named_traits {
+    using type = named<T, TName>;
+};
+
+template<class T, class TName>
+struct named_traits<const T&, TName> {
+	using type = const named<T, TName>&;
+};
+
+template<class T, class TName>
+struct named_traits<T&, TName> {
+	using type = named<T, TName>&;
+};
+
+template<class TName, class T>
+using named_ = typename named_traits<T, TName>::type;
 
 }} // boost::di
 
@@ -1030,32 +1048,36 @@ BOOST_DI_HAS_TYPE(is_ref);
 template<class TParent = aux::none_t, class TInjector = aux::none_t>
 struct any_type {
     template<class T>
-    using is_not_same_t = std::enable_if_t<
-        !std::is_same<aux::make_plain_t<T>, aux::make_plain_t<TParent>>{} &&
-        !std::is_base_of<aux::make_plain_t<TParent>, aux::make_plain_t<T>>{}
-    >;
+    struct is_not_same_impl {
+        static constexpr auto value =
+            std::is_same<aux::make_plain_t<T>, aux::make_plain_t<TParent>>::value ||
+            std::is_base_of<aux::make_plain_t<TParent>, aux::make_plain_t<T>>::value;
+    };
 
     template<class T>
-    using dependency = typename std::remove_reference_t<
-        decltype(binder::resolve<T>((TInjector*)nullptr))
-    >;
+    using is_not_same = std::enable_if_t<!is_not_same_impl<T>::value>;
 
     template<class T>
-    using is_ref_t = std::enable_if_t<
-        std::is_same<TInjector, aux::none_t>{} || has_is_ref<dependency<T>>{}
-    >;
+    struct is_ref_impl {
+        static constexpr auto value =
+            std::is_same<TInjector, aux::none_t>::value ||
+            has_is_ref<std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>>::value;
+    };
 
-    template<class T, class = is_not_same_t<T>>
+    template<class T>
+    using is_ref = std::enable_if_t<is_ref_impl<T>::value>;
+
+    template<class T, class = is_not_same<T>>
     operator T() noexcept {
         return injector_.template create<T, TParent>();
     }
 
-    template<class T, class = is_not_same_t<T>, class = is_ref_t<T>>
+    template<class T, class = is_not_same<T>, class = is_ref<T>>
     operator T&() const noexcept {
         return injector_.template create<T&, TParent>();
     }
 
-    template<class T, class = is_not_same_t<T>, class = is_ref_t<T>>
+    template<class T, class = is_not_same<T>, class = is_ref<T>>
     operator const T&() const noexcept {
         return injector_.template create<const T&, TParent>();
     }
@@ -1070,6 +1092,7 @@ template<class... TArgs>
 struct is_any_type<any_type<TArgs...>> : std::true_type { };
 
 }}} // boost::di::core
+
 
 #define BOOST_DI_INJECT_HPP
 
@@ -1452,15 +1475,6 @@ struct universal {
     }
 };
 
-template<class T, class TWrapper>
-struct universal<T&, TWrapper> {
-    TWrapper wrapper_;
-
-    inline operator T&() const noexcept {
-        return static_cast<T&>(wrapper_);
-    }
-};
-
 template<class TWrapper, class T, class TName>
 struct universal<di::named<T, TName>, TWrapper> {
     TWrapper wrapper_;
@@ -1470,7 +1484,7 @@ struct universal<di::named<T, TName>, TWrapper> {
     }
 
     inline operator named<T, TName>() const noexcept {
-       return wrapper_.operator T();
+       return static_cast<const T&>(wrapper_);
     }
 };
 
