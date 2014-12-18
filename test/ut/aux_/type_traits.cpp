@@ -84,7 +84,6 @@ test is_braces_constructible_types = [] {
 
 test remove_accessors_types = [] {
     expect(std::is_same<int, remove_accessors_t<int>>{});
-    expect(std::is_same<named<int>, remove_accessors_t<named<int>>>{});
     expect(std::is_same<int, remove_accessors_t<int&>>{});
     expect(std::is_same<int, remove_accessors_t<int*>>{});
     expect(std::is_same<int, remove_accessors_t<const int*>>{});
@@ -103,11 +102,6 @@ test make_plain_types = [] {
         expect(std::is_same<T, make_plain_t<const std::shared_ptr<T>&>>{});
         expect(std::is_same<T, make_plain_t<std::shared_ptr<T>&>>{});
         expect(std::is_same<T, make_plain_t<volatile T>>{});
-        expect(std::is_same<T, make_plain_t<const named<T, void>&>>{});
-        expect(std::is_same<T, make_plain_t<named<T, void>>>{});
-        expect(std::is_same<T, make_plain_t<named<std::shared_ptr<T>, void>>>{});
-        expect(std::is_same<T, make_plain_t<named<const std::shared_ptr<T>&, void>>>{});
-        expect(std::is_same<T, make_plain_t<const named<const std::shared_ptr<T>&, void>&>>{});
         expect(std::is_same<T, make_plain_t<T&&>>{});
         expect(std::is_same<T, make_plain_t<const T&&>>{});
     };

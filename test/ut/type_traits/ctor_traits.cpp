@@ -58,18 +58,6 @@ test ctors = [] {
         ctor_unique_ptr(std::unique_ptr<int>) { }
     };
 
-    struct int_1 { };
-    struct int_2 { };
-
-    struct ctor_inject_named {
-        static void BOOST_DI_INJECTOR(
-            named<int, int_1>
-          , named<int, int_2>
-        );
-
-        ctor_inject_named(int, int);
-    };
-
     struct rvalue {
         rvalue(int&&) { };
     };
@@ -81,7 +69,6 @@ test ctors = [] {
     expect(std::is_same<aux::pair<direct, aux::type_list<char*, const int&>>, ctor_traits<extensions>::type>{});
     expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type<ctor2>, core::any_type<ctor2>>>, ctor_traits<ctor2>::type>{});
     expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>>>, ctor_traits<ctor_complex>::type>{});
-    expect(std::is_same<aux::pair<direct, aux::type_list<named<int, int_1>, named<int, int_2>>>, ctor_traits<ctor_inject_named>::type>{});
     expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type<ctor1>>>, ctor_traits<ctor1>::type>{});
     expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type<ctor_unique_ptr>>>, ctor_traits<ctor_unique_ptr>::type>{});
     expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type<rvalue>>>, ctor_traits<rvalue>::type>{});

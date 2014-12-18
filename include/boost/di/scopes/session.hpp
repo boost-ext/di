@@ -8,7 +8,7 @@
 #define BOOST_DI_SCOPES_SESSION_HPP
 
 #include "boost/di/wrappers/shared.hpp"
-#include "boost/di/named.hpp"
+#include "boost/di/fwd.hpp"
 
 namespace boost { namespace di { namespace scopes {
 

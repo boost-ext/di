@@ -14,7 +14,6 @@
 #include "boost/di/scopes/unique.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/external.hpp"
-#include "boost/di/named.hpp"
 
 namespace boost { namespace di { namespace type_traits {
 
@@ -93,16 +92,6 @@ struct scope_traits<T&&> {
 template<class T>
 struct scope_traits<const T&&> {
     using type = scopes::unique;
-};
-
-template<class T, class TName>
-struct scope_traits<named<T, TName>> {
-    using type = typename scope_traits<T>::type;
-};
-
-template<class T, class TName>
-struct scope_traits<const named<T, TName>&> {
-    using type = typename scope_traits<T>::type;
 };
 
 template<class T>

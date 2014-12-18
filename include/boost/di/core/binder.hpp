@@ -10,7 +10,6 @@
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/core/dependency.hpp"
 #include "boost/di/scopes/deduce.hpp"
-#include "boost/di/named.hpp"
 
 namespace boost { namespace di { namespace core {
 

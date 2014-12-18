@@ -8,7 +8,6 @@
 #define BOOST_DI_WRAPPERS_UNIVERSAL_HPP
 
 #include <memory>
-#include "boost/di/named.hpp"
 
 namespace boost { namespace di { namespace wrappers {
 
@@ -18,45 +17,6 @@ struct universal {
 
     inline operator T() const noexcept {
         return wrapper_;
-    }
-};
-
-template<class TWrapper, class T, class TName>
-struct universal<di::named<T, TName>, TWrapper> {
-    TWrapper wrapper_;
-
-    inline operator T() const noexcept {
-        return wrapper_;
-    }
-
-    inline operator named<T, TName>() const noexcept {
-       return static_cast<const T&>(wrapper_);
-    }
-};
-
-template<class TWrapper, class T, class TName>
-struct universal<const di::named<T, TName>&, TWrapper> {
-    TWrapper wrapper_;
-
-    inline operator const T&() const noexcept {
-        return wrapper_;
-    }
-
-    inline operator const named<T, TName>&() const noexcept {
-        return reinterpret_cast<const named<T, TName>&>(static_cast<const T&>(wrapper_));
-    }
-};
-
-template<class TWrapper, class T, class TName>
-struct universal<di::named<T, TName>&, TWrapper> {
-    TWrapper wrapper_;
-
-    inline operator T&() const noexcept {
-        return wrapper_;
-    }
-
-    inline operator named<T, TName>&() const noexcept {
-        return reinterpret_cast<named<T, TName>&>(static_cast<T&>(wrapper_));
     }
 };
 

@@ -12,9 +12,6 @@
 // config
 #include "boost/di/config.hpp"
 
-// annotations
-#include "boost/di/named.hpp"
-
 // bindings
 #include "boost/di/bindings.hpp"
 
@@ -100,80 +97,6 @@ template<class TDefault, class TKey, class... Ts>
 using at_key_t = typename at_key<TDefault, TKey, Ts...>::type;
 
 }}} // boost::di::aux
-
-#define BOOST_DI_NAMED_HPP
-
-namespace boost { namespace di {
-
-namespace detail {
-
-template<class T, class TName, class = void>
-class named_impl : public T {
-public:
-    using named_type = T;
-    using name = TName;
-
-    using T::T;
-
-    named_impl(const T& object = {}) noexcept // non explicit
-        : T(object)
-    { }
-
-    operator const T&() const noexcept {
-        return *this;;
-    }
-};
-
-template<class T, class TName>
-class named_impl<T, TName, std::enable_if_t<!std::is_class<T>{}>> {
-public:
-    using named_type = T;
-    using name = TName;
-
-    named_impl(const T& object = {}) noexcept // non explicit
-        : object_(object)
-    { }
-
-    operator T&() noexcept {
-        return object_;;
-    }
-
-    operator const T&() const noexcept {
-        return object_;;
-    }
-
-private:
-    T object_;
-};
-
-} // namespace detail
-
-struct no_name { };
-
-template<class T, class TName = no_name>
-class named : public detail::named_impl<T, TName> {
-    using detail::named_impl<T, TName>::named_impl;
-};
-
-template<class T, class TName>
-struct named_traits {
-    using type = named<T, TName>;
-};
-
-template<class T, class TName>
-struct named_traits<const T&, TName> {
-	using type = const named<T, TName>&;
-};
-
-template<class T, class TName>
-struct named_traits<T&, TName> {
-	using type = named<T, TName>&;
-};
-
-template<class TName, class T>
-using named_ = typename named_traits<T, TName>::type;
-
-}} // boost::di
 
 #define BOOST_DI_AUX_TYPE_TRAITS_HPP
 
@@ -263,16 +186,10 @@ struct deref_type {
     using type = T;
 };
 
-template<class T, class TName>
-struct deref_type<named<T, TName>> {
-    using type = T;
-};
-
 BOOST_DI_HAS_TYPE(element_type);
-BOOST_DI_HAS_TYPE(named_type);
 
 template<class T>
-struct deref_type<T, std::enable_if_t<has_element_type<T>{} && !has_named_type<T>{}>> {
+struct deref_type<T, std::enable_if_t<has_element_type<T>{}>> {
     using type = typename T::element_type;
 };
 
@@ -622,6 +539,19 @@ public:
 
 }}} // boost::di::scopes
 
+#define BOOST_DI_FWD_HPP
+
+namespace boost { namespace di {
+namespace providers {
+class nothrow_heap;
+class nothrow_reduce_heap_usage;
+} // providers
+
+struct no_name { };
+class config;
+template<class...> class injector;
+}} // boost::di
+
 
 namespace boost { namespace di { namespace core {
 
@@ -796,16 +726,6 @@ struct memory_traits<const T&&> {
     using type = stack;
 };
 
-template<class T, class TName>
-struct memory_traits<named<T, TName>> {
-    using type = typename memory_traits<T>::type;
-};
-
-template<class T, class TName>
-struct memory_traits<const named<T, TName>&> {
-    using type = typename memory_traits<T>::type;
-};
-
 template<class T>
 using memory_traits_t = typename memory_traits<T>::type;
 
@@ -947,16 +867,6 @@ struct scope_traits<const T&&> {
     using type = scopes::unique;
 };
 
-template<class T, class TName>
-struct scope_traits<named<T, TName>> {
-    using type = typename scope_traits<T>::type;
-};
-
-template<class T, class TName>
-struct scope_traits<const named<T, TName>&> {
-    using type = typename scope_traits<T>::type;
-};
-
 template<class T>
 using scope_traits_t = typename scope_traits<T>::type;
 
@@ -1082,7 +992,7 @@ struct any_type {
 
     template<class T, class Name, class = is_not_same<T>, class = is_ref<T>>
     operator t<T, Name>() {
-        static auto fx = [this]() -> decltype(auto) { return injector_.template create<const T&, TParent>(); };
+        static auto fx = [this]() -> decltype(auto) { return injector_.template create_impl<const T&, Name>(); };
 
         struct c {
             static const T& f(Name) {
@@ -1495,45 +1405,6 @@ struct universal {
     }
 };
 
-template<class TWrapper, class T, class TName>
-struct universal<di::named<T, TName>, TWrapper> {
-    TWrapper wrapper_;
-
-    inline operator T() const noexcept {
-        return wrapper_;
-    }
-
-    inline operator named<T, TName>() const noexcept {
-       return static_cast<const T&>(wrapper_);
-    }
-};
-
-template<class TWrapper, class T, class TName>
-struct universal<const di::named<T, TName>&, TWrapper> {
-    TWrapper wrapper_;
-
-    inline operator const T&() const noexcept {
-        return wrapper_;
-    }
-
-    inline operator const named<T, TName>&() const noexcept {
-        return reinterpret_cast<const named<T, TName>&>(static_cast<const T&>(wrapper_));
-    }
-};
-
-template<class TWrapper, class T, class TName>
-struct universal<di::named<T, TName>&, TWrapper> {
-    TWrapper wrapper_;
-
-    inline operator T&() const noexcept {
-        return wrapper_;
-    }
-
-    inline operator named<T, TName>&() const noexcept {
-        return reinterpret_cast<named<T, TName>&>(static_cast<T&>(wrapper_));
-    }
-};
-
 }}} // boost::di::wrappers
 
 #define BOOST_DI_CORE_INJECTOR_HPP
@@ -1620,7 +1491,7 @@ private:
           , T
           , std::remove_reference_t<T>
         >;
-        //call_policies<T>(config_.policies(), dependency);
+        call_policies<T>(config_.policies(), dependency);
         return wrappers::universal<type, wrapper_t>{
             dependency.template create<T>(ctor_provider)
         };

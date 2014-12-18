@@ -8,7 +8,7 @@
 
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/scopes/external.hpp"
-#include "boost/di/named.hpp"
+#include "boost/di/fwd.hpp"
 
 namespace boost { namespace di { namespace core {
 

@@ -37,9 +37,6 @@ main() {
     echo "// config"
     echo "#include \"boost/di/config.hpp"\"
     echo
-    echo "// annotations"
-    echo "#include \"boost/di/named.hpp\""
-    echo
     echo "// bindings"
     echo "#include \"boost/di/bindings.hpp"\"
     echo

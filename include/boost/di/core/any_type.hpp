@@ -9,7 +9,6 @@
 #include <memory>
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/core/binder.hpp"
-#include "boost/di/named.hpp"
 
 namespace boost { namespace di { namespace core {
 
@@ -64,17 +63,10 @@ struct any_type {
 
     template<class T, class Name, class = is_not_same<T>, class = is_ref<T>>
     operator t<T, Name>() {
-        static auto fx = [this]() -> decltype(auto) { return injector_.template create<const T&, TParent>(); };
-
-        struct c {
-            static const T& f(Name) {
-                return fx();
-            }
-        };
-
+        static auto fx = [this]() -> decltype(auto) { return injector_.template create_impl<const T&, Name>(); };
+        struct c { static const T& f(Name) { return fx(); } };
         return c::fx;
     }
-
 
     template<class T, class Name>
     using t2 = T(*)(Name);

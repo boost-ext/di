@@ -11,7 +11,6 @@
 #if (__has_include(<boost/shared_ptr.hpp>))
     #include <boost/shared_ptr.hpp>
 #endif
-#include "boost/di/named.hpp"
 
 namespace boost { namespace di { namespace type_traits {
 
@@ -93,16 +92,6 @@ struct memory_traits<T&&> {
 template<class T>
 struct memory_traits<const T&&> {
     using type = stack;
-};
-
-template<class T, class TName>
-struct memory_traits<named<T, TName>> {
-    using type = typename memory_traits<T>::type;
-};
-
-template<class T, class TName>
-struct memory_traits<const named<T, TName>&> {
-    using type = typename memory_traits<T>::type;
 };
 
 template<class T>
