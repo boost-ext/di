@@ -987,19 +987,6 @@ public:
 namespace boost { namespace di { namespace core {
 
 class binder {
-    template<class>
-    struct get_name {
-        using type = no_name;
-    };
-
-    template<class T, class TName>
-    struct get_name<named<T, TName>> {
-        using type = TName;
-    };
-
-    template<class T>
-    using get_name_t = typename get_name<T>::type;
-
     template<class TDefault, class>
     static TDefault resolve_impl(...) noexcept {
         return {};
@@ -1027,12 +1014,13 @@ class binder {
 public:
     template<
         class T
+      , class TName
       , class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>
       , class TDeps = void
     > static decltype(auto) resolve(TDeps* deps) noexcept {
         using dependency = dependency_concept<
             aux::make_plain_t<T>
-          , get_name_t<aux::remove_accessors_t<T>>
+          , TName
         >;
         return resolve_impl<TDefault, dependency>(deps);
     }
@@ -1062,12 +1050,12 @@ struct any_type {
     template<class T>
     using is_not_same = std::enable_if_t<!is_not_same_impl<T>::value && !is_blah<T>::value>;
 
-    template<class T>
+    template<class T, class Name = no_name>
     struct is_ref_impl {
         static constexpr auto value =
             std::is_same<TInjector, aux::none_t>::value ||
             has_is_ref<
-                std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>
+                std::remove_reference_t<decltype(binder::resolve<T, Name>((TInjector*)nullptr))>
             >::value;
     };
 
@@ -1110,15 +1098,9 @@ struct any_type {
 
     template<class T, class Name, class = is_not_same<T>>
     operator t2<T, Name>() {
-        static auto fx = [this]() -> decltype(auto) { return injector_.template create<T, TParent>(); };
-
-        struct c {
-            static T f(Name) {
-                return fx();
-            }
-        };
-
-        return c::fx;
+        static auto fx = [this]() -> decltype(auto) { return injector_.template create_impl<T, Name>(); };
+        struct c { static T f(Name) { return fx(); } };
+        return c::f;
     }
 
     const TInjector& injector_;
@@ -1624,9 +1606,9 @@ private:
         return create_impl<T>();
     }
 
-    template<class T>
+    template<class T, class TName = no_name>
     decltype(auto) create_impl() const noexcept {
-        auto&& dependency = binder::resolve<T>((injector*)this);
+        auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = typename std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;

@@ -99,7 +99,7 @@ private:
           , T
           , std::remove_reference_t<T>
         >;
-        //call_policies<T>(config_.policies(), dependency);
+        call_policies<T>(config_.policies(), dependency);
         return wrappers::universal<type, wrapper_t>{
             dependency.template create<T>(ctor_provider)
         };

@@ -87,10 +87,10 @@ test-suite ut : # unit tests
 
 test-suite ft : # functional tests
     [ run-test c++1y : ft/di.cpp ]
-#    [ run-test c++1y : ft/di_allow_ctor_types.cpp ]
-    #[ run-test c++1y : ft/di_custom_policies.cpp ]
-    #[ run-test c++1y : ft/di_custom_policies_global.cpp ]
-    #[ run-test c++1y : ft/di_custom_provider.cpp ]
+    [ run-test c++1y : ft/di_allow_ctor_types.cpp ]
+    [ run-test c++1y : ft/di_custom_policies.cpp ]
+    [ run-test c++1y : ft/di_custom_policies_global.cpp ]
+    [ run-test c++1y : ft/di_custom_provider.cpp ]
 ;
 
 test-suite fail : # compile fail tests
