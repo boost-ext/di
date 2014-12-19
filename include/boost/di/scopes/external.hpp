@@ -54,7 +54,7 @@ public:
         { }
 
         template<class, class TProvider>
-        decltype(auto) create(const TProvider&) const noexcept {
+        auto create(const TProvider&) const noexcept {
             return object_;
         }
 
@@ -72,7 +72,7 @@ public:
         { }
 
         template<class, class TProvider>
-        decltype(auto) create(const TProvider&) const noexcept {
+        auto create(const TProvider&) const noexcept {
             return object_;
         }
 
@@ -88,7 +88,7 @@ public:
         { }
 
         template<class, class TProvider>
-        decltype(auto) create(const TProvider&) const noexcept {
+        auto create(const TProvider&) const noexcept {
             return object_;
         }
 
@@ -112,7 +112,7 @@ public:
         { }
 
         template<class, class TProvider>
-        decltype(auto) create(const TProvider&) const noexcept {
+        auto create(const TProvider&) const noexcept {
             using wrapper = wrapper_traits_t<decltype(std::declval<TGiven>()())>;
             return wrapper{object_()};
         }
@@ -129,7 +129,7 @@ public:
         { }
 
         template<class, class TProvider>
-        decltype(auto) create(const TProvider& provider) const noexcept {
+        auto create(const TProvider& provider) const noexcept {
             using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_))>;
             return wrapper{(object_)(provider.injector_)};
         }

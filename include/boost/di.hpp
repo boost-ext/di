@@ -508,7 +508,7 @@ public:
         { }
 
         template<class, class TProvider>
-        decltype(auto) create(const TProvider&) const noexcept {
+        auto create(const TProvider&) const noexcept {
             return object_;
         }
 
@@ -526,7 +526,7 @@ public:
         { }
 
         template<class, class TProvider>
-        decltype(auto) create(const TProvider&) const noexcept {
+        auto create(const TProvider&) const noexcept {
             return object_;
         }
 
@@ -542,7 +542,7 @@ public:
         { }
 
         template<class, class TProvider>
-        decltype(auto) create(const TProvider&) const noexcept {
+        auto create(const TProvider&) const noexcept {
             return object_;
         }
 
@@ -566,7 +566,7 @@ public:
         { }
 
         template<class, class TProvider>
-        decltype(auto) create(const TProvider&) const noexcept {
+        auto create(const TProvider&) const noexcept {
             using wrapper = wrapper_traits_t<decltype(std::declval<TGiven>()())>;
             return wrapper{object_()};
         }
@@ -583,7 +583,7 @@ public:
         { }
 
         template<class, class TProvider>
-        decltype(auto) create(const TProvider& provider) const noexcept {
+        auto create(const TProvider& provider) const noexcept {
             using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_))>;
             return wrapper{(object_)(provider.injector_)};
         }
@@ -796,7 +796,7 @@ public:
     class scope {
     public:
         template<class T, class TProvider>
-        decltype(auto) create(const TProvider& provider) const noexcept {
+        auto create(const TProvider& provider) const noexcept {
             using memory = type_traits::memory_traits_t<T>;
             using wrapper = wrappers::unique<decltype(provider.get(memory{}))>;
             return wrapper{provider.get(memory{})};
@@ -818,7 +818,7 @@ public:
     class scope {
     public:
         template<class, class TProvider>
-        decltype(auto) create(const TProvider& provider) const noexcept {
+        auto create(const TProvider& provider) const noexcept {
             if (!get_instance()) {
                 get_instance().reset(provider.get());
             }
@@ -946,7 +946,7 @@ public:
     class scope {
     public:
         template<class T, class TProvider>
-        decltype(auto) create(const TProvider& provider) const noexcept {
+        auto create(const TProvider& provider) const noexcept {
             using scope_traits = type_traits::scope_traits_t<T>;
             using scope = typename scope_traits::template scope<TExpected, TGiven>;
             return scope{}.template create<T>(provider);
@@ -1265,7 +1265,7 @@ public:
     }
 
     template<class T, class... TArgs>
-    auto get(const type_traits::aggregate
+    auto get(const type_traits::aggregate&
            , const type_traits::stack&
            , TArgs&&... args) const noexcept {
         return T{std::forward<TArgs>(args)...};
@@ -1330,7 +1330,7 @@ public:
         }
 
         template<class, class TProvider>
-        decltype(auto) create(const TProvider& provider) noexcept {
+        auto create(const TProvider& provider) noexcept {
             if (in_scope_ && !object_) {
                 object_.reset(provider.get());
             }
@@ -1357,7 +1357,7 @@ public:
     class scope {
     public:
         template<class, class TProvider>
-        decltype(auto) create(const TProvider& provider) noexcept {
+        auto create(const TProvider& provider) noexcept {
             if (!object_) {
                 object_.reset(provider.get());
             }
@@ -1690,7 +1690,7 @@ public:
         { }
 
         template<class T, class TProvider>
-        decltype(auto) create(const TProvider&) const noexcept {
+        auto create(const TProvider&) const noexcept {
             using scope_traits = type_traits::scope_traits_t<T>;
             using scope = typename scope_traits::template scope<TExpected, TGiven>;
             return scope{}.template create<T>(*provider_);

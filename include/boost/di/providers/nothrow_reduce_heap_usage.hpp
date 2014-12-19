@@ -37,7 +37,7 @@ public:
     }
 
     template<class T, class... TArgs>
-    auto get(const type_traits::aggregate
+    auto get(const type_traits::aggregate&
            , const type_traits::stack&
            , TArgs&&... args) const noexcept {
         return T{std::forward<TArgs>(args)...};

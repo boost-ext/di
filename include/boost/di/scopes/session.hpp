@@ -36,7 +36,7 @@ public:
         }
 
         template<class, class TProvider>
-        decltype(auto) create(const TProvider& provider) noexcept {
+        auto create(const TProvider& provider) noexcept {
             if (in_scope_ && !object_) {
                 object_.reset(provider.get());
             }
