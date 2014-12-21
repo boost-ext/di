@@ -19,7 +19,7 @@ public:
     class scope {
     public:
         template<class, class TProvider>
-        decltype(auto) create(const TProvider& provider) const noexcept {
+        auto create(const TProvider& provider) const noexcept {
             if (!get_instance()) {
                 get_instance().reset(provider.get());
             }
