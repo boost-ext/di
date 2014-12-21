@@ -27,12 +27,12 @@ template<
   , TInjector
 > {
     template<class TMemory = type_traits::heap>
-    decltype(auto) get(const TMemory& memory = {}) const noexcept {
+    auto get(const TMemory& memory = {}) const noexcept {
         auto&& config = injector_.config_;
         return config.provider().template get<T>(
             TInitialization{}
           , memory
-          , injector_.template create<TArgs, TParent>()...
+          , injector_.template create_type<TParent>(aux::type<TArgs>{})...
         );
     }
 

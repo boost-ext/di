@@ -490,8 +490,8 @@ test automatic_inject_with_initializer_list = [] {
 
 test named_polymorphic = [] {
     struct c {
-        explicit c(std::shared_ptr<i1> sp(name))
-            : sp(sp({}))
+        BOOST_DI_INJECT(explicit c, (name, std::shared_ptr<i1> sp))
+            : sp(sp)
         { }
 
         std::shared_ptr<i1> sp;
@@ -707,28 +707,28 @@ test refs_vs_copy = [] {
 };
 #endif
 
-test named_parameters_with_shared_scope = [] {
-    struct a { };
-    struct b { };
+//test named_parameters_with_shared_scope = [] {
+    //struct a { };
+    //struct b { };
 
-    struct c {
-        c(const std::shared_ptr<i1>& n1(a), std::shared_ptr<i1> n2(b))
-            : n1(n1({})), n2(n2({}))
-        { }
+    //struct c {
+        //c(const std::shared_ptr<i1>& n1(a), std::shared_ptr<i1> n2(b))
+            //: n1(n1({})), n2(n2({}))
+        //{ }
 
-        std::shared_ptr<i1> n1;
-        std::shared_ptr<i1> n2;
-    };
+        //std::shared_ptr<i1> n1;
+        //std::shared_ptr<i1> n2;
+    //};
 
-    auto injector = di::make_injector(
-        di::bind<i1, impl1>.named(a{}).in(di::unique)
-      , di::bind<i1>.named(b{}).to(std::make_shared<impl1>())
-    );
+    //auto injector = di::make_injector(
+        //di::bind<i1, impl1>.named(a{}).in(di::unique)
+      //, di::bind<i1>.named(b{}).to(std::make_shared<impl1>())
+    //);
 
-    auto object = injector.create<c>();
-    expect(object.n1 != object.n2);
-    assert(false);
-};
+    //auto object = injector.create<c>();
+    //expect(object.n1 != object.n2);
+    //assert(false);
+//};
 
 test call_policy_lambda = [] {
     static auto called = false;

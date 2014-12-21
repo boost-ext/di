@@ -61,7 +61,7 @@ public:
 
     template<class T>
     T create() const noexcept {
-        return create<T, aux::none_t>();
+        return create_type<aux::none_t>(aux::type<T>{});
     }
 
     template<class TAction>
@@ -75,18 +75,23 @@ private:
         : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
     { }
 
-    template<class T, class TParent>
-    decltype(auto) create(std::enable_if_t<is_any_type<T>{}>* = 0) const noexcept {
+    template<class TParent, class... Ts>
+    auto create_type(const aux::type<any_type<Ts...>>&) const noexcept {
         return any_type<TParent, injector>{*this};
     }
 
-    template<class T, class TParent>
-    decltype(auto) create(std::enable_if_t<!is_any_type<T>{}>* = 0) const noexcept {
+    template<class, class T>
+    auto create_type(const aux::type<T>&) const noexcept {
         return create_impl<T>();
     }
 
+    template<class, class T, class TName>
+    auto create_type(const aux::type<di::named<TName, T>>&) const noexcept {
+        return create_impl<T, TName>();
+    }
+
     template<class T, class TName = no_name>
-    decltype(auto) create_impl() const noexcept {
+    auto create_impl() const noexcept {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = typename std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;

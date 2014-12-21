@@ -15,6 +15,9 @@ namespace boost { namespace di { namespace aux {
 
 struct none_t { };
 
+template<class>
+struct type { };
+
 template<class T, T>
 struct non_type { };
 

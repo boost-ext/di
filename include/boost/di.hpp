@@ -45,6 +45,9 @@ namespace boost { namespace di { namespace aux {
 
 struct none_t { };
 
+template<class>
+struct type { };
+
 template<class T, T>
 struct non_type { };
 
@@ -452,7 +455,7 @@ public:
         { }
 
         template<class, class TProvider>
-        decltype(auto) create(const TProvider&) const noexcept {
+        auto create(const TProvider&) const noexcept {
             return object_;
         }
 
@@ -470,7 +473,7 @@ public:
         { }
 
         template<class, class TProvider>
-        decltype(auto) create(const TProvider&) const noexcept {
+        auto create(const TProvider&) const noexcept {
             return object_;
         }
 
@@ -486,7 +489,7 @@ public:
         { }
 
         template<class, class TProvider>
-        decltype(auto) create(const TProvider&) const noexcept {
+        auto create(const TProvider&) const noexcept {
             return object_;
         }
 
@@ -510,7 +513,7 @@ public:
         { }
 
         template<class, class TProvider>
-        decltype(auto) create(const TProvider&) const noexcept {
+        auto create(const TProvider&) const noexcept {
             using wrapper = wrapper_traits_t<decltype(std::declval<TGiven>()())>;
             return wrapper{object_()};
         }
@@ -527,7 +530,7 @@ public:
         { }
 
         template<class, class TProvider>
-        decltype(auto) create(const TProvider& provider) const noexcept {
+        auto create(const TProvider& provider) const noexcept {
             using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_))>;
             return wrapper{(object_)(provider.injector_)};
         }
@@ -550,6 +553,8 @@ class nothrow_reduce_heap_usage;
 struct no_name { };
 class config;
 template<class...> class injector;
+
+template<class, class> struct named { };
 }} // boost::di
 
 
@@ -743,7 +748,7 @@ public:
     class scope {
     public:
         template<class T, class TProvider>
-        decltype(auto) create(const TProvider& provider) const noexcept {
+        auto create(const TProvider& provider) const noexcept {
             using memory = type_traits::memory_traits_t<T>;
             using wrapper = wrappers::unique<decltype(provider.get(memory{}))>;
             return wrapper{provider.get(memory{})};
@@ -765,7 +770,7 @@ public:
     class scope {
     public:
         template<class, class TProvider>
-        decltype(auto) create(const TProvider& provider) const noexcept {
+        auto create(const TProvider& provider) const noexcept {
             if (!get_instance()) {
                 get_instance().reset(provider.get());
             }
@@ -883,7 +888,7 @@ public:
     class scope {
     public:
         template<class T, class TProvider>
-        decltype(auto) create(const TProvider& provider) const noexcept {
+        auto create(const TProvider& provider) const noexcept {
             using scope_traits = type_traits::scope_traits_t<T>;
             using scope = typename scope_traits::template scope<TExpected, TGiven>;
             return scope{}.template create<T>(provider);
@@ -924,7 +929,7 @@ class binder {
 public:
     template<
         class T
-      , class TName
+      , class TName = no_name
       , class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>
       , class TDeps = void
     > static decltype(auto) resolve(TDeps* deps) noexcept {
@@ -942,11 +947,6 @@ public:
 namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_TYPE(is_ref);
-template<class T>
-struct is_blah : std::false_type{};
-
-template<class T, class N>
-struct is_blah<T(*)(N)> : std::true_type {};
 
 template<class TParent = aux::none_t, class TInjector = aux::none_t>
 struct any_type {
@@ -958,14 +958,14 @@ struct any_type {
     };
 
     template<class T>
-    using is_not_same = std::enable_if_t<!is_not_same_impl<T>::value && !is_blah<T>::value>;
+    using is_not_same = std::enable_if_t<!is_not_same_impl<T>::value>;
 
-    template<class T, class Name = no_name>
+    template<class T>
     struct is_ref_impl {
         static constexpr auto value =
             std::is_same<TInjector, aux::none_t>::value ||
             has_is_ref<
-                std::remove_reference_t<decltype(binder::resolve<T, Name>((TInjector*)nullptr))>
+                std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>
             >::value;
     };
 
@@ -987,32 +987,6 @@ struct any_type {
         return injector_.template create_impl<const T&>();
     }
 
-    template<class T, class Name>
-    using t = const T&(*)(Name);
-
-    template<class T, class Name, class = is_not_same<T>, class = is_ref<T>>
-    operator t<T, Name>() {
-        static auto fx = [this]() -> decltype(auto) { return injector_.template create_impl<const T&, Name>(); };
-
-        struct c {
-            static const T& f(Name) {
-                return fx();
-            }
-        };
-
-        return c::fx;
-    }
-
-    template<class T, class Name>
-    using t2 = T(*)(Name);
-
-    template<class T, class Name, class = is_not_same<T>>
-    operator t2<T, Name>() {
-        static auto fx = [this]() -> decltype(auto) { return injector_.template create_impl<T, Name>(); };
-        struct c { static T f(Name) { return fx(); } };
-        return c::f;
-    }
-
     const TInjector& injector_;
 };
 
@@ -1026,6 +1000,14 @@ struct is_any_type<any_type<TArgs...>> : std::true_type { };
 
 #define BOOST_DI_INJECT_HPP
 
+template<class x>
+struct traits;
+
+template<class T>
+struct traits<void(T)> {
+    using type = T;
+};
+
 #if !defined(BOOST_DI_INJECTOR)
     #define BOOST_DI_INJECTOR boost_di_injector__
 #endif
@@ -1034,15 +1016,47 @@ struct is_any_type<any_type<TArgs...>> : std::true_type { };
     #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
 #endif
 
+#define IBP_SPLIT(i, ...) PRIMITIVE_CAT(IBP_SPLIT_,i)(__VA_ARGS__)
+#define IBP_IS_VARIADIC_C(...) 1
+#define IBP_SPLIT_0(a, ...) a
+#define IBP_SPLIT_1(a, ...) __VA_ARGS__
+#define IBP_IS_VARIADIC_R_1 1,
+#define IBP_IS_VARIADIC_R_IBP_IS_VARIADIC_C 0,
+#define IS_BEGIN_PARENS(...) IBP_SPLIT(0, CAT(IBP_IS_VARIADIC_R_, IBP_IS_VARIADIC_C __VA_ARGS__))
+#define CAT(a, ...) PRIMITIVE_CAT(a, __VA_ARGS__)
+#define PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
+#define IIF(c) PRIMITIVE_CAT(IIF_, c)
+#define IIF_0(t, ...) __VA_ARGS__
+#define IIF_1(t, ...) t
+#define FIRST(v1, v2) v2
+#define SECOND(v1, v2) di::named<v1, typename traits<void(v2)>::type>
+#define VA_NARGS_IMPL(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, N, ...) N
+#define VA_NARGS(...) VA_NARGS_IMPL(__VA_ARGS__, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
+#define VARARG_IMPL2(base, count, ...) base##count(__VA_ARGS__)
+#define VARARG_IMPL(base, count, ...) VARARG_IMPL2(base, count, __VA_ARGS__)
+#define VARARG(base, ...) VARARG_IMPL(base, VA_NARGS(__VA_ARGS__), __VA_ARGS__)
+#define ARG(expr, p) IIF(IS_BEGIN_PARENS(p))(expr p, p)
+#define BOOST_DI_INJECT_IMPL1(expr)
+#define BOOST_DI_INJECT_IMPL2(expr, p1) ARG(expr, p1)
+#define BOOST_DI_INJECT_IMPL3(expr, p1, p2) ARG(expr, p1), ARG(expr, p2)
+#define BOOST_DI_INJECT_IMPL4(expr, p1, p2, p3) ARG(expr, p1), ARG(expr, p2), ARG(expr, p3)
+#define BOOST_DI_INJECT_IMPL5(expr, p1, p2, p3, p4) ARG(expr, p1), ARG(expr, p2), ARG(expr, p3), ARG(expr, p4)
+#define BOOST_DI_INJECT_IMPL6(expr, p1, p2, p3, p4, p5) ARG(expr, p1), ARG(expr, p2), ARG(expr, p3), ARG(expr, p4), ARG(expr, p5)
+#define BOOST_DI_INJECT_IMPL7(expr, p1, p2, p3, p4, p5, p6) ARG(expr, p1), ARG(expr, p2), ARG(expr, p3), ARG(expr, p4), ARG(expr, p5), ARG(expr, p6)
+#define BOOST_DI_INJECT_IMPL8(expr, p1, p2, p3, p4, p5, p6, p7) ARG(expr, p1), ARG(expr, p2), ARG(expr, p3), ARG(expr, p4), ARG(expr, p5), ARG(expr, p6), ARG(expr, p7)
+#define BOOST_DI_INJECT_IMPL9(expr, p1, p2, p3, p4, p5, p6, p7, p8) ARG(expr, p1), ARG(expr, p2), ARG(expr, p3), ARG(expr, p4), ARG(expr, p5), ARG(expr, p6), ARG(expr, p7), ARG(expr, p8)
+#define BOOST_DI_INJECT_IMPL10(expr, p1, p2, p3, p4, p5, p6, p7, p8, p9) ARG(expr, p1), ARG(expr, p2), ARG(expr, p3), ARG(expr, p4), ARG(expr, p5), ARG(expr, p6), ARG(expr, p7), ARG(expr, p8), ARG(expr, p9)
+#define BOOST_DI_INJECT_IMPL11(expr, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10) ARG(expr, p1), ARG(expr, p2), ARG(expr, p3), ARG(expr, p4), ARG(expr, p5), ARG(expr, p6), ARG(expr, p7), ARG(expr, p8), ARG(expr, p9), ARG(expr, p10)
+
 #if !defined(BOOST_DI_INJECT_TRAITS)
-    #define BOOST_DI_INJECT_TRAITS(...)             \
-        static void BOOST_DI_INJECTOR(__VA_ARGS__)
+    #define BOOST_DI_INJECT_TRAITS(...) \
+        static void BOOST_DI_INJECTOR(VARARG(BOOST_DI_INJECT_IMPL, SECOND, __VA_ARGS__))
 #endif
 
 #if !defined(BOOST_DI_INJECT)
-    #define BOOST_DI_INJECT(type, ...)              \
-        BOOST_DI_INJECT_TRAITS(__VA_ARGS__);        \
-        type(__VA_ARGS__)
+    #define BOOST_DI_INJECT(type, ...) \
+        BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
+        type(VARARG(BOOST_DI_INJECT_IMPL, FIRST, __VA_ARGS__))
 #endif
 
 #define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
@@ -1221,7 +1235,7 @@ public:
     }
 
     template<class T, class... TArgs>
-    auto get(const type_traits::aggregate
+    auto get(const type_traits::aggregate&
            , const type_traits::stack&
            , TArgs&&... args) const noexcept {
         return T{std::forward<TArgs>(args)...};
@@ -1286,7 +1300,7 @@ public:
         }
 
         template<class, class TProvider>
-        decltype(auto) create(const TProvider& provider) noexcept {
+        auto create(const TProvider& provider) noexcept {
             if (in_scope_ && !object_) {
                 object_.reset(provider.get());
             }
@@ -1313,7 +1327,7 @@ public:
     class scope {
     public:
         template<class, class TProvider>
-        decltype(auto) create(const TProvider& provider) noexcept {
+        auto create(const TProvider& provider) noexcept {
             if (!object_) {
                 object_.reset(provider.get());
             }
@@ -1378,12 +1392,12 @@ template<
   , TInjector
 > {
     template<class TMemory = type_traits::heap>
-    decltype(auto) get(const TMemory& memory = {}) const noexcept {
+    auto get(const TMemory& memory = {}) const noexcept {
         auto&& config = injector_.config_;
         return config.provider().template get<T>(
             TInitialization{}
           , memory
-          , injector_.template create<TArgs, TParent>()...
+          , injector_.template create_type<TParent>(aux::type<TArgs>{})...
         );
     }
 
@@ -1453,7 +1467,7 @@ public:
 
     template<class T>
     T create() const noexcept {
-        return create<T, aux::none_t>();
+        return create_type<aux::none_t>(aux::type<T>{});
     }
 
     template<class TAction>
@@ -1467,18 +1481,23 @@ private:
         : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
     { }
 
-    template<class T, class TParent>
-    decltype(auto) create(std::enable_if_t<is_any_type<T>{}>* = 0) const noexcept {
+    template<class TParent, class... Ts>
+    auto create_type(const aux::type<any_type<Ts...>>&) const noexcept {
         return any_type<TParent, injector>{*this};
     }
 
-    template<class T, class TParent>
-    decltype(auto) create(std::enable_if_t<!is_any_type<T>{}>* = 0) const noexcept {
+    template<class, class T>
+    auto create_type(const aux::type<T>&) const noexcept {
         return create_impl<T>();
     }
 
+    template<class, class T, class TName>
+    auto create_type(const aux::type<di::named<TName, T>>&) const noexcept {
+        return create_impl<T, TName>();
+    }
+
     template<class T, class TName = no_name>
-    decltype(auto) create_impl() const noexcept {
+    auto create_impl() const noexcept {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = typename std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;
@@ -1607,7 +1626,7 @@ public:
         { }
 
         template<class T, class TProvider>
-        decltype(auto) create(const TProvider&) const noexcept {
+        auto create(const TProvider&) const noexcept {
             using scope_traits = type_traits::scope_traits_t<T>;
             using scope = typename scope_traits::template scope<TExpected, TGiven>;
             return scope{}.template create<T>(*provider_);
