@@ -15,17 +15,9 @@ namespace di = boost::di;
 
 struct name { };
 
-struct ctor_named {
-    /*<<constructor with intrusive named parameter>>*/
-    ctor_named(int i1, di::named<int, name> i2 = 0) {
-        assert(i1 == 0);
-        assert(i2 == 42);
-    }
-};
-
 struct ctor_inject {
     /*<<constructor with intrusive named parameter explicitly selected>>*/
-    BOOST_DI_INJECT(ctor_inject, int i1, di::named<int, name> i2 = 0) {
+    BOOST_DI_INJECT(ctor_inject, int i1, (name, int i2)) {
         assert(i1 == 0);
         assert(i2 == 42);
     }
@@ -33,17 +25,8 @@ struct ctor_inject {
 
 struct ctor_inject_traits {
     /*<<constructor with less intrusive named parameter using traits>>*/
-    BOOST_DI_INJECT_TRAITS(int, di::named<int, name>);
+    BOOST_DI_INJECT_TRAITS(int, (name, int));
     ctor_inject_traits(int i1, int i2 = 0) {
-        assert(i1 == 0);
-        assert(i2 == 42);
-    }
-};
-
-struct ctor_injector {
-    /*<<constructor with less intrusive named parameter using static method>>*/
-    static void BOOST_DI_INJECTOR(int, di::named<int, name>);
-    ctor_injector(int i1, int i2 = 0) {
         assert(i1 == 0);
         assert(i2 == 42);
     }
@@ -63,7 +46,7 @@ namespace di {
 template<>
 struct ctor_traits<ctor_di_traits> {
     /*<<no intrusive way of defining named parameters>>*/
-    BOOST_DI_INJECT_TRAITS(int, di::named<int, name>);
+    BOOST_DI_INJECT_TRAITS(int, (name, int));
 };
 
 } // namespace di
@@ -76,10 +59,8 @@ int main() {
     );
 
     /*<<create dependencies>>*/
-    injector.create<ctor_named>();
     injector.create<ctor_inject>();
     injector.create<ctor_inject_traits>();
-    injector.create<ctor_injector>();
     injector.create<ctor_di_traits>();
 }
 

@@ -19,7 +19,7 @@ struct int_2 { };
 class named {
 public:
     /*<<Constructor with named parameters of the same `int` type>>*/
-    named(di::named<int, int_1> i1, di::named<int, int_2> i2)
+    BOOST_DI_INJECT(named, (int_1, int i1), (int_2, int i2))
         : i1(i1), i2(i2)
     {
         assert(i1 == 42);

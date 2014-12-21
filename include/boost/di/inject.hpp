@@ -9,6 +9,10 @@
 
 #include "boost/di/aux_/utility.hpp"
 
+namespace boost { namespace di {
+template<class, class> struct named { };
+}} // boost::di
+
 template<class>
 struct traits;
 

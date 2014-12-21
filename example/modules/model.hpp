@@ -2,7 +2,7 @@
 #define MODEL_HPP
 
 #include <memory>
-#include <boost/di/fwd.hpp>
+#include <boost/di/inject.hpp>
 #include "common.hpp"
 
 namespace di = boost::di;
@@ -12,7 +12,7 @@ struct colls{};
 
 class model {
 public:
-    model(di::named<int, rows>, di::named<int, colls>, std::unique_ptr<iboard>);
+    BOOST_DI_INJECT(model, (rows, int), (colls, int), std::unique_ptr<iboard>);
 };
 
 #endif

@@ -45,10 +45,7 @@ public:
       , class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>
       , class TDeps = void
     > static decltype(auto) resolve(TDeps* deps) noexcept {
-        using dependency = dependency_concept<
-            aux::make_plain_t<T>
-          , TName
-        >;
+        using dependency = dependency_concept<aux::make_plain_t<T>, TName>;
         return resolve_impl<TDefault, dependency>(deps);
     }
 };

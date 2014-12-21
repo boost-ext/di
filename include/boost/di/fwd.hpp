@@ -17,7 +17,6 @@ struct no_name { };
 class config;
 template<class...> class injector;
 
-template<class, class> struct named { };
 }} // boost::di
 
 #endif

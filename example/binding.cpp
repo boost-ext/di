@@ -25,11 +25,12 @@ struct int_name { };
 //->
 
 struct service {
-    service(const std::shared_ptr<interface1>& sp
+    BOOST_DI_INJECT(service
+          , const std::shared_ptr<interface1>& sp
           , bool b
           , int i
           , std::function<int()> f
-          , const di::named<int, int_name> ni)
+          , (int_name, const int ni))
         : sp(sp)
     {
         assert(dynamic_cast<implementation1*>(sp.get()));
@@ -43,12 +44,12 @@ struct service {
 };
 
 struct app {
-    app(service copy
+    BOOST_DI_INJECT(app
+      , service copy
       , std::shared_ptr<interface1> sp
       , std::unique_ptr<interface2> ap
       , int i
-      , di::named<std::string, some_name> s
-      //, di::named<const std::string&, some_name> s
+      , (some_name, const std::string& s)
       , float& f
       , const double& d)
       : str(s)

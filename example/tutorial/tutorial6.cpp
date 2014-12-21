@@ -20,7 +20,7 @@ class second { };
 
 class app {
 public:
-    app(di::named<int, first> value1, di::named<int, second> value2, const std::string& text, std::shared_ptr<ilogger> logger)
+    BOOST_DI_INJECT(app, (first, int value1), (second, int value2), const std::string& text, std::shared_ptr<ilogger> logger)
         : value1_(value1), value2_(value2) , text_(text), logger_(logger)
     { }
 
