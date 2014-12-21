@@ -7,9 +7,24 @@
 #ifndef BOOST_DI_AUX_UTILITY_HPP
 #define BOOST_DI_AUX_UTILITY_HPP
 
-#define BOOST_DI_CAT_IMPL(a, b) a ## b
-#define BOOST_DI_CAT(a, b) BOOST_DI_CAT_IMPL(a, b)
+#define BOOST_DI_PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
+#define BOOST_DI_CAT(a, ...) BOOST_DI_PRIMITIVE_CAT(a, __VA_ARGS__)
 #define BOOST_DI_CALL(m, ...) m(__VA_ARGS__)
+#define BOOST_DI_IBP_SPLIT(i, ...) BOOST_DI_PRIMITIVE_CAT(BOOST_DI_IBP_SPLIT_, i)(__VA_ARGS__)
+#define BOOST_DI_IBP_SPLIT_0(a, ...) a
+#define BOOST_DI_IBP_SPLIT_1(a, ...) __VA_ARGS__
+#define BOOST_DI_IBP_IS_VARIADIC_C(...) 1
+#define BOOST_DI_IBP_IS_VARIADIC_R_1 1,
+#define BOOST_DI_IBP_IS_VARIADIC_R_BOOST_DI_IBP_IS_VARIADIC_C 0,
+#define BOOST_DI_IBP(...) BOOST_DI_IBP_SPLIT(0, BOOST_DI_CAT(BOOST_DI_IBP_IS_VARIADIC_R_, BOOST_DI_IBP_IS_VARIADIC_C __VA_ARGS__))
+#define BOOST_DI_IF(c) BOOST_DI_PRIMITIVE_CAT(BOOST_DI_IF_, c)
+#define BOOST_DI_IF_0(t, ...) __VA_ARGS__
+#define BOOST_DI_IF_1(t, ...) t
+#define BOOST_DI_VA_NARGS_IMPL(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, N, ...) N
+#define BOOST_DI_VA_NARGS(...) BOOST_DI_VA_NARGS_IMPL(__VA_ARGS__, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
+#define BOOST_DI_VARARG_IMPL2(m, count, ...) m##count(__VA_ARGS__)
+#define BOOST_DI_VARARG_IMPL(m, count, ...) BOOST_DI_VARARG_IMPL2(m, count, __VA_ARGS__)
+#define BOOST_DI_VAR_ARG(m, ...) BOOST_DI_VARARG_IMPL(m, BOOST_DI_VA_NARGS(__VA_ARGS__), __VA_ARGS__)
 
 namespace boost { namespace di { namespace aux {
 

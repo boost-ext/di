@@ -1504,16 +1504,16 @@ private:
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_type = provider<given_t, T, ctor_t, injector>;
         const auto& ctor_provider = provider_type{*this};
-        using wrapper_t = decltype(dependency.template create<T>(ctor_provider));
-        using type = std::conditional_t<
-            std::is_reference<T>{} && has_is_ref<dependency_t>{}
-          , T
-          , std::remove_reference_t<T>
-        >;
+        //using wrapper_t = decltype(dependency.template create<T>(ctor_provider));
+/*        using type = std::conditional_t<*/
+            //std::is_reference<T>{} && has_is_ref<dependency_t>{}
+          //, T
+          //, std::remove_reference_t<T>
+        /*>;*/
         call_policies<T>(config_.policies(), dependency);
-        return wrappers::universal<type, wrapper_t>{
-            dependency.template create<T>(ctor_provider)
-        };
+        return //wrappers::universal<type, wrapper_t>{
+            dependency.template create<T>(ctor_provider);
+        //};
     }
 
     template<

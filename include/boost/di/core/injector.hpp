@@ -15,7 +15,6 @@
 #include "boost/di/core/binder.hpp"
 #include "boost/di/core/pool.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
-#include "boost/di/wrappers/universal.hpp"
 
 namespace boost { namespace di { namespace core {
 
@@ -61,7 +60,7 @@ public:
 
     template<class T>
     T create() const noexcept {
-        return create_type<aux::none_t>(aux::type<T>{});
+        return create_t<aux::none_t>(aux::type<T>{});
     }
 
     template<class TAction>
@@ -76,17 +75,17 @@ private:
     { }
 
     template<class TParent, class... Ts>
-    auto create_type(const aux::type<any_type<Ts...>>&) const noexcept {
+    auto create_t(const aux::type<any_type<Ts...>>&) const noexcept {
         return any_type<TParent, injector>{*this};
     }
 
     template<class, class T>
-    auto create_type(const aux::type<T>&) const noexcept {
+    auto create_t(const aux::type<T>&) const noexcept {
         return create_impl<T>();
     }
 
     template<class, class T, class TName>
-    auto create_type(const aux::type<di::named<TName, T>>&) const noexcept {
+    auto create_t(const aux::type<di::named<TName, T>>&) const noexcept {
         return create_impl<T, TName>();
     }
 
@@ -96,18 +95,9 @@ private:
         using dependency_t = typename std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-        using provider_type = provider<given_t, T, ctor_t, injector>;
-        const auto& ctor_provider = provider_type{*this};
-        using wrapper_t = decltype(dependency.template create<T>(ctor_provider));
-        using type = std::conditional_t<
-            std::is_reference<T>{} && has_is_ref<dependency_t>{}
-          , T
-          , std::remove_reference_t<T>
-        >;
+        using provider_t = provider<given_t, T, ctor_t, injector>;
         call_policies<T>(config_.policies(), dependency);
-        return wrappers::universal<type, wrapper_t>{
-            dependency.template create<T>(ctor_provider)
-        };
+        return dependency.template create<T>(provider_t{*this});
     }
 
     template<

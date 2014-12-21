@@ -628,7 +628,7 @@ test refs_vs_copy = [] {
                       , (name, const int& i)
                       , (name, const std::string& s)
                       , (other_name, int& i_ref)
-                       , int& ii)
+                      , int& ii)
             : str(s), i(i), i_ref(static_cast<int&>(i_ref)), ii(ii)
         { }
 

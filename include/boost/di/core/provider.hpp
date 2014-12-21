@@ -32,7 +32,7 @@ template<
         return config.provider().template get<T>(
             TInitialization{}
           , memory
-          , injector_.template create_type<TParent>(aux::type<TArgs>{})...
+          , injector_.template create_t<TParent>(aux::type<TArgs>{})...
         );
     }
 
