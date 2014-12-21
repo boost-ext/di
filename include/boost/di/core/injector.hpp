@@ -74,25 +74,25 @@ private:
         : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
     { }
 
-    template<class TParent, class... Ts>
-    auto create_t(const aux::type<any_type<Ts...>>&) const noexcept {
-        return any_type<TParent, injector>{*this};
-    }
-
     template<class, class T>
     auto create_t(const aux::type<T>&) const noexcept {
         return create_impl<T>();
     }
 
+    template<class TParent, class... Ts>
+    auto create_t(const aux::type<any_type<Ts...>>&) const noexcept {
+        return any_type<TParent, injector>{*this};
+    }
+
     template<class, class T, class TName>
-    auto create_t(const aux::type<di::named<TName, T>>&) const noexcept {
+    auto create_t(const aux::type<named<TName, T>>&) const noexcept {
         return create_impl<T, TName>();
     }
 
     template<class T, class TName = no_name>
     auto create_impl() const noexcept {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
-        using dependency_t = typename std::remove_reference_t<decltype(dependency)>;
+        using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<given_t, T, ctor_t, injector>;

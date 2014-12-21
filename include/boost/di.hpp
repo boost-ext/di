@@ -37,9 +37,24 @@
 
 #define BOOST_DI_AUX_UTILITY_HPP
 
-#define BOOST_DI_CAT_IMPL(a, b) a ## b
-#define BOOST_DI_CAT(a, b) BOOST_DI_CAT_IMPL(a, b)
+#define BOOST_DI_PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
+#define BOOST_DI_CAT(a, ...) BOOST_DI_PRIMITIVE_CAT(a, __VA_ARGS__)
 #define BOOST_DI_CALL(m, ...) m(__VA_ARGS__)
+#define BOOST_DI_IBP_SPLIT(i, ...) BOOST_DI_PRIMITIVE_CAT(BOOST_DI_IBP_SPLIT_, i)(__VA_ARGS__)
+#define BOOST_DI_IBP_SPLIT_0(a, ...) a
+#define BOOST_DI_IBP_SPLIT_1(a, ...) __VA_ARGS__
+#define BOOST_DI_IBP_IS_VARIADIC_C(...) 1
+#define BOOST_DI_IBP_IS_VARIADIC_R_1 1,
+#define BOOST_DI_IBP_IS_VARIADIC_R_BOOST_DI_IBP_IS_VARIADIC_C 0,
+#define BOOST_DI_IBP(...) BOOST_DI_IBP_SPLIT(0, BOOST_DI_CAT(BOOST_DI_IBP_IS_VARIADIC_R_, BOOST_DI_IBP_IS_VARIADIC_C __VA_ARGS__))
+#define BOOST_DI_IF(c) BOOST_DI_PRIMITIVE_CAT(BOOST_DI_IF_, c)
+#define BOOST_DI_IF_0(t, ...) __VA_ARGS__
+#define BOOST_DI_IF_1(t, ...) t
+#define BOOST_DI_VA_NARGS_IMPL(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, N, ...) N
+#define BOOST_DI_VA_NARGS(...) BOOST_DI_VA_NARGS_IMPL(__VA_ARGS__, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
+#define BOOST_DI_VARARG_IMPL2(m, count, ...) m##count(__VA_ARGS__)
+#define BOOST_DI_VARARG_IMPL(m, count, ...) BOOST_DI_VARARG_IMPL2(m, count, __VA_ARGS__)
+#define BOOST_DI_VAR_ARG(m, ...) BOOST_DI_VARARG_IMPL(m, BOOST_DI_VA_NARGS(__VA_ARGS__), __VA_ARGS__)
 
 namespace boost { namespace di { namespace aux {
 
@@ -1000,7 +1015,7 @@ struct is_any_type<any_type<TArgs...>> : std::true_type { };
 
 #define BOOST_DI_INJECT_HPP
 
-template<class x>
+template<class>
 struct traits;
 
 template<class T>
@@ -1016,47 +1031,99 @@ struct traits<void(T)> {
     #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
 #endif
 
-#define IBP_SPLIT(i, ...) PRIMITIVE_CAT(IBP_SPLIT_,i)(__VA_ARGS__)
-#define IBP_IS_VARIADIC_C(...) 1
-#define IBP_SPLIT_0(a, ...) a
-#define IBP_SPLIT_1(a, ...) __VA_ARGS__
-#define IBP_IS_VARIADIC_R_1 1,
-#define IBP_IS_VARIADIC_R_IBP_IS_VARIADIC_C 0,
-#define IS_BEGIN_PARENS(...) IBP_SPLIT(0, CAT(IBP_IS_VARIADIC_R_, IBP_IS_VARIADIC_C __VA_ARGS__))
-#define CAT(a, ...) PRIMITIVE_CAT(a, __VA_ARGS__)
-#define PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
-#define IIF(c) PRIMITIVE_CAT(IIF_, c)
-#define IIF_0(t, ...) __VA_ARGS__
-#define IIF_1(t, ...) t
-#define FIRST(v1, v2) v2
-#define SECOND(v1, v2) di::named<v1, typename traits<void(v2)>::type>
-#define VA_NARGS_IMPL(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, N, ...) N
-#define VA_NARGS(...) VA_NARGS_IMPL(__VA_ARGS__, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
-#define VARARG_IMPL2(base, count, ...) base##count(__VA_ARGS__)
-#define VARARG_IMPL(base, count, ...) VARARG_IMPL2(base, count, __VA_ARGS__)
-#define VARARG(base, ...) VARARG_IMPL(base, VA_NARGS(__VA_ARGS__), __VA_ARGS__)
-#define ARG(expr, p) IIF(IS_BEGIN_PARENS(p))(expr p, p)
+#define BOOST_DI_TYPE(v1, v2) v2
+#define BOOST_DI_NAME(v1, v2) di::named<v1, typename traits<void(v2)>::type>
+
+#define BOOST_DI_ARG(expr, p) BOOST_DI_IF(BOOST_DI_IBP(p))(expr p, p)
+
 #define BOOST_DI_INJECT_IMPL1(expr)
-#define BOOST_DI_INJECT_IMPL2(expr, p1) ARG(expr, p1)
-#define BOOST_DI_INJECT_IMPL3(expr, p1, p2) ARG(expr, p1), ARG(expr, p2)
-#define BOOST_DI_INJECT_IMPL4(expr, p1, p2, p3) ARG(expr, p1), ARG(expr, p2), ARG(expr, p3)
-#define BOOST_DI_INJECT_IMPL5(expr, p1, p2, p3, p4) ARG(expr, p1), ARG(expr, p2), ARG(expr, p3), ARG(expr, p4)
-#define BOOST_DI_INJECT_IMPL6(expr, p1, p2, p3, p4, p5) ARG(expr, p1), ARG(expr, p2), ARG(expr, p3), ARG(expr, p4), ARG(expr, p5)
-#define BOOST_DI_INJECT_IMPL7(expr, p1, p2, p3, p4, p5, p6) ARG(expr, p1), ARG(expr, p2), ARG(expr, p3), ARG(expr, p4), ARG(expr, p5), ARG(expr, p6)
-#define BOOST_DI_INJECT_IMPL8(expr, p1, p2, p3, p4, p5, p6, p7) ARG(expr, p1), ARG(expr, p2), ARG(expr, p3), ARG(expr, p4), ARG(expr, p5), ARG(expr, p6), ARG(expr, p7)
-#define BOOST_DI_INJECT_IMPL9(expr, p1, p2, p3, p4, p5, p6, p7, p8) ARG(expr, p1), ARG(expr, p2), ARG(expr, p3), ARG(expr, p4), ARG(expr, p5), ARG(expr, p6), ARG(expr, p7), ARG(expr, p8)
-#define BOOST_DI_INJECT_IMPL10(expr, p1, p2, p3, p4, p5, p6, p7, p8, p9) ARG(expr, p1), ARG(expr, p2), ARG(expr, p3), ARG(expr, p4), ARG(expr, p5), ARG(expr, p6), ARG(expr, p7), ARG(expr, p8), ARG(expr, p9)
-#define BOOST_DI_INJECT_IMPL11(expr, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10) ARG(expr, p1), ARG(expr, p2), ARG(expr, p3), ARG(expr, p4), ARG(expr, p5), ARG(expr, p6), ARG(expr, p7), ARG(expr, p8), ARG(expr, p9), ARG(expr, p10)
+
+#define BOOST_DI_INJECT_IMPL2(expr, p1) \
+    BOOST_DI_ARG(expr, p1)
+
+#define BOOST_DI_INJECT_IMPL3(expr, p1, p2) \
+    BOOST_DI_ARG(expr, p1) \
+  , BOOST_DI_ARG(expr, p2)
+
+#define BOOST_DI_INJECT_IMPL4(expr, p1, p2, p3) \
+    BOOST_DI_ARG(expr, p1) \
+  , BOOST_DI_ARG(expr, p2) \
+  , BOOST_DI_ARG(expr, p3)
+
+#define BOOST_DI_INJECT_IMPL5(expr, p1, p2, p3, p4) \
+    BOOST_DI_ARG(expr, p1) \
+  , BOOST_DI_ARG(expr, p2) \
+  , BOOST_DI_ARG(expr, p3) \
+  , BOOST_DI_ARG(expr, p4)
+
+#define BOOST_DI_INJECT_IMPL6(expr, p1, p2, p3, p4, p5) \
+    BOOST_DI_ARG(expr, p1) \
+  , BOOST_DI_ARG(expr, p2) \
+  , BOOST_DI_ARG(expr, p3) \
+  , BOOST_DI_ARG(expr, p4) \
+  , BOOST_DI_ARG(expr, p5)
+
+#define BOOST_DI_INJECT_IMPL7(expr, p1, p2, p3, p4, p5, p6) \
+    BOOST_DI_ARG(expr, p1) \
+  , BOOST_DI_ARG(expr, p2) \
+  , BOOST_DI_ARG(expr, p3) \
+  , BOOST_DI_ARG(expr, p4) \
+  , BOOST_DI_ARG(expr, p5) \
+  , BOOST_DI_ARG(expr, p6)
+
+#define BOOST_DI_INJECT_IMPL8(expr, p1, p2, p3, p4, p5, p6, p7) \
+    BOOST_DI_ARG(expr, p1) \
+  , BOOST_DI_ARG(expr, p2) \
+  , BOOST_DI_ARG(expr, p3) \
+  , BOOST_DI_ARG(expr, p4) \
+  , BOOST_DI_ARG(expr, p5) \
+  , BOOST_DI_ARG(expr, p6) \
+  , BOOST_DI_ARG(expr, p7)
+
+#define BOOST_DI_INJECT_IMPL9(expr, p1, p2, p3, p4, p5, p6, p7, p8) \
+    BOOST_DI_ARG(expr, p1) \
+  , BOOST_DI_ARG(expr, p2) \
+  , BOOST_DI_ARG(expr, p3) \
+  , BOOST_DI_ARG(expr, p4) \
+  , BOOST_DI_ARG(expr, p5) \
+  , BOOST_DI_ARG(expr, p6) \
+  , BOOST_DI_ARG(expr, p7) \
+  , BOOST_DI_ARG(expr, p8)
+
+#define BOOST_DI_INJECT_IMPL10(expr, p1, p2, p3, p4, p5, p6, p7, p8, p9) \
+    BOOST_DI_ARG(expr, p1) \
+  , BOOST_DI_ARG(expr, p2) \
+  , BOOST_DI_ARG(expr, p3) \
+  , BOOST_DI_ARG(expr, p4) \
+  , BOOST_DI_ARG(expr, p5) \
+  , BOOST_DI_ARG(expr, p6) \
+  , BOOST_DI_ARG(expr, p7) \
+  , BOOST_DI_ARG(expr, p8) \
+  , BOOST_DI_ARG(expr, p9)
+
+#define BOOST_DI_INJECT_IMPL11(expr, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10) \
+    BOOST_DI_ARG(expr, p1) \
+  , BOOST_DI_ARG(expr, p2) \
+  , BOOST_DI_ARG(expr, p3) \
+  , BOOST_DI_ARG(expr, p4) \
+  , BOOST_DI_ARG(expr, p5) \
+  , BOOST_DI_ARG(expr, p6) \
+  , BOOST_DI_ARG(expr, p7) \
+  , BOOST_DI_ARG(expr, p8) \
+  , BOOST_DI_ARG(expr, p9) \
+  , BOOST_DI_ARG(expr, p10)
 
 #if !defined(BOOST_DI_INJECT_TRAITS)
     #define BOOST_DI_INJECT_TRAITS(...) \
-        static void BOOST_DI_INJECTOR(VARARG(BOOST_DI_INJECT_IMPL, SECOND, __VA_ARGS__))
+        static void BOOST_DI_INJECTOR( \
+            BOOST_DI_VAR_ARG(BOOST_DI_INJECT_IMPL, BOOST_DI_NAME, __VA_ARGS__) \
+        )
 #endif
 
 #if !defined(BOOST_DI_INJECT)
     #define BOOST_DI_INJECT(type, ...) \
         BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
-        type(VARARG(BOOST_DI_INJECT_IMPL, FIRST, __VA_ARGS__))
+        type(BOOST_DI_VAR_ARG(BOOST_DI_INJECT_IMPL, BOOST_DI_TYPE, __VA_ARGS__))
 #endif
 
 #define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
@@ -1397,7 +1464,7 @@ template<
         return config.provider().template get<T>(
             TInitialization{}
           , memory
-          , injector_.template create_type<TParent>(aux::type<TArgs>{})...
+          , injector_.template create_t<TParent>(aux::type<TArgs>{})...
         );
     }
 
@@ -1405,21 +1472,6 @@ template<
 };
 
 }}} // boost::di::core
-
-#define BOOST_DI_WRAPPERS_UNIVERSAL_HPP
-
-namespace boost { namespace di { namespace wrappers {
-
-template<class T, class TWrapper>
-struct universal {
-    TWrapper wrapper_;
-
-    inline operator T() const noexcept {
-        return wrapper_;
-    }
-};
-
-}}} // boost::di::wrappers
 
 #define BOOST_DI_CORE_INJECTOR_HPP
 
@@ -1467,7 +1519,7 @@ public:
 
     template<class T>
     T create() const noexcept {
-        return create_type<aux::none_t>(aux::type<T>{});
+        return create_t<aux::none_t>(aux::type<T>{});
     }
 
     template<class TAction>
@@ -1482,17 +1534,17 @@ private:
     { }
 
     template<class TParent, class... Ts>
-    auto create_type(const aux::type<any_type<Ts...>>&) const noexcept {
+    auto create_t(const aux::type<any_type<Ts...>>&) const noexcept {
         return any_type<TParent, injector>{*this};
     }
 
     template<class, class T>
-    auto create_type(const aux::type<T>&) const noexcept {
+    auto create_t(const aux::type<T>&) const noexcept {
         return create_impl<T>();
     }
 
     template<class, class T, class TName>
-    auto create_type(const aux::type<di::named<TName, T>>&) const noexcept {
+    auto create_t(const aux::type<di::named<TName, T>>&) const noexcept {
         return create_impl<T, TName>();
     }
 
@@ -1502,18 +1554,9 @@ private:
         using dependency_t = typename std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-        using provider_type = provider<given_t, T, ctor_t, injector>;
-        const auto& ctor_provider = provider_type{*this};
-        //using wrapper_t = decltype(dependency.template create<T>(ctor_provider));
-/*        using type = std::conditional_t<*/
-            //std::is_reference<T>{} && has_is_ref<dependency_t>{}
-          //, T
-          //, std::remove_reference_t<T>
-        /*>;*/
+        using provider_t = provider<given_t, T, ctor_t, injector>;
         call_policies<T>(config_.policies(), dependency);
-        return //wrappers::universal<type, wrapper_t>{
-            dependency.template create<T>(ctor_provider);
-        //};
+        return dependency.template create<T>(provider_t{*this});
     }
 
     template<
