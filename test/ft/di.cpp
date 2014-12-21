@@ -33,6 +33,15 @@ struct complex3 {
     complex2 c2;
 };
 
+test named_params = [] {
+    constexpr auto i = 42;
+    auto injector = di::make_injector(
+        di::bind<int>.named(name{}).to(i)
+    );
+    expect(0 == injector.create<int>());
+    expect(i == injector.create<di::named<int, name>>());
+};
+
 test any_of = [] {
     auto injector = di::make_injector(
         di::bind<impl1_2>
@@ -488,9 +497,24 @@ test automatic_inject_with_initializer_list = [] {
     expect_eq(0, object.il.size());
 };
 
+test named_polymorphic_agreggate = [] {
+    struct c {
+        di::named<std::shared_ptr<i1>, name> sp;
+    };
+
+    auto injector = di::make_injector(
+        di::bind<i1, impl1>.named(name{})
+    );
+
+    auto object = injector.create<c>();
+    auto sp = static_cast<std::shared_ptr<i1>>(object.sp);
+
+    expect(dynamic_cast<impl1*>(sp.get()));
+};
+
 test named_polymorphic = [] {
     struct c {
-        BOOST_DI_INJECT(explicit c, (name, std::shared_ptr<i1> sp))
+        explicit c(di::named<std::shared_ptr<i1>, name> sp)
             : sp(sp)
         { }
 
@@ -514,18 +538,17 @@ test bind_chars_to_string = [] {
     expect_eq("str", injector.create<std::string>());
 };
 
-#if 0
 test ctor_refs = [] {
     struct c {
         c(const std::shared_ptr<i1>& sp
         , int& i
         , const double& d
         , const std::string& str
-        , const std::string& nstr(name)
+        , const di::named<std::string, name>& nstr
         , std::function<int()> f
         , long&& l
         , short s)
-            : i(i), d(d), str(str), nstr(nstr({})), f(f), l(std::move(l)), s(s)
+            : i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)
         {
             sp->dummy1();
         }
@@ -545,11 +568,11 @@ test ctor_refs = [] {
                       , int& i
                       , const double& d
                       , const std::string& str
-                      , const std::string& nstr(name)
+                      , const di::named<std::string, name>& nstr
                       , std::function<int()> f
                       , long&& l
                       , short s)
-            : i(i), d(d), str(str), nstr(nstr({})), f(f), l(std::move(l)), s(s)
+            : i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)
         {
             sp->dummy1();
         }
@@ -568,7 +591,7 @@ test ctor_refs = [] {
         int& i;
         const double& d;
         std::string str; // possible ref to copy with const std::string&
-        std::string nstr; // possible ref to copy with const std::string&
+        di::named<std::string, name> nstr; // possible ref to copy with const std::string&
         std::function<int()> f;
         long l = 0;
         short s = 0;
@@ -705,30 +728,31 @@ test refs_vs_copy = [] {
     expect_eq(&i, &object.ii);
     }
 };
-#endif
 
-//test named_parameters_with_shared_scope = [] {
-    //struct a { };
-    //struct b { };
+test named_parameters_with_shared_scope = [] {
+    struct a { };
+    struct b { };
 
-    //struct c {
-        //c(const std::shared_ptr<i1>& n1(a), std::shared_ptr<i1> n2(b))
-            //: n1(n1({})), n2(n2({}))
-        //{ }
+    struct c {
+        c(const di::named<std::shared_ptr<i1>, a>& n1, di::named<std::shared_ptr<i1>, b> n2)
+            : n1(n1), n2(n2)
+        { }
 
-        //std::shared_ptr<i1> n1;
-        //std::shared_ptr<i1> n2;
-    //};
+        std::shared_ptr<i1> n1;
+        std::shared_ptr<i1> n2;
+    };
 
-    //auto injector = di::make_injector(
-        //di::bind<i1, impl1>.named(a{}).in(di::unique)
-      //, di::bind<i1>.named(b{}).to(std::make_shared<impl1>())
-    //);
+    auto injector = di::make_injector(
+        di::bind<i1, impl1>.named(a{}).in(di::unique)
+      , di::bind<i1>.named(b{}).to(std::make_shared<impl1>())
+    );
 
-    //auto object = injector.create<c>();
-    //expect(object.n1 != object.n2);
-    //assert(false);
-//};
+    auto object = injector.create<c>();
+
+    expect(object.n1 != object.n2);
+    expect(object.n1 != static_cast<std::shared_ptr<i1>>(injector.create<di::named<std::shared_ptr<i1>, a>>()));
+    expect(object.n2 == static_cast<std::shared_ptr<i1>>(injector.create<di::named<std::shared_ptr<i1>, b>>()));
+};
 
 test call_policy_lambda = [] {
     static auto called = false;
