@@ -569,7 +569,6 @@ struct no_name { };
 class config;
 template<class...> class injector;
 
-template<class, class> struct named { };
 }} // boost::di
 
 
@@ -948,10 +947,7 @@ public:
       , class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>
       , class TDeps = void
     > static decltype(auto) resolve(TDeps* deps) noexcept {
-        using dependency = dependency_concept<
-            aux::make_plain_t<T>
-          , TName
-        >;
+        using dependency = dependency_concept<aux::make_plain_t<T>, TName>;
         return resolve_impl<TDefault, dependency>(deps);
     }
 };
@@ -1015,6 +1011,10 @@ struct is_any_type<any_type<TArgs...>> : std::true_type { };
 
 #define BOOST_DI_INJECT_HPP
 
+namespace boost { namespace di {
+template<class, class> struct named { };
+}} // boost::di
+
 template<class>
 struct traits;
 
@@ -1031,99 +1031,102 @@ struct traits<void(T)> {
     #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
 #endif
 
-#define BOOST_DI_TYPE(v1, v2) v2
-#define BOOST_DI_NAME(v1, v2) di::named<v1, typename traits<void(v2)>::type>
+#define BOOST_DI_TYPE(x)
+#define BOOST_DI_TYPE_END()
 
-#define BOOST_DI_ARG(expr, p) BOOST_DI_IF(BOOST_DI_IBP(p))(expr p, p)
+#define BOOST_DI_NAME(name) di::named<name, typename traits<void(
+#define BOOST_DI_NAME_END() )>::type>
 
-#define BOOST_DI_INJECT_IMPL1(expr)
+#define BOOST_DI_ARG(expr, x, p) BOOST_DI_IF(BOOST_DI_IBP(p))(expr p x(), p)
 
-#define BOOST_DI_INJECT_IMPL2(expr, p1) \
-    BOOST_DI_ARG(expr, p1)
+#define BOOST_DI_INJECT_IMPL2(expr, x)
 
-#define BOOST_DI_INJECT_IMPL3(expr, p1, p2) \
-    BOOST_DI_ARG(expr, p1) \
-  , BOOST_DI_ARG(expr, p2)
+#define BOOST_DI_INJECT_IMPL3(expr, x, p1) \
+    BOOST_DI_ARG(expr, x, p1)
 
-#define BOOST_DI_INJECT_IMPL4(expr, p1, p2, p3) \
-    BOOST_DI_ARG(expr, p1) \
-  , BOOST_DI_ARG(expr, p2) \
-  , BOOST_DI_ARG(expr, p3)
+#define BOOST_DI_INJECT_IMPL4(expr, x, p1, p2) \
+    BOOST_DI_ARG(expr, x, p1) \
+  , BOOST_DI_ARG(expr, x, p2)
 
-#define BOOST_DI_INJECT_IMPL5(expr, p1, p2, p3, p4) \
-    BOOST_DI_ARG(expr, p1) \
-  , BOOST_DI_ARG(expr, p2) \
-  , BOOST_DI_ARG(expr, p3) \
-  , BOOST_DI_ARG(expr, p4)
+#define BOOST_DI_INJECT_IMPL5(expr, x, p1, p2, p3) \
+    BOOST_DI_ARG(expr, x, p1) \
+  , BOOST_DI_ARG(expr, x, p2) \
+  , BOOST_DI_ARG(expr, x, p3)
 
-#define BOOST_DI_INJECT_IMPL6(expr, p1, p2, p3, p4, p5) \
-    BOOST_DI_ARG(expr, p1) \
-  , BOOST_DI_ARG(expr, p2) \
-  , BOOST_DI_ARG(expr, p3) \
-  , BOOST_DI_ARG(expr, p4) \
-  , BOOST_DI_ARG(expr, p5)
+#define BOOST_DI_INJECT_IMPL6(expr, x, p1, p2, p3, p4) \
+    BOOST_DI_ARG(expr, x, p1) \
+  , BOOST_DI_ARG(expr, x, p2) \
+  , BOOST_DI_ARG(expr, x, p3) \
+  , BOOST_DI_ARG(expr, x, p4)
 
-#define BOOST_DI_INJECT_IMPL7(expr, p1, p2, p3, p4, p5, p6) \
-    BOOST_DI_ARG(expr, p1) \
-  , BOOST_DI_ARG(expr, p2) \
-  , BOOST_DI_ARG(expr, p3) \
-  , BOOST_DI_ARG(expr, p4) \
-  , BOOST_DI_ARG(expr, p5) \
-  , BOOST_DI_ARG(expr, p6)
+#define BOOST_DI_INJECT_IMPL7(expr, x, p1, p2, p3, p4, p5) \
+    BOOST_DI_ARG(expr, x, p1) \
+  , BOOST_DI_ARG(expr, x, p2) \
+  , BOOST_DI_ARG(expr, x, p3) \
+  , BOOST_DI_ARG(expr, x, p4) \
+  , BOOST_DI_ARG(expr, x, p5)
 
-#define BOOST_DI_INJECT_IMPL8(expr, p1, p2, p3, p4, p5, p6, p7) \
-    BOOST_DI_ARG(expr, p1) \
-  , BOOST_DI_ARG(expr, p2) \
-  , BOOST_DI_ARG(expr, p3) \
-  , BOOST_DI_ARG(expr, p4) \
-  , BOOST_DI_ARG(expr, p5) \
-  , BOOST_DI_ARG(expr, p6) \
-  , BOOST_DI_ARG(expr, p7)
+#define BOOST_DI_INJECT_IMPL8(expr, x, p1, p2, p3, p4, p5, p6) \
+    BOOST_DI_ARG(expr, x, p1) \
+  , BOOST_DI_ARG(expr, x, p2) \
+  , BOOST_DI_ARG(expr, x, p3) \
+  , BOOST_DI_ARG(expr, x, p4) \
+  , BOOST_DI_ARG(expr, x, p5) \
+  , BOOST_DI_ARG(expr, x, p6)
 
-#define BOOST_DI_INJECT_IMPL9(expr, p1, p2, p3, p4, p5, p6, p7, p8) \
-    BOOST_DI_ARG(expr, p1) \
-  , BOOST_DI_ARG(expr, p2) \
-  , BOOST_DI_ARG(expr, p3) \
-  , BOOST_DI_ARG(expr, p4) \
-  , BOOST_DI_ARG(expr, p5) \
-  , BOOST_DI_ARG(expr, p6) \
-  , BOOST_DI_ARG(expr, p7) \
-  , BOOST_DI_ARG(expr, p8)
+#define BOOST_DI_INJECT_IMPL9(expr, x, p1, p2, p3, p4, p5, p6, p7) \
+    BOOST_DI_ARG(expr, x, p1) \
+  , BOOST_DI_ARG(expr, x, p2) \
+  , BOOST_DI_ARG(expr, x, p3) \
+  , BOOST_DI_ARG(expr, x, p4) \
+  , BOOST_DI_ARG(expr, x, p5) \
+  , BOOST_DI_ARG(expr, x, p6) \
+  , BOOST_DI_ARG(expr, x, p7)
 
-#define BOOST_DI_INJECT_IMPL10(expr, p1, p2, p3, p4, p5, p6, p7, p8, p9) \
-    BOOST_DI_ARG(expr, p1) \
-  , BOOST_DI_ARG(expr, p2) \
-  , BOOST_DI_ARG(expr, p3) \
-  , BOOST_DI_ARG(expr, p4) \
-  , BOOST_DI_ARG(expr, p5) \
-  , BOOST_DI_ARG(expr, p6) \
-  , BOOST_DI_ARG(expr, p7) \
-  , BOOST_DI_ARG(expr, p8) \
-  , BOOST_DI_ARG(expr, p9)
+#define BOOST_DI_INJECT_IMPL10(expr, x, p1, p2, p3, p4, p5, p6, p7, p8) \
+    BOOST_DI_ARG(expr, x, p1) \
+  , BOOST_DI_ARG(expr, x, p2) \
+  , BOOST_DI_ARG(expr, x, p3) \
+  , BOOST_DI_ARG(expr, x, p4) \
+  , BOOST_DI_ARG(expr, x, p5) \
+  , BOOST_DI_ARG(expr, x, p6) \
+  , BOOST_DI_ARG(expr, x, p7) \
+  , BOOST_DI_ARG(expr, x, p8)
 
-#define BOOST_DI_INJECT_IMPL11(expr, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10) \
-    BOOST_DI_ARG(expr, p1) \
-  , BOOST_DI_ARG(expr, p2) \
-  , BOOST_DI_ARG(expr, p3) \
-  , BOOST_DI_ARG(expr, p4) \
-  , BOOST_DI_ARG(expr, p5) \
-  , BOOST_DI_ARG(expr, p6) \
-  , BOOST_DI_ARG(expr, p7) \
-  , BOOST_DI_ARG(expr, p8) \
-  , BOOST_DI_ARG(expr, p9) \
-  , BOOST_DI_ARG(expr, p10)
+#define BOOST_DI_INJECT_IMPL11(expr, x, p1, p2, p3, p4, p5, p6, p7, p8, p9) \
+    BOOST_DI_ARG(expr, x, p1) \
+  , BOOST_DI_ARG(expr, x, p2) \
+  , BOOST_DI_ARG(expr, x, p3) \
+  , BOOST_DI_ARG(expr, x, p4) \
+  , BOOST_DI_ARG(expr, x, p5) \
+  , BOOST_DI_ARG(expr, x, p6) \
+  , BOOST_DI_ARG(expr, x, p7) \
+  , BOOST_DI_ARG(expr, x, p8) \
+  , BOOST_DI_ARG(expr, x, p9)
+
+#define BOOST_DI_INJECT_IMPL12(expr, x, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10) \
+    BOOST_DI_ARG(expr, x, p1) \
+  , BOOST_DI_ARG(expr, x, p2) \
+  , BOOST_DI_ARG(expr, x, p3) \
+  , BOOST_DI_ARG(expr, x, p4) \
+  , BOOST_DI_ARG(expr, x, p5) \
+  , BOOST_DI_ARG(expr, x, p6) \
+  , BOOST_DI_ARG(expr, x, p7) \
+  , BOOST_DI_ARG(expr, x, p8) \
+  , BOOST_DI_ARG(expr, x, p9) \
+  , BOOST_DI_ARG(expr, x, p10)
 
 #if !defined(BOOST_DI_INJECT_TRAITS)
     #define BOOST_DI_INJECT_TRAITS(...) \
         static void BOOST_DI_INJECTOR( \
-            BOOST_DI_VAR_ARG(BOOST_DI_INJECT_IMPL, BOOST_DI_NAME, __VA_ARGS__) \
+            BOOST_DI_VAR_ARG(BOOST_DI_INJECT_IMPL, BOOST_DI_NAME, BOOST_DI_NAME_END, __VA_ARGS__) \
         )
 #endif
 
 #if !defined(BOOST_DI_INJECT)
     #define BOOST_DI_INJECT(type, ...) \
         BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
-        type(BOOST_DI_VAR_ARG(BOOST_DI_INJECT_IMPL, BOOST_DI_TYPE, __VA_ARGS__))
+        type(BOOST_DI_VAR_ARG(BOOST_DI_INJECT_IMPL, BOOST_DI_TYPE, BOOST_DI_TYPE_END, __VA_ARGS__))
 #endif
 
 #define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
@@ -1533,25 +1536,25 @@ private:
         : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
     { }
 
-    template<class TParent, class... Ts>
-    auto create_t(const aux::type<any_type<Ts...>>&) const noexcept {
-        return any_type<TParent, injector>{*this};
-    }
-
     template<class, class T>
     auto create_t(const aux::type<T>&) const noexcept {
         return create_impl<T>();
     }
 
+    template<class TParent, class... Ts>
+    auto create_t(const aux::type<any_type<Ts...>>&) const noexcept {
+        return any_type<TParent, injector>{*this};
+    }
+
     template<class, class T, class TName>
-    auto create_t(const aux::type<di::named<TName, T>>&) const noexcept {
+    auto create_t(const aux::type<named<TName, T>>&) const noexcept {
         return create_impl<T, TName>();
     }
 
     template<class T, class TName = no_name>
     auto create_impl() const noexcept {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
-        using dependency_t = typename std::remove_reference_t<decltype(dependency)>;
+        using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<given_t, T, ctor_t, injector>;

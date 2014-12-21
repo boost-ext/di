@@ -12,7 +12,7 @@ struct colls{};
 
 class model {
 public:
-    BOOST_DI_INJECT(model, (rows, int), (colls, int), std::unique_ptr<iboard>);
+    BOOST_DI_INJECT(model, (rows)int, (colls)int, std::unique_ptr<iboard>);
 };
 
 #endif
