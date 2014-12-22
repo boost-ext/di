@@ -9,8 +9,8 @@ namespace di = boost::di;
 di::injector<model> module_model::configure() const noexcept {
     return di::make_injector(
         di::bind<iboard, board>
-      , di::bind<int>.named(rows{}).to(42)
-      , di::bind<int>.named(colls{}).to(42)
+      , di::bind<int>.named(rows).to(42)
+      , di::bind<int>.named(colls).to(42)
     );
 }
 

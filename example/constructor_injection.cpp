@@ -13,7 +13,7 @@
 
 namespace di = boost::di;
 
-struct name { };
+static struct name_ { } name;
 
 struct ctor_inject {
     /*<<constructor with intrusive named parameter explicitly selected>>*/
@@ -55,7 +55,7 @@ struct ctor_traits<ctor_di_traits> {
 int main() {
     /*<<make injector>>*/
     auto injector = di::make_injector(
-        di::bind<int>.named(name{}).to(42)
+        di::bind<int>.named(name).to(42)
     );
 
     /*<<create dependencies>>*/

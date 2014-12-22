@@ -7,8 +7,8 @@
 
 namespace di = boost::di;
 
-struct rows{};
-struct colls{};
+static struct rows{} rows;
+static struct colls{} colls;
 
 class model {
 public:
