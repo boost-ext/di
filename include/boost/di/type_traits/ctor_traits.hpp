@@ -12,7 +12,12 @@
 #include "boost/di/core/any_type.hpp"
 #include "boost/di/inject.hpp"
 
-namespace boost { namespace di { namespace type_traits {
+namespace boost { namespace di {
+
+template<class, class>
+struct named { };
+
+namespace type_traits {
 
 struct direct { };
 struct aggregate { };
@@ -89,6 +94,33 @@ struct ctor_traits
 
 namespace type_traits {
 
+template<class>
+struct get_arg_impl;
+
+template<class T>
+struct get_arg_impl<aux::type_list<T>> {
+	using type = T;
+};
+
+template<class T>
+struct parse;
+
+template<class T>
+struct parse_impl {
+	using type = T;
+};
+
+template<class T>
+struct parse_impl<named_<T>> {
+	using type = named<typename aux::function_traits<decltype(T::name__)>::result_type, typename get_arg_impl<typename aux::function_traits<decltype(T::arg__)>::args>::type>;
+};
+
+template<class... Ts>
+struct parse<aux::type_list<Ts...>>
+	: aux::type_list<typename parse_impl<Ts>::type...>
+{ };
+
+
 template<
     class T
   , class = typename BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<T>::type
@@ -103,9 +135,7 @@ template<class T>
 struct ctor_traits<T, std::true_type>
     : aux::pair<
           direct
-        , typename aux::function_traits<
-              decltype(&T::BOOST_DI_INJECTOR)
-          >::args
+        , typename parse<typename aux::function_traits<decltype(T::BOOST_DI_INJECTOR)>::args>::type
       >
 { };
 
@@ -118,9 +148,7 @@ template<class T>
 struct ctor_traits_impl<T, std::true_type>
     : aux::pair<
           direct
-        , typename aux::function_traits<
-              decltype(&di::ctor_traits<T>::BOOST_DI_INJECTOR)
-          >::args
+        , typename parse<typename aux::function_traits<decltype(di::ctor_traits<T>::BOOST_DI_INJECTOR)>::args>::type
       >
 { };
 

@@ -30,7 +30,7 @@ struct service {
           , bool b
           , int i
           , std::function<int()> f
-          , (int_name) const int ni)
+          , (named = int_name) const int ni)
         : sp(sp)
     {
         assert(dynamic_cast<implementation1*>(sp.get()));
@@ -49,7 +49,7 @@ struct app {
       , std::shared_ptr<interface1> sp
       , std::unique_ptr<interface2> ap
       , int i
-      , (some_name)const std::string& s
+      , (named = some_name)const std::string& s
       , float& f
       , const double& d)
       : str(s)

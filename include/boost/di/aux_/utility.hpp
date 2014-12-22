@@ -7,6 +7,8 @@
 #ifndef BOOST_DI_AUX_UTILITY_HPP
 #define BOOST_DI_AUX_UTILITY_HPP
 
+#define BOOST_DI_COMMA() ,
+#define BOOST_DI_NONE()
 #define BOOST_DI_PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
 #define BOOST_DI_CAT(a, ...) BOOST_DI_PRIMITIVE_CAT(a, __VA_ARGS__)
 #define BOOST_DI_CALL(m, ...) m(__VA_ARGS__)
@@ -20,8 +22,8 @@
 #define BOOST_DI_IF(c) BOOST_DI_PRIMITIVE_CAT(BOOST_DI_IF_, c)
 #define BOOST_DI_IF_0(t, ...) __VA_ARGS__
 #define BOOST_DI_IF_1(t, ...) t
-#define BOOST_DI_VA_NARGS_IMPL(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, N, ...) N
-#define BOOST_DI_VA_NARGS(...) BOOST_DI_VA_NARGS_IMPL(__VA_ARGS__, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
+#define BOOST_DI_VA_NARGS_IMPL(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, N, ...) N
+#define BOOST_DI_VA_NARGS(...) BOOST_DI_VA_NARGS_IMPL(__VA_ARGS__, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
 #define BOOST_DI_VARARG_IMPL2(m, count, ...) m##count(__VA_ARGS__)
 #define BOOST_DI_VARARG_IMPL(m, count, ...) BOOST_DI_VARARG_IMPL2(m, count, __VA_ARGS__)
 #define BOOST_DI_VAR_ARG(m, ...) BOOST_DI_VARARG_IMPL(m, BOOST_DI_VA_NARGS(__VA_ARGS__), __VA_ARGS__)

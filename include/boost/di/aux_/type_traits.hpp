@@ -123,6 +123,13 @@ struct function_traits<R(*)(TArgs...)> {
     using args = type_list<TArgs...>;
 };
 
+template<class R, class... TArgs>
+struct function_traits<R(TArgs...)> {
+    using result_type = R;
+    using base_type = none_t;
+    using args = type_list<TArgs...>;
+};
+
 template<class R, class T, class... TArgs>
 struct function_traits<R(T::*)(TArgs...)> {
     using result_type = R;

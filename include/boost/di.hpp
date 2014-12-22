@@ -37,6 +37,8 @@
 
 #define BOOST_DI_AUX_UTILITY_HPP
 
+#define BOOST_DI_COMMA() ,
+#define BOOST_DI_NONE()
 #define BOOST_DI_PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
 #define BOOST_DI_CAT(a, ...) BOOST_DI_PRIMITIVE_CAT(a, __VA_ARGS__)
 #define BOOST_DI_CALL(m, ...) m(__VA_ARGS__)
@@ -50,8 +52,8 @@
 #define BOOST_DI_IF(c) BOOST_DI_PRIMITIVE_CAT(BOOST_DI_IF_, c)
 #define BOOST_DI_IF_0(t, ...) __VA_ARGS__
 #define BOOST_DI_IF_1(t, ...) t
-#define BOOST_DI_VA_NARGS_IMPL(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, N, ...) N
-#define BOOST_DI_VA_NARGS(...) BOOST_DI_VA_NARGS_IMPL(__VA_ARGS__, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
+#define BOOST_DI_VA_NARGS_IMPL(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, N, ...) N
+#define BOOST_DI_VA_NARGS(...) BOOST_DI_VA_NARGS_IMPL(__VA_ARGS__, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1)
 #define BOOST_DI_VARARG_IMPL2(m, count, ...) m##count(__VA_ARGS__)
 #define BOOST_DI_VARARG_IMPL(m, count, ...) BOOST_DI_VARARG_IMPL2(m, count, __VA_ARGS__)
 #define BOOST_DI_VAR_ARG(m, ...) BOOST_DI_VARARG_IMPL(m, BOOST_DI_VA_NARGS(__VA_ARGS__), __VA_ARGS__)
@@ -226,6 +228,13 @@ struct function_traits
 
 template<class R, class... TArgs>
 struct function_traits<R(*)(TArgs...)> {
+    using result_type = R;
+    using base_type = none_t;
+    using args = type_list<TArgs...>;
+};
+
+template<class R, class... TArgs>
+struct function_traits<R(TArgs...)> {
     using result_type = R;
     using base_type = none_t;
     using args = type_list<TArgs...>;
@@ -1012,16 +1021,9 @@ struct is_any_type<any_type<TArgs...>> : std::true_type { };
 #define BOOST_DI_INJECT_HPP
 
 namespace boost { namespace di {
-template<class, class> struct named { };
-}} // boost::di
-
 template<class>
-struct traits;
-
-template<class T>
-struct traits<void(T)> {
-    using type = T;
-};
+struct named_ { };
+}} // boost::di
 
 #if !defined(BOOST_DI_INJECTOR)
     #define BOOST_DI_INJECTOR boost_di_injector__
@@ -1033,105 +1035,47 @@ struct traits<void(T)> {
 
 #define BOOST_DI_TYPE(x)
 #define BOOST_DI_TYPE_END()
-
-#define BOOST_DI_NAME(name) di::named<name, typename traits<void(
-#define BOOST_DI_NAME_END() )>::type>
-
-#define BOOST_DI_ARG(expr, x, p) BOOST_DI_IF(BOOST_DI_IBP(p))(expr p x(), p)
-
-#define BOOST_DI_INJECT_IMPL2(expr, x)
-
-#define BOOST_DI_INJECT_IMPL3(expr, x, p1) \
-    BOOST_DI_ARG(expr, x, p1)
-
-#define BOOST_DI_INJECT_IMPL4(expr, x, p1, p2) \
-    BOOST_DI_ARG(expr, x, p1) \
-  , BOOST_DI_ARG(expr, x, p2)
-
-#define BOOST_DI_INJECT_IMPL5(expr, x, p1, p2, p3) \
-    BOOST_DI_ARG(expr, x, p1) \
-  , BOOST_DI_ARG(expr, x, p2) \
-  , BOOST_DI_ARG(expr, x, p3)
-
-#define BOOST_DI_INJECT_IMPL6(expr, x, p1, p2, p3, p4) \
-    BOOST_DI_ARG(expr, x, p1) \
-  , BOOST_DI_ARG(expr, x, p2) \
-  , BOOST_DI_ARG(expr, x, p3) \
-  , BOOST_DI_ARG(expr, x, p4)
-
-#define BOOST_DI_INJECT_IMPL7(expr, x, p1, p2, p3, p4, p5) \
-    BOOST_DI_ARG(expr, x, p1) \
-  , BOOST_DI_ARG(expr, x, p2) \
-  , BOOST_DI_ARG(expr, x, p3) \
-  , BOOST_DI_ARG(expr, x, p4) \
-  , BOOST_DI_ARG(expr, x, p5)
-
-#define BOOST_DI_INJECT_IMPL8(expr, x, p1, p2, p3, p4, p5, p6) \
-    BOOST_DI_ARG(expr, x, p1) \
-  , BOOST_DI_ARG(expr, x, p2) \
-  , BOOST_DI_ARG(expr, x, p3) \
-  , BOOST_DI_ARG(expr, x, p4) \
-  , BOOST_DI_ARG(expr, x, p5) \
-  , BOOST_DI_ARG(expr, x, p6)
-
-#define BOOST_DI_INJECT_IMPL9(expr, x, p1, p2, p3, p4, p5, p6, p7) \
-    BOOST_DI_ARG(expr, x, p1) \
-  , BOOST_DI_ARG(expr, x, p2) \
-  , BOOST_DI_ARG(expr, x, p3) \
-  , BOOST_DI_ARG(expr, x, p4) \
-  , BOOST_DI_ARG(expr, x, p5) \
-  , BOOST_DI_ARG(expr, x, p6) \
-  , BOOST_DI_ARG(expr, x, p7)
-
-#define BOOST_DI_INJECT_IMPL10(expr, x, p1, p2, p3, p4, p5, p6, p7, p8) \
-    BOOST_DI_ARG(expr, x, p1) \
-  , BOOST_DI_ARG(expr, x, p2) \
-  , BOOST_DI_ARG(expr, x, p3) \
-  , BOOST_DI_ARG(expr, x, p4) \
-  , BOOST_DI_ARG(expr, x, p5) \
-  , BOOST_DI_ARG(expr, x, p6) \
-  , BOOST_DI_ARG(expr, x, p7) \
-  , BOOST_DI_ARG(expr, x, p8)
-
-#define BOOST_DI_INJECT_IMPL11(expr, x, p1, p2, p3, p4, p5, p6, p7, p8, p9) \
-    BOOST_DI_ARG(expr, x, p1) \
-  , BOOST_DI_ARG(expr, x, p2) \
-  , BOOST_DI_ARG(expr, x, p3) \
-  , BOOST_DI_ARG(expr, x, p4) \
-  , BOOST_DI_ARG(expr, x, p5) \
-  , BOOST_DI_ARG(expr, x, p6) \
-  , BOOST_DI_ARG(expr, x, p7) \
-  , BOOST_DI_ARG(expr, x, p8) \
-  , BOOST_DI_ARG(expr, x, p9)
-
-#define BOOST_DI_INJECT_IMPL12(expr, x, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10) \
-    BOOST_DI_ARG(expr, x, p1) \
-  , BOOST_DI_ARG(expr, x, p2) \
-  , BOOST_DI_ARG(expr, x, p3) \
-  , BOOST_DI_ARG(expr, x, p4) \
-  , BOOST_DI_ARG(expr, x, p5) \
-  , BOOST_DI_ARG(expr, x, p6) \
-  , BOOST_DI_ARG(expr, x, p7) \
-  , BOOST_DI_ARG(expr, x, p8) \
-  , BOOST_DI_ARG(expr, x, p9) \
-  , BOOST_DI_ARG(expr, x, p10)
+#define BOOST_DI_TYPE_X(x) x
+#define BOOST_DI_TYPE_END_X()
+#define BOOST_DI_FUN(x) static auto name__() { auto x{}; return named; } static void arg__(
+#define BOOST_DI_FUN_END() );
+#define BOOST_DI_F(x) static void arg__(x);
+#define BOOST_DI_F_END()
+#define BOOST_DI_X(x)
+#define BOOST_DI_ARG(n, expr1, expr2, x, y, p)  BOOST_DI_IF(BOOST_DI_IBP(p))(struct arg##n { expr1 p x() };, )
+#define BOOST_DI_ARG2(n, expr1, expr2, x, y, p) BOOST_DI_IF(BOOST_DI_IBP(p))(expr1 p x(), expr2(p) y())
+#define BOOST_DI_ARGX(n, expr1, expr2, x, y, p) BOOST_DI_IF(BOOST_DI_IBP(p))(::boost::di::named_<arg##n>, p)
+#define BOOST_DI_INJECT_IMPL7(c, m, expr1, x, expr2, y, p1) m(1, expr1, expr2, x, y, p1)
+#define BOOST_DI_INJECT_IMPL8(c, m, expr1, x, expr2, y, p1, p2) m(1, expr1, expr2, x, y, p1) c() m(2, expr1, expr2, x, y, p2)
+#define BOOST_DI_INJECT_IMPL9(c, m, expr1, x, expr2, y, p1, p2, p3) m(1, expr1, expr2, x, y, p1) c() m(2, expr1, expr2, x, y, p2) c() m(3, expr1, expr2, x, y, p3)
+#define BOOST_DI_INJECT_IMPL10(c, m, expr1, x, expr2, y, p1, p2, p3, p4) m(1, expr1, expr2, x, y, p1) c() m(2, expr1, expr2, x, y, p2) c() m(3, expr1, expr2, x, y, p3) c() m(4, expr1, expr2, x, y, p4)
+#define BOOST_DI_INJECT_IMPL11(c, m, expr1, x, expr2, y, p1, p2, p3, p4, p5) m(1, expr1, expr2, x, y, p1) c() m(2, expr1, expr2, x, y, p2) c() m(3, expr1, expr2, x, y, p3) c() m(4, expr1, expr2, x, y, p4) c() m(5, expr1, expr2, x, y, p5)
+#define BOOST_DI_INJECT_IMPL12(c, m, expr1, x, expr2, y, p1, p2, p3, p4, p5, p6) m(1, expr1, expr2, x, y, p1) c() m(2, expr1, expr2, x, y, p2) c() m(3, expr1, expr2, x, y, p3) c() m(4, expr1, expr2, x, y, p4) c() m(5, expr1, expr2, x, y, p5) c() m(6, expr1, expr2, x, y, p6)
+#define BOOST_DI_INJECT_IMPL13(c, m, expr1, x, expr2, y, p1, p2, p3, p4, p5, p6, p7) m(1, expr1, expr2, x, y, p1) c() m(2, expr1, expr2, x, y, p2) c() m(3, expr1, expr2, x, y, p3) c() m(4, expr1, expr2, x, y, p4) c() m(5, expr1, expr2, x, y, p5) c() m(6, expr1, expr2, x, y, p6) c() m(7, expr1, expr2, x, y, p7)
+#define BOOST_DI_INJECT_IMPL14(c, m, expr1, x, expr2, y, p1, p2, p3, p4, p5, p6, p7, p8) m(1, expr1, expr2, x, y, p1) c() m(2, expr1, expr2, x, y, p2) c() m(3, expr1, expr2, x, y, p3) c() m(4, expr1, expr2, x, y, p4) c() m(5, expr1, expr2, x, y, p5) c() m(6, expr1, expr2, x, y, p6) c() m(7, expr1, expr2, x, y, p7) c() m(8, expr1, expr2, x, y, p8)
+#define BOOST_DI_INJECT_IMPL15(c, m, expr1, x, expr2, y, p1, p2, p3, p4, p5, p6, p7, p8, p9) m(1, expr1, expr2, x, y, p1) c() m(2, expr1, expr2, x, y, p2) c() m(3, expr1, expr2, x, y, p3) c() m(4, expr1, expr2, x, y, p4) c() m(5, expr1, expr2, x, y, p5) c() m(6, expr1, expr2, x, y, p6) c() m(7, expr1, expr2, x, y, p7) c() m(8, expr1, expr2, x, y, p8) c() m(9, expr1, expr2, x, y, p9)
+#define BOOST_DI_INJECT_IMPL16(c, m, expr1, x, expr2, y, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10) m(1, expr1, expr2, x, y, p1) c() m(2, expr1, expr2, x, y, p2) c() m(3, expr1, expr2, x, y, p3) c() m(4, expr1, expr2, x, y, p4) c() m(5, expr1, expr2, x, y, p5) c() m(6, expr1, expr2, x, y, p6) c() m(7, expr1, expr2, x, y, p7) c() m(8, expr1, expr2, x, y, p8) c() m(9, expr1, expr2, x, y, p9) c() m(10, expr1, expr2, x, y, p10)
 
 #if !defined(BOOST_DI_INJECT_TRAITS)
     #define BOOST_DI_INJECT_TRAITS(...) \
-        static void BOOST_DI_INJECTOR( \
-            BOOST_DI_VAR_ARG(BOOST_DI_INJECT_IMPL, BOOST_DI_NAME, BOOST_DI_NAME_END, __VA_ARGS__) \
-        )
+		BOOST_DI_VAR_ARG(BOOST_DI_INJECT_IMPL, BOOST_DI_NONE, BOOST_DI_ARG, BOOST_DI_FUN, BOOST_DI_FUN_END, BOOST_DI_F, BOOST_DI_F_END, __VA_ARGS__) \
+		static void BOOST_DI_INJECTOR(BOOST_DI_VAR_ARG(BOOST_DI_INJECT_IMPL, BOOST_DI_COMMA, BOOST_DI_ARGX, BOOST_DI_X, BOOST_DI_FUN_END, BOOST_DI_F, BOOST_DI_F_END, __VA_ARGS__))
 #endif
 
 #if !defined(BOOST_DI_INJECT)
     #define BOOST_DI_INJECT(type, ...) \
         BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
-        type(BOOST_DI_VAR_ARG(BOOST_DI_INJECT_IMPL, BOOST_DI_TYPE, BOOST_DI_TYPE_END, __VA_ARGS__))
+        type(BOOST_DI_VAR_ARG(BOOST_DI_INJECT_IMPL, BOOST_DI_COMMA, BOOST_DI_ARG2, BOOST_DI_TYPE, BOOST_DI_TYPE_END, BOOST_DI_TYPE_X, BOOST_DI_TYPE_END_X, __VA_ARGS__))
 #endif
 
 #define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 
-namespace boost { namespace di { namespace type_traits {
+namespace boost { namespace di {
+
+template<class, class>
+struct named { };
+
+namespace type_traits {
 
 struct direct { };
 struct aggregate { };
@@ -1208,6 +1152,32 @@ struct ctor_traits
 
 namespace type_traits {
 
+template<class>
+struct get_arg_impl;
+
+template<class T>
+struct get_arg_impl<aux::type_list<T>> {
+	using type = T;
+};
+
+template<class T>
+struct parse;
+
+template<class T>
+struct parse_impl {
+	using type = T;
+};
+
+template<class T>
+struct parse_impl<named_<T>> {
+	using type = named<typename aux::function_traits<decltype(T::name__)>::result_type, typename get_arg_impl<typename aux::function_traits<decltype(T::arg__)>::args>::type>;
+};
+
+template<class... Ts>
+struct parse<aux::type_list<Ts...>>
+	: aux::type_list<typename parse_impl<Ts>::type...>
+{ };
+
 template<
     class T
   , class = typename BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<T>::type
@@ -1222,9 +1192,7 @@ template<class T>
 struct ctor_traits<T, std::true_type>
     : aux::pair<
           direct
-        , typename aux::function_traits<
-              decltype(&T::BOOST_DI_INJECTOR)
-          >::args
+        , typename parse<typename aux::function_traits<decltype(T::BOOST_DI_INJECTOR)>::args>::type
       >
 { };
 
@@ -1237,9 +1205,7 @@ template<class T>
 struct ctor_traits_impl<T, std::true_type>
     : aux::pair<
           direct
-        , typename aux::function_traits<
-              decltype(&di::ctor_traits<T>::BOOST_DI_INJECTOR)
-          >::args
+        , typename parse<typename aux::function_traits<decltype(di::ctor_traits<T>::BOOST_DI_INJECTOR)>::args>::type
       >
 { };
 

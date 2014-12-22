@@ -490,7 +490,7 @@ test automatic_inject_with_initializer_list = [] {
 
 test named_polymorphic = [] {
     struct c {
-        BOOST_DI_INJECT(explicit c, (name)std::shared_ptr<i1> sp)
+        BOOST_DI_INJECT(explicit c, (named = name)std::shared_ptr<i1> sp)
             : sp(sp)
         { }
 
@@ -521,7 +521,7 @@ test ctor_refs = [] {
         , int& i
         , const double& d
         , const std::string& str
-        , (name) const std::string& nstr
+        , (named = name) const std::string& nstr
         , std::function<int()> f
         , long&& l
         , short s)
@@ -545,7 +545,7 @@ test ctor_refs = [] {
                       , int& i
                       , const double& d
                       , const std::string& str
-                      , (name) const std::string& nstr
+                      , (named = name) const std::string& nstr
                       , std::function<int()> f
                       , long&& l
                       , short s)
@@ -610,9 +610,9 @@ test ctor_refs = [] {
 test refs_vs_copy = [] {
     struct cc {
         BOOST_DI_INJECT(cc
-         , (name) const int& i
-         , (name) const std::string& s
-         , (other_name) int& i_ref
+         , (named = name) const int& i
+         , (named = name) const std::string& s
+         , (named = other_name) int& i_ref
          , int& ii)
             : str(s), i(i), i_ref(i_ref), ii(ii)
         { }
@@ -625,9 +625,9 @@ test refs_vs_copy = [] {
 
     struct cc_inject {
         BOOST_DI_INJECT(cc_inject
-                      , (name) const int& i
-                      , (name) const std::string& s
-                      , (other_name) int& i_ref
+                      , (named = name) const int& i
+                      , (named = name) const std::string& s
+                      , (named = other_name) int& i_ref
                       , int& ii)
             : str(s), i(i), i_ref(i_ref), ii(ii)
         { }
@@ -711,7 +711,7 @@ test named_parameters_with_shared_scope = [] {
     struct b { };
 
     struct c {
-        BOOST_DI_INJECT(c, (a)const std::shared_ptr<i1>& n1, (b)std::shared_ptr<i1> n2)
+        BOOST_DI_INJECT(c, (named = a)const std::shared_ptr<i1>& n1, (named = b)std::shared_ptr<i1> n2)
             : n1(n1), n2(n2)
         { }
 
