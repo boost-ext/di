@@ -13,8 +13,8 @@
 
 namespace di = boost::di;
 
-static struct int_1_ { } int_1;
-static struct int_2_ { } int_2;
+static struct int_1{} int_1;
+static struct int_2{} int_2;
 
 class named {
 public:

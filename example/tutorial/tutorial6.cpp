@@ -15,8 +15,8 @@
 
 namespace di = boost::di;
 
-static struct first_ { } first;
-static struct second_ { } second;
+static struct first{} first;
+static struct second{} second;
 
 class app {
 public:
