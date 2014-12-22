@@ -103,6 +103,7 @@ test-suite ft : # functional tests
     [ compile-fail-test c++1y : ft/error_injector_ctor_ambiguous.cpp ]
     [ compile-fail-test c++1y : ft/error_injector_shared_by_copy.cpp ]
     [ compile-fail-test c++1y : ft/error_make_injector_wrong_arg.cpp ]
+    [ compile-fail-test c++1y : ft/error_named_paramater_spelling.cpp ]
     [ compile-fail-test c++1y : ft/error_policy_allow_ctor_types.cpp ]
     [ compile-fail-test c++1y : ft/error_scope_traits_external_deduced.cpp ]
 ;
