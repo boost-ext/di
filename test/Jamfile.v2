@@ -95,6 +95,7 @@ test-suite ft : # functional tests
 
 test-suite fail : # compile fail tests
     #[ compile-fail-test c++1y : fail/make_injector_wrong_arg.cpp ]
+    #[ compile-fail-test c++1y : ft/error_bind_to_different_types.cpp ]
 ;
 
 test-suite pt : # performane tests
