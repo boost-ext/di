@@ -13,8 +13,8 @@
 
 namespace di = boost::di;
 
-struct int_1 { };
-struct int_2 { };
+struct int_1_ { } int_1;
+struct int_2_ { } int_2;
 
 class named {
 public:
@@ -34,8 +34,8 @@ private:
 int main() {
     /*<<make injector and bind named parameters>>*/
     auto injector = di::make_injector(
-        di::bind<int>.named(int_1{}).to(42)
-      , di::bind<int>.named(int_2{}).to(87)
+        di::bind<int>.named(int_1).to(42)
+      , di::bind<int>.named(int_2).to(87)
     );
 
     /*<<create `named`>>*/

@@ -6,8 +6,10 @@
 
 namespace di = boost::di;
 
-struct name{};
-struct other_name{};
+struct n1 {} name;
+struct n2 {} other_name;
+struct n3 {} a;
+struct n4 {} b;
 
 struct i1 { virtual ~i1() = default; virtual void dummy1() = 0; };
 struct i2 { virtual ~i2() = default; virtual void dummy2() = 0; };
@@ -498,7 +500,7 @@ test named_polymorphic = [] {
     };
 
     auto injector = di::make_injector(
-        di::bind<i1, impl1>.named(name{})
+        di::bind<i1, impl1>.named(name)
     );
 
     auto object = injector.create<c>();
@@ -582,7 +584,7 @@ test ctor_refs = [] {
             di::bind<int>.to(std::ref(i))
           , di::bind<double>.to(std::cref(d))
           , di::bind<std::string>.to("str")
-          , di::bind<std::string>.named(name{}).to("named str")
+          , di::bind<std::string>.named(name).to("named str")
           , bind_i1
           , di::bind<short>.to(42)
           , di::bind<long>.to(123)
@@ -643,9 +645,9 @@ test refs_vs_copy = [] {
 
     {
     auto injector = di::make_injector(
-        di::bind<std::string>.named(name{}).to(std::ref(ref))
-      , di::bind<int>.named(name{}).to(std::cref(i))
-      , di::bind<int>.named(other_name{}).to(std::ref(i))
+        di::bind<std::string>.named(name).to(std::ref(ref))
+      , di::bind<int>.named(name).to(std::cref(i))
+      , di::bind<int>.named(other_name).to(std::ref(i))
       , di::bind<int>.to(std::ref(i))
     );
     auto object = injector.create<cc>();
@@ -659,9 +661,9 @@ test refs_vs_copy = [] {
 
     {
     auto injector = di::make_injector(
-        di::bind<std::string>.named(name{}).to(std::ref(ref))
-      , di::bind<int>.named(name{}).to(std::cref(i))
-      , di::bind<int>.named(other_name{}).to(std::ref(i))
+        di::bind<std::string>.named(name).to(std::ref(ref))
+      , di::bind<int>.named(name).to(std::cref(i))
+      , di::bind<int>.named(other_name).to(std::ref(i))
       , di::bind<int>.to(std::ref(i))
     );
     auto object = injector.create<cc_inject>();
@@ -675,9 +677,9 @@ test refs_vs_copy = [] {
 
     {
     auto injector = di::make_injector(
-        di::bind<std::string>.named(name{}).to(ref)
-      , di::bind<int>.named(name{}).to(i)
-      , di::bind<int>.named(other_name{}).to(std::ref(i))
+        di::bind<std::string>.named(name).to(ref)
+      , di::bind<int>.named(name).to(i)
+      , di::bind<int>.named(other_name).to(std::ref(i))
       , di::bind<int>.to(std::ref(i))
     );
     auto object = injector.create<cc>();
@@ -691,9 +693,9 @@ test refs_vs_copy = [] {
 
     {
     auto injector = di::make_injector(
-        di::bind<std::string>.named(name{}).to(ref)
-      , di::bind<int>.named(name{}).to(i)
-      , di::bind<int>.named(other_name{}).to(std::ref(i))
+        di::bind<std::string>.named(name).to(ref)
+      , di::bind<int>.named(name).to(i)
+      , di::bind<int>.named(other_name).to(std::ref(i))
       , di::bind<int>.to(std::ref(i))
     );
     auto object = injector.create<cc_inject>();
@@ -707,9 +709,6 @@ test refs_vs_copy = [] {
 };
 
 test named_parameters_with_shared_scope = [] {
-    struct a { };
-    struct b { };
-
     struct c {
         BOOST_DI_INJECT(c, (named = a)const std::shared_ptr<i1>& n1, (named = b)std::shared_ptr<i1> n2)
             : n1(n1), n2(n2)
@@ -720,8 +719,8 @@ test named_parameters_with_shared_scope = [] {
     };
 
     auto injector = di::make_injector(
-        di::bind<i1, impl1>.named(a{}).in(di::unique)
-      , di::bind<i1>.named(b{}).to(std::make_shared<impl1>())
+        di::bind<i1, impl1>.named(a).in(di::unique)
+      , di::bind<i1>.named(b).to(std::make_shared<impl1>())
     );
 
     auto object = injector.create<c>();

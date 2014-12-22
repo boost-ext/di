@@ -9,10 +9,7 @@
 
 #include "boost/di/aux_/utility.hpp"
 
-namespace boost { namespace di {
-template<class>
-struct named_ { };
-}} // boost::di
+namespace boost { namespace di { template<class> struct named_ { }; }} // boost::di
 
 #if !defined(BOOST_DI_INJECTOR)
     #define BOOST_DI_INJECTOR boost_di_injector__
@@ -26,7 +23,7 @@ struct named_ { };
 #define BOOST_DI_TYPE_END()
 #define BOOST_DI_TYPE_X(x) x
 #define BOOST_DI_TYPE_END_X()
-#define BOOST_DI_FUN(x) static auto name__() { auto x{}; return named; } static void arg__(
+#define BOOST_DI_FUN(x) static auto name__() { auto x; return named; } static void arg__(
 #define BOOST_DI_FUN_END() );
 #define BOOST_DI_F(x) static void arg__(x);
 #define BOOST_DI_F_END()
