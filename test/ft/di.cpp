@@ -533,7 +533,7 @@ test ctor_refs = [] {
         , const double& d
         , const std::string& str
         , (named = name) const std::string& nstr
-        , std::function<int()> f
+        , const std::function<int()>& f
         , long&& l
         , short s)
             : i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)

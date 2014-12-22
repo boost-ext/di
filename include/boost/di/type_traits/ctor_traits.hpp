@@ -111,8 +111,11 @@ struct parse_impl {
 };
 
 template<class T>
-struct parse_impl<named_<T>> {
-	using type = named<typename aux::function_traits<decltype(T::name__)>::result_type, typename get_arg_impl<typename aux::function_traits<decltype(T::arg__)>::args>::type>;
+struct parse_impl<const named_<T>&> {
+	using type = named<
+        typename aux::function_traits<decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, name))>::result_type
+      , typename get_arg_impl<typename aux::function_traits<decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, arg))>::args>::type
+    >;
 };
 
 template<class... Ts>

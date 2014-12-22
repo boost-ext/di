@@ -136,7 +136,6 @@ void test_hello_world_when_run_with_value_true_then_log_and_do_it() {
 * Type safe
 * Header only
 * Minimal runtime overhead
-* Really quick compilation times
 * Requires C++14 standard compliant compiler (STL headers: memory/new/type\_traits)
 * No Boost libraries requirements (optional requirement to support Boost Smart Pointers)
 * Easily extendible (custom scopes/providers including allocation strategy)

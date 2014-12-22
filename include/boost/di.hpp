@@ -1062,14 +1062,14 @@ namespace boost { namespace di { template<class> struct named_ { }; }} // boost:
 #define BOOST_DI_TYPE_END()
 #define BOOST_DI_TYPE_X(x) x
 #define BOOST_DI_TYPE_END_X()
-#define BOOST_DI_FUN(x) static auto name__() { auto x; return named; } static void arg__(
+#define BOOST_DI_FUN(x) static auto BOOST_DI_CAT(BOOST_DI_INJECTOR, name)() { auto x; return named; } static void BOOST_DI_CAT(BOOST_DI_INJECTOR, arg)(
 #define BOOST_DI_FUN_END() );
-#define BOOST_DI_F(x) static void arg__(x);
+#define BOOST_DI_F(x) static void BOOST_DI_CAT(BOOST_DI_INJECTOR, arg)(x);
 #define BOOST_DI_F_END()
 #define BOOST_DI_X(x)
 #define BOOST_DI_ARG(n, expr1, expr2, x, y, p)  BOOST_DI_IF(BOOST_DI_IBP(p))(struct arg##n { expr1 p x() };, )
 #define BOOST_DI_ARG2(n, expr1, expr2, x, y, p) BOOST_DI_IF(BOOST_DI_IBP(p))(expr1 p x(), expr2(p) y())
-#define BOOST_DI_ARGX(n, expr1, expr2, x, y, p) BOOST_DI_IF(BOOST_DI_IBP(p))(::boost::di::named_<arg##n>, p)
+#define BOOST_DI_ARGX(n, expr1, expr2, x, y, p) BOOST_DI_IF(BOOST_DI_IBP(p))(const ::boost::di::named_<arg##n>&, p)
 #define BOOST_DI_INJECT_IMPL7(c, m, expr1, x, expr2, y, p1) m(1, expr1, expr2, x, y, p1)
 #define BOOST_DI_INJECT_IMPL8(c, m, expr1, x, expr2, y, p1, p2) m(1, expr1, expr2, x, y, p1) c() m(2, expr1, expr2, x, y, p2)
 #define BOOST_DI_INJECT_IMPL9(c, m, expr1, x, expr2, y, p1, p2, p3) m(1, expr1, expr2, x, y, p1) c() m(2, expr1, expr2, x, y, p2) c() m(3, expr1, expr2, x, y, p3)
@@ -1194,8 +1194,11 @@ struct parse_impl {
 };
 
 template<class T>
-struct parse_impl<named_<T>> {
-	using type = named<typename aux::function_traits<decltype(T::name__)>::result_type, typename get_arg_impl<typename aux::function_traits<decltype(T::arg__)>::args>::type>;
+struct parse_impl<const named_<T>&> {
+	using type = named<
+        typename aux::function_traits<decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, name))>::result_type
+      , typename get_arg_impl<typename aux::function_traits<decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, arg))>::args>::type
+    >;
 };
 
 template<class... Ts>
