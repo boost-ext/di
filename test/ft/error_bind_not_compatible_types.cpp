@@ -8,13 +8,14 @@
 
 namespace di = boost::di;
 
-test error_scope_traits_external_deduced = [] {
-    struct c {
-        c(int&) { }
-    };
+struct i { };
+struct impl : i { };
 
-    auto injector = di::make_injector();
+test error_bind_not_compatible_types = [] {
+    auto injector = di::make_injector(
+        di::bind<int, impl>
+    );
 
-    injector.create<c>();
+    injector.create<int>();
 };
 

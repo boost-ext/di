@@ -6,21 +6,14 @@
 //
 #include "boost/di.hpp"
 
-#include <boost/test/unit_test.hpp>
+namespace di = boost::di;
 
-namespace boost {
-namespace di {
+test error_injector_ctor_ambiguous = [] {
+    struct ctor {
+        ctor(int, double) { }
+        ctor(double, int) { }
+    };
 
-struct ctor
-{
-    BOOST_DI_INJECT(ctor, int, double) { }
-    BOOST_DI_INJECT(ctor, double, int) { }
+    di::make_injector().create<ctor>();
 };
-
-BOOST_AUTO_TEST_CASE(ctor_ambiguous_fail) {
-    injector<>().create<ctor>();
-}
-
-} // namespace di
-} // namespace boost
 

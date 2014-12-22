@@ -8,13 +8,10 @@
 
 namespace di = boost::di;
 
-test error_scope_traits_external_deduced = [] {
-    struct c {
-        c(int&) { }
-    };
-
-    auto injector = di::make_injector();
-
-    injector.create<c>();
+test error_bind_multiple_times = [] {
+    di::make_injector(
+        di::bind<int>.to(42)
+      , di::bind<int>.to(87)
+    );
 };
 

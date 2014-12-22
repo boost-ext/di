@@ -14,6 +14,7 @@
 #include "boost/di/core/provider.hpp"
 #include "boost/di/core/binder.hpp"
 #include "boost/di/core/pool.hpp"
+#include "boost/di/core/requires.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 
 namespace boost { namespace di { namespace core {
@@ -22,13 +23,13 @@ BOOST_DI_HAS_METHOD(configure, configure);
 BOOST_DI_HAS_METHOD(call, call);
 
 template<class TDeps, class TConfig>
-class injector : public pool<TDeps> {
+class injector : requires_unique_bindings<TDeps>, public pool<TDeps> {
     template<class, class> friend struct any_type;
     template<class...> friend struct provider;
 
     using pool_t = pool<TDeps>;
 
-    template<class T, class TDependency>
+    template<class T, class TName, class TDependency>
     struct data {
         using type = T;
 
@@ -37,7 +38,7 @@ class injector : public pool<TDeps> {
 
         template<class U, class TDefault>
         decltype(auto) resolve() const noexcept {
-            return binder::template resolve<U, TDefault>(&deps);
+            return binder::template resolve<U, TName, TDefault>(&deps);
         }
     };
 
@@ -96,17 +97,18 @@ private:
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<given_t, T, ctor_t, injector>;
-        call_policies<T>(config_.policies(), dependency);
+        call_policies<T, TName>(config_.policies(), dependency);
         return dependency.template create<T>(provider_t{*this});
     }
 
     template<
         class T
+      , class TName
       , class TDependency
       , class... TPolicies
     > void call_policies(const pool<aux::type_list<TPolicies...>>& policies
                        , TDependency&& dependency) const noexcept {
-        void(call_policies_impl<TPolicies, T>(
+        void(call_policies_impl<TPolicies, T, TName>(
             policies, std::forward<TDependency>(dependency))...
         );
     }
@@ -114,11 +116,12 @@ private:
     template<
         class TPolicy
       , class T
+      , class TName
       , class TPolicies
       , class TDependency
     > void call_policies_impl(const TPolicies& policies
                             , TDependency&& dependency) const noexcept {
-        auto&& injections = data<T, TDependency>{
+        auto&& injections = data<T, TName, TDependency>{
             std::forward<TDependency>(dependency)
           , (injector&)*this
         };

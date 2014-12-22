@@ -373,6 +373,121 @@ private:
 
 }}} // boost::di::wrappers
 
+#define BOOST_DI_TYPE_TRAITS_MEMORY_TRAITS_HPP
+
+#if (__has_include(<boost/shared_ptr.hpp>))
+    #include <boost/shared_ptr.hpp>
+#endif
+
+namespace boost { namespace di { namespace type_traits {
+
+struct heap { };
+struct stack { };
+
+template<class T>
+struct memory_traits {
+    using type = stack;
+};
+
+template<class T>
+struct memory_traits<T&> {
+    using type = stack;
+};
+
+template<class T>
+struct memory_traits<const T&> {
+    using type = stack;
+};
+
+template<class T>
+struct memory_traits<T*> {
+    using type = heap;
+};
+
+template<class T>
+struct memory_traits<const T*> {
+    using type = heap;
+};
+
+template<class T>
+struct memory_traits<std::shared_ptr<T>> {
+    using type = heap;
+};
+
+template<class T>
+struct memory_traits<const std::shared_ptr<T>&> {
+    using type = heap;
+};
+
+#if (__has_include(<boost/shared_ptr.hpp>))
+    template<class T>
+    struct memory_traits<boost::shared_ptr<T>> {
+        using type = heap;
+    };
+
+    template<class T>
+    struct memory_traits<const boost::shared_ptr<T>&> {
+        using type = heap;
+    };
+#endif
+
+template<class T>
+struct memory_traits<std::weak_ptr<T>> {
+    using type = heap;
+};
+
+template<class T>
+struct memory_traits<const std::weak_ptr<T>&> {
+    using type = heap;
+};
+
+template<class T>
+struct memory_traits<std::unique_ptr<T>> {
+    using type = heap;
+};
+
+template<class T>
+struct memory_traits<const std::unique_ptr<T>&> {
+    using type = heap;
+};
+
+template<class T>
+struct memory_traits<T&&> {
+    using type = stack;
+};
+
+template<class T>
+struct memory_traits<const T&&> {
+    using type = stack;
+};
+
+template<class T>
+using memory_traits_t = typename memory_traits<T>::type;
+
+}}} // boost::di::type_traits
+
+#define BOOST_DI_SCOPES_UNIQUE_HPP
+
+namespace boost { namespace di { namespace scopes {
+
+class unique {
+public:
+    static constexpr auto priority = false;
+
+    template<class, class>
+    class scope {
+    public:
+        template<class T, class TProvider>
+        auto create(const TProvider& provider) const noexcept {
+            using memory = type_traits::memory_traits_t<T>;
+            using wrapper = wrappers::unique<decltype(provider.get(memory{}))>;
+            return wrapper{provider.get(memory{})};
+        }
+    };
+};
+
+}}} // boost::di::scopes
+
 #define BOOST_DI_WRAPPERS_SHARED_HPP
 
 #if (__has_include(<boost/shared_ptr.hpp>))
@@ -434,6 +549,35 @@ private:
 };
 
 }}} // boost::di::wrappers
+
+#define BOOST_DI_SCOPES_SINGLETON_HPP
+
+namespace boost { namespace di { namespace scopes {
+
+class singleton {
+public:
+    static constexpr auto priority = false;
+
+    template<class, class T>
+    class scope {
+    public:
+        template<class, class TProvider>
+        auto create(const TProvider& provider) const noexcept {
+            if (!get_instance()) {
+                get_instance().reset(provider.get());
+            }
+            return get_instance();
+        }
+
+    private:
+        static wrappers::shared<T>& get_instance() noexcept {
+            static wrappers::shared<T> object;
+            return object;
+        }
+    };
+};
+
+}}} // boost::di::scopes
 
 #define BOOST_DI_SCOPES_EXTERNAL_HPP
 
@@ -566,250 +710,6 @@ public:
 
 }}} // boost::di::scopes
 
-#define BOOST_DI_FWD_HPP
-
-namespace boost { namespace di {
-namespace providers {
-class nothrow_heap;
-class nothrow_reduce_heap_usage;
-} // providers
-
-struct no_name { };
-class config;
-template<class...> class injector;
-
-}} // boost::di
-
-
-namespace boost { namespace di { namespace core {
-
-template<class TExpected, class TName>
-struct dependency_concept { };
-
-template<class T, class TDependency>
-struct dependency_impl : aux::pair<T, TDependency>
-{ };
-
-template<class... Ts, class TName, class TDependency>
-struct dependency_impl<
-    dependency_concept<aux::type_list<Ts...>, TName>
-  , TDependency
-> : aux::pair<dependency_concept<Ts, TName>, TDependency>...
-{ };
-
-template<
-    class TScope
-  , class TExpected
-  , class TGiven = TExpected
-  , class TName = no_name
-  , bool  TPriority = TScope::priority
->
-class dependency
-    : public TScope::template scope<TExpected, TGiven>
-    , public dependency_impl<
-          dependency_concept<TExpected, TName>
-        , dependency<TScope, TExpected, TGiven, TName, TPriority>
-      > {
-    using scope_t = typename TScope::template scope<TExpected, TGiven>;
-
-public:
-    using type = dependency;
-    using scope = TScope;
-    using expected = TExpected;
-    using given = TGiven;
-    using name = TName;
-
-    dependency() noexcept { }
-
-    template<class T>
-    explicit dependency(T&& object) noexcept
-        : scope_t(std::forward<T>(object))
-    { }
-
-    template<class T, class TInjector>
-    dependency(T&& object, const TInjector& injector) noexcept
-        : scope_t(std::forward<T>(object), injector)
-    { }
-
-    template<class T>
-    auto named(const T&) const noexcept {
-        return dependency<TScope, TExpected, TGiven, T>{};
-    }
-
-    template<class T>
-    auto in(const T&) const noexcept {
-        return dependency<T, TExpected, TGiven, TName>{};
-    }
-
-    template<class T>
-    auto to(T&& object) const noexcept {
-        using dependency = dependency<
-            scopes::external, TExpected, std::remove_reference_t<T>, TName
-        >;
-        return dependency{std::forward<T>(object)};
-    }
-};
-
-template<class>
-struct is_dependency : std::false_type { };
-
-template<
-    class TScope
-  , class TExpected
-  , class TGiven
-  , class TName
-  , bool  TPriority
->
-struct is_dependency<
-    dependency<TScope, TExpected, TGiven, TName, TPriority>
-> : std::true_type { };
-
-}}} // boost::di::core
-
-#define BOOST_DI_TYPE_TRAITS_MEMORY_TRAITS_HPP
-
-#if (__has_include(<boost/shared_ptr.hpp>))
-    #include <boost/shared_ptr.hpp>
-#endif
-
-namespace boost { namespace di { namespace type_traits {
-
-struct heap { };
-struct stack { };
-
-template<class T>
-struct memory_traits {
-    using type = stack;
-};
-
-template<class T>
-struct memory_traits<T&> {
-    using type = stack;
-};
-
-template<class T>
-struct memory_traits<const T&> {
-    using type = stack;
-};
-
-template<class T>
-struct memory_traits<T*> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<const T*> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<std::shared_ptr<T>> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<const std::shared_ptr<T>&> {
-    using type = heap;
-};
-
-#if (__has_include(<boost/shared_ptr.hpp>))
-    template<class T>
-    struct memory_traits<boost::shared_ptr<T>> {
-        using type = heap;
-    };
-
-    template<class T>
-    struct memory_traits<const boost::shared_ptr<T>&> {
-        using type = heap;
-    };
-#endif
-
-template<class T>
-struct memory_traits<std::weak_ptr<T>> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<const std::weak_ptr<T>&> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<std::unique_ptr<T>> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<const std::unique_ptr<T>&> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<T&&> {
-    using type = stack;
-};
-
-template<class T>
-struct memory_traits<const T&&> {
-    using type = stack;
-};
-
-template<class T>
-using memory_traits_t = typename memory_traits<T>::type;
-
-}}} // boost::di::type_traits
-
-#define BOOST_DI_SCOPES_UNIQUE_HPP
-
-namespace boost { namespace di { namespace scopes {
-
-class unique {
-public:
-    static constexpr auto priority = false;
-
-    template<class, class>
-    class scope {
-    public:
-        template<class T, class TProvider>
-        auto create(const TProvider& provider) const noexcept {
-            using memory = type_traits::memory_traits_t<T>;
-            using wrapper = wrappers::unique<decltype(provider.get(memory{}))>;
-            return wrapper{provider.get(memory{})};
-        }
-    };
-};
-
-}}} // boost::di::scopes
-
-#define BOOST_DI_SCOPES_SINGLETON_HPP
-
-namespace boost { namespace di { namespace scopes {
-
-class singleton {
-public:
-    static constexpr auto priority = false;
-
-    template<class, class T>
-    class scope {
-    public:
-        template<class, class TProvider>
-        auto create(const TProvider& provider) const noexcept {
-            if (!get_instance()) {
-                get_instance().reset(provider.get());
-            }
-            return get_instance();
-        }
-
-    private:
-        static wrappers::shared<T>& get_instance() noexcept {
-            static wrappers::shared<T> object;
-            return object;
-        }
-    };
-};
-
-}}} // boost::di::scopes
-
 #define BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 
 #if (__has_include(<boost/shared_ptr.hpp>))
@@ -920,6 +820,134 @@ public:
 };
 
 }}} // boost::di::scopes
+
+
+namespace boost { namespace di { namespace core {
+
+template<class>
+class requires_unique_bindings;
+
+template<class... Ts>
+class requires_unique_bindings<aux::type_list<Ts...>> {
+    template<class T>
+    struct expected {
+        using type = aux::pair<
+            aux::pair<typename T::expected, typename T::name>
+          , std::integral_constant<bool, T::scope::priority>
+        >;
+    };
+
+    pool<aux::type_list<typename expected<Ts>::type...>> bindings;
+};
+
+template<class TExpected, class TGiven, class TScope>
+class requires_external_concepts {
+    static_assert(std::is_same<TExpected, TGiven>{}, "");
+    static_assert(std::is_same<TScope, scopes::deduce>{}, "");
+};
+
+}}} // boost::di::core
+
+#define BOOST_DI_FWD_HPP
+
+namespace boost { namespace di {
+namespace providers {
+class nothrow_heap;
+class nothrow_reduce_heap_usage;
+} // providers
+
+struct no_name { };
+class config;
+template<class...> class injector;
+
+}} // boost::di
+
+
+namespace boost { namespace di { namespace core {
+
+template<class TExpected, class TName>
+struct dependency_concept { };
+
+template<class T, class TDependency>
+struct dependency_impl : aux::pair<T, TDependency>
+{ };
+
+template<class... Ts, class TName, class TDependency>
+struct dependency_impl<
+    dependency_concept<aux::type_list<Ts...>, TName>
+  , TDependency
+> : aux::pair<dependency_concept<Ts, TName>, TDependency>...
+{ };
+
+template<
+    class TScope
+  , class TExpected
+  , class TGiven = TExpected
+  , class TName = no_name
+  , bool  TPriority = TScope::priority
+>
+class dependency
+    : public TScope::template scope<TExpected, TGiven>
+    , public dependency_impl<
+          dependency_concept<TExpected, TName>
+        , dependency<TScope, TExpected, TGiven, TName, TPriority>
+      > {
+    using scope_t = typename TScope::template scope<TExpected, TGiven>;
+
+public:
+    using type = dependency;
+    using scope = TScope;
+    using expected = TExpected;
+    using given = TGiven;
+    using name = TName;
+
+    dependency() noexcept { }
+
+    template<class T>
+    explicit dependency(T&& object) noexcept
+        : scope_t(std::forward<T>(object))
+    { }
+
+    template<class T, class TInjector>
+    dependency(T&& object, const TInjector& injector) noexcept
+        : scope_t(std::forward<T>(object), injector)
+    { }
+
+    template<class T>
+    auto named(const T&) const noexcept {
+        return dependency<TScope, TExpected, TGiven, T>{};
+    }
+
+    template<class T>
+    auto in(const T&) const noexcept {
+        return dependency<T, TExpected, TGiven, TName>{};
+    }
+
+    template<class T>
+    auto to(T&& object) const noexcept {
+        void(requires_external_concepts<TExpected, TGiven, TScope>{});
+        using dependency = dependency<
+            scopes::external, TExpected, std::remove_reference_t<T>, TName
+        >;
+        return dependency{std::forward<T>(object)};
+    }
+};
+
+template<class>
+struct is_dependency : std::false_type { };
+
+template<
+    class TScope
+  , class TExpected
+  , class TGiven
+  , class TName
+  , bool  TPriority
+>
+struct is_dependency<
+    dependency<TScope, TExpected, TGiven, TName, TPriority>
+> : std::true_type { };
+
+}}} // boost::di::core
 
 
 namespace boost { namespace di { namespace core {
@@ -1447,13 +1475,13 @@ BOOST_DI_HAS_METHOD(configure, configure);
 BOOST_DI_HAS_METHOD(call, call);
 
 template<class TDeps, class TConfig>
-class injector : public pool<TDeps> {
+class injector : requires_unique_bindings<TDeps>, public pool<TDeps> {
     template<class, class> friend struct any_type;
     template<class...> friend struct provider;
 
     using pool_t = pool<TDeps>;
 
-    template<class T, class TDependency>
+    template<class T, class TName, class TDependency>
     struct data {
         using type = T;
 
@@ -1462,7 +1490,7 @@ class injector : public pool<TDeps> {
 
         template<class U, class TDefault>
         decltype(auto) resolve() const noexcept {
-            return binder::template resolve<U, TDefault>(&deps);
+            return binder::template resolve<U, TName, TDefault>(&deps);
         }
     };
 
@@ -1521,17 +1549,18 @@ private:
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<given_t, T, ctor_t, injector>;
-        call_policies<T>(config_.policies(), dependency);
+        call_policies<T, TName>(config_.policies(), dependency);
         return dependency.template create<T>(provider_t{*this});
     }
 
     template<
         class T
+      , class TName
       , class TDependency
       , class... TPolicies
     > void call_policies(const pool<aux::type_list<TPolicies...>>& policies
                        , TDependency&& dependency) const noexcept {
-        void(call_policies_impl<TPolicies, T>(
+        void(call_policies_impl<TPolicies, T, TName>(
             policies, std::forward<TDependency>(dependency))...
         );
     }
@@ -1539,11 +1568,12 @@ private:
     template<
         class TPolicy
       , class T
+      , class TName
       , class TPolicies
       , class TDependency
     > void call_policies_impl(const TPolicies& policies
                             , TDependency&& dependency) const noexcept {
-        auto&& injections = data<T, TDependency>{
+        auto&& injections = data<T, TName, TDependency>{
             std::forward<TDependency>(dependency)
           , (injector&)*this
         };

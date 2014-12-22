@@ -4,24 +4,19 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/cpp_0x/injector.hpp"
+#include "boost/di.hpp"
 
-#include <boost/test/unit_test.hpp>
+namespace di = boost::di;
 
-#include "common/data.hpp"
+test error_injector_shared_by_copy = [] {
+    struct c {
+        c(int) { }
+    };
 
-namespace boost {
-namespace di {
+    auto injector = di::make_injector(
+        di::bind<int>.in(di::shared)
+    );
 
-BOOST_AUTO_TEST_CASE(shared_by_copy_fail) {
-    injector<
-        c0if0
-      , shared<
-            c6
-        >
-    >().create<c15>();
-}
-
-} // namespace di
-} // namespace boost
+    injector.create<c>();
+};
 

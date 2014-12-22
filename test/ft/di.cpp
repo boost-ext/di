@@ -102,16 +102,6 @@ test create_interface_when_impl_with_one_arg_ctor = [] {
     expect(object.get());
 };
 
-test external_with_scope = [] {
-    constexpr auto i = 42;
-
-    auto injector = di::make_injector(
-        di::bind<int>.in(di::shared).to(i)
-    );
-
-    expect_eq(i, injector.create<int>());
-};
-
 test injectors_mix = [] {
     auto injector = di::make_injector(
         di::make_injector(
@@ -264,7 +254,7 @@ test scopes_priority = [] {
 
 test scopes_order = [] {
     auto injector = di::make_injector(
-        di::bind<int>.to(41)
+        di::bind<int, std::integral_constant<int, 41>>
       , di::bind<int>.to([]{return 42;})
     );
 

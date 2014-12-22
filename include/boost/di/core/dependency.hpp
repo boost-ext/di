@@ -7,7 +7,9 @@
 #define BOOST_DI_CORE_DEPENDENCY_HPP
 
 #include "boost/di/aux_/utility.hpp"
+#include "boost/di/core/requires.hpp"
 #include "boost/di/scopes/external.hpp"
+#include "boost/di/scopes/deduce.hpp"
 #include "boost/di/fwd.hpp"
 
 namespace boost { namespace di { namespace core {
@@ -72,6 +74,7 @@ public:
 
     template<class T>
     auto to(T&& object) const noexcept {
+        void(requires_external_concepts<TExpected, TGiven, TScope>{});
         using dependency = dependency<
             scopes::external, TExpected, std::remove_reference_t<T>, TName
         >;
