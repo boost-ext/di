@@ -498,6 +498,25 @@ test named_polymorphic = [] {
     expect(dynamic_cast<impl1*>(object.sp.get()));
 };
 
+struct c {
+    BOOST_DI_INJECT(explicit c, (named = name) int i);
+    int i = 0;
+};
+
+c::c(int i) : i(i) { }
+
+test named_with_def_decl_ctor = [] {
+    constexpr auto i = 42;
+
+    auto injector = di::make_injector(
+        di::bind<int>.named(name).to(i)
+    );
+
+    auto object = injector.create<c>();
+
+    expect_eq(i, object.i);
+};
+
 test bind_chars_to_string = [] {
     auto injector = di::make_injector(
         di::bind<std::string>.to("str")

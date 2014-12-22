@@ -1474,25 +1474,38 @@ namespace boost { namespace di { namespace core {
 BOOST_DI_HAS_METHOD(configure, configure);
 BOOST_DI_HAS_METHOD(call, call);
 
+template<class T, class TWrapper>
+struct universal {
+    TWrapper wrapper_;
+
+    inline operator T() const noexcept {
+        return wrapper_;
+    }
+};
+
+template<
+    class T
+  , class TName
+  , class TDependency
+  , class TDeps
+> struct data {
+    using type = T;
+
+    TDependency&& dep;
+    TDeps& deps;
+
+    template<class U, class TDefault>
+    decltype(auto) resolve() const noexcept {
+        return binder::template resolve<U, TName, TDefault>(&deps);
+    }
+};
+
 template<class TDeps, class TConfig>
 class injector : requires_unique_bindings<TDeps>, public pool<TDeps> {
     template<class, class> friend struct any_type;
     template<class...> friend struct provider;
 
     using pool_t = pool<TDeps>;
-
-    template<class T, class TName, class TDependency>
-    struct data {
-        using type = T;
-
-        TDependency&& dep;
-        pool_t& deps;
-
-        template<class U, class TDefault>
-        decltype(auto) resolve() const noexcept {
-            return binder::template resolve<U, TName, TDefault>(&deps);
-        }
-    };
 
 public:
     using deps = TDeps;
@@ -1550,7 +1563,13 @@ private:
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<given_t, T, ctor_t, injector>;
         call_policies<T, TName>(config_.policies(), dependency);
-        return dependency.template create<T>(provider_t{*this});
+        using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
+        using type = std::conditional_t<
+            std::is_reference<T>{} && has_is_ref<dependency_t>{}
+          , T
+          , std::remove_reference_t<T>
+        >;
+        return universal<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
 
     template<
@@ -1573,7 +1592,7 @@ private:
       , class TDependency
     > void call_policies_impl(const TPolicies& policies
                             , TDependency&& dependency) const noexcept {
-        auto&& injections = data<T, TName, TDependency>{
+        auto&& injections = data<T, TName, TDependency, pool_t>{
             std::forward<TDependency>(dependency)
           , (injector&)*this
         };
