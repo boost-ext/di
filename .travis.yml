@@ -12,7 +12,7 @@ before_install:
   - cd build && ./bootstrap.sh --with-toolset=clang
 
 script:
-  - ./b2 -j4 -q --toolset=clang cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++" ../test ../example
+  - ./b2 -j4 -q --toolset=clang ../test ../example
 
 after_success:
 
