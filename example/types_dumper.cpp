@@ -9,6 +9,7 @@
 //<-
 #include <iostream>
 #include <memory>
+#include <type_traits>
 #include <boost/units/detail/utility.hpp>
 //->
 #include <boost/di.hpp>
@@ -27,28 +28,21 @@ struct c3 { c3(std::shared_ptr<c1>, std::shared_ptr<c2>) { } };
 //->
 namespace di = boost::di;
 
-/*<<Definition of text visitor>>*/
-class types_dumper {
-public:
-    /*<<Definition of the visitor call operator requirement>>*/
-    template<typename T>
-    void operator()(const T&) const {
-        //auto size = mpl::size<typename T::call_stack>::value;
-        auto size = 1;
-        while(--size) {
-            std::clog << "\t";
-        }
-        std::clog << utils::demangle(typeid(typename T::parent).name())
-                  << " : " << utils::demangle(typeid(typename T::type).name())
-                  << " : " << typename T::name{}()
-                  << std::endl;
-    }
-};
-
 class local_config : public di::config {
 public:
     auto policies() const noexcept {
-        return di::make_policies(types_dumper{});
+        return di::make_policies(
+            [](auto type) {
+                using T = decltype(type);
+                using dep = std::decay_t<decltype(type.dep)>;
+
+                std::clog << utils::demangle(typeid(typename T::parent).name())
+                          << " : (" << utils::demangle(typeid(typename T::type).name())
+                          << "[" << typename T::name{}() << "]"
+                          << " -> " << utils::demangle(typeid(typename dep::given).name())
+                          << ")" << std::endl;
+            }
+        );
     }
 };
 
@@ -62,14 +56,14 @@ int main() {
     injector.create<c3>();
 
     /*<< output [pre
-    c3
-        std::shared_ptr<c1>
-            std::shared_ptr<i0>
-            int
-        std::shared_ptr<c2>
-            int
-            double
-            char
+        void : (c3[no_name] -> c3)
+        c3 : (std::shared_ptr<c1>[no_name] -> c1)
+        std::shared_ptr<c1> : (std::shared_ptr<i0>[no_name] -> c0)
+        std::shared_ptr<c1> : (int[no_name] -> int)
+        c3 : (std::shared_ptr<c2>[no_name] -> c2)
+        std::shared_ptr<c2> : (int[first int] -> int)
+        std::shared_ptr<c2> : (int[second int] -> int)
+        std::shared_ptr<c2> : (char[no_name] -> char)
     ]>>*/
     return 0;
 }

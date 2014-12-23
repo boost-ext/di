@@ -37,7 +37,7 @@ rule run-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
     }
 
     if $(ctor) {
-        defines += <define>\"BOOST_DI_INJECT(type,...)=type(__VA_ARGS__)\" ;
+        defines += <define>BOOST_DI_CFG_CTOR <define>\"BOOST_DI_INJECT(type,...)=type(__VA_ARGS__)\" ;
     }
 
     if ! $(preprocessed_headers) {

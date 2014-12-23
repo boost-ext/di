@@ -17,7 +17,7 @@ auto name = []{};
 
 struct ctor_inject {
     /*<<constructor with intrusive named parameter explicitly selected>>*/
-    BOOST_DI_INJECT(ctor_inject, int i1, (named = name)int i2) {
+    BOOST_DI_INJECT(ctor_inject, int i1, (named = name) int i2) {
         assert(i1 == 0);
         assert(i2 == 42);
     }
@@ -25,7 +25,7 @@ struct ctor_inject {
 
 struct ctor_inject_traits {
     /*<<constructor with less intrusive named parameter using traits>>*/
-    BOOST_DI_INJECT_TRAITS(int, (named = name)int);
+    BOOST_DI_INJECT_TRAITS(int, (named = name) int);
     ctor_inject_traits(int i1, int i2 = 0) {
         assert(i1 == 0);
         assert(i2 == 42);
@@ -46,7 +46,7 @@ namespace di {
 template<>
 struct ctor_traits<ctor_di_traits> {
     /*<<no intrusive way of defining named parameters>>*/
-    BOOST_DI_INJECT_TRAITS(int, (named = name)int);
+    BOOST_DI_INJECT_TRAITS(int, (named = name) int);
 };
 
 } // namespace di

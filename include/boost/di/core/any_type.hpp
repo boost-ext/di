@@ -40,17 +40,17 @@ struct any_type {
 
     template<class T, class = is_not_same<T>>
     operator T() noexcept {
-        return injector_.template create_impl<TParent, T>();
+        return injector_.template create_impl<typename TInjector::template pass<TParent, decltype(typename TInjector::config{}.policies())>::type, T>();
     }
 
     template<class T, class = is_not_same<T>, class = is_ref<T>>
     operator T&() const noexcept {
-        return injector_.template create_impl<TParent, T&>();
+        return injector_.template create_impl<typename TInjector::template pass<TParent, decltype(typename TInjector::config{}.policies())>::type, T&>();
     }
 
     template<class T, class = is_not_same<T>, class = is_ref<T>>
     operator const T&() const noexcept {
-        return injector_.template create_impl<TParent, const T&>();
+        return injector_.template create_impl<typename TInjector::template pass<TParent, decltype(typename TInjector::config{}.policies())>::type, const T&>();
     }
 
     const TInjector& injector_;

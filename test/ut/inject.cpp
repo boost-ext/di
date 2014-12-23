@@ -10,10 +10,10 @@ namespace boost { namespace di {
 
 test empty_ctor = [] {
     struct c {
-        BOOST_DI_INJECT(c, void) { }
+        BOOST_DI_INJECT(c,) { }
     };
 
-    c c_;
+    void(c{});
 };
 
 test empty_traits = [] {
@@ -25,20 +25,18 @@ test empty_traits = [] {
     c c_;
 };
 
+struct c_def {
+    static constexpr auto N = 42;
+
+    BOOST_DI_INJECT(explicit c_def, int v = N)
+        : i(v)
+    { }
+
+    int i = 0;
+};
+
 test explicit_with_default = [] {
-    struct c {
-        enum { DEFAULT = 42 };
-
-        BOOST_DI_INJECT(explicit c, int i = DEFAULT)
-            : i(i)
-        { }
-
-        int i = 0;
-    };
-
-    c c_;
-
-    expect_eq(static_cast<int>(c::DEFAULT), c_.i);
+    expect_eq(c_def::N, c_def{}.i);
 };
 
 test set_to_default = [] {
@@ -135,6 +133,41 @@ test inheriting_ctors = [] {
     expect_eq(i, c1_.i);
     expect_eq(d, c1_.d);
 };
+
+#if !defined(BOOST_DI_CFG_CTOR)
+    auto name = []{};
+
+    test named_param = [] {
+        constexpr auto i = 42;
+
+        struct c {
+            BOOST_DI_INJECT(explicit c, (named = name) int i)
+                : i(i)
+            { }
+
+            int i = 0;
+        };
+
+        expect_eq(i, c{i}.i);
+    };
+
+
+    struct c_def_named {
+        static constexpr auto N = 42;
+
+        BOOST_DI_INJECT(c_def_named, (named = name) int i1 = N, int i2 = N)
+            : i1(i1), i2(i2)
+        { }
+
+        int i1 = 0;
+        int i2 = 0;
+    };
+
+    test default_parametesr = [] {
+        expect_eq(c_def_named::N, c_def_named{}.i1);
+        expect_eq(c_def_named::N, c_def_named{}.i2);
+    };
+#endif
 
 }} // boost::di
 

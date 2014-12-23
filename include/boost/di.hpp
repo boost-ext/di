@@ -269,31 +269,31 @@ template<class... TArgs>
 class pool<aux::type_list<TArgs...>> : public TArgs... {
 public:
     template<class... Ts>
-    explicit pool(const Ts&... args) noexcept
+    constexpr explicit pool(const Ts&... args) noexcept
         : Ts(args)...
     { }
 
     template<class TPool>
-    pool(const init&, const TPool& p) noexcept
+    constexpr pool(const init&, const TPool& p) noexcept
         : pool(get<TArgs>(p)...)
     { }
 
     template<class T>
-    inline const T& get() const noexcept {
+    constexpr inline const T& get() const noexcept {
         return static_cast<const T&>(*this);
     }
 
 private:
     template<class T, class TPool>
-    std::enable_if_t<std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}, const T&>
+    constexpr std::enable_if_t<std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}, const T&>
     inline get(const TPool& p) const noexcept { return p.template get<T>(); }
 
     template<class T, class TPool>
-    std::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, T>
+    constexpr std::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, T>
     inline get(const TPool&) const noexcept { return {}; }
 
     template<class T, class TPool>
-    std::enable_if_t<!std::is_base_of<T, pool>{}, T>
+    constexpr std::enable_if_t<!std::is_base_of<T, pool>{}, T>
     inline get(const TPool&) const noexcept { return {}; }
 };
 
@@ -1025,17 +1025,17 @@ struct any_type {
 
     template<class T, class = is_not_same<T>>
     operator T() noexcept {
-        return injector_.template create_impl<TParent, T>();
+        return injector_.template create_impl<typename TInjector::template pass<TParent, decltype(typename TInjector::config{}.policies())>::type, T>();
     }
 
     template<class T, class = is_not_same<T>, class = is_ref<T>>
     operator T&() const noexcept {
-        return injector_.template create_impl<TParent, T&>();
+        return injector_.template create_impl<typename TInjector::template pass<TParent, decltype(typename TInjector::config{}.policies())>::type, T&>();
     }
 
     template<class T, class = is_not_same<T>, class = is_ref<T>>
     operator const T&() const noexcept {
-        return injector_.template create_impl<TParent, const T&>();
+        return injector_.template create_impl<typename TInjector::template pass<TParent, decltype(typename TInjector::config{}.policies())>::type, const T&>();
     }
 
     const TInjector& injector_;
@@ -1516,6 +1516,8 @@ class injector : requires_unique_bindings<TDeps>, public pool<TDeps> {
 
     using pool_t = pool<TDeps>;
 
+    using config = TConfig;
+
 public:
     using deps = TDeps;
 
@@ -1535,13 +1537,23 @@ public:
 
     template<class T>
     T create() const noexcept {
-        return create_t<aux::none_t>(aux::type<T>{});
+        return create_t<void>(aux::type<T>{});
     }
 
     template<class TAction>
     void call(const TAction& action) noexcept {
         call_impl(action, deps{});
     }
+
+    template<class T, class>
+    struct pass {
+        using type = T;
+    };
+
+    template<class T>
+    struct pass<T, pool<aux::type_list<>>> {
+        using type = void;
+    };
 
 private:
     template<class... TArgs>
@@ -1551,7 +1563,7 @@ private:
 
     template<class TParent, class T>
     auto create_t(const aux::type<T>&) const noexcept {
-        return create_impl<TParent, T>();
+        return create_impl<typename pass<TParent, decltype(TConfig{}.policies())>::type, T>();
     }
 
     template<class TParent, class... Ts>
@@ -1561,7 +1573,7 @@ private:
 
     template<class TParent, class T, class TName>
     auto create_t(const aux::type<named<TName, T>>&) const noexcept {
-        return create_impl<TParent, T, TName>();
+        return create_impl<typename pass<TParent, decltype(TConfig{}.policies())>::type, T, TName>();
     }
 
     template<class TParent, class T, class TName = no_name>
@@ -1571,7 +1583,7 @@ private:
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<given_t, T, ctor_t, injector>;
-        call_policies<TParent, T, TName>(config_.policies(), dependency);
+        //call_policies<TParent, T, TName>(config_.policies(), dependency);
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
             std::is_reference<T>{} && has_is_ref<dependency_t>{}

@@ -58,6 +58,8 @@ class injector : requires_unique_bindings<TDeps>, public pool<TDeps> {
 
     using pool_t = pool<TDeps>;
 
+    using config = TConfig;
+
 public:
     using deps = TDeps;
 
@@ -77,13 +79,23 @@ public:
 
     template<class T>
     T create() const noexcept {
-        return create_t<aux::none_t>(aux::type<T>{});
+        return create_t<void>(aux::type<T>{});
     }
 
     template<class TAction>
     void call(const TAction& action) noexcept {
         call_impl(action, deps{});
     }
+
+    template<class T, class>
+    struct pass {
+        using type = T;
+    };
+
+    template<class T>
+    struct pass<T, pool<aux::type_list<>>> {
+        using type = void;
+    };
 
 private:
     template<class... TArgs>
@@ -93,7 +105,7 @@ private:
 
     template<class TParent, class T>
     auto create_t(const aux::type<T>&) const noexcept {
-        return create_impl<TParent, T>();
+        return create_impl<typename pass<TParent, decltype(TConfig{}.policies())>::type, T>();
     }
 
     template<class TParent, class... Ts>
@@ -103,7 +115,7 @@ private:
 
     template<class TParent, class T, class TName>
     auto create_t(const aux::type<named<TName, T>>&) const noexcept {
-        return create_impl<TParent, T, TName>();
+        return create_impl<typename pass<TParent, decltype(TConfig{}.policies())>::type, T, TName>();
     }
 
     template<class TParent, class T, class TName = no_name>

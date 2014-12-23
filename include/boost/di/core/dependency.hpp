@@ -44,7 +44,6 @@ class dependency
     using scope_t = typename TScope::template scope<TExpected, TGiven>;
 
 public:
-    using type = dependency;
     using scope = TScope;
     using expected = TExpected;
     using given = TGiven;

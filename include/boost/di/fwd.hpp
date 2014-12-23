@@ -14,7 +14,7 @@ class nothrow_reduce_heap_usage;
 } // providers
 
 struct no_name {
-    const char* operator()() const noexcept { return "no_name"; }
+    const char* operator()() const noexcept { return "no name"; }
 };
 
 class config;

@@ -505,7 +505,7 @@ struct c {
 
 c::c(int i) : i(i) { }
 
-test named_with_def_decl_ctor = [] {
+test named_with_ctor_def_decl = [] {
     constexpr auto i = 42;
 
     auto injector = di::make_injector(
@@ -2292,3 +2292,4 @@ test call_policy_lambda = [] {
     //BOOST_CHECK_EQUAL(1, fake_policy<1>::assert_calls());
     //BOOST_CHECK_EQUAL(1, fake_policy<1>::assert_calls());
 //}
+
