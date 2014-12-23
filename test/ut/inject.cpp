@@ -151,7 +151,6 @@ test inheriting_ctors = [] {
         expect_eq(i, c{i}.i);
     };
 
-
     struct c_def_named {
         static constexpr auto N = 42;
 
