@@ -21,31 +21,31 @@ template<class... TArgs>
 class pool<aux::type_list<TArgs...>> : public TArgs... {
 public:
     template<class... Ts>
-    constexpr explicit pool(const Ts&... args) noexcept
+    explicit pool(const Ts&... args) noexcept
         : Ts(args)...
     { }
 
     template<class TPool>
-    constexpr pool(const init&, const TPool& p) noexcept
+    pool(const init&, const TPool& p) noexcept
         : pool(get<TArgs>(p)...)
     { }
 
     template<class T>
-    constexpr inline const T& get() const noexcept {
+    inline const T& get() const noexcept {
         return static_cast<const T&>(*this);
     }
 
 private:
     template<class T, class TPool>
-    constexpr std::enable_if_t<std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}, const T&>
+    std::enable_if_t<std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}, const T&>
     inline get(const TPool& p) const noexcept { return p.template get<T>(); }
 
     template<class T, class TPool>
-    constexpr std::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, T>
+    std::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, T>
     inline get(const TPool&) const noexcept { return {}; }
 
     template<class T, class TPool>
-    constexpr std::enable_if_t<!std::is_base_of<T, pool>{}, T>
+    std::enable_if_t<!std::is_base_of<T, pool>{}, T>
     inline get(const TPool&) const noexcept { return {}; }
 };
 
