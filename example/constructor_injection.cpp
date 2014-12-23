@@ -13,7 +13,7 @@
 
 namespace di = boost::di;
 
-static struct name{} name;
+auto name = []{};
 
 struct ctor_inject {
     /*<<constructor with intrusive named parameter explicitly selected>>*/

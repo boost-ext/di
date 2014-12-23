@@ -6,10 +6,10 @@
 
 namespace di = boost::di;
 
-static struct name{} name;
-static struct other_name{} other_name;
-static struct a{} a;
-static struct b{} b;
+auto name = []{};
+auto other_name = []{};
+auto a = []{};
+auto b = []{};
 
 struct i1 { virtual ~i1() = default; virtual void dummy1() = 0; };
 struct i2 { virtual ~i2() = default; virtual void dummy2() = 0; };

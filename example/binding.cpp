@@ -20,8 +20,8 @@ struct interface1 { virtual ~interface1() { } };
 struct interface2 { virtual ~interface2() { } };
 struct implementation1 : interface1 { };
 struct implementation2 : interface2 { };
-static struct some_name{} some_name;
-static struct int_name{} int_name;
+auto some_name = []{};
+auto int_name = []{};
 //->
 
 struct service {
