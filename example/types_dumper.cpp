@@ -16,10 +16,13 @@
 //<-
 namespace utils = boost::units::detail;
 
+auto int_1 = []{ return "first int"; };
+auto int_2 = []{ return "second int"; };
+
 struct i0 { virtual ~i0() { }; };
 struct c0 : i0 { };
 struct c1 { c1(std::shared_ptr<i0>, int) { } };
-struct c2 { c2(int, double, char) { } };
+struct c2 { BOOST_DI_INJECT(c2, (named = int_1) int, (named = int_2) int, char) { } };
 struct c3 { c3(std::shared_ptr<c1>, std::shared_ptr<c2>) { } };
 //->
 namespace di = boost::di;
@@ -35,7 +38,10 @@ public:
         while(--size) {
             std::clog << "\t";
         }
-        std::clog << utils::demangle(typeid(typename T::type).name()) << std::endl;
+        std::clog << utils::demangle(typeid(typename T::type).name())
+                  << " : " << typename T::name{}()
+                  << " : " << utils::demangle(typeid(typename T::parent).name())
+                  << std::endl;
     }
 };
 

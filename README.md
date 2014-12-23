@@ -1,6 +1,6 @@
 [![Stories in Ready](https://badge.waffle.io/krzysztof-jusiak/di.svg?label=ready&title=Ready)](http://waffle.io/krzysztof-jusiak/di)
-[![Build Status](https://travis-ci.org/krzysztof-jusiak/di.png?branch=master)](https://travis-ci.org/krzysztof-jusiak/di)
-[![Coverage Status](https://coveralls.io/repos/krzysztof-jusiak/di/badge.png?branch=master)](https://coveralls.io/r/krzysztof-jusiak/di?branch=master)
+[![Build Status](https://travis-ci.org/krzysztof-jusiak/di.svg?branch=cpp14)](https://travis-ci.org/krzysztof-jusiak/di)
+[![Coverage Status](https://coveralls.io/repos/krzysztof-jusiak/di/badge.png?branch=cpp14)](https://coveralls.io/r/krzysztof-jusiak/di?branch=cpp14)
 
 ### C++ Dependency Injection
 > "Don't call us, we'll call you", Hollywood principle

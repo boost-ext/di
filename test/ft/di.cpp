@@ -482,7 +482,7 @@ test automatic_inject_with_initializer_list = [] {
 
 test named_polymorphic = [] {
     struct c {
-        BOOST_DI_INJECT(explicit c, (named = name)std::shared_ptr<i1> sp)
+        BOOST_DI_INJECT(explicit c, (named = name) std::shared_ptr<i1> sp)
             : sp(sp)
         { }
 
@@ -719,7 +719,7 @@ test refs_vs_copy = [] {
 
 test named_parameters_with_shared_scope = [] {
     struct c {
-        BOOST_DI_INJECT(c, (named = a)const std::shared_ptr<i1>& n1, (named = b)std::shared_ptr<i1> n2)
+        BOOST_DI_INJECT(c, (named = a) const std::shared_ptr<i1>& n1, (named = b) std::shared_ptr<i1> n2)
             : n1(n1), n2(n2)
         { }
 

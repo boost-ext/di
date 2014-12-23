@@ -856,7 +856,10 @@ class nothrow_heap;
 class nothrow_reduce_heap_usage;
 } // providers
 
-struct no_name { };
+struct no_name {
+    const char* operator()() const noexcept { return "no_name"; }
+};
+
 class config;
 template<class...> class injector;
 
@@ -1022,17 +1025,17 @@ struct any_type {
 
     template<class T, class = is_not_same<T>>
     operator T() noexcept {
-        return injector_.template create_impl<T>();
+        return injector_.template create_impl<TParent, T>();
     }
 
     template<class T, class = is_not_same<T>, class = is_ref<T>>
     operator T&() const noexcept {
-        return injector_.template create_impl<T&>();
+        return injector_.template create_impl<TParent, T&>();
     }
 
     template<class T, class = is_not_same<T>, class = is_ref<T>>
     operator const T&() const noexcept {
-        return injector_.template create_impl<const T&>();
+        return injector_.template create_impl<TParent, const T&>();
     }
 
     const TInjector& injector_;
@@ -1487,12 +1490,15 @@ struct universal {
 };
 
 template<
-    class T
+    class TParent
+  , class T
   , class TName
   , class TDependency
   , class TDeps
 > struct data {
     using type = T;
+    using name = TName;
+    using parent = TParent;
 
     TDependency&& dep;
     TDeps& deps;
@@ -1543,9 +1549,9 @@ private:
         : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
     { }
 
-    template<class, class T>
+    template<class TParent, class T>
     auto create_t(const aux::type<T>&) const noexcept {
-        return create_impl<T>();
+        return create_impl<void, T>();
     }
 
     template<class TParent, class... Ts>
@@ -1553,19 +1559,19 @@ private:
         return any_type<TParent, injector>{*this};
     }
 
-    template<class, class T, class TName>
+    template<class TParent, class T, class TName>
     auto create_t(const aux::type<named<TName, T>>&) const noexcept {
-        return create_impl<T, TName>();
+        return create_impl<void, T, TName>();
     }
 
-    template<class T, class TName = no_name>
+    template<class TParent, class T, class TName = no_name>
     auto create_impl() const noexcept {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<given_t, T, ctor_t, injector>;
-        call_policies<T, TName>(config_.policies(), dependency);
+        call_policies<TParent, T, TName>(config_.policies(), dependency);
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
             std::is_reference<T>{} && has_is_ref<dependency_t>{}
@@ -1576,26 +1582,28 @@ private:
     }
 
     template<
-        class T
+        class TParent
+      , class T
       , class TName
       , class TDependency
       , class... TPolicies
     > void call_policies(const pool<aux::type_list<TPolicies...>>& policies
                        , TDependency&& dependency) const noexcept {
-        void(call_policies_impl<TPolicies, T, TName>(
+        void(call_policies_impl<TPolicies, TParent, T, TName>(
             policies, std::forward<TDependency>(dependency))...
         );
     }
 
     template<
         class TPolicy
+      , class TParent
       , class T
       , class TName
       , class TPolicies
       , class TDependency
     > void call_policies_impl(const TPolicies& policies
                             , TDependency&& dependency) const noexcept {
-        auto&& injections = data<T, TName, TDependency, pool_t>{
+        auto&& injections = data<TParent, T, TName, TDependency, pool_t>{
             std::forward<TDependency>(dependency)
           , (injector&)*this
         };

@@ -40,17 +40,17 @@ struct any_type {
 
     template<class T, class = is_not_same<T>>
     operator T() noexcept {
-        return injector_.template create_impl<T>();
+        return injector_.template create_impl<TParent, T>();
     }
 
     template<class T, class = is_not_same<T>, class = is_ref<T>>
     operator T&() const noexcept {
-        return injector_.template create_impl<T&>();
+        return injector_.template create_impl<TParent, T&>();
     }
 
     template<class T, class = is_not_same<T>, class = is_ref<T>>
     operator const T&() const noexcept {
-        return injector_.template create_impl<const T&>();
+        return injector_.template create_impl<TParent, const T&>();
     }
 
     const TInjector& injector_;
