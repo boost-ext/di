@@ -23,7 +23,7 @@ rule run-example ( std : src + : cxxflags * : property * ) {
 }
 
 test-suite example :
-    [ run-example c++1y : xml_injection.cpp ]
+    #[ run-example c++1y : xml_injection.cpp ]
     [ run-example c++1y : binding.cpp ]
     [ run-example c++1y : externals.cpp ]
     [ run-example c++1y : multiple_interfaces.cpp ]
