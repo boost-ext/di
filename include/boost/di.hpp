@@ -1551,7 +1551,7 @@ private:
 
     template<class TParent, class T>
     auto create_t(const aux::type<T>&) const noexcept {
-        return create_impl<void, T>();
+        return create_impl<TParent, T>();
     }
 
     template<class TParent, class... Ts>
@@ -1561,7 +1561,7 @@ private:
 
     template<class TParent, class T, class TName>
     auto create_t(const aux::type<named<TName, T>>&) const noexcept {
-        return create_impl<void, T, TName>();
+        return create_impl<TParent, T, TName>();
     }
 
     template<class TParent, class T, class TName = no_name>

@@ -38,9 +38,9 @@ public:
         while(--size) {
             std::clog << "\t";
         }
-        std::clog << utils::demangle(typeid(typename T::type).name())
+        std::clog << utils::demangle(typeid(typename T::parent).name())
+                  << " : " << utils::demangle(typeid(typename T::type).name())
                   << " : " << typename T::name{}()
-                  << " : " << utils::demangle(typeid(typename T::parent).name())
                   << std::endl;
     }
 };
