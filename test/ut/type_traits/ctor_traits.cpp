@@ -16,22 +16,22 @@ struct ctor_traits;
 
 template<>
 struct ctor_traits<traits> {
-    static void BOOST_DI_INJECTOR();
+    BOOST_DI_INJECT_TRAITS();
 };
 
 namespace type_traits {
 
 test ctors = [] {
     struct empty {
-        static void BOOST_DI_INJECTOR();
+        BOOST_DI_INJECT_TRAITS();
     };
 
     struct int_double {
-        static void BOOST_DI_INJECTOR(int, double);
+        BOOST_DI_INJECT_TRAITS(int, double);
     };
 
     struct extensions {
-        static void BOOST_DI_INJECTOR(char*, const int&);
+        BOOST_DI_INJECT_TRAITS(char*, const int&);
     };
 
     struct ctor1 {
