@@ -22,7 +22,7 @@ namespace type_traits {
 struct direct { };
 struct aggregate { };
 
-BOOST_DI_CALL(BOOST_DI_HAS_METHOD_CALL, BOOST_DI_INJECTOR, BOOST_DI_INJECTOR);
+BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_INJECTOR);
 
 template<class T, std::size_t>
 struct get_type {
@@ -95,34 +95,36 @@ struct ctor_traits
 namespace type_traits {
 
 template<class>
-struct get_arg_impl;
-
-template<class T>
-struct get_arg_impl<aux::type_list<T>> {
-	using type = T;
-};
-
-template<class T>
 struct parse;
 
+template<class>
+struct arg;
+
+template<class>
+struct arg_impl;
+
 template<class T>
-struct parse_impl {
+struct arg_impl<aux::type_list<T>> {
 	using type = T;
 };
 
 template<class T>
-struct parse_impl<const named_<T>&> {
+struct arg<const named_<T, true>&> {
 	using type = named<
         typename aux::function_traits<decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, name))>::result_type
-      , typename get_arg_impl<typename aux::function_traits<decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, arg))>::args>::type
+      , typename arg_impl<typename aux::function_traits<decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, arg))>::args>::type
     >;
+};
+
+template<class T>
+struct arg<const named_<T, false>&> {
+    using type = typename arg_impl<typename aux::function_traits<decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, arg))>::args>::type;
 };
 
 template<class... Ts>
 struct parse<aux::type_list<Ts...>>
-	: aux::type_list<typename parse_impl<Ts>::type...>
+    : aux::type_list<typename arg<Ts>::type...>
 { };
-
 
 template<
     class T
@@ -138,7 +140,7 @@ template<class T>
 struct ctor_traits<T, std::true_type>
     : aux::pair<
           direct
-        , typename parse<typename aux::function_traits<decltype(T::BOOST_DI_INJECTOR)>::args>::type
+        , typename parse<typename T::BOOST_DI_INJECTOR::type>::type
       >
 { };
 
@@ -151,7 +153,7 @@ template<class T>
 struct ctor_traits_impl<T, std::true_type>
     : aux::pair<
           direct
-        , typename parse<typename aux::function_traits<decltype(di::ctor_traits<T>::BOOST_DI_INJECTOR)>::args>::type
+        , typename parse<typename di::ctor_traits<T>::BOOST_DI_INJECTOR::type>::type
       >
 { };
 

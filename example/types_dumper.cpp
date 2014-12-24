@@ -34,12 +34,15 @@ public:
         return di::make_policies(
             [](auto type) {
                 using T = decltype(type);
-                using dep = std::decay_t<decltype(type.dep)>;
+                using arg = typename T::arg::type;
+                using name = typename T::arg::name;
+                using parent = typename T::arg::parent;
+                using given = std::decay_t<typename T::arg::type>;
 
-                std::clog << utils::demangle(typeid(typename T::parent).name())
-                          << " : (" << utils::demangle(typeid(typename T::type).name())
-                          << "[" << typename T::name{}() << "]"
-                          << " -> " << utils::demangle(typeid(typename dep::given).name())
+                std::clog << utils::demangle(typeid(parent).name())
+                          << " : (" << utils::demangle(typeid(arg).name())
+                          << "[" << name{}() << "]"
+                          << " -> " << utils::demangle(typeid(given).name())
                           << ")" << std::endl;
             }
         );

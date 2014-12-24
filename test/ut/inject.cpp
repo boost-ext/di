@@ -167,21 +167,21 @@ test inheriting_ctors = [] {
         expect_eq(c_def_named::N, c_def_named{}.i2);
     };
 
-    //struct c_def_named_without_def {
-        //static constexpr auto N = 42;
+    struct c_def_named_without_def {
+        static constexpr auto N = 42;
 
-        //BOOST_DI_INJECT(c_def_named_without_def,  int i1 = N, (named = name) int i2 = N)
-            //: i1(i1), i2(i2)
-        //{ }
+        BOOST_DI_INJECT(c_def_named_without_def, int i1 = N, (named = name) int i2 = N)
+            : i1(i1), i2(i2)
+        { }
 
-        //int i1 = 0;
-        //int i2 = 0;
-    //};
+        int i1 = 0;
+        int i2 = 0;
+    };
 
-    //test named_def_param_without_def = [] {
-        //expect_eq(c_def_named_without_def::N, c_def_named_without_def{c_def_named_without_def::N}.i1);
-        //expect_eq(c_def_named_without_def::N, c_def_named_without_def{c_def_named_without_def::N}.i2);
-    //};
+    test named_def_param_without_def = [] {
+        expect_eq(c_def_named_without_def::N, c_def_named_without_def{c_def_named_without_def::N}.i1);
+        expect_eq(c_def_named_without_def::N, c_def_named_without_def{c_def_named_without_def::N}.i2);
+    };
 #endif
 
 }} // boost::di
