@@ -96,10 +96,10 @@ test inheriting_ctors = [] {
 };
 
 test inheriting_ctors_inject = [] {
-    struct c0 { c0(int, double) { } static void BOOST_DI_INJECTOR(int, double); };
+    struct c0 { c0(int, double) { }  BOOST_DI_INJECT_TRAITS(int, double); };
     struct c1 : public c0 { using c0::c0; };
     struct c2 : public c0 { };
-    struct c3 : public c0 { static void BOOST_DI_INJECTOR(); };
+    struct c3 : public c0 { BOOST_DI_INJECT_TRAITS(); };
 
     expect(std::is_same<aux::pair<direct, aux::type_list<int, double>>, ctor_traits<c0>::type>{});
     expect(std::is_same<aux::pair<direct, aux::type_list<int, double>>, ctor_traits<c1>::type>{});

@@ -42,23 +42,6 @@ test has_method = [] {
     expect(!has_call<call3, int, double, float>{});
 };
 
-
-BOOST_DI_HAS_METHOD(inject, inject);
-
-test has_method_call = [] {
-    struct a { };
-    struct inject1 { void inject(...); };
-    struct inject2 { int inject(); };
-    struct inject3 { auto inject() const noexcept { return int{}; } };
-    struct inject4 { void Inject(); };
-
-    expect(!has_inject<a>{});
-    expect(has_inject<inject1>{});
-    expect(has_inject<inject2>{});
-    expect(has_inject<inject3>{});
-    expect(!has_inject<inject4>{});
-};
-
 test is_braces_constructible_types = [] {
     struct c { };
     struct ctor { ctor(int) { } };
