@@ -4,29 +4,51 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_FAKE_POLICY_HPP
-#define BOOST_DI_FAKE_POLICY_HPP
+#ifndef BOOST_DI_fake_policy_HPP
+#define BOOST_DI_fake_policy_HPP
 
-namespace boost {
-namespace di {
+#include "boost/di/aux_/utility.hpp"
 
-template<int = 0>
-class fake_policy
-{
-public:
-    template<typename>
-    void assert_policy() const {
-        ++assert_calls();
-    }
+namespace boost { namespace di {
 
-    static int& assert_calls() {
-        static int calls = 0;
-        return calls;
-    }
+template<
+    class T
+  , class TDependency = aux::none_t
+  , class TDeps = aux::none_t
+  , bool TResolve = true
+> struct fake_policy;
+
+template<
+    class T
+  , class TDependency
+  , class TDeps
+> struct fake_policy<T, TDependency, TDeps, true> {
+    struct arg {
+        using type = T;
+    };
+
+    using dependency = TDependency;
+
+    template<class TT, class Name, class TDefault>
+    using resolve = TDependency;
 };
 
-} // namespace di
-} // namespace boost
+template<
+    class T
+  , class TDependency
+  , class TDeps
+> struct fake_policy<T, TDependency, TDeps, false> {
+    struct arg {
+        using type = T;
+    };
+
+    using dependency = TDependency;
+
+    template<class TT, class Name, class TDefault>
+    using resolve = TDefault;
+};
+
+}} // boost::di
 
 #endif
 
