@@ -115,6 +115,9 @@ private:
         return wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
 
+    template<class, class, class, class>
+    void call_policies(const pool<aux::type_list<>>&) const noexcept { }
+
     template<
         class TParent
       , class T

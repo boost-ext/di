@@ -269,31 +269,31 @@ template<class... TArgs>
 class pool<aux::type_list<TArgs...>> : public TArgs... {
 public:
     template<class... Ts>
-    constexpr explicit pool(const Ts&... args) noexcept
+    explicit pool(const Ts&... args) noexcept
         : Ts(args)...
     { }
 
     template<class TPool>
-    constexpr pool(const init&, const TPool& p) noexcept
+    pool(const init&, const TPool& p) noexcept
         : pool(get<TArgs>(p)...)
     { }
 
     template<class T>
-    constexpr inline const T& get() const noexcept {
+    inline const T& get() const noexcept {
         return static_cast<const T&>(*this);
     }
 
 private:
     template<class T, class TPool>
-    constexpr std::enable_if_t<std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}, const T&>
+    std::enable_if_t<std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}, const T&>
     inline get(const TPool& p) const noexcept { return p.template get<T>(); }
 
     template<class T, class TPool>
-    constexpr std::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, T>
+    std::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, T>
     inline get(const TPool&) const noexcept { return {}; }
 
     template<class T, class TPool>
-    constexpr std::enable_if_t<!std::is_base_of<T, pool>{}, T>
+    std::enable_if_t<!std::is_base_of<T, pool>{}, T>
     inline get(const TPool&) const noexcept { return {}; }
 };
 
@@ -898,7 +898,6 @@ class dependency
     using scope_t = typename TScope::template scope<TExpected, TGiven>;
 
 public:
-    using type = dependency;
     using scope = TScope;
     using expected = TExpected;
     using given = TGiven;
@@ -1440,6 +1439,31 @@ constexpr auto session_exit(const TName&) noexcept {
 
 }} // boost::di
 
+#define BOOST_DI_CORE_POLICY_HPP
+
+namespace boost { namespace di { namespace core {
+
+template<
+    class TParent
+  , class T
+  , class TName
+  , class TDependency
+  , class TDeps
+> struct policy {
+    struct arg {
+        using type = T;
+        using parent = TParent;
+        using name = TName;
+    };
+
+    using dependency = TDependency;
+
+    template<class TT, class Name, class TDefault>
+    using resolve = decltype(binder::resolve<TT, Name, TDefault>((TDeps*)nullptr));
+};
+
+}}} // boost::di::core
+
 
 namespace boost { namespace di { namespace core {
 
@@ -1481,31 +1505,11 @@ BOOST_DI_HAS_METHOD(configure, configure);
 BOOST_DI_HAS_METHOD(call, call);
 
 template<class T, class TWrapper>
-struct universal {
+struct wrapper {
     TWrapper wrapper_;
 
     inline operator T() const noexcept {
         return wrapper_;
-    }
-};
-
-template<
-    class TParent
-  , class T
-  , class TName
-  , class TDependency
-  , class TDeps
-> struct data {
-    using type = T;
-    using name = TName;
-    using parent = TParent;
-
-    TDependency&& dep;
-    TDeps& deps;
-
-    template<class U, class TDefault>
-    decltype(auto) resolve() const noexcept {
-        return binder::template resolve<U, TName, TDefault>(&deps);
     }
 };
 
@@ -1515,7 +1519,6 @@ class injector : requires_unique_bindings<TDeps>, public pool<TDeps> {
     template<class...> friend struct provider;
 
     using pool_t = pool<TDeps>;
-
     using config = TConfig;
 
 public:
@@ -1583,15 +1586,18 @@ private:
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<given_t, T, ctor_t, injector>;
-        //call_policies<TParent, T, TName>(config_.policies(), dependency);
+        call_policies<TParent, T, TName, dependency_t>(config_.policies());
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
             std::is_reference<T>{} && has_is_ref<dependency_t>{}
           , T
           , std::remove_reference_t<T>
         >;
-        return universal<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
+        return wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
+
+    template<class, class, class, class>
+    void call_policies(const pool<aux::type_list<>>&) const noexcept { }
 
     template<
         class TParent
@@ -1599,11 +1605,8 @@ private:
       , class TName
       , class TDependency
       , class... TPolicies
-    > void call_policies(const pool<aux::type_list<TPolicies...>>& policies
-                       , TDependency&& dependency) const noexcept {
-        void(call_policies_impl<TPolicies, TParent, T, TName>(
-            policies, std::forward<TDependency>(dependency))...
-        );
+    > void call_policies(const pool<aux::type_list<TPolicies...>>& policies) const noexcept {
+        void(call_policies_impl<TPolicies, TParent, T, TName, TDependency>(policies)...);
     }
 
     template<
@@ -1611,15 +1614,10 @@ private:
       , class TParent
       , class T
       , class TName
-      , class TPolicies
       , class TDependency
-    > void call_policies_impl(const TPolicies& policies
-                            , TDependency&& dependency) const noexcept {
-        auto&& injections = data<TParent, T, TName, TDependency, pool_t>{
-            std::forward<TDependency>(dependency)
-          , (injector&)*this
-        };
-        (static_cast<const TPolicy&>(policies))(injections);
+      , class TPolicies
+    > void call_policies_impl(const TPolicies& policies) const noexcept {
+        (static_cast<const TPolicy&>(policies))(policy<TParent, T, TName, TDependency, pool_t>{});
     }
 
     template<class TAction, class... Ts>
