@@ -1607,9 +1607,7 @@ public:
     > static void call(const pool<aux::type_list<TPolicies...>>& policies
                      , TDependency&& dependency
                      , aux::pair<TInitialization, aux::type_list<TArgs...>>) noexcept {
-        int dummy[]{0, (call_impl<TPolicies, T, TName, TPolicies, TDependency, TArgs...>(policies, dependency), 0)...};
-        (void)dummy;
-        //void(...);
+        int _[]{0, (call_impl<TPolicies, T, TName, TPolicies, TDependency, TArgs...>(policies, dependency), 0)...}; (void)_;
     }
 };
 
@@ -1737,7 +1735,7 @@ private:
 
     template<class TAction, class... Ts>
     void call_impl(const TAction& action, const aux::type_list<Ts...>&) noexcept {
-        void(call_impl<Ts>(action)...);
+        int _[]{0, (call_impl<Ts>(action), 0)...}; (void)_;
     }
 
     template<class T, class TAction>

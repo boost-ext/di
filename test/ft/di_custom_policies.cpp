@@ -2,31 +2,35 @@
 
 namespace di = boost::di;
 
-auto called = false;
+auto called = 0;
 
 struct policy {
     template<typename T>
     void operator()(const T&) const noexcept {
-        called = true;
+        ++called;
     }
 };
 
 class custom_policies : public di::config {
 public:
     auto policies() const noexcept {
-        return di::make_policies(policy{});
+        return di::make_policies(
+            policy{}
+          , [](auto) { ++called; }
+          , [](auto type, auto dependency, auto... ctor) { ++called; }
+        );
     }
 };
 
 test call_custom_policies = [] {
-    called = false;
+    called = 0;
     auto injector = di::make_injector<custom_policies>();
     injector.create<int>();
-    expect_eq(1, called);
+    expect_eq(3, called);
 };
 
 test call_global_config_policies = [] {
-    called = false;
+    called = 0;
     auto injector = di::make_injector();
     injector.create<int>();
     expect_eq(0, called);
@@ -36,7 +40,7 @@ struct i { virtual ~i() = default; virtual void dummy() = 0; };
 struct impl : i { void dummy() override { } };
 
 test call_custom_policies_with_exposed_injector = [] {
-    called = false;
+    called = 0;
 
     di::injector<i> injector = di::make_injector<custom_policies>(
         di::bind<i, impl>
@@ -44,6 +48,6 @@ test call_custom_policies_with_exposed_injector = [] {
 
     auto object = injector.create<std::unique_ptr<i>>();
     expect(dynamic_cast<i*>(object.get()));
-    expect_eq(1, called);
+    expect_eq(3, called);
 };
 
