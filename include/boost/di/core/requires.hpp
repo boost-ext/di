@@ -30,8 +30,8 @@ class requires_unique_bindings<aux::type_list<Ts...>> {
 
 template<class TExpected, class TGiven, class TScope>
 class requires_external_concepts {
-    static_assert(std::is_same<TExpected, TGiven>{}, "");
-    static_assert(std::is_same<TScope, scopes::deduce>{}, "");
+    static_assert(std::is_same<TExpected, TGiven>{}, "Explicit implementation type doesn't have sens for external scope");
+    static_assert(std::is_same<TScope, scopes::deduce>{}, "External scope can not be bound explicitly in a different scope");
 };
 
 }}} // boost::di::core

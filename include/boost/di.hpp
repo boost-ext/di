@@ -830,7 +830,7 @@ public:
     class scope {
     public:
         template<class T, class TProvider>
-        auto create(const TProvider& provider) const noexcept {
+        auto create(const TProvider& provider) noexcept {
             using scope_traits = type_traits::scope_traits_t<T>;
             using scope = typename scope_traits::template scope<TExpected, TGiven>;
             return scope{}.template create<T>(provider);
@@ -861,8 +861,8 @@ class requires_unique_bindings<aux::type_list<Ts...>> {
 
 template<class TExpected, class TGiven, class TScope>
 class requires_external_concepts {
-    static_assert(std::is_same<TExpected, TGiven>{}, "");
-    static_assert(std::is_same<TScope, scopes::deduce>{}, "");
+    static_assert(std::is_same<TExpected, TGiven>{}, "Explicit implementation type doesn't have sens for external scope");
+    static_assert(std::is_same<TScope, scopes::deduce>{}, "External scope can not be bound explicitly in a different scope");
 };
 
 }}} // boost::di::core
@@ -909,7 +909,7 @@ public:
         { }
 
         template<class T, class TProvider>
-        auto create(const TProvider&) const noexcept {
+        auto create(const TProvider&) noexcept {
             return scope_.template create<T>(*provider_);
         }
 
@@ -1607,7 +1607,8 @@ public:
     > static void call(const pool<aux::type_list<TPolicies...>>& policies
                      , TDependency&& dependency
                      , aux::pair<TInitialization, aux::type_list<TArgs...>>) noexcept {
-        int _[]{0, (call_impl<TPolicies, T, TName, TPolicies, TDependency, TArgs...>(policies, dependency), 0)...}; (void)_;
+        int _[]{0, (call_impl<TPolicies, T, TName, TPolicies, TDependency, TArgs...>(
+            policies, dependency), 0)...}; (void)_;
     }
 };
 
