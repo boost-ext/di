@@ -79,8 +79,7 @@ using decay =
     deref_type<remove_accessors_t<deref_type_t<remove_accessors_t<T>>>>;
 
 template<class T>
-using decay_t =
-    typename decay<T>::type;
+using decay_t = typename decay<T>::type;
 
 template<class T>
 struct function_traits

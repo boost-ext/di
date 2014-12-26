@@ -138,10 +138,7 @@ template<
 
 template<class T>
 struct ctor_traits<T, std::true_type>
-    : aux::pair<
-          direct
-        , typename parse<typename T::BOOST_DI_INJECTOR::type>::type
-      >
+    : aux::pair<direct, typename parse<typename T::BOOST_DI_INJECTOR::type>::type>
 { };
 
 template<class T>

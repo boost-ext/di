@@ -17,9 +17,6 @@ BOOST_DI_HAS_METHOD(call_operator, operator());
 
 template<class TDeps>
 class policy {
-    template<class T>
-    static aux::type<T> add_type() noexcept { return {}; };
-
     template<
         class TPolicy
       , class T
@@ -49,7 +46,7 @@ class policy {
     template<class TArg, class TDependency, class TPolicy, class... TArgs>
     static std::enable_if_t<has_call_operator<TPolicy, TArg, TDependency, TArgs...>{}>
     call_impl_args(const TPolicy& policy, TDependency&& dependency) noexcept {
-        (policy)(TArg{}, dependency, add_type<TArgs>()...);
+        (policy)(TArg{}, dependency, aux::type<TArgs>{}...);
     }
 
 public:

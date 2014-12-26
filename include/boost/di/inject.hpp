@@ -51,7 +51,6 @@ namespace boost { namespace di { template<class, bool> struct named_ { }; }} // 
         }
 #endif
 
-
 #if !defined(BOOST_DI_INJECT)
     #define BOOST_DI_INJECT(type, ...) \
         BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
