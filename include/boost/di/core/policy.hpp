@@ -53,9 +53,6 @@ class policy {
     }
 
 public:
-    template<class, class, class, class TDependency, class TCtor>
-    static void call(const pool<aux::type_list<>>&, TDependency&&, const TCtor&) noexcept { }
-
     template<
         class T
       , class TName
