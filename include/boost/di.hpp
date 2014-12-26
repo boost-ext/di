@@ -349,7 +349,7 @@ public:
         : value_(value)
     { }
 
-    template<class I, class = std::enable_if_t<!std::is_polymorphic<I>{}>>
+    template<class I>
     inline operator I() const noexcept {
         return *std::unique_ptr<I>(value_);
     }
@@ -398,7 +398,7 @@ namespace boost { namespace di { namespace type_traits {
 struct heap { };
 struct stack { };
 
-template<class T>
+template<class T, class = void>
 struct memory_traits {
     using type = stack;
 };
@@ -473,6 +473,11 @@ struct memory_traits<T&&> {
 template<class T>
 struct memory_traits<const T&&> {
     using type = stack;
+};
+
+template<class T>
+struct memory_traits<T, std::enable_if_t<std::is_polymorphic<T>{}>> {
+    using type = heap;
 };
 
 template<class T>
@@ -862,6 +867,60 @@ class requires_external_concepts {
 
 }}} // boost::di::core
 
+
+namespace boost { namespace di { namespace scopes {
+
+template<class TScope = scopes::deduce>
+class exposed {
+public:
+    static constexpr auto priority = false;
+
+    template<class TExpected, class TGiven>
+    class scope {
+        struct iprovider {
+            virtual ~iprovider() = default;
+            virtual TExpected* get(const type_traits::heap& = {}) const noexcept = 0;
+            virtual TExpected  get(const type_traits::stack&) const noexcept = 0;
+        };
+
+        template<typename TInjector>
+        class provider : public iprovider {
+        public:
+            explicit provider(const TInjector& injector)
+                : injector_(injector)
+            { }
+
+            TExpected* get(const type_traits::heap&) const noexcept override {
+                return injector_.template create<TExpected*>();
+            }
+
+            TExpected get(const type_traits::stack&) const noexcept override {
+                return injector_.template create<TExpected>();
+            }
+
+        private:
+            TInjector injector_;
+        };
+
+    public:
+        template<class TInjector>
+        explicit scope(const TInjector& injector) noexcept
+            : provider_{std::make_shared<provider<TInjector>>(injector)}
+        { }
+
+        template<class T, class TProvider>
+        auto create(const TProvider&) const noexcept {
+            return scope_.template create<T>(*provider_);
+        }
+
+    private:
+        std::shared_ptr<iprovider> provider_;
+        typename TScope::template scope<TExpected, TExpected> scope_;
+    };
+};
+
+}}} // boost::di::scopes
+
 #define BOOST_DI_FWD_HPP
 
 namespace boost { namespace di {
@@ -881,6 +940,13 @@ template<class...> class injector;
 
 
 namespace boost { namespace di { namespace core {
+
+BOOST_DI_HAS_METHOD(configure, configure);
+BOOST_DI_HAS_TYPE(deps);
+
+template<class T>
+using is_injector =
+    std::integral_constant<bool, has_deps<T>{} || has_configure<T>{}>;
 
 template<class TExpected, class TName>
 struct dependency_concept { };
@@ -940,12 +1006,28 @@ public:
     }
 
     template<class T>
-    auto to(T&& object) const noexcept {
+    auto to(T&& object, std::enable_if_t<!is_injector<std::remove_reference_t<T>>{}>* = 0) const noexcept {
         void(requires_external_concepts<TExpected, TGiven, TScope>{});
         using dependency = dependency<
             scopes::external, TExpected, std::remove_reference_t<T>, TName
         >;
         return dependency{std::forward<T>(object)};
+    }
+
+    template<class T>
+    auto to(const T& object, std::enable_if_t<has_configure<T>{}>* = 0) const noexcept {
+        using dependency = dependency<
+            scopes::exposed<TScope>, TExpected, decltype(std::declval<T>().configure()), TName
+        >;
+        return dependency{object.configure()};
+    }
+
+    template<class T>
+    auto to(const T& object, std::enable_if_t<has_deps<T>{}>* = 0) const noexcept {
+        using dependency = dependency<
+            scopes::exposed<TScope>, TExpected, T, TName
+        >;
+        return dependency{object};
     }
 };
 
@@ -1682,60 +1764,6 @@ private:
 
 }}} // boost::di::core
 
-
-namespace boost { namespace di { namespace scopes {
-
-class exposed {
-public:
-    static constexpr auto priority = false;
-
-    template<class TExpected, class TGiven>
-    class scope {
-        struct iprovider {
-            virtual ~iprovider() = default;
-            virtual TGiven* get(const type_traits::heap& = {}) const noexcept = 0;
-            virtual TGiven  get(const type_traits::stack&) const noexcept = 0;
-        };
-
-        template<typename TInjector>
-        class provider : public iprovider {
-        public:
-            explicit provider(const TInjector& injector)
-                : injector_(injector)
-            { }
-
-            TGiven* get(const type_traits::heap&) const noexcept override {
-                return injector_.template create<TGiven*>();
-            }
-
-            TGiven get(const type_traits::stack&) const noexcept override {
-                return injector_.template create<TGiven>();
-            }
-
-        private:
-            TInjector injector_;
-        };
-
-    public:
-        template<class TInjector>
-        explicit scope(const TInjector& injector) noexcept
-            : provider_{std::make_shared<provider<TInjector>>(injector)}
-        { }
-
-        template<class T, class TProvider>
-        auto create(const TProvider&) const noexcept {
-            using scope_traits = type_traits::scope_traits_t<T>;
-            using scope = typename scope_traits::template scope<TExpected, TGiven>;
-            return scope{}.template create<T>(*provider_);
-        }
-
-    private:
-        std::shared_ptr<iprovider> provider_;
-    };
-};
-
-}}} // boost::di::scopes
-
 #define BOOST_DI_INJECTOR_HPP
 
 namespace boost { namespace di { namespace detail {
@@ -1776,7 +1804,7 @@ struct add_type_list<T, std::false_type, std::true_type> {
 
 template<class T>
 struct add_type_list<T, std::false_type, std::false_type> {
-    using type = aux::type_list<core::dependency<scopes::exposed, T>>;
+    using type = aux::type_list<core::dependency<scopes::exposed<>, T>>;
 };
 
 template<class... Ts>

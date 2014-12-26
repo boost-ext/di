@@ -29,8 +29,6 @@ struct c3 { c3(std::shared_ptr<c1>, std::shared_ptr<c2>) { } };
 namespace di = boost::di;
 
 class local_config : public di::config {
-public:
-
     template<class>
     struct size;
 
@@ -39,6 +37,7 @@ public:
         operator int() const { return sizeof...(Ts); }
     };
 
+public:
     auto policies() const noexcept {
         return di::make_policies(
             [&](auto type) {

@@ -11,7 +11,6 @@
 #if (__has_include(<boost/shared_ptr.hpp>))
     #include <boost/shared_ptr.hpp>
 #endif
-#include "boost/di/aux_/type_traits.hpp"
 
 namespace boost { namespace di { namespace wrappers {
 
@@ -43,7 +42,7 @@ public:
         : value_(value)
     { }
 
-    template<class I, class = std::enable_if_t<!std::is_polymorphic<I>{}>>
+    template<class I>
     inline operator I() const noexcept {
         return *std::unique_ptr<I>(value_);
     }

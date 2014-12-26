@@ -241,6 +241,100 @@ test exposed_with_external = [] {
     expect_eq(i, injector.create<int>());
 };
 
+test exposed_bind_deduced = [] {
+    static constexpr auto i = 42;
+
+    struct module {
+        di::injector<int> configure() const noexcept {
+            return di::make_injector(
+                di::bind<int>.to(i)
+            );
+        }
+    };
+
+    auto injector = di::make_injector(
+        di::bind<int>.to(module{})
+    );
+
+    expect_eq(i, injector.create<int>());
+};
+
+test exposed_bind = [] {
+    static constexpr auto i = 42;
+
+    struct c {
+        BOOST_DI_INJECT(c, (named = name) int i)
+            : i(i)
+        { }
+
+        int i = 0;
+    };
+
+    struct module {
+        di::injector<int> configure() const noexcept {
+            return di::make_injector(
+                di::bind<int>.to(i)
+            );
+        }
+    };
+
+    auto injector = di::make_injector(
+        di::bind<int>.named(name).in(di::unique).to(module{})
+    );
+
+    auto object = injector.create<c>();
+
+    expect_eq(i, object.i);
+};
+
+test exposed_bind_interface = [] {
+    struct c {
+        BOOST_DI_INJECT(c, (named = name) std::unique_ptr<i1> i)
+            : i(std::move(i))
+        { }
+
+        std::unique_ptr<i1> i;
+    };
+
+    di::injector<i1> module = di::make_injector(
+        di::bind<i1, impl1>
+    );
+
+    auto injector = di::make_injector(
+        di::bind<i1>.named(name).to(module)
+    );
+
+    auto object = injector.create<std::unique_ptr<c>>();
+
+    expect(dynamic_cast<impl1*>(object->i.get()));
+};
+
+test exposed_bind_interface_module = [] {
+    struct c {
+        BOOST_DI_INJECT(c, (named = name) std::unique_ptr<i1> i)
+            : i(std::move(i))
+        { }
+
+        std::unique_ptr<i1> i;
+    };
+
+    struct module {
+        di::injector<i1> configure() const noexcept {
+            return di::make_injector(
+                di::bind<i1, impl1>
+            );
+        }
+    };
+
+    auto injector = di::make_injector(
+        di::bind<i1>.named(name).to(module{})
+    );
+
+    auto object = injector.create<std::unique_ptr<c>>();
+
+    expect(dynamic_cast<impl1*>(object->i.get()));
+};
+
 test scopes_priority = [] {
     auto injector = di::make_injector(
         di::bind<int>.to(12)

@@ -8,6 +8,7 @@
 #define BOOST_DI_TYPE_TRAITS_MEMORY_TRAITS_HPP
 
 #include <memory>
+#include <type_traits>
 #if (__has_include(<boost/shared_ptr.hpp>))
     #include <boost/shared_ptr.hpp>
 #endif
@@ -17,7 +18,7 @@ namespace boost { namespace di { namespace type_traits {
 struct heap { };
 struct stack { };
 
-template<class T>
+template<class T, class = void>
 struct memory_traits {
     using type = stack;
 };
@@ -92,6 +93,11 @@ struct memory_traits<T&&> {
 template<class T>
 struct memory_traits<const T&&> {
     using type = stack;
+};
+
+template<class T>
+struct memory_traits<T, std::enable_if_t<std::is_polymorphic<T>{}>> {
+    using type = heap;
 };
 
 template<class T>

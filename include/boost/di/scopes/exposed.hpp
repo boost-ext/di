@@ -6,11 +6,11 @@
 #ifndef BOOST_DI_SCOPES_EXPOSED_HPP
 #define BOOST_DI_SCOPES_EXPOSED_HPP
 
-#include "boost/di/type_traits/scope_traits.hpp"
-#include "boost/di/providers/nothrow_reduce_heap_usage.hpp"
+#include "boost/di/scopes/deduce.hpp"
 
 namespace boost { namespace di { namespace scopes {
 
+template<class TScope = scopes::deduce>
 class exposed {
 public:
     static constexpr auto priority = false;
@@ -19,8 +19,8 @@ public:
     class scope {
         struct iprovider {
             virtual ~iprovider() = default;
-            virtual TGiven* get(const type_traits::heap& = {}) const noexcept = 0;
-            virtual TGiven  get(const type_traits::stack&) const noexcept = 0;
+            virtual TExpected* get(const type_traits::heap& = {}) const noexcept = 0;
+            virtual TExpected  get(const type_traits::stack&) const noexcept = 0;
         };
 
         template<typename TInjector>
@@ -30,12 +30,12 @@ public:
                 : injector_(injector)
             { }
 
-            TGiven* get(const type_traits::heap&) const noexcept override {
-                return injector_.template create<TGiven*>();
+            TExpected* get(const type_traits::heap&) const noexcept override {
+                return injector_.template create<TExpected*>();
             }
 
-            TGiven get(const type_traits::stack&) const noexcept override {
-                return injector_.template create<TGiven>();
+            TExpected get(const type_traits::stack&) const noexcept override {
+                return injector_.template create<TExpected>();
             }
 
         private:
@@ -50,13 +50,12 @@ public:
 
         template<class T, class TProvider>
         auto create(const TProvider&) const noexcept {
-            using scope_traits = type_traits::scope_traits_t<T>;
-            using scope = typename scope_traits::template scope<TExpected, TGiven>;
-            return scope{}.template create<T>(*provider_);
+            return scope_.template create<T>(*provider_);
         }
 
     private:
         std::shared_ptr<iprovider> provider_;
+        typename TScope::template scope<TExpected, TExpected> scope_;
     };
 };
 

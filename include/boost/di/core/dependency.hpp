@@ -8,11 +8,19 @@
 
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/core/requires.hpp"
+#include "boost/di/scopes/exposed.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/fwd.hpp"
 
 namespace boost { namespace di { namespace core {
+
+BOOST_DI_HAS_METHOD(configure, configure);
+BOOST_DI_HAS_TYPE(deps);
+
+template<class T>
+using is_injector =
+    std::integral_constant<bool, has_deps<T>{} || has_configure<T>{}>;
 
 template<class TExpected, class TName>
 struct dependency_concept { };
@@ -72,12 +80,28 @@ public:
     }
 
     template<class T>
-    auto to(T&& object) const noexcept {
+    auto to(T&& object, std::enable_if_t<!is_injector<std::remove_reference_t<T>>{}>* = 0) const noexcept {
         void(requires_external_concepts<TExpected, TGiven, TScope>{});
         using dependency = dependency<
             scopes::external, TExpected, std::remove_reference_t<T>, TName
         >;
         return dependency{std::forward<T>(object)};
+    }
+
+    template<class T>
+    auto to(const T& object, std::enable_if_t<has_configure<T>{}>* = 0) const noexcept {
+        using dependency = dependency<
+            scopes::exposed<TScope>, TExpected, decltype(std::declval<T>().configure()), TName
+        >;
+        return dependency{object.configure()};
+    }
+
+    template<class T>
+    auto to(const T& object, std::enable_if_t<has_deps<T>{}>* = 0) const noexcept {
+        using dependency = dependency<
+            scopes::exposed<TScope>, TExpected, T, TName
+        >;
+        return dependency{object};
     }
 };
 

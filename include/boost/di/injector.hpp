@@ -50,7 +50,7 @@ struct add_type_list<T, std::false_type, std::true_type> {
 
 template<class T>
 struct add_type_list<T, std::false_type, std::false_type> {
-    using type = aux::type_list<core::dependency<scopes::exposed, T>>;
+    using type = aux::type_list<core::dependency<scopes::exposed<>, T>>;
 };
 
 template<class... Ts>
