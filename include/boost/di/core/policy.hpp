@@ -63,7 +63,7 @@ public:
     > static void call(const pool<aux::type_list<TPolicies...>>& policies
                      , TDependency&& dependency
                      , aux::pair<TInitialization, aux::type_list<TArgs...>>) noexcept {
-        void(call_impl<TPolicies, T, TName, TPolicies, TDependency, TArgs...>(policies, dependency)...);
+        int _[]{0, (call_impl<TPolicies, T, TName, TPolicies, TDependency, TArgs...>(policies, dependency), 0)...}; (void)_;
     }
 };
 

@@ -106,7 +106,7 @@ private:
 
     template<class TAction, class... Ts>
     void call_impl(const TAction& action, const aux::type_list<Ts...>&) noexcept {
-        void(call_impl<Ts>(action)...);
+        int _[]{0, (call_impl<Ts>(action), 0)...}; (void)_;
     }
 
     template<class T, class TAction>
