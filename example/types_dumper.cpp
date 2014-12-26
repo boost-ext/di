@@ -30,22 +30,14 @@ struct c3 { c3(std::shared_ptr<c1>, std::shared_ptr<c2>) { } };
 namespace di = boost::di;
 
 class local_config : public di::config {
-    template<class>
-    struct size;
-
-    template<class Q, class... Ts>
-    struct size<di::aux::pair<Q, di::aux::type_list<Ts...>>> {
-        operator int() const { return sizeof...(Ts); }
-    };
-
 public:
     auto policies() const noexcept {
         return di::make_policies(
-            [&](auto type) {
+            [&](auto type, auto dependency, auto... ctor) {
                 using T = decltype(type);
-                using arg = typename T::arg::type;
-                using name = typename T::arg::name;
-                using given = std::decay_t<typename T::dependency::given>;
+                using arg = typename T::type;
+                using name = typename T::name;
+                using given = typename decltype(dependency)::given;
 
                 auto tab = v[i - 1];
                 while (tab--) {
@@ -57,7 +49,7 @@ public:
                           << " -> " << utils::demangle(typeid(given).name())
                           << ")" << std::endl;
 
-                int ctor_size = size<typename di::type_traits::ctor_traits<given>::type>{};
+                auto ctor_size = sizeof...(ctor);
                 while(ctor_size--) {
                     v.insert((v.begin()+i), v[i-1]+1);
                 }

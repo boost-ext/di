@@ -17,8 +17,8 @@ struct type_op {};
 
 template<class T, class = void>
 struct apply_impl {
-    template<class TData>
-    static auto apply(const TData&) noexcept {
+    template<class TArg>
+    static auto apply(const TArg&) noexcept {
         return T{};
     }
 };
@@ -40,17 +40,17 @@ struct apply_impl<T<Ts...>, std::enable_if_t<!std::is_base_of<type_op, T<Ts...>>
         using type = TExpr<typename apply_placeholder_impl<TArgs, TOp>::type...>;
     };
 
-    template<class TData>
-    static auto apply(const TData&) noexcept {
-        using type = typename TData::arg::type;
+    template<class TArg>
+    static auto apply(const TArg&) noexcept {
+        using type = typename TArg::arg::type;
         return typename apply_placeholder<T, type, Ts...>::type{};
     }
 };
 
 template<class T>
 struct apply_impl<T, std::enable_if_t<std::is_base_of<type_op, T>{}>> {
-    template<class TData>
-    static auto apply(const TData& data) noexcept {
+    template<class TArg>
+    static auto apply(const TArg& data) noexcept {
         return T::apply(data);
     }
 };
@@ -60,8 +60,8 @@ struct bool_seq { };
 
 template<class T>
 struct not_ : type_op {
-	template<class TData>
-    static auto apply(const TData& data) noexcept {
+	template<class TArg>
+    static auto apply(const TArg& data) noexcept {
         return std::integral_constant<bool
           , !decltype(apply_impl<T>::apply(data)){}
         >{};
@@ -70,8 +70,8 @@ struct not_ : type_op {
 
 template<class... Ts>
 struct and_ : type_op {
-	template<class TData>
-    static auto apply(const TData& data) noexcept {
+	template<class TArg>
+    static auto apply(const TArg& data) noexcept {
         return std::is_same<
             bool_seq<decltype(apply_impl<Ts>::apply(data)){}...>
           , bool_seq<(decltype(apply_impl<Ts>::apply(data)){}, true)...>
@@ -81,8 +81,8 @@ struct and_ : type_op {
 
 template<class... Ts>
 struct or_ : type_op {
-	template<class TData>
-    static auto apply(const TData& data) noexcept {
+	template<class TArg>
+    static auto apply(const TArg& data) noexcept {
         return std::integral_constant<bool
           , !std::is_same<
                 bool_seq<decltype(apply_impl<Ts>::apply(data)){}...>
@@ -94,19 +94,19 @@ struct or_ : type_op {
 
 template<class T>
 struct always : type_op {
-	template<class TData>
-	static auto apply(const TData& data) noexcept {
+	template<class TArg>
+	static auto apply(const TArg& data) noexcept {
 		return apply_impl<T>::apply(data);
 	}
 };
 
 template<class T, class TName = no_name>
 struct is_bound : type_op {
-	template<class TData>
-	static auto apply(const TData& data) noexcept {
+	template<class TArg>
+	static auto apply(const TArg& data) noexcept {
         struct not_resolved { };
-        using type = std::conditional_t<std::is_same<T, _>{}, typename TData::arg::type, T>;
-        using dependency = typename TData::template resolve<type, TName, not_resolved>;
+        using type = std::conditional_t<std::is_same<T, _>{}, typename TArg::arg::type, T>;
+        using dependency = typename TArg::template resolve<type, TName, not_resolved>;
         return std::integral_constant<bool, !std::is_same<dependency, not_resolved>{}>{};
     }
 };
@@ -132,8 +132,8 @@ inline auto operator!(const T&) {
 
 template<class T>
 struct allow_ctor_types_impl {
-    template<class TData>
-    void operator()(const TData& data) const {
+    template<class TArg>
+    void operator()(const TArg& data) const {
 		static_assert(decltype(T::apply(data)){}, "Type T is not allowed");
     }
 };

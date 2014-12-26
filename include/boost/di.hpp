@@ -1557,21 +1557,61 @@ constexpr auto session_exit(const TName&) noexcept {
 
 namespace boost { namespace di { namespace core {
 
-template<
-    class T
-  , class TName
-  , class TDependency
-  , class TDeps
-> struct policy {
-    struct arg {
-        using type = T;
-        using name = TName;
-    };
+BOOST_DI_HAS_METHOD(call_operator, operator());
 
-    using dependency = TDependency;
+template<class TDeps>
+class policy {
+    template<class T>
+    static aux::type<T> add_type() noexcept { return {}; };
 
-    template<class TT, class Name, class TDefault>
-    using resolve = decltype(binder::resolve<TT, Name, TDefault>((TDeps*)nullptr));
+    template<
+        class TPolicy
+      , class T
+      , class TName
+      , class TPolicies
+      , class TDependency
+      , class... TArgs
+    > static void call_impl(const TPolicies& policies, TDependency&& dependency) noexcept {
+        struct arg {
+            using type = T;
+            using name = TName;
+            template<class T_, class TName_, class TDefault_>
+            using resolve = decltype(binder::resolve<T_, TName_, TDefault_>((TDeps*)nullptr));
+        };
+
+        call_impl_args<arg, TDependency, TPolicy, TArgs...>(
+            static_cast<const TPolicy&>(policies), dependency
+        );
+    }
+
+    template<class TArg, class TDependency, class TPolicy, class... TArgs>
+    static std::enable_if_t<has_call_operator<TPolicy, TArg>{}>
+    call_impl_args(const TPolicy& policy, TDependency&&) noexcept {
+        (policy)(TArg{});
+    }
+
+    template<class TArg, class TDependency, class TPolicy, class... TArgs>
+    static std::enable_if_t<has_call_operator<TPolicy, TArg, TDependency, TArgs...>{}>
+    call_impl_args(const TPolicy& policy, TDependency&& dependency) noexcept {
+        (policy)(TArg{}, dependency, add_type<TArgs>()...);
+    }
+
+public:
+    template<class, class, class, class TDependency, class TCtor>
+    static void call(const pool<aux::type_list<>>&, TDependency&&, const TCtor&) noexcept { }
+
+    template<
+        class T
+      , class TName
+      , class TInitialization
+      , class TDependency
+      , class... TArgs
+      , class... TPolicies
+    > static void call(const pool<aux::type_list<TPolicies...>>& policies
+                     , TDependency&& dependency
+                     , aux::pair<TInitialization, aux::type_list<TArgs...>>) noexcept {
+        void(call_impl<TPolicies, T, TName, TPolicies, TDependency, TArgs...>(policies, dependency)...);
+    }
 };
 
 }}} // boost::di::core
@@ -1613,7 +1653,6 @@ template<
 
 namespace boost { namespace di { namespace core {
 
-BOOST_DI_HAS_METHOD(configure, configure);
 BOOST_DI_HAS_METHOD(call, call);
 
 template<class T, class TWrapper>
@@ -1631,7 +1670,6 @@ class injector : requires_unique_bindings<TDeps>, public pool<TDeps> {
     template<class...> friend struct provider;
 
     using pool_t = pool<TDeps>;
-    using config = TConfig;
 
 public:
     using deps = TDeps;
@@ -1688,7 +1726,7 @@ private:
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<given_t, T, ctor_t, injector>;
-        call_policies<T, TName, dependency_t>(config_.policies());
+        policy<pool_t>::template call<T, TName>(config_.policies(), dependency, ctor_t{});
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
             std::is_reference<T>{} && has_is_ref<dependency_t>{}
@@ -1696,28 +1734,6 @@ private:
           , std::remove_reference_t<T>
         >;
         return wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
-    }
-
-    template<class, class, class, class>
-    void call_policies(const pool<aux::type_list<>>&) const noexcept { }
-
-    template<
-        class T
-      , class TName
-      , class TDependency
-      , class... TPolicies
-    > void call_policies(const pool<aux::type_list<TPolicies...>>& policies) const noexcept {
-        void(call_policies_impl<TPolicies, T, TName, TDependency>(policies)...);
-    }
-
-    template<
-        class TPolicy
-      , class T
-      , class TName
-      , class TDependency
-      , class TPolicies
-    > void call_policies_impl(const TPolicies& policies) const noexcept {
-        (static_cast<const TPolicy&>(policies))(policy<T, TName, TDependency, pool_t>{});
     }
 
     template<class TAction, class... Ts>
@@ -1736,21 +1752,18 @@ private:
     call_impl(const TAction&) noexcept { }
 
     template<class T>
-    decltype(auto) pass_arg(const T& arg
-                          , std::enable_if_t<!has_configure<T>{}>* = 0) const noexcept {
+    decltype(auto) pass_arg(const T& arg, std::enable_if_t<!has_configure<T>{}>* = 0) const noexcept {
         return arg;
     }
 
     template<class T>
-    decltype(auto) pass_arg(const T& arg
-                          , std::enable_if_t<has_configure<T>{}>* = 0) const noexcept {
+    decltype(auto) pass_arg(const T& arg, std::enable_if_t<has_configure<T>{}>* = 0) const noexcept {
         return arg.configure();
     }
 
     template<class... TArgs, class... Ts>
-    decltype(auto)
-    create_from_injector(const injector<TArgs...>& injector
-                       , const aux::type_list<Ts...>&) const noexcept {
+    decltype(auto) create_from_injector(const injector<TArgs...>& injector
+                                      , const aux::type_list<Ts...>&) const noexcept {
         return pool<TDeps>(create_dep<Ts>(injector)...);
     }
 
@@ -1768,12 +1781,6 @@ private:
 
 namespace boost { namespace di { namespace detail {
 
-BOOST_DI_HAS_TYPE(deps);
-
-template<class T>
-using is_injector =
-    std::integral_constant<bool, has_deps<T>{} || core::has_configure<T>{}>;
-
 template<class T, class = void>
 struct get_deps {
     using type = typename T::deps;
@@ -1788,7 +1795,7 @@ struct get_deps<T, std::enable_if_t<core::has_configure<T>{}>> {
 
 template<
     class T
-  , class = typename is_injector<T>::type
+  , class = typename core::is_injector<T>::type
   , class = typename core::is_dependency<T>::type
 > struct add_type_list;
 

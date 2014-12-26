@@ -14,12 +14,6 @@
 
 namespace boost { namespace di { namespace detail {
 
-BOOST_DI_HAS_TYPE(deps);
-
-template<class T>
-using is_injector =
-    std::integral_constant<bool, has_deps<T>{} || core::has_configure<T>{}>;
-
 template<class T, class = void>
 struct get_deps {
     using type = typename T::deps;
@@ -34,7 +28,7 @@ struct get_deps<T, std::enable_if_t<core::has_configure<T>{}>> {
 
 template<
     class T
-  , class = typename is_injector<T>::type
+  , class = typename core::is_injector<T>::type
   , class = typename core::is_dependency<T>::type
 > struct add_type_list;
 
