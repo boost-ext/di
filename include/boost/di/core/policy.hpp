@@ -12,15 +12,13 @@
 namespace boost { namespace di { namespace core {
 
 template<
-    class TParent
-  , class T
+    class T
   , class TName
   , class TDependency
   , class TDeps
 > struct policy {
     struct arg {
         using type = T;
-        using parent = TParent;
         using name = TName;
     };
 

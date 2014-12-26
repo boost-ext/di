@@ -30,23 +30,44 @@ namespace di = boost::di;
 
 class local_config : public di::config {
 public:
+
+    template<class>
+    struct size;
+
+    template<class Q, class... Ts>
+    struct size<di::aux::pair<Q, di::aux::type_list<Ts...>>> {
+        operator int() const { return sizeof...(Ts); }
+    };
+
     auto policies() const noexcept {
         return di::make_policies(
-            [](auto type) {
+            [&](auto type) {
                 using T = decltype(type);
                 using arg = typename T::arg::type;
                 using name = typename T::arg::name;
-                using parent = typename T::arg::parent;
-                using given = std::decay_t<typename T::arg::type>;
+                using given = std::decay_t<typename T::dependency::given>;
 
-                std::clog << utils::demangle(typeid(parent).name())
-                          << " : (" << utils::demangle(typeid(arg).name())
+                auto tab = v[i - 1];
+                while (tab--) {
+                    std::clog << "    ";
+                }
+
+                std::clog << "(" << utils::demangle(typeid(arg).name())
                           << "[" << name{}() << "]"
                           << " -> " << utils::demangle(typeid(given).name())
                           << ")" << std::endl;
+
+                int ctor_size = size<typename di::type_traits::ctor_traits<given>::type>{};
+                while(ctor_size--) {
+                    v.insert((v.begin()+i), v[i-1]+1);
+                }
+                ++i;
             }
         );
     }
+
+    mutable std::vector<int> v = { 0 };
+    mutable int i = 1;
 };
 
 int main() {

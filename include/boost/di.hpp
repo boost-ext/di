@@ -185,35 +185,6 @@ using at_key_t = typename at_key<TDefault, TKey, Ts...>::type;
     template<class T, class... TArgs>                               \
     using has_##name = decltype(has_##name##_impl<T, TArgs...>(0))
 
-#define BOOST_DI_HAS_METHOD_CALL(name, call_name)                   \
-    struct has_##name##_base {                                      \
-        void call_name();                                           \
-    };                                                              \
-                                                                    \
-    template<class T>                                               \
-    std::false_type has_##name##_impl(                              \
-        T*                                                          \
-      , boost::di::aux::non_type<                                   \
-            void (has_##name##_base::*)()                           \
-          , &T::call_name                                           \
-        >* = 0                                                      \
-    );                                                              \
-                                                                    \
-    template<class>                                                 \
-    std::true_type has_##name##_impl(...);                          \
-                                                                    \
-    template<class T, typename = void>                              \
-    struct has_##name                                               \
-        : decltype(has_##name##_impl<                               \
-              boost::di::aux::inherit<T, has_##name##_base>         \
-          >(0))                                                     \
-    { };                                                            \
-                                                                    \
-    template<class T>                                               \
-    struct has_##name<T, std::enable_if_t<!std::is_class<T>{}>>     \
-        : std::false_type                                           \
-    { }
-
 namespace boost { namespace di { namespace aux {
 
 template<class T, class... TArgs>
@@ -1067,17 +1038,17 @@ struct any_type {
 
     template<class T, class = is_not_same<T>>
     operator T() noexcept {
-        return injector_.template create_impl<typename TInjector::template pass<TParent, decltype(typename TInjector::config{}.policies())>::type, T>();
+        return injector_.template create_impl<T>();
     }
 
     template<class T, class = is_not_same<T>, class = is_ref<T>>
     operator T&() const noexcept {
-        return injector_.template create_impl<typename TInjector::template pass<TParent, decltype(typename TInjector::config{}.policies())>::type, T&>();
+        return injector_.template create_impl<T&>();
     }
 
     template<class T, class = is_not_same<T>, class = is_ref<T>>
     operator const T&() const noexcept {
-        return injector_.template create_impl<typename TInjector::template pass<TParent, decltype(typename TInjector::config{}.policies())>::type, const T&>();
+        return injector_.template create_impl<const T&>();
     }
 
     const TInjector& injector_;
@@ -1505,15 +1476,13 @@ constexpr auto session_exit(const TName&) noexcept {
 namespace boost { namespace di { namespace core {
 
 template<
-    class TParent
-  , class T
+    class T
   , class TName
   , class TDependency
   , class TDeps
 > struct policy {
     struct arg {
         using type = T;
-        using parent = TParent;
         using name = TName;
     };
 
@@ -1609,25 +1578,15 @@ public:
         call_impl(action, deps{});
     }
 
-    template<class T, class>
-    struct pass {
-        using type = T;
-    };
-
-    template<class T>
-    struct pass<T, pool<aux::type_list<>>> {
-        using type = void;
-    };
-
 private:
     template<class... TArgs>
     injector(const init&, const TArgs&... args) noexcept
         : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
     { }
 
-    template<class TParent, class T>
+    template<class, class T>
     auto create_t(const aux::type<T>&) const noexcept {
-        return create_impl<typename pass<TParent, decltype(TConfig{}.policies())>::type, T>();
+        return create_impl<T>();
     }
 
     template<class TParent, class... Ts>
@@ -1635,19 +1594,19 @@ private:
         return any_type<TParent, injector>{*this};
     }
 
-    template<class TParent, class T, class TName>
+    template<class, class T, class TName>
     auto create_t(const aux::type<named<TName, T>>&) const noexcept {
-        return create_impl<typename pass<TParent, decltype(TConfig{}.policies())>::type, T, TName>();
+        return create_impl<T, TName>();
     }
 
-    template<class TParent, class T, class TName = no_name>
+    template<class T, class TName = no_name>
     auto create_impl() const noexcept {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<given_t, T, ctor_t, injector>;
-        call_policies<TParent, T, TName, dependency_t>(config_.policies());
+        call_policies<T, TName, dependency_t>(config_.policies());
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
             std::is_reference<T>{} && has_is_ref<dependency_t>{}
@@ -1661,24 +1620,22 @@ private:
     void call_policies(const pool<aux::type_list<>>&) const noexcept { }
 
     template<
-        class TParent
-      , class T
+        class T
       , class TName
       , class TDependency
       , class... TPolicies
     > void call_policies(const pool<aux::type_list<TPolicies...>>& policies) const noexcept {
-        void(call_policies_impl<TPolicies, TParent, T, TName, TDependency>(policies)...);
+        void(call_policies_impl<TPolicies, T, TName, TDependency>(policies)...);
     }
 
     template<
         class TPolicy
-      , class TParent
       , class T
       , class TName
       , class TDependency
       , class TPolicies
     > void call_policies_impl(const TPolicies& policies) const noexcept {
-        (static_cast<const TPolicy&>(policies))(policy<TParent, T, TName, TDependency, pool_t>{});
+        (static_cast<const TPolicy&>(policies))(policy<T, TName, TDependency, pool_t>{});
     }
 
     template<class TAction, class... Ts>

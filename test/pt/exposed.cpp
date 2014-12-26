@@ -819,5 +819,5 @@ int main() {
     return result;
 }
 
-//time clang++ exposed.cpp -std=c++1y -I../../include -O2 -D"EXPOSED_OR_AUTO(t)=auto" -D"BOOST_DI_INJECT(type,...)=type(__VA_ARGS__)"
+//time clang++ exposed.cpp -std=c++1y -I../../include -O2 -D"EXPOSED_OR_AUTO(t1, t2)=t1" -D"BOOST_DI_INJECT(type,...)=type(__VA_ARGS__)"
 
