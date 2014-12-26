@@ -228,12 +228,12 @@ struct deref_type<T, std::enable_if_t<has_element_type<T>{}>> {
 };
 
 template<class T>
-using make_plain =
+using decay =
     deref_type<remove_accessors_t<deref_type_t<remove_accessors_t<T>>>>;
 
 template<class T>
-using make_plain_t =
-    typename make_plain<T>::type;
+using decay_t =
+    typename decay<T>::type;
 
 template<class T>
 struct function_traits
@@ -1079,10 +1079,10 @@ public:
     template<
         class T
       , class TName = no_name
-      , class TDefault = dependency<scopes::deduce, aux::make_plain_t<T>>
+      , class TDefault = dependency<scopes::deduce, aux::decay_t<T>>
       , class TDeps = void
     > static decltype(auto) resolve(TDeps* deps) noexcept {
-        using dependency = dependency_concept<aux::make_plain_t<T>, TName>;
+        using dependency = dependency_concept<aux::decay_t<T>, TName>;
         return resolve_impl<TDefault, dependency>(deps);
     }
 };
@@ -1099,8 +1099,8 @@ struct any_type {
     template<class T>
     struct is_not_same_impl {
         static constexpr auto value =
-            std::is_same<aux::make_plain_t<T>, aux::make_plain_t<TParent>>::value ||
-            std::is_base_of<aux::make_plain_t<TParent>, aux::make_plain_t<T>>::value;
+            std::is_same<aux::decay_t<T>, aux::decay_t<TParent>>::value ||
+            std::is_base_of<aux::decay_t<TParent>, aux::decay_t<T>>::value;
     };
 
     template<class T>

@@ -19,8 +19,8 @@ struct any_type {
     template<class T>
     struct is_not_same_impl {
         static constexpr auto value =
-            std::is_same<aux::make_plain_t<T>, aux::make_plain_t<TParent>>::value ||
-            std::is_base_of<aux::make_plain_t<TParent>, aux::make_plain_t<T>>::value;
+            std::is_same<aux::decay_t<T>, aux::decay_t<TParent>>::value ||
+            std::is_base_of<aux::decay_t<TParent>, aux::decay_t<T>>::value;
     };
 
     template<class T>

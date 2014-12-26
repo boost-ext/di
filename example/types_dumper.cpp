@@ -50,7 +50,7 @@ public:
                           << ")" << std::endl;
 
                 auto ctor_size = sizeof...(ctor);
-                while(ctor_size--) {
+                while (ctor_size--) {
                     v.insert((v.begin()+i), v[i-1]+1);
                 }
                 ++i;

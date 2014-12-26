@@ -75,12 +75,12 @@ struct deref_type<T, std::enable_if_t<has_element_type<T>{}>> {
 };
 
 template<class T>
-using make_plain =
+using decay =
     deref_type<remove_accessors_t<deref_type_t<remove_accessors_t<T>>>>;
 
 template<class T>
-using make_plain_t =
-    typename make_plain<T>::type;
+using decay_t =
+    typename decay<T>::type;
 
 template<class T>
 struct function_traits

@@ -72,21 +72,21 @@ test remove_accessors_types = [] {
     expect(std::is_same<int, remove_accessors_t<const int*>>{});
 };
 
-test make_plain_types = [] {
+test decay_types = [] {
     auto test = [] (auto type) {
         using T = decltype(type);
-        expect(std::is_same<T, make_plain_t<T>>{});
-        expect(std::is_same<T, make_plain_t<T*>>{});
-        expect(std::is_same<T, make_plain_t<const T*>>{});
-        expect(std::is_same<T, make_plain_t<const T>>{});
-        expect(std::is_same<T, make_plain_t<const T&>>{});
-        expect(std::is_same<T, make_plain_t<T&>>{});
-        expect(std::is_same<T, make_plain_t<std::shared_ptr<T>>>{});
-        expect(std::is_same<T, make_plain_t<const std::shared_ptr<T>&>>{});
-        expect(std::is_same<T, make_plain_t<std::shared_ptr<T>&>>{});
-        expect(std::is_same<T, make_plain_t<volatile T>>{});
-        expect(std::is_same<T, make_plain_t<T&&>>{});
-        expect(std::is_same<T, make_plain_t<const T&&>>{});
+        expect(std::is_same<T, decay_t<T>>{});
+        expect(std::is_same<T, decay_t<T*>>{});
+        expect(std::is_same<T, decay_t<const T*>>{});
+        expect(std::is_same<T, decay_t<const T>>{});
+        expect(std::is_same<T, decay_t<const T&>>{});
+        expect(std::is_same<T, decay_t<T&>>{});
+        expect(std::is_same<T, decay_t<std::shared_ptr<T>>>{});
+        expect(std::is_same<T, decay_t<const std::shared_ptr<T>&>>{});
+        expect(std::is_same<T, decay_t<std::shared_ptr<T>&>>{});
+        expect(std::is_same<T, decay_t<volatile T>>{});
+        expect(std::is_same<T, decay_t<T&&>>{});
+        expect(std::is_same<T, decay_t<const T&&>>{});
     };
 
     struct c { };
