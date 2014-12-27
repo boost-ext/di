@@ -7,9 +7,9 @@
 #ifndef BOOST_DI_INJECT_HPP
 #define BOOST_DI_INJECT_HPP
 
+#include <type_traits>
+#include "boost/di/aux_/preprocessor.hpp"
 #include "boost/di/aux_/utility.hpp"
-
-namespace boost { namespace di { template<class, bool> struct named_ { }; }} // boost::di
 
 #if !defined(BOOST_DI_INJECTOR)
     #define BOOST_DI_INJECTOR boost_di_injector__
@@ -19,54 +19,30 @@ namespace boost { namespace di { template<class, bool> struct named_ { }; }} // 
     #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
 #endif
 
-#define BOOST_DI_TYPE(x)
-#define BOOST_DI_TYPE_END()
-#define BOOST_DI_TYPE_X(x) x
-#define BOOST_DI_TYPE_END_X()
-#define BOOST_DI_FUN(x) static auto BOOST_DI_CAT(BOOST_DI_INJECTOR, name)() { auto x; return named; } static void BOOST_DI_CAT(BOOST_DI_INJECTOR, arg)(
-#define BOOST_DI_FUN_END() );
-#define BOOST_DI_F(x) static void BOOST_DI_CAT(BOOST_DI_INJECTOR, arg)(x);
-#define BOOST_DI_F_END()
-#define BOOST_DI_X(x)
-#define BOOST_DI_ARG(n, expr1, expr2, x, y, p) struct arg##n { BOOST_DI_IF(BOOST_DI_IBP(p))( expr1 p x(), expr2(p)) };
-#define BOOST_DI_ARG2(n, expr1, expr2, x, y, p) BOOST_DI_IF(BOOST_DI_IBP(p))(expr1 p x(), expr2(p) y())
-#define BOOST_DI_ARGX(n, expr1, expr2, x, y, p) BOOST_DI_IF(BOOST_DI_IBP(p))(const ::boost::di::named_<arg##n BOOST_DI_COMMA() true>&, BOOST_DI_IF(ISEMPTY(p))(,const ::boost::di::named_<arg##n BOOST_DI_COMMA() false>&))
-#define BOOST_DI_INJECT_IMPL0(c, m, expr1, x, expr2, y)
-#define BOOST_DI_INJECT_IMPL1(c, m, expr1, x, expr2, y, p1) m(1, expr1, expr2, x, y, p1)
-#define BOOST_DI_INJECT_IMPL2(c, m, expr1, x, expr2, y, p1, p2) m(1, expr1, expr2, x, y, p1) c() m(2, expr1, expr2, x, y, p2)
-#define BOOST_DI_INJECT_IMPL3(c, m, expr1, x, expr2, y, p1, p2, p3) m(1, expr1, expr2, x, y, p1) c() m(2, expr1, expr2, x, y, p2) c() m(3, expr1, expr2, x, y, p3)
-#define BOOST_DI_INJECT_IMPL4(c, m, expr1, x, expr2, y, p1, p2, p3, p4) m(1, expr1, expr2, x, y, p1) c() m(2, expr1, expr2, x, y, p2) c() m(3, expr1, expr2, x, y, p3) c() m(4, expr1, expr2, x, y, p4)
-#define BOOST_DI_INJECT_IMPL5(c, m, expr1, x, expr2, y, p1, p2, p3, p4, p5) m(1, expr1, expr2, x, y, p1) c() m(2, expr1, expr2, x, y, p2) c() m(3, expr1, expr2, x, y, p3) c() m(4, expr1, expr2, x, y, p4) c() m(5, expr1, expr2, x, y, p5)
-#define BOOST_DI_INJECT_IMPL6(c, m, expr1, x, expr2, y, p1, p2, p3, p4, p5, p6) m(1, expr1, expr2, x, y, p1) c() m(2, expr1, expr2, x, y, p2) c() m(3, expr1, expr2, x, y, p3) c() m(4, expr1, expr2, x, y, p4) c() m(5, expr1, expr2, x, y, p5) c() m(6, expr1, expr2, x, y, p6)
-#define BOOST_DI_INJECT_IMPL7(c, m, expr1, x, expr2, y, p1, p2, p3, p4, p5, p6, p7) m(1, expr1, expr2, x, y, p1) c() m(2, expr1, expr2, x, y, p2) c() m(3, expr1, expr2, x, y, p3) c() m(4, expr1, expr2, x, y, p4) c() m(5, expr1, expr2, x, y, p5) c() m(6, expr1, expr2, x, y, p6) c() m(7, expr1, expr2, x, y, p7)
-#define BOOST_DI_INJECT_IMPL8(c, m, expr1, x, expr2, y, p1, p2, p3, p4, p5, p6, p7, p8) m(1, expr1, expr2, x, y, p1) c() m(2, expr1, expr2, x, y, p2) c() m(3, expr1, expr2, x, y, p3) c() m(4, expr1, expr2, x, y, p4) c() m(5, expr1, expr2, x, y, p5) c() m(6, expr1, expr2, x, y, p6) c() m(7, expr1, expr2, x, y, p7) c() m(8, expr1, expr2, x, y, p8)
-#define BOOST_DI_INJECT_IMPL9(c, m, expr1, x, expr2, y, p1, p2, p3, p4, p5, p6, p7, p8, p9) m(1, expr1, expr2, x, y, p1) c() m(2, expr1, expr2, x, y, p2) c() m(3, expr1, expr2, x, y, p3) c() m(4, expr1, expr2, x, y, p4) c() m(5, expr1, expr2, x, y, p5) c() m(6, expr1, expr2, x, y, p6) c() m(7, expr1, expr2, x, y, p7) c() m(8, expr1, expr2, x, y, p8) c() m(9, expr1, expr2, x, y, p9)
-#define BOOST_DI_INJECT_IMPL10(c, m, expr1, x, expr2, y, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10) m(1, expr1, expr2, x, y, p1) c() m(2, expr1, expr2, x, y, p2) c() m(3, expr1, expr2, x, y, p3) c() m(4, expr1, expr2, x, y, p4) c() m(5, expr1, expr2, x, y, p5) c() m(6, expr1, expr2, x, y, p6) c() m(7, expr1, expr2, x, y, p7) c() m(8, expr1, expr2, x, y, p8) c() m(9, expr1, expr2, x, y, p9) c() m(10, expr1, expr2, x, y, p10)
+#define BOOST_DI_GEN_ARGS(i, ...) BOOST_DI_GEN_ARGS_IMPL(BOOST_DI_VARARG_IMPL(ARG, i, __VA_ARGS__,), i)
+#define BOOST_DI_GEN_ARGS_IMPL(p, i) struct arg##i { BOOST_DI_IF(BOOST_DI_IBP(p))(BOOST_DI_GEN_NAME_ARG p BOOST_DI_GEN_NAME_ARG_END(), BOOST_DI_GEN_ARG(p)) };
+#define BOOST_DI_GEN_NAME_ARG(p) static auto BOOST_DI_CAT(BOOST_DI_INJECTOR, name)() { auto p; return named; } static void BOOST_DI_CAT(BOOST_DI_INJECTOR, arg)(
+#define BOOST_DI_GEN_NAME_ARG_END() );
+#define BOOST_DI_GEN_ARG(p) static void BOOST_DI_CAT(BOOST_DI_INJECTOR, arg)(p);
+#define BOOST_DI_GEN_CTOR(i, ...) BOOST_DI_GEN_CTOR_IMPL(BOOST_DI_VARARG_IMPL(ARG, i, __VA_ARGS__,), i)
+#define BOOST_DI_GEN_CTOR_IMPL(p, i) BOOST_DI_IF(i)(BOOST_DI_COMMA(),) BOOST_DI_IF(BOOST_DI_IBP(p))(EAT p, p)
+#define BOOST_DI_GEN_TYPE_LIST(i, ...) BOOST_DI_GEN_TYPE_LIST_IMPL(BOOST_DI_VARARG_IMPL(ARG, i, __VA_ARGS__,), i)
+#define BOOST_DI_GEN_TYPE_LIST_IMPL(p, n)  BOOST_DI_IF(n)(BOOST_DI_COMMA(),) BOOST_DI_IF(BOOST_DI_IBP(p))( \
+    const ::boost::di::aux::void_t<arg##n BOOST_DI_COMMA() ::std::true_type>& \
+  , BOOST_DI_IF(ISEMPTY(p))(,const ::boost::di::aux::void_t<arg##n BOOST_DI_COMMA() ::std::false_type>&))
 
 #if !defined(BOOST_DI_INJECT_TRAITS)
     #define BOOST_DI_INJECT_TRAITS(...) \
         struct BOOST_DI_INJECTOR { \
-            BOOST_DI_VAR_ARG(BOOST_DI_INJECT_IMPL, BOOST_DI_NONE, BOOST_DI_ARG, BOOST_DI_FUN, BOOST_DI_FUN_END, BOOST_DI_F, BOOST_DI_F_END, __VA_ARGS__) \
-            using type = ::boost::di::aux::type_list<BOOST_DI_VAR_ARG(BOOST_DI_INJECT_IMPL, BOOST_DI_COMMA, BOOST_DI_ARGX, BOOST_DI_X, BOOST_DI_FUN_END, BOOST_DI_F, BOOST_DI_F_END, __VA_ARGS__)>; \
+            EVAL(REPEAT(PP_NARG(__VA_ARGS__), BOOST_DI_GEN_ARGS, __VA_ARGS__)) \
+            using type = ::boost::di::aux::type_list<EVAL(REPEAT(PP_NARG(__VA_ARGS__), BOOST_DI_GEN_TYPE_LIST, __VA_ARGS__))>; \
         }
 #endif
 
 #if !defined(BOOST_DI_INJECT)
     #define BOOST_DI_INJECT(type, ...) \
         BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
-        type(BOOST_DI_VAR_ARG(BOOST_DI_INJECT_IMPL, BOOST_DI_COMMA, BOOST_DI_ARG2, BOOST_DI_TYPE, BOOST_DI_TYPE_END, BOOST_DI_TYPE_X, BOOST_DI_TYPE_END_X, __VA_ARGS__))
-#endif
-
-#if !defined(BOOST_DI_INJECT_TRAITS)
-    #define BOOST_DI_INJECT_TRAITS(...) \
-		BOOST_DI_VAR_ARG(BOOST_DI_INJECT_IMPL, BOOST_DI_NONE, BOOST_DI_ARG, BOOST_DI_FUN, BOOST_DI_FUN_END, BOOST_DI_F, BOOST_DI_F_END, __VA_ARGS__) \
-		static void BOOST_DI_INJECTOR(BOOST_DI_VAR_ARG(BOOST_DI_INJECT_IMPL, BOOST_DI_COMMA, BOOST_DI_ARGX, BOOST_DI_X, BOOST_DI_FUN_END, BOOST_DI_F, BOOST_DI_F_END, __VA_ARGS__))
-#endif
-
-#if !defined(BOOST_DI_INJECT)
-    #define BOOST_DI_INJECT(type, ...) \
-        BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
-        type(BOOST_DI_VAR_ARG(BOOST_DI_INJECT_IMPL, BOOST_DI_COMMA, BOOST_DI_ARG2, BOOST_DI_TYPE, BOOST_DI_TYPE_END, BOOST_DI_TYPE_X, BOOST_DI_TYPE_END_X, __VA_ARGS__))
+        type(EVAL(REPEAT(PP_NARG(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__)))
 #endif
 
 #endif

@@ -9,20 +9,6 @@
 
 namespace boost { namespace di { namespace aux {
 
-test cat = [] {
-    #define CAT BOOST_DI_CAT(in, t)
-        CAT i = 0;
-    #undef CAT
-    expect(!i);
-};
-
-test call = [] {
-    #define CAT BOOST_DI_CALL(BOOST_DI_CAT, in, t)
-        CAT i = 0;
-    #undef CAT
-    expect(!i);
-};
-
 test join_types = [] {
     expect(std::is_same<type_list<>, join_t<>>{});
     expect(std::is_same<type_list<int>, join_t<type_list<int>>>{});
