@@ -141,6 +141,8 @@ auto injector = di::make_injector(      | auto object = injector.create<unique_p
 
 > **Policies**
 
+*
+
 > **Runtime Performance**
 ```cpp
 Create type wihtout bindings            | Asm
