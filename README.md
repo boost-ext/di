@@ -691,6 +691,7 @@ auto injector = di::make_injector(      | error: base class 'boost::di::aux::pai
     di::bind<int>.to(42)                |
   , di::bind<int>.to(87)                |
 );                                      |
+                                        |
 injector.create<int>();                 |
 ```
 ```cpp
