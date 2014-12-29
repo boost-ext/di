@@ -117,13 +117,118 @@ auto injector = di::make_injector(      |
 Bind interface to implementation        | Test
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector(      | auto object = injector.create<unique_ptr<i>>();
-    di::bind<i, impl>                   | assert(dynamic_cast<i*>(object.get()));
+    di::bind<i, impl>                   | assert(dynamic_cast<impl*>(object.get()));
 );                                      |
+```
+```cpp
+Bind different interfaces to one
+implementation                          | Test
+----------------------------------------|-----------------------------------------
+auto injector = di::make_injector(      | auto object1 = injector.create<shared_ptr<i1>>();
+    di::bind<di::any_of<i1, i2>, impl>  | auto object2 = injector.create<shared_ptr<i2>>();
+);                                      | assert(dynamic_cast<impl*>(object1.get()));
+                                        | assert(dynamic_cast<impl*>(object2.get()));
+                                        | assert(object1 == object2);
 ```
 
 *
 
 > **Injections**
+```cpp
+Direct constructor injection            | Test
+----------------------------------------|-----------------------------------------
+struct c {                              | auto object = injector.create<c>();
+    c(int a, double d) : a(a), d(d) { } | assert(42 == object.a);
+                                        | assert(87.0 == object.b);
+    int a = 0;                          |
+    double d = 0.0;                     |
+};                                      |
+                                        |
+auto injector = di::make_injector(      |
+    di::bind<int>.to(42)                |
+  , di::bind<double>.to(87.0)           |
+);                                      |
+```cpp
+Direct constructor injection with many
+constructors (longest parameters list
+constructor will be chosen)             | Test
+----------------------------------------|-----------------------------------------
+struct c {                              | auto object = injector.create<c>();
+    c();                                | assert(42 == object.a);
+    c(int a) : a(a) { }                 | assert(87.0 == object.b);
+    c(int a, double d) : a(a), d(d) { } |
+                                        |
+    int a = 0;                          |
+    double d = 0.0;                     |
+};                                      |
+                                        |
+auto injector = di::make_injector(      |
+    di::bind<int>.to(42)                |
+  , di::bind<double>.to(87.0)           |
+);                                      |
+```
+```cpp
+Direct constructor injection with
+ambigious constructors (BOOST_DI_INJECT)| Test
+----------------------------------------|-----------------------------------------
+struct c {                              | auto object = injector.create<c>();
+    c(double d, int a) : a(a), d(d) { } | assert(42 == object.a);
+    BOOST_DI_INJECT(c, int a, double d) | assert(87.0 == object.b);
+        : a(a), d(d) { }                |
+                                        |
+    int a = 0;                          |
+    double d = 0.0;                     |
+};                                      |
+                                        |
+auto injector = di::make_injector(      |
+    di::bind<int>.to(42)                |
+  , di::bind<double>.to(87.0)           |
+);                                      |
+```
+```cpp
+Direct constructor injection with
+ambigious constructors
+(BOOST_DI_INJECT_TRAITS)                | Test
+----------------------------------------|-----------------------------------------
+struct c {                              | auto object = injector.create<c>();
+    BOOST_DI_INJECT_TRAITS(int, double);| assert(42 == object.a);
+    c(double d, int a) : a(a), d(d) { } | assert(87.0 == object.b);
+    c(int a, double d) : a(a), d(d) { } |
+                                        |
+    int a = 0;                          |
+    double d = 0.0;                     |
+};                                      |
+                                        |
+auto injector = di::make_injector(      |
+    di::bind<int>.to(42)                |
+  , di::bind<double>.to(87.0)           |
+);                                      |
+```
+```cpp
+Direct constructor injection with
+ambigious constructors
+(di::ctor_traits)                       | Test
+----------------------------------------|-----------------------------------------
+struct c {                              | auto object = injector.create<c>();
+    c(double d, int a) : a(a), d(d) { } | assert(42 == object.a);
+    c(int a, double d) : a(a), d(d) { } | assert(87.0 == object.b);
+                                        |
+    int a = 0;                          |
+    double d = 0.0;                     |
+};                                      |
+                                        |
+namespace boost { namespace di {        |
+template<>                              |
+struct ctor_traits<c> {                 |
+    BOOST_DI_INJECT_TRAITS(int, double);|
+};                                      |
+}} // boost::di                         |
+                                        |
+auto injector = di::make_injector(      |
+    di::bind<int>.to(42)                |
+  , di::bind<double>.to(87.0)           |
+);                                      |
+```
 
 *
 
