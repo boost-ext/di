@@ -82,13 +82,15 @@ There are no Boost libraries requirements (optionally Boost.Smart\_Ptr).
 
 **Quick User Guide**
 
-* Bindings
-
 Let's assume all examples below include `boost/di.hpp` header and define `di` namespace alias.
 ```cpp
     #include <boost/di.hpp>
     namespace di = boost::di;
 ```
+
+---
+* *Bindings*
+---
 
 ```cpp
 Create empty injector                   | Test
