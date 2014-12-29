@@ -86,7 +86,6 @@ There are no Boost libraries requirements (optionally Boost.Smart\_Ptr).
 ```cpp
     #include <boost/di.hpp>
     namespace di = boost::di;
-
     struct i1 { virtual ~i1() = default; virtual void dummy1() = 0; };
     struct i2 { virtual ~i2() = default; virtual void dummy2() = 0; };
     struct imp1 : i1 { void dummy1() override { } };
