@@ -88,8 +88,7 @@ Let's assume all examples below include `boost/di.hpp` header and define `di` na
     namespace di = boost::di;
 ```
 
----
-* Bindings
+* *Bindings*
 ---
 
 ```cpp
