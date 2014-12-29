@@ -361,8 +361,7 @@ template<>                              |
 struct ctor_traits<c> {                 |
     BOOST_DI_INJECT_TRAITS(             |
         (named = int1) int              |
-      , (named = int2) int              |
-    );                                  |
+      , (named = int2) int);            |
 };                                      |
 }} // boost::di                         |
                                         |
