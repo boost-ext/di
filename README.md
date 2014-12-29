@@ -595,7 +595,7 @@ public:                                 | assert(87.0, make_injector(di::bind<do
 
 > **Providers** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_provider.cpp)
 ```cpp
-Heap provider                           | Test
+Stack/Heap no throw provider            | Test
 ----------------------------------------|-----------------------------------------
 class nothrow_reduce_heap_usage {       | // per injector policy
 public:                                 | auto injector = di::make_injector<my_provider>();
