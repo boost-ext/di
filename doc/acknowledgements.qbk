@@ -9,9 +9,8 @@
 
 [section Acknowledgements]
 
-* Thanks to Robert Ramey for [@http://blincubator.com Boost Library Incubator] and useful comments about documentation.
-* Thanks to Bartosz Kalinczuk for code review, bug reports and useful tips about how to improve `Boost.DI`.
-* Thanks to Rafal Przywarski for code review.
+* Thanks to Bartosz Kalinczuk for code review, bug reports and useful tips about how to improve `Boost.DI`
+* Thanks to Rafal Przywarski for code review
 
 [endsect]
 

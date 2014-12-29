@@ -155,7 +155,6 @@
 [include examples.qbk]
 [include performance.qbk]
 [include rationale.qbk]
-[include reference.qbk]
 [include changelog.qbk]
 [include acknowledgements.qbk]
 [include references.qbk]
