@@ -441,7 +441,7 @@ auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>
 | shared\_ptr<T> | singleton |
 | weak\_ptr<T> | singleton |
 
-**Scopes conversion**
+**Scope to type conversion**
 
 | Type/Scope | unique | shared | singleton | session | external |
 |------------|--------|--------|-----------|---------|----------|
