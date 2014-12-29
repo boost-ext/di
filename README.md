@@ -709,7 +709,7 @@ int main() {                            | push   %rax
 
 *
 
-> **Compile-time performance**
+> **Compile-time performance (time clang++ -O2)**
 ```cpp
 Boost.DI header                         | Time [s] / Size [kb]
 ----------------------------------------|-----------------------------------------
