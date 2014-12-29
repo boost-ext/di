@@ -122,7 +122,7 @@ auto injector = di::make_injector(      | auto obj = injector.create<unique_ptr<
     di::bind<i, impl>                   | assert(dynamic_cast<i*>(obj.get()));
 );                                      |
 ```
-> 
+> blah
 
 * **Injections**
 
