@@ -49,6 +49,9 @@ int main() {                            | int main() {
 }                                       |}
 ```
 
+**Why Dependency Injection?**
+[![The Clean Code Talks - Don't Look For Things!](http://img.youtube.com/vi/RlfLCWKxHJ0/0.jpg)](http://www.youtube.com/watch?v=RlfLCWKxHJ0)
+
 **How To Start?**
 
 * Get C++14 compliant compiler (Clang-3.4+, GCC-5.0+) with STL (memory, new, type\_traits headers) / Boost is not required
