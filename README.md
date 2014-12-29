@@ -89,13 +89,11 @@ There are no Boost libraries requirements (optionally Boost.Smart\_Ptr).
 ```
 
 > **Bindings**
-
 ```cpp
 Create empty injector                   | Test
 ----------------------------------------|------------------------------------------
 auto injector = di::make_injector();    | assert(0 == injector.create<int>());
 ```
-
 ```cpp
 Bind type to value                      | Test
 ----------------------------------------|------------------------------------------
@@ -103,7 +101,6 @@ auto injector = di::make_injector(      | assert(42 == injector.create<int>());
     di::bind<int>.to(42)                |
 );                                      |
 ```
-
 ```cpp
 Bind type to static value               | Test
 ----------------------------------------|------------------------------------------
@@ -114,7 +111,6 @@ auto injector = di::make_injector(      |
     di::bind<int, int_<42>>             |
 );                                      |
 ```
-
 ```cpp
 Bind interface to implementation        | Test
 ----------------------------------------|------------------------------------------
