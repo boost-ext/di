@@ -598,40 +598,17 @@ Stack/Heap no throw provider            | Test
 ----------------------------------------|-----------------------------------------
 class stack_heap_no_throw {             | // per injector policy
 public:                                 | auto injector = di::make_injector<my_provider>();
-  template<class T, class... TArgs>     | assert(0 == injector.create<int>());
-  auto* get(                            |
-    const type_traits::direct&          | // global policy
-  , const type_traits::heap&            | #define BOOST_DI_CFG my_provider
-  , TArgs&&... args) const noexcept {   | auto injector = di::make_injector();
-      return new (std::nothrow)         | assert(0 == injector.create<int>());
-        T(std::forward<TArgs>(args)...);|
-  }                                     |
-                                        |
-  template<class T, class... TArgs>     |
-  auto* get(                            |
-    const type_traits::aggregate&       |
-  , const type_traits::heap&            |
-  , TArgs&&... args) const noexcept {   |
+  template<                             | assert(0 == injector.create<int>());
+    class T                             |
+  , class TInit // direct()/aggregate{} | // global policy
+  , class TMemory // heap/stack         | #define BOOST_DI_CFG my_provider
+  , class... TArgs                      | auto injector = di::make_injector();
+  > auto* get(const TInit&              | assert(0 == injector.create<int>());
+            , const TMemory&            |
+            , TArgs&&... args)          |
+  const noexcept {                      |
       return new (std::nothrow)         |
         T{std::forward<TArgs>(args)...};|
-  }                                     |
-                                        |
-  template<class T, class... TArgs>     |
-  auto get(                             |
-    const type_traits::direct&          |
-  , const type_traits::stack&           |
-  , TArgs&&... args) const noexcept {   |
-      return T(                         |
-        std::forward<TArgs>(args)...);  |
-  }                                     |
-                                        |
-  template<class T, class... TArgs>     |
-  auto get(                             |
-    const type_traits::aggregate&       |
-  , const type_traits::stack&           |
-  , TArgs&&... args) const noexcept {   |
-      return T{                         |
-        std::forward<TArgs>(args)...};  |
   }                                     |
 };                                      |
                                         |
