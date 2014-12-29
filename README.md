@@ -5,9 +5,9 @@
 
 Dependency injection is a programming practice providing required objects to an object.
 
-* Provide loosely coupled code (separation of business logic and object creation)
-* Provide easier to maintain code (different objects might be easily injected)
-* Provide easier to test code (fakes objects might be injected)
+* Provides loosely coupled code (separation of business logic and object creation)
+* Provides easier to maintain code (different objects might be easily injected)
+* Provides easier to test code (fakes objects might be injected)
 
 ```cpp
 No Dependency injection                 | Dependency Injection
@@ -31,9 +31,9 @@ Boost.DI is a header only, type safe, compile time, non-intrusive constructor de
 library improving manual dependency injection by simplifying object instantiation with automatic
 dependencies injection.
 
-* Reduce boilerplate code (no factories, no objects creation)
-* Reduce cost of maintenance effort (constructor signature change won't affect di configuration)
-* Reduce testing effort (automatic mocks Injector)
+* Reduces boilerplate code (no factories, no objects creation)
+* Reduces cost of maintenance effort (constructor signature change won't affect di configuration)
+* Reduces testing effort (automatic mocks Injector)
 * Gives better control of what and how is created (policies, providers)
 * Gives better understanding about objects hierarchy (Types creation graph)
 
