@@ -51,7 +51,7 @@ int main() {                            | int main() {
 
 **How To Start?**
 
-* Boost.DI requires C++14 compliant compiler (Clang-3.4+, GCC-5.0+) with STL (memory, new, type\_traits headers) / Boost is not required
+* Get C++14 compliant compiler (Clang-3.4+, GCC-5.0+) with STL (memory, new, type\_traits headers) / Boost is not required
 * Read Quick User Guide (below)
 * [Read tutorial](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/tutorial.html)
 * [Read documentation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
