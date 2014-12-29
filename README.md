@@ -120,11 +120,18 @@ Bind interface to implementation        | Test
 ----------------------------------------|------------------------------------------
 auto injector = di::make_injector(      | auto obj = injector.create<unique_ptr<i>>();
     di::bind<i, impl>                   | assert(dynamic_cast<i*>(obj.get()));
-);
+);                                      |
 ```
 
-* Injections
+* **Injections**
 
+* **Scopes**
+
+* **Modules**
+
+* **Providers**
+
+* **Policies**
 
 **Runtime Performance**
 ```cpp
@@ -147,9 +154,6 @@ int main() {                            | mov $0x2a,%eax
     return injector.create<int>();      |
 }                                       |
 ```
-
-* Constructor Injection
-
 
 **Compile-time Performance**
 
