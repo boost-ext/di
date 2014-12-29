@@ -427,6 +427,20 @@ auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>
 );                                      | }
 ```
 
+**scoped deduction**
+| Type | Scope |
+|------|-------|
+| T | unique |
+| T& | error - has to be bound as external |
+| const T& | unique (temporary) |
+| T* | unique (ownership transfer) |
+| const T* | unique (ownership transfer) |
+| T&& | unique |
+| unique\_ptr<T> | unique |
+| shared\_ptr<T> | singleton |
+| weak\_ptr<T> | singleton |
+
+**Scopes conversion**
 | Type/Scope | unique | shared | singleton | session | external |
 |------------|--------|--------|-----------|---------|----------|
 | T | X | - | - | - | X |
