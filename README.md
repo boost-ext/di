@@ -86,6 +86,12 @@ There are no Boost libraries requirements (optionally Boost.Smart\_Ptr).
 ```cpp
     #include <boost/di.hpp>
     namespace di = boost::di;
+
+    struct i1 { virtual ~i1() = default; virtual void dummy1() = 0; };
+    struct i2 { virtual ~i2() = default; virtual void dummy2() = 0; };
+    struct imp1 : i1 { void dummy1() override { } };
+    struct imp2 : i2 { void dummy2() override { } };
+    struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 ```
 
 *
@@ -117,8 +123,8 @@ auto injector = di::make_injector(      |
 ```cpp
 Bind interface to implementation        | Test
 ----------------------------------------|-----------------------------------------
-auto injector = di::make_injector(      | auto object = injector.create<unique_ptr<i>>();
-    di::bind<i, impl>                   | assert(dynamic_cast<impl*>(object.get()));
+auto injector = di::make_injector(      | auto object = injector.create<unique_ptr<i1>>();
+    di::bind<i1, impl1>                 | assert(dynamic_cast<impl1*>(object.get()));
 );                                      |
 ```
 ```cpp
