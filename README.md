@@ -427,7 +427,8 @@ auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>
 );                                      | }
 ```
 
-**scoped deduction**
+**Scope deduction**
+
 | Type | Scope |
 |------|-------|
 | T | unique |
@@ -441,6 +442,7 @@ auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>
 | weak\_ptr<T> | singleton |
 
 **Scopes conversion**
+
 | Type/Scope | unique | shared | singleton | session | external |
 |------------|--------|--------|-----------|---------|----------|
 | T | X | - | - | - | X |
