@@ -88,24 +88,25 @@ There are no Boost libraries requirements (optionally Boost.Smart\_Ptr).
     namespace di = boost::di;
 ```
 
----
+
+
 
 > **Bindings**
 ```cpp
 Create empty injector                   | Test
-----------------------------------------|------------------------------------------
+----------------------------------------|-----------------------------------------
 auto injector = di::make_injector();    | assert(0 == injector.create<int>());
 ```
 ```cpp
 Bind type to value                      | Test
-----------------------------------------|------------------------------------------
+----------------------------------------|-----------------------------------------
 auto injector = di::make_injector(      | assert(42 == injector.create<int>());
     di::bind<int>.to(42)                |
 );                                      |
 ```
 ```cpp
 Bind type to static value               | Test
-----------------------------------------|------------------------------------------
+----------------------------------------|-----------------------------------------
 template<int N> using int_ =            | assert(42 == injector.create<int>());
     std::integral_constant<int, N>;     |
                                         |
@@ -115,7 +116,7 @@ auto injector = di::make_injector(      |
 ```
 ```cpp
 Bind interface to implementation        | Test
-----------------------------------------|------------------------------------------
+----------------------------------------|-----------------------------------------
 auto injector = di::make_injector(      | auto obj = injector.create<unique_ptr<i>>();
     di::bind<i, impl>                   | assert(dynamic_cast<i*>(obj.get()));
 );                                      |
@@ -134,7 +135,7 @@ auto injector = di::make_injector(      | auto obj = injector.create<unique_ptr<
 **Runtime Performance**
 ```cpp
 Create type wihtout bindings            | Asm
-----------------------------------------|------------------------------------------
+----------------------------------------|-----------------------------------------
 int main() {                            | xor %eax,%eax
     auto injector = di::make_injector();| retq
     return injector.create<int>();      |
@@ -143,7 +144,7 @@ int main() {                            | xor %eax,%eax
 
 ```cpp
 Create type with bounded instance       | Asm
-----------------------------------------|------------------------------------------
+----------------------------------------|-----------------------------------------
 int main() {                            | mov $0x2a,%eax
     auto injector = di::make_injector(  | retq
         di::bind<int>.to(42)            |
