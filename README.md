@@ -721,7 +721,6 @@ di::make_injector().create<c>();        |
 ```
 
 **Similar libraries**
-
 * C++ | [dicpp](https://bitbucket.org/cheez/dicpp) | [Fruit](https://github.com/google/fruit)
 * Java | [Dagger 2](https://github.com/google/dagger) | [Guice](https://github.com/google/guice)
 * C# | [Ninject](http://www.ninject.org)
