@@ -82,11 +82,12 @@ There are no Boost libraries requirements (optionally Boost.Smart\_Ptr).
 
 **Quick User Guide**
 
-* Let's assume all examples below include `boost/di.hpp` header and define `di` namespace alias.
+> Let's assume all examples below include `boost/di.hpp` header and define `di` namespace alias.
 ```cpp
     #include <boost/di.hpp>
     namespace di = boost::di;
 ```
+
 
 > **Bindings**
 ```cpp
@@ -118,7 +119,6 @@ auto injector = di::make_injector(      | auto obj = injector.create<unique_ptr<
     di::bind<i, impl>                   | assert(dynamic_cast<i*>(obj.get()));
 );                                      |
 ```
-> blah
 
 * **Injections**
 
