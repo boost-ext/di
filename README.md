@@ -427,7 +427,7 @@ auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>
 | unique\_ptr<T> | X | X | X | X | X |
 | shared\_ptr<T> | X | X | X | X | X |
 | weak\_ptr<T> | X | X | X | X | X |
-|------------|--------|--------|-----------|---------|
+---
 | Temporary const T& | X | X | X | X | X |
 
 *
