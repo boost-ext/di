@@ -13,7 +13,7 @@ Dependency injection is a programming practice providing required objects to an 
 * Provide easier to test code (Fakes objects might be injected)
 
 ```cpp
-No Dependency injection                        Dependency Injection
+No Dependency injection                  Dependency Injection
 ----------------------------------------|------------------------------------------
 class example {                         | class example {
 public:                                 | public:
