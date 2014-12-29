@@ -705,6 +705,12 @@ struct c {                              |
 di::make_injector().create<c>();        |
 ```
 
+**Similar libraries for other languages**
+
+* Java | [Dagger 2](https://github.com/google/dagger)
+* Java | [Google Guice](https://github.com/google/guice)
+* C# | [Ninject](http://www.ninject.org)
+
 **License**
 Distributed under the [Boost Software License, Version 1.0](http://www.boost.org/LICENSE_1_0.txt).
 
