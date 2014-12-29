@@ -80,7 +80,7 @@ There are no Boost libraries requirements (optionally Boost.Smart\_Ptr).
     ./b2 -j4 ../test ../example
 ```
 
-**Quick User Guide**
+**Quick User Guide** | [Hello World](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/hello_world.cpp)
 
 > Let's assume all examples below include `boost/di.hpp` header and define `di` namespace alias.
 ```cpp
@@ -90,7 +90,7 @@ There are no Boost libraries requirements (optionally Boost.Smart\_Ptr).
 
 *
 
-> **Bindings** [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/binding.cpp) | [More Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/dynamic_binding.cpp)
+> **Bindings** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/binding.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/dynamic_binding.cpp)
 
 ```cpp
 Create empty injector                   | Test
@@ -143,7 +143,7 @@ auto injector = di::make_injector(      | assert(&i == &object);
 
 *
 
-> **Injections**
+> **Injections** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/constructor_injection.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/constructor_signature.cpp) | [Even more examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/multiple_interfaces.cpp)
 ```cpp
 Direct constructor injection            | Test
 ----------------------------------------|-----------------------------------------
@@ -256,7 +256,7 @@ auto injector = di::make_injector(      |
 
 *
 
-> **Annotations**
+> **Annotations** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/named.cpp)
 ```cpp
 Annotated constructor injection         | Test
 ----------------------------------------|-----------------------------------------
@@ -334,7 +334,7 @@ auto injector = di::make_injector(      |
 ```
 *
 
-> **Scopes**
+> **Scopes** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/deduce_scope.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_scope.cpp) | [Even more examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/externals.cpp)
 ```cpp
 Scopes deduction (default behaviour)    | Test
 ----------------------------------------|-----------------------------------------
@@ -418,7 +418,7 @@ auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>
 
 *
 
-> **Modules**
+> **Modules** [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/modules.cpp)
 ```cpp
 Module                                  | Test
 ----------------------------------------|-----------------------------------------
@@ -525,7 +525,7 @@ auto injector = di::make_injector(      |
 
 *
 
-> **Policies**
+> **Policies** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/types_dumper.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_policy.cpp)
 ```cpp
 Define policies configuration
 ----------------------------------------------------------------------------------
@@ -571,7 +571,7 @@ assert(87.0, make_injector(di::bind<double>.to(42.0)).create<double>());
 
 *
 
-> **Providers**
+> **Providers** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_provider.cpp)
 ```cpp
 Heap provider
 ----------------------------------------------------------------------------------
