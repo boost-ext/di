@@ -51,12 +51,12 @@ int main() {                            | int main() {
 }                                       |
 ```
 
-###How To Start
+**How To Start**
 
 * [Documentation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
 * [Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
 
-Boost.DI requires C++14 compliant compiler(Clang-3.4+, GCC-5.0+) with STL (memory, new, type\_traits).
+Boost.DI requires C++14 compliant compiler (Clang-3.4+, GCC-5.0+) with STL (memory, new, type\_traits headers).
 There are no Boost libraries requirements (optionally Boost.Smart\_Ptr).
 
 > To get started the only file you need is `di.hpp`:
@@ -84,52 +84,9 @@ There are no Boost libraries requirements (optionally Boost.Smart\_Ptr).
 
 **Quick User Guide**
 
-**Hello World**
-
-```cpp
-#include <memory>
-#include <boost/di.hpp>
-
-namespace di = boost::di;
-
-class hello_world {
-public:
-    hello_world(std::shared_ptr<ilogger> logger
-              , std::shared_ptr<ilogic> logic
-              , bool value)
-        : logger_(logger)
-        , logic_(logic)
-        , value_(value)
-    { }
-
-    int run() const {
-        if (value_) {
-            logger_->log("hello world");
-            return logic_->do_it();
-        }
-    }
-
-    std::shared_ptr<ilogger> logger_;
-    std::shared_ptr<ilogic> logic_;
-    bool value_ = false;
-};
-
-int main() {
-    // dependency injection configuration
-    auto injector = di::make_injector(
-        di::bind<ilogger, logger>
-      , di::bind<ilogic, logic>
-      , di::bind<bool>.to(true)
-    );
-
-    // composition root
-    return injector.create<hello_world>().run();
-}
-```
-
-*License*
+**License**
 Distributed under the [Boost Software License, Version 1.0](http://www.boost.org/LICENSE_1_0.txt).
 
-*Disclaimers*
+**Disclaimers**
 This is not an official Boost library yet and there is no guarantee it will ever be!
 
