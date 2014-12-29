@@ -88,6 +88,7 @@ There are no Boost libraries requirements (optionally Boost.Smart\_Ptr).
     namespace di = boost::di;
 ```
 
+---
 
 > **Bindings**
 ```cpp
