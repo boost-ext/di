@@ -313,8 +313,8 @@ auto injector = di::make_injector(      |
 Annotated constructor injection with    | Test
 seperate constructor definition         |
 ----------------------------------------|-----------------------------------------
-auto int1 = []{}; /*name definition*/   | auto object = injector.create<c>();
-auto int2 = []{}; /*name definition*/   | assert(42 == c.a);
+auto int1 = []{};                       | auto object = injector.create<c>();
+auto int2 = []{};                       | assert(42 == c.a);
                                         | assert(87 == c.b);
 struct c {                              |
     BOOST_DI_INJECT(c                   |
@@ -397,11 +397,12 @@ auto injector = di::make_injector(      | injector.call(di::session_entry(my_ses
 ```cpp
 External scope                          | Test
 ----------------------------------------|-----------------------------------------
-auto l = 42l;                           | assert(42 == injector.create<int>());
+auto l = 42l;                           | assert(42 == injector.create<int>()); // external has priority
 auto b = false;                         | assert(injector.create<shared_ptr<i1>>()
                                         |        ==
 auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>()
-   di::bind<int>.to(42)                 | );
+   di::bind<int, int_<41>>              |
+ , di::bind<int>.to(42)                 | );
  , di::bind<i1>.to(make_shared<impl>());| assert(l == injector.create<long&>());
  , di::bind<long>.to(std::ref(l);       | assert(&l == &injector.create<long&>());
  , di::bind<short>.to([]{return 87;})   | assert(87 == injector.create<short>());
@@ -564,6 +565,8 @@ injector.create<int>(); // output: int
 ```cpp
 Allow ctor types policy
 ----------------------------------------------------------------------------------
+#include <boost/di/policies/allow_ctor_types.hpp>
+//
 class all_must_be_bound_unless_int : public di::config {
 public:
     auto policies() const noexcept {
@@ -649,7 +652,7 @@ int main() {                            | xor %eax,%eax
 }                                       |
 ```
 ```cpp
-Create type with bounded instance       | Asm
+Create type with bound instance       | Asm
 ----------------------------------------|-----------------------------------------
 int main() {                            | mov $0x2a,%eax
     auto injector = di::make_injector(  | retq
@@ -666,7 +669,54 @@ int main() {                            | mov $0x2a,%eax
 
 *
 
-> **Diagnostics**
+> **Error messages (-ftemplate-backtrace-limit=1 -ferror-limit=1)**
+```cpp
+Create interface without bound          | Error message
+implementation                          |
+----------------------------------------|-----------------------------------------
+    auto injector = di::make_injector();| error: allocating an object of abstract class type 'i1' return new (std::nothrow) T{std::forward<TArgs>(args)...};
+    injector.create<unique_ptr<i1>>();  |
+```
+```cpp
+Ambiguous binding                       | Error message
+----------------------------------------|-----------------------------------------
+auto injector = di::make_injector(      | error: base class 'boost::di::aux::pair<boost::di::aux::pair<int, boost::di::no_name>, std::integral_constant<bool, true> >' specified more than once as a direct base class
+        di::bind<int>.to(42)            |
+      , di::bind<int>.to(87)            |
+);                                      |
+injector.create<int>();                 |
+```
+```cpp
+Create not bound object with all bound  | Error message
+policy                                  |
+----------------------------------------|-----------------------------------------
+class all_bound : public di::config {   | error: static_assert failed "Type T is not allowed" static_assert(decltype(T::apply(data)){}, "Type T is not allowed");
+public:                                 |
+  auto policies() const noexcept {      |
+    return di::make_policies(           |
+      allow_ctor_types(is_bound<_>{})   |
+    );                                  |
+  }                                     |
+};                                      |
+                                        |
+auto injector =                         |
+    di::make_injector<all_bound>();     |
+injector.create<int>();                 |
+```
+```cpp
+Wrong annotation                        | Error message
+(NAMED instead of named)                |
+----------------------------------------|-----------------------------------------
+auto name = []{};                       | error: use of undeclared identifier 'named'
+                                        |
+struct c {                              |
+    BOOST_DI_INJECT(c                   |
+        , (NAMED = name) int) { }       |
+};                                      |
+                                        |
+di::make_injector().create<c>();        |
+```
+
 
 **License**
 Distributed under the [Boost Software License, Version 1.0](http://www.boost.org/LICENSE_1_0.txt).
