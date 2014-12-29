@@ -14,20 +14,20 @@ Dependency injection is a programming practice providing required objects to an 
 
 ```cpp
 No Dependency injection                        Dependency Injection
----------------------------------------------|-----------------------------------------
-class example {                              | class example {
-public:                                      | public:
-    example()                                |     example(shared_ptr<logic> logic
-        : logic_(new logic())                |           , shared_ptr<logger> logger)
-        , logger_(logger_factory::create())  |         : logic_(logic), logger_(logger)
-    { }                                      |     { }
-                                             |
-    int run() const;                         |     int run() const;
-                                             |
-    shared_ptr<logic> logic_;                | private:
-    shared_ptr<logger> logger_;              |     shared_ptr<logic> logic_;
-};                                           |     shared_ptr<logger> logger_;
-                                             | };
+----------------------------------------|------------------------------------------
+class example {                         | class example {
+public:                                 | public:
+    example()                           |     example(shared_ptr<logic> logic
+        : logic_(new logic())           |           , shared_ptr<logger> logger)
+        , logger_(factory::create())    |         : logic_(logic), logger_(logger)
+    { }                                 |     { }
+                                        |
+    int run() const;                    |     int run() const;
+                                        |
+    shared_ptr<logic> logic_;           | private:
+    shared_ptr<logger> logger_;         |     shared_ptr<logic> logic_;
+};                                      |     shared_ptr<logger> logger_;
+                                        | };
 ```
 
 ### Introduction
