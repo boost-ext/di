@@ -8,14 +8,13 @@
  /]
 
 [section Concepts]
-[include injections.qbk]
 [include bindings.qbk]
-[include injectors.qbk]
-[include modules.qbk]
-[include scopes.qbk]
+[include injections.qbk]
 [include annotations.qbk]
-[include providers.qbk]
+[include scopes.qbk]
+[include modules.qbk]
 [include policies.qbk]
+[include providers.qbk]
 
 [endsect]
 

@@ -1414,7 +1414,7 @@ public:
     auto* get(const type_traits::aggregate&
             , const type_traits::heap&
             , TArgs&&... args) const noexcept {
-        return new (std::nothrow) T{std::forward<TArgs>(args)...};
+        return new T{std::forward<TArgs>(args)...};
     }
 
     template<class T, class... TArgs>
