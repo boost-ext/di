@@ -55,7 +55,7 @@ int main() {                            | int main() {
 
 **How To Start?**
 
-* Get C++14 compliant compiler (Clang-3.4+, GCC-5.0+) with STL (memory, new, type\_traits headers) / Boost is not required
+* Get C++14 compliant compiler (Clang-3.4+, GCC-5.0+) with STL (memory, type\_traits headers) / Boost is not required
 * Read Quick User Guide (below)
 * [Read tutorial](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/tutorial.html)
 * [Read documentation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
@@ -626,9 +626,9 @@ public:                                 |
 
 *
 
-> **Run-time performance**
+> **Run-time performance (-O2)**
 ```cpp
-Create type wihtout bindings            | Assembler
+Create type wihtout bindings            | Assembler (the same as `return 0`)
 ----------------------------------------|-----------------------------------------
 int main() {                            | xor %eax,%eax
     auto injector = di::make_injector();| retq
@@ -636,7 +636,7 @@ int main() {                            | xor %eax,%eax
 }                                       |
 ```
 ```cpp
-Create type with bound instance         | Assembler
+Create type with bound instance         | Assembler (the same as `return 42`)
 ----------------------------------------|-----------------------------------------
 int main() {                            | mov $0x2a,%eax
     auto injector = di::make_injector(  | retq
@@ -644,6 +644,21 @@ int main() {                            | mov $0x2a,%eax
     );                                  |
                                         |
     return injector.create<int>();      |
+}                                       |
+```
+```cpp
+Create bound interface                  | Assembler (same output as `make_unique`)
+----------------------------------------|-----------------------------------------
+int main() {                            | push   %rax
+    auto injector = di::make_injector(  | mov    $0x8,%edi
+        di::bind<i1, impl1>             | callq  0x4007b0 <_Znwm@plt>
+    );                                  | movq   $0x400a30,(%rax)
+                                        | mov    $0x8,%esi
+    auto ptr = injector.create<         | mov    %rax,%rdi
+        std::unique_ptr<i1>             | callq  0x400960 <_ZdlPvm>
+    >();                                | mov    $0x1,%eax
+                                        | pop    %rdx
+    return ptr.get() != nullptr;        | retq
 }                                       |
 ```
 
