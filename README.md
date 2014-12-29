@@ -342,6 +342,35 @@ auto injector = di::make_injector(      |
   , di::bind<int>.named(int2).to(87)    |
 );                                      |
 ```
+```cpp
+Annotated constructor injection with    | Test
+ctor_traits
+----------------------------------------|-----------------------------------------
+auto int1 = []{};                       | auto object = injector.create<c>();
+auto int2 = []{};                       | assert(42 == c.a);
+                                        | assert(87 == c.b);
+struct c {                              |
+    c(int a, int b) : a(a), b(b) { }    |
+                                        |
+    int a = 0;                          |
+    int b = 0;                          |
+};                                      |
+                                        |
+namespace boost { namespace di {        |
+template<>                              |
+struct ctor_traits<c> {                 |
+    BOOST_DI_INJECT_TRAITS(             |
+        (named = int1) int              |
+        (named = int2) int              |
+    ;                                   |
+};                                      |
+}} // boost::di                         |
+                                        |
+auto injector = di::make_injector(      |
+    di::bind<int>.named(int1).to(42)    |
+  , di::bind<int>.named(int2).to(87)    |
+);                                      |
+```
 *
 
 > **Scopes** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/deduce_scope.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_scope.cpp) | [Even more examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/externals.cpp)
