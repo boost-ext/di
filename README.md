@@ -91,7 +91,7 @@ There are no Boost libraries requirements (optionally Boost.Smart\_Ptr).
 
 
 
-> **Bindings**
+> Bindings
 ```cpp
 Create empty injector                   | Test
 ----------------------------------------|-----------------------------------------
@@ -117,8 +117,8 @@ auto injector = di::make_injector(      |
 ```cpp
 Bind interface to implementation        | Test
 ----------------------------------------|-----------------------------------------
-auto injector = di::make_injector(      | auto obj = injector.create<unique_ptr<i>>();
-    di::bind<i, impl>                   | assert(dynamic_cast<i*>(obj.get()));
+auto injector = di::make_injector(      | auto object = injector.create<unique_ptr<i>>();
+    di::bind<i, impl>                   | assert(dynamic_cast<i*>(object.get()));
 );                                      |
 ```
 
