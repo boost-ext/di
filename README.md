@@ -121,17 +121,27 @@ auto injector = di::make_injector(      | auto object = injector.create<unique_p
 );                                      |
 ```
 
-* **Injections**
+*
 
-* **Scopes**
+> **Injections**
 
-* **Modules**
+*
 
-* **Providers**
+> **Scopes**
 
-* **Policies**
+*
 
-**Runtime Performance**
+> **Modules**
+
+*
+
+> **Providers**
+
+*
+
+> **Policies**
+
+> **Runtime Performance**
 ```cpp
 Create type wihtout bindings            | Asm
 ----------------------------------------|-----------------------------------------
@@ -153,7 +163,9 @@ int main() {                            | mov $0x2a,%eax
 }                                       |
 ```
 
-**Compile-time Performance**
+*
+
+> **Compile-time Performance**
 
 **License**
 Distributed under the [Boost Software License, Version 1.0](http://www.boost.org/LICENSE_1_0.txt).
