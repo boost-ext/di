@@ -82,6 +82,8 @@ There are no Boost libraries requirements (optionally Boost.Smart\_Ptr).
 
 **Quick User Guide**
 
+* Bindings
+
 Let's assume all examples below include `boost/di.hpp` header and define `di` namespace alias.
 ```cpp
     #include <boost/di.hpp>
@@ -121,6 +123,9 @@ auto injector = di::make_injector(      | auto obj = injector.create<unique_ptr<
 );
 ```
 
+* Injections
+
+
 **Runtime Performance**
 ```cpp
 Create type wihtout bindings            | Asm
@@ -142,6 +147,9 @@ int main() {                            | mov $0x2a,%eax
     return injector.create<int>();      |
 }                                       |
 ```
+
+* Constructor Injection
+
 
 **Compile-time Performance**
 
