@@ -2,19 +2,18 @@
 [![Coverage Status](https://coveralls.io/repos/krzysztof-jusiak/di/badge.png?branch=cpp14)](https://coveralls.io/r/krzysztof-jusiak/di?branch=cpp14)
 [![Stories in Ready](https://badge.waffle.io/krzysztof-jusiak/di.svg?label=ready&title=Ready)](http://waffle.io/krzysztof-jusiak/di)
 
-### Dependency Injection
+*Dependency Injection*
 > "Don't call us, we'll call you", Hollywood principle
 
+Dependency injection is a programming practice providing required objects to an object.
 
-Dependency injection is a programming practice providing required objects to an object. Following this approach has many advantages:
-
-* Provide loosely coupled code (Separation of business logic and object creation)
-* Provide easier to maintain code (Different objects might be easily injected)
-* Provide easier to test code (Fakes objects might be injected)
+* Provide loosely coupled code (separation of business logic and object creation)
+* Provide easier to maintain code (different objects might be easily injected)
+* Provide easier to test code (fakes objects might be injected)
 
 ```cpp
 No Dependency injection                  Dependency Injection
-----------------------------------------|------------------------------------------
+----------------------------------------|--------------------------------------------
 class example {                         | class example {
 public:                                 | public:
     example()                           |     example(shared_ptr<logic> logic
@@ -32,17 +31,17 @@ public:                                 | public:
 
 Boost.DI is a C++14 header only, type safe, compile time, non-intrusive constructor dependency injection
 library improving manual dependency injection by simplifying object instantiation with automatic
-dependencies injection. Using Boost.DI has many advantages over manual dependency injection.
+dependencies injection.
 
-* Reduce boilerplate code (No factories, no objects creation)
-* Reduce cost of maintenance effort (Constructor signature change won't affect di configuration)
-* Reduce testing effort (Automatic Mocks Injector)
-* Give better control of what and how is created (Policies, allocator)
-* Give better understanding about objects hierarchy (UML Visitor)
+* Reduce boilerplate code (no factories, no objects creation)
+* Reduce cost of maintenance effort (constructor signature change won't affect di configuration)
+* Reduce testing effort (automatic mocks Injector)
+* Gives better control of what and how is created (policies, providers)
+* Gives better understanding about objects hierarchy (Types creation graph)
 
 ```cpp
 Manual Dependency Injection              Boost.DI
-----------------------------------------|------------------------------------------
+----------------------------------------|--------------------------------------------
 int main() {                            | int main() {
     // boilerplate code                 |     auto injector = di::make_injector();
     auto logic = make_shared<logic>();  |     return injector.create<example>().run()
@@ -52,13 +51,13 @@ int main() {                            | int main() {
 }                                       |
 ```
 
----
+*How To Start*
 
 * [Documentation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
 * [Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
 
-### Instalation
-Boost.DI is header only library which requires C++14 compliant compiler(Clang-3.4+, GCC-5.0+) with STL (memory, new, type\_traits). There are no Boost libraries requirements (optionally Boost.Smart\_Ptr).
+Boost.DI requires C++14 compliant compiler(Clang-3.4+, GCC-5.0+) with STL (memory, new, type\_traits).
+There are no Boost libraries requirements (optionally Boost.Smart\_Ptr).
 
 > To get started the only file you need is `di.hpp`:
 
@@ -128,20 +127,9 @@ int main() {
 }
 ```
 
-### Tested compilers (100% test code coverage)
-* Linux (x86/x86-64)
-   * Clang 3.4+ (clean with Clang Static Analyzer and Valgrind)
-   * GCC 5.0+ (clean with Valgrind)
-
-* Windows (x86/x86-64)
-   * MinGW 5.0+
-
-* Darwin/Mac OS (x86-64)
-   * Clang 503+
-
-### License
+*License*
 Distributed under the [Boost Software License, Version 1.0](http://www.boost.org/LICENSE_1_0.txt).
 
-### Disclaimers
+*Disclaimers*
 This is not an official Boost library yet and there is no guarantee it will ever be!
 
