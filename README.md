@@ -343,7 +343,7 @@ auto injector = di::make_injector(      |
 
 > **Scopes** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/deduce_scope.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_scope.cpp) | [Even more examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/externals.cpp)
 ```cpp
-Scopes deduction (default behaviour)    | Test
+Deduce scope (default)                  | Test
 ----------------------------------------|-----------------------------------------
 struct c {                              | auto object1 = injector.create<c>();
     shared_ptr<i1> sp; /*singleton*/    | auto object2 = injector.create<c>();
