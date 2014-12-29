@@ -597,7 +597,7 @@ public:                                 | assert(87.0, make_injector(di::bind<do
 ```cpp
 Stack/Heap no throw provider            | Test
 ----------------------------------------|-----------------------------------------
-class nothrow_reduce_heap_usage {       | // per injector policy
+class stack_heap_no_throw {             | // per injector policy
 public:                                 | auto injector = di::make_injector<my_provider>();
   template<class T, class... TArgs>     | assert(0 == injector.create<int>());
   auto* get(                            |
@@ -639,7 +639,7 @@ public:                                 | auto injector = di::make_injector<my_p
 class my_provider : public di::config { |
 public:                                 |
     auto provider() const noexcept {    |
-        return nothrow_heap{};          |
+        return stack_heap_no_throw{};   |
     }                                   |
 };                                      |
 ```
