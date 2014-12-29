@@ -139,6 +139,7 @@ auto injector = di::make_injector(      | assert(&i == &object);
     di::bind<int>.to(std::cref(i));     |
 );                                      |
 ```
+
 *
 
 > **Injections**
@@ -414,7 +415,6 @@ auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>
 );                                      | }
 ```
 
-
 | Scope/Conversion | T | const T& | T*
 ----------------------
 | unique | X | |
@@ -532,14 +532,105 @@ auto injector = di::make_injector(      |
 
 *
 
-> **Providers**
+> **Policies**
+```cpp
+Define policies configuration
+----------------------------------------------------------------------------------
+class print_types_policy : public di::config {
+public:
+    auto policies() const noexcept {
+        return di::make_policies(
+            [](auto type){ std::cout << typeid(typename decltype(type)::type).name() << std::endl; }
+        );
+    }
+};
+
+Test
+----------------------------------------------------------------------------------
+auto injector = di::make_injector<print_types_policy>(); // per injector policy
+injector.create<int>(); // output: int
+
+#define BOOST_DI_CFG my_policy // globally
+auto injector = di::make_injector();
+injector.create<int>(); // output: int
+```
+
+```cpp
+Allow ctor types policy
+----------------------------------------------------------------------------------
+class all_must_be_bound_unless_int : public di::config {
+public:
+    auto policies() const noexcept {
+        using namespace di::policies;
+        using namespace di::policies::operators;
+
+        return di::make_policies(
+            allow_ctor_types(std::is_same<_, int>{} || is_bound<_>{})
+        );
+    }
+};
+
+Test
+----------------------------------------------------------------------------------
+#define BOOST_DI_CFG all_must_be_bound_unless_int // globally
+assert(0 == auto injector.create<int>());
+injector.create<double>(); // compile error
+assert(87.0, make_injector(di::bind<double>.to(42.0)).create<double>());
+```
 
 *
 
-> **Policies**
-/global
-/per_injector
-/custom
+> **Providers**
+```cpp
+Heap provider
+----------------------------------------------------------------------------------
+class nothrow_reduce_heap_usage {
+public:
+    template<class T, class... TArgs>
+    auto* get(const type_traits::direct&
+            , const type_traits::heap&
+            , TArgs&&... args) const noexcept {
+        return new (std::nothrow) T(std::forward<TArgs>(args)...);
+    }
+
+    template<class T, class... TArgs>
+    auto* get(const type_traits::aggregate&
+            , const type_traits::heap&
+            , TArgs&&... args) const noexcept {
+        return new (std::nothrow) T{std::forward<TArgs>(args)...};
+    }
+
+    template<class T, class... TArgs>
+    auto get(const type_traits::direct&
+           , const type_traits::stack&
+           , TArgs&&... args) const noexcept {
+        return T(std::forward<TArgs>(args)...);
+    }
+
+    template<class T, class... TArgs>
+    auto get(const type_traits::aggregate&
+           , const type_traits::stack&
+           , TArgs&&... args) const noexcept {
+        return T{std::forward<TArgs>(args)...};
+    }
+};
+
+class my_provider : public di::config {
+public:
+    auto provider() const noexcept {
+        return nothrow_heap{};
+    }
+};
+
+Test
+----------------------------------------------------------------------------------
+auto injector = di::make_injector<my_provider>(); // per injector
+assert(0 == injector.create<int>());
+
+#define BOOST_DI_CFG my_provider // globally
+auto injector = di::make_injector();
+assert(0 == injector.create<int>());
+```
 
 *
 
