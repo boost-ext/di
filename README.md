@@ -559,7 +559,7 @@ public:
         );
     }
 };
- 
+//
 Test
 ----------------------------------------------------------------------------------
 #define BOOST_DI_CFG all_must_be_bound_unless_int // globally
