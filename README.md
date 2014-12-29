@@ -710,9 +710,32 @@ int main() {                            | push   %rax
 *
 
 > **Compile-time performance**
-* Boost.DI dependency itself
-* Number of bindings vs scope deduction
-* Automatic injection vs BOOST\_DI\_INJECT
+```cpp
+Boost.DI header                         | Time [s] / Size [kb]
+----------------------------------------|-----------------------------------------
+#include <boost/di.hpp>                 | 0.25s / 6.2 kb
+int main() { }                          |
+```
+
+```cpp
+Number of bindings                      | Time [s] / Size [kb]
+----------------------------------------|-----------------------------------------
+```
+
+```cpp
+Scope deduction                         | Time [s] / Size [kb]
+----------------------------------------|-----------------------------------------
+```
+
+```cpp
+Automatic injection                     | Time [s] / Size [kb]
+----------------------------------------|-----------------------------------------
+```
+
+```cpp
+BOOST_DI_INJECT                         | Time [s] / Size [kb]
+----------------------------------------|-----------------------------------------
+```
 
 *
 
