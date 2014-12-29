@@ -536,12 +536,12 @@ public:
         );
     }
 };
- 
+---
 Test
 ----------------------------------------------------------------------------------
 auto injector = di::make_injector<print_types_policy>(); // per injector policy
 injector.create<int>(); // output: int
- 
+---
 #define BOOST_DI_CFG my_policy // globally
 auto injector = di::make_injector();
 injector.create<int>(); // output: int
