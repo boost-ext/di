@@ -31,7 +31,7 @@ namespace di = boost::di;
 
 class local_config : public di::config {
 public:
-    auto policies() const noexcept {
+    auto policies() noexcept {
         return di::make_policies(
             [&](auto type, auto dependency, auto... ctor) {
                 using T = decltype(type);
@@ -58,8 +58,8 @@ public:
         );
     }
 
-    mutable std::vector<int> v = { 0 };
-    mutable int i = 1;
+    std::vector<int> v = { 0 };
+    int i = 1;
 };
 
 int main() {

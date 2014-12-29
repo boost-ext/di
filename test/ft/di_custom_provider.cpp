@@ -1,5 +1,5 @@
 #include <boost/di.hpp>
-#include <boost/di/providers/nothrow_heap.hpp>
+#include <boost/di/providers/heap.hpp>
 
 namespace di = boost::di;
 
@@ -9,7 +9,7 @@ class config : public di::config {
 public:
     auto provider() const noexcept {
         ++called;
-        return di::providers::nothrow_heap{};
+        return di::providers::heap{};
     }
 };
 

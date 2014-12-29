@@ -57,7 +57,7 @@ public:
     { }
 
     template<class T>
-    T create() const noexcept {
+    T create() const {
         return create_t<void>(aux::type<T>{});
     }
 
@@ -73,22 +73,22 @@ private:
     { }
 
     template<class, class T>
-    auto create_t(const aux::type<T>&) const noexcept {
+    auto create_t(const aux::type<T>&) const {
         return create_impl<T>();
     }
 
     template<class TParent, class... Ts>
-    auto create_t(const aux::type<any_type<Ts...>>&) const noexcept {
+    auto create_t(const aux::type<any_type<Ts...>>&) const {
         return any_type<TParent, injector>{*this};
     }
 
     template<class, class T, class TName>
-    auto create_t(const aux::type<named<TName, T>>&) const noexcept {
+    auto create_t(const aux::type<named<TName, T>>&) const {
         return create_impl<T, TName>();
     }
 
     template<class T, class TName = no_name>
-    auto create_impl() const noexcept {
+    auto create_impl() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;
@@ -140,7 +140,7 @@ private:
         return TDependency{injector};
     }
 
-    TConfig config_;
+    mutable TConfig config_;
 };
 
 }}} // boost::di::core

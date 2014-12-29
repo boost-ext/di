@@ -18,7 +18,7 @@ test make_policies_types = [] {
 };
 
 test default_config = [] {
-    expect(std::is_same<providers::nothrow_reduce_heap_usage, decltype(config{}.provider())>{});
+    expect(std::is_same<providers::stack_over_heap, decltype(config{}.provider())>{});
     expect(std::is_same<core::pool<aux::type_list<>>, decltype(config{}.policies())>{});
 };
 

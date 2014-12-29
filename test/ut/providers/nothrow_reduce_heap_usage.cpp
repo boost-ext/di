@@ -4,19 +4,19 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/providers/nothrow_reduce_heap_usage.hpp"
+#include "boost/di/providers/stack_over_heap.hpp"
 
 namespace boost { namespace di { namespace providers {
 
 auto test_heap = [](auto type, auto init, auto... args) {
     using T = typename decltype(type)::type;
-    std::unique_ptr<T> object{nothrow_reduce_heap_usage{}.get<T>(init, type_traits::heap{}, args...)};
+    std::unique_ptr<T> object{stack_over_heap{}.get<T>(init, type_traits::heap{}, args...)};
     expect(object.get());
 };
 
 auto test_stack = [](auto type, auto init, auto... args) {
     using T = typename decltype(type)::type;
-    T object = nothrow_reduce_heap_usage{}.get<T>(init, type_traits::stack{}, args...);
+    T object = stack_over_heap{}.get<T>(init, type_traits::stack{}, args...);
     (void)object;
 };
 

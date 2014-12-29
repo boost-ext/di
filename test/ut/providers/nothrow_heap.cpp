@@ -4,13 +4,13 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/providers/nothrow_heap.hpp"
+#include "boost/di/providers/heap.hpp"
 
 namespace boost { namespace di { namespace providers {
 
 auto test_heap = [](auto type, auto init, auto memory, auto... args) {
     using T = typename decltype(type)::type;
-    std::unique_ptr<T> object{nothrow_heap{}.get<T>(init, memory, args...)};
+    std::unique_ptr<T> object{heap{}.get<T>(init, memory, args...)};
     expect(object.get());
 };
 

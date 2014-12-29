@@ -49,7 +49,7 @@ public:
         { }
 
         template<class T, class TProvider>
-        auto create(const TProvider&) noexcept {
+        auto create(const TProvider&) {
             return scope_.template create<T>(*provider_);
         }
 

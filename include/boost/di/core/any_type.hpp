@@ -39,17 +39,17 @@ struct any_type {
     using is_ref = std::enable_if_t<is_ref_impl<T>::value>;
 
     template<class T, class = is_not_same<T>>
-    operator T() noexcept {
+    operator T() {
         return injector_.template create_impl<T>();
     }
 
     template<class T, class = is_not_same<T>, class = is_ref<T>>
-    operator T&() const noexcept {
+    operator T&() const {
         return injector_.template create_impl<T&>();
     }
 
     template<class T, class = is_not_same<T>, class = is_ref<T>>
-    operator const T&() const noexcept {
+    operator const T&() const {
         return injector_.template create_impl<const T&>();
     }
 

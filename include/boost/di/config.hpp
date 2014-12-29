@@ -9,7 +9,7 @@
 
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/core/pool.hpp"
-#include "boost/di/providers/nothrow_reduce_heap_usage.hpp"
+#include "boost/di/providers/stack_over_heap.hpp"
 
 #if defined(BOOST_DI_CFG)
     class BOOST_DI_CFG;
@@ -27,10 +27,10 @@ inline auto make_policies(const TArgs&... args) noexcept {
 class config {
 public:
     auto provider() const noexcept {
-        return providers::nothrow_reduce_heap_usage{};
+        return providers::stack_over_heap{};
     }
 
-    auto policies() const noexcept {
+    auto policies() noexcept {
         return make_policies();
     }
 };

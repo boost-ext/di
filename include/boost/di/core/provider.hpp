@@ -27,7 +27,7 @@ template<
   , TInjector
 > {
     template<class TMemory = type_traits::heap>
-    auto get(const TMemory& memory = {}) const noexcept {
+    auto get(const TMemory& memory = {}) const {
         auto&& config = injector_.config_;
         return config.provider().template get<T>(
             TInitialization{}
