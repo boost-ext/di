@@ -32,7 +32,6 @@
 #else
 
 #include <memory>
-#include <new>
 #include <type_traits>
 
 #define BOOST_DI_AUX_UTILITY_HPP

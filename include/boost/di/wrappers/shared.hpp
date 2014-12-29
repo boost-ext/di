@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_WRAPPERS_SHARED_HPP
 #define BOOST_DI_WRAPPERS_SHARED_HPP
 
-#include <new>
 #include <memory>
 #if (__has_include(<boost/shared_ptr.hpp>))
     #include <boost/shared_ptr.hpp>
