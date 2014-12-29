@@ -14,12 +14,11 @@ Dependency injection is a programming practice providing required objects to an 
 
 ```cpp
 No Dependency injection                        Dependency Injection
----------------------------------------------|--------------------------------------------
+---------------------------------------------|-----------------------------------------
 class example {                              | class example {
 public:                                      | public:
-    example()                                | // dependencies are passed via constructor
-        : logic_(new logic())                |     example(shared_ptr<logic> logic
-                                             |           , shared_ptr<logger> logger)
+    example()                                |     example(shared_ptr<logic> logic
+        : logic_(new logic())                |           , shared_ptr<logger> logger)
         , logger_(logger_factory::create())  |         : logic_(logic), logger_(logger)
     { }                                      |     { }
                                              |
@@ -27,10 +26,9 @@ public:                                      | public:
                                              |
     shared_ptr<logic> logic_;                | private:
     shared_ptr<logger> logger_;              |     shared_ptr<logic> logic_;
-};                                           |      shared_ptr<logger> logger_;
+};                                           |     shared_ptr<logger> logger_;
                                              | };
 ```
-
 
 ### Introduction
 Boost.DI is C++14 header only library providing type safe, compile time, non-intrusive constructor dependency injection.
