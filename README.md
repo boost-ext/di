@@ -596,17 +596,17 @@ public:                                 | assert(87.0, make_injector(di::bind<do
 ```cpp
 Stack/Heap no throw provider            | Test
 ----------------------------------------|-----------------------------------------
-class stack_heap_no_throw {             | /*per injector policy*/
+class stack_heap_no_throw {             | // per injector policy
 public:                                 | auto injector = di::make_injector<my_provider>();
   template<                             | assert(0 == injector.create<int>());
     class T                             |
-  , class TInit // direct()/aggregate{} | /*global policy*/
+  , class TInit // direct()/aggregate{} | // global policy
   , class TMemory // heap/stack         | #define BOOST_DI_CFG my_provider
   , class... TArgs                      | auto injector = di::make_injector();
-  >                                     |
+  \>                                    |
   auto* get(const TInit&                | assert(0 == injector.create<int>());
           , const TMemory&              |
-          , TArgs&&... args)            |
+          , TArgs&&... args)
   const noexcept {                      |
       return new (std::nothrow)         |
         T{std::forward<TArgs>(args)...};|
