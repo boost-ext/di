@@ -30,8 +30,29 @@ public:                                 | public:
                                         | };
 ```
 
-### Introduction
-Boost.DI is C++14 header only library providing type safe, compile time, non-intrusive constructor dependency injection.
+Boost.DI is a C++14 header only, type safe, compile time, non-intrusive constructor dependency injection
+library improving manual dependency injection by simplifying object instantiation with automatic
+dependencies injection. Using Boost.DI has many advantages over manual dependency injection.
+
+* Reduce boilerplate code (No factories, no objects creation)
+* Reduce cost of maintenance effort (Constructor signature change won't affect di configuration)
+* Reduce testing effort (Automatic Mocks Injector)
+* Give better control of what and how is created (Policies, allocator)
+* Give better understanding about objects hierarchy (UML Visitor)
+
+```cpp
+Manual Dependency Injection              Boost.DI
+----------------------------------------|------------------------------------------
+int main() {                            | int main() {
+    // boilerplate code                 |     auto injector = di::make_injector();
+    auto logic = make_shared<logic>();  |     return injector.create<example>().run()
+    auto logger = make_shared<logger>();| }
+                                        |
+    return example{logic, logger}.run();|
+}                                       |
+```
+
+---
 
 * [Documentation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
 * [Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
