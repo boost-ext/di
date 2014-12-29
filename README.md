@@ -51,7 +51,7 @@ int main() {                            | int main() {
 
 **Why Dependency Injection?**
 
-* [![The Clean Code Talks - Don't Look For Things!](http://img.youtube.com/vi/RlfLCWKxHJ0/0.jpg)](http://www.youtube.com/watch?v=RlfLCWKxHJ0)
+[![The Clean Code Talks - Don't Look For Things!](http://img.youtube.com/vi/RlfLCWKxHJ0/100.jpg)](http://www.youtube.com/watch?v=RlfLCWKxHJ0)
 
 **How To Start?**
 
