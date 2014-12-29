@@ -279,6 +279,36 @@ auto injector = di::make_injector(      |
 ```
 ```cpp
 Annotated constructor injection with    | Test
+the same names for different variables  |
+----------------------------------------|-----------------------------------------
+auto n1 = []{};                         | auto object = injector.create<c>();
+auto n2 = []{};                         | assert(42 == c.a);
+                                        | assert(42 == c.b);
+struct c {                              | assert(87 == c.c);
+    BOOST_DI_INJECT(c                   | assert(0 == c.d);
+        , (named = n1) int a            | assert("str" == c.s);
+        , (named = n1) int b            |
+        , (named = n2) int c            |
+        , int d                         |
+        , (named = n1) string s)        |
+        : a(a), b(b), c(c), d(d), s(s)  |
+    { }                                 |
+                                        |
+    int a = 0;                          |
+    int b = 0;                          |
+    int c = 0;                          |
+    int d = 0;                          |
+    string s;                           |
+};                                      |
+                                        |
+auto injector = di::make_injector(      |
+    di::bind<int>.named(n1).to(42)      |
+  , di::bind<int>.named(n2).to(87)      |
+  , di::bind<string>.named(n1).to("str")|
+);                                      |
+```
+```cpp
+Annotated constructor injection with    | Test
 seperate constructor definition         |
 ----------------------------------------|-----------------------------------------
 auto int1 = []{}; /*name definition*/   | auto object = injector.create<c>();
@@ -382,6 +412,7 @@ auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>
         return nullptr;                 | auto object = injector.create<shared_ptr<i2>>();
      }                                  | assert(dynamic_cast<impl2*>(object.get()));
 );                                      | }
+```
 
 
 | Scope/Conversion | T | const T& | T*
@@ -395,8 +426,109 @@ auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>
 *
 
 > **Modules**
-/auto
-/exposed
+```cpp
+Module                                  | Test
+----------------------------------------|-----------------------------------------
+struct c {                              | auto object = injector.create<c>();
+    c(unique_ptr<i1> i1                 | assert(dynamic_cast<impl1*>(object.i1.get()));
+    , unique_ptr<i2> i2                 | assert(dynamic_cast<impl2*>(object.i2.get()));
+    , int i) : i1(i1), i2(i2), i(i)     | asert(42 == object.i);
+    { }                                 |
+                                        | assert(dynamic_cast<impl1*>(injector.crate<unique_ptr<i1>>());
+    unique_ptr<i1> i1;                  | assert(dynamic_cast<impl2*>(injector.crate<unique_ptr<i2>>());
+    unique_ptr<i2> i2;                  |
+    int i = 0;                          |
+};                                      |
+                                        |
+struct module1 {                        |
+    auto configure() const noexcept {   |
+        return di::make_injector(       |
+            di::bind<i1, impl1>         |
+          , di::bind<int>.to(42)        |
+        );                              |
+    }                                   |
+};                                      |
+                                        |
+struct module2 {                        |
+    auto configure() const noexcept {   |
+        return di::make_injector(       |
+            di::bind<i2, impl2>         |
+        );                              |
+    };                                  |
+};                                      |
+                                        |
+auto injector = di::make_injector(      |
+    module1{}, module2{}                |
+);                                      |
+```
+```cpp
+Exposed type module                     | Test
+----------------------------------------|-----------------------------------------
+struct module {                         | auto object = injector.create<c>();
+    di::injector<c> configure()         | assert(dynamic_cast<impl1*>(object.i1.get()));
+    const noexcept;                     | assert(dynamic_cast<impl2*>(object.i2.get()));
+                                        | asert(42 == object.i);
+    int i = 0;                          |
+};                                      | injector.crate<unique_ptr<i1>>() // compile error
+                                        | injector.crate<unique_ptr<i2>>() // compile error
+di::injector<c>                         |
+module::configure() const noexcept {    |
+    return di::make_injector(           |
+        di::bind<i1, impl1>             |
+      , di::bind<i2, impl2>             |
+      , di::bind<int>.to(i)             |
+    );                                  |
+}                                       |
+                                        |
+auto injector = di::make_injector(      |
+    module{42}                          |
+);                                      |
+```
+```cpp
+Exposed many types module               | Test
+----------------------------------------|-----------------------------------------
+struct module {                         | assert(dynamic_cast<impl1*>(injector.crate<unique_ptr<i1>>());
+    di::injector<i1, i2> configure()    | assert(dynamic_cast<impl2*>(injector.crate<unique_ptr<i2>>());
+    const noexcept;                     |
+                                        |
+    int i = 0;                          |
+};                                      |
+                                        |
+di::injector<i1, i2>                    |
+module::configure() const noexcept {    |
+    return di::make_injector(           |
+        di::bind<i1, impl1>             |
+      , di::bind<i2, impl2>             |
+    );                                  |
+}                                       |
+                                        |
+auto injector = di::make_injector(      |
+    module{}                            |
+);                                      |
+```
+```cpp
+Exposed type module with annotation     | Test
+----------------------------------------|-----------------------------------------
+auto my = []{};                         | auto object = injector.create<c>();
+                                        | assert(dynamic_cast<impl1*>(c.up.get()));
+struct c {                              |
+    BOOST_DI_INJECT(c                   |
+      , (named = my) unique_ptr<i1> up);|
+      : up(up)                          |
+    { }                                 |
+                                        |
+    unique_ptr<i1> up;                  |
+};                                      |
+                                        |
+di::injector<i1> module =               |
+    di::make_injector(                  |
+        di::bind<i1, impl1>             |
+    );                                  |
+                                        |
+auto injector = di::make_injector(      |
+    di::bind<i1>.named(my).to(module)   |
+);                                      |
+```
 
 *
 
