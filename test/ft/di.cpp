@@ -366,13 +366,12 @@ test scopes_injector_lambda_injector = [] {
 };
 
 test session_call = [] {
-    struct name { };
     auto injector = di::make_injector(
-        di::bind<i1, impl1>.in(di::session(name{}))
+        di::bind<i1, impl1>.in(di::session(name))
     );
 
     {
-    injector.call(di::session_entry(name{}));
+    injector.call(di::session_entry(name));
     auto object = injector.create<std::shared_ptr<i1>>();
     expect(object.get());
     expect(dynamic_cast<i1*>(object.get()));
@@ -385,7 +384,7 @@ test session_call = [] {
     }
 
     {
-    injector.call(di::session_exit(name{}));
+    injector.call(di::session_exit(name));
     auto object = injector.create<std::shared_ptr<i1>>();
     expect(!object.get());
     }
