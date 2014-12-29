@@ -14,16 +14,16 @@ No Dependency injection                 | Dependency Injection
 ----------------------------------------|--------------------------------------------
 class example {                         | class example {
 public:                                 | public:
-    example()                           |     example(shared_ptr<logic> logic
-        : logic_(new logic())           |           , shared_ptr<logger> logger)
+    example()                           |     example(shared_ptr<ilogic> logic
+        : logic_(new logic())           |           , shared_ptr<ilogger> logger)
         , logger_(factory::create())    |         : logic_(logic), logger_(logger)
     { }                                 |     { }
                                         |
     int run() const;                    |     int run() const;
                                         |
-    shared_ptr<logic> logic_;           | private:
-    shared_ptr<logger> logger_;         |     shared_ptr<logic> logic_;
-};                                      |     shared_ptr<logger> logger_;
+    shared_ptr<ilogic> logic_;          | private:
+    shared_ptr<ilogger> logger_;        |     shared_ptr<ilogic> logic_;
+};                                      |     shared_ptr<ilogger> logger_;
                                         | };
 ```
 
@@ -41,12 +41,12 @@ dependencies injection.
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
 int main() {                            | int main() {
-    /*boilerplate code*/                |     auto injector = di::make_injector();
-    auto logic = make_shared<logic>();  |     return injector.create<example>().run();
-    auto logger = make_shared<logger>();| }
-                                        |
-    return example{logic, logger}.run();|
-}                                       |
+    /*boilerplate code*/                |     auto injector = di::make_injector(
+    auto logic = make_shared<logic>();  |         di::bind<ilogic, logic>
+    auto logger = make_shared<logger>();|       , di::bind<ilogger, logger>
+                                        |     );
+    return example{logic, logger}.run();|     return injector.create<example>().run();
+}                                       |}
 ```
 
 **How To Start?**
