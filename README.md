@@ -2,11 +2,38 @@
 [![Coverage Status](https://coveralls.io/repos/krzysztof-jusiak/di/badge.png?branch=cpp14)](https://coveralls.io/r/krzysztof-jusiak/di?branch=cpp14)
 [![Stories in Ready](https://badge.waffle.io/krzysztof-jusiak/di.svg?label=ready&title=Ready)](http://waffle.io/krzysztof-jusiak/di)
 
-### C++ Dependency Injection
+### Dependency Injection
 > "Don't call us, we'll call you", Hollywood principle
 
+
+Dependency injection is a programming practice providing required objects to an object. Following this approach has many advantages:
+
+* Provide loosely coupled code (Separation of business logic and object creation)
+* Provide easier to maintain code (Different objects might be easily injected)
+* Provide easier to test code (Fakes objects might be injected)
+
+```cpp
+No Dependency injection                                  Dependency Injection
+-------------------------------------------------------|-----------------------------------------------------------------------
+class example {                                          class example {
+public:                                                  public:
+    example()                                                // dependencies are passed via constructor
+        : logic_(new logic())                                example(shared_ptr<logic> logic, shared_ptr<logger> logger)
+        , logger_(logger_factory::create())                      : logic_(logic), logger_(logger)
+    { }                                                      { }
+
+    int run() const;                                         int run() const;
+
+    shared_ptr<logic> logic_;                            private:
+    shared_ptr<logger> logger_;                              shared_ptr<logic> logic_;
+};                                                           shared_ptr<logger> logger_;
+                                                         };
+
+```
+
+
 ### Introduction
-Boost.DI is C++14 header only library providing type safe, compile time, macro free constructor dependency injection.
+Boost.DI is C++14 header only library providing type safe, compile time, non-intrusive constructor dependency injection.
 
 * [Documentation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
 * [Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)

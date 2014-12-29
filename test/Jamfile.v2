@@ -18,7 +18,9 @@ compose <variant>coverage :
 
 extend-feature variant : analyze ;
 compose <variant>analyze :
-    <cxxflags>"-fsanitize=undefined -fsanitize=memory"
+    <cxxflags>"-fsanitize=undefined"
+    <cxxflags>"-fsanitize=memory"
+    <optimization>off
 ;
 
 project :
