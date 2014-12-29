@@ -646,7 +646,7 @@ public:                                 |
 
 *
 
-> **Runtime Performance**
+> **Run-time performance**
 ```cpp
 Create type wihtout bindings            | Assembler
 ----------------------------------------|-----------------------------------------
@@ -669,7 +669,7 @@ int main() {                            | mov $0x2a,%eax
 
 *
 
-> **Compile-time Performance**
+> **Compile-time performance**
 * Boost.DI dependency itself
 * Number of bindings vs scope deduction
 * Automatic injection vs BOOST\_DI\_INJECT
