@@ -43,7 +43,7 @@ dependencies injection.
 Manual Dependency Injection              Boost.DI
 ----------------------------------------|--------------------------------------------
 int main() {                            | int main() {
-    // boilerplate code                 |     auto injector = di::make_injector();
+    /*boilerplate code*/                |     auto injector = di::make_injector();
     auto logic = make_shared<logic>();  |     return injector.create<example>().run()
     auto logger = make_shared<logger>();| }
                                         |
