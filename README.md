@@ -681,15 +681,15 @@ int main() {                            | mov $0x2a,%eax
 Create interface without bound          | Error message
 implementation                          |
 ----------------------------------------|-----------------------------------------
-    auto injector = di::make_injector();| error: allocating an object of abstract class type 'i1' return new (std::nothrow) T{std::forward<TArgs>(args)...};
-    injector.create<unique_ptr<i1>>();  |
+auto injector = di::make_injector();    | error: allocating an object of abstract class type 'i1' return new (std::nothrow) T{std::forward<TArgs>(args)...};
+injector.create<unique_ptr<i1>>();      |
 ```
 ```cpp
 Ambiguous binding                       | Error message
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector(      | error: base class 'boost::di::aux::pair<boost::di::aux::pair<int, boost::di::no_name>, std::integral_constant<bool, true> >' specified more than once as a direct base class
-        di::bind<int>.to(42)            |
-      , di::bind<int>.to(87)            |
+    di::bind<int>.to(42)                |
+  , di::bind<int>.to(87)                |
 );                                      |
 injector.create<int>();                 |
 ```
