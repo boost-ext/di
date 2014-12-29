@@ -602,11 +602,10 @@ public:                                 | auto injector = di::make_injector<my_p
     class T                             |
   , class TInit // direct()/aggregate{} | // global policy
   , class TMemory // heap/stack         | #define BOOST_DI_CFG my_provider
-  , class... TArgs                      | auto injector = di::make_injector();
-  \>                                    |
+  , class... TArgs>                     | auto injector = di::make_injector();
   auto* get(const TInit&                | assert(0 == injector.create<int>());
           , const TMemory&              |
-          , TArgs&&... args)
+          , TArgs&&... args)            |
   const noexcept {                      |
       return new (std::nothrow)         |
         T{std::forward<TArgs>(args)...};|
