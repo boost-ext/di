@@ -370,6 +370,7 @@ auto injector = di::make_injector(      |
   , di::bind<int>.named(int2).to(87)    |
 );                                      |
 ```
+
 *
 
 > **Scopes** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/deduce_scope.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_scope.cpp) | [Even more examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/externals.cpp)
