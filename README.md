@@ -150,7 +150,6 @@ int main() {                            | xor %eax,%eax
     return injector.create<int>();      |
 }                                       |
 ```
-
 ```cpp
 Create type with bounded instance       | Asm
 ----------------------------------------|-----------------------------------------
