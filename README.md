@@ -51,6 +51,7 @@ int main() {                            | int main() {
 
 **How To Start?**
 
+* Read Quick User Guide (below)
 * [Documentation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
 * [Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
 
