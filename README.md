@@ -667,6 +667,10 @@ int main() {                            | mov $0x2a,%eax
 
 > **Compile-time Performance**
 
+* Boost.DI dependency itself
+* Number of bindings vs scope deduction
+* Automatic injection vs BOOST\_DI\_INJECT
+
 *
 
 > **Error messages (-ftemplate-backtrace-limit=1 -ferror-limit=1)**
