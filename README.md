@@ -72,7 +72,7 @@ int main() {                            | int main() {
 ```
 
 ```sh
-    clang++ -std=c++1y main.cpp
+    $CXX -std=c++1y main.cpp
 ```
 
 > To get and test Boost.DI library:
