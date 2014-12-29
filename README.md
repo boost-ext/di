@@ -667,9 +667,11 @@ int main() {                            | mov $0x2a,%eax
 
 > **Compile-time Performance**
 
-    * Boost.DI dependency itself
-    * Number of bindings vs scope deduction
-    * Automatic injection vs BOOST\_DI\_INJECT
+```cpp
+* Boost.DI dependency itself
+* Number of bindings vs scope deduction
+* Automatic injection vs BOOST\_DI\_INJECT
+```
 
 *
 
