@@ -121,7 +121,7 @@ auto injector = di::make_injector(      | auto object = injector.create<unique_p
 );                                      |
 ```
 ```cpp
-Bind different interfaces to one
+Bind different interfaces to one        |
 implementation                          | Test
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector(      | auto object1 = injector.create<shared_ptr<i1>>();
@@ -148,9 +148,10 @@ auto injector = di::make_injector(      |
     di::bind<int>.to(42)                |
   , di::bind<double>.to(87.0)           |
 );                                      |
+```
 ```cpp
-Direct constructor injection with many
-constructors (longest parameters list
+Direct constructor injection with many  |
+constructors (longest parameters list   |
 constructor will be chosen)             | Test
 ----------------------------------------|-----------------------------------------
 struct c {                              | auto object = injector.create<c>();
@@ -168,7 +169,7 @@ auto injector = di::make_injector(      |
 );                                      |
 ```
 ```cpp
-Direct constructor injection with
+Direct constructor injection with       |
 ambigious constructors (BOOST_DI_INJECT)| Test
 ----------------------------------------|-----------------------------------------
 struct c {                              | auto object = injector.create<c>();
@@ -186,8 +187,8 @@ auto injector = di::make_injector(      |
 );                                      |
 ```
 ```cpp
-Direct constructor injection with
-ambigious constructors
+Direct constructor injection with       |
+ambigious constructors                  |
 (BOOST_DI_INJECT_TRAITS)                | Test
 ----------------------------------------|-----------------------------------------
 struct c {                              | auto object = injector.create<c>();
@@ -205,8 +206,8 @@ auto injector = di::make_injector(      |
 );                                      |
 ```
 ```cpp
-Direct constructor injection with
-ambigious constructors
+Direct constructor injection with       |
+ambigious constructors                  |
 (di::ctor_traits)                       | Test
 ----------------------------------------|-----------------------------------------
 struct c {                              | auto object = injector.create<c>();
