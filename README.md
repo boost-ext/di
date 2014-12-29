@@ -42,7 +42,7 @@ Manual Dependency Injection              Boost.DI
 ----------------------------------------|--------------------------------------------
 int main() {                            | int main() {
     /*boilerplate code*/                |     auto injector = di::make_injector();
-    auto logic = make_shared<logic>();  |     return injector.create<example>().run()
+    auto logic = make_shared<logic>();  |     return injector.create<example>().run();
     auto logger = make_shared<logger>();| }
                                         |
     return example{logic, logger}.run();|
@@ -159,7 +159,7 @@ auto injector = di::make_injector(      |
 );                                      |
 ```
 ```cpp
-Aggregate constructor injection            | Test
+Aggregate constructor injection         | Test
 ----------------------------------------|-----------------------------------------
 struct c {                              | auto object = injector.create<c>();
     int a = 0;                          | assert(42 == object.a);
@@ -370,7 +370,7 @@ auto injector = di::make_injector(      | assert(injector.create<shared_ptr<i1>>
                                         | );
 ```
 ```cpp
-Singleton scope (shared per all threads)| Test
+Singleton scope (shared between threads)| Test
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector(      | assert(injector.create<shared_ptr<i1>>()
    di::bind<i1, impl1>.in(di::singleton)|        ==
@@ -414,14 +414,6 @@ auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>
      }                                  | assert(dynamic_cast<impl2*>(object.get()));
 );                                      | }
 ```
-
-| Scope/Conversion | T | const T& | T*
-----------------------
-| unique | X | |
-| shared |
-| singleton |
-| session |
-| external |
 
 *
 
@@ -544,17 +536,14 @@ public:
         );
     }
 };
-
 Test
 ----------------------------------------------------------------------------------
 auto injector = di::make_injector<print_types_policy>(); // per injector policy
 injector.create<int>(); // output: int
-
 #define BOOST_DI_CFG my_policy // globally
 auto injector = di::make_injector();
 injector.create<int>(); // output: int
 ```
-
 ```cpp
 Allow ctor types policy
 ----------------------------------------------------------------------------------
@@ -563,13 +552,11 @@ public:
     auto policies() const noexcept {
         using namespace di::policies;
         using namespace di::policies::operators;
-
         return di::make_policies(
             allow_ctor_types(std::is_same<_, int>{} || is_bound<_>{})
         );
     }
 };
-
 Test
 ----------------------------------------------------------------------------------
 #define BOOST_DI_CFG all_must_be_bound_unless_int // globally
