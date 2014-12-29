@@ -82,6 +82,45 @@ There are no Boost libraries requirements (optionally Boost.Smart\_Ptr).
 
 **Quick User Guide**
 
+Let's assume all examples below include `boost/di.hpp` header and define `di` namespace alias.
+```cpp
+    #include <boost/di.hpp>
+    namespace di = boost::di;
+```
+
+```cpp
+Create empty injector                   | Test
+----------------------------------------|------------------------------------------
+auto injector = di::make_injector();    | assert(0 == injector.create<int>());
+```
+
+```cpp
+Bind type to value                      | Test
+----------------------------------------|------------------------------------------
+auto injector = di::make_injector(      | assert(42 == injector.create<int>());
+    di::bind<int>.to(42)                |
+);                                      |
+```
+
+```cpp
+Bind type to static value               | Test
+----------------------------------------|------------------------------------------
+template<int N> using int_ =            | assert(42 == injector.create<int>());
+    std::integral_constant<int, N>;     |
+                                        |
+auto injector = di::make_injector(      |
+    di::bind<int, int_<42>>             |
+);                                      |
+```
+
+```cpp
+Bind interface to implementation        | Test
+----------------------------------------|------------------------------------------
+auto injector = di::make_injector(      | auto obj = injector.create<unique_ptr<i>>();
+    di::bind<i, impl>                   | assert(dynamic_cast<i*>(obj.get()));
+);
+```
+
 **Runtime Performance**
 ```cpp
 Create type wihtout bindings            | Asm
@@ -93,7 +132,7 @@ int main() {                            | xor %eax,%eax
 ```
 
 ```cpp
-Create type wiht bounded instance       | Asm
+Create type with bounded instance       | Asm
 ----------------------------------------|------------------------------------------
 int main() {                            | mov $0x2a,%eax
     auto injector = di::make_injector(  | retq
