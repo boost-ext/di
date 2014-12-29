@@ -596,7 +596,7 @@ public:                                 | assert(87.0, make_injector(di::bind<do
 
 *
 
-> **Providers (heap, stack_over_heap)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_provider.cpp)
+> **Providers (heap, stack_over_heap - default)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_provider.cpp)
 ```cpp
 Stack/Heap no throw provider            | Test
 ----------------------------------------|-----------------------------------------
