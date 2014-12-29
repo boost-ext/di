@@ -90,7 +90,8 @@ There are no Boost libraries requirements (optionally Boost.Smart\_Ptr).
 
 *
 
-> **Bindings**
+> **Bindings** [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/binding.cpp) | [More Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/dynamic_binding.cpp)
+
 ```cpp
 Create empty injector                   | Test
 ----------------------------------------|-----------------------------------------
