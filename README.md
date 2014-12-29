@@ -445,17 +445,17 @@ auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>
 
 | Type/Scope | unique | shared | singleton | session | external |
 |------------|--------|--------|-----------|---------|----------|
-| T | ✔ | - | - | - | X |
-| T& | - | - | - | - | X |
-| const T& | - | - | - | - | X |
-| T* | X | - | - | - | X |
-| const T* | X | - | - | - | X |
-| T&& | X | - | - | - | - |
-| unique\_ptr<T> | X | - | - | - | X |
-| shared\_ptr<T> | X | X | X | X | X |
-| weak\_ptr<T> | - | X | X | X | - |
+| T | ✔ | - | - | - | ✔ |
+| T& | - | - | - | - | ✔ |
+| const T& | - | - | - | - | ✔ |
+| T* | ✔ | - | - | - | ✔ |
+| const T* | ✔ | - | - | - | ✔ |
+| T&& | ✔ | - | - | - | - |
+| unique\_ptr<T> | ✔ | - | - | - | ✔ |
+| shared\_ptr<T> | ✔ | ✔ | ✔ | ✔ | ✔ |
+| weak\_ptr<T> | - | ✔ | ✔ | ✔ | - |
 ||
-| Temporary const T& | X | - | - | - | - |
+| Temporary const T& | ✔ | - | - | - | - |
 
 *
 
