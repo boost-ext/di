@@ -10,7 +10,7 @@ Dependency injection is a programming practice providing required objects to an 
 * Provide easier to test code (fakes objects might be injected)
 
 ```cpp
-No Dependency injection                  Dependency Injection
+No Dependency injection                 | Dependency Injection
 ----------------------------------------|--------------------------------------------
 class example {                         | class example {
 public:                                 | public:
@@ -38,7 +38,7 @@ dependencies injection.
 * Gives better understanding about objects hierarchy (Types creation graph)
 
 ```cpp
-Manual Dependency Injection              Boost.DI
+Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
 int main() {                            | int main() {
     /*boilerplate code*/                |     auto injector = di::make_injector();
