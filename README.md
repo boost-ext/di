@@ -416,8 +416,8 @@ auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>
 );                                      | }
 ```
 
-| Type/Scope | unique | shared | singleton | session | external |
------------------------------------------------------------------
+| Type/Scope | unique | shared | singleton | session |
+|------------|--------|--------|-----------|---------|
 | T | X | X | X | X | X |
 | T& | X | X | X | X | X |
 | const T& | X | X | X | X | X |
@@ -427,7 +427,7 @@ auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>
 | unique\_ptr<T> | X | X | X | X | X |
 | shared\_ptr<T> | X | X | X | X | X |
 | weak\_ptr<T> | X | X | X | X | X |
------------------------------------------------------------------
+|------------|--------|--------|-----------|---------|
 | Temporary const T& | X | X | X | X | X |
 
 *
