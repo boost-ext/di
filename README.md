@@ -47,6 +47,7 @@ int main() {                            | int main() {
                                         |     );
     return example{logic, logger}.run();|     return injector.create<example>().run();
 }                                       |}
+```
 
 **Why Dependency Injection?**
 
