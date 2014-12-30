@@ -3,7 +3,7 @@
 ### C++ Dependency Injection
 > "Don't call us, we'll call you", Hollywood principle
 
-Dependency injection is a programming practice providing required objects to an object.
+Dependency injection is a programming practice providing required instances to an object.
 
 * Provides loosely coupled code (separation of business logic and object creation)
 * Provides easier to maintain code (different objects might be easily injected)
@@ -21,12 +21,12 @@ public:                                 | public:
                                         |
     int run() const;                    |     int run() const;
                                         |
-    shared_ptr<ilogic> logic_;          | private:
-    shared_ptr<ilogger> logger_;        |     shared_ptr<ilogic> logic_;
-};                                      |     shared_ptr<ilogger> logger_;
-                                        | };
+private:                                | private:
+    shared_ptr<ilogic> logic_;          |     shared_ptr<ilogic> logic_;
+    shared_ptr<ilogger> logger_;        |     shared_ptr<ilogger> logger_;
+};                                      | };
+                                        |
 ```
-
 Boost.DI is a header only, type safe, compile time, non-intrusive constructor dependency injection
 library improving manual dependency injection by simplifying object instantiation with automatic
 dependencies injection.
@@ -47,7 +47,6 @@ int main() {                            | int main() {
                                         |     );
     return example{logic, logger}.run();|     return injector.create<example>().run();
 }                                       |}
-```
 
 **Why Dependency Injection?**
 
@@ -72,7 +71,7 @@ int main() {                            | int main() {
 ```
 
 ```sh
-    $CXX -std=c++1y main.cpp
+    $CXX -std=c++1y -I. main.cpp
 ```
 
 > To get and test Boost.DI library:
@@ -576,7 +575,7 @@ auto my = []{};                         | auto object = injector.create<c>();
                                         | assert(dynamic_cast<impl1*>(c.up.get()));
 struct c {                              |
     BOOST_DI_INJECT(c                   |
-      , (named = my) unique_ptr<i1> up);|
+      , (named = my) unique_ptr<i1> up) |
       : up(up)                          |
     { }                                 |
                                         |
@@ -673,7 +672,7 @@ public:                                 |
 
 > **Run-time performance (-O2)**
 ```cpp
-Create type wihtout bindings            | Assembler (the same as `return 0`)
+Create type wihtout bindings            | Assembler x86-64 (the same as `return 0`)
 ----------------------------------------|-----------------------------------------
 int main() {                            | xor %eax,%eax
     auto injector = di::make_injector();| retq
@@ -681,7 +680,7 @@ int main() {                            | xor %eax,%eax
 }                                       |
 ```
 ```cpp
-Create type with bound instance         | Assembler (the same as `return 42`)
+Create type with bound instance         | Assembler x86-64 (the same as `return 42`)
 ----------------------------------------|-----------------------------------------
 int main() {                            | mov $0x2a,%eax
     auto injector = di::make_injector(  | retq
@@ -692,7 +691,29 @@ int main() {                            | mov $0x2a,%eax
 }                                       |
 ```
 ```cpp
-Create bound interface                  | Assembler (same output as `make_unique`)
+Create named type                       | Assembler x86-64 (the same as `return 42`)
+----------------------------------------|-----------------------------------------
+auto my_int = []{};                     | mov $0x2a,%eax
+                                        | retq
+struct c {                              |
+    BOOST_DI_INJECT(c                   |
+        , (named = my_int) int i)       |
+        : i(i)                          |
+    { }                                 |
+                                        |
+    int i = 0;                          |
+};                                      |
+                                        |
+int main() {                            |
+  auto injector = di::make_injector(    |
+    di::bind<int>.named(my_int).to(42)  |
+  );                                    |
+                                        |
+    return injector.create<c>().i;      |
+}                                       |
+```
+```cpp
+Create bound interface                  | Assembler x86-64 (same output as `make_unique`)
 ----------------------------------------|-----------------------------------------
 int main() {                            | push   %rax
     auto injector = di::make_injector(  | mov    $0x8,%edi
