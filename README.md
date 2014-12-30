@@ -673,7 +673,7 @@ public:                                 |
 
 > **Run-time performance (-O2)**
 ```cpp
-Create type wihtout bindings            | Assembler x86-64 (the same as `return 0`)
+Create type wihtout bindings            | Asm x86-64 (same result as `return 0`)
 ----------------------------------------|-----------------------------------------
 int main() {                            | xor %eax,%eax
     auto injector = di::make_injector();| retq
@@ -681,7 +681,7 @@ int main() {                            | xor %eax,%eax
 }                                       |
 ```
 ```cpp
-Create type with bound instance         | Assembler x86-64 (the same as `return 42`)
+Create type with bound instance         | Asm x86-64 (same result as `return 42`)
 ----------------------------------------|-----------------------------------------
 int main() {                            | mov $0x2a,%eax
     auto injector = di::make_injector(  | retq
@@ -692,7 +692,7 @@ int main() {                            | mov $0x2a,%eax
 }                                       |
 ```
 ```cpp
-Create named type                       | Assembler x86-64 (the same as `return 42`)
+Create named type                       | Asm x86-64 (same result as `return 42`)
 ----------------------------------------|-----------------------------------------
 auto my_int = []{};                     | mov $0x2a,%eax
                                         | retq
@@ -714,7 +714,7 @@ int main() {                            |
 }                                       |
 ```
 ```cpp
-Create bound interface                  | Assembler x86-64 (same output as `make_unique`)
+Create bound interface                  | Asm x86-64 (same result as `make_unique`)
 ----------------------------------------|-----------------------------------------
 int main() {                            | push   %rax
     auto injector = di::make_injector(  | mov    $0x8,%edi
