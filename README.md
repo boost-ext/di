@@ -9,36 +9,24 @@ Dependency injection is a programming practice providing required instances to a
 * Provides easier to maintain code (different objects might be easily injected)
 * Provides easier to test code (fakes objects might be injected)
 
-<table><tr><td><b>No Dependency Injection</b></td><td><b>Dependency Injection</b></td></tr><tr><td><pre>
-class example {
-public:
-    example()
-        : logic_(new logic())
-        , logger_(factory::create())
-    { }
-
-    int run() const;
-
-private:
-    shared_ptr<ilogic> logic_;
-    shared_ptr<ilogger> logger_;
-};
-</pre></td><td><pre>
-class example {
-public:
-    example(shared_ptr<ilogic> logic
-          , shared_ptr<ilogger> logger)
-        : logic_(logic), logger_(logger)
-    { }
-
-    int run() const;
-
-private:
-    shared_ptr<ilogic> logic_;
-    shared_ptr<ilogger> logger_;
-};
-</pre></td></tr></table>
-
+```cpp
+No Dependency injection                 | Dependency Injection
+----------------------------------------|--------------------------------------------
+class example {                         | class example {
+public:                                 | public:
+    example()                           |     example(shared_ptr<ilogic> logic
+        : logic_(new logic())           |           , shared_ptr<ilogger> logger)
+        , logger_(factory::create())    |         : logic_(logic), logger_(logger)
+    { }                                 |     { }
+                                        |
+    int run() const;                    |     int run() const;
+                                        |
+private:                                | private:
+    shared_ptr<ilogic> logic_;          |     shared_ptr<ilogic> logic_;
+    shared_ptr<ilogger> logger_;        |     shared_ptr<ilogger> logger_;
+};                                      | };
+                                        |
+```
 Boost.DI is a header only, type safe, compile time, non-intrusive constructor dependency injection
 library improving manual dependency injection by simplifying object instantiation with automatic
 dependencies injection.
@@ -49,23 +37,17 @@ dependencies injection.
 * Gives better control of what and how is created (policies, providers)
 * Gives better understanding about objects hierarchy (Types creation graph)
 
-<table><tr><td><b>Manual Dependency Injection</b></td><td><b>Boost.DI</b></td></tr><tr><td><pre>
-int main() {
-    /*boilerplate code*/
-    auto logic = make_shared<logic>();
-    auto logger = make_shared<logger>();
-
-    return example{logic, logger}.run();
-}
-</pre></td><td><pre>
-int main() {
-    auto injector = di::make_injector(
-        di::bind<ilogic, logic>
-      , di::bind<ilogger, logger>
-    );
-    return injector.create<example>().run();
-}
-</pre></td></tr></table>
+```cpp
+Manual Dependency Injection             | Boost.DI
+----------------------------------------|--------------------------------------------
+int main() {                            | int main() {
+    /*boilerplate code*/                |     auto injector = di::make_injector(
+    auto logic = make_shared<logic>();  |         di::bind<ilogic, logic>
+    auto logger = make_shared<logger>();|       , di::bind<ilogger, logger>
+                                        |     );
+    return example{logic, logger}.run();|     return injector.create<example>().run();
+}                                       |}
+```
 
 **Why Dependency Injection?**
 
@@ -120,65 +102,54 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 
 > **Bindings** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/binding.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/dynamic_binding.cpp)
 
-<table>
-<tr><td>Create empty injector</td><td>Test</td></tr><tr><td><pre>
-auto injector = di::make_injector();
-</pre></td><td><pre>
-assert(0 == injector.create<int>());
-</pre></td></tr>
-<tr><td>Bind type to value</td><td>Test</td></tr><tr><td><pre>
-auto injector = di::make_injector(
-    di::bind<int>.to(42)
-);
-</pre></td><td><pre>
-assert(42 == injector.create<int>());
-</pre></td></tr>
-
-<tr><td>Bind type to static value</td><td>Test</td></tr><tr><td><pre>
-template<int N> using int_ =
-    std::integral_constant<int, N>;
-
-auto injector = di::make_injector(
-    di::bind<int, int_<42>>
-);
-</pre></td><td><pre>
-assert(42 == injector.create<int>());
-</pre></td></tr>
-
-<tr><td>Bind interface to implementation</td><td>Test</td></tr><tr><td><pre>
-auto injector = di::make_injector(
-    di::bind<i1, impl1>
-);
-</pre></td><td><pre>
-auto object = injector.create<unique_ptr<i1>>();
-assert(dynamic_cast<impl1*>(object.get()));
-</pre></td></tr>
-
-<tr><td>Bind different interfaces to one implementation</td><td>Test</td></tr><tr><td><pre>
-auto injector = di::make_injector(
-    di::bind<di::any_of<i1, i2>, impl>
-);
-</pre></td><td><pre>
-auto object1 = injector.create<shared_ptr<i1>>();
-auto object2 = injector.create<shared_ptr<i2>>();
-assert(dynamic_cast<impl*>(object1.get()));
-assert(dynamic_cast<impl*>(object2.get()));
-assert(object1 == object2);
-</pre></td></tr>
-
-<tr><td>Bind to external value</td><td>Test</td></tr><tr><td><pre>
-auto i = 42;
-
-auto injector = di::make_injector(
-    di::bind<int>.to(std::cref(i));
-);
-</pre></td><td><pre>
-auto object = injector.create<const int&>();
-assert(i == object);
-assert(&i == &object);
-</pre></td></tr>
-
-</table>
+```cpp
+Create empty injector                   | Test
+----------------------------------------|-----------------------------------------
+auto injector = di::make_injector();    | assert(0 == injector.create<int>());
+```
+```cpp
+Bind type to value                      | Test
+----------------------------------------|-----------------------------------------
+auto injector = di::make_injector(      | assert(42 == injector.create<int>());
+    di::bind<int>.to(42)                |
+);                                      |
+```
+```cpp
+Bind type to static value               | Test
+----------------------------------------|-----------------------------------------
+template<int N> using int_ =            | assert(42 == injector.create<int>());
+    std::integral_constant<int, N>;     |
+                                        |
+auto injector = di::make_injector(      |
+    di::bind<int, int_<42>>             |
+);                                      |
+```
+```cpp
+Bind interface to implementation        | Test
+----------------------------------------|-----------------------------------------
+auto injector = di::make_injector(      | auto object = injector.create<unique_ptr<i1>>();
+    di::bind<i1, impl1>                 | assert(dynamic_cast<impl1*>(object.get()));
+);                                      |
+```
+```cpp
+Bind different interfaces to one        | Test
+implementation                          |
+----------------------------------------|-----------------------------------------
+auto injector = di::make_injector(      | auto object1 = injector.create<shared_ptr<i1>>();
+    di::bind<di::any_of<i1, i2>, impl>  | auto object2 = injector.create<shared_ptr<i2>>();
+);                                      | assert(dynamic_cast<impl*>(object1.get()));
+                                        | assert(dynamic_cast<impl*>(object2.get()));
+                                        | assert(object1 == object2);
+```
+```cpp
+Bind to external value                  | Test
+----------------------------------------|-----------------------------------------
+auto i = 42;                            | auto object = injector.create<const int&>();
+                                        | assert(i == object);
+auto injector = di::make_injector(      | assert(&i == &object);
+    di::bind<int>.to(std::cref(i));     |
+);                                      |
+```
 
 *
 
@@ -928,4 +899,20 @@ di::make_injector().create<c>();        |
 
 **License**
 Distributed under the [Boost Software License, Version 1.0](http://www.boost.org/LICENSE_1_0.txt).
+
+<table border="1" style="width:100%">
+  <tr><td>
+<pre style='color:#000000;background:#ffffff;'><html><body style='color:#000000; background:#ffffff; '><pre>
+<span style='color:#800000; font-weight:bold; '>auto</span> name <span style='color:#808030; '>=</span> <span style='color:#808030; '>[</span><span style='color:#808030; '>]</span><span style='color:#800080; '>{</span><span style='color:#800080; '>}</span><span style='color:#800080; '>;</span>
+
+<span style='color:#800000; font-weight:bold; '>struct</span> c <span style='color:#800080; '>{</span>
+    BOOST_DI_INJECT<span style='color:#808030; '>(</span>c
+        <span style='color:#808030; '>,</span> <span style='color:#808030; '>(</span>NAMED <span style='color:#808030; '>=</span> name<span style='color:#808030; '>)</span> <span style='color:#800000; font-weight:bold; '>int</span><span style='color:#808030; '>)</span> <span style='color:#800080; '>{</span> <span style='color:#800080; '>}</span>
+<span style='color:#800080; '>}</span><span style='color:#800080; '>;</span>
+
+di<span style='color:#800080; '>::</span>make_injector<span style='color:#808030; '>(</span><span style='color:#808030; '>)</span><span style='color:#808030; '>.</span>create<span style='color:#800080; '>&lt;</span>c<span style='color:#800080; '>></span><span style='color:#808030; '>(</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+</pre>
+
+</td></tr> <tr><td>other text</td></tr>
+</table>
 
