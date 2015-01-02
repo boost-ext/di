@@ -28,8 +28,8 @@
 #define BOOST_DI_GEN_CTOR_IMPL(p, i) BOOST_DI_IF(i)(BOOST_DI_COMMA(),) BOOST_DI_IF(BOOST_DI_IBP(p))(EAT p, p)
 #define BOOST_DI_GEN_TYPE_LIST(i, ...) BOOST_DI_GEN_TYPE_LIST_IMPL(BOOST_DI_VARARG_IMPL(ARG, i, __VA_ARGS__,), i)
 #define BOOST_DI_GEN_TYPE_LIST_IMPL(p, n)  BOOST_DI_IF(n)(BOOST_DI_COMMA(),) BOOST_DI_IF(BOOST_DI_IBP(p))( \
-    const ::boost::di::aux::void_t<arg##n BOOST_DI_COMMA() ::std::true_type>& \
-  , BOOST_DI_IF(ISEMPTY(p))(,const ::boost::di::aux::void_t<arg##n BOOST_DI_COMMA() ::std::false_type>&))
+    const ::boost::di::aux::type<arg##n BOOST_DI_COMMA() ::std::true_type>& \
+  , BOOST_DI_IF(ISEMPTY(p))(,const ::boost::di::aux::type<arg##n BOOST_DI_COMMA() ::std::false_type>&))
 
 #if !defined(BOOST_DI_INJECT_TRAITS)
     #define BOOST_DI_INJECT_TRAITS(...) \

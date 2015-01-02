@@ -40,14 +40,14 @@ namespace boost { namespace di { namespace aux {
 
 struct none_t { };
 
-template<class>
+template<class...>
 struct type { };
 
 template<class T, T>
 struct non_type { };
 
 template<class...>
-struct void_t { };
+using void_t = void;
 
 template<class, class>
 struct pair { using type = pair; };
@@ -102,14 +102,13 @@ using join_t = typename join<TArgs...>::type;
 #define BOOST_DI_AUX_TYPE_TRAITS_HPP
 
 #define BOOST_DI_HAS_TYPE(name)                                     \
-    template<class>                                                 \
-    std::false_type has_##name##_impl(...);                         \
+    template<class, class = void>                                   \
+    struct has_##name : std::false_type { };                        \
                                                                     \
     template<class T>                                               \
-    std::true_type has_##name##_impl(typename T::name*);            \
-                                                                    \
-    template<class T>                                               \
-    using has_##name = decltype(has_##name##_impl<T>(0))
+    struct has_##name<T, aux::void_t<typename T::name>>             \
+        : std::true_type                                            \
+    { };
 
 #define BOOST_DI_HAS_METHOD(name, call_name)                        \
     template<class T, class... TArgs>                               \
@@ -326,99 +325,10 @@ private:
 
 #define BOOST_DI_TYPE_TRAITS_MEMORY_TRAITS_HPP
 
-#if (__has_include(<boost/shared_ptr.hpp>))
-    #include <boost/shared_ptr.hpp>
-#endif
-
 namespace boost { namespace di { namespace type_traits {
 
 struct heap { };
 struct stack { };
-
-template<class T, class = void>
-struct memory_traits {
-    using type = stack;
-};
-
-template<class T>
-struct memory_traits<T&> {
-    using type = stack;
-};
-
-template<class T>
-struct memory_traits<const T&> {
-    using type = stack;
-};
-
-template<class T>
-struct memory_traits<T*> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<const T*> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<std::shared_ptr<T>> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<const std::shared_ptr<T>&> {
-    using type = heap;
-};
-
-#if (__has_include(<boost/shared_ptr.hpp>))
-    template<class T>
-    struct memory_traits<boost::shared_ptr<T>> {
-        using type = heap;
-    };
-
-    template<class T>
-    struct memory_traits<const boost::shared_ptr<T>&> {
-        using type = heap;
-    };
-#endif
-
-template<class T>
-struct memory_traits<std::weak_ptr<T>> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<const std::weak_ptr<T>&> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<std::unique_ptr<T>> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<const std::unique_ptr<T>&> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<T&&> {
-    using type = stack;
-};
-
-template<class T>
-struct memory_traits<const T&&> {
-    using type = stack;
-};
-
-template<class T>
-struct memory_traits<T, std::enable_if_t<std::is_polymorphic<T>{}>> {
-    using type = heap;
-};
-
-template<class T>
-using memory_traits_t = typename memory_traits<T>::type;
 
 }}} // boost::di::type_traits
 
@@ -426,7 +336,18 @@ using memory_traits_t = typename memory_traits<T>::type;
 
 namespace boost { namespace di { namespace scopes {
 
+BOOST_DI_HAS_TYPE(element_type);
+
 class unique {
+    template<class T>
+    using memory = std::conditional_t<
+        std::is_pointer<T>{} ||
+        std::is_polymorphic<T>{} ||
+        has_element_type<aux::remove_accessors_t<T>>{}
+      , type_traits::heap
+      , type_traits::stack
+    >;
+
 public:
     static constexpr auto priority = false;
 
@@ -435,7 +356,7 @@ public:
     public:
         template<class T, class TProvider>
         auto create(const TProvider& provider) const {
-            using memory = type_traits::memory_traits_t<T>;
+            using memory = memory<T>;
             using wrapper = wrappers::unique<decltype(provider.get(memory{}))>;
             return wrapper{provider.get(memory{})};
         }
@@ -1201,8 +1122,8 @@ struct is_any_type<any_type<TArgs...>> : std::true_type { };
 #define BOOST_DI_GEN_CTOR_IMPL(p, i) BOOST_DI_IF(i)(BOOST_DI_COMMA(),) BOOST_DI_IF(BOOST_DI_IBP(p))(EAT p, p)
 #define BOOST_DI_GEN_TYPE_LIST(i, ...) BOOST_DI_GEN_TYPE_LIST_IMPL(BOOST_DI_VARARG_IMPL(ARG, i, __VA_ARGS__,), i)
 #define BOOST_DI_GEN_TYPE_LIST_IMPL(p, n)  BOOST_DI_IF(n)(BOOST_DI_COMMA(),) BOOST_DI_IF(BOOST_DI_IBP(p))( \
-    const ::boost::di::aux::void_t<arg##n BOOST_DI_COMMA() ::std::true_type>& \
-  , BOOST_DI_IF(ISEMPTY(p))(,const ::boost::di::aux::void_t<arg##n BOOST_DI_COMMA() ::std::false_type>&))
+    const ::boost::di::aux::type<arg##n BOOST_DI_COMMA() ::std::true_type>& \
+  , BOOST_DI_IF(ISEMPTY(p))(,const ::boost::di::aux::type<arg##n BOOST_DI_COMMA() ::std::false_type>&))
 
 #if !defined(BOOST_DI_INJECT_TRAITS)
     #define BOOST_DI_INJECT_TRAITS(...) \
@@ -1317,7 +1238,7 @@ struct arg_impl<aux::type_list<T>> {
 };
 
 template<class T>
-struct arg<const aux::void_t<T, std::true_type>&> {
+struct arg<const aux::type<T, std::true_type>&> {
 	using type = named<
         typename aux::function_traits<decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, name))>::result_type
       , typename arg_impl<typename aux::function_traits<decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, arg))>::args>::type
@@ -1325,7 +1246,7 @@ struct arg<const aux::void_t<T, std::true_type>&> {
 };
 
 template<class T>
-struct arg<const aux::void_t<T, std::false_type>&> {
+struct arg<const aux::type<T, std::false_type>&> {
     using type = typename arg_impl<typename aux::function_traits<decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, arg))>::args>::type;
 };
 

@@ -11,14 +11,13 @@
 #include "boost/di/aux_/utility.hpp"
 
 #define BOOST_DI_HAS_TYPE(name)                                     \
-    template<class>                                                 \
-    std::false_type has_##name##_impl(...);                         \
+    template<class, class = void>                                   \
+    struct has_##name : std::false_type { };                        \
                                                                     \
     template<class T>                                               \
-    std::true_type has_##name##_impl(typename T::name*);            \
-                                                                    \
-    template<class T>                                               \
-    using has_##name = decltype(has_##name##_impl<T>(0))
+    struct has_##name<T, aux::void_t<typename T::name>>             \
+        : std::true_type                                            \
+    { };
 
 #define BOOST_DI_HAS_METHOD(name, call_name)                        \
     template<class T, class... TArgs>                               \

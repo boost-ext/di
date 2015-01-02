@@ -11,14 +11,14 @@ namespace boost { namespace di { namespace aux {
 
 struct none_t { };
 
-template<class>
+template<class...>
 struct type { };
 
 template<class T, T>
 struct non_type { };
 
 template<class...>
-struct void_t { };
+using void_t = void;
 
 template<class, class>
 struct pair { using type = pair; };
