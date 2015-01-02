@@ -46,7 +46,7 @@ int main() {                            | int main() {
     auto logger = make_shared<logger>();|       , di::bind<ilogger, logger>
                                         |     );
     return example{logic, logger}.run();|     return injector.create<example>().run();
-}                                       |}
+}                                       | }
 ```
 
 **Why Dependency Injection?**
