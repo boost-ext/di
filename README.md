@@ -13,24 +13,25 @@ Dependency injection is a programming practice providing required instances to a
 <table border="1" style="width:100%">
 <tr><td>No Dependency Injection</td><td>Dependency Injection</td></tr>
 <tr><td>
-<pre style='color:#d1d1d1;background:#000000;'>
-<span style='color:#e66170; font-weight:bold; '>class</span> example <span style='color:#b060b0; '>{</span>
-<span style='color:#e66170; font-weight:bold; '>public</span><span style='color:#e34adc; '>:</span>
-    example<span style='color:#d2cd86; '>(</span>shared_ptr logic
-          <span style='color:#d2cd86; '>,</span> shared_ptr logger<span style='color:#d2cd86; '>)</span>
-        <span style='color:#b060b0; '>:</span> logic_<span style='color:#d2cd86; '>(</span>logic<span style='color:#d2cd86; '>)</span><span style='color:#d2cd86; '>,</span> logger_<span style='color:#d2cd86; '>(</span>logger<span style='color:#d2cd86; '>)</span>
-    <span style='color:#b060b0; '>{</span> <span style='color:#b060b0; '>}</span>
+<code>
+class example {
+public:
+    example()
+        : logic_(new logic())
+        , logger_(factory::create())
+    { }
 
-    <span style='color:#e66170; font-weight:bold; '>int</span> run<span style='color:#d2cd86; '>(</span><span style='color:#d2cd86; '>)</span> <span style='color:#e66170; font-weight:bold; '>const</span><span style='color:#b060b0; '>;</span>
+    int run() const;
 
-<span style='color:#e66170; font-weight:bold; '>private</span><span style='color:#e34adc; '>:</span>
-    shared_ptr logic_<span style='color:#b060b0; '>;</span>
-    shared_ptr logger_<span style='color:#b060b0; '>;</span>
-<span style='color:#b060b0; '>}</span><span style='color:#b060b0; '>;</span>
-</pre>
+private:
+    shared_ptr<ilogic> logic_;
+    shared_ptr<ilogger> logger_;
+};
+</code>
 </td>
 <td>
 <pre>
+```cpp
 class example {
 public:
     example(shared_ptr<ilogic> logic
@@ -44,6 +45,7 @@ private:
     shared_ptr<ilogic> logic_;
     shared_ptr<ilogger> logger_;
 };
+```
 </pre>
 </td>
 </tr></table>
