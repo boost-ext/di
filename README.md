@@ -9,11 +9,8 @@ Dependency injection is a programming practice providing required instances to a
 * Provides easier to maintain code (different objects might be easily injected)
 * Provides easier to test code (fakes objects might be injected)
 
-
 <table>
-<tr><td><b>No Dependency Injection</b></td><td><b>Dependency Injection</b></td></tr>
-<tr><td>
-<pre>
+<tr><td><b>No Dependency Injection</b></td><td><b>Dependency Injection</b></td></tr><tr><td><pre>
 class example {
 public:
     example()
@@ -27,10 +24,7 @@ private:
     shared_ptr<ilogic> logic_;
     shared_ptr<ilogger> logger_;
 };
-</pre>
-</td>
-<td>
-<pre>
+</pre></td><td><pre>
 class example {
 public:
     example(shared_ptr<ilogic> logic
@@ -44,9 +38,7 @@ private:
     shared_ptr<ilogic> logic_;
     shared_ptr<ilogger> logger_;
 };
-</pre>
-</td>
-</tr></table>
+</pre></td></tr></table>
 
 Boost.DI is a header only, type safe, compile time, non-intrusive constructor dependency injection
 library improving manual dependency injection by simplifying object instantiation with automatic
@@ -58,17 +50,24 @@ dependencies injection.
 * Gives better control of what and how is created (policies, providers)
 * Gives better understanding about objects hierarchy (Types creation graph)
 
-```cpp
-Manual Dependency Injection             | Boost.DI
-----------------------------------------|--------------------------------------------
-int main() {                            | int main() {
-    /*boilerplate code*/                |     auto injector = di::make_injector(
-    auto logic = make_shared<logic>();  |         di::bind<ilogic, logic>
-    auto logger = make_shared<logger>();|       , di::bind<ilogger, logger>
-                                        |     );
-    return example{logic, logger}.run();|     return injector.create<example>().run();
-}                                       |}
-```
+<table>
+<tr><td><b>Manual Dependency Injection</b></td><td><b>Boost.DI</b></td></tr><tr><td><pre>
+int main() {
+    /*boilerplate code*/
+    auto logic = make_shared<logic>();
+    auto logger = make_shared<logger>();
+
+    return example{logic, logger}.run();
+}
+</pre></td><td><pre>
+int main() {
+    auto injector = di::make_injector(
+        di::bind<ilogic, logic>
+      , di::bind<ilogger, logger>
+    );
+    return injector.create<example>().run();
+}
+</pre></td></tr></table>
 
 **Why Dependency Injection?**
 
