@@ -13,6 +13,7 @@ Dependency injection is a programming practice providing required instances to a
 <table border="1" style="width:100%">
 <tr><td>No Dependency Injection</td><td>Dependency Injection</td></tr>
 <tr><td>
+<pre>
 class example {
 public:
     example()
@@ -26,8 +27,10 @@ private:
     shared_ptr<ilogic> logic_;
     shared_ptr<ilogger> logger_;
 };
+</pre>
 </td>
 <td>
+<pre>
 class example {
 public:
     example(shared_ptr<ilogic> logic
@@ -41,6 +44,7 @@ private:
     shared_ptr<ilogic> logic_;
     shared_ptr<ilogger> logger_;
 };
+</pre>
 </td>
 </tr></table>
 
