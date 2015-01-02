@@ -728,6 +728,92 @@ int main() {                            | push   %rax
     return ptr.get() != nullptr;        | retq
 }                                       |
 ```
+```cpp
+Create bound interface via module       | Asm x86-64 (same as `make_unique`)
+----------------------------------------|-----------------------------------------
+struct module {                         | push   %rax
+	auto configure() const noexcept {   | mov    $0x8,%edi
+		return di::make_injector(       | callq  0x4007b0 <_Znwm@plt>
+			di::bind<i1, impl1>         | movq   $0x400a10,(%rax)
+		);                              | mov    $0x8,%esi
+	}                                   | mov    %rax,%rdi
+};                                      | callq  0x400960 <_ZdlPvm>
+                                        | mov    $0x1,%eax
+int main() {                            | pop    %rdx
+	auto injector = di::make_injector(  | retq
+        module{}                        |
+    );                                  |
+                                        |
+	auto ptr = injector.create<         |
+        std::unique_ptr<i1>             |
+    >();                                |
+                                        |
+	return ptr != nullptr;              |
+}                                       |
+```
+```cpp
+Create bound interface via exposed      | Asm x86-64
+module                                  | cost = virtual call due to type erasure
+----------------------------------------|-----------------------------------------
+struct module {                         | push   %rbp
+	di::injector<i1> configure() const {| push   %rbx
+		return di::make_injector(       | sub    $0x38,%rsp
+			di::bind<i1, impl1>         | lea    0x10(%rsp),%rdi
+		);                              | lea    0x8(%rsp),%rsi
+	}                                   | callq  0x400bf0 <_ZN5boost2di4core8injectorINS0_3aux9type_listIJNS1_10dependencyINS0_6scopes7exposedINS6_6deduceEEE2i1SA_NS0_7no_nameELb0EEEEEENS0_6configEEC2IJ6moduleEEEDpRKT_>
+};                                      | mov    0x18(%rsp),%rdi
+                                        | mov    (%rdi),%rax
+int main() {                            | lea    0x30(%rsp),%rsi
+	auto injector = di::make_injector(  | callq  *0x10(%rax)
+        module{}                        | test   %rax,%rax
+    );                                  | setne  %bpl
+                                        | je     0x400b57 <main+55>
+	auto ptr = injector.create<         | mov    (%rax),%rcx
+        std::unique_ptr<i1>             | mov    %rax,%rdi
+    >();                                | callq  *0x8(%rcx)
+                                        | mov    0x20(%rsp),%rbx
+	return ptr != nullptr;              | test   %rbx,%rbx
+}                                       | je     0x400bcd <main+173>
+                                        | lea    0x8(%rbx),%rax
+                                        | mov    $0x0,%ecx
+                                        | test   %rcx,%rcx
+                                        | je     0x400b82 <main+98>
+                                        | mov    $0xffffffff,%ecx
+                                        | lock   xadd %ecx,(%rax)
+                                        | mov    %ecx,0x30(%rsp)
+                                        | mov    0x30(%rsp),%ecx
+                                        | jmp    0x400b89 <main+105>
+                                        | mov    (%rax),%ecx
+                                        | lea    -0x1(%rcx),%edx
+                                        | mov    %edx,(%rax)
+                                        | cmp    $0x1,%ecx
+                                        | jne    0x400bcd <main+173>
+                                        | mov    (%rbx),%rax
+                                        | mov    %rbx,%rdi
+                                        | callq  *0x10(%rax)
+                                        | lea    0xc(%rbx),%rax
+                                        | mov    $0x0,%ecx
+                                        | test   %rcx,%rcx
+                                        | je     0x400bb8 <main+152>
+                                        | mov    $0xffffffff,%ecx
+                                        | lock   xadd %ecx,(%rax)
+                                        | mov    %ecx,0x30(%rsp)
+                                        | mov    0x30(%rsp),%ecx
+                                        | jmp    0x400bbf <main+159>
+                                        | mov    (%rax),%ecx
+                                        | lea    -0x1(%rcx),%edx
+                                        | mov    %edx,(%rax)
+                                        | cmp    $0x1,%ecx
+                                        | jne    0x400bcd <main+173>
+                                        | mov    (%rbx),%rax
+                                        | mov    %rbx,%rdi
+                                        | callq  *0x18(%rax)
+                                        | movzbl %bpl,%eax
+                                        | add    $0x38,%rsp
+                                        | pop    %rbx
+                                        | pop    %rbp
+                                        | retq
+```
 
 *
 
