@@ -10,10 +10,11 @@ Dependency injection is a programming practice providing required instances to a
 * Provides easier to test code (fakes objects might be injected)
 
 
+<div class="highlight highlight-cpp">
 <table border="1" style="width:100%">
 <tr><td>No Dependency Injection</td><td>Dependency Injection</td></tr>
 <tr><td>
-<code>
+<pre>
 class example {
 public:
     example()
@@ -27,22 +28,27 @@ private:
     shared_ptr<ilogic> logic_;
     shared_ptr<ilogger> logger_;
 };
-</code>
+</pre>
 </td>
 <td>
 <pre>
-<div class="highlight highlight-cpp"><pre>Manual Dependency Injection             | Boost.DI
-----------------------------------------|--------------------------------------------
-<span class="pl-st">int</span> <span class="pl-en">main</span>() {                            | <span class="pl-st">int</span> <span class="pl-vo">main</span>() {
-    <span class="pl-c">/*boilerplate code*/</span>                |     <span class="pl-st">auto</span> injector = <span class="pl-s3">di::make_injector</span>(
-    <span class="pl-st">auto</span> logic = make_shared&lt;logic&gt;();  |         di::bind&lt;ilogic, logic&gt;
-    <span class="pl-st">auto</span> logger = make_shared&lt;logger&gt;();|       , di::bind&lt;ilogger, logger&gt;
-                                        |     );
-    <span class="pl-k">return</span> example{logic, logger}.<span class="pl-s3">run</span>();|     <span class="pl-k">return</span> injector.<span class="pl-vo">create</span>&lt;example&gt;().<span class="pl-s3">run</span>();
-}                                       |}</pre></div>
+class example {
+public:
+    example(shared_ptr<ilogic> logic
+          , shared_ptr<ilogger> logger)
+        : logic_(logic), logger_(logger)
+    { }
+
+    int run() const;
+
+private:
+    shared_ptr<ilogic> logic_;
+    shared_ptr<ilogger> logger_;
+};
 </pre>
 </td>
 </tr></table>
+</div>
 
 Boost.DI is a header only, type safe, compile time, non-intrusive constructor dependency injection
 library improving manual dependency injection by simplifying object instantiation with automatic
