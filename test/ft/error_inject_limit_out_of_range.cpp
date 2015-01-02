@@ -4,14 +4,18 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#define BOOST_DI_CFG_CTOR_LIMIT_SIZE 3
 #include "boost/di.hpp"
 
 namespace di = boost::di;
 
-struct i { virtual ~i() = default; virtual void dummy() = 0; };
-struct impl : i { void dummy() override { } };
+test error_inject_limit_out_of_range = [] {
+    struct c {
+        BOOST_DI_INJECT(c, int, int, int, int) { }
+    };
 
-test error_create_polymorphic_type_without_binding = [] {
-    di::make_injector().create<std::unique_ptr<i>>();
+    auto injector = di::make_injector();
+
+    injector.create<c>();
 };
 

@@ -36,6 +36,7 @@
         struct BOOST_DI_INJECTOR { \
             EVAL(REPEAT(PP_NARG(__VA_ARGS__), BOOST_DI_GEN_ARGS, __VA_ARGS__)) \
             using type = ::boost::di::aux::type_list<EVAL(REPEAT(PP_NARG(__VA_ARGS__), BOOST_DI_GEN_TYPE_LIST, __VA_ARGS__))>; \
+            static_assert(PP_NARG(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE, "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE"); \
         }
 #endif
 

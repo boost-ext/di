@@ -102,6 +102,8 @@ test-suite ft : # functional tests
     [ compile-fail-test c++1y : ft/error_bind_repeated.cpp ]
     [ compile-fail-test c++1y : ft/error_bind_to_different_types.cpp ]
     [ compile-fail-test c++1y : ft/error_create_polymorphic_type_without_binding.cpp ]
+    [ compile-fail-test c++1y : ft/error_ctor_limit_out_of_range.cpp ]
+    [ compile-fail-test c++1y : ft/error_inject_limit_out_of_range.cpp ]
     [ compile-fail-test c++1y : ft/error_injector_ctor_ambiguous.cpp ]
     [ compile-fail-test c++1y : ft/error_injector_shared_by_copy.cpp ]
     [ compile-fail-test c++1y : ft/error_make_injector_wrong_arg.cpp ]
