@@ -10,8 +10,7 @@ Dependency injection is a programming practice providing required instances to a
 * Provides easier to test code (fakes objects might be injected)
 
 
-<div class="highlight highlight-cpp">
-<table border="1" style="width:100%">
+<table>
 <tr><td>No Dependency Injection</td><td>Dependency Injection</td></tr>
 <tr><td>
 <pre>
@@ -48,7 +47,6 @@ private:
 </pre>
 </td>
 </tr></table>
-</div>
 
 Boost.DI is a header only, type safe, compile time, non-intrusive constructor dependency injection
 library improving manual dependency injection by simplifying object instantiation with automatic
