@@ -13,7 +13,7 @@ Dependency injection is a programming practice providing required instances to a
 <table border="1" style="width:100%">
 <tr><td>No Dependency Injection</td><td>Dependency Injection</td></tr>
 <tr><td>
-<pre>
+<pre style='color:#d1d1d1;background:#000000;'>
 <span style='color:#e66170; font-weight:bold; '>class</span> example <span style='color:#b060b0; '>{</span>
 <span style='color:#e66170; font-weight:bold; '>public</span><span style='color:#e34adc; '>:</span>
     example<span style='color:#d2cd86; '>(</span>shared_ptr logic
