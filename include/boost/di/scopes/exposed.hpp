@@ -15,12 +15,12 @@ class exposed {
 public:
     static constexpr auto priority = false;
 
-    template<class TExpected, class TGiven>
+    template<class T, class>
     class scope {
         struct iprovider {
             virtual ~iprovider() = default;
-            virtual TExpected* get(const type_traits::heap& = {}) const noexcept = 0;
-            virtual TExpected  get(const type_traits::stack&) const noexcept = 0;
+            virtual T* get(const type_traits::heap& = {}) const noexcept = 0;
+            virtual T  get(const type_traits::stack&) const noexcept = 0;
         };
 
         template<typename TInjector>
@@ -30,12 +30,12 @@ public:
                 : injector_(injector)
             { }
 
-            TExpected* get(const type_traits::heap&) const noexcept override {
-                return injector_.template create<TExpected*>();
+            T* get(const type_traits::heap&) const noexcept override {
+                return injector_.template create<T*>();
             }
 
-            TExpected get(const type_traits::stack&) const noexcept override {
-                return injector_.template create<TExpected>();
+            T get(const type_traits::stack&) const noexcept override {
+                return injector_.template create<T>();
             }
 
         private:
@@ -55,7 +55,7 @@ public:
 
     private:
         std::shared_ptr<iprovider> provider_;
-        typename TScope::template scope<TExpected, TExpected> scope_;
+        typename TScope::template scope<T, T> scope_;
     };
 };
 
