@@ -101,6 +101,10 @@ using join_t = typename join<TArgs...>::type;
 
 #define BOOST_DI_AUX_TYPE_TRAITS_HPP
 
+#if (__has_include(<boost/shared_ptr.hpp>))
+    #include <boost/shared_ptr.hpp>
+#endif
+
 #define BOOST_DI_HAS_TYPE(name)                                     \
     template<class, class = void>                                   \
     struct has_##name : std::false_type { };                        \
@@ -123,6 +127,31 @@ using join_t = typename join<TArgs...>::type;
     using has_##name = decltype(has_##name##_impl<T, TArgs...>(0))
 
 namespace boost { namespace di { namespace aux {
+
+template<class>
+struct is_smart_ptr : std::false_type { };
+
+template<class T>
+struct is_smart_ptr<std::unique_ptr<T>>
+    : std::true_type
+{ };
+
+template<class T>
+struct is_smart_ptr<std::shared_ptr<T>>
+    : std::true_type
+{ };
+
+#if (__has_include(<boost/shared_ptr.hpp>))
+    template<class T>
+    struct is_smart_ptr<boost::shared_ptr<T>>
+        : std::true_type
+    { };
+#endif
+
+template<class T>
+struct is_smart_ptr<std::weak_ptr<T>>
+    : std::true_type
+{ };
 
 template<class T, class... TArgs>
 decltype(void(T{std::declval<TArgs>()...}), std::true_type{})
@@ -157,10 +186,8 @@ struct deref_type {
     using type = T;
 };
 
-BOOST_DI_HAS_TYPE(element_type);
-
 template<class T>
-struct deref_type<T, std::enable_if_t<has_element_type<T>{}>> {
+struct deref_type<T, std::enable_if_t<is_smart_ptr<T>{}>> {
     using type = typename T::element_type;
 };
 
@@ -360,6 +387,26 @@ struct memory_traits<const T*> {
 };
 
 template<class T>
+struct memory_traits<T&&> {
+    using type = stack;
+};
+
+template<class T>
+struct memory_traits<const T&&> {
+    using type = stack;
+};
+
+template<class T>
+struct memory_traits<std::unique_ptr<T>> {
+    using type = heap;
+};
+
+template<class T>
+struct memory_traits<const std::unique_ptr<T>&> {
+    using type = heap;
+};
+
+template<class T>
 struct memory_traits<std::shared_ptr<T>> {
     using type = heap;
 };
@@ -389,26 +436,6 @@ struct memory_traits<std::weak_ptr<T>> {
 template<class T>
 struct memory_traits<const std::weak_ptr<T>&> {
     using type = heap;
-};
-
-template<class T>
-struct memory_traits<std::unique_ptr<T>> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<const std::unique_ptr<T>&> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<T&&> {
-    using type = stack;
-};
-
-template<class T>
-struct memory_traits<const T&&> {
-    using type = stack;
 };
 
 template<class T>
@@ -700,6 +727,26 @@ struct scope_traits<const T*> {
 };
 
 template<class T>
+struct scope_traits<T&&> {
+    using type = scopes::unique;
+};
+
+template<class T>
+struct scope_traits<const T&&> {
+    using type = scopes::unique;
+};
+
+template<class T>
+struct scope_traits<std::unique_ptr<T>> {
+    using type = scopes::unique;
+};
+
+template<class T>
+struct scope_traits<const std::unique_ptr<T>&> {
+    using type = scopes::unique;
+};
+
+template<class T>
 struct scope_traits<std::shared_ptr<T>> {
     using type = scopes::singleton;
 };
@@ -729,26 +776,6 @@ struct scope_traits<std::weak_ptr<T>> {
 template<class T>
 struct scope_traits<const std::weak_ptr<T>&> {
     using type = scopes::singleton;
-};
-
-template<class T>
-struct scope_traits<std::unique_ptr<T>> {
-    using type = scopes::unique;
-};
-
-template<class T>
-struct scope_traits<const std::unique_ptr<T>&> {
-    using type = scopes::unique;
-};
-
-template<class T>
-struct scope_traits<T&&> {
-    using type = scopes::unique;
-};
-
-template<class T>
-struct scope_traits<const T&&> {
-    using type = scopes::unique;
 };
 
 template<class T>
@@ -1300,7 +1327,7 @@ struct ctor_traits
 namespace type_traits {
 
 template<class>
-struct parse;
+struct parse_args;
 
 template<class>
 struct arg;
@@ -1314,22 +1341,34 @@ struct arg_impl<aux::type_list<T>> {
 };
 
 template<class T>
+using arg_impl_t = typename arg_impl<T>::type;
+
+template<class T>
 struct arg<const aux::type<T, std::true_type>&> {
 	using type = named<
-        typename aux::function_traits<decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, name))>::result_type
-      , typename arg_impl<typename aux::function_traits<decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, arg))>::args>::type
+        typename aux::function_traits<
+            decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, name))
+        >::result_type
+      , arg_impl_t<typename aux::function_traits<
+            decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, arg))
+        >::args>
     >;
 };
 
 template<class T>
 struct arg<const aux::type<T, std::false_type>&> {
-    using type = typename arg_impl<typename aux::function_traits<decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, arg))>::args>::type;
+    using type = arg_impl_t<typename aux::function_traits<
+        decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, arg))
+    >::args>;
 };
 
 template<class... Ts>
-struct parse<aux::type_list<Ts...>>
+struct parse_args<aux::type_list<Ts...>>
     : aux::type_list<typename arg<Ts>::type...>
 { };
+
+template<class... Ts>
+using parse_args_t = typename parse_args<Ts...>::type;
 
 template<
     class T
@@ -1343,7 +1382,7 @@ template<
 
 template<class T>
 struct ctor_traits<T, std::true_type>
-    : aux::pair<direct, typename parse<typename T::BOOST_DI_INJECTOR::type>::type>
+    : aux::pair<direct, parse_args_t<typename T::BOOST_DI_INJECTOR::type>>
 { };
 
 template<class T>
@@ -1355,7 +1394,7 @@ template<class T>
 struct ctor_traits_impl<T, std::true_type>
     : aux::pair<
           direct
-        , typename parse<typename di::ctor_traits<T>::BOOST_DI_INJECTOR::type>::type
+        , parse_args_t<typename di::ctor_traits<T>::BOOST_DI_INJECTOR::type>
       >
 { };
 

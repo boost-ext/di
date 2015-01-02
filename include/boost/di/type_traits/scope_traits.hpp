@@ -43,6 +43,26 @@ struct scope_traits<const T*> {
 };
 
 template<class T>
+struct scope_traits<T&&> {
+    using type = scopes::unique;
+};
+
+template<class T>
+struct scope_traits<const T&&> {
+    using type = scopes::unique;
+};
+
+template<class T>
+struct scope_traits<std::unique_ptr<T>> {
+    using type = scopes::unique;
+};
+
+template<class T>
+struct scope_traits<const std::unique_ptr<T>&> {
+    using type = scopes::unique;
+};
+
+template<class T>
 struct scope_traits<std::shared_ptr<T>> {
     using type = scopes::singleton;
 };
@@ -72,26 +92,6 @@ struct scope_traits<std::weak_ptr<T>> {
 template<class T>
 struct scope_traits<const std::weak_ptr<T>&> {
     using type = scopes::singleton;
-};
-
-template<class T>
-struct scope_traits<std::unique_ptr<T>> {
-    using type = scopes::unique;
-};
-
-template<class T>
-struct scope_traits<const std::unique_ptr<T>&> {
-    using type = scopes::unique;
-};
-
-template<class T>
-struct scope_traits<T&&> {
-    using type = scopes::unique;
-};
-
-template<class T>
-struct scope_traits<const T&&> {
-    using type = scopes::unique;
 };
 
 template<class T>

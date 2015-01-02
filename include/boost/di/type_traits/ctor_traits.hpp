@@ -106,7 +106,7 @@ struct arg_impl<aux::type_list<T>> {
 };
 
 template<class T>
-using arg_impl_t = typename arg_impl<T>::type;o
+using arg_impl_t = typename arg_impl<T>::type;
 
 template<class T>
 struct arg<const aux::type<T, std::true_type>&> {

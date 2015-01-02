@@ -44,6 +44,26 @@ struct memory_traits<const T*> {
 };
 
 template<class T>
+struct memory_traits<T&&> {
+    using type = stack;
+};
+
+template<class T>
+struct memory_traits<const T&&> {
+    using type = stack;
+};
+
+template<class T>
+struct memory_traits<std::unique_ptr<T>> {
+    using type = heap;
+};
+
+template<class T>
+struct memory_traits<const std::unique_ptr<T>&> {
+    using type = heap;
+};
+
+template<class T>
 struct memory_traits<std::shared_ptr<T>> {
     using type = heap;
 };
@@ -73,26 +93,6 @@ struct memory_traits<std::weak_ptr<T>> {
 template<class T>
 struct memory_traits<const std::weak_ptr<T>&> {
     using type = heap;
-};
-
-template<class T>
-struct memory_traits<std::unique_ptr<T>> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<const std::unique_ptr<T>&> {
-    using type = heap;
-};
-
-template<class T>
-struct memory_traits<T&&> {
-    using type = stack;
-};
-
-template<class T>
-struct memory_traits<const T&&> {
-    using type = stack;
 };
 
 template<class T>
