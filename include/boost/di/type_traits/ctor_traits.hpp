@@ -12,13 +12,10 @@
 #include "boost/di/core/any_type.hpp"
 #include "boost/di/inject.hpp"
 
-namespace boost { namespace di {
+namespace boost { namespace di { namespace type_traits {
 
 template<class, class>
 struct named { };
-
-namespace type_traits {
-
 struct direct { };
 struct uniform { };
 

@@ -83,7 +83,7 @@ private:
     }
 
     template<class, class T, class TName>
-    auto create_t(const aux::type<named<TName, T>>&) const {
+    auto create_t(const aux::type<type_traits::named<TName, T>>&) const {
         return create_impl<T, TName>();
     }
 

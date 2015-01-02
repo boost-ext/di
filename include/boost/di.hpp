@@ -325,10 +325,99 @@ private:
 
 #define BOOST_DI_TYPE_TRAITS_MEMORY_TRAITS_HPP
 
+#if (__has_include(<boost/shared_ptr.hpp>))
+    #include <boost/shared_ptr.hpp>
+#endif
+
 namespace boost { namespace di { namespace type_traits {
 
 struct heap { };
 struct stack { };
+
+template<class T, class = void>
+struct memory_traits {
+    using type = stack;
+};
+
+template<class T>
+struct memory_traits<T&> {
+    using type = stack;
+};
+
+template<class T>
+struct memory_traits<const T&> {
+    using type = stack;
+};
+
+template<class T>
+struct memory_traits<T*> {
+    using type = heap;
+};
+
+template<class T>
+struct memory_traits<const T*> {
+    using type = heap;
+};
+
+template<class T>
+struct memory_traits<std::shared_ptr<T>> {
+    using type = heap;
+};
+
+template<class T>
+struct memory_traits<const std::shared_ptr<T>&> {
+    using type = heap;
+};
+
+#if (__has_include(<boost/shared_ptr.hpp>))
+    template<class T>
+    struct memory_traits<boost::shared_ptr<T>> {
+        using type = heap;
+    };
+
+    template<class T>
+    struct memory_traits<const boost::shared_ptr<T>&> {
+        using type = heap;
+    };
+#endif
+
+template<class T>
+struct memory_traits<std::weak_ptr<T>> {
+    using type = heap;
+};
+
+template<class T>
+struct memory_traits<const std::weak_ptr<T>&> {
+    using type = heap;
+};
+
+template<class T>
+struct memory_traits<std::unique_ptr<T>> {
+    using type = heap;
+};
+
+template<class T>
+struct memory_traits<const std::unique_ptr<T>&> {
+    using type = heap;
+};
+
+template<class T>
+struct memory_traits<T&&> {
+    using type = stack;
+};
+
+template<class T>
+struct memory_traits<const T&&> {
+    using type = stack;
+};
+
+template<class T>
+struct memory_traits<T, std::enable_if_t<std::is_polymorphic<T>{}>> {
+    using type = heap;
+};
+
+template<class T>
+using memory_traits_t = typename memory_traits<T>::type;
 
 }}} // boost::di::type_traits
 
@@ -942,7 +1031,7 @@ namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_TYPE(is_ref);
 
-template<class TParent = aux::none_t, class TInjector = aux::none_t>
+template<class TParent = void, class TInjector = aux::none_t>
 struct any_type {
     template<class T>
     struct is_not_same_impl {
@@ -1131,13 +1220,10 @@ struct is_any_type<any_type<TArgs...>> : std::true_type { };
 
 #define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 
-namespace boost { namespace di {
+namespace boost { namespace di { namespace type_traits {
 
 template<class, class>
 struct named { };
-
-namespace type_traits {
-
 struct direct { };
 struct uniform { };
 
@@ -1630,7 +1716,7 @@ private:
     }
 
     template<class, class T, class TName>
-    auto create_t(const aux::type<named<TName, T>>&) const {
+    auto create_t(const aux::type<type_traits::named<TName, T>>&) const {
         return create_impl<T, TName>();
     }
 
