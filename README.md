@@ -62,7 +62,7 @@ int main() {
 </pre></td><td><pre>
 int main() {
     auto injector = di::make_injector(
-        di::bind ilogic, logic
+        di::bind&lt;ilogic, logic&gt;
       , di::bind<ilogger, logger>
     );
     return injector.create<example>().run();
