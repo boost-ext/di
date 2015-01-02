@@ -902,14 +902,15 @@ Distributed under the [Boost Software License, Version 1.0](http://www.boost.org
 
 <table border="1" style="width:100%">
   <tr>
-    <td>Jill</td>
-    <td>Smith</td> 
-    <td>50</td>
-  </tr>
-  <tr>
-    <td>Eve</td>
-    <td>Jackson</td> 
-    <td>94</td>
-  </tr>
+  ```cpp
+auto name = []{};
+
+struct c {
+    BOOST_DI_INJECT(c
+        , (NAMED = name) int) { }
+};
+
+di::make_injector().create<c>();
+```</tr> <tr>other text</tr>
 </table>
 
