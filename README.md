@@ -101,13 +101,11 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 *
 
 > **Bindings** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/binding.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/dynamic_binding.cpp)
-[copy](blah)
 ```cpp
 Create empty injector                   | Test
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector();    | assert(0 == injector.create<int>());
 ```
-[copy](blah)
 ```cpp
 Bind type to value                      | Test
 ----------------------------------------|-----------------------------------------
