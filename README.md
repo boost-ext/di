@@ -106,12 +106,14 @@ Create empty injector
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector();    | assert(0 == injector.create<int>());
 ----------------------------------------|-----------------------------------------
+
 Bind type to value
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector(      | assert(42 == injector.create<int>());
     di::bind<int>.to(42)                |
 );                                      |
 ----------------------------------------|-----------------------------------------
+
 Bind type to static value
 ----------------------------------------|-----------------------------------------
 template<int N> using int_ =            | assert(42 == injector.create<int>());
@@ -121,12 +123,14 @@ auto injector = di::make_injector(      |
     di::bind<int, int_<42>>             |
 );                                      |
 ----------------------------------------|-----------------------------------------
+
 Bind interface to implementation
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector(      | auto object = injector.create<unique_ptr<i1>>();
     di::bind<i1, impl1>                 | assert(dynamic_cast<impl1*>(object.get()));
 );                                      |
 ----------------------------------------|-----------------------------------------
+
 Bind different interfaces to one implementation
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector(      | auto object1 = injector.create<shared_ptr<i1>>();
@@ -135,6 +139,7 @@ auto injector = di::make_injector(      | auto object1 = injector.create<shared_
                                         | assert(dynamic_cast<impl*>(object2.get()));
                                         | assert(object1 == object2);
 ----------------------------------------|-----------------------------------------
+
 Bind to external value
 ----------------------------------------|-----------------------------------------
 auto i = 42;                            | auto object = injector.create<const int&>();
