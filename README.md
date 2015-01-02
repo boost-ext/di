@@ -9,8 +9,7 @@ Dependency injection is a programming practice providing required instances to a
 * Provides easier to maintain code (different objects might be easily injected)
 * Provides easier to test code (fakes objects might be injected)
 
-<table>
-<tr><td><b>No Dependency Injection</b></td><td><b>Dependency Injection</b></td></tr><tr><td><pre>
+<table><tr><td><b>No Dependency Injection</b></td><td><b>Dependency Injection</b></td></tr><tr><td><pre>
 class example {
 public:
     example()
@@ -50,8 +49,7 @@ dependencies injection.
 * Gives better control of what and how is created (policies, providers)
 * Gives better understanding about objects hierarchy (Types creation graph)
 
-<table>
-<tr><td><b>Manual Dependency Injection</b></td><td><b>Boost.DI</b></td></tr><tr><td><pre>
+<table><tr><td><b>Manual Dependency Injection</b></td><td><b>Boost.DI</b></td></tr><tr><td><pre>
 int main() {
     /*boilerplate code*/
     auto logic = make_shared<logic>();
@@ -62,7 +60,7 @@ int main() {
 </pre></td><td><pre>
 int main() {
     auto injector = di::make_injector(
-        di::bind&lt;ilogic, logic&gt;
+        di::bind<ilogic, logic>
       , di::bind<ilogger, logger>
     );
     return injector.create<example>().run();
@@ -122,54 +120,65 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 
 > **Bindings** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/binding.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/dynamic_binding.cpp)
 
-```cpp
-Create empty injector                   | Test
-----------------------------------------|-----------------------------------------
-auto injector = di::make_injector();    | assert(0 == injector.create<int>());
-```
-```cpp
-Bind type to value                      | Test
-----------------------------------------|-----------------------------------------
-auto injector = di::make_injector(      | assert(42 == injector.create<int>());
-    di::bind<int>.to(42)                |
-);                                      |
-```
-```cpp
-Bind type to static value               | Test
-----------------------------------------|-----------------------------------------
-template<int N> using int_ =            | assert(42 == injector.create<int>());
-    std::integral_constant<int, N>;     |
-                                        |
-auto injector = di::make_injector(      |
-    di::bind<int, int_<42>>             |
-);                                      |
-```
-```cpp
-Bind interface to implementation        | Test
-----------------------------------------|-----------------------------------------
-auto injector = di::make_injector(      | auto object = injector.create<unique_ptr<i1>>();
-    di::bind<i1, impl1>                 | assert(dynamic_cast<impl1*>(object.get()));
-);                                      |
-```
-```cpp
-Bind different interfaces to one        | Test
-implementation                          |
-----------------------------------------|-----------------------------------------
-auto injector = di::make_injector(      | auto object1 = injector.create<shared_ptr<i1>>();
-    di::bind<di::any_of<i1, i2>, impl>  | auto object2 = injector.create<shared_ptr<i2>>();
-);                                      | assert(dynamic_cast<impl*>(object1.get()));
-                                        | assert(dynamic_cast<impl*>(object2.get()));
-                                        | assert(object1 == object2);
-```
-```cpp
-Bind to external value                  | Test
-----------------------------------------|-----------------------------------------
-auto i = 42;                            | auto object = injector.create<const int&>();
-                                        | assert(i == object);
-auto injector = di::make_injector(      | assert(&i == &object);
-    di::bind<int>.to(std::cref(i));     |
-);                                      |
-```
+<table>
+<tr><td>Create empty injector</td><td>Test</td></tr><tr><td><pre>
+auto injector = di::make_injector();
+</pre></td><td><pre>
+assert(0 == injector.create<int>());
+</pre></td></tr>
+<tr><td>Bind type to value</td><td>Test</td></tr><tr><td><pre>
+auto injector = di::make_injector(
+    di::bind<int>.to(42)
+);
+</pre></td><td><pre>
+assert(42 == injector.create<int>());
+</pre></td></tr>
+
+<tr><td>Bind type to static value</td><td>Test</td></tr><tr><td><pre>
+template<int N> using int_ =
+    std::integral_constant<int, N>;
+
+auto injector = di::make_injector(
+    di::bind<int, int_<42>>
+);
+</pre></td><td><pre>
+assert(42 == injector.create<int>());
+</pre></td></tr>
+
+<tr><td>Bind interface to implementation</td><td>Test</td></tr><tr><td><pre>
+auto injector = di::make_injector(
+    di::bind<i1, impl1>
+);
+</pre></td><td><pre>
+auto object = injector.create<unique_ptr<i1>>();
+assert(dynamic_cast<impl1*>(object.get()));
+</pre></td></tr>
+
+<tr><td>Bind different interfaces to one implementation</td><td>Test</td></tr><tr><td><pre>
+auto injector = di::make_injector(
+    di::bind<di::any_of<i1, i2>, impl>
+);
+</pre></td><td><pre>
+auto object1 = injector.create<shared_ptr<i1>>();
+auto object2 = injector.create<shared_ptr<i2>>();
+assert(dynamic_cast<impl*>(object1.get()));
+assert(dynamic_cast<impl*>(object2.get()));
+assert(object1 == object2);
+</pre></td></tr>
+
+<tr><td>Bind to external value</td><td>Test</td></tr><tr><td><pre>
+auto i = 42;
+
+auto injector = di::make_injector(
+    di::bind<int>.to(std::cref(i));
+);
+</pre></td><td><pre>
+auto object = injector.create<const int&>();
+assert(i == object);
+assert(&i == &object);
+</pre></td></tr>
+
+</table>
 
 *
 
