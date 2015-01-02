@@ -17,7 +17,7 @@ namespace boost { namespace di { namespace wrappers {
 template<class T>
 class unique {
 public:
-    unique(const T& value) noexcept // non explicit
+    explicit unique(const T& value) noexcept // non explicit
         : value_(value)
     { }
 
@@ -38,7 +38,7 @@ private:
 template<class T>
 class unique<T*> {
 public:
-    unique(T* value) noexcept // non explicit
+    explicit unique(T* value) noexcept // non explicit
         : value_(value)
     { }
 

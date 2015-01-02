@@ -260,7 +260,7 @@ namespace boost { namespace di { namespace wrappers {
 template<class T>
 class unique {
 public:
-    unique(const T& value) noexcept // non explicit
+    explicit unique(const T& value) noexcept // non explicit
         : value_(value)
     { }
 
@@ -281,7 +281,7 @@ private:
 template<class T>
 class unique<T*> {
 public:
-    unique(T* value) noexcept // non explicit
+    explicit unique(T* value) noexcept // non explicit
         : value_(value)
     { }
 
@@ -376,19 +376,9 @@ namespace boost { namespace di { namespace wrappers {
 template<class T>
 class shared {
 public:
-    shared() noexcept { }
-
-    shared(const std::shared_ptr<T>& value) noexcept // non explicit
+    explicit shared(const std::shared_ptr<T>& value) noexcept
         : value_(value)
     { }
-
-    inline bool operator!() const noexcept {
-        return !value_;
-    }
-
-    inline void reset(T* ptr = 0) noexcept {
-        return value_.reset(ptr);
-    }
 
     template<class I>
     inline operator std::shared_ptr<I>() const noexcept {
@@ -443,12 +433,12 @@ public:
             if (!get_instance()) {
                 get_instance().reset(provider.get());
             }
-            return get_instance();
+            return wrappers::shared<T>{get_instance()};
         }
 
     private:
-        static wrappers::shared<T>& get_instance() noexcept {
-            static wrappers::shared<T> object;
+        static std::shared_ptr<T>& get_instance() noexcept {
+            static std::shared_ptr<T> object;
             return object;
         }
     };
@@ -783,8 +773,8 @@ public:
 
 namespace boost { namespace di {
 namespace providers {
-class nothrow_heap;
-class nothrow_reduce_heap_usage;
+class heap;
+class stack_over_heap;
 } // providers
 
 struct no_name {
@@ -1414,11 +1404,11 @@ public:
             if (in_scope_ && !object_) {
                 object_.reset(provider.get());
             }
-            return object_;
+            return wrappers::shared<T>{object_};
         }
 
     private:
-        wrappers::shared<T> object_;
+        std::shared_ptr<T> object_;
         bool in_scope_ = false;
     };
 };
@@ -1441,11 +1431,11 @@ public:
             if (!object_) {
                 object_.reset(provider.get());
             }
-            return object_;
+            return wrappers::shared<T>{object_};
         }
 
     private:
-        wrappers::shared<T> object_;
+        std::shared_ptr<T> object_;
     };
 };
 

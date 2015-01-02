@@ -23,11 +23,11 @@ public:
             if (!object_) {
                 object_.reset(provider.get());
             }
-            return object_;
+            return wrappers::shared<T>{object_};
         }
 
     private:
-        wrappers::shared<T> object_;
+        std::shared_ptr<T> object_;
     };
 };
 

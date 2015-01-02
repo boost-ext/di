@@ -23,12 +23,12 @@ public:
             if (!get_instance()) {
                 get_instance().reset(provider.get());
             }
-            return get_instance();
+            return wrappers::shared<T>{get_instance()};
         }
 
     private:
-        static wrappers::shared<T>& get_instance() noexcept {
-            static wrappers::shared<T> object;
+        static std::shared_ptr<T>& get_instance() noexcept {
+            static std::shared_ptr<T> object;
             return object;
         }
     };

@@ -7,8 +7,9 @@
 #ifndef BOOST_DI_SCOPES_SESSION_HPP
 #define BOOST_DI_SCOPES_SESSION_HPP
 
+#include <memory>
 #include "boost/di/wrappers/shared.hpp"
-#include "boost/di/fwd.hpp"
+#include "boost/di/fwd.hpp" // no_name
 
 namespace boost { namespace di { namespace scopes {
 
@@ -40,11 +41,11 @@ public:
             if (in_scope_ && !object_) {
                 object_.reset(provider.get());
             }
-            return object_;
+            return wrappers::shared<T>{object_};
         }
 
     private:
-        wrappers::shared<T> object_;
+        std::shared_ptr<T> object_;
         bool in_scope_ = false;
     };
 };

@@ -9,8 +9,8 @@
 
 namespace boost { namespace di {
 namespace providers {
-class nothrow_heap;
-class nothrow_reduce_heap_usage;
+class heap;
+class stack_over_heap;
 } // providers
 
 struct no_name {

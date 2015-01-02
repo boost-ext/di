@@ -17,19 +17,9 @@ namespace boost { namespace di { namespace wrappers {
 template<class T>
 class shared {
 public:
-    shared() noexcept { }
-
-    shared(const std::shared_ptr<T>& value) noexcept // non explicit
+    explicit shared(const std::shared_ptr<T>& value) noexcept
         : value_(value)
     { }
-
-    inline bool operator!() const noexcept {
-        return !value_;
-    }
-
-    inline void reset(T* ptr = 0) noexcept {
-        return value_.reset(ptr);
-    }
 
     template<class I>
     inline operator std::shared_ptr<I>() const noexcept {
