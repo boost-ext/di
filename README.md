@@ -9,24 +9,41 @@ Dependency injection is a programming practice providing required instances to a
 * Provides easier to maintain code (different objects might be easily injected)
 * Provides easier to test code (fakes objects might be injected)
 
-```cpp
-No Dependency injection                 | Dependency Injection
-----------------------------------------|--------------------------------------------
-class example {                         | class example {
-public:                                 | public:
-    example()                           |     example(shared_ptr<ilogic> logic
-        : logic_(new logic())           |           , shared_ptr<ilogger> logger)
-        , logger_(factory::create())    |         : logic_(logic), logger_(logger)
-    { }                                 |     { }
-                                        |
-    int run() const;                    |     int run() const;
-                                        |
-private:                                | private:
-    shared_ptr<ilogic> logic_;          |     shared_ptr<ilogic> logic_;
-    shared_ptr<ilogger> logger_;        |     shared_ptr<ilogger> logger_;
-};                                      | };
-                                        |
-```
+
+<table border="1" style="width:100%">
+<tr><td>No Dependency Injection</td><td>Dependency Injection</td></tr>
+<tr><td>
+class example {
+public:
+    example()
+        : logic_(new logic())
+        , logger_(factory::create())
+    { }
+
+    int run() const;
+
+private:
+    shared_ptr<ilogic> logic_;
+    shared_ptr<ilogger> logger_;
+};
+</td>
+<td>
+class example {
+public:
+    example(shared_ptr<ilogic> logic
+          , shared_ptr<ilogger> logger)
+        : logic_(logic), logger_(logger)
+    { }
+
+    int run() const;
+
+private:
+    shared_ptr<ilogic> logic_;
+    shared_ptr<ilogger> logger_;
+};
+</td>
+</tr></table>
+
 Boost.DI is a header only, type safe, compile time, non-intrusive constructor dependency injection
 library improving manual dependency injection by simplifying object instantiation with automatic
 dependencies injection.
@@ -899,20 +916,4 @@ di::make_injector().create<c>();        |
 
 **License**
 Distributed under the [Boost Software License, Version 1.0](http://www.boost.org/LICENSE_1_0.txt).
-
-<table border="1" style="width:100%">
-  <tr><td>
-<pre style='color:#000000;background:#ffffff;'><html><body style='color:#000000; background:#ffffff; '><pre>
-<span style='color:#800000; font-weight:bold; '>auto</span> name <span style='color:#808030; '>=</span> <span style='color:#808030; '>[</span><span style='color:#808030; '>]</span><span style='color:#800080; '>{</span><span style='color:#800080; '>}</span><span style='color:#800080; '>;</span>
-
-<span style='color:#800000; font-weight:bold; '>struct</span> c <span style='color:#800080; '>{</span>
-    BOOST_DI_INJECT<span style='color:#808030; '>(</span>c
-        <span style='color:#808030; '>,</span> <span style='color:#808030; '>(</span>NAMED <span style='color:#808030; '>=</span> name<span style='color:#808030; '>)</span> <span style='color:#800000; font-weight:bold; '>int</span><span style='color:#808030; '>)</span> <span style='color:#800080; '>{</span> <span style='color:#800080; '>}</span>
-<span style='color:#800080; '>}</span><span style='color:#800080; '>;</span>
-
-di<span style='color:#800080; '>::</span>make_injector<span style='color:#808030; '>(</span><span style='color:#808030; '>)</span><span style='color:#808030; '>.</span>create<span style='color:#800080; '>&lt;</span>c<span style='color:#800080; '>></span><span style='color:#808030; '>(</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
-</pre>
-
-</td></tr> <tr><td>other text</td></tr>
-</table>
 
