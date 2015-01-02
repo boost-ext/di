@@ -902,15 +902,17 @@ Distributed under the [Boost Software License, Version 1.0](http://www.boost.org
 
 <table border="1" style="width:100%">
   <tr><td>
-  ```cpp
-auto name = []{};
+<pre style='color:#000000;background:#ffffff;'><html><body style='color:#000000; background:#ffffff; '><pre>
+<span style='color:#800000; font-weight:bold; '>auto</span> name <span style='color:#808030; '>=</span> <span style='color:#808030; '>[</span><span style='color:#808030; '>]</span><span style='color:#800080; '>{</span><span style='color:#800080; '>}</span><span style='color:#800080; '>;</span>
 
-struct c {
-    BOOST_DI_INJECT(c
-        , (NAMED = name) int) { }
-};
+<span style='color:#800000; font-weight:bold; '>struct</span> c <span style='color:#800080; '>{</span>
+    BOOST_DI_INJECT<span style='color:#808030; '>(</span>c
+        <span style='color:#808030; '>,</span> <span style='color:#808030; '>(</span>NAMED <span style='color:#808030; '>=</span> name<span style='color:#808030; '>)</span> <span style='color:#800000; font-weight:bold; '>int</span><span style='color:#808030; '>)</span> <span style='color:#800080; '>{</span> <span style='color:#800080; '>}</span>
+<span style='color:#800080; '>}</span><span style='color:#800080; '>;</span>
 
-di::make_injector().create<c>();
-```</td></tr> <tr><td>other text</td></tr>
+di<span style='color:#800080; '>::</span>make_injector<span style='color:#808030; '>(</span><span style='color:#808030; '>)</span><span style='color:#808030; '>.</span>create<span style='color:#800080; '>&lt;</span>c<span style='color:#800080; '>></span><span style='color:#808030; '>(</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+</pre>
+
+</td></tr> <tr><td>other text</td></tr>
 </table>
 
