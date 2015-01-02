@@ -92,7 +92,7 @@ struct ctor_traits
 namespace type_traits {
 
 template<class>
-struct parse;
+struct parse_args;
 
 template<class>
 struct arg;
@@ -106,22 +106,34 @@ struct arg_impl<aux::type_list<T>> {
 };
 
 template<class T>
+using arg_impl_t = typename arg_impl<T>::type;o
+
+template<class T>
 struct arg<const aux::type<T, std::true_type>&> {
 	using type = named<
-        typename aux::function_traits<decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, name))>::result_type
-      , typename arg_impl<typename aux::function_traits<decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, arg))>::args>::type
+        typename aux::function_traits<
+            decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, name))
+        >::result_type
+      , arg_impl_t<typename aux::function_traits<
+            decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, arg))
+        >::args>
     >;
 };
 
 template<class T>
 struct arg<const aux::type<T, std::false_type>&> {
-    using type = typename arg_impl<typename aux::function_traits<decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, arg))>::args>::type;
+    using type = arg_impl_t<typename aux::function_traits<
+        decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, arg))
+    >::args>;
 };
 
 template<class... Ts>
-struct parse<aux::type_list<Ts...>>
+struct parse_args<aux::type_list<Ts...>>
     : aux::type_list<typename arg<Ts>::type...>
 { };
+
+template<class... Ts>
+using parse_args_t = typename parse_args<Ts...>::type;
 
 template<
     class T
@@ -135,7 +147,7 @@ template<
 
 template<class T>
 struct ctor_traits<T, std::true_type>
-    : aux::pair<direct, typename parse<typename T::BOOST_DI_INJECTOR::type>::type>
+    : aux::pair<direct, parse_args_t<typename T::BOOST_DI_INJECTOR::type>>
 { };
 
 template<class T>
@@ -147,7 +159,7 @@ template<class T>
 struct ctor_traits_impl<T, std::true_type>
     : aux::pair<
           direct
-        , typename parse<typename di::ctor_traits<T>::BOOST_DI_INJECTOR::type>::type
+        , parse_args_t<typename di::ctor_traits<T>::BOOST_DI_INJECTOR::type>
       >
 { };
 
