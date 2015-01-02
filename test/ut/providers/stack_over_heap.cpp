@@ -23,20 +23,20 @@ auto test_stack = [](auto type, auto init, auto... args) {
 test get_no_args = [] {
     struct c { };
     test_stack(test_type<int>{}, type_traits::direct{});
-    test_heap(test_type<int>{}, type_traits::aggregate{});
-    test_stack(test_type<int>{}, type_traits::aggregate{});
+    test_heap(test_type<int>{}, type_traits::uniform{});
+    test_stack(test_type<int>{}, type_traits::uniform{});
     test_heap(test_type<c>{}, type_traits::direct{});
     test_stack(test_type<c>{}, type_traits::direct{});
-    test_heap(test_type<c>{}, type_traits::aggregate{});
-    test_stack(test_type<c>{}, type_traits::aggregate{});
+    test_heap(test_type<c>{}, type_traits::uniform{});
+    test_stack(test_type<c>{}, type_traits::uniform{});
 };
 
 test get_with_args = [] {
     struct direct { direct(int, double) { } };
-    struct aggregate { int i = 0; double d = 0.0; };
+    struct uniform { int i = 0; double d = 0.0; };
     test_stack(test_type<direct>{}, type_traits::direct{}, int{}, double{});
-    test_heap(test_type<direct>{}, type_traits::aggregate{}, int{}, double{});
-    test_heap(test_type<aggregate>{}, type_traits::aggregate{}, int{}, double{});
+    test_heap(test_type<direct>{}, type_traits::uniform{}, int{}, double{});
+    test_heap(test_type<uniform>{}, type_traits::uniform{}, int{}, double{});
 };
 
 }}} // boost::di::providers

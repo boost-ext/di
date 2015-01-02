@@ -74,7 +74,7 @@ test ctors = [] {
     expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type<rvalue>>>, ctor_traits<rvalue>::type>{});
 };
 
-test aggregates = [] {
+test uniforms = [] {
     struct empty { };
     struct ctor1 {
         int i = 0;
@@ -83,8 +83,8 @@ test aggregates = [] {
         std::unique_ptr<void> ptr;
         int& i;
     };
-    expect(std::is_same<aux::pair<aggregate, aux::type_list<>>, ctor_traits<empty>::type>{});
-    expect(std::is_same<aux::pair<aggregate, aux::type_list<core::any_type<ctor2_ref>, core::any_type<ctor2_ref>>>, ctor_traits<ctor2_ref>::type>{});
+    expect(std::is_same<aux::pair<uniform, aux::type_list<>>, ctor_traits<empty>::type>{});
+    expect(std::is_same<aux::pair<uniform, aux::type_list<core::any_type<ctor2_ref>, core::any_type<ctor2_ref>>>, ctor_traits<ctor2_ref>::type>{});
 };
 
 test inheriting_ctors = [] {

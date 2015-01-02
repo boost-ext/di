@@ -21,7 +21,7 @@ public:
     }
 
     template<class T, class TMemory, class... TArgs>
-    auto* get(const type_traits::aggregate&
+    auto* get(const type_traits::uniform&
             , const TMemory&
             , TArgs&&... args) const {
         return new T{std::forward<TArgs>(args)...};

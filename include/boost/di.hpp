@@ -1149,7 +1149,7 @@ struct named { };
 namespace type_traits {
 
 struct direct { };
-struct aggregate { };
+struct uniform { };
 
 BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_INJECTOR);
 
@@ -1206,7 +1206,7 @@ struct ctor;
 
 template<class T>
 struct ctor<T, aux::type_list<>>
-    : aux::pair<aggregate, ctor_impl_t<aux::is_braces_constructible, T>>
+    : aux::pair<uniform, ctor_impl_t<aux::is_braces_constructible, T>>
 { };
 
 template<class T, class... TArgs>
@@ -1331,7 +1331,7 @@ public:
     }
 
     template<class T, class... TArgs>
-    auto* get(const type_traits::aggregate&
+    auto* get(const type_traits::uniform&
             , const type_traits::heap&
             , TArgs&&... args) const {
         return new T{std::forward<TArgs>(args)...};
@@ -1345,7 +1345,7 @@ public:
     }
 
     template<class T, class... TArgs>
-    auto get(const type_traits::aggregate&
+    auto get(const type_traits::uniform&
            , const type_traits::stack&
            , TArgs&&... args) const noexcept {
         return T{std::forward<TArgs>(args)...};

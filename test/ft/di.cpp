@@ -346,6 +346,16 @@ test scopes_priority = [] {
     expect_eq(12, object);
 };
 
+test bind_int_to_static_value = [] {
+    auto injector = di::make_injector(
+        di::bind<int, std::integral_constant<int, 42>>
+    );
+
+    auto object = injector.create<int>();
+
+    expect_eq(42, object);
+};
+
 test scopes_order = [] {
     auto injector = di::make_injector(
         di::bind<int, std::integral_constant<int, 41>>
