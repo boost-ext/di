@@ -72,14 +72,14 @@ int main() {
     injector.create<c3>();
 
     /*<< output [pre
-        void : (c3[no_name] -> c3)
-        c3 : (std::shared_ptr<c1>[no_name] -> c1)
-        std::shared_ptr<c1> : (std::shared_ptr<i0>[no_name] -> c0)
-        std::shared_ptr<c1> : (int[no_name] -> int)
-        c3 : (std::shared_ptr<c2>[no_name] -> c2)
-        std::shared_ptr<c2> : (int[first int] -> int)
-        std::shared_ptr<c2> : (int[second int] -> int)
-        std::shared_ptr<c2> : (char[no_name] -> char)
+        (c3[no_name] -> c3)
+            (std::shared_ptr<c1>[no_name] -> c1)
+                (std::shared_ptr<i0>[no_name] -> c0)
+                (int[no_name] -> int)
+            (std::shared_ptr<c2>[no_name] -> c2)
+                (int[first int] -> int)
+                (int[second int] -> int)
+                (char[no_name] -> char)
     ]>>*/
     return 0;
 }
