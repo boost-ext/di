@@ -8,7 +8,7 @@
 #define BOOST_DI_INJECT_HPP
 
 #include <type_traits>
-#include "boost/di/aux_/preprocessor.hpp"
+#include "boost/di/aux_/preprocessor/preprocessor.hpp"
 #include "boost/di/aux_/utility.hpp"
 
 #if !defined(BOOST_DI_INJECTOR)
