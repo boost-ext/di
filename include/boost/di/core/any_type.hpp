@@ -14,7 +14,7 @@ namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_TYPE(is_ref);
 
-template<class TParent = aux::none_t, class TInjector = aux::none_t>
+template<class TParent = void, class TInjector = aux::none_t>
 struct any_type {
     template<class T>
     struct is_not_same_impl {
