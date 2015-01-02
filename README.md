@@ -11,7 +11,7 @@ Dependency injection is a programming practice providing required instances to a
 
 
 <table>
-<tr><td>No Dependency Injection</td><td>Dependency Injection</td></tr>
+<tr><td><b>No Dependency Injection</b></td><td>Dependency Injection</td></tr>
 <tr><td>
 <pre>
 class example {
