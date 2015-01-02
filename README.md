@@ -102,19 +102,19 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 
 > **Bindings** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/binding.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/dynamic_binding.cpp)
 ```cpp
-Create empty injector                   | Test
+Create empty injector
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector();    | assert(0 == injector.create<int>());
 ```
 ```cpp
-Bind type to value                      | Test
+Bind type to value
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector(      | assert(42 == injector.create<int>());
     di::bind<int>.to(42)                |
 );                                      |
 ```
 ```cpp
-Bind type to static value               | Test
+Bind type to static value
 ----------------------------------------|-----------------------------------------
 template<int N> using int_ =            | assert(42 == injector.create<int>());
     std::integral_constant<int, N>;     |
@@ -124,15 +124,14 @@ auto injector = di::make_injector(      |
 );                                      |
 ```
 ```cpp
-Bind interface to implementation        | Test
+Bind interface to implementation
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector(      | auto object = injector.create<unique_ptr<i1>>();
     di::bind<i1, impl1>                 | assert(dynamic_cast<impl1*>(object.get()));
 );                                      |
 ```
 ```cpp
-Bind different interfaces to one        | Test
-implementation                          |
+Bind different interfaces to one implementation
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector(      | auto object1 = injector.create<shared_ptr<i1>>();
     di::bind<di::any_of<i1, i2>, impl>  | auto object2 = injector.create<shared_ptr<i2>>();
@@ -141,7 +140,7 @@ auto injector = di::make_injector(      | auto object1 = injector.create<shared_
                                         | assert(object1 == object2);
 ```
 ```cpp
-Bind to external value                  | Test
+Bind to external value
 ----------------------------------------|-----------------------------------------
 auto i = 42;                            | auto object = injector.create<const int&>();
                                         | assert(i == object);
