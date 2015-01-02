@@ -7,24 +7,12 @@
 #ifndef BOOST_DI_SCOPES_UNIQUE_HPP
 #define BOOST_DI_SCOPES_UNIQUE_HPP
 
-#include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/wrappers/unique.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
 
 namespace boost { namespace di { namespace scopes {
 
-BOOST_DI_HAS_TYPE(element_type);
-
 class unique {
-    template<class T>
-    using memory = std::conditional_t<
-        std::is_pointer<T>{} ||
-        std::is_polymorphic<T>{} ||
-        has_element_type<aux::remove_accessors_t<T>>{}
-      , type_traits::heap
-      , type_traits::stack
-    >;
-
 public:
     static constexpr auto priority = false;
 
@@ -33,7 +21,7 @@ public:
     public:
         template<class T, class TProvider>
         auto create(const TProvider& provider) const {
-            using memory = memory<T>;
+            using memory = type_traits::memory_traits_t<T>;
             using wrapper = wrappers::unique<decltype(provider.get(memory{}))>;
             return wrapper{provider.get(memory{})};
         }

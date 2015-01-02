@@ -131,13 +131,13 @@ private:
     }
 
     template<class... TArgs, class... Ts>
-    decltype(auto) create_from_injector(const injector<TArgs...>& injector
-                                      , const aux::type_list<Ts...>&) const noexcept {
+    auto create_from_injector(const injector<TArgs...>& injector
+                            , const aux::type_list<Ts...>&) const noexcept {
         return pool<TDeps>(create_dep<Ts>(injector)...);
     }
 
     template<class TDependency, class TInjector>
-    decltype(auto) create_dep(const TInjector& injector) const noexcept {
+    auto create_dep(const TInjector& injector) const noexcept {
         return TDependency{injector};
     }
 };

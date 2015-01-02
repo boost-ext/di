@@ -452,18 +452,7 @@ using memory_traits_t = typename memory_traits<T>::type;
 
 namespace boost { namespace di { namespace scopes {
 
-BOOST_DI_HAS_TYPE(element_type);
-
 class unique {
-    template<class T>
-    using memory = std::conditional_t<
-        std::is_pointer<T>{} ||
-        std::is_polymorphic<T>{} ||
-        has_element_type<aux::remove_accessors_t<T>>{}
-      , type_traits::heap
-      , type_traits::stack
-    >;
-
 public:
     static constexpr auto priority = false;
 
@@ -472,7 +461,7 @@ public:
     public:
         template<class T, class TProvider>
         auto create(const TProvider& provider) const {
-            using memory = memory<T>;
+            using memory = type_traits::memory_traits_t<T>;
             using wrapper = wrappers::unique<decltype(provider.get(memory{}))>;
             return wrapper{provider.get(memory{})};
         }
@@ -1803,13 +1792,13 @@ private:
     }
 
     template<class... TArgs, class... Ts>
-    decltype(auto) create_from_injector(const injector<TArgs...>& injector
-                                      , const aux::type_list<Ts...>&) const noexcept {
+    auto create_from_injector(const injector<TArgs...>& injector
+                            , const aux::type_list<Ts...>&) const noexcept {
         return pool<TDeps>(create_dep<Ts>(injector)...);
     }
 
     template<class TDependency, class TInjector>
-    decltype(auto) create_dep(const TInjector& injector) const noexcept {
+    auto create_dep(const TInjector& injector) const noexcept {
         return TDependency{injector};
     }
 };
