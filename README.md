@@ -59,7 +59,7 @@ int main() {
 
     return example{logic, logger}.run();
 }
-</pre></td><td><pre>
+</pre></td><td><pre><code>
 int main() {
     auto injector = di::make_injector(
         di::bind<ilogic, logic>
@@ -67,7 +67,7 @@ int main() {
     );
     return injector.create<example>().run();
 }
-</pre></td></tr></table>
+</code></pre></td></tr></table>
 
 **Why Dependency Injection?**
 
