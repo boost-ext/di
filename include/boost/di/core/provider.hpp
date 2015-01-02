@@ -28,8 +28,8 @@ template<
 > {
     template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const {
-        auto&& config = injector_.config_;
-        return config.provider().template get<T>(
+        using config = typename TInjector::config;
+        return config{}.provider().template get<T>(
             TInitialization{}
           , memory
           , injector_.template create_t<TParent>(aux::type<TArgs>{})...

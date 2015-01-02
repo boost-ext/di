@@ -40,6 +40,7 @@ class injector : requires_unique_bindings<TDeps>, public pool<TDeps> {
     using pool_t = pool<TDeps>;
 
 public:
+    using config = TConfig;
     using deps = TDeps;
 
     // bind<...>, etc.  -> ignore
@@ -94,7 +95,7 @@ private:
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<given_t, T, ctor_t, injector>;
-        policy<pool_t>::template call<T, TName>(config_.policies(), dependency, ctor_t{});
+        policy<pool_t>::template call<T, TName>(TConfig{}.policies(), dependency, ctor_t{});
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
             std::is_reference<T>{} && has_is_ref<dependency_t>{}
@@ -139,8 +140,6 @@ private:
     decltype(auto) create_dep(const TInjector& injector) const noexcept {
         return TDependency{injector};
     }
-
-    mutable TConfig config_;
 };
 
 }}} // boost::di::core
