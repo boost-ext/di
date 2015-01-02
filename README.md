@@ -901,7 +901,7 @@ di::make_injector().create<c>();        |
 Distributed under the [Boost Software License, Version 1.0](http://www.boost.org/LICENSE_1_0.txt).
 
 <table border="1" style="width:100%">
-  <tr>
+  <tr><td>
   ```cpp
 auto name = []{};
 
@@ -911,6 +911,6 @@ struct c {
 };
 
 di::make_injector().create<c>();
-```</tr> <tr>other text</tr>
+```</td></tr> <tr><td>other text</td></tr>
 </table>
 
