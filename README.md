@@ -103,7 +103,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 
 *
 
-> **Injectors**
+> **Injector**
 ```cpp
 Create empty injector                   | Test
 ----------------------------------------|-----------------------------------------
