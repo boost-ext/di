@@ -104,9 +104,9 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 *
 
 > **Bindings** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/binding.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/dynamic_binding.cpp)
-
+```
 Represents configuration used to resolve types
-
+```
 ```cpp
 Create empty injector                   | Test
 ----------------------------------------|-----------------------------------------
