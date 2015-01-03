@@ -28,7 +28,6 @@ private:
 
 int main() {
     auto injector = di::make_injector();
-
     injector.create<app>().run();
 
     return 0;

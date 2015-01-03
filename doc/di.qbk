@@ -14,8 +14,7 @@
     [copyright 2014 Krzysztof Jusiak | Distributed under the Boost Software License, Version 1.0.]
     [authors [Jusiak, Krzysztof]]
     [license
-        [@https://github.com/krzysztof-jusiak/di C++14 Repository] |
-        [@http://krzysztof-jusiak.github.io/di/cpp03/boost/libs/di/doc/html C++03/11 Version]
+        [@https://github.com/krzysztof-jusiak/di Repository]
     ]
     [source-mode c++]
 ]

@@ -20,7 +20,10 @@ auto second = []{};
 
 class app {
 public:
-    BOOST_DI_INJECT(app, (named = first) int value1, (named = second) int value2, const std::string& text, std::shared_ptr<ilogger> logger)
+    BOOST_DI_INJECT(app, (named = first) int value1
+                       , (named = second) int value2
+                       , const std::string& text
+                       , std::shared_ptr<ilogger> logger)
         : value1_(value1), value2_(value2) , text_(text), logger_(logger)
     { }
 
