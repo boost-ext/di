@@ -647,13 +647,13 @@ public:                                 |     di::bind<i1, impl1>
       [](auto type                      | injector.create<unique_ptr<i1>>();
        , auto dep                       |
        , auto... ctor) {                | // output:
-         using T = decltype(type);      |     0
-         using arg = typename T::type;  |     unique_ptr<i1>
-         using arg_name =               |     di::no_name
-            typename T::name;           |     di::deduce
-         using D = decltype(dep);       |     i1
-         using Scope =                  |     impl1
-            typename D::scope;          |     no_name
+         using T = decltype(type);      |     0 // ctor_size of impl1
+         using arg = typename T::type;  |     unique_ptr<i1> // ctor arg
+         using arg_name =               |     di::no_name // ctor arg name
+            typename T::name;           |     di::deduce // scope
+         using D = decltype(dep);       |     i1 // expected
+         using Scope =                  |     impl1 // given
+            typename D::scope;          |     no_name // dependency
          using expected =               |
             typename D::expected;       |
          using given =                  | // global policy
@@ -665,13 +665,13 @@ public:                                 |     di::bind<i1, impl1>
          cout << ctor_s                 | injector.create<unique_ptr<i1>>();
               << endl                   |
               << typeid(arg).name()     | // output:
-              << endl                   |     0
-              << typeid(arg_name).name()|     unique_ptr<i1>
-              << endl                   |     di::no_name
-              << typeid(scope).name()   |     di::deduce
-              << endl                   |     i1
-              << typeid(expected).name()|     impl1
-              << endl                   |     no_name
+              << endl                   |     0 // ctor_size of impl1
+              << typeid(arg_name).name()|     unique_ptr<i1> // cotr arg
+              << endl                   |     di::no_name // ctor arg name
+              << typeid(scope).name()   |     di::deduce // scope
+              << endl                   |     i1 // expected
+              << typeid(expected).name()|     impl1 // given
+              << endl                   |     no_name // dependency
               << typeid(given).name()   |
               << endl                   |
               << typeid(name).name()    |
