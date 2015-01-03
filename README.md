@@ -15,23 +15,24 @@ No Dependency injection                 | Dependency Injection
 class example {                         | class example {
 public:                                 | public:
     example()                           |     example(shared_ptr<ilogic> logic
-        : logic_(new logic())           |           , shared_ptr<ilogger> logger)
-        , logger_(factory::create())    |         : logic_(logic), logger_(logger)
-    { }                                 |     { }
+        : logic_(new logic{})           |           , shared_ptr<ilogger> logger)
+        , logger_(                      |       : logic_(logic), logger_(logger)
+            logger_factory::create()    |     { }
+          )                             |
+    { }                                 |     int run() const;
                                         |
-    int run() const;                    |     int run() const;
-                                        |
-private:                                | private:
-    shared_ptr<ilogic> logic_;          |     shared_ptr<ilogic> logic_;
-    shared_ptr<ilogger> logger_;        |     shared_ptr<ilogger> logger_;
-};                                      | };
-                                        |
+    int run() const;                    | private:
+                                        |     shared_ptr<ilogic> logic_;
+private:                                |     shared_ptr<ilogger> logger_;
+    shared_ptr<ilogic> logic_;          | };
+    shared_ptr<ilogger> logger_;        |
+};                                      |
 ```
 Boost.DI is a header only, type safe, compile time, non-intrusive constructor dependency injection
 library improving manual dependency injection by simplifying object instantiation with automatic
 dependencies injection.
 
-* Reduces boilerplate code (no factories, no objects creation)
+* Reduces boilerplate code (no factories, no objects creation in specific order)
 * Reduces cost of maintenance effort (constructor signature change won't affect di configuration)
 * Reduces testing effort (automatic mocks Injector)
 * Gives better control of what and how is created (policies, providers)
@@ -50,6 +51,8 @@ int main() {                            | int main() {
 ```
 
 **Why Dependency Injection?**
+
+* [Motivation](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/motivation.html) | [Rationale](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/rationale.html)
 
 [![The Clean Code Talks - Don't Look For Things!](http://img.youtube.com/vi/RlfLCWKxHJ0/0.jpg)](http://www.youtube.com/watch?v=RlfLCWKxHJ0)
 
@@ -101,6 +104,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 *
 
 > **Bindings** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/binding.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/dynamic_binding.cpp)
+Represents configuration used to resolve types
 ```cpp
 Create empty injector                   | Test
 ----------------------------------------|-----------------------------------------
@@ -114,10 +118,10 @@ auto injector = di::make_injector(      | assert(42 == injector.create<int>());
 );                                      |
 ```
 ```cpp
-Bind type to static value               | Test
+Bind type to compile time value         | Test
 ----------------------------------------|-----------------------------------------
 template<int N> using int_ =            | assert(42 == injector.create<int>());
-    std::integral_constant<int, N>;     |
+    integral_constant<int, N>;          |
                                         |
 auto injector = di::make_injector(      |
     di::bind<int, int_<42>>             |
@@ -141,12 +145,21 @@ auto injector = di::make_injector(      | auto object1 = injector.create<shared_
                                         | assert(object1 == object2);
 ```
 ```cpp
-Bind to external value                  | Test
+Bind to external value (const&)         | Test
 ----------------------------------------|-----------------------------------------
-auto i = 42;                            | auto object = injector.create<const int&>();
+const auto i = 42;                      | auto object = injector.create<const int&>();
                                         | assert(i == object);
 auto injector = di::make_injector(      | assert(&i == &object);
-    di::bind<int>.to(std::cref(i));     |
+    di::bind<int>.to(cref(i));          |
+);                                      |
+```
+```cpp
+Bind to external value (&)              | Test
+----------------------------------------|-----------------------------------------
+auto i = 42;                            | auto object = injector.create<int&>();
+                                        | assert(i == object);
+auto injector = di::make_injector(      | assert(&i == &object);
+    di::bind<int>.to(ref(i));           |
 );                                      |
 ```
 
@@ -290,7 +303,7 @@ auto injector = di::make_injector(      |
 ```
 ```cpp
 Annotated constructor injection with    | Test
-the same names for different variables  |
+the same names for different parameters |
 ----------------------------------------|-----------------------------------------
 auto n1 = []{};                         | auto object = injector.create<c>();
 auto n2 = []{};                         | assert(42 == c.a);
@@ -388,7 +401,7 @@ auto i = 42;                            | assert(&i == object2.i);
 auto injector = di::make_injector(      | assert(87.0 == object2.d);
     di::bind<i1, impl1>                 |
   , di::bind<i2, impl2>                 |
-  , di::bind<int>.to(std::ref(i))       |
+  , di::bind<int>.to(ref(i))            |
   , di::bind<double>.to(87.0)           |
 );                                      |
 ```
@@ -442,7 +455,7 @@ auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>
    di::bind<int, int_<41>>              |
  , di::bind<int>.to(42)                 | );
  , di::bind<i1>.to(make_shared<impl>());| assert(l == injector.create<long&>());
- , di::bind<long>.to(std::ref(l);       | assert(&l == &injector.create<long&>());
+ , di::bind<long>.to(ref(l));           | assert(&l == &injector.create<long&>());
  , di::bind<short>.to([]{return 87;})   | assert(87 == injector.create<short>());
  , di::bind<i2>.to(                     | {
      [&](const auto& injector) {        | auto object = injector.create<shared_ptr<i2>>();
@@ -453,6 +466,29 @@ auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>
         return nullptr;                 | auto object = injector.create<shared_ptr<i2>>();
      }                                  | assert(dynamic_cast<impl2*>(object.get()));
 );                                      | }
+```
+```cpp
+Custom scope                            | Test
+----------------------------------------|-----------------------------------------
+struct custom_scope {                   | assert(injector.create<shared_ptr<i>>()
+ static constexpr auto priority = false;|        !=
+                                        |        injector.create<shared_ptr<i>>()
+  template<class TExpected, class>      | );
+  class scope {                         |
+  public:                               |
+    template<class T, class TProvider>  |
+      auto create(                      |
+        const TProvider& provider) {    |
+          return shared_ptr<TExpected>{ |
+              provider.get()            |
+          };                            |
+      }                                 |
+  };                                    |
+};                                      |
+                                        |
+auto injector = di::make_injector(      |
+  di::bind<i, impl>.in(custom_scope{})  |
+);                                      |
 ```
 
 **Scope deduction**
@@ -597,6 +633,7 @@ auto injector = di::make_injector(      |
 > **Policies** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/types_dumper.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_policy.cpp)
 ```cpp
 Define policies configuration           | Test
+(dump types)                            |
 ----------------------------------------|-----------------------------------------
 class print_types_policy                | // per injector policy
     : public di::config {               | auto injector = di::make_injector<print_types_policy>();
@@ -604,12 +641,41 @@ public:                                 | injector.create<int>(); // output: int
   auto policies() const noexcept {      |
     return di::make_policies(           | // global policy
       [](auto type){                    | #define BOOST_DI_CFG my_policy
-        using T =                       | auto injector = di::make_injector();
-          typename decltype(type)::type;| injector.create<int>(); // output: int
-                                        |
-        std::cout                       |
-            << typeid(T).name()         |
-            << std::endl;               |
+         using T = decltype(type);      | auto injector = di::make_injector();
+         using arg = typename T::type;  | injector.create<int>(); // output: int
+         cout << typeid(arg).name()     |
+              << endl;                  |
+      }                                 |
+    );                                  |
+  }                                     |
+};                                      |
+```
+```cpp
+Define policies configuration           | Test
+(dump types extended)                   |
+----------------------------------------|-----------------------------------------
+class print_types_policy                |
+    : public di::config {               |
+public:                                 |
+  auto policies() const noexcept {      |
+    return di::make_policies(           |
+      [](auto type                      |
+       , auto dep                       |
+       , auto... ctor) {                |
+         using T = decltype(type);      |
+         using arg = typename T::type;  |
+         using arg_name =               |
+            typename T::name;           |
+         using D = decltype(dep);       |
+         using Scope =                  |
+            typename D::scope;          |
+         using expected =               |
+            typename D::expected;       |
+         using given =                  |
+            typename D::given;          |
+         using name =                   |
+            typename D::name;           |
+         auto ctor_s = sizeof...(ctor); |
       }                                 |
     );                                  |
   }                                     |
@@ -631,7 +697,7 @@ public:                                 | assert(87.0, make_injector(di::bind<do
                                         |
     return di::make_policies(           |
       allow_ctor_types(                 |
-        std::is_same<_, int>{} ||       |
+        is_same<_, int>{} ||            |
         is_bound<_>{})                  |
     );                                  |
   }                                     |
@@ -640,37 +706,40 @@ public:                                 | assert(87.0, make_injector(di::bind<do
 
 *
 
-> **Providers (heap, stack_over_heap - default)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_provider.cpp)
+> **Providers** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_provider.cpp)
+Provides required pointer type used by scopes
+* heap
+* stack\_over\_heap (default)
 ```cpp
-Stack/Heap no throw provider            | Test
+Heap no throw provider                  | Test
 ----------------------------------------|-----------------------------------------
-class stack_heap_no_throw {             | // per injector policy
+class heap_no_throw {                   | // per injector policy
 public:                                 | auto injector = di::make_injector<my_provider>();
   template<                             | assert(0 == injector.create<int>());
     class T                             |
-  , class TInit // direct()/aggregate{} | // global policy
+  , class TInit // direct()/uniform{}   | // global policy
   , class TMemory // heap/stack         | #define BOOST_DI_CFG my_provider
   , class... TArgs>                     | auto injector = di::make_injector();
   auto* get(const TInit&                | assert(0 == injector.create<int>());
           , const TMemory&              |
           , TArgs&&... args)            |
   const noexcept {                      |
-      return new (std::nothrow)         |
-        T{std::forward<TArgs>(args)...};|
+      return new (nothrow)              |
+        T{forward<TArgs>(args)...};     |
   }                                     |
 };                                      |
                                         |
 class my_provider : public di::config { |
 public:                                 |
     auto provider() const noexcept {    |
-        return stack_heap_no_throw{};   |
+        return heap_no_throw{};         |
     }                                   |
 };                                      |
 ```
 
 *
 
-> **Run-time performance (-O2)**
+> **Run-time performance (-O2)** | [Performance](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/performance.html)
 ```cpp
 Create type wihtout bindings            | Asm x86-64 (same as `return 0`)
 ----------------------------------------|-----------------------------------------
@@ -721,7 +790,7 @@ int main() {                            | push   %rax
     );                                  | movq   $0x400a30,(%rax)
                                         | mov    $0x8,%esi
     auto ptr = injector.create<         | mov    %rax,%rdi
-        std::unique_ptr<i1>             | callq  0x400960 <_ZdlPvm>
+        unique_ptr<i1>                  | callq  0x400960 <_ZdlPvm>
     >();                                | mov    $0x1,%eax
                                         | pop    %rdx
     return ptr.get() != nullptr;        | retq
@@ -744,7 +813,7 @@ int main() {                            | pop    %rdx
     );                                  |
                                         |
 	auto ptr = injector.create<         |
-        std::unique_ptr<i1>             |
+        unique_ptr<i1>                  |
     >();                                |
                                         |
 	return ptr != nullptr;              |
@@ -768,7 +837,7 @@ int main() {                            | lea    0x30(%rsp),%rsi
     );                                  | setne  %bpl
                                         | je     0x400b57 <main+55>
 	auto ptr = injector.create<         | mov    (%rax),%rcx
-        std::unique_ptr<i1>             | mov    %rax,%rdi
+        unique_ptr<i1>                  | mov    %rax,%rdi
     >();                                | callq  *0x8(%rcx)
                                         | mov    0x20(%rsp),%rbx
 	return ptr != nullptr;              | test   %rbx,%rbx
@@ -816,7 +885,7 @@ int main() {                            | lea    0x30(%rsp),%rsi
 
 *
 
-> **Compile-time performance (time clang++ -O2)**
+> **Compile-time performance (time clang++ -O2)** | [Performance](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/performance.html)
 ```cpp
 Boost.DI header                         | Time [s] / Size [kb]
 ----------------------------------------|-----------------------------------------
@@ -847,16 +916,16 @@ BOOST_DI_INJECT                         | Time [s] / Size [kb]
 Create interface without bound          | Error message
 implementation                          |
 ----------------------------------------|-----------------------------------------
-auto injector = di::make_injector();    | error: allocating an object of abstract class type 'i1' return new (std::nothrow) T{std::forward<TArgs>(args)...};
-injector.create<unique_ptr<i1>>();      |
+auto injector = di::make_injector();    | error: allocating an object of abstract
+injector.create<unique_ptr<i1>>();      | class type 'i1' return new (nothrow)
+                                        | T{forward<TArgs>(args)...};
 ```
 ```cpp
 Ambiguous binding                       | Error message
 ----------------------------------------|-----------------------------------------
-auto injector = di::make_injector(      | error: base class 'boost::di::aux::pair<boost::di::aux::pair<int, boost::di::no_name>, std::integral_constant<bool, true> >' specified more than once as a direct base class
-    di::bind<int>.to(42)                |
-  , di::bind<int>.to(87)                |
-);                                      |
+auto injector = di::make_injector(      | error: base class 'pair<int, no_name>'
+  , di::bind<int>.to(87)                | specified more than once as a direct base
+);                                      | class
                                         |
 injector.create<int>();                 |
 ```
@@ -864,8 +933,8 @@ injector.create<int>();                 |
 Create not bound object with all bound  | Error message
 policy                                  |
 ----------------------------------------|-----------------------------------------
-class all_bound : public di::config {   | error: static_assert failed "Type T is not allowed" static_assert(decltype(T::apply(data)){}, "Type T is not allowed");
-public:                                 |
+class all_bound : public di::config {   | error: static_assert failed
+public:                                 | "Type T is not allowed"
   auto policies() const noexcept {      |
     return di::make_policies(           |
       allow_ctor_types(is_bound<_>{})   |
