@@ -639,21 +639,21 @@ public:                                 | injector.create<int>(); // output: int
 Define policies configuration           | Test
 (dump types extended)                   |
 ----------------------------------------|-----------------------------------------
-class print_types_policy                |
-    : public di::config {               |
-public:                                 |
-  auto policies() const noexcept {      |
+class print_types_info_policy           | // per injector policy
+    : public di::config {               | auto injector = di::make_injector<print_types_info_policy>(
+public:                                 |     di::bind<i1, impl1>
+  auto policies() const noexcept {      | );
     return di::make_policies(           |
-      [](auto type                      |
+      [](auto type                      | injector.create<unique_ptr<i1>>(); // output: 0|i1|unique_ptr<i1>|di::no_name|di::deduce|i1|impl1|no_name
        , auto dep                       |
        , auto... ctor) {                |
-         using T = decltype(type);      |
-         using arg = typename T::type;  |
-         using arg_name =               |
-            typename T::name;           |
-         using D = decltype(dep);       |
+         using T = decltype(type);      | // global policy
+         using arg = typename T::type;  | #define BOOST_DI_CFG my_policy
+         using arg_name =               | auto injector = di::make_injector(
+            typename T::name;           |     di::bind<i1, impl1>
+         using D = decltype(dep);       | );
          using Scope =                  |
-            typename D::scope;          |
+            typename D::scope;          | injector.create<unique_ptr<i1>>(); // output: 0|i1|unique_ptr<i1>|di::no_name|di::deduce|i1|impl1|no_name
          using expected =               |
             typename D::expected;       |
          using given =                  |
@@ -661,6 +661,22 @@ public:                                 |
          using name =                   |
             typename D::name;           |
          auto ctor_s = sizeof...(ctor); |
+                                        |
+         cout << ctor_s                 |
+              << "|"                    |
+              << typeid(arg).name()     |
+              << "|"                    |
+              << typeid(arg_name).name()|
+              << "|"                    |
+              << typeid(scope).name()   |
+              << "|"                    |
+              << typeid(expected).name()|
+              << "|"                    |
+              << typeid(given).name()   |
+              << "|"                    |
+              << typeid(name).name()    |
+              << ::endl;                |
+         ;                              |
       }                                 |
     );                                  |
   }                                     |
