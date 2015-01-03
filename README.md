@@ -104,7 +104,6 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 *
 
 > **Injectors**
-* Keeps binding configuration used to resolve types
 ```cpp
 Create empty injector                   | Test
 ----------------------------------------|-----------------------------------------
@@ -114,7 +113,6 @@ auto injector = di::make_injector();    | assert(0 == injector.create<int>());
 *
 
 > **Bindings** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/binding.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/dynamic_binding.cpp)
-* Represents configuration kept by injector
 ```cpp
 Bind type to value (see external scope) | Test
 ----------------------------------------|-----------------------------------------
@@ -694,9 +692,8 @@ public:                                 | assert(87.0, make_injector(di::bind<do
 *
 
 > **Providers** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_provider.cpp)
-* Provides required pointer type used by scopes
-    * heap
-    * stack\_over\_heap (default)
+* heap
+* stack\_over\_heap (default)
 ```cpp
 Heap no throw provider                  | Test
 ----------------------------------------|-----------------------------------------
