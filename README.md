@@ -644,38 +644,38 @@ class print_types_info_policy           | // per injector policy
 public:                                 |     di::bind<i1, impl1>
   auto policies() const noexcept {      | );
     return di::make_policies(           |
-      [](auto type                      | injector.create<unique_ptr<i1>>(); // output: 0|i1|unique_ptr<i1>|di::no_name|di::deduce|i1|impl1|no_name
+      [](auto type                      | injector.create<unique_ptr<i1>>();
        , auto dep                       |
-       , auto... ctor) {                |
-         using T = decltype(type);      | // global policy
-         using arg = typename T::type;  | #define BOOST_DI_CFG my_policy
-         using arg_name =               | auto injector = di::make_injector(
-            typename T::name;           |     di::bind<i1, impl1>
-         using D = decltype(dep);       | );
-         using Scope =                  |
-            typename D::scope;          | injector.create<unique_ptr<i1>>(); // output: 0|i1|unique_ptr<i1>|di::no_name|di::deduce|i1|impl1|no_name
+       , auto... ctor) {                | // output:
+         using T = decltype(type);      |     0
+         using arg = typename T::type;  |     unique_ptr<i1>
+         using arg_name =               |     di::no_name
+            typename T::name;           |     di::deduce
+         using D = decltype(dep);       |     i1
+         using Scope =                  |     impl1
+            typename D::scope;          |     no_name
          using expected =               |
             typename D::expected;       |
-         using given =                  |
-            typename D::given;          |
-         using name =                   |
-            typename D::name;           |
-         auto ctor_s = sizeof...(ctor); |
+         using given =                  | // global policy
+            typename D::given;          | #define BOOST_DI_CFG my_policy
+         using name =                   | auto injector = di::make_injector(
+            typename D::name;           |     di::bind<i1, impl1>
+         auto ctor_s = sizeof...(ctor); | );
                                         |
-         cout << ctor_s                 |
-              << "|"                    |
-              << typeid(arg).name()     |
-              << "|"                    |
-              << typeid(arg_name).name()|
-              << "|"                    |
-              << typeid(scope).name()   |
-              << "|"                    |
-              << typeid(expected).name()|
-              << "|"                    |
+         cout << ctor_s                 | injector.create<unique_ptr<i1>>();
+              << endl                   |
+              << typeid(arg).name()     | // output:
+              << endl                   |     0
+              << typeid(arg_name).name()|     unique_ptr<i1>
+              << endl                   |     di::no_name
+              << typeid(scope).name()   |     di::deduce
+              << endl                   |     i1
+              << typeid(expected).name()|     impl1
+              << endl                   |     no_name
               << typeid(given).name()   |
-              << "|"                    |
+              << endl                   |
               << typeid(name).name()    |
-              << ::endl;                |
+              << endl;                  |
          ;                              |
       }                                 |
     );                                  |
