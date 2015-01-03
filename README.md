@@ -908,8 +908,8 @@ injector.create<unique_ptr<i1>>();      | class type 'i1' return new (nothrow)
 Ambiguous binding                       | Error message
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector(      | error: base class 'pair<int, no_name>'
-  , di::bind<int>.to(87)                | specified more than once as a direct base
-);                                      | class
+  , di::bind<int>.to(87)                | specified more than once as a direct
+);                                      | base class
                                         |
 injector.create<int>();                 |
 ```
@@ -934,8 +934,8 @@ injector.create<int>();                 |
 Wrong annotation                        | Error message
 (NAMED instead of named)                |
 ----------------------------------------|-----------------------------------------
-auto name = []{};                       | error: use of undeclared identifier 'named'
-                                        |
+auto name = []{};                       | error: use of undeclared identifier
+                                        | 'named'
 struct c {                              |
     BOOST_DI_INJECT(c                   |
         , (NAMED = name) int) { }       |
