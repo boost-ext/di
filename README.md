@@ -652,7 +652,7 @@ public:                                 |     di::bind<i1, impl1>
          using arg_name =               |     di::no_name // ctor arg name
             typename T::name;           |     di::deduce // scope
          using D = decltype(dep);       |     i1 // expected
-         using Scope =                  |     impl1 // given
+         using scope =                  |     impl1 // given
             typename D::scope;          |     no_name // dependency
          using expected =               |
             typename D::expected;       |
