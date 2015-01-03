@@ -62,7 +62,7 @@ int main() {                            | int main() {
 * Read Quick User Guide (below)
 * [Read tutorial](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/tutorial.html)
 * [Read documentation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
-* [Check/Report Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
+* [Report Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
 
 > To get started the only file you need is `di.hpp`:
 
@@ -103,15 +103,20 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 
 *
 
-> **Bindings** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/binding.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/dynamic_binding.cpp)
-* Represents configuration used to resolve types
+> **Injectors**
+* Keeps binding configuration used to resolve types
 ```cpp
 Create empty injector                   | Test
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector();    | assert(0 == injector.create<int>());
 ```
+
+*
+
+> **Bindings** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/binding.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/dynamic_binding.cpp)
+* Represents configuration kept by injector
 ```cpp
-Bind type to value                      | Test
+Bind type to value (see external scope) | Test
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector(      | assert(42 == injector.create<int>());
     di::bind<int>.to(42)                |
@@ -143,24 +148,6 @@ auto injector = di::make_injector(      | auto object1 = injector.create<shared_
 );                                      | assert(dynamic_cast<impl*>(object1.get()));
                                         | assert(dynamic_cast<impl*>(object2.get()));
                                         | assert(object1 == object2);
-```
-```cpp
-Bind to external value (const&)         | Test
-----------------------------------------|-----------------------------------------
-const auto i = 42;                      | auto object = injector.create<const int&>();
-                                        | assert(i == object);
-auto injector = di::make_injector(      | assert(&i == &object);
-    di::bind<int>.to(cref(i));          |
-);                                      |
-```
-```cpp
-Bind to external value (&)              | Test
-----------------------------------------|-----------------------------------------
-auto i = 42;                            | auto object = injector.create<int&>();
-                                        | assert(i == object);
-auto injector = di::make_injector(      | assert(&i == &object);
-    di::bind<int>.to(ref(i));           |
-);                                      |
 ```
 
 *
