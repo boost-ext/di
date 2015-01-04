@@ -21,6 +21,7 @@ class policy {
         class TPolicy
       , class T
       , class TName
+      , class TIsRoot
       , class TPolicies
       , class TDependency
       , class... TArgs
@@ -28,6 +29,7 @@ class policy {
         struct arg {
             using type = T;
             using name = TName;
+            using is_root = TIsRoot;
             template<class T_, class TName_, class TDefault_>
             using resolve = decltype(binder::resolve<T_, TName_, TDefault_>((TDeps*)nullptr));
         };
@@ -53,6 +55,7 @@ public:
     template<
         class T
       , class TName
+      , class TIsRoot
       , class TInitialization
       , class TDependency
       , class... TArgs
@@ -60,7 +63,7 @@ public:
     > static void call(const pool<aux::type_list<TPolicies...>>& policies
                      , TDependency&& dependency
                      , aux::pair<TInitialization, aux::type_list<TArgs...>>) noexcept {
-        int _[]{0, (call_impl<TPolicies, T, TName, TPolicies, TDependency, TArgs...>(
+        int _[]{0, (call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TArgs...>(
             policies, dependency), 0)...}; (void)_;
     }
 };

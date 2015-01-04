@@ -21,7 +21,7 @@ public:
         using namespace di::policies;
         using namespace di::policies::operators;
         return di::make_policies(
-            allow_ctor_types(is_bound<_>{})
+            allow_ctor_types(is_root{} || is_bound<_>{})
         );
     }
 };
@@ -36,7 +36,6 @@ int main() {
     auto injector = di::make_injector<custom_policy>(
         di::bind<int>.to(42)
       , di::bind<double>.to(87.0)
-      , di::bind<example>
     );
 
     injector.create<example>();
@@ -47,7 +46,6 @@ int main() {
     auto injector = di::make_injector(
         di::bind<int>.to(42)
       , di::bind<double>.to(87.0)
-      , di::bind<example>
     );
 
     injector.create<example>();

@@ -103,11 +103,18 @@ struct always : type_op {
 template<class T, class TName = no_name>
 struct is_bound : type_op {
 	template<class TArg>
-	static auto apply(const TArg& data) noexcept {
+	static auto apply(const TArg&) noexcept {
         struct not_resolved { };
         using type = std::conditional_t<std::is_same<T, _>{}, typename TArg::arg::type, T>;
         using dependency = typename TArg::template resolve<type, TName, not_resolved>;
         return std::integral_constant<bool, !std::is_same<dependency, not_resolved>{}>{};
+    }
+};
+
+struct is_root : type_op {
+	template<class TArg>
+	static auto apply(const TArg&) noexcept {
+        return typename TArg::is_root{};
     }
 };
 
