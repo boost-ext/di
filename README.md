@@ -131,13 +131,6 @@ auto injector = di::make_injector(      | auto object1 = injector.create<shared_
                                         | assert(object1 == object2);
 ```
 ```cpp
-Bind type to value (see external scope) | Test
-----------------------------------------|-----------------------------------------
-auto injector = di::make_injector(      | assert(42 == injector.create<int>());
-    di::bind<int>.to(42)                |
-);                                      |
-```
-```cpp
 Bind type to compile time value         | Test
 ----------------------------------------|-----------------------------------------
 template<int N> using int_ =            | assert(42 == injector.create<int>());
@@ -145,6 +138,13 @@ template<int N> using int_ =            | assert(42 == injector.create<int>());
                                         |
 auto injector = di::make_injector(      |
     di::bind<int, int_<42>>             |
+);                                      |
+```
+```cpp
+Bind type to value (see external scope) | Test
+----------------------------------------|-----------------------------------------
+auto injector = di::make_injector(      | assert(42 == injector.create<int>());
+    di::bind<int>.to(42)                |
 );                                      |
 ```
 
