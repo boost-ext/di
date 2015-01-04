@@ -131,6 +131,13 @@ auto injector = di::make_injector(      | auto object1 = injector.create<shared_
                                         | assert(object1 == object2);
 ```
 ```cpp
+Bind type to value (see external scope) | Test
+----------------------------------------|-----------------------------------------
+auto injector = di::make_injector(      | assert(42 == injector.create<int>());
+    di::bind<int>.to(42)                |
+);                                      |
+```
+```cpp
 Bind type to compile time value         | Test
 ----------------------------------------|-----------------------------------------
 template<int N> using int_ =            | assert(42 == injector.create<int>());
@@ -139,28 +146,6 @@ template<int N> using int_ =            | assert(42 == injector.create<int>());
 auto injector = di::make_injector(      |
     di::bind<int, int_<42>>             |
 );                                      |
-```
-```cpp
-Bind type to value                      | Test
-----------------------------------------|-----------------------------------------
-auto l = 42l;                           | assert(42 == injector.create<int>()); // values bind with `to` have priority
-auto b = false;                         | assert(injector.create<shared_ptr<i1>>()
-                                        |        ==
-auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>()
-   di::bind<int, int_<41>>              |
- , di::bind<int>.to(42)                 | );
- , di::bind<i1>.to(make_shared<impl>());| assert(l == injector.create<long&>());
- , di::bind<long>.to(ref(l));           | assert(&l == &injector.create<long&>());
- , di::bind<short>.to([]{return 87;})   | assert(87 == injector.create<short>());
- , di::bind<i2>.to(                     | {
-     [&](const auto& injector) {        | auto object = injector.create<shared_ptr<i2>>();
-        if (b) {                        | assert(nullptr == object);
-            return injector.template    | }
-                create<impl2>();        | {
-        }                               | b = true;
-        return nullptr;                 | auto object = injector.create<shared_ptr<i2>>();
-     }                                  | assert(dynamic_cast<impl2*>(object.get()));
-);                                      | }
 ```
 
 *
@@ -444,6 +429,28 @@ auto injector = di::make_injector(      | injector.call(di::session_entry(my_ses
                                         | injector.call(di::session_exit(my_session);
                                         |
                                         | assert(nullptr == injector.create<shared_ptr<i1>>());
+```
+```cpp
+External scope                          | Test
+----------------------------------------|-----------------------------------------
+auto l = 42l;                           | assert(42 == injector.create<int>()); // external has priority
+auto b = false;                         | assert(injector.create<shared_ptr<i1>>()
+                                        |        ==
+auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>()
+   di::bind<int, int_<41>>              | );
+ , di::bind<int>.to(42)                 | assert(l == injector.create<long&>());           
+ , di::bind<i1>.to(make_shared<impl>());| assert(&l == &injector.create<long&>());         
+ , di::bind<long>.to(ref(l));           | assert(87 == injector.create<short>());          
+ , di::bind<short>.to([]{return 87;})   | {                                                
+ , di::bind<i2>.to(                     | auto object = injector.create<shared_ptr<i2>>(); 
+     [&](const auto& injector) {        | assert(nullptr == object);                       
+        if (b) {                        | }                                                
+            return injector.template    | {                                                
+                create<impl2>();        | b = true;                                        
+        }                               | auto object = injector.create<shared_ptr<i2>>(); 
+        return nullptr;                 | assert(dynamic_cast<impl2*>(object.get()));      
+     }                                  | }                                                
+);                                      | 
 ```
 ```cpp
 Custom scope                            | Test
