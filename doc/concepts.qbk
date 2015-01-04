@@ -8,7 +8,7 @@
  /]
 
 [section Concepts]
-[include injectors.qbk]
+[include injector.qbk]
 [include bindings.qbk]
 [include injections.qbk]
 [include annotations.qbk]

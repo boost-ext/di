@@ -44,11 +44,11 @@
     [[Full code example: [@example/multiple_interfaces.cpp]]]
 ]
 
-[h6 Text Visitor]
-[import ../example/text_visitor.cpp]
-[text_visitor]
+[h6 Types dumper]
+[import ../example/types_dumper.cpp]
+[types_dumper]
 [table
-    [[Full code example: [@example/text_visitor.cpp]]]
+    [[Full code example: [@example/types_dumper.cpp]]]
 ]
 
 [endsect]

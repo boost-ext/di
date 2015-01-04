@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[uml_visitor
+//[uml_dumper
 //<-
 #include <iostream>
 #include <sstream>
@@ -28,13 +28,13 @@ namespace di = boost::di;
 
 /**
  * http://plantuml.sourceforge.net/objects.html
- * ./uml_visitor | java -jar plantuml.jar -p > uml_visitor.png
+ * ./uml_dumper | java -jar plantuml.jar -p > uml_dumper.png
  */
 /*<<define `plant_uml` printer>>*/
 class plant_uml {
 public:
     void on_begin(std::stringstream& stream) const {
-        stream << "@startuml uml_visitor.png" << std::endl;
+        stream << "@startuml uml_dumper.png" << std::endl;
     }
 
     void on_end(std::stringstream& stream) const {
@@ -53,9 +53,9 @@ public:
     }
 };
 
-/*<<define `uml_visitor` with policy parameter>>*/
+/*<<define `uml_dumper` with policy parameter>>*/
 template<typename TPolicy>
-class uml_visitor : public TPolicy {
+class uml_dumper : public TPolicy {
     struct dependency {
         dependency(const std::string& expected
                  , const std::string& given
@@ -72,19 +72,19 @@ class uml_visitor : public TPolicy {
         std::size_t context_size;
     };
 
-    uml_visitor& operator=(const uml_visitor&);
+    uml_dumper& operator=(const uml_dumper&);
 
 public:
-    explicit uml_visitor(std::stringstream& stream)
+    explicit uml_dumper(std::stringstream& stream)
         : stream_(stream) {
         this->on_begin(stream_);
     }
 
-    ~uml_visitor() {
+    ~uml_dumper() {
         this->on_end(stream_);
     }
 
-    /*<<Definition of the visitor call operator requirement>>*/
+    /*<<Definition of the dumper call operator requirement>>*/
     template<typename T>
     void operator()(const T& data) const {
         //auto call_stack_size = mpl::size<typename T::call_stack>::value;
@@ -125,7 +125,7 @@ std::stringstream stream_;
 class uml_config : public di::config {
 public:
     auto& policies() const noexcept {
-        static auto s = di::make_policies(uml_visitor<plant_uml>{stream_});
+        static auto s = di::make_policies(uml_dumper<plant_uml>{stream_});
         return s;
     }
 
@@ -138,11 +138,11 @@ int main() {
         di::bind<i0, c0>
     );
 
-    /*<<iterate through created objects with `uml_visitor`>>*/
+    /*<<iterate through created objects with `uml_dumper`>>*/
     injector.create<c3>();
     std::clog << stream_.str();
 
-    /*<<output [@images/uml_visitor.png [$images/uml_visitor.png [width 75%] [height 75%] ]]>>*/
+    /*<<output [@images/uml_dumper.png [$images/uml_dumper.png [width 75%] [height 75%] ]]>>*/
     return 0;
 }
 

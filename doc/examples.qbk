@@ -86,11 +86,11 @@
 ]
 [endsect]
 
-[section UML Visitor]
-[import ../example/uml_visitor.cpp]
-[uml_visitor]
+[section UML Dumper]
+[import ../example/uml_dumper.cpp]
+[uml_dumper]
 [table
-    [[Full code example: [@example/uml_visitor.cpp]]]
+    [[Full code example: [@example/uml_dumper.cpp]]]
 ]
 [endsect]
 

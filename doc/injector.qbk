@@ -7,9 +7,9 @@
  /
  /]
 
-[section Injectors]
+[section Injector]
 Main component responsible for configuration is `injector`.
-`Boost.DI` injectors might be composed by mixing [link di.concepts.bindings bindings], modules and other [link di.concepts.injectors.injector injectors].
+`Boost.DI` injector might be composed by mixing [link di.concepts.bindings bindings], modules and other [link di.concepts.injectors.injector injectors].
 
 [heading Examples]
     using injector_t = __di_injector__<>; // empty injector type

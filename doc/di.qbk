@@ -9,12 +9,12 @@
 
 [library Boost.DI (Dependency Injection)
     [quickbook 1.6]
-    [version 1.4]
+    [version C++14]
     [id di]
     [copyright 2014 Krzysztof Jusiak | Distributed under the Boost Software License, Version 1.0.]
     [authors [Jusiak, Krzysztof]]
     [license
-        [@https://github.com/krzysztof-jusiak/di Repository]
+        [@https://github.com/krzysztof-jusiak/di GitHub]
     ]
     [source-mode c++]
 ]
