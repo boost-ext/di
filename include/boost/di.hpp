@@ -1720,7 +1720,7 @@ public:
 
     template<class T>
     T create() const {
-        return create_t<void>(aux::type<T>{});
+        return create_impl<T>();
     }
 
     template<class TAction>
