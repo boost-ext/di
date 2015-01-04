@@ -12,7 +12,7 @@
 [:['["Don't call us, we'll call you.]]]
 [:*--Hollywood principle*]
 
-[*[@http://en.wikipedia.org/wiki/Dependency_injection Dependency injection]] is a programming practice providing required objects to an object.
+[*[@http://en.wikipedia.org/wiki/Dependency_injection Dependency injection]] is a programming practice providing required instances to an object.
 Following this approach has many advantages.
 
 * [*Provide loosely coupled code] (Separation of business logic and object creation)
@@ -27,14 +27,15 @@ Following this approach has many advantages.
                 class example {
                 public:
                     example()
-                        : logic_(new logic())
+                        : logic_(new logic{})
                         , logger_(logger_factory::create())
                     { }
 
                     int run() const;
 
-                    shared_ptr<logic> logic_;
-                    shared_ptr<logger> logger_;
+                private:
+                    shared_ptr<ilogic> logic_;
+                    shared_ptr<ilogger> logger_;
                 };
             ```
         ]
@@ -43,29 +44,29 @@ Following this approach has many advantages.
                 class example {
                 public:
                     // dependencies are passed via constructor
-                    example(shared_ptr<logic> logic, shared_ptr<logger> logger)
+                    example(shared_ptr<ilogic> logic, shared_ptr<ilogger> logger)
                         : logic_(logic), logger_(logger)
                     { }
 
                     int run() const;
 
                 private:
-                    shared_ptr<logic> logic_;
-                    shared_ptr<logger> logger_;
+                    shared_ptr<ilogic> logic_;
+                    shared_ptr<ilogger> logger_;
                 };
             ```
         ]
     ]
 ]
 
-`Boost.DI` is a `Dependency Injection library` improving `manual dependency injection` by simplifying object instantiation with automatic dependencies injection.
+`Boost.DI` is a `dependency injection library` improving `manual dependency injection` by simplifying object instantiation with automatic dependencies injection.
 Using `Boost.DI` has many advantages over `manual dependency injection`.
 
-* [*Reduce boilerplate code] (No factories, no objects creation)
+* [*Reduce boilerplate code] (No factories, no objects creation in specific order)
 * [*Reduce cost of maintenance effort] ([link di.examples.constructor_signature Constructor signature] change won't affect `di` configuration)
 * [*Reduce testing effort] (__examples_testing_automatic_mocks_injector__)
-* [*Give better control of what and how is created] (__policies__, __utilities_allocator__)
-* [*Give better understanding about objects hierarchy] (__examples_uml_visitor__)
+* [*Give better control of what and how is created] (__policies__, __providers__)
+* [*Give better understanding about objects hierarchy] (__examples_uml_dumper__)
 
 [table
 [[Manual Dependency Injection][`Boost.DI`]]
@@ -77,14 +78,18 @@ Using `Boost.DI` has many advantages over `manual dependency injection`.
                     auto logic = make_shared<logic>();
                     auto logger = make_shared<logger>();
 
-                    return example(logic, logger).run();
+                    return example{logic, logger}.run();
                 }
             ```
         ]
         [
             ```
                 int main() {
-                    return __di_make_injector__().__di_injector_create__<example>().run();                     .
+                    auto injector = __di_make_injector__(
+                        di::__bindings_bind__<ilogic, logic>
+                      , di::__bindings_bind__<ilogger, logger>
+                    );
+                    return injector.__di_injector_create__<example>().run();                     .
                 }
             ```
         ]
@@ -99,8 +104,8 @@ Using `Boost.DI` has many advantages over `manual dependency injection`.
 * [*[link di.concepts.injections.automatic Macro free]] - by default - no need to specify constructor traits or register anything (less intrusive)
 * [*[link di.concepts.scopes.deduce Scopes deduction]] - [link di.concepts.scopes scopes] are deduced based on type semantic
 * Automatic conversion between [link di.concepts.scopes.shared std/boost smart pointers]
-* Compile time [link di.concepts.policies policies] - to detect [link di.concepts.policies.circular_dependencies circular dependencies] or limit [link di.concepts.policies.parameters_permission supported types] only to specified
-* Supports `C++03`/`C++11`/`C++14`
+* Compile time [link di.concepts.policies policies] - to limit [link di.concepts.policies.allow_ctor_types supported types] only to specified
+* Requires `C++14` compliant compiler
 
 [heading See Also]
 * [link di.motivation Motivation]

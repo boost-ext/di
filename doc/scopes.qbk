@@ -260,9 +260,6 @@ Default scope which will be converted to one of the scopes __scopes_external__ /
 
 [endsect]
 
-[section exposed]
-[endsect]
-
 [section external]
 
 [heading Description]
