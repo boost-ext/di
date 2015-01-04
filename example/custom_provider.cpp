@@ -5,11 +5,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[custom_allocator
+//[custom_provider
 //<-
 #include <cassert>
 #include <memory>
-#include <utility>
 //->
 #include <boost/di.hpp>
 
@@ -22,32 +21,39 @@ struct implementation : interface { };
 
 /*<define `example` class as usual>*/
 struct example {
-    explicit example(long l, std::unique_ptr<interface> up) {
-        assert(l == 42l);
+    explicit example(int i, std::unique_ptr<interface> up) {
+        assert(i == 42);
         assert(dynamic_cast<implementation*>(up.get()));
     }
 };
 
-/*<define `custom allocator` with allocate emethod>*/
-class custom_allocator {
+/*<define `custom provider`>*/
+class custom_provider : public di::config {
 public:
-    template<typename TExpected, typename TGiven, typename... TArgs>
-    TExpected* allocate(TArgs&&... args) const {
-        return new TGiven(std::forward<TArgs>(args)...);
+    template<class T, class TMemory, class... TArgs>
+    auto* get(const di::type_traits::direct&
+            , const TMemory& // stack/heap
+            , TArgs&&... args) const {
+        return new T(std::forward<TArgs>(args)...);
     }
 
-    /*<to support `bind_int<interface>()`, `bind_string<"s">()` allocate needs support types with `value` or when `mpl::string`>*/
+    template<class T, class TMemory, class... TArgs>
+    auto* get(const di::type_traits::uniform&
+            , const TMemory& // stack/heap
+            , TArgs&&... args) const {
+        return new T{std::forward<TArgs>(args)...};
+    }
 };
 
 int main() {
     /*<<make injector with simple configuration>>*/
-    auto injector = di::make_injector(
-        di::bind<long>::to(42l)
-      , di::bind<interface, implementation>()
+    auto injector = di::make_injector<custom_provider>(
+        di::bind<int>.to(42)
+      , di::bind<interface, implementation>
     );
 
-    /*<<create `example` using `custom_allocator`>>*/
-    injector.allocate<example>(custom_allocator());
+    /*<<create `example` using `custom_provider`>>*/
+    injector.create<example>();
 }
 
 //]
