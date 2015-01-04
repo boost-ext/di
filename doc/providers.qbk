@@ -16,7 +16,7 @@ Provides common `Boost.DI` functionality to be externally implemented.
 * __utilities_allocator__
 * __utilities_provider__
 
-[section nothrow_heap]
+[section heap]
 
 [heading Description]
 Allocate and create objects. By default objects are allocated on heap using `new` operator.
@@ -77,7 +77,7 @@ Allocate and create objects. By default objects are allocated on heap using `new
 
 [endsect]
 
-[section nothrow_reduce_heap_usage]
+[section stack_over_heap]
 [endsect]
 
 [endsect]
