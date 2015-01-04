@@ -21,13 +21,6 @@ namespace boost {
 namespace di {
 namespace scopes {
 
-BOOST_AUTO_TEST_CASE(is_reference_wrapper_unwrap_reference) {
-    BOOST_CHECK((is_reference_wrapper<std::reference_wrapper<int> >::value));
-    BOOST_CHECK((is_same<unwrap_reference<std::reference_wrapper<int> >::type, int>::value));
-    BOOST_CHECK((is_reference_wrapper<boost::reference_wrapper<int> >::value));
-    BOOST_CHECK((is_same<unwrap_reference<boost::reference_wrapper<int> >::type, int>::value));
-}
-
 BOOST_AUTO_TEST_CASE(from_arithmetic) {
     const int i = 42;
     BOOST_CHECK_EQUAL(i, (external<>::scope<int>(i).create())(type<int>()));
