@@ -22,7 +22,7 @@ template<class T>
 using is_injector =
     std::integral_constant<bool, has_deps<T>{} || has_configure<T>{}>;
 
-template<class TExpected, class TName>
+template<class, class>
 struct dependency_concept { };
 
 template<class T, class TDependency>
