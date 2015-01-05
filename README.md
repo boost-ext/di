@@ -820,7 +820,7 @@ int main() {                            | pop    %rdx
 ```cpp
 Create bound interface via exposed      | Asm x86-64
 module                                  | cost = virtual call due to type erasure
-----------------------------------------|-----------------------------------------
+----------------------------------------|----------------------------------------------------------------------
 struct module {                         | push   %rbp                               mov    (%rax),%ecx
 	di::injector<i1> configure() const {| push   %rbx                               lea    -0x1(%rcx),%edx
 		return di::make_injector(       | sub    $0x38,%rsp                         mov    %edx,(%rax)
