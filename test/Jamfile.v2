@@ -66,6 +66,7 @@ rule compile-fail-test ( std * : src + : ctor * : defines * : preprocessed_heade
 test-suite ut : # unit tests
     [ run-test c++1y : ut/inject.cpp ]
     [ run-test c++1y : ut/inject.cpp : ctor_inject ]
+    [ run-test c++1y : ut/aux_/preprocessor.cpp ]
     [ run-test c++1y : ut/aux_/type_traits.cpp ]
     [ run-test c++1y : ut/aux_/utility.cpp ]
     [ run-test c++1y : ut/core/any_type.cpp ]

@@ -42,6 +42,17 @@ test has_method = [] {
     expect(!has_call<call3, int, double, float>{});
 };
 
+test is_smart_ptr_types = [] {
+    expect(!is_smart_ptr<void>{});
+    expect(!is_smart_ptr<int>{});
+    expect(is_smart_ptr<std::unique_ptr<int>>{});
+    expect(is_smart_ptr<std::shared_ptr<int>>{});
+    expect(is_smart_ptr<std::weak_ptr<int>>{});
+#if (__has_include(<boost/shared_ptr.hpp>))
+    expect(is_smart_ptr<boost::shared_ptr<int>>{});
+#endif
+};
+
 test is_braces_constructible_types = [] {
     struct c { };
     struct ctor { ctor(int) { } };

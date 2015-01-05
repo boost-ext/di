@@ -134,6 +134,15 @@ test inheriting_ctors = [] {
     expect_eq(d, c1_.d);
 };
 
+test c_traits_no_limits = [] {
+    struct c_no_limits {
+        BOOST_DI_INJECT_TRAITS_NO_LIMITS(int, int, int, int, int, int, int, int, int, int, int);
+        c_no_limits(int, int, int, int, int, int, int, int, int, int, int) { }
+    };
+
+    c_no_limits object{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+};
+
 #if !defined(BOOST_DI_CFG_CTOR)
     auto name = []{};
 
