@@ -7,6 +7,10 @@
 #ifndef BOOST_DI_AUX_PREPROCESSOR_HPP
 #define BOOST_DI_AUX_PREPROCESSOR_HPP
 
+// Based on:
+//    Boost.Preprocessor: http://www.boost.org/doc/libs/1_57_0/libs/preprocessor
+//    Cloak: https://github.com/pfultz2/Cloak
+
 #define BOOST_DI_CAT(a, ...) BOOST_DI_PRIMITIVE_CAT(a, __VA_ARGS__)
 #define BOOST_DI_CALL(m, ...) m(__VA_ARGS__)
 #define BOOST_DI_EMPTY()
