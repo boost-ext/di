@@ -821,64 +821,36 @@ int main() {                            | pop    %rdx
 Create bound interface via exposed      | Asm x86-64
 module                                  | cost = virtual call due to type erasure
 ----------------------------------------|-----------------------------------------
-struct module {                         | push   %rbp
-	di::injector<i1> configure() const {| push   %rbx
-		return di::make_injector(       | sub    $0x38,%rsp
-			di::bind<i1, impl1>         | lea    0x10(%rsp),%rdi
-		);                              | lea    0x8(%rsp),%rsi
-	}                                   | callq  0x400bf0 <_ZN5boost2di4core8injectorINS0_3aux9type_listIJNS1_10dependencyINS0_6scopes7exposedINS6_6deduceEEE2i1SA_NS0_7no_nameELb0EEEEEENS0_6configEEC2IJ6moduleEEEDpRKT_>
-};                                      | mov    0x18(%rsp),%rdi
-                                        | mov    (%rdi),%rax
-int main() {                            | lea    0x30(%rsp),%rsi
-	auto injector = di::make_injector(  | callq  *0x10(%rax)
-        module{}                        | test   %rax,%rax
-    );                                  | setne  %bpl
-                                        | je     0x400b57 <main+55>
-	auto ptr = injector.create<         | mov    (%rax),%rcx
-        unique_ptr<i1>                  | mov    %rax,%rdi
-    >();                                | callq  *0x8(%rcx)
-                                        | mov    0x20(%rsp),%rbx
-	return ptr != nullptr;              | test   %rbx,%rbx
-}                                       | je     0x400bcd <main+173>
-                                        | lea    0x8(%rbx),%rax
-                                        | mov    $0x0,%ecx
-                                        | test   %rcx,%rcx
-                                        | je     0x400b82 <main+98>
-                                        | mov    $0xffffffff,%ecx
-                                        | lock   xadd %ecx,(%rax)
-                                        | mov    %ecx,0x30(%rsp)
-                                        | mov    0x30(%rsp),%ecx
-                                        | jmp    0x400b89 <main+105>
-                                        | mov    (%rax),%ecx
-                                        | lea    -0x1(%rcx),%edx
-                                        | mov    %edx,(%rax)
-                                        | cmp    $0x1,%ecx
-                                        | jne    0x400bcd <main+173>
-                                        | mov    (%rbx),%rax
-                                        | mov    %rbx,%rdi
-                                        | callq  *0x10(%rax)
-                                        | lea    0xc(%rbx),%rax
-                                        | mov    $0x0,%ecx
-                                        | test   %rcx,%rcx
-                                        | je     0x400bb8 <main+152>
-                                        | mov    $0xffffffff,%ecx
-                                        | lock   xadd %ecx,(%rax)
-                                        | mov    %ecx,0x30(%rsp)
-                                        | mov    0x30(%rsp),%ecx
-                                        | jmp    0x400bbf <main+159>
-                                        | mov    (%rax),%ecx
-                                        | lea    -0x1(%rcx),%edx
-                                        | mov    %edx,(%rax)
-                                        | cmp    $0x1,%ecx
-                                        | jne    0x400bcd <main+173>
-                                        | mov    (%rbx),%rax
-                                        | mov    %rbx,%rdi
-                                        | callq  *0x18(%rax)
-                                        | movzbl %bpl,%eax
-                                        | add    $0x38,%rsp
-                                        | pop    %rbx
-                                        | pop    %rbp
-                                        | retq
+struct module {                         | push   %rbp                               mov    (%rax),%ecx
+	di::injector<i1> configure() const {| push   %rbx                               lea    -0x1(%rcx),%edx
+		return di::make_injector(       | sub    $0x38,%rsp                         mov    %edx,(%rax)
+			di::bind<i1, impl1>         | lea    0x10(%rsp),%rdi                    cmp    $0x1,%ecx
+		);                              | lea    0x8(%rsp),%rsi                     jne    0x400bcd <main+173>
+	}                                   | callq  0x400bf0 <_ZN5boost2di7exposed>    mov    (%rbx),%rax
+};                                      | mov    0x18(%rsp),%rdi                    mov    %rbx,%rdi
+                                        | mov    (%rdi),%rax                        callq  *0x10(%rax)
+int main() {                            | lea    0x30(%rsp),%rsi                    lea    0xc(%rbx),%rax
+	auto injector = di::make_injector(  | callq  *0x10(%rax)                        mov    $0x0,%ecx
+        module{}                        | test   %rax,%rax                          test   %rcx,%rcx
+    );                                  | setne  %bpl                               je     0x400bb8 <main+152>
+                                        | je     0x400b57 <main+55>                 mov    $0xffffffff,%ecx
+	auto ptr = injector.create<         | mov    (%rax),%rcx                        lock   xadd %ecx,(%rax)
+        unique_ptr<i1>                  | mov    %rax,%rdi                          mov    %ecx,0x30(%rsp)
+    >();                                | callq  *0x8(%rcx)                         mov    0x30(%rsp),%ecx
+                                        | mov    0x20(%rsp),%rbx                    jmp    0x400bbf <main+159>
+	return ptr != nullptr;              | test   %rbx,%rbx                          mov    (%rax),%ecx
+}                                       | je     0x400bcd <main+173>                lea    -0x1(%rcx),%edx
+                                        | lea    0x8(%rbx),%rax                     mov    %edx,(%rax)
+                                        | mov    $0x0,%ecx                          cmp    $0x1,%ecx
+                                        | test   %rcx,%rcx                          jne    0x400bcd <main+173>
+                                        | je     0x400b82 <main+98>                 mov    (%rbx),%rax
+                                        | mov    $0xffffffff,%ecx                   mov    %rbx,%rdi
+                                        | lock   xadd %ecx,(%rax)                   callq  *0x18(%rax)
+                                        | mov    %ecx,0x30(%rsp)                    movzbl %bpl,%eax
+                                        | mov    0x30(%rsp),%ecx                    add    $0x38,%rsp
+                                        | jmp    0x400b89 <main+105>                pop    %rbx
+                                        |                                           pop    %rbp
+                                        | -->                                       retq
 ```
 
 *
