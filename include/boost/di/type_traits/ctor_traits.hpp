@@ -94,8 +94,10 @@ namespace type_traits {
 template<class>
 struct parse_args;
 
-template<class>
-struct arg;
+template<class T>
+struct arg {
+    using type = T;
+};
 
 template<class>
 struct arg_impl;

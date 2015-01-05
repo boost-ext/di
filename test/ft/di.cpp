@@ -1153,6 +1153,34 @@ test create_with_default_values = [] {
     expect_eq(87.0, object.d);
 };
 
+test inject_traits_no_limits = [] {
+    struct c {
+        BOOST_DI_INJECT_TRAITS_NO_LIMITS(int, int, int, int, int, int, int, int, int, int, int);
+        c(int, int, int, int, int, int, int, int, int, int, int) { }
+    };
+
+    auto injector = di::make_injector();
+    injector.create<c>();
+};
+
+struct c_no_limits {
+    c_no_limits(int, int, int, int, int, int, int, int, int, int, int) { }
+};
+
+namespace boost { namespace di {
+
+template<>
+struct ctor_traits<c_no_limits> {
+    BOOST_DI_INJECT_TRAITS_NO_LIMITS(int, int, int, int, int, int, int, int, int, int, int);
+};
+
+}} // boost::di
+
+test inject_traits_no_limits_via_ctor_traits = [] {
+    auto injector = di::make_injector();
+    injector.create<c_no_limits>();
+};
+
 //namespace boost {
 //namespace di {
 
