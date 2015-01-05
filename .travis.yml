@@ -9,21 +9,16 @@ compiler:
 #  - gcc
 
 before_install:
+  - sudo pip install cpp-coveralls pyyaml
   - cd build && ./bootstrap.sh --with-toolset=clang
 
 script:
   - ./b2 -j4 -q --toolset=clang cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++" ../test ../example
 
 after_success:
+  #- coveralls --exclude benchmark --exclude test --gcov-options '\-lp' --gcov 'gcov-4.8'
 
 branches:
   only:
     - cpp14
-
-notifications:
-  recipients:
-    - krzysztof@jusiak.net
-  email:
-    on_success: change
-    on_failure: always
 

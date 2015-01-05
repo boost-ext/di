@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/krzysztof-jusiak/di.svg?branch=cpp14)](https://travis-ci.org/krzysztof-jusiak/di)
+[![Coverage Status](https://img.shields.io/coveralls/nlohmann/json.svg)](https://coveralls.io/r/krzysztof-jusiak/di)
+[![Github Issues](https://img.shields.io/github/issues/nlohmann/json.svg)](http://github.com/krzysztof-jusiak/di/issues)
 
 ### C++ Dependency Injection
 > "Don't call us, we'll call you", Hollywood principle
