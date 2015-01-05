@@ -552,7 +552,7 @@ struct module {                         | auto object = injector.create<c>();
     int i = 0;                          |
 };                                      | injector.crate<unique_ptr<i1>>() // compile error
                                         | injector.crate<unique_ptr<i2>>() // compile error
-di::injector<c>                         |
+di::injector<c> // expose c             |
 module::configure() const noexcept {    |
     return di::make_injector(           |
         di::bind<i1, impl1>             |
@@ -575,7 +575,7 @@ struct module {                         | assert(dynamic_cast<impl1*>(injector.c
     int i = 0;                          |
 };                                      |
                                         |
-di::injector<i1, i2>                    |
+di::injector<i1, i2> // expose i1, i2   |
 module::configure() const noexcept {    |
     return di::make_injector(           |
         di::bind<i1, impl1>             |
