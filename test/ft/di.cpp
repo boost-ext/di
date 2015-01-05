@@ -19,6 +19,17 @@ struct impl1_int : i1 { impl1_int(int i) : i(i) { } void dummy1() override { } i
 struct impl2 : i2 { void dummy2() override { } };
 struct impl1_2 : i1, i2 { void dummy1() override { } void dummy2() override { } };
 struct impl4 : impl1_2 { };
+
+struct impl1_with_i2 : i1 {
+    explicit impl1_with_i2(std::shared_ptr<i2> i2)
+        : i2(i2)
+    { }
+
+    void dummy1() override { }
+
+    std::shared_ptr<i2> i2;
+};
+
 struct complex1 {
     explicit complex1(const std::shared_ptr<i1>& i1)
         : i1(i1)
@@ -1008,112 +1019,70 @@ test runtime_factory_impl = [] {
     }
 };
 
-//test dynamic_binding_using_polymorphic_lambdas_with_interfaces = [] {
-    //auto b = false;
-    //auto module = di::make_injector(
-        //di::bind<i1>.to([&](auto& injector) -> std::shared_ptr<i1> {
-            //BOOST_CHECK(dynamic_cast<cif0if1*>(injector.template create<std::unique_ptr<if1>>().get()));
+struct call_operator {
+    bool& b;
 
-            //if (b) {
-              //return injector.template create<std::shared_ptr<c0if0>>();
-            //}
+    template<typename TInjector>
+    std::shared_ptr<i1> operator()(const TInjector& injector) const {
+        if (b) {
+            return injector.template create<std::shared_ptr<impl1>>();
+        }
 
-            //return injector.template create<std::shared_ptr<c3if0>>();
-        //})
-    //);
+        return injector.template create<std::shared_ptr<impl1_int>>();
+    }
+};
 
-    //auto injector = di::make_injector(
-        //module
-      //, di::bind<if1, cif0if1>{}
-      //, di::bind<int>::to(42)
-    //);
+test runtime_factory_call_operator_impl = [] {
+    constexpr auto i = 42;
 
-    //{
-    //auto object = injector.create<std::shared_ptr<if0>>();
-    //BOOST_CHECK(dynamic_cast<c3if0*>(object.get()));
-    //BOOST_CHECK_EQUAL(42, dynamic_cast<c3if0*>(object.get())->i);
-    //}
+    auto test = [&](bool debug_property) {
+        auto injector = make_injector(
+            di::bind<int>.to(i)
+          , di::bind<i1>.to(call_operator{debug_property})
+        );
 
-    //b = true;
-    //{
-    //auto object = injector.create<std::shared_ptr<if0>>();
-    //BOOST_CHECK(dynamic_cast<c0if0*>(object.get()));
-    //}
-//};
+        return injector.create<std::shared_ptr<i1>>();
+    };
 
-//BOOST_AUTO_TEST_CASE(dynamic_binding_using_polymorphic_lambdas_with_dependend_interfaces) {
-    //auto b = false;
-    //auto module1 = di::make_injector(
-        //di::bind<if0>::to([&](auto& injector) -> std::shared_ptr<if0> {
-            //if (b) {
-              //return injector.template create<std::shared_ptr<c3if0>>();
-            //}
+    {
+    auto object = test(false);
+    expect(dynamic_cast<impl1_int*>(object.get()));
+    expect_eq(i, dynamic_cast<impl1_int*>(object.get())->i);
+    }
 
-            //return injector.template create<std::shared_ptr<c4if0>>();
-        //})
-    //);
+    {
+    auto object = test(true);
+    expect(dynamic_cast<impl1*>(object.get()));
+    }
+};
 
-    //auto module2 = di::make_injector(
-        //di::bind<if1>::to([&](auto& injector) -> std::shared_ptr<if1> {
-            //if (b) {
-              //return injector.template create<std::shared_ptr<c1if1>>();
-            //}
+test dynamic_binding_using_polymorphic_lambdas_with_dependend_interfaces = [] {
+    auto test = [&](bool debug_property) {
+        auto injector = make_injector(
+            di::bind<i1>.to([&](const auto& injector) -> std::shared_ptr<i1> {
+                if (debug_property) {
+                    return std::make_shared<impl1>();
+                }
 
-            //return injector.template create<std::shared_ptr<cif0if1>>();
-        //})
-    //);
+                return injector.template create<std::shared_ptr<impl1_with_i2>>();
+            })
+          , di::bind<i2, impl2>
+        );
 
-    //auto injector = di::make_injector(
-        //module1
-      //, module2
-    //);
+        return injector.create<std::shared_ptr<i1>>();
+    };
 
-    //{
-    //auto object1 = dynamic_cast<c4if0*>(injector.create<std::shared_ptr<if0>>().get());
-    //auto object2 = dynamic_cast<cif0if1*>(injector.create<std::shared_ptr<if1>>().get());
-    //BOOST_CHECK(object1 && object2);
-    //BOOST_CHECK_EQUAL(dynamic_cast<cif0if1*>(object1->if1_.get()), object2);
-    //}
+    {
+    auto object = test(false);
+    expect(dynamic_cast<impl1_with_i2*>(object.get()));
+    expect(dynamic_cast<impl2*>(dynamic_cast<impl1_with_i2*>(object.get())->i2.get()));
+    }
 
-    //b = true;
-    //{
-    //BOOST_CHECK(dynamic_cast<c3if0*>(injector.create<std::shared_ptr<if0>>().get()));
-    //BOOST_CHECK(dynamic_cast<c1if1*>(injector.create<std::shared_ptr<if1>>().get()));
-    //}
-//}
-
-//struct call_operator {
-    //bool& b;
-
-    //template<typename TInjector>
-    //std::shared_ptr<if0> operator()(TInjector& injector) const {
-        //if (b) {
-            //return injector.template create<std::shared_ptr<c0if0>>();
-        //}
-
-        //return injector.template create<std::shared_ptr<c3if0>>();
-    //}
-//};
-
-//BOOST_AUTO_TEST_CASE(dynamic_binding_using_template_call_operator) {
-    //auto b = false;
-    //auto injector = di::make_injector(
-       //di::bind<int>::to(42)
-     //, di::bind<if0>::to(call_operator{b})
-    //);
-
-    //{
-    //auto object = injector.create<std::shared_ptr<if0>>();
-    //BOOST_CHECK(dynamic_cast<c3if0*>(object.get()));
-    //BOOST_CHECK_EQUAL(42, dynamic_cast<c3if0*>(object.get())->i);
-    //}
-
-    //b = true;
-    //{
-    //auto object = injector.create<std::shared_ptr<if0>>();
-    //BOOST_CHECK(dynamic_cast<c0if0*>(object.get()));
-    //}
-//}
+    {
+    auto object = test(true);
+    expect(dynamic_cast<impl1*>(object.get()));
+    }
+};
 
 test externals_ref_cref = [] {
     auto i = 42;
