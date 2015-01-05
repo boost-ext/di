@@ -458,11 +458,11 @@ auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>
 Custom scope                            | Test
 ----------------------------------------|-----------------------------------------
 struct custom_scope {                   | assert(injector.create<shared_ptr<i>>()
- static constexpr auto priority = false;|        !=
-                                        |        injector.create<shared_ptr<i>>()
-  template<class TExpected, class>      | );
-  class scope {                         |
-  public:                               |
+  static constexpr                      |        !=
+      auto priority = false;            |        injector.create<shared_ptr<i>>()
+                                        | );
+  template<class TExpected, class>      |
+  struct scope {                        |
     template<class T, class TProvider>  |
     auto create(const TProvider& pr) {  |
       return                            |
