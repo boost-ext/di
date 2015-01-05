@@ -438,19 +438,19 @@ auto b = false;                         | assert(injector.create<shared_ptr<i1>>
                                         |        ==
 auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>()
    di::bind<int, int_<41>>              | );
- , di::bind<int>.to(42)                 | assert(l == injector.create<long&>());           
- , di::bind<i1>.to(make_shared<impl>());| assert(&l == &injector.create<long&>());         
- , di::bind<long>.to(ref(l));           | assert(87 == injector.create<short>());          
- , di::bind<short>.to([]{return 87;})   | {                                                
- , di::bind<i2>.to(                     | auto object = injector.create<shared_ptr<i2>>(); 
-     [&](const auto& injector) {        | assert(nullptr == object);                       
-        if (b) {                        | }                                                
-            return injector.template    | {                                                
-                create<impl2>();        | b = true;                                        
-        }                               | auto object = injector.create<shared_ptr<i2>>(); 
-        return nullptr;                 | assert(dynamic_cast<impl2*>(object.get()));      
-     }                                  | }                                                
-);                                      | 
+ , di::bind<int>.to(42)                 | assert(l == injector.create<long&>());
+ , di::bind<i1>.to(make_shared<impl>());| assert(&l == &injector.create<long&>());
+ , di::bind<long>.to(ref(l));           | assert(87 == injector.create<short>());
+ , di::bind<short>.to([]{return 87;})   | {
+ , di::bind<i2>.to(                     | auto object = injector.create<shared_ptr<i2>>();
+     [&](const auto& injector) {        | assert(nullptr == object);
+        if (b) {                        | }
+            return injector.template    | {
+                create<impl2>();        | b = true;
+        }                               | auto object = injector.create<shared_ptr<i2>>();
+        return nullptr;                 | assert(dynamic_cast<impl2*>(object.get()));
+     }                                  | }
+);                                      |
 ```
 ```cpp
 Custom scope                            | Test
@@ -496,15 +496,13 @@ auto injector = di::make_injector(      |
 |------------|--------|--------|-----------|---------|----------|
 | T | ✔ | - | - | - | ✔ |
 | T& | - | - | - | - | ✔ |
-| const T& | - | - | - | - | ✔ |
+| const T& | ✔ (temporary) | - | - | - | ✔ |
 | T* | ✔ | - | - | - | ✔ |
 | const T* | ✔ | - | - | - | ✔ |
 | T&& | ✔ | - | - | - | - |
 | unique\_ptr<T> | ✔ | - | - | - | ✔ |
 | shared\_ptr<T> | ✔ | ✔ | ✔ | ✔ | ✔ |
 | weak\_ptr<T> | - | ✔ | ✔ | ✔ | - |
-||
-| Temporary const T& | ✔ | - | - | - | - |
 
 *
 
@@ -885,7 +883,7 @@ int main() {                            | lea    0x30(%rsp),%rsi
 
 *
 
-> **[Compile-time performance (time clang++ -O2)](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/performance.html)** 
+> **[Compile-time performance (time clang++ -O2)](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/performance.html)**
 ```cpp
 Boost.DI header                         | Time [s] / Size [kb]
 ----------------------------------------|-----------------------------------------
@@ -958,6 +956,21 @@ struct c {                              |
 };                                      |
                                         |
 di::make_injector().create<c>();        |
+```
+
+*
+
+> **[Configuration](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)**
+```cpp
+Macro                                   | Description
+----------------------------------------|-----------------------------------------
+BOOST_DI_CFG_CTOR_LIMIT_SIZE            | limits number of allowed consturctor
+                                        | parameters [0-10, default=10]
+----------------------------------------|-----------------------------------------
+BOOST_DI_INJECTOR                       | Named used internally by Boost.DI
+                                        | to define constructor traits
+                                        | [default=boost_di_injector__]
+----------------------------------------|-----------------------------------------
 ```
 
 **Similar libraries**
