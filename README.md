@@ -685,13 +685,13 @@ Allow ctor types policy                 | Test
 ----------------------------------------|-----------------------------------------
 #include <boost/di/                     | // global policy
     policies/allow_ctor_types.hpp>      | #define BOOST_DI_CFG all_must_be_bound_unless_int
-                                        | assert(0 == injector.create<int>()); // okay
+                                        | assert(0 == injector.create<int>());
 class all_must_be_bound_unless_int      |
     : public di::config {               | injector.create<double>(); // compile error
 public:                                 | assert(42.0, make_injector(
   auto policies() const noexcept {      |                  di::bind<double>.to(42.0)
     using namespace di::policies;       |              ).create<double>()
-    using namespace                     | ); // okay
+    using namespace                     | );
         di::policies::operators;        |
                                         |
     return di::make_policies(           |
@@ -970,7 +970,6 @@ BOOST_DI_CFG_CTOR_LIMIT_SIZE            | limits number of allowed consturctor
 BOOST_DI_INJECTOR                       | Named used internally by Boost.DI
                                         | to define constructor traits
                                         | [default=boost_di_injector__]
-----------------------------------------|-----------------------------------------
 ```
 
 **Similar libraries**
