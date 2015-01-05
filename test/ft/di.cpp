@@ -72,19 +72,6 @@ test create_using_shared_ptr = [] {
     expect(object.get());
 };
 
-//test create_noncopyable = [] {
-    //struct noncopyable {
-        //noncopyable(const noncopyable&) = delete;
-    //};
-
-    //struct c {
-        //c(const noncopyable&) { }
-    //};
-
-    //auto injector = di::make_injector();
-    //injector.create<c>();
-//};
-
 test empty_module = [] {
     struct empty {
         auto configure() const {
@@ -94,6 +81,18 @@ test empty_module = [] {
 
     auto injector = di::make_injector(empty{});
     expect_eq(0, injector.create<int>());
+};
+
+test create_ptr = [] {
+    struct c {
+        c(i1* ptr) { delete ptr; }
+    };
+
+    auto injector = di::make_injector(
+        di::bind<i1, impl1>
+    );
+
+    injector.create<c>();
 };
 
 test empty_exposed_module = [] {
