@@ -464,12 +464,10 @@ struct custom_scope {                   | assert(injector.create<shared_ptr<i>>(
   class scope {                         |
   public:                               |
     template<class T, class TProvider>  |
-      auto create(                      |
-        const TProvider& provider) {    |
-          return shared_ptr<TExpected>{ |
-              provider.get()            |
-          };                            |
-      }                                 |
+    auto create(const TProvider& pr) {  |
+      return                            |
+        shared_ptr<TExpected>{pr.get()};|
+    }                                   |
   };                                    |
 };                                      |
                                         |
