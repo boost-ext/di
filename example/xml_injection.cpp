@@ -8,7 +8,7 @@
 //[xml_injector
 //<-
 #include <cassert>
-#include <boost/units/detail/utility.hpp>
+#include <typeinfo>
 //->
 #include <boost/di.hpp>
 
@@ -31,8 +31,8 @@ struct xml_parser_stub : ixml_parser {
 
         switch (i++) {
             default : return {};
-            case 0: return "implementation1";
-            case 1: return "implementation2";
+            case 0: return typeid(implementation1).name();
+            case 1: return typeid(implementation2).name();
         };
 
         return {};
@@ -48,7 +48,7 @@ public:
     template<class TInjector>
     auto operator()(TInjector& injector) const {
         auto parser = injector.template create<std::unique_ptr<ixml_parser>>();
-        auto parsed = parser->parse(boost::units::detail::demangle(typeid(TIf).name()));
+        auto parsed = parser->parse(typeid(TIf).name());
         return create_impl(injector, parsed, TImpl{});
     }
 
@@ -57,7 +57,7 @@ private:
     std::shared_ptr<interface> create_impl(TInjector& injector
                                          , const std::string& parsed
                                          , const xml_list<T, Ts...>&) const {
-        auto impl = boost::units::detail::demangle(typeid(T).name());
+        auto impl = typeid(T).name();
         if (impl == parsed) {
             return injector.template create<std::shared_ptr<T>>();
         }

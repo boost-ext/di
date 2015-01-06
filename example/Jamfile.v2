@@ -23,24 +23,6 @@ rule run-example ( std : src + : cxxflags * : property * ) {
 }
 
 test-suite example :
-    #[ run-example c++1y : xml_injection.cpp ]
-    [ run-example c++1y : binding.cpp ]
-    [ run-example c++1y : externals.cpp ]
-    [ run-example c++1y : multiple_interfaces.cpp ]
-    [ run-example c++1y : named.cpp ]
-    [ run-example c++1y : provider.cpp ]
-    [ run-example c++1y : hello_world.cpp ]
-    [ run-example c++1y : modules.cpp ]
-    [ run-example c++1y : constructor_injection.cpp ]
-    [ run-example c++1y : constructor_signature.cpp ]
-    [ run-example c++1y : custom_scope.cpp ]
-    [ run-example c++1y : dynamic_binding.cpp ]
-    [ run-example c++1y : deduce_scope.cpp ]
-    #[ run-example c++1y : uml_dumper.cpp ]
-    [ run-example c++1y : types_dumper.cpp ]
-    #[ run-example c++1y : pool_provider.cpp ]
-    [ run-example c++1y : custom_provider.cpp ]
-    [ run-example c++1y : custom_policy.cpp ]
     [ run-example c++1y : modules/model.cpp
                           modules/module_model.cpp
                           modules/view.cpp
@@ -49,6 +31,24 @@ test-suite example :
                           modules/main.cpp
       : -Imodules -DBOOST_DI_CFG=config
     ]
+    [ run-example c++1y : binding.cpp ]
+    [ run-example c++1y : constructor_injection.cpp ]
+    [ run-example c++1y : constructor_signature.cpp ]
+    [ run-example c++1y : custom_policy.cpp ]
+    [ run-example c++1y : custom_provider.cpp ]
+    [ run-example c++1y : custom_scope.cpp ]
+    [ run-example c++1y : deduce_scope.cpp ]
+    [ run-example c++1y : dynamic_binding.cpp ]
+    [ run-example c++1y : externals.cpp ]
+    [ run-example c++1y : hello_world.cpp ]
+    [ run-example c++1y : modules.cpp ]
+    [ run-example c++1y : multiple_interfaces.cpp ]
+    [ run-example c++1y : named.cpp ]
+    #[ run-example c++1y : pool_provider.cpp ]
+    [ run-example c++1y : provider.cpp ]
+    [ run-example c++1y : types_dumper.cpp ]
+    #[ run-example c++1y : uml_dumper.cpp ]
+    [ run-example c++1y : xml_injection.cpp ]
 ;
 
 test-suite tutorial :
