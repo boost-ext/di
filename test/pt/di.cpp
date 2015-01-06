@@ -1,617 +1,799 @@
+#include <memory>
 #include <boost/di.hpp>
 
 namespace di = boost::di;
 
-struct X0 { BOOST_DI_INJECT(X0) {} };
-struct X1 { BOOST_DI_INJECT(X1) {} };
-struct X2 { BOOST_DI_INJECT(X2) {} };
-struct X3 { BOOST_DI_INJECT(X3) {} };
-struct X4 { BOOST_DI_INJECT(X4) {} };
-struct X5 { BOOST_DI_INJECT(X5) {} };
-struct X6 { BOOST_DI_INJECT(X6) {} };
-struct X7 { BOOST_DI_INJECT(X7) {} };
-struct X8 { BOOST_DI_INJECT(X8) {} };
-struct X9 { BOOST_DI_INJECT(X9) {} };
-struct X10 { BOOST_DI_INJECT(X10) {} };
-struct X11 { BOOST_DI_INJECT(X11) {} };
-struct X12 { BOOST_DI_INJECT(X12) {} };
-struct X13 { BOOST_DI_INJECT(X13) {} };
-struct X14 { BOOST_DI_INJECT(X14) {} };
-struct X15 { BOOST_DI_INJECT(X15) {} };
-struct X16 { BOOST_DI_INJECT(X16) {} };
-struct X17 { BOOST_DI_INJECT(X17) {} };
-struct X18 { BOOST_DI_INJECT(X18) {} };
-struct X19 { BOOST_DI_INJECT(X19) {} };
-struct X20 { BOOST_DI_INJECT(X20) {} };
-struct X21 { BOOST_DI_INJECT(X21) {} };
-struct X22 { BOOST_DI_INJECT(X22) {} };
-struct X23 { BOOST_DI_INJECT(X23) {} };
-struct X24 { BOOST_DI_INJECT(X24) {} };
-struct X25 { BOOST_DI_INJECT(X25) {} };
-struct X26 { BOOST_DI_INJECT(X26) {} };
-struct X27 { BOOST_DI_INJECT(X27) {} };
-struct X28 { BOOST_DI_INJECT(X28) {} };
-struct X29 { BOOST_DI_INJECT(X29) {} };
-struct X30 { BOOST_DI_INJECT(X30) {} };
-struct X31 { BOOST_DI_INJECT(X31) {} };
-struct X32 { BOOST_DI_INJECT(X32) {} };
-struct X33 { BOOST_DI_INJECT(X33) {} };
-struct X34 { BOOST_DI_INJECT(X34) {} };
-struct X35 { BOOST_DI_INJECT(X35) {} };
-struct X36 { BOOST_DI_INJECT(X36) {} };
-struct X37 { BOOST_DI_INJECT(X37) {} };
-struct X38 { BOOST_DI_INJECT(X38) {} };
-struct X39 { BOOST_DI_INJECT(X39) {} };
-struct X40 { BOOST_DI_INJECT(X40) {} };
-struct X41 { BOOST_DI_INJECT(X41) {} };
-struct X42 { BOOST_DI_INJECT(X42) {} };
-struct X43 { BOOST_DI_INJECT(X43) {} };
-struct X44 { BOOST_DI_INJECT(X44) {} };
-struct X45 { BOOST_DI_INJECT(X45) {} };
-struct X46 { BOOST_DI_INJECT(X46) {} };
-struct X47 { BOOST_DI_INJECT(X47) {} };
-struct X48 { BOOST_DI_INJECT(X48) {} };
-struct X49 { BOOST_DI_INJECT(X49) {} };
-struct X50 { BOOST_DI_INJECT(X50) {} };
-struct X51 { BOOST_DI_INJECT(X51) {} };
-struct X52 { BOOST_DI_INJECT(X52) {} };
-struct X53 { BOOST_DI_INJECT(X53) {} };
-struct X54 { BOOST_DI_INJECT(X54) {} };
-struct X55 { BOOST_DI_INJECT(X55) {} };
-struct X56 { BOOST_DI_INJECT(X56) {} };
-struct X57 { BOOST_DI_INJECT(X57) {} };
-struct X58 { BOOST_DI_INJECT(X58) {} };
-struct X59 { BOOST_DI_INJECT(X59) {} };
-struct X60 { BOOST_DI_INJECT(X60) {} };
-struct X61 { BOOST_DI_INJECT(X61) {} };
-struct X62 { BOOST_DI_INJECT(X62) {} };
-struct X63 { BOOST_DI_INJECT(X63) {} };
-struct X64 { BOOST_DI_INJECT(X64) {} };
-struct X65 { BOOST_DI_INJECT(X65) {} };
-struct X66 { BOOST_DI_INJECT(X66) {} };
-struct X67 { BOOST_DI_INJECT(X67) {} };
-struct X68 { BOOST_DI_INJECT(X68) {} };
-struct X69 { BOOST_DI_INJECT(X69) {} };
-struct X70 { BOOST_DI_INJECT(X70) {} };
-struct X71 { BOOST_DI_INJECT(X71) {} };
-struct X72 { BOOST_DI_INJECT(X72) {} };
-struct X73 { BOOST_DI_INJECT(X73) {} };
-struct X74 { BOOST_DI_INJECT(X74) {} };
-struct X75 { BOOST_DI_INJECT(X75) {} };
-struct X76 { BOOST_DI_INJECT(X76) {} };
-struct X77 { BOOST_DI_INJECT(X77) {} };
-struct X78 { BOOST_DI_INJECT(X78) {} };
-struct X79 { BOOST_DI_INJECT(X79) {} };
-struct X80 { BOOST_DI_INJECT(X80) {} };
-struct X81 { BOOST_DI_INJECT(X81) {} };
-struct X82 { BOOST_DI_INJECT(X82) {} };
-struct X83 { BOOST_DI_INJECT(X83) {} };
-struct X84 { BOOST_DI_INJECT(X84) {} };
-struct X85 { BOOST_DI_INJECT(X85) {} };
-struct X86 { BOOST_DI_INJECT(X86) {} };
-struct X87 { BOOST_DI_INJECT(X87) {} };
-struct X88 { BOOST_DI_INJECT(X88) {} };
-struct X89 { BOOST_DI_INJECT(X89) {} };
-struct X90 { BOOST_DI_INJECT(X90) {} };
-struct X91 { BOOST_DI_INJECT(X91) {} };
-struct X92 { BOOST_DI_INJECT(X92) {} };
-struct X93 { BOOST_DI_INJECT(X93) {} };
-struct X94 { BOOST_DI_INJECT(X94) {} };
-struct X95 { BOOST_DI_INJECT(X95) {} };
-struct X96 { BOOST_DI_INJECT(X96) {} };
-struct X97 { BOOST_DI_INJECT(X97) {} };
-struct X98 { BOOST_DI_INJECT(X98) {} };
-struct X99 { BOOST_DI_INJECT(X99) {} };
-struct X100 { BOOST_DI_INJECT(X100, X0, X12, X15, X26, X27, X45, X58, X63, X80, X83) {} };
-struct X101 { BOOST_DI_INJECT(X101, X9, X23, X24, X39, X44, X49, X56, X61, X92, X93) {} };
-struct X102 { BOOST_DI_INJECT(X102, X8, X11, X17, X30, X33, X45, X50, X53, X56, X95) {} };
-struct X103 { BOOST_DI_INJECT(X103, X6, X19, X44, X61, X63, X64, X73, X89, X91, X96) {} };
-struct X104 { BOOST_DI_INJECT(X104, X12, X18, X25, X32, X35, X72, X81, X88, X92, X101) {} };
-struct X105 { BOOST_DI_INJECT(X105, X44, X47, X61, X67, X76, X79, X81, X88, X94, X103) {} };
-struct X106 { BOOST_DI_INJECT(X106, X1, X6, X9, X22, X23, X33, X51, X72, X77, X82) {} };
-struct X107 { BOOST_DI_INJECT(X107, X8, X38, X40, X65, X66, X74, X75, X86, X92, X105) {} };
-struct X108 { BOOST_DI_INJECT(X108, X7, X9, X18, X48, X53, X55, X60, X67, X69, X98) {} };
-struct X109 { BOOST_DI_INJECT(X109, X16, X32, X40, X49, X60, X68, X76, X88, X91, X107) {} };
-struct X110 { BOOST_DI_INJECT(X110, X8, X19, X26, X27, X29, X65, X76, X83, X86, X98) {} };
-struct X111 { BOOST_DI_INJECT(X111, X5, X29, X35, X38, X51, X54, X57, X62, X92, X104) {} };
-struct X112 { BOOST_DI_INJECT(X112, X1, X2, X39, X48, X49, X55, X65, X78, X80, X105) {} };
-struct X113 { BOOST_DI_INJECT(X113, X1, X10, X12, X15, X17, X30, X79, X87, X96, X104) {} };
-struct X114 { BOOST_DI_INJECT(X114, X0, X1, X17, X62, X64, X69, X80, X89, X92, X109) {} };
-struct X115 { BOOST_DI_INJECT(X115, X6, X29, X52, X65, X70, X82, X89, X93, X98, X113) {} };
-struct X116 { BOOST_DI_INJECT(X116, X13, X31, X39, X47, X48, X58, X63, X70, X77, X99) {} };
-struct X117 { BOOST_DI_INJECT(X117, X16, X40, X55, X59, X78, X79, X83, X91, X100, X106) {} };
-struct X118 { BOOST_DI_INJECT(X118, X4, X16, X34, X53, X69, X74, X94, X96, X105, X116) {} };
-struct X119 { BOOST_DI_INJECT(X119, X0, X19, X20, X22, X60, X76, X78, X83, X105, X112) {} };
-struct X120 { BOOST_DI_INJECT(X120, X12, X14, X23, X24, X54, X60, X65, X70, X86, X105) {} };
-struct X121 { BOOST_DI_INJECT(X121, X1, X4, X12, X16, X21, X31, X36, X54, X57, X96) {} };
-struct X122 { BOOST_DI_INJECT(X122, X12, X13, X26, X37, X42, X54, X57, X64, X94, X105) {} };
-struct X123 { BOOST_DI_INJECT(X123, X41, X63, X77, X79, X81, X90, X97, X103, X114, X120) {} };
-struct X124 { BOOST_DI_INJECT(X124, X0, X10, X15, X45, X52, X54, X86, X90, X109, X110) {} };
-struct X125 { BOOST_DI_INJECT(X125, X8, X11, X28, X32, X44, X45, X48, X92, X94, X112) {} };
-struct X126 { BOOST_DI_INJECT(X126, X0, X27, X48, X64, X69, X72, X79, X97, X109, X124) {} };
-struct X127 { BOOST_DI_INJECT(X127, X2, X3, X14, X29, X55, X79, X86, X92, X115, X122) {} };
-struct X128 { BOOST_DI_INJECT(X128, X10, X35, X63, X66, X87, X98, X100, X107, X117, X119) {} };
-struct X129 { BOOST_DI_INJECT(X129, X1, X9, X10, X16, X29, X62, X98, X117, X125, X128) {} };
-struct X130 { BOOST_DI_INJECT(X130, X6, X29, X53, X81, X89, X90, X93, X105, X106, X108) {} };
-struct X131 { BOOST_DI_INJECT(X131, X3, X9, X20, X36, X42, X53, X77, X84, X89, X119) {} };
-struct X132 { BOOST_DI_INJECT(X132, X38, X41, X47, X87, X90, X99, X107, X119, X120, X126) {} };
-struct X133 { BOOST_DI_INJECT(X133, X8, X11, X18, X28, X43, X45, X62, X90, X107, X109) {} };
-struct X134 { BOOST_DI_INJECT(X134, X7, X23, X56, X69, X77, X80, X81, X86, X101, X103) {} };
-struct X135 { BOOST_DI_INJECT(X135, X6, X13, X50, X69, X75, X80, X82, X93, X98, X106) {} };
-struct X136 { BOOST_DI_INJECT(X136, X16, X41, X49, X63, X66, X78, X90, X103, X117, X122) {} };
-struct X137 { BOOST_DI_INJECT(X137, X20, X21, X29, X30, X52, X53, X60, X66, X91, X131) {} };
-struct X138 { BOOST_DI_INJECT(X138, X1, X10, X51, X53, X54, X73, X90, X96, X114, X115) {} };
-struct X139 { BOOST_DI_INJECT(X139, X1, X2, X6, X19, X21, X47, X73, X76, X109, X126) {} };
-struct X140 { BOOST_DI_INJECT(X140, X7, X18, X25, X38, X46, X55, X67, X90, X92, X103) {} };
-struct X141 { BOOST_DI_INJECT(X141, X0, X28, X36, X47, X63, X66, X79, X101, X102, X126) {} };
-struct X142 { BOOST_DI_INJECT(X142, X2, X13, X23, X27, X40, X49, X85, X104, X108, X137) {} };
-struct X143 { BOOST_DI_INJECT(X143, X27, X36, X65, X68, X74, X76, X80, X93, X114, X116) {} };
-struct X144 { BOOST_DI_INJECT(X144, X30, X37, X43, X81, X89, X90, X121, X125, X138, X143) {} };
-struct X145 { BOOST_DI_INJECT(X145, X9, X25, X59, X82, X95, X99, X100, X114, X133, X137) {} };
-struct X146 { BOOST_DI_INJECT(X146, X16, X44, X72, X93, X114, X120, X134, X135, X138, X141) {} };
-struct X147 { BOOST_DI_INJECT(X147, X20, X28, X57, X73, X84, X94, X101, X107, X129, X137) {} };
-struct X148 { BOOST_DI_INJECT(X148, X1, X60, X61, X73, X83, X90, X104, X107, X140, X143) {} };
-struct X149 { BOOST_DI_INJECT(X149, X9, X23, X34, X39, X55, X68, X94, X97, X105, X114) {} };
-struct X150 { BOOST_DI_INJECT(X150, X1, X19, X28, X35, X40, X55, X117, X125, X139, X149) {} };
-struct X151 { BOOST_DI_INJECT(X151, X29, X40, X42, X56, X75, X77, X90, X120, X126, X143) {} };
-struct X152 { BOOST_DI_INJECT(X152, X21, X27, X36, X38, X50, X71, X77, X102, X132, X133) {} };
-struct X153 { BOOST_DI_INJECT(X153, X16, X23, X30, X58, X69, X74, X92, X106, X123, X139) {} };
-struct X154 { BOOST_DI_INJECT(X154, X13, X20, X23, X54, X72, X82, X85, X96, X100, X119) {} };
-struct X155 { BOOST_DI_INJECT(X155, X29, X57, X67, X78, X82, X85, X113, X114, X116, X121) {} };
-struct X156 { BOOST_DI_INJECT(X156, X2, X6, X44, X66, X77, X88, X101, X107, X108, X141) {} };
-struct X157 { BOOST_DI_INJECT(X157, X23, X38, X55, X56, X65, X82, X100, X106, X110, X150) {} };
-struct X158 { BOOST_DI_INJECT(X158, X71, X75, X101, X105, X109, X118, X119, X137, X146, X150) {} };
-struct X159 { BOOST_DI_INJECT(X159, X4, X9, X27, X59, X84, X87, X116, X124, X132, X154) {} };
-struct X160 { BOOST_DI_INJECT(X160, X44, X66, X68, X81, X90, X125, X134, X135, X137, X147) {} };
-struct X161 { BOOST_DI_INJECT(X161, X9, X24, X42, X47, X73, X118, X126, X132, X148, X149) {} };
-struct X162 { BOOST_DI_INJECT(X162, X1, X10, X21, X37, X56, X70, X102, X106, X113, X161) {} };
-struct X163 { BOOST_DI_INJECT(X163, X11, X31, X59, X60, X93, X98, X126, X134, X144, X151) {} };
-struct X164 { BOOST_DI_INJECT(X164, X17, X18, X36, X39, X76, X106, X108, X140, X142, X160) {} };
-struct X165 { BOOST_DI_INJECT(X165, X1, X47, X92, X93, X94, X101, X102, X125, X133, X146) {} };
-struct X166 { BOOST_DI_INJECT(X166, X38, X40, X70, X97, X126, X128, X129, X133, X147, X164) {} };
-struct X167 { BOOST_DI_INJECT(X167, X0, X1, X18, X20, X53, X79, X114, X128, X146, X165) {} };
-struct X168 { BOOST_DI_INJECT(X168, X4, X5, X9, X84, X88, X96, X133, X143, X150, X152) {} };
-struct X169 { BOOST_DI_INJECT(X169, X10, X59, X70, X81, X83, X87, X95, X97, X152, X165) {} };
-struct X170 { BOOST_DI_INJECT(X170, X23, X26, X35, X74, X92, X93, X99, X144, X152, X156) {} };
-struct X171 { BOOST_DI_INJECT(X171, X1, X3, X77, X88, X89, X108, X110, X116, X135, X159) {} };
-struct X172 { BOOST_DI_INJECT(X172, X38, X44, X51, X55, X66, X74, X94, X132, X135, X159) {} };
-struct X173 { BOOST_DI_INJECT(X173, X12, X22, X59, X66, X73, X83, X89, X105, X126, X137) {} };
-struct X174 { BOOST_DI_INJECT(X174, X2, X7, X61, X64, X72, X99, X141, X149, X153, X169) {} };
-struct X175 { BOOST_DI_INJECT(X175, X10, X29, X31, X84, X94, X96, X112, X124, X166, X170) {} };
-struct X176 { BOOST_DI_INJECT(X176, X26, X33, X64, X74, X82, X105, X124, X141, X161, X172) {} };
-struct X177 { BOOST_DI_INJECT(X177, X13, X19, X65, X91, X119, X120, X129, X142, X143, X161) {} };
-struct X178 { BOOST_DI_INJECT(X178, X47, X49, X68, X99, X110, X141, X151, X169, X170, X172) {} };
-struct X179 { BOOST_DI_INJECT(X179, X20, X23, X26, X28, X71, X74, X95, X101, X136, X170) {} };
-struct X180 { BOOST_DI_INJECT(X180, X3, X15, X57, X65, X70, X92, X109, X111, X134, X140) {} };
-struct X181 { BOOST_DI_INJECT(X181, X10, X14, X22, X23, X112, X116, X118, X130, X134, X152) {} };
-struct X182 { BOOST_DI_INJECT(X182, X22, X28, X33, X48, X83, X84, X89, X129, X171, X180) {} };
-struct X183 { BOOST_DI_INJECT(X183, X28, X35, X50, X75, X79, X87, X101, X127, X142, X179) {} };
-struct X184 { BOOST_DI_INJECT(X184, X58, X60, X90, X105, X130, X150, X156, X162, X170, X179) {} };
-struct X185 { BOOST_DI_INJECT(X185, X22, X44, X48, X91, X109, X111, X112, X140, X160, X179) {} };
-struct X186 { BOOST_DI_INJECT(X186, X19, X38, X39, X41, X52, X83, X91, X155, X179, X183) {} };
-struct X187 { BOOST_DI_INJECT(X187, X6, X19, X38, X48, X55, X78, X84, X104, X116, X178) {} };
-struct X188 { BOOST_DI_INJECT(X188, X0, X19, X23, X75, X151, X152, X158, X163, X174, X186) {} };
-struct X189 { BOOST_DI_INJECT(X189, X24, X52, X57, X76, X89, X96, X126, X128, X136, X140) {} };
-struct X190 { BOOST_DI_INJECT(X190, X14, X18, X28, X84, X94, X133, X146, X160, X176, X188) {} };
-struct X191 { BOOST_DI_INJECT(X191, X25, X38, X75, X102, X104, X128, X133, X136, X155, X180) {} };
-struct X192 { BOOST_DI_INJECT(X192, X6, X54, X85, X97, X127, X128, X132, X158, X169, X187) {} };
-struct X193 { BOOST_DI_INJECT(X193, X17, X20, X25, X30, X55, X70, X84, X94, X121, X172) {} };
-struct X194 { BOOST_DI_INJECT(X194, X3, X22, X88, X116, X142, X146, X151, X152, X171, X191) {} };
-struct X195 { BOOST_DI_INJECT(X195, X17, X71, X76, X77, X113, X130, X155, X163, X171, X185) {} };
-struct X196 { BOOST_DI_INJECT(X196, X62, X76, X106, X116, X117, X134, X153, X155, X177, X190) {} };
-struct X197 { BOOST_DI_INJECT(X197, X19, X42, X61, X73, X99, X101, X106, X126, X159, X181) {} };
-struct X198 { BOOST_DI_INJECT(X198, X4, X15, X33, X48, X62, X87, X97, X99, X148, X160) {} };
-struct X199 { BOOST_DI_INJECT(X199, X17, X20, X33, X57, X67, X69, X80, X99, X122, X136) {} };
+struct x00 { BOOST_DI_INJECT(x00) { } };
+struct x01 { BOOST_DI_INJECT(x01) { } };
+struct x02 { BOOST_DI_INJECT(x02) { } };
+struct x03 { BOOST_DI_INJECT(x03) { } };
+struct x04 { BOOST_DI_INJECT(x04) { } };
+struct x05 { BOOST_DI_INJECT(x05) { } };
+struct x06 { BOOST_DI_INJECT(x06) { } };
+struct x07 { BOOST_DI_INJECT(x07) { } };
+struct x08 { BOOST_DI_INJECT(x08) { } };
+struct x09 { BOOST_DI_INJECT(x09) { } };
+struct x10 { BOOST_DI_INJECT(x10) { } };
+struct x11 { BOOST_DI_INJECT(x11) { } };
+struct x12 { BOOST_DI_INJECT(x12) { } };
+struct x13 { BOOST_DI_INJECT(x13) { } };
+struct x14 { BOOST_DI_INJECT(x14) { } };
+struct x15 { BOOST_DI_INJECT(x15) { } };
+struct x16 { BOOST_DI_INJECT(x16) { } };
+struct x17 { BOOST_DI_INJECT(x17) { } };
+struct x18 { BOOST_DI_INJECT(x18) { } };
+struct x19 { BOOST_DI_INJECT(x19) { } };
+struct x20 { BOOST_DI_INJECT(x20) { } };
+struct x21 { BOOST_DI_INJECT(x21) { } };
+struct x22 { BOOST_DI_INJECT(x22) { } };
+struct x23 { BOOST_DI_INJECT(x23) { } };
+struct x24 { BOOST_DI_INJECT(x24) { } };
+struct x25 { BOOST_DI_INJECT(x25) { } };
+struct x26 { BOOST_DI_INJECT(x26) { } };
+struct x27 { BOOST_DI_INJECT(x27) { } };
+struct x28 { BOOST_DI_INJECT(x28) { } };
+struct x29 { BOOST_DI_INJECT(x29) { } };
+struct x30 { BOOST_DI_INJECT(x30) { } };
+struct x31 { BOOST_DI_INJECT(x31) { } };
+struct x32 { BOOST_DI_INJECT(x32) { } };
+struct x33 { BOOST_DI_INJECT(x33) { } };
+struct x34 { BOOST_DI_INJECT(x34) { } };
+struct x35 { BOOST_DI_INJECT(x35) { } };
+struct x36 { BOOST_DI_INJECT(x36) { } };
+struct x37 { BOOST_DI_INJECT(x37) { } };
+struct x38 { BOOST_DI_INJECT(x38) { } };
+struct x39 { BOOST_DI_INJECT(x39) { } };
+struct x40 { BOOST_DI_INJECT(x40) { } };
+struct x41 { BOOST_DI_INJECT(x41) { } };
+struct x42 { BOOST_DI_INJECT(x42) { } };
+struct x43 { BOOST_DI_INJECT(x43) { } };
+struct x44 { BOOST_DI_INJECT(x44) { } };
+struct x45 { BOOST_DI_INJECT(x45) { } };
+struct x46 { BOOST_DI_INJECT(x46) { } };
+struct x47 { BOOST_DI_INJECT(x47) { } };
+struct x48 { BOOST_DI_INJECT(x48) { } };
+struct x49 { BOOST_DI_INJECT(x49) { } };
+struct x50 { BOOST_DI_INJECT(x50) { } };
+struct x51 { BOOST_DI_INJECT(x51) { } };
+struct x52 { BOOST_DI_INJECT(x52) { } };
+struct x53 { BOOST_DI_INJECT(x53) { } };
+struct x54 { BOOST_DI_INJECT(x54) { } };
+struct x55 { BOOST_DI_INJECT(x55) { } };
+struct x56 { BOOST_DI_INJECT(x56) { } };
+struct x57 { BOOST_DI_INJECT(x57) { } };
+struct x58 { BOOST_DI_INJECT(x58) { } };
+struct x59 { BOOST_DI_INJECT(x59) { } };
+struct x60 { BOOST_DI_INJECT(x60) { } };
+struct x61 { BOOST_DI_INJECT(x61) { } };
+struct x62 { BOOST_DI_INJECT(x62) { } };
+struct x63 { BOOST_DI_INJECT(x63) { } };
+struct x64 { BOOST_DI_INJECT(x64) { } };
+struct x65 { BOOST_DI_INJECT(x65) { } };
+struct x66 { BOOST_DI_INJECT(x66) { } };
+struct x67 { BOOST_DI_INJECT(x67) { } };
+struct x68 { BOOST_DI_INJECT(x68) { } };
+struct x69 { BOOST_DI_INJECT(x69) { } };
+struct x70 { BOOST_DI_INJECT(x70) { } };
+struct x71 { BOOST_DI_INJECT(x71) { } };
+struct x72 { BOOST_DI_INJECT(x72) { } };
+struct x73 { BOOST_DI_INJECT(x73) { } };
+struct x74 { BOOST_DI_INJECT(x74) { } };
+struct x75 { BOOST_DI_INJECT(x75) { } };
+struct x76 { BOOST_DI_INJECT(x76) { } };
+struct x77 { BOOST_DI_INJECT(x77) { } };
+struct x78 { BOOST_DI_INJECT(x78) { } };
+struct x79 { BOOST_DI_INJECT(x79) { } };
+struct x80 { BOOST_DI_INJECT(x80) { } };
+struct x81 { BOOST_DI_INJECT(x81) { } };
+struct x82 { BOOST_DI_INJECT(x82) { } };
+struct x83 { BOOST_DI_INJECT(x83) { } };
+struct x84 { BOOST_DI_INJECT(x84) { } };
+struct x85 { BOOST_DI_INJECT(x85) { } };
+struct x86 { BOOST_DI_INJECT(x86) { } };
+struct x87 { BOOST_DI_INJECT(x87) { } };
+struct x88 { BOOST_DI_INJECT(x88) { } };
+struct x89 { BOOST_DI_INJECT(x89) { } };
+struct x90 { BOOST_DI_INJECT(x90) { } };
+struct x91 { BOOST_DI_INJECT(x91) { } };
+struct x92 { BOOST_DI_INJECT(x92) { } };
+struct x93 { BOOST_DI_INJECT(x93) { } };
+struct x94 { BOOST_DI_INJECT(x94) { } };
+struct x95 { BOOST_DI_INJECT(x95) { } };
+struct x96 { BOOST_DI_INJECT(x96) { } };
+struct x97 { BOOST_DI_INJECT(x97) { } };
+struct x98 { BOOST_DI_INJECT(x98) { } };
+struct x99 { BOOST_DI_INJECT(x99) { } };
+
+struct y00 { BOOST_DI_INJECT(y00) { } };
+struct y01 { BOOST_DI_INJECT(y01, y00) { } };
+struct y02 { BOOST_DI_INJECT(y02, y00, y01) { } };
+struct y03 { BOOST_DI_INJECT(y03, y00, y01, y02) { } };
+struct y04 { BOOST_DI_INJECT(y04, y00, y01, y02, y03) { } };
+struct y05 { BOOST_DI_INJECT(y05, y00, y01, y02, y03, y04) { } };
+struct y06 { BOOST_DI_INJECT(y06, y00, y01, y02, y03, y04, y05) { } };
+struct y07 { BOOST_DI_INJECT(y07, y00, y01, y02, y03, y04, y05, y06) { } };
+struct y08 { BOOST_DI_INJECT(y08, y00, y01, y02, y03, y04, y05, y06, y07) { } };
+struct y09 { BOOST_DI_INJECT(y09, y00, y01, y02, y03, y04, y05, y06, y07, y08) { } };
+struct y10 { BOOST_DI_INJECT(y10, y00, y01, y02, y03, y04, y05, y06, y07, y08, y09) { } };
+struct y11 { BOOST_DI_INJECT(y11, y01, y02, y03, y04, y05, y06, y07, y08, y09, y10) { } };
+struct y12 { BOOST_DI_INJECT(y12, y02, y03, y04, y05, y06, y07, y08, y09, y10, y11) { } };
+struct y13 { BOOST_DI_INJECT(y13, y03, y04, y05, y06, y07, y08, y09, y10, y11, y12) { } };
+struct y14 { BOOST_DI_INJECT(y14, y04, y05, y06, y07, y08, y09, y10, y11, y12, y13) { } };
+struct y15 { BOOST_DI_INJECT(y15, y05, y06, y07, y08, y09, y10, y11, y12, y13, y14) { } };
+struct y16 { BOOST_DI_INJECT(y16, y06, y07, y08, y09, y10, y11, y12, y13, y14, y15) { } };
+struct y17 { BOOST_DI_INJECT(y17, y07, y08, y09, y10, y11, y12, y13, y14, y15, y16) { } };
+struct y18 { BOOST_DI_INJECT(y18, y08, y09, y10, y11, y12, y13, y14, y15, y16, y17) { } };
+struct y19 { BOOST_DI_INJECT(y19, y09, y10, y11, y12, y13, y14, y15, y16, y17, y18) { } };
+struct y20 { BOOST_DI_INJECT(y20, y10, y11, y12, y13, y14, y15, y16, y17, y18, y19) { } };
+struct y21 { BOOST_DI_INJECT(y21, y11, y12, y13, y14, y15, y16, y17, y18, y19, y20) { } };
+struct y22 { BOOST_DI_INJECT(y22, y12, y13, y14, y15, y16, y17, y18, y19, y20, y21) { } };
+struct y23 { BOOST_DI_INJECT(y23, y13, y14, y15, y16, y17, y18, y19, y20, y21, y22) { } };
+struct y24 { BOOST_DI_INJECT(y24, y14, y15, y16, y17, y18, y19, y20, y21, y22, y23) { } };
+struct y25 { BOOST_DI_INJECT(y25, y15, y16, y17, y18, y19, y20, y21, y22, y23, y24) { } };
+struct y26 { BOOST_DI_INJECT(y26, y16, y17, y18, y19, y20, y21, y22, y23, y24, y25) { } };
+struct y27 { BOOST_DI_INJECT(y27, y17, y18, y19, y20, y21, y22, y23, y24, y25, y26) { } };
+struct y28 { BOOST_DI_INJECT(y28, y18, y19, y20, y21, y22, y23, y24, y25, y26, y27) { } };
+struct y29 { BOOST_DI_INJECT(y29, y19, y20, y21, y22, y23, y24, y25, y26, y27, y28) { } };
+struct y30 { BOOST_DI_INJECT(y30, y20, y21, y22, y23, y24, y25, y26, y27, y28, y29) { } };
+struct y31 { BOOST_DI_INJECT(y31, y21, y22, y23, y24, y25, y26, y27, y28, y29, y30) { } };
+struct y32 { BOOST_DI_INJECT(y32, y22, y23, y24, y25, y26, y27, y28, y29, y30, y31) { } };
+struct y33 { BOOST_DI_INJECT(y33, y23, y24, y25, y26, y27, y28, y29, y30, y31, y32) { } };
+struct y34 { BOOST_DI_INJECT(y34, y24, y25, y26, y27, y28, y29, y30, y31, y32, y33) { } };
+struct y35 { BOOST_DI_INJECT(y35, y25, y26, y27, y28, y29, y30, y31, y32, y33, y34) { } };
+struct y36 { BOOST_DI_INJECT(y36, y26, y27, y28, y29, y30, y31, y32, y33, y34, y35) { } };
+struct y37 { BOOST_DI_INJECT(y37, y27, y28, y29, y30, y31, y32, y33, y34, y35, y36) { } };
+struct y38 { BOOST_DI_INJECT(y38, y28, y29, y30, y31, y32, y33, y34, y35, y36, y37) { } };
+struct y39 { BOOST_DI_INJECT(y39, y29, y30, y31, y32, y33, y34, y35, y36, y37, y38) { } };
+struct y40 { BOOST_DI_INJECT(y40, y30, y31, y32, y33, y34, y35, y36, y37, y38, y39) { } };
+struct y41 { BOOST_DI_INJECT(y41, y31, y32, y33, y34, y35, y36, y37, y38, y39, y40) { } };
+struct y42 { BOOST_DI_INJECT(y42, y32, y33, y34, y35, y36, y37, y38, y39, y40, y41) { } };
+struct y43 { BOOST_DI_INJECT(y43, y33, y34, y35, y36, y37, y38, y39, y40, y41, y42) { } };
+struct y44 { BOOST_DI_INJECT(y44, y34, y35, y36, y37, y38, y39, y40, y41, y42, y43) { } };
+struct y45 { BOOST_DI_INJECT(y45, y35, y36, y37, y38, y39, y40, y41, y42, y43, y44) { } };
+struct y46 { BOOST_DI_INJECT(y46, y36, y37, y38, y39, y40, y41, y42, y43, y44, y45) { } };
+struct y47 { BOOST_DI_INJECT(y47, y37, y38, y39, y40, y41, y42, y43, y44, y45, y46) { } };
+struct y48 { BOOST_DI_INJECT(y48, y38, y39, y40, y41, y42, y43, y44, y45, y46, y47) { } };
+struct y49 { BOOST_DI_INJECT(y49, y39, y40, y41, y42, y43, y44, y45, y46, y47, y48) { } };
+struct y50 { BOOST_DI_INJECT(y50, y40, y41, y42, y43, y44, y45, y46, y47, y48, y49) { } };
+struct y51 { BOOST_DI_INJECT(y51, y41, y42, y43, y44, y45, y46, y47, y48, y49, y50) { } };
+struct y52 { BOOST_DI_INJECT(y52, y42, y43, y44, y45, y46, y47, y48, y49, y50, y51) { } };
+struct y53 { BOOST_DI_INJECT(y53, y43, y44, y45, y46, y47, y48, y49, y50, y51, y52) { } };
+struct y54 { BOOST_DI_INJECT(y54, y44, y45, y46, y47, y48, y49, y50, y51, y52, y53) { } };
+struct y55 { BOOST_DI_INJECT(y55, y45, y46, y47, y48, y49, y50, y51, y52, y53, y54) { } };
+struct y56 { BOOST_DI_INJECT(y56, y46, y47, y48, y49, y50, y51, y52, y53, y54, y55) { } };
+struct y57 { BOOST_DI_INJECT(y57, y47, y48, y49, y50, y51, y52, y53, y54, y55, y56) { } };
+struct y58 { BOOST_DI_INJECT(y58, y48, y49, y50, y51, y52, y53, y54, y55, y56, y57) { } };
+struct y59 { BOOST_DI_INJECT(y59, y49, y50, y51, y52, y53, y54, y55, y56, y57, y58) { } };
+struct y60 { BOOST_DI_INJECT(y60, y50, y51, y52, y53, y54, y55, y56, y57, y58, y59) { } };
+struct y61 { BOOST_DI_INJECT(y61, y51, y52, y53, y54, y55, y56, y57, y58, y59, y60) { } };
+struct y62 { BOOST_DI_INJECT(y62, y52, y53, y54, y55, y56, y57, y58, y59, y60, y61) { } };
+struct y63 { BOOST_DI_INJECT(y63, y53, y54, y55, y56, y57, y58, y59, y60, y61, y62) { } };
+struct y64 { BOOST_DI_INJECT(y64, y54, y55, y56, y57, y58, y59, y60, y61, y62, y63) { } };
+struct y65 { BOOST_DI_INJECT(y65, y55, y56, y57, y58, y59, y60, y61, y62, y63, y64) { } };
+struct y66 { BOOST_DI_INJECT(y66, y56, y57, y58, y59, y60, y61, y62, y63, y64, y65) { } };
+struct y67 { BOOST_DI_INJECT(y67, y57, y58, y59, y60, y61, y62, y63, y64, y65, y66) { } };
+struct y68 { BOOST_DI_INJECT(y68, y58, y59, y60, y61, y62, y63, y64, y65, y66, y67) { } };
+struct y69 { BOOST_DI_INJECT(y69, y59, y60, y61, y62, y63, y64, y65, y66, y67, y68) { } };
+struct y70 { BOOST_DI_INJECT(y70, y60, y61, y62, y63, y64, y65, y66, y67, y68, y69) { } };
+struct y71 { BOOST_DI_INJECT(y71, y61, y62, y63, y64, y65, y66, y67, y68, y69, y70) { } };
+struct y72 { BOOST_DI_INJECT(y72, y62, y63, y64, y65, y66, y67, y68, y69, y70, y71) { } };
+struct y73 { BOOST_DI_INJECT(y73, y63, y64, y65, y66, y67, y68, y69, y70, y71, y72) { } };
+struct y74 { BOOST_DI_INJECT(y74, y64, y65, y66, y67, y68, y69, y70, y71, y72, y73) { } };
+struct y75 { BOOST_DI_INJECT(y75, y65, y66, y67, y68, y69, y70, y71, y72, y73, y74) { } };
+struct y76 { BOOST_DI_INJECT(y76, y66, y67, y68, y69, y70, y71, y72, y73, y74, y75) { } };
+struct y77 { BOOST_DI_INJECT(y77, y67, y68, y69, y70, y71, y72, y73, y74, y75, y76) { } };
+struct y78 { BOOST_DI_INJECT(y78, y68, y69, y70, y71, y72, y73, y74, y75, y76, y77) { } };
+struct y79 { BOOST_DI_INJECT(y79, y69, y70, y71, y72, y73, y74, y75, y76, y77, y78) { } };
+struct y80 { BOOST_DI_INJECT(y80, y70, y71, y72, y73, y74, y75, y76, y77, y78, y79) { } };
+struct y81 { BOOST_DI_INJECT(y81, y71, y72, y73, y74, y75, y76, y77, y78, y79, y80) { } };
+struct y82 { BOOST_DI_INJECT(y82, y72, y73, y74, y75, y76, y77, y78, y79, y80, y81) { } };
+struct y83 { BOOST_DI_INJECT(y83, y73, y74, y75, y76, y77, y78, y79, y80, y81, y82) { } };
+struct y84 { BOOST_DI_INJECT(y84, y74, y75, y76, y77, y78, y79, y80, y81, y82, y83) { } };
+struct y85 { BOOST_DI_INJECT(y85, y75, y76, y77, y78, y79, y80, y81, y82, y83, y84) { } };
+struct y86 { BOOST_DI_INJECT(y86, y76, y77, y78, y79, y80, y81, y82, y83, y84, y85) { } };
+struct y87 { BOOST_DI_INJECT(y87, y77, y78, y79, y80, y81, y82, y83, y84, y85, y86) { } };
+struct y88 { BOOST_DI_INJECT(y88, y78, y79, y80, y81, y82, y83, y84, y85, y86, y87) { } };
+struct y89 { BOOST_DI_INJECT(y89, y79, y80, y81, y82, y83, y84, y85, y86, y87, y88) { } };
+struct y90 { BOOST_DI_INJECT(y90, y80, y81, y82, y83, y84, y85, y86, y87, y88, y89) { } };
+struct y91 { BOOST_DI_INJECT(y91, y81, y82, y83, y84, y85, y86, y87, y88, y89, y90) { } };
+struct y92 { BOOST_DI_INJECT(y92, y82, y83, y84, y85, y86, y87, y88, y89, y90, y91) { } };
+struct y93 { BOOST_DI_INJECT(y93, y83, y84, y85, y86, y87, y88, y89, y90, y91, y92) { } };
+struct y94 { BOOST_DI_INJECT(y94, y84, y85, y86, y87, y88, y89, y90, y91, y92, y93) { } };
+struct y95 { BOOST_DI_INJECT(y95, y85, y86, y87, y88, y89, y90, y91, y92, y93, y94) { } };
+struct y96 { BOOST_DI_INJECT(y96, y86, y87, y88, y89, y90, y91, y92, y93, y94, y95) { } };
+struct y97 { BOOST_DI_INJECT(y97, y87, y88, y89, y90, y91, y92, y93, y94, y95, y96) { } };
+struct y98 { BOOST_DI_INJECT(y98, y88, y89, y90, y91, y92, y93, y94, y95, y96, y97) { } };
+struct y99 { BOOST_DI_INJECT(y99, y89, y90, y91, y92, y93, y94, y95, y96, y97, y98) { } };
+
+struct i00 { virtual ~i00() = default; virtual void dummy() = 0; }; struct impl00 : i00 { BOOST_DI_INJECT(impl00, y00, y01, y02, y03, y04, y05, y06, y07, y08, y09) { } void dummy() override { } };
+struct i01 { virtual ~i01() = default; virtual void dummy() = 0; }; struct impl01 : i01 { BOOST_DI_INJECT(impl01, y01, y02, y03, y04, y05, y06, y07, y08, y09, y10) { } void dummy() override { } };
+struct i02 { virtual ~i02() = default; virtual void dummy() = 0; }; struct impl02 : i02 { BOOST_DI_INJECT(impl02, y02, y03, y04, y05, y06, y07, y08, y09, y10, y11) { } void dummy() override { } };
+struct i03 { virtual ~i03() = default; virtual void dummy() = 0; }; struct impl03 : i03 { BOOST_DI_INJECT(impl03, y03, y04, y05, y06, y07, y08, y09, y10, y11, y12) { } void dummy() override { } };
+struct i04 { virtual ~i04() = default; virtual void dummy() = 0; }; struct impl04 : i04 { BOOST_DI_INJECT(impl04, y04, y05, y06, y07, y08, y09, y10, y11, y12, y13) { } void dummy() override { } };
+struct i05 { virtual ~i05() = default; virtual void dummy() = 0; }; struct impl05 : i05 { BOOST_DI_INJECT(impl05, y05, y06, y07, y08, y09, y10, y11, y12, y13, y14) { } void dummy() override { } };
+struct i06 { virtual ~i06() = default; virtual void dummy() = 0; }; struct impl06 : i06 { BOOST_DI_INJECT(impl06, y06, y07, y08, y09, y10, y11, y12, y13, y14, y15) { } void dummy() override { } };
+struct i07 { virtual ~i07() = default; virtual void dummy() = 0; }; struct impl07 : i07 { BOOST_DI_INJECT(impl07, y07, y08, y09, y10, y11, y12, y13, y14, y15, y16) { } void dummy() override { } };
+struct i08 { virtual ~i08() = default; virtual void dummy() = 0; }; struct impl08 : i08 { BOOST_DI_INJECT(impl08, y08, y09, y10, y11, y12, y13, y14, y15, y16, y17) { } void dummy() override { } };
+struct i09 { virtual ~i09() = default; virtual void dummy() = 0; }; struct impl09 : i09 { BOOST_DI_INJECT(impl09, y09, y10, y11, y12, y13, y14, y15, y16, y17, y18) { } void dummy() override { } };
+struct i10 { virtual ~i10() = default; virtual void dummy() = 0; }; struct impl10 : i10 { BOOST_DI_INJECT(impl10, y10, y11, y12, y13, y14, y15, y16, y17, y18, y19) { } void dummy() override { } };
+struct i11 { virtual ~i11() = default; virtual void dummy() = 0; }; struct impl11 : i11 { BOOST_DI_INJECT(impl11, y11, y12, y13, y14, y15, y16, y17, y18, y19, y20) { } void dummy() override { } };
+struct i12 { virtual ~i12() = default; virtual void dummy() = 0; }; struct impl12 : i12 { BOOST_DI_INJECT(impl12, y12, y13, y14, y15, y16, y17, y18, y19, y20, y21) { } void dummy() override { } };
+struct i13 { virtual ~i13() = default; virtual void dummy() = 0; }; struct impl13 : i13 { BOOST_DI_INJECT(impl13, y13, y14, y15, y16, y17, y18, y19, y20, y21, y22) { } void dummy() override { } };
+struct i14 { virtual ~i14() = default; virtual void dummy() = 0; }; struct impl14 : i14 { BOOST_DI_INJECT(impl14, y14, y15, y16, y17, y18, y19, y20, y21, y22, y23) { } void dummy() override { } };
+struct i15 { virtual ~i15() = default; virtual void dummy() = 0; }; struct impl15 : i15 { BOOST_DI_INJECT(impl15, y15, y16, y17, y18, y19, y20, y21, y22, y23, y24) { } void dummy() override { } };
+struct i16 { virtual ~i16() = default; virtual void dummy() = 0; }; struct impl16 : i16 { BOOST_DI_INJECT(impl16, y16, y17, y18, y19, y20, y21, y22, y23, y24, y25) { } void dummy() override { } };
+struct i17 { virtual ~i17() = default; virtual void dummy() = 0; }; struct impl17 : i17 { BOOST_DI_INJECT(impl17, y17, y18, y19, y20, y21, y22, y23, y24, y25, y26) { } void dummy() override { } };
+struct i18 { virtual ~i18() = default; virtual void dummy() = 0; }; struct impl18 : i18 { BOOST_DI_INJECT(impl18, y18, y19, y20, y21, y22, y23, y24, y25, y26, y27) { } void dummy() override { } };
+struct i19 { virtual ~i19() = default; virtual void dummy() = 0; }; struct impl19 : i19 { BOOST_DI_INJECT(impl19, y19, y20, y21, y22, y23, y24, y25, y26, y27, y28) { } void dummy() override { } };
+struct i20 { virtual ~i20() = default; virtual void dummy() = 0; }; struct impl20 : i20 { BOOST_DI_INJECT(impl20, y20, y21, y22, y23, y24, y25, y26, y27, y28, y29) { } void dummy() override { } };
+struct i21 { virtual ~i21() = default; virtual void dummy() = 0; }; struct impl21 : i21 { BOOST_DI_INJECT(impl21, y21, y22, y23, y24, y25, y26, y27, y28, y29, y30) { } void dummy() override { } };
+struct i22 { virtual ~i22() = default; virtual void dummy() = 0; }; struct impl22 : i22 { BOOST_DI_INJECT(impl22, y22, y23, y24, y25, y26, y27, y28, y29, y30, y31) { } void dummy() override { } };
+struct i23 { virtual ~i23() = default; virtual void dummy() = 0; }; struct impl23 : i23 { BOOST_DI_INJECT(impl23, y23, y24, y25, y26, y27, y28, y29, y30, y31, y32) { } void dummy() override { } };
+struct i24 { virtual ~i24() = default; virtual void dummy() = 0; }; struct impl24 : i24 { BOOST_DI_INJECT(impl24, y24, y25, y26, y27, y28, y29, y30, y31, y32, y33) { } void dummy() override { } };
+struct i25 { virtual ~i25() = default; virtual void dummy() = 0; }; struct impl25 : i25 { BOOST_DI_INJECT(impl25, y25, y26, y27, y28, y29, y30, y31, y32, y33, y34) { } void dummy() override { } };
+struct i26 { virtual ~i26() = default; virtual void dummy() = 0; }; struct impl26 : i26 { BOOST_DI_INJECT(impl26, y26, y27, y28, y29, y30, y31, y32, y33, y34, y35) { } void dummy() override { } };
+struct i27 { virtual ~i27() = default; virtual void dummy() = 0; }; struct impl27 : i27 { BOOST_DI_INJECT(impl27, y27, y28, y29, y30, y31, y32, y33, y34, y35, y36) { } void dummy() override { } };
+struct i28 { virtual ~i28() = default; virtual void dummy() = 0; }; struct impl28 : i28 { BOOST_DI_INJECT(impl28, y28, y29, y30, y31, y32, y33, y34, y35, y36, y37) { } void dummy() override { } };
+struct i29 { virtual ~i29() = default; virtual void dummy() = 0; }; struct impl29 : i29 { BOOST_DI_INJECT(impl29, y29, y30, y31, y32, y33, y34, y35, y36, y37, y38) { } void dummy() override { } };
+struct i30 { virtual ~i30() = default; virtual void dummy() = 0; }; struct impl30 : i30 { BOOST_DI_INJECT(impl30, y30, y31, y32, y33, y34, y35, y36, y37, y38, y39) { } void dummy() override { } };
+struct i31 { virtual ~i31() = default; virtual void dummy() = 0; }; struct impl31 : i31 { BOOST_DI_INJECT(impl31, y31, y32, y33, y34, y35, y36, y37, y38, y39, y40) { } void dummy() override { } };
+struct i32 { virtual ~i32() = default; virtual void dummy() = 0; }; struct impl32 : i32 { BOOST_DI_INJECT(impl32, y32, y33, y34, y35, y36, y37, y38, y39, y40, y41) { } void dummy() override { } };
+struct i33 { virtual ~i33() = default; virtual void dummy() = 0; }; struct impl33 : i33 { BOOST_DI_INJECT(impl33, y33, y34, y35, y36, y37, y38, y39, y40, y41, y42) { } void dummy() override { } };
+struct i34 { virtual ~i34() = default; virtual void dummy() = 0; }; struct impl34 : i34 { BOOST_DI_INJECT(impl34, y34, y35, y36, y37, y38, y39, y40, y41, y42, y43) { } void dummy() override { } };
+struct i35 { virtual ~i35() = default; virtual void dummy() = 0; }; struct impl35 : i35 { BOOST_DI_INJECT(impl35, y35, y36, y37, y38, y39, y40, y41, y42, y43, y44) { } void dummy() override { } };
+struct i36 { virtual ~i36() = default; virtual void dummy() = 0; }; struct impl36 : i36 { BOOST_DI_INJECT(impl36, y36, y37, y38, y39, y40, y41, y42, y43, y44, y45) { } void dummy() override { } };
+struct i37 { virtual ~i37() = default; virtual void dummy() = 0; }; struct impl37 : i37 { BOOST_DI_INJECT(impl37, y37, y38, y39, y40, y41, y42, y43, y44, y45, y46) { } void dummy() override { } };
+struct i38 { virtual ~i38() = default; virtual void dummy() = 0; }; struct impl38 : i38 { BOOST_DI_INJECT(impl38, y38, y39, y40, y41, y42, y43, y44, y45, y46, y47) { } void dummy() override { } };
+struct i39 { virtual ~i39() = default; virtual void dummy() = 0; }; struct impl39 : i39 { BOOST_DI_INJECT(impl39, y39, y40, y41, y42, y43, y44, y45, y46, y47, y48) { } void dummy() override { } };
+struct i40 { virtual ~i40() = default; virtual void dummy() = 0; }; struct impl40 : i40 { BOOST_DI_INJECT(impl40, y40, y41, y42, y43, y44, y45, y46, y47, y48, y49) { } void dummy() override { } };
+struct i41 { virtual ~i41() = default; virtual void dummy() = 0; }; struct impl41 : i41 { BOOST_DI_INJECT(impl41, y41, y42, y43, y44, y45, y46, y47, y48, y49, y50) { } void dummy() override { } };
+struct i42 { virtual ~i42() = default; virtual void dummy() = 0; }; struct impl42 : i42 { BOOST_DI_INJECT(impl42, y42, y43, y44, y45, y46, y47, y48, y49, y50, y51) { } void dummy() override { } };
+struct i43 { virtual ~i43() = default; virtual void dummy() = 0; }; struct impl43 : i43 { BOOST_DI_INJECT(impl43, y43, y44, y45, y46, y47, y48, y49, y50, y51, y52) { } void dummy() override { } };
+struct i44 { virtual ~i44() = default; virtual void dummy() = 0; }; struct impl44 : i44 { BOOST_DI_INJECT(impl44, y44, y45, y46, y47, y48, y49, y50, y51, y52, y53) { } void dummy() override { } };
+struct i45 { virtual ~i45() = default; virtual void dummy() = 0; }; struct impl45 : i45 { BOOST_DI_INJECT(impl45, y45, y46, y47, y48, y49, y50, y51, y52, y53, y54) { } void dummy() override { } };
+struct i46 { virtual ~i46() = default; virtual void dummy() = 0; }; struct impl46 : i46 { BOOST_DI_INJECT(impl46, y46, y47, y48, y49, y50, y51, y52, y53, y54, y55) { } void dummy() override { } };
+struct i47 { virtual ~i47() = default; virtual void dummy() = 0; }; struct impl47 : i47 { BOOST_DI_INJECT(impl47, y47, y48, y49, y50, y51, y52, y53, y54, y55, y56) { } void dummy() override { } };
+struct i48 { virtual ~i48() = default; virtual void dummy() = 0; }; struct impl48 : i48 { BOOST_DI_INJECT(impl48, y48, y49, y50, y51, y52, y53, y54, y55, y56, y57) { } void dummy() override { } };
+struct i49 { virtual ~i49() = default; virtual void dummy() = 0; }; struct impl49 : i49 { BOOST_DI_INJECT(impl49, y49, y50, y51, y52, y53, y54, y55, y56, y57, y58) { } void dummy() override { } };
+struct i50 { virtual ~i50() = default; virtual void dummy() = 0; }; struct impl50 : i50 { BOOST_DI_INJECT(impl50, y50, y51, y52, y53, y54, y55, y56, y57, y58, y59) { } void dummy() override { } };
+struct i51 { virtual ~i51() = default; virtual void dummy() = 0; }; struct impl51 : i51 { BOOST_DI_INJECT(impl51, y51, y52, y53, y54, y55, y56, y57, y58, y59, y60) { } void dummy() override { } };
+struct i52 { virtual ~i52() = default; virtual void dummy() = 0; }; struct impl52 : i52 { BOOST_DI_INJECT(impl52, y52, y53, y54, y55, y56, y57, y58, y59, y60, y61) { } void dummy() override { } };
+struct i53 { virtual ~i53() = default; virtual void dummy() = 0; }; struct impl53 : i53 { BOOST_DI_INJECT(impl53, y53, y54, y55, y56, y57, y58, y59, y60, y61, y62) { } void dummy() override { } };
+struct i54 { virtual ~i54() = default; virtual void dummy() = 0; }; struct impl54 : i54 { BOOST_DI_INJECT(impl54, y54, y55, y56, y57, y58, y59, y60, y61, y62, y63) { } void dummy() override { } };
+struct i55 { virtual ~i55() = default; virtual void dummy() = 0; }; struct impl55 : i55 { BOOST_DI_INJECT(impl55, y55, y56, y57, y58, y59, y60, y61, y62, y63, y64) { } void dummy() override { } };
+struct i56 { virtual ~i56() = default; virtual void dummy() = 0; }; struct impl56 : i56 { BOOST_DI_INJECT(impl56, y56, y57, y58, y59, y60, y61, y62, y63, y64, y65) { } void dummy() override { } };
+struct i57 { virtual ~i57() = default; virtual void dummy() = 0; }; struct impl57 : i57 { BOOST_DI_INJECT(impl57, y57, y58, y59, y60, y61, y62, y63, y64, y65, y66) { } void dummy() override { } };
+struct i58 { virtual ~i58() = default; virtual void dummy() = 0; }; struct impl58 : i58 { BOOST_DI_INJECT(impl58, y58, y59, y60, y61, y62, y63, y64, y65, y66, y67) { } void dummy() override { } };
+struct i59 { virtual ~i59() = default; virtual void dummy() = 0; }; struct impl59 : i59 { BOOST_DI_INJECT(impl59, y59, y60, y61, y62, y63, y64, y65, y66, y67, y68) { } void dummy() override { } };
+struct i60 { virtual ~i60() = default; virtual void dummy() = 0; }; struct impl60 : i60 { BOOST_DI_INJECT(impl60, y60, y61, y62, y63, y64, y65, y66, y67, y68, y69) { } void dummy() override { } };
+struct i61 { virtual ~i61() = default; virtual void dummy() = 0; }; struct impl61 : i61 { BOOST_DI_INJECT(impl61, y61, y62, y63, y64, y65, y66, y67, y68, y69, y70) { } void dummy() override { } };
+struct i62 { virtual ~i62() = default; virtual void dummy() = 0; }; struct impl62 : i62 { BOOST_DI_INJECT(impl62, y62, y63, y64, y65, y66, y67, y68, y69, y70, y71) { } void dummy() override { } };
+struct i63 { virtual ~i63() = default; virtual void dummy() = 0; }; struct impl63 : i63 { BOOST_DI_INJECT(impl63, y63, y64, y65, y66, y67, y68, y69, y70, y71, y72) { } void dummy() override { } };
+struct i64 { virtual ~i64() = default; virtual void dummy() = 0; }; struct impl64 : i64 { BOOST_DI_INJECT(impl64, y64, y65, y66, y67, y68, y69, y70, y71, y72, y73) { } void dummy() override { } };
+struct i65 { virtual ~i65() = default; virtual void dummy() = 0; }; struct impl65 : i65 { BOOST_DI_INJECT(impl65, y65, y66, y67, y68, y69, y70, y71, y72, y73, y74) { } void dummy() override { } };
+struct i66 { virtual ~i66() = default; virtual void dummy() = 0; }; struct impl66 : i66 { BOOST_DI_INJECT(impl66, y66, y67, y68, y69, y70, y71, y72, y73, y74, y75) { } void dummy() override { } };
+struct i67 { virtual ~i67() = default; virtual void dummy() = 0; }; struct impl67 : i67 { BOOST_DI_INJECT(impl67, y67, y68, y69, y70, y71, y72, y73, y74, y75, y76) { } void dummy() override { } };
+struct i68 { virtual ~i68() = default; virtual void dummy() = 0; }; struct impl68 : i68 { BOOST_DI_INJECT(impl68, y68, y69, y70, y71, y72, y73, y74, y75, y76, y77) { } void dummy() override { } };
+struct i69 { virtual ~i69() = default; virtual void dummy() = 0; }; struct impl69 : i69 { BOOST_DI_INJECT(impl69, y69, y70, y71, y72, y73, y74, y75, y76, y77, y78) { } void dummy() override { } };
+struct i70 { virtual ~i70() = default; virtual void dummy() = 0; }; struct impl70 : i70 { BOOST_DI_INJECT(impl70, y70, y71, y72, y73, y74, y75, y76, y77, y78, y79) { } void dummy() override { } };
+struct i71 { virtual ~i71() = default; virtual void dummy() = 0; }; struct impl71 : i71 { BOOST_DI_INJECT(impl71, y71, y72, y73, y74, y75, y76, y77, y78, y79, y80) { } void dummy() override { } };
+struct i72 { virtual ~i72() = default; virtual void dummy() = 0; }; struct impl72 : i72 { BOOST_DI_INJECT(impl72, y72, y73, y74, y75, y76, y77, y78, y79, y80, y81) { } void dummy() override { } };
+struct i73 { virtual ~i73() = default; virtual void dummy() = 0; }; struct impl73 : i73 { BOOST_DI_INJECT(impl73, y73, y74, y75, y76, y77, y78, y79, y80, y81, y82) { } void dummy() override { } };
+struct i74 { virtual ~i74() = default; virtual void dummy() = 0; }; struct impl74 : i74 { BOOST_DI_INJECT(impl74, y74, y75, y76, y77, y78, y79, y80, y81, y82, y83) { } void dummy() override { } };
+struct i75 { virtual ~i75() = default; virtual void dummy() = 0; }; struct impl75 : i75 { BOOST_DI_INJECT(impl75, y75, y76, y77, y78, y79, y80, y81, y82, y83, y84) { } void dummy() override { } };
+struct i76 { virtual ~i76() = default; virtual void dummy() = 0; }; struct impl76 : i76 { BOOST_DI_INJECT(impl76, y76, y77, y78, y79, y80, y81, y82, y83, y84, y85) { } void dummy() override { } };
+struct i77 { virtual ~i77() = default; virtual void dummy() = 0; }; struct impl77 : i77 { BOOST_DI_INJECT(impl77, y77, y78, y79, y80, y81, y82, y83, y84, y85, y86) { } void dummy() override { } };
+struct i78 { virtual ~i78() = default; virtual void dummy() = 0; }; struct impl78 : i78 { BOOST_DI_INJECT(impl78, y78, y79, y80, y81, y82, y83, y84, y85, y86, y87) { } void dummy() override { } };
+struct i79 { virtual ~i79() = default; virtual void dummy() = 0; }; struct impl79 : i79 { BOOST_DI_INJECT(impl79, y79, y80, y81, y82, y83, y84, y85, y86, y87, y88) { } void dummy() override { } };
+struct i80 { virtual ~i80() = default; virtual void dummy() = 0; }; struct impl80 : i80 { BOOST_DI_INJECT(impl80, y80, y81, y82, y83, y84, y85, y86, y87, y88, y89) { } void dummy() override { } };
+struct i81 { virtual ~i81() = default; virtual void dummy() = 0; }; struct impl81 : i81 { BOOST_DI_INJECT(impl81, y81, y82, y83, y84, y85, y86, y87, y88, y89, y90) { } void dummy() override { } };
+struct i82 { virtual ~i82() = default; virtual void dummy() = 0; }; struct impl82 : i82 { BOOST_DI_INJECT(impl82, y82, y83, y84, y85, y86, y87, y88, y89, y90, y91) { } void dummy() override { } };
+struct i83 { virtual ~i83() = default; virtual void dummy() = 0; }; struct impl83 : i83 { BOOST_DI_INJECT(impl83, y83, y84, y85, y86, y87, y88, y89, y90, y91, y92) { } void dummy() override { } };
+struct i84 { virtual ~i84() = default; virtual void dummy() = 0; }; struct impl84 : i84 { BOOST_DI_INJECT(impl84, y84, y85, y86, y87, y88, y89, y90, y91, y92, y93) { } void dummy() override { } };
+struct i85 { virtual ~i85() = default; virtual void dummy() = 0; }; struct impl85 : i85 { BOOST_DI_INJECT(impl85, y85, y86, y87, y88, y89, y90, y91, y92, y93, y94) { } void dummy() override { } };
+struct i86 { virtual ~i86() = default; virtual void dummy() = 0; }; struct impl86 : i86 { BOOST_DI_INJECT(impl86, y86, y87, y88, y89, y90, y91, y92, y93, y94, y95) { } void dummy() override { } };
+struct i87 { virtual ~i87() = default; virtual void dummy() = 0; }; struct impl87 : i87 { BOOST_DI_INJECT(impl87, y87, y88, y89, y90, y91, y92, y93, y94, y95, y96) { } void dummy() override { } };
+struct i88 { virtual ~i88() = default; virtual void dummy() = 0; }; struct impl88 : i88 { BOOST_DI_INJECT(impl88, y88, y89, y90, y91, y92, y93, y94, y95, y96, y97) { } void dummy() override { } };
+struct i89 { virtual ~i89() = default; virtual void dummy() = 0; }; struct impl89 : i89 { BOOST_DI_INJECT(impl89, y89, y90, y91, y92, y93, y94, y95, y96, y97, y98) { } void dummy() override { } };
+struct i90 { virtual ~i90() = default; virtual void dummy() = 0; }; struct impl90 : i90 { BOOST_DI_INJECT(impl90, y90, y91, y92, y93, y94, y95, y96, y97, y98, y99) { } void dummy() override { } };
+struct i91 { virtual ~i91() = default; virtual void dummy() = 0; }; struct impl91 : i91 { BOOST_DI_INJECT(impl91, y91, y92, y93, y94, y95, y96, y97, y98, y99, y00) { } void dummy() override { } };
+struct i92 { virtual ~i92() = default; virtual void dummy() = 0; }; struct impl92 : i92 { BOOST_DI_INJECT(impl92, y92, y93, y94, y95, y96, y97, y98, y99, y00, y01) { } void dummy() override { } };
+struct i93 { virtual ~i93() = default; virtual void dummy() = 0; }; struct impl93 : i93 { BOOST_DI_INJECT(impl93, y93, y94, y95, y96, y97, y98, y99, y00, y01, y02) { } void dummy() override { } };
+struct i94 { virtual ~i94() = default; virtual void dummy() = 0; }; struct impl94 : i94 { BOOST_DI_INJECT(impl94, y94, y95, y96, y97, y98, y99, y00, y01, y02, y03) { } void dummy() override { } };
+struct i95 { virtual ~i95() = default; virtual void dummy() = 0; }; struct impl95 : i95 { BOOST_DI_INJECT(impl95, y95, y96, y97, y98, y99, y00, y01, y02, y03, y04) { } void dummy() override { } };
+struct i96 { virtual ~i96() = default; virtual void dummy() = 0; }; struct impl96 : i96 { BOOST_DI_INJECT(impl96, y96, y97, y98, y99, y00, y01, y02, y03, y04, y05) { } void dummy() override { } };
+struct i97 { virtual ~i97() = default; virtual void dummy() = 0; }; struct impl97 : i97 { BOOST_DI_INJECT(impl97, y97, y98, y99, y00, y01, y02, y03, y04, y05, y06) { } void dummy() override { } };
+struct i98 { virtual ~i98() = default; virtual void dummy() = 0; }; struct impl98 : i98 { BOOST_DI_INJECT(impl98, y98, y99, y00, y01, y02, y03, y04, y05, y06, y07) { } void dummy() override { } };
+struct i99 { virtual ~i99() = default; virtual void dummy() = 0; }; struct impl99 : i99 { BOOST_DI_INJECT(impl99, y99, y00, y01, y02, y03, y04, y05, y06, y07, y08) { } void dummy() override { } };
+
+struct c0 { BOOST_DI_INJECT(c0, std::unique_ptr<i00>, std::unique_ptr<i01>, std::unique_ptr<i02>, std::unique_ptr<i03>, std::unique_ptr<i04>, std::unique_ptr<i05>, std::unique_ptr<i06>, std::unique_ptr<i07>, std::unique_ptr<i08>, std::unique_ptr<i09>) { } };
+struct c1 { BOOST_DI_INJECT(c1, std::unique_ptr<i10>, std::unique_ptr<i11>, std::unique_ptr<i12>, std::unique_ptr<i13>, std::unique_ptr<i14>, std::unique_ptr<i15>, std::unique_ptr<i16>, std::unique_ptr<i17>, std::unique_ptr<i18>, std::unique_ptr<i19>) { } };
+struct c2 { BOOST_DI_INJECT(c2, std::unique_ptr<i20>, std::unique_ptr<i21>, std::unique_ptr<i22>, std::unique_ptr<i23>, std::unique_ptr<i24>, std::unique_ptr<i25>, std::unique_ptr<i26>, std::unique_ptr<i27>, std::unique_ptr<i28>, std::unique_ptr<i29>) { } };
+struct c3 { BOOST_DI_INJECT(c3, std::unique_ptr<i30>, std::unique_ptr<i31>, std::unique_ptr<i32>, std::unique_ptr<i33>, std::unique_ptr<i34>, std::unique_ptr<i35>, std::unique_ptr<i36>, std::unique_ptr<i37>, std::unique_ptr<i38>, std::unique_ptr<i39>) { } };
+struct c4 { BOOST_DI_INJECT(c4, std::unique_ptr<i40>, std::unique_ptr<i41>, std::unique_ptr<i42>, std::unique_ptr<i43>, std::unique_ptr<i44>, std::unique_ptr<i45>, std::unique_ptr<i46>, std::unique_ptr<i47>, std::unique_ptr<i48>, std::unique_ptr<i49>) { } };
+struct c5 { BOOST_DI_INJECT(c5, std::unique_ptr<i50>, std::unique_ptr<i51>, std::unique_ptr<i52>, std::unique_ptr<i53>, std::unique_ptr<i54>, std::unique_ptr<i55>, std::unique_ptr<i56>, std::unique_ptr<i57>, std::unique_ptr<i58>, std::unique_ptr<i59>) { } };
+struct c6 { BOOST_DI_INJECT(c6, std::unique_ptr<i60>, std::unique_ptr<i61>, std::unique_ptr<i62>, std::unique_ptr<i63>, std::unique_ptr<i64>, std::unique_ptr<i65>, std::unique_ptr<i66>, std::unique_ptr<i67>, std::unique_ptr<i68>, std::unique_ptr<i69>) { } };
+struct c7 { BOOST_DI_INJECT(c7, std::unique_ptr<i70>, std::unique_ptr<i71>, std::unique_ptr<i72>, std::unique_ptr<i73>, std::unique_ptr<i74>, std::unique_ptr<i75>, std::unique_ptr<i76>, std::unique_ptr<i77>, std::unique_ptr<i78>, std::unique_ptr<i79>) { } };
+struct c8 { BOOST_DI_INJECT(c8, std::unique_ptr<i80>, std::unique_ptr<i81>, std::unique_ptr<i82>, std::unique_ptr<i83>, std::unique_ptr<i84>, std::unique_ptr<i85>, std::unique_ptr<i86>, std::unique_ptr<i87>, std::unique_ptr<i88>, std::unique_ptr<i89>) { } };
+struct c9 { BOOST_DI_INJECT(c9, std::unique_ptr<i90>, std::unique_ptr<i91>, std::unique_ptr<i92>, std::unique_ptr<i93>, std::unique_ptr<i94>, std::unique_ptr<i95>, std::unique_ptr<i96>, std::unique_ptr<i97>, std::unique_ptr<i98>, std::unique_ptr<i99>) { } };
+
+struct small_complex { BOOST_DI_INJECT(small_complex, y99) { } };
+struct medium_complex { BOOST_DI_INJECT(medium_complex, c0) { } };
+struct huge_complex { BOOST_DI_INJECT(huge_complex, c0, c1, c2, c3, c4, c5, c6, c7, c8, c9) { } };
+
+#if defined(MODULE0)
+struct module0 {
+    EXPOSED_OR_AUTO(di::injector<c0>, auto) configure() const noexcept {
+        return di::make_injector(
+            BIND_INTERFACES0(
+                di::bind<i00, impl00>
+              , di::bind<i01, impl01>
+              , di::bind<i02, impl02>
+              , di::bind<i03, impl03>
+              , di::bind<i04, impl04>
+              , di::bind<i05, impl05>
+              , di::bind<i06, impl06>
+              , di::bind<i07, impl07>
+              , di::bind<i08, impl08>
+              , di::bind<i09, impl09>
+            )
+            BIND_OTHERS0(
+                di::bind<x00>.in(di::unique)
+              , di::bind<x01>.in(di::unique)
+              , di::bind<x02>.in(di::unique)
+              , di::bind<x03>.in(di::unique)
+              , di::bind<x04>.in(di::unique)
+              , di::bind<x05>.in(di::unique)
+              , di::bind<x06>.in(di::unique)
+              , di::bind<x07>.in(di::unique)
+              , di::bind<x08>.in(di::unique)
+              , di::bind<x09>.in(di::unique)
+              , di::bind<y00>.in(di::unique)
+              , di::bind<y01>.in(di::unique)
+              , di::bind<y02>.in(di::unique)
+              , di::bind<y03>.in(di::unique)
+              , di::bind<y04>.in(di::unique)
+              , di::bind<y05>.in(di::unique)
+              , di::bind<y06>.in(di::unique)
+              , di::bind<y07>.in(di::unique)
+              , di::bind<y08>.in(di::unique)
+              , di::bind<y09>.in(di::unique)
+          )
+        );
+    }
+};
+#endif
+
+#if defined(MODULE1)
+struct module1 {
+    EXPOSED_OR_AUTO(di::injector<c1>, auto) configure() const noexcept {
+        return di::make_injector(
+            BIND_INTERFACES1(
+                di::bind<i10, impl10>
+              , di::bind<i11, impl11>
+              , di::bind<i12, impl12>
+              , di::bind<i13, impl13>
+              , di::bind<i14, impl14>
+              , di::bind<i15, impl15>
+              , di::bind<i16, impl16>
+              , di::bind<i17, impl17>
+              , di::bind<i18, impl18>
+              , di::bind<i19, impl19>
+            )
+            BIND_OTHERS1(
+                di::bind<x10>.in(di::unique)
+              , di::bind<x11>.in(di::unique)
+              , di::bind<x12>.in(di::unique)
+              , di::bind<x13>.in(di::unique)
+              , di::bind<x14>.in(di::unique)
+              , di::bind<x15>.in(di::unique)
+              , di::bind<x16>.in(di::unique)
+              , di::bind<x17>.in(di::unique)
+              , di::bind<x18>.in(di::unique)
+              , di::bind<x19>.in(di::unique)
+              , di::bind<y10>.in(di::unique)
+              , di::bind<y11>.in(di::unique)
+              , di::bind<y12>.in(di::unique)
+              , di::bind<y13>.in(di::unique)
+              , di::bind<y14>.in(di::unique)
+              , di::bind<y15>.in(di::unique)
+              , di::bind<y16>.in(di::unique)
+              , di::bind<y17>.in(di::unique)
+              , di::bind<y18>.in(di::unique)
+              , di::bind<y19>.in(di::unique)
+            )
+        );
+    }
+};
+#endif
+
+#if defined(MODULE2)
+struct module2 {
+    EXPOSED_OR_AUTO(di::injector<c2>, auto) configure() const noexcept {
+        return di::make_injector(
+            BIND_INTERFACES2(
+                di::bind<i20, impl20>
+              , di::bind<i21, impl21>
+              , di::bind<i22, impl22>
+              , di::bind<i23, impl23>
+              , di::bind<i24, impl24>
+              , di::bind<i25, impl25>
+              , di::bind<i26, impl26>
+              , di::bind<i27, impl27>
+              , di::bind<i28, impl28>
+              , di::bind<i29, impl29>
+            )
+            BIND_OTHERS2(
+                di::bind<x20>.in(di::unique)
+              , di::bind<x21>.in(di::unique)
+              , di::bind<x22>.in(di::unique)
+              , di::bind<x23>.in(di::unique)
+              , di::bind<x24>.in(di::unique)
+              , di::bind<x25>.in(di::unique)
+              , di::bind<x26>.in(di::unique)
+              , di::bind<x27>.in(di::unique)
+              , di::bind<x28>.in(di::unique)
+              , di::bind<x29>.in(di::unique)
+              , di::bind<y20>.in(di::unique)
+              , di::bind<y21>.in(di::unique)
+              , di::bind<y22>.in(di::unique)
+              , di::bind<y23>.in(di::unique)
+              , di::bind<y24>.in(di::unique)
+              , di::bind<y25>.in(di::unique)
+              , di::bind<y26>.in(di::unique)
+              , di::bind<y27>.in(di::unique)
+              , di::bind<y28>.in(di::unique)
+              , di::bind<y29>.in(di::unique)
+            )
+        );
+    }
+};
+#endif
+
+#if defined(MODULE3)
+struct module3 {
+    EXPOSED_OR_AUTO(di::injector<c3>, auto) configure() const noexcept {
+        return di::make_injector(
+            BIND_INTERFACES3(
+                di::bind<i30, impl30>
+              , di::bind<i31, impl31>
+              , di::bind<i32, impl32>
+              , di::bind<i33, impl33>
+              , di::bind<i34, impl34>
+              , di::bind<i35, impl35>
+              , di::bind<i36, impl36>
+              , di::bind<i37, impl37>
+              , di::bind<i38, impl38>
+              , di::bind<i39, impl39>
+            )
+            BIND_OTHERS3(
+                di::bind<x30>.in(di::unique)
+              , di::bind<x31>.in(di::unique)
+              , di::bind<x32>.in(di::unique)
+              , di::bind<x33>.in(di::unique)
+              , di::bind<x34>.in(di::unique)
+              , di::bind<x35>.in(di::unique)
+              , di::bind<x36>.in(di::unique)
+              , di::bind<x37>.in(di::unique)
+              , di::bind<x38>.in(di::unique)
+              , di::bind<x39>.in(di::unique)
+              , di::bind<y30>.in(di::unique)
+              , di::bind<y31>.in(di::unique)
+              , di::bind<y32>.in(di::unique)
+              , di::bind<y33>.in(di::unique)
+              , di::bind<y34>.in(di::unique)
+              , di::bind<y35>.in(di::unique)
+              , di::bind<y36>.in(di::unique)
+              , di::bind<y37>.in(di::unique)
+              , di::bind<y38>.in(di::unique)
+              , di::bind<y39>.in(di::unique)
+            )
+        );
+    }
+};
+#endif
+
+#if defined(MODULE4)
+struct module4 {
+    EXPOSED_OR_AUTO(di::injector<c4>, auto) configure() const noexcept {
+        return di::make_injector(
+            BIND_INTERFACES4(
+                di::bind<i40, impl40>
+              , di::bind<i41, impl41>
+              , di::bind<i42, impl42>
+              , di::bind<i43, impl43>
+              , di::bind<i44, impl44>
+              , di::bind<i45, impl45>
+              , di::bind<i46, impl46>
+              , di::bind<i47, impl47>
+              , di::bind<i48, impl48>
+              , di::bind<i49, impl49>
+            )
+            BIND_OTHERS4(
+                di::bind<x40>.in(di::unique)
+              , di::bind<x41>.in(di::unique)
+              , di::bind<x42>.in(di::unique)
+              , di::bind<x43>.in(di::unique)
+              , di::bind<x44>.in(di::unique)
+              , di::bind<x45>.in(di::unique)
+              , di::bind<x46>.in(di::unique)
+              , di::bind<x47>.in(di::unique)
+              , di::bind<x48>.in(di::unique)
+              , di::bind<x49>.in(di::unique)
+              , di::bind<y40>.in(di::unique)
+              , di::bind<y41>.in(di::unique)
+              , di::bind<y42>.in(di::unique)
+              , di::bind<y43>.in(di::unique)
+              , di::bind<y44>.in(di::unique)
+              , di::bind<y45>.in(di::unique)
+              , di::bind<y46>.in(di::unique)
+              , di::bind<y47>.in(di::unique)
+              , di::bind<y48>.in(di::unique)
+              , di::bind<y49>.in(di::unique)
+            )
+        );
+    }
+};
+#endif
+
+#if defined(MODULE5)
+struct module5 {
+    EXPOSED_OR_AUTO(di::injector<c5>, auto) configure() const noexcept {
+        return di::make_injector(
+            BIND_INTERFACES5(
+                di::bind<i50, impl50>
+              , di::bind<i51, impl51>
+              , di::bind<i52, impl52>
+              , di::bind<i53, impl53>
+              , di::bind<i54, impl54>
+              , di::bind<i55, impl55>
+              , di::bind<i56, impl56>
+              , di::bind<i57, impl57>
+              , di::bind<i58, impl58>
+              , di::bind<i59, impl59>
+            )
+            BIND_OTHERS5(
+                di::bind<x50>.in(di::unique)
+              , di::bind<x51>.in(di::unique)
+              , di::bind<x52>.in(di::unique)
+              , di::bind<x53>.in(di::unique)
+              , di::bind<x54>.in(di::unique)
+              , di::bind<x55>.in(di::unique)
+              , di::bind<x56>.in(di::unique)
+              , di::bind<x57>.in(di::unique)
+              , di::bind<x58>.in(di::unique)
+              , di::bind<x59>.in(di::unique)
+              , di::bind<y50>.in(di::unique)
+              , di::bind<y51>.in(di::unique)
+              , di::bind<y52>.in(di::unique)
+              , di::bind<y53>.in(di::unique)
+              , di::bind<y54>.in(di::unique)
+              , di::bind<y55>.in(di::unique)
+              , di::bind<y56>.in(di::unique)
+              , di::bind<y57>.in(di::unique)
+              , di::bind<y58>.in(di::unique)
+              , di::bind<y59>.in(di::unique)
+            )
+        );
+    }
+};
+#endif
+
+#if defined(MODULE6)
+struct module6 {
+    EXPOSED_OR_AUTO(di::injector<c6>, auto) configure() const noexcept {
+        return di::make_injector(
+            BIND_INTERFACES6(
+                di::bind<i60, impl60>
+              , di::bind<i61, impl61>
+              , di::bind<i62, impl62>
+              , di::bind<i63, impl63>
+              , di::bind<i64, impl64>
+              , di::bind<i65, impl65>
+              , di::bind<i66, impl66>
+              , di::bind<i67, impl67>
+              , di::bind<i68, impl68>
+              , di::bind<i69, impl69>
+            )
+            BIND_OTHERS6(
+                di::bind<x60>.in(di::unique)
+              , di::bind<x61>.in(di::unique)
+              , di::bind<x62>.in(di::unique)
+              , di::bind<x63>.in(di::unique)
+              , di::bind<x64>.in(di::unique)
+              , di::bind<x65>.in(di::unique)
+              , di::bind<x66>.in(di::unique)
+              , di::bind<x67>.in(di::unique)
+              , di::bind<x68>.in(di::unique)
+              , di::bind<x69>.in(di::unique)
+              , di::bind<y60>.in(di::unique)
+              , di::bind<y61>.in(di::unique)
+              , di::bind<y62>.in(di::unique)
+              , di::bind<y63>.in(di::unique)
+              , di::bind<y64>.in(di::unique)
+              , di::bind<y65>.in(di::unique)
+              , di::bind<y66>.in(di::unique)
+              , di::bind<y67>.in(di::unique)
+              , di::bind<y68>.in(di::unique)
+              , di::bind<y69>.in(di::unique)
+            )
+        );
+    }
+};
+#endif
+
+#if defined(MODULE7)
+struct module7 {
+    EXPOSED_OR_AUTO(di::injector<c7>, auto) configure() const noexcept {
+        return di::make_injector(
+            BIND_INTERFACES7(
+                di::bind<i70, impl70>
+              , di::bind<i71, impl71>
+              , di::bind<i72, impl72>
+              , di::bind<i73, impl73>
+              , di::bind<i74, impl74>
+              , di::bind<i75, impl75>
+              , di::bind<i76, impl76>
+              , di::bind<i77, impl77>
+              , di::bind<i78, impl78>
+              , di::bind<i79, impl79>
+            )
+            BIND_OTHERS7(
+                di::bind<x70>.in(di::unique)
+              , di::bind<x71>.in(di::unique)
+              , di::bind<x72>.in(di::unique)
+              , di::bind<x73>.in(di::unique)
+              , di::bind<x74>.in(di::unique)
+              , di::bind<x75>.in(di::unique)
+              , di::bind<x76>.in(di::unique)
+              , di::bind<x77>.in(di::unique)
+              , di::bind<x78>.in(di::unique)
+              , di::bind<x79>.in(di::unique)
+              , di::bind<y70>.in(di::unique)
+              , di::bind<y71>.in(di::unique)
+              , di::bind<y72>.in(di::unique)
+              , di::bind<y73>.in(di::unique)
+              , di::bind<y74>.in(di::unique)
+              , di::bind<y75>.in(di::unique)
+              , di::bind<y76>.in(di::unique)
+              , di::bind<y77>.in(di::unique)
+              , di::bind<y78>.in(di::unique)
+              , di::bind<y79>.in(di::unique)
+            )
+        );
+    }
+};
+#endif
+
+#if defined(MODULE8)
+struct module8 {
+    EXPOSED_OR_AUTO(di::injector<c8>, auto) configure() const noexcept {
+        return di::make_injector(
+            BIND_INTERFACES8(
+                di::bind<i80, impl80>
+              , di::bind<i81, impl81>
+              , di::bind<i82, impl82>
+              , di::bind<i83, impl83>
+              , di::bind<i84, impl84>
+              , di::bind<i85, impl85>
+              , di::bind<i86, impl86>
+              , di::bind<i87, impl87>
+              , di::bind<i88, impl88>
+              , di::bind<i89, impl89>
+            )
+            BIND_OTHERS8(
+                di::bind<x80>.in(di::unique)
+              , di::bind<x81>.in(di::unique)
+              , di::bind<x82>.in(di::unique)
+              , di::bind<x83>.in(di::unique)
+              , di::bind<x84>.in(di::unique)
+              , di::bind<x85>.in(di::unique)
+              , di::bind<x86>.in(di::unique)
+              , di::bind<x87>.in(di::unique)
+              , di::bind<x88>.in(di::unique)
+              , di::bind<x89>.in(di::unique)
+              , di::bind<y80>.in(di::unique)
+              , di::bind<y81>.in(di::unique)
+              , di::bind<y82>.in(di::unique)
+              , di::bind<y83>.in(di::unique)
+              , di::bind<y84>.in(di::unique)
+              , di::bind<y85>.in(di::unique)
+              , di::bind<y86>.in(di::unique)
+              , di::bind<y87>.in(di::unique)
+              , di::bind<y88>.in(di::unique)
+              , di::bind<y89>.in(di::unique)
+            )
+        );
+    }
+};
+#endif
+
+#if defined(MODULE9)
+struct module9 {
+    EXPOSED_OR_AUTO(di::injector<c9>, auto) configure() const noexcept {
+        return di::make_injector(
+            BIND_INTERFACES9(
+                di::bind<i90, impl90>
+              , di::bind<i91, impl91>
+              , di::bind<i92, impl92>
+              , di::bind<i93, impl93>
+              , di::bind<i94, impl94>
+              , di::bind<i95, impl95>
+              , di::bind<i96, impl96>
+              , di::bind<i97, impl97>
+              , di::bind<i98, impl98>
+              , di::bind<i99, impl99>
+            )
+            BIND_OTHERS9(
+                di::bind<x90>.in(di::unique)
+              , di::bind<x91>.in(di::unique)
+              , di::bind<x92>.in(di::unique)
+              , di::bind<x93>.in(di::unique)
+              , di::bind<x94>.in(di::unique)
+              , di::bind<x95>.in(di::unique)
+              , di::bind<x96>.in(di::unique)
+              , di::bind<x97>.in(di::unique)
+              , di::bind<x98>.in(di::unique)
+              , di::bind<x99>.in(di::unique)
+              , di::bind<y90>.in(di::unique)
+              , di::bind<y91>.in(di::unique)
+              , di::bind<y92>.in(di::unique)
+              , di::bind<y93>.in(di::unique)
+              , di::bind<y94>.in(di::unique)
+              , di::bind<y95>.in(di::unique)
+              , di::bind<y96>.in(di::unique)
+              , di::bind<y97>.in(di::unique)
+              , di::bind<y98>.in(di::unique)
+              , di::bind<y99>.in(di::unique)
+            )
+        );
+    }
+};
+#endif
 
 int main() {
     auto injector = di::make_injector(
-        di::bind<X0>.in(di::unique)
-      , di::bind<X1>.in(di::unique)
-      , di::bind<X2>.in(di::unique)
-      , di::bind<X3>.in(di::unique)
-      , di::bind<X4>.in(di::unique)
-      , di::bind<X5>.in(di::unique)
-      , di::bind<X6>.in(di::unique)
-      , di::bind<X7>.in(di::unique)
-      , di::bind<X8>.in(di::unique)
-      , di::bind<X9>.in(di::unique)
-      , di::bind<X10>.in(di::unique)
-      , di::bind<X11>.in(di::unique)
-      , di::bind<X12>.in(di::unique)
-      , di::bind<X13>.in(di::unique)
-      , di::bind<X14>.in(di::unique)
-      , di::bind<X15>.in(di::unique)
-      , di::bind<X16>.in(di::unique)
-      , di::bind<X17>.in(di::unique)
-      , di::bind<X18>.in(di::unique)
-      , di::bind<X19>.in(di::unique)
-      , di::bind<X20>.in(di::unique)
-      , di::bind<X21>.in(di::unique)
-      , di::bind<X22>.in(di::unique)
-      , di::bind<X23>.in(di::unique)
-      , di::bind<X24>.in(di::unique)
-      , di::bind<X25>.in(di::unique)
-      , di::bind<X26>.in(di::unique)
-      , di::bind<X27>.in(di::unique)
-      , di::bind<X28>.in(di::unique)
-      , di::bind<X29>.in(di::unique)
-      , di::bind<X30>.in(di::unique)
-      , di::bind<X31>.in(di::unique)
-      , di::bind<X32>.in(di::unique)
-      , di::bind<X33>.in(di::unique)
-      , di::bind<X34>.in(di::unique)
-      , di::bind<X35>.in(di::unique)
-      , di::bind<X36>.in(di::unique)
-      , di::bind<X37>.in(di::unique)
-      , di::bind<X38>.in(di::unique)
-      , di::bind<X39>.in(di::unique)
-      , di::bind<X40>.in(di::unique)
-      , di::bind<X41>.in(di::unique)
-      , di::bind<X42>.in(di::unique)
-      , di::bind<X43>.in(di::unique)
-      , di::bind<X44>.in(di::unique)
-      , di::bind<X45>.in(di::unique)
-      , di::bind<X46>.in(di::unique)
-      , di::bind<X47>.in(di::unique)
-      , di::bind<X48>.in(di::unique)
-      , di::bind<X49>.in(di::unique)
-      , di::bind<X50>.in(di::unique)
-      , di::bind<X51>.in(di::unique)
-      , di::bind<X52>.in(di::unique)
-      , di::bind<X53>.in(di::unique)
-      , di::bind<X54>.in(di::unique)
-      , di::bind<X55>.in(di::unique)
-      , di::bind<X56>.in(di::unique)
-      , di::bind<X57>.in(di::unique)
-      , di::bind<X58>.in(di::unique)
-      , di::bind<X59>.in(di::unique)
-      , di::bind<X60>.in(di::unique)
-      , di::bind<X61>.in(di::unique)
-      , di::bind<X62>.in(di::unique)
-      , di::bind<X63>.in(di::unique)
-      , di::bind<X64>.in(di::unique)
-      , di::bind<X65>.in(di::unique)
-      , di::bind<X66>.in(di::unique)
-      , di::bind<X67>.in(di::unique)
-      , di::bind<X68>.in(di::unique)
-      , di::bind<X69>.in(di::unique)
-      , di::bind<X70>.in(di::unique)
-      , di::bind<X71>.in(di::unique)
-      , di::bind<X72>.in(di::unique)
-      , di::bind<X73>.in(di::unique)
-      , di::bind<X74>.in(di::unique)
-      , di::bind<X75>.in(di::unique)
-      , di::bind<X76>.in(di::unique)
-      , di::bind<X77>.in(di::unique)
-      , di::bind<X78>.in(di::unique)
-      , di::bind<X79>.in(di::unique)
-      , di::bind<X80>.in(di::unique)
-      , di::bind<X81>.in(di::unique)
-      , di::bind<X82>.in(di::unique)
-      , di::bind<X83>.in(di::unique)
-      , di::bind<X84>.in(di::unique)
-      , di::bind<X85>.in(di::unique)
-      , di::bind<X86>.in(di::unique)
-      , di::bind<X87>.in(di::unique)
-      , di::bind<X88>.in(di::unique)
-      , di::bind<X89>.in(di::unique)
-      , di::bind<X90>.in(di::unique)
-      , di::bind<X91>.in(di::unique)
-      , di::bind<X92>.in(di::unique)
-      , di::bind<X93>.in(di::unique)
-      , di::bind<X94>.in(di::unique)
-      , di::bind<X95>.in(di::unique)
-      , di::bind<X96>.in(di::unique)
-      , di::bind<X97>.in(di::unique)
-      , di::bind<X98>.in(di::unique)
-      , di::bind<X99>.in(di::unique)
-      , di::bind<X100>.in(di::unique)
-      , di::bind<X101>.in(di::unique)
-      , di::bind<X102>.in(di::unique)
-      , di::bind<X103>.in(di::unique)
-      , di::bind<X104>.in(di::unique)
-      , di::bind<X105>.in(di::unique)
-      , di::bind<X106>.in(di::unique)
-      , di::bind<X107>.in(di::unique)
-      , di::bind<X108>.in(di::unique)
-      , di::bind<X109>.in(di::unique)
-      , di::bind<X110>.in(di::unique)
-      , di::bind<X111>.in(di::unique)
-      , di::bind<X112>.in(di::unique)
-      , di::bind<X113>.in(di::unique)
-      , di::bind<X114>.in(di::unique)
-      , di::bind<X115>.in(di::unique)
-      , di::bind<X116>.in(di::unique)
-      , di::bind<X117>.in(di::unique)
-      , di::bind<X118>.in(di::unique)
-      , di::bind<X119>.in(di::unique)
-      , di::bind<X120>.in(di::unique)
-      , di::bind<X121>.in(di::unique)
-      , di::bind<X122>.in(di::unique)
-      , di::bind<X123>.in(di::unique)
-      , di::bind<X124>.in(di::unique)
-      , di::bind<X125>.in(di::unique)
-      , di::bind<X126>.in(di::unique)
-      , di::bind<X127>.in(di::unique)
-      , di::bind<X128>.in(di::unique)
-      , di::bind<X129>.in(di::unique)
-      , di::bind<X130>.in(di::unique)
-      , di::bind<X131>.in(di::unique)
-      , di::bind<X132>.in(di::unique)
-      , di::bind<X133>.in(di::unique)
-      , di::bind<X134>.in(di::unique)
-      , di::bind<X135>.in(di::unique)
-      , di::bind<X136>.in(di::unique)
-      , di::bind<X137>.in(di::unique)
-      , di::bind<X138>.in(di::unique)
-      , di::bind<X139>.in(di::unique)
-      , di::bind<X140>.in(di::unique)
-      , di::bind<X141>.in(di::unique)
-      , di::bind<X142>.in(di::unique)
-      , di::bind<X143>.in(di::unique)
-      , di::bind<X144>.in(di::unique)
-      , di::bind<X145>.in(di::unique)
-      , di::bind<X146>.in(di::unique)
-      , di::bind<X147>.in(di::unique)
-      , di::bind<X148>.in(di::unique)
-      , di::bind<X149>.in(di::unique)
-      , di::bind<X150>.in(di::unique)
-      , di::bind<X151>.in(di::unique)
-      , di::bind<X152>.in(di::unique)
-      , di::bind<X153>.in(di::unique)
-      , di::bind<X154>.in(di::unique)
-      , di::bind<X155>.in(di::unique)
-      , di::bind<X156>.in(di::unique)
-      , di::bind<X157>.in(di::unique)
-      , di::bind<X158>.in(di::unique)
-      , di::bind<X159>.in(di::unique)
-      , di::bind<X160>.in(di::unique)
-      , di::bind<X161>.in(di::unique)
-      , di::bind<X162>.in(di::unique)
-      , di::bind<X163>.in(di::unique)
-      , di::bind<X164>.in(di::unique)
-      , di::bind<X165>.in(di::unique)
-      , di::bind<X166>.in(di::unique)
-      , di::bind<X167>.in(di::unique)
-      , di::bind<X168>.in(di::unique)
-      , di::bind<X169>.in(di::unique)
-      , di::bind<X170>.in(di::unique)
-      , di::bind<X171>.in(di::unique)
-      , di::bind<X172>.in(di::unique)
-      , di::bind<X173>.in(di::unique)
-      , di::bind<X174>.in(di::unique)
-      , di::bind<X175>.in(di::unique)
-      , di::bind<X176>.in(di::unique)
-      , di::bind<X177>.in(di::unique)
-      , di::bind<X178>.in(di::unique)
-      , di::bind<X179>.in(di::unique)
-      , di::bind<X180>.in(di::unique)
-      , di::bind<X181>.in(di::unique)
-      , di::bind<X182>.in(di::unique)
-      , di::bind<X183>.in(di::unique)
-      , di::bind<X184>.in(di::unique)
-      , di::bind<X185>.in(di::unique)
-      , di::bind<X186>.in(di::unique)
-      , di::bind<X187>.in(di::unique)
-      , di::bind<X188>.in(di::unique)
-      , di::bind<X189>.in(di::unique)
-      , di::bind<X190>.in(di::unique)
-      , di::bind<X191>.in(di::unique)
-      , di::bind<X192>.in(di::unique)
-      , di::bind<X193>.in(di::unique)
-      , di::bind<X194>.in(di::unique)
-      , di::bind<X195>.in(di::unique)
-      , di::bind<X196>.in(di::unique)
-      , di::bind<X197>.in(di::unique)
-      , di::bind<X198>.in(di::unique)
-      , di::bind<X199>.in(di::unique)
+        #if defined(MODULE0)
+            module0{}
+        #endif
+
+        #if defined(MODULE1)
+          , module1{}
+        #endif
+
+        #if defined(MODULE2)
+          , module2{}
+        #endif
+
+        #if defined(MODULE3)
+          , module3{}
+        #endif
+
+        #if defined(MODULE4)
+          , module4{}
+        #endif
+
+        #if defined(MODULE5)
+          , module5{}
+        #endif
+
+        #if defined(MODULE6)
+          , module6{}
+        #endif
+
+        #if defined(MODULE7)
+          , module7{}
+        #endif
+
+        #if defined(MODULE8)
+          , module8{}
+        #endif
+
+        #if defined(MODULE9)
+          , module9{}
+        #endif
     );
 
-    auto result = 0;
-
-    for (int i = 0; i < 1000; i++) {
-        result+=(injector.create<X0*>() != nullptr);
-        result+=(injector.create<X1*>() != nullptr);
-        result+=(injector.create<X2*>() != nullptr);
-        result+=(injector.create<X3*>() != nullptr);
-        result+=(injector.create<X4*>() != nullptr);
-        result+=(injector.create<X5*>() != nullptr);
-        result+=(injector.create<X6*>() != nullptr);
-        result+=(injector.create<X7*>() != nullptr);
-        result+=(injector.create<X8*>() != nullptr);
-        result+=(injector.create<X9*>() != nullptr);
-        result+=(injector.create<X10*>() != nullptr);
-        result+=(injector.create<X11*>() != nullptr);
-        result+=(injector.create<X12*>() != nullptr);
-        result+=(injector.create<X13*>() != nullptr);
-        result+=(injector.create<X14*>() != nullptr);
-        result+=(injector.create<X15*>() != nullptr);
-        result+=(injector.create<X16*>() != nullptr);
-        result+=(injector.create<X17*>() != nullptr);
-        result+=(injector.create<X18*>() != nullptr);
-        result+=(injector.create<X19*>() != nullptr);
-        result+=(injector.create<X20*>() != nullptr);
-        result+=(injector.create<X21*>() != nullptr);
-        result+=(injector.create<X22*>() != nullptr);
-        result+=(injector.create<X23*>() != nullptr);
-        result+=(injector.create<X24*>() != nullptr);
-        result+=(injector.create<X25*>() != nullptr);
-        result+=(injector.create<X26*>() != nullptr);
-        result+=(injector.create<X27*>() != nullptr);
-        result+=(injector.create<X28*>() != nullptr);
-        result+=(injector.create<X29*>() != nullptr);
-        result+=(injector.create<X30*>() != nullptr);
-        result+=(injector.create<X31*>() != nullptr);
-        result+=(injector.create<X32*>() != nullptr);
-        result+=(injector.create<X33*>() != nullptr);
-        result+=(injector.create<X34*>() != nullptr);
-        result+=(injector.create<X35*>() != nullptr);
-        result+=(injector.create<X36*>() != nullptr);
-        result+=(injector.create<X37*>() != nullptr);
-        result+=(injector.create<X38*>() != nullptr);
-        result+=(injector.create<X39*>() != nullptr);
-        result+=(injector.create<X40*>() != nullptr);
-        result+=(injector.create<X41*>() != nullptr);
-        result+=(injector.create<X42*>() != nullptr);
-        result+=(injector.create<X43*>() != nullptr);
-        result+=(injector.create<X44*>() != nullptr);
-        result+=(injector.create<X45*>() != nullptr);
-        result+=(injector.create<X46*>() != nullptr);
-        result+=(injector.create<X47*>() != nullptr);
-        result+=(injector.create<X48*>() != nullptr);
-        result+=(injector.create<X49*>() != nullptr);
-        result+=(injector.create<X50*>() != nullptr);
-        result+=(injector.create<X51*>() != nullptr);
-        result+=(injector.create<X52*>() != nullptr);
-        result+=(injector.create<X53*>() != nullptr);
-        result+=(injector.create<X54*>() != nullptr);
-        result+=(injector.create<X55*>() != nullptr);
-        result+=(injector.create<X56*>() != nullptr);
-        result+=(injector.create<X57*>() != nullptr);
-        result+=(injector.create<X58*>() != nullptr);
-        result+=(injector.create<X59*>() != nullptr);
-        result+=(injector.create<X60*>() != nullptr);
-        result+=(injector.create<X61*>() != nullptr);
-        result+=(injector.create<X62*>() != nullptr);
-        result+=(injector.create<X63*>() != nullptr);
-        result+=(injector.create<X64*>() != nullptr);
-        result+=(injector.create<X65*>() != nullptr);
-        result+=(injector.create<X66*>() != nullptr);
-        result+=(injector.create<X67*>() != nullptr);
-        result+=(injector.create<X68*>() != nullptr);
-        result+=(injector.create<X69*>() != nullptr);
-        result+=(injector.create<X70*>() != nullptr);
-        result+=(injector.create<X71*>() != nullptr);
-        result+=(injector.create<X72*>() != nullptr);
-        result+=(injector.create<X73*>() != nullptr);
-        result+=(injector.create<X74*>() != nullptr);
-        result+=(injector.create<X75*>() != nullptr);
-        result+=(injector.create<X76*>() != nullptr);
-        result+=(injector.create<X77*>() != nullptr);
-        result+=(injector.create<X78*>() != nullptr);
-        result+=(injector.create<X79*>() != nullptr);
-        result+=(injector.create<X80*>() != nullptr);
-        result+=(injector.create<X81*>() != nullptr);
-        result+=(injector.create<X82*>() != nullptr);
-        result+=(injector.create<X83*>() != nullptr);
-        result+=(injector.create<X84*>() != nullptr);
-        result+=(injector.create<X85*>() != nullptr);
-        result+=(injector.create<X86*>() != nullptr);
-        result+=(injector.create<X87*>() != nullptr);
-        result+=(injector.create<X88*>() != nullptr);
-        result+=(injector.create<X89*>() != nullptr);
-        result+=(injector.create<X90*>() != nullptr);
-        result+=(injector.create<X91*>() != nullptr);
-        result+=(injector.create<X92*>() != nullptr);
-        result+=(injector.create<X93*>() != nullptr);
-        result+=(injector.create<X94*>() != nullptr);
-        result+=(injector.create<X95*>() != nullptr);
-        result+=(injector.create<X96*>() != nullptr);
-        result+=(injector.create<X97*>() != nullptr);
-        result+=(injector.create<X98*>() != nullptr);
-        result+=(injector.create<X99*>() != nullptr);
-        result+=(injector.create<X100*>() != nullptr);
-        result+=(injector.create<X101*>() != nullptr);
-        result+=(injector.create<X102*>() != nullptr);
-        result+=(injector.create<X103*>() != nullptr);
-        result+=(injector.create<X104*>() != nullptr);
-        result+=(injector.create<X105*>() != nullptr);
-        result+=(injector.create<X106*>() != nullptr);
-        result+=(injector.create<X107*>() != nullptr);
-        result+=(injector.create<X108*>() != nullptr);
-        result+=(injector.create<X109*>() != nullptr);
-        result+=(injector.create<X110*>() != nullptr);
-        result+=(injector.create<X111*>() != nullptr);
-        result+=(injector.create<X112*>() != nullptr);
-        result+=(injector.create<X113*>() != nullptr);
-        result+=(injector.create<X114*>() != nullptr);
-        result+=(injector.create<X115*>() != nullptr);
-        result+=(injector.create<X116*>() != nullptr);
-        result+=(injector.create<X117*>() != nullptr);
-        result+=(injector.create<X118*>() != nullptr);
-        result+=(injector.create<X119*>() != nullptr);
-        result+=(injector.create<X120*>() != nullptr);
-        result+=(injector.create<X121*>() != nullptr);
-        result+=(injector.create<X122*>() != nullptr);
-        result+=(injector.create<X123*>() != nullptr);
-        result+=(injector.create<X124*>() != nullptr);
-        result+=(injector.create<X125*>() != nullptr);
-        result+=(injector.create<X126*>() != nullptr);
-        result+=(injector.create<X127*>() != nullptr);
-        result+=(injector.create<X128*>() != nullptr);
-        result+=(injector.create<X129*>() != nullptr);
-        result+=(injector.create<X130*>() != nullptr);
-        result+=(injector.create<X131*>() != nullptr);
-        result+=(injector.create<X132*>() != nullptr);
-        result+=(injector.create<X133*>() != nullptr);
-        result+=(injector.create<X134*>() != nullptr);
-        result+=(injector.create<X135*>() != nullptr);
-        result+=(injector.create<X136*>() != nullptr);
-        result+=(injector.create<X137*>() != nullptr);
-        result+=(injector.create<X138*>() != nullptr);
-        result+=(injector.create<X139*>() != nullptr);
-        result+=(injector.create<X140*>() != nullptr);
-        result+=(injector.create<X141*>() != nullptr);
-        result+=(injector.create<X142*>() != nullptr);
-        result+=(injector.create<X143*>() != nullptr);
-        result+=(injector.create<X144*>() != nullptr);
-        result+=(injector.create<X145*>() != nullptr);
-        result+=(injector.create<X146*>() != nullptr);
-        result+=(injector.create<X147*>() != nullptr);
-        result+=(injector.create<X148*>() != nullptr);
-        result+=(injector.create<X149*>() != nullptr);
-        result+=(injector.create<X150*>() != nullptr);
-        result+=(injector.create<X151*>() != nullptr);
-        result+=(injector.create<X152*>() != nullptr);
-        result+=(injector.create<X153*>() != nullptr);
-        result+=(injector.create<X154*>() != nullptr);
-        result+=(injector.create<X155*>() != nullptr);
-        result+=(injector.create<X156*>() != nullptr);
-        result+=(injector.create<X157*>() != nullptr);
-        result+=(injector.create<X158*>() != nullptr);
-        result+=(injector.create<X159*>() != nullptr);
-        result+=(injector.create<X160*>() != nullptr);
-        result+=(injector.create<X161*>() != nullptr);
-        result+=(injector.create<X162*>() != nullptr);
-        result+=(injector.create<X163*>() != nullptr);
-        result+=(injector.create<X164*>() != nullptr);
-        result+=(injector.create<X165*>() != nullptr);
-        result+=(injector.create<X166*>() != nullptr);
-        result+=(injector.create<X167*>() != nullptr);
-        result+=(injector.create<X168*>() != nullptr);
-        result+=(injector.create<X169*>() != nullptr);
-        result+=(injector.create<X170*>() != nullptr);
-        result+=(injector.create<X171*>() != nullptr);
-        result+=(injector.create<X172*>() != nullptr);
-        result+=(injector.create<X173*>() != nullptr);
-        result+=(injector.create<X174*>() != nullptr);
-        result+=(injector.create<X175*>() != nullptr);
-        result+=(injector.create<X176*>() != nullptr);
-        result+=(injector.create<X177*>() != nullptr);
-        result+=(injector.create<X178*>() != nullptr);
-        result+=(injector.create<X179*>() != nullptr);
-        result+=(injector.create<X180*>() != nullptr);
-        result+=(injector.create<X181*>() != nullptr);
-        result+=(injector.create<X182*>() != nullptr);
-        result+=(injector.create<X183*>() != nullptr);
-        result+=(injector.create<X184*>() != nullptr);
-        result+=(injector.create<X185*>() != nullptr);
-        result+=(injector.create<X186*>() != nullptr);
-        result+=(injector.create<X187*>() != nullptr);
-        result+=(injector.create<X188*>() != nullptr);
-        result+=(injector.create<X189*>() != nullptr);
-        result+=(injector.create<X190*>() != nullptr);
-        result+=(injector.create<X191*>() != nullptr);
-        result+=(injector.create<X192*>() != nullptr);
-        result+=(injector.create<X193*>() != nullptr);
-        result+=(injector.create<X194*>() != nullptr);
-        result+=(injector.create<X195*>() != nullptr);
-        result+=(injector.create<X196*>() != nullptr);
-        result+=(injector.create<X197*>() != nullptr);
-        result+=(injector.create<X198*>() != nullptr);
-        result+=(injector.create<X199*>() != nullptr);
-    }
-
-    return result;
+    injector.create<COMPLEX>();
 }
 
