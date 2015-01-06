@@ -203,7 +203,6 @@ struct X197 { BOOST_DI_INJECT(X197, X19, X42, X61, X73, X99, X101, X106, X126, X
 struct X198 { BOOST_DI_INJECT(X198, X4, X15, X33, X48, X62, X87, X97, X99, X148, X160) {} };
 struct X199 { BOOST_DI_INJECT(X199, X17, X20, X33, X57, X67, X69, X80, X99, X122, X136) {} };
 
-
 int main() {
     auto injector = di::make_injector(
         di::bind<X0>.in(di::unique)

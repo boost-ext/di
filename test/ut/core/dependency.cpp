@@ -4,145 +4,119 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/cpp_0x/bindings/dependency.hpp"
+#include "boost/di/core/dependency.hpp"
 
-#include <typeinfo>
-#include <functional>
-#include <boost/test/unit_test.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/make_shared.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/int.hpp>
-#include <boost/type_traits/is_same.hpp>
+namespace boost { namespace di { namespace core {
 
-#include "boost/di/cpp_0x/aux_/config.hpp"
-#include "boost/di/cpp_0x/scopes/deduce.hpp"
+test is_dependency_types = [] {
+    expect(!is_dependency<void>{});
+    expect(!is_dependency<int>{});
+    expect(is_dependency<dependency<scopes::deduce, int>>{});
+    expect(is_dependency<dependency<scopes::deduce, double, double>>{});
+};
 
-#include "common/fakes/fake_scope.hpp"
+struct fake_scope {
+    static constexpr auto priority = false;
 
-namespace boost {
-namespace di {
-namespace bindings {
+    template<class T, class>
+    struct scope {
+        explicit scope(T object, int injector = 0)
+            : object(object), injector(injector)
+        { }
 
-BOOST_AUTO_TEST_CASE(ctor) {
-    dependency<fake_scope<>, int> dep(42);
-}
+        T object;
+        int injector = 0;
+    };
+};
 
-BOOST_AUTO_TEST_CASE(default_value) {
-    using dependency_t = dependency<fake_scope<>, int>;
+struct name { };
 
-    BOOST_CHECK((is_same<
-        detail::requires_<
-            bindings::type_traits::is_required_priority
-          , bindings::type_traits::is_required_type<int>
-        >
-      , dependency_t::bind
-    >::value));
-}
+test types = [] {
+    using dep = dependency<fake_scope, int, double, name>;
+    expect(std::is_same<fake_scope, typename dep::scope>{});
+    expect(std::is_same<int, typename dep::expected>{});
+    expect(std::is_same<double, typename dep::given>{});
+    expect(std::is_same<name, typename dep::name>{});
+};
 
-BOOST_AUTO_TEST_CASE(rebind_scope) {
-    BOOST_CHECK((
-        is_same<
-            dependency<
-                fake_scope<1>
-              , int
-              , int
-              , detail::requires_<is_same<mpl::_1, int>>
-            >
-          , dependency<
-                scopes::deduce
-              , int
-              , int
-              , detail::requires_<is_same<mpl::_1, int>>
-            >::rebind<fake_scope<1>>::other
-        >::value
-    ));
-}
+test def_ctor = [] {
+    dependency<scopes::deduce, int> dep;
+    (void)dep;
+};
 
-BOOST_AUTO_TEST_CASE(to_value_arithmetic) {
-    using expected = scopes::external<wrappers::value>;
-    using external = decltype(dependency<fake_scope<>, int>::to(int()));
-    using given = external::scope;
-    BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
-}
+test ctor = [] {
+    constexpr auto i = 42;
+    dependency<fake_scope, int> dep{i};
+    expect_eq(i, dep.object);
+};
 
-BOOST_AUTO_TEST_CASE(to_value_enum) {
-    enum e { };
-    using expected = scopes::external<wrappers::value>;
-    using external = decltype(dependency<fake_scope<>, e>::to(e()));
-    using given = external::scope;
-    BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
-}
+test ctor_injector = [] {
+    constexpr auto i = 42;
+    dependency<fake_scope, int> dep{0, i};
+    expect_eq(0, dep.object);
+    expect_eq(i, dep.injector);
+};
 
-BOOST_AUTO_TEST_CASE(to_value_text) {
-    using expected = scopes::external<wrappers::value>;
-    using external = decltype(dependency<fake_scope<>, std::string>::to(std::string()));
-    using given = external::scope;
-    BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
-}
+test named = [] {
+    using dep1 = dependency<scopes::deduce, int>;
+    expect(std::is_same<no_name, typename dep1::name>{});
 
-BOOST_AUTO_TEST_CASE(to_const_ref) {
-    struct c { } c_;
-    (void)c_;
-    using expected = scopes::external<wrappers::reference>;
-    using external = decltype(dependency<fake_scope<>, c>::to(cref(c_)));
-    using given = external::scope;
-    BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
-}
+    using dep2 = decltype(dep1{}.named(name{}));
+    expect(std::is_same<name, typename dep2::name>{});
+};
 
-BOOST_AUTO_TEST_CASE(to_std_const_ref) {
-    struct c { } c_;
-    (void)c_;
-    using expected = scopes::external<wrappers::reference>;
-    using external = decltype(dependency<fake_scope<>, c>::to(std::cref(c_)));
-    using given = external::scope;
-    BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
-}
+test in = [] {
+    using dep1 = dependency<fake_scope, int>;
+    expect(std::is_same<fake_scope, typename dep1::scope>{});
 
-BOOST_AUTO_TEST_CASE(to_ref) {
-    struct c { } c_;
-    c& c_ref_ = c_;
-    (void)c_ref_;
-    using expected = scopes::external<wrappers::reference>;
-    using external = decltype(dependency<fake_scope<>, c>::to(ref(c_ref_)));
-    using given = external::scope;
-    BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
-}
+    using dep2 = decltype(dep1{}.in(scopes::deduce{}));
+    expect(std::is_same<scopes::deduce, typename dep2::scope>{});
+};
 
-BOOST_AUTO_TEST_CASE(to_std_ref) {
-    struct c { } c_;
-    c& c_ref_ = c_;
-    (void)c_ref_;
-    using expected = scopes::external<wrappers::reference>;
-    using external = decltype(dependency<fake_scope<>, c>::to(std::ref(c_ref_)));
-    using given = external::scope;
-    BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
-}
+test to = [] {
+    using dep1 = dependency<scopes::deduce, int>;
+    expect(std::is_same<scopes::deduce, typename dep1::scope>{});
 
-BOOST_AUTO_TEST_CASE(to_shared_ptr) {
-    using expected = scopes::external<wrappers::shared>;
-    using external = decltype(dependency<fake_scope<>, int>::to(std::shared_ptr<int>()));
-    using given = external::scope;
-    BOOST_CHECK_EQUAL(&typeid(expected), &typeid(given));
-}
+    using dep2 = decltype(dep1{}.to(42));
+    expect(std::is_same<scopes::external, typename dep2::scope>{});
+    expect(std::is_same<int, typename dep2::expected>{});
+    expect(std::is_same<int, typename dep2::given>{});
 
-BOOST_AUTO_TEST_CASE(to_lambda_shared_ptr) {
-    using expected = scopes::external<wrappers::shared>;
-    auto given = dependency<fake_scope<>, int>::to([]{ return std::shared_ptr<int>(); });
-    using external = decltype(given);
-    BOOST_CHECK_EQUAL(&typeid(expected), &typeid(external::scope));
-}
+    int i = 42;
+    using dep3 = decltype(dep1{}.to(i));
+    expect(std::is_same<scopes::external, typename dep2::scope>{});
+    expect(std::is_same<int, typename dep2::expected>{});
+    expect(std::is_same<int, typename dep2::given>{});
+};
 
-int return_int(int i) { return i; }
+struct fake_injector {
+    using deps = void;
+    template<class T> T create() const noexcept { return {}; }
+};
 
-BOOST_AUTO_TEST_CASE(to_bind_int) {
-    using expected = scopes::external<wrappers::value>;
-    auto given = dependency<fake_scope<>, int>::to(std::bind(&return_int, 0));
-    using external = decltype(given);
-    BOOST_CHECK_EQUAL(&typeid(expected), &typeid(external::scope));
-}
+test to_with_configure = [] {
+    struct module {
+        fake_injector configure() const noexcept { return {}; }
+    };
 
-} // namespace bindings
-} // namespace di
-} // namespace boost
+    using dep1 = dependency<scopes::deduce, int>;
+    expect(std::is_same<scopes::deduce, typename dep1::scope>{});
+
+    using dep2 = decltype(dep1{}.to(module{}));
+    expect(std::is_same<scopes::exposed<scopes::deduce>, typename dep2::scope>{});
+    expect(std::is_same<int, typename dep2::expected>{});
+    expect(std::is_same<fake_injector, typename dep2::given>{});
+};
+
+test to_with_deps = [] {
+    using dep1 = dependency<scopes::deduce, int>;
+    expect(std::is_same<scopes::deduce, typename dep1::scope>{});
+
+    using dep2 = decltype(dep1{}.to(fake_injector{}));
+    expect(std::is_same<scopes::exposed<scopes::deduce>, typename dep2::scope>{});
+    expect(std::is_same<int, typename dep2::expected>{});
+    expect(std::is_same<fake_injector, typename dep2::given>{});
+};
+
+}}} // boost::di::core
 
