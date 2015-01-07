@@ -6,7 +6,7 @@ Boost.DI: C++ Dependency Injection
 
 **Download [current stable version (1.4)]().**
 
----
+===============================================
 
 > "Don't call us, we'll call you", Hollywood principle
 
