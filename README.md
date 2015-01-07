@@ -872,7 +872,7 @@ Boost.DI header                         | Time [s] / Size [kb]
 int main() { }                          |
 ```
 ```cpp
-legend:
+Legend:
     ctor    = raw constructor: c(int, int);
     inject  = inject constructor: BOOST_DI_INJECT(c, int, int);
     all     = all types exposed from module: auto configure();
@@ -884,12 +884,14 @@ legend:
 * 132 different types
 * 10 modules
 ```
+---
 [![medium complexity](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/medium_complexity.png)]()
 ```cpp
 * 1862039751439806464 instances created
 * 200 different types
 * 10 modules
 ```
+---
 [![big complexity](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/big_complexity.png)]()
 ```cpp
 * 5874638529236910091 instances created
