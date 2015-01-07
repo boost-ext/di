@@ -45,10 +45,10 @@ graph() {
              set grid
              set style data linespoints
              plot \"$1.dat\" \
-                  using 1:2 title \"Raw Constructor/auto\" \
-           , \"\" using 1:3 title \"BOOST_DI_INJECT/auto\" \
-           , \"\" using 1:4 title \"Raw Constructor/Exposed\" \
-           , \"\" using 1:5 title \"BOOST_DI_INJECT/Exposed\"
+                  using 1:2 title \"ctor/all\" \
+           , \"\" using 1:3 title \"inject/all\" \
+           , \"\" using 1:4 title \"ctor/exposed\" \
+           , \"\" using 1:5 title \"inject/exposed\"
     " > $1.pg
     `echo $1` > $1.dat
     chmod +x $1.pg
@@ -88,7 +88,7 @@ big_complexity() {
     done
 }
 
-graph small_complexity "small complexity\\\n\\\n4248897537 instances created\\\n132 different types\\\n10 modules"
-graph medium_complexity "medium complexity\\\n\\\n1862039751439806464 instances created\\\n 200 different types\\\n10 modules"
-graph big_complexity "big complexity\\\n\\\n5874638529236910091 instances created\\\n310 different types\\\n100 different interfaces\\\n10 modules"
+graph small_complexity "small complexity | clang-3.4 -O2"
+graph medium_complexity "medium complexity | clang-3.4 -O2"
+graph big_complexity "big complexity | clang-3.4 -O2"
 

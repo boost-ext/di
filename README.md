@@ -862,16 +862,41 @@ int main() {                            | lea    0x30(%rsp),%rsi                
 
 *
 
-> **[Compile-time performance (time clang++ -O2)](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/performance.html)**
+> **[Compile-time performance](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/performance.html)**
+* Environment
+    * x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
 ```cpp
 Boost.DI header                         | Time [s] / Size [kb]
 ----------------------------------------|-----------------------------------------
 #include <boost/di.hpp>                 | 0.25s / 6.2 kb
 int main() { }                          |
 ```
+```cpp
+legend:
+    ctor    = raw constructor: c(int, int);
+    inject  = inject constructor: BOOST_DI_INJECT(c, int, int);
+    all     = all types exposed from module: auto configure();
+    exposed = one type exposed from module: di::injector<c> configure();
+```
 [![small complexity](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/small_complexity.png)]()
+```cpp
+* 4248897537 instances created
+* 132 different types
+* 10 modules
+```
 [![medium complexity](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/medium_complexity.png)]()
+```cpp
+* 1862039751439806464 instances created
+* 200 different types
+* 10 modules
+```
 [![big complexity](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/big_complexity.png)]()
+```cpp
+* 5874638529236910091 instances created
+* 310 different types
+* 100 different interfaces
+* 10 modules
+```
 
 *
 
