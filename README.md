@@ -100,12 +100,11 @@ int main() {                            | int main() {
 * [Scopes](#4-building-mlpack-from-source)
 * [Modules](#5-running-mlpack-programs)
 * [Policies](#6-further-documentation)
-* [Providers](#6-further-documentation)
-
-* [Run-time performance](#6-further-documentation)
-* [Compile-time performance](#6-further-documentation)
-* [Error messages](#6-further-documentation)
-* [Configuration](#6-further-documentation)
+* [Providers]()
+* [Run-time performance]()
+* [Compile-time performance]()
+* [Error messages]()
+* [Configuration]()
 
 > Let's assume all examples below include `boost/di.hpp` header and define `di` namespace alias.
 ```cpp
