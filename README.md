@@ -113,12 +113,12 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 *
 
 > **[Injector](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)**
-[copy example]()
 ```cpp
 Create empty injector                   | Test
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector();    | assert(0 == injector.create<int>());
 ```
+[copy]()
 
 *
 
