@@ -873,8 +873,8 @@ int main() { }                          |
 ```
 ```cpp
 Legend:
-    ctor    = raw constructor: c(int, int);
-    inject  = inject constructor: BOOST_DI_INJECT(c, int, int);
+    ctor    = raw constructor: c(int i, double d);
+    inject  = inject constructor: BOOST_DI_INJECT(c, int i, double d);
     all     = all types exposed from module: auto configure();
     exposed = one type exposed from module: di::injector<c> configure();
 ```
