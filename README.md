@@ -129,7 +129,7 @@ auto injector = di::make_injector(      | auto object = injector.create<unique_p
     di::bind<i1, impl1>                 | assert(dynamic_cast<impl1*>(object.get()));
 );                                      |
 ```
-<p align="right">[copy]()</p>
+[<p style='text-align: right;'>copy</p>](#anchor)
 ```cpp
 Bind different interfaces to one        | Test
 implementation                          |
