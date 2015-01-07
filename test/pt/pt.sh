@@ -31,13 +31,13 @@ bind_all() {
 benchmark() {
     CTOR=`[ "$2" == "ctor" ] && echo -n "-DBOOST_DI_INJECT(type, ...)=type(__VA_ARGS__)"`
     EXPOSED_OR_AUTO=`[ "$3" == "auto" ] && echo -n "-DEXPOSED_OR_AUTO(t1, t2)=t2" || echo -n "-DEXPOSED_OR_AUTO(t1, t2)=t1"`
-    (time clang++ -O2 di.cpp -std=c++1y -I ../../include "$CTOR" "$EXPOSED_OR_AUTO" `$4` -DCOMPLEX=$1) 2>&1 | grep real | awk '{print $2}' | sed "s/0m\(.*\)s/\1/" | tr '\n' ' '
+    (time ls) 2>&1 | grep real | awk '{print $2}' | sed "s/0m\(.*\)s/\1/" | tr '\n' ' '
 }
 
 graph() {
     rm -f $1.pg $1.dat
-    echo -e "#!/usr/bin/gnuplot
-             set terminal png
+    `echo $1` > $1.dat
+    echo -e "set terminal png
              set xlabel \"Number of bindings\"
              set ylabel \"Time [s]\"
              set title \"$2\"
@@ -50,9 +50,7 @@ graph() {
            , \"\" using 1:4 title \"ctor/exposed\" \
            , \"\" using 1:5 title \"inject/exposed\"
     " > $1.pg
-    `echo $1` > $1.dat
-    chmod +x $1.pg
-    ./$1.pg > $1.png
+    gnuplot $1.pg > $1.png
 }
 
 small_complexity() {
