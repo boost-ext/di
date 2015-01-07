@@ -8,12 +8,11 @@
 #define BOOST_DI_FAKE_INJECTOR_HPP
 
 #include <typeinfo>
-
 #include "boost/di/aux_/type_traits.hpp"
 
 namespace boost { namespace di {
 
-template<typename TExpected = void>
+template<class TExpected = void>
 struct fake_injector {
     template<class T, class TParent>
     decltype(auto) create() const noexcept {

@@ -7,94 +7,20 @@
 #ifndef BOOST_DI_FAKE_DEPENDENCY_HPP
 #define BOOST_DI_FAKE_DEPENDENCY_HPP
 
-#include "boost/di/bindings/dependency.hpp"
+#include "boost/di/fwd.hpp"
+#include "common/fakes/fake_scope.hpp"
 
-#include "boost/di/named.hpp"
-#include "boost/di/bindings/detail/requires.hpp"
-#include "boost/di/bindings/detail/when.hpp"
-#include "boost/di/bindings/type_traits/is_required_name.hpp"
-#include "boost/di/bindings/type_traits/is_required_priority.hpp"
-#include "boost/di/bindings/type_traits/is_required_type.hpp"
+namespace boost { namespace di {
 
-#include <boost/mpl/if.hpp>
-
-namespace boost {
-namespace di {
-
-template<typename T, typename TName, typename TCallStack>
-struct get_bind
-    : bindings::detail::requires_<
-          bindings::type_traits::is_required_priority
-        , bindings::type_traits::is_required_type<T>
-        , bindings::type_traits::is_required_name<TName>
-        , bindings::detail::when_<TCallStack>
-      >
-{ };
-
-template<typename T, typename TName>
-struct get_bind<T, TName, mpl::vector0<>>
-    : bindings::detail::requires_<
-          bindings::type_traits::is_required_priority
-        , bindings::type_traits::is_required_type<T>
-        , bindings::type_traits::is_required_name<TName>
-      >
-{ };
-
-template<typename T, typename TCallStack>
-struct get_bind<T, no_name, TCallStack>
-    : bindings::detail::requires_<
-          bindings::type_traits::is_required_priority
-        , bindings::type_traits::is_required_type<T>
-        , bindings::detail::when_<TCallStack>
-      >
-{ };
-
-template<typename T>
-struct get_bind<T, no_name, mpl::vector0<>>
-    : bindings::detail::requires_<
-          bindings::type_traits::is_required_priority
-        , bindings::type_traits::is_required_type<T>
-      >
-{ };
-
-template<
-    typename TScope
-  , typename TExpected
-  , typename TGiven = TExpected
-  , typename TName = no_name
-  , typename TContext = mpl::vector0<>
-  , typename TBind = typename get_bind<TExpected, TName, TContext>::type
->
-struct fake_dependency
-{
-    typedef TScope scope;
-    typedef TExpected expected;
-    typedef TGiven given;
-    typedef TBind bind;
-
-    typedef typename bindings::dependency<
-        TScope
-      , TExpected
-      , TGiven
-      , TBind
-    > type;
-
-    template<
-        typename Expected = void
-      , typename Given = void
-    >
-    struct rebind
-    {
-        typedef fake_dependency<
-            TScope
-          , typename mpl::if_<is_same<Given, void>, TExpected, Expected>::type
-          , typename mpl::if_<is_same<Given, void>, TGiven, Given>::type
-        > other;
-    };
+template<class T, class TScope = fake_scope<>>
+struct fake_dependency : TScope::template scope<T, T> {
+    using expected = T;
+    using given = T;
+    using scope = TScope;
+    using name = no_name;
 };
 
-} // namespace di
-} // namespace boost
+}} // boost::di
 
 #endif
 

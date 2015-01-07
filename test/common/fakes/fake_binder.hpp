@@ -7,21 +7,12 @@
 #ifndef BOOST_DI_FAKE_BINDER_HPP
 #define BOOST_DI_FAKE_BINDER_HPP
 
-namespace boost {
-namespace di {
+namespace boost { namespace di {
 
-template<typename T>
-struct fake_binder
-{
-    template<typename, typename>
-    struct resolve
-    {
-        typedef T type;
-    };
-};
+template<class T>
+struct fake_binder { };
 
-} // namespace di
-} // namespace boost
+}} // boost::di
 
 #endif
 

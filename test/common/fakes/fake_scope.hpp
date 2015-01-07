@@ -4,93 +4,43 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#if !BOOST_PP_IS_ITERATING
+#ifndef BOOST_DI_FAKE_SCOPE_HPP
+#define BOOST_DI_FAKE_SCOPE_HPP
 
-#include <utility>
-#include <boost/type.hpp>
-#include <boost/function.hpp>
-#include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/is_same.hpp>
-
-#include <memory>
-#include "boost/di/type_traits/ctor_traits.hpp"
-
-namespace boost {
-namespace di {
+namespace boost { namespace di {
 
 struct fake_scope_entry { };
 struct fake_scope_exit { };
 
-template<int Priority = 0>
-struct fake_scope
-{
-    typedef mpl::int_<Priority> priority;
+template<bool Priority = false>
+struct fake_scope {
+    static constexpr auto priority = Priority;
 
-    template<typename T>
-    class wrapper
-    {
-    public:
-        wrapper(const std::shared_ptr<T>& obj) // non explicit
-            : obj_(obj)
-        { }
+    template<class T, class>
+    struct scope {
+        explicit scope(const T& = {}) { }
 
-        template<typename I>
-        std::shared_ptr<I> operator()(const type<std::shared_ptr<I>>&) const {
-            return obj_;
-        }
-
-        T operator()(const type<T>&) const {
-            if (!obj_) {
-                return T();
-            }
-            return *obj_;
-        }
-
-    private:
-        std::shared_ptr<T> obj_;
-    };
-
-    template<typename T, typename>
-    class scope
-    {
-    public:
-        typedef scope type;
-        typedef wrapper<T> result_type;
-
-        scope() { }
-
-        explicit scope(const T&) { }
-
-        void call(const fake_scope_entry&) {
+        void call(const fake_scope_entry&) noexcept {
             ++entry_calls();
         }
 
-        void call(const fake_scope_exit&) {
+        void call(const fake_scope_exit&) noexcept {
             ++exit_calls();
-        }
-
-        result_type create(const function<T*()>& f) {
-            if (entry_calls() > exit_calls()) {
-                return std::shared_ptr<T>(f());
-            }
-
-            return result_type(std::shared_ptr<T>());
         }
     };
 
-    static int& entry_calls() {
-        static int calls = 0;
+    static auto& entry_calls() {
+        static auto calls = 0;
         return calls;
     }
 
-    static int& exit_calls() {
-        static int calls = 0;
+    static auto& exit_calls() {
+        static auto calls = 0;
         return calls;
     }
 };
 
-} // namespace di
-} // namespace boost
+}} // boost::di
 
 #endif
 

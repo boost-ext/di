@@ -12,8 +12,7 @@
 #define static_assert(c, msg) \
     if (!c) { throw ::boost::di::assert_exception(#msg); }
 
-namespace boost {
-namespace di {
+namespace boost { namespace di {
 
 class assert_exception : public std::exception {
 public:
@@ -27,8 +26,7 @@ private:
     const char* msg_;
 };
 
-} // namespace di
-} // namespace boost
+}} // boost::di
 
 #endif
 
