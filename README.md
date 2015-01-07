@@ -118,7 +118,6 @@ Create empty injector                   | Test
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector();    | assert(0 == injector.create<int>());
 ```
-[copy]()
 
 *
 
@@ -130,6 +129,7 @@ auto injector = di::make_injector(      | auto object = injector.create<unique_p
     di::bind<i1, impl1>                 | assert(dynamic_cast<impl1*>(object.get()));
 );                                      |
 ```
+[copy]()
 ```cpp
 Bind different interfaces to one        | Test
 implementation                          |
@@ -140,6 +140,7 @@ auto injector = di::make_injector(      | auto object1 = injector.create<shared_
                                         | assert(dynamic_cast<impl*>(object2.get()));
                                         | assert(object1 == object2);
 ```
+[copy]()
 ```cpp
 Bind type to compile time value         | Test
 ----------------------------------------|-----------------------------------------
