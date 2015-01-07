@@ -1,8 +1,11 @@
-[![Build Status](https://travis-ci.org/krzysztof-jusiak/di.svg?branch=cpp14)](https://travis-ci.org/krzysztof-jusiak/di)
-[![Coverage Status](https://img.shields.io/coveralls/nlohmann/json.svg)](https://coveralls.io/r/krzysztof-jusiak/di)
-[![Github Issues](https://img.shields.io/github/issues/nlohmann/json.svg)](http://github.com/krzysztof-jusiak/di/issues)
+Boost.DI: C++ Dependency Injection
+===============================================
 
-### C++ Dependency Injection
+[![Build Status](https://travis-ci.org/krzysztof-jusiak/di.svg?branch=cpp14)](https://travis-ci.org/krzysztof-jusiak/di)
+[![Github Issues](https://img.shields.io/github/issues/krzysztof-jusiak/json.svg)](http://github.com/krzysztof-jusiak/di/issues)
+
+**Download [current stable version (1.0.11)](http://www.mlpack.org/files/mlpack-1.0.11.tar.gz).**
+
 > "Don't call us, we'll call you", Hollywood principle
 
 Dependency injection is a programming practice providing required instances to an object.
@@ -36,9 +39,9 @@ dependencies injection.
 
 * Reduces boilerplate code (no factories, no objects creation in specific order)
 * Reduces cost of maintenance effort (constructor signature change won't affect di configuration)
-* Reduces testing effort (automatic mocks Injector)
+* Reduces testing effort (automatic mocks injector)
 * Gives better control of what and how is created (policies, providers)
-* Gives better understanding about objects hierarchy (Types creation graph)
+* Gives better understanding about objects hierarchy (types creation graph)
 
 ```cpp
 Manual Dependency Injection             | Boost.DI
@@ -61,10 +64,10 @@ int main() {                            | int main() {
 **How To Start?**
 
 * Get C++14 compliant compiler (Clang-3.4+, GCC-5.0+) with STL (memory, type\_traits headers) / Boost is not required
-* Read Quick User Guide (below)
-* [Read tutorial](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/tutorial.html)
-* [Read documentation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
-* [Report Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open) (optional)
+* [Read Quick User Guide](quick user guide)
+* [Read Tutorial](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/tutorial.html)
+* [Read Documentation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
+* [Report Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
 
 > To get started the only file you need is `di.hpp`:
 
@@ -90,6 +93,19 @@ int main() {                            | int main() {
 ```
 
 **Quick User Guide** | [Hello World](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/hello_world.cpp)
+
+* [Injector](#1-introduction)
+* [Bindings](#2-citation-details)
+* [Annotations](#3-dependencies)
+* [Scopes](#4-building-mlpack-from-source)
+* [Modules](#5-running-mlpack-programs)
+* [Policies](#6-further-documentation)
+* [Providers](#6-further-documentation)
+
+* [Run-time performance](#6-further-documentation)
+* [Compile-time performance](#6-further-documentation)
+* [Error messages](#6-further-documentation)
+* [Configuration](#6-further-documentation)
 
 > Let's assume all examples below include `boost/di.hpp` header and define `di` namespace alias.
 ```cpp
@@ -861,22 +877,6 @@ Boost.DI header                         | Time [s] / Size [kb]
 ----------------------------------------|-----------------------------------------
 #include <boost/di.hpp>                 | 0.25s / 6.2 kb
 int main() { }                          |
-```
-```cpp
-Number of bindings                      | Time [s] / Size [kb]
-----------------------------------------|-----------------------------------------
-```
-```cpp
-Scope deduction                         | Time [s] / Size [kb]
-----------------------------------------|-----------------------------------------
-```
-```cpp
-Automatic injection                     | Time [s] / Size [kb]
-----------------------------------------|-----------------------------------------
-```
-```cpp
-BOOST_DI_INJECT                         | Time [s] / Size [kb]
-----------------------------------------|-----------------------------------------
 ```
 
 *

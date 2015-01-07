@@ -321,11 +321,11 @@ struct small_complex { BOOST_DI_INJECT(small_complex, y99) { } };
 struct medium_complex { BOOST_DI_INJECT(medium_complex, c0) { } };
 struct huge_complex { BOOST_DI_INJECT(huge_complex, c0, c1, c2, c3, c4, c5, c6, c7, c8, c9) { } };
 
-#if defined(MODULE0)
-struct module0 {
+#if defined(MODULE1)
+struct module1 {
     EXPOSED_OR_AUTO(di::injector<c0>, auto) configure() const noexcept {
         return di::make_injector(
-            BIND_INTERFACES0(
+            BIND_INTERFACES1(
                 di::bind<i00, impl00>
               , di::bind<i01, impl01>
               , di::bind<i02, impl02>
@@ -337,7 +337,7 @@ struct module0 {
               , di::bind<i08, impl08>
               , di::bind<i09, impl09>
             )
-            BIND_OTHERS0(
+            BIND_OTHERS1(
                 di::bind<x00>.in(di::unique)
               , di::bind<x01>.in(di::unique)
               , di::bind<x02>.in(di::unique)
@@ -364,11 +364,11 @@ struct module0 {
 };
 #endif
 
-#if defined(MODULE1)
-struct module1 {
+#if defined(MODULE2)
+struct module2 {
     EXPOSED_OR_AUTO(di::injector<c1>, auto) configure() const noexcept {
         return di::make_injector(
-            BIND_INTERFACES1(
+            BIND_INTERFACES2(
                 di::bind<i10, impl10>
               , di::bind<i11, impl11>
               , di::bind<i12, impl12>
@@ -380,7 +380,7 @@ struct module1 {
               , di::bind<i18, impl18>
               , di::bind<i19, impl19>
             )
-            BIND_OTHERS1(
+            BIND_OTHERS2(
                 di::bind<x10>.in(di::unique)
               , di::bind<x11>.in(di::unique)
               , di::bind<x12>.in(di::unique)
@@ -407,11 +407,11 @@ struct module1 {
 };
 #endif
 
-#if defined(MODULE2)
-struct module2 {
+#if defined(MODULE3)
+struct module3 {
     EXPOSED_OR_AUTO(di::injector<c2>, auto) configure() const noexcept {
         return di::make_injector(
-            BIND_INTERFACES2(
+            BIND_INTERFACES3(
                 di::bind<i20, impl20>
               , di::bind<i21, impl21>
               , di::bind<i22, impl22>
@@ -423,7 +423,7 @@ struct module2 {
               , di::bind<i28, impl28>
               , di::bind<i29, impl29>
             )
-            BIND_OTHERS2(
+            BIND_OTHERS3(
                 di::bind<x20>.in(di::unique)
               , di::bind<x21>.in(di::unique)
               , di::bind<x22>.in(di::unique)
@@ -450,11 +450,11 @@ struct module2 {
 };
 #endif
 
-#if defined(MODULE3)
-struct module3 {
+#if defined(MODULE4)
+struct module4 {
     EXPOSED_OR_AUTO(di::injector<c3>, auto) configure() const noexcept {
         return di::make_injector(
-            BIND_INTERFACES3(
+            BIND_INTERFACES4(
                 di::bind<i30, impl30>
               , di::bind<i31, impl31>
               , di::bind<i32, impl32>
@@ -466,7 +466,7 @@ struct module3 {
               , di::bind<i38, impl38>
               , di::bind<i39, impl39>
             )
-            BIND_OTHERS3(
+            BIND_OTHERS4(
                 di::bind<x30>.in(di::unique)
               , di::bind<x31>.in(di::unique)
               , di::bind<x32>.in(di::unique)
@@ -493,11 +493,11 @@ struct module3 {
 };
 #endif
 
-#if defined(MODULE4)
-struct module4 {
+#if defined(MODULE5)
+struct module5 {
     EXPOSED_OR_AUTO(di::injector<c4>, auto) configure() const noexcept {
         return di::make_injector(
-            BIND_INTERFACES4(
+            BIND_INTERFACES5(
                 di::bind<i40, impl40>
               , di::bind<i41, impl41>
               , di::bind<i42, impl42>
@@ -509,7 +509,7 @@ struct module4 {
               , di::bind<i48, impl48>
               , di::bind<i49, impl49>
             )
-            BIND_OTHERS4(
+            BIND_OTHERS5(
                 di::bind<x40>.in(di::unique)
               , di::bind<x41>.in(di::unique)
               , di::bind<x42>.in(di::unique)
@@ -536,11 +536,11 @@ struct module4 {
 };
 #endif
 
-#if defined(MODULE5)
-struct module5 {
+#if defined(MODULE6)
+struct module6 {
     EXPOSED_OR_AUTO(di::injector<c5>, auto) configure() const noexcept {
         return di::make_injector(
-            BIND_INTERFACES5(
+            BIND_INTERFACES6(
                 di::bind<i50, impl50>
               , di::bind<i51, impl51>
               , di::bind<i52, impl52>
@@ -552,7 +552,7 @@ struct module5 {
               , di::bind<i58, impl58>
               , di::bind<i59, impl59>
             )
-            BIND_OTHERS5(
+            BIND_OTHERS6(
                 di::bind<x50>.in(di::unique)
               , di::bind<x51>.in(di::unique)
               , di::bind<x52>.in(di::unique)
@@ -579,11 +579,11 @@ struct module5 {
 };
 #endif
 
-#if defined(MODULE6)
-struct module6 {
+#if defined(MODULE7)
+struct module7 {
     EXPOSED_OR_AUTO(di::injector<c6>, auto) configure() const noexcept {
         return di::make_injector(
-            BIND_INTERFACES6(
+            BIND_INTERFACES7(
                 di::bind<i60, impl60>
               , di::bind<i61, impl61>
               , di::bind<i62, impl62>
@@ -595,7 +595,7 @@ struct module6 {
               , di::bind<i68, impl68>
               , di::bind<i69, impl69>
             )
-            BIND_OTHERS6(
+            BIND_OTHERS7(
                 di::bind<x60>.in(di::unique)
               , di::bind<x61>.in(di::unique)
               , di::bind<x62>.in(di::unique)
@@ -622,11 +622,11 @@ struct module6 {
 };
 #endif
 
-#if defined(MODULE7)
-struct module7 {
+#if defined(MODULE8)
+struct module8 {
     EXPOSED_OR_AUTO(di::injector<c7>, auto) configure() const noexcept {
         return di::make_injector(
-            BIND_INTERFACES7(
+            BIND_INTERFACES8(
                 di::bind<i70, impl70>
               , di::bind<i71, impl71>
               , di::bind<i72, impl72>
@@ -638,7 +638,7 @@ struct module7 {
               , di::bind<i78, impl78>
               , di::bind<i79, impl79>
             )
-            BIND_OTHERS7(
+            BIND_OTHERS8(
                 di::bind<x70>.in(di::unique)
               , di::bind<x71>.in(di::unique)
               , di::bind<x72>.in(di::unique)
@@ -665,11 +665,11 @@ struct module7 {
 };
 #endif
 
-#if defined(MODULE8)
-struct module8 {
+#if defined(MODULE9)
+struct module9 {
     EXPOSED_OR_AUTO(di::injector<c8>, auto) configure() const noexcept {
         return di::make_injector(
-            BIND_INTERFACES8(
+            BIND_INTERFACES9(
                 di::bind<i80, impl80>
               , di::bind<i81, impl81>
               , di::bind<i82, impl82>
@@ -681,7 +681,7 @@ struct module8 {
               , di::bind<i88, impl88>
               , di::bind<i89, impl89>
             )
-            BIND_OTHERS8(
+            BIND_OTHERS9(
                 di::bind<x80>.in(di::unique)
               , di::bind<x81>.in(di::unique)
               , di::bind<x82>.in(di::unique)
@@ -708,11 +708,11 @@ struct module8 {
 };
 #endif
 
-#if defined(MODULE9)
-struct module9 {
+#if defined(MODULE10)
+struct module10 {
     EXPOSED_OR_AUTO(di::injector<c9>, auto) configure() const noexcept {
         return di::make_injector(
-            BIND_INTERFACES9(
+            BIND_INTERFACES10(
                 di::bind<i90, impl90>
               , di::bind<i91, impl91>
               , di::bind<i92, impl92>
@@ -724,7 +724,7 @@ struct module9 {
               , di::bind<i98, impl98>
               , di::bind<i99, impl99>
             )
-            BIND_OTHERS9(
+            BIND_OTHERS10(
                 di::bind<x90>.in(di::unique)
               , di::bind<x91>.in(di::unique)
               , di::bind<x92>.in(di::unique)
@@ -753,12 +753,8 @@ struct module9 {
 
 int main() {
     auto injector = di::make_injector(
-        #if defined(MODULE0)
-            module0{}
-        #endif
-
         #if defined(MODULE1)
-          , module1{}
+            module1{}
         #endif
 
         #if defined(MODULE2)
@@ -791,6 +787,10 @@ int main() {
 
         #if defined(MODULE9)
           , module9{}
+        #endif
+
+        #if defined(MODULE10)
+          , module10{}
         #endif
     );
 
