@@ -40,55 +40,55 @@ graph() {
              set terminal png
              set xlabel \"Number of bindings\"
              set ylabel \"Time [s]\"
-             set title \"$1\"
+             set title \"$2\"
              set key reverse Left outside
              set grid
              set style data linespoints
              plot \"$1.dat\" \
-                  using 1:2 title \"ctor/auto\" \
-           , \"\" using 1:3 title \"inject/auto\" \
-           , \"\" using 1:4 title \"ctor/exposed\" \
-           , \"\" using 1:5 title \"inject/exposed\"
+                  using 1:2 title \"Raw Constructor/auto\" \
+           , \"\" using 1:3 title \"BOOST_DI_INJECT/auto\" \
+           , \"\" using 1:4 title \"Raw Constructor/Exposed\" \
+           , \"\" using 1:5 title \"BOOST_DI_INJECT/Exposed\"
     " > $1.pg
     `echo $1` > $1.dat
     chmod +x $1.pg
     ./$1.pg > $1.png
 }
 
-small_complex() {
+small_complexity() {
     for ((i=0; i<=10; ++i)); do
         echo -n "$((i*20)) "
-        benchmark small_complex ctor auto "bind_others $i"
-        benchmark small_complex inject auto "bind_others $i"
-        benchmark small_complex ctor exposed "bind_others $i"
-        benchmark small_complex inject exposed "bind_others $i"
+        benchmark small_complexity ctor auto "bind_others $i"
+        benchmark small_complexity inject auto "bind_others $i"
+        benchmark small_complexity ctor exposed "bind_others $i"
+        benchmark small_complexity inject exposed "bind_others $i"
         echo
     done
 }
 
-medium_complex() {
+medium_complexity() {
     for ((i=0; i<=10; ++i)); do
         echo -n "$((i*20)) "
-        benchmark medium_complex ctor auto "bind_others $i"
-        benchmark medium_complex inject auto "bind_others $i"
-        benchmark medium_complex ctor exposed "bind_others $i"
-        benchmark medium_complex inject exposed "bind_others $i"
+        benchmark medium_complexity ctor auto "bind_others $i"
+        benchmark medium_complexity inject auto "bind_others $i"
+        benchmark medium_complexity ctor exposed "bind_others $i"
+        benchmark medium_complexity inject exposed "bind_others $i"
         echo
     done
 }
 
-huge_complex() {
+big_complexity() {
     for ((i=0; i<=10; ++i)); do
         echo -n "$((100+(i*20))) "
-        benchmark huge_complex ctor auto "bind_interfaces_others 10 $i"
-        benchmark huge_complex ctor exposed "bind_interfaces_others 10 $i"
-        benchmark huge_complex inject auto "bind_interfaces_others 10 $i"
-        benchmark huge_complex inject exposed "bind_interfaces_others 10 $i"
+        benchmark big_complexity ctor auto "bind_interfaces_others 10 $i"
+        benchmark big_complexity ctor exposed "bind_interfaces_others 10 $i"
+        benchmark big_complexity inject auto "bind_interfaces_others 10 $i"
+        benchmark big_complexity inject exposed "bind_interfaces_others 10 $i"
         echo
     done
 }
 
-graph small_complex #4248897537 instances | 132 types | 10 modules
-graph medium_complex #1862039751439806464 instances | 200 types | 10 modules
-graph huge_complex #5874638529236910091 instances | 310 types | 100 interfaces | 10 modules
+graph small_complexity "small complexity\n\n4248897537 instances created\n132 different types\n10 modules"
+graph medium_complexity "medium complexity\n\n1862039751439806464 instances created\n 200 different types\n10 modules"
+graph big_complexity "big complexity\n\n5874638529236910091 instances created\n310 different types\n100 different interfaces\n10 modules"
 
