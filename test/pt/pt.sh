@@ -88,7 +88,7 @@ big_complexity() {
     done
 }
 
-graph small_complexity "small complexity\n\n4248897537 instances created\n132 different types\n10 modules"
-graph medium_complexity "medium complexity\n\n1862039751439806464 instances created\n 200 different types\n10 modules"
-graph big_complexity "big complexity\n\n5874638529236910091 instances created\n310 different types\n100 different interfaces\n10 modules"
+graph small_complexity "small complexity\\\n\\\n4248897537 instances created\\\n132 different types\\\n10 modules"
+graph medium_complexity "medium complexity\\\n\\\n1862039751439806464 instances created\\\n 200 different types\\\n10 modules"
+graph big_complexity "big complexity\\\n\\\n5874638529236910091 instances created\\\n310 different types\\\n100 different interfaces\\\n10 modules"
 

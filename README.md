@@ -869,9 +869,9 @@ Boost.DI header                         | Time [s] / Size [kb]
 #include <boost/di.hpp>                 | 0.25s / 6.2 kb
 int main() { }                          |
 ```
-[![small complex](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/small_complex.png)]()
-[![medium complex](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/medium_complex.png)]()
-[![huge complex](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/huge_complex.png)]()
+[![small complexity](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/small_complexity.png)]()
+[![medium complexity](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/medium_complexity.png)]()
+[![big complexity](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/big_complexity.png)]()
 
 *
 
