@@ -5,7 +5,6 @@ Boost.DI: C++ Dependency Injection
 [![Github Issues](https://img.shields.io/github/issues/krzysztof-jusiak/di.svg)](http://github.com/krzysztof-jusiak/di/issues)
 
 **Download [current stable version (1.4)]().**
-
 ===============================================
 
 > "Don't call us, we'll call you", Hollywood principle
