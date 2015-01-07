@@ -94,7 +94,7 @@ int main() {                            | int main() {
 
 **Quick User Guide** | [Hello World](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/hello_world.cpp)
 
-* [Injector](#Injector) | [Bindings](#2-citation-details) | [Annotations](#3-dependencies) | [Scopes](#4-building-mlpack-from-source) | [Modules](#5-running-mlpack-programs) | [Policies](#6-further-documentation) | [Providers]()
+* [Injector](#injector) | [Bindings](#2-citation-details) | [Annotations](#3-dependencies) | [Scopes](#4-building-mlpack-from-source) | [Modules](#5-running-mlpack-programs) | [Policies](#6-further-documentation) | [Providers]()
 * [Run-time performance]() | [Compile-time performance]()
 * [Error messages]() | [Configuration]()
 
@@ -112,7 +112,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 
 *
 
-> **[Injector](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)**
+> **[Injector](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)** <a id="injector"></a>
 ```cpp
 Create empty injector                   | Test
 ----------------------------------------|-----------------------------------------
@@ -129,7 +129,6 @@ auto injector = di::make_injector(      | auto object = injector.create<unique_p
     di::bind<i1, impl1>                 | assert(dynamic_cast<impl1*>(object.get()));
 );                                      |
 ```
-[]()<p style='text-align: right;'>[title](http://example.com), author(s), date, [OCLC ref](https://www.worldcat.org/oclc/)</p>
 ```cpp
 Bind different interfaces to one        | Test
 implementation                          |
@@ -140,7 +139,6 @@ auto injector = di::make_injector(      | auto object1 = injector.create<shared_
                                         | assert(dynamic_cast<impl*>(object2.get()));
                                         | assert(object1 == object2);
 ```
-[copy]()
 ```cpp
 Bind type to compile time value         | Test
 ----------------------------------------|-----------------------------------------
