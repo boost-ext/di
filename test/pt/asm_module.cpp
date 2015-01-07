@@ -23,7 +23,7 @@ int main() {
 /*
 Dump of assembler code for function main:
    0x00000000004007a0 <+0>:	mov    $0x2a,%eax
-   0x00000000004007a5 <+5>:	retq   
+   0x00000000004007a5 <+5>:	retq
 End of assembler dump.
 */
 
