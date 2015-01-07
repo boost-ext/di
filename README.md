@@ -870,8 +870,7 @@ Boost.DI header                         | Time [s] / Size [kb]
 int main() { }                          |
 ```
 [![small complex](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/small_complex.png)]()
-[![medium complex interfaces](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/medium_complex_interfaces.png)]()
-[![medium complex all](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/medium_complex_all.png)]()
+[![medium complex](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/medium_complex.png)]()
 [![huge complex](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/huge_complex.png)]()
 
 *

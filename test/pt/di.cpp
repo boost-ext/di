@@ -317,8 +317,8 @@ struct c7 { BOOST_DI_INJECT(c7, std::unique_ptr<i70>, std::unique_ptr<i71>, std:
 struct c8 { BOOST_DI_INJECT(c8, std::unique_ptr<i80>, std::unique_ptr<i81>, std::unique_ptr<i82>, std::unique_ptr<i83>, std::unique_ptr<i84>, std::unique_ptr<i85>, std::unique_ptr<i86>, std::unique_ptr<i87>, std::unique_ptr<i88>, std::unique_ptr<i89>) { } };
 struct c9 { BOOST_DI_INJECT(c9, std::unique_ptr<i90>, std::unique_ptr<i91>, std::unique_ptr<i92>, std::unique_ptr<i93>, std::unique_ptr<i94>, std::unique_ptr<i95>, std::unique_ptr<i96>, std::unique_ptr<i97>, std::unique_ptr<i98>, std::unique_ptr<i99>) { } };
 
-struct small_complex { BOOST_DI_INJECT(small_complex, y99) { } };
-struct medium_complex { BOOST_DI_INJECT(medium_complex, c0) { } };
+struct small_complex { BOOST_DI_INJECT(small_complex, y32) { } };
+struct medium_complex { BOOST_DI_INJECT(medium_complex, y99) { } };
 struct huge_complex { BOOST_DI_INJECT(huge_complex, c0, c1, c2, c3, c4, c5, c6, c7, c8, c9) { } };
 
 #if defined(MODULE1)
@@ -795,6 +795,5 @@ int main() {
     );
 
     injector.create<COMPLEX>();
-    std::cout << "D=" << i << std::endl;
 }
 
