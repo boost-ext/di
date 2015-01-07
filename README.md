@@ -94,17 +94,9 @@ int main() {                            | int main() {
 
 **Quick User Guide** | [Hello World](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/hello_world.cpp)
 
-* [Injector](#1-introduction)
-* [Bindings](#2-citation-details)
-* [Annotations](#3-dependencies)
-* [Scopes](#4-building-mlpack-from-source)
-* [Modules](#5-running-mlpack-programs)
-* [Policies](#6-further-documentation)
-* [Providers]()
-* [Run-time performance]()
-* [Compile-time performance]()
-* [Error messages]()
-* [Configuration]()
+* [Injector](#1-introduction) | [Bindings](#2-citation-details) | [Annotations](#3-dependencies) | [Scopes](#4-building-mlpack-from-source) | [Modules](#5-running-mlpack-programs) | [Policies](#6-further-documentation) | [Providers]()
+* [Run-time performance]() | [Compile-time performance]()
+* [Error messages]() | [Configuration]()
 
 > Let's assume all examples below include `boost/di.hpp` header and define `di` namespace alias.
 ```cpp
