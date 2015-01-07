@@ -866,9 +866,9 @@ int main() {                            | lea    0x30(%rsp),%rsi                
 * Environment
     * x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
 ```cpp
-Boost.DI header                         | Time [s] / Size [kb]
+Boost.DI header                         | Time [s]
 ----------------------------------------|-----------------------------------------
-#include <boost/di.hpp>                 | 0.25s / 6.2 kb
+#include <boost/di.hpp>                 | 0.165s
 int main() { }                          |
 ```
 ```cpp
