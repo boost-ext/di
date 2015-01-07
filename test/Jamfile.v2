@@ -88,6 +88,7 @@ test-suite ut : # unit tests
     #[ run-test c++1y : ut/wrappers/shared.cpp ]
     [ run-test c++1y : ut/bindings.cpp ]
     [ run-test c++1y : ut/config.cpp ]
+    [ run-test c++1y : ut/injector.cpp : ctor_injector_cpp ]
     [ run-test c++1y : ut/make_injector.cpp ]
 ;
 
