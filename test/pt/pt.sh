@@ -88,7 +88,7 @@ big_complexity() {
     done
 }
 
-graph small_complexity "small complexity | clang-3.4 -O2"
-graph medium_complexity "medium complexity | clang-3.4 -O2"
-graph big_complexity "big complexity | clang-3.4 -O2"
+graph small_complexity "Small complexity | clang-3.4 -O2"
+graph medium_complexity "Medium complexity | clang-3.4 -O2"
+graph big_complexity "Big complexity | clang-3.4 -O2"
 
