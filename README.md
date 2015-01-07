@@ -862,7 +862,7 @@ int main() {                            | lea    0x30(%rsp),%rsi                
 
 *
 
-> **[Compile-time performance](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/performance.html)**
+> **[Compile-time performance](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/performance.html)** | [Example](https://github.com/krzysztof-jusiak/di/blob/cpp14/test/pt/di.cpp)
 * Environment
     * x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
 ```cpp
