@@ -36,6 +36,8 @@
 
 #define BOOST_DI_AUX_UTILITY_HPP
 
+static unsigned long long i = 0;
+
 namespace boost { namespace di { namespace aux {
 
 struct none_t { };
@@ -1724,6 +1726,7 @@ template<
     template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const {
         auto&& config = injector_.config_;
+        i++;
         return config.provider().template get<T>(
             TInitialization{}
           , memory

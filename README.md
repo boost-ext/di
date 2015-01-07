@@ -1,10 +1,10 @@
 Boost.DI: C++ Dependency Injection
 ===============================================
 
-[![Build Status](https://travis-ci.org/krzysztof-jusiak/di.svg?branch=cpp14)](https://travis-ci.org/krzysztof-jusiak/di)
-[![Github Issues](https://img.shields.io/github/issues/krzysztof-jusiak/json.svg)](http://github.com/krzysztof-jusiak/di/issues)
+[![Build Status](https://img.shields.io/travis/krzysztof-jusiak/di/cpp14.svg)](https://travis-ci.org/krzysztof-jusiak/di)
+[![Github Issues](https://img.shields.io/github/issues/krzysztof-jusiak/di.svg)](http://github.com/krzysztof-jusiak/di/issues)
 
-**Download [current stable version (1.0.11)](http://www.mlpack.org/files/mlpack-1.0.11.tar.gz).**
+**Download [current stable version (1.4)]().**
 
 > "Don't call us, we'll call you", Hollywood principle
 

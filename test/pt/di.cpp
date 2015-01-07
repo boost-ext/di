@@ -795,5 +795,6 @@ int main() {
     );
 
     injector.create<COMPLEX>();
+    std::cout << "D=" << i << std::endl;
 }
 

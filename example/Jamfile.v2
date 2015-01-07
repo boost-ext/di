@@ -31,6 +31,7 @@ test-suite example :
                           modules/main.cpp
       : -Imodules -DBOOST_DI_CFG=config
     ]
+    [ run-example c++1y : annotations.cpp ]
     [ run-example c++1y : binding.cpp ]
     [ run-example c++1y : constructor_injection.cpp ]
     [ run-example c++1y : constructor_signature.cpp ]
@@ -43,7 +44,6 @@ test-suite example :
     [ run-example c++1y : hello_world.cpp ]
     [ run-example c++1y : modules.cpp ]
     [ run-example c++1y : multiple_interfaces.cpp ]
-    [ run-example c++1y : named.cpp ]
     #[ run-example c++1y : pool_provider.cpp ]
     [ run-example c++1y : provider.cpp ]
     [ run-example c++1y : types_dumper.cpp ]

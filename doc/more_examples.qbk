@@ -16,11 +16,11 @@
 * __more_examples_text_visitor__
 * __more_examples_modules_hpp_cpp__
 
-[h6 Named Parameters]
-[import ../example/named.cpp]
-[named]
+[h6 Annotations]
+[import ../example/annotations.cpp]
+[annotations]
 [table
-    [[Full code example: [@example/named.cpp]]]
+    [[Full code example: [@example/annotations.cpp]]]
 ]
 
 [h6 Provider]
