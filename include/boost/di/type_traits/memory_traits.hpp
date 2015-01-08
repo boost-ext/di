@@ -15,8 +15,9 @@
 
 namespace boost { namespace di { namespace type_traits {
 
-struct heap { };
 struct stack { };
+struct unique { };
+struct shared { };
 
 template<class T, class = void>
 struct memory_traits {
@@ -35,12 +36,12 @@ struct memory_traits<const T&> {
 
 template<class T>
 struct memory_traits<T*> {
-    using type = heap;
+    using type = unique;
 };
 
 template<class T>
 struct memory_traits<const T*> {
-    using type = heap;
+    using type = unique;
 };
 
 template<class T>
@@ -55,49 +56,49 @@ struct memory_traits<const T&&> {
 
 template<class T, class TDeleter>
 struct memory_traits<std::unique_ptr<T, TDeleter>> {
-    using type = heap;
+    using type = unique;
 };
 
 template<class T, class TDeleter>
 struct memory_traits<const std::unique_ptr<T, TDeleter>&> {
-    using type = heap;
+    using type = unique;
 };
 
 template<class T>
 struct memory_traits<std::shared_ptr<T>> {
-    using type = heap;
+    using type = shared;
 };
 
 template<class T>
 struct memory_traits<const std::shared_ptr<T>&> {
-    using type = heap;
+    using type = shared;
 };
 
 #if (__has_include(<boost/shared_ptr.hpp>))
     template<class T>
     struct memory_traits<boost::shared_ptr<T>> {
-        using type = heap;
+        using type = shared;
     };
 
     template<class T>
     struct memory_traits<const boost::shared_ptr<T>&> {
-        using type = heap;
+        using type = shared;
     };
 #endif
 
 template<class T>
 struct memory_traits<std::weak_ptr<T>> {
-    using type = heap;
+    using type = shared;
 };
 
 template<class T>
 struct memory_traits<const std::weak_ptr<T>&> {
-    using type = heap;
+    using type = shared;
 };
 
 template<class T>
 struct memory_traits<T, std::enable_if_t<std::is_polymorphic<T>{}>> {
-    using type = heap;
+    using type = unique;
 };
 
 template<class T>

@@ -39,7 +39,7 @@ public:
         template<class, class TProvider>
         auto create(const TProvider& provider) {
             if (in_scope_ && !object_) {
-                object_.reset(provider.get());
+                object_ = provider.get();
             }
             return wrappers::shared<T>{object_};
         }

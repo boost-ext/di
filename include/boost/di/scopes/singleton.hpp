@@ -21,7 +21,7 @@ public:
         template<class, class TProvider>
         auto create(const TProvider& provider) {
             if (!get_instance()) {
-                get_instance().reset(provider.get());
+                get_instance() = provider.get();
             }
             return wrappers::shared<T>{get_instance()};
         }

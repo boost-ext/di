@@ -22,7 +22,7 @@ public:
         auto create(const TProvider& provider) {
             using deleter = typename TProvider::deleter;
             if (!object_) {
-                object_.reset(provider.get());
+                object_ = provider.get();
             }
             return wrappers::shared<T>{object_};
         }

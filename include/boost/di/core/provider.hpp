@@ -45,7 +45,7 @@ template<
       , typename has_deleter<typename TInjector::config>::type
      >::type;
 
-    template<class TMemory = type_traits::heap>
+    template<class TMemory = type_traits::unique>
     auto get(const TMemory& memory = {}) const {
         auto&& config = injector_.config_;
         return config.provider().template get<typename TDependency::given>(

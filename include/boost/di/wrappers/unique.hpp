@@ -27,7 +27,12 @@ public:
     }
 
     template<class I>
-    inline operator I*() const noexcept { // only for compilation clean
+    inline operator std::unique_ptr<I>() const noexcept { // only for compilation clean
+        return {};
+    }
+
+    template<class I>
+    inline operator std::shared_ptr<I>() const noexcept { // only for compilation clean
         return {};
     }
 
@@ -36,25 +41,25 @@ private:
 };
 
 template<class T, class TDeleter>
-class unique<T*, TDeleter> {
+class unique<std::unique_ptr<T>, TDeleter> {
 public:
-    explicit unique(T* value) noexcept // non explicit
-        : value_(value)
+    explicit unique(std::unique_ptr<T> value) noexcept // non explicit
+        : value_(std::move(value))
     { }
 
     template<class I>
     inline operator I() const noexcept {
-        return *std::unique_ptr<I, TDeleter>{value_, TDeleter{}};
+        return *value_;
     }
 
     template<class I>
     inline operator I*() const noexcept {
-        return value_; // ownership transfer
+        return value_.release(); // ownership transfer
     }
 
     template<class I>
     inline operator const I*() const noexcept {
-        return value_; // ownership transfer
+        return value_.release(); // ownership transfer
     }
 
     template<class I>
@@ -71,11 +76,11 @@ public:
 
     template<class I>
     inline operator std::unique_ptr<I, TDeleter>() const noexcept {
-        return std::unique_ptr<I, TDeleter>{value_, TDeleter{}};
+        return std::move(value_);
     }
 
 private:
-    T* value_ = nullptr;
+    mutable std::unique_ptr<T> value_ = nullptr;
 };
 
 }}} // boost::di::wrappers

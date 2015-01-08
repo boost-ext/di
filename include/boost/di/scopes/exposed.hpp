@@ -6,6 +6,7 @@
 #ifndef BOOST_DI_SCOPES_EXPOSED_HPP
 #define BOOST_DI_SCOPES_EXPOSED_HPP
 
+#include <memory>
 #include "boost/di/scopes/deduce.hpp"
 
 namespace boost { namespace di { namespace scopes {
@@ -19,8 +20,9 @@ public:
     class scope {
         struct iprovider {
             virtual ~iprovider() = default;
-            virtual TExpected* get(const type_traits::heap&) const noexcept = 0;
-            virtual TExpected  get(const type_traits::stack&) const noexcept = 0;
+            virtual std::unique_ptr<TExpected> get(const type_traits::unique&) const noexcept = 0;
+            virtual std::shared_ptr<TExpected> get(const type_traits::shared&) const noexcept = 0;
+            virtual TExpected get(const type_traits::stack&) const noexcept = 0;
         };
 
         template<typename TInjector>
@@ -30,8 +32,12 @@ public:
                 : injector_(injector)
             { }
 
-            TExpected* get(const type_traits::heap&) const noexcept override {
-                return injector_.template create<TExpected*>();
+            std::unique_ptr<TExpected> get(const type_traits::unique&) const noexcept override {
+                return injector_.template create<std::unique_ptr<TExpected>>();
+            }
+
+            std::shared_ptr<TExpected> get(const type_traits::shared&) const noexcept override {
+                return injector_.template create<std::shared_ptr<TExpected>>();
             }
 
             TExpected get(const type_traits::stack&) const noexcept override {
@@ -46,7 +52,7 @@ public:
         struct provider_with_deleter {
             using deleter = TDeleter;
 
-            template<class TMemory = type_traits::heap>
+            template<class TMemory = type_traits::unique>
             auto get(const TMemory& memory = {}) const noexcept {
                 return provider_.get(memory);
             }
