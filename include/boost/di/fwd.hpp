@@ -14,7 +14,7 @@ class stack_over_heap;
 } // providers
 
 struct no_name {
-    const char* operator()() const noexcept { return "no_name"; }
+    const char* operator()() const noexcept { return nullptr; }
 };
 
 class config;

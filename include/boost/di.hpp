@@ -883,7 +883,7 @@ class stack_over_heap;
 } // providers
 
 struct no_name {
-    const char* operator()() const noexcept { return "no_name"; }
+    const char* operator()() const noexcept { return nullptr; }
 };
 
 class config;
@@ -901,7 +901,7 @@ template<class T>
 using is_injector =
     std::integral_constant<bool, has_deps<T>{} || has_configure<T>{}>;
 
-template<class TExpected, class TName>
+template<class, class>
 struct dependency_concept { };
 
 template<class T, class TDependency>

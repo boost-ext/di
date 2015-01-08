@@ -8,139 +8,74 @@
 //[uml_dumper
 //<-
 #include <iostream>
-#include <sstream>
-#include <vector>
 #include <memory>
-#include <boost/units/detail/utility.hpp>
+#include <vector>
+#include <typeinfo>
 //->
 #include <boost/di.hpp>
 
-//<-
-namespace utils = boost::units::detail;
+auto int_1 = []{ return "first int"; };
+auto int_2 = []{ return "second int"; };
 
 struct i0 { virtual ~i0() { }; };
 struct c0 : i0 { };
 struct c1 { c1(std::shared_ptr<i0>, int) { } };
-struct c2 { c2(int, double, char) { } };
+struct c2 { BOOST_DI_INJECT(c2, (named = int_1) int, (named = int_2) int, char) { } };
 struct c3 { c3(std::shared_ptr<c1>, std::shared_ptr<c2>) { } };
-//->
+
 namespace di = boost::di;
 
 /**
  * http://plantuml.sourceforge.net/objects.html
  * ./uml_dumper | java -jar plantuml.jar -p > uml_dumper.png
  */
-/*<<define `plant_uml` printer>>*/
-class plant_uml {
+class uml_dumper : public di::config {
 public:
-    void on_begin(std::stringstream& stream) const {
-        stream << "@startuml uml_dumper.png" << std::endl;
-    }
-
-    void on_end(std::stringstream& stream) const {
-        stream << "@enduml" << std::endl;
-    }
-
-    template<typename TDependency>
-    void on_call(std::stringstream& stream
-               , const TDependency& from
-               , const TDependency& to) const {
-        if (to.expected != to.given) {
-            stream << "\"" << to.expected << "\" <|-- \"" << to.given << "\"" << std::endl;
-        }
-
-        stream << "\"" << from.expected << "\" .. \"" << to.expected << "\"" << std::endl;
-    }
-};
-
-/*<<define `uml_dumper` with policy parameter>>*/
-template<typename TPolicy>
-class uml_dumper : public TPolicy {
-    struct dependency {
-        dependency(const std::string& expected
-                 , const std::string& given
-                 , const std::string& scope
-                 , std::size_t context_size)
-            : expected(expected)
-            , given(given)
-            , scope(scope)
-            , context_size(context_size) { }
-
-        std::string expected;
-        std::string given;
-        std::string scope;
-        std::size_t context_size;
-    };
-
-    uml_dumper& operator=(const uml_dumper&);
-
-public:
-    explicit uml_dumper(std::stringstream& stream)
-        : stream_(stream) {
-        this->on_begin(stream_);
+    uml_dumper() {
+        std::cout << "@startuml uml_dumper.png" << std::endl;
     }
 
     ~uml_dumper() {
-        this->on_end(stream_);
+        std::cout << "@enduml" << std::endl;
     }
 
-    /*<<Definition of the dumper call operator requirement>>*/
-    template<typename T>
-    void operator()(const T& data) const {
-        //auto call_stack_size = mpl::size<typename T::call_stack>::value;
-        auto call_stack_size = 0;
+    auto policies() noexcept {
+        /*<<define `uml dumper` directly in policies configuration>>*/
+        return di::make_policies(
+            [&](auto type, auto dependency, auto... ctor) {
+                using T = decltype(type);
+                using name = typename T::name;
+                using given = typename decltype(dependency)::given;
 
-/*        while (!context_.empty() && context_.back().context_size >= call_stack_size) {*/
-            //context_.pop_back();
-        /*}*/
+                auto root = v[i - 1];
+                if (root != &typeid(nullptr)) {
+                    std::cout << "\"" <<root->name() << "\" .. \"" << typeid(given).name()
+                              << (name{}() ? std::string(" [") + name{}() + std::string("]") : "")
+                              << "\"" << std::endl;
+                }
 
-        using dependency_t = std::remove_reference_t<decltype(data.dep)>;
-
-        context_.emplace_back(
-            dependency(
-                utils::demangle(typeid(typename dependency_t::expected).name())
-              , utils::demangle(typeid(typename dependency_t::given).name())
-              , utils::demangle(typeid(typename dependency_t::scope).name())
-              , call_stack_size
-            )
+                auto ctor_size = sizeof...(ctor);
+                while (ctor_size--) {
+                    v.insert((v.begin()+i), &typeid(given));
+                }
+                ++i;
+            }
         );
-
-        auto context_size = context_.size();
-
-        if (context_size > 1 /*&& context_size > (call_stack_size - 2)*/) {
-            this->on_call(
-                stream_
-              , context_[context_size - 2]
-              , context_[context_size - 1]
-            );
-        }
     }
 
-    std::stringstream& stream_;
-    mutable std::vector<dependency> context_;
-};
-
-std::stringstream stream_;
-
-class uml_config : public di::config {
-public:
-    auto& policies() const noexcept {
-        static auto s = di::make_policies(uml_dumper<plant_uml>{stream_});
-        return s;
-    }
-
-    uml_config
+private:
+    std::vector<const std::type_info*> v = { &typeid(nullptr) };
+    int i = 1;
 };
 
 int main() {
     /*<<define injector>>*/
-    auto injector = di::make_injector<uml_config>(
+    auto injector = di::make_injector<uml_dumper>(
         di::bind<i0, c0>
     );
 
-    /*<<iterate through created objects with `uml_dumper`>>*/
+    /*<<iterate through created objects with `types_dumper`>>*/
     injector.create<c3>();
-    std::clog << stream_.str();
 
     /*<<output [@images/uml_dumper.png [$images/uml_dumper.png [width 75%] [height 75%] ]]>>*/
     return 0;

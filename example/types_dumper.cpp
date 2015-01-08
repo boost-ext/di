@@ -10,13 +10,9 @@
 #include <iostream>
 #include <memory>
 #include <vector>
-#include <type_traits>
-#include <boost/units/detail/utility.hpp>
+#include <typeinfo>
 //->
 #include <boost/di.hpp>
-
-//<-
-namespace utils = boost::units::detail;
 
 auto int_1 = []{ return "first int"; };
 auto int_2 = []{ return "second int"; };
@@ -26,10 +22,11 @@ struct c0 : i0 { };
 struct c1 { c1(std::shared_ptr<i0>, int) { } };
 struct c2 { BOOST_DI_INJECT(c2, (named = int_1) int, (named = int_2) int, char) { } };
 struct c3 { c3(std::shared_ptr<c1>, std::shared_ptr<c2>) { } };
-//->
+
 namespace di = boost::di;
 
-class local_config : public di::config {
+/*<<define `types dumper` directly in configuration>>*/
+class types_dumper : public di::config {
 public:
     auto policies() noexcept {
         return di::make_policies(
@@ -44,9 +41,9 @@ public:
                     std::clog << "    ";
                 }
 
-                std::clog << "(" << utils::demangle(typeid(arg).name())
-                          << "[" << name{}() << "]"
-                          << " -> " << utils::demangle(typeid(given).name())
+                std::clog << "(" << typeid(arg).name()
+                          << (name{}() ? std::string("[") + name{}() + std::string("]") : "")
+                          << " -> " << typeid(given).name()
                           << ")" << std::endl;
 
                 auto ctor_size = sizeof...(ctor);
@@ -58,13 +55,14 @@ public:
         );
     }
 
+private:
     std::vector<int> v = { 0 };
     int i = 1;
 };
 
 int main() {
     /*<<define injector>>*/
-    auto injector = di::make_injector<local_config>(
+    auto injector = di::make_injector<types_dumper>(
         di::bind<i0, c0>
     );
 
@@ -72,14 +70,14 @@ int main() {
     injector.create<c3>();
 
     /*<< output [pre
-        (c3[no_name] -> c3)
-            (std::shared_ptr<c1>[no_name] -> c1)
-                (std::shared_ptr<i0>[no_name] -> c0)
-                (int[no_name] -> int)
-            (std::shared_ptr<c2>[no_name] -> c2)
-                (int[first int] -> int)
-                (int[second int] -> int)
-                (char[no_name] -> char)
+        (2c3 -> 2c3)
+            (St10shared_ptrI2c1E -> 2c1)
+                (St10shared_ptrI2i0E -> 2c0)
+                (i -> i)
+            (St10shared_ptrI2c2E -> 2c2)
+                (i[first int] -> i)
+                (i[second int] -> i)
+                (c -> c)
     ]>>*/
     return 0;
 }
