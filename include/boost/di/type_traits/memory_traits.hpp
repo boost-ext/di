@@ -53,13 +53,13 @@ struct memory_traits<const T&&> {
     using type = stack;
 };
 
-template<class T>
-struct memory_traits<std::unique_ptr<T>> {
+template<class T, class TDeleter>
+struct memory_traits<std::unique_ptr<T, TDeleter>> {
     using type = heap;
 };
 
-template<class T>
-struct memory_traits<const std::unique_ptr<T>&> {
+template<class T, class TDeleter>
+struct memory_traits<const std::unique_ptr<T, TDeleter>&> {
     using type = heap;
 };
 

@@ -20,6 +20,7 @@ public:
     public:
         template<class, class TProvider>
         auto create(const TProvider& provider) {
+            using deleter = typename TProvider::deleter;
             if (!object_) {
                 object_.reset(provider.get());
             }

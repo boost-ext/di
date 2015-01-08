@@ -11,6 +11,13 @@ namespace boost { namespace di { namespace type_traits {
 
 struct c { };
 
+template<class T>
+struct deleter {
+    void operator()(T* ptr) const noexcept {
+        delete ptr;
+    }
+};
+
 test traits = [] {
     expect(std::is_same<scopes::unique, scope_traits<int>::type>{});
     expect(std::is_same<scopes::unique, scope_traits<c>::type>{});
@@ -27,6 +34,7 @@ test traits = [] {
     expect(std::is_same<scopes::singleton, scope_traits<const std::weak_ptr<int>&>::type>{});
     expect(std::is_same<scopes::external, scope_traits<int&>::type>{});
     expect(std::is_same<scopes::unique, scope_traits<std::unique_ptr<int>>::type>{});
+    expect(std::is_same<scopes::unique, scope_traits<std::unique_ptr<int, deleter<int>>>::type>{});
     expect(std::is_same<scopes::singleton, scope_traits<std::shared_ptr<int>>::type>{});
     expect(std::is_same<scopes::singleton, scope_traits<std::weak_ptr<int>>::type>{});
     expect(std::is_same<scopes::unique, scope_traits<int&&>::type>{});

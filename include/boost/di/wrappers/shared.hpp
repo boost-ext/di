@@ -18,7 +18,7 @@ template<class T>
 class shared {
 public:
     explicit shared(const std::shared_ptr<T>& value) noexcept
-        : value_(value)
+        : value_{value}
     { }
 
     template<class I>

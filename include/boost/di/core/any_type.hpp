@@ -12,7 +12,7 @@
 
 namespace boost { namespace di { namespace core {
 
-BOOST_DI_HAS_TYPE(is_ref);
+BOOST_DI_HAS_TYPE(is_ref, is_ref);
 
 template<class TParent = void, class TInjector = aux::none_t>
 struct any_type {

@@ -10,7 +10,7 @@
 
 namespace boost { namespace di { namespace aux {
 
-BOOST_DI_HAS_TYPE(has);
+BOOST_DI_HAS_TYPE(has, has);
 
 test has_type = [] {
     struct a { };
@@ -42,10 +42,18 @@ test has_method = [] {
     expect(!has_call<call3, int, double, float>{});
 };
 
+template<class T>
+struct deleter {
+    void operator()(T* ptr) const noexcept {
+        delete ptr;
+    }
+};
+
 test is_smart_ptr_types = [] {
     expect(!is_smart_ptr<void>{});
     expect(!is_smart_ptr<int>{});
     expect(is_smart_ptr<std::unique_ptr<int>>{});
+    expect(is_smart_ptr<std::unique_ptr<int, deleter<int>>>{});
     expect(is_smart_ptr<std::shared_ptr<int>>{});
     expect(is_smart_ptr<std::weak_ptr<int>>{});
 #if (__has_include(<boost/shared_ptr.hpp>))

@@ -14,7 +14,7 @@
 
 namespace boost { namespace di { namespace wrappers {
 
-template<class T>
+template<class T, class>
 class unique {
 public:
     explicit unique(const T& value) noexcept // non explicit
@@ -35,8 +35,8 @@ private:
     T value_;
 };
 
-template<class T>
-class unique<T*> {
+template<class T, class TDeleter>
+class unique<T*, TDeleter> {
 public:
     explicit unique(T* value) noexcept // non explicit
         : value_(value)
@@ -44,7 +44,7 @@ public:
 
     template<class I>
     inline operator I() const noexcept {
-        return *std::unique_ptr<I>(value_);
+        return *std::unique_ptr<I, TDeleter>{value_, TDeleter{}};
     }
 
     template<class I>
@@ -70,8 +70,8 @@ public:
 #endif
 
     template<class I>
-    inline operator std::unique_ptr<I>() const noexcept {
-        return std::unique_ptr<I>{value_};
+    inline operator std::unique_ptr<I, TDeleter>() const noexcept {
+        return std::unique_ptr<I, TDeleter>{value_, TDeleter{}};
     }
 
 private:

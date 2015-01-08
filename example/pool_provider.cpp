@@ -19,14 +19,6 @@ struct interface { virtual ~interface() { }; };
 struct implementation : interface { };
 //->
 
-/*<define `example` class as usual>*/
-struct example {
-    explicit example(int i, std::unique_ptr<interface> up) {
-        assert(i == 42);
-        assert(dynamic_cast<implementation*>(up.get()));
-    }
-};
-
 /*<example `pool allocator`>*/
 template<class T>
 struct pool_allocator {
@@ -44,7 +36,22 @@ template<class T>
 void pool_allocator<T>::deallocate(T* ptr) {
     return ::operator delete(ptr);
 }
+
+template<class T>
+struct pool_deleter {
+    void operator()(T* ptr) const noexcept {
+        pool_allocator<T>::deallocate(ptr);
+    }
+};
 //->
+
+/*<define `example` class as usual>*/
+struct example {
+    explicit example(int i, std::unique_ptr<interface, pool_deleter<interface>> up) {
+        assert(i == 42);
+        assert(dynamic_cast<implementation*>(up.get()));
+    }
+};
 
 /*<define `pool provider`>*/
 class pool_provider : public di::config {
@@ -56,6 +63,9 @@ public:
         auto* memory = pool_allocator<T>::allocate();
         return new (memory) T(std::forward<TArgs>(args)...);
     }
+
+    template<class T>
+    using deleter = pool_deleter<T>;
 };
 
 int main() {

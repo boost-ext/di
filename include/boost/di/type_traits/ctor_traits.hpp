@@ -19,7 +19,7 @@ struct named { };
 struct direct { };
 struct uniform { };
 
-BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_INJECTOR);
+BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_INJECTOR, BOOST_DI_INJECTOR);
 
 template<class T, std::size_t>
 struct get_type {

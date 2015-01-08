@@ -52,13 +52,13 @@ struct scope_traits<const T&&> {
     using type = scopes::unique;
 };
 
-template<class T>
-struct scope_traits<std::unique_ptr<T>> {
+template<class T, class TDeleter>
+struct scope_traits<std::unique_ptr<T, TDeleter>> {
     using type = scopes::unique;
 };
 
-template<class T>
-struct scope_traits<const std::unique_ptr<T>&> {
+template<class T, class TDeleter>
+struct scope_traits<const std::unique_ptr<T, TDeleter>&> {
     using type = scopes::unique;
 };
 

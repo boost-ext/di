@@ -14,7 +14,7 @@
 
 namespace boost { namespace di { namespace scopes {
 
-BOOST_DI_HAS_TYPE(result_type);
+BOOST_DI_HAS_TYPE(result_type, result_type);
 BOOST_DI_HAS_METHOD(call_operator, operator());
 
 template<class T, class U>
@@ -25,18 +25,19 @@ using is_lambda_expr =
        !has_result_type<T>::value
     >;
 
-template<class T>
+template<class T, class TDeleter>
 struct wrapper_traits {
-    using type = wrappers::unique<T>;
+    using type = wrappers::unique<T, TDeleter>;
 };
 
-template<class T>
-struct wrapper_traits<std::shared_ptr<T>> {
+template<class T, class TDeleter>
+struct wrapper_traits<std::shared_ptr<T>, TDeleter> {
     using type = wrappers::shared<T>;
 };
 
-template<class T>
-using wrapper_traits_t = typename wrapper_traits<T>::type;
+template<class T, class TDeleter>
+using wrapper_traits_t =
+    typename wrapper_traits<T, TDeleter>::type;
 
 class external {
     struct injector {
@@ -46,20 +47,21 @@ class external {
 public:
     static constexpr auto priority = true;
 
-    template<class TExpected, class TGiven, class = void>
+    template<class TExpected, class, class = void>
     class scope {
     public:
-        explicit scope(const TGiven& object) noexcept
+        explicit scope(const TExpected& object) noexcept
             : object_(object)
         { }
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
-            return object_;
+            using deleter = typename TProvider::deleter;
+            return wrappers::unique<TExpected, deleter>{object_};
         }
 
     private:
-        wrappers::unique<TExpected> object_;
+        TExpected object_;
     };
 
     template<class TExpected, class TGiven>
@@ -89,11 +91,11 @@ public:
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
-            return object_;
+            return wrappers::shared<TGiven>{object_};
         }
 
     private:
-        wrappers::shared<TGiven> object_;
+        std::shared_ptr<TGiven> object_;
     };
 
     template<class TExpected, class TGiven>
@@ -113,7 +115,8 @@ public:
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
-            using wrapper = wrapper_traits_t<decltype(std::declval<TGiven>()())>;
+            using deleter = typename TProvider::deleter;
+            using wrapper = wrapper_traits_t<decltype(std::declval<TGiven>()()), deleter>;
             return wrapper{object_()};
         }
 
@@ -130,7 +133,8 @@ public:
 
         template<class, class TProvider>
         auto create(const TProvider& provider) const noexcept {
-            using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_))>;
+            using deleter = typename TProvider::deleter;
+            using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_)), deleter>;
             return wrapper{(object_)(provider.injector_)};
         }
 

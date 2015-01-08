@@ -14,12 +14,12 @@
     #include <boost/shared_ptr.hpp>
 #endif
 
-#define BOOST_DI_HAS_TYPE(name)                                     \
+#define BOOST_DI_HAS_TYPE(name, type_name)                          \
     template<class, class = void>                                   \
     struct has_##name : std::false_type { };                        \
                                                                     \
     template<class T>                                               \
-    struct has_##name<T, aux::void_t<typename T::name>>             \
+    struct has_##name<T, aux::void_t<typename T::type_name>>        \
         : std::true_type                                            \
     { };
 
@@ -40,8 +40,8 @@ namespace boost { namespace di { namespace aux {
 template<class>
 struct is_smart_ptr : std::false_type { };
 
-template<class T>
-struct is_smart_ptr<std::unique_ptr<T>>
+template<class T, class TDeleter>
+struct is_smart_ptr<std::unique_ptr<T, TDeleter>>
     : std::true_type
 { };
 

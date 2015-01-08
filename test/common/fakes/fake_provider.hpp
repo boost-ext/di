@@ -14,6 +14,8 @@ class fake_provider {
     struct memory { };
 
 public:
+    using deleter = std::default_delete<T>;
+
     template<class TMemory = memory>
     T* get(const TMemory& = {}) const noexcept {
         ++provide_calls();

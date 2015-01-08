@@ -19,7 +19,7 @@ public:
     class scope {
         struct iprovider {
             virtual ~iprovider() = default;
-            virtual TExpected* get(const type_traits::heap& = {}) const noexcept = 0;
+            virtual TExpected* get(const type_traits::heap&) const noexcept = 0;
             virtual TExpected  get(const type_traits::stack&) const noexcept = 0;
         };
 
@@ -42,6 +42,18 @@ public:
             TInjector injector_;
         };
 
+        template<class TDeleter>
+        struct provider_with_deleter {
+            using deleter = TDeleter;
+
+            template<class TMemory = type_traits::heap>
+            auto get(const TMemory& memory = {}) const noexcept {
+                return provider_.get(memory);
+            }
+
+            const iprovider& provider_;
+        };
+
     public:
         template<class TInjector>
         explicit scope(const TInjector& injector) noexcept
@@ -50,7 +62,10 @@ public:
 
         template<class T, class TProvider>
         auto create(const TProvider&) {
-            return scope_.template create<T>(*provider_);
+            using deleter = typename TProvider::deleter;
+            return scope_.template create<T>(
+                provider_with_deleter<deleter>{*provider_}
+            );
         }
 
     private:
