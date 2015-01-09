@@ -34,13 +34,13 @@
 [endsect]
 
 [section Binding]
-[import ../example/binding.cpp]
-[binding]
+[import ../example/bindings.cpp]
+[bindings]
 [endsect]
 
-[section Dynamic Binding]
-[import ../example/dynamic_binding.cpp]
-[dynamic_binding]
+[section Dynamic Bindings]
+[import ../example/dynamic_bindings.cpp]
+[dynamic_bindings]
 [table
     [[Full code example: [@example/dynamic_binding.cpp]]]
 ]
