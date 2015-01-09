@@ -10,7 +10,7 @@
 
 namespace boost { namespace di { namespace aux {
 
-BOOST_DI_HAS_TYPE(has, has);
+BOOST_DI_HAS_TYPE(has);
 
 test has_type = [] {
     struct a { };

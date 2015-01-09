@@ -14,12 +14,12 @@
     #include <boost/shared_ptr.hpp>
 #endif
 
-#define BOOST_DI_HAS_TYPE(name, type_name)                          \
+#define BOOST_DI_HAS_TYPE(name)                                     \
     template<class, class = void>                                   \
     struct has_##name : std::false_type { };                        \
                                                                     \
     template<class T>                                               \
-    struct has_##name<T, aux::void_t<typename T::type_name>>        \
+    struct has_##name<T, aux::void_t<typename T::name>>             \
         : std::true_type                                            \
     { };
 

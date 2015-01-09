@@ -48,18 +48,6 @@ public:
             TInjector injector_;
         };
 
-        template<class TDeleter>
-        struct provider_with_deleter {
-            using deleter = TDeleter;
-
-            template<class TMemory = type_traits::unique>
-            auto get(const TMemory& memory = {}) const noexcept {
-                return provider_.get(memory);
-            }
-
-            const iprovider& provider_;
-        };
-
     public:
         template<class TInjector>
         explicit scope(const TInjector& injector) noexcept
@@ -68,10 +56,7 @@ public:
 
         template<class T, class TProvider>
         auto create(const TProvider&) {
-            using deleter = typename TProvider::deleter;
-            return scope_.template create<T>(
-                provider_with_deleter<deleter>{*provider_}
-            );
+            return scope_.template create<T>(*provider_);
         }
 
     private:

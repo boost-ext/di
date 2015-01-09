@@ -27,7 +27,7 @@ template<class T, class TWrapper>
 struct wrapper {
     TWrapper wrapper_;
 
-    inline operator T() const noexcept {
+    inline operator T() noexcept {
         return wrapper_;
     }
 };
@@ -95,7 +95,7 @@ private:
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-        using provider_t = provider<dependency_t, T, ctor_t, injector>;
+        using provider_t = provider<given_t, T, ctor_t, injector>;
         policy<pool_t>::template call<T, TName, TIsRoot>(config_.policies(), dependency, ctor_t{});
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<

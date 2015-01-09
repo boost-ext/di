@@ -66,34 +66,34 @@ struct memory_traits<const std::unique_ptr<T, TDeleter>&> {
 
 template<class T>
 struct memory_traits<std::shared_ptr<T>> {
-    using type = shared;
+    using type = unique;
 };
 
 template<class T>
 struct memory_traits<const std::shared_ptr<T>&> {
-    using type = shared;
+    using type = unique;
 };
 
 #if (__has_include(<boost/shared_ptr.hpp>))
     template<class T>
     struct memory_traits<boost::shared_ptr<T>> {
-        using type = shared;
+        using type = unique;
     };
 
     template<class T>
     struct memory_traits<const boost::shared_ptr<T>&> {
-        using type = shared;
+        using type = unique;
     };
 #endif
 
 template<class T>
 struct memory_traits<std::weak_ptr<T>> {
-    using type = shared;
+    using type = unique;
 };
 
 template<class T>
 struct memory_traits<const std::weak_ptr<T>&> {
-    using type = shared;
+    using type = unique;
 };
 
 template<class T>

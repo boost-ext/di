@@ -22,8 +22,7 @@ public:
         template<class T, class TProvider>
         auto create(const TProvider& provider) const {
             using memory = type_traits::memory_traits_t<T>;
-            using deleter = typename TProvider::deleter;
-            using wrapper = wrappers::unique<decltype(provider.get(memory{})), deleter>;
+            using wrapper = wrappers::unique<decltype(provider.get(memory{}))>;
             return wrapper{provider.get(memory{})};
         }
     };

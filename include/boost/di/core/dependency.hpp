@@ -16,7 +16,7 @@
 namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_METHOD(configure, configure);
-BOOST_DI_HAS_TYPE(deps, deps);
+BOOST_DI_HAS_TYPE(deps);
 
 template<class T>
 using is_injector =

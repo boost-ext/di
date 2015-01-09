@@ -14,7 +14,7 @@
 
 namespace boost { namespace di { namespace scopes {
 
-BOOST_DI_HAS_TYPE(result_type, result_type);
+BOOST_DI_HAS_TYPE(result_type);
 BOOST_DI_HAS_METHOD(call_operator, operator());
 
 template<class T, class U>
@@ -25,19 +25,19 @@ using is_lambda_expr =
        !has_result_type<T>::value
     >;
 
-template<class T, class TDeleter>
+template<class T>
 struct wrapper_traits {
-    using type = wrappers::unique<T, TDeleter>;
+    using type = wrappers::unique<T>;
 };
 
-template<class T, class TDeleter>
-struct wrapper_traits<std::shared_ptr<T>, TDeleter> {
+template<class T>
+struct wrapper_traits<std::shared_ptr<T>> {
     using type = wrappers::shared<T>;
 };
 
-template<class T, class TDeleter>
+template<class T>
 using wrapper_traits_t =
-    typename wrapper_traits<T, TDeleter>::type;
+    typename wrapper_traits<T>::type;
 
 class external {
     struct injector {
@@ -56,8 +56,7 @@ public:
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
-            using deleter = typename TProvider::deleter;
-            return wrappers::unique<TExpected, deleter>{object_};
+            return wrappers::unique<TExpected>{object_};
         }
 
     private:
@@ -115,8 +114,7 @@ public:
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
-            using deleter = typename TProvider::deleter;
-            using wrapper = wrapper_traits_t<decltype(std::declval<TGiven>()()), deleter>;
+            using wrapper = wrapper_traits_t<decltype(std::declval<TGiven>()())>;
             return wrapper{object_()};
         }
 
@@ -133,8 +131,7 @@ public:
 
         template<class, class TProvider>
         auto create(const TProvider& provider) const noexcept {
-            using deleter = typename TProvider::deleter;
-            using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_)), deleter>;
+            using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_))>;
             return wrapper{(object_)(provider.injector_)};
         }
 

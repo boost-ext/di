@@ -7,7 +7,9 @@
 #ifndef BOOST_DI_SCOPES_SINGLETON_HPP
 #define BOOST_DI_SCOPES_SINGLETON_HPP
 
+#include <memory>
 #include "boost/di/wrappers/shared.hpp"
+#include "boost/di/type_traits/memory_traits.hpp"
 
 namespace boost { namespace di { namespace scopes {
 
@@ -21,7 +23,7 @@ public:
         template<class, class TProvider>
         auto create(const TProvider& provider) {
             if (!get_instance()) {
-                get_instance() = provider.get();
+                get_instance() = provider.get(type_traits::shared{});
             }
             return wrappers::shared<T>{get_instance()};
         }

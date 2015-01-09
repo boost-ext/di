@@ -556,7 +556,7 @@ public:
 
 namespace boost { namespace di { namespace scopes {
 
-BOOST_DI_HAS_TYPE(result_type, result_type);
+BOOST_DI_HAS_TYPE(result_type);
 BOOST_DI_HAS_METHOD(call_operator, operator());
 
 template<class T, class U>

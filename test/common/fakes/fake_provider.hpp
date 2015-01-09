@@ -7,19 +7,30 @@
 #ifndef BOOST_DI_FAKE_PROVIDER_HPP
 #define BOOST_DI_FAKE_PROVIDER_HPP
 
+#include <new>
+#include <memory>
+#include "boost/di/type_traits/memory_traits.hpp"
+
 namespace boost { namespace di {
 
 template<class T>
 class fake_provider {
-    struct memory { };
-
 public:
     using deleter = std::default_delete<T>;
 
-    template<class TMemory = memory>
-    T* get(const TMemory& = {}) const noexcept {
+    T get(const type_traits::stack&) const noexcept {
         ++provide_calls();
-        return new (std::nothrow) T{};
+        return T{};
+    }
+
+    std::unique_ptr<T> get(const type_traits::unique&) const noexcept {
+        ++provide_calls();
+        return std::make_unique<T>();
+    }
+
+    std::shared_ptr<T> get(const type_traits::shared&) const noexcept {
+        ++provide_calls();
+        return std::make_shared<T>();
     }
 
     static int& provide_calls() {

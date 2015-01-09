@@ -7,7 +7,9 @@
 #ifndef BOOST_DI_SCOPES_SHARED_HPP
 #define BOOST_DI_SCOPES_SHARED_HPP
 
+#include <memory>
 #include "boost/di/wrappers/shared.hpp"
+#include "boost/di/type_traits/memory_traits.hpp"
 
 namespace boost { namespace di { namespace scopes {
 
@@ -20,9 +22,8 @@ public:
     public:
         template<class, class TProvider>
         auto create(const TProvider& provider) {
-            using deleter = typename TProvider::deleter;
             if (!object_) {
-                object_ = provider.get();
+                object_ = provider.get(type_traits::shared{});
             }
             return wrappers::shared<T>{object_};
         }
