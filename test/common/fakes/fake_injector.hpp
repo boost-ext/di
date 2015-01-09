@@ -12,10 +12,23 @@
 
 namespace boost { namespace di {
 
+struct fake_provider {
+    template<class, class T, class... TArgs>
+    auto get(TArgs&&...) const noexcept {
+        return T{};
+    }
+};
+
 template<class TExpected = void>
 struct fake_injector {
+    struct config {
+        auto provider() const noexcept {
+            return fake_provider{};
+        }
+    } config_;
+
     template<class T, class TParent>
-    decltype(auto) create() const noexcept {
+    auto create() const noexcept {
         expect_eq(typeid(TExpected).name(), typeid(T).name());
         static aux::remove_accessors_t<T> object;
         return object;
