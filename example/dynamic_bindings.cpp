@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[dynamic_binding
+//[dynamic_bindings
 //<-
 #include <cassert>
 #include <memory>
@@ -21,11 +21,11 @@ struct implementation1 : interface { };
 struct implementation2 : interface { };
 //->
 
-class dynamic_binding {
-    dynamic_binding& operator=(const dynamic_binding&);
-
+class dynamic_bindings {
 public:
-    explicit dynamic_binding(eid& id)
+    dynamic_bindings& operator=(const dynamic_bindings&) = delete;
+
+    explicit dynamic_bindings(eid& id)
         : id(id)
     { }
 
@@ -55,7 +55,7 @@ int main() {
     auto id = e1;
 
     /*<<create interface with `id = e1`>>*/
-    auto injector = di::make_injector(dynamic_binding{id});
+    auto injector = di::make_injector(dynamic_bindings{id});
     assert(dynamic_cast<implementation1*>(injector.create<std::shared_ptr<interface>>().get()));
 
     id = e2;
