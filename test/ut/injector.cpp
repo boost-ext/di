@@ -22,9 +22,21 @@ test injector_exposed = [] {
 };
 
 test injector_with_injector = [] {
+    using injector = injector<injector<int, double>>;
+    using dep1 = core::dependency<scopes::exposed<scopes::deduce>, int>;
+    using dep2 = core::dependency<scopes::exposed<scopes::deduce>, double>;
+    expect(std::is_same<aux::type_list<dep1, dep2>, injector::deps>{});
 };
 
 test injector_with_module = [] {
+    using dep = core::dependency<scopes::exposed<scopes::deduce>, int>;
+    struct module {
+        di::injector<int> configure() const noexcept {
+            return di::injector<>();
+        }
+    };
+
+    expect(std::is_same<aux::type_list<dep>, injector<module>::deps>{});
 };
 
 }} // boost::di
