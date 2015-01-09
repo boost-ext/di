@@ -64,13 +64,13 @@ public:
 
     template<class I>
     inline operator std::shared_ptr<I>() noexcept {
-        return std::shared_ptr<I>{value_.release(), value_.get_deleter()};
+        return {value_.release(), value_.get_deleter()};
     }
 
 #if (__has_include(<boost/shared_ptr.hpp>))
     template<class I>
     inline operator boost::shared_ptr<I>() noexcept {
-        return boost::shared_ptr<I>{value_, value_.get_deleter()};
+        return {value_.release(), value_.get_deleter()};
     }
 #endif
 

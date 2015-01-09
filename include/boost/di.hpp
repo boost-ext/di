@@ -105,12 +105,12 @@ using join_t = typename join<TArgs...>::type;
     #include <boost/shared_ptr.hpp>
 #endif
 
-#define BOOST_DI_HAS_TYPE(name, type_name)                          \
+#define BOOST_DI_HAS_TYPE(name)                                     \
     template<class, class = void>                                   \
     struct has_##name : std::false_type { };                        \
                                                                     \
     template<class T>                                               \
-    struct has_##name<T, aux::void_t<typename T::type_name>>        \
+    struct has_##name<T, aux::void_t<typename T::name>>             \
         : std::true_type                                            \
     { };
 
@@ -284,7 +284,7 @@ private:
 
 namespace boost { namespace di { namespace wrappers {
 
-template<class T, class>
+template<class T>
 class unique {
 public:
     explicit unique(const T& value) noexcept // non explicit
@@ -296,8 +296,13 @@ public:
         return value_;
     }
 
+    template<class I, class D>
+    inline operator std::unique_ptr<I, D>() const noexcept { // only for compilation clean
+        return {};
+    }
+
     template<class I>
-    inline operator I*() const noexcept { // only for compilation clean
+    inline operator std::shared_ptr<I>() const noexcept { // only for compilation clean
         return {};
     }
 
@@ -306,46 +311,46 @@ private:
 };
 
 template<class T, class TDeleter>
-class unique<T*, TDeleter> {
+class unique<std::unique_ptr<T, TDeleter>> {
 public:
-    explicit unique(T* value) noexcept // non explicit
-        : value_(value)
+    explicit unique(std::unique_ptr<T, TDeleter> value) noexcept // non explicit
+        : value_(std::move(value))
     { }
 
     template<class I>
     inline operator I() const noexcept {
-        return *std::unique_ptr<I, TDeleter>{value_, TDeleter{}};
+        return *value_;
     }
 
     template<class I>
-    inline operator I*() const noexcept {
-        return value_; // ownership transfer
+    inline operator I*() noexcept {
+        return value_.release();
     }
 
     template<class I>
-    inline operator const I*() const noexcept {
-        return value_; // ownership transfer
+    inline operator const I*() noexcept {
+        return value_.release();
     }
 
     template<class I>
-    inline operator std::shared_ptr<I>() const noexcept {
-        return std::shared_ptr<I>{value_};
+    inline operator std::shared_ptr<I>() noexcept {
+        return {value_.release(), value_.get_deleter()};
     }
 
 #if (__has_include(<boost/shared_ptr.hpp>))
     template<class I>
-    inline operator boost::shared_ptr<I>() const noexcept {
-        return boost::shared_ptr<I>{value_};
+    inline operator boost::shared_ptr<I>() noexcept {
+        return {value_.release(), value_.get_deleter()};
     }
 #endif
 
-    template<class I>
-    inline operator std::unique_ptr<I, TDeleter>() const noexcept {
-        return std::unique_ptr<I, TDeleter>{value_, TDeleter{}};
+    template<class I, class D>
+    inline operator std::unique_ptr<I, D>() noexcept {
+        return std::move(value_);
     }
 
 private:
-    T* value_ = nullptr;
+    std::unique_ptr<T, TDeleter> value_;
 };
 
 }}} // boost::di::wrappers
@@ -358,8 +363,9 @@ private:
 
 namespace boost { namespace di { namespace type_traits {
 
-struct heap { };
 struct stack { };
+struct unique { };
+struct shared { };
 
 template<class T, class = void>
 struct memory_traits {
@@ -378,12 +384,12 @@ struct memory_traits<const T&> {
 
 template<class T>
 struct memory_traits<T*> {
-    using type = heap;
+    using type = unique;
 };
 
 template<class T>
 struct memory_traits<const T*> {
-    using type = heap;
+    using type = unique;
 };
 
 template<class T>
@@ -398,49 +404,49 @@ struct memory_traits<const T&&> {
 
 template<class T, class TDeleter>
 struct memory_traits<std::unique_ptr<T, TDeleter>> {
-    using type = heap;
+    using type = unique;
 };
 
 template<class T, class TDeleter>
 struct memory_traits<const std::unique_ptr<T, TDeleter>&> {
-    using type = heap;
+    using type = unique;
 };
 
 template<class T>
 struct memory_traits<std::shared_ptr<T>> {
-    using type = heap;
+    using type = unique;
 };
 
 template<class T>
 struct memory_traits<const std::shared_ptr<T>&> {
-    using type = heap;
+    using type = unique;
 };
 
 #if (__has_include(<boost/shared_ptr.hpp>))
     template<class T>
     struct memory_traits<boost::shared_ptr<T>> {
-        using type = heap;
+        using type = unique;
     };
 
     template<class T>
     struct memory_traits<const boost::shared_ptr<T>&> {
-        using type = heap;
+        using type = unique;
     };
 #endif
 
 template<class T>
 struct memory_traits<std::weak_ptr<T>> {
-    using type = heap;
+    using type = unique;
 };
 
 template<class T>
 struct memory_traits<const std::weak_ptr<T>&> {
-    using type = heap;
+    using type = unique;
 };
 
 template<class T>
 struct memory_traits<T, std::enable_if_t<std::is_polymorphic<T>{}>> {
-    using type = heap;
+    using type = unique;
 };
 
 template<class T>
@@ -462,8 +468,7 @@ public:
         template<class T, class TProvider>
         auto create(const TProvider& provider) const {
             using memory = type_traits::memory_traits_t<T>;
-            using deleter = typename TProvider::deleter;
-            using wrapper = wrappers::unique<decltype(provider.get(memory{})), deleter>;
+            using wrapper = wrappers::unique<decltype(provider.get(memory{}))>;
             return wrapper{provider.get(memory{})};
         }
     };
@@ -537,7 +542,7 @@ public:
         template<class, class TProvider>
         auto create(const TProvider& provider) {
             if (!get_instance()) {
-                get_instance().reset(provider.get());
+                get_instance() = provider.get(type_traits::shared{});
             }
             return wrappers::shared<T>{get_instance()};
         }
@@ -567,19 +572,19 @@ using is_lambda_expr =
        !has_result_type<T>::value
     >;
 
-template<class T, class TDeleter>
+template<class T>
 struct wrapper_traits {
-    using type = wrappers::unique<T, TDeleter>;
+    using type = wrappers::unique<T>;
 };
 
-template<class T, class TDeleter>
-struct wrapper_traits<std::shared_ptr<T>, TDeleter> {
+template<class T>
+struct wrapper_traits<std::shared_ptr<T>> {
     using type = wrappers::shared<T>;
 };
 
-template<class T, class TDeleter>
+template<class T>
 using wrapper_traits_t =
-    typename wrapper_traits<T, TDeleter>::type;
+    typename wrapper_traits<T>::type;
 
 class external {
     struct injector {
@@ -598,8 +603,7 @@ public:
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
-            using deleter = typename TProvider::deleter;
-            return wrappers::unique<TExpected, deleter>{object_};
+            return wrappers::unique<TExpected>{object_};
         }
 
     private:
@@ -657,8 +661,7 @@ public:
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
-            using deleter = typename TProvider::deleter;
-            using wrapper = wrapper_traits_t<decltype(std::declval<TGiven>()()), deleter>;
+            using wrapper = wrapper_traits_t<decltype(std::declval<TGiven>()())>;
             return wrapper{object_()};
         }
 
@@ -675,8 +678,7 @@ public:
 
         template<class, class TProvider>
         auto create(const TProvider& provider) const noexcept {
-            using deleter = typename TProvider::deleter;
-            using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_)), deleter>;
+            using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_))>;
             return wrapper{(object_)(provider.injector_)};
         }
 
@@ -837,8 +839,9 @@ public:
     class scope {
         struct iprovider {
             virtual ~iprovider() = default;
-            virtual TExpected* get(const type_traits::heap&) const noexcept = 0;
-            virtual TExpected  get(const type_traits::stack&) const noexcept = 0;
+            virtual std::unique_ptr<TExpected> get(const type_traits::unique&) const noexcept = 0;
+            virtual std::shared_ptr<TExpected> get(const type_traits::shared&) const noexcept = 0;
+            virtual TExpected get(const type_traits::stack&) const noexcept = 0;
         };
 
         template<typename TInjector>
@@ -848,8 +851,12 @@ public:
                 : injector_(injector)
             { }
 
-            TExpected* get(const type_traits::heap&) const noexcept override {
-                return injector_.template create<TExpected*>();
+            std::unique_ptr<TExpected> get(const type_traits::unique&) const noexcept override {
+                return injector_.template create<std::unique_ptr<TExpected>>();
+            }
+
+            std::shared_ptr<TExpected> get(const type_traits::shared&) const noexcept override {
+                return injector_.template create<std::shared_ptr<TExpected>>();
             }
 
             TExpected get(const type_traits::stack&) const noexcept override {
@@ -860,18 +867,6 @@ public:
             TInjector injector_;
         };
 
-        template<class TDeleter>
-        struct provider_with_deleter {
-            using deleter = TDeleter;
-
-            template<class TMemory = type_traits::heap>
-            auto get(const TMemory& memory = {}) const noexcept {
-                return provider_.get(memory);
-            }
-
-            const iprovider& provider_;
-        };
-
     public:
         template<class TInjector>
         explicit scope(const TInjector& injector) noexcept
@@ -880,10 +875,7 @@ public:
 
         template<class T, class TProvider>
         auto create(const TProvider&) {
-            using deleter = typename TProvider::deleter;
-            return scope_.template create<T>(
-                provider_with_deleter<deleter>{*provider_}
-            );
+            return scope_.template create<T>(*provider_);
         }
 
     private:
@@ -915,7 +907,7 @@ template<class...> class injector;
 namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_METHOD(configure, configure);
-BOOST_DI_HAS_TYPE(deps, deps);
+BOOST_DI_HAS_TYPE(deps);
 
 template<class T>
 using is_injector =
@@ -1065,7 +1057,7 @@ public:
 
 namespace boost { namespace di { namespace core {
 
-BOOST_DI_HAS_TYPE(is_ref, is_ref);
+BOOST_DI_HAS_TYPE(is_ref);
 
 template<class TParent = void, class TInjector = aux::none_t>
 struct any_type {
@@ -1316,7 +1308,7 @@ struct named { };
 struct direct { };
 struct uniform { };
 
-BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_INJECTOR, BOOST_DI_INJECTOR);
+BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_INJECTOR);
 
 template<class T, std::size_t>
 struct get_type {
@@ -1503,17 +1495,31 @@ namespace boost { namespace di { namespace providers {
 class stack_over_heap {
 public:
     template<class T, class... TArgs>
-    auto* get(const type_traits::direct&
-            , const type_traits::heap&
-            , TArgs&&... args) {
-        return new T(std::forward<TArgs>(args)...);
+    auto get(const type_traits::direct&
+           , const type_traits::unique&
+           , TArgs&&... args) {
+        return std::make_unique<T>(std::forward<TArgs>(args)...);
     }
 
     template<class T, class... TArgs>
-    auto* get(const type_traits::uniform&
-            , const type_traits::heap&
-            , TArgs&&... args) const {
-        return new T{std::forward<TArgs>(args)...};
+    auto get(const type_traits::uniform&
+           , const type_traits::unique&
+           , TArgs&&... args) {
+        return std::unique_ptr<T>(new T{std::forward<TArgs>(args)...});
+    }
+
+    template<class T, class... TArgs>
+    auto get(const type_traits::direct&
+           , const type_traits::shared&
+           , TArgs&&... args) {
+        return std::make_shared<T>(std::forward<TArgs>(args)...);
+    }
+
+    template<class T, class... TArgs>
+    auto get(const type_traits::uniform&
+           , const type_traits::shared&
+           , TArgs&&... args) {
+        return std::shared_ptr<T>(new T{std::forward<TArgs>(args)...});
     }
 
     template<class T, class... TArgs>
@@ -1591,7 +1597,7 @@ public:
         template<class, class TProvider>
         auto create(const TProvider& provider) {
             if (in_scope_ && !object_) {
-                object_.reset(provider.get());
+                object_ = provider.get(type_traits::shared{});
             }
             return wrappers::shared<T>{object_};
         }
@@ -1617,9 +1623,8 @@ public:
     public:
         template<class, class TProvider>
         auto create(const TProvider& provider) {
-            using deleter = typename TProvider::deleter;
             if (!object_) {
-                object_.reset(provider.get());
+                object_ = provider.get(type_traits::shared{});
             }
             return wrappers::shared<T>{object_};
         }
@@ -1727,43 +1732,25 @@ public:
 
 namespace boost { namespace di { namespace core {
 
-BOOST_DI_HAS_TYPE(deleter, template deleter<void>);
-
 template<class...>
 struct provider;
 
-template<class, class T, class = std::false_type>
-struct get_deleter {
-    using type = std::default_delete<T>;
-};
-
-template<class TInjector, class T>
-struct get_deleter<TInjector, T, std::true_type> {
-    using type = typename TInjector::config::template deleter<T>;
-};
-
 template<
-    class TDependency
+    class T
   , class TParent
   , class TInjector
   , class TInitialization
   , class... TArgs
 > struct provider<
-    TDependency
+    T
   , TParent
   , aux::pair<TInitialization, aux::type_list<TArgs...>>
   , TInjector
 > {
-    using deleter = typename get_deleter<
-        TInjector
-      , typename TDependency::expected
-      , typename has_deleter<typename TInjector::config>::type
-     >::type;
-
-    template<class TMemory = type_traits::heap>
+    template<class TMemory = type_traits::unique>
     auto get(const TMemory& memory = {}) const {
         auto&& config = injector_.config_;
-        return config.provider().template get<typename TDependency::given>(
+        return config.provider().template get<T>(
             TInitialization{}
           , memory
           , injector_.template create_t<TParent>(aux::type<TArgs>{})...
@@ -1785,7 +1772,7 @@ template<class T, class TWrapper>
 struct wrapper {
     TWrapper wrapper_;
 
-    inline operator T() const noexcept {
+    inline operator T() noexcept {
         return wrapper_;
     }
 };
@@ -1799,7 +1786,6 @@ class injector : requires_unique_bindings<TDeps>, public pool<TDeps> {
 
 public:
     using deps = TDeps;
-    using config = TConfig;
 
     // bind<...>, etc.  -> ignore
     // injector<...>    -> get all dependencies from the injector
@@ -1853,8 +1839,10 @@ private:
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-        using provider_t = provider<dependency_t, T, ctor_t, injector>;
-        policy<pool_t>::template call<T, TName, TIsRoot>(config_.policies(), dependency, ctor_t{});
+        using provider_t = provider<given_t, T, ctor_t, injector>;
+        policy<pool_t>::template call<T, TName, TIsRoot>(
+            ((TConfig&)config_).policies(), dependency, ctor_t{}
+        );
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
             std::is_reference<T>{} && has_is_ref<dependency_t>{}
@@ -1900,7 +1888,7 @@ private:
         return TDependency{injector};
     }
 
-    mutable TConfig config_;
+    TConfig config_;
 };
 
 }}} // boost::di::core
