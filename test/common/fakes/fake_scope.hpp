@@ -29,12 +29,12 @@ struct fake_scope {
         }
     };
 
-    static auto& entry_calls() {
+    static int& entry_calls() {
         static auto calls = 0;
         return calls;
     }
 
-    static auto& exit_calls() {
+    static int& exit_calls() {
         static auto calls = 0;
         return calls;
     }
