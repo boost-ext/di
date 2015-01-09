@@ -23,22 +23,22 @@ test traits = [] {
     expect(std::is_same<stack, memory_traits<int>::type>{});
     expect(std::is_same<stack, memory_traits<c>::type>{});
     expect(std::is_same<stack, memory_traits<const int&>::type>{});
-    expect(std::is_same<unique, memory_traits<int*>::type>{});
-    expect(std::is_same<unique, memory_traits<const int*>::type>{});
-    expect(std::is_same<unique, memory_traits<std::shared_ptr<int>>::type>{});
-    expect(std::is_same<unique, memory_traits<const std::shared_ptr<int>&>::type>{});
-    expect(std::is_same<unique, memory_traits<boost::shared_ptr<int>>::type>{});
-    expect(std::is_same<unique, memory_traits<const boost::shared_ptr<int>&>::type>{});
-    expect(std::is_same<unique, memory_traits<std::weak_ptr<int>>::type>{});
-    expect(std::is_same<unique, memory_traits<const std::weak_ptr<int>&>::type>{});
+    expect(std::is_same<heap, memory_traits<int*>::type>{});
+    expect(std::is_same<heap, memory_traits<const int*>::type>{});
+    expect(std::is_same<heap, memory_traits<std::shared_ptr<int>>::type>{});
+    expect(std::is_same<heap, memory_traits<const std::shared_ptr<int>&>::type>{});
+    expect(std::is_same<heap, memory_traits<boost::shared_ptr<int>>::type>{});
+    expect(std::is_same<heap, memory_traits<const boost::shared_ptr<int>&>::type>{});
+    expect(std::is_same<heap, memory_traits<std::weak_ptr<int>>::type>{});
+    expect(std::is_same<heap, memory_traits<const std::weak_ptr<int>&>::type>{});
     expect(std::is_same<stack, memory_traits<int&>::type>{});
-    expect(std::is_same<unique, memory_traits<std::unique_ptr<int>>::type>{});
-    expect(std::is_same<unique, memory_traits<std::unique_ptr<int, deleter<int>>>::type>{});
-    expect(std::is_same<unique, memory_traits<std::shared_ptr<int>>::type>{});
-    expect(std::is_same<unique, memory_traits<std::weak_ptr<int>>::type>{});
+    expect(std::is_same<heap, memory_traits<std::unique_ptr<int>>::type>{});
+    expect(std::is_same<heap, memory_traits<std::unique_ptr<int, deleter<int>>>::type>{});
+    expect(std::is_same<heap, memory_traits<std::shared_ptr<int>>::type>{});
+    expect(std::is_same<heap, memory_traits<std::weak_ptr<int>>::type>{});
     expect(std::is_same<stack, memory_traits<int&&>::type>{});
     expect(std::is_same<stack, memory_traits<const int&&>::type>{});
-    expect(std::is_same<unique, memory_traits<i>::type>{});
+    expect(std::is_same<heap, memory_traits<i>::type>{});
 };
 
 }}} // boost::di::type_traits

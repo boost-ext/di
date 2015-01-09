@@ -10,13 +10,13 @@ namespace boost { namespace di { namespace providers {
 
 auto test_heap = [](auto type, auto init, auto... args) {
     using T = typename decltype(type)::type;
-    std::unique_ptr<T> object{stack_over_heap{}.get<T>(init, type_traits::heap{}, args...)};
+    std::unique_ptr<T> object{stack_over_heap{}.get<T, T>(init, type_traits::heap{}, args...)};
     expect(object.get());
 };
 
 auto test_stack = [](auto type, auto init, auto... args) {
     using T = typename decltype(type)::type;
-    T object = stack_over_heap{}.get<T>(init, type_traits::stack{}, args...);
+    T object = stack_over_heap{}.get<T, T>(init, type_traits::stack{}, args...);
     (void)object;
 };
 

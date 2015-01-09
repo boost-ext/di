@@ -16,21 +16,14 @@ namespace boost { namespace di {
 template<class T>
 class fake_provider {
 public:
-    using deleter = std::default_delete<T>;
+    T* get(const type_traits::heap& = {}) const noexcept {
+        ++provide_calls();
+        return new T{};
+    }
 
     T get(const type_traits::stack&) const noexcept {
         ++provide_calls();
         return T{};
-    }
-
-    std::unique_ptr<T> get(const type_traits::unique&) const noexcept {
-        ++provide_calls();
-        return std::make_unique<T>();
-    }
-
-    std::shared_ptr<T> get(const type_traits::shared&) const noexcept {
-        ++provide_calls();
-        return std::make_shared<T>();
     }
 
     static int& provide_calls() {

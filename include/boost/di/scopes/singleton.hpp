@@ -9,7 +9,6 @@
 
 #include <memory>
 #include "boost/di/wrappers/shared.hpp"
-#include "boost/di/type_traits/memory_traits.hpp"
 
 namespace boost { namespace di { namespace scopes {
 
@@ -23,7 +22,7 @@ public:
         template<class, class TProvider>
         auto create(const TProvider& provider) {
             if (!get_instance()) {
-                get_instance() = provider.get(type_traits::shared{});
+                get_instance() = std::shared_ptr<T>{provider.get()};
             }
             return wrappers::shared<T>{get_instance()};
         }

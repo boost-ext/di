@@ -28,26 +28,33 @@ struct example {
 };
 
 /*<define `custom provider`>*/
-class custom_provider : public di::config {
-public:
-    template<class T, class TMemory, class... TArgs>
-    auto* get(const di::type_traits::direct&
+struct custom_provider {
+    template<class, class T, class TMemory, class... TArgs>
+    auto get(const di::type_traits::direct&
             , const TMemory& // stack/heap
             , TArgs&&... args) const {
         return new T(std::forward<TArgs>(args)...);
     }
 
-    template<class T, class TMemory, class... TArgs>
-    auto* get(const di::type_traits::uniform&
+    template<class, class T, class TMemory, class... TArgs>
+    auto get(const di::type_traits::uniform&
             , const TMemory& // stack/heap
             , TArgs&&... args) const {
         return new T{std::forward<TArgs>(args)...};
     }
 };
 
+/*<override `di` provider configuration>*/
+class config : public di::config {
+public:
+    auto provider() const noexcept {
+        return custom_provider{};
+    }
+};
+
 int main() {
     /*<<make injector with simple configuration>>*/
-    auto injector = di::make_injector<custom_provider>(
+    auto injector = di::make_injector<config>(
         di::bind<int>.to(42)
       , di::bind<interface, implementation>
     );

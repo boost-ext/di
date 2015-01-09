@@ -16,21 +16,23 @@ template<class...>
 struct provider;
 
 template<
-    class T
+    class TExpected
+  , class TGiven
   , class TParent
   , class TInjector
   , class TInitialization
   , class... TArgs
 > struct provider<
-    T
+    TExpected
+  , TGiven
   , TParent
   , aux::pair<TInitialization, aux::type_list<TArgs...>>
   , TInjector
 > {
-    template<class TMemory = type_traits::unique>
+    template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const {
         auto&& config = injector_.config_;
-        return config.provider().template get<T>(
+        return config.provider().template get<TExpected, TGiven>(
             TInitialization{}
           , memory
           , injector_.template create_t<TParent>(aux::type<TArgs>{})...

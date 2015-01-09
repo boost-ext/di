@@ -20,8 +20,7 @@ public:
     class scope {
         struct iprovider {
             virtual ~iprovider() = default;
-            virtual std::unique_ptr<TExpected> get(const type_traits::unique&) const noexcept = 0;
-            virtual std::shared_ptr<TExpected> get(const type_traits::shared&) const noexcept = 0;
+            virtual TExpected* get(const type_traits::heap& = {}) const noexcept = 0;
             virtual TExpected get(const type_traits::stack&) const noexcept = 0;
         };
 
@@ -32,12 +31,8 @@ public:
                 : injector_(injector)
             { }
 
-            std::unique_ptr<TExpected> get(const type_traits::unique&) const noexcept override {
-                return injector_.template create<std::unique_ptr<TExpected>>();
-            }
-
-            std::shared_ptr<TExpected> get(const type_traits::shared&) const noexcept override {
-                return injector_.template create<std::shared_ptr<TExpected>>();
+            TExpected* get(const type_traits::heap&) const noexcept override {
+                return injector_.template create<TExpected*>();
             }
 
             TExpected get(const type_traits::stack&) const noexcept override {

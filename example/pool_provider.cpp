@@ -54,28 +54,34 @@ struct example {
 };
 
 /*<define `pool provider`>*/
-class pool_provider : public di::config {
-public:
-    template<class T, class TInitilization, class TMemory, class... TArgs>
-    auto* get(const TInitilization& // direct/uniform
-            , const TMemory& // stack/heap
-            , TArgs&&... args) const {
-        auto* memory = pool_allocator<T>::allocate();
-        return new (memory) T(std::forward<TArgs>(args)...);
+struct pool_provider {
+    template<class I, class T, class TInitilization, class TMemory, class... TArgs>
+    auto get(const TInitilization& // direct/uniform
+           , const TMemory& // stack/heap
+           , TArgs&&... args) const {
+        auto memory = pool_allocator<T>::allocate();
+        return std::unique_ptr<T, pool_deleter<I>>{
+            new (memory) T(std::forward<TArgs>(args)...)
+        };
     }
+};
 
-    template<class T>
-    using deleter = pool_deleter<T>;
+/*<override `di` provider configuration>*/
+class config : public di::config {
+public:
+    auto provider() const noexcept {
+        return pool_provider{};
+    }
 };
 
 int main() {
     /*<<make injector with simple configuration>>*/
-    auto injector = di::make_injector<pool_provider>(
+    auto injector = di::make_injector<config>(
         di::bind<int>.to(42)
       , di::bind<interface, implementation>
     );
 
-    /*<<create `example` using `pool_provider`>>*/
+    /*<<create `example` using configuration with `pool_provider`>>*/
     injector.create<example>();
 }
 

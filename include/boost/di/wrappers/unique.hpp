@@ -26,18 +26,56 @@ public:
         return value_;
     }
 
-    template<class I, class D>
-    inline operator std::unique_ptr<I, D>() const noexcept { // only for compilation clean
-        return {};
-    }
-
     template<class I>
-    inline operator std::shared_ptr<I>() const noexcept { // only for compilation clean
+    inline operator I*() const noexcept { // only for compilation clean
         return {};
     }
 
 private:
     T value_;
+};
+
+template<class T>
+class unique<T*> {
+public:
+    explicit unique(T* value) noexcept // non explicit
+        : value_(value)
+    { }
+
+    template<class I>
+    inline operator I() const noexcept {
+        return *std::unique_ptr<I>{value_};
+    }
+
+    template<class I>
+    inline operator I*() const noexcept {
+        return value_; // ownership transfer
+    }
+
+    template<class I>
+    inline operator const I*() const noexcept {
+        return value_; // ownership transfer
+    }
+
+    template<class I>
+    inline operator std::shared_ptr<I>() const noexcept {
+        return std::shared_ptr<I>{value_};
+    }
+
+#if (__has_include(<boost/shared_ptr.hpp>))
+    template<class I>
+    inline operator boost::shared_ptr<I>() const noexcept {
+        return boost::shared_ptr<I>{value_};
+    }
+#endif
+
+    template<class I>
+    inline operator std::unique_ptr<I>() const noexcept {
+        return std::unique_ptr<I>{value_};
+    }
+
+private:
+    T* value_ = nullptr;
 };
 
 template<class T, class TDeleter>
