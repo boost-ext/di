@@ -721,13 +721,14 @@ Heap no throw provider                  | Test
 class heap_no_throw {                   | // per injector policy
 public:                                 | auto injector = di::make_injector<my_provider>();
   template<                             | assert(0 == injector.create<int>());
-    class T                             |
-  , class TInit // direct()/uniform{}   | // global policy
-  , class TMemory // heap/stack         | #define BOOST_DI_CFG my_provider
-  , class... TArgs>                     | auto injector = di::make_injector();
-  auto* get(const TInit&                | assert(0 == injector.create<int>());
-          , const TMemory&              |
-          , TArgs&&... args)            |
+    class // interface                  |
+  , class T // implementation           | // global policy
+  , class TInit // direct()/uniform{}   | #define BOOST_DI_CFG my_provider
+  , class TMemory // heap/stack         | auto injector = di::make_injector();
+  , class... TArgs>                     | assert(0 == injector.create<int>());
+  auto get(const TInit&                 |
+         , const TMemory&               |
+         , TArgs&&... args)             |
   const noexcept {                      |
       return new (nothrow)              |
         T{forward<TArgs>(args)...};     |
