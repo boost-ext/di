@@ -399,9 +399,7 @@ auto injector = di::make_injector(      | assert(87.0 == object2.d);
   , di::bind<double>.to(87.0)           |
 );                                      |
 ```
-
 **Scope deduction**
-
 | Type | Scope |
 |------|-------|
 | T | unique |
@@ -413,7 +411,6 @@ auto injector = di::make_injector(      | assert(87.0 == object2.d);
 | unique\_ptr<T> | unique |
 | shared\_ptr<T> | singleton |
 | weak\_ptr<T> | singleton |
-
 ```cpp
 Unique scope                            | Test
 ----------------------------------------|-----------------------------------------
@@ -497,9 +494,7 @@ auto injector = di::make_injector(      |
   di::bind<i, impl>.in(custom_scope{})  |
 );                                      |
 ```
-
 **Scope to type conversion**
-
 | Type/Scope | unique | shared | singleton | session | external |
 |------------|--------|--------|-----------|---------|----------|
 | T | ✔ | - | - | - | ✔ |
