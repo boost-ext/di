@@ -399,7 +399,7 @@ auto injector = di::make_injector(      | assert(87.0 == object2.d);
   , di::bind<double>.to(87.0)           |
 );                                      |
 ```
-| Type | Scope |
+| Type | Deduced scope |
 |------|-------|
 | T | unique |
 | T& | error - has to be bound as external |
@@ -493,7 +493,6 @@ auto injector = di::make_injector(      |
   di::bind<i, impl>.in(custom_scope{})  |
 );                                      |
 ```
-**Scope to type conversion**
 | Type/Scope | unique | shared | singleton | session | external |
 |------------|--------|--------|-----------|---------|----------|
 | T | ✔ | - | - | - | ✔ |
