@@ -24,14 +24,14 @@
                 auto injector = di::make_injector();
                 return injector.create<int>();
             }
-                                                                                               .
+                                                                                  .
             ```
         ]
         [
             ```
             xor %eax,%eax
             retq
-                                                                                                                       .
+                                                                                  .
             ```
         ]
     ]
@@ -50,14 +50,14 @@
 
                 return injector.create<int>();
             }
-                                                                                               .
+                                                                                  .
             ```
         ]
         [
             ```
             mov $0x2a,%eax
             retq
-                                                                                                                       .
+                                                                                  .
             ```
         ]
     ]
@@ -87,14 +87,14 @@
 
                 return injector.create<c>().i;
             }
-                                                                                               .
+                                                                                  .
             ```
         ]
         [
             ```
             mov $0x2a,%eax
             retq
-                                                                                                                       .
+                                                                                  .
             ```
         ]
     ]
@@ -117,7 +117,7 @@
 
                 return ptr.get() != nullptr;
             }
-                                                                                               .
+                                                                                  .
             ```
         ]
         [
@@ -132,7 +132,7 @@
             mov    $0x1,%eax
             pop    %rdx
             retq
-                                                                                                                       .
+                                                                                  .
             ```
         ]
     ]
@@ -163,7 +163,7 @@
 
                 return ptr != nullptr;
             }
-                                                                                               .
+                                                                                  .
             ```
         ]
         [
@@ -178,7 +178,7 @@
             mov    $0x1,%eax
             pop    %rdx
             retq
-                                                                                                                       .
+                                                                                  .
             ```
         ]
     ]
@@ -209,7 +209,7 @@
 
                 return ptr != nullptr;
             }
-                                                                                               .
+                                                                               .
             ```
         ]
         [
@@ -243,7 +243,6 @@
         mov    0x30(%rsp),%ecx                    add    $0x38,%rsp
         jmp    0x400b89 <main+105>                pop    %rbx
         pop    %rbp                               retq
-                                                                                                                   .
             ```
         ]
     ]
@@ -261,13 +260,13 @@
             ```
             #include <boost/di.hpp>
             int main() { }
-                                                                                               .
+                                                                               .
             ```
         ]
         [
             ```
             0.165
-                                                                                                                       .
+                                                                               .
             ```
         ]
     ]

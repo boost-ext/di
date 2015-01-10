@@ -196,9 +196,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
     ]
 ]
 
-
 [table
-[[Direct constructor injection with many constructors\n
+[[Direct constructor injection with many constructors[br]
   (longest parameters list constructor will be chosen)][Test]]
     [
         [

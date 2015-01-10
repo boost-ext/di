@@ -87,9 +87,10 @@ There are 3 basic types of wrappers.
         static constexpr auto priority = false;
 
         template<class TExpected, class>
-        struct scope {
+        class scope {
+        public:
             template<class T, class TProvider>
-            auto __di_injector_create__(const TProvider& provider) {
+            auto create(const TProvider& provider) {
                 return shared_ptr<TExpected>{provider.get()};
             }
         };
@@ -151,131 +152,23 @@ Default scope which will be converted to one of the scopes  __scopes_unique__ / 
 [heading Synopsis]
     class deduce {
     public:
-        template<class>
-        class scope {
-            template<class T>
-            struct rebind {
-                typedef class scope_traits<T>::type other;
-            };
-        };
-    };
+        static constexpr auto priority = false;
 
-[table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`T`][None][Type to be re-bound accordingly to [link di.concepts.scopes.deduce.scope_traits Scope Traits]]]
-]
-
-[heading Header]
-    #include <__di_hpp__>
-
-[heading Namespace]
-    boost::di::scopes
-
-[heading Examples]
-[table
-    [[Binding][Description]]
-    [[```__di_bind_deduce__<__di_bind__<interface, implementation>>()```][Bind `implementation` with deduced `interface` in deduce scope]]
-    [[```__di_bind_deduce__<implementation>()```][Bind `implementation` in deduce scope]]
-]
-    class example {
-    public:
-        example(shared_ptr<interface1> i1   // deduced as shared scope
-              , shared_ptr<interface1> i1_  // deduced as shared scope
-              , shared_ptr<interface2> i2   // deduced as unique scope
-              , unique_ptr<interface3> i3   // deduced as unique scope
-              , interface4& i4)             // deduced as external scope
-            : i1(i1)
-            , i1_(i1_)
-            , i2(i2)
-            , i3(i4)
-            , i4(i4)
-        { }
-
-        shared_ptr<interface1> i1;
-        shared_ptr<interface1> i1_;
-        unique_ptr<interface2> i2;
-        unique_ptr<interface> i3;
-        interface& i4;
-    };
-
-    auto injector = __di_make_injector__(
-        __di_bind_deduce__<implementation1>() // bind deduced interface to implementation
-      , __di_bind__<interface2, implementation2>() // deduce scope by default
-      , __di_bind_scope__<di::scopes::deduce>::bind<__di_bind__<interface3, implementation3>>() // long version of scope binding
-      , __di_bind__<interface4>::to(ref(implementation4)) // bind to external value
-    );
-
-    auto example_ = injector.__di_injector_create__<example>();
-
-    assert(dynamic_cast<implementation1*>(example_->i1.get());
-    assert(dynamic_cast<implementation1*>(example_->i1_.get());
-    assert(example_->i1 == example->i1_);
-    assert(dynamic_cast<implementation2*>(example_->i2.get());
-    assert(dynamic_cast<implementation3*>(example_->i3.get());
-    assert(dynamic_cast<implementation4*>(example_->i4.get());
-
-[heading More Examples]
-    ``__examples_deduce_scope__``
-
-[heading Tests]
-    ``[@test/ut/scopes/deduce_ut.cpp]``
-
-[heading See Also]
-
-* __scopes__
-* __scopes_external__
-* __scopes_unique__
-* __scopes_shared__
-* __scopes_session__
-
-[endsect]
-
-[section external]
-
-[heading Description]
-Scope representing external values - passed by user. The life time of the object depends on the user.
-`Boost.DI` is not responsible of managing life time of passed objects, however `values` and `strings` will be copied
-and managed by the library. External scope has priority before other scopes which means that if some value/type
-will be bound using different scope as well then binding using external scope will be used.
-
-[heading Synopsis]
-    template<template<class> class TWrapper>
-    class external {
-    public:
-        typedef mpl::int_<1> priority;
-
-        template<class TExpected>
+        template<class TExpected, class TGiven>
         class scope {
         public:
-            TWrapper<TExpected> create();
-        };
+            template<class T, class TProvider>
+            auto create(const TProvider&);
     };
 
 [table Parameters
     [[Parameter][Requirement][Description][Returns][Throw]]
-    [[`TWrapper`][__wrapper_model__ type][Consist available type conversions]]
-    [[`TExpected`][None][Type to be expected by constructor]]
-    [[`create()`][None][Create wrapped type to be passed to constructor][__wrapper_model__<TExpected>][Does not throw]]
+    [[`TExpected`][None][Interface type to be expected by constructor]]
+    [[`TGiven`][None][Implementation to be created]]
+    [[`T`][None][Constructor parameter type]]
+    [[`TProvider`][__provider_model__][Instance provider]]
+    [[`create(TProvider)`][None][create `TGiven` object and return wrappered `TExpected` instance][None][Does not throw]]
 ]
-
-[table Conversions
-    [[Type][external]]
-    [[T][\u2714 - with lvalues]]
-    [[T*][\u2714 - with lvalues]]
-    [[T&][\u2714]]
-    [[const T&][\u2714]]
-    [[T&&][\u2714 - with lvalues]]
-    [[const T*][\u2714 - with lvalues]]
-    [[std::shared_ptr<T>][\u2714]]
-    [[boost::shared_ptr<T>][\u2714]]
-    [[std::unique_ptr<T>][\u2714 - with lvalues]]
-    [[std::auto_ptr<T>][\u2714 - with lvalues]]
-    [[][]]
-    [[temporary const T&][\u2714 - with lvalues]]
-    [[__di_named__<T, TName>][\u2714 - with lvalues]]
-]
-
-[note If expected type is `T*` or `const T*` then responsibility to delete the object is on client side. `Boost.DI` won't delete it.]
 
 [heading Header]
     #include <__di_hpp__>
@@ -285,84 +178,83 @@ will be bound using different scope as well then binding using external scope wi
 
 [heading Examples]
 [table
-    [[Binding][Description]]
-    [[```__di_bind__<int>::to(42)```][Bind `int` parameter to value `42`]]
-    [[```__di_bind__<std::string>::to("text")```][Bind `std::string` parameter to value `text`]]
-    [[```__di_bind__<example>::to(make_shared<example>())```][Bind example type to external `shared_ptr`]]
-    [[```__di_bind__<example>::to(cref(example_))```][Bind example to const reference object]]
-    [[```__di_bind__<example>::to(ref(example_))```][Bind example to reference object]]
-    [[```__di_bind__<int>::to([]{return 42;})```][Bind `int` to lambda expression returning `42` value]]
+    [
+        [
+            ```
+            struct c {
+                shared_ptr<i1> sp; /*singleton*/
+                unique_ptr<i2> up; /*unique*/
+                int& i; /*external*/
+                double d; /*unique*/
+            };
+
+            auto i = 42;
+
+            auto injector = __di_make_injector__(
+                __di_bind__<i1, impl1>
+              , __di_bind__<i2, impl2>
+              , __di_bind__<int>.to(ref(i))
+              , __di_bind__<double>.to(87.0)
+            );
+            ```
+        ]
+        [
+            ```
+            auto object1 = injector.__di_injector_create__<c>();
+            auto object2 = injector.__di_injector_create__<c>();
+            assert(object1.sp == object2.sp);
+            assert(object1.up != object2.up);
+            assert(42 == object1.i);
+            assert(&i == object1.i;
+            assert(42 == object2.i);
+            assert(&i == object2.i);
+            assert(87.0 == object1.d);
+            assert(87.0 == object2.d);
+            ```
+        ]
+    ]
 ]
 
-    auto example_ = make_shared<example>();
-
-    auto injector = __di_make_injector__(
-        __di_bind__<int>::to(42)
-      , __di_bind__<example>::to(example_)
-    );
-
-    assert(42 == injector.__di_injector_create__<int>());
-    assert(example_ == injector.__di_injector_create__<shared_ptr<example>>());
+[note Deduce scope has lower priority than explicit __bindings_scope__ definition, so `shared_ptr` parameter might be forced to be unique.]
 
 [heading More Examples]
-    ``__more_examples_externals__``
-
-[heading Tests]
-    ``[@test/ut/scopes/external_ut.cpp]`` | ``[@test/ut/wrappers/value_ut.cpp]`` | ``[@test/ut/wrappers/reference_ut.cpp]`` | ``[@test/ut/wrappers/shared_ut.cpp]``
+    ``__examples_deduce_scope__``
 
 [heading See Also]
 
 * __scopes__
-* __scopes_deduce__
 * __scopes_unique__
 * __scopes_shared__
 * __scopes_session__
+* __scopes_external__
 
 [endsect]
 
 [section unique]
 
 [heading Description]
-Scope representing per request value which means unique value always will be passed to the constructor.
+Scope representing unique value.
 
 [heading Synopsis]
-    template<template<class> class TWrapper = wrappers::copy>
     class unique {
     public:
-        typedef mpl::int_<0> priority;
+        static constexpr auto priority = false;
 
-        template<class TExpected>
+        template<class TExpected, class TGiven>
         class scope {
         public:
-            TWrapper<TExpected> create(const function<TExpected*()>&);
-        };
+            template<class T, class TProvider>
+            auto create(const TProvider&);
     };
 
 [table Parameters
-    [[Parameter][Requirement][Description][Returns][Throws]]
-    [[`TWrapper`][__wrapper_model__ type][Consist available type conversions]]
-    [[`TExpected`][None][Type to be expected by constructor]]
-    [[`create(const function<TExpected*()>&)`][None][Create wrapped type to be passed to constructor][__wrapper_model__<TExpected>][Does not throw]]
+    [[Parameter][Requirement][Description][Returns][Throw]]
+    [[`TExpected`][None][Interface type to be expected by constructor]]
+    [[`TGiven`][None][Implementation to be created]]
+    [[`T`][None][Constructor parameter type]]
+    [[`TProvider`][__provider_model__][Instance provider]]
+    [[`create(TProvider)`][None][create `TGiven` object and return wrappered `TExpected` instance][None][Does not throw]]
 ]
-
-[table Conversions
-    [[Type][unique]]
-    [[T][\u2714]]
-    [[T*][\u2714]]
-    [[T&][-]]
-    [[const T&][-]]
-    [[T&&][-]]
-    [[const T*][\u2714]]
-    [[std::shared_ptr<T>][\u2714]]
-    [[boost::shared_ptr<T>][\u2714]]
-    [[std::unique_ptr<T>][\u2714]]
-    [[std::auto_ptr<T>][\u2714]]
-    [[][]]
-    [[temporary const T&][\u2714]]
-    [[__di_named__<T, TName>][\u2714]]
-]
-
-[note If expected type is `T*` or `const T*` then responsibility to delete the object is on client side. `Boost.DI` won't delete it.]
 
 [heading Header]
     #include <__di_hpp__>
@@ -370,32 +262,41 @@ Scope representing per request value which means unique value always will be pas
 [heading Namespace]
     boost::di::scopes
 
-[heading Examples]
-[table
-    [[Binding][Description]]
-    [[```di::unique<__di_bind__<interface, implementation>>()```][Bind `interface` to `implementation` in unique scope]]
-    [[`create(const function<TExpected*()>&)`][Create wrapped type to be passed to constructor]]
+[table Conversions
+    [[Type]                     [unique]]
+    [[T]                        [\u2714]]
+    [[T&]                       [-]]
+    [[const T&]                 [\u2714 (temporary)]]
+    [[T*]                       [\u2714]]
+    [[const T*]                 [\u2714]]
+    [[T&&]                      [\u2714]]
+    [[unique_ptr<T>]            [\u2714]]
+    [[shared_ptr<T>]            [\u2714]]
+    [[weak_ptr<T>]              [-]]
 ]
 
-    auto injector = __di_make_injector__(
-        di::unique<
-            __di_bind__<interface, implementation>
-          , __di_bind_int__<42>
-        >()
-      , di::scope<di::scopes::unique<>>::bind<
-            __di_bind_string__<mpl::string<'txt'>>
-        >()
-    );
+[note If expected type is `T*` or `const T*` then responsibility to delete the object is on client side. `Boost.DI` won't delete it.]
 
-    assert(42 == injector.__di_injector_create__<int>());
-    assert("txt" == injector.__di_injector_create__<std::string>());
-    assert(dynamic_cast<implementation*>(injector.__di_injector_create__<shared_ptr<interface>>().get()));
-    assert(injector.__di_injector_create__<shared_ptr<interface>>() != injector.__di_injector_create__<shared_ptr<interface>>());
-
-[note Scope deduction has lower priority than explicit __bindings_scope__ definition, so `shared_ptr` parameter might be forced to be unique.]
-
-[heading Tests]
-    ``[@test/ut/scopes/unique_ut.cpp]`` | ``[@test/ut/wrappers/copy_ut.cpp]``
+[heading Examples]
+[table
+    [
+        [
+            ```
+            auto injector = __di_make_injector__(
+                __di_bind__<i1, impl1>.in(__di_scopes_unique__)
+            );
+            ```
+        ]
+        [
+            ```
+            assert(injector.__di_injector_create__<shared_ptr<i1>>()
+                   !=
+                   injector.__di_injector_create__<shared_ptr<i1>>()
+            );
+            ```
+        ]
+    ]
+]
 
 [heading See Also]
 
@@ -410,48 +311,28 @@ Scope representing per request value which means unique value always will be pas
 [section shared]
 
 [heading Description]
-Scope representing shared value which will be shared between all instances.
-`Boost.DI` to achieve that is using smart shared pointers. This scope will be deduced in case of `shared_ptr`.
-[note Shared scope will convert between `std::shared_ptr` and `boost::shared_ptr` if required.
- Primary smart pointer might be set by `BOOST_DI_CFG_STD_SMART_PTR` and `BOOST_DI_CFG_BOOST_SMART_PTR`.
- Only primary smart pointer will be able to be converted to `weak_ptr`.
-]
+Scope representing shared value between all instances within current thread.
+[note Shared scope will convert between `std::shared_ptr` and `boost::shared_ptr` if required.]
 
 [heading Synopsis]
-    template<template<class> class TWrapper = wrappers::shared>
     class shared {
     public:
-        typedef mpl::int_<0> priority;
+        static constexpr auto priority = false;
 
-        template<class TExpected>
+        template<class TExpected, class TGiven>
         class scope {
         public:
-            TWrapper<TExpected> create(const function<TExpected*()>&);
-        };
+            template<class T, class TProvider>
+            auto create(const TProvider&);
     };
 
 [table Parameters
-    [[Parameter][Requirement][Description][Returns][Throws]]
-    [[`TWrapper`][__wrapper_model__ type][Consist available type conversions]]
-    [[`TExpected`][None][Type to be expected by constructor]]
-    [[`create(const function<TExpected*()>&)`][None][Create wrapped type to be passed to constructor][__wrapper_model__<TExpected>][Does not throw]]
-]
-
-[table Conversions
-    [[Type][shared]]
-    [[T][-]]
-    [[T*][-]]
-    [[T&][-]]
-    [[const T&][-]]
-    [[T&&][-]]
-    [[const T*][-]]
-    [[std::shared_ptr<T>][\u2714]]
-    [[boost::shared_ptr<T>][\u2714]]
-    [[std::unique_ptr<T>][-]]
-    [[std::auto_ptr<T>][-]]
-    [[][]]
-    [[temporary const T&][-]]
-    [[__di_named__<T, TName>][\u2714 with T=shared_ptr<T>]]
+    [[Parameter][Requirement][Description][Returns][Throw]]
+    [[`TExpected`][None][Interface type to be expected by constructor]]
+    [[`TGiven`][None][Implementation to be created]]
+    [[`T`][None][Constructor parameter type]]
+    [[`TProvider`][__provider_model__][Instance provider]]
+    [[`create(TProvider)`][None][create `TGiven` object and return wrappered `TExpected` instance][None][Does not throw]]
 ]
 
 [heading Header]
@@ -460,22 +341,40 @@ Scope representing shared value which will be shared between all instances.
 [heading Namespace]
     boost::di::scopes
 
+[table Conversions
+    [[Type]                     [shared]]
+    [[T]                        [-]]
+    [[T&]                       [-]]
+    [[const T&]                 [-]]
+    [[T*]                       [-]]
+    [[const T*]                 [-]]
+    [[T&&]                      [-]]
+    [[unique_ptr<T>]            [-]]
+    [[shared_ptr<T>]            [\u2714]]
+    [[weak_ptr<T>]              [\u2714]]
+]
+
 [heading Examples]
 [table
-    [[Binding][Description]]
-    [[```di::shared<__di_bind__<interface, implementation>>()```][Bind `interface` to `implementation` in shared scope]]
+    [
+        [
+            ```
+            auto injector = __di_make_injector__(
+                __di_bind__<i1, impl1>.in(__di_scopes_shared__)
+            );
+
+            ```
+        ]
+        [
+            ```
+            assert(injector.__di_injector_create__<shared_ptr<i1>>()
+                   ==
+                   injector.__di_injector_create__<shared_ptr<i1>>()
+            );
+            ```
+        ]
+    ]
 ]
-    auto injector = __di_make_injector__(
-        di::shared<
-            __di_bind__<interface, implementation>
-        >()
-    );
-
-    assert(dynamic_cast<implementation*>(injector.__di_injector_create__<shared_ptr<interface>>().get()));
-    assert(injector.__di_injector_create__<shared_ptr<interface>>() == injector.__di_injector_create__<shared_ptr<interface>>());
-
-[heading Tests]
-    ``[@test/ut/scopes/shared_ut.cpp]`` | ``[@test/ut/wrappers/shared_ut.cpp]``
 
 [heading See Also]
 
@@ -488,53 +387,31 @@ Scope representing shared value which will be shared between all instances.
 [endsect]
 
 [section singleton]
-[endsect]
-
-[section session]
 
 [heading Description]
-Scope representing session value which will be shared between all instances and will be empty if it won't be in scope.
-Scope is activated by call of `call` method with `di::policies::session_entry` parameter and deactivated by call of `call` method with `di::policies::session_exit` parameter;
+Scope representing shared value between all instances and between threads.
+Singleton scope will be deduced in case of `shared_ptr` or `weak_ptr`.
+[note Singleton scope will convert between `std::shared_ptr` and `boost::shared_ptr` if required.]
 
 [heading Synopsis]
-    template<template<class> class TWrapper = wrappers::shared>
-    class session {
+    class singleton {
     public:
-        typedef mpl::int_<0> priority;
+        static constexpr auto priority = false;
 
-        template<class TExpected>
+        template<class TExpected, class TGiven>
         class scope {
         public:
-            TWrapper<TExpected> create(const function<TExpected*()>&);
-            void call(const session_entry&);
-            void call(const session_exit&);
-        };
+            template<class T, class TProvider>
+            auto create(const TProvider&);
     };
 
 [table Parameters
     [[Parameter][Requirement][Description][Returns][Throw]]
-    [[`TWrapper`][__wrapper_model__ type][Consist available type conversions]]
-    [[`TExpected`][None][type to be expected by constructor]]
-    [[`create(const function<TExpected*()>&)`][None][Create wrapped type to be passed to constructor][__wrapper_model__<TExpected>][Does not throw]]
-    [[`call(const session_entry&)`][None][Trigger  scope entry][][Does not throw]]
-    [[`call(const session_exit&)`][None][Trigger scope exit][][Does not throw]]
-]
-
-[table Conversions
-    [[Type][session]]
-    [[T][-]]
-    [[T*][-]]
-    [[T&][-]]
-    [[const T&][-]]
-    [[T&&][-]]
-    [[const T*][-]]
-    [[std::shared_ptr<T>][\u2714]]
-    [[boost::shared_ptr<T>][\u2714]]
-    [[std::unique_ptr<T>][-]]
-    [[std::auto_ptr<T>][-]]
-    [[][]]
-    [[temporary const T&][-]]
-    [[__di_named__<T, TName>][\u2714 with T=shared_ptr<T>]]
+    [[`TExpected`][None][Interface type to be expected by constructor]]
+    [[`TGiven`][None][Implementation to be created]]
+    [[`T`][None][Constructor parameter type]]
+    [[`TProvider`][__provider_model__][Instance provider]]
+    [[`create(TProvider)`][None][create `TGiven` object and return wrappered `TExpected` instance][None][Does not throw]]
 ]
 
 [heading Header]
@@ -543,26 +420,40 @@ Scope is activated by call of `call` method with `di::policies::session_entry` p
 [heading Namespace]
     boost::di::scopes
 
-[heading Examples]
-[table
-    [[Binding][Description]]
-    [[```di::session<__di_bind__<interface, implementation>>()```][Bind `interface` to `implementation` in session scope]]
+[table Conversions
+    [[Type]                     [singleton]]
+    [[T]                        [-]]
+    [[T&]                       [-]]
+    [[const T&]                 [-]]
+    [[T*]                       [-]]
+    [[const T*]                 [-]]
+    [[T&&]                      [-]]
+    [[unique_ptr<T>]            [-]]
+    [[shared_ptr<T>]            [\u2714]]
+    [[weak_ptr<T>]              [\u2714]]
 ]
 
-    auto injector = __di_make_injector__(
-        di::session<bind<interface, implementation>>()
-    );
+[heading Examples]
+[table
+    [
+        [
+            ```
+            auto injector = __di_make_injector__(
+                __di_bind__<i1, impl1>.in(__di_scopes_shared__)
+            );
 
-    assert(!injector.__di_injector_create__<std::unique_ptr<interface>>())
-
-    injector.call(di::scopes::session_entry());
-    assert(injector.__di_injector_create__<std::unique_ptr<interface>>())
-
-    injector.call(di::scopes::session_exit());
-    assert(!injector.__di_injector_create__<std::unique_ptr<interface>>())
-
-[heading Tests]
-    ``[@test/ut/scopes/session_ut.cpp]`` | ``[@test/ut/wrappers/shared_ut.cpp]``
+            ```
+        ]
+        [
+            ```
+            assert(injector.__di_injector_create__<shared_ptr<i1>>() // thread 1
+                   ==
+                   injector.__di_injector_create__<shared_ptr<i1>>() // thread 2
+            );
+            ```
+        ]
+    ]
+]
 
 [heading See Also]
 
@@ -570,6 +461,217 @@ Scope is activated by call of `call` method with `di::policies::session_entry` p
 * __scopes_deduce__
 * __scopes_external__
 * __scopes_unique__
+* __scopes_session__
+
+[endsect]
+
+[section session]
+
+[heading Description]
+Scope representing session value shared between all instances when within session and empty value otherwise.
+Scope is activated by call of `call` method with `session_entry` with given `name` parameter and deactivated
+by call of `call` method with `session_exit` with given `name` parameter;
+
+[heading Synopsis]
+    template<class = no_name>
+    class session_entry { };
+
+    template<class = no_name>
+    class session_exit { };
+
+    template<class TName = no_name>
+    class session {
+    public:
+        static constexpr auto priority = false;
+
+        template<class TExpected, class TGiven>
+        class scope {
+        public:
+            template<class T, class TProvider>
+            auto create(const TProvider&);
+
+            void call(const session_entry<TName>&) noexcept
+            void call(const session_exit<TName>&) noexcept;
+    };
+
+[table Parameters
+    [[Parameter][Requirement][Description][Returns][Throw]]
+    [[`TExpected`][None][Interface type to be expected by constructor]]
+    [[`TGiven`][None][Implementation to be created]]
+    [[`T`][None][Constructor parameter type]]
+    [[`TName`][None][Named object]]
+    [[`TProvider`][__provider_model__][Instance provider]]
+    [[`create(TProvider)`][None][create `TGiven` object and return wrappered `TExpected` instance][None][Does not throw]]
+    [[`call(const session_entry&)`][None][Trigger  scope entry][][Does not throw]]
+    [[`call(const session_exit&)`][None][Trigger scope exit][][Does not throw]]
+]
+
+[heading Header]
+    #include <__di_hpp__>
+
+[heading Namespace]
+    boost::di::scopes
+
+[table Conversions
+    [[Type]                     [session]]
+    [[T]                        [-]]
+    [[T&]                       [-]]
+    [[const T&]                 [-]]
+    [[T*]                       [-]]
+    [[const T*]                 [-]]
+    [[T&&]                      [-]]
+    [[unique_ptr<T>]            [-]]
+    [[shared_ptr<T>]            [\u2714]]
+    [[weak_ptr<T>]              [\u2714]]
+]
+
+[heading Examples]
+[table
+    [
+        [
+            ```
+            auto my_session = []{};
+
+            auto injector = __di_make_injector__(
+                __di_bind__<i1, impl1>.in(
+                    __di_scopes_session__(my_mession)
+                )
+            );
+            ```
+        ]
+        [
+            ```
+            assert(nullptr == injector.__di_injector_create__<shared_ptr<i1>>());
+            injector.call(di::session_entry(my_session);
+            assert(injector.__di_injector_create__<shared_ptr<i1>>()
+                   ==
+                   injector.__di_injector_create__<shared_ptr<i1>>()
+            );
+            injector.call(di::session_exit(my_session);
+            assert(nullptr == injector.__di_injector_create__<shared_ptr<i1>>());
+            ```
+        ]
+    ]
+]
+
+[heading See Also]
+
+* __scopes__
+* __scopes_deduce__
+* __scopes_external__
+* __scopes_unique__
+* __scopes_session__
+
+[endsect]
+
+[section external]
+
+[heading Description]
+Scope representing external values - passed by user. The life time of the object depends on the user.
+`Boost.DI` is not responsible of managing life time of passed objects, however `values` and `strings` will be copied
+and managed by the library. External scope has priority before other scopes which means that if some value/type
+will be bound using different scope as well then binding using external scope will be proffered.
+
+[heading Synopsis]
+    class external {
+    public:
+        static constexpr auto priority = true;
+
+        template<class TExpected, class TGiven>
+        class scope {
+        public:
+            template<class T, class TProvider>
+            auto create(const TProvider&);
+    };
+
+[table Parameters
+    [[Parameter][Requirement][Description][Returns][Throw]]
+    [[`TExpected`][None][Interface type to be expected by constructor]]
+    [[`TGiven`][None][Implementation to be created]]
+    [[`T`][None][Constructor parameter type]]
+    [[`TProvider`][__provider_model__][Instance provider]]
+    [[`create(TProvider)`][None][create `TGiven` object and return wrappered `TExpected` instance][None][Does not throw]]
+]
+
+[heading Header]
+    #include <__di_hpp__>
+
+[heading Namespace]
+    boost::di::scopes
+
+[table Conversions
+    [[Type]                     [external]]
+    [[T]                        [\u2714]]
+    [[T&]                       [\u2714]]
+    [[const T&]                 [\u2714]]
+    [[T*]                       [\u2714]]
+    [[const T*]                 [\u2714]]
+    [[T&&]                      [-]]
+    [[unique_ptr<T>]            [\u2714]]
+    [[shared_ptr<T>]            [\u2714]]
+    [[weak_ptr<T>]              [-]]
+]
+
+[note If expected type is `T*` or `const T*` then responsibility to delete the object is on client side. `Boost.DI` won't delete it.]
+
+[heading Examples]
+[table
+    [
+        [
+            ```
+            auto l = 42l;
+            auto b = false;
+
+            auto injector = __di_make_injector__(
+               __di_bind__<int, int_<41>>
+             , __di_bind__<int>.to(42)
+             , __di_bind__<i1>.to(make_shared<impl>());
+             , __di_bind__<long>.to(ref(l));
+             , __di_bind__<short>.to([]{return 87;})
+             , __di_bind__<i2>.to(
+                 [&](const auto& injector) {
+                    if (b) {
+                        return injector.template
+                            __di_injector_create__<impl2>();
+                    }
+                    return nullptr;
+                 }
+            );
+            ```
+        ]
+        [
+            ```
+            assert(42 == injector.__di_injector_create__<int>()); // external has priority
+            assert(injector.__di_injector_create__<shared_ptr<i1>>()
+                   ==
+                   injector.__di_injector_create__<shared_ptr<i1>>()
+            );
+            assert(l == injector.__di_injector_create__<long&>());
+            assert(&l == &injector.__di_injector_create__<long&>());
+            assert(87 == injector.__di_injector_create__<short>());
+            {
+            auto object = injector.__di_injector_create__<shared_ptr<i2>>();
+            assert(nullptr == object);
+            }
+            {
+            b = true;
+            auto object = injector.__di_injector_create__<shared_ptr<i2>>();
+            assert(dynamic_cast<impl2*>(object.get()));
+            }
+            ```
+        ]
+    ]
+]
+
+[heading More Examples]
+    ``__more_examples_externals__``
+
+[heading See Also]
+
+* __scopes__
+* __scopes_deduce__
+* __scopes_unique__
+* __scopes_shared__
 * __scopes_session__
 
 [endsect]
