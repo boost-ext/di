@@ -12,28 +12,7 @@
 `Boost.DI` design was driven by few main goals.
 
 * User interface should be compact and eliminate boilerplate code as much as possible (common things should be achieved in easy way and harder should be possible)
-    * achieved with [link di.concepts.scopes.deduce automatic scopes deduction]/[link di.concepts.bindings.bind automatic interface deduction]
-
-```
-    class example {
-    public:
-        example(std::shared_ptr<i>);
-    };
-```
-
-```
-        __di_make_injector__(__di_bind_deduce__<implementation>()).__di_injector_create__<example>();
-```
-
-```
-        __di_make_injector__(__di_bind__<interface, implementation>()).__di_injector_create__<example>();
-```
-
-```
-        __di_make_injector__(__di_bind_shared__<__di_bind__<interface, implementation>>()).__di_injector_create__<example>();
-```
-
-[note All above expressions create the same configuration.]
+    * achieved with [link di.concepts.scopes.deduce automatic scopes deduction]
 
 * Dependencies should be resolved during compilation time (no runtime exceptions when dependencies can't be resolved)
     * achieved with compile time dependency resolving
@@ -47,98 +26,18 @@
 * Binding front end should be easily extensible
     * achieved with [link di.concepts.bindings.synopsis dependency model] - custom user interface for binding has to return list of [link di.concepts.bindings.synopsis dependency] models
 
-and maybe the most important that `Boost.DI` shouldn't be a copy of existing frameworks like [@https://github.com/google/guice Google Guice] for `Java` or [@http://www.ninject.org Ninject] for `C#`
-and use whole potential of `C++` instead whilst not ignoring useful concepts in the same time.
-
 [h6 Design]
 [@images/di.png [$images/di.png [width 75%] [height 75%] ]]
 Generated with [@http://plantuml.sourceforge.net PlantUML].
 
-[note During implementation of `Boost.DI` a lot of concepts were checked
-and a many approaches were taken. To track different design's
-please refer to commits history.]
-
-`Boost.DI` architecture.
-
 [table
     [ [Component] [Description] ]
-    [ [__core__] [Responsible for resolving requested types (implementation detail)] ]
     [ [__bindings__] [DSL to create dependencies representation which will be used by core to resolve types] ]
+    [ [__core__] [Responsible for resolving requested types (implementation detail)] ]
+    [ [__providers__] [Responsible for providings object instance] ]
     [ [__scopes__] [Responsible for maintain objects life time] ]
     [ [__wrappers__] [Responsible for conversion to required type] ]
     [ [__policies__] [Compile time assertions for types] ]
-]
-
-[#constructor_injection]
-Having above in mind, main concern was - how to make constructor injection as less intrusive as possible (avoid macros/registration/reflection)?.
-Problem was solved purely in `C++`.
-
-```
-struct any_type {
-    template<typename U> operator U();
-};
-
-class injector {
-public:
-    template<typename T>
-    T create(std::enable_if<std::is_constructible<T, any_type...>::value>::type* = 0) const {
-        return T(create<any_type>()...);
-    }
-};
-
-struct example {
-    example(int i, int double) { }
-};
-
-injector().__di_injector_create__<example>();
-```
-[note Purpose of above pseudo code is to illustrate basic idea, if you interested in the implementation details take a look into `Boost.DI` source code.]
-
-Approach presented above although meet all the requirements cause tricky issues as well - see [link di.overview.notes Notes] for further information.
-
-[h5 Constructor Parameters Deduction]
-
-# for type T
-    # for N = 1 to [link di.overview.configuration BOOST_DI_CFG_CTOR_LIMIT_SIZE]
-    # if T has constructor with N parameters (which might be converted using `conversion operator` / __injections_ctor_traits__) then goto `2`
-# generate list of `any_type` with N elements which represents constructor parameters (notice that `any_type` is convertible to actual constructor parameter)
-
-[table
-    [[Tests: [@test/ut/type_traits/has_ctor_ut.cpp] | [@test/ut/type_traits/ctor_traits_ut.cpp]]]
-]
-
-[h5 Binding Resolution Algorithm]
-
-# for type T
-    # set `current_weight` to 0 and `best_dependency` to default dependency
-    # for all given dependencies
-        # if `dependency` scope is set to `deduce` rebind it accordingly to one of non virtual scopes (using `scope traits - see __scopes_deduce__`)
-        # for all given dependency requirements calculate weight
-            # `weight` = requirement1 * 10, requirement2 * 100, ..., requirementN * (N times 10)
-        # if `weight` > `current_weight`
-            # set `current_weight` to `weight`
-            # set `best_dependency` to `dependency`
-    # return `best_dependency`
-
-[table
-    [[Tests: [@test/ut/core/binder_ut.cpp]]]
-]
-
-[h5 Type Creation Algorithm]
-
-# for type T
-    # get constructor parameters
-        # if T has `constructor` traits (set using __injections_boost_di_inject__)
-            # get `constructor` parameters from traits
-        # else
-            # deduce `constructor` using [link di.concepts.injections.automatic Constructor Parameters Deduction]
-    # create T with `constructor` parameters T(`constructor parameters`...)
-        # for all `constructor` parameters resolve best dependency using `Binding Resolution Algorithm`
-            # allocate required type and pass it to `dependency` scope
-            # return wrappered type from scope which is converted to actual constructor parameter
-
-[table
-    [[Tests: [@test/ut/core/creator_ut.cpp] | [@test/ut/injector_ut.cpp] | [@test/mt/core/module_mt.cpp] | [@test/mt/injector_mt.cpp] | [@test/mt/make_injector_mt.cpp]]]
 ]
 
 [endsect]

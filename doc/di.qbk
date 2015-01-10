@@ -23,6 +23,7 @@
 
 [def __concepts__                                       [link di.concepts Concepts]]
 
+[def __injector__                                       [link di.injector Injector]]
 [def __injections__                                     [link di.concepts.injections Injections]]
 [def __injections_automatic__                           [link di.concepts.injections.automatic automatic]]
 [def __injections_boost_di_inject__                     [link di.concepts.injections.boost_di_inject BOOST_DI_INJECT]]
@@ -135,12 +136,17 @@
 [def __di_injector_allocate__                           [link di.concepts.injectors.injector.synopsis allocate]]
 [def __di_injector_visit__                              [link di.concepts.injectors.injector.synopsis visit]]
 [def __di_make_injector__                               [link di.concepts.injectors.make_injector di::make_injector]]
-[def __di_scopes_deduce__                               [link di.concepts.scopes.deduce di::scopes::deduce]]
-[def __di_scopes_unique__                               [link di.concepts.scopes.unique di::scopes::unique]]
-[def __di_scopes_shared__                               [link di.concepts.scopes.shared di::scopes::shared]]
-[def __di_scopes_session__                              [link di.concepts.scopes.session di::scopes::session]]
-[def __di_scopes_external__                             [link di.concepts.scopes.external di::scopes::external]]
+[def __di_scopes_deduce__                               [link di.concepts.scopes.deduce di::deduce]]
+[def __di_scopes_unique__                               [link di.concepts.scopes.unique di::unique]]
+[def __di_scopes_shared__                               [link di.concepts.scopes.shared di::shared]]
+[def __di_scopes_session__                              [link di.concepts.scopes.session di::session]]
+[def __di_scopes_singleton__                            [link di.concepts.scopes.singleton di::singleton]]
+[def __di_scopes_external__                             [link di.concepts.scopes.external di::external]]
 [def __di_dependency__                                  [link di.concepts.bindings.synopsis di::dependency]]
+
+
+[def __di_config__                                      [link di.concepts.bindings.synopsis di::config]]
+[def __di_make_policies__                               [link di.concepts.bindings.synopsis di::make_policies]]
 
 [def __di_hpp__                                         [link di.reference.di_hpp boost/di.hpp]]
 [def __di_inject_hpp__                                  [link di.reference.di_inject_hpp boost/di/inject.hpp]]
@@ -150,9 +156,9 @@
 [include overview.qbk]
 [include tutorial.qbk]
 [include quick_user_guide.qbk]
+[include performance.qbk]
 [include concepts.qbk]
 [include examples.qbk]
-[include performance.qbk]
 [include rationale.qbk]
 [include changelog.qbk]
 [include acknowledgements.qbk]

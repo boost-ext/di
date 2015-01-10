@@ -350,7 +350,7 @@ auto injector = di::make_injector(      |
 ```
 ```cpp
 Annotated constructor injection with    | Test
-ctor_traits
+di::ctor_traits
 ----------------------------------------|-----------------------------------------
 auto int1 = []{};                       | auto object = injector.create<c>();
 auto int2 = []{};                       | assert(42 == c.a);
@@ -951,6 +951,15 @@ struct c {                              |
                                         |
 di::make_injector().create<c>();        |
 ```
+
+*
+
+> **[Good practices](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)**
+* Composition root
+* Don't carry dependencies
+* Limit consturctor parameters limit size
+* Prefere configuration in modules
+* expose the types if appropritate
 
 *
 

@@ -8,5 +8,1091 @@
  /]
 
 [section Quick User Guide]
+
+* __injector__
+
+[table
+[[create empty injector][Test]]
+    [
+        [
+            ```
+            auto injector = __di_make_injector__();
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            assert(0 == injector.__di_injector_create__<int>());
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+* __bindings__
+
+[table
+[[Bind interface to implementation][Test]]
+    [
+        [
+            ```
+            auto injector = __di_make_injector__(
+                __di_bind__<i1, impl1>
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<unique_ptr<i1>>();
+            assert(dynamic_cast<impl1*>(object.get()));
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+
+[table
+[[Bind different interfaces to one][Test]]
+    [
+        [
+            ```
+            auto injector = __di_make_injector__(
+                __di_bind__<__bindings_bind_any_of__<i1, i2>, impl>
+            );
+
+
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object1 = injector.__di_injector_create__<shared_ptr<i1>>();
+            auto object2 = injector.__di_injector_create__<shared_ptr<i2>>();
+            assert(dynamic_cast<impl*>(object1.get()));
+            assert(dynamic_cast<impl*>(object2.get()));
+            assert(object1 == object2);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+
+[table
+[[Bind type to compile time value][Test]]
+    [
+        [
+            ```
+            template<int N> using int_ = integral_constant<int, N>;
+
+            auto injector = __di_make_injector__(
+                __di_bind__<int, int_<42>>
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            assert(42 == injector.__di_injector_create__<int>());
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+
+[table
+[[Bind type to value (see external scope)][Test]]
+    [
+        [
+            ```
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.to(42)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            assert(42 == injector.__di_injector_create__<int>());
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+* __injections__
+
+[table
+[[Direct constructor injection][Test]]
+    [
+        [
+            ```
+            struct c {
+                c(int a, double d) : a(a), d(d) { }
+
+                int a = 0;
+                double d = 0.0;
+            };
+
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.to(42)
+              , __di_bind__<double>.to(87.0)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(42 == object.a);
+            assert(87.0 == object.b);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+
+[table
+[[Aggregate constructor injection][Test]]
+    [
+        [
+            ```
+            struct c {
+                int a = 0;
+                double d = 0.0;
+            };
+
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.to(42)
+              , __di_bind__<double>.to(87.0)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(42 == object.a);
+            assert(87.0 == object.b);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+
+[table
+[[Direct constructor injection with many constructors\n
+  (longest parameters list constructor will be chosen)][Test]]
+    [
+        [
+            ```
+            struct c {
+                c();
+                c(int a) : a(a) { }
+                c(int a, double d) : a(a), d(d) { }
+
+                int a = 0;
+                double d = 0.0;
+            };
+
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.to(42)
+              , __di_bind__<double>.to(87.0)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(42 == object.a);
+            assert(87.0 == object.b);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+[table
+[[Direct constructor injection with ambigious constructors (__injections_boost_di_inject__)][Test]]
+    [
+        [
+            ```
+            struct c {
+                c(double d, int a) : a(a), d(d) { }
+                __injections_boost_di_inject__(c, int a, double d)
+                    : a(a), d(d) { }
+
+                int a = 0;
+                double d = 0.0;
+            };
+
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.to(42)
+              , __di_bind__<double>.to(87.0)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(42 == object.a);
+            assert(87.0 == object.b);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+
+[table
+[[Direct constructor injection with ambigious constructors (__injections_boost_di_inject_traits__)][Test]]
+    [
+        [
+            ```
+            struct c {
+                __injections_boost_di_inject_traits__(int, double);
+                c(double d, int a) : a(a), d(d) { }
+                c(int a, double d) : a(a), d(d) { }
+
+                int a = 0;
+                double d = 0.0;
+            };
+
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.to(42)
+              , __di_bind__<double>.to(87.0)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(42 == object.a);
+            assert(87.0 == object.b);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+
+[table
+[[Direct constructor injection with ambigious constructors (__injections_ctor_traits__)][Test]]
+    [
+        [
+            ```
+            struct c {
+                c(double d, int a) : a(a), d(d) { }
+                c(int a, double d) : a(a), d(d) { }
+
+                int a = 0;
+                double d = 0.0;
+            };
+
+            namespace boost { namespace di {
+            template<>
+            struct __injections_ctor_traits__<c> {
+                __injections_boost_di_inject_traits__(int, double);
+            };
+            }} // boost::di
+
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.to(42)
+              , __di_bind__<double>.to(87.0)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(42 == object.a);
+            assert(87.0 == object.b);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+* __annotations__
+
+[table
+[[Annotated constructor injection][Test]]
+    [
+        [
+            ```
+            auto int1 = []{};
+            auto int2 = []{};
+
+            struct c {
+                __injections_boost_di_inject__(c
+                    , (__bindings_named__ = int1) int a
+                    , (__bindings_named__ = int2) int b)
+                    : a(a), b(b)
+                { }
+
+                int a = 0;
+                int b = 0;
+            };
+
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.__bindings_named__(int1).to(42)
+              , __di_bind__<int>.__bindings_named__(int2).to(87)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(42 == c.a);
+            assert(87 == c.b);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+
+[table
+[[Annotated constructor injection with the same names for different parameters][Test]]
+    [
+        [
+            ```
+            auto n1 = []{};
+            auto n2 = []{};
+
+            struct c {
+                __injections_boost_di_inject__(c
+                    , (__bindings_named__ = n1) int a
+                    , (__bindings_named__ = n1) int b
+                    , (__bindings_named__ = n2) int c
+                    , int d
+                    , (__bindings_named__ = n1) string s)
+                    : a(a), b(b), c(c), d(d), s(s)
+                { }
+
+                int a = 0;
+                int b = 0;
+                int c = 0;
+                int d = 0;
+                string s;
+            };
+
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.__bindings_named__(n1).to(42)
+              , __di_bind__<int>.__bindings_named__(n2).to(87)
+              , __di_bind__<string>.__bindings_named__(n1).to("str")
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(42 == c.a);
+            assert(42 == c.b);
+            assert(87 == c.c);
+            assert(0 == c.d);
+            assert("str" == c.s);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+
+[table
+[[Annotated constructor injection with seperate constructor definition  ][Test]]
+    [
+        [
+            ```
+            auto int1 = []{};
+            auto int2 = []{};
+
+            struct c {
+                __injections_boost_di_inject__(c
+                    , (__bindings_named__ = int1) int a
+                    , (__bindings_named__ = int2) int b);
+
+                int a = 0;
+                int b = 0;
+            };
+
+            c::c(int a, int b) : a(a), b(b) { }
+
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.__bindings_named__(int1).to(42)
+              , __di_bind__<int>.__bindings_named__(int2).to(87)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(42 == c.a);
+            assert(87 == c.b);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+
+[table
+[[Annotated constructor injection with __injections_ctor_traits__][Test]]
+    [
+        [
+            ```
+            auto int1 = []{};
+            auto int2 = []{};
+
+            struct c {
+                c(int a, int b) : a(a), b(b) { }
+
+                int a = 0;
+                int b = 0;
+            };
+
+            namespace boost { namespace di {
+            template<>
+            struct ctor_traits<c> {
+                __injections_boost_di_inject_traits__(
+                    (__bindings_named__ = int1) int
+                  , (__bindings_named__ = int2) int);
+            };
+            }} // boost::di
+
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.__bindings_named__(int1).to(42)
+              , __di_bind__<int>.__bindings_named__(int2).to(87)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(42 == c.a);
+            assert(87 == c.b);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+* __scopes__
+
+[table
+[[Deduce scope (default)][Test]]
+    [
+        [
+            ```
+            struct c {
+                shared_ptr<i1> sp; /*singleton*/
+                unique_ptr<i2> up; /*unique*/
+                int& i; /*external*/
+                double d; /*unique*/
+            };
+
+            auto i = 42;
+
+            auto injector = __di_make_injector__(
+                __di_bind__<i1, impl1>
+              , __di_bind__<i2, impl2>
+              , __di_bind__<int>.to(ref(i))
+              , __di_bind__<double>.to(87.0)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object1 = injector.__di_injector_create__<c>();
+            auto object2 = injector.__di_injector_create__<c>();
+            assert(object1.sp == object2.sp);
+            assert(object1.up != object2.up);
+            assert(42 == object1.i);
+            assert(&i == object1.i;
+            assert(42 == object2.i);
+            assert(&i == object2.i);
+            assert(87.0 == object1.d);
+            assert(87.0 == object2.d);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+
+[table
+[[Unique scope][Test]]
+    [
+        [
+            ```
+            auto injector = __di_make_injector__(
+                __di_bind__<i1, impl1>.in(__di_scopes_unique__)
+            );
+
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            assert(injector.__di_injector_create__<shared_ptr<i1>>()
+                   !=
+                   injector.__di_injector_create__<shared_ptr<i1>>()
+            );
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+
+[table
+[[Shared scope (shared per one thread)][Test]]
+    [
+        [
+            ```
+            auto injector = __di_make_injector__(
+                __di_bind__<i1, impl1>.in(__di_scopes_shared__)
+            );
+
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            assert(injector.__di_injector_create__<shared_ptr<i1>>()
+                   ==
+                   injector.__di_injector_create__<shared_ptr<i1>>()
+            );
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+
+[table
+[[Singleton scope (shared between threads)][Test]]
+    [
+        [
+            ```
+            auto injector = __di_make_injector__(
+                __di_bind__<i1, impl1>.in(__di_scopes_singleton__)
+            );
+
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            assert(injector.__di_injector_create__<shared_ptr<i1>>()
+                   ==
+                   injector.__di_injector_create__<shared_ptr<i1>>()
+            );
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+
+[table
+[[Session scope][Test]]
+    [
+        [
+            ```
+            auto my_session = []{};
+
+            auto injector = __di_make_injector__(
+                __di_bind__<i1, impl1>.in(
+                    __di_scopes_session__(my_mession)
+                )
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            assert(nullptr == injector.__di_injector_create__<shared_ptr<i1>>());
+            injector.call(di::session_entry(my_session);
+            assert(injector.__di_injector_create__<shared_ptr<i1>>()
+                   ==
+                   injector.__di_injector_create__<shared_ptr<i1>>()
+            );
+            injector.call(di::session_exit(my_session);
+            assert(nullptr == injector.__di_injector_create__<shared_ptr<i1>>());
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+
+[table
+[[External scope][Test]]
+    [
+        [
+            ```
+            auto l = 42l;
+            auto b = false;
+
+            auto injector = __di_make_injector__(
+               __di_bind__<int, int_<41>>
+             , __di_bind__<int>.to(42)
+             , __di_bind__<i1>.to(make_shared<impl>());
+             , __di_bind__<long>.to(ref(l));
+             , __di_bind__<short>.to([]{return 87;})
+             , __di_bind__<i2>.to(
+                 [&](const auto& injector) {
+                    if (b) {
+                        return injector.template
+                            __di_injector_create__<impl2>();
+                    }
+                    return nullptr;
+                 }
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            assert(42 == injector.__di_injector_create__<int>()); // external has priority
+            assert(injector.__di_injector_create__<shared_ptr<i1>>()
+                   ==
+                   injector.__di_injector_create__<shared_ptr<i1>>()
+            );
+            assert(l == injector.__di_injector_create__<long&>());
+            assert(&l == &injector.__di_injector_create__<long&>());
+            assert(87 == injector.__di_injector_create__<short>());
+            {
+            auto object = injector.__di_injector_create__<shared_ptr<i2>>();
+            assert(nullptr == object);
+            }
+            {
+            b = true;
+            auto object = injector.__di_injector_create__<shared_ptr<i2>>();
+            assert(dynamic_cast<impl2*>(object.get()));
+            }
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+
+[table
+[[Custom scope][Test]]
+    [
+        [
+            ```
+            struct custom_scope {
+                static constexpr auto priority = false;
+
+                template<class TExpected, class>
+                struct scope {
+                    template<class T, class TProvider>
+                    auto __di_injector_create__(const TProvider& pr) {
+                        return shared_ptr<TExpected>{pr.get()};
+                    }
+                };
+            };
+
+            auto injector = __di_make_injector__(
+              __di_bind__<i, impl>.in(custom_scope{})
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            assert(injector.__di_injector_create__<shared_ptr<i>>()
+                   !=
+                   injector.__di_injector_create__<shared_ptr<i>>()
+            );
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+* __modules__
+
+[table
+[[Module][Test]]
+    [
+        [
+            ```
+            struct c {
+                c(unique_ptr<i1> i1
+                , unique_ptr<i2> i2
+                , int i) : i1(i1), i2(i2), i(i)
+                { }
+
+                unique_ptr<i1> i1;
+                unique_ptr<i2> i2;
+                int i = 0;
+            };
+
+            struct module1 {
+                auto configure() const noexcept {
+                    return __di_make_injector__(
+                        __di_bind__<i1, impl1>
+                      , __di_bind__<int>.to(42)
+                    );
+                }
+            };
+
+            struct module2 {
+                auto configure() const noexcept {
+                    return __di_make_injector__(
+                        __di_bind__<i2, impl2>
+                    );
+                };
+            };
+
+            auto injector = __di_make_injector__(
+                module1{}, module2{}
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(dynamic_cast<impl1*>(object.i1.get()));
+            assert(dynamic_cast<impl2*>(object.i2.get()));
+            asert(42 == object.i);
+            assert(dynamic_cast<impl1*>(injector.crate<unique_ptr<i1>>());
+            assert(dynamic_cast<impl2*>(injector.crate<unique_ptr<i2>>());
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+
+[table
+[[Exposed type module][Test]]
+    [
+        [
+            ```
+            struct module {
+                __di_injector__<c> configure()
+                const noexcept;
+
+                int i = 0;
+            };
+
+            __di_injector__<c> // expose c
+            module::configure() const noexcept {
+                return __di_make_injector__(
+                    __di_bind__<i1, impl1>
+                  , __di_bind__<i2, impl2>
+                  , __di_bind__<int>.to(i)
+                );
+            }
+
+            auto injector = __di_make_injector__(
+                module{42}
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(dynamic_cast<impl1*>(object.i1.get()));
+            assert(dynamic_cast<impl2*>(object.i2.get()));
+            asert(42 == object.i);
+            injector.crate<unique_ptr<i1>>() // compile error
+            injector.crate<unique_ptr<i2>>() // compile error
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+
+[table
+[[Exposed many types module][Test]]
+    [
+        [
+            ```
+            struct module {
+                __di_injector__<i1, i2> configure()
+                const noexcept;
+
+                int i = 0;
+            };
+
+            __di_injector__<i1, i2> // expose i1, i2
+            module::configure() const noexcept {
+                return __di_make_injector__(
+                    __di_bind__<i1, impl1>
+                  , __di_bind__<i2, impl2>
+                );
+            }
+
+            auto injector = __di_make_injector__(
+                module{}
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            assert(dynamic_cast<impl1*>(injector.crate<unique_ptr<i1>>());
+            assert(dynamic_cast<impl2*>(injector.crate<unique_ptr<i2>>());
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+
+[table
+[[Exposed type module with annotation][Test]]
+    [
+        [
+            ```
+            auto my = []{};
+
+            struct c {
+                __injections_boost_di_inject__(c
+                  , (__bindings_named__ = my) unique_ptr<i1> up)
+                  : up(up)
+                { }
+
+                unique_ptr<i1> up;
+            };
+
+            __di_injector__<i1> module =
+                __di_make_injector__(
+                    __di_bind__<i1, impl1>
+                );
+
+            auto injector = __di_make_injector__(
+                __di_bind__<i1>.__bindings_named__(my).to(module)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(dynamic_cast<impl1*>(c.up.get()));
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+* __policies__
+
+[table
+[[Define policies configuration (dump types)][Test]]
+    [
+        [
+            ```
+            class print_types_policy : public __di_config__ {
+            public:
+                auto policies() const noexcept {
+                    return __di_make_policies__(
+                        [](auto type){
+                            using T = decltype(type);
+                            using arg = typename T::type;
+                            cout << typeid(arg).name() << endl;
+                        }
+                    );
+                }
+            };
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            // per injector policy
+            auto injector = __di_make_injector__<print_types_policy>();
+            injector.__di_injector_create__<int>(); // output: int
+
+            // global policy
+            #define BOOST_DI_CFG my_policy
+            auto injector = __di_make_injector__();
+            injector.__di_injector_create__<int>(); // output: int
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+
+[table
+[[Define policies configuration (dump types extended)][Test]]
+    [
+        [
+            ```
+            class print_types_info_policy : public __di_config__ {
+            public:
+                auto policies() const noexcept {
+                    return __di_make_policies__(
+                        [](auto type, auto dep, auto... ctor) {
+                            using T = decltype(type);
+                            using arg = typename T::type;
+                            using arg_name = typename T::name;
+                            using D = decltype(dep);
+                            using scope = typename D::scope;
+                            using expected = typename D::expected;
+                            using given = typename D::given;
+                            using name = typename D::name;
+                            auto ctor_s = sizeof...(ctor);
+
+                            cout << ctor_s << endl
+                                << typeid(arg).name() << endl
+                                << typeid(arg_name).name() << endl
+                                << typeid(scope).name() << endl
+                                << typeid(expected).name() << endl
+                                << typeid(given).name() << endl
+                                << typeid(name).name() << endl;
+                        }
+                    )
+                }
+            };
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            // per injector policy
+            auto injector = __di_make_injector__<print_types_info_policy>(
+                __di_bind__<i1, impl1>
+            );
+
+            injector.__di_injector_create__<unique_ptr<i1>>();
+                // output:
+                0 // ctor_size of impl1
+                unique_ptr<i1> // ctor arg
+                di::no_name // ctor arg name
+                __di_scopes_deduce__ // scope
+                i1 // expected
+                impl1 // given
+                no_name // dependency
+
+            // global policy
+            #define BOOST_DI_CFG my_policy
+            auto injector = __di_make_injector__(
+                __di_bind__<i1, impl1>
+            );
+
+            injector.__di_injector_create__<unique_ptr<i1>>();
+                // output:
+                0 // ctor_size of impl1
+                unique_ptr<i1> // cotr arg
+                di::no_name // ctor arg name
+                __di_scopes_deduce__ // scope
+                i1 // expected
+                impl1 // given
+                no_name // dependency
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+
+[table
+[[Allow ctor types policy][Test]]
+    [
+        [
+            ```
+            #include <boost/di/policies/allow_ctor_types.hpp>
+
+            class all_must_be_bound_unless_int : public __di_config__ {
+            public:
+                auto policies() const noexcept {
+                    using namespace di::policies;
+                    using namespace di::policies::operators;
+
+                    return __di_make_policies__(
+                        allow_ctor_types(is_same<_, int>{} || is_bound<_>{})
+                    );
+                }
+            };
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            // global policy
+            #define BOOST_DI_CFG all_must_be_bound_unless_int
+            assert(0 == injector.__di_injector_create__<int>());
+            injector.__di_injector_create__<double>(); // compile error
+            assert(42.0, make_injector(
+                             __di_bind__<double>.to(42.0)
+                         ).__di_injector_create__<double>()
+            );
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+* __providers__
+
+[table
+[[Heap no throw provider][Test]]
+    [
+        [
+            ```
+            class heap_no_throw {
+            public:
+                template<
+                  class // interface
+                , class T // implementation
+                , class TInit // direct()/uniform{}
+                , class TMemory // heap/stack
+                , class... TArgs>
+                auto get(const TInit&, const TMemory&, TArgs&&... args) const noexcept {
+                    return new (nothrow) T{forward<TArgs>(args)...};
+                }
+            };
+
+            class my_provider : public __di_config__ {
+            public:
+                auto provider() const noexcept {
+                    return heap_no_throw{};
+                }
+            };
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            // per injector policy
+            auto injector = __di_make_injector__<my_provider>();
+            assert(0 == injector.__di_injector_create__<int>());
+
+            // global policy
+            #define BOOST_DI_CFG my_provider
+            auto injector = __di_make_injector__();
+            assert(0 == injector.__di_injector_create__<int>());
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
 [endsect]
 

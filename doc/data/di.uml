@@ -8,135 +8,105 @@
 
 package Boost.DI {
 
-    package user <<Rect>> {
-        class named {
-            named(T)
-            operator T() const
-        }
-
-        class provider {
-            T get() const
-        }
-
-        class make_injector {
-        }
-
-    }
-
     package core <<Rect>> {
-        class allocator {
-            T* allocate(...) const
-        }
         class any_type {
             operator T()
         }
         class binder {
-            typedef resolve
+            resolve(Deps)
         }
-        class creator {
-            universal<T> create(policies...)
+        class dependency {
+            in(Scope)
+            named(Name)
+            to(T)
         }
-        class module {
+        class injector {
             typedef deps
-            module(TArgs...)
+            injector(TArgs...)
             T create(policies...)
-            T allocate(allocator, policies...)
-            void visit()
-            void call(TAction)
         }
         class pool {
-            pool(...)
             T get() const
         }
     }
 
-    package concepts <<Rect>> {
-        class dependency {
-            dependency()
-            dependency(T)
-            dependency<T> to(T)
-        }
-        class bind
-        class scope
-    }
-
     package scopes <<Rect>> {
         class deduce {
+            create(Provider)
+        }
+        class exposed {
+            create(Provider)
         }
         class external {
-            T create()
+            create(Provider)
         }
         class session {
-            T create(function<T*()>)
+            create(Provider)
         }
         class shared {
-            T create(function<T*()>)
+            create(Provider)
+        }
+        class singleton {
+            create(Provider)
         }
         class unique {
-            T create(function<T*()>)
+            create(Provider)
         }
     }
 
     package policies <<Rect>> {
-        class parameters_permission {
-            void assert_policy() const
+        class allow_ctor_types {
+            operaator()(T)
+        }
+    }
+
+    package providers <<Rect>> {
+        class heap {
+            get()
         }
 
-        class circular_dependencies {
-            void assert_policy() const
-        }
-
-        class creation_permission {
-            void assert_policy() const
-        }
-
-        class scopes_permission {
-            void assert_policy() const
+        class stack_over_heap {
+            get()
         }
     }
 
     package wrappers <<Rect>> {
-        class copy {
-            T operator()(type<T>) const
-        }
-        class reference {
-            T operator()(type<T>) const
-        }
         class wrappers.shared {
-            T operator()(type<T>) const
+            operator shared_ptr<T>()
         }
-        class universal {
-            T operator()(type<T>) const
-        }
-        class value {
-            T operator()(type<T>) const
+        class wrappers.unique {
+            operator T()
+            operator T*()
+            operator unique_ptr<T>()
+            operator shared_ptr<T>()
         }
     }
 
-    class injector {
-        injector(TArgs...)
-        T create(policies...)
-        T allocate(allocate, policies...)
-        void visit()
-        void call(TAction)
+    class bind {
     }
 
-    user - injector
-    user - policies
-    dependency <|-- scope
+    class make_injector {
+    }
+
+    class config {
+        policies()
+        provider()
+    }
+
     dependency <|-- bind
-    injector - concepts
-    injector - policies
-    injector <|-- module
-    scopes - wrappers
-    dependency - module
-    concepts - scopes
+    scopes - bind
+    make_injector - bind
 
-    module <|-- pool
-    module --* creator
-    creator --* binder
-    any_type - creator
-    allocator - creator
+    make_injector - injector
+    make_injector - config
+    config - policies
+    config - providers
+    scopes - wrappers
+    binder - dependency
+
+    injector <|-- pool
+    injector --* binder
+    injector --* any_type
 }
 
 @enduml

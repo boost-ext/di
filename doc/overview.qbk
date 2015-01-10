@@ -9,152 +9,45 @@
 
 [section Overview]
 
-`Boost.DI` is `C++03`/`C++11`/`C++14` header only, type safe, library providing compile time, macro free constructor [@http://en.wikipedia.org/wiki/Dependency_injection dependency injection].
+[@https://travis-ci.org/krzysztof-jusiak/di [$https://img.shields.io/travis/krzysztof-jusiak/di/cpp14.svg [format PNG]]]
+[@http://github.com/krzysztof-jusiak/di/issues [$https://img.shields.io/github/issues/krzysztof-jusiak/di.svg [format PNG]]]
 
-[h6 Features]
-
-* Type safe
-* Header only library
-* Architecture independent (tested on x86/x86-64)
-* Supports all POSIX and Windows operating systems (tested on Linux/Windows/Mac/Darwin)
-* Supports `C++03`/`C++11`/`C++14`
-* Exception safe guaranty
-* Thread safe guaranty
-* [link di.concepts.injections.automatic Constructor injection] (macro free)
-* Compile time creation guaranty
-* Compile time __policies__ (__policies_circular_dependencies__, __policies_creation_permission__, __policies_parameters_permission__, __policies_scopes_permission__)
-* Dependencies life time management (__scopes_deduce__, __scopes_external__, __scopes_unique__, __scopes_shared__, __scopes_session__ + [link di.examples.custom_scope custom scope])
-* [link di.concepts.scopes.deduce Scope deduction] (shared\_ptr -> shared, unique\_ptr, lvalue -> unique, ...)
-* Supports copies, references, pointers, boost and std smart pointers / rvalue references (`C++11`)
-* [link di.concepts.annotations.named Named parameters] (__annotations_named__\<int, my\_int\>)
-* [link di.concepts.injectors.injector Runtime visitor] throughout created objects (useful for generation [link di.examples.uml_visitor dependency diagrams])
-
-Although library supports `C++03` and `C++11`, only `C++14` shows the full potential of `Boost.DI`.
-To achieve the same behaviour with previous standards sometimes will just require a bit more hassle.
+Boost.DI is a header only, type safe, compile time, non-intrusive constructor dependency injection
+library improving manual dependency injection by simplifying object instantiation with automatic
+dependencies injection.
 
 [h6 Dependencies]
 
-* [@http://www.boost.org/doc/libs/1_55_0/libs/bind Boost.Bind]
-* [@http://www.boost.org/doc/libs/1_55_0/libs/config Boost.Config]
-* [@http://www.boost.org/doc/libs/1_55_0/libs/function Boost.Function]
-* [@http://www.boost.org/doc/libs/1_55_0/libs/mpl Boost.MPL]
-* [@http://www.boost.org/doc/libs/1_55_0/libs/preprocessor Boost.Preprocessor]
-* [@http://www.boost.org/doc/libs/1_55_0/doc/html/ref.html Boost.Ref]
-* [@http://www.boost.org/doc/libs/1_55_0/libs/smart_ptr Boost.Smart_Ptr]
-* [@http://www.boost.org/doc/libs/1_55_0/libs/typeof Boost.Typeof]
-* [@http://www.boost.org/doc/libs/1_55_0/libs/type_traits Boost.Type_Traits]
-* [@http://www.boost.org/doc/libs/1_55_0/libs/utility Boost.Utility]
+* C++14 compliant compiler with STL (memory, type\_traits headers) / Boost is not required
 
-[h6 Supported Compilers - 100% test code coverage]
+[h6 Supported Compilers]
 
-`Boost.DI` was successfully test on following compilers.
-
-* Linux (x86/x86-64)
-   * Clang 3.2/3.3/3.4/3.5/3.6+ (clean with Clang Static Analyzer and Valgrind)
-   * GCC 4.7/4.8/4.9+ (clean with Valgrind)
-   * Intel C++ 14.0+ (clean with Valgrind)
-
-* Windows (x86/x86-64)
-   * MinGW 4.7/4.8/4.9+
-   * Microsoft Visual Studio 2013+ (clean with DrMemory)
-
-* Darwin/Mac OS (x86-64)
-   * Clang 503+
-
-[note Older compilers might be supported, but weren't tested and probably can't be tested properly due to requirements of C++11 features by tests.]
-
-[h6 Restrictions]
-
-See [link Notes] for further information.
-
-[table
-  [[Issue][GCC][Clang][Intel][MSVC]]
-  [[Rvalue References][supported][supported][supported][not supported]]
-  [[std::function/boost::function][supported][supported][supported][supported (boost::function supported when pass by const reference)]]
-  [[[link di.concepts.policies.parameters_permission Parameters Permission Policy]][supported][supported][supported][not supported]]
-]
-
-[table
-  [[Feature][`C++03`][`C++11`][`C++14`]]
-  [[[link di.concepts.injections.automatic Automatic Constructor Injection]][supported, except constructor with 1 parameter][supported][supported]]
-  [[`__injections_boost_di_inject__`/`__injections_boost_di_inject_traits__`/`__injections_ctor_traits__`][supported][supported][supported]]
-]
-
-[h6 Recommendations]
-
-`Boost.DI` supports variety of compilers and standards. Not all features are supported the same way or in general
-by all of them. Below table shows recommendations (based on testing) what to be careful about whilst using
-a specific combination.
-
-[table
-  [[Standard][Compiler][Recommendation]]
-  [[`C++14`][`Microsoft Visual Studio 12.0`]
-  [
-    [pre
-* __modules__ definition harder syntax
-* Rvalue references aren't supported
-* Policy __policies_parameters_permission__ not supported]
-  ]]
-  [[`C++03`][`GCC >= 4.7`, `Clang >= 3.2`]
-  [
-    [pre
-* Boost.Typeof has to be used
-* __modules__ definition harder syntax
-* [link di.concepts.injections.automatic Automatic Constructor Injection] doesn't work with 1 parameter constructors]
-  ]]
-  [[`C++11`][`GCC >= 4.7`, `Clang >= 3.2`]
-  [
-    [pre* __modules__ definition harder syntax]
-  ]]
-  [[`C++14`][`GCC >= 4.9`, `Clang >= 3.3`]
-  [
-    [pre* Go for it!]
-  ]]
-]
+* Clang-3.4+
+* GCC-5.0+
 
 [h6 Installation]
 
-```
-    git clone --recursive https://github.com/boostorg/boost.git
-    cd boost/libs
-    git clone https://github.com/krzysztof-jusiak/di.git
-```
+To get started the only file you need is `di.hpp`:
 
-`Boost.DI` is header only library and doesn't require building.
-To start using library just include `Boost.DI` header.
-```
-    #include <__di_hpp__>
-```
-
-[h6 Tests]
-`Boost.DI` is released with many levels of tests.
-
-* Unit tests (ut)
-* Module/Integration tests (mt)
-* Functional tests (ft)
-* Performance tests (pt)
-* Compilation fail tests (ft)
-* Verification tests (vt) - verify compiler support
-
-To run tests go to `boost/di/test` directory and run.
-```
-    bjam
-```
-
-[h6 Examples]
-`Boost.DI` is released with __examples__ and __more_examples__.
-
-To run examples go to `boost/di/example` directory and run.
-```
-    bjam
-```
-
-[h6 Preprocessed headers]
-`Boost.DI` is released with preprocessed headers for `BOOST_DI_CFG_CTOR_LIMIT_SIZE` and `BOOST_MPL_LIMIT_VECTOR_SIZE`
-as well as with tool to generate them. Generation of preprocessed headers might be done with tools provided.
+[@https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/include/boost/di.hpp https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/include/boost/di.hpp]
 
 ```
-    tools/preprocessed.sh
+    // main.cpp
+    #include "di.hpp"
+    int main() { }
+```
+
+```
+    $CXX -std=c++1y -I. main.cpp
+```
+
+To get and test Boost.DI library:
+
+```
+    git clone --recursive https://github.com/krzysztof-jusiak/di.git
+    cd di/build
+    ./bootstrap.sh --with-toolset=clang
+    ./b2 -j4 ../test ../example
 ```
 
 [h6 Configuration]
@@ -163,90 +56,15 @@ The macros listed in the table below may be used to control the behaviour of `Bo
 
 [table
   [[Macro][Description]]
-  [
-    [`BOOST_DI_CFG_NO_PREPROCESSED_HEADERS`]
-    [
-        `Boost.DI` by default uses preprocessed headers. See [link di.rationale.performance Compilation time] for further specification.
-        To explicitly disable preprocessed headers `BOOST_DI_CFG_NO_PREPROCESSED_HEADERS` has to be defined.
-
-        default: `enabled`
-    ]
-  ]
-
-  [
-    [`BOOST_DI_CFG_STD`]
-    [
-        Defines which compiler features will be used. When `cpp_11` below features will be used:
-        [pre
-* variadic templates
-* function template default arguments
-* rvalue references and perfet forwarding
-* decltype
-        ]
-        Configuration affects `preprocessed headers`, which are generated for both configurations.
-
-        default: `cpp_11` when `C++11` `cpp_03` otherwise
-    ]
-  ]
 
   [
     [`BOOST_DI_CFG_CTOR_LIMIT_SIZE`]
     [
         Constructor injection is limited by `BOOST_DI_CFG_CTOR_LIMIT_SIZE`, which means that constructor can't
         have more parameters then defined in order for `Boost.DI` to works correctly. Value might be redefined
-        to any number, the only repercussion will be longer compilation times. Might be used as well to limit
-        clients from having long parameter list constructors.
+        to any number between 0 and 10. Might be used as well to limit clients from having long parameter list constructors.
 
         default: `10`
-    ]
-  ]
-
-  [
-    [`BOOST_DI_CFG_EXAMINE_CALL_STACK`]
-    [
-        Context concepts (__di_bind_when__ syntax) have to be explicitly turned on using `BOOST_DI_CFG_EXAMINE_CALL_STACK`. Reason being
-        much longer compilation times.
-
-        default: `disabled`
-    ]
-  ]
-
-  [
-    [`BOOST_DI_CFG_INJECT_VA_ARGS`]
-    [
-        __injections_boost_di_inject__(ctor, arg1, arg2, ..., argN)
-
-        default: `enabled when C++11`
-    ]
-  ]
-
-  [
-    [`BOOST_DI_CFG_INJECT_BRACKET`]
-    [
-        __injections_boost_di_inject__[*(]ctor, (arg1, arg2, ..., argN[*)])
-
-        default: `enabled when C++03`
-    ]
-  ]
-
-  [
-    [`BOOST_DI_CFG_STD_SMART_PTR`]
-    [
-        Default `smart pointer` type is set accordingly to compiler/standard library support, but
-        might standard smart pointers might be forced by `BOOST_DI_CFG_STD_SMART_PTR`.
-        Then `Boost.DI` internally will use standard smart pointers instead of boost smart
-        pointers. Additionally conversion to `weak_ptr` is only allowed from default `smart pointer type`.
-
-        default: `enabled if standard smart pointers are supported by compiler`
-    ]
-  ]
-
-  [
-    [`BOOST_DI_CFG_BOOST_SMART_PTR`]
-    [
-        Same as `BOOST_DI_CFG_STD_SMART_PTR`, but with `boost smart pointers` to be chosen.
-
-        default: `enabled if standard smart pointers are` [*not] `supported by compiler`
     ]
   ]
 
@@ -261,374 +79,21 @@ The macros listed in the table below may be used to control the behaviour of `Bo
   ]
 
   [
-    [`BOOST_MPL_LIMIT_VECTOR_SIZE`]
+    [`BOOST_DI_CFG_NO_PREPROCESSED_HEADERS`]
     [
-        Number of allowed bindings is limited by `Boost.MPL` vector size.
+        `Boost.DI` by default uses preprocessed headers. To explicitly disable preprocessed headers `BOOST_DI_CFG_NO_PREPROCESSED_HEADERS` has to be defined.
 
-        default: `20 (defined by Boost.MPL)`
+        default: `enabled`
     ]
   ]
 
 ]
 
-[h6 Notes]
-
-[#Notes]
-* Ambiguous constructors with the same - longest - number of parameters
-[table
-    [[Issue][Solution]]
-    [
-        [
-            ```
-                                                                      .
-            struct example {
-                explicit example(int);
-                example(int, double);
-                example(int, double, float); // ambiguity
-                example(int, float, double); // ambiguity
-            };
-            ```
-        ]
-        [
-            ```
-                                                                                                         .
-            use __injections_boost_di_inject__ to point which constructor should be chosen by Boost.DI
-                struct example {
-                    explicit example(int);
-                    example(int, double);
-                    example(int, double, float);
-                    __injections_boost_di_inject__(example, int, float, double);
-                };
-            ```
-        ]
-    ]
-]
-
-* Constructor with variadic number of parameters
-[table
-    [[Issue][Solution]]
-    [
-        [
-            ```
-                                                                      .
-            struct example {
-                template<typename... TArgs>
-                explicit example(TArgs&&...);
-            };
-            ```
-        ]
-        [
-            ```
-                                                                                                         .
-            use __injections_boost_di_inject_traits__ to define the constructor
-                namespace boost { namespace di {
-                    template<>
-                    struct ctor_traits<example> {
-                        __injections_boost_di_inject_traits__(int, double); // or in definition of the class
-                    };
-                }} // boost::di
-            ```
-        ]
-    ]
-]
-
-
-* Copy constructors
-[table
-    [[Issue][Solution]]
-    [
-        [
-            ```
-                                                                      .
-            struct example {
-                example(const example&);
-                example(int); // ambiguous in c++03
-            };
-            ```
-        ]
-        [
-            ```
-                                                                                                         .
-            In C++11 copy constructors ambiguity might be disabled using default template parameters
-                template<
-                    typename U
-                  , typename = typename disable_if<is_same_base_of<T, U>>::type
-                >
-                operator U();
-
-            In C++03 constructor has to be explicitly pointed out
-            struct example {
-                example(const example&);
-                __injections_boost_di_inject__(example, (int)); // ok in c++03
-            };
-
-            Or by adding dummy parameter to the constructor
-            struct example {
-                example(const example&);
-                example(int, int = 0); // ok in c++03
-            };
-            ```
-        ]
-    ]
-]
-
-* Constructor with non-copyable types
-[table
-    [[Issue][Solution]]
-    [
-        [
-            ```
-                                                                      .
-            struct example {
-                 // moveable types are supported
-                example(std::auto_ptr<int>, std::unique_ptr<int>);
-            };
-            ```
-        ]
-        [
-            ```
-                                                                                                         .
-            struct any_type {
-                template<typename U> operator U();
-                template<typename U> operator aux::auto_ptr<U>&(); // for std::auto_ptr
-            };
-            ```
-        ]
-    ]
-]
-
-* Constructor with types which have `conversion constructor`
-[table
-    [[Issue][Solution]]
-    [
-        [
-            ```
-                                                                      .
-            template<typename>
-            struct example {
-                template<typename T>
-                example(T);
-            };
-
-            struct app {
-                app(example<int>);
-            };
-            ```
-        ]
-        [
-            ```
-                                                                                                         .
-            use __injections_boost_di_inject__ to explicitly point out the constructor parameters
-                struct app {
-                    __injections_boost_di_inject__(app, example<int>);
-                };
-
-            make example constructor explicit if possible
-                template<typename>
-                struct example {
-                    template<typename T>
-                    explicit example(T);
-                };
-
-            if conversion constructor might be disabled, might be worth to do so
-            boost::function has a conversion constructor from any type but integral types
-                template<>
-                struct is_integral<any_type>
-                    : mpl::true_
-                { };
-            ```
-        ]
-    ]
-]
-
-* Inheriting constructors
-[table
-    [[Issue][Solution]]
-    [
-        [
-            ```
-                                                                      .
-            struct a {
-                a(int, double);
-                a(int, double, float);
-            };
-
-            struct b : a {
-                using a::a;
-            };
-
-            struct app {
-                app(b);
-            };
-            ```
-        ]
-        [
-            ```
-                                                                                                         .
-            Support without any issues
-            ```
-        ]
-    ]
-]
-
-* `__injections_boost_di_inject__` and default parameters
-[table
-    [[Issue][Solution]]
-    [
-        [
-            ```
-                                                                      .
-            struct example {
-                __injections_boost_di_inject__(explicit example
-                               , int = 0
-                               , double = 0.0);
-            };
-            ```
-        ]
-        [
-            ```
-                                                                                                         .
-            __injections_boost_di_inject__ creates a function instead of direct traits
-                struct example {
-                    static void boost_di_injector__(int = 0, double = 0.0);
-                    explicit example(int = 0, double = 0.0);
-                };
-
-            paramter_types<decltype(&example::boost_di_injector__)>::type -> mpl::vector<int, double>
-            ```
-        ]
-    ]
-]
-
-* `__injections_boost_di_inject__` with inheritance
-[table
-    [[Issue][Solution]]
-    [
-        [
-            ```
-                                                                      .
-            struct a {
-                __injections_boost_di_inject__(a, int, double);
-            };
-
-            struct b : a { };
-
-            std::make_unique<b>(); // error b doesn't have
-                                   // constructor with 2 parameters
-            ```
-        ]
-        [
-            ```
-                                                                                                         .
-            use __injections_boost_di_inject__ or __injections_boost_di_inject_traits__ to explicitly point that constructor is empty
-
-            struct a {
-                __injections_boost_di_inject__(a, int, double);
-            };
-
-            struct b : a {
-                __injections_boost_di_inject_traits__(); // or __injections_boost_di_inject__(b);
-            };
-
-            std::make_unique<b>();
-            ```
-        ]
-    ]
-]
-
-* Function parameters evaluation order with shared binding
-[table
-    [[Issue][Solution]]
-    [
-        [
-            ```
-                                                                      .
-            struct a { a(int); };
-            struct b { b(aux::shared_ptr<a>); };
-
-            // parameters evaluation order is not specified
-            struct c { c(aux::shared_ptr<a>, aux::shared_ptr<b>); };
-
-            __di_make_injector__(
-                __di_bind__<int>::when<call_stack<a>>::to(42)
-              , __di_bind_shared__<a>
-            );
-            ```
-        ]
-        [
-            ```
-                                                                                                         .
-            be aware and avoid binding which may be affected by parameters evaluation order
-            ```
-        ]
-    ]
-]
-
-[table
-    [[Tests: [@test/vt/compiler_support_vt.cpp]]]
-]
-
-[warning GCC/Clang/MSVC/Intel compilers differ with the way template conversion operator is handled and `Boost.DI` implemented some workarounds in order to support all of them.]
-
 [h6 Similar libraries]
 
-* [@https://bitbucket.org/cheez/dicpp dicpp]
-* [@https://github.com/google/fruit fruit]
-* [@https://code.google.com/p/infectorpp infectorpp]
-* [@https://github.com/phs/sauce sauce]
-* [@https://code.google.com/p/wallaroo wallaroo]
-* [@https://code.google.com/p/hypodermic hypodermic]
-* [@https://github.com/admiyo/CppInject CppInject]
-* [@http://qtioccontainer.sourceforge.net qtioccontainer]
-* [@https://code.google.com/p/autumnframework autumnframework]
-* [@http://sourceforge.net/projects/cpp-resolver cpp-resolver]
-* [@https://code.google.com/p/pococapsule pococapsule]
-* [@https://code.google.com/p/spring-cpp spring-cpp]
-* [@http://www.cs.utah.edu/~arichard/inject.html inject]
-* [@http://bobah.net/d4d/source-code/misc/cpp-dependency-injection cpp-dependency-injection]
-* [@https://code.google.com/p/ffead-cpp ffead-cpp]
-* [@http://codebros.github.io/DiLite DiLite]
-* [@https://code.google.com/p/kindi kindi]
-* [@https://www.leapmotion.com/blog/hello-world-meet-autowiring-c Autowiring]
-
-*
-* Java: [@https://github.com/google/guice Google Guice]
-* C#: [@http://www.ninject.org Ninject]
-
-[h6 FAQ]
-
-# Is configuration via XML supported by `Boost.DI`?
-
-    * Short answer is NO. `Boost.DI` dependencies are configured in the source code using C++ features which allows compile time checking.
-    Long story short, with fluent configuration you don't have to remember of changing the configuration file, compiler will take care of it for you.
-Usually lazy binding requires exceptions handling and is a performance killer, but obviously it depends on a projects needs.
-Although it might be hard it is possible to achieve it with `Boost.DI`.
-The question which should be asked though - how often configuration is dynamically changed via XML?
-
-# Why `Boost.DI` doesn't support `setter/member`` injection?
-
-    * Constructor injection is the most powerful and the preferable injection method which avoid uninitialized state of members.
-`Setter/Member` injection should be avoided at all costs in order to keep the solutions as clean as possible. Therefore `Boost.DI`
-doesn't support it by default.
-
-# Why `Boost.DI` doesn't have `singleton` scope?
-
-    * Singleton pattern is usually overused and makes code really hard to test. Thread safety has to be considered as well whilst using it.
-`Boost.DI` provides `shared` scope which behaves like non-multi threaded singleton.
-`Singleton` scope might be implemented using `Boost.DI` [link di.concepts.scopes scope] functionality.
-
-# How many constructors parameters are supported and how many bindings I can have?
-    * `Boost.DI` by default supports up to 10 constructor parameters. Configuration might be changed by `BOOST_DI_CFG_CTOR_LIMIT_SIZE`.
-The number of allowed bindings is limited by `BOOST_MPL_LIMIT_VECTOR_SIZE` value.
-
-# How automatic constructor injection works since there is no registration/reflection/traits ?
-    * See __rationale__ for further explanations.
-
-[h6 Continuous Integration]
-
-[@https://travis-ci.org/krzysztof-jusiak/di [$https://travis-ci.org/krzysztof-jusiak/di.svg?branch=master [format PNG]]]
-[@https://ci.appveyor.com/project/krzysztof-jusiak/di [$https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic [format PNG]]]
-[@https://coveralls.io/r/krzysztof-jusiak/di?branch=master [$https://coveralls.io/repos/krzysztof-jusiak/di/badge.png?branch=master [format PNG]]]
+* C++ | [@https://bitbucket.org/cheez/dicpp dicpp] | [@https://github.com/google/fruit Fruit]
+* Java | [@https://github.com/google/dagger Dagger 2] | [@https://github.com/google/guice Guice]
+* C# | [@http://www.ninject.org Ninject]
 
 [heading See Also]
 * [link di.tutorial Tutorial]

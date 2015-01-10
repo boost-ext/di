@@ -11,8 +11,8 @@
 
 [table
     [[Version][Date][Comment]]
-    [[1.0][24.07.2014][Initial version]]
     [[1.4][20.12.2014][C++14 version]]
+    [[1.0][24.07.2014][Initial version]]
 ]
 
 [endsect]

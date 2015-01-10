@@ -220,14 +220,6 @@ Such approach allows to easy test State Machine by simulating actions/guards beh
 
 Full example and implementation might be found in [@https://github.com/krzysztof-jusiak/msm Boost Meta State Machine with Dependency Injection].
 
-[h6 Match-3 Game]
-
-Simple Match-3 game is an example of `Boost Dependency Injection` and `Boost Meta State Machine` used together.
-
-* [@https://github.com/krzysztof-jusiak/match3/blob/master/include/controller.hpp Meta State Machine Definition]
-* [@https://github.com/krzysztof-jusiak/match3/blob/master/include/config.hpp Dependency Injection Configuration]
-* [@https://github.com/krzysztof-jusiak/match3/blob/master/include/actions.hpp Actions] / [@https://github.com/krzysztof-jusiak/match3/blob/master/include/guards.hpp Guards]
-
 [endsect]
 
 [endsect]
