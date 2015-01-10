@@ -14,31 +14,20 @@ Modules allow to split the configuration into smaller injectors.
 Module is a type with `configure` method returning __injectors_injector__ type.
 Activation of `Module` is done by passing it into injector.
 
-[heading Synopsis `C++14`]
+[heading Synopsis]
     class module {
     public:
-        auto configure() const {
+        auto configure() const noexcept {
             return __di_make_injector__(...);
         }
-    }
+    };
 
-[heading Synopsis `C++11`]
-    class module {
+    class module_exposed {
     public:
-        auto configure() const -> decltype(__di_make_injector__(...)) {
+        __di_injector__<interface> configure() const noexcept {
             return __di_make_injector__(...);
         }
-    }
-
-[heading Synopsis `C++03`]
-    class module {
-        typedef __di_injector__<...> injector;
-
-    public:
-        injector configure() const {
-            return injector(...);
-        }
-    }
+    };
 
 [table Parameters
     [[Parameter][Requirement][Description][Returns][Throw]]
@@ -46,7 +35,7 @@ Activation of `Module` is done by passing it into injector.
 ]
 
 [heading Expression Semantics]
-    __di_make_injector__(module())
+    __di_make_injector__(module{})
 
 [*Return type]: `__di_injector__<...>`
 
@@ -54,53 +43,39 @@ Activation of `Module` is done by passing it into injector.
     #include <__di_hpp__>
 
 [heading Examples]
-    class module_cpp_14 {
+    class module {
     public:
-        auto configure() const {
+        auto configure() const noexcept {
             return __di_make_injector__(
-                __di_bind__<interface, implementation>()
+                __di_bind__<int>.to(42)
+              , __di_bind__<interface1, implementation1>
             );
         }
     };
 
-    class module_cpp_11 {
+    class exposed_module {
     public:
-        auto configure() const -> decltype(__di_make_injector__(__di_bind_int__<42>())) {
+        di::injector<complex> configure() const noexcept {
             return __di_make_injector__(
-                __di_bind__<int>::to(42)
+                __di_bind__<interface2, implementation2>
             );
-        }
-    };
-
-    class module_cpp_03 {
-    public:
-        typedef __di_injector__<
-            __di_bind_bool__<true>
-          , BOOST_TYPEOF_TPL(__di_bind__<long>::to(long()))
-        >;
-
-        injector_t configure() const {
-            return injector_t(__di_bind__<long>::to(87l)); // order of passed binding is not important
         }
     };
 
     auto injector = __di_make_injector__(
-        module_cpp_03(), module_cpp_11(), module_cpp_14()
-        // module_cpp_14(), module_cpp_03(), module_cpp_11() // order of passed modules is not important
+        module{}, exposed_module{}
+        // exposed_module{}, module{} // order of passed modules is not important
     );
 
-    assert(dynamic_cast<implementation*>(injector.__di_injector_create__<unique_ptr<interface>>().get()));
+    assert(dynamic_cast<implementation1*>(injector.__di_injector_create__<unique_ptr<interface1>>().get()));
     assert(42 == injector.__di_injector_create__<int>());
-    assert(87l == injector.__di_injector_create__<long>());
-    assert(true == injector.__di_injector_create__<bool>());
+    injector.__di_injector_create__<complex>(); // okay
+    injector.__di_injector_create__<unique_ptr<interface2>>(); // compile error, only `complex` was exposed by module
 
-[tip `__modules__/__bindings__/Types` might be mixed whilst creating an injector, order is not important.]
+[tip `__modules__/__bindings__` might be mixed whilst creating an injector, order is not important.]
 
 [heading More Examples]
     ``__examples_modules__`` | ``__more_examples_modules_hpp_cpp__``
-
-[heading Tests]
-    ``[@test/mt/injector_mt.cpp]`` | ``[@test/mt/make_injector_mt.cpp]``
 
 [heading See Also]
 

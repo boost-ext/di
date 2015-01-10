@@ -27,6 +27,7 @@ install html/example/modules : [ glob ../example/modules/*.* ] ;
 install html/example/tutorial : [ glob ../example/tutorial/*.* ] ;
 
 install html/test/ft : [ glob ../test/ft/*.cpp ] ;
+install html/test/pt : [ glob ../test/pt/*.cpp ] ;
 install html/test/ut : [ glob ../test/ut/*.cpp ] ;
 install html/test/ut/aux_ : [ glob ../test/ut/aux_/*.cpp ] ;
 install html/test/ut/core : [ glob ../test/ut/core/*.cpp ] ;

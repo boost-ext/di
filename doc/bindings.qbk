@@ -14,67 +14,62 @@ Bindings in `Boost.DI` are done using [@http://en.wikipedia.org/wiki/Domain-spec
 The main purpose of bindings DSL is to make easy things as easy
 as possible whilst giving possibility to accomplish solutions for more complicated problems.
 The glue between DSL and the core is __dependency_model__, so if you would like to write your own front end
-the only thing which has to be in mind is to return `mpl::vector` of __dependency_model__.
+the only thing which has to be in mind is to return list of __dependency_model__.
 
 [heading Synopsis]
     template<
-        typename TScope
-      , typename TExpected
-      , typename TGiven
-      , typename TBind
-    >
-    class dependency {
-        typedef dependency type;
-        typedef TScope scope;
-        typedef TExpected expected;
-        typedef TGiven given;
-        typedef TBind bind;
+        class TScope
+      , class TExpected
+      , class TGiven
+      , class TName
+    > class dependency {
+        using scope = TScope;
+        using expected = TExpected;
+        using given = TGiven;
+        using name = TName;
 
-        template<typename>
-        struct rebind;
-
-        template<typename T>
+        template<class T>
         explicit dependency(const T&);
 
-        template<typename T>
-        static dependency to(const T&);
+        template<class T> auto to(const T&) const noexcept;
+        template<class Scope> auto in(const Scope&) const noexcept;
+        template<class Name> auto named(const Name&) const noexcept;
     };
 
 [table Parameters
     [[Parameter][Requirement][Description][Returns][Throw]]
     [[`TScope`][__scope_model__ type][Scope to be used]]
     [[`TExpected`][None][Type to be returned]]
-    [[`TGiven`][None][Type to be created]]
-    [[`TBind`][Boolean expression][Expression to be evaluated in order o verify dependency match during resolving]]
+    [[`TGiven`][is same or base of TExpected][Type to be created]]
+    [[`TName`][None][Type annotation]]
     [[`dependency(T)`][None][Intialize dependency from type `T`][][Does not throw]]
     [[`to(T)`][None][Returns new __dependency_model__ with associated `T` value][__dependency_model__][Does not throw]]
+    [[`in(Scope)`][__scope_model__][Returns new __dependency_model__ using given scope][__dependency_model__][Does not throw]]
+    [[`named(T)`][None][Returns new __dependency_model__ with given type annotation][__dependency_model__][Does not throw]]
 ]
 
 [heading Header]
     #include <__di_hpp__>
 
 [heading Examples]
-    template<typename TIinterface typename TImplementation>
-    struct bind
-        : __di_dependency__<__di_scopes_deduce__, TInterface, TImplementation>
-    { };
+    auto my_int = []{};
+    auto my_interface = []{};
+    auto my_second_interface = []{};
 
     __di_make_injector__(
-        __di_bind__<interface, implementation>()
+        __di_bind__<interface, implementation>
+      , __di_bind__<interface, implementation2>.__di_bind_named__(my_interface)
+      , __di_bind__<interface, implementation2>.__di_bind_named__(my_second_interface).in(__di_scopes_shared__)
+      , __di_bind__<int>.to(42)
+      , __di_bind__<int>.__di_bind_named__(my_int).to(42)
     );
 
 [heading More Examples]
     ``__examples_binding__`` | ``__examples_dynamic_binding__``
 
-[heading Tests]
-    ``[@test/ut/bindings_ut.cpp]``
-
 [heading See Also]
 
 * __bindings_bind__
-* __bindings_scope__
-* __bindings_when__
-* __bindings_named__
 
 [section bind]
 
@@ -82,9 +77,9 @@ the only thing which has to be in mind is to return `mpl::vector` of __dependenc
 Allows to bind interface to implementation and associate value with __dependency_model__.
 
 [heading Synopsis]
-    template<typename TInterface, typename TImplementation>
+    template<class TInterface, class TImplementation>
     struct bind {
-        template<typename T>
+        template<class T>
         static __dependency_model__ to(const T&);
     };
 
@@ -148,7 +143,7 @@ Allows to bind interface to implementation and associate value with __dependency
 Allows to bind multiple interfaces to one instance.
 
 [heading Synopsis]
-    template<typename... TArgs>
+    template<class... TArgs>
     struct any_of;
 
 [table Parameters
@@ -197,9 +192,9 @@ Allows to bind multiple interfaces to one instance.
 Allows to bind other bindings to defined/custom scope. If not used `deduce` scope is assumed.
 
 [heading Synopsis]
-    template<typename TScope>
+    template<class TScope>
     struct scope {
-        template<typename... TArgs>
+        template<class... TArgs>
         struct bind;
     };
 
@@ -256,7 +251,7 @@ Allows to bind other bindings in __scopes_deduce__. Interface type will be deduc
 Scoped will be deduced accordingly to constructor parameter type. See __scopes_deduce__ for further information.
 
 [heading Synopsis]
-    template<typename... TArgs>
+    template<class... TArgs>
     struct deduce
         : __di_bind_scope__<scopes::deduce>::bind<TArgs...>
     { };
@@ -307,7 +302,7 @@ Scoped will be deduced accordingly to constructor parameter type. See __scopes_d
 Allows to bind other bindings in __scopes_unique__.
 
 [heading Synopsis]
-    template<typename... TArgs>
+    template<class... TArgs>
     struct unique
         : __di_bind_scope__<__di_scopes_unique__<>>::bind<TArgs...>
     { };
@@ -358,7 +353,7 @@ Allows to bind other bindings in __scopes_unique__.
 Allows to bind other bindings in __scopes_shared__.
 
 [heading Synopsis]
-    template<typename... TArgs>
+    template<class... TArgs>
     struct shared
         : __di_bind_scope__<__di_scopes_shared__<>::bind<TArgs...>
     { };
@@ -409,7 +404,7 @@ Allows to bind other bindings in __scopes_shared__.
 Allows to bind other bindings in __scopes_session__.
 
 [heading Synopsis]
-    template<typename... TArgs>
+    template<class... TArgs>
     struct session
         : __di_bind_scope__<__di_scopes_session__<>>::bind<TArgs...>
     { };
@@ -465,7 +460,7 @@ Allows to bind other bindings in __scopes_session__.
 Allows to connect __annotations_named__ annotation parameters with binding configuration.
 
 [heading Synopsis]
-    template<typename TName>
+    template<class TName>
     struct named;
 
 [table Parameters

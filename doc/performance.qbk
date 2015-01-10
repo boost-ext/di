@@ -9,7 +9,11 @@
 
 [section Performance]
 
-[h6 Run-time execution speed]
+* [h6 Run-time]
+
+    * Environment
+        * x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
+        * clang++3.4 -O2 / `gdb -batch -ex 'file ./a.out' -ex 'disassemble main'`
 
 [table
 [[Create type wihtout bindings][Asm x86-64 (same as `return 0`)]]
@@ -245,11 +249,11 @@
     ]
 ]
 
-[h6 Compilation time]
+* [h6 Compile-time]
 
-* Environment
-    * x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
-
+    * Environment
+        * x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
+        * clang++3.4 -O2
 [table
 [[Boost.DI header][Time [s]]]
     [
@@ -262,7 +266,7 @@
         ]
         [
             ```
-            0.165s
+            0.165
                                                                                                                        .
             ```
         ]
@@ -276,6 +280,10 @@ Legend:
     all     = all types exposed from module: auto configure();
     exposed = one type exposed from module: di::injector<c> configure();
 ```
+
+[table
+    [[Test source code: [@test/pt/di.cpp]]]
+]
 
 [@images/small_complexity.png [$images/small_complexity.png]]
 ```
@@ -298,6 +306,8 @@ Legend:
 * 100 different interfaces
 * 10 modules
 ```
+
+[note To run compile time performance tests go to `test/pt` directory and run `./pt.sh` script.]
 
 [endsect]
 

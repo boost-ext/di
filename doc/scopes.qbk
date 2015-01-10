@@ -12,26 +12,27 @@
 [heading Description]
 Scopes are responsible for creating and maintaining life time of dependencies.
 If no scope will be given whilst binding __scopes_deduce__ will be assumed.
-`Boost.DI` favor 5 types of scopes.
+`Boost.DI` favor 6 types of scopes.
 
 * __scopes_deduce__
-* __scopes_external__
 * __scopes_unique__
 * __scopes_shared__
+* __scopes_singleton__
 * __scopes_session__
+* __scopes_external__
 
 Scopes use `wrappers` to return convertible objects.
 `Wrappers` are able to convert object to requested types accurately to their definition.
-There are 5 basic types of wrappers.
+There are 3 basic types of wrappers.
 
 [heading Wrapper Model]
-    template<typename T>
+    template<class T>
     class wrapper_model {
     public:
-        template<typename TValueType>
-        wrapper_model(const TValueType&);
+        template<class TValueType>
+        wrapper_model(const TValueType&) noexcept;
 
-        T operator()(const type<T>&) const;
+        operator T()() const noexcept;
     };
 
 [table Parameters
@@ -39,38 +40,40 @@ There are 5 basic types of wrappers.
     [[`T`][None][Type to which __wrapper_model__ might be converted to]]
     [[`TValueType`][None][Object type to be stored by __wrapper_model__]]
     [[`wrapper_model(const TValueType&)`][None][Conversion constructor - creates __wrapper_model__ from `TValueType` type][][Does not throw]]
-    [[`operator()(const type<T>&)`][None][Converts __wrapper_model__ to `T` type][`T` instance][Does not throw]]
+    [[`operator T()`][None][Converts __wrapper_model__ to `T` type][`T` instance][Does not throw]]
 ]
 
 [table
     [[Wrapper][Description]]
-    [[copy][Conversion to lvalue/pointer/smart pointers]]
-    [[reference][Conversion to reference]]
-    [[shared][Conversion to smart pointers]]
-    [[universal][Conversion to all wrappers types and to const reference/__annotations_named__ on top of it]]
-    [[value][Conversion to lvalue/rvalue/pointer/smart pointers]]
+    [[std::reference_wrapper][Conversion to reference types]]
+    [[shared][Conversion to shared smart pointers]]
+    [[unique][Conversion to uniuqe smart pointer and unique values]]
 ]
 
 [heading Synopsis]
     class scope {
-        typedef mpl::int_<N> priority; // N - priority, 1=lowest, N=highest
+        static constexpr auto priority = false; // scope priority
 
-        template<typename TExpected>
+        template<class TExpected, class TGiven>
         class scope {
         public:
-            result_type create(); // mutually exclusive with create(const function<TExpected*>()>*), used when object is not required - external scope
-            result_type create(const function<TExpected*()>&); // mutually exclusive with create()
-
-            template<typename TAction>
+            template<class TAction>
             void call(const TAction&);
+
+            template<class T, class TProvider>
+            auto create(const TProvider&);
         };
     };
 
 [table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`TExpected`][None][Object to be expected by constructor]]
-    [[`N`][Integer number value][Priority of the scope, 1=lowest, N=highest]]
+    [[Parameter][Requirement][Description][Returns][Throw]]
+    [[`TExpected`][None][Interface type to be expected by constructor]]
+    [[`TGiven`][None][Implementation to be created]]
     [[`TAction`][None][Action to be passed to scopes which handle it]]
+    [[`T`][None][Constructor parameter type]]
+    [[`TProvider`][__provider_model__][Instance provider]]
+    [[`call(TAction)`][None][call appropirate `call` method on scope][None][Does not throw]]
+    [[`create(TProvider)`][None][create `TGiven` object and return wrappered `TExpected` instance][None][Does not throw]]
 ]
 
 [heading Header]
@@ -80,72 +83,44 @@ There are 5 basic types of wrappers.
     boost::di::scopes
 
 [heading Examples]
-    class custom_scope {
-    public:
-        typedef boost::mpl::int_<0> priority;
+    struct custom_scope {
+        static constexpr auto priority = false;
 
-        template<typename TExpected>
-        class scope {
-        public:
-            typedef scope type;
-            typedef di::wrappers::shared<TExpected> result_type;
-
-            result_type create(const function<TExpected*()>& f) {
-                return std::make_shared<TGiven>(f());
+        template<class TExpected, class>
+        struct scope {
+            template<class T, class TProvider>
+            auto __di_injector_create__(const TProvider& provider) {
+                return shared_ptr<TExpected>{provider.get()};
             }
         };
     };
 
-    namespace di {
-
-    template<typename... T>
-    struct custom_scope
-        : scope< ::custom_scope >::bind<T...>
-    { };
-
-    } // namespace di
-
     auto injector = __di_make_injector__(
-        custom_scope<
-            __di_bind__<interface, implementation>
-        >()
-      , scope<custom_scope>::bind<
-            __di_bind__<interface1, implementation1>
-        >()
+      __di_bind__<i, impl>.in(custom_scope{})
     );
 
-    assert(dynamic_cast<implementation1*>(injector.__di_injector_create__<shared_ptr<interface1>>().get()));
-    assert(dynamic_cast<implementation2*>(injector.__di_injector_create__<shared_ptr<interface2>>().get()));
-    assert(injector.__di_injector_create__<shared_ptr<interface1>>() != injector.__di_injector_create__<shared_ptr<interface2>>());
+    assert(injector.__di_injector_create__<shared_ptr<i>>()
+           !=
+           injector.__di_injector_create__<shared_ptr<i>>()
+    );
 
 [heading More Examples]
     ``__examples_custom_scope__``
 
-[heading Scopes Conversions]
-
-[warning Current version of `Boost.DI` doesn't support `rvalue references` with `Microsoft Visual Studio Compiler`.]
-
-[table Conversions
-    [[Type]                     [external]                   [unique]    [shared]                       [session]]
-    [[T]                        [\u2714 - with lvalues]      [\u2714]    [-]                            [-]]
-    [[T*]                       [\u2714 - with lvalues]      [\u2714]    [-]                            [-]]
-    [[T&]                       [\u2714]                     [-]         [-]                            [-]]
-    [[const T&]                 [\u2714]                     [-]         [-]                            [-]]
-    [[T&&]                      [\u2714 - with lvalues]      [-]         [-]                            [-]]
-    [[const T*]                 [\u2714 - with lvalues]      [\u2714]    [-]                            [-]]
-    [[std::shared_ptr<T>]       [\u2714]                     [\u2714]    [\u2714]                       [\u2714]]
-    [[boost::shared_ptr<T>]     [\u2714]                     [\u2714]    [\u2714]                       [\u2714]]
-    [[std::unique_ptr<T>]       [\u2714 - with lvalues]      [\u2714]    [-]                            [-]]
-    [[std::auto_ptr<T>]         [\u2714 - with lvalues]      [\u2714]    [-]                            [-]]
-    [[]                         []                           []          []                             []]
-    [[temporary const T&]       [\u2714 - with lvalues]      [\u2714]    [-]                            [-]]
-    [[__di_named__<T, TName>]   [\u2714 - with lvalues]      [\u2714]    [\u2714 with T=shared_ptr<T>]  [\u2714 with T=shared_ptr<T>]]
+[table Scope to type conversion
+    [[Type]                     [unique]                [shared]    [singleton]                   [session]         [external]]
+    [[T]                        [\u2714]                [-]         [-]                            [-]              [\u2714]]
+    [[T&]                       [-]                     [-]         [-]                            [-]              [\u2714]]
+    [[const T&]                 [\u2714 (temporary)]    [-]         [-]                            [-]              [\u2714]]
+    [[T*]                       [\u2714]                [-]         [-]                            [-]              [\u2714]]
+    [[const T*]                 [\u2714]                [-]         [-]                            [-]              [\u2714]]
+    [[T&&]                      [\u2714]                [-]         [-]                            [-]              [-]]
+    [[unique_ptr<T>]            [\u2714]                [-]         [-]                            [-]              [\u2714]]
+    [[shared_ptr<T>]            [\u2714]                [\u2714]    [\u2714]                       [\u2714]         [\u2714]]
+    [[weak_ptr<T>]              [-]                     [\u2714]    [\u2714]                       [\u2714]         [-]]
 ]
 
 [note If expected type is `T*` or `const T*` then responsibility to delete the object is on client side. `Boost.DI` won't delete it.]
-
-[heading Tests]
-    ``[@test/ut/wrappers/universal_ut.cpp]``
 
 [heading See Also]
 
@@ -158,34 +133,29 @@ There are 5 basic types of wrappers.
 [section:deduce deduce (default)]
 
 [heading Description]
-Default scope which will be converted to one of the scopes __scopes_external__ / __scopes_unique__ / __scopes_shared__ accordingly to [link di.concepts.scopes.deduce.scope_traits Scope Traits] mapping.
+Default scope which will be converted to one of the scopes  __scopes_unique__ / __scopes_singleton__ accordingly to [link di.concepts.scopes.deduce.scope_traits Scope Traits] mapping.
 
-[table Scope Traits
+[table Scope deduction
     [[Type][Scope]]
-    [[T&][external]]
-    [[T][unique]]
-    [[const T&][unique]]
-    [[T*][unique]]
-    [[const T*][unique]]
-    [[unique_ptr<T>][unique]]
-    [[const unique_ptr<T>&][unique]]
-    [[T&&][unique]]
-    [[const T&&][unique]]
-    [[shared_ptr<T>][shared]]
-    [[const shared_ptr<T>&][shared]]
-    [[weak_ptr<T>][shared]]
-    [[const weak_ptr<T>&][shared]]
-    [[named<T, TName>][scope of T]]
+    [[T][__di_scopes_unique__]]
+    [[T&][error - has to be bound as external]]
+    [[const T&][__di_scopes_unique__ (temporary)]]
+    [[T*][__di_scopes_unique__ (ownership transfer)]]
+    [[const T*][__di_scopes_unique__ (ownership transfer)]]
+    [[T&&][__di_scopes_unique__]]
+    [[unique_ptr<T>][__di_scopes_unique__]]
+    [[shared_ptr<T>][__di_scopes_singleton__]]
+    [[weak_ptr<T>][__di_scopes_singleton__]]
 ]
 
 [heading Synopsis]
     class deduce {
     public:
-        template<typename>
+        template<class>
         class scope {
-            template<typename T>
+            template<class T>
             struct rebind {
-                typedef typename scope_traits<T>::type other;
+                typedef class scope_traits<T>::type other;
             };
         };
     };
@@ -269,12 +239,12 @@ and managed by the library. External scope has priority before other scopes whic
 will be bound using different scope as well then binding using external scope will be used.
 
 [heading Synopsis]
-    template<template<typename> class TWrapper>
+    template<template<class> class TWrapper>
     class external {
     public:
         typedef mpl::int_<1> priority;
 
-        template<typename TExpected>
+        template<class TExpected>
         class scope {
         public:
             TWrapper<TExpected> create();
@@ -356,12 +326,12 @@ will be bound using different scope as well then binding using external scope wi
 Scope representing per request value which means unique value always will be passed to the constructor.
 
 [heading Synopsis]
-    template<template<typename> class TWrapper = wrappers::copy>
+    template<template<class> class TWrapper = wrappers::copy>
     class unique {
     public:
         typedef mpl::int_<0> priority;
 
-        template<typename TExpected>
+        template<class TExpected>
         class scope {
         public:
             TWrapper<TExpected> create(const function<TExpected*()>&);
@@ -448,12 +418,12 @@ Scope representing shared value which will be shared between all instances.
 ]
 
 [heading Synopsis]
-    template<template<typename> class TWrapper = wrappers::shared>
+    template<template<class> class TWrapper = wrappers::shared>
     class shared {
     public:
         typedef mpl::int_<0> priority;
 
-        template<typename TExpected>
+        template<class TExpected>
         class scope {
         public:
             TWrapper<TExpected> create(const function<TExpected*()>&);
@@ -527,12 +497,12 @@ Scope representing session value which will be shared between all instances and 
 Scope is activated by call of `call` method with `di::policies::session_entry` parameter and deactivated by call of `call` method with `di::policies::session_exit` parameter;
 
 [heading Synopsis]
-    template<template<typename> class TWrapper = wrappers::shared>
+    template<template<class> class TWrapper = wrappers::shared>
     class session {
     public:
         typedef mpl::int_<0> priority;
 
-        template<typename TExpected>
+        template<class TExpected>
         class scope {
         public:
             TWrapper<TExpected> create(const function<TExpected*()>&);

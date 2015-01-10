@@ -533,6 +533,18 @@
     ]
 ]
 
+[table Scope deduction
+    [[Type][Scope]]
+    [[T][__di_scopes_unique__]]
+    [[T&][error - has to be bound as external]]
+    [[const T&][__di_scopes_unique__ (temporary)]]
+    [[T*][__di_scopes_unique__ (ownership transfer)]]
+    [[const T*][__di_scopes_unique__ (ownership transfer)]]
+    [[T&&][__di_scopes_unique__]]
+    [[unique_ptr<T>][__di_scopes_unique__]]
+    [[shared_ptr<T>][__di_scopes_singleton__]]
+    [[weak_ptr<T>][__di_scopes_singleton__]]
+]
 
 [table
 [[Unique scope][Test]]
@@ -558,7 +570,6 @@
     ]
 ]
 
-
 [table
 [[Shared scope (shared per one thread)][Test]]
     [
@@ -583,7 +594,6 @@
     ]
 ]
 
-
 [table
 [[Singleton scope (shared between threads)][Test]]
     [
@@ -607,7 +617,6 @@
         ]
     ]
 ]
-
 
 [table
 [[Session scope][Test]]
@@ -639,7 +648,6 @@
         ]
     ]
 ]
-
 
 [table
 [[External scope][Test]]
@@ -692,7 +700,6 @@
     ]
 ]
 
-
 [table
 [[Custom scope][Test]]
     [
@@ -704,8 +711,8 @@
                 template<class TExpected, class>
                 struct scope {
                     template<class T, class TProvider>
-                    auto __di_injector_create__(const TProvider& pr) {
-                        return shared_ptr<TExpected>{pr.get()};
+                    auto __di_injector_create__(const TProvider& provider) {
+                        return shared_ptr<TExpected>{provider.get()};
                     }
                 };
             };
@@ -726,6 +733,19 @@
             ```
         ]
     ]
+]
+
+[table Scope to type conversion
+    [[Type]                     [unique]                [shared]    [singleton]                   [session]         [external]]
+    [[T]                        [\u2714]                [-]         [-]                            [-]              [\u2714]]
+    [[T&]                       [-]                     [-]         [-]                            [-]              [\u2714]]
+    [[const T&]                 [\u2714 (temporary)]    [-]         [-]                            [-]              [\u2714]]
+    [[T*]                       [\u2714]                [-]         [-]                            [-]              [\u2714]]
+    [[const T*]                 [\u2714]                [-]         [-]                            [-]              [\u2714]]
+    [[T&&]                      [\u2714]                [-]         [-]                            [-]              [-]]
+    [[unique_ptr<T>]            [\u2714]                [-]         [-]                            [-]              [\u2714]]
+    [[shared_ptr<T>]            [\u2714]                [\u2714]    [\u2714]                       [\u2714]         [\u2714]]
+    [[weak_ptr<T>]              [-]                     [\u2714]    [\u2714]                       [\u2714]         [-]]
 ]
 
 * __modules__

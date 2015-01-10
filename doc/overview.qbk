@@ -69,6 +69,15 @@ The macros listed in the table below may be used to control the behaviour of `Bo
   ]
 
   [
+    [`BOOST_DI_CFG`]
+    [
+        Global configuration allows to customize provider and policies.
+
+        default: __di_config__
+    ]
+  ]
+
+  [
     [`BOOST_DI_INJECTOR`]
     [
         Named used internally by `Boost.DI` when `__injections_boost_di_inject__` or `__injections_boost_di_inject_traits__` is used

@@ -10,67 +10,65 @@
 [section Policies]
 
 [heading Description]
-Policies are compile time components operates on dependencies in order to limit allowed behaviour.
-Policy has to have `assert_policy` method defined.
-In order for __injectors_injector__ to verify policies they have to be passed to `create`, `allocate` call.
-Policies will be verified using `and` semantic, which means that each type to be created has to meet all policies requirements.
+Policies are compile time components operates on dependencies in order to limit allowed behaviour or visit created types during run-time.
+Policy has to be callable with at least one given type.
+In order for __injectors_injector__ to verify policies they have to be passed using __di_config__ to __injectors_injector__ (per injector) or defined globally 
 `Boost.DI` is released with following policies.
 
-* __policies_circular_dependencies__ - verify circular dependencies occurrence
-* __policies_creation_permission__  - verify object creation permission
-* __policies_parameters_permission__ - verify constructor parameters permission
-* __policies_scopes_permission__ - verify scopes configuration permission
-
-[heading Data Model]
-    template<
-        typename T
-      , typename TCallStack
-      , typename TDependency
-    >
-    struct data {
-        typedef T type;
-        typedef TCallStack call_stack;
-        typedef TDependency dependency;
-    };
-
-[table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`T`][None][Type to be created]]
-    [[`TCallStack`][`mpl::vector` type][Context in which type is going to be created]]
-    [[`TDependency`][__dependency_model__ type][Resolved dependency]]
-]
+* __policies_allow_ctor_types__ - limit constructor parameters
 
 [note By Default `Boost.DI` has no policies enabled.]
 
 [heading Synopsis]
     class policy {
     public:
-        template<typename T>
-        void assert_policy() const;
+        template<class T> void operator()(T)
+        const noexcept;
+
+        template<class T, class TDependency, class... TCtor>
+        void operator()(T, TDependency, TCtor...) const noexcept;
     };
 
 [table Parameters
     [[Parameter][Requirement][Description][Throw]]
-    [[`T`][__data_model__ type][Data to be verified]]
-    [[`assert_policy()`][None][Verify policy requirements][Does not throw]]
+    [[`T`][None][Constructor parameter type]]
+    [[`TDependency`][__dependency_model__][Dependency used to resolve object]]
+    [[`TCtor...`][None][Constructor parameters]]
+    [[`operator()`][None][Verify policy requirements][Does not throw]]
 ]
 
 [heading Namespace]
     boost::di::policies
 
 [heading Examples]
-    __di_make_injector__().__di_injector_create__<int>(policy1(), policy2(), ..., policyN());
-    __di_make_injector__().__di_injector_allocate__<int>(allocator(), policy1(), policy2(), ..., policyN());
+    class print_types_policy : public __di_config__ {
+    public:
+        auto policies() const noexcept {
+            return __di_make_policies__(
+                [](auto type){
+                    using T = decltype(type);
+                    using arg = typename T::type;
+                    cout << typeid(arg).name() << endl;
+                }
+            );
+        }
+    };
+
+    // per injector policy
+    auto injector = __di_make_injector__<print_types_policy>();
+    injector.__di_injector_create__<int>(); // output: int
+
+    // global policy
+    #define BOOST_DI_CFG my_policy
+    auto injector = __di_make_injector__();
+    injector.__di_injector_create__<int>(); // output: int
 
 [heading More Examples]
     ``__examples_custom_policy__``
 
 [heading See Also]
 
-* __policies_circular_dependencies__
-* __policies_creation_permission__
-* __policies_parameters_permission__
-* __policies_scopes_permission__
+* __policies_allow_ctor_types__
 
 [section allow_ctor_types]
 
@@ -78,10 +76,10 @@ Policies will be verified using `and` semantic, which means that each type to be
 Limits default constructible types not be created unless they are explicitly bound or allowed.
 
 [heading Allow Type Model]
-    template<typename TValueType>
+    template<class TValueType>
     class allow_type_model {
     public:
-        template<typename T>
+        template<class T>
         struct allow; // returns boolean expression
     };
 
@@ -92,16 +90,16 @@ Limits default constructible types not be created unless they are explicitly bou
 ]
 
 [heading Synopsis]
-    template<typename>
+    template<class>
     struct allow_type;
 
-    template<typename>
+    template<class>
     struct allow_type_expr;
 
-    template<typename... TArgs>
+    template<class... TArgs>
     class creation_permission {
     public:
-        template<typename T>
+        template<class T>
         void assert_policy() const;
     };
 
@@ -146,10 +144,10 @@ Limits default constructible types not be created unless they are explicitly bou
 Limits allowed constructor parameters. By default, if used, all parameters are disallowed.
 
 [heading Allow Parameter Model]
-    template<typename TParameter>
+    template<class TParameter>
     class allow_parameter_model {
     public:
-        template<typename T>
+        template<class T>
         struct allow; // returns boolean expression
     };
 
@@ -167,10 +165,10 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
     struct allow_ptrs;
     struct allow_copies;
 
-    template<typename... TArgs>
+    template<class... TArgs>
     class parameters_permission {
     public:
-        template<typename TDependency>
+        template<class TDependency>
         void assert_policy();
     };
 
@@ -229,10 +227,10 @@ Limits allowed constructor parameters. By default, if used, all parameters are d
 Limits allowed scopes to be used whilst binding. By default, if used, all scopes are disallowed.
 
 [heading Allow Scope Model]
-    template<typename TScope>
+    template<class TScope>
     class allow_scope_model {
     public:
-        template<typename T>
+        template<class T>
         struct allow; // returns boolean expression
     };
 
@@ -244,16 +242,16 @@ Limits allowed scopes to be used whilst binding. By default, if used, all scopes
 ]
 
 [heading Synopsis]
-    template<typename TScope>
+    template<class TScope>
     struct allow_scope;
 
     template<>
     struct allow_scope<scopes::deduce>; // disabled
 
-    template<typename... TArgs>
+    template<class... TArgs>
     class scopes_permission {
     public:
-        template<typename TDependency>
+        template<class TDependency>
         void assert_policy() const;
     };
 
@@ -321,9 +319,6 @@ Limits allowed scopes to be used whilst binding. By default, if used, all scopes
 [heading See Also]
 
 * __policies__
-* __policies_circular_dependencies__
-* __policies_creation_permission__
-* __policies_parameters_permission__
 
 [endsect]
 

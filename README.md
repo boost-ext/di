@@ -399,6 +399,21 @@ auto injector = di::make_injector(      | assert(87.0 == object2.d);
   , di::bind<double>.to(87.0)           |
 );                                      |
 ```
+
+**Scope deduction**
+
+| Type | Scope |
+|------|-------|
+| T | unique |
+| T& | error - has to be bound as external |
+| const T& | unique (temporary) |
+| T* | unique (ownership transfer) |
+| const T* | unique (ownership transfer) |
+| T&& | unique |
+| unique\_ptr<T> | unique |
+| shared\_ptr<T> | singleton |
+| weak\_ptr<T> | singleton |
+
 ```cpp
 Unique scope                            | Test
 ----------------------------------------|-----------------------------------------
@@ -482,20 +497,6 @@ auto injector = di::make_injector(      |
   di::bind<i, impl>.in(custom_scope{})  |
 );                                      |
 ```
-
-**Scope deduction**
-
-| Type | Scope |
-|------|-------|
-| T | unique |
-| T& | error - has to be bound as external |
-| const T& | unique (temporary) |
-| T* | unique (ownership transfer) |
-| const T* | unique (ownership transfer) |
-| T&& | unique |
-| unique\_ptr<T> | unique |
-| shared\_ptr<T> | singleton |
-| weak\_ptr<T> | singleton |
 
 **Scope to type conversion**
 
@@ -746,6 +747,10 @@ public:                                 |
 *
 
 > **[Run-time performance (-O2)](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/performance.html)**
+* Environment
+    * x86\_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
+    * clang++3.4 -O2 / `gdb -batch -ex 'file ./a.out' -ex 'disassemble main'`
+
 ```cpp
 Create type wihtout bindings            | Asm x86-64 (same as `return 0`)
 ----------------------------------------|-----------------------------------------
@@ -865,11 +870,13 @@ int main() {                            | lea    0x30(%rsp),%rsi                
 
 > **[Compile-time performance](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/performance.html)** | [Example](https://github.com/krzysztof-jusiak/di/blob/cpp14/test/pt/di.cpp)
 * Environment
-    * x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
+    * x86\_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
+    * clang++3.4 -O2
+
 ```cpp
 Boost.DI header                         | Time [s]
 ----------------------------------------|-----------------------------------------
-#include <boost/di.hpp>                 | 0.165s
+#include <boost/di.hpp>                 | 0.165
 int main() { }                          |
 ```
 ```cpp
@@ -954,21 +961,15 @@ di::make_injector().create<c>();        |
 
 *
 
-> **[Good practices](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)**
-* Composition root
-* Don't carry dependencies
-* Limit consturctor parameters limit size
-* Prefere configuration in modules
-* expose the types if appropritate
-
-*
-
 > **[Configuration](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)**
 ```cpp
 Macro                                   | Description
 ----------------------------------------|-----------------------------------------
-BOOST_DI_CFG_CTOR_LIMIT_SIZE            | limits number of allowed consturctor
+BOOST_DI_CFG_CTOR_LIMIT_SIZE            | Limits number of allowed consturctor
                                         | parameters [0-10, default=10]
+----------------------------------------|-----------------------------------------
+BOOST_DI_CFG                            | Global configuration allows to customize
+                                        | provider and policies
 ----------------------------------------|-----------------------------------------
 BOOST_DI_INJECTOR                       | Named used internally by Boost.DI
                                         | to define constructor traits
