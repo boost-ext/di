@@ -399,7 +399,6 @@ auto injector = di::make_injector(      | assert(87.0 == object2.d);
   , di::bind<double>.to(87.0)           |
 );                                      |
 ```
-**Scope deduction**
 | Type | Scope |
 |------|-------|
 | T | unique |
