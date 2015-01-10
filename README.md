@@ -67,7 +67,6 @@ int main() {                            | int main() {
 * [Read Quick User Guide](quick user guide)
 * [Read Tutorial](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/tutorial.html)
 * [Read Documentation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
-* [Report Issues] (https://github.com/krzysztof-jusiak/di/issues?state=open)
 
 > To get started the only file you need is `di.hpp`:
 
