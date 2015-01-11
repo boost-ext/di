@@ -39,7 +39,7 @@ It guarantees initialized state of data members. `Boost.DI` [link di.concepts.in
 [section:automatic automatic (default)]
 
 [heading Description]
-`Boost.DI` will deduce the best available constructor to be used for injection - unique constructor with [*the longest parameter list] - see __rationale_constructor_parameters_deduction__ for further reading.
+`Boost.DI` will deduce the best available constructor to be used for injection - unique constructor with [*the longest parameter list].
 If the default behavior should be changed constructor has to be explicitly marked with __injections_boost_di_inject__ or __injections_boost_di_inject_traits__.
 
 [heading Synopsis]
@@ -339,8 +339,8 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
 [heading BOOST_DI_INJECT_TRAITS_NO_LIMITS]
 
 [heading Description]
-`BOOST_DI_INJECT_TRAITS_NO_LIMITS` is similar to __injections_boost_di_inject_traits__, but it's not limited by BOOST_DI_CFG_CTOR_LIMIT_SIZE
-and doesn't support __annotations_. Useful for generated constructors.
+`BOOST_DI_INJECT_TRAITS_NO_LIMITS` is similar to __injections_boost_di_inject_traits__, but it's not limited by [link di.overview.configuration BOOST_DI_CFG_CTOR_LIMIT_SIZE]
+and doesn't support __annotations__. Useful for generated constructors.
 
 [heading Synopsis]
     BOOST_DI_INJECT_TRAITS_NO_LIMITS(...)

@@ -112,7 +112,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 
 *
 <a id="injector"></a>
-> **[Injector](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)**
+> **[Injector](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/injector.html)**
 ```cpp
 Create empty injector                   | Test
 ----------------------------------------|-----------------------------------------
@@ -122,7 +122,7 @@ auto injector = di::make_injector();    | assert(0 == injector.create<int>());
 *
 
 <a id="bindings"></a>
-> **[Bindings](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/binding.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/dynamic_binding.cpp)
+> **[Bindings](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/bindings.html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/bindings.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/dynamic_bindings.cpp)
 ```cpp
 Bind interface to implementation        | Test
 ----------------------------------------|-----------------------------------------
@@ -161,7 +161,7 @@ auto injector = di::make_injector(      | assert(42 == injector.create<int>());
 *
 
 <a id="injections"></a>
-> **[Injections](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/constructor_injection.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/constructor_signature.cpp)
+> **[Injections](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/injections.html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/constructor_injection.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/constructor_signature.cpp)
 ```cpp
 Direct constructor injection            | Test
 ----------------------------------------|-----------------------------------------
@@ -275,7 +275,7 @@ auto injector = di::make_injector(      |
 *
 
 <a id="annotations"></a>
-> **[Annotations](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/named.cpp)
+> **[Annotations](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/annotations.html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/annotations.cpp)
 ```cpp
 Annotated constructor injection         | Test
 ----------------------------------------|-----------------------------------------
@@ -383,7 +383,7 @@ auto injector = di::make_injector(      |
 *
 
 <a id="scopes"></a>
-> **[Scopes](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/deduce_scope.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_scope.cpp)
+> **[Scopes](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/scopes.html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/deduce_scope.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_scope.cpp)
 ```cpp
 Deduce scope (default)                  | Test
 ----------------------------------------|-----------------------------------------
@@ -512,7 +512,7 @@ auto injector = di::make_injector(      |
 *
 
 <a id="modules"></a>
-> **[Modules](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/modules.cpp)
+> **[Modules](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/modules.html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/modules.cpp)
 ```cpp
 Module                                  | Test
 ----------------------------------------|-----------------------------------------
@@ -620,7 +620,7 @@ auto injector = di::make_injector(      |
 *
 
 <a id="policies"></a>
-> **[Policies](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/types_dumper.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_policy.cpp)
+> **[Policies](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/policies.html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/types_dumper.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_policy.cpp)
 ```cpp
 Define policies configuration           | Test
 (dump types)                            |
@@ -713,9 +713,9 @@ public:                                 | assert(42.0, make_injector(
 *
 
 <a id="providers"></a>
-> **[Providers](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_provider.cpp)
-* [heap](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
-* [stack\_over\_heap (default)](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
+> **[Providers](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/providers.html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_provider.cpp)
+* [heap](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/providers/heap.html)
+* [stack\_over\_heap (default)](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/providers/stack_over_heap_default.html)
 ```cpp
 Heap no throw provider                  | Test
 ----------------------------------------|-----------------------------------------
@@ -747,7 +747,7 @@ public:                                 |
 *
 
 <a id="run_time_performance"></a>
-> **[Run-time performance (-O2)](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/performance.html)**
+> **[Run-time performance (-O2)](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/performance.html)**
 * Environment
     * x86\_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
     * clang++3.4 -O2 / `gdb -batch -ex 'file ./a.out' -ex 'disassemble main'`
@@ -870,7 +870,7 @@ int main() {                            | lea    0x30(%rsp),%rsi                
 *
 
 <a id="compile_time_performance"></a>
-> **[Compile-time performance](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/performance.html)** | [Example](https://github.com/krzysztof-jusiak/di/blob/cpp14/test/pt/di.cpp)
+> **[Compile-time performance](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/performance.html)** | [Example](https://github.com/krzysztof-jusiak/di/blob/cpp14/test/pt/di.cpp)
 * Environment
     * x86\_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
     * clang++3.4 -O2
@@ -913,7 +913,7 @@ Legend:
 *
 
 <a id="diagnostic_messages"></a>
-> **Diagnostic messages (-ftemplate-backtrace-limit=1 -ferror-limit=1)**
+> **[Diagnostic messages](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/diagnostic_messages.html) (-ftemplate-backtrace-limit=1 -ferror-limit=1)**
 ```cpp
 Create interface without bound          | Error message
 implementation                          |
@@ -966,7 +966,7 @@ di::make_injector().create<c>();        |
 *
 
 <a id="configuration"></a>
-> **[Configuration](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)**
+> **[Configuration](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/overview.html#di.overview.configuration)**
 ```cpp
 Macro                                   | Description
 ----------------------------------------|-----------------------------------------

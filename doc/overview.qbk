@@ -106,6 +106,9 @@ The macros listed in the table below may be used to control the behaviour of `Bo
 
 [heading See Also]
 * [link di.tutorial Tutorial]
+* [link di.quick_user_guide Quick user Guide]
+* [link di.diagnostic_messages Diagnostic messages]
+* [link di.performance Performance]
 * [link di.concepts Concepts]
 * [link di.examples Examples]
 * [link di.rationale Rationale]

@@ -11,7 +11,7 @@
 
 Let's assume all examples below include `boost/di.hpp` header and define `di` namespace alias.
 ```
-#include <boost/di.hpp>
+#include <__di_hpp__>
 namespace di = boost::di;
 
 struct i1 { virtual ~i1() = default; virtual void dummy1() = 0; };
@@ -1112,9 +1112,9 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 ]
 
 [heading See Also]
-* [link di.concepts Concepts]
 * [link di.diagnostic_messages Diagnostic messages]
 * [link di.performance Performance]
+* [link di.concepts Concepts]
 * [link di.examples Examples]
 * [link di.rationale Rationale]
 

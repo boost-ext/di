@@ -52,6 +52,7 @@
 [def __scopes_external__                                [link di.concepts.scopes.external external scope]]
 [def __scopes_unique__                                  [link di.concepts.scopes.unique unique scope]]
 [def __scopes_shared__                                  [link di.concepts.scopes.shared shared scope]]
+[def __scopes_singleton__                               [link di.concepts.scopes.singleton singleton scope]]
 [def __scopes_session__                                 [link di.concepts.scopes.session session scope]]
 
 [def __modules__                                        [link di.concepts.modules Modules]]

@@ -14,7 +14,7 @@ Scopes are responsible for creating and maintaining life time of dependencies.
 If no scope will be given whilst binding __scopes_deduce__ will be assumed.
 `Boost.DI` favor 6 types of scopes.
 
-* __scopes_deduce__
+* __scopes_deduce__ (default)
 * __scopes_unique__
 * __scopes_shared__
 * __scopes_singleton__
@@ -129,6 +129,7 @@ There are 3 basic types of wrappers.
 * __scopes_external__
 * __scopes_unique__
 * __scopes_shared__
+* __scopes_singleton__
 * __scopes_session__
 
 [section:deduce deduce (default)]
@@ -225,6 +226,7 @@ Default scope which will be converted to one of the scopes  __scopes_unique__ / 
 * __scopes__
 * __scopes_unique__
 * __scopes_shared__
+* __scopes_singleton__
 * __scopes_session__
 * __scopes_external__
 
@@ -302,9 +304,10 @@ Scope representing unique value.
 
 * __scopes__
 * __scopes_deduce__
-* __scopes_external__
 * __scopes_shared__
+* __scopes_singleton__
 * __scopes_session__
+* __scopes_external__
 
 [endsect]
 
@@ -380,9 +383,10 @@ Scope representing shared value between all instances within current thread.
 
 * __scopes__
 * __scopes_deduce__
-* __scopes_external__
 * __scopes_unique__
+* __scopes_singleton__
 * __scopes_session__
+* __scopes_external__
 
 [endsect]
 
@@ -459,9 +463,10 @@ Singleton scope will be deduced in case of `shared_ptr` or `weak_ptr`.
 
 * __scopes__
 * __scopes_deduce__
-* __scopes_external__
 * __scopes_unique__
+* __scopes_shared__
 * __scopes_session__
+* __scopes_external__
 
 [endsect]
 
@@ -558,9 +563,10 @@ by call of `call` method with `session_exit` with given `name` parameter;
 
 * __scopes__
 * __scopes_deduce__
-* __scopes_external__
 * __scopes_unique__
-* __scopes_session__
+* __scopes_shared__
+* __scopes_singleton__
+* __scopes_external__
 
 [endsect]
 
@@ -672,6 +678,7 @@ will be bound using different scope as well then binding using external scope wi
 * __scopes_deduce__
 * __scopes_unique__
 * __scopes_shared__
+* __scopes_singleton__
 * __scopes_session__
 
 [endsect]
