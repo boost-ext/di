@@ -17,13 +17,19 @@
 namespace di = boost::di;
 
 //<-
-struct interface { virtual ~interface() = default; };
-struct implementation : interface { };
+struct interface { virtual ~interface() = default; virtual void dummy() = 0;};
+struct implementation1 : interface { void dummy() override { } };
+struct implementation2 : interface { void dummy() override { } };
 //->
 
+struct data {
+    std::shared_ptr<interface> sp;
+};
+
 struct app {
-    app(std::unique_ptr<interface> up, int i) {
-        assert(dynamic_cast<implementation*>(up.get()));
+    app(std::unique_ptr<interface> up, int i, const data& data) {
+        assert(dynamic_cast<implementation1*>(up.get()));
+        assert(dynamic_cast<implementation2*>(data.sp.get()));
         assert(i == 42);
     }
 };
@@ -33,7 +39,7 @@ public:
     /*<<module configuration>>*/
     auto configure() const {
         return di::make_injector(
-            di::bind<interface, implementation>
+            di::bind<interface, implementation1>
         );
     }
 };
@@ -55,11 +61,25 @@ private:
     int i_ = 0;
 };
 
-int main() {
-    const int i = 42;
+class exposed_module {
+public:
+    /*<<module configuration with exposed `data`>>*/
+    di::injector<data> configure() const {
+        return di::make_injector(
+            di::bind<interface, implementation2>
+        );
+    }
+};
 
-    /*<<create injector and pass `module1`, `module2`>>*/
-    auto injector = di::make_injector(module1{}, module2{i});
+int main() {
+    const auto i = 42;
+
+    /*<<create injector and pass `module1`, `module2` and `exposed_module`>>*/
+    auto injector = di::make_injector(
+        module1{}
+      , module2{i}
+      , exposed_module{}
+    );
 
     /*<<create `app`>>*/
     injector.create<app>();

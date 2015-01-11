@@ -55,8 +55,8 @@ struct example {
 
 /*<define `pool provider`>*/
 struct pool_provider {
-    template<class I, class T, class TInitilization, class TMemory, class... TArgs>
-    auto get(const TInitilization& // direct/uniform
+    template<class I, class T, class TInitialization, class TMemory, class... TArgs>
+    auto get(const TInitialization& // direct/uniform
            , const TMemory& // stack/heap
            , TArgs&&... args) const {
         auto memory = pool_allocator<T>::allocate();
