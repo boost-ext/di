@@ -157,7 +157,6 @@ If the default behavior should be changed constructor has to be explicitly marke
 [heading See Also]
 
 * __injections__
-* __injections_automatic__
 * __injections_inject__
 * __injections_ctor_traits__
 
@@ -394,7 +393,6 @@ and doesn't support __annotations__. Useful for generated constructors.
 
 * __injections__
 * __injections_automatic__
-* __injections_boost_di_inject__
 * __injections_ctor_traits__
 
 [endsect]
@@ -542,8 +540,7 @@ might be defined in order to point which constructor should be used by `Boost.DI
 
 * __injections__
 * __injections_automatic__
-* __injections_boost_di_inject__
-* __injections_boost_di_inject_traits__
+* __injections_inject__
 
 [endsect]
 

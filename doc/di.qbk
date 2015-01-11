@@ -26,6 +26,7 @@
 
 [def __concepts__                                       [link di.concepts Concepts]]
 [def __injector__                                       [link di.concepts.injector Injector]]
+[def __injector_make_injector__                         [link di.concepts.injector.make_injector make_injector]]
 [def __core__                                           [link di.concepts.injector Core]]
 
 [def __bindings__                                       [link di.concepts.bindings Bindings]]

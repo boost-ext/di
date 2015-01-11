@@ -78,11 +78,10 @@ Injector is a component used for creating dependencies configuration using [link
 
 [heading See Also]
 
-* __injectors_make_injector__
-* __injectors__
+* __injector_make_injector__
 * __modules__
 * __policies__
-* __utilities_allocator__
+* __providers__
 
 [section make_injector]
 
@@ -129,8 +128,7 @@ Creates [link di.concepts.injector injector] type.
 
 [heading See Also]
 
-* __injectors_injector__
-* __injectors__
+* __injector__
 * __modules__
 * __policies__
 * __providers__
