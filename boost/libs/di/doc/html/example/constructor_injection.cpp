@@ -52,6 +52,15 @@ struct ctor_traits<ctor_di_traits> {
 } // namespace di
 } // namespace boost
 
+struct ctor_inject_traits_no_limits {
+    /*<<constructor with 20 parameters>>*/
+    BOOST_DI_INJECT_TRAITS_NO_LIMITS(int, int, int, int, int, int, int, int, int, int
+                                   , int, int, int, int, int, int, int, int, int, int);
+
+    ctor_inject_traits_no_limits(int, int, int, int, int, int, int, int, int, int
+                               , int, int, int, int, int, int, int, int, int, int) { }
+};
+
 int main() {
     /*<<make injector>>*/
     auto injector = di::make_injector(
@@ -62,6 +71,8 @@ int main() {
     injector.create<ctor_inject>();
     injector.create<ctor_inject_traits>();
     injector.create<ctor_di_traits>();
+
+    injector.create<ctor_inject_traits_no_limits>();
 }
 
 //]

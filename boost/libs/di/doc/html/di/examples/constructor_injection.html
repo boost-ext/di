@@ -65,14 +65,24 @@
 <span class="special">}</span> <span class="comment">// namespace di</span>
 <span class="special">}</span> <span class="comment">// namespace boost</span>
 
+<span class="keyword">struct</span> <span class="identifier">ctor_inject_traits_no_limits</span> <span class="special">{</span>
+    <a class="co" name="di.examples.constructor_injection.c8" href="constructor_injection.html#di.examples.constructor_injection.c9"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a><span class="identifier">BOOST_DI_INJECT_TRAITS_NO_LIMITS</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span>
+                                   <span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">);</span>
+
+    <span class="identifier">ctor_inject_traits_no_limits</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span>
+                               <span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+<span class="special">};</span>
+
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <a class="co" name="di.examples.constructor_injection.c8" href="constructor_injection.html#di.examples.constructor_injection.c9"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+    <a class="co" name="di.examples.constructor_injection.c10" href="constructor_injection.html#di.examples.constructor_injection.c11"><img src="../../../../../../doc/src/images/callouts/6.png" alt="6" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
         <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">named</span><span class="special">(</span><span class="identifier">name</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
     <span class="special">);</span>
 
-    <a class="co" name="di.examples.constructor_injection.c10" href="constructor_injection.html#di.examples.constructor_injection.c11"><img src="../../../../../../doc/src/images/callouts/6.png" alt="6" border="0"></a><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">ctor_inject</span><span class="special">&gt;();</span>
+    <a class="co" name="di.examples.constructor_injection.c12" href="constructor_injection.html#di.examples.constructor_injection.c13"><img src="../../../../../../doc/src/images/callouts/7.png" alt="7" border="0"></a><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">ctor_inject</span><span class="special">&gt;();</span>
     <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">ctor_inject_traits</span><span class="special">&gt;();</span>
     <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">ctor_di_traits</span><span class="special">&gt;();</span>
+
+    <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">ctor_inject_traits_no_limits</span><span class="special">&gt;();</span>
 <span class="special">}</span>
 </pre>
 <div class="calloutlist"><table border="0" summary="Callout list">
@@ -103,11 +113,17 @@
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="di.examples.constructor_injection.c9"></a><a href="#di.examples.constructor_injection.c8"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
-            make injector
+            constructor with 20 parameters
           </p></td>
 </tr>
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="di.examples.constructor_injection.c11"></a><a href="#di.examples.constructor_injection.c10"><img src="../../../../../../doc/src/images/callouts/6.png" alt="6" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            make injector
+          </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="di.examples.constructor_injection.c13"></a><a href="#di.examples.constructor_injection.c12"><img src="../../../../../../doc/src/images/callouts/7.png" alt="7" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             create dependencies
           </p></td>
