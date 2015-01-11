@@ -1,0 +1,68 @@
+//
+// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+
+//[constructor_injection
+//<-
+#include <cassert>
+//->
+#include <boost/di.hpp>
+
+namespace di = boost::di;
+
+auto name = []{};
+
+struct ctor_inject {
+    /*<<constructor with intrusive named parameter explicitly selected>>*/
+    BOOST_DI_INJECT(ctor_inject, int i1, (named = name) int i2) {
+        assert(i1 == 0);
+        assert(i2 == 42);
+    }
+};
+
+struct ctor_inject_traits {
+    /*<<constructor with less intrusive named parameter using traits>>*/
+    BOOST_DI_INJECT_TRAITS(int, (named = name) int);
+    ctor_inject_traits(int i1, int i2 = 0) {
+        assert(i1 == 0);
+        assert(i2 == 42);
+    }
+};
+
+struct ctor_di_traits {
+    /*<<class without any changes>>*/
+    ctor_di_traits(int i1, int i2 = 0) {
+        assert(i1 == 0);
+        assert(i2 == 42);
+    }
+};
+
+namespace boost {
+namespace di {
+
+template<>
+struct ctor_traits<ctor_di_traits> {
+    /*<<no intrusive way of defining named parameters>>*/
+    BOOST_DI_INJECT_TRAITS(int, (named = name) int);
+};
+
+} // namespace di
+} // namespace boost
+
+int main() {
+    /*<<make injector>>*/
+    auto injector = di::make_injector(
+        di::bind<int>.named(name).to(42)
+    );
+
+    /*<<create dependencies>>*/
+    injector.create<ctor_inject>();
+    injector.create<ctor_inject_traits>();
+    injector.create<ctor_di_traits>();
+}
+
+//]
+
