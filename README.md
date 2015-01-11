@@ -208,7 +208,7 @@ auto injector = di::make_injector(      |
 ```
 ```cpp
 Direct constructor injection with       | Test
-ambigious constructors (BOOST_DI_INJECT)|
+ambiguous constructors (BOOST_DI_INJECT)|
 ----------------------------------------|-----------------------------------------
 struct c {                              | auto object = injector.create<c>();
     c(double d, int a) : a(a), d(d) { } | assert(42 == object.a);
@@ -226,7 +226,7 @@ auto injector = di::make_injector(      |
 ```
 ```cpp
 Direct constructor injection with       | Test
-ambigious constructors                  |
+ambiguous constructors                  |
 (BOOST_DI_INJECT_TRAITS)                |
 ----------------------------------------|-----------------------------------------
 struct c {                              | auto object = injector.create<c>();
@@ -245,7 +245,7 @@ auto injector = di::make_injector(      |
 ```
 ```cpp
 Direct constructor injection with       | Test
-ambigious constructors                  |
+ambiguous constructors                  |
 (di::ctor_traits)                       |
 ----------------------------------------|-----------------------------------------
 struct c {                              | auto object = injector.create<c>();
@@ -326,7 +326,7 @@ auto injector = di::make_injector(      |
 ```
 ```cpp
 Annotated constructor injection with    | Test
-seperate constructor definition         |
+separate constructor definition         |
 ----------------------------------------|-----------------------------------------
 auto int1 = []{};                       | auto object = injector.create<c>();
 auto int2 = []{};                       | assert(42 == c.a);

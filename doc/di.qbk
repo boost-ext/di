@@ -33,6 +33,7 @@
 [def __injections_automatic__                           [link di.concepts.injections.automatic automatic]]
 [def __injections_boost_di_inject__                     [link di.concepts.injections.boost_di_inject BOOST_DI_INJECT]]
 [def __injections_boost_di_inject_traits__              [link di.concepts.injections.boost_di_inject_traits BOOST_DI_INJECT_TRAITS]]
+[def __injections_boost_di_inject_traits_no_limits__    [link di.concepts.injections.boost_di_inject_traits_no_limits BOOST_DI_INJECT_TRAITS_NO_LIMITS]]
 [def __injections_ctor_traits__                         [link di.concepts.injections.ctor_traits ctor_traits]]
 
 [def __annotations__                                    [link di.concepts.annotations Annotations]]
@@ -101,13 +102,12 @@
 [def __examples_deduce_scope__                          [link di.examples.deduce_scope Deduce Scope]]
 [def __examples_uml_dumper__                            [link di.examples.uml_visitor UML Dumper]]
 
-[def __more_examples__                                  [link di.examples.more_examples More Examples]]
-[def __more_examples_named__                            [link di.examples.more_examples.named_parameters Named Parameters]]
-[def __more_examples_provider__                         [link di.examples.more_examples.provider Provider]]
-[def __more_examples_externals__                        [link di.examples.more_examples.externals Externals]]
-[def __more_examples_multiple_interfaces__              [link di.examples.more_examples.multiple_interfaces Multiple Interfaces]]
-[def __more_examples_types_dumper__                     [link di.examples.more_examples.types_dumper Types Dumper]]
-[def __more_examples_modules_hpp_cpp__                  [link di.examples.more_examples.modules_hpp_cpp Modules (hpp/cpp)]]
+[def __examples_annotations__                           [link di.examples.examples.annotations Annotations]]
+[def __examples_provider__                              [link di.examples.examples.provider Provider]]
+[def __examples_externals__                             [link di.examples.examples.externals Externals]]
+[def __examples_multiple_interfaces__                   [link di.examples.examples.multiple_interfaces Multiple Interfaces]]
+[def __examples_types_dumper__                          [link di.examples.examples.types_dumper Types Dumper]]
+[def __examples_modules_hpp_cpp__                       [link di.examples.examples.modules_hpp_cpp Modules (hpp/cpp)]]
 
 [def __binding_model__                                  [link di.concepts.bindings.synopsis Binding Model]]
 [def __dependency_model__                               [link di.concepts.bindings.synopsis Dependency Model]]

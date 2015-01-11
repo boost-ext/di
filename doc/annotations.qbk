@@ -12,119 +12,202 @@
 [heading Description]
 Annotations are intrusive, additional informations specified along with the type in order to refer to given type by the annotation instead of type it self.
 Useful, when there are more than one of the same parameters type in constructor parameters.
-`Boost.DI` provides concept of __annotations_named__ parameters, which are wrapper for types with given name.
+`Boost.DI` provides concept of __annotations_named__ parameters.
 
-[section named]
+[section:named (named = name)]
 Named parameters are useful when constructor has more parameters of the same type.
 ```
-    example(int value1, int value2);
+    ctor(int value1, int value2);
 ```
 In order to inject proper values into `value1` and `value2` they have to be distinguished somehow.
-`Boost.DI` solution for that problem are `named parameters`, which are just wrappers
-for the type with automatic conversion to the based type.
-Named parameters are intrusive in a sens constructor has to be changed in order to support them.
-It doesn't has to be the case when __injections_ctor_traits__ are used.
+`Boost.DI` solution for that problem are annotations.
+
+[note Annotations might be set only when constructor is selected using __injections_boost_di_inject__ or __injections_boost_di_inject_traits__.]
 
 [heading Synopsis]
-    template<
-        typename T
-      , typename TName = no_name
-    >
-    class named {
-        named& operator=(const named&);
+    auto value_1 = []{};
+    auto value_2 = []{};
 
-    public:
-        typedef T named_type;
-        typedef TName name;
-
-        named(T); // non explicit
-        named(const named&);
-
-        operator T() const;
-    };
+    __injections_boost_di_inject__(ctor, (named = Name) type type_name [= default_value], ...);
 
 [table Parameters
-    [[Parameter][Requirement][Description][Returns][Throws]]
-    [[`T`][None][Type to be annotated]]
-    [[`TName`][None][Type represent name (default = `no_name`) / mpl::string<'str'> might be useful]]
-    [[`named(T)`][None][Conversion constructor - Create named from type `T`][][Does not throw]]
-    [[`named(const named&)`][None][Copy constructor][][Does not throw]]
-    [[`operator T() const`][None][Conversion operator - converts `named` to `T` type][`T` instance][Does not throw]]
+    [[Parameter][Requirement][Description]]
+    [[`Name`][None][Instance represents object name]]
 ]
 
-[heading Expression Semantics]
-    di::named<int, mpl::string<'int'>>()
+[heading Example]
+    __injections_boost_di_inject__(ctor, (named = value_1) int value1, (named = value_2) int value2);
+
+[tip Implementation of constructor doesn't require annotations, which means implementation won't be affected by annotations.] 
 
 [heading Header]
     #include <__di_hpp__>
 
 [heading Examples]
 [table
-    [[Binding][Description]]
-    [[
-        ```
-            class my_name { };
-            di::named<int, my_int> named_parameter;
-            int i = named_parameter;
-        ```
-      ][wrapped `int` type with `my_int` name]]
+[[Annotated constructor injection][]]
+    [
+        [
+            ```
+            auto int1 = []{};
+            auto int2 = []{};
+
+            struct c {
+                __injections_boost_di_inject__(c
+                    , (__bindings_named__ = int1) int a
+                    , (__bindings_named__ = int2) int b)
+                    : a(a), b(b)
+                { }
+
+                int a = 0;
+                int b = 0;
+            };
+
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.__bindings_named__(int1).to(42)
+              , __di_bind__<int>.__bindings_named__(int2).to(87)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(42 == c.a);
+            assert(87 == c.b);
+                                                                                                                       .
+            ```
+        ]
+    ]
 ]
 
-[heading Examples - __injections_automatic__]
-    struct my_int { };
+[table
+[[Annotated constructor injection with the same names for different parameters][]]
+    [
+        [
+            ```
+            auto n1 = []{};
+            auto n2 = []{};
 
-    class example {
-    public:
-        example(di::named<int, my_int> i1, int i2);
-            : i1(i1)
-            , i2(i2)
-        { }
+            struct c {
+                __injections_boost_di_inject__(c
+                    , (__bindings_named__ = n1) int a
+                    , (__bindings_named__ = n1) int b
+                    , (__bindings_named__ = n2) int c
+                    , int d
+                    , (__bindings_named__ = n1) string s)
+                    : a(a), b(b), c(c), d(d), s(s)
+                { }
 
-        int i1 = 0;
-        int i2 = 0;
-    };
+                int a = 0;
+                int b = 0;
+                int c = 0;
+                int d = 0;
+                string s;
+            };
 
-    auto injector = __di_make_injector__(
-        __di_bind__<int>::__di_bind_named__<my_int>::to(42)
-      , __di_bind_int__<0>
-    );
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.__bindings_named__(n1).to(42)
+              , __di_bind__<int>.__bindings_named__(n2).to(87)
+              , __di_bind__<string>.__bindings_named__(n1).to("str")
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(42 == c.a);
+            assert(42 == c.b);
+            assert(87 == c.c);
+            assert(0 == c.d);
+            assert("str" == c.s);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
 
-    auto example_ = injector.__di_injector_create__<example>();
+[table
+[[Annotated constructor injection with separate constructor definition  ][]]
+    [
+        [
+            ```
+            auto int1 = []{};
+            auto int2 = []{};
 
-    assert(42 == example_.i1);
-    assert(0 == example_.i2);
+            struct c {
+                __injections_boost_di_inject__(c
+                    , (__bindings_named__ = int1) int a
+                    , (__bindings_named__ = int2) int b);
 
+                int a = 0;
+                int b = 0;
+            };
 
-[heading Examples - __injections_ctor_traits__]
-    class example {
-    public:
-        example(int value1, int value2);
-    };
+            c::c(int a, int b) : a(a), b(b) { }
 
-    class my_value1 { };
-    class my_value2 { };
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.__bindings_named__(int1).to(42)
+              , __di_bind__<int>.__bindings_named__(int2).to(87)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(42 == c.a);
+            assert(87 == c.b);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
 
-    namespace boost { namespace di {
+[table
+[[Annotated constructor injection with __injections_ctor_traits__][Test]]
+    [
+        [
+            ```
+            auto int1 = []{};
+            auto int2 = []{};
 
-    template<>
-    struct ctor_traits<example> {
-        __injections_boost_di_inject_traits__(di::named<int, my_value1>, di::named<int, my_value2>);
-    };
+            struct c {
+                c(int a, int b) : a(a), b(b) { }
 
-    }} // boost::di
+                int a = 0;
+                int b = 0;
+            };
 
-    auto injector = __di_make_injector__(
-        __di_bind__<int>::__di_bind_named__<my_value1>::to(1)
-        __di_bind__<int>::__di_bind_named__<my_value2>::to(2)
-    );
+            namespace boost { namespace di {
+            template<>
+            struct ctor_traits<c> {
+                __injections_boost_di_inject_traits__(
+                    (__bindings_named__ = int1) int
+                  , (__bindings_named__ = int2) int);
+            };
+            }} // boost::di
 
-    auto example_ = injector.__di_injector_create__<example>();
-
-    assert(1 == example_.i1);
-    assert(2 == example_.i2);
-
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.__bindings_named__(int1).to(42)
+              , __di_bind__<int>.__bindings_named__(int2).to(87)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(42 == c.a);
+            assert(87 == c.b);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
 [heading More Examples]
-    ``__more_examples_named__`` | ``__examples_binding__``
+    ``__examples_annotations__``
 
 [heading Tests]
     ``[@test/ut/named_ut.cpp]``

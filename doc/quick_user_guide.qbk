@@ -167,7 +167,6 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
     ]
 ]
 
-
 [table
 [[Aggregate constructor injection][Test]]
     [
@@ -230,7 +229,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 ]
 
 [table
-[[Direct constructor injection with ambigious constructors (__injections_boost_di_inject__)][Test]]
+[[Direct constructor injection with ambiguous constructors (__injections_boost_di_inject__)][Test]]
     [
         [
             ```
@@ -261,9 +260,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
     ]
 ]
 
-
 [table
-[[Direct constructor injection with ambigious constructors (__injections_boost_di_inject_traits__)][Test]]
+[[Direct constructor injection with ambiguous constructors (__injections_boost_di_inject_traits__)][Test]]
     [
         [
             ```
@@ -294,9 +292,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
     ]
 ]
 
-
 [table
-[[Direct constructor injection with ambigious constructors (__injections_ctor_traits__)][Test]]
+[[Direct constructor injection with ambiguous constructors (__injections_ctor_traits__)][Test]]
     [
         [
             ```
@@ -372,7 +369,6 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
     ]
 ]
 
-
 [table
 [[Annotated constructor injection with the same names for different parameters][Test]]
     [
@@ -420,9 +416,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
     ]
 ]
 
-
 [table
-[[Annotated constructor injection with seperate constructor definition  ][Test]]
+[[Annotated constructor injection with separate constructor definition  ][Test]]
     [
         [
             ```
@@ -457,7 +452,6 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
         ]
     ]
 ]
-
 
 [table
 [[Annotated constructor injection with __injections_ctor_traits__][Test]]

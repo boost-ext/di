@@ -10,7 +10,7 @@
 [section:injections Injections]
 
 [*Constructor Injection] is the most powerful of the available injections.
-It guarantees initialized state of data members. `Boost.DI` [link di.concepts.injections.automatic constructor injection] is achieved without any additional work from the user except defining the constructor.
+It guarantees initialized state of data members. `Boost.DI` [link di.concepts.injections.automatic constructor injection] is achieved without any additional work from the user.
 
 ```
     class example {
@@ -41,55 +41,119 @@ It guarantees initialized state of data members. `Boost.DI` [link di.concepts.in
 
 [heading Description]
 `Boost.DI` will deduce the best available constructor to be used for injection - unique constructor with [*the longest parameter list] - see __rationale_constructor_parameters_deduction__ for further reading.
-If the default behavior should be changed constructor have to be explicitly marked with __injections_boost_di_inject__ or __injections_boost_di_inject_traits__.
+If the default behavior should be changed constructor has to be explicitly marked with __injections_boost_di_inject__ or __injections_boost_di_inject_traits__.
 
 [heading Synopsis]
-    class example {
+    class ctor {
     public:
-        example(parameter1, parameter2, ..., parameterN);
+        ctor(parameter1, parameter2, ..., parameterN);
     };
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`parameterX`][None][Constructor parameter]]
+    [[`parameterN`][None][`N` constructor parameter]]
 ]
 
 [heading Header]
     #include <__di_hpp__>
 
 [heading Example]
-    class example {
-    public:
-        example(int) : params(1) { }
-        example(int, double) : params(2) { }
-        example(int, double, float) : params(3) { } // will be deduced by Boost.DI
+[table
+[[Direct constructor injection][]]
+    [
+        [
+            ```
+            struct c {
+                c(int a, double d) : a(a), d(d) { }
 
-        int params = 0;
-    };
+                int a = 0;
+                double d = 0.0;
+            };
 
-    class example_with_different_constructor_signature {
-    public:
-        example_with_different_constructor_signature(int) : params(1) { }
-        example_with_different_constructor_signature(int, double) : params(2) { }
-        example_with_different_constructor_signature(float, double, int) : params(3) { } // will be deduced by Boost.DI
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.to(42)
+              , __di_bind__<double>.to(87.0)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(42 == object.a);
+            assert(87.0 == object.b);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
 
-        int params = 0;
-    };
+[table
+[[Aggregate constructor injection][]]
+    [
+        [
+            ```
+            struct c {
+                int a = 0;
+                double d = 0.0;
+            };
 
-    auto injector = __di_make_injector__(); // use the same configuration to create different `example` objects
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.to(42)
+              , __di_bind__<double>.to(87.0)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(42 == object.a);
+            assert(87.0 == object.b);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
 
-    assert(3 == injector.__di_injector_create__<example>().params);
-    assert(3 == injector.__di_injector_create__<example_with_different_constructor_signature>().params);
+[table
+[[Direct constructor injection with many constructors[br]
+  (longest parameters list constructor will be chosen)][]]
+    [
+        [
+            ```
+            struct c {
+                c();
+                c(int a) : a(a) { }
+                c(int a, double d) : a(a), d(d) { }
+
+                int a = 0;
+                double d = 0.0;
+            };
+
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.to(42)
+              , __di_bind__<double>.to(87.0)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(42 == object.a);
+            assert(87.0 == object.b);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
 
 [note Automatic constructor parameters deduction is limited to [link di.overview.configuration BOOST_DI_CFG_CTOR_LIMIT_SIZE], which by defaults is set to `10`.]
 [note `Boost.DI` is not able to distinguish between ambiguous constructors with the same ([*longest]) amount of parameters, then __injections_boost_di_inject__ has to be used to point which constructor should be deduced.]
-[warning In `C++03` constructors with one argument might be ambiguous with copy constructor, therefore is advised to always use __injections_boost_di_inject__ for 1 argument constructors in `C++03`.]
 
 [heading More Examples]
     ``__examples_constructor_injection__`` | ``__examples_constructor_signature__``
-
-[heading Tests]
-    ``[@test/vt/compiler_support_vt.cpp]``
 
 [heading See Also]
 
@@ -101,73 +165,74 @@ If the default behavior should be changed constructor have to be explicitly mark
 
 [endsect]
 
-[section BOOST_DI_INJECT]
+[section inject]
 
 [heading Description]
-`BOOST_DI_INJECT` is a macro definition used to explicitly say `Boost.DI` which constructor should be used.
+`BOOST_DI_INJECT` is a macro definition used to explicitly say `Boost.DI` which constructor should be used as well as in order to annotate types - see __annotations__ for further reding.
 When class has more than one constructor `Boost.DI` will by default choose the one with
 [*the longest parameter list]. In case of constructors ambiguity `Boost.DI` is not able to choose the best one.
 Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
 
 [heading Synopsis]
-    #define BOOST_DI_INJECT(type, ...)
-        static void BOOST_DI_INJECTOR(__VA_ARGS__);
-        type(__VA_ARGS__)
+    BOOST_DI_INJECT(Type, ...)
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`type`][None][Class type]]
+    [[`Type`][None][Class type]]
     [[`...`][None][Constructor parameters]]
 ]
 
 [heading Expression Semantics]
-    BOOS_DI_INJECT(explicit example, int = 0, double = 0.0);
-
-[*Preprocessed type]:
-```
-    void boost_di_injector__(int = 0, double = 0.0);
-    explicit example(int = 0, double = 0.0);
-```
+    BOOST_DI_INJECT(explicit example, int i = 0, double 0 = 0.0);
 
 [heading Header]
     #include <__di_inject_hpp__>
 
 [heading Example]
-    class example {
-    public:
-        example(int);
-        BOOS_DI_INJECT(example, int, double); // will be chosen by Boost.DI
-        example(int, double, float);
-    };
+[table
+[[Direct constructor injection with ambiguous constructors][]]
+    [
+        [
+            ```
+            struct c {
+                c(double d, int a) : a(a), d(d) { }
+                __injections_boost_di_inject__(c, int a, double d)
+                    : a(a), d(d) { }
 
-    __di_make_injector__().__di_injector_create__<example>(); // compile clean
+                int a = 0;
+                double d = 0.0;
+            };
 
-[note In `C++03` additional brackets are needed: `BOOST_DI_INJECT(example, (int, double))`.]
-[tip Requirement of brackets in `BOOST_DI_INJECT` might be switched with [link di.overview.configuration BOOST_DI_CFG_INJECT_VA_ARGS] and [link di.overview.configuration BOOST_DI_CFG_INJECT_BRACKET].]
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.to(42)
+              , __di_bind__<double>.to(87.0)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(42 == object.a);
+            assert(87.0 == object.b);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+[note BOOST_DI_INJECT is limited by [link di.overview.configuration BOOST_DI_CFG_CTOR_LIMIT_SIZE], which by default is set to `10` and might be between 0 and 10. In order to support more constructor parameters __injections_boost_di_inject_traits_no_limits__ has to be used.]
 
 [heading More Examples]
     ``__examples_constructor_injection__``
 
-[heading Tests]
-    ``[@test/ut/inject_va_args_ut.cpp]`` | ``[@test/ut/inject_bracket_ut.cpp]``
-
-[heading See Also]
-
-* __injections__
-* __injections_automatic__
-* __injections_boost_di_inject_traits__
-* __injections_ctor_traits__
-
-[endsect]
-
-[section BOOST_DI_INJECT_TRAITS]
+[heading BOOST_DI_INJECT_TRAITS]
 
 [heading Description]
 `BOOST_DI_INJECT_TRAITS` is a macro definition used to define constructor traits.
 
 [heading Synopsis]
-    #define BOOST_DI_INJECT_TRAITS(...)
-        static void BOOST_DI_INJECTOR(__VA_ARGS__)
+    BOOST_DI_INJECT_TRAITS(...)
 
 [table Parameters
     [[Parameter][Requirement][Description]]
@@ -177,46 +242,152 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
 [heading Expression Semantics]
     BOOST_DI_INJECT_TRAITS(int, double, float);
 
-[*Preprocessed type]:
-```
-    void boost_di_injector__(int, double, float);
-```
+[heading Header]
+    #include <__di_inject_hpp__>
+
+[heading Example]
+[table
+[[Direct constructor injection with ambiguous constructors][]]
+    [
+        [
+            ```
+            struct c {
+                __injections_boost_di_inject_traits__(int, double);
+                c(double d, int a) : a(a), d(d) { }
+                c(int a, double d) : a(a), d(d) { }
+
+                int a = 0;
+                double d = 0.0;
+            };
+
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.to(42)
+              , __di_bind__<double>.to(87.0)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(42 == object.a);
+            assert(87.0 == object.b);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+[table
+[[Direct constructor injection with selected constructor][]]
+    [
+        [
+            ```
+            struct example {
+                __injections_boost_di_inject_traits__(int);
+                example(int) : i(i) { }
+                example(int, double) : i(i), d(d) { }
+
+                int i = 0;
+                double d = 0.0;
+            };
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = __di_make_injector__().__di_injector_create__<example>();
+            assert(0 == object.i);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+[table
+[[Direct constructor injection with default value][]]
+    [
+        [
+            ```
+            class example {
+            public:
+                __injections_boost_di_inject_traits__(int);
+                explicit example(int i, double d = 42.0)
+                    : i(i) , d(d)
+                { }
+
+                int i = 0;
+                double d = 0.0;
+            };
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = __di_make_injector__().__di_injector_create__<example>();
+            assert(0 == object.i);
+            assert(42.0 == object.d)
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+[heading More Examples]
+    ``__examples_constructor_injection__``
+
+[heading BOOST_DI_INJECT_TRAITS_NO_LIMITS]
+[heading Description]
+`BOOST_DI_INJECT_TRAITS_NO_LIMITS` is similar to __injections_boost_di_inject_traits__, but it's not limited by BOOST_DI_CFG_CTOR_LIMIT_SIZE
+and doesn't support __annotations_. Useful for generated constructors.
+
+[heading Synopsis]
+    BOOST_DI_INJECT_TRAITS_NO_LIMITS(...)
+
+[table Parameters
+    [[Parameter][Requirement][Description]]
+    [[`...`][None][Constructor parameters]]
+]
+
+[heading Expression Semantics]
+    BOOST_DI_INJECT_TRAITS_NO_LIMITS(int i = 0, double 0 = 0.0);
 
 [heading Header]
     #include <__di_inject_hpp__>
 
 [heading Example]
-    class example {
-    public:
-        BOOST_DI_INJECT_TRAITS(int, double);
-        example(int, double);
-        example(double, int);
-    };
+[table
+[[Constructor with long parameters list][]]
+    [
+        [
+            ```
+            struct c {
+                __injections_boost_di_inject_traits_no_limits__(
+                    int, int, int, int, int, int, int, int, int, int
+                  , int, int, int, int, int, int, int, int, int, int
+                  , int, int, int, int, int, int, int, int, int, int
+                );
 
-    __di_make_injector__().__di_injector_create__<example>(); // compile clean
+                c(int, int, int, int, int, int, int, int, int, int
+                , int, int, int, int, int, int, int, int, int, int
+                , int, int, int, int, int, int, int, int, int, int);
+            };
 
-[heading Example - default value]
-    class example {
-    public:
-        BOOST_DI_INJECT_TRAITS(int);
-        explicit example(int i, double d = 42.0)
-            : i(i)
-            , d(d)
-        { }
-
-        int i = 0;
-        double d = 0.0;
-    };
-
-    auto example_ = __di_make_injector__().__di_injector_create__<example>();
-    assert(0 == example_.i_);
-    assert(42.0 == example_.d_)
+            auto injector = __di_make_injector__();
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>(); // compile clean
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
 
 [heading More Examples]
     ``__examples_constructor_injection__``
-
-[heading Tests]
-    ``[@test/ut/inject_va_args_ut.cpp]`` | ``[@test/ut/inject_bracket_ut.cpp]``
 
 [heading See Also]
 
@@ -242,34 +413,129 @@ might be defined in order to point which constructor should be used by `Boost.DI
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`parameterX`][None][`X` constructor parameter]]
+    [[`parameterN`][None][`N` constructor parameter]]
 ]
 
 [heading Header]
     #include <__di_hpp__>
 
 [heading Example]
-    class example {
-    public:
-        example(int, double, float);
-    };
+[table
+[[Direct constructor injection with ambiguous constructors][]]
+    [
+        [
+            ```
+            struct c {
+                c(double d, int a) : a(a), d(d) { }
+                c(int a, double d) : a(a), d(d) { }
 
-    namespace boost { namespace di {
+                int a = 0;
+                double d = 0.0;
+            };
 
-    template<>
-    struct ctor_traits<example> {
-        __injections_boost_di_inject_traits__(int, double, float);
-    };
+            namespace boost { namespace di {
+            template<>
+            struct __injections_ctor_traits__<c> {
+                __injections_boost_di_inject_traits__(int, double);
+            };
+            }} // boost::di
 
-    }} // boost::di
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.to(42)
+              , __di_bind__<double>.to(87.0)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(42 == object.a);
+            assert(87.0 == object.b);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+[table
+[[Direct constructor injection with annotations][]]
+    [
+        [
+            ```
+            auto int_a = []{};
+            auto int_b = []{};
 
-    __di_make_injector__().__di_injector_create__<example>(); // compile clean
+            struct c {
+                c(int a, int b) : a(a), b(b) { }
+
+                int a = 0;
+                int b = 0;
+            };
+
+            namespace boost { namespace di {
+            template<>
+            struct __injections_ctor_traits__<c> {
+                __injections_boost_di_inject_traits__((named = int_a) int, (named = int_b) int);
+            };
+            }} // boost::di
+
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.named(a).to(42)
+              , __di_bind__<int>.named(b).to(87)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(42 == object.a);
+            assert(87 == object.b);
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+[table
+[[Direct constructor injection with no limits injection][]]
+    [
+        [
+            ```
+            struct c {
+                c(int, int, int, int, int, int, int, int, int, int
+                , int, int, int, int, int, int, int, int, int, int
+                , int, int, int, int, int, int, int, int, int, int);
+            };
+
+
+            namespace boost { namespace di {
+            template<>
+            struct __injections_ctor_traits__<c> {
+                __injections_boost_di_inject_traits_no_limits__(
+                    int, int, int, int, int, int, int, int, int, int
+                  , int, int, int, int, int, int, int, int, int, int
+                  , int, int, int, int, int, int, int, int, int, int
+                );
+
+            };
+            }} // boost::di
+
+            auto injector = __di_make_injector__();
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>(); // compile clean
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
 
 [heading More Examples]
-    ``__examples_constructor_injection__`` | ``__examples_constructor_traits_generator__``
-
-[heading Tests]
-    ``[@test/ut/type_traits/ctor_traits_ut.cpp]``
+    ``__examples_constructor_injection__``
 
 [heading See Also]
 

@@ -61,31 +61,16 @@ Injector is a component used for creating dependencies configuration using [link
     #include <__di_hpp__>
 
 [heading Examples]
-    auto injector_empty = di::injector<>; // empty exposed injector
-
-    class module {
-    public:
-        auto configure() const {
-            return __di_make_injector__(
-                __di_bind__<interface0, implementation0>
-            );
-        }
-    };
+    auto injector_exposed_empty = di::injector<>;
+    auto injector_empty = di::make_injector();
 
     auto injector = __di_make_injector__(
-        module{}
-      , __di_bind__<interface1, implementation1>
-      , __di_bind__<interface2, implementation2>.in(__di_scopes_unique__)
-      , __di_make_injector__(
-            __di_bind__<int>.to(42)
-        )
+        injector_exposed_empty
       , injector_empty
+      , __di_make_injector__()
     );
 
-    assert(42 == injector.__di_injector_create__<int>());
-    assert(dynamic_cast<implementation0*>(injector.__di_injector_create__<unique_ptr<interface0>>().get()));
-    assert(dynamic_cast<implementation1*>(injector.__di_injector_create__<unique_ptr<interface1>>().get()));
-    assert(dynamic_cast<implementation2*>(injector.__di_injector_create__<unique_ptr<interface2>>().get()));
+    assert(0 == injector.__di_injector_create__<int>());
 
 [heading More Examples]
     ``__examples_hello_world__`` | ``__examples_modules__`` | ``__examples_uml_dumper__`` | ``__examples_custom_provider__`` | ``__examples_custom_scope__``
@@ -123,28 +108,20 @@ Creates [link di.concepts.injectors.injector injector] type.
 
 [heading Examples]
 [table
-    [[Injector][Description]]
-    [[```di::make_injector()```][Create empty injector]]
-    [[```di::make_injector(__di_bind__<interface, implementation>>)```][Injector with `interface` to `implementation` binding configuration]]
-    [[```di::make_injector(__di_bind__<int>.to(42))```][Injector with configuration binding `42` value to `int` parameters]]
-    [[```di::make_injector(__di_bind__<int>.to([]{return 42;}))```][Injector with configuration binding `int` parameters with lambda expression returning `42`]]
-    [[```di::make_injector(__di_bind__<function<int()>>.to([]{return 42;}))```][Injector with configuration binding `function<int()>` parameters with lambda expression returning `42`]]
-    [[```di::make_injector(__di_bind__<example>.to(cref(example)))```][Binds `example` to const reference given object]]
+[[create empty injector][]]
+    [
+        [
+            ```
+            auto injector = __di_make_injector__();
+            ```
+        ]
+        [
+            ```
+            assert(0 == injector.__di_injector_create__<int>());
+            ```
+        ]
+    ]
 ]
-
-[heading Examples]
-    auto injector_empty = di::make_injector();
-
-    auto injector = di::make_injector(
-        injector_empty
-      , __di_bind__<interface, implementation>
-      , __di_bind__<int>.to<42>
-      , __di_bind__<long>.to(42l)
-    );
-
-    assert(42 == injector.__di_injector_create__<int>());
-    assert(87l == injector.__di_injector_create__<long>());
-    assert(dynamic_cast<implementation*>(injector.__di_injector_create__<unique_ptr<interface>>().get()));
 
 [heading More Examples]
     ``__examples_hello_world__`` | ``__examples_modules__`` | ``__examples_uml_dumper__`` | ``__examples_custom_provider__`` | ``__examples_custom_scope__`` | ``__examples_custom_policy__``
