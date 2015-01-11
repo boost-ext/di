@@ -19,7 +19,8 @@ Injector is a component used for creating dependencies configuration using [link
 
         explicit injector(const TArgs&...);
 
-        template<class T> T create() const noexcept;
+        template<class T>
+        T create() const noexcept;
 
         template<class TAction>
         void call(const TAction&) const noexcept;

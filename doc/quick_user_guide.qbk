@@ -957,7 +957,6 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
     ]
 ]
 
-
 [table
 [[Define policies configuration (dump types extended)][Test]]
     [
@@ -1029,7 +1028,6 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
         ]
     ]
 ]
-
 
 [table
 [[Allow ctor types policy][Test]]

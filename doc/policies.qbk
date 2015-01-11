@@ -12,19 +12,21 @@
 [heading Description]
 Policies are compile time components operates on dependencies in order to limit allowed behaviour or visit created types during run-time.
 Policy has to be callable with at least one given type.
-In order for __injectors_injector__ to verify policies they have to be passed using __di_config__ to __injectors_injector__ (per injector) or defined globally 
-`Boost.DI` is released with following policies.
 
+`Boost.DI` is released with following policies
 * __policies_allow_ctor_types__ - limit constructor parameters
 
 [note By Default `Boost.DI` has no policies enabled.]
 
 [heading Synopsis]
-    class policy {
+    class policy_simple {
     public:
-        template<class T> void operator()(T)
-        const noexcept;
+        template<class T>
+        void operator()(T) const noexcept;
+    };
 
+    class policy_extended {
+    public:
         template<class T, class TDependency, class... TCtor>
         void operator()(T, TDependency, TCtor...) const noexcept;
     };
@@ -37,31 +39,119 @@ In order for __injectors_injector__ to verify policies they have to be passed us
     [[`operator()`][None][Verify policy requirements][Does not throw]]
 ]
 
+[note In order for __injectors_injector__ to verify policies they have to be passed using __di_config__ into __injectors_injector__ (per injector) or defined globally.]
+
 [heading Namespace]
     boost::di::policies
 
 [heading Examples]
-    class print_types_policy : public __di_config__ {
-    public:
-        auto policies() const noexcept {
-            return __di_make_policies__(
-                [](auto type){
-                    using T = decltype(type);
-                    using arg = typename T::type;
-                    cout << typeid(arg).name() << endl;
+[table
+[[Define policies configuration (dump types)][]]
+    [
+        [
+            ```
+            class print_types_policy : public __di_config__ {
+            public:
+                auto policies() const noexcept {
+                    return __di_make_policies__(
+                        [](auto type){
+                            using T = decltype(type);
+                            using arg = typename T::type;
+                            cout << typeid(arg).name() << endl;
+                        }
+                    );
                 }
+            };
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            // per injector policy
+            auto injector = __di_make_injector__<print_types_policy>();
+            injector.__di_injector_create__<int>(); // output: int
+
+            // global policy
+            #define BOOST_DI_CFG my_policy
+            auto injector = __di_make_injector__();
+            injector.__di_injector_create__<int>(); // output: int
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+[table
+[[Define policies configuration (dump types extended)][]]
+    [
+        [
+            ```
+            class print_types_info_policy : public __di_config__ {
+            public:
+                auto policies() const noexcept {
+                    return __di_make_policies__(
+                        [](auto type, auto dep, auto... ctor) {
+                            using T = decltype(type);
+                            using arg = typename T::type;
+                            using arg_name = typename T::name;
+                            using D = decltype(dep);
+                            using scope = typename D::scope;
+                            using expected = typename D::expected;
+                            using given = typename D::given;
+                            using name = typename D::name;
+                            auto ctor_s = sizeof...(ctor);
+
+                            cout << ctor_s << endl
+                                << typeid(arg).name() << endl
+                                << typeid(arg_name).name() << endl
+                                << typeid(scope).name() << endl
+                                << typeid(expected).name() << endl
+                                << typeid(given).name() << endl
+                                << typeid(name).name() << endl;
+                        }
+                    )
+                }
+            };
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            // per injector policy
+            auto injector = __di_make_injector__<print_types_info_policy>(
+                __di_bind__<i1, impl1>
             );
-        }
-    };
 
-    // per injector policy
-    auto injector = __di_make_injector__<print_types_policy>();
-    injector.__di_injector_create__<int>(); // output: int
+            injector.__di_injector_create__<unique_ptr<i1>>();
+                // output:
+                0 // ctor_size of impl1
+                unique_ptr<i1> // ctor arg
+                di::no_name // ctor arg name
+                __di_scopes_deduce__ // scope
+                i1 // expected
+                impl1 // given
+                no_name // dependency
 
-    // global policy
-    #define BOOST_DI_CFG my_policy
-    auto injector = __di_make_injector__();
-    injector.__di_injector_create__<int>(); // output: int
+            // global policy
+            #define BOOST_DI_CFG my_policy
+            auto injector = __di_make_injector__(
+                __di_bind__<i1, impl1>
+            );
+
+            injector.__di_injector_create__<unique_ptr<i1>>();
+                // output:
+                0 // ctor_size of impl1
+                unique_ptr<i1> // cotr arg
+                di::no_name // ctor arg name
+                __di_scopes_deduce__ // scope
+                i1 // expected
+                impl1 // given
+                no_name // dependency
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
 
 [heading More Examples]
     ``__examples_custom_policy__``
@@ -73,248 +163,92 @@ In order for __injectors_injector__ to verify policies they have to be passed us
 [section allow_ctor_types]
 
 [heading Description]
-Limits default constructible types not be created unless they are explicitly bound or allowed.
+Limits constructor parameters to explicitly allowed. 
+[note By default `allow_ctor_types` policy disables creation of any constructor parameters.]
 
-[heading Allow Type Model]
-    template<class TValueType>
-    class allow_type_model {
-    public:
-        template<class T>
-        struct allow; // returns boolean expression
-    };
+[heading Synopsis]
+    template<class T>
+    inline auto allow_ctor_types(const T&);
+
+    struct _ { }; // placeholder
+
+    template<class T, class TName = no_name>
+    struct is_bound; // is type explicitly bound using __bindings__
+
+    struct is_root; // is type a request type (create<c>() -> is_root<c>{} = true)
+
+    template<class X>
+    inline auto operator!(const X&)
+
+    template<class X, class Y>
+    inline auto operator&&(const X&, const Y&);
+
+    template<class X, class Y>
+    inline auto operator||(const X&, const Y&);
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TValueType`][None][Type to be allowed]]
-    [[`T`][None][__data_model__ parameter type]]
-]
-
-[heading Synopsis]
-    template<class>
-    struct allow_type;
-
-    template<class>
-    struct allow_type_expr;
-
-    template<class... TArgs>
-    class creation_permission {
-    public:
-        template<class T>
-        void assert_policy() const;
-    };
-
-[table Parameters
-    [[Parameter][Requirement][Description][Throw]]
     [[`TArgs...`][__allow_type_model__ type][Type to be allowed]]
-    [[`T`][__data_model__ type][Data to be verified]]
-    [[`assert_policy()`][None][Verify policy requirements][Does not throw]]
+    [[`T`][Type is convertible to bool][Policy configuration, might be combined using provided logic operators (!, &&, ||)]]
+    [[`TName`][None][Type name]]
+    [[`X, Y`][Type is convertible to bool][Input types for operators]]
 ]
 
 [heading Expression Semantics]
-    using namespace di::policies;
-    di::policies::creation_permission<TArgs...>() // TArgs will be verified using `or` semantic
+    allow_ctor_types(T)
+    is_bound<_>{} | is_bound<int, name>{} | is_root{}
 
-[*Result]: static assert with `TYPE_HAS_TO_BE_EXPLICITLY_BINDED` message or clean compilation.
+[*Result]: static assert with "`Type T is not allowed`" message or clean compilation.
 
 [heading Header]
     #include <__di_hpp__>
 
 [heading Namespace]
     boost::di::policies
+    boost::di::policies::operators // for logic operators to be supported
+
+[warning Logic operators will works only when `using boost::di::policies::operators` will be defined.]
 
 [heading Examples]
-    using namespace di::policies;
+[table
+[[Allow ctor types policy][]]
+    [
+        [
+            ```
+            #include <boost/di/policies/allow_ctor_types.hpp>
 
-    __di_make_injector__().__di_injector_create__<int>(creation_permission<>()); // compile error
-    __di_make_injector__(__di_bind_int__<42>()).__di_injector_create__<int>(creation_permission<>()); // compile ok
-    __di_make_injector__().__di_injector_create__<int>(creation_permission<allow_type<int>>()); // compile ok
-    __di_make_injector__().__di_injector_create__<int>(creation_permission<allow_type_expr<is_pod<mpl::_>>>()); // compile ok
+            class all_must_be_bound_unless_int : public __di_config__ {
+            public:
+                auto policies() const noexcept {
+                    using namespace di::policies;
+                    using namespace di::policies::operators; // to support logic operators
 
-[heading Tests]
-    ``[@test/ut/policies/creation_permission_ut.cpp]``
-
-[heading See Also]
-
-* __policies__
-* __policies_circular_dependencies__
-* __policies_parameters_permission__
-* __policies_scopes_permission__
-
-[heading Description]
-Limits allowed constructor parameters. By default, if used, all parameters are disallowed.
-
-[heading Allow Parameter Model]
-    template<class TParameter>
-    class allow_parameter_model {
-    public:
-        template<class T>
-        struct allow; // returns boolean expression
-    };
-
-[table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`TParameter`][None][Parameter to be allowed]]
-    [[`T`][None][__data_model__ type]]
+                    return __di_make_policies__(
+                        allow_ctor_types(is_same<_, int>{} || is_bound<_>{})
+                    );
+                }
+            };
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            // global policy
+            #define BOOST_DI_CFG all_must_be_bound_unless_int
+            assert(0 == injector.__di_injector_create__<int>());
+            injector.__di_injector_create__<double>(); // compile error
+            assert(42.0, 
+                make_injector(
+                    __di_bind__<double>.to(42.0)
+                ).__di_injector_create__<double>()
+            );
+                                                                                                                       .
+            ```
+        ]
+    ]
 ]
 
-[heading Synopsis]
-    struct allow_smart_ptrs;
-    struct allow_refs;
-    struct allow_const_refs;
-    struct allow_rvalue_refs;
-    struct allow_ptrs;
-    struct allow_copies;
-
-    template<class... TArgs>
-    class parameters_permission {
-    public:
-        template<class TDependency>
-        void assert_policy();
-    };
-
-[table Parameters
-    [[Parameter][Requirement][Description][Throw]]
-    [[`TArgs...`][__allow_parameter_model__ type][Parameters to be allowed]]
-    [[`T`][__data_model__ type][Data to be verified]]
-    [[`assert_policy()`][None][Verify policy requirements][Does not throw]]
-]
-
-[heading Expression Semantics]
-    using namespace di::policies;
-    parameters_permission<allow_refs, allow_smart_ptrs, ..., allow_copies>() // TArgs will be verified using `or` semantic
-
-[*Result]: static assert with `PARAMETER_NOT_PERMITTED` message or clean compilation.
-
-[heading Header]
-    #include <__di_hpp__>
-
-[heading Namespace]
-    boost::di::policies
-
-[heading Examples]
-    using namespace di::policies;
-
-    __di_make_injector__().__di_injector_create__<int>(parameters_permission<>()); // compile error, no parameters are allowed
-    __di_make_injector__().__di_injector_create__<int>(parameters_permission<allow_copies>()); // compile ok
-
-    struct example {
-        example(std::vector<int*>, std::shared_ptr<int>, const int&);
-    };
-
-    // Parameters
-    //    * std::vector<int*> -> allow_copies
-    //        * int* -> allow_ptrs
-    //    * std::shared_ptr<int> -> allow_smart_ptrs
-    //    * const int& -> allow_const_refs
-
-    __di_make_injector__().__di_injector_create__<example>(
-        parameters_permission<allow_copies, allow_ptrs, allow_smart_ptrs, allow_const_refs>()
-    ); // compile ok
-
-[warning `Parameters Permission` policy is not supported by Microsoft Visual Studio.]
-
-[heading Tests]
-    ``[@test/ut/policies/parameters_permission_ut.cpp]``
-
-[heading See Also]
-
-* __policies__
-* __policies_circular_dependencies__
-* __policies_creation_permission__
-* __policies_scopes_permission__
-
-[heading Description]
-Limits allowed scopes to be used whilst binding. By default, if used, all scopes are disallowed.
-
-[heading Allow Scope Model]
-    template<class TScope>
-    class allow_scope_model {
-    public:
-        template<class T>
-        struct allow; // returns boolean expression
-    };
-
-[table Parameters
-    [[Parameter][Requirement][Description][Throw]]
-    [[`TScope`][__scope_model__][Scope to be allowed]]
-    [[`T`][None][__data_model__ type]]
-    [[`assert_policy()`][None][Verify policy requirements][Does not throw]]
-]
-
-[heading Synopsis]
-    template<class TScope>
-    struct allow_scope;
-
-    template<>
-    struct allow_scope<scopes::deduce>; // disabled
-
-    template<class... TArgs>
-    class scopes_permission {
-    public:
-        template<class TDependency>
-        void assert_policy() const;
-    };
-
-[table Parameters
-    [[Parameter][Requirement][Description][Throw]]
-    [[`TScope`][__scope_model__ type][Scope to be allowed]]
-    [[`TArgs...`][__allow_scope_model__ type][Scopes to be allowed]]
-    [[`T`][__data_model__ type][Data to be verified]]
-    [[`assert_policy()`][None][Verify policy requirements][Does not throw]]
-]
-
-[heading Expression Semantics]
-    using namespace di::policies;
-    scopes_permission<
-        allow_scope<__di_scopes_unique__<>>
-      , allow_scope<__di_scopes_shared__<>>
-      , allow_scope<__di_scopes_session__<>>
-      , allow_scope<__di_scopes_external__<>>
-    >() // TArgs will be verified using `or` semantic
-
-[note `allow_scope<scopes::__scopes_deduce__>` is not allowed.]
-
-[*Result]: static assert with `SCOPE_NOT_PERMITTED` message or clean compilation.
-
-[heading Header]
-    #include <__di_hpp__>
-
-[heading Namespace]
-    boost::di::policies
-
-[heading Examples]
-    using namespace di::policies;
-
-    __di_make_injector__().__di_injector_create__<int>(scopes_permission<>()); // compile error, no scopes are allowed
-
-    __di_make_injector__(
-        __di_bind_unique__<int>()
-    ).__di_injector_create__<int>(scopes_permission<allow_scope<__di_scopes_unique__<>>>()); // compile ok
-
-    __di_make_injector__(
-        __di_bind_shared__<int>()
-    ).__di_injector_create__<int>(scopes_permission<allow_scope<__di_scopes_unique__<>>>()); // compile error
-
-    struct example {
-        example(std::shared_ptr<int>);
-    };
-
-    __di_make_injector__(
-        __di_bind_deduce__<int>()
-    ).__di_injector_create__<example>(scopes_permission<allow_scope<__di_scopes_unique__<>>>()); // compile error
-
-    struct example {
-        example(int);
-    };
-
-    __di_make_injector__(
-        __di_bind_deduce__<int>()
-    ).__di_injector_create__<example>(scopes_permission<allow_scope<__di_scopes_unique__<>>>()); // compile ok
-
-[note To read more about `scope deduction` mapping see __scopes_deduce__.]
-
-[heading Tests]
-    ``[@test/ut/policies/scopes_permission_ut.cpp]``
+[tip STL type traits are supported and might be combined with `Boost.DI` traits in order to limit constructor types ex. `std::is_same<_, int>{} || std::is_constructible<_, int, int>{} || std::is_base_of<int, _>{}`, etc...]
 
 [heading See Also]
 

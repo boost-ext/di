@@ -10,7 +10,7 @@
 [section Providers]
 
 [heading Description]
-Providers are reponsible for creating objects using given configuration and parameters.
+Providers are responsible for creating objects using given configuration and parameters.
 Boot.DI is released with 2 providers.
 
 * __providers_stack_over_heap__ (default)
