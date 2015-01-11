@@ -19,8 +19,6 @@
     [source-mode c++]
 ]
 
-[caution This is not an official Boost library yet and there is no guarantee it will ever be!]
-
 [def __di_hpp__                                         [@https://github.com/krzysztof-jusiak/di/blob/cpp14/include/boost/di.hpp boost/di.hpp]]
 [def __di_inject_hpp__                                  [@https://github.com/krzysztof-jusiak/di/blob/cpp14/include/boost/di/inject.hpp boost/di/inject.hpp]]
 
