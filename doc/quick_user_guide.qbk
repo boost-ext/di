@@ -814,7 +814,6 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
     ]
 ]
 
-
 [table
 [[Exposed type module][Test]]
     [
@@ -856,7 +855,6 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
     ]
 ]
 
-
 [table
 [[Exposed many types module][Test]]
     [
@@ -892,7 +890,6 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
         ]
     ]
 ]
-
 
 [table
 [[Exposed type module with annotation][Test]]
@@ -1124,6 +1121,13 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
         ]
     ]
 ]
+
+[heading See Also]
+* [link di.concepts Concepts]
+* [link di.diagnostic_messages Diagnostic messages]
+* [link di.performance Performance]
+* [link di.examples Examples]
+* [link di.rationale Rationale]
 
 [endsect]
 

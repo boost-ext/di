@@ -95,7 +95,7 @@ int main() {                            | int main() {
 
 * [Injector](#injector) | [Bindings](#2-bindings) | [Inejctions](#2-injections) | [Annotations](#3-dependencies) | [Scopes](#4-building-mlpack-from-source) | [Modules](#5-running-mlpack-programs) | [Policies](#6-further-documentation) | [Providers]()
 * [Run-time performance]() | [Compile-time performance]()
-* [Error messages]() | [Configuration]()
+* [Diagnostic messages]() | [Configuration]()
 
 > Let's assume all examples below include `boost/di.hpp` header and define `di` namespace alias.
 ```cpp
@@ -902,7 +902,7 @@ Legend:
 
 *
 
-> **Error messages (-ftemplate-backtrace-limit=1 -ferror-limit=1)**
+> **Diagnostic messages (-ftemplate-backtrace-limit=1 -ferror-limit=1)**
 ```cpp
 Create interface without bound          | Error message
 implementation                          |
@@ -915,8 +915,9 @@ injector.create<unique_ptr<i1>>();      | class type 'i1' return new (nothrow)
 Ambiguous binding                       | Error message
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector(      | error: base class 'pair<int, no_name>'
-  , di::bind<int>.to(87)                | specified more than once as a direct
-);                                      | base class
+    di::bind<int>.to(42)                | specified more than once as a direct
+  , di::bind<int>.to(87)                | base class
+);                                      |
                                         |
 injector.create<int>();                 |
 ```

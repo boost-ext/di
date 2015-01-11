@@ -1,0 +1,115 @@
+[/
+ /
+ / Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+ /
+ / Distributed under the Boost Software License, Version 1.0.
+ / (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /
+ /]
+
+[section Diagnostic messages]
+
+[table
+[[Create interface without bound implementation][Error message]]
+    [
+        [
+            ```
+            auto injector = __di_make_injector__();
+            injector.__di_injector_create__<unique_ptr<i1>>();
+
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            error: allocating an object of abstract class type 'i1' return new (nothrow) T{forward<TArgs>(args)...};
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+[table
+[[Ambiguous binding][Error message]]
+    [
+        [
+            ```
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.to(42)
+              , __di_bind__<int>.to(87)
+            );
+
+            injector.__di_injector_create__<int>();
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            error: base class 'pair<int, no_name>' specified more than once as a direct base class
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+[table
+[[Create not bound object with all bound policy][Error message]]
+    [
+        [
+            ```
+            class all_bound : public __di_config__ {
+            public:
+                auto policies() const noexcept {
+                    return __di_make_policies__(
+                        allow_ctor_types(is_bound<_>{})
+                    );
+                }
+            };
+
+            auto injector = __di_make_injector__<all_bound>();
+            injector.__di_injector_create__<int>();
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            error: static_assert failed "Type T is not allowed"
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+[table
+[[Wrong annotation (NAMED instead of named)][Error message]]
+    [
+        [
+            ```
+            auto name = []{};
+
+            struct c {
+                __injections_boost_di_inject__(c
+                    , (NAMED = name) int) { }
+            };
+
+            __di_make_injector__().__di_injector_create__<c>();
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            error: use of undeclared identifier 'named'
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+[heading See Also]
+* [link di.concepts Concepts]
+* [link di.examples Examples]
+* [link di.performance Performance]
+* [link di.rationale Rationale]
+
+[endsect]
+

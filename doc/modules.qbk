@@ -22,7 +22,7 @@ Activation of `Module` is done by passing it into injector.
         }
     };
 
-    class module_exposed {
+    class exposed {
     public:
         __di_injector__<interface> configure() const noexcept {
             return __di_make_injector__(...);
@@ -43,34 +43,172 @@ Activation of `Module` is done by passing it into injector.
     #include <__di_hpp__>
 
 [heading Examples]
-    class module {
-    public:
-        auto configure() const noexcept {
-            return __di_make_injector__(
-                __di_bind__<int>.to(42)
-              , __di_bind__<interface1, implementation1>
+[table
+[[Module][]]
+    [
+        [
+            ```
+            struct c {
+                c(unique_ptr<i1> i1
+                , unique_ptr<i2> i2
+                , int i) : i1(i1), i2(i2), i(i)
+                { }
+
+                unique_ptr<i1> i1;
+                unique_ptr<i2> i2;
+                int i = 0;
+            };
+
+            struct module1 {
+                auto configure() const noexcept {
+                    return __di_make_injector__(
+                        __di_bind__<i1, impl1>
+                      , __di_bind__<int>.to(42)
+                    );
+                }
+            };
+
+            struct module2 {
+                auto configure() const noexcept {
+                    return __di_make_injector__(
+                        __di_bind__<i2, impl2>
+                    );
+                };
+            };
+
+            auto injector = __di_make_injector__(
+                module1{}, module2{}
             );
-        }
-    };
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(dynamic_cast<impl1*>(object.i1.get()));
+            assert(dynamic_cast<impl2*>(object.i2.get()));
+            asert(42 == object.i);
+            assert(dynamic_cast<impl1*>(injector.crate<unique_ptr<i1>>());
+            assert(dynamic_cast<impl2*>(injector.crate<unique_ptr<i2>>());
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
 
-    class exposed_module {
-    public:
-        di::injector<complex> configure() const noexcept {
-            return __di_make_injector__(
-                __di_bind__<interface2, implementation2>
+[table
+[[Exposed type module][]]
+    [
+        [
+            ```
+            struct module {
+                __di_injector__<c> configure()
+                const noexcept;
+
+                int i = 0;
+            };
+
+            __di_injector__<c> // expose c
+            module::configure() const noexcept {
+                return __di_make_injector__(
+                    __di_bind__<i1, impl1>
+                  , __di_bind__<i2, impl2>
+                  , __di_bind__<int>.to(i)
+                );
+            }
+
+            auto injector = __di_make_injector__(
+                module{42}
             );
-        }
-    };
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(dynamic_cast<impl1*>(object.i1.get()));
+            assert(dynamic_cast<impl2*>(object.i2.get()));
+            asert(42 == object.i);
+            injector.crate<unique_ptr<i1>>() // compile error
+            injector.crate<unique_ptr<i2>>() // compile error
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
 
-    auto injector = __di_make_injector__(
-        module{}, exposed_module{}
-        // exposed_module{}, module{} // order of passed modules is not important
-    );
+[table
+[[Exposed many types module][]]
+    [
+        [
+            ```
+            struct module {
+                __di_injector__<i1, i2> configure()
+                const noexcept;
 
-    assert(dynamic_cast<implementation1*>(injector.__di_injector_create__<unique_ptr<interface1>>().get()));
-    assert(42 == injector.__di_injector_create__<int>());
-    injector.__di_injector_create__<complex>(); // okay
-    injector.__di_injector_create__<unique_ptr<interface2>>(); // compile error, only `complex` was exposed by module
+                int i = 0;
+            };
+
+            __di_injector__<i1, i2> // expose i1, i2
+            module::configure() const noexcept {
+                return __di_make_injector__(
+                    __di_bind__<i1, impl1>
+                  , __di_bind__<i2, impl2>
+                );
+            }
+
+            auto injector = __di_make_injector__(
+                module{}
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            assert(dynamic_cast<impl1*>(injector.crate<unique_ptr<i1>>());
+            assert(dynamic_cast<impl2*>(injector.crate<unique_ptr<i2>>());
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+[table
+[[Exposed type module with annotation][]]
+    [
+        [
+            ```
+            auto my = []{};
+
+            struct c {
+                __injections_boost_di_inject__(c
+                  , (__bindings_named__ = my) unique_ptr<i1> up)
+                  : up(up)
+                { }
+
+                unique_ptr<i1> up;
+            };
+
+            __di_injector__<i1> module =
+                __di_make_injector__(
+                    __di_bind__<i1, impl1>
+                );
+
+            auto injector = __di_make_injector__(
+                __di_bind__<i1>.__bindings_named__(my).to(module)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<c>();
+            assert(dynamic_cast<impl1*>(c.up.get()));
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
 
 [tip `__modules__/__bindings__` might be mixed whilst creating an injector, order is not important.]
 
