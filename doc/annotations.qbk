@@ -54,8 +54,8 @@ In order to inject proper values into `value1` and `value2` they have to be dist
 
             struct c {
                 __injections_boost_di_inject__(c
-                    , (__bindings_named__ = int1) int a
-                    , (__bindings_named__ = int2) int b)
+                    , (__annotations_named__ = int1) int a
+                    , (__annotations_named__ = int2) int b)
                     : a(a), b(b)
                 { }
 
@@ -64,8 +64,8 @@ In order to inject proper values into `value1` and `value2` they have to be dist
             };
 
             auto injector = __di_make_injector__(
-                __di_bind__<int>.__bindings_named__(int1).to(42)
-              , __di_bind__<int>.__bindings_named__(int2).to(87)
+                __di_bind__<int>.__annotations_named__(int1).to(42)
+              , __di_bind__<int>.__annotations_named__(int2).to(87)
             );
                                                                                                .
             ```
@@ -91,11 +91,11 @@ In order to inject proper values into `value1` and `value2` they have to be dist
 
             struct c {
                 __injections_boost_di_inject__(c
-                    , (__bindings_named__ = n1) int a
-                    , (__bindings_named__ = n1) int b
-                    , (__bindings_named__ = n2) int c
+                    , (__annotations_named__ = n1) int a
+                    , (__annotations_named__ = n1) int b
+                    , (__annotations_named__ = n2) int c
                     , int d
-                    , (__bindings_named__ = n1) string s)
+                    , (__annotations_named__ = n1) string s)
                     : a(a), b(b), c(c), d(d), s(s)
                 { }
 
@@ -107,9 +107,9 @@ In order to inject proper values into `value1` and `value2` they have to be dist
             };
 
             auto injector = __di_make_injector__(
-                __di_bind__<int>.__bindings_named__(n1).to(42)
-              , __di_bind__<int>.__bindings_named__(n2).to(87)
-              , __di_bind__<string>.__bindings_named__(n1).to("str")
+                __di_bind__<int>.__annotations_named__(n1).to(42)
+              , __di_bind__<int>.__annotations_named__(n2).to(87)
+              , __di_bind__<string>.__annotations_named__(n1).to("str")
             );
                                                                                                .
             ```
@@ -138,8 +138,8 @@ In order to inject proper values into `value1` and `value2` they have to be dist
 
             struct c {
                 __injections_boost_di_inject__(c
-                    , (__bindings_named__ = int1) int a
-                    , (__bindings_named__ = int2) int b);
+                    , (__annotations_named__ = int1) int a
+                    , (__annotations_named__ = int2) int b);
 
                 int a = 0;
                 int b = 0;
@@ -148,8 +148,8 @@ In order to inject proper values into `value1` and `value2` they have to be dist
             c::c(int a, int b) : a(a), b(b) { }
 
             auto injector = __di_make_injector__(
-                __di_bind__<int>.__bindings_named__(int1).to(42)
-              , __di_bind__<int>.__bindings_named__(int2).to(87)
+                __di_bind__<int>.__annotations_named__(int1).to(42)
+              , __di_bind__<int>.__annotations_named__(int2).to(87)
             );
                                                                                                .
             ```
@@ -184,14 +184,14 @@ In order to inject proper values into `value1` and `value2` they have to be dist
             template<>
             struct ctor_traits<c> {
                 __injections_boost_di_inject_traits__(
-                    (__bindings_named__ = int1) int
-                  , (__bindings_named__ = int2) int);
+                    (__annotations_named__ = int1) int
+                  , (__annotations_named__ = int2) int);
             };
             }} // boost::di
 
             auto injector = __di_make_injector__(
-                __di_bind__<int>.__bindings_named__(int1).to(42)
-              , __di_bind__<int>.__bindings_named__(int2).to(87)
+                __di_bind__<int>.__annotations_named__(int1).to(42)
+              , __di_bind__<int>.__annotations_named__(int2).to(87)
             );
                                                                                                .
             ```
@@ -206,11 +206,13 @@ In order to inject proper values into `value1` and `value2` they have to be dist
         ]
     ]
 ]
+
 [heading More Examples]
     ``__examples_annotations__``
 
-[heading Tests]
-    ``[@test/ut/named_ut.cpp]``
+[heading See Also]
+
+* __annotations__
 
 [endsect]
 

@@ -37,7 +37,7 @@ To get started the only file you need is `di.hpp`:
     int main() { }
 ```
 
-```
+[teletype] ```
     $CXX -std=c++1y -I. main.cpp
 ```
 

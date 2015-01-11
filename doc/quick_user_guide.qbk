@@ -193,8 +193,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 ]
 
 [table
-[[Direct constructor injection with many constructors[br]
-  (longest parameters list constructor will be chosen)][Test]]
+[[Direct constructor injection with many constructors][Test]]
+[[Longest parameters list constructor will be chosen][]]
     [
         [
             ```
@@ -339,8 +339,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 
             struct c {
                 __injections_boost_di_inject__(c
-                    , (__bindings_named__ = int1) int a
-                    , (__bindings_named__ = int2) int b)
+                    , (__annotations_named__ = int1) int a
+                    , (__annotations_named__ = int2) int b)
                     : a(a), b(b)
                 { }
 
@@ -349,8 +349,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
             };
 
             auto injector = __di_make_injector__(
-                __di_bind__<int>.__bindings_named__(int1).to(42)
-              , __di_bind__<int>.__bindings_named__(int2).to(87)
+                __di_bind__<int>.__annotations_named__(int1).to(42)
+              , __di_bind__<int>.__annotations_named__(int2).to(87)
             );
                                                                                                .
             ```
@@ -376,11 +376,11 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 
             struct c {
                 __injections_boost_di_inject__(c
-                    , (__bindings_named__ = n1) int a
-                    , (__bindings_named__ = n1) int b
-                    , (__bindings_named__ = n2) int c
+                    , (__annotations_named__ = n1) int a
+                    , (__annotations_named__ = n1) int b
+                    , (__annotations_named__ = n2) int c
                     , int d
-                    , (__bindings_named__ = n1) string s)
+                    , (__annotations_named__ = n1) string s)
                     : a(a), b(b), c(c), d(d), s(s)
                 { }
 
@@ -392,9 +392,9 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
             };
 
             auto injector = __di_make_injector__(
-                __di_bind__<int>.__bindings_named__(n1).to(42)
-              , __di_bind__<int>.__bindings_named__(n2).to(87)
-              , __di_bind__<string>.__bindings_named__(n1).to("str")
+                __di_bind__<int>.__annotations_named__(n1).to(42)
+              , __di_bind__<int>.__annotations_named__(n2).to(87)
+              , __di_bind__<string>.__annotations_named__(n1).to("str")
             );
                                                                                                .
             ```
@@ -423,8 +423,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 
             struct c {
                 __injections_boost_di_inject__(c
-                    , (__bindings_named__ = int1) int a
-                    , (__bindings_named__ = int2) int b);
+                    , (__annotations_named__ = int1) int a
+                    , (__annotations_named__ = int2) int b);
 
                 int a = 0;
                 int b = 0;
@@ -433,8 +433,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
             c::c(int a, int b) : a(a), b(b) { }
 
             auto injector = __di_make_injector__(
-                __di_bind__<int>.__bindings_named__(int1).to(42)
-              , __di_bind__<int>.__bindings_named__(int2).to(87)
+                __di_bind__<int>.__annotations_named__(int1).to(42)
+              , __di_bind__<int>.__annotations_named__(int2).to(87)
             );
                                                                                                .
             ```
@@ -469,14 +469,14 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
             template<>
             struct ctor_traits<c> {
                 __injections_boost_di_inject_traits__(
-                    (__bindings_named__ = int1) int
-                  , (__bindings_named__ = int2) int);
+                    (__annotations_named__ = int1) int
+                  , (__annotations_named__ = int2) int);
             };
             }} // boost::di
 
             auto injector = __di_make_injector__(
-                __di_bind__<int>.__bindings_named__(int1).to(42)
-              , __di_bind__<int>.__bindings_named__(int2).to(87)
+                __di_bind__<int>.__annotations_named__(int1).to(42)
+              , __di_bind__<int>.__annotations_named__(int2).to(87)
             );
                                                                                                .
             ```
@@ -891,7 +891,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 
             struct c {
                 __injections_boost_di_inject__(c
-                  , (__bindings_named__ = my) unique_ptr<i1> up)
+                  , (__annotations_named__ = my) unique_ptr<i1> up)
                   : up(up)
                 { }
 
@@ -904,7 +904,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
                 );
 
             auto injector = __di_make_injector__(
-                __di_bind__<i1>.__bindings_named__(my).to(module)
+                __di_bind__<i1>.__annotations_named__(my).to(module)
             );
                                                                                                .
             ```

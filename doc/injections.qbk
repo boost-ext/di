@@ -33,8 +33,7 @@ It guarantees initialized state of data members. `Boost.DI` [link di.concepts.in
 [heading See Also]
 
 * __injections_automatic__
-* __injections_boost_di_inject__
-* __injections_boost_di_inject_traits__
+* __injections_inject__
 * __injections_ctor_traits__
 
 [section:automatic automatic (default)]
@@ -117,7 +116,7 @@ If the default behavior should be changed constructor has to be explicitly marke
 ]
 
 [table
-[[Direct constructor injection with many constructors[br]
+[[Direct constructor injection with many constructors
   (longest parameters list constructor will be chosen)][]]
     [
         [
@@ -159,13 +158,14 @@ If the default behavior should be changed constructor has to be explicitly marke
 
 * __injections__
 * __injections_automatic__
-* __injections_boost_di_inject__
-* __injections_boost_di_inject_traits__
+* __injections_inject__
 * __injections_ctor_traits__
 
 [endsect]
 
 [section inject]
+
+[heading BOOST_DI_INJECT]
 
 [heading Description]
 `BOOST_DI_INJECT` is a macro definition used to explicitly say `Boost.DI` which constructor should be used as well as in order to annotate types - see __annotations__ for further reding.
@@ -337,6 +337,7 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
     ``__examples_constructor_injection__``
 
 [heading BOOST_DI_INJECT_TRAITS_NO_LIMITS]
+
 [heading Description]
 `BOOST_DI_INJECT_TRAITS_NO_LIMITS` is similar to __injections_boost_di_inject_traits__, but it's not limited by BOOST_DI_CFG_CTOR_LIMIT_SIZE
 and doesn't support __annotations_. Useful for generated constructors.

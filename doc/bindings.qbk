@@ -49,7 +49,7 @@ The glue between bindings and the core is __dependency_model__.
     #include <__di_hpp__>
 
 [heading Examples]
-    ``__examples_binding__`` | ``__examples_dynamic_binding__``
+    ``__examples_bindings__`` | ``__examples_dynamic_bindings__``
 
 [heading See Also]
 
@@ -176,7 +176,7 @@ Allows to bind interface to implementation and associate value with __dependency
 [note Values bind with `to(T)` always have higher priority than other bindings. See __scopes_external__ for further information.]
 
 [heading More Examples]
-    ``__examples_binding__`` | ``__examples_dynamic_binding__`` | ``__more_examples_multiple_interfaces__``
+    ``__examples_bindings__`` | ``__examples_dynamic_bindings__`` | ``__examples_multiple_interfaces__``
 
 [heading See Also]
 

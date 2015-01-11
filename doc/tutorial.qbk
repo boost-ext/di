@@ -84,15 +84,15 @@ the value to `1` for now.
 
 ```
 auto injector = __di_make_injector__(
-    __di_bind__<int, std::integral_constant<int, 1>>() // compile-time value
-  , __di_bind__<std::string>::to("hello world") // run-time value
+    __di_bind__<int, std::integral_constant<int, 1>> // compile-time value
+  , __di_bind__<std::string>.to("hello world") // run-time value
 );
 ```
 [table
     [[Full code example: [@example/tutorial/tutorial2.cpp]]]
 ]
 
-So, right now we have [link di.concepts.injectors.injector injector] configured and the output of our example application
+So, right now we have [link di.concepts.injector injector] configured and the output of our example application
 should always be "hello world".
 
 Let's continue then with our requirement that text should be displayed if first command
@@ -206,9 +206,9 @@ public:
 
     auto configure() const {
         return __di_make_injector__(
-            __di_bind_<ilogger, ilogger>()
+            __di_bind__<ilogger, ilogger>
           , __di_bind__<int>.to(value_)
-          , __di_bind__<std::string>::to("hello world")
+          , __di_bind__<std::string>.to("hello world")
         );
     }
 
@@ -221,7 +221,7 @@ and the main function
 
 ```
 int main(int argc, char** argv) {
-    auto injector = __di_make_injector__(module(argc > 1 ? std::atoi(argv[1]) : 0));
+    auto injector = __di_make_injector__(module{argc > 1 ? std::atoi(argv[1]) : 0});
     injector.__di_injector_create__<app>().run();
 
     return 0;
@@ -231,6 +231,38 @@ int main(int argc, char** argv) {
 
 [table
     [[Full code example: [@example/tutorial/tutorial5.cpp]]]
+]
+
+But using `auto` force us to write module only in a header file. Such approach might not be suitable for large projects. In order to be able to write
+implementation in cpp file we are going to use module with explicit exposed type.
+The only thing we have to change is declaration of configure method and obviously write the definition as well.
+
+```
+class module {
+public:
+    explicit module(int value)
+        : value_(value)
+    { }
+
+    di::injector<app> configure() const {
+        return __di_make_injector__(
+            __di_bind__<ilogger, ilogger>
+          , __di_bind__<int>.to(value_)
+          , __di_bind__<std::string>.to("hello world")
+        );
+    }
+
+private:
+    int value_ = 0;
+};
+```
+
+Our main function is not going to change, we still create `app`.
+
+[note Many types might be exposed using __di_injector__<...>.]
+
+[table
+    [[Full code example: [@example/tutorial/tutorial6.cpp]]]
 ]
 
 But in our company we have our `string` implementation, but we still want to support `std::string` as well, how to achieve that?
@@ -269,15 +301,23 @@ We have few options in order to do so, some of them are more intrusive and some 
 we can define different types for both of them. We can use __annotations_named__ parameters provided by `Boost.DI`.
 
 ```
-    class first { };
-    class second { };
+    auto first = []{};
+    auto second = []{};
 ...
-    app(__di_named__<int, first> value1, __di_named__<int, second> value2, const std::string& text, std::shared_ptr<ilogger> logger)
+    __injections_inject__(app, (__annotations_named__ = first) int value1, (__annotations_named__ = second) int value2, const std::string& text, std::shared_ptr<ilogger> logger)
 ```
 
-[note __annotations_named__ parameters will convert to the type there are named from, meaning - you can write: `int value = named<int, first>(42)`.]
+[note __annotations_named__ is just an annotation in constructor declaration and is not changing constructor parameters itself.]
 
-Or in less intrusive way - when we can't change [link di.examples.constructor_signature constructor signature] for example - by using __injections_ctor_traits__ to achieve __annotations_named__ parameters.
+```
+    app::app(int value1, int value2, const std::string& text, std::shared_ptr<ilogger> logger)
+```
+
+```
+    __injections_inject__(app, (__annotations_named__ = first) int value1, (__annotations_named__ = second) int value2, const std::string& text, std::shared_ptr<ilogger> logger)
+```
+
+Or no intrusive way - when we can't change [link di.examples.constructor_signature constructor signature] for example - by using __injections_ctor_traits__ to achieve __annotations_named__ parameters.
 
 ```
     app(int value1, int value2, const std::string& text, std::shared_ptr<ilogger> logger)
@@ -289,7 +329,7 @@ Or in less intrusive way - when we can't change [link di.examples.constructor_si
 
     template<>
     struct ctor_traits<app> {
-        __injections_boost_di_inject_traits__(__di_named__<int, first>, __di_named__<int, second>, const std::string&, std::shared_ptr<ilogger> logger);
+        __injections_boost_di_inject_traits__((__annotations_named__ = first) int, (__annotations_named__ = second) int, const std::string&, std::shared_ptr<ilogger> logger);
     };
 
     }} //boost::di
@@ -297,14 +337,14 @@ Or in less intrusive way - when we can't change [link di.examples.constructor_si
 
 [tip __injections_boost_di_inject_traits__ might be defined within a class as well.]
 
-Right now, if we want to bind `value1` and `value2` we just need to use __di_bind_named__ property of __bindings_bind__.
+Right now, if we want to bind `value1` and `value2` we just need to use __annotations_named__ property of __bindings_bind__.
 
 ```
     auto configure() const {
         return __di_make_injector__(
-            __di_bind__<ilogger, logger>()
-          , __di_bind__<int>.__di_bind_named__<first>.to(i_) // bind int named first to i_ member
-          , __di_bind__<int>.__di_bind_named__<second>.to(0) // bind int named second to 0
+            __di_bind__<ilogger, logger>
+          , __di_bind__<int>.__annotations_named__<first>.to(i_) // bind int named first to i_ member
+          , __di_bind__<int>.__annotations_named__<second>.to(0) // bind int named second to 0
           , __di_bind__<std::string>.to("hello world")
         );
     }
@@ -313,38 +353,17 @@ Right now, if we want to bind `value1` and `value2` we just need to use __di_bin
 With such configuration `value1` will be set to first `int` command line argument and `value2` to `0`.
 
 [table
-    [[Full code example: [@example/tutorial/tutorial6.cpp]]]
+    [[Full code example: [@example/tutorial/tutorial7.cpp]]]
 ]
 
 That's pretty much it. Hope this tutorial helped you a bit with understanding
 basics concept of dependency injection framework and that creation of dependencies won't be
 a problem for you anymore.
 
-But oh, almost forgotten - I've promised to show how to handle `unique_ptr` issue with testing in a better way. So let's go back to our original example.
-
-```
-    app(int value, const std::string& text, std::unique_ptr<ilogger> logger);
-```
-
-To handle this issue properly we are going to use __examples_testing_automatic_mocks_injector__, which not only allow us to mock `unique_ptr` instances, but also
-will generate requires mocks for us! So, we don't have to change the implementation and we don't need `fake_logger` at all. Example test will looks like that.
-
-```
-    //1. create mocks injector
-    auto mi = di::make_mocks_injector();
-
-    //2. set up expectations
-    EXPECT_CALL(mi, ilogger::log).With("hello world");
-
-    //3. create example class and run it
-    mi.__di_injector_create__<std::unique_ptr<example>>()->run();
-```
-
-[table
-    [[Full code example: [@example/tutorial/tutorial_ut.cpp]]]
-]
-
 [heading See Also]
+* [link di.quick_user_guide Quick User Guide]
+* [link di.diagnostic_messages Diagnostic messages]
+* [link di.performance Performance]
 * [link di.concepts Concepts]
 * [link di.examples Examples]
 * [link di.rationale Rationale]

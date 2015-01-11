@@ -76,6 +76,21 @@ There are 3 basic types of wrappers.
     [[`create(TProvider)`][None][create `TGiven` object and return wrappered `TExpected` instance][None][Does not throw]]
 ]
 
+[table Scope to type conversion
+    [[Type]                     [unique]                [shared]    [singleton]                   [session]         [external]]
+    [[T]                        [\u2714]                [-]         [-]                            [-]              [\u2714]]
+    [[T&]                       [-]                     [-]         [-]                            [-]              [\u2714]]
+    [[const T&]                 [\u2714 (temporary)]    [-]         [-]                            [-]              [\u2714]]
+    [[T*]                       [\u2714]                [-]         [-]                            [-]              [\u2714]]
+    [[const T*]                 [\u2714]                [-]         [-]                            [-]              [\u2714]]
+    [[T&&]                      [\u2714]                [-]         [-]                            [-]              [-]]
+    [[unique_ptr<T>]            [\u2714]                [-]         [-]                            [-]              [\u2714]]
+    [[shared_ptr<T>]            [\u2714]                [\u2714]    [\u2714]                       [\u2714]         [\u2714]]
+    [[weak_ptr<T>]              [-]                     [\u2714]    [\u2714]                       [\u2714]         [-]]
+]
+
+[note If expected type is `T*` or `const T*` then responsibility to delete the object is on client side. `Boost.DI` won't delete it.]
+
 [heading Header]
     #include <__di_hpp__>
 
@@ -108,21 +123,6 @@ There are 3 basic types of wrappers.
 [heading More Examples]
     ``__examples_custom_scope__``
 
-[table Scope to type conversion
-    [[Type]                     [unique]                [shared]    [singleton]                   [session]         [external]]
-    [[T]                        [\u2714]                [-]         [-]                            [-]              [\u2714]]
-    [[T&]                       [-]                     [-]         [-]                            [-]              [\u2714]]
-    [[const T&]                 [\u2714 (temporary)]    [-]         [-]                            [-]              [\u2714]]
-    [[T*]                       [\u2714]                [-]         [-]                            [-]              [\u2714]]
-    [[const T*]                 [\u2714]                [-]         [-]                            [-]              [\u2714]]
-    [[T&&]                      [\u2714]                [-]         [-]                            [-]              [-]]
-    [[unique_ptr<T>]            [\u2714]                [-]         [-]                            [-]              [\u2714]]
-    [[shared_ptr<T>]            [\u2714]                [\u2714]    [\u2714]                       [\u2714]         [\u2714]]
-    [[weak_ptr<T>]              [-]                     [\u2714]    [\u2714]                       [\u2714]         [-]]
-]
-
-[note If expected type is `T*` or `const T*` then responsibility to delete the object is on client side. `Boost.DI` won't delete it.]
-
 [heading See Also]
 
 * __scopes_deduce__
@@ -134,7 +134,7 @@ There are 3 basic types of wrappers.
 [section:deduce deduce (default)]
 
 [heading Description]
-Default scope which will be converted to one of the scopes  __scopes_unique__ / __scopes_singleton__ accordingly to [link di.concepts.scopes.deduce.scope_traits Scope Traits] mapping.
+Default scope which will be converted to one of the scopes  __scopes_unique__ / __scopes_singleton__ accordingly to [link di.concepts.scopes.deduce Scope Traits] mapping.
 
 [table Scope deduction
     [[Type][Scope]]
@@ -664,7 +664,7 @@ will be bound using different scope as well then binding using external scope wi
 ]
 
 [heading More Examples]
-    ``__more_examples_externals__``
+    ``__examples_externals__``
 
 [heading See Also]
 

@@ -58,5 +58,6 @@ test-suite tutorial :
     [ run-example c++1y : tutorial/tutorial4.cpp : -Itutorial ]
     [ run-example c++1y : tutorial/tutorial5.cpp : -Itutorial ]
     [ run-example c++1y : tutorial/tutorial6.cpp : -Itutorial ]
+    [ run-example c++1y : tutorial/tutorial7.cpp : -Itutorial ]
 ;
 

@@ -64,7 +64,7 @@ Using `Boost.DI` has many advantages over `manual dependency injection`.
 
 * [*Reduce boilerplate code] (No factories, no objects creation in specific order)
 * [*Reduce cost of maintenance effort] ([link di.examples.constructor_signature Constructor signature] change won't affect `di` configuration)
-* [*Reduce testing effort] (__examples_testing_automatic_mocks_injector__)
+* [*Reduce testing effort]
 * [*Give better control of what and how is created] (__policies__, __providers__)
 * [*Give better understanding about objects hierarchy] (__examples_uml_dumper__)
 
@@ -86,8 +86,8 @@ Using `Boost.DI` has many advantages over `manual dependency injection`.
             ```
                 int main() {
                     auto injector = __di_make_injector__(
-                        di::__bindings_bind__<ilogic, logic>
-                      , di::__bindings_bind__<ilogger, logger>
+                        __di_bind__<ilogic, logic>
+                      , __di_bind__<ilogger, logger>
                     );
                     return injector.__di_injector_create__<example>().run();                     .
                 }
@@ -101,6 +101,7 @@ Using `Boost.DI` has many advantages over `manual dependency injection`.
 * [*Type safe]
 * [*Header only]
 * [*Compile time] creation guaranty - no exceptions - if application compiles all dependencies will be be created accurately
+* [*Exception safe strong guaranty]
 * [*[link di.concepts.injections.automatic Macro free]] - by default - no need to specify constructor traits or register anything (less intrusive)
 * [*[link di.concepts.scopes.deduce Scopes deduction]] - [link di.concepts.scopes scopes] are deduced based on type semantic
 * Automatic conversion between [link di.concepts.scopes.shared std/boost smart pointers]

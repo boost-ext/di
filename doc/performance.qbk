@@ -19,7 +19,7 @@
 [[Create type wihtout bindings][Asm x86-64 (same as `return 0`)]]
     [
         [
-            ```
+            [c++] ```
             int main() {
                 auto injector = di::make_injector();
                 return injector.create<int>();
@@ -28,7 +28,7 @@
             ```
         ]
         [
-            ```
+            [teletype] ```
             xor %eax,%eax
             retq
                                                                                   .
@@ -42,7 +42,7 @@
 [[Create type with bound instance][Asm x86-64 (same as `return 42`)]]
     [
         [
-            ```
+            [c++] ```
             int main() {
                 auto injector = di::make_injector(
                     di::bind<int>.to(42)
@@ -54,7 +54,7 @@
             ```
         ]
         [
-            ```
+            [teletype] ```
             mov $0x2a,%eax
             retq
                                                                                   .
@@ -68,7 +68,7 @@
 [[Create named type][Asm x86-64 (same as `return 42`)]]
     [
         [
-            ```
+            [c++] ```
             auto my_int = []{};
 
             struct c {
@@ -91,7 +91,7 @@
             ```
         ]
         [
-            ```
+            [teletype] ```
             mov $0x2a,%eax
             retq
                                                                                   .
@@ -105,7 +105,7 @@
 [[Create bound interface][Asm x86-64 (same as `make_unique`)]]
     [
         [
-            ```
+            [c++] ```
             int main() {
                 auto injector = di::make_injector(
                     di::bind<i1, impl1>
@@ -121,7 +121,7 @@
             ```
         ]
         [
-            ```
+            [teletype] ```
             push   %rax
             mov    $0x8,%edi
             callq  0x4007b0 <_Znwm@plt>
@@ -143,7 +143,7 @@
 [[Create bound interface via module][Asm x86-64 (same as `make_unique`)]]
     [
         [
-            ```
+            [c++] ```
             struct module {
                 auto configure() const noexcept {
                     return di::make_injector(
@@ -167,7 +167,7 @@
             ```
         ]
         [
-            ```
+            [teletype] ```
             push   %rax
             mov    $0x8,%edi
             callq  0x4007b0 <_Znwm@plt>
@@ -189,7 +189,7 @@
 [[Create bound interface via exposed module][Asm x86-64]]
     [
         [
-            ```
+            [c++] ```
             struct module {
                 di::injector<i1> configure() const {
                     return di::make_injector(
@@ -213,7 +213,7 @@
             ```
         ]
         [
-            ```
+            [teletype] ```
         push   %rbp                               mov    (%rax),%ecx
         push   %rbx                               lea    -0x1(%rcx),%edx
         sub    $0x38,%rsp                         mov    %edx,(%rax)
@@ -257,7 +257,7 @@
 [[Boost.DI header][Time [s]]]
     [
         [
-            ```
+            [c++] ```
             #include <boost/di.hpp>
             int main() { }
                                                                                .

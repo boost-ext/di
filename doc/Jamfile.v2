@@ -25,16 +25,5 @@ install html/images : [ glob images/*.png ] ;
 install html/example : [ glob ../example/*.cpp ] ;
 install html/example/modules : [ glob ../example/modules/*.* ] ;
 install html/example/tutorial : [ glob ../example/tutorial/*.* ] ;
-
-install html/test/ft : [ glob ../test/ft/*.cpp ] ;
-install html/test/pt : [ glob ../test/pt/*.cpp ] ;
-install html/test/ut : [ glob ../test/ut/*.cpp ] ;
-install html/test/ut/aux_ : [ glob ../test/ut/aux_/*.cpp ] ;
-install html/test/ut/core : [ glob ../test/ut/core/*.cpp ] ;
-install html/test/ut/policies : [ glob ../test/ut/policies/*.cpp ] ;
-install html/test/ut/providers : [ glob ../test/ut/providers/*.cpp ] ;
-install html/test/ut/scopes : [ glob ../test/ut/scopes/*.cpp ] ;
-install html/test/ut/type_traits : [ glob ../test/ut/type_traits/*.cpp ] ;
-install html/test/ut/wrappers : [ glob ../test/ut/wrappers/*.cpp ] ;
-install html/test/pt : [ glob ../test/pt/*.cpp ] ;
+install html/test/pt : [ glob ../test/pt/di.cpp ] ;
 

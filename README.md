@@ -64,7 +64,7 @@ int main() {                            | int main() {
 **How To Start?**
 
 * Get C++14 compliant compiler (Clang-3.4+, GCC-5.0+) with STL (memory, type\_traits headers) / Boost is not required
-* [Read Quick User Guide](quick user guide)
+* [Read Quick User Guide](#quick_user_guide)
 * [Read Tutorial](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/tutorial.html)
 * [Read Documentation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
 
@@ -91,11 +91,12 @@ int main() {                            | int main() {
     ./b2 -j4 ../test ../example
 ```
 
+<a id="quick_uesr_guide"></a>
 **Quick User Guide** | [Hello World](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/hello_world.cpp)
 
-* [Injector](#injector) | [Bindings](#2-bindings) | [Inejctions](#2-injections) | [Annotations](#3-dependencies) | [Scopes](#4-building-mlpack-from-source) | [Modules](#5-running-mlpack-programs) | [Policies](#6-further-documentation) | [Providers]()
-* [Run-time performance]() | [Compile-time performance]()
-* [Diagnostic messages]() | [Configuration]()
+* [Injector](#injector) | [Bindings](#bindings) | [Inejctions](#injections) | [Annotations](#annotations) | [Scopes](#scopes) | [Modules](#modules) | [Policies](#policies) | [Providers](#providers)
+* [Run-time performance](#run_time_performance) | [Compile-time performance](#compile_time_performance)
+* [Diagnostic messages](#diagnostic_messages) | [Configuration](#configuration)
 
 > Let's assume all examples below include `boost/di.hpp` header and define `di` namespace alias.
 ```cpp
@@ -120,6 +121,7 @@ auto injector = di::make_injector();    | assert(0 == injector.create<int>());
 
 *
 
+<a id="bindings"></a>
 > **[Bindings](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/binding.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/dynamic_binding.cpp)
 ```cpp
 Bind interface to implementation        | Test
@@ -158,6 +160,7 @@ auto injector = di::make_injector(      | assert(42 == injector.create<int>());
 
 *
 
+<a id="injections"></a>
 > **[Injections](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/constructor_injection.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/constructor_signature.cpp)
 ```cpp
 Direct constructor injection            | Test
@@ -271,6 +274,7 @@ auto injector = di::make_injector(      |
 
 *
 
+<a id="annotations"></a>
 > **[Annotations](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/named.cpp)
 ```cpp
 Annotated constructor injection         | Test
@@ -378,6 +382,7 @@ auto injector = di::make_injector(      |
 
 *
 
+<a id="scopes"></a>
 > **[Scopes](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/deduce_scope.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_scope.cpp)
 ```cpp
 Deduce scope (default)                  | Test
@@ -506,6 +511,7 @@ auto injector = di::make_injector(      |
 
 *
 
+<a id="modules"></a>
 > **[Modules](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/modules.cpp)
 ```cpp
 Module                                  | Test
@@ -613,6 +619,7 @@ auto injector = di::make_injector(      |
 
 *
 
+<a id="policies"></a>
 > **[Policies](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/types_dumper.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_policy.cpp)
 ```cpp
 Define policies configuration           | Test
@@ -705,6 +712,7 @@ public:                                 | assert(42.0, make_injector(
 
 *
 
+<a id="providers"></a>
 > **[Providers](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_provider.cpp)
 * [heap](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
 * [stack\_over\_heap (default)](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
@@ -738,6 +746,7 @@ public:                                 |
 
 *
 
+<a id="run_time_performance"></a>
 > **[Run-time performance (-O2)](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/performance.html)**
 * Environment
     * x86\_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
@@ -860,6 +869,7 @@ int main() {                            | lea    0x30(%rsp),%rsi                
 
 *
 
+<a id="compile_time_performance"></a>
 > **[Compile-time performance](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/performance.html)** | [Example](https://github.com/krzysztof-jusiak/di/blob/cpp14/test/pt/di.cpp)
 * Environment
     * x86\_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
@@ -902,6 +912,7 @@ Legend:
 
 *
 
+<a id="diagnostic_messages"></a>
 > **Diagnostic messages (-ftemplate-backtrace-limit=1 -ferror-limit=1)**
 ```cpp
 Create interface without bound          | Error message
@@ -954,6 +965,7 @@ di::make_injector().create<c>();        |
 
 *
 
+<a id="configuration"></a>
 > **[Configuration](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)**
 ```cpp
 Macro                                   | Description

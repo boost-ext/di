@@ -15,49 +15,44 @@
 
 namespace di = boost::di;
 
-auto first = []{};
-auto second = []{};
-
 class app {
 public:
-    BOOST_DI_INJECT(app, (named = first) int value1
-                       , (named = second) int value2
-                       , const std::string& text
-                       , std::shared_ptr<ilogger> logger)
-        : value1_(value1), value2_(value2) , text_(text), logger_(logger)
+    app(int value, const std::string& text, std::shared_ptr<ilogger> logger)
+        : value_(value), text_(text), logger_(logger)
     { }
 
     void run() const {
-        if (value1_ || value2_) {
+        if (value_) {
             logger_->log(text_);
         }
     }
 
 private:
-    int value1_ = 0;
-    int value2_ = 0;
+    int value_ = 0;
     std::string text_;
     std::shared_ptr<ilogger> logger_;
 };
 
 class module {
 public:
-    explicit module(int i)
-        : i_(i)
-    { }
-
-    auto configure() const {
-        return di::make_injector(
-            di::bind<ilogger, logger>
-          , di::bind<int>.named(first).to(i_)
-          , di::bind<int>.named(second).to(0)
-          , di::bind<std::string>.to("hello world")
-        );
-    }
+    explicit module(int i);
+    di::injector<app> configure() const;
 
 private:
     int i_ = 0;
 };
+
+module::module(int i)
+    : i_(i)
+{ }
+
+di::injector<app> module::configure() const {
+    return di::make_injector(
+        di::bind<ilogger, logger>
+      , di::bind<int>.to(i_)
+      , di::bind<std::string>.to("hello world")
+    );
+}
 
 int main(int argc, char** argv) {
     auto injector = di::make_injector(module(argc > 1 ? std::atoi(argv[1]) : 0));
@@ -65,4 +60,5 @@ int main(int argc, char** argv) {
 
     return 0;
 }
+
 
