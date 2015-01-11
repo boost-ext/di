@@ -64,7 +64,6 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
     ]
 ]
 
-
 [table
 [[Bind different interfaces to one][Test]]
     [
@@ -91,7 +90,6 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
     ]
 ]
 
-
 [table
 [[Bind type to compile time value][Test]]
     [
@@ -114,9 +112,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
     ]
 ]
 
-
 [table
-[[Bind type to value (see external scope)][Test]]
+[[Bind type to value (see __scopes_external__)][Test]]
     [
         [
             ```

@@ -10,11 +10,8 @@
 [section Bindings]
 
 [heading Description]
-Bindings in `Boost.DI` are done using [@http://en.wikipedia.org/wiki/Domain-specific_language Domain Specific Language].
-The main purpose of bindings DSL is to make easy things as easy
-as possible whilst giving possibility to accomplish solutions for more complicated problems.
-The glue between DSL and the core is __dependency_model__, so if you would like to write your own front end
-the only thing which has to be in mind is to return list of __dependency_model__.
+Bindings define dependencies configuration, which basically means what to types will be created and what values will be passed into them.
+The glue between bindings and the core is __dependency_model__.
 
 [heading Synopsis]
     template<
@@ -52,19 +49,6 @@ the only thing which has to be in mind is to return list of __dependency_model__
     #include <__di_hpp__>
 
 [heading Examples]
-    auto my_int = []{};
-    auto my_interface = []{};
-    auto my_second_interface = []{};
-
-    __di_make_injector__(
-        __di_bind__<interface, implementation>
-      , __di_bind__<interface, implementation2>.__di_bind_named__(my_interface)
-      , __di_bind__<interface, implementation2>.__di_bind_named__(my_second_interface).in(__di_scopes_shared__)
-      , __di_bind__<int>.to(42)
-      , __di_bind__<int>.__di_bind_named__(my_int).to(42)
-    );
-
-[heading More Examples]
     ``__examples_binding__`` | ``__examples_dynamic_binding__``
 
 [heading See Also]
@@ -77,23 +61,22 @@ the only thing which has to be in mind is to return list of __dependency_model__
 Allows to bind interface to implementation and associate value with __dependency_model__.
 
 [heading Synopsis]
-    template<class TInterface, class TImplementation>
-    struct bind {
-        template<class T>
-        static __dependency_model__ to(const T&);
-    };
+    template<class TExpected, class TGiven = TExpected>
+    __dependency_model__<__di_scopes_deduce__, TExpected, TGiven> bind{};
+
+    template<class... Ts>
+    using any_of;
 
 [table Parameters
-    [[Parameter][Requirement][Description][Retruns][Throw]]
-    [[`TInterface`][None][Interface type]]
-    [[`TImplementation`][None][Implementation type]]
-    [[`T`][`POD`/`reference_wrapper`/`shared_ptr`][Value type]]
-    [[`to(T)`][None][Returns new __dependency_model__ with associated `T` value][__dependency_model__][Does not throw]]
+    [[Parameter][Requirement][Description]]
+    [[`TInterface`][Type or any_of][Interface type]]
+    [[`TImplementation`][Is same or base of `TInterface`][Implementation type]]
+    [[`Ts...`][type list][List of interfaces]]
 ]
 
 [heading Expression Semantics]
-    di::bind<interface, implementation>()
-    di::bind<int>::to(int())
+    di::bind<interface, implementation>
+    di::bind<di::any_of<interface1, interface2>, implementation>
 
 [*Return type]: __dependency_model__
 
@@ -102,409 +85,102 @@ Allows to bind interface to implementation and associate value with __dependency
 
 [heading Examples]
 [table
-    [[Binding][Description]]
-    [[```di::bind<interface, implementation>())```][Bind `interface` to `implementation`]]
-    [[```di::bind<implementation>())```][Bind to `implementation` with deduced `interface`]]
-    [[```di::bind<int>::to(42)```][Bind `int` parameters to `42`]]
-    [[```di::bind<std::string>::to("text")```][Bind `std::string` parameters to "text"]]
-    [[```di::bind<example>::to(cref(example_))```][Bind `example` parameters to const reference instance]]
-    [[```di::bind<example>::to(ref(example_))```][Bind `example` parameters to to reference instance]]
-    [[```di::bind<interface>::to(make_shared<implementation>())```][Bind `interface` to shared_ptr instance]]
-    [[```di::bind<int>::to([]{ return 42; })```][Bind `int` parameters to lambda expression returning `42`]]
-    [[```di::bind<function<int()>>::to([]{ return 42; })```][Bind `int` to lambda expression returning `42`]]
-    [[```di::bind<function<int()>>::to(bind(&return_int, 42))```][Bind `int` to functor expression returning `42`]]
-    [[```di::bind<interface, implementation>::__di_bind_named__<my_interface>```][Bind annotated `interface` to `implementation` named with `my_interface`]]
+[[Bind interface to implementation][Test]]
+    [
+        [
+            ```
+            auto injector = __di_make_injector__(
+                __di_bind__<i1, impl1>
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<unique_ptr<i1>>();
+            assert(dynamic_cast<impl1*>(object.get()));
+                                                                                                                       .
+            ```
+        ]
+    ]
 ]
-    auto injector = __di_make_injector__(
-        di::bind<interface, implementation>()
-      , di::bind<int>::to(42)
-    );
-
-    assert(dynamic_cast<implementation*>(injector.__di_injector_create__<unique_ptr<interface>>().get()));
-    assert(42 == injector.__di_injector_create__<int>());
-
-[note Values bind with `bind<T>::to(T)` always have higher priority than other bindings. See __scopes_external__ for further information.]
-
-[heading More Examples]
-    ``__examples_binding__`` | ``__examples_dynamic_binding__``
-
-[heading Tests]
-    ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
-
-[heading See Also]
-
-* __bindings__
-* __bindings_bind_any_of__
-* __bindings_bind_bind_bool__
-* __bindings_bind_bind_int__
-* __bindings_bind_bind_string__
-
-[h1 any_of]
-Allows to bind multiple interfaces to one instance.
-
-[heading Synopsis]
-    template<class... TArgs>
-    struct any_of;
-
-[table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`TArgs...`][Polymorphic types][Interfaces to be bound to one instance]]
-]
-
-[heading Expression Semantics]
-    di::any_of<interface1, interface2, ..., interfaceN>()
-
-[*Return type]: `mpl::vector`
-
-[heading Header]
-    #include <__di_hpp__>
-
-[heading Examples]
-[table
-    [[Binding][Description]]
-    [[```__di_bind__<di::any_of<interface1, interface2>, implementation>())```][Bind `interface1`, `interface2` to `implementation` using one instance]]
-]
-
-    auto injector = __di_make_injector__(
-        __di_bind__<di::any_of<interface1, interface2>, implementation1>()
-    );
-
-    assert(dynamic_cast<implementation1*>(injector.__di_injector_create__<unique_ptr<interface1>>().get()));
-    assert(injector.__di_injector_create__<unique_ptr<interface1>>() == injector.__di_injector_create__<unique_ptr<interface2>>());
-
-[tip The same result might be achieved with `di::bind<implementation1>()`, but list of interfaces will be deduced instead.]
-
-[heading More Examples]
-    ``__more_examples_multiple_interfaces__`` | ``__examples_binding__``
-
-[heading Tests]
-    ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
-
-[heading See Also]
-
-* __bindings__
-* __bindings_bind__
-* __bindings_bind_bind_bool__
-* __bindings_bind_bind_int__
-* __bindings_bind_bind_string__
-
-[heading Description]
-Allows to bind other bindings to defined/custom scope. If not used `deduce` scope is assumed.
-
-[heading Synopsis]
-    template<class TScope>
-    struct scope {
-        template<class... TArgs>
-        struct bind;
-    };
-
-[table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`TScope`][__scope_model__ type][scope to be bound]]
-    [[`TArgs...`][__binding_model__ type][types to be bound in `TScope`]]
-]
-
-[heading Expression Semantics]
-    di::scope<TScope>::bind<TArgs...>()
-
-[*Return type]: __dependency_model__
-
-[heading Header]
-    #include <__di_hpp__>
-
-[heading Examples]
-[table
-    [[Binding][Description]]
-    [[```di::scope<__di_scopes_unique__<>>::bind<__di_bind__<interface, implementation>>```][Bind `interface` to `implementation` in `unique` scope]]
-    [[```di::scope<__di_scopes_shared__<>>::bind<__di_bind__<interface, implementation>>```][Bind `interface` to `implementation` in `shared` scope]]
-    [[```di::scope<__di_scopes_session__<>>::bind<__di_bind__<interface, implementation>>```][Bind `interface` to `implementation` in `session` scope]]
-]
-
-    auto injector = __di_make_injector__(
-        di::scope<__di_scopes_unique__<>>::bind<
-            __di_bind__<interface, implementation>
-        >()
-    );
-
-    assert(injector.__di_injector_create__<shared_ptr<interface>>() != injector.__di_injector_create__<shared_ptr<interface>>());
-
-[note `external` scope can be only bound using `bind<T>::to(T)` semantic.]
-
-[heading More Examples]
-    ``__examples_binding__``
-
-[heading Tests]
-    ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
-
-[heading See Also]
-
-* __bindings__
-* __bindings_scope_deduce__
-* __bindings_scope_unique__
-* __bindings_scope_shared__
-* __bindings_scope_session__
-
-[h1 deduce]
-
-[heading Description]
-Allows to bind other bindings in __scopes_deduce__. Interface type will be deduced, if not given.
-Scoped will be deduced accordingly to constructor parameter type. See __scopes_deduce__ for further information.
-
-[heading Synopsis]
-    template<class... TArgs>
-    struct deduce
-        : __di_bind_scope__<scopes::deduce>::bind<TArgs...>
-    { };
-
-[table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`TArgs...`][__binding_model__ type][Bindings to be bound in `deduce` scope]]
-]
-
-[heading Expression Semantics]
-    di::deduce<__di_bind__<interface, implementation>>()
-
-[*Return type]: __dependency_model__
-
-[heading Header]
-    #include <__di_hpp__>
-
-[heading Examples]
-[table
-    [[Binding][Description]]
-    [[```di::deduce<implementation>()```][Bind deduced interface to `implementation`]]
-    [[```di::deduce<__di_bind__<interface, implementation>>()```][Bind `interface` to `implementation`]]
-]
-
-    auto injector = __di_make_injector__(
-        di::deduce<implementation>()
-    );
-
-    assert(injector.__di_injector_create__<unique_ptr<implementation>>() != injector.__di_injector_create__<unique_ptr<implementation>>());
-
-[heading More Examples]
-    ``__examples_deduce_scope__``
-
-[heading Tests]
-    ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
-
-[heading See Also]
-
-* __bindings__
-* __bindings_scope__
-* __bindings_scope_unique__ | __scopes_unique__
-* __bindings_scope_shared__ | __scopes_shared__
-* __bindings_scope_session__ | __scopes_session__
-
-[h1 unique]
-
-[heading Description]
-Allows to bind other bindings in __scopes_unique__.
-
-[heading Synopsis]
-    template<class... TArgs>
-    struct unique
-        : __di_bind_scope__<__di_scopes_unique__<>>::bind<TArgs...>
-    { };
-
-[table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`TArgs...`][__binding_model__ type][Bindings to be used in __scopes_unique__]]
-]
-
-[heading Expression Semantics]
-    di::unique<__di_bind__<interface, implementation>>()
-
-[*Return type]: __dependency_model__
-
-[heading Header]
-    #include <__di_hpp__>
-
-[heading Examples]
-[table
-    [[Binding][Description]]
-    [[```di::unique<__di_bind__<interface, implementation>>()```][Bind `interface` to `implementation` in __scopes_unique__]]
-]
-
-    auto injector = __di_make_injector__(
-        di::unique<
-            __di_bind__<interface, implementation>
-        >()
-    );
-
-    assert(injector.__di_injector_create__<shared_ptr<implementation>>() != injector.__di_injector_create__<shared_ptr<implementation>>());
-
-[heading More Examples]
-    ``__examples_binding__``
-
-[heading Tests]
-    ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
-
-[heading See Also]
-
-* __bindings__
-* __bindings_scope__
-* __bindings_scope_deduce__ | __scopes_deduce__
-* __bindings_scope_shared__ | __scopes_shared__
-* __bindings_scope_session__ | __scopes_session__
-
-[h1 shared]
-
-Allows to bind other bindings in __scopes_shared__.
-
-[heading Synopsis]
-    template<class... TArgs>
-    struct shared
-        : __di_bind_scope__<__di_scopes_shared__<>::bind<TArgs...>
-    { };
-
-[table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`TArgs...`][__binding_model__ type][Bindings to be used in __scopes_shared__]]
-]
-
-[heading Expression Semantics]
-    di::shared<__di_bind__<interface, implementation>>()
-
-[*Return type]: __dependency_model__
-
-[heading Header]
-    #include <__di_hpp__>
-
-[heading Examples]
-[table
-    [[Binding][Description]]
-    [[```di::shared<__di_bind__<interface, implementation>>()```][Bind `interface` to `implementation` in __scopes_shared__]]
-]
-
-    auto injector = __di_make_injector__(
-        di::shared<
-            __di_bind__<interface, implementation>
-        >()
-    );
-
-    assert(injector.__di_injector_create__<shared_ptr<implementation>>() == injector.__di_injector_create__<shared_ptr<implementation>>());
-
-[heading More Examples]
-    ``__examples_binding__``
-
-[heading Tests]
-    ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
-
-[heading See Also]
-
-* __bindings__
-* __bindings_scope__
-* __bindings_scope_deduce__ | __scopes_deduce__
-* __bindings_scope_unique__ | __scopes_unique__
-* __bindings_scope_session__ | __scopes_session__
-
-[h1 session]
-
-Allows to bind other bindings in __scopes_session__.
-
-[heading Synopsis]
-    template<class... TArgs>
-    struct session
-        : __di_bind_scope__<__di_scopes_session__<>>::bind<TArgs...>
-    { };
-
-[table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`TArgs...`][__binding_model__ type][Bindings to be bound in __scopes_session__]]
-]
-
-[heading Expression Semantics]
-    di::session<__di_bind__<interface, implementation>>()
-
-[*Return type]: __dependency_model__
-
-[heading Header]
-    #include <__di_hpp__>
-
-[heading Examples]
-[table
-    [[Binding][Description]]
-    [[```di::session<__di_bind__<interface, implementation>>()```][Bind `interface` to `implementation` in __scopes_session__]]
-]
-
-    auto injector = __di_make_injector__(
-        di::session<
-            __di_bind__<interface, implementation>
-        >()
-    );
-
-    assert(!injector.__di_injector_create__<shared_ptr<implementation>>());
-
-    injector.call(di::scopes::session_entry());
-    assert(injector.__di_injector_create__<shared_ptr<implementation>>());
-
-    injector.call(di::scopes::session_exit());
-    assert(!injector.__di_injector_create__<shared_ptr<implementation>>());
-
-[heading More Examples]
-    ``__examples_binding__``
-
-[heading Tests]
-    ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
-
-[heading See Also]
-
-* __bindings__
-* __bindings_scope__
-* __bindings_scope_deduce__ | __scopes_deduce__
-* __bindings_scope_unique__ | __scopes_unique__
-* __bindings_scope_shared__ | __scopes_shared__
-
-[heading Description]
-Allows to connect __annotations_named__ annotation parameters with binding configuration.
-
-[heading Synopsis]
-    template<class TName>
-    struct named;
-
-[table Parameters
-    [[Parameter][Requirement][Description]]
-    [[`TName`][None][Given name type]]
-]
-
-[heading Header]
-    #include <__di_hpp__>
-
-[heading Examples]
 
 [table
-    [[Binding][Description]]
-    [[```__di_bind_int__<42>::__di_bind_named__<my_int>()```][Bind named with `my_int` name `int` parameter to `42`]]
-    [[```__di_bind__<interface, implementation>::__di_bind_named__<my_implementation>()```][Bind named with `my_impementation` name `interface` to `implementation`]]
+[[Bind different interfaces to one][Test]]
+    [
+        [
+            ```
+            auto injector = __di_make_injector__(
+                __di_bind__<__bindings_bind_any_of__<i1, i2>, impl>
+            );
+
+
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object1 = injector.__di_injector_create__<shared_ptr<i1>>();
+            auto object2 = injector.__di_injector_create__<shared_ptr<i2>>();
+            assert(dynamic_cast<impl*>(object1.get()));
+            assert(dynamic_cast<impl*>(object2.get()));
+            assert(object1 == object2);
+                                                                                                                       .
+            ```
+        ]
+    ]
 ]
-    struct my_int { };
 
-    class example {
-    public:
-        example(__di_named__<int, my_int> i)
-            : i(i)
-        { }
+[table
+[[Bind type to compile time value][Test]]
+    [
+        [
+            ```
+            template<int N> using int_ = integral_constant<int, N>;
 
-        int i = 0;
-    };
+            auto injector = __di_make_injector__(
+                __di_bind__<int, int_<42>>
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            assert(42 == injector.__di_injector_create__<int>());
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
 
-    auto injector = __di_make_injector__(
-        __di_bind_int__<42>::__di_bind_named__<my_int>()
-    );
+[table
+[[Bind type to value (see __scopes_external__)][Test]]
+    [
+        [
+            ```
+            auto injector = __di_make_injector__(
+                __di_bind__<int>.to(42)
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            assert(42 == injector.__di_injector_create__<int>());
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
 
-    assert(42 == injector.__di_injector_create__<example>().i);
+[note Values bind with `to(T)` always have higher priority than other bindings. See __scopes_external__ for further information.]
 
 [heading More Examples]
-    ``__more_examples_named__`` | ``__examples_binding__``
-
-[heading Tests]
-    ``[@test/ut/bindings_ut.cpp]`` | ``[@test/ut/core/binder_ut.cpp]``
+    ``__examples_binding__`` | ``__examples_dynamic_binding__`` | ``__more_examples_multiple_interfaces__``
 
 [heading See Also]
 
 * __bindings__
-* __bindings_when__
 
 [endsect]
 
