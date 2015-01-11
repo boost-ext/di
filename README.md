@@ -57,7 +57,7 @@ int main() {                            | int main() {
 
 **Why Dependency Injection?**
 
-* [Motivation](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/motivation.html) | [Rationale](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/rationale.html)
+* [Motivation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/motivation.html) | [Rationale](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/rationale.html)
 
 [![The Clean Code Talks - Don't Look For Things!](http://img.youtube.com/vi/RlfLCWKxHJ0/0.jpg)](http://www.youtube.com/watch?v=RlfLCWKxHJ0)
 
@@ -65,7 +65,7 @@ int main() {                            | int main() {
 
 * Get C++14 compliant compiler (Clang-3.4+, GCC-5.0+) with STL (memory, type\_traits headers) / Boost is not required
 * [Read Quick User Guide](#quick_user_guide)
-* [Read Tutorial](http://krzysztof-jusiak.github.io/di/boost/libs/di/doc/html/di/tutorial.html)
+* [Read Tutorial](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/tutorial.html)
 * [Read Documentation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
 
 > To get started the only file you need is `di.hpp`:
