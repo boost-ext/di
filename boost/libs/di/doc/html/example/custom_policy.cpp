@@ -8,57 +8,48 @@
 //[custom_policy
 //<-
 #include <memory>
-#include <boost/shared_ptr.hpp>
-#include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/remove_reference.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/assert.hpp>
-#include <boost/mpl/has_xxx.hpp>
 //->
+#define BOOST_DI_CFG custom_policy
 #include <boost/di.hpp>
+#include <boost/di/policies/allow_ctor_types.hpp>
 
 namespace di = boost::di;
 
-struct example {
-    example(std::shared_ptr<int>, std::unique_ptr<double>, boost::shared_ptr<char>) { }
-};
-
-/*<define policy class>*/
-class allow_only_smart_ptr_policy {
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(element_type)
-
-    /*<let's assume smart pointers require to only have `has_element` type>*/
-    template<typename TDependency>
-    struct is_creation_by_smart_ptr
-        : has_element_type<
-              typename boost::remove_reference<typename TDependency::type>::type
-          >
-    { };
-
+class custom_policy : public di::config {
 public:
-    /*<<define `assert_policy` requirement - version when type is smart pointer>>*/
-    template<typename TDependency>
-    typename boost::enable_if<is_creation_by_smart_ptr<TDependency>>::type
-    assert_policy() const { }
-
-    /*<<define `assert_policy` requirement - version when type is not smart pointer>>*/
-    template<typename TDependency>
-    typename boost::disable_if<is_creation_by_smart_ptr<TDependency>>::type
-    assert_policy() const {
-        BOOST_MPL_ASSERT_MSG(
-            false
-          , CREATION_NOT_BY_SMART_PTR_IS_DISALLOWED
-          , (TDependency)
+    auto policies() const noexcept {
+        using namespace di::policies;
+        using namespace di::policies::operators;
+        return di::make_policies(
+            allow_ctor_types(is_root{} || is_bound<_>{})
         );
     }
 };
 
-int main() {
-    /*<<create shared_ptr `example` with `allow_only_smart_ptr_policy` policy>>*/
-    di::make_injector().create<std::shared_ptr<example>>(allow_only_smart_ptr_policy());
+struct example {
+    example(int, double) { }
+};
 
-    /*<<create lvalue `example` with `allow_only_smart_ptr_policy` policy - compile error>>*/
-    //di::make_injector().create<example>(allow_only_smart_ptr_policy());
+int main() {
+    /*<<create shared_ptr `example` with per injector policy setting>>*/
+    {
+    auto injector = di::make_injector<custom_policy>(
+        di::bind<int>.to(42)
+      , di::bind<double>.to(87.0)
+    );
+
+    injector.create<example>();
+    }
+
+    /*<<create shared_ptr `example` with global policy setting>>*/
+    {
+    auto injector = di::make_injector(
+        di::bind<int>.to(42)
+      , di::bind<double>.to(87.0)
+    );
+
+    injector.create<example>();
+    }
 
     return 0;
 }

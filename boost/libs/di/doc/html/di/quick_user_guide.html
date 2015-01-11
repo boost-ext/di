@@ -4,10 +4,10 @@
 <title>Quick User Guide</title>
 <link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
-<link rel="home" href="../index.html" title="Boost.DI (Dependency Injection) 1.4">
-<link rel="up" href="../index.html" title="Boost.DI (Dependency Injection) 1.4">
+<link rel="home" href="../index.html" title="Boost.DI (Dependency Injection) C++14">
+<link rel="up" href="../index.html" title="Boost.DI (Dependency Injection) C++14">
 <link rel="prev" href="tutorial.html" title="Tutorial">
-<link rel="next" href="concepts.html" title="Concepts">
+<link rel="next" href="diagnostic_messages.html" title="Diagnostic messages">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,24 +20,1971 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="tutorial.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="concepts.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="tutorial.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="diagnostic_messages.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
-<div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="di.quick_user_guide"></a><a class="link" href="quick_user_guide.html" title="Quick User Guide">Quick User Guide</a>
-</h2></div></div></div></div>
+</h2></div></div></div>
+<p>
+      Let's assume all examples below include <code class="computeroutput"><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span></code> header and define <code class="computeroutput"><span class="identifier">di</span></code>
+      namespace alias.
+    </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">i1</span> <span class="special">{</span> <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">i1</span><span class="special">()</span> <span class="special">=</span> <span class="keyword">default</span><span class="special">;</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">dummy1</span><span class="special">()</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">i2</span> <span class="special">{</span> <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">i2</span><span class="special">()</span> <span class="special">=</span> <span class="keyword">default</span><span class="special">;</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">dummy2</span><span class="special">()</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">impl1</span> <span class="special">:</span> <span class="identifier">i1</span> <span class="special">{</span> <span class="keyword">void</span> <span class="identifier">dummy1</span><span class="special">()</span> <span class="identifier">override</span> <span class="special">{</span> <span class="special">}</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">impl2</span> <span class="special">:</span> <span class="identifier">i2</span> <span class="special">{</span> <span class="keyword">void</span> <span class="identifier">dummy2</span><span class="special">()</span> <span class="identifier">override</span> <span class="special">{</span> <span class="special">}</span> <span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">impl</span> <span class="special">:</span> <span class="identifier">i1</span><span class="special">,</span> <span class="identifier">i2</span> <span class="special">{</span> <span class="keyword">void</span> <span class="identifier">dummy1</span><span class="special">()</span> <span class="identifier">override</span> <span class="special">{</span> <span class="special">}</span> <span class="keyword">void</span> <span class="identifier">dummy2</span><span class="special">()</span> <span class="identifier">override</span> <span class="special">{</span> <span class="special">}</span> <span class="special">};</span>
+</pre>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+          <a class="link" href="concepts/injector.html" title="Injector">Injector</a>
+        </li></ul></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                create empty injector
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">();</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+          <a class="link" href="concepts/bindings.html" title="Bindings">Bindings</a>
+        </li></ul></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Bind interface to implementation
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">impl1</span><span class="special">&gt;</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl1</span><span class="special">*&gt;(</span><span class="identifier">object</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Bind different interfaces to one
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">__bindings_bind_any_of__</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">i2</span><span class="special">&gt;,</span> <span class="identifier">impl</span><span class="special">&gt;</span>
+<span class="special">);</span>
+
+
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object1</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;();</span>
+<span class="keyword">auto</span> <span class="identifier">object2</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl</span><span class="special">*&gt;(</span><span class="identifier">object1</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl</span><span class="special">*&gt;(</span><span class="identifier">object2</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">object1</span> <span class="special">==</span> <span class="identifier">object2</span><span class="special">);</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Bind type to compile time value
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">int</span> <span class="identifier">N</span><span class="special">&gt;</span> <span class="keyword">using</span> <span class="identifier">int_</span> <span class="special">=</span> <span class="identifier">integral_constant</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">N</span><span class="special">&gt;;</span>
+
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">int_</span><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;&gt;</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Bind type to value (see <a class="link" href="concepts/scopes/external.html" title="external">external
+                scope</a>)
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+          <a class="link" href="concepts/injections.html" title="Injections">Injections</a>
+        </li></ul></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Direct constructor injection
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">struct</span> <span class="identifier">c</span> <span class="special">{</span>
+    <span class="identifier">c</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">a</span><span class="special">(</span><span class="identifier">a</span><span class="special">),</span> <span class="identifier">d</span><span class="special">(</span><span class="identifier">d</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+
+    <span class="keyword">int</span> <span class="identifier">a</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">double</span> <span class="identifier">d</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+  <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">87.0</span><span class="special">)</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Aggregate constructor injection
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">struct</span> <span class="identifier">c</span> <span class="special">{</span>
+    <span class="keyword">int</span> <span class="identifier">a</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">double</span> <span class="identifier">d</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+  <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">87.0</span><span class="special">)</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Direct constructor injection with many constructors
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                Longest parameters list constructor will be chosen
+              </p>
+            </td>
+<td>
+            </td>
+</tr>
+<tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">struct</span> <span class="identifier">c</span> <span class="special">{</span>
+    <span class="identifier">c</span><span class="special">();</span>
+    <span class="identifier">c</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">a</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">a</span><span class="special">(</span><span class="identifier">a</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+    <span class="identifier">c</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">a</span><span class="special">(</span><span class="identifier">a</span><span class="special">),</span> <span class="identifier">d</span><span class="special">(</span><span class="identifier">d</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+
+    <span class="keyword">int</span> <span class="identifier">a</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">double</span> <span class="identifier">d</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+  <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">87.0</span><span class="special">)</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr>
+</tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Direct constructor injection with ambiguous constructors (<a class="link" href="concepts/injections/inject.html#di.concepts.injections.inject.boost_di_inject">BOOST_DI_INJECT</a>)
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">struct</span> <span class="identifier">c</span> <span class="special">{</span>
+    <span class="identifier">c</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">d</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">a</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">a</span><span class="special">(</span><span class="identifier">a</span><span class="special">),</span> <span class="identifier">d</span><span class="special">(</span><span class="identifier">d</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+    <a class="link" href="concepts/injections/inject.html#di.concepts.injections.inject.boost_di_inject">BOOST_DI_INJECT</a><span class="special">(</span><span class="identifier">c</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">d</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">a</span><span class="special">(</span><span class="identifier">a</span><span class="special">),</span> <span class="identifier">d</span><span class="special">(</span><span class="identifier">d</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+
+    <span class="keyword">int</span> <span class="identifier">a</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">double</span> <span class="identifier">d</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+  <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">87.0</span><span class="special">)</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Direct constructor injection with ambiguous constructors (<a class="link" href="concepts/injections/inject.html#di.concepts.injections.inject.boost_di_inject_traits">BOOST_DI_INJECT_TRAITS</a>)
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">struct</span> <span class="identifier">c</span> <span class="special">{</span>
+    <a class="link" href="concepts/injections/inject.html#di.concepts.injections.inject.boost_di_inject_traits">BOOST_DI_INJECT_TRAITS</a><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">);</span>
+    <span class="identifier">c</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">d</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">a</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">a</span><span class="special">(</span><span class="identifier">a</span><span class="special">),</span> <span class="identifier">d</span><span class="special">(</span><span class="identifier">d</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+    <span class="identifier">c</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">a</span><span class="special">(</span><span class="identifier">a</span><span class="special">),</span> <span class="identifier">d</span><span class="special">(</span><span class="identifier">d</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+
+    <span class="keyword">int</span> <span class="identifier">a</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">double</span> <span class="identifier">d</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+  <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">87.0</span><span class="special">)</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Direct constructor injection with ambiguous constructors (<a class="link" href="concepts/injections/ctor_traits.html" title="ctor_traits">ctor_traits</a>)
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">struct</span> <span class="identifier">c</span> <span class="special">{</span>
+    <span class="identifier">c</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">d</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">a</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">a</span><span class="special">(</span><span class="identifier">a</span><span class="special">),</span> <span class="identifier">d</span><span class="special">(</span><span class="identifier">d</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+    <span class="identifier">c</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">d</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">a</span><span class="special">(</span><span class="identifier">a</span><span class="special">),</span> <span class="identifier">d</span><span class="special">(</span><span class="identifier">d</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+
+    <span class="keyword">int</span> <span class="identifier">a</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">double</span> <span class="identifier">d</span> <span class="special">=</span> <span class="number">0.0</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">{</span>
+<span class="keyword">template</span><span class="special">&lt;&gt;</span>
+<span class="keyword">struct</span> <a class="link" href="concepts/injections/ctor_traits.html" title="ctor_traits">ctor_traits</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;</span> <span class="special">{</span>
+    <a class="link" href="concepts/injections/inject.html#di.concepts.injections.inject.boost_di_inject_traits">BOOST_DI_INJECT_TRAITS</a><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">);</span>
+<span class="special">};</span>
+<span class="special">}}</span> <span class="comment">// boost::di</span>
+
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+  <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">87.0</span><span class="special">)</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+          <a class="link" href="concepts/annotations.html" title="Annotations">Annotations</a>
+        </li></ul></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Annotated constructor injection
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">int1</span> <span class="special">=</span> <span class="special">[]{};</span>
+<span class="keyword">auto</span> <span class="identifier">int2</span> <span class="special">=</span> <span class="special">[]{};</span>
+
+<span class="keyword">struct</span> <span class="identifier">c</span> <span class="special">{</span>
+    <a class="link" href="concepts/injections/inject.html#di.concepts.injections.inject.boost_di_inject">BOOST_DI_INJECT</a><span class="special">(</span><span class="identifier">c</span>
+        <span class="special">,</span> <span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a> <span class="special">=</span> <span class="identifier">int1</span><span class="special">)</span> <span class="keyword">int</span> <span class="identifier">a</span>
+        <span class="special">,</span> <span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a> <span class="special">=</span> <span class="identifier">int2</span><span class="special">)</span> <span class="keyword">int</span> <span class="identifier">b</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">a</span><span class="special">(</span><span class="identifier">a</span><span class="special">),</span> <span class="identifier">b</span><span class="special">(</span><span class="identifier">b</span><span class="special">)</span>
+    <span class="special">{</span> <span class="special">}</span>
+
+    <span class="keyword">int</span> <span class="identifier">a</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">b</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a><span class="special">(</span><span class="identifier">int1</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+  <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a><span class="special">(</span><span class="identifier">int2</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="number">87</span><span class="special">)</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Annotated constructor injection with the same names for different
+                parameters
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">n1</span> <span class="special">=</span> <span class="special">[]{};</span>
+<span class="keyword">auto</span> <span class="identifier">n2</span> <span class="special">=</span> <span class="special">[]{};</span>
+
+<span class="keyword">struct</span> <span class="identifier">c</span> <span class="special">{</span>
+    <a class="link" href="concepts/injections/inject.html#di.concepts.injections.inject.boost_di_inject">BOOST_DI_INJECT</a><span class="special">(</span><span class="identifier">c</span>
+        <span class="special">,</span> <span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a> <span class="special">=</span> <span class="identifier">n1</span><span class="special">)</span> <span class="keyword">int</span> <span class="identifier">a</span>
+        <span class="special">,</span> <span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a> <span class="special">=</span> <span class="identifier">n1</span><span class="special">)</span> <span class="keyword">int</span> <span class="identifier">b</span>
+        <span class="special">,</span> <span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a> <span class="special">=</span> <span class="identifier">n2</span><span class="special">)</span> <span class="keyword">int</span> <span class="identifier">c</span>
+        <span class="special">,</span> <span class="keyword">int</span> <span class="identifier">d</span>
+        <span class="special">,</span> <span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a> <span class="special">=</span> <span class="identifier">n1</span><span class="special">)</span> <span class="identifier">string</span> <span class="identifier">s</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">a</span><span class="special">(</span><span class="identifier">a</span><span class="special">),</span> <span class="identifier">b</span><span class="special">(</span><span class="identifier">b</span><span class="special">),</span> <span class="identifier">c</span><span class="special">(</span><span class="identifier">c</span><span class="special">),</span> <span class="identifier">d</span><span class="special">(</span><span class="identifier">d</span><span class="special">),</span> <span class="identifier">s</span><span class="special">(</span><span class="identifier">s</span><span class="special">)</span>
+    <span class="special">{</span> <span class="special">}</span>
+
+    <span class="keyword">int</span> <span class="identifier">a</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">b</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">c</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">d</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="identifier">string</span> <span class="identifier">s</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a><span class="special">(</span><span class="identifier">n1</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+  <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a><span class="special">(</span><span class="identifier">n2</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="number">87</span><span class="special">)</span>
+  <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">string</span><span class="special">&gt;.</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a><span class="special">(</span><span class="identifier">n1</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="string">"str"</span><span class="special">)</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">c</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">d</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="string">"str"</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">s</span><span class="special">);</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Annotated constructor injection with separate constructor definition
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">int1</span> <span class="special">=</span> <span class="special">[]{};</span>
+<span class="keyword">auto</span> <span class="identifier">int2</span> <span class="special">=</span> <span class="special">[]{};</span>
+
+<span class="keyword">struct</span> <span class="identifier">c</span> <span class="special">{</span>
+    <a class="link" href="concepts/injections/inject.html#di.concepts.injections.inject.boost_di_inject">BOOST_DI_INJECT</a><span class="special">(</span><span class="identifier">c</span>
+        <span class="special">,</span> <span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a> <span class="special">=</span> <span class="identifier">int1</span><span class="special">)</span> <span class="keyword">int</span> <span class="identifier">a</span>
+        <span class="special">,</span> <span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a> <span class="special">=</span> <span class="identifier">int2</span><span class="special">)</span> <span class="keyword">int</span> <span class="identifier">b</span><span class="special">);</span>
+
+    <span class="keyword">int</span> <span class="identifier">a</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">b</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="identifier">c</span><span class="special">::</span><span class="identifier">c</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">b</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">a</span><span class="special">(</span><span class="identifier">a</span><span class="special">),</span> <span class="identifier">b</span><span class="special">(</span><span class="identifier">b</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a><span class="special">(</span><span class="identifier">int1</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+  <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a><span class="special">(</span><span class="identifier">int2</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="number">87</span><span class="special">)</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Annotated constructor injection with <a class="link" href="concepts/injections/ctor_traits.html" title="ctor_traits">ctor_traits</a>
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">int1</span> <span class="special">=</span> <span class="special">[]{};</span>
+<span class="keyword">auto</span> <span class="identifier">int2</span> <span class="special">=</span> <span class="special">[]{};</span>
+
+<span class="keyword">struct</span> <span class="identifier">c</span> <span class="special">{</span>
+    <span class="identifier">c</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">a</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">b</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">a</span><span class="special">(</span><span class="identifier">a</span><span class="special">),</span> <span class="identifier">b</span><span class="special">(</span><span class="identifier">b</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+
+    <span class="keyword">int</span> <span class="identifier">a</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">b</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">{</span>
+<span class="keyword">template</span><span class="special">&lt;&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">ctor_traits</span><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;</span> <span class="special">{</span>
+    <a class="link" href="concepts/injections/inject.html#di.concepts.injections.inject.boost_di_inject_traits">BOOST_DI_INJECT_TRAITS</a><span class="special">(</span>
+        <span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a> <span class="special">=</span> <span class="identifier">int1</span><span class="special">)</span> <span class="keyword">int</span>
+      <span class="special">,</span> <span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a> <span class="special">=</span> <span class="identifier">int2</span><span class="special">)</span> <span class="keyword">int</span><span class="special">);</span>
+<span class="special">};</span>
+<span class="special">}}</span> <span class="comment">// boost::di</span>
+
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a><span class="special">(</span><span class="identifier">int1</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+  <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a><span class="special">(</span><span class="identifier">int2</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="number">87</span><span class="special">)</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+          <a class="link" href="concepts/scopes.html" title="Scopes">Scopes</a>
+        </li></ul></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Deduce scope (default)
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">struct</span> <span class="identifier">c</span> <span class="special">{</span>
+    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;</span> <span class="identifier">sp</span><span class="special">;</span> <span class="comment">/*singleton*/</span>
+    <span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;</span> <span class="identifier">up</span><span class="special">;</span> <span class="comment">/*unique*/</span>
+    <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">i</span><span class="special">;</span> <span class="comment">/*external*/</span>
+    <span class="keyword">double</span> <span class="identifier">d</span><span class="special">;</span> <span class="comment">/*unique*/</span>
+<span class="special">};</span>
+
+<span class="keyword">auto</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">42</span><span class="special">;</span>
+
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">impl1</span><span class="special">&gt;</span>
+  <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">,</span> <span class="identifier">impl2</span><span class="special">&gt;</span>
+  <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">ref</span><span class="special">(</span><span class="identifier">i</span><span class="special">))</span>
+  <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">87.0</span><span class="special">)</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object1</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
+<span class="keyword">auto</span> <span class="identifier">object2</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">object1</span><span class="special">.</span><span class="identifier">sp</span> <span class="special">==</span> <span class="identifier">object2</span><span class="special">.</span><span class="identifier">sp</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">object1</span><span class="special">.</span><span class="identifier">up</span> <span class="special">!=</span> <span class="identifier">object2</span><span class="special">.</span><span class="identifier">up</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object1</span><span class="special">.</span><span class="identifier">i</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(&amp;</span><span class="identifier">i</span> <span class="special">==</span> <span class="identifier">object1</span><span class="special">.</span><span class="identifier">i</span><span class="special">;</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object2</span><span class="special">.</span><span class="identifier">i</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(&amp;</span><span class="identifier">i</span> <span class="special">==</span> <span class="identifier">object2</span><span class="special">.</span><span class="identifier">i</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object1</span><span class="special">.</span><span class="identifier">d</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object2</span><span class="special">.</span><span class="identifier">d</span><span class="special">);</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="table">
+<a name="di.quick_user_guide.scope_deduction"></a><p class="title"><b>Table&#160;1.&#160;Scope deduction</b></p>
+<div class="table-contents"><table class="table" summary="Scope deduction">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Type
+              </p>
+            </th>
+<th>
+              <p>
+                Scope
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                T
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="concepts/scopes/unique.html" title="unique">di::unique</a>
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                T&amp;
+              </p>
+            </td>
+<td>
+              <p>
+                error - has to be bound as external
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                const T&amp;
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="concepts/scopes/unique.html" title="unique">di::unique</a> (temporary)
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                T*
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="concepts/scopes/unique.html" title="unique">di::unique</a> (ownership
+                transfer)
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                const T*
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="concepts/scopes/unique.html" title="unique">di::unique</a> (ownership
+                transfer)
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                T&amp;&amp;
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="concepts/scopes/unique.html" title="unique">di::unique</a>
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                unique_ptr&lt;T&gt;
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="concepts/scopes/unique.html" title="unique">di::unique</a>
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                shared_ptr&lt;T&gt;
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="concepts/scopes/singleton.html" title="singleton">di::singleton</a>
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                weak_ptr&lt;T&gt;
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="concepts/scopes/singleton.html" title="singleton">di::singleton</a>
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Unique scope
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">impl1</span><span class="special">&gt;.</span><span class="identifier">in</span><span class="special">(</span><a class="link" href="concepts/scopes/unique.html" title="unique">di::unique</a><span class="special">)</span>
+<span class="special">);</span>
+
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">assert</span><span class="special">(</span><span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;()</span>
+       <span class="special">!=</span>
+       <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;()</span>
+<span class="special">);</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Shared scope (shared per one thread)
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">impl1</span><span class="special">&gt;.</span><span class="identifier">in</span><span class="special">(</span><a class="link" href="concepts/scopes/shared.html" title="shared">di::shared</a><span class="special">)</span>
+<span class="special">);</span>
+
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">assert</span><span class="special">(</span><span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;()</span>
+       <span class="special">==</span>
+       <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;()</span>
+<span class="special">);</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Singleton scope (shared between threads)
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">impl1</span><span class="special">&gt;.</span><span class="identifier">in</span><span class="special">(</span><a class="link" href="concepts/scopes/singleton.html" title="singleton">di::singleton</a><span class="special">)</span>
+<span class="special">);</span>
+
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">assert</span><span class="special">(</span><span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;()</span>
+       <span class="special">==</span>
+       <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;()</span>
+<span class="special">);</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Session scope
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">my_session</span> <span class="special">=</span> <span class="special">[]{};</span>
+
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">impl1</span><span class="special">&gt;.</span><span class="identifier">in</span><span class="special">(</span>
+        <a class="link" href="concepts/scopes/session.html" title="session">di::session</a><span class="special">(</span><span class="identifier">my_mession</span><span class="special">)</span>
+    <span class="special">)</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">assert</span><span class="special">(</span><span class="keyword">nullptr</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;());</span>
+<span class="identifier">injector</span><span class="special">.</span><span class="identifier">call</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">session_entry</span><span class="special">(</span><span class="identifier">my_session</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;()</span>
+       <span class="special">==</span>
+       <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;()</span>
+<span class="special">);</span>
+<span class="identifier">injector</span><span class="special">.</span><span class="identifier">call</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">session_exit</span><span class="special">(</span><span class="identifier">my_session</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">nullptr</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;());</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                External scope
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">l</span> <span class="special">=</span> <span class="number">42l</span><span class="special">;</span>
+<span class="keyword">auto</span> <span class="identifier">b</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
+
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+   <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">int_</span><span class="special">&lt;</span><span class="number">41</span><span class="special">&gt;&gt;</span>
+ <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+ <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">make_shared</span><span class="special">&lt;</span><span class="identifier">impl</span><span class="special">&gt;());</span>
+ <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">ref</span><span class="special">(</span><span class="identifier">l</span><span class="special">));</span>
+ <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">short</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">([]{</span><span class="keyword">return</span> <span class="number">87</span><span class="special">;})</span>
+ <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span>
+     <span class="special">[&amp;](</span><span class="keyword">const</span> <span class="keyword">auto</span><span class="special">&amp;</span> <span class="identifier">injector</span><span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">b</span><span class="special">)</span> <span class="special">{</span>
+            <span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="keyword">template</span>
+                <a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">impl2</span><span class="special">&gt;();</span>
+        <span class="special">}</span>
+        <span class="keyword">return</span> <span class="keyword">nullptr</span><span class="special">;</span>
+     <span class="special">}</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span> <span class="comment">// external has priority</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;()</span>
+       <span class="special">==</span>
+       <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;()</span>
+<span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">l</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&amp;&gt;());</span>
+<span class="identifier">assert</span><span class="special">(&amp;</span><span class="identifier">l</span> <span class="special">==</span> <span class="special">&amp;</span><span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&amp;&gt;());</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">short</span><span class="special">&gt;());</span>
+<span class="special">{</span>
+<span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">nullptr</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">);</span>
+<span class="special">}</span>
+<span class="special">{</span>
+<span class="identifier">b</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">;</span>
+<span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl2</span><span class="special">*&gt;(</span><span class="identifier">object</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+<span class="special">}</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Custom scope
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">struct</span> <span class="identifier">custom_scope</span> <span class="special">{</span>
+    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> <span class="identifier">priority</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="keyword">class</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">scope</span> <span class="special">{</span>
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TProvider</span><span class="special">&gt;</span>
+        <span class="keyword">auto</span> <a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TProvider</span><span class="special">&amp;</span> <span class="identifier">provider</span><span class="special">)</span> <span class="special">{</span>
+            <span class="keyword">return</span> <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">&gt;{</span><span class="identifier">provider</span><span class="special">.</span><span class="identifier">get</span><span class="special">()};</span>
+        <span class="special">}</span>
+    <span class="special">};</span>
+<span class="special">};</span>
+
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+  <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i</span><span class="special">,</span> <span class="identifier">impl</span><span class="special">&gt;.</span><span class="identifier">in</span><span class="special">(</span><span class="identifier">custom_scope</span><span class="special">{})</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">assert</span><span class="special">(</span><span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;&gt;()</span>
+       <span class="special">!=</span>
+       <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;&gt;()</span>
+<span class="special">);</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="table">
+<a name="di.quick_user_guide.scope_to_type_conversion"></a><p class="title"><b>Table&#160;2.&#160;Scope to type conversion</b></p>
+<div class="table-contents"><table class="table" summary="Scope to type conversion">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Type
+              </p>
+            </th>
+<th>
+              <p>
+                unique
+              </p>
+            </th>
+<th>
+              <p>
+                shared
+              </p>
+            </th>
+<th>
+              <p>
+                singleton
+              </p>
+            </th>
+<th>
+              <p>
+                session
+              </p>
+            </th>
+<th>
+              <p>
+                external
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                T
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                T&amp;
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                const T&amp;
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004; (temporary)
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                T*
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                const T*
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                T&amp;&amp;
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                unique_ptr&lt;T&gt;
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                shared_ptr&lt;T&gt;
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                weak_ptr&lt;T&gt;
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+<td>
+              <p>
+                -
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+          <a class="link" href="concepts/modules.html" title="Modules">Modules</a>
+        </li></ul></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Module
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">struct</span> <span class="identifier">c</span> <span class="special">{</span>
+    <span class="identifier">c</span><span class="special">(</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;</span> <span class="identifier">i1</span>
+    <span class="special">,</span> <span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;</span> <span class="identifier">i2</span>
+    <span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">i1</span><span class="special">(</span><span class="identifier">i1</span><span class="special">),</span> <span class="identifier">i2</span><span class="special">(</span><span class="identifier">i2</span><span class="special">),</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">i</span><span class="special">)</span>
+    <span class="special">{</span> <span class="special">}</span>
+
+    <span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;</span> <span class="identifier">i1</span><span class="special">;</span>
+    <span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;</span> <span class="identifier">i2</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">module1</span> <span class="special">{</span>
+    <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+        <span class="keyword">return</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+            <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">impl1</span><span class="special">&gt;</span>
+          <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+        <span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">module2</span> <span class="special">{</span>
+    <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+        <span class="keyword">return</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+            <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">,</span> <span class="identifier">impl2</span><span class="special">&gt;</span>
+        <span class="special">);</span>
+    <span class="special">};</span>
+<span class="special">};</span>
+
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <span class="identifier">module1</span><span class="special">{},</span> <span class="identifier">module2</span><span class="special">{}</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl1</span><span class="special">*&gt;(</span><span class="identifier">object</span><span class="special">.</span><span class="identifier">i1</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl2</span><span class="special">*&gt;(</span><span class="identifier">object</span><span class="special">.</span><span class="identifier">i2</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+<span class="identifier">asert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">i</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl1</span><span class="special">*&gt;(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">crate</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;());</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl2</span><span class="special">*&gt;(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">crate</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;&gt;());</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Exposed type module
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">struct</span> <span class="identifier">module</span> <span class="special">{</span>
+    <a class="link" href="concepts/injector.html" title="Injector">di::injector</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;</span> <span class="identifier">configure</span><span class="special">()</span>
+    <span class="keyword">const</span> <span class="keyword">noexcept</span><span class="special">;</span>
+
+    <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">};</span>
+
+<a class="link" href="concepts/injector.html" title="Injector">di::injector</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;</span> <span class="comment">// expose c</span>
+<span class="identifier">module</span><span class="special">::</span><span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+    <span class="keyword">return</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+        <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">impl1</span><span class="special">&gt;</span>
+      <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">,</span> <span class="identifier">impl2</span><span class="special">&gt;</span>
+      <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">i</span><span class="special">)</span>
+    <span class="special">);</span>
+<span class="special">}</span>
+
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <span class="identifier">module</span><span class="special">{</span><span class="number">42</span><span class="special">}</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl1</span><span class="special">*&gt;(</span><span class="identifier">object</span><span class="special">.</span><span class="identifier">i1</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl2</span><span class="special">*&gt;(</span><span class="identifier">object</span><span class="special">.</span><span class="identifier">i2</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+<span class="identifier">asert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">i</span><span class="special">);</span>
+<span class="identifier">injector</span><span class="special">.</span><span class="identifier">crate</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;()</span> <span class="comment">// compile error</span>
+<span class="identifier">injector</span><span class="special">.</span><span class="identifier">crate</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;&gt;()</span> <span class="comment">// compile error</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Exposed many types module
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">struct</span> <span class="identifier">module</span> <span class="special">{</span>
+    <a class="link" href="concepts/injector.html" title="Injector">di::injector</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">i2</span><span class="special">&gt;</span> <span class="identifier">configure</span><span class="special">()</span>
+    <span class="keyword">const</span> <span class="keyword">noexcept</span><span class="special">;</span>
+
+    <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">};</span>
+
+<a class="link" href="concepts/injector.html" title="Injector">di::injector</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">i2</span><span class="special">&gt;</span> <span class="comment">// expose i1, i2</span>
+<span class="identifier">module</span><span class="special">::</span><span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+    <span class="keyword">return</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+        <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">impl1</span><span class="special">&gt;</span>
+      <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">,</span> <span class="identifier">impl2</span><span class="special">&gt;</span>
+    <span class="special">);</span>
+<span class="special">}</span>
+
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <span class="identifier">module</span><span class="special">{}</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl1</span><span class="special">*&gt;(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">crate</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;());</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl2</span><span class="special">*&gt;(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">crate</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;&gt;());</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Exposed type module with annotation
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">my</span> <span class="special">=</span> <span class="special">[]{};</span>
+
+<span class="keyword">struct</span> <span class="identifier">c</span> <span class="special">{</span>
+    <a class="link" href="concepts/injections/inject.html#di.concepts.injections.inject.boost_di_inject">BOOST_DI_INJECT</a><span class="special">(</span><span class="identifier">c</span>
+      <span class="special">,</span> <span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a> <span class="special">=</span> <span class="identifier">my</span><span class="special">)</span> <span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;</span> <span class="identifier">up</span><span class="special">)</span>
+      <span class="special">:</span> <span class="identifier">up</span><span class="special">(</span><span class="identifier">up</span><span class="special">)</span>
+    <span class="special">{</span> <span class="special">}</span>
+
+    <span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;</span> <span class="identifier">up</span><span class="special">;</span>
+<span class="special">};</span>
+
+<a class="link" href="concepts/injector.html" title="Injector">di::injector</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;</span> <span class="identifier">module</span> <span class="special">=</span>
+    <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+        <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">impl1</span><span class="special">&gt;</span>
+    <span class="special">);</span>
+
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;.</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a><span class="special">(</span><span class="identifier">my</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">module</span><span class="special">)</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl1</span><span class="special">*&gt;(</span><span class="identifier">c</span><span class="special">.</span><span class="identifier">up</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+          <a class="link" href="concepts/policies.html" title="Policies">Policies</a>
+        </li></ul></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Define policies configuration (dump types)
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">class</span> <span class="identifier">print_types_policy</span> <span class="special">:</span> <span class="keyword">public</span> <a class="link" href="concepts.html#di.concepts.synopsis">di::config</a> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">auto</span> <span class="identifier">policies</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+        <span class="keyword">return</span> <a class="link" href="concepts.html#di.concepts.synopsis">di::make_policies</a><span class="special">(</span>
+            <span class="special">[](</span><span class="keyword">auto</span> <span class="identifier">type</span><span class="special">){</span>
+                <span class="keyword">using</span> <span class="identifier">T</span> <span class="special">=</span> <span class="keyword">decltype</span><span class="special">(</span><span class="identifier">type</span><span class="special">);</span>
+                <span class="keyword">using</span> <span class="identifier">arg</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">::</span><span class="identifier">type</span><span class="special">;</span>
+                <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="keyword">typeid</span><span class="special">(</span><span class="identifier">arg</span><span class="special">).</span><span class="identifier">name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+            <span class="special">}</span>
+        <span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// per injector policy</span>
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">&lt;</span><span class="identifier">print_types_policy</span><span class="special">&gt;();</span>
+<span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;();</span> <span class="comment">// output: int</span>
+
+<span class="comment">// global policy</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_CFG</span> <span class="identifier">my_policy</span>
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">();</span>
+<span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;();</span> <span class="comment">// output: int</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Define policies configuration (dump types extended)
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">class</span> <span class="identifier">print_types_info_policy</span> <span class="special">:</span> <span class="keyword">public</span> <a class="link" href="concepts.html#di.concepts.synopsis">di::config</a> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">auto</span> <span class="identifier">policies</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+        <span class="keyword">return</span> <a class="link" href="concepts.html#di.concepts.synopsis">di::make_policies</a><span class="special">(</span>
+            <span class="special">[](</span><span class="keyword">auto</span> <span class="identifier">type</span><span class="special">,</span> <span class="keyword">auto</span> <span class="identifier">dep</span><span class="special">,</span> <span class="keyword">auto</span><span class="special">...</span> <span class="identifier">ctor</span><span class="special">)</span> <span class="special">{</span>
+                <span class="keyword">using</span> <span class="identifier">T</span> <span class="special">=</span> <span class="keyword">decltype</span><span class="special">(</span><span class="identifier">type</span><span class="special">);</span>
+                <span class="keyword">using</span> <span class="identifier">arg</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">::</span><span class="identifier">type</span><span class="special">;</span>
+                <span class="keyword">using</span> <span class="identifier">arg_name</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">T</span><span class="special">::</span><span class="identifier">name</span><span class="special">;</span>
+                <span class="keyword">using</span> <span class="identifier">D</span> <span class="special">=</span> <span class="keyword">decltype</span><span class="special">(</span><span class="identifier">dep</span><span class="special">);</span>
+                <span class="keyword">using</span> <span class="identifier">scope</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">D</span><span class="special">::</span><span class="identifier">scope</span><span class="special">;</span>
+                <span class="keyword">using</span> <span class="identifier">expected</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">D</span><span class="special">::</span><span class="identifier">expected</span><span class="special">;</span>
+                <span class="keyword">using</span> <span class="identifier">given</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">D</span><span class="special">::</span><span class="identifier">given</span><span class="special">;</span>
+                <span class="keyword">using</span> <span class="identifier">name</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">D</span><span class="special">::</span><span class="identifier">name</span><span class="special">;</span>
+                <span class="keyword">auto</span> <span class="identifier">ctor_s</span> <span class="special">=</span> <span class="keyword">sizeof</span><span class="special">...(</span><span class="identifier">ctor</span><span class="special">);</span>
+
+                <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">ctor_s</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span>
+                    <span class="special">&lt;&lt;</span> <span class="keyword">typeid</span><span class="special">(</span><span class="identifier">arg</span><span class="special">).</span><span class="identifier">name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span>
+                    <span class="special">&lt;&lt;</span> <span class="keyword">typeid</span><span class="special">(</span><span class="identifier">arg_name</span><span class="special">).</span><span class="identifier">name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span>
+                    <span class="special">&lt;&lt;</span> <span class="keyword">typeid</span><span class="special">(</span><span class="identifier">scope</span><span class="special">).</span><span class="identifier">name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span>
+                    <span class="special">&lt;&lt;</span> <span class="keyword">typeid</span><span class="special">(</span><span class="identifier">expected</span><span class="special">).</span><span class="identifier">name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span>
+                    <span class="special">&lt;&lt;</span> <span class="keyword">typeid</span><span class="special">(</span><span class="identifier">given</span><span class="special">).</span><span class="identifier">name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span>
+                    <span class="special">&lt;&lt;</span> <span class="keyword">typeid</span><span class="special">(</span><span class="identifier">name</span><span class="special">).</span><span class="identifier">name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+            <span class="special">}</span>
+        <span class="special">)</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// per injector policy</span>
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">&lt;</span><span class="identifier">print_types_info_policy</span><span class="special">&gt;(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">impl1</span><span class="special">&gt;</span>
+<span class="special">);</span>
+
+<span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;();</span>
+    <span class="comment">// output:</span>
+    <span class="number">0</span> <span class="comment">// ctor_size of impl1</span>
+    <span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;</span> <span class="comment">// ctor arg</span>
+    <span class="identifier">di</span><span class="special">::</span><span class="identifier">no_name</span> <span class="comment">// ctor arg name</span>
+    <a class="link" href="concepts/scopes/deduce.html" title="deduce (default)">di::deduce</a> <span class="comment">// scope</span>
+    <span class="identifier">i1</span> <span class="comment">// expected</span>
+    <span class="identifier">impl1</span> <span class="comment">// given</span>
+    <span class="identifier">no_name</span> <span class="comment">// dependency</span>
+
+<span class="comment">// global policy</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_CFG</span> <span class="identifier">my_policy</span>
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">impl1</span><span class="special">&gt;</span>
+<span class="special">);</span>
+
+<span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;();</span>
+    <span class="comment">// output:</span>
+    <span class="number">0</span> <span class="comment">// ctor_size of impl1</span>
+    <span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;</span> <span class="comment">// cotr arg</span>
+    <span class="identifier">di</span><span class="special">::</span><span class="identifier">no_name</span> <span class="comment">// ctor arg name</span>
+    <a class="link" href="concepts/scopes/deduce.html" title="deduce (default)">di::deduce</a> <span class="comment">// scope</span>
+    <span class="identifier">i1</span> <span class="comment">// expected</span>
+    <span class="identifier">impl1</span> <span class="comment">// given</span>
+    <span class="identifier">no_name</span> <span class="comment">// dependency</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Allow ctor types policy
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">/</span><span class="identifier">policies</span><span class="special">/</span><span class="identifier">allow_ctor_types</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">class</span> <span class="identifier">all_must_be_bound_unless_int</span> <span class="special">:</span> <span class="keyword">public</span> <a class="link" href="concepts.html#di.concepts.synopsis">di::config</a> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">auto</span> <span class="identifier">policies</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+        <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">;</span>
+        <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">operators</span><span class="special">;</span>
+
+        <span class="keyword">return</span> <a class="link" href="concepts.html#di.concepts.synopsis">di::make_policies</a><span class="special">(</span>
+            <span class="identifier">allow_ctor_types</span><span class="special">(</span><span class="identifier">is_same</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;{}</span> <span class="special">||</span> <span class="identifier">is_bound</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&gt;{})</span>
+        <span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// global policy</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_CFG</span> <span class="identifier">all_must_be_bound_unless_int</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
+<span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;();</span> <span class="comment">// compile error</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42.0</span><span class="special">,</span> <span class="identifier">make_injector</span><span class="special">(</span>
+                 <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42.0</span><span class="special">)</span>
+             <span class="special">).</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;()</span>
+<span class="special">);</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+          <a class="link" href="concepts/providers.html" title="Providers">Providers</a>
+        </li></ul></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Heap no throw provider
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">class</span> <span class="identifier">heap_no_throw</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">template</span><span class="special">&lt;</span>
+      <span class="keyword">class</span> <span class="comment">// interface</span>
+    <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span> <span class="comment">// implementation</span>
+    <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TInit</span> <span class="comment">// direct()/uniform{}</span>
+    <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TMemory</span> <span class="comment">// heap/stack</span>
+    <span class="special">,</span> <span class="keyword">class</span><span class="special">...</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
+    <span class="keyword">auto</span> <span class="identifier">get</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TInit</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">TMemory</span><span class="special">&amp;,</span> <span class="identifier">TArgs</span><span class="special">&amp;&amp;...</span> <span class="identifier">args</span><span class="special">)</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="keyword">new</span> <span class="special">(</span><span class="identifier">nothrow</span><span class="special">)</span> <span class="identifier">T</span><span class="special">{</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">TArgs</span><span class="special">&gt;(</span><span class="identifier">args</span><span class="special">)...};</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">my_provider</span> <span class="special">:</span> <span class="keyword">public</span> <a class="link" href="concepts.html#di.concepts.synopsis">di::config</a> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">auto</span> <span class="identifier">provider</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">heap_no_throw</span><span class="special">{};</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// per injector policy</span>
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">&lt;</span><span class="identifier">my_provider</span><span class="special">&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
+
+<span class="comment">// global policy</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_CFG</span> <span class="identifier">my_provider</span>
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<h4>
+<a name="di.quick_user_guide.h0"></a>
+      <span class="phrase"><a name="di.quick_user_guide.see_also"></a></span><a class="link" href="quick_user_guide.html#di.quick_user_guide.see_also">See
+      Also</a>
+    </h4>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <a class="link" href="concepts.html" title="Concepts">Concepts</a>
+        </li>
+<li class="listitem">
+          <a class="link" href="diagnostic_messages.html" title="Diagnostic messages">Diagnostic messages</a>
+        </li>
+<li class="listitem">
+          <a class="link" href="performance.html" title="Performance">Performance</a>
+        </li>
+<li class="listitem">
+          <a class="link" href="examples.html" title="Examples">Examples</a>
+        </li>
+<li class="listitem">
+          <a class="link" href="rationale.html" title="Rationale">Rationale</a>
+        </li>
+</ul></div>
+</div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
 <td align="right"><div class="copyright-footer">Copyright &#169; 2014 Krzysztof Jusiak | Distributed under the Boost Software
       License, Version 1.0.<p>
-        <a href="https://github.com/krzysztof-jusiak/di" target="_top">C++14 Repository</a>
-        | <a href="http://krzysztof-jusiak.github.io/di/cpp03/boost/libs/di/doc/html" target="_top">C++03/11
-        Version</a>
+        --- <a href="https://github.com/krzysztof-jusiak/di" target="_top">GitHub</a> ---
       </p>
 </div></td>
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="tutorial.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="concepts.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="tutorial.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="diagnostic_messages.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

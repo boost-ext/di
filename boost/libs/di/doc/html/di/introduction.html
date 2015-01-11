@@ -4,9 +4,9 @@
 <title>Introduction</title>
 <link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
-<link rel="home" href="../index.html" title="Boost.DI (Dependency Injection) 1.4">
-<link rel="up" href="../index.html" title="Boost.DI (Dependency Injection) 1.4">
-<link rel="prev" href="../index.html" title="Boost.DI (Dependency Injection) 1.4">
+<link rel="home" href="../index.html" title="Boost.DI (Dependency Injection) C++14">
+<link rel="up" href="../index.html" title="Boost.DI (Dependency Injection) C++14">
+<link rel="prev" href="../index.html" title="Boost.DI (Dependency Injection) C++14">
 <link rel="next" href="motivation.html" title="Motivation">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -34,7 +34,7 @@
       </p></blockquote></div>
 <p>
       <span class="bold"><strong><a href="http://en.wikipedia.org/wiki/Dependency_injection" target="_top">Dependency
-      injection</a></strong></span> is a programming practice providing required objects
+      injection</a></strong></span> is a programming practice providing required instances
       to an object. Following this approach has many advantages.
     </p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
@@ -73,14 +73,15 @@
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">class</span> <span class="identifier">example</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="identifier">example</span><span class="special">()</span>
-        <span class="special">:</span> <span class="identifier">logic_</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">logic</span><span class="special">())</span>
+        <span class="special">:</span> <span class="identifier">logic_</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">logic</span><span class="special">{})</span>
         <span class="special">,</span> <span class="identifier">logger_</span><span class="special">(</span><span class="identifier">logger_factory</span><span class="special">::</span><span class="identifier">create</span><span class="special">())</span>
     <span class="special">{</span> <span class="special">}</span>
 
     <span class="keyword">int</span> <span class="identifier">run</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
 
-    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">logic</span><span class="special">&gt;</span> <span class="identifier">logic_</span><span class="special">;</span>
-    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">logger</span><span class="special">&gt;</span> <span class="identifier">logger_</span><span class="special">;</span>
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogic</span><span class="special">&gt;</span> <span class="identifier">logic_</span><span class="special">;</span>
+    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger_</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
             </td>
@@ -88,23 +89,23 @@
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">class</span> <span class="identifier">example</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="comment">// dependencies are passed via constructor</span>
-    <span class="identifier">example</span><span class="special">(</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">logic</span><span class="special">&gt;</span> <span class="identifier">logic</span><span class="special">,</span> <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">logger</span><span class="special">&gt;</span> <span class="identifier">logger</span><span class="special">)</span>
+    <span class="identifier">example</span><span class="special">(</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogic</span><span class="special">&gt;</span> <span class="identifier">logic</span><span class="special">,</span> <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger</span><span class="special">)</span>
         <span class="special">:</span> <span class="identifier">logic_</span><span class="special">(</span><span class="identifier">logic</span><span class="special">),</span> <span class="identifier">logger_</span><span class="special">(</span><span class="identifier">logger</span><span class="special">)</span>
     <span class="special">{</span> <span class="special">}</span>
 
     <span class="keyword">int</span> <span class="identifier">run</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
 
 <span class="keyword">private</span><span class="special">:</span>
-    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">logic</span><span class="special">&gt;</span> <span class="identifier">logic_</span><span class="special">;</span>
-    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">logger</span><span class="special">&gt;</span> <span class="identifier">logger_</span><span class="special">;</span>
+    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogic</span><span class="special">&gt;</span> <span class="identifier">logic_</span><span class="special">;</span>
+    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger_</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
             </td>
 </tr></tbody>
 </table></div>
 <p>
-      <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is a <code class="computeroutput"><span class="identifier">Dependency</span>
-      <span class="identifier">Injection</span> <span class="identifier">library</span></code>
+      <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> is a <code class="computeroutput"><span class="identifier">dependency</span>
+      <span class="identifier">injection</span> <span class="identifier">library</span></code>
       improving <code class="computeroutput"><span class="identifier">manual</span> <span class="identifier">dependency</span>
       <span class="identifier">injection</span></code> by simplifying object instantiation
       with automatic dependencies injection. Using <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> has many
@@ -114,7 +115,7 @@
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
           <span class="bold"><strong>Reduce boilerplate code</strong></span> (No factories,
-          no objects creation)
+          no objects creation in specific order)
         </li>
 <li class="listitem">
           <span class="bold"><strong>Reduce cost of maintenance effort</strong></span> (<a class="link" href="examples/constructor_signature.html" title="Constructor Signature">Constructor signature</a>
@@ -122,16 +123,15 @@
           configuration)
         </li>
 <li class="listitem">
-          <span class="bold"><strong>Reduce testing effort</strong></span> (<a class="link" href="examples/testing/automatic_mocks_injector.html" title="Automatic Mocks Injector">Automatic
-          Mocks Injector</a>)
+          <span class="bold"><strong>Reduce testing effort</strong></span>
         </li>
 <li class="listitem">
           <span class="bold"><strong>Give better control of what and how is created</strong></span>
-          (<a class="link" href="concepts/policies.html" title="Policies">Policies</a>, <a class="link" href="../">allocator</a>)
+          (<a class="link" href="concepts/policies.html" title="Policies">Policies</a>, <a class="link" href="concepts/providers.html" title="Providers">Providers</a>)
         </li>
 <li class="listitem">
           <span class="bold"><strong>Give better understanding about objects hierarchy</strong></span>
-          (<a class="link" href="examples/uml_visitor.html" title="UML Visitor">UML Visitor</a>)
+          (<a class="link" href="examples/uml_dumper.html" title="UML Dumper">UML Dumper</a>)
         </li>
 </ul></div>
 <div class="informaltable"><table class="table">
@@ -158,13 +158,17 @@
     <span class="keyword">auto</span> <span class="identifier">logic</span> <span class="special">=</span> <span class="identifier">make_shared</span><span class="special">&lt;</span><span class="identifier">logic</span><span class="special">&gt;();</span>
     <span class="keyword">auto</span> <span class="identifier">logger</span> <span class="special">=</span> <span class="identifier">make_shared</span><span class="special">&lt;</span><span class="identifier">logger</span><span class="special">&gt;();</span>
 
-    <span class="keyword">return</span> <span class="identifier">example</span><span class="special">(</span><span class="identifier">logic</span><span class="special">,</span> <span class="identifier">logger</span><span class="special">).</span><span class="identifier">run</span><span class="special">();</span>
+    <span class="keyword">return</span> <span class="identifier">example</span><span class="special">{</span><span class="identifier">logic</span><span class="special">,</span> <span class="identifier">logger</span><span class="special">}.</span><span class="identifier">run</span><span class="special">();</span>
 <span class="special">}</span>
 </pre>
             </td>
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <span class="keyword">return</span> <a class="link" href="concepts/injectors/make_injector.html" title="make_injector">di::make_injector</a><span class="special">().</span><a class="link" href="../">create</a><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;().</span><span class="identifier">run</span><span class="special">();</span>                     <span class="special">.</span>
+    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+        <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">ilogic</span><span class="special">,</span> <span class="identifier">logic</span><span class="special">&gt;</span>
+      <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">,</span> <span class="identifier">logger</span><span class="special">&gt;</span>
+    <span class="special">);</span>
+    <span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;().</span><span class="identifier">run</span><span class="special">();</span>                     <span class="special">.</span>
 <span class="special">}</span>
 </pre>
             </td>
@@ -185,6 +189,9 @@
           - if application compiles all dependencies will be be created accurately
         </li>
 <li class="listitem">
+          <span class="bold"><strong>Exception safe strong guaranty</strong></span>
+        </li>
+<li class="listitem">
           <span class="bold"><strong><a class="link" href="concepts/injections/automatic.html" title="automatic (default)">Macro
           free</a></strong></span> - by default - no need to specify constructor traits
           or register anything (less intrusive)
@@ -200,12 +207,11 @@
         </li>
 <li class="listitem">
           Compile time <a class="link" href="concepts/policies.html" title="Policies">policies</a> - to
-          detect <a class="link" href="../">circular
-          dependencies</a> or limit <a class="link" href="../">supported
-          types</a> only to specified
+          limit <a class="link" href="concepts/policies/allow_ctor_types.html" title="allow_ctor_types">supported types</a>
+          only to specified
         </li>
 <li class="listitem">
-          Supports <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">03</span></code>/<code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">11</span></code>/<code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">14</span></code>
+          Requires <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">14</span></code> compliant compiler
         </li>
 </ul></div>
 <h4>
@@ -238,9 +244,7 @@
 <td align="left"></td>
 <td align="right"><div class="copyright-footer">Copyright &#169; 2014 Krzysztof Jusiak | Distributed under the Boost Software
       License, Version 1.0.<p>
-        <a href="https://github.com/krzysztof-jusiak/di" target="_top">C++14 Repository</a>
-        | <a href="http://krzysztof-jusiak.github.io/di/cpp03/boost/libs/di/doc/html" target="_top">C++03/11
-        Version</a>
+        --- <a href="https://github.com/krzysztof-jusiak/di" target="_top">GitHub</a> ---
       </p>
 </div></td>
 </tr></table>

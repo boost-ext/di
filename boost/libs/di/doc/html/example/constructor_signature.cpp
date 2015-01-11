@@ -23,8 +23,7 @@ struct implementation2 : interface2 { };
 /*<define `example` class as usual>*/
 class example {
 public:
-    example(std::unique_ptr<interface1> up, std::shared_ptr<interface2> sp, int i)
-    {
+    example(std::unique_ptr<interface1> up, std::shared_ptr<interface2> sp, int i) {
         assert(dynamic_cast<implementation1*>(up.get()));
         assert(dynamic_cast<implementation2*>(sp.get()));
         assert(42 == i);
@@ -34,8 +33,7 @@ public:
 /*<define `example` class with different parameters order - won't require any changes in injector configuration>*/
 class example_with_different_parameters_order {
 public:
-    example_with_different_parameters_order(std::shared_ptr<interface2> sp, int i, std::unique_ptr<interface1> up)
-    {
+    example_with_different_parameters_order(std::shared_ptr<interface2> sp, int i, std::unique_ptr<interface1> up) {
         assert(dynamic_cast<implementation1*>(up.get()));
         assert(dynamic_cast<implementation2*>(sp.get()));
         assert(42 == i);
@@ -46,8 +44,7 @@ public:
 class example_with_different_parameters_order_and_types {
 public:
     example_with_different_parameters_order_and_types(std::unique_ptr<interface2> sp, const int& i, interface1* up)
-        : up_(up)
-    {
+        : up_(up) {
         assert(dynamic_cast<implementation1*>(up));
         assert(dynamic_cast<implementation2*>(sp.get()));
         assert(42 == i);
