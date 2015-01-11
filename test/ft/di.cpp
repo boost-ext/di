@@ -1,8 +1,10 @@
-#include <boost/di.hpp>
 #include <memory>
 #if (__has_include(<boost/shared_ptr.hpp>))
     #include <boost/shared_ptr.hpp>
 #endif
+#include "boost/di.hpp"
+#include "boost/di/providers/heap.hpp"
+#include "boost/di/policies/allow_ctor_types.hpp"
 
 namespace di = boost::di;
 
@@ -1191,5 +1193,112 @@ struct ctor_traits<c_no_limits> {
 test inject_traits_no_limits_via_ctor_traits = [] {
     auto injector = di::make_injector();
     injector.create<c_no_limits>();
+};
+
+test call_provider = [] {
+    static auto called = 0;
+    class config : public di::config {
+    public:
+        auto provider() const noexcept {
+            ++called;
+            return di::providers::heap{};
+        }
+    };
+
+    auto injector = di::make_injector<config>();
+    injector.create<int>();
+    expect_eq(1, called);
+};
+
+struct deleter_provider {
+    static auto& called() {
+        static auto i = 0;
+        return i;
+    }
+
+    template<class I, class T, class TInitialization, class TMemory, class... TArgs>
+    auto get(const TInitialization& // direct/uniform
+           , const TMemory& // stack/heap
+           , TArgs&&... args) const {
+            ++called();
+        return std::unique_ptr<T, std::default_delete<I>>{
+            new T(std::forward<TArgs>(args)...)
+        };
+    }
+};
+
+test call_provider_with_deleter = [] {
+    class config : public di::config {
+    public:
+        auto provider() const noexcept {
+            return deleter_provider{};
+        }
+    };
+
+    deleter_provider::called() = 0;
+    auto injector = di::make_injector<config>();
+    injector.create<int>();
+    expect_eq(1, deleter_provider::called());
+};
+
+test allow_types_policy = [] {
+    class config : public di::config {
+    public:
+        auto policies() const noexcept {
+            using namespace di::policies;
+            using namespace di::policies::operators;
+            return di::make_policies(allow_ctor_types(is_root{} || std::is_same<_, double>{} || is_bound<_>{}));
+        }
+    };
+
+    struct example {
+        int i = 0;
+        double d = 0.0;
+    };
+
+    auto injector = di::make_injector<config>(di::bind<int>.to(42));
+    injector.create<example>();
+};
+
+struct policy {
+    static auto& called() {
+        static auto i = 0;
+        return i;
+    }
+
+    template<typename T>
+    void operator()(const T&) const noexcept {
+        ++called();
+    }
+};
+
+class custom_policies : public di::config {
+public:
+    auto policies() const noexcept {
+        return di::make_policies(
+            policy{}
+          , [](auto) { ++policy::called(); }
+          , [](auto type, auto dependency, auto... ctor) { ++policy::called(); }
+        );
+    }
+};
+
+test call_custom_policies = [] {
+    policy::called() = 0;
+    auto injector = di::make_injector<custom_policies>();
+    injector.create<int>();
+    expect_eq(3, policy::called());
+};
+
+test call_custom_policies_with_exposed_injector = [] {
+    policy::called() = 0;
+
+    di::injector<i1> injector = di::make_injector<custom_policies>(
+        di::bind<i1, impl1>
+    );
+
+    auto object = injector.create<std::unique_ptr<i1>>();
+    expect(dynamic_cast<i1*>(object.get()));
+    expect_eq(3, policy::called());
 };
 

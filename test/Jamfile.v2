@@ -96,10 +96,10 @@ test-suite ut : # unit tests
 
 test-suite ft : # functional tests
     [ run-test c++1y : ft/di.cpp ]
-    [ run-test c++1y : ft/di_custom_policies_allow_ctor_types.cpp ]
-    [ run-test c++1y : ft/di_custom_policies.cpp ]
+    [ run-test c++1y : ft/di_ctor_inject_limit_size.cpp ]
+    [ run-test c++1y : ft/di_ctor_limit_size.cpp ]
     [ run-test c++1y : ft/di_custom_policies_global.cpp ]
-    [ run-test c++1y : ft/di_custom_provider.cpp ]
+    [ run-test c++1y : ft/di_custom_provider_global.cpp ]
 
     [ compile-fail-test c++1y : ft/error_bind_external_repeated.cpp ]
     [ compile-fail-test c++1y : ft/error_bind_external_with_given_scope.cpp ]
@@ -117,10 +117,5 @@ test-suite ft : # functional tests
     [ compile-fail-test c++1y : ft/error_named_paramater_spelling.cpp ]
     [ compile-fail-test c++1y : ft/error_policy_allow_ctor_types.cpp ]
     [ compile-fail-test c++1y : ft/error_scope_traits_external_deduced.cpp ]
-;
-
-test-suite pt : # performane tests
-    #[ run-test c++1y : pt/di.cpp : : : pph ]
-    #[ run-test c++1y : pt/di.cpp : ctor_di : : pph ]
 ;
 
