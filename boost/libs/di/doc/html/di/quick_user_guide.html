@@ -2,7 +2,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Quick User Guide</title>
-<link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
 <link rel="home" href="../index.html" title="Boost.DI (Dependency Injection) C++14">
 <link rel="up" href="../index.html" title="Boost.DI (Dependency Injection) C++14">
@@ -10,17 +10,8 @@
 <link rel="next" href="diagnostic_messages.html" title="Diagnostic messages">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table cellpadding="2" width="100%"><tr>
-<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
-<td align="center"><a href="../../../../../index.html">Home</a></td>
-<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
-<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
-<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
-<td align="center"><a href="../../../../../more/index.htm">More</a></td>
-</tr></table>
-<hr>
 <div class="spirit-nav">
-<a accesskey="p" href="tutorial.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="diagnostic_messages.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="tutorial.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="diagnostic_messages.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
@@ -31,6 +22,7 @@
       namespace alias.
     </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><a href="https://github.com/krzysztof-jusiak/di/blob/cpp14/include/boost/di.hpp" target="_top">boost/di.hpp</a><span class="special">&gt;</span>
+
 <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 
 <span class="keyword">struct</span> <span class="identifier">i1</span> <span class="special">{</span> <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">i1</span><span class="special">()</span> <span class="special">=</span> <span class="keyword">default</span><span class="special">;</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">dummy1</span><span class="special">()</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="special">};</span>
@@ -128,10 +120,8 @@
 <tbody><tr>
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
-    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">__bindings_bind_any_of__</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">i2</span><span class="special">&gt;,</span> <span class="identifier">impl</span><span class="special">&gt;</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><a class="link" href="concepts/bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">i2</span><span class="special">&gt;,</span> <span class="identifier">impl</span><span class="special">&gt;</span>
 <span class="special">);</span>
-
-
                                                                                    <span class="special">.</span>
 </pre>
             </td>
@@ -140,7 +130,6 @@
 <span class="keyword">auto</span> <span class="identifier">object2</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;&gt;();</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl</span><span class="special">*&gt;(</span><span class="identifier">object1</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl</span><span class="special">*&gt;(</span><span class="identifier">object2</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="identifier">object1</span> <span class="special">==</span> <span class="identifier">object2</span><span class="special">);</span>
                                                                                                            <span class="special">.</span>
 </pre>
             </td>
@@ -252,7 +241,7 @@
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">d</span><span class="special">);</span>
                                                                                                            <span class="special">.</span>
 </pre>
             </td>
@@ -292,7 +281,7 @@
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">d</span><span class="special">);</span>
                                                                                                            <span class="special">.</span>
 </pre>
             </td>
@@ -346,7 +335,7 @@
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">d</span><span class="special">);</span>
                                                                                                            <span class="special">.</span>
 </pre>
             </td>
@@ -391,7 +380,7 @@
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">d</span><span class="special">);</span>
                                                                                                            <span class="special">.</span>
 </pre>
             </td>
@@ -435,7 +424,7 @@
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">d</span><span class="special">);</span>
                                                                                                            <span class="special">.</span>
 </pre>
             </td>
@@ -485,7 +474,7 @@
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">d</span><span class="special">);</span>
                                                                                                            <span class="special">.</span>
 </pre>
             </td>
@@ -536,8 +525,8 @@
             </td>
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">87</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
                                                                                                            <span class="special">.</span>
 </pre>
             </td>
@@ -568,18 +557,18 @@
 
 <span class="keyword">struct</span> <span class="identifier">c</span> <span class="special">{</span>
     <a class="link" href="concepts/injections/inject.html#di.concepts.injections.inject.boost_di_inject">BOOST_DI_INJECT</a><span class="special">(</span><span class="identifier">c</span>
-        <span class="special">,</span> <span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a> <span class="special">=</span> <span class="identifier">n1</span><span class="special">)</span> <span class="keyword">int</span> <span class="identifier">a</span>
-        <span class="special">,</span> <span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a> <span class="special">=</span> <span class="identifier">n1</span><span class="special">)</span> <span class="keyword">int</span> <span class="identifier">b</span>
-        <span class="special">,</span> <span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a> <span class="special">=</span> <span class="identifier">n2</span><span class="special">)</span> <span class="keyword">int</span> <span class="identifier">c</span>
-        <span class="special">,</span> <span class="keyword">int</span> <span class="identifier">d</span>
+        <span class="special">,</span> <span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a> <span class="special">=</span> <span class="identifier">n1</span><span class="special">)</span> <span class="keyword">int</span> <span class="identifier">i1</span>
+        <span class="special">,</span> <span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a> <span class="special">=</span> <span class="identifier">n1</span><span class="special">)</span> <span class="keyword">int</span> <span class="identifier">i2</span>
+        <span class="special">,</span> <span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a> <span class="special">=</span> <span class="identifier">n2</span><span class="special">)</span> <span class="keyword">int</span> <span class="identifier">i3</span>
+        <span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i4</span>
         <span class="special">,</span> <span class="special">(</span><a class="link" href="concepts/annotations/named.html" title="(named = name)">named</a> <span class="special">=</span> <span class="identifier">n1</span><span class="special">)</span> <span class="identifier">string</span> <span class="identifier">s</span><span class="special">)</span>
-        <span class="special">:</span> <span class="identifier">a</span><span class="special">(</span><span class="identifier">a</span><span class="special">),</span> <span class="identifier">b</span><span class="special">(</span><span class="identifier">b</span><span class="special">),</span> <span class="identifier">c</span><span class="special">(</span><span class="identifier">c</span><span class="special">),</span> <span class="identifier">d</span><span class="special">(</span><span class="identifier">d</span><span class="special">),</span> <span class="identifier">s</span><span class="special">(</span><span class="identifier">s</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">i1</span><span class="special">(</span><span class="identifier">i1</span><span class="special">),</span> <span class="identifier">i2</span><span class="special">(</span><span class="identifier">i2</span><span class="special">),</span> <span class="identifier">i3</span><span class="special">(</span><span class="identifier">i3</span><span class="special">),</span> <span class="identifier">i4</span><span class="special">(</span><span class="identifier">i4</span><span class="special">),</span> <span class="identifier">s</span><span class="special">(</span><span class="identifier">s</span><span class="special">)</span>
     <span class="special">{</span> <span class="special">}</span>
 
-    <span class="keyword">int</span> <span class="identifier">a</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
-    <span class="keyword">int</span> <span class="identifier">b</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
-    <span class="keyword">int</span> <span class="identifier">c</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
-    <span class="keyword">int</span> <span class="identifier">d</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">i1</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">i2</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">i3</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">i4</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
     <span class="identifier">string</span> <span class="identifier">s</span><span class="special">;</span>
 <span class="special">};</span>
 
@@ -593,10 +582,10 @@
             </td>
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">87</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">c</span><span class="special">);</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">d</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">i1</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">i2</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">i3</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">i3</span><span class="special">);</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="string">"str"</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">s</span><span class="special">);</span>
                                                                                                            <span class="special">.</span>
 </pre>
@@ -645,8 +634,8 @@
             </td>
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">87</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
                                                                                                            <span class="special">.</span>
 </pre>
             </td>
@@ -699,8 +688,8 @@
             </td>
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">87</span> <span class="special">==</span> <span class="identifier">c</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">a</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">b</span><span class="special">);</span>
                                                                                                            <span class="special">.</span>
 </pre>
             </td>
@@ -747,16 +736,16 @@
 </pre>
             </td>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object1</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
-<span class="keyword">auto</span> <span class="identifier">object2</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="identifier">object1</span><span class="special">.</span><span class="identifier">sp</span> <span class="special">==</span> <span class="identifier">object2</span><span class="special">.</span><span class="identifier">sp</span><span class="special">);</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="identifier">object1</span><span class="special">.</span><span class="identifier">up</span> <span class="special">!=</span> <span class="identifier">object2</span><span class="special">.</span><span class="identifier">up</span><span class="special">);</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object1</span><span class="special">.</span><span class="identifier">i</span><span class="special">);</span>
-<span class="identifier">assert</span><span class="special">(&amp;</span><span class="identifier">i</span> <span class="special">==</span> <span class="identifier">object1</span><span class="special">.</span><span class="identifier">i</span><span class="special">;</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object2</span><span class="special">.</span><span class="identifier">i</span><span class="special">);</span>
-<span class="identifier">assert</span><span class="special">(&amp;</span><span class="identifier">i</span> <span class="special">==</span> <span class="identifier">object2</span><span class="special">.</span><span class="identifier">i</span><span class="special">);</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object1</span><span class="special">.</span><span class="identifier">d</span><span class="special">);</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object2</span><span class="special">.</span><span class="identifier">d</span><span class="special">);</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object1</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;&gt;();</span>
+<span class="keyword">auto</span> <span class="identifier">object2</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">object1</span><span class="special">-&gt;</span><span class="identifier">sp</span> <span class="special">==</span> <span class="identifier">object2</span><span class="special">-&gt;</span><span class="identifier">sp</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">object1</span><span class="special">-&gt;</span><span class="identifier">up</span> <span class="special">!=</span> <span class="identifier">object2</span><span class="special">-&gt;</span><span class="identifier">up</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object1</span><span class="special">-&gt;</span><span class="identifier">i</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(&amp;</span><span class="identifier">i</span> <span class="special">==</span> <span class="special">&amp;</span><span class="identifier">object1</span><span class="special">-&gt;</span><span class="identifier">i</span><span class="special">;</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object2</span><span class="special">-&gt;</span><span class="identifier">i</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(&amp;</span><span class="identifier">i</span> <span class="special">==</span> <span class="special">&amp;</span><span class="identifier">object2</span><span class="special">-&gt;</span><span class="identifier">i</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object1</span><span class="special">-&gt;</span><span class="identifier">d</span><span class="special">);</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">87.0</span> <span class="special">==</span> <span class="identifier">object2</span><span class="special">-&gt;</span><span class="identifier">d</span><span class="special">);</span>
                                                                                                            <span class="special">.</span>
 </pre>
             </td>
@@ -1026,7 +1015,7 @@
 
 <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
     <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">impl1</span><span class="special">&gt;.</span><span class="identifier">in</span><span class="special">(</span>
-        <a class="link" href="concepts/scopes/session.html" title="session">di::session</a><span class="special">(</span><span class="identifier">my_mession</span><span class="special">)</span>
+        <a class="link" href="concepts/scopes/session.html" title="session">di::session</a><span class="special">(</span><span class="identifier">my_session</span><span class="special">)</span>
     <span class="special">)</span>
 <span class="special">);</span>
                                                                                    <span class="special">.</span>
@@ -1034,12 +1023,12 @@
             </td>
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">assert</span><span class="special">(</span><span class="keyword">nullptr</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;());</span>
-<span class="identifier">injector</span><span class="special">.</span><span class="identifier">call</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">session_entry</span><span class="special">(</span><span class="identifier">my_session</span><span class="special">);</span>
+<span class="identifier">injector</span><span class="special">.</span><span class="identifier">call</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">session_entry</span><span class="special">(</span><span class="identifier">my_session</span><span class="special">));</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;()</span>
        <span class="special">==</span>
        <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;()</span>
 <span class="special">);</span>
-<span class="identifier">injector</span><span class="special">.</span><span class="identifier">call</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">session_exit</span><span class="special">(</span><span class="identifier">my_session</span><span class="special">);</span>
+<span class="identifier">injector</span><span class="special">.</span><span class="identifier">call</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">session_exit</span><span class="special">(</span><span class="identifier">my_session</span><span class="special">));</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="keyword">nullptr</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;());</span>
                                                                                                            <span class="special">.</span>
 </pre>
@@ -1071,17 +1060,18 @@
 <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">int_</span><span class="special">&lt;</span><span class="number">41</span><span class="special">&gt;&gt;</span>
  <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
- <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">make_shared</span><span class="special">&lt;</span><span class="identifier">impl</span><span class="special">&gt;());</span>
- <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">ref</span><span class="special">(</span><span class="identifier">l</span><span class="special">));</span>
+ <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">make_shared</span><span class="special">&lt;</span><span class="identifier">impl</span><span class="special">&gt;())</span>
+ <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">long</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">ref</span><span class="special">(</span><span class="identifier">l</span><span class="special">))</span>
  <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">short</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">([]{</span><span class="keyword">return</span> <span class="number">87</span><span class="special">;})</span>
  <span class="special">,</span> <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span>
-     <span class="special">[&amp;](</span><span class="keyword">const</span> <span class="keyword">auto</span><span class="special">&amp;</span> <span class="identifier">injector</span><span class="special">)</span> <span class="special">{</span>
-        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">b</span><span class="special">)</span> <span class="special">{</span>
-            <span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="keyword">template</span>
-                <a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">impl2</span><span class="special">&gt;();</span>
+        <span class="special">[&amp;](</span><span class="keyword">const</span> <span class="keyword">auto</span><span class="special">&amp;</span> <span class="identifier">injector</span><span class="special">)</span> <span class="special">-&gt;</span> <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;</span> <span class="special">{</span>
+            <span class="keyword">if</span> <span class="special">(</span><span class="identifier">b</span><span class="special">)</span> <span class="special">{</span>
+                <span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="keyword">template</span>
+                    <a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">impl2</span><span class="special">&gt;&gt;();</span>
+            <span class="special">}</span>
+            <span class="keyword">return</span> <span class="keyword">nullptr</span><span class="special">;</span>
         <span class="special">}</span>
-        <span class="keyword">return</span> <span class="keyword">nullptr</span><span class="special">;</span>
-     <span class="special">}</span>
+    <span class="special">)</span>
 <span class="special">);</span>
                                                                                    <span class="special">.</span>
 </pre>
@@ -1141,15 +1131,15 @@
 <span class="special">};</span>
 
 <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
-  <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i</span><span class="special">,</span> <span class="identifier">impl</span><span class="special">&gt;.</span><span class="identifier">in</span><span class="special">(</span><span class="identifier">custom_scope</span><span class="special">{})</span>
+    <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">impl1</span><span class="special">&gt;.</span><span class="identifier">in</span><span class="special">(</span><span class="identifier">custom_scope</span><span class="special">{})</span>
 <span class="special">);</span>
                                                                                    <span class="special">.</span>
 </pre>
             </td>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">assert</span><span class="special">(</span><span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;&gt;()</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">assert</span><span class="special">(</span><span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;()</span>
        <span class="special">!=</span>
-       <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i</span><span class="special">&gt;&gt;()</span>
+       <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;()</span>
 <span class="special">);</span>
                                                                                                            <span class="special">.</span>
 </pre>
@@ -1516,7 +1506,7 @@
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">struct</span> <span class="identifier">c</span> <span class="special">{</span>
     <span class="identifier">c</span><span class="special">(</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;</span> <span class="identifier">i1</span>
     <span class="special">,</span> <span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;</span> <span class="identifier">i2</span>
-    <span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">i1</span><span class="special">(</span><span class="identifier">i1</span><span class="special">),</span> <span class="identifier">i2</span><span class="special">(</span><span class="identifier">i2</span><span class="special">),</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">i</span><span class="special">)</span>
+    <span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">i1</span><span class="special">(</span><span class="identifier">move</span><span class="special">(</span><span class="identifier">i1</span><span class="special">)),</span> <span class="identifier">i2</span><span class="special">(</span><span class="identifier">move</span><span class="special">(</span><span class="identifier">i2</span><span class="special">)),</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">i</span><span class="special">)</span>
     <span class="special">{</span> <span class="special">}</span>
 
     <span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;</span> <span class="identifier">i1</span><span class="special">;</span>
@@ -1548,12 +1538,16 @@
 </pre>
             </td>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl1</span><span class="special">*&gt;(</span><span class="identifier">object</span><span class="special">.</span><span class="identifier">i1</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl2</span><span class="special">*&gt;(</span><span class="identifier">object</span><span class="special">.</span><span class="identifier">i2</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
-<span class="identifier">asert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">i</span><span class="special">);</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl1</span><span class="special">*&gt;(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">crate</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;());</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl2</span><span class="special">*&gt;(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">crate</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;&gt;());</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl1</span><span class="special">*&gt;(</span><span class="identifier">object</span><span class="special">-&gt;</span><span class="identifier">i1</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl2</span><span class="special">*&gt;(</span><span class="identifier">object</span><span class="special">-&gt;</span><span class="identifier">i2</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">-&gt;</span><span class="identifier">i</span><span class="special">);</span>
+
+<span class="keyword">auto</span> <span class="identifier">up1</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl1</span><span class="special">*&gt;(</span><span class="identifier">up1</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+
+<span class="keyword">auto</span> <span class="identifier">up2</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl2</span><span class="special">*&gt;(</span><span class="identifier">up2</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
                                                                                                            <span class="special">.</span>
 </pre>
             </td>
@@ -1578,9 +1572,19 @@
 </tr></thead>
 <tbody><tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">struct</span> <span class="identifier">module</span> <span class="special">{</span>
-    <a class="link" href="concepts/injector.html" title="Injector">di::injector</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;</span> <span class="identifier">configure</span><span class="special">()</span>
-    <span class="keyword">const</span> <span class="keyword">noexcept</span><span class="special">;</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">struct</span> <span class="identifier">c</span> <span class="special">{</span>
+    <span class="identifier">c</span><span class="special">(</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;</span> <span class="identifier">i1</span>
+    <span class="special">,</span> <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;</span> <span class="identifier">i2</span>
+    <span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">i1</span><span class="special">(</span><span class="identifier">i1</span><span class="special">),</span> <span class="identifier">i2</span><span class="special">(</span><span class="identifier">i2</span><span class="special">),</span> <span class="identifier">i</span><span class="special">(</span><span class="identifier">i</span><span class="special">)</span>
+    <span class="special">{</span> <span class="special">}</span>
+
+    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;</span> <span class="identifier">i1</span><span class="special">;</span>
+    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;</span> <span class="identifier">i2</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">module</span> <span class="special">{</span>
+    <a class="link" href="concepts/injector.html" title="Injector">di::injector</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span><span class="special">;</span>
 
     <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">};</span>
@@ -1605,8 +1609,9 @@
 <span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl1</span><span class="special">*&gt;(</span><span class="identifier">object</span><span class="special">.</span><span class="identifier">i1</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl2</span><span class="special">*&gt;(</span><span class="identifier">object</span><span class="special">.</span><span class="identifier">i2</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
 <span class="identifier">asert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">i</span><span class="special">);</span>
-<span class="identifier">injector</span><span class="special">.</span><span class="identifier">crate</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;()</span> <span class="comment">// compile error</span>
-<span class="identifier">injector</span><span class="special">.</span><span class="identifier">crate</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;&gt;()</span> <span class="comment">// compile error</span>
+
+<span class="comment">// injector.create&lt;unique_ptr&lt;i1&gt;&gt;() // compile error</span>
+<span class="comment">// injector.create&lt;unique_ptr&lt;i2&gt;&gt;() // compile error</span>
                                                                                                            <span class="special">.</span>
 </pre>
             </td>
@@ -1653,8 +1658,11 @@
 </pre>
             </td>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl1</span><span class="special">*&gt;(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">crate</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;());</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl2</span><span class="special">*&gt;(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">crate</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;&gt;());</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">up1</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl1</span><span class="special">*&gt;(</span><span class="identifier">up1</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+
+<span class="keyword">auto</span> <span class="identifier">up2</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl2</span><span class="special">*&gt;(</span><span class="identifier">up2</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
                                                                                                            <span class="special">.</span>
 </pre>
             </td>
@@ -1702,8 +1710,8 @@
 </pre>
             </td>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;();</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl1</span><span class="special">*&gt;(</span><span class="identifier">c</span><span class="special">.</span><span class="identifier">up</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl1</span><span class="special">*&gt;(</span><span class="identifier">object</span><span class="special">-&gt;</span><span class="identifier">up</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
                                                                                                            <span class="special">.</span>
 </pre>
             </td>
@@ -1802,7 +1810,7 @@
                     <span class="special">&lt;&lt;</span> <span class="keyword">typeid</span><span class="special">(</span><span class="identifier">given</span><span class="special">).</span><span class="identifier">name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span>
                     <span class="special">&lt;&lt;</span> <span class="keyword">typeid</span><span class="special">(</span><span class="identifier">name</span><span class="special">).</span><span class="identifier">name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
             <span class="special">}</span>
-        <span class="special">)</span>
+        <span class="special">);</span>
     <span class="special">}</span>
 <span class="special">};</span>
                                                                                    <span class="special">.</span>
@@ -1882,11 +1890,11 @@
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// global policy</span>
 <span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_CFG</span> <span class="identifier">all_must_be_bound_unless_int</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
-<span class="identifier">injector</span><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;();</span> <span class="comment">// compile error</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">42.0</span><span class="special">,</span> <span class="identifier">make_injector</span><span class="special">(</span>
-                 <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42.0</span><span class="special">)</span>
-             <span class="special">).</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;()</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
+<a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">.</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;();</span> <span class="comment">// compile error</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42.0</span> <span class="special">==</span> <a class="link" href="concepts/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+                   <a class="link" href="concepts/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42.0</span><span class="special">)</span>
+               <span class="special">).</span><a class="link" href="concepts/injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;()</span>
 <span class="special">);</span>
                                                                                                            <span class="special">.</span>
 </pre>
@@ -1984,7 +1992,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="tutorial.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="diagnostic_messages.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="tutorial.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="diagnostic_messages.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
