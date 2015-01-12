@@ -284,7 +284,7 @@
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">auto</span> <span class="identifier">policies</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
         <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">;</span>
-        <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">operators</span><span class="special">;</span> <span class="comment">// to support logic operators</span>
+        <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">operators</span><span class="special">;</span>
 
         <span class="keyword">return</span> <a class="link" href="../../concepts.html#di.concepts.synopsis">di::make_policies</a><span class="special">(</span>
             <span class="identifier">allow_ctor_types</span><span class="special">(</span><span class="identifier">is_same</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;{}</span> <span class="special">||</span> <span class="identifier">is_bound</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&gt;{})</span>
@@ -297,12 +297,11 @@
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// global policy</span>
 <span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_CFG</span> <span class="identifier">all_must_be_bound_unless_int</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="../injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
-<span class="identifier">injector</span><span class="special">.</span><a class="link" href="../injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;();</span> <span class="comment">// compile error</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">42.0</span><span class="special">,</span>
-    <span class="identifier">make_injector</span><span class="special">(</span>
-        <a class="link" href="../bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42.0</span><span class="special">)</span>
-    <span class="special">).</span><a class="link" href="../injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;()</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <a class="link" href="../injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">.</span><a class="link" href="../injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
+<a class="link" href="../injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">.</span><a class="link" href="../injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;();</span> <span class="comment">// compile error</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">42.0</span> <span class="special">==</span> <a class="link" href="../injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+                   <a class="link" href="../bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42.0</span><span class="special">)</span>
+               <span class="special">).</span><a class="link" href="../injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;()</span>
 <span class="special">);</span>
                                                                                 <span class="special">.</span>
 </pre>

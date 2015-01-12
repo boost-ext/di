@@ -185,16 +185,24 @@
           <span class="bold"><strong>Header only</strong></span>
         </li>
 <li class="listitem">
-          <span class="bold"><strong>Compile time</strong></span> creation guaranty - no exceptions
+          <span class="bold"><strong>Compile time creation guarantee</strong></span> - no exceptions
           - if application compiles all dependencies will be be created accurately
         </li>
 <li class="listitem">
-          <span class="bold"><strong>Exception safe strong guaranty</strong></span>
+          <span class="bold"><strong>Exception safe strong guarantee</strong></span>
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>None or minimal run-time execution overhead</strong></span>
+          - <a class="link" href="performance.html#di.performance.run_time">Run-time performance</a>
+        </li>
+<li class="listitem">
+          <span class="bold"><strong>Fast compilation times</strong></span> - <a class="link" href="performance.html#di.performance.compile_time">Compile-time
+          performance</a>
         </li>
 <li class="listitem">
           <span class="bold"><strong><a class="link" href="concepts/injections/automatic.html" title="automatic (default)">Macro
           free</a></strong></span> - by default - no need to specify constructor traits
-          or register anything (less intrusive)
+          or register anything
         </li>
 <li class="listitem">
           <span class="bold"><strong><a class="link" href="concepts/scopes/deduce.html" title="deduce (default)">Scopes
@@ -202,13 +210,12 @@
           are deduced based on type semantic
         </li>
 <li class="listitem">
-          Automatic conversion between <a class="link" href="concepts/scopes/shared.html" title="shared">std/boost
-          smart pointers</a>
+          <a class="link" href="concepts/policies.html" title="Policies">Policies</a> to limit <a class="link" href="concepts/policies/allow_ctor_types.html" title="allow_ctor_types">supported
+          constructor parameters</a> or dump objects creation graph (<a class="link" href="examples/uml_dumper.html" title="UML Dumper">UML
+          Dumper</a>)
         </li>
 <li class="listitem">
-          Compile time <a class="link" href="concepts/policies.html" title="Policies">policies</a> - to
-          limit <a class="link" href="concepts/policies/allow_ctor_types.html" title="allow_ctor_types">supported types</a>
-          only to specified
+          Automatic conversion to boost smart pointers (if boost is available)
         </li>
 <li class="listitem">
           Requires <code class="computeroutput"><span class="identifier">C</span><span class="special">++</span><span class="number">14</span></code> compliant compiler

@@ -198,10 +198,8 @@
 <tbody><tr>
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="../injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
-    <a class="link" href="bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">__bindings_bind_any_of__</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">i2</span><span class="special">&gt;,</span> <span class="identifier">impl</span><span class="special">&gt;</span>
+    <a class="link" href="bind.html" title="bind">di::bind</a><span class="special">&lt;</span><a class="link" href="bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">i2</span><span class="special">&gt;,</span> <span class="identifier">impl</span><span class="special">&gt;</span>
 <span class="special">);</span>
-
-
                                                                                    <span class="special">.</span>
 </pre>
                 </td>
@@ -210,7 +208,6 @@
 <span class="keyword">auto</span> <span class="identifier">object2</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="../injector.html#di.concepts.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;&gt;();</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl</span><span class="special">*&gt;(</span><span class="identifier">object1</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl</span><span class="special">*&gt;(</span><span class="identifier">object2</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="identifier">object1</span> <span class="special">==</span> <span class="identifier">object2</span><span class="special">);</span>
                                                                                                            <span class="special">.</span>
 </pre>
                 </td>
@@ -299,7 +296,7 @@
           <span class="phrase"><a name="di.concepts.bindings.bind.more_examples"></a></span><a class="link" href="bind.html#di.concepts.bindings.bind.more_examples">More
           Examples</a>
         </h6>
-<pre class="programlisting"><a class="link" href="../../examples/bindings.html" title="Bindings">Bindings</a> <span class="special">|</span> __examples_dynamic_bindings__ <span class="special">|</span> <a class="link" href="../../examples/multiple_interfaces.html" title="Multiple Interfaces">Multiple Interfaces</a>
+<pre class="programlisting"><a class="link" href="../../examples/bindings.html" title="Bindings">Bindings</a> <span class="special">|</span> <a class="link" href="../../examples/dynamic_bindings.html" title="Dynamic Bindings">Dynamic Bindings</a> <span class="special">|</span> <a class="link" href="../../examples/multiple_interfaces.html" title="Multiple Interfaces">Multiple Interfaces</a>
 </pre>
 <h6>
 <a name="di.concepts.bindings.bind.h6"></a>
