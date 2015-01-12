@@ -813,9 +813,19 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
     [
         [
             ```
+            struct c {
+                c(shared_ptr<i1> i1
+                , shared_ptr<i2> i2
+                , int i) : i1(i1), i2(i2), i(i)
+                { }
+
+                shared_ptr<i1> i1;
+                shared_ptr<i2> i2;
+                int i = 0;
+            };
+
             struct module {
-                __di_injector__<c> configure()
-                const noexcept;
+                __di_injector__<c> configure() const noexcept;
 
                 int i = 0;
             };
@@ -841,8 +851,9 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
             assert(dynamic_cast<impl1*>(object.i1.get()));
             assert(dynamic_cast<impl2*>(object.i2.get()));
             asert(42 == object.i);
-            injector.crate<unique_ptr<i1>>() // compile error
-            injector.crate<unique_ptr<i2>>() // compile error
+
+            // injector.create<unique_ptr<i1>>() // compile error
+            // injector.create<unique_ptr<i2>>() // compile error
                                                                                                                        .
             ```
         ]

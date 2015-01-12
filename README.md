@@ -554,13 +554,24 @@ auto injector = di::make_injector(      |
 ```cpp
 Exposed type module                     | Test
 ----------------------------------------|-----------------------------------------
-struct module {                         | auto object = injector.create<c>();
-    di::injector<c> configure()         | assert(dynamic_cast<impl1*>(object.i1.get()));
-    const noexcept;                     | assert(dynamic_cast<impl2*>(object.i2.get()));
-                                        | asert(42 == object.i);
+struct c {                              | auto object = injector.create<c>();
+    c(shared_ptr<i1> i1                 | assert(dynamic_cast<impl1*>(object.i1.get()));
+    , shared_ptr<i2> i2                 | assert(dynamic_cast<impl2*>(object.i2.get()));
+    , int i) : i1(i1), i2(i2), i(i)     | assert(42 == object.i);
+    { }                                 |                                                       
+                                        | // injector.create<unique_ptr<i1>>() // compile error
+    shared_ptr<i1> i1;                  | // injector.create<unique_ptr<i2>>() // compile error
+    shared_ptr<i2> i2;                  |
     int i = 0;                          |
-};                                      | injector.crate<unique_ptr<i1>>() // compile error
-                                        | injector.crate<unique_ptr<i2>>() // compile error
+};                                      |
+                                        |
+struct module {                         | 
+    di::injector<c> configure()         | 
+    const noexcept;                     | 
+                                        | 
+    int i = 0;                          |
+};                                      | 
+                                        | 
 di::injector<c> // expose c             |
 module::configure() const noexcept {    |
     return di::make_injector(           |
@@ -697,7 +708,7 @@ Allow ctor types policy                 | Test
     policies/allow_ctor_types.hpp>      | #define BOOST_DI_CFG all_must_be_bound_unless_int
                                         | assert(0 == di::make_injector().create<int>());
 class all_must_be_bound_unless_int      |
-    : public di::config {               | di::make_injector().create<double>(); // compile error
+    : public di::config {               | // di::make_injector().create<double>(); // compile error
 public:                                 | assert(42.0 == make_injector(
   auto policies() const noexcept {      |                    di::bind<double>.to(42.0)
     using namespace di::policies;       |                ).create<double>()
