@@ -92,7 +92,7 @@ int main() {                            | int main() {
 ```
 
 <a id="quick_user_guide"></a>
-**Quick User Guide** | [Download Examples](https://github.com/krzysztof-jusiak/di/tree/cpp14/example/quick_user_guide)
+**Quick User Guide** | [Examples](https://github.com/krzysztof-jusiak/di/tree/cpp14/example/quick_user_guide)
 
 * [Injector](#injector) | [Bindings](#bindings) | [Inejctions](#injections) | [Annotations](#annotations) | [Scopes](#scopes) | [Modules](#modules) | [Policies](#policies) | [Providers](#providers)
 * [Run-time performance](#run_time_performance) | [Compile-time performance](#compile_time_performance)
