@@ -31,9 +31,8 @@ struct fake_injector {
 
     template<class T>
     auto create() const noexcept {
-        expect_eq(typeid(TExpected).name(), typeid(T).name());
-        static aux::remove_accessors_t<T> object;
-        return object;
+        //expect_eq(typeid(TExpected).name(), typeid(T).name());
+        return T{};
     }
 };
 

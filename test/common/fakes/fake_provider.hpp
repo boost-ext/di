@@ -9,12 +9,13 @@
 
 #include <new>
 #include <memory>
+#include "boost/di/aux_/utility.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
 #include "common/fakes/fake_injector.hpp"
 
 namespace boost { namespace di {
 
-template<class T>
+template<class T = aux::none_t>
 struct fake_provider {
     T* get(const type_traits::heap& = {}) const noexcept {
         ++provide_calls();

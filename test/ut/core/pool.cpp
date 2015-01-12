@@ -43,8 +43,7 @@ struct custom_ctor {
     int i = 0;
 };
 
-struct custom_ctor_other
-{
+struct custom_ctor_other {
     explicit custom_ctor_other(int i)
         : i(i)
     { }

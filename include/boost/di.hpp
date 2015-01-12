@@ -293,7 +293,7 @@ template<class T>
 struct unique {
     template<class I>
     inline operator I() const noexcept {
-        return value_;
+        return object;
     }
 
     template<class I>
@@ -301,81 +301,81 @@ struct unique {
         return {};
     }
 
-    T value_;
+    T object;
 };
 
 template<class T>
 struct unique<T*> {
     template<class I>
     inline operator I() const noexcept {
-        return *std::unique_ptr<I>{value_};
+        return *std::unique_ptr<I>{object};
     }
 
     template<class I>
     inline operator I*() const noexcept {
-        return value_; // ownership transfer
+        return object; // ownership transfer
     }
 
     template<class I>
     inline operator const I*() const noexcept {
-        return value_; // ownership transfer
+        return object; // ownership transfer
     }
 
     template<class I>
     inline operator std::shared_ptr<I>() const noexcept {
-        return std::shared_ptr<I>{value_};
+        return std::shared_ptr<I>{object};
     }
 
 #if (__has_include(<boost/shared_ptr.hpp>))
     template<class I>
     inline operator boost::shared_ptr<I>() const noexcept {
-        return boost::shared_ptr<I>{value_};
+        return boost::shared_ptr<I>{object};
     }
 #endif
 
     template<class I>
     inline operator std::unique_ptr<I>() const noexcept {
-        return std::unique_ptr<I>{value_};
+        return std::unique_ptr<I>{object};
     }
 
-    T* value_ = nullptr;
+    T* object = nullptr;
 };
 
 template<class T, class TDeleter>
 struct unique<std::unique_ptr<T, TDeleter>> {
     template<class I>
     inline operator I() const noexcept {
-        return *value_;
+        return *object;
     }
 
     template<class I>
     inline operator I*() noexcept {
-        return value_.release();
+        return object.release();
     }
 
     template<class I>
     inline operator const I*() noexcept {
-        return value_.release();
+        return object.release();
     }
 
     template<class I>
     inline operator std::shared_ptr<I>() noexcept {
-        return {value_.release(), value_.get_deleter()};
+        return {object.release(), object.get_deleter()};
     }
 
 #if (__has_include(<boost/shared_ptr.hpp>))
     template<class I>
     inline operator boost::shared_ptr<I>() noexcept {
-        return {value_.release(), value_.get_deleter()};
+        return {object.release(), object.get_deleter()};
     }
 #endif
 
     template<class I, class D>
     inline operator std::unique_ptr<I, D>() noexcept {
-        return std::move(value_);
+        return std::move(object);
     }
 
-    std::unique_ptr<T, TDeleter> value_;
+    std::unique_ptr<T, TDeleter> object;
 };
 
 }}} // boost::di::wrappers
@@ -512,7 +512,7 @@ template<class T>
 struct shared {
     template<class I>
     inline operator std::shared_ptr<I>() const noexcept {
-        return value_;
+        return object;
     }
 
 #if (__has_include(<boost/shared_ptr.hpp>))
@@ -528,20 +528,20 @@ struct shared {
     template<class I>
     inline operator boost::shared_ptr<I>() const noexcept {
         using sp = sp_holder<boost::shared_ptr<I>>;
-        if (auto* deleter = std::get_deleter<sp, I>(value_)) {
+        if (auto* deleter = std::get_deleter<sp, I>(object)) {
             return deleter->object;
         } else {
-            return {value_.get(), sp_holder<std::shared_ptr<T>>{value_}};
+            return {object.get(), sp_holder<std::shared_ptr<T>>{object}};
         }
     }
 #endif
 
     template<class I>
     inline operator std::weak_ptr<I>() const noexcept {
-        return value_;
+        return object;
     }
 
-    std::shared_ptr<T> value_;
+    std::shared_ptr<T> object;
 };
 
 }}} // boost::di::wrappers

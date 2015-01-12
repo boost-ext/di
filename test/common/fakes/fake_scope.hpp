@@ -16,9 +16,9 @@ template<bool Priority = false>
 struct fake_scope {
     static constexpr auto priority = Priority;
 
-    template<class T, class>
+    template<class TExpected, class>
     struct scope {
-        explicit scope(const T& = {}) { }
+        explicit scope(const TExpected& = {}) { }
 
         void call(const fake_scope_entry&) noexcept {
             ++entry_calls();
@@ -27,7 +27,18 @@ struct fake_scope {
         void call(const fake_scope_exit&) noexcept {
             ++exit_calls();
         }
+
+        template<class T, class TProvider>
+        T create(const TProvider&) const noexcept {
+            ++calls();
+            return T{};
+        }
     };
+
+    static int& calls() {
+        static auto calls = 0;
+        return calls;
+    }
 
     static int& entry_calls() {
         static auto calls = 0;
