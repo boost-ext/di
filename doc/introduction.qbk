@@ -100,12 +100,14 @@ Using `Boost.DI` has many advantages over `manual dependency injection`.
 
 * [*Type safe]
 * [*Header only]
-* [*Compile time] creation guaranty - no exceptions - if application compiles all dependencies will be be created accurately
-* [*Exception safe strong guaranty]
-* [*[link di.concepts.injections.automatic Macro free]] - by default - no need to specify constructor traits or register anything (less intrusive)
+* [*Compile time creation guarantee] - no exceptions - if application compiles all dependencies will be be created accurately
+* [*Exception safe strong guarantee]
+* [*None or minimal run-time execution overhead] - [link di.performance.run_time Run-time performance]
+* [*Fast compilation times] - [link di.performance.compile_time Compile-time performance]
+* [*[link di.concepts.injections.automatic Macro free]] - by default - no need to specify constructor traits or register anything
 * [*[link di.concepts.scopes.deduce Scopes deduction]] - [link di.concepts.scopes scopes] are deduced based on type semantic
-* Automatic conversion between [link di.concepts.scopes.shared std/boost smart pointers]
-* Compile time [link di.concepts.policies policies] - to limit [link di.concepts.policies.allow_ctor_types supported types] only to specified
+* [link di.concepts.policies Policies] to limit [link di.concepts.policies.allow_ctor_types supported constructor parameters] or dump objects creation graph (__examples_uml_dumper__)
+* Automatic conversion to boost smart pointers (if boost is available)
 * Requires `C++14` compliant compiler
 
 [heading See Also]
