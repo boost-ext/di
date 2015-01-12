@@ -31,6 +31,7 @@
 [def __binding_model__                                  [link di.concepts.bindings.synopsis Binding Model]]
 [def __dependency_model__                               [link di.concepts.bindings.synopsis Dependency Model]]
 [def __bindings_bind__                                  [link di.concepts.bindings.bind bind]]
+[def __bindings_any_of__                                [link di.concepts.bindings.bind bind]]
 
 [def __injections__                                     [link di.concepts.injections Injections]]
 [def __injections_automatic__                           [link di.concepts.injections.automatic automatic]]

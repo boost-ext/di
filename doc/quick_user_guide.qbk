@@ -12,13 +12,14 @@
 Let's assume all examples below include `boost/di.hpp` header and define `di` namespace alias.
 ```
 #include <__di_hpp__>
+
 namespace di = boost::di;
 
 struct i1 { virtual ~i1() = default; virtual void dummy1() = 0; };
 struct i2 { virtual ~i2() = default; virtual void dummy2() = 0; };
 struct impl1 : i1 { void dummy1() override { } };
 struct impl2 : i2 { void dummy2() override { } };
-struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } }; 
+struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 ```
 
 * __injector__
@@ -70,10 +71,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
         [
             ```
             auto injector = __di_make_injector__(
-                __di_bind__<__bindings_bind_any_of__<i1, i2>, impl>
+                __di_bind__<__bindings_any_of__<i1, i2>, impl>
             );
-
-
                                                                                                .
             ```
         ]
@@ -83,7 +82,6 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
             auto object2 = injector.__di_injector_create__<shared_ptr<i2>>();
             assert(dynamic_cast<impl*>(object1.get()));
             assert(dynamic_cast<impl*>(object2.get()));
-            assert(object1 == object2);
                                                                                                                        .
             ```
         ]
@@ -157,7 +155,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
             ```
             auto object = injector.__di_injector_create__<c>();
             assert(42 == object.a);
-            assert(87.0 == object.b);
+            assert(87.0 == object.d);
                                                                                                                        .
             ```
         ]
@@ -185,7 +183,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
             ```
             auto object = injector.__di_injector_create__<c>();
             assert(42 == object.a);
-            assert(87.0 == object.b);
+            assert(87.0 == object.d);
                                                                                                                        .
             ```
         ]
@@ -218,7 +216,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
             ```
             auto object = injector.__di_injector_create__<c>();
             assert(42 == object.a);
-            assert(87.0 == object.b);
+            assert(87.0 == object.d);
                                                                                                                        .
             ```
         ]
@@ -250,7 +248,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
             ```
             auto object = injector.__di_injector_create__<c>();
             assert(42 == object.a);
-            assert(87.0 == object.b);
+            assert(87.0 == object.d);
                                                                                                                        .
             ```
         ]
@@ -282,7 +280,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
             ```
             auto object = injector.__di_injector_create__<c>();
             assert(42 == object.a);
-            assert(87.0 == object.b);
+            assert(87.0 == object.d);
                                                                                                                        .
             ```
         ]
@@ -320,7 +318,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
             ```
             auto object = injector.__di_injector_create__<c>();
             assert(42 == object.a);
-            assert(87.0 == object.b);
+            assert(87.0 == object.d);
                                                                                                                        .
             ```
         ]
@@ -358,8 +356,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
         [
             ```
             auto object = injector.__di_injector_create__<c>();
-            assert(42 == c.a);
-            assert(87 == c.b);
+            assert(42 == object.a);
+            assert(87 == object.b);
                                                                                                                        .
             ```
         ]
@@ -376,18 +374,18 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 
             struct c {
                 __injections_boost_di_inject__(c
-                    , (__annotations_named__ = n1) int a
-                    , (__annotations_named__ = n1) int b
-                    , (__annotations_named__ = n2) int c
-                    , int d
+                    , (__annotations_named__ = n1) int i1
+                    , (__annotations_named__ = n1) int i2
+                    , (__annotations_named__ = n2) int i3
+                    , int i4
                     , (__annotations_named__ = n1) string s)
-                    : a(a), b(b), c(c), d(d), s(s)
+                    : i1(i1), i2(i2), i3(i3), i4(i4), s(s)
                 { }
 
-                int a = 0;
-                int b = 0;
-                int c = 0;
-                int d = 0;
+                int i1 = 0;
+                int i2 = 0;
+                int i3 = 0;
+                int i4 = 0;
                 string s;
             };
 
@@ -402,10 +400,10 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
         [
             ```
             auto object = injector.__di_injector_create__<c>();
-            assert(42 == c.a);
-            assert(42 == c.b);
-            assert(87 == c.c);
-            assert(0 == c.d);
+            assert(42 == object.i1);
+            assert(42 == object.i2);
+            assert(87 == object.i3);
+            assert(0 == object.i3);
             assert("str" == c.s);
                                                                                                                        .
             ```
@@ -442,8 +440,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
         [
             ```
             auto object = injector.__di_injector_create__<c>();
-            assert(42 == c.a);
-            assert(87 == c.b);
+            assert(42 == object.a);
+            assert(87 == object.b);
                                                                                                                        .
             ```
         ]
@@ -484,8 +482,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
         [
             ```
             auto object = injector.__di_injector_create__<c>();
-            assert(42 == c.a);
-            assert(87 == c.b);
+            assert(42 == object.a);
+            assert(87 == object.b);
                                                                                                                        .
             ```
         ]
@@ -519,16 +517,16 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
         ]
         [
             ```
-            auto object1 = injector.__di_injector_create__<c>();
-            auto object2 = injector.__di_injector_create__<c>();
-            assert(object1.sp == object2.sp);
-            assert(object1.up != object2.up);
-            assert(42 == object1.i);
-            assert(&i == object1.i;
-            assert(42 == object2.i);
-            assert(&i == object2.i);
-            assert(87.0 == object1.d);
-            assert(87.0 == object2.d);
+            auto object1 = injector.__di_injector_create__<unique_ptr<c>>();
+            auto object2 = injector.__di_injector_create__<unique_ptr<c>>();
+            assert(object1->sp == object2->sp);
+            assert(object1->up != object2->up);
+            assert(42 == object1->i);
+            assert(&i == &object1->i;
+            assert(42 == object2->i);
+            assert(&i == &object2->i);
+            assert(87.0 == object1->d);
+            assert(87.0 == object2->d);
                                                                                                                        .
             ```
         ]
@@ -629,7 +627,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 
             auto injector = __di_make_injector__(
                 __di_bind__<i1, impl1>.in(
-                    __di_scopes_session__(my_mession)
+                    __di_scopes_session__(my_session)
                 )
             );
                                                                                                .
@@ -638,12 +636,12 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
         [
             ```
             assert(nullptr == injector.__di_injector_create__<shared_ptr<i1>>());
-            injector.call(di::session_entry(my_session);
+            injector.call(di::session_entry(my_session));
             assert(injector.__di_injector_create__<shared_ptr<i1>>()
                    ==
                    injector.__di_injector_create__<shared_ptr<i1>>()
             );
-            injector.call(di::session_exit(my_session);
+            injector.call(di::session_exit(my_session));
             assert(nullptr == injector.__di_injector_create__<shared_ptr<i1>>());
                                                                                                                        .
             ```
@@ -662,17 +660,18 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
             auto injector = __di_make_injector__(
                __di_bind__<int, int_<41>>
              , __di_bind__<int>.to(42)
-             , __di_bind__<i1>.to(make_shared<impl>());
-             , __di_bind__<long>.to(ref(l));
+             , __di_bind__<i1>.to(make_shared<impl>())
+             , __di_bind__<long>.to(ref(l))
              , __di_bind__<short>.to([]{return 87;})
              , __di_bind__<i2>.to(
-                 [&](const auto& injector) {
-                    if (b) {
-                        return injector.template
-                            __di_injector_create__<impl2>();
+                    [&](const auto& injector) -> shared_ptr<i2> {
+                        if (b) {
+                            return injector.template
+                                __di_injector_create__<shared_ptr<impl2>>();
+                        }
+                        return nullptr;
                     }
-                    return nullptr;
-                 }
+                )
             );
                                                                                                .
             ```
@@ -720,16 +719,16 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
             };
 
             auto injector = __di_make_injector__(
-              __di_bind__<i, impl>.in(custom_scope{})
+                __di_bind__<i1, impl1>.in(custom_scope{})
             );
                                                                                                .
             ```
         ]
         [
             ```
-            assert(injector.__di_injector_create__<shared_ptr<i>>()
+            assert(injector.__di_injector_create__<shared_ptr<i1>>()
                    !=
-                   injector.__di_injector_create__<shared_ptr<i>>()
+                   injector.__di_injector_create__<shared_ptr<i1>>()
             );
                                                                                                                        .
             ```
@@ -760,7 +759,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
             struct c {
                 c(unique_ptr<i1> i1
                 , unique_ptr<i2> i2
-                , int i) : i1(i1), i2(i2), i(i)
+                , int i) : i1(move(i1)), i2(move(i2)), i(i)
                 { }
 
                 unique_ptr<i1> i1;
@@ -793,12 +792,16 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
         ]
         [
             ```
-            auto object = injector.__di_injector_create__<c>();
-            assert(dynamic_cast<impl1*>(object.i1.get()));
-            assert(dynamic_cast<impl2*>(object.i2.get()));
-            asert(42 == object.i);
-            assert(dynamic_cast<impl1*>(injector.crate<unique_ptr<i1>>());
-            assert(dynamic_cast<impl2*>(injector.crate<unique_ptr<i2>>());
+            auto object = injector.__di_injector_create__<unique_ptr<c>>();
+            assert(dynamic_cast<impl1*>(object->i1.get()));
+            assert(dynamic_cast<impl2*>(object->i2.get()));
+            assert(42 == object->i);
+
+            auto up1 = injector.create<unique_ptr<i1>>();
+            assert(dynamic_cast<impl1*>(up1.get()));
+
+            auto up2 = injector.create<unique_ptr<i2>>();
+            assert(dynamic_cast<impl2*>(up2.get()));
                                                                                                                        .
             ```
         ]
@@ -874,8 +877,11 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
         ]
         [
             ```
-            assert(dynamic_cast<impl1*>(injector.crate<unique_ptr<i1>>());
-            assert(dynamic_cast<impl2*>(injector.crate<unique_ptr<i2>>());
+            auto up1 = injector.create<unique_ptr<i1>>();
+            assert(dynamic_cast<impl1*>(up1.get()));
+
+            auto up2 = injector.create<unique_ptr<i2>>();
+            assert(dynamic_cast<impl2*>(up2.get()));
                                                                                                                        .
             ```
         ]
@@ -911,8 +917,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
         ]
         [
             ```
-            auto object = injector.__di_injector_create__<c>();
-            assert(dynamic_cast<impl1*>(c.up.get()));
+            auto object = injector.__di_injector_create__<unique_ptr<c>>();
+            assert(dynamic_cast<impl1*>(object->up.get()));
                                                                                                                        .
             ```
         ]
@@ -985,7 +991,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
                                 << typeid(given).name() << endl
                                 << typeid(name).name() << endl;
                         }
-                    )
+                    );
                 }
             };
                                                                                                .
@@ -1054,11 +1060,11 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
             ```
             // global policy
             #define BOOST_DI_CFG all_must_be_bound_unless_int
-            assert(0 == injector.__di_injector_create__<int>());
-            injector.__di_injector_create__<double>(); // compile error
-            assert(42.0, make_injector(
-                             __di_bind__<double>.to(42.0)
-                         ).__di_injector_create__<double>()
+            assert(0 == __di_make_injector__.__di_injector_create__<int>());
+            __di_make_injector__.__di_injector_create__<double>(); // compile error
+            assert(42.0 == __di_make_injector__(
+                               __di_bind__<double>.to(42.0)
+                           ).__di_injector_create__<double>()
             );
                                                                                                                        .
             ```
