@@ -91,7 +91,7 @@ int main() {                            | int main() {
     ./b2 -j4 ../test ../example
 ```
 
-<a id="quick_uesr_guide"></a>
+<a id="quick_user_guide"></a>
 **Quick User Guide** | [Hello World](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/hello_world.cpp)
 
 * [Injector](#injector) | [Bindings](#bindings) | [Inejctions](#injections) | [Annotations](#annotations) | [Scopes](#scopes) | [Modules](#modules) | [Policies](#policies) | [Providers](#providers)
