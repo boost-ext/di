@@ -80,7 +80,7 @@ If the default behavior should be changed constructor has to be explicitly marke
             ```
             auto object = injector.__di_injector_create__<c>();
             assert(42 == object.a);
-            assert(87.0 == object.b);
+            assert(87.0 == object.d);
                                                                                                                        .
             ```
         ]
@@ -108,7 +108,7 @@ If the default behavior should be changed constructor has to be explicitly marke
             ```
             auto object = injector.__di_injector_create__<c>();
             assert(42 == object.a);
-            assert(87.0 == object.b);
+            assert(87.0 == object.d);
                                                                                                                        .
             ```
         ]
@@ -141,7 +141,7 @@ If the default behavior should be changed constructor has to be explicitly marke
             ```
             auto object = injector.__di_injector_create__<c>();
             assert(42 == object.a);
-            assert(87.0 == object.b);
+            assert(87.0 == object.d);
                                                                                                                        .
             ```
         ]
@@ -213,7 +213,7 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
             ```
             auto object = injector.__di_injector_create__<c>();
             assert(42 == object.a);
-            assert(87.0 == object.b);
+            assert(87.0 == object.d);
                                                                                                                        .
             ```
         ]
@@ -270,7 +270,7 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
             ```
             auto object = injector.__di_injector_create__<c>();
             assert(42 == object.a);
-            assert(87.0 == object.b);
+            assert(87.0 == object.d);
                                                                                                                        .
             ```
         ]

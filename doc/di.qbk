@@ -75,7 +75,7 @@
 [def __examples__                                       [link di.examples Examples]]
 [def __examples_hello_world__                           [link di.examples.hello_world Hello World]]
 [def __examples_bindings__                              [link di.examples.bindings Bindings]]
-[def __examples_dynamic_bindings_                       [link di.examples.dynamic_bindings Dynamic Bindings]]
+[def __examples_dynamic_bindings__                      [link di.examples.dynamic_bindings Dynamic Bindings]]
 [def __examples_constructor_injection__                 [link di.examples.constructor_injection Constructor Injection]]
 [def __examples_constructor_signature__                 [link di.examples.constructor_signature Constructor Signature]]
 [def __examples_modules__                               [link di.examples.modules Modules]]

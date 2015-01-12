@@ -51,7 +51,7 @@ Activation of `Module` is done by passing it into injector.
             struct c {
                 c(unique_ptr<i1> i1
                 , unique_ptr<i2> i2
-                , int i) : i1(i1), i2(i2), i(i)
+                , int i) : i1(move(i1)), i2(move(i2)), i(i)
                 { }
 
                 unique_ptr<i1> i1;
@@ -79,18 +79,20 @@ Activation of `Module` is done by passing it into injector.
             auto injector = __di_make_injector__(
                 module1{}, module2{}
             );
-                                                                                               .
             ```
         ]
         [
             ```
-            auto object = injector.__di_injector_create__<c>();
-            assert(dynamic_cast<impl1*>(object.i1.get()));
-            assert(dynamic_cast<impl2*>(object.i2.get()));
-            asert(42 == object.i);
-            assert(dynamic_cast<impl1*>(injector.crate<unique_ptr<i1>>());
-            assert(dynamic_cast<impl2*>(injector.crate<unique_ptr<i2>>());
-                                                                                                                       .
+            auto object = injector.__di_injector_create__<unique_ptr<c>>();
+            assert(dynamic_cast<impl1*>(object->i1.get()));
+            assert(dynamic_cast<impl2*>(object->i2.get()));
+            assert(42 == object->i);
+
+            auto up1 = injector.create<unique_ptr<i1>>();
+            assert(dynamic_cast<impl1*>(up1.get()));
+
+            auto up2 = injector.create<unique_ptr<i2>>();
+            assert(dynamic_cast<impl2*>(up2.get()));
             ```
         ]
     ]
@@ -101,9 +103,19 @@ Activation of `Module` is done by passing it into injector.
     [
         [
             ```
+            struct c {
+                c(shared_ptr<i1> i1
+                , shared_ptr<i2> i2
+                , int i) : i1(i1), i2(i2), i(i)
+                { }
+
+                shared_ptr<i1> i1;
+                shared_ptr<i2> i2;
+                int i = 0;
+            };
+
             struct module {
-                __di_injector__<c> configure()
-                const noexcept;
+                __di_injector__<c> configure() const noexcept;
 
                 int i = 0;
             };
@@ -129,8 +141,9 @@ Activation of `Module` is done by passing it into injector.
             assert(dynamic_cast<impl1*>(object.i1.get()));
             assert(dynamic_cast<impl2*>(object.i2.get()));
             asert(42 == object.i);
-            injector.crate<unique_ptr<i1>>() // compile error
-            injector.crate<unique_ptr<i2>>() // compile error
+
+            // injector.create<unique_ptr<i1>>() // compile error
+            // injector.create<unique_ptr<i2>>() // compile error
                                                                                                                        .
             ```
         ]
@@ -165,8 +178,11 @@ Activation of `Module` is done by passing it into injector.
         ]
         [
             ```
-            assert(dynamic_cast<impl1*>(injector.crate<unique_ptr<i1>>());
-            assert(dynamic_cast<impl2*>(injector.crate<unique_ptr<i2>>());
+            auto up1 = injector.create<unique_ptr<i1>>();
+            assert(dynamic_cast<impl1*>(up1.get()));
+
+            auto up2 = injector.create<unique_ptr<i2>>();
+            assert(dynamic_cast<impl2*>(up2.get()));
                                                                                                                        .
             ```
         ]
@@ -202,8 +218,8 @@ Activation of `Module` is done by passing it into injector.
         ]
         [
             ```
-            auto object = injector.__di_injector_create__<c>();
-            assert(dynamic_cast<impl1*>(c.up.get()));
+            auto object = injector.__di_injector_create__<unique_ptr<c>>();
+            assert(dynamic_cast<impl1*>(object->up.get()));
                                                                                                                        .
             ```
         ]
@@ -217,9 +233,8 @@ Activation of `Module` is done by passing it into injector.
 
 [heading See Also]
 
-* __injectors__
-* __injectors_injector__
-* __injectors_make_injector__
+* __injector__
+* __injector_make_injector__
 
 [endsect]
 

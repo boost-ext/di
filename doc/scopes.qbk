@@ -98,27 +98,37 @@ There are 3 basic types of wrappers.
     boost::di::scopes
 
 [heading Examples]
-    struct custom_scope {
-        static constexpr auto priority = false;
+[table
+    [
+        [
+            ```
+            struct custom_scope {
+                static constexpr auto priority = false;
 
-        template<class TExpected, class>
-        class scope {
-        public:
-            template<class T, class TProvider>
-            auto create(const TProvider& provider) {
-                return shared_ptr<TExpected>{provider.get()};
-            }
-        };
-    };
+                template<class TExpected, class>
+                struct scope {
+                    template<class T, class TProvider>
+                    auto __di_injector_create__(const TProvider& provider) {
+                        return shared_ptr<TExpected>{provider.get()};
+                    }
+                };
+            };
 
-    auto injector = __di_make_injector__(
-      __di_bind__<i, impl>.in(custom_scope{})
-    );
-
-    assert(injector.__di_injector_create__<shared_ptr<i>>()
-           !=
-           injector.__di_injector_create__<shared_ptr<i>>()
-    );
+            auto injector = __di_make_injector__(
+                __di_bind__<i1, impl1>.in(custom_scope{})
+            );
+            ```
+        ]
+        [
+            ```
+            assert(injector.__di_injector_create__<shared_ptr<i1>>()
+                   !=
+                   injector.__di_injector_create__<shared_ptr<i1>>()
+            );
+            ```
+        ]
+    ]
+]
 
 [heading More Examples]
     ``__examples_custom_scope__``
@@ -201,16 +211,16 @@ Default scope which will be converted to one of the scopes  __scopes_unique__ / 
         ]
         [
             ```
-            auto object1 = injector.__di_injector_create__<c>();
-            auto object2 = injector.__di_injector_create__<c>();
-            assert(object1.sp == object2.sp);
-            assert(object1.up != object2.up);
-            assert(42 == object1.i);
-            assert(&i == object1.i;
-            assert(42 == object2.i);
-            assert(&i == object2.i);
-            assert(87.0 == object1.d);
-            assert(87.0 == object2.d);
+            auto object1 = injector.__di_injector_create__<unique_ptr<c>>();
+            auto object2 = injector.__di_injector_create__<unique_ptr<c>>();
+            assert(object1->sp == object2->sp);
+            assert(object1->up != object2->up);
+            assert(42 == object1->i);
+            assert(&i == &object1->i;
+            assert(42 == object2->i);
+            assert(&i == &object2->i);
+            assert(87.0 == object1->d);
+            assert(87.0 == object2->d);
             ```
         ]
     ]
@@ -539,7 +549,7 @@ by call of `call` method with `session_exit` with given `name` parameter;
 
             auto injector = __di_make_injector__(
                 __di_bind__<i1, impl1>.in(
-                    __di_scopes_session__(my_mession)
+                    __di_scopes_session__(my_session)
                 )
             );
             ```
@@ -547,12 +557,12 @@ by call of `call` method with `session_exit` with given `name` parameter;
         [
             ```
             assert(nullptr == injector.__di_injector_create__<shared_ptr<i1>>());
-            injector.call(di::session_entry(my_session);
+            injector.call(di::session_entry(my_session));
             assert(injector.__di_injector_create__<shared_ptr<i1>>()
                    ==
                    injector.__di_injector_create__<shared_ptr<i1>>()
             );
-            injector.call(di::session_exit(my_session);
+            injector.call(di::session_exit(my_session));
             assert(nullptr == injector.__di_injector_create__<shared_ptr<i1>>());
             ```
         ]
@@ -631,17 +641,18 @@ will be bound using different scope as well then binding using external scope wi
             auto injector = __di_make_injector__(
                __di_bind__<int, int_<41>>
              , __di_bind__<int>.to(42)
-             , __di_bind__<i1>.to(make_shared<impl>());
-             , __di_bind__<long>.to(ref(l));
+             , __di_bind__<i1>.to(make_shared<impl>())
+             , __di_bind__<long>.to(ref(l))
              , __di_bind__<short>.to([]{return 87;})
              , __di_bind__<i2>.to(
-                 [&](const auto& injector) {
-                    if (b) {
-                        return injector.template
-                            __di_injector_create__<impl2>();
+                    [&](const auto& injector) -> shared_ptr<i2> {
+                        if (b) {
+                            return injector.template
+                                __di_injector_create__<shared_ptr<impl2>>();
+                        }
+                        return nullptr;
                     }
-                    return nullptr;
-                 }
+                )
             );
             ```
         ]
@@ -655,10 +666,12 @@ will be bound using different scope as well then binding using external scope wi
             assert(l == injector.__di_injector_create__<long&>());
             assert(&l == &injector.__di_injector_create__<long&>());
             assert(87 == injector.__di_injector_create__<short>());
+
             {
             auto object = injector.__di_injector_create__<shared_ptr<i2>>();
             assert(nullptr == object);
             }
+
             {
             b = true;
             auto object = injector.__di_injector_create__<shared_ptr<i2>>();

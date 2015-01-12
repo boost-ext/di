@@ -91,18 +91,18 @@ In order to inject proper values into `value1` and `value2` they have to be dist
 
             struct c {
                 __injections_boost_di_inject__(c
-                    , (__annotations_named__ = n1) int a
-                    , (__annotations_named__ = n1) int b
-                    , (__annotations_named__ = n2) int c
-                    , int d
+                    , (__annotations_named__ = n1) int i1
+                    , (__annotations_named__ = n1) int i2
+                    , (__annotations_named__ = n2) int i3
+                    , int i4
                     , (__annotations_named__ = n1) string s)
-                    : a(a), b(b), c(c), d(d), s(s)
+                    : i1(i1), i2(i2), i3(i3), i4(i4), s(s)
                 { }
 
-                int a = 0;
-                int b = 0;
-                int c = 0;
-                int d = 0;
+                int i1 = 0;
+                int i2 = 0;
+                int i3 = 0;
+                int i4 = 0;
                 string s;
             };
 
@@ -117,10 +117,10 @@ In order to inject proper values into `value1` and `value2` they have to be dist
         [
             ```
             auto object = injector.__di_injector_create__<c>();
-            assert(42 == c.a);
-            assert(42 == c.b);
-            assert(87 == c.c);
-            assert(0 == c.d);
+            assert(42 == object.i1);
+            assert(42 == object.i2);
+            assert(87 == object.i3);
+            assert(0 == object.i3);
             assert("str" == c.s);
                                                                                                                        .
             ```
@@ -157,8 +157,8 @@ In order to inject proper values into `value1` and `value2` they have to be dist
         [
             ```
             auto object = injector.__di_injector_create__<c>();
-            assert(42 == c.a);
-            assert(87 == c.b);
+            assert(42 == object.a);
+            assert(87 == object.b);
                                                                                                                        .
             ```
         ]
@@ -199,8 +199,8 @@ In order to inject proper values into `value1` and `value2` they have to be dist
         [
             ```
             auto object = injector.__di_injector_create__<c>();
-            assert(42 == c.a);
-            assert(87 == c.b);
+            assert(42 == object.a);
+            assert(87 == object.b);
                                                                                                                        .
             ```
         ]

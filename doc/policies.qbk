@@ -110,7 +110,7 @@ Policy has to be callable with at least one given type.
                                 << typeid(given).name() << endl
                                 << typeid(name).name() << endl;
                         }
-                    )
+                    );
                 }
             };
                                                                                                .
@@ -259,7 +259,7 @@ Limits constructor parameters to explicitly allowed.
             public:
                 auto policies() const noexcept {
                     using namespace di::policies;
-                    using namespace di::policies::operators; // to support logic operators
+                    using namespace di::policies::operators;
 
                     return __di_make_policies__(
                         allow_ctor_types(is_same<_, int>{} || is_bound<_>{})
@@ -273,12 +273,11 @@ Limits constructor parameters to explicitly allowed.
             ```
             // global policy
             #define BOOST_DI_CFG all_must_be_bound_unless_int
-            assert(0 == injector.__di_injector_create__<int>());
-            injector.__di_injector_create__<double>(); // compile error
-            assert(42.0,
-                make_injector(
-                    __di_bind__<double>.to(42.0)
-                ).__di_injector_create__<double>()
+            assert(0 == __di_make_injector__.__di_injector_create__<int>());
+            __di_make_injector__.__di_injector_create__<double>(); // compile error
+            assert(42.0 == __di_make_injector__(
+                               __di_bind__<double>.to(42.0)
+                           ).__di_injector_create__<double>()
             );
                                                                                             .
             ```

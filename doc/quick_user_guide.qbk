@@ -686,10 +686,12 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
             assert(l == injector.__di_injector_create__<long&>());
             assert(&l == &injector.__di_injector_create__<long&>());
             assert(87 == injector.__di_injector_create__<short>());
+
             {
             auto object = injector.__di_injector_create__<shared_ptr<i2>>();
             assert(nullptr == object);
             }
+
             {
             b = true;
             auto object = injector.__di_injector_create__<shared_ptr<i2>>();
