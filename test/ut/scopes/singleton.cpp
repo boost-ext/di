@@ -21,4 +21,3 @@ test create_singleton = [] {
 
 }}} // boost::di::scopes
 
-

@@ -10,12 +10,12 @@
 #include <new>
 #include <memory>
 #include "boost/di/type_traits/memory_traits.hpp"
+#include "common/fakes/fake_injector.hpp"
 
 namespace boost { namespace di {
 
 template<class T>
-class fake_provider {
-public:
+struct fake_provider {
     T* get(const type_traits::heap& = {}) const noexcept {
         ++provide_calls();
         return new T{};
@@ -30,6 +30,8 @@ public:
         static int calls = 0;
         return calls;
     }
+
+    fake_injector<T> injector_;
 };
 
 }} // boost::di

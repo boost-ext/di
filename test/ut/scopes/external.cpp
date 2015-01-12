@@ -4,101 +4,113 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/cpp_0x/scopes/external.hpp"
+#include "boost/di/scopes/external.hpp"
+#include "common/fakes/fake_provider.hpp"
+#include "common/fakes/fake_injector.hpp"
 
-#include <functional>
-#include <boost/test/unit_test.hpp>
-#include <boost/ref.hpp>
-#include <boost/type.hpp>
+namespace boost { namespace di { namespace scopes {
 
-#include "boost/di/cpp_0x/aux_/memory.hpp"
-#include "boost/di/cpp_0x/wrappers/reference.hpp"
-#include "boost/di/cpp_0x/wrappers/shared.hpp"
+struct interface { virtual ~interface() = default; virtual void dummy() = 0; };
+struct implementation : public interface { virtual void dummy() { }; };
 
-#include "common/data.hpp"
-
-namespace boost {
-namespace di {
-namespace scopes {
-
-BOOST_AUTO_TEST_CASE(from_arithmetic) {
+test from_arithmetic = [] {
     const int i = 42;
-    BOOST_CHECK_EQUAL(i, (external<>::scope<int>(i).create())(type<int>()));
-}
+    expect_eq(i, static_cast<int>(external::scope<int, int>(i).create<void>(fake_provider<void>{})));
+};
 
-BOOST_AUTO_TEST_CASE(from_string) {
+test from_string = [] {
     const std::string s = "string";
-    BOOST_CHECK_EQUAL(s, (external<>::scope<std::string>(s).create())(type<std::string>()));
-}
+    std::string object = external::scope<std::string, std::string>(s).create<void>(fake_provider<void>{});
+    expect_eq(s, object);
+};
 
-BOOST_AUTO_TEST_CASE(from_ref) {
-    c c_;
-    c& c_ref_ = (external<wrappers::reference>::scope<c>(boost::ref(c_)).create())(type<c&>());
-    BOOST_CHECK_EQUAL(&c_, &c_ref_);
-}
+test from_ref = [] {
+    struct c { } c_;
+    c& c_ref_ = external::scope<c, decltype(std::ref(c_))>(std::ref(c_)).create<void>(fake_provider<void>{});
+    expect_eq(&c_, &c_ref_);
+};
 
-BOOST_AUTO_TEST_CASE(from_const_ref) {
-    c c_;
-    const c& const_c_ref_ = (external<wrappers::reference>::scope<const c>(boost::cref(c_)).create())(type<const c&>());
-    BOOST_CHECK_EQUAL(&c_, &const_c_ref_);
-}
+test from_const_ref = [] {
+    struct c { } c_;
+    const c& c_ref_ = external::scope<c, decltype(std::cref(c_))>(std::cref(c_)).create<void>(fake_provider<void>{});
+    expect_eq(&c_, &c_ref_);
+};
 
-BOOST_AUTO_TEST_CASE(from_shared_ptr) {
-    std::shared_ptr<c> c_(new c);
-    std::shared_ptr<c> sp_c =
-        (external<wrappers::shared>::scope<c>(c_).create())(type<std::shared_ptr<c>>());
+test from_shared_ptr = [] {
+    struct c { };
+    auto c_ = std::make_shared<c>();
+    std::shared_ptr<c> sp_c = external::scope<c, std::shared_ptr<c>>(c_).create<void>(fake_provider<void>{});
+    expect_eq(c_, sp_c);
+};
 
-    BOOST_CHECK_EQUAL(c_, sp_c);
-}
-
-BOOST_AUTO_TEST_CASE(from_context) {
-    std::shared_ptr<c> c1_(new c);
-    std::shared_ptr<c> c2_(new c);
-
-    BOOST_CHECK((
-        (external<>::scope<int>(87).create())(type<int>())
+test from_context = [] {
+    expect((
+        static_cast<int>(external::scope<int, int>(87).create<void>(fake_provider<void>{}))
         !=
-        (external<>::scope<int>(42).create())(type<int>())
+        static_cast<int>(external::scope<int, int>(42).create<void>(fake_provider<void>{}))
     ));
 
-    BOOST_CHECK((
-        (external<wrappers::shared>::scope<c>(c1_).create())(type<std::shared_ptr<c>>())
-        !=
-        (external<wrappers::shared>::scope<c>(c2_).create())(type<std::shared_ptr<c>>())
-    ));
-}
+    struct c { };
+    auto c1 = std::make_shared<c>();
+    auto c2 = std::make_shared<c>();
 
-BOOST_AUTO_TEST_CASE(from_if_shared_ptr) {
-    std::shared_ptr<c0if0> c0_(new c0if0);
-    std::shared_ptr<if0> c1_ = external<wrappers::shared>::scope<if0>(c0_).create()(type<std::shared_ptr<if0>>());
-    BOOST_CHECK_EQUAL(c0_, c1_);
-}
+    {
+    std::shared_ptr<c> c1_ = external::scope<c, std::shared_ptr<c>>(c1).create<void>(fake_provider<void>{});
+    std::shared_ptr<c> c2_ = external::scope<c, std::shared_ptr<c>>(c2).create<void>(fake_provider<void>{});
+    expect(c1_ != c2_);
+    }
 
-BOOST_AUTO_TEST_CASE(from_function_expr) {
-    bool flag = false;
-    external<wrappers::shared>::scope<if0> external_(
-        [&flag]() -> std::shared_ptr<if0> {
-            if (!flag) {
-                return std::shared_ptr<c0if0>(new c0if0);
-            }
+    {
+    std::shared_ptr<c> c1_ = external::scope<c, std::shared_ptr<c>>(c1).create<void>(fake_provider<void>{});
+    std::shared_ptr<c> c2_ = external::scope<c, std::shared_ptr<c>>(c1).create<void>(fake_provider<void>{});
+    expect(c1_ == c2_);
+    }
+};
 
-            return std::shared_ptr<c1if0>(new c1if0);
+test from_if_shared_ptr = [] {
+    auto i = std::make_shared<implementation>();
+    std::shared_ptr<interface> c = external::scope<interface, std::shared_ptr<interface>>(i).create<void>(fake_provider<void>{});
+    expect_eq(i, c);
+};
+
+test from_function_expr = [] {
+    auto flag = false;
+    auto expr = [&flag]() -> std::shared_ptr<interface> {
+        if (!flag) {
+            return std::make_shared<implementation>();
         }
-    );
+        return nullptr;
+    };
 
-    BOOST_CHECK(dynamic_cast<c0if0*>(external_.create()(type<std::shared_ptr<if0>>()).get()));
+    external::scope<interface, decltype(expr)> external{expr};
 
+    {
+    std::shared_ptr<interface> sp = external.create<void>(fake_provider<void>{});
+    expect(dynamic_cast<implementation*>(sp.get()));
+    }
+
+    {
     flag = true;
-    BOOST_CHECK(dynamic_cast<c1if0*>(external_.create()(type<std::shared_ptr<if0>>()).get()));
-}
+    std::shared_ptr<interface> sp = external.create<void>(fake_provider<void>{});
+    expect_eq(nullptr, sp);
+    }
+};
 
-BOOST_AUTO_TEST_CASE(from_function_expr_with_expected_function_expr) {
-    const int i = 42;
-    external<wrappers::value>::scope<std::function<int()>> external_([&]{ return i; });
-    BOOST_CHECK_EQUAL(i, external_.create()(type<std::function<int()>>())());
-}
+test from_function_expr_with_expected_function_expr = [] {
+    constexpr auto i = 42;
+    external::scope<std::function<int()>, std::function<int()>> external([&]{ return i; });
+    std::function<int()> f = external.create<void>(fake_provider<void>{});
+    expect_eq(i, f());
+};
 
-} // namespace scopes
-} // namespace di
-} // namespace boost
+test from_fucntion_expr_with_injector = [] {
+    auto expr = [](const auto& injector) {
+        return injector.template create<int>();
+    };
+
+    external::scope<int, decltype(expr)> external{expr};
+    expect_eq(0, static_cast<int>(external.create<void>(fake_provider<int>{})));
+};
+
+}}} // boost::di::scopes
 
