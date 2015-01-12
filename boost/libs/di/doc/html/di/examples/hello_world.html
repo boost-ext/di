@@ -2,7 +2,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Hello World</title>
-<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<link rel="stylesheet" href="../../../../../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
 <link rel="home" href="../../index.html" title="Boost.DI (Dependency Injection) C++14">
 <link rel="up" href="../examples.html" title="Examples">
@@ -10,8 +10,17 @@
 <link rel="next" href="bindings.html" title="Bindings">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../examples.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../examples.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="bindings.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="../examples.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../examples.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="bindings.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
@@ -21,7 +30,7 @@
 
 <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 
-<a class="co" name="di.examples.hello_world.c0" href="hello_world.html#di.examples.hello_world.c1"><img src="../../images/callouts/1.png" alt="1" border="0"></a>
+<a class="co" name="di.examples.hello_world.c0" href="hello_world.html#di.examples.hello_world.c1"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a>
 <span class="keyword">class</span> <span class="identifier">hello_world</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="identifier">hello_world</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger</span>
@@ -46,31 +55,31 @@
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <a class="co" name="di.examples.hello_world.c2" href="hello_world.html#di.examples.hello_world.c3"><img src="../../images/callouts/2.png" alt="2" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+    <a class="co" name="di.examples.hello_world.c2" href="hello_world.html#di.examples.hello_world.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
         <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">,</span> <span class="identifier">logger</span><span class="special">&gt;</span>
       <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ilogic</span><span class="special">,</span> <span class="identifier">logic</span><span class="special">&gt;</span>
       <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
     <span class="special">);</span>
 
-    <a class="co" name="di.examples.hello_world.c4" href="hello_world.html#di.examples.hello_world.c5"><img src="../../images/callouts/3.png" alt="3" border="0"></a><span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">hello_world</span><span class="special">&gt;().</span><span class="identifier">run</span><span class="special">();</span>
+    <a class="co" name="di.examples.hello_world.c4" href="hello_world.html#di.examples.hello_world.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">hello_world</span><span class="special">&gt;().</span><span class="identifier">run</span><span class="special">();</span>
 <span class="special">}</span>
 </pre>
 <div class="calloutlist"><table border="0" summary="Callout list">
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.examples.hello_world.c1"></a><a href="#di.examples.hello_world.c0"><img src="../../images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.examples.hello_world.c1"></a><a href="#di.examples.hello_world.c0"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             define <code class="computeroutput"><span class="identifier">hello_world</span></code> class
             as usual
           </p></td>
 </tr>
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.examples.hello_world.c3"></a><a href="#di.examples.hello_world.c2"><img src="../../images/callouts/2.png" alt="2" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.examples.hello_world.c3"></a><a href="#di.examples.hello_world.c2"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             make injector configuration
           </p></td>
 </tr>
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.examples.hello_world.c5"></a><a href="#di.examples.hello_world.c4"><img src="../../images/callouts/3.png" alt="3" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.examples.hello_world.c5"></a><a href="#di.examples.hello_world.c4"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a> </p></td>
 <td valign="top" align="left">
 <p>
             create <code class="computeroutput"><span class="identifier">hello_world</span></code> and
@@ -100,7 +109,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../examples.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../examples.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="bindings.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="../examples.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../examples.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="bindings.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

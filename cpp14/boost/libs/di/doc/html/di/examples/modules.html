@@ -2,7 +2,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Modules</title>
-<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<link rel="stylesheet" href="../../../../../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
 <link rel="home" href="../../index.html" title="Boost.DI (Dependency Injection) C++14">
 <link rel="up" href="../examples.html" title="Examples">
@@ -10,8 +10,17 @@
 <link rel="next" href="modules_hpp_cpp.html" title="Modules (hpp/cpp)">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
 <div class="spirit-nav">
-<a accesskey="p" href="externals.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../examples.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="modules_hpp_cpp.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="externals.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../examples.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="modules_hpp_cpp.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
@@ -36,7 +45,7 @@
 
 <span class="keyword">class</span> <span class="identifier">module1</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-    <a class="co" name="di.examples.modules.c0" href="modules.html#di.examples.modules.c1"><img src="../../images/callouts/1.png" alt="1" border="0"></a><span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+    <a class="co" name="di.examples.modules.c0" href="modules.html#di.examples.modules.c1"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
         <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
             <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation1</span><span class="special">&gt;</span>
         <span class="special">);</span>
@@ -49,7 +58,7 @@
         <span class="special">:</span> <span class="identifier">i_</span><span class="special">(</span><span class="identifier">i</span><span class="special">)</span>
     <span class="special">{</span> <span class="special">}</span>
 
-    <a class="co" name="di.examples.modules.c2" href="modules.html#di.examples.modules.c3"><img src="../../images/callouts/2.png" alt="2" border="0"></a><span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+    <a class="co" name="di.examples.modules.c2" href="modules.html#di.examples.modules.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
         <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
             <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">i_</span><span class="special">)</span>
         <span class="special">);</span>
@@ -61,7 +70,7 @@
 
 <span class="keyword">class</span> <span class="identifier">exposed_module</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-    <a class="co" name="di.examples.modules.c4" href="modules.html#di.examples.modules.c5"><img src="../../images/callouts/3.png" alt="3" border="0"></a><span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">data</span><span class="special">&gt;</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+    <a class="co" name="di.examples.modules.c4" href="modules.html#di.examples.modules.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">data</span><span class="special">&gt;</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
         <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
             <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation2</span><span class="special">&gt;</span>
         <span class="special">);</span>
@@ -71,45 +80,45 @@
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
     <span class="keyword">const</span> <span class="keyword">auto</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">42</span><span class="special">;</span>
 
-    <a class="co" name="di.examples.modules.c6" href="modules.html#di.examples.modules.c7"><img src="../../images/callouts/4.png" alt="4" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+    <a class="co" name="di.examples.modules.c6" href="modules.html#di.examples.modules.c7"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
         <span class="identifier">module1</span><span class="special">{}</span>
       <span class="special">,</span> <span class="identifier">module2</span><span class="special">{</span><span class="identifier">i</span><span class="special">}</span>
       <span class="special">,</span> <span class="identifier">exposed_module</span><span class="special">{}</span>
     <span class="special">);</span>
 
-    <a class="co" name="di.examples.modules.c8" href="modules.html#di.examples.modules.c9"><img src="../../images/callouts/5.png" alt="5" border="0"></a><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;();</span>
+    <a class="co" name="di.examples.modules.c8" href="modules.html#di.examples.modules.c9"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;();</span>
 
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <div class="calloutlist"><table border="0" summary="Callout list">
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.examples.modules.c1"></a><a href="#di.examples.modules.c0"><img src="../../images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.examples.modules.c1"></a><a href="#di.examples.modules.c0"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             module configuration
           </p></td>
 </tr>
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.examples.modules.c3"></a><a href="#di.examples.modules.c2"><img src="../../images/callouts/2.png" alt="2" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.examples.modules.c3"></a><a href="#di.examples.modules.c2"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             module configuration
           </p></td>
 </tr>
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.examples.modules.c5"></a><a href="#di.examples.modules.c4"><img src="../../images/callouts/3.png" alt="3" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.examples.modules.c5"></a><a href="#di.examples.modules.c4"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             module configuration with exposed <code class="computeroutput"><span class="identifier">data</span></code>
           </p></td>
 </tr>
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.examples.modules.c7"></a><a href="#di.examples.modules.c6"><img src="../../images/callouts/4.png" alt="4" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.examples.modules.c7"></a><a href="#di.examples.modules.c6"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             create injector and pass <code class="computeroutput"><span class="identifier">module1</span></code>,
             <code class="computeroutput"><span class="identifier">module2</span></code> and <code class="computeroutput"><span class="identifier">exposed_module</span></code>
           </p></td>
 </tr>
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.examples.modules.c9"></a><a href="#di.examples.modules.c8"><img src="../../images/callouts/5.png" alt="5" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.examples.modules.c9"></a><a href="#di.examples.modules.c8"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             create <code class="computeroutput"><span class="identifier">app</span></code>
           </p></td>
@@ -134,7 +143,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="externals.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../examples.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="modules_hpp_cpp.html"><img src="../../images/next.png" alt="Next"></a>
+<a accesskey="p" href="externals.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../examples.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="modules_hpp_cpp.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
