@@ -765,7 +765,6 @@ public:                                 |
 * Environment
     * x86\_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
     * clang++3.4 -O2 / `gdb -batch -ex 'file ./a.out' -ex 'disassemble main'`
-
 ```cpp
 Create type wihtout bindings            | Asm x86-64 (same as `return 0`)
 ----------------------------------------|-----------------------------------------
@@ -888,7 +887,6 @@ int main() {                            | lea    0x30(%rsp),%rsi                
 * Environment
     * x86\_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
     * clang++3.4 -O2
-
 ```cpp
 Boost.DI header                         | Time [s]
 ----------------------------------------|-----------------------------------------
