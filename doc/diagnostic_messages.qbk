@@ -9,6 +9,12 @@
 
 [section Diagnostic messages]
 
+Error messages were accomplished using below compilation flags (in order to avoid instantiation stack trace).
+
+```
+    -ftemplate-backtrace-limit=1 -ferror-limit=1
+```
+
 [table
 [[Create interface without bound implementation][Error message]]
     [

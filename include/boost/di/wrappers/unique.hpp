@@ -15,15 +15,10 @@
 namespace boost { namespace di { namespace wrappers {
 
 template<class T>
-class unique {
-public:
-    explicit unique(const T& value) noexcept // non explicit
-        : value_(value)
-    { }
-
+struct unique {
     template<class I>
     inline operator I() const noexcept {
-        return value_;
+        return object;
     }
 
     template<class I>
@@ -31,94 +26,81 @@ public:
         return {};
     }
 
-private:
-    T value_;
+    T object;
 };
 
 template<class T>
-class unique<T*> {
-public:
-    explicit unique(T* value) noexcept // non explicit
-        : value_(value)
-    { }
-
+struct unique<T*> {
     template<class I>
     inline operator I() const noexcept {
-        return *std::unique_ptr<I>{value_};
+        return *std::unique_ptr<I>{object};
     }
 
     template<class I>
     inline operator I*() const noexcept {
-        return value_; // ownership transfer
+        return object; // ownership transfer
     }
 
     template<class I>
     inline operator const I*() const noexcept {
-        return value_; // ownership transfer
+        return object; // ownership transfer
     }
 
     template<class I>
     inline operator std::shared_ptr<I>() const noexcept {
-        return std::shared_ptr<I>{value_};
+        return std::shared_ptr<I>{object};
     }
 
 #if (__has_include(<boost/shared_ptr.hpp>))
     template<class I>
     inline operator boost::shared_ptr<I>() const noexcept {
-        return boost::shared_ptr<I>{value_};
+        return boost::shared_ptr<I>{object};
     }
 #endif
 
     template<class I>
     inline operator std::unique_ptr<I>() const noexcept {
-        return std::unique_ptr<I>{value_};
+        return std::unique_ptr<I>{object};
     }
 
-private:
-    T* value_ = nullptr;
+    T* object = nullptr;
 };
 
 template<class T, class TDeleter>
-class unique<std::unique_ptr<T, TDeleter>> {
-public:
-    explicit unique(std::unique_ptr<T, TDeleter> value) noexcept // non explicit
-        : value_(std::move(value))
-    { }
-
+struct unique<std::unique_ptr<T, TDeleter>> {
     template<class I>
     inline operator I() const noexcept {
-        return *value_;
+        return *object;
     }
 
     template<class I>
     inline operator I*() noexcept {
-        return value_.release();
+        return object.release();
     }
 
     template<class I>
     inline operator const I*() noexcept {
-        return value_.release();
+        return object.release();
     }
 
     template<class I>
     inline operator std::shared_ptr<I>() noexcept {
-        return {value_.release(), value_.get_deleter()};
+        return {object.release(), object.get_deleter()};
     }
 
 #if (__has_include(<boost/shared_ptr.hpp>))
     template<class I>
     inline operator boost::shared_ptr<I>() noexcept {
-        return {value_.release(), value_.get_deleter()};
+        return {object.release(), object.get_deleter()};
     }
 #endif
 
     template<class I, class D>
     inline operator std::unique_ptr<I, D>() noexcept {
-        return std::move(value_);
+        return std::move(object);
     }
 
-private:
-    std::unique_ptr<T, TDeleter> value_;
+    std::unique_ptr<T, TDeleter> object;
 };
 
 }}} // boost::di::wrappers

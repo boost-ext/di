@@ -15,15 +15,10 @@
 namespace boost { namespace di { namespace wrappers {
 
 template<class T>
-class shared {
-public:
-    explicit shared(const std::shared_ptr<T>& value) noexcept
-        : value_{value}
-    { }
-
+struct shared {
     template<class I>
     inline operator std::shared_ptr<I>() const noexcept {
-        return value_;
+        return object;
     }
 
 #if (__has_include(<boost/shared_ptr.hpp>))
@@ -39,21 +34,20 @@ public:
     template<class I>
     inline operator boost::shared_ptr<I>() const noexcept {
         using sp = sp_holder<boost::shared_ptr<I>>;
-        if (auto* deleter = std::get_deleter<sp, I>(value_)) {
+        if (auto* deleter = std::get_deleter<sp, I>(object)) {
             return deleter->object;
         } else {
-            return {value_.get(), sp_holder<std::shared_ptr<T>>{value_}};
+            return {object.get(), sp_holder<std::shared_ptr<T>>{object}};
         }
     }
 #endif
 
     template<class I>
     inline operator std::weak_ptr<I>() const noexcept {
-        return value_;
+        return object;
     }
 
-private:
-    std::shared_ptr<T> value_;
+    std::shared_ptr<T> object;
 };
 
 }}} // boost::di::wrappers

@@ -32,6 +32,11 @@ main() {
     echo "#ifndef BOOST_DI_HPP"
     echo "#define BOOST_DI_HPP"
     echo
+    echo
+    echo "#if (__cplusplus < 201305L)"
+    echo "   #error \"C++14 is required by Boost.DI\""
+    echo "#endif"
+    echo
     echo "#if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)"
     echo
     echo "// config"

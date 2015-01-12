@@ -7,6 +7,11 @@
 #ifndef BOOST_DI_HPP
 #define BOOST_DI_HPP
 
+
+#if (__cplusplus < 201305L)
+   #error "C++14 is required by Boost.DI"
+#endif
+
 #if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)
 
 // config
@@ -285,12 +290,7 @@ private:
 namespace boost { namespace di { namespace wrappers {
 
 template<class T>
-class unique {
-public:
-    explicit unique(const T& value) noexcept // non explicit
-        : value_(value)
-    { }
-
+struct unique {
     template<class I>
     inline operator I() const noexcept {
         return value_;
@@ -301,17 +301,11 @@ public:
         return {};
     }
 
-private:
     T value_;
 };
 
 template<class T>
-class unique<T*> {
-public:
-    explicit unique(T* value) noexcept // non explicit
-        : value_(value)
-    { }
-
+struct unique<T*> {
     template<class I>
     inline operator I() const noexcept {
         return *std::unique_ptr<I>{value_};
@@ -344,17 +338,11 @@ public:
         return std::unique_ptr<I>{value_};
     }
 
-private:
     T* value_ = nullptr;
 };
 
 template<class T, class TDeleter>
-class unique<std::unique_ptr<T, TDeleter>> {
-public:
-    explicit unique(std::unique_ptr<T, TDeleter> value) noexcept // non explicit
-        : value_(std::move(value))
-    { }
-
+struct unique<std::unique_ptr<T, TDeleter>> {
     template<class I>
     inline operator I() const noexcept {
         return *value_;
@@ -387,7 +375,6 @@ public:
         return std::move(value_);
     }
 
-private:
     std::unique_ptr<T, TDeleter> value_;
 };
 
@@ -522,12 +509,7 @@ public:
 namespace boost { namespace di { namespace wrappers {
 
 template<class T>
-class shared {
-public:
-    explicit shared(const std::shared_ptr<T>& value) noexcept
-        : value_{value}
-    { }
-
+struct shared {
     template<class I>
     inline operator std::shared_ptr<I>() const noexcept {
         return value_;
@@ -559,7 +541,6 @@ public:
         return value_;
     }
 
-private:
     std::shared_ptr<T> value_;
 };
 
