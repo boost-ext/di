@@ -37,7 +37,7 @@ The glue between bindings and the core is __dependency_model__.
     [[Parameter][Requirement][Description][Returns][Throw]]
     [[`TScope`][__scope_model__ type][Scope to be used]]
     [[`TExpected`][None][Type to be returned]]
-    [[`TGiven`][is same or base of TExpected][Type to be created]]
+    [[`TGiven`][Is convertible to `TExpected`][Type to be created]]
     [[`TName`][None][Type annotation]]
     [[`dependency(T)`][None][Intialize dependency from type `T`][][Does not throw]]
     [[`to(T)`][None][Returns new __dependency_model__ with associated `T` value][__dependency_model__][Does not throw]]

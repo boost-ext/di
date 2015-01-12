@@ -26,7 +26,7 @@ Boot.DI is released with 2 providers.
 [table Parameters
     [[Parameter][Requirement][Description][Returns][Throw]]
     [[`I`][None][Interface type]]
-    [[`T`][is same or base of `I`][Type to be created]]
+    [[`T`][Is convertible to `I`][Type to be created]]
     [[`TInitalization`][direct/uniform][Describes how object should be created, using `()` when `direct` or `{}` when `uniform`]]
     [[`TMemory`][stack/heap][Describes where in memory object might be created, on stack when `stack` or heap when `heap`]]
     [[`TArgs...`][None][List of parameters to be passed to constructor]]
@@ -174,7 +174,7 @@ Basic provider creates objects on heap.
 [table Parameters
     [[Parameter][Requirement][Description][Returns][Throw]]
     [[`I`][None][Interface type]]
-    [[`T`][is same or base of `I`][Type to be created]]
+    [[`T`][Is convertible to `I`][Type to be created]]
     [[`TInitalization`][direct/uniform][Describes how object should be created, using `()` when `direct` or `{}` when `uniform`]]
     [[`TMemory`][stack/heap][Describes where in memory object might be created, on stack when `stack` or heap when `heap`]]
     [[`TArgs...`][None][List of parameters to be passed to constructor]]
