@@ -19,6 +19,8 @@
     [source-mode c++]
 ]
 
+[note GitHub repository - [@https://github.com/krzysztof-jusiak/di]]
+
 [def __di_hpp__                                         [@https://github.com/krzysztof-jusiak/di/blob/cpp14/include/boost/di.hpp boost/di.hpp]]
 [def __di_inject_hpp__                                  [@https://github.com/krzysztof-jusiak/di/blob/cpp14/include/boost/di/inject.hpp boost/di/inject.hpp]]
 
