@@ -223,8 +223,8 @@ test exposed_type_by_injector = [] {
     expect_eq(i, object->i);
 };
 
-test exposed_type_by_component = [] {
-    struct component {
+test exposed_type_by_module = [] {
+    struct module {
         di::injector<complex1> configure() const {
             return di::make_injector(di::bind<i1, impl1>);
         }
@@ -233,7 +233,7 @@ test exposed_type_by_component = [] {
     constexpr auto i = 42;
 
     auto injector = di::make_injector(
-        component{}
+        module{}
       , di::bind<int>.to(i)
     );
 
@@ -242,8 +242,8 @@ test exposed_type_by_component = [] {
     expect_eq(i, object->i);
 };
 
-test exposed_type_by_component_twice = [] {
-    struct component {
+test exposed_type_by_module_twice = [] {
+    struct module {
         di::injector<complex1> configure() const {
             return di::make_injector(di::bind<i1, impl1>);
         }
@@ -252,7 +252,7 @@ test exposed_type_by_component_twice = [] {
     constexpr auto i = 42;
 
     di::injector<complex2> injector = di::make_injector(
-        component{}
+        module{}
       , di::bind<int>.to(i)
     );
 
@@ -261,23 +261,23 @@ test exposed_type_by_component_twice = [] {
     expect_eq(i, object->i);
 };
 
-test exposed_type_by_component_mix = [] {
+test exposed_type_by_module_mix = [] {
     static constexpr auto i = 42;
 
-    struct component1 {
+    struct module1 {
         di::injector<complex1> configure() const {
             return di::make_injector(di::bind<i1, impl1>);
         }
     };
 
-    struct component2 {
+    struct module2 {
         di::injector<complex2> configure() const {
-            return di::make_injector(di::bind<int>.to(i), component1{});
+            return di::make_injector(di::bind<int>.to(i), module1{});
         }
     };
 
     auto injector = di::make_injector(
-        component2{}
+        module2{}
     );
 
     {
@@ -782,7 +782,7 @@ test ctor_refs = [] {
           , di::bind<std::string>.to("str")
           , di::bind<std::string>.named(name).to("named str")
           , bind_i1
-          , di::bind<short>.to(42)
+          , di::bind<short>.to(short{42})
           , di::bind<long>.to(123)
           , di::bind<std::function<int()>>.to([]{return 87;})
         );

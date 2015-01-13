@@ -15,39 +15,39 @@ struct implementation : public interface { virtual void dummy() { }; };
 
 test from_arithmetic = [] {
     const int i = 42;
-    expect_eq(i, static_cast<int>(external::scope<int, int>(i).create<void>(fake_provider<>{})));
+    expect_eq(i, static_cast<int>(external::scope<int, int>{i}.create<void>(fake_provider<>{})));
 };
 
 test from_string = [] {
     const std::string s = "string";
-    std::string object = external::scope<std::string, std::string>(s).create<void>(fake_provider<>{});
+    std::string object = external::scope<std::string, std::string>{s}.create<void>(fake_provider<>{});
     expect_eq(s, object);
 };
 
 test from_ref = [] {
     struct c { } c_;
-    c& c_ref_ = external::scope<c, decltype(std::ref(c_))>(std::ref(c_)).create<void>(fake_provider<>{});
+    c& c_ref_ = external::scope<c, decltype(std::ref(c_))>{std::ref(c_)}.create<void>(fake_provider<>{});
     expect_eq(&c_, &c_ref_);
 };
 
 test from_const_ref = [] {
     struct c { } c_;
-    const c& c_ref_ = external::scope<c, decltype(std::cref(c_))>(std::cref(c_)).create<void>(fake_provider<>{});
+    const c& c_ref_ = external::scope<c, decltype(std::cref(c_))>{std::cref(c_)}.create<void>(fake_provider<>{});
     expect_eq(&c_, &c_ref_);
 };
 
 test from_shared_ptr = [] {
     struct c { };
     auto c_ = std::make_shared<c>();
-    std::shared_ptr<c> sp_c = external::scope<c, std::shared_ptr<c>>(c_).create<void>(fake_provider<>{});
+    std::shared_ptr<c> sp_c = external::scope<c, std::shared_ptr<c>>{c_}.create<void>(fake_provider<>{});
     expect_eq(c_, sp_c);
 };
 
 test from_context = [] {
     expect((
-        static_cast<int>(external::scope<int, int>(87).create<void>(fake_provider<>{}))
+        static_cast<int>(external::scope<int, int>{87}.create<void>(fake_provider<>{}))
         !=
-        static_cast<int>(external::scope<int, int>(42).create<void>(fake_provider<>{}))
+        static_cast<int>(external::scope<int, int>{42}.create<void>(fake_provider<>{}))
     ));
 
     struct c { };
@@ -55,21 +55,21 @@ test from_context = [] {
     auto c2 = std::make_shared<c>();
 
     {
-    std::shared_ptr<c> c1_ = external::scope<c, std::shared_ptr<c>>(c1).create<void>(fake_provider<>{});
-    std::shared_ptr<c> c2_ = external::scope<c, std::shared_ptr<c>>(c2).create<void>(fake_provider<>{});
+    std::shared_ptr<c> c1_ = external::scope<c, std::shared_ptr<c>>{c1}.create<void>(fake_provider<>{});
+    std::shared_ptr<c> c2_ = external::scope<c, std::shared_ptr<c>>{c2}.create<void>(fake_provider<>{});
     expect(c1_ != c2_);
     }
 
     {
-    std::shared_ptr<c> c1_ = external::scope<c, std::shared_ptr<c>>(c1).create<void>(fake_provider<>{});
-    std::shared_ptr<c> c2_ = external::scope<c, std::shared_ptr<c>>(c1).create<void>(fake_provider<>{});
+    std::shared_ptr<c> c1_ = external::scope<c, std::shared_ptr<c>>{c1}.create<void>(fake_provider<>{});
+    std::shared_ptr<c> c2_ = external::scope<c, std::shared_ptr<c>>{c1}.create<void>(fake_provider<>{});
     expect(c1_ == c2_);
     }
 };
 
 test from_if_shared_ptr = [] {
     auto i = std::make_shared<implementation>();
-    std::shared_ptr<interface> c = external::scope<interface, std::shared_ptr<interface>>(i).create<void>(fake_provider<>{});
+    std::shared_ptr<interface> c = external::scope<interface, std::shared_ptr<interface>>{i}.create<void>(fake_provider<>{});
     expect_eq(i, c);
 };
 
@@ -98,7 +98,7 @@ test from_function_expr = [] {
 
 test from_function_expr_with_expected_function_expr = [] {
     constexpr auto i = 42;
-    external::scope<std::function<int()>, std::function<int()>> external([&]{ return i; });
+    external::scope<std::function<int()>, std::function<int()>> external{[&]{ return i; }};
     std::function<int()> f = external.create<void>(fake_provider<>{});
     expect_eq(i, f());
 };

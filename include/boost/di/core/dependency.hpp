@@ -61,12 +61,7 @@ public:
 
     template<class T>
     explicit dependency(T&& object) noexcept
-        : scope_t(std::forward<T>(object))
-    { }
-
-    template<class T, class TInjector>
-    dependency(T&& object, const TInjector& injector) noexcept
-        : scope_t(std::forward<T>(object), injector)
+        : scope_t{std::forward<T>(object)}
     { }
 
     template<class T>
