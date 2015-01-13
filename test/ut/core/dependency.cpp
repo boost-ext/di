@@ -50,13 +50,6 @@ test ctor = [] {
     expect_eq(i, dep.object);
 };
 
-test ctor_injector = [] {
-    constexpr auto i = 42;
-    dependency<fake_scope, int> dep{0, i};
-    expect_eq(0, dep.object);
-    expect_eq(i, dep.injector);
-};
-
 test named = [] {
     using dep1 = dependency<scopes::deduce, int>;
     expect(std::is_same<no_name, typename dep1::name>{});
