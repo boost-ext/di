@@ -59,7 +59,9 @@ int main() {                            | int main() {
 
 * [Motivation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/motivation.html) | [Rationale](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/rationale.html)
 
-[![The Clean Code Talks - Don't Look For Things!](http://img.youtube.com/vi/RlfLCWKxHJ0/0.jpg)](http://www.youtube.com/watch?v=RlfLCWKxHJ0)
+|   |     |
+--- | --- |
+[![The Clean Code Talks - Don't Look For Things!](http://img.youtube.com/vi/RlfLCWKxHJ0/0.jpg)](http://www.youtube.com/watch?v=RlfLCWKxHJ0) | [![DAGGER 2 - A New Type of dependency injection](https://img.youtube.com/vi/oK_XtfXPkqw/0.jpg)](http://www.youtube.com/watch?v=oK_XtfXPkqw) |
 
 **How To Start?**
 
