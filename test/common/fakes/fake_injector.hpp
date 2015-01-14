@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_FAKE_INJECTOR_HPP
 #define BOOST_DI_FAKE_INJECTOR_HPP
 
-#include <typeinfo>
 #include "boost/di/aux_/type_traits.hpp"
 
 namespace boost { namespace di {
@@ -31,7 +30,6 @@ struct fake_injector {
 
     template<class T>
     auto create() const noexcept {
-        //expect_eq(typeid(TExpected).name(), typeid(T).name());
         return T{};
     }
 };

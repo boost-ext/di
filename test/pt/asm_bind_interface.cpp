@@ -14,6 +14,7 @@ int main() {
 
     auto ptr = injector.create<std::unique_ptr<i>>();
     return ptr->dummy();
+
     /*<< asm gdb -batch -ex 'file ./a.out' -ex 'disassemble main' [pre
         Dump of assembler code for function main:
            0x0000000000400780 <+0>:	mov    $0x2a,%eax

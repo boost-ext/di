@@ -8,6 +8,7 @@ int main() {
     );
 
     return injector.create<int>();
+
     /*<< asm gdb -batch -ex 'file ./a.out' -ex 'disassemble main' [pre
         Dump of assembler code for function main:
            0x0000000000400780 <+0>:	mov    $0x2a,%eax

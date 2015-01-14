@@ -18,12 +18,12 @@ int main() {
     auto injector = di::make_injector(module{});
     auto* ptr =  injector.create<i*>();
     return ptr->dummy();
-}
 
-/*
-Dump of assembler code for function main:
-   0x00000000004007a0 <+0>:	mov    $0x2a,%eax
-   0x00000000004007a5 <+5>:	retq
-End of assembler dump.
-*/
+    /*<< asm gdb -batch -ex 'file ./a.out' -ex 'disassemble main' [pre
+        Dump of assembler code for function main:
+           0x0000000000400780 <+0>:	mov    $0x2a,%eax
+           0x0000000000400785 <+5>:	retq
+        End of assembler dump.
+    ]>>*/
+}
 

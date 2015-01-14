@@ -41,4 +41,3 @@ test get_with_args = [] {
 
 }}} // boost::di::providers
 
-

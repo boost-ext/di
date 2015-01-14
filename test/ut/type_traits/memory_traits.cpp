@@ -43,4 +43,3 @@ test traits = [] {
 
 }}} // boost::di::type_traits
 
-
