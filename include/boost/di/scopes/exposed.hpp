@@ -24,7 +24,7 @@ public:
             virtual TExpected get(const type_traits::stack&) const noexcept = 0;
         };
 
-        template<typename TInjector>
+        template<class TInjector>
         class provider : public iprovider {
         public:
             explicit provider(const TInjector& injector)

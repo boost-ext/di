@@ -25,11 +25,11 @@ BOOST_DI_HAS_METHOD(call, call);
 
 template<class T, class TWrapper>
 struct wrapper {
-    TWrapper wrapper_;
-
     inline operator T() noexcept {
         return wrapper_;
     }
+
+    TWrapper wrapper_;
 };
 
 template<class TDeps, class TConfig>
