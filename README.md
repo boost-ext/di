@@ -1001,9 +1001,6 @@ BOOST_DI_INJECTOR                       | Named used internally by Boost.DI
 * Java | [Dagger 2](https://github.com/google/dagger) | [Guice](https://github.com/google/guice)
 * C# | [Ninject](http://www.ninject.org)
 
-**License**
-Distributed under the [Boost Software License, Version 1.0](http://www.boost.org/LICENSE_1_0.txt).
-
-**Disclaimer**
-Boost.DI is not an official Boost library.
+**License** Distributed under the [Boost Software License, Version 1.0](http://www.boost.org/LICENSE_1_0.txt).
+**Disclaimer** Boost.DI is not an official Boost library.
 
