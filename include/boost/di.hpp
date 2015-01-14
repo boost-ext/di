@@ -832,7 +832,7 @@ public:
             virtual TExpected get(const type_traits::stack&) const noexcept = 0;
         };
 
-        template<typename TInjector>
+        template<class TInjector>
         class provider : public iprovider {
         public:
             explicit provider(const TInjector& injector)
@@ -1737,11 +1737,11 @@ BOOST_DI_HAS_METHOD(call, call);
 
 template<class T, class TWrapper>
 struct wrapper {
-    TWrapper wrapper_;
-
     inline operator T() noexcept {
         return wrapper_;
     }
+
+    TWrapper wrapper_;
 };
 
 template<class TDeps, class TConfig>

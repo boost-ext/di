@@ -30,7 +30,7 @@ Injector is a component used for creating dependencies configuration using [link
     [[Parameter][Requirement][Description][Returns][Throw]]
     [[`TDeps...`][__binding_model__ type][__bindings__ to be used as configuration]]
     [[`deps`][`variadic list`][List of dependencies]]
-    [[`T`][None][Object to be created]]
+    [[`T`][Is constructible using given configuration][Object to be created]]
     [[`TAction`][None][Action to be called for scopes having `call(const TAction&)` method]]
 
     [[`injector(const TArgs&...))`][None][Create __injectors_injector__ with given bindings][][Does not throw]]
