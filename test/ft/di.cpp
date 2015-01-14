@@ -1063,7 +1063,7 @@ test runtime_factory_impl = [] {
 struct call_operator {
     bool& b;
 
-    template<typename TInjector>
+    template<class TInjector>
     std::shared_ptr<i1> operator()(const TInjector& injector) const {
         if (b) {
             return injector.template create<std::shared_ptr<impl1>>();
@@ -1305,7 +1305,7 @@ struct policy {
         return i;
     }
 
-    template<typename T>
+    template<class T>
     void operator()(const T&) const noexcept {
         ++called();
     }

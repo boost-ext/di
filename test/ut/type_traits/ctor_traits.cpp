@@ -11,7 +11,7 @@ namespace boost { namespace di {
 
 struct traits { };
 
-template<typename>
+template<class>
 struct ctor_traits;
 
 template<>

@@ -10,7 +10,7 @@
 
 namespace boost { namespace di { namespace core {
 
-template<typename T>
+template<class T>
 struct allocator {
     allocator(T* object) // non explicit
         : object(object)
@@ -214,7 +214,7 @@ test pool_from_pof_pools_many = [] {
     expect_eq(0, p2.get<default_ctor>().i);
 };
 
-template<typename T1, typename T2>
+template<class T1, class T2>
 struct base : T1, T2 { };
 
 test pool_flatten = [] {

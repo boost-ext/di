@@ -7,14 +7,14 @@ auto custom_called = false;
 auto global_called = false;
 
 struct custom_policy {
-    template<typename T>
+    template<class T>
     void operator()(const T&) const noexcept {
         custom_called = true;
     }
 };
 
 struct global_policy {
-    template<typename T>
+    template<class T>
     void operator()(const T&) const noexcept {
         global_called = true;
     }
