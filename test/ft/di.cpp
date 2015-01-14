@@ -419,6 +419,45 @@ test exposed_bind_interface_module = [] {
     expect(dynamic_cast<impl1*>(object->i.get()));
 };
 
+test exposed_module_with_unique_ptr = [] {
+    struct i1 { virtual ~i1() = default; virtual void dummy1() = 0; };
+    struct i2 { virtual ~i2() = default; virtual void dummy2() = 0; };
+    struct impl1 : i1 { void dummy1() override { } };
+    struct impl2 : i2 { void dummy2() override { } };
+
+    struct c {
+        c(std::unique_ptr<i1> i1
+        , std::unique_ptr<i2> i2
+        , int i) : i1(std::move(i1)), i2(std::move(i2)), i(i)
+        { }
+
+        std::unique_ptr<i1> i1;
+        std::unique_ptr<i2> i2;
+        int i = 0;
+    };
+
+    struct module {
+        di::injector<c> configure() const noexcept {
+            return di::make_injector(
+                di::bind<i1, impl1>
+              , di::bind<i2, impl2>
+              , di::bind<int>.to(i)
+            );
+        }
+
+        int i = 0;
+    };
+
+    auto injector = di::make_injector(
+        module{42}
+    );
+
+    auto object = injector.create<std::unique_ptr<c>>();
+    assert(dynamic_cast<impl1*>(object->i1.get()));
+    assert(dynamic_cast<impl2*>(object->i2.get()));
+    assert(42 == object->i);
+};
+
 test scopes_priority = [] {
     auto injector = di::make_injector(
         di::bind<int>.to(12)

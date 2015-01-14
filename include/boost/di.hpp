@@ -826,24 +826,31 @@ public:
 
     template<class TExpected, class TGiven>
     class scope {
+        template<class T, class = void>
         struct iprovider {
             virtual ~iprovider() = default;
-            virtual TExpected* get(const type_traits::heap& = {}) const noexcept = 0;
-            virtual TExpected get(const type_traits::stack&) const noexcept = 0;
+            virtual T* get(const type_traits::heap& = {}) const noexcept = 0;
+            virtual T  get(const type_traits::stack&) const noexcept = 0;
+        };
+
+        template<class T>
+        struct iprovider<T, std::enable_if_t<!std::is_copy_constructible<T>{}>> {
+            virtual ~iprovider() = default;
+            virtual T* get(const type_traits::heap& = {}) const noexcept = 0;
         };
 
         template<class TInjector>
-        class provider : public iprovider {
+        class provider : public iprovider<TExpected> {
         public:
             explicit provider(const TInjector& injector)
                 : injector_(injector)
             { }
 
-            TExpected* get(const type_traits::heap&) const noexcept override {
+            TExpected* get(const type_traits::heap&) const noexcept { // non override
                 return injector_.template create<TExpected*>();
             }
 
-            TExpected get(const type_traits::stack&) const noexcept override {
+            TExpected get(const type_traits::stack&) const noexcept { // non override
                 return injector_.template create<TExpected>();
             }
 
@@ -863,7 +870,7 @@ public:
         }
 
     private:
-        std::shared_ptr<iprovider> provider_;
+        std::shared_ptr<iprovider<TExpected>> provider_;
         typename TScope::template scope<TExpected, TGiven> scope_;
     };
 };
