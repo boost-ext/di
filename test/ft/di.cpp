@@ -1361,8 +1361,8 @@ test blah3 = [] {
         BOOST_DI_INJECT_TRAITS(int);
         c(int, double) {}
     };
-    auto injector = di::make_injector();
-    injector.create<c>();
+    //auto injector = di::make_injector();
+    //injector.create<c>();
 };
 
 test blah4 = [] {

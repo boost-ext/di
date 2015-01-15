@@ -19,7 +19,6 @@
 #include "boost/di/core/requires.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 
-#include <boost/units/detail/utility.hpp>
 namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_METHOD(call, call);
@@ -33,15 +32,17 @@ struct wrapper {
     TWrapper wrapper_;
 };
 
-template<class>
-struct any;
-
 template<class, class>
 struct is;
 
-template<class T, class TInitialization, class... TArgs>
-struct is<T, aux::pair<TInitialization, aux::type_list<TArgs...>>> {
+template<class T, class... TArgs>
+struct is<T, aux::pair<type_traits::uniform, aux::type_list<TArgs...>>> {
     using type = aux::is_braces_constructible<T, TArgs...>;
+};
+
+template<class T, class... TArgs>
+struct is<T, aux::pair<type_traits::direct, aux::type_list<TArgs...>>> {
+    using type = std::is_constructible<T, TArgs...>;
 };
 
 template<class P>
