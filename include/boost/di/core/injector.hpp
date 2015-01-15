@@ -19,6 +19,7 @@
 #include "boost/di/core/requires.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 
+#include <boost/units/detail/utility.hpp>
 namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_METHOD(call, call);
@@ -31,6 +32,36 @@ struct wrapper {
 
     TWrapper wrapper_;
 };
+
+template<class>
+struct any;
+
+template<class, class>
+struct is;
+
+template<class T, class TInitialization, class... TArgs>
+struct is<T, aux::pair<TInitialization, aux::type_list<TArgs...>>> {
+    using type = aux::is_braces_constructible<T, TArgs...>;
+};
+
+template<class P>
+struct any {
+    template<class T
+          , class U = aux::decay_t<T>
+          , class = std::enable_if_t<!std::is_same<U, P>{}>
+          , class = std::enable_if_t<typename is<U, typename type_traits::ctor_traits<
+                typename std::remove_reference_t<decltype(binder::resolve<U>((pool<>*)nullptr))>::given
+            >::type>::type{}>
+    > operator T();
+};
+
+template<class, class, class = void>
+struct is_constructible : std::false_type { };
+
+template<class T, class TParent>
+struct is_constructible<T, TParent, aux::void_t<decltype(static_cast<T>(any<TParent>{}))>>
+    : std::true_type
+{ };
 
 template<class TDeps, class TConfig>
 class injector : requires_unique_bindings<TDeps>, public pool<TDeps> {
@@ -58,8 +89,10 @@ public:
 
     template<class T>
     T create() const {
+        constexpr auto is_constructible_v = typename is_constructible<T, void>::type{};
+        static_assert(is_constructible_v, "");
         using IsRoot = std::true_type;
-        return create_impl<T, no_name, IsRoot>();
+        return create_impl<T, no_name, IsRoot>(is_constructible_v);
     }
 
     template<class TAction>
@@ -88,8 +121,11 @@ private:
         return create_impl<T, TName>();
     }
 
+    template<class T, class, class>
+    T create_impl(const std::false_type&) const;
+
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
-    auto create_impl() const {
+    auto create_impl(const std::true_type& = {}) const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;

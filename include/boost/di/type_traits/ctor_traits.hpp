@@ -12,7 +12,9 @@
 #include "boost/di/core/any_type.hpp"
 #include "boost/di/inject.hpp"
 
-namespace boost { namespace di { namespace type_traits {
+namespace boost { namespace di {
+namespace core { template<class P> struct any; }
+namespace type_traits {
 
 template<class, class>
 struct named { };
@@ -55,7 +57,7 @@ template<
         , ctor_args<
               TIsConstructible
             , T
-            , core::any_type<T>
+            , core::any<T>
             , std::make_index_sequence<TArgs>
           >...
       >
