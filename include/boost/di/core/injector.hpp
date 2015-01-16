@@ -16,8 +16,8 @@
 #include "boost/di/core/policy.hpp"
 #include "boost/di/core/pool.hpp"
 #include "boost/di/core/provider.hpp"
-#include "boost/di/core/requires.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
+#include "boost/di/concepts/is_creatable.hpp"
 
 namespace boost { namespace di { namespace core {
 
@@ -32,40 +32,8 @@ struct wrapper {
     TWrapper wrapper_;
 };
 
-template<class, class>
-struct is;
-
-template<class T, class... TArgs>
-struct is<T, aux::pair<type_traits::uniform, aux::type_list<TArgs...>>> {
-    using type = aux::is_braces_constructible<T, TArgs...>;
-};
-
-template<class T, class... TArgs>
-struct is<T, aux::pair<type_traits::direct, aux::type_list<TArgs...>>> {
-    using type = std::is_constructible<T, TArgs...>;
-};
-
-template<class P>
-struct any {
-    template<class T
-          , class U = aux::decay_t<T>
-          , class = std::enable_if_t<!std::is_same<U, P>{}>
-          , class = std::enable_if_t<typename is<U, typename type_traits::ctor_traits<
-                typename std::remove_reference_t<decltype(binder::resolve<U>((pool<>*)nullptr))>::given
-            >::type>::type{}>
-    > operator T();
-};
-
-template<class, class, class = void>
-struct is_constructible : std::false_type { };
-
-template<class T, class TParent>
-struct is_constructible<T, TParent, aux::void_t<decltype(static_cast<T>(any<TParent>{}))>>
-    : std::true_type
-{ };
-
 template<class TDeps, class TConfig>
-class injector : requires_unique_bindings<TDeps>, public pool<TDeps> {
+class injector : public pool<TDeps> {
     template<class, class> friend struct any_type;
     template<class...> friend struct provider;
 
@@ -90,10 +58,10 @@ public:
 
     template<class T>
     T create() const {
-        constexpr auto is_constructible_v = typename is_constructible<T, void>::type{};
-        static_assert(is_constructible_v, "");
+        constexpr auto is_creatable_v = typename concepts::is_creatable<T, void, pool_t>::type{};
+        static_assert(is_creatable_v, "");
         using IsRoot = std::true_type;
-        return create_impl<T, no_name, IsRoot>(is_constructible_v);
+        return create_impl<T, no_name, IsRoot>(is_creatable_v);
     }
 
     template<class TAction>
@@ -131,7 +99,7 @@ private:
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;
         using given_t = typename dependency_t::given;
-        using ctor_t = typename type_traits::ctor_traits<given_t>::type;
+        using ctor_t = typename type_traits::ctor_traits<given_t, core::any_type_>::type;
         using provider_t = provider<expected_t, given_t, T, ctor_t, injector>;
         policy<pool_t>::template call<T, TName, TIsRoot>(
             ((TConfig&)config_).policies(), dependency, ctor_t{}

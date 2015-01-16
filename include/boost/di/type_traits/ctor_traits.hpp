@@ -12,9 +12,9 @@
 #include "boost/di/core/any_type.hpp"
 #include "boost/di/inject.hpp"
 
-namespace boost { namespace di {
-namespace core { template<class P> struct any; }
-namespace type_traits {
+#include "boost/di/core/pool.hpp"
+
+namespace boost { namespace di { namespace type_traits {
 
 template<class, class>
 struct named { };
@@ -43,52 +43,63 @@ template<
       >
 { };
 
-template<template<class...> class, class, class>
+template<template<class...> class, template<class> class, class, class>
 struct ctor_impl;
 
 template<
     template<class...> class TIsConstructible
+  , template<class> class TAny
   , class T
   , std::size_t... TArgs
-> struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>>
+> struct ctor_impl<TIsConstructible, TAny, T, std::index_sequence<TArgs...>>
     : aux::at_key_t<
           aux::type_list<>
         , std::true_type
         , ctor_args<
               TIsConstructible
             , T
-            , core::any<T>
+            , TAny<T>
             , std::make_index_sequence<TArgs>
           >...
       >
 { };
 
-template<template<class...> class TIsConstructible, class T>
-using ctor_impl_t =
+template<
+    template<class...> class TIsConstructible
+  , template<class> class TAny
+  , class T
+> using ctor_impl_t =
     typename ctor_impl<
         TIsConstructible
+      , TAny
       , T
       , std::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>
     >::type;
 
-template<class...>
+template<class, template<class> class, class>
 struct ctor;
 
-template<class T>
-struct ctor<T, aux::type_list<>>
-    : aux::pair<uniform, ctor_impl_t<aux::is_braces_constructible, T>>
+template<class T, template<class> class TAny>
+struct ctor<T, TAny, aux::type_list<>>
+    : aux::pair<uniform, ctor_impl_t<aux::is_braces_constructible, TAny, T>>
 { };
 
-template<class T, class... TArgs>
-struct ctor<T, aux::type_list<TArgs...>>
+template<class T, template<class> class TAny, class... TArgs>
+struct ctor<T, TAny, aux::type_list<TArgs...>>
     : aux::pair<direct, aux::type_list<TArgs...>>
 { };
 
 } // type_traits
 
+template<class T, template<class> class TAny>
+struct ctor_traits_
+    : type_traits::ctor<T, TAny, type_traits::ctor_impl_t<std::is_constructible, TAny, T>>
+{ };
+
+
 template<class T>
 struct ctor_traits
-    : type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>
+    : ctor_traits_<T, core::any_type_>
 { };
 
 namespace type_traits {
@@ -141,35 +152,37 @@ using parse_args_t = typename parse_args<Ts...>::type;
 
 template<
     class T
+  , template<class> class
   , class = typename BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<T>::type
 > struct ctor_traits;
 
 template<
     class T
+  , template<class> class
   , class = typename BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<di::ctor_traits<T>>::type
 > struct ctor_traits_impl;
 
-template<class T>
-struct ctor_traits<T, std::true_type>
+template<class T, template<class> class TAny>
+struct ctor_traits<T, TAny, std::true_type>
     : aux::pair<direct, parse_args_t<typename T::BOOST_DI_INJECTOR::type>>
 { };
 
-template<class T>
-struct ctor_traits<T, std::false_type>
-    : ctor_traits_impl<T>
+template<class T, template<class> class TAny>
+struct ctor_traits<T, TAny, std::false_type>
+    : ctor_traits_impl<T, TAny>
 { };
 
-template<class T>
-struct ctor_traits_impl<T, std::true_type>
+template<class T, template<class> class TAny>
+struct ctor_traits_impl<T, TAny, std::true_type>
     : aux::pair<
           direct
-        , parse_args_t<typename di::ctor_traits<T>::BOOST_DI_INJECTOR::type>
+        , parse_args_t<typename di::ctor_traits_<T, TAny>::BOOST_DI_INJECTOR::type>
       >
 { };
 
-template<class T>
-struct ctor_traits_impl<T, std::false_type>
-    : di::ctor_traits<T>
+template<class T, template<class> class TAny>
+struct ctor_traits_impl<T, TAny, std::false_type>
+    : di::ctor_traits_<T, TAny>
 { };
 
 }}} // boost::di::type_traits

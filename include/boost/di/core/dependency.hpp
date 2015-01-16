@@ -7,7 +7,6 @@
 #define BOOST_DI_CORE_DEPENDENCY_HPP
 
 #include "boost/di/aux_/utility.hpp"
-#include "boost/di/core/requires.hpp"
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/scopes/deduce.hpp"
@@ -76,7 +75,7 @@ public:
 
     template<class T>
     auto to(T&& object, std::enable_if_t<!is_injector<std::remove_reference_t<T>>{}>* = 0) const noexcept {
-        void(requires_external_concepts<TExpected, TGiven, TScope>{});
+        //void(requires_external_concepts<TExpected, TGiven, TScope>{});
         using dependency = dependency<
             scopes::external, TExpected, std::remove_reference_t<T>, TName
         >;

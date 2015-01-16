@@ -1348,13 +1348,13 @@ test blah = [] {
 
 };
 
-/*test blah2 = [] {*/
-    //struct c {
-        //c(int, double){}
-    //};
-    //auto injector = di::make_injector();
-    //injector.create<c>();
-/*};*/
+test blah2 = [] {
+    struct c {
+        c(int, double){}
+    };
+    auto injector = di::make_injector();
+    injector.create<c>();
+};
 
 test blah3 = [] {
     struct c {
@@ -1369,7 +1369,18 @@ test blah4 = [] {
     struct c {
         c(std::unique_ptr<i1>, int) {}
     };
-    auto injector = di::make_injector();
+    //auto injector = di::make_injector();
+    //injector.create<c>();
+};
+
+test blah5 = [] {
+    struct c {
+        c(std::unique_ptr<i1>, int) {}
+    };
+
+    auto injector = di::make_injector(
+        di::bind<i1, impl1>
+    );
     injector.create<c>();
 };
 
