@@ -57,11 +57,9 @@ public:
     { }
 
     template<class T>
-    T create() const {
-        constexpr auto is_creatable_v = typename concepts::is_creatable<T, void, pool_t>::type{};
-        static_assert(is_creatable_v, "");
+    T create(std::enable_if_t<typename concepts::is_creatable<T, void, pool_t>{}>* = 0) const {
         using IsRoot = std::true_type;
-        return create_impl<T, no_name, IsRoot>(is_creatable_v);
+        return create_impl<T, no_name, IsRoot>();
     }
 
     template<class TAction>
@@ -90,11 +88,8 @@ private:
         return create_impl<T, TName>();
     }
 
-    template<class T, class, class>
-    T create_impl(const std::false_type&) const;
-
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
-    auto create_impl(const std::true_type& = {}) const {
+    auto create_impl() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;
