@@ -27,14 +27,14 @@ struct any {
     using any_ = any<T, TDeps>;
 
     template<class T
-          , class U = aux::decay_t<T>
-          , class G = typename std::remove_reference_t<decltype(core::binder::resolve<U>((TDeps*)nullptr))>::given
-          , class = std::enable_if_t<!(std::is_same<U, TParent>{} || std::is_base_of<TParent, U>{})>
-          , class = std::enable_if_t<
-                typename is_creatable_impl<
-                    G, typename type_traits::ctor_traits<G, any_>::type
-                >::type{}
-            >
+           , class U = aux::decay_t<T>
+           , class G = typename std::remove_reference_t<decltype(core::binder::resolve<U>((TDeps*)nullptr))>::given
+           , class = std::enable_if_t<!(std::is_same<U, TParent>{} || std::is_base_of<TParent, U>{})>
+           , class = std::enable_if_t<
+                 typename is_creatable_impl<
+                     G, typename type_traits::ctor_traits<G, any_>::type
+                 >::type{}
+             >
     > operator T();
 };
 
