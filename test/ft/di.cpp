@@ -7,7 +7,6 @@
 #include "boost/di/providers/heap.hpp"
 #include "boost/di/policies/constructible.hpp"
 
-#include <boost/units/detail/utility.hpp>
 namespace di = boost::di;
 
 //auto name = []{};
@@ -47,157 +46,157 @@ struct complex2 {
     complex1 c1;
 };
 
-//struct complex3 {
-    //complex2 c2;
-//};
+struct complex3 {
+    complex2 c2;
+};
 
-//struct empty { };
+struct empty { };
 
-//test empty_injector = [] {
-    //auto injector = di::make_injector();
-    //expect_eq(0, injector.create<int>());
-//};
+test empty_injector = [] {
+    auto injector = di::make_injector();
+    expect_eq(0, injector.create<int>());
+};
 
-//test create_using_copy = [] {
-    //auto injector = di::make_injector();
-    //injector.create<empty>();
-//};
+test create_using_copy = [] {
+    auto injector = di::make_injector();
+    injector.create<empty>();
+};
 
-//test create_using_ptr = [] {
-    //auto injector = di::make_injector();
-    //std::unique_ptr<empty> object{injector.create<empty*>()};
-    //expect(object.get());
-//};
+test create_using_ptr = [] {
+    auto injector = di::make_injector();
+    std::unique_ptr<empty> object{injector.create<empty*>()};
+    expect(object.get());
+};
 
-//test create_using_const_ptr = [] {
-    //auto injector = di::make_injector();
-    //std::unique_ptr<const empty> object{injector.create<const empty*>()};
-    //expect(object.get());
-//};
+test create_using_const_ptr = [] {
+    auto injector = di::make_injector();
+    std::unique_ptr<const empty> object{injector.create<const empty*>()};
+    expect(object.get());
+};
 
-//test create_using_unique_ptr = [] {
-    //auto injector = di::make_injector();
-    //auto object = injector.create<std::unique_ptr<empty>>();
-    //expect(object.get());
-//};
+test create_using_unique_ptr = [] {
+    auto injector = di::make_injector();
+    auto object = injector.create<std::unique_ptr<empty>>();
+    expect(object.get());
+};
 
-//test create_using_shared_ptr = [] {
-    //auto injector = di::make_injector();
-    //auto object = injector.create<std::shared_ptr<empty>>();
-    //expect(object.get());
-//};
+test create_using_shared_ptr = [] {
+    auto injector = di::make_injector();
+    auto object = injector.create<std::shared_ptr<empty>>();
+    expect(object.get());
+};
 
-//test empty_module = [] {
-    //struct empty {
-        //auto configure() const {
-            //return di::make_injector();
-        //}
-    //};
+test empty_module = [] {
+    struct empty {
+        auto configure() const {
+            return di::make_injector();
+        }
+    };
 
-    //auto injector = di::make_injector(empty{});
-    //expect_eq(0, injector.create<int>());
-//};
+    auto injector = di::make_injector(empty{});
+    expect_eq(0, injector.create<int>());
+};
 
-//test create_ptr = [] {
-    //struct c {
-        //c(i1* ptr) { delete ptr; }
-    //};
+test create_ptr = [] {
+    struct c {
+        c(i1* ptr) { delete ptr; }
+    };
 
-    //auto injector = di::make_injector(
-        //di::bind<i1, impl1>
-    //);
+    auto injector = di::make_injector(
+        di::bind<i1, impl1>
+    );
 
-    //injector.create<c>();
-//};
+    injector.create<c>();
+};
 
-//test empty_exposed_module = [] {
-    //struct empty {
-        //di::injector<> configure() const {
-            //return di::make_injector();
-        //}
-    //};
+test empty_exposed_module = [] {
+    struct empty {
+        di::injector<> configure() const {
+            return di::make_injector();
+        }
+    };
 
-    //auto injector = di::make_injector(empty{});
-    //expect_eq(0, injector.create<int>());
-//};
+    auto injector = di::make_injector(empty{});
+    expect_eq(0, injector.create<int>());
+};
 
-//test any_of = [] {
-    //auto injector = di::make_injector(
-        //di::bind<impl1_2>
-    //);
+test any_of = [] {
+    auto injector = di::make_injector(
+        di::bind<impl1_2>
+    );
 
-    //auto object = injector.create<std::unique_ptr<impl1_2>>();
-    //expect(dynamic_cast<i1*>(object.get()));
-    //expect(dynamic_cast<i2*>(object.get()));
-    //expect(!dynamic_cast<i3*>(object.get()));
-//};
+    auto object = injector.create<std::unique_ptr<impl1_2>>();
+    expect(dynamic_cast<i1*>(object.get()));
+    expect(dynamic_cast<i2*>(object.get()));
+    expect(!dynamic_cast<i3*>(object.get()));
+};
 
-//test any_of_with_scope = [] {
-    //auto test = [](auto scope, auto same) {
-        //auto injector = di::make_injector(
-            //di::bind<di::any_of<i2, i1>, impl1_2>.in(scope)
-        //);
+test any_of_with_scope = [] {
+    auto test = [](auto scope, auto same) {
+        auto injector = di::make_injector(
+            di::bind<di::any_of<i2, i1>, impl1_2>.in(scope)
+        );
 
-        //auto object_1 = injector.template create<std::shared_ptr<i1>>();
-        //auto object_2 = injector.template create<std::shared_ptr<i2>>();
-        //auto result = dynamic_cast<impl1_2*>(object_1.get()) == dynamic_cast<impl1_2*>(object_2.get());
-        //expect_eq(result, same);
-    //};
+        auto object_1 = injector.template create<std::shared_ptr<i1>>();
+        auto object_2 = injector.template create<std::shared_ptr<i2>>();
+        auto result = dynamic_cast<impl1_2*>(object_1.get()) == dynamic_cast<impl1_2*>(object_2.get());
+        expect_eq(result, same);
+    };
 
-    //test(di::unique, false);
-    //test(di::shared, true);
-    //test(di::singleton, true);
-//};
+    test(di::unique, false);
+    test(di::shared, true);
+    test(di::singleton, true);
+};
 
-//test any_of_with_scope_split = [] {
-    //auto test = [](auto scope, auto same) {
-        //auto injector = di::make_injector(
-            //di::bind<i1, impl1_2>.in(scope)
-          //, di::bind<i2, impl1_2>.in(scope)
-        //);
+test any_of_with_scope_split = [] {
+    auto test = [](auto scope, auto same) {
+        auto injector = di::make_injector(
+            di::bind<i1, impl1_2>.in(scope)
+          , di::bind<i2, impl1_2>.in(scope)
+        );
 
-        //auto object_1 = injector.template create<std::shared_ptr<i1>>();
-        //auto object_2 = injector.template create<std::shared_ptr<i2>>();
-        //auto result = dynamic_cast<impl1_2*>(object_1.get()) == dynamic_cast<impl1_2*>(object_2.get());
-        //expect_eq(result, same);
-    //};
+        auto object_1 = injector.template create<std::shared_ptr<i1>>();
+        auto object_2 = injector.template create<std::shared_ptr<i2>>();
+        auto result = dynamic_cast<impl1_2*>(object_1.get()) == dynamic_cast<impl1_2*>(object_2.get());
+        expect_eq(result, same);
+    };
 
-    //test(di::unique, false);
-    //test(di::shared, false);
-    //test(di::singleton, false);
-//};
+    test(di::unique, false);
+    test(di::shared, false);
+    test(di::singleton, false);
+};
 
-//test any_of_unique = [] {
-    //auto injector = di::make_injector(
-        //di::bind<di::any_of<i1, i2>, impl1_2>.in(di::unique)
-    //);
+test any_of_unique = [] {
+    auto injector = di::make_injector(
+        di::bind<di::any_of<i1, i2>, impl1_2>.in(di::unique)
+    );
 
-    //auto object_1 = injector.create<std::shared_ptr<i1>>();
-    //auto object_2 = injector.create<std::shared_ptr<i2>>();
-    //expect(dynamic_cast<impl1_2*>(object_1.get()) != dynamic_cast<impl1_2*>(object_2.get()));
-//};
+    auto object_1 = injector.create<std::shared_ptr<i1>>();
+    auto object_2 = injector.create<std::shared_ptr<i2>>();
+    expect(dynamic_cast<impl1_2*>(object_1.get()) != dynamic_cast<impl1_2*>(object_2.get()));
+};
 
-//test create_interface_when_impl_with_one_arg_ctor = [] {
-    //struct impl : i1 { impl(int) { } void dummy1() override { } };
+test create_interface_when_impl_with_one_arg_ctor = [] {
+    struct impl : i1 { impl(int) { } void dummy1() override { } };
 
-    //auto injector = di::make_injector(
-        //di::bind<i1, impl>
-    //);
+    auto injector = di::make_injector(
+        di::bind<i1, impl>
+    );
 
-    //auto object = injector.create<std::unique_ptr<i1>>();
-    //expect(object.get());
-//};
+    auto object = injector.create<std::unique_ptr<i1>>();
+    expect(object.get());
+};
 
-//test injectors_mix = [] {
-    //auto injector = di::make_injector(
-        //di::make_injector(
-            //di::bind<i1, impl1>
-        //)
-    //);
+test injectors_mix = [] {
+    auto injector = di::make_injector(
+        di::make_injector(
+            di::bind<i1, impl1>
+        )
+    );
 
-    //auto object = injector.create<std::shared_ptr<complex1>>();
-    //expect(object->i1.get());
-//};
+    auto object = injector.create<std::shared_ptr<complex1>>();
+    expect(object->i1.get());
+};
 
 //test exposed_type = [] {
     //di::injector<complex1> injector = di::make_injector(
@@ -1382,7 +1381,7 @@ test blah5 = [] {
     auto injector = di::make_injector(
         di::bind<i1, impl1>
     );
-    injector.create<c>();
+    injector.create<std::unique_ptr<c>>();
 };
 
 test blah6 = [] {

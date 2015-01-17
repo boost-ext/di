@@ -72,6 +72,11 @@ struct expected {
     >;
 };
 
+template<class... Ts, class T>
+struct boundable<aux::type_list<Ts...>, T>
+    : std::integral_constant<bool, !std::is_same<bool_seq<never<Ts>{}...>, bool_seq<std::is_base_of<Ts, T>{}...>>{}>
+{ };
+
 template<class... Ts>
 struct boundable<aux::type_list<Ts...>, void>
     : unique<typename expected<Ts>::type...>

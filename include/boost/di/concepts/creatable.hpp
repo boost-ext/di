@@ -49,7 +49,7 @@ template<class, class, class = void>
 struct creatable : std::false_type { };
 
 template<class T, class TDeps>
-struct creatable<T, TDeps, aux::void_t<decltype(static_cast<T>(any<void, core::pool<TDeps>>{}))>>
+struct creatable<T, TDeps, aux::void_t<decltype(any<void, core::pool<TDeps>>{}.operator T())>>
     : std::true_type
 { };
 
