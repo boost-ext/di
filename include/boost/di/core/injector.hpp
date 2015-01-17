@@ -17,7 +17,8 @@
 #include "boost/di/core/pool.hpp"
 #include "boost/di/core/provider.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
-#include "boost/di/concepts/is_creatable.hpp"
+#include "boost/di/concepts/creatable.hpp"
+#include "boost/di/concepts/boundable.hpp"
 
 namespace boost { namespace di { namespace core {
 
@@ -32,7 +33,7 @@ struct wrapper {
     TWrapper wrapper_;
 };
 
-template<class TDeps, class TConfig>
+template<class TDeps, class TConfig, BOOST_DI_REQUIRES(concepts::boundable<TDeps>{})>
 class injector : public pool<TDeps> {
     template<class, class> friend struct any_type;
     template<class...> friend struct provider;
@@ -56,8 +57,8 @@ public:
         : pool_t{init{}, create_from_injector(injector, TDeps{})}
     { }
 
-    template<class T>
-    T create(std::enable_if_t<typename concepts::is_creatable<T, void, pool_t>{}>* = 0) const {
+    template<class T, BOOST_DI_REQUIRES(concepts::creatable<T, TDeps>{})>
+    T create() const {
         using IsRoot = std::true_type;
         return create_impl<T, no_name, IsRoot>();
     }

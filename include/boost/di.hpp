@@ -41,6 +41,8 @@
 
 #define BOOST_DI_AUX_UTILITY_HPP
 
+#define BOOST_DI_REQUIRES(...) typename std::enable_if<__VA_ARGS__{}, int>::type = 0
+
 namespace boost { namespace di { namespace aux {
 
 struct none_t { };
@@ -790,33 +792,6 @@ public:
 }}} // boost::di::scopes
 
 
-namespace boost { namespace di { namespace core {
-
-template<class>
-class requires_unique_bindings;
-
-template<class... Ts>
-class requires_unique_bindings<aux::type_list<Ts...>> {
-    template<class T>
-    struct expected {
-        using type = aux::pair<
-            aux::pair<typename T::expected, typename T::name>
-          , std::integral_constant<bool, T::scope::priority>
-        >;
-    };
-
-    pool<aux::type_list<typename expected<Ts>::type...>> bindings;
-};
-
-template<class TExpected, class TGiven, class TScope>
-class requires_external_concepts {
-    static_assert(std::is_same<TExpected, TGiven>{}, "Explicit implementation type doesn't have sens for external scope");
-    static_assert(std::is_same<TScope, scopes::deduce>{}, "External scope can not be bound explicitly in a different scope");
-};
-
-}}} // boost::di::core
-
-
 namespace boost { namespace di { namespace scopes {
 
 template<class TScope = scopes::deduce>
@@ -958,7 +933,7 @@ public:
 
     template<class T>
     auto to(T&& object, std::enable_if_t<!is_injector<std::remove_reference_t<T>>{}>* = 0) const noexcept {
-        void(requires_external_concepts<TExpected, TGiven, TScope>{});
+        //void(requires_external_concepts<TExpected, TGiven, TScope>{});
         using dependency = dependency<
             scopes::external, TExpected, std::remove_reference_t<T>, TName
         >;
@@ -1086,6 +1061,9 @@ struct any_type {
 
     const TInjector& injector_;
 };
+
+template<class TParent>
+using any_type_ = any_type<TParent>;
 
 template<class>
 struct is_any_type : std::false_type { };
@@ -1316,52 +1294,62 @@ template<
       >
 { };
 
-template<template<class...> class, class, class>
+template<template<class...> class, template<class> class, class, class>
 struct ctor_impl;
 
 template<
     template<class...> class TIsConstructible
+  , template<class> class TAny
   , class T
   , std::size_t... TArgs
-> struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>>
+> struct ctor_impl<TIsConstructible, TAny, T, std::index_sequence<TArgs...>>
     : aux::at_key_t<
           aux::type_list<>
         , std::true_type
         , ctor_args<
               TIsConstructible
             , T
-            , core::any_type<T>
+            , TAny<T>
             , std::make_index_sequence<TArgs>
           >...
       >
 { };
 
-template<template<class...> class TIsConstructible, class T>
-using ctor_impl_t =
+template<
+    template<class...> class TIsConstructible
+  , template<class> class TAny
+  , class T
+> using ctor_impl_t =
     typename ctor_impl<
         TIsConstructible
+      , TAny
       , T
       , std::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>
     >::type;
 
-template<class...>
+template<class, template<class> class, class>
 struct ctor;
 
-template<class T>
-struct ctor<T, aux::type_list<>>
-    : aux::pair<uniform, ctor_impl_t<aux::is_braces_constructible, T>>
+template<class T, template<class> class TAny>
+struct ctor<T, TAny, aux::type_list<>>
+    : aux::pair<uniform, ctor_impl_t<aux::is_braces_constructible, TAny, T>>
 { };
 
-template<class T, class... TArgs>
-struct ctor<T, aux::type_list<TArgs...>>
+template<class T, template<class> class TAny, class... TArgs>
+struct ctor<T, TAny, aux::type_list<TArgs...>>
     : aux::pair<direct, aux::type_list<TArgs...>>
 { };
 
 } // type_traits
 
+template<class T, template<class> class TAny>
+struct ctor_traits_
+    : type_traits::ctor<T, TAny, type_traits::ctor_impl_t<std::is_constructible, TAny, T>>
+{ };
+
 template<class T>
 struct ctor_traits
-    : type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>
+    : ctor_traits_<T, core::any_type_>
 { };
 
 namespace type_traits {
@@ -1414,35 +1402,37 @@ using parse_args_t = typename parse_args<Ts...>::type;
 
 template<
     class T
+  , template<class> class
   , class = typename BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<T>::type
 > struct ctor_traits;
 
 template<
     class T
+  , template<class> class
   , class = typename BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<di::ctor_traits<T>>::type
 > struct ctor_traits_impl;
 
-template<class T>
-struct ctor_traits<T, std::true_type>
+template<class T, template<class> class TAny>
+struct ctor_traits<T, TAny, std::true_type>
     : aux::pair<direct, parse_args_t<typename T::BOOST_DI_INJECTOR::type>>
 { };
 
-template<class T>
-struct ctor_traits<T, std::false_type>
-    : ctor_traits_impl<T>
+template<class T, template<class> class TAny>
+struct ctor_traits<T, TAny, std::false_type>
+    : ctor_traits_impl<T, TAny>
 { };
 
-template<class T>
-struct ctor_traits_impl<T, std::true_type>
+template<class T, template<class> class TAny>
+struct ctor_traits_impl<T, TAny, std::true_type>
     : aux::pair<
           direct
-        , parse_args_t<typename di::ctor_traits<T>::BOOST_DI_INJECTOR::type>
+        , parse_args_t<typename di::ctor_traits_<T, TAny>::BOOST_DI_INJECTOR::type>
       >
 { };
 
-template<class T>
-struct ctor_traits_impl<T, std::false_type>
-    : di::ctor_traits<T>
+template<class T, template<class> class TAny>
+struct ctor_traits_impl<T, TAny, std::false_type>
+    : di::ctor_traits_<T, TAny>
 { };
 
 }}} // boost::di::type_traits
@@ -1736,6 +1726,49 @@ template<
 
 }}} // boost::di::core
 
+
+namespace boost { namespace di { namespace concepts {
+
+template<class, class>
+struct is_creatable_impl;
+
+template<class T, class... TArgs>
+struct is_creatable_impl<T, aux::pair<type_traits::uniform, aux::type_list<TArgs...>>> {
+    using type = aux::is_braces_constructible<T, TArgs...>;
+};
+
+template<class T, class... TArgs>
+struct is_creatable_impl<T, aux::pair<type_traits::direct, aux::type_list<TArgs...>>> {
+    using type = std::is_constructible<T, TArgs...>;
+};
+
+template<class TParent, class TDeps>
+struct any {
+    template<class T>
+    using any_ = any<T, TDeps>;
+
+    template<class T
+           , class U = aux::decay_t<T>
+           , class G = typename std::remove_reference_t<decltype(core::binder::resolve<U>((TDeps*)nullptr))>::given
+           , class = std::enable_if_t<!(std::is_same<U, TParent>{} || std::is_base_of<TParent, U>{})>
+           , class = std::enable_if_t<
+                 typename is_creatable_impl<
+                     G, typename type_traits::ctor_traits<G, any_>::type
+                 >::type{}
+             >
+    > operator T();
+};
+
+template<class, class, class, class = void>
+struct is_creatable : std::false_type { };
+
+template<class T, class TParent, class TDeps>
+struct is_creatable<T, TParent, TDeps, aux::void_t<decltype(static_cast<T>(any<TParent, TDeps>{}))>>
+    : std::true_type
+{ };
+
+}}} // boost::di::concepts
+
 #define BOOST_DI_CORE_INJECTOR_HPP
 
 namespace boost { namespace di { namespace core {
@@ -1752,7 +1785,7 @@ struct wrapper {
 };
 
 template<class TDeps, class TConfig>
-class injector : requires_unique_bindings<TDeps>, public pool<TDeps> {
+class injector : public pool<TDeps> {
     template<class, class> friend struct any_type;
     template<class...> friend struct provider;
 
@@ -1775,7 +1808,7 @@ public:
         : pool_t{init{}, create_from_injector(injector, TDeps{})}
     { }
 
-    template<class T>
+    template<class T, BOOST_DI_REQUIRES(concepts::is_creatable<T, void, pool_t>)>
     T create() const {
         using IsRoot = std::true_type;
         return create_impl<T, no_name, IsRoot>();
@@ -1813,7 +1846,7 @@ private:
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;
         using given_t = typename dependency_t::given;
-        using ctor_t = typename type_traits::ctor_traits<given_t>::type;
+        using ctor_t = typename type_traits::ctor_traits<given_t, core::any_type_>::type;
         using provider_t = provider<expected_t, given_t, T, ctor_t, injector>;
         policy<pool_t>::template call<T, TName, TIsRoot>(
             ((TConfig&)config_).policies(), dependency, ctor_t{}

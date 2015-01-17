@@ -7,13 +7,17 @@
 #ifndef BOOST_DI_MAKE_INJECTOR_HPP
 #define BOOST_DI_MAKE_INJECTOR_HPP
 
+#include "boost/di/aux_/utility.hpp"
 #include "boost/di/injector.hpp"
+#include "boost/di/concepts/configurable.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost { namespace di {
 
-template<class TConfig = ::BOOST_DI_CFG, class... TArgs>
-inline auto make_injector(const TArgs&... args) noexcept {
+template<class TConfig = ::BOOST_DI_CFG
+       , BOOST_DI_REQUIRES(concepts::configurable<TConfig>{})
+       , class... TArgs
+> inline auto make_injector(const TArgs&... args) noexcept {
     return detail::injector<TConfig, TArgs...>(args...);
 }
 

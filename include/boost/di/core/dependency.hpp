@@ -16,6 +16,7 @@ namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_METHOD(configure, configure);
 BOOST_DI_HAS_TYPE(deps);
+BOOST_DI_HAS_TYPE(given);
 
 template<class T>
 using is_injector =
@@ -41,8 +42,7 @@ template<
   , class TGiven = TExpected
   , class TName = no_name
   , bool  TPriority = TScope::priority
->
-class dependency
+> class dependency
     : public TScope::template scope<TExpected, TGiven>
     , public dependency_impl<
           dependency_concept<TExpected, TName>
@@ -73,7 +73,7 @@ public:
         return dependency<T, TExpected, TGiven, TName>{};
     }
 
-    template<class T>
+    template<class T>// REQUIRES
     auto to(T&& object, std::enable_if_t<!is_injector<std::remove_reference_t<T>>{}>* = 0) const noexcept {
         //void(requires_external_concepts<TExpected, TGiven, TScope>{});
         using dependency = dependency<

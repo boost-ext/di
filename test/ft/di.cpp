@@ -1,10 +1,11 @@
+//#define BOOST_DI_CFG_CONCEPTS_CHECK_DISABLED
 #include <memory>
 #if (__has_include(<boost/shared_ptr.hpp>))
     #include <boost/shared_ptr.hpp>
 #endif
 #include "boost/di.hpp"
 #include "boost/di/providers/heap.hpp"
-#include "boost/di/policies/allow_ctor_types.hpp"
+#include "boost/di/policies/constructible.hpp"
 
 #include <boost/units/detail/utility.hpp>
 namespace di = boost::di;
@@ -23,28 +24,28 @@ struct impl2 : i2 { void dummy2() override { } };
 struct impl1_2 : i1, i2 { void dummy1() override { } void dummy2() override { } };
 struct impl4 : impl1_2 { };
 
-//struct impl1_with_i2 : i1 {
-    //explicit impl1_with_i2(std::shared_ptr<i2> i2)
-        //: i2(i2)
-    //{ }
+struct impl1_with_i2 : i1 {
+    explicit impl1_with_i2(std::shared_ptr<i2> i2)
+        : i2(i2)
+    { }
 
-    //void dummy1() override { }
+    void dummy1() override { }
 
-    //std::shared_ptr<i2> i2;
-//};
+    std::shared_ptr<i2> i2;
+};
 
-//struct complex1 {
-    //explicit complex1(const std::shared_ptr<i1>& i1)
-        //: i1(i1)
-    //{ }
+struct complex1 {
+    explicit complex1(const std::shared_ptr<i1>& i1)
+        : i1(i1)
+    { }
 
-    //std::shared_ptr<i1> i1;
-//};
+    std::shared_ptr<i1> i1;
+};
 
-//struct complex2 {
-    //int i;
-    //complex1 c1;
-//};
+struct complex2 {
+    int i;
+    complex1 c1;
+};
 
 //struct complex3 {
     //complex2 c2;
@@ -1382,5 +1383,41 @@ test blah5 = [] {
         di::bind<i1, impl1>
     );
     injector.create<c>();
+};
+
+test blah6 = [] {
+    //auto inj = di::make_injector(
+        //di::bind<int>.to(42)
+      ////, di::bind<int>.to([]{return 65;})
+    //);
+
+    //inj.create<complex2>();
+
+    //std::cout << boost::units::detail::demangle(typeid(di::concepts::boundable<decltype(inj)::deps>{}).name())<< std::endl;
+    //assert(false);
+};
+
+test blah7 = [] {
+    di::make_injector(
+        di::bind<int>.in(di::unique)
+        //di::bind<int>.to(42)
+    );
+};
+
+//test blah8 = [] {
+    //class config {
+    //public:
+        //auto policies() const noexcept {
+            //return di::make_policies();
+        //}
+    //};
+
+    //di::make_injector<config>();
+//};
+
+test blah9 = [] {
+    di::make_injector(
+        //di::bind<int, std::string>
+    );
 };
 
