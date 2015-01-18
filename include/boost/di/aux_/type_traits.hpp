@@ -36,7 +36,7 @@
     using has_##name = decltype(has_##name##_impl<T, TArgs...>(0))
 
 #define BOOST_DI_REQUIRES(...) \
-    class = typename std::enable_if<__VA_ARGS__>::type
+    typename std::enable_if<(__VA_ARGS__), int>::type = 0
 
 namespace boost { namespace di { namespace aux {
 

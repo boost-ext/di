@@ -18,7 +18,6 @@ struct lookup;
 
 template <std::size_t ...ignore>
 struct lookup<std::index_sequence<ignore...>> {
-
     template <class... ts>
     static aux::type_list<ts...>
     apply(decltype(ignore, (void*)nullptr)..., aux::no_decay<ts>*...);

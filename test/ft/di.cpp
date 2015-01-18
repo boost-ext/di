@@ -1405,16 +1405,16 @@ test blah7 = [] {
     );
 };
 
-//test blah8 = [] {
-    //class config {
-    //public:
-        //auto policies() const noexcept {
-            //return di::make_policies();
-        //}
-    //};
+test blah8 = [] {
+    class config : public di::config{
+    public:
+        auto policies() const noexcept {
+            return di::make_policies();
+        }
+    };
 
-    //di::make_injector<config>();
-//};
+    di::make_injector<config>();
+};
 
 test blah9 = [] {
     di::make_injector(

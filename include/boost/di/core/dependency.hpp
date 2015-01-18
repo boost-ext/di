@@ -72,8 +72,8 @@ public:
         return dependency<T, TExpected, TGiven, TName>{};
     }
 
-    template<class T>// REQUIRES
-    auto to(T&& object, std::enable_if_t<!is_injector<std::remove_reference_t<T>>{}>* = 0) const noexcept {
+    template<class T, std::enable_if_t<!is_injector<std::remove_reference_t<T>>{}, int> = 0>
+    auto to(T&& object) const noexcept {
         //void(requires_external_concepts<TExpected, TGiven, TScope>{});
         using dependency = dependency<
             scopes::external, TExpected, std::remove_reference_t<T>, TName
@@ -81,16 +81,16 @@ public:
         return dependency{std::forward<T>(object)};
     }
 
-    template<class T>
-    auto to(const T& object, std::enable_if_t<has_configure<T>{}>* = 0) const noexcept {
+    template<class T, std::enable_if_t<has_configure<T>{}, int> = 0>
+    auto to(const T& object) const noexcept {
         using dependency = dependency<
             scopes::exposed<TScope>, TExpected, decltype(std::declval<T>().configure()), TName
         >;
         return dependency{object.configure()};
     }
 
-    template<class T>
-    auto to(const T& object, std::enable_if_t<has_deps<T>{}>* = 0) const noexcept {
+    template<class T, std::enable_if_t<has_deps<T>{}, int> = 0>
+    auto to(const T& object) const noexcept {
         using dependency = dependency<
             scopes::exposed<TScope>, TExpected, T, TName
         >;

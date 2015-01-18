@@ -52,8 +52,8 @@ public:
         : injector(init{}, pass_arg(args)...)
     { }
 
-    template<class... TArgs>
-    injector(const injector<TArgs...>& injector) noexcept // non explicit
+    template<class TDeps_, class TConfig_>
+    injector(const injector<TDeps_, TConfig_>& injector) noexcept // non explicit
         : pool_t{init{}, create_from_injector(injector, TDeps{})}
     { }
 
@@ -134,8 +134,8 @@ private:
         return arg.configure();
     }
 
-    template<class... TArgs, class... Ts>
-    auto create_from_injector(const injector<TArgs...>& injector
+    template<class TDeps_, class TConfig_, class... Ts>
+    auto create_from_injector(const injector<TDeps_, TConfig_>& injector
                             , const aux::type_list<Ts...>&) const noexcept {
         return pool<TDeps>(create_dep<Ts>(injector)...);
     }

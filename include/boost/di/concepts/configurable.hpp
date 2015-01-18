@@ -11,12 +11,13 @@
 
 namespace boost { namespace di { namespace concepts {
 
-BOOST_DI_HAS_METHOD(policies, policies);
-BOOST_DI_HAS_METHOD(provider, provider);
+template<class, class = void>
+struct configurable : std::false_type { };
 
 template<class T>
-using configurable =
-    std::integral_constant<bool, has_policies<T>{} && has_provider<T>{}>;
+struct configurable<T, aux::void_t<decltype(std::declval<T>().policies()), decltype(std::declval<T>().provider())>>
+    : std::true_type
+{ };
 
 }}} // boost::di::concepts
 
