@@ -16,8 +16,11 @@
 
 namespace boost { namespace di { namespace type_traits {
 
-template<class, class>
-struct named { };
+template<class, class T>
+struct named {
+    operator T();
+    operator T&() const;
+};
 struct direct { };
 struct uniform { };
 

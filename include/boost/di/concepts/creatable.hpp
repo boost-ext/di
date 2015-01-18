@@ -56,6 +56,19 @@ struct any {
                  >::type{}
              >
     > operator T();
+
+    template<class T
+           , class U = aux::decay_t<T>
+           , class D = std::remove_reference_t<decltype(core::binder::resolve<U>((TDeps*)nullptr))>
+           , class = std::enable_if_t<!(std::is_same<U, TParent>{} || std::is_base_of<TParent, U>{})>
+           , class = std::enable_if_t<
+                 typename creatable_impl<
+                     typename D::scope
+                   , typename D::given
+                   , typename type_traits::ctor_traits<typename D::given, any_>::type
+                 >::type{}
+             >
+    > operator T&() const;
 };
 
 template<class, class, class = void>

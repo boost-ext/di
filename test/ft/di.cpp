@@ -7,12 +7,13 @@
 #include "boost/di/providers/heap.hpp"
 #include "boost/di/policies/constructible.hpp"
 
+#include <boost/units/detail/utility.hpp>
 namespace di = boost::di;
 
 auto name = []{};
 //auto other_name = []{};
-//auto a = []{};
-//auto b = []{};
+auto a = []{};
+auto b = []{};
 
 struct i1 { virtual ~i1() = default; virtual void dummy1() = 0; };
 struct i2 { virtual ~i2() = default; virtual void dummy2() = 0; };
@@ -344,81 +345,81 @@ test exposed_bind_deduced = [] {
     expect_eq(i, injector.create<int>());
 };
 
-/*test exposed_bind = [] {*/
-    //static constexpr auto i = 42;
+test exposed_bind = [] {
+    static constexpr auto i = 42;
 
-    //struct c {
-        //BOOST_DI_INJECT(c, (named = name) int i)
-            //: i(i)
-        //{ }
+    struct c {
+        BOOST_DI_INJECT(c, (named = name) int i)
+            : i(i)
+        { }
 
-        //int i = 0;
-    //};
+        int i = 0;
+    };
 
-    //struct module {
-        //di::injector<int> configure() const noexcept {
-            //return di::make_injector(
-                //di::bind<int>.to(i)
-            //);
-        //}
-    //};
+    struct module {
+        di::injector<int> configure() const noexcept {
+            return di::make_injector(
+                di::bind<int>.to(i)
+            );
+        }
+    };
 
-    //auto injector = di::make_injector(
-        //di::bind<int>.named(name).in(di::unique).to(module{})
-    //);
+    auto injector = di::make_injector(
+        di::bind<int>.named(name).in(di::unique).to(module{})
+    );
 
-    //auto object = injector.create<c>();
+    auto object = injector.create<c>();
 
-    //expect_eq(i, object.i);
-/*};*/
+    expect_eq(i, object.i);
+};
 
-/*test exposed_bind_interface = [] {*/
-    //struct c {
-        //BOOST_DI_INJECT(c, (named = name) std::unique_ptr<i1> i)
-            //: i(std::move(i))
-        //{ }
+test exposed_bind_interface = [] {
+    struct c {
+        BOOST_DI_INJECT(c, (named = name) std::unique_ptr<i1> i)
+            : i(std::move(i))
+        { }
 
-        //std::unique_ptr<i1> i;
-    //};
+        std::unique_ptr<i1> i;
+    };
 
-    //di::injector<i1> module = di::make_injector(
-        //di::bind<i1, impl1>
-    //);
+    di::injector<i1> module = di::make_injector(
+        di::bind<i1, impl1>
+    );
 
-    //auto injector = di::make_injector(
-        //di::bind<i1>.named(name).to(module)
-    //);
+    auto injector = di::make_injector(
+        di::bind<i1>.named(name).to(module)
+    );
 
-    //auto object = injector.create<std::unique_ptr<c>>();
+    auto object = injector.create<std::unique_ptr<c>>();
 
-    //expect(dynamic_cast<impl1*>(object->i.get()));
-/*};*/
+    expect(dynamic_cast<impl1*>(object->i.get()));
+};
 
-/*test exposed_bind_interface_module = [] {*/
-    //struct c {
-        //BOOST_DI_INJECT(c, (named = name) std::unique_ptr<i1> i)
-            //: i(std::move(i))
-        //{ }
+test exposed_bind_interface_module = [] {
+    struct c {
+        BOOST_DI_INJECT(c, (named = name) std::unique_ptr<i1> i)
+            : i(std::move(i))
+        { }
 
-        //std::unique_ptr<i1> i;
-    //};
+        std::unique_ptr<i1> i;
+    };
 
-    //struct module {
-        //di::injector<i1> configure() const noexcept {
-            //return di::make_injector(
-                //di::bind<i1, impl1>
-            //);
-        //}
-    //};
+    struct module {
+        di::injector<i1> configure() const noexcept {
+            return di::make_injector(
+                di::bind<i1, impl1>
+            );
+        }
+    };
 
-    //auto injector = di::make_injector(
-        //di::bind<i1>.named(name).to(module{})
-    //);
+    auto injector = di::make_injector(
+        di::bind<i1>.named(name).to(module{})
+    );
 
-    //auto object = injector.create<std::unique_ptr<c>>();
+    auto object = injector.create<std::unique_ptr<c>>();
 
-    //expect(dynamic_cast<impl1*>(object->i.get()));
-/*};*/
+    expect(dynamic_cast<impl1*>(object->i.get()));
+};
 
 test exposed_module_with_unique_ptr = [] {
     struct i1 { virtual ~i1() = default; virtual void dummy1() = 0; };
@@ -707,23 +708,23 @@ test inject = [] {
     //expect_eq(0, object.il.size());
 /*};*/
 
-/*test named_polymorphic = [] {*/
-    //struct c {
-        //BOOST_DI_INJECT(explicit c, (named = name) std::shared_ptr<i1> sp)
-            //: sp(sp)
-        //{ }
+test named_polymorphic = [] {
+    struct c {
+        BOOST_DI_INJECT(explicit c, (named = name) std::shared_ptr<i1> sp)
+            : sp(sp)
+        { }
 
-        //std::shared_ptr<i1> sp;
-    //};
+        std::shared_ptr<i1> sp;
+    };
 
-    //auto injector = di::make_injector(
-        //di::bind<i1, impl1>.named(name)
-    //);
+    auto injector = di::make_injector(
+        di::bind<i1, impl1>.named(name)
+    );
 
-    //auto object = injector.create<c>();
+    auto object = injector.create<c>();
 
-    //expect(dynamic_cast<impl1*>(object.sp.get()));
-/*};*/
+    expect(dynamic_cast<impl1*>(object.sp.get()));
+};
 
 struct c {
     BOOST_DI_INJECT(explicit c, (named = name) int i);
@@ -732,17 +733,17 @@ struct c {
 
 c::c(int i) : i(i) { }
 
-/*test named_with_ctor_def_decl = [] {*/
-    //constexpr auto i = 42;
+test named_with_ctor_def_decl = [] {
+    constexpr auto i = 42;
 
-    //auto injector = di::make_injector(
-        //di::bind<int>.named(name).to(i)
-    //);
+    auto injector = di::make_injector(
+        di::bind<int>.named(name).to(i)
+    );
 
-    //auto object = injector.create<c>();
+    auto object = injector.create<c>();
 
-    //expect_eq(i, object.i);
-/*};*/
+    expect_eq(i, object.i);
+};
 
 test bind_chars_to_string = [] {
     auto injector = di::make_injector(
@@ -944,25 +945,25 @@ test bind_chars_to_string = [] {
     //}
 /*};*/
 
-/*test named_parameters_with_shared_scope = [] {*/
-    //struct c {
-        //BOOST_DI_INJECT(c, (named = a) const std::shared_ptr<i1>& n1, (named = b) std::shared_ptr<i1> n2)
-            //: n1(n1), n2(n2)
-        //{ }
+test named_parameters_with_shared_scope = [] {
+    struct c {
+        BOOST_DI_INJECT(c, (named = a) const std::shared_ptr<i1>& n1, (named = b) std::shared_ptr<i1> n2)
+            : n1(n1), n2(n2)
+        { }
 
-        //std::shared_ptr<i1> n1;
-        //std::shared_ptr<i1> n2;
-    //};
+        std::shared_ptr<i1> n1;
+        std::shared_ptr<i1> n2;
+    };
 
-    //auto injector = di::make_injector(
-        //di::bind<i1, impl1>.named(a).in(di::unique)
-      //, di::bind<i1>.named(b).to(std::make_shared<impl1>())
-    //);
+    auto injector = di::make_injector(
+        di::bind<i1, impl1>.named(a).in(di::unique)
+      , di::bind<i1>.named(b).to(std::make_shared<impl1>())
+    );
 
-    //auto object = injector.create<c>();
+    auto object = injector.create<c>();
 
-    //expect(object.n1 != object.n2);
-/*};*/
+    expect(object.n1 != object.n2);
+};
 
 test call_policy_lambda = [] {
     static auto called = false;
@@ -1074,29 +1075,29 @@ struct call_operator {
     }
 };
 
-/*test runtime_factory_call_operator_impl = [] {*/
-    //constexpr auto i = 42;
+test runtime_factory_call_operator_impl = [] {
+    constexpr auto i = 42;
 
-    //auto test = [&](bool debug_property) {
-        //auto injector = make_injector(
-            //di::bind<int>.to(i)
-          //, di::bind<i1>.to(call_operator{debug_property})
-        //);
+    auto test = [&](bool debug_property) {
+        auto injector = make_injector(
+            di::bind<int>.to(i)
+          , di::bind<i1>.to(call_operator{debug_property})
+        );
 
-        //return injector.create<std::shared_ptr<i1>>();
-    //};
+        return injector.create<std::shared_ptr<i1>>();
+    };
 
-    //{
-    //auto object = test(false);
-    //expect(dynamic_cast<impl1_int*>(object.get()));
-    //expect_eq(i, dynamic_cast<impl1_int*>(object.get())->i);
-    //}
+    {
+    auto object = test(false);
+    expect(dynamic_cast<impl1_int*>(object.get()));
+    expect_eq(i, dynamic_cast<impl1_int*>(object.get())->i);
+    }
 
-    //{
-    //auto object = test(true);
-    //expect(dynamic_cast<impl1*>(object.get()));
-    //}
-//};
+    {
+    auto object = test(true);
+    expect(dynamic_cast<impl1*>(object.get()));
+    }
+};
 
 //test dynamic_binding_using_polymorphic_lambdas_with_dependend_interfaces = [] {
     //auto test = [&](bool debug_property) {
