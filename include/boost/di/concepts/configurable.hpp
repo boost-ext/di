@@ -8,6 +8,7 @@
 #define BOOST_DI_CONCEPTS_CONFIGURABLE_HPP
 
 #include <type_traits>
+#include "boost/di/aux_/utility.hpp"
 
 namespace boost { namespace di { namespace concepts {
 
