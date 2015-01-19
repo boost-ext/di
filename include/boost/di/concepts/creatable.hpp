@@ -12,6 +12,7 @@
 #include "boost/di/core/binder.hpp"
 #include "boost/di/core/pool.hpp"
 #include "boost/di/scopes/exposed.hpp"
+#include "boost/di/scopes/external.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 
 namespace boost { namespace di { namespace concepts {
@@ -39,36 +40,37 @@ struct creatable_impl<scopes::exposed<TScope>, T, aux::pair<type_traits::uniform
     using type = std::true_type;
 };
 
+template<class T, class... TArgs>
+struct creatable_impl<scopes::external, T, aux::pair<type_traits::direct, aux::type_list<TArgs...>>> {
+    using type = std::true_type;
+};
+
+template<class T, class... TArgs>
+struct creatable_impl<scopes::external, T, aux::pair<type_traits::uniform, aux::type_list<TArgs...>>> {
+    using type = std::true_type;
+};
+
 template<class TParent, class TDeps>
 struct any {
     template<class T>
     using any_ = any<T, TDeps>;
 
-    template<class T
-           , class U = aux::decay_t<T>
-           , class D = std::remove_reference_t<decltype(core::binder::resolve<U>((TDeps*)nullptr))>
-           , class = std::enable_if_t<!(std::is_same<U, TParent>{} || std::is_base_of<TParent, U>{})>
-           , class = std::enable_if_t<
-                 typename creatable_impl<
-                     typename D::scope
-                   , typename D::given
-                   , typename type_traits::ctor_traits<typename D::given, any_>::type
-                 >::type{}
-             >
-    > operator T();
+    template<
+        class T
+      , class U = aux::decay_t<T>
+      , class D = std::remove_reference_t<decltype(core::binder::resolve<U>((TDeps*)nullptr))>
+      , class = std::enable_if_t<!(std::is_same<U, TParent>{} || std::is_base_of<TParent, U>{})>
+      , class = std::enable_if_t<
+            typename creatable_impl<
+                typename D::scope
+              , typename D::given
+              , typename type_traits::ctor_traits<typename D::given, any_>::type
+            >::type{}
+        >
+    > struct is_valid_expr { };
 
-    template<class T
-           , class U = aux::decay_t<T>
-           , class D = std::remove_reference_t<decltype(core::binder::resolve<U>((TDeps*)nullptr))>
-           , class = std::enable_if_t<!(std::is_same<U, TParent>{} || std::is_base_of<TParent, U>{})>
-           , class = std::enable_if_t<
-                 typename creatable_impl<
-                     typename D::scope
-                   , typename D::given
-                   , typename type_traits::ctor_traits<typename D::given, any_>::type
-                 >::type{}
-             >
-    > operator T&() const;
+    template<class T, class = is_valid_expr<T>> operator T();
+    template<class T, class = is_valid_expr<T>> operator T&() const;
 };
 
 template<class, class, class = void>

@@ -553,45 +553,45 @@ test scopes_external_shared = [] {
     }
 };
 
-/*test scopes_external_lambda = [] {*/
-    //auto i = std::make_shared<int>(42);
+test scopes_external_lambda = [] {
+    auto i = std::make_shared<int>(42);
 
-    //auto injector = di::make_injector(
-        //di::bind<int>.to([&i]{return i;})
-    //);
+    auto injector = di::make_injector(
+        di::bind<int>.to([&i]{return i;})
+    );
 
-    //{
-    //auto object = injector.create<std::shared_ptr<int>>();
-    //expect_eq(i.get(), object.get());
-    //expect_eq(42, *i);
-    //}
+    {
+    auto object = injector.create<std::shared_ptr<int>>();
+    expect_eq(i.get(), object.get());
+    expect_eq(42, *i);
+    }
 
-    //{
-    //++*i;
-    //auto object = injector.create<std::shared_ptr<int>>();
-    //expect_eq(43, *i);
-    //}
-//};
+    {
+    ++*i;
+    auto object = injector.create<std::shared_ptr<int>>();
+    expect_eq(43, *i);
+    }
+};
 
-//test scopes_external_lambda_injector = [] {
-    //auto i = std::make_shared<int>(42);
+test scopes_external_lambda_injector = [] {
+    auto i = std::make_shared<int>(42);
 
-    //auto injector = di::make_injector(
-        //di::bind<int>.to([&i](const auto&){return i;})
-    //);
+    auto injector = di::make_injector(
+        di::bind<int>.to([&i](const auto&){return i;})
+    );
 
-    //{
-    //auto object = injector.create<std::shared_ptr<int>>();
-    //expect_eq(i.get(), object.get());
-    //expect_eq(42, *i);
-    //}
+    {
+    auto object = injector.create<std::shared_ptr<int>>();
+    expect_eq(i.get(), object.get());
+    expect_eq(42, *i);
+    }
 
-    //{
-    //++*i;
-    //auto object = injector.create<std::shared_ptr<int>>();
-    //expect_eq(43, *i);
-    //}
-/*};*/
+    {
+    ++*i;
+    auto object = injector.create<std::shared_ptr<int>>();
+    expect_eq(43, *i);
+    }
+};
 
 #if (__has_include(<boost/shared_ptr.hpp>))
     test conversion_to_boost_shared_ptr = [] {
@@ -753,98 +753,98 @@ test bind_chars_to_string = [] {
     expect_eq("str", injector.create<std::string>());
 };
 
-/*test ctor_refs = [] {*/
-    //struct c {
-        //BOOST_DI_INJECT(c
-        //, const std::shared_ptr<i1>& sp
-        //, int& i
-        //, const double& d
-        //, const std::string& str
-        //, (named = name) const std::string& nstr
-        //, const std::function<int()>& f
-        //, long&& l
-        //, short s)
-            //: i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)
-        //{
-            //sp->dummy1();
-        //}
+test ctor_refs = [] {
+    struct c {
+        BOOST_DI_INJECT(c
+        , const std::shared_ptr<i1>& sp
+        , int& i
+        , const double& d
+        , const std::string& str
+        , (named = name) const std::string& nstr
+        , const std::function<int()>& f
+        , long&& l
+        , short s)
+            : i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)
+        {
+            sp->dummy1();
+        }
 
-        //int& i;
-        //const double& d;
-        //std::string str;
-        //std::string nstr;
-        //std::function<int()> f;
-        //long l = 0;
-        //short s = 0;
-    //};
+        int& i;
+        const double& d;
+        std::string str;
+        std::string nstr;
+        std::function<int()> f;
+        long l = 0;
+        short s = 0;
+    };
 
-    //struct c_inject {
-        //BOOST_DI_INJECT(c_inject
-                      //, const std::shared_ptr<i1>& sp
-                      //, int& i
-                      //, const double& d
-                      //, const std::string& str
-                      //, (named = name) const std::string& nstr
-                      //, std::function<int()> f
-                      //, long&& l
-                      //, short s)
-            //: i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)
-        //{
-            //sp->dummy1();
-        //}
+    struct c_inject {
+        BOOST_DI_INJECT(c_inject
+                      , const std::shared_ptr<i1>& sp
+                      , int& i
+                      , const double& d
+                      , const std::string& str
+                      , (named = name) const std::string& nstr
+                      , std::function<int()> f
+                      , long&& l
+                      , short s)
+            : i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)
+        {
+            sp->dummy1();
+        }
 
-        //int& i;
-        //const double& d;
-        //std::string str;
-        //std::string nstr;
-        //std::function<int()> f;
-        //long l = 0;
-        //short s = 0;
-    //};
+        int& i;
+        const double& d;
+        std::string str;
+        std::string nstr;
+        std::function<int()> f;
+        long l = 0;
+        short s = 0;
+    };
 
-    //struct c_aggregate {
-        //const std::shared_ptr<i1>& sp;
-        //int& i;
-        //const double& d;
-        //std::string str;
-        //std::string nstr;
-        //std::function<int()> f;
-        //long l = 0;
-        //short s = 0;
-    //};
+    struct c_aggregate {
+        const std::shared_ptr<i1>& sp;
+        int& i;
+        const double& d;
+        std::string str;
+        std::string nstr;
+        std::function<int()> f;
+        long l = 0;
+        short s = 0;
+    };
 
-    //auto test = [](auto type, const auto& bind_i1) {
-        //auto i = 0;
-        //constexpr auto d = 0.0;
+    auto test = [](auto type, const auto& bind_i1) {
+        auto i = 0;
+        constexpr auto d = 0.0;
 
-        //auto injector = di::make_injector(
-            //di::bind<int>.to(std::ref(i))
-          //, di::bind<double>.to(std::cref(d))
-          //, di::bind<std::string>.to("str")
-          //, di::bind<std::string>.named(name).to("named str")
-          //, bind_i1
-          //, di::bind<short>.to(short{42})
-          //, di::bind<long>.to(123)
-          //, di::bind<std::function<int()>>.to([]{return 87;})
-        //);
+        auto injector = di::make_injector(
+            di::bind<int>.to(std::ref(i))
+          , di::bind<double>.to(std::cref(d))
+          , di::bind<std::string>.to("str")
+          , di::bind<std::string>.named(name).to("named str")
+          , bind_i1
+          , di::bind<short>.to(short{42})
+          , di::bind<long>.to(123)
+          , di::bind<std::function<int()>>.to([]{return 87;})
+        );
 
-        //auto object = injector.template create<typename decltype(type)::type>();
-        //expect_eq(&i, &object.i);
-        //expect_eq(&d, &object.d);
-        //expect_eq("str", object.str);
-        //expect_eq(42, object.s);
-        //expect_eq(87, object.f());
-        //expect_eq(123, object.l);
-    //};
+        auto object = injector.template create<typename decltype(type)::type>();
+        expect_eq(&i, &object.i);
+        expect_eq(&d, &object.d);
+        expect_eq("str", object.str);
+        expect_eq(42, object.s);
+        expect_eq(87, object.f());
+        expect_eq(123, object.l);
+    };
 
-    //test(test_type<c>{}, di::bind<i1, impl1>);
-    //test(test_type<c_inject>{}, di::bind<i1, impl1>);
-    //test(test_type<c_aggregate>{}, di::bind<i1, impl1>);
+    test(test_type<c>{}, di::bind<i1, impl1>);
+    test(test_type<c_inject>{}, di::bind<i1, impl1>);
+    test(test_type<c_aggregate>{}, di::bind<i1, impl1>);
 
-    //test(test_type<c>{}, di::bind<i1>.to(std::make_shared<impl1>()));
-    //test(test_type<c_inject>{}, di::bind<i1>.to(std::make_shared<impl1>()));
-    //test(test_type<c_aggregate>{}, di::bind<i1>.to(std::make_shared<impl1>()));
-/*};*/
+    test(test_type<c>{}, di::bind<i1>.to(std::make_shared<impl1>()));
+    test(test_type<c_inject>{}, di::bind<i1>.to(std::make_shared<impl1>()));
+    test(test_type<c_aggregate>{}, di::bind<i1>.to(std::make_shared<impl1>()));
+};
 
 /*test refs_vs_copy = [] {*/
     //struct cc {
@@ -980,87 +980,88 @@ test call_policy_lambda = [] {
     expect(called);
 };
 
-/*test modules_mix_make_injector = [] {*/
-    //constexpr auto i = 42;
-    //constexpr auto d = 87.0;
-    //constexpr auto f = 123.0f;
-    //const std::string s = "string";
+test modules_mix_make_injector = [] {
+    constexpr auto i = 42;
+    constexpr auto d = 87.0;
+    constexpr auto f = 123.0f;
+    const std::string s = "string";
 
-    //auto injector_string = make_injector(
-        //di::bind<std::string>.to(s)
-    //);
+    auto injector_string = make_injector(
+        di::bind<std::string>.to(s)
+    );
 
-    //struct empty {
-        //auto configure() const {
-            //return di::make_injector();
-        //}
-    //};
+    struct empty {
+        auto configure() const {
+            return di::make_injector();
+        }
+    };
 
-    //struct module1 {
-        //di::injector<i1> configure() const {
-            //return di::make_injector(
-                //di::bind<i1, impl1>
-            //);
-        //}
-    //};
+    struct module1 {
+        di::injector<i1> configure() const {
+            return di::make_injector(
+                di::bind<i1, impl1>
+            );
+        }
+    };
 
-    //struct module2 {
-        //di::injector<int> configure() const {
-            //return di::make_injector(
-                //di::bind<int>.to(i_)
-            //);
-        //}
+    struct module2 {
+        di::injector<int> configure() const {
+            return di::make_injector(
+                di::bind<int>.to(i_)
+            );
+        }
 
-        //int i_ = 0;
-    //};
+        int i_ = 0;
+    };
 
-    //auto injector = di::make_injector(
-        //empty{}
-      //, di::bind<double>.to(d)
-      //, module1{}
-      //, make_injector(
-            //di::bind<float>.to(f)
-        //)
-      //, injector_string
-      //, module2{i}
-    //);
+    auto injector = di::make_injector(
+        empty{}
+      , di::bind<double>.to(d)
+      , module1{}
+      , make_injector(
+            di::bind<float>.to(f)
+        )
+      , injector_string
+      , module2{i}
+    );
 
-    //expect(dynamic_cast<impl1*>(injector.create<std::unique_ptr<i1>>().get()));
-    //expect_eq(i, injector.create<int>());
-    //expect_eq(d, injector.create<double>());
-    //expect_eq(f, injector.create<float>());
+    expect(dynamic_cast<impl1*>(injector.create<std::unique_ptr<i1>>().get()));
+    expect_eq(i, injector.create<int>());
+    expect_eq(d, injector.create<double>());
+    expect_eq(f, injector.create<float>());
+    //TODO
     //expect_eq(s, injector.create<std::string>());
-/*};*/
+};
 
-/*test runtime_factory_impl = [] {*/
-    //constexpr auto i = 42;
+test runtime_factory_impl = [] {
+    constexpr auto i = 42;
 
-    //auto test = [&](bool debug_property) {
-        //auto injector = make_injector(
-            //di::bind<int>.to(i)
-          //, di::bind<i1>.to([&](const auto& injector) -> std::shared_ptr<i1> {
-                //if (debug_property) {
-                    //return std::make_shared<impl1>();
-                //}
+    auto test = [&](bool debug_property) {
+        auto injector = make_injector(
+            di::bind<int>.to(i)
+          , di::bind<i1>.to([&](const auto& injector) -> std::shared_ptr<i1> {
+                if (debug_property) {
+                    return std::make_shared<impl1>();
+                }
 
-                //return injector.template create<std::shared_ptr<impl1_int>>();
-            //})
-        //);
+                return injector.template create<std::shared_ptr<impl1_int>>();
+            })
+        );
 
-        //return injector.create<std::shared_ptr<i1>>();
-    //};
+        return injector.create<std::shared_ptr<i1>>();
+    };
 
-    //{
-    //auto object = test(false);
-    //expect(dynamic_cast<impl1_int*>(object.get()));
-    //expect_eq(i, dynamic_cast<impl1_int*>(object.get())->i);
-    //}
+    {
+    auto object = test(false);
+    expect(dynamic_cast<impl1_int*>(object.get()));
+    expect_eq(i, dynamic_cast<impl1_int*>(object.get())->i);
+    }
 
-    //{
-    //auto object = test(true);
-    //expect(dynamic_cast<impl1*>(object.get()));
-    //}
-/*};*/
+    {
+    auto object = test(true);
+    expect(dynamic_cast<impl1*>(object.get()));
+    }
+};
 
 struct call_operator {
     bool& b;
@@ -1099,33 +1100,33 @@ test runtime_factory_call_operator_impl = [] {
     }
 };
 
-//test dynamic_binding_using_polymorphic_lambdas_with_dependend_interfaces = [] {
-    //auto test = [&](bool debug_property) {
-        //auto injector = make_injector(
-            //di::bind<i1>.to([&](const auto& injector) -> std::shared_ptr<i1> {
-                //if (debug_property) {
-                    //return std::make_shared<impl1>();
-                //}
+test dynamic_binding_using_polymorphic_lambdas_with_dependend_interfaces = [] {
+    auto test = [&](bool debug_property) {
+        auto injector = make_injector(
+            di::bind<i1>.to([&](const auto& injector) -> std::shared_ptr<i1> {
+                if (debug_property) {
+                    return std::make_shared<impl1>();
+                }
 
-                //return injector.template create<std::shared_ptr<impl1_with_i2>>();
-            //})
-          //, di::bind<i2, impl2>
-        //);
+                return injector.template create<std::shared_ptr<impl1_with_i2>>();
+            })
+          , di::bind<i2, impl2>
+        );
 
-        //return injector.create<std::shared_ptr<i1>>();
-    //};
+        return injector.create<std::shared_ptr<i1>>();
+    };
 
-    //{
-    //auto object = test(false);
-    //expect(dynamic_cast<impl1_with_i2*>(object.get()));
-    //expect(dynamic_cast<impl2*>(dynamic_cast<impl1_with_i2*>(object.get())->i2.get()));
-    //}
+    {
+    auto object = test(false);
+    expect(dynamic_cast<impl1_with_i2*>(object.get()));
+    expect(dynamic_cast<impl2*>(dynamic_cast<impl1_with_i2*>(object.get())->i2.get()));
+    }
 
-    //{
-    //auto object = test(true);
-    //expect(dynamic_cast<impl1*>(object.get()));
-    //}
-/*};*/
+    {
+    auto object = test(true);
+    expect(dynamic_cast<impl1*>(object.get()));
+    }
+};
 
 test externals_ref_cref = [] {
     auto i = 42;
@@ -1157,30 +1158,30 @@ test externals_ref_cref = [] {
 double return_double(double d) { return d; }
 long return_long(long l) { return l; }
 
-/*test bind_to_function_ptr = [] {*/
-    //constexpr auto i = 42;
-    //constexpr auto d = 87.0;
+test bind_to_function_ptr = [] {
+    constexpr auto i = 42;
+    constexpr auto d = 87.0;
 
-    //struct functions {
-        //functions(const std::function<int()>& fi, std::function<double()> fd)
-            //: fi(fi)
-            //, fd(fd)
-        //{ }
+    struct functions {
+        functions(const std::function<int()>& fi, std::function<double()> fd)
+            : fi(fi)
+            , fd(fd)
+        { }
 
-        //std::function<int()> fi;
-        //std::function<double()> fd;
-    //};
+        std::function<int()> fi;
+        std::function<double()> fd;
+    };
 
-    //auto injector = di::make_injector(
-        //di::bind<std::function<int()>>.to([&]{ return i; })
-      //, di::bind<std::function<double()>>.to(std::bind(&return_double, d))
-    //);
+    auto injector = di::make_injector(
+        di::bind<std::function<int()>>.to([&]{ return i; })
+      , di::bind<std::function<double()>>.to(std::bind(&return_double, d))
+    );
 
-    //auto object = injector.create<functions>();
+    auto object = injector.create<functions>();
 
-    //expect_eq(i, object.fi());
-    //expect_eq(d, object.fd());
-/*};*/
+    expect_eq(i, object.fi());
+    expect_eq(d, object.fd());
+};
 
 test create_with_default_values = [] {
     constexpr auto i = 42;
@@ -1282,24 +1283,24 @@ test call_provider_with_deleter = [] {
     expect_eq(1, deleter_provider::called());
 };
 
-/*test allow_types_policy = [] {*/
-    //class config : public di::config {
-    //public:
-        //auto policies() const noexcept {
-            //using namespace di::policies;
-            //using namespace di::policies::operators;
-            //return di::make_policies(allow_ctor_types(is_root{} || std::is_same<_, double>{} || is_bound<_>{}));
-        //}
-    //};
+test allow_types_policy = [] {
+    class config : public di::config {
+    public:
+        auto policies() const noexcept {
+            using namespace di::policies;
+            using namespace di::policies::operators;
+            return di::make_policies(constructible(is_root{} || std::is_same<_, double>{} || is_bound<_>{}));
+        }
+    };
 
-    //struct example {
-        //int i = 0;
-        //double d = 0.0;
-    //};
+    struct example {
+        int i = 0;
+        double d = 0.0;
+    };
 
-    //auto injector = di::make_injector<config>(di::bind<int>.to(42));
-    //injector.create<example>();
-/*};*/
+    auto injector = di::make_injector<config>(di::bind<int>.to(42));
+    injector.create<example>();
+};
 
 struct policy {
     static auto& called() {
@@ -1406,7 +1407,7 @@ test blah7 = [] {
 };
 
 test blah8 = [] {
-    class config : public di::config{
+    class config : public di::config {
     public:
         auto policies() const noexcept {
             return di::make_policies();
