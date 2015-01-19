@@ -12,12 +12,32 @@
 
 namespace boost { namespace di { namespace concepts {
 
-template<class, class = void>
-struct configurable : std::false_type { };
+template<class Concept, class Enable=void>
+struct models
+: std::false_type
+{};
+template<class T>
+struct always_void {
+    typedef void type;
+};
+
+template<class Concept, class... Ts>
+struct models<Concept(Ts...), typename always_void<
+    decltype(std::declval<Concept>().requires_(std::declval<Ts>()...))
+>::type>
+: std::true_type
+{};
+
+struct configurable_ {
+    template<class T>
+    auto requires_(T&& x) -> aux::void_t<
+        decltype(x.policies())
+      , decltype(x.provider())
+    >;
+};
 
 template<class T>
-struct configurable<T, aux::void_t<decltype(std::declval<T>().policies()), decltype(std::declval<T>().provider())>>
-    : std::true_type
+struct configurable : models<configurable_(T)>
 { };
 
 }}} // boost::di::concepts

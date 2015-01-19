@@ -73,7 +73,7 @@ public:
     }
 
     template<class T,
-        BOOST_DI_REQUIRES(!is_injector<T>{} && std::is_same<TExpected, TGiven>{} && std::is_same<TScope, scopes::deduce>{})
+        BOOST_DI_REQUIRES_OVERLOAD(!is_injector<T>{} && std::is_same<TExpected, TGiven>{} && std::is_same<TScope, scopes::deduce>{})
     > auto to(T&& object) const noexcept {
         using dependency = dependency<
             scopes::external, TExpected, std::remove_reference_t<T>, TName
@@ -81,7 +81,7 @@ public:
         return dependency{std::forward<T>(object)};
     }
 
-    template<class T, BOOST_DI_REQUIRES(has_configure<T>{})>
+    template<class T, BOOST_DI_REQUIRES_OVERLOAD(has_configure<T>{})>
     auto to(const T& object) const noexcept {
         using dependency = dependency<
             scopes::exposed<TScope>, TExpected, decltype(std::declval<T>().configure()), TName
@@ -89,7 +89,7 @@ public:
         return dependency{object.configure()};
     }
 
-    template<class T, BOOST_DI_REQUIRES(has_deps<T>{})>
+    template<class T, BOOST_DI_REQUIRES_OVERLOAD(has_deps<T>{})>
     auto to(const T& object) const noexcept {
         using dependency = dependency<
             scopes::exposed<TScope>, TExpected, T, TName
