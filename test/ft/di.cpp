@@ -1422,45 +1422,21 @@ test blah9 = [] {
     );
 };
 
-    //struct c3 { BOOST_DI_INJECT_TRAITS(int); c3(int) { } };
-    //struct c2 { BOOST_DI_INJECT(c2, c3) { } };
-    //struct c1 { BOOST_DI_INJECT(c1, c2, c3) { } };
+test blah10 = [] {
+    struct c3 { BOOST_DI_INJECT_TRAITS(); c3(int) { } };
+    struct c2 { BOOST_DI_INJECT(c2, c3) { } };
+    struct c1 { BOOST_DI_INJECT(c1, c2, c3) { } };
 
-    struct c3 { BOOST_DI_INJECT_TRAITS(int); c3(int) { } };
+    //auto injector = di::make_injector();
+    //injector.create<c1>();
+};
+
+test blah11 = [] {
+    struct c3 { BOOST_DI_INJECT_TRAITS(); c3(int) { } };
     struct c2 { c2(c3) { } };
     struct c1 { c1(c2, c3) { } };
 
-struct c4 { BOOST_DI_INJECT(c4, (named = name) int) {} };
-
     //auto injector = di::make_injector();
-    di::injector<complex1> injector = di::make_injector(
-        di::bind<i1, impl1>
-    );
-
-    using deps = decltype(injector)::deps;
-
-    template<class T>
-    using any_ = di::concepts::any<T, deps>;
-test blah10 = [] {
-
-    //injector.create<c2>();
-
-    using D = std::remove_reference_t<decltype(di::core::binder::resolve<c4>((di::core::pool<>*)nullptr))>;
-    using w = typename di::type_traits::ctor_traits<typename D::given>::type;
-    std::cout << boost::units::detail::demangle(typeid(D).name()) << std::endl;
-    std::cout << boost::units::detail::demangle(typeid(w).name()) << std::endl;
-    //std::cout << std::is_constructible<c3>::value << std::endl;
-    std::cout << 
-             di::concepts::creatable_impl<
-                typename D::scope
-              , typename D::given
-              , di::core::pool<>
-              , typename di::type_traits::ctor_traits<typename D::given>::type
-            >::type{} << std::endl;
-
-
-    //auto object = injector.create<complex2>();
-
-    assert(false);
+    //injector.create<c1>();
 };
 

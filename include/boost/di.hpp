@@ -1275,11 +1275,8 @@ struct is_any_type<any_type<TArgs...>> : std::true_type { };
 
 namespace boost { namespace di { namespace type_traits {
 
-template<class, class T>
-struct named {
-    operator T();
-    operator T&() const;
-};
+template<class, class>
+struct named { };
 struct direct { };
 struct uniform { };
 
@@ -1305,62 +1302,52 @@ template<
       >
 { };
 
-template<template<class...> class, template<class> class, class, class>
+template<template<class...> class, class, class>
 struct ctor_impl;
 
 template<
     template<class...> class TIsConstructible
-  , template<class> class TAny
   , class T
   , std::size_t... TArgs
-> struct ctor_impl<TIsConstructible, TAny, T, std::index_sequence<TArgs...>>
+> struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>>
     : aux::at_key_t<
           aux::type_list<>
         , std::true_type
         , ctor_args<
               TIsConstructible
             , T
-            , TAny<T>
+            , core::any_type<T>
             , std::make_index_sequence<TArgs>
           >...
       >
 { };
 
-template<
-    template<class...> class TIsConstructible
-  , template<class> class TAny
-  , class T
-> using ctor_impl_t =
+template<template<class...> class TIsConstructible, class T>
+using ctor_impl_t =
     typename ctor_impl<
         TIsConstructible
-      , TAny
       , T
       , std::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>
     >::type;
 
-template<class, template<class> class, class>
+template<class...>
 struct ctor;
 
-template<class T, template<class> class TAny>
-struct ctor<T, TAny, aux::type_list<>>
-    : aux::pair<uniform, ctor_impl_t<aux::is_braces_constructible, TAny, T>>
+template<class T>
+struct ctor<T, aux::type_list<>>
+    : aux::pair<uniform, ctor_impl_t<aux::is_braces_constructible, T>>
 { };
 
-template<class T, template<class> class TAny, class... TArgs>
-struct ctor<T, TAny, aux::type_list<TArgs...>>
+template<class T, class... TArgs>
+struct ctor<T, aux::type_list<TArgs...>>
     : aux::pair<direct, aux::type_list<TArgs...>>
 { };
 
 } // type_traits
 
-template<class T, template<class> class TAny>
-struct ctor_traits_
-    : type_traits::ctor<T, TAny, type_traits::ctor_impl_t<std::is_constructible, TAny, T>>
-{ };
-
 template<class T>
 struct ctor_traits
-    : ctor_traits_<T, core::any_type_>
+    : type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>
 { };
 
 namespace type_traits {
@@ -1413,37 +1400,35 @@ using parse_args_t = typename parse_args<Ts...>::type;
 
 template<
     class T
-  , template<class> class
   , class = typename BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<T>::type
 > struct ctor_traits;
 
 template<
     class T
-  , template<class> class
   , class = typename BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<di::ctor_traits<T>>::type
 > struct ctor_traits_impl;
 
-template<class T, template<class> class TAny>
-struct ctor_traits<T, TAny, std::true_type>
+template<class T>
+struct ctor_traits<T, std::true_type>
     : aux::pair<direct, parse_args_t<typename T::BOOST_DI_INJECTOR::type>>
 { };
 
-template<class T, template<class> class TAny>
-struct ctor_traits<T, TAny, std::false_type>
-    : ctor_traits_impl<T, TAny>
+template<class T>
+struct ctor_traits<T, std::false_type>
+    : ctor_traits_impl<T>
 { };
 
-template<class T, template<class> class TAny>
-struct ctor_traits_impl<T, TAny, std::true_type>
+template<class T>
+struct ctor_traits_impl<T, std::true_type>
     : aux::pair<
           direct
-        , parse_args_t<typename di::ctor_traits_<T, TAny>::BOOST_DI_INJECTOR::type>
+        , parse_args_t<typename di::ctor_traits<T>::BOOST_DI_INJECTOR::type>
       >
 { };
 
-template<class T, template<class> class TAny>
-struct ctor_traits_impl<T, TAny, std::false_type>
-    : di::ctor_traits_<T, TAny>
+template<class T>
+struct ctor_traits_impl<T, std::false_type>
+    : di::ctor_traits<T>
 { };
 
 }}} // boost::di::type_traits
@@ -1669,7 +1654,7 @@ struct expected {
 std::false_type boundable(...);
 
 template<class... Ts>
-auto boundable(aux::type_list<Ts...>&&) -> unique<typename expected<Ts>::type...>;
+auto boundable(aux::type_list<Ts...>&&) -> std::true_type;//unique<typename expected<Ts>::type...>;
 
 template<class I, class T>
 auto boundable(I&&, T&&) -> std::integral_constant<bool,
@@ -1814,54 +1799,70 @@ template<
 
 namespace boost { namespace di { namespace concepts {
 
-template<class, class, class>
+template<class, class, class = no_name>
+struct any;
+
+template<class, class, class, class>
 struct creatable_impl;
 
-template<class TScope, class T, class... TArgs>
-struct creatable_impl<TScope, T, aux::pair<type_traits::uniform, aux::type_list<TArgs...>>> {
-    using type = aux::is_braces_constructible<T, TArgs...>;
+template<class T, class TDeps>
+struct get_type {
+    using type = any<void, TDeps>;
 };
 
-template<class TScope, class T, class... TArgs>
-struct creatable_impl<TScope, T, aux::pair<type_traits::direct, aux::type_list<TArgs...>>> {
-    using type = std::is_constructible<T, TArgs...>;
+template<class TP, class X, class TDeps>
+struct get_type<core::any_type<TP, X>, TDeps> {
+    using type = any<void, TDeps>;
 };
 
-template<class TScope, class T, class... TArgs>
-struct creatable_impl<scopes::exposed<TScope>, T, aux::pair<type_traits::direct, aux::type_list<TArgs...>>> {
+template<class TName, class T, class TDeps>
+struct get_type<type_traits::named<TName, T>, TDeps> {
+    using type = any<void, TDeps, TName>;
+};
+
+template<class TScope, class T, class TDeps, class... TArgs>
+struct creatable_impl<TScope, T, TDeps, aux::pair<type_traits::direct, aux::type_list<TArgs...>>> {
+    using type = std::is_constructible<T, typename get_type<TArgs, TDeps>::type...>;
+};
+
+template<class TScope, class T, class TDeps, class... TArgs>
+struct creatable_impl<TScope, T, TDeps, aux::pair<type_traits::uniform, aux::type_list<TArgs...>>> {
+    using type = aux::is_braces_constructible<T, typename get_type<TArgs, TDeps>::type...>;
+};
+
+template<class TScope, class T, class TDeps, class... TArgs>
+struct creatable_impl<scopes::exposed<TScope>, T, TDeps, aux::pair<type_traits::direct, aux::type_list<TArgs...>>> {
     using type = std::true_type;
 };
 
-template<class TScope, class T, class... TArgs>
-struct creatable_impl<scopes::exposed<TScope>, T, aux::pair<type_traits::uniform, aux::type_list<TArgs...>>> {
+template<class TScope, class T, class TDeps, class... TArgs>
+struct creatable_impl<scopes::exposed<TScope>, T, TDeps, aux::pair<type_traits::uniform, aux::type_list<TArgs...>>> {
     using type = std::true_type;
 };
 
-template<class T, class... TArgs>
-struct creatable_impl<scopes::external, T, aux::pair<type_traits::direct, aux::type_list<TArgs...>>> {
+template<class T, class TDeps, class... TArgs>
+struct creatable_impl<scopes::external, T, TDeps, aux::pair<type_traits::direct, aux::type_list<TArgs...>>> {
     using type = std::true_type;
 };
 
-template<class T, class... TArgs>
-struct creatable_impl<scopes::external, T, aux::pair<type_traits::uniform, aux::type_list<TArgs...>>> {
+template<class T, class TDeps, class... TArgs>
+struct creatable_impl<scopes::external, T, TDeps, aux::pair<type_traits::uniform, aux::type_list<TArgs...>>> {
     using type = std::true_type;
 };
 
-template<class TParent, class TDeps>
+template<class TParent, class TDeps, class TName>
 struct any {
-    template<class T>
-    using any_ = any<T, TDeps>;
-
     template<
         class T
       , class U = aux::decay_t<T>
-      , class D = std::remove_reference_t<decltype(core::binder::resolve<U>((TDeps*)nullptr))>
+      , class D = std::remove_reference_t<decltype(core::binder::resolve<U, TName>((TDeps*)nullptr))>
       , class = std::enable_if_t<!(std::is_same<U, TParent>{} || std::is_base_of<TParent, U>{})>
       , class = std::enable_if_t<
             typename creatable_impl<
                 typename D::scope
               , typename D::given
-              , typename type_traits::ctor_traits<typename D::given, any_>::type
+              , TDeps
+              , typename type_traits::ctor_traits<typename D::given>::type
             >::type{}
         >
     > struct is_creatable { };
@@ -1956,7 +1957,7 @@ private:
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;
         using given_t = typename dependency_t::given;
-        using ctor_t = typename type_traits::ctor_traits<given_t, core::any_type_>::type;
+        using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<expected_t, given_t, T, ctor_t, injector>;
         policy<pool_t>::template call<T, TName, TIsRoot>(
             ((TConfig&)config_).policies(), dependency, ctor_t{}
