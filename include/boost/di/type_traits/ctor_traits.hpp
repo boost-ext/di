@@ -107,7 +107,7 @@ struct ctor_traits
 
 namespace type_traits {
 
-template<class>
+template<template<class> class, class>
 struct parse_args;
 
 template<class T>
@@ -145,13 +145,13 @@ struct arg<const aux::type<T, std::false_type>&> {
     >::args>;
 };
 
-template<class... Ts>
-struct parse_args<aux::type_list<Ts...>>
-    : aux::type_list<typename arg<Ts>::type...>
+template<template<class> class TAny, class... Ts>
+struct parse_args<TAny, aux::type_list<Ts...>>
+    : aux::type_list<TAny<aux::void_t<typename arg<Ts>::type>>...>
 { };
 
-template<class... Ts>
-using parse_args_t = typename parse_args<Ts...>::type;
+template<template<class> class TAny, class... Ts>
+using parse_args_t = typename parse_args<TAny, Ts...>::type;
 
 template<
     class T
@@ -167,7 +167,7 @@ template<
 
 template<class T, template<class> class TAny>
 struct ctor_traits<T, TAny, std::true_type>
-    : aux::pair<direct, parse_args_t<typename T::BOOST_DI_INJECTOR::type>>
+    : aux::pair<direct, parse_args_t<TAny, typename T::BOOST_DI_INJECTOR::type>>
 { };
 
 template<class T, template<class> class TAny>
@@ -179,7 +179,7 @@ template<class T, template<class> class TAny>
 struct ctor_traits_impl<T, TAny, std::true_type>
     : aux::pair<
           direct
-        , parse_args_t<typename di::ctor_traits_<T, TAny>::BOOST_DI_INJECTOR::type>
+        , parse_args_t<TAny, typename di::ctor_traits_<T, TAny>::BOOST_DI_INJECTOR::type>
       >
 { };
 
