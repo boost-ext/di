@@ -8,7 +8,7 @@
 #define BOOST_DI_CONCEPTS_CREATABLE_HPP
 
 #include <type_traits>
-#include "boost/di/aux_/utility.hpp"
+#include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/core/binder.hpp"
 #include "boost/di/core/pool.hpp"
 #include "boost/di/scopes/exposed.hpp"
@@ -67,19 +67,18 @@ struct any {
               , typename type_traits::ctor_traits<typename D::given, any_>::type
             >::type{}
         >
-    > struct is_valid_expr { };
+    > struct is_creatable { };
 
-    template<class T, class = is_valid_expr<T>> operator T();
-    template<class T, class = is_valid_expr<T>> operator T&() const;
+    template<class T, class = is_creatable<T>> operator T();
+    template<class T, class = is_creatable<T>> operator T&() const;
 };
 
-template<class, class, class = void>
-struct creatable : std::false_type { };
+std::false_type creatable(...);
 
 template<class T, class TDeps>
-struct creatable<T, TDeps, aux::void_t<decltype(any<void, core::pool<TDeps>>{}.operator T())>>
-    : std::true_type
-{ };
+auto creatable(T&&, TDeps&&) -> aux::is_valid_expr<
+    decltype(any<void, core::pool<TDeps>>{}.operator T())
+>;
 
 }}} // boost::di::concepts
 

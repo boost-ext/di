@@ -7,38 +7,17 @@
 #ifndef BOOST_DI_CONCEPTS_CONFIGURABLE_HPP
 #define BOOST_DI_CONCEPTS_CONFIGURABLE_HPP
 
-#include <type_traits>
-#include "boost/di/aux_/utility.hpp"
+#include "boost/di/aux_/type_traits.hpp"
 
 namespace boost { namespace di { namespace concepts {
 
-template<class Concept, class Enable=void>
-struct models
-: std::false_type
-{};
-template<class T>
-struct always_void {
-    typedef void type;
-};
-
-template<class Concept, class... Ts>
-struct models<Concept(Ts...), typename always_void<
-    decltype(std::declval<Concept>().requires_(std::declval<Ts>()...))
->::type>
-: std::true_type
-{};
-
-struct configurable_ {
-    template<class T>
-    auto requires_(T&& x) -> aux::void_t<
-        decltype(x.policies())
-      , decltype(x.provider())
-    >;
-};
+std::false_type configurable(...);
 
 template<class T>
-struct configurable : models<configurable_(T)>
-{ };
+auto configurable(T&& t) -> aux::is_valid_expr<
+    decltype(t.policies())
+  , decltype(t.provider())
+>;
 
 }}} // boost::di::concepts
 

@@ -36,12 +36,15 @@
     using has_##name = decltype(has_##name##_impl<T, TArgs...>(0))
 
 #define BOOST_DI_REQUIRES(...) \
-    class = typename std::enable_if<(__VA_ARGS__)>::type
+    class = typename std::enable_if<decltype(__VA_ARGS__){}>::type
 
 #define BOOST_DI_REQUIRES_OVERLOAD(...) \
     typename std::enable_if<(__VA_ARGS__), int>::type = 0
 
 namespace boost { namespace di { namespace aux {
+
+template<class...>
+using is_valid_expr = std::true_type;
 
 template<class>
 struct is_smart_ptr : std::false_type { };

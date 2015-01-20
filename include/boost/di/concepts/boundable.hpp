@@ -58,11 +58,6 @@ struct unique_impl<std::index_sequence<s...>, ts...>
 template<class... ts>
 using unique = typename unique_impl<std::make_index_sequence<sizeof...(ts)>, ts...>::type;
 
-template<class I, class T = void>
-struct boundable : std::integral_constant<bool,
-    std::is_convertible<T, I>{} || std::is_base_of<I, T>{}
-> { };
-
 template<class T>
 struct expected {
     using type = aux::pair<
@@ -71,15 +66,19 @@ struct expected {
     >;
 };
 
-template<class... Ts, class T>
-struct boundable<aux::type_list<Ts...>, T>
-    : std::integral_constant<bool, !std::is_same<bool_seq<never<Ts>{}...>, bool_seq<std::is_base_of<Ts, T>{}...>>{}>
-{ };
+std::false_type boundable(...);
 
 template<class... Ts>
-struct boundable<aux::type_list<Ts...>, void>
-    : unique<typename expected<Ts>::type...>
-{ };
+auto boundable(aux::type_list<Ts...>&&) -> unique<typename expected<Ts>::type...>;
+
+template<class I, class T>
+auto boundable(I&&, T&&) -> std::integral_constant<bool,
+    std::is_convertible<T, I>{} || std::is_base_of<I, T>{}
+>;
+
+template<class T, class... Ts>
+auto boundable(aux::type_list<Ts...>&&, T&&) ->
+    std::integral_constant<bool, !std::is_same<bool_seq<never<Ts>{}...>, bool_seq<std::is_base_of<Ts, T>{}...>>{}>;
 
 }}} // boost::di::concepts
 

@@ -21,7 +21,7 @@ namespace boost { namespace di {
 template<class... Ts>
 using any_of = aux::type_list<Ts...>;
 
-template<class TExpected, class TGiven = TExpected, BOOST_DI_REQUIRES(concepts::boundable<TExpected, TGiven>{})>
+template<class TExpected, class TGiven = TExpected, BOOST_DI_REQUIRES(concepts::boundable(std::declval<TExpected>(), std::declval<TGiven>()))>
 core::dependency<scopes::deduce, TExpected, TGiven> bind{};
 
 constexpr scopes::deduce deduce{};

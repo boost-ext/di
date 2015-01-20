@@ -33,7 +33,7 @@ struct wrapper {
     TWrapper wrapper_;
 };
 
-template<class TDeps, class TConfig, BOOST_DI_REQUIRES(concepts::boundable<TDeps>{})>
+template<class TDeps, class TConfig, BOOST_DI_REQUIRES(concepts::boundable(std::declval<TDeps>()))>
 class injector : public pool<TDeps> {
     template<class, class> friend struct any_type;
     template<class...> friend struct provider;
@@ -57,7 +57,7 @@ public:
         : pool_t{init{}, create_from_injector(injector, TDeps{})}
     { }
 
-    template<class T, BOOST_DI_REQUIRES(concepts::creatable<T, TDeps>{})>
+    template<class T, BOOST_DI_REQUIRES(concepts::creatable(std::declval<T>(), std::declval<TDeps>()))>
     T create() const {
         using IsRoot = std::true_type;
         return create_impl<T, no_name, IsRoot>();
