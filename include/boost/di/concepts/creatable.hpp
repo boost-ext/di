@@ -17,54 +17,70 @@
 
 namespace boost { namespace di { namespace concepts {
 
-template<class, class, class>
+template<class, class, class = no_name>
+struct any;
+
+template<class, class, class, class>
 struct creatable_impl;
 
-//template<class TScope, class T, class... TArgs>
-//struct creatable_impl<TScope, T, aux::pair<type_traits::uniform, aux::type_list<TArgs...>>> {
-    //using type = aux::is_braces_constructible<T, TArgs...>;
-//};
-
-template<class TScope, class T, class... TArgs>
-struct creatable_impl<TScope, T, aux::pair<type_traits::direct, aux::type_list<TArgs...>>> {
-    using type = std::is_constructible<T, TArgs...>;
+template<class T, class TDeps>
+struct get_type {
+    using type = any<void, TDeps>;
 };
 
-/*template<class TScope, class T, class... TArgs>*/
-//struct creatable_impl<scopes::exposed<TScope>, T, aux::pair<type_traits::direct, aux::type_list<TArgs...>>> {
-    //using type = std::true_type;
-//};
+template<class TP, class X, class TDeps>
+struct get_type<core::any_type<TP, X>, TDeps> {
+    using type = any<void, TDeps>;
+};
 
-//template<class TScope, class T, class... TArgs>
-//struct creatable_impl<scopes::exposed<TScope>, T, aux::pair<type_traits::uniform, aux::type_list<TArgs...>>> {
-    //using type = std::true_type;
-//};
+template<class TName, class T, class TDeps>
+struct get_type<type_traits::named<TName, T>, TDeps> {
+    using type = any<void, TDeps, TName>;
+};
 
-//template<class T, class... TArgs>
-//struct creatable_impl<scopes::external, T, aux::pair<type_traits::direct, aux::type_list<TArgs...>>> {
-    //using type = std::true_type;
-//};
+template<class TScope, class T, class TDeps, class... TArgs>
+struct creatable_impl<TScope, T, TDeps, aux::pair<type_traits::direct, aux::type_list<TArgs...>>> {
+    using type = std::is_constructible<T, typename get_type<TArgs, TDeps>::type...>;
+};
 
-//template<class T, class... TArgs>
-//struct creatable_impl<scopes::external, T, aux::pair<type_traits::uniform, aux::type_list<TArgs...>>> {
-    //using type = std::true_type;
-/*};*/
+template<class TScope, class T, class TDeps, class... TArgs>
+struct creatable_impl<TScope, T, TDeps, aux::pair<type_traits::uniform, aux::type_list<TArgs...>>> {
+    using type = aux::is_braces_constructible<T, typename get_type<TArgs, TDeps>::type...>;
+};
 
-template<class TParent, class TDeps>
+template<class TScope, class T, class TDeps, class... TArgs>
+struct creatable_impl<scopes::exposed<TScope>, T, TDeps, aux::pair<type_traits::direct, aux::type_list<TArgs...>>> {
+    using type = std::true_type;
+};
+
+template<class TScope, class T, class TDeps, class... TArgs>
+struct creatable_impl<scopes::exposed<TScope>, T, TDeps, aux::pair<type_traits::uniform, aux::type_list<TArgs...>>> {
+    using type = std::true_type;
+};
+
+template<class T, class TDeps, class... TArgs>
+struct creatable_impl<scopes::external, T, TDeps, aux::pair<type_traits::direct, aux::type_list<TArgs...>>> {
+    using type = std::true_type;
+};
+
+template<class T, class TDeps, class... TArgs>
+struct creatable_impl<scopes::external, T, TDeps, aux::pair<type_traits::uniform, aux::type_list<TArgs...>>> {
+    using type = std::true_type;
+};
+
+template<class TParent, class TDeps, class TName>
 struct any {
-    template<class T>
-    using any_ = any<T, TDeps>;
-
     template<
         class T
       , class U = aux::decay_t<T>
-      , class D = std::remove_reference_t<decltype(core::binder::resolve<U>((TDeps*)nullptr))>
+      , class D = std::remove_reference_t<decltype(core::binder::resolve<U, TName>((TDeps*)nullptr))>
       , class = std::enable_if_t<!(std::is_same<U, TParent>{} || std::is_base_of<TParent, U>{})>
       , class = std::enable_if_t<
             typename creatable_impl<
                 typename D::scope
               , typename D::given
-              , typename type_traits::ctor_traits<typename D::given, any_>::type
+              , TDeps
+              , typename type_traits::ctor_traits<typename D::given>::type
             >::type{}
         >
     > struct is_creatable { };

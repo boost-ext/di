@@ -10,9 +10,8 @@
 #include <boost/units/detail/utility.hpp>
 namespace di = boost::di;
 
-#if 0
 auto name = []{};
-//auto other_name = []{};
+auto other_name = []{};
 auto a = []{};
 auto b = []{};
 
@@ -205,7 +204,7 @@ test exposed_type = [] {
         di::bind<i1, impl1>
     );
 
-   auto object = injector.create<std::shared_ptr<complex1>>();
+    auto object = injector.create<std::shared_ptr<complex1>>();
     expect(dynamic_cast<i1*>(object->i1.get()));
 };
 
@@ -526,13 +525,13 @@ test session_call = [] {
     }
 };
 
-/*test string_creation = [] {*/
-    //struct string {
-        //std::string str;
-    //};
+test string_creation = [] {
+    struct string {
+        std::string str;
+    };
 
-    //expect_eq("", di::make_injector().create<string>().str);
-/*};*/
+    expect_eq("", di::make_injector().create<string>().str);
+};
 
 test scopes_external_shared = [] {
     auto i = std::make_shared<int>(42);
@@ -663,51 +662,51 @@ test inject = [] {
     expect_eq(0.0, object.d);
 };
 
-/*test automatic_inject = [] {*/
-    //constexpr auto i = 42;
+test automatic_inject = [] {
+    constexpr auto i = 42;
 
-    //struct c {
-        //c(std::initializer_list<int>) { }
+    struct c {
+        c(std::initializer_list<int>) { }
 
-        //c(int i, double d)
-            //: i(i), d(d)
-        //{ }
+        c(int i, double d)
+            : i(i), d(d)
+        { }
 
-        //int i = 0;
-        //double d = 0.0;
-    //};
+        int i = 0;
+        double d = 0.0;
+    };
 
-    //auto injector = di::make_injector(
-        //di::bind<int>.to(i)
-    //);
+    auto injector = di::make_injector(
+        di::bind<int>.to(i)
+    );
 
-    //auto object = injector.create<c>();
+    auto object = injector.create<c>();
 
-    //expect_eq(i, object.i);
-    //expect_eq(0.0, object.d);
-/*};*/
+    expect_eq(i, object.i);
+    expect_eq(0.0, object.d);
+};
 
-/*test automatic_inject_with_initializer_list = [] {*/
-    //constexpr auto i = 42;
+test automatic_inject_with_initializer_list = [] {
+    constexpr auto i = 42;
 
-    //struct c {
-        //c(int i, std::initializer_list<int> il)
-            //: i(i), il(il)
-        //{ }
+    struct c {
+        c(int i, std::initializer_list<int> il)
+            : i(i), il(il)
+        { }
 
-        //int i = 0;
-        //std::initializer_list<int> il;
-    //};
+        int i = 0;
+        std::initializer_list<int> il;
+    };
 
-    //auto injector = di::make_injector(
-        //di::bind<int>.to(i)
-    //);
+    auto injector = di::make_injector(
+        di::bind<int>.to(i)
+    );
 
-    //auto object = injector.create<c>();
+    auto object = injector.create<c>();
 
-    //expect_eq(i, object.i);
-    //expect_eq(0, object.il.size());
-/*};*/
+    expect_eq(i, object.i);
+    expect_eq(0, object.il.size());
+};
 
 test named_polymorphic = [] {
     struct c {
@@ -847,104 +846,104 @@ test ctor_refs = [] {
     test(test_type<c_aggregate>{}, di::bind<i1>.to(std::make_shared<impl1>()));
 };
 
-/*test refs_vs_copy = [] {*/
-    //struct cc {
-        //BOOST_DI_INJECT(cc
-         //, (named = name) const int& i
-         //, (named = name) const std::string& s
-         //, (named = other_name) int& i_ref
-         //, int& ii)
-            //: str(s), i(i), i_ref(i_ref), ii(ii)
-        //{ }
+test refs_vs_copy = [] {
+    struct cc {
+        BOOST_DI_INJECT(cc
+         , (named = name) const int& i
+         , (named = name) const std::string& s
+         , (named = other_name) int& i_ref
+         , int& ii)
+            : str(s), i(i), i_ref(i_ref), ii(ii)
+        { }
 
-        //std::string str;
-        //int i = 0;
-        //int& i_ref;
-        //int& ii;
-    //};
+        std::string str;
+        int i = 0;
+        int& i_ref;
+        int& ii;
+    };
 
-    //struct cc_inject {
-        //BOOST_DI_INJECT(cc_inject
-                      //, (named = name) const int& i
-                      //, (named = name) const std::string& s
-                      //, (named = other_name) int& i_ref
-                      //, int& ii)
-            //: str(s), i(i), i_ref(i_ref), ii(ii)
-        //{ }
+    struct cc_inject {
+        BOOST_DI_INJECT(cc_inject
+                      , (named = name) const int& i
+                      , (named = name) const std::string& s
+                      , (named = other_name) int& i_ref
+                      , int& ii)
+            : str(s), i(i), i_ref(i_ref), ii(ii)
+        { }
 
-        //std::string str;
-        //int i = 0;
-        //int& i_ref;
-        //int& ii;
-    //};
+        std::string str;
+        int i = 0;
+        int& i_ref;
+        int& ii;
+    };
 
-    //std::string ref = "named str";
-    //auto i = 42;
+    std::string ref = "named str";
+    auto i = 42;
 
-    //{
-    //auto injector = di::make_injector(
-        //di::bind<std::string>.named(name).to(std::ref(ref))
-      //, di::bind<int>.named(name).to(std::cref(i))
-      //, di::bind<int>.named(other_name).to(std::ref(i))
-      //, di::bind<int>.to(std::ref(i))
-    //);
-    //auto object = injector.create<cc>();
-    //expect_eq(ref, object.str);
-    //expect_eq(i, object.i);
-    //expect_eq(i, object.i_ref);
-    //expect_eq(&i, &object.i_ref);
-    //expect_eq(i, object.ii);
-    //expect_eq(&i, &object.ii);
-    //}
+    {
+    auto injector = di::make_injector(
+        di::bind<std::string>.named(name).to(std::ref(ref))
+      , di::bind<int>.named(name).to(std::cref(i))
+      , di::bind<int>.named(other_name).to(std::ref(i))
+      , di::bind<int>.to(std::ref(i))
+    );
+    auto object = injector.create<cc>();
+    expect_eq(ref, object.str);
+    expect_eq(i, object.i);
+    expect_eq(i, object.i_ref);
+    expect_eq(&i, &object.i_ref);
+    expect_eq(i, object.ii);
+    expect_eq(&i, &object.ii);
+    }
 
-    //{
-    //auto injector = di::make_injector(
-        //di::bind<std::string>.named(name).to(std::ref(ref))
-      //, di::bind<int>.named(name).to(std::cref(i))
-      //, di::bind<int>.named(other_name).to(std::ref(i))
-      //, di::bind<int>.to(std::ref(i))
-    //);
-    //auto object = injector.create<cc_inject>();
-    //expect_eq(ref, object.str);
-    //expect_eq(i, object.i);
-    //expect_eq(i, object.i_ref);
-    //expect_eq(&i, &object.i_ref);
-    //expect_eq(i, object.ii);
-    //expect_eq(&i, &object.ii);
-    //}
+    {
+    auto injector = di::make_injector(
+        di::bind<std::string>.named(name).to(std::ref(ref))
+      , di::bind<int>.named(name).to(std::cref(i))
+      , di::bind<int>.named(other_name).to(std::ref(i))
+      , di::bind<int>.to(std::ref(i))
+    );
+    auto object = injector.create<cc_inject>();
+    expect_eq(ref, object.str);
+    expect_eq(i, object.i);
+    expect_eq(i, object.i_ref);
+    expect_eq(&i, &object.i_ref);
+    expect_eq(i, object.ii);
+    expect_eq(&i, &object.ii);
+    }
 
-    //{
-    //auto injector = di::make_injector(
-        //di::bind<std::string>.named(name).to(ref)
-      //, di::bind<int>.named(name).to(i)
-      //, di::bind<int>.named(other_name).to(std::ref(i))
-      //, di::bind<int>.to(std::ref(i))
-    //);
-    //auto object = injector.create<cc>();
-    //expect_eq(ref, object.str);
-    //expect_eq(i, object.i);
-    //expect_eq(i, object.i_ref);
-    //expect_eq(&i, &object.i_ref);
-    //expect_eq(i, object.ii);
-    //expect_eq(&i, &object.ii);
-    //}
+    {
+    auto injector = di::make_injector(
+        di::bind<std::string>.named(name).to(ref)
+      , di::bind<int>.named(name).to(i)
+      , di::bind<int>.named(other_name).to(std::ref(i))
+      , di::bind<int>.to(std::ref(i))
+    );
+    auto object = injector.create<cc>();
+    expect_eq(ref, object.str);
+    expect_eq(i, object.i);
+    expect_eq(i, object.i_ref);
+    expect_eq(&i, &object.i_ref);
+    expect_eq(i, object.ii);
+    expect_eq(&i, &object.ii);
+    }
 
-    //{
-    //auto injector = di::make_injector(
-        //di::bind<std::string>.named(name).to(ref)
-      //, di::bind<int>.named(name).to(i)
-      //, di::bind<int>.named(other_name).to(std::ref(i))
-      //, di::bind<int>.to(std::ref(i))
-    //);
-    //auto object = injector.create<cc_inject>();
-    //expect_eq(ref, object.str);
-    //expect_eq(i, object.i);
-    //expect_eq(i, object.i_ref);
-    //expect_eq(&i, &object.i_ref);
-    //expect_eq(i, object.ii);
-    //expect_eq(&i, &object.ii);
-    //}
-/*};*/
+    {
+    auto injector = di::make_injector(
+        di::bind<std::string>.named(name).to(ref)
+      , di::bind<int>.named(name).to(i)
+      , di::bind<int>.named(other_name).to(std::ref(i))
+      , di::bind<int>.to(std::ref(i))
+    );
+    auto object = injector.create<cc_inject>();
+    expect_eq(ref, object.str);
+    expect_eq(i, object.i);
+    expect_eq(i, object.i_ref);
+    expect_eq(&i, &object.i_ref);
+    expect_eq(i, object.ii);
+    expect_eq(&i, &object.ii);
+    }
+};
 
 test named_parameters_with_shared_scope = [] {
     struct c {
@@ -1030,8 +1029,7 @@ test modules_mix_make_injector = [] {
     expect_eq(i, injector.create<int>());
     expect_eq(d, injector.create<double>());
     expect_eq(f, injector.create<float>());
-    //TODO
-    //expect_eq(s, injector.create<std::string>());
+    expect_eq(s, injector.create<std::string>());
 };
 
 test runtime_factory_impl = [] {
@@ -1233,10 +1231,10 @@ struct ctor_traits<c_no_limits> {
 
 }} // boost::di
 
-/*test inject_traits_no_limits_via_ctor_traits = [] {*/
-    //auto injector = di::make_injector();
-    //injector.create<c_no_limits>();
-/*};*/
+test inject_traits_no_limits_via_ctor_traits = [] {
+    auto injector = di::make_injector();
+    injector.create<c_no_limits>();
+};
 
 test call_provider = [] {
     static auto called = 0;
@@ -1424,12 +1422,21 @@ test blah9 = [] {
     );
 };
 
-#endif
-    struct c3 { BOOST_DI_INJECT_TRAITS(int); c3(int) { } };
-    struct c2 { BOOST_DI_INJECT(c2, c3) { } };
-    struct c1 { BOOST_DI_INJECT(c1, c2, c3) { } };
+    //struct c3 { BOOST_DI_INJECT_TRAITS(int); c3(int) { } };
+    //struct c2 { BOOST_DI_INJECT(c2, c3) { } };
+    //struct c1 { BOOST_DI_INJECT(c1, c2, c3) { } };
 
-    auto injector = di::make_injector();
+    struct c3 { BOOST_DI_INJECT_TRAITS(int); c3(int) { } };
+    struct c2 { c2(c3) { } };
+    struct c1 { c1(c2, c3) { } };
+
+struct c4 { BOOST_DI_INJECT(c4, (named = name) int) {} };
+
+    //auto injector = di::make_injector();
+    di::injector<complex1> injector = di::make_injector(
+        di::bind<i1, impl1>
+    );
+
     using deps = decltype(injector)::deps;
 
     template<class T>
@@ -1438,8 +1445,8 @@ test blah10 = [] {
 
     //injector.create<c2>();
 
-    using D = std::remove_reference_t<decltype(di::core::binder::resolve<c2>((di::core::pool<>*)nullptr))>;
-    using w = typename di::type_traits::ctor_traits<typename D::given, any_>::type;
+    using D = std::remove_reference_t<decltype(di::core::binder::resolve<c4>((di::core::pool<>*)nullptr))>;
+    using w = typename di::type_traits::ctor_traits<typename D::given>::type;
     std::cout << boost::units::detail::demangle(typeid(D).name()) << std::endl;
     std::cout << boost::units::detail::demangle(typeid(w).name()) << std::endl;
     //std::cout << std::is_constructible<c3>::value << std::endl;
@@ -1447,8 +1454,12 @@ test blah10 = [] {
              di::concepts::creatable_impl<
                 typename D::scope
               , typename D::given
-              , typename di::type_traits::ctor_traits<typename D::given, any_>::type
+              , di::core::pool<>
+              , typename di::type_traits::ctor_traits<typename D::given>::type
             >::type{} << std::endl;
+
+
+    //auto object = injector.create<complex2>();
 
     assert(false);
 };

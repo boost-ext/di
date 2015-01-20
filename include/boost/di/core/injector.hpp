@@ -95,7 +95,7 @@ private:
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;
         using given_t = typename dependency_t::given;
-        using ctor_t = typename type_traits::ctor_traits<given_t, core::any_type_>::type;
+        using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<expected_t, given_t, T, ctor_t, injector>;
         policy<pool_t>::template call<T, TName, TIsRoot>(
             ((TConfig&)config_).policies(), dependency, ctor_t{}
