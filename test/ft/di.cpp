@@ -8,8 +8,10 @@
 #include "boost/di/policies/constructible.hpp"
 
 #include <boost/units/detail/utility.hpp>
+#include <common/fakes/fake_policy.hpp>
 namespace di = boost::di;
 
+#if 0
 auto name = []{};
 auto other_name = []{};
 auto a = []{};
@@ -1438,5 +1440,38 @@ test blah11 = [] {
 
     //auto injector = di::make_injector();
     //injector.create<c1>();
+};
+
+#endif
+
+test blah12 = [] {
+    struct c3 { BOOST_DI_INJECT_TRAITS(int); c3(int) { } };
+    struct c2 { c2(c3) { } };
+    struct c1 { c1(c2, c3) { } };
+
+    class config : public di::config {
+    public:
+        auto policies() const noexcept {
+
+            using namespace di::policies;
+            using namespace di::policies::operators;
+
+            return di::make_policies(
+                constructible(!std::is_same<int, _>{})
+            );
+        }
+    };
+
+    //std::cout << qqq<int, double>() << std::endl;
+    //assert(false);
+    //using namespace di::policies;
+    //using namespace di::policies::operators;
+    //using d = decltype(constructible(!std::is_same<int, _>{})(di::fake_policy<double>{}));
+    //std::cout << boost::units::detail::demangle(typeid(d).name()) << std::endl;
+    ////static_assert(d{}, "");
+    //assert(false);
+
+    auto injector = di::make_injector<config>();
+    injector.create<c1>();
 };
 

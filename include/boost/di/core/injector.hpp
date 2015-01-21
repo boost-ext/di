@@ -57,7 +57,7 @@ public:
         : pool_t{init{}, create_from_injector(injector, TDeps{})}
     { }
 
-    template<class T, BOOST_DI_REQUIRES(concepts::creatable(std::declval<T>(), std::declval<TDeps>()))>
+    template<class T, BOOST_DI_REQUIRES(concepts::creatable(std::declval<T>(), std::declval<TDeps>(), std::declval<TConfig>()))>
     T create() const {
         using IsRoot = std::true_type;
         return create_impl<T, no_name, IsRoot>();

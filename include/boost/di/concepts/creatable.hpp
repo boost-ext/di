@@ -17,7 +17,7 @@
 
 namespace boost { namespace di { namespace concepts {
 
-template<class, class, class = no_name>
+template<class, class, class = no_name, class = core::pool<>>
 struct any;
 
 template<class, class, class, class>
@@ -68,7 +68,30 @@ struct creatable_impl<scopes::external, T, TDeps, aux::pair<type_traits::uniform
     using type = std::true_type;
 };
 
-template<class TParent, class TDeps, class TName>
+template<class, class, class, class, class>
+struct call_policies;
+
+template <bool ...> struct bool_seq;
+
+template<class>
+using always = std::true_type;
+
+template<class T, class TDependency, class TName, class TDeps, class... Ts>
+struct call_policies<T, TDependency, TName, TDeps, core::pool<aux::type_list<Ts...>>> {
+    struct arg {
+        using type = T;
+        using name = TName;
+        using is_root = std::false_type;
+        template<class T_, class TName_, class TDefault_>
+        using resolve = decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)nullptr));
+    };
+
+    constexpr operator bool() const noexcept {
+        return std::is_same<bool_seq<always<Ts>{}...>, bool_seq<(Ts)(arg{})...>>{};
+    }
+};
+
+template<class TParent, class TDeps, class TName, class TPolicies>
 struct any {
     template<
         class T
@@ -81,7 +104,7 @@ struct any {
               , typename D::given
               , TDeps
               , typename type_traits::ctor_traits<typename D::given>::type
-            >::type{}
+            >::type{} && call_policies<TPolicies, T, D, TName, TDeps>{}
         >
     > struct is_creatable { };
 
@@ -91,9 +114,9 @@ struct any {
 
 std::false_type creatable(...);
 
-template<class T, class TDeps>
-auto creatable(T&&, TDeps&&) -> aux::is_valid_expr<
-    decltype(any<void, core::pool<TDeps>>{}.operator T())
+template<class T, class TDeps, class TConfig>
+auto creatable(T&&, TDeps&&, TConfig&& cfg) -> aux::is_valid_expr<
+    decltype(any<void, core::pool<TDeps>, no_name, decltype(cfg.policies())>{}.operator T())
 >;
 
 }}} // boost::di::concepts

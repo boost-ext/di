@@ -140,9 +140,7 @@ inline auto operator!(const T&) {
 template<class T>
 struct constructible_impl {
     template<class TArg>
-    void operator()(const TArg& data) const {
-		static_assert(decltype(T::apply(data)){}, "Type T is not allowed");
-    }
+    auto operator()(const TArg& data) const -> decltype(T::apply(data));
 };
 
 template<class T = std::false_type>
