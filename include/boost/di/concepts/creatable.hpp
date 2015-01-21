@@ -71,13 +71,19 @@ struct creatable_impl<scopes::external, T, TDeps, aux::pair<type_traits::uniform
 template<class, class, class, class, class>
 struct call_policies;
 
-template <bool ...> struct bool_seq;
+template<bool...> struct bool_seq;
 
 template<class>
 using always = std::true_type;
 
 template<class TScope, class T, class TDeps, class TCtor, class TPolicies>
 using creatable_impl_t = typename creatable_impl<TScope, T, TDeps, TCtor, TPolicies>::type;
+
+template<class T>
+struct get : T { };
+
+template<>
+struct get<void> : std::true_type { };
 
 template<class T, class TDependency, class TName, class TDeps, class... Ts>
 struct call_policies<T, TDependency, TName, TDeps, core::pool<aux::type_list<Ts...>>> {
@@ -90,7 +96,7 @@ struct call_policies<T, TDependency, TName, TDeps, core::pool<aux::type_list<Ts.
     };
 
     constexpr operator bool() const noexcept {
-        return std::is_same<bool_seq<always<Ts>{}...>, bool_seq<decltype((Ts{})(arg{})){}...>>{};
+        return std::is_same<bool_seq<always<Ts>{}...>, bool_seq<get<decltype((Ts{})(arg{}))>{}...>>{};
     }
 };
 

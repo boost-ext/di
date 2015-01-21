@@ -140,7 +140,9 @@ inline auto operator!(const T&) {
 template<class T>
 struct constructible_impl {
     template<class TArg>
-    auto operator()(const TArg& data) const -> decltype(T::apply(data));
+    auto operator()(const TArg& data) const {
+        return T::apply(data);
+    }
 };
 
 template<class T = std::false_type>

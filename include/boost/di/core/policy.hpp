@@ -43,7 +43,7 @@ class policy {
     template<class TArg, class TDependency, class TPolicy, class... TArgs>
     static std::enable_if_t<has_call_operator<TPolicy, TArg>{}>
     call_impl_args(const TPolicy& policy, TDependency&&) noexcept {
-        //(policy)(TArg{});
+        (policy)(TArg{});
     }
 
     template<class TArg, class TDependency, class TPolicy, class... TArgs>

@@ -966,20 +966,20 @@ test named_parameters_with_shared_scope = [] {
     expect(object.n1 != object.n2);
 };
 
-//test call_policy_lambda = [] {
-    //static auto called = false;
-    //class config : public di::config {
-    //public:
-        //auto policies() const noexcept {
-            //return di::make_policies([](auto){called = true;});
-        //}
-    //};
+test call_policy_lambda = [] {
+    static auto called = false;
+    class config : public di::config {
+    public:
+        auto policies() const noexcept {
+            return di::make_policies([](auto){called = true;});
+        }
+    };
 
-    //auto injector = di::make_injector<config>();
+    auto injector = di::make_injector<config>();
 
-    //expect_eq(0, injector.create<int>());
-    //expect(called);
-//};
+    expect_eq(0, injector.create<int>());
+    expect(called);
+};
 
 test modules_mix_make_injector = [] {
     constexpr auto i = 42;
