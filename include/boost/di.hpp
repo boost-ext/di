@@ -1876,6 +1876,11 @@ struct call_policies<T, TDependency, TName, TDeps, core::pool<aux::type_list<Ts.
     }
 };
 
+template<class T, class TDependency, class TName, class TDeps>
+struct call_policies<T, TDependency, TName, TDeps, core::pool<aux::type_list<>>>
+    : std::true_type
+{ };
+
 template<
     class TParent
   , class TDeps
@@ -1889,7 +1894,7 @@ template<
       , class TCtor = typename type_traits::ctor_traits<typename D::given>::type
       , class = std::enable_if_t<!(std::is_same<U, TParent>{} || std::is_base_of<TParent, U>{})>
       , class = std::enable_if_t<
-            call_policies<T, D, TName, TDeps, TPolicies>{} &&
+            //call_policies<T, D, TName, TDeps, TPolicies>{} &&
             creatable_impl_t<typename D::scope, typename D::given, TDeps, TCtor, TPolicies>{}
         >
     > struct is_creatable { };
