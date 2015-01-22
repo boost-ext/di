@@ -1471,10 +1471,10 @@ test blah13 = [] {
         c(int) { }
     };
 
-    auto injector = di::make_injector(
-        di::bind<int>.in(di::shared)
-    );
+    //auto injector = di::make_injector(
+        //di::bind<int>.in(di::shared)
+    //);
 
-    injector.create<c>();
+    //injector.create<c>();
 };
 
