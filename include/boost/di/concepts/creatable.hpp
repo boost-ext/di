@@ -100,11 +100,6 @@ struct call_policies<T, TDependency, TName, TDeps, core::pool<aux::type_list<Ts.
     }
 };
 
-template<class T, class TDependency, class TName, class TDeps>
-struct call_policies<T, TDependency, TName, TDeps, core::pool<aux::type_list<>>>
-    : std::true_type
-{ };
-
 template<
     class TParent
   , class TDeps
@@ -118,7 +113,28 @@ template<
       , class TCtor = typename type_traits::ctor_traits<typename D::given>::type
       , class = std::enable_if_t<!(std::is_same<U, TParent>{} || std::is_base_of<TParent, U>{})>
       , class = std::enable_if_t<
-            call_policies<T, D, TName, TDeps, TPolicies>{} &&
+            creatable_impl_t<typename D::scope, typename D::given, TDeps, TCtor, TPolicies>{} &&
+            call_policies<T, D, TName, TDeps, TPolicies>{}
+        >
+    > struct is_creatable { };
+
+    template<class T, class = is_creatable<T>> operator T();
+    template<class T, class = is_creatable<T>> operator T&() const;
+};
+
+template<
+    class TParent
+  , class TDeps
+  , class TName
+> struct any<TParent, TDeps, TName, core::pool<aux::type_list<>>> {
+    using TPolicies = core::pool<aux::type_list<>>;
+    template<
+        class T
+      , class U = aux::decay_t<T>
+      , class D = std::remove_reference_t<decltype(core::binder::resolve<U, TName>((TDeps*)nullptr))>
+      , class TCtor = typename type_traits::ctor_traits<typename D::given>::type
+      , class = std::enable_if_t<!(std::is_same<U, TParent>{} || std::is_base_of<TParent, U>{})>
+      , class = std::enable_if_t<
             creatable_impl_t<typename D::scope, typename D::given, TDeps, TCtor, TPolicies>{}
         >
     > struct is_creatable { };
