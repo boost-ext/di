@@ -20,11 +20,20 @@ struct non_type { };
 template<class...>
 using void_t = void;
 
+template<class...>
+using always = std::true_type;
+
+template<class...>
+using never = std::false_type;
+
 template<class, class>
 struct pair { using type = pair; };
 
 template<class...>
 struct type_list { using type = type_list; };
+
+template<bool...>
+struct bool_list;
 
 template<class... TArgs>
 struct inherit : TArgs... { };

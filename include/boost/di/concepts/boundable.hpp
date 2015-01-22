@@ -30,29 +30,24 @@ using eat = decltype(
     )
 );
 
-template <bool ...> struct bool_seq;
-
-template<class X>
-using never = std::false_type;
-
 template <class x, class>
 struct is_in;
 
 template <class x, typename ...xs>
 using is_in_impl = std::integral_constant<bool, !std::is_same<
-    bool_seq<std::is_same<xs, x>{}...>,
-    bool_seq<never<xs>{}...>
+    aux::bool_list<std::is_same<xs, x>{}...>,
+    aux::bool_list<aux::never<xs>{}...>
 >{}>;
 
 template <class x, class... ts>
 struct is_in<x, aux::type_list<ts...>> : is_in_impl<x, ts...> {};
 
-template<class... ts>
+template<class...>
 struct unique_impl;
 
 template<class... ts, std::size_t... s>
 struct unique_impl<std::index_sequence<s...>, ts...>
-    : std::is_same<bool_seq<never<ts>{}...>, bool_seq<typename is_in<ts, typename eat<s + 1, ts...>::type>::type{}...>>
+    : std::is_same<aux::bool_list<aux::never<ts>{}...>, aux::bool_list<typename is_in<ts, typename eat<s + 1, ts...>::type>::type{}...>>
 { };
 
 template<class... ts>
@@ -78,7 +73,7 @@ auto boundable(I&&, T&&) -> std::integral_constant<bool,
 
 template<class T, class... Ts>
 auto boundable(aux::type_list<Ts...>&&, T&&) ->
-    std::integral_constant<bool, !std::is_same<bool_seq<never<Ts>{}...>, bool_seq<std::is_base_of<Ts, T>{}...>>{}>;
+    std::integral_constant<bool, !std::is_same<aux::bool_list<aux::never<Ts>{}...>, aux::bool_list<std::is_base_of<Ts, T>{}...>>{}>;
 
 }}} // boost::di::concepts
 

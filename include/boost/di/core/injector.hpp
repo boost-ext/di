@@ -13,7 +13,7 @@
 #include "boost/di/core/any_type.hpp"
 #include "boost/di/core/binder.hpp"
 #include "boost/di/core/dependency.hpp"
-#include "boost/di/core/policy.hpp"
+#include "boost/di/core/visitor.hpp"
 #include "boost/di/core/pool.hpp"
 #include "boost/di/core/provider.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
@@ -57,10 +57,9 @@ public:
         : pool_t{init{}, create_from_injector(injector, TDeps{})}
     { }
 
-    template<class T, BOOST_DI_REQUIRES(concepts::creatable(std::declval<T>(), std::declval<TDeps>(), std::declval<TConfig>()))>
+    template<class T, BOOST_DI_REQUIRES(concepts::creatable(std::declval<T>(), std::declval<TDeps>(), std::declval<TConfig>().policies()))>
     T create() const {
-        using IsRoot = std::true_type;
-        return create_impl<T, no_name, IsRoot>();
+        return create_impl<T, no_name>();
     }
 
     template<class TAction>
@@ -89,7 +88,7 @@ private:
         return create_impl<T, TName>();
     }
 
-    template<class T, class TName = no_name, class TIsRoot = std::false_type>
+    template<class T, class TName = no_name>
     auto create_impl() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
@@ -97,8 +96,8 @@ private:
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<expected_t, given_t, T, ctor_t, injector>;
-        policy<pool_t>::template call<T, TName, TIsRoot>(
-            ((TConfig&)config_).policies(), dependency, ctor_t{}
+        visitor<pool_t>::template call<T, TName>(
+            ((TConfig&)config_).visitors(), dependency, ctor_t{}
         );
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<

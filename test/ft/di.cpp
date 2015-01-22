@@ -966,12 +966,12 @@ test named_parameters_with_shared_scope = [] {
     expect(object.n1 != object.n2);
 };
 
-test call_policy_lambda = [] {
+test call_visitor_lambda = [] {
     static auto called = false;
     class config : public di::config {
     public:
-        auto policies() const noexcept {
-            return di::make_policies([](auto){called = true;});
+        auto visitors() const noexcept {
+            return di::make_visitors([](auto){called = true;});
         }
     };
 
@@ -1283,26 +1283,26 @@ test call_provider_with_deleter = [] {
     expect_eq(1, deleter_provider::called());
 };
 
-//test constructible_policy = [] {
-    //class config : public di::config {
-    //public:
-        //auto policies() const noexcept {
-            //using namespace di::policies;
-            //using namespace di::policies::operators;
-            //return di::make_policies(constructible(is_root{} || std::is_same<_, double>{} || is_bound<_>{}));
-        //}
-    //};
+test constructible_policy = [] {
+    class config : public di::config {
+    public:
+        auto policies() const noexcept {
+            using namespace di::policies;
+            using namespace di::policies::operators;
+            return di::make_policies(constructible(is_root{} || std::is_same<_, double>{} || is_bound<_>{}));
+        }
+    };
 
-    //struct example {
-        //int i = 0;
-        //double d = 0.0;
-    //};
+    struct example {
+        int i = 0;
+        double d = 0.0;
+    };
 
-    //auto injector = di::make_injector<config>(di::bind<int>.to(42));
-    //injector.create<example>();
-//};
+    auto injector = di::make_injector<config>(di::bind<int>.to(42));
+    injector.create<example>();
+};
 
-struct policy {
+struct visitor {
     static auto& called() {
         static auto i = 0;
         return i;
@@ -1314,35 +1314,35 @@ struct policy {
     }
 };
 
-//class custom_policies : public di::config {
-//public:
-    //auto policies() const noexcept {
-        //return di::make_policies(
-            //policy{}
-          //, [](auto) { ++policy::called(); }
-          //, [](auto type, auto dependency, auto... ctor) { ++policy::called(); }
-        //);
-    //}
-//};
+class custom_policies : public di::config {
+public:
+    auto visitors() const noexcept {
+        return di::make_visitors(
+            visitor{}
+          , [](auto) { ++visitor::called(); }
+          , [](auto type, auto dependency, auto... ctor) { ++visitor::called(); }
+        );
+    }
+};
 
-//test call_custom_policies = [] {
-    //policy::called() = 0;
-    //auto injector = di::make_injector<custom_policies>();
-    //injector.create<int>();
-    //expect_eq(3, policy::called());
-//};
+test call_custom_policies = [] {
+    visitor::called() = 0;
+    auto injector = di::make_injector<custom_policies>();
+    injector.create<int>();
+    expect_eq(3, visitor::called());
+};
 
-//test call_custom_policies_with_exposed_injector = [] {
-    //policy::called() = 0;
+test call_custom_policies_with_exposed_injector = [] {
+    visitor::called() = 0;
 
-    //di::injector<i1> injector = di::make_injector<custom_policies>(
-        //di::bind<i1, impl1>
-    //);
+    di::injector<i1> injector = di::make_injector<custom_policies>(
+        di::bind<i1, impl1>
+    );
 
-    //auto object = injector.create<std::unique_ptr<i1>>();
-    //expect(dynamic_cast<i1*>(object.get()));
-    //expect_eq(3, policy::called());
-//};
+    auto object = injector.create<std::unique_ptr<i1>>();
+    expect(dynamic_cast<i1*>(object.get()));
+    expect_eq(3, visitor::called());
+};
 
 test blah = [] {
     auto injector = di::make_injector();

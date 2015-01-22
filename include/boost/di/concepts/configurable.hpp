@@ -15,8 +15,9 @@ std::false_type configurable(...);
 
 template<class T>
 auto configurable(T&& t) -> aux::is_valid_expr<
-    decltype(t.policies())
-  , decltype(t.provider())
+    decltype(t.provider())
+  , decltype(t.policies())
+  , decltype(t.visitors())
 >;
 
 }}} // boost::di::concepts

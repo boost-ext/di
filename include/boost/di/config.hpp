@@ -24,6 +24,11 @@ inline auto make_policies(const TArgs&... args) noexcept {
     return core::pool<aux::type_list<TArgs...>>(args...);
 }
 
+template<class... TArgs>
+inline auto make_visitors(const TArgs&... args) noexcept {
+    return core::pool<aux::type_list<TArgs...>>(args...);
+}
+
 class config {
 public:
     auto provider() const noexcept {
@@ -32,6 +37,10 @@ public:
 
     auto policies() noexcept {
         return make_policies();
+    }
+
+    auto visitors() noexcept {
+        return make_visitors();
     }
 };
 
