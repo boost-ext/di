@@ -41,9 +41,6 @@
 #define BOOST_DI_REQUIRES_OVERLOAD(...) \
     typename std::enable_if<(__VA_ARGS__), int>::type = 0
 
-#define BOOST_DI_REQUIRES_RETURN(...) \
-    typename std::enable_if<(__VA_ARGS__)>::type
-
 namespace boost { namespace di { namespace aux {
 
 template<class...>

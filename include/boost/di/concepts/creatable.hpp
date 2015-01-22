@@ -30,9 +30,9 @@ struct get_type {
     using type = create<void, TDeps, TPolicies>;
 };
 
-template<class TP, class X, class TDeps, class TPolicies>
-struct get_type<core::any_type<TP, X>, TDeps, TPolicies> {
-    using type = create<void, TDeps, TPolicies>;
+template<class TParent, class T, class TDeps, class TPolicies>
+struct get_type<core::any_type<TParent, T>, TDeps, TPolicies> {
+    using type = create<TParent, TDeps, TPolicies>;
 };
 
 template<class TName, class T, class TDeps, class TPolicies>

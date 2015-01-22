@@ -7,6 +7,8 @@
 #ifndef BOOST_DI_AUX_UTILITY_HPP
 #define BOOST_DI_AUX_UTILITY_HPP
 
+#include <type_traits>
+
 namespace boost { namespace di { namespace aux {
 
 struct none_t { };

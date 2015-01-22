@@ -1402,7 +1402,8 @@ test blah6 = [] {
 test blah7 = [] {
     di::make_injector(
         //di::bind<int>.in(di::unique).to(42)
-        //di::bind<int>.to(42)
+        di::bind<int>.to(42)
+      //, di::bind<int>.to(2)
     );
 };
 
@@ -1463,5 +1464,17 @@ test blah12 = [] {
         di::bind<int>.to(42)
     );
     injector.create<int>();
+};
+
+test blah13 = [] {
+    struct c {
+        c(int) { }
+    };
+
+    auto injector = di::make_injector(
+        di::bind<int>.in(di::shared)
+    );
+
+    injector.create<c>();
 };
 
