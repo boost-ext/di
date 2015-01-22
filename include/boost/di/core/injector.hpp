@@ -18,7 +18,6 @@
 #include "boost/di/core/provider.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/concepts/creatable.hpp"
-#include "boost/di/concepts/boundable.hpp"
 
 namespace boost { namespace di { namespace core {
 
@@ -33,7 +32,7 @@ struct wrapper {
     TWrapper wrapper_;
 };
 
-template<class TDeps, class TConfig, BOOST_DI_REQUIRES(concepts::boundable(std::declval<TDeps>()))>
+template<class TDeps, class TConfig>
 class injector : public pool<TDeps> {
     template<class, class> friend struct any_type;
     template<class...> friend struct provider;

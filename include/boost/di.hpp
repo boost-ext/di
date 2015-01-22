@@ -146,6 +146,9 @@ using join_t = typename join<TArgs...>::type;
 #define BOOST_DI_REQUIRES_OVERLOAD(...) \
     typename std::enable_if<(__VA_ARGS__), int>::type = 0
 
+#define BOOST_DI_REQUIRES_RETURN(...) \
+    typename std::enable_if<(__VA_ARGS__)>::type
+
 namespace boost { namespace di { namespace aux {
 
 template<class...>
@@ -2107,7 +2110,7 @@ struct wrapper {
     TWrapper wrapper_;
 };
 
-template<class TDeps, class TConfig, BOOST_DI_REQUIRES(concepts::boundable(std::declval<TDeps>()))>
+template<class TDeps, class TConfig>
 class injector : public pool<TDeps> {
     template<class, class> friend struct any_type;
     template<class...> friend struct provider;
@@ -2295,9 +2298,11 @@ auto configurable(T&& t) -> aux::is_valid_expr<
 namespace boost { namespace di {
 
 template<class TConfig = ::BOOST_DI_CFG
-       , BOOST_DI_REQUIRES(concepts::configurable(std::declval<TConfig>()))
-       , class... TArgs
-> inline auto make_injector(const TArgs&... args) noexcept {
+   , BOOST_DI_REQUIRES(concepts::configurable(std::declval<TConfig>()))
+   , class... TArgs
+> inline auto make_injector(const TArgs&... args) noexcept ->
+    std::enable_if_t<decltype(concepts::boundable(typename detail::injector<TConfig, TArgs...>::deps{})){}, detail::injector<TConfig, TArgs...>>
+ {
     return detail::injector<TConfig, TArgs...>(args...);
 }
 
