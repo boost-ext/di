@@ -15,18 +15,19 @@ namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_TYPE(is_ref);
 
+template<class T, class TParent>
+struct is_not_same_impl {
+    static constexpr auto value =
+        std::is_same<aux::decay_t<T>, aux::decay_t<TParent>>::value ||
+        std::is_base_of<aux::decay_t<TParent>, aux::decay_t<T>>::value;
+};
+
+template<class T, class TParent>
+using is_not_same = std::enable_if_t<!is_not_same_impl<T, TParent>::value>;
+
+
 template<class TParent = void, class TInjector = aux::none_t>
 struct any_type {
-    template<class T>
-    struct is_not_same_impl {
-        static constexpr auto value =
-            std::is_same<aux::decay_t<T>, aux::decay_t<TParent>>::value ||
-            std::is_base_of<aux::decay_t<TParent>, aux::decay_t<T>>::value;
-    };
-
-    template<class T>
-    using is_not_same = std::enable_if_t<!is_not_same_impl<T>::value>;
-
     template<class T>
     struct is_ref_impl {
         static constexpr auto value =
@@ -39,17 +40,17 @@ struct any_type {
     template<class T>
     using is_ref = std::enable_if_t<is_ref_impl<T>::value>;
 
-    template<class T, class = is_not_same<T>>
+    template<class T, class = is_not_same<T, TParent>>
     operator T() {
         return injector_.template create_impl<T>();
     }
 
-    template<class T, class = is_not_same<T>, class = is_ref<T>>
+    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>>
     operator T&() const {
         return injector_.template create_impl<T&>();
     }
 
-    template<class T, class = is_not_same<T>, class = is_ref<T>>
+    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>>
     operator const T&() const {
         return injector_.template create_impl<const T&>();
     }
