@@ -13,7 +13,7 @@
 
 namespace boost { namespace di { namespace concepts {
 
-template <typename ignore>
+template<class ignore>
 struct lookup;
 
 template <std::size_t ...ignore>
@@ -23,7 +23,7 @@ struct lookup<std::index_sequence<ignore...>> {
     apply(decltype(ignore, (void*)nullptr)..., aux::no_decay<ts>*...);
 };
 
-template <std::size_t index, typename ...xs>
+template <std::size_t index, class... xs>
 using eat = decltype(
     lookup<std::make_index_sequence<index>>::apply(
         (aux::no_decay<xs>*)nullptr...
@@ -33,7 +33,7 @@ using eat = decltype(
 template <class x, class>
 struct is_in;
 
-template <class x, typename ...xs>
+template <class x, class... xs>
 using is_in_impl = std::integral_constant<bool, !std::is_same<
     aux::bool_list<std::is_same<xs, x>{}...>,
     aux::bool_list<aux::never<xs>{}...>

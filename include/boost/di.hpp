@@ -54,11 +54,20 @@ struct non_type { };
 template<class...>
 using void_t = void;
 
+template<class...>
+using always = std::true_type;
+
+template<class...>
+using never = std::false_type;
+
 template<class, class>
 struct pair { using type = pair; };
 
 template<class...>
 struct type_list { using type = type_list; };
+
+template<bool...>
+struct bool_list;
 
 template<class... TArgs>
 struct inherit : TArgs... { };
@@ -1512,6 +1521,11 @@ inline auto make_policies(const TArgs&... args) noexcept {
     return core::pool<aux::type_list<TArgs...>>(args...);
 }
 
+template<class... TArgs>
+inline auto make_visitors(const TArgs&... args) noexcept {
+    return core::pool<aux::type_list<TArgs...>>(args...);
+}
+
 class config {
 public:
     auto provider() const noexcept {
@@ -1520,6 +1534,10 @@ public:
 
     auto policies() noexcept {
         return make_policies();
+    }
+
+    auto visitors() noexcept {
+        return make_visitors();
     }
 };
 
@@ -1598,7 +1616,7 @@ public:
 
 namespace boost { namespace di { namespace concepts {
 
-template <typename ignore>
+template<class ignore>
 struct lookup;
 
 template <std::size_t ...ignore>
@@ -1608,36 +1626,31 @@ struct lookup<std::index_sequence<ignore...>> {
     apply(decltype(ignore, (void*)nullptr)..., aux::no_decay<ts>*...);
 };
 
-template <std::size_t index, typename ...xs>
+template <std::size_t index, class... xs>
 using eat = decltype(
     lookup<std::make_index_sequence<index>>::apply(
         (aux::no_decay<xs>*)nullptr...
     )
 );
 
-template <bool ...> struct bool_seq;
-
-template<class X>
-using never = std::false_type;
-
 template <class x, class>
 struct is_in;
 
-template <class x, typename ...xs>
+template <class x, class... xs>
 using is_in_impl = std::integral_constant<bool, !std::is_same<
-    bool_seq<std::is_same<xs, x>{}...>,
-    bool_seq<never<xs>{}...>
+    aux::bool_list<std::is_same<xs, x>{}...>,
+    aux::bool_list<aux::never<xs>{}...>
 >{}>;
 
 template <class x, class... ts>
 struct is_in<x, aux::type_list<ts...>> : is_in_impl<x, ts...> {};
 
-template<class... ts>
+template<class...>
 struct unique_impl;
 
 template<class... ts, std::size_t... s>
 struct unique_impl<std::index_sequence<s...>, ts...>
-    : std::is_same<bool_seq<never<ts>{}...>, bool_seq<typename is_in<ts, typename eat<s + 1, ts...>::type>::type{}...>>
+    : std::is_same<aux::bool_list<aux::never<ts>{}...>, aux::bool_list<typename is_in<ts, typename eat<s + 1, ts...>::type>::type{}...>>
 { };
 
 template<class... ts>
@@ -1654,7 +1667,7 @@ struct expected {
 std::false_type boundable(...);
 
 template<class... Ts>
-auto boundable(aux::type_list<Ts...>&&) -> std::true_type;//unique<typename expected<Ts>::type...>;
+auto boundable(aux::type_list<Ts...>&&) -> unique<typename expected<Ts>::type...>;
 
 template<class I, class T>
 auto boundable(I&&, T&&) -> std::integral_constant<bool,
@@ -1663,7 +1676,7 @@ auto boundable(I&&, T&&) -> std::integral_constant<bool,
 
 template<class T, class... Ts>
 auto boundable(aux::type_list<Ts...>&&, T&&) ->
-    std::integral_constant<bool, !std::is_same<bool_seq<never<Ts>{}...>, bool_seq<std::is_base_of<Ts, T>{}...>>{}>;
+    std::integral_constant<bool, !std::is_same<aux::bool_list<aux::never<Ts>{}...>, aux::bool_list<std::is_base_of<Ts, T>{}...>>{}>;
 
 }}} // boost::di::concepts
 
@@ -1699,62 +1712,57 @@ constexpr auto session_exit(const TName&) noexcept {
 
 }} // boost::di
 
-#define BOOST_DI_CORE_POLICY_HPP
+#define BOOST_DI_CORE_VISITOR_HPP
 
 namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_METHOD(call_operator, operator());
 
 template<class TDeps>
-class policy {
+class visitor {
     template<
-        class TPolicy
+        class TVisitor
       , class T
       , class TName
-      , class TIsRoot
-      , class TPolicies
+      , class TVisitors
       , class TDependency
       , class... TArgs
-    > static void call_impl(const TPolicies& policies, TDependency&& dependency) noexcept {
+    > static void call_impl(const TVisitors& visitors, TDependency&& dependency) noexcept {
         struct arg {
             using type = T;
             using name = TName;
-            using is_root = TIsRoot;
-            template<class T_, class TName_, class TDefault_>
-            using resolve = decltype(binder::resolve<T_, TName_, TDefault_>((TDeps*)nullptr));
         };
 
-        call_impl_args<arg, TDependency, TPolicy, TArgs...>(
-            static_cast<const TPolicy&>(policies), dependency
+        call_impl_args<arg, TDependency, TVisitor, TArgs...>(
+            static_cast<const TVisitor&>(visitors), dependency
         );
     }
 
-    template<class TArg, class TDependency, class TPolicy, class... TArgs>
-    static std::enable_if_t<has_call_operator<TPolicy, TArg>{}>
-    call_impl_args(const TPolicy& policy, TDependency&&) noexcept {
-        (policy)(TArg{});
+    template<class TArg, class TDependency, class TVisitor, class... TArgs>
+    static std::enable_if_t<has_call_operator<TVisitor, TArg>{}>
+    call_impl_args(const TVisitor& visitor, TDependency&&) noexcept {
+        (visitor)(TArg{});
     }
 
-    template<class TArg, class TDependency, class TPolicy, class... TArgs>
-    static std::enable_if_t<has_call_operator<TPolicy, TArg, TDependency, TArgs...>{}>
-    call_impl_args(const TPolicy& policy, TDependency&& dependency) noexcept {
-        (policy)(TArg{}, dependency, aux::type<TArgs>{}...);
+    template<class TArg, class TDependency, class TVisitor, class... TArgs>
+    static std::enable_if_t<has_call_operator<TVisitor, TArg, TDependency, TArgs...>{}>
+    call_impl_args(const TVisitor& visitor, TDependency&& dependency) noexcept {
+        (visitor)(TArg{}, dependency, aux::type<TArgs>{}...);
     }
 
 public:
     template<
         class T
       , class TName
-      , class TIsRoot
       , class TInitialization
       , class TDependency
       , class... TArgs
-      , class... TPolicies
-    > static void call(const pool<aux::type_list<TPolicies...>>& policies
+      , class... TVisitors
+    > static void call(const pool<aux::type_list<TVisitors...>>& visitors
                      , TDependency&& dependency
                      , aux::pair<TInitialization, aux::type_list<TArgs...>>) noexcept {
-        int _[]{0, (call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TArgs...>(
-            policies, dependency), 0)...}; (void)_;
+        int _[]{0, (call_impl<TVisitors, T, TName, TVisitors, TDependency, TArgs...>(
+            visitors, dependency), 0)...}; (void)_;
     }
 };
 
@@ -1799,7 +1807,7 @@ template<
 
 namespace boost { namespace di { namespace concepts {
 
-template<class, class, class = no_name, class = core::pool<>>
+template<class, class, class, class = no_name, class = std::false_type>
 struct create;
 
 template<class, class, class, class, class>
@@ -1807,83 +1815,171 @@ struct creatable_impl;
 
 template<class T, class TDeps, class TPolicies>
 struct get_type {
-    using type = create<void, TDeps, no_name, TPolicies>;
+    using type = create<void, TDeps, TPolicies>;
 };
 
 template<class TP, class X, class TDeps, class TPolicies>
 struct get_type<core::any_type<TP, X>, TDeps, TPolicies> {
-    using type = create<void, TDeps, no_name, TPolicies>;
+    using type = create<void, TDeps, TPolicies>;
 };
 
 template<class TName, class T, class TDeps, class TPolicies>
 struct get_type<type_traits::named<TName, T>, TDeps, TPolicies> {
-    using type = create<void, TDeps, TName, TPolicies>;
+    using type = create<void, TDeps, TPolicies, TName>;
 };
 
-template<class TScope, class T, class TDeps, class TPolicies, class... TArgs>
-struct creatable_impl<TScope, T, TDeps, aux::pair<type_traits::direct, aux::type_list<TArgs...>>, TPolicies> {
-    using type = std::is_constructible<T, typename get_type<TArgs, TDeps, TPolicies>::type...>;
+template<
+    class TScope
+  , class T
+  , class TDeps
+  , class TPolicies
+  , class... TArgs
+> struct creatable_impl<
+    TScope
+  , T
+  , TDeps
+  , aux::pair<type_traits::direct, aux::type_list<TArgs...>>
+  , TPolicies
+> {
+    using type = std::is_constructible<
+        T
+      , typename get_type<TArgs, TDeps, TPolicies>::type...
+    >;
 };
 
-template<class TScope, class T, class TDeps, class TPolicies, class... TArgs>
-struct creatable_impl<TScope, T, TDeps, aux::pair<type_traits::uniform, aux::type_list<TArgs...>>, TPolicies> {
-    using type = aux::is_braces_constructible<T, typename get_type<TArgs, TDeps, TPolicies>::type...>;
+template<
+    class TScope
+  , class T
+  , class TDeps
+  , class TPolicies
+  , class... TArgs
+> struct creatable_impl<
+    TScope
+  , T
+  , TDeps
+  , aux::pair<type_traits::uniform, aux::type_list<TArgs...>>
+  , TPolicies
+> {
+    using type = aux::is_braces_constructible<
+        T
+      , typename get_type<TArgs, TDeps, TPolicies>::type...
+    >;
 };
 
-template<class TScope, class T, class TDeps, class TPolicies, class... TArgs>
-struct creatable_impl<scopes::exposed<TScope>, T, TDeps, aux::pair<type_traits::direct, aux::type_list<TArgs...>>, TPolicies> {
+template<
+    class TScope
+  , class T
+  , class TDeps
+  , class TPolicies
+  , class... TArgs
+> struct creatable_impl<
+    scopes::exposed<TScope>
+  , T
+  , TDeps
+  , aux::pair<type_traits::direct, aux::type_list<TArgs...>>
+  , TPolicies
+> {
     using type = std::true_type;
 };
 
-template<class TScope, class T, class TDeps, class TPolicies, class... TArgs>
-struct creatable_impl<scopes::exposed<TScope>, T, TDeps, aux::pair<type_traits::uniform, aux::type_list<TArgs...>>, TPolicies> {
+template<
+    class TScope
+  , class T
+  , class TDeps
+  , class TPolicies
+  , class... TArgs
+> struct creatable_impl<
+    scopes::exposed<TScope>
+  , T
+  , TDeps
+  , aux::pair<type_traits::uniform, aux::type_list<TArgs...>>
+  , TPolicies
+> {
     using type = std::true_type;
 };
 
-template<class T, class TDeps, class TPolicies, class... TArgs>
-struct creatable_impl<scopes::external, T, TDeps, aux::pair<type_traits::direct, aux::type_list<TArgs...>>, TPolicies> {
+template<
+    class T
+  , class TDeps
+  , class TPolicies
+  , class... TArgs
+> struct creatable_impl<
+    scopes::external
+  , T
+  , TDeps
+  , aux::pair<type_traits::direct, aux::type_list<TArgs...>>
+  , TPolicies
+> {
     using type = std::true_type;
 };
 
-template<class T, class TDeps, class TPolicies, class... TArgs>
-struct creatable_impl<scopes::external, T, TDeps, aux::pair<type_traits::uniform, aux::type_list<TArgs...>>, TPolicies> {
+template<
+    class T
+  , class TDeps
+  , class TPolicies
+  , class... TArgs
+> struct creatable_impl<
+    scopes::external
+  , T
+  , TDeps
+  , aux::pair<type_traits::uniform, aux::type_list<TArgs...>>
+  , TPolicies
+> {
     using type = std::true_type;
 };
 
-template<class, class, class, class, class>
+template<class, class, class, class, class, class>
 struct call_policies;
 
-template<bool...> struct bool_seq;
+template<
+    class TScope
+  , class T
+  , class TDeps
+  , class TCtor
+  , class TPolicies
+> using creatable_impl_t =
+    typename creatable_impl<
+        TScope
+      , T
+      , TDeps
+      , TCtor
+      , TPolicies
+    >::type;
 
-template<class>
-using always = std::true_type;
-
-template<class TScope, class T, class TDeps, class TCtor, class TPolicies>
-using creatable_impl_t = typename creatable_impl<TScope, T, TDeps, TCtor, TPolicies>::type;
-
-template<class T>
-struct get : T { };
-
-template<>
-struct get<void> : std::true_type { };
-
-template<class T, class TDependency, class TName, class TDeps, class... Ts>
-struct call_policies<T, TDependency, TName, TDeps, core::pool<aux::type_list<Ts...>>> {
+template<
+    class T
+  , class TDependency
+  , class TName
+  , class TIsRoot
+  , class TDeps
+  , class... Ts
+> struct call_policies<
+    T
+  , TDependency
+  , TName
+  , TIsRoot
+  , TDeps
+  , core::pool<aux::type_list<Ts...>>
+> {
     struct arg {
         using type = T;
         using name = TName;
-        using is_root = std::false_type;
+        using is_root = TIsRoot;
         template<class T_, class TName_, class TDefault_>
         using resolve = decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)nullptr));
     };
 
     static constexpr auto value = 
-        std::is_same<bool_seq<always<Ts>{}...>, bool_seq<get<decltype((Ts{})(arg{}))>{}...>>::value;
+        std::is_same<
+            aux::bool_list<aux::always<Ts>{}...>
+          , aux::bool_list<decltype((Ts{})(arg{})){}...>
+        >::value;
 };
 
 template<
     class T
   , class TName
+  , class TIsRoot
   , class TDependency
   , class TDeps
   , class TCtor
@@ -1901,6 +1997,7 @@ template<
             T
           , TDependency
           , TName
+          , TIsRoot
           , TDeps
           , TPolicies
         >::value
@@ -1910,12 +2007,14 @@ template<
 template<
     class T
   , class TName
+  , class TIsRoot
   , class TDependency
   , class TDeps
   , class TCtor
 > struct is_createable_impl<
     T
   , TName
+  , TIsRoot
   , TDependency
   , TDeps
   , TCtor
@@ -1933,6 +2032,7 @@ template<
 template<
     class T
   , class TName
+  , class TIsRoot
   , class TDependency
   , class TDeps
   , class TCtor
@@ -1942,6 +2042,7 @@ template<
         is_createable_impl<
             T
           , TName
+          , TIsRoot
           , TDependency
           , TDeps
           , TCtor
@@ -1954,24 +2055,26 @@ template<
   , class TParent
   , class TDeps
   , class TName
+  , class TIsRoot
   , class TPolicies
   , class TDependency = std::remove_reference_t<
-        decltype(core::binder::resolve<aux::decay_t<T>, TName>((TDeps*)nullptr))
+        decltype(core::binder::resolve<T, TName>((TDeps*)nullptr))
     >
   , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
   , class = core::is_not_same<T, TParent>
-  , class = is_createable_impl_t<T, TName, TDependency, TDeps, TCtor, TPolicies>
+  , class = is_createable_impl_t<T, TName, TIsRoot, TDependency, TDeps, TCtor, TPolicies>
 > struct is_creatable { };
 
 template<
     class TParent
   , class TDeps
-  , class TName
   , class TPolicies
+  , class TName
+  , class TIsRoot
 > struct create {
     template<class T>
     using is_creatable_t =
-        is_creatable<T, TParent, TDeps, TName, TPolicies>;
+        is_creatable<T, TParent, TDeps, TName, TIsRoot, TPolicies>;
 
     template<class T, class = is_creatable_t<T>>
     operator T();
@@ -1982,9 +2085,9 @@ template<
 
 std::false_type creatable(...);
 
-template<class T, class TDeps, class TConfig>
-auto creatable(T&&, TDeps&&, TConfig&& cfg) -> aux::is_valid_expr<
-    decltype(create<void, core::pool<TDeps>, no_name, decltype(cfg.policies())>{}.operator T())
+template<class T, class TDeps, class TPolicies>
+auto creatable(T&&, TDeps&&, TPolicies&&) -> aux::is_valid_expr<
+    decltype(create<void, core::pool<TDeps>, TPolicies, no_name, std::true_type>{}.operator T())
 >;
 
 }}} // boost::di::concepts
@@ -2028,10 +2131,9 @@ public:
         : pool_t{init{}, create_from_injector(injector, TDeps{})}
     { }
 
-    template<class T, BOOST_DI_REQUIRES(concepts::creatable(std::declval<T>(), std::declval<TDeps>(), std::declval<TConfig>()))>
+    template<class T, BOOST_DI_REQUIRES(concepts::creatable(std::declval<T>(), std::declval<TDeps>(), std::declval<TConfig>().policies()))>
     T create() const {
-        using IsRoot = std::true_type;
-        return create_impl<T, no_name, IsRoot>();
+        return create_impl<T, no_name>();
     }
 
     template<class TAction>
@@ -2060,7 +2162,7 @@ private:
         return create_impl<T, TName>();
     }
 
-    template<class T, class TName = no_name, class TIsRoot = std::false_type>
+    template<class T, class TName = no_name>
     auto create_impl() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
@@ -2068,8 +2170,8 @@ private:
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<expected_t, given_t, T, ctor_t, injector>;
-        policy<pool_t>::template call<T, TName, TIsRoot>(
-            ((TConfig&)config_).policies(), dependency, ctor_t{}
+        visitor<pool_t>::template call<T, TName>(
+            ((TConfig&)config_).visitors(), dependency, ctor_t{}
         );
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
@@ -2181,8 +2283,9 @@ std::false_type configurable(...);
 
 template<class T>
 auto configurable(T&& t) -> aux::is_valid_expr<
-    decltype(t.policies())
-  , decltype(t.provider())
+    decltype(t.provider())
+  , decltype(t.policies())
+  , decltype(t.visitors())
 >;
 
 }}} // boost::di::concepts
