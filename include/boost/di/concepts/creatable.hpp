@@ -181,7 +181,7 @@ template<
         using resolve = decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)nullptr));
     };
 
-    static constexpr auto value = 
+    static constexpr auto value =
         std::is_same<
             aux::bool_list<aux::always<Ts>{}...>
           , aux::bool_list<decltype((Ts{})(arg{})){}...>
@@ -197,7 +197,7 @@ template<
   , class TCtor
   , class TPolicies
 > struct is_createable_impl {
-    using type = std::integral_constant<bool, 
+    using type = std::integral_constant<bool,
         creatable_impl_t<
             typename TDependency::scope
           , typename TDependency::given
