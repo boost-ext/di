@@ -1877,29 +1877,77 @@ struct call_policies<T, TDependency, TName, TDeps, core::pool<aux::type_list<Ts.
         using resolve = decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)nullptr));
     };
 
-    constexpr operator bool() const noexcept {
-        return std::is_same<bool_seq<always<Ts>{}...>, bool_seq<get<decltype((Ts{})(arg{}))>{}...>>{};
-    }
+    static constexpr auto value = 
+        std::is_same<bool_seq<always<Ts>{}...>, bool_seq<get<decltype((Ts{})(arg{}))>{}...>>::value;
 };
 
-template<class T1, class T2>
-struct and_ : std::integral_constant<bool, T1{} && T2{}> { };
-
-template<class T, class TName, class TDependency, class TDeps, class TCtor, class TPolicies>
-struct is_createable_impl {
-    using type = and_<
-        creatable_impl_t<typename TDependency::scope, typename TDependency::given, TDeps, TCtor, TPolicies>
-      , call_policies<T, TDependency, TName, TDeps, TPolicies>
+template<
+    class T
+  , class TName
+  , class TDependency
+  , class TDeps
+  , class TCtor
+  , class TPolicies
+> struct is_createable_impl {
+    using type = std::integral_constant<bool, 
+        creatable_impl_t<
+            typename TDependency::scope
+          , typename TDependency::given
+          , TDeps
+          , TCtor
+          , TPolicies
+        >::value &&
+        call_policies<
+            T
+          , TDependency
+          , TName
+          , TDeps
+          , TPolicies
+        >::value
     >;
 };
 
-template<class T, class TName, class TDependency, class TDeps, class TCtor>
-struct is_createable_impl<T, TName, TDependency, TDeps, TCtor, core::pool<aux::type_list<>>> {
-    using type = creatable_impl_t<typename TDependency::scope, typename TDependency::given, TDeps, TCtor, core::pool<aux::type_list<>>>;
+template<
+    class T
+  , class TName
+  , class TDependency
+  , class TDeps
+  , class TCtor
+> struct is_createable_impl<
+    T
+  , TName
+  , TDependency
+  , TDeps
+  , TCtor
+  , core::pool<aux::type_list<>>
+> {
+    using type = creatable_impl_t<
+        typename TDependency::scope
+      , typename TDependency::given
+      , TDeps
+      , TCtor
+      , core::pool<aux::type_list<>>
+    >;
 };
 
-template<class T, class TName, class TDependency, class TDeps, class TCtor, class TPolicies>
-using is_createable_impl_t = std::enable_if_t<is_createable_impl<T, TName, TDependency, TDeps, TCtor, TPolicies>::type::value>;
+template<
+    class T
+  , class TName
+  , class TDependency
+  , class TDeps
+  , class TCtor
+  , class TPolicies
+> using is_createable_impl_t =
+    std::enable_if_t<
+        is_createable_impl<
+            T
+          , TName
+          , TDependency
+          , TDeps
+          , TCtor
+          , TPolicies
+        >::type::value
+    >;
 
 template<
     class T
@@ -1907,7 +1955,9 @@ template<
   , class TDeps
   , class TName
   , class TPolicies
-  , class TDependency = std::remove_reference_t<decltype(core::binder::resolve<aux::decay_t<T>, TName>((TDeps*)nullptr))>
+  , class TDependency = std::remove_reference_t<
+        decltype(core::binder::resolve<aux::decay_t<T>, TName>((TDeps*)nullptr))
+    >
   , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
   , class = core::is_not_same<T, TParent>
   , class = is_createable_impl_t<T, TName, TDependency, TDeps, TCtor, TPolicies>
@@ -1919,8 +1969,15 @@ template<
   , class TName
   , class TPolicies
 > struct create {
-    template<class T, class = is_creatable<T, TParent, TDeps, TName, TPolicies>> operator T();
-    template<class T, class = is_creatable<T, TParent, TDeps, TName, TPolicies>> operator T&() const;
+    template<class T>
+    using is_creatable_t =
+        is_creatable<T, TParent, TDeps, TName, TPolicies>;
+
+    template<class T, class = is_creatable_t<T>>
+    operator T();
+
+    template<class T, class = is_creatable_t<T>>
+    operator T&() const;
 };
 
 std::false_type creatable(...);
