@@ -13,46 +13,6 @@
 
 namespace boost { namespace di { namespace concepts {
 
-template<class ignore>
-struct lookup;
-
-template <std::size_t ...ignore>
-struct lookup<std::index_sequence<ignore...>> {
-    template <class... ts>
-    static aux::type_list<ts...>
-    apply(decltype(ignore, (void*)nullptr)..., aux::no_decay<ts>*...);
-};
-
-template <std::size_t index, class... xs>
-using eat = decltype(
-    lookup<std::make_index_sequence<index>>::apply(
-        (aux::no_decay<xs>*)nullptr...
-    )
-);
-
-template <class x, class>
-struct is_in;
-
-template <class x, class... xs>
-using is_in_impl = std::integral_constant<bool, !std::is_same<
-    aux::bool_list<std::is_same<xs, x>{}...>,
-    aux::bool_list<aux::never<xs>{}...>
->{}>;
-
-template <class x, class... ts>
-struct is_in<x, aux::type_list<ts...>> : is_in_impl<x, ts...> {};
-
-template<class...>
-struct unique_impl;
-
-template<class... ts, std::size_t... s>
-struct unique_impl<std::index_sequence<s...>, ts...>
-    : std::is_same<aux::bool_list<aux::never<ts>{}...>, aux::bool_list<typename is_in<ts, typename eat<s + 1, ts...>::type>::type{}...>>
-{ };
-
-template<class... ts>
-using unique = typename unique_impl<std::make_index_sequence<sizeof...(ts)>, ts...>::type;
-
 template<class T>
 struct expected {
     using type = aux::pair<
@@ -64,7 +24,8 @@ struct expected {
 std::false_type boundable(...);
 
 template<class... Ts>
-auto boundable(aux::type_list<Ts...>&&) -> unique<typename expected<Ts>::type...>;
+auto boundable(aux::type_list<Ts...>&&) ->
+    aux::always<typename aux::inherit<typename expected<Ts>::type...>::type>;
 
 template<class I, class T>
 auto boundable(I&&, T&&) -> std::integral_constant<bool,

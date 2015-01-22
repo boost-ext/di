@@ -1403,7 +1403,7 @@ test blah7 = [] {
     di::make_injector(
         //di::bind<int>.in(di::unique).to(42)
         di::bind<int>.to(42)
-      //, di::bind<int>.to(2)
+      //, di::bind<int>.to([]{return 1;})
     );
 };
 

@@ -70,7 +70,9 @@ template<bool...>
 struct bool_list;
 
 template<class... TArgs>
-struct inherit : TArgs... { };
+struct inherit : TArgs... {
+    using type = inherit;
+};
 
 template<class T>
 struct no_decay { using type = T; };
@@ -145,9 +147,6 @@ using join_t = typename join<TArgs...>::type;
 
 #define BOOST_DI_REQUIRES_OVERLOAD(...) \
     typename std::enable_if<(__VA_ARGS__), int>::type = 0
-
-#define BOOST_DI_REQUIRES_RETURN(...) \
-    typename std::enable_if<(__VA_ARGS__)>::type
 
 namespace boost { namespace di { namespace aux {
 
@@ -1619,46 +1618,6 @@ public:
 
 namespace boost { namespace di { namespace concepts {
 
-template<class ignore>
-struct lookup;
-
-template <std::size_t ...ignore>
-struct lookup<std::index_sequence<ignore...>> {
-    template <class... ts>
-    static aux::type_list<ts...>
-    apply(decltype(ignore, (void*)nullptr)..., aux::no_decay<ts>*...);
-};
-
-template <std::size_t index, class... xs>
-using eat = decltype(
-    lookup<std::make_index_sequence<index>>::apply(
-        (aux::no_decay<xs>*)nullptr...
-    )
-);
-
-template <class x, class>
-struct is_in;
-
-template <class x, class... xs>
-using is_in_impl = std::integral_constant<bool, !std::is_same<
-    aux::bool_list<std::is_same<xs, x>{}...>,
-    aux::bool_list<aux::never<xs>{}...>
->{}>;
-
-template <class x, class... ts>
-struct is_in<x, aux::type_list<ts...>> : is_in_impl<x, ts...> {};
-
-template<class...>
-struct unique_impl;
-
-template<class... ts, std::size_t... s>
-struct unique_impl<std::index_sequence<s...>, ts...>
-    : std::is_same<aux::bool_list<aux::never<ts>{}...>, aux::bool_list<typename is_in<ts, typename eat<s + 1, ts...>::type>::type{}...>>
-{ };
-
-template<class... ts>
-using unique = typename unique_impl<std::make_index_sequence<sizeof...(ts)>, ts...>::type;
-
 template<class T>
 struct expected {
     using type = aux::pair<
@@ -1670,7 +1629,8 @@ struct expected {
 std::false_type boundable(...);
 
 template<class... Ts>
-auto boundable(aux::type_list<Ts...>&&) -> std::true_type;//unique<typename expected<Ts>::type...>;
+auto boundable(aux::type_list<Ts...>&&) ->
+    aux::always<typename aux::inherit<typename expected<Ts>::type...>::type>;
 
 template<class I, class T>
 auto boundable(I&&, T&&) -> std::integral_constant<bool,
@@ -1821,9 +1781,9 @@ struct get_type {
     using type = create<void, TDeps, TPolicies>;
 };
 
-template<class TP, class X, class TDeps, class TPolicies>
-struct get_type<core::any_type<TP, X>, TDeps, TPolicies> {
-    using type = create<void, TDeps, TPolicies>;
+template<class TParent, class T, class TDeps, class TPolicies>
+struct get_type<core::any_type<TParent, T>, TDeps, TPolicies> {
+    using type = create<TParent, TDeps, TPolicies>;
 };
 
 template<class TName, class T, class TDeps, class TPolicies>
@@ -2110,7 +2070,7 @@ struct wrapper {
     TWrapper wrapper_;
 };
 
-template<class TDeps, class TConfig>
+template<class TDeps, class TConfig, BOOST_DI_REQUIRES(concepts::boundable(std::declval<TDeps>()))>
 class injector : public pool<TDeps> {
     template<class, class> friend struct any_type;
     template<class...> friend struct provider;
@@ -2300,9 +2260,7 @@ namespace boost { namespace di {
 template<class TConfig = ::BOOST_DI_CFG
    , BOOST_DI_REQUIRES(concepts::configurable(std::declval<TConfig>()))
    , class... TArgs
-> inline auto make_injector(const TArgs&... args) noexcept ->
-    std::enable_if_t<decltype(concepts::boundable(typename detail::injector<TConfig, TArgs...>::deps{})){}, detail::injector<TConfig, TArgs...>>
- {
+> inline auto make_injector(const TArgs&... args) noexcept {
     return detail::injector<TConfig, TArgs...>(args...);
 }
 

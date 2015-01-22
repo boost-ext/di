@@ -38,7 +38,9 @@ template<bool...>
 struct bool_list;
 
 template<class... TArgs>
-struct inherit : TArgs... { };
+struct inherit : TArgs... {
+    using type = inherit;
+};
 
 template<class T>
 struct no_decay { using type = T; };
