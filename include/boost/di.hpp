@@ -1095,9 +1095,6 @@ struct any_type {
     const TInjector& injector_;
 };
 
-template<class TParent>
-using any_type_ = any_type<TParent>;
-
 template<class>
 struct is_any_type : std::false_type { };
 
@@ -1537,11 +1534,6 @@ inline auto make_policies(const TArgs&... args) noexcept {
     return core::pool<aux::type_list<TArgs...>>(args...);
 }
 
-template<class... TArgs>
-inline auto make_visitors(const TArgs&... args) noexcept {
-    return core::pool<aux::type_list<TArgs...>>(args...);
-}
-
 class config {
 public:
     auto provider() const noexcept {
@@ -1550,10 +1542,6 @@ public:
 
     auto policies() noexcept {
         return make_policies();
-    }
-
-    auto visitors() noexcept {
-        return make_visitors();
     }
 };
 

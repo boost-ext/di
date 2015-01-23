@@ -58,9 +58,6 @@ struct any_type {
     const TInjector& injector_;
 };
 
-template<class TParent>
-using any_type_ = any_type<TParent>;
-
 template<class>
 struct is_any_type : std::false_type { };
 
