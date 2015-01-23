@@ -1,0 +1,288 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>User Guide</title>
+<link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
+<link rel="home" href="../index.html" title="Boost.DI (Dependency Injection) C++14">
+<link rel="up" href="../index.html" title="Boost.DI (Dependency Injection) C++14">
+<link rel="prev" href="performance.html" title="Performance">
+<link rel="next" href="user_guide/injector.html" title="Injector">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="performance.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="user_guide/injector.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="di.user_guide"></a><a class="link" href="user_guide.html" title="User Guide">User Guide</a>
+</h2></div></div></div>
+<div class="toc"><dl class="toc">
+<dt><span class="section"><a href="user_guide/injector.html">Injector</a></span></dt>
+<dd><dl><dt><span class="section"><a href="user_guide/injector/make_injector.html">make_injector</a></span></dt></dl></dd>
+<dt><span class="section"><a href="user_guide/bindings.html">Bindings</a></span></dt>
+<dd><dl><dt><span class="section"><a href="user_guide/bindings/bind.html">bind</a></span></dt></dl></dd>
+<dt><span class="section"><a href="user_guide/injections.html">Injections</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="user_guide/injections/automatic.html">automatic (default)</a></span></dt>
+<dt><span class="section"><a href="user_guide/injections/inject.html">inject</a></span></dt>
+<dt><span class="section"><a href="user_guide/injections/ctor_traits.html">ctor_traits</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="user_guide/annotations.html">Annotations</a></span></dt>
+<dd><dl><dt><span class="section"><a href="user_guide/annotations/named.html">(named = name)</a></span></dt></dl></dd>
+<dt><span class="section"><a href="user_guide/scopes.html">Scopes</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="user_guide/scopes/deduce.html">deduce (default)</a></span></dt>
+<dt><span class="section"><a href="user_guide/scopes/unique.html">unique</a></span></dt>
+<dt><span class="section"><a href="user_guide/scopes/shared.html">shared</a></span></dt>
+<dt><span class="section"><a href="user_guide/scopes/singleton.html">singleton</a></span></dt>
+<dt><span class="section"><a href="user_guide/scopes/session.html">session</a></span></dt>
+<dt><span class="section"><a href="user_guide/scopes/external.html">external</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="user_guide/modules.html">Modules</a></span></dt>
+<dt><span class="section"><a href="user_guide/policies.html">Policies</a></span></dt>
+<dd><dl><dt><span class="section"><a href="user_guide/policies/constructible.html">constructible</a></span></dt></dl></dd>
+<dt><span class="section"><a href="user_guide/providers.html">Providers</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="user_guide/providers/stack_over_heap_default.html">stack_over_heap
+        (default)</a></span></dt>
+<dt><span class="section"><a href="user_guide/providers/heap.html">heap</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="user_guide/concepts.html">Concepts</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="user_guide/concepts/boundable.html">boundable</a></span></dt>
+<dt><span class="section"><a href="user_guide/concepts/configurable.html">configurable</a></span></dt>
+<dt><span class="section"><a href="user_guide/concepts/creatable.html">creatable</a></span></dt>
+</dl></dd>
+</dl></div>
+<p>
+      <code class="computeroutput"><span class="identifier">Boost</span><span class="special">.</span><span class="identifier">DI</span></code> design distinguish few building blocks
+      (above), which might be cofigured using <a class="link" href="overview.html#di.overview.configuration">BOOST_DI_CFG</a>.
+    </p>
+<h4>
+<a name="di.user_guide.h0"></a>
+      <span class="phrase"><a name="di.user_guide.synopsis"></a></span><a class="link" href="user_guide.html#di.user_guide.synopsis">Synopsis</a>
+    </h4>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">config</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">auto</span> <span class="identifier">policies</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">auto</span> <span class="identifier">provider</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">...</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
+<span class="keyword">inline</span> <span class="keyword">auto</span> <span class="identifier">make_policies</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TArgs</span><span class="special">&amp;...</span> <span class="identifier">args</span><span class="special">)</span> <span class="keyword">noexcept</span><span class="special">;</span>
+</pre>
+<div class="table">
+<a name="di.user_guide.parameters"></a><p class="title"><b>Table&#160;35.&#160;Parameters</b></p>
+<div class="table-contents"><table class="table" summary="Parameters">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Parameter
+              </p>
+            </th>
+<th>
+              <p>
+                Requirement
+              </p>
+            </th>
+<th>
+              <p>
+                Description
+              </p>
+            </th>
+<th>
+              <p>
+                Returns
+              </p>
+            </th>
+<th>
+              <p>
+                Throw
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                TArgs...
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="user_guide/policies.html" title="Policies">Policy Model</a>
+              </p>
+            </td>
+<td>
+              <p>
+                Creates policies
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="user_guide/policies.html" title="Policies">Policy Model</a> list
+              </p>
+            </td>
+<td>
+              <p>
+                Does not throw
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">policies</span><span class="special">()</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                None
+              </p>
+            </td>
+<td>
+              <p>
+                Configure default policies
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="user_guide/policies.html" title="Policies">Policy Model</a> list
+              </p>
+            </td>
+<td>
+              <p>
+                Does not throw
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">provider</span><span class="special">()</span></code>
+              </p>
+            </td>
+<td>
+              <p>
+                None
+              </p>
+            </td>
+<td>
+              <p>
+                Configure default provider
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="user_guide/providers.html#di.user_guide.providers.synopsis">Provider Model</a>
+              </p>
+            </td>
+<td>
+              <p>
+                Does not throw
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><h4>
+<a name="di.user_guide.h1"></a>
+      <span class="phrase"><a name="di.user_guide.header"></a></span><a class="link" href="user_guide.html#di.user_guide.header">Header</a>
+    </h4>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><a href="https://github.com/krzysztof-jusiak/di/blob/cpp14/include/boost/di.hpp" target="_top">boost/di.hpp</a><span class="special">&gt;</span>
+</pre>
+<h4>
+<a name="di.user_guide.h2"></a>
+      <span class="phrase"><a name="di.user_guide.examples"></a></span><a class="link" href="user_guide.html#di.user_guide.examples">Examples</a>
+    </h4>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">class</span> <span class="identifier">my_config</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">config</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">auto</span> <span class="identifier">provider</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+        <span class="keyword">return</span> <a class="link" href="user_guide/providers/heap.html" title="heap">stack_over_heap</a><span class="special">{};</span>
+    <span class="special">}</span>
+
+    <span class="keyword">auto</span> <span class="identifier">policies</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+        <span class="keyword">return</span> <a class="link" href="user_guide.html#di.user_guide.synopsis">di::make_policies</a><span class="special">(</span>
+            <span class="special">[](</span><span class="keyword">auto</span> <span class="identifier">type</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+          <span class="special">,</span> <span class="special">[](</span><span class="keyword">auto</span> <span class="identifier">type</span><span class="special">,</span> <span class="keyword">auto</span> <span class="identifier">dependency</span><span class="special">,</span> <span class="keyword">auto</span><span class="special">...</span> <span class="identifier">ctor</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+          <span class="special">,</span> <a class="link" href="user_guide/policies/constructible.html" title="constructible">constructible</a><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">is_same</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">_</span><span class="special">&gt;{})</span>
+        <span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// per injector policy</span>
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">&lt;</span><span class="identifier">my_config</span><span class="special">&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="user_guide/injector.html#di.user_guide.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
+
+<span class="comment">// global policy</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_CFG</span> <span class="identifier">my_provider</span>
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="user_guide/injector.html#di.user_guide.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<h4>
+<a name="di.user_guide.h3"></a>
+      <span class="phrase"><a name="di.user_guide.more_examples"></a></span><a class="link" href="user_guide.html#di.user_guide.more_examples">More
+      Examples</a>
+    </h4>
+<pre class="programlisting"><a class="link" href="examples/custom_provider.html" title="Custom Provider">Custom Provider</a> <span class="special">|</span> <a class="link" href="examples/custom_policy.html" title="Custom Policy">Custom Policy</a>
+</pre>
+<h4>
+<a name="di.user_guide.h4"></a>
+      <span class="phrase"><a name="di.user_guide.see_also"></a></span><a class="link" href="user_guide.html#di.user_guide.see_also">See
+      Also</a>
+    </h4>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+          <a class="link" href="user_guide/policies.html" title="Policies">Policies</a>
+        </li>
+<li class="listitem">
+          <a class="link" href="user_guide/providers.html" title="Providers">Providers</a>
+        </li>
+</ul></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2014 Krzysztof Jusiak | Distributed under the Boost Software
+      License, Version 1.0.<p>
+        --- <a href="https://github.com/krzysztof-jusiak/di" target="_top">GitHub</a> ---
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="performance.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="user_guide/injector.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

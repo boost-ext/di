@@ -1,0 +1,216 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>make_injector</title>
+<link rel="stylesheet" href="../../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
+<link rel="home" href="../../../index.html" title="Boost.DI (Dependency Injection) C++14">
+<link rel="up" href="../injector.html" title="Injector">
+<link rel="prev" href="../injector.html" title="Injector">
+<link rel="next" href="../bindings.html" title="Bindings">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../injector.html"><img src="../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../injector.html"><img src="../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../bindings.html"><img src="../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="di.user_guide.injector.make_injector"></a><a class="link" href="make_injector.html" title="make_injector">make_injector</a>
+</h4></div></div></div>
+<h6>
+<a name="di.user_guide.injector.make_injector.h0"></a>
+          <span class="phrase"><a name="di.user_guide.injector.make_injector.description"></a></span><a class="link" href="make_injector.html#di.user_guide.injector.make_injector.description">Description</a>
+        </h6>
+<p>
+          Creates <a class="link" href="../injector.html" title="Injector">injector</a> type.
+        </p>
+<h6>
+<a name="di.user_guide.injector.make_injector.h1"></a>
+          <span class="phrase"><a name="di.user_guide.injector.make_injector.synopsis"></a></span><a class="link" href="make_injector.html#di.user_guide.injector.make_injector.synopsis">Synopsis</a>
+        </h6>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">...</span> <span class="identifier">TBindings</span><span class="special">&gt;</span>
+<span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">TBindings</span><span class="special">...&gt;</span> <span class="keyword">inline</span> <span class="identifier">make_injector</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TBindings</span><span class="special">&amp;...)</span> <span class="keyword">noexcept</span><span class="special">;</span>
+</pre>
+<div class="table">
+<a name="di.user_guide.injector.make_injector.parameters"></a><p class="title"><b>Table&#160;4.&#160;Parameters</b></p>
+<div class="table-contents"><table class="table" summary="Parameters">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Parameter
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Requirement
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Returns
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Throw
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TBindings</span><span class="special">...</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../bindings.html#di.user_guide.bindings.synopsis">Binding Model</a>
+                    type
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Bindings to be used as configuration
+                  </p>
+                </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">TBindings</span><span class="special">...)</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    None
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Created <a class="link" href="../injector.html" title="Injector">di::injector</a>
+                    with bindings configuration
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../injector.html" title="Injector">di::injector</a>&lt;TBindings...&gt;
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Does not throw
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><h6>
+<a name="di.user_guide.injector.make_injector.h2"></a>
+          <span class="phrase"><a name="di.user_guide.injector.make_injector.expression_semantics"></a></span><a class="link" href="make_injector.html#di.user_guide.injector.make_injector.expression_semantics">Expression
+          Semantics</a>
+        </h6>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">TBindings</span><span class="special">...)</span>
+</pre>
+<p>
+          <span class="bold"><strong>Return type</strong></span>: <a class="link" href="../injector.html" title="Injector">di::injector</a>&lt;TBindings...&gt;
+        </p>
+<h6>
+<a name="di.user_guide.injector.make_injector.h3"></a>
+          <span class="phrase"><a name="di.user_guide.injector.make_injector.header"></a></span><a class="link" href="make_injector.html#di.user_guide.injector.make_injector.header">Header</a>
+        </h6>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><a href="https://github.com/krzysztof-jusiak/di/blob/cpp14/include/boost/di.hpp" target="_top">boost/di.hpp</a><span class="special">&gt;</span>
+</pre>
+<h6>
+<a name="di.user_guide.injector.make_injector.h4"></a>
+          <span class="phrase"><a name="di.user_guide.injector.make_injector.examples"></a></span><a class="link" href="make_injector.html#di.user_guide.injector.make_injector.examples">Examples</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    create empty injector
+                  </p>
+                </th>
+<th>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="make_injector.html" title="make_injector">di::make_injector</a><span class="special">();</span>
+</pre>
+                </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="../injector.html#di.user_guide.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
+</pre>
+                </td>
+</tr></tbody>
+</table></div>
+<h6>
+<a name="di.user_guide.injector.make_injector.h5"></a>
+          <span class="phrase"><a name="di.user_guide.injector.make_injector.more_examples"></a></span><a class="link" href="make_injector.html#di.user_guide.injector.make_injector.more_examples">More Examples</a>
+        </h6>
+<pre class="programlisting"><a class="link" href="../../examples/hello_world.html" title="Hello World">Hello World</a> <span class="special">|</span> <a class="link" href="../../examples/modules.html" title="Modules">Modules</a> <span class="special">|</span> <a class="link" href="../../examples/uml_dumper.html" title="UML Dumper">UML Dumper</a> <span class="special">|</span> <a class="link" href="../../examples/custom_provider.html" title="Custom Provider">Custom Provider</a> <span class="special">|</span> <a class="link" href="../../examples/custom_scope.html" title="Custom Scope">Custom Scope</a> <span class="special">|</span> <a class="link" href="../../examples/custom_policy.html" title="Custom Policy">Custom Policy</a>
+</pre>
+<h6>
+<a name="di.user_guide.injector.make_injector.h6"></a>
+          <span class="phrase"><a name="di.user_guide.injector.make_injector.see_also"></a></span><a class="link" href="make_injector.html#di.user_guide.injector.make_injector.see_also">See
+          Also</a>
+        </h6>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+              <a class="link" href="../injector.html" title="Injector">Injector</a>
+            </li>
+<li class="listitem">
+              <a class="link" href="../modules.html" title="Modules">Modules</a>
+            </li>
+<li class="listitem">
+              <a class="link" href="../policies.html" title="Policies">Policies</a>
+            </li>
+<li class="listitem">
+              <a class="link" href="../providers.html" title="Providers">Providers</a>
+            </li>
+</ul></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2014 Krzysztof Jusiak | Distributed under the Boost Software
+      License, Version 1.0.<p>
+        --- <a href="https://github.com/krzysztof-jusiak/di" target="_top">GitHub</a> ---
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../injector.html"><img src="../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../injector.html"><img src="../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../bindings.html"><img src="../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

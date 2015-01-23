@@ -1,0 +1,323 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>bind</title>
+<link rel="stylesheet" href="../../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
+<link rel="home" href="../../../index.html" title="Boost.DI (Dependency Injection) C++14">
+<link rel="up" href="../bindings.html" title="Bindings">
+<link rel="prev" href="../bindings.html" title="Bindings">
+<link rel="next" href="../injections.html" title="Injections">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../bindings.html"><img src="../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../bindings.html"><img src="../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../injections.html"><img src="../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="di.user_guide.bindings.bind"></a><a class="link" href="bind.html" title="bind">bind</a>
+</h4></div></div></div>
+<h6>
+<a name="di.user_guide.bindings.bind.h0"></a>
+          <span class="phrase"><a name="di.user_guide.bindings.bind.description"></a></span><a class="link" href="bind.html#di.user_guide.bindings.bind.description">Description</a>
+        </h6>
+<p>
+          Allows to bind interface to implementation and associate value with <a class="link" href="../bindings.html#di.user_guide.bindings.synopsis">Dependency Model</a>.
+        </p>
+<h6>
+<a name="di.user_guide.bindings.bind.h1"></a>
+          <span class="phrase"><a name="di.user_guide.bindings.bind.synopsis"></a></span><a class="link" href="bind.html#di.user_guide.bindings.bind.synopsis">Synopsis</a>
+        </h6>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TGiven</span> <span class="special">=</span> <span class="identifier">TExpected</span><span class="special">&gt;</span>
+<a class="link" href="../bindings.html#di.user_guide.bindings.synopsis">Dependency Model</a><span class="special">&lt;</span><a class="link" href="../scopes/deduce.html" title="deduce (default)">di::deduce</a><span class="special">,</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="identifier">TGiven</span><span class="special">&gt;</span> <span class="identifier">bind</span><span class="special">{};</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">...</span> <span class="identifier">Ts</span><span class="special">&gt;</span>
+<span class="keyword">using</span> <span class="identifier">any_of</span><span class="special">;</span>
+</pre>
+<div class="table">
+<a name="di.user_guide.bindings.bind.parameters"></a><p class="title"><b>Table&#160;6.&#160;Parameters</b></p>
+<div class="table-contents"><table class="table" summary="Parameters">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Parameter
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Requirement
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TInterface</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Type or any_of
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Interface type
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">TImplementation</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Is same or base of <code class="computeroutput"><span class="identifier">TInterface</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Implementation type
+                  </p>
+                </td>
+</tr>
+<tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">Ts</span><span class="special">...</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    type list
+                  </p>
+                </td>
+<td>
+                  <p>
+                    List of interfaces
+                  </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><h6>
+<a name="di.user_guide.bindings.bind.h2"></a>
+          <span class="phrase"><a name="di.user_guide.bindings.bind.expression_semantics"></a></span><a class="link" href="bind.html#di.user_guide.bindings.bind.expression_semantics">Expression
+          Semantics</a>
+        </h6>
+<pre class="programlisting"><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;</span>
+<span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">any_of</span><span class="special">&lt;</span><span class="identifier">interface1</span><span class="special">,</span> <span class="identifier">interface2</span><span class="special">&gt;,</span> <span class="identifier">implementation</span><span class="special">&gt;</span>
+</pre>
+<p>
+          <span class="bold"><strong>Return type</strong></span>: <a class="link" href="../bindings.html#di.user_guide.bindings.synopsis">Dependency
+          Model</a>
+        </p>
+<h6>
+<a name="di.user_guide.bindings.bind.h3"></a>
+          <span class="phrase"><a name="di.user_guide.bindings.bind.header"></a></span><a class="link" href="bind.html#di.user_guide.bindings.bind.header">Header</a>
+        </h6>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><a href="https://github.com/krzysztof-jusiak/di/blob/cpp14/include/boost/di.hpp" target="_top">boost/di.hpp</a><span class="special">&gt;</span>
+</pre>
+<h6>
+<a name="di.user_guide.bindings.bind.h4"></a>
+          <span class="phrase"><a name="di.user_guide.bindings.bind.examples"></a></span><a class="link" href="bind.html#di.user_guide.bindings.bind.examples">Examples</a>
+        </h6>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Bind interface to implementation
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Test
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="../injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">impl1</span><span class="special">&gt;</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+                </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="../injector.html#di.user_guide.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl1</span><span class="special">*&gt;(</span><span class="identifier">object</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+                </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Bind different interfaces to one
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Test
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="../injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="bind.html" title="bind">di::bind</a><span class="special">&lt;</span><a class="link" href="bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">i2</span><span class="special">&gt;,</span> <span class="identifier">impl</span><span class="special">&gt;</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+                </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object1</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="../injector.html#di.user_guide.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;();</span>
+<span class="keyword">auto</span> <span class="identifier">object2</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="../injector.html#di.user_guide.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl</span><span class="special">*&gt;(</span><span class="identifier">object1</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl</span><span class="special">*&gt;(</span><span class="identifier">object2</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+                </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Bind type to compile time value
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Test
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">int</span> <span class="identifier">N</span><span class="special">&gt;</span> <span class="keyword">using</span> <span class="identifier">int_</span> <span class="special">=</span> <span class="identifier">integral_constant</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">N</span><span class="special">&gt;;</span>
+
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="../injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">int_</span><span class="special">&lt;</span><span class="number">42</span><span class="special">&gt;&gt;</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+                </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="../injector.html#di.user_guide.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+                </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Bind type to value (see <a class="link" href="../scopes/external.html" title="external">external
+                    scope</a>)
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Test
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="../injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+                </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">assert</span><span class="special">(</span><span class="number">42</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="../injector.html#di.user_guide.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+                </td>
+</tr></tbody>
+</table></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../../doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Values bind with <code class="computeroutput"><span class="identifier">to</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span></code>
+            always have higher priority than other bindings. See <a class="link" href="../scopes/external.html" title="external">external
+            scope</a> for further information.
+          </p></td></tr>
+</table></div>
+<h6>
+<a name="di.user_guide.bindings.bind.h5"></a>
+          <span class="phrase"><a name="di.user_guide.bindings.bind.more_examples"></a></span><a class="link" href="bind.html#di.user_guide.bindings.bind.more_examples">More
+          Examples</a>
+        </h6>
+<pre class="programlisting"><a class="link" href="../../examples/bindings.html" title="Bindings">Bindings</a> <span class="special">|</span> <a class="link" href="../../examples/dynamic_bindings.html" title="Dynamic Bindings">Dynamic Bindings</a> <span class="special">|</span> <a class="link" href="../../examples/multiple_interfaces.html" title="Multiple Interfaces">Multiple Interfaces</a>
+</pre>
+<h6>
+<a name="di.user_guide.bindings.bind.h6"></a>
+          <span class="phrase"><a name="di.user_guide.bindings.bind.see_also"></a></span><a class="link" href="bind.html#di.user_guide.bindings.bind.see_also">See
+          Also</a>
+        </h6>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+              <a class="link" href="../bindings.html" title="Bindings">Bindings</a>
+            </li></ul></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2014 Krzysztof Jusiak | Distributed under the Boost Software
+      License, Version 1.0.<p>
+        --- <a href="https://github.com/krzysztof-jusiak/di" target="_top">GitHub</a> ---
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../bindings.html"><img src="../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../bindings.html"><img src="../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../injections.html"><img src="../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
