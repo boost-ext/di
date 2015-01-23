@@ -1719,16 +1719,19 @@ class policy {
             using type = T;
             using name = TName;
         };
-        call_impl_<arg>(static_cast<const TPolicy&>(policies), dependency);
+
+        call_impl_type<arg, TDependency, TPolicy, TCtor...>(
+            static_cast<const TPolicy&>(policies), dependency
+        );
     }
 
     template<class TArg, class TDependency, class TPolicy, class... TCtor>
     static std::enable_if_t<has_compile_time<TPolicy>{}>
-    call_impl_(const TPolicy&, TDependency&&) noexcept { }
+    call_impl_type(const TPolicy&, TDependency&&) noexcept { }
 
     template<class TArg, class TDependency, class TPolicy, class... TCtor>
     static std::enable_if_t<!has_compile_time<TPolicy>{}>
-    call_impl_(const TPolicy& policy, TDependency&& dependency) noexcept {
+    call_impl_type(const TPolicy& policy, TDependency&& dependency) noexcept {
         call_impl_args<TArg, TDependency, TPolicy, TCtor...>(policy, dependency);
     }
 
