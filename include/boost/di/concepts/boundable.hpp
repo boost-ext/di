@@ -14,7 +14,7 @@
 namespace boost { namespace di { namespace concepts {
 
 template<class T>
-struct expected {
+struct unique {
     using type = aux::pair<
         aux::pair<typename T::expected, typename T::name>
       , std::integral_constant<bool, T::scope::priority>
@@ -25,7 +25,7 @@ std::false_type boundable(...);
 
 template<class... Ts>
 auto boundable(aux::type_list<Ts...>&&) ->
-    aux::always<typename aux::inherit<typename expected<Ts>::type...>::type>;
+    aux::always<typename aux::inherit<typename unique<Ts>::type...>::type>;
 
 template<class I, class T>
 auto boundable(I&&, T&&) -> std::integral_constant<bool,
@@ -34,7 +34,13 @@ auto boundable(I&&, T&&) -> std::integral_constant<bool,
 
 template<class T, class... Ts>
 auto boundable(aux::type_list<Ts...>&&, T&&) ->
-    std::integral_constant<bool, !std::is_same<aux::bool_list<aux::never<Ts>{}...>, aux::bool_list<std::is_base_of<Ts, T>{}...>>{}>;
+    std::integral_constant<
+        bool
+      , !std::is_same<
+            aux::bool_list<aux::never<Ts>{}...>
+          , aux::bool_list<std::is_base_of<Ts, T>{}...>
+         >{}
+    >;
 
 }}} // boost::di::concepts
 
