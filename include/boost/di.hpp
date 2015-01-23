@@ -1689,42 +1689,50 @@ constexpr auto session_exit(const TName&) noexcept {
 
 }} // boost::di
 
-#define BOOST_DI_CORE_VISITOR_HPP
+#define BOOST_DI_CORE_POLICY_HPP
 
 namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_METHOD(call_operator, operator());
+BOOST_DI_HAS_TYPE(compile_time);
 
 template<class TDeps>
-class visitor {
+class policy {
     template<
-        class TVisitor
+        class TPolicy
       , class T
       , class TName
-      , class TVisitors
+      , class TPolicies
       , class TDependency
-      , class... TArgs
-    > static void call_impl(const TVisitors& visitors, TDependency&& dependency) noexcept {
+      , class... TCtor
+    > static void call_impl(const TPolicies& policies, TDependency&& dependency) noexcept {
         struct arg {
             using type = T;
             using name = TName;
         };
-
-        call_impl_args<arg, TDependency, TVisitor, TArgs...>(
-            static_cast<const TVisitor&>(visitors), dependency
-        );
+        call_impl_<arg>(static_cast<const TPolicy&>(policies), dependency);
     }
 
-    template<class TArg, class TDependency, class TVisitor, class... TArgs>
-    static std::enable_if_t<has_call_operator<TVisitor, TArg>{}>
-    call_impl_args(const TVisitor& visitor, TDependency&&) noexcept {
-        (visitor)(TArg{});
+    template<class TArg, class TDependency, class TPolicy, class... TCtor>
+    static std::enable_if_t<has_compile_time<TPolicy>{}>
+    call_impl_(const TPolicy&, TDependency&&) noexcept { }
+
+    template<class TArg, class TDependency, class TPolicy, class... TCtor>
+    static std::enable_if_t<!has_compile_time<TPolicy>{}>
+    call_impl_(const TPolicy& policy, TDependency&& dependency) noexcept {
+        call_impl_args<TArg, TDependency, TPolicy, TCtor...>(policy, dependency);
     }
 
-    template<class TArg, class TDependency, class TVisitor, class... TArgs>
-    static std::enable_if_t<has_call_operator<TVisitor, TArg, TDependency, TArgs...>{}>
-    call_impl_args(const TVisitor& visitor, TDependency&& dependency) noexcept {
-        (visitor)(TArg{}, dependency, aux::type<TArgs>{}...);
+    template<class TArg, class TDependency, class TPolicy, class... TCtor>
+    static std::enable_if_t<has_call_operator<TPolicy, TArg>{}>
+    call_impl_args(const TPolicy& policy, TDependency&&) noexcept {
+        (policy)(TArg{});
+    }
+
+    template<class TArg, class TDependency, class TPolicy, class... TCtor>
+    static std::enable_if_t<has_call_operator<TPolicy, TArg, TDependency, TCtor...>{}>
+    call_impl_args(const TPolicy& policy, TDependency&& dependency) noexcept {
+        (policy)(TArg{}, dependency, aux::type<TCtor>{}...);
     }
 
 public:
@@ -1733,13 +1741,13 @@ public:
       , class TName
       , class TInitialization
       , class TDependency
-      , class... TArgs
-      , class... TVisitors
-    > static void call(const pool<aux::type_list<TVisitors...>>& visitors
+      , class... TCtor
+      , class... TPolicies
+    > static void call(const pool<aux::type_list<TPolicies...>>& policies
                      , TDependency&& dependency
-                     , aux::pair<TInitialization, aux::type_list<TArgs...>>) noexcept {
-        int _[]{0, (call_impl<TVisitors, T, TName, TVisitors, TDependency, TArgs...>(
-            visitors, dependency), 0)...}; (void)_;
+                     , aux::pair<TInitialization, aux::type_list<TCtor...>>) noexcept {
+        int _[]{0, (call_impl<TPolicies, T, TName, TPolicies, TDependency, TCtor...>(
+            policies, dependency), 0)...}; (void)_;
     }
 };
 
@@ -1942,10 +1950,18 @@ template<
             decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)nullptr));
     };
 
+    template<class TPolicy, class = void>
+    struct call : std::true_type { };
+
+    template<class TPolicy>
+    struct call<TPolicy, std::enable_if_t<core::has_compile_time<TPolicy>{}>>
+        : decltype((TPolicy{})(arg{}))
+    { };
+
     static constexpr auto value =
         std::is_same<
             aux::bool_list<aux::always<Ts>{}...>
-          , aux::bool_list<decltype((Ts{})(arg{})){}...>
+          , aux::bool_list<call<Ts>{}...>
         >::value;
 };
 
@@ -2151,8 +2167,8 @@ private:
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<expected_t, given_t, T, ctor_t, injector>;
-        visitor<pool_t>::template call<T, TName>(
-            ((TConfig&)config_).visitors(), dependency, ctor_t{}
+        policy<pool_t>::template call<T, TName>(
+            ((TConfig&)config_).policies(), dependency, ctor_t{}
         );
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
@@ -2266,7 +2282,6 @@ template<class T>
 auto configurable(T&& t) -> aux::is_valid_expr<
     decltype(t.provider())
   , decltype(t.policies())
-  , decltype(t.visitors())
 >;
 
 }}} // boost::di::concepts

@@ -47,7 +47,7 @@ test-suite example :
     [ run-example c++1y : pool_provider.cpp ]
     [ run-example c++1y : provider.cpp ]
     [ run-example c++1y : types_dumper.cpp ]
-    [ run-example c++1y : uml_dumper.cpp ]
+    #[ run-example c++1y : uml_dumper.cpp ]
     [ run-example c++1y : xml_injection.cpp ]
 ;
 
@@ -73,9 +73,9 @@ test-suite quick_user_guide :
     [ run-example c++1y : quick_user_guide/injections1.cpp ]
     [ run-example c++1y : quick_user_guide/injections2.cpp ]
     [ run-example c++1y : quick_user_guide/injections3.cpp ]
-    [ run-example c++1y : quick_user_guide/injections4.cpp ]
-    [ run-example c++1y : quick_user_guide/injections5.cpp ]
-    [ run-example c++1y : quick_user_guide/injections6.cpp ]
+    #[ run-example c++1y : quick_user_guide/injections4.cpp ]
+    #[ run-example c++1y : quick_user_guide/injections5.cpp ]
+    #[ run-example c++1y : quick_user_guide/injections6.cpp ]
     [ run-example c++1y : quick_user_guide/injector1.cpp ]
     [ run-example c++1y : quick_user_guide/modules1.cpp ]
     [ run-example c++1y : quick_user_guide/modules2.cpp ]

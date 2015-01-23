@@ -6,7 +6,7 @@
 //
 #define BOOST_DI_CFG all_must_be_bound_unless_int
 #include <boost/di.hpp>
-#include <boost/di/policies/allow_ctor_types.hpp>
+#include <boost/di/policies/constructible.hpp>
 #include <type_traits>
 #include <cassert>
 
@@ -19,7 +19,7 @@ public:
         using namespace di::policies::operators;
 
         return di::make_policies(
-            allow_ctor_types(std::is_same<_, int>{} || is_bound<_>{})
+            constructible(std::is_same<_, int>{} || is_bound<_>{})
         );
     }
 };
