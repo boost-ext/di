@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOS_DI_POLICIES_ALLOW_TYPES_HPP
-#define BOOS_DI_POLICIES_ALLOW_TYPES_HPP
+#ifndef BOOS_DI_POLICIES_CONSTRUCTIBLE_HPP
+#define BOOS_DI_POLICIES_CONSTRUCTIBLE_HPP
 
 #include <type_traits>
 #include "boost/di/fwd.hpp"
@@ -138,16 +138,17 @@ inline auto operator!(const T&) {
 } // operators
 
 template<class T>
-struct allow_ctor_types_impl {
+struct constructible_impl {
+    using compile_time = void;
     template<class TArg>
-    void operator()(const TArg& data) const {
-		static_assert(decltype(T::apply(data)){}, "Type T is not allowed");
+    auto operator()(const TArg& data) const {
+        return T::apply(data);
     }
 };
 
 template<class T = std::false_type>
-inline auto allow_ctor_types(const T& = {}) {
-	return allow_ctor_types_impl<always<T>>{};
+inline auto constructible(const T& = {}) {
+	return constructible_impl<always<T>>{};
 };
 
 }}} // boost::di::policies

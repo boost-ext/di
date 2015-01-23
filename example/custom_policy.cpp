@@ -11,7 +11,7 @@
 //->
 #define BOOST_DI_CFG custom_policy
 #include <boost/di.hpp>
-#include <boost/di/policies/allow_ctor_types.hpp>
+#include <boost/di/policies/constructible.hpp>
 
 namespace di = boost::di;
 
@@ -21,7 +21,7 @@ public:
         using namespace di::policies;
         using namespace di::policies::operators;
         return di::make_policies(
-            allow_ctor_types(is_root{} || is_bound<_>{})
+            constructible(is_root{} || is_bound<_>{})
         );
     }
 };

@@ -16,24 +16,16 @@
 #include "boost/di/core/policy.hpp"
 #include "boost/di/core/pool.hpp"
 #include "boost/di/core/provider.hpp"
-#include "boost/di/core/requires.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
+#include "boost/di/concepts/boundable.hpp"
+#include "boost/di/concepts/creatable.hpp"
 
 namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_METHOD(call, call);
 
-template<class T, class TWrapper>
-struct wrapper {
-    inline operator T() noexcept {
-        return wrapper_;
-    }
-
-    TWrapper wrapper_;
-};
-
-template<class TDeps, class TConfig>
-class injector : requires_unique_bindings<TDeps>, public pool<TDeps> {
+template<class TDeps, class TConfig, BOOST_DI_REQUIRES(concepts::boundable(std::declval<TDeps>()))>
+class injector : public pool<TDeps> {
     template<class, class> friend struct any_type;
     template<class...> friend struct provider;
 
@@ -51,15 +43,14 @@ public:
         : injector(init{}, pass_arg(args)...)
     { }
 
-    template<class... TArgs>
-    injector(const injector<TArgs...>& injector) noexcept // non explicit
+    template<class TDeps_, class TConfig_>
+    injector(const injector<TDeps_, TConfig_>& injector) noexcept // non explicit
         : pool_t{init{}, create_from_injector(injector, TDeps{})}
     { }
 
-    template<class T>
+    template<class T, BOOST_DI_REQUIRES(concepts::creatable(std::declval<T>(), std::declval<TDeps>(), std::declval<TConfig>().policies()))>
     T create() const {
-        using IsRoot = std::true_type;
-        return create_impl<T, no_name, IsRoot>();
+        return create_impl<T, no_name>();
     }
 
     template<class TAction>
@@ -88,7 +79,7 @@ private:
         return create_impl<T, TName>();
     }
 
-    template<class T, class TName = no_name, class TIsRoot = std::false_type>
+    template<class T, class TName = no_name>
     auto create_impl() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
@@ -96,7 +87,7 @@ private:
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<expected_t, given_t, T, ctor_t, injector>;
-        policy<pool_t>::template call<T, TName, TIsRoot>(
+        policy<pool_t>::template call<T, TName>(
             ((TConfig&)config_).policies(), dependency, ctor_t{}
         );
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
@@ -105,7 +96,7 @@ private:
           , T
           , std::remove_reference_t<T>
         >;
-        return wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
+        return aux::wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
 
     template<class TAction, class... Ts>
@@ -133,8 +124,8 @@ private:
         return arg.configure();
     }
 
-    template<class... TArgs, class... Ts>
-    auto create_from_injector(const injector<TArgs...>& injector
+    template<class TDeps_, class TConfig_, class... Ts>
+    auto create_from_injector(const injector<TDeps_, TConfig_>& injector
                             , const aux::type_list<Ts...>&) const noexcept {
         return pool<TDeps>(create_dep<Ts>(injector)...);
     }

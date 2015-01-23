@@ -1,10 +1,13 @@
+//#define BOOST_DI_CFG_CONCEPTS_CHECK_DISABLED
 #include <memory>
 #if (__has_include(<boost/shared_ptr.hpp>))
     #include <boost/shared_ptr.hpp>
 #endif
 #include "boost/di.hpp"
 #include "boost/di/providers/heap.hpp"
-#include "boost/di/policies/allow_ctor_types.hpp"
+#include "boost/di/policies/constructible.hpp"
+
+#include <boost/units/detail/utility.hpp>
 
 namespace di = boost::di;
 
@@ -1280,13 +1283,13 @@ test call_provider_with_deleter = [] {
     expect_eq(1, deleter_provider::called());
 };
 
-test allow_types_policy = [] {
+test constructible_policy = [] {
     class config : public di::config {
     public:
         auto policies() const noexcept {
             using namespace di::policies;
             using namespace di::policies::operators;
-            return di::make_policies(allow_ctor_types(is_root{} || std::is_same<_, double>{} || is_bound<_>{}));
+            return di::make_policies(constructible(is_root{} || std::is_same<_, double>{} || is_bound<_>{}));
         }
     };
 
@@ -1339,5 +1342,159 @@ test call_custom_policies_with_exposed_injector = [] {
     auto object = injector.create<std::unique_ptr<i1>>();
     expect(dynamic_cast<i1*>(object.get()));
     expect_eq(3, policy::called());
+};
+
+test blah = [] {
+    auto injector = di::make_injector();
+    injector.create<int>();
+
+};
+
+test blah2 = [] {
+    struct c {
+        c(int, double){}
+    };
+    auto injector = di::make_injector();
+    injector.create<c>();
+};
+
+test blah3 = [] {
+    struct c {
+        BOOST_DI_INJECT_TRAITS(int);
+        c(int, double) {}
+    };
+    //auto injector = di::make_injector();
+    //injector.create<c>();
+};
+
+test blah4 = [] {
+    struct c {
+        c(std::unique_ptr<i1>, int) {}
+    };
+    //auto injector = di::make_injector();
+    //injector.create<c>();
+};
+
+test blah5 = [] {
+    struct c {
+        c(std::unique_ptr<i1>, int) {}
+    };
+
+    auto injector = di::make_injector(
+        di::bind<i1, impl1>
+    );
+    //injector.create<std::unique_ptr<c>, void>(); // with call trace
+    injector.create<std::unique_ptr<c>>();
+};
+
+test blah6 = [] {
+    //auto inj = di::make_injector(
+        //di::bind<int>.to(42)
+      ////, di::bind<int>.to([]{return 65;})
+    //);
+
+    //inj.create<complex2>();
+
+    //std::cout << boost::units::detail::demangle(typeid(di::concepts::boundable<decltype(inj)::deps>{}).name())<< std::endl;
+    //assert(false);
+};
+
+test blah7 = [] {
+    di::make_injector(
+        //di::bind<int>.in(di::unique).to(42)
+        di::bind<int>.to(42)
+      //, di::bind<int>.to([]{return 1;})
+    );
+};
+
+test blah8 = [] {
+    class config : public di::config {
+    public:
+        auto policies() const noexcept {
+            return di::make_policies();
+        }
+    };
+
+    di::make_injector<config>();
+};
+
+test blah9 = [] {
+    di::make_injector(
+        //di::bind<int, std::string>
+    );
+};
+
+test blah10 = [] {
+    struct c3 { BOOST_DI_INJECT_TRAITS(); c3(int) { } };
+    struct c2 { BOOST_DI_INJECT(c2, c3) { } };
+    struct c1 { BOOST_DI_INJECT(c1, c2, c3) { } };
+
+    //auto injector = di::make_injector();
+    //injector.create<c1>();
+};
+
+test blah11 = [] {
+    struct c3 { BOOST_DI_INJECT_TRAITS(); c3(int) { } };
+    struct c2 { c2(c3) { } };
+    struct c1 { c1(c2, c3) { } };
+
+    //auto injector = di::make_injector();
+    //injector.create<c1>();
+};
+
+test blah12 = [] {
+    struct c3 { BOOST_DI_INJECT_TRAITS(int); c3(int) { } };
+    struct c2 { c2(c3) { } };
+    struct c1 { c1(c2, c3) { } };
+
+    class config : public di::config {
+    public:
+        auto policies() const noexcept {
+            using namespace di::policies;
+            using namespace di::policies::operators;
+
+            return di::make_policies(
+                //constructible(std::is_same<c1, _>{} || std::is_same<c2, _>{} || std::is_same<c3, _>{} || std::is_same<int, _>{})
+                constructible(is_bound<_>{})
+            );
+        }
+    };
+
+    auto injector = di::make_injector<config>(
+        di::bind<int>.to(42)
+    );
+    injector.create<int>();
+};
+
+test blah13 = [] {
+    struct c {
+        c(int) { }
+    };
+
+    //auto injector = di::make_injector(
+        //di::bind<int>.in(di::shared)
+    //);
+
+    //injector.create<c>();
+};
+
+test blah14 = [] {
+    struct c {
+        BOOST_DI_INJECT(c, int a, double d)
+            : a(a), d(d) { }
+        c(double d, int a) : a(a), d(d) { }
+
+        int a = 0;
+        double d = 0.0;
+    };
+
+    auto injector = di::make_injector(
+        di::bind<int>.to(42)
+      , di::bind<double>.to(87.0)
+    );
+
+    auto object = injector.create<c>();
+    assert(42 == object.a);
+    assert(87.0 == object.d);
 };
 

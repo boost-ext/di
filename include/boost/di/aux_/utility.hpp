@@ -7,6 +7,8 @@
 #ifndef BOOST_DI_AUX_UTILITY_HPP
 #define BOOST_DI_AUX_UTILITY_HPP
 
+#include <type_traits>
+
 namespace boost { namespace di { namespace aux {
 
 struct none_t { };
@@ -20,14 +22,28 @@ struct non_type { };
 template<class...>
 using void_t = void;
 
+template<class...>
+using always = std::true_type;
+
+template<class...>
+using never = std::false_type;
+
+template<class T>
+struct identity {
+    using type = T;
+};
+
 template<class, class>
 struct pair { using type = pair; };
+
+template<bool...>
+struct bool_list { using type = bool_list; };
 
 template<class...>
 struct type_list { using type = type_list; };
 
 template<class... TArgs>
-struct inherit : TArgs... { };
+struct inherit : TArgs... { using type = inherit; };
 
 template<class T>
 struct no_decay { using type = T; };
@@ -67,6 +83,15 @@ struct join<type_list<TArgs1...>, type_list<TArgs2...>, Ts...> {
 
 template<class... TArgs>
 using join_t = typename join<TArgs...>::type;
+
+template<class T, class TWrapper>
+struct wrapper {
+    inline operator T() noexcept {
+        return wrapper_;
+    }
+
+    TWrapper wrapper_;
+};
 
 }}} // boost::di::aux
 

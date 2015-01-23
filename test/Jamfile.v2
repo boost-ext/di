@@ -76,7 +76,7 @@ test-suite ut :
     [ run-test c++1y : ut/core/policy.cpp ]
     [ run-test c++1y : ut/core/pool.cpp ]
     [ run-test c++1y : ut/core/provider.cpp ]
-    [ run-test c++1y : ut/policies/allow_ctor_types.cpp ]
+    [ run-test c++1y : ut/policies/constructible.cpp ]
     [ run-test c++1y : ut/providers/heap.cpp ]
     [ run-test c++1y : ut/providers/stack_over_heap.cpp ]
     [ run-test c++1y : ut/scopes/deduce.cpp ]

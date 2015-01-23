@@ -7,7 +7,6 @@
 #define BOOST_DI_CORE_DEPENDENCY_HPP
 
 #include "boost/di/aux_/utility.hpp"
-#include "boost/di/core/requires.hpp"
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/scopes/deduce.hpp"
@@ -18,9 +17,9 @@ namespace boost { namespace di { namespace core {
 BOOST_DI_HAS_METHOD(configure, configure);
 BOOST_DI_HAS_TYPE(deps);
 
-template<class T>
+template<class T, class U = std::remove_reference_t<T>>
 using is_injector =
-    std::integral_constant<bool, has_deps<T>{} || has_configure<T>{}>;
+    std::integral_constant<bool, has_deps<U>{} || has_configure<U>{}>;
 
 template<class, class>
 struct dependency_concept { };
@@ -42,8 +41,7 @@ template<
   , class TGiven = TExpected
   , class TName = no_name
   , bool  TPriority = TScope::priority
->
-class dependency
+> class dependency
     : public TScope::template scope<TExpected, TGiven>
     , public dependency_impl<
           dependency_concept<TExpected, TName>
@@ -74,25 +72,27 @@ public:
         return dependency<T, TExpected, TGiven, TName>{};
     }
 
-    template<class T>
-    auto to(T&& object, std::enable_if_t<!is_injector<std::remove_reference_t<T>>{}>* = 0) const noexcept {
-        void(requires_external_concepts<TExpected, TGiven, TScope>{});
+    template<class T,
+        BOOST_DI_REQUIRES_OVERLOAD(!is_injector<T>{} &&
+                                   std::is_same<TExpected, TGiven>{} && 
+                                   std::is_same<TScope, scopes::deduce>{})
+    > auto to(T&& object) const noexcept {
         using dependency = dependency<
             scopes::external, TExpected, std::remove_reference_t<T>, TName
         >;
         return dependency{std::forward<T>(object)};
     }
 
-    template<class T>
-    auto to(const T& object, std::enable_if_t<has_configure<T>{}>* = 0) const noexcept {
+    template<class T, BOOST_DI_REQUIRES_OVERLOAD(has_configure<T>{})>
+    auto to(const T& object) const noexcept {
         using dependency = dependency<
             scopes::exposed<TScope>, TExpected, decltype(std::declval<T>().configure()), TName
         >;
         return dependency{object.configure()};
     }
 
-    template<class T>
-    auto to(const T& object, std::enable_if_t<has_deps<T>{}>* = 0) const noexcept {
+    template<class T, BOOST_DI_REQUIRES_OVERLOAD(has_deps<T>{})>
+    auto to(const T& object) const noexcept {
         using dependency = dependency<
             scopes::exposed<TScope>, TExpected, T, TName
         >;
