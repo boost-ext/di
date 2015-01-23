@@ -84,6 +84,15 @@ struct join<type_list<TArgs1...>, type_list<TArgs2...>, Ts...> {
 template<class... TArgs>
 using join_t = typename join<TArgs...>::type;
 
+template<class T, class TWrapper>
+struct wrapper {
+    inline operator T() noexcept {
+        return wrapper_;
+    }
+
+    TWrapper wrapper_;
+};
+
 }}} // boost::di::aux
 
 #endif

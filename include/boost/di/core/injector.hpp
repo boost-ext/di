@@ -24,15 +24,6 @@ namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_METHOD(call, call);
 
-template<class T, class TWrapper>
-struct wrapper {
-    inline operator T() noexcept {
-        return wrapper_;
-    }
-
-    TWrapper wrapper_;
-};
-
 template<class TDeps, class TConfig, BOOST_DI_REQUIRES(concepts::boundable(std::declval<TDeps>()))>
 class injector : public pool<TDeps> {
     template<class, class> friend struct any_type;
@@ -105,7 +96,7 @@ private:
           , T
           , std::remove_reference_t<T>
         >;
-        return wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
+        return aux::wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
 
     template<class TAction, class... Ts>

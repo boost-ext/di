@@ -1478,3 +1478,23 @@ test blah13 = [] {
     //injector.create<c>();
 };
 
+test blah14 = [] {
+    struct c {
+        BOOST_DI_INJECT(c, int a, double d)
+            : a(a), d(d) { }
+        c(double d, int a) : a(a), d(d) { }
+
+        int a = 0;
+        double d = 0.0;
+    };
+
+    auto injector = di::make_injector(
+        di::bind<int>.to(42)
+      , di::bind<double>.to(87.0)
+    );
+
+    auto object = injector.create<c>();
+    assert(42 == object.a);
+    assert(87.0 == object.d);
+};
+

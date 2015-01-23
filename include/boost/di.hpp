@@ -116,6 +116,15 @@ struct join<type_list<TArgs1...>, type_list<TArgs2...>, Ts...> {
 template<class... TArgs>
 using join_t = typename join<TArgs...>::type;
 
+template<class T, class TWrapper>
+struct wrapper {
+    inline operator T() noexcept {
+        return wrapper_;
+    }
+
+    TWrapper wrapper_;
+};
+
 }}} // boost::di::aux
 
 #define BOOST_DI_AUX_TYPE_TRAITS_HPP
@@ -1800,17 +1809,17 @@ struct creatable_impl;
 
 template<class T, class TDeps, class TPolicies>
 struct get_type {
-    using type = create<void, TDeps, TPolicies>;
+    using type = aux::wrapper<T, create<void, TDeps, TPolicies>>;
 };
 
-template<class TParent, class T, class TDeps, class TPolicies>
-struct get_type<core::any_type<TParent, T>, TDeps, TPolicies> {
+template<class TParent, class TNone, class TDeps, class TPolicies>
+struct get_type<core::any_type<TParent, TNone>, TDeps, TPolicies> {
     using type = create<TParent, TDeps, TPolicies>;
 };
 
 template<class TName, class T, class TDeps, class TPolicies>
 struct get_type<type_traits::named<TName, T>, TDeps, TPolicies> {
-    using type = create<void, TDeps, TPolicies, TName>;
+    using type = aux::wrapper<T, create<void, TDeps, TPolicies, TName>>;
 };
 
 template<
@@ -1818,16 +1827,16 @@ template<
   , class T
   , class TDeps
   , class TPolicies
-  , class... TArgs
+  , class... TCtor
 > struct creatable_impl<
     TScope
   , T
   , TDeps
-  , aux::pair<type_traits::direct, aux::type_list<TArgs...>>
+  , aux::pair<type_traits::direct, aux::type_list<TCtor...>>
   , TPolicies
 > : aux::identity<std::is_constructible<
         T
-      , typename get_type<TArgs, TDeps, TPolicies>::type...
+      , typename get_type<TCtor, TDeps, TPolicies>::type...
     >>
 { };
 
@@ -1836,16 +1845,16 @@ template<
   , class T
   , class TDeps
   , class TPolicies
-  , class... TArgs
+  , class... TCtor
 > struct creatable_impl<
     TScope
   , T
   , TDeps
-  , aux::pair<type_traits::uniform, aux::type_list<TArgs...>>
+  , aux::pair<type_traits::uniform, aux::type_list<TCtor...>>
   , TPolicies
 > : aux::is_braces_constructible<
         T
-      , typename get_type<TArgs, TDeps, TPolicies>::type...
+      , typename get_type<TCtor, TDeps, TPolicies>::type...
     >
 { };
 
@@ -1854,12 +1863,12 @@ template<
   , class T
   , class TDeps
   , class TPolicies
-  , class... TArgs
+  , class... TCtor
 > struct creatable_impl<
     scopes::exposed<TScope>
   , T
   , TDeps
-  , aux::pair<type_traits::direct, aux::type_list<TArgs...>>
+  , aux::pair<type_traits::direct, aux::type_list<TCtor...>>
   , TPolicies
 > : std::true_type
 { };
@@ -1869,12 +1878,12 @@ template<
   , class T
   , class TDeps
   , class TPolicies
-  , class... TArgs
+  , class... TCtor
 > struct creatable_impl<
     scopes::exposed<TScope>
   , T
   , TDeps
-  , aux::pair<type_traits::uniform, aux::type_list<TArgs...>>
+  , aux::pair<type_traits::uniform, aux::type_list<TCtor...>>
   , TPolicies
 > : std::true_type
 { };
@@ -1883,12 +1892,12 @@ template<
     class T
   , class TDeps
   , class TPolicies
-  , class... TArgs
+  , class... TCtor
 > struct creatable_impl<
     scopes::external
   , T
   , TDeps
-  , aux::pair<type_traits::direct, aux::type_list<TArgs...>>
+  , aux::pair<type_traits::direct, aux::type_list<TCtor...>>
   , TPolicies
 > : std::true_type
 { };
@@ -1897,12 +1906,12 @@ template<
     class T
   , class TDeps
   , class TPolicies
-  , class... TArgs
+  , class... TCtor
 > struct creatable_impl<
     scopes::external
   , T
   , TDeps
-  , aux::pair<type_traits::uniform, aux::type_list<TArgs...>>
+  , aux::pair<type_traits::uniform, aux::type_list<TCtor...>>
   , TPolicies
 > : std::true_type
 { };
@@ -2095,15 +2104,6 @@ namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_METHOD(call, call);
 
-template<class T, class TWrapper>
-struct wrapper {
-    inline operator T() noexcept {
-        return wrapper_;
-    }
-
-    TWrapper wrapper_;
-};
-
 template<class TDeps, class TConfig, BOOST_DI_REQUIRES(concepts::boundable(std::declval<TDeps>()))>
 class injector : public pool<TDeps> {
     template<class, class> friend struct any_type;
@@ -2176,7 +2176,7 @@ private:
           , T
           , std::remove_reference_t<T>
         >;
-        return wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
+        return aux::wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
 
     template<class TAction, class... Ts>
