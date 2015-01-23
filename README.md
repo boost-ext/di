@@ -60,7 +60,7 @@ int main() {                            | int main() {
 
 * [Motivation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/motivation.html) | [Rationale](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/rationale.html)
 
-[![The Clean Code Talks - Don't Look For Things!](http://img.youtube.com/vi/RlfLCWKxHJ0/0.jpg)](http://www.youtube.com/watch?v=RlfLCWKxHJ0) | [![DAGGER 2 - A New Type of dependency injection](http://image.slidesharecdn.com/9alexkorovyanskycto-141031065552-conversion-gate01/95/mbltdev-android-c-mblock-23-638.jpg?cb=1414756695)](http://www.youtube.com/watch?v=oK_XtfXPkqw) |
+[![The Clean Code Talks - Don't Look For Things!](http://img.youtube.com/vi/RlfLCWKxHJ0/0.jpg)](http://www.youtube.com/watch?v=RlfLCWKxHJ0) | [![DAGGER 2 - A New Type of dependency injection](http://image.slidesharecdn.com/nr73mexetqiybd1qpcem-140529143342-phpapp01/95/dependency-injection-for-android-5-638.jpg?cb=1401392113)](http://www.youtube.com/watch?v=oK_XtfXPkqw) |
 --- | --- |
 
 **How To Start?**
