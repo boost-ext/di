@@ -55,8 +55,8 @@ package Boost.DI {
     }
 
     package policies <<Rect>> {
-        class allow_ctor_types {
-            operaator()(T)
+        class constructible {
+            operator()(T)
         }
     }
 

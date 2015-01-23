@@ -707,7 +707,7 @@ public:                                 |     di::bind<i1, impl1>
 `constructible` policy                  | Test
 ----------------------------------------|-----------------------------------------
 #include <boost/di/                     | // global policy
-    policies/allow_ctor_types.hpp>      | #define BOOST_DI_CFG all_must_be_bound_unless_int
+    policies/constructible.hpp>         | #define BOOST_DI_CFG all_must_be_bound_unless_int
                                         | assert(0 == di::make_injector().create<int>());
 class all_must_be_bound_unless_int      |
     : public di::config {               | // di::make_injector().create<double>(); // compile error
@@ -718,7 +718,7 @@ public:                                 | assert(42.0 == make_injector(
         di::policies::operators;        |
                                         |
     return di::make_policies(           |
-      allow_ctor_types(                 |
+      constructible(                    |
         is_same<_, int>{} ||            |
         is_bound<_>{})                  |
     );                                  |
@@ -954,7 +954,7 @@ class all_bound : public di::config {   | error: static_assert failed
 public:                                 | "Type T is not allowed"
   auto policies() const noexcept {      |
     return di::make_policies(           |
-      allow_ctor_types(is_bound<_>{})   |
+      constructible(is_bound<_>{})      |
     );                                  |
   }                                     |
 };                                      |
