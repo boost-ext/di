@@ -92,7 +92,7 @@ auto injector = __di_make_injector__(
     [[Full code example: [@example/tutorial/tutorial2.cpp]]]
 ]
 
-So, right now we have [link di.concepts.injector injector] configured and the output of our example application
+So, right now we have [link di.user_guide.injector injector] configured and the output of our example application
 should always be "hello world".
 
 Let's continue then with our requirement that text should be displayed if first command
@@ -364,7 +364,7 @@ a problem for you anymore.
 * [link di.quick_user_guide Quick User Guide]
 * [link di.diagnostic_messages Diagnostic messages]
 * [link di.performance Performance]
-* [link di.concepts Concepts]
+* [link di.user_guide User Guide]
 * [link di.examples Examples]
 * [link di.rationale Rationale]
 

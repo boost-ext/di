@@ -1049,11 +1049,11 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 ]
 
 [table
-[[Allow ctor types policy][Test]]
+[[`constructible` policy][Test]]
     [
         [
             ```
-            #include <boost/di/policies/allow_ctor_types.hpp>
+            #include <boost/di/policies/constructible.hpp>
 
             class all_must_be_bound_unless_int : public __di_config__ {
             public:
@@ -1062,7 +1062,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
                     using namespace di::policies::operators;
 
                     return __di_make_policies__(
-                        allow_ctor_types(is_same<_, int>{} || is_bound<_>{})
+                        constructible(is_same<_, int>{} || is_bound<_>{})
                     );
                 }
             };
@@ -1135,7 +1135,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 [heading See Also]
 * [link di.diagnostic_messages Diagnostic messages]
 * [link di.performance Performance]
-* [link di.concepts Concepts]
+* [link di.user_guide User Guide]
 * [link di.examples Examples]
 * [link di.rationale Rationale]
 

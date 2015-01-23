@@ -8,8 +8,8 @@
  /]
 
 [section Injector]
-Injector is a component used for creating dependencies configuration using [link di.concepts.bindings bindings] and resolve requested types.
-`Boost.DI` injector might be composed by mixing [link di.concepts.bindings bindings], [link di.concepts.modules modules] and other [link di.concepts.injector injectors].
+Injector is a component used for creating dependencies configuration using [link di.user_guide.bindings bindings] and resolve requested types.
+`Boost.DI` injector might be composed by mixing [link di.user_guide.bindings bindings], [link di.user_guide.modules modules] and other [link di.user_guide.injector injectors].
 
 [heading Synopsis]
     template<class... TDeps>
@@ -86,7 +86,7 @@ Injector is a component used for creating dependencies configuration using [link
 [section make_injector]
 
 [heading Description]
-Creates [link di.concepts.injector injector] type.
+Creates [link di.user_guide.injector injector] type.
 
 [heading Synopsis]
     template<class... TBindings>

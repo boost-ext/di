@@ -15,7 +15,7 @@ Policy has to be callable with at least one given type.
 
 `Boost.DI` is released with following policies
 
-* __policies_allow_ctor_types__ - limit constructor parameters
+* __policies_constructible__ - limit constructor parameters
 
 [note By Default `Boost.DI` has no policies enabled.]
 
@@ -159,17 +159,17 @@ Policy has to be callable with at least one given type.
 
 [heading See Also]
 
-* __policies_allow_ctor_types__
+* __policies_constructible__
 
-[section allow_ctor_types]
+[section constructible]
 
 [heading Description]
 Limits constructor parameters to explicitly allowed.
-[note By default `allow_ctor_types` policy disables creation of any constructor parameters.]
+[note By default `constructible` policy disables creation of any constructor parameters.]
 
 [heading Synopsis]
     template<class T>
-    inline auto allow_ctor_types(const T&);
+    inline auto constructible(const T&);
 
     struct _ { }; // placeholder
 
@@ -189,14 +189,13 @@ Limits constructor parameters to explicitly allowed.
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TArgs...`][__allow_type_model__ type][Type to be allowed]]
     [[`T`][Type is convertible to bool][Policy configuration, might be combined using provided logic operators (!, &&, ||)]]
     [[`TName`][None][Type name]]
     [[`X, Y`][Type is convertible to bool][Input types for operators]]
 ]
 
 [heading Expression Semantics]
-    allow_ctor_types(T)
+    constructible(T)
     is_bound<_>{} | is_bound<int, name>{} | is_root{}
 
 [*Result]: static assert with "`Type T is not allowed`" message or clean compilation.
@@ -249,11 +248,11 @@ Limits constructor parameters to explicitly allowed.
 ]]
 
 [table
-[[Allow ctor types policy][]]
+[[`constructible` policy][]]
     [
         [
             ```
-            #include <boost/di/policies/allow_ctor_types.hpp>
+            #include <boost/di/policies/constructible.hpp>
 
             class all_must_be_bound_unless_int : public __di_config__ {
             public:
@@ -262,7 +261,7 @@ Limits constructor parameters to explicitly allowed.
                     using namespace di::policies::operators;
 
                     return __di_make_policies__(
-                        allow_ctor_types(is_same<_, int>{} || is_bound<_>{})
+                        constructible(is_same<_, int>{} || is_bound<_>{})
                     );
                 }
             };

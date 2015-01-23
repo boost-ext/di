@@ -13,11 +13,11 @@ More precisely [@http://en.wikipedia.org/wiki/Dependency_injection [*Dependency 
 Dependency Injection allows us to separate business logic to object creation, which give possibility to write maintainable and testable code.
 There are many forms of dependency injection which you can read more about in [[link Van08]].
 
-* [link di.concepts.injections Constructor injection]
+* [link di.user_guide.injections Constructor injection]
 * Setter injection
 * Member injection
 
-[link di.concepts.injections [*Constructor injection]] is the most powerful and the cleanest way of dependency injection,
+[link di.user_guide.injections [*Constructor injection]] is the most powerful and the cleanest way of dependency injection,
 it's also preferable, because there is no need to worry about objects arriving in an uninitialized state.
 
 Dependency Injection doesn't really require Dependency Injection
@@ -316,7 +316,7 @@ Followed by few good practices/principles will get most out of Dependency Inject
 * [link di.quick_user_guide Quick user Guide]
 * [link di.diagnostic_messages Diagnostic messages]
 * [link di.performance Performance]
-* [link di.concepts Concepts]
+* [link di.user_guide User Guide]
 * [link di.examples Examples]
 * [link di.rationale Rationale]
 

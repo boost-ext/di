@@ -309,7 +309,7 @@ Legend:
 [note To run compile time performance tests go to `test/pt` directory and run `./pt.sh` script.]
 
 [heading See Also]
-* [link di.concepts Concepts]
+* [link di.user_guide User Guide]
 * [link di.examples Examples]
 * [link di.rationale Rationale]
 

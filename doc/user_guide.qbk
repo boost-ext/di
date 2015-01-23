@@ -16,6 +16,7 @@
 [include modules.qbk]
 [include policies.qbk]
 [include providers.qbk]
+[include concepts.qbk]
 
 `Boost.DI` design distinguish few building blocks (above), which might be cofigured using [link di.overview.configuration BOOST_DI_CFG].
 
@@ -54,7 +55,7 @@
                     return __di_make_policies__(
                         [](auto type) { }
                       , [](auto type, auto dependency, auto... ctor) { }
-                      , __policies_allow_ctor_types__(std::is_same<int, di::_>{})
+                      , __policies_constructible__(std::is_same<int, di::_>{})
                     );
                 }
             };

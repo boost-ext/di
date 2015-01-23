@@ -10,7 +10,7 @@
 [section:injections Injections]
 
 [*Constructor Injection] is the most powerful of the available injections.
-It guarantees initialized state of data members. `Boost.DI` [link di.concepts.injections.automatic constructor injection] is achieved without any additional work from the user.
+It guarantees initialized state of data members. `Boost.DI` [link di.user_guide.injections.automatic constructor injection] is achieved without any additional work from the user.
 
 ```
     class example {

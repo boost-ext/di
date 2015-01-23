@@ -61,7 +61,7 @@
 
 [def __policies__                                       [link di.user_guide.policies Policies]]
 [def __policy_model__                                   [link di.user_guide.policies Policy Model]]
-[def __policies_allow_ctor_types__                      [link di.user_guide.policies.allow_ctor_types allow_ctor_types]]
+[def __policies_constructible__                         [link di.user_guide.policies.constructible constructible]]
 
 [def __providers__                                      [link di.user_guide.providers Providers]]
 [def __provider_model__                                 [link di.user_guide.providers.synopsis Provider Model]]

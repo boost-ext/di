@@ -145,7 +145,7 @@ There are 3 basic types of wrappers.
 [section:deduce deduce (default)]
 
 [heading Description]
-Default scope which will be converted to one of the scopes  __scopes_unique__ / __scopes_singleton__ accordingly to [link di.concepts.scopes.deduce Scope Traits] mapping.
+Default scope which will be converted to one of the scopes  __scopes_unique__ / __scopes_singleton__ accordingly to [link di.user_guide.scopes.deduce Scope Traits] mapping.
 
 [table Scope deduction
     [[Type][Scope]]

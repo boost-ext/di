@@ -12,19 +12,19 @@
 `Boost.DI` design was driven by few main goals.
 
 * User interface should be compact and eliminate boilerplate code as much as possible (common things should be achieved in easy way and harder should be possible)
-    * achieved with [link di.concepts.scopes.deduce automatic scopes deduction]
+    * achieved with [link di.user_guide.scopes.deduce automatic scopes deduction]
 
 * Dependencies should be resolved during compilation time (no runtime exceptions when dependencies can't be resolved)
     * achieved with compile time dependency resolving
 
 * Constructor injection should be as less intrusive as possible
-    * see [link di.concepts.injections.automatic Constructor Injection]
+    * see [link di.user_guide.injections.automatic Constructor Injection]
 
 * Creation overhead should be as small as possible
     * achieved with compile time dependency resolving to minimize runtime overhead
 
 * Binding front end should be easily extensible
-    * achieved with [link di.concepts.bindings.synopsis dependency model] - custom user interface for binding has to return list of [link di.concepts.bindings.synopsis dependency] models
+    * achieved with [link di.user_guide.bindings.synopsis dependency model] - custom user interface for binding has to return list of [link di.user_guide.bindings.synopsis dependency] models
 
 [h6 Design]
 [@images/di.png [$images/di.png [width 75%] [height 75%] ]]
@@ -48,7 +48,7 @@ Generated with [@http://plantuml.sourceforge.net PlantUML].
 * [link di.quick_user_guide Quick user Guide]
 * [link di.diagnostic_messages Diagnostic messages]
 * [link di.performance Performance]
-* [link di.concepts Concepts]
+* [link di.user_guide User Guide]
 * [link di.examples Examples]
 
 [endsect]

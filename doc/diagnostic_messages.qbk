@@ -65,7 +65,7 @@ Error messages were accomplished using below compilation flags (in order to avoi
             public:
                 auto policies() const noexcept {
                     return __di_make_policies__(
-                        allow_ctor_types(is_bound<_>{})
+                        constructible(is_bound<_>{})
                     );
                 }
             };
@@ -111,7 +111,7 @@ Error messages were accomplished using below compilation flags (in order to avoi
 
 [heading See Also]
 * [link di.performance Performance]
-* [link di.concepts Concepts]
+* [link di.user_guide User Guide]
 * [link di.examples Examples]
 * [link di.rationale Rationale]
 

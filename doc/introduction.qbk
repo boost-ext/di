@@ -104,9 +104,9 @@ Using `Boost.DI` has many advantages over `manual dependency injection`.
 * [*Exception safe strong guarantee]
 * [*None or minimal run-time execution overhead] - [link di.performance.run_time Run-time performance]
 * [*Fast compilation times] - [link di.performance.compile_time Compile-time performance]
-* [*[link di.concepts.injections.automatic Macro free]] - by default - no need to specify constructor traits or register anything
-* [*[link di.concepts.scopes.deduce Scopes deduction]] - [link di.concepts.scopes scopes] are deduced based on type semantic
-* [link di.concepts.policies Policies] to limit [link di.concepts.policies.allow_ctor_types supported constructor parameters] or dump objects creation graph (__examples_uml_dumper__)
+* [*[link di.user_guide.injections.automatic Macro free]] - by default - no need to specify constructor traits or register anything
+* [*[link di.user_guide.scopes.deduce Scopes deduction]] - [link di.user_guide.scopes scopes] are deduced based on type semantic
+* [link di.user_guide.policies Policies] to limit [link di.user_guide.policies.constructible supported constructor parameters] or dump objects creation graph (__examples_uml_dumper__)
 * Automatic conversion to boost smart pointers (if boost is available)
 * Requires `C++14` compliant compiler
 
@@ -117,7 +117,7 @@ Using `Boost.DI` has many advantages over `manual dependency injection`.
 * [link di.quick_user_guide Quick user Guide]
 * [link di.diagnostic_messages Diagnostic messages]
 * [link di.performance Performance]
-* [link di.concepts Concepts]
+* [link di.user_guide User Guide]
 * [link di.examples Examples]
 * [link di.rationale Rationale]
 

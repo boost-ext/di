@@ -704,7 +704,7 @@ public:                                 |     di::bind<i1, impl1>
 };                                      |
 ```
 ```cpp
-Allow ctor types policy                 | Test
+`constructible` policy                  | Test
 ----------------------------------------|-----------------------------------------
 #include <boost/di/                     | // global policy
     policies/allow_ctor_types.hpp>      | #define BOOST_DI_CFG all_must_be_bound_unless_int
