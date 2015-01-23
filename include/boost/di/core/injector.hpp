@@ -13,7 +13,7 @@
 #include "boost/di/core/any_type.hpp"
 #include "boost/di/core/binder.hpp"
 #include "boost/di/core/dependency.hpp"
-#include "boost/di/core/visitor.hpp"
+#include "boost/di/core/policy.hpp"
 #include "boost/di/core/pool.hpp"
 #include "boost/di/core/provider.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
@@ -96,8 +96,8 @@ private:
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<expected_t, given_t, T, ctor_t, injector>;
-        visitor<pool_t>::template call<T, TName>(
-            ((TConfig&)config_).visitors(), dependency, ctor_t{}
+        policy<pool_t>::template call<T, TName>(
+            ((TConfig&)config_).policies(), dependency, ctor_t{}
         );
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<

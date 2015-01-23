@@ -60,19 +60,22 @@ using always = std::true_type;
 template<class...>
 using never = std::false_type;
 
+template<class T>
+struct identity {
+    using type = T;
+};
+
 template<class, class>
 struct pair { using type = pair; };
+
+template<bool...>
+struct bool_list { using type = bool_list; };
 
 template<class...>
 struct type_list { using type = type_list; };
 
-template<bool...>
-struct bool_list;
-
 template<class... TArgs>
-struct inherit : TArgs... {
-    using type = inherit;
-};
+struct inherit : TArgs... { using type = inherit; };
 
 template<class T>
 struct no_decay { using type = T; };
@@ -949,7 +952,9 @@ public:
     }
 
     template<class T,
-        BOOST_DI_REQUIRES_OVERLOAD(!is_injector<T>{} && std::is_same<TExpected, TGiven>{} && std::is_same<TScope, scopes::deduce>{})
+        BOOST_DI_REQUIRES_OVERLOAD(!is_injector<T>{} &&
+                                   std::is_same<TExpected, TGiven>{} && 
+                                   std::is_same<TScope, scopes::deduce>{})
     > auto to(T&& object) const noexcept {
         using dependency = dependency<
             scopes::external, TExpected, std::remove_reference_t<T>, TName
@@ -1614,7 +1619,7 @@ public:
 
 }}} // boost::di::scopes
 
-#define BOOST_DI_CONCEPTS__HPP
+#define BOOST_DI_CONCEPTS_BOUNDABLE_HPP
 
 namespace boost { namespace di { namespace concepts {
 
@@ -1644,7 +1649,7 @@ auto boundable(aux::type_list<Ts...>&&, T&&) ->
       , !std::is_same<
             aux::bool_list<aux::never<Ts>{}...>
           , aux::bool_list<std::is_base_of<Ts, T>{}...>
-         >{}
+        >{}
     >;
 
 }}} // boost::di::concepts
@@ -1656,8 +1661,11 @@ namespace boost { namespace di {
 template<class... Ts>
 using any_of = aux::type_list<Ts...>;
 
-template<class TExpected, class TGiven = TExpected, BOOST_DI_REQUIRES(concepts::boundable(std::declval<TExpected>(), std::declval<TGiven>()))>
-core::dependency<scopes::deduce, TExpected, TGiven> bind{};
+template<
+    class TExpected
+  , class TGiven = TExpected
+  , BOOST_DI_REQUIRES(concepts::boundable(std::declval<TExpected>(), std::declval<TGiven>()))
+> core::dependency<scopes::deduce, TExpected, TGiven> bind{};
 
 constexpr scopes::deduce deduce{};
 constexpr scopes::unique unique{};
@@ -1809,12 +1817,11 @@ template<
   , TDeps
   , aux::pair<type_traits::direct, aux::type_list<TArgs...>>
   , TPolicies
-> {
-    using type = std::is_constructible<
+> : aux::identity<std::is_constructible<
         T
       , typename get_type<TArgs, TDeps, TPolicies>::type...
-    >;
-};
+    >>
+{ };
 
 template<
     class TScope
@@ -1828,12 +1835,11 @@ template<
   , TDeps
   , aux::pair<type_traits::uniform, aux::type_list<TArgs...>>
   , TPolicies
-> {
-    using type = aux::is_braces_constructible<
+> : aux::is_braces_constructible<
         T
       , typename get_type<TArgs, TDeps, TPolicies>::type...
-    >;
-};
+    >
+{ };
 
 template<
     class TScope
@@ -1847,9 +1853,8 @@ template<
   , TDeps
   , aux::pair<type_traits::direct, aux::type_list<TArgs...>>
   , TPolicies
-> {
-    using type = std::true_type;
-};
+> : std::true_type
+{ };
 
 template<
     class TScope
@@ -1863,9 +1868,8 @@ template<
   , TDeps
   , aux::pair<type_traits::uniform, aux::type_list<TArgs...>>
   , TPolicies
-> {
-    using type = std::true_type;
-};
+> : std::true_type
+{ };
 
 template<
     class T
@@ -1878,9 +1882,8 @@ template<
   , TDeps
   , aux::pair<type_traits::direct, aux::type_list<TArgs...>>
   , TPolicies
-> {
-    using type = std::true_type;
-};
+> : std::true_type
+{ };
 
 template<
     class T
@@ -1893,9 +1896,8 @@ template<
   , TDeps
   , aux::pair<type_traits::uniform, aux::type_list<TArgs...>>
   , TPolicies
-> {
-    using type = std::true_type;
-};
+> : std::true_type
+{ };
 
 template<class, class, class, class, class, class>
 struct call_policies;
@@ -1934,8 +1936,10 @@ template<
         using type = T;
         using name = TName;
         using is_root = TIsRoot;
+
         template<class T_, class TName_, class TDefault_>
-        using resolve = decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)nullptr));
+        using resolve =
+            decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)nullptr));
     };
 
     static constexpr auto value =
@@ -2056,7 +2060,15 @@ std::false_type creatable(...);
 
 template<class T, class TDeps, class TPolicies>
 auto creatable(T&&, TDeps&&, TPolicies&&) -> aux::is_valid_expr<
-    decltype(create<void, core::pool<TDeps>, TPolicies, no_name, std::true_type>{}.operator T())
+    decltype(
+        create<
+            void
+          , core::pool<TDeps>
+          , TPolicies
+          , no_name
+          , std::true_type // is_root
+        >{}.operator T()
+    )
 >;
 
 }}} // boost::di::concepts

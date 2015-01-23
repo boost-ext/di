@@ -28,19 +28,22 @@ using always = std::true_type;
 template<class...>
 using never = std::false_type;
 
+template<class T>
+struct identity {
+    using type = T;
+};
+
 template<class, class>
 struct pair { using type = pair; };
+
+template<bool...>
+struct bool_list { using type = bool_list; };
 
 template<class...>
 struct type_list { using type = type_list; };
 
-template<bool...>
-struct bool_list;
-
 template<class... TArgs>
-struct inherit : TArgs... {
-    using type = inherit;
-};
+struct inherit : TArgs... { using type = inherit; };
 
 template<class T>
 struct no_decay { using type = T; };

@@ -12,6 +12,7 @@
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/core/any_type.hpp"
 #include "boost/di/core/binder.hpp"
+#include "boost/di/core/policy.hpp"
 #include "boost/di/core/pool.hpp"
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/scopes/external.hpp"
@@ -52,12 +53,11 @@ template<
   , TDeps
   , aux::pair<type_traits::direct, aux::type_list<TArgs...>>
   , TPolicies
-> {
-    using type = std::is_constructible<
+> : aux::identity<std::is_constructible<
         T
       , typename get_type<TArgs, TDeps, TPolicies>::type...
-    >;
-};
+    >>
+{ };
 
 template<
     class TScope
@@ -71,12 +71,11 @@ template<
   , TDeps
   , aux::pair<type_traits::uniform, aux::type_list<TArgs...>>
   , TPolicies
-> {
-    using type = aux::is_braces_constructible<
+> : aux::is_braces_constructible<
         T
       , typename get_type<TArgs, TDeps, TPolicies>::type...
-    >;
-};
+    >
+{ };
 
 template<
     class TScope
@@ -90,9 +89,8 @@ template<
   , TDeps
   , aux::pair<type_traits::direct, aux::type_list<TArgs...>>
   , TPolicies
-> {
-    using type = std::true_type;
-};
+> : std::true_type
+{ };
 
 template<
     class TScope
@@ -106,9 +104,8 @@ template<
   , TDeps
   , aux::pair<type_traits::uniform, aux::type_list<TArgs...>>
   , TPolicies
-> {
-    using type = std::true_type;
-};
+> : std::true_type
+{ };
 
 template<
     class T
@@ -121,9 +118,8 @@ template<
   , TDeps
   , aux::pair<type_traits::direct, aux::type_list<TArgs...>>
   , TPolicies
-> {
-    using type = std::true_type;
-};
+> : std::true_type
+{ };
 
 template<
     class T
@@ -136,9 +132,8 @@ template<
   , TDeps
   , aux::pair<type_traits::uniform, aux::type_list<TArgs...>>
   , TPolicies
-> {
-    using type = std::true_type;
-};
+> : std::true_type
+{ };
 
 template<class, class, class, class, class, class>
 struct call_policies;
@@ -177,14 +172,24 @@ template<
         using type = T;
         using name = TName;
         using is_root = TIsRoot;
+
         template<class T_, class TName_, class TDefault_>
-        using resolve = decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)nullptr));
+        using resolve =
+            decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)nullptr));
     };
+
+    template<class TPolicy, class = void>
+    struct call : std::true_type { };
+
+    template<class TPolicy>
+    struct call<TPolicy, std::enable_if_t<core::has_compile_time<TPolicy>{}>>
+        : decltype((TPolicy{})(arg{}))
+    { };
 
     static constexpr auto value =
         std::is_same<
             aux::bool_list<aux::always<Ts>{}...>
-          , aux::bool_list<decltype((Ts{})(arg{})){}...>
+          , aux::bool_list<call<Ts>{}...>
         >::value;
 };
 
@@ -299,7 +304,15 @@ std::false_type creatable(...);
 
 template<class T, class TDeps, class TPolicies>
 auto creatable(T&&, TDeps&&, TPolicies&&) -> aux::is_valid_expr<
-    decltype(create<void, core::pool<TDeps>, TPolicies, no_name, std::true_type>{}.operator T())
+    decltype(
+        create<
+            void
+          , core::pool<TDeps>
+          , TPolicies
+          , no_name
+          , std::true_type // is_root
+        >{}.operator T()
+    )
 >;
 
 }}} // boost::di::concepts

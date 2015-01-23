@@ -139,6 +139,7 @@ inline auto operator!(const T&) {
 
 template<class T>
 struct constructible_impl {
+    using compile_time = void;
     template<class TArg>
     auto operator()(const TArg& data) const {
         return T::apply(data);
