@@ -1729,6 +1729,64 @@
 </tr></tbody>
 </table></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+          <a class="link" href="user_guide/providers.html" title="Providers">Providers</a>
+        </li></ul></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Heap no throw provider
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">class</span> <span class="identifier">heap_no_throw</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">template</span><span class="special">&lt;</span>
+      <span class="keyword">class</span> <span class="comment">// interface</span>
+    <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span> <span class="comment">// implementation</span>
+    <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TInit</span> <span class="comment">// direct()/uniform{}</span>
+    <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TMemory</span> <span class="comment">// heap/stack</span>
+    <span class="special">,</span> <span class="keyword">class</span><span class="special">...</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
+    <span class="keyword">auto</span> <span class="identifier">get</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TInit</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">TMemory</span><span class="special">&amp;,</span> <span class="identifier">TArgs</span><span class="special">&amp;&amp;...</span> <span class="identifier">args</span><span class="special">)</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="keyword">new</span> <span class="special">(</span><span class="identifier">nothrow</span><span class="special">)</span> <span class="identifier">T</span><span class="special">{</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">TArgs</span><span class="special">&gt;(</span><span class="identifier">args</span><span class="special">)...};</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">my_provider</span> <span class="special">:</span> <span class="keyword">public</span> <a class="link" href="user_guide.html#di.user_guide.synopsis">di::config</a> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">auto</span> <span class="identifier">provider</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">heap_no_throw</span><span class="special">{};</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// per injector policy</span>
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">&lt;</span><span class="identifier">my_provider</span><span class="special">&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="user_guide/injector.html#di.user_guide.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
+
+<span class="comment">// global policy</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_CFG</span> <span class="identifier">my_provider</span>
+<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="user_guide/injector.html#di.user_guide.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
           <a class="link" href="user_guide/policies.html" title="Policies">Policies</a>
         </li></ul></div>
 <div class="informaltable"><table class="table">
@@ -1907,64 +1965,6 @@
                    <a class="link" href="user_guide/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42.0</span><span class="special">)</span>
                <span class="special">).</span><a class="link" href="user_guide/injector.html#di.user_guide.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;()</span>
 <span class="special">);</span>
-                                                                                                           <span class="special">.</span>
-</pre>
-            </td>
-</tr></tbody>
-</table></div>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
-          <a class="link" href="user_guide/providers.html" title="Providers">Providers</a>
-        </li></ul></div>
-<div class="informaltable"><table class="table">
-<colgroup>
-<col>
-<col>
-</colgroup>
-<thead><tr>
-<th>
-              <p>
-                Heap no throw provider
-              </p>
-            </th>
-<th>
-              <p>
-                Test
-              </p>
-            </th>
-</tr></thead>
-<tbody><tr>
-<td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">class</span> <span class="identifier">heap_no_throw</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">template</span><span class="special">&lt;</span>
-      <span class="keyword">class</span> <span class="comment">// interface</span>
-    <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span> <span class="comment">// implementation</span>
-    <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TInit</span> <span class="comment">// direct()/uniform{}</span>
-    <span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TMemory</span> <span class="comment">// heap/stack</span>
-    <span class="special">,</span> <span class="keyword">class</span><span class="special">...</span> <span class="identifier">TArgs</span><span class="special">&gt;</span>
-    <span class="keyword">auto</span> <span class="identifier">get</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TInit</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">TMemory</span><span class="special">&amp;,</span> <span class="identifier">TArgs</span><span class="special">&amp;&amp;...</span> <span class="identifier">args</span><span class="special">)</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="keyword">new</span> <span class="special">(</span><span class="identifier">nothrow</span><span class="special">)</span> <span class="identifier">T</span><span class="special">{</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">TArgs</span><span class="special">&gt;(</span><span class="identifier">args</span><span class="special">)...};</span>
-    <span class="special">}</span>
-<span class="special">};</span>
-
-<span class="keyword">class</span> <span class="identifier">my_provider</span> <span class="special">:</span> <span class="keyword">public</span> <a class="link" href="user_guide.html#di.user_guide.synopsis">di::config</a> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">auto</span> <span class="identifier">provider</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="identifier">heap_no_throw</span><span class="special">{};</span>
-    <span class="special">}</span>
-<span class="special">};</span>
-                                                                                   <span class="special">.</span>
-</pre>
-            </td>
-<td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// per injector policy</span>
-<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">&lt;</span><span class="identifier">my_provider</span><span class="special">&gt;();</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="user_guide/injector.html#di.user_guide.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
-
-<span class="comment">// global policy</span>
-<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_CFG</span> <span class="identifier">my_provider</span>
-<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">();</span>
-<span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="user_guide/injector.html#di.user_guide.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
                                                                                                            <span class="special">.</span>
 </pre>
             </td>
