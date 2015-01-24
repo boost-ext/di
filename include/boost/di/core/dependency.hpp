@@ -74,7 +74,7 @@ public:
 
     template<class T,
         BOOST_DI_REQUIRES_OVERLOAD(!is_injector<T>{} &&
-                                   std::is_same<TExpected, TGiven>{} && 
+                                   std::is_same<TExpected, TGiven>{} &&
                                    std::is_same<TScope, scopes::deduce>{})
     > auto to(T&& object) const noexcept {
         using dependency = dependency<
