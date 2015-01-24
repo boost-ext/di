@@ -96,7 +96,7 @@ int main() {                            | int main() {
 <a id="quick_user_guide"></a>
 **Quick User Guide** | [Examples](https://github.com/krzysztof-jusiak/di/tree/cpp14/example/quick_user_guide)
 
-* [Injector](#injector) | [Bindings](#bindings) | [Injections](#injections) | [Annotations](#annotations) | [Scopes](#scopes) | [Modules](#modules) | [Policies](#policies) | [Providers](#providers)
+* [Injector](#injector) | [Bindings](#bindings) | [Injections](#injections) | [Annotations](#annotations) | [Scopes](#scopes) | [Modules](#modules) | [Providers](#providers) | [Policies](#policies)
 * [Run-time performance](#run_time_performance) | [Compile-time performance](#compile_time_performance)
 * [Diagnostic messages](#diagnostic_messages) | [Configuration](#configuration)
 
@@ -635,6 +635,40 @@ auto injector = di::make_injector(      |
 
 *
 
+<a id="providers"></a>
+> **[Providers](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/providers.html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_provider.cpp)
+* [heap](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/providers/heap.html)
+* [stack\_over\_heap (default)](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/providers/stack_over_heap_default.html)
+```cpp
+Heap no throw provider                  | Test
+----------------------------------------|-----------------------------------------
+class heap_no_throw {                   | // per injector policy
+public:                                 | auto injector = di::make_injector<my_provider>();
+  template<                             | assert(0 == injector.create<int>());
+    class // interface                  |
+  , class T // implementation           | // global policy
+  , class TInit // direct()/uniform{}   | #define BOOST_DI_CFG my_provider
+  , class TMemory // heap/stack         | auto injector = di::make_injector();
+  , class... TArgs>                     | assert(0 == injector.create<int>());
+  auto get(const TInit&                 |
+         , const TMemory&               |
+         , TArgs&&... args)             |
+  const noexcept {                      |
+      return new (nothrow)              |
+        T{forward<TArgs>(args)...};     |
+  }                                     |
+};                                      |
+                                        |
+class my_provider : public di::config { |
+public:                                 |
+    auto provider() const noexcept {    |
+        return heap_no_throw{};         |
+    }                                   |
+};                                      |
+```
+
+*
+
 <a id="policies"></a>
 > **[Policies](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/policies.html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/types_dumper.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_policy.cpp)
 ```cpp
@@ -723,40 +757,6 @@ public:                                 | assert(42.0 == make_injector(
         is_bound<_>{})                  |
     );                                  |
   }                                     |
-};                                      |
-```
-
-*
-
-<a id="providers"></a>
-> **[Providers](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/providers.html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_provider.cpp)
-* [heap](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/providers/heap.html)
-* [stack\_over\_heap (default)](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/providers/stack_over_heap_default.html)
-```cpp
-Heap no throw provider                  | Test
-----------------------------------------|-----------------------------------------
-class heap_no_throw {                   | // per injector policy
-public:                                 | auto injector = di::make_injector<my_provider>();
-  template<                             | assert(0 == injector.create<int>());
-    class // interface                  |
-  , class T // implementation           | // global policy
-  , class TInit // direct()/uniform{}   | #define BOOST_DI_CFG my_provider
-  , class TMemory // heap/stack         | auto injector = di::make_injector();
-  , class... TArgs>                     | assert(0 == injector.create<int>());
-  auto get(const TInit&                 |
-         , const TMemory&               |
-         , TArgs&&... args)             |
-  const noexcept {                      |
-      return new (nothrow)              |
-        T{forward<TArgs>(args)...};     |
-  }                                     |
-};                                      |
-                                        |
-class my_provider : public di::config { |
-public:                                 |
-    auto provider() const noexcept {    |
-        return heap_no_throw{};         |
-    }                                   |
 };                                      |
 ```
 

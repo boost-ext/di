@@ -14,8 +14,8 @@
 [include annotations.qbk]
 [include scopes.qbk]
 [include modules.qbk]
-[include policies.qbk]
 [include providers.qbk]
+[include policies.qbk]
 [include concepts.qbk]
 
 `Boost.DI` design distinguish few building blocks (above), which might be cofigured using [link di.overview.configuration BOOST_DI_CFG].
