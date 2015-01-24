@@ -12,7 +12,7 @@
 [:['["Don't call us, we'll call you.]]]
 [:*--Hollywood principle*]
 
-[*[@http://en.wikipedia.org/wiki/Dependency_injection Dependency injection]] is a programming practice providing required instances to an object.
+[*[@http://en.wikipedia.org/wiki/Dependency_injection Dependency injection]] (DI) involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state. It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.
 Following this approach has many advantages.
 
 * [*Provide loosely coupled code] (Separation of business logic and object creation)

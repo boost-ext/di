@@ -9,7 +9,7 @@ Boost.DI: C++ Dependency Injection
 
 > "Don't call us, we'll call you", Hollywood principle
 
-Dependency injection is a programming practice providing required instances to an object.
+Dependency Injection (DI) involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state. It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.
 
 * Provides loosely coupled code (separation of business logic and object creation)
 * Provides easier to maintain code (different objects might be easily injected)
