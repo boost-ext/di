@@ -11,6 +11,7 @@
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/core/any_type.hpp"
 #include "boost/di/core/binder.hpp"
+#include "boost/di/core/policy.hpp"
 #include "boost/di/core/pool.hpp"
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/scopes/external.hpp"
@@ -26,7 +27,11 @@ struct creatable_impl;
 
 template<class T, class TDeps, class TPolicies>
 struct get_type {
-    using type = aux::wrapper<T, create<TDeps, TPolicies>>;
+    using type = std::conditional_t<
+        std::is_convertible<create<TDeps, TPolicies>, T>{}
+      , T
+      , void
+    >;
 };
 
 template<class TParent, class TNone, class TDeps, class TPolicies>
@@ -36,7 +41,11 @@ struct get_type<core::any_type<TParent, TNone>, TDeps, TPolicies> {
 
 template<class TName, class T, class TDeps, class TPolicies>
 struct get_type<type_traits::named<TName, T>, TDeps, TPolicies> {
-    using type = aux::wrapper<T, create<TDeps, TPolicies, void, TName>>;
+    using type = std::conditional_t<
+        std::is_convertible<create<TDeps, TPolicies, void, TName>, T>{}
+      , T
+      , void
+    >;
 };
 
 template<

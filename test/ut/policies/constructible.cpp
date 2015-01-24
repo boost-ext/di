@@ -4,23 +4,32 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "common/fakes/fake_assert.hpp"
-#include "common/fakes/fake_policy.hpp"
 #include <type_traits>
+#include "common/fakes/fake_policy.hpp"
 #include "boost/di/policies/constructible.hpp"
 
 namespace boost { namespace di { namespace policies {
 
+template<class TPolicy, class T = std::false_type>
+bool constructible_test(const TPolicy&, const T& arg = {}) noexcept {
+    return decltype(constructible(arg)(fake_policy<TPolicy>{})){};
+}
+
+template<class T = std::false_type, class T_, class TDependency, class TDeps, bool TResolve>
+bool constructible_test(const fake_policy<T_, TDependency, TDeps, TResolve>& policy, const T& arg = {}) noexcept {
+    return decltype(constructible(arg)(policy)){};
+}
+
 test nothing_is_allowed = [] {
     struct c { };
-    try { constructible()(fake_policy<int>{}); } catch(const assert_exception&) { };
-    try { constructible()(fake_policy<double>{}); } catch(const assert_exception&) { };
-    try { constructible()(fake_policy<c>{}); } catch(const assert_exception&) { };
+    expect(!constructible_test(int{}));
+    expect(!constructible_test(double{}));
+    expect(!constructible_test(c{}));
 };
 
 test type_is_allowed = [] {
     auto test = [](auto type) {
-        constructible(std::is_same<decltype(type), _>{})(fake_policy<decltype(type)>{});
+        expect(constructible_test(type, std::is_same<decltype(type), _>{}));
     };
 
     struct c { };
@@ -31,7 +40,7 @@ test type_is_allowed = [] {
 
 test type_is_not_allowed = [] {
     auto test = [](auto type) {
-         try { constructible(std::is_same<decltype(type), _>{})(fake_policy<void>{}); } catch(const assert_exception&) { }
+        expect(!constructible_test(fake_policy<void>{}, std::is_same<decltype(type), _>{}));
     };
 
     struct c { };
@@ -41,77 +50,71 @@ test type_is_not_allowed = [] {
 };
 
 test operator_not = [] {
-    auto test_okay = [](auto type, auto allowed) {
+    auto test_pass = [](auto type, auto allowed) {
         using namespace operators;
-        constructible(!std::is_same<_, decltype(type)>{})(fake_policy<decltype(allowed)>{});
+        expect(constructible_test(allowed, !std::is_same<_, decltype(type)>{}));
     };
 
-    auto test_throw = [](auto type, auto allowed) {
+    auto test_fail = [](auto type, auto allowed) {
         using namespace operators;
-        try { constructible(
-            !std::is_same<_, decltype(type)>{})(fake_policy<decltype(allowed)>{});
-        } catch(const assert_exception&) { }
+        expect(!constructible_test(allowed, !std::is_same<_, decltype(type)>{}));
     };
 
     struct c { };
-    test_okay(double{}, int{});
-    test_throw(c{}, c{});
-    test_throw(int{}, int{});
-    test_throw(double{}, double{});
+    test_pass(double{}, int{});
+    test_fail(c{}, c{});
+    test_fail(int{}, int{});
+    test_fail(double{}, double{});
 };
 
 test operator_or = [] {
-    auto test_okay = [](auto type1, auto type2, auto allowed) {
+    auto test_pass = [](auto type1, auto type2, auto allowed) {
         using namespace operators;
-        constructible(std::is_same<decltype(type1), _>{} || std::is_same<_, decltype(type2)>{})(fake_policy<decltype(allowed)>{});
+        expect(constructible_test(allowed, std::is_same<decltype(type1), _>{} || std::is_same<_, decltype(type2)>{}));
     };
 
-    auto test_throw = [](auto type1, auto type2, auto allowed) {
+    auto test_fail = [](auto type1, auto type2, auto allowed) {
         using namespace operators;
-        try { constructible(
-            std::is_same<decltype(type1), _>{} || std::is_same<_, decltype(type2)>{})(fake_policy<decltype(allowed)>{});
-        } catch(const assert_exception&) { }
+        expect(!constructible_test(allowed, std::is_same<decltype(type1), _>{} || std::is_same<_, decltype(type2)>{}));
     };
 
-    test_okay(int{}, double{}, int{});
-    test_okay(double{}, int{}, int{});
-    test_throw(int{}, double{}, float{});
-    test_throw(double{}, int{}, float{});
+    test_pass(int{}, double{}, int{});
+    test_pass(double{}, int{}, int{});
+    test_fail(int{}, double{}, float{});
+    test_fail(double{}, int{}, float{});
 };
 
 test operator_and = [] {
-    auto test_okay = [](auto type, auto allowed) {
+    auto test_pass = [](auto type, auto allowed) {
         using namespace operators;
-        constructible(std::is_integral<_>{} && std::is_same<_, decltype(type)>{})(fake_policy<decltype(allowed)>{});
+        expect(constructible_test(allowed, std::is_integral<_>{} && std::is_same<_, decltype(type)>{}));
     };
 
-    auto test_throw = [](auto type, auto allowed) {
+    auto test_fail = [](auto type, auto allowed) {
         using namespace operators;
-        try { constructible(
-            std::is_integral<_>{} && std::is_same<_, decltype(type)>{})(fake_policy<decltype(allowed)>{});
-        } catch(const assert_exception&) { }
+        expect(!constructible_test(allowed, std::is_integral<_>{} && std::is_same<_, decltype(type)>{}));
     };
 
     struct c { };
-    test_okay(int{}, int{});
-    test_throw(c{}, c{});
-    test_throw(int{}, float{});
-    test_throw(double{}, float{});
+    test_pass(int{}, int{});
+    test_fail(c{}, c{});
+    test_fail(int{}, float{});
+    test_fail(double{}, float{});
 };
 
 test is_type_bound = [] {
-    constructible(is_bound<_>{})(fake_policy<void, aux::none_t, aux::none_t, true>{});
-    try { constructible(is_bound<_>{})(fake_policy<void, aux::none_t, aux::none_t, false>{}); } catch(const assert_exception&) { }
+    expect(constructible_test(fake_policy<void, aux::none_t, aux::none_t, true>{}, is_bound<_>{}));
+    expect(!constructible_test(fake_policy<void, aux::none_t, aux::none_t, false>{}, is_bound<_>{}));
 };
 
 test complex_opeartors = [] {
     using namespace operators;
-    auto test = [](auto data) { constructible((std::is_integral<_>{} && std::is_same<_, int>{}) || is_bound<_>{})(data); };
-    try { test(fake_policy<void, aux::none_t, aux::none_t, false>{}); } catch(const assert_exception&) { }
-    try { test(fake_policy<double, aux::none_t, aux::none_t, false>{}); } catch(const assert_exception&) { }
-    test(fake_policy<int, aux::none_t, aux::none_t, false>{});
-    test(fake_policy<int, aux::none_t, aux::none_t, true>{});
-    test(fake_policy<double, aux::none_t, aux::none_t, true>{});
+    auto test = [](auto policy) { return constructible_test(policy, (std::is_integral<_>{} && std::is_same<_, int>{}) || is_bound<_>{}); };
+    expect(!test(fake_policy<void, aux::none_t, aux::none_t, false>{}));
+    expect(!test(fake_policy<double, aux::none_t, aux::none_t, false>{}));
+    expect(test(fake_policy<int, aux::none_t, aux::none_t, false>{}));
+    expect(test(fake_policy<int, aux::none_t, aux::none_t, true>{}));
+    expect(test(fake_policy<double, aux::none_t, aux::none_t, true>{}));
 };
 
 }}} // boost::di::policies

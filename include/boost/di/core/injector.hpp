@@ -50,7 +50,7 @@ public:
 
     template<class T, BOOST_DI_REQUIRES(concepts::creatable(std::declval<T>(), std::declval<TDeps>(), std::declval<TConfig>().policies()))>
     T create() const {
-        return create_impl<T, no_name>();
+        return create_impl<T>();
     }
 
     template<class TAction>
