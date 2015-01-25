@@ -8,57 +8,57 @@
 #define BOOST_DI_INJECTOR_HPP
 
 #include "boost/di/core/injector.hpp"
-#include "boost/di/core/dependency.hpp"
-#include "boost/di/scopes/exposed.hpp"
 #include "boost/di/config.hpp"
 
-namespace boost { namespace di { namespace detail {
+namespace boost { namespace di {
 
-template<class T, class = void>
-struct get_deps {
-    using type = typename T::deps;
+//template<class T, class D>
+//struct get {
+    //using type = decltype(concepts::creatable(std::declval<typename T::given>(), std::declval<D>(), std::declval<TConfig>().policies()));
+//};
+
+//template<class, class>
+//struct creatable_for_all;
+
+//template<class T, class... TArgs>
+//struct creatable_for_all<T, aux::type_list<TArgs...>> {
+    //using type = std::is_same<aux::bool_list<aux::always<TArgs>{}...>, aux::bool_list<typename get<TArgs, T>::type{}...>>;
+//};
+
+template<class TConfig, class... TDeps>
+class injector_ : public core::injector<TConfig, TDeps...> {
+    using self = core::injector<TConfig, TDeps...>;
+
+public:
+    using deps = typename self::deps;
+
+    template<class... TArgs>
+    explicit injector_(const TArgs&... args) noexcept
+        : self{core::init{}, core::pass_arg(args)...}
+    { }
+
+    template<class TConfig_, class... TDeps_>
+    injector_(const core::injector<TConfig_, TDeps_...>& injector
+            //, BOOST_DI_REQUIRES_OVERLOAD(typename creatable_for_all<TDeps_, TDeps>::type{})
+    ) noexcept // non explicit
+        : self{injector}
+    { }
+
+    template<
+        class T
+      , BOOST_DI_REQUIRES(concepts::creatable(std::declval<T>(), std::declval<deps>(), std::declval<TConfig>().policies()))
+    > T create() const {
+        return self::template create_impl<T>();
+    }
+
+    template<class TAction>
+    void call(const TAction& action) noexcept {
+        self::call_impl(action, deps{});
+    }
 };
 
-template<class T>
-struct get_deps<T, std::enable_if_t<core::has_configure<T>{}>> {
-    using type = typename aux::function_traits<
-        decltype(&T::configure)
-    >::result_type::deps;
-};
-
-template<
-    class T
-  , class = typename core::is_injector<T>::type
-  , class = typename core::is_dependency<T>::type
-> struct add_type_list;
-
-template<class T, class TAny>
-struct add_type_list<T, std::true_type, TAny> {
-    using type = typename get_deps<T>::type;
-};
-
-template<class T>
-struct add_type_list<T, std::false_type, std::true_type> {
-    using type = aux::type_list<T>;
-};
-
-template<class T>
-struct add_type_list<T, std::false_type, std::false_type> {
-    using type = aux::type_list<core::dependency<scopes::exposed<>, T>>;
-};
-
-template<class... Ts>
-using bindings_t = aux::join_t<typename add_type_list<Ts>::type...>;
-
-template<class TConfig, class... TArgs>
-using injector = core::injector<detail::bindings_t<TArgs...>, TConfig>;
-
-} // detail
-
-template<class... TArgs>
-class injector : public core::injector<detail::bindings_t<TArgs...>, config> {
-    using core::injector<detail::bindings_t<TArgs...>, config>::injector;
-};
+template<class... TDeps>
+using injector = injector_<config, TDeps...>;
 
 }} // boost::di
 

@@ -7,18 +7,19 @@
 #ifndef BOOST_DI_MAKE_INJECTOR_HPP
 #define BOOST_DI_MAKE_INJECTOR_HPP
 
-#include "boost/di/aux_/utility.hpp"
+#include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/injector.hpp"
 #include "boost/di/concepts/configurable.hpp"
+#include "boost/di/concepts/boundable.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost { namespace di {
 
 template<class TConfig = ::BOOST_DI_CFG
    , BOOST_DI_REQUIRES(concepts::configurable(std::declval<TConfig>()))
-   , class... TArgs
-> inline auto make_injector(const TArgs&... args) noexcept {
-    return detail::injector<TConfig, TArgs...>(args...);
+   , class... TDeps
+> inline auto make_injector(const TDeps&... args) noexcept -> std::enable_if_t<decltype(concepts::boundable(typename injector_<TConfig, TDeps...>::deps{})){}, injector_<TConfig, TDeps...>> {
+    return injector_<TConfig, TDeps...>(args...);
 }
 
 }} // boost::di

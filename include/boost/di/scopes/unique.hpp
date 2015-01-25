@@ -20,7 +20,7 @@ public:
     class scope {
     public:
         template<class T, class TProvider>
-        auto create(const TProvider& provider) const {
+        auto construct(const TProvider& provider) const {
             using memory = type_traits::memory_traits_t<T>;
             using wrapper = wrappers::unique<decltype(provider.get(memory{}))>;
             return wrapper{provider.get(memory{})};
