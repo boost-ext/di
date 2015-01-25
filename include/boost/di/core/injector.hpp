@@ -125,13 +125,13 @@ public:
         policy<pool_t>::template call<T, TName>(
             ((TConfig&)config_).policies(), dependency, ctor_t{}
         );
-        using wrapper_t = decltype(dependency.template construct<T>(provider_t{*this}));
+        using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
             std::is_reference<T>{} && has_is_ref<dependency_t>{}
           , T
           , std::remove_reference_t<T>
         >;
-        return aux::wrapper<type, wrapper_t>{dependency.template construct<T>(provider_t{*this})};
+        return aux::wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
 
     template<class TAction, class... Ts>

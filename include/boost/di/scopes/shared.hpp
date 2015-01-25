@@ -20,7 +20,7 @@ public:
     class scope {
     public:
         template<class, class TProvider>
-        auto construct(const TProvider& provider) {
+        auto create(const TProvider& provider) {
             if (!object_) {
                 object_ = std::shared_ptr<T>{provider.get()};
             }

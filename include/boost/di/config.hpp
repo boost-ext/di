@@ -20,6 +20,7 @@
 namespace boost { namespace di {
 
 template<class... TArgs>
+    //REQUIRES are callable
 inline auto make_policies(const TArgs&... args) noexcept {
     return core::pool<aux::type_list<TArgs...>>(args...);
 }

@@ -11,13 +11,16 @@
 
 namespace boost { namespace di { namespace concepts {
 
-std::false_type configurable(...);
+std::false_type configurable_impl(...);
 
 template<class T>
-auto configurable(T&& t) -> aux::is_valid_expr<
+auto configurable_impl(T&& t) -> aux::is_valid_expr<
     decltype(t.provider())
   , decltype(t.policies())
 >;
+
+template<class T>
+decltype(configurable_impl(std::declval<T>())) configurable{};
 
 }}} // boost::di::concepts
 

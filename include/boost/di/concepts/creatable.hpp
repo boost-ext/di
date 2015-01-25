@@ -23,7 +23,7 @@ template<class, class, class = void, class = no_name, class = std::false_type>
 struct create;
 
 template<class, class, class, class, class>
-struct creatable_impl;
+struct is_creatable_impl;
 
 template<class T, class TDeps, class TPolicies>
 struct get_type {
@@ -54,7 +54,7 @@ template<
   , class TDeps
   , class TPolicies
   , class... TCtor
-> struct creatable_impl<
+> struct is_creatable_impl<
     TScope
   , T
   , TDeps
@@ -72,7 +72,7 @@ template<
   , class TDeps
   , class TPolicies
   , class... TCtor
-> struct creatable_impl<
+> struct is_creatable_impl<
     TScope
   , T
   , TDeps
@@ -90,7 +90,7 @@ template<
   , class TDeps
   , class TPolicies
   , class... TCtor
-> struct creatable_impl<
+> struct is_creatable_impl<
     scopes::exposed<TScope>
   , T
   , TDeps
@@ -105,7 +105,7 @@ template<
   , class TDeps
   , class TPolicies
   , class... TCtor
-> struct creatable_impl<
+> struct is_creatable_impl<
     scopes::exposed<TScope>
   , T
   , TDeps
@@ -119,7 +119,7 @@ template<
   , class TDeps
   , class TPolicies
   , class... TCtor
-> struct creatable_impl<
+> struct is_creatable_impl<
     scopes::external
   , T
   , TDeps
@@ -133,7 +133,7 @@ template<
   , class TDeps
   , class TPolicies
   , class... TCtor
-> struct creatable_impl<
+> struct is_creatable_impl<
     scopes::external
   , T
   , TDeps
@@ -151,8 +151,8 @@ template<
   , class TDeps
   , class TCtor
   , class TPolicies
-> using creatable_impl_t =
-    typename creatable_impl<
+> using is_creatable_impl_t =
+    typename is_creatable_impl<
         TScope
       , T
       , TDeps
@@ -210,7 +210,7 @@ template<
   , class TPolicies
 > struct is_createable_impl {
     using type = std::integral_constant<bool,
-        creatable_impl_t<
+        is_creatable_impl_t<
             typename TDependency::scope
           , typename TDependency::given
           , TDeps
@@ -244,7 +244,7 @@ template<
   , TCtor
   , core::pool<aux::type_list<>>
 > {
-    using type = creatable_impl_t<
+    using type = is_creatable_impl_t<
         typename TDependency::scope
       , typename TDependency::given
       , TDeps
@@ -307,10 +307,10 @@ template<
     operator T&() const;
 };
 
-std::false_type creatable(...);
+std::false_type creatable_impl(...);
 
 template<class T, class TDeps, class TPolicies>
-auto creatable(T&&, TDeps&&, TPolicies&&) -> aux::is_valid_expr<
+auto creatable_impl(T&&, TDeps&&, TPolicies&&) -> aux::is_valid_expr<
     decltype(
         create<
             core::pool<TDeps>
@@ -321,6 +321,12 @@ auto creatable(T&&, TDeps&&, TPolicies&&) -> aux::is_valid_expr<
         >{}.operator T()
     )
 >;
+
+template<class T, class TDeps, class TConfig>
+decltype(creatable_impl(std::declval<T>()
+                 , std::declval<TDeps>()
+                 , std::declval<TConfig>().policies()))
+creatable{};
 
 }}} // boost::di::concepts
 

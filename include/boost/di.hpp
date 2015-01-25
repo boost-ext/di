@@ -155,7 +155,7 @@ struct wrapper {
     using has_##name = decltype(has_##name##_impl<T, TArgs...>(0))
 
 #define BOOST_DI_REQUIRES(...) \
-    class = typename std::enable_if<decltype(__VA_ARGS__){}>::type
+    class = typename std::enable_if<(__VA_ARGS__)>::type
 
 #define BOOST_DI_REQUIRES_OVERLOAD(...) \
     typename std::enable_if<(__VA_ARGS__), int>::type = 0
@@ -522,7 +522,7 @@ public:
     class scope {
     public:
         template<class T, class TProvider>
-        auto construct(const TProvider& provider) const {
+        auto create(const TProvider& provider) const {
             using memory = type_traits::memory_traits_t<T>;
             using wrapper = wrappers::unique<decltype(provider.get(memory{}))>;
             return wrapper{provider.get(memory{})};
@@ -590,7 +590,7 @@ public:
     class scope {
     public:
         template<class, class TProvider>
-        auto construct(const TProvider& provider) {
+        auto create(const TProvider& provider) {
             if (!get_instance()) {
                 get_instance() = std::shared_ptr<T>{provider.get()};
             }
@@ -647,7 +647,7 @@ public:
     template<class TExpected, class, class = void>
     struct scope {
         template<class, class TProvider>
-        auto construct(const TProvider&) const noexcept {
+        auto create(const TProvider&) const noexcept {
             return wrappers::unique<TExpected>{object_};
         }
 
@@ -659,7 +659,7 @@ public:
         using is_ref = void;
 
         template<class, class TProvider>
-        auto construct(const TProvider&) const noexcept {
+        auto create(const TProvider&) const noexcept {
             return object_;
         }
 
@@ -669,7 +669,7 @@ public:
     template<class TExpected, class TGiven>
     struct scope<TExpected, std::shared_ptr<TGiven>> {
         template<class, class TProvider>
-        auto construct(const TProvider&) const noexcept {
+        auto create(const TProvider&) const noexcept {
             return wrappers::shared<TGiven>{object_};
         }
 
@@ -688,7 +688,7 @@ public:
     > {
     public:
         template<class, class TProvider>
-        auto construct(const TProvider&) const noexcept {
+        auto create(const TProvider&) const noexcept {
             using wrapper = wrapper_traits_t<decltype(std::declval<TGiven>()())>;
             return wrapper{object_()};
         }
@@ -699,7 +699,7 @@ public:
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&>{}>> {
         template<class, class TProvider>
-        auto construct(const TProvider& provider) const noexcept {
+        auto create(const TProvider& provider) const noexcept {
             using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_))>;
             return wrapper{(object_)(provider.injector_)};
         }
@@ -811,10 +811,10 @@ public:
     class scope {
     public:
         template<class T, class TProvider>
-        auto construct(const TProvider& provider) {
+        auto create(const TProvider& provider) {
             using scope_traits = type_traits::scope_traits_t<T>;
             using scope = typename scope_traits::template scope<TExpected, TGiven>;
-            return scope{}.template construct<T>(provider);
+            return scope{}.template create<T>(provider);
         }
     };
 };
@@ -870,8 +870,8 @@ public:
         { }
 
         template<class T, class TProvider>
-        auto construct(const TProvider&) {
-            return scope_.template construct<T>(*provider_);
+        auto create(const TProvider&) {
+            return scope_.template create<T>(*provider_);
         }
 
     private:
@@ -1530,6 +1530,7 @@ public:
 namespace boost { namespace di {
 
 template<class... TArgs>
+    //REQUIRES are callable
 inline auto make_policies(const TArgs&... args) noexcept {
     return core::pool<aux::type_list<TArgs...>>(args...);
 }
@@ -1575,7 +1576,7 @@ public:
         }
 
         template<class, class TProvider>
-        auto construct(const TProvider& provider) {
+        auto create(const TProvider& provider) {
             if (in_scope_ && !object_) {
                 object_ = std::shared_ptr<T>{provider.get()};
             }
@@ -1602,7 +1603,7 @@ public:
     class scope {
     public:
         template<class, class TProvider>
-        auto construct(const TProvider& provider) {
+        auto create(const TProvider& provider) {
             if (!object_) {
                 object_ = std::shared_ptr<T>{provider.get()};
             }
@@ -1628,19 +1629,19 @@ struct unique {
     >;
 };
 
-std::false_type boundable(...);
+std::false_type boundable_impl(...);
 
 template<class... Ts>
-auto boundable(aux::type_list<Ts...>&&) ->
+auto boundable_impl(aux::type_list<Ts...>&&) ->
     aux::always<typename aux::inherit<typename unique<Ts>::type...>::type>;
 
 template<class I, class T>
-auto boundable(I&&, T&&) -> std::integral_constant<bool,
+auto boundable_impl(I&&, T&&) -> std::integral_constant<bool,
     std::is_convertible<T, I>{} || std::is_base_of<I, T>{}
 >;
 
 template<class T, class... Ts>
-auto boundable(aux::type_list<Ts...>&&, T&&) ->
+auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
     std::integral_constant<
         bool
       , !std::is_same<
@@ -1648,6 +1649,9 @@ auto boundable(aux::type_list<Ts...>&&, T&&) ->
           , aux::bool_list<std::is_base_of<Ts, T>{}...>
         >{}
     >;
+
+template<class... Ts>
+decltype(boundable_impl(std::declval<Ts>()...)) boundable{};
 
 }}} // boost::di::concepts
 
@@ -1661,7 +1665,7 @@ using any_of = aux::type_list<Ts...>;
 template<
     class TExpected
   , class TGiven = TExpected
-  , BOOST_DI_REQUIRES(concepts::boundable(std::declval<TExpected>(), std::declval<TGiven>()))
+  , BOOST_DI_REQUIRES(concepts::boundable<TExpected, TGiven>)
 > core::dependency<scopes::deduce, TExpected, TGiven> bind{};
 
 constexpr scopes::deduce deduce{};
@@ -1796,7 +1800,7 @@ template<class, class, class = void, class = no_name, class = std::false_type>
 struct create;
 
 template<class, class, class, class, class>
-struct creatable_impl;
+struct is_creatable_impl;
 
 template<class T, class TDeps, class TPolicies>
 struct get_type {
@@ -1827,7 +1831,7 @@ template<
   , class TDeps
   , class TPolicies
   , class... TCtor
-> struct creatable_impl<
+> struct is_creatable_impl<
     TScope
   , T
   , TDeps
@@ -1845,7 +1849,7 @@ template<
   , class TDeps
   , class TPolicies
   , class... TCtor
-> struct creatable_impl<
+> struct is_creatable_impl<
     TScope
   , T
   , TDeps
@@ -1863,7 +1867,7 @@ template<
   , class TDeps
   , class TPolicies
   , class... TCtor
-> struct creatable_impl<
+> struct is_creatable_impl<
     scopes::exposed<TScope>
   , T
   , TDeps
@@ -1878,7 +1882,7 @@ template<
   , class TDeps
   , class TPolicies
   , class... TCtor
-> struct creatable_impl<
+> struct is_creatable_impl<
     scopes::exposed<TScope>
   , T
   , TDeps
@@ -1892,7 +1896,7 @@ template<
   , class TDeps
   , class TPolicies
   , class... TCtor
-> struct creatable_impl<
+> struct is_creatable_impl<
     scopes::external
   , T
   , TDeps
@@ -1906,7 +1910,7 @@ template<
   , class TDeps
   , class TPolicies
   , class... TCtor
-> struct creatable_impl<
+> struct is_creatable_impl<
     scopes::external
   , T
   , TDeps
@@ -1924,8 +1928,8 @@ template<
   , class TDeps
   , class TCtor
   , class TPolicies
-> using creatable_impl_t =
-    typename creatable_impl<
+> using is_creatable_impl_t =
+    typename is_creatable_impl<
         TScope
       , T
       , TDeps
@@ -1983,7 +1987,7 @@ template<
   , class TPolicies
 > struct is_createable_impl {
     using type = std::integral_constant<bool,
-        creatable_impl_t<
+        is_creatable_impl_t<
             typename TDependency::scope
           , typename TDependency::given
           , TDeps
@@ -2017,7 +2021,7 @@ template<
   , TCtor
   , core::pool<aux::type_list<>>
 > {
-    using type = creatable_impl_t<
+    using type = is_creatable_impl_t<
         typename TDependency::scope
       , typename TDependency::given
       , TDeps
@@ -2080,10 +2084,10 @@ template<
     operator T&() const;
 };
 
-std::false_type creatable(...);
+std::false_type creatable_impl(...);
 
 template<class T, class TDeps, class TPolicies>
-auto creatable(T&&, TDeps&&, TPolicies&&) -> aux::is_valid_expr<
+auto creatable_impl(T&&, TDeps&&, TPolicies&&) -> aux::is_valid_expr<
     decltype(
         create<
             core::pool<TDeps>
@@ -2094,6 +2098,12 @@ auto creatable(T&&, TDeps&&, TPolicies&&) -> aux::is_valid_expr<
         >{}.operator T()
     )
 >;
+
+template<class T, class TDeps, class TConfig>
+decltype(creatable_impl(std::declval<T>()
+                 , std::declval<TDeps>()
+                 , std::declval<TConfig>().policies()))
+creatable{};
 
 }}} // boost::di::concepts
 
@@ -2203,13 +2213,13 @@ public:
         policy<pool_t>::template call<T, TName>(
             ((TConfig&)config_).policies(), dependency, ctor_t{}
         );
-        using wrapper_t = decltype(dependency.template construct<T>(provider_t{*this}));
+        using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
             std::is_reference<T>{} && has_is_ref<dependency_t>{}
           , T
           , std::remove_reference_t<T>
         >;
-        return aux::wrapper<type, wrapper_t>{dependency.template construct<T>(provider_t{*this})};
+        return aux::wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
 
     template<class TAction, class... Ts>
@@ -2247,6 +2257,19 @@ public:
 
 namespace boost { namespace di {
 
+//template<class T, class D>
+//struct get {
+    //using type = decltype(concepts::creatable(std::declval<typename T::given>(), std::declval<D>(), std::declval<TConfig>().policies()));
+//};
+
+//template<class, class>
+//struct creatable_for_all;
+
+//template<class T, class... TArgs>
+//struct creatable_for_all<T, aux::type_list<TArgs...>> {
+    //using type = std::is_same<aux::bool_list<aux::always<TArgs>{}...>, aux::bool_list<typename get<TArgs, T>::type{}...>>;
+//};
+
 template<class TConfig, class... TDeps>
 class injector_ : public core::injector<TConfig, TDeps...> {
     using self = core::injector<TConfig, TDeps...>;
@@ -2260,12 +2283,16 @@ public:
     { }
 
     template<class TConfig_, class... TDeps_>
-    injector_(const core::injector<TConfig_, TDeps_...>& injector)//, BOOST_DI_REQUIRES_OVERLOAD(typename creatable_for_all<TDeps_, TDeps>::type{})) noexcept // non explicit
+    injector_(const core::injector<TConfig_, TDeps_...>& injector
+            //, BOOST_DI_REQUIRES_OVERLOAD(typename creatable_for_all<TDeps_, TDeps>::type{})
+    ) noexcept // non explicit
         : self{injector}
     { }
 
-    template<class T, BOOST_DI_REQUIRES(concepts::creatable(std::declval<T>(), std::declval<deps>(), std::declval<TConfig>().policies()))>
-    T create() const {
+    template<
+        class T
+      , BOOST_DI_REQUIRES(concepts::creatable<T, deps, TConfig>)
+    > T create() const {
         return self::template create_impl<T>();
     }
 
@@ -2284,13 +2311,16 @@ using injector = injector_<config, TDeps...>;
 
 namespace boost { namespace di { namespace concepts {
 
-std::false_type configurable(...);
+std::false_type configurable_impl(...);
 
 template<class T>
-auto configurable(T&& t) -> aux::is_valid_expr<
+auto configurable_impl(T&& t) -> aux::is_valid_expr<
     decltype(t.provider())
   , decltype(t.policies())
 >;
+
+template<class T>
+decltype(configurable_impl(std::declval<T>())) configurable{};
 
 }}} // boost::di::concepts
 
@@ -2299,9 +2329,11 @@ auto configurable(T&& t) -> aux::is_valid_expr<
 namespace boost { namespace di {
 
 template<class TConfig = ::BOOST_DI_CFG
-   , BOOST_DI_REQUIRES(concepts::configurable(std::declval<TConfig>()))
+   , BOOST_DI_REQUIRES(concepts::configurable<TConfig>)
    , class... TDeps
-> inline auto make_injector(const TDeps&... args) noexcept -> std::enable_if_t<decltype(concepts::boundable(typename injector_<TConfig, TDeps...>::deps{})){}, injector_<TConfig, TDeps...>> {
+> inline auto make_injector(const TDeps&... args) noexcept ->
+    //BOOST_DI_REQUIRES_RETURN(concepts::boundable<typename injector_<TConfig, TDeps...>::deps>)(injector_<TConfig, TDeps...>)
+    std::enable_if_t<concepts::boundable<typename injector_<TConfig, TDeps...>::deps>, injector_<TConfig, TDeps...>> {
     return injector_<TConfig, TDeps...>(args...);
 }
 

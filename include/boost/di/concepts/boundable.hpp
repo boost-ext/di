@@ -21,19 +21,19 @@ struct unique {
     >;
 };
 
-std::false_type boundable(...);
+std::false_type boundable_impl(...);
 
 template<class... Ts>
-auto boundable(aux::type_list<Ts...>&&) ->
+auto boundable_impl(aux::type_list<Ts...>&&) ->
     aux::always<typename aux::inherit<typename unique<Ts>::type...>::type>;
 
 template<class I, class T>
-auto boundable(I&&, T&&) -> std::integral_constant<bool,
+auto boundable_impl(I&&, T&&) -> std::integral_constant<bool,
     std::is_convertible<T, I>{} || std::is_base_of<I, T>{}
 >;
 
 template<class T, class... Ts>
-auto boundable(aux::type_list<Ts...>&&, T&&) ->
+auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
     std::integral_constant<
         bool
       , !std::is_same<
@@ -41,6 +41,9 @@ auto boundable(aux::type_list<Ts...>&&, T&&) ->
           , aux::bool_list<std::is_base_of<Ts, T>{}...>
         >{}
     >;
+
+template<class... Ts>
+decltype(boundable_impl(std::declval<Ts>()...)) boundable{};
 
 }}} // boost::di::concepts
 

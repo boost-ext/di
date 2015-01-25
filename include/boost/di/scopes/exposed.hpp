@@ -58,8 +58,8 @@ public:
         { }
 
         template<class T, class TProvider>
-        auto construct(const TProvider&) {
-            return scope_.template construct<T>(*provider_);
+        auto create(const TProvider&) {
+            return scope_.template create<T>(*provider_);
         }
 
     private:

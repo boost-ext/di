@@ -16,9 +16,11 @@
 namespace boost { namespace di {
 
 template<class TConfig = ::BOOST_DI_CFG
-   , BOOST_DI_REQUIRES(concepts::configurable(std::declval<TConfig>()))
+   , BOOST_DI_REQUIRES(concepts::configurable<TConfig>)
    , class... TDeps
-> inline auto make_injector(const TDeps&... args) noexcept -> std::enable_if_t<decltype(concepts::boundable(typename injector_<TConfig, TDeps...>::deps{})){}, injector_<TConfig, TDeps...>> {
+> inline auto make_injector(const TDeps&... args) noexcept ->
+    //BOOST_DI_REQUIRES_RETURN(concepts::boundable<typename injector_<TConfig, TDeps...>::deps>)(injector_<TConfig, TDeps...>)
+    std::enable_if_t<concepts::boundable<typename injector_<TConfig, TDeps...>::deps>, injector_<TConfig, TDeps...>> {
     return injector_<TConfig, TDeps...>(args...);
 }
 

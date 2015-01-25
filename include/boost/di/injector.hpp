@@ -46,7 +46,7 @@ public:
 
     template<
         class T
-      , BOOST_DI_REQUIRES(concepts::creatable(std::declval<T>(), std::declval<deps>(), std::declval<TConfig>().policies()))
+      , BOOST_DI_REQUIRES(concepts::creatable<T, deps, TConfig>)
     > T create() const {
         return self::template create_impl<T>();
     }

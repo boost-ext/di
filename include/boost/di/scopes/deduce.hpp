@@ -18,10 +18,10 @@ public:
     class scope {
     public:
         template<class T, class TProvider>
-        auto construct(const TProvider& provider) {
+        auto create(const TProvider& provider) {
             using scope_traits = type_traits::scope_traits_t<T>;
             using scope = typename scope_traits::template scope<TExpected, TGiven>;
-            return scope{}.template construct<T>(provider);
+            return scope{}.template create<T>(provider);
         }
     };
 };
