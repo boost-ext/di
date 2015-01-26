@@ -102,6 +102,12 @@ public:
         : pool_t(core::init{}, create_from_injector(injector, bindings_t<TDeps...>{}))
     { }
 
+    //TODO
+    template<class T>
+    T create() const {
+        return create_impl<T>();
+    }
+
     template<class T, class TName = no_name>
     auto create_impl() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
@@ -109,7 +115,7 @@ public:
         using expected_t = typename dependency_t::expected;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-        using provider_t = provider<expected_t, given_t, T, ctor_t, injector_<TConfig, TDeps...>>;
+        using provider_t = provider<expected_t, given_t, T, ctor_t, injector>;
         policy<pool_t>::template call<T, TName>(
             ((TConfig&)config_).policies(), dependency, ctor_t{}
         );

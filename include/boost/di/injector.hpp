@@ -24,12 +24,13 @@ public:
         : self{core::pass_arg(args)...}
     { }
 
-    template<class TConfig_, class... TDeps_>
-    injector_(const core::injector<TConfig_, TDeps_...>& injector
-            , BOOST_DI_REQUIRES_OVERLOAD(
-                  concepts::creatable<typename core::injector<TConfig_, TDeps_...>::deps, TConfig, TDeps...>()
-              )
-    ) noexcept // non explicit
+    template<
+        class TConfig_
+      , class... TDeps_
+      //, BOOST_DI_REQUIRES(
+            //concepts::creatable<typename core::injector<TConfig_, TDeps_...>::deps, TConfig, TDeps...>()
+        //)
+    > injector_(const core::injector<TConfig_, TDeps_...>& injector) noexcept // non explicit
         : self{injector}
     { }
 

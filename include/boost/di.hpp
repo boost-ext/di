@@ -151,11 +151,6 @@ using join_t = typename join<TArgs...>::type;
 #define BOOST_DI_REQUIRES_OVERLOAD(...) \
     typename std::enable_if<__VA_ARGS__, int>::type = 0
 
-#define BOOST_DI_REQUIRES_RETURN_IMPL(...) __VA_ARGS__>::type
-
-#define BOOST_DI_REQUIRES_RETURN(...) \
-    typename std::enable_if<__VA_ARGS__, BOOST_DI_REQUIRES_RETURN_IMPL
-
 namespace boost { namespace di { namespace aux {
 
 template<class...>
@@ -322,9 +317,6 @@ struct no_name {
 };
 
 class config;
-
-template<class, class...>
-class injector_;
 
 }} // boost::di
 
@@ -1565,9 +1557,10 @@ public:
 
 namespace boost { namespace di {
 
-template<class... TPolicies>
-inline auto make_policies(const TPolicies&... args) noexcept ->
-BOOST_DI_REQUIRES_RETURN(concepts::callable<TPolicies...>())(core::pool<aux::type_list<TPolicies...>>) {
+template<
+    class... TPolicies
+  , BOOST_DI_REQUIRES(concepts::callable<TPolicies...>())
+> inline auto make_policies(const TPolicies&... args) noexcept {
     return core::pool<aux::type_list<TPolicies...>>(args...);
 }
 
@@ -2234,6 +2227,12 @@ public:
         : pool_t(core::init{}, create_from_injector(injector, bindings_t<TDeps...>{}))
     { }
 
+    //TODO
+    template<class T>
+    T create() const {
+        return create_impl<T>();
+    }
+
     template<class T, class TName = no_name>
     auto create_impl() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
@@ -2241,7 +2240,7 @@ public:
         using expected_t = typename dependency_t::expected;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-        using provider_t = provider<expected_t, given_t, T, ctor_t, injector_<TConfig, TDeps...>>;
+        using provider_t = provider<expected_t, given_t, T, ctor_t, injector>;
         policy<pool_t>::template call<T, TName>(
             ((TConfig&)config_).policies(), dependency, ctor_t{}
         );
@@ -2317,12 +2316,13 @@ public:
         : self{core::pass_arg(args)...}
     { }
 
-    template<class TConfig_, class... TDeps_>
-    injector_(const core::injector<TConfig_, TDeps_...>& injector
-            , BOOST_DI_REQUIRES_OVERLOAD(
-                  concepts::creatable<typename core::injector<TConfig_, TDeps_...>::deps, TConfig, TDeps...>()
-              )
-    ) noexcept // non explicit
+    template<
+        class TConfig_
+      , class... TDeps_
+      //, BOOST_DI_REQUIRES(
+            //concepts::creatable<typename core::injector<TConfig_, TDeps_...>::deps, TConfig, TDeps...>()
+        //)
+    > injector_(const core::injector<TConfig_, TDeps_...>& injector) noexcept // non explicit
         : self{injector}
     { }
 
@@ -2366,10 +2366,12 @@ constexpr auto configurable() {
 namespace boost { namespace di {
 
 template<class TConfig = ::BOOST_DI_CFG
-   , BOOST_DI_REQUIRES(concepts::configurable<TConfig>())
    , class... TDeps
-> inline auto make_injector(const TDeps&... args) noexcept -> BOOST_DI_REQUIRES_RETURN(
-    concepts::boundable<typename injector_<TConfig, TDeps...>::deps>())(injector_<TConfig, TDeps...>) {
+   , BOOST_DI_REQUIRES(
+        concepts::configurable<TConfig>() &&
+        concepts::boundable<typename injector_<TConfig, TDeps...>::deps>()
+     )
+> inline auto make_injector(const TDeps&... args) noexcept {
     return injector_<TConfig, TDeps...>(args...);
 }
 
