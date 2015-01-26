@@ -8,6 +8,7 @@
 #define BOOS_DI_POLICIES_CONSTRUCTIBLE_HPP
 
 #include <type_traits>
+#include "boost/di/aux_/utility.hpp"
 #include "boost/di/fwd.hpp"
 
 namespace boost { namespace di { namespace policies {
@@ -55,9 +56,6 @@ struct apply_impl<T, std::enable_if_t<std::is_base_of<type_op, T>{}>> {
     }
 };
 
-template<bool...>
-struct bool_seq { };
-
 template<class T>
 struct not_ : type_op {
 	template<class TArg>
@@ -73,8 +71,8 @@ struct and_ : type_op {
 	template<class TArg>
     static auto apply(const TArg& data) noexcept {
         return std::is_same<
-            bool_seq<decltype(apply_impl<Ts>::apply(data)){}...>
-          , bool_seq<(decltype(apply_impl<Ts>::apply(data)){}, true)...>
+            aux::bool_list<decltype(apply_impl<Ts>::apply(data)){}...>
+          , aux::bool_list<(decltype(apply_impl<Ts>::apply(data)){}, true)...>
         >{};
     }
 };
@@ -85,8 +83,8 @@ struct or_ : type_op {
     static auto apply(const TArg& data) noexcept {
         return std::integral_constant<bool
           , !std::is_same<
-                bool_seq<decltype(apply_impl<Ts>::apply(data)){}...>
-              , bool_seq<(decltype(apply_impl<Ts>::apply(data)){}, false)...>
+                aux::bool_list<decltype(apply_impl<Ts>::apply(data)){}...>
+              , aux::bool_list<(decltype(apply_impl<Ts>::apply(data)){}, false)...>
             >{}
         >{};
     }
