@@ -27,9 +27,9 @@ public:
     template<
         class TConfig_
       , class... TDeps_
-      //, BOOST_DI_REQUIRES(
-            //concepts::creatable<typename core::injector<TConfig_, TDeps_...>::deps, TConfig, TDeps...>()
-        //)
+      , BOOST_DI_REQUIRES(
+            concepts::creatable<typename core::injector<TConfig_, TDeps_...>::deps, TConfig, TDeps...>()
+        )
     > injector_(const core::injector<TConfig_, TDeps_...>& injector) noexcept // non explicit
         : self{injector}
     { }
