@@ -22,7 +22,7 @@ template<class TConfig = ::BOOST_DI_CFG
         concepts::boundable<typename injector_<TConfig, TDeps...>::deps>()
      )
 > inline auto make_injector(const TDeps&... args) noexcept {
-    return injector_<TConfig, TDeps...>(args...);
+    return injector_<TConfig, TDeps...>{args...};
 }
 
 }} // boost::di
