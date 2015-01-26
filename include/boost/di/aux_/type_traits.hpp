@@ -36,10 +36,15 @@
     using has_##name = decltype(has_##name##_impl<T, TArgs...>(0))
 
 #define BOOST_DI_REQUIRES(...) \
-    class = typename std::enable_if<(__VA_ARGS__)>::type
+    class = typename std::enable_if<__VA_ARGS__>::type
 
 #define BOOST_DI_REQUIRES_OVERLOAD(...) \
-    typename std::enable_if<(__VA_ARGS__), int>::type = 0
+    typename std::enable_if<__VA_ARGS__, int>::type = 0
+
+#define BOOST_DI_REQUIRES_RETURN_IMPL(...) __VA_ARGS__>::type
+
+#define BOOST_DI_REQUIRES_RETURN(...) \
+    typename std::enable_if<__VA_ARGS__, BOOST_DI_REQUIRES_RETURN_IMPL
 
 namespace boost { namespace di { namespace aux {
 

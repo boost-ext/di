@@ -30,6 +30,11 @@ struct fake_injector {
 
     template<class T>
     auto create() const noexcept {
+        return create_impl<T>();
+    }
+
+    template<class T>
+    auto create_impl() const noexcept {
         return T{};
     }
 };

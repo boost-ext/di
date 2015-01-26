@@ -20,7 +20,9 @@ auto configurable_impl(T&& t) -> aux::is_valid_expr<
 >;
 
 template<class T>
-decltype(configurable_impl(std::declval<T>())) configurable{};
+constexpr auto configurable() {
+    return decltype(configurable_impl(std::declval<T>())){};
+}
 
 }}} // boost::di::concepts
 

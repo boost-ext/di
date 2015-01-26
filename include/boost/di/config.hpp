@@ -8,7 +8,9 @@
 #define BOOST_DI_CONFIG_HPP
 
 #include "boost/di/aux_/utility.hpp"
+#include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/core/pool.hpp"
+#include "boost/di/concepts/callable.hpp"
 #include "boost/di/providers/stack_over_heap.hpp"
 
 #if defined(BOOST_DI_CFG)
@@ -19,22 +21,10 @@
 
 namespace boost { namespace di {
 
-struct arg {
-    using type = int;
-    using name = no_name;
-    using is_root = std::false_type;
-
-    template<class T_, class TName_, class TDefault_>
-    struct resolve;
-};
-
-template<class... TArgs>
-    //REQUIRES are callable
-inline auto make_policies(const TArgs&... args) noexcept ->
-std::enable_if_t<
-    aux::always<decltype(args(arg{}))...>{}, core::pool<aux::type_list<TArgs...>>>
-{
-    return core::pool<aux::type_list<TArgs...>>(args...);
+template<class... TPolicies>
+inline auto make_policies(const TPolicies&... args) noexcept ->
+BOOST_DI_REQUIRES_RETURN(concepts::callable<TPolicies...>())(core::pool<aux::type_list<TPolicies...>>) {
+    return core::pool<aux::type_list<TPolicies...>>(args...);
 }
 
 class config {

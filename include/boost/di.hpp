@@ -1529,9 +1529,21 @@ public:
 
 namespace boost { namespace di {
 
+struct arg {
+    using type = int;
+    using name = no_name;
+    using is_root = std::false_type;
+
+    template<class T_, class TName_, class TDefault_>
+    struct resolve;
+};
+
 template<class... TArgs>
     //REQUIRES are callable
-inline auto make_policies(const TArgs&... args) noexcept {
+inline auto make_policies(const TArgs&... args) noexcept ->
+std::enable_if_t<
+    aux::always<decltype(args(arg{}))...>{}, core::pool<aux::type_list<TArgs...>>>
+{
     return core::pool<aux::type_list<TArgs...>>(args...);
 }
 

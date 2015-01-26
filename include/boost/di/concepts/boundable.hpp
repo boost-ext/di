@@ -43,7 +43,9 @@ auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
     >;
 
 template<class... Ts>
-decltype(boundable_impl(std::declval<Ts>()...)) boundable{};
+constexpr auto boundable() {
+    return decltype(boundable_impl(std::declval<Ts>()...)){};
+}
 
 }}} // boost::di::concepts
 

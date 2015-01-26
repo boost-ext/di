@@ -9,8 +9,15 @@
 
 namespace boost { namespace di {
 
-struct policy1 { };
-struct policy2 { };
+struct policy1 {
+    template<class T>
+    void operator()(T);
+};
+
+struct policy2 {
+    template<class T>
+    void operator()(T);
+};
 
 test make_policies_types = [] {
     expect(std::is_same<core::pool<aux::type_list<>>, decltype(make_policies())>{});

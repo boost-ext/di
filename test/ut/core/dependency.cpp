@@ -84,7 +84,7 @@ test to = [] {
 
 struct fake_injector {
     using deps = void;
-    template<class T> T create() const noexcept { return {}; }
+    template<class T> T create_impl() const noexcept { return {}; }
 };
 
 test to_with_configure = [] {

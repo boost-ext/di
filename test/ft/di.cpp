@@ -1341,9 +1341,3 @@ test call_custom_policies_with_exposed_injector = [] {
     expect_eq(3, policy::called());
 };
 
-/*test blah = [] {*/
-    //di::injector<complex1> _ = di::make_injector(
-        ////di::bind<i1, impl1>
-    //);
-/*};*/
-

@@ -322,11 +322,17 @@ auto creatable_impl(T&&, TDeps&&, TPolicies&&) -> aux::is_valid_expr<
     )
 >;
 
-template<class T, class TDeps, class TConfig>
-decltype(creatable_impl(std::declval<T>()
-                 , std::declval<TDeps>()
-                 , std::declval<TConfig>().policies()))
-creatable{};
+template<class TDeps, class TConfig, class... Ts>
+constexpr auto creatable() {
+    return std::is_same<
+        aux::bool_list<aux::always<Ts>{}...>
+      , aux::bool_list<decltype(
+            creatable_impl(std::declval<Ts>()
+                         , std::declval<TDeps>()
+                         , std::declval<TConfig>().policies())
+        ){}...>
+    >{};
+}
 
 }}} // boost::di::concepts
 

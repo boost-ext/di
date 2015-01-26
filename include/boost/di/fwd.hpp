@@ -18,7 +18,9 @@ struct no_name {
 };
 
 class config;
-//template<class...> class injector;
+
+template<class, class...>
+class injector_;
 
 }} // boost::di
 
