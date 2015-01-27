@@ -8,6 +8,8 @@
 #define BOOST_DI_CONCEPTS_CALLABLE_HPP
 
 #include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/core/dependency.hpp"
+#include "boost/di/scopes/deduce.hpp"
 #include "boost/di/fwd.hpp"
 
 namespace boost { namespace di { namespace concepts {
@@ -21,6 +23,8 @@ struct arg {
     struct resolve;
 };
 
+struct ctor { };
+
 std::false_type callable_impl(...);
 
 template<class T, class TArg>
@@ -28,9 +32,9 @@ auto callable_impl(T&& t, TArg&& arg) -> aux::is_valid_expr<
     decltype(t(arg))
 >;
 
-template<class T, class TArg, class TDependency>
-auto callable_impl(T&& t, TArg&& arg, TDependency&& dep) -> aux::is_valid_expr<
-    decltype(t(arg, dep))
+template<class T, class TArg, class TDependency, class... TCtor>
+auto callable_impl(T&& t, TArg&& arg, TDependency&& dep, TCtor&&... ctor) -> aux::is_valid_expr<
+    decltype(t(arg, dep, ctor...))
 >;
 
 template<class... T>
@@ -39,7 +43,7 @@ constexpr auto callable() {
         aux::bool_list<aux::always<T>{}...>
       , aux::bool_list<(
             decltype(callable_impl(std::declval<T>(), arg{})){} ||
-            decltype(callable_impl(std::declval<T>(), arg{}, arg{})){})...
+            decltype(callable_impl(std::declval<T>(), arg{}, core::dependency<scopes::deduce, T>{}, ctor{})){})...
         >
     >{};
 }

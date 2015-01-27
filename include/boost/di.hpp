@@ -306,63 +306,6 @@ private:
 
 }}} // boost::di::core
 
-#define BOOST_DI_FWD_HPP
-
-namespace boost { namespace di {
-namespace providers {
-class heap;
-class stack_over_heap;
-} // providers
-
-struct no_name {
-    const char* operator()() const noexcept { return nullptr; }
-};
-
-class config;
-
-template<class...>
-class injector;
-
-}} // boost::di
-
-#define BOOST_DI_CONCEPTS_CALLABLE_HPP
-
-namespace boost { namespace di { namespace concepts {
-
-struct arg {
-    using type = void;
-    using name = no_name;
-    using is_root = std::false_type;
-
-    template<class, class, class>
-    struct resolve;
-};
-
-std::false_type callable_impl(...);
-
-template<class T, class TArg>
-auto callable_impl(T&& t, TArg&& arg) -> aux::is_valid_expr<
-    decltype(t(arg))
->;
-
-template<class T, class TArg, class TDependency>
-auto callable_impl(T&& t, TArg&& arg, TDependency&& dep) -> aux::is_valid_expr<
-    decltype(t(arg, dep))
->;
-
-template<class... T>
-constexpr auto callable() {
-    return std::is_same<
-        aux::bool_list<aux::always<T>{}...>
-      , aux::bool_list<(
-            decltype(callable_impl(std::declval<T>(), arg{})){} ||
-            decltype(callable_impl(std::declval<T>(), arg{}, arg{})){})...
-        >
-    >{};
-}
-
-}}} // boost::di::concepts
-
 #define BOOST_DI_WRAPPERS_UNIQUE_HPP
 
 #if (__has_include(<boost/shared_ptr.hpp>))
@@ -932,6 +875,25 @@ public:
 
 }}} // boost::di::scopes
 
+#define BOOST_DI_FWD_HPP
+
+namespace boost { namespace di {
+namespace providers {
+class heap;
+class stack_over_heap;
+} // providers
+
+struct no_name {
+    const char* operator()() const noexcept { return nullptr; }
+};
+
+class config;
+
+template<class...>
+class injector;
+
+}} // boost::di
+
 
 namespace boost { namespace di { namespace core {
 
@@ -1036,6 +998,46 @@ struct is_dependency<
 > : std::true_type { };
 
 }}} // boost::di::core
+
+#define BOOST_DI_CONCEPTS_CALLABLE_HPP
+
+namespace boost { namespace di { namespace concepts {
+
+struct arg {
+    using type = void;
+    using name = no_name;
+    using is_root = std::false_type;
+
+    template<class, class, class>
+    struct resolve;
+};
+
+struct ctor { };
+
+std::false_type callable_impl(...);
+
+template<class T, class TArg>
+auto callable_impl(T&& t, TArg&& arg) -> aux::is_valid_expr<
+    decltype(t(arg))
+>;
+
+template<class T, class TArg, class TDependency, class... TCtor>
+auto callable_impl(T&& t, TArg&& arg, TDependency&& dep, TCtor&&... ctor) -> aux::is_valid_expr<
+    decltype(t(arg, dep, ctor...))
+>;
+
+template<class... T>
+constexpr auto callable() {
+    return std::is_same<
+        aux::bool_list<aux::always<T>{}...>
+      , aux::bool_list<(
+            decltype(callable_impl(std::declval<T>(), arg{})){} ||
+            decltype(callable_impl(std::declval<T>(), arg{}, core::dependency<scopes::deduce, T>{}, ctor{})){})...
+        >
+    >{};
+}
+
+}}} // boost::di::concepts
 
 #define BOOST_DI_CORE_BINDER_HPP
 
@@ -2242,12 +2244,6 @@ public:
         call_impl(action, deps{});
     }
 
-//private:
-    template<class... TArgs>
-    explicit injector(const init&, const TArgs&... args) noexcept
-        : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
-    { }
-
     template<class T, class TName = no_name>
     auto create_impl() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
@@ -2267,6 +2263,12 @@ public:
         >;
         return wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
+
+private:
+    template<class... TArgs>
+    explicit injector(const init&, const TArgs&... args) noexcept
+        : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
+    { }
 
     template<class TAction, class... Ts>
     void call_impl(const TAction& action, const aux::type_list<Ts...>&) {
