@@ -21,14 +21,14 @@ public:
     class scope {
         template<class T, class = void>
         struct iprovider {
-            virtual ~iprovider() = default;
+            virtual ~iprovider() noexcept = default;
             virtual T* get(const type_traits::heap& = {}) const noexcept = 0;
             virtual T  get(const type_traits::stack&) const noexcept = 0;
         };
 
         template<class T>
         struct iprovider<T, std::enable_if_t<!std::is_copy_constructible<T>{}>> {
-            virtual ~iprovider() = default;
+            virtual ~iprovider() noexcept = default;
             virtual T* get(const type_traits::heap& = {}) const noexcept = 0;
         };
 

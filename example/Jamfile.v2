@@ -46,6 +46,7 @@ test-suite example :
     [ run-example c++1y : multiple_interfaces.cpp ]
     [ run-example c++1y : pool_provider.cpp ]
     [ run-example c++1y : provider.cpp ]
+    [ run-example c++1y : testing.cpp ]
     [ run-example c++1y : types_dumper.cpp ]
     [ run-example c++1y : uml_dumper.cpp ]
     [ run-example c++1y : xml_injection.cpp ]
