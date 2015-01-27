@@ -8,21 +8,22 @@
 #define BOOST_DI_MAKE_INJECTOR_HPP
 
 #include "boost/di/aux_/type_traits.hpp"
-#include "boost/di/injector.hpp"
 #include "boost/di/concepts/configurable.hpp"
 #include "boost/di/concepts/boundable.hpp"
+#include "boost/di/core/injector.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost { namespace di {
 
-template<class TConfig = ::BOOST_DI_CFG
+template<
+     class TConfig = ::BOOST_DI_CFG
    , class... TDeps
-   , BOOST_DI_REQUIRES(
+     BOOST_DI_REQUIRES(
         concepts::configurable<TConfig>() &&
-        concepts::boundable<typename injector_<TConfig, TDeps...>::deps>()
+        concepts::boundable<typename core::injector<TConfig, TDeps...>::deps>()
      )
 > inline auto make_injector(const TDeps&... args) noexcept {
-    return injector_<TConfig, TDeps...>{args...};
+    return core::injector<TConfig, TDeps...>{args...};
 }
 
 }} // boost::di

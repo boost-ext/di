@@ -8,45 +8,23 @@
 #define BOOST_DI_INJECTOR_HPP
 
 #include "boost/di/core/injector.hpp"
+#include "boost/di/concepts/boundable.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost { namespace di {
 
-template<class TConfig, class... TDeps>
-class injector_ : public core::injector<TConfig, TDeps...> {
-    using self = core::injector<TConfig, TDeps...>;
-
-public:
-    using deps = typename self::deps;
-
-    template<class... TArgs>
-    explicit injector_(const TArgs&... args) noexcept
-        : self{core::pass_arg(args)...}
-    { }
-
-    template<
-        class TConfig_
-      , class... TDeps_
-      , BOOST_DI_REQUIRES(
-            concepts::creatable<typename core::injector<TConfig_, TDeps_...>::deps, TConfig, TDeps...>()
-        )
-    > injector_(const core::injector<TConfig_, TDeps_...>& injector) noexcept // non explicit
-        : self{injector}
-    { }
-
-    template<class T, BOOST_DI_REQUIRES(concepts::creatable<deps, TConfig, T>())>
-    T create() const {
-        return self::template create_impl<T>();
-    }
-
-    template<class TAction>
-    void call(const TAction& action) {
-        self::call_impl(action, deps{});
-    }
-};
-
 template<class... TDeps>
-using injector = injector_<config, TDeps...>;
+class injector
+    : public BOOST_DI_REQUIRES_RET(concepts::boundable<core::bindings_t<TDeps...>>())(core::injector<::BOOST_DI_CFG, TDeps...>) {
+public:
+    template<
+        class TConfig
+      , class... TArgs
+        BOOST_DI_REQUIRES(concepts::creatable<typename core::injector<TConfig, TArgs...>::deps, TConfig, TDeps...>())
+    > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
+        : core::injector<::BOOST_DI_CFG, TDeps...>{std::true_type{}, injector}
+    { }
+};
 
 }} // boost::di
 

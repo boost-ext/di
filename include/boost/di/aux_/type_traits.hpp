@@ -35,12 +35,13 @@
     template<class T, class... TArgs>                               \
     using has_##name = decltype(has_##name##_impl<T, TArgs...>(0))
 
-#if defined(BOOST_DI_CFG_DISABLE_CONCEPTS)
-    #define BOOST_DI_REQUIRES(...)
-#else
 #define BOOST_DI_REQUIRES(...) \
-        typename std::enable_if<__VA_ARGS__, int>::type = 0
-#endif
+    , typename std::enable_if<__VA_ARGS__, int>::type = 0
+
+#define BOOST_DI_REQUIRES_RET_IMPL(...) __VA_ARGS__>::type
+
+#define BOOST_DI_REQUIRES_RET(...) \
+    std::enable_if<__VA_ARGS__, BOOST_DI_REQUIRES_RET_IMPL
 
 namespace boost { namespace di { namespace aux {
 

@@ -18,7 +18,6 @@
 #include "boost/di/core/provider.hpp"
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
-#include "boost/di/concepts/boundable.hpp"
 #include "boost/di/concepts/creatable.hpp"
 
 namespace boost { namespace di { namespace core {
@@ -29,7 +28,7 @@ struct get_deps {
 };
 
 template<class T>
-struct get_deps<T, std::enable_if_t<core::has_configure<T>{}>> {
+struct get_deps<T, std::enable_if_t<has_configure<T>{}>> {
     using type = typename aux::function_traits<
         decltype(&T::configure)
     >::result_type::deps;
@@ -37,8 +36,8 @@ struct get_deps<T, std::enable_if_t<core::has_configure<T>{}>> {
 
 template<
     class T
-  , class = typename core::is_injector<T>::type
-  , class = typename core::is_dependency<T>::type
+  , class = typename is_injector<T>::type
+  , class = typename is_dependency<T>::type
 > struct add_type_list;
 
 template<class T, class TAny>
@@ -53,7 +52,7 @@ struct add_type_list<T, std::false_type, std::true_type> {
 
 template<class T>
 struct add_type_list<T, std::false_type, std::false_type> {
-    using type = aux::type_list<core::dependency<scopes::exposed<>, T>>;
+    using type = aux::type_list<dependency<scopes::exposed<>, T>>;
 };
 
 template<class... Ts>
@@ -82,8 +81,10 @@ BOOST_DI_HAS_METHOD(call, call);
 
 template<class TConfig, class... TDeps>
 class injector : public pool<bindings_t<TDeps...>> {
-    using pool_t = pool<bindings_t<TDeps...>>;
+    template<class, class> friend struct any_type;
     template<class...> friend struct provider;
+
+    using pool_t = pool<bindings_t<TDeps...>>;
 
 public:
     using deps = bindings_t<TDeps...>;
@@ -94,19 +95,29 @@ public:
 
     template<class... TArgs>
     explicit injector(const TArgs&... args) noexcept
-        : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
+        : injector{init{}, pass_arg(args)...}
     { }
 
-    template<class TDeps_, class... TConfig_>
-    injector(const injector<TDeps_, TConfig_...>& injector) noexcept // non explicit
-        : pool_t(core::init{}, create_from_injector(injector, bindings_t<TDeps...>{}))
+    template<class TConfig_, class... TDeps_>
+    explicit injector(const std::true_type&, const injector<TConfig_, TDeps_...>& injector) noexcept // non explicit
+        : pool_t{init{}, create_from_injector(injector, deps{})}
     { }
 
-    //TODO
-    template<class T>
+    template<class T BOOST_DI_REQUIRES(concepts::creatable<deps, TConfig, T>())>
     T create() const {
         return create_impl<T>();
     }
+
+    template<class TAction>
+    void call(const TAction& action) {
+        call_impl(action, deps{});
+    }
+
+//private:
+    template<class... TArgs>
+    explicit injector(const init&, const TArgs&... args) noexcept
+        : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
+    { }
 
     template<class T, class TName = no_name>
     auto create_impl() const {
@@ -133,7 +144,6 @@ public:
         int _[]{0, (call_impl<Ts>(action), 0)...}; (void)_;
     }
 
-private:
     template<class, class T>
     auto create_t(const aux::type<T>&) const {
         return create_impl<T>();
@@ -159,8 +169,8 @@ private:
     std::enable_if_t<!has_call<T, const TAction&>{}>
     call_impl(const TAction&) { }
 
-    template<class TDeps_, class... TConfig_, class... Ts>
-    auto create_from_injector(const injector<TDeps_, TConfig_...>& injector
+    template<class TInjector, class... Ts>
+    auto create_from_injector(const TInjector& injector
                             , const aux::type_list<Ts...>&) const noexcept {
         return pool_t{create_dep<Ts>(injector)...};
     }

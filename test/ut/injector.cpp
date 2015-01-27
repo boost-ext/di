@@ -6,6 +6,7 @@
 //
 #include <type_traits>
 #include "boost/di/injector.hpp"
+#include "boost/di/core/injector.hpp"
 #include "common/fakes/fake_dependency.hpp"
 
 namespace boost { namespace di {
@@ -31,8 +32,8 @@ test injector_with_injector = [] {
 test injector_with_module = [] {
     using dep = core::dependency<scopes::exposed<scopes::deduce>, int>;
     struct module {
-        di::injector<int> configure() const noexcept {
-            return di::injector<>();
+        injector<int> configure() const noexcept {
+            return core::injector<::BOOST_DI_CFG>{};
         }
     };
 

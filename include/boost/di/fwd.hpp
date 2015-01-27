@@ -19,6 +19,9 @@ struct no_name {
 
 class config;
 
+template<class...>
+class injector;
+
 }} // boost::di
 
 #endif
