@@ -8,12 +8,9 @@
 
 namespace boost { namespace di { namespace concepts {
 
-template<class TDeps>
-decltype(configurable(std::declval<TDeps>())) configurable_v{};
-
 test none = [] {
     class config { };
-    static_assert(!configurable_v<config>, "");
+    static_expect(!configurable<config>());
 };
 
 test just_policies = [] {
@@ -21,7 +18,7 @@ test just_policies = [] {
     public:
         auto policies() const noexcept { return 0; }
     };
-    static_assert(!configurable_v<config>, "");
+    static_expect(!configurable<config>());
 };
 
 test just_provider = [] {
@@ -29,7 +26,7 @@ test just_provider = [] {
     public:
         auto provider() const noexcept { return 0; }
     };
-    static_assert(!configurable_v<config>, "");
+    static_expect(!configurable<config>());
 };
 
 test private_access = [] {
@@ -38,7 +35,7 @@ test private_access = [] {
         auto policies() const noexcept { return 0; }
         auto provider() const noexcept { return 0; }
     };
-    static_assert(!configurable_v<config>, "");
+    static_expect(!configurable<config>());
 };
 
 test inheritance = [] {
@@ -48,7 +45,7 @@ test inheritance = [] {
         auto provider() const noexcept { return 0; }
     };
     class config : public config_ { };
-    static_assert(configurable_v<config>, "");
+    static_expect(configurable<config>());
 };
 
 test all = [] {
@@ -58,7 +55,7 @@ test all = [] {
         auto provider() const noexcept { return 0; }
     };
 
-    static_assert(configurable_v<config>, "");
+    static_expect(configurable<config>());
 };
 
 }}} // boost::di::concepts

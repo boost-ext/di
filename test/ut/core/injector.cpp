@@ -40,10 +40,10 @@ test call = [] {
     using dep1 = fake_dependency<int>;
     injector<di::config, dep1> injector;
 
-    injector.call_impl(fake_scope_entry{}, typename decltype(injector)::deps{});
+    injector.call(fake_scope_entry{});
     expect_eq(1, fake_scope<>::entry_calls());
 
-    injector.call_impl(fake_scope_exit{}, typename decltype(injector)::deps{});
+    injector.call(fake_scope_exit{});
     expect_eq(1, fake_scope<>::exit_calls());
 };
 

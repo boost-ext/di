@@ -113,12 +113,6 @@ public:
         call_impl(action, deps{});
     }
 
-//private:
-    template<class... TArgs>
-    explicit injector(const init&, const TArgs&... args) noexcept
-        : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
-    { }
-
     template<class T, class TName = no_name>
     auto create_impl() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
@@ -138,6 +132,12 @@ public:
         >;
         return wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
+
+private:
+    template<class... TArgs>
+    explicit injector(const init&, const TArgs&... args) noexcept
+        : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
+    { }
 
     template<class TAction, class... Ts>
     void call_impl(const TAction& action, const aux::type_list<Ts...>&) {

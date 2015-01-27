@@ -10,12 +10,6 @@
 
 namespace boost { namespace di { namespace concepts {
 
-template<class TDeps>
-decltype(boundable(std::declval<TDeps>())) boundable_deps_v{};
-
-template<class I, class T>
-decltype(boundable(std::declval<I>(), std::declval<T>())) boundable_v{};
-
 template<class... TArgs>
 inline auto make_deps(const TArgs&...) noexcept {
     return aux::type_list<TArgs...>{};
@@ -23,13 +17,13 @@ inline auto make_deps(const TArgs&...) noexcept {
 
 test empty_deps = [] {
     auto deps = make_deps();
-    static_assert(boundable_deps_v<decltype(deps)>, "");
+    static_expect(boundable<decltype(deps)>());
 };
 
 test bind_to_type = [] {
-    static_assert(boundable_v<int, int>, "");
-    static_assert(boundable_v<int, short>, "");
-    static_assert(!boundable_v<int, std::string>, "");
+    static_expect(boundable<int, int>());
+    static_expect(boundable<int, short>());
+    static_expect(!boundable<int, std::string>());
 };
 
 }}} // boost::di::concepts
