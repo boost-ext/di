@@ -117,6 +117,7 @@ test-suite ft :
     [ compile-fail-test c++1y : ft/error_bind_to_different_types.cpp ]
     [ compile-fail-test c++1y : ft/error_create_polymorphic_type_without_binding.cpp ]
     [ compile-fail-test c++1y : ft/error_ctor_limit_out_of_range.cpp ]
+    [ compile-fail-test c++1y : ft/error_expose_multiple_times.cpp ]
     [ compile-fail-test c++1y : ft/error_expose_polymorphic_type_without_binding.cpp ]
     [ compile-fail-test c++1y : ft/error_inject_limit_out_of_range.cpp ]
     [ compile-fail-test c++1y : ft/error_injector_ctor_ambiguous.cpp ]
