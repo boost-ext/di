@@ -26,6 +26,10 @@ struct unique {
         return {};
     }
 
+    inline operator T&&() noexcept {
+        return std::move(object);
+    }
+
     T object;
 };
 

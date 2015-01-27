@@ -113,6 +113,10 @@ public:
         call_impl(action, deps{});
     }
 
+    TConfig& config() noexcept {
+        return config_;
+    }
+
     template<class T, class TName = no_name>
     auto create_impl() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);

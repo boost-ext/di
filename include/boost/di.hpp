@@ -326,6 +326,10 @@ struct unique {
         return {};
     }
 
+    inline operator T&&() noexcept {
+        return std::move(object);
+    }
+
     T object;
 };
 
@@ -2242,6 +2246,10 @@ public:
     template<class TAction>
     void call(const TAction& action) {
         call_impl(action, deps{});
+    }
+
+    TConfig& config() noexcept {
+        return config_;
     }
 
     template<class T, class TName = no_name>

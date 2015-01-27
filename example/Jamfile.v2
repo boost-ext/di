@@ -62,6 +62,10 @@ test-suite tutorial :
     [ run-example c++1y : tutorial/tutorial7.cpp : -Itutorial ]
 ;
 
+test-suite introduction :
+    [ run-example c++1y : introduction/coffee_maker.cpp ]
+;
+
 test-suite quick_user_guide :
     [ run-example c++1y : quick_user_guide/annotations1.cpp ]
     [ run-example c++1y : quick_user_guide/annotations2.cpp ]
