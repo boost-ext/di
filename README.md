@@ -51,9 +51,9 @@ private:                                | };
 
 **Why Boost.DI?**
 
-* Boost.DI has non or minimal overhead - [Run-time performance](#run_time_performance)
+* Boost.DI has none or minimal overhead - [Run-time performance](#run_time_performance)
 * Boost.DI compiles fast - [Compile-time performance](#compile_time_performance)
-* Boost.DI gives short error messages - [Diagnostic messages](#diagnostic_messages)
+* Boost.DI gives short diagnostic messages - [Diagnostic messages](#diagnostic_messages)
 
 > **Boost.DI is not intrusive**
 ```cpp
@@ -85,10 +85,9 @@ int main() {                            | int main() {
 
 *
 
-> **Boost.DI reduces cost of maintenance effort**
-> Let's add grinder which will be dependent on pump
+> **Boost.DI reduces cost of maintenance effort** | Let's add grinder dependency to pump
 ```cpp
-Manual Dependency Injection             | Boost.DI (1 new binding)
+Manual Dependency Injection             | Boost.DI (only 1 new binding)
 ----------------------------------------|--------------------------------------------
 int main() {                            | int main() {
    // has to be before pump             |     auto injector = di::make_injector(
