@@ -181,7 +181,7 @@ Manual Dependency Injection             | Boost.DI
                                         | auto cm = injector.create<coffee_maker>();
 ```
                                         | [![coffee maker](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker.png)]()
---- | --- |
+--------------------------------------- | ----------------------------------------- |
 
 **How To Start?**
 
