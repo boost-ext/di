@@ -55,7 +55,7 @@ private:                                | };
 * Boost.DI compiles fast - [Compile-time performance](#compile_time_performance)
 * Boost.DI gives short error messages - [Diagnostic messages](#diagnostic_messages)
 
-> Boost.DI is not intrusive
+> **Boost.DI is not intrusive**
 ```cpp
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
