@@ -9,13 +9,14 @@ Boost.DI: C++ Dependency Injection
 
 > "Don't call us, we'll call you", Hollywood principle
 
-Dependency Injection (DI) involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state. It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.
+Dependency Injection (DI) involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state.
+It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.
+
+**Why Dependency Injection?**
 
 * Provides loosely coupled code (separation of business logic and object creation)
 * Provides easier to maintain code (different objects might be easily injected)
 * Provides easier to test code (fakes objects might be injected)
-
-**Why Dependency Injection?**
 
 [![The Clean Code Talks - Don't Look For Things!](http://img.youtube.com/vi/RlfLCWKxHJ0/0.jpg)](http://www.youtube.com/watch?v=RlfLCWKxHJ0) | [![DAGGER 2 - A New Type of dependency injection](http://image.slidesharecdn.com/nr73mexetqiybd1qpcem-140529143342-phpapp01/95/dependency-injection-for-android-5-638.jpg?cb=1401392113)](http://www.youtube.com/watch?v=oK_XtfXPkqw) |
 --- | --- |
@@ -26,19 +27,19 @@ No Dependency injection                 | Dependency Injection
 ----------------------------------------|--------------------------------------------
 class coffee_maker {                    | class coffee_maker {
 public:                                 | public:
-    coffee_maker()                      |   coffee_maker(shared_ptr<iheater> heater)
-      : heater{                         |              , unique_ptr<ipump> pump)
-          make_shared<electric_heater>()|       : heater(heater)
-        }                               |       , pump(pump)
-      , pump{                           |   { }
+    coffee_maker()                      |     coffee_maker(shared_ptr<iheater> heater)
+      : heater{                         |                , unique_ptr<ipump> pump)
+          make_shared<electric_heater>()|         : heater(heater)
+        }                               |         , pump(pump)
+      , pump{                           |     { }
           make_unique<heat_pump>(heater)|
-        }                               |   void brew() {
-    { }                                 |       heater->on();
-                                        |       pump->pump();
-    void brew() {                       |       clog << "coffee" << endl;
-        heater->on();                   |       heater->off();
-        pump->pump();                   |   }
-        clog << "coffee" << endl;       |
+        }                               |     void brew() {
+    { }                                 |         heater->on();
+                                        |         pump->pump();
+    void brew() {                       |         clog << "coffee!" << endl;
+        heater->on();                   |         heater->off();
+        pump->pump();                   |     }
+        clog << "coffee"! << endl;      |
         heater->off();                  | private:
     }                                   |     shared_ptr<iheater> heater;
                                         |     unique_ptr<ipump> pump;
@@ -57,13 +58,13 @@ dependencies injection.
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
 int main() {                            | int main() {
-   // has to be before pump             |   auto injector = di::make_injector(
-   auto heater = shared_ptr<iheater>{   |       di::bind<ipump, heat_pump>
-       make_shared<electric_heater>()   |     , di::bind<iheater, electric_heater>
-   };                                   |   );
+   // has to be before pump             |     auto injector = di::make_injector(
+   auto heater = shared_ptr<iheater>{   |         di::bind<ipump, heat_pump>
+       make_shared<electric_heater>()   |       , di::bind<iheater, electric_heater>
+   };                                   |     );
                                         |
-   // has to be after heater            |   auto cm = injector.create<coffee_maker>();
-   auto pump = unique_ptr<ipump>{       |   cm.brew();
+   // has to be after heater            |     auto cm = injector.create<coffee_maker>();
+   auto pump = unique_ptr<ipump>{       |     cm.brew();
        make_unique<heat_pump>(heater)   | }
    };                                   |
                                         |
@@ -75,19 +76,78 @@ int main() {                            | int main() {
 *
 
 > **Reduces cost of maintenance effort**
+> Let's add grinder which will be dependent on pump
 ```cpp
-Manual Dependency Injection             | Boost.DI
+Manual Dependency Injection             | Boost.DI (1 new binding)
 ----------------------------------------|--------------------------------------------
+int main() {                            | int main() {
+   // has to be before pump             |     auto injector = di::make_injector(
+   auto heater = shared_ptr<iheater>{   |         di::bind<ipump, heat_pump>
+       make_shared<electric_heater>()   |       , di::bind<iheater, electric_heater>
+   };                                   |       , di::bind<igrinder, grinder> // new
+                                        |     );
+   // has to be before pump             |
+   // and after heater                  |     auto cm = injector.create<coffee_maker>();
+   auto grinder = unique_ptr<igrinder>{ |     cm.brew();
+       make_unique<grinder>(heater)     | }
+   };                                   |
+                                        |
+   // has to be after                   |
+   // heater and grinder                |
+   auto pump = unique_ptr<ipump>{       |
+       make_unique<heat_pump>(          |
+           heater, pump                 |
+       )                                |
+   };                                   |
+                                        |
+   coffee_maker cm{heater, move(pump)}; |
+   cm.brew();                           |
+}                                       |
+
+```
+
+> Let's change that grinder will depend on pump
+```cpp
+Manual Dependency Injection             | Boost.DI (no changes!)
+----------------------------------------|--------------------------------------------
+int main() {
+   // has to be before pump
+   auto heater = shared_ptr<iheater>{
+       make_shared<electric_heater>()
+   };
+
+   // has to be after
+   // heater and grinder
+   auto pump = unique_ptr<ipump>{
+       make_unique<heat_pump>(
+           heater
+       )
+   };
+
+   // has to be before pump
+   // and after heater
+   auto grinder = unique_ptr<igrinder>{
+       make_unique<grinder>(heater, pump)
+   };
+
+   coffee_maker cm{heater, move(pump)};
+   cm.brew();
+```
+
+> Let's change grinder constructor order
+```cpp
+Manual Dependency Injection             | Boost.DI (no changes!)
+----------------------------------------|--------------------------------------------
+...
+   auto grinder = unique_ptr<igrinder>{
+       make_unique<grinder>(pump, heater)
+   };
+...
 ```
 
 *
 
-> **Reduces testing effort** (automatic mocks injector)
-```cpp
-Manual Dependency Injection             | Boost.DI
-----------------------------------------|--------------------------------------------
-```
-
+> **Reduces testing effort**
 *
 
 > **Gives better control of what and how is created**
@@ -102,7 +162,10 @@ Manual Dependency Injection             | Boost.DI
 ```cpp
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
+                                        | injector = di::make_injector<uml_dumper>();
+                                        | auto cm = injector.create<coffee_maker>();
 ```
+pictures
 
 **How To Start?**
 
