@@ -57,6 +57,8 @@ Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
 ```
 
+*
+
 > **Boost.DI reduces boilerplate code**
 ```cpp
 Manual Dependency Injection             | Boost.DI
