@@ -51,10 +51,6 @@ private:                                | };
 
 **Why Boost.DI?**
 
-Boost.DI is a header only, type safe, compile time, non-intrusive constructor dependency injection
-library improving manual dependency injection by simplifying object instantiation with automatic
-dependencies injection.
-
 > **Boost.DI is not *intrusive***
 ```cpp
 Manual Dependency Injection             | Boost.DI
