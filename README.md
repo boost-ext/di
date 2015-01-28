@@ -18,10 +18,10 @@ No Dependency injection                 | Dependency Injection
 ----------------------------------------|--------------------------------------------
 class coffee_maker {                    | class coffee_maker {
 public:                                 | public:
-    coffee_maker()                      |     coffee_maker(shared_ptr<iheater> heater)
+    coffee_maker()                      |     coffee_maker(shared_ptr<iheater> heater
       : heater{                         |                , unique_ptr<ipump> pump)
           make_shared<electric_heater>()|         : heater(heater)
-        }                               |         , pump(pump)
+        }                               |         , pump(move(pump))
       , pump{                           |     { }
           make_unique<heat_pump>(heater)|
         }                               |     void brew() {
@@ -1045,14 +1045,16 @@ Legend:
 *
 
 <a id="diagnostic_messages"></a>
-> **[Diagnostic messages](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/diagnostic_messages.html) (-ftemplate-backtrace-limit=1 -ferror-limit=1)**
+> **[Diagnostic messages](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/diagnostic_messages.html)**
 ```cpp
 Create interface without bound          | Error message
 implementation                          |
 ----------------------------------------|-----------------------------------------
-auto injector = di::make_injector();    | error: allocating an object of abstract
-injector.create<unique_ptr<i1>>();      | class type 'i1' return new (nothrow)
-                                        | T{forward<TArgs>(args)...};
+auto injector = di::make_injector();    | error: no matching member function for call to 'create'
+injector.create<unique_ptr<i1>>();      |     injector.create<std::unique_ptr<i1>>();
+                                        |     ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+                                        | note: candidate template ignored: disabled by 'enable_if' [with T = std::unique_ptr<i1, std::default_delete<i1> >]
+                                        |     template<class T BOOST_DI_REQUIRES(concepts::creatable<deps, TConfig, T>())>
 ```
 ```cpp
 Ambiguous binding                       | Error message
@@ -1079,6 +1081,7 @@ public:                                 | "Type T is not allowed"
                                         |
 auto injector =                         |
     di::make_injector<all_bound>();     |
+                                        |
 injector.create<int>();                 |
 ```
 ```cpp
