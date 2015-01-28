@@ -20,7 +20,7 @@ Dependency Injection (DI) involves passing (injecting) one or more dependencies 
 [![The Clean Code Talks - Don't Look For Things!](http://img.youtube.com/vi/RlfLCWKxHJ0/0.jpg)](http://www.youtube.com/watch?v=RlfLCWKxHJ0) | [![DAGGER 2 - A New Type of dependency injection](http://image.slidesharecdn.com/nr73mexetqiybd1qpcem-140529143342-phpapp01/95/dependency-injection-for-android-5-638.jpg?cb=1401392113)](http://www.youtube.com/watch?v=oK_XtfXPkqw) |
 --- | --- |
 
-> "Let's make some coffee!"
+> **"Let's make some coffee!"**
 ```cpp
 No Dependency injection                 | Dependency Injection
 ----------------------------------------|--------------------------------------------
@@ -52,7 +52,7 @@ Boost.DI is a header only, type safe, compile time, non-intrusive constructor de
 library improving manual dependency injection by simplifying object instantiation with automatic
 dependencies injection.
 
-> Reduces boilerplate code (no factories, no objects creation in specific order)
+> **Reduces boilerplate code**
 ```cpp
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
@@ -74,7 +74,7 @@ int main() {                            | int main() {
 
 *
 
-> Reduces cost of maintenance effort (constructor signature change won't affect di configuration)
+> **Reduces cost of maintenance effort**
 ```cpp
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
@@ -82,7 +82,7 @@ Manual Dependency Injection             | Boost.DI
 
 *
 
-> Reduces testing effort (automatic mocks injector)
+> **Reduces testing effort** (automatic mocks injector)
 ```cpp
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
@@ -90,7 +90,7 @@ Manual Dependency Injection             | Boost.DI
 
 *
 
-> Gives better control of what and how is created (policies, providers)
+> **Gives better control of what and how is created**
 ```cpp
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
@@ -98,7 +98,7 @@ Manual Dependency Injection             | Boost.DI
 
 *
 
-> Gives better understanding about objects hierarchy (types creation graph)
+> **Gives better understanding about objects hierarchy**
 ```cpp
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
