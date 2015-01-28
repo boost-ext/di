@@ -15,53 +15,87 @@ Dependency Injection (DI) involves passing (injecting) one or more dependencies 
 * Provides easier to maintain code (different objects might be easily injected)
 * Provides easier to test code (fakes objects might be injected)
 
+**Why Dependency Injection?**
+
+[![The Clean Code Talks - Don't Look For Things!](http://img.youtube.com/vi/RlfLCWKxHJ0/0.jpg)](http://www.youtube.com/watch?v=RlfLCWKxHJ0) | [![DAGGER 2 - A New Type of dependency injection](http://image.slidesharecdn.com/nr73mexetqiybd1qpcem-140529143342-phpapp01/95/dependency-injection-for-android-5-638.jpg?cb=1401392113)](http://www.youtube.com/watch?v=oK_XtfXPkqw) |
+--- | --- |
+
+> "Let's make some coffee!"
+
 ```cpp
 No Dependency injection                 | Dependency Injection
 ----------------------------------------|--------------------------------------------
-class example {                         | class example {
-public:                                 | public:
-    example()                           |     example(shared_ptr<ilogic> logic
-        : logic_(new logic{})           |           , shared_ptr<ilogger> logger)
-        , logger_(                      |       : logic_(logic), logger_(logger)
-            logger_factory::create()    |     { }
-          )                             |
-    { }                                 |     int run() const;
-                                        |
-    int run() const;                    | private:
-                                        |     shared_ptr<ilogic> logic_;
-private:                                |     shared_ptr<ilogger> logger_;
-    shared_ptr<ilogic> logic_;          | };
-    shared_ptr<ilogger> logger_;        |
-};                                      |
+class coffee_maker {                    | class coffee_maker {                    
+public:                                 | public:                                 
+    coffee_maker()                      |     coffee_maker(shared_ptr<iheater> heater)                      
+      : heater{                         |                , unique_ptr<ipump> pump)
+          make_shared<electric_heater>()|         : heater(heater)
+        }                               |         , pump(pump)
+      , pump{                           |     { }
+          make_unique<heat_pump>(heater)| 
+        }                               |     void brew() {                       
+    { }                                 |         heater->on();                   
+                                        |         pump->pump();                   
+    void brew() {                       |         clog << "coffee" << endl;                                               
+        heater->on();                   |         heater->off();                  
+        pump->pump();                   |     }                                   
+        clog << "coffee" << endl;       |                                         
+        heater->off();                  | private:                                
+    }                                   |     shared_ptr<iheater> heater;         
+                                        |     unique_ptr<ipump> pump;             
+private:                                | };                                      
+    shared_ptr<iheater> heater;         | 
+    unique_ptr<ipump> pump;             | 
+};                                      | 
 ```
+
 Boost.DI is a header only, type safe, compile time, non-intrusive constructor dependency injection
 library improving manual dependency injection by simplifying object instantiation with automatic
 dependencies injection.
 
-* Reduces boilerplate code (no factories, no objects creation in specific order)
-* Reduces cost of maintenance effort (constructor signature change won't affect di configuration)
-* Reduces testing effort (automatic mocks injector)
-* Gives better control of what and how is created (policies, providers)
-* Gives better understanding about objects hierarchy (types creation graph)
-
+> Reduces boilerplate code (no factories, no objects creation in specific order)
 ```cpp
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
 int main() {                            | int main() {
-    /*boilerplate code*/                |     auto injector = di::make_injector(
-    auto logic = make_shared<logic>();  |         di::bind<ilogic, logic>
-    auto logger = make_shared<logger>();|       , di::bind<ilogger, logger>
-                                        |     );
-    return example{logic, logger}.run();|     return injector.create<example>().run();
-}                                       | }
+   // has to be before pump             |     auto injector = di::make_injector(
+   auto heater = shared_ptr<iheater>{   |         di::bind<ipump, heat_pump>
+       make_shared<electric_heater>()   |       , di::bind<iheater, electric_heater>
+   };                                   |     );
+                                        |                                                    
+   // has to be after heater            |     auto cm = injector.create<coffee_maker>();
+   auto pump = unique_ptr<ipump>{       |     cm.brew();
+       make_unique<heat_pump>(heater)   | }
+   };                                   |
+                                        |    
+   coffee_maker cm{heater, move(pump)}; |
+   cm.brew();                           |
+}
 ```
 
-**Why Dependency Injection?**
+> Reduces cost of maintenance effort (constructor signature change won't affect di configuration)
+```cpp
+Manual Dependency Injection             | Boost.DI
+----------------------------------------|--------------------------------------------
+```
 
-* [Motivation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/motivation.html) | [Rationale](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/rationale.html)
+> Reduces testing effort (automatic mocks injector)
+```cpp
+Manual Dependency Injection             | Boost.DI
+----------------------------------------|--------------------------------------------
+```
 
-[![The Clean Code Talks - Don't Look For Things!](http://img.youtube.com/vi/RlfLCWKxHJ0/0.jpg)](http://www.youtube.com/watch?v=RlfLCWKxHJ0) | [![DAGGER 2 - A New Type of dependency injection](http://image.slidesharecdn.com/nr73mexetqiybd1qpcem-140529143342-phpapp01/95/dependency-injection-for-android-5-638.jpg?cb=1401392113)](http://www.youtube.com/watch?v=oK_XtfXPkqw) |
---- | --- |
+> Gives better control of what and how is created (policies, providers)
+```cpp
+Manual Dependency Injection             | Boost.DI
+----------------------------------------|--------------------------------------------
+```
+
+> Gives better understanding about objects hierarchy (types creation graph)
+```cpp
+Manual Dependency Injection             | Boost.DI
+----------------------------------------|--------------------------------------------
+```
 
 **How To Start?**
 

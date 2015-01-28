@@ -56,8 +56,8 @@ void no_di() {
         }
     };
 
-    auto cm = std::make_unique<coffee_maker>();
-    cm->brew();
+    coffee_maker cm;
+    cm.brew();
 }
 
 void manual_di() {
