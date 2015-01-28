@@ -16,12 +16,12 @@ namespace di = boost::di;
 
 #include <iostream>
 //<-
-struct interface { virtual ~interface() = default; };
+struct interface { virtual ~interface() noexcept = default; };
 struct implementation1 : interface { };
 struct implementation2 : interface { };
 
 struct ixml_parser {
-    virtual ~ixml_parser() = default;
+    virtual ~ixml_parser() noexcept = default;
     virtual std::string parse(const std::string&) = 0;
 };
 

@@ -2,7 +2,7 @@
 
 namespace di = boost::di;
 
-struct i { virtual ~i() = default; virtual int dummy() = 0; };
+struct i { virtual ~i() noexcept = default; virtual int dummy() = 0; };
 struct impl : i { impl(int i) : i_(i) { }; int dummy() override { return i_; }; int i_ = 0; };
 
 struct module {

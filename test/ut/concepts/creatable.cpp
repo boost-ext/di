@@ -13,7 +13,7 @@
 
 namespace boost { namespace di { namespace concepts {
 
-struct i1 { virtual ~i1() = default; virtual void dummy() = 0; };
+struct i1 { virtual ~i1() noexcept = default; virtual void dummy() = 0; };
 struct impl1 : public i1 { virtual void dummy() { }; };
 
 test empty = [] {

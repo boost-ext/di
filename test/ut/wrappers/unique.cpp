@@ -9,13 +9,18 @@
 
 namespace boost { namespace di { namespace wrappers {
 
-struct interface { virtual ~interface() = default; virtual void dummy() = 0; };
+struct interface { virtual ~interface() noexcept = default; virtual void dummy() = 0; };
 struct implementation : public interface { virtual void dummy() { }; };
 
 constexpr auto i = 42;
 
 test to_value = [] {
     auto object = static_cast<int>(unique<int>{i});
+    expect_eq(i, object);
+};
+
+test to_rvalue = [] {
+    auto object = static_cast<int&&>(unique<int>{i});
     expect_eq(i, object);
 };
 

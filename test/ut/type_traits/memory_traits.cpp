@@ -10,7 +10,7 @@
 namespace boost { namespace di { namespace type_traits {
 
 struct c { };
-struct i { virtual ~i() = default; };
+struct i { virtual ~i() noexcept = default; };
 
 template<class T>
 struct deleter {

@@ -10,8 +10,8 @@
 
 namespace di = boost::di;
 
-struct i1 { virtual ~i1() = default; virtual void dummy1() = 0; };
-struct i2 { virtual ~i2() = default; virtual void dummy2() = 0; };
+struct i1 { virtual ~i1() noexcept = default; virtual void dummy1() = 0; };
+struct i2 { virtual ~i2() noexcept = default; virtual void dummy2() = 0; };
 struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 
 int main() {

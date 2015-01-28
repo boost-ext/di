@@ -10,7 +10,7 @@
 
 namespace boost { namespace di { namespace scopes {
 
-struct interface { virtual ~interface() = default; virtual void dummy() = 0; };
+struct interface { virtual ~interface() noexcept = default; virtual void dummy() = 0; };
 struct implementation : public interface { virtual void dummy() { }; };
 
 test from_arithmetic = [] {

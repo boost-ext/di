@@ -8,7 +8,7 @@
 
 namespace di = boost::di;
 
-struct i { virtual ~i() = default; virtual void dummy() = 0; };
+struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
 struct impl : i { void dummy() override { } };
 
 test error_create_polymorphic_type_without_binding = [] {

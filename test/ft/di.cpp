@@ -13,9 +13,9 @@ auto other_name = []{};
 auto a = []{};
 auto b = []{};
 
-struct i1 { virtual ~i1() = default; virtual void dummy1() = 0; };
-struct i2 { virtual ~i2() = default; virtual void dummy2() = 0; };
-struct i3 { virtual ~i3() = default; virtual void dummy3() = 0; };
+struct i1 { virtual ~i1() noexcept = default; virtual void dummy1() = 0; };
+struct i2 { virtual ~i2() noexcept = default; virtual void dummy2() = 0; };
+struct i3 { virtual ~i3() noexcept = default; virtual void dummy3() = 0; };
 struct impl1 : i1 { void dummy1() override { } };
 struct impl1_int : i1 { impl1_int(int i) : i(i) { } void dummy1() override { } int i = 0; };
 struct impl2 : i2 { void dummy2() override { } };
@@ -420,8 +420,8 @@ test exposed_bind_interface_module = [] {
 };
 
 test exposed_module_with_unique_ptr = [] {
-    struct i1 { virtual ~i1() = default; virtual void dummy1() = 0; };
-    struct i2 { virtual ~i2() = default; virtual void dummy2() = 0; };
+    struct i1 { virtual ~i1() noexcept = default; virtual void dummy1() = 0; };
+    struct i2 { virtual ~i2() noexcept = default; virtual void dummy2() = 0; };
     struct impl1 : i1 { void dummy1() override { } };
     struct impl2 : i2 { void dummy2() override { } };
 
