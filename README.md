@@ -26,18 +26,18 @@ No Dependency injection                 | Dependency Injection
 ----------------------------------------|--------------------------------------------
 class coffee_maker {                    | class coffee_maker {
 public:                                 | public:
-    coffee_maker()                      |     coffee_maker(shared_ptr<iheater> heater)
-      : heater{                         |                , unique_ptr<ipump> pump)
-          make_shared<electric_heater>()|         : heater(heater)
-        }                               |         , pump(pump)
-      , pump{                           |     { }
+    coffee_maker()                      |   coffee_maker(shared_ptr<iheater> heater)
+      : heater{                         |              , unique_ptr<ipump> pump)
+          make_shared<electric_heater>()|       : heater(heater)
+        }                               |       , pump(pump)
+      , pump{                           |   { }
           make_unique<heat_pump>(heater)|
-        }                               |     void brew() {
-    { }                                 |         heater->on();
-                                        |         pump->pump();
-    void brew() {                       |         clog << "coffee" << endl;
-        heater->on();                   |         heater->off();
-        pump->pump();                   |     }
+        }                               |   void brew() {
+    { }                                 |       heater->on();
+                                        |       pump->pump();
+    void brew() {                       |       clog << "coffee" << endl;
+        heater->on();                   |       heater->off();
+        pump->pump();                   |   }
         clog << "coffee" << endl;       |
         heater->off();                  | private:
     }                                   |     shared_ptr<iheater> heater;
@@ -57,13 +57,13 @@ dependencies injection.
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
 int main() {                            | int main() {
-   // has to be before pump             |     auto injector = di::make_injector(
-   auto heater = shared_ptr<iheater>{   |         di::bind<ipump, heat_pump>
-       make_shared<electric_heater>()   |       , di::bind<iheater, electric_heater>
-   };                                   |     );
+   // has to be before pump             |   auto injector = di::make_injector(
+   auto heater = shared_ptr<iheater>{   |       di::bind<ipump, heat_pump>
+       make_shared<electric_heater>()   |     , di::bind<iheater, electric_heater>
+   };                                   |   );
                                         |
-   // has to be after heater            |     auto cm = injector.create<coffee_maker>();
-   auto pump = unique_ptr<ipump>{       |     cm.brew();
+   // has to be after heater            |   auto cm = injector.create<coffee_maker>();
+   auto pump = unique_ptr<ipump>{       |   cm.brew();
        make_unique<heat_pump>(heater)   | }
    };                                   |
                                         |
