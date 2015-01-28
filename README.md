@@ -21,32 +21,31 @@ Dependency Injection (DI) involves passing (injecting) one or more dependencies 
 --- | --- |
 
 > "Let's make some coffee!"
-
 ```cpp
 No Dependency injection                 | Dependency Injection
 ----------------------------------------|--------------------------------------------
-class coffee_maker {                    | class coffee_maker {                    
-public:                                 | public:                                 
-    coffee_maker()                      |     coffee_maker(shared_ptr<iheater> heater)                      
+class coffee_maker {                    | class coffee_maker {
+public:                                 | public:
+    coffee_maker()                      |     coffee_maker(shared_ptr<iheater> heater)
       : heater{                         |                , unique_ptr<ipump> pump)
           make_shared<electric_heater>()|         : heater(heater)
         }                               |         , pump(pump)
       , pump{                           |     { }
-          make_unique<heat_pump>(heater)| 
-        }                               |     void brew() {                       
-    { }                                 |         heater->on();                   
-                                        |         pump->pump();                   
-    void brew() {                       |         clog << "coffee" << endl;                                               
-        heater->on();                   |         heater->off();                  
-        pump->pump();                   |     }                                   
-        clog << "coffee" << endl;       |                                         
-        heater->off();                  | private:                                
-    }                                   |     shared_ptr<iheater> heater;         
-                                        |     unique_ptr<ipump> pump;             
-private:                                | };                                      
-    shared_ptr<iheater> heater;         | 
-    unique_ptr<ipump> pump;             | 
-};                                      | 
+          make_unique<heat_pump>(heater)|
+        }                               |     void brew() {
+    { }                                 |         heater->on();
+                                        |         pump->pump();
+    void brew() {                       |         clog << "coffee" << endl;
+        heater->on();                   |         heater->off();
+        pump->pump();                   |     }
+        clog << "coffee" << endl;       |
+        heater->off();                  | private:
+    }                                   |     shared_ptr<iheater> heater;
+                                        |     unique_ptr<ipump> pump;
+private:                                | };
+    shared_ptr<iheater> heater;         |
+    unique_ptr<ipump> pump;             |
+};                                      |
 ```
 
 Boost.DI is a header only, type safe, compile time, non-intrusive constructor dependency injection
@@ -62,16 +61,18 @@ int main() {                            | int main() {
    auto heater = shared_ptr<iheater>{   |         di::bind<ipump, heat_pump>
        make_shared<electric_heater>()   |       , di::bind<iheater, electric_heater>
    };                                   |     );
-                                        |                                                    
+                                        |
    // has to be after heater            |     auto cm = injector.create<coffee_maker>();
    auto pump = unique_ptr<ipump>{       |     cm.brew();
        make_unique<heat_pump>(heater)   | }
    };                                   |
-                                        |    
+                                        |
    coffee_maker cm{heater, move(pump)}; |
    cm.brew();                           |
 }
 ```
+
+*
 
 > Reduces cost of maintenance effort (constructor signature change won't affect di configuration)
 ```cpp
@@ -79,17 +80,23 @@ Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
 ```
 
+*
+
 > Reduces testing effort (automatic mocks injector)
 ```cpp
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
 ```
 
+*
+
 > Gives better control of what and how is created (policies, providers)
 ```cpp
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
 ```
+
+*
 
 > Gives better understanding about objects hierarchy (types creation graph)
 ```cpp
@@ -508,7 +515,7 @@ auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>
               return injector.template  | b = true;
                 create<                 | auto object = injector.create<shared_ptr<i2>>();
                   shared_ptr<impl2>>(); | assert(dynamic_cast<impl2*>(object.get()));
-            }                           | } 
+            }                           | }
             return nullptr;             |
      }                                  |
    )                                    |
@@ -558,10 +565,10 @@ struct c {                              | auto object = injector.create<unique_p
     c(unique_ptr<i1> i1                 | assert(dynamic_cast<impl1*>(object->i1.get()));
     , unique_ptr<i2> i2                 | assert(dynamic_cast<impl2*>(object->i2.get()));
     , int i) : i1(move(i1))             | assert(42 == object->i);
-             , i2(move(i2)), i(i)       | 
+             , i2(move(i2)), i(i)       |
     { }                                 | auto up1 = injector.create<unique_ptr<i1>>();
                                         | assert(dynamic_cast<impl1*>(up1.get()));
-    unique_ptr<i1> i1;                  |                                                    
+    unique_ptr<i1> i1;                  |
     unique_ptr<i2> i2;                  | auto up2 = injector.create<unique_ptr<i2>>();
     int i = 0;                          | assert(dynamic_cast<impl2*>(up2.get()));
 };                                      |
@@ -594,20 +601,20 @@ struct c {                              | auto object = injector.create<c>();
     c(shared_ptr<i1> i1                 | assert(dynamic_cast<impl1*>(object.i1.get()));
     , shared_ptr<i2> i2                 | assert(dynamic_cast<impl2*>(object.i2.get()));
     , int i) : i1(i1), i2(i2), i(i)     | assert(42 == object.i);
-    { }                                 |                                                       
+    { }                                 |
                                         | // injector.create<unique_ptr<i1>>() // compile error
     shared_ptr<i1> i1;                  | // injector.create<unique_ptr<i2>>() // compile error
     shared_ptr<i2> i2;                  |
     int i = 0;                          |
 };                                      |
                                         |
-struct module {                         | 
-    di::injector<c> configure()         | 
-    const noexcept;                     | 
-                                        | 
+struct module {                         |
+    di::injector<c> configure()         |
+    const noexcept;                     |
+                                        |
     int i = 0;                          |
-};                                      | 
-                                        | 
+};                                      |
+                                        |
 di::injector<c> // expose c             |
 module::configure() const noexcept {    |
     return di::make_injector(           |
@@ -626,7 +633,7 @@ Exposed many types module               | Test
 ----------------------------------------|-----------------------------------------
 struct module {                         | auto up1 = injector.create<unique_ptr<i1>>();
     di::injector<i1, i2> configure()    | assert(dynamic_cast<impl1*>(up1.get()));
-    const noexcept;                     |                                                    
+    const noexcept;                     |
                                         | auto up2 = injector.create<unique_ptr<i2>>();
     int i = 0;                          | assert(dynamic_cast<impl2*>(up2.get()));
 };                                      |
