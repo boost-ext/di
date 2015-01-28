@@ -21,8 +21,6 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 [![The Clean Code Talks - Don't Look For Things!](http://img.youtube.com/vi/RlfLCWKxHJ0/0.jpg)](http://www.youtube.com/watch?v=RlfLCWKxHJ0) | [![DAGGER 2 - A New Type of dependency injection](http://image.slidesharecdn.com/nr73mexetqiybd1qpcem-140529143342-phpapp01/95/dependency-injection-for-android-5-638.jpg?cb=1401392113)](http://www.youtube.com/watch?v=oK_XtfXPkqw) |
 --- | --- |
 
-**Why Boost.DI?**
-
 > **"Let's make some coffee!"**
 ```cpp
 No Dependency injection                 | Dependency Injection
@@ -51,11 +49,19 @@ private:                                | };
 };                                      |
 ```
 
+**Why Boost.DI?**
+
 Boost.DI is a header only, type safe, compile time, non-intrusive constructor dependency injection
 library improving manual dependency injection by simplifying object instantiation with automatic
 dependencies injection.
 
-> **Reduces boilerplate code**
+> **Boost.DI is not *intrusive***
+```cpp
+Manual Dependency Injection             | Boost.DI
+----------------------------------------|--------------------------------------------
+```
+
+> **Boost.DI reduces boilerplate code**
 ```cpp
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
@@ -77,7 +83,7 @@ int main() {                            | int main() {
 
 *
 
-> **Reduces cost of maintenance effort**
+> **Boost.DI reduces cost of maintenance effort**
 > Let's add grinder which will be dependent on pump
 ```cpp
 Manual Dependency Injection             | Boost.DI (1 new binding)
@@ -105,10 +111,11 @@ int main() {                            | int main() {
    coffee_maker cm{heater, move(pump)}; |
    cm.brew();                           |
 }                                       |
-
 ```
 
-> Let's change that grinder will depend on pump
+*
+
+> **Boost.DI is smart**
 ```cpp
 Manual Dependency Injection             | Boost.DI (no changes!)
 ----------------------------------------|--------------------------------------------
@@ -136,23 +143,28 @@ int main() {
    cm.brew();
 ```
 
+*
+
 > Let's change grinder constructor order
 ```cpp
 Manual Dependency Injection             | Boost.DI (no changes!)
 ----------------------------------------|--------------------------------------------
-...
    auto grinder = unique_ptr<igrinder>{
        make_unique<grinder>(pump, heater)
    };
-...
 ```
 
 *
 
 > **Reduces testing effort**
+```cpp
+Manual Dependency Injection             | Boost.DI (no changes!)
+----------------------------------------|--------------------------------------------
+```
+
 *
 
-> **Gives better control of what and how is created**
+> **Boost.DI gives better control of what and how is created**
 ```cpp
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
@@ -160,14 +172,13 @@ Manual Dependency Injection             | Boost.DI
 
 *
 
-> **Gives better understanding about objects hierarchy**
+> **Boost.DI gives better understanding about objects hierarchy**
 ```cpp
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
                                         | injector = di::make_injector<uml_dumper>();
                                         | auto cm = injector.create<coffee_maker>();
 ```
-pictures
 
 **How To Start?**
 
