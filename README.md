@@ -51,7 +51,7 @@ private:                                | };
 
 **Why Boost.DI?**
 
-> **Boost.DI is not *intrusive***
+> **Boost.DI is not intrusive**
 ```cpp
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
