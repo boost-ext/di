@@ -51,9 +51,9 @@ private:                                | };
 
 **Why Boost.DI?**
 
-> **Boost.DI has non or minimal overhead** - [Run-time performance](#run_time_performance)
-> **Boost.DI compiles fast** - [Compile-time performance](#compile_time_performance)
-> **Boost.DI gives short error messages** - [Diagnostic messages](#diagnostic_messages)
+* **Boost.DI has non or minimal overhead** - [Run-time performance](#run_time_performance)
+* **Boost.DI compiles fast** - [Compile-time performance](#compile_time_performance)
+* **Boost.DI gives short error messages** - [Diagnostic messages](#diagnostic_messages)
 
 > **Boost.DI is not intrusive**
 ```cpp
