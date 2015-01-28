@@ -180,7 +180,7 @@ Manual Dependency Injection             | Boost.DI
                                         | injector = di::make_injector<uml_dumper>();
                                         | auto cm = injector.create<coffee_maker>();
 ```
-                                      . | [![coffee maker](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker.png)]()
+--------------------------------------- | [![coffee maker](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker.png)]()
 --------------------------------------- | ----------------------------------------- |
 
 **How To Start?**
