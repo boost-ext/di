@@ -95,11 +95,12 @@ public:
 
     template<class... TArgs>
     explicit injector(const TArgs&... args) noexcept
-        : injector{init{}, pass_arg(args)...}
+        : pool_t{init{}, pool<aux::type_list<
+              std::remove_reference_t<decltype(pass_arg(args))>...>>{pass_arg(args)...}}
     { }
 
     template<class TConfig_, class... TDeps_>
-    explicit injector(const std::true_type&, const injector<TConfig_, TDeps_...>& injector) noexcept // non explicit
+    explicit injector(const init&, const injector<TConfig_, TDeps_...>& injector) noexcept
         : pool_t{init{}, create_from_injector(injector, deps{})}
     { }
 
@@ -138,11 +139,6 @@ public:
     }
 
 private:
-    template<class... TArgs>
-    explicit injector(const init&, const TArgs&... args) noexcept
-        : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
-    { }
-
     template<class TAction, class... Ts>
     void call_impl(const TAction& action, const aux::type_list<Ts...>&) {
         int _[]{0, (call_impl<Ts>(action), 0)...}; (void)_;
@@ -176,12 +172,7 @@ private:
     template<class TInjector, class... Ts>
     auto create_from_injector(const TInjector& injector
                             , const aux::type_list<Ts...>&) const noexcept {
-        return pool_t{create_dep<Ts>(injector)...};
-    }
-
-    template<class TDependency, class TInjector>
-    auto create_dep(const TInjector& injector) const noexcept {
-        return TDependency{injector};
+        return pool_t{Ts{injector}...};
     }
 
     TConfig config_;
