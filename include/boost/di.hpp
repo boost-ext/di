@@ -131,7 +131,7 @@ using join_t = typename join<TArgs...>::type;
     template<class T>                                               \
     struct has_##name<T, aux::void_t<typename T::name>>             \
         : std::true_type                                            \
-    { };
+    { }
 
 #define BOOST_DI_HAS_METHOD(name, call_name)                        \
     template<class T, class... TArgs>                               \
@@ -2230,7 +2230,8 @@ public:
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
         : pool_t{init{}, pool<aux::type_list<
-              std::remove_reference_t<decltype(pass_arg(args))>...>>{pass_arg(args)...}}
+              std::remove_reference_t<decltype(pass_arg(args))>...>
+          >{pass_arg(args)...}}
     { }
 
     template<class TConfig_, class... TDeps_>

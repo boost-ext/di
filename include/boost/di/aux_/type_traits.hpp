@@ -21,7 +21,7 @@
     template<class T>                                               \
     struct has_##name<T, aux::void_t<typename T::name>>             \
         : std::true_type                                            \
-    { };
+    { }
 
 #define BOOST_DI_HAS_METHOD(name, call_name)                        \
     template<class T, class... TArgs>                               \

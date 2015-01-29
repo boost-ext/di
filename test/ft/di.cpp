@@ -24,20 +24,20 @@ struct impl4 : impl1_2 { };
 
 struct impl1_with_i2 : i1 {
     explicit impl1_with_i2(std::shared_ptr<i2> i2)
-        : i2(i2)
+        : i2_(i2)
     { }
 
     void dummy1() override { }
 
-    std::shared_ptr<i2> i2;
+    std::shared_ptr<i2> i2_;
 };
 
 struct complex1 {
     explicit complex1(const std::shared_ptr<i1>& i1)
-        : i1(i1)
+        : i1_(i1)
     { }
 
-    std::shared_ptr<i1> i1;
+    std::shared_ptr<i1> i1_;
 };
 
 struct complex2 {
@@ -194,7 +194,7 @@ test injectors_mix = [] {
     );
 
     auto object = injector.create<std::shared_ptr<complex1>>();
-    expect(object->i1.get());
+    expect(object->i1_.get());
 };
 
 test exposed_type = [] {
@@ -203,7 +203,7 @@ test exposed_type = [] {
     );
 
     auto object = injector.create<std::shared_ptr<complex1>>();
-    expect(dynamic_cast<i1*>(object->i1.get()));
+    expect(dynamic_cast<i1*>(object->i1_.get()));
 };
 
 test exposed_type_by_injector = [] {
@@ -219,7 +219,7 @@ test exposed_type_by_injector = [] {
     );
 
     auto object = injector.create<std::shared_ptr<complex2>>();
-    expect(dynamic_cast<i1*>(object->c1.i1.get()));
+    expect(dynamic_cast<i1*>(object->c1.i1_.get()));
     expect_eq(i, object->i);
 };
 
@@ -238,7 +238,7 @@ test exposed_type_by_module = [] {
     );
 
     auto object = injector.create<std::shared_ptr<complex2>>();
-    expect(dynamic_cast<i1*>(object->c1.i1.get()));
+    expect(dynamic_cast<i1*>(object->c1.i1_.get()));
     expect_eq(i, object->i);
 };
 
@@ -257,7 +257,7 @@ test exposed_type_by_module_twice = [] {
     );
 
     auto object = injector.create<std::shared_ptr<complex2>>();
-    expect(dynamic_cast<i1*>(object->c1.i1.get()));
+    expect(dynamic_cast<i1*>(object->c1.i1_.get()));
     expect_eq(i, object->i);
 };
 
@@ -305,7 +305,7 @@ test exposed_many = [] {
 
     {
     auto object = injector.create<std::shared_ptr<complex2>>();
-    expect(dynamic_cast<i1*>(object->c1.i1.get()));
+    expect(dynamic_cast<i1*>(object->c1.i1_.get()));
     expect_eq(i, object->i);
     }
 
@@ -428,11 +428,11 @@ test exposed_module_with_unique_ptr = [] {
     struct c {
         c(std::unique_ptr<i1> i1
         , std::unique_ptr<i2> i2
-        , int i) : i1(std::move(i1)), i2(std::move(i2)), i(i)
+        , int i) : i1_(std::move(i1)), i2_(std::move(i2)), i(i)
         { }
 
-        std::unique_ptr<i1> i1;
-        std::unique_ptr<i2> i2;
+        std::unique_ptr<i1> i1_;
+        std::unique_ptr<i2> i2_;
         int i = 0;
     };
 
@@ -453,8 +453,8 @@ test exposed_module_with_unique_ptr = [] {
     );
 
     auto object = injector.create<std::unique_ptr<c>>();
-    assert(dynamic_cast<impl1*>(object->i1.get()));
-    assert(dynamic_cast<impl2*>(object->i2.get()));
+    assert(dynamic_cast<impl1*>(object->i1_.get()));
+    assert(dynamic_cast<impl2*>(object->i2_.get()));
     assert(42 == object->i);
 };
 
@@ -1116,7 +1116,7 @@ test dynamic_binding_using_polymorphic_lambdas_with_dependend_interfaces = [] {
     {
     auto object = test(false);
     expect(dynamic_cast<impl1_with_i2*>(object.get()));
-    expect(dynamic_cast<impl2*>(dynamic_cast<impl1_with_i2*>(object.get())->i2.get()));
+    expect(dynamic_cast<impl2*>(dynamic_cast<impl1_with_i2*>(object.get())->i2_.get()));
     }
 
     {

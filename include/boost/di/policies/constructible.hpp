@@ -147,7 +147,7 @@ struct constructible_impl {
 template<class T = std::false_type>
 inline auto constructible(const T& = {}) {
 	return constructible_impl<always<T>>{};
-};
+}
 
 }}} // boost::di::policies
 
