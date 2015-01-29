@@ -25,7 +25,6 @@ struct is_not_same_impl {
 template<class T, class TParent>
 using is_not_same = std::enable_if_t<!is_not_same_impl<T, TParent>::value>;
 
-
 template<class TParent = void, class TInjector = aux::none_t>
 struct any_type {
     template<class T>

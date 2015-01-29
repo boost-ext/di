@@ -1344,9 +1344,7 @@ struct uniform { };
 BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_INJECTOR);
 
 template<class T, std::size_t>
-struct get_type {
-    using type = T;
-};
+using type = T;
 
 template<template<class...> class, class, class, class>
 struct ctor_args;
@@ -1358,8 +1356,8 @@ template<
   , std::size_t... TArgs
 > struct ctor_args<TIsConstructible, T, TAny, std::index_sequence<TArgs...>>
     : aux::pair<
-          typename TIsConstructible<T, typename get_type<TAny, TArgs>::type...>::type
-        , aux::type_list<typename get_type<TAny, TArgs>::type...>
+          typename TIsConstructible<T, type<TAny, TArgs>...>::type
+        , aux::type_list<type<TAny, TArgs>...>
       >
 { };
 
