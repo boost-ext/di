@@ -33,7 +33,7 @@ test injector_with_module = [] {
     using dep = core::dependency<scopes::exposed<scopes::deduce>, int>;
     struct module {
         injector<int> configure() const noexcept {
-            return core::injector<::BOOST_DI_CFG>{};
+            return core::injector<::BOOST_DI_CFG>{core::init{}};
         }
     };
 

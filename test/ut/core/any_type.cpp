@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include "boost/di/core/any_type.hpp"
+#include "common/fakes/fake_injector.hpp"
 
 namespace boost { namespace di { namespace core {
 
@@ -15,14 +16,9 @@ test is_any_types = [] {
     expect(is_any_type<any_type<int>>{});
 };
 
-struct fake_injector {
-    template<class T>
-    T create_impl() const { return {}; }
-};
-
 test any_type_create = [] {
-    fake_injector injector;
-    expect_eq(0, static_cast<int>(any_type<void, fake_injector>{injector}));
+    fake_injector<> injector;
+    expect_eq(0, static_cast<int>(any_type<void, fake_injector<>>{injector}));
 };
 
 }}} // boost::di::core

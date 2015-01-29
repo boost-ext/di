@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include "boost/di/core/dependency.hpp"
+#include "common/fakes/fake_injector.hpp"
 
 namespace boost { namespace di { namespace core {
 
@@ -82,14 +83,9 @@ test to = [] {
     expect(std::is_same<int, typename dep2::given>{});
 };
 
-struct fake_injector {
-    using deps = void;
-    template<class T> T create_impl() const noexcept { return {}; }
-};
-
 test to_with_configure = [] {
     struct module {
-        fake_injector configure() const noexcept { return {}; }
+        fake_injector<> configure() const noexcept { return {}; }
     };
 
     using dep1 = dependency<scopes::deduce, int>;
@@ -98,17 +94,17 @@ test to_with_configure = [] {
     using dep2 = decltype(dep1{}.to(module{}));
     expect(std::is_same<scopes::exposed<scopes::deduce>, typename dep2::scope>{});
     expect(std::is_same<int, typename dep2::expected>{});
-    expect(std::is_same<fake_injector, typename dep2::given>{});
+    expect(std::is_same<fake_injector<>, typename dep2::given>{});
 };
 
 test to_with_deps = [] {
     using dep1 = dependency<scopes::deduce, int>;
     expect(std::is_same<scopes::deduce, typename dep1::scope>{});
 
-    using dep2 = decltype(dep1{}.to(fake_injector{}));
+    using dep2 = decltype(dep1{}.to(fake_injector<>{}));
     expect(std::is_same<scopes::exposed<scopes::deduce>, typename dep2::scope>{});
     expect(std::is_same<int, typename dep2::expected>{});
-    expect(std::is_same<fake_injector, typename dep2::given>{});
+    expect(std::is_same<fake_injector<>, typename dep2::given>{});
 };
 
 }}} // boost::di::core

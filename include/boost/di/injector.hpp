@@ -24,7 +24,7 @@ public:
       , class... TArgs
         BOOST_DI_REQUIRES(concepts::creatable<typename core::injector<TConfig, TArgs...>::deps, TConfig, TDeps...>())
     > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
-        : core::injector<::BOOST_DI_CFG, TDeps...>{core::init{}, injector}
+        : core::injector<::BOOST_DI_CFG, TDeps...>{injector}
     { }
 };
 

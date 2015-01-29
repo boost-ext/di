@@ -23,7 +23,7 @@ template<
         concepts::boundable<typename core::injector<TConfig, TDeps...>::deps>()
      )
 > inline auto make_injector(const TDeps&... args) noexcept {
-    return core::injector<TConfig, TDeps...>{args...};
+    return core::injector<TConfig, TDeps...>{core::init{}, args...};
 }
 
 }} // boost::di

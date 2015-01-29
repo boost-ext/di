@@ -81,7 +81,6 @@ BOOST_DI_HAS_METHOD(call, call);
 
 template<class TConfig, class... TDeps>
 class injector : public pool<bindings_t<TDeps...>> {
-    template<class, class> friend struct any_type;
     template<class...> friend struct provider;
 
     using pool_t = pool<bindings_t<TDeps...>>;
@@ -94,19 +93,20 @@ public:
     // dependency<...>  -> pass
 
     template<class... TArgs>
-    explicit injector(const TArgs&... args) noexcept
+    explicit injector(const init&, const TArgs&... args) noexcept
         : pool_t{init{}, pool<aux::type_list<
-              std::remove_reference_t<decltype(pass_arg(args))>...>>{pass_arg(args)...}}
+              std::remove_reference_t<decltype(pass_arg(args))>...>
+          >{pass_arg(args)...}}
     { }
 
     template<class TConfig_, class... TDeps_>
-    explicit injector(const init&, const injector<TConfig_, TDeps_...>& injector) noexcept
+    explicit injector(const injector<TConfig_, TDeps_...>& injector) noexcept
         : pool_t{init{}, create_from_injector(injector, deps{})}
     { }
 
     template<class T BOOST_DI_REQUIRES(concepts::creatable<deps, TConfig, T>())>
     T create() const {
-        return create_impl<T>();
+        return create_t<T>();
     }
 
     template<class TAction>
@@ -119,7 +119,7 @@ public:
     }
 
     template<class T, class TName = no_name>
-    auto create_impl() const {
+    auto create_t() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;
@@ -145,18 +145,18 @@ private:
     }
 
     template<class, class T>
-    auto create_t(const aux::type<T>&) const {
-        return create_impl<T>();
+    auto create_impl(const aux::type<T>&) const {
+        return create_t<T>();
     }
 
     template<class TParent, class... Ts>
-    auto create_t(const aux::type<any_type<Ts...>>&) const {
+    auto create_impl(const aux::type<any_type<Ts...>>&) const {
         return any_type<TParent, injector>{*this};
     }
 
     template<class, class T, class TName>
-    auto create_t(const aux::type<type_traits::named<TName, T>>&) const {
-        return create_impl<T, TName>();
+    auto create_impl(const aux::type<type_traits::named<TName, T>>&) const {
+        return create_t<T, TName>();
     }
 
     template<class T, class TAction>

@@ -42,17 +42,17 @@ struct any_type {
 
     template<class T, class = is_not_same<T, TParent>>
     operator T() {
-        return injector_.template create_impl<T>();
+        return injector_.template create_t<T>();
     }
 
     template<class T, class = is_not_same<T, TParent>, class = is_ref<T>>
     operator T&() const {
-        return injector_.template create_impl<T&>();
+        return injector_.template create_t<T&>();
     }
 
     template<class T, class = is_not_same<T, TParent>, class = is_ref<T>>
     operator const T&() const {
-        return injector_.template create_impl<const T&>();
+        return injector_.template create_t<const T&>();
     }
 
     const TInjector& injector_;

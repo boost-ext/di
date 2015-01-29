@@ -12,25 +12,25 @@
 namespace boost { namespace di { namespace core {
 
 test def_ctor = [] {
-    injector<di::config> injector;
+    injector<di::config> injector{core::init{}};
     expect(std::is_same<aux::type_list<>, decltype(injector)::deps>{});
 };
 
 test ctor = [] {
     using dep1 = fake_dependency<int>;
     using dep2 = fake_dependency<double>;
-    injector<di::config, dep1, dep2> injector;
+    injector<di::config, dep1, dep2> injector{core::init{}};
 };
 
 test ctor_injector = [] {
-    injector<di::config> injector1;
+    injector<di::config> injector1{core::init{}};
     injector<di::config> injector2{injector1};
     (void)injector2;
 };
 
 test create = [] {
-    injector<di::config> injector{};
-    expect_eq(0, injector.create_impl<int>());
+    injector<di::config> injector{core::init{}};
+    expect_eq(0, injector.create_t<int>());
 };
 
 test call = [] {
@@ -38,7 +38,7 @@ test call = [] {
     fake_scope<>::exit_calls() = 0;
 
     using dep1 = fake_dependency<int>;
-    injector<di::config, dep1> injector;
+    injector<di::config, dep1> injector{core::init{}};
 
     injector.call(fake_scope_entry{});
     expect_eq(1, fake_scope<>::entry_calls());

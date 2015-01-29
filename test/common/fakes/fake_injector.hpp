@@ -22,6 +22,8 @@ struct fake_provider {
 
 template<class TExpected = void>
 struct fake_injector {
+    using deps = void;
+
     struct config {
         detail::fake_provider provider() const noexcept {
             return detail::fake_provider{};
@@ -30,11 +32,11 @@ struct fake_injector {
 
     template<class T>
     auto create() const noexcept {
-        return create_impl<T>();
+        return create_t<T>();
     }
 
     template<class T>
-    auto create_impl() const noexcept {
+    auto create_t() const noexcept {
         return T{};
     }
 };
