@@ -177,11 +177,15 @@ Manual Dependency Injection             | Boost.DI
 ```cpp
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
-                                        | injector = di::make_injector<uml_dumper>();
+                                        | injector = di::make_injector<types_dumper>();
                                         | auto cm = injector.create<coffee_maker>();
+----------------------------------------|--------------------------------------------
+                                        | (coffee_maker)
+                                        |     (shared_ptr<iheater> -> electric_heater)
+                                        |     (unique_ptr<ipump> -> heat_pump)
+                                        |         (shared_ptr<iheater> -> electric_heater)
+                                        |
 ```
-```------------------ ? -----------------``` | [![coffee maker](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker.png)](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker.png)
---------------------------------------- | ----------------------------------------- |
 
 **How To Start?**
 
