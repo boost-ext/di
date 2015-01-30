@@ -120,28 +120,28 @@ int main() {                            | int main() {
 ```cpp
 Manual Dependency Injection             | Boost.DI (no changes!)
 ----------------------------------------|--------------------------------------------
-int main() {
-   // has to be before pump
-   auto heater = shared_ptr<iheater>{
-       make_shared<electric_heater>()
-   };
-
-   // has to be after
-   // heater and grinder
-   auto pump = unique_ptr<ipump>{
-       make_unique<heat_pump>(
-           heater
-       )
-   };
-
-   // has to be before pump
-   // and after heater
-   auto grinder = unique_ptr<igrinder>{
-       make_unique<grinder>(heater, pump)
-   };
-
-   coffee_maker cm{heater, move(pump)};
-   cm.brew();
+int main() {                            |
+   // has to be before pump             |
+   auto heater = shared_ptr<iheater>{   |
+       make_shared<electric_heater>()   |
+   };                                   |
+                                        |
+   // has to be after                   |
+   // heater and grinder                |
+   auto pump = unique_ptr<ipump>{       |
+       make_unique<heat_pump>(          |
+           heater                       |
+       )                                |
+   };                                   |
+                                        |
+   // has to be before pump             |
+   // and after heater                  |
+   auto grinder = unique_ptr<igrinder>{ |
+     make_unique<grinder>(heater, pump) |
+   };                                   |
+                                        |
+   coffee_maker cm{heater, move(pump)}; |
+   cm.brew();                           |
 ```
 
 *
@@ -150,9 +150,9 @@ int main() {
 ```cpp
 Manual Dependency Injection             | Boost.DI (no changes!)
 ----------------------------------------|--------------------------------------------
-   auto grinder = unique_ptr<igrinder>{
-       make_unique<grinder>(pump, heater)
-   };
+   auto grinder = unique_ptr<igrinder>{ |
+     make_unique<grinder>(pump, heater) |
+   };                                   |
 ```
 
 *
