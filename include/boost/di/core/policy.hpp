@@ -18,6 +18,22 @@ BOOST_DI_HAS_TYPE(compile_time);
 
 template<class TDeps>
 class policy {
+public:
+    template<
+        class T
+      , class TName
+      , class TInitialization
+      , class TDependency
+      , class... TCtor
+      , class... TPolicies
+    > static void call(const pool<aux::type_list<TPolicies...>>& policies
+                     , TDependency&& dependency
+                     , aux::pair<TInitialization, aux::type_list<TCtor...>>) noexcept {
+        int _[]{0, (call_impl<TPolicies, T, TName, TPolicies, TDependency, TCtor...>(
+            policies, dependency), 0)...}; (void)_;
+    }
+
+private:
     template<
         class TPolicy
       , class T
@@ -56,21 +72,6 @@ class policy {
     static std::enable_if_t<has_call_operator<TPolicy, TArg, TDependency, TCtor...>{}>
     call_impl_args(const TPolicy& policy, TDependency&& dependency) noexcept {
         (policy)(TArg{}, dependency, aux::type<TCtor>{}...);
-    }
-
-public:
-    template<
-        class T
-      , class TName
-      , class TInitialization
-      , class TDependency
-      , class... TCtor
-      , class... TPolicies
-    > static void call(const pool<aux::type_list<TPolicies...>>& policies
-                     , TDependency&& dependency
-                     , aux::pair<TInitialization, aux::type_list<TCtor...>>) noexcept {
-        int _[]{0, (call_impl<TPolicies, T, TName, TPolicies, TDependency, TCtor...>(
-            policies, dependency), 0)...}; (void)_;
     }
 };
 
