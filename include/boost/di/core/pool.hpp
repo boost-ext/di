@@ -33,7 +33,7 @@ public:
 
     template<class TPool>
     pool(const init&, const TPool& p) noexcept
-        : pool(get<TArgs>(p, is_base_of_pool<TArgs, TPool>{})...)
+        : pool(get_impl<TArgs>(p, is_base_of_pool<TArgs, TPool>{})...)
     { }
 
     template<class T>
@@ -43,12 +43,12 @@ public:
 
 private:
     template<class T, class TPool>
-    inline const T& get(const TPool& p, const std::true_type&) const noexcept { 
+    inline const T& get_impl(const TPool& p, const std::true_type&) const noexcept {
         return p.template get<T>();
     }
 
     template<class T, class TPool>
-    inline T get(const TPool&, const std::false_type&) const noexcept {
+    inline T get_impl(const TPool&, const std::false_type&) const noexcept {
         return {};
     }
 };
