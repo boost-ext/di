@@ -19,6 +19,12 @@ class pool;
 
 template<class... TArgs>
 class pool<aux::type_list<TArgs...>> : public TArgs... {
+    template<class T, class TPool>
+    using is_base_of_pool = std::integral_constant<
+        bool
+      , std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}
+    >;
+
 public:
     template<class... Ts>
     explicit pool(const Ts&... args) noexcept
@@ -27,7 +33,7 @@ public:
 
     template<class TPool>
     pool(const init&, const TPool& p) noexcept
-        : pool(get<TArgs>(p)...)
+        : pool(get<TArgs>(p, is_base_of_pool<TArgs, TPool>{})...)
     { }
 
     template<class T>
@@ -37,16 +43,14 @@ public:
 
 private:
     template<class T, class TPool>
-    std::enable_if_t<std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}, const T&>
-    inline get(const TPool& p) const noexcept { return p.template get<T>(); }
+    inline const T& get(const TPool& p, const std::true_type&) const noexcept { 
+        return p.template get<T>();
+    }
 
     template<class T, class TPool>
-    std::enable_if_t<std::is_base_of<T, pool>{} && !std::is_base_of<T, TPool>{}, T>
-    inline get(const TPool&) const noexcept { return {}; }
-
-    template<class T, class TPool>
-    std::enable_if_t<!std::is_base_of<T, pool>{}, T>
-    inline get(const TPool&) const noexcept { return {}; }
+    inline T get(const TPool&, const std::false_type&) const noexcept {
+        return {};
+    }
 };
 
 }}} // boost::di::core
