@@ -11,6 +11,7 @@
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/core/binder.hpp"
 #include "boost/di/core/dependency.hpp"
+#include "boost/di/core/any_type.hpp"
 #include "boost/di/core/policy.hpp"
 #include "boost/di/core/pool.hpp"
 #include "boost/di/core/provider.hpp"
@@ -79,6 +80,10 @@ BOOST_DI_HAS_METHOD(call, call);
 
 template<class TConfig, class... TDeps>
 class injector : public pool<bindings_t<TDeps...>> {
+    template<class...> friend struct provider;
+    template<class, class> friend struct any_type;
+    template<class> friend class scopes::exposed;
+
     using pool_t = pool<bindings_t<TDeps...>>;
 
 public:
@@ -96,11 +101,21 @@ public:
 
     template<class T BOOST_DI_REQUIRES(concepts::creatable<deps, TConfig, T>())>
     T create() const {
-        return create_t<T>();
+        return create_impl<T>();
     }
 
+    template<class TAction>
+    void call(const TAction& action) {
+        call_impl(action, deps{});
+    }
+
+    TConfig& config() noexcept {
+        return config_;
+    }
+
+private:
     template<class T, class TName = no_name>
-    auto create_t() const {
+    auto create_impl() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;
@@ -119,16 +134,6 @@ public:
         return wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
 
-    template<class TAction>
-    void call(const TAction& action) {
-        call_impl(action, deps{});
-    }
-
-    TConfig& config() noexcept {
-        return config_;
-    }
-
-private:
     template<class TAction, class... Ts>
     void call_impl(const TAction& action, const aux::type_list<Ts...>&) {
         int _[]{0, (call_impl<Ts>(action), 0)...}; (void)_;

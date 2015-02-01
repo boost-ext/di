@@ -46,10 +46,6 @@ public:
 
 class module2 {
 public:
-    explicit module2(int i)
-        : i_(i)
-    { }
-
     /*<<module configuration>>*/
     auto configure() const {
         return di::make_injector(
@@ -57,7 +53,6 @@ public:
         );
     }
 
-private:
     int i_ = 0;
 };
 

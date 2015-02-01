@@ -30,7 +30,7 @@ test ctor_injector = [] {
 
 test create = [] {
     injector<di::config> injector{core::init{}};
-    expect_eq(0, injector.create_t<int>());
+    expect_eq(0, injector.create<int>());
 };
 
 test call = [] {
