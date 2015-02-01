@@ -99,15 +99,6 @@ public:
         return create_t<T>();
     }
 
-    template<class TAction>
-    void call(const TAction& action) {
-        call_impl(action, deps{});
-    }
-
-    TConfig& config() noexcept {
-        return config_;
-    }
-
     template<class T, class TName = no_name>
     auto create_t() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
@@ -126,6 +117,15 @@ public:
           , std::remove_reference_t<T>
         >;
         return wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
+    }
+
+    template<class TAction>
+    void call(const TAction& action) {
+        call_impl(action, deps{});
+    }
+
+    TConfig& config() noexcept {
+        return config_;
     }
 
 private:
