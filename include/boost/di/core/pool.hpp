@@ -44,7 +44,7 @@ public:
 private:
     template<class T, class TPool>
     inline const T& get_impl(const TPool& p, const std::true_type&) const noexcept {
-        return p.template get<T>();
+        return static_cast<const T&>(p);
     }
 
     template<class T, class TPool>
