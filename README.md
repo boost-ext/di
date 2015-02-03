@@ -59,7 +59,7 @@ private:                                | };
 > **Boost.DI is not intrusive**
 ```cpp
 Manual Dependency Injection             | Boost.DI (same as manual di)
-----------------------------------------|------------------------------------------
+----------------------------------------|-----------------------------------------
 coffee_maker(shared_ptr<iheater> heater | coffee_maker(shared_ptr<iheater> heater
            , unique_ptr<ipump> pump);   |            , unique_ptr<ipump> pump);
 ```
