@@ -87,7 +87,7 @@ int main() {                            | int main() {
    cm.brew();                           |
 }
 ```
-[![coffee maker](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_3_cd.png)]() | [![coffee maker](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_3_od.png)]() |
+[![coffee maker](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_3_cd.png)](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_3_cd.png) | [![coffee maker](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_3_od.png)](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_3_od.png) |
 --- | --- |
 ```cpp
 Manual Dependency Injection             | Boost.DI (only 1 new binding)
@@ -108,7 +108,7 @@ int main() {                            | int main() {
    // heater and grinder                |
    auto pump = unique_ptr<ipump>{       |
        make_unique<heat_pump>(          |
-           heater, pump                 |
+           heater, grinder              |
        )                                |
    };                                   |
                                         |
@@ -116,10 +116,8 @@ int main() {                            | int main() {
    cm.brew();                           |
 }                                       |
 ```
-
-*
-
-> **Boost.DI is smart**
+[![coffee maker](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_4_cd.png)](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_4_cd.png) | [![coffee maker](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_4_od.png)](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_4_od.png) |
+--- | --- |
 ```cpp
 Manual Dependency Injection             | Boost.DI (no changes!)
 ----------------------------------------|--------------------------------------------
