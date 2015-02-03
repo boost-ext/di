@@ -13,7 +13,7 @@ Dependency Injection (DI) involves passing (injecting) one or more dependencies 
 It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.
 
 > **"Let's make some coffee!"**
-<p align="center"><img src="https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker.png" alt="cofee maker"/></p>
+<p align="center"><img src="https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker.png" alt="coffee maker"/></p>
 ```cpp
 No Dependency injection                 | Dependency Injection
 ----------------------------------------|--------------------------------------------
@@ -57,6 +57,7 @@ private:                                | };
 * Boost.DI gives short diagnostic messages - [Diagnostic messages](#diagnostic_messages)
 
 > **Boost.DI is not intrusive**
+<p align="center"><img src="https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_1.png" alt="coffee maker"/></p>
 ```cpp
 Manual Dependency Injection             | Boost.DI (same as manual di)
 ----------------------------------------|-----------------------------------------
