@@ -143,6 +143,7 @@ int main() {                            |
                                         |
    coffee_maker cm{heater, move(pump)}; |
    cm.brew();                           |
+}                                       |
 ```
 <p align="center"><img src="https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_5.png" alt="coffee maker"/></p>
 ```cpp
