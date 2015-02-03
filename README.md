@@ -208,6 +208,7 @@ Manual Dependency Injection             | Boost.DI
                                         |         (shared_ptr<iheater> -> electric_heater)
                                         |
 ```
+<p align="center"><img src="https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_uml.png" alt="coffee maker"/></p>
 
 **How To Start?**
 
