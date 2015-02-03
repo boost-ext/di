@@ -13,7 +13,8 @@ Dependency Injection (DI) involves passing (injecting) one or more dependencies 
 It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.
 
 > **"Let's make some coffee!"**
-[![coffee_maker](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker.png)]()
+>
+[![coffee\_maker](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker.png)]()
 ```cpp
 No Dependency injection                 | Dependency Injection
 ----------------------------------------|--------------------------------------------
