@@ -131,7 +131,7 @@ int main() {                            |
    // heater and grinder                |
    auto pump = unique_ptr<ipump>{       |
        make_unique<heat_pump>(          |
-           heater                       |               ✔
+           heater                       |                    ✔
        )                                |
    };                                   |
                                         |
@@ -150,7 +150,7 @@ Manual Dependency Injection             | Boost.DI (no changes!)
 ----------------------------------------|-----------------------------------------
 int main() {                            |
    ...                                  |
-   auto grinder = unique_ptr<igrinder>{ |               ✔
+   auto grinder = unique_ptr<igrinder>{ |                    ✔
      make_unique<grinder>(pump, heater) |
    };                                   |
    ...                                  |
@@ -164,7 +164,7 @@ int main() {                            |
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
 auto heater_mock = create_heater_mock{};| auto injector = di::make_injector<mocks_provider>();
-auto pump_mock = create_pump_mock();    | auto cm = injector.create<coffee_maker>();
+auto pump_mock = create_pump_mock{};    | auto cm = injector.create<coffee_maker>();
 coffee_maker cm{heater_mock, pump_mock};| expect_call(&iheater::on);
 expect_call(&ipump::pump);              | expect_call(&ipump::pump);
 expect_call(&iheater::off);             | expect_call(&iheater::off);
@@ -177,16 +177,16 @@ cm.brew();                              | cm.brew();
 ```cpp
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
-                                        | class allow_only_smart_ptrs
-                                        |     : public di::config {
+                                        | class allow_only_smart_ptrs : public di::config {
                                         | public:
                                         |   auto policies() const noexcept {
                                         |     return di::make_policies(
-                  ?                     |       constructible(
-                                        |         is_smart_ptr<di::policies::_>{};
+                                        |       constructible(
+                  ?                     |         is_smart_ptr<di::policies::_>{};
                                         |     );
                                         |   }
                                         | };
+                                        |
                                         | auto injector = di::make_injector();
                                         | injector.create<int>(); // compile error
                                         | injector.create<unique_ptr<int>>(); // okay
