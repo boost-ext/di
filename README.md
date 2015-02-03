@@ -144,16 +144,17 @@ int main() {                            |
    coffee_maker cm{heater, move(pump)}; |
    cm.brew();                           |
 ```
-
-*
-
-> Let's change grinder constructor order
+<p align="center"><img src="https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_5.png" alt="coffee maker"/></p>
 ```cpp
 Manual Dependency Injection             | Boost.DI (no changes!)
 ----------------------------------------|--------------------------------------------
+int main() {                            |
+   ...                                  |
    auto grinder = unique_ptr<igrinder>{ |
      make_unique<grinder>(pump, heater) |
    };                                   |
+   ...                                  |
+}                                       |
 ```
 
 *
