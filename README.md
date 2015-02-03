@@ -68,6 +68,7 @@ coffee_maker(shared_ptr<iheater> heater | coffee_maker(shared_ptr<iheater> heate
 *
 
 > **Boost.DI reduces boilerplate code**
+<p align="center"><img src="https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_2.png" alt="coffee maker"/></p>
 ```cpp
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
@@ -86,10 +87,7 @@ int main() {                            | int main() {
    cm.brew();                           |
 }
 ```
-
-*
-
-> **Boost.DI reduces cost of maintenance effort** | Let's add grinder dependency to pump
+<p align="center"><img src="https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_2.png" alt="coffee maker"/></p>
 ```cpp
 Manual Dependency Injection             | Boost.DI (only 1 new binding)
 ----------------------------------------|--------------------------------------------
