@@ -87,7 +87,8 @@ int main() {                            | int main() {
    cm.brew();                           |
 }
 ```
-<p align="center"><img src="https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_2.png" alt="coffee maker"/></p>
+[![coffee maker](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_3_cd.png)]() | [![coffee maker](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_3_od.png)]() |
+--- | --- |
 ```cpp
 Manual Dependency Injection             | Boost.DI (only 1 new binding)
 ----------------------------------------|--------------------------------------------
