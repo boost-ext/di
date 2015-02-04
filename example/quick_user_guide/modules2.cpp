@@ -18,11 +18,11 @@ struct impl2 : i2 { void dummy2() override { } };
 struct c {
     c(std::shared_ptr<i1> i1
     , std::shared_ptr<i2> i2
-    , int i) : i1(i1), i2(i2), i(i)
+    , int i) : i1_(i1), i2_(i2), i(i)
     { }
 
-    std::shared_ptr<i1> i1;
-    std::shared_ptr<i2> i2;
+    std::shared_ptr<i1> i1_;
+    std::shared_ptr<i2> i2_;
     int i = 0;
 };
 
@@ -45,8 +45,8 @@ int main() {
     );
 
     auto object = injector.create<c>();
-    assert(dynamic_cast<impl1*>(object.i1.get()));
-    assert(dynamic_cast<impl2*>(object.i2.get()));
+    assert(dynamic_cast<impl1*>(object.i1_.get()));
+    assert(dynamic_cast<impl2*>(object.i2_.get()));
     assert(42 == object.i);
 
     //injector.create<std::unique_ptr<i1>>(); // compile error

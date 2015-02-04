@@ -23,10 +23,10 @@ template<class...>
 using void_t = void;
 
 template<class...>
-using always = std::true_type;
+struct always : std::true_type { };
 
 template<class...>
-using never = std::false_type;
+struct never : std::false_type { };
 
 template<class T>
 struct identity {

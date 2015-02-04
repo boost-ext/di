@@ -50,7 +50,7 @@ rule run-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
 }
 
 rule compile-fail-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
-    common_toolset = <cxxflags>"-std=$(std) -Wfatal-errors -ftemplate-backtrace-limit=1 -ferror-limit=1 -include common/test.hpp" ;
+    common_toolset = <cxxflags>"-std=$(std) -Wfatal-errors -include common/test.hpp" ;
 
     if $(ctor) {
         defines += <define>\"BOOST_DI_INJECT(type,...)=type(__VA_ARGS__)\" ;

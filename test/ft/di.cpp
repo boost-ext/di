@@ -969,8 +969,8 @@ test named_parameters_with_shared_scope = [] {
     expect(object.n1 != object.n2);
 };
 
+static auto called = false;
 test call_policy_lambda = [] {
-    static auto called = false;
     class config : public di::config {
     public:
         auto policies() const noexcept {

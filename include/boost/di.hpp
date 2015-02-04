@@ -55,10 +55,10 @@ template<class...>
 using void_t = void;
 
 template<class...>
-using always = std::true_type;
+struct always : std::true_type { };
 
 template<class...>
-using never = std::false_type;
+struct never : std::false_type { };
 
 template<class T>
 struct identity {
@@ -842,22 +842,38 @@ public:
         template<class T>
         struct iprovider<T, std::enable_if_t<!std::is_copy_constructible<T>{}>> {
             virtual ~iprovider() noexcept = default;
-            virtual T* get(const type_traits::heap& = {}) const noexcept = 0;
+            virtual T* get(const type_traits::heap& = {}) const noexcept { return nullptr; };
         };
 
-        template<class TInjector>
-        class provider : public iprovider<TExpected> {
+        template<class T, class TInjector, class = void>
+        class provider : public iprovider<T> {
         public:
             explicit provider(const TInjector& injector)
                 : injector_(injector)
             { }
 
-            TExpected* get(const type_traits::heap&) const noexcept { // non override
-                return injector_.template create_impl<TExpected*>();
+            T* get(const type_traits::heap&) const noexcept override {
+                return injector_.template create_impl<T*>();
             }
 
-            TExpected get(const type_traits::stack&) const noexcept { // non override
-                return injector_.template create_impl<TExpected>();
+            T get(const type_traits::stack&) const noexcept override {
+                return injector_.template create_impl<T>();
+            }
+
+        private:
+            TInjector injector_;
+        };
+
+        template<class T, class TInjector>
+        class provider<T, TInjector, std::enable_if_t<!std::is_copy_constructible<T>{}>>
+            : public iprovider<T> {
+        public:
+            explicit provider(const TInjector& injector)
+                : injector_(injector)
+            { }
+
+            T* get(const type_traits::heap&) const noexcept override {
+                return injector_.template create_impl<T*>();
             }
 
         private:
@@ -867,7 +883,7 @@ public:
     public:
         template<class TInjector>
         explicit scope(const TInjector& injector) noexcept
-            : provider_{std::make_shared<provider<TInjector>>(injector)}
+            : provider_{std::make_shared<provider<TExpected, TInjector>>(injector)}
         { }
 
         template<class T, class TProvider>

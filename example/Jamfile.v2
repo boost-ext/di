@@ -16,9 +16,9 @@ project di :
 
 rule run-example ( std : src + : cxxflags * : property * ) {
     if $(cxxflags) {
-        run $(src) : : : <cxxflags>"-std=$(std) -ftemplate-backtrace-limit=1 -ferror-limit=1 $(cxxflags)" : $(property) ;
+        run $(src) : : : <cxxflags>"-std=$(std) $(cxxflags)" : $(property) ;
     } else {
-        run $(src) : : : <cxxflags>"-std=$(std) -ftemplate-backtrace-limit=1 -ferror-limit=1" : $(property) ;
+        run $(src) : : : <cxxflags>"-std=$(std)" : $(property) ;
     }
 }
 
