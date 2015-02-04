@@ -1,0 +1,16 @@
+@startuml uml_dumper.png
+object cm
+object grinder
+object pump
+object heater
+
+cm -- heater
+cm -- pump
+grinder -- heater
+grinder -- pump
+pump -- heater
+
+@enduml
+
+
+
