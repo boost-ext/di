@@ -50,7 +50,7 @@ public:
                 auto root = v[i - 1];
                 if (root != &typeid(nullptr)) {
                     std::cout << "\"" << root->name() << "\" .. \"" << typeid(given).name()
-                              << (name{}() ? std::string(" [") + name{}() + std::string("]") : "")
+                              << ((*(name*)(0))() ? std::string(" [") + (*(name*)(0))() + std::string("]") : "")
                               << "\"" << std::endl;
                 }
 

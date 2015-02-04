@@ -42,7 +42,7 @@ public:
                 }
 
                 std::clog << "(" << typeid(arg).name()
-                          << (name{}() ? std::string("[") + name{}() + std::string("]") : "")
+                          << ((*(name*)(0))() ? std::string("[") + (*(name*)(0))() + std::string("]") : "")
                           << " -> " << typeid(given).name()
                           << ")" << std::endl;
 
