@@ -1366,21 +1366,6 @@ BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_INJECTOR);
 template<class T, std::size_t>
 using type = T;
 
-template<template<class...> class, class, class, class>
-struct ctor_args;
-
-template<
-    template<class...> class TIsConstructible
-  , class T
-  , class TAny
-  , std::size_t... TArgs
-> struct ctor_args<TIsConstructible, T, TAny, std::index_sequence<TArgs...>>
-    : aux::pair<
-          typename TIsConstructible<T, type<TAny, TArgs>...>::type
-        , aux::type_list<type<TAny, TArgs>...>
-      >
-{ };
-
 template<template<class...> class, class, class>
 struct ctor_impl;
 
@@ -1389,16 +1374,22 @@ template<
   , class T
   , std::size_t... TArgs
 > struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>>
-    : aux::at_key_t<
-          aux::type_list<>
-        , std::true_type
-        , ctor_args<
+    : std::conditional<
+          TIsConstructible<T, type<core::any_type<T>, TArgs>...>::value
+        , aux::type_list<type<core::any_type<T>, TArgs>...>
+        , typename ctor_impl<
               TIsConstructible
             , T
-            , core::any_type<T>
-            , std::make_index_sequence<TArgs>
-          >...
+            , std::make_index_sequence<sizeof...(TArgs) - 1>
+          >::type
       >
+{ };
+
+template<
+    template<class...> class TIsConstructible
+  , class T
+> struct ctor_impl<TIsConstructible, T, std::index_sequence<>>
+    : aux::type_list<>
 { };
 
 template<template<class...> class TIsConstructible, class T>
@@ -1406,7 +1397,7 @@ using ctor_impl_t =
     typename ctor_impl<
         TIsConstructible
       , T
-      , std::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE + 1>
+      , std::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
     >::type;
 
 template<class...>
