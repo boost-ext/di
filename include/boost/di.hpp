@@ -54,11 +54,19 @@ struct non_type { };
 template<class...>
 using void_t = void;
 
-template<class...>
-struct always : std::true_type { };
+#if defined(__clang__)
+    template<class...>
+    using always = std::true_type;
 
-template<class...>
-struct never : std::false_type { };
+    template<class...>
+    using never = std::false_type;
+#else
+    template<class...>
+    struct always : std::true_type { };
+
+    template<class...>
+    struct never : std::false_type { };
+#endif
 
 template<class T>
 struct identity {
@@ -1145,6 +1153,13 @@ struct any_type {
     operator T&() const {
         return injector_.template create_impl<T&>();
     }
+
+#if !defined(__clang__)
+    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>>
+    operator T&&() const {
+        return injector_.template create_impl<T&&>();
+    }
+#endif
 
     template<class T, class = is_not_same<T, TParent>, class = is_ref<T>>
     operator const T&() const {
