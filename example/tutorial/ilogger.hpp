@@ -15,7 +15,7 @@
 
 class ilogger {
 public:
-    virtual ~ilogger() { }
+    virtual ~ilogger() noexcept = default;
     virtual void log(const std::string&) = 0;
 };
 
