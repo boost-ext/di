@@ -28,6 +28,7 @@ project :
         <include>.
         <include>..
         <include>../include
+        <define>NDEBUG
         <warnings>all
 ;
 
