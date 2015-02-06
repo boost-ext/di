@@ -15,7 +15,8 @@
 
 namespace di = boost::di;
 
-class custom_policy : public di::config {
+template<class>
+class custom_policy : public di::config<> {
 public:
     auto policies() const noexcept {
         using namespace di::policies;

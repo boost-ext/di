@@ -83,49 +83,47 @@ test automatic_bound = [] {
     static_expect(creatable<decltype(injector)::deps, fake_config, c>());
 };
 
-test constructible_policy_pass = [] {
-    struct c3 { c3(int) { } };
-    struct c2 { c2(c3) { } };
-    struct c1 { c1(c2, c3) { } };
+struct c3 { c3(int) { } };
+struct c2 { c2(c3) { } };
+struct c1 { c1(c2, c3) { } };
 
+template<class>
+class config : fake_config<> {
+public:
+    auto policies() {
+        using namespace di::policies;
+        using namespace di::policies::operators;
+
+        return di::make_policies(
+            constructible(std::is_same<c1, _>{} || std::is_same<c2, _>{} || std::is_same<c3, _>{} || std::is_same<int, _>{})
+        );
+    }
+};
+
+test constructible_policy_pass = [] {
     auto injector = di::make_injector(
         di::bind<int>.to(42)
     );
 
-    class config : fake_config {
-    public:
-        auto policies() {
-            using namespace di::policies;
-            using namespace di::policies::operators;
-
-            return di::make_policies(
-                constructible(std::is_same<c1, _>{} || std::is_same<c2, _>{} || std::is_same<c3, _>{} || std::is_same<int, _>{})
-            );
-        }
-    };
-
     static_expect(creatable<decltype(injector)::deps, config, c1>(),  "");
 };
 
+template<class>
+class config_fail : fake_config<> {
+public:
+    auto policies() {
+        using namespace di::policies;
+        using namespace di::policies::operators;
+
+        return di::make_policies(
+            constructible(std::is_same<c1, _>{} || std::is_same<c2, _>{} || std::is_same<c3, _>{})
+        );
+    }
+};
+
 test constructible_policy_fail = [] {
-    struct c3 { c3(int) { } };
-    struct c2 { c2(c3) { } };
-    struct c1 { c1(c2, c3) { } };
-
-    class config : fake_config {
-    public:
-        auto policies() {
-            using namespace di::policies;
-            using namespace di::policies::operators;
-
-            return di::make_policies(
-                constructible(std::is_same<c1, _>{} || std::is_same<c2, _>{} || std::is_same<c3, _>{})
-            );
-        }
-    };
-
     auto injector = di::make_injector();
-    static_expect(!creatable<decltype(injector)::deps, config, c1>());
+    static_expect(!creatable<decltype(injector)::deps, config_fail, c1>());
 };
 
 test ctors_many = [] {

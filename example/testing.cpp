@@ -10,18 +10,28 @@
 #include <cassert>
 #include <memory>
 #include <map>
+#include <stdexcept>
 #include <typeindex>
 //->
 #include <boost/di.hpp>
 
 namespace di = boost::di;
 
-struct interface {
-    virtual ~interface() noexcept = default;
-    virtual int get_value() = 0;
+struct i1 {
+    virtual ~i1() noexcept = default;
+    virtual int get() = 0;
 };
 
-class mocks_provider : public di::config {
+struct i2 {
+    virtual ~i2() noexcept = default;
+    virtual int get() = 0;
+};
+
+/*<<``mocks provider` configuration>>*/
+template<class TInjector>
+class mocks_provider : public di::config<> {
+    class not_implemented : public std::exception { };
+
     class expectations : public std::map<std::type_index, std::function<void*()>> {
     public:
         template<class T>
@@ -54,24 +64,47 @@ class mocks_provider : public di::config {
                     return *(int*)it->second();
                 }
 
-                throw 0;
+                throw not_implemented{};
             }
 
         private:
             const expectations& expectations_;
         };
 
-        template<class, class T, class TInitialization, class TMemory, class... TArgs, std::enable_if_t<!std::is_polymorphic<T>{}, int> = 0>
-        auto get(const TInitialization&
-               , const TMemory&
-               , TArgs&&... args) const {
+        struct not_resolved { };
+
+        template<class T>
+        using is_resolvable = std::integral_constant<
+            bool
+          , !std::is_same<
+                not_resolved
+              , decltype(di::core::binder::resolve<T, di::no_name, not_resolved>((TInjector*)nullptr))
+            >{}
+        >;
+
+        template<
+            class I
+          , class T
+          , class TInitialization
+          , class TMemory
+          , class... TArgs
+          , std::enable_if_t<is_resolvable<I>{} || !std::is_polymorphic<T>{}, int> = 0
+        > auto get(const TInitialization&
+                 , const TMemory&
+                 , TArgs&&... args) const {
             return new T(std::forward<TArgs>(args)...);
         }
 
-        template<class, class T, class TInitialization, class TMemory, class... TArgs, std::enable_if_t<std::is_polymorphic<T>{}, int> = 0>
-        auto get(const TInitialization&
-               , const TMemory&
-               , TArgs&&... args) const {
+        template<
+            class I
+          , class T
+          , class TInitialization
+          , class TMemory
+          , class... TArgs
+          , std::enable_if_t<!is_resolvable<I>{} && std::is_polymorphic<T>{}, int> = 0
+        > auto get(const TInitialization&
+                 , const TMemory&
+                 , TArgs&&... args) const {
             return reinterpret_cast<T*>(new mock<T>{expectations_});
         }
 
@@ -79,31 +112,41 @@ class mocks_provider : public di::config {
     };
 
 public:
+    explicit mocks_provider(const TInjector& injector)
+        : injector_(injector)
+    { }
+
     auto provider() const noexcept {
         return mock_provider{expectations_};
     }
 
+    /*<<extend injector functionality of call operator>>*/
     template<class R, class T, class... TArgs>
     expectations& operator()(R(T::*ptr)(TArgs...)) {
-        expectations_.add(std::type_index(typeid(T)), []{ throw 0; return nullptr; });
+        expectations_.add(std::type_index(typeid(T))
+                        , []{ throw not_implemented{}; return nullptr; }
+        );
         return expectations_;
+    }
+
+    /*<<extend injector functionality of conversion operator>>*/
+    template<class T>
+    operator T() const {
+        return injector_.template create<T>();
     }
 
 private:
     expectations expectations_;
+    const TInjector& injector_;
 };
 
 struct c {
-    c(std::shared_ptr<interface> sp, int i) {
-        assert(sp->get_value() == 42);
+    c(std::shared_ptr<i1> sp, std::unique_ptr<i2> up, int i) {
+        assert(sp->get() == 42);
+        assert(up->get() == 123);
         assert(i == 87);
     }
 };
-
-template<class T, class F>
-decltype(auto) expect_call(T& t, const F& f) {
-    return t.config()(f);
-}
 
 struct test {
     template<class Test>
@@ -112,25 +155,31 @@ struct test {
     }
 };
 
-//test unit_test = [] {
-    //auto _ = di::make_injector<mocks_provider>();
+/*<<define simple unit test>>*/
+test unit_test = [] {
+    /*<<create injector with `mocks_provider`>>*/
+    auto mi = di::make_injector<mocks_provider>();
+    /*<<set expectations>>*/
+    mi(&i1::get).will_return(42);
+    mi(&i2::get).will_return(123);
+    /*<<create object to test with interfaces to be injected by di and int value passed directly to constructor>>*/
+    c object{mi, mi, 87};
+};
 
-    //expect_call(_, &interface::get_value).will_return(42);
-    //c sut{_, 87};
-//};
-
-//test integration_test = [] {
-    //struct implementation : interface {
-        //int get_value() override { return 42; }
-    //};
-
-    //auto mi = di::make_injector<mocks_provider>(
-        //di::bind<int>.to(87)
-      //, di::bind<interface, implementation>
-    //);
-
-    //mi.create<c>();
-//};
+test integration_test = [] {
+    struct impl1 : i1 {
+        int get() override { return 42; }
+    };
+    /*<<create injector with `mocks_provider`>>*/
+    auto mi = di::make_injector<mocks_provider>(
+        di::bind<int>.to(87) // value
+      , di::bind<i1, impl1>  // original implementation
+    );
+    /*<<set expectations>>*/
+    mi(&i2::get).will_return(123); //fake
+    /*<<create object to test with mocked `i1` and original `i2` and injected int value>>*/
+    mi.create<c>();
+};
 
 int main() { }
 

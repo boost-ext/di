@@ -26,7 +26,8 @@ struct c3 { c3(std::shared_ptr<c1>, std::shared_ptr<c2>) { } };
 namespace di = boost::di;
 
 /*<<define `types dumper` directly in configuration>>*/
-class types_dumper : public di::config {
+template<class>
+class types_dumper : public di::config<> {
 public:
     auto policies() noexcept {
         return di::make_policies(

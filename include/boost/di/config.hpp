@@ -14,6 +14,7 @@
 #include "boost/di/providers/stack_over_heap.hpp"
 
 #if defined(BOOST_DI_CFG)
+    template<class = void>
     class BOOST_DI_CFG;
 #else
     #define BOOST_DI_CFG boost::di::config
@@ -26,6 +27,7 @@ inline auto make_policies(const TPolicies&... args) noexcept {
     return core::pool<aux::type_list<TPolicies...>>(args...);
 }
 
+template<class>
 class config {
 public:
     auto provider() const noexcept {

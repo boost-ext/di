@@ -23,7 +23,8 @@ public:
     }
 };
 
-class my_provider : public di::config {
+template<class>
+class my_provider : public di::config<> {
 public:
     auto provider() const noexcept {
         return heap_no_throw{};

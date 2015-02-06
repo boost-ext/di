@@ -29,7 +29,8 @@ namespace di = boost::di;
  * http://plantuml.sourceforge.net/objects.html
  * ./uml_dumper | java -jar plantuml.jar -p > uml_dumper.png
  */
-class uml_dumper : public di::config {
+template<class>
+class uml_dumper : public di::config<> {
 public:
     uml_dumper() {
         std::cout << "@startuml uml_dumper.png" << std::endl;

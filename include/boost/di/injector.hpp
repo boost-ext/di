@@ -20,7 +20,7 @@ class injector
         (core::injector<::BOOST_DI_CFG, TDeps...>) {
 public:
     template<
-        class TConfig
+        template<class> class TConfig
       , class... TArgs
         BOOST_DI_REQUIRES(concepts::creatable<typename core::injector<TConfig, TArgs...>::deps, TConfig, TDeps...>())
     > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit

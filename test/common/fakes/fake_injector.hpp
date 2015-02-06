@@ -34,14 +34,8 @@ struct fake_injector {
         return T{};
     }
 
-    struct fake_config {
-        detail::fake_provider provider() const noexcept {
-            return detail::fake_provider{};
-        }
-    } config_;
-
-    fake_config& config() {
-        return config_;
+    detail::fake_provider provider() const noexcept {
+        return detail::fake_provider{};
     }
 };
 

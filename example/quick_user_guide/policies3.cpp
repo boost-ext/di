@@ -12,7 +12,8 @@
 
 namespace di = boost::di;
 
-class all_must_be_bound_unless_int : public di::config {
+template<class>
+class all_must_be_bound_unless_int : public di::config<> {
 public:
     auto policies() const noexcept {
         using namespace di::policies;

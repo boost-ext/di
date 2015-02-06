@@ -322,16 +322,20 @@ auto creatable_impl(T&&, TDeps&&, TPolicies&&) -> aux::is_valid_expr<
     )
 >;
 
-template<class TDeps, class TConfig, class... Ts>
+template<class TDeps, template<class> class TConfig, class... Ts>
 constexpr auto creatable() {
+#if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)
     return std::is_same<
         aux::bool_list<aux::always<Ts>{}...>
       , aux::bool_list<decltype(
             creatable_impl(std::declval<Ts>()
                          , std::declval<TDeps>()
-                         , std::declval<TConfig>().policies())
+                         , std::declval<TConfig<int>>().policies())
         ){}...>
     >{};
+#else
+    return true;
+#endif
 }
 
 }}} // boost::di::concepts

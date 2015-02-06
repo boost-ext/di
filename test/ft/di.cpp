@@ -969,19 +969,20 @@ test named_parameters_with_shared_scope = [] {
     expect(object.n1 != object.n2);
 };
 
-static auto called = false;
+static auto called = 0;
+template<class>
+class config : public di::config<> {
+public:
+    auto policies() const noexcept {
+        return di::make_policies([](auto){++called;});
+    }
+};
+
 test call_policy_lambda = [] {
-    class config : public di::config {
-    public:
-        auto policies() const noexcept {
-            return di::make_policies([](auto){called = true;});
-        }
-    };
-
+    called = 0;
     auto injector = di::make_injector<config>();
-
     expect_eq(0, injector.create<int>());
-    expect(called);
+    expect_eq(1, called);
 };
 
 test modules_mix_make_injector = [] {
@@ -1240,17 +1241,18 @@ test inject_traits_no_limits_via_ctor_traits = [] {
     injector.create<c_no_limits>();
 };
 
-test call_provider = [] {
-    static auto called = 0;
-    class config : public di::config {
-    public:
-        auto provider() const noexcept {
-            ++called;
-            return di::providers::heap{};
-        }
-    };
+template<class>
+class config_provider : public di::config<> {
+public:
+    auto provider() const noexcept {
+        ++called;
+        return di::providers::heap{};
+    }
+};
 
-    auto injector = di::make_injector<config>();
+test call_provider = [] {
+    called = 0;
+    auto injector = di::make_injector<config_provider>();
     injector.create<int>();
     expect_eq(1, called);
 };
@@ -1272,36 +1274,38 @@ struct deleter_provider {
     }
 };
 
-test call_provider_with_deleter = [] {
-    class config : public di::config {
-    public:
-        auto provider() const noexcept {
-            return deleter_provider{};
-        }
-    };
+template<class>
+class config_deleter_provider : public di::config<> {
+public:
+    auto provider() const noexcept {
+        return deleter_provider{};
+    }
+};
 
+test call_provider_with_deleter = [] {
     deleter_provider::called() = 0;
-    auto injector = di::make_injector<config>();
+    auto injector = di::make_injector<config_deleter_provider>();
     injector.create<int>();
     expect_eq(1, deleter_provider::called());
 };
 
-test constructible_policy = [] {
-    class config : public di::config {
-    public:
-        auto policies() const noexcept {
-            using namespace di::policies;
-            using namespace di::policies::operators;
-            return di::make_policies(constructible(is_root{} || std::is_same<_, double>{} || is_bound<_>{}));
-        }
-    };
+template<class>
+class config_policies : public di::config<> {
+public:
+    auto policies() const noexcept {
+        using namespace di::policies;
+        using namespace di::policies::operators;
+        return di::make_policies(constructible(is_root{} || std::is_same<_, double>{} || is_bound<_>{}));
+    }
+};
 
+test constructible_policy = [] {
     struct example {
         int i = 0;
         double d = 0.0;
     };
 
-    auto injector = di::make_injector<config>(di::bind<int>.to(42));
+    auto injector = di::make_injector<config_policies>(di::bind<int>.to(42));
     injector.create<example>();
 };
 
@@ -1317,7 +1321,8 @@ struct policy {
     }
 };
 
-class custom_policies : public di::config {
+template<class>
+class custom_policies : public di::config<> {
 public:
     auto policies() const noexcept {
         return di::make_policies(

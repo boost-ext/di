@@ -12,6 +12,7 @@
 
 namespace boost { namespace di {
 
+template<class = void>
 struct fake_config {
     auto policies() const {
         return make_policies();

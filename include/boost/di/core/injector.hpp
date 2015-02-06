@@ -76,15 +76,24 @@ struct wrapper {
     TWrapper wrapper_;
 };
 
+struct any_ctor { explicit any_ctor(...) { } };
+
 BOOST_DI_HAS_METHOD(call, call);
 
-template<class TConfig, class... TDeps>
-class injector : public pool<bindings_t<TDeps...>> {
+template<template<class> class TConfig, class... TDeps>
+class injector : public pool<bindings_t<TDeps...>>
+               , public TConfig<injector<TConfig, TDeps...>>
+               , any_ctor {
     template<class...> friend struct provider;
     template<class, class> friend struct any_type;
     template<class> friend class scopes::exposed;
 
     using pool_t = pool<bindings_t<TDeps...>>;
+    using config = std::conditional_t<
+        std::is_constructible<TConfig<injector>, const injector&>{}
+      , TConfig<injector>
+      , any_ctor
+    >;
 
 public:
     using deps = bindings_t<TDeps...>;
@@ -92,11 +101,13 @@ public:
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
         : pool_t{init{}, pool<aux::type_list<std::remove_reference_t<decltype(arg(args))>...>>{arg(args)...}}
+        , config{*this}
     { }
 
-    template<class TConfig_, class... TDeps_>
+    template<template<class> class TConfig_, class... TDeps_>
     explicit injector(const injector<TConfig_, TDeps_...>& injector) noexcept
         : pool_t{init{}, create_from_injector(injector, deps{})}
+        , config{*this}
     { }
 
     template<class T BOOST_DI_REQUIRES(concepts::creatable<deps, TConfig, T>())>
@@ -109,10 +120,6 @@ public:
         call_impl(action, deps{});
     }
 
-    TConfig& config() noexcept {
-        return config_;
-    }
-
 private:
     template<class T, class TName = no_name>
     auto create_impl() const {
@@ -122,9 +129,7 @@ private:
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<expected_t, given_t, T, ctor_t, injector>;
-        policy<pool_t>::template call<T, TName>(
-            ((TConfig&)config_).policies(), dependency, ctor_t{}
-        );
+        policy<pool_t>::template call<T, TName>(((injector&)*this).policies(), dependency, ctor_t{});
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
             std::is_reference<T>{} && has_is_ref<dependency_t>{}
@@ -154,8 +159,6 @@ private:
                             , const aux::type_list<Ts...>&) const noexcept {
         return pool_t{Ts{injector}...};
     }
-
-    TConfig config_;
 };
 
 }}} // boost::di::core

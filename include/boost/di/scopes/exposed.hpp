@@ -33,9 +33,9 @@ public:
         };
 
         template<class T, class TInjector, class = void>
-        class provider : public iprovider<T> {
+        class provider_impl : public iprovider<T> {
         public:
-            explicit provider(const TInjector& injector)
+            explicit provider_impl(const TInjector& injector)
                 : injector_(injector)
             { }
 
@@ -52,10 +52,10 @@ public:
         };
 
         template<class T, class TInjector>
-        class provider<T, TInjector, std::enable_if_t<!std::is_copy_constructible<T>{}>>
+        class provider_impl<T, TInjector, std::enable_if_t<!std::is_copy_constructible<T>{}>>
             : public iprovider<T> {
         public:
-            explicit provider(const TInjector& injector)
+            explicit provider_impl(const TInjector& injector)
                 : injector_(injector)
             { }
 
@@ -70,7 +70,7 @@ public:
     public:
         template<class TInjector>
         explicit scope(const TInjector& injector) noexcept
-            : provider_{std::make_shared<provider<TExpected, TInjector>>(injector)}
+            : provider_{std::make_shared<provider_impl<TExpected, TInjector>>(injector)}
         { }
 
         template<class T, class TProvider>

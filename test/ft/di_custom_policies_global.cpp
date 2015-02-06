@@ -26,14 +26,16 @@ struct global_policy {
     }
 };
 
-class custom_policies : public di::config {
+template<class>
+class custom_policies : public di::config<> {
 public:
     auto policies() const noexcept {
         return di::make_policies(custom_policy{});
     }
 };
 
-class global_policies : public di::config {
+template<class>
+class global_policies : public di::config<> {
 public:
     auto policies() const noexcept {
         return di::make_policies(global_policy{});

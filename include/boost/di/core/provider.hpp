@@ -34,8 +34,7 @@ template<
 > {
     template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const {
-        auto&& config = ((TInjector&)injector_).config();
-        return config.provider().template get<TExpected, TGiven>(
+        return injector_.provider().template get<TExpected, TGiven>(
             TInitialization{}
           , memory
           , get_impl(aux::type<TArgs>{})...
