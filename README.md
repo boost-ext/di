@@ -501,7 +501,7 @@ auto injector = di::make_injector(      |
 ```
 ```cpp
 Annotated constructor injection with    | Test
-di::ctor_traits
+di::ctor_traits                         |
 ----------------------------------------|-----------------------------------------
 auto int1 = []{};                       | auto object = injector.create<c>();
 auto int2 = []{};                       | assert(42 == object.a);
