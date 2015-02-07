@@ -176,9 +176,9 @@ template<
   , core::pool<aux::type_list<Ts...>>
 > {
     struct arg {
-        using type = T;
-        using name = TName;
-        using is_root = TIsRoot;
+        using type BOOST_DI_UNUSED = T;
+        using name BOOST_DI_UNUSED = TName;
+        using is_root BOOST_DI_UNUSED = TIsRoot;
 
         template<class T_, class TName_, class TDefault_>
         using resolve =

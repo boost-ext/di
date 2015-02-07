@@ -161,6 +161,12 @@ using join_t = typename join<TArgs...>::type;
 #define BOOST_DI_REQUIRES_RET(...) \
     std::enable_if<__VA_ARGS__, BOOST_DI_REQUIRES_RET_IMPL
 
+#if defined(__GNUC__) || defined(__clang__)
+    #define BOOST_DI_UNUSED __attribute__((unused))
+#else
+    #define BOOST_DI_UNUSED
+#endif
+
 namespace boost { namespace di { namespace aux {
 
 template<class...>
@@ -1332,7 +1338,7 @@ struct is_any_type<any_type<TArgs...>> : std::true_type { };
                   , __VA_ARGS__ \
                 ) \
             ) \
-            using type = ::boost::di::aux::type_list< \
+            using type BOOST_DI_UNUSED = ::boost::di::aux::type_list< \
                 BOOST_DI_EVAL( \
                     BOOST_DI_REPEAT( \
                         BOOST_DI_NARG(__VA_ARGS__) \
@@ -1352,7 +1358,7 @@ struct is_any_type<any_type<TArgs...>> : std::true_type { };
     #define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
         struct BOOST_DI_INJECTOR { \
             static void inject(__VA_ARGS__); \
-            using type = typename ::boost::di::aux::function_traits<decltype(inject)>::args; \
+            using type BOOST_DI_UNUSED = typename ::boost::di::aux::function_traits<decltype(inject)>::args; \
         }
 #endif
 
@@ -1791,8 +1797,8 @@ private:
       , class... TCtor
     > static void call_impl(const TPolicies& policies, TDependency&& dependency) noexcept {
         struct arg {
-            using type = T;
-            using name = TName;
+            using type BOOST_DI_UNUSED = T;
+            using name BOOST_DI_UNUSED = TName;
         };
 
         call_impl_type<arg, TDependency, TPolicy, TCtor...>(
@@ -2036,9 +2042,9 @@ template<
   , core::pool<aux::type_list<Ts...>>
 > {
     struct arg {
-        using type = T;
-        using name = TName;
-        using is_root = TIsRoot;
+        using type BOOST_DI_UNUSED = T;
+        using name BOOST_DI_UNUSED = TName;
+        using is_root BOOST_DI_UNUSED = TIsRoot;
 
         template<class T_, class TName_, class TDefault_>
         using resolve =

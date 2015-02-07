@@ -43,6 +43,12 @@
 #define BOOST_DI_REQUIRES_RET(...) \
     std::enable_if<__VA_ARGS__, BOOST_DI_REQUIRES_RET_IMPL
 
+#if defined(__GNUC__) || defined(__clang__)
+    #define BOOST_DI_UNUSED __attribute__((unused))
+#else
+    #define BOOST_DI_UNUSED
+#endif
+
 namespace boost { namespace di { namespace aux {
 
 template<class...>

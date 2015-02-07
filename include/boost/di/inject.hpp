@@ -74,7 +74,7 @@
                   , __VA_ARGS__ \
                 ) \
             ) \
-            using type = ::boost::di::aux::type_list< \
+            using type BOOST_DI_UNUSED = ::boost::di::aux::type_list< \
                 BOOST_DI_EVAL( \
                     BOOST_DI_REPEAT( \
                         BOOST_DI_NARG(__VA_ARGS__) \
@@ -94,7 +94,7 @@
     #define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
         struct BOOST_DI_INJECTOR { \
             static void inject(__VA_ARGS__); \
-            using type = typename ::boost::di::aux::function_traits<decltype(inject)>::args; \
+            using type BOOST_DI_UNUSED = typename ::boost::di::aux::function_traits<decltype(inject)>::args; \
         }
 #endif
 

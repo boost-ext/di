@@ -12,6 +12,7 @@ project di :
         <include>../include
         <include>.
         <warnings>all
+        <warnings-as-errors>on
 ;
 
 rule run-example ( std : src + : cxxflags * : property * ) {

@@ -76,8 +76,6 @@ test to = [] {
     expect(std::is_same<int, typename dep2::expected>{});
     expect(std::is_same<int, typename dep2::given>{});
 
-    int i = 42;
-    using dep3 = decltype(dep1{}.to(i));
     expect(std::is_same<scopes::external, typename dep2::scope>{});
     expect(std::is_same<int, typename dep2::expected>{});
     expect(std::is_same<int, typename dep2::given>{});

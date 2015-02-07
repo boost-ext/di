@@ -43,8 +43,8 @@ private:
       , class... TCtor
     > static void call_impl(const TPolicies& policies, TDependency&& dependency) noexcept {
         struct arg {
-            using type = T;
-            using name = TName;
+            using type BOOST_DI_UNUSED = T;
+            using name BOOST_DI_UNUSED = TName;
         };
 
         call_impl_type<arg, TDependency, TPolicy, TCtor...>(
