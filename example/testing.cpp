@@ -104,7 +104,7 @@ class mocks_provider : public di::config<> {
           , std::enable_if_t<!is_resolvable<I>{} && std::is_polymorphic<T>{}, int> = 0
         > auto get(const TInitialization&
                  , const TMemory&
-                 , TArgs&&... args) const {
+                 , TArgs&&...) const {
             return reinterpret_cast<T*>(new mock<T>{expectations_});
         }
 

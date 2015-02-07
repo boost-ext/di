@@ -67,7 +67,7 @@ public:
 };
 
 int main() {
-    const auto i = 42;
+    constexpr auto i = 42;
 
     /*<<create injector and pass `module1`, `module2` and `exposed_module`>>*/
     auto injector = di::make_injector(
