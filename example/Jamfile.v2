@@ -11,7 +11,6 @@ project di :
     requirements
         <include>../include
         <include>.
-        <define>NDEBUG
         <warnings>all
 ;
 
@@ -42,6 +41,7 @@ test-suite example :
     [ run-example c++1y : deduce_scope.cpp ]
     [ run-example c++1y : dynamic_bindings.cpp ]
     [ run-example c++1y : externals.cpp ]
+    [ run-example c++1y : factory.cpp ]
     [ run-example c++1y : hello_world.cpp ]
     [ run-example c++1y : modules.cpp ]
     [ run-example c++1y : multiple_interfaces.cpp ]
