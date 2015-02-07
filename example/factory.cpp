@@ -27,7 +27,7 @@ public:
     auto operator()(const TInjector& injector) const {
         return [&](auto&&... args) {
             using ctor = typename di::type_traits::ctor_traits<T>::type;
-            return create(injector, ctor{}, std::forward<decltype(args)>(args)...);
+            return this->create(injector, ctor{}, std::forward<decltype(args)>(args)...);
         };
     }
 
@@ -40,12 +40,18 @@ private:
 
     template<class TInitialization, class... TCtor, std::size_t... Ns, class TInjector, class... TArgs>
     auto create_helper(const std::index_sequence<Ns...>&, const TInjector& injector, const di::aux::pair<TInitialization, di::aux::type_list<TCtor...>>&, TArgs&&... args) const {
-        return std::make_unique<T>(create_impl<Ns>(injector, di::aux::type<TCtor>{}, args...)...);
+        return std::make_unique<T>(create_impl<Ns>(injector, di::aux::type<TCtor>{}, std::forward<TArgs>(args)...)...);
     }
 
-    template<std::size_t, class TInjector, class TArg, class... TArgs>
-    decltype(auto) create_impl(const TInjector& injector, const di::aux::type<TArg>&, TArgs&&...) const {
+    template<std::size_t, class TInjector, class TArg>
+    decltype(auto) create_impl(const TInjector& injector, const di::aux::type<TArg>&, ...) const {
         return injector.template create<TArg>();
+    }
+
+    template<std::size_t N, class TInjector, class TArg, class... TArgs>
+    decltype(auto) create_impl(const TInjector& injector, const di::aux::type<di::type_traits::named<di::no_name, TArg>>&, TArgs&&... args) const {
+        constexpr auto value = get_assisted_ctor_nr(N, typename di::type_traits::ctor_traits<T>::type{});
+        return get<TArg>(std::integral_constant<std::size_t, value>{}, args...);
     }
 
     template<class TInitialization, class... TCtor>
@@ -75,13 +81,7 @@ private:
         return true;
     }
 
-    template<std::size_t N, class TInjector, class TArg, class... TArgs>
-    decltype(auto) create_impl(const TInjector&, const di::aux::type<di::type_traits::named<di::no_name, TArg>>&, TArgs&&... args) const {
-        constexpr auto value = get_assisted_ctor_nr(N, typename di::type_traits::ctor_traits<T>::type{});
-        return get<TArg>(std::integral_constant<std::size_t, value>{}, args...);
-    }
-
-    template<class TCtor, std::size_t N, class TArg, class... TArgs>
+    template<class TCtor, std::size_t N, class TArg, class... TArgs, class = std::enable_if_t<(N > 1)>>
     decltype(auto) get(const std::integral_constant<std::size_t, N>&, TArg&&, TArgs&&... args) const {
         return get<TCtor>(std::integral_constant<std::size_t, N - 1>{}, args...);
     }
