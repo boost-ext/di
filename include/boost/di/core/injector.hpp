@@ -69,6 +69,8 @@ decltype(auto) arg(const T& arg, std::enable_if_t<has_configure<T>{}>* = 0) noex
 
 template<class T, class TWrapper>
 struct wrapper {
+    using element_type = T;
+
     inline operator T() const noexcept {
         return wrapper_;
     }
