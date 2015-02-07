@@ -2184,7 +2184,7 @@ auto creatable_impl(T&&, TDeps&&, TPolicies&&) -> aux::is_valid_expr<
 
 template<class TDeps, template<class> class TConfig, class... Ts>
 constexpr auto creatable() {
-#if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)
+#if defined(BOOST_DI_CFG_ENABLE_CREATABLE_CONCEPT)
     return std::is_same<
         aux::bool_list<aux::always<Ts>{}...>
       , aux::bool_list<decltype(
@@ -2290,13 +2290,13 @@ public:
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
         : pool_t{init{}, pool<aux::type_list<std::remove_reference_t<decltype(arg(args))>...>>{arg(args)...}}
-        , config{*this}
+        , config(*this)
     { }
 
     template<template<class> class TConfig_, class... TDeps_>
     explicit injector(const injector<TConfig_, TDeps_...>& injector) noexcept
         : pool_t{init{}, create_from_injector(injector, deps{})}
-        , config{*this}
+        , config(*this)
     { }
 
     template<class T BOOST_DI_REQUIRES(concepts::creatable<deps, TConfig, T>())>

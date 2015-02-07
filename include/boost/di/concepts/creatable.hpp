@@ -324,7 +324,7 @@ auto creatable_impl(T&&, TDeps&&, TPolicies&&) -> aux::is_valid_expr<
 
 template<class TDeps, template<class> class TConfig, class... Ts>
 constexpr auto creatable() {
-#if defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)
+#if defined(BOOST_DI_CFG_ENABLE_CREATABLE_CONCEPT)
     return std::is_same<
         aux::bool_list<aux::always<Ts>{}...>
       , aux::bool_list<decltype(

@@ -107,13 +107,13 @@ public:
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
         : pool_t{init{}, pool<aux::type_list<std::remove_reference_t<decltype(arg(args))>...>>{arg(args)...}}
-        , config{*this}
+        , config(*this)
     { }
 
     template<template<class> class TConfig_, class... TDeps_>
     explicit injector(const injector<TConfig_, TDeps_...>& injector) noexcept
         : pool_t{init{}, create_from_injector(injector, deps{})}
-        , config{*this}
+        , config(*this)
     { }
 
     template<class T BOOST_DI_REQUIRES(concepts::creatable<deps, TConfig, T>())>

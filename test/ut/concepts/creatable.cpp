@@ -4,6 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#define BOOST_DI_CFG_ENABLE_CREATABLE_CONCEPT
 #include "boost/di/concepts/creatable.hpp"
 #include "boost/di/policies/constructible.hpp"
 #include "boost/di/make_injector.hpp"
