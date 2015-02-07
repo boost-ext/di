@@ -1352,7 +1352,7 @@ struct is_any_type<any_type<TArgs...>> : std::true_type { };
     #define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
         struct BOOST_DI_INJECTOR { \
             static void inject(__VA_ARGS__); \
-            using type = ::boost::di::aux::function_traits<decltype(inject)>::args; \
+            using type = typename ::boost::di::aux::function_traits<decltype(inject)>::args; \
         }
 #endif
 
@@ -2252,6 +2252,10 @@ decltype(auto) arg(const T& arg, std::enable_if_t<has_configure<T>{}>* = 0) noex
 
 template<class T, class TWrapper>
 struct wrapper {
+    inline operator T() const noexcept {
+        return wrapper_;
+    }
+
     inline operator T() noexcept {
         return wrapper_;
     }

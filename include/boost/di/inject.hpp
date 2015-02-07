@@ -94,7 +94,7 @@
     #define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
         struct BOOST_DI_INJECTOR { \
             static void inject(__VA_ARGS__); \
-            using type = ::boost::di::aux::function_traits<decltype(inject)>::args; \
+            using type = typename ::boost::di::aux::function_traits<decltype(inject)>::args; \
         }
 #endif
 
