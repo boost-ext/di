@@ -32,14 +32,14 @@ template<class TInjector>
 class mocks_provider : public di::config<> {
     class not_implemented : public std::exception { };
 
-    class expectations : public std::map<std::type_index, std::function<void*()>> {
+    class expectations : public std::map<std::type_index, std::function<std::shared_ptr<void>()>> {
     public:
         template<class T>
         void will_return(T value) {
-            operator [](current) = [=]{ return (void*)&value; };
+            operator [](current) = [=]{ return std::make_shared<T>(value); };
         }
 
-        void add(std::type_index type, std::function<void*()> call) {
+        void add(std::type_index type, std::function<std::shared_ptr<void>()> call) {
             current = type;
             operator [](current) = call;
         }
@@ -61,7 +61,7 @@ class mocks_provider : public di::config<> {
             virtual int _1() {
                 auto it = expectations_.find(std::type_index(typeid(T)));
                 if (it != expectations_.end()) {
-                    return *(int*)it->second();
+                    return *(int*)it->second().get();
                 }
 
                 throw not_implemented{};
@@ -92,7 +92,7 @@ class mocks_provider : public di::config<> {
         > auto get(const TInitialization&
                  , const TMemory&
                  , TArgs&&... args) const {
-            return new T(std::forward<TArgs>(args)...);
+            return new T{std::forward<TArgs>(args)...};
         }
 
         template<
