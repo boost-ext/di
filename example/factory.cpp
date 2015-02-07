@@ -12,28 +12,13 @@
 //->
 #include <boost/di.hpp>
 
-#include <boost/units/detail/utility.hpp>
 namespace di = boost::di;
 
 //<-
 struct interface { virtual ~interface() noexcept = default; virtual void dummy() = 0; };
 struct implementation : interface { void dummy() override { } };
-//->
 
 constexpr di::no_name assisted{};
-
-struct example {
-    BOOST_DI_INJECT(example
-                  , (named = assisted) int date
-                  , std::unique_ptr<interface> up
-                  , (named = assisted) double factor
-                  , int i) {
-        assert(i == 87);
-        assert(dynamic_cast<implementation*>(up.get()));
-        assert(date == 42);
-        assert(factor == 123.0);
-    }
-};
 
 template<class T>
 class factory {
@@ -112,12 +97,30 @@ private:
     }
 };
 
+//->
+
+struct example {
+    /*<<define `example` constructor using `assisted` as factory creation parameters>>*/
+    BOOST_DI_INJECT(example
+                  , (named = assisted) int date /*from factory*/
+                  , std::unique_ptr<interface> up /*from injector*/
+                  , (named = assisted) double factor /*from factory*/
+                  , int i /*from injector*/) {
+        assert(i == 87);
+        assert(dynamic_cast<implementation*>(up.get()));
+        assert(date == 42);
+        assert(factor == 123.0);
+    }
+};
+
 int main() {
+    /*<<factory declaration using std function>>*/
     using example_factory = std::function<std::unique_ptr<example>(int, double)>;
 
     auto injector = di::make_injector(
         di::bind<int>.to(87)
       , di::bind<interface, implementation>
+        /*<<bind `example_factory` to factory creating `example`>>*/
       , di::bind<example_factory>.to(factory<example>{})
     );
 
