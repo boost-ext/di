@@ -9,7 +9,7 @@
 
 namespace boost { namespace di {
 
-template<class T>
+template<class>
 struct fake_binder { };
 
 }} // boost::di

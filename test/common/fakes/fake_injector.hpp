@@ -7,21 +7,12 @@
 #ifndef BOOST_DI_FAKE_INJECTOR_HPP
 #define BOOST_DI_FAKE_INJECTOR_HPP
 
-#include "boost/di/aux_/type_traits.hpp"
+#include "common/fakes/fake_config.hpp"
 
 namespace boost { namespace di {
 
-namespace detail {
-struct fake_provider {
-    template<class, class T, class... TArgs>
-    auto get(TArgs&&...) const noexcept {
-        return T{};
-    }
-};
-} // namespace detail
-
 template<class TExpected = void>
-struct fake_injector {
+struct fake_injector : fake_config<> {
     using deps = void;
 
     template<class T>
@@ -32,10 +23,6 @@ struct fake_injector {
     template<class T>
     auto create_impl() const noexcept {
         return T{};
-    }
-
-    detail::fake_provider provider() const noexcept {
-        return detail::fake_provider{};
     }
 };
 

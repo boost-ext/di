@@ -15,7 +15,7 @@ template<
     class T
   , class TDependency = aux::none_t
   , class TDeps = aux::none_t
-  , bool TResolve = true
+  , bool  TResolve = true
 > struct fake_policy;
 
 template<
@@ -29,7 +29,7 @@ template<
 
     using dependency = TDependency;
 
-    template<class TT, class Name, class TDefault>
+    template<class, class, class>
     using resolve = TDependency;
 };
 
@@ -44,7 +44,7 @@ template<
 
     using dependency = TDependency;
 
-    template<class TT, class Name, class TDefault>
+    template<class, class, class TDefault>
     using resolve = TDefault;
 };
 

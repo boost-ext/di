@@ -7,9 +7,6 @@
 #ifndef BOOST_DI_FAKE_PROVIDER_HPP
 #define BOOST_DI_FAKE_PROVIDER_HPP
 
-#include <new>
-#include <memory>
-#include "boost/di/aux_/utility.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
 #include "common/fakes/fake_injector.hpp"
 
