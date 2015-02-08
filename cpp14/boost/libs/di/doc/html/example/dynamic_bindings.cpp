@@ -16,7 +16,7 @@ namespace di  = boost::di;
 
 //<-
 enum eid { e1 = 1, e2 = 2 };
-struct interface { virtual ~interface() = default; };
+struct interface { virtual ~interface() noexcept = default; };
 struct implementation1 : interface { };
 struct implementation2 : interface { };
 //->

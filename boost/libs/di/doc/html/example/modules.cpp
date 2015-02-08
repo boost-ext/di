@@ -17,7 +17,7 @@
 namespace di = boost::di;
 
 //<-
-struct interface { virtual ~interface() = default; virtual void dummy() = 0;};
+struct interface { virtual ~interface() noexcept = default; virtual void dummy() = 0;};
 struct implementation1 : interface { void dummy() override { } };
 struct implementation2 : interface { void dummy() override { } };
 //->
@@ -46,10 +46,6 @@ public:
 
 class module2 {
 public:
-    explicit module2(int i)
-        : i_(i)
-    { }
-
     /*<<module configuration>>*/
     auto configure() const {
         return di::make_injector(
@@ -57,7 +53,6 @@ public:
         );
     }
 
-private:
     int i_ = 0;
 };
 
@@ -72,7 +67,7 @@ public:
 };
 
 int main() {
-    const auto i = 42;
+    constexpr auto i = 42;
 
     /*<<create injector and pass `module1`, `module2` and `exposed_module`>>*/
     auto injector = di::make_injector(

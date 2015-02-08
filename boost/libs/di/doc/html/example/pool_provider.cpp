@@ -67,7 +67,8 @@ struct pool_provider {
 };
 
 /*<override `di` provider configuration>*/
-class config : public di::config {
+template<class>
+class config : public di::config<> {
 public:
     auto provider() const noexcept {
         return pool_provider{};

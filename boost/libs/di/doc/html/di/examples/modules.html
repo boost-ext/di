@@ -54,17 +54,12 @@
 
 <span class="keyword">class</span> <span class="identifier">module2</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">explicit</span> <span class="identifier">module2</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span>
-        <span class="special">:</span> <span class="identifier">i_</span><span class="special">(</span><span class="identifier">i</span><span class="special">)</span>
-    <span class="special">{</span> <span class="special">}</span>
-
     <a class="co" name="di.examples.modules.c2" href="modules.html#di.examples.modules.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
         <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
             <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">i_</span><span class="special">)</span>
         <span class="special">);</span>
     <span class="special">}</span>
 
-<span class="keyword">private</span><span class="special">:</span>
     <span class="keyword">int</span> <span class="identifier">i_</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">};</span>
 
@@ -78,7 +73,7 @@
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <span class="keyword">const</span> <span class="keyword">auto</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">42</span><span class="special">;</span>
+    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">42</span><span class="special">;</span>
 
     <a class="co" name="di.examples.modules.c6" href="modules.html#di.examples.modules.c7"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
         <span class="identifier">module1</span><span class="special">{}</span>

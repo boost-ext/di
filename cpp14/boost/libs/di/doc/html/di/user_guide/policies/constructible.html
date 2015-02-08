@@ -178,7 +178,7 @@
 <th align="left">Warning</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-            Logic operators will works only when <code class="computeroutput"><span class="keyword">using</span>
+            Logic operators will work only when <code class="computeroutput"><span class="keyword">using</span>
             <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">operators</span></code> will be defined.
           </p></td></tr>
 </table></div>
@@ -264,13 +264,14 @@
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">/</span><span class="identifier">policies</span><span class="special">/</span><span class="identifier">constructible</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
-<span class="keyword">class</span> <span class="identifier">all_must_be_bound_unless_int</span> <span class="special">:</span> <span class="keyword">public</span> <a class="link" href="../../user_guide.html#di.user_guide.synopsis">di::config</a> <span class="special">{</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">all_must_be_bound_unless_int</span> <span class="special">:</span> <span class="keyword">public</span> <a class="link" href="../configuration.html#di.user_guide.configuration.synopsis">di::config</a><span class="special">&lt;&gt;</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">auto</span> <span class="identifier">policies</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
         <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">;</span>
         <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">operators</span><span class="special">;</span>
 
-        <span class="keyword">return</span> <a class="link" href="../../user_guide.html#di.user_guide.synopsis">di::make_policies</a><span class="special">(</span>
+        <span class="keyword">return</span> <a class="link" href="../configuration.html#di.user_guide.configuration.synopsis">di::make_policies</a><span class="special">(</span>
             <span class="identifier">constructible</span><span class="special">(</span><span class="identifier">is_same</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;{}</span> <span class="special">||</span> <span class="identifier">is_bound</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&gt;{})</span>
         <span class="special">);</span>
     <span class="special">}</span>

@@ -1,6 +1,5 @@
 index.html
 di/introduction.html
-di/motivation.html
 di/overview.html
 di/tutorial.html
 di/quick_user_guide.html
@@ -31,9 +30,7 @@ di/user_guide/providers/heap.html
 di/user_guide/policies.html
 di/user_guide/policies/constructible.html
 di/user_guide/concepts.html
-di/user_guide/concepts/boundable.html
-di/user_guide/concepts/configurable.html
-di/user_guide/concepts/creatable.html
+di/user_guide/configuration.html
 di/examples.html
 di/examples/hello_world.html
 di/examples/bindings.html
@@ -47,12 +44,14 @@ di/examples/custom_scope.html
 di/examples/externals.html
 di/examples/modules.html
 di/examples/modules_hpp_cpp.html
+di/examples/factory_assisted_injection.html
 di/examples/custom_policy.html
 di/examples/types_dumper.html
 di/examples/uml_dumper.html
 di/examples/xml_injection.html
 di/examples/custom_provider.html
 di/examples/pool_provider.html
+di/examples/testing_automatic_mocks_injectio.html
 di/rationale.html
 di/change_log.html
 di/acknowledgements.html

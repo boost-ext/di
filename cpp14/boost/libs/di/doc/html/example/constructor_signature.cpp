@@ -14,8 +14,8 @@
 
 namespace di = boost::di;
 //<-
-struct interface1 { virtual ~interface1() = default; };
-struct interface2 { virtual ~interface2() = default; };
+struct interface1 { virtual ~interface1() noexcept = default; };
+struct interface2 { virtual ~interface2() noexcept = default; };
 struct implementation1 : interface1 { };
 struct implementation2 : interface2 { };
 //->

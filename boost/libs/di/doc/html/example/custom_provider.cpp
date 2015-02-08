@@ -45,7 +45,8 @@ struct custom_provider {
 };
 
 /*<override `di` provider configuration>*/
-class config : public di::config {
+template<class>
+class config : public di::config<> {
 public:
     auto provider() const noexcept {
         return custom_provider{};

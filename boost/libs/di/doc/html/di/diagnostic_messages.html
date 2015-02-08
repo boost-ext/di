@@ -27,12 +27,8 @@
 <a name="di.diagnostic_messages"></a><a class="link" href="diagnostic_messages.html" title="Diagnostic messages">Diagnostic messages</a>
 </h2></div></div></div>
 <p>
-      Error messages were accomplished using below compilation flags (in order to
-      avoid instantiation stack trace).
+      Error messages were produced using <a class="link" href="user_guide/concepts.html" title="Concepts">concepts</a>.
     </p>
-<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
-          <code class="computeroutput"><span class="special">-</span><span class="identifier">ftemplate</span><span class="special">-</span><span class="identifier">backtrace</span><span class="special">-</span><span class="identifier">limit</span><span class="special">=</span><span class="number">1</span> <span class="special">-</span><span class="identifier">ferror</span><span class="special">-</span><span class="identifier">limit</span><span class="special">=</span><span class="number">1</span></code>
-        </li></ul></div>
 <div class="informaltable"><table class="table">
 <colgroup>
 <col>
@@ -119,10 +115,10 @@
 </tr></thead>
 <tbody><tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">class</span> <span class="identifier">all_bound</span> <span class="special">:</span> <span class="keyword">public</span> <a class="link" href="user_guide.html#di.user_guide.synopsis">di::config</a> <span class="special">{</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">class</span> <span class="identifier">all_bound</span> <span class="special">:</span> <span class="keyword">public</span> <a class="link" href="user_guide/configuration.html#di.user_guide.configuration.synopsis">di::config</a> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">auto</span> <span class="identifier">policies</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
-        <span class="keyword">return</span> <a class="link" href="user_guide.html#di.user_guide.synopsis">di::make_policies</a><span class="special">(</span>
+        <span class="keyword">return</span> <a class="link" href="user_guide/configuration.html#di.user_guide.configuration.synopsis">di::make_policies</a><span class="special">(</span>
             <span class="identifier">constructible</span><span class="special">(</span><span class="identifier">is_bound</span><span class="special">&lt;</span><span class="identifier">_</span><span class="special">&gt;{})</span>
         <span class="special">);</span>
     <span class="special">}</span>

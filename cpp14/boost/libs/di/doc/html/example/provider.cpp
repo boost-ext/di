@@ -17,7 +17,7 @@ namespace di = boost::di;
 template<typename T>
 class provider {
 public:
-    virtual ~provider() = default;
+    virtual ~provider() noexcept = default;
     virtual T get() const = 0;
 };
 

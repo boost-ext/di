@@ -226,7 +226,8 @@
 <a name="di.user_guide.providers.heap.h4"></a>
           <span class="phrase"><a name="di.user_guide.providers.heap.examples"></a></span><a class="link" href="heap.html#di.user_guide.providers.heap.examples">Examples</a>
         </h6>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">use_heap_provider</span> <span class="special">:</span> <span class="keyword">public</span> <a class="link" href="../../user_guide.html#di.user_guide.synopsis">di::config</a> <span class="special">{</span>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">use_heap_provider</span> <span class="special">:</span> <span class="keyword">public</span> <a class="link" href="../configuration.html#di.user_guide.configuration.synopsis">di::config</a><span class="special">&lt;&gt;</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">auto</span> <span class="identifier">provider</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
         <span class="keyword">return</span> <span class="identifier">heap</span><span class="special">{};</span>

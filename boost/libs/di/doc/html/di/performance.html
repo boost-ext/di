@@ -191,8 +191,7 @@ retq
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
     <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">impl1</span><span class="special">&gt;</span>
-    <span class="special">);</span>
+        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">impl1</span><span class="special">&gt;);</span>
 
     <span class="keyword">auto</span> <span class="identifier">ptr</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span>
         <span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;</span>
