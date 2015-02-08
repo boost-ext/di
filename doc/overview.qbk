@@ -12,10 +12,6 @@
 [@https://travis-ci.org/krzysztof-jusiak/di [$https://img.shields.io/travis/krzysztof-jusiak/di/cpp14.svg [format PNG]]]
 [@http://github.com/krzysztof-jusiak/di/issues [$https://img.shields.io/github/issues/krzysztof-jusiak/di.svg [format PNG]]]
 
-Boost.DI is a header only, type safe, compile time, non-intrusive constructor dependency injection
-library improving manual dependency injection by simplifying object instantiation with automatic
-dependencies injection.
-
 [h6 Dependencies]
 
 * C++14 compliant compiler with STL (memory, type\_traits headers) / Boost is not required
@@ -49,54 +45,6 @@ To get and test Boost.DI library:
     ./bootstrap.sh --with-toolset=clang
     ./b2 -j4 ../test ../example
 ```
-
-[h6 Configuration]
-
-The macros listed in the table below may be used to control the behaviour of `Boost.DI`.
-
-[table
-  [[Macro][Description]]
-
-  [
-    [`BOOST_DI_CFG_CTOR_LIMIT_SIZE`]
-    [
-        Constructor injection is limited by `BOOST_DI_CFG_CTOR_LIMIT_SIZE`, which means that constructor can't
-        have more parameters then defined in order for `Boost.DI` to works correctly. Value might be redefined
-        to any number between 0 and 10. Might be used as well to limit clients from having long parameter list constructors.
-
-        default: `10`
-    ]
-  ]
-
-  [
-    [`BOOST_DI_CFG`]
-    [
-        Global configuration allows to customize provider and policies.
-
-        default: __di_config__
-    ]
-  ]
-
-  [
-    [`BOOST_DI_INJECTOR`]
-    [
-        Named used internally by `Boost.DI` when `__injections_boost_di_inject__` or `__injections_boost_di_inject_traits__` is used
-        to define constructor traits.
-
-        default: `boost_di_injector__`
-    ]
-  ]
-
-  [
-    [`BOOST_DI_CFG_NO_PREPROCESSED_HEADERS`]
-    [
-        `Boost.DI` by default uses preprocessed headers. To explicitly disable preprocessed headers `BOOST_DI_CFG_NO_PREPROCESSED_HEADERS` has to be defined.
-
-        default: `enabled`
-    ]
-  ]
-
-]
 
 [h6 Similar libraries]
 

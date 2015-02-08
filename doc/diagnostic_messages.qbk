@@ -9,9 +9,7 @@
 
 [section Diagnostic messages]
 
-Error messages were accomplished using below compilation flags (in order to avoid instantiation stack trace).
-
-* `-ftemplate-backtrace-limit=1 -ferror-limit=1`
+Error messages were produced using [link di.user_guide.concepts concepts].
 
 [table
 [[Create interface without bound implementation][Error message]]

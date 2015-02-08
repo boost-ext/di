@@ -148,7 +148,7 @@ If the default behavior should be changed constructor has to be explicitly marke
     ]
 ]
 
-[note Automatic constructor parameters deduction is limited to [link di.overview.configuration BOOST_DI_CFG_CTOR_LIMIT_SIZE], which by defaults is set to `10`.]
+[note Automatic constructor parameters deduction is limited to [link di.user_guide.configuration BOOST_DI_CFG_CTOR_LIMIT_SIZE], which by defaults is set to `10`.]
 [note `Boost.DI` is not able to distinguish between ambiguous constructors with the same ([*longest]) amount of parameters, then __injections_boost_di_inject__ has to be used to point which constructor should be deduced.]
 
 [heading More Examples]
@@ -220,7 +220,7 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
     ]
 ]
 
-[note BOOST_DI_INJECT is limited by [link di.overview.configuration BOOST_DI_CFG_CTOR_LIMIT_SIZE], which by default is set to `10` and might be between 0 and 10. In order to support more constructor parameters __injections_boost_di_inject_traits_no_limits__ has to be used.]
+[note BOOST_DI_INJECT is limited by [link di.user_guide.configuration BOOST_DI_CFG_CTOR_LIMIT_SIZE], which by default is set to `10` and might be between 0 and 10. In order to support more constructor parameters __injections_boost_di_inject_traits_no_limits__ has to be used.]
 
 [heading More Examples]
     ``__examples_constructor_injection__``
@@ -338,7 +338,7 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
 [heading BOOST_DI_INJECT_TRAITS_NO_LIMITS]
 
 [heading Description]
-`BOOST_DI_INJECT_TRAITS_NO_LIMITS` is similar to __injections_boost_di_inject_traits__, but it's not limited by [link di.overview.configuration BOOST_DI_CFG_CTOR_LIMIT_SIZE]
+`BOOST_DI_INJECT_TRAITS_NO_LIMITS` is similar to __injections_boost_di_inject_traits__, but it's not limited by [link di.user_guide.configuration BOOST_DI_CFG_CTOR_LIMIT_SIZE]
 and doesn't support __annotations__. Useful for generated constructors.
 
 [heading Synopsis]

@@ -85,7 +85,7 @@ int main() {                            | int main() {
                                         |
    coffee_maker cm{heater, move(pump)}; |
    cm.brew();                           |
-}
+}                                       |
 ```
 [![coffee maker](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_3_cd.png)](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_3_cd.png) | [![coffee maker](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_3_od.png)](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_3_od.png) |
 --- | --- |

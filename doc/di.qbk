@@ -68,8 +68,8 @@
 [def __providers_heap__                                 [link di.user_guide.providers.heap heap]]
 [def __providers_stack_over_heap__                      [link di.user_guide.providers.heap stack_over_heap]]
 
-[def __di_config__                                      [link di.user_guide.synopsis di::config]]
-[def __di_make_policies__                               [link di.user_guide.synopsis di::make_policies]]
+[def __di_config__                                      [link di.user_guide.configuration.synopsis di::config]]
+[def __di_make_policies__                               [link di.user_guide.configuration.synopsis di::make_policies]]
 
 [def __performance__                                    [link di.performance Performance]]
 [def __diagnostic_messages__                            [link di.diagnostic_messages Diagnostic messages]]

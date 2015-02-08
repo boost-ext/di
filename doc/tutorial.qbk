@@ -10,7 +10,7 @@
 [section Tutorial]
 
 For the purposes of this tutorial we are going to implement simple application which will print
-"hello_world" using our logger implementation from [link di.motivation Motivation] when first command line argument is not equal 0.
+"hello_world" using simple logger implementation when first command line argument is not equal 0.
 
 [table
     [[Logger/Fake logger implementation: [@example/tutorial/ilogger.hpp] | [@example/tutorial/logger.hpp]]]

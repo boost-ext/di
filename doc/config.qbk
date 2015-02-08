@@ -1,6 +1,6 @@
 [section Configuration]
 
-`Boost.DI` design distinguish few building blocks (above), which might be cofigured using [link di.overview.configuration BOOST_DI_CFG].
+`Boost.DI` design distinguish few building blocks (above), which might be cofigured using [link di.user_guide.configuration BOOST_DI_CFG].
 
 [heading Synopsis]
     template<class>
@@ -18,6 +18,52 @@
     [[TArgs...][__policy_model__][Creates policies][__policy_model__ list][Does not throw]]
     [[`policies()`][None][Configure default policies][__policy_model__ list][Does not throw]]
     [[`provider()`][None][Configure default provider][__provider_model__][Does not throw]]
+]
+
+The macros listed in the table below may be used to control the behaviour of `Boost.DI`.
+
+[table
+  [[Macro][Description]]
+
+  [
+    [`BOOST_DI_CFG_CTOR_LIMIT_SIZE`]
+    [
+        Constructor injection is limited by `BOOST_DI_CFG_CTOR_LIMIT_SIZE`, which means that constructor can't
+        have more parameters then defined in order for `Boost.DI` to works correctly. Value might be redefined
+        to any number between 0 and 10. Might be used as well to limit clients from having long parameter list constructors.
+
+        default: `10`
+    ]
+  ]
+
+  [
+    [`BOOST_DI_CFG`]
+    [
+        Global configuration allows to customize provider and policies.
+
+        default: __di_config__
+    ]
+  ]
+
+  [
+    [`BOOST_DI_INJECTOR`]
+    [
+        Named used internally by `Boost.DI` when `__injections_boost_di_inject__` or `__injections_boost_di_inject_traits__` is used
+        to define constructor traits.
+
+        default: `boost_di_injector__`
+    ]
+  ]
+
+  [
+    [`BOOST_DI_CFG_NO_PREPROCESSED_HEADERS`]
+    [
+        `Boost.DI` by default uses preprocessed headers. To explicitly disable preprocessed headers `BOOST_DI_CFG_NO_PREPROCESSED_HEADERS` has to be defined.
+
+        default: `enabled`
+    ]
+  ]
+
 ]
 
 [heading Header]

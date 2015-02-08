@@ -34,7 +34,7 @@ Generated with [@http://plantuml.sourceforge.net PlantUML].
     [ [Component] [Description] ]
     [ [__bindings__] [DSL to create dependencies representation which will be used by core to resolve types] ]
     [ [__core__] [Responsible for resolving requested types (implementation detail)] ]
-    [ [__providers__] [Responsible for providings object instance] ]
+    [ [__providers__] [Responsible for providing object instance] ]
     [ [__scopes__] [Responsible for maintain objects life time] ]
     [ [__wrappers__] [Responsible for conversion to required type] ]
     [ [__policies__] [Compile time assertions for types] ]
@@ -42,7 +42,6 @@ Generated with [@http://plantuml.sourceforge.net PlantUML].
 
 [heading See Also]
 * [link di.introduction Introduction]
-* [link di.motivation Motivation]
 * [link di.overview Overview]
 * [link di.tutorial Tutorial]
 * [link di.quick_user_guide Quick user Guide]
