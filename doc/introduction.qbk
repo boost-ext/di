@@ -334,7 +334,7 @@ Following this approach has many advantages.
     ]
 ]
 
-* *Boost.DI reduces testing effort*
+* *Boost.DI simplify testing*
 [table
     [[Manual Dependency Injection][Boost.DI]]
     [
