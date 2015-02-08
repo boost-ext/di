@@ -958,7 +958,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
                 }
             };
 
-            class my_provider : public __di_config__ {
+            template<class>
+            class my_provider : public __di_config__<> {
             public:
                 auto provider() const noexcept {
                     return heap_no_throw{};
@@ -990,7 +991,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
     [
         [
             ```
-            class print_types_policy : public __di_config__ {
+            template<class>
+            class print_types_policy : public __di_config__<> {
             public:
                 auto policies() const noexcept {
                     return __di_make_policies__(
@@ -1026,7 +1028,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
     [
         [
             ```
-            class print_types_info_policy : public __di_config__ {
+            template<class>
+            class print_types_info_policy : public __di_config__<> {
             public:
                 auto policies() const noexcept {
                     return __di_make_policies__(
@@ -1100,7 +1103,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
             ```
             #include <boost/di/policies/constructible.hpp>
 
-            class all_must_be_bound_unless_int : public __di_config__ {
+            template<class>
+            class all_must_be_bound_unless_int : public __di_config__<> {
             public:
                 auto policies() const noexcept {
                     using namespace di::policies;

@@ -16,7 +16,7 @@
 #include <boost/di.hpp>
 
 namespace di = boost::di;
-
+//<-
 struct i1 {
     virtual ~i1() noexcept = default;
     virtual int get() = 0;
@@ -27,7 +27,7 @@ struct i2 {
     virtual int get() = 0;
 };
 
-/*<<``mocks provider` configuration>>*/
+/*<<`mocks provider` configuration>>*/
 template<class TInjector>
 class mocks_provider : public di::config<> {
     class not_implemented : public std::exception { };
@@ -140,18 +140,19 @@ private:
     const TInjector& injector_;
 };
 
+struct test {
+    template<class Test>
+    test(const Test& test) {
+        test();
+    }
+};
+//->
+
 struct c {
     c(std::shared_ptr<i1> sp, std::unique_ptr<i2> up, int i) {
         assert(sp->get() == 42);
         assert(up->get() == 123);
         assert(i == 87);
-    }
-};
-
-struct test {
-    template<class Test>
-    test(const Test& test) {
-        test();
     }
 };
 
@@ -181,6 +182,7 @@ test integration_test = [] {
     mi.create<c>();
 };
 
+/*<<`mock_provider` is just a simple mock framework - to check out di integration with full mock support framework see: [@https://github.com/krzysztof-jusiak/mocks_injector]>>*/
 int main() { }
 
 //]

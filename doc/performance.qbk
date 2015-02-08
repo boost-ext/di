@@ -108,8 +108,7 @@
             [c++] ```
             int main() {
                 auto injector = di::make_injector(
-                    di::bind<i1, impl1>
-                );
+                    di::bind<i1, impl1>);
 
                 auto ptr = injector.create<
                     unique_ptr<i1>

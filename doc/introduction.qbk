@@ -15,49 +15,78 @@
 [*[@http://en.wikipedia.org/wiki/Dependency_injection Dependency injection]] (DI) involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state. It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.
 Following this approach has many advantages.
 
-* [*Provide loosely coupled code] (Separation of business logic and object creation)
-* [*Provide easier to maintain code] (Different objects might be easily injected)
-* [*Provide easier to test code] (Fakes objects might be injected)
+[table
+[[Let's make some coffee!]]
+[[[@images/coffee_maker.png [$images/coffee_maker.png]]]]
+]
 
 [table
 [[No Dependency Injection][Dependency Injection]]
     [
         [
             ```
-                class example {
-                public:
-                    example()
-                        : logic_(new logic{})
-                        , logger_(logger_factory::create())
-                    { }
-
-                    int run() const;
-
-                private:
-                    shared_ptr<ilogic> logic_;
-                    shared_ptr<ilogger> logger_;
-                };
+                class coffee_maker {                    
+                public:                                 
+                    coffee_maker()                      
+                      : heater{make_shared<electric_heater>()}                               
+                      , pump{make_unique<heat_pump>(heater)}                               
+                    { }                                 
+                                                        
+                    void brew() {                       
+                        heater->on();                   
+                        pump->pump();                   
+                        clog << "coffee"! << endl;      
+                        heater->off();                  
+                    }                                   
+                                                        
+                private:                                
+                    shared_ptr<iheater> heater;         
+                    unique_ptr<ipump> pump;             
+                };                                      
             ```
         ]
         [
             ```
-                class example {
+                class coffee_maker {
                 public:
-                    // dependencies are passed via constructor
-                    example(shared_ptr<ilogic> logic, shared_ptr<ilogger> logger)
-                        : logic_(logic), logger_(logger)
+                    coffee_maker(shared_ptr<iheater> heater, unique_ptr<ipump> pump)
+                        : heater(heater)
+                        , pump(move(pump))
                     { }
-
-                    int run() const;
-
+                                                            
+                    void brew() {
+                        heater->on();
+                        pump->pump();
+                        clog << "coffee!" << endl;
+                        heater->off();
+                    }
+                                                            
                 private:
-                    shared_ptr<ilogic> logic_;
-                    shared_ptr<ilogger> logger_;
+                    shared_ptr<iheater> heater;
+                    unique_ptr<ipump> pump;
                 };
             ```
         ]
     ]
 ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+* [*Provide loosely coupled code] (Separation of business logic and object creation)
+* [*Provide easier to maintain code] (Different objects might be easily injected)
+* [*Provide easier to test code] (Fakes objects might be injected)
+
 
 `Boost.DI` is a `dependency injection library` improving `manual dependency injection` by simplifying object instantiation with automatic dependencies injection.
 Using `Boost.DI` has many advantages over `manual dependency injection`.

@@ -57,7 +57,8 @@ Boot.DI is released with 2 providers.
                 }
             };
 
-            class my_provider : public __di_config__ {
+            template<class>
+            class my_provider : public __di_config__<> {
             public:
                 auto provider() const noexcept {
                     return heap_no_throw{};
@@ -133,7 +134,8 @@ Creates objects on stack whenever possible, otherwise on heap.
     boost::di::providers
 
 [heading Examples]
-    class use_stack_over_heap_provider : public __di_config__ {
+    template<class>
+    class use_stack_over_heap_provider : public __di_config__<> {
     public:
         auto provider() const noexcept {
             return stack_over_heap{};
@@ -188,7 +190,8 @@ Basic provider creates objects on heap.
     boost::di::providers
 
 [heading Examples]
-    class use_heap_provider : public __di_config__ {
+    template<class>
+    class use_heap_provider : public __di_config__<> {
     public:
         auto provider() const noexcept {
             return heap{};

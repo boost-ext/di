@@ -51,7 +51,8 @@ Policy has to be callable with at least one given type.
     [
         [
             ```
-            class print_types_policy : public __di_config__ {
+            template<class>
+            class print_types_policy : public __di_config__<> {
             public:
                 auto policies() const noexcept {
                     return __di_make_policies__(
@@ -87,7 +88,8 @@ Policy has to be callable with at least one given type.
     [
         [
             ```
-            class print_types_info_policy : public __di_config__ {
+            template<class>
+            class print_types_info_policy : public __di_config__<> {
             public:
                 auto policies() const noexcept {
                     return __di_make_policies__(
@@ -207,7 +209,7 @@ Limits constructor parameters to explicitly allowed.
     boost::di::policies
     boost::di::policies::operators // for logic operators to be supported
 
-[warning Logic operators will works only when `using boost::di::policies::operators` will be defined.]
+[warning Logic operators will work only when `using boost::di::policies::operators` will be defined.]
 
 [heading Examples]
 [table
@@ -254,7 +256,8 @@ Limits constructor parameters to explicitly allowed.
             ```
             #include <boost/di/policies/constructible.hpp>
 
-            class all_must_be_bound_unless_int : public __di_config__ {
+            template<class>
+            class all_must_be_bound_unless_int : public __di_config__<> {
             public:
                 auto policies() const noexcept {
                     using namespace di::policies;

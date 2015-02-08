@@ -39,6 +39,7 @@
 #include <memory>
 #include <type_traits>
 
+#ifndef BOOST_DI_AUX_UTILITY_HPP
 #define BOOST_DI_AUX_UTILITY_HPP
 
 namespace boost { namespace di { namespace aux {
@@ -126,6 +127,9 @@ using join_t = typename join<TArgs...>::type;
 
 }}} // boost::di::aux
 
+#endif
+
+#ifndef BOOST_DI_AUX_TYPE_TRAITS_HPP
 #define BOOST_DI_AUX_TYPE_TRAITS_HPP
 
 #if (__has_include(<boost/shared_ptr.hpp>))
@@ -277,6 +281,9 @@ struct function_traits<R(T::*)(TArgs...) const> {
 
 }}} // boost::di::aux
 
+#endif
+
+#ifndef BOOST_DI_CORE_POOL_HPP
 #define BOOST_DI_CORE_POOL_HPP
 
 namespace boost { namespace di { namespace core {
@@ -324,6 +331,9 @@ private:
 
 }}} // boost::di::core
 
+#endif
+
+#ifndef BOOST_DI_WRAPPERS_UNIQUE_HPP
 #define BOOST_DI_WRAPPERS_UNIQUE_HPP
 
 #if (__has_include(<boost/shared_ptr.hpp>))
@@ -427,6 +437,9 @@ struct unique<std::unique_ptr<T, TDeleter>> {
 
 }}} // boost::di::wrappers
 
+#endif
+
+#ifndef BOOST_DI_TYPE_TRAITS_MEMORY_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_MEMORY_TRAITS_HPP
 
 #if (__has_include(<boost/shared_ptr.hpp>))
@@ -525,6 +538,9 @@ using memory_traits_t = typename memory_traits<T>::type;
 
 }}} // boost::di::type_traits
 
+#endif
+
+#ifndef BOOST_DI_SCOPES_UNIQUE_HPP
 #define BOOST_DI_SCOPES_UNIQUE_HPP
 
 namespace boost { namespace di { namespace scopes {
@@ -547,6 +563,9 @@ public:
 
 }}} // boost::di::scopes
 
+#endif
+
+#ifndef BOOST_DI_WRAPPERS_SHARED_HPP
 #define BOOST_DI_WRAPPERS_SHARED_HPP
 
 #if (__has_include(<boost/shared_ptr.hpp>))
@@ -593,6 +612,9 @@ struct shared {
 
 }}} // boost::di::wrappers
 
+#endif
+
+#ifndef BOOST_DI_SCOPES_SINGLETON_HPP
 #define BOOST_DI_SCOPES_SINGLETON_HPP
 
 namespace boost { namespace di { namespace scopes {
@@ -622,6 +644,9 @@ public:
 
 }}} // boost::di::scopes
 
+#endif
+
+#ifndef BOOST_DI_SCOPES_EXTERNAL_HPP
 #define BOOST_DI_SCOPES_EXTERNAL_HPP
 
 namespace boost { namespace di { namespace scopes {
@@ -725,6 +750,9 @@ public:
 
 }}} // boost::di::scopes
 
+#endif
+
+#ifndef BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 
 #if (__has_include(<boost/shared_ptr.hpp>))
@@ -815,6 +843,10 @@ using scope_traits_t = typename scope_traits<T>::type;
 
 }}} // boost::di::type_traits
 
+#endif
+
+#ifndef BOOST_DI_SCOPES_DEDUCE_HPP
+#define BOOST_DI_SCOPES_DEDUCE_HPP
 
 namespace boost { namespace di { namespace scopes {
 
@@ -836,6 +868,10 @@ public:
 
 }}} // boost::di::scopes
 
+#endif
+
+#ifndef BOOST_DI_SCOPES_EXPOSED_HPP
+#define BOOST_DI_SCOPES_EXPOSED_HPP
 
 namespace boost { namespace di { namespace scopes {
 
@@ -913,6 +949,9 @@ public:
 
 }}} // boost::di::scopes
 
+#endif
+
+#ifndef BOOST_DI_FWD_HPP
 #define BOOST_DI_FWD_HPP
 
 namespace boost { namespace di {
@@ -933,6 +972,10 @@ class injector;
 
 }} // boost::di
 
+#endif
+
+#ifndef BOOST_DI_CORE_DEPENDENCY_HPP
+#define BOOST_DI_CORE_DEPENDENCY_HPP
 
 namespace boost { namespace di { namespace core {
 
@@ -1038,6 +1081,9 @@ struct is_dependency<
 
 }}} // boost::di::core
 
+#endif
+
+#ifndef BOOST_DI_CONCEPTS_CALLABLE_HPP
 #define BOOST_DI_CONCEPTS_CALLABLE_HPP
 
 namespace boost { namespace di { namespace concepts {
@@ -1078,6 +1124,9 @@ constexpr auto callable() {
 
 }}} // boost::di::concepts
 
+#endif
+
+#ifndef BOOST_DI_CORE_BINDER_HPP
 #define BOOST_DI_CORE_BINDER_HPP
 
 namespace boost { namespace di { namespace core {
@@ -1121,6 +1170,9 @@ public:
 
 }}} // boost::di::core
 
+#endif
+
+#ifndef BOOST_DI_CORE_ANY_TYPE_HPP
 #define BOOST_DI_CORE_ANY_TYPE_HPP
 
 namespace boost { namespace di { namespace core {
@@ -1184,6 +1236,9 @@ struct is_any_type<any_type<TArgs...>> : std::true_type { };
 
 }}} // boost::di::core
 
+#endif
+
+#ifndef BOOST_DI_AUX_PREPROCESSOR_HPP
 #define BOOST_DI_AUX_PREPROCESSOR_HPP
 
 // Based on:
@@ -1273,6 +1328,9 @@ struct is_any_type<any_type<TArgs...>> : std::true_type { };
 #define BOOST_DI_DEC_9 8
 #define BOOST_DI_DEC_10 9
 
+#endif
+
+#ifndef BOOST_DI_INJECT_HPP
 #define BOOST_DI_INJECT_HPP
 
 #if !defined(BOOST_DI_INJECTOR)
@@ -1374,6 +1432,9 @@ struct is_any_type<any_type<TArgs...>> : std::true_type { };
         )
 #endif
 
+#endif
+
+#ifndef BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 
 namespace boost { namespace di { namespace type_traits {
@@ -1552,6 +1613,9 @@ struct ctor_traits_impl<T, std::false_type>
 
 #endif
 
+#endif
+
+#ifndef BOOST_DI_PROVIDERS_STACK_OVER_HEAP_HPP
 #define BOOST_DI_PROVIDERS_STACK_OVER_HEAP_HPP
 
 namespace boost { namespace di { namespace providers {
@@ -1589,6 +1653,9 @@ public:
 
 }}} // boost::di::providers
 
+#endif
+
+#ifndef BOOST_DI_CONFIG_HPP
 #define BOOST_DI_CONFIG_HPP
 
 #if defined(BOOST_DI_CFG)
@@ -1619,6 +1686,9 @@ public:
 
 }} // boost::di
 
+#endif
+
+#ifndef BOOST_DI_SCOPES_SESSION_HPP
 #define BOOST_DI_SCOPES_SESSION_HPP
 
 namespace boost { namespace di { namespace scopes {
@@ -1662,6 +1732,9 @@ public:
 
 }}} // boost::di::scopes
 
+#endif
+
+#ifndef BOOST_DI_SCOPES_SHARED_HPP
 #define BOOST_DI_SCOPES_SHARED_HPP
 
 namespace boost { namespace di { namespace scopes {
@@ -1688,6 +1761,9 @@ public:
 
 }}} // boost::di::scopes
 
+#endif
+
+#ifndef BOOST_DI_CONCEPTS_BOUNDABLE_HPP
 #define BOOST_DI_CONCEPTS_BOUNDABLE_HPP
 
 namespace boost { namespace di { namespace concepts {
@@ -1728,6 +1804,9 @@ constexpr auto boundable() {
 
 }}} // boost::di::concepts
 
+#endif
+
+#ifndef BOOST_DI_BINDINGS_HPP
 #define BOOST_DI_BINDINGS_HPP
 
 namespace boost { namespace di {
@@ -1763,6 +1842,9 @@ constexpr auto session_exit(const TName&) noexcept {
 
 }} // boost::di
 
+#endif
+
+#ifndef BOOST_DI_CORE_POLICY_HPP
 #define BOOST_DI_CORE_POLICY_HPP
 
 namespace boost { namespace di { namespace core {
@@ -1831,6 +1913,9 @@ private:
 
 }}} // boost::di::core
 
+#endif
+
+#ifndef BOOST_DI_CORE_PROVIDER_HPP
 #define BOOST_DI_CORE_PROVIDER_HPP
 
 namespace boost { namespace di { namespace core {
@@ -1881,6 +1966,9 @@ template<
 
 }}} // boost::di::core
 
+#endif
+
+#ifndef BOOST_DI_CONCEPTS_CREATABLE_HPP
 #define BOOST_DI_CONCEPTS_CREATABLE_HPP
 
 namespace boost { namespace di { namespace concepts {
@@ -2206,6 +2294,9 @@ constexpr auto creatable() {
 
 }}} // boost::di::concepts
 
+#endif
+
+#ifndef BOOST_DI_CORE_INJECTOR_HPP
 #define BOOST_DI_CORE_INJECTOR_HPP
 
 namespace boost { namespace di { namespace core {
@@ -2358,6 +2449,9 @@ private:
 
 }}} // boost::di::core
 
+#endif
+
+#ifndef BOOST_DI_INJECTOR_HPP
 #define BOOST_DI_INJECTOR_HPP
 
 namespace boost { namespace di {
@@ -2379,6 +2473,9 @@ public:
 
 }} // boost::di
 
+#endif
+
+#ifndef BOOST_DI_CONCEPTS_CONFIGURABLE_HPP
 #define BOOST_DI_CONCEPTS_CONFIGURABLE_HPP
 
 namespace boost { namespace di { namespace concepts {
@@ -2398,6 +2495,9 @@ constexpr auto configurable() {
 
 }}} // boost::di::concepts
 
+#endif
+
+#ifndef BOOST_DI_MAKE_INJECTOR_HPP
 #define BOOST_DI_MAKE_INJECTOR_HPP
 
 namespace boost { namespace di {
@@ -2414,6 +2514,8 @@ template<
 }
 
 }} // boost::di
+
+#endif
 
 #endif
 

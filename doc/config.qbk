@@ -1,0 +1,74 @@
+[section Configuration]
+
+`Boost.DI` design distinguish few building blocks (above), which might be cofigured using [link di.overview.configuration BOOST_DI_CFG].
+
+[heading Synopsis]
+    template<class>
+    class config {
+    public:
+        auto policies() const;
+        auto provider() const;
+    };
+
+    template<class... TArgs>
+    inline auto make_policies(const TArgs&... args) noexcept;
+
+[table Parameters
+    [[Parameter][Requirement][Description][Returns][Throw]]
+    [[TArgs...][__policy_model__][Creates policies][__policy_model__ list][Does not throw]]
+    [[`policies()`][None][Configure default policies][__policy_model__ list][Does not throw]]
+    [[`provider()`][None][Configure default provider][__provider_model__][Does not throw]]
+]
+
+[heading Header]
+    #include <__di_hpp__>
+
+[heading Examples]
+[table
+    [
+        [
+            ```
+            template<class>
+            class my_config : public __di_config__<> {
+            public:
+                auto provider() const noexcept {
+                    return __providers_stack_over_heap__{};
+                }
+
+                auto policies() const noexcept {
+                    return __di_make_policies__(
+                        [](auto type) { }
+                      , [](auto type, auto dependency, auto... ctor) { }
+                      , __policies_constructible__(std::is_same<int, di::_>{})
+                    );
+                }
+            };
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            // per injector policy
+            auto injector = __di_make_injector__<my_config>();
+            assert(0 == injector.__di_injector_create__<int>());
+
+            // global policy
+            #define BOOST_DI_CFG my_provider
+            auto injector = __di_make_injector__();
+            assert(0 == injector.__di_injector_create__<int>());
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+[heading More Examples]
+    ``__examples_custom_provider__`` | ``__examples_custom_policy__``
+
+[heading See Also]
+
+* __policies__
+* __providers__
+
+[endsect]
+

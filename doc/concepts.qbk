@@ -9,14 +9,13 @@
 
 [section Concepts]
 
-[section boundable]
-[endsect]
+[h6 boundable]
 
-[section configurable]
-[endsect]
+[h6 callable]
 
-[section creatable]
-[endsect]
+[h6 configurable]
+
+[h6 creatable]
 
 [endsect]
 

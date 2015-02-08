@@ -16,7 +16,7 @@ main() {
                 genereate_pph $file $2
                 cat $file | egrep "^#include" | grep -v "boost\/di" >> $2/includes.hpp
                 echo >> $2/pph.hpp
-                tail -n +8 $file | head -n -3 | egrep -v "^#include" | cat -s >> $2/pph.hpp
+                tail -n +7 $file | head -n -1 | egrep -v "^#include" | cat -s >> $2/pph.hpp
             fi
         done
     }
