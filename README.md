@@ -184,7 +184,7 @@ Manual Dependency Injection             | Boost.DI
                                         |   auto policies() const noexcept {
                                         |     return di::make_policies(
                                         |       constructible(
-                  ?                     |         is_smart_ptr<di::policies::_>{};
+                  ?                     |         is_smart_ptr<di::policies::_>{}
                                         |     );
                                         |   }
                                         | };

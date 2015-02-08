@@ -84,27 +84,77 @@ Following this approach has many advantages.
 * *Boost.DI has none or minimal run-time overhead* - [link di.performance.run_time Run-time Performance]
 * *Boost.DI compiles fast* - [link di.performance.compile_time Compile-time Performance]
 * *Boost.DI gives short diagnostic messages* - [link di.diagnostic_messages Diagnostic Messages]
-* *Boost.DI is not intrusive*
+
+* *Boost.DI guarantees compile time creation*
 [table
     [[Manual Dependency Injection][Boost.DI][]]
     [
         [
             ```
-                coffee_maker(shared_ptr<iheater> heater
-                           , unique_ptr<ipump> pump);
+                class coffee_maker {
+                public:
+                    coffee_maker(unique_ptr<ipump> pump = nullptr);
+                };
+
+                int main() {
+                    auto cm = coffee_maker cm{}; // pump is nullptr
+                }
             ```
         ]
         [
             ```
-                coffee_maker(shared_ptr<iheater> heater
-                           , unique_ptr<ipump> pump);
-                                                                         .
+                class coffee_maker {
+                public:
+                    coffee_maker(unique_ptr<ipump> pump = nullptr);
+                };
+
+                int main() {
+                    auto injector = __di_make_injector__();
+                    auto cm = injector.create<coffee_maker>(); // compile error: ipump not bound
+                }
             ```
         ]
         [[@images/coffee_maker_1.png [$images/coffee_maker_1.png]]
-        ```
-        .                                                                                               .
-        ```
+        ]
+    ]
+]
+
+* *Boost.DI supports non-intrusive constructor injection*
+[table
+    [[Manual Dependency Injection][Boost.DI][]]
+    [
+        [
+            ```
+                class coffee_maker {
+                public:
+                    coffee_maker(shared_ptr<iheater> heater, unique_ptr<ipump> pump);
+                };
+
+                int main() {
+                    auto heater = make_shared<heater>();
+                    auto pump = make_unique<pump>();
+                    auto cm = coffee_maker cm{heater, move(pump)};
+                }
+            ```
+        ]
+        [
+            ```
+                class coffee_maker {
+                public:
+                    coffee_maker(shared_ptr<iheater> heater, unique_ptr<ipump> pump); // no generation or constructor changes required
+                };
+
+                int main() {
+                    auto injector = __di_make_injector__(
+                        __di_bind__<iheater, heater>
+                      , __di_bind__<ipump, pump>
+                    );
+
+                    auto cm = injector.create<coffee_maker>();
+                }
+            ```
+        ]
+        [[@images/coffee_maker_1.png [$images/coffee_maker_1.png]]
         ]
     ]
 ]
@@ -235,7 +285,7 @@ Following this approach has many advantages.
                 int main() {
                    ...
                    auto grinder = unique_ptr<igrinder>{
-                     make_unique<grinder>(pump, heater)
+                       make_unique<grinder>(pump, heater)
                    };
                    ...
                 }
@@ -250,27 +300,70 @@ Following this approach has many advantages.
     ]
 ]
 
+* *Boost.DI reduces maintaining effort* (by automatic scopes deduction)
+[table
+    [[Manual Dependency Injection][Boost.DI]]
+    [
+        [
+            ```
+            ```
+        ]
+        [
+            ```
+            ```
+        ]
+    ]
+]
+
+* *Boost.DI supports conversion between boost smart pointers and std smart pointers*
+[table
+    [[Manual Dependency Injection][Boost.DI]]
+    [
+        [
+            ```
+                class coffee_maker {
+                public:
+                    coffee_maker(std::shared_ptr<iheater> heater, boost::shared_ptr<ipump> pump);
+                };
+            ```
+        ]
+        [
+            ```
+            ```
+        ]
+    ]
+]
+
 * *Boost.DI reduces testing effort*
 [table
     [[Manual Dependency Injection][Boost.DI]]
     [
         [
             ```
+                // create and maintain all required mocks
                 auto heater_mock = create_heater_mock{};
                 auto pump_mock = create_pump_mock{};
+
+                // set expectations
+                EXPECT_CALL(&ipump::pump);
+                EXPECT_CALL(&iheater::on);
+                EXPECT_CALL(&iheater::off);
+
                 coffee_maker cm{heater_mock, pump_mock};
-                expect_call(&ipump::pump);
-                expect_call(&iheater::off);
                 cm.brew();
             ```
         ]
         [
             ```
-                auto injector = di::make_injector<mocks_provider>();
+                // create and maintain one mocks injector despite the number of required mocks
+                auto mi = di::make_injector<mocks_provider>();
+
+                // set expectations
+                mi(&iheater::on);
+                mi(&ipump::pump);
+                mi(&iheater::off);
+
                 auto cm = injector.create<coffee_maker>();
-                expect_call(&iheater::on);
-                expect_call(&ipump::pump);
-                expect_call(&iheater::off);
                 cm.brew();
             ```
         ]
@@ -283,7 +376,7 @@ Following this approach has many advantages.
     [
         [
             ```
-                ?
+                ???
             ```
         ]
         [
@@ -291,12 +384,10 @@ Following this approach has many advantages.
                 template<class>
                 class allow_only_smart_ptrs : public di::config<> {
                 public:
-                  auto policies() const noexcept {
-                    return di::make_policies(
-                      constructible(
-                        is_smart_ptr<di::policies::_>{};
-                    );
-                  }
+                    auto policies() const noexcept {
+                        return di::make_policies(
+                            constructible(is_smart_ptr<di::policies::_>{});
+                    }
                 };
 
                 auto injector = di::make_injector();
@@ -309,25 +400,43 @@ Following this approach has many advantages.
 
 * *Boost.DI gives better understanding about objects hierarchy*
 [table
-    [[Manual Dependency Injection][Boost.DI][]]
+    [[Manual Dependency Injection][Boost.DI][Output]]
     [
         [
             ```
-                ?
+                ???
             ```
         ]
         [
             ```
                 injector = di::make_injector<types_dumper>();
                 auto cm = injector.create<coffee_maker>();
-
+            ```
+        ]
+        [
+            ```
                 (coffee_maker)
                     (shared_ptr<iheater> -> electric_heater)
                     (unique_ptr<ipump> -> heat_pump)
                         (shared_ptr<iheater> -> electric_heater)
             ```
         ]
-        [[@images/coffee_maker_uml.png [$images/coffee_maker_uml.png]]]
+    ]
+    [
+        [
+            ```
+                ???
+            ```
+        ]
+        [
+            ```
+                injector = di::make_injector<uml_dumper>();
+                auto cm = injector.create<coffee_maker>();
+            ```
+        ]
+        [
+            [@images/coffee_maker_uml.png [$images/coffee_maker_uml.png]]
+        ]
     ]
 ]
 
