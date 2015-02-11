@@ -114,6 +114,30 @@ test create_ptr = [] {
     injector.create<c>();
 };
 
+test named_to = [] {
+    constexpr auto i = 42;
+    constexpr auto d = 87.0;
+
+    struct c {
+        BOOST_DI_INJECT(c, (named = name) int i, (named = name) double d)
+            : i_(i), d_(d)
+        { }
+
+        int i_ = 0;
+        double d_ = 0.0;
+    };
+
+    auto injector = di::make_injector(
+        di::bind<int>.named(name).to(i)
+      , di::bind<double>.to(d).named(name)
+    );
+
+    auto object = injector.create<c>();
+
+    expect_eq(i, object.i_);
+    expect_eq(d, object.d_);
+};
+
 test empty_exposed_module = [] {
     struct empty {
         di::injector<> configure() const {
@@ -741,7 +765,7 @@ test named_with_ctor_def_decl = [] {
     constexpr auto i = 42;
 
     auto injector = di::make_injector(
-        di::bind<int>.named(name).to(i)
+        di::bind<int>.to(i).named(name)
     );
 
     auto object = injector.create<c>();

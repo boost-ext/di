@@ -4,6 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#include <string>
 #include "boost/di/aux_/preprocessor.hpp"
 
 test cat = [] {
@@ -46,12 +47,12 @@ test arg = [] {
 };
 
 test eval_repeat = [] {
-    #define Q_IMPL(...) #__VA_ARGS__
+    #define Q_IMPL(...) std::string{#__VA_ARGS__}
     #define Q(...) Q_IMPL(__VA_ARGS__)
     #define M(i, ...) i
-    expect_eq("0", Q(BOOST_DI_EVAL(BOOST_DI_REPEAT(1, M, ...))));
-    expect_eq("0 1", Q(BOOST_DI_EVAL(BOOST_DI_REPEAT(2, M, ...))));
-    expect_eq("0 1 2", Q(BOOST_DI_EVAL(BOOST_DI_REPEAT(3, M, ...))));
+    expect_eq(std::string{"0"}, Q(BOOST_DI_EVAL(BOOST_DI_REPEAT(1, M, ...))));
+    expect_eq(std::string{"0 1"}, Q(BOOST_DI_EVAL(BOOST_DI_REPEAT(2, M, ...))));
+    expect_eq(std::string{"0 1 2"}, Q(BOOST_DI_EVAL(BOOST_DI_REPEAT(3, M, ...))));
     #undef M
     #undef Q
     #undef Q_IMPL
