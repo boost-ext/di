@@ -119,7 +119,7 @@ test named_to = [] {
     constexpr auto d = 87.0;
 
     struct c {
-        BOOST_DI_INJECT(c, (named = name) int i, (named = name) double d)
+        BOOST_DI_INJECT(c, (named = a) int i, (named = b) double d)
             : i_(i), d_(d)
         { }
 
@@ -128,8 +128,8 @@ test named_to = [] {
     };
 
     auto injector = di::make_injector(
-        di::bind<int>.named(name).to(i)
-      , di::bind<double>.to(d).named(name)
+        di::bind<int>.named(a).to(i)
+      , di::bind<double>.to(d).named(b)
     );
 
     auto object = injector.create<c>();
