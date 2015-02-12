@@ -63,9 +63,19 @@ public:
         : scope_t{std::forward<T>(object)}
     { }
 
+    template<
+        class TScope_
+      , class TExpected_
+      , class TGiven_
+      , class TName_
+      , bool  TPriority_
+    > dependency(const dependency<TScope_, TExpected_, TGiven_, TName_, TPriority_>& other) noexcept
+        : scope_t(other)
+    { }
+
     template<class T>
     auto named(const T&) const noexcept {
-        return dependency<TScope, TExpected, TGiven, T>{};
+        return dependency<TScope, TExpected, TGiven, T>{*this};
     }
 
     template<class T>
