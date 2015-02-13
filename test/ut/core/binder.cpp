@@ -64,22 +64,22 @@ test resolve_types_found_many = [] {
 
 test resolve_types_found_priority = [] {
     struct deps
-        : dependency<scopes::unique, int, int, no_name, true>
-        , dependency<scopes::unique, int, int, no_name, false>
+        : dependency<scopes::unique, int, int, no_name, std::true_type>
+        , dependency<scopes::unique, int, int, no_name, std::false_type>
     { };
 
     auto result = binder::resolve<int>((deps*)nullptr);
-    expect(std::is_same<decltype(result), dependency<scopes::unique, int, int, no_name, true>>{});
+    expect(std::is_same<decltype(result), dependency<scopes::unique, int, int, no_name, std::true_type>>{});
 };
 
 test resolve_types_found_priority_order = [] {
     struct deps
-        : dependency<scopes::unique, int, int, no_name, false>
-        , dependency<scopes::unique, int, int, no_name, true>
+        : dependency<scopes::unique, int, int, no_name, std::false_type>
+        , dependency<scopes::unique, int, int, no_name, std::true_type>
     { };
 
     auto result = binder::resolve<int>((deps*)nullptr);
-    expect(std::is_same<decltype(result), dependency<scopes::unique, int, int, no_name, true>>{});
+    expect(std::is_same<decltype(result), dependency<scopes::unique, int, int, no_name, std::true_type>>{});
 };
 
 }}} // boost::di::core

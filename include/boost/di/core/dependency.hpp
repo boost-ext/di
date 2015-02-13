@@ -41,7 +41,7 @@ template<
   , class TExpected
   , class TGiven = TExpected
   , class TName = no_name
-  , bool  TPriority = TScope::priority
+  , class TPriority = std::integral_constant<bool, TScope::priority>
 > class dependency
     : public TScope::template scope<TExpected, TGiven>
     , public dependency_impl<
@@ -63,13 +63,8 @@ public:
         : scope_t{std::forward<T>(object)}
     { }
 
-    template<
-        class TScope_
-      , class TExpected_
-      , class TGiven_
-      , class TName_
-      , bool  TPriority_
-    > dependency(const dependency<TScope_, TExpected_, TGiven_, TName_, TPriority_>& other) noexcept
+    template<class... Ts>
+    dependency(const dependency<Ts...>& other) noexcept
         : scope_t(other)
     { }
 
@@ -114,16 +109,8 @@ public:
 template<class>
 struct is_dependency : std::false_type { };
 
-template<
-    class TScope
-  , class TExpected
-  , class TGiven
-  , class TName
-  , bool  TPriority
->
-struct is_dependency<
-    dependency<TScope, TExpected, TGiven, TName, TPriority>
-> : std::true_type { };
+template<class... Ts>
+struct is_dependency<dependency<Ts...>> : std::true_type { };
 
 }}} // boost::di::core
 
