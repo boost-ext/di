@@ -116,8 +116,9 @@ public:
         , config{*this}
     { }
 
-    template<class T BOOST_DI_REQUIRES(concepts::creatable<deps, TConfig, T>())>
-    T create() const {
+    template<class T>
+    auto create() -> REQUIRES<concepts::creatable<deps, TConfig, T>()
+                            , decltype(static_cast<T>(concepts::errors<deps>{}))> {
         return create_impl<T>();
     }
 

@@ -49,6 +49,9 @@
     #define BOOST_DI_UNUSED
 #endif
 
+template<bool b, class T>
+using REQUIRES = std::enable_if_t<b, T>;
+
 namespace boost { namespace di { namespace aux {
 
 template<class...>
