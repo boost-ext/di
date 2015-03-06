@@ -372,22 +372,22 @@ template<class TDeps>
 struct errors {
     template<class T, typename enable1<T, 3>::type = 0>
     constexpr operator T() {
-        return {errors<TDeps>{}, errors<TDeps>{}, errors<TDeps>{}};
+        return {errors{}, errors{}, errors{}};
     }
 
     template<class T, typename enable1<T, 3>::type = 0>
     constexpr operator T&() const {
-        return *(new T{errors<TDeps>{}, errors<TDeps>{}, errors<TDeps>{}});
+        return *(new T{errors{}, errors{}, errors{}});
     }
 
     template<class T, typename enable1<T, 2>::type = 0>
     constexpr operator T() {
-        return {errors<TDeps>{}, errors<TDeps>{}};
+        return {errors{}, errors{}};
     }
 
     template<class T, typename enable1<T, 1>::type = 0>
     constexpr operator T() {
-        return {errors<TDeps>{}};
+        return {errors{}};
     }
 
     template<class T, typename enable1<T, 0>::type = 0>
@@ -397,10 +397,15 @@ struct errors {
 
     template<class T, typename enable<T, TDeps, 0, 2>::type = 0>
     constexpr operator T*() {
-        return new typename decltype(core::binder::resolve<T, no_name>((TDeps*)nullptr))::given{errors<TDeps>{}, errors<TDeps>{}};
+        return new typename decltype(core::binder::resolve<T, no_name>((TDeps*)nullptr))::given{errors{}, errors{}};
     }
 
-    template<class T, typename enable<T, TDeps>::type = 0>
+    template<class T, typename enable<T, TDeps, 0, 1>::type = 0>
+    constexpr operator T*() {
+        return new typename decltype(core::binder::resolve<T, no_name>((TDeps*)nullptr))::given{errors{}};
+    }
+
+    template<class T, typename enable<T, TDeps, 0, 0>::type = 0>
     constexpr operator T*() {
         return error<T>("did you forget to add: 'bind<interface, implementation>'?");
     }

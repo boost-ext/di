@@ -118,7 +118,7 @@ public:
 
     template<class T>
     auto create() -> REQUIRES<concepts::creatable<deps, TConfig, T>()
-                            , decltype(static_cast<T>(concepts::errors<deps>{}))> {
+                            , decltype(static_cast<T>(concepts::errors<injector>{}))> {
         return create_impl<T>();
     }
 
