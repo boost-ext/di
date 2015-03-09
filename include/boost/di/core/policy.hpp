@@ -16,6 +16,21 @@ namespace boost { namespace di { namespace core {
 BOOST_DI_HAS_METHOD(call_operator, operator());
 BOOST_DI_HAS_TYPE(compile_time);
 
+template<class T, class TName, class TDeps>
+        struct arg_ {
+            struct arg {
+                using type = T;
+            };
+            using type BOOST_DI_UNUSED = T;
+            using name BOOST_DI_UNUSED = TName;
+            using is_root BOOST_DI_UNUSED = std::false_type;
+
+            template<class T_, class TName_, class TDefault_>
+            using resolve =
+                decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)nullptr));
+
+        };
+
 template<class TDeps>
 class policy {
 public:
@@ -42,18 +57,8 @@ private:
       , class TDependency
       , class... TCtor
     > static void call_impl(const TPolicies& policies, TDependency&& dependency) noexcept {
-        struct arg {
-            using type BOOST_DI_UNUSED = T;
-            using name BOOST_DI_UNUSED = TName;
-            using is_root BOOST_DI_UNUSED = std::false_type;
 
-            template<class T_, class TName_, class TDefault_>
-            using resolve =
-                decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)nullptr));
-
-        };
-
-        call_impl_type<arg, TDependency, TPolicy, TCtor...>(
+        call_impl_type<arg_<T, TName, TDeps>, TDependency, TPolicy, TCtor...>(
             static_cast<const TPolicy&>(policies), dependency
         );
     }

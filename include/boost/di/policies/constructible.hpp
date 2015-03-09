@@ -156,7 +156,7 @@ struct constructible_impl {
 
     template<class TArg, std::enable_if_t<!decltype(T::apply(TArg{})){}, int> = 0>
     auto operator()(const TArg& data) const {
-        return not_allowed<typename TArg::type>::error();
+        return not_allowed<typename TArg::type, T>::error();
     }
 };
 
