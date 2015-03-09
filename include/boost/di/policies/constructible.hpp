@@ -13,6 +13,17 @@
 
 namespace boost { namespace di { namespace policies {
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic error "-Wundefined-inline"
+
+using reason = const char*;
+template<class T, class = void>
+struct not_allowed {
+    static constexpr T* error(reason = "type not allowed!");
+};
+
+#pragma GCC diagnostic pop
+
 struct _ { };
 struct type_op {};
 
@@ -138,9 +149,14 @@ inline auto operator!(const T&) {
 template<class T>
 struct constructible_impl {
     using compile_time = void;
-    template<class TArg>
+    template<class TArg, std::enable_if_t<decltype(T::apply(TArg{})){}, int> = 0>
     auto operator()(const TArg& data) const {
         return T::apply(data);
+    }
+
+    template<class TArg, std::enable_if_t<!decltype(T::apply(TArg{})){}, int> = 0>
+    auto operator()(const TArg& data) const {
+        return not_allowed<typename TArg::type>::error();
     }
 };
 

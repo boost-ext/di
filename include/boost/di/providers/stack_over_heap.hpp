@@ -23,7 +23,7 @@ struct polymorphic_type {
 using reason = const char*;
 template<class T, class = void>
 struct err {
-static constexpr T* error(reason = "type not bound, did you forget to add: 'bind<interface, implementation>'?");
+    static constexpr T* error(reason = "type not bound, did you forget to add: 'bind<interface, implementation>'?");
 };
 
 #pragma GCC diagnostic pop

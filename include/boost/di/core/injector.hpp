@@ -116,10 +116,10 @@ public:
         , config{*this}
     { }
 
-    template<class T>
-    [[deprecated]] T create() /*-> REQUIRES<concepts::creatable<deps, TConfig, T>(), T>*/ {
-        return create_impl<T>();
-    }
+    //template<class T>
+    //auto create() {
+        //return create_impl<T>();
+    //}
 
     //template<class T>
     //[[deprecated]] auto create() -> REQUIRES<!concepts::creatable<deps, TConfig, T>(), T> {
@@ -131,7 +131,7 @@ public:
         call_impl(action, deps{});
     }
 
-private:
+//private:
     template<class T, class TName = no_name>
     auto create_impl() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
@@ -148,6 +148,11 @@ private:
           , std::remove_reference_t<T>
         >;
         return wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
+    }
+
+    template<class T>
+    auto create() {
+        return create_impl<T>();
     }
 
     template<class TAction, class... Ts>

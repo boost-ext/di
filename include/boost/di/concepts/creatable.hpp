@@ -324,7 +324,6 @@ auto creatable_impl(T&&, TDeps&&, TPolicies&&) -> aux::is_valid_expr<
 
 template<class TDeps, template<class> class TConfig, class... Ts>
 constexpr auto creatable() {
-//#if defined(BOOST_DI_CFG_ENABLE_CREATABLE_CONCEPT)
     return std::is_same<
         aux::bool_list<aux::always<Ts>{}...>
       , aux::bool_list<decltype(
@@ -333,83 +332,7 @@ constexpr auto creatable() {
                          , std::declval<TConfig<int>>().policies())
         ){}...>
     >{};
-//#else
-    //return true;
-//#endif
 }
-
-using satisfied = int;
-
-template<class>
-struct size;
-
-template<class TInit, class... TCtor>
-struct size<aux::pair<TInit, aux::type_list<TCtor...>>>
-    : std::integral_constant<int, sizeof...(TCtor)>
-{ };
-
-template<class T, class TDeps, int N1 = 0, int N2 = 0>
-struct enable : std::enable_if<
-        (size<typename type_traits::ctor_traits<T>::type>{} == N1) &&
-        (size<typename type_traits::ctor_traits<typename std::remove_reference_t<decltype(core::binder::resolve<T, no_name>((TDeps*)nullptr))>::given>::type>{} == N2) &&
-        (!aux::is_braces_constructible<typename std::remove_reference_t<decltype(core::binder::resolve<T, no_name>((TDeps*)nullptr))>::given>{})
-    , int
-    >
-{ };
-
-template<class T, int N>
-struct enable1 : std::enable_if<size<typename type_traits::ctor_traits<T>::type>{} == N, int> { };
-
-template<class>
-struct polymorphic_type {
-    struct is_not_bound { };
-};
-
-template<class T, class = void>
-constexpr T* error(...);
-
-template<class TDeps>
-struct errors {
-    template<class T, typename enable1<T, 3>::type = 0>
-    constexpr operator T() {
-        return {errors{}, errors{}, errors{}};
-    }
-
-    template<class T, typename enable1<T, 3>::type = 0>
-    constexpr operator T&() const {
-        return *(new T{errors{}, errors{}, errors{}});
-    }
-
-    template<class T, typename enable1<T, 2>::type = 0>
-    constexpr operator T() {
-        return {errors{}, errors{}};
-    }
-
-    template<class T, typename enable1<T, 1>::type = 0>
-    constexpr operator T() {
-        return {errors{}};
-    }
-
-    template<class T, typename enable1<T, 0>::type = 0>
-    constexpr operator T() {
-        return {};
-    }
-
-    template<class T, typename enable<T, TDeps, 0, 2>::type = 0>
-    constexpr operator T*() {
-        return new typename decltype(core::binder::resolve<T, no_name>((TDeps*)nullptr))::given{errors{}, errors{}};
-    }
-
-    template<class T, typename enable<T, TDeps, 0, 1>::type = 0>
-    constexpr operator T*() {
-        return new typename decltype(core::binder::resolve<T, no_name>((TDeps*)nullptr))::given{errors{}};
-    }
-
-    template<class T, typename enable<T, TDeps, 0, 0>::type = 0>
-    constexpr operator T*() {
-        return error<T, typename polymorphic_type<T>::is_not_bound>("did you forget to add: 'bind<interface, implementation>'?");
-    }
-};
 
 }}} // boost::di::concepts
 
