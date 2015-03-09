@@ -20,8 +20,11 @@ struct polymorphic_type {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic error "-Wundefined-inline"
 
+using reason = const char*;
 template<class T, class = void>
-constexpr T* error(...);
+struct err {
+static constexpr T* error(reason = "type not bound, did you forget to add: 'bind<interface, implementation>'?");
+};
 
 #pragma GCC diagnostic pop
 
@@ -46,7 +49,8 @@ public:
     auto get(const type_traits::uniform&
            , const type_traits::heap&
            , TArgs&&... args) {
-        return error<T, typename polymorphic_type<T>::is_not_bound>("did you forget to add: 'bind<interface, implementation>'?");
+        using not_satisfied = err<T, typename polymorphic_type<T>::is_not_bound>;
+        return not_satisfied::error();
     }
 
     template<class, class T, class... TArgs>
