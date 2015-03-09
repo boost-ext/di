@@ -12,6 +12,19 @@
 
 namespace boost { namespace di { namespace providers {
 
+template<class>
+struct polymorphic_type {
+    struct is_not_bound { };
+};
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic error "-Wundefined-inline"
+
+template<class T, class = void>
+constexpr T* error(...);
+
+#pragma GCC diagnostic pop
+
 class stack_over_heap {
 public:
     template<class, class T, class... TArgs>
@@ -21,11 +34,19 @@ public:
         return new T(std::forward<TArgs>(args)...);
     }
 
-    template<class, class T, class... TArgs>
+    template<class, class T, class... TArgs, std::enable_if_t<aux::is_braces_constructible<T, TArgs...>{}, int> = 0>
     auto get(const type_traits::uniform&
            , const type_traits::heap&
            , TArgs&&... args) {
         return new T{std::forward<TArgs>(args)...};
+    }
+
+
+    template<class, class T, class... TArgs, std::enable_if_t<!aux::is_braces_constructible<T, TArgs...>{}, int> = 0>
+    auto get(const type_traits::uniform&
+           , const type_traits::heap&
+           , TArgs&&... args) {
+        return error<T, typename polymorphic_type<T>::is_not_bound>("did you forget to add: 'bind<interface, implementation>'?");
     }
 
     template<class, class T, class... TArgs>

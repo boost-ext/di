@@ -117,10 +117,14 @@ public:
     { }
 
     template<class T>
-    auto create() -> REQUIRES<concepts::creatable<deps, TConfig, T>()
-                            , decltype(static_cast<T>(concepts::errors<deps>{}))> {
+    [[deprecated]] T create() /*-> REQUIRES<concepts::creatable<deps, TConfig, T>(), T>*/ {
         return create_impl<T>();
     }
+
+    //template<class T>
+    //[[deprecated]] auto create() -> REQUIRES<!concepts::creatable<deps, TConfig, T>(), T> {
+        //return create_impl<T>();
+    //}
 
     template<class TAction>
     void call(const TAction& action) {

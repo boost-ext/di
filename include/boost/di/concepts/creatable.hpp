@@ -365,8 +365,8 @@ struct polymorphic_type {
     struct is_not_bound { };
 };
 
-template<class T>
-typename polymorphic_type<T>::is_not_bound error(...);
+template<class T, class = void>
+constexpr T* error(...);
 
 template<class TDeps>
 struct errors {
@@ -407,7 +407,7 @@ struct errors {
 
     template<class T, typename enable<T, TDeps, 0, 0>::type = 0>
     constexpr operator T*() {
-        return error<T>("did you forget to add: 'bind<interface, implementation>'?");
+        return error<T, typename polymorphic_type<T>::is_not_bound>("did you forget to add: 'bind<interface, implementation>'?");
     }
 };
 
