@@ -1615,10 +1615,10 @@ struct ctor_traits_impl<T, std::false_type>
 
 #endif
 
-#ifndef BOOST_DI_PROVIDERS_STACK_OVER_HEAP_HPP
-#define BOOST_DI_PROVIDERS_STACK_OVER_HEAP_HPP
+#ifndef BOOST_DI_CONCEPTS_CREATABLE_HPP
+#define BOOST_DI_CONCEPTS_CREATABLE_HPP
 
-namespace boost { namespace di { namespace providers {
+namespace boost { namespace di {
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic error "-Wundefined-inline"
@@ -1628,7 +1628,48 @@ struct $ { $(...) { } };
 template<class T>
 struct polymorphic_type {
     struct is_not_bound {
-        constexpr T* error($ = "type not bound, did you forget to add: 'bind<interface, implementation>'?");
+        constexpr operator T() const {
+            return error();
+        }
+        constexpr T error($ = "type not bound, did you forget to add: 'bind<interface, implementation>'?") const;
+    };
+};
+
+struct any {
+    template<class T>
+    constexpr operator T(){
+        return {};
+    };
+
+    template<class T>
+    constexpr operator T&() const{
+        return error<T&>();
+    };
+
+    template<class T>
+    constexpr T error($ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!") const;
+};
+
+template<class>
+struct Any {
+    using type = any;
+};
+
+template<class T, class... TCtor>
+struct type {
+    struct is_not_bound {
+        constexpr operator T() const {
+            return T(typename Any<TCtor>::type{}...);
+        }
+        constexpr T error($ = "type not bound, did you forget to add: 'bind<interface, implementation>'?") const;
+    };
+
+    template<class X>
+    struct is_not_convertible_to {
+        constexpr operator X() const {
+            return error();
+        }
+        constexpr X error($ = "type not convertible, missing 'di::bind<type>.to(ref(value))'") const;
     };
 };
 
@@ -1638,7 +1679,10 @@ struct number_of_constructor_arguments_doesnt_match_for {
     struct given {
         template<int Expected>
         struct expected {
-            constexpr T* error($ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits");
+            constexpr operator T() const {
+                return error();
+            }
+            constexpr T error($ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits");
         };
     };
 };
@@ -1648,10 +1692,16 @@ struct allocating_an_object_of_abastract_class_type {
     struct has_unimplemented_pure_virtual_methods { };
 };
 
+namespace concepts {
+
 template<class T, class, class = void>
-struct get_error {
-    using type = typename polymorphic_type<T>::is_not_bound;
-};
+struct creatable_impl : polymorphic_type<T>::is_not_bound
+{ };
+
+template<class T, class... TCtor>
+struct creatable_impl<T, aux::type_list<TCtor...>, std::enable_if_t<!std::is_polymorphic<aux::decay_t<T>>{}>>
+    : type<T, TCtor...>::is_not_bound
+{ };
 
 template<class>
 struct ctor_size;
@@ -1661,25 +1711,36 @@ struct ctor_size<aux::pair<TInit, aux::type_list<TCtor...>>>
     : std::integral_constant<int, sizeof...(TCtor)>
 { };
 
-//struct not_resolved { };
-//using type = std::conditional_t<
-    //std::is_same<not_resolved, std::remove_reference_t<decltype(core::binder::resolve<T, no_name, not_resolved>((TDeps*)nullptr))>>{} ||
-
 template<class T, class... TCtor>
-struct get_error<T, aux::type_list<TCtor...>, std::enable_if_t<ctor_size<typename type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>::type>{} != sizeof...(TCtor)>> {
-    using type = typename number_of_constructor_arguments_doesnt_match_for<T>
+struct creatable_impl<T, aux::type_list<TCtor...>, std::enable_if_t<ctor_size<typename type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>::type>{} != sizeof...(TCtor)>>
+    : number_of_constructor_arguments_doesnt_match_for<T>
         ::template given<sizeof...(TCtor)>
-        ::template expected<ctor_size<typename type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>::type>{}>;
-};
+        ::template expected<ctor_size<typename type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>::type>{}>
+{ };
 
-//template<class T, class... TCtor>
-//struct get_error<T, aux::type_list<TCtor...>, std::enable_if_t<>> {
-    //using type = typename number_of_constructor_arguments_doesnt_match_for<T>
-        //::template given<sizeof...(TCtor)>
-        //::template expected<ctor_size<typename type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>::type>{}>;
-//};
+template<class T, class... Ts>
+constexpr T creatable() {
+    return creatable_impl<T, aux::type_list<Ts...>>{};
+}
+
+template<class, class T, class... Ts>
+T creatable2(std::enable_if_t<std::is_constructible<T, Ts...>{}>* = 0);
+
+template<class, class T, class... Ts>
+constexpr auto creatable2(std::enable_if_t<!std::is_constructible<T, Ts...>{}>* = 0) {
+    return creatable_impl<T, aux::type_list<Ts...>>{};
+}
 
 #pragma GCC diagnostic pop
+
+}}} // boost::di::concepts
+
+#endif
+
+#ifndef BOOST_DI_PROVIDERS_STACK_OVER_HEAP_HPP
+#define BOOST_DI_PROVIDERS_STACK_OVER_HEAP_HPP
+
+namespace boost { namespace di { namespace providers {
 
 class stack_over_heap {
 public:
@@ -1694,7 +1755,7 @@ public:
     auto get(const type_traits::direct&
            , const type_traits::heap&
            , TArgs&&...) {
-        return typename get_error<T, aux::type_list<TArgs...>>::type{}.error();
+        return concepts::creatable<T*, TArgs...>();
     }
 
     template<class, class T, class... TArgs, std::enable_if_t<aux::is_braces_constructible<T, TArgs...>{}, int> = 0>
@@ -1708,8 +1769,16 @@ public:
     auto get(const type_traits::uniform&
            , const type_traits::heap&
            , TArgs&&...) {
-        return typename get_error<T, aux::type_list<TArgs...>>::type{}.error();
+        return concepts::creatable<T*, TArgs...>();
     }
+
+    //template<class, class T, class... TArgs>
+    //decltype(static_cast<T>(concepts::creatable2<type_traits::direct, T, TArgs...>()))
+         //get(const type_traits::direct&
+           //, const type_traits::stack&
+           //, TArgs&&... args) const noexcept {
+        //return T(std::forward<TArgs>(args)...);
+    //}
 
     template<class, class T, class... TArgs, std::enable_if_t<std::is_constructible<T, TArgs...>{}, int> = 0>
     auto get(const type_traits::direct&
@@ -1722,7 +1791,7 @@ public:
     auto get(const type_traits::direct&
            , const type_traits::stack&
            , TArgs&&...) const noexcept {
-        return typename get_error<T, aux::type_list<TArgs...>>::type{}.error();
+        return concepts::creatable<T, TArgs...>();
     }
 
     template<class, class T, class... TArgs, std::enable_if_t<aux::is_braces_constructible<T, TArgs...>{}, int> = 0>
@@ -1736,7 +1805,7 @@ public:
     auto get(const type_traits::uniform&
            , const type_traits::stack&
            , TArgs&&...) const noexcept {
-        return typename get_error<T, aux::type_list<TArgs...>>::type{}.error();
+        return concepts::creatable<T, TArgs...>();
     }
 };
 
@@ -2070,330 +2139,6 @@ template<
 
 #endif
 
-#ifndef BOOST_DI_CONCEPTS_CREATABLE_HPP
-#define BOOST_DI_CONCEPTS_CREATABLE_HPP
-
-namespace boost { namespace di { namespace concepts {
-
-template<class, class, class = void, class = no_name, class = std::false_type>
-struct create;
-
-template<class, class, class, class, class>
-struct is_creatable_impl;
-
-template<class T, class TDeps, class TPolicies>
-struct get_type {
-    using type = std::conditional_t<
-        std::is_convertible<create<TDeps, TPolicies>, T>{}
-      , T
-      , void
-    >;
-};
-
-template<class TParent, class TNone, class TDeps, class TPolicies>
-struct get_type<core::any_type<TParent, TNone>, TDeps, TPolicies> {
-    using type = create<TDeps, TPolicies, TParent>;
-};
-
-template<class TName, class T, class TDeps, class TPolicies>
-struct get_type<type_traits::named<TName, T>, TDeps, TPolicies> {
-    using type = std::conditional_t<
-        std::is_convertible<create<TDeps, TPolicies, void, TName>, T>{}
-      , T
-      , void
-    >;
-};
-
-template<
-    class TScope
-  , class T
-  , class TDeps
-  , class TPolicies
-  , class... TCtor
-> struct is_creatable_impl<
-    TScope
-  , T
-  , TDeps
-  , aux::pair<type_traits::direct, aux::type_list<TCtor...>>
-  , TPolicies
-> : aux::identity<std::is_constructible<
-        T
-      , typename get_type<TCtor, TDeps, TPolicies>::type...
-    >>
-{ };
-
-template<
-    class TScope
-  , class T
-  , class TDeps
-  , class TPolicies
-  , class... TCtor
-> struct is_creatable_impl<
-    TScope
-  , T
-  , TDeps
-  , aux::pair<type_traits::uniform, aux::type_list<TCtor...>>
-  , TPolicies
-> : aux::is_braces_constructible<
-        T
-      , typename get_type<TCtor, TDeps, TPolicies>::type...
-    >
-{ };
-
-template<
-    class TScope
-  , class T
-  , class TDeps
-  , class TPolicies
-  , class... TCtor
-> struct is_creatable_impl<
-    scopes::exposed<TScope>
-  , T
-  , TDeps
-  , aux::pair<type_traits::direct, aux::type_list<TCtor...>>
-  , TPolicies
-> : std::true_type
-{ };
-
-template<
-    class TScope
-  , class T
-  , class TDeps
-  , class TPolicies
-  , class... TCtor
-> struct is_creatable_impl<
-    scopes::exposed<TScope>
-  , T
-  , TDeps
-  , aux::pair<type_traits::uniform, aux::type_list<TCtor...>>
-  , TPolicies
-> : std::true_type
-{ };
-
-template<
-    class T
-  , class TDeps
-  , class TPolicies
-  , class... TCtor
-> struct is_creatable_impl<
-    scopes::external
-  , T
-  , TDeps
-  , aux::pair<type_traits::direct, aux::type_list<TCtor...>>
-  , TPolicies
-> : std::true_type
-{ };
-
-template<
-    class T
-  , class TDeps
-  , class TPolicies
-  , class... TCtor
-> struct is_creatable_impl<
-    scopes::external
-  , T
-  , TDeps
-  , aux::pair<type_traits::uniform, aux::type_list<TCtor...>>
-  , TPolicies
-> : std::true_type
-{ };
-
-template<class, class, class, class, class, class>
-struct call_policies;
-
-template<
-    class TScope
-  , class T
-  , class TDeps
-  , class TCtor
-  , class TPolicies
-> using is_creatable_impl_t =
-    typename is_creatable_impl<
-        TScope
-      , T
-      , TDeps
-      , TCtor
-      , TPolicies
-    >::type;
-
-template<
-    class T
-  , class TDependency
-  , class TName
-  , class TIsRoot
-  , class TDeps
-  , class... Ts
-> struct call_policies<
-    T
-  , TDependency
-  , TName
-  , TIsRoot
-  , TDeps
-  , core::pool<aux::type_list<Ts...>>
-> {
-    struct arg {
-        using type BOOST_DI_UNUSED = T;
-        using name BOOST_DI_UNUSED = TName;
-        using is_root BOOST_DI_UNUSED = TIsRoot;
-
-        template<class T_, class TName_, class TDefault_>
-        using resolve =
-            decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)nullptr));
-    };
-
-    template<class TPolicy, class = void>
-    struct call : std::true_type { };
-
-    template<class TPolicy>
-    struct call<TPolicy, std::enable_if_t<core::has_compile_time<TPolicy>{}>>
-        : decltype((TPolicy{})(arg{}))
-    { };
-
-    static constexpr auto value =
-        std::is_same<
-            aux::bool_list<aux::always<Ts>{}...>
-          , aux::bool_list<call<Ts>{}...>
-        >::value;
-};
-
-template<
-    class T
-  , class TName
-  , class TIsRoot
-  , class TDependency
-  , class TDeps
-  , class TCtor
-  , class TPolicies
-> struct is_createable_impl {
-    using type = std::integral_constant<bool,
-        is_creatable_impl_t<
-            typename TDependency::scope
-          , typename TDependency::given
-          , TDeps
-          , TCtor
-          , TPolicies
-        >::value &&
-        call_policies<
-            T
-          , TDependency
-          , TName
-          , TIsRoot
-          , TDeps
-          , TPolicies
-        >::value
-    >;
-};
-
-template<
-    class T
-  , class TName
-  , class TIsRoot
-  , class TDependency
-  , class TDeps
-  , class TCtor
-> struct is_createable_impl<
-    T
-  , TName
-  , TIsRoot
-  , TDependency
-  , TDeps
-  , TCtor
-  , core::pool<aux::type_list<>>
-> {
-    using type = is_creatable_impl_t<
-        typename TDependency::scope
-      , typename TDependency::given
-      , TDeps
-      , TCtor
-      , core::pool<aux::type_list<>>
-    >;
-};
-
-template<
-    class T
-  , class TName
-  , class TIsRoot
-  , class TDependency
-  , class TDeps
-  , class TCtor
-  , class TPolicies
-> using is_createable_impl_t =
-    std::enable_if_t<
-        is_createable_impl<
-            T
-          , TName
-          , TIsRoot
-          , TDependency
-          , TDeps
-          , TCtor
-          , TPolicies
-        >::type::value
-    >;
-
-template<
-    class T
-  , class TParent
-  , class TDeps
-  , class TName
-  , class TIsRoot
-  , class TPolicies
-  , class TDependency = std::remove_reference_t<
-        decltype(core::binder::resolve<T, TName>((TDeps*)nullptr))
-    >
-  , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
-  , class = core::is_not_same<T, TParent>
-  , class = is_createable_impl_t<T, TName, TIsRoot, TDependency, TDeps, TCtor, TPolicies>
-> struct is_creatable { };
-
-template<
-    class TDeps
-  , class TPolicies
-  , class TParent
-  , class TName
-  , class TIsRoot
-> struct create {
-    template<class T>
-    using is_creatable_t =
-        is_creatable<T, TParent, TDeps, TName, TIsRoot, TPolicies>;
-
-    template<class T, class = is_creatable_t<T>>
-    operator T();
-
-    template<class T, class = is_creatable_t<T>>
-    operator T&() const;
-};
-
-std::false_type creatable_impl(...);
-
-template<class T, class TDeps, class TPolicies>
-auto creatable_impl(T&&, TDeps&&, TPolicies&&) -> aux::is_valid_expr<
-    decltype(
-        create<
-            core::pool<TDeps>
-          , TPolicies
-          , void // parent
-          , no_name // name
-          , std::true_type // is_root
-        >{}.operator T()
-    )
->;
-
-template<class TDeps, template<class> class TConfig, class... Ts>
-constexpr auto creatable() {
-    return std::is_same<
-        aux::bool_list<aux::always<Ts>{}...>
-      , aux::bool_list<decltype(
-            creatable_impl(std::declval<Ts>()
-                         , std::declval<TDeps>()
-                         , std::declval<TConfig<int>>().policies())
-        ){}...>
-    >{};
-}
-
-}}} // boost::di::concepts
-
-#endif
-
 #ifndef BOOST_DI_CORE_INJECTOR_HPP
 #define BOOST_DI_CORE_INJECTOR_HPP
 
@@ -2445,7 +2190,7 @@ decltype(auto) arg(const T& arg, std::enable_if_t<has_configure<T>{}>* = 0) noex
     return arg.configure();
 }
 
-template<class T, class TWrapper>
+template<class T, class TWrapper, class = void>
 struct wrapper {
     using element_type = T;
 
@@ -2455,6 +2200,21 @@ struct wrapper {
 
     inline operator T() noexcept {
         return wrapper_;
+    }
+
+    TWrapper wrapper_;
+};
+
+template<class T, class TWrapper>
+struct wrapper<T, TWrapper, std::enable_if_t<!std::is_convertible<TWrapper, T>{}>> {
+    using element_type = T;
+
+    inline operator T() const noexcept {
+        return typename type<TWrapper>::template is_not_convertible_to<T>{};
+    }
+
+    inline operator T() noexcept {
+        return typename type<TWrapper>::template is_not_convertible_to<T>{};
     }
 
     TWrapper wrapper_;
@@ -2573,7 +2333,7 @@ public:
     template<
         template<class> class TConfig
       , class... TArgs
-        BOOST_DI_REQUIRES(concepts::creatable<typename core::injector<TConfig, TArgs...>::deps, TConfig, TDeps...>())
+        //BOOST_DI_REQUIRES(concepts::creatable<typename core::injector<TConfig, TArgs...>::deps, TConfig, TDeps...>())
     > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, TDeps...>{injector}
     { }

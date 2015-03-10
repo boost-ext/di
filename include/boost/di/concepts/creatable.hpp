@@ -28,7 +28,8 @@ struct polymorphic_type {
     };
 };
 
-struct any {
+template<class>
+struct type_ {
     template<class T>
     constexpr operator T(){
         return {};
@@ -43,16 +44,16 @@ struct any {
     constexpr T error($ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!") const;
 };
 
-template<class>
+template<class T, class>
 struct Any {
-    using type = any;
+    using type = type_<T>;
 };
 
 template<class T, class... TCtor>
 struct type {
     struct is_not_bound {
         constexpr operator T() const {
-            return T(typename Any<TCtor>::type{}...);
+            return T(typename Any<T, TCtor>::type{}...);
         }
         constexpr T error($ = "type not bound, did you forget to add: 'bind<interface, implementation>'?") const;
     };
