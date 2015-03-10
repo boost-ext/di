@@ -67,7 +67,7 @@ decltype(auto) arg(const T& arg, std::enable_if_t<has_configure<T>{}>* = 0) noex
     return arg.configure();
 }
 
-template<class T, class TWrapper>
+template<class T, class TWrapper, class = void>
 struct wrapper {
     using element_type = T;
 
@@ -77,6 +77,21 @@ struct wrapper {
 
     inline operator T() noexcept {
         return wrapper_;
+    }
+
+    TWrapper wrapper_;
+};
+
+template<class T, class TWrapper>
+struct wrapper<T, TWrapper, std::enable_if_t<!std::is_convertible<TWrapper, T>{}>> {
+    using element_type = T;
+
+    inline operator T() const noexcept {
+        return typename type<TWrapper>::template is_not_convertible_to<T>{};
+    }
+
+    inline operator T() noexcept {
+        return typename type<TWrapper>::template is_not_convertible_to<T>{};
     }
 
     TWrapper wrapper_;

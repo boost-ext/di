@@ -16,10 +16,9 @@ namespace boost { namespace di { namespace policies {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic error "-Wundefined-inline"
 
-using reason = const char*;
 template<class T, class = void>
 struct not_allowed {
-    static constexpr T* error(reason = "type not allowed!");
+    static constexpr T error($ = "type not allowed!");
 };
 
 #pragma GCC diagnostic pop

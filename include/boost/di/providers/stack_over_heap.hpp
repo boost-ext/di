@@ -9,32 +9,24 @@
 
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
+#include "boost/di/concepts/creatable.hpp"
 
 namespace boost { namespace di { namespace providers {
 
-template<class>
-struct polymorphic_type {
-    struct is_not_bound { };
-};
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic error "-Wundefined-inline"
-
-using reason = const char*;
-template<class T, class = void>
-struct err {
-    static constexpr T* error(reason = "type not bound, did you forget to add: 'bind<interface, implementation>'?");
-};
-
-#pragma GCC diagnostic pop
-
 class stack_over_heap {
 public:
-    template<class, class T, class... TArgs>
+    template<class, class T, class... TArgs, std::enable_if_t<std::is_constructible<T, TArgs...>{}, int> = 0>
     auto get(const type_traits::direct&
            , const type_traits::heap&
            , TArgs&&... args) {
         return new T(std::forward<TArgs>(args)...);
+    }
+
+    template<class, class T, class... TArgs, std::enable_if_t<!std::is_constructible<T, TArgs...>{}, int> = 0>
+    auto get(const type_traits::direct&
+           , const type_traits::heap&
+           , TArgs&&...) {
+        return concepts::creatable<T*, TArgs...>();
     }
 
     template<class, class T, class... TArgs, std::enable_if_t<aux::is_braces_constructible<T, TArgs...>{}, int> = 0>
@@ -44,27 +36,47 @@ public:
         return new T{std::forward<TArgs>(args)...};
     }
 
-
     template<class, class T, class... TArgs, std::enable_if_t<!aux::is_braces_constructible<T, TArgs...>{}, int> = 0>
     auto get(const type_traits::uniform&
            , const type_traits::heap&
-           , TArgs&&... args) {
-        using not_satisfied = err<T, typename polymorphic_type<T>::is_not_bound>;
-        return not_satisfied::error();
+           , TArgs&&...) {
+        return concepts::creatable<T*, TArgs...>();
     }
 
-    template<class, class T, class... TArgs>
+    //template<class, class T, class... TArgs>
+    //decltype(static_cast<T>(concepts::creatable2<type_traits::direct, T, TArgs...>()))
+         //get(const type_traits::direct&
+           //, const type_traits::stack&
+           //, TArgs&&... args) const noexcept {
+        //return T(std::forward<TArgs>(args)...);
+    //}
+
+    template<class, class T, class... TArgs, std::enable_if_t<std::is_constructible<T, TArgs...>{}, int> = 0>
     auto get(const type_traits::direct&
            , const type_traits::stack&
            , TArgs&&... args) const noexcept {
         return T(std::forward<TArgs>(args)...);
     }
 
-    template<class, class T, class... TArgs>
+    template<class, class T, class... TArgs, std::enable_if_t<!std::is_constructible<T, TArgs...>{}, int> = 0>
+    auto get(const type_traits::direct&
+           , const type_traits::stack&
+           , TArgs&&...) const noexcept {
+        return concepts::creatable<T, TArgs...>();
+    }
+
+    template<class, class T, class... TArgs, std::enable_if_t<aux::is_braces_constructible<T, TArgs...>{}, int> = 0>
     auto get(const type_traits::uniform&
            , const type_traits::stack&
            , TArgs&&... args) const noexcept {
         return T{std::forward<TArgs>(args)...};
+    }
+
+    template<class, class T, class... TArgs, std::enable_if_t<!aux::is_braces_constructible<T, TArgs...>{}, int> = 0>
+    auto get(const type_traits::uniform&
+           , const type_traits::stack&
+           , TArgs&&...) const noexcept {
+        return concepts::creatable<T, TArgs...>();
     }
 };
 
