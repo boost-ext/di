@@ -20,7 +20,7 @@ template<
    , class... TDeps
      BOOST_DI_REQUIRES(
         concepts::configurable<TConfig<int>>() &&
-        concepts::boundable<typename core::injector<TConfig, TDeps...>::deps>()
+        concepts::boundable<core::bindings_t<TDeps...>>()
      )
 > inline auto make_injector(const TDeps&... args) noexcept {
     return core::injector<TConfig, TDeps...>{core::init{}, args...};

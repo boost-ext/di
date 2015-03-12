@@ -92,6 +92,24 @@ struct join<type_list<TArgs1...>, type_list<TArgs2...>, Ts...> {
 template<class... TArgs>
 using join_t = typename join<TArgs...>::type;
 
+template<class, class...>
+struct is_unique_impl;
+
+template<class T>
+struct is_unique_impl<T>: std::true_type { };
+
+template<class T1, class T2, class... Ts>
+struct is_unique_impl<T1, T2, Ts...>
+	: std::conditional_t<
+		  std::is_base_of<type<T2>, T1>{}
+		, std::false_type
+		, is_unique_impl<inherit<T1, type<T2>>, Ts...>
+ 	  >
+{ };
+
+template<class... Ts>
+using is_unique = is_unique_impl<none_t, Ts...>;
+
 } // aux
 
 struct _ { _(...) { } };

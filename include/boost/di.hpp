@@ -125,6 +125,24 @@ struct join<type_list<TArgs1...>, type_list<TArgs2...>, Ts...> {
 template<class... TArgs>
 using join_t = typename join<TArgs...>::type;
 
+template<class, class...>
+struct is_unique_impl;
+
+template<class T>
+struct is_unique_impl<T>: std::true_type { };
+
+template<class T1, class T2, class... Ts>
+struct is_unique_impl<T1, T2, Ts...>
+	: std::conditional_t<
+		  std::is_base_of<type<T2>, T1>{}
+		, std::false_type
+		, is_unique_impl<inherit<T1, type<T2>>, Ts...>
+ 	  >
+{ };
+
+template<class... Ts>
+using is_unique = is_unique_impl<none_t, Ts...>;
+
 } // aux
 
 struct _ { _(...) { } };
@@ -1914,18 +1932,15 @@ public:
 namespace boost { namespace di { namespace concepts {
 
 template<class T>
-struct unique {
-    using type = aux::pair<
-        aux::pair<typename T::expected, typename T::name>
-      , std::integral_constant<bool, T::scope::priority>
-    >;
-};
+using unique_dependency = aux::pair<
+    aux::pair<typename T::expected, typename T::name>
+  , std::integral_constant<bool, T::scope::priority>
+>;
 
 std::false_type boundable_impl(...);
 
 template<class... Ts>
-auto boundable_impl(aux::type_list<Ts...>&&) ->
-    aux::always<typename aux::inherit<typename unique<Ts>::type...>::type>;
+auto boundable_impl(aux::type_list<Ts...>&&) -> aux::is_unique<unique_dependency<Ts>...>;
 
 template<class I, class T>
 auto boundable_impl(I&&, T&&) -> std::integral_constant<bool,
@@ -2344,7 +2359,7 @@ template<
    , class... TDeps
      BOOST_DI_REQUIRES(
         concepts::configurable<TConfig<int>>() &&
-        concepts::boundable<typename core::injector<TConfig, TDeps...>::deps>()
+        concepts::boundable<core::bindings_t<TDeps...>>()
      )
 > inline auto make_injector(const TDeps&... args) noexcept {
     return core::injector<TConfig, TDeps...>{core::init{}, args...};
