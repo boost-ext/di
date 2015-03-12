@@ -39,12 +39,12 @@ struct type_ {
     template<class T>
     constexpr operator T&() const{
         return
-            creatable_constraint_not_satisfied
+            creatable_constraint_not_satisfied_for
         <T&>();
     };
 
     template<class T> constexpr T
-    creatable_constraint_not_satisfied(_ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!")
+    creatable_constraint_not_satisfied_for(_ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!")
     const;
 };
 
@@ -58,8 +58,8 @@ struct Any {
 template<class T, class... TCtor>
 struct type {
 struct is_not_bound {
-    constexpr operator T() const {
-        return T(typename Any<T, TCtor>::type{}...);
+    constexpr operator T*() const {
+        return new T(typename Any<T, TCtor>::type{}...);
     }
 
     constexpr T
@@ -115,15 +115,15 @@ struct ctor_size<aux::pair<TInit, aux::type_list<TCtor...>>>
 { };
 
 template<class T, class... TCtor>
-struct creatable_error_impl<T, aux::type_list<TCtor...>, std::enable_if_t<!std::is_polymorphic<aux::decay_t<T>>{} && ctor_size<typename type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>::type>{} == sizeof...(TCtor)>>
-    : type<T, TCtor...>::is_not_bound
+struct creatable_error_impl<T, aux::type_list<TCtor...>, std::enable_if_t<!std::is_polymorphic<aux::decay_t<T>>{} && ctor_size<typename type_traits::ctor<aux::decay_t<T>, type_traits::ctor_impl_t<std::is_constructible, aux::decay_t<T>>>::type>{} == sizeof...(TCtor)>>
+    : type<aux::decay_t<T>, TCtor...>::is_not_bound
 { };
 
 template<class T, class... TCtor>
-struct creatable_error_impl<T, aux::type_list<TCtor...>, std::enable_if_t<ctor_size<typename type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>::type>{} != sizeof...(TCtor)>>
-    : number_of_constructor_arguments_doesnt_match_for<T>
+struct creatable_error_impl<T, aux::type_list<TCtor...>, std::enable_if_t<ctor_size<typename type_traits::ctor<aux::decay_t<T>, type_traits::ctor_impl_t<std::is_constructible, aux::decay_t<T>>>::type>{} != sizeof...(TCtor)>>
+    : number_of_constructor_arguments_doesnt_match_for<aux::decay_t<T>>
         ::template given<sizeof...(TCtor)>
-        ::template expected<ctor_size<typename type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>::type>{}>
+        ::template expected<ctor_size<typename type_traits::ctor<aux::decay_t<T>, type_traits::ctor_impl_t<std::is_constructible, aux::decay_t<T>>>::type>{}>
 { };
 
 template<class TInitialization, class T, class... Ts>
