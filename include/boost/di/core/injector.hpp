@@ -101,8 +101,7 @@ BOOST_DI_HAS_METHOD(call, call);
 
 template<template<class> class TConfig, class... TDeps>
 class injector : public pool<bindings_t<TDeps...>>
-               , public TConfig<injector<TConfig, TDeps...>>
-               , $ {
+               , public TConfig<injector<TConfig, TDeps...>>, $ {
     template<class...> friend struct provider;
     template<class, class> friend struct any_type;
     template<class> friend class scopes::exposed;
@@ -131,7 +130,8 @@ public:
 
     template<class T>
     auto create() {
-        return create_impl<T>();
+        using TIsRoot = std::true_type;
+        return create_impl<T, no_name, TIsRoot>();
     }
 
     template<class TAction>
@@ -140,7 +140,7 @@ public:
     }
 
 private:
-    template<class T, class TName = no_name>
+    template<class T, class TName = no_name, class TIsRoot = std::false_type>
     auto create_impl() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
@@ -148,7 +148,7 @@ private:
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<expected_t, given_t, T, ctor_t, injector>;
-        policy<pool_t>::template call<T, TName>(((injector&)*this).policies(), dependency, ctor_t{});
+        policy<pool_t>::template call<T, TName, TIsRoot>(((injector&)*this).policies(), dependency, ctor_t{});
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
             std::is_reference<T>{} && has_is_ref<dependency_t>{}

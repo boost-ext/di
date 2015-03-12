@@ -175,9 +175,6 @@ struct $ { $(...) { } };
     #define BOOST_DI_UNUSED
 #endif
 
-template<bool b, class T>
-using REQUIRES = std::enable_if_t<b, T>;
-
 namespace boost { namespace di { namespace aux {
 
 template<class...>
@@ -1948,7 +1945,7 @@ auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
     >;
 
 template<class... Ts>
-constexpr bool boundable() {
+constexpr auto boundable() {
     return decltype(boundable_impl(std::declval<Ts>()...)){};
 }
 
@@ -1967,7 +1964,7 @@ using any_of = aux::type_list<Ts...>;
 template<
     class TExpected
   , class TGiven = TExpected
-  , std::enable_if_t<concepts::boundable<TExpected, TGiven>(), int> = 0
+    BOOST_DI_REQUIRES(concepts::boundable<TExpected, TGiven>())
 > core::dependency<scopes::deduce, TExpected, TGiven> bind{};
 
 constexpr scopes::deduce deduce{};
@@ -2001,14 +1998,15 @@ namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_METHOD(call_operator, operator());
 
-template<class T, class TName, class TDeps>
-struct arg_ {
-    struct arg {
-        using type = T;
-    };
+template<
+    class T
+  , class TName
+  , class TIsRoot
+  , class TDeps
+> struct arg_wrapper {
     using type BOOST_DI_UNUSED = T;
     using name BOOST_DI_UNUSED = TName;
-    using is_root BOOST_DI_UNUSED = std::false_type;
+    using is_root BOOST_DI_UNUSED = TIsRoot;
 
     template<class T_, class TName_, class TDefault_>
     using resolve =
@@ -2021,6 +2019,7 @@ public:
     template<
         class T
       , class TName
+      , class TIsRoot
       , class TInitialization
       , class TDependency
       , class... TCtor
@@ -2028,7 +2027,7 @@ public:
     > static void call(const pool<aux::type_list<TPolicies...>>& policies
                      , TDependency&& dependency
                      , aux::pair<TInitialization, aux::type_list<TCtor...>>) noexcept {
-        int _[]{0, (call_impl<TPolicies, T, TName, TPolicies, TDependency, TCtor...>(
+        int _[]{0, (call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(
             policies, dependency), 0)...}; (void)_;
     }
 
@@ -2037,11 +2036,12 @@ private:
         class TPolicy
       , class T
       , class TName
+      , class TIsRoot
       , class TPolicies
       , class TDependency
       , class... TCtor
     > static void call_impl(const TPolicies& policies, TDependency&& dependency) noexcept {
-        call_impl_type<arg_<T, TName, TDeps>, TDependency, TPolicy, TCtor...>(
+        call_impl_type<arg_wrapper<T, TName, TIsRoot, TDeps>, TDependency, TPolicy, TCtor...>(
             static_cast<const TPolicy&>(policies), dependency
         );
     }
@@ -2206,8 +2206,7 @@ BOOST_DI_HAS_METHOD(call, call);
 
 template<template<class> class TConfig, class... TDeps>
 class injector : public pool<bindings_t<TDeps...>>
-               , public TConfig<injector<TConfig, TDeps...>>
-               , $ {
+               , public TConfig<injector<TConfig, TDeps...>>, $ {
     template<class...> friend struct provider;
     template<class, class> friend struct any_type;
     template<class> friend class scopes::exposed;
@@ -2236,7 +2235,8 @@ public:
 
     template<class T>
     auto create() {
-        return create_impl<T>();
+        using TIsRoot = std::true_type;
+        return create_impl<T, no_name, TIsRoot>();
     }
 
     template<class TAction>
@@ -2245,7 +2245,7 @@ public:
     }
 
 private:
-    template<class T, class TName = no_name>
+    template<class T, class TName = no_name, class TIsRoot = std::false_type>
     auto create_impl() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
@@ -2253,7 +2253,7 @@ private:
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<expected_t, given_t, T, ctor_t, injector>;
-        policy<pool_t>::template call<T, TName>(((injector&)*this).policies(), dependency, ctor_t{});
+        policy<pool_t>::template call<T, TName, TIsRoot>(((injector&)*this).policies(), dependency, ctor_t{});
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
             std::is_reference<T>{} && has_is_ref<dependency_t>{}

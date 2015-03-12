@@ -15,14 +15,15 @@ namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_METHOD(call_operator, operator());
 
-template<class T, class TName, class TDeps>
-struct arg_ {
-    struct arg {
-        using type = T;
-    };
+template<
+    class T
+  , class TName
+  , class TIsRoot
+  , class TDeps
+> struct arg_wrapper {
     using type BOOST_DI_UNUSED = T;
     using name BOOST_DI_UNUSED = TName;
-    using is_root BOOST_DI_UNUSED = std::false_type;
+    using is_root BOOST_DI_UNUSED = TIsRoot;
 
     template<class T_, class TName_, class TDefault_>
     using resolve =
@@ -35,6 +36,7 @@ public:
     template<
         class T
       , class TName
+      , class TIsRoot
       , class TInitialization
       , class TDependency
       , class... TCtor
@@ -42,7 +44,7 @@ public:
     > static void call(const pool<aux::type_list<TPolicies...>>& policies
                      , TDependency&& dependency
                      , aux::pair<TInitialization, aux::type_list<TCtor...>>) noexcept {
-        int _[]{0, (call_impl<TPolicies, T, TName, TPolicies, TDependency, TCtor...>(
+        int _[]{0, (call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(
             policies, dependency), 0)...}; (void)_;
     }
 
@@ -51,11 +53,12 @@ private:
         class TPolicy
       , class T
       , class TName
+      , class TIsRoot
       , class TPolicies
       , class TDependency
       , class... TCtor
     > static void call_impl(const TPolicies& policies, TDependency&& dependency) noexcept {
-        call_impl_type<arg_<T, TName, TDeps>, TDependency, TPolicy, TCtor...>(
+        call_impl_type<arg_wrapper<T, TName, TIsRoot, TDeps>, TDependency, TPolicy, TCtor...>(
             static_cast<const TPolicy&>(policies), dependency
         );
     }
