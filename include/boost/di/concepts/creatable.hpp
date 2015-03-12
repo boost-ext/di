@@ -107,17 +107,17 @@ template<class T, class, class = void>
 struct creatable_error_impl : polymorphic_type<aux::decay_t<T>>::is_not_bound
 { };
 
-template<class T, class... TCtor>
-struct creatable_error_impl<T, aux::type_list<TCtor...>, std::enable_if_t<!std::is_polymorphic<aux::decay_t<T>>{}>>
-    : type<T, TCtor...>::is_not_bound
-{ };
-
 template<class>
 struct ctor_size;
 
 template<class TInit, class... TCtor>
 struct ctor_size<aux::pair<TInit, aux::type_list<TCtor...>>>
     : std::integral_constant<int, sizeof...(TCtor)>
+{ };
+
+template<class T, class... TCtor>
+struct creatable_error_impl<T, aux::type_list<TCtor...>, std::enable_if_t<!std::is_polymorphic<aux::decay_t<T>>{} && ctor_size<typename type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>::type>{} == sizeof...(TCtor)>>
+    : type<T, TCtor...>::is_not_bound
 { };
 
 template<class T, class... TCtor>
