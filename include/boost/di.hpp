@@ -201,8 +201,12 @@ struct _ { _(...) { } };
     #define BOOST_DI_CFG_ERRORS_DESC_END \
         _Pragma("clang diagnostic pop")
 #else
-    #define BOOST_DI_CFG_ERRORS_DESC_BEGIN
-    #define BOOST_DI_CFG_ERRORS_DESC_END
+    #define BOOST_DI_CFG_ERRORS_DESC_BEGIN \
+        _Pragma("GCC diagnostic push") \
+        _Pragma("GCC diagnostic error \"-Werror\"")
+
+    #define BOOST_DI_CFG_ERRORS_DESC_END \
+        _Pragma("GCC diagnostic pop")
 #endif
 
 namespace boost { namespace di { namespace aux {
