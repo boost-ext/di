@@ -18,7 +18,7 @@ namespace boost { namespace di { namespace policies {
 
 template<class T, class = void>
 struct not_allowed {
-    static constexpr T error($ = "type not allowed!");
+    static constexpr T error(_ ="type not allowed!");
 };
 
 #pragma GCC diagnostic pop
@@ -53,7 +53,7 @@ struct apply_impl<T<Ts...>, std::enable_if_t<!std::is_base_of<type_op, T<Ts...>>
 
     template<class TArg>
     static auto apply(const TArg&) noexcept {
-        using type = typename TArg::arg::type;
+        using type = typename TArg::type;
         return typename apply_placeholder<T, type, Ts...>::type{};
     }
 };
@@ -113,7 +113,7 @@ struct is_bound : type_op {
 	template<class TArg>
 	static auto apply(const TArg&) noexcept {
         struct not_resolved { };
-        using type = std::conditional_t<std::is_same<T, _>{}, typename TArg::arg::type, T>;
+        using type = std::conditional_t<std::is_same<T, _>{}, typename TArg::type, T>;
         using dependency = typename TArg::template resolve<type, TName, not_resolved>;
         return std::integral_constant<bool, !std::is_same<dependency, not_resolved>{}>{};
     }

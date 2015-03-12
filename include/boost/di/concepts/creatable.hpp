@@ -25,7 +25,7 @@ struct polymorphic_type { struct is_not_bound {
     }
 
     constexpr T*
-    creatable_constraint_not_satisfied($ = "type not bound, did you forget to add: 'bind<interface, implementation>'?")
+    creatable_constraint_not_satisfied(_ ="type not bound, did you forget to add: 'bind<interface, implementation>'?")
     const;
 };};
 
@@ -45,7 +45,7 @@ struct type_ {
 
     template<class T>
     constexpr T
-    creatable_constraint_not_satisfied($ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!")
+    creatable_constraint_not_satisfied(_ ="reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!")
     const;
 };
 
@@ -61,7 +61,7 @@ struct type {
             return T(typename Any<T, TCtor>::type{}...);
         }
         constexpr T
-    creatable_constraint_not_satisfied($ = "type not bound, did you forget to add: 'bind<interface, implementation>'?")
+    creatable_constraint_not_satisfied(_ ="type not bound, did you forget to add: 'bind<interface, implementation>'?")
         const;
     };
 
@@ -73,7 +73,7 @@ struct type {
             ();
         }
         constexpr X
-    creatable_constraint_not_satisfied($ = "type not convertible, missing 'di::bind<type>.to(ref(value))'")
+    creatable_constraint_not_satisfied(_ ="type not convertible, missing 'di::bind<type>.to(ref(value))'")
         const;
     };
 };
@@ -90,7 +90,7 @@ struct number_of_constructor_arguments_doesnt_match_for {
                 ();
             }
             constexpr T
-    creatable_constraint_not_satisfied($ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits")
+    creatable_constraint_not_satisfied(_ ="verify BOOST_DI_INJECT_TRAITS or di::ctor_traits")
             const;
         };
     };

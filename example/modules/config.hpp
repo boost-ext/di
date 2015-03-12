@@ -19,7 +19,7 @@ class config : public di::config<> {
 public:
     auto policies() const noexcept {
         return di::make_policies(
-            [](auto type){ std::cout << typeid(typename decltype(type)::arg::type).name() << std::endl; }
+            [](auto type){ std::cout << typeid(typename decltype(type)::type).name() << std::endl; }
         );
     }
 };

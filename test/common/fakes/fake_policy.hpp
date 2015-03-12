@@ -23,10 +23,7 @@ template<
   , class TDependency
   , class TDeps
 > struct fake_policy<T, TDependency, TDeps, true> {
-    struct arg {
-        using type = T;
-    };
-
+    using type = T;
     using dependency = TDependency;
 
     template<class, class, class>
@@ -38,10 +35,7 @@ template<
   , class TDependency
   , class TDeps
 > struct fake_policy<T, TDependency, TDeps, false> {
-    struct arg {
-        using type = T;
-    };
-
+    using type = T;
     using dependency = TDependency;
 
     template<class, class, class TDefault>

@@ -127,7 +127,7 @@ using join_t = typename join<TArgs...>::type;
 
 } // aux
 
-struct $ { $(...) { } };
+struct _ { _(...) { } };
 
 }} // boost::di
 
@@ -1632,7 +1632,7 @@ struct polymorphic_type { struct is_not_bound {
     }
 
     constexpr T*
-    creatable_constraint_not_satisfied($ = "type not bound, did you forget to add: 'bind<interface, implementation>'?")
+    creatable_constraint_not_satisfied(_ ="type not bound, did you forget to add: 'bind<interface, implementation>'?")
     const;
 };};
 
@@ -1652,7 +1652,7 @@ struct type_ {
 
     template<class T>
     constexpr T
-    creatable_constraint_not_satisfied($ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!")
+    creatable_constraint_not_satisfied(_ ="reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!")
     const;
 };
 
@@ -1668,7 +1668,7 @@ struct type {
             return T(typename Any<T, TCtor>::type{}...);
         }
         constexpr T
-    creatable_constraint_not_satisfied($ = "type not bound, did you forget to add: 'bind<interface, implementation>'?")
+    creatable_constraint_not_satisfied(_ ="type not bound, did you forget to add: 'bind<interface, implementation>'?")
         const;
     };
 
@@ -1680,7 +1680,7 @@ struct type {
             ();
         }
         constexpr X
-    creatable_constraint_not_satisfied($ = "type not convertible, missing 'di::bind<type>.to(ref(value))'")
+    creatable_constraint_not_satisfied(_ ="type not convertible, missing 'di::bind<type>.to(ref(value))'")
         const;
     };
 };
@@ -1697,7 +1697,7 @@ struct number_of_constructor_arguments_doesnt_match_for {
                 ();
             }
             constexpr T
-    creatable_constraint_not_satisfied($ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits")
+    creatable_constraint_not_satisfied(_ ="verify BOOST_DI_INJECT_TRAITS or di::ctor_traits")
             const;
         };
     };
@@ -2206,7 +2206,8 @@ BOOST_DI_HAS_METHOD(call, call);
 
 template<template<class> class TConfig, class... TDeps>
 class injector : public pool<bindings_t<TDeps...>>
-               , public TConfig<injector<TConfig, TDeps...>>, $ {
+               , public TConfig<injector<TConfig, TDeps...>>
+               , _ {
     template<class...> friend struct provider;
     template<class, class> friend struct any_type;
     template<class> friend class scopes::exposed;
@@ -2214,7 +2215,7 @@ class injector : public pool<bindings_t<TDeps...>>
     using pool_t = pool<bindings_t<TDeps...>>;
     using config = std::conditional_t<
         std::is_default_constructible<TConfig<injector>>{}
-      , $
+      , _
       , TConfig<injector>
     >;
 
@@ -2234,7 +2235,7 @@ public:
     { }
 
     template<class T>
-    auto create() {
+    T create() const {
         using TIsRoot = std::true_type;
         return create_impl<T, no_name, TIsRoot>();
     }

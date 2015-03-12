@@ -94,7 +94,7 @@ using join_t = typename join<TArgs...>::type;
 
 } // aux
 
-struct $ { $(...) { } };
+struct _ { _(...) { } };
 
 }} // boost::di
 

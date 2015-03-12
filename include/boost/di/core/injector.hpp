@@ -101,7 +101,8 @@ BOOST_DI_HAS_METHOD(call, call);
 
 template<template<class> class TConfig, class... TDeps>
 class injector : public pool<bindings_t<TDeps...>>
-               , public TConfig<injector<TConfig, TDeps...>>, $ {
+               , public TConfig<injector<TConfig, TDeps...>>
+               , _ {
     template<class...> friend struct provider;
     template<class, class> friend struct any_type;
     template<class> friend class scopes::exposed;
@@ -109,7 +110,7 @@ class injector : public pool<bindings_t<TDeps...>>
     using pool_t = pool<bindings_t<TDeps...>>;
     using config = std::conditional_t<
         std::is_default_constructible<TConfig<injector>>{}
-      , $
+      , _
       , TConfig<injector>
     >;
 
@@ -129,7 +130,7 @@ public:
     { }
 
     template<class T>
-    auto create() {
+    T create() const {
         using TIsRoot = std::true_type;
         return create_impl<T, no_name, TIsRoot>();
     }
