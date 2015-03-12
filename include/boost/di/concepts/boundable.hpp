@@ -43,7 +43,7 @@ auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
     >;
 
 template<class... Ts>
-constexpr auto boundable() {
+constexpr bool boundable() {
     return decltype(boundable_impl(std::declval<Ts>()...)){};
 }
 

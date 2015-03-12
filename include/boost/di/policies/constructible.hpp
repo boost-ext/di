@@ -147,7 +147,6 @@ inline auto operator!(const T&) {
 
 template<class T>
 struct constructible_impl {
-    using compile_time = void;
     template<class TArg, std::enable_if_t<decltype(T::apply(TArg{})){}, int> = 0>
     auto operator()(const TArg& data) const {
         return T::apply(data);

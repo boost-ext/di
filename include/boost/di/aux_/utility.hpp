@@ -92,7 +92,11 @@ struct join<type_list<TArgs1...>, type_list<TArgs2...>, Ts...> {
 template<class... TArgs>
 using join_t = typename join<TArgs...>::type;
 
-}}} // boost::di::aux
+} // aux
+
+struct $ { $(...) { } };
+
+}} // boost::di
 
 #endif
 

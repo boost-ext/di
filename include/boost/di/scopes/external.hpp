@@ -89,7 +89,6 @@ public:
              has_call_operator<TGiven>{}
         >
     > {
-    public:
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
             using wrapper = wrapper_traits_t<decltype(std::declval<TGiven>()())>;

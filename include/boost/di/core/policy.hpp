@@ -14,22 +14,20 @@
 namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_METHOD(call_operator, operator());
-BOOST_DI_HAS_TYPE(compile_time);
 
 template<class T, class TName, class TDeps>
-        struct arg_ {
-            struct arg {
-                using type = T;
-            };
-            using type BOOST_DI_UNUSED = T;
-            using name BOOST_DI_UNUSED = TName;
-            using is_root BOOST_DI_UNUSED = std::false_type;
+struct arg_ {
+    struct arg {
+        using type = T;
+    };
+    using type BOOST_DI_UNUSED = T;
+    using name BOOST_DI_UNUSED = TName;
+    using is_root BOOST_DI_UNUSED = std::false_type;
 
-            template<class T_, class TName_, class TDefault_>
-            using resolve =
-                decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)nullptr));
-
-        };
+    template<class T_, class TName_, class TDefault_>
+    using resolve =
+        decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)nullptr));
+};
 
 template<class TDeps>
 class policy {
@@ -57,21 +55,13 @@ private:
       , class TDependency
       , class... TCtor
     > static void call_impl(const TPolicies& policies, TDependency&& dependency) noexcept {
-
         call_impl_type<arg_<T, TName, TDeps>, TDependency, TPolicy, TCtor...>(
             static_cast<const TPolicy&>(policies), dependency
         );
     }
 
     template<class TArg, class TDependency, class TPolicy, class... TCtor>
-    static std::enable_if_t<has_compile_time<TPolicy>{}>
-    call_impl_type(const TPolicy& policy, TDependency&& dependency) noexcept {
-        call_impl_args<TArg, TDependency, TPolicy, TCtor...>(policy, dependency);
-    }
-
-    template<class TArg, class TDependency, class TPolicy, class... TCtor>
-    static std::enable_if_t<!has_compile_time<TPolicy>{}>
-    call_impl_type(const TPolicy& policy, TDependency&& dependency) noexcept {
+    static void call_impl_type(const TPolicy& policy, TDependency&& dependency) noexcept {
         call_impl_args<TArg, TDependency, TPolicy, TCtor...>(policy, dependency);
     }
 

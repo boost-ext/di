@@ -24,7 +24,7 @@ using any_of = aux::type_list<Ts...>;
 template<
     class TExpected
   , class TGiven = TExpected
-    BOOST_DI_REQUIRES(concepts::boundable<TExpected, TGiven>())
+  , std::enable_if_t<concepts::boundable<TExpected, TGiven>(), int> = 0
 > core::dependency<scopes::deduce, TExpected, TGiven> bind{};
 
 constexpr scopes::deduce deduce{};

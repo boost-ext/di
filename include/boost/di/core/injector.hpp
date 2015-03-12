@@ -97,14 +97,12 @@ struct wrapper<T, TWrapper, std::enable_if_t<!std::is_convertible<TWrapper, T>{}
     TWrapper wrapper_;
 };
 
-struct any_ctor { explicit any_ctor(...) { } };
-
 BOOST_DI_HAS_METHOD(call, call);
 
 template<template<class> class TConfig, class... TDeps>
 class injector : public pool<bindings_t<TDeps...>>
                , public TConfig<injector<TConfig, TDeps...>>
-               , any_ctor {
+               , $ {
     template<class...> friend struct provider;
     template<class, class> friend struct any_type;
     template<class> friend class scopes::exposed;
@@ -112,7 +110,7 @@ class injector : public pool<bindings_t<TDeps...>>
     using pool_t = pool<bindings_t<TDeps...>>;
     using config = std::conditional_t<
         std::is_default_constructible<TConfig<injector>>{}
-      , any_ctor
+      , $
       , TConfig<injector>
     >;
 
@@ -131,22 +129,17 @@ public:
         , config{*this}
     { }
 
-    //template<class T>
-    //auto create() {
-        //return create_impl<T>();
-    //}
-
-    //template<class T>
-    //[[deprecated]] auto create() -> REQUIRES<!concepts::creatable<deps, TConfig, T>(), T> {
-        //return create_impl<T>();
-    //}
+    template<class T>
+    auto create() {
+        return create_impl<T>();
+    }
 
     template<class TAction>
     void call(const TAction& action) {
         call_impl(action, deps{});
     }
 
-//private:
+private:
     template<class T, class TName = no_name>
     auto create_impl() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
@@ -163,11 +156,6 @@ public:
           , std::remove_reference_t<T>
         >;
         return wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
-    }
-
-    template<class T>
-    auto create() {
-        return create_impl<T>();
     }
 
     template<class TAction, class... Ts>

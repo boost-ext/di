@@ -8,24 +8,31 @@
 #define BOOST_DI_PROVIDERS_HEAP_HPP
 
 #include "boost/di/type_traits/ctor_traits.hpp"
+#include "boost/di/concepts/creatable.hpp"
 
 namespace boost { namespace di { namespace providers {
 
 class heap {
 public:
-    template<class, class T, class TMemory, class... TArgs>
+    template<class, class T, class TMemory, class... TArgs
+             BOOST_DI_REQUIRES(concepts::creatable<type_traits::direct, T, TArgs...>())>
     auto get(const type_traits::direct&
            , const TMemory&
            , TArgs&&... args) const {
         return new T(std::forward<TArgs>(args)...);
     }
 
-    template<class, class T, class TMemory, class... TArgs>
+    template<class, class T, class TMemory, class... TArgs
+             BOOST_DI_REQUIRES(concepts::creatable<type_traits::uniform, T, TArgs...>())>
     auto get(const type_traits::uniform&
            , const TMemory&
            , TArgs&&... args) const {
         return new T{std::forward<TArgs>(args)...};
     }
+
+    template<class, class T, class TInitialization, class TMemory, class... TArgs
+             BOOST_DI_REQUIRES(!concepts::creatable<TInitialization, T, TArgs...>())>
+    decltype(concepts::creatable_error<T*, TArgs...>()) get(const TInitialization&, const TMemory&, TArgs&&...);
 };
 
 }}} // boost::di::providers
