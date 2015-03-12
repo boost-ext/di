@@ -29,7 +29,8 @@ struct polymorphic_type { struct is_not_bound {
     const;
 };};
 
-struct any {
+template<class>
+struct type_ {
     template<class T>
     constexpr operator T(){
         return {};
@@ -48,16 +49,16 @@ struct any {
     const;
 };
 
-template<class>
+template<class T, class>
 struct Any {
-    using type = any;
+    using type = type_<T>;
 };
 
 template<class T, class... TCtor>
 struct type {
     struct is_not_bound {
         constexpr operator T() const {
-            return T(typename Any<TCtor>::type{}...);
+            return T(typename Any<T, TCtor>::type{}...);
         }
         constexpr T
     creatable_constraint_not_satisfied($ = "type not bound, did you forget to add: 'bind<interface, implementation>'?")
