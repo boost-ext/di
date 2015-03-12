@@ -13,8 +13,7 @@
 
 namespace boost { namespace di {
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic error "-Wundefined-inline"
+BOOST_DI_CFG_ERRORS_DESC_BEGIN
 
 template<class T>
 struct polymorphic_type {
@@ -48,6 +47,8 @@ struct type_ {
     creatable_constraint_not_satisfied(_ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!")
     const;
 };
+
+BOOST_DI_CFG_ERRORS_DESC_END
 
 template<class T, class>
 struct Any {
@@ -138,8 +139,6 @@ template<class T, class... Ts>
 constexpr T creatable_error() {
     return creatable_error_impl<T, aux::type_list<Ts...>>{};
 }
-
-#pragma GCC diagnostic pop
 
 }}} // boost::di::concepts
 

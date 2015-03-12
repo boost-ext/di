@@ -13,8 +13,7 @@
 
 namespace boost { namespace di { namespace policies {
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic error "-Wundefined-inline"
+BOOST_DI_CFG_ERRORS_DESC_BEGIN
 
 template<class T>
 struct type {
@@ -31,7 +30,7 @@ struct not_allowed_by {
     const;
 };};
 
-#pragma GCC diagnostic pop
+BOOST_DI_CFG_ERRORS_DESC_END
 
 struct _ { };
 struct type_op {};

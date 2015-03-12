@@ -193,6 +193,18 @@ struct _ { _(...) { } };
     #define BOOST_DI_UNUSED
 #endif
 
+#if defined(__clang__)
+    #define BOOST_DI_CFG_ERRORS_DESC_BEGIN \
+        _Pragma("clang diagnostic push") \
+        _Pragma("clang diagnostic error \"-Wundefined-inline\"")
+
+    #define BOOST_DI_CFG_ERRORS_DESC_END \
+        _Pragma("clang diagnostic pop")
+#else
+    #define BOOST_DI_CFG_ERRORS_DESC_BEGIN
+    #define BOOST_DI_CFG_ERRORS_DESC_END
+#endif
+
 namespace boost { namespace di { namespace aux {
 
 template<class...>
@@ -1638,8 +1650,7 @@ struct ctor_traits_impl<T, std::false_type>
 
 namespace boost { namespace di {
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic error "-Wundefined-inline"
+BOOST_DI_CFG_ERRORS_DESC_BEGIN
 
 template<class T>
 struct polymorphic_type {
@@ -1673,6 +1684,8 @@ struct type_ {
     creatable_constraint_not_satisfied(_ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!")
     const;
 };
+
+BOOST_DI_CFG_ERRORS_DESC_END
 
 template<class T, class>
 struct Any {
@@ -1763,8 +1776,6 @@ template<class T, class... Ts>
 constexpr T creatable_error() {
     return creatable_error_impl<T, aux::type_list<Ts...>>{};
 }
-
-#pragma GCC diagnostic pop
 
 }}} // boost::di::concepts
 
