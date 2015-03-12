@@ -16,10 +16,20 @@ namespace boost { namespace di { namespace policies {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic error "-Wundefined-inline"
 
-template<class T, class = void>
-struct not_allowed {
-    static constexpr T error(_ ="type not allowed!");
-};
+template<class T>
+struct type {
+template<class TPolicy>
+struct not_allowed_by {
+    operator T() const {
+        return
+            constructible_not_satisfied
+        ();
+    }
+
+    constexpr T
+    constructible_not_satisfied(_ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG> !")
+    const;
+};};
 
 #pragma GCC diagnostic pop
 
@@ -154,13 +164,13 @@ struct constructible_impl {
 
     template<class TArg, std::enable_if_t<!decltype(T::apply(TArg{})){}, int> = 0>
     auto operator()(const TArg& data) const {
-        return not_allowed<typename TArg::type, T>::error();
+        return static_cast<typename TArg::type>(typename type<typename TArg::type>::template not_allowed_by<T>{});
     }
 };
 
-template<class T = std::false_type>
+template<class T = aux::never<_>>
 inline auto constructible(const T& = {}) {
-	return constructible_impl<always<T>>{};
+	return constructible_impl<T>{};
 }
 
 }}} // boost::di::policies

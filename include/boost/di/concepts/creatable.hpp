@@ -17,15 +17,16 @@ namespace boost { namespace di {
 #pragma GCC diagnostic error "-Wundefined-inline"
 
 template<class T>
-struct polymorphic_type { struct is_not_bound {
+struct polymorphic_type {
+struct is_not_bound {
     constexpr operator T*() const {
         return
             creatable_constraint_not_satisfied
-            ();
+        ();
     }
 
     constexpr T*
-    creatable_constraint_not_satisfied(_ ="type not bound, did you forget to add: 'bind<interface, implementation>'?")
+    creatable_constraint_not_satisfied(_ = "type not bound, did you forget to add: 'bind<interface, implementation>'?")
     const;
 };};
 
@@ -39,13 +40,12 @@ struct type_ {
     template<class T>
     constexpr operator T&() const{
         return
-    creatable_constraint_not_satisfied
+            creatable_constraint_not_satisfied
         <T&>();
     };
 
-    template<class T>
-    constexpr T
-    creatable_constraint_not_satisfied(_ ="reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!")
+    template<class T> constexpr T
+    creatable_constraint_not_satisfied(_ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!")
     const;
 };
 
@@ -56,45 +56,43 @@ struct Any {
 
 template<class T, class... TCtor>
 struct type {
-    struct is_not_bound {
-        constexpr operator T() const {
-            return T(typename Any<T, TCtor>::type{}...);
-        }
-        constexpr T
-    creatable_constraint_not_satisfied(_ ="type not bound, did you forget to add: 'bind<interface, implementation>'?")
-        const;
-    };
+struct is_not_bound {
+    constexpr operator T() const {
+        return T(typename Any<T, TCtor>::type{}...);
+    }
 
-    template<class X>
-    struct is_not_convertible_to {
-        constexpr operator X() const {
-            return
-    creatable_constraint_not_satisfied
-            ();
-        }
-        constexpr X
-    creatable_constraint_not_satisfied(_ ="type not convertible, missing 'di::bind<type>.to(ref(value))'")
-        const;
-    };
+    constexpr T
+    creatable_constraint_not_satisfied(_ = "type not bound, did you forget to add: 'bind<interface, implementation>'?")
+    const;
 };
+
+template<class X>
+struct is_not_convertible_to {
+    constexpr operator X() const {
+        return
+            creatable_constraint_not_satisfied
+        ();
+    }
+
+    constexpr X
+    creatable_constraint_not_satisfied(_ = "type not convertible, missing 'di::bind<type>.to(ref(value))'")
+    const;
+};};
 
 template<class T>
 struct number_of_constructor_arguments_doesnt_match_for {
-    template<int Given>
-    struct given {
-        template<int Expected>
-        struct expected {
-            constexpr operator T() const {
-                return
-    creatable_constraint_not_satisfied
-                ();
-            }
-            constexpr T
-    creatable_constraint_not_satisfied(_ ="verify BOOST_DI_INJECT_TRAITS or di::ctor_traits")
-            const;
-        };
-    };
-};
+template<int Given> struct given {
+template<int Expected> struct expected {
+    constexpr operator T() const {
+        return
+            creatable_constraint_not_satisfied
+        ();
+    }
+
+    constexpr T
+    creatable_constraint_not_satisfied(_ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits")
+    const;
+};};};
 
 template<class>
 struct allocating_an_object_of_abastract_class_type {
