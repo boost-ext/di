@@ -162,7 +162,7 @@ struct constructible_impl {
     }
 
     template<class TArg, std::enable_if_t<!decltype(T::apply(TArg{})){}, int> = 0>
-    auto operator()(const TArg& data) const {
+    auto operator()(const TArg&) const {
         return static_cast<typename TArg::type>(typename type<typename TArg::type>::template not_allowed_by<T>{});
     }
 };
