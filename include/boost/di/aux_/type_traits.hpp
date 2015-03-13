@@ -44,7 +44,8 @@
 #if defined(__clang__)
     #define BOOST_DI_CFG_ERRORS_DESC_BEGIN \
         _Pragma("clang diagnostic push") \
-        _Pragma("clang diagnostic error \"-Wundefined-inline\"")
+        _Pragma("clang diagnostic error \"-Wundefined-inline\"") \
+        _Pragma("clang diagnostic error \"-Wundefined-internal\"")
 
     #define BOOST_DI_CFG_ERRORS_DESC_END \
         _Pragma("clang diagnostic pop")

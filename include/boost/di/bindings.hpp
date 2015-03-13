@@ -24,7 +24,10 @@ using any_of = aux::type_list<Ts...>;
 template<
     class TExpected
   , class TGiven = TExpected
-  , REQUIRES<concepts::boundable<TExpected, TGiven>(), decltype(concepts::boundable_error<TExpected, TGiven>())> = 0
+  , REQUIRES<
+        concepts::boundable<TExpected, TGiven>()
+      , decltype(concepts::boundable_error<TExpected, TGiven>())
+    > = 0
 > core::dependency<scopes::deduce, TExpected, TGiven> bind{};
 
 constexpr scopes::deduce deduce{};

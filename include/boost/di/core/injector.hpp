@@ -83,7 +83,7 @@ struct wrapper {
 };
 
 template<class T, class TWrapper>
-struct wrapper<T, TWrapper, std::enable_if_t<!std::is_convertible<TWrapper, T>{}>> {
+struct wrapper<T, TWrapper, REQUIRES<!std::is_convertible<TWrapper, T>{}, void, void>> {
     using element_type = T;
 
     inline operator T() const noexcept {

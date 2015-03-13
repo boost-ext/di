@@ -29,14 +29,14 @@ struct is_not_bound {
     const;
 };};
 
-template<class>
+template<class TParent>
 struct type_ {
-    template<class T>
+    template<class T, class = core::is_not_same<T, TParent>>
     constexpr operator T(){
         return {};
     }
 
-    template<class T>
+    template<class T, class = core::is_not_same<T, TParent>>
     constexpr operator T&() const{
         return
             creatable_constraint_not_satisfied_for
@@ -48,8 +48,6 @@ struct type_ {
     const;
 };
 
-BOOST_DI_CFG_ERRORS_DESC_END
-
 template<class T, class>
 struct Any {
     using type = type_<T>;
@@ -57,14 +55,22 @@ struct Any {
 
 template<class T, class... TCtor>
 struct type {
-struct is_not_bound {
+struct is_not_creatable {
+    constexpr operator T*() const {
+        return
+            creatable_constraint_not_satisfied
+        ();
+    }
+
+    constexpr T*
+    creatable_constraint_not_satisfied(_ = "type is not creatable'?")
+    const;
+};
+
+struct args {
     constexpr operator T*() const {
         return new T(typename Any<T, TCtor>::type{}...);
     }
-
-    constexpr T
-    creatable_constraint_not_satisfied(_ = "type not bound, did you forget to add: 'bind<interface, implementation>'?")
-    const;
 };
 
 template<class X>
@@ -84,26 +90,43 @@ template<class T>
 struct number_of_constructor_arguments_doesnt_match_for {
 template<int Given> struct given {
 template<int Expected> struct expected {
-    constexpr operator T() const {
+    constexpr operator T*() const {
         return
             creatable_constraint_not_satisfied
         ();
     }
 
-    constexpr T
+    constexpr T*
     creatable_constraint_not_satisfied(_ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits")
     const;
 };};};
+
+template<class T>
+struct number_of_constructor_arguments_is_out_of_range_for {
+template<int TMax> struct max {
+    constexpr operator T*() const {
+        return
+            creatable_constraint_not_satisfied
+        ();
+    }
+
+    constexpr T*
+    creatable_constraint_not_satisfied(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters")
+    const;
+};};
 
 template<class>
 struct allocating_an_object_of_abastract_class_type {
     struct has_unimplemented_pure_virtual_methods { };
 };
 
+BOOST_DI_CFG_ERRORS_DESC_END
+
 namespace concepts {
 
 template<class T, class, class = void>
-struct creatable_error_impl : polymorphic_type<aux::decay_t<T>>::is_not_bound
+struct creatable_error_impl
+    : type<aux::decay_t<T>>::is_not_creatable
 { };
 
 template<class>
@@ -115,8 +138,18 @@ struct ctor_size<aux::pair<TInit, aux::type_list<TCtor...>>>
 { };
 
 template<class T, class... TCtor>
-struct creatable_error_impl<T, aux::type_list<TCtor...>, std::enable_if_t<!std::is_polymorphic<aux::decay_t<T>>{} && ctor_size<typename type_traits::ctor<aux::decay_t<T>, type_traits::ctor_impl_t<std::is_constructible, aux::decay_t<T>>>::type>{} == sizeof...(TCtor)>>
-    : type<aux::decay_t<T>, TCtor...>::is_not_bound
+struct creatable_error_impl<T, aux::type_list<TCtor...>, std::enable_if_t<std::is_polymorphic<aux::decay_t<T>>{}>>
+    : polymorphic_type<aux::decay_t<T>>::is_not_bound
+{ };
+
+template<class T, class... TCtor>
+struct creatable_error_impl<T, aux::type_list<TCtor...>, std::enable_if_t<!std::is_polymorphic<aux::decay_t<T>>{} && ctor_size<typename type_traits::ctor<aux::decay_t<T>, type_traits::ctor_impl_t<std::is_constructible, aux::decay_t<T>>>::type>{} == sizeof...(TCtor) /*&& std::is_constructible<aux::decay_t<T>, TCtor...>{}*/>>
+    : type<aux::decay_t<T>, TCtor...>::args
+{ };
+
+template<class T, class... TCtor>
+struct creatable_error_impl<T, aux::type_list<TCtor...>, std::enable_if_t<!std::is_polymorphic<aux::decay_t<T>>{} && !std::is_constructible<aux::decay_t<T>, TCtor...>{} && !sizeof...(TCtor)>>
+    : number_of_constructor_arguments_is_out_of_range_for<aux::decay_t<T>>::template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
 { };
 
 template<class T, class... TCtor>
