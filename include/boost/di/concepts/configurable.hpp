@@ -9,9 +9,17 @@
 
 #include "boost/di/aux_/type_traits.hpp"
 
-namespace boost { namespace di { namespace concepts {
+namespace boost { namespace di {
+
+template<class>
+struct config_type {
+    struct is_not_configurable { };
+};
+
+namespace concepts {
 
 std::false_type configurable_impl(...);
+std::false_type configurable_error_impl(...);
 
 template<class T>
 auto configurable_impl(T&& t) -> aux::is_valid_expr<
@@ -20,8 +28,20 @@ auto configurable_impl(T&& t) -> aux::is_valid_expr<
 >;
 
 template<class T>
+auto configurable_error_impl(T&&) -> std::conditional_t<
+    decltype(configurable_impl(std::declval<T>())){}
+  , std::false_type
+  , typename config_type<T>::is_not_configurable
+>;
+
+template<class T>
 constexpr auto configurable() {
     return decltype(configurable_impl(std::declval<T>())){};
+}
+
+template<class T>
+constexpr auto configurable_error() {
+    return decltype(configurable_error_impl(std::declval<T>())){};
 }
 
 }}} // boost::di::concepts

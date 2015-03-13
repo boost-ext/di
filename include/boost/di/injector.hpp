@@ -15,15 +15,13 @@ namespace boost { namespace di {
 
 template<class... TDeps>
 class injector
-    : public BOOST_DI_REQUIRES_RET
-        (concepts::boundable<core::bindings_t<TDeps...>>())
-        (core::injector<::BOOST_DI_CFG, TDeps...>) {
+    : public REQUIRES<
+          concepts::boundable<core::bindings_t<TDeps...>>()
+        , decltype(concepts::boundable_error<core::bindings_t<TDeps...>>())
+        , core::injector<::BOOST_DI_CFG, TDeps...>> {
 public:
-    template<
-        template<class> class TConfig
-      , class... TArgs
-        //BOOST_DI_REQUIRES(concepts::creatable<typename core::injector<TConfig, TArgs...>::deps, TConfig, TDeps...>())
-    > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
+    template<template<class> class TConfig, class... TArgs>
+    injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, TDeps...>{injector}
     { }
 };

@@ -34,14 +34,14 @@ struct type_ {
     template<class T>
     constexpr operator T(){
         return {};
-    };
+    }
 
     template<class T>
     constexpr operator T&() const{
         return
             creatable_constraint_not_satisfied_for
         <T&>();
-    };
+    }
 
     template<class T> constexpr T
     creatable_constraint_not_satisfied_for(_ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!")

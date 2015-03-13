@@ -16,7 +16,7 @@ namespace boost { namespace di { namespace providers {
 class stack_over_heap {
 public:
     template<class, class T, class... TArgs
-             BOOST_DI_REQUIRES(concepts::creatable<type_traits::direct, T, TArgs...>())>
+           , REQUIRES<concepts::creatable<type_traits::direct, T, TArgs...>()> = 0>
     auto get(const type_traits::direct&
            , const type_traits::heap&
            , TArgs&&... args) {
@@ -24,7 +24,7 @@ public:
     }
 
     template<class, class T, class... TArgs
-             BOOST_DI_REQUIRES(concepts::creatable<type_traits::uniform, T, TArgs...>())>
+           , REQUIRES<concepts::creatable<type_traits::uniform, T, TArgs...>()> = 0>
     auto get(const type_traits::uniform&
            , const type_traits::heap&
            , TArgs&&... args) {
@@ -32,7 +32,7 @@ public:
     }
 
     template<class, class T, class... TArgs
-             BOOST_DI_REQUIRES(concepts::creatable<type_traits::direct, T, TArgs...>())>
+           , REQUIRES<concepts::creatable<type_traits::direct, T, TArgs...>()> = 0>
     auto get(const type_traits::direct&
            , const type_traits::stack&
            , TArgs&&... args) const noexcept {
@@ -40,7 +40,7 @@ public:
     }
 
     template<class, class T, class... TArgs
-             BOOST_DI_REQUIRES(concepts::creatable<type_traits::uniform, T, TArgs...>())>
+           , REQUIRES<concepts::creatable<type_traits::uniform, T, TArgs...>()> = 0>
     auto get(const type_traits::uniform&
            , const type_traits::stack&
            , TArgs&&... args) const noexcept {
@@ -48,7 +48,7 @@ public:
     }
 
     template<class, class T, class TInitialization, class TMemory, class... TArgs
-             BOOST_DI_REQUIRES(!concepts::creatable<TInitialization, T, TArgs...>())>
+           , REQUIRES<!concepts::creatable<TInitialization, T, TArgs...>()> = 0>
     decltype(concepts::creatable_error<T*, TArgs...>()) get(const TInitialization&, const TMemory&, TArgs&&...);
 };
 

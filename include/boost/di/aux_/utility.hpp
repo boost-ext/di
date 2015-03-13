@@ -95,14 +95,24 @@ using join_t = typename join<TArgs...>::type;
 template<class, class...>
 struct is_unique_impl;
 
+template<class...>
+struct not_unique : std::false_type {
+    using type = not_unique;
+};
+
+template<>
+struct not_unique<> : std::true_type {
+    using type = not_unique;
+};
+
 template<class T>
-struct is_unique_impl<T>: std::true_type { };
+struct is_unique_impl<T> : not_unique<> { };
 
 template<class T1, class T2, class... Ts>
 struct is_unique_impl<T1, T2, Ts...>
 	: std::conditional_t<
 		  std::is_base_of<type<T2>, T1>{}
-		, std::false_type
+		, not_unique<T2>
 		, is_unique_impl<inherit<T1, type<T2>>, Ts...>
  	  >
 { };

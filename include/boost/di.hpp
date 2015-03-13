@@ -128,14 +128,24 @@ using join_t = typename join<TArgs...>::type;
 template<class, class...>
 struct is_unique_impl;
 
+template<class...>
+struct not_unique : std::false_type {
+    using type = not_unique;
+};
+
+template<>
+struct not_unique<> : std::true_type {
+    using type = not_unique;
+};
+
 template<class T>
-struct is_unique_impl<T>: std::true_type { };
+struct is_unique_impl<T> : not_unique<> { };
 
 template<class T1, class T2, class... Ts>
 struct is_unique_impl<T1, T2, Ts...>
 	: std::conditional_t<
 		  std::is_base_of<type<T2>, T1>{}
-		, std::false_type
+		, not_unique<T2>
 		, is_unique_impl<inherit<T1, type<T2>>, Ts...>
  	  >
 { };
@@ -178,14 +188,6 @@ struct _ { _(...) { } };
                                                                     \
     template<class T, class... TArgs>                               \
     using has_##name = decltype(has_##name##_impl<T, TArgs...>(0))
-
-#define BOOST_DI_REQUIRES(...) \
-    , typename std::enable_if<__VA_ARGS__, int>::type = 0
-
-#define BOOST_DI_REQUIRES_RET_IMPL(...) __VA_ARGS__>::type
-
-#define BOOST_DI_REQUIRES_RET(...) \
-    std::enable_if<__VA_ARGS__, BOOST_DI_REQUIRES_RET_IMPL
 
 #if defined(__GNUC__) || defined(__clang__)
     #define BOOST_DI_UNUSED __attribute__((unused))
@@ -317,7 +319,41 @@ struct function_traits<R(T::*)(TArgs...) const> {
     using args = type_list<TArgs...>;
 };
 
-}}} // boost::di::aux
+} // aux
+
+template<class, class, bool>
+struct constraint_not_satisfied { };
+
+template<class TError, class TReturn>
+struct constraint_not_satisfied<TError, TReturn, true> {
+    using type = TReturn;
+};
+
+template<bool B, class TError = void, class TReturn = int>
+using REQUIRES = typename constraint_not_satisfied<TError, TReturn, B>::type;
+
+template<class, class>
+struct errors_impl;
+
+template<class T>
+struct errors_impl<std::false_type, T> {
+    using type = T;
+};
+
+template<class T>
+struct errors_impl<T, std::false_type> {
+    using type = T;
+};
+
+template<>
+struct errors_impl<std::false_type, std::false_type> {
+    using type = int;
+};
+
+template<class... Ts>
+using errors = typename errors_impl<Ts...>::type;
+
+}} // boost::di
 
 #endif
 
@@ -1080,9 +1116,9 @@ public:
     }
 
     template<class T
-        BOOST_DI_REQUIRES(!is_injector<T>{} &&
-                          std::is_same<TExpected, TGiven>{} &&
-                          std::is_same<TScope, scopes::deduce>{})
+           , REQUIRES<!is_injector<T>{} &&
+                      std::is_same<TExpected, TGiven>{} &&
+                      std::is_same<TScope, scopes::deduce>{}> = 0
     > auto to(T&& object) const noexcept {
         using dependency = dependency<
             scopes::external, TExpected, std::remove_reference_t<T>, TName
@@ -1090,7 +1126,7 @@ public:
         return dependency{std::forward<T>(object)};
     }
 
-    template<class T BOOST_DI_REQUIRES(has_configure<T>{})>
+    template<class T, REQUIRES<has_configure<T>{}> = 0>
     auto to(const T& object) const noexcept {
         using dependency = dependency<
             scopes::exposed<TScope>, TExpected, decltype(std::declval<T>().configure()), TName
@@ -1098,7 +1134,7 @@ public:
         return dependency{object.configure()};
     }
 
-    template<class T BOOST_DI_REQUIRES(has_deps<T>{})>
+    template<class T, REQUIRES<has_deps<T>{}> = 0>
     auto to(const T& object) const noexcept {
         using dependency = dependency<
             scopes::exposed<TScope>, TExpected, T, TName
@@ -1675,14 +1711,14 @@ struct type_ {
     template<class T>
     constexpr operator T(){
         return {};
-    };
+    }
 
     template<class T>
     constexpr operator T&() const{
         return
             creatable_constraint_not_satisfied_for
         <T&>();
-    };
+    }
 
     template<class T> constexpr T
     creatable_constraint_not_satisfied_for(_ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!")
@@ -1793,7 +1829,7 @@ namespace boost { namespace di { namespace providers {
 class stack_over_heap {
 public:
     template<class, class T, class... TArgs
-             BOOST_DI_REQUIRES(concepts::creatable<type_traits::direct, T, TArgs...>())>
+           , REQUIRES<concepts::creatable<type_traits::direct, T, TArgs...>()> = 0>
     auto get(const type_traits::direct&
            , const type_traits::heap&
            , TArgs&&... args) {
@@ -1801,7 +1837,7 @@ public:
     }
 
     template<class, class T, class... TArgs
-             BOOST_DI_REQUIRES(concepts::creatable<type_traits::uniform, T, TArgs...>())>
+           , REQUIRES<concepts::creatable<type_traits::uniform, T, TArgs...>()> = 0>
     auto get(const type_traits::uniform&
            , const type_traits::heap&
            , TArgs&&... args) {
@@ -1809,7 +1845,7 @@ public:
     }
 
     template<class, class T, class... TArgs
-             BOOST_DI_REQUIRES(concepts::creatable<type_traits::direct, T, TArgs...>())>
+           , REQUIRES<concepts::creatable<type_traits::direct, T, TArgs...>()> = 0>
     auto get(const type_traits::direct&
            , const type_traits::stack&
            , TArgs&&... args) const noexcept {
@@ -1817,7 +1853,7 @@ public:
     }
 
     template<class, class T, class... TArgs
-             BOOST_DI_REQUIRES(concepts::creatable<type_traits::uniform, T, TArgs...>())>
+           , REQUIRES<concepts::creatable<type_traits::uniform, T, TArgs...>()> = 0>
     auto get(const type_traits::uniform&
            , const type_traits::stack&
            , TArgs&&... args) const noexcept {
@@ -1825,7 +1861,7 @@ public:
     }
 
     template<class, class T, class TInitialization, class TMemory, class... TArgs
-             BOOST_DI_REQUIRES(!concepts::creatable<TInitialization, T, TArgs...>())>
+           , REQUIRES<!concepts::creatable<TInitialization, T, TArgs...>()> = 0>
     decltype(concepts::creatable_error<T*, TArgs...>()) get(const TInitialization&, const TMemory&, TArgs&&...);
 };
 
@@ -1845,7 +1881,7 @@ public:
 
 namespace boost { namespace di {
 
-template<class... TPolicies BOOST_DI_REQUIRES(concepts::callable<TPolicies...>())>
+template<class... TPolicies, REQUIRES<concepts::callable<TPolicies...>()> = 0>
 inline auto make_policies(const TPolicies&... args) noexcept {
     return core::pool<aux::type_list<TPolicies...>>(args...);
 }
@@ -1944,7 +1980,17 @@ public:
 #ifndef BOOST_DI_CONCEPTS_BOUNDABLE_HPP
 #define BOOST_DI_CONCEPTS_BOUNDABLE_HPP
 
-namespace boost { namespace di { namespace concepts {
+namespace boost { namespace di {
+
+template<class...>
+struct bound_type {
+    struct is_bound_more_than_once { };
+
+    template<class>
+    struct is_not_base_of_or_is_convertible_to { };
+};
+
+namespace concepts {
 
 template<class T>
 using unique_dependency = aux::pair<
@@ -1953,14 +1999,30 @@ using unique_dependency = aux::pair<
 >;
 
 std::false_type boundable_impl(...);
+std::false_type boundable_error_impl(...);
 
 template<class... Ts>
 auto boundable_impl(aux::type_list<Ts...>&&) -> aux::is_unique<unique_dependency<Ts>...>;
+
+template<class>
+struct get_is_unique_error;
+
+template<class T, class TName, class TPriority>
+struct get_is_unique_error<aux::not_unique<aux::pair<aux::pair<T, TName>, TPriority>>> {
+    using type = typename bound_type<T, TName>::is_bound_more_than_once;
+};
+
+template<class... Ts>
+auto boundable_error_impl(aux::type_list<Ts...>&&) ->
+    typename get_is_unique_error<typename aux::is_unique<unique_dependency<Ts>...>::type>::type;
 
 template<class I, class T>
 auto boundable_impl(I&&, T&&) -> std::integral_constant<bool,
     std::is_convertible<T, I>{} || std::is_base_of<I, T>{}
 >;
+
+template<class I, class T>
+auto boundable_error_impl(I&&, T&&) -> typename bound_type<T>::template is_not_base_of_or_is_convertible_to<I>;
 
 template<class T, class... Ts>
 auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
@@ -1971,6 +2033,14 @@ auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
           , aux::bool_list<std::is_base_of<Ts, T>{}...>
         >{}
     >;
+
+template<class T, class... Ts>
+auto boundable_error_impl(aux::type_list<Ts...>&&, T&&) -> int;
+
+template<class... Ts>
+constexpr auto boundable_error() {
+    return decltype(boundable_error_impl(std::declval<Ts>()...)){};
+}
 
 template<class... Ts>
 constexpr auto boundable() {
@@ -1992,7 +2062,7 @@ using any_of = aux::type_list<Ts...>;
 template<
     class TExpected
   , class TGiven = TExpected
-    BOOST_DI_REQUIRES(concepts::boundable<TExpected, TGiven>())
+  , REQUIRES<concepts::boundable<TExpected, TGiven>(), decltype(concepts::boundable_error<TExpected, TGiven>())> = 0
 > core::dependency<scopes::deduce, TExpected, TGiven> bind{};
 
 constexpr scopes::deduce deduce{};
@@ -2325,15 +2395,13 @@ namespace boost { namespace di {
 
 template<class... TDeps>
 class injector
-    : public BOOST_DI_REQUIRES_RET
-        (concepts::boundable<core::bindings_t<TDeps...>>())
-        (core::injector<::BOOST_DI_CFG, TDeps...>) {
+    : public REQUIRES<
+          concepts::boundable<core::bindings_t<TDeps...>>()
+        , decltype(concepts::boundable_error<core::bindings_t<TDeps...>>())
+        , core::injector<::BOOST_DI_CFG, TDeps...>> {
 public:
-    template<
-        template<class> class TConfig
-      , class... TArgs
-        //BOOST_DI_REQUIRES(concepts::creatable<typename core::injector<TConfig, TArgs...>::deps, TConfig, TDeps...>())
-    > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
+    template<template<class> class TConfig, class... TArgs>
+    injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, TDeps...>{injector}
     { }
 };
@@ -2345,9 +2413,17 @@ public:
 #ifndef BOOST_DI_CONCEPTS_CONFIGURABLE_HPP
 #define BOOST_DI_CONCEPTS_CONFIGURABLE_HPP
 
-namespace boost { namespace di { namespace concepts {
+namespace boost { namespace di {
+
+template<class>
+struct config_type {
+    struct is_not_configurable { };
+};
+
+namespace concepts {
 
 std::false_type configurable_impl(...);
+std::false_type configurable_error_impl(...);
 
 template<class T>
 auto configurable_impl(T&& t) -> aux::is_valid_expr<
@@ -2356,8 +2432,20 @@ auto configurable_impl(T&& t) -> aux::is_valid_expr<
 >;
 
 template<class T>
+auto configurable_error_impl(T&&) -> std::conditional_t<
+    decltype(configurable_impl(std::declval<T>())){}
+  , std::false_type
+  , typename config_type<T>::is_not_configurable
+>;
+
+template<class T>
 constexpr auto configurable() {
     return decltype(configurable_impl(std::declval<T>())){};
+}
+
+template<class T>
+constexpr auto configurable_error() {
+    return decltype(configurable_error_impl(std::declval<T>())){};
 }
 
 }}} // boost::di::concepts
@@ -2372,10 +2460,12 @@ namespace boost { namespace di {
 template<
      template<class> class TConfig = ::BOOST_DI_CFG
    , class... TDeps
-     BOOST_DI_REQUIRES(
-        concepts::configurable<TConfig<int>>() &&
-        concepts::boundable<core::bindings_t<TDeps...>>()
-     )
+   , REQUIRES<concepts::configurable<TConfig<_>>() &&
+              concepts::boundable<core::bindings_t<TDeps...>>()
+            , errors<decltype(concepts::boundable_error<core::bindings_t<TDeps...>>())
+                   , decltype(concepts::configurable_error<TConfig<_>>())
+              >
+     > = 0
 > inline auto make_injector(const TDeps&... args) noexcept {
     return core::injector<TConfig, TDeps...>{core::init{}, args...};
 }

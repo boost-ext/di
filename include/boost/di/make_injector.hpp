@@ -18,10 +18,12 @@ namespace boost { namespace di {
 template<
      template<class> class TConfig = ::BOOST_DI_CFG
    , class... TDeps
-     BOOST_DI_REQUIRES(
-        concepts::configurable<TConfig<int>>() &&
-        concepts::boundable<core::bindings_t<TDeps...>>()
-     )
+   , REQUIRES<concepts::configurable<TConfig<_>>() &&
+              concepts::boundable<core::bindings_t<TDeps...>>()
+            , errors<decltype(concepts::boundable_error<core::bindings_t<TDeps...>>())
+                   , decltype(concepts::configurable_error<TConfig<_>>())
+              >
+     > = 0
 > inline auto make_injector(const TDeps&... args) noexcept {
     return core::injector<TConfig, TDeps...>{core::init{}, args...};
 }
