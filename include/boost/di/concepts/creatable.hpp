@@ -135,21 +135,29 @@ struct ctor_size<aux::pair<TInit, aux::type_list<TCtor...>>>
 template<class, class>
 struct creatable_error_impl;
 
+template<class T>
+constexpr auto ctor_size_v = ctor_size<
+    typename type_traits::ctor<
+        aux::decay_t<T>
+      , type_traits::ctor_impl_t<std::is_constructible, aux::decay_t<T>>
+    >::type
+>{};
+
 template<class T, class... TCtor>
 struct creatable_error_impl<T, aux::type_list<TCtor...>>
     : std::conditional_t<
           std::is_polymorphic<aux::decay_t<T>>{}
         , typename polymorphic_type<aux::decay_t<T>>::is_not_bound
         , std::conditional_t<
-              ctor_size<typename type_traits::ctor<aux::decay_t<T>, type_traits::ctor_impl_t<std::is_constructible, aux::decay_t<T>>>::type>{} != sizeof...(TCtor)
+              ctor_size_v<T> == sizeof...(TCtor)
+            , std::conditional_t<
+                  !sizeof...(TCtor)
+                , typename number_of_constructor_arguments_is_out_of_range_for<aux::decay_t<T>>::template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
+                , typename type<aux::decay_t<T>, TCtor...>::args
+              >
             , typename number_of_constructor_arguments_doesnt_match_for<aux::decay_t<T>>
                 ::template given<sizeof...(TCtor)>
                 ::template expected<ctor_size<typename type_traits::ctor<aux::decay_t<T>, type_traits::ctor_impl_t<std::is_constructible, aux::decay_t<T>>>::type>{}>
-            , std::conditional_t<
-                  ctor_size<typename type_traits::ctor<aux::decay_t<T>, type_traits::ctor_impl_t<std::is_constructible, aux::decay_t<T>>>::type>{} == sizeof...(TCtor) /*&& std::is_constructible<aux::decay_t<T>, TCtor...>{}*/
-                , typename number_of_constructor_arguments_is_out_of_range_for<aux::decay_t<T>>::template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
-                , typename type<aux::decay_t<T>>::is_not_creatable
-              >
           >
       >
 { };
