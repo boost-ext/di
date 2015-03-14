@@ -32,7 +32,9 @@ public:
 
     template<class, class T, class TInitialization, class TMemory, class... TArgs
            , REQUIRES<!concepts::creatable<TInitialization, T, TArgs...>()> = 0>
-    decltype(concepts::creatable_error<T*, TArgs...>()) get(const TInitialization&, const TMemory&, TArgs&&...);
+    auto get(const TInitialization&, const TMemory&, TArgs&&...) const noexcept {
+        return concepts::creatable_error<TInitialization, T*, TArgs...>();
+    }
 };
 
 }}} // boost::di::providers

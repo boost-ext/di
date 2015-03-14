@@ -173,11 +173,11 @@ test integration_test = [] {
     };
     /*<<create injector with `mocks_provider`>>*/
     auto mi = di::make_injector<mocks_provider>(
-        di::bind<int>.to(87) // value
+        di::bind<int>.to(87) // custom value
       , di::bind<i1, impl1>  // original implementation
     );
     /*<<set expectations>>*/
-    mi(&i2::get).will_return(123); //fake
+    mi(&i2::get).will_return(123); // fake
     /*<<create object to test with mocked `i1` and original `i2` and injected int value>>*/
     mi.create<c>();
 };

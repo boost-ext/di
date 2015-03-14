@@ -67,21 +67,32 @@ struct is_not_creatable {
     const;
 };
 
-struct args {
+template<class, class = void>
+struct args;
+
+template<class TDummy>
+struct args<type_traits::direct, TDummy> {
     constexpr operator T*() const {
         return new T(typename Any<T, TCtor>::type{}...);
     }
 };
 
-template<class X>
+template<class TDummy>
+struct args<type_traits::uniform, TDummy> {
+    constexpr operator T*() const {
+        return new T{typename Any<T, TCtor>::type{}...};
+    }
+};
+
+template<class To>
 struct is_not_convertible_to {
-    constexpr operator X() const {
+    constexpr operator To() const {
         return
             creatable_constraint_not_satisfied
         ();
     }
 
-    constexpr X
+    constexpr To
     creatable_constraint_not_satisfied(_ = "type not convertible, missing 'di::bind<type>.to(ref(value))'")
     const;
 };};
@@ -132,7 +143,7 @@ struct ctor_size<aux::pair<TInit, aux::type_list<TCtor...>>>
     : std::integral_constant<int, sizeof...(TCtor)>
 { };
 
-template<class, class>
+template<class, class, class>
 struct creatable_error_impl;
 
 template<class T>
@@ -143,8 +154,8 @@ using ctor_size_t = ctor_size<
     >::type
 >;
 
-template<class T, class... TCtor>
-struct creatable_error_impl<T, aux::type_list<TCtor...>>
+template<class TInitialization, class T, class... TCtor>
+struct creatable_error_impl<TInitialization, T, aux::type_list<TCtor...>>
     : std::conditional_t<
           std::is_polymorphic<aux::decay_t<T>>{}
         , typename polymorphic_type<aux::decay_t<T>>::is_not_bound
@@ -153,7 +164,7 @@ struct creatable_error_impl<T, aux::type_list<TCtor...>>
             , std::conditional_t<
                   !sizeof...(TCtor)
                 , typename number_of_constructor_arguments_is_out_of_range_for<aux::decay_t<T>>::template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
-                , typename type<aux::decay_t<T>, TCtor...>::args
+                , typename type<aux::decay_t<T>, TCtor...>::template args<TInitialization>
               >
             , typename number_of_constructor_arguments_doesnt_match_for<aux::decay_t<T>>
                 ::template given<sizeof...(TCtor)>
@@ -171,9 +182,9 @@ constexpr auto creatable() {
     >{};
 }
 
-template<class T, class... Ts>
+template<class TInitialization, class T, class... Ts>
 constexpr T creatable_error() {
-    return creatable_error_impl<T, aux::type_list<Ts...>>{};
+    return creatable_error_impl<TInitialization, T, aux::type_list<Ts...>>{};
 }
 
 }}} // boost::di::concepts

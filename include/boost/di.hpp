@@ -1745,21 +1745,32 @@ struct is_not_creatable {
     const;
 };
 
-struct args {
+template<class, class = void>
+struct args;
+
+template<class TDummy>
+struct args<type_traits::direct, TDummy> {
     constexpr operator T*() const {
         return new T(typename Any<T, TCtor>::type{}...);
     }
 };
 
-template<class X>
+template<class TDummy>
+struct args<type_traits::uniform, TDummy> {
+    constexpr operator T*() const {
+        return new T{typename Any<T, TCtor>::type{}...};
+    }
+};
+
+template<class To>
 struct is_not_convertible_to {
-    constexpr operator X() const {
+    constexpr operator To() const {
         return
             creatable_constraint_not_satisfied
         ();
     }
 
-    constexpr X
+    constexpr To
     creatable_constraint_not_satisfied(_ = "type not convertible, missing 'di::bind<type>.to(ref(value))'")
     const;
 };};
@@ -1802,11 +1813,6 @@ BOOST_DI_CFG_ERRORS_DESC_END
 
 namespace concepts {
 
-template<class T, class, class = void>
-struct creatable_error_impl
-    : type<aux::decay_t<T>>::is_not_creatable
-{ };
-
 template<class>
 struct ctor_size;
 
@@ -1815,26 +1821,34 @@ struct ctor_size<aux::pair<TInit, aux::type_list<TCtor...>>>
     : std::integral_constant<int, sizeof...(TCtor)>
 { };
 
-template<class T, class... TCtor>
-struct creatable_error_impl<T, aux::type_list<TCtor...>, std::enable_if_t<std::is_polymorphic<aux::decay_t<T>>{}>>
-    : polymorphic_type<aux::decay_t<T>>::is_not_bound
-{ };
+template<class, class, class>
+struct creatable_error_impl;
 
-template<class T, class... TCtor>
-struct creatable_error_impl<T, aux::type_list<TCtor...>, std::enable_if_t<!std::is_polymorphic<aux::decay_t<T>>{} && ctor_size<typename type_traits::ctor<aux::decay_t<T>, type_traits::ctor_impl_t<std::is_constructible, aux::decay_t<T>>>::type>{} == sizeof...(TCtor) /*&& std::is_constructible<aux::decay_t<T>, TCtor...>{}*/>>
-    : type<aux::decay_t<T>, TCtor...>::args
-{ };
+template<class T>
+using ctor_size_t = ctor_size<
+    typename type_traits::ctor<
+        aux::decay_t<T>
+      , type_traits::ctor_impl_t<std::is_constructible, aux::decay_t<T>>
+    >::type
+>;
 
-template<class T, class... TCtor>
-struct creatable_error_impl<T, aux::type_list<TCtor...>, std::enable_if_t<!std::is_polymorphic<aux::decay_t<T>>{} && !std::is_constructible<aux::decay_t<T>, TCtor...>{} && !sizeof...(TCtor)>>
-    : number_of_constructor_arguments_is_out_of_range_for<aux::decay_t<T>>::template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
-{ };
-
-template<class T, class... TCtor>
-struct creatable_error_impl<T, aux::type_list<TCtor...>, std::enable_if_t<ctor_size<typename type_traits::ctor<aux::decay_t<T>, type_traits::ctor_impl_t<std::is_constructible, aux::decay_t<T>>>::type>{} != sizeof...(TCtor)>>
-    : number_of_constructor_arguments_doesnt_match_for<aux::decay_t<T>>
-        ::template given<sizeof...(TCtor)>
-        ::template expected<ctor_size<typename type_traits::ctor<aux::decay_t<T>, type_traits::ctor_impl_t<std::is_constructible, aux::decay_t<T>>>::type>{}>
+template<class TInitialization, class T, class... TCtor>
+struct creatable_error_impl<TInitialization, T, aux::type_list<TCtor...>>
+    : std::conditional_t<
+          std::is_polymorphic<aux::decay_t<T>>{}
+        , typename polymorphic_type<aux::decay_t<T>>::is_not_bound
+        , std::conditional_t<
+              ctor_size_t<T>{} == sizeof...(TCtor)
+            , std::conditional_t<
+                  !sizeof...(TCtor)
+                , typename number_of_constructor_arguments_is_out_of_range_for<aux::decay_t<T>>::template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
+                , typename type<aux::decay_t<T>, TCtor...>::template args<TInitialization>
+              >
+            , typename number_of_constructor_arguments_doesnt_match_for<aux::decay_t<T>>
+                ::template given<sizeof...(TCtor)>
+                ::template expected<ctor_size_t<T>{}>
+          >
+      >
 { };
 
 template<class TInitialization, class T, class... Ts>
@@ -1846,9 +1860,9 @@ constexpr auto creatable() {
     >{};
 }
 
-template<class T, class... Ts>
+template<class TInitialization, class T, class... Ts>
 constexpr T creatable_error() {
-    return creatable_error_impl<T, aux::type_list<Ts...>>{};
+    return creatable_error_impl<TInitialization, T, aux::type_list<Ts...>>{};
 }
 
 }}} // boost::di::concepts
@@ -1897,7 +1911,7 @@ public:
     template<class, class T, class TInitialization, class TMemory, class... TArgs
            , REQUIRES<!concepts::creatable<TInitialization, T, TArgs...>()> = 0>
     auto get(const TInitialization&, const TMemory&, TArgs&&...) const noexcept {
-        return concepts::creatable_error<T*, TArgs...>();
+        return concepts::creatable_error<TInitialization, T*, TArgs...>();
     }
 };
 
