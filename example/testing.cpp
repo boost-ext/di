@@ -85,6 +85,7 @@ class mocks_provider : public di::config<> {
         template<
             class I
           , class T
+          , class
           , class TInitialization
           , class TMemory
           , class... TArgs
@@ -98,6 +99,7 @@ class mocks_provider : public di::config<> {
         template<
             class I
           , class T
+          , class
           , class TInitialization
           , class TMemory
           , class... TArgs

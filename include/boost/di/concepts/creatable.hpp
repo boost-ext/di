@@ -25,9 +25,23 @@ struct is_not_bound {
     }
 
     constexpr T*
-    creatable_constraint_not_satisfied(_ = "type not bound, did you forget to add: 'bind<interface, implementation>'?")
+    creatable_constraint_not_satisfied(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?")
     const;
-};};
+};
+
+template<class TName>
+struct named {
+struct is_not_bound {
+    constexpr operator T*() const {
+        return
+            creatable_constraint_not_satisfied
+        ();
+    }
+
+    constexpr T*
+    creatable_constraint_not_satisfied(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>.named(name)'?")
+    const;
+};};};
 
 template<class TParent>
 struct type_ {
@@ -143,7 +157,7 @@ struct ctor_size<aux::pair<TInit, aux::type_list<TCtor...>>>
     : std::integral_constant<int, sizeof...(TCtor)>
 { };
 
-template<class, class, class>
+template<class, class, class, class>
 struct creatable_error_impl;
 
 template<class T>
@@ -154,21 +168,22 @@ using ctor_size_t = ctor_size<
     >::type
 >;
 
-template<class TInitialization, class T, class... TCtor>
-struct creatable_error_impl<TInitialization, T, aux::type_list<TCtor...>>
+template<class TInitialization, class TName, class T, class... TCtor>
+struct creatable_error_impl<TInitialization, TName, T, aux::type_list<TCtor...>>
     : std::conditional_t<
           std::is_polymorphic<aux::decay_t<T>>{}
-        , typename polymorphic_type<aux::decay_t<T>>::is_not_bound
+        , std::conditional_t<std::is_same<TName, no_name>{}, typename polymorphic_type<aux::decay_t<T>>::is_not_bound, typename polymorphic_type<aux::decay_t<T>>::template named<TName>::is_not_bound>
         , std::conditional_t<
               ctor_size_t<T>{} == sizeof...(TCtor)
             , std::conditional_t<
                   !sizeof...(TCtor)
-                , typename number_of_constructor_arguments_is_out_of_range_for<aux::decay_t<T>>::template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
+                , typename number_of_constructor_arguments_is_out_of_range_for<aux::decay_t<T>>::
+                      template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
                 , typename type<aux::decay_t<T>, TCtor...>::template args<TInitialization>
               >
-            , typename number_of_constructor_arguments_doesnt_match_for<aux::decay_t<T>>
-                ::template given<sizeof...(TCtor)>
-                ::template expected<ctor_size_t<T>{}>
+            , typename number_of_constructor_arguments_doesnt_match_for<aux::decay_t<T>>::
+                  template given<sizeof...(TCtor)>::
+                  template expected<ctor_size_t<T>{}>
           >
       >
 { };
@@ -182,9 +197,9 @@ constexpr auto creatable() {
     >{};
 }
 
-template<class TInitialization, class T, class... Ts>
+template<class TInitialization, class TName, class T, class... Ts>
 constexpr T creatable_error() {
-    return creatable_error_impl<TInitialization, T, aux::type_list<Ts...>>{};
+    return creatable_error_impl<TInitialization, TName, T, aux::type_list<Ts...>>{};
 }
 
 }}} // boost::di::concepts

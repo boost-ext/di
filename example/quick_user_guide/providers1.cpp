@@ -15,6 +15,7 @@ public:
     template<
       class // interface
     , class T // implementation
+    , class // name
     , class TInit // direct()/uniform{}
     , class TMemory // heap/stack
     , class... TArgs>

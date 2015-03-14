@@ -1703,9 +1703,23 @@ struct is_not_bound {
     }
 
     constexpr T*
-    creatable_constraint_not_satisfied(_ = "type not bound, did you forget to add: 'bind<interface, implementation>'?")
+    creatable_constraint_not_satisfied(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?")
     const;
-};};
+};
+
+template<class TName>
+struct named {
+struct is_not_bound {
+    constexpr operator T*() const {
+        return
+            creatable_constraint_not_satisfied
+        ();
+    }
+
+    constexpr T*
+    creatable_constraint_not_satisfied(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>.named(name)'?")
+    const;
+};};};
 
 template<class TParent>
 struct type_ {
@@ -1821,7 +1835,7 @@ struct ctor_size<aux::pair<TInit, aux::type_list<TCtor...>>>
     : std::integral_constant<int, sizeof...(TCtor)>
 { };
 
-template<class, class, class>
+template<class, class, class, class>
 struct creatable_error_impl;
 
 template<class T>
@@ -1832,21 +1846,22 @@ using ctor_size_t = ctor_size<
     >::type
 >;
 
-template<class TInitialization, class T, class... TCtor>
-struct creatable_error_impl<TInitialization, T, aux::type_list<TCtor...>>
+template<class TInitialization, class TName, class T, class... TCtor>
+struct creatable_error_impl<TInitialization, TName, T, aux::type_list<TCtor...>>
     : std::conditional_t<
           std::is_polymorphic<aux::decay_t<T>>{}
-        , typename polymorphic_type<aux::decay_t<T>>::is_not_bound
+        , std::conditional_t<std::is_same<TName, no_name>{}, typename polymorphic_type<aux::decay_t<T>>::is_not_bound, typename polymorphic_type<aux::decay_t<T>>::template named<TName>::is_not_bound>
         , std::conditional_t<
               ctor_size_t<T>{} == sizeof...(TCtor)
             , std::conditional_t<
                   !sizeof...(TCtor)
-                , typename number_of_constructor_arguments_is_out_of_range_for<aux::decay_t<T>>::template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
+                , typename number_of_constructor_arguments_is_out_of_range_for<aux::decay_t<T>>::
+                      template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
                 , typename type<aux::decay_t<T>, TCtor...>::template args<TInitialization>
               >
-            , typename number_of_constructor_arguments_doesnt_match_for<aux::decay_t<T>>
-                ::template given<sizeof...(TCtor)>
-                ::template expected<ctor_size_t<T>{}>
+            , typename number_of_constructor_arguments_doesnt_match_for<aux::decay_t<T>>::
+                  template given<sizeof...(TCtor)>::
+                  template expected<ctor_size_t<T>{}>
           >
       >
 { };
@@ -1860,9 +1875,9 @@ constexpr auto creatable() {
     >{};
 }
 
-template<class TInitialization, class T, class... Ts>
+template<class TInitialization, class TName, class T, class... Ts>
 constexpr T creatable_error() {
-    return creatable_error_impl<TInitialization, T, aux::type_list<Ts...>>{};
+    return creatable_error_impl<TInitialization, TName, T, aux::type_list<Ts...>>{};
 }
 
 }}} // boost::di::concepts
@@ -1876,7 +1891,7 @@ namespace boost { namespace di { namespace providers {
 
 class stack_over_heap {
 public:
-    template<class, class T, class... TArgs
+    template<class, class T, class, class... TArgs
            , REQUIRES<concepts::creatable<type_traits::direct, T, TArgs...>()> = 0>
     auto get(const type_traits::direct&
            , const type_traits::heap&
@@ -1884,7 +1899,7 @@ public:
         return new T(std::forward<TArgs>(args)...);
     }
 
-    template<class, class T, class... TArgs
+    template<class, class T, class, class... TArgs
            , REQUIRES<concepts::creatable<type_traits::uniform, T, TArgs...>()> = 0>
     auto get(const type_traits::uniform&
            , const type_traits::heap&
@@ -1892,7 +1907,7 @@ public:
         return new T{std::forward<TArgs>(args)...};
     }
 
-    template<class, class T, class... TArgs
+    template<class, class T, class, class... TArgs
            , REQUIRES<concepts::creatable<type_traits::direct, T, TArgs...>()> = 0>
     auto get(const type_traits::direct&
            , const type_traits::stack&
@@ -1900,7 +1915,7 @@ public:
         return T(std::forward<TArgs>(args)...);
     }
 
-    template<class, class T, class... TArgs
+    template<class, class T, class, class... TArgs
            , REQUIRES<concepts::creatable<type_traits::uniform, T, TArgs...>()> = 0>
     auto get(const type_traits::uniform&
            , const type_traits::stack&
@@ -1908,10 +1923,10 @@ public:
         return T{std::forward<TArgs>(args)...};
     }
 
-    template<class, class T, class TInitialization, class TMemory, class... TArgs
+    template<class, class T, class TName, class TInitialization, class TMemory, class... TArgs
            , REQUIRES<!concepts::creatable<TInitialization, T, TArgs...>()> = 0>
     auto get(const TInitialization&, const TMemory&, TArgs&&...) const noexcept {
-        return concepts::creatable_error<TInitialization, T*, TArgs...>();
+        return concepts::creatable_error<TInitialization, TName, T*, TArgs...>();
     }
 };
 
@@ -2230,6 +2245,7 @@ struct provider;
 template<
     class TExpected
   , class TGiven
+  , class TName
   , class TParent
   , class TInjector
   , class TInitialization
@@ -2237,13 +2253,14 @@ template<
 > struct provider<
     TExpected
   , TGiven
+  , TName
   , TParent
   , aux::pair<TInitialization, aux::type_list<TArgs...>>
   , TInjector
 > {
     template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const {
-        return injector_.provider().template get<TExpected, TGiven>(
+        return injector_.provider().template get<TExpected, TGiven, TName>(
             TInitialization{}
           , memory
           , get_impl(aux::type<TArgs>{})...
@@ -2260,9 +2277,9 @@ template<
         return any_type<TParent, TInjector>{injector_};
     }
 
-    template<class T, class TName>
-    auto get_impl(const aux::type<type_traits::named<TName, T>>&) const {
-        return injector_.template create_impl<T, TName>();
+    template<class T, class TName_>
+    auto get_impl(const aux::type<type_traits::named<TName_, T>>&) const {
+        return injector_.template create_impl<T, TName_>();
     }
 
     const TInjector& injector_;
@@ -2404,7 +2421,7 @@ private:
         using expected_t = typename dependency_t::expected;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-        using provider_t = provider<expected_t, given_t, T, ctor_t, injector>;
+        using provider_t = provider<expected_t, given_t, TName, T, ctor_t, injector>;
         policy<pool_t>::template call<T, TName, TIsRoot>(((injector&)*this).policies(), dependency, ctor_t{});
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<

@@ -10,7 +10,7 @@ namespace boost { namespace di { namespace providers {
 
 auto test_heap = [](auto type, auto init, auto memory, auto... args) {
     using T = typename decltype(type)::type;
-    std::unique_ptr<T> object{heap{}.get<T, T>(init, memory, args...)};
+    std::unique_ptr<T> object{heap{}.get<T, T, no_name>(init, memory, args...)};
     expect(object.get());
 };
 

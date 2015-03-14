@@ -1287,7 +1287,7 @@ struct deleter_provider {
         return i;
     }
 
-    template<class I, class T, class TInitialization, class TMemory, class... TArgs>
+    template<class I, class T, class, class TInitialization, class TMemory, class... TArgs>
     auto get(const TInitialization& // direct/uniform
            , const TMemory& // stack/heap
            , TArgs&&... args) const {

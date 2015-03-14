@@ -12,21 +12,21 @@ namespace boost { namespace di { namespace core {
 
 test get_default = [] {
     fake_injector<int> injector;
-    provider<int, int, void, aux::pair<type_traits::direct, aux::type_list<>>, decltype(injector)> provider{injector};
+    provider<int, int, void, no_name, aux::pair<type_traits::direct, aux::type_list<>>, decltype(injector)> provider{injector};
     std::unique_ptr<int> ptr{provider.get()};
     expect(ptr.get());
 };
 
 test get_stack = [] {
     fake_injector<int> injector;
-    provider<int, int, void, aux::pair<type_traits::direct, aux::type_list<>>, decltype(injector)> provider{injector};
+    provider<int, int, void, no_name, aux::pair<type_traits::direct, aux::type_list<>>, decltype(injector)> provider{injector};
     std::unique_ptr<int> ptr{provider.get(type_traits::stack{})};
     expect(ptr.get());
 };
 
 test get_heap = [] {
     fake_injector<int> injector;
-    provider<int, int, void, aux::pair<type_traits::direct, aux::type_list<>>, decltype(injector)> provider{injector};
+    provider<int, int, void, no_name, aux::pair<type_traits::direct, aux::type_list<>>, decltype(injector)> provider{injector};
     std::unique_ptr<int> ptr{provider.get(type_traits::heap{})};
     expect(ptr.get());
 };

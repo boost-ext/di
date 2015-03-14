@@ -14,7 +14,7 @@ namespace boost { namespace di { namespace providers {
 
 class heap {
 public:
-    template<class, class T, class TMemory, class... TArgs
+    template<class, class T, class, class TMemory, class... TArgs
            , REQUIRES<concepts::creatable<type_traits::direct, T, TArgs...>()> = 0>
     auto get(const type_traits::direct&
            , const TMemory&
@@ -22,7 +22,7 @@ public:
         return new T(std::forward<TArgs>(args)...);
     }
 
-    template<class, class T, class TMemory, class... TArgs
+    template<class, class T, class, class TMemory, class... TArgs
            , REQUIRES<concepts::creatable<type_traits::uniform, T, TArgs...>()> = 0>
     auto get(const type_traits::uniform&
            , const TMemory&
@@ -30,10 +30,10 @@ public:
         return new T{std::forward<TArgs>(args)...};
     }
 
-    template<class, class T, class TInitialization, class TMemory, class... TArgs
+    template<class, class T, class TName, class TInitialization, class TMemory, class... TArgs
            , REQUIRES<!concepts::creatable<TInitialization, T, TArgs...>()> = 0>
     auto get(const TInitialization&, const TMemory&, TArgs&&...) const noexcept {
-        return concepts::creatable_error<TInitialization, T*, TArgs...>();
+        return concepts::creatable_error<TInitialization, TName, T*, TArgs...>();
     }
 };
 

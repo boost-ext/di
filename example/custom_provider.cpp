@@ -29,14 +29,14 @@ struct example {
 
 /*<define `custom provider`>*/
 struct custom_provider {
-    template<class, class T, class TMemory, class... TArgs>
+    template<class, class T, class, class TMemory, class... TArgs>
     auto get(const di::type_traits::direct&
             , const TMemory& // stack/heap
             , TArgs&&... args) const {
         return new T(std::forward<TArgs>(args)...);
     }
 
-    template<class, class T, class TMemory, class... TArgs>
+    template<class, class T, class, class TMemory, class... TArgs>
     auto get(const di::type_traits::uniform&
             , const TMemory& // stack/heap
             , TArgs&&... args) const {
