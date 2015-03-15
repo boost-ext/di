@@ -16,8 +16,8 @@ namespace boost { namespace di {
 template<class... TDeps>
 class injector
     : public REQUIRES<
-          concepts::boundable<core::bindings_t<TDeps...>>()
-        , decltype(concepts::boundable_error<core::bindings_t<TDeps...>>())
+          concepts::boundable<aux::type<TDeps...>>()
+        , decltype(concepts::boundable_error<aux::type<TDeps...>>())
         , core::injector<::BOOST_DI_CFG, TDeps...>> {
 public:
     template<template<class> class TConfig, class... TArgs>

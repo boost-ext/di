@@ -19,8 +19,8 @@ template<
      template<class> class TConfig = ::BOOST_DI_CFG
    , class... TDeps
    , REQUIRES<concepts::configurable<TConfig<_>>() &&
-              concepts::boundable<core::bindings_t<TDeps...>>()
-            , errors<decltype(concepts::boundable_error<core::bindings_t<TDeps...>>())
+              concepts::boundable<aux::type_list<TDeps...>>()
+            , errors<decltype(concepts::boundable_error<aux::type_list<TDeps...>>())
                    , decltype(concepts::configurable_error<TConfig<_>>())
               >
      > = 0
