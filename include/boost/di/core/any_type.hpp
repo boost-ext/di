@@ -13,6 +13,16 @@
 
 namespace boost { namespace di { namespace core {
 
+auto creatable_impl_(...) -> std::false_type { return {}; }
+
+template<class T, class B, class C>
+auto creatable_impl_(T&& t, B&&, C&&) -> aux::is_valid_expr<decltype(t.template create_impl<B, no_name, std::true_type, C>())> { return {}; }
+
+template<class T, class B, class C>
+constexpr auto creatable_() {
+    return decltype(creatable_impl_(std::declval<T>(), std::declval<B>(), std::declval<C>())){};
+}
+
 BOOST_DI_HAS_TYPE(is_ref);
 
 template<class T, class TParent>
@@ -39,24 +49,24 @@ struct any_type {
     template<class T>
     using is_ref = std::enable_if_t<is_ref_impl<T>::value>;
 
-    template<class T, class = is_not_same<T, TParent>>
+    template<class T, class = is_not_same<T, TParent>, class = std::enable_if_t<creatable_<TInjector, T, std::true_type>()>>
     operator T() {
         return injector_.template create_impl<T>();
     }
 
-    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>>
+    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = std::enable_if_t<creatable_<TInjector, T&, std::true_type>()>>
     operator T&() const {
         return injector_.template create_impl<T&>();
     }
 
 #if !defined(__clang__)
-    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>>
+    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = std::enable_if_t<creatable_<TInjector, T&&, std::true_type>()>>
     operator T&&() const {
         return injector_.template create_impl<T&&>();
     }
 #endif
 
-    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>>
+    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = std::enable_if_t<creatable_<TInjector, const T&, std::true_type>()>>
     operator const T&() const {
         return injector_.template create_impl<const T&>();
     }

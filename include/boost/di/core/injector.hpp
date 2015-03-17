@@ -17,7 +17,7 @@
 #include "boost/di/core/provider.hpp"
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
-#include "boost/di/concepts/creatable.hpp"
+#include "boost/di/core/any_type.hpp"
 
 namespace boost { namespace di { namespace core {
 
@@ -129,7 +129,14 @@ public:
         , config{*this}
     { }
 
-    template<class T>
+    template<class T, REQUIRES<creatable_<injector, T, std::true_type>()> = 0>
+    T create() const {
+        using TIsRoot = std::true_type;
+        return create_impl<T, no_name, TIsRoot>();
+    }
+
+    template<class T, REQUIRES<!creatable_<injector, T, std::true_type>()> = 0>
+    [[deprecated("creatable constraint not satisfied")]]
     T create() const {
         using TIsRoot = std::true_type;
         return create_impl<T, no_name, TIsRoot>();
@@ -140,8 +147,8 @@ public:
         call_impl(action, deps{});
     }
 
-private:
-    template<class T, class TName = no_name, class TIsRoot = std::false_type>
+//private:
+    template<class T, class TName = no_name, class TIsRoot = std::false_type, class TError = std::false_type>
     auto create_impl() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
