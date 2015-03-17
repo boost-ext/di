@@ -24,6 +24,7 @@ template<
   , class TName
   , class TParent
   , class TInjector
+  , class TError
   , class TInitialization
   , class... TArgs
 > struct provider<
@@ -33,10 +34,11 @@ template<
   , TParent
   , aux::pair<TInitialization, aux::type_list<TArgs...>>
   , TInjector
+  , TError
 > {
     template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const {
-        return injector_.provider().template get<TExpected, TGiven, TName>(
+        return injector_.provider().template get<TExpected, TGiven, TName, TError>(
             TInitialization{}
           , memory
           , get_impl(aux::type<TArgs>{})...

@@ -155,7 +155,7 @@ public:
         using expected_t = typename dependency_t::expected;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-        using provider_t = provider<expected_t, given_t, TName, T, ctor_t, injector>;
+        using provider_t = provider<expected_t, given_t, TName, T, ctor_t, injector, TError>;
         policy<pool_t>::template call<T, TName, TIsRoot>(((injector&)*this).policies(), dependency, ctor_t{});
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
