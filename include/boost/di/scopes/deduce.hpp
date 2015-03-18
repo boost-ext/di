@@ -19,7 +19,10 @@ public:
     class scope {
     public:
         template<class T, class TProvider>
-        auto create(const TProvider& provider) {
+        auto create(const TProvider& provider) -> decltype(
+typename type_traits::scope_traits_t<T>::template scope<TExpected, TGiven>{}.template create<T>(provider)
+                )
+        {
             using scope_traits = type_traits::scope_traits_t<T>;
             using scope = typename scope_traits::template scope<TExpected, TGiven>;
             return scope{}.template create<T>(provider);

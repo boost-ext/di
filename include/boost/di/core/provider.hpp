@@ -36,28 +36,36 @@ template<
   , TInjector
   , TError
 > {
+   template<class T>
+    auto get_impl(const aux::type<T>&) const/* -> decltype(std::declval<TInjector>().template create_impl<T>())*/ {
+        return injector_.template create_impl<T, no_name, std::false_type, TError>();
+    }
+
+    template<class... Ts>
+    auto get_impl(const aux::type<any_type<Ts...>>&) const -> decltype(any_type<TParent, TInjector, TError>{std::declval<TInjector>()}) {
+        return any_type<TParent, TInjector, TError>{injector_};
+    }
+
+    template<class T, class TName_>
+    auto get_impl(const aux::type<type_traits::named<TName_, T>>&) const /*-> decltype(std::declval<TInjector>().template create_impl<T, TName_>())*/ {
+        return injector_.template create_impl<T, TName_, std::false_type, TError>();
+    }
+
     template<class TMemory = type_traits::heap>
-    auto get(const TMemory& memory = {}) const {
+    auto get(const TMemory& memory = {}) const
+    -> decltype(
+        std::declval<TInjector>().provider().template get<TExpected, TGiven, TName, TError>(
+            TInitialization{}
+          , memory
+          , get_impl(aux::type<TArgs>{})...
+        )
+            )
+    {
         return injector_.provider().template get<TExpected, TGiven, TName, TError>(
             TInitialization{}
           , memory
           , get_impl(aux::type<TArgs>{})...
         );
-    }
-
-    template<class T>
-    auto get_impl(const aux::type<T>&) const {
-        return injector_.template create_impl<T>();
-    }
-
-    template<class... Ts>
-    auto get_impl(const aux::type<any_type<Ts...>>&) const {
-        return any_type<TParent, TInjector>{injector_};
-    }
-
-    template<class T, class TName_>
-    auto get_impl(const aux::type<type_traits::named<TName_, T>>&) const {
-        return injector_.template create_impl<T, TName_>();
     }
 
     const TInjector& injector_;

@@ -35,7 +35,7 @@ struct is_not_same_impl {
 template<class T, class TParent>
 using is_not_same = std::enable_if_t<!is_not_same_impl<T, TParent>::value>;
 
-template<class TParent = void, class TInjector = aux::none_t>
+template<class TParent = void, class TInjector = aux::none_t, class TError = std::false_type>
 struct any_type {
     template<class T>
     struct is_ref_impl {
@@ -49,26 +49,26 @@ struct any_type {
     template<class T>
     using is_ref = std::enable_if_t<is_ref_impl<T>::value>;
 
-    template<class T, class = is_not_same<T, TParent>, class = std::enable_if_t<std::is_same<TInjector, aux::none_t>::value || creatable_<TInjector, T, std::true_type>()>>
+    template<class T, class = is_not_same<T, TParent>, class = std::enable_if_t<std::is_same<TInjector, aux::none_t>::value || creatable_<TInjector, T, TError>()>>
     operator T() {
-        return injector_.template create_impl<T>();
+        return injector_.template create_impl<T, no_name, std::false_type, TError>();
     }
 
-    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = std::enable_if_t<std::is_same<TInjector, aux::none_t>::value || creatable_<TInjector, T&, std::true_type>()>>
+    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = std::enable_if_t<std::is_same<TInjector, aux::none_t>::value || creatable_<TInjector, T&, TError>()>>
     operator T&() const {
-        return injector_.template create_impl<T&>();
+        return injector_.template create_impl<T&, no_name, std::false_type, TError>();
     }
 
 #if !defined(__clang__)
-    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = std::enable_if_t<std::is_same<TInjector, aux::none_t>::value || creatable_<TInjector, T&&, std::true_type>()>>
+    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = std::enable_if_t<std::is_same<TInjector, aux::none_t>::value || creatable_<TInjector, T&&, TError>()>>
     operator T&&() const {
-        return injector_.template create_impl<T&&>();
+        return injector_.template create_impl<T&&, no_name, std::false_type, TError>();
     }
 #endif
 
-    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = std::enable_if_t<std::is_same<TInjector, aux::none_t>::value || creatable_<TInjector, const T&, std::true_type>()>>
+    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = std::enable_if_t<std::is_same<TInjector, aux::none_t>::value || creatable_<TInjector, const T&, TError>()>>
     operator const T&() const {
-        return injector_.template create_impl<const T&>();
+        return injector_.template create_impl<const T&, no_name, std::false_type, TError>();
     }
 
     const TInjector& injector_;
