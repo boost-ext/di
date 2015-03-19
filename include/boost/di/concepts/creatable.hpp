@@ -87,14 +87,34 @@ struct args;
 template<class TDummy>
 struct args<type_traits::direct, TDummy> {
     constexpr operator T*() const {
-        return new T(typename Any<T, TCtor>::type{}...);
+        return impl<T>();
+    }
+
+    template<class Q, std::enable_if_t<std::is_constructible<Q, TCtor...>{}, int> = 0>
+    Q* impl() const {
+        return new Q{typename Any<Q, TCtor>::type{}...};
+    }
+
+    template<class Q, std::enable_if_t<!std::is_constructible<Q, TCtor...>{}, int> = 0>
+    Q* impl() const {
+        return nullptr;
     }
 };
 
 template<class TDummy>
 struct args<type_traits::uniform, TDummy> {
     constexpr operator T*() const {
-        return new T{typename Any<T, TCtor>::type{}...};
+        return impl<T>();
+    }
+
+    template<class Q, std::enable_if_t<aux::is_braces_constructible<Q, TCtor...>{}, int> = 0>
+    Q* impl() const {
+        return new Q{typename Any<Q, TCtor>::type{}...};
+    }
+
+    template<class Q, std::enable_if_t<!aux::is_braces_constructible<Q, TCtor...>{}, int> = 0>
+    Q* impl() const {
+        return nullptr;
     }
 };
 
