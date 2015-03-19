@@ -15,12 +15,12 @@ namespace boost { namespace di { namespace core {
 
 auto creatable_impl_(...) -> std::false_type { return {}; }
 
-template<class T, class B, class C>
-auto creatable_impl_(T&& t, B&&, C&&) -> aux::is_valid_expr<decltype(t.template create_impl<B, no_name, std::true_type, C>())> { return {}; }
+template<class T, class B, class C, class N>
+auto creatable_impl_(T&& t, B&&, C&&, N&&) -> aux::is_valid_expr<decltype(t.template create_impl<B, N, std::true_type, C>())> { return {}; }
 
-template<class T, class B, class C>
+template<class T, class B, class C, class N = no_name>
 constexpr auto creatable_() {
-    return decltype(creatable_impl_(std::declval<T>(), std::declval<B>(), std::declval<C>())){};
+    return decltype(creatable_impl_(std::declval<T>(), std::declval<B>(), std::declval<C>(), std::declval<N>())){};
 }
 
 BOOST_DI_HAS_TYPE(is_ref);
