@@ -2337,20 +2337,20 @@ struct wrapper {
     TWrapper wrapper_;
 };
 
-/*template<class T, class TWrapper>*/
-//struct wrapper<T, TWrapper, REQUIRES<!std::is_convertible<TWrapper, T>{}, void, void>> {
-    //using element_type = T;
+template<class T, class TWrapper>
+struct wrapper<T, TWrapper, REQUIRES<!std::is_convertible<TWrapper, T>{}, void, void>> {
+    using element_type = T;
 
-    //inline operator T() const noexcept {
-        //return typename type<TWrapper>::template is_not_convertible_to<T>{};
-    //}
+    inline operator T() const noexcept {
+        return typename type<TWrapper>::template is_not_convertible_to<T>{};
+    }
 
-    //inline operator T() noexcept {
-        //return typename type<TWrapper>::template is_not_convertible_to<T>{};
-    //}
+    inline operator T() noexcept {
+        return typename type<TWrapper>::template is_not_convertible_to<T>{};
+    }
 
-    //TWrapper wrapper_;
-//};
+    TWrapper wrapper_;
+};
 
 BOOST_DI_HAS_METHOD(call, call);
 
