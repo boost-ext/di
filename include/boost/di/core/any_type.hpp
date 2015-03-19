@@ -16,7 +16,7 @@ namespace boost { namespace di { namespace core {
 auto creatable_impl_(...) -> std::false_type { return {}; }
 
 template<class T, class B, class C, class N>
-auto creatable_impl_(T&& t, B&&, C&&, N&&) -> aux::is_valid_expr<decltype(t.template create_impl<B, N, std::true_type, C>())> { return {}; }
+auto creatable_impl_(T&& t, B&&, C&&, N&&) -> aux::is_valid_expr<decltype(t.template create_impl_<B, N, std::true_type, C>())> { return {}; }
 
 template<class T, class B, class C, class N = no_name>
 constexpr auto creatable_() {

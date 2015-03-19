@@ -629,7 +629,7 @@ public:
     public:
         template<class T, class TProvider>
         auto create(const TProvider& provider) const -> decltype(
-                wrappers::unique<decltype(provider.get(type_traits::memory_traits_t<T>{}))>{provider.get(type_traits::memory_traits_t<T>{})}
+                wrappers::unique<decltype(provider.get_(type_traits::memory_traits_t<T>{}))>{provider.get_(type_traits::memory_traits_t<T>{})}
         ) {
             using memory = type_traits::memory_traits_t<T>;
             using wrapper = wrappers::unique<decltype(provider.get(memory{}))>;
@@ -1256,7 +1256,7 @@ namespace boost { namespace di { namespace core {
 auto creatable_impl_(...) -> std::false_type { return {}; }
 
 template<class T, class B, class C, class N>
-auto creatable_impl_(T&& t, B&&, C&&, N&&) -> aux::is_valid_expr<decltype(t.template create_impl<B, N, std::true_type, C>())> { return {}; }
+auto creatable_impl_(T&& t, B&&, C&&, N&&) -> aux::is_valid_expr<decltype(t.template create_impl_<B, N, std::true_type, C>())> { return {}; }
 
 template<class T, class B, class C, class N = no_name>
 constexpr auto creatable_() {
@@ -2181,7 +2181,7 @@ template<
   , TError
 > {
     template<class T>
-    struct get_impl {
+    struct get_impl_ {
         template<class Q, std::enable_if_t<creatable_<TInjector, Q, TError>(), int> = 0>
         auto blah() const   {
             return injector_.template create_impl<T, no_name, std::false_type, TError>();
@@ -2194,7 +2194,7 @@ template<
     };
 
     template<class... Ts>
-    struct get_impl<any_type<Ts...>> {
+    struct get_impl_<any_type<Ts...>> {
         template<class Q>
         auto blah() const  {
             return any_type<TParent, TInjector, TError>{injector_};
@@ -2204,7 +2204,7 @@ template<
     };
 
    template<class TName_, class T>
-    struct get_impl<type_traits::named<TName_, T>> {
+    struct get_impl_<type_traits::named<TName_, T>> {
         template<class Q, std::enable_if_t<!std::is_same<Q, void>{} && creatable_<TInjector, T, TError, TName_>(), int> = 0>
         auto blah() const  {
             return injector_.template create_impl<T, TName_, std::false_type, TError>();
@@ -2217,20 +2217,37 @@ template<
     };
 
     template<class TMemory = type_traits::heap>
-    auto get(const TMemory& memory = {}) const
+    auto get_(const TMemory& memory = {}) const
     -> decltype(
         std::declval<TInjector>().provider().template get<TExpected, TGiven, TName, TError>(
             TInitialization{}
           , memory
-          , get_impl<TArgs>{std::declval<TInjector>()}.template blah<TArgs>()...
+          , get_impl_<TArgs>{std::declval<TInjector>()}.template blah<TArgs>()...
         )
-            )
-    {
+            );
+
+    template<class TMemory = type_traits::heap>
+    auto get(const TMemory& memory = {}) const {
         return injector_.provider().template get<TExpected, TGiven, TName, TError>(
             TInitialization{}
           , memory
-          , get_impl<TArgs>{injector_}.template blah<TArgs>()...
+          , get_impl(aux::type<TArgs>{})...
         );
+    }
+
+    template<class T>
+    auto get_impl(const aux::type<T>&) const {
+        return injector_.template create_impl<T>();
+    }
+
+    template<class... Ts>
+    auto get_impl(const aux::type<any_type<Ts...>>&) const {
+        return any_type<TParent, TInjector>{injector_};
+    }
+
+    template<class T, class TName_>
+    auto get_impl(const aux::type<type_traits::named<TName_, T>>&) const {
+        return injector_.template create_impl<T, TName_>();
     }
 
     const TInjector& injector_;
@@ -2372,20 +2389,8 @@ public:
 
 //private:
     //requires policy<pool_t>::template call<T, TName, TIsRoot>(((injector&)*this).policies(), dependency, ctor_t{});
-    template<class T, class TName = no_name, class TIsRoot = std::false_type, class TError = std::false_type, class D = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>>
+    template<class T, class TName = no_name, class TIsRoot = std::false_type, class TError = std::false_type>
     auto create_impl() const
-    -> wrapper<
-                std::conditional_t<
-                    std::is_reference<T>{} && has_is_ref<D>{}
-                  , T
-                  , std::remove_reference_t<T>
-                >
-              , decltype(
-                 std::declval<D>().template create<T>(
-                     provider<typename D::expected, typename D::given, TName, T, typename type_traits::ctor_traits<typename D::given>::type, injector, TError>{std::declval<injector>()}
-                 )
-                )
-             >
     {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
@@ -2402,6 +2407,21 @@ public:
         >;
         return wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
+
+    template<class T, class TName = no_name, class TIsRoot = std::false_type, class TError = std::false_type, class D = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>>
+    auto create_impl_() const
+    -> wrapper<
+                std::conditional_t<
+                    std::is_reference<T>{} && has_is_ref<D>{}
+                  , T
+                  , std::remove_reference_t<T>
+                >
+              , decltype(
+                 std::declval<D>().template create<T>(
+                     provider<typename D::expected, typename D::given, TName, T, typename type_traits::ctor_traits<typename D::given>::type, injector, TError>{std::declval<injector>()}
+                 )
+                )
+             >;
 
     template<class TAction, class... Ts>
     void call_impl(const TAction& action, const aux::type_list<Ts...>&) {
