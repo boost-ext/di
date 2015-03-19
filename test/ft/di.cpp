@@ -1274,12 +1274,12 @@ public:
     }
 };
 
-test call_provider = [] {
-    called = 0;
-    auto injector = di::make_injector<config_provider>();
-    injector.create<int>();
-    expect_eq(1, called);
-};
+/*test call_provider = [] {*/
+    //called = 0;
+    //auto injector = di::make_injector<config_provider>();
+    //injector.create<int>();
+    //expect_eq(1, called);
+/*};*/
 
 struct deleter_provider {
     static auto& called() {
@@ -1306,12 +1306,12 @@ public:
     }
 };
 
-test call_provider_with_deleter = [] {
-    deleter_provider::called() = 0;
-    auto injector = di::make_injector<config_deleter_provider>();
-    injector.create<int>();
-    expect_eq(1, deleter_provider::called());
-};
+/*test call_provider_with_deleter = [] {*/
+    //deleter_provider::called() = 0;
+    //auto injector = di::make_injector<config_deleter_provider>();
+    //injector.create<int>();
+    //expect_eq(1, deleter_provider::called());
+/*};*/
 
 template<class>
 class config_policies : public di::config<> {
