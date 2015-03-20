@@ -24,7 +24,6 @@ template<
   , class TName
   , class TParent
   , class TInjector
-  , class TError
   , class TInitialization
   , class... TArgs
 > struct provider<
@@ -34,38 +33,34 @@ template<
   , TParent
   , aux::pair<TInitialization, aux::type_list<TArgs...>>
   , TInjector
-  , TError
 > {
     template<class T>
     struct get_impl_ {
-        template<class Q>
-        static std::conditional_t<creatable_<TInjector, Q, TError>(), T, void> impl();
+        static std::conditional_t<creatable_<TInjector, T>(), T, void> impl();
     };
 
     template<class... Ts>
     struct get_impl_<any_type<Ts...>> {
-        template<class>
         static auto impl() -> any_type<TParent, TInjector, std::true_type>;
     };
 
     template<class TName_, class T>
     struct get_impl_<type_traits::named<TName_, T>> {
-        template<class Q>
-        static std::conditional_t<creatable_<TInjector, Q, TError, TName_>(), T, void> impl();
+        static std::conditional_t<creatable_<TInjector, T, TName_>(), T, void> impl();
     };
 
     template<class TMemory = type_traits::heap>
     auto get_(const TMemory& memory = {}) const -> decltype(
-        std::declval<TInjector>().provider().template get_<TExpected, TGiven, TName, TError>(
+        std::declval<TInjector>().provider().template get_<TExpected, TGiven, TName>(
             TInitialization{}
           , memory
-          , get_impl_<TArgs>::template impl<TArgs>()...
+          , get_impl_<TArgs>::impl()...
         )
     );
 
     template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const {
-        return injector_.provider().template get<TExpected, TGiven, TName, TError>(
+        return injector_.provider().template get<TExpected, TGiven, TName>(
             TInitialization{}
           , memory
           , get_impl(aux::type<TArgs>{})...

@@ -13,14 +13,14 @@
 
 namespace boost { namespace di { namespace core {
 
-auto creatable_impl_(...) -> std::false_type { return {}; }
+auto creatable_impl_(...) -> std::false_type;
 
-template<class T, class B, class C, class N>
-auto creatable_impl_(T&& t, B&&, C&&, N&&) -> aux::is_valid_expr<decltype(t.template create_impl_<B, N, std::true_type, std::false_type>())> { return {}; }
+template<class T, class B, class N>
+auto creatable_impl_(T&& t, B&&, N&&) -> aux::is_valid_expr<decltype(t.template create_impl_<B, N, std::true_type>())>;
 
-template<class T, class B, class C, class N = no_name>
+template<class T, class B, class N = no_name>
 constexpr auto creatable_() {
-    return decltype(creatable_impl_(std::declval<T>(), std::declval<B>(), std::declval<C>(), std::declval<N>())){};
+    return decltype(creatable_impl_(std::declval<T>(), std::declval<B>(), std::declval<N>())){};
 }
 
 BOOST_DI_HAS_TYPE(is_ref);
@@ -52,7 +52,7 @@ struct any_type {
     template<class T, class TError_>
     struct is_creatable_impl {
         static constexpr auto value =
-            std::is_same<TInjector, aux::none_t>::value || creatable_<TInjector, T, TError_>();
+            std::is_same<TInjector, aux::none_t>::value || creatable_<TInjector, T>();
     };
 
     template<class T>
@@ -65,24 +65,24 @@ struct any_type {
 
     template<class T, class = is_not_same<T, TParent>, class = is_creatable<T, TError>>
     operator T() {
-        return injector_.template create_impl<T, no_name, std::false_type, TError>();
+        return injector_.template create_impl<T>();
     }
 
     template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = is_creatable<T, TError>>
     operator T&() const {
-        return injector_.template create_impl<T&, no_name, std::false_type, TError>();
+        return injector_.template create_impl<T&>();
     }
 
 #if !defined(__clang__)
     template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = is_creatable<T, TError>>
     operator T&&() const {
-        return injector_.template create_impl<T&&, no_name, std::false_type, TError>();
+        return injector_.template create_impl<T&&>();
     }
 #endif
 
     template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = is_creatable<T, TError>>
     operator const T&() const {
-        return injector_.template create_impl<const T&, no_name, std::false_type, TError>();
+        return injector_.template create_impl<const T&>();
     }
 
     const TInjector& injector_;
