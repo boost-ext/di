@@ -1274,12 +1274,12 @@ public:
     }
 };
 
-/*test call_provider = [] {*/
-    //called = 0;
-    //auto injector = di::make_injector<config_provider>();
-    //injector.create<int>();
-    //expect_eq(1, called);
-/*};*/
+test call_provider = [] {
+    called = 0;
+    auto injector = di::make_injector<config_provider>();
+    injector.create<int>();
+    expect_eq(1, called);
+};
 
 struct deleter_provider {
     static auto& called() {
@@ -1296,6 +1296,9 @@ struct deleter_provider {
             new T(std::forward<TArgs>(args)...)
         };
     }
+
+    template<class, class T, class, class TInitialization, class TMemory, class... TArgs>
+    T* get_(const TInitialization&, const TMemory&, TArgs&&... args) const noexcept;
 };
 
 template<class>
@@ -1306,12 +1309,12 @@ public:
     }
 };
 
-/*test call_provider_with_deleter = [] {*/
-    //deleter_provider::called() = 0;
-    //auto injector = di::make_injector<config_deleter_provider>();
-    //injector.create<int>();
-    //expect_eq(1, deleter_provider::called());
-/*};*/
+test call_provider_with_deleter = [] {
+    deleter_provider::called() = 0;
+    auto injector = di::make_injector<config_deleter_provider>();
+    injector.create<int>();
+    expect_eq(1, deleter_provider::called());
+};
 
 template<class>
 class config_policies : public di::config<> {

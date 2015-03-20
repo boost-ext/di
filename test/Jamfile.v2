@@ -103,7 +103,7 @@ test-suite ut :
 ;
 
 test-suite ft :
-    #[ run-test c++1y : ft/di.cpp ]
+    [ run-test c++1y : ft/di.cpp ]
     [ run-test c++1y : ft/di_ctor_inject_limit_size.cpp ]
     [ run-test c++1y : ft/di_ctor_limit_size.cpp ]
     #[ run-test c++1y : ft/di_custom_policies_global.cpp ]
