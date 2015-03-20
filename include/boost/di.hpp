@@ -2388,6 +2388,64 @@ class injector : public pool<bindings_t<TDeps...>>
       , TConfig<injector>
     >;
 
+public:
+    using deps = bindings_t<TDeps...>;
+
+    template<class... TArgs>
+    explicit injector(const init&, const TArgs&... args) noexcept
+        : pool_t{init{}, pool<aux::type_list<std::remove_reference_t<decltype(arg(args))>...>>{arg(args)...}}
+        , config{*this}
+    { }
+
+    template<template<class> class TConfig_, class... TDeps_>
+    explicit injector(const injector<TConfig_, TDeps_...>& injector) noexcept
+        : pool_t{init{}, create_from_injector(injector, deps{})}
+        , config{*this}
+    { }
+
+    template<
+        class T
+      , class TName = no_name
+      , class TIsRoot = std::false_type
+      , class TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
+      , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
+     //, REQUIRES<
+          //policy<pool_t>::template call<T, TName, TIsRoot>(core::pool<>{}, std::declval<TDependency>(), TCtor{})
+       //> = 0
+    > auto create_impl_() const -> std::enable_if_t<std::is_convertible<
+       decltype(
+           std::declval<TDependency>().template create_<T>(
+               provider<
+                   typename TDependency::expected
+                 , typename TDependency::given
+                 , TName
+                 , T
+                 , TCtor
+                 , injector
+               >{std::declval<injector>()}
+           )
+       ), T>{}
+    >;
+
+    template<class T, REQUIRES<creatable_<injector, T>()> = 0>
+    T create() const {
+        using TIsRoot = std::true_type;
+        return create_impl<T, no_name, TIsRoot>();
+    }
+
+    template<class T, REQUIRES<!creatable_<injector, T>()> = 0>
+    [[deprecated("creatable constraint not satisfied")]]
+    T create() {
+        using TIsRoot = std::true_type;
+        return create_impl<T, no_name, TIsRoot>();
+    }
+
+    template<class TAction>
+    void call(const TAction& action) {
+        call_impl(action, deps{});
+    }
+
+private:
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     auto create_impl() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
@@ -2425,64 +2483,6 @@ class injector : public pool<bindings_t<TDeps...>>
     auto create_from_injector(const TInjector& injector
                             , const aux::type_list<Ts...>&) const noexcept {
         return pool_t{Ts{injector}...};
-    }
-
-public:
-    using deps = bindings_t<TDeps...>;
-
-    template<class... TArgs>
-    explicit injector(const init&, const TArgs&... args) noexcept
-        : pool_t{init{}, pool<aux::type_list<std::remove_reference_t<decltype(arg(args))>...>>{arg(args)...}}
-        , config{*this}
-    { }
-
-    template<template<class> class TConfig_, class... TDeps_>
-    explicit injector(const injector<TConfig_, TDeps_...>& injector) noexcept
-        : pool_t{init{}, create_from_injector(injector, deps{})}
-        , config{*this}
-    { }
-
-    template<
-        class T
-      , class TName = no_name
-      , class TIsRoot = std::false_type
-      , class TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
-      , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
-     //, REQUIRES<
-          //policy<pool_t>::template call<T, TName, TIsRoot>(core::pool<>{}, std::declval<TDependency>(), TCtor{})
-       //> = 0
-    > auto create_impl_() const -> std::enable_if_t<std::is_convertible<
-       decltype(
-           std::declval<TDependency>().template create_<T>(
-               provider<
-                   typename TDependency::expected
-                 , typename TDependency::given
-                 , TName
-                 , T
-                 , TCtor
-                 , injector
-               >{std::declval<injector>()}
-           )
-        ), T
-       >{}
-    >;
-
-    template<class T, REQUIRES<creatable_<injector, T>()> = 0>
-    T create() const {
-        using TIsRoot = std::true_type;
-        return create_impl<T, no_name, TIsRoot>();
-    }
-
-    template<class T, REQUIRES<!creatable_<injector, T>()> = 0>
-    [[deprecated("creatable constraint not satisfied")]]
-    T create() {
-        using TIsRoot = std::true_type;
-        return create_impl<T, no_name, TIsRoot>();
-    }
-
-    template<class TAction>
-    void call(const TAction& action) {
-        call_impl(action, deps{});
     }
 };
 
