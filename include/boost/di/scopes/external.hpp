@@ -50,6 +50,9 @@ public:
     template<class TExpected, class, class = void>
     struct scope {
         template<class, class TProvider>
+        TExpected create_(const TProvider&);
+
+        template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
             return wrappers::unique<TExpected>{object_};
         }
@@ -62,6 +65,9 @@ public:
         using is_ref = void;
 
         template<class, class TProvider>
+        std::reference_wrapper<TGiven> create_(const TProvider&);
+
+        template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
             return object_;
         }
@@ -71,6 +77,9 @@ public:
 
     template<class TExpected, class TGiven>
     struct scope<TExpected, std::shared_ptr<TGiven>> {
+        template<class, class TProvider>
+        wrappers::shared<TGiven> create_(const TProvider&);
+
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
             return wrappers::shared<TGiven>{object_};
@@ -89,6 +98,9 @@ public:
              has_call_operator<TGiven>{}
         >
     > {
+        template<class T, class TProvider>
+        T create_(const TProvider&);
+
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
             using wrapper = wrapper_traits_t<decltype(std::declval<TGiven>()())>;
@@ -100,6 +112,9 @@ public:
 
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&>{}>> {
+        template<class T, class TProvider>
+        T create_(const TProvider&);
+
         template<class, class TProvider>
         auto create(const TProvider& provider) const noexcept {
             using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_))>;

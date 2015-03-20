@@ -42,11 +42,13 @@ public:
       , class TDependency
       , class... TCtor
       , class... TPolicies
-    > static void call(const pool<aux::type_list<TPolicies...>>& policies
-                     , TDependency&& dependency
-                     , aux::pair<TInitialization, aux::type_list<TCtor...>>) noexcept {
-        int _[]{0, (call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(
-            policies, dependency), 0)...}; (void)_;
+    > constexpr static auto call(const pool<aux::type_list<TPolicies...>>& policies
+                               , TDependency&& dependency
+                               , aux::pair<TInitialization, aux::type_list<TCtor...>>) noexcept {
+        return std::is_same<
+            aux::bool_list<aux::always<TPolicies>{}...>
+          , aux::bool_list<call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(policies, dependency)...>
+        >{};
     }
 
 private:
@@ -58,27 +60,27 @@ private:
       , class TPolicies
       , class TDependency
       , class... TCtor
-    > static void call_impl(const TPolicies& policies, TDependency&& dependency) noexcept {
-        call_impl_type<arg_wrapper<T, TName, TIsRoot, TDeps>, TDependency, TPolicy, TCtor...>(
+    > constexpr static auto call_impl(const TPolicies& policies, TDependency&& dependency) noexcept {
+        return call_impl_type<arg_wrapper<T, TName, TIsRoot, TDeps>, TDependency, TPolicy, TCtor...>(
             static_cast<const TPolicy&>(policies), dependency
         );
     }
 
     template<class TArg, class TDependency, class TPolicy, class... TCtor>
-    static void call_impl_type(const TPolicy& policy, TDependency&& dependency) noexcept {
-        call_impl_args<TArg, TDependency, TPolicy, TCtor...>(policy, dependency);
+    constexpr static auto call_impl_type(const TPolicy& policy, TDependency&& dependency) noexcept {
+        return call_impl_args<TArg, TDependency, TPolicy, TCtor...>(policy, dependency);
     }
 
-    template<class TArg, class TDependency, class TPolicy, class... TCtor>
-    static std::enable_if_t<has_call_operator<TPolicy, TArg>{}>
-    call_impl_args(const TPolicy& policy, TDependency&&) noexcept {
-        (policy)(TArg{});
+    template<class TArg, class TDependency, class TPolicy, class... TCtor
+           , REQUIRES<!has_call_operator<TPolicy, TArg, TDependency, TCtor...>{}> = 0>
+    constexpr static auto call_impl_args(const TPolicy& policy, TDependency&&) noexcept {
+        return (policy)(TArg{});
     }
 
-    template<class TArg, class TDependency, class TPolicy, class... TCtor>
-    static std::enable_if_t<has_call_operator<TPolicy, TArg, TDependency, TCtor...>{}>
-    call_impl_args(const TPolicy& policy, TDependency&& dependency) noexcept {
-        (policy)(TArg{}, dependency, aux::type<TCtor>{}...);
+    template<class TArg, class TDependency, class TPolicy, class... TCtor
+           , REQUIRES<has_call_operator<TPolicy, TArg, TDependency, TCtor...>{}> = 0>
+    constexpr static auto call_impl_args(const TPolicy& policy, TDependency&& dependency) noexcept {
+        return (policy)(TArg{}, dependency, aux::type<TCtor>{}...);
     }
 };
 

@@ -709,7 +709,10 @@ public:
     class scope {
     public:
         template<class, class TProvider>
-        auto create(const TProvider& provider) -> decltype(wrappers::shared<T>{provider.get()}) {
+        auto create_(const TProvider& provider) -> decltype(wrappers::shared<T>{provider.get_()});
+
+        template<class, class TProvider>
+        auto create(const TProvider& provider) {
             if (!get_instance()) {
                 get_instance() = std::shared_ptr<T>{provider.get()};
             }
@@ -769,6 +772,9 @@ public:
     template<class TExpected, class, class = void>
     struct scope {
         template<class, class TProvider>
+        TExpected create_(const TProvider&);
+
+        template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
             return wrappers::unique<TExpected>{object_};
         }
@@ -781,6 +787,9 @@ public:
         using is_ref = void;
 
         template<class, class TProvider>
+        std::reference_wrapper<TGiven> create_(const TProvider&);
+
+        template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
             return object_;
         }
@@ -790,6 +799,9 @@ public:
 
     template<class TExpected, class TGiven>
     struct scope<TExpected, std::shared_ptr<TGiven>> {
+        template<class, class TProvider>
+        wrappers::shared<TGiven> create_(const TProvider&);
+
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
             return wrappers::shared<TGiven>{object_};
@@ -808,6 +820,9 @@ public:
              has_call_operator<TGiven>{}
         >
     > {
+        template<class T, class TProvider>
+        T create_(const TProvider&);
+
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
             using wrapper = wrapper_traits_t<decltype(std::declval<TGiven>()())>;
@@ -819,6 +834,9 @@ public:
 
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&>{}>> {
+        template<class T, class TProvider>
+        T create_(const TProvider&);
+
         template<class, class TProvider>
         auto create(const TProvider& provider) const noexcept {
             using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_))>;
@@ -1022,6 +1040,9 @@ public:
         explicit scope(const TInjector& injector) noexcept
             : provider_{std::make_shared<provider_impl<TExpected, TInjector>>(injector)}
         { }
+
+        template<class T, class TProvider>
+        T create_(const TProvider&);
 
         template<class T, class TProvider>
         auto create(const TProvider&) {
@@ -2057,6 +2078,9 @@ public:
         }
 
         template<class, class TProvider>
+        auto create_(const TProvider& provider) -> decltype(wrappers::shared<T>{provider.get_()});
+
+        template<class, class TProvider>
         auto create(const TProvider& provider) {
             if (in_scope_ && !object_) {
                 object_ = std::shared_ptr<T>{provider.get()};
@@ -2086,6 +2110,9 @@ public:
     template<class, class T>
     class scope {
     public:
+        template<class, class TProvider>
+        auto create_(const TProvider& provider) -> decltype(wrappers::shared<T>{provider.get_()});
+
         template<class, class TProvider>
         auto create(const TProvider& provider) {
             if (!object_) {
@@ -2136,11 +2163,13 @@ public:
       , class TDependency
       , class... TCtor
       , class... TPolicies
-    > static void call(const pool<aux::type_list<TPolicies...>>& policies
-                     , TDependency&& dependency
-                     , aux::pair<TInitialization, aux::type_list<TCtor...>>) noexcept {
-        int _[]{0, (call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(
-            policies, dependency), 0)...}; (void)_;
+    > constexpr static auto call(const pool<aux::type_list<TPolicies...>>& policies
+                               , TDependency&& dependency
+                               , aux::pair<TInitialization, aux::type_list<TCtor...>>) noexcept {
+        return std::is_same<
+            aux::bool_list<aux::always<TPolicies>{}...>
+          , aux::bool_list<call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(policies, dependency)...>
+        >{};
     }
 
 private:
@@ -2152,27 +2181,27 @@ private:
       , class TPolicies
       , class TDependency
       , class... TCtor
-    > static void call_impl(const TPolicies& policies, TDependency&& dependency) noexcept {
-        call_impl_type<arg_wrapper<T, TName, TIsRoot, TDeps>, TDependency, TPolicy, TCtor...>(
+    > constexpr static auto call_impl(const TPolicies& policies, TDependency&& dependency) noexcept {
+        return call_impl_type<arg_wrapper<T, TName, TIsRoot, TDeps>, TDependency, TPolicy, TCtor...>(
             static_cast<const TPolicy&>(policies), dependency
         );
     }
 
     template<class TArg, class TDependency, class TPolicy, class... TCtor>
-    static void call_impl_type(const TPolicy& policy, TDependency&& dependency) noexcept {
-        call_impl_args<TArg, TDependency, TPolicy, TCtor...>(policy, dependency);
+    constexpr static auto call_impl_type(const TPolicy& policy, TDependency&& dependency) noexcept {
+        return call_impl_args<TArg, TDependency, TPolicy, TCtor...>(policy, dependency);
     }
 
-    template<class TArg, class TDependency, class TPolicy, class... TCtor>
-    static std::enable_if_t<has_call_operator<TPolicy, TArg>{}>
-    call_impl_args(const TPolicy& policy, TDependency&&) noexcept {
-        (policy)(TArg{});
+    template<class TArg, class TDependency, class TPolicy, class... TCtor
+           , REQUIRES<!has_call_operator<TPolicy, TArg, TDependency, TCtor...>{}> = 0>
+    constexpr static auto call_impl_args(const TPolicy& policy, TDependency&&) noexcept {
+        return (policy)(TArg{});
     }
 
-    template<class TArg, class TDependency, class TPolicy, class... TCtor>
-    static std::enable_if_t<has_call_operator<TPolicy, TArg, TDependency, TCtor...>{}>
-    call_impl_args(const TPolicy& policy, TDependency&& dependency) noexcept {
-        (policy)(TArg{}, dependency, aux::type<TCtor>{}...);
+    template<class TArg, class TDependency, class TPolicy, class... TCtor
+           , REQUIRES<has_call_operator<TPolicy, TArg, TDependency, TCtor...>{}> = 0>
+    constexpr static auto call_impl_args(const TPolicy& policy, TDependency&& dependency) noexcept {
+        return (policy)(TArg{}, dependency, aux::type<TCtor>{}...);
     }
 };
 
@@ -2365,7 +2394,7 @@ class injector : public pool<bindings_t<TDeps...>>
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<expected_t, given_t, TName, T, ctor_t, injector>;
-        policy<pool_t>::template call<T, TName, TIsRoot>(((injector&)*this).policies(), dependency, ctor_t{});
+        policy<pool_t>::template call<T, TName, TIsRoot>(((TConfig<injector>&)*this).policies(), dependency, ctor_t{});
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
             std::is_reference<T>{} && has_is_ref<dependency_t>{}
@@ -2411,26 +2440,29 @@ public:
         , config{*this}
     { }
 
-    //requires policy<pool_t>::template call<T, TName, TIsRoot>(((injector&)*this).policies(), dependency, ctor_t{});
     template<
         class T
       , class TName = no_name
       , class TIsRoot = std::false_type
-      , class D = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
+      , class TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
+      , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
+     //, REQUIRES<
+          //policy<pool_t>::template call<T, TName, TIsRoot>(core::pool<>{}, std::declval<TDependency>(), TCtor{})
+       //> = 0
     > auto create_impl_() const -> wrapper<
           std::conditional_t<
-              std::is_reference<T>{} && has_is_ref<D>{}
+              std::is_reference<T>{} && has_is_ref<TDependency>{}
             , T
             , std::remove_reference_t<T>
           >
       , decltype(
-           std::declval<D>().template create_<T>(
+           std::declval<TDependency>().template create_<T>(
                provider<
-                   typename D::expected
-                 , typename D::given
+                   typename TDependency::expected
+                 , typename TDependency::given
                  , TName
                  , T
-                 , typename type_traits::ctor_traits<typename D::given>::type
+                 , TCtor
                  , injector
                >{std::declval<injector>()}
            )

@@ -122,7 +122,7 @@ class injector : public pool<bindings_t<TDeps...>>
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<expected_t, given_t, TName, T, ctor_t, injector>;
-        policy<pool_t>::template call<T, TName, TIsRoot>(((injector&)*this).policies(), dependency, ctor_t{});
+        policy<pool_t>::template call<T, TName, TIsRoot>(((TConfig<injector>&)*this).policies(), dependency, ctor_t{});
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
             std::is_reference<T>{} && has_is_ref<dependency_t>{}
@@ -168,26 +168,29 @@ public:
         , config{*this}
     { }
 
-    //requires policy<pool_t>::template call<T, TName, TIsRoot>(((injector&)*this).policies(), dependency, ctor_t{});
     template<
         class T
       , class TName = no_name
       , class TIsRoot = std::false_type
-      , class D = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
+      , class TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
+      , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
+     //, REQUIRES<
+          //policy<pool_t>::template call<T, TName, TIsRoot>(core::pool<>{}, std::declval<TDependency>(), TCtor{})
+       //> = 0
     > auto create_impl_() const -> wrapper<
           std::conditional_t<
-              std::is_reference<T>{} && has_is_ref<D>{}
+              std::is_reference<T>{} && has_is_ref<TDependency>{}
             , T
             , std::remove_reference_t<T>
           >
       , decltype(
-           std::declval<D>().template create_<T>(
+           std::declval<TDependency>().template create_<T>(
                provider<
-                   typename D::expected
-                 , typename D::given
+                   typename TDependency::expected
+                 , typename TDependency::given
                  , TName
                  , T
-                 , typename type_traits::ctor_traits<typename D::given>::type
+                 , TCtor
                  , injector
                >{std::declval<injector>()}
            )

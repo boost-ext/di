@@ -37,6 +37,9 @@ public:
         }
 
         template<class, class TProvider>
+        auto create_(const TProvider& provider) -> decltype(wrappers::shared<T>{provider.get_()});
+
+        template<class, class TProvider>
         auto create(const TProvider& provider) {
             if (in_scope_ && !object_) {
                 object_ = std::shared_ptr<T>{provider.get()};

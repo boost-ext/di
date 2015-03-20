@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_CORE_ANY_TYPE_HPP
 #define BOOST_DI_CORE_ANY_TYPE_HPP
 
-#include <memory>
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/core/binder.hpp"
 
