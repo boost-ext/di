@@ -45,7 +45,7 @@ template<
     template<class... Ts>
     struct get_impl_<any_type<Ts...>> {
         template<class>
-        static auto blah() -> any_type<TParent, TInjector, TError>;
+        static auto blah() -> any_type<TParent, TInjector, std::true_type>;
     };
 
    template<class TName_, class T>
