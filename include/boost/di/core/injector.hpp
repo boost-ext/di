@@ -108,6 +108,7 @@ class injector : public pool<bindings_t<TDeps...>>
     template<class> friend class scopes::exposed;
 
     using pool_t = pool<bindings_t<TDeps...>>;
+    using is_root_t = std::true_type;
     using config = std::conditional_t<
         std::is_default_constructible<TConfig<injector>>{}
       , _
@@ -155,15 +156,13 @@ public:
 
     template<class T, REQUIRES<creatable_<injector, T>()> = 0>
     T create() const {
-        using TIsRoot = std::true_type;
-        return create_impl<T, no_name, TIsRoot>();
+        return create_impl<T, no_name, is_root_t>();
     }
 
     template<class T, REQUIRES<!creatable_<injector, T>()> = 0>
     [[BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")]]
-    T create() {
-        using TIsRoot = std::true_type;
-        return create_impl<T, no_name, TIsRoot>();
+    T create() const {
+        return create_impl<T, no_name, is_root_t>();
     }
 
     template<class TAction>
