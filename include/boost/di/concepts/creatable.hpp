@@ -20,12 +20,12 @@ struct polymorphic_type {
 struct is_not_bound {
     constexpr operator T*() const {
         return
-            creatable_constraint_not_satisfied
+            constraint_not_satisfied
         ();
     }
 
     constexpr T*
-    creatable_constraint_not_satisfied(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?")
+    constraint_not_satisfied(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?")
     const;
 };
 
@@ -34,12 +34,12 @@ struct named {
 struct is_not_bound {
     constexpr operator T*() const {
         return
-            creatable_constraint_not_satisfied
+            constraint_not_satisfied
         ();
     }
 
     constexpr T*
-    creatable_constraint_not_satisfied(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>.named(name)'?")
+    constraint_not_satisfied(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>.named(name)'?")
     const;
 };};};
 
@@ -53,12 +53,12 @@ struct type_ {
     template<class T, class = core::is_not_same<T, TParent>>
     constexpr operator T&() const{
         return
-            creatable_constraint_not_satisfied_for
+            constraint_not_satisfied_for
         <T&>();
     }
 
     template<class T> constexpr T
-    creatable_constraint_not_satisfied_for(_ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!")
+    constraint_not_satisfied_for(_ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!")
     const;
 };
 
@@ -72,12 +72,12 @@ struct type {
 struct is_not_creatable {
     constexpr operator T*() const {
         return
-            creatable_constraint_not_satisfied
+            constraint_not_satisfied
         ();
     }
 
     constexpr T*
-    creatable_constraint_not_satisfied(_ = "type is not creatable'?")
+    constraint_not_satisfied(_ = "type is not creatable'?")
     const;
 };
 
@@ -122,12 +122,12 @@ template<class To>
 struct is_not_convertible_to {
     constexpr operator To() const {
         return
-            creatable_constraint_not_satisfied
+            constraint_not_satisfied
         ();
     }
 
     constexpr To
-    creatable_constraint_not_satisfied(_ = "type not convertible, missing 'di::bind<type>.to(ref(value))'")
+    constraint_not_satisfied(_ = "type not convertible, missing 'di::bind<type>.to(ref(value))'")
     const;
 };};
 
@@ -137,12 +137,12 @@ template<int Given> struct given {
 template<int Expected> struct expected {
     constexpr operator T*() const {
         return
-            creatable_constraint_not_satisfied
+            constraint_not_satisfied
         ();
     }
 
     constexpr T*
-    creatable_constraint_not_satisfied(_ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits")
+    constraint_not_satisfied(_ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits")
     const;
 };};};
 
@@ -151,12 +151,12 @@ struct number_of_constructor_arguments_is_out_of_range_for {
 template<int TMax> struct max {
     constexpr operator T*() const {
         return
-            creatable_constraint_not_satisfied
+            constraint_not_satisfied
         ();
     }
 
     constexpr T*
-    creatable_constraint_not_satisfied(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters")
+    constraint_not_satisfied(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters")
     const;
 };};
 
