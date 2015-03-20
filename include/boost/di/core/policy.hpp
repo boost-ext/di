@@ -45,10 +45,11 @@ public:
     > constexpr static auto call(const pool<aux::type_list<TPolicies...>>& policies
                                , TDependency&& dependency
                                , aux::pair<TInitialization, aux::type_list<TCtor...>>) noexcept {
-        return std::is_same<
-            aux::bool_list<aux::always<TPolicies>{}...>
-          , aux::bool_list<call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(policies, dependency)...>
-        >{};
+        return true;
+/*        return std::is_same<*/
+            //aux::bool_list<aux::always<TPolicies>{}...>
+          //, aux::bool_list<call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(policies, dependency)...>
+        /*>{};*/
     }
 
 private:

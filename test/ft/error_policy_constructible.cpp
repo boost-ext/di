@@ -9,7 +9,8 @@
 
 namespace di = boost::di;
 
-class config : public di::config {
+template<class>
+class config : public di::config<> {
 public:
     auto policies() const noexcept {
         using namespace di::policies;

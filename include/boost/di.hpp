@@ -709,7 +709,7 @@ public:
     class scope {
     public:
         template<class, class TProvider>
-        auto create_(const TProvider& provider) -> decltype(wrappers::shared<T>{provider.get_()});
+        auto create_(const TProvider& provider) -> decltype(wrappers::shared<T>{std::shared_ptr<T>{provider.get_()}});
 
         template<class, class TProvider>
         auto create(const TProvider& provider) {
@@ -821,7 +821,7 @@ public:
         >
     > {
         template<class T, class TProvider>
-        T create_(const TProvider&);
+        auto create_(const TProvider&) -> wrapper_traits_t<decltype(std::declval<TGiven>()())>;
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
@@ -1826,15 +1826,15 @@ struct args<type_traits::direct, TDummy> {
         return impl<T>();
     }
 
-    template<class Q, std::enable_if_t<std::is_constructible<Q, TCtor...>{}, int> = 0>
+    template<class Q>//, std::enable_if_t<std::is_constructible<Q, TCtor...>{}, int> = 0>
     Q* impl() const {
         return new Q{typename Any<Q, TCtor>::type{}...};
     }
 
-    template<class Q, std::enable_if_t<!std::is_constructible<Q, TCtor...>{}, int> = 0>
-    Q* impl() const {
-        return nullptr;
-    }
+    //template<class Q, std::enable_if_t<!std::is_constructible<Q, TCtor...>{}, int> = 0>
+    //Q* impl() const {
+        //return nullptr;
+    //}
 };
 
 template<class TDummy>
@@ -2007,9 +2007,10 @@ public:
         return concepts::creatable_error<TInitialization, TName, T*, TArgs...>();
     }
 
-    template<class, class T, class, class TInit, class TMemory, class... TArgs
-           , REQUIRES<concepts::creatable<TInit, T, TArgs...>()> = 0>
-    T* get_(const TInit&, const TMemory&, TArgs&&... args) const noexcept;
+    template<class, class T, class, class TInitialization, class TMemory, class... TArgs
+           , REQUIRES<concepts::creatable<TInitialization, T, TArgs...>()> = 0>
+    std::conditional_t<std::is_same<TMemory, type_traits::stack>{}, T, T*>
+    get_(const TInitialization&, const TMemory&, TArgs&&... args) const noexcept;
 };
 
 }}} // boost::di::providers
@@ -2078,7 +2079,7 @@ public:
         }
 
         template<class, class TProvider>
-        auto create_(const TProvider& provider) -> decltype(wrappers::shared<T>{provider.get_()});
+        auto create_(const TProvider& provider) -> decltype(wrappers::shared<T>{std::shared_ptr<T>{provider.get_()}});
 
         template<class, class TProvider>
         auto create(const TProvider& provider) {
@@ -2111,7 +2112,7 @@ public:
     class scope {
     public:
         template<class, class TProvider>
-        auto create_(const TProvider& provider) -> decltype(wrappers::shared<T>{provider.get_()});
+        auto create_(const TProvider& provider) -> decltype(wrappers::shared<T>{std::shared_ptr<T>{provider.get_()}});
 
         template<class, class TProvider>
         auto create(const TProvider& provider) {
@@ -2166,10 +2167,11 @@ public:
     > constexpr static auto call(const pool<aux::type_list<TPolicies...>>& policies
                                , TDependency&& dependency
                                , aux::pair<TInitialization, aux::type_list<TCtor...>>) noexcept {
-        return std::is_same<
-            aux::bool_list<aux::always<TPolicies>{}...>
-          , aux::bool_list<call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(policies, dependency)...>
-        >{};
+        return true;
+/*        return std::is_same<*/
+            //aux::bool_list<aux::always<TPolicies>{}...>
+          //, aux::bool_list<call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(policies, dependency)...>
+        /*>{};*/
     }
 
 private:
@@ -2235,30 +2237,25 @@ template<
 > {
     template<class T>
     struct get_impl_ {
-       template<class _, std::enable_if_t<creatable_<TInjector, _>(), int> = 0>
-        static auto impl() -> decltype(std::declval<TInjector>().template create_impl<_>());
-
-       template<class _, std::enable_if_t<!creatable_<TInjector, _>(), int> = 0>
-        static void impl();
+        static std::conditional_t<creatable_<TInjector, T>(), T, void> impl();
     };
 
     template<class... Ts>
     struct get_impl_<any_type<Ts...>> {
-        template<class>
         static auto impl() -> any_type<TParent, TInjector, std::true_type>;
     };
 
-/*    template<class TName_, class T>*/
-    //struct get_impl_<type_traits::named<TName_, T>> {
-        //static std::conditional_t<creatable_<TInjector, T, TName_>(), T, void> impl();
-    /*};*/
+    template<class TName_, class T>
+    struct get_impl_<type_traits::named<TName_, T>> {
+        static std::conditional_t<creatable_<TInjector, T, TName_>(), T, void> impl();
+    };
 
     template<class TMemory = type_traits::heap>
     auto get_(const TMemory& memory = {}) const -> decltype(
         std::declval<TInjector>().provider().template get_<TExpected, TGiven, TName>(
             TInitialization{}
           , memory
-          , get_impl_<TArgs>::template impl<TArgs>()...
+          , get_impl_<TArgs>::impl()...
         )
     );
 
@@ -2482,8 +2479,10 @@ public:
 
     template<class T, REQUIRES<!creatable_<injector, T>()> = 0>
     [[deprecated("creatable constraint not satisfied")]]
-    auto create()
-        -> decltype(create_impl<T, no_name, std::true_type>()) const;
+    T create() {
+        using TIsRoot = std::true_type;
+        return create_impl<T, no_name, TIsRoot>();
+    }
 
     template<class TAction>
     void call(const TAction& action) {

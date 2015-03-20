@@ -19,6 +19,9 @@ struct custom_scope {
     template<class TExpected, class>
     struct scope {
         template<class T, class TProvider>
+        auto create_(const TProvider& provider) -> decltype(std::shared_ptr<TExpected>{provider.get_()});
+
+        template<class T, class TProvider>
         auto create(const TProvider& provider) {
             return std::shared_ptr<TExpected>{provider.get()};
         }
