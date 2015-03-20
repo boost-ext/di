@@ -53,9 +53,10 @@ public:
         return concepts::creatable_error<TInitialization, TName, T*, TArgs...>();
     }
 
-    template<class, class T, class, class TInit, class TMemory, class... TArgs
-           , REQUIRES<concepts::creatable<TInit, T, TArgs...>()> = 0>
-    T get_(const TInit&, const TMemory&, TArgs&&... args) const noexcept;
+    template<class, class T, class, class TInitialization, class TMemory, class... TArgs
+           , REQUIRES<concepts::creatable<TInitialization, T, TArgs...>()> = 0>
+    std::conditional_t<std::is_same<TMemory, type_traits::stack>{}, T, T*>
+    get_(const TInitialization&, const TMemory&, TArgs&&... args) const noexcept;
 };
 
 }}} // boost::di::providers

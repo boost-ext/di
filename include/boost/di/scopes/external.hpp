@@ -99,7 +99,7 @@ public:
         >
     > {
         template<class T, class TProvider>
-        T create_(const TProvider&);
+        auto create_(const TProvider&) -> wrapper_traits_t<decltype(std::declval<TGiven>()())>;
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
