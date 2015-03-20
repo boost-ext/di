@@ -160,7 +160,7 @@ public:
     }
 
     template<class T, REQUIRES<!creatable_<injector, T>()> = 0>
-    BOOST_DI_CFG_ERROR("creatable constraint not satisfied")
+    [[BOOST_DI_CFG_ERROR("creatable constraint not satisfied")]]
     T create() {
         using TIsRoot = std::true_type;
         return create_impl<T, no_name, TIsRoot>();
