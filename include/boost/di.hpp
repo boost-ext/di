@@ -203,6 +203,8 @@ struct _ { _(...) { } };
 
     #define BOOST_DI_CFG_ERRORS_DESC_END \
         _Pragma("clang diagnostic pop")
+
+    #define BOOST_DI_CFG_ERROR(...) [[deprecated(__VA_ARGS__)]]
 #else
     #define BOOST_DI_CFG_ERRORS_DESC_BEGIN \
         _Pragma("GCC diagnostic push") \
@@ -210,6 +212,8 @@ struct _ { _(...) { } };
 
     #define BOOST_DI_CFG_ERRORS_DESC_END \
         _Pragma("GCC diagnostic pop")
+
+    #define BOOST_DI_CFG_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
 #endif
 
 namespace boost { namespace di { namespace aux {
@@ -2434,7 +2438,7 @@ public:
     }
 
     template<class T, REQUIRES<!creatable_<injector, T>()> = 0>
-    [[deprecated("creatable constraint not satisfied")]]
+    BOOST_DI_CFG_ERROR("creatable constraint not satisfied")
     T create() {
         using TIsRoot = std::true_type;
         return create_impl<T, no_name, TIsRoot>();
