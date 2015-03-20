@@ -114,45 +114,6 @@ class injector : public pool<bindings_t<TDeps...>>
       , TConfig<injector>
     >;
 
-    template<class T, class TName = no_name, class TIsRoot = std::false_type>
-    auto create_impl() const {
-        auto&& dependency = binder::resolve<T, TName>((injector*)this);
-        using dependency_t = std::remove_reference_t<decltype(dependency)>;
-        using expected_t = typename dependency_t::expected;
-        using given_t = typename dependency_t::given;
-        using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-        using provider_t = provider<expected_t, given_t, TName, T, ctor_t, injector>;
-        policy<pool_t>::template call<T, TName, TIsRoot>(((TConfig<injector>&)*this).policies(), dependency, ctor_t{});
-        using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
-        using type = std::conditional_t<
-            std::is_reference<T>{} && has_is_ref<dependency_t>{}
-          , T
-          , std::remove_reference_t<T>
-        >;
-        return wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
-    }
-
-    template<class TAction, class... Ts>
-    void call_impl(const TAction& action, const aux::type_list<Ts...>&) {
-        int _[]{0, (call_impl<Ts>(action), 0)...}; (void)_;
-    }
-
-    template<class T, class TAction>
-    std::enable_if_t<has_call<T, const TAction&>{}>
-    call_impl(const TAction& action) {
-        static_cast<T&>(*this).call(action);
-    }
-
-    template<class T, class TAction>
-    std::enable_if_t<!has_call<T, const TAction&>{}>
-    call_impl(const TAction&) { }
-
-    template<class TInjector, class... Ts>
-    auto create_from_injector(const TInjector& injector
-                            , const aux::type_list<Ts...>&) const noexcept {
-        return pool_t{Ts{injector}...};
-    }
-
 public:
     using deps = bindings_t<TDeps...>;
 
@@ -208,6 +169,46 @@ public:
     template<class TAction>
     void call(const TAction& action) {
         call_impl(action, deps{});
+    }
+
+private:
+    template<class T, class TName = no_name, class TIsRoot = std::false_type>
+    auto create_impl() const {
+        auto&& dependency = binder::resolve<T, TName>((injector*)this);
+        using dependency_t = std::remove_reference_t<decltype(dependency)>;
+        using expected_t = typename dependency_t::expected;
+        using given_t = typename dependency_t::given;
+        using ctor_t = typename type_traits::ctor_traits<given_t>::type;
+        using provider_t = provider<expected_t, given_t, TName, T, ctor_t, injector>;
+        policy<pool_t>::template call<T, TName, TIsRoot>(((TConfig<injector>&)*this).policies(), dependency, ctor_t{});
+        using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
+        using type = std::conditional_t<
+            std::is_reference<T>{} && has_is_ref<dependency_t>{}
+          , T
+          , std::remove_reference_t<T>
+        >;
+        return wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
+    }
+
+    template<class TAction, class... Ts>
+    void call_impl(const TAction& action, const aux::type_list<Ts...>&) {
+        int _[]{0, (call_impl<Ts>(action), 0)...}; (void)_;
+    }
+
+    template<class T, class TAction>
+    std::enable_if_t<has_call<T, const TAction&>{}>
+    call_impl(const TAction& action) {
+        static_cast<T&>(*this).call(action);
+    }
+
+    template<class T, class TAction>
+    std::enable_if_t<!has_call<T, const TAction&>{}>
+    call_impl(const TAction&) { }
+
+    template<class TInjector, class... Ts>
+    auto create_from_injector(const TInjector& injector
+                            , const aux::type_list<Ts...>&) const noexcept {
+        return pool_t{Ts{injector}...};
     }
 };
 

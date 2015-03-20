@@ -38,7 +38,7 @@ public:
 
     template<class, class T, class, class TInit, class TMemory, class... TArgs
            , REQUIRES<concepts::creatable<TInit, T, TArgs...>()> = 0>
-    T get_(const TInit&, const TMemory&, TArgs&&... args) const noexcept;
+    T* get_(const TInit&, const TMemory&, TArgs&&... args) const noexcept;
 };
 
 }}} // boost::di::providers
