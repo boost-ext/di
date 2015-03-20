@@ -38,47 +38,29 @@ template<
 > {
     template<class T>
     struct get_impl_ {
-        template<class Q, std::enable_if_t<creatable_<TInjector, Q, TError>(), int> = 0>
-        auto blah() const   {
-            return injector_.template create_impl<T, no_name, std::false_type, TError>();
-        }
-
-        template<class Q, std::enable_if_t<!creatable_<TInjector, Q, TError>(), int> = 0>
-        void blah() const;
-
-        const TInjector& injector_;
+        template<class Q>
+        static std::conditional_t<creatable_<TInjector, Q, TError>(), T, void> blah();
     };
 
     template<class... Ts>
     struct get_impl_<any_type<Ts...>> {
-        template<class Q>
-        auto blah() const  {
-            return any_type<TParent, TInjector, TError>{injector_};
-        }
-
-        const TInjector& injector_;
+        template<class>
+        static auto blah() -> any_type<TParent, TInjector, TError>;
     };
 
    template<class TName_, class T>
     struct get_impl_<type_traits::named<TName_, T>> {
-        template<class Q, std::enable_if_t<!std::is_same<Q, void>{} && creatable_<TInjector, T, TError, TName_>(), int> = 0>
-        auto blah() const  {
-            return injector_.template create_impl<T, TName_, std::false_type, TError>();
-        }
-
-        template<class Q, std::enable_if_t<!std::is_same<Q, void>{} && !creatable_<TInjector, T, TError, TName_>(), int> = 0>
-        void blah() const;
-
-        const TInjector& injector_;
+        template<class Q>
+        static std::conditional_t<creatable_<TInjector, Q, TError, TName_>(), T, void> blah();
     };
 
     template<class TMemory = type_traits::heap>
     auto get_(const TMemory& memory = {}) const
     -> decltype(
-        std::declval<TInjector>().provider().template get<TExpected, TGiven, TName, TError>(
+        std::declval<TInjector>().provider().template get_<TExpected, TGiven, TName, TError>(
             TInitialization{}
           , memory
-          , get_impl_<TArgs>{std::declval<TInjector>()}.template blah<TArgs>()...
+          , get_impl_<TArgs>::template blah<TArgs>()...
         )
             );
 
