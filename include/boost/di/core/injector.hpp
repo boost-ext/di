@@ -189,8 +189,7 @@ public:
                  , injector
                >{std::declval<injector>()}
            )
-        ), T
-       >{}
+       ), T>{}
     >;
 
     template<class T, REQUIRES<creatable_<injector, T>()> = 0>
