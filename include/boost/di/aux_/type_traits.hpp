@@ -50,7 +50,7 @@
     #define BOOST_DI_CFG_ERRORS_DESC_END \
         _Pragma("clang diagnostic pop")
 
-    #define BOOST_DI_CFG_ERROR deprecated
+    #define BOOST_DI_ATTR_ERROR deprecated
 #else
     #define BOOST_DI_CFG_ERRORS_DESC_BEGIN \
         _Pragma("GCC diagnostic push") \
@@ -59,7 +59,7 @@
     #define BOOST_DI_CFG_ERRORS_DESC_END \
         _Pragma("GCC diagnostic pop")
 
-    #define BOOST_DI_CFG_ERROR error
+    #define BOOST_DI_ATTR_ERROR error
 #endif
 
 namespace boost { namespace di { namespace aux {
