@@ -20,8 +20,9 @@ public:
     public:
         template<class T, class TProvider>
         auto create_(const TProvider& provider) -> decltype(
-typename type_traits::scope_traits_t<T>::template scope<TExpected, TGiven>{}.template create_<T>(provider)
-                );
+            typename type_traits::scope_traits_t<T>::template
+                scope<TExpected, TGiven>{}.template create_<T>(provider)
+        );
 
         template<class T, class TProvider>
         auto create(const TProvider& provider) {

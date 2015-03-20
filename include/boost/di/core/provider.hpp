@@ -39,30 +39,29 @@ template<
     template<class T>
     struct get_impl_ {
         template<class Q>
-        static std::conditional_t<creatable_<TInjector, Q, TError>(), T, void> blah();
+        static std::conditional_t<creatable_<TInjector, Q, TError>(), T, void> impl();
     };
 
     template<class... Ts>
     struct get_impl_<any_type<Ts...>> {
         template<class>
-        static auto blah() -> any_type<TParent, TInjector, std::true_type>;
+        static auto impl() -> any_type<TParent, TInjector, std::true_type>;
     };
 
-   template<class TName_, class T>
+    template<class TName_, class T>
     struct get_impl_<type_traits::named<TName_, T>> {
         template<class Q>
-        static std::conditional_t<creatable_<TInjector, Q, TError, TName_>(), T, void> blah();
+        static std::conditional_t<creatable_<TInjector, Q, TError, TName_>(), T, void> impl();
     };
 
     template<class TMemory = type_traits::heap>
-    auto get_(const TMemory& memory = {}) const
-    -> decltype(
+    auto get_(const TMemory& memory = {}) const -> decltype(
         std::declval<TInjector>().provider().template get_<TExpected, TGiven, TName, TError>(
             TInitialization{}
           , memory
-          , get_impl_<TArgs>::template blah<TArgs>()...
+          , get_impl_<TArgs>::template impl<TArgs>()...
         )
-            );
+    );
 
     template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const {
