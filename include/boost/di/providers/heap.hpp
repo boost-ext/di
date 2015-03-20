@@ -35,6 +35,10 @@ public:
     auto get(const TInitialization&, const TMemory&, TArgs&&...) const noexcept {
         return concepts::creatable_error<TInitialization, TName, T*, TArgs...>();
     }
+
+    template<class, class T, class, class TInit, class TMemory, class... TArgs
+           , REQUIRES<concepts::creatable<TInit, T, TArgs...>()> = 0>
+    T get_(const TInit&, const TMemory&, TArgs&&... args) const noexcept;
 };
 
 }}} // boost::di::providers

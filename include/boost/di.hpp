@@ -1337,19 +1337,19 @@ struct any_type {
         return injector_.template create_impl<T>();
     }
 
-    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = is_creatable<T, TError>>
+    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = is_creatable<T&, TError>>
     operator T&() const {
         return injector_.template create_impl<T&>();
     }
 
 #if !defined(__clang__)
-    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = is_creatable<T, TError>>
+    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = is_creatable<T&&, TError>>
     operator T&&() const {
         return injector_.template create_impl<T&&>();
     }
 #endif
 
-    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = is_creatable<T, TError>>
+    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = is_creatable<const T&, TError>>
     operator const T&() const {
         return injector_.template create_impl<const T&>();
     }
@@ -2009,7 +2009,7 @@ public:
 
     template<class, class T, class, class TInit, class TMemory, class... TArgs
            , REQUIRES<concepts::creatable<TInit, T, TArgs...>()> = 0>
-    T get_(const TInit&, const TMemory&, TArgs&&... args) const;
+    T* get_(const TInit&, const TMemory&, TArgs&&... args) const noexcept;
 };
 
 }}} // boost::di::providers
@@ -2235,25 +2235,30 @@ template<
 > {
     template<class T>
     struct get_impl_ {
-        static std::conditional_t<creatable_<TInjector, T>(), T, void> impl();
+       template<class _, std::enable_if_t<creatable_<TInjector, _>(), int> = 0>
+        static auto impl() -> decltype(std::declval<TInjector>().template create_impl<_>());
+
+       template<class _, std::enable_if_t<!creatable_<TInjector, _>(), int> = 0>
+        static void impl();
     };
 
     template<class... Ts>
     struct get_impl_<any_type<Ts...>> {
+        template<class>
         static auto impl() -> any_type<TParent, TInjector, std::true_type>;
     };
 
-    template<class TName_, class T>
-    struct get_impl_<type_traits::named<TName_, T>> {
-        static std::conditional_t<creatable_<TInjector, T, TName_>(), T, void> impl();
-    };
+/*    template<class TName_, class T>*/
+    //struct get_impl_<type_traits::named<TName_, T>> {
+        //static std::conditional_t<creatable_<TInjector, T, TName_>(), T, void> impl();
+    /*};*/
 
     template<class TMemory = type_traits::heap>
     auto get_(const TMemory& memory = {}) const -> decltype(
         std::declval<TInjector>().provider().template get_<TExpected, TGiven, TName>(
             TInitialization{}
           , memory
-          , get_impl_<TArgs>::impl()...
+          , get_impl_<TArgs>::template impl<TArgs>()...
         )
     );
 

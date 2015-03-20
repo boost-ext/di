@@ -205,8 +205,10 @@ public:
 
     template<class T, REQUIRES<!creatable_<injector, T>()> = 0>
     [[deprecated("creatable constraint not satisfied")]]
-    auto create()
-        -> decltype(create_impl<T, no_name, std::true_type>()) const;
+    T create() {
+        using TIsRoot = std::true_type;
+        return create_impl<T, no_name, TIsRoot>();
+    }
 
     template<class TAction>
     void call(const TAction& action) {

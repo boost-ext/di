@@ -67,19 +67,19 @@ struct any_type {
         return injector_.template create_impl<T>();
     }
 
-    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = is_creatable<T, TError>>
+    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = is_creatable<T&, TError>>
     operator T&() const {
         return injector_.template create_impl<T&>();
     }
 
 #if !defined(__clang__)
-    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = is_creatable<T, TError>>
+    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = is_creatable<T&&, TError>>
     operator T&&() const {
         return injector_.template create_impl<T&&>();
     }
 #endif
 
-    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = is_creatable<T, TError>>
+    template<class T, class = is_not_same<T, TParent>, class = is_ref<T>, class = is_creatable<const T&, TError>>
     operator const T&() const {
         return injector_.template create_impl<const T&>();
     }
