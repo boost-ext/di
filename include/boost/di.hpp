@@ -2451,13 +2451,8 @@ public:
      //, REQUIRES<
           //policy<pool_t>::template call<T, TName, TIsRoot>(core::pool<>{}, std::declval<TDependency>(), TCtor{})
        //> = 0
-    > auto create_impl_() const -> wrapper<
-          std::conditional_t<
-              std::is_reference<T>{} && has_is_ref<TDependency>{}
-            , T
-            , std::remove_reference_t<T>
-          >
-      , decltype(
+    > auto create_impl_() const -> std::enable_if_t<std::is_convertible<
+       decltype(
            std::declval<TDependency>().template create_<T>(
                provider<
                    typename TDependency::expected
@@ -2468,8 +2463,9 @@ public:
                  , injector
                >{std::declval<injector>()}
            )
-        )
-     >;
+        ), T
+       >{}
+    >;
 
     template<class T, REQUIRES<creatable_<injector, T>()> = 0>
     T create() const {

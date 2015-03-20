@@ -103,13 +103,13 @@ test-suite ut :
 ;
 
 test-suite ft :
-    [ run-test c++1y : ft/di.cpp ]
+    #[ run-test c++1y : ft/di.cpp ]
     [ run-test c++1y : ft/di_ctor_inject_limit_size.cpp ]
     [ run-test c++1y : ft/di_ctor_limit_size.cpp ]
     #[ run-test c++1y : ft/di_custom_policies_global.cpp ]
     #[ run-test c++1y : ft/di_custom_provider_global.cpp ]
 
-    #[ compile-fail-test c++1y : ft/error_bind_external_repeated.cpp ]
+#    [ compile-fail-test c++1y : ft/error_bind_external_repeated.cpp ]
     #[ compile-fail-test c++1y : ft/error_bind_external_with_given_scope.cpp ]
     #[ compile-fail-test c++1y : ft/error_bind_external_with_given_type.cpp ]
     #[ compile-fail-test c++1y : ft/error_bind_not_compatible_types.cpp ]
