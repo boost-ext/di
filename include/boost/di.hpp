@@ -204,7 +204,7 @@ struct _ { _(...) { } };
     #define BOOST_DI_CFG_ERRORS_DESC_END \
         _Pragma("clang diagnostic pop")
 
-    #define BOOST_DI_CFG_ERROR(...) [[deprecated(__VA_ARGS__)]]
+    #define BOOST_DI_ATTR_ERROR(...) [[deprecated(__VA_ARGS__)]]
 #else
     #define BOOST_DI_CFG_ERRORS_DESC_BEGIN \
         _Pragma("GCC diagnostic push") \
@@ -213,7 +213,7 @@ struct _ { _(...) { } };
     #define BOOST_DI_CFG_ERRORS_DESC_END \
         _Pragma("GCC diagnostic pop")
 
-    #define BOOST_DI_CFG_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
+    #define BOOST_DI_ATTR_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
 #endif
 
 namespace boost { namespace di { namespace aux {
@@ -2386,6 +2386,7 @@ class injector : public pool<bindings_t<TDeps...>>
     template<class> friend class scopes::exposed;
 
     using pool_t = pool<bindings_t<TDeps...>>;
+    using is_root_t = std::true_type;
     using config = std::conditional_t<
         std::is_default_constructible<TConfig<injector>>{}
       , _
@@ -2433,15 +2434,13 @@ public:
 
     template<class T, REQUIRES<creatable_<injector, T>()> = 0>
     T create() const {
-        using TIsRoot = std::true_type;
-        return create_impl<T, no_name, TIsRoot>();
+        return create_impl<T, no_name, is_root_t>();
     }
 
     template<class T, REQUIRES<!creatable_<injector, T>()> = 0>
-    BOOST_DI_CFG_ERROR("creatable constraint not satisfied")
-    T create() {
-        using TIsRoot = std::true_type;
-        return create_impl<T, no_name, TIsRoot>();
+    BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
+    T create() const {
+        return create_impl<T, no_name, is_root_t>();
     }
 
     template<class TAction>
