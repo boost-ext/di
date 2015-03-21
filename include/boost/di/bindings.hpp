@@ -28,7 +28,7 @@ template<
         concepts::boundable<TExpected, TGiven>()
       , decltype(concepts::boundable_error<TExpected, TGiven>())
     > = 0
-> core::dependency<scopes::deduce, TExpected, TGiven> bind{};
+> core::bind<TExpected, TGiven> bind{};
 
 constexpr scopes::deduce deduce{};
 constexpr scopes::unique unique{};
