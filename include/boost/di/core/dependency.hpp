@@ -47,10 +47,10 @@ template<
 struct dependency_ { };
 
 template<class I, class Impl>
-struct bind : core::dependency<scopes::deduce, I, Impl> {
+struct bind : dependency<scopes::deduce, I, Impl> {
     template<class T>
-    struct named_ : core::dependency<scopes::deduce, I, Impl, T> {
-        using core::dependency<scopes::deduce, I, Impl, T>::dependency;
+    struct named_ : dependency<scopes::deduce, I, Impl, T> {
+        using dependency<scopes::deduce, I, Impl, T>::dependency;
     };
 };
 
