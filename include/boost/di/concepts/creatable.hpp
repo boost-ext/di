@@ -9,7 +9,6 @@
 
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
-//#include "boost/di/core/any_type.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 
 namespace boost { namespace di {

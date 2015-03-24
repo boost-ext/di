@@ -15,51 +15,43 @@ namespace boost { namespace di { namespace providers {
 
 class stack_over_heap {
 public:
-    template<class, class T, class, class... TArgs
-           , REQUIRES<concepts::creatable<type_traits::direct, T, TArgs...>()> = 0>
+    template<class T, class TInitialization, class, class... TArgs>
+    static constexpr auto is_creatable() {
+        return concepts::creatable<TInitialization, T, TArgs...>();
+    }
+
+    template<class, class T, class... TArgs>
     auto get(const type_traits::direct&
            , const type_traits::heap&
            , TArgs&&... args) {
         return new T(std::forward<TArgs>(args)...);
     }
 
-    template<class, class T, class, class... TArgs
-           , REQUIRES<concepts::creatable<type_traits::uniform, T, TArgs...>()> = 0>
+    template<class, class T, class... TArgs>
     auto get(const type_traits::uniform&
            , const type_traits::heap&
            , TArgs&&... args) {
         return new T{std::forward<TArgs>(args)...};
     }
 
-    template<class, class T, class, class... TArgs
-           , REQUIRES<concepts::creatable<type_traits::direct, T, TArgs...>()> = 0>
+    template<class, class T, class... TArgs>
     auto get(const type_traits::direct&
            , const type_traits::stack&
            , TArgs&&... args) const noexcept {
         return T(std::forward<TArgs>(args)...);
     }
 
-    template<class, class T, class, class... TArgs
-           , REQUIRES<concepts::creatable<type_traits::uniform, T, TArgs...>()> = 0>
+    template<class, class T, class... TArgs>
     auto get(const type_traits::uniform&
            , const type_traits::stack&
            , TArgs&&... args) const noexcept {
         return T{std::forward<TArgs>(args)...};
     }
-
-    template<class, class T, class TName, class TInitialization, class TMemory, class... TArgs
-           , REQUIRES<!concepts::creatable<TInitialization, T, TArgs...>()> = 0>
-    auto get(const TInitialization&, const TMemory&, TArgs&&...) const noexcept {
-        return concepts::creatable_error<TInitialization, TName, T*, TArgs...>();
-    }
-
-    template<class, class T, class, class TInitialization, class TMemory, class... TArgs
-           , REQUIRES<concepts::creatable<TInitialization, T, TArgs...>()> = 0>
-    std::conditional_t<std::is_same<TMemory, type_traits::stack>{}, T, T*>
-    get_(const TInitialization&, const TMemory&, TArgs&&... args) const noexcept;
 };
 
 }}} // boost::di::providers
 
 #endif
+
+
 

@@ -35,6 +35,12 @@ template<
   , aux::pair<TInitialization, aux::type_list<TArgs...>>
   , TInjector
 > {
+    template<class TMemory>
+    static constexpr auto is_creatable() {
+        using provider_t = decltype(injector_.provider());
+        return provider_t::template is_creatable<TGiven, TInitialization, TMemory, TArgs...>();
+    }
+
     template<class T>
     struct get_impl_ {
         static std::conditional_t<concepts::creatable_<TInjector, T>(), T, void> impl();
@@ -50,22 +56,26 @@ template<
         static std::conditional_t<concepts::creatable_<TInjector, T, TName_>(), T, void> impl();
     };
 
-    template<class TMemory = type_traits::heap>
-    auto get_(const TMemory& memory = {}) const -> decltype(
-        std::declval<TInjector>().provider().template get_<TExpected, TGiven, TName>(
-            TInitialization{}
-          , memory
-          , get_impl_<TArgs>::impl()...
-        )
-    );
+    template<class TMemory, class... Ts, REQUIRES<is_creatable<TMemory>()> = 0>
+    auto get__(Ts&&...) const -> std::conditional_t<std::is_same<TMemory, type_traits::stack>{}, TGiven, TGiven*>;
 
     template<class TMemory = type_traits::heap>
+    auto get_(const TMemory& memory = {}) const -> decltype(
+        get__<TMemory>(get_impl_<TArgs>::impl()...)
+    );
+
+    template<class TMemory = type_traits::heap, REQUIRES<is_creatable<TMemory>()> = 0>
     auto get(const TMemory& memory = {}) const {
-        return injector_.provider().template get<TExpected, TGiven, TName>(
+        return injector_.provider().template get<TExpected, TGiven>(
             TInitialization{}
           , memory
           , get_impl(aux::type<TArgs>{})...
         );
+    }
+
+    template<class TMemory = type_traits::heap, REQUIRES<!is_creatable<TMemory>()> = 0>
+    auto get(const TMemory& memory = {}) const {
+        return concepts::creatable_error<TInitialization, TName, TGiven*, TArgs...>();
     }
 
     template<class T>
@@ -89,4 +99,6 @@ template<
 }}} // boost::di::core
 
 #endif
+
+
 

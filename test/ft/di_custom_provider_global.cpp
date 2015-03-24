@@ -13,7 +13,12 @@ auto called = 0;
 
 class custom_provider {
 public:
-    template<class, class T, class, class TInitialization, class TMemory, class... TArgs>
+    template<class...>
+    static constexpr auto is_creatable() {
+        return true;
+    }
+
+    template<class, class T,class TInitialization, class TMemory, class... TArgs>
     auto get(const TInitialization&, const TMemory&, TArgs&&... args) const {
         ++called;
         return new T(std::forward<TArgs>(args)...);
