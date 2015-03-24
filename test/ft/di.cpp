@@ -1288,7 +1288,7 @@ struct deleter_provider {
         return i;
     }
 
-    template<class I, class T, class, class TInitialization, class TMemory, class... TArgs>
+    template<class I, class T, class TInitialization, class TMemory, class... TArgs>
     auto get(const TInitialization& // direct/uniform
            , const TMemory& // stack/heap
            , TArgs&&... args) const {
@@ -1297,9 +1297,6 @@ struct deleter_provider {
             new T(std::forward<TArgs>(args)...)
         };
     }
-
-    template<class, class T, class, class TInitialization, class TMemory, class... TArgs>
-    T* get_(const TInitialization&, const TMemory&, TArgs&&... args) const noexcept;
 };
 
 template<class>

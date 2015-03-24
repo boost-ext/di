@@ -50,22 +50,42 @@ template<
         static std::conditional_t<concepts::creatable_<TInjector, T, TName_>(), T, void> impl();
     };
 
-    template<class TMemory = type_traits::heap>
-    auto get_(const TMemory& memory = {}) const -> decltype(
-        std::declval<TInjector>().provider().template get_<TExpected, TGiven, TName>(
+    template<class, class T>
+    struct tt {
+        using type = T;
+    };
+
+   template<class T, class TInitialization_, class TMemory, class... TArgs_
+           , REQUIRES<concepts::creatable<TInitialization_, T, TArgs_...>()> = 0
+       >
+    std::conditional_t<std::is_same<TMemory, type_traits::stack>{}, T, T*>
+    get__(const TInitialization_&, const TMemory&, TArgs_&&...) const;
+
+    template<class TMemory = type_traits::heap
+           , REQUIRES<concepts::creatable<TInitialization, typename tt<TMemory, TGiven>::type, TArgs...>()> = 0
+    > auto get_(const TMemory& memory = {}) const
+    -> decltype(
+        get__<TGiven>(
             TInitialization{}
           , memory
           , get_impl_<TArgs>::impl()...
         )
     );
 
-    template<class TMemory = type_traits::heap>
-    auto get(const TMemory& memory = {}) const {
-        return injector_.provider().template get<TExpected, TGiven, TName>(
+    template<class TMemory = type_traits::heap
+           , REQUIRES<concepts::creatable<TInitialization, typename tt<TMemory, TGiven>::type, TArgs...>()> = 0
+    > auto get(const TMemory& memory = {}) const {
+        return injector_.provider().template get<TExpected, TGiven>(
             TInitialization{}
           , memory
           , get_impl(aux::type<TArgs>{})...
         );
+    }
+
+    template<class TMemory = type_traits::heap
+           , REQUIRES<!concepts::creatable<TInitialization, typename tt<TMemory, TGiven>::type, TArgs...>()> = 0
+    > auto get(const TMemory& memory = {}) const {
+        return concepts::creatable_error<TInitialization, TName, TGiven*, TArgs...>();
     }
 
     template<class T>
