@@ -1118,8 +1118,27 @@ template<
   , class TGiven = TExpected
   , class TName = no_name
   , class TPriority = std::integral_constant<bool, TScope::priority>
+> class dependency;
+
+struct dependency_ { };
+
+template<class I, class Impl>
+struct bind : dependency<scopes::deduce, I, Impl> {
+    template<class T>
+    struct named_ : dependency<scopes::deduce, I, Impl, T> {
+        using dependency<scopes::deduce, I, Impl, T>::dependency;
+    };
+};
+
+template<
+    class TScope
+  , class TExpected
+  , class TGiven
+  , class TName
+  , class TPriority
 > class dependency
     : public TScope::template scope<TExpected, TGiven>
+    , public dependency_
     , public dependency_impl<
           dependency_concept<TExpected, TName>
         , dependency<TScope, TExpected, TGiven, TName, TPriority>
@@ -1146,6 +1165,7 @@ public:
 
     template<class T>
     auto named(const T&) const noexcept {
+        //return typename bind<TExpected, TGiven>::template named_<T>{*this};
         return dependency<TScope, TExpected, TGiven, T>{*this};
     }
 
@@ -1182,11 +1202,8 @@ public:
     }
 };
 
-template<class>
-struct is_dependency : std::false_type { };
-
-template<class... Ts>
-struct is_dependency<dependency<Ts...>> : std::true_type { };
+template<class T>
+struct is_dependency : std::is_base_of<dependency_, T> { };
 
 }}} // boost::di::core
 
@@ -1288,12 +1305,12 @@ namespace boost { namespace di { namespace core {
 
 auto creatable_impl_(...) -> std::false_type;
 
-template<class T, class B, class N>
-auto creatable_impl_(T&& t, B&&, N&&) -> aux::is_valid_expr<decltype(t.template create_impl_<B, N, std::true_type>())>;
+template<class T, class B, class N, class TIsRoot>
+auto creatable_impl_(T&& t, B&&, N&&, TIsRoot&&) -> aux::is_valid_expr<decltype(t.template create_impl_<B, N, TIsRoot>())>;
 
-template<class T, class B, class N = no_name>
+template<class T, class B, class N = no_name, class TIsRoot = std::false_type>
 constexpr auto creatable_() {
-    return decltype(creatable_impl_(std::declval<T>(), std::declval<B>(), std::declval<N>())){};
+    return decltype(creatable_impl_(std::declval<T>(), std::declval<B>(), std::declval<N>(), std::declval<TIsRoot>())){};
 }
 
 BOOST_DI_HAS_TYPE(is_ref);
@@ -2168,14 +2185,17 @@ public:
       , class TDependency
       , class... TCtor
       , class... TPolicies
-    > constexpr static auto call(const pool<aux::type_list<TPolicies...>>& policies
-                               , TDependency&& dependency
-                               , aux::pair<TInitialization, aux::type_list<TCtor...>>) noexcept {
-        return true;
-/*        return std::is_same<*/
-            //aux::bool_list<aux::always<TPolicies>{}...>
-          //, aux::bool_list<call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(policies, dependency)...>
-        /*>{};*/
+    > static auto call(const pool<aux::type_list<TPolicies...>>& policies
+                     , TDependency dependency
+                     , aux::pair<TInitialization, aux::type_list<TCtor...>>) noexcept {
+
+        int _[]{0, (call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(
+            policies, dependency), 0)...}; (void)_;
+
+       return std::is_same<
+            aux::bool_list<aux::always<TPolicies>{}...>
+          , aux::bool_list<decltype(call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(policies, dependency)){}...>
+        >{};
     }
 
 private:
@@ -2187,26 +2207,28 @@ private:
       , class TPolicies
       , class TDependency
       , class... TCtor
-    > constexpr static auto call_impl(const TPolicies& policies, TDependency&& dependency) noexcept {
+    > static auto call_impl(const TPolicies& policies, TDependency dependency) noexcept {
         return call_impl_type<arg_wrapper<T, TName, TIsRoot, TDeps>, TDependency, TPolicy, TCtor...>(
             static_cast<const TPolicy&>(policies), dependency
         );
     }
 
     template<class TArg, class TDependency, class TPolicy, class... TCtor>
-    constexpr static auto call_impl_type(const TPolicy& policy, TDependency&& dependency) noexcept {
-        return call_impl_args<TArg, TDependency, TPolicy, TCtor...>(policy, dependency);
+    static auto call_impl_type(const TPolicy& policy, TDependency dependency) noexcept {
+        call_impl_args<TArg, TDependency, TPolicy, TCtor...>(policy, dependency);
+        using type = decltype(call_impl_args<TArg, TDependency, TPolicy, TCtor...>(policy, dependency));
+        return std::conditional_t<std::is_same<type, void>{}, std::true_type, type>{};
     }
 
     template<class TArg, class TDependency, class TPolicy, class... TCtor
            , REQUIRES<!has_call_operator<TPolicy, TArg, TDependency, TCtor...>{}> = 0>
-    constexpr static auto call_impl_args(const TPolicy& policy, TDependency&&) noexcept {
+    static auto call_impl_args(const TPolicy& policy, TDependency) noexcept {
         return (policy)(TArg{});
     }
 
     template<class TArg, class TDependency, class TPolicy, class... TCtor
            , REQUIRES<has_call_operator<TPolicy, TArg, TDependency, TCtor...>{}> = 0>
-    constexpr static auto call_impl_args(const TPolicy& policy, TDependency&& dependency) noexcept {
+    static auto call_impl_args(const TPolicy& policy, TDependency dependency) noexcept {
         return (policy)(TArg{}, dependency, aux::type<TCtor>{}...);
     }
 };
@@ -2414,9 +2436,6 @@ public:
       , class TIsRoot = std::false_type
       , class TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
       , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
-     //, REQUIRES<
-          //policy<pool_t>::template call<T, TName, TIsRoot>(core::pool<>{}, std::declval<TDependency>(), TCtor{})
-       //> = 0
     > auto create_impl_() const -> std::enable_if_t<std::is_convertible<
        decltype(
            std::declval<TDependency>().template create_<T>(
@@ -2429,15 +2448,16 @@ public:
                  , injector
                >{std::declval<injector>()}
            )
-       ), T>{}
+       ), T>{} && decltype(policy<pool_t>::template
+           call<T, TName, TIsRoot>(((TConfig<injector>&)*this).policies(), std::declval<TDependency>(), TCtor{})){}
     >;
 
-    template<class T, REQUIRES<creatable_<injector, T>()> = 0>
+    template<class T, REQUIRES<creatable_<injector, T, no_name, is_root_t>()> = 0>
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }
 
-    template<class T, REQUIRES<!creatable_<injector, T>()> = 0>
+    template<class T, REQUIRES<!creatable_<injector, T, no_name, is_root_t>()> = 0>
     BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
     T create() const {
         return create_impl<T, no_name, is_root_t>();
@@ -2654,7 +2674,7 @@ template<
         concepts::boundable<TExpected, TGiven>()
       , decltype(concepts::boundable_error<TExpected, TGiven>())
     > = 0
-> core::dependency<scopes::deduce, TExpected, TGiven> bind{};
+> core::bind<TExpected, TGiven> bind{};
 
 constexpr scopes::deduce deduce{};
 constexpr scopes::unique unique{};
