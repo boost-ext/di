@@ -60,6 +60,9 @@ public:
             in_scope_ = false;
         }
 
+        template<class, class TProvider>
+        custom_wrapper create_(const TProvider&) const noexcept;
+
         /*<<create shared_ptr when in scope out of provider pointer>>*/
         template<class, class TProvider>
         custom_wrapper create(const TProvider& provider) const noexcept {

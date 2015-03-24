@@ -64,6 +64,10 @@ struct pool_provider {
             new (memory) T(std::forward<TArgs>(args)...)
         };
     }
+
+    template<class I, class T, class, class TInitialization, class TMemory, class... TArgs>
+    std::unique_ptr<T, pool_deleter<I>>
+    get_(const TInitialization&, const TMemory&, TArgs&&...) const noexcept;
 };
 
 /*<override `di` provider configuration>*/

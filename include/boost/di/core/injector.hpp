@@ -136,9 +136,6 @@ public:
       , class TIsRoot = std::false_type
       , class TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
       , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
-     //, REQUIRES<
-          //policy<pool_t>::template call<T, TName, TIsRoot>(core::pool<>{}, std::declval<TDependency>(), TCtor{})
-       //> = 0
     > auto create_impl_() const -> std::enable_if_t<std::is_convertible<
        decltype(
            std::declval<TDependency>().template create_<T>(
@@ -151,15 +148,16 @@ public:
                  , injector
                >{std::declval<injector>()}
            )
-       ), T>{}
+       ), T>{} && decltype(policy<pool_t>::template
+           call<T, TName, TIsRoot>(((TConfig<injector>&)*this).policies(), std::declval<TDependency>(), TCtor{})){}
     >;
 
-    template<class T, REQUIRES<creatable_<injector, T>()> = 0>
+    template<class T, REQUIRES<creatable_<injector, T, no_name, is_root_t>()> = 0>
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }
 
-    template<class T, REQUIRES<!creatable_<injector, T>()> = 0>
+    template<class T, REQUIRES<!creatable_<injector, T, no_name, is_root_t>()> = 0>
     BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
     T create() const {
         return create_impl<T, no_name, is_root_t>();

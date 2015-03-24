@@ -158,21 +158,26 @@ inline auto operator!(const T&) {
 template<class T>
 struct constructible_impl {
     template<class TArg, std::enable_if_t<decltype(T::apply(TArg{})){}, int> = 0>
-    auto operator()(const TArg& data) const {
+    std::true_type operator()(const TArg& data) const {
         T::apply(data);
-        return true;
+        return {};
     }
 
     template<class TArg, std::enable_if_t<!decltype(T::apply(TArg{})){}, int> = 0>
-    auto operator()(const TArg&) const {
+    std::false_type operator()(const TArg&) const {
         void(static_cast<typename TArg::type>(typename type<typename TArg::type>::template not_allowed_by<T>{}));
-        return false;
+        return {};
     }
 };
 
-template<class T = aux::never<_>>
+template<class T = aux::never<_>, std::enable_if_t<std::is_base_of<type_op, T>{}, int> = 0>
 inline auto constructible(const T& = {}) {
 	return constructible_impl<T>{};
+}
+
+template<class T = aux::never<_>, std::enable_if_t<!std::is_base_of<type_op, T>{}, int> = 0>
+inline auto constructible(const T& = {}) {
+	return constructible_impl<or_<T>>{};
 }
 
 }}} // boost::di::policies

@@ -994,6 +994,7 @@ test named_parameters_with_shared_scope = [] {
 };
 
 static auto called = 0;
+
 template<class>
 class config : public di::config<> {
 public:

@@ -110,6 +110,9 @@ class mocks_provider : public di::config<> {
             return reinterpret_cast<T*>(new mock<T>{expectations_});
         }
 
+        template<class, class T, class, class TInitialization, class TMemory, class... TArgs>
+        T* get_(const TInitialization&, const TMemory&, TArgs&&...) const noexcept;
+
         const expectations& expectations_;
     };
 

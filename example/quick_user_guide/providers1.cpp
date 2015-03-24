@@ -22,6 +22,9 @@ public:
     auto get(const TInit&, const TMemory&, TArgs&&... args) const noexcept {
         return new (std::nothrow) T{std::forward<TArgs>(args)...};
     }
+
+    template<class, class T, class, class TInitialization, class TMemory, class... TArgs>
+    T* get_(const TInitialization&, const TMemory&, TArgs&&...) const noexcept;
 };
 
 template<class>

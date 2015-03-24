@@ -42,6 +42,10 @@ struct custom_provider {
             , TArgs&&... args) const {
         return new T{std::forward<TArgs>(args)...};
     }
+
+    template<class, class T, class, class TInitialization, class TMemory, class... TArgs>
+    std::conditional_t<std::is_same<TMemory, di::type_traits::stack>{}, T, T*>
+    get_(const TInitialization&, const TMemory&, TArgs&&...) const noexcept;
 };
 
 /*<override `di` provider configuration>*/

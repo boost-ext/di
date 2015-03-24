@@ -14,8 +14,8 @@ struct impl : i { };
 struct name { };
 
 test bindings_types = [] {
-    expect(std::is_same<core::dependency<scopes::deduce, int>, decltype(bind<int>)>{});
-    expect(std::is_same<core::dependency<scopes::deduce, i, impl>, decltype(bind<i, impl>)>{});
+    expect(std::is_same<core::bind<int, int>, decltype(bind<int>)>{});
+    expect(std::is_same<core::bind<i, impl>, decltype(bind<i, impl>)>{});
     expect(std::is_same<scopes::session<name>, decltype(session(name{}))>{});
     expect(std::is_same<scopes::session_entry<name>, decltype(session_entry(name{}))>{});
     expect(std::is_same<scopes::session_exit<name>, decltype(session_exit(name{}))>{});

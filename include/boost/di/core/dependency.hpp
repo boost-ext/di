@@ -89,7 +89,8 @@ public:
 
     template<class T>
     auto named(const T&) const noexcept {
-        return typename bind<TExpected, TGiven>::template named_<T>{*this};
+        //return typename bind<TExpected, TGiven>::template named_<T>{*this};
+        return dependency<TScope, TExpected, TGiven, T>{*this};
     }
 
     template<class T>
