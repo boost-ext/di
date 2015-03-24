@@ -9,8 +9,8 @@
 
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
-#include "boost/di/core/any_type.hpp"
 #include "boost/di/inject.hpp"
+#include "boost/di/fwd.hpp"
 
 namespace boost { namespace di { namespace type_traits {
 
@@ -43,10 +43,8 @@ template<
       >
 { };
 
-template<
-    template<class...> class TIsConstructible
-  , class T
-> struct ctor_impl<TIsConstructible, T, std::index_sequence<>>
+template<template<class...> class TIsConstructible, class T>
+struct ctor_impl<TIsConstructible, T, std::index_sequence<>>
     : aux::type_list<>
 { };
 

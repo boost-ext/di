@@ -9,6 +9,7 @@
 
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
+//#include "boost/di/core/any_type.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 
 namespace boost { namespace di {
@@ -43,14 +44,17 @@ struct is_not_bound {
     const;
 };};};
 
+template<class T, class TParent>
+using is_not_same = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
+
 template<class TParent>
 struct type_ {
-    template<class T, class = core::is_not_same<T, TParent>>
+    template<class T, class = is_not_same<T, TParent>>
     constexpr operator T(){
         return {};
     }
 
-    template<class T, class = core::is_not_same<T, TParent>>
+    template<class T, class = is_not_same<T, TParent>>
     constexpr operator T&() const{
         return
             constraint_not_satisfied_for
@@ -90,15 +94,10 @@ struct args<type_traits::direct, TDummy> {
         return impl<T>();
     }
 
-    template<class Q>//, std::enable_if_t<std::is_constructible<Q, TCtor...>{}, int> = 0>
-    Q* impl() const {
-        return new Q{typename Any<Q, TCtor>::type{}...};
+    template<class T_>
+    T_* impl() const {
+        return new T{typename Any<T_, TCtor>::type{}...};
     }
-
-    //template<class Q, std::enable_if_t<!std::is_constructible<Q, TCtor...>{}, int> = 0>
-    //Q* impl() const {
-        //return nullptr;
-    //}
 };
 
 template<class TDummy>
@@ -107,13 +106,13 @@ struct args<type_traits::uniform, TDummy> {
         return impl<T>();
     }
 
-    template<class Q, std::enable_if_t<aux::is_braces_constructible<Q, TCtor...>{}, int> = 0>
-    Q* impl() const {
-        return new Q{typename Any<Q, TCtor>::type{}...};
+    template<class T_, std::enable_if_t<aux::is_braces_constructible<T_, TCtor...>{}, int> = 0>
+    T_* impl() const {
+        return new T_{typename Any<T_, TCtor>::type{}...};
     }
 
-    template<class Q, std::enable_if_t<!aux::is_braces_constructible<Q, TCtor...>{}, int> = 0>
-    Q* impl() const {
+    template<class T_, std::enable_if_t<!aux::is_braces_constructible<T_, TCtor...>{}, int> = 0>
+    T_* impl() const {
         return nullptr;
     }
 };
@@ -220,6 +219,16 @@ constexpr auto creatable() {
 template<class TInitialization, class TName, class T, class... Ts>
 constexpr T creatable_error() {
     return creatable_error_impl<TInitialization, TName, T, aux::type_list<Ts...>>{};
+}
+
+auto creatable_impl_(...) -> std::false_type;
+
+template<class T, class B, class N, class TIsRoot>
+auto creatable_impl_(T&& t, B&&, N&&, TIsRoot&&) -> aux::is_valid_expr<decltype(t.template create_impl_<B, N, TIsRoot>())>;
+
+template<class T, class B, class N = no_name, class TIsRoot = std::false_type>
+constexpr auto creatable_() {
+    return decltype(creatable_impl_(std::declval<T>(), std::declval<B>(), std::declval<N>(), std::declval<TIsRoot>())){};
 }
 
 }}} // boost::di::concepts

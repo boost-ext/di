@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include "boost/di/providers/heap.hpp"
+#include "boost/di/type_traits/memory_traits.hpp"
 
 namespace boost { namespace di { namespace providers {
 

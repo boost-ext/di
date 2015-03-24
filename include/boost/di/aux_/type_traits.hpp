@@ -137,6 +137,13 @@ using decay =
 template<class T>
 using decay_t = typename decay<T>::type;
 
+template<class T1, class T2>
+struct is_same_or_base_of {
+    static constexpr auto value =
+        std::is_same<aux::decay_t<T1>, aux::decay_t<T2>>::value ||
+        std::is_base_of<aux::decay_t<T2>, aux::decay_t<T1>>::value;
+};
+
 template<class T>
 struct function_traits
     : function_traits<decltype(&T::operator())>

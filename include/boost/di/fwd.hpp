@@ -8,6 +8,11 @@
 #define BOOST_DI_FWD_HPP
 
 namespace boost { namespace di {
+namespace aux { struct none_t; };
+namespace core {
+template<class = void, class = aux::none_t, class = std::false_type>
+struct any_type;
+} // core
 namespace providers {
 class heap;
 class stack_over_heap;

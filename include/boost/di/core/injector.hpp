@@ -152,12 +152,12 @@ public:
            call<T, TName, TIsRoot>(((TConfig<injector>&)*this).policies(), std::declval<TDependency>(), TCtor{})){}
     >;
 
-    template<class T, REQUIRES<creatable_<injector, T, no_name, is_root_t>()> = 0>
+    template<class T, REQUIRES<concepts::creatable_<injector, T, no_name, is_root_t>()> = 0>
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }
 
-    template<class T, REQUIRES<!creatable_<injector, T, no_name, is_root_t>()> = 0>
+    template<class T, REQUIRES<!concepts::creatable_<injector, T, no_name, is_root_t>()> = 0>
     BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
     T create() const {
         return create_impl<T, no_name, is_root_t>();

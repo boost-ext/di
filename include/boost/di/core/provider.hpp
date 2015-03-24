@@ -10,6 +10,7 @@
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/core/any_type.hpp"
+#include "boost/di/concepts/creatable.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 
@@ -36,7 +37,7 @@ template<
 > {
     template<class T>
     struct get_impl_ {
-        static std::conditional_t<creatable_<TInjector, T>(), T, void> impl();
+        static std::conditional_t<concepts::creatable_<TInjector, T>(), T, void> impl();
     };
 
     template<class... Ts>
@@ -46,7 +47,7 @@ template<
 
     template<class TName_, class T>
     struct get_impl_<type_traits::named<TName_, T>> {
-        static std::conditional_t<creatable_<TInjector, T, TName_>(), T, void> impl();
+        static std::conditional_t<concepts::creatable_<TInjector, T, TName_>(), T, void> impl();
     };
 
     template<class TMemory = type_traits::heap>

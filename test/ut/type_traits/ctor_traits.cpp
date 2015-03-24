@@ -6,6 +6,7 @@
 //
 #include <type_traits>
 #include "boost/di/type_traits/ctor_traits.hpp"
+#include "boost/di/core/any_type.hpp"
 
 namespace boost { namespace di {
 
