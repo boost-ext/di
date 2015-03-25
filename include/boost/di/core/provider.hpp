@@ -38,7 +38,7 @@ template<
     template<class TMemory, class... Ts>
     static constexpr auto is_creatable() {
         using provider_t = decltype(injector_.provider());
-        return provider_t::template is_creatable<TGiven, TInitialization, TMemory, Ts...>();
+        return provider_t::template is_creatable<TGiven, Ts...>(TInitialization{}, TMemory{});
     }
 
     template<class T>

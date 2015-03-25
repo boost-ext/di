@@ -29,8 +29,8 @@ struct example {
 
 /*<define `custom provider`>*/
 struct custom_provider {
-    template<class...>
-    static constexpr auto is_creatable() {
+    template<class..., class TInitialization, class TMemory>
+    static constexpr auto is_creatable(const TInitialization&, const TMemory&) {
         return true;
     }
 

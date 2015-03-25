@@ -206,13 +206,14 @@ struct creatable_error_impl<TInitialization, TName, T, aux::type_list<TCtor...>>
       >
 { };
 
-template<class TInitialization, class T, class... Ts>
-constexpr auto creatable() {
-    return std::conditional_t<
-        std::is_same<TInitialization, type_traits::uniform>{}
-      , aux::is_braces_constructible<T, Ts...>
-      , std::is_constructible<T, Ts...>
-    >{};
+template<class T, class... Ts>
+constexpr auto creatable(const type_traits::direct&) {
+    return std::is_constructible<T, Ts...>{};
+}
+
+template<class T, class... Ts>
+constexpr auto creatable(const type_traits::uniform&) {
+    return aux::is_braces_constructible<T, Ts...>{};
 }
 
 template<class TInitialization, class TName, class T, class... Ts>

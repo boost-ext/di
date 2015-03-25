@@ -13,8 +13,8 @@ auto called = 0;
 
 class custom_provider {
 public:
-    template<class...>
-    static constexpr auto is_creatable() {
+    template<class..., class TInitialization, class TMemory>
+    static constexpr auto is_creatable(const TInitialization&, const TMemory&) {
         return true;
     }
 

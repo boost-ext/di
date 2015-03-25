@@ -720,7 +720,8 @@ public:
     class scope {
     public:
         template<class, class TProvider>
-        auto create_(const TProvider& provider) -> decltype(wrappers::shared<T>{std::shared_ptr<T>{provider.get_()}});
+        auto create_(const TProvider& provider)
+            -> decltype(wrappers::shared<T>{std::shared_ptr<T>{provider.get_()}});
 
         template<class, class TProvider>
         auto create(const TProvider& provider) {
@@ -1837,13 +1838,14 @@ struct creatable_error_impl<TInitialization, TName, T, aux::type_list<TCtor...>>
       >
 { };
 
-template<class TInitialization, class T, class... Ts>
-constexpr auto creatable() {
-    return std::conditional_t<
-        std::is_same<TInitialization, type_traits::uniform>{}
-      , aux::is_braces_constructible<T, Ts...>
-      , std::is_constructible<T, Ts...>
-    >{};
+template<class T, class... Ts>
+constexpr auto creatable(const type_traits::direct&) {
+    return std::is_constructible<T, Ts...>{};
+}
+
+template<class T, class... Ts>
+constexpr auto creatable(const type_traits::uniform&) {
+    return aux::is_braces_constructible<T, Ts...>{};
 }
 
 template<class TInitialization, class TName, class T, class... Ts>
@@ -1872,9 +1874,9 @@ namespace boost { namespace di { namespace providers {
 
 class stack_over_heap {
 public:
-    template<class T, class TInitialization, class, class... TArgs>
-    static constexpr auto is_creatable() {
-        return concepts::creatable<TInitialization, T, TArgs...>();
+    template<class T, class... TArgs, class TInitialization, class TMemory>
+    static constexpr auto is_creatable(const TInitialization& init, const TMemory&) {
+        return concepts::creatable<T, TArgs...>(init);
     }
 
     template<class, class T, class... TArgs>
@@ -1909,7 +1911,6 @@ public:
 }}} // boost::di::providers
 
 #endif
-
 
 #ifndef BOOST_DI_CONFIG_HPP
 #define BOOST_DI_CONFIG_HPP
@@ -1973,7 +1974,8 @@ public:
         }
 
         template<class, class TProvider>
-        auto create_(const TProvider& provider) -> decltype(wrappers::shared<T>{std::shared_ptr<T>{provider.get_()}});
+        auto create_(const TProvider& provider)
+            -> decltype(wrappers::shared<T>{std::shared_ptr<T>{provider.get_()}});
 
         template<class, class TProvider>
         auto create(const TProvider& provider) {
@@ -2006,7 +2008,8 @@ public:
     class scope {
     public:
         template<class, class TProvider>
-        auto create_(const TProvider& provider) -> decltype(wrappers::shared<T>{std::shared_ptr<T>{provider.get_()}});
+        auto create_(const TProvider& provider)
+            -> decltype(wrappers::shared<T>{std::shared_ptr<T>{provider.get_()}});
 
         template<class, class TProvider>
         auto create(const TProvider& provider) {
@@ -2256,7 +2259,7 @@ template<
     template<class TMemory, class... Ts>
     static constexpr auto is_creatable() {
         using provider_t = decltype(injector_.provider());
-        return provider_t::template is_creatable<TGiven, TInitialization, TMemory, Ts...>();
+        return provider_t::template is_creatable<TGiven, Ts...>(TInitialization{}, TMemory{});
     }
 
     template<class T>
@@ -2435,6 +2438,22 @@ public:
         , config{*this}
     { }
 
+    template<class T, REQUIRES<concepts::creatable_<injector, T, no_name, is_root_t>()> = 0>
+    T create() const {
+        return create_impl<T, no_name, is_root_t>();
+    }
+
+    template<class T, REQUIRES<!concepts::creatable_<injector, T, no_name, is_root_t>()> = 0>
+    BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
+    T create() const {
+        return create_impl<T, no_name, is_root_t>();
+    }
+
+    template<class TAction>
+    void call(const TAction& action) {
+        call_impl(action, deps{});
+    }
+
     template<
         class T
       , class TName = no_name
@@ -2456,22 +2475,6 @@ public:
        ), T>{} && decltype(policy<pool_t>::template
            call<T, TName, TIsRoot>(((TConfig<injector>&)*this).policies(), std::declval<TDependency>(), TCtor{})){}
     >;
-
-    template<class T, REQUIRES<concepts::creatable_<injector, T, no_name, is_root_t>()> = 0>
-    T create() const {
-        return create_impl<T, no_name, is_root_t>();
-    }
-
-    template<class T, REQUIRES<!concepts::creatable_<injector, T, no_name, is_root_t>()> = 0>
-    BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
-    T create() const {
-        return create_impl<T, no_name, is_root_t>();
-    }
-
-    template<class TAction>
-    void call(const TAction& action) {
-        call_impl(action, deps{});
-    }
 
 private:
     template<class T, class TName = no_name, class TIsRoot = std::false_type>

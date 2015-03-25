@@ -18,19 +18,19 @@ struct u {
 };
 
 test is_creatable = [] {
-    expect(creatable<type_traits::direct, int>());
-    expect(creatable<type_traits::uniform, int>());
+    expect(creatable<int>(type_traits::direct{}));
+    expect(creatable<int>(type_traits::uniform{}));
 
-    expect(creatable<type_traits::direct, d, int, double>());
-    expect(!creatable<type_traits::direct, d, int>());
-    expect(creatable<type_traits::uniform, d, int, double>());
-    expect(!creatable<type_traits::uniform, d, int>());
+    expect(creatable<d, int, double>(type_traits::direct{}));
+    expect(!creatable<d, int>(type_traits::direct{}));
+    expect(creatable<d, int, double>(type_traits::uniform{}));
+    expect(!creatable<d, int>(type_traits::uniform{}));
 
-    expect(!creatable<type_traits::direct, u, int, double>());
-    expect(creatable<type_traits::uniform, u, int, double>());
-    expect(creatable<type_traits::uniform, u, int>());
-    expect(creatable<type_traits::uniform, u>());
-    expect(!creatable<type_traits::uniform, u, float, short>());
+    expect(!creatable<u, int, double>(type_traits::direct{}));
+    expect(creatable<u, int, double>(type_traits::uniform{}));
+    expect(creatable<u, int>(type_traits::uniform{}));
+    expect(creatable<u>(type_traits::uniform{}));
+    expect(!creatable<u, float, short>(type_traits::uniform{}));
 };
 
 }}} // boost::di::concepts

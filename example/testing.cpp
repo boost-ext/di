@@ -108,8 +108,8 @@ class mocks_provider : public di::config<> {
             return reinterpret_cast<T*>(new mock<T>{expectations_});
         }
 
-        template<class...>
-        static constexpr auto is_creatable() {
+        template<class..., class TInitialization, class TMemory>
+        static constexpr auto is_creatable(const TInitialization&, const TMemory&) {
             return true;
         }
 

@@ -14,9 +14,9 @@ namespace boost { namespace di { namespace providers {
 
 class heap {
 public:
-    template<class T, class TInitialization, class, class... TArgs>
-    static constexpr auto is_creatable() {
-        return concepts::creatable<TInitialization, T, TArgs...>();
+    template<class T, class TInitialization, class TMemory, class... TArgs>
+    static constexpr auto is_creatable(const TInitialization& init, const TMemory&) {
+        return concepts::creatable<T, TArgs...>(init);
     }
 
     template<class, class T, class TMemory, class... TArgs>
