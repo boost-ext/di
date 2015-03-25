@@ -55,7 +55,12 @@ struct example {
 
 /*<define `pool provider`>*/
 struct pool_provider {
-    template<class I, class T, class, class TInitialization, class TMemory, class... TArgs>
+    template<class...>
+    static constexpr auto is_creatable() {
+        return true;
+    }
+
+    template<class I, class T, class TInitialization, class TMemory, class... TArgs>
     auto get(const TInitialization& // direct/uniform
            , const TMemory& // stack/heap
            , TArgs&&... args) const {
@@ -64,10 +69,6 @@ struct pool_provider {
             new (memory) T(std::forward<TArgs>(args)...)
         };
     }
-
-    template<class I, class T, class, class TInitialization, class TMemory, class... TArgs>
-    std::unique_ptr<T, pool_deleter<I>>
-    get_(const TInitialization&, const TMemory&, TArgs&&...) const noexcept;
 };
 
 /*<override `di` provider configuration>*/

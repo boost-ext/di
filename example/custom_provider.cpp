@@ -29,23 +29,24 @@ struct example {
 
 /*<define `custom provider`>*/
 struct custom_provider {
-    template<class, class T, class, class TMemory, class... TArgs>
+    template<class...>
+    static constexpr auto is_creatable() {
+        return true;
+    }
+
+    template<class, class T, class TMemory, class... TArgs>
     auto get(const di::type_traits::direct&
             , const TMemory& // stack/heap
             , TArgs&&... args) const {
         return new T(std::forward<TArgs>(args)...);
     }
 
-    template<class, class T, class, class TMemory, class... TArgs>
+    template<class, class T, class TMemory, class... TArgs>
     auto get(const di::type_traits::uniform&
             , const TMemory& // stack/heap
             , TArgs&&... args) const {
         return new T{std::forward<TArgs>(args)...};
     }
-
-    template<class, class T, class, class TInitialization, class TMemory, class... TArgs>
-    std::conditional_t<std::is_same<TMemory, di::type_traits::stack>{}, T, T*>
-    get_(const TInitialization&, const TMemory&, TArgs&&...) const noexcept;
 };
 
 /*<override `di` provider configuration>*/
