@@ -1288,10 +1288,10 @@ struct deleter_provider {
         return i;
     }
 
-    template<class..., class TInitialization, class TMemory>
-    static constexpr auto is_creatable(const TInitialization&, const TMemory&) {
-        return true;
-    }
+    template<class...>
+    struct is_creatable {
+        static constexpr auto value = true;
+    };
 
     template<class I, class T, class TInitialization, class TMemory, class... TArgs>
     auto get(const TInitialization& // direct/uniform

@@ -13,10 +13,10 @@ auto called = 0;
 
 class custom_provider {
 public:
-    template<class..., class TInitialization, class TMemory>
-    static constexpr auto is_creatable(const TInitialization&, const TMemory&) {
-        return true;
-    }
+    template<class...>
+    struct is_creatable {
+        static constexpr auto value = true;
+    };
 
     template<class, class T,class TInitialization, class TMemory, class... TArgs>
     auto get(const TInitialization&, const TMemory&, TArgs&&... args) const {

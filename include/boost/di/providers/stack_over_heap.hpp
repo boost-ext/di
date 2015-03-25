@@ -15,10 +15,11 @@ namespace boost { namespace di { namespace providers {
 
 class stack_over_heap {
 public:
-    template<class T, class... TArgs, class TInitialization, class TMemory>
-    static constexpr auto is_creatable(const TInitialization& init, const TMemory&) {
-        return concepts::creatable<T, TArgs...>(init);
-    }
+    template<class TInitialization, class TMemory, class T, class... TArgs>
+    struct is_creatable {
+        static constexpr auto value =
+            concepts::creatable<TInitialization, T, TArgs...>::value;
+    };
 
     template<class, class T, class... TArgs>
     auto get(const type_traits::direct&

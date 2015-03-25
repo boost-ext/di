@@ -1838,15 +1838,15 @@ struct creatable_error_impl<TInitialization, TName, T, aux::type_list<TCtor...>>
       >
 { };
 
-template<class T, class... Ts>
-constexpr auto creatable(const type_traits::direct&) {
-    return std::is_constructible<T, Ts...>{};
-}
+template<class TInit, class T, class... Ts>
+struct creatable {
+    static constexpr auto value = std::is_constructible<T, Ts...>::value;
+};
 
 template<class T, class... Ts>
-constexpr auto creatable(const type_traits::uniform&) {
-    return aux::is_braces_constructible<T, Ts...>{};
-}
+struct creatable<type_traits::uniform, T, Ts...> {
+    static constexpr auto value = aux::is_braces_constructible<T, Ts...>::value;
+};
 
 template<class TInitialization, class TName, class T, class... Ts>
 constexpr T creatable_error() {
@@ -1874,10 +1874,11 @@ namespace boost { namespace di { namespace providers {
 
 class stack_over_heap {
 public:
-    template<class T, class... TArgs, class TInitialization, class TMemory>
-    static constexpr auto is_creatable(const TInitialization& init, const TMemory&) {
-        return concepts::creatable<T, TArgs...>(init);
-    }
+    template<class TInitialization, class TMemory, class T, class... TArgs>
+    struct is_creatable {
+        static constexpr auto value =
+            concepts::creatable<TInitialization, T, TArgs...>::value;
+    };
 
     template<class, class T, class... TArgs>
     auto get(const type_traits::direct&
@@ -2256,11 +2257,13 @@ template<
   , aux::pair<TInitialization, aux::type_list<TArgs...>>
   , TInjector
 > {
+    using provider_t = decltype(std::declval<TInjector>().provider());
+
     template<class TMemory, class... Ts>
-    static constexpr auto is_creatable() {
-        using provider_t = decltype(injector_.provider());
-        return provider_t::template is_creatable<TGiven, Ts...>(TInitialization{}, TMemory{});
-    }
+    struct is_creatable {
+        static constexpr auto value =
+            provider_t::template is_creatable<TInitialization, TMemory, TGiven, Ts...>::value;
+    };
 
     template<class T>
     struct get_arg_ {
@@ -2279,7 +2282,7 @@ template<
 
     template<class TMemory = type_traits::heap>
     auto get_(const TMemory& memory = {}) const -> std::enable_if_t<
-        is_creatable<TMemory, typename get_arg_<TArgs>::type...>()
+        is_creatable<TMemory, typename get_arg_<TArgs>::type...>::value
       , std::conditional_t<std::is_same<TMemory, type_traits::stack>{}, TGiven, TGiven*>
     >;
 
@@ -2288,7 +2291,7 @@ template<
         return get_impl(memory, get_arg(aux::type<TArgs>{})...);
     }
 
-    template<class TMemory, class... Ts, REQUIRES<is_creatable<TMemory, Ts...>()> = 0>
+    template<class TMemory, class... Ts, REQUIRES<is_creatable<TMemory, Ts...>::value> = 0>
     auto get_impl(const TMemory& memory, Ts&&... args) const {
         return injector_.provider().template get<TExpected, TGiven>(
             TInitialization{}
@@ -2297,7 +2300,7 @@ template<
         );
     };
 
-    template<class TMemory, class... Ts, REQUIRES<!is_creatable<TMemory, Ts...>()> = 0>
+    template<class TMemory, class... Ts, REQUIRES<!is_creatable<TMemory, Ts...>::value> = 0>
     auto get_impl(const TMemory& memory, Ts&&... args) const {
         return concepts::creatable_error<TInitialization, TName, TGiven*, Ts...>();
     };

@@ -206,15 +206,15 @@ struct creatable_error_impl<TInitialization, TName, T, aux::type_list<TCtor...>>
       >
 { };
 
-template<class T, class... Ts>
-constexpr auto creatable(const type_traits::direct&) {
-    return std::is_constructible<T, Ts...>{};
-}
+template<class TInit, class T, class... Ts>
+struct creatable {
+    static constexpr auto value = std::is_constructible<T, Ts...>::value;
+};
 
 template<class T, class... Ts>
-constexpr auto creatable(const type_traits::uniform&) {
-    return aux::is_braces_constructible<T, Ts...>{};
-}
+struct creatable<type_traits::uniform, T, Ts...> {
+    static constexpr auto value = aux::is_braces_constructible<T, Ts...>::value;
+};
 
 template<class TInitialization, class TName, class T, class... Ts>
 constexpr T creatable_error() {

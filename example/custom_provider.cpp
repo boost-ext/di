@@ -29,10 +29,10 @@ struct example {
 
 /*<define `custom provider`>*/
 struct custom_provider {
-    template<class..., class TInitialization, class TMemory>
-    static constexpr auto is_creatable(const TInitialization&, const TMemory&) {
-        return true;
-    }
+    template<class...>
+    struct is_creatable {
+        static constexpr auto value = true;
+    };
 
     template<class, class T, class TMemory, class... TArgs>
     auto get(const di::type_traits::direct&

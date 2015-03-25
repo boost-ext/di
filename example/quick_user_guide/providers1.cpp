@@ -12,10 +12,10 @@ namespace di = boost::di;
 
 class heap_no_throw {
 public:
-    template<class..., class TInitialization, class TMemory>
-    static constexpr auto is_creatable(const TInitialization&, const TMemory&) {
-        return true;
-    }
+    template<class...>
+    struct is_creatable {
+        static constexpr auto value = true;
+    };
 
     template<
       class // interface
