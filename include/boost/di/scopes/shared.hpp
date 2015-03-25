@@ -20,7 +20,8 @@ public:
     class scope {
     public:
         template<class, class TProvider>
-        auto create_(const TProvider& provider) -> decltype(wrappers::shared<T>{std::shared_ptr<T>{provider.get_()}});
+        auto create_(const TProvider& provider)
+            -> decltype(wrappers::shared<T>{std::shared_ptr<T>{provider.get_()}});
 
         template<class, class TProvider>
         auto create(const TProvider& provider) {
