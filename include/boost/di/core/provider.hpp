@@ -38,10 +38,7 @@ template<
     using provider_t = decltype(std::declval<TInjector>().provider());
 
     template<class TMemory, class... Ts>
-    struct is_creatable {
-        static constexpr auto value =
-            provider_t::template is_creatable<TInitialization, TMemory, TGiven, Ts...>::value;
-    };
+    using is_creatable = typename provider_t::template is_creatable<TInitialization, TMemory, TGiven, Ts...>;
 
     template<class T>
     struct get_arg_ {

@@ -109,9 +109,7 @@ class mocks_provider : public di::config<> {
         }
 
         template<class...>
-        struct is_creatable {
-            static constexpr auto value = true;
-        };
+        struct is_creatable : std::true_type { };
 
         const expectations& expectations_;
     };

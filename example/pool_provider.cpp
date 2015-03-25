@@ -56,9 +56,7 @@ struct example {
 /*<define `pool provider`>*/
 struct pool_provider {
     template<class...>
-    struct is_creatable {
-        static constexpr auto value = true;
-    };
+    struct is_creatable : std::true_type { };
 
     template<class I, class T, class TInitialization, class TMemory, class... TArgs>
     auto get(const TInitialization& // direct/uniform
