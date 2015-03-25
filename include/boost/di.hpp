@@ -1875,7 +1875,10 @@ namespace boost { namespace di { namespace providers {
 class stack_over_heap {
 public:
     template<class TInitialization, class TMemory, class T, class... TArgs>
-    using is_creatable = concepts::creatable<TInitialization, T, TArgs...>;
+    struct is_creatable {
+        static constexpr auto value =
+            concepts::creatable<TInitialization, T, TArgs...>::value;
+    };
 
     template<class, class T, class... TArgs>
     auto get(const type_traits::direct&
@@ -2257,7 +2260,10 @@ template<
     using provider_t = decltype(std::declval<TInjector>().provider());
 
     template<class TMemory, class... Ts>
-    using is_creatable = typename provider_t::template is_creatable<TInitialization, TMemory, TGiven, Ts...>;
+    struct is_creatable {
+        static constexpr auto value =
+            provider_t::template is_creatable<TInitialization, TMemory, TGiven, Ts...>::value;
+    };
 
     template<class T>
     struct get_arg_ {

@@ -13,7 +13,9 @@ namespace di = boost::di;
 class heap_no_throw {
 public:
     template<class...>
-    struct is_creatable : std::true_type { };
+    struct is_creatable {
+        static constexpr auto value = true;
+    };
 
     template<
       class // interface
