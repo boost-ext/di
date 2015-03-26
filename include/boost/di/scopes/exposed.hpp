@@ -20,21 +20,20 @@ public:
 
     template<class TExpected, class TGiven>
     class scope {
-        template<class T, class = void>
+        using type = std::conditional_t<
+            std::is_polymorphic<TExpected>::value
+          , TExpected*
+          , TExpected
+        >;
+
         struct iprovider {
             virtual ~iprovider() noexcept = default;
-            virtual T* get(const type_traits::heap& = {}) const noexcept = 0;
-            virtual T  get(const type_traits::stack&) const noexcept = 0;
-        };
-
-        template<class T>
-        struct iprovider<T, std::enable_if_t<!std::is_copy_constructible<T>{}>> {
-            virtual ~iprovider() noexcept = default;
-            virtual T* get(const type_traits::heap& = {}) const noexcept = 0;
+            virtual TExpected* get(const type_traits::heap& = {}) const noexcept = 0;
+            virtual type get(const type_traits::stack&) const noexcept = 0;
         };
 
         template<class TInjector>
-        class provider_impl : public iprovider<TExpected> {
+        class provider_impl : public iprovider {
         public:
             explicit provider_impl(const TInjector& injector)
                 : injector_(injector)
@@ -44,9 +43,8 @@ public:
                 return injector_.template create_impl<TExpected*>();
             }
 
-            std::conditional_t<std::is_copy_constructible<TExpected>{}, TExpected, void>
-            get(const type_traits::stack&) const noexcept { // non override
-                return injector_.template create_impl<TExpected>();
+            type get(const type_traits::stack&) const noexcept override {
+                return injector_.template create_impl<type>();
             }
 
         private:
@@ -68,7 +66,7 @@ public:
         }
 
     private:
-        std::shared_ptr<iprovider<TExpected>> provider_;
+        std::shared_ptr<iprovider> provider_;
         typename TScope::template scope<TExpected, TGiven> scope_;
     };
 };
