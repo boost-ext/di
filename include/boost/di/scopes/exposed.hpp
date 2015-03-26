@@ -35,7 +35,7 @@ public:
         template<class TInjector>
         class provider_impl : public iprovider {
         public:
-            explicit provider_impl(const TInjector& injector)
+            explicit provider_impl(const TInjector& injector) noexcept
                 : injector_(injector)
             { }
 
