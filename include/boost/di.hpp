@@ -1804,7 +1804,7 @@ using ctor_size_t = ctor_size<
 template<class TInitialization, class TName, class T, class... TCtor>
 struct creatable_error_impl<TInitialization, TName, T, aux::type_list<TCtor...>>
     : std::conditional_t<
-          std::is_polymorphic<aux::decay_t<T>>{}
+          std::is_abstract<aux::decay_t<T>>{}
         , std::conditional_t<std::is_same<TName, no_name>{}, typename polymorphic_type<aux::decay_t<T>>::is_not_bound, typename polymorphic_type<aux::decay_t<T>>::template named<TName>::is_not_bound>
         , std::conditional_t<
               ctor_size_t<T>{} == sizeof...(TCtor)
