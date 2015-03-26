@@ -21,7 +21,7 @@ public:
     template<class TExpected, class TGiven>
     class scope {
         using type = std::conditional_t<
-            std::is_polymorphic<TExpected>::value
+            std::is_copy_constructible<TExpected>{}
           , TExpected*
           , TExpected
         >;
