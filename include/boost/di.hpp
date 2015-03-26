@@ -1019,7 +1019,7 @@ public:
                 : injector_(injector)
             { }
 
-            TExpected* get(const type_traits::heap&) const noexcept { // non override
+            TExpected* get(const type_traits::heap&) const noexcept override {
                 return injector_.template create_impl<TExpected*>();
             }
 
