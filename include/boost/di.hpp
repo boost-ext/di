@@ -1000,9 +1000,9 @@ public:
     template<class TExpected, class TGiven>
     class scope {
         using type = std::conditional_t<
-            std::is_polymorphic<TExpected>::value
-          , TExpected*
+            std::is_copy_constructible<TExpected>{}
           , TExpected
+          , TExpected*
         >;
 
         struct iprovider {
@@ -1014,7 +1014,7 @@ public:
         template<class TInjector>
         class provider_impl : public iprovider {
         public:
-            explicit provider_impl(const TInjector& injector)
+            explicit provider_impl(const TInjector& injector) noexcept
                 : injector_(injector)
             { }
 

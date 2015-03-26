@@ -22,8 +22,8 @@ public:
     class scope {
         using type = std::conditional_t<
             std::is_copy_constructible<TExpected>{}
-          , TExpected*
           , TExpected
+          , TExpected*
         >;
 
         struct iprovider {
