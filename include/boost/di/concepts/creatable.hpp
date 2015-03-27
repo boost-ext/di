@@ -65,14 +65,24 @@ struct in_type {
     const;
 };
 
-template<class T, class... TCtor>
-struct type {
+template<class...>
+struct type;
+
+template<class T, class>
+struct in {
+    using type = in_type<T>;
+};
+
+template<class TParent, class TName, class T>
+struct in<TParent, type_traits::named<TName, T>> {
+    using type = in_type<TParent>;
+};
+
+template<class T, class TInitialization, class... TArgs, class... TCtor>
+struct type<T, aux::pair<TInitialization, aux::type_list<TArgs...>>, TCtor...> {
 
 template<class, class = void>
 struct args;
-
-template<class _, class>
-using in = in_type<_>;
 
 template<class TDummy>
 struct args<type_traits::direct, TDummy> {
@@ -82,7 +92,7 @@ struct args<type_traits::direct, TDummy> {
 
     template<class T_>
     T_* impl() const {
-        return new T{in<T_, TCtor>{}...};
+        return new T{typename in<T_, TArgs>::type{}...};
     }
 };
 
@@ -94,7 +104,7 @@ struct args<type_traits::uniform, TDummy> {
 
     template<class T_, std::enable_if_t<aux::is_braces_constructible<T_, TCtor...>{}, int> = 0>
     T_* impl() const {
-        return new T_{in<T_, TCtor>{}...};
+        return new T_{typename in<T_, TArgs>::type{}...};
     }
 
     template<class T_, std::enable_if_t<!aux::is_braces_constructible<T_, TCtor...>{}, int> = 0>
@@ -179,7 +189,7 @@ struct creatable_error_impl<TInitialization, TName, T, aux::type_list<TCtor...>>
                   !sizeof...(TCtor)
                 , typename number_of_constructor_arguments_is_out_of_range_for<aux::decay_t<T>>::
                       template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
-                , typename type<aux::decay_t<T>, TCtor...>::template args<TInitialization>
+                , typename type<aux::decay_t<T>, typename type_traits::ctor_traits<aux::decay_t<T>>::type, TCtor...>::template args<TInitialization>
               >
             , typename number_of_constructor_arguments_doesnt_match_for<aux::decay_t<T>>::
                   template given<sizeof...(TCtor)>::
