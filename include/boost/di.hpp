@@ -1631,16 +1631,16 @@ namespace boost { namespace di {
 BOOST_DI_CFG_ERRORS_DESC_BEGIN
 
 template<class T>
-struct polymorphic_type {
+struct abstract_type {
 struct is_not_bound {
     constexpr operator T*() const {
+        using constraint_not_satisfied = is_not_bound;
         return
-            is_not_satisfied
-        ();
+            constraint_not_satisfied{}.error();
     }
 
     constexpr T*
-    is_not_satisfied(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?")
+    error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?")
     const;
 };
 
@@ -1648,13 +1648,13 @@ template<class TName>
 struct named {
 struct is_not_bound {
     constexpr operator T*() const {
+        using constraint_not_satisfied = is_not_bound;
         return
-            is_not_satisfied
-        ();
+            constraint_not_satisfied{}.error();
     }
 
     constexpr T*
-    is_not_satisfied(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>.named(name)'?")
+    error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>.named(name)'?")
     const;
 };};};
 
@@ -1664,12 +1664,12 @@ struct when_creating {
     struct type {
         template<class TName>
         struct named {
-            static constexpr T
-            is_not_satisfied(_ = "reference type not bound, did you forget to add `di::bind<T>.named(name).to([c]ref(value))`, notice that `di::bind<T>.named(name).to(value)` won't work!");
+            constexpr T
+            error(_ = "reference type not bound, did you forget to add `di::bind<T>.named(name).to([c]ref(value))`, notice that `di::bind<T>.named(name).to(value)` won't work!");
         };
 
-        static constexpr T
-        is_not_satisfied(_ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!");
+        constexpr T
+        error(_ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!");
     };
 };
 
@@ -1685,10 +1685,9 @@ struct in_type {
 
     template<class T, class = is_not_same<T>>
     constexpr operator T&() const {
+        using constraint_not_satisfied = typename when_creating<TParent>::template type<T&>::template named<TName>;
         return
-            when_creating<TParent>::template type<T&>::template named<TName>::
-            is_not_satisfied
-            ();
+            constraint_not_satisfied{}.error();
     }
 };
 
@@ -1704,10 +1703,9 @@ struct in_type<TParent, no_name> {
 
     template<class T, class = is_not_same<T>>
     constexpr operator T&() const {
+        using constraint_not_satisfied = typename when_creating<TParent>::template type<T&>;
         return
-            when_creating<TParent>::template type<T&>::
-            is_not_satisfied
-            ();
+            constraint_not_satisfied{}.error();
     }
 };
 
@@ -1737,7 +1735,7 @@ struct args<type_traits::direct, TDummy> {
     }
 
     template<class T_>
-    T_* impl() const {
+    auto impl() const {
         return new T{typename in<T_, TArgs>::type{}...};
     }
 };
@@ -1749,12 +1747,12 @@ struct args<type_traits::uniform, TDummy> {
     }
 
     template<class T_, std::enable_if_t<aux::is_braces_constructible<T_, TCtor...>{}, int> = 0>
-    T_* impl() const {
+    auto impl() const {
         return new T_{typename in<T_, TArgs>::type{}...};
     }
 
     template<class T_, std::enable_if_t<!aux::is_braces_constructible<T_, TCtor...>{}, int> = 0>
-    T_* impl() const {
+    auto impl() const {
         return nullptr;
     }
 };
@@ -1762,13 +1760,13 @@ struct args<type_traits::uniform, TDummy> {
 template<class To>
 struct is_not_convertible_to {
     constexpr operator To() const {
+        using constraint_not_satisfied = is_not_convertible_to;
         return
-            is_not_satisfied
-        ();
+            constraint_not_satisfied{}.error();
     }
 
     constexpr To
-    is_not_satisfied(_ = "type not convertible, missing 'di::bind<type>.to(ref(value))'")
+    error(_ = "type not convertible, missing 'di::bind<type>.to(ref(value))'")
     const;
 };};
 
@@ -1777,13 +1775,13 @@ struct number_of_constructor_arguments_doesnt_match_for {
 template<int Given> struct given {
 template<int Expected> struct expected {
     constexpr operator T*() const {
+        using constraint_not_satisfied = expected;
         return
-            is_not_satisfied
-        ();
+            constraint_not_satisfied{}.error();
     }
 
     constexpr T*
-    is_not_satisfied(_ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits")
+    error(_ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits")
     const;
 };};};
 
@@ -1791,13 +1789,13 @@ template<class T>
 struct number_of_constructor_arguments_is_out_of_range_for {
 template<int TMax> struct max {
     constexpr operator T*() const {
+        using constraint_not_satisfied = max;
         return
-            is_not_satisfied
-        ();
+            constraint_not_satisfied{}.error();
     }
 
     constexpr T*
-    is_not_satisfied(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters")
+    error(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters")
     const;
 };};
 
@@ -1828,7 +1826,7 @@ template<class TInitialization, class TName, class T, class... TCtor>
 struct creatable_error_impl<TInitialization, TName, T, aux::type_list<TCtor...>>
     : std::conditional_t<
           std::is_abstract<aux::decay_t<T>>{}
-        , std::conditional_t<std::is_same<TName, no_name>{}, typename polymorphic_type<aux::decay_t<T>>::is_not_bound, typename polymorphic_type<aux::decay_t<T>>::template named<TName>::is_not_bound>
+        , std::conditional_t<std::is_same<TName, no_name>{}, typename abstract_type<aux::decay_t<T>>::is_not_bound, typename abstract_type<aux::decay_t<T>>::template named<TName>::is_not_bound>
         , std::conditional_t<
               ctor_size_t<T>{} == sizeof...(TCtor)
             , std::conditional_t<
