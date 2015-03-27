@@ -20,12 +20,12 @@ struct polymorphic_type {
 struct is_not_bound {
     constexpr operator T*() const {
         return
-            is_not_satisfied
+            error
         ();
     }
 
     constexpr T*
-    is_not_satisfied(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?")
+    error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?")
     const;
 };
 
@@ -34,12 +34,12 @@ struct named {
 struct is_not_bound {
     constexpr operator T*() const {
         return
-            is_not_satisfied
+            error
         ();
     }
 
     constexpr T*
-    is_not_satisfied(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>.named(name)'?")
+    error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>.named(name)'?")
     const;
 };};};
 
@@ -50,11 +50,11 @@ struct when_creating {
         template<class TName>
         struct named {
             constexpr T
-            is_not_satisfied(_ = "reference type not bound, did you forget to add `di::bind<T>.named(name).to([c]ref(value))`, notice that `di::bind<T>.named(name).to(value)` won't work!");
+            error(_ = "reference type not bound, did you forget to add `di::bind<T>.named(name).to([c]ref(value))`, notice that `di::bind<T>.named(name).to(value)` won't work!");
         };
 
         constexpr T
-        is_not_satisfied(_ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!");
+        error(_ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!");
     };
 };
 
@@ -70,11 +70,10 @@ struct in_type {
 
     template<class T, class = is_not_same<T>>
     constexpr operator T&() const {
-        using constraint = typename when_creating<TParent>::template type<T&>::template named<TName>;
+        using constraint_not_satisfied = typename when_creating<TParent>::template type<T&>::template named<TName>;
 
         return
-            constraint{}.is_not_satisfied
-            ();
+            constraint_not_satisfied{}.error();
     }
 };
 
@@ -90,11 +89,10 @@ struct in_type<TParent, no_name> {
 
     template<class T, class = is_not_same<T>>
     constexpr operator T&() const {
-        using constraint = typename when_creating<TParent>::template type<T&>;
+        using constraint_not_satisfied = typename when_creating<TParent>::template type<T&>;
 
         return
-            constraint{}.is_not_satisfied
-            ();
+            constraint_not_satisfied{}.error();
     }
 };
 
@@ -150,12 +148,12 @@ template<class To>
 struct is_not_convertible_to {
     constexpr operator To() const {
         return
-            is_not_satisfied
+            error
         ();
     }
 
     constexpr To
-    is_not_satisfied(_ = "type not convertible, missing 'di::bind<type>.to(ref(value))'")
+    error(_ = "type not convertible, missing 'di::bind<type>.to(ref(value))'")
     const;
 };};
 
@@ -165,12 +163,12 @@ template<int Given> struct given {
 template<int Expected> struct expected {
     constexpr operator T*() const {
         return
-            is_not_satisfied
+            error
         ();
     }
 
     constexpr T*
-    is_not_satisfied(_ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits")
+    error(_ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits")
     const;
 };};};
 
@@ -179,12 +177,12 @@ struct number_of_constructor_arguments_is_out_of_range_for {
 template<int TMax> struct max {
     constexpr operator T*() const {
         return
-            is_not_satisfied
+            error
         ();
     }
 
     constexpr T*
-    is_not_satisfied(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters")
+    error(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters")
     const;
 };};
 
