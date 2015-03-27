@@ -1662,14 +1662,14 @@ template<class T, class TParent>
 using is_not_same = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
 
 template<class TParent>
-struct type_ {
+struct in_type {
     template<class T, class = is_not_same<T, TParent>>
-    constexpr operator T(){
+    constexpr operator T() {
         return {};
     }
 
     template<class T, class = is_not_same<T, TParent>>
-    constexpr operator T&() const{
+    constexpr operator T&() const {
         return
             constraint_not_satisfied_for
         <T&>();
@@ -1680,27 +1680,14 @@ struct type_ {
     const;
 };
 
-template<class T, class>
-struct Any {
-    using type = type_<T>;
-};
-
 template<class T, class... TCtor>
 struct type {
-struct is_not_creatable {
-    constexpr operator T*() const {
-        return
-            constraint_not_satisfied
-        ();
-    }
-
-    constexpr T*
-    constraint_not_satisfied(_ = "type is not creatable'?")
-    const;
-};
 
 template<class, class = void>
 struct args;
+
+template<class _, class>
+using in = in_type<_>;
 
 template<class TDummy>
 struct args<type_traits::direct, TDummy> {
@@ -1710,7 +1697,7 @@ struct args<type_traits::direct, TDummy> {
 
     template<class T_>
     T_* impl() const {
-        return new T{typename Any<T_, TCtor>::type{}...};
+        return new T{in<T_, TCtor>{}...};
     }
 };
 
@@ -1722,7 +1709,7 @@ struct args<type_traits::uniform, TDummy> {
 
     template<class T_, std::enable_if_t<aux::is_braces_constructible<T_, TCtor...>{}, int> = 0>
     T_* impl() const {
-        return new T_{typename Any<T_, TCtor>::type{}...};
+        return new T_{in<T_, TCtor>{}...};
     }
 
     template<class T_, std::enable_if_t<!aux::is_braces_constructible<T_, TCtor...>{}, int> = 0>
@@ -1772,11 +1759,6 @@ template<int TMax> struct max {
     constraint_not_satisfied(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters")
     const;
 };};
-
-template<class>
-struct allocating_an_object_of_abastract_class_type {
-    struct has_unimplemented_pure_virtual_methods { };
-};
 
 BOOST_DI_CFG_ERRORS_DESC_END
 
