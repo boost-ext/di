@@ -49,11 +49,11 @@ struct when_creating {
     struct type {
         template<class TName>
         struct named {
-            static constexpr T
+            constexpr T
             is_not_satisfied(_ = "reference type not bound, did you forget to add `di::bind<T>.named(name).to([c]ref(value))`, notice that `di::bind<T>.named(name).to(value)` won't work!");
         };
 
-        static constexpr T
+        constexpr T
         is_not_satisfied(_ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!");
     };
 };
@@ -70,9 +70,10 @@ struct in_type {
 
     template<class T, class = is_not_same<T>>
     constexpr operator T&() const {
+        using constraint = typename when_creating<TParent>::template type<T&>::template named<TName>;
+
         return
-            when_creating<TParent>::template type<T&>::template named<TName>::
-            is_not_satisfied
+            constraint{}.is_not_satisfied
             ();
     }
 };
@@ -89,9 +90,10 @@ struct in_type<TParent, no_name> {
 
     template<class T, class = is_not_same<T>>
     constexpr operator T&() const {
+        using constraint = typename when_creating<TParent>::template type<T&>;
+
         return
-            when_creating<TParent>::template type<T&>::
-            is_not_satisfied
+            constraint{}.is_not_satisfied
             ();
     }
 };
