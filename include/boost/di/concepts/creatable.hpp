@@ -20,12 +20,12 @@ struct polymorphic_type {
 struct is_not_bound {
     constexpr operator T*() const {
         return
-            constraint_not_satisfied
+            is_not_satisfied
         ();
     }
 
     constexpr T*
-    constraint_not_satisfied(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?")
+    is_not_satisfied(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?")
     const;
 };
 
@@ -34,16 +34,31 @@ struct named {
 struct is_not_bound {
     constexpr operator T*() const {
         return
-            constraint_not_satisfied
+            is_not_satisfied
         ();
     }
 
     constexpr T*
-    constraint_not_satisfied(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>.named(name)'?")
+    is_not_satisfied(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>.named(name)'?")
     const;
 };};};
 
 template<class TParent>
+struct when_creating {
+    template<class T>
+    struct type {
+        template<class TName>
+        struct named {
+            static constexpr T
+            is_not_satisfied(_ = "reference type not bound, did you forget to add `di::bind<T>.named(name).to([c]ref(value))`, notice that `di::bind<T>.named(name).to(value)` won't work!");
+        };
+
+        static constexpr T
+        is_not_satisfied(_ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!");
+    };
+};
+
+template<class TParent, class TName = no_name>
 struct in_type {
     template<class T>
     using is_not_same = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
@@ -56,13 +71,29 @@ struct in_type {
     template<class T, class = is_not_same<T>>
     constexpr operator T&() const {
         return
-            constraint_not_satisfied_for
-        <T&>();
+            when_creating<TParent>::template type<T&>::template named<TName>::
+            is_not_satisfied
+            ();
+    }
+};
+
+template<class TParent>
+struct in_type<TParent, no_name> {
+    template<class T>
+    using is_not_same = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
+
+    template<class T, class = is_not_same<T>>
+    constexpr operator T() {
+        return {};
     }
 
-    template<class T> constexpr T
-    constraint_not_satisfied_for(_ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!")
-    const;
+    template<class T, class = is_not_same<T>>
+    constexpr operator T&() const {
+        return
+            when_creating<TParent>::template type<T&>::
+            is_not_satisfied
+            ();
+    }
 };
 
 template<class...>
@@ -75,7 +106,7 @@ struct in {
 
 template<class TParent, class TName, class T>
 struct in<TParent, type_traits::named<TName, T>> {
-    using type = in_type<TParent>;
+    using type = in_type<TParent, TName>;
 };
 
 template<class T, class TInitialization, class... TArgs, class... TCtor>
@@ -117,12 +148,12 @@ template<class To>
 struct is_not_convertible_to {
     constexpr operator To() const {
         return
-            constraint_not_satisfied
+            is_not_satisfied
         ();
     }
 
     constexpr To
-    constraint_not_satisfied(_ = "type not convertible, missing 'di::bind<type>.to(ref(value))'")
+    is_not_satisfied(_ = "type not convertible, missing 'di::bind<type>.to(ref(value))'")
     const;
 };};
 
@@ -132,12 +163,12 @@ template<int Given> struct given {
 template<int Expected> struct expected {
     constexpr operator T*() const {
         return
-            constraint_not_satisfied
+            is_not_satisfied
         ();
     }
 
     constexpr T*
-    constraint_not_satisfied(_ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits")
+    is_not_satisfied(_ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits")
     const;
 };};};
 
@@ -146,12 +177,12 @@ struct number_of_constructor_arguments_is_out_of_range_for {
 template<int TMax> struct max {
     constexpr operator T*() const {
         return
-            constraint_not_satisfied
+            is_not_satisfied
         ();
     }
 
     constexpr T*
-    constraint_not_satisfied(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters")
+    is_not_satisfied(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters")
     const;
 };};
 
