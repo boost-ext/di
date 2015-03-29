@@ -18,25 +18,16 @@
 #include "boost/di/core/wrapper.hpp"
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
+#include "boost/di/type_traits/config_traits.hpp"
 #include "boost/di/concepts/creatable.hpp"
 
 namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_METHOD(call, call);
 
-template<class TConfig, class>
-struct config_traits {
-    using type = TConfig;
-};
-
-template<template<class> class TConfig, class T, class TInjector>
-struct config_traits<TConfig<T>, TInjector> {
-    using type = TConfig<TInjector>;
-};
-
 template<class TConfig, class... TDeps>
 class injector : public pool<transform_t<TDeps...>>
-               , public config_traits<TConfig, injector<TConfig, TDeps...>>::type
+               , public type_traits::config_traits<TConfig, injector<TConfig, TDeps...>>::type
                , _ {
     template<class...> friend struct provider;
     template<class, class, class> friend struct any_type;
@@ -44,11 +35,11 @@ class injector : public pool<transform_t<TDeps...>>
 
     using pool_t = pool<transform_t<TDeps...>>;
     using is_root_t = std::true_type;
-    using config_t = typename config_traits<TConfig, injector>::type;
+    using config_t = typename type_traits::config_traits<TConfig, injector>::type;
     using config = std::conditional_t<
-        std::is_default_constructible<TConfig>{}
-      , _
+        std::is_constructible<TConfig, injector>{}
       , config_t
+      , _
     >;
 
 public:

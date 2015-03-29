@@ -2599,12 +2599,10 @@ struct wrapper<T, TWrapper, REQUIRES<!std::is_convertible<TWrapper, T>{}, void, 
 
 #endif
 
-#ifndef BOOST_DI_CORE_INJECTOR_HPP
-#define BOOST_DI_CORE_INJECTOR_HPP
+#ifndef BOOST_DI_TYPE_TRAITS_CONFIG_TRAITS_HPP
+#define BOOST_DI_TYPE_TRAITS_CONFIG_TRAITS_HPP
 
-namespace boost { namespace di { namespace core {
-
-BOOST_DI_HAS_METHOD(call, call);
+namespace boost { namespace di { namespace type_traits {
 
 template<class TConfig, class>
 struct config_traits {
@@ -2616,9 +2614,20 @@ struct config_traits<TConfig<T>, TInjector> {
     using type = TConfig<TInjector>;
 };
 
+}}} // boost::di::type_traits
+
+#endif
+
+#ifndef BOOST_DI_CORE_INJECTOR_HPP
+#define BOOST_DI_CORE_INJECTOR_HPP
+
+namespace boost { namespace di { namespace core {
+
+BOOST_DI_HAS_METHOD(call, call);
+
 template<class TConfig, class... TDeps>
 class injector : public pool<transform_t<TDeps...>>
-               , public config_traits<TConfig, injector<TConfig, TDeps...>>::type
+               , public type_traits::config_traits<TConfig, injector<TConfig, TDeps...>>::type
                , _ {
     template<class...> friend struct provider;
     template<class, class, class> friend struct any_type;
@@ -2626,11 +2635,11 @@ class injector : public pool<transform_t<TDeps...>>
 
     using pool_t = pool<transform_t<TDeps...>>;
     using is_root_t = std::true_type;
-    using config_t = typename config_traits<TConfig, injector>::type;
+    using config_t = typename type_traits::config_traits<TConfig, injector>::type;
     using config = std::conditional_t<
-        std::is_default_constructible<TConfig>{}
-      , _
+        std::is_constructible<TConfig, injector>{}
       , config_t
+      , _
     >;
 
 public:
@@ -2763,6 +2772,30 @@ public:
 
 #endif
 
+#ifndef BOOST_DI_CONCEPTS_PROVIDABLE_HPP
+#define BOOST_DI_CONCEPTS_PROVIDABLE_HPP
+
+namespace boost { namespace di { namespace concepts {
+
+std::false_type providable_impl(...);
+
+template<class T>
+auto providable_impl(T&& t) -> aux::is_valid_expr<
+    decltype(t.template get<_, _>(type_traits::direct{}, type_traits::heap{}))
+  , decltype(t.template get<_, _>(type_traits::direct{}, type_traits::heap{}, int{}))
+  , decltype(t.template get<_, _>(type_traits::uniform{}, type_traits::stack{}))
+  , decltype(t.template get<_, _>(type_traits::uniform{}, type_traits::stack{}, int{}))
+>;
+
+template<class T>
+constexpr auto providable() {
+    return decltype(providable_impl(std::declval<T>())){};
+}
+
+}}} // boost::di::concepts
+
+#endif
+
 #ifndef BOOST_DI_CONCEPTS_CONFIGURABLE_HPP
 #define BOOST_DI_CONCEPTS_CONFIGURABLE_HPP
 
@@ -2792,8 +2825,18 @@ auto configurable_error_impl(T&&) -> std::conditional_t<
 >;
 
 template<class T>
+constexpr auto configurable_(const std::true_type&) {
+    return providable<decltype(std::declval<T>().provider())>();
+}
+
+template<class T>
+constexpr auto configurable_(const std::false_type&) {
+    return false;
+}
+
+template<class T>
 constexpr auto configurable() {
-    return decltype(configurable_impl(std::declval<T>())){};
+    return configurable_<T>(decltype(configurable_impl(std::declval<T>())){});
 }
 
 template<class T>

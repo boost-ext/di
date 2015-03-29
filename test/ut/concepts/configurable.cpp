@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include "boost/di/concepts/configurable.hpp"
+#include "boost/di/providers/heap.hpp"
 
 namespace boost { namespace di { namespace concepts {
 
@@ -42,7 +43,7 @@ test inheritance = [] {
     class config_ {
     public:
         auto policies() const noexcept { return 0; }
-        auto provider() const noexcept { return 0; }
+        auto provider() const noexcept { return providers::heap{}; }
     };
     class config : public config_ { };
     static_expect(configurable<config>());
@@ -52,7 +53,7 @@ test all = [] {
     class config {
     public:
         auto policies() const noexcept { return 0; }
-        auto provider() const noexcept { return 0; }
+        auto provider() const noexcept { return providers::heap{}; }
     };
 
     static_expect(configurable<config>());

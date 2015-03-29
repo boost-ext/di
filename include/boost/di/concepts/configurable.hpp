@@ -8,6 +8,7 @@
 #define BOOST_DI_CONCEPTS_CONFIGURABLE_HPP
 
 #include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/concepts/providable.hpp"
 
 namespace boost { namespace di {
 
@@ -35,8 +36,18 @@ auto configurable_error_impl(T&&) -> std::conditional_t<
 >;
 
 template<class T>
+constexpr auto configurable_(const std::true_type&) {
+    return providable<decltype(std::declval<T>().provider())>();
+}
+
+template<class T>
+constexpr auto configurable_(const std::false_type&) {
+    return false;
+}
+
+template<class T>
 constexpr auto configurable() {
-    return decltype(configurable_impl(std::declval<T>())){};
+    return configurable_<T>(decltype(configurable_impl(std::declval<T>())){});
 }
 
 template<class T>
