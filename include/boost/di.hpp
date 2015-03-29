@@ -2630,7 +2630,9 @@ public:
 
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
-        : pool_t{init{}, pool<aux::type_list<std::remove_reference_t<decltype(arg(args))>...>>{arg(args)...}}
+        : pool_t{init{}, pool<aux::type_list<
+              std::remove_reference_t<decltype(arg(args, has_configure<decltype(args)>{}))>...>>{
+                  arg(args, has_configure<decltype(args)>{})...}}
         , config{*this}
     { }
 
@@ -2719,12 +2721,12 @@ private:
     }
 
     template<class T>
-    decltype(auto) arg(const T& arg, std::enable_if_t<!has_configure<T>{}>* = 0) noexcept {
+    decltype(auto) arg(const T& arg, const std::false_type&) noexcept {
         return arg;
     }
 
     template<class T>
-    decltype(auto) arg(const T& arg, std::enable_if_t<has_configure<T>{}>* = 0) noexcept {
+    decltype(auto) arg(const T& arg, const std::true_type&) noexcept {
         return arg.configure();
     }
 };
