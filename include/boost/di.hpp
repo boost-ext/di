@@ -2033,6 +2033,238 @@ public:
 
 #endif
 
+#ifndef BOOST_DI_CORE_TRANSFORM_HPP
+#define BOOST_DI_CORE_TRANSFORM_HPP
+
+namespace boost { namespace di { namespace core {
+
+template<class T, class = void>
+struct get_deps {
+    using type = typename T::deps;
+};
+
+template<class T>
+struct get_deps<T, std::enable_if_t<has_configure<T>{}>> {
+    using type = typename aux::function_traits<
+        decltype(&T::configure)
+    >::result_type::deps;
+};
+
+template<
+    class T
+  , class = typename is_injector<T>::type
+  , class = typename is_dependency<T>::type
+> struct add_type_list;
+
+template<class T, class TAny>
+struct add_type_list<T, std::true_type, TAny> {
+    using type = typename get_deps<T>::type;
+};
+
+template<class T>
+struct add_type_list<T, std::false_type, std::true_type> {
+    using type = aux::type_list<T>;
+};
+
+template<class T>
+struct add_type_list<T, std::false_type, std::false_type> {
+    using type = aux::type_list<dependency<scopes::exposed<>, T>>;
+};
+
+template<class... Ts>
+using transform_t = aux::join_t<typename add_type_list<Ts>::type...>;
+
+}}} // boost::di::core
+
+#endif
+
+#ifndef BOOST_DI_CONCEPTS_BOUNDABLE_HPP
+#define BOOST_DI_CONCEPTS_BOUNDABLE_HPP
+
+namespace boost { namespace di {
+
+template<class...>
+struct bound_type {
+    struct is_bound_more_than_once { };
+    struct is_neither_a_dependency_nor_an_injector { };
+
+    template<class>
+    struct is_not_base_of { };
+
+    template<class>
+    struct is_not_convertible_to { };
+};
+
+namespace concepts {
+
+template<class... TDeps>
+using is_supported =
+    std::is_same<
+       aux::bool_list<aux::always<TDeps>{}...>
+     , aux::bool_list<(core::is_injector<TDeps>{} || core::is_dependency<TDeps>{})...>
+    >;
+
+template<class...>
+struct get_not_supported;
+
+template<class T>
+struct get_not_supported<T> {
+    using type = T;
+};
+
+template<class T, class... TDeps>
+struct get_not_supported<T, TDeps...>
+    : std::conditional<
+          core::is_injector<T>{} || core::is_dependency<T>{}
+        , typename get_not_supported<TDeps...>::type
+        , T
+      >
+{ };
+
+template<class>
+struct is_unique;
+
+template<class T>
+using unique_dependency = aux::pair<
+    aux::pair<typename T::expected, typename T::name>
+  , std::integral_constant<bool, T::scope::priority>
+>;
+
+template<class... TDeps>
+struct is_unique<aux::type_list<TDeps...>>
+    : aux::is_unique<unique_dependency<TDeps>...>
+{ };
+
+template<class... TDeps>
+auto boundable_impl(aux::type_list<TDeps...>&&) ->
+    std::integral_constant<bool,
+        is_supported<TDeps...>{} && is_unique<core::transform_t<TDeps...>>{}
+    >;
+
+template<class I, class T>
+auto boundable_impl(I&&, T&&) ->
+    std::integral_constant<bool,
+        std::is_convertible<T, I>{} || std::is_base_of<I, T>{}
+    >;
+
+template<class T, class... Ts> // any_of
+auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
+    std::integral_constant<
+        bool
+      , !std::is_same<
+            aux::bool_list<aux::never<Ts>{}...>
+          , aux::bool_list<std::is_base_of<Ts, T>{}...>
+        >{}
+    >;
+
+template<class... TDeps> // di::injector
+auto boundable_impl(aux::type<TDeps...>&&) ->
+    is_unique<core::transform_t<TDeps...>>;
+
+std::false_type boundable_impl(...);
+
+template<class... TDeps>
+constexpr auto boundable() {
+    return decltype(boundable_impl(std::declval<TDeps>()...)){};
+}
+
+template<class>
+struct get_is_unique_error_impl
+    : std::true_type
+{ };
+
+template<class T, class TName, class TPriority>
+struct get_is_unique_error_impl<aux::not_unique<aux::pair<aux::pair<T, TName>, TPriority>>> {
+    using type = typename bound_type<T, TName>::is_bound_more_than_once;
+};
+
+template<class>
+struct get_is_unique_error;
+
+template<class... TDeps>
+struct get_is_unique_error<aux::type_list<TDeps...>>
+    : get_is_unique_error_impl<typename aux::is_unique<unique_dependency<TDeps>...>::type>
+{ };
+
+template<class... TDeps>
+using get_error =
+    std::conditional_t<
+        is_supported<TDeps...>{}
+      , typename get_is_unique_error<core::transform_t<TDeps...>>::type
+      , typename bound_type<typename get_not_supported<TDeps...>::type>::
+            is_neither_a_dependency_nor_an_injector
+    >;
+
+template<class... TDeps>
+auto boundable_error_impl(aux::type_list<TDeps...>&&) -> get_error<TDeps...>;
+
+template<class I, class T>
+auto boundable_error_impl(I&&, T&&) ->
+    std::conditional_t<
+        std::is_base_of<I, T>{}
+      , typename bound_type<T>::template is_not_base_of<I>
+      , typename bound_type<T>::template is_not_convertible_to<I>
+    >;
+
+template<class T, class... Ts> // any_of
+auto boundable_error_impl(aux::type_list<Ts...>&&, T&&) -> int;
+
+template<class... TDeps> // di::injector
+auto boundable_error_impl(aux::type<TDeps...>&&) ->
+    get_is_unique_error_impl<typename aux::is_unique<unique_dependency<TDeps>...>::type>;
+
+std::false_type boundable_error_impl(...);
+
+template<class... TDeps>
+constexpr auto boundable_error() {
+    return decltype(boundable_error_impl(std::declval<TDeps>()...)){};
+}
+
+}}} // boost::di::concepts
+
+#endif
+
+#ifndef BOOST_DI_BINDINGS_HPP
+#define BOOST_DI_BINDINGS_HPP
+
+namespace boost { namespace di {
+
+template<class... Ts>
+using any_of = aux::type_list<Ts...>;
+
+template<
+    class TExpected
+  , class TGiven = TExpected
+  , REQUIRES<
+        concepts::boundable<TExpected, TGiven>()
+      , decltype(concepts::boundable_error<TExpected, TGiven>())
+    > = 0
+> core::bind<TExpected, TGiven> bind{};
+
+constexpr scopes::deduce deduce{};
+constexpr scopes::unique unique{};
+constexpr scopes::shared shared{};
+constexpr scopes::singleton singleton{};
+
+template<class TName>
+constexpr auto session(const TName&) noexcept {
+    return scopes::session<TName>{};
+}
+
+template<class TName>
+constexpr auto session_entry(const TName&) noexcept {
+    return scopes::session_entry<TName>{};
+}
+
+template<class TName>
+constexpr auto session_exit(const TName&) noexcept {
+    return scopes::session_exit<TName>{};
+}
+
+}} // boost::di
+
+#endif
+
 #ifndef BOOST_DI_CORE_BINDER_HPP
 #define BOOST_DI_CORE_BINDER_HPP
 
@@ -2331,56 +2563,10 @@ template<
 
 #endif
 
-#ifndef BOOST_DI_CORE_INJECTOR_HPP
-#define BOOST_DI_CORE_INJECTOR_HPP
+#ifndef BOOST_DI_CORE_WRAPPER_HPP
+#define BOOST_DI_CORE_WRAPPER_HPP
 
 namespace boost { namespace di { namespace core {
-
-template<class T, class = void>
-struct get_deps {
-    using type = typename T::deps;
-};
-
-template<class T>
-struct get_deps<T, std::enable_if_t<has_configure<T>{}>> {
-    using type = typename aux::function_traits<
-        decltype(&T::configure)
-    >::result_type::deps;
-};
-
-template<
-    class T
-  , class = typename is_injector<T>::type
-  , class = typename is_dependency<T>::type
-> struct add_type_list;
-
-template<class T, class TAny>
-struct add_type_list<T, std::true_type, TAny> {
-    using type = typename get_deps<T>::type;
-};
-
-template<class T>
-struct add_type_list<T, std::false_type, std::true_type> {
-    using type = aux::type_list<T>;
-};
-
-template<class T>
-struct add_type_list<T, std::false_type, std::false_type> {
-    using type = aux::type_list<dependency<scopes::exposed<>, T>>;
-};
-
-template<class... Ts>
-using bindings_t = aux::join_t<typename add_type_list<Ts>::type...>;
-
-template<class T>
-decltype(auto) arg(const T& arg, std::enable_if_t<!has_configure<T>{}>* = 0) noexcept {
-    return arg;
-}
-
-template<class T>
-decltype(auto) arg(const T& arg, std::enable_if_t<has_configure<T>{}>* = 0) noexcept {
-    return arg.configure();
-}
 
 template<class T, class TWrapper, class = void>
 struct wrapper {
@@ -2412,17 +2598,26 @@ struct wrapper<T, TWrapper, REQUIRES<!std::is_convertible<TWrapper, T>{}, void, 
     TWrapper wrapper_;
 };
 
+}}} // boost::di::core
+
+#endif
+
+#ifndef BOOST_DI_CORE_INJECTOR_HPP
+#define BOOST_DI_CORE_INJECTOR_HPP
+
+namespace boost { namespace di { namespace core {
+
 BOOST_DI_HAS_METHOD(call, call);
 
 template<template<class> class TConfig, class... TDeps>
-class injector : public pool<bindings_t<TDeps...>>
+class injector : public pool<transform_t<TDeps...>>
                , public TConfig<injector<TConfig, TDeps...>>
                , _ {
     template<class...> friend struct provider;
     template<class, class, class> friend struct any_type;
     template<class> friend class scopes::exposed;
 
-    using pool_t = pool<bindings_t<TDeps...>>;
+    using pool_t = pool<transform_t<TDeps...>>;
     using is_root_t = std::true_type;
     using config = std::conditional_t<
         std::is_default_constructible<TConfig<injector>>{}
@@ -2431,7 +2626,7 @@ class injector : public pool<bindings_t<TDeps...>>
     >;
 
 public:
-    using deps = bindings_t<TDeps...>;
+    using deps = transform_t<TDeps...>;
 
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
@@ -2522,196 +2717,19 @@ private:
                             , const aux::type_list<Ts...>&) const noexcept {
         return pool_t{Ts{injector}...};
     }
+
+    template<class T>
+    decltype(auto) arg(const T& arg, std::enable_if_t<!has_configure<T>{}>* = 0) noexcept {
+        return arg;
+    }
+
+    template<class T>
+    decltype(auto) arg(const T& arg, std::enable_if_t<has_configure<T>{}>* = 0) noexcept {
+        return arg.configure();
+    }
 };
 
 }}} // boost::di::core
-
-#endif
-
-#ifndef BOOST_DI_CONCEPTS_BOUNDABLE_HPP
-#define BOOST_DI_CONCEPTS_BOUNDABLE_HPP
-
-namespace boost { namespace di {
-
-template<class...>
-struct bound_type {
-    struct is_bound_more_than_once { };
-    struct is_neither_a_dependency_nor_an_injector { };
-
-    template<class>
-    struct is_not_base_of { };
-
-    template<class>
-    struct is_not_convertible_to { };
-};
-
-namespace concepts {
-
-template<class... TDeps>
-using is_supported =
-    std::is_same<
-       aux::bool_list<aux::always<TDeps>{}...>
-     , aux::bool_list<(core::is_injector<TDeps>{} || core::is_dependency<TDeps>{})...>
-    >;
-
-template<class...>
-struct get_not_supported;
-
-template<class T>
-struct get_not_supported<T> {
-    using type = T;
-};
-
-template<class T, class... TDeps>
-struct get_not_supported<T, TDeps...>
-    : std::conditional<
-          core::is_injector<T>{} || core::is_dependency<T>{}
-        , typename get_not_supported<TDeps...>::type
-        , T
-      >
-{ };
-
-template<class>
-struct is_unique;
-
-template<class T>
-using unique_dependency = aux::pair<
-    aux::pair<typename T::expected, typename T::name>
-  , std::integral_constant<bool, T::scope::priority>
->;
-
-template<class... TDeps>
-struct is_unique<aux::type_list<TDeps...>>
-    : aux::is_unique<unique_dependency<TDeps>...>
-{ };
-
-template<class... TDeps>
-auto boundable_impl(aux::type_list<TDeps...>&&) ->
-    std::integral_constant<bool,
-        is_supported<TDeps...>{} && is_unique<core::bindings_t<TDeps...>>{}
-    >;
-
-template<class I, class T>
-auto boundable_impl(I&&, T&&) ->
-    std::integral_constant<bool,
-        std::is_convertible<T, I>{} || std::is_base_of<I, T>{}
-    >;
-
-template<class T, class... Ts> // any_of
-auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
-    std::integral_constant<
-        bool
-      , !std::is_same<
-            aux::bool_list<aux::never<Ts>{}...>
-          , aux::bool_list<std::is_base_of<Ts, T>{}...>
-        >{}
-    >;
-
-template<class... TDeps> // di::injector
-auto boundable_impl(aux::type<TDeps...>&&) ->
-    is_unique<core::bindings_t<TDeps...>>;
-
-std::false_type boundable_impl(...);
-
-template<class... TDeps>
-constexpr auto boundable() {
-    return decltype(boundable_impl(std::declval<TDeps>()...)){};
-}
-
-template<class>
-struct get_is_unique_error_impl
-    : std::true_type
-{ };
-
-template<class T, class TName, class TPriority>
-struct get_is_unique_error_impl<aux::not_unique<aux::pair<aux::pair<T, TName>, TPriority>>> {
-    using type = typename bound_type<T, TName>::is_bound_more_than_once;
-};
-
-template<class>
-struct get_is_unique_error;
-
-template<class... TDeps>
-struct get_is_unique_error<aux::type_list<TDeps...>>
-    : get_is_unique_error_impl<typename aux::is_unique<unique_dependency<TDeps>...>::type>
-{ };
-
-template<class... TDeps>
-using get_error =
-    std::conditional_t<
-        is_supported<TDeps...>{}
-      , typename get_is_unique_error<core::bindings_t<TDeps...>>::type
-      , typename bound_type<typename get_not_supported<TDeps...>::type>::
-            is_neither_a_dependency_nor_an_injector
-    >;
-
-template<class... TDeps>
-auto boundable_error_impl(aux::type_list<TDeps...>&&) -> get_error<TDeps...>;
-
-template<class I, class T>
-auto boundable_error_impl(I&&, T&&) ->
-    std::conditional_t<
-        std::is_base_of<I, T>{}
-      , typename bound_type<T>::template is_not_base_of<I>
-      , typename bound_type<T>::template is_not_convertible_to<I>
-    >;
-
-template<class T, class... Ts> // any_of
-auto boundable_error_impl(aux::type_list<Ts...>&&, T&&) -> int;
-
-template<class... TDeps> // di::injector
-auto boundable_error_impl(aux::type<TDeps...>&&) ->
-    get_is_unique_error_impl<typename aux::is_unique<unique_dependency<TDeps>...>::type>;
-
-std::false_type boundable_error_impl(...);
-
-template<class... TDeps>
-constexpr auto boundable_error() {
-    return decltype(boundable_error_impl(std::declval<TDeps>()...)){};
-}
-
-}}} // boost::di::concepts
-
-#endif
-
-#ifndef BOOST_DI_BINDINGS_HPP
-#define BOOST_DI_BINDINGS_HPP
-
-namespace boost { namespace di {
-
-template<class... Ts>
-using any_of = aux::type_list<Ts...>;
-
-template<
-    class TExpected
-  , class TGiven = TExpected
-  , REQUIRES<
-        concepts::boundable<TExpected, TGiven>()
-      , decltype(concepts::boundable_error<TExpected, TGiven>())
-    > = 0
-> core::bind<TExpected, TGiven> bind{};
-
-constexpr scopes::deduce deduce{};
-constexpr scopes::unique unique{};
-constexpr scopes::shared shared{};
-constexpr scopes::singleton singleton{};
-
-template<class TName>
-constexpr auto session(const TName&) noexcept {
-    return scopes::session<TName>{};
-}
-
-template<class TName>
-constexpr auto session_entry(const TName&) noexcept {
-    return scopes::session_entry<TName>{};
-}
-
-template<class TName>
-constexpr auto session_exit(const TName&) noexcept {
-    return scopes::session_exit<TName>{};
-}
-
-}} // boost::di
 
 #endif
 

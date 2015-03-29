@@ -10,7 +10,7 @@
 #include <type_traits>
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/core/pool.hpp"
-#include "boost/di/core/injector.hpp"
+#include "boost/di/core/transform.hpp"
 
 namespace boost { namespace di {
 
@@ -69,7 +69,7 @@ struct is_unique<aux::type_list<TDeps...>>
 template<class... TDeps>
 auto boundable_impl(aux::type_list<TDeps...>&&) ->
     std::integral_constant<bool,
-        is_supported<TDeps...>{} && is_unique<core::bindings_t<TDeps...>>{}
+        is_supported<TDeps...>{} && is_unique<core::transform_t<TDeps...>>{}
     >;
 
 template<class I, class T>
@@ -90,7 +90,7 @@ auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
 
 template<class... TDeps> // di::injector
 auto boundable_impl(aux::type<TDeps...>&&) ->
-    is_unique<core::bindings_t<TDeps...>>;
+    is_unique<core::transform_t<TDeps...>>;
 
 std::false_type boundable_impl(...);
 
@@ -121,7 +121,7 @@ template<class... TDeps>
 using get_error =
     std::conditional_t<
         is_supported<TDeps...>{}
-      , typename get_is_unique_error<core::bindings_t<TDeps...>>::type
+      , typename get_is_unique_error<core::transform_t<TDeps...>>::type
       , typename bound_type<typename get_not_supported<TDeps...>::type>::
             is_neither_a_dependency_nor_an_injector
     >;

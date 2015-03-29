@@ -11,103 +11,28 @@
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/core/binder.hpp"
 #include "boost/di/core/any_type.hpp"
-#include "boost/di/core/dependency.hpp"
 #include "boost/di/core/policy.hpp"
 #include "boost/di/core/pool.hpp"
 #include "boost/di/core/provider.hpp"
+#include "boost/di/core/transform.hpp"
+#include "boost/di/core/wrapper.hpp"
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/concepts/creatable.hpp"
 
 namespace boost { namespace di { namespace core {
 
-template<class T, class = void>
-struct get_deps {
-    using type = typename T::deps;
-};
-
-template<class T>
-struct get_deps<T, std::enable_if_t<has_configure<T>{}>> {
-    using type = typename aux::function_traits<
-        decltype(&T::configure)
-    >::result_type::deps;
-};
-
-template<
-    class T
-  , class = typename is_injector<T>::type
-  , class = typename is_dependency<T>::type
-> struct add_type_list;
-
-template<class T, class TAny>
-struct add_type_list<T, std::true_type, TAny> {
-    using type = typename get_deps<T>::type;
-};
-
-template<class T>
-struct add_type_list<T, std::false_type, std::true_type> {
-    using type = aux::type_list<T>;
-};
-
-template<class T>
-struct add_type_list<T, std::false_type, std::false_type> {
-    using type = aux::type_list<dependency<scopes::exposed<>, T>>;
-};
-
-template<class... Ts>
-using bindings_t = aux::join_t<typename add_type_list<Ts>::type...>;
-
-template<class T>
-decltype(auto) arg(const T& arg, std::enable_if_t<!has_configure<T>{}>* = 0) noexcept {
-    return arg;
-}
-
-template<class T>
-decltype(auto) arg(const T& arg, std::enable_if_t<has_configure<T>{}>* = 0) noexcept {
-    return arg.configure();
-}
-
-template<class T, class TWrapper, class = void>
-struct wrapper {
-    using element_type = T;
-
-    inline operator T() const noexcept {
-        return wrapper_;
-    }
-
-    inline operator T() noexcept {
-        return wrapper_;
-    }
-
-    TWrapper wrapper_;
-};
-
-template<class T, class TWrapper>
-struct wrapper<T, TWrapper, REQUIRES<!std::is_convertible<TWrapper, T>{}, void, void>> {
-    using element_type = T;
-
-    inline operator T() const noexcept {
-        return typename type<TWrapper>::template is_not_convertible_to<T>{};
-    }
-
-    inline operator T() noexcept {
-        return typename type<TWrapper>::template is_not_convertible_to<T>{};
-    }
-
-    TWrapper wrapper_;
-};
-
 BOOST_DI_HAS_METHOD(call, call);
 
 template<template<class> class TConfig, class... TDeps>
-class injector : public pool<bindings_t<TDeps...>>
+class injector : public pool<transform_t<TDeps...>>
                , public TConfig<injector<TConfig, TDeps...>>
                , _ {
     template<class...> friend struct provider;
     template<class, class, class> friend struct any_type;
     template<class> friend class scopes::exposed;
 
-    using pool_t = pool<bindings_t<TDeps...>>;
+    using pool_t = pool<transform_t<TDeps...>>;
     using is_root_t = std::true_type;
     using config = std::conditional_t<
         std::is_default_constructible<TConfig<injector>>{}
@@ -116,7 +41,7 @@ class injector : public pool<bindings_t<TDeps...>>
     >;
 
 public:
-    using deps = bindings_t<TDeps...>;
+    using deps = transform_t<TDeps...>;
 
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
@@ -206,6 +131,16 @@ private:
     auto create_from_injector(const TInjector& injector
                             , const aux::type_list<Ts...>&) const noexcept {
         return pool_t{Ts{injector}...};
+    }
+
+    template<class T>
+    decltype(auto) arg(const T& arg, std::enable_if_t<!has_configure<T>{}>* = 0) noexcept {
+        return arg;
+    }
+
+    template<class T>
+    decltype(auto) arg(const T& arg, std::enable_if_t<has_configure<T>{}>* = 0) noexcept {
+        return arg.configure();
     }
 };
 
