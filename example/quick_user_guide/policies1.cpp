@@ -11,8 +11,7 @@
 
 namespace di = boost::di;
 
-template<class>
-class print_types_policy : public di::config<> {
+class print_types_policy : public di::config {
 public:
     auto policies() const noexcept {
         return di::make_policies(

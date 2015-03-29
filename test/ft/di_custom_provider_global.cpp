@@ -25,8 +25,7 @@ public:
     }
 };
 
-template<class>
-class global_provider : public di::config<> {
+class global_provider : public di::config {
 public:
     auto provider() const noexcept {
         return custom_provider{};

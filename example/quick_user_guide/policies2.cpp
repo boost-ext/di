@@ -14,8 +14,7 @@ namespace di = boost::di;
 struct i1 { virtual ~i1() noexcept = default; virtual void dummy1() = 0; };
 struct impl1 : i1 { void dummy1() override { } };
 
-template<class>
-class print_types_info_policy : public di::config<> {
+class print_types_info_policy : public di::config {
 public:
     auto policies() const noexcept {
         return di::make_policies(

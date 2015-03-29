@@ -24,9 +24,19 @@ namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_METHOD(call, call);
 
-template<template<class> class TConfig, class... TDeps>
+template<class TConfig, class>
+struct config_traits {
+    using type = TConfig;
+};
+
+template<template<class> class TConfig, class T, class TInjector>
+struct config_traits<TConfig<T>, TInjector> {
+    using type = TConfig<TInjector>;
+};
+
+template<class TConfig, class... TDeps>
 class injector : public pool<transform_t<TDeps...>>
-               , public TConfig<injector<TConfig, TDeps...>>
+               , public config_traits<TConfig, injector<TConfig, TDeps...>>::type
                , _ {
     template<class...> friend struct provider;
     template<class, class, class> friend struct any_type;
@@ -34,10 +44,11 @@ class injector : public pool<transform_t<TDeps...>>
 
     using pool_t = pool<transform_t<TDeps...>>;
     using is_root_t = std::true_type;
+    using config_t = typename config_traits<TConfig, injector>::type;
     using config = std::conditional_t<
-        std::is_default_constructible<TConfig<injector>>{}
+        std::is_default_constructible<TConfig>{}
       , _
-      , TConfig<injector>
+      , config_t
     >;
 
 public:
@@ -51,7 +62,7 @@ public:
         , config{*this}
     { }
 
-    template<template<class> class TConfig_, class... TDeps_>
+    template<class TConfig_, class... TDeps_>
     explicit injector(const injector<TConfig_, TDeps_...>& injector) noexcept
         : pool_t{init{}, create_from_injector(injector, deps{})}
         , config{*this}
@@ -92,7 +103,7 @@ public:
                >{std::declval<injector>()}
            )
        ), T>{} && decltype(policy<pool_t>::template
-           call<T, TName, TIsRoot>(((TConfig<injector>&)*this).policies(), std::declval<TDependency>(), TCtor{})){}
+           call<T, TName, TIsRoot>(((TConfig&)*this).policies(), std::declval<TDependency>(), TCtor{})){}
     >;
 
 private:
@@ -104,7 +115,7 @@ private:
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<expected_t, given_t, TName, T, ctor_t, injector>;
-        policy<pool_t>::template call<T, TName, TIsRoot>(((TConfig<injector>&)*this).policies(), dependency, ctor_t{});
+        policy<pool_t>::template call<T, TName, TIsRoot>(((TConfig&)*this).policies(), dependency, ctor_t{});
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
             std::is_reference<T>{} && has_is_ref<dependency_t>{}

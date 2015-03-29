@@ -16,12 +16,12 @@
 namespace boost { namespace di {
 
 template<
-     template<class> class TConfig = ::BOOST_DI_CFG
+     class TConfig = ::BOOST_DI_CFG
    , class... TDeps
-   , REQUIRES<concepts::configurable<TConfig<_>>() &&
+   , REQUIRES<concepts::configurable<TConfig>() &&
               concepts::boundable<aux::type_list<TDeps...>>()
             , errors<decltype(concepts::boundable_error<aux::type_list<TDeps...>>())
-                   , decltype(concepts::configurable_error<TConfig<_>>())
+                   , decltype(concepts::configurable_error<TConfig>())
               >
      > = 0
 > inline auto make_injector(const TDeps&... args) noexcept {

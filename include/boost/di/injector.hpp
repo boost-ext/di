@@ -20,7 +20,7 @@ class injector
         , decltype(concepts::boundable_error<aux::type<TDeps...>>())
         , core::injector<::BOOST_DI_CFG, TDeps...>> {
 public:
-    template<template<class> class TConfig, class... TArgs>
+    template<class TConfig, class... TArgs>
     injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, TDeps...>{injector}
     { }

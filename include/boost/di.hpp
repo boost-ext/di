@@ -1072,7 +1072,6 @@ struct no_name {
     const char* operator()() const noexcept { return nullptr; }
 };
 
-template<class = void>
 class config;
 
 template<class...>
@@ -1921,7 +1920,6 @@ public:
 #define BOOST_DI_CONFIG_HPP
 
 #if defined(BOOST_DI_CFG)
-    template<class = void>
     class BOOST_DI_CFG;
 #else
     #define BOOST_DI_CFG boost::di::config
@@ -1934,7 +1932,6 @@ inline auto make_policies(const TPolicies&... args) noexcept {
     return core::pool<aux::type_list<TPolicies...>>(args...);
 }
 
-template<class>
 class config {
 public:
     auto provider() const noexcept {
@@ -2609,9 +2606,19 @@ namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_METHOD(call, call);
 
-template<template<class> class TConfig, class... TDeps>
+template<class TConfig, class>
+struct config_traits {
+    using type = TConfig;
+};
+
+template<template<class> class TConfig, class T, class TInjector>
+struct config_traits<TConfig<T>, TInjector> {
+    using type = TConfig<TInjector>;
+};
+
+template<class TConfig, class... TDeps>
 class injector : public pool<transform_t<TDeps...>>
-               , public TConfig<injector<TConfig, TDeps...>>
+               , public config_traits<TConfig, injector<TConfig, TDeps...>>::type
                , _ {
     template<class...> friend struct provider;
     template<class, class, class> friend struct any_type;
@@ -2619,10 +2626,11 @@ class injector : public pool<transform_t<TDeps...>>
 
     using pool_t = pool<transform_t<TDeps...>>;
     using is_root_t = std::true_type;
+    using config_t = typename config_traits<TConfig, injector>::type;
     using config = std::conditional_t<
-        std::is_default_constructible<TConfig<injector>>{}
+        std::is_default_constructible<TConfig>{}
       , _
-      , TConfig<injector>
+      , config_t
     >;
 
 public:
@@ -2636,7 +2644,7 @@ public:
         , config{*this}
     { }
 
-    template<template<class> class TConfig_, class... TDeps_>
+    template<class TConfig_, class... TDeps_>
     explicit injector(const injector<TConfig_, TDeps_...>& injector) noexcept
         : pool_t{init{}, create_from_injector(injector, deps{})}
         , config{*this}
@@ -2677,7 +2685,7 @@ public:
                >{std::declval<injector>()}
            )
        ), T>{} && decltype(policy<pool_t>::template
-           call<T, TName, TIsRoot>(((TConfig<injector>&)*this).policies(), std::declval<TDependency>(), TCtor{})){}
+           call<T, TName, TIsRoot>(((TConfig&)*this).policies(), std::declval<TDependency>(), TCtor{})){}
     >;
 
 private:
@@ -2689,7 +2697,7 @@ private:
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = provider<expected_t, given_t, TName, T, ctor_t, injector>;
-        policy<pool_t>::template call<T, TName, TIsRoot>(((TConfig<injector>&)*this).policies(), dependency, ctor_t{});
+        policy<pool_t>::template call<T, TName, TIsRoot>(((TConfig&)*this).policies(), dependency, ctor_t{});
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
             std::is_reference<T>{} && has_is_ref<dependency_t>{}
@@ -2745,7 +2753,7 @@ class injector
         , decltype(concepts::boundable_error<aux::type<TDeps...>>())
         , core::injector<::BOOST_DI_CFG, TDeps...>> {
 public:
-    template<template<class> class TConfig, class... TArgs>
+    template<class TConfig, class... TArgs>
     injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, TDeps...>{injector}
     { }
@@ -2803,12 +2811,12 @@ constexpr auto configurable_error() {
 namespace boost { namespace di {
 
 template<
-     template<class> class TConfig = ::BOOST_DI_CFG
+     class TConfig = ::BOOST_DI_CFG
    , class... TDeps
-   , REQUIRES<concepts::configurable<TConfig<_>>() &&
+   , REQUIRES<concepts::configurable<TConfig>() &&
               concepts::boundable<aux::type_list<TDeps...>>()
             , errors<decltype(concepts::boundable_error<aux::type_list<TDeps...>>())
-                   , decltype(concepts::configurable_error<TConfig<_>>())
+                   , decltype(concepts::configurable_error<TConfig>())
               >
      > = 0
 > inline auto make_injector(const TDeps&... args) noexcept {

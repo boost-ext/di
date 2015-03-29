@@ -22,7 +22,6 @@ struct no_name {
     const char* operator()() const noexcept { return nullptr; }
 };
 
-template<class = void>
 class config;
 
 template<class...>

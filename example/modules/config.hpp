@@ -14,8 +14,7 @@
 //->
 #include <boost/di/config.hpp>
 
-template<class>
-class config : public di::config<> {
+class config : public di::config {
 public:
     auto policies() const noexcept {
         return di::make_policies(

@@ -995,8 +995,7 @@ test named_parameters_with_shared_scope = [] {
 
 static auto called = 0;
 
-template<class>
-class config : public di::config<> {
+class config : public di::config {
 public:
     auto policies() const noexcept {
         return di::make_policies([](auto){++called;});
@@ -1266,8 +1265,7 @@ test inject_traits_no_limits_via_ctor_traits = [] {
     injector.create<c_no_limits>();
 };
 
-template<class>
-class config_provider : public di::config<> {
+class config_provider : public di::config {
 public:
     auto provider() const noexcept {
         ++called;
@@ -1304,8 +1302,7 @@ struct deleter_provider {
     }
 };
 
-template<class>
-class config_deleter_provider : public di::config<> {
+class config_deleter_provider : public di::config {
 public:
     auto provider() const noexcept {
         return deleter_provider{};
@@ -1319,8 +1316,7 @@ test call_provider_with_deleter = [] {
     expect_eq(1, deleter_provider::called());
 };
 
-template<class>
-class config_policies : public di::config<> {
+class config_policies : public di::config {
 public:
     auto policies() const noexcept {
         using namespace di::policies;
@@ -1351,8 +1347,7 @@ struct policy {
     }
 };
 
-template<class>
-class custom_policies : public di::config<> {
+class custom_policies : public di::config {
 public:
     auto policies() const noexcept {
         return di::make_policies(
