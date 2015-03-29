@@ -116,18 +116,16 @@ private:
 
     template<class TAction, class... Ts>
     void call_impl(const TAction& action, const aux::type_list<Ts...>&) {
-        int _[]{0, (call_impl<Ts>(action), 0)...}; (void)_;
+        int _[]{0, (call_impl<Ts>(action, has_call<Ts, const TAction&>{}), 0)...}; (void)_;
     }
 
     template<class T, class TAction>
-    std::enable_if_t<has_call<T, const TAction&>{}>
-    call_impl(const TAction& action) {
+    void call_impl(const TAction& action, const std::true_type&) {
         static_cast<T&>(*this).call(action);
     }
 
-    template<class T, class TAction>
-    std::enable_if_t<!has_call<T, const TAction&>{}>
-    call_impl(const TAction&) { }
+    template<class, class TAction>
+    void call_impl(const TAction&, const std::false_type&) { }
 
     template<class TInjector, class... Ts>
     auto create_from_injector(const TInjector& injector
