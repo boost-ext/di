@@ -312,16 +312,65 @@ struct i97 { virtual ~i97() noexcept = default; virtual void dummy() = 0; }; str
 struct i98 { virtual ~i98() noexcept = default; virtual void dummy() = 0; }; struct impl98 : i98 { BOOST_DI_INJECT(impl98, y98, y99, y00, y01, y02, y03, y04, y05, y06, y07) { } void dummy() override { } };
 struct i99 { virtual ~i99() noexcept = default; virtual void dummy() = 0; }; struct impl99 : i99 { BOOST_DI_INJECT(impl99, y99, y00, y01, y02, y03, y04, y05, y06, y07, y08) { } void dummy() override { } };
 
-struct c0 { BOOST_DI_INJECT(c0, std::unique_ptr<i00>, std::unique_ptr<i01>, std::unique_ptr<i02>, std::unique_ptr<i03>, std::unique_ptr<i04>, std::unique_ptr<i05>, std::unique_ptr<i06>, std::unique_ptr<i07>, std::unique_ptr<i08>, std::unique_ptr<i09>) { } };
-struct c1 { BOOST_DI_INJECT(c1, std::unique_ptr<i10>, std::unique_ptr<i11>, std::unique_ptr<i12>, std::unique_ptr<i13>, std::unique_ptr<i14>, std::unique_ptr<i15>, std::unique_ptr<i16>, std::unique_ptr<i17>, std::unique_ptr<i18>, std::unique_ptr<i19>) { } };
-struct c2 { BOOST_DI_INJECT(c2, std::unique_ptr<i20>, std::unique_ptr<i21>, std::unique_ptr<i22>, std::unique_ptr<i23>, std::unique_ptr<i24>, std::unique_ptr<i25>, std::unique_ptr<i26>, std::unique_ptr<i27>, std::unique_ptr<i28>, std::unique_ptr<i29>) { } };
-struct c3 { BOOST_DI_INJECT(c3, std::unique_ptr<i30>, std::unique_ptr<i31>, std::unique_ptr<i32>, std::unique_ptr<i33>, std::unique_ptr<i34>, std::unique_ptr<i35>, std::unique_ptr<i36>, std::unique_ptr<i37>, std::unique_ptr<i38>, std::unique_ptr<i39>) { } };
-struct c4 { BOOST_DI_INJECT(c4, std::unique_ptr<i40>, std::unique_ptr<i41>, std::unique_ptr<i42>, std::unique_ptr<i43>, std::unique_ptr<i44>, std::unique_ptr<i45>, std::unique_ptr<i46>, std::unique_ptr<i47>, std::unique_ptr<i48>, std::unique_ptr<i49>) { } };
-struct c5 { BOOST_DI_INJECT(c5, std::unique_ptr<i50>, std::unique_ptr<i51>, std::unique_ptr<i52>, std::unique_ptr<i53>, std::unique_ptr<i54>, std::unique_ptr<i55>, std::unique_ptr<i56>, std::unique_ptr<i57>, std::unique_ptr<i58>, std::unique_ptr<i59>) { } };
-struct c6 { BOOST_DI_INJECT(c6, std::unique_ptr<i60>, std::unique_ptr<i61>, std::unique_ptr<i62>, std::unique_ptr<i63>, std::unique_ptr<i64>, std::unique_ptr<i65>, std::unique_ptr<i66>, std::unique_ptr<i67>, std::unique_ptr<i68>, std::unique_ptr<i69>) { } };
-struct c7 { BOOST_DI_INJECT(c7, std::unique_ptr<i70>, std::unique_ptr<i71>, std::unique_ptr<i72>, std::unique_ptr<i73>, std::unique_ptr<i74>, std::unique_ptr<i75>, std::unique_ptr<i76>, std::unique_ptr<i77>, std::unique_ptr<i78>, std::unique_ptr<i79>) { } };
-struct c8 { BOOST_DI_INJECT(c8, std::unique_ptr<i80>, std::unique_ptr<i81>, std::unique_ptr<i82>, std::unique_ptr<i83>, std::unique_ptr<i84>, std::unique_ptr<i85>, std::unique_ptr<i86>, std::unique_ptr<i87>, std::unique_ptr<i88>, std::unique_ptr<i89>) { } };
-struct c9 { BOOST_DI_INJECT(c9, std::unique_ptr<i90>, std::unique_ptr<i91>, std::unique_ptr<i92>, std::unique_ptr<i93>, std::unique_ptr<i94>, std::unique_ptr<i95>, std::unique_ptr<i96>, std::unique_ptr<i97>, std::unique_ptr<i98>, std::unique_ptr<i99>) { } };
+struct c0 { BOOST_DI_INJECT(c0
+#if !defined(NO_CTOR_INTERFACES1)
+    , std::unique_ptr<i00>, std::unique_ptr<i01>, std::unique_ptr<i02>, std::unique_ptr<i03>, std::unique_ptr<i04>, std::unique_ptr<i05>, std::unique_ptr<i06>, std::unique_ptr<i07>, std::unique_ptr<i08>, std::unique_ptr<i09>
+#endif
+) { } };
+
+struct c1 { BOOST_DI_INJECT(c1
+#if !defined(NO_CTOR_INTERFACES2)
+    , std::unique_ptr<i10>, std::unique_ptr<i11>, std::unique_ptr<i12>, std::unique_ptr<i13>, std::unique_ptr<i14>, std::unique_ptr<i15>, std::unique_ptr<i16>, std::unique_ptr<i17>, std::unique_ptr<i18>, std::unique_ptr<i19>
+#endif
+) { } };
+
+struct c2 { BOOST_DI_INJECT(c2
+#if !defined(NO_CTOR_INTERFACES3)
+    , std::unique_ptr<i20>, std::unique_ptr<i21>, std::unique_ptr<i22>, std::unique_ptr<i23>, std::unique_ptr<i24>, std::unique_ptr<i25>, std::unique_ptr<i26>, std::unique_ptr<i27>, std::unique_ptr<i28>, std::unique_ptr<i29>
+#endif
+) { } };
+
+struct c3 { BOOST_DI_INJECT(c3
+#if !defined(NO_CTOR_INTERFACES4)
+    , std::unique_ptr<i30>, std::unique_ptr<i31>, std::unique_ptr<i32>, std::unique_ptr<i33>, std::unique_ptr<i34>, std::unique_ptr<i35>, std::unique_ptr<i36>, std::unique_ptr<i37>, std::unique_ptr<i38>, std::unique_ptr<i39>
+#endif
+) { } };
+
+struct c4 { BOOST_DI_INJECT(c4
+#if !defined(NO_CTOR_INTERFACES5)
+    , std::unique_ptr<i40>, std::unique_ptr<i41>, std::unique_ptr<i42>, std::unique_ptr<i43>, std::unique_ptr<i44>, std::unique_ptr<i45>, std::unique_ptr<i46>, std::unique_ptr<i47>, std::unique_ptr<i48>, std::unique_ptr<i49>
+#endif
+) { } };
+
+struct c5 { BOOST_DI_INJECT(c5
+#if !defined(NO_CTOR_INTERFACES6)
+    , std::unique_ptr<i50>, std::unique_ptr<i51>, std::unique_ptr<i52>, std::unique_ptr<i53>, std::unique_ptr<i54>, std::unique_ptr<i55>, std::unique_ptr<i56>, std::unique_ptr<i57>, std::unique_ptr<i58>, std::unique_ptr<i59>
+#endif
+) { } };
+
+struct c6 { BOOST_DI_INJECT(c6
+#if !defined(NO_CTOR_INTERFACES7)
+    , std::unique_ptr<i60>, std::unique_ptr<i61>, std::unique_ptr<i62>, std::unique_ptr<i63>, std::unique_ptr<i64>, std::unique_ptr<i65>, std::unique_ptr<i66>, std::unique_ptr<i67>, std::unique_ptr<i68>, std::unique_ptr<i69>
+#endif
+) { } };
+
+struct c7 { BOOST_DI_INJECT(c7
+#if !defined(NO_CTOR_INTERFACES8)
+    , std::unique_ptr<i70>, std::unique_ptr<i71>, std::unique_ptr<i72>, std::unique_ptr<i73>, std::unique_ptr<i74>, std::unique_ptr<i75>, std::unique_ptr<i76>, std::unique_ptr<i77>, std::unique_ptr<i78>, std::unique_ptr<i79>
+#endif
+) { } };
+
+struct c8 { BOOST_DI_INJECT(c8
+#if !defined(NO_CTOR_INTERFACES9)
+    , std::unique_ptr<i80>, std::unique_ptr<i81>, std::unique_ptr<i82>, std::unique_ptr<i83>, std::unique_ptr<i84>, std::unique_ptr<i85>, std::unique_ptr<i86>, std::unique_ptr<i87>, std::unique_ptr<i88>, std::unique_ptr<i89>
+#endif
+) { } };
+
+struct c9 { BOOST_DI_INJECT(c9
+#if !defined(NO_CTOR_INTERFACES10)
+    , std::unique_ptr<i90>, std::unique_ptr<i91>, std::unique_ptr<i92>, std::unique_ptr<i93>, std::unique_ptr<i94>, std::unique_ptr<i95>, std::unique_ptr<i96>, std::unique_ptr<i97>, std::unique_ptr<i98>, std::unique_ptr<i99>
+#endif
+) { } };
 
 struct small_complexity { BOOST_DI_INJECT(small_complexity, y32) { } };
 struct medium_complexity { BOOST_DI_INJECT(medium_complexity, y99) { } };
