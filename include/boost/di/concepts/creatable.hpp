@@ -13,8 +13,6 @@
 
 namespace boost { namespace di {
 
-BOOST_DI_CFG_ERRORS_DESC_BEGIN
-
 template<class T>
 struct abstract_type {
 struct is_not_bound {
@@ -183,8 +181,6 @@ template<int TMax> struct max {
     error(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters")
     const;
 };};
-
-BOOST_DI_CFG_ERRORS_DESC_END
 
 namespace concepts {
 

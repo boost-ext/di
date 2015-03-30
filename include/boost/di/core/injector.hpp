@@ -37,9 +37,9 @@ class injector : public pool<transform_t<TDeps...>>
     using is_root_t = std::true_type;
     using config_t = typename type_traits::config_traits<TConfig, injector>::type;
     using config = std::conditional_t<
-        std::is_constructible<TConfig, injector>{}
-      , config_t
+        std::is_default_constructible<TConfig>{}
       , _
+      , config_t
     >;
 
 public:

@@ -35,31 +35,15 @@
     template<class T, class... TArgs>                               \
     using has_##name = decltype(has_##name##_impl<T, TArgs...>(0))
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__clang__)
     #define BOOST_DI_UNUSED __attribute__((unused))
+    #define BOOST_DI_ATTR_ERROR(...) [[deprecated(__VA_ARGS__)]]
+#elif defined(__GNUC__)
+    #define BOOST_DI_UNUSED __attribute__((unused))
+    #define BOOST_DI_ATTR_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
 #else
     #define BOOST_DI_UNUSED
-#endif
-
-#if defined(__clang__)
-    #define BOOST_DI_CFG_ERRORS_DESC_BEGIN \
-        _Pragma("clang diagnostic push") \
-        _Pragma("clang diagnostic error \"-Wundefined-inline\"") \
-        _Pragma("clang diagnostic error \"-Wundefined-internal\"")
-
-    #define BOOST_DI_CFG_ERRORS_DESC_END \
-        _Pragma("clang diagnostic pop")
-
-    #define BOOST_DI_ATTR_ERROR(...) [[deprecated(__VA_ARGS__)]]
-#else
-    #define BOOST_DI_CFG_ERRORS_DESC_BEGIN \
-        _Pragma("GCC diagnostic push") \
-        _Pragma("GCC diagnostic error \"-Werror\"")
-
-    #define BOOST_DI_CFG_ERRORS_DESC_END \
-        _Pragma("GCC diagnostic pop")
-
-    #define BOOST_DI_ATTR_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
+    #define BOOST_DI_ATTR_ERROR(...)
 #endif
 
 namespace boost { namespace di { namespace aux {

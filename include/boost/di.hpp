@@ -189,31 +189,15 @@ struct _ { _(...) { } };
     template<class T, class... TArgs>                               \
     using has_##name = decltype(has_##name##_impl<T, TArgs...>(0))
 
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__clang__)
     #define BOOST_DI_UNUSED __attribute__((unused))
+    #define BOOST_DI_ATTR_ERROR(...) [[deprecated(__VA_ARGS__)]]
+#elif defined(__GNUC__)
+    #define BOOST_DI_UNUSED __attribute__((unused))
+    #define BOOST_DI_ATTR_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
 #else
     #define BOOST_DI_UNUSED
-#endif
-
-#if defined(__clang__)
-    #define BOOST_DI_CFG_ERRORS_DESC_BEGIN \
-        _Pragma("clang diagnostic push") \
-        _Pragma("clang diagnostic error \"-Wundefined-inline\"") \
-        _Pragma("clang diagnostic error \"-Wundefined-internal\"")
-
-    #define BOOST_DI_CFG_ERRORS_DESC_END \
-        _Pragma("clang diagnostic pop")
-
-    #define BOOST_DI_ATTR_ERROR(...) [[deprecated(__VA_ARGS__)]]
-#else
-    #define BOOST_DI_CFG_ERRORS_DESC_BEGIN \
-        _Pragma("GCC diagnostic push") \
-        _Pragma("GCC diagnostic error \"-Werror\"")
-
-    #define BOOST_DI_CFG_ERRORS_DESC_END \
-        _Pragma("GCC diagnostic pop")
-
-    #define BOOST_DI_ATTR_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
+    #define BOOST_DI_ATTR_ERROR(...)
 #endif
 
 namespace boost { namespace di { namespace aux {
@@ -1627,8 +1611,6 @@ struct ctor_traits_impl<T, std::false_type>
 
 namespace boost { namespace di {
 
-BOOST_DI_CFG_ERRORS_DESC_BEGIN
-
 template<class T>
 struct abstract_type {
 struct is_not_bound {
@@ -1797,8 +1779,6 @@ template<int TMax> struct max {
     error(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters")
     const;
 };};
-
-BOOST_DI_CFG_ERRORS_DESC_END
 
 namespace concepts {
 
@@ -2637,9 +2617,9 @@ class injector : public pool<transform_t<TDeps...>>
     using is_root_t = std::true_type;
     using config_t = typename type_traits::config_traits<TConfig, injector>::type;
     using config = std::conditional_t<
-        std::is_constructible<TConfig, injector>{}
-      , config_t
+        std::is_default_constructible<TConfig>{}
       , _
+      , config_t
     >;
 
 public:

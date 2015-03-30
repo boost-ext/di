@@ -14,8 +14,6 @@
 
 namespace boost { namespace di { namespace policies {
 
-BOOST_DI_CFG_ERRORS_DESC_BEGIN
-
 template<class T>
 struct type {
 template<class TPolicy>
@@ -30,8 +28,6 @@ struct not_allowed_by {
     constructible_not_satisfied(_ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG> !")
     const;
 };};
-
-BOOST_DI_CFG_ERRORS_DESC_END
 
 struct _ { };
 struct type_op {};
