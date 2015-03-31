@@ -46,7 +46,7 @@ template<class TIf, typename TImpl>
 class inject_from_xml {
 public:
     template<class TInjector>
-    auto operator()(TInjector& injector) const {
+    auto operator()(const TInjector& injector) const {
         auto parser = injector.template create<std::unique_ptr<ixml_parser>>();
         auto parsed = parser->parse(typeid(TIf).name());
         return create_impl(injector, parsed, TImpl{});
@@ -54,7 +54,7 @@ public:
 
 private:
     template<class TInjector, typename T, typename... Ts>
-    std::shared_ptr<interface> create_impl(TInjector& injector
+    std::shared_ptr<interface> create_impl(const TInjector& injector
                                          , const std::string& parsed
                                          , const xml_list<T, Ts...>&) const {
         auto impl = typeid(T).name();

@@ -28,8 +28,8 @@ struct i2 {
 };
 
 /*<<`mocks provider` configuration>>*/
-template<class TInjector>
-class mocks_provider : public di::config {
+template<class TInjector = di::_>
+class mocks_provider_impl : public di::config {
     class not_implemented : public std::exception { };
 
     class expectations : public std::map<std::type_index, std::function<std::shared_ptr<void>()>> {
@@ -117,7 +117,7 @@ class mocks_provider : public di::config {
     };
 
 public:
-    explicit mocks_provider(const TInjector& injector)
+    explicit mocks_provider_impl(const TInjector& injector)
         : injector_(injector)
     { }
 
@@ -145,6 +145,8 @@ private:
     const TInjector& injector_;
 };
 
+using mocks_provider = mocks_provider_impl<>;
+
 struct test {
     template<class Test>
     test(const Test& test) {
@@ -164,7 +166,7 @@ struct c {
 /*<<define simple unit test>>*/
 test unit_test = [] {
     /*<<create injector with `mocks_provider`>>*/
-    auto mi = di::make_injector<mocks_provider<di::_>>();
+    auto mi = di::make_injector<mocks_provider>();
     /*<<set expectations>>*/
     mi(&i1::get).will_return(42);
     mi(&i2::get).will_return(123);
@@ -177,7 +179,7 @@ test integration_test = [] {
         int get() override { return 42; }
     };
     /*<<create injector with `mocks_provider`>>*/
-    auto mi = di::make_injector<mocks_provider<di::_>>(
+    auto mi = di::make_injector<mocks_provider>(
         di::bind<int>.to(87) // custom value
       , di::bind<i1, impl1>  // original implementation
     );
