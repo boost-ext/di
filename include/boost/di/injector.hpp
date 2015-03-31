@@ -13,6 +13,9 @@
 
 namespace boost { namespace di {
 
+template<bool... Ts>
+using all = std::is_same<aux::bool_list<(Ts, true)...>, aux::bool_list<Ts...>>;
+
 template<class... TDeps>
 class injector
     : public REQUIRES<
@@ -20,10 +23,27 @@ class injector
         , decltype(concepts::boundable_error<aux::type<TDeps...>>())
         , core::injector<::BOOST_DI_CFG, TDeps...>> {
 public:
-    template<class TConfig, class... TArgs>
-    injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
+    template<class...>
+    BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
+    void t1(){}
+
+    template<
+        class TConfig
+      , class... TArgs
+      , REQUIRES<all<concepts::creatable_<core::injector<TConfig, TArgs...>, TDeps*>()...>{}> = 0
+    > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, TDeps...>{injector}
     { }
+
+    template<
+        class TConfig
+      , class... TArgs
+      , REQUIRES<!all<concepts::creatable_<core::injector<TConfig, TArgs...>, TDeps*>()...>{}> = 0
+    > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
+        : core::injector<::BOOST_DI_CFG, TDeps...>{injector}
+    {
+        t1<TArgs...>();
+    }
 };
 
 }} // boost::di
