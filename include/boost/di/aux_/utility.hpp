@@ -50,8 +50,8 @@ struct bool_list { using type = bool_list; };
 template<class...>
 struct type_list { using type = type_list; };
 
-template<class... TArgs>
-struct inherit : TArgs... { using type = inherit; };
+template<class... Ts>
+struct inherit : Ts... { using type = inherit; };
 
 template<class T>
 struct no_decay { using type = T; };

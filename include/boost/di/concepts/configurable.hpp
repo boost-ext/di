@@ -37,7 +37,7 @@ auto configurable_error_impl(T&&) -> std::conditional_t<
 
 template<class T>
 constexpr auto configurable_(const std::true_type&) {
-    return providable<decltype(std::declval<T>().provider())>();
+    return providable<decltype(std::declval<T>().provider())>(); // && policies -> pool<type_list<...>>
 }
 
 template<class T>

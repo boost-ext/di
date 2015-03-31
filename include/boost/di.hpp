@@ -83,8 +83,8 @@ struct bool_list { using type = bool_list; };
 template<class...>
 struct type_list { using type = type_list; };
 
-template<class... TArgs>
-struct inherit : TArgs... { using type = inherit; };
+template<class... Ts>
+struct inherit : Ts... { using type = inherit; };
 
 template<class T>
 struct no_decay { using type = T; };
@@ -2807,7 +2807,7 @@ auto configurable_error_impl(T&&) -> std::conditional_t<
 
 template<class T>
 constexpr auto configurable_(const std::true_type&) {
-    return providable<decltype(std::declval<T>().provider())>();
+    return providable<decltype(std::declval<T>().provider())>(); // && policies -> pool<type_list<...>>
 }
 
 template<class T>
