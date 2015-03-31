@@ -7,7 +7,6 @@
 #ifndef BOOS_DI_POLICIES_CONSTRUCTIBLE_HPP
 #define BOOS_DI_POLICIES_CONSTRUCTIBLE_HPP
 
-#include <type_traits>
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/fwd.hpp"
@@ -19,13 +18,13 @@ struct type {
 template<class TPolicy>
 struct not_allowed_by {
     operator T() const {
+        using constraint_not_satisfied = not_allowed_by;
         return
-            constructible_not_satisfied
-        ();
+            constraint_not_satisfied{}.error();
     }
 
     constexpr T
-    constructible_not_satisfied(_ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG> !")
+    error(_ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>!")
     const;
 };};
 
