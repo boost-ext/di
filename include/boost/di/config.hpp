@@ -21,7 +21,7 @@
 
 namespace boost { namespace di {
 
-template<class... TPolicies, BOOST_DI_REQUIRES_ERR(concepts::callable<TPolicies...>)>
+template<class... TPolicies, BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>)>
 inline auto make_policies(const TPolicies&... args) noexcept {
     return core::pool<aux::type_list<TPolicies...>>(args...);
 }

@@ -206,10 +206,10 @@ using is_unique = is_unique_impl<none_t, Ts...>;
 #define BOOST_DI_REQUIRES_T(...) \
     typename std::enable_if<__VA_ARGS__, int>::type
 
-#define BOOST_DI_REQUIRES_ERR(...) \
+#define BOOST_DI_REQUIRES_MSG(...) \
     typename constraint_not_satisfied<__VA_ARGS__>::type = 0
 
-#define BOOST_DI_REQUIRES_ERR_T(...) \
+#define BOOST_DI_REQUIRES_MSG_T(...) \
     constraint_not_satisfied<__VA_ARGS__>::type
 
 namespace boost { namespace di {
@@ -1599,6 +1599,9 @@ struct ctor_traits_impl<T, std::false_type>
 #ifndef BOOST_DI_CONCEPTS_CREATABLE_HPP
 #define BOOST_DI_CONCEPTS_CREATABLE_HPP
 
+#define BOOST_DI_CONCEPTS_CREATABLE_ATTR \
+    BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
+
 namespace boost { namespace di {
 
 template<class T>
@@ -1897,7 +1900,7 @@ public:
 
 namespace boost { namespace di {
 
-template<class... TPolicies, BOOST_DI_REQUIRES_ERR(concepts::callable<TPolicies...>)>
+template<class... TPolicies, BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>)>
 inline auto make_policies(const TPolicies&... args) noexcept {
     return core::pool<aux::type_list<TPolicies...>>(args...);
 }
@@ -2176,7 +2179,7 @@ using any_of = aux::type_list<Ts...>;
 template<
     class TExpected
   , class TGiven = TExpected
-  , BOOST_DI_REQUIRES_ERR(concepts::boundable<TExpected, TGiven>)
+  , BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, TGiven>)
 > core::bind<TExpected, TGiven> bind{};
 
 constexpr scopes::deduce deduce{};
@@ -2606,7 +2609,7 @@ public:
     }
 
     template<class T, BOOST_DI_REQUIRES(!concepts::creatable_<injector, T, no_name, is_root_t>())>
-    BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
+    BOOST_DI_CONCEPTS_CREATABLE_ATTR
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }
@@ -2700,21 +2703,21 @@ template<class>
 void create(const std::true_type&) { }
 
 template<class>
-BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
+BOOST_DI_CONCEPTS_CREATABLE_ATTR
 void
     create
 (const std::false_type&) { }
 
 template<class... T>
 class injector : public
-     BOOST_DI_REQUIRES_ERR_T(concepts::boundable<aux::type<T...>>
+     BOOST_DI_REQUIRES_MSG_T(concepts::boundable<aux::type<T...>>
                            , core::injector<::BOOST_DI_CFG, T...>) {
 public:
     template<
         class TConfig
       , class... TArgs
 #if !defined(__clang__)
-     , BOOST_DI_REQUIRES_ERR(concepts::boundable<aux::type<T...>>)
+     , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>)
 #endif
     > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, T...>{injector} {
@@ -2811,8 +2814,8 @@ namespace boost { namespace di {
 template<
      class TConfig = ::BOOST_DI_CFG
    , class... TDeps
-   , BOOST_DI_REQUIRES_ERR(concepts::boundable<aux::type_list<TDeps...>>)
-   , BOOST_DI_REQUIRES_ERR(concepts::configurable<TConfig>)
+   , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type_list<TDeps...>>)
+   , BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>)
 > inline auto make_injector(const TDeps&... args) noexcept {
     return core::injector<TConfig, TDeps...>{core::init{}, args...};
 }

@@ -18,21 +18,21 @@ template<class>
 void create(const std::true_type&) { }
 
 template<class>
-BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
+BOOST_DI_CONCEPTS_CREATABLE_ATTR
 void
     create
 (const std::false_type&) { }
 
 template<class... T>
 class injector : public
-     BOOST_DI_REQUIRES_ERR_T(concepts::boundable<aux::type<T...>>
+     BOOST_DI_REQUIRES_MSG_T(concepts::boundable<aux::type<T...>>
                            , core::injector<::BOOST_DI_CFG, T...>) {
 public:
     template<
         class TConfig
       , class... TArgs
 #if !defined(__clang__)
-     , BOOST_DI_REQUIRES_ERR(concepts::boundable<aux::type<T...>>)
+     , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>)
 #endif
     > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, T...>{injector} {

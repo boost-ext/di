@@ -52,10 +52,10 @@
 #define BOOST_DI_REQUIRES_T(...) \
     typename std::enable_if<__VA_ARGS__, int>::type
 
-#define BOOST_DI_REQUIRES_ERR(...) \
+#define BOOST_DI_REQUIRES_MSG(...) \
     typename constraint_not_satisfied<__VA_ARGS__>::type = 0
 
-#define BOOST_DI_REQUIRES_ERR_T(...) \
+#define BOOST_DI_REQUIRES_MSG_T(...) \
     constraint_not_satisfied<__VA_ARGS__>::type
 
 namespace boost { namespace di {

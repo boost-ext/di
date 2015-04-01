@@ -65,7 +65,7 @@ public:
     }
 
     template<class T, BOOST_DI_REQUIRES(!concepts::creatable_<injector, T, no_name, is_root_t>())>
-    BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
+    BOOST_DI_CONCEPTS_CREATABLE_ATTR
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }

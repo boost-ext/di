@@ -11,6 +11,9 @@
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 
+#define BOOST_DI_CONCEPTS_CREATABLE_ATTR \
+    BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
+
 namespace boost { namespace di {
 
 template<class T>
