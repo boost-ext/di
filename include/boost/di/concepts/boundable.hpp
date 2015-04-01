@@ -109,6 +109,11 @@ struct get_is_unique_error_impl<aux::not_unique<aux::pair<aux::pair<T, TName>, T
     using type = typename bound_type<T, TName>::is_bound_more_than_once;
 };
 
+template<class T>
+struct get_is_unique_error_impl<aux::not_unique<T>> {
+    using type = typename bound_type<T>::is_bound_more_than_once;
+};
+
 template<class>
 struct get_is_unique_error;
 
@@ -132,9 +137,13 @@ auto boundable_error_impl(aux::type_list<TDeps...>&&) -> get_error<TDeps...>;
 template<class I, class T>
 auto boundable_error_impl(I&&, T&&) ->
     std::conditional_t<
-        std::is_base_of<I, T>{}
-      , typename bound_type<T>::template is_not_base_of<I>
-      , typename bound_type<T>::template is_not_convertible_to<I>
+        std::is_base_of<I, T>{} || std::is_convertible<T, I>{}
+      , std::true_type
+      , std::conditional_t<
+            std::is_base_of<I, T>{}
+          , typename bound_type<T>::template is_not_convertible_to<I>
+          , typename bound_type<T>::template is_not_base_of<I>
+        >
     >;
 
 template<class T, class... Ts> // any_of
@@ -142,7 +151,8 @@ auto boundable_error_impl(aux::type_list<Ts...>&&, T&&) -> int;
 
 template<class... TDeps> // di::injector
 auto boundable_error_impl(aux::type<TDeps...>&&) ->
-    get_is_unique_error_impl<typename aux::is_unique<unique_dependency<TDeps>...>::type>;
+    //get_is_unique_error_impl<typename aux::is_unique<unique_dependency<TDeps>...>::type>;
+    typename get_is_unique_error_impl<typename aux::is_unique<TDeps...>::type>::type;
 
 std::false_type boundable_error_impl(...);
 
@@ -150,6 +160,9 @@ template<class... TDeps>
 constexpr auto boundable_error() {
     return decltype(boundable_error_impl(std::declval<TDeps>()...)){};
 }
+
+template<class... TDeps>
+using boundable_ = decltype(boundable_error_impl(std::declval<TDeps>()...));
 
 }}} // boost::di::concepts
 

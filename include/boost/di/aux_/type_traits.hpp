@@ -46,6 +46,12 @@
     #define BOOST_DI_ATTR_ERROR(...)
 #endif
 
+#define BOOST_DI_REQUIRES(...) \
+    typename constraint_not_satisfied_<__VA_ARGS__>::type = 0
+
+#define BOOST_DI_REQUIRES_T(...) \
+    constraint_not_satisfied_<__VA_ARGS__>::type
+
 namespace boost { namespace di { namespace aux {
 
 template<class...>
@@ -173,6 +179,19 @@ struct constraint_not_satisfied<TError, TReturn, true> {
 
 template<bool B, class TError = void, class TReturn = int>
 using REQUIRES = typename constraint_not_satisfied<TError, TReturn, B>::type;
+
+template<class...>
+struct constraint_not_satisfied_ { };
+
+template<>
+struct constraint_not_satisfied_<std::true_type> {
+    using type = int;
+};
+
+template<class T>
+struct constraint_not_satisfied_<std::true_type, T> {
+    using type = T;
+};
 
 template<class, class>
 struct errors_impl;

@@ -24,15 +24,16 @@ void
 (const std::false_type&) { }
 
 template<class... T>
-class injector
-    : public REQUIRES<
-          concepts::boundable<aux::type<T...>>()
-        , decltype(concepts::boundable_error<aux::type<T...>>())
-        , core::injector<::BOOST_DI_CFG, T...>> {
+class injector : public
+     BOOST_DI_REQUIRES_T(concepts::boundable_<aux::type<T...>>
+                       , core::injector<::BOOST_DI_CFG, T...>) {
 public:
     template<
         class TConfig
       , class... TArgs
+#if !defined(__clang__)
+     , BOOST_DI_REQUIRES(concepts::boundable_<aux::type<T...>>)
+#endif
     > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, T...>{injector} {
         int _[]{0, (
