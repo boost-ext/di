@@ -15,15 +15,13 @@
 namespace boost { namespace di {
 
 template<class>
-auto create(
-    const std::true_type&
-) { }
+void create(const std::true_type&) { }
 
 template<class>
 BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
-auto create(
-    const std::false_type&
-) { }
+void
+    create
+(const std::false_type&) { }
 
 template<class... T>
 class injector
