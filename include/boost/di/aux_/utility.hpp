@@ -9,7 +9,11 @@
 
 #include <type_traits>
 
-namespace boost { namespace di { namespace aux {
+namespace boost { namespace di {
+
+struct _ { _(...) { } };
+
+namespace aux {
 
 struct none_t { };
 
@@ -120,11 +124,7 @@ struct is_unique_impl<T1, T2, Ts...>
 template<class... Ts>
 using is_unique = is_unique_impl<none_t, Ts...>;
 
-} // aux
-
-struct _ { _(...) { } };
-
-}} // boost::di
+}}} // boost::di::aux
 
 #endif
 
