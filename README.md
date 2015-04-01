@@ -178,14 +178,13 @@ cm.brew();                              | cm.brew();
 ```cpp
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|--------------------------------------------
-                                        | template<class>
-                                        | class allow_only_smart_ptrs : public di::config<> {
+                                        | class allow_only_smart_ptrs : public di::config {
                                         | public:
                                         |   auto policies() const noexcept {
                                         |     return di::make_policies(
                                         |       constructible(
-                  ?                     |         is_smart_ptr<di::policies::_>{}
-                                        |     );
+                                        |         is_smart_ptr<di::policies::_>{}
+                  ?                     |     );
                                         |   }
                                         | };
                                         |
@@ -807,8 +806,7 @@ public:                                 | auto injector = di::make_injector<my_p
   }                                     |
 };                                      |
                                         |
-template<class>                         |
-class my_provider : public di::config<>{|
+class my_provider : public di::config { |
 public:                                 |
     auto provider() const noexcept {    |
         return heap_no_throw{};         |
@@ -824,15 +822,14 @@ public:                                 |
 Define policies configuration           | Test
 (dump types)                            |
 ----------------------------------------|-----------------------------------------
-template<class>                         | // per injector policy
-class print_types_policy                | auto injector = di::make_injector<print_types_policy>();
-    : public di::config<> {             | injector.create<int>(); // output: int
-public:                                 |
-  auto policies() const noexcept {      | // global policy
-    return di::make_policies(           | #define BOOST_DI_CFG my_policy
-      [](auto type){                    | auto injector = di::make_injector();
-         using T = decltype(type);      | injector.create<int>(); // output: int
-         using arg = typename T::type;  |
+class print_types_policy                | // per injector policy
+    : public di::config {               | auto injector = di::make_injector<print_types_policy>();
+public:                                 | injector.create<int>(); // output: int
+  auto policies() const noexcept {      |
+    return di::make_policies(           | // global policy
+      [](auto type){                    | #define BOOST_DI_CFG my_policy
+         using T = decltype(type);      | auto injector = di::make_injector();
+         using arg = typename T::type;  | injector.create<int>(); // output: int
          cout << typeid(arg).name()     |
               << endl;                  |
       }                                 |
@@ -844,40 +841,39 @@ public:                                 |
 Define policies configuration           | Test
 (dump types extended)                   |
 ----------------------------------------|-----------------------------------------
-template<class>                         | // per injector policy
-class print_types_info_policy           | auto injector = di::make_injector<print_types_info_policy>(
-    : public di::config<> {             |     di::bind<i1, impl1>
-public:                                 | );
-  auto policies() const noexcept {      |
-    return di::make_policies(           | injector.create<unique_ptr<i1>>();
-      [](auto type                      |
-       , auto dep                       | // output:
-       , auto... ctor) {                |     0 // ctor_size of impl1
-         using T = decltype(type);      |     unique_ptr<i1> // ctor arg
-         using arg = typename T::type;  |     di::no_name // ctor arg name
-         using arg_name =               |     di::deduce // scope
-            typename T::name;           |     i1 // expected
-         using D = decltype(dep);       |     impl1 // given
-         using scope =                  |     no_name // dependency
-            typename D::scope;          |
+class print_types_info_policy           | // per injector policy
+    : public di::config {               | auto injector = di::make_injector<print_types_info_policy>(
+public:                                 |     di::bind<i1, impl1>
+  auto policies() const noexcept {      | );
+    return di::make_policies(           |
+      [](auto type                      | injector.create<unique_ptr<i1>>();
+       , auto dep                       |
+       , auto... ctor) {                | // output:
+         using T = decltype(type);      |     0 // ctor_size of impl1
+         using arg = typename T::type;  |     unique_ptr<i1> // ctor arg
+         using arg_name =               |     di::no_name // ctor arg name
+            typename T::name;           |     di::deduce // scope
+         using D = decltype(dep);       |     i1 // expected
+         using scope =                  |     impl1 // given
+            typename D::scope;          |     no_name // dependency
          using expected =               |
-            typename D::expected;       | // global policy
-         using given =                  | #define BOOST_DI_CFG my_policy
-            typename D::given;          | auto injector = di::make_injector(
-         using name =                   |     di::bind<i1, impl1>
-            typename D::name;           | );
-         auto ctor_s = sizeof...(ctor); |
-                                        | injector.create<unique_ptr<i1>>();
-         cout << ctor_s                 |
-              << endl                   | // output:
-              << typeid(arg).name()     |     0 // ctor_size of impl1
-              << endl                   |     unique_ptr<i1> // cotr arg
-              << typeid(arg_name).name()|     di::no_name // ctor arg name
-              << endl                   |     di::deduce // scope
-              << typeid(scope).name()   |     i1 // expected
-              << endl                   |     impl1 // given
-              << typeid(expected).name()|     no_name // dependency
+            typename D::expected;       |
+         using given =                  | // global policy
+            typename D::given;          | #define BOOST_DI_CFG my_policy
+         using name =                   | auto injector = di::make_injector(
+            typename D::name;           |     di::bind<i1, impl1>
+         auto ctor_s = sizeof...(ctor); | );
+                                        |
+         cout << ctor_s                 | injector.create<unique_ptr<i1>>();
               << endl                   |
+              << typeid(arg).name()     | // output:
+              << endl                   |     0 // ctor_size of impl1
+              << typeid(arg_name).name()|     unique_ptr<i1> // cotr arg
+              << endl                   |     di::no_name // ctor arg name
+              << typeid(scope).name()   |     di::deduce // scope
+              << endl                   |     i1 // expected
+              << typeid(expected).name()|     impl1 // given
+              << endl                   |     no_name // dependency
               << typeid(given).name()   |
               << endl                   |
               << typeid(name).name()    |
@@ -887,6 +883,7 @@ public:                                 | );
     );                                  |
   }                                     |
 };                                      |
+|
 ```
 ```cpp
 `constructible` policy                  | Test
@@ -894,13 +891,12 @@ public:                                 | );
 #include <boost/di/                     | // global policy
     policies/constructible.hpp>         | #define BOOST_DI_CFG all_must_be_bound_unless_int
                                         | assert(0 == di::make_injector().create<int>());
-template<class>                         |
-class all_must_be_bound_unless_int      | // di::make_injector().create<double>(); // compile error
-    : public di::config<> {             | assert(42.0 == make_injector(
-public:                                 |                    di::bind<double>.to(42.0)
-  auto policies() const noexcept {      |                ).create<double>()
-    using namespace di::policies;       | );
-    using namespace                     |
+class all_must_be_bound_unless_int      |
+    : public di::config {               | // di::make_injector().create<double>(); // compile error
+public:                                 | assert(42.0 == make_injector(
+  auto policies() const noexcept {      |                    di::bind<double>.to(42.0)
+    using namespace di::policies;       |                ).create<double>()
+    using namespace                     | );
         di::policies::operators;        |
                                         |
     return di::make_policies(           |
@@ -910,6 +906,7 @@ public:                                 |                    di::bind<double>.to
     );                                  |
   }                                     |
 };                                      |
+    |
 ```
 
 *
@@ -1104,9 +1101,8 @@ injector.create<int>();                 |
 Create not bound object with all bound  | Error message
 policy                                  |
 ----------------------------------------|-----------------------------------------
-template<class>                         | error: static_assert failed
-class all_bound : public di::config<> { | "Type T is not allowed"
-public:                                 |
+class all_bound : public di::config {   | error: static_assert failed
+public:                                 | "Type T is not allowed"
   auto policies() const noexcept {      |
     return di::make_policies(           |
       constructible(is_bound<_>{})      |
