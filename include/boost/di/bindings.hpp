@@ -24,7 +24,7 @@ using any_of = aux::type_list<Ts...>;
 template<
     class TExpected
   , class TGiven = TExpected
-  , BOOST_DI_REQUIRES_ERR(concepts::boundable_<TExpected, TGiven>)
+  , BOOST_DI_REQUIRES_ERR(concepts::boundable<TExpected, TGiven>)
 > core::bind<TExpected, TGiven> bind{};
 
 constexpr scopes::deduce deduce{};

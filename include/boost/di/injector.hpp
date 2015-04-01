@@ -25,8 +25,8 @@ void
 
 template<class... T>
 class injector : public
-     BOOST_DI_REQUIRES_ERR_T(concepts::boundable_<aux::type<T...>>
-                       , core::injector<::BOOST_DI_CFG, T...>) {
+     BOOST_DI_REQUIRES_ERR_T(concepts::boundable<aux::type<T...>>
+                           , core::injector<::BOOST_DI_CFG, T...>) {
 public:
     template<
         class TConfig

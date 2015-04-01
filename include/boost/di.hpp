@@ -2102,39 +2102,6 @@ struct is_unique<aux::type_list<TDeps...>>
     : aux::is_unique<unique_dependency<TDeps>...>
 { };
 
-template<class... TDeps>
-auto boundable_impl(aux::type_list<TDeps...>&&) ->
-    std::integral_constant<bool,
-        is_supported<TDeps...>{} && is_unique<core::transform_t<TDeps...>>{}
-    >;
-
-template<class I, class T>
-auto boundable_impl(I&&, T&&) ->
-    std::integral_constant<bool,
-        std::is_convertible<T, I>{} || std::is_base_of<I, T>{}
-    >;
-
-template<class T, class... Ts> // any_of
-auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
-    std::integral_constant<
-        bool
-      , !std::is_same<
-            aux::bool_list<aux::never<Ts>{}...>
-          , aux::bool_list<std::is_base_of<Ts, T>{}...>
-        >{}
-    >;
-
-template<class... TDeps> // di::injector
-auto boundable_impl(aux::type<TDeps...>&&) ->
-    is_unique<core::transform_t<TDeps...>>;
-
-std::false_type boundable_impl(...);
-
-template<class... TDeps>
-constexpr auto boundable() {
-    return decltype(boundable_impl(std::declval<TDeps>()...)){};
-}
-
 template<class>
 struct get_is_unique_error_impl
     : std::true_type
@@ -2167,11 +2134,8 @@ using get_error =
             is_neither_a_dependency_nor_an_injector
     >;
 
-template<class... TDeps>
-auto boundable_error_impl(aux::type_list<TDeps...>&&) -> get_error<TDeps...>;
-
 template<class I, class T>
-auto boundable_error_impl(I&&, T&&) ->
+auto boundable_impl(I&&, T&&) ->
     std::conditional_t<
         std::is_base_of<I, T>{} || std::is_convertible<T, I>{}
       , std::true_type
@@ -2182,22 +2146,20 @@ auto boundable_error_impl(I&&, T&&) ->
         >
     >;
 
+template<class... TDeps> // deps
+auto boundable_impl(aux::type_list<TDeps...>&&) -> get_error<TDeps...>;
+
 template<class T, class... Ts> // any_of
-auto boundable_error_impl(aux::type_list<Ts...>&&, T&&) -> std::true_type;
+auto boundable_impl(aux::type_list<Ts...>&&, T&&) -> std::true_type;
 
 template<class... TDeps> // di::injector
-auto boundable_error_impl(aux::type<TDeps...>&&) ->
+auto boundable_impl(aux::type<TDeps...>&&) ->
     typename get_is_unique_error_impl<typename aux::is_unique<TDeps...>::type>::type;
 
-std::true_type boundable_error_impl(...);
+std::true_type boundable_impl(...);
 
 template<class... TDeps>
-constexpr auto boundable_error() {
-    return decltype(boundable_error_impl(std::declval<TDeps>()...)){};
-}
-
-template<class... TDeps>
-using boundable_ = decltype(boundable_error_impl(std::declval<TDeps>()...));
+using boundable = decltype(boundable_impl(std::declval<TDeps>()...));
 
 }}} // boost::di::concepts
 
@@ -2214,7 +2176,7 @@ using any_of = aux::type_list<Ts...>;
 template<
     class TExpected
   , class TGiven = TExpected
-  , BOOST_DI_REQUIRES_ERR(concepts::boundable_<TExpected, TGiven>)
+  , BOOST_DI_REQUIRES_ERR(concepts::boundable<TExpected, TGiven>)
 > core::bind<TExpected, TGiven> bind{};
 
 constexpr scopes::deduce deduce{};
@@ -2745,8 +2707,8 @@ void
 
 template<class... T>
 class injector : public
-     BOOST_DI_REQUIRES_ERR_T(concepts::boundable_<aux::type<T...>>
-                       , core::injector<::BOOST_DI_CFG, T...>) {
+     BOOST_DI_REQUIRES_ERR_T(concepts::boundable<aux::type<T...>>
+                           , core::injector<::BOOST_DI_CFG, T...>) {
 public:
     template<
         class TConfig
@@ -2849,7 +2811,7 @@ namespace boost { namespace di {
 template<
      class TConfig = ::BOOST_DI_CFG
    , class... TDeps
-   , BOOST_DI_REQUIRES_ERR(concepts::boundable_<aux::type_list<TDeps...>>)
+   , BOOST_DI_REQUIRES_ERR(concepts::boundable<aux::type_list<TDeps...>>)
    , BOOST_DI_REQUIRES_ERR(concepts::configurable<TConfig>)
 > inline auto make_injector(const TDeps&... args) noexcept {
     return core::injector<TConfig, TDeps...>{core::init{}, args...};
