@@ -147,14 +147,13 @@ auto boundable_error_impl(I&&, T&&) ->
     >;
 
 template<class T, class... Ts> // any_of
-auto boundable_error_impl(aux::type_list<Ts...>&&, T&&) -> int;
+auto boundable_error_impl(aux::type_list<Ts...>&&, T&&) -> std::true_type;
 
 template<class... TDeps> // di::injector
 auto boundable_error_impl(aux::type<TDeps...>&&) ->
-    //get_is_unique_error_impl<typename aux::is_unique<unique_dependency<TDeps>...>::type>;
     typename get_is_unique_error_impl<typename aux::is_unique<TDeps...>::type>::type;
 
-std::false_type boundable_error_impl(...);
+std::true_type boundable_error_impl(...);
 
 template<class... TDeps>
 constexpr auto boundable_error() {

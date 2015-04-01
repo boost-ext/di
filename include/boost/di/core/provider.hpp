@@ -69,7 +69,7 @@ template<
         return get_impl(memory, get_arg(aux::type<TArgs>{})...);
     }
 
-    template<class TMemory, class... Ts, REQUIRES<is_creatable<TMemory, Ts...>::value> = 0>
+    template<class TMemory, class... Ts, BOOST_DI_REQUIRES(is_creatable<TMemory, Ts...>::value)>
     auto get_impl(const TMemory& memory, Ts&&... args) const {
         return injector_.provider().template get<TExpected, TGiven>(
             TInitialization{}
@@ -78,7 +78,7 @@ template<
         );
     };
 
-    template<class TMemory, class... Ts, REQUIRES<!is_creatable<TMemory, Ts...>::value> = 0>
+    template<class TMemory, class... Ts, BOOST_DI_REQUIRES(!is_creatable<TMemory, Ts...>::value)>
     auto get_impl(const TMemory& memory, Ts&&... args) const {
         return concepts::creatable_error<TInitialization, TName, TGiven*, Ts...>();
     };

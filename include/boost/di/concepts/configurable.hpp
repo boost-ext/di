@@ -20,7 +20,7 @@ struct config_type {
 namespace concepts {
 
 std::false_type configurable_impl(...);
-std::false_type configurable_error_impl(...);
+std::true_type configurable_error_impl(...);
 
 template<class T>
 auto configurable_impl(T&& t) -> aux::is_valid_expr<
@@ -31,7 +31,7 @@ auto configurable_impl(T&& t) -> aux::is_valid_expr<
 template<class T>
 auto configurable_error_impl(T&&) -> std::conditional_t<
     decltype(configurable_impl(std::declval<T>())){}
-  , std::false_type
+  , std::true_type
   , typename config_type<T>::is_not_configurable
 >;
 
@@ -46,14 +46,7 @@ constexpr auto configurable_(const std::false_type&) {
 }
 
 template<class T>
-constexpr auto configurable() {
-    return configurable_<T>(decltype(configurable_impl(std::declval<T>())){});
-}
-
-template<class T>
-constexpr auto configurable_error() {
-    return decltype(configurable_error_impl(std::declval<T>())){};
-}
+using configurable = decltype(configurable_error_impl(std::declval<T>()));
 
 }}} // boost::di::concepts
 

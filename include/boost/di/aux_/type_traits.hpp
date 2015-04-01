@@ -47,12 +47,33 @@
 #endif
 
 #define BOOST_DI_REQUIRES(...) \
-    typename constraint_not_satisfied_<__VA_ARGS__>::type = 0
+    typename std::enable_if<__VA_ARGS__, int>::type = 0
 
 #define BOOST_DI_REQUIRES_T(...) \
-    constraint_not_satisfied_<__VA_ARGS__>::type
+    typename std::enable_if<__VA_ARGS__, int>::type
 
-namespace boost { namespace di { namespace aux {
+#define BOOST_DI_REQUIRES_ERR(...) \
+    typename constraint_not_satisfied<__VA_ARGS__>::type = 0
+
+#define BOOST_DI_REQUIRES_ERR_T(...) \
+    constraint_not_satisfied<__VA_ARGS__>::type
+
+namespace boost { namespace di {
+
+template<class...>
+struct constraint_not_satisfied { };
+
+template<>
+struct constraint_not_satisfied<std::true_type> {
+    using type = int;
+};
+
+template<class T>
+struct constraint_not_satisfied<std::true_type, T> {
+    using type = T;
+};
+
+namespace aux {
 
 template<class...>
 using is_valid_expr = std::true_type;
@@ -167,54 +188,7 @@ struct function_traits<R(T::*)(TArgs...) const> {
     using args = type_list<TArgs...>;
 };
 
-} // aux
-
-template<class, class, bool>
-struct constraint_not_satisfied { };
-
-template<class TError, class TReturn>
-struct constraint_not_satisfied<TError, TReturn, true> {
-    using type = TReturn;
-};
-
-template<bool B, class TError = void, class TReturn = int>
-using REQUIRES = typename constraint_not_satisfied<TError, TReturn, B>::type;
-
-template<class...>
-struct constraint_not_satisfied_ { };
-
-template<>
-struct constraint_not_satisfied_<std::true_type> {
-    using type = int;
-};
-
-template<class T>
-struct constraint_not_satisfied_<std::true_type, T> {
-    using type = T;
-};
-
-template<class, class>
-struct errors_impl;
-
-template<class T>
-struct errors_impl<std::false_type, T> {
-    using type = T;
-};
-
-template<class T>
-struct errors_impl<T, std::false_type> {
-    using type = T;
-};
-
-template<>
-struct errors_impl<std::false_type, std::false_type> {
-    using type = int;
-};
-
-template<class... Ts>
-using errors = typename errors_impl<Ts...>::type;
-
-}} // boost::di
+}}} // boost::di::aux
 
 #endif
 

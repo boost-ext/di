@@ -78,13 +78,13 @@ private:
     }
 
     template<class TArg, class TDependency, class TPolicy, class... TCtor
-           , REQUIRES<!has_call_operator<TPolicy, TArg, TDependency, TCtor...>{}> = 0>
+           , BOOST_DI_REQUIRES(!has_call_operator<TPolicy, TArg, TDependency, TCtor...>{})>
     static auto call_impl_args(const TPolicy& policy, TDependency) noexcept {
         return (policy)(TArg{});
     }
 
     template<class TArg, class TDependency, class TPolicy, class... TCtor
-           , REQUIRES<has_call_operator<TPolicy, TArg, TDependency, TCtor...>{}> = 0>
+           , BOOST_DI_REQUIRES(has_call_operator<TPolicy, TArg, TDependency, TCtor...>{})>
     static auto call_impl_args(const TPolicy& policy, TDependency dependency) noexcept {
         return (policy)(TArg{}, dependency, aux::type<TCtor>{}...);
     }

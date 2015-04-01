@@ -59,12 +59,12 @@ public:
         , config{*this}
     { }
 
-    template<class T, REQUIRES<concepts::creatable_<injector, T, no_name, is_root_t>()> = 0>
+    template<class T, BOOST_DI_REQUIRES(concepts::creatable_<injector, T, no_name, is_root_t>())>
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }
 
-    template<class T, REQUIRES<!concepts::creatable_<injector, T, no_name, is_root_t>()> = 0>
+    template<class T, BOOST_DI_REQUIRES(!concepts::creatable_<injector, T, no_name, is_root_t>())>
     BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
     T create() const {
         return create_impl<T, no_name, is_root_t>();

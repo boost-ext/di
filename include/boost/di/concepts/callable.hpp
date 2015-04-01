@@ -37,16 +37,15 @@ auto callable_impl(T&& t, TArg&& arg, TDependency&& dep, TCtor&&... ctor) -> aux
     decltype(t(arg, dep, ctor...))
 >;
 
-template<class... T>
-constexpr auto callable() {
-    return std::is_same<
-        aux::bool_list<aux::always<T>{}...>
+template<class... Ts>
+using callable =
+    typename std::is_same<
+        aux::bool_list<aux::always<Ts>{}...>
       , aux::bool_list<(
-            decltype(callable_impl(std::declval<T>(), arg{})){} ||
-            decltype(callable_impl(std::declval<T>(), arg{}, core::dependency<scopes::deduce, T>{}, ctor{})){})...
+            decltype(callable_impl(std::declval<Ts>(), arg{})){} ||
+            decltype(callable_impl(std::declval<Ts>(), arg{}, core::dependency<scopes::deduce, Ts>{}, ctor{})){})...
         >
-    >{};
-}
+    >::type;
 
 }}} // boost::di::concepts
 
