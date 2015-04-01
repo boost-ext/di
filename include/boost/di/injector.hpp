@@ -9,40 +9,42 @@
 
 #include "boost/di/core/injector.hpp"
 #include "boost/di/concepts/boundable.hpp"
+#include "boost/di/concepts/creatable.hpp"
 #include "boost/di/config.hpp"
 
 namespace boost { namespace di {
 
-template<bool... Ts>
-using all = std::is_same<aux::bool_list<(Ts, true)...>, aux::bool_list<Ts...>>;
+template<class>
+auto create(
+    const std::true_type&
+) { }
 
-template<class... TDeps>
+template<class>
+BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
+auto create(
+    const std::false_type&
+) { }
+
+template<class... T>
 class injector
     : public REQUIRES<
-          concepts::boundable<aux::type<TDeps...>>()
-        , decltype(concepts::boundable_error<aux::type<TDeps...>>())
-        , core::injector<::BOOST_DI_CFG, TDeps...>> {
+          concepts::boundable<aux::type<T...>>()
+        , decltype(concepts::boundable_error<aux::type<T...>>())
+        , core::injector<::BOOST_DI_CFG, T...>> {
 public:
-    template<class...>
-    BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
-    void t1(){}
-
     template<
         class TConfig
       , class... TArgs
-      , REQUIRES<all<concepts::creatable_<core::injector<TConfig, TArgs...>, TDeps*>()...>{}> = 0
     > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
-        : core::injector<::BOOST_DI_CFG, TDeps...>{injector}
-    { }
-
-    template<
-        class TConfig
-      , class... TArgs
-      , REQUIRES<!all<concepts::creatable_<core::injector<TConfig, TArgs...>, TDeps*>()...>{}> = 0
-    > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
-        : core::injector<::BOOST_DI_CFG, TDeps...>{injector}
-    {
-        t1<TArgs...>();
+        : core::injector<::BOOST_DI_CFG, T...>{injector} {
+        int _[]{0, (
+            create<T>(
+                std::integral_constant<bool
+                    , concepts::creatable_<core::injector<TConfig, TArgs...>, T>() ||
+                      concepts::creatable_<core::injector<TConfig, TArgs...>, T*>()
+                >{}
+            )
+        , 0)...}; (void)_;
     }
 };
 

@@ -2735,17 +2735,38 @@ private:
 
 namespace boost { namespace di {
 
-template<class... TDeps>
+template<class>
+auto create(
+    const std::true_type&
+) { }
+
+template<class>
+BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
+auto create(
+    const std::false_type&
+) { }
+
+template<class... T>
 class injector
     : public REQUIRES<
-          concepts::boundable<aux::type<TDeps...>>()
-        , decltype(concepts::boundable_error<aux::type<TDeps...>>())
-        , core::injector<::BOOST_DI_CFG, TDeps...>> {
+          concepts::boundable<aux::type<T...>>()
+        , decltype(concepts::boundable_error<aux::type<T...>>())
+        , core::injector<::BOOST_DI_CFG, T...>> {
 public:
-    template<class TConfig, class... TArgs>
-    injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
-        : core::injector<::BOOST_DI_CFG, TDeps...>{injector}
-    { }
+    template<
+        class TConfig
+      , class... TArgs
+    > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
+        : core::injector<::BOOST_DI_CFG, T...>{injector} {
+        int _[]{0, (
+            create<T>(
+                std::integral_constant<bool
+                    , concepts::creatable_<core::injector<TConfig, TArgs...>, T>() ||
+                      concepts::creatable_<core::injector<TConfig, TArgs...>, T*>()
+                >{}
+            )
+        , 0)...}; (void)_;
+    }
 };
 
 }} // boost::di
