@@ -984,7 +984,7 @@ public:
 
         struct iprovider {
             virtual ~iprovider() noexcept = default;
-            virtual TExpected* get(const type_traits::heap& = {}) const noexcept = 0;
+            virtual TExpected* get(const type_traits::heap& = {}) const noexcept { return nullptr; /*for gcc*/ }
             virtual type get(const type_traits::stack&) const noexcept = 0;
         };
 
@@ -1035,7 +1035,7 @@ public:
 #define BOOST_DI_FWD_HPP
 
 namespace boost { namespace di {
-namespace aux { struct none_t; };
+namespace aux { struct none_t; }
 namespace core {
 template<class = void, class = aux::none_t, class = std::false_type>
 struct any_type;
@@ -2472,12 +2472,12 @@ template<
           , memory
           , args...
         );
-    };
+    }
 
     template<class TMemory, class... Ts, BOOST_DI_REQUIRES(!is_creatable<TMemory, Ts...>::value)>
     auto get_impl(const TMemory& memory, Ts&&... args) const {
         return concepts::creatable_error<TInitialization, TName, TGiven*, Ts...>();
-    };
+    }
 
     template<class T>
     auto get_arg(const aux::type<T>&) const {

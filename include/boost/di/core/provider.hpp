@@ -76,12 +76,12 @@ template<
           , memory
           , args...
         );
-    };
+    }
 
     template<class TMemory, class... Ts, BOOST_DI_REQUIRES(!is_creatable<TMemory, Ts...>::value)>
     auto get_impl(const TMemory& memory, Ts&&... args) const {
         return concepts::creatable_error<TInitialization, TName, TGiven*, Ts...>();
-    };
+    }
 
     template<class T>
     auto get_arg(const aux::type<T>&) const {
