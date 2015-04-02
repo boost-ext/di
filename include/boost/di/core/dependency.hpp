@@ -45,7 +45,7 @@ template<
   , class TPriority = std::integral_constant<bool, TScope::priority>
 > class dependency;
 
-struct dependency_ { };
+struct dependency_base { };
 
 template<class I, class Impl>
 struct bind : dependency<scopes::deduce, I, Impl> {
@@ -63,7 +63,7 @@ template<
   , class TPriority
 > class dependency
     : public TScope::template scope<TExpected, TGiven>
-    , public dependency_
+    , public dependency_base
     , public dependency_impl<
           dependency_concept<TExpected, TName>
         , dependency<TScope, TExpected, TGiven, TName, TPriority>
@@ -90,7 +90,6 @@ public:
 
     template<class T> // no requirements
     auto named(const T&) const noexcept {
-        //return typename bind<TExpected, TGiven>::template named_<T>{*this};
         return dependency<TScope, TExpected, TGiven, T>{*this};
     }
 
@@ -126,7 +125,7 @@ public:
 };
 
 template<class T>
-struct is_dependency : std::is_base_of<dependency_, T> { };
+struct is_dependency : std::is_base_of<dependency_base, T> { };
 
 }}} // boost::di::core
 

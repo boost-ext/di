@@ -40,11 +40,6 @@ using void_t = void;
     struct never : std::false_type { };
 #endif
 
-template<class T>
-struct identity {
-    using type = T;
-};
-
 template<class, class>
 struct pair { using type = pair; };
 
