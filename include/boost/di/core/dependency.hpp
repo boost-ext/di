@@ -11,6 +11,7 @@
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/scopes/deduce.hpp"
+#include "boost/di/concepts/scopable.hpp"
 #include "boost/di/fwd.hpp"
 
 namespace boost { namespace di { namespace core {
@@ -93,7 +94,7 @@ public:
         return dependency<TScope, TExpected, TGiven, T>{*this};
     }
 
-    template<class T>
+    template<class T, BOOST_DI_REQUIRES(concepts::scopable<T>())>
     auto in(const T&) const noexcept {
         return dependency<T, TExpected, TGiven, TName>{};
     }
