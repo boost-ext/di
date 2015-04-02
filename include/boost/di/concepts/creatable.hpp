@@ -30,6 +30,18 @@ struct is_not_bound {
     const;
 };
 
+struct is_not_fully_implemented {
+    constexpr operator T*() const {
+        using constraint_not_satisfied = is_not_fully_implemented;
+        return
+            constraint_not_satisfied{}.error();
+    }
+
+    constexpr T*
+    error(_ = "type not implemented, did you forget to implement all interface methods?")
+    const;
+};
+
 template<class TName>
 struct named {
 struct is_not_bound {
@@ -42,7 +54,21 @@ struct is_not_bound {
     constexpr T*
     error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>.named(name)'?")
     const;
-};};};
+};
+
+struct is_not_fully_implemented {
+    constexpr operator T*() const {
+        using constraint_not_satisfied = is_not_fully_implemented;
+        return
+            constraint_not_satisfied{}.error();
+    }
+
+    constexpr T*
+    error(_ = "type not implemented, did you forget to implement all interface methods?")
+    const;
+};
+
+};};
 
 template<class TParent>
 struct when_creating {
@@ -197,7 +223,7 @@ struct ctor_size<aux::pair<TInit, aux::type_list<TCtor...>>>
     : std::integral_constant<int, sizeof...(TCtor)>
 { };
 
-template<class, class, class, class>
+template<class...>
 struct creatable_error_impl;
 
 template<class T>
@@ -208,11 +234,15 @@ using ctor_size_t = ctor_size<
     >::type
 >;
 
-template<class TInitialization, class TName, class T, class... TCtor>
-struct creatable_error_impl<TInitialization, TName, T, aux::type_list<TCtor...>>
+template<class TInitialization, class TName, class I, class T, class... TCtor>
+struct creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TCtor...>>
     : std::conditional_t<
           std::is_abstract<aux::decay_t<T>>{}
-        , std::conditional_t<std::is_same<TName, no_name>{}, typename abstract_type<aux::decay_t<T>>::is_not_bound, typename abstract_type<aux::decay_t<T>>::template named<TName>::is_not_bound>
+        , std::conditional_t<
+              std::is_same<I, T>{}
+            , std::conditional_t<std::is_same<TName, no_name>{}, typename abstract_type<aux::decay_t<T>>::is_not_bound, typename abstract_type<aux::decay_t<T>>::template named<TName>::is_not_bound>
+            , std::conditional_t<std::is_same<TName, no_name>{}, typename abstract_type<aux::decay_t<T>>::is_not_fully_implemented, typename abstract_type<aux::decay_t<T>>::template named<TName>::is_not_fully_implemented>
+          >
         , std::conditional_t<
               ctor_size_t<T>{} == sizeof...(TCtor)
             , std::conditional_t<
@@ -238,9 +268,9 @@ struct creatable<type_traits::uniform, T, Ts...> {
     static constexpr auto value = aux::is_braces_constructible<T, Ts...>::value;
 };
 
-template<class TInitialization, class TName, class T, class... Ts>
+template<class TInitialization, class TName, class I, class T, class... Ts>
 constexpr T creatable_error() {
-    return creatable_error_impl<TInitialization, TName, T, aux::type_list<Ts...>>{};
+    return creatable_error_impl<TInitialization, TName, I, T, aux::type_list<Ts...>>{};
 }
 
 auto creatable_impl_(...) -> std::false_type;
