@@ -23,6 +23,9 @@ struct bound_type {
 
     template<class>
     struct is_not_convertible_to { };
+
+    template<class>
+    struct is_not_declaring_anything_with_the_same_type { };
 };
 
 namespace concepts {
@@ -107,11 +110,15 @@ using get_any_of_error = std::conditional_t<
 template<class I, class T> // expected -> given
 auto boundable_impl(I&&, T&&) ->
     std::conditional_t<
-        std::is_base_of<I, T>{} || std::is_convertible<T, I>{}
+        std::is_convertible<T, I>{} || (std::is_base_of<I, T>{} && !std::is_same<I, T>{})
       , std::true_type
       , std::conditional_t<
             std::is_base_of<I, T>{}
-          , typename bound_type<T>::template is_not_convertible_to<I>
+          , std::conditional_t<
+                std::is_same<I, T>{}
+              , typename bound_type<T>::template is_not_declaring_anything_with_the_same_type<I>
+              , typename bound_type<T>::template is_not_convertible_to<I>
+            >
           , typename bound_type<T>::template is_not_base_of<I>
         >
     >;
