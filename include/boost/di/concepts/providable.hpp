@@ -11,9 +11,17 @@
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
 
-namespace boost { namespace di { namespace concepts {
+namespace boost { namespace di {
 
-std::false_type providable_impl(...);
+template<class>
+struct provider {
+    struct is_not_providable { };
+};
+
+namespace concepts {
+
+template<class T>
+typename provider<T>::is_not_providable providable_impl(...);
 
 template<class T>
 auto providable_impl(T&& t) -> aux::is_valid_expr<
@@ -21,13 +29,12 @@ auto providable_impl(T&& t) -> aux::is_valid_expr<
   , decltype(t.template get<_, _>(type_traits::direct{}, type_traits::heap{}, int{}))
   , decltype(t.template get<_, _>(type_traits::uniform{}, type_traits::stack{}))
   , decltype(t.template get<_, _>(type_traits::uniform{}, type_traits::stack{}, int{}))
-    //is_creatable
+  , decltype(T::template is_creatable<type_traits::direct, type_traits::heap, _>::value)
+  , decltype(T::template is_creatable<type_traits::uniform, type_traits::stack, _, int>::value)
 >;
 
 template<class T>
-constexpr auto providable() {
-    return decltype(providable_impl(std::declval<T>())){};
-}
+using providable = decltype(providable_impl<T>(std::declval<T>()));
 
 }}} // boost::di::concepts
 

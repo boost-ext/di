@@ -33,7 +33,7 @@ struct callable_type_extended {
     void operator()(T, TDep, TCtor...) const noexcept;
 };
 
-test is_callable = [] {
+test is_concept_callable = [] {
     static_expect(!callable<int>());
     static_expect(!callable<non_callable_type>());
     static_expect(!callable<non_match_callable_type>());

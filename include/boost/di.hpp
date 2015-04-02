@@ -432,7 +432,7 @@ struct unique<T*> {
     }
 
     template<class I>
-    inline operator I*()  noexcept {
+    inline operator I*() const noexcept {
         return object; // ownership transfer
     }
 
@@ -1182,7 +1182,15 @@ struct is_dependency : std::is_base_of<dependency_, T> { };
 #ifndef BOOST_DI_CONCEPTS_CALLABLE_HPP
 #define BOOST_DI_CONCEPTS_CALLABLE_HPP
 
-namespace boost { namespace di { namespace concepts {
+namespace boost { namespace di {
+
+template<class...>
+struct policy {
+    struct is_not_callable { };
+    struct is_not_configurable { };
+};
+
+namespace concepts {
 
 struct arg {
     using type = void;
@@ -1207,15 +1215,41 @@ auto callable_impl(T&& t, TArg&& arg, TDependency&& dep, TCtor&&... ctor) -> aux
     decltype(t(arg, dep, ctor...))
 >;
 
+template<class...>
+struct is_callable_impl;
+
+template<class T, class... Ts>
+struct is_callable_impl<T, Ts...> {
+    using type = std::conditional_t<
+        decltype(callable_impl(std::declval<T>(), arg{})){} ||
+        decltype(callable_impl(std::declval<T>(), arg{}, core::dependency<scopes::deduce, T>{}, ctor{})){}
+      , typename is_callable_impl<Ts...>::type
+      , typename policy<T>::is_not_callable
+    >;
+};
+
+template<>
+struct is_callable_impl<>
+    : std::true_type
+{ };
+
 template<class... Ts>
-using callable =
-    typename std::is_same<
-        aux::bool_list<aux::always<Ts>{}...>
-      , aux::bool_list<(
-            decltype(callable_impl(std::declval<Ts>(), arg{})){} ||
-            decltype(callable_impl(std::declval<Ts>(), arg{}, core::dependency<scopes::deduce, Ts>{}, ctor{})){})...
-        >
-    >::type;
+struct is_callable
+    : is_callable_impl<Ts...>
+{ };
+
+template<class... Ts>
+struct is_callable<core::pool<aux::type_list<Ts...>>>
+    : is_callable_impl<Ts...>
+{ };
+
+template<>
+struct is_callable<void> { // auto
+    using type = policy<>::is_not_configurable;
+};
+
+template<class... Ts>
+using callable = typename is_callable<Ts...>::type;
 
 }}} // boost::di::concepts
 
@@ -2702,54 +2736,20 @@ private:
 
 #endif
 
-#ifndef BOOST_DI_INJECTOR_HPP
-#define BOOST_DI_INJECTOR_HPP
+#ifndef BOOST_DI_CONCEPTS_PROVIDABLE_HPP
+#define BOOST_DI_CONCEPTS_PROVIDABLE_HPP
 
 namespace boost { namespace di {
 
 template<class>
-void create(const std::true_type&) { }
-
-template<class>
-BOOST_DI_CONCEPTS_CREATABLE_ATTR
-void
-    create
-(const std::false_type&) { }
-
-template<class... T>
-class injector : public
-     BOOST_DI_REQUIRES_MSG_T(concepts::boundable<aux::type<T...>>
-                           , core::injector<::BOOST_DI_CFG, T...>) {
-public:
-    template<
-        class TConfig
-      , class... TArgs
-#if !defined(__clang__)
-     , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>)
-#endif
-    > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
-        : core::injector<::BOOST_DI_CFG, T...>{injector} {
-        int _[]{0, (
-            create<T>(
-                std::integral_constant<bool
-                    , concepts::creatable_<core::injector<TConfig, TArgs...>, T>() ||
-                      concepts::creatable_<core::injector<TConfig, TArgs...>, T*>()
-                >{}
-            )
-        , 0)...}; (void)_;
-    }
+struct provider {
+    struct is_not_providable { };
 };
 
-}} // boost::di
+namespace concepts {
 
-#endif
-
-#ifndef BOOST_DI_CONCEPTS_PROVIDABLE_HPP
-#define BOOST_DI_CONCEPTS_PROVIDABLE_HPP
-
-namespace boost { namespace di { namespace concepts {
-
-std::false_type providable_impl(...);
+template<class T>
+typename provider<T>::is_not_providable providable_impl(...);
 
 template<class T>
 auto providable_impl(T&& t) -> aux::is_valid_expr<
@@ -2757,13 +2757,12 @@ auto providable_impl(T&& t) -> aux::is_valid_expr<
   , decltype(t.template get<_, _>(type_traits::direct{}, type_traits::heap{}, int{}))
   , decltype(t.template get<_, _>(type_traits::uniform{}, type_traits::stack{}))
   , decltype(t.template get<_, _>(type_traits::uniform{}, type_traits::stack{}, int{}))
-    //is_creatable
+  , decltype(T::template is_creatable<type_traits::direct, type_traits::heap, _>::value)
+  , decltype(T::template is_creatable<type_traits::uniform, type_traits::stack, _, int>::value)
 >;
 
 template<class T>
-constexpr auto providable() {
-    return decltype(providable_impl(std::declval<T>())){};
-}
+using providable = decltype(providable_impl<T>(std::declval<T>()));
 
 }}} // boost::di::concepts
 
@@ -2782,35 +2781,109 @@ struct config_type {
 namespace concepts {
 
 std::false_type configurable_impl(...);
-std::true_type configurable_error_impl(...);
 
 template<class T>
 auto configurable_impl(T&& t) -> aux::is_valid_expr<
-    decltype(t.provider())
+    decltype(static_cast<const T&>(t).provider())
   , decltype(t.policies())
 >;
 
-template<class T>
-auto configurable_error_impl(T&&) -> std::conditional_t<
-    decltype(configurable_impl(std::declval<T>())){}
-  , std::true_type
-  , typename config_type<T>::is_not_configurable
->;
+template<class T1, class T2>
+struct get_configurable_error
+    : aux::type_list<T1, T2>
+{ };
 
 template<class T>
-constexpr auto configurable_(const std::true_type&) {
-    return providable<decltype(std::declval<T>().provider())>(); // && policies -> pool<type_list<...>>
+struct get_configurable_error<std::true_type, T> {
+    using type = T;
+};
+
+template<class T>
+struct get_configurable_error<T, std::true_type> {
+    using type = T;
+};
+
+template<>
+struct get_configurable_error<std::true_type, std::true_type>
+    : std::true_type
+{ };
+
+template<class T>
+constexpr auto is_configurable(const std::true_type&) {
+    return typename get_configurable_error<
+        decltype(providable<decltype(std::declval<T>().provider())>())
+      , decltype(callable<decltype(std::declval<T>().policies())>())
+    >::type{};
 }
 
 template<class T>
-constexpr auto configurable_(const std::false_type&) {
-    return false;
+constexpr auto is_configurable(const std::false_type&) {
+    return typename config_type<T>::is_not_configurable{};
 }
 
 template<class T>
-using configurable = decltype(configurable_error_impl(std::declval<T>()));
+using configurable = decltype(is_configurable<T>(decltype(configurable_impl(std::declval<T>())){}));
 
 }}} // boost::di::concepts
+
+#endif
+
+#ifndef BOOST_DI_INJECTOR_HPP
+#define BOOST_DI_INJECTOR_HPP
+
+namespace boost { namespace di { namespace detail {
+
+template<class>
+void create(const std::true_type&) { }
+
+template<class>
+BOOST_DI_CONCEPTS_CREATABLE_ATTR
+void
+    create
+(const std::false_type&) { }
+
+template<class...>
+struct is_creatable
+    : std::true_type
+{ };
+
+template<class TInjector, class _>
+struct is_creatable<std::true_type, TInjector, _>
+    : std::integral_constant<bool
+        , concepts::creatable_<TInjector, _>() ||
+          concepts::creatable_<TInjector, _*>()
+      >
+{ };
+
+} // namespace detail
+
+template<class... T>
+class injector : public
+     BOOST_DI_REQUIRES_MSG_T(concepts::boundable<aux::type<T...>>
+                           , core::injector<::BOOST_DI_CFG, T...>) {
+public:
+    template<
+        class TConfig
+      , class... TArgs
+#if !defined(__clang__)
+     , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>)
+#endif
+    > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
+        : core::injector<::BOOST_DI_CFG, T...>{injector} {
+        using namespace detail;
+        int _[]{0, (
+            create<T>(
+                detail::is_creatable<
+                    typename std::is_same<concepts::configurable<TConfig>, std::true_type>::type
+                  , core::injector<TConfig, TArgs...>
+                  , T
+                >{}
+            )
+        , 0)...}; (void)_;
+    }
+};
+
+}} // boost::di
 
 #endif
 

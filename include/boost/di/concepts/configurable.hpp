@@ -9,6 +9,7 @@
 
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/concepts/providable.hpp"
+#include "boost/di/concepts/callable.hpp"
 
 namespace boost { namespace di {
 
@@ -20,33 +21,48 @@ struct config_type {
 namespace concepts {
 
 std::false_type configurable_impl(...);
-std::true_type configurable_error_impl(...);
 
 template<class T>
 auto configurable_impl(T&& t) -> aux::is_valid_expr<
-    decltype(t.provider())
+    decltype(static_cast<const T&>(t).provider())
   , decltype(t.policies())
 >;
 
-template<class T>
-auto configurable_error_impl(T&&) -> std::conditional_t<
-    decltype(configurable_impl(std::declval<T>())){}
-  , std::true_type
-  , typename config_type<T>::is_not_configurable
->;
+template<class T1, class T2>
+struct get_configurable_error
+    : aux::type_list<T1, T2>
+{ };
 
 template<class T>
-constexpr auto configurable_(const std::true_type&) {
-    return providable<decltype(std::declval<T>().provider())>(); // && policies -> pool<type_list<...>>
+struct get_configurable_error<std::true_type, T> {
+    using type = T;
+};
+
+template<class T>
+struct get_configurable_error<T, std::true_type> {
+    using type = T;
+};
+
+template<>
+struct get_configurable_error<std::true_type, std::true_type>
+    : std::true_type
+{ };
+
+template<class T>
+constexpr auto is_configurable(const std::true_type&) {
+    return typename get_configurable_error<
+        decltype(providable<decltype(std::declval<T>().provider())>())
+      , decltype(callable<decltype(std::declval<T>().policies())>())
+    >::type{};
 }
 
 template<class T>
-constexpr auto configurable_(const std::false_type&) {
-    return false;
+constexpr auto is_configurable(const std::false_type&) {
+    return typename config_type<T>::is_not_configurable{};
 }
 
 template<class T>
-using configurable = decltype(configurable_error_impl(std::declval<T>()));
+using configurable = decltype(is_configurable<T>(decltype(configurable_impl(std::declval<T>())){}));
 
 }}} // boost::di::concepts
 

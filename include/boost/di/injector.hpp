@@ -10,9 +10,10 @@
 #include "boost/di/core/injector.hpp"
 #include "boost/di/concepts/boundable.hpp"
 #include "boost/di/concepts/creatable.hpp"
+#include "boost/di/concepts/configurable.hpp"
 #include "boost/di/config.hpp"
 
-namespace boost { namespace di {
+namespace boost { namespace di { namespace detail {
 
 template<class>
 void create(const std::true_type&) { }
@@ -22,6 +23,21 @@ BOOST_DI_CONCEPTS_CREATABLE_ATTR
 void
     create
 (const std::false_type&) { }
+
+template<class...>
+struct is_creatable
+    : std::true_type
+{ };
+
+template<class TInjector, class _>
+struct is_creatable<std::true_type, TInjector, _>
+    : std::integral_constant<bool
+        , concepts::creatable_<TInjector, _>() ||
+          concepts::creatable_<TInjector, _*>()
+      >
+{ };
+
+} // namespace detail
 
 template<class... T>
 class injector : public
@@ -36,11 +52,13 @@ public:
 #endif
     > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, T...>{injector} {
+        using namespace detail;
         int _[]{0, (
             create<T>(
-                std::integral_constant<bool
-                    , concepts::creatable_<core::injector<TConfig, TArgs...>, T>() ||
-                      concepts::creatable_<core::injector<TConfig, TArgs...>, T*>()
+                detail::is_creatable<
+                    typename std::is_same<concepts::configurable<TConfig>, std::true_type>::type
+                  , core::injector<TConfig, TArgs...>
+                  , T
                 >{}
             )
         , 0)...}; (void)_;

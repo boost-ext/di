@@ -9,10 +9,19 @@
 
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/core/dependency.hpp"
+#include "boost/di/core/pool.hpp"
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/fwd.hpp"
 
-namespace boost { namespace di { namespace concepts {
+namespace boost { namespace di {
+
+template<class...>
+struct policy {
+    struct is_not_callable { };
+    struct is_not_configurable { };
+};
+
+namespace concepts {
 
 struct arg {
     using type = void;
@@ -37,15 +46,41 @@ auto callable_impl(T&& t, TArg&& arg, TDependency&& dep, TCtor&&... ctor) -> aux
     decltype(t(arg, dep, ctor...))
 >;
 
+template<class...>
+struct is_callable_impl;
+
+template<class T, class... Ts>
+struct is_callable_impl<T, Ts...> {
+    using type = std::conditional_t<
+        decltype(callable_impl(std::declval<T>(), arg{})){} ||
+        decltype(callable_impl(std::declval<T>(), arg{}, core::dependency<scopes::deduce, T>{}, ctor{})){}
+      , typename is_callable_impl<Ts...>::type
+      , typename policy<T>::is_not_callable
+    >;
+};
+
+template<>
+struct is_callable_impl<>
+    : std::true_type
+{ };
+
 template<class... Ts>
-using callable =
-    typename std::is_same<
-        aux::bool_list<aux::always<Ts>{}...>
-      , aux::bool_list<(
-            decltype(callable_impl(std::declval<Ts>(), arg{})){} ||
-            decltype(callable_impl(std::declval<Ts>(), arg{}, core::dependency<scopes::deduce, Ts>{}, ctor{})){})...
-        >
-    >::type;
+struct is_callable
+    : is_callable_impl<Ts...>
+{ };
+
+template<class... Ts>
+struct is_callable<core::pool<aux::type_list<Ts...>>>
+    : is_callable_impl<Ts...>
+{ };
+
+template<>
+struct is_callable<void> { // auto
+    using type = policy<>::is_not_configurable;
+};
+
+template<class... Ts>
+using callable = typename is_callable<Ts...>::type;
 
 }}} // boost::di::concepts
 
