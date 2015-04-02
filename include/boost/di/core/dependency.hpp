@@ -88,7 +88,7 @@ public:
         : scope_t(other)
     { }
 
-    template<class T>
+    template<class T> // no requirements
     auto named(const T&) const noexcept {
         //return typename bind<TExpected, TGiven>::template named_<T>{*this};
         return dependency<TScope, TExpected, TGiven, T>{*this};

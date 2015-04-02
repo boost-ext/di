@@ -1545,7 +1545,7 @@ public:
         : scope_t(other)
     { }
 
-    template<class T>
+    template<class T> // no requirements
     auto named(const T&) const noexcept {
         //return typename bind<TExpected, TGiven>::template named_<T>{*this};
         return dependency<TScope, TExpected, TGiven, T>{*this};
@@ -1798,8 +1798,10 @@ struct args<type_traits::uniform, TDummy> {
     auto impl() const {
         return nullptr;
     }
-};
+};};
 
+template<class T>
+struct type<T> {
 template<class To>
 struct is_not_convertible_to {
     constexpr operator To() const {

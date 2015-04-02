@@ -141,8 +141,10 @@ struct args<type_traits::uniform, TDummy> {
     auto impl() const {
         return nullptr;
     }
-};
+};};
 
+template<class T>
+struct type<T> {
 template<class To>
 struct is_not_convertible_to {
     constexpr operator To() const {
