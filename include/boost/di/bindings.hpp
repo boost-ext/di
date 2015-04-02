@@ -18,8 +18,8 @@
 
 namespace boost { namespace di {
 
-template<class... Ts>
-using any_of = aux::type_list<Ts...>;
+template<class T1, class T2, class... Ts>
+using any_of = aux::type_list<T1, T2, Ts...>;
 
 template<
     class TExpected

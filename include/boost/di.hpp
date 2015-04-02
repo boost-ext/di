@@ -432,7 +432,7 @@ struct unique<T*> {
     }
 
     template<class I>
-    inline operator I*() const noexcept {
+    inline operator I*()  noexcept {
         return object; // ownership transfer
     }
 
@@ -2129,7 +2129,7 @@ struct get_is_unique_error<aux::type_list<TDeps...>>
 { };
 
 template<class... TDeps>
-using get_error =
+using get_bindings_error =
     std::conditional_t<
         is_supported<TDeps...>{}
       , typename get_is_unique_error<core::transform_t<TDeps...>>::type
@@ -2137,7 +2137,14 @@ using get_error =
             is_neither_a_dependency_nor_an_injector
     >;
 
-template<class I, class T>
+template<class... Ts>
+using get_any_of_error = std::conditional_t<
+    std::is_same<aux::bool_list<aux::always<Ts>{}...>, aux::bool_list<std::is_same<std::true_type, Ts>{}...>>{}
+  , std::true_type
+  , aux::type_list<Ts...>
+ >;
+
+template<class I, class T> // expected -> given
 auto boundable_impl(I&&, T&&) ->
     std::conditional_t<
         std::is_base_of<I, T>{} || std::is_convertible<T, I>{}
@@ -2149,13 +2156,14 @@ auto boundable_impl(I&&, T&&) ->
         >
     >;
 
-template<class... TDeps> // deps
-auto boundable_impl(aux::type_list<TDeps...>&&) -> get_error<TDeps...>;
+template<class... TDeps> // bindings
+auto boundable_impl(aux::type_list<TDeps...>&&) -> get_bindings_error<TDeps...>;
 
 template<class T, class... Ts> // any_of
-auto boundable_impl(aux::type_list<Ts...>&&, T&&) -> std::true_type;
+auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
+    get_any_of_error<decltype(boundable_impl(std::declval<Ts>(), std::declval<T>()))...>;
 
-template<class... TDeps> // di::injector
+template<class... TDeps> // injector
 auto boundable_impl(aux::type<TDeps...>&&) ->
     typename get_is_unique_error_impl<typename aux::is_unique<TDeps...>::type>::type;
 
@@ -2173,8 +2181,8 @@ using boundable = decltype(boundable_impl(std::declval<TDeps>()...));
 
 namespace boost { namespace di {
 
-template<class... Ts>
-using any_of = aux::type_list<Ts...>;
+template<class T1, class T2, class... Ts>
+using any_of = aux::type_list<T1, T2, Ts...>;
 
 template<
     class TExpected
