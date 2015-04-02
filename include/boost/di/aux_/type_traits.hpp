@@ -50,7 +50,7 @@
     typename std::enable_if<__VA_ARGS__, int>::type = 0
 
 #define BOOST_DI_REQUIRES_T(...) \
-    typename std::enable_if<__VA_ARGS__, int>::type
+    std::enable_if_t<__VA_ARGS__>
 
 #define BOOST_DI_REQUIRES_MSG(...) \
     typename constraint_not_satisfied<__VA_ARGS__>::type = 0

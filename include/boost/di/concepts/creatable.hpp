@@ -154,7 +154,7 @@ struct is_not_convertible_to {
     }
 
     constexpr To
-    error(_ = "type not convertible, missing 'di::bind<type>.to(ref(value))'")
+    error(_ = "wrapper is not convertible to requested type, did you mistake the scope?")
     const;
 };};
 

@@ -204,7 +204,7 @@ using is_unique = is_unique_impl<none_t, Ts...>;
     typename std::enable_if<__VA_ARGS__, int>::type = 0
 
 #define BOOST_DI_REQUIRES_T(...) \
-    typename std::enable_if<__VA_ARGS__, int>::type
+    std::enable_if_t<__VA_ARGS__>
 
 #define BOOST_DI_REQUIRES_MSG(...) \
     typename constraint_not_satisfied<__VA_ARGS__>::type = 0
@@ -1811,7 +1811,7 @@ struct is_not_convertible_to {
     }
 
     constexpr To
-    error(_ = "type not convertible, missing 'di::bind<type>.to(ref(value))'")
+    error(_ = "wrapper is not convertible to requested type, did you mistake the scope?")
     const;
 };};
 
