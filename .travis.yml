@@ -9,11 +9,13 @@ compiler:
 #  - gcc
 
 before_install:
-  - sudo pip install cpp-coveralls pyyaml
+  - sudo apt-get -qq install valgrind; fi
+  - sudo pip install cpp-coveralls
   - cd build && ./bootstrap.sh --with-toolset=clang
 
 script:
   - ./b2 -j4 -q --toolset=clang debug-symbols=off cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++" ../test ../example
+  - find .. -type f -executable | xargs -i% valgrind --error-exitcode=-1 %
 
 after_success:
   #- coveralls --exclude benchmark --exclude test --gcov-options '\-lp' --gcov 'gcov-4.8'

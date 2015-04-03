@@ -2,8 +2,11 @@ Boost.DI: C++ Dependency Injection
 ===============================================
 
 [![Boost Libraries](https://raw.githubusercontent.com/krzysztof-jusiak/di/gh-pages/boost/boost.png)](http://www.boost.org)
+[![Boost Licence](http://img.shields.io/badge/license-boost-blue.svg)](http://www.boost.org/LICENSE_1_0.txt)
 [![Build Status](https://img.shields.io/travis/krzysztof-jusiak/di/cpp14.svg)](https://travis-ci.org/krzysztof-jusiak/di)
+[![Coveralls](http://img.shields.io/coveralls/krzysztof-jusiak/di/cpp14.svg)](https://coveralls.io/r/krzysztof-jusiak/di?branch=cpp14)
 [![Github Issues](https://img.shields.io/github/issues/krzysztof-jusiak/di.svg)](http://github.com/krzysztof-jusiak/di/issues)
+[![Github Release](http://img.shields.io/github/release/krzysztof-jusiak/di.svg)](https://github.com/krzysztof-jusiak/di/releases)
 
 **Download [current stable version (C++14)](https://github.com/krzysztof-jusiak/di/releases/tag/di-1.0-cpp14)**
 
@@ -1151,8 +1154,6 @@ BOOST_DI_INJECTOR                       | Named used internally by Boost.DI
 * C++ | [dicpp](https://bitbucket.org/cheez/dicpp) | [Fruit](https://github.com/google/fruit)
 * Java | [Dagger 2](https://github.com/google/dagger) | [Guice](https://github.com/google/guice)
 * C# | [Ninject](http://www.ninject.org)
-
-**License** Distributed under the [Boost Software License, Version 1.0](http://www.boost.org/LICENSE_1_0.txt).
 
 ---
 
