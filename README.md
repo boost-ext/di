@@ -1,8 +1,6 @@
-<p align="right">
 [![Boost Licence](http://img.shields.io/badge/license-boost-blue.svg)](http://www.boost.org/LICENSE_1_0.txt)
 [![Github Release](http://img.shields.io/github/release/krzysztof-jusiak/di.svg)](https://github.com/krzysztof-jusiak/di/releases/latest)
 
-</p>
 Boost.DI: C++ Dependency Injection
 ===============================================
 [![Boost Libraries](https://raw.githubusercontent.com/krzysztof-jusiak/di/gh-pages/boost/boost.png)](http://www.boost.org)
