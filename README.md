@@ -6,7 +6,9 @@ Boost.DI [![Boost Licence](http://img.shields.io/badge/license-boost-blue.svg)](
 [![Valgrind](https://img.shields.io/badge/valgrind-clean-brightgreen.svg)](https://travis-ci.org/krzysztof-jusiak/di)
 [![Github Issues](https://img.shields.io/github/issues/krzysztof-jusiak/di.svg)](http://github.com/krzysztof-jusiak/di/issues)
 
-> **C++ Dependency Injection Library**
+<p align="right">
+C++ Dependency Injection Library
+</p>
 
 ===============================================
 
