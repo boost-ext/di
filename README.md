@@ -13,8 +13,8 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 
 [![Boost Licence](http://img.shields.io/badge/license-boost-blue.svg)](http://www.boost.org/LICENSE_1_0.txt)
 [![Github Release](http://img.shields.io/github/release/krzysztof-jusiak/di.svg)](https://github.com/krzysztof-jusiak/di/releases/latest)
+[![Todo](https://img.shields.io/badge/Todo-0-blue.svg)](http://waffle.io/krzysztof-jusiak/di)
 [![Gitter Chat](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)](https://gitter.im/krzysztof-jusiak/di)
-[![Todo](https://badge.waffle.io/krzysztof-jusiak/di.svg?label=ready&title=Todo)](http://waffle.io/krzysztof-jusiak/di)
 
 > **"Let's make some coffee!"**
 <p align="center"><img src="https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker.png" alt="coffee maker"/></p>
