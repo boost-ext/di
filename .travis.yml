@@ -1,7 +1,7 @@
 language: cpp
 
 os:
-#  - linux
+  - linux
   - osx
 
 compiler:
@@ -9,13 +9,13 @@ compiler:
 #  - gcc
 
 before_install:
-  - sudo apt-get -qq install valgrind
   - sudo pip install cpp-coveralls
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get -qq install valgrind; fi
   - cd build && ./bootstrap.sh --with-toolset=clang
 
 script:
   - ./b2 -j4 -q --toolset=clang debug-symbols=off cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++" ../test ../example
-  - find .. -type f -executable | xargs -i% valgrind --error-exitcode=-1 %
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then find .. -type f -executable | xargs -i% valgrind --error-exitcode=-1 %; fi
 
 after_success:
   #- coveralls --exclude benchmark --exclude test --gcov-options '\-lp' --gcov 'gcov-4.8'
