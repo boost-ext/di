@@ -1,7 +1,5 @@
 Boost.DI: C++ Dependency Injection
 ===============================================
-[![Boost Licence](http://img.shields.io/badge/license-boost-blue.svg)](http://www.boost.org/LICENSE_1_0.txt)
-
 [![Boost Libraries](https://raw.githubusercontent.com/krzysztof-jusiak/di/gh-pages/boost/boost.png)](http://www.boost.org)
 [![Build Status](https://img.shields.io/travis/krzysztof-jusiak/di/cpp14.svg)](https://travis-ci.org/krzysztof-jusiak/di)
 [![Coveralls](http://img.shields.io/coveralls/krzysztof-jusiak/di/cpp14.svg)](https://coveralls.io/r/krzysztof-jusiak/di?branch=cpp14)
@@ -10,6 +8,7 @@ Boost.DI: C++ Dependency Injection
 
 > "Don't call us, we'll call you", Hollywood principle
 
+[![Boost Licence](http://img.shields.io/badge/license-boost-blue.svg)](http://www.boost.org/LICENSE_1_0.txt)
 [![Github Release](http://img.shields.io/github/release/krzysztof-jusiak/di.svg)](https://github.com/krzysztof-jusiak/di/releases/latest)
 [![Stories in Ready](https://badge.waffle.io/krzysztof-jusiak/di.svg?label=ready&title=Todo)](http://waffle.io/krzysztof-jusiak/di)
 [![Gitter Chat](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)](https://gitter.im/krzysztof-jusiak/di)
