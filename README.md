@@ -1,9 +1,6 @@
 Boost.DI: C++ Dependency Injection
 ===============================================
 [![Boost Licence](http://img.shields.io/badge/license-boost-blue.svg)](http://www.boost.org/LICENSE_1_0.txt)
-[![Github Release](http://img.shields.io/github/release/krzysztof-jusiak/di.svg)](https://github.com/krzysztof-jusiak/di/releases/latest)
-[![Stories in Ready](https://badge.waffle.io/krzysztof-jusiak/di.svg?label=ready&title=Ready)](http://waffle.io/krzysztof-jusiak/di)
-[![Gitter Chat](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)](https://gitter.im/krzysztof-jusiak/di)
 
 [![Boost Libraries](https://raw.githubusercontent.com/krzysztof-jusiak/di/gh-pages/boost/boost.png)](http://www.boost.org)
 [![Build Status](https://img.shields.io/travis/krzysztof-jusiak/di/cpp14.svg)](https://travis-ci.org/krzysztof-jusiak/di)
@@ -12,6 +9,12 @@ Boost.DI: C++ Dependency Injection
 [![Github Issues](https://img.shields.io/github/issues/krzysztof-jusiak/di.svg)](http://github.com/krzysztof-jusiak/di/issues)
 
 > "Don't call us, we'll call you", Hollywood principle
+
+[![Github Release](http://img.shields.io/github/release/krzysztof-jusiak/di.svg)](https://github.com/krzysztof-jusiak/di/releases/latest)
+[![Stories in Ready](https://badge.waffle.io/krzysztof-jusiak/di.svg?label=ready&title=Todo)](http://waffle.io/krzysztof-jusiak/di)
+[![Gitter Chat](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)](https://gitter.im/krzysztof-jusiak/di)
+
+===============================================
 
 **Dependency Injection (DI)** involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state.
 It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.
