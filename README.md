@@ -5,10 +5,10 @@ Boost.DI: C++ Dependency Injection
 [![Coveralls](http://img.shields.io/coveralls/krzysztof-jusiak/di/cpp14.svg)](https://coveralls.io/r/krzysztof-jusiak/di?branch=cpp14)
 [![Valgrind](https://img.shields.io/badge/valgrind-clean-brightgreen.svg)](https://travis-ci.org/krzysztof-jusiak/di)
 [![Github Issues](https://img.shields.io/github/issues/krzysztof-jusiak/di.svg)](http://github.com/krzysztof-jusiak/di/issues)
-[![Gitter Chat](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)](https://gitter.im/krzysztof-jusiak/di)
 
 [![Boost Licence](http://img.shields.io/badge/license-boost-blue.svg)](http://www.boost.org/LICENSE_1_0.txt)
 [![Github Release](http://img.shields.io/github/release/krzysztof-jusiak/di.svg)](https://github.com/krzysztof-jusiak/di/releases/latest)
+[![Gitter Chat](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)](https://gitter.im/krzysztof-jusiak/di)
 
 > "Don't call us, we'll call you", Hollywood principle
 
