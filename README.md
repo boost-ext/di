@@ -6,7 +6,7 @@ C++ Dependency Injection  [![Boost Licence](http://img.shields.io/badge/license-
 [![Valgrind](https://img.shields.io/badge/valgrind-clean-brightgreen.svg)](https://travis-ci.org/krzysztof-jusiak/di)
 [![Github Issues](https://img.shields.io/github/issues/krzysztof-jusiak/di.svg)](http://github.com/krzysztof-jusiak/di/issues)
 
-**Boost.DI**
+**Boost.DI** - Boost Dependency Injection
 
 > "Don't call us, we'll call you", Hollywood principle
 
