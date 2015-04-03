@@ -1522,6 +1522,13 @@ template<
       > {
     using scope_t = typename TScope::template scope<TExpected, TGiven>;
 
+    template<class T>
+    static constexpr auto externable() {
+        return !is_injector<T>{} &&
+               std::is_same<TExpected, TGiven>{} &&
+               std::is_same<TScope, scopes::deduce>{};
+    }
+
 public:
     using scope = TScope;
     using expected = TExpected;
@@ -1550,9 +1557,8 @@ public:
         return dependency<T, TExpected, TGiven, TName>{};
     }
 
-    template<class T
-           , BOOST_DI_REQUIRES(!is_injector<T>{} && std::is_same<TExpected, TGiven>{} && std::is_same<TScope, scopes::deduce>{})
-    > auto to(T&& object) const noexcept {
+    template<class T, BOOST_DI_REQUIRES(externable<T>())>
+    auto to(T&& object) const noexcept {
         using dependency = dependency<
             scopes::external, TExpected, std::remove_reference_t<T>, TName
         >;
@@ -1577,7 +1583,9 @@ public:
 };
 
 template<class T>
-struct is_dependency : std::is_base_of<dependency_base, T> { };
+struct is_dependency
+    : std::is_base_of<dependency_base, T>
+{ };
 
 }}} // boost::di::core
 
