@@ -8,6 +8,8 @@ Boost.DI [![Boost Licence](http://img.shields.io/badge/license-boost-blue.svg)](
 
 > **C++ Dependency Injection Library**
 
+===============================================
+
 > "Don't call us, we'll call you", Hollywood principle
 
 Dependency Injection (DI) involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state.
