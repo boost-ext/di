@@ -15,7 +15,8 @@ before_install:
   - cd build && ./bootstrap.sh --with-toolset=clang
 
 script:
-  - ./b2 -j4 -q --toolset=clang debug-symbols=off cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++" ../test ../example
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./b2 -j4 -q --toolset=clang debug-symbols=off ../test ../example; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then ./b2 -j4 -q --toolset=clang debug-symbols=off cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++" ../test ../example; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then find .. -type f -executable | xargs -i% valgrind --error-exitcode=-1 %; fi
 
 after_success:
