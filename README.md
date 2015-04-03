@@ -1082,12 +1082,25 @@ Legend:
 ```cpp
 Create interface without bound          | Error message
 implementation                          |
-----------------------------------------|-----------------------------------------
-auto injector = di::make_injector();    | error: no matching member function for call to 'create'
-injector.create<unique_ptr<i1>>();      |     injector.create<std::unique_ptr<i1>>();
-                                        |     ~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
-                                        | note: candidate template ignored: disabled by 'enable_if' [with T = std::unique_ptr<i1, std::default_delete<i1> >]
-                                        |     template<class T BOOST_DI_REQUIRES(concepts::creatable<deps, TConfig, T>())>
+----------------------------------------|[clang]--------------------------------------
+auto injector = di::make_injector();    | warning: 'create' is deprecated: creatable constraint not satisfied
+injector.create<i*>();                  |     injector.create<i*>();
+                                        |              ^
+                                        | note: 'create<i *, 0>' has been explicitly marked deprecated here
+                                        |     T create() const {
+                                        |       ^
+                                        | error: inline function 'boost::di::abstract_type<i>::is_not_bound::error' is not defined
+                                        |     error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?")
+                                        |     ^
+                                        | note: used here
+                                        |     constraint_not_satisfied{}.error();
+                                        |
+                                        |[gcc]----------------------------------------
+                                        | error: inline function ‘constexpr T* boost::di::abstract_type<T>::is_not_bound::error(boost::di::_) const [with T = i]’ used but never defined
+                                        |      error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?")
+                                        |      ^
+                                        | error: call to ‘boost::di::core::injector<boost::di::config>::create<i*, 0>’ declared with attribute error: creatable constraint not satisfied
+                                        |      injector.create<i*>();
 ```
 ```cpp
 Ambiguous binding                       | Error message

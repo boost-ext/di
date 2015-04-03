@@ -101,3 +101,7 @@ test-suite quick_user_guide :
     [ run-example c++1y : quick_user_guide/scopes7.cpp ]
 ;
 
+#test-suite diagnostics :
+    #[ run-example c++1y : diagnostics/create_interface_no_bound.cpp ]
+#;
+
