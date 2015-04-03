@@ -9,7 +9,7 @@ compiler:
 #  - gcc
 
 before_install:
-  - sudo apt-get -qq install valgrind; fi
+  - sudo apt-get -qq install valgrind
   - sudo pip install cpp-coveralls
   - cd build && ./bootstrap.sh --with-toolset=clang
 
