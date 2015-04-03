@@ -27,7 +27,8 @@ template<class, class>
 struct dependency_concept { };
 
 template<class T, class TDependency>
-struct dependency_impl : aux::pair<T, TDependency>
+struct dependency_impl
+    : aux::pair<T, TDependency>
 { };
 
 template<class... Ts, class TName, class TDependency>
