@@ -483,9 +483,9 @@ test exposed_module_with_unique_ptr = [] {
     );
 
     auto object = injector.create<std::unique_ptr<c>>();
-    assert(dynamic_cast<impl1*>(object->i1_.get()));
-    assert(dynamic_cast<impl2*>(object->i2_.get()));
-    assert(42 == object->i);
+    expect(dynamic_cast<impl1*>(object->i1_.get()));
+    expect(dynamic_cast<impl2*>(object->i2_.get()));
+    expect(42 == object->i);
 };
 
 test scopes_priority = [] {
