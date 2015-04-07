@@ -36,6 +36,7 @@ test-suite example :
     [ run-example c++1y : bindings.cpp ]
     [ run-example c++1y : constructor_injection.cpp ]
     [ run-example c++1y : constructor_signature.cpp ]
+    [ run-example c++1y : containers.cpp ]
     [ run-example c++1y : custom_policy.cpp ]
     [ run-example c++1y : custom_provider.cpp ]
     [ run-example c++1y : custom_scope.cpp ]
@@ -100,8 +101,4 @@ test-suite quick_user_guide :
     [ run-example c++1y : quick_user_guide/scopes6.cpp ]
     [ run-example c++1y : quick_user_guide/scopes7.cpp ]
 ;
-
-#test-suite diagnostics :
-    #[ run-example c++1y : diagnostics/create_interface_no_bound.cpp ]
-#;
 

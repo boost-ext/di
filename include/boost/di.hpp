@@ -723,11 +723,11 @@ namespace boost { namespace di { namespace scopes {
 BOOST_DI_HAS_TYPE(result_type);
 BOOST_DI_HAS_METHOD(call_operator, operator());
 
-template<class T, class U>
+template<class T, class... Ts>
 using is_lambda_expr =
     std::integral_constant<
         bool
-      , has_call_operator<T, U>::value &&
+      , has_call_operator<T, Ts...>::value &&
        !has_result_type<T>::value
     >;
 
@@ -825,6 +825,20 @@ public:
         auto create(const TProvider& provider) const noexcept {
             using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_))>;
             return wrapper{(object_)(provider.injector_)};
+        }
+
+        TGiven object_;
+    };
+
+    template<class TExpected, class TGiven>
+    struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>{}>> {
+        template<class T, class TProvider>
+        T create_(const TProvider&);
+
+        template<class T, class TProvider>
+        auto create(const TProvider& provider) const noexcept {
+            using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_, aux::type<T>{}))>;
+            return wrapper{(object_)(provider.injector_, aux::type<T>{})};
         }
 
         TGiven object_;
@@ -2285,8 +2299,8 @@ auto boundable_impl(aux::type<TDeps...>&&) ->
 
 std::true_type boundable_impl(...);
 
-template<class... TDeps>
-using boundable = decltype(boundable_impl(std::declval<TDeps>()...));
+template<class... Ts>
+using boundable = decltype(boundable_impl(std::declval<Ts>()...));
 
 }}} // boost::di::concepts
 

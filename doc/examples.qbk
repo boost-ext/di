@@ -179,6 +179,14 @@
 
 [endsect]
 
+[section Containers]
+[import ../example/containers.cpp]
+[containers]
+[table
+    [[Full code example: [@example/containers.cpp]]]
+]
+[endsect]
+
 [section Factory (Assisted Injection)]
 [import ../example/factory.cpp]
 [factory]
