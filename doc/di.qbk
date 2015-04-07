@@ -93,6 +93,8 @@
 [def __examples_types_dumper__                          [link di.examples.types_dumper Types Dumper]]
 [def __examples_modules_hpp_cpp__                       [link di.examples.modules_hpp_cpp Modules (hpp/cpp)]]
 
+[def __extensions__                                     [link di.examples Extensions]]
+
 [def __rationale__                                      [link di.rationale Rationale]]
 
 [def __di_bind__                                        [link di.user_guide.bindings.bind di::bind]]
@@ -115,6 +117,7 @@
 [include performance.qbk]
 [include user_guide.qbk]
 [include examples.qbk]
+[include extensions.qbk]
 [include rationale.qbk]
 [include changelog.qbk]
 [include acknowledgements.qbk]

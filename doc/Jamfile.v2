@@ -23,6 +23,7 @@ boostbook quickbook : di.qbk :
 
 install html/images : [ glob images/*.png ] ;
 install html/example : [ glob ../example/*.cpp ] ;
+install html/example/extensions : [ glob ../example/extensions/*.* ] ;
 install html/example/modules : [ glob ../example/modules/*.* ] ;
 install html/example/tutorial : [ glob ../example/tutorial/*.* ] ;
 install html/test/pt : [ glob ../test/pt/di.cpp ] ;

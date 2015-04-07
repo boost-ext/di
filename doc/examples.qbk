@@ -179,51 +179,11 @@
 
 [endsect]
 
-[section Containers]
-[import ../example/containers.cpp]
-[containers]
-[table
-    [[Full code example: [@example/containers.cpp]]]
-]
-[endsect]
-
-[section Factory (Assisted Injection)]
-[import ../example/factory.cpp]
-[factory]
-[table
-    [[Full code example: [@example/factory.cpp]]]
-]
-[endsect]
-
 [section Custom Policy]
 [import ../example/custom_policy.cpp]
 [custom_policy]
 [table
     [[Full code example: [@example/custom_policy.cpp]]]
-]
-[endsect]
-
-[section Types dumper]
-[import ../example/types_dumper.cpp]
-[types_dumper]
-[table
-    [[Full code example: [@example/types_dumper.cpp]]]
-]
-[endsect]
-
-[section UML Dumper]
-[import ../example/uml_dumper.cpp]
-[uml_dumper]
-[table
-    [[Full code example: [@example/uml_dumper.cpp]]]
-]
-[endsect]
-
-[section XML Injection]
-[import ../example/xml_injection.cpp]
-[xml_injection]
-[table
-    [[Full code example: [@example/xml_injection.cpp]]]
 ]
 [endsect]
 
@@ -240,14 +200,6 @@
 [pool_provider]
 [table
     [[Full code example: [@example/pool_provider.cpp]]]
-]
-[endsect]
-
-[section Testing (Automatic Mocks Injection)]
-[import ../example/testing.cpp]
-[testing]
-[table
-    [[Full code example: [@example/testing.cpp]]]
 ]
 [endsect]
 

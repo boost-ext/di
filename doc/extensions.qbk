@@ -1,0 +1,61 @@
+[/
+ /
+ / Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+ /
+ / Distributed under the Boost Software License, Version 1.0.
+ / (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /
+ /]
+
+[section Extensions]
+
+[section Containers]
+[import ../example/extensions/containers.cpp]
+[containers]
+[table
+    [[Full code example: [@example/extensions/containers.cpp]]]
+]
+[endsect]
+
+[section Factory (Assisted Injection)]
+[import ../example/extensions/factory.cpp]
+[factory]
+[table
+    [[Full code example: [@example/extensions/factory.cpp]]]
+]
+[endsect]
+
+[section Types dumper]
+[import ../example/extensions/types_dumper.cpp]
+[types_dumper]
+[table
+    [[Full code example: [@example/extensions/types_dumper.cpp]]]
+]
+[endsect]
+
+[section UML Dumper]
+[import ../example/extensions/uml_dumper.cpp]
+[uml_dumper]
+[table
+    [[Full code example: [@example/extensions/uml_dumper.cpp]]]
+]
+[endsect]
+
+[section XML Injection]
+[import ../example/extensions/xml_injection.cpp]
+[xml_injection]
+[table
+    [[Full code example: [@example/extensions/xml_injection.cpp]]]
+]
+[endsect]
+
+[section Testing (Automatic Mocks Injection)]
+[import ../example/extensions/testing.cpp]
+[testing]
+[table
+    [[Full code example: [@example/extensions/testing.cpp]]]
+]
+[endsect]
+
+[endsect]
+
