@@ -1894,14 +1894,21 @@ using ctor_size_t = ctor_size<
     >::type
 >;
 
+#define BOOST_DI_NAMED_ERROR(name, type, error_type, error) \
+    std::conditional_t< \
+        std::is_same<TName, no_name>{} \
+      , typename error_type<aux::decay_t<type>>::error \
+      , typename error_type<aux::decay_t<type>>::template named<TName>::error \
+    >
+
 template<class TInitialization, class TName, class I, class T, class... TCtor>
 struct creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TCtor...>>
     : std::conditional_t<
           std::is_abstract<aux::decay_t<T>>{}
         , std::conditional_t<
               std::is_same<I, T>{}
-            , std::conditional_t<std::is_same<TName, no_name>{}, typename abstract_type<aux::decay_t<T>>::is_not_bound, typename abstract_type<aux::decay_t<T>>::template named<TName>::is_not_bound>
-            , std::conditional_t<std::is_same<TName, no_name>{}, typename abstract_type<aux::decay_t<T>>::is_not_fully_implemented, typename abstract_type<aux::decay_t<T>>::template named<TName>::is_not_fully_implemented>
+            , BOOST_DI_NAMED_ERROR(TName, T, abstract_type, is_not_bound)
+            , BOOST_DI_NAMED_ERROR(TName, T, abstract_type, is_not_fully_implemented)
           >
         , std::conditional_t<
               ctor_size_t<T>{} == sizeof...(TCtor)
@@ -1909,7 +1916,10 @@ struct creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TCtor..
                   !sizeof...(TCtor)
                 , typename number_of_constructor_arguments_is_out_of_range_for<aux::decay_t<T>>::
                       template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
-                , typename type<aux::decay_t<T>, typename type_traits::ctor_traits<aux::decay_t<T>>::type, TCtor...>::template args<TInitialization>
+                , typename type<
+                      aux::decay_t<T>
+                    , typename type_traits::ctor_traits<aux::decay_t<T>>::type, TCtor...
+                  >::template args<TInitialization>
               >
             , typename number_of_constructor_arguments_doesnt_match_for<aux::decay_t<T>>::
                   template given<sizeof...(TCtor)>::
@@ -1917,6 +1927,8 @@ struct creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TCtor..
           >
       >
 { };
+
+#undef BOOST_DI_NAMED_ERROR
 
 template<class TInit, class T, class... Ts>
 struct creatable {
