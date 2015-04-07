@@ -26,7 +26,7 @@ struct deref_type<std::vector<T>> {
 
 namespace concepts {
 
-/*<<allow `type[]` to anything>>*/
+/*<<allow binding `type[]` to anything>>*/
 template<class I, class T>
 auto boundable_impl(I[], T&&) -> std::true_type;
 
