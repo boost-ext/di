@@ -10,7 +10,7 @@ os:
 
 compiler:
   - clang
-#  - gcc
+  - gcc
 
 before_install:
   - sudo pip install cpp-coveralls
@@ -18,22 +18,17 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update -qq; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get -qq install valgrind; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install -qq libstdc++-4.9-dev; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo wget http://ftp.us.debian.org/debian/pool/main/b/binutils/binutils_2.25-6_amd64.deb; sudo dpkg -i binutils_2.25-6_amd64.deb; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo wget http://ftp.us.debian.org/debian/pool/main/i/isl/libisl10_0.12.2-2_amd64.deb; sudo dpkg -i libisl10_0.12.2-2_amd64.deb; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo wget http://ftp.us.debian.org/debian/pool/main/m/mpfr4/libmpfr4_3.1.2-3_amd64.deb; sudo dpkg -i libmpfr4_3.1.2-3_amd64.deb; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo wget http://ftp.us.debian.org/debian/pool/main/m/mpclib3/libmpc3_1.0.3-1_amd64.deb; sudo dpkg -i libmpc3_1.0.3-1_amd64.deb; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo wget http://ftp.us.debian.org/debian/pool/main/g/gcc-5/gcc-5-base_5-20150404-1_amd64.deb; sudo dpkg -i gcc-5-base_5-20150404-1_amd64.deb; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo wget http://ftp.us.debian.org/debian/pool/main/g/gcc-5/libcc1-0_5-20150404-1_amd64.deb; sudo dpkg -i libcc1-0_5-20150404-1_amd64.deb; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo wget http://ftp.us.debian.org/debian/pool/main/g/gcc-5/cpp-5_5-20150404-1_amd64.deb; sudo dpkg -i cpp-5_5-20150404-1_amd64.deb; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo wget http://ftp.us.debian.org/debian/pool/main/g/gcc-5/libgcc-5-dev_5-20150404-1_amd64.deb; sudo dpkg -i libgcc-5-dev_5-20150404-1_amd64.deb; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo wget http://ftp.us.debian.org/debian/pool/main/g/gcc-5/gcc-5_5-20150404-1_amd64.deb; sudo dpkg -i gcc-5_5-20150404-1_amd64.deb; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then g++ -v; fi
-  - cd build && ./bootstrap.sh --with-toolset=clang
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo apt-get install -qq g++-5.0; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5.0 90; fi
+  - cd build 
+  - if [ "$CXX" == "g++" ]; then ./bootstrap.sh --with-toolset=gcc; done
+  - if [ "$CXX" == "clang++" ]; then ./bootstrap.sh --with-toolset=clang; done
 
 script:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then ./b2 -j4 -q --toolset=clang debug-symbols=off cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++" ../test ../example; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then ./b2 -j4 -q --toolset=clang debug-symbols=off ../test ../example; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then find .. -type f -executable | grep "\.test" | xargs -i% valgrind --error-exitcode=-1 %; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then ./b2 -j4 -q --toolset=gcc debug-symbols=off ../test ../example; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "clang++" ]; then ./b2 -j4 -q --toolset=clang debug-symbols=off ../test ../example; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then find .. -type f -executable | grep "\.test" | xargs -i% valgrind --error-exitcode=-1 %; fi
 
 after_success:
   #- coveralls --exclude benchmark --exclude test --gcov-options '\-lp' --gcov 'gcov-4.8'
