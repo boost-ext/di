@@ -9,6 +9,25 @@
 
 namespace di = boost::di;
 
+struct i1 { virtual ~i1() noexcept = default; virtual void dummy1() = 0; };
+struct i2 { virtual ~i2() noexcept = default; virtual void dummy2() = 0; };
+struct i3 { virtual ~i3() noexcept = default; virtual void dummy3() = 0; };
+struct impl1 : i1 { void dummy1() override { } };
+struct impl1_int : i1 { impl1_int(int i) : i(i) { } void dummy1() override { } int i = 0; };
+struct impl2 : i2 { void dummy2() override { } };
+struct impl1_2 : i1, i2 { void dummy1() override { } void dummy2() override { } };
+struct impl4 : impl1_2 { };
+
+struct impl1_with_i2 : i1 {
+    explicit impl1_with_i2(std::shared_ptr<i2> i2)
+        : i2_(i2)
+    { }
+
+    void dummy1() override { }
+
+    std::shared_ptr<i2> i2_;
+};
+
 test scopes_external_shared = [] {
     auto i = std::make_shared<int>(42);
 
@@ -94,5 +113,69 @@ test externals_ref_cref = [] {
 
     expect_eq(i, object.i_);
     expect_eq(d, object.d_);
+};
+
+test bind_chars_to_string = [] {
+    auto injector = di::make_injector(
+        di::bind<std::string>.to("str")
+    );
+
+    expect_eq("str", injector.create<std::string>());
+};
+
+test dynamic_binding_using_polymorphic_lambdas_with_dependend_interfaces = [] {
+    auto test = [&](bool debug_property) {
+        auto injector = make_injector(
+            di::bind<i1>.to([&](const auto& injector) -> std::shared_ptr<i1> {
+                if (debug_property) {
+                    return std::make_shared<impl1>();
+                }
+
+                return injector.template create<std::shared_ptr<impl1_with_i2>>();
+            })
+          , di::bind<i2, impl2>
+        );
+
+        return injector.create<std::shared_ptr<i1>>();
+    };
+
+    {
+    auto object = test(false);
+    expect(dynamic_cast<impl1_with_i2*>(object.get()));
+    expect(dynamic_cast<impl2*>(dynamic_cast<impl1_with_i2*>(object.get())->i2_.get()));
+    }
+
+    {
+    auto object = test(true);
+    expect(dynamic_cast<impl1*>(object.get()));
+    }
+};
+
+double return_double(double d) { return d; }
+long return_long(long l) { return l; }
+
+test bind_to_function_ptr = [] {
+    constexpr auto i = 42;
+    constexpr auto d = 87.0;
+
+    struct functions {
+        functions(const std::function<int()>& fi, std::function<double()> fd)
+            : fi(fi)
+            , fd(fd)
+        { }
+
+        std::function<int()> fi;
+        std::function<double()> fd;
+    };
+
+    auto injector = di::make_injector(
+        di::bind<std::function<int()>>.to([&]{ return i; })
+      , di::bind<std::function<double()>>.to(std::bind(&return_double, d))
+    );
+
+    auto object = injector.create<functions>();
+
+    expect_eq(i, object.fi());
+    expect_eq(d, object.fd());
 };
 

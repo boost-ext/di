@@ -134,16 +134,6 @@ test scopes_priority = [] {
     expect_eq(12, object);
 };
 
-test bind_int_to_static_value = [] {
-    auto injector = di::make_injector(
-        di::bind<int, std::integral_constant<int, 42>>
-    );
-
-    auto object = injector.create<int>();
-
-    expect_eq(42, object);
-};
-
 test scopes_order = [] {
     auto injector = di::make_injector(
         di::bind<int, std::integral_constant<int, 41>>
@@ -309,14 +299,6 @@ test automatic_inject_with_initializer_list = [] {
 
     expect_eq(i, object.i);
     expect_eq(0, object.il.size());
-};
-
-test bind_chars_to_string = [] {
-    auto injector = di::make_injector(
-        di::bind<std::string>.to("str")
-    );
-
-    expect_eq("str", injector.create<std::string>());
 };
 
 test ctor_refs = [] {
@@ -592,62 +574,6 @@ test runtime_factory_call_operator_impl = [] {
     auto object = test(true);
     expect(dynamic_cast<impl1*>(object.get()));
     }
-};
-
-test dynamic_binding_using_polymorphic_lambdas_with_dependend_interfaces = [] {
-    auto test = [&](bool debug_property) {
-        auto injector = make_injector(
-            di::bind<i1>.to([&](const auto& injector) -> std::shared_ptr<i1> {
-                if (debug_property) {
-                    return std::make_shared<impl1>();
-                }
-
-                return injector.template create<std::shared_ptr<impl1_with_i2>>();
-            })
-          , di::bind<i2, impl2>
-        );
-
-        return injector.create<std::shared_ptr<i1>>();
-    };
-
-    {
-    auto object = test(false);
-    expect(dynamic_cast<impl1_with_i2*>(object.get()));
-    expect(dynamic_cast<impl2*>(dynamic_cast<impl1_with_i2*>(object.get())->i2_.get()));
-    }
-
-    {
-    auto object = test(true);
-    expect(dynamic_cast<impl1*>(object.get()));
-    }
-};
-
-double return_double(double d) { return d; }
-long return_long(long l) { return l; }
-
-test bind_to_function_ptr = [] {
-    constexpr auto i = 42;
-    constexpr auto d = 87.0;
-
-    struct functions {
-        functions(const std::function<int()>& fi, std::function<double()> fd)
-            : fi(fi)
-            , fd(fd)
-        { }
-
-        std::function<int()> fi;
-        std::function<double()> fd;
-    };
-
-    auto injector = di::make_injector(
-        di::bind<std::function<int()>>.to([&]{ return i; })
-      , di::bind<std::function<double()>>.to(std::bind(&return_double, d))
-    );
-
-    auto object = injector.create<functions>();
-
-    expect_eq(i, object.fi());
-    expect_eq(d, object.fd());
 };
 
 test create_with_default_values = [] {
