@@ -21,8 +21,8 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo apt-get install -qq g++-5.0; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5.0 90; fi
   - cd build 
-  - if [ "$CXX" == "g++" ]; then ./bootstrap.sh --with-toolset=gcc; done
-  - if [ "$CXX" == "clang++" ]; then ./bootstrap.sh --with-toolset=clang; done
+  - if [ "$CXX" == "g++" ]; then ./bootstrap.sh --with-toolset=gcc; fi
+  - if [ "$CXX" == "clang++" ]; then ./bootstrap.sh --with-toolset=clang; fi
 
 script:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then ./b2 -j4 -q --toolset=clang debug-symbols=off cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++" ../test ../example; fi
