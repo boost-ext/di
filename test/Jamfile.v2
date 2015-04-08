@@ -103,13 +103,15 @@ test-suite ut :
 ;
 
 test-suite ft :
+    [ run-test c++1y : ft/binding_any_of.cpp ]
     [ run-test c++1y : ft/di.cpp ]
+    [ run-test c++1y : ft/utility_named.cpp ]
+    [ run-test c++1y : ft/scope_exposed.cpp ]
     [ run-test c++1y : ft/di_ctor_inject_limit_size.cpp ]
     [ run-test c++1y : ft/di_ctor_limit_size.cpp ]
     [ run-test c++1y : ft/di_custom_policies_global.cpp ]
     [ run-test c++1y : ft/di_custom_provider_global.cpp ]
 ;
-
 
 test-suite error :
     [ compile-fail-test c++1y : error/bind_external_repeated.cpp ]
