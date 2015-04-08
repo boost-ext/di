@@ -1086,7 +1086,6 @@ Create interface without bound implementation
 ----------------------------------------------------------------------------------
 auto injector = di::make_injector();
 injector.create<i*>();
-
 [clang]---------------------------------------------------------------------------
  warning: 'create' is deprecated: creatable constraint not satisfied
      injector.create<i*>();
@@ -1099,7 +1098,6 @@ injector.create<i*>();
      ^
  note: used here
      constraint_not_satisfied{}.error();
-
 [gcc]----------------------------------------------------------------------------
  error: inline function ‘constexpr T* boost::di::abstract_type<T>::is_not_bound::error(boost::di::_) const [with T = i]’ used but never defined
       error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?")
