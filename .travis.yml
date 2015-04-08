@@ -14,8 +14,15 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update -qq; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get -qq install valgrind; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install -qq libstdc++-4.9-dev; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo wget http://ftp.us.debian.org/debian/pool/main/g/gcc-5/gcc-5_5-20150404-1_amd64.deb; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo dpkg -i gcc-5_5-20150404-1_amd64.deb; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo wget http://ftp.us.debian.org/debian/pool/main/b/binutils/binutils_2.25-6_amd64.deb; sudo dpkg -i binutils_2.25-6_amd64.deb; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo wget http://ftp.us.debian.org/debian/pool/main/i/isl/libisl10_0.12.2-2_amd64.deb; sudo dpkg -i libisl10_0.12.2-2_amd64.deb; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo wget http://ftp.us.debian.org/debian/pool/main/m/mpclib3/libmpc3_1.0.3-1_amd64.deb; sudo dpkg -i libmpc3_1.0.3-1_amd64.deb; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo wget http://ftp.us.debian.org/debian/pool/main/m/mpfr4/libmpfr4_3.1.2-3_amd64.deb; sudo dpkg -i libmpfr4_3.1.2-3_amd64.deb; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo wget http://ftp.us.debian.org/debian/pool/main/g/gcc-5/libcc1-0_5-20150404-1_amd64.deb; sudo dpkg -i libcc1-0_5-20150404-1_amd64.deb; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo wget http://ftp.us.debian.org/debian/pool/main/g/gcc-5/cpp-5_5-20150404-1_amd64.deb; sudo dpkg -i cpp-5_5-20150404-1_amd64.deb; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo wget http://ftp.us.debian.org/debian/pool/main/g/gcc-5/gcc-5-base_5-20150404-1_amd64.deb; sudo dpkg i gcc-5-base_5-20150404-1_amd64.deb; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo wget http://ftp.us.debian.org/debian/pool/main/g/gcc-5/libgcc-5-dev_5-20150404-1_amd64.deb; sudo dpkg -i libgcc-5-dev_5-20150404-1_amd64.deb; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo wget http://ftp.us.debian.org/debian/pool/main/g/gcc-5/gcc-5_5-20150404-1_amd64.deb; sudo dpkg -i gcc-5_5-20150404-1_amd64.deb; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then g++ -v; fi
   - cd build && ./bootstrap.sh --with-toolset=clang
 
