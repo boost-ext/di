@@ -106,6 +106,7 @@ test-suite ft :
     [ run-test c++1y : ft/binding_any_of.cpp ]
     [ run-test c++1y : ft/di.cpp ]
     [ run-test c++1y : ft/utility_named.cpp ]
+    [ run-test c++1y : ft/modules.cpp ]
     [ run-test c++1y : ft/scope_exposed.cpp ]
     [ run-test c++1y : ft/scope_external.cpp ]
     [ run-test c++1y : ft/di_ctor_inject_limit_size.cpp ]
