@@ -14,6 +14,9 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update -qq; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get -qq install valgrind; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install -qq libstdc++-4.9-dev; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo wget http://ftp.us.debian.org/debian/pool/main/g/gcc-5/gcc-5_5-20150404-1_amd64.deb; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo dpkg -i gcc-5_5-20150404-1_amd64.deb; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then g++ -v; fi
   - cd build && ./bootstrap.sh --with-toolset=clang
 
 script:
@@ -27,4 +30,12 @@ after_success:
 branches:
   only:
     - cpp14
+
+notifications:
+    webhooks:
+        urls:
+            - https://webhooks.gitter.im/e/743f46341bea58bbe3ca
+        on_success: change
+        on_failure: always
+        on_start: false
 
