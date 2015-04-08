@@ -1082,28 +1082,27 @@ Legend:
 <a id="diagnostic_messages"></a>
 > **[Diagnostic messages](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/diagnostic_messages.html)**
 ```cpp
-Create interface without bound implementation
-----------------------------------------------------------------------------------
-auto injector = di::make_injector();
-injector.create<i*>();
-[clang]---------------------------------------------------------------------------
- warning: 'create' is deprecated: creatable constraint not satisfied
-     injector.create<i*>();
-              ^
- note: 'create<i *, 0>' has been explicitly marked deprecated here
-     T create() const {
-       ^
- error: inline function 'boost::di::abstract_type<i>::is_not_bound::error' is not defined
-     error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?")
-     ^
- note: used here
-     constraint_not_satisfied{}.error();
-[gcc]----------------------------------------------------------------------------
- error: inline function ‘constexpr T* boost::di::abstract_type<T>::is_not_bound::error(boost::di::_) const [with T = i]’ used but never defined
-      error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?")
-      ^
- error: call to ‘boost::di::core::injector<boost::di::config>::create<i*, 0>’ declared with attribute error: creatable constraint not satisfied
-      injector.create<i*>();
+Create interface without bound          | Error message
+implementation                          |
+----------------------------------------|[clang]--------------------------------------
+auto injector = di::make_injector();    | warning: 'create' is deprecated: creatable constraint not satisfied
+injector.create<i*>();                  |     injector.create<i*>();
+                                        |              ^
+                                        | note: 'create<i *, 0>' has been explicitly marked deprecated here
+                                        |     T create() const {
+                                        |       ^
+                                        | error: inline function 'boost::di::abstract_type<i>::is_not_bound::error' is not defined
+                                        |     error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?")
+                                        |     ^
+                                        | note: used here
+                                        |     constraint_not_satisfied{}.error();
+                                        |
+                                        |[gcc]----------------------------------------
+                                        | error: inline function ‘constexpr T* boost::di::abstract_type<T>::is_not_bound::error(boost::di::_) const [with T = i]’ used but never defined
+                                        |      error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?")
+                                        |      ^
+                                        | error: call to ‘boost::di::core::injector<boost::di::config>::create<i*, 0>’ declared with attribute error: creatable constraint not satisfied
+                                        |      injector.create<i*>();
 ```
 ```cpp
 Ambiguous binding                       | Error message
