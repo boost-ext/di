@@ -207,66 +207,6 @@ test string_creation = [] {
     expect_eq("", di::make_injector().create<string>().str);
 };
 
-test scopes_external_shared = [] {
-    auto i = std::make_shared<int>(42);
-
-    auto injector = di::make_injector(
-        di::bind<int>.to(i)
-    );
-
-    {
-    auto object = injector.create<std::shared_ptr<int>>();
-    expect_eq(i.get(), object.get());
-    expect_eq(42, *i);
-    }
-
-    {
-    ++*i;
-    auto object = injector.create<std::shared_ptr<int>>();
-    expect_eq(43, *i);
-    }
-};
-
-test scopes_external_lambda = [] {
-    auto i = std::make_shared<int>(42);
-
-    auto injector = di::make_injector(
-        di::bind<int>.to([&i]{return i;})
-    );
-
-    {
-    auto object = injector.create<std::shared_ptr<int>>();
-    expect_eq(i.get(), object.get());
-    expect_eq(42, *i);
-    }
-
-    {
-    ++*i;
-    auto object = injector.create<std::shared_ptr<int>>();
-    expect_eq(43, *i);
-    }
-};
-
-test scopes_external_lambda_injector = [] {
-    auto i = std::make_shared<int>(42);
-
-    auto injector = di::make_injector(
-        di::bind<int>.to([&i](const auto&){return i;})
-    );
-
-    {
-    auto object = injector.create<std::shared_ptr<int>>();
-    expect_eq(i.get(), object.get());
-    expect_eq(42, *i);
-    }
-
-    {
-    ++*i;
-    auto object = injector.create<std::shared_ptr<int>>();
-    expect_eq(43, *i);
-    }
-};
-
 #if (__has_include(<boost/shared_ptr.hpp>))
     test conversion_to_boost_shared_ptr = [] {
         struct c {
@@ -743,33 +683,6 @@ test dynamic_binding_using_polymorphic_lambdas_with_dependend_interfaces = [] {
     auto object = test(true);
     expect(dynamic_cast<impl1*>(object.get()));
     }
-};
-
-test externals_ref_cref = [] {
-    auto i = 42;
-    const auto d = 87.0;
-
-    struct refs {
-        BOOST_DI_INJECT(refs
-            , int& i
-            , const double& d
-        ) : i_(i)
-          , d_(d)
-        { }
-
-        int& i_;
-        const double& d_;
-    };
-
-    auto injector = make_injector(
-        di::bind<int>.to(std::ref(i))
-      , di::bind<double>.to(std::cref(d))
-    );
-
-    auto object = injector.create<refs>();
-
-    expect_eq(i, object.i_);
-    expect_eq(d, object.d_);
 };
 
 double return_double(double d) { return d; }
