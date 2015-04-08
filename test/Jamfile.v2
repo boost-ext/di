@@ -110,6 +110,7 @@ test-suite ft :
     [ run-test c++1y : ft/modules.cpp ]
     [ run-test c++1y : ft/scope_exposed.cpp ]
     [ run-test c++1y : ft/scope_external.cpp ]
+    [ run-test c++1y : ft/scope_session.cpp ]
     [ run-test c++1y : ft/inject_ctor_limit_size.cpp ]
     [ run-test c++1y : ft/ctor_limit_size.cpp ]
     [ run-test c++1y : ft/custom_policies.cpp ]
