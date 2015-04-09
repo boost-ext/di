@@ -99,7 +99,10 @@ using get_bindings_error =
 
 template<class... Ts>
 using get_any_of_error = std::conditional_t<
-    std::is_same<aux::bool_list<aux::always<Ts>{}...>, aux::bool_list<std::is_same<std::true_type, Ts>{}...>>{}
+    std::is_same<
+        aux::bool_list<aux::always<Ts>{}...>
+      , aux::bool_list<std::is_same<std::true_type, Ts>{}...>
+    >{}
   , std::true_type
   , aux::type_list<Ts...>
  >;

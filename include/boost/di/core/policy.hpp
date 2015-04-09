@@ -51,7 +51,9 @@ public:
 
        return std::is_same<
             aux::bool_list<aux::always<TPolicies>{}...>
-          , aux::bool_list<decltype(call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(policies, dependency)){}...>
+          , aux::bool_list<decltype(
+                call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(policies, dependency)
+            ){}...>
         >{};
     }
 
