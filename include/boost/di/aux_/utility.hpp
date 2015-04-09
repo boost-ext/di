@@ -11,7 +11,7 @@
 
 namespace boost { namespace di {
 
-struct _ { _(...) { } };
+struct _ { constexpr _(...) { } };
 
 namespace aux {
 

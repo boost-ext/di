@@ -19,9 +19,9 @@ public:
     class scope {
     public:
         template<class T, class TProvider>
-        auto create_(const TProvider& provider) -> decltype(
+        auto try_create(const TProvider& provider) -> decltype(
             typename type_traits::scope_traits_t<T>::template
-                scope<TExpected, TGiven>{}.template create_<T>(provider)
+                scope<TExpected, TGiven>{}.template try_create<T>(provider)
         );
 
         template<class T, class TProvider>

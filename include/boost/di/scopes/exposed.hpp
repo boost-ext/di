@@ -58,7 +58,7 @@ public:
         { }
 
         template<class T, class TProvider>
-        T create_(const TProvider&);
+        T try_create(const TProvider&);
 
         template<class T, class TProvider>
         auto create(const TProvider&) {

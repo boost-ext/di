@@ -17,7 +17,7 @@ template<class T>
 struct provider {
     template<class TMemory = type_traits::heap>
     std::conditional_t<std::is_same<TMemory, type_traits::stack>{}, T, T*>
-    get_(const TMemory& = {}) const;
+    try_get(const TMemory& = {}) const;
 
     template<class TMemory = type_traits::heap>
     T* get(const TMemory& = {}) const {
@@ -31,7 +31,7 @@ template<class T>
 auto scopable_impl(T&&) -> aux::is_valid_expr<
     decltype(bool{T::priority})
   , decltype(std::declval<typename T::template scope<_, _>>().template create<_>(provider<_>{}))
-  , decltype(std::declval<typename T::template scope<_, _>>().template create_<_>(provider<_>{}))
+  , decltype(std::declval<typename T::template scope<_, _>>().template try_create<_>(provider<_>{}))
 >;
 
 template<class T>

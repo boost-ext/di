@@ -42,6 +42,34 @@ class injector : public pool<transform_t<TDeps...>>
       , config_t
     >;
 
+    template<
+        class T
+      , class TName = no_name
+      , class TIsRoot = std::false_type
+      , class TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
+      , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
+    > static auto try_create_impl() -> std::enable_if_t<std::is_convertible<
+       decltype(
+           std::declval<TDependency>().template try_create<T>(
+               provider<
+                   typename TDependency::expected
+                 , typename TDependency::given
+                 , TName
+                 , T
+                 , TCtor
+                 , injector
+               >{std::declval<injector>()}
+           )
+       ), T>{} && decltype(policy<pool_t>::template
+           call<T, TName, TIsRoot>(((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{})){}
+    >;
+
+    static auto try_create_impl(...) -> std::false_type;
+
+    template<class T, class TName, class TIsRoot>
+    static auto try_create_impl(T&&, TName&&, TIsRoot&&)
+        -> aux::is_valid_expr<decltype(try_create_impl<T, TName, TIsRoot>())>;
+
 public:
     using deps = transform_t<TDeps...>;
 
@@ -59,12 +87,20 @@ public:
         , config{*this}
     { }
 
-    template<class T, BOOST_DI_REQUIRES(concepts::creatable_<injector, T, no_name, is_root_t>())>
+    template<class T, class TName = no_name, class TIsRoot = is_root_t>
+    static constexpr auto try_create() {
+        return decltype(try_create_impl(std::declval<T>()
+                                      , std::declval<TName>()
+                                      , std::declval<TIsRoot>())
+               ){};
+    }
+
+    template<class T, BOOST_DI_REQUIRES(try_create<T, no_name, is_root_t>())>
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }
 
-    template<class T, BOOST_DI_REQUIRES(!concepts::creatable_<injector, T, no_name, is_root_t>())>
+    template<class T, BOOST_DI_REQUIRES(!try_create<T, no_name, is_root_t>())>
     BOOST_DI_CONCEPTS_CREATABLE_ATTR
     T create() const {
         return create_impl<T, no_name, is_root_t>();
@@ -74,28 +110,6 @@ public:
     void call(const TAction& action) {
         call_impl(action, deps{});
     }
-
-    template<
-        class T
-      , class TName = no_name
-      , class TIsRoot = std::false_type
-      , class TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
-      , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
-    > auto create_impl_() const -> std::enable_if_t<std::is_convertible<
-       decltype(
-           std::declval<TDependency>().template create_<T>(
-               provider<
-                   typename TDependency::expected
-                 , typename TDependency::given
-                 , TName
-                 , T
-                 , TCtor
-                 , injector
-               >{std::declval<injector>()}
-           )
-       ), T>{} && decltype(policy<pool_t>::template
-           call<T, TName, TIsRoot>(((TConfig&)*this).policies(), std::declval<TDependency>(), TCtor{})){}
-    >;
 
 private:
     template<class T, class TName = no_name, class TIsRoot = std::false_type>

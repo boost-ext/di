@@ -44,23 +44,23 @@ template<
     };
 
     template<class T>
-    struct get_arg_ {
-        using type = std::conditional_t<concepts::creatable_<TInjector, T>(), T, void>;
+    struct try_get_arg {
+        using type = std::conditional_t<TInjector::template try_create<T>(), T, void>;
     };
 
     template<class... Ts>
-    struct get_arg_<any_type<Ts...>> {
+    struct try_get_arg<any_type<Ts...>> {
         using type = any_type<TParent, TInjector, std::true_type>;
     };
 
     template<class TName_, class T>
-    struct get_arg_<type_traits::named<TName_, T>> {
-        using type = std::conditional_t<concepts::creatable_<TInjector, T, TName_>(), T, void>;
+    struct try_get_arg<type_traits::named<TName_, T>> {
+        using type = std::conditional_t<TInjector::template try_create<T, TName_>(), T, void>;
     };
 
     template<class TMemory = type_traits::heap>
-    auto get_(const TMemory& memory = {}) const -> std::enable_if_t<
-        is_creatable<TMemory, typename get_arg_<TArgs>::type...>::value
+    auto try_get(const TMemory& memory = {}) const -> std::enable_if_t<
+        is_creatable<TMemory, typename try_get_arg<TArgs>::type...>::value
       , std::conditional_t<std::is_same<TMemory, type_traits::stack>{}, TGiven, TGiven*>
     >;
 

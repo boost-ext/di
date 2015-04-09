@@ -285,16 +285,6 @@ constexpr T creatable_error() {
     return creatable_error_impl<TInitialization, TName, I, T, aux::type_list<Ts...>>{};
 }
 
-auto creatable_impl_(...) -> std::false_type;
-
-template<class T, class B, class N, class TIsRoot>
-auto creatable_impl_(T&& t, B&&, N&&, TIsRoot&&) -> aux::is_valid_expr<decltype(t.template create_impl_<B, N, TIsRoot>())>;
-
-template<class T, class B, class N = no_name, class TIsRoot = std::false_type>
-constexpr auto creatable_() {
-    return decltype(creatable_impl_(std::declval<T>(), std::declval<B>(), std::declval<N>(), std::declval<TIsRoot>())){};
-}
-
 }}} // boost::di::concepts
 
 #endif

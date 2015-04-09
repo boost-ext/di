@@ -50,7 +50,7 @@ public:
     template<class TExpected, class, class = void>
     struct scope {
         template<class, class TProvider>
-        TExpected create_(const TProvider&);
+        TExpected try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
@@ -65,7 +65,7 @@ public:
         using is_ref = void;
 
         template<class, class TProvider>
-        std::reference_wrapper<TGiven> create_(const TProvider&);
+        std::reference_wrapper<TGiven> try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
@@ -78,7 +78,7 @@ public:
     template<class TExpected, class TGiven>
     struct scope<TExpected, std::shared_ptr<TGiven>> {
         template<class, class TProvider>
-        wrappers::shared<TGiven> create_(const TProvider&);
+        wrappers::shared<TGiven> try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
@@ -99,7 +99,7 @@ public:
         >
     > {
         template<class T, class TProvider>
-        auto create_(const TProvider&) -> wrapper_traits_t<decltype(std::declval<TGiven>()())>;
+        auto try_create(const TProvider&) -> wrapper_traits_t<decltype(std::declval<TGiven>()())>;
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
@@ -113,7 +113,7 @@ public:
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&>{}>> {
         template<class T, class TProvider>
-        T create_(const TProvider&);
+        T try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider& provider) const noexcept {
@@ -127,7 +127,7 @@ public:
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>{}>> {
         template<class T, class TProvider>
-        T create_(const TProvider&);
+        T try_create(const TProvider&);
 
         template<class T, class TProvider>
         auto create(const TProvider& provider) const noexcept {

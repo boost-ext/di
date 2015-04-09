@@ -44,7 +44,7 @@
 
 namespace boost { namespace di {
 
-struct _ { _(...) { } };
+struct _ { constexpr _(...) { } };
 
 namespace aux {
 
@@ -611,9 +611,9 @@ public:
     class scope {
     public:
         template<class T, class TProvider>
-        auto create_(const TProvider& provider) const -> decltype(
-            wrappers::unique<decltype(provider.get_(type_traits::memory_traits_t<T>{}))>{
-                provider.get_(type_traits::memory_traits_t<T>{})
+        auto try_create(const TProvider& provider) const -> decltype(
+            wrappers::unique<decltype(provider.try_get(type_traits::memory_traits_t<T>{}))>{
+                provider.try_get(type_traits::memory_traits_t<T>{})
             }
         );
 
@@ -692,8 +692,8 @@ public:
     class scope {
     public:
         template<class, class TProvider>
-        auto create_(const TProvider& provider)
-            -> decltype(wrappers::shared<T>{std::shared_ptr<T>{provider.get_()}});
+        auto try_create(const TProvider& provider)
+            -> decltype(wrappers::shared<T>{std::shared_ptr<T>{provider.try_get()}});
 
         template<class, class TProvider>
         auto create(const TProvider& provider) {
@@ -756,7 +756,7 @@ public:
     template<class TExpected, class, class = void>
     struct scope {
         template<class, class TProvider>
-        TExpected create_(const TProvider&);
+        TExpected try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
@@ -771,7 +771,7 @@ public:
         using is_ref = void;
 
         template<class, class TProvider>
-        std::reference_wrapper<TGiven> create_(const TProvider&);
+        std::reference_wrapper<TGiven> try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
@@ -784,7 +784,7 @@ public:
     template<class TExpected, class TGiven>
     struct scope<TExpected, std::shared_ptr<TGiven>> {
         template<class, class TProvider>
-        wrappers::shared<TGiven> create_(const TProvider&);
+        wrappers::shared<TGiven> try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
@@ -805,7 +805,7 @@ public:
         >
     > {
         template<class T, class TProvider>
-        auto create_(const TProvider&) -> wrapper_traits_t<decltype(std::declval<TGiven>()())>;
+        auto try_create(const TProvider&) -> wrapper_traits_t<decltype(std::declval<TGiven>()())>;
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
@@ -819,7 +819,7 @@ public:
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&>{}>> {
         template<class T, class TProvider>
-        T create_(const TProvider&);
+        T try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider& provider) const noexcept {
@@ -833,7 +833,7 @@ public:
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>{}>> {
         template<class T, class TProvider>
-        T create_(const TProvider&);
+        T try_create(const TProvider&);
 
         template<class T, class TProvider>
         auto create(const TProvider& provider) const noexcept {
@@ -955,9 +955,9 @@ public:
     class scope {
     public:
         template<class T, class TProvider>
-        auto create_(const TProvider& provider) -> decltype(
+        auto try_create(const TProvider& provider) -> decltype(
             typename type_traits::scope_traits_t<T>::template
-                scope<TExpected, TGiven>{}.template create_<T>(provider)
+                scope<TExpected, TGiven>{}.template try_create<T>(provider)
         );
 
         template<class T, class TProvider>
@@ -1023,7 +1023,7 @@ public:
         { }
 
         template<class T, class TProvider>
-        T create_(const TProvider&);
+        T try_create(const TProvider&);
 
         template<class T, class TProvider>
         auto create(const TProvider&) {
@@ -1451,7 +1451,7 @@ template<class T>
 struct provider {
     template<class TMemory = type_traits::heap>
     std::conditional_t<std::is_same<TMemory, type_traits::stack>{}, T, T*>
-    get_(const TMemory& = {}) const;
+    try_get(const TMemory& = {}) const;
 
     template<class TMemory = type_traits::heap>
     T* get(const TMemory& = {}) const {
@@ -1465,7 +1465,7 @@ template<class T>
 auto scopable_impl(T&&) -> aux::is_valid_expr<
     decltype(bool{T::priority})
   , decltype(std::declval<typename T::template scope<_, _>>().template create<_>(provider<_>{}))
-  , decltype(std::declval<typename T::template scope<_, _>>().template create_<_>(provider<_>{}))
+  , decltype(std::declval<typename T::template scope<_, _>>().template try_create<_>(provider<_>{}))
 >;
 
 template<class T>
@@ -1965,16 +1965,6 @@ constexpr T creatable_error() {
     return creatable_error_impl<TInitialization, TName, I, T, aux::type_list<Ts...>>{};
 }
 
-auto creatable_impl_(...) -> std::false_type;
-
-template<class T, class B, class N, class TIsRoot>
-auto creatable_impl_(T&& t, B&&, N&&, TIsRoot&&) -> aux::is_valid_expr<decltype(t.template create_impl_<B, N, TIsRoot>())>;
-
-template<class T, class B, class N = no_name, class TIsRoot = std::false_type>
-constexpr auto creatable_() {
-    return decltype(creatable_impl_(std::declval<T>(), std::declval<B>(), std::declval<N>(), std::declval<TIsRoot>())){};
-}
-
 }}} // boost::di::concepts
 
 #endif
@@ -2085,8 +2075,8 @@ public:
         }
 
         template<class, class TProvider>
-        auto create_(const TProvider& provider)
-            -> decltype(wrappers::shared<T>{std::shared_ptr<T>{provider.get_()}});
+        auto try_create(const TProvider& provider)
+            -> decltype(wrappers::shared<T>{std::shared_ptr<T>{provider.try_get()}});
 
         template<class, class TProvider>
         auto create(const TProvider& provider) {
@@ -2119,8 +2109,8 @@ public:
     class scope {
     public:
         template<class, class TProvider>
-        auto create_(const TProvider& provider)
-            -> decltype(wrappers::shared<T>{std::shared_ptr<T>{provider.get_()}});
+        auto try_create(const TProvider& provider)
+            -> decltype(wrappers::shared<T>{std::shared_ptr<T>{provider.try_get()}});
 
         template<class, class TProvider>
         auto create(const TProvider& provider) {
@@ -2430,7 +2420,7 @@ struct any_type {
     template<class T, class TError_>
     struct is_creatable_impl {
         static constexpr auto value =
-            std::is_same<TInjector, aux::none_t>::value || concepts::creatable_<TInjector, T>();
+            std::is_same<TInjector, aux::none_t>::value || TInjector::template try_create<T>();
     };
 
     template<class T>
@@ -2594,23 +2584,23 @@ template<
     };
 
     template<class T>
-    struct get_arg_ {
-        using type = std::conditional_t<concepts::creatable_<TInjector, T>(), T, void>;
+    struct try_get_arg {
+        using type = std::conditional_t<TInjector::template try_create<T>(), T, void>;
     };
 
     template<class... Ts>
-    struct get_arg_<any_type<Ts...>> {
+    struct try_get_arg<any_type<Ts...>> {
         using type = any_type<TParent, TInjector, std::true_type>;
     };
 
     template<class TName_, class T>
-    struct get_arg_<type_traits::named<TName_, T>> {
-        using type = std::conditional_t<concepts::creatable_<TInjector, T, TName_>(), T, void>;
+    struct try_get_arg<type_traits::named<TName_, T>> {
+        using type = std::conditional_t<TInjector::template try_create<T, TName_>(), T, void>;
     };
 
     template<class TMemory = type_traits::heap>
-    auto get_(const TMemory& memory = {}) const -> std::enable_if_t<
-        is_creatable<TMemory, typename get_arg_<TArgs>::type...>::value
+    auto try_get(const TMemory& memory = {}) const -> std::enable_if_t<
+        is_creatable<TMemory, typename try_get_arg<TArgs>::type...>::value
       , std::conditional_t<std::is_same<TMemory, type_traits::stack>{}, TGiven, TGiven*>
     >;
 
@@ -2737,6 +2727,34 @@ class injector : public pool<transform_t<TDeps...>>
       , config_t
     >;
 
+    template<
+        class T
+      , class TName = no_name
+      , class TIsRoot = std::false_type
+      , class TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
+      , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
+    > static auto try_create_impl() -> std::enable_if_t<std::is_convertible<
+       decltype(
+           std::declval<TDependency>().template try_create<T>(
+               provider<
+                   typename TDependency::expected
+                 , typename TDependency::given
+                 , TName
+                 , T
+                 , TCtor
+                 , injector
+               >{std::declval<injector>()}
+           )
+       ), T>{} && decltype(policy<pool_t>::template
+           call<T, TName, TIsRoot>(((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{})){}
+    >;
+
+    static auto try_create_impl(...) -> std::false_type;
+
+    template<class T, class TName, class TIsRoot>
+    static auto try_create_impl(T&&, TName&&, TIsRoot&&)
+        -> aux::is_valid_expr<decltype(try_create_impl<T, TName, TIsRoot>())>;
+
 public:
     using deps = transform_t<TDeps...>;
 
@@ -2754,12 +2772,20 @@ public:
         , config{*this}
     { }
 
-    template<class T, BOOST_DI_REQUIRES(concepts::creatable_<injector, T, no_name, is_root_t>())>
+    template<class T, class TName = no_name, class TIsRoot = is_root_t>
+    static constexpr auto try_create() {
+        return decltype(try_create_impl(std::declval<T>()
+                                      , std::declval<TName>()
+                                      , std::declval<TIsRoot>())
+               ){};
+    }
+
+    template<class T, BOOST_DI_REQUIRES(try_create<T, no_name, is_root_t>())>
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }
 
-    template<class T, BOOST_DI_REQUIRES(!concepts::creatable_<injector, T, no_name, is_root_t>())>
+    template<class T, BOOST_DI_REQUIRES(!try_create<T, no_name, is_root_t>())>
     BOOST_DI_CONCEPTS_CREATABLE_ATTR
     T create() const {
         return create_impl<T, no_name, is_root_t>();
@@ -2769,28 +2795,6 @@ public:
     void call(const TAction& action) {
         call_impl(action, deps{});
     }
-
-    template<
-        class T
-      , class TName = no_name
-      , class TIsRoot = std::false_type
-      , class TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
-      , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
-    > auto create_impl_() const -> std::enable_if_t<std::is_convertible<
-       decltype(
-           std::declval<TDependency>().template create_<T>(
-               provider<
-                   typename TDependency::expected
-                 , typename TDependency::given
-                 , TName
-                 , T
-                 , TCtor
-                 , injector
-               >{std::declval<injector>()}
-           )
-       ), T>{} && decltype(policy<pool_t>::template
-           call<T, TName, TIsRoot>(((TConfig&)*this).policies(), std::declval<TDependency>(), TCtor{})){}
-    >;
 
 private:
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
@@ -2959,8 +2963,8 @@ struct is_creatable
 template<class TInjector, class _>
 struct is_creatable<std::true_type, TInjector, _>
     : std::integral_constant<bool
-        , concepts::creatable_<TInjector, _>() ||
-          concepts::creatable_<TInjector, _*>()
+        , TInjector::template try_create<_>() ||
+          TInjector::template try_create<_*>()
       >
 { };
 
