@@ -35,7 +35,7 @@ struct any_type {
     template<class T, class TError_>
     struct is_creatable_impl {
         static constexpr auto value =
-            std::is_same<TInjector, aux::none_t>::value || TInjector::template try_create<T>();
+            std::is_same<TInjector, aux::none_t>::value || TInjector::template is_creatable<T>();
     };
 
     template<class T>

@@ -64,10 +64,10 @@ class injector : public pool<transform_t<TDeps...>>
            call<T, TName, TIsRoot>(((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{})){}
     >;
 
-    static auto try_create_impl(...) -> std::false_type;
+    static auto is_creatable_impl(...) -> std::false_type;
 
     template<class T, class TName, class TIsRoot>
-    static auto try_create_impl(T&&, TName&&, TIsRoot&&)
+    static auto is_creatable_impl(T&&, TName&&, TIsRoot&&)
         -> aux::is_valid_expr<decltype(try_create_impl<T, TName, TIsRoot>())>;
 
 public:
@@ -88,18 +88,18 @@ public:
     { }
 
     template<class T, class TName = no_name, class TIsRoot = is_root_t>
-    static constexpr auto try_create() {
-        return decltype(try_create_impl(std::declval<T>()
-                                      , std::declval<TName>()
-                                      , std::declval<TIsRoot>())){};
+    static constexpr auto is_creatable() {
+        return decltype(is_creatable_impl(
+            std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>())
+        ){};
     }
 
-    template<class T, BOOST_DI_REQUIRES(try_create<T, no_name, is_root_t>())>
+    template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>())>
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }
 
-    template<class T, BOOST_DI_REQUIRES(!try_create<T, no_name, is_root_t>())>
+    template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, is_root_t>())>
     BOOST_DI_CONCEPTS_CREATABLE_ATTR
     T create() const {
         return create_impl<T, no_name, is_root_t>();
