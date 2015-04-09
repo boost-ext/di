@@ -62,7 +62,8 @@ constexpr auto is_configurable(const std::false_type&) {
 }
 
 template<class T>
-using configurable = decltype(is_configurable<T>(decltype(configurable_impl(std::declval<T>())){}));
+using configurable =
+    decltype(is_configurable<T>(decltype(configurable_impl(std::declval<T>())){}));
 
 }}} // boost::di::concepts
 
