@@ -2776,8 +2776,7 @@ public:
     static constexpr auto try_create() {
         return decltype(try_create_impl(std::declval<T>()
                                       , std::declval<TName>()
-                                      , std::declval<TIsRoot>())
-               ){};
+                                      , std::declval<TIsRoot>())){};
     }
 
     template<class T, BOOST_DI_REQUIRES(try_create<T, no_name, is_root_t>())>
