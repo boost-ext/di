@@ -347,7 +347,7 @@ test ctor_refs = [] {
           , di::bind<std::string>.named(name).to("named str")
           , bind_i1
           , di::bind<short>.to(short{42})
-          , di::bind<long>.to(123)
+          , di::bind<long>.to(123l)
           , di::bind<std::function<int()>>.to([]{return 87;})
         );
 

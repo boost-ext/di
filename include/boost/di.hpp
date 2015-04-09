@@ -1538,10 +1538,16 @@ template<
     using scope_t = typename TScope::template scope<TExpected, TGiven>;
 
     template<class T>
+    using is_not_narrowed = std::integral_constant<bool,
+        (std::is_arithmetic<T>{} && std::is_same<TExpected, T>{}) || !std::is_arithmetic<T>{}
+    >;
+
+    template<class T>
     using externable = std::integral_constant<bool,
         !is_injector<T>{} &&
+        std::is_same<TScope, scopes::deduce>{} &&
         std::is_same<TExpected, TGiven>{} &&
-        std::is_same<TScope, scopes::deduce>{}
+        is_not_narrowed<T>{}
     >;
 
 public:
