@@ -18,7 +18,7 @@
 
 namespace boost { namespace di { namespace detail {
 
-template<class... Ts, BOOST_DI_REQUIRES(aux::is_unique<Ts...>{})>
+template<class... Ts, BOOST_DI_REQUIRES(aux::is_unique<Ts...>::value)>
 auto any_of() {
     return aux::type_list<Ts...>{};
 }

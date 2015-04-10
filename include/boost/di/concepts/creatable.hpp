@@ -155,16 +155,16 @@ struct args<type_traits::direct, TDummy> {
 template<class TDummy>
 struct args<type_traits::uniform, TDummy> {
     constexpr operator T*() const {
-        return impl<T>();
+        return impl<T>(aux::is_braces_constructible<T, TCtor...>{});
     }
 
-    template<class T_, std::enable_if_t<aux::is_braces_constructible<T_, TCtor...>{}, int> = 0>
-    auto impl() const {
+    template<class T_>
+    auto impl(const std::true_type&) const {
         return new T_{typename in<T_, TArgs>::type{}...};
     }
 
-    template<class T_, std::enable_if_t<!aux::is_braces_constructible<T_, TCtor...>{}, int> = 0>
-    auto impl() const {
+    template<class T_>
+    auto impl(const std::false_type&) const {
         return nullptr;
     }
 };};
@@ -236,7 +236,7 @@ using ctor_size_t = ctor_size<
 
 #define BOOST_DI_NAMED_ERROR(name, type, error_type, error) \
     std::conditional_t< \
-        std::is_same<TName, no_name>{} \
+        std::is_same<TName, no_name>::value \
       , typename error_type<aux::decay_t<type>>::error \
       , typename error_type<aux::decay_t<type>>::template named<TName>::error \
     >
@@ -244,14 +244,14 @@ using ctor_size_t = ctor_size<
 template<class TInitialization, class TName, class I, class T, class... TCtor>
 struct creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TCtor...>>
     : std::conditional_t<
-          std::is_abstract<aux::decay_t<T>>{}
+          std::is_abstract<aux::decay_t<T>>::value
         , std::conditional_t<
-              std::is_same<I, T>{}
+              std::is_same<I, T>::value
             , BOOST_DI_NAMED_ERROR(TName, T, abstract_type, is_not_bound)
             , BOOST_DI_NAMED_ERROR(TName, T, abstract_type, is_not_fully_implemented)
           >
         , std::conditional_t<
-              ctor_size_t<T>{} == sizeof...(TCtor)
+              ctor_size_t<T>::value == sizeof...(TCtor)
             , std::conditional_t<
                   !sizeof...(TCtor)
                 , typename number_of_constructor_arguments_is_out_of_range_for<aux::decay_t<T>>::
@@ -263,7 +263,7 @@ struct creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TCtor..
               >
             , typename number_of_constructor_arguments_doesnt_match_for<aux::decay_t<T>>::
                   template given<sizeof...(TCtor)>::
-                  template expected<ctor_size_t<T>{}>
+                  template expected<ctor_size_t<T>::value>
           >
       >
 { };

@@ -30,8 +30,8 @@ namespace concepts {
 template<class... TDeps>
 using is_supported =
     std::is_same<
-       aux::bool_list<aux::always<TDeps>{}...>
-     , aux::bool_list<(core::is_injector<TDeps>{} || core::is_dependency<TDeps>{})...>
+       aux::bool_list<aux::always<TDeps>::value...>
+     , aux::bool_list<(core::is_injector<TDeps>::value || core::is_dependency<TDeps>::value)...>
     >;
 
 template<class...>
@@ -45,7 +45,7 @@ struct get_not_supported<T> {
 template<class T, class... TDeps>
 struct get_not_supported<T, TDeps...>
     : std::conditional<
-          core::is_injector<T>{} || core::is_dependency<T>{}
+          core::is_injector<T>::value || core::is_dependency<T>::value
         , typename get_not_supported<TDeps...>::type
         , T
       >
@@ -91,7 +91,7 @@ struct get_is_unique_error<aux::type_list<TDeps...>>
 template<class... TDeps>
 using get_bindings_error =
     std::conditional_t<
-        is_supported<TDeps...>{}
+        is_supported<TDeps...>::value
       , typename get_is_unique_error<core::transform_t<TDeps...>>::type
       , typename bound_type<typename get_not_supported<TDeps...>::type>::
             is_neither_a_dependency_nor_an_injector
@@ -100,9 +100,9 @@ using get_bindings_error =
 template<class... Ts>
 using get_any_of_error = std::conditional_t<
     std::is_same<
-        aux::bool_list<aux::always<Ts>{}...>
-      , aux::bool_list<std::is_same<std::true_type, Ts>{}...>
-    >{}
+        aux::bool_list<aux::always<Ts>::value...>
+      , aux::bool_list<std::is_same<std::true_type, Ts>::value...>
+    >::value
   , std::true_type
   , aux::type_list<Ts...>
  >;
@@ -110,10 +110,10 @@ using get_any_of_error = std::conditional_t<
 template<class I, class T> // expected -> given
 auto boundable_impl(I&&, T&&) ->
     std::conditional_t<
-        std::is_base_of<I, T>{} || std::is_convertible<T, I>{}
+        std::is_base_of<I, T>::value || std::is_convertible<T, I>::value
       , std::true_type
       , std::conditional_t<
-            std::is_base_of<I, T>{}
+            std::is_base_of<I, T>::value
           , typename bound_type<T>::template is_not_convertible_to<I>
           , typename bound_type<T>::template is_not_base_of<I>
         >

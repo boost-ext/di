@@ -96,7 +96,7 @@ struct memory_traits<const std::weak_ptr<T>&> {
 };
 
 template<class T>
-struct memory_traits<T, std::enable_if_t<std::is_polymorphic<T>{}>> {
+struct memory_traits<T, std::enable_if_t<std::is_polymorphic<T>::value>> {
     using type = heap;
 };
 

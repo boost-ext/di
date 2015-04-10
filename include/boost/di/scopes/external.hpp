@@ -93,9 +93,9 @@ public:
         TExpected
       , TGiven
       , std::enable_if_t<
-            !is_lambda_expr<TGiven, const injector&>{} &&
-            !has_call_operator<TExpected>{} &&
-             has_call_operator<TGiven>{}
+            !is_lambda_expr<TGiven, const injector&>::value &&
+            !has_call_operator<TExpected>::value &&
+             has_call_operator<TGiven>::value
         >
     > {
         template<class T, class TProvider>
@@ -111,7 +111,7 @@ public:
     };
 
     template<class TExpected, class TGiven>
-    struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&>{}>> {
+    struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&>::value>> {
         template<class T, class TProvider>
         T try_create(const TProvider&);
 
@@ -125,7 +125,7 @@ public:
     };
 
     template<class TExpected, class TGiven>
-    struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>{}>> {
+    struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
         template<class T, class TProvider>
         T try_create(const TProvider&);
 

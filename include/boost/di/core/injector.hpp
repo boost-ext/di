@@ -37,7 +37,7 @@ class injector : public pool<transform_t<TDeps...>>
     using is_root_t = std::true_type;
     using config_t = typename type_traits::config_traits<TConfig, injector>::type;
     using config = std::conditional_t<
-        std::is_default_constructible<TConfig>{}
+        std::is_default_constructible<TConfig>::value
       , _
       , config_t
     >;
@@ -63,7 +63,7 @@ public:
     static constexpr auto is_creatable() {
         return decltype(is_creatable_impl(
             std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>())
-        ){};
+        )::value;
     }
 
     template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>())>
@@ -101,8 +101,10 @@ private:
                  , injector
                >{std::declval<injector>()}
            )
-       ), T>{} && decltype(policy<pool_t>::template
-           call<T, TName, TIsRoot>(((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{})){}
+       ), T>::value &&
+       decltype(policy<pool_t>::template call<T, TName, TIsRoot>(
+          ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{})
+       )::value
     >;
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
@@ -116,7 +118,7 @@ private:
         policy<pool_t>::template call<T, TName, TIsRoot>(((TConfig&)*this).policies(), dependency, ctor_t{});
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
-            std::is_reference<T>{} && has_is_ref<dependency_t>{}
+            std::is_reference<T>::value && has_is_ref<dependency_t>::value
           , T
           , std::remove_reference_t<T>
         >;

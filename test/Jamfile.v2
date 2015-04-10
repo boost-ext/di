@@ -137,3 +137,4 @@ test-suite error :
     [ compile-fail-test c++1y : error/policy_constructible.cpp ]
     [ compile-fail-test c++1y : error/scope_traits_external_deduced.cpp ]
 ;
+

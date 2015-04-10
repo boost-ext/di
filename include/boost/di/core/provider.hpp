@@ -61,7 +61,7 @@ template<
     template<class TMemory = type_traits::heap>
     auto try_get(const TMemory& memory = {}) const -> std::enable_if_t<
         is_creatable<TMemory, typename try_get_arg<TArgs>::type...>::value
-      , std::conditional_t<std::is_same<TMemory, type_traits::stack>{}, TGiven, TGiven*>
+      , std::conditional_t<std::is_same<TMemory, type_traits::stack>::value, TGiven, TGiven*>
     >;
 
     template<class TMemory = type_traits::heap>

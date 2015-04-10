@@ -21,7 +21,7 @@ BOOST_DI_HAS_TYPE(deps);
 
 template<class T, class U = std::remove_reference_t<T>>
 using is_injector =
-    std::integral_constant<bool, has_deps<U>{} || has_configure<U>{}>;
+    std::integral_constant<bool, has_deps<U>::value || has_configure<U>::value>;
 
 template<class, class>
 struct dependency_concept { };
@@ -73,15 +73,15 @@ template<
 
     template<class T>
     using is_not_narrowed = std::integral_constant<bool,
-        (std::is_arithmetic<T>{} && std::is_same<TExpected, T>{}) || !std::is_arithmetic<T>{}
+        (std::is_arithmetic<T>::value && std::is_same<TExpected, T>::value) || !std::is_arithmetic<T>::value
     >;
 
     template<class T>
     using externable = std::integral_constant<bool,
-        !is_injector<T>{} &&
-        std::is_same<TScope, scopes::deduce>{} &&
-        std::is_same<TExpected, TGiven>{} &&
-        is_not_narrowed<T>{}
+        !is_injector<T>::value &&
+        std::is_same<TScope, scopes::deduce>::value &&
+        std::is_same<TExpected, TGiven>::value &&
+        is_not_narrowed<T>::value
     >;
 
 public:
@@ -112,7 +112,7 @@ public:
         return dependency<T, TExpected, TGiven, TName>{};
     }
 
-    template<class T, BOOST_DI_REQUIRES(externable<T>{})>
+    template<class T, BOOST_DI_REQUIRES(externable<T>::value)>
     auto to(T&& object) const noexcept {
         using dependency = dependency<
             scopes::external, TExpected, std::remove_reference_t<T>, TName
@@ -120,7 +120,7 @@ public:
         return dependency{std::forward<T>(object)};
     }
 
-    template<class T, BOOST_DI_REQUIRES(has_configure<T>{})>
+    template<class T, BOOST_DI_REQUIRES(has_configure<T>::value)>
     auto to(const T& object) const noexcept {
         using dependency = dependency<
             scopes::exposed<TScope>, TExpected, decltype(std::declval<T>().configure()), TName
@@ -128,7 +128,7 @@ public:
         return dependency{object.configure()};
     }
 
-    template<class T, BOOST_DI_REQUIRES(has_deps<T>{})>
+    template<class T, BOOST_DI_REQUIRES(has_deps<T>::value)>
     auto to(const T& object) const noexcept {
         using dependency = dependency<
             scopes::exposed<TScope>, TExpected, T, TName

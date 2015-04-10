@@ -26,19 +26,19 @@ struct non_type { };
 template<class...>
 using void_t = void;
 
-#if defined(__clang__)
-    template<class...>
-    using always = std::true_type;
+//#if defined(__clang__)
+    //template<class...>
+    //using always = std::true_type;
 
-    template<class...>
-    using never = std::false_type;
-#else
+    //template<class...>
+    //using never = std::false_type;
+//#else
     template<class...>
     struct always : std::true_type { };
 
     template<class...>
     struct never : std::false_type { };
-#endif
+//#endif
 
 template<class, class>
 struct pair { using type = pair; };
@@ -110,7 +110,7 @@ struct is_unique_impl<T> : not_unique<> { };
 template<class T1, class T2, class... Ts>
 struct is_unique_impl<T1, T2, Ts...>
 	: std::conditional_t<
-		  std::is_base_of<type<T2>, T1>{}
+		  std::is_base_of<type<T2>, T1>::value
 		, not_unique<T2>
 		, is_unique_impl<inherit<T1, type<T2>>, Ts...>
  	  >

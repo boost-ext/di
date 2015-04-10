@@ -137,7 +137,7 @@ struct deref_type {
 };
 
 template<class T>
-struct deref_type<T, std::enable_if_t<is_smart_ptr<T>{}>> {
+struct deref_type<T, std::enable_if_t<is_smart_ptr<T>::value>> {
     using type = typename T::element_type;
 };
 

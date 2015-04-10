@@ -22,7 +22,7 @@ class pool<aux::type_list<TArgs...>> : public TArgs... {
     template<class T, class TPool>
     using is_base_of_pool = std::integral_constant<
         bool
-      , std::is_base_of<T, pool>{} && std::is_base_of<T, TPool>{}
+      , std::is_base_of<T, pool>::value && std::is_base_of<T, TPool>::value
     >;
 
 public:

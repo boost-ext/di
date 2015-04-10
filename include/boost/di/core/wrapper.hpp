@@ -28,7 +28,7 @@ struct wrapper {
 };
 
 template<class T, class TWrapper>
-struct wrapper<T, TWrapper, BOOST_DI_REQUIRES_T(!std::is_convertible<TWrapper, T>{})> {
+struct wrapper<T, TWrapper, BOOST_DI_REQUIRES_T(!std::is_convertible<TWrapper, T>::value)> {
     using element_type = T;
 
     inline operator T() const noexcept {

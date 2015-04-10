@@ -52,8 +52,8 @@ struct is_callable_impl;
 template<class T, class... Ts>
 struct is_callable_impl<T, Ts...> {
     using type = std::conditional_t<
-        decltype(callable_impl(std::declval<T>(), arg{})){} ||
-        decltype(callable_impl(std::declval<T>(), arg{}, core::dependency<scopes::deduce, T>{}, ctor{})){}
+        decltype(callable_impl(std::declval<T>(), arg{}))::value ||
+        decltype(callable_impl(std::declval<T>(), arg{}, core::dependency<scopes::deduce, T>{}, ctor{}))::value
       , typename is_callable_impl<Ts...>::type
       , typename policy<T>::is_not_callable
     >;
