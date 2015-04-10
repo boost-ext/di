@@ -26,13 +26,22 @@ struct impl : i{
 };
 
 struct c {
-	BOOST_DI_INJECT(c, int a, double b, std::shared_ptr<i>){}
-	//c(int a, double b, std::shared_ptr<i>) {}
+	//BOOST_DI_INJECT(c, int a, double b, std::shared_ptr<i>){}
+	c(int a, double b, std::shared_ptr<i>) {}
+};
+
+struct module {
+	auto configure() {
+		return di::make_injector(
+				di::bind<int>().to(42)
+		);
+	}
 };
 
 int main() {
 	auto injector = di::make_injector(
-			di::bind<int>().to(42)
+			//di::bind<int>().to(42)
+			module{}
 	      , di::bind<i, impl>()
 	      , di::bind<i2, impl2>()
 	);

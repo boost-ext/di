@@ -47,10 +47,12 @@ public:
 
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
-        : pool_t{init{}, pool<aux::type_list<
-			  //std::remove_reference_t<decltype(arg(args, has_configure<decltype(args)>{}))>...>>{
-			  std::remove_reference_t<TArgs>...>>{
-				  arg(args, has_configure<decltype(args)>{})...}}
+		: injector{std::true_type{}, arg(args, has_configure<decltype(args)>{})...}
+    { }
+
+    template<class... TArgs>
+    explicit injector(const std::true_type&, const TArgs&... args) noexcept
+        : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
         , config{*this}
     { }
 

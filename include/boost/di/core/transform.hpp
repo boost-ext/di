@@ -49,7 +49,7 @@ struct add_type_list<T, std::false_type, std::false_type> {
 };
 
 template<class... Ts>
-struct transform_t : aux::type_list<Ts...>{};//aux::join_t<typename add_type_list<Ts>::type...>{};
+struct transform_t : aux::join_t<typename add_type_list<Ts>::type...> { };
 
 }}} // boost::di::core
 
