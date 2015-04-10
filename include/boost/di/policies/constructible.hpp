@@ -87,7 +87,7 @@ struct and_ : type_op {
     static auto apply(const TArg& data) noexcept {
         return std::is_same<
             aux::bool_list<decltype(apply_impl<Ts>::apply(data))::value...>
-          , aux::bool_list<(decltype(apply_impl<Ts>::apply(data))::value, true)...>
+          , aux::bool_list<(decltype(apply_impl<Ts>::apply(data)){}, true)...>
         >{};
     }
 };
@@ -99,7 +99,7 @@ struct or_ : type_op {
         return std::integral_constant<bool
           , !std::is_same<
                 aux::bool_list<decltype(apply_impl<Ts>::apply(data))::value...>
-              , aux::bool_list<(decltype(apply_impl<Ts>::apply(data))::value, false)...>
+              , aux::bool_list<(decltype(apply_impl<Ts>::apply(data)){}, false)...>
             >::value
         >{};
     }
