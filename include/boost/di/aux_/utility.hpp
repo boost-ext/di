@@ -26,19 +26,11 @@ struct non_type { };
 template<class...>
 using void_t = void;
 
-//#if defined(__clang__)
-    //template<class...>
-    //using always = std::true_type;
+template<class...>
+struct always : std::true_type { };
 
-    //template<class...>
-    //using never = std::false_type;
-//#else
-    template<class...>
-    struct always : std::true_type { };
-
-    template<class...>
-    struct never : std::false_type { };
-//#endif
+template<class...>
+struct never : std::false_type { };
 
 template<class, class>
 struct pair { using type = pair; };

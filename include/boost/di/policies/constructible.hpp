@@ -40,7 +40,7 @@ struct apply_impl {
 };
 
 template<template<class...> class T, class... Ts>
-struct apply_impl<T<Ts...>, std::enable_if_t<!std::is_base_of<type_op, T<Ts...>>{}>> {
+struct apply_impl<T<Ts...>, std::enable_if_t<!std::is_base_of<type_op, T<Ts...>>::value>> {
     template<class TOp, class>
     struct apply_placeholder_impl {
         using type = TOp;
@@ -64,7 +64,7 @@ struct apply_impl<T<Ts...>, std::enable_if_t<!std::is_base_of<type_op, T<Ts...>>
 };
 
 template<class T>
-struct apply_impl<T, std::enable_if_t<std::is_base_of<type_op, T>{}>> {
+struct apply_impl<T, std::enable_if_t<std::is_base_of<type_op, T>::value>> {
     template<class TArg>
     static auto apply(const TArg& data) noexcept {
         return T::apply(data);
@@ -76,7 +76,7 @@ struct not_ : type_op {
 	template<class TArg>
     static auto apply(const TArg& data) noexcept {
         return std::integral_constant<bool
-          , !decltype(apply_impl<T>::apply(data)){}
+          , !decltype(apply_impl<T>::apply(data))::value
         >{};
     }
 };
@@ -86,8 +86,8 @@ struct and_ : type_op {
 	template<class TArg>
     static auto apply(const TArg& data) noexcept {
         return std::is_same<
-            aux::bool_list<decltype(apply_impl<Ts>::apply(data)){}...>
-          , aux::bool_list<(decltype(apply_impl<Ts>::apply(data)){}, true)...>
+            aux::bool_list<decltype(apply_impl<Ts>::apply(data))::value...>
+          , aux::bool_list<(decltype(apply_impl<Ts>::apply(data))::value, true)...>
         >{};
     }
 };
@@ -98,9 +98,9 @@ struct or_ : type_op {
     static auto apply(const TArg& data) noexcept {
         return std::integral_constant<bool
           , !std::is_same<
-                aux::bool_list<decltype(apply_impl<Ts>::apply(data)){}...>
-              , aux::bool_list<(decltype(apply_impl<Ts>::apply(data)){}, false)...>
-            >{}
+                aux::bool_list<decltype(apply_impl<Ts>::apply(data))::value...>
+              , aux::bool_list<(decltype(apply_impl<Ts>::apply(data))::value, false)...>
+            >::value
         >{};
     }
 };
@@ -118,9 +118,9 @@ struct is_bound : type_op {
 	template<class TArg>
 	static auto apply(const TArg&) noexcept {
         struct not_resolved { };
-        using type = std::conditional_t<std::is_same<T, _>{}, typename TArg::type, T>;
+        using type = std::conditional_t<std::is_same<T, _>::value, typename TArg::type, T>;
         using dependency = typename TArg::template resolve<type, TName, not_resolved>;
-        return std::integral_constant<bool, !std::is_same<dependency, not_resolved>{}>{};
+        return std::integral_constant<bool, !std::is_same<dependency, not_resolved>::value>{};
     }
 };
 
@@ -152,25 +152,25 @@ inline auto operator!(const T&) {
 
 template<class T>
 struct constructible_impl {
-    template<class TArg, std::enable_if_t<decltype(T::apply(TArg{})){}, int> = 0>
+    template<class TArg, std::enable_if_t<decltype(T::apply(TArg{}))::value, int> = 0>
     std::true_type operator()(const TArg& data) const {
         T::apply(data);
         return {};
     }
 
-    template<class TArg, std::enable_if_t<!decltype(T::apply(TArg{})){}, int> = 0>
+    template<class TArg, std::enable_if_t<!decltype(T::apply(TArg{}))::value, int> = 0>
     std::false_type operator()(const TArg&) const {
         void(static_cast<typename TArg::type>(typename type<typename TArg::type>::template not_allowed_by<T>{}));
         return {};
     }
 };
 
-template<class T = aux::never<_>, std::enable_if_t<std::is_base_of<type_op, T>{}, int> = 0>
+template<class T = aux::never<_>, std::enable_if_t<std::is_base_of<type_op, T>::value, int> = 0>
 inline auto constructible(const T& = {}) {
 	return constructible_impl<T>{};
 }
 
-template<class T = aux::never<_>, std::enable_if_t<!std::is_base_of<type_op, T>{}, int> = 0>
+template<class T = aux::never<_>, std::enable_if_t<!std::is_base_of<type_op, T>::value, int> = 0>
 inline auto constructible(const T& = {}) {
 	return constructible_impl<or_<T>>{};
 }

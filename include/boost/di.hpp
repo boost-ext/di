@@ -59,19 +59,11 @@ struct non_type { };
 template<class...>
 using void_t = void;
 
-//#if defined(__clang__)
-    //template<class...>
-    //using always = std::true_type;
+template<class...>
+struct always : std::true_type { };
 
-    //template<class...>
-    //using never = std::false_type;
-//#else
-    template<class...>
-    struct always : std::true_type { };
-
-    template<class...>
-    struct never : std::false_type { };
-//#endif
+template<class...>
+struct never : std::false_type { };
 
 template<class, class>
 struct pair { using type = pair; };
@@ -2510,8 +2502,8 @@ public:
             policies, dependency), 0)...}; (void)_;
 
        return std::is_same<
-            aux::bool_list<aux::always<TPolicies>{}...>
-          , aux::bool_list<decltype(call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(policies, dependency)){}...>
+            aux::bool_list<aux::always<TPolicies>::value...>
+          , aux::bool_list<decltype(call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(policies, dependency))::value...>
         >{};
     }
 
@@ -2534,17 +2526,17 @@ private:
     static auto call_impl_type(const TPolicy& policy, TDependency dependency) noexcept {
         call_impl_args<TArg, TDependency, TPolicy, TCtor...>(policy, dependency);
         using type = decltype(call_impl_args<TArg, TDependency, TPolicy, TCtor...>(policy, dependency));
-        return std::conditional_t<std::is_same<type, void>{}, std::true_type, type>{};
+        return std::conditional_t<std::is_same<type, void>::value, std::true_type, type>{};
     }
 
     template<class TArg, class TDependency, class TPolicy, class... TCtor
-           , BOOST_DI_REQUIRES(!has_call_operator<TPolicy, TArg, TDependency, TCtor...>{})>
+           , BOOST_DI_REQUIRES(!has_call_operator<TPolicy, TArg, TDependency, TCtor...>::value)>
     static auto call_impl_args(const TPolicy& policy, TDependency) noexcept {
         return (policy)(TArg{});
     }
 
     template<class TArg, class TDependency, class TPolicy, class... TCtor
-           , BOOST_DI_REQUIRES(has_call_operator<TPolicy, TArg, TDependency, TCtor...>{})>
+           , BOOST_DI_REQUIRES(has_call_operator<TPolicy, TArg, TDependency, TCtor...>::value)>
     static auto call_impl_args(const TPolicy& policy, TDependency dependency) noexcept {
         return (policy)(TArg{}, dependency, aux::type<TCtor>{}...);
     }
