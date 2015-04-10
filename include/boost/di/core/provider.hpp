@@ -69,7 +69,11 @@ template<
         return get_impl(memory, get_arg(aux::type<TArgs>{})...);
     }
 
-    template<class TMemory, class... Ts, BOOST_DI_REQUIRES(is_creatable<TMemory, Ts...>::value)>
+    template<class TMemory, class... Ts
+#if !defined(_MSC_VER)
+		, BOOST_DI_REQUIRES(is_creatable<TMemory, Ts...>::value)
+#endif
+		>
     auto get_impl(const TMemory& memory, Ts&&... args) const {
         return injector_.provider().template get<TExpected, TGiven>(
             TInitialization{}
@@ -78,10 +82,12 @@ template<
         );
     }
 
+#if !defined(_MSC_VER)
     template<class TMemory, class... Ts, BOOST_DI_REQUIRES(!is_creatable<TMemory, Ts...>::value)>
     auto get_impl(const TMemory& memory, Ts&&... args) const {
         return concepts::creatable_error<TInitialization, TName, TExpected*, TGiven*, Ts...>();
     }
+#endif
 
     template<class T>
     auto get_arg(const aux::type<T>&) const {

@@ -16,39 +16,40 @@ namespace boost { namespace di { namespace core {
 
 template<class T, class = void>
 struct get_deps {
-    using type = typename T::deps;
+	using type = typename T::deps;
 };
 
 template<class T>
 struct get_deps<T, std::enable_if_t<has_configure<T>::value>> {
-    using type = typename aux::function_traits<
-        decltype(&T::configure)
-    >::result_type::deps;
+	using type1 = typename aux::function_traits<
+		decltype(&T::configure)
+	>::result_type;
+	using type = typename type1::deps;
 };
 
 template<
-    class T
+	class T
   , class = typename is_injector<T>::type
   , class = typename is_dependency<T>::type
 > struct add_type_list;
 
 template<class T, class TAny>
 struct add_type_list<T, std::true_type, TAny> {
-    using type = typename get_deps<T>::type;
+	using type = typename get_deps<T>::type;
 };
 
 template<class T>
 struct add_type_list<T, std::false_type, std::true_type> {
-    using type = aux::type_list<T>;
+	using type = aux::type_list<T>;
 };
 
 template<class T>
 struct add_type_list<T, std::false_type, std::false_type> {
-    using type = aux::type_list<dependency<scopes::exposed<>, T>>;
+	using type = aux::type_list<dependency<scopes::exposed<>, T>>;
 };
 
 template<class... Ts>
-using transform_t = aux::join_t<typename add_type_list<Ts>::type...>;
+struct transform_t : aux::type_list<Ts...>{};//aux::join_t<typename add_type_list<Ts>::type...>{};
 
 }}} // boost::di::core
 

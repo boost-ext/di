@@ -107,12 +107,16 @@ public:
         return dependency<TScope, TExpected, TGiven, T>{*this};
     }
 
-    template<class T, BOOST_DI_REQUIRES(concepts::scopable<T>())>
+    template<class T
+#if !defined(_MSC_VER)
+		, BOOST_DI_REQUIRES(concepts::scopable<T>())
+#endif
+		>
     auto in(const T&) const noexcept {
         return dependency<T, TExpected, TGiven, TName>{};
     }
 
-    template<class T, BOOST_DI_REQUIRES(externable<T>::value)>
+    template<class T>//, BOOST_DI_REQUIRES(externable<T>::value)>
     auto to(T&& object) const noexcept {
         using dependency = dependency<
             scopes::external, TExpected, std::remove_reference_t<T>, TName
@@ -120,6 +124,7 @@ public:
         return dependency{std::forward<T>(object)};
     }
 
+#if !defined(_MSC_VER)
     template<class T, BOOST_DI_REQUIRES(has_configure<T>::value)>
     auto to(const T& object) const noexcept {
         using dependency = dependency<
@@ -135,6 +140,7 @@ public:
         >;
         return dependency{object};
     }
+#endif
 };
 
 template<class T>

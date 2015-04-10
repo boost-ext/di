@@ -27,6 +27,7 @@ struct wrapper {
     TWrapper wrapper_;
 };
 
+#if !defined(_MSC_VER)
 template<class T, class TWrapper>
 struct wrapper<T, TWrapper, BOOST_DI_REQUIRES_T(!std::is_convertible<TWrapper, T>::value)> {
     using element_type = T;
@@ -41,6 +42,7 @@ struct wrapper<T, TWrapper, BOOST_DI_REQUIRES_T(!std::is_convertible<TWrapper, T
 
     TWrapper wrapper_;
 };
+#endif
 
 }}} // boost::di::core
 

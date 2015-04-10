@@ -4,6 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#if !defined(_MSC_VER)
 #ifndef BOOS_DI_POLICIES_CONSTRUCTIBLE_HPP
 #define BOOS_DI_POLICIES_CONSTRUCTIBLE_HPP
 
@@ -179,3 +180,4 @@ inline auto constructible(const T& = {}) {
 
 #endif
 
+#endif

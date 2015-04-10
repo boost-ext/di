@@ -8,7 +8,7 @@
 #define BOOST_DI_HPP
 
 
-#if (__cplusplus < 201305L)
+#if (__cplusplus < 201305L && !defined(_MSC_VER))
    #error "C++14 is required by Boost.DI"
 #endif
 

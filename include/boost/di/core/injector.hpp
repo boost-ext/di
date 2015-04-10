@@ -26,14 +26,14 @@ namespace boost { namespace di { namespace core {
 BOOST_DI_HAS_METHOD(call, call);
 
 template<class TConfig, class... TDeps>
-class injector : public pool<transform_t<TDeps...>>
+class injector : public pool<typename transform_t<TDeps...>::type>
                , public type_traits::config_traits<TConfig, injector<TConfig, TDeps...>>::type
                , _ {
     template<class...> friend struct provider;
     template<class, class, class> friend struct any_type;
     template<class> friend class scopes::exposed;
 
-    using pool_t = pool<transform_t<TDeps...>>;
+    using pool_t = pool<typename transform_t<TDeps...>::type>;
     using is_root_t = std::true_type;
     using config_t = typename type_traits::config_traits<TConfig, injector>::type;
     using config = std::conditional_t<
@@ -43,13 +43,14 @@ class injector : public pool<transform_t<TDeps...>>
     >;
 
 public:
-    using deps = transform_t<TDeps...>;
+    using deps = typename transform_t<TDeps...>::type;
 
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
         : pool_t{init{}, pool<aux::type_list<
-              std::remove_reference_t<decltype(arg(args, has_configure<decltype(args)>{}))>...>>{
-                  arg(args, has_configure<decltype(args)>{})...}}
+			  //std::remove_reference_t<decltype(arg(args, has_configure<decltype(args)>{}))>...>>{
+			  std::remove_reference_t<TArgs>...>>{
+				  arg(args, has_configure<decltype(args)>{})...}}
         , config{*this}
     { }
 
@@ -59,23 +60,31 @@ public:
         , config{*this}
     { }
 
+#if !defined(_MSC_VER)
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     static constexpr auto is_creatable() {
         return decltype(is_creatable_impl(
             std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>())
         )::value;
     }
+#endif
 
-    template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>())>
+    template<class T
+#if !defined(_MSC_VER)
+		, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>())
+#endif
+		>
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }
 
+#if !defined(_MSC_VER)
     template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, is_root_t>())>
     BOOST_DI_CONCEPTS_CREATABLE_ATTR
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }
+#endif
 
     template<class TAction>
     void call(const TAction& action) {
@@ -83,6 +92,7 @@ public:
     }
 
 private:
+#if !defined(_MSC_VER)
     template<
         class T
       , class TName = no_name
@@ -106,6 +116,7 @@ private:
           ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{})
        )::value
     >;
+#endif
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     auto create_impl() const {
@@ -114,7 +125,7 @@ private:
         using expected_t = typename dependency_t::expected;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-        using provider_t = provider<expected_t, given_t, TName, T, ctor_t, injector>;
+        using provider_t = core::provider<expected_t, given_t, TName, T, ctor_t, injector>;
         policy<pool_t>::template call<T, TName, TIsRoot>(((TConfig&)*this).policies(), dependency, ctor_t{});
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
@@ -125,11 +136,13 @@ private:
         return wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
 
+#if !defined(_MSC_VER)
     static auto is_creatable_impl(...) -> std::false_type;
 
     template<class T, class TName, class TIsRoot>
     static auto is_creatable_impl(T&&, TName&&, TIsRoot&&)
         -> aux::is_valid_expr<decltype(try_create_impl<T, TName, TIsRoot>())>;
+#endif
 
     template<class TAction, class... Ts>
     void call_impl(const TAction& action, const aux::type_list<Ts...>&) {

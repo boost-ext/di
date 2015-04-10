@@ -67,6 +67,8 @@ struct unique<T*> {
         return std::unique_ptr<I>{object};
     }
 
+	unique(T* t) : object(t) {}
+
     T* object = nullptr;
 };
 

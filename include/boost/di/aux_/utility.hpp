@@ -24,7 +24,9 @@ template<class T, T>
 struct non_type { };
 
 template<class...>
-using void_t = void;
+struct void_t {
+	using type = void;
+};
 
 template<class...>
 struct always : std::true_type { };

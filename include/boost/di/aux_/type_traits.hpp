@@ -7,6 +7,8 @@
 #ifndef BOOST_DI_AUX_TYPE_TRAITS_HPP
 #define BOOST_DI_AUX_TYPE_TRAITS_HPP
 
+#define __has_include(...) 0
+
 #include <memory>
 #include <type_traits>
 #include "boost/di/aux_/utility.hpp"
@@ -19,7 +21,7 @@
     struct has_##name : std::false_type { };                        \
                                                                     \
     template<class T>                                               \
-    struct has_##name<T, aux::void_t<typename T::name>>             \
+    struct has_##name<T, typename aux::void_t<typename T::name>::type>             \
         : std::true_type                                            \
     { }
 
@@ -33,7 +35,7 @@
     std::false_type has_##name##_impl(...);                         \
                                                                     \
     template<class T, class... TArgs>                               \
-    using has_##name = decltype(has_##name##_impl<T, TArgs...>(0))
+    struct has_##name : decltype(has_##name##_impl<T, TArgs...>(0)) {}
 
 #if defined(__clang__)
     #define BOOST_DI_UNUSED __attribute__((unused))
@@ -111,16 +113,16 @@ template<class, class...>
 std::false_type test_is_braces_constructible(...);
 
 template<class T, class... TArgs>
-using is_braces_constructible =
-    decltype(test_is_braces_constructible<T, TArgs...>(0));
+struct is_braces_constructible :
+    decltype(test_is_braces_constructible<T, TArgs...>(0)) {};
 
 template<class T, class... TArgs>
 using is_braces_constructible_t =
     typename is_braces_constructible<T, TArgs...>::type;
 
 template<class T>
-using remove_accessors =
-    std::remove_cv<std::remove_pointer_t<std::remove_reference_t<T>>>;
+struct remove_accessors :
+    std::remove_cv<std::remove_pointer_t<std::remove_reference_t<T>>>{};
 
 template<class T>
 using remove_accessors_t = typename remove_accessors<T>::type;
