@@ -31,7 +31,7 @@ struct c {
 };
 
 struct module {
-	auto configure() {
+	auto configure() const {
 		return di::make_injector(
 				di::bind<int>().to(42)
 		);
