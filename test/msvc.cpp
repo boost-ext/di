@@ -20,7 +20,7 @@ struct impl2 : i2 {
 
 struct impl : i{
 	impl(int i, std::shared_ptr<i2>){
-		assert(i == 42);
+		assert(i == 87);
 	}
 	void dummy() override {};
 };
@@ -31,19 +31,19 @@ struct c {
 };
 
 struct module {
-	auto configure() const {
+    di::injector<i> configure() const {
 		return di::make_injector(
-				di::bind<int>().to(42)
+                di::bind<i, impl>()
+	          , di::bind<i2, impl2>()
+              , di::bind<int>().to(87)
 		);
 	}
 };
 
 int main() {
 	auto injector = di::make_injector(
-			//di::bind<int>().to(42)
-			module{}
-	      , di::bind<i, impl>()
-	      , di::bind<i2, impl2>()
+          di::bind<int>().to(42)
+		, module{}
 	);
 
 	auto object = injector.create<i*>();

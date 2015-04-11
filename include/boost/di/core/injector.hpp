@@ -58,9 +58,19 @@ public:
 
     template<class TConfig_, class... TDeps_>
     explicit injector(const injector<TConfig_, TDeps_...>& injector) noexcept
-        : pool_t{init{}, create_from_injector(injector, deps{})}
+        : injector{std::false_type{}, injector, deps{}}
+    { }
+
+    template<class TInjector, class... TArgs>
+    explicit injector(const std::false_type&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
+        : pool_t{init{}, pool_t{build<TArgs>(injector)...}}
         , config{*this}
     { }
+
+    template<class T, class TInjector>
+    auto build(const TInjector& injector) const noexcept {
+        return T{injector};
+    }
 
 #if !defined(_MSC_VER)
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
@@ -158,12 +168,6 @@ private:
 
     template<class, class TAction>
     void call_impl(const TAction&, const std::false_type&) { }
-
-    template<class TInjector, class... Ts>
-    auto create_from_injector(const TInjector& injector
-                            , const aux::type_list<Ts...>&) const noexcept {
-        return pool_t{Ts{injector}...};
-    }
 
     template<class T>
     decltype(auto) arg(const T& arg, const std::false_type&) noexcept {
