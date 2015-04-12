@@ -18,11 +18,7 @@
 
 namespace boost { namespace di { namespace detail {
 
-template<class... Ts
-#if !defined(_MSC_VER)
-	, BOOST_DI_REQUIRES(aux::is_unique<Ts...>::value)
-#endif
-	>
+template<class... Ts, BOOST_DI_REQUIRES(aux::is_unique<Ts...>::value)>
 auto any_of() {
     return aux::type_list<Ts...>{};
 }
@@ -35,9 +31,7 @@ using any_of = decltype(detail::any_of<T1, T2, Ts...>());
 template<
     class TExpected
   , class TGiven = TExpected
-#if !defined(_MSC_VER)
   , BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, TGiven>)
-#endif
 >
 #if !defined(_MSC_VER)
 core::bind<TExpected, TGiven> bind{};
