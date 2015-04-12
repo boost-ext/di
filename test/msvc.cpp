@@ -42,7 +42,6 @@ struct impl : i{
 
 struct c {
     BOOST_DI_INJECT(c, int, int, int a, double b, double, std::shared_ptr<i>, (named = blah) std::shared_ptr<i3>){}
-    //c(int a, double b, std::shared_ptr<i>) {}
 };
 
 struct module {
