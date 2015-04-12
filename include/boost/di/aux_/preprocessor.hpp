@@ -42,12 +42,17 @@
 # define BOOST_PP_IF_I(cond, t, f) BOOST_PP_IIF(cond, t, f)
 #define BOOST_PP_IIF(bit, t, f) BOOST_PP_IIF_OO((bit, t, f))
 #define BOOST_PP_IIF_OO(par) BOOST_PP_IIF_I ## par
-# define BOOST_PP_IIF_I(bit, t, f) BOOST_PP_IIF_ ## bit(t, f)
-# define BOOST_PP_IIF_0(t, f) f
-# define BOOST_PP_IIF_1(t, f) t
-# define BOOST_PP_IIF_2(t, f) t
-# define BOOST_PP_IIF_3(t, f) t
-# define BOOST_PP_IIF_4(t, f) t
+#define BOOST_PP_IIF_I(bit, t, f) BOOST_PP_IIF_ ## bit(t, f)
+#define BOOST_PP_IIF_0(t, f) f
+#define BOOST_PP_IIF_1(t, f) t
+#define BOOST_PP_IIF_2(t, f) t
+#define BOOST_PP_IIF_3(t, f) t
+#define BOOST_PP_IIF_4(t, f) t
+#define BOOST_PP_IIF_5(t, f) t
+#define BOOST_PP_IIF_6(t, f) t
+#define BOOST_PP_IIF_7(t, f) t
+#define BOOST_PP_IIF_8(t, f) t
+#define BOOST_PP_IIF_9(t, f) t
 #define BOOST_DI_JOIN_5(_0, _1, _2, _3, _4) _0 ## _1 ## _2 ## _3 ## _4
 #define BOOST_DI_IS_EMPTY_IMPL_0001 ,
 #define BOOST_DI_ARG_N( _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, N, ...) N
