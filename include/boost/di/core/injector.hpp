@@ -72,14 +72,14 @@ public:
         return T{injector};
     }
 
-#if !defined(_MSC_VER)
+//#if !defined(_MSC_VER)
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     static constexpr auto is_creatable() {
         return decltype(is_creatable_impl(
             std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>())
         )::value;
     }
-#endif
+//#endif
 
     template<class T
 #if !defined(_MSC_VER)
@@ -104,7 +104,7 @@ public:
     }
 
 private:
-#if !defined(_MSC_VER)
+//#if !defined(_MSC_VER)
     template<
         class T
       , class TName = no_name
@@ -123,12 +123,13 @@ private:
                  , injector
                >{std::declval<injector>()}
            )
-       ), T>::value &&
-       decltype(policy<pool_t>::template call<T, TName, TIsRoot>(
-          ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{})
-       )::value
+       ), T>::value
+       //&&
+       //decltype(policy<pool_t>::template call<T, TName, TIsRoot>(
+          //((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{})
+       //)::value
     >;
-#endif
+//#endif
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     auto create_impl() const {
@@ -148,13 +149,13 @@ private:
         return wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
 
-#if !defined(_MSC_VER)
+//#if !defined(_MSC_VER)
     static auto is_creatable_impl(...) -> std::false_type;
 
     template<class T, class TName, class TIsRoot>
     static auto is_creatable_impl(T&&, TName&&, TIsRoot&&)
         -> aux::is_valid_expr<decltype(try_create_impl<T, TName, TIsRoot>())>;
-#endif
+//#endif
 
     template<class TAction, class... Ts>
     void call_impl(const TAction& action, const aux::type_list<Ts...>&) {

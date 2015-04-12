@@ -17,11 +17,7 @@ public:
     template<class TInitialization, class TMemory, class T, class... TArgs>
     struct is_creatable {
         static constexpr auto value =
-#if !defined(_MSC_VER)
             concepts::creatable<TInitialization, T, TArgs...>::value;
-#else
-		true;
-#endif
     };
 
     template<class, class T, class TMemory, class... TArgs>

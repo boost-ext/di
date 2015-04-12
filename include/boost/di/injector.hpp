@@ -15,7 +15,6 @@
 
 namespace boost { namespace di { namespace detail {
 
-#if !defined(_MSC_VER)
 template<class>
 void create(const std::true_type&) { }
 
@@ -37,17 +36,13 @@ struct is_creatable<std::true_type, TInjector, T>
           TInjector::template is_creatable<T*>()
       >
 { };
-#endif
 
 } // namespace detail
 
 template<class... T>
 class injector : public
-#if !defined(_MSC_VER)
      BOOST_DI_REQUIRES_MSG_T(concepts::boundable<aux::type<T...>>
-#else                          , core::injector<::BOOST_DI_CFG, T...>) {
-	core::injector<::BOOST_DI_CFG, T...> {
-#endif
+                          , core::injector<::BOOST_DI_CFG, T...>) {
 public:
     template<
         class TConfig
