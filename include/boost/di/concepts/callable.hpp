@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#if !defined(_MSC_VER)
 #ifndef BOOST_DI_CONCEPTS_CALLABLE_HPP
 #define BOOST_DI_CONCEPTS_CALLABLE_HPP
 
@@ -53,8 +52,8 @@ struct is_callable_impl;
 template<class T, class... Ts>
 struct is_callable_impl<T, Ts...> {
     using type = std::conditional_t<
-        decltype(callable_impl(std::declval<T>(), arg{}))::value ||
-        decltype(callable_impl(std::declval<T>(), arg{}, core::dependency<scopes::deduce, T>{}, ctor{}))::value
+        decltype(callable_impl(std::declval<T>(), arg{})){} ||
+        decltype(callable_impl(std::declval<T>(), arg{}, core::dependency<scopes::deduce, T>{}, ctor{})){}
       , typename is_callable_impl<Ts...>::type
       , typename policy<T>::is_not_callable
     >;
@@ -87,4 +86,3 @@ using callable = typename is_callable<Ts...>::type;
 
 #endif
 
-#endif
