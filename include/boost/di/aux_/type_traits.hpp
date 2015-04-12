@@ -43,9 +43,9 @@
 #elif defined(__GNUC__)
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_ATTR_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
-#else
+#elif defined(_MSC_VER)
     #define BOOST_DI_UNUSED
-    #define BOOST_DI_ATTR_ERROR(...)
+    #define BOOST_DI_ATTR_ERROR(...) __declspec(deprecated(__VA_ARGS__))
 #endif
 
 #define BOOST_DI_REQUIRES(...) \

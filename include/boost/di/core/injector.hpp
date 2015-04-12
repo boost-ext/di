@@ -81,9 +81,9 @@ public:
 
     template<class T
 #if !defined(_MSC_VER)
-		, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>())
+        , BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>())
 #endif
-		>
+        >
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }
