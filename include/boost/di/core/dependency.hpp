@@ -104,7 +104,7 @@ public:
 
     template<class T> // no requirements
     auto named(const T&) const noexcept {
-        return dependency<TScope, TExpected, TGiven, T>{*this};
+        return dependency<TScope, TExpected, TGiven, T>{/**this*/};
     }
 
     template<class T
