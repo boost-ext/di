@@ -48,7 +48,7 @@ struct impl : i{
 };
 
 struct c {
-    BOOST_DI_INJECT(c, int, int, int a, double b, double, std::shared_ptr<i>, (named = blah) std::shared_ptr<i3>){}
+    BOOST_DI_INJECT(c, int, int, int, double, double, std::shared_ptr<i>, (named = blah) std::shared_ptr<i3>){}
 };
 
 struct module {
@@ -61,7 +61,7 @@ struct module {
     }
 };
 
-int main() {
+test ft = []{
     auto injector = di::make_injector(
           di::bind<int>().to(42)
         , module{}
@@ -74,9 +74,7 @@ int main() {
     assert(42 == injector.create<int>());
 
     injector.create<c>();
-
-    return 0;
-}
+};
 
 #endif
 

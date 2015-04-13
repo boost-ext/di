@@ -28,8 +28,8 @@ project :
         <include>.
         <include>..
         <include>../include
-        <warnings>all
-        <warnings-as-errors>on
+#        <warnings>all
+#        <warnings-as-errors>on
 ;
 
 rule run-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
