@@ -1045,16 +1045,16 @@ public:
 #ifndef BOOST_DI_AUX_PREPROCESSOR_HPP
 #define BOOST_DI_AUX_PREPROCESSOR_HPP
 
-#define BOOST_DI_IF(cond, t, f) BOOST_PP_IF_I(cond, t, f)
+#define BOOST_DI_IF(cond, t, f) BOOST_DI_IF_I(cond, t, f)
 #define BOOST_DI_REPEAT(i, m, ...) BOOST_DI_REPEAT_N(i, m, __VA_ARGS__)
-#define BOOST_PP_EMPTY()
+#define BOOST_DI_EMPTY()
 #define BOOST_DI_CAT(a, ...) BOOST_DI_PRIMITIVE_CAT(a, __VA_ARGS__)
 #define BOOST_DI_CALL(m, ...) m(__VA_ARGS__)
 #define BOOST_DI_EMPTY()
 #define BOOST_DI_COMMA() ,
 #define BOOST_DI_EAT(...)
 #define BOOST_DI_EXPAND(...) __VA_ARGS__
-#define BOOST_DI_NARG(...) BOOST_DI_CAT(BOOST_PP_VARIADIC_SIZE_I(__VA_ARGS__, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1,),)
+#define BOOST_DI_NARG(...) BOOST_DI_CAT(BOOST_DI_VARIADIC_SIZE_I(__VA_ARGS__, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1,),)
 #define BOOST_DI_PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
 #define BOOST_DI_IS_EMPTY(...)  \
     BOOST_DI_IS_EMPTY_IMPL(BOOST_DI_HAS_COMMA(__VA_ARGS__) \
@@ -1064,7 +1064,7 @@ public:
 
 // detail
 
-#define BOOST_PP_VARIADIC_SIZE_I(e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, size, ...) size
+#define BOOST_DI_VARIADIC_SIZE_I(e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, size, ...) size
 #define BOOST_DI_TRIGGER_PARENTHESIS(...) ,
 #define BOOST_DI_IS_EMPTY_IMPL(_0, _1, _2, _3) BOOST_DI_HAS_COMMA(BOOST_DI_JOIN_5(BOOST_DI_IS_EMPTY_IMPL_, _0, _1, _2, _3))
 #define BOOST_DI_JOIN_5(_0, _1, _2, _3, _4) _0 ## _1 ## _2 ## _3 ## _4
@@ -1072,17 +1072,17 @@ public:
 #define BOOST_DI_ARG_N( _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, N, ...) N
 #define BOOST_DI_HAS_COMMA(...) BOOST_DI_ARG_N(__VA_ARGS__, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0)
 
-#define BOOST_PP_IF_I(cond, t, f) BOOST_PP_IIF(cond, t, f)
-#define BOOST_PP_IIF_0(t, f) f
-#define BOOST_PP_IIF_1(t, f) t
-#define BOOST_PP_IIF_2(t, f) t
-#define BOOST_PP_IIF_3(t, f) t
-#define BOOST_PP_IIF_4(t, f) t
-#define BOOST_PP_IIF_5(t, f) t
-#define BOOST_PP_IIF_6(t, f) t
-#define BOOST_PP_IIF_7(t, f) t
-#define BOOST_PP_IIF_8(t, f) t
-#define BOOST_PP_IIF_9(t, f) t
+#define BOOST_DI_IF_I(cond, t, f) BOOST_DI_IIF(cond, t, f)
+#define BOOST_DI_IIF_0(t, f) f
+#define BOOST_DI_IIF_1(t, f) t
+#define BOOST_DI_IIF_2(t, f) t
+#define BOOST_DI_IIF_3(t, f) t
+#define BOOST_DI_IIF_4(t, f) t
+#define BOOST_DI_IIF_5(t, f) t
+#define BOOST_DI_IIF_6(t, f) t
+#define BOOST_DI_IIF_7(t, f) t
+#define BOOST_DI_IIF_8(t, f) t
+#define BOOST_DI_IIF_9(t, f) t
 
 #define BOOST_DI_ARG(n, ...) BOOST_DI_ARG_I(n,__VA_ARGS__)
 #define BOOST_DI_ARG_I(n, ...) BOOST_DI_CAT(BOOST_DI_CAT(BOOST_DI_ARG, n)(__VA_ARGS__,),)
@@ -1110,22 +1110,22 @@ public:
 #define BOOST_DI_REPEAT_10(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) m(6, __VA_ARGS__) m(7, __VA_ARGS__) m(8, __VA_ARGS__) m(9, __VA_ARGS__)
 
 #if defined(_MSC_VER)
-    #define BOOST_PP_DETAIL_VD_IBP_CAT(a, b) BOOST_PP_DETAIL_VD_IBP_CAT_I(a, b)
-    #define BOOST_PP_DETAIL_VD_IBP_CAT_I(a, b) BOOST_PP_DETAIL_VD_IBP_CAT_II(a ## b)
-    #define BOOST_PP_DETAIL_VD_IBP_CAT_II(res) res
-    #define BOOST_PP_DETAIL_IBP_SPLIT(i, ...) BOOST_PP_DETAIL_VD_IBP_CAT(BOOST_PP_DETAIL_IBP_PRIMITIVE_CAT(BOOST_PP_DETAIL_IBP_SPLIT_,i)(__VA_ARGS__),BOOST_PP_EMPTY())
-    #define BOOST_PP_DETAIL_IBP_IS_VARIADIC_C(...) 1 1
-    #define BOOST_PP_DETAIL_IBP_SPLIT_0(a, ...) a
-    #define BOOST_PP_DETAIL_IBP_SPLIT_1(a, ...) __VA_ARGS__
-    #define BOOST_PP_DETAIL_IBP_CAT(a, ...) BOOST_PP_DETAIL_IBP_PRIMITIVE_CAT(a,__VA_ARGS__)
-    #define BOOST_PP_DETAIL_IBP_PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
-    #define BOOST_PP_DETAIL_IBP_IS_VARIADIC_R_1 1,
-    #define BOOST_PP_DETAIL_IBP_IS_VARIADIC_R_BOOST_PP_DETAIL_IBP_IS_VARIADIC_C 0,
-    #define BOOST_DI_IBP(...) BOOST_PP_DETAIL_IBP_SPLIT(0, BOOST_PP_DETAIL_IBP_CAT(BOOST_PP_DETAIL_IBP_IS_VARIADIC_R_, BOOST_PP_DETAIL_IBP_IS_VARIADIC_C __VA_ARGS__))
+    #define BOOST_DI_VD_IBP_CAT(a, b) BOOST_DI_VD_IBP_CAT_I(a, b)
+    #define BOOST_DI_VD_IBP_CAT_I(a, b) BOOST_DI_VD_IBP_CAT_II(a ## b)
+    #define BOOST_DI_VD_IBP_CAT_II(res) res
+    #define BOOST_DI_IBP_SPLIT(i, ...) BOOST_DI_VD_IBP_CAT(BOOST_DI_IBP_PRIMITIVE_CAT(BOOST_DI_IBP_SPLIT_,i)(__VA_ARGS__),BOOST_DI_EMPTY())
+    #define BOOST_DI_IBP_IS_VARIADIC_C(...) 1 1
+    #define BOOST_DI_IBP_SPLIT_0(a, ...) a
+    #define BOOST_DI_IBP_SPLIT_1(a, ...) __VA_ARGS__
+    #define BOOST_DI_IBP_CAT(a, ...) BOOST_DI_IBP_PRIMITIVE_CAT(a,__VA_ARGS__)
+    #define BOOST_DI_IBP_PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
+    #define BOOST_DI_IBP_IS_VARIADIC_R_1 1,
+    #define BOOST_DI_IBP_IS_VARIADIC_R_BOOST_DI_IBP_IS_VARIADIC_C 0,
+    #define BOOST_DI_IBP(...) BOOST_DI_IBP_SPLIT(0, BOOST_DI_IBP_CAT(BOOST_DI_IBP_IS_VARIADIC_R_, BOOST_DI_IBP_IS_VARIADIC_C __VA_ARGS__))
 
-    #define BOOST_PP_IIF(bit, t, f) BOOST_PP_IIF_OO((bit, t, f))
-    #define BOOST_PP_IIF_OO(par) BOOST_PP_IIF_I ## par
-    #define BOOST_PP_IIF_I(bit, t, f) BOOST_PP_IIF_ ## bit(t, f)
+    #define BOOST_DI_IIF(bit, t, f) BOOST_DI_IIF_OO((bit, t, f))
+    #define BOOST_DI_IIF_OO(par) BOOST_DI_IIF_I ## par
+    #define BOOST_DI_IIF_I(bit, t, f) BOOST_DI_IIF_ ## bit(t, f)
 #else
     #define BOOST_DI_IBP_SPLIT(i, ...) BOOST_DI_PRIMITIVE_CAT(BOOST_DI_IBP_SPLIT_, i)(__VA_ARGS__)
     #define BOOST_DI_IBP_SPLIT_0(a, ...) a
@@ -1138,9 +1138,9 @@ public:
                 BOOST_DI_IBP_IS_VARIADIC_R_, BOOST_DI_IBP_IS_VARIADIC_C __VA_ARGS__) \
             )
 
-    #define BOOST_PP_IIF(bit, t, f) BOOST_PP_IIF_I(bit, t, f)
-    #define BOOST_PP_IIF_I(bit, t, f) BOOST_PP_IIF_II(BOOST_PP_IIF_ ## bit(t, f))
-    #define BOOST_PP_IIF_II(id) id
+    #define BOOST_DI_IIF(bit, t, f) BOOST_DI_IIF_I(bit, t, f)
+    #define BOOST_DI_IIF_I(bit, t, f) BOOST_DI_IIF_II(BOOST_DI_IIF_ ## bit(t, f))
+    #define BOOST_DI_IIF_II(id) id
 #endif
 
 #endif
