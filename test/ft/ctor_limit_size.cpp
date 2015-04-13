@@ -11,8 +11,8 @@ namespace di = boost::di;
 
 test ctor_limit_size = [] {
     struct c {
-        c(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8, int p9, int p10)
-       { }
+        c(int /*p1*/, int /*p2*/, int /*p3*/, int /*p4*/, int /*p5*/, int /*p6*/, int /*p7*/, int /*p8*/, int /*p9*/, int /*p10*/)
+        { }
     };
 
     auto injector = di::make_injector();

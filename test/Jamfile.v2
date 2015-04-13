@@ -28,15 +28,13 @@ project :
         <include>.
         <include>..
         <include>../include
-#        <warnings>all
-#        <warnings-as-errors>on
 ;
 
 rule run-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
     toolset =
-        <toolset>gcc:<cxxflags>"-std=$(std) -include common/test.hpp"
-        <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp"
-        <toolset>darwin:<cxxflags>"-std=$(std) -include common/test.hpp"
+        <toolset>gcc:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra"
+        <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra"
+        <toolset>darwin:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror=all"
         <toolset>msvc:<cxxflags>"/FI common/test.hpp"
     ;
 
@@ -53,9 +51,9 @@ rule run-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
 
 rule compile-fail-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
     toolset =
-        <toolset>gcc:<cxxflags>"-std=$(std) -Wfatal-errors -include common/test.hpp"
-        <toolset>clang:<cxxflags>"-std=$(std) -Wfatal-errors -include common/test.hpp"
-        <toolset>darwin:<cxxflags>"-std=$(std) -Wfatal-errors -include common/test.hpp"
+        <toolset>gcc:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
+        <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
+        <toolset>darwin:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
         <toolset>msvc:<cxxflags>"/FI common/test.hpp"
     ;
 
