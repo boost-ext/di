@@ -121,7 +121,7 @@ auto boundable_impl(I&&, T&&) ->
     >;
 
 template<class... TDeps> // bindings
-auto boundable_impl(aux::type_list<TDeps...>&&) -> get_bindings_error<TDeps...>;
+auto boundable_impl(aux::type_list<TDeps...>&&) -> typename get_bindings_error<TDeps...>::type;
 
 template<class T, class... Ts> // any_of
 auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->

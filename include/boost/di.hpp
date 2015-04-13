@@ -2308,7 +2308,7 @@ auto boundable_impl(I&&, T&&) ->
     >;
 
 template<class... TDeps> // bindings
-auto boundable_impl(aux::type_list<TDeps...>&&) -> get_bindings_error<TDeps...>;
+auto boundable_impl(aux::type_list<TDeps...>&&) -> typename get_bindings_error<TDeps...>::type;
 
 template<class T, class... Ts> // any_of
 auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
@@ -3058,8 +3058,10 @@ namespace boost { namespace di {
 template<
      class TConfig = ::BOOST_DI_CFG
    , class... TDeps
-   //, BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type_list<TDeps...>>)
-   //, BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>)
+#if !defined(_MSC_VER)
+   , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type_list<TDeps...>>)
+   , BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>)
+#endif
 > inline auto make_injector(const TDeps&... args) noexcept {
     return core::injector<TConfig, TDeps...>{core::init{}, args...};
 }
