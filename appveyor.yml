@@ -6,6 +6,8 @@ configuration:
   - Debug
   - Release
 
+os: Visual Studio 2015 CTP6
+
 branches:
   only:
     - msvc2015
