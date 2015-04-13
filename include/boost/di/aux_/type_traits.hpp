@@ -113,16 +113,16 @@ template<class, class...>
 std::false_type test_is_braces_constructible(...);
 
 template<class T, class... TArgs>
-struct is_braces_constructible :
-    decltype(test_is_braces_constructible<T, TArgs...>(0)) {};
+using is_braces_constructible =
+    decltype(test_is_braces_constructible<T, TArgs...>(0));
 
 template<class T, class... TArgs>
 using is_braces_constructible_t =
     typename is_braces_constructible<T, TArgs...>::type;
 
 template<class T>
-struct remove_accessors :
-    std::remove_cv<std::remove_pointer_t<std::remove_reference_t<T>>>{};
+using remove_accessors =
+    std::remove_cv<std::remove_pointer_t<std::remove_reference_t<T>>>;
 
 template<class T>
 using remove_accessors_t = typename remove_accessors<T>::type;
