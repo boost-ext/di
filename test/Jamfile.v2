@@ -33,11 +33,12 @@ project :
 ;
 
 rule run-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
-    common_toolset = ;
-
-    if $(std) {
-        common_toolset += <cxxflags>"-std=$(std) -include common/test.hpp" ;
-    }
+    toolset =
+        <toolset>gcc:<cxxflags>"-std=$(std) -include common/test.hpp"
+        <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp"
+        <toolset>darwin:<cxxflags>"-std=$(std) -include common/test.hpp"
+        <toolset>msvc:<cxxflags>"/FI common/test.hpp"
+    ;
 
     if $(ctor) {
         defines += <define>BOOST_DI_CFG_CTOR <define>\"BOOST_DI_INJECT(type,...)=type(__VA_ARGS__)\" ;
@@ -47,11 +48,16 @@ rule run-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
         defines += <define>BOOST_DI_CFG_NO_PREPROCESSED_HEADERS ;
     }
 
-    run $(src) : : : $(common_toolset) $(defines) : $(ctor) ;
+    run $(src) : : : $(toolset) $(defines) : $(ctor) ;
 }
 
 rule compile-fail-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
-    common_toolset = <cxxflags>"-std=$(std) -Wfatal-errors -include common/test.hpp" ;
+    toolset =
+        <toolset>gcc:<cxxflags>"-std=$(std) -Wfatal-errors -include common/test.hpp"
+        <toolset>clang:<cxxflags>"-std=$(std) -Wfatal-errors -include common/test.hpp"
+        <toolset>darwin:<cxxflags>"-std=$(std) -Wfatal-errors -include common/test.hpp"
+        <toolset>msvc:<cxxflags>"/FI common/test.hpp"
+    ;
 
     if $(ctor) {
         defines += <define>\"BOOST_DI_INJECT(type,...)=type(__VA_ARGS__)\" ;
@@ -61,7 +67,7 @@ rule compile-fail-test ( std * : src + : ctor * : defines * : preprocessed_heade
         defines += <define>BOOST_DI_CFG_NO_PREPROCESSED_HEADERS ;
     }
 
-    compile-fail $(src) : $(common_toolset) $(defines) : $(ctor) ;
+    compile-fail $(src) : $(toolset) $(defines) : $(ctor) ;
 }
 
 test-suite ut :

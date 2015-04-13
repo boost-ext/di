@@ -16,11 +16,19 @@ project di :
 ;
 
 rule run-example ( std : src + : cxxflags * : property * ) {
+    cxx_flags = "" ;
     if $(cxxflags) {
-        run $(src) : : : <cxxflags>"-std=$(std) $(cxxflags)" : $(property) ;
-    } else {
-        run $(src) : : : <cxxflags>"-std=$(std)" : $(property) ;
+        cxx_flags = "$(cxxflags)" ;
     }
+
+    toolset =
+        <toolset>gcc:<cxxflags>"-std=$(std) $(cxx_flags)"
+        <toolset>clang:<cxxflags>"-std=$(std) $(cxx_flags)"
+        <toolset>darwin:<cxxflags>"-std=$(std) $(cxx_flags)"
+        <toolset>msvc:<cxxflags>"/FI $(cxx_flags)"
+    ;
+
+    run $(src) : : : $(toolset) : $(property) ;
 }
 
 test-suite example :
