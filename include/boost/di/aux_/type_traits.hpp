@@ -7,7 +7,9 @@
 #ifndef BOOST_DI_AUX_TYPE_TRAITS_HPP
 #define BOOST_DI_AUX_TYPE_TRAITS_HPP
 
-//#define __has_include(...) 0
+#if defined(_MSC_VER)
+	#define __has_include(...) 0
+#endif
 
 #include <memory>
 #include <type_traits>
