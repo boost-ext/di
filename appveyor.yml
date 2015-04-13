@@ -11,7 +11,6 @@ branches:
     - msvc2015
 
 install:
-  - pwd
   - cd build && bootstrap --with-toolset=msvc-14.0
   - cd build && b2 -j2 -q --toolset=msvc-14.0 ../test ../example
 
