@@ -138,3 +138,7 @@ test-suite error :
     [ compile-fail-test c++1y : error/scope_traits_external_deduced.cpp ]
 ;
 
+test-suite msvc : # special test suite for msvc
+    [ run-test c++1y : msvc/msvc2015.cpp ]
+;
+
