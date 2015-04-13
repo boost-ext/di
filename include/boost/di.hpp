@@ -1585,7 +1585,11 @@ public:
 
     template<class T> // no requirements
     auto named(const T&) const noexcept {
-        return dependency<TScope, TExpected, TGiven, T>{/**this*/};
+        return dependency<TScope, TExpected, TGiven, T>{
+#if !defined(_MSC_VER)
+			*this
+#endif
+		};
     }
 
     template<class T
@@ -2276,14 +2280,12 @@ struct get_is_unique_error<aux::type_list<TDeps...>>
 { };
 
 template<class... TDeps>
-struct get_bindings_error :
-    std::conditional_t<
-        is_supported<TDeps...>::value
-      , typename get_is_unique_error<core::transform_t<TDeps...>>::type
-      , typename bound_type<typename get_not_supported<TDeps...>::type>::
-            is_neither_a_dependency_nor_an_injector
-    >
-{ };
+using get_bindings_error = std::conditional_t<
+    is_supported<TDeps...>::value
+  , typename get_is_unique_error<core::transform_t<TDeps...>>::type
+  , typename bound_type<typename get_not_supported<TDeps...>::type>::
+        is_neither_a_dependency_nor_an_injector
+>;
 
 template<class... Ts>
 using get_any_of_error = std::conditional_t<
@@ -2293,7 +2295,7 @@ using get_any_of_error = std::conditional_t<
     >::value
   , std::true_type
   , aux::type_list<Ts...>
- >;
+>;
 
 template<class I, class T> // expected -> given
 auto boundable_impl(I&&, T&&) ->
@@ -2308,7 +2310,12 @@ auto boundable_impl(I&&, T&&) ->
     >;
 
 template<class... TDeps> // bindings
-auto boundable_impl(aux::type_list<TDeps...>&&) -> typename get_bindings_error<TDeps...>::type;
+auto boundable_impl(aux::type_list<TDeps...>&&) ->
+#if defined(_MSC_VER)
+    std::true_type
+#else
+    get_bindings_error<TDeps...>;
+#endif
 
 template<class T, class... Ts> // any_of
 auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
