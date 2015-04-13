@@ -23,9 +23,9 @@
     struct has_##name : std::false_type { };                        \
                                                                     \
     template<class T>                                               \
-    struct has_##name<T, typename aux::void_t<typename T::name>::type>             \
-        : std::true_type                                            \
-    { }
+    struct has_##name<                                              \
+        T, typename aux::void_t<typename T::name>::type             \
+    > : std::true_type { }
 
 #define BOOST_DI_HAS_METHOD(name, call_name)                        \
     template<class T, class... TArgs>                               \
@@ -37,7 +37,8 @@
     std::false_type has_##name##_impl(...);                         \
                                                                     \
     template<class T, class... TArgs>                               \
-    struct has_##name : decltype(has_##name##_impl<T, TArgs...>(0)) {}
+    struct has_##name : decltype(has_##name##_impl<T, TArgs...>(0)) \
+    { }
 
 #if defined(__clang__)
     #define BOOST_DI_UNUSED __attribute__((unused))

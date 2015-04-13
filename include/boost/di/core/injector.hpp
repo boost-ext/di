@@ -42,17 +42,20 @@ class injector : public pool<transform_t<TDeps...>>
       , config_t
     >;
 
+    struct from_injector { };
+    struct from_deps { };
+
 public:
     using deps = transform_t<TDeps...>;
 
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
-		: injector{std::true_type{}, arg(args, has_configure<decltype(args)>{})...}
+		: injector{from_deps{}, arg(args, has_configure<decltype(args)>{})...}
     { }
 
     template<class TConfig_, class... TDeps_>
-    explicit injector(const injector<TConfig_, TDeps_...>& injector_) noexcept
-        : injector{std::false_type{}, injector_, deps{}}
+    explicit injector(const injector<TConfig_, TDeps_...>& other) noexcept
+        : injector{from_injector{}, other, deps{}}
     { }
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
@@ -86,19 +89,19 @@ public:
 
 private:
     template<class... TArgs>
-    explicit injector(const std::true_type&, const TArgs&... args) noexcept
+    explicit injector(const from_deps&, const TArgs&... args) noexcept
         : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
         , config{*this}
     { }
 
     template<class TInjector, class... TArgs>
-    explicit injector(const std::false_type&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
+    explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
         : pool_t{init{}, pool_t{build<TArgs>(injector)...}}
         , config{*this}
     { }
 
     template<class T, class TInjector>
-    auto build(const TInjector& injector) const noexcept {
+    inline auto build(const TInjector& injector) const noexcept {
         return T{injector};
     }
 
@@ -121,10 +124,12 @@ private:
                >{std::declval<injector>()}
            )
        ), T>::value
-       //&&
-       //decltype(policy<pool_t>::template call<T, TName, TIsRoot>(
-          //((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{})
-       //)::value
+#if !defined(_MSC_VER)
+       &&
+       decltype(policy<pool_t>::template call<T, TName, TIsRoot>(
+          ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{})
+       )::value
+#endif
     >;
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>

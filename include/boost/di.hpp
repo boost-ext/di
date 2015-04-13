@@ -166,9 +166,9 @@ using is_unique = is_unique_impl<none_t, Ts...>;
     struct has_##name : std::false_type { };                        \
                                                                     \
     template<class T>                                               \
-    struct has_##name<T, typename aux::void_t<typename T::name>::type>             \
-        : std::true_type                                            \
-    { }
+    struct has_##name<                                              \
+        T, typename aux::void_t<typename T::name>::type             \
+    > : std::true_type { }
 
 #define BOOST_DI_HAS_METHOD(name, call_name)                        \
     template<class T, class... TArgs>                               \
@@ -180,7 +180,8 @@ using is_unique = is_unique_impl<none_t, Ts...>;
     std::false_type has_##name##_impl(...);                         \
                                                                     \
     template<class T, class... TArgs>                               \
-    struct has_##name : decltype(has_##name##_impl<T, TArgs...>(0)) {}
+    struct has_##name : decltype(has_##name##_impl<T, TArgs...>(0)) \
+    { }
 
 #if defined(__clang__)
     #define BOOST_DI_UNUSED __attribute__((unused))
@@ -451,7 +452,11 @@ struct unique<T*> {
         return std::unique_ptr<I>{object};
     }
 
-	unique(T* t) : object(t) {}
+#if defined(_MSC_VER)
+	explicit unique(T* object)
+        : object(object)
+    { }
+#endif
 
     T* object = nullptr;
 };
@@ -1292,6 +1297,9 @@ template<class T, std::size_t>
 struct get {
    	using type = T;
 };
+
+template<class T>
+using get_t = typename T::type;
 
 template<template<class...> class, class, class>
 struct ctor_impl;
@@ -2172,7 +2180,7 @@ struct get_deps<T, std::enable_if_t<has_configure<T>::value>> {
 };
 
 template<
-	class T
+    class T
   , class = typename is_injector<T>::type
   , class = typename is_dependency<T>::type
 > struct add_type_list;
@@ -2280,22 +2288,24 @@ struct get_is_unique_error<aux::type_list<TDeps...>>
 { };
 
 template<class... TDeps>
-using get_bindings_error = std::conditional_t<
-    is_supported<TDeps...>::value
-  , typename get_is_unique_error<core::transform_t<TDeps...>>::type
-  , typename bound_type<typename get_not_supported<TDeps...>::type>::
-        is_neither_a_dependency_nor_an_injector
->;
+using get_bindings_error =
+    std::conditional_t<
+        is_supported<TDeps...>::value
+      , typename get_is_unique_error<core::transform_t<TDeps...>>::type
+      , typename bound_type<typename get_not_supported<TDeps...>::type>::
+            is_neither_a_dependency_nor_an_injector
+    >;
 
 template<class... Ts>
-using get_any_of_error = std::conditional_t<
-    std::is_same<
-        aux::bool_list<aux::always<Ts>::value...>
-      , aux::bool_list<std::is_same<std::true_type, Ts>::value...>
-    >::value
-  , std::true_type
-  , aux::type_list<Ts...>
->;
+using get_any_of_error =
+    std::conditional_t<
+        std::is_same<
+            aux::bool_list<aux::always<Ts>::value...>
+          , aux::bool_list<std::is_same<std::true_type, Ts>::value...>
+        >::value
+      , std::true_type
+      , aux::type_list<Ts...>
+    >;
 
 template<class I, class T> // expected -> given
 auto boundable_impl(I&&, T&&) ->
@@ -2312,7 +2322,7 @@ auto boundable_impl(I&&, T&&) ->
 template<class... TDeps> // bindings
 auto boundable_impl(aux::type_list<TDeps...>&&) ->
 #if defined(_MSC_VER)
-    std::true_type
+    std::true_type;
 #else
     get_bindings_error<TDeps...>;
 #endif
@@ -2764,17 +2774,20 @@ class injector : public pool<transform_t<TDeps...>>
       , config_t
     >;
 
+    struct from_injector { };
+    struct from_deps { };
+
 public:
     using deps = transform_t<TDeps...>;
 
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
-		: injector{std::true_type{}, arg(args, has_configure<decltype(args)>{})...}
+		: injector{from_deps{}, arg(args, has_configure<decltype(args)>{})...}
     { }
 
     template<class TConfig_, class... TDeps_>
-    explicit injector(const injector<TConfig_, TDeps_...>& injector_) noexcept
-        : injector{std::false_type{}, injector_, deps{}}
+    explicit injector(const injector<TConfig_, TDeps_...>& other) noexcept
+        : injector{from_injector{}, other, deps{}}
     { }
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
@@ -2808,19 +2821,19 @@ public:
 
 private:
     template<class... TArgs>
-    explicit injector(const std::true_type&, const TArgs&... args) noexcept
+    explicit injector(const from_deps&, const TArgs&... args) noexcept
         : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
         , config{*this}
     { }
 
     template<class TInjector, class... TArgs>
-    explicit injector(const std::false_type&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
+    explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
         : pool_t{init{}, pool_t{build<TArgs>(injector)...}}
         , config{*this}
     { }
 
     template<class T, class TInjector>
-    auto build(const TInjector& injector) const noexcept {
+    inline auto build(const TInjector& injector) const noexcept {
         return T{injector};
     }
 
@@ -2843,10 +2856,12 @@ private:
                >{std::declval<injector>()}
            )
        ), T>::value
-       //&&
-       //decltype(policy<pool_t>::template call<T, TName, TIsRoot>(
-          //((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{})
-       //)::value
+#if !defined(_MSC_VER)
+       &&
+       decltype(policy<pool_t>::template call<T, TName, TIsRoot>(
+          ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{})
+       )::value
+#endif
     >;
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
@@ -3031,10 +3046,8 @@ public:
     template<
         class TConfig
       , class... TArgs
-#if !defined(_MSC_VER)
-#if !defined(__clang__)
+#if !defined(__clang__) && !defined(_MSC_VER)
      , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>)
-#endif
 #endif
     > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, T...>(injector) {

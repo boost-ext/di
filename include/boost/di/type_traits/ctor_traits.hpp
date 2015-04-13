@@ -26,6 +26,9 @@ struct get {
    	using type = T;
 };
 
+template<class T>
+using get_t = typename T::type;
+
 template<template<class...> class, class, class>
 struct ctor_impl;
 
