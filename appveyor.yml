@@ -11,7 +11,7 @@ branches:
     - msvc2015
 
 install:
-  - c:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat
+  #- c:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat
   - cd build
   - bootstrap.bat --with-toolset=msvc-14.0
   - b2 -j2 -q --toolset=msvc-14.0 ../test ../example
