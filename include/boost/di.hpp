@@ -2655,7 +2655,7 @@ template<
     }
 
     template<class TMemory, class... Ts, BOOST_DI_REQUIRES(!is_creatable<TMemory, Ts...>::value)>
-    auto get_impl(const TMemory& memory, Ts&&... args) const {
+    auto get_impl(const TMemory&, Ts&&...) const {
         return concepts::creatable_error<TInitialization, TName, TExpected*, TGiven*, Ts...>();
     }
 
