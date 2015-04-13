@@ -13,11 +13,10 @@ branches:
 install:
   - git submodule update --init --recursive
   - cd build && bootstrap.bat --with-toolset=msvc-14.0
-
-build: OFF
-test:
   - cd test && ..\build\b2 -sBOOST_ROOT=..\build -j2 -q --toolset=msvc-14.0 msvc2015
 
+build: OFF
+test: OFF
 test_script: OFF
 deploy: OFF
 
