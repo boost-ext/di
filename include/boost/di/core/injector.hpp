@@ -26,14 +26,14 @@ namespace boost { namespace di { namespace core {
 BOOST_DI_HAS_METHOD(call, call);
 
 template<class TConfig, class... TDeps>
-class injector : public pool<typename transform_t<TDeps...>::type>
+class injector : public pool<transform_t<TDeps...>>
                , public type_traits::config_traits<TConfig, injector<TConfig, TDeps...>>::type
                , _ {
     template<class...> friend struct provider;
     template<class, class, class> friend struct any_type;
     template<class> friend class scopes::exposed;
 
-    using pool_t = pool<typename transform_t<TDeps...>::type>;
+    using pool_t = pool<transform_t<TDeps...>>;
     using is_root_t = std::true_type;
     using config_t = typename type_traits::config_traits<TConfig, injector>::type;
     using config = std::conditional_t<
@@ -43,17 +43,11 @@ class injector : public pool<typename transform_t<TDeps...>::type>
     >;
 
 public:
-    using deps = typename transform_t<TDeps...>::type;
+    using deps = transform_t<TDeps...>;
 
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
 		: injector{std::true_type{}, arg(args, has_configure<decltype(args)>{})...}
-    { }
-
-    template<class... TArgs>
-    explicit injector(const std::true_type&, const TArgs&... args) noexcept
-        : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
-        , config{*this}
     { }
 
     template<class TConfig_, class... TDeps_>
@@ -61,19 +55,8 @@ public:
         : injector{std::false_type{}, injector, deps{}}
     { }
 
-    template<class TInjector, class... TArgs>
-    explicit injector(const std::false_type&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
-        : pool_t{init{}, pool_t{build<TArgs>(injector)...}}
-        , config{*this}
-    { }
-
-    template<class T, class TInjector>
-    auto build(const TInjector& injector) const noexcept {
-        return T{injector};
-    }
-
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
-    static constexpr /*auto*/bool is_creatable() {
+	static constexpr auto is_creatable() {
         return decltype(is_creatable_impl(
             std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>())
         )::value;
@@ -102,6 +85,23 @@ public:
     }
 
 private:
+    template<class... TArgs>
+    explicit injector(const std::true_type&, const TArgs&... args) noexcept
+        : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
+        , config{*this}
+    { }
+
+    template<class TInjector, class... TArgs>
+    explicit injector(const std::false_type&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
+        : pool_t{init{}, pool_t{build<TArgs>(injector)...}}
+        , config{*this}
+    { }
+
+    template<class T, class TInjector>
+    auto build(const TInjector& injector) const noexcept {
+        return T{injector};
+    }
+
     template<
         class T
       , class TName = no_name
