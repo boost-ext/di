@@ -7,7 +7,6 @@
 #if defined(_MSC_VER)
 
 #include <boost/di.hpp>
-#include <cassert>
 
 namespace di = boost::di;
 
@@ -25,6 +24,7 @@ struct i2 {
 };
 
 struct impl2 : i2 {
+    //BOOST_DI_INJECT(impl2){}
     void dummy2() override {}
 };
 
@@ -35,14 +35,14 @@ struct i3 {
 
 struct impl3 : i3 {
     BOOST_DI_INJECT(impl3, (named = my_int) const int& i, double) {
-        assert(i == 21);
+        expect_eq(21, i);
     }
     void dummy3() override {}
 };
 
 struct impl : i{
     impl(int i, std::shared_ptr<i2>){
-        assert(i == 87);
+        expect_eq(87, i);
     }
     void dummy() override {};
 };
@@ -61,7 +61,7 @@ struct module {
     }
 };
 
-test ft = []{
+test ft = [] {
     auto injector = di::make_injector(
           di::bind<int>().to(42)
         , module{}
@@ -70,8 +70,8 @@ test ft = []{
     );
 
     auto object = injector.create<i*>();
-    assert(object != nullptr);
-    assert(42 == injector.create<int>());
+    expect(object != nullptr);
+    expect_eq(42, injector.create<int>());
 
     injector.create<c>();
 };
