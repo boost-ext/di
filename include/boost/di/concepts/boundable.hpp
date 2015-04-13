@@ -89,22 +89,24 @@ struct get_is_unique_error<aux::type_list<TDeps...>>
 { };
 
 template<class... TDeps>
-using get_bindings_error = std::conditional_t<
-    is_supported<TDeps...>::value
-  , typename get_is_unique_error<core::transform_t<TDeps...>>::type
-  , typename bound_type<typename get_not_supported<TDeps...>::type>::
-        is_neither_a_dependency_nor_an_injector
->;
+using get_bindings_error =
+    std::conditional_t<
+        is_supported<TDeps...>::value
+      , typename get_is_unique_error<core::transform_t<TDeps...>>::type
+      , typename bound_type<typename get_not_supported<TDeps...>::type>::
+            is_neither_a_dependency_nor_an_injector
+    >;
 
 template<class... Ts>
-using get_any_of_error = std::conditional_t<
-    std::is_same<
-        aux::bool_list<aux::always<Ts>::value...>
-      , aux::bool_list<std::is_same<std::true_type, Ts>::value...>
-    >::value
-  , std::true_type
-  , aux::type_list<Ts...>
->;
+using get_any_of_error =
+    std::conditional_t<
+        std::is_same<
+            aux::bool_list<aux::always<Ts>::value...>
+          , aux::bool_list<std::is_same<std::true_type, Ts>::value...>
+        >::value
+      , std::true_type
+      , aux::type_list<Ts...>
+    >;
 
 template<class I, class T> // expected -> given
 auto boundable_impl(I&&, T&&) ->

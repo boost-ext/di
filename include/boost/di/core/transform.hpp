@@ -29,7 +29,7 @@ struct get_deps<T, std::enable_if_t<has_configure<T>::value>> {
 };
 
 template<
-	class T
+    class T
   , class = typename is_injector<T>::type
   , class = typename is_dependency<T>::type
 > struct add_type_list;
