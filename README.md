@@ -2,6 +2,7 @@ Boost.DI: C++ Dependency Injection
 ===============================================
 [![Boost Libraries](https://raw.githubusercontent.com/krzysztof-jusiak/di/gh-pages/boost/boost.png)](http://www.boost.org)
 [![Build Status](https://img.shields.io/travis/krzysztof-jusiak/di/cpp14.svg)](https://travis-ci.org/krzysztof-jusiak/di)
+[![Build Status](https://img.shields.io/appveyor/ci/krzysztof-jusiak/di/cpp14.svg)](https://ci.appveyor.com/project/krzysztof-jusiak/di)
 [![Coveralls](http://img.shields.io/coveralls/krzysztof-jusiak/di/cpp14.svg)](https://coveralls.io/r/krzysztof-jusiak/di?branch=cpp14)
 [![Github Issues](https://img.shields.io/github/issues/krzysztof-jusiak/di.svg)](http://github.com/krzysztof-jusiak/di/issues)
 

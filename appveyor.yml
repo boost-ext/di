@@ -11,6 +11,7 @@ branches:
     - msvc2015
 
 install:
+  - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat
   - git submodule update --init --recursive
   - cd build && bootstrap.bat --with-toolset=msvc-14.0
   - cd test && ..\build\b2 -sBOOST_ROOT=..\build -j2 -q --toolset=msvc-14.0 msvc2015
