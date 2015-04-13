@@ -693,7 +693,7 @@ public:
         return di::make_policies(
             policy{}
           , [](auto) { ++policy::called(); }
-          , [](auto type, auto dependency, auto... ctor) { ++policy::called(); }
+          , [](BOOST_DI_UNUSED auto type, BOOST_DI_UNUSED auto dependency, BOOST_DI_UNUSED auto... ctor) { ++policy::called(); }
         );
     }
 };

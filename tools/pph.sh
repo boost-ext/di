@@ -33,7 +33,7 @@ main() {
     echo "#define BOOST_DI_HPP"
     echo
     echo
-    echo "#if (__cplusplus < 201305L)"
+    echo "#if (__cplusplus < 201305L && _MSC_VER < 1900)"
     echo "   #error \"C++14 is required by Boost.DI\""
     echo "#endif"
     echo

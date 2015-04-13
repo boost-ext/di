@@ -8,6 +8,7 @@
 #define BOOST_DI_FAKE_POLICY_HPP
 
 #include "boost/di/aux_/utility.hpp"
+#include "boost/di/fwd.hpp"
 
 namespace boost { namespace di {
 
@@ -24,6 +25,7 @@ template<
   , class TDeps
 > struct fake_policy<T, TDependency, TDeps, true> {
     using type = T;
+    using name = no_name;
     using dependency = TDependency;
 
     template<class, class, class>
@@ -36,6 +38,7 @@ template<
   , class TDeps
 > struct fake_policy<T, TDependency, TDeps, false> {
     using type = T;
+    using name = no_name;
     using dependency = TDependency;
 
     template<class, class, class TDefault>

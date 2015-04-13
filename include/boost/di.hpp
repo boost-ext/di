@@ -8,7 +8,7 @@
 #define BOOST_DI_HPP
 
 
-#if (__cplusplus < 201305L)
+#if (__cplusplus < 201305L && _MSC_VER < 1900)
    #error "C++14 is required by Boost.DI"
 #endif
 
@@ -57,7 +57,9 @@ template<class T, T>
 struct non_type { };
 
 template<class...>
-using void_t = void;
+struct void_t {
+	using type = void;
+};
 
 template<class...>
 struct always : std::true_type { };
@@ -151,6 +153,10 @@ using is_unique = is_unique_impl<none_t, Ts...>;
 #ifndef BOOST_DI_AUX_TYPE_TRAITS_HPP
 #define BOOST_DI_AUX_TYPE_TRAITS_HPP
 
+#if defined(_MSC_VER)
+	#define __has_include(...) 0
+#endif
+
 #if (__has_include(<boost/shared_ptr.hpp>))
     #include <boost/shared_ptr.hpp>
 #endif
@@ -160,9 +166,9 @@ using is_unique = is_unique_impl<none_t, Ts...>;
     struct has_##name : std::false_type { };                        \
                                                                     \
     template<class T>                                               \
-    struct has_##name<T, aux::void_t<typename T::name>>             \
-        : std::true_type                                            \
-    { }
+    struct has_##name<                                              \
+        T, typename aux::void_t<typename T::name>::type             \
+    > : std::true_type { }
 
 #define BOOST_DI_HAS_METHOD(name, call_name)                        \
     template<class T, class... TArgs>                               \
@@ -174,7 +180,8 @@ using is_unique = is_unique_impl<none_t, Ts...>;
     std::false_type has_##name##_impl(...);                         \
                                                                     \
     template<class T, class... TArgs>                               \
-    using has_##name = decltype(has_##name##_impl<T, TArgs...>(0))
+    struct has_##name : decltype(has_##name##_impl<T, TArgs...>(0)) \
+    { }
 
 #if defined(__clang__)
     #define BOOST_DI_UNUSED __attribute__((unused))
@@ -182,9 +189,9 @@ using is_unique = is_unique_impl<none_t, Ts...>;
 #elif defined(__GNUC__)
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_ATTR_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
-#else
+#elif defined(_MSC_VER)
     #define BOOST_DI_UNUSED
-    #define BOOST_DI_ATTR_ERROR(...)
+    #define BOOST_DI_ATTR_ERROR(...) __declspec(deprecated(__VA_ARGS__))
 #endif
 
 #define BOOST_DI_REQUIRES(...) \
@@ -444,6 +451,12 @@ struct unique<T*> {
     inline operator std::unique_ptr<I>() const noexcept {
         return std::unique_ptr<I>{object};
     }
+
+#if defined(_MSC_VER)
+	explicit unique(T* object)
+        : object(object)
+    { }
+#endif
 
     T* object = nullptr;
 };
@@ -822,6 +835,7 @@ public:
         TGiven object_;
     };
 
+#if !defined(_MSC_VER)
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
         template<class T, class TProvider>
@@ -835,6 +849,7 @@ public:
 
         TGiven object_;
     };
+#endif
 };
 
 }}} // boost::di::scopes
@@ -1035,70 +1050,42 @@ public:
 #ifndef BOOST_DI_AUX_PREPROCESSOR_HPP
 #define BOOST_DI_AUX_PREPROCESSOR_HPP
 
-// Based on:
-//    Boost.Preprocessor: http://www.boost.org/doc/libs/1_57_0/libs/preprocessor
-//    Cloak: https://github.com/pfultz2/Cloak
-
+#define BOOST_DI_IF(cond, t, f) BOOST_DI_IF_I(cond, t, f)
+#define BOOST_DI_REPEAT(i, m, ...) BOOST_DI_REPEAT_N(i, m, __VA_ARGS__)
 #define BOOST_DI_CAT(a, ...) BOOST_DI_PRIMITIVE_CAT(a, __VA_ARGS__)
 #define BOOST_DI_CALL(m, ...) m(__VA_ARGS__)
 #define BOOST_DI_EMPTY()
 #define BOOST_DI_COMMA() ,
 #define BOOST_DI_EAT(...)
 #define BOOST_DI_EXPAND(...) __VA_ARGS__
-#define BOOST_DI_NARG_(...) BOOST_DI_ARG_N(__VA_ARGS__)
-#define BOOST_DI_NARG(...) BOOST_DI_NARG_(__VA_ARGS__, BOOST_DI_RSEQ_N())
+#define BOOST_DI_NARG(...) BOOST_DI_CAT(BOOST_DI_VARIADIC_SIZE_I(__VA_ARGS__, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1,),)
 #define BOOST_DI_PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
-#define BOOST_DI_IBP_SPLIT(i, ...) BOOST_DI_PRIMITIVE_CAT(BOOST_DI_IBP_SPLIT_, i)(__VA_ARGS__)
-#define BOOST_DI_IBP_SPLIT_0(a, ...) a
-#define BOOST_DI_IBP_SPLIT_1(a, ...) __VA_ARGS__
-#define BOOST_DI_IBP_IS_VARIADIC_C(...) 1
-#define BOOST_DI_IBP_IS_VARIADIC_R_1 1,
-#define BOOST_DI_IBP_IS_VARIADIC_R_BOOST_DI_IBP_IS_VARIADIC_C 0,
-#define BOOST_DI_IBP(...) \
-    BOOST_DI_IBP_SPLIT(0, BOOST_DI_CAT( \
-        BOOST_DI_IBP_IS_VARIADIC_R_, BOOST_DI_IBP_IS_VARIADIC_C __VA_ARGS__) \
-    )
-#define BOOST_DI_TRIGGER_PARENTHESIS(...) ,
-#define BOOST_DI_IS_EMPTY(...)  \
+#define BOOST_DI_ARG(n, ...) BOOST_DI_ARG_I(n,__VA_ARGS__)
+#define BOOST_DI_IS_EMPTY(...) \
     BOOST_DI_IS_EMPTY_IMPL(BOOST_DI_HAS_COMMA(__VA_ARGS__) \
            , BOOST_DI_HAS_COMMA(BOOST_DI_TRIGGER_PARENTHESIS __VA_ARGS__) \
            , BOOST_DI_HAS_COMMA(__VA_ARGS__ ()) \
            , BOOST_DI_HAS_COMMA(BOOST_DI_TRIGGER_PARENTHESIS __VA_ARGS__ ()))
-#define BOOST_DI_IS_EMPTY_IMPL(_0, _1, _2, _3) \
-    BOOST_DI_HAS_COMMA(BOOST_DI_JOIN_5(BOOST_DI_IS_EMPTY_IMPL_, _0, _1, _2, _3))
-#define BOOST_DI_DEFER(id) id BOOST_DI_EMPTY()
-#define BOOST_DI_OBSTRUCT(...) __VA_ARGS__ BOOST_DI_DEFER(BOOST_DI_EMPTY)()
-#define BOOST_DI_EVAL(...) BOOST_DI_EVAL1(BOOST_DI_EVAL1(BOOST_DI_EVAL1(__VA_ARGS__)))
-#define BOOST_DI_EVAL1(...) BOOST_DI_EVAL2(BOOST_DI_EVAL2(BOOST_DI_EVAL2(__VA_ARGS__)))
-#define BOOST_DI_EVAL2(...) __VA_ARGS__
-#define BOOST_DI_CHECK_N(x, n, ...) n
-#define BOOST_DI_CHECK(...) BOOST_DI_CHECK_N(__VA_ARGS__, 0,)
-#define BOOST_DI_NOT(x) BOOST_DI_CHECK(BOOST_DI_PRIMITIVE_CAT(BOOST_DI_NOT_, x))
-#define BOOST_DI_NOT_0 ~, 1,
-#define BOOST_DI_COMPL(b) BOOST_DI_PRIMITIVE_CAT(BOOST_DI_COMPL_, b)
-#define BOOST_DI_COMPL_0 1
-#define BOOST_DI_COMPL_1 0
-#define BOOST_DI_BOOL(x) BOOST_DI_COMPL(BOOST_DI_NOT(x))
-#define BOOST_DI_IF_IMPL(c) BOOST_DI_PRIMITIVE_CAT(BOOST_DI_IF_IMPL_, c)
-#define BOOST_DI_IF_IMPL_0(t, ...) __VA_ARGS__
-#define BOOST_DI_IF_IMPL_1(t, ...) t
-#define BOOST_DI_IF(c) BOOST_DI_IF_IMPL(BOOST_DI_BOOL(c))
+
+#define BOOST_DI_VARIADIC_SIZE_I(e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, size, ...) size
+#define BOOST_DI_TRIGGER_PARENTHESIS(...) ,
+#define BOOST_DI_IS_EMPTY_IMPL(_0, _1, _2, _3) BOOST_DI_HAS_COMMA(BOOST_DI_JOIN_5(BOOST_DI_IS_EMPTY_IMPL_, _0, _1, _2, _3))
 #define BOOST_DI_JOIN_5(_0, _1, _2, _3, _4) _0 ## _1 ## _2 ## _3 ## _4
 #define BOOST_DI_IS_EMPTY_IMPL_0001 ,
-#define BOOST_DI_REPEAT(n, m, ...) \
-    BOOST_DI_IF(n)(BOOST_DI_EXPAND, BOOST_DI_EAT)( \
-        BOOST_DI_OBSTRUCT(BOOST_DI_REPEAT_INDIRECT)()( \
-            BOOST_DI_DEC(n), m, __VA_ARGS__ \
-        ) \
-    BOOST_DI_OBSTRUCT(m)( \
-        BOOST_DI_DEC(n), __VA_ARGS__ ) \
-    )
-#define BOOST_DI_REPEAT_INDIRECT() BOOST_DI_REPEAT
-#define BOOST_DI_VARARG_IMPL2(m, n, ...) m##n(__VA_ARGS__)
-#define BOOST_DI_VARARG_IMPL(m, n, ...) BOOST_DI_VARARG_IMPL2(m, n, __VA_ARGS__)
 #define BOOST_DI_ARG_N( _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, N, ...) N
-#define BOOST_DI_RSEQ_N() 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
 #define BOOST_DI_HAS_COMMA(...) BOOST_DI_ARG_N(__VA_ARGS__, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0)
+#define BOOST_DI_IF_I(cond, t, f) BOOST_DI_IIF(cond, t, f)
+#define BOOST_DI_IIF_0(t, f) f
+#define BOOST_DI_IIF_1(t, f) t
+#define BOOST_DI_IIF_2(t, f) t
+#define BOOST_DI_IIF_3(t, f) t
+#define BOOST_DI_IIF_4(t, f) t
+#define BOOST_DI_IIF_5(t, f) t
+#define BOOST_DI_IIF_6(t, f) t
+#define BOOST_DI_IIF_7(t, f) t
+#define BOOST_DI_IIF_8(t, f) t
+#define BOOST_DI_IIF_9(t, f) t
+#define BOOST_DI_ARG_I(n, ...) BOOST_DI_CAT(BOOST_DI_CAT(BOOST_DI_ARG, n)(__VA_ARGS__,),)
 #define BOOST_DI_ARG0(p1, ...) p1
 #define BOOST_DI_ARG1(p1, p2, ...) p2
 #define BOOST_DI_ARG2(p1, p2, p3, ...) p3
@@ -1109,18 +1096,46 @@ public:
 #define BOOST_DI_ARG7(p1, p2, p3, p4, p5, p6, p7, p8, ...) p8
 #define BOOST_DI_ARG8(p1, p2, p3, p4, p5, p6, p7, p8, p9, ...) p9
 #define BOOST_DI_ARG9(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, ...) p10
-#define BOOST_DI_DEC(x) BOOST_DI_PRIMITIVE_CAT(BOOST_DI_DEC_, x)
-#define BOOST_DI_DEC_0 0
-#define BOOST_DI_DEC_1 0
-#define BOOST_DI_DEC_2 1
-#define BOOST_DI_DEC_3 2
-#define BOOST_DI_DEC_4 3
-#define BOOST_DI_DEC_5 4
-#define BOOST_DI_DEC_6 5
-#define BOOST_DI_DEC_7 6
-#define BOOST_DI_DEC_8 7
-#define BOOST_DI_DEC_9 8
-#define BOOST_DI_DEC_10 9
+#define BOOST_DI_REPEAT_N(i, m, ...) BOOST_DI_REPEAT_##i(m, __VA_ARGS__)
+#define BOOST_DI_REPEAT_1(m, ...) m(0, __VA_ARGS__)
+#define BOOST_DI_REPEAT_2(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__)
+#define BOOST_DI_REPEAT_3(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__)
+#define BOOST_DI_REPEAT_4(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__)
+#define BOOST_DI_REPEAT_5(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__)
+#define BOOST_DI_REPEAT_6(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__)
+#define BOOST_DI_REPEAT_7(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) m(6, __VA_ARGS__)
+#define BOOST_DI_REPEAT_8(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) m(6, __VA_ARGS__) m(7, __VA_ARGS__)
+#define BOOST_DI_REPEAT_9(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) m(6, __VA_ARGS__) m(7, __VA_ARGS__) m(8, __VA_ARGS__)
+#define BOOST_DI_REPEAT_10(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) m(6, __VA_ARGS__) m(7, __VA_ARGS__) m(8, __VA_ARGS__) m(9, __VA_ARGS__)
+
+#if defined(_MSC_VER)
+    #define BOOST_DI_VD_IBP_CAT(a, b) BOOST_DI_VD_IBP_CAT_I(a, b)
+    #define BOOST_DI_VD_IBP_CAT_I(a, b) BOOST_DI_VD_IBP_CAT_II(a ## b)
+    #define BOOST_DI_VD_IBP_CAT_II(res) res
+    #define BOOST_DI_IBP_SPLIT(i, ...) BOOST_DI_VD_IBP_CAT(BOOST_DI_IBP_PRIMITIVE_CAT(BOOST_DI_IBP_SPLIT_,i)(__VA_ARGS__),BOOST_DI_EMPTY())
+    #define BOOST_DI_IBP_IS_VARIADIC_C(...) 1 1
+    #define BOOST_DI_IBP_SPLIT_0(a, ...) a
+    #define BOOST_DI_IBP_SPLIT_1(a, ...) __VA_ARGS__
+    #define BOOST_DI_IBP_CAT(a, ...) BOOST_DI_IBP_PRIMITIVE_CAT(a,__VA_ARGS__)
+    #define BOOST_DI_IBP_PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
+    #define BOOST_DI_IBP_IS_VARIADIC_R_1 1,
+    #define BOOST_DI_IBP_IS_VARIADIC_R_BOOST_DI_IBP_IS_VARIADIC_C 0,
+    #define BOOST_DI_IBP(...) BOOST_DI_IBP_SPLIT(0, BOOST_DI_IBP_CAT(BOOST_DI_IBP_IS_VARIADIC_R_, BOOST_DI_IBP_IS_VARIADIC_C __VA_ARGS__))
+    #define BOOST_DI_IIF(bit, t, f) BOOST_DI_IIF_OO((bit, t, f))
+    #define BOOST_DI_IIF_OO(par) BOOST_DI_IIF_I ## par
+    #define BOOST_DI_IIF_I(bit, t, f) BOOST_DI_IIF_ ## bit(t, f)
+#else
+    #define BOOST_DI_IBP_SPLIT(i, ...) BOOST_DI_PRIMITIVE_CAT(BOOST_DI_IBP_SPLIT_, i)(__VA_ARGS__)
+    #define BOOST_DI_IBP_SPLIT_0(a, ...) a
+    #define BOOST_DI_IBP_SPLIT_1(a, ...) __VA_ARGS__
+    #define BOOST_DI_IBP_IS_VARIADIC_C(...) 1
+    #define BOOST_DI_IBP_IS_VARIADIC_R_1 1,
+    #define BOOST_DI_IBP_IS_VARIADIC_R_BOOST_DI_IBP_IS_VARIADIC_C 0,
+    #define BOOST_DI_IBP(...) BOOST_DI_IBP_SPLIT(0, BOOST_DI_CAT( BOOST_DI_IBP_IS_VARIADIC_R_, BOOST_DI_IBP_IS_VARIADIC_C __VA_ARGS__))
+    #define BOOST_DI_IIF(bit, t, f) BOOST_DI_IIF_I(bit, t, f)
+    #define BOOST_DI_IIF_I(bit, t, f) BOOST_DI_IIF_II(BOOST_DI_IIF_ ## bit(t, f))
+    #define BOOST_DI_IIF_II(id) id
+#endif
 
 #endif
 
@@ -1136,67 +1151,68 @@ public:
 #endif
 
 #define BOOST_DI_GEN_ARGS(i, ...) \
-    BOOST_DI_GEN_ARGS_IMPL(BOOST_DI_VARARG_IMPL(BOOST_DI_ARG, i, __VA_ARGS__,), i)
+    BOOST_DI_GEN_ARGS_IMPL(BOOST_DI_ARG(i, __VA_ARGS__,), i)
 
 #define BOOST_DI_GEN_ARGS_IMPL(p, i) \
     struct arg##i { \
-        BOOST_DI_IF(BOOST_DI_IBP(p))( \
-            BOOST_DI_GEN_NAME_ARG p BOOST_DI_GEN_NAME_ARG_END() \
-          , BOOST_DI_GEN_ARG(p)) \
+        BOOST_DI_IF(BOOST_DI_IBP(p), \
+            BOOST_DI_GEN_ARG_NAME \
+          , BOOST_DI_GEN_ARG)(p) \
     };
+
+#define BOOST_DI_GEN_ARG_NAME(p) \
+    BOOST_DI_GEN_NAME_ARG p );
 
 #define BOOST_DI_GEN_NAME_ARG(p) \
     static auto BOOST_DI_CAT(BOOST_DI_INJECTOR, name)() { \
         auto p; return named; \
     } static void BOOST_DI_CAT(BOOST_DI_INJECTOR, arg)(
 
-#define BOOST_DI_GEN_NAME_ARG_END() );
-
 #define BOOST_DI_GEN_ARG(p) \
     static void BOOST_DI_CAT(BOOST_DI_INJECTOR, arg)(p);
 
+#define BOOST_DI_GEN_CTOR_IMPL(p, i) \
+    BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
+    BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_EAT p, p)
+
 #define BOOST_DI_GEN_CTOR(i, ...) \
     BOOST_DI_GEN_CTOR_IMPL( \
-        BOOST_DI_VARARG_IMPL(BOOST_DI_ARG, i, __VA_ARGS__,) \
+        BOOST_DI_ARG(i, __VA_ARGS__,) \
       , i \
     )
-
-#define BOOST_DI_GEN_CTOR_IMPL(p, i) \
-    BOOST_DI_IF(i)(BOOST_DI_COMMA(),) \
-    BOOST_DI_IF(BOOST_DI_IBP(p))(BOOST_DI_EAT p, p)
 
 #define BOOST_DI_GEN_TYPE_LIST(i, ...) \
     BOOST_DI_GEN_TYPE_LIST_IMPL( \
-        BOOST_DI_VARARG_IMPL(BOOST_DI_ARG, i, __VA_ARGS__,) \
+        BOOST_DI_ARG(i, __VA_ARGS__,) \
       , i \
     )
 
+#define BOOST_DI_GEN_TYPE_NAME(p, n) \
+    const ::boost::di::aux::type<arg##n, ::std::true_type>&
+
+#define BOOST_DI_GEN_TYPE_IMPL(n) \
+    const ::boost::di::aux::type<arg##n, ::std::false_type>&
+
+#define BOOST_DI_GEN_TYPE(p, n) \
+    BOOST_DI_IF(BOOST_DI_IS_EMPTY(p), BOOST_DI_EAT, BOOST_DI_GEN_TYPE_IMPL)(n)
+
 #define BOOST_DI_GEN_TYPE_LIST_IMPL(p, n) \
-    BOOST_DI_IF(n)(BOOST_DI_COMMA(),) \
-    BOOST_DI_IF(BOOST_DI_IBP(p))( \
-        const ::boost::di::aux::type<arg##n BOOST_DI_COMMA() ::std::true_type>& \
-      , BOOST_DI_IF(BOOST_DI_IS_EMPTY(p))( \
-            , const ::boost::di::aux::type<arg##n BOOST_DI_COMMA() ::std::false_type>& \
-        ) \
-    )
+    BOOST_DI_IF(n, BOOST_DI_COMMA, BOOST_DI_EAT)() \
+    BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_GEN_TYPE_NAME, BOOST_DI_GEN_TYPE)(p, n)
 
 #if !defined(BOOST_DI_INJECT_TRAITS)
     #define BOOST_DI_INJECT_TRAITS(...) \
         struct BOOST_DI_INJECTOR { \
-            BOOST_DI_EVAL( \
-                BOOST_DI_REPEAT( \
-                    BOOST_DI_NARG(__VA_ARGS__) \
-                  , BOOST_DI_GEN_ARGS \
-                  , __VA_ARGS__ \
-                ) \
+            BOOST_DI_REPEAT( \
+                BOOST_DI_NARG(__VA_ARGS__) \
+              , BOOST_DI_GEN_ARGS \
+              , __VA_ARGS__ \
             ) \
             using type BOOST_DI_UNUSED = ::boost::di::aux::type_list< \
-                BOOST_DI_EVAL( \
-                    BOOST_DI_REPEAT( \
-                        BOOST_DI_NARG(__VA_ARGS__) \
-                      , BOOST_DI_GEN_TYPE_LIST \
-                      , __VA_ARGS__ \
-                    ) \
+                BOOST_DI_REPEAT( \
+                    BOOST_DI_NARG(__VA_ARGS__) \
+                  , BOOST_DI_GEN_TYPE_LIST \
+                  , __VA_ARGS__ \
                 ) \
             >; \
             static_assert( \
@@ -1210,19 +1226,18 @@ public:
     #define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
         struct BOOST_DI_INJECTOR { \
             static void inject(__VA_ARGS__); \
-            using type BOOST_DI_UNUSED = typename ::boost::di::aux::function_traits<decltype(inject)>::args; \
+            using type BOOST_DI_UNUSED = \
+                typename ::boost::di::aux::function_traits<decltype(inject)>::args; \
         }
 #endif
 
 #if !defined(BOOST_DI_INJECT)
     #define BOOST_DI_INJECT(type, ...) \
         BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
-        type(BOOST_DI_EVAL( \
-            BOOST_DI_REPEAT( \
-                BOOST_DI_NARG(__VA_ARGS__) \
-              , BOOST_DI_GEN_CTOR \
-              , __VA_ARGS__) \
-            ) \
+        type(BOOST_DI_REPEAT( \
+            BOOST_DI_NARG(__VA_ARGS__) \
+          , BOOST_DI_GEN_CTOR \
+          , __VA_ARGS__) \
         )
 #endif
 
@@ -1268,7 +1283,12 @@ struct uniform { };
 BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_INJECTOR);
 
 template<class T, std::size_t>
-using type = T;
+struct get {
+   	using type = T;
+};
+
+template<class T>
+using get_t = typename T::type;
 
 template<template<class...> class, class, class>
 struct ctor_impl;
@@ -1278,15 +1298,15 @@ template<
   , class T
   , std::size_t... TArgs
 > struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>>
-    : std::conditional<
-          TIsConstructible<T, type<core::any_type<T>, TArgs>...>::value
-        , aux::type_list<type<core::any_type<T>, TArgs>...>
-        , typename ctor_impl<
-              TIsConstructible
-            , T
-            , std::make_index_sequence<sizeof...(TArgs) - 1>
-          >::type
-      >
+	: std::conditional<
+		  TIsConstructible<T, typename get<core::any_type<T>, TArgs>::type...>::value
+		, aux::type_list<typename get<core::any_type<T>, TArgs>::type...>
+		, typename ctor_impl<
+			  TIsConstructible
+			, T
+			, std::make_index_sequence<sizeof...(TArgs) - 1>
+		  >::type
+	  >
 { };
 
 template<template<class...> class TIsConstructible, class T>
@@ -1478,8 +1498,8 @@ BOOST_DI_HAS_METHOD(configure, configure);
 BOOST_DI_HAS_TYPE(deps);
 
 template<class T, class U = std::remove_reference_t<T>>
-using is_injector =
-    std::integral_constant<bool, has_deps<U>::value || has_configure<U>::value>;
+struct is_injector :
+    std::integral_constant<bool, has_deps<U>::value || has_configure<U>::value>{};
 
 template<class, class>
 struct dependency_concept { };
@@ -1562,10 +1582,18 @@ public:
 
     template<class T> // no requirements
     auto named(const T&) const noexcept {
-        return dependency<TScope, TExpected, TGiven, T>{*this};
+        return dependency<TScope, TExpected, TGiven, T>{
+#if !defined(_MSC_VER)
+			*this
+#endif
+		};
     }
 
-    template<class T, BOOST_DI_REQUIRES(concepts::scopable<T>())>
+    template<class T
+#if !defined(_MSC_VER)
+		, BOOST_DI_REQUIRES(concepts::scopable<T>())
+#endif
+		>
     auto in(const T&) const noexcept {
         return dependency<T, TExpected, TGiven, TName>{};
     }
@@ -1646,8 +1674,8 @@ struct is_callable_impl;
 template<class T, class... Ts>
 struct is_callable_impl<T, Ts...> {
     using type = std::conditional_t<
-        decltype(callable_impl(std::declval<T>(), arg{}))::value ||
-        decltype(callable_impl(std::declval<T>(), arg{}, core::dependency<scopes::deduce, T>{}, ctor{}))::value
+        decltype(callable_impl(std::declval<T>(), arg{})){} ||
+        decltype(callable_impl(std::declval<T>(), arg{}, core::dependency<scopes::deduce, T>{}, ctor{})){}
       , typename is_callable_impl<Ts...>::type
       , typename policy<T>::is_not_callable
     >;
@@ -2133,9 +2161,11 @@ struct get_deps {
 
 template<class T>
 struct get_deps<T, std::enable_if_t<has_configure<T>::value>> {
-    using type = typename aux::function_traits<
-        decltype(&T::configure)
-    >::result_type::deps;
+	using result_type = typename aux::function_traits<
+		decltype(&T::configure)
+	>::result_type;
+
+    using type = typename result_type::deps;
 };
 
 template<
@@ -2256,14 +2286,15 @@ using get_bindings_error =
     >;
 
 template<class... Ts>
-using get_any_of_error = std::conditional_t<
-    std::is_same<
-        aux::bool_list<aux::always<Ts>::value...>
-      , aux::bool_list<std::is_same<std::true_type, Ts>::value...>
-    >::value
-  , std::true_type
-  , aux::type_list<Ts...>
- >;
+using get_any_of_error =
+    std::conditional_t<
+        std::is_same<
+            aux::bool_list<aux::always<Ts>::value...>
+          , aux::bool_list<std::is_same<std::true_type, Ts>::value...>
+        >::value
+      , std::true_type
+      , aux::type_list<Ts...>
+    >;
 
 template<class I, class T> // expected -> given
 auto boundable_impl(I&&, T&&) ->
@@ -2278,7 +2309,12 @@ auto boundable_impl(I&&, T&&) ->
     >;
 
 template<class... TDeps> // bindings
-auto boundable_impl(aux::type_list<TDeps...>&&) -> get_bindings_error<TDeps...>;
+auto boundable_impl(aux::type_list<TDeps...>&&) ->
+#if defined(_MSC_VER)
+    std::true_type;
+#else
+    get_bindings_error<TDeps...>;
+#endif
 
 template<class T, class... Ts> // any_of
 auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
@@ -2316,7 +2352,12 @@ template<
     class TExpected
   , class TGiven = TExpected
   , BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, TGiven>)
-> core::bind<TExpected, TGiven> bind{};
+>
+#if !defined(_MSC_VER)
+    core::bind<TExpected, TGiven> bind{};
+#else
+    struct bind : core::bind<TExpected, TGiven> {};
+#endif
 
 constexpr scopes::deduce deduce{};
 constexpr scopes::unique unique{};
@@ -2722,40 +2763,45 @@ class injector : public pool<transform_t<TDeps...>>
       , config_t
     >;
 
+    struct from_injector { };
+    struct from_deps { };
+
 public:
     using deps = transform_t<TDeps...>;
 
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
-        : pool_t{init{}, pool<aux::type_list<
-              std::remove_reference_t<decltype(arg(args, has_configure<decltype(args)>{}))>...>>{
-                  arg(args, has_configure<decltype(args)>{})...}}
-        , config{*this}
+		: injector{from_deps{}, arg(args, has_configure<decltype(args)>{})...}
     { }
 
     template<class TConfig_, class... TDeps_>
-    explicit injector(const injector<TConfig_, TDeps_...>& injector) noexcept
-        : pool_t{init{}, create_from_injector(injector, deps{})}
-        , config{*this}
+    explicit injector(const injector<TConfig_, TDeps_...>& other) noexcept
+        : injector{from_injector{}, other, deps{}}
     { }
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
-    static constexpr auto is_creatable() {
+	static constexpr auto is_creatable() {
         return decltype(is_creatable_impl(
             std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>())
         )::value;
     }
 
-    template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>())>
+    template<class T
+#if !defined(_MSC_VER)
+        , BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>())
+#endif
+        >
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }
 
+#if !defined(_MSC_VER)
     template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, is_root_t>())>
     BOOST_DI_CONCEPTS_CREATABLE_ATTR
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }
+#endif
 
     template<class TAction>
     void call(const TAction& action) {
@@ -2763,6 +2809,23 @@ public:
     }
 
 private:
+    template<class... TArgs>
+    explicit injector(const from_deps&, const TArgs&... args) noexcept
+        : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
+        , config{*this}
+    { }
+
+    template<class TInjector, class... TArgs>
+    explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
+        : pool_t{init{}, pool_t{build<TArgs>(injector)...}}
+        , config{*this}
+    { }
+
+    template<class T, class TInjector>
+    inline auto build(const TInjector& injector) const noexcept {
+        return T{injector};
+    }
+
     template<
         class T
       , class TName = no_name
@@ -2781,10 +2844,13 @@ private:
                  , injector
                >{std::declval<injector>()}
            )
-       ), T>::value &&
+       ), T>::value
+#if !defined(_MSC_VER)
+       &&
        decltype(policy<pool_t>::template call<T, TName, TIsRoot>(
           ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{})
        )::value
+#endif
     >;
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
@@ -2794,7 +2860,7 @@ private:
         using expected_t = typename dependency_t::expected;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-        using provider_t = provider<expected_t, given_t, TName, T, ctor_t, injector>;
+        using provider_t = core::provider<expected_t, given_t, TName, T, ctor_t, injector>;
         policy<pool_t>::template call<T, TName, TIsRoot>(((TConfig&)*this).policies(), dependency, ctor_t{});
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
@@ -2823,12 +2889,6 @@ private:
 
     template<class, class TAction>
     void call_impl(const TAction&, const std::false_type&) { }
-
-    template<class TInjector, class... Ts>
-    auto create_from_injector(const TInjector& injector
-                            , const aux::type_list<Ts...>&) const noexcept {
-        return pool_t{Ts{injector}...};
-    }
 
     template<class T>
     decltype(auto) arg(const T& arg, const std::false_type&) noexcept {
@@ -2975,11 +3035,12 @@ public:
     template<
         class TConfig
       , class... TArgs
-#if !defined(__clang__)
+#if !defined(__clang__) && !defined(_MSC_VER)
      , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>)
 #endif
     > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
-        : core::injector<::BOOST_DI_CFG, T...>{injector} {
+        : core::injector<::BOOST_DI_CFG, T...>(injector) {
+#if !defined(_MSC_VER)
         using namespace detail;
         int _[]{0, (
             create<T>(
@@ -2990,6 +3051,7 @@ public:
                 >{}
             )
         , 0)...}; (void)_;
+#endif
     }
 };
 
@@ -3005,8 +3067,10 @@ namespace boost { namespace di {
 template<
      class TConfig = ::BOOST_DI_CFG
    , class... TDeps
+#if !defined(_MSC_VER)
    , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type_list<TDeps...>>)
    , BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>)
+#endif
 > inline auto make_injector(const TDeps&... args) noexcept {
     return core::injector<TConfig, TDeps...>{core::init{}, args...};
 }

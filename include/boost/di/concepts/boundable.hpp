@@ -98,14 +98,15 @@ using get_bindings_error =
     >;
 
 template<class... Ts>
-using get_any_of_error = std::conditional_t<
-    std::is_same<
-        aux::bool_list<aux::always<Ts>::value...>
-      , aux::bool_list<std::is_same<std::true_type, Ts>::value...>
-    >::value
-  , std::true_type
-  , aux::type_list<Ts...>
- >;
+using get_any_of_error =
+    std::conditional_t<
+        std::is_same<
+            aux::bool_list<aux::always<Ts>::value...>
+          , aux::bool_list<std::is_same<std::true_type, Ts>::value...>
+        >::value
+      , std::true_type
+      , aux::type_list<Ts...>
+    >;
 
 template<class I, class T> // expected -> given
 auto boundable_impl(I&&, T&&) ->
@@ -120,7 +121,12 @@ auto boundable_impl(I&&, T&&) ->
     >;
 
 template<class... TDeps> // bindings
-auto boundable_impl(aux::type_list<TDeps...>&&) -> get_bindings_error<TDeps...>;
+auto boundable_impl(aux::type_list<TDeps...>&&) ->
+#if defined(_MSC_VER)
+    std::true_type;
+#else
+    get_bindings_error<TDeps...>;
+#endif
 
 template<class T, class... Ts> // any_of
 auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->

@@ -7,6 +7,10 @@
 #ifndef BOOST_DI_AUX_TYPE_TRAITS_HPP
 #define BOOST_DI_AUX_TYPE_TRAITS_HPP
 
+#if defined(_MSC_VER)
+	#define __has_include(...) 0
+#endif
+
 #include <memory>
 #include <type_traits>
 #include "boost/di/aux_/utility.hpp"
@@ -19,9 +23,9 @@
     struct has_##name : std::false_type { };                        \
                                                                     \
     template<class T>                                               \
-    struct has_##name<T, aux::void_t<typename T::name>>             \
-        : std::true_type                                            \
-    { }
+    struct has_##name<                                              \
+        T, typename aux::void_t<typename T::name>::type             \
+    > : std::true_type { }
 
 #define BOOST_DI_HAS_METHOD(name, call_name)                        \
     template<class T, class... TArgs>                               \
@@ -33,7 +37,8 @@
     std::false_type has_##name##_impl(...);                         \
                                                                     \
     template<class T, class... TArgs>                               \
-    using has_##name = decltype(has_##name##_impl<T, TArgs...>(0))
+    struct has_##name : decltype(has_##name##_impl<T, TArgs...>(0)) \
+    { }
 
 #if defined(__clang__)
     #define BOOST_DI_UNUSED __attribute__((unused))
@@ -41,9 +46,9 @@
 #elif defined(__GNUC__)
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_ATTR_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
-#else
+#elif defined(_MSC_VER)
     #define BOOST_DI_UNUSED
-    #define BOOST_DI_ATTR_ERROR(...)
+    #define BOOST_DI_ATTR_ERROR(...) __declspec(deprecated(__VA_ARGS__))
 #endif
 
 #define BOOST_DI_REQUIRES(...) \

@@ -124,6 +124,7 @@ public:
         TGiven object_;
     };
 
+#if !defined(_MSC_VER)
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
         template<class T, class TProvider>
@@ -137,6 +138,7 @@ public:
 
         TGiven object_;
     };
+#endif
 };
 
 }}} // boost::di::scopes

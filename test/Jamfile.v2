@@ -28,16 +28,15 @@ project :
         <include>.
         <include>..
         <include>../include
-        <warnings>all
-        <warnings-as-errors>on
 ;
 
 rule run-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
-    common_toolset = ;
-
-    if $(std) {
-        common_toolset += <cxxflags>"-std=$(std) -include common/test.hpp" ;
-    }
+    toolset =
+        <toolset>gcc:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra"
+        <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra"
+        <toolset>darwin:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror=all"
+        <toolset>msvc:<cxxflags>"/FI common/test.hpp"
+    ;
 
     if $(ctor) {
         defines += <define>BOOST_DI_CFG_CTOR <define>\"BOOST_DI_INJECT(type,...)=type(__VA_ARGS__)\" ;
@@ -47,11 +46,16 @@ rule run-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
         defines += <define>BOOST_DI_CFG_NO_PREPROCESSED_HEADERS ;
     }
 
-    run $(src) : : : $(common_toolset) $(defines) : $(ctor) ;
+    run $(src) : : : $(toolset) $(defines) : $(ctor) ;
 }
 
 rule compile-fail-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
-    common_toolset = <cxxflags>"-std=$(std) -Wfatal-errors -include common/test.hpp" ;
+    toolset =
+        <toolset>gcc:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
+        <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
+        <toolset>darwin:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
+        <toolset>msvc:<cxxflags>"/FI common/test.hpp"
+    ;
 
     if $(ctor) {
         defines += <define>\"BOOST_DI_INJECT(type,...)=type(__VA_ARGS__)\" ;
@@ -61,7 +65,7 @@ rule compile-fail-test ( std * : src + : ctor * : defines * : preprocessed_heade
         defines += <define>BOOST_DI_CFG_NO_PREPROCESSED_HEADERS ;
     }
 
-    compile-fail $(src) : $(common_toolset) $(defines) : $(ctor) ;
+    compile-fail $(src) : $(toolset) $(defines) : $(ctor) ;
 }
 
 test-suite ut :
@@ -136,5 +140,9 @@ test-suite error :
     [ compile-fail-test c++1y : error/named_paramater_spelling.cpp ]
     [ compile-fail-test c++1y : error/policy_constructible.cpp ]
     [ compile-fail-test c++1y : error/scope_traits_external_deduced.cpp ]
+;
+
+test-suite msvc : # special test suite for msvc
+    [ run-test c++1y : msvc/msvc2015.cpp ]
 ;
 

@@ -67,6 +67,12 @@ struct unique<T*> {
         return std::unique_ptr<I>{object};
     }
 
+#if defined(_MSC_VER)
+	explicit unique(T* object)
+        : object(object)
+    { }
+#endif
+
     T* object = nullptr;
 };
 

@@ -42,40 +42,45 @@ class injector : public pool<transform_t<TDeps...>>
       , config_t
     >;
 
+    struct from_injector { };
+    struct from_deps { };
+
 public:
     using deps = transform_t<TDeps...>;
 
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
-        : pool_t{init{}, pool<aux::type_list<
-              std::remove_reference_t<decltype(arg(args, has_configure<decltype(args)>{}))>...>>{
-                  arg(args, has_configure<decltype(args)>{})...}}
-        , config{*this}
+		: injector{from_deps{}, arg(args, has_configure<decltype(args)>{})...}
     { }
 
     template<class TConfig_, class... TDeps_>
-    explicit injector(const injector<TConfig_, TDeps_...>& injector) noexcept
-        : pool_t{init{}, create_from_injector(injector, deps{})}
-        , config{*this}
+    explicit injector(const injector<TConfig_, TDeps_...>& other) noexcept
+        : injector{from_injector{}, other, deps{}}
     { }
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
-    static constexpr auto is_creatable() {
+	static constexpr auto is_creatable() {
         return decltype(is_creatable_impl(
             std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>())
         )::value;
     }
 
-    template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>())>
+    template<class T
+#if !defined(_MSC_VER)
+        , BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>())
+#endif
+        >
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }
 
+#if !defined(_MSC_VER)
     template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, is_root_t>())>
     BOOST_DI_CONCEPTS_CREATABLE_ATTR
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }
+#endif
 
     template<class TAction>
     void call(const TAction& action) {
@@ -83,6 +88,23 @@ public:
     }
 
 private:
+    template<class... TArgs>
+    explicit injector(const from_deps&, const TArgs&... args) noexcept
+        : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
+        , config{*this}
+    { }
+
+    template<class TInjector, class... TArgs>
+    explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
+        : pool_t{init{}, pool_t{build<TArgs>(injector)...}}
+        , config{*this}
+    { }
+
+    template<class T, class TInjector>
+    inline auto build(const TInjector& injector) const noexcept {
+        return T{injector};
+    }
+
     template<
         class T
       , class TName = no_name
@@ -101,10 +123,13 @@ private:
                  , injector
                >{std::declval<injector>()}
            )
-       ), T>::value &&
+       ), T>::value
+#if !defined(_MSC_VER)
+       &&
        decltype(policy<pool_t>::template call<T, TName, TIsRoot>(
           ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{})
        )::value
+#endif
     >;
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
@@ -114,7 +139,7 @@ private:
         using expected_t = typename dependency_t::expected;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-        using provider_t = provider<expected_t, given_t, TName, T, ctor_t, injector>;
+        using provider_t = core::provider<expected_t, given_t, TName, T, ctor_t, injector>;
         policy<pool_t>::template call<T, TName, TIsRoot>(((TConfig&)*this).policies(), dependency, ctor_t{});
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using type = std::conditional_t<
@@ -143,12 +168,6 @@ private:
 
     template<class, class TAction>
     void call_impl(const TAction&, const std::false_type&) { }
-
-    template<class TInjector, class... Ts>
-    auto create_from_injector(const TInjector& injector
-                            , const aux::type_list<Ts...>&) const noexcept {
-        return pool_t{Ts{injector}...};
-    }
 
     template<class T>
     decltype(auto) arg(const T& arg, const std::false_type&) noexcept {

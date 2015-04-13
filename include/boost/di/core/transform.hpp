@@ -21,9 +21,11 @@ struct get_deps {
 
 template<class T>
 struct get_deps<T, std::enable_if_t<has_configure<T>::value>> {
-    using type = typename aux::function_traits<
-        decltype(&T::configure)
-    >::result_type::deps;
+	using result_type = typename aux::function_traits<
+		decltype(&T::configure)
+	>::result_type;
+
+    using type = typename result_type::deps;
 };
 
 template<

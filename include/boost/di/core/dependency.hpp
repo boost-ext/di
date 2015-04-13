@@ -20,8 +20,8 @@ BOOST_DI_HAS_METHOD(configure, configure);
 BOOST_DI_HAS_TYPE(deps);
 
 template<class T, class U = std::remove_reference_t<T>>
-using is_injector =
-    std::integral_constant<bool, has_deps<U>::value || has_configure<U>::value>;
+struct is_injector :
+    std::integral_constant<bool, has_deps<U>::value || has_configure<U>::value>{};
 
 template<class, class>
 struct dependency_concept { };
@@ -104,10 +104,18 @@ public:
 
     template<class T> // no requirements
     auto named(const T&) const noexcept {
-        return dependency<TScope, TExpected, TGiven, T>{*this};
+        return dependency<TScope, TExpected, TGiven, T>{
+#if !defined(_MSC_VER)
+			*this
+#endif
+		};
     }
 
-    template<class T, BOOST_DI_REQUIRES(concepts::scopable<T>())>
+    template<class T
+#if !defined(_MSC_VER)
+		, BOOST_DI_REQUIRES(concepts::scopable<T>())
+#endif
+		>
     auto in(const T&) const noexcept {
         return dependency<T, TExpected, TGiven, TName>{};
     }
