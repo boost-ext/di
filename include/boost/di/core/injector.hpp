@@ -51,8 +51,8 @@ public:
     { }
 
     template<class TConfig_, class... TDeps_>
-    explicit injector(const injector<TConfig_, TDeps_...>& injector) noexcept
-        : injector{std::false_type{}, injector, deps{}}
+    explicit injector(const injector<TConfig_, TDeps_...>& injector_) noexcept
+        : injector{std::false_type{}, injector_, deps{}}
     { }
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>

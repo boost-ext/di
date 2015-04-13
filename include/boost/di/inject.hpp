@@ -25,11 +25,11 @@
 #define BOOST_DI_GEN_ARGS_IMPL(p, i) \
     struct arg##i { \
         BOOST_DI_IF(BOOST_DI_IBP(p), \
-            BOOST_DI_GEN_NAME__ \
+            BOOST_DI_GEN_ARG_NAME \
           , BOOST_DI_GEN_ARG)(p) \
     };
 
-#define BOOST_DI_GEN_NAME__(p) \
+#define BOOST_DI_GEN_ARG_NAME(p) \
     BOOST_DI_GEN_NAME_ARG p );
 
 #define BOOST_DI_GEN_NAME_ARG(p) \
@@ -56,18 +56,18 @@
       , i \
     )
 
-#define B1(p, n) \
+#define BOOST_DI_GEN_TYPE_NAME(p, n) \
     const ::boost::di::aux::type<arg##n, ::std::true_type>&
 
-#define B2_impl(n) \
+#define BOOST_DI_GEN_TYPE_IMPL(n) \
     const ::boost::di::aux::type<arg##n, ::std::false_type>&
 
-#define B2(p, n) \
-    BOOST_DI_IF(BOOST_DI_IS_EMPTY(p), BOOST_DI_EAT, B2_impl)(n)
+#define BOOST_DI_GEN_TYPE(p, n) \
+    BOOST_DI_IF(BOOST_DI_IS_EMPTY(p), BOOST_DI_EAT, BOOST_DI_GEN_TYPE_IMPL)(n)
 
 #define BOOST_DI_GEN_TYPE_LIST_IMPL(p, n) \
     BOOST_DI_IF(n, BOOST_DI_COMMA, BOOST_DI_EAT)() \
-    BOOST_DI_IF(BOOST_DI_IBP(p), B1, B2)(p, n)
+    BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_GEN_TYPE_NAME, BOOST_DI_GEN_TYPE)(p, n)
 
 #if !defined(BOOST_DI_INJECT_TRAITS)
     #define BOOST_DI_INJECT_TRAITS(...) \
@@ -95,7 +95,8 @@
     #define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
         struct BOOST_DI_INJECTOR { \
             static void inject(__VA_ARGS__); \
-            using type BOOST_DI_UNUSED = typename ::boost::di::aux::function_traits<decltype(inject)>::args; \
+            using type BOOST_DI_UNUSED = \
+                typename ::boost::di::aux::function_traits<decltype(inject)>::args; \
         }
 #endif
 

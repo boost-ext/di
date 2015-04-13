@@ -16,7 +16,7 @@ namespace boost { namespace di { namespace core {
 
 template<class T, class = void>
 struct get_deps {
-	using type = typename T::deps;
+    using type = typename T::deps;
 };
 
 template<class T>
@@ -25,7 +25,7 @@ struct get_deps<T, std::enable_if_t<has_configure<T>::value>> {
 		decltype(&T::configure)
 	>::result_type;
 
-	using type = typename result_type::deps;
+    using type = typename result_type::deps;
 };
 
 template<
@@ -36,17 +36,17 @@ template<
 
 template<class T, class TAny>
 struct add_type_list<T, std::true_type, TAny> {
-	using type = typename get_deps<T>::type;
+    using type = typename get_deps<T>::type;
 };
 
 template<class T>
 struct add_type_list<T, std::false_type, std::true_type> {
-	using type = aux::type_list<T>;
+    using type = aux::type_list<T>;
 };
 
 template<class T>
 struct add_type_list<T, std::false_type, std::false_type> {
-	using type = aux::type_list<dependency<scopes::exposed<>, T>>;
+    using type = aux::type_list<dependency<scopes::exposed<>, T>>;
 };
 
 template<class... Ts>

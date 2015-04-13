@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_AUX_TYPE_TRAITS_HPP
 #define BOOST_DI_AUX_TYPE_TRAITS_HPP
 
-#define __has_include(...) 0
+//#define __has_include(...) 0
 
 #include <memory>
 #include <type_traits>
