@@ -1,0 +1,22 @@
+platform:
+  - x86
+
+configuration:
+  - Debug
+  - Release
+
+branches:
+  only:
+    - msvc2015
+
+install:
+  - c:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat
+  - cd build
+  - bootstrap.bat --with-toolset=msvc-14.0
+  - b2 -j2 -q --toolset=msvc-14.0 ../test ../example
+
+build: OFF
+test: OFF
+test_script: OFF
+deploy: OFF
+
