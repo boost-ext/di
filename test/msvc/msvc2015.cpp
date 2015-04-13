@@ -11,7 +11,7 @@
 
 namespace di = boost::di;
 
-auto blah = []{};
+auto name = []{};
 auto my_int = []{};
 
 struct i {
@@ -48,7 +48,7 @@ struct impl : i{
 };
 
 struct c {
-    BOOST_DI_INJECT(c, int, int, int, double, double, std::shared_ptr<i>, (named = blah) std::shared_ptr<i3>){}
+    BOOST_DI_INJECT(c, int, int, int, double, double, std::shared_ptr<i>, (named = name) std::shared_ptr<i3>){}
 };
 
 struct module {
@@ -65,7 +65,7 @@ test ft = []{
     auto injector = di::make_injector(
           di::bind<int>().to(42)
         , module{}
-        , di::bind<i3, impl3>().named(blah)
+        , di::bind<i3, impl3>().named(name)
         , di::bind<int>().named(my_int).to(21)
     );
 
