@@ -121,7 +121,7 @@ auto boundable_impl(I&&, T&&) ->
 template<class... TDeps> // bindings
 auto boundable_impl(aux::type_list<TDeps...>&&) ->
 #if defined(_MSC_VER)
-    std::true_type
+    std::true_type;
 #else
     get_bindings_error<TDeps...>;
 #endif
