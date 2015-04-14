@@ -20,7 +20,7 @@
 #endif
 
 #define BOOST_DI_GEN_ARGS(i, ...) \
-    BOOST_DI_GEN_ARGS_IMPL(BOOST_DI_ARG(i, __VA_ARGS__,), i)
+    BOOST_DI_GEN_ARGS_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__,), i)
 
 #define BOOST_DI_GEN_ARGS_IMPL(p, i) \
     struct arg##i { \
@@ -46,13 +46,13 @@
 
 #define BOOST_DI_GEN_CTOR(i, ...) \
     BOOST_DI_GEN_CTOR_IMPL( \
-        BOOST_DI_ARG(i, __VA_ARGS__,) \
+        BOOST_DI_ELEM(i, __VA_ARGS__,) \
       , i \
     )
 
 #define BOOST_DI_GEN_TYPE_LIST(i, ...) \
     BOOST_DI_GEN_TYPE_LIST_IMPL( \
-        BOOST_DI_ARG(i, __VA_ARGS__,) \
+        BOOST_DI_ELEM(i, __VA_ARGS__,) \
       , i \
     )
 
@@ -73,19 +73,19 @@
     #define BOOST_DI_INJECT_TRAITS(...) \
         struct BOOST_DI_INJECTOR { \
             BOOST_DI_REPEAT( \
-                BOOST_DI_NARG(__VA_ARGS__) \
+                BOOST_DI_SIZE(__VA_ARGS__) \
               , BOOST_DI_GEN_ARGS \
               , __VA_ARGS__ \
             ) \
             using type BOOST_DI_UNUSED = ::boost::di::aux::type_list< \
                 BOOST_DI_REPEAT( \
-                    BOOST_DI_NARG(__VA_ARGS__) \
+                    BOOST_DI_SIZE(__VA_ARGS__) \
                   , BOOST_DI_GEN_TYPE_LIST \
                   , __VA_ARGS__ \
                 ) \
             >; \
             static_assert( \
-                BOOST_DI_NARG(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE \
+                BOOST_DI_SIZE(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE \
               , "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE" \
             ); \
         }
@@ -104,7 +104,7 @@
     #define BOOST_DI_INJECT(type, ...) \
         BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
         type(BOOST_DI_REPEAT( \
-            BOOST_DI_NARG(__VA_ARGS__) \
+            BOOST_DI_SIZE(__VA_ARGS__) \
           , BOOST_DI_GEN_CTOR \
           , __VA_ARGS__) \
         )
