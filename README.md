@@ -2,18 +2,18 @@ Boost.DI: C++ Dependency Injection
 ===============================================
 [![Boost Libraries](https://raw.githubusercontent.com/krzysztof-jusiak/di/gh-pages/boost/boost.png)](http://www.boost.org)
 <a href="https://travis-ci.org/krzysztof-jusiak/di" target="_blank">![Build Status](https://img.shields.io/travis/krzysztof-jusiak/di/cpp14.svg)</a> 
-[![Build Status](https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic/branch/cpp14?svg=true)](https://ci.appveyor.com/project/krzysztof-jusiak/di)
-[![Coveralls](http://img.shields.io/coveralls/krzysztof-jusiak/di/cpp14.svg)](https://coveralls.io/r/krzysztof-jusiak/di?branch=cpp14)
-[![Github Issues](https://img.shields.io/github/issues/krzysztof-jusiak/di.svg)](http://github.com/krzysztof-jusiak/di/issues)
+<a href="https://ci.appveyor.com/project/krzysztof-jusiak/di" target="_blank">[![Build Status](https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic/branch/cpp14?svg=true)</a>
+<a href="https://coveralls.io/r/krzysztof-jusiak/di?branch=cpp14" target="_blank">![Coveralls](http://img.shields.io/coveralls/krzysztof-jusiak/di/cpp14.svg)</a>
+<a href="http://github.com/krzysztof-jusiak/di/issues" target="_blank">![Github Issues](https://img.shields.io/github/issues/krzysztof-jusiak/di.svg)</a>
 
 > "Don't call us, we'll call you", Hollywood principle
 
 **Dependency Injection (DI)** involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state.
 It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.
 
-[![Boost Licence](http://img.shields.io/badge/license-boost-blue.svg)](http://www.boost.org/LICENSE_1_0.txt)
-[![Github Release](http://img.shields.io/github/release/krzysztof-jusiak/di.svg)](https://github.com/krzysztof-jusiak/di/releases/latest)
-[![Gitter Chat](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)](https://gitter.im/krzysztof-jusiak/di)
+<a href="http://www.boost.org/LICENSE_1_0.txt" target="_blank">![Boost Licence](http://img.shields.io/badge/license-boost-blue.svg)</a>
+<a href="https://github.com/krzysztof-jusiak/di/releases/latest" target="_blank">![Github Release](http://img.shields.io/github/release/krzysztof-jusiak/di.svg)</a>
+<a href="https://gitter.im/krzysztof-jusiak/di" target="_blank">![Gitter Chat](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)</a>
 
 > **"Let's make some coffee!"**
 <p align="center"><img src="https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker.png" alt="coffee maker"/></p>
