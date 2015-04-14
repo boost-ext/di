@@ -24,8 +24,8 @@ struct i2 {
 };
 
 struct impl2 : i2 {
-    //BOOST_DI_INJECT(impl2){}
-    void dummy2() override {}
+	BOOST_DI_INJECT(impl2) { }
+    void dummy2() override { }
 };
 
 struct i3 {
@@ -37,14 +37,14 @@ struct impl3 : i3 {
     BOOST_DI_INJECT(impl3, (named = my_int) const int& i, double) {
         expect_eq(21, i);
     }
-    void dummy3() override {}
+    void dummy3() override {} 
 };
 
 struct impl : i{
     impl(int i, std::shared_ptr<i2>){
         expect_eq(87, i);
     }
-    void dummy() override {};
+    void dummy() override { };
 };
 
 struct c {
