@@ -14,8 +14,8 @@ int main() {
 
     /*<< asm gdb -batch -ex 'file ./a.out' -ex 'disassemble main' [pre
         Dump of assembler code for function main:
-        0x0000000000400760 <+0>:	xor    %eax,%eax
-        0x0000000000400762 <+2>:	retq
+        0x0000000000400760 <+0>:    xor    %eax,%eax
+        0x0000000000400762 <+2>:    retq
         End of assembler dump.
     ]>>*/
 }

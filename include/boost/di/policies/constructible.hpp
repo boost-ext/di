@@ -73,7 +73,7 @@ struct apply_impl<T, std::enable_if_t<std::is_base_of<type_op, T>::value>> {
 
 template<class T>
 struct not_ : type_op {
-	template<class TArg>
+    template<class TArg>
     static auto apply(const TArg& data) noexcept {
         return std::integral_constant<bool
           , !decltype(apply_impl<T>::apply(data))::value
@@ -83,7 +83,7 @@ struct not_ : type_op {
 
 template<class... Ts>
 struct and_ : type_op {
-	template<class TArg>
+    template<class TArg>
     static auto apply(const TArg& data) noexcept {
         return std::is_same<
             aux::bool_list<decltype(apply_impl<Ts>::apply(data))::value...>
@@ -94,7 +94,7 @@ struct and_ : type_op {
 
 template<class... Ts>
 struct or_ : type_op {
-	template<class TArg>
+    template<class TArg>
     static auto apply(const TArg& data) noexcept {
         return std::integral_constant<bool
           , !std::is_same<
@@ -107,16 +107,16 @@ struct or_ : type_op {
 
 template<class T>
 struct always : type_op {
-	template<class TArg>
-	static auto apply(const TArg& data) noexcept {
-		return apply_impl<T>::apply(data);
-	}
+    template<class TArg>
+    static auto apply(const TArg& data) noexcept {
+        return apply_impl<T>::apply(data);
+    }
 };
 
 template<class T>
 struct is_bound : type_op {
-	template<class TArg>
-	static auto apply(const TArg&) noexcept {
+    template<class TArg>
+    static auto apply(const TArg&) noexcept {
         struct not_resolved { };
         using type = std::conditional_t<std::is_same<T, _>::value, typename TArg::type, T>;
         using dependency = typename TArg::template resolve<type, typename TArg::name, not_resolved>;
@@ -125,8 +125,8 @@ struct is_bound : type_op {
 };
 
 struct is_root : type_op {
-	template<class TArg>
-	static auto apply(const TArg&) noexcept {
+    template<class TArg>
+    static auto apply(const TArg&) noexcept {
         return typename TArg::is_root{};
     }
 };
@@ -167,12 +167,12 @@ struct constructible_impl {
 
 template<class T = aux::never<_>, std::enable_if_t<std::is_base_of<type_op, T>::value, int> = 0>
 inline auto constructible(const T& = {}) {
-	return constructible_impl<T>{};
+    return constructible_impl<T>{};
 }
 
 template<class T = aux::never<_>, std::enable_if_t<!std::is_base_of<type_op, T>::value, int> = 0>
 inline auto constructible(const T& = {}) {
-	return constructible_impl<or_<T>>{};
+    return constructible_impl<or_<T>>{};
 }
 
 }}} // boost::di::policies

@@ -23,7 +23,7 @@ BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_INJECTOR);
 
 template<class T, std::size_t>
 struct get {
-   	using type = T;
+       using type = T;
 };
 
 template<class T>
@@ -37,15 +37,15 @@ template<
   , class T
   , std::size_t... TArgs
 > struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>>
-	: std::conditional<
-		  TIsConstructible<T, typename get<core::any_type<T>, TArgs>::type...>::value
-		, aux::type_list<typename get<core::any_type<T>, TArgs>::type...>
-		, typename ctor_impl<
-			  TIsConstructible
-			, T
-			, std::make_index_sequence<sizeof...(TArgs) - 1>
-		  >::type
-	  >
+    : std::conditional<
+          TIsConstructible<T, typename get<core::any_type<T>, TArgs>::type...>::value
+        , aux::type_list<typename get<core::any_type<T>, TArgs>::type...>
+        , typename ctor_impl<
+              TIsConstructible
+            , T
+            , std::make_index_sequence<sizeof...(TArgs) - 1>
+          >::type
+      >
 { };
 
 template<template<class...> class TIsConstructible, class T>
@@ -96,7 +96,7 @@ struct arg_impl;
 
 template<class T>
 struct arg_impl<aux::type_list<T>> {
-	using type = T;
+    using type = T;
 };
 
 template<class T>
@@ -104,7 +104,7 @@ using arg_impl_t = typename arg_impl<T>::type;
 
 template<class T>
 struct arg<const aux::type<T, std::true_type>&> {
-	using type = named<
+    using type = named<
         typename aux::function_traits<
             decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, name))
         >::result_type

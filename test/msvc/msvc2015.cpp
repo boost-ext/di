@@ -24,7 +24,7 @@ struct i2 {
 };
 
 struct impl2 : i2 {
-	BOOST_DI_INJECT(impl2) { }
+    BOOST_DI_INJECT(impl2) { }
     void dummy2() override { }
 };
 

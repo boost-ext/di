@@ -50,7 +50,7 @@ public:
 
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
-		: injector{from_deps{}, arg(args, has_configure<decltype(args)>{})...}
+        : injector{from_deps{}, arg(args, has_configure<decltype(args)>{})...}
     { }
 
     template<class TConfig_, class... TDeps_>
@@ -59,7 +59,7 @@ public:
     { }
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
-	static constexpr auto is_creatable() {
+    static constexpr auto is_creatable() {
         return decltype(is_creatable_impl(
             std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>())
         )::value;

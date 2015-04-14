@@ -58,7 +58,7 @@ struct non_type { };
 
 template<class...>
 struct void_t {
-	using type = void;
+    using type = void;
 };
 
 template<class...>
@@ -136,11 +136,11 @@ struct is_unique_impl<T> : not_unique<> { };
 
 template<class T1, class T2, class... Ts>
 struct is_unique_impl<T1, T2, Ts...>
-	: std::conditional_t<
-		  std::is_base_of<type<T2>, T1>::value
-		, not_unique<T2>
-		, is_unique_impl<inherit<T1, type<T2>>, Ts...>
- 	  >
+    : std::conditional_t<
+          std::is_base_of<type<T2>, T1>::value
+        , not_unique<T2>
+        , is_unique_impl<inherit<T1, type<T2>>, Ts...>
+       >
 { };
 
 template<class... Ts>
@@ -154,7 +154,7 @@ using is_unique = is_unique_impl<none_t, Ts...>;
 #define BOOST_DI_AUX_TYPE_TRAITS_HPP
 
 #if defined(_MSC_VER)
-	#define __has_include(...) 0
+    #define __has_include(...) 0
 #endif
 
 #if (__has_include(<boost/shared_ptr.hpp>))
@@ -453,7 +453,7 @@ struct unique<T*> {
     }
 
 #if defined(_MSC_VER)
-	explicit unique(T* object)
+    explicit unique(T* object)
         : object(object)
     { }
 #endif
@@ -1063,8 +1063,8 @@ public:
 #define BOOST_DI_ELEM(n, ...) BOOST_DI_ELEM_I(n,__VA_ARGS__)
 #define BOOST_DI_IS_EMPTY(...) \
     BOOST_DI_DETAIL_IS_EMPTY_IIF(BOOST_DI_IBP(__VA_ARGS__))( \
-		BOOST_DI_DETAIL_IS_EMPTY_GEN_ZERO, \
-		BOOST_DI_DETAIL_IS_EMPTY_PROCESS \
+        BOOST_DI_DETAIL_IS_EMPTY_GEN_ZERO, \
+        BOOST_DI_DETAIL_IS_EMPTY_PROCESS \
     )(__VA_ARGS__)
 
 #define BOOST_DI_DETAIL_IS_EMPTY_PRIMITIVE_CAT(a, b) a ## b
@@ -1288,7 +1288,7 @@ BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_INJECTOR);
 
 template<class T, std::size_t>
 struct get {
-   	using type = T;
+       using type = T;
 };
 
 template<class T>
@@ -1302,15 +1302,15 @@ template<
   , class T
   , std::size_t... TArgs
 > struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>>
-	: std::conditional<
-		  TIsConstructible<T, typename get<core::any_type<T>, TArgs>::type...>::value
-		, aux::type_list<typename get<core::any_type<T>, TArgs>::type...>
-		, typename ctor_impl<
-			  TIsConstructible
-			, T
-			, std::make_index_sequence<sizeof...(TArgs) - 1>
-		  >::type
-	  >
+    : std::conditional<
+          TIsConstructible<T, typename get<core::any_type<T>, TArgs>::type...>::value
+        , aux::type_list<typename get<core::any_type<T>, TArgs>::type...>
+        , typename ctor_impl<
+              TIsConstructible
+            , T
+            , std::make_index_sequence<sizeof...(TArgs) - 1>
+          >::type
+      >
 { };
 
 template<template<class...> class TIsConstructible, class T>
@@ -1361,7 +1361,7 @@ struct arg_impl;
 
 template<class T>
 struct arg_impl<aux::type_list<T>> {
-	using type = T;
+    using type = T;
 };
 
 template<class T>
@@ -1369,7 +1369,7 @@ using arg_impl_t = typename arg_impl<T>::type;
 
 template<class T>
 struct arg<const aux::type<T, std::true_type>&> {
-	using type = named<
+    using type = named<
         typename aux::function_traits<
             decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, name))
         >::result_type
@@ -1588,16 +1588,16 @@ public:
     auto named(const T&) const noexcept {
         return dependency<TScope, TExpected, TGiven, T>{
 #if !defined(_MSC_VER)
-			*this
+            *this
 #endif
-		};
+        };
     }
 
     template<class T
 #if !defined(_MSC_VER)
-		, BOOST_DI_REQUIRES(concepts::scopable<T>())
+        , BOOST_DI_REQUIRES(concepts::scopable<T>())
 #endif
-		>
+        >
     auto in(const T&) const noexcept {
         return dependency<T, TExpected, TGiven, TName>{};
     }
@@ -2165,9 +2165,9 @@ struct get_deps {
 
 template<class T>
 struct get_deps<T, std::enable_if_t<has_configure<T>::value>> {
-	using result_type = typename aux::function_traits<
-		decltype(&T::configure)
-	>::result_type;
+    using result_type = typename aux::function_traits<
+        decltype(&T::configure)
+    >::result_type;
 
     using type = typename result_type::deps;
 };
@@ -2775,7 +2775,7 @@ public:
 
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
-		: injector{from_deps{}, arg(args, has_configure<decltype(args)>{})...}
+        : injector{from_deps{}, arg(args, has_configure<decltype(args)>{})...}
     { }
 
     template<class TConfig_, class... TDeps_>
@@ -2784,7 +2784,7 @@ public:
     { }
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
-	static constexpr auto is_creatable() {
+    static constexpr auto is_creatable() {
         return decltype(is_creatable_impl(
             std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>())
         )::value;

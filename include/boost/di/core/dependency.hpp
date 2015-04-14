@@ -106,16 +106,16 @@ public:
     auto named(const T&) const noexcept {
         return dependency<TScope, TExpected, TGiven, T>{
 #if !defined(_MSC_VER)
-			*this
+            *this
 #endif
-		};
+        };
     }
 
     template<class T
 #if !defined(_MSC_VER)
-		, BOOST_DI_REQUIRES(concepts::scopable<T>())
+        , BOOST_DI_REQUIRES(concepts::scopable<T>())
 #endif
-		>
+        >
     auto in(const T&) const noexcept {
         return dependency<T, TExpected, TGiven, TName>{};
     }

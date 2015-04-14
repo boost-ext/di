@@ -68,7 +68,7 @@ struct unique<T*> {
     }
 
 #if defined(_MSC_VER)
-	explicit unique(T* object)
+    explicit unique(T* object)
         : object(object)
     { }
 #endif
