@@ -37,7 +37,7 @@ struct impl3 : i3 {
     BOOST_DI_INJECT(impl3, (named = my_int) const int& i, double) {
         expect_eq(21, i);
     }
-    void dummy3() override {} 
+    void dummy3() override { }
 };
 
 struct impl : i{
