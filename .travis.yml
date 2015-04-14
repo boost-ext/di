@@ -18,7 +18,7 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update -qq; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get -qq install valgrind; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install -qq libstdc++-4.9-dev; fi
-#  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo apt-get install g++-4.9; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo apt-get install gcc-5-multilib; fi
 #  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5.0 90; fi
   - cd build
   - if [ "$CXX" == "g++" ]; then ./bootstrap.sh --with-toolset=gcc; fi
