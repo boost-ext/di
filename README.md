@@ -2,7 +2,7 @@ Boost.DI: C++ Dependency Injection
 ===============================================
 [![Boost Libraries](https://raw.githubusercontent.com/krzysztof-jusiak/di/gh-pages/boost/boost.png)](http://www.boost.org)
 [![Build Status](https://img.shields.io/travis/krzysztof-jusiak/di/cpp14.svg)](https://travis-ci.org/krzysztof-jusiak/di)
-[![Build Status](https://img.shields.io/appveyor/ci/krzysztof-jusiak/di/cpp14.svg)](https://ci.appveyor.com/project/krzysztof-jusiak/di)
+[![Build Status](https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic/branch/cpp14?svg=true)](https://ci.appveyor.com/project/krzysztof-jusiak/di)
 [![Coveralls](http://img.shields.io/coveralls/krzysztof-jusiak/di/cpp14.svg)](https://coveralls.io/r/krzysztof-jusiak/di?branch=cpp14)
 [![Github Issues](https://img.shields.io/github/issues/krzysztof-jusiak/di.svg)](http://github.com/krzysztof-jusiak/di/issues)
 
@@ -215,10 +215,12 @@ Manual Dependency Injection             | Boost.DI
 
 **How To Start?**
 
-* Get C++14 compliant compiler (Clang-3.4+, GCC-5.0+, Visual Studio 2015+) with STL (memory, type\_traits headers) / Boost is not required
+* Get C++14 compliant compiler (Clang-3.4+, GCC-5.0+, Visual Studio 2015\*+) with STL (memory, type\_traits headers) / Boost is not required
 * [Read Quick User Guide](#quick_user_guide)
 * [Read Tutorial](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/tutorial.html)
 * [Read Documentation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
+
+\* - limited support
 
 > To get started the only file you need is `di.hpp`:
 
