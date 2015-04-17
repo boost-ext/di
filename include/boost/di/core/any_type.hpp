@@ -56,7 +56,7 @@ struct any_type {
         return injector_.template create_impl<T&>();
     }
 
-#if !defined(__clang__)
+#if !defined(__clang__) && !defined(_MSC_VER)
     template<class T, class = is_not_same<T>, class = is_ref<T>, class = is_creatable<T&&, TError>>
     operator T&&() const {
         return injector_.template create_impl<T&&>();

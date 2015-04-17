@@ -7,6 +7,7 @@
 #if defined(_MSC_VER)
 #define BOOST_DI_CFG_NO_PREPROCESSED_HEADERS
 #include <boost/di.hpp>
+#include <functional>
 
 namespace di = boost::di;
 
@@ -240,6 +241,130 @@ test runtime_factory_impl = [] {
     auto object = test(true);
     expect(dynamic_cast<impl1*>(object.get()));
     }
+};
+
+test scopes_priority = [] {
+    auto injector = di::make_injector(
+        di::bind<int>().to(12)
+      , di::bind<int, std::integral_constant<int, 42>>()
+    );
+
+    auto object = injector.create<int>();
+
+    expect_eq(12, object);
+};
+
+test scopes_order = [] {
+    auto injector = di::make_injector(
+        di::bind<int, std::integral_constant<int, 41>>()
+      , di::bind<int>().to([]{return 42;})
+    );
+
+    expect_eq(42, injector.create<int>());
+};
+
+test scopes_injector_lambda_injector = [] {
+    constexpr short s = 42;
+    auto injector = di::make_injector(
+        di::bind<short>().to(s)
+      , di::bind<int>().to([](const auto& injector){ return static_cast<int>(injector.template create<short>()); })
+    );
+
+    expect_eq(s, injector.create<int>());
+};
+
+test string_creation = [] {
+    struct string {
+        std::string str;
+    };
+
+    expect_eq("", di::make_injector().create<string>().str);
+};
+
+test request_value_and_ptr_in_unique = [] {
+    struct c {
+        int i = 0;
+        int* ptr = nullptr;
+    };
+
+    auto injector = di::make_injector(
+        di::bind<int>().in(di::unique)
+    );
+
+    auto object = injector.create<c>();
+    delete object.ptr;
+};
+
+test inject = [] {
+    constexpr auto i = 42;
+
+    struct c {
+        c(std::initializer_list<int>) { }
+
+        c(int, double, float) { }
+
+        BOOST_DI_INJECT(c, int i, double d)
+            : i(i), d(d)
+        { }
+
+        int i = 0;
+        double d = 0.0;
+    };
+
+    auto injector = di::make_injector(
+        di::bind<int>().to(i)
+    );
+
+    auto object = injector.create<c>();
+
+    expect_eq(i, object.i);
+    expect_eq(0.0, object.d);
+};
+
+test automatic_inject = [] {
+    constexpr auto i = 42;
+
+    struct c {
+        c(std::initializer_list<int>) { }
+
+        c(int i, double d)
+            : i(i), d(d)
+        { }
+
+        int i = 0;
+        double d = 0.0;
+    };
+
+    auto injector = di::make_injector(
+        di::bind<int>().to(i)
+    );
+
+    auto object = injector.create<c>();
+
+    expect_eq(i, object.i);
+    expect_eq(0.0, object.d);
+};
+
+test automatic_inject_with_initializer_list = [] {
+    constexpr auto i = 42;
+
+    struct c {
+        c(int i, std::initializer_list<int> il)
+            : i(i), il(il)
+        { }
+
+        int i = 0;
+        std::initializer_list<int> il;
+    };
+
+    auto injector = di::make_injector(
+        di::bind<int>().to(i)
+    );
+
+    auto object = injector.create<c>();
+
+    expect_eq(i, object.i);
+    expect_eq(0, object.il.size());
 };
 
 #endif
