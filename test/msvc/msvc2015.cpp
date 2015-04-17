@@ -12,6 +12,9 @@ namespace di = boost::di;
 
 auto name = []{};
 auto my_int = []{};
+auto my_int2 = []{};
+
+auto i_ = 2;
 
 struct i {
     virtual ~i() noexcept = default;
@@ -48,7 +51,9 @@ struct impl : i{
 };
 
 struct c {
-    BOOST_DI_INJECT(c, int, int, int, double, double, std::shared_ptr<i>, (named = name) std::shared_ptr<i3>){}
+    BOOST_DI_INJECT(c, (named = my_int2) int& ref, int, int, int, double, double, std::shared_ptr<i>, (named = name) std::shared_ptr<i3>) {
+		expect_eq(&i_, &ref);
+	}
 };
 
 struct module {
@@ -65,6 +70,7 @@ test ft = [] {
     auto injector = di::make_injector(
           di::bind<int>().to(42)
         , module{}
+	    , di::bind<int>().named(my_int2).to(std::ref(i_))
         , di::bind<i3, impl3>().named(name)
         , di::bind<int>().named(my_int).to(21)
     );
