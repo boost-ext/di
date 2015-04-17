@@ -33,10 +33,10 @@ template<
   , class TGiven = TExpected
   , BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, TGiven>)
 >
-#if !defined(_MSC_VER)
-    core::bind<TExpected, TGiven> bind{};
-#else
+#if defined(_MSC_VER)
     struct bind : core::bind<TExpected, TGiven> {};
+#else
+    core::bind<TExpected, TGiven> bind{};
 #endif
 
 constexpr scopes::deduce deduce{};

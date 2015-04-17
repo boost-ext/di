@@ -11,6 +11,10 @@
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
 
+#if defined(_MSC_VER)
+    #pragma warning(disable : 4822) // local class member function does not have a body
+#endif
+
 #if !defined(BOOST_DI_INJECTOR)
     #define BOOST_DI_INJECTOR boost_di_injector__
 #endif
