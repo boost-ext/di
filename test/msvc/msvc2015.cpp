@@ -212,14 +212,13 @@ test create_with_default_values = [] {
     expect_eq(87.0, object.d);
 };
 
-#if 0
 test runtime_factory_impl = [] {
     constexpr auto i = 42;
 
     auto test = [&](bool debug_property) {
         auto injector = make_injector(
             di::bind<int>().to(i)
-          , di::bind<i>().to([&](const auto& injector) -> std::shared_ptr<i> {
+          , di::bind<i1>().to([&](const auto& injector) -> std::shared_ptr<i1> {
                 if (debug_property) {
                     return std::make_shared<impl1>();
                 }
@@ -242,7 +241,6 @@ test runtime_factory_impl = [] {
     expect(dynamic_cast<impl1*>(object.get()));
     }
 };
-#endif
 
 #endif
 
