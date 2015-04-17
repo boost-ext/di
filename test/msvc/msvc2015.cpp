@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #if defined(_MSC_VER)
-#define BOOST_DI_CFG_NO_PREPROCESSED_HEADERS
 #include <boost/di.hpp>
 #include <functional>
 
@@ -187,6 +186,7 @@ test refs_vs_copy = [] {
     }
 };
 
+#if 0
 test create_with_default_values = [] {
     constexpr auto i = 42;
 
@@ -366,6 +366,7 @@ test automatic_inject_with_initializer_list = [] {
     expect_eq(i, object.i);
     expect_eq(0, object.il.size());
 };
+#endif
 
 #endif
 
