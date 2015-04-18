@@ -1446,7 +1446,6 @@ struct ctor_traits_impl<T, std::false_type>
             BOOST_DI_INJECT_TRAITS();
         };
     }} // boost::di
-
 #endif
 
 #if (__has_include(<initializer_list>))
@@ -1458,7 +1457,6 @@ struct ctor_traits_impl<T, std::false_type>
             BOOST_DI_INJECT_TRAITS();
         };
     }} // boost::di
-
 #endif
 
 #endif
