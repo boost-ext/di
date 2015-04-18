@@ -186,7 +186,6 @@ test refs_vs_copy = [] {
     }
 };
 
-#if 0
 test create_with_default_values = [] {
     constexpr auto i = 42;
 
@@ -213,6 +212,7 @@ test create_with_default_values = [] {
     expect_eq(87.0, object.d);
 };
 
+#if 0
 test runtime_factory_impl = [] {
     constexpr auto i = 42;
 

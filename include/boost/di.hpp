@@ -155,6 +155,7 @@ using is_unique = is_unique_impl<none_t, Ts...>;
 
 #if defined(_MSC_VER)
     #define __has_include(...) 0
+    #pragma warning(disable : 4503) // decorated name length exceeded, name was truncated
 #endif
 
 #if (__has_include(<boost/shared_ptr.hpp>))
@@ -1145,6 +1146,10 @@ public:
 
 #ifndef BOOST_DI_INJECT_HPP
 #define BOOST_DI_INJECT_HPP
+
+#if defined(_MSC_VER)
+    #pragma warning(disable : 4822) // local class member function does not have a body
+#endif
 
 #if !defined(BOOST_DI_INJECTOR)
     #define BOOST_DI_INJECTOR boost_di_injector__
@@ -2357,10 +2362,10 @@ template<
   , class TGiven = TExpected
   , BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, TGiven>)
 >
-#if !defined(_MSC_VER)
-    core::bind<TExpected, TGiven> bind{};
-#else
+#if defined(_MSC_VER)
     struct bind : core::bind<TExpected, TGiven> {};
+#else
+    core::bind<TExpected, TGiven> bind{};
 #endif
 
 constexpr scopes::deduce deduce{};
@@ -2481,7 +2486,7 @@ struct any_type {
         return injector_.template create_impl<T&>();
     }
 
-#if !defined(__clang__)
+#if !defined(__clang__) && !defined(_MSC_VER)
     template<class T, class = is_not_same<T>, class = is_ref<T>, class = is_creatable<T&&, TError>>
     operator T&&() const {
         return injector_.template create_impl<T&&>();
@@ -2867,12 +2872,12 @@ private:
         using provider_t = core::provider<expected_t, given_t, TName, T, ctor_t, injector>;
         policy<pool_t>::template call<T, TName, TIsRoot>(((TConfig&)*this).policies(), dependency, ctor_t{});
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
-        using type = std::conditional_t<
+        using create_t = std::conditional_t<
             std::is_reference<T>::value && has_is_ref<dependency_t>::value
           , T
           , std::remove_reference_t<T>
         >;
-        return wrapper<type, wrapper_t>{dependency.template create<T>(provider_t{*this})};
+        return wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
 
     static auto is_creatable_impl(...) -> std::false_type;
@@ -3039,8 +3044,10 @@ public:
     template<
         class TConfig
       , class... TArgs
-#if !defined(__clang__) && !defined(_MSC_VER)
+#if !defined(_MSC_VER)
+#if !defined(__clang__)
      , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>)
+#endif
 #endif
     > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, T...>(injector) {
