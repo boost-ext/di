@@ -95,10 +95,10 @@ test ctor_refs = [] {
         , const double& d
         , const std::string& str
         , (named = name) const std::string& nstr
-        , const std::function<int()>& f
+        //, const std::function<int()>& f
         , long&& l
         , short s)
-            : i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)
+            : i(i), d(d), str(str), nstr(nstr), l(std::move(l)), s(s)
         {
             sp->dummy1();
         }
@@ -107,7 +107,7 @@ test ctor_refs = [] {
         const double& d;
         std::string str;
         std::string nstr;
-        std::function<int()> f;
+        //std::function<int()> f;
         long l = 0;
         short s = 0;
     };
@@ -119,10 +119,10 @@ test ctor_refs = [] {
                       , const double& d
                       , const std::string& str
                       , (named = name) const std::string& nstr
-                      , std::function<int()> f
+                      //, std::function<int()> f
                       , long&& l
                       , short s)
-            : i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)
+            : i(i), d(d), str(str), nstr(nstr), /*f(f),*/ l(std::move(l)), s(s)
         {
             sp->dummy1();
         }
@@ -131,7 +131,7 @@ test ctor_refs = [] {
         const double& d;
         std::string str;
         std::string nstr;
-        std::function<int()> f;
+        //std::function<int()> f;
         long l = 0;
         short s = 0;
     };
@@ -142,7 +142,7 @@ test ctor_refs = [] {
         const double& d;
         std::string str;
         std::string nstr;
-        std::function<int()> f;
+        //std::function<int()> f;
         long l = 0;
         short s = 0;
     };
@@ -159,7 +159,7 @@ test ctor_refs = [] {
           , bind_i1
           , di::bind<short>().to(short{42})
           , di::bind<long>().to(123l)
-          , di::bind<std::function<int()>>().to([]{return 87;})
+          //, di::bind<std::function<int()>>().to([]{return 87;})
         );
 
         auto object = injector.template create<typename decltype(type)::type>();
@@ -167,16 +167,16 @@ test ctor_refs = [] {
         expect_eq(&d, &object.d);
         expect_eq("str", object.str);
         expect_eq(42, object.s);
-        expect_eq(87, object.f());
+        //expect_eq(87, object.f());
         expect_eq(123, object.l);
     };
 
-    //test(test_type<c>{}, di::bind<i1, impl1>());
-    //test(test_type<c_inject>{}, di::bind<i1, impl1>());
+    test(test_type<c>{}, di::bind<i1, impl1>());
+    test(test_type<c_inject>{}, di::bind<i1, impl1>());
     //test(test_type<c_aggregate>{}, di::bind<i1, impl1>());
 
-    //test(test_type<c>{}, di::bind<i1>().to(std::make_shared<impl1>()));
-    //test(test_type<c_inject>{}, di::bind<i1>().to(std::make_shared<impl1>()));
+    test(test_type<c>{}, di::bind<i1>().to(std::make_shared<impl1>()));
+    test(test_type<c_inject>{}, di::bind<i1>().to(std::make_shared<impl1>()));
     //test(test_type<c_aggregate>{}, di::bind<i1>().to(std::make_shared<impl1>()));
 };
 
