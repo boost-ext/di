@@ -215,7 +215,7 @@ Manual Dependency Injection             | Boost.DI
 
 **How To Start?**
 
-* Get C++14 compliant compiler (Clang-3.4+, GCC-5.0+, Visual Studio 2015\*+) with STL (memory, type\_traits headers) / Boost is not required
+* Get C++14 compliant compiler (Clang-3.4+, GCC-5.1+, Visual Studio 2015\*+) with STL (memory, type\_traits headers) / Boost is not required
 * [Read Quick User Guide](#quick_user_guide)
 * [Read Tutorial](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/tutorial.html)
 * [Read Documentation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)

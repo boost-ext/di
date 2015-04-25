@@ -42,8 +42,8 @@ public:
       , class TDependency
       , class... TCtor
       , class... TPolicies
-    > static auto call(const pool<aux::type_list<TPolicies...>>& policies
-                     , TDependency dependency
+    > static auto call(BOOST_DI_UNUSED const pool<aux::type_list<TPolicies...>>& policies
+                     , BOOST_DI_UNUSED TDependency dependency
                      , aux::pair<TInitialization, aux::type_list<TCtor...>>) noexcept {
 
         int _[]{0, (call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(

@@ -19,7 +19,10 @@
 [h6 Supported Compilers]
 
 * Clang-3.4+
-* GCC-5.0+
+* GCC-5.1+
+* Microsoft Visual Studio 2015*+
+
+\* - limited support
 
 [h6 Installation]
 
