@@ -123,9 +123,9 @@ test injectors_mix = [] {
     expect(object->i1_.get());
 };
 
-test scopes_priority = [] {
+test override_priority = [] {
     auto injector = di::make_injector(
-        di::bind<int>.to(12)
+        di::bind<int>.to(12) [di::override]
       , di::bind<int, std::integral_constant<int, 42>>
     );
 
@@ -134,13 +134,41 @@ test scopes_priority = [] {
     expect_eq(12, object);
 };
 
-test scopes_order = [] {
+test override_priority_order = [] {
     auto injector = di::make_injector(
         di::bind<int, std::integral_constant<int, 41>>
-      , di::bind<int>.to([]{return 42;})
+      , di::bind<int>.to([]{return 42;}) [di::override]
     );
 
     expect_eq(42, injector.create<int>());
+};
+
+test override_priority_interface = [] {
+    auto injector = di::make_injector(
+        di::bind<i1, impl1>
+      , di::bind<i1, impl1_int> [di::override]
+    );
+
+    auto object = injector.create<std::unique_ptr<i1>>();
+    expect(dynamic_cast<impl1_int*>(object.get()));
+};
+
+test override_priority_interface_module = [] {
+    struct module {
+        auto configure() const {
+            return di::make_injector(
+                di::bind<i1, impl1_int>
+            );
+        }
+    };
+
+    auto injector = di::make_injector(
+        module{}
+      , di::bind<i1, impl1> [di::override]
+    );
+
+    auto object = injector.create<std::unique_ptr<i1>>();
+    expect(dynamic_cast<impl1*>(object.get()));
 };
 
 test scopes_injector_lambda_injector = [] {

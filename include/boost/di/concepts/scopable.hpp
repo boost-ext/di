@@ -29,8 +29,7 @@ std::false_type scopable_impl(...);
 
 template<class T>
 auto scopable_impl(T&&) -> aux::is_valid_expr<
-    decltype(bool{T::priority})
-  , decltype(std::declval<typename T::template scope<_, _>>().template create<_>(provider<_>{}))
+    decltype(std::declval<typename T::template scope<_, _>>().template create<_>(provider<_>{}))
   , decltype(std::declval<typename T::template scope<_, _>>().template try_create<_>(provider<_>{}))
 >;
 

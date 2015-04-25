@@ -33,10 +33,10 @@ class binder {
       , class TExpected
       , class TGiven
       , class TName
-    > static decltype(auto) // priority scope
+    > static decltype(auto)
     resolve_impl(aux::pair<TConcept
-               , dependency<TScope, TExpected, TGiven, TName, std::true_type>>* dep) noexcept {
-        return static_cast<dependency<TScope, TExpected, TGiven, TName, std::true_type>&>(*dep);
+               , dependency<TScope, TExpected, TGiven, TName, override>>* dep) noexcept {
+        return static_cast<dependency<TScope, TExpected, TGiven, TName, override>&>(*dep);
     }
 
 public:

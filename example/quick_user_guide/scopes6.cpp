@@ -25,8 +25,8 @@ int main() {
     auto b = false;
 
     auto injector = di::make_injector(
-       di::bind<int, int_<41>>
-     , di::bind<int>.to(42)
+       di::bind<int>.to(0)
+     , di::bind<int>.to(42) [di::override]
      , di::bind<i1>.to(std::make_shared<impl>())
      , di::bind<long>.to(std::ref(l))
      , di::bind<short>.to([]{return 87;})
@@ -42,7 +42,7 @@ int main() {
        )
     );
 
-    assert(42 == injector.create<int>()); // external has priority
+    assert(42 == injector.create<int>());
     assert(injector.create<std::shared_ptr<i1>>()
            ==
            injector.create<std::shared_ptr<i1>>()

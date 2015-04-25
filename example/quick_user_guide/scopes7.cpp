@@ -14,8 +14,6 @@ struct i1 { virtual ~i1() noexcept = default; virtual void dummy1() = 0; };
 struct impl1 : i1 { void dummy1() override { } };
 
 struct custom_scope {
-    static constexpr auto priority = false;
-
     template<class TExpected, class>
     struct scope {
         template<class T, class TProvider>

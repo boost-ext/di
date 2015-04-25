@@ -16,8 +16,6 @@ namespace boost { namespace di { namespace scopes {
 template<class TScope = scopes::deduce>
 class exposed {
 public:
-    static constexpr auto priority = false;
-
     template<class TExpected, class TGiven>
     class scope {
         using type = std::conditional_t<

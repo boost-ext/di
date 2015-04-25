@@ -14,8 +14,6 @@ namespace boost { namespace di { namespace scopes {
 
 class shared {
 public:
-    static constexpr auto priority = false;
-
     template<class, class T>
     class scope {
     public:

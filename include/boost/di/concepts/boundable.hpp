@@ -57,7 +57,7 @@ struct is_unique;
 template<class T>
 using unique_dependency = aux::pair<
     aux::pair<typename T::expected, typename T::name>
-  , std::integral_constant<bool, T::scope::priority>
+  , typename T::priority
 >;
 
 template<class... TDeps>

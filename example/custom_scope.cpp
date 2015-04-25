@@ -25,8 +25,6 @@ struct example {
 /*<define scope class>*/
 class custom_scope {
 public:
-    static constexpr auto priority = false;
-
     /*<define `entry`, `exit` actions>*/
     class entry { };
     class exit { };

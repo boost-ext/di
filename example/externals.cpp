@@ -37,7 +37,7 @@ int main() {
     auto injector = di::make_injector(
         config
       , di::bind<int>.to(42)
-      , di::bind<interface>.to(std::make_shared<implementation2>()) // external has priority
+      , di::bind<interface>.to(std::make_shared<implementation2>()) [di::override]
     );
 
     /*<<create `example`>>*/

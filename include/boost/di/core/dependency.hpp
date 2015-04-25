@@ -38,12 +38,14 @@ struct dependency_impl<
 > : aux::pair<dependency_concept<Ts, TName>, TDependency>...
 { };
 
+struct override { };
+
 template<
     class TScope
   , class TExpected
   , class TGiven = TExpected
   , class TName = no_name
-  , class TPriority = std::integral_constant<bool, TScope::priority>
+  , class TPriority = aux::none_t
 > class dependency;
 
 struct dependency_base { };
@@ -89,6 +91,7 @@ public:
     using expected = TExpected;
     using given = TGiven;
     using name = TName;
+    using priority = TPriority;
 
     dependency() noexcept { }
 
@@ -108,8 +111,7 @@ public:
 #if !defined(_MSC_VER)
             *this
 #endif
-        };
-    }
+        }; }
 
     template<class T
 #if !defined(_MSC_VER)
@@ -142,6 +144,14 @@ public:
             scopes::exposed<TScope>, TExpected, T, TName
         >;
         return dependency{object};
+    }
+
+    auto operator[](const override&) const noexcept {
+        return dependency<TScope, TExpected, TGiven, TName, override>{
+#if !defined(_MSC_VER)
+            *this
+#endif
+        };
     }
 };
 

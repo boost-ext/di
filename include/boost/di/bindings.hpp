@@ -39,6 +39,8 @@ template<
     core::bind<TExpected, TGiven> bind{};
 #endif
 
+constexpr core::override override{};
+
 constexpr scopes::deduce deduce{};
 constexpr scopes::unique unique{};
 constexpr scopes::shared shared{};

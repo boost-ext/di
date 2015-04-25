@@ -610,12 +610,12 @@ auto injector = di::make_injector(      | injector.call(di::session_entry(my_ses
 ```cpp
 External scope                          | Test
 ----------------------------------------|-----------------------------------------
-auto l = 42l;                           | assert(42 == injector.create<int>()); // external has priority
+auto l = 42l;                           | assert(42 == injector.create<int>());
 auto b = false;                         | assert(injector.create<shared_ptr<i1>>()
                                         |        ==
 auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>()
-   di::bind<int, int_<41>>              | );
- , di::bind<int>.to(42)                 | assert(l == injector.create<long&>());
+   di::bind<int>.to(0)                  | );
+ , di::bind<int>.to(42) [di::override]  | assert(l == injector.create<long&>());
  , di::bind<i1>.to(make_shared<impl>()) | assert(&l == &injector.create<long&>());
  , di::bind<long>.to(ref(l))            | assert(87 == injector.create<short>());
  , di::bind<short>.to([]{return 87;})   | {
@@ -636,12 +636,9 @@ auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>
 Custom scope                            | Test
 ----------------------------------------|-----------------------------------------
 struct custom_scope {                   | assert(injector.create<shared_ptr<i1>>()
-  static constexpr                      |        !=
-      auto priority = false;            |        injector.create<shared_ptr<i1>>()
-                                        | );
-  template<class TExpected, class>      |
-  struct scope {                        |
-    template<class T, class TProvider>  |
+  template<class TExpected, class>      |        !=
+  struct scope {                        |        injector.create<shared_ptr<i1>>()
+    template<class T, class TProvider>  | );
     auto create(const TProvider& pr) {  |
       return                            |
         shared_ptr<TExpected>{pr.get()};|

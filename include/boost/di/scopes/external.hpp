@@ -45,8 +45,6 @@ class external {
     };
 
 public:
-    static constexpr auto priority = true;
-
     template<class TExpected, class, class = void>
     struct scope {
         template<class, class TProvider>

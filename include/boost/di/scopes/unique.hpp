@@ -14,8 +14,6 @@ namespace boost { namespace di { namespace scopes {
 
 class unique {
 public:
-    static constexpr auto priority = false;
-
     template<class, class>
     class scope {
     public:

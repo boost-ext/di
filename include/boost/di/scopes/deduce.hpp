@@ -13,8 +13,6 @@ namespace boost { namespace di { namespace scopes {
 
 class deduce {
 public:
-    static constexpr auto priority = false;
-
     template<class TExpected, class TGiven>
     class scope {
     public:

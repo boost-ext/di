@@ -611,8 +611,6 @@ namespace boost { namespace di { namespace scopes {
 
 class unique {
 public:
-    static constexpr auto priority = false;
-
     template<class, class>
     class scope {
     public:
@@ -692,8 +690,6 @@ namespace boost { namespace di { namespace scopes {
 
 class singleton {
 public:
-    static constexpr auto priority = false;
-
     template<class, class T>
     class scope {
     public:
@@ -757,8 +753,6 @@ class external {
     };
 
 public:
-    static constexpr auto priority = true;
-
     template<class TExpected, class, class = void>
     struct scope {
         template<class, class TProvider>
@@ -957,8 +951,6 @@ namespace boost { namespace di { namespace scopes {
 
 class deduce {
 public:
-    static constexpr auto priority = false;
-
     template<class TExpected, class TGiven>
     class scope {
     public:
@@ -989,8 +981,6 @@ namespace boost { namespace di { namespace scopes {
 template<class TScope = scopes::deduce>
 class exposed {
 public:
-    static constexpr auto priority = false;
-
     template<class TExpected, class TGiven>
     class scope {
         using type = std::conditional_t<
@@ -1482,8 +1472,7 @@ std::false_type scopable_impl(...);
 
 template<class T>
 auto scopable_impl(T&&) -> aux::is_valid_expr<
-    decltype(bool{T::priority})
-  , decltype(std::declval<typename T::template scope<_, _>>().template create<_>(provider<_>{}))
+    decltype(std::declval<typename T::template scope<_, _>>().template create<_>(provider<_>{}))
   , decltype(std::declval<typename T::template scope<_, _>>().template try_create<_>(provider<_>{}))
 >;
 
@@ -1523,12 +1512,14 @@ struct dependency_impl<
 > : aux::pair<dependency_concept<Ts, TName>, TDependency>...
 { };
 
+struct override { };
+
 template<
     class TScope
   , class TExpected
   , class TGiven = TExpected
   , class TName = no_name
-  , class TPriority = std::integral_constant<bool, TScope::priority>
+  , class TPriority = aux::none_t
 > class dependency;
 
 struct dependency_base { };
@@ -1574,6 +1565,7 @@ public:
     using expected = TExpected;
     using given = TGiven;
     using name = TName;
+    using priority = TPriority;
 
     dependency() noexcept { }
 
@@ -1593,8 +1585,7 @@ public:
 #if !defined(_MSC_VER)
             *this
 #endif
-        };
-    }
+        }; }
 
     template<class T
 #if !defined(_MSC_VER)
@@ -1627,6 +1618,14 @@ public:
             scopes::exposed<TScope>, TExpected, T, TName
         >;
         return dependency{object};
+    }
+
+    auto operator[](const override&) const noexcept {
+        return dependency<TScope, TExpected, TGiven, TName, override>{
+#if !defined(_MSC_VER)
+            *this
+#endif
+        };
     }
 };
 
@@ -2087,8 +2086,6 @@ class session_exit { };
 template<class TName = no_name>
 class session {
 public:
-    static constexpr auto priority = false;
-
     template<class, class T>
     class scope {
     public:
@@ -2130,8 +2127,6 @@ namespace boost { namespace di { namespace scopes {
 
 class shared {
 public:
-    static constexpr auto priority = false;
-
     template<class, class T>
     class scope {
     public:
@@ -2252,7 +2247,7 @@ struct is_unique;
 template<class T>
 using unique_dependency = aux::pair<
     aux::pair<typename T::expected, typename T::name>
-  , std::integral_constant<bool, T::scope::priority>
+  , typename T::priority
 >;
 
 template<class... TDeps>
@@ -2366,6 +2361,8 @@ template<
     core::bind<TExpected, TGiven> bind{};
 #endif
 
+constexpr core::override override{};
+
 constexpr scopes::deduce deduce{};
 constexpr scopes::unique unique{};
 constexpr scopes::shared shared{};
@@ -2414,10 +2411,10 @@ class binder {
       , class TExpected
       , class TGiven
       , class TName
-    > static decltype(auto) // priority scope
+    > static decltype(auto)
     resolve_impl(aux::pair<TConcept
-               , dependency<TScope, TExpected, TGiven, TName, std::true_type>>* dep) noexcept {
-        return static_cast<dependency<TScope, TExpected, TGiven, TName, std::true_type>&>(*dep);
+               , dependency<TScope, TExpected, TGiven, TName, override>>* dep) noexcept {
+        return static_cast<dependency<TScope, TExpected, TGiven, TName, override>&>(*dep);
     }
 
 public:

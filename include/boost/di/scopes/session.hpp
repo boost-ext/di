@@ -22,8 +22,6 @@ class session_exit { };
 template<class TName = no_name>
 class session {
 public:
-    static constexpr auto priority = false;
-
     template<class, class T>
     class scope {
     public:
