@@ -9,9 +9,17 @@
 
 [section Projects]
 
-Boost Meta State Machine - Dependency Injection Extension
-Match3 Game - Simple Switcher
-Automatic Mock Injector
+[section Boost Meta State Machine - Dependency Injection Extension]
+[@https://github.com/krzysztof-jusiak/msm]
+[endsect]
+
+[section Match-3 Switcher Game]
+[@https://github.com/krzysztof-jusiak/match3]
+[endsect]
+
+[section Automatic Mocks Injector]
+[@https://github.com/krzysztof-jusiak/mocks_injector]
+[endsect]
 
 [endsect]
 

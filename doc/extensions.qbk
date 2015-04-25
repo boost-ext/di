@@ -9,6 +9,14 @@
 
 [section Extensions]
 
+[section Contextual Bindings]
+[import ../example/extensions/contextual_bindings.cpp]
+[contextual_bindings]
+[table
+    [[Full code example: [@example/extensions/contextual_bindings.cpp]]]
+]
+[endsect]
+
 [section Containers]
 [import ../example/extensions/containers.cpp]
 [containers]
