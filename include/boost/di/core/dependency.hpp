@@ -153,11 +153,7 @@ public:
     }
 
     auto operator[](const override&) const noexcept {
-        return dependency<TScope, TExpected, TGiven, TName, override>{
-#if !defined(_MSC_VER)
-            *this
-#endif
-        };
+        return dependency<TScope, TExpected, TGiven, TName, override>{*this};
     }
 };
 
