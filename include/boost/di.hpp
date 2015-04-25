@@ -1488,6 +1488,10 @@ constexpr auto scopable() {
 #ifndef BOOST_DI_CORE_DEPENDENCY_HPP
 #define BOOST_DI_CORE_DEPENDENCY_HPP
 
+#if !defined(BOOST_DI_CFG_DEPENDENCY_EXTENSIONS)
+    #define BOOST_DI_CFG_DEPENDENCY_EXTENSIONS ::boost::di::aux::none_t
+#endif
+
 namespace boost { namespace di { namespace core {
 
 BOOST_DI_HAS_METHOD(configure, configure);
@@ -1520,7 +1524,7 @@ template<
   , class TGiven = TExpected
   , class TName = no_name
   , class TPriority = aux::none_t
-> class dependency;
+> struct dependency;
 
 struct dependency_base { };
 
@@ -1538,13 +1542,15 @@ template<
   , class TGiven
   , class TName
   , class TPriority
-> class dependency
-    : public TScope::template scope<TExpected, TGiven>
-    , public dependency_base
-    , public dependency_impl<
+> struct dependency
+    : TScope::template scope<TExpected, TGiven>
+    , dependency_base
+    , dependency_impl<
           dependency_concept<TExpected, TName>
         , dependency<TScope, TExpected, TGiven, TName, TPriority>
-      > {
+      >
+    , BOOST_DI_CFG_DEPENDENCY_EXTENSIONS {
+private:
     using scope_t = typename TScope::template scope<TExpected, TGiven>;
 
     template<class T>

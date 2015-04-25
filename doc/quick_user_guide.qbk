@@ -658,8 +658,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
             auto b = false;
 
             auto injector = __di_make_injector__(
-               __di_bind__<int, int_<41>>
-             , __di_bind__<int>.to(42)
+               __di_bind__<int>.to(0)
+             , __di_bind__<int>.to(42) [di::override]
              , __di_bind__<i1>.to(make_shared<impl>())
              , __di_bind__<long>.to(ref(l))
              , __di_bind__<short>.to([]{return 87;})
@@ -678,7 +678,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
         ]
         [
             ```
-            assert(42 == injector.__di_injector_create__<int>()); // external has priority
+            assert(42 == injector.__di_injector_create__<int>());
             assert(injector.__di_injector_create__<shared_ptr<i1>>()
                    ==
                    injector.__di_injector_create__<shared_ptr<i1>>()
@@ -709,8 +709,6 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
         [
             ```
             struct custom_scope {
-                static constexpr auto priority = false;
-
                 template<class TExpected, class>
                 struct scope {
                     template<class T, class TProvider>

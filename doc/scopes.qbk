@@ -52,8 +52,6 @@ There are 3 basic types of wrappers.
 
 [heading Synopsis]
     class scope {
-        static constexpr auto priority = false; // scope priority
-
         template<class TExpected, class TGiven>
         class scope {
         public:
@@ -103,8 +101,6 @@ There are 3 basic types of wrappers.
         [
             ```
             struct custom_scope {
-                static constexpr auto priority = false;
-
                 template<class TExpected, class>
                 struct scope {
                     template<class T, class TProvider>
@@ -163,8 +159,6 @@ Default scope which will be converted to one of the scopes  __scopes_unique__ / 
 [heading Synopsis]
     class deduce {
     public:
-        static constexpr auto priority = false;
-
         template<class TExpected, class TGiven>
         class scope {
         public:
@@ -250,8 +244,6 @@ Scope representing unique value.
 [heading Synopsis]
     class unique {
     public:
-        static constexpr auto priority = false;
-
         template<class TExpected, class TGiven>
         class scope {
         public:
@@ -330,8 +322,6 @@ Scope representing shared value between all instances within current thread.
 [heading Synopsis]
     class shared {
     public:
-        static constexpr auto priority = false;
-
         template<class TExpected, class TGiven>
         class scope {
         public:
@@ -410,95 +400,6 @@ Singleton scope will be deduced in case of `shared_ptr` or `weak_ptr`.
 [heading Synopsis]
     class singleton {
     public:
-        static constexpr auto priority = false;
-
-        template<class TExpected, class TGiven>
-        class scope {
-        public:
-            template<class T, class TProvider>
-            auto create(const TProvider&);
-    };
-
-[table Parameters
-    [[Parameter][Requirement][Description][Returns][Throw]]
-    [[`TExpected`][None][Interface type to be expected by constructor]]
-    [[`TGiven`][None][Implementation to be created]]
-    [[`T`][None][Constructor parameter type]]
-    [[`TProvider`][__provider_model__][Instance provider]]
-    [[`create(TProvider)`][None][create `TGiven` object and return wrappered `TExpected` instance][None][Does not throw]]
-]
-
-[heading Header]
-    #include <__di_hpp__>
-
-[heading Namespace]
-    boost::di::scopes
-
-[table Conversions
-    [[Type]                     [singleton]]
-    [[T]                        [-]]
-    [[T&]                       [-]]
-    [[const T&]                 [-]]
-    [[T*]                       [-]]
-    [[const T*]                 [-]]
-    [[T&&]                      [-]]
-    [[unique_ptr<T>]            [-]]
-    [[shared_ptr<T>]            [\u2714]]
-    [[weak_ptr<T>]              [\u2714]]
-]
-
-[heading Examples]
-[table
-    [
-        [
-            ```
-            auto injector = __di_make_injector__(
-                __di_bind__<i1, impl1>.in(__di_scopes_shared__)
-            );
-
-            ```
-        ]
-        [
-            ```
-            assert(injector.__di_injector_create__<shared_ptr<i1>>() // thread 1
-                   ==
-                   injector.__di_injector_create__<shared_ptr<i1>>() // thread 2
-            );
-            ```
-        ]
-    ]
-]
-
-[heading See Also]
-
-* __scopes__
-* __scopes_deduce__
-* __scopes_unique__
-* __scopes_shared__
-* __scopes_session__
-* __scopes_external__
-
-[endsect]
-
-[section session]
-
-[heading Description]
-Scope representing session value shared between all instances when within session and empty value otherwise.
-Scope is activated by call of `call` method with `session_entry` with given `name` parameter and deactivated
-by call of `call` method with `session_exit` with given `name` parameter;
-
-[heading Synopsis]
-    template<class = no_name>
-    class session_entry { };
-
-    template<class = no_name>
-    class session_exit { };
-
-    template<class TName = no_name>
-    class session {
-    public:
-        static constexpr auto priority = false;
-
         template<class TExpected, class TGiven>
         class scope {
         public:
@@ -585,14 +486,11 @@ by call of `call` method with `session_exit` with given `name` parameter;
 [heading Description]
 Scope representing external values - passed by user. The life time of the object depends on the user.
 `Boost.DI` is not responsible of managing life time of passed objects, however `values` and `strings` will be copied
-and managed by the library. External scope has priority before other scopes which means that if some value/type
-will be bound using different scope as well then binding using external scope will be proffered.
+and managed by the library.
 
 [heading Synopsis]
     class external {
     public:
-        static constexpr auto priority = true;
-
         template<class TExpected, class TGiven>
         class scope {
         public:

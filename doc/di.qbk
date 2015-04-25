@@ -118,6 +118,7 @@
 [include user_guide.qbk]
 [include examples.qbk]
 [include extensions.qbk]
+[include projects.qbk]
 [include rationale.qbk]
 [include changelog.qbk]
 [include acknowledgements.qbk]
