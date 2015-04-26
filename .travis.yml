@@ -1,18 +1,14 @@
-env:
-    global:
-        - secure: "A27gNApbElRr3fqZXifVPKkB+xbxMYDFINGk2RDqul1X1Zg51M7e+ohHO9BwhEYiOGmCnFfbsVUP11XyFIH6kzWmxw9mhy8YDglbYfeyu6grxtU3mHElz8W7wO5OCPFPWXQf23sVYE8AWyjj6M+t3oyLJhPXCcYI7uMHEQm10CQ="
+language: c++
+
+os:
+    - linux
+    - osx
+
+compiler:
+  - clang
+  - gcc
 
 matrix:
-    language: c++
-
-    os:
-        - linux
-        - osx
-
-    compiler:
-      - clang
-      - gcc
-
     include:
         - env: TOOLSET=clang-3.4
           addons: &clang34
@@ -62,6 +58,11 @@ matrix:
                       - valgrind
               sources:
                   - ubuntu-toolchain-r-test
+
+env:
+    global:
+        - secure: "A27gNApbElRr3fqZXifVPKkB+xbxMYDFINGk2RDqul1X1Zg51M7e+ohHO9BwhEYiOGmCnFfbsVUP11XyFIH6kzWmxw9mhy8YDglbYfeyu6grxtU3mHElz8W7wO5OCPFPWXQf23sVYE8AWyjj6M+t3oyLJhPXCcYI7uMHEQm10CQ="
+
 
 before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo pip install cpp-coveralls; fi
