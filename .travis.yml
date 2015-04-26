@@ -46,7 +46,7 @@ matrix:
                   - ubuntu-toolchain-r-test
                   - llvm-toolchain-precise
 
-        - env: TOOLSET=gcc-5.1
+        - env: TOOLSET=gcc-5
           addons: &gcc5
               apt:
                   packages:
