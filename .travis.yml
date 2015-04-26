@@ -62,15 +62,15 @@ os:
     - osx
 
 before_install:
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo pip install cpp-coveralls; fi
+  - if [ "$TRAVIS_OS_NAME" != "osx" ]; then sudo pip install cpp-coveralls; fi
   - cd build
   - ./bootstrap.sh --with-toolset=${TOOLSET};
 
 script:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then ./b2 -j4 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++" ../test ../example; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then ./b2 -j4 -q --toolset=${TOOLSET} debug-symbols=off ../test ../example; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "clang++" ]; then ./b2 -j4 -q --toolset=${TOOLSET} debug-symbols=off ../test ../example; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then find .. -type f -executable | grep "\.test" | xargs -i% valgrind --error-exitcode=-1 %; fi
+  - if [ "$TRAVIS_OS_NAME" != "osx" ] && [ "$CXX" == "g++" ]; then ./b2 -j4 -q --toolset=${TOOLSET} debug-symbols=off ../test ../example; fi
+  - if [ "$TRAVIS_OS_NAME" != "osx" ] && [ "$CXX" == "clang++" ]; then ./b2 -j4 -q --toolset=${TOOLSET} debug-symbols=off ../test ../example; fi
+  - if [ "$TRAVIS_OS_NAME" != "osx" ]; then find .. -type f -executable | grep "\.test" | xargs -i% valgrind --error-exitcode=-1 %; fi
 
 after_success:
   #- if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$CXX" == "g++" ]; then coveralls -r . -b test/ --repo-token c3V44Hj0ZTKzz4kaa3gIlVjInFiyNRZ4f; fi
