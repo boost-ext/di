@@ -46,7 +46,7 @@ matrix:
                   - ubuntu-toolchain-r-test
                   - llvm-toolchain-precise
 
-        - env: TOOLSET=gcc
+        - env: TOOLSET=gcc-5.1
           addons: &gcc5
               apt:
                   packages:
@@ -73,7 +73,7 @@ before_install:
 script:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then ./b2 -j4 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++" ../test ../example; fi
   - if [ "$TRAVIS_OS_NAME" != "osx" ] && [ "$CXX" == "g++" ]; then ./b2 -j4 -q --toolset=${TOOLSET} debug-symbols=off ../test ../example; fi
-  - if [ "$TRAVIS_OS_NAME" != "osx" ] && [ "$CXX" == "clang++" ]; then ./b2 -j4 -q --toolset=${TOOLSET} debug-symbols=off ../test ../example; fi
+  - if [ "$TRAVIS_OS_NAME" != "osx" ] && [ "$CXX" == "clang++" ]; then ./b2 -j4 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++" ../test ../example; fi
   - if [ "$TRAVIS_OS_NAME" != "osx" ]; then find .. -type f -executable | grep "\.test" | xargs -i% valgrind --error-exitcode=-1 %; fi
 
 after_success:
