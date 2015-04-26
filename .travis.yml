@@ -46,7 +46,7 @@ matrix:
                   - ubuntu-toolchain-r-test
                   - llvm-toolchain-precise
 
-        - env: TOOLSET=gcc-5.1
+        - env: TOOLSET=gcc-5.1.0
           addons: &gcc5
               apt:
                   packages:
@@ -68,7 +68,7 @@ os:
 before_install:
   - if [ "$TRAVIS_OS_NAME" != "osx" ]; then sudo pip install cpp-coveralls; fi
   - cd build
-  - ./bootstrap.sh --with-toolset=${TOOLSET};
+  - ./bootstrap.sh
 
 script:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then ./b2 -j4 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++" ../test ../example; fi
