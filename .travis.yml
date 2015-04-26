@@ -1,8 +1,8 @@
 language: c++
 
-os:
-    - linux
-    - osx
+#os:
+    #- linux
+    #- osx
 
 #compiler:
     #- clang
@@ -11,6 +11,9 @@ os:
 matrix:
     include:
         - env: TOOLSET=clang-3.4
+          os:
+              - linux
+              - osx
           addons: &clang34
               apt:
                   packages:
