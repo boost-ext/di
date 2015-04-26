@@ -17,8 +17,6 @@ test is_dependency_types = [] {
 };
 
 struct fake_scope {
-    static constexpr auto priority = false;
-
     template<class T, class>
     struct scope {
         explicit scope(T object, int injector = 0)

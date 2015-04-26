@@ -14,8 +14,6 @@ struct fake_scope_exit { };
 
 template<bool Priority = false>
 struct fake_scope {
-    static constexpr auto priority = Priority;
-
     template<class TExpected, class>
     struct scope {
         explicit scope(const TExpected& = {}) { }

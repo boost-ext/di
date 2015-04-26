@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_HPP
 #define BOOST_DI_HPP
 
-
 #if (__cplusplus < 201305L && _MSC_VER < 1900)
    #error "C++14 is required by Boost.DI"
 #endif
@@ -1580,18 +1579,20 @@ public:
         : scope_t{std::forward<T>(object)}
     { }
 
-    template<class... Ts>
-    dependency(const dependency<Ts...>& other) noexcept
+    template<
+        class TScope_
+      , class TExpected_
+      , class TGiven_
+      , class TName_
+      , class TPriority_
+    > dependency(const dependency<TScope_, TExpected_, TGiven_, TName_, TPriority_>& other) noexcept
         : scope_t(other)
     { }
 
     template<class T> // no requirements
     auto named(const T&) const noexcept {
-        return dependency<TScope, TExpected, TGiven, T>{
-#if !defined(_MSC_VER)
-            *this
-#endif
-        }; }
+        return dependency<TScope, TExpected, TGiven, T>{*this };
+    }
 
     template<class T
 #if !defined(_MSC_VER)
