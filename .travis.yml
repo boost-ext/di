@@ -4,9 +4,9 @@ os:
     - linux
     - osx
 
-compiler:
-  - clang
-  - gcc
+#compiler:
+    #- clang
+    #- gcc
 
 matrix:
     include:
