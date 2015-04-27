@@ -9,6 +9,7 @@
 //<-
 #include <cassert>
 #include <memory>
+#include <functional>
 //->
 #include <boost/di.hpp>
 
