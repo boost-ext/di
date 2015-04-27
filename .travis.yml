@@ -7,8 +7,6 @@ matrix:
               apt:
                   packages:
                       - clang-3.4
-                      - libc++-dev
-                      - libstdc++-5-dev
                       - valgrind
               sources:
                   - ubuntu-toolchain-r-test
@@ -19,8 +17,6 @@ matrix:
               apt:
                   packages:
                       - clang-3.5
-                      - libc++-dev
-                      - libstdc++-5-dev
                       - valgrind
               sources:
                   - ubuntu-toolchain-r-test
@@ -31,8 +27,6 @@ matrix:
               apt:
                   packages:
                       - clang-3.6
-                      - libc++-dev
-                      - libstdc++-5-dev
                       - valgrind
               sources:
                   - ubuntu-toolchain-r-test
@@ -43,8 +37,6 @@ matrix:
               apt:
                   packages:
                       - clang-3.7
-                      - libc++-dev
-                      - libstdc++-5-dev
                       - valgrind
               sources:
                   - ubuntu-toolchain-r-test
@@ -55,7 +47,6 @@ matrix:
               apt:
                   packages:
                       - gcc-5
-                      - libstdc++-5-dev
                       - valgrind
               sources:
                   - ubuntu-toolchain-r-test
@@ -72,6 +63,11 @@ os:
 
 install:
   - if [ "$TRAVIS_OS_NAME" != "osx" ]; then sudo pip install cpp-coveralls; fi
+  - echo | g++ -Wp,-v -x c++ - -fsyntax-only
+  - travis_wait travis_retry svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx
+  - mkdir libcxx/build
+  - (cd libcxx/build && cmake .. -DLIBCXX_CXX_ABI=libstdc++ -DLIBCXX_CXX_ABI_INCLUDE_PATHS="/usr/include/c++/4.6;/usr/include/c++/4.6/x86_64-linux-gnu")
+  - make -C libcxx/build cxx -j2
 
 before_script:
   - cd build
