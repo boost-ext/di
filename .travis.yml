@@ -77,11 +77,12 @@ install:
 
 before_script:
   - export LIBCXX=$PWD/libcxx/build/include/c++/v1
+  - export LD_LIBRARY_PATH=$PWD/libcxx/build/lib
   - cd build
   - ./bootstrap.sh --with-toolset=${TOOLSET}
 
 script:
-  - ./b2 -j4 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-I$LIBCXX" ../test ../example
+  - ./b2 -j4 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-stdlib=libc++ -I$LIBCXX" linkflags="-stdlib=libc++" ../test ../example
   - if [ "$TRAVIS_OS_NAME" != "osx" ]; then find .. -type f -executable | grep "\.test" | xargs -i% valgrind --error-exitcode=-1 %; fi
 
 after_success:
