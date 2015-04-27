@@ -63,18 +63,15 @@ os:
 
 install:
   - if [ "$TRAVIS_OS_NAME" != "osx" ]; then sudo pip install cpp-coveralls; fi
-  - export CXX=clang
   - travis_wait travis_retry svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx
-  - mkdir libcxx/build
-  - (cd libcxx/build && cmake .. -DLIBCXX_CXX_ABI=libstdc++ -DLIBCXX_CXX_ABI_INCLUDE_PATHS="/usr/include/c++/4.6;/usr/include/c++/4.6/x86_64-linux-gnu")
+  - (mkdir libcxx/build && cd libcxx/build && CXX=clang cmake .. -DLIBCXX_CXX_ABI=libstdc++ -DLIBCXX_CXX_ABI_INCLUDE_PATHS="/usr/include/c++/4.6;/usr/include/c++/4.6/x86_64-linux-gnu")
   - if [ "$TRAVIS_OS_NAME" != "osx" ]; then make -C libcxx/build cxx -j2; fi
 
 before_script:
   - export LIBCXX=$PWD/libcxx/build/include/c++/v1
   - export LIBCXX_DIR=$PWD/libcxx/build/lib
   - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$LIBCXX_DIR
-  - cd build
-  - ./bootstrap.sh --with-toolset=${TOOLSET}
+  - (cd build && ./bootstrap.sh --with-toolset=${TOOLSET})
 
 script:
   - (cd test && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-stdlib=libc++ -I$LIBCXX" linkflags="-stdlib=libc++ -L$LIBCXX_DIR" ${COVERAGE})
