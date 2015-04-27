@@ -73,7 +73,7 @@ install:
   - travis_wait travis_retry svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx
   - mkdir libcxx/build
   - (cd libcxx/build && cmake .. -DLIBCXX_CXX_ABI=libstdc++ -DLIBCXX_CXX_ABI_INCLUDE_PATHS="/usr/include/c++/4.6;/usr/include/c++/4.6/x86_64-linux-gnu")
-  - make -C libcxx/build cxx -j2
+  - if [ "$TRAVIS_OS_NAME" != "osx" ]; then make -C libcxx/build cxx -j2; fi
 
 before_script:
   - export LIBCXX=$PWD/libcxx/build/include/c++/v1
