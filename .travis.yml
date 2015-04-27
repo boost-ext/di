@@ -76,7 +76,7 @@ install:
   - make -C libcxx/build cxx -j2
 
 before_script:
-  - export LD_LIBRARY_PATH=libcxx/build/lib
+  - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:libcxx/build/lib
   - export LIBCXX=$PWD/libcxx/build/include/c++/v1
   - cd build
   - ./bootstrap.sh --with-toolset=${TOOLSET}
