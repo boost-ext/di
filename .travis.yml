@@ -7,7 +7,6 @@ matrix:
               apt:
                   packages:
                       - clang-3.4
-                      - libstdc++-4.9-dev
                       - valgrind
               sources:
                   - ubuntu-toolchain-r-test
@@ -18,7 +17,6 @@ matrix:
               apt:
                   packages:
                       - clang-3.5
-                      - libstdc++-4.9-dev
                       - valgrind
               sources:
                   - ubuntu-toolchain-r-test
@@ -29,7 +27,6 @@ matrix:
               apt:
                   packages:
                       - clang-3.6
-                      - libstdc++-4.9-dev
                       - valgrind
               sources:
                   - ubuntu-toolchain-r-test
@@ -40,7 +37,6 @@ matrix:
               apt:
                   packages:
                       - clang-3.7
-                      - libstdc++-4.9-dev
                       - valgrind
               sources:
                   - ubuntu-toolchain-r-test
@@ -71,6 +67,10 @@ before_install:
   - ./bootstrap.sh
 
 script:
+  - travis_wait travis_retry svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx
+  - mkdir libcxx/build
+  - (cd libcxx/build && cmake .. -DLIBCXX_CXX_ABI=libstdc++ -DLIBCXX_CXX_ABI_INCLUDE_PATHS="/usr/include/c++/4.6;/usr/include/c++/4.6/x86_64-linux-gnu")
+  - make -C libcxx/build cxx -j2
   - ./b2 -j4 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++" ../test ../example
   - if [ "$TRAVIS_OS_NAME" != "osx" ]; then find .. -type f -executable | grep "\.test" | xargs -i% valgrind --error-exitcode=-1 %; fi
 
