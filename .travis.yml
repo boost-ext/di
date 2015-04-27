@@ -8,6 +8,7 @@ matrix:
                   packages:
                       - clang-3.4
                       - libc++-dev
+                      - libstdc++-5-dev
                       - valgrind
               sources:
                   - ubuntu-toolchain-r-test
@@ -19,6 +20,7 @@ matrix:
                   packages:
                       - clang-3.5
                       - libc++-dev
+                      - libstdc++-5-dev
                       - valgrind
               sources:
                   - ubuntu-toolchain-r-test
@@ -30,6 +32,7 @@ matrix:
                   packages:
                       - clang-3.6
                       - libc++-dev
+                      - libstdc++-5-dev
                       - valgrind
               sources:
                   - ubuntu-toolchain-r-test
@@ -41,6 +44,7 @@ matrix:
                   packages:
                       - clang-3.7
                       - libc++-dev
+                      - libstdc++-5-dev
                       - valgrind
               sources:
                   - ubuntu-toolchain-r-test
@@ -74,8 +78,7 @@ before_script:
   - ./bootstrap.sh
 
 script:
-  #- ./b2 -j4 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++" ../test ../example
-  - ./b2 -j4 -q --toolset=${TOOLSET} debug-symbols=off ../test ../example
+  - ./b2 -j4 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++" ../test ../example
   - if [ "$TRAVIS_OS_NAME" != "osx" ]; then find .. -type f -executable | grep "\.test" | xargs -i% valgrind --error-exitcode=-1 %; fi
 
 after_success:
