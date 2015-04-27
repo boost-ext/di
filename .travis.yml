@@ -42,7 +42,7 @@ matrix:
                   - ubuntu-toolchain-r-test
                   - llvm-toolchain-precise
 
-        - env: TOOLSET=gcc-5 VARIANT=coverage
+        - env: TOOLSET=gcc-5 VARIANT=coverage DOCUMENTATION=publish
           addons: &gcc5
               apt:
                   packages:
@@ -63,7 +63,6 @@ os:
 
 install:
   - if [ "$TRAVIS_OS_NAME" != "osx" ]; then sudo pip install cpp-coveralls; fi
-  - echo | g++ -Wp,-v -x c++ - -fsyntax-only
   - export CXX=clang
   - travis_wait travis_retry svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx
   - mkdir libcxx/build
@@ -78,12 +77,13 @@ before_script:
   - ./bootstrap.sh --with-toolset=${TOOLSET}
 
 script:
-  - (cd test && ..\build\b2 -sBOOST_ROOT=..\build -j2 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-stdlib=libc++ -I$LIBCXX" linkflags="-stdlib=libc++ -L$LIBCXX_DIR" ${COVERAGE})
-  - (cd example && ..\build\b2 -sBOOST_ROOT=..\build -j2 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-stdlib=libc++ -I$LIBCXX" linkflags="-stdlib=libc++ -L$LIBCXX_DIR")
+  - (cd test && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-stdlib=libc++ -I$LIBCXX" linkflags="-stdlib=libc++ -L$LIBCXX_DIR" ${COVERAGE})
+  - (cd example && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-stdlib=libc++ -I$LIBCXX" linkflags="-stdlib=libc++ -L$LIBCXX_DIR")
   - if [ "$TRAVIS_OS_NAME" != "osx" ]; then find .. -type f -executable | grep "\.test" | xargs -i% valgrind --error-exitcode=-1 %; fi
 
 after_success:
   - if [ "${COVERAGE}" != "" ]; then coveralls -r . -b test/ --repo-token c3V44Hj0ZTKzz4kaa3gIlVjInFiyNRZ4f; fi
+  - if [ "${DOCUMENTATION}" != "" ]; then cd doc && ../build/b2 -sBOOST_ROOT=../build; fi
 
 branches:
   only:
