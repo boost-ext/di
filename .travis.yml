@@ -79,8 +79,7 @@ before_script:
   - ./bootstrap.sh
 
 script:
-  #- ./b2 -j4 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++" ../test ../example
-  - ./b2 -j4 -q --toolset=${TOOLSET} debug-symbols=off ../test ../example
+  - ./b2 -j4 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-stdlib=libc++ -I/usr/include/c++/4.6 -I/usr/include/c++/4.6/x86_64-linux-gnu" linkflags="-stdlib=libc++" ../test ../example
   - if [ "$TRAVIS_OS_NAME" != "osx" ]; then find .. -type f -executable | grep "\.test" | xargs -i% valgrind --error-exitcode=-1 %; fi
 
 after_success:
