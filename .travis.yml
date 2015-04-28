@@ -59,7 +59,7 @@ matrix:
       addons: &gcc5
         apt:
           packages:
-            - gcc-5
+            - g++-5
             - libstdc++-5-dev
             - valgrind
           sources:
