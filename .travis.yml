@@ -1,5 +1,5 @@
 language: c++
-os: osx
+os: linux
 
 branches:
   only:
