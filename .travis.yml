@@ -4,7 +4,10 @@ branches:
   only:
     - travis
 
-os: linux
+os:
+  - linux
+  - osx
+
 sudo: required
 
 matrix:
