@@ -6,6 +6,9 @@
 //
 #include <memory>
 #include "boost/di/wrappers/unique.hpp"
+#if (__has_include(<boost/shared_ptr.hpp>))
+    #include <boost/shared_ptr.hpp>
+#endif
 
 namespace boost { namespace di { namespace wrappers {
 

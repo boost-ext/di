@@ -8,9 +8,7 @@
 #define BOOST_DI_WRAPPERS_SHARED_HPP
 
 #include <memory>
-#if (__has_include(<boost/shared_ptr.hpp>))
-    #include <boost/shared_ptr.hpp>
-#endif
+#include "boost/di/fwd.hpp"
 
 namespace boost { namespace di { namespace wrappers {
 
@@ -21,7 +19,6 @@ struct shared {
         return object;
     }
 
-#if (__has_include(<boost/shared_ptr.hpp>))
     template<class TSharedPtr>
     struct sp_holder {
         TSharedPtr object;
@@ -40,7 +37,6 @@ struct shared {
             return {object.get(), sp_holder<std::shared_ptr<T>>{object}};
         }
     }
-#endif
 
     template<class I>
     inline operator std::weak_ptr<I>() const noexcept {

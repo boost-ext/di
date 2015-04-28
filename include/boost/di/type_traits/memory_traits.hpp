@@ -8,10 +8,8 @@
 #define BOOST_DI_TYPE_TRAITS_MEMORY_TRAITS_HPP
 
 #include <memory>
-#include <type_traits>
-#if (__has_include(<boost/shared_ptr.hpp>))
-    #include <boost/shared_ptr.hpp>
-#endif
+#include "boost/di/fwd.hpp"
+#include "boost/di/aux_/type_traits.hpp"
 
 namespace boost { namespace di { namespace type_traits {
 
@@ -73,17 +71,15 @@ struct memory_traits<const std::shared_ptr<T>&> {
     using type = heap;
 };
 
-#if (__has_include(<boost/shared_ptr.hpp>))
-    template<class T>
-    struct memory_traits<boost::shared_ptr<T>> {
-        using type = heap;
-    };
+template<class T>
+struct memory_traits<boost::shared_ptr<T>> {
+    using type = heap;
+};
 
-    template<class T>
-    struct memory_traits<const boost::shared_ptr<T>&> {
-        using type = heap;
-    };
-#endif
+template<class T>
+struct memory_traits<const boost::shared_ptr<T>&> {
+    using type = heap;
+};
 
 template<class T>
 struct memory_traits<std::weak_ptr<T>> {

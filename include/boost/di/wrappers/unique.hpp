@@ -8,9 +8,7 @@
 #define BOOST_DI_WRAPPERS_UNIQUE_HPP
 
 #include <memory>
-#if (__has_include(<boost/shared_ptr.hpp>))
-    #include <boost/shared_ptr.hpp>
-#endif
+#include "boost/di/fwd.hpp"
 
 namespace boost { namespace di { namespace wrappers {
 
@@ -55,12 +53,10 @@ struct unique<T*> {
         return std::shared_ptr<I>{object};
     }
 
-#if (__has_include(<boost/shared_ptr.hpp>))
     template<class I>
     inline operator boost::shared_ptr<I>() const noexcept {
         return boost::shared_ptr<I>{object};
     }
-#endif
 
     template<class I>
     inline operator std::unique_ptr<I>() const noexcept {
@@ -98,12 +94,10 @@ struct unique<std::unique_ptr<T, TDeleter>> {
         return {object.release(), object.get_deleter()};
     }
 
-#if (__has_include(<boost/shared_ptr.hpp>))
     template<class I>
     inline operator boost::shared_ptr<I>() noexcept {
         return {object.release(), object.get_deleter()};
     }
-#endif
 
     template<class I, class D>
     inline operator std::unique_ptr<I, D>() noexcept {

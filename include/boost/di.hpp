@@ -149,16 +149,41 @@ using is_unique = is_unique_impl<none_t, Ts...>;
 
 #endif
 
+#ifndef BOOST_DI_FWD_HPP
+#define BOOST_DI_FWD_HPP
+
+namespace boost {
+template<class> class shared_ptr;
+namespace di {
+namespace aux { struct none_t; }
+namespace core {
+template<class = void, class = aux::none_t, class = std::false_type>
+struct any_type;
+} // core
+namespace providers {
+class heap;
+class stack_over_heap;
+} // providers
+
+struct no_name {
+    const char* operator()() const noexcept { return nullptr; }
+};
+
+class config;
+
+template<class...>
+class injector;
+
+}} // boost::di
+
+#endif
+
 #ifndef BOOST_DI_AUX_TYPE_TRAITS_HPP
 #define BOOST_DI_AUX_TYPE_TRAITS_HPP
 
 #if defined(_MSC_VER)
     #define __has_include(...) 0
     #pragma warning(disable : 4503) // decorated name length exceeded, name was truncated
-#endif
-
-#if (__has_include(<boost/shared_ptr.hpp>))
-    #include <boost/shared_ptr.hpp>
 #endif
 
 #define BOOST_DI_HAS_TYPE(name)                                     \
@@ -242,12 +267,10 @@ struct is_smart_ptr<std::shared_ptr<T>>
     : std::true_type
 { };
 
-#if (__has_include(<boost/shared_ptr.hpp>))
-    template<class T>
-    struct is_smart_ptr<boost::shared_ptr<T>>
-        : std::true_type
-    { };
-#endif
+template<class T>
+struct is_smart_ptr<boost::shared_ptr<T>>
+    : std::true_type
+{ };
 
 template<class T>
 struct is_smart_ptr<std::weak_ptr<T>>
@@ -396,10 +419,6 @@ private:
 #ifndef BOOST_DI_WRAPPERS_UNIQUE_HPP
 #define BOOST_DI_WRAPPERS_UNIQUE_HPP
 
-#if (__has_include(<boost/shared_ptr.hpp>))
-    #include <boost/shared_ptr.hpp>
-#endif
-
 namespace boost { namespace di { namespace wrappers {
 
 template<class T>
@@ -443,12 +462,10 @@ struct unique<T*> {
         return std::shared_ptr<I>{object};
     }
 
-#if (__has_include(<boost/shared_ptr.hpp>))
     template<class I>
     inline operator boost::shared_ptr<I>() const noexcept {
         return boost::shared_ptr<I>{object};
     }
-#endif
 
     template<class I>
     inline operator std::unique_ptr<I>() const noexcept {
@@ -486,12 +503,10 @@ struct unique<std::unique_ptr<T, TDeleter>> {
         return {object.release(), object.get_deleter()};
     }
 
-#if (__has_include(<boost/shared_ptr.hpp>))
     template<class I>
     inline operator boost::shared_ptr<I>() noexcept {
         return {object.release(), object.get_deleter()};
     }
-#endif
 
     template<class I, class D>
     inline operator std::unique_ptr<I, D>() noexcept {
@@ -507,10 +522,6 @@ struct unique<std::unique_ptr<T, TDeleter>> {
 
 #ifndef BOOST_DI_TYPE_TRAITS_MEMORY_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_MEMORY_TRAITS_HPP
-
-#if (__has_include(<boost/shared_ptr.hpp>))
-    #include <boost/shared_ptr.hpp>
-#endif
 
 namespace boost { namespace di { namespace type_traits {
 
@@ -572,17 +583,15 @@ struct memory_traits<const std::shared_ptr<T>&> {
     using type = heap;
 };
 
-#if (__has_include(<boost/shared_ptr.hpp>))
-    template<class T>
-    struct memory_traits<boost::shared_ptr<T>> {
-        using type = heap;
-    };
+template<class T>
+struct memory_traits<boost::shared_ptr<T>> {
+    using type = heap;
+};
 
-    template<class T>
-    struct memory_traits<const boost::shared_ptr<T>&> {
-        using type = heap;
-    };
-#endif
+template<class T>
+struct memory_traits<const boost::shared_ptr<T>&> {
+    using type = heap;
+};
 
 template<class T>
 struct memory_traits<std::weak_ptr<T>> {
@@ -639,10 +648,6 @@ public:
 #ifndef BOOST_DI_WRAPPERS_SHARED_HPP
 #define BOOST_DI_WRAPPERS_SHARED_HPP
 
-#if (__has_include(<boost/shared_ptr.hpp>))
-    #include <boost/shared_ptr.hpp>
-#endif
-
 namespace boost { namespace di { namespace wrappers {
 
 template<class T>
@@ -652,7 +657,6 @@ struct shared {
         return object;
     }
 
-#if (__has_include(<boost/shared_ptr.hpp>))
     template<class TSharedPtr>
     struct sp_holder {
         TSharedPtr object;
@@ -671,7 +675,6 @@ struct shared {
             return {object.get(), sp_holder<std::shared_ptr<T>>{object}};
         }
     }
-#endif
 
     template<class I>
     inline operator std::weak_ptr<I>() const noexcept {
@@ -856,10 +859,6 @@ public:
 #ifndef BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 
-#if (__has_include(<boost/shared_ptr.hpp>))
-    #include <boost/shared_ptr.hpp>
-#endif
-
 namespace boost { namespace di { namespace type_traits {
 
 template<class T>
@@ -917,17 +916,15 @@ struct scope_traits<const std::shared_ptr<T>&> {
     using type = scopes::singleton;
 };
 
-#if (__has_include(<boost/shared_ptr.hpp>))
-    template<class T>
-    struct scope_traits<boost::shared_ptr<T>> {
-        using type = scopes::singleton;
-    };
+template<class T>
+struct scope_traits<boost::shared_ptr<T>> {
+    using type = scopes::singleton;
+};
 
-    template<class T>
-    struct scope_traits<const boost::shared_ptr<T>&> {
-        using type = scopes::singleton;
-    };
-#endif
+template<class T>
+struct scope_traits<const boost::shared_ptr<T>&> {
+    using type = scopes::singleton;
+};
 
 template<class T>
 struct scope_traits<std::weak_ptr<T>> {
@@ -1244,33 +1241,6 @@ public:
 
 #endif
 
-#ifndef BOOST_DI_FWD_HPP
-#define BOOST_DI_FWD_HPP
-
-namespace boost { namespace di {
-namespace aux { struct none_t; }
-namespace core {
-template<class = void, class = aux::none_t, class = std::false_type>
-struct any_type;
-} // core
-namespace providers {
-class heap;
-class stack_over_heap;
-} // providers
-
-struct no_name {
-    const char* operator()() const noexcept { return nullptr; }
-};
-
-class config;
-
-template<class...>
-class injector;
-
-}} // boost::di
-
-#endif
-
 #ifndef BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 
@@ -1441,7 +1411,10 @@ struct ctor_traits_impl<T, std::false_type>
 #endif
 
 #if (__has_include(<initializer_list>))
-    #include <initializer_list>
+    namespace std {
+        template<class>
+        class initializer_list;
+    };
 
     namespace boost { namespace di {
         template<class T>

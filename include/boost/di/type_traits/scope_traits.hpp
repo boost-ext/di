@@ -8,9 +8,7 @@
 #define BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 
 #include <memory>
-#if (__has_include(<boost/shared_ptr.hpp>))
-    #include <boost/shared_ptr.hpp>
-#endif
+#include "boost/di/fwd.hpp"
 #include "boost/di/scopes/unique.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/external.hpp"
@@ -72,17 +70,15 @@ struct scope_traits<const std::shared_ptr<T>&> {
     using type = scopes::singleton;
 };
 
-#if (__has_include(<boost/shared_ptr.hpp>))
-    template<class T>
-    struct scope_traits<boost::shared_ptr<T>> {
-        using type = scopes::singleton;
-    };
+template<class T>
+struct scope_traits<boost::shared_ptr<T>> {
+    using type = scopes::singleton;
+};
 
-    template<class T>
-    struct scope_traits<const boost::shared_ptr<T>&> {
-        using type = scopes::singleton;
-    };
-#endif
+template<class T>
+struct scope_traits<const boost::shared_ptr<T>&> {
+    using type = scopes::singleton;
+};
 
 template<class T>
 struct scope_traits<std::weak_ptr<T>> {

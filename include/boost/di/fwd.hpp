@@ -7,7 +7,9 @@
 #ifndef BOOST_DI_FWD_HPP
 #define BOOST_DI_FWD_HPP
 
-namespace boost { namespace di {
+namespace boost {
+template<class> class shared_ptr;
+namespace di {
 namespace aux { struct none_t; }
 namespace core {
 template<class = void, class = aux::none_t, class = std::false_type>

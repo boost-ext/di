@@ -179,7 +179,10 @@ struct ctor_traits_impl<T, std::false_type>
 #endif
 
 #if (__has_include(<initializer_list>))
-    #include <initializer_list>
+    namespace std {
+        template<class>
+        class initializer_list;
+    };
 
     namespace boost { namespace di {
         template<class T>

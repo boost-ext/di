@@ -14,10 +14,8 @@
 
 #include <memory>
 #include <type_traits>
+#include "boost/di/fwd.hpp"
 #include "boost/di/aux_/utility.hpp"
-#if (__has_include(<boost/shared_ptr.hpp>))
-    #include <boost/shared_ptr.hpp>
-#endif
 
 #define BOOST_DI_HAS_TYPE(name)                                     \
     template<class, class = void>                                   \
@@ -100,12 +98,10 @@ struct is_smart_ptr<std::shared_ptr<T>>
     : std::true_type
 { };
 
-#if (__has_include(<boost/shared_ptr.hpp>))
-    template<class T>
-    struct is_smart_ptr<boost::shared_ptr<T>>
-        : std::true_type
-    { };
-#endif
+template<class T>
+struct is_smart_ptr<boost::shared_ptr<T>>
+    : std::true_type
+{ };
 
 template<class T>
 struct is_smart_ptr<std::weak_ptr<T>>
