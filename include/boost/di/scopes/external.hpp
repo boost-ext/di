@@ -59,18 +59,35 @@ public:
     };
 
     template<class TExpected, class TGiven>
-    struct scope<TExpected, std::reference_wrapper<TGiven>> {
+    struct scope<TExpected, TGiven&> {
         using is_ref = void;
 
         template<class, class TProvider>
-        std::reference_wrapper<TGiven> try_create(const TProvider&);
+        wrappers::shared<TGiven&> try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
             return object_;
         }
 
-        std::reference_wrapper<TGiven> object_;
+        explicit scope(TGiven& object)
+            : object_{object}
+        { }
+
+        wrappers::shared<TGiven&> object_;
+    };
+
+    template<class TExpected, int N>
+    struct scope<TExpected, char const(&)[N]> {
+        template<class, class TProvider>
+        wrappers::unique<TExpected> try_create(const TProvider&);
+
+        template<class, class TProvider>
+        auto create(const TProvider&) const noexcept {
+            return object_;
+        }
+
+        wrappers::unique<TExpected> object_;
     };
 
     template<class TExpected, class TGiven>

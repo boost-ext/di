@@ -369,8 +369,8 @@ test ctor_refs = [] {
         constexpr auto d = 0.0;
 
         auto injector = di::make_injector(
-            di::bind<int>.to(std::ref(i))
-          , di::bind<double>.to(std::cref(d))
+            di::bind<int>.to(i)
+          , di::bind<double>.to(d)
           , di::bind<std::string>.to("str")
           , di::bind<std::string>.named(name).to("named str")
           , bind_i1
@@ -433,10 +433,10 @@ test refs_vs_copy = [] {
 
     {
     auto injector = di::make_injector(
-        di::bind<std::string>.named(name).to(std::ref(ref))
-      , di::bind<int>.named(name).to(std::cref(i))
-      , di::bind<int>.named(other_name).to(std::ref(i))
-      , di::bind<int>.to(std::ref(i))
+        di::bind<std::string>.named(name).to(ref)
+      , di::bind<int>.named(name).to(i)
+      , di::bind<int>.named(other_name).to(i)
+      , di::bind<int>.to(i)
     );
     auto object = injector.create<cc>();
     expect_eq(ref, object.str);
@@ -449,10 +449,10 @@ test refs_vs_copy = [] {
 
     {
     auto injector = di::make_injector(
-        di::bind<std::string>.named(name).to(std::ref(ref))
-      , di::bind<int>.named(name).to(std::cref(i))
-      , di::bind<int>.named(other_name).to(std::ref(i))
-      , di::bind<int>.to(std::ref(i))
+        di::bind<std::string>.named(name).to(ref)
+      , di::bind<int>.named(name).to(i)
+      , di::bind<int>.named(other_name).to(i)
+      , di::bind<int>.to(i)
     );
     auto object = injector.create<cc_inject>();
     expect_eq(ref, object.str);
@@ -467,8 +467,8 @@ test refs_vs_copy = [] {
     auto injector = di::make_injector(
         di::bind<std::string>.named(name).to(ref)
       , di::bind<int>.named(name).to(i)
-      , di::bind<int>.named(other_name).to(std::ref(i))
-      , di::bind<int>.to(std::ref(i))
+      , di::bind<int>.named(other_name).to(i)
+      , di::bind<int>.to(i)
     );
     auto object = injector.create<cc>();
     expect_eq(ref, object.str);
@@ -483,8 +483,8 @@ test refs_vs_copy = [] {
     auto injector = di::make_injector(
         di::bind<std::string>.named(name).to(ref)
       , di::bind<int>.named(name).to(i)
-      , di::bind<int>.named(other_name).to(std::ref(i))
-      , di::bind<int>.to(std::ref(i))
+      , di::bind<int>.named(other_name).to(i)
+      , di::bind<int>.to(i)
     );
     auto object = injector.create<cc_inject>();
     expect_eq(ref, object.str);

@@ -105,8 +105,8 @@ test externals_ref_cref = [] {
     };
 
     auto injector = make_injector(
-        di::bind<int>.to(std::ref(i))
-      , di::bind<double>.to(std::cref(d))
+        di::bind<int>.to(i)
+      , di::bind<double>.to(d)
     );
 
     auto object = injector.create<refs>();

@@ -26,13 +26,13 @@ test from_string = [] {
 
 test from_ref = [] {
     struct c { } c_;
-    c& c_ref_ = external::scope<c, decltype(std::ref(c_))>{std::ref(c_)}.create<void>(fake_provider<>{});
+    c& c_ref_ = external::scope<c, c&>{c_}.create<void>(fake_provider<>{});
     expect_eq(&c_, &c_ref_);
 };
 
 test from_const_ref = [] {
     struct c { } c_;
-    const c& c_ref_ = external::scope<c, decltype(std::cref(c_))>{std::cref(c_)}.create<void>(fake_provider<>{});
+    const c& c_ref_ = external::scope<c, c&>{c_}.create<void>(fake_provider<>{});
     expect_eq(&c_, &c_ref_);
 };
 

@@ -29,7 +29,7 @@ int main() {
     auto injector = di::make_injector(
         di::bind<i1, impl1>
       , di::bind<i2, impl2>
-      , di::bind<int>.to(std::ref(i))
+      , di::bind<int>.to(i)
       , di::bind<double>.to(87.0)
     );
 

@@ -77,11 +77,11 @@ struct when_creating {
         template<class TName>
         struct named {
             BOOST_DI_CONSTEXPR T
-            error(_ = "reference type not bound, did you forget to add `di::bind<T>.named(name).to([c]ref(value))`, notice that `di::bind<T>.named(name).to(value)` won't work!");
+            error(_ = "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.named(name).to(value)`");
         };
 
         BOOST_DI_CONSTEXPR T
-        error(_ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!");
+        error(_ = "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.to(value)`");
     };
 };
 

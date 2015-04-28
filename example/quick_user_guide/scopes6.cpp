@@ -28,7 +28,7 @@ int main() {
        di::bind<int>.to(0)
      , di::bind<int>.to(42) [di::override]
      , di::bind<i1>.to(std::make_shared<impl>())
-     , di::bind<long>.to(std::ref(l))
+     , di::bind<long>.to(l)
      , di::bind<short>.to([]{return 87;})
      , di::bind<i2>.to(
            [&](const auto& injector) -> std::shared_ptr<i2> {

@@ -552,7 +552,7 @@ auto i = 42;                            | assert(&i == &object2->i);
 auto injector = di::make_injector(      | assert(87.0 == object2->d);
     di::bind<i1, impl1>                 |
   , di::bind<i2, impl2>                 |
-  , di::bind<int>.to(ref(i))            |
+  , di::bind<int>.to(i)                 |
   , di::bind<double>.to(87.0)           |
 );                                      |
 ```
@@ -617,7 +617,7 @@ auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>
    di::bind<int>.to(0)                  | );
  , di::bind<int>.to(42) [di::override]  | assert(l == injector.create<long&>());
  , di::bind<i1>.to(make_shared<impl>()) | assert(&l == &injector.create<long&>());
- , di::bind<long>.to(ref(l))            | assert(87 == injector.create<short>());
+ , di::bind<long>.to(l)                 | assert(87 == injector.create<short>());
  , di::bind<short>.to([]{return 87;})   | {
  , di::bind<i2>.to(                     | auto object = injector.create<shared_ptr<i2>>();
      [&](const auto& injector)          | assert(nullptr == object);

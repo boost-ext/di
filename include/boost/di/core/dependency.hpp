@@ -95,7 +95,7 @@ private:
 public:
     using scope = TScope;
     using expected = TExpected;
-    using given = TGiven;
+    using given = std::remove_reference_t<TGiven>;
     using name = TName;
     using priority = TPriority;
 
@@ -133,7 +133,7 @@ public:
     template<class T, BOOST_DI_REQUIRES(externable<T>::value)>
     auto to(T&& object) const noexcept {
         using dependency = dependency<
-            scopes::external, TExpected, std::remove_reference_t<T>, TName
+            scopes::external, TExpected, T, TName
         >;
         return dependency{std::forward<T>(object)};
     }

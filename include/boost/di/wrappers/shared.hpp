@@ -46,6 +46,25 @@ struct shared {
     std::shared_ptr<T> object;
 };
 
+template<class T>
+struct shared<T&> {
+    template<class I>
+    inline operator I() const noexcept {
+        return object;
+    }
+
+    inline operator T&() const noexcept {
+        return object;
+    }
+
+    template<class I>
+    inline operator I*() const noexcept { // only for compilation clean
+        return {};
+    }
+
+    T& object;
+};
+
 }}} // boost::di::wrappers
 
 #endif

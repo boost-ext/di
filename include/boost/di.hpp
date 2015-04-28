@@ -684,6 +684,25 @@ struct shared {
     std::shared_ptr<T> object;
 };
 
+template<class T>
+struct shared<T&> {
+    template<class I>
+    inline operator I() const noexcept {
+        return object;
+    }
+
+    inline operator T&() const noexcept {
+        return object;
+    }
+
+    template<class I>
+    inline operator I*() const noexcept { // only for compilation clean
+        return {};
+    }
+
+    T& object;
+};
+
 }}} // boost::di::wrappers
 
 #endif
@@ -772,18 +791,35 @@ public:
     };
 
     template<class TExpected, class TGiven>
-    struct scope<TExpected, std::reference_wrapper<TGiven>> {
+    struct scope<TExpected, TGiven&> {
         using is_ref = void;
 
         template<class, class TProvider>
-        std::reference_wrapper<TGiven> try_create(const TProvider&);
+        wrappers::shared<TGiven&> try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
             return object_;
         }
 
-        std::reference_wrapper<TGiven> object_;
+        explicit scope(TGiven& object)
+            : object_{object}
+        { }
+
+        wrappers::shared<TGiven&> object_;
+    };
+
+    template<class TExpected, int N>
+    struct scope<TExpected, char const(&)[N]> {
+        template<class, class TProvider>
+        wrappers::unique<TExpected> try_create(const TProvider&);
+
+        template<class, class TProvider>
+        auto create(const TProvider&) const noexcept {
+            return object_;
+        }
+
+        wrappers::unique<TExpected> object_;
     };
 
     template<class TExpected, class TGiven>
@@ -1538,7 +1574,7 @@ private:
 public:
     using scope = TScope;
     using expected = TExpected;
-    using given = TGiven;
+    using given = std::remove_reference_t<TGiven>;
     using name = TName;
     using priority = TPriority;
 
@@ -1576,7 +1612,7 @@ public:
     template<class T, BOOST_DI_REQUIRES(externable<T>::value)>
     auto to(T&& object) const noexcept {
         using dependency = dependency<
-            scopes::external, TExpected, std::remove_reference_t<T>, TName
+            scopes::external, TExpected, T, TName
         >;
         return dependency{std::forward<T>(object)};
     }
@@ -1756,11 +1792,11 @@ struct when_creating {
         template<class TName>
         struct named {
             BOOST_DI_CONSTEXPR T
-            error(_ = "reference type not bound, did you forget to add `di::bind<T>.named(name).to([c]ref(value))`, notice that `di::bind<T>.named(name).to(value)` won't work!");
+            error(_ = "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.named(name).to(value)`");
         };
 
         BOOST_DI_CONSTEXPR T
-        error(_ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!");
+        error(_ = "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.to(value)`");
     };
 };
 
