@@ -4,7 +4,7 @@ branches:
   only:
     - travis
 
-os: linux
+os: linux osx
 #  - osx
 
 sudo: required
