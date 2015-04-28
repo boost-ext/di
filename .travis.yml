@@ -73,7 +73,7 @@ env:
     #- TOOLSET=clang # for osx
 
 before_script:
-  - (cd build && ./bootstrap.sh --with-toolset=${TOOLSET})
+  - (cd build && ./bootstrap.sh)
 
 script:
   - (cd test && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off ${COVERAGE})
@@ -83,9 +83,6 @@ script:
 after_success:
   - if [ "${COVERAGE}" != "" ]; then sudo pip install cpp-coveralls; coveralls -r . -b test/ --repo-token c3V44Hj0ZTKzz4kaa3gIlVjInFiyNRZ4f; fi
   - if [ "${DOCUMENTATION}" != "" ]; then cd doc && ../build/b2 -sBOOST_ROOT=../build; fi
-
-after_failure:
-  - cat bootstrap.log
 
 notifications:
   webhooks:
