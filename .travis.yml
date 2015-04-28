@@ -1,5 +1,4 @@
 language: c++
-os: linux
 
 branches:
   only:
@@ -57,6 +56,9 @@ matrix:
             - valgrind
           sources:
             - ubuntu-toolchain-r-test
+
+os:
+  - osx
 
 env:
   global:
