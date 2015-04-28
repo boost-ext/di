@@ -393,13 +393,13 @@ test scopes_injector_lambda_injector = [] {
     expect_eq(s, injector.create<int>());
 };
 
-//test string_creation = [] {
-    //struct string {
-        //std::string str;
-    //};
+test string_creation = [] {
+	struct string {
+		std::string str;
+	};
 
-    //expect_eq("", di::make_injector().create<string>().str);
-//};
+	expect_eq("", di::make_injector().create<string>().str);
+};
 
 test request_value_and_ptr_in_unique = [] {
     struct c {
