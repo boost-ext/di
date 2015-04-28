@@ -1,9 +1,5 @@
 language: c++
 
-branches:
-  only:
-    - travis
-
 os: linux
 #  - osx
 
@@ -83,6 +79,10 @@ script:
 after_success:
   - if [ "${COVERAGE}" != "" ]; then sudo pip install cpp-coveralls; coveralls -r . -b test/ --repo-token c3V44Hj0ZTKzz4kaa3gIlVjInFiyNRZ4f; fi
   - if [ "${DOCUMENTATION}" != "" ]; then cd doc && ../build/b2 -sBOOST_ROOT=../build; fi
+
+branches:
+  only:
+    - cpp14
 
 notifications:
   webhooks:
