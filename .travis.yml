@@ -1,5 +1,13 @@
 language: c++
 
+compiler:
+    - clang
+    - gcc
+
+os:
+    - linux
+    - osx
+
 matrix:
     include:
         - env: TOOLSET=clang-3.4
@@ -57,9 +65,6 @@ env:
 
     matrix:
         - TOOLSET=clang
-
-os:
-    - osx
 
 install:
   - if [ "$TRAVIS_OS_NAME" != "osx" ]; then sudo pip install cpp-coveralls; fi
