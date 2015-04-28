@@ -6,7 +6,7 @@ branches:
 
 os:
   - linux
-  - osx
+#  - osx
 
 sudo: required
 
