@@ -52,7 +52,7 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise
 
-    - env: TOOLSET=gcc-5.1.0 VARIANT=coverage DOCUMENTATION=publish
+    - env: TOOLSET=gcc-5.1 VARIANT=coverage DOCUMENTATION=publish
       addons: &gcc5
         apt:
           packages:
@@ -63,7 +63,7 @@ matrix:
             - ubuntu-toolchain-r-test
 
 os:
-  - osx
+  - osx # linux set by default for matrix
 
 env:
   global:
