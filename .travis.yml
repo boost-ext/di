@@ -1,7 +1,16 @@
 language: c++
 
+compiler:
+  - clang
+  - gcc
+
 os:
-    - osx
+  - linux
+  - osx
+
+branches:
+  only:
+    - travis
 
 matrix:
   include:
@@ -10,48 +19,82 @@ matrix:
         apt:
           packages:
             - clang-3.4
+            - libc++-dev
             - valgrind
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.4
 
-env:
-    global:
-        - secure: "A27gNApbElRr3fqZXifVPKkB+xbxMYDFINGk2RDqul1X1Zg51M7e+ohHO9BwhEYiOGmCnFfbsVUP11XyFIH6kzWmxw9mhy8YDglbYfeyu6grxtU3mHElz8W7wO5OCPFPWXQf23sVYE8AWyjj6M+t3oyLJhPXCcYI7uMHEQm10CQ="
+    - env: TOOLSET=clang-3.5
+      addons: &clang35
+        apt:
+          packages:
+            - clang-3.5
+            - libc++-dev
+            - valgrind
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.5
 
-    matrix:
-        - TOOLSET=clang
+    - env: TOOLSET=clang-3.6
+      addons: &clang36
+        apt:
+          packages:
+            - clang-3.6
+            - libc++-dev
+            - valgrind
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.6
+
+    - env: TOOLSET=clang-3.7
+      addons: &clang37
+        apt:
+          packages:
+            - clang-3.7
+            - libc++-dev
+            - valgrind
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise
+
+    - env: TOOLSET=gcc-5 VARIANT=coverage DOCUMENTATION=publish
+      addons: &gcc5
+        apt:
+          packages:
+            - gcc-5
+            - libstdc++-5-dev
+            - valgrind
+          sources:
+            - ubuntu-toolchain-r-test
+
+env:
+  global:
+    - secure: "A27gNApbElRr3fqZXifVPKkB+xbxMYDFINGk2RDqul1X1Zg51M7e+ohHO9BwhEYiOGmCnFfbsVUP11XyFIH6kzWmxw9mhy8YDglbYfeyu6grxtU3mHElz8W7wO5OCPFPWXQf23sVYE8AWyjj6M+t3oyLJhPXCcYI7uMHEQm10CQ="
+
+  matrix:
+    - TOOLSET=clang
 
 install:
   - if [ "$TRAVIS_OS_NAME" != "osx" ]; then sudo pip install cpp-coveralls; fi
-  - travis_wait travis_retry svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx
-  - (mkdir libcxx/build && cd libcxx/build && CXX=clang cmake .. -DLIBCXX_CXX_ABI=libstdc++ -DLIBCXX_CXX_ABI_INCLUDE_PATHS="/usr/include/c++/4.6;/usr/include/c++/4.6/x86_64-linux-gnu")
-  - if [ "$TRAVIS_OS_NAME" != "osx" ]; then make -C libcxx/build cxx -j2; fi
 
 before_script:
-  - export LIBCXX=$PWD/libcxx/build/include/c++/v1
-  - export LIBCXX_DIR=$PWD/libcxx/build/lib
-  - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$LIBCXX_DIR
   - (cd build && ./bootstrap.sh --with-toolset=${TOOLSET})
 
 script:
-  - (cd test && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-stdlib=libc++ -I$LIBCXX" linkflags="-stdlib=libc++ -L$LIBCXX_DIR" ${COVERAGE})
-  - (cd example && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-stdlib=libc++ -I$LIBCXX" linkflags="-stdlib=libc++ -L$LIBCXX_DIR")
+  - (cd test && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++ -L$LIBCXX_DIR" ${COVERAGE})
+  - (cd example && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++ -L$LIBCXX_DIR")
   - if [ "$TRAVIS_OS_NAME" != "osx" ]; then find .. -type f -executable | grep "\.test" | xargs -i% valgrind --error-exitcode=-1 %; fi
 
 after_success:
   - if [ "${COVERAGE}" != "" ]; then coveralls -r . -b test/ --repo-token c3V44Hj0ZTKzz4kaa3gIlVjInFiyNRZ4f; fi
   - if [ "${DOCUMENTATION}" != "" ]; then cd doc && ../build/b2 -sBOOST_ROOT=../build; fi
 
-branches:
-  only:
-    - travis
-
 notifications:
-    webhooks:
-        urls:
-            - https://webhooks.gitter.im/e/743f46341bea58bbe3ca
-        on_success: change
-        on_failure: always
-        on_start: false
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/743f46341bea58bbe3ca
+  on_success: change
+  on_failure: always
+  on_start: false
 
