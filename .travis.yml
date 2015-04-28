@@ -81,8 +81,8 @@ before_script:
   - (cd build && ./bootstrap.sh --with-toolset=${TOOLSET})
 
 script:
-  - (cd test && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++ -L$LIBCXX_DIR" ${COVERAGE})
-  - (cd example && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++ -L$LIBCXX_DIR")
+  - (cd test && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off ${COVERAGE})
+  - (cd example && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off)
   - if [ "$TRAVIS_OS_NAME" != "osx" ]; then find .. -type f -executable | grep "\.test" | xargs -i% valgrind --error-exitcode=-1 %; fi
 
 after_success:
