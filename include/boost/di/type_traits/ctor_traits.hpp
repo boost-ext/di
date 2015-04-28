@@ -179,7 +179,7 @@ namespace boost { namespace di {
 namespace std {
     template<class>
     class initializer_list;
-};
+} // std
 
 namespace boost { namespace di {
     template<class T>
