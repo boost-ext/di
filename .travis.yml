@@ -4,7 +4,7 @@ branches:
   only:
     - travis
 
-os: osx linux
+os: linux
 #  - osx
 
 sudo: required
@@ -55,7 +55,7 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise
 
-    - env: TOOLSET=gcc-5 VARIANT=coverage DOCUMENTATION=publish
+    - env: TOOLSET=gcc-5.1.0 VARIANT=coverage DOCUMENTATION=publish
       addons: &gcc5
         apt:
           packages:
