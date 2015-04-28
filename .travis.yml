@@ -69,8 +69,8 @@ env:
   global:
     - secure: "A27gNApbElRr3fqZXifVPKkB+xbxMYDFINGk2RDqul1X1Zg51M7e+ohHO9BwhEYiOGmCnFfbsVUP11XyFIH6kzWmxw9mhy8YDglbYfeyu6grxtU3mHElz8W7wO5OCPFPWXQf23sVYE8AWyjj6M+t3oyLJhPXCcYI7uMHEQm10CQ="
 
-  matrix:
-    - TOOLSET=clang # for osx
+#  matrix:
+    #- TOOLSET=clang # for osx
 
 before_script:
   - (cd build && ./bootstrap.sh)
