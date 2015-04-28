@@ -1,12 +1,7 @@
 language: c++
-
-compiler:
-    - clang
-    - gcc
-
-os:
-    - linux
-    - osx
+compiler: clang
+os: linux
+sudo: false
 
 matrix:
     include:
