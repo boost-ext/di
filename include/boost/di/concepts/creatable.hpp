@@ -19,25 +19,25 @@ namespace boost { namespace di {
 template<class T>
 struct abstract_type {
 struct is_not_bound {
-    constexpr operator T*() const {
+    BOOST_DI_CONSTEXPR operator T*() const {
         using constraint_not_satisfied = is_not_bound;
         return
             constraint_not_satisfied{}.error();
     }
 
-    constexpr T*
+    BOOST_DI_CONSTEXPR T*
     error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?")
     const;
 };
 
 struct is_not_fully_implemented {
-    constexpr operator T*() const {
+    BOOST_DI_CONSTEXPR operator T*() const {
         using constraint_not_satisfied = is_not_fully_implemented;
         return
             constraint_not_satisfied{}.error();
     }
 
-    constexpr T*
+    BOOST_DI_CONSTEXPR T*
     error(_ = "type not implemented, did you forget to implement all interface methods?")
     const;
 };
@@ -45,25 +45,25 @@ struct is_not_fully_implemented {
 template<class TName>
 struct named {
 struct is_not_bound {
-    constexpr operator T*() const {
+    BOOST_DI_CONSTEXPR operator T*() const {
         using constraint_not_satisfied = is_not_bound;
         return
             constraint_not_satisfied{}.error();
     }
 
-    constexpr T*
+    BOOST_DI_CONSTEXPR T*
     error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>.named(name)'?")
     const;
 };
 
 struct is_not_fully_implemented {
-    constexpr operator T*() const {
+    BOOST_DI_CONSTEXPR operator T*() const {
         using constraint_not_satisfied = is_not_fully_implemented;
         return
             constraint_not_satisfied{}.error();
     }
 
-    constexpr T*
+    BOOST_DI_CONSTEXPR T*
     error(_ = "type not implemented, did you forget to implement all interface methods?")
     const;
 };
@@ -76,11 +76,11 @@ struct when_creating {
     struct type {
         template<class TName>
         struct named {
-            constexpr T
+            BOOST_DI_CONSTEXPR T
             error(_ = "reference type not bound, did you forget to add `di::bind<T>.named(name).to([c]ref(value))`, notice that `di::bind<T>.named(name).to(value)` won't work!");
         };
 
-        constexpr T
+        BOOST_DI_CONSTEXPR T
         error(_ = "reference type not bound, did you forget to add `di::bind<T>.to([c]ref(value))`, notice that `di::bind<T>.to(value)` won't work!");
     };
 };
@@ -91,12 +91,12 @@ struct in_type {
     using is_not_same = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
 
     template<class T, class = is_not_same<T>>
-    constexpr operator T() {
+    BOOST_DI_CONSTEXPR operator T() {
         return {};
     }
 
     template<class T, class = is_not_same<T>>
-    constexpr operator T&() const {
+    BOOST_DI_CONSTEXPR operator T&() const {
         using constraint_not_satisfied = typename when_creating<TParent>::template type<T&>::template named<TName>;
         return
             constraint_not_satisfied{}.error();
@@ -109,12 +109,12 @@ struct in_type<TParent, no_name> {
     using is_not_same = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
 
     template<class T, class = is_not_same<T>>
-    constexpr operator T() {
+    BOOST_DI_CONSTEXPR operator T() {
         return {};
     }
 
     template<class T, class = is_not_same<T>>
-    constexpr operator T&() const {
+    BOOST_DI_CONSTEXPR operator T&() const {
         using constraint_not_satisfied = typename when_creating<TParent>::template type<T&>;
         return
             constraint_not_satisfied{}.error();
@@ -136,7 +136,7 @@ struct in<TParent, type_traits::named<TName, T>> {
 
 template<class T, class TInitialization, class... TArgs, class... TCtor>
 struct type<T, type_traits::direct, aux::pair<TInitialization, aux::type_list<TArgs...>>, TCtor...> {
-    constexpr operator T*() const {
+    BOOST_DI_CONSTEXPR operator T*() const {
         return impl<T>();
     }
 
@@ -148,7 +148,7 @@ struct type<T, type_traits::direct, aux::pair<TInitialization, aux::type_list<TA
 
 template<class T, class TInitialization, class... TArgs, class... TCtor>
 struct type<T, type_traits::uniform, aux::pair<TInitialization, aux::type_list<TArgs...>>, TCtor...> {
-    constexpr operator T*() const {
+    BOOST_DI_CONSTEXPR operator T*() const {
         return impl<T>(aux::is_braces_constructible<T, TCtor...>{});
     }
 
@@ -167,13 +167,13 @@ template<class T>
 struct type<T> {
 template<class To>
 struct is_not_convertible_to {
-    constexpr operator To() const {
+    BOOST_DI_CONSTEXPR operator To() const {
         using constraint_not_satisfied = is_not_convertible_to;
         return
             constraint_not_satisfied{}.error();
     }
 
-    constexpr To
+    BOOST_DI_CONSTEXPR To
     error(_ = "wrapper is not convertible to requested type, did you mistake the scope?")
     const;
 };};
@@ -182,13 +182,13 @@ template<class T>
 struct number_of_constructor_arguments_doesnt_match_for {
 template<int Given> struct given {
 template<int Expected> struct expected {
-    constexpr operator T*() const {
+    BOOST_DI_CONSTEXPR operator T*() const {
         using constraint_not_satisfied = expected;
         return
             constraint_not_satisfied{}.error();
     }
 
-    constexpr T*
+    BOOST_DI_CONSTEXPR T*
     error(_ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits")
     const;
 };};};
@@ -196,13 +196,13 @@ template<int Expected> struct expected {
 template<class T>
 struct number_of_constructor_arguments_is_out_of_range_for {
 template<int TMax> struct max {
-    constexpr operator T*() const {
+    BOOST_DI_CONSTEXPR operator T*() const {
         using constraint_not_satisfied = max;
         return
             constraint_not_satisfied{}.error();
     }
 
-    constexpr T*
+    BOOST_DI_CONSTEXPR T*
     error(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters")
     const;
 };};

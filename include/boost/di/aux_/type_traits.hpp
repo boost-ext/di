@@ -44,12 +44,15 @@
 #if defined(__clang__)
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_ATTR_ERROR(...) [[deprecated(__VA_ARGS__)]]
+    #define BOOST_DI_CONSTEXPR constexpr
 #elif defined(__GNUC__)
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_ATTR_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
+    #define BOOST_DI_CONSTEXPR constexpr
 #elif defined(_MSC_VER)
     #define BOOST_DI_UNUSED
     #define BOOST_DI_ATTR_ERROR(...) __declspec(deprecated(__VA_ARGS__))
+    #define BOOST_DI_CONSTEXPR
 #endif
 
 #define BOOST_DI_REQUIRES(...) \
