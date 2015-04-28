@@ -1,10 +1,13 @@
 language: c++
-os: osx # linux by default
-sudo: required
+os:
+  - linux
+  - osx
 
 branches:
   only:
     - travis
+
+sudo: required
 
 matrix:
   include:
