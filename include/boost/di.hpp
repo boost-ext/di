@@ -794,6 +794,10 @@ public:
     struct scope<TExpected, TGiven&> {
         using is_ref = void;
 
+        explicit scope(TGiven& object)
+            : object_{object}
+        { }
+
         template<class, class TProvider>
         wrappers::shared<TGiven&> try_create(const TProvider&);
 
@@ -802,15 +806,15 @@ public:
             return object_;
         }
 
-        explicit scope(TGiven& object)
-            : object_{object}
-        { }
-
         wrappers::shared<TGiven&> object_;
     };
 
     template<class TExpected, int N>
     struct scope<TExpected, char const(&)[N]> {
+        explicit scope(char const(&object)[N])
+            : object_{object}
+        { }
+
         template<class, class TProvider>
         wrappers::unique<TExpected> try_create(const TProvider&);
 

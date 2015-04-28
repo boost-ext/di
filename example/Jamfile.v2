@@ -58,12 +58,12 @@ test-suite example :
 ;
 
 test-suite extensions :
-    [ run-example c++1y : extensions/containers.cpp ]
+    #[ run-example c++1y : extensions/containers.cpp ]
     [ run-example c++1y : extensions/factory.cpp ]
     [ run-example c++1y : extensions/testing.cpp ]
     [ run-example c++1y : extensions/types_dumper.cpp ]
     [ run-example c++1y : extensions/uml_dumper.cpp ]
-    [ run-example c++1y : extensions/xml_injection.cpp ]
+    #[ run-example c++1y : extensions/xml_injection.cpp ]
 ;
 
 test-suite introduction :
