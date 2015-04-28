@@ -3,56 +3,87 @@ compiler: clang
 os: linux
 sudo: false
 
+
 matrix:
-    include:
-        - env: TOOLSET=clang-3.4
-          addons: &clang34
-              apt:
-                  packages:
-                      - clang-3.4
-                      - valgrind
-              sources:
-                  - ubuntu-toolchain-r-test
-                  - llvm-toolchain-precise-3.4
+  allow_failures:
+    - env: BOOST_VERSION=trunk
 
-        - env: TOOLSET=clang-3.5
-          addons: &clang35
-              apt:
-                  packages:
-                      - clang-3.5
-                      - valgrind
-              sources:
-                  - ubuntu-toolchain-r-test
-                  - llvm-toolchain-precise-3.5
+  include:
+    # clang 3.5
+    - env: CLANG_VERSION=3.5 BOOST_VERSION=1.57.0 UNIT_TESTS=true
+      addons: &clang35
+        apt:
+          packages:
+            - clang-3.5
+            - valgrind
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.5
 
-        - env: TOOLSET=clang-3.6
-          addons: &clang36
-              apt:
-                  packages:
-                      - clang-3.6
-                      - valgrind
-              sources:
-                  - ubuntu-toolchain-r-test
-                  - llvm-toolchain-precise-3.6
+    - env: CLANG_VERSION=3.5 BOOST_VERSION=1.58.0 UNIT_TESTS=true
+      addons: *clang35
 
-        - env: TOOLSET=clang-3.7
-          addons: &clang37
-              apt:
-                  packages:
-                      - clang-3.7
-                      - valgrind
-              sources:
-                  - ubuntu-toolchain-r-test
-                  - llvm-toolchain-precise
+    - env: CLANG_VERSION=3.5 BOOST_VERSION=trunk UNIT_TESTS=true
+      addons: *clang35
 
-        - env: TOOLSET=gcc-5 VARIANT=coverage DOCUMENTATION=publish
-          addons: &gcc5
-              apt:
-                  packages:
-                      - gcc-5
-                      - valgrind
-              sources:
-                  - ubuntu-toolchain-r-test
+    # clang 3.6
+    - env: CLANG_VERSION=3.6 BOOST_VERSION=1.57.0 UNIT_TESTS=true
+      addons: &clang36
+        apt:
+          packages:
+            - clang-3.6
+            - valgrind
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.6
+
+    - env: CLANG_VERSION=3.6 BOOST_VERSION=1.58.0 UNIT_TESTS=true
+      addons: *clang36
+
+    - env: CLANG_VERSION=3.6 BOOST_VERSION=trunk UNIT_TESTS=true
+      addons: *clang36
+
+    # clang 3.7
+    - env: CLANG_VERSION=3.7 BOOST_VERSION=1.57.0 UNIT_TESTS=true
+      addons: &clang37
+        apt:
+          packages:
+            - clang-3.7
+            - valgrind
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise # latest
+
+    - env: CLANG_VERSION=3.7 BOOST_VERSION=1.58.0 UNIT_TESTS=true
+      addons: *clang37
+
+    - env: CLANG_VERSION=3.7 BOOST_VERSION=trunk UNIT_TESTS=true
+      addons: *clang37
+
+    # Release benchmarks
+    - env: CLANG_VERSION=3.5 BOOST_VERSION=1.57.0 BENCHMARKS=true BUILD_TYPE=Release
+      addons: *clang35
+
+    - env: CLANG_VERSION=3.6 BOOST_VERSION=1.57.0 BENCHMARKS=true BUILD_TYPE=Release
+      addons: *clang36
+
+    - env: CLANG_VERSION=3.7 BOOST_VERSION=1.57.0 BENCHMARKS=true BUILD_TYPE=Release
+      addons: *clang37
+
+    # Debug benchmarks
+    #
+    # Note: We do _not_ run the Debug benchmarks on Clang 3.5, because it does not
+    # have support for debug information for `auto`, and it produces compilation
+    # errors. So we use the default build type instead for Clang 3.5.
+    - env: CLANG_VERSION=3.5 BOOST_VERSION=1.57.0 BENCHMARKS=true
+      addons: *clang35
+
+    - env: CLANG_VERSION=3.6 BOOST_VERSION=1.57.0 BENCHMARKS=true BUILD_TYPE=Debug
+      addons: *clang36
+
+    - env: CLANG_VERSION=3.7 BOOST_VERSION=1.57.0 BENCHMARKS=true BUILD_TYPE=Debug
+      addons: *clang37
+
 
 env:
     global:
@@ -84,7 +115,7 @@ after_success:
 
 branches:
   only:
-    - cpp14
+    - travis
 
 notifications:
     webhooks:
