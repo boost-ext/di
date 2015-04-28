@@ -8,7 +8,6 @@
 #define BOOST_DI_AUX_TYPE_TRAITS_HPP
 
 #if defined(_MSC_VER)
-    #define __has_include(...) 0
     #pragma warning(disable : 4503) // decorated name length exceeded, name was truncated
 #endif
 

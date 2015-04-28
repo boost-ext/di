@@ -182,7 +182,6 @@ class injector;
 #define BOOST_DI_AUX_TYPE_TRAITS_HPP
 
 #if defined(_MSC_VER)
-    #define __has_include(...) 0
     #pragma warning(disable : 4503) // decorated name length exceeded, name was truncated
 #endif
 
@@ -1396,33 +1395,29 @@ struct ctor_traits_impl<T, std::false_type>
 
 }}} // boost::di::type_traits
 
-#if (__has_include(<string>))
-    #include <string>
+/*#include <string>*/
 
-    namespace boost { namespace di {
-        template<
-            class T
-          , class Traits
-          , class TAllocator
-        > struct ctor_traits<std::basic_string<T, Traits, TAllocator>> {
-            BOOST_DI_INJECT_TRAITS();
-        };
-    }} // boost::di
-#endif
+//namespace boost { namespace di {
+    //template<
+        //class T
+      //, class Traits
+      //, class TAllocator
+    //> struct ctor_traits<std::basic_string<T, Traits, TAllocator>> {
+        //BOOST_DI_INJECT_TRAITS();
+    //};
+//}} // boost::di
 
-#if (__has_include(<initializer_list>))
-    namespace std {
-        template<class>
-        class initializer_list;
-    };
+//namespace std {
+    //template<class>
+    //class initializer_list;
+//};
 
-    namespace boost { namespace di {
-        template<class T>
-        struct ctor_traits<std::initializer_list<T>> {
-            BOOST_DI_INJECT_TRAITS();
-        };
-    }} // boost::di
-#endif
+//namespace boost { namespace di {
+    //template<class T>
+    //struct ctor_traits<std::initializer_list<T>> {
+        //BOOST_DI_INJECT_TRAITS();
+    //};
+/*}} // boost::di*/
 
 #endif
 
