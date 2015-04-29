@@ -6,8 +6,11 @@
 #
 import boostbook : boostbook ;
 
-path-constant images_location : html/images ;
 using quickbook ;
+using xsltproc ;
+using boostbook ;
+
+path-constant images_location : html/images ;
 
 boostbook quickbook : di.qbk :
     <xsl:param>boost.root=../../../..
