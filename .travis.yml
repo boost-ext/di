@@ -1,16 +1,16 @@
 language: c++
-os : linux
 sudo: required
 env:
   global:
     - secure: "A27gNApbElRr3fqZXifVPKkB+xbxMYDFINGk2RDqul1X1Zg51M7e+ohHO9BwhEYiOGmCnFfbsVUP11XyFIH6kzWmxw9mhy8YDglbYfeyu6grxtU3mHElz8W7wO5OCPFPWXQf23sVYE8AWyjj6M+t3oyLJhPXCcYI7uMHEQm10CQ="
 
   matrix:
-    - DOCUMENTATION=publish
+    - DOCUMENTATION=1
 
 matrix:
   include:
-    - env: TOOLSET=clang-3.4
+    - os: linux
+      env: TOOLSET=clang-3.4
       addons: &clang34
         apt:
           packages:
@@ -21,7 +21,8 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.4
 
-    - env: TOOLSET=clang-3.5
+    - os: linux
+      env: TOOLSET=clang-3.5
       addons: &clang35
         apt:
           packages:
@@ -32,7 +33,8 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.5
 
-    - env: TOOLSET=clang-3.6
+    - os: linux
+      env: TOOLSET=clang-3.6
       addons: &clang36
         apt:
           packages:
@@ -43,7 +45,8 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.6
 
-    - env: TOOLSET=clang-3.7
+    - os: linux
+      env: TOOLSET=clang-3.7
       addons: &clang37
         apt:
           packages:
@@ -54,7 +57,8 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise
 
-    - env: TOOLSET=gcc-5 VARIANT=coverage
+    - os: linux
+      env: TOOLSET=gcc-5 VARIANT=coverage
       addons: &gcc5
         apt:
           packages:
@@ -64,7 +68,11 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
 
+    - os: osx
+      env: TOOLSET=clang
+
 before_script:
+  - git config --global user.name "travis"
   - if [ "${TOOLSET}" != "" ]; then (cd build && ./bootstrap.sh); fi
 
 script:
