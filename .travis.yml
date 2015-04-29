@@ -1,7 +1,8 @@
 language: c++
 
-os: linux
-#  - osx
+os:
+  - linux
+  - osx
 
 sudo: required
 
