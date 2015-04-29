@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>shared</title>
 <link rel="stylesheet" href="../../../../../../../doc/src/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="../../../index.html" title="Boost.DI (Dependency Injection) C++14">
 <link rel="up" href="../scopes.html" title="Scopes">
 <link rel="prev" href="unique.html" title="unique">
@@ -49,8 +49,6 @@
         </h6>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">shared</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> <span class="identifier">priority</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
-
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TGiven</span><span class="special">&gt;</span>
     <span class="keyword">class</span> <span class="identifier">scope</span> <span class="special">{</span>
     <span class="keyword">public</span><span class="special">:</span>
@@ -391,7 +389,7 @@
               <a class="link" href="singleton.html" title="singleton">singleton scope</a>
             </li>
 <li class="listitem">
-              <a class="link" href="session.html" title="session">session scope</a>
+              <a class="link" href="../../../">session scope</a>
             </li>
 <li class="listitem">
               <a class="link" href="external.html" title="external">external scope</a>

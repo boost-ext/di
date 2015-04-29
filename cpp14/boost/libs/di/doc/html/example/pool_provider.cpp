@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+// Copyright (c) 2012-2015 Krzysztof Jusiak (krzysztof at jusiak dot net)
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -15,7 +15,7 @@
 namespace di = boost::di;
 
 //<-
-struct interface { virtual ~interface() { }; };
+struct interface { virtual ~interface() noexcept = default; };
 struct implementation : interface { };
 //->
 
@@ -55,6 +55,11 @@ struct example {
 
 /*<define `pool provider`>*/
 struct pool_provider {
+    template<class...>
+    struct is_creatable {
+        static constexpr auto value = true;
+    };
+
     template<class I, class T, class TInitialization, class TMemory, class... TArgs>
     auto get(const TInitialization& // direct/uniform
            , const TMemory& // stack/heap
@@ -67,8 +72,7 @@ struct pool_provider {
 };
 
 /*<override `di` provider configuration>*/
-template<class>
-class config : public di::config<> {
+class config : public di::config {
 public:
     auto provider() const noexcept {
         return pool_provider{};

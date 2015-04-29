@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+// Copyright (c) 2012-2015 Krzysztof Jusiak (krzysztof at jusiak dot net)
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -25,8 +25,6 @@ struct example {
 /*<define scope class>*/
 class custom_scope {
 public:
-    static constexpr auto priority = false;
-
     /*<define `entry`, `exit` actions>*/
     class entry { };
     class exit { };
@@ -59,6 +57,9 @@ public:
         void call(const exit&) {
             in_scope_ = false;
         }
+
+        template<class, class TProvider>
+        custom_wrapper try_create(const TProvider&) const noexcept;
 
         /*<<create shared_ptr when in scope out of provider pointer>>*/
         template<class, class TProvider>

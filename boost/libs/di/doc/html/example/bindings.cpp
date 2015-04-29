@@ -16,8 +16,8 @@
 namespace di = boost::di;
 
 //<-
-struct interface1 { virtual ~interface1() { } };
-struct interface2 { virtual ~interface2() { } };
+struct interface1 { virtual ~interface1() noexcept = default; };
+struct interface2 { virtual ~interface2() noexcept = default; };
 struct implementation1 : interface1 { };
 struct implementation2 : interface2 { };
 auto some_name = []{};
@@ -82,8 +82,8 @@ int main() {
       , di::bind<interface2, implementation2>
       , di::bind<int>.to(42)
       , di::bind<std::string>.named(some_name).to("some_name")
-      , di::bind<float>.to(std::ref(f))
-      , di::bind<double>.to(std::cref(d))
+      , di::bind<float>.to(f)
+      , di::bind<double>.to(d)
       , di::bind<std::function<int()>>.to([]{return 87;})
       , di::bind<int>.named(int_name).to(123)
     );

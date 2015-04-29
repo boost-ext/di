@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2014 Krzysztof Jusiak (krzysztof at jusiak dot net)
+// Copyright (c) 2012-2015 Krzysztof Jusiak (krzysztof at jusiak dot net)
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -15,8 +15,7 @@
 
 namespace di = boost::di;
 
-template<class>
-class custom_policy : public di::config<> {
+class custom_policy : public di::config {
 public:
     auto policies() const noexcept {
         using namespace di::policies;

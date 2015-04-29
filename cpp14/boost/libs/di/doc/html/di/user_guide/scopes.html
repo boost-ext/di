@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Scopes</title>
 <link rel="stylesheet" href="../../../../../../doc/src/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="../../index.html" title="Boost.DI (Dependency Injection) C++14">
 <link rel="up" href="../user_guide.html" title="User Guide">
 <link rel="prev" href="annotations/named.html" title="(named = name)">
@@ -31,7 +31,6 @@
 <dt><span class="section"><a href="scopes/unique.html">unique</a></span></dt>
 <dt><span class="section"><a href="scopes/shared.html">shared</a></span></dt>
 <dt><span class="section"><a href="scopes/singleton.html">singleton</a></span></dt>
-<dt><span class="section"><a href="scopes/session.html">session</a></span></dt>
 <dt><span class="section"><a href="scopes/external.html">external</a></span></dt>
 </dl></div>
 <h5>
@@ -58,7 +57,7 @@
             <a class="link" href="scopes/singleton.html" title="singleton">singleton scope</a>
           </li>
 <li class="listitem">
-            <a class="link" href="scopes/session.html" title="session">session scope</a>
+            <a class="link" href="../../">session scope</a>
           </li>
 <li class="listitem">
             <a class="link" href="scopes/external.html" title="external">external scope</a>
@@ -281,8 +280,6 @@
         <span class="phrase"><a name="di.user_guide.scopes.synopsis"></a></span><a class="link" href="scopes.html#di.user_guide.scopes.synopsis">Synopsis</a>
       </h5>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">scope</span> <span class="special">{</span>
-    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> <span class="identifier">priority</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span> <span class="comment">// scope priority</span>
-
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TGiven</span><span class="special">&gt;</span>
     <span class="keyword">class</span> <span class="identifier">scope</span> <span class="special">{</span>
     <span class="keyword">public</span><span class="special">:</span>
@@ -858,8 +855,6 @@
 <tbody><tr>
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">struct</span> <span class="identifier">custom_scope</span> <span class="special">{</span>
-    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> <span class="identifier">priority</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
-
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="keyword">class</span><span class="special">&gt;</span>
     <span class="keyword">struct</span> <span class="identifier">scope</span> <span class="special">{</span>
         <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TProvider</span><span class="special">&gt;</span>
@@ -912,7 +907,7 @@
             <a class="link" href="scopes/singleton.html" title="singleton">singleton scope</a>
           </li>
 <li class="listitem">
-            <a class="link" href="scopes/session.html" title="session">session scope</a>
+            <a class="link" href="../../">session scope</a>
           </li>
 </ul></div>
 </div>

@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Introduction &amp; Motivation</title>
 <link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.0">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="../index.html" title="Boost.DI (Dependency Injection) C++14">
 <link rel="up" href="../index.html" title="Boost.DI (Dependency Injection) C++14">
 <link rel="prev" href="../index.html" title="Boost.DI (Dependency Injection) C++14">
@@ -170,7 +170,7 @@
         </li>
 <li class="listitem">
 <p class="simpara">
-          <span class="bold"><strong>Boost.DI is not intrusive</strong></span>
+          <span class="bold"><strong>Boost.DI guarantees compile time creation</strong></span>
         </p>
 <div class="informaltable"><table class="table">
 <colgroup>
@@ -194,22 +194,94 @@
 </tr></thead>
 <tbody><tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">coffee_maker</span><span class="special">(</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">iheater</span><span class="special">&gt;</span> <span class="identifier">heater</span>
-           <span class="special">,</span> <span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">ipump</span><span class="special">&gt;</span> <span class="identifier">pump</span><span class="special">);</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">class</span> <span class="identifier">coffee_maker</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">coffee_maker</span><span class="special">(</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">ipump</span><span class="special">&gt;</span> <span class="identifier">pump</span> <span class="special">=</span> <span class="keyword">nullptr</span><span class="special">);</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">auto</span> <span class="identifier">cm</span> <span class="special">=</span> <span class="identifier">coffee_maker</span> <span class="identifier">cm</span><span class="special">{};</span> <span class="comment">// pump is nullptr</span>
+<span class="special">}</span>
 </pre>
                 </td>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">coffee_maker</span><span class="special">(</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">iheater</span><span class="special">&gt;</span> <span class="identifier">heater</span>
-           <span class="special">,</span> <span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">ipump</span><span class="special">&gt;</span> <span class="identifier">pump</span><span class="special">);</span>
-                                                         <span class="special">.</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">class</span> <span class="identifier">coffee_maker</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">coffee_maker</span><span class="special">(</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">ipump</span><span class="special">&gt;</span> <span class="identifier">pump</span> <span class="special">=</span> <span class="keyword">nullptr</span><span class="special">);</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">();</span>
+    <span class="keyword">auto</span> <span class="identifier">cm</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">coffee_maker</span><span class="special">&gt;();</span> <span class="comment">// compile error: ipump not bound</span>
+<span class="special">}</span>
 </pre>
                 </td>
 <td>
                   <p>
                     <a href="../images/coffee_maker_1.png" target="_top"><span class="inlinemediaobject"><img src="../images/coffee_maker_1.png"></span></a>
                   </p>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="special">.</span>                                                                                               <span class="special">.</span>
+                </td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<p class="simpara">
+          <span class="bold"><strong>Boost.DI supports non-intrusive constructor injection</strong></span>
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Manual Dependency Injection
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Boost.DI
+                  </p>
+                </th>
+<th>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">class</span> <span class="identifier">coffee_maker</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">coffee_maker</span><span class="special">(</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">iheater</span><span class="special">&gt;</span> <span class="identifier">heater</span><span class="special">,</span> <span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">ipump</span><span class="special">&gt;</span> <span class="identifier">pump</span><span class="special">);</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">auto</span> <span class="identifier">heater</span> <span class="special">=</span> <span class="identifier">make_shared</span><span class="special">&lt;</span><span class="identifier">heater</span><span class="special">&gt;();</span>
+    <span class="keyword">auto</span> <span class="identifier">pump</span> <span class="special">=</span> <span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">pump</span><span class="special">&gt;();</span>
+    <span class="keyword">auto</span> <span class="identifier">cm</span> <span class="special">=</span> <span class="identifier">coffee_maker</span> <span class="identifier">cm</span><span class="special">{</span><span class="identifier">heater</span><span class="special">,</span> <span class="identifier">move</span><span class="special">(</span><span class="identifier">pump</span><span class="special">)};</span>
+<span class="special">}</span>
 </pre>
+                </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">class</span> <span class="identifier">coffee_maker</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">coffee_maker</span><span class="special">(</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">iheater</span><span class="special">&gt;</span> <span class="identifier">heater</span><span class="special">,</span> <span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">ipump</span><span class="special">&gt;</span> <span class="identifier">pump</span><span class="special">);</span> <span class="comment">// no generation or constructor changes required</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+        <a class="link" href="user_guide/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">iheater</span><span class="special">,</span> <span class="identifier">heater</span><span class="special">&gt;</span>
+      <span class="special">,</span> <a class="link" href="user_guide/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">ipump</span><span class="special">,</span> <span class="identifier">pump</span><span class="special">&gt;</span>
+    <span class="special">);</span>
+
+    <span class="keyword">auto</span> <span class="identifier">cm</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">coffee_maker</span><span class="special">&gt;();</span>
+<span class="special">}</span>
+</pre>
+                </td>
+<td>
+                  <p>
+                    <a href="../images/coffee_maker_1.png" target="_top"><span class="inlinemediaobject"><img src="../images/coffee_maker_1.png"></span></a>
+                  </p>
                 </td>
 </tr></tbody>
 </table></div>
@@ -366,7 +438,7 @@
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
    <span class="special">...</span>
    <span class="keyword">auto</span> <span class="identifier">grinder</span> <span class="special">=</span> <span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">igrinder</span><span class="special">&gt;{</span>
-     <span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">grinder</span><span class="special">&gt;(</span><span class="identifier">pump</span><span class="special">,</span> <span class="identifier">heater</span><span class="special">)</span>
+       <span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">grinder</span><span class="special">&gt;(</span><span class="identifier">pump</span><span class="special">,</span> <span class="identifier">heater</span><span class="special">)</span>
    <span class="special">};</span>
    <span class="special">...</span>
 <span class="special">}</span>
@@ -388,7 +460,8 @@
 </li>
 <li class="listitem">
 <p class="simpara">
-          <span class="bold"><strong>Boost.DI reduces testing effort</strong></span>
+          <span class="bold"><strong>Boost.DI reduces maintaining effort</strong></span> (by
+          automatic scopes deduction)
         </p>
 <div class="informaltable"><table class="table">
 <colgroup>
@@ -409,20 +482,93 @@
 </tr></thead>
 <tbody><tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">heater_mock</span> <span class="special">=</span> <span class="identifier">create_heater_mock</span><span class="special">{};</span>
+                </td>
+<td>
+                </td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<p class="simpara">
+          <span class="bold"><strong>Boost.DI supports conversion between boost smart
+          pointers and std smart pointers</strong></span>
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Manual Dependency Injection
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Boost.DI
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">class</span> <span class="identifier">coffee_maker</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">coffee_maker</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">iheater</span><span class="special">&gt;</span> <span class="identifier">heater</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ipump</span><span class="special">&gt;</span> <span class="identifier">pump</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+                </td>
+<td>
+                </td>
+</tr></tbody>
+</table></div>
+</li>
+<li class="listitem">
+<p class="simpara">
+          <span class="bold"><strong>Boost.DI simplify testing</strong></span>
+        </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Manual Dependency Injection
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Boost.DI
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// create and maintain all required mocks</span>
+<span class="keyword">auto</span> <span class="identifier">heater_mock</span> <span class="special">=</span> <span class="identifier">create_heater_mock</span><span class="special">{};</span>
 <span class="keyword">auto</span> <span class="identifier">pump_mock</span> <span class="special">=</span> <span class="identifier">create_pump_mock</span><span class="special">{};</span>
+
+<span class="comment">// set expectations</span>
+<span class="identifier">EXPECT_CALL</span><span class="special">(&amp;</span><span class="identifier">ipump</span><span class="special">::</span><span class="identifier">pump</span><span class="special">);</span>
+<span class="identifier">EXPECT_CALL</span><span class="special">(&amp;</span><span class="identifier">iheater</span><span class="special">::</span><span class="identifier">on</span><span class="special">);</span>
+<span class="identifier">EXPECT_CALL</span><span class="special">(&amp;</span><span class="identifier">iheater</span><span class="special">::</span><span class="identifier">off</span><span class="special">);</span>
+
 <span class="identifier">coffee_maker</span> <span class="identifier">cm</span><span class="special">{</span><span class="identifier">heater_mock</span><span class="special">,</span> <span class="identifier">pump_mock</span><span class="special">};</span>
-<span class="identifier">expect_call</span><span class="special">(&amp;</span><span class="identifier">ipump</span><span class="special">::</span><span class="identifier">pump</span><span class="special">);</span>
-<span class="identifier">expect_call</span><span class="special">(&amp;</span><span class="identifier">iheater</span><span class="special">::</span><span class="identifier">off</span><span class="special">);</span>
 <span class="identifier">cm</span><span class="special">.</span><span class="identifier">brew</span><span class="special">();</span>
 </pre>
                 </td>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">&lt;</span><span class="identifier">mocks_provider</span><span class="special">&gt;();</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// create and maintain one mocks injector despite the number of required mocks</span>
+<span class="keyword">auto</span> <span class="identifier">mi</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">&lt;</span><span class="identifier">mocks_provider</span><span class="special">&gt;();</span>
+
+<span class="comment">// set expectations</span>
+<span class="identifier">mi</span><span class="special">(&amp;</span><span class="identifier">iheater</span><span class="special">::</span><span class="identifier">on</span><span class="special">);</span>
+<span class="identifier">mi</span><span class="special">(&amp;</span><span class="identifier">ipump</span><span class="special">::</span><span class="identifier">pump</span><span class="special">);</span>
+<span class="identifier">mi</span><span class="special">(&amp;</span><span class="identifier">iheater</span><span class="special">::</span><span class="identifier">off</span><span class="special">);</span>
+
 <span class="keyword">auto</span> <span class="identifier">cm</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">coffee_maker</span><span class="special">&gt;();</span>
-<span class="identifier">expect_call</span><span class="special">(&amp;</span><span class="identifier">iheater</span><span class="special">::</span><span class="identifier">on</span><span class="special">);</span>
-<span class="identifier">expect_call</span><span class="special">(&amp;</span><span class="identifier">ipump</span><span class="special">::</span><span class="identifier">pump</span><span class="special">);</span>
-<span class="identifier">expect_call</span><span class="special">(&amp;</span><span class="identifier">iheater</span><span class="special">::</span><span class="identifier">off</span><span class="special">);</span>
 <span class="identifier">cm</span><span class="special">.</span><span class="identifier">brew</span><span class="special">();</span>
 </pre>
                 </td>
@@ -453,19 +599,17 @@
 </tr></thead>
 <tbody><tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="special">?</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="special">???</span>
 </pre>
                 </td>
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">&gt;</span>
 <span class="keyword">class</span> <span class="identifier">allow_only_smart_ptrs</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">config</span><span class="special">&lt;&gt;</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">auto</span> <span class="identifier">policies</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
-    <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_policies</span><span class="special">(</span>
-      <span class="identifier">constructible</span><span class="special">(</span>
-        <span class="identifier">is_smart_ptr</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">_</span><span class="special">&gt;{};</span>
-    <span class="special">);</span>
-  <span class="special">}</span>
+    <span class="keyword">auto</span> <span class="identifier">policies</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_policies</span><span class="special">(</span>
+            <span class="identifier">constructible</span><span class="special">(</span><span class="identifier">is_smart_ptr</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">_</span><span class="special">&gt;{});</span>
+    <span class="special">}</span>
 <span class="special">};</span>
 
 <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">();</span>
@@ -499,21 +643,38 @@
                   </p>
                 </th>
 <th>
+                  <p>
+                    Output
+                  </p>
                 </th>
 </tr></thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="special">?</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="special">???</span>
 </pre>
                 </td>
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">&lt;</span><span class="identifier">types_dumper</span><span class="special">&gt;();</span>
 <span class="keyword">auto</span> <span class="identifier">cm</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">coffee_maker</span><span class="special">&gt;();</span>
-
-<span class="special">(</span><span class="identifier">coffee_maker</span><span class="special">)</span>
+</pre>
+                </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="special">(</span><span class="identifier">coffee_maker</span><span class="special">)</span>
     <span class="special">(</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">iheater</span><span class="special">&gt;</span> <span class="special">-&gt;</span> <span class="identifier">electric_heater</span><span class="special">)</span>
     <span class="special">(</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">ipump</span><span class="special">&gt;</span> <span class="special">-&gt;</span> <span class="identifier">heat_pump</span><span class="special">)</span>
         <span class="special">(</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">iheater</span><span class="special">&gt;</span> <span class="special">-&gt;</span> <span class="identifier">electric_heater</span><span class="special">)</span>
+</pre>
+                </td>
+</tr>
+<tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="special">???</span>
+</pre>
+                </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">&lt;</span><span class="identifier">uml_dumper</span><span class="special">&gt;();</span>
+<span class="keyword">auto</span> <span class="identifier">cm</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">coffee_maker</span><span class="special">&gt;();</span>
 </pre>
                 </td>
 <td>
@@ -521,7 +682,8 @@
                     <a href="../images/coffee_maker_uml.png" target="_top"><span class="inlinemediaobject"><img src="../images/coffee_maker_uml.png"></span></a>
                   </p>
                 </td>
-</tr></tbody>
+</tr>
+</tbody>
 </table></div>
 </li>
 </ul></div>
