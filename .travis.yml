@@ -73,7 +73,7 @@ matrix:
 
 before_script:
   - git config --global user.name "travis"
-  - if [ "${TOOLSET}" != "" ]; then (cd build && ./bootstrap.sh); fi
+  - cd build && ./bootstrap.sh
 
 script:
   - if [ "${TOOLSET}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off ${VARIANT}); fi
