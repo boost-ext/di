@@ -85,12 +85,22 @@ script:
   - if [ "${TOOLSET}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off ${VARIANT}); fi
   - if [ "${TOOLSET}" != "" ]; then (cd example && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off); fi
   - if [ "$TRAVIS_OS_NAME" != "osx" ] && [ "${TOOLSET}" != "" ]; then (find .. -type f -executable | grep "\.test" | xargs -i% valgrind --error-exitcode=-1 %); fi
-  - if [ "${DOCUMENTATION}" != "" ]; then (travis_wait travis_retry wget --quiet http://sourceforge.net/projects/boost/files/boost/1.58.0/${BOOST}.tar.gz); fi
-  - if [ "${DOCUMENTATION}" != "" ]; then (tar zxf ${BOOST}.tar.gz && mkdir ${BOOST}/libs/di && cp -r example build doc ${BOOST}/libs/di); fi
-  - if [ "${DOCUMENTATION}" != "" ]; then (sudo apt-get install xsltproc && cd ${BOOST}/libs/di/doc && ../build/b2 -sBOOST_ROOT=../build); fi
+  - if [ "${DOCUMENTATION}" != "" ]; then (travis_wait travis_retry wget --quiet http://sourceforge.net/projects/boost/files/boost/1.58.0/${BOOST}.tar.gz\
+                                           tar zxf ${BOOST}.tar.gz &&\
+                                           mkdir ${BOOST}/libs/di &&\
+                                           cp -r example build doc ${BOOST}/libs/di &&\
+                                           sudo apt-get install xsltproc &&\
+                                           cd ${BOOST}/libs/di/doc &&\
+                                           ../build/b2 -sBOOST_ROOT=../build &&\
+                                           git clone https://github.com/krzysztof-jusiak/di.git &&\
+                                           cd di && git checkout gh-pages --track origin/gh-pages && git reset --hard &&\
+                                           rm -rf boost/libs/di/doc/html cpp14/boost/libs/di/doc/html &&\
+                                           cp -r ../html boost/libs/di/doc && cp -r ../html cpp14/boost/libs/di/doc &&\
+                                           git add . && git commit -am "doc regeneration" && git push); fi
 
 after_success:
-  - if [ "${VARIANT}" == "coverage" ]; then sudo pip install cpp-coveralls; coveralls -r . -b test/ --gcov /usr/bin/g++-5 --repo-token c3V44Hj0ZTKzz4kaa3gIlVjInFiyNRZ4f; fi
+  - if [ "${VARIANT}" == "coverage" ]; then (sudo pip install cpp-coveralls &&\
+                                             coveralls -r . -b test/ --gcov /usr/bin/g++-5 --repo-token c3V44Hj0ZTKzz4kaa3gIlVjInFiyNRZ4f); fi
 
 notifications:
   webhooks:
