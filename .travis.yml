@@ -11,7 +11,7 @@ env:
     - secure: "A27gNApbElRr3fqZXifVPKkB+xbxMYDFINGk2RDqul1X1Zg51M7e+ohHO9BwhEYiOGmCnFfbsVUP11XyFIH6kzWmxw9mhy8YDglbYfeyu6grxtU3mHElz8W7wO5OCPFPWXQf23sVYE8AWyjj6M+t3oyLJhPXCcYI7uMHEQm10CQ="
 
   matrix:
-    - DOCUMENTATION=1
+    - DOCUMENTATION=1 BOOST=boost_1_58_0
 
 matrix:
   include:
@@ -85,7 +85,9 @@ script:
   - if [ "${TOOLSET}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off ${VARIANT}); fi
   - if [ "${TOOLSET}" != "" ]; then (cd example && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off); fi
   - if [ "$TRAVIS_OS_NAME" != "osx" ] && [ "${TOOLSET}" != "" ]; then (find .. -type f -executable | grep "\.test" | xargs -i% valgrind --error-exitcode=-1 %); fi
-  - if [ "${DOCUMENTATION}" != "" ]; then (cd doc && ../build/b2 -sBOOST_ROOT=../build); fi
+  - if [ "${DOCUMENTATION}" != "" ]; then (travis_wait travis_retry wget --quiet http://sourceforge.net/projects/boost/files/boost/1.58.0/${BOOST}.tar.gz); fi
+  - if [ "${DOCUMENTATION}" != "" ]; then (tar zxf ${BOOST}.tar.gz && mkdir ${BOOST}/libs/di && cp -r example build doc example ${BOOST}/libs/di); fi
+  - if [ "${DOCUMENTATION}" != "" ]; then (cd ${BOOST}/libs/di/doc && ../build/b2 -sBOOST_ROOT=../build); fi
 
 after_success:
   - if [ "${VARIANT}" == "coverage" ]; then sudo pip install cpp-coveralls; coveralls -r . -b test/ --gcov /usr/bin/g++-5 --repo-token c3V44Hj0ZTKzz4kaa3gIlVjInFiyNRZ4f; fi
