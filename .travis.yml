@@ -84,8 +84,8 @@ before_script:
 script:
   - if [ "${TOOLSET}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off ${VARIANT}); fi
   - if [ "${TOOLSET}" != "" ]; then (cd example && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off); fi
-  - if [ "${TOOLSET}" != "" ]; then (find .. -type f -executable | grep "\.test" | xargs -i% valgrind --error-exitcode=-1 %); fi
-  - if [ "${DOCUMENTATION}" != "" ]; then (rm -f Jamroot; cd doc && ../build/b2 -sBOOST_ROOT=../build); fi
+  - if [ "$TRAVIS_OS_NAME" != "osx" ] && [ "${TOOLSET}" != "" ]; then (find .. -type f -executable | grep "\.test" | xargs -i% valgrind --error-exitcode=-1 %); fi
+  - if [ "${DOCUMENTATION}" != "" ]; then (cd doc && ../build/b2 -sBOOST_ROOT=../build); fi
 
 after_success:
   - if [ "${VARIANT}" == "coverage" ]; then sudo pip install cpp-coveralls; coveralls -r . -b test/ --gcov /usr/bin/g++-5 --repo-token c3V44Hj0ZTKzz4kaa3gIlVjInFiyNRZ4f; fi
