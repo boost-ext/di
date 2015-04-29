@@ -59,7 +59,7 @@ public:
     };
 
     template<class TExpected, class TGiven>
-    struct scope<TExpected, TGiven&> {
+    struct scope<TExpected, TGiven&, std::enable_if_t<!is_lambda_expr<TGiven, const injector&>::value && !is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
         using is_ref = void;
 
         explicit scope(TGiven& object)
@@ -75,23 +75,6 @@ public:
         }
 
         wrappers::shared<TGiven&> object_;
-    };
-
-    template<class TExpected, int N>
-    struct scope<TExpected, char const(&)[N]> {
-        explicit scope(char const(&object)[N])
-            : object_{object}
-        { }
-
-        template<class, class TProvider>
-        wrappers::unique<TExpected> try_create(const TProvider&);
-
-        template<class, class TProvider>
-        auto create(const TProvider&) const noexcept {
-            return object_;
-        }
-
-        wrappers::unique<TExpected> object_;
     };
 
     template<class TExpected, class TGiven>

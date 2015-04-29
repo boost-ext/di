@@ -92,6 +92,16 @@ private:
         is_not_narrowed<T>::value
     >;
 
+    template<class T>
+    struct str_traits {
+        using type = T;
+    };
+
+    template<int N>
+    struct str_traits<const char(&)[N]> {
+        using type = std::string;
+    };
+
 public:
     using scope = TScope;
     using expected = TExpected;
@@ -133,7 +143,7 @@ public:
     template<class T, BOOST_DI_REQUIRES(externable<T>::value)>
     auto to(T&& object) const noexcept {
         using dependency = dependency<
-            scopes::external, TExpected, T, TName
+            scopes::external, TExpected, typename str_traits<T>::type, TName
         >;
         return dependency{std::forward<T>(object)};
     }

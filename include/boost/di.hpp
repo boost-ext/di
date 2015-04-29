@@ -791,7 +791,7 @@ public:
     };
 
     template<class TExpected, class TGiven>
-    struct scope<TExpected, TGiven&> {
+    struct scope<TExpected, TGiven&, std::enable_if_t<!is_lambda_expr<TGiven, const injector&>::value && !is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
         using is_ref = void;
 
         explicit scope(TGiven& object)
@@ -807,23 +807,6 @@ public:
         }
 
         wrappers::shared<TGiven&> object_;
-    };
-
-    template<class TExpected, int N>
-    struct scope<TExpected, char const(&)[N]> {
-        explicit scope(char const(&object)[N])
-            : object_{object}
-        { }
-
-        template<class, class TProvider>
-        wrappers::unique<TExpected> try_create(const TProvider&);
-
-        template<class, class TProvider>
-        auto create(const TProvider&) const noexcept {
-            return object_;
-        }
-
-        wrappers::unique<TExpected> object_;
     };
 
     template<class TExpected, class TGiven>
@@ -1575,6 +1558,16 @@ private:
         is_not_narrowed<T>::value
     >;
 
+    template<class T>
+    struct str_traits {
+        using type = T;
+    };
+
+    template<int N>
+    struct str_traits<const char(&)[N]> {
+        using type = std::string;
+    };
+
 public:
     using scope = TScope;
     using expected = TExpected;
@@ -1616,7 +1609,7 @@ public:
     template<class T, BOOST_DI_REQUIRES(externable<T>::value)>
     auto to(T&& object) const noexcept {
         using dependency = dependency<
-            scopes::external, TExpected, T, TName
+            scopes::external, TExpected, typename str_traits<T>::type, TName
         >;
         return dependency{std::forward<T>(object)};
     }
