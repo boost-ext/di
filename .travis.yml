@@ -64,7 +64,7 @@ matrix:
             - llvm-toolchain-precise
 
     - os: linux
-      env: TOOLSET=gcc-5 VARIANT=coverage
+      env: TOOLSET=gcc-5 GCOV=gcov-5 VARIANT=coverage
       addons: &gcc5
         apt:
           packages:
@@ -90,7 +90,7 @@ script:
   - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (travis_wait travis_retry wget --quiet http://sourceforge.net/projects/boost/files/boost/1.58.0/${BOOST}.tar.gz && tar zxf ${BOOST}.tar.gz && mkdir ${BOOST}/libs/di && cp -r example build doc ${BOOST}/libs/di && sudo apt-get install xsltproc && cd ${BOOST}/libs/di/doc && ../build/b2 -sBOOST_ROOT=../build && git clone https://github.com/krzysztof-jusiak/di.git && cd di && git checkout -b gh-pages --track origin/gh-pages && git reset --hard && rm -rf boost/libs/di/doc/html cpp14/boost/libs/di/doc/html && cp -r ../html boost/libs/di/doc && cp -r ../html cpp14/boost/libs/di/doc && git add -A . && git commit -am "doc regeneration" && git push --force --quiet "https://${GH_TOKEN}@github.com/krzysztof-jusiak/di"); fi
 
 after_success:
-  - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${VARIANT}" == "coverage" ]; then (sudo pip install requests[security] cpp-coveralls && coveralls -r . -b test/ --gcov /usr/bin/gcov-5 --repo-token c3V44Hj0ZTKzz4kaa3gIlVjInFiyNRZ4f); fi
+  - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${VARIANT}" == "coverage" ]; then (sudo pip install requests[security] cpp-coveralls && coveralls -r . -b test/ --gcov /usr/bin/${GCOV} --repo-token c3V44Hj0ZTKzz4kaa3gIlVjInFiyNRZ4f); fi
 
 notifications:
   webhooks:
