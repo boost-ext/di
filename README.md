@@ -241,7 +241,7 @@ Manual Dependency Injection             | Boost.DI
 ```sh
     git clone --recursive https://github.com/krzysztof-jusiak/di.git
     cd di/build
-    ./bootstrap.sh --with-toolset=clang
+    ./bootstrap.sh
     ./b2 -j4 ../test ../example
 ```
 
