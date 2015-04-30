@@ -14,6 +14,12 @@ namespace boost { namespace di { namespace wrappers {
 
 template<class T>
 struct shared {
+    template<class>
+    struct is_ref : std::true_type { };
+
+    template<class I>
+    struct is_ref<std::shared_ptr<I>> : std::is_same<I, T> { };
+
     template<class I>
     inline operator std::shared_ptr<I>() const noexcept {
         return object;
@@ -40,6 +46,19 @@ struct shared {
 
     template<class I>
     inline operator std::weak_ptr<I>() const noexcept {
+        return object;
+    }
+
+    inline operator T&() noexcept {
+        return *object;
+    }
+
+    inline operator const T&() const noexcept {
+        return *object;
+    }
+
+    // needed?
+    inline operator const std::shared_ptr<T>&() const noexcept {
         return object;
     }
 

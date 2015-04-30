@@ -60,7 +60,8 @@ public:
 
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven&, std::enable_if_t<!is_lambda_expr<TGiven, const injector&>::value && !is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
-        using is_ref = void;
+        template<class T>
+        using is_ref = std::true_type;
 
         explicit scope(TGiven& object)
             : object_{object}

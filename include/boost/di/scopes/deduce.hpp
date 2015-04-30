@@ -16,6 +16,9 @@ public:
     template<class TExpected, class TGiven>
     class scope {
     public:
+        template<class T>
+        using is_ref = typename type_traits::scope_traits_t<T>::template scope<TExpected, TGiven>::template is_ref<aux::remove_accessors_t<T>>;
+
         template<class T, class TProvider>
         auto try_create(const TProvider& provider) -> decltype(
             typename type_traits::scope_traits_t<T>::template

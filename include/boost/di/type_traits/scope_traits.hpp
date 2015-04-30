@@ -22,12 +22,12 @@ struct scope_traits {
 
 template<class T>
 struct scope_traits<T&> {
-    using type = scopes::external;
+    using type = scopes::singleton;
 };
 
 template<class T>
 struct scope_traits<const T&> {
-    using type = scopes::unique;
+    using type = scopes::singleton;
 };
 
 template<class T>

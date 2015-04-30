@@ -17,6 +17,9 @@ public:
     template<class, class T>
     class scope {
     public:
+        template<class T_>
+        using is_ref = typename wrappers::shared<T>::template is_ref<T_>;
+
         template<class, class TProvider>
         auto try_create(const TProvider& provider)
             -> decltype(wrappers::shared<T>{std::shared_ptr<T>{provider.try_get()}});

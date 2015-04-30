@@ -13,17 +13,13 @@
 
 namespace boost { namespace di { namespace core {
 
-BOOST_DI_HAS_TYPE(is_ref);
-
 template<class TParent, class TInjector, class TError>
 struct any_type {
     template<class T>
     struct is_ref_impl {
         static constexpr auto value =
             std::is_same<TInjector, aux::none_t>::value ||
-            has_is_ref<
-                std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>
-            >::value;
+                std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>::template is_ref<T>::value;
     };
 
     template<class T>
@@ -51,7 +47,7 @@ struct any_type {
         return injector_.template create_impl<T>();
     }
 
-    template<class T, class = is_not_same<T>, class = is_ref<T>, class = is_creatable<T&, TError>>
+    template<class T, class = is_not_same<T>, class = is_ref<T&>, class = is_creatable<T&, TError>>
     operator T&() const {
         return injector_.template create_impl<T&>();
     }
@@ -63,7 +59,7 @@ struct any_type {
     }
 #endif
 
-    template<class T, class = is_not_same<T>, class = is_ref<T>, class = is_creatable<const T&, TError>>
+    template<class T, class = is_not_same<T>, class = is_ref<const T&>, class = is_creatable<const T&, TError>>
     operator const T&() const {
         return injector_.template create_impl<const T&>();
     }
