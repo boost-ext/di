@@ -357,9 +357,9 @@ test ctor_refs = [] {
         const std::shared_ptr<i1>& sp;
         int& i;
         const double& d;
-        std::string str;
-        std::string nstr;
-        std::function<int()> f;
+        std::string str = {};
+        std::string nstr = {};
+        std::function<int()> f = {};
         long l = 0;
         short s = 0;
     };

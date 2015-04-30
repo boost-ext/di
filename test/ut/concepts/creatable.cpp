@@ -13,8 +13,8 @@ struct d {
 };
 
 struct u {
-    int i;
-    double d;
+    int i = {};
+    double d = {};
 };
 
 test is_creatable = [] {
