@@ -10,18 +10,16 @@ import feature : extend-feature compose ;
 
 extend-feature variant : coverage ;
 compose <variant>coverage :
-    <cxxflags>"-fprofile-arcs"
-    <cxxflags>"-ftest-coverage"
-    <linkflags>"-fprofile-arcs"
+    <cxxflags>"-fprofile-arcs -ftest-coverage" <linkflags>"-fprofile-arcs"
     <optimization>off
 ;
 
-extend-feature variant : sanitize ;
-compose <variant>sanitize :
-    <cxxflags>"-fsanitize=undefined"
-    <cxxflags>"-fsanitize=address"
-    <linkflags>"-fsanitize=undefined"
-    <linkflags>"-fsanitize=address"
+extend-feature variant : analyze ;
+compose <variant>analyze :
+    <toolset>gcc:<cxxflags>"-fsanitize=undefined -fsanitize=address" <linkflags>"-fsanitize=undefined -fsanitize=address"
+    <toolset>clang:<cxxflags>"-fsanitize=undefined -fsanitize=address" <linkflags>"-fsanitize=undefined -fsanitize=address"
+    <toolset>darwin:<cxxflags>"-fsanitize=undefined -fsanitize=address" <linkflags>"-fsanitize=undefined -fsanitize=address"
+    <toolset>msvc:<cxxflags>"/analyze"
     <optimization>off
 ;
 
@@ -35,7 +33,7 @@ project :
 rule run-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
     toolset =
         <toolset>gcc:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra"
-        <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra"
+        <cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra"
         <toolset>darwin:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror=all"
         <toolset>msvc:<cxxflags>"/FI common/test.hpp"
     ;

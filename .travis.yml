@@ -64,7 +64,7 @@ matrix:
             - llvm-toolchain-precise
 
     - os: linux
-      env: TOOLSET=clang-3.7 VARIANT=sanitize
+      env: TOOLSET=clang-3.7 VARIANT=analyze
       addons: &clang37
         apt:
           packages:
@@ -87,7 +87,7 @@ matrix:
             - ubuntu-toolchain-r-test
 
     - os: linux
-      env: TOOLSET=gcc-5 VARIANT=sanitize
+      env: TOOLSET=gcc-5 VARIANT=analyze
       addons: &gcc5
         apt:
           packages:
@@ -98,7 +98,7 @@ matrix:
             - ubuntu-toolchain-r-test
 
     - os: osx
-      env: TOOLSET=clang VARIANT=sanitize
+      env: TOOLSET=clang VARIANT=analyze
 
 before_script:
   - git config --global user.name "Travis-CI"
