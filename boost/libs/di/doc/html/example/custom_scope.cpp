@@ -47,8 +47,8 @@ public:
         };
 
     public:
-        /*<<define result_type>>*/
-        using result_type = custom_wrapper;
+        template<class>
+        using is_referable = std::false_type;
 
         void call(const entry&) {
             in_scope_ = true;
