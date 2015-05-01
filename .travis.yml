@@ -16,7 +16,7 @@ env:
 matrix:
   include:
     - os: linux
-      env: TOOLSET=clang-3.4 VARIANT=analyze
+      env: TOOLSET=clang-3.4 VALGRIND=1
       addons: &clang34
         apt:
           packages:
@@ -28,7 +28,7 @@ matrix:
             - llvm-toolchain-precise-3.4
 
     - os: linux
-      env: TOOLSET=clang-3.5
+      env: TOOLSET=clang-3.5 VALGRIND=1
       addons: &clang35
         apt:
           packages:
@@ -40,7 +40,7 @@ matrix:
             - llvm-toolchain-precise-3.5
 
     - os: linux
-      env: TOOLSET=clang-3.6
+      env: TOOLSET=clang-3.6 VALGRIND=1
       addons: &clang36
         apt:
           packages:
@@ -52,7 +52,7 @@ matrix:
             - llvm-toolchain-precise-3.6
 
     - os: linux
-      env: TOOLSET=clang-3.7
+      env: TOOLSET=clang-3.7 VALGRIND=1
       addons: &clang37
         apt:
           packages:
@@ -64,7 +64,19 @@ matrix:
             - llvm-toolchain-precise
 
     - os: linux
-      env: TOOLSET=gcc-5 GCOV=gcov-5 VARIANT=coverage
+      env: TOOLSET=clang-3.7 VARIANT=analyze
+      addons: &clang37
+        apt:
+          packages:
+            - clang-3.7
+            - libstdc++-5-dev
+            - valgrind
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise
+
+    - os: linux
+      env: TOOLSET=gcc-5 GCOV=gcov-5 VARIANT=coverage VALGRIND=1
       addons: &gcc5
         apt:
           packages:
@@ -86,7 +98,7 @@ matrix:
             - ubuntu-toolchain-r-test
 
     - os: osx
-      env: TOOLSET=clang
+      env: TOOLSET=clang VARIANT=analyze
 
 before_script:
   - git config --global user.name "Travis-CI"
@@ -97,7 +109,7 @@ before_script:
 script:
   - if [ "${TOOLSET}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off ${VARIANT}); fi
   - if [ "${TOOLSET}" != "" ]; then (cd example && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off); fi
-  - if [ "${TRAVIS_OS_NAME}" != "osx" ] && [ "${TOOLSET}" != "" ]; then (find .. -type f -executable | grep "\.test" | xargs -i% valgrind --error-exitcode=-1 %); fi
+  - if [ "${VALGRIND}" != "" ]; then (find .. -type f -executable | grep "\.test" | xargs -i% valgrind --error-exitcode=-1 %); fi
   - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (travis_wait travis_retry wget --quiet http://sourceforge.net/projects/boost/files/boost/1.58.0/${BOOST}.tar.gz && tar zxf ${BOOST}.tar.gz && mkdir ${BOOST}/libs/di && cp -r example build doc ${BOOST}/libs/di && sudo apt-get install xsltproc && cd ${BOOST}/libs/di/doc && ../build/b2 -sBOOST_ROOT=../build && git clone https://github.com/krzysztof-jusiak/di.git && cd di && git checkout -b gh-pages --track origin/gh-pages && git reset --hard && rm -rf boost/libs/di/doc/html cpp14/boost/libs/di/doc/html && cp -r ../html boost/libs/di/doc && cp -r ../html cpp14/boost/libs/di/doc && git add -A . && git commit -am "doc regeneration" && git push --force --quiet "https://${GH_TOKEN}@github.com/krzysztof-jusiak/di"); fi
 
 after_success:
