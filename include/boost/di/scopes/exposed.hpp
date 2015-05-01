@@ -51,7 +51,7 @@ public:
 
     public:
         template<class>
-        using is_ref = std::false_type;
+        using is_referable = std::false_type;
 
         template<class TInjector>
         explicit scope(const TInjector& injector) noexcept

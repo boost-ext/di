@@ -18,7 +18,7 @@ public:
     class scope {
     public:
         template<class T_>
-        using is_ref = typename wrappers::shared<T>::template is_ref<T_>;
+        using is_referable = typename wrappers::shared<T>::template is_referable<T_>;
 
         template<class, class TProvider>
         auto try_create(const TProvider& provider)

@@ -48,7 +48,7 @@ public:
     template<class TExpected, class, class = void>
     struct scope {
         template<class>
-        using is_ref = std::false_type;
+        using is_referable = std::false_type;
 
         template<class, class TProvider>
         TExpected try_create(const TProvider&);
@@ -64,7 +64,7 @@ public:
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven&, std::enable_if_t<!is_lambda_expr<TGiven, const injector&>::value && !is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
         template<class>
-        using is_ref = std::true_type;
+        using is_referable = std::true_type;
 
         explicit scope(TGiven& object)
             : object_{object}
@@ -84,7 +84,7 @@ public:
     template<class TExpected, class TGiven>
     struct scope<TExpected, std::shared_ptr<TGiven>> {
         template<class T>
-        using is_ref = typename wrappers::shared<TGiven>::template is_ref<aux::remove_accessors_t<T>>;
+        using is_referable = typename wrappers::shared<TGiven>::template is_referable<aux::remove_accessors_t<T>>;
 
         template<class, class TProvider>
         wrappers::shared<TGiven> try_create(const TProvider&);
@@ -108,7 +108,7 @@ public:
         >
     > {
         template<class>
-        using is_ref = std::false_type;
+        using is_referable = std::false_type;
 
         template<class T, class TProvider>
         auto try_create(const TProvider&) -> wrapper_traits_t<decltype(std::declval<TGiven>()())>;
@@ -125,7 +125,7 @@ public:
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&>::value>> {
         template<class>
-        using is_ref = std::false_type;
+        using is_referable = std::false_type;
 
         template<class T, class TProvider>
         T try_create(const TProvider&);
@@ -143,7 +143,7 @@ public:
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
         template<class>
-        using is_ref = std::false_type;
+        using is_referable = std::false_type;
 
         template<class T, class TProvider>
         T try_create(const TProvider&);

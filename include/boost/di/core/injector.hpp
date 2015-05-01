@@ -142,7 +142,7 @@ private:
         using provider_t = core::provider<expected_t, given_t, TName, T, ctor_t, injector>;
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using create_t = std::conditional_t<
-            std::is_reference<T>::value && dependency_t::template is_ref<T>::value
+            std::is_reference<T>::value && dependency_t::template is_referable<T>::value
           , T
           , std::remove_reference_t<T>
         >;

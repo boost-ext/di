@@ -26,7 +26,7 @@ public:
     class scope {
     public:
         template<class T_>
-        using is_ref = typename wrappers::shared<T>::template is_ref<T_>;
+        using is_referable = typename wrappers::shared<T>::template is_referable<T_>;
 
         void call(const session_entry<TName>&) noexcept {
             in_scope_ = true;

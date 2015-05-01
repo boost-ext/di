@@ -626,7 +626,7 @@ public:
     class scope {
     public:
         template<class>
-        using is_ref = std::false_type;
+        using is_referable = std::false_type;
 
         template<class T, class TProvider>
         auto try_create(const TProvider& provider) const -> decltype(
@@ -655,11 +655,17 @@ namespace boost { namespace di { namespace wrappers {
 
 template<class T>
 struct shared {
+    using type = std::conditional_t<std::is_same<T, void>::value, _, T>;
+
     template<class>
-    struct is_ref : std::true_type { };
+    struct is_referable
+        : std::true_type
+    { };
 
     template<class I>
-    struct is_ref<std::shared_ptr<I>> : std::is_same<I, T> { };
+    struct is_referable<std::shared_ptr<I>>
+        : std::false_type
+    { };
 
     template<class I>
     inline operator std::shared_ptr<I>() const noexcept {
@@ -690,16 +696,12 @@ struct shared {
         return object;
     }
 
-    inline operator T&() noexcept {
+    inline operator type&() noexcept {
         return *object;
     }
 
-    inline operator const T&() const noexcept {
+    inline operator const type&() const noexcept {
         return *object;
-    }
-
-    inline operator const std::shared_ptr<T>&() const noexcept {
-        return object;
     }
 
     std::shared_ptr<T> object;
@@ -739,7 +741,7 @@ public:
     class scope {
     public:
         template<class T_>
-        using is_ref = typename wrappers::shared<T>::template is_ref<T_>;
+        using is_referable = typename wrappers::shared<T>::template is_referable<T_>;
 
         template<class, class TProvider>
         auto try_create(const TProvider& provider)
@@ -759,160 +761,6 @@ public:
             return object;
         }
     };
-};
-
-}}} // boost::di::scopes
-
-#endif
-
-#ifndef BOOST_DI_SCOPES_EXTERNAL_HPP
-#define BOOST_DI_SCOPES_EXTERNAL_HPP
-
-namespace boost { namespace di { namespace scopes {
-
-BOOST_DI_HAS_TYPE(result_type);
-BOOST_DI_HAS_METHOD(call_operator, operator());
-
-template<class T, class... Ts>
-using is_lambda_expr =
-    std::integral_constant<
-        bool
-      , has_call_operator<T, Ts...>::value &&
-       !has_result_type<T>::value
-    >;
-
-template<class T>
-struct wrapper_traits {
-    using type = wrappers::unique<T>;
-};
-
-template<class T>
-struct wrapper_traits<std::shared_ptr<T>> {
-    using type = wrappers::shared<T>;
-};
-
-template<class T>
-using wrapper_traits_t =
-    typename wrapper_traits<T>::type;
-
-class external {
-    struct injector {
-        template<class T> T create() const;
-    };
-
-public:
-    template<class TExpected, class, class = void>
-    struct scope {
-        template<class>
-        using is_ref = std::false_type;
-
-        template<class, class TProvider>
-        TExpected try_create(const TProvider&);
-
-        template<class, class TProvider>
-        auto create(const TProvider&) const noexcept {
-            return wrappers::unique<TExpected>{object_};
-        }
-
-        TExpected object_;
-    };
-
-    template<class TExpected, class TGiven>
-    struct scope<TExpected, TGiven&, std::enable_if_t<!is_lambda_expr<TGiven, const injector&>::value && !is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
-        template<class>
-        using is_ref = std::true_type;
-
-        explicit scope(TGiven& object)
-            : object_{object}
-        { }
-
-        template<class, class TProvider>
-        wrappers::shared<TGiven&> try_create(const TProvider&);
-
-        template<class, class TProvider>
-        auto create(const TProvider&) const noexcept {
-            return object_;
-        }
-
-        wrappers::shared<TGiven&> object_;
-    };
-
-    template<class TExpected, class TGiven>
-    struct scope<TExpected, std::shared_ptr<TGiven>> {
-        template<class T>
-        using is_ref = typename wrappers::shared<TGiven>::template is_ref<aux::remove_accessors_t<T>>;
-
-        template<class, class TProvider>
-        wrappers::shared<TGiven> try_create(const TProvider&);
-
-        template<class, class TProvider>
-        auto create(const TProvider&) const noexcept {
-            return wrappers::shared<TGiven>{object_};
-        }
-
-        std::shared_ptr<TGiven> object_;
-    };
-
-    template<class TExpected, class TGiven>
-    struct scope<
-        TExpected
-      , TGiven
-      , std::enable_if_t<
-            !is_lambda_expr<TGiven, const injector&>::value &&
-            !has_call_operator<TExpected>::value &&
-             has_call_operator<TGiven>::value
-        >
-    > {
-        template<class>
-        using is_ref = std::false_type;
-
-        template<class T, class TProvider>
-        auto try_create(const TProvider&) -> wrapper_traits_t<decltype(std::declval<TGiven>()())>;
-
-        template<class, class TProvider>
-        auto create(const TProvider&) const noexcept {
-            using wrapper = wrapper_traits_t<decltype(std::declval<TGiven>()())>;
-            return wrapper{object_()};
-        }
-
-        TGiven object_;
-    };
-
-    template<class TExpected, class TGiven>
-    struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&>::value>> {
-        template<class>
-        using is_ref = std::false_type;
-
-        template<class T, class TProvider>
-        T try_create(const TProvider&);
-
-        template<class, class TProvider>
-        auto create(const TProvider& provider) const noexcept {
-            using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_))>;
-            return wrapper{(object_)(provider.injector_)};
-        }
-
-        TGiven object_;
-    };
-
-#if !defined(_MSC_VER)
-    template<class TExpected, class TGiven>
-    struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
-        template<class>
-        using is_ref = std::false_type;
-
-        template<class T, class TProvider>
-        T try_create(const TProvider&);
-
-        template<class T, class TProvider>
-        auto create(const TProvider& provider) const noexcept {
-            using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_, aux::type<T>{}))>;
-            return wrapper{(object_)(provider.injector_, aux::type<T>{})};
-        }
-
-        TGiven object_;
-    };
-#endif
 };
 
 }}} // boost::di::scopes
@@ -1017,7 +865,7 @@ public:
     class scope {
     public:
         template<class T>
-        using is_ref = typename type_traits::scope_traits_t<T>::template scope<TExpected, TGiven>::template is_ref<aux::remove_accessors_t<T>>;
+        using is_referable = typename type_traits::scope_traits_t<T>::template scope<TExpected, TGiven>::template is_referable<aux::remove_accessors_t<T>>;
 
         template<class T, class TProvider>
         auto try_create(const TProvider& provider) -> decltype(
@@ -1081,7 +929,7 @@ public:
 
     public:
         template<class>
-        using is_ref = std::false_type;
+        using is_referable = std::false_type;
 
         template<class TInjector>
         explicit scope(const TInjector& injector) noexcept
@@ -1100,6 +948,160 @@ public:
         std::shared_ptr<iprovider> provider_;
         typename TScope::template scope<TExpected, TGiven> scope_;
     };
+};
+
+}}} // boost::di::scopes
+
+#endif
+
+#ifndef BOOST_DI_SCOPES_EXTERNAL_HPP
+#define BOOST_DI_SCOPES_EXTERNAL_HPP
+
+namespace boost { namespace di { namespace scopes {
+
+BOOST_DI_HAS_TYPE(result_type);
+BOOST_DI_HAS_METHOD(call_operator, operator());
+
+template<class T, class... Ts>
+using is_lambda_expr =
+    std::integral_constant<
+        bool
+      , has_call_operator<T, Ts...>::value &&
+       !has_result_type<T>::value
+    >;
+
+template<class T>
+struct wrapper_traits {
+    using type = wrappers::unique<T>;
+};
+
+template<class T>
+struct wrapper_traits<std::shared_ptr<T>> {
+    using type = wrappers::shared<T>;
+};
+
+template<class T>
+using wrapper_traits_t =
+    typename wrapper_traits<T>::type;
+
+class external {
+    struct injector {
+        template<class T> T create() const;
+    };
+
+public:
+    template<class TExpected, class, class = void>
+    struct scope {
+        template<class>
+        using is_referable = std::false_type;
+
+        template<class, class TProvider>
+        TExpected try_create(const TProvider&);
+
+        template<class, class TProvider>
+        auto create(const TProvider&) const noexcept {
+            return wrappers::unique<TExpected>{object_};
+        }
+
+        TExpected object_;
+    };
+
+    template<class TExpected, class TGiven>
+    struct scope<TExpected, TGiven&, std::enable_if_t<!is_lambda_expr<TGiven, const injector&>::value && !is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
+        template<class>
+        using is_referable = std::true_type;
+
+        explicit scope(TGiven& object)
+            : object_{object}
+        { }
+
+        template<class, class TProvider>
+        wrappers::shared<TGiven&> try_create(const TProvider&);
+
+        template<class, class TProvider>
+        auto create(const TProvider&) const noexcept {
+            return object_;
+        }
+
+        wrappers::shared<TGiven&> object_;
+    };
+
+    template<class TExpected, class TGiven>
+    struct scope<TExpected, std::shared_ptr<TGiven>> {
+        template<class T>
+        using is_referable = typename wrappers::shared<TGiven>::template is_referable<aux::remove_accessors_t<T>>;
+
+        template<class, class TProvider>
+        wrappers::shared<TGiven> try_create(const TProvider&);
+
+        template<class, class TProvider>
+        auto create(const TProvider&) const noexcept {
+            return wrappers::shared<TGiven>{object_};
+        }
+
+        std::shared_ptr<TGiven> object_;
+    };
+
+    template<class TExpected, class TGiven>
+    struct scope<
+        TExpected
+      , TGiven
+      , std::enable_if_t<
+            !is_lambda_expr<TGiven, const injector&>::value &&
+            !has_call_operator<TExpected>::value &&
+             has_call_operator<TGiven>::value
+        >
+    > {
+        template<class>
+        using is_referable = std::false_type;
+
+        template<class T, class TProvider>
+        auto try_create(const TProvider&) -> wrapper_traits_t<decltype(std::declval<TGiven>()())>;
+
+        template<class, class TProvider>
+        auto create(const TProvider&) const noexcept {
+            using wrapper = wrapper_traits_t<decltype(std::declval<TGiven>()())>;
+            return wrapper{object_()};
+        }
+
+        TGiven object_;
+    };
+
+    template<class TExpected, class TGiven>
+    struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&>::value>> {
+        template<class>
+        using is_referable = std::false_type;
+
+        template<class T, class TProvider>
+        T try_create(const TProvider&);
+
+        template<class, class TProvider>
+        auto create(const TProvider& provider) const noexcept {
+            using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_))>;
+            return wrapper{(object_)(provider.injector_)};
+        }
+
+        TGiven object_;
+    };
+
+#if !defined(_MSC_VER)
+    template<class TExpected, class TGiven>
+    struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
+        template<class>
+        using is_referable = std::false_type;
+
+        template<class T, class TProvider>
+        T try_create(const TProvider&);
+
+        template<class T, class TProvider>
+        auto create(const TProvider& provider) const noexcept {
+            using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_, aux::type<T>{}))>;
+            return wrapper{(object_)(provider.injector_, aux::type<T>{})};
+        }
+
+        TGiven object_;
+    };
+#endif
 };
 
 }}} // boost::di::scopes
@@ -2142,7 +2144,7 @@ public:
     class scope {
     public:
         template<class T_>
-        using is_ref = typename wrappers::shared<T>::template is_ref<T_>;
+        using is_referable = typename wrappers::shared<T>::template is_referable<T_>;
 
         void call(const session_entry<TName>&) noexcept {
             in_scope_ = true;
@@ -2186,7 +2188,7 @@ public:
     class scope {
     public:
         template<class T_>
-        using is_ref = typename wrappers::shared<T>::template is_ref<T_>;
+        using is_referable = typename wrappers::shared<T>::template is_referable<T_>;
 
         template<class, class TProvider>
         auto try_create(const TProvider& provider)
@@ -2507,14 +2509,14 @@ namespace boost { namespace di { namespace core {
 template<class TParent, class TInjector, class TError>
 struct any_type {
     template<class T>
-    struct is_ref_impl {
+    struct is_referable_impl {
         static constexpr auto value =
             std::is_same<TInjector, aux::none_t>::value ||
-                std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>::template is_ref<T>::value;
+                std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>::template is_referable<T>::value;
     };
 
     template<class T>
-    using is_ref = std::enable_if_t<is_ref_impl<T>::value>;
+    using is_referable = std::enable_if_t<is_referable_impl<T>::value>;
 
     template<class T>
     using is_not_same = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
@@ -2538,19 +2540,19 @@ struct any_type {
         return injector_.template create_impl<T>();
     }
 
-    template<class T, class = is_not_same<T>, class = is_ref<T&>, class = is_creatable<T&, TError>>
+    template<class T, class = is_not_same<T>, class = is_referable<T&>, class = is_creatable<T&, TError>>
     operator T&() const {
         return injector_.template create_impl<T&>();
     }
 
 #if !defined(__clang__) && !defined(_MSC_VER)
-    template<class T, class = is_not_same<T>, class = is_ref<T>, class = is_creatable<T&&, TError>>
+    template<class T, class = is_not_same<T>, class = is_referable<T>, class = is_creatable<T&&, TError>>
     operator T&&() const {
         return injector_.template create_impl<T&&>();
     }
 #endif
 
-    template<class T, class = is_not_same<T>, class = is_ref<const T&>, class = is_creatable<const T&, TError>>
+    template<class T, class = is_not_same<T>, class = is_referable<const T&>, class = is_creatable<const T&, TError>>
     operator const T&() const {
         return injector_.template create_impl<const T&>();
     }
@@ -2929,7 +2931,7 @@ private:
         using provider_t = core::provider<expected_t, given_t, TName, T, ctor_t, injector>;
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using create_t = std::conditional_t<
-            std::is_reference<T>::value && dependency_t::template is_ref<T>::value
+            std::is_reference<T>::value && dependency_t::template is_referable<T>::value
           , T
           , std::remove_reference_t<T>
         >;

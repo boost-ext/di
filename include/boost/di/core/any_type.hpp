@@ -16,14 +16,14 @@ namespace boost { namespace di { namespace core {
 template<class TParent, class TInjector, class TError>
 struct any_type {
     template<class T>
-    struct is_ref_impl {
+    struct is_referable_impl {
         static constexpr auto value =
             std::is_same<TInjector, aux::none_t>::value ||
-                std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>::template is_ref<T>::value;
+                std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>::template is_referable<T>::value;
     };
 
     template<class T>
-    using is_ref = std::enable_if_t<is_ref_impl<T>::value>;
+    using is_referable = std::enable_if_t<is_referable_impl<T>::value>;
 
     template<class T>
     using is_not_same = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
@@ -47,19 +47,19 @@ struct any_type {
         return injector_.template create_impl<T>();
     }
 
-    template<class T, class = is_not_same<T>, class = is_ref<T&>, class = is_creatable<T&, TError>>
+    template<class T, class = is_not_same<T>, class = is_referable<T&>, class = is_creatable<T&, TError>>
     operator T&() const {
         return injector_.template create_impl<T&>();
     }
 
 #if !defined(__clang__) && !defined(_MSC_VER)
-    template<class T, class = is_not_same<T>, class = is_ref<T>, class = is_creatable<T&&, TError>>
+    template<class T, class = is_not_same<T>, class = is_referable<T>, class = is_creatable<T&&, TError>>
     operator T&&() const {
         return injector_.template create_impl<T&&>();
     }
 #endif
 
-    template<class T, class = is_not_same<T>, class = is_ref<const T&>, class = is_creatable<const T&, TError>>
+    template<class T, class = is_not_same<T>, class = is_referable<const T&>, class = is_creatable<const T&, TError>>
     operator const T&() const {
         return injector_.template create_impl<const T&>();
     }

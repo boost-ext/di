@@ -10,7 +10,7 @@ namespace di = boost::di;
 
 test error_injector_shared_by_copy = [] {
     struct c {
-        c(int) { }
+        c(int*) { }
     };
 
     auto injector = di::make_injector(

@@ -18,7 +18,7 @@ public:
     class scope {
     public:
         template<class>
-        using is_ref = std::false_type;
+        using is_referable = std::false_type;
 
         template<class T, class TProvider>
         auto try_create(const TProvider& provider) const -> decltype(

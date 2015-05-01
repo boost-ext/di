@@ -15,12 +15,17 @@ namespace boost { namespace di { namespace wrappers {
 
 template<class T>
 struct shared {
+    using type = std::conditional_t<std::is_same<T, void>::value, _, T>;
+
     template<class>
-    struct is_ref : std::true_type { };
+    struct is_referable
+        : std::true_type
+    { };
 
     template<class I>
-    struct is_ref<std::shared_ptr<I>> //: std::is_same<I, T> { };
-    : std::false_type {};
+    struct is_referable<std::shared_ptr<I>>
+        : std::false_type
+    { };
 
     template<class I>
     inline operator std::shared_ptr<I>() const noexcept {
@@ -51,17 +56,13 @@ struct shared {
         return object;
     }
 
-    inline operator std::conditional_t<std::is_same<T, void>::value, _, T>&() noexcept {
+    inline operator type&() noexcept {
         return *object;
     }
 
-    inline operator const std::conditional_t<std::is_same<T, void>::value, _, T>&() const noexcept {
+    inline operator const type&() const noexcept {
         return *object;
     }
-
-/*    inline operator const std::shared_ptr<T>&() const noexcept {*/
-        //return object;
-    /*}*/
 
     std::shared_ptr<T> object;
 };
