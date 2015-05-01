@@ -9,9 +9,6 @@
 
 [section Overview]
 
-[@https://travis-ci.org/krzysztof-jusiak/di [$https://img.shields.io/travis/krzysztof-jusiak/di/cpp14.svg [format PNG]]]
-[@http://github.com/krzysztof-jusiak/di/issues [$https://img.shields.io/github/issues/krzysztof-jusiak/di.svg [format PNG]]]
-
 [h6 Dependencies]
 
 * C++14 compliant compiler with STL (memory, type\_traits headers) / Boost is not required
