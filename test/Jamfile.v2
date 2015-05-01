@@ -16,8 +16,8 @@ compose <variant>coverage :
     <optimization>off
 ;
 
-extend-feature variant : analyze ;
-compose <variant>analyze :
+extend-feature variant : sanitize ;
+compose <variant>sanitize :
     <cxxflags>"-fsanitize=undefined"
     <cxxflags>"-fsanitize=address"
     <linkflags>"-fsanitize=undefined"
