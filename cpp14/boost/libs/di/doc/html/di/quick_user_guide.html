@@ -729,7 +729,7 @@
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">struct</span> <span class="identifier">c</span> <span class="special">{</span>
     <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;</span> <span class="identifier">sp</span><span class="special">;</span> <span class="comment">/*singleton*/</span>
     <span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i2</span><span class="special">&gt;</span> <span class="identifier">up</span><span class="special">;</span> <span class="comment">/*unique*/</span>
-    <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">i</span><span class="special">;</span> <span class="comment">/*external*/</span>
+    <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">i</span><span class="special">;</span> <span class="comment">/*singleton*/</span>
     <span class="keyword">double</span> <span class="identifier">d</span><span class="special">;</span> <span class="comment">/*unique*/</span>
 <span class="special">};</span>
 
@@ -800,7 +800,7 @@
             </td>
 <td>
               <p>
-                error - has to be bound as external
+                <a class="link" href="user_guide/scopes/singleton.html" title="singleton">di::singleton</a>
               </p>
             </td>
 </tr>
@@ -812,7 +812,7 @@
             </td>
 <td>
               <p>
-                <a class="link" href="user_guide/scopes/unique.html" title="unique">di::unique</a> (temporary)
+                <a class="link" href="user_guide/scopes/unique.html" title="unique">di::unique</a> (temporary)/<a class="link" href="user_guide/scopes/singleton.html" title="singleton">di::singleton</a>
               </p>
             </td>
 </tr>
@@ -1244,17 +1244,17 @@
             </td>
 <td>
               <p>
-                -
+                &#10004;
               </p>
             </td>
 <td>
               <p>
-                -
+                &#10004;
               </p>
             </td>
 <td>
               <p>
-                -
+                &#10004;
               </p>
             </td>
 <td>
@@ -1276,6 +1276,38 @@
             </td>
 <td>
               <p>
+                &#10004;
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                T* (ownership transfer)
+              </p>
+            </td>
+<td>
+              <p>
+                &#10004;
+              </p>
+            </td>
+<td>
+              <p>
                 -
               </p>
             </td>
@@ -1298,39 +1330,7 @@
 <tr>
 <td>
               <p>
-                T*
-              </p>
-            </td>
-<td>
-              <p>
-                &#10004;
-              </p>
-            </td>
-<td>
-              <p>
-                -
-              </p>
-            </td>
-<td>
-              <p>
-                -
-              </p>
-            </td>
-<td>
-              <p>
-                -
-              </p>
-            </td>
-<td>
-              <p>
-                &#10004;
-              </p>
-            </td>
-</tr>
-<tr>
-<td>
-              <p>
-                const T*
+                const T* (ownership transfer)
               </p>
             </td>
 <td>
@@ -1483,7 +1483,7 @@
             </td>
 <td>
               <p>
-                -
+                &#10004;
               </p>
             </td>
 </tr>
