@@ -21,10 +21,12 @@ template<
   , class TName
   , class TIsRoot
   , class TDeps
+  , class TIgnore
 > struct arg_wrapper {
     using type BOOST_DI_UNUSED = T;
     using name BOOST_DI_UNUSED = TName;
     using is_root BOOST_DI_UNUSED = TIsRoot;
+    using ignore = TIgnore;
 
     template<class T_, class TName_, class TDefault_>
     using resolve =
@@ -40,18 +42,19 @@ public:
       , class TIsRoot
       , class TInitialization
       , class TDependency
+      , class TIgnore
       , class... TCtor
       , class... TPolicies
     > static auto call(BOOST_DI_UNUSED const pool<aux::type_list<TPolicies...>>& policies
                      , BOOST_DI_UNUSED TDependency dependency
-                     , aux::pair<TInitialization, aux::type_list<TCtor...>>) noexcept {
+                     , aux::pair<TInitialization, aux::type_list<TCtor...>>, const TIgnore&) noexcept {
 
-        int _[]{0, (call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(
+        int _[]{0, (call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TIgnore, TCtor...>(
             policies, dependency), 0)...}; (void)_;
 
        return std::is_same<
             aux::bool_list<aux::always<TPolicies>::value...>
-          , aux::bool_list<decltype(call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(policies, dependency))::value...>
+          , aux::bool_list<decltype(call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TIgnore, TCtor...>(policies, dependency))::value...>
         >{};
     }
 
@@ -63,9 +66,10 @@ private:
       , class TIsRoot
       , class TPolicies
       , class TDependency
+      , class TIgnore
       , class... TCtor
     > static auto call_impl(const TPolicies& policies, TDependency dependency) noexcept {
-        return call_impl_type<arg_wrapper<T, TName, TIsRoot, TDeps>, TDependency, TPolicy, TCtor...>(
+        return call_impl_type<arg_wrapper<T, TName, TIsRoot, TDeps, TIgnore>, TDependency, TPolicy, TCtor...>(
             static_cast<const TPolicy&>(policies), dependency
         );
     }

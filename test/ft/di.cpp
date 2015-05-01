@@ -745,3 +745,20 @@ test call_custom_policies_with_exposed_injector = [] {
     expect_eq(3, policy::called());
 };
 
+test smart_pointers = [] {
+    struct c {
+        c(std::unique_ptr<i1> up1, const std::shared_ptr<i1>& sp1, std::shared_ptr<i1> sp2) {
+            expect(dynamic_cast<impl1*>(up1.get()));
+            expect(dynamic_cast<impl1*>(sp1.get()));
+            expect(dynamic_cast<impl1*>(sp2.get()));
+            expect_eq(sp1, sp2);
+        }
+    };
+
+    auto injector = di::make_injector(
+        di::bind<i1, impl1>
+    );
+
+    injector.create<c>();
+};
+

@@ -152,17 +152,25 @@ inline auto operator!(const T&) {
 
 template<class T>
 struct constructible_impl {
-    template<class TArg, std::enable_if_t<decltype(T::apply(TArg{}))::value, int> = 0>
+    template<class TArg, BOOST_DI_REQUIRES(decltype(T::apply(TArg{}))::value)>
     std::true_type operator()(const TArg& data) const {
         T::apply(data);
         return {};
     }
 
-    template<class TArg, std::enable_if_t<!decltype(T::apply(TArg{}))::value, int> = 0>
+    template<class TArg, BOOST_DI_REQUIRES(!decltype(T::apply(TArg{}))::value)>
     std::false_type operator()(const TArg&) const {
-        void(static_cast<typename TArg::type>(typename type<typename TArg::type>::template not_allowed_by<T>{}));
+        dump_error<typename TArg::type>(typename TArg::ignore{});
         return {};
     }
+
+    template<class T_>
+    void dump_error(const std::true_type&) const {
+        void(static_cast<T_>(typename type<T_>::template not_allowed_by<T>{}));
+    }
+
+    template<class>
+    void dump_error(const std::false_type&) const { }
 };
 
 template<class T = aux::never<_>, std::enable_if_t<std::is_base_of<type_op, T>::value, int> = 0>

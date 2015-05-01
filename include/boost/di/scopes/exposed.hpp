@@ -26,7 +26,7 @@ public:
 
         struct iprovider {
             virtual ~iprovider() noexcept = default;
-            virtual TExpected* get(const type_traits::heap& = {}) const noexcept { return nullptr; /*for gcc*/ }
+            virtual TExpected* get(const type_traits::heap& = {}) const noexcept = 0;
             virtual type get(const type_traits::stack&) const noexcept = 0;
         };
 

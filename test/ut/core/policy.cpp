@@ -43,7 +43,7 @@ test call = [] {
         int
       , no_name
       , std::false_type
-    >(policies, dep, aux::pair<type_traits::direct, aux::type_list<>>{});
+    >(policies, dep, aux::pair<type_traits::direct, aux::type_list<>>{}, std::false_type{});
 
     expect_eq(1, fake_policy::calls());
 };
@@ -57,7 +57,7 @@ test call_long = [] {
         int
       , no_name
       , std::false_type
-    >(policies, dep, aux::pair<type_traits::direct, aux::type_list<>>{});
+    >(policies, dep, aux::pair<type_traits::direct, aux::type_list<>>{}, std::false_type{});
 
     expect_eq(1, fake_policy_long::calls());
 };
@@ -72,7 +72,7 @@ test call_policies = [] {
         int
       , no_name
       , std::false_type
-    >(policies, dep, aux::pair<type_traits::direct, aux::type_list<>>{});
+    >(policies, dep, aux::pair<type_traits::direct, aux::type_list<>>{}, std::false_type{});
 
     expect_eq(1, fake_policy::calls());
     expect_eq(1, fake_policy_long::calls());

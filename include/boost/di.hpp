@@ -904,7 +904,7 @@ public:
 
         struct iprovider {
             virtual ~iprovider() noexcept = default;
-            virtual TExpected* get(const type_traits::heap& = {}) const noexcept { return nullptr; /*for gcc*/ }
+            virtual TExpected* get(const type_traits::heap& = {}) const noexcept = 0;
             virtual type get(const type_traits::stack&) const noexcept = 0;
         };
 
@@ -2512,7 +2512,8 @@ struct any_type {
     struct is_referable_impl {
         static constexpr auto value =
             std::is_same<TInjector, aux::none_t>::value ||
-                std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>::template is_referable<T>::value;
+            std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>::template
+                is_referable<T>::value;
     };
 
     template<class T>
@@ -2582,10 +2583,12 @@ template<
   , class TName
   , class TIsRoot
   , class TDeps
+  , class TIgnore
 > struct arg_wrapper {
     using type BOOST_DI_UNUSED = T;
     using name BOOST_DI_UNUSED = TName;
     using is_root BOOST_DI_UNUSED = TIsRoot;
+    using ignore = TIgnore;
 
     template<class T_, class TName_, class TDefault_>
     using resolve =
@@ -2601,18 +2604,19 @@ public:
       , class TIsRoot
       , class TInitialization
       , class TDependency
+      , class TIgnore
       , class... TCtor
       , class... TPolicies
     > static auto call(BOOST_DI_UNUSED const pool<aux::type_list<TPolicies...>>& policies
                      , BOOST_DI_UNUSED TDependency dependency
-                     , aux::pair<TInitialization, aux::type_list<TCtor...>>) noexcept {
+                     , aux::pair<TInitialization, aux::type_list<TCtor...>>, const TIgnore&) noexcept {
 
-        int _[]{0, (call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(
+        int _[]{0, (call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TIgnore, TCtor...>(
             policies, dependency), 0)...}; (void)_;
 
        return std::is_same<
             aux::bool_list<aux::always<TPolicies>::value...>
-          , aux::bool_list<decltype(call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TCtor...>(policies, dependency))::value...>
+          , aux::bool_list<decltype(call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TIgnore, TCtor...>(policies, dependency))::value...>
         >{};
     }
 
@@ -2624,9 +2628,10 @@ private:
       , class TIsRoot
       , class TPolicies
       , class TDependency
+      , class TIgnore
       , class... TCtor
     > static auto call_impl(const TPolicies& policies, TDependency dependency) noexcept {
-        return call_impl_type<arg_wrapper<T, TName, TIsRoot, TDeps>, TDependency, TPolicy, TCtor...>(
+        return call_impl_type<arg_wrapper<T, TName, TIsRoot, TDeps, TIgnore>, TDependency, TPolicy, TCtor...>(
             static_cast<const TPolicy&>(policies), dependency
         );
     }
@@ -2831,6 +2836,21 @@ class injector : public pool<transform_t<TDeps...>>
       , config_t
     >;
 
+    template<class T, class>
+    struct referable_traits {
+        using type = T;
+    };
+
+    template<class T, class TDependency>
+    struct referable_traits<T&, TDependency> {
+        using type = std::conditional_t<TDependency::template is_referable<T&>::value, T&, T>;
+    };
+
+    template<class T, class TDependency>
+    struct referable_traits<const T&, TDependency> {
+        using type = std::conditional_t<TDependency::template is_referable<const T&>::value, const T&, T>;
+    };
+
     struct from_injector { };
     struct from_deps { };
 
@@ -2914,9 +2934,8 @@ private:
            )
        ), T>::value
 #if !defined(_MSC_VER)
-       &&
-       decltype(policy<pool_t>::template call<T, TName, TIsRoot>(
-          ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{})
+       && decltype(policy<pool_t>::template call<typename referable_traits<T, TDependency>::type, TName, TIsRoot>(
+          ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{}, std::false_type{})
        )::value
 #endif
     >;
@@ -2930,12 +2949,8 @@ private:
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = core::provider<expected_t, given_t, TName, T, ctor_t, injector>;
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
-        using create_t = std::conditional_t<
-            std::is_reference<T>::value && dependency_t::template is_referable<T>::value
-          , T
-          , std::remove_reference_t<T>
-        >;
-        policy<pool_t>::template call<create_t, TName, TIsRoot>(((TConfig&)*this).policies(), dependency, ctor_t{});
+        using create_t = typename referable_traits<T, dependency_t>::type;
+        policy<pool_t>::template call<create_t, TName, TIsRoot>(((TConfig&)*this).policies(), dependency, ctor_t{}, std::true_type{});
         return wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
 

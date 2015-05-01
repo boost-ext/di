@@ -19,7 +19,8 @@ struct any_type {
     struct is_referable_impl {
         static constexpr auto value =
             std::is_same<TInjector, aux::none_t>::value ||
-                std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>::template is_referable<T>::value;
+            std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>::template
+                is_referable<T>::value;
     };
 
     template<class T>
