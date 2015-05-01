@@ -63,17 +63,16 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise
 
-    - os: linux
-      env: TOOLSET=clang-3.7 VARIANT=analyze
-      addons: &clang37
-        apt:
-          packages:
-            - clang-3.7
-            - libstdc++-5-dev
-            - valgrind
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise
+    #- os: linux
+      #env: TOOLSET=clang-3.7 VARIANT=analyze
+      #addons: &clang37
+        #apt:
+          #packages:
+            #- clang-3.7
+            #- libstdc++-5-dev
+          #sources:
+            #- ubuntu-toolchain-r-test
+            #- llvm-toolchain-precise
 
     - os: linux
       env: TOOLSET=gcc-5 GCOV=gcov-5 VARIANT=coverage VALGRIND=1
@@ -93,12 +92,11 @@ matrix:
           packages:
             - g++-5
             - libstdc++-5-dev
-            - valgrind
           sources:
             - ubuntu-toolchain-r-test
 
     - os: osx
-      env: TOOLSET=clang VARIANT=analyze
+      env: TOOLSET=clang
 
 before_script:
   - git config --global user.name "Travis-CI"
