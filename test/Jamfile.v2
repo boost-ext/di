@@ -20,6 +20,8 @@ extend-feature variant : analyze ;
 compose <variant>analyze :
     <cxxflags>"-fsanitize=undefined"
     <cxxflags>"-fsanitize=address"
+    <linkflags>"-fsanitize=undefined"
+    <linkflags>"-fsanitize=address"
     <optimization>off
 ;
 
