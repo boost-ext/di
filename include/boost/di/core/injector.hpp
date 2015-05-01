@@ -57,6 +57,13 @@ class injector : public pool<transform_t<TDeps...>>
         using type = std::conditional_t<TDependency::template is_referable<const T&>::value, const T&, T>;
     };
 
+#if defined(_MSC_VER)
+    template<class T, class TDependency>
+    struct referable_traits<T&&, TDependency> {
+        using type = std::conditional_t<TDependency::template is_referable<T&&>::value, T&&, T>;
+    };
+#endif
+
     struct from_injector { };
     struct from_deps { };
 
