@@ -19,7 +19,7 @@ compose <variant>coverage :
 extend-feature variant : analyze ;
 compose <variant>analyze :
     <cxxflags>"-fsanitize=undefined"
-    <cxxflags>"-fsanitize=memory"
+    <cxxflags>"-fsanitize=address"
     <optimization>off
 ;
 
