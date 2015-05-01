@@ -1480,6 +1480,11 @@ namespace boost { namespace di {
 namespace std {
     template<class>
     class initializer_list;
+
+#if defined(_MSC_VER)
+    template<class>
+    class function;
+#endif
 } // std
 
 namespace boost { namespace di {
@@ -1487,6 +1492,13 @@ namespace boost { namespace di {
     struct ctor_traits<std::initializer_list<T>> {
         BOOST_DI_INJECT_TRAITS();
     };
+
+#if defined(_MSC_VER)
+    template<class T>
+    struct ctor_traits<function<T>> {
+        BOOST_DI_INJECT_TRAITS();
+    };
+#endif
 }} // boost::di
 
 #endif
