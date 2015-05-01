@@ -1495,7 +1495,7 @@ namespace boost { namespace di {
 
 #if defined(_MSC_VER)
     template<class T>
-    struct ctor_traits<function<T>> {
+    struct ctor_traits<std::function<T>> {
         BOOST_DI_INJECT_TRAITS();
     };
 #endif
