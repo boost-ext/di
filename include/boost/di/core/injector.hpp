@@ -140,14 +140,14 @@ private:
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = core::provider<expected_t, given_t, TName, T, ctor_t, injector>;
-        policy<pool_t>::template call<T, TName, TIsRoot>(((TConfig&)*this).policies(), dependency, ctor_t{});
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
-        //using create_t = std::conditional_t<
-            //std::is_reference<T>::value && has_is_ref<dependency_t>::value
-          //, T
-          //, std::remove_reference_t<T>
-        //>;
-        return wrapper<T, wrapper_t>{dependency.template create<T>(provider_t{*this})};
+        using create_t = std::conditional_t<
+            std::is_reference<T>::value && dependency_t::template is_ref<T>::value
+          , T
+          , std::remove_reference_t<T>
+        >;
+        policy<pool_t>::template call<create_t, TName, TIsRoot>(((TConfig&)*this).policies(), dependency, ctor_t{});
+        return wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
 
     static auto is_creatable_impl(...) -> std::false_type;

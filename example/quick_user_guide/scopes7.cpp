@@ -16,6 +16,9 @@ struct impl1 : i1 { void dummy1() override { } };
 struct custom_scope {
     template<class TExpected, class>
     struct scope {
+        template<class>
+        using is_ref = std::false_type;
+
         template<class T, class TProvider>
         auto try_create(const TProvider& provider) -> decltype(std::shared_ptr<TExpected>{provider.try_get()});
 

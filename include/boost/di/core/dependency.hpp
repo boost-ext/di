@@ -102,6 +102,11 @@ private:
         using type = std::string;
     };
 
+    template<class T>
+    struct str_traits<std::shared_ptr<T>&> {
+        using type = std::shared_ptr<T>;
+    };
+
 public:
     using scope = TScope;
     using expected = TExpected;

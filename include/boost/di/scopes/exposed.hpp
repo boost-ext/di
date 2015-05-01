@@ -50,6 +50,9 @@ public:
         };
 
     public:
+        template<class>
+        using is_ref = std::false_type;
+
         template<class TInjector>
         explicit scope(const TInjector& injector) noexcept
             : provider_{std::make_shared<provider_impl<TInjector>>(injector)}

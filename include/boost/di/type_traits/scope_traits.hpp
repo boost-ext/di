@@ -11,7 +11,6 @@
 #include "boost/di/fwd.hpp"
 #include "boost/di/scopes/unique.hpp"
 #include "boost/di/scopes/singleton.hpp"
-#include "boost/di/scopes/external.hpp"
 
 namespace boost { namespace di { namespace type_traits {
 

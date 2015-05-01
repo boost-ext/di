@@ -9,6 +9,7 @@
 
 #include <memory>
 #include "boost/di/fwd.hpp"
+#include "boost/di/aux_/utility.hpp"
 
 namespace boost { namespace di { namespace wrappers {
 
@@ -18,7 +19,8 @@ struct shared {
     struct is_ref : std::true_type { };
 
     template<class I>
-    struct is_ref<std::shared_ptr<I>> : std::is_same<I, T> { };
+    struct is_ref<std::shared_ptr<I>> //: std::is_same<I, T> { };
+    : std::false_type {};
 
     template<class I>
     inline operator std::shared_ptr<I>() const noexcept {
@@ -49,18 +51,17 @@ struct shared {
         return object;
     }
 
-    inline operator T&() noexcept {
+    inline operator std::conditional_t<std::is_same<T, void>::value, _, T>&() noexcept {
         return *object;
     }
 
-    inline operator const T&() const noexcept {
+    inline operator const std::conditional_t<std::is_same<T, void>::value, _, T>&() const noexcept {
         return *object;
     }
 
-    // needed?
-    inline operator const std::shared_ptr<T>&() const noexcept {
-        return object;
-    }
+/*    inline operator const std::shared_ptr<T>&() const noexcept {*/
+        //return object;
+    /*}*/
 
     std::shared_ptr<T> object;
 };

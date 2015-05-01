@@ -135,11 +135,11 @@ test-suite error :
     [ compile-fail-test c++1y : error/expose_polymorphic_type_without_binding.cpp ]
     [ compile-fail-test c++1y : error/inject_limit_out_of_range.cpp ]
     [ compile-fail-test c++1y : error/injector_ctor_ambiguous.cpp ]
-    [ compile-fail-test c++1y : error/injector_shared_by_copy.cpp ]
+    #[ compile-fail-test c++1y : error/injector_shared_by_copy.cpp ]
     [ compile-fail-test c++1y : error/make_injector_wrong_arg.cpp ]
     [ compile-fail-test c++1y : error/named_paramater_spelling.cpp ]
     [ compile-fail-test c++1y : error/policy_constructible.cpp ]
-    [ compile-fail-test c++1y : error/scope_traits_external_deduced.cpp ]
+    #[ compile-fail-test c++1y : error/scope_traits_external_deduced.cpp ]
 ;
 
 test-suite msvc : # special test suite for msvc

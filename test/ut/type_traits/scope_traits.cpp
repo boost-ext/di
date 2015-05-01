@@ -21,7 +21,7 @@ struct deleter {
 test traits = [] {
     expect(std::is_same<scopes::unique, scope_traits<int>::type>{});
     expect(std::is_same<scopes::unique, scope_traits<c>::type>{});
-    expect(std::is_same<scopes::unique, scope_traits<const int&>::type>{});
+    expect(std::is_same<scopes::singleton, scope_traits<const int&>::type>{});
     expect(std::is_same<scopes::unique, scope_traits<int*>::type>{});
     expect(std::is_same<scopes::unique, scope_traits<const int*>::type>{});
     expect(std::is_same<scopes::singleton, scope_traits<std::shared_ptr<int>>::type>{});
@@ -32,7 +32,7 @@ test traits = [] {
 #endif
     expect(std::is_same<scopes::singleton, scope_traits<std::weak_ptr<int>>::type>{});
     expect(std::is_same<scopes::singleton, scope_traits<const std::weak_ptr<int>&>::type>{});
-    expect(std::is_same<scopes::external, scope_traits<int&>::type>{});
+    expect(std::is_same<scopes::singleton, scope_traits<int&>::type>{});
     expect(std::is_same<scopes::unique, scope_traits<std::unique_ptr<int>>::type>{});
     expect(std::is_same<scopes::unique, scope_traits<std::unique_ptr<int, deleter<int>>>::type>{});
     expect(std::is_same<scopes::singleton, scope_traits<std::shared_ptr<int>>::type>{});
