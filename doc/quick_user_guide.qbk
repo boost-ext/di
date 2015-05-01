@@ -500,7 +500,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
             struct c {
                 shared_ptr<i1> sp; /*singleton*/
                 unique_ptr<i2> up; /*unique*/
-                int& i; /*external*/
+                int& i; /*singleton*/
                 double d; /*unique*/
             };
 
@@ -536,8 +536,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 [table Scope deduction
     [[Type][Scope]]
     [[T][__di_scopes_unique__]]
-    [[T&][error - has to be bound as external]]
-    [[const T&][__di_scopes_unique__ (temporary)]]
+    [[T&][__di_scopes_singleton__]]
+    [[const T&][__di_scopes_unique__ (temporary)/__di_scopes_singleton__]]
     [[T*][__di_scopes_unique__ (ownership transfer)]]
     [[const T*][__di_scopes_unique__ (ownership transfer)]]
     [[T&&][__di_scopes_unique__]]
@@ -737,16 +737,16 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 ]
 
 [table Scope to type conversion
-    [[Type]                     [unique]                [shared]    [singleton]                   [session]         [external]]
-    [[T]                        [\u2714]                [-]         [-]                            [-]              [\u2714]]
-    [[T&]                       [-]                     [-]         [-]                            [-]              [\u2714]]
-    [[const T&]                 [\u2714 (temporary)]    [-]         [-]                            [-]              [\u2714]]
-    [[T*]                       [\u2714]                [-]         [-]                            [-]              [\u2714]]
-    [[const T*]                 [\u2714]                [-]         [-]                            [-]              [\u2714]]
-    [[T&&]                      [\u2714]                [-]         [-]                            [-]              [-]]
-    [[unique_ptr<T>]            [\u2714]                [-]         [-]                            [-]              [\u2714]]
-    [[shared_ptr<T>]            [\u2714]                [\u2714]    [\u2714]                       [\u2714]         [\u2714]]
-    [[weak_ptr<T>]              [-]                     [\u2714]    [\u2714]                       [\u2714]         [-]]
+    [[Type]                             [unique]                [shared]    [singleton]                   [session]         [external]]
+    [[T]                                [\u2714]                [-]         [-]                            [-]              [\u2714]]
+    [[T&]                               [-]                     [\u2714]    [\u2714]                       [\u2714]         [\u2714]]
+    [[const T&]                         [\u2714 (temporary)]    [\u2714]    [\u2714]                       [\u2714]         [\u2714]]
+    [[T* (ownership transfer)]          [\u2714]                [-]         [-]                            [-]              [\u2714]]
+    [[const T* (ownership transfer)]    [\u2714]                [-]         [-]                            [-]              [\u2714]]
+    [[T&&]                              [\u2714]                [-]         [-]                            [-]              [-]]
+    [[unique_ptr<T>]                    [\u2714]                [-]         [-]                            [-]              [\u2714]]
+    [[shared_ptr<T>]                    [\u2714]                [\u2714]    [\u2714]                       [\u2714]         [\u2714]]
+    [[weak_ptr<T>]                      [-]                     [\u2714]    [\u2714]                       [\u2714]         [\u2714]]
 ]
 
 * __modules__

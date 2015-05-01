@@ -543,7 +543,7 @@ Deduce scope (default)                  | Test
 struct c {                              | auto object1 = injector.create<unique_ptr<c>>();
     shared_ptr<i1> sp; /*singleton*/    | auto object2 = injector.create<unique_ptr<c>>();
     unique_ptr<i2> up; /*unique*/       | assert(object1->sp == object2->sp);
-    int& i; /*external*/                | assert(object1->up != object2->up);
+    int& i; /*singleton*/               | assert(object1->up != object2->up);
     double d; /*unique*/                | assert(42 == object1->i);
 };                                      | assert(&i == &object1->i;
                                         | assert(42 == object2->i);
@@ -559,8 +559,8 @@ auto injector = di::make_injector(      | assert(87.0 == object2->d);
 | Type | Deduced scope |
 |------|-------|
 | T | unique |
-| T& | error - has to be bound as external |
-| const T& | unique (temporary) |
+| T& | singleton |
+| const T& | unique (temporary)/singleton |
 | T* | unique (ownership transfer) |
 | const T* | unique (ownership transfer) |
 | T&& | unique |
@@ -653,14 +653,14 @@ auto injector = di::make_injector(      |
 | Type/Scope | unique | shared | singleton | session | external |
 |------------|--------|--------|-----------|---------|----------|
 | T | ✔ | - | - | - | ✔ |
-| T& | - | - | - | - | ✔ |
+| T& | - | ✔ | ✔ | ✔ | ✔ |
 | const T& | ✔ (temporary) | - | - | - | ✔ |
-| T* | ✔ | - | - | - | ✔ |
+| T* (transfer ownership) | ✔ | - | - | - | ✔ |
 | const T* | ✔ | - | - | - | ✔ |
 | T&& | ✔ | - | - | - | - |
 | unique\_ptr<T> | ✔ | - | - | - | ✔ |
 | shared\_ptr<T> | ✔ | ✔ | ✔ | ✔ | ✔ |
-| weak\_ptr<T> | - | ✔ | ✔ | ✔ | - |
+| weak\_ptr<T> | - | ✔ | ✔ | ✔ | ✔ |
 
 *
 
