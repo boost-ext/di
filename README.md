@@ -239,10 +239,9 @@ Manual Dependency Injection             | Boost.DI
 > To get and test Boost.DI library:
 
 ```sh
-    git clone --recursive https://github.com/krzysztof-jusiak/di.git
-    cd di/build
-    ./bootstrap.sh
-    ./b2 -j4 ../test ../example
+    git clone https://github.com/krzysztof-jusiak/di.git
+    cd build && cmake ..
+    make && ctest
 ```
 
 <a id="quick_user_guide"></a>
