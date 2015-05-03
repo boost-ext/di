@@ -127,7 +127,7 @@ public:
 
     /*<<extend injector functionality of call operator>>*/
     template<class R, class T, class... TArgs>
-    expectations& operator()(R(T::*ptr)(TArgs...)) {
+    expectations& operator()(R(T::*)(TArgs...)) {
         expectations_.add(std::type_index(typeid(T))
                         , []{ throw not_implemented{}; return nullptr; }
         );
