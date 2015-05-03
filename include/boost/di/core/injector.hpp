@@ -19,6 +19,7 @@
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/type_traits/config_traits.hpp"
+#include "boost/di/type_traits/referable_traits.hpp"
 #include "boost/di/concepts/creatable.hpp"
 
 namespace boost { namespace di { namespace core {
@@ -41,28 +42,6 @@ class injector : public pool<transform_t<TDeps...>>
       , _
       , config_t
     >;
-
-    template<class T, class>
-    struct referable_traits {
-        using type = T;
-    };
-
-    template<class T, class TDependency>
-    struct referable_traits<T&, TDependency> {
-        using type = std::conditional_t<TDependency::template is_referable<T&>::value, T&, T>;
-    };
-
-    template<class T, class TDependency>
-    struct referable_traits<const T&, TDependency> {
-        using type = std::conditional_t<TDependency::template is_referable<const T&>::value, const T&, T>;
-    };
-
-#if defined(_MSC_VER)
-    template<class T, class TDependency>
-    struct referable_traits<T&&, TDependency> {
-        using type = std::conditional_t<TDependency::template is_referable<T&&>::value, T&&, T>;
-    };
-#endif
 
     struct from_injector { };
     struct from_deps { };
@@ -147,7 +126,7 @@ private:
            )
        ), T>::value
 #if !defined(_MSC_VER)
-       && decltype(policy<pool_t>::template call<typename referable_traits<T, TDependency>::type, TName, TIsRoot>(
+       && decltype(policy<pool_t>::template call<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot>(
           ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{}, std::false_type{})
        )::value
 #endif
@@ -162,7 +141,7 @@ private:
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = core::provider<expected_t, given_t, TName, T, ctor_t, injector>;
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
-        using create_t = typename referable_traits<T, dependency_t>::type;
+        using create_t = type_traits::referable_traits_t<T, dependency_t>;
         policy<pool_t>::template call<create_t, TName, TIsRoot>(((TConfig&)*this).policies(), dependency, ctor_t{}, std::true_type{});
         return wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }

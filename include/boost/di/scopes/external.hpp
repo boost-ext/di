@@ -9,35 +9,9 @@
 
 #include <memory>
 #include "boost/di/aux_/type_traits.hpp"
-#include "boost/di/wrappers/unique.hpp"
-#include "boost/di/wrappers/shared.hpp"
+#include "boost/di/type_traits/wrapper_traits.hpp"
 
 namespace boost { namespace di { namespace scopes {
-
-BOOST_DI_HAS_TYPE(result_type);
-BOOST_DI_HAS_METHOD(call_operator, operator());
-
-template<class T, class... Ts>
-using is_lambda_expr =
-    std::integral_constant<
-        bool
-      , has_call_operator<T, Ts...>::value &&
-       !has_result_type<T>::value
-    >;
-
-template<class T>
-struct wrapper_traits {
-    using type = wrappers::unique<T>;
-};
-
-template<class T>
-struct wrapper_traits<std::shared_ptr<T>> {
-    using type = wrappers::shared<T>;
-};
-
-template<class T>
-using wrapper_traits_t =
-    typename wrapper_traits<T>::type;
 
 class external {
     struct injector {
@@ -62,7 +36,7 @@ public:
     };
 
     template<class TExpected, class TGiven>
-    struct scope<TExpected, TGiven&, std::enable_if_t<!is_lambda_expr<TGiven, const injector&>::value && !is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
+    struct scope<TExpected, TGiven&, std::enable_if_t<!aux::is_lambda_expr<TGiven, const injector&>::value && !aux::is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
         template<class>
         using is_referable = std::true_type;
 
@@ -102,20 +76,20 @@ public:
         TExpected
       , TGiven
       , std::enable_if_t<
-            !is_lambda_expr<TGiven, const injector&>::value &&
-            !has_call_operator<TExpected>::value &&
-             has_call_operator<TGiven>::value
+            !aux::is_lambda_expr<TGiven, const injector&>::value &&
+            !aux::has_call_operator<TExpected>::value &&
+             aux::has_call_operator<TGiven>::value
         >
     > {
         template<class>
         using is_referable = std::false_type;
 
         template<class T, class TProvider>
-        auto try_create(const TProvider&) -> wrapper_traits_t<decltype(std::declval<TGiven>()())>;
+        auto try_create(const TProvider&) -> type_traits::wrapper_traits_t<decltype(std::declval<TGiven>()())>;
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
-            using wrapper = wrapper_traits_t<decltype(std::declval<TGiven>()())>;
+            using wrapper = type_traits::wrapper_traits_t<decltype(std::declval<TGiven>()())>;
             return wrapper{object_()};
         }
 
@@ -123,7 +97,7 @@ public:
     };
 
     template<class TExpected, class TGiven>
-    struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&>::value>> {
+    struct scope<TExpected, TGiven, std::enable_if_t<aux::is_lambda_expr<TGiven, const injector&>::value>> {
         template<class>
         using is_referable = std::false_type;
 
@@ -132,7 +106,7 @@ public:
 
         template<class, class TProvider>
         auto create(const TProvider& provider) const noexcept {
-            using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_))>;
+            using wrapper = type_traits::wrapper_traits_t<decltype((object_)(provider.injector_))>;
             return wrapper{(object_)(provider.injector_)};
         }
 
@@ -141,7 +115,7 @@ public:
 
 #if !defined(_MSC_VER)
     template<class TExpected, class TGiven>
-    struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
+    struct scope<TExpected, TGiven, std::enable_if_t<aux::is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
         template<class>
         using is_referable = std::false_type;
 
@@ -150,7 +124,7 @@ public:
 
         template<class T, class TProvider>
         auto create(const TProvider& provider) const noexcept {
-            using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_, aux::type<T>{}))>;
+            using wrapper = type_traits::wrapper_traits_t<decltype((object_)(provider.injector_, aux::type<T>{}))>;
             return wrapper{(object_)(provider.injector_, aux::type<T>{})};
         }
 

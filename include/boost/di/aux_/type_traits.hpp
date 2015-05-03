@@ -159,6 +159,17 @@ struct is_same_or_base_of {
         std::is_base_of<aux::decay_t<T2>, aux::decay_t<T1>>::value;
 };
 
+BOOST_DI_HAS_TYPE(result_type);
+BOOST_DI_HAS_METHOD(call_operator, operator());
+
+template<class T, class... Ts>
+using is_lambda_expr =
+    std::integral_constant<
+        bool
+      , has_call_operator<T, Ts...>::value &&
+       !has_result_type<T>::value
+    >;
+
 template<class T>
 struct function_traits
     : function_traits<decltype(&T::operator())>

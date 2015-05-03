@@ -26,9 +26,10 @@ public:
 
         struct iprovider {
             virtual ~iprovider() noexcept = default;
-            virtual TExpected* get(const type_traits::heap& = {}) const noexcept { return nullptr; /*for gcc*/ }
+            virtual TExpected* get(const type_traits::heap& = {}) const noexcept = 0;
             virtual type get(const type_traits::stack&) const noexcept = 0;
         };
+
 
         template<class TInjector>
         class provider_impl : public iprovider {
@@ -71,6 +72,14 @@ public:
         typename TScope::template scope<TExpected, TGiven> scope_;
     };
 };
+
+#if defined(__GNUC__) && !defined(__clang__)
+    template<class TScope>
+    template<class TExpected, class TGiven>
+    TExpected* exposed<TScope>::scope<TExpected, TGiven>::iprovider::get(const type_traits::heap&) const noexcept {
+        return nullptr;
+    }
+#endif
 
 }}} // boost::di::scopes
 

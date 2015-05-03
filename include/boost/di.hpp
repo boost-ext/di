@@ -329,6 +329,17 @@ struct is_same_or_base_of {
         std::is_base_of<aux::decay_t<T2>, aux::decay_t<T1>>::value;
 };
 
+BOOST_DI_HAS_TYPE(result_type);
+BOOST_DI_HAS_METHOD(call_operator, operator());
+
+template<class T, class... Ts>
+using is_lambda_expr =
+    std::integral_constant<
+        bool
+      , has_call_operator<T, Ts...>::value &&
+       !has_result_type<T>::value
+    >;
+
 template<class T>
 struct function_traits
     : function_traits<decltype(&T::operator())>
@@ -904,7 +915,7 @@ public:
 
         struct iprovider {
             virtual ~iprovider() noexcept = default;
-            virtual TExpected* get(const type_traits::heap& = {}) const noexcept { return nullptr; /*for gcc*/ }
+            virtual TExpected* get(const type_traits::heap& = {}) const noexcept = 0;
             virtual type get(const type_traits::stack&) const noexcept = 0;
         };
 
@@ -950,25 +961,22 @@ public:
     };
 };
 
+#if defined(__GNUC__) && !defined(__clang__)
+    template<class TScope>
+    template<class TExpected, class TGiven>
+    TExpected* exposed<TScope>::scope<TExpected, TGiven>::iprovider::get(const type_traits::heap&) const noexcept {
+        return nullptr;
+    }
+#endif
+
 }}} // boost::di::scopes
 
 #endif
 
-#ifndef BOOST_DI_SCOPES_EXTERNAL_HPP
-#define BOOST_DI_SCOPES_EXTERNAL_HPP
+#ifndef BOOST_DI_TYPE_TRAITS_WRAPPER_TRAITS_HPP
+#define BOOST_DI_TYPE_TRAITS_WRAPPER_TRAITS_HPP
 
-namespace boost { namespace di { namespace scopes {
-
-BOOST_DI_HAS_TYPE(result_type);
-BOOST_DI_HAS_METHOD(call_operator, operator());
-
-template<class T, class... Ts>
-using is_lambda_expr =
-    std::integral_constant<
-        bool
-      , has_call_operator<T, Ts...>::value &&
-       !has_result_type<T>::value
-    >;
+namespace boost { namespace di { namespace type_traits {
 
 template<class T>
 struct wrapper_traits {
@@ -981,8 +989,16 @@ struct wrapper_traits<std::shared_ptr<T>> {
 };
 
 template<class T>
-using wrapper_traits_t =
-    typename wrapper_traits<T>::type;
+using wrapper_traits_t = typename wrapper_traits<T>::type;
+
+}}} // boost::di::type_traits
+
+#endif
+
+#ifndef BOOST_DI_SCOPES_EXTERNAL_HPP
+#define BOOST_DI_SCOPES_EXTERNAL_HPP
+
+namespace boost { namespace di { namespace scopes {
 
 class external {
     struct injector {
@@ -1007,7 +1023,7 @@ public:
     };
 
     template<class TExpected, class TGiven>
-    struct scope<TExpected, TGiven&, std::enable_if_t<!is_lambda_expr<TGiven, const injector&>::value && !is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
+    struct scope<TExpected, TGiven&, std::enable_if_t<!aux::is_lambda_expr<TGiven, const injector&>::value && !aux::is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
         template<class>
         using is_referable = std::true_type;
 
@@ -1047,20 +1063,20 @@ public:
         TExpected
       , TGiven
       , std::enable_if_t<
-            !is_lambda_expr<TGiven, const injector&>::value &&
-            !has_call_operator<TExpected>::value &&
-             has_call_operator<TGiven>::value
+            !aux::is_lambda_expr<TGiven, const injector&>::value &&
+            !aux::has_call_operator<TExpected>::value &&
+             aux::has_call_operator<TGiven>::value
         >
     > {
         template<class>
         using is_referable = std::false_type;
 
         template<class T, class TProvider>
-        auto try_create(const TProvider&) -> wrapper_traits_t<decltype(std::declval<TGiven>()())>;
+        auto try_create(const TProvider&) -> type_traits::wrapper_traits_t<decltype(std::declval<TGiven>()())>;
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
-            using wrapper = wrapper_traits_t<decltype(std::declval<TGiven>()())>;
+            using wrapper = type_traits::wrapper_traits_t<decltype(std::declval<TGiven>()())>;
             return wrapper{object_()};
         }
 
@@ -1068,7 +1084,7 @@ public:
     };
 
     template<class TExpected, class TGiven>
-    struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&>::value>> {
+    struct scope<TExpected, TGiven, std::enable_if_t<aux::is_lambda_expr<TGiven, const injector&>::value>> {
         template<class>
         using is_referable = std::false_type;
 
@@ -1077,7 +1093,7 @@ public:
 
         template<class, class TProvider>
         auto create(const TProvider& provider) const noexcept {
-            using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_))>;
+            using wrapper = type_traits::wrapper_traits_t<decltype((object_)(provider.injector_))>;
             return wrapper{(object_)(provider.injector_)};
         }
 
@@ -1086,7 +1102,7 @@ public:
 
 #if !defined(_MSC_VER)
     template<class TExpected, class TGiven>
-    struct scope<TExpected, TGiven, std::enable_if_t<is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
+    struct scope<TExpected, TGiven, std::enable_if_t<aux::is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
         template<class>
         using is_referable = std::false_type;
 
@@ -1095,7 +1111,7 @@ public:
 
         template<class T, class TProvider>
         auto create(const TProvider& provider) const noexcept {
-            using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_, aux::type<T>{}))>;
+            using wrapper = type_traits::wrapper_traits_t<decltype((object_)(provider.injector_, aux::type<T>{}))>;
             return wrapper{(object_)(provider.injector_, aux::type<T>{})};
         }
 
@@ -2824,6 +2840,40 @@ struct config_traits<TConfig<T>, TInjector> {
 
 #endif
 
+#ifndef BOOST_DI_TYPE_TRAITS_REFERABLE_TRAITS_HPP
+#define BOOST_DI_TYPE_TRAITS_REFERABLE_TRAITS_HPP
+
+namespace boost { namespace di { namespace type_traits {
+
+template<class T, class>
+struct referable_traits {
+    using type = T;
+};
+
+template<class T, class TDependency>
+struct referable_traits<T&, TDependency> {
+    using type = std::conditional_t<TDependency::template is_referable<T&>::value, T&, T>;
+};
+
+template<class T, class TDependency>
+struct referable_traits<const T&, TDependency> {
+    using type = std::conditional_t<TDependency::template is_referable<const T&>::value, const T&, T>;
+};
+
+#if defined(_MSC_VER)
+    template<class T, class TDependency>
+    struct referable_traits<T&&, TDependency> {
+        using type = std::conditional_t<TDependency::template is_referable<T&&>::value, T&&, T>;
+    };
+#endif
+
+template<class T, class TDependency>
+using referable_traits_t = typename referable_traits<T, TDependency>::type;
+
+}}} // boost::di::type_traits
+
+#endif
+
 #ifndef BOOST_DI_CORE_INJECTOR_HPP
 #define BOOST_DI_CORE_INJECTOR_HPP
 
@@ -2847,28 +2897,6 @@ class injector : public pool<transform_t<TDeps...>>
       , _
       , config_t
     >;
-
-    template<class T, class>
-    struct referable_traits {
-        using type = T;
-    };
-
-    template<class T, class TDependency>
-    struct referable_traits<T&, TDependency> {
-        using type = std::conditional_t<TDependency::template is_referable<T&>::value, T&, T>;
-    };
-
-    template<class T, class TDependency>
-    struct referable_traits<const T&, TDependency> {
-        using type = std::conditional_t<TDependency::template is_referable<const T&>::value, const T&, T>;
-    };
-
-#if defined(_MSC_VER)
-    template<class T, class TDependency>
-    struct referable_traits<T&&, TDependency> {
-        using type = std::conditional_t<TDependency::template is_referable<T&&>::value, T&&, T>;
-    };
-#endif
 
     struct from_injector { };
     struct from_deps { };
@@ -2953,7 +2981,7 @@ private:
            )
        ), T>::value
 #if !defined(_MSC_VER)
-       && decltype(policy<pool_t>::template call<typename referable_traits<T, TDependency>::type, TName, TIsRoot>(
+       && decltype(policy<pool_t>::template call<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot>(
           ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{}, std::false_type{})
        )::value
 #endif
@@ -2968,7 +2996,7 @@ private:
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = core::provider<expected_t, given_t, TName, T, ctor_t, injector>;
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
-        using create_t = typename referable_traits<T, dependency_t>::type;
+        using create_t = type_traits::referable_traits_t<T, dependency_t>;
         policy<pool_t>::template call<create_t, TName, TIsRoot>(((TConfig&)*this).policies(), dependency, ctor_t{}, std::true_type{});
         return wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
