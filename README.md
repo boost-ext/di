@@ -241,7 +241,7 @@ Manual Dependency Injection             | Boost.DI
 ```sh
     git clone https://github.com/krzysztof-jusiak/di.git
     cd build && cmake ..
-    make && ctest
+    make all test
 ```
 
 <a id="quick_user_guide"></a>
