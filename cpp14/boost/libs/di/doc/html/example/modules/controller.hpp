@@ -16,8 +16,8 @@
 //->
 
 struct controller {
-    std::shared_ptr<view> view_;
-    std::shared_ptr<model> model_;
+    std::shared_ptr<view> view_ = {};
+    std::shared_ptr<model> model_ = {};
 
     int run();
 };

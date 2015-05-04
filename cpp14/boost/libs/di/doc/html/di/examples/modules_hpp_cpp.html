@@ -58,8 +58,8 @@
               </td></tr></tbody>
 </table></div>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">controller</span> <span class="special">{</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">view</span><span class="special">&gt;</span> <span class="identifier">view_</span><span class="special">;</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">model</span><span class="special">&gt;</span> <span class="identifier">model_</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">view</span><span class="special">&gt;</span> <span class="identifier">view_</span> <span class="special">=</span> <span class="special">{};</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">model</span><span class="special">&gt;</span> <span class="identifier">model_</span> <span class="special">=</span> <span class="special">{};</span>
 
     <span class="keyword">int</span> <span class="identifier">run</span><span class="special">();</span>
 <span class="special">};</span>

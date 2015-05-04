@@ -30,7 +30,7 @@ class types_dumper : public di::config {
 public:
     auto policies() noexcept {
         return di::make_policies(
-            [&](auto type, auto dependency, auto... ctor) {
+            [&](auto type, auto dependency, BOOST_DI_UNUSED auto... ctor) {
                 using T = decltype(type);
                 using arg = typename T::type;
                 using name = typename T::name;
