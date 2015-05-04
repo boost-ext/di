@@ -12,7 +12,9 @@ configuration:
   - Debug
   - Release
 
-os: Visual Studio 2015 CTP 6
+os:
+  - Visual Studio 2015 CTP 6
+  - Visual Studio 2015 CTP RC
 
 branches:
   only:
