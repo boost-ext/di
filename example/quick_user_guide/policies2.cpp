@@ -18,7 +18,7 @@ class print_types_info_policy : public di::config {
 public:
     auto policies() const noexcept {
         return di::make_policies(
-            [](auto type, auto dep, auto... ctor) {
+            [](auto type, auto dep, BOOST_DI_UNUSED auto... ctor) {
                 using T = decltype(type);
                 using arg = typename T::type;
                 using arg_name = typename T::name;
