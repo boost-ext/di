@@ -20,7 +20,7 @@ struct c {
     std::shared_ptr<i1> sp; /*singleton*/
     std::unique_ptr<i2> up; /*unique*/
     int& i; /*external*/
-    double d; /*unique*/
+    double d = 0.0; /*unique*/
 };
 
 int main() {

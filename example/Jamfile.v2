@@ -11,8 +11,6 @@ project di :
     requirements
         <include>../include
         <include>.
-        <warnings>all
-        <warnings-as-errors>on
 ;
 
 rule run-example ( std : src + : cxxflags * : property * ) {
@@ -22,10 +20,10 @@ rule run-example ( std : src + : cxxflags * : property * ) {
     }
 
     toolset =
-        <toolset>gcc:<cxxflags>"-std=$(std) $(cxx_flags)"
-        <toolset>clang:<cxxflags>"-std=$(std) $(cxx_flags)"
-        <toolset>darwin:<cxxflags>"-std=$(std) $(cxx_flags)"
-        <toolset>msvc:<cxxflags>"/FI $(cxx_flags)"
+        <toolset>gcc:<cxxflags>"-std=$(std) -pedantic -pedantic-errors -Wall -Wextra -Werror $(cxx_flags)"
+        <toolset>clang:<cxxflags>"-std=$(std) -pedantic -pedantic-errors -Wall -Wextra -Werror $(cxx_flags)"
+        <toolset>darwin:<cxxflags>"-std=$(std) -pedantic -pedantic-errors -Wall -Wextra -Werror $(cxx_flags)"
+        <toolset>msvc:<cxxflags>"/W3 $(cxx_flags)"
     ;
 
     run $(src) : : : $(toolset) : $(property) ;

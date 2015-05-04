@@ -42,7 +42,7 @@ public:
     auto policies() noexcept {
         /*<<define `uml dumper` directly in policies configuration>>*/
         return di::make_policies(
-            [&](auto type, auto dependency, auto... ctor) {
+            [&](auto type, auto dependency, BOOST_DI_UNUSED auto... ctor) {
                 using T = decltype(type);
                 using name = typename T::name;
                 using given = typename decltype(dependency)::given;
