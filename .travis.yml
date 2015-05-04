@@ -108,6 +108,9 @@ matrix:
     - os: osx
       env: TOOLSET=clang
 
+    - os: osx
+      env: CMAKE_COMPILER=clang++
+
 before_script:
   - git config --global user.name "Travis-CI"
   - git config --global user.email "travis@ci.net"
