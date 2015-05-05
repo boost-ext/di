@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_AUX_CONFIG_HPP
-#define BOOST_DI_AUX_CONFIG_HPP
+#ifndef BOOST_DI_AUX_COMPILER_SPECIFIC_HPP
+#define BOOST_DI_AUX_COMPILER_SPECIFIC_HPP
 
 #if defined(__clang__)
     #define BOOST_DI_CLANG
@@ -43,7 +43,7 @@
 #elif defined(BOOST_DI_MSVC)
     #define BOOST_DI_UNUSED
     #define BOOST_DI_ATTR_ERROR(...) __declspec(deprecated(__VA_ARGS__))
-    #define BOOST_DI_CONSTEXPR
+    #define BOOST_DI_CONSTEXPR inline
     #define BOOST_DI_WKND_IMPL_BOOST_DI_MSVC(...) __VA_ARGS__
     #define BOOST_DI_WKND_IMPL_BOOST_DI_CLANG(...)
     #define BOOST_DI_WKND_IMPL_BOOST_DI_GCC(...)

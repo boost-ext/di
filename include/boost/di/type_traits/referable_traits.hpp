@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_TYPE_TRAITS_REFERABLE_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_REFERABLE_TRAITS_HPP
 
-#include "boost/di/aux_/config.hpp"
+#include "boost/di/aux_/compiler_specific.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 
 namespace boost { namespace di { namespace type_traits {

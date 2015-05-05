@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_CORE_INJECTOR_HPP
 #define BOOST_DI_CORE_INJECTOR_HPP
 
-#include "boost/di/aux_/config.hpp"
+#include "boost/di/aux_/compiler_specific.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/core/binder.hpp"
@@ -93,13 +93,14 @@ public:
     { }
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
-    using is_creatable =
-        BOOST_DI_WKND(BOOST_DI_MSVC)(aux::always<T>)
+    struct is_creatable :
+        BOOST_DI_WKND(BOOST_DI_MSVC)(std::true_type)
         BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
             decltype(is_creatable_impl(
                 std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>())
             )
-        );
+        )
+    { };
 
     template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>::value)>
     T create() const {

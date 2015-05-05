@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_AUX_PREPROCESSOR_HPP
 #define BOOST_DI_AUX_PREPROCESSOR_HPP
 
-#include "boost/di/aux_/config.hpp"
+#include "boost/di/aux_/compiler_specific.hpp"
 
 #define BOOST_DI_IF(cond, t, f) BOOST_DI_IF_I(cond, t, f)
 #define BOOST_DI_REPEAT(i, m, ...) BOOST_DI_REPEAT_N(i, m, __VA_ARGS__)
