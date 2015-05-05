@@ -184,7 +184,7 @@ namespace std {
     BOOST_DI_WKND(BOOST_DI_MSVC)(
         template<class>
         class function;
-    )
+    )()
 } // std
 
 namespace boost { namespace di {
@@ -198,7 +198,7 @@ namespace boost { namespace di {
         struct ctor_traits<std::function<T>> {
             BOOST_DI_INJECT_TRAITS();
         };
-    )
+    )()
 }} // boost::di
 
 #endif

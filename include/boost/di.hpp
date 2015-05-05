@@ -412,38 +412,38 @@ private:
 #define BOOST_DI_WKND(T) BOOST_DI_WKND_IMPL_##T
 
 #define BOOST_DI_WKND(T) BOOST_DI_WKND_IMPL_##T
-#define BOOST_DI_WKND_NOT(T) BOOST_DI_WKND_IMPL_NOT_##T
+#define BOOST_DI_WKND_ELSE(T) BOOST_DI_WKND_IMPL_ELSE_##T
 
 #if defined(BOOST_DI_CLANG)
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_ATTR_ERROR(...) [[deprecated(__VA_ARGS__)]]
     #define BOOST_DI_CONSTEXPR constexpr
-    #define BOOST_DI_WKND_IMPL_BOOST_DI_CLANG(...) __VA_ARGS__
-    #define BOOST_DI_WKND_IMPL_BOOST_DI_GCC(...)
-    #define BOOST_DI_WKND_IMPL_BOOST_DI_MSVC(...)
-    #define BOOST_DI_WKND_IMPL_NOT_BOOST_DI_CLANG(...)
-    #define BOOST_DI_WKND_IMPL_NOT_BOOST_DI_GCC(...) __VA_ARGS__
-    #define BOOST_DI_WKND_IMPL_NOT_BOOST_DI_MSVC(...) __VA_ARGS__
+    #define BOOST_DI_WKND_IMPL_BOOST_DI_CLANG(...) __VA_ARGS__ BOOST_DI_WKND_IMPL_ELSE_BOOST_DI_CLANG
+    #define BOOST_DI_WKND_IMPL_BOOST_DI_GCC(...) BOOST_DI_WKND_IMPL_ELSE_BOOST_DI_GCC
+    #define BOOST_DI_WKND_IMPL_BOOST_DI_MSVC(...) BOOST_DI_WKND_IMPL_ELSE_BOOST_DI_MSVC
+    #define BOOST_DI_WKND_IMPL_ELSE_BOOST_DI_CLANG(...)
+    #define BOOST_DI_WKND_IMPL_ELSE_BOOST_DI_GCC(...) __VA_ARGS__
+    #define BOOST_DI_WKND_IMPL_ELSE_BOOST_DI_MSVC(...) __VA_ARGS__
 #elif defined(BOOST_DI_GCC)
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_ATTR_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
     #define BOOST_DI_CONSTEXPR constexpr
-    #define BOOST_DI_WKND_IMPL_BOOST_DI_GCC(...) __VA_ARGS__
-    #define BOOST_DI_WKND_IMPL_BOOST_DI_CLANG(...)
-    #define BOOST_DI_WKND_IMPL_BOOST_DI_MSVC(...)
-    #define BOOST_DI_WKND_IMPL_NOT_BOOST_DI_GCC(...)
-    #define BOOST_DI_WKND_IMPL_NOT_BOOST_DI_CLANG(...) __VA_ARGS__
-    #define BOOST_DI_WKND_IMPL_NOT_BOOST_DI_MSVC(...) __VA_ARGS__
+    #define BOOST_DI_WKND_IMPL_BOOST_DI_GCC(...) __VA_ARGS__ BOOST_DI_WKND_IMPL_ELSE_BOOST_DI_GCC
+    #define BOOST_DI_WKND_IMPL_BOOST_DI_CLANG(...) BOOST_DI_WKND_IMPL_ELSE_BOOST_DI_CLANG
+    #define BOOST_DI_WKND_IMPL_BOOST_DI_MSVC(...) BOOST_DI_WKND_IMPL_ELSE_BOOST_DI_MSVC
+    #define BOOST_DI_WKND_IMPL_ELSE_BOOST_DI_GCC(...)
+    #define BOOST_DI_WKND_IMPL_ELSE_BOOST_DI_CLANG(...) __VA_ARGS__
+    #define BOOST_DI_WKND_IMPL_ELSE_BOOST_DI_MSVC(...) __VA_ARGS__
 #elif defined(BOOST_DI_MSVC)
     #define BOOST_DI_UNUSED
     #define BOOST_DI_ATTR_ERROR(...) __declspec(deprecated(__VA_ARGS__))
     #define BOOST_DI_CONSTEXPR inline
-    #define BOOST_DI_WKND_IMPL_BOOST_DI_MSVC(...) __VA_ARGS__
-    #define BOOST_DI_WKND_IMPL_BOOST_DI_CLANG(...)
-    #define BOOST_DI_WKND_IMPL_BOOST_DI_GCC(...)
-    #define BOOST_DI_WKND_IMPL_NOT_BOOST_DI_MSVC(...)
-    #define BOOST_DI_WKND_IMPL_NOT_BOOST_DI_CLANG(...) __VA_ARGS__
-    #define BOOST_DI_WKND_IMPL_NOT_BOOST_DI_GCC(...) __VA_ARGS__
+    #define BOOST_DI_WKND_IMPL_BOOST_DI_MSVC(...) __VA_ARGS__ BOOST_DI_WKND_IMPL_ELSE_BOOST_DI_MSVC
+    #define BOOST_DI_WKND_IMPL_BOOST_DI_CLANG(...) BOOST_DI_WKND_IMPL_ELSE_BOOST_DI_CLANG
+    #define BOOST_DI_WKND_IMPL_BOOST_DI_GCC(...) BOOST_DI_WKND_IMPL_ELSE_BOOST_DI_GCC
+    #define BOOST_DI_WKND_IMPL_ELSE_BOOST_DI_MSVC(...)
+    #define BOOST_DI_WKND_IMPL_ELSE_BOOST_DI_CLANG(...) __VA_ARGS__
+    #define BOOST_DI_WKND_IMPL_ELSE_BOOST_DI_GCC(...) __VA_ARGS__
 
     #pragma warning(disable : 4503) // decorated name length exceeded, name was truncated
     #pragma warning(disable : 4822) // local class member function does not have a body
@@ -511,7 +511,7 @@ struct unique<T*> {
         explicit unique(T* object)
             : object(object)
         { }
-    )
+    )()
 
     T* object = nullptr;
 };
@@ -991,7 +991,7 @@ BOOST_DI_WKND(BOOST_DI_GCC)(
     TExpected* exposed<TScope>::scope<TExpected, TGiven>::iprovider::get(const type_traits::heap&) const noexcept {
         return nullptr;
     }
-)
+)()
 
 }}} // boost::di::scopes
 
@@ -1526,7 +1526,7 @@ namespace std {
     BOOST_DI_WKND(BOOST_DI_MSVC)(
         template<class>
         class function;
-    )
+    )()
 } // std
 
 namespace boost { namespace di {
@@ -1540,7 +1540,7 @@ namespace boost { namespace di {
         struct ctor_traits<std::function<T>> {
             BOOST_DI_INJECT_TRAITS();
         };
-    )
+    )()
 }} // boost::di
 
 #endif
@@ -1571,9 +1571,8 @@ auto scopable_impl(T&&) -> aux::is_valid_expr<
 >;
 
 template<class T>
-using scopable =
-    BOOST_DI_WKND(BOOST_DI_MSVC)(std::true_type)
-    BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(decltype(scopable_impl(std::declval<T>())));
+using scopable = BOOST_DI_WKND(BOOST_DI_MSVC)
+    (std::true_type)(decltype(scopable_impl(std::declval<T>())));
 
 }}} // boost::di::concepts
 
@@ -2307,8 +2306,7 @@ BOOST_DI_WKND(BOOST_DI_MSVC)(
 
     template<class... Ts>
     using transform_t = typename transform<Ts...>::type;
-)
-BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
+)(
     template<class... Ts>
     using transform_t = aux::join_t<typename add_type_list<Ts>::type...>;
 )
@@ -2431,8 +2429,7 @@ auto boundable_impl(I&&, T&&) ->
 
 template<class... TDeps> // bindings
 auto boundable_impl(aux::type_list<TDeps...>&&) ->
-    BOOST_DI_WKND(BOOST_DI_MSVC)(std::true_type)
-    BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(get_bindings_error<TDeps...>);
+    BOOST_DI_WKND(BOOST_DI_MSVC)(std::true_type)(get_bindings_error<TDeps...>);
 
 template<class T, class... Ts> // any_of
 auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
@@ -2445,9 +2442,8 @@ auto boundable_impl(aux::type<TDeps...>&&) ->
 std::true_type boundable_impl(...);
 
 template<class... Ts>
-using boundable =
-    BOOST_DI_WKND(BOOST_DI_MSVC)(std::true_type)
-    BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(decltype(boundable_impl(std::declval<Ts>()...)));
+using boundable = BOOST_DI_WKND(BOOST_DI_MSVC)
+    (std::true_type)(decltype(boundable_impl(std::declval<Ts>()...)));
 
 }}} // boost::di::concepts
 
@@ -2472,13 +2468,8 @@ template<
     class TExpected
   , class TGiven = TExpected
   , BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, TGiven>)
->
-BOOST_DI_WKND(BOOST_DI_MSVC)(
-    struct bind : core::bind<TExpected, TGiven> {};
-)
-BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
-    core::bind<TExpected, TGiven> bind{};
-)
+> BOOST_DI_WKND(BOOST_DI_MSVC)
+    (struct bind : core::bind<TExpected, TGiven> {})(core::bind<TExpected, TGiven> bind{});
 
 constexpr core::override override{};
 
@@ -2602,7 +2593,7 @@ struct any_type {
         operator T&&() const {
             return injector_.template create_impl<T&&>();
         }
-    )
+    )()
 
     template<class T, class = is_not_same<T>, class = is_referable<const T&>, class = is_creatable<const T&, TError>>
     operator const T&() const {
@@ -2888,7 +2879,7 @@ BOOST_DI_WKND(BOOST_DI_MSVC)(
     struct referable_traits<T&&, TDependency> {
         using type = std::conditional_t<TDependency::template is_referable<T&&>::value, T&&, T>;
     };
-)
+)()
 
 template<class T, class TDependency>
 using referable_traits_t = typename referable_traits<T, TDependency>::type;
@@ -2943,7 +2934,7 @@ class injector : public pool<transform_t<TDeps...>>
                >{std::declval<injector>()}
            )
        ), T>::value
-       BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
+       BOOST_DI_WKND(BOOST_DI_MSVC)()(
            && decltype(policy<pool_t>::template call<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot>(
               ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{}, std::false_type{})
            )::value
@@ -2971,8 +2962,7 @@ public:
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     struct is_creatable :
-        BOOST_DI_WKND(BOOST_DI_MSVC)(std::true_type)
-        BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
+        BOOST_DI_WKND(BOOST_DI_MSVC)(std::true_type)(
             decltype(is_creatable_impl(
                 std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>())
             )
@@ -3141,11 +3131,8 @@ constexpr auto is_configurable(const std::false_type&) {
 }
 
 template<class T>
-using configurable =
-    BOOST_DI_WKND(BOOST_DI_MSVC)(std::true_type)
-    BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
-        decltype(is_configurable<T>(decltype(configurable_impl(std::declval<T>())){}))
-    );
+using configurable = BOOST_DI_WKND(BOOST_DI_MSVC)
+    (std::true_type)(decltype(is_configurable<T>(decltype(configurable_impl(std::declval<T>())){})));
 
 }}} // boost::di::concepts
 
@@ -3191,7 +3178,7 @@ public:
      , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>)
     > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, T...>(injector) {
-            BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
+            BOOST_DI_WKND(BOOST_DI_MSVC)()(
                 using namespace detail;
                 int _[]{0, (
                     create<T>(

@@ -68,7 +68,7 @@ struct unique<T*> {
         explicit unique(T* object)
             : object(object)
         { }
-    )
+    )()
 
     T* object = nullptr;
 };

@@ -56,8 +56,7 @@ BOOST_DI_WKND(BOOST_DI_MSVC)(
 
     template<class... Ts>
     using transform_t = typename transform<Ts...>::type;
-)
-BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
+)(
     template<class... Ts>
     using transform_t = aux::join_t<typename add_type_list<Ts>::type...>;
 )

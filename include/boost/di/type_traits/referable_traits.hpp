@@ -32,7 +32,7 @@ BOOST_DI_WKND(BOOST_DI_MSVC)(
     struct referable_traits<T&&, TDependency> {
         using type = std::conditional_t<TDependency::template is_referable<T&&>::value, T&&, T>;
     };
-)
+)()
 
 template<class T, class TDependency>
 using referable_traits_t = typename referable_traits<T, TDependency>::type;

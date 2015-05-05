@@ -51,7 +51,7 @@ public:
      , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>)
     > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, T...>(injector) {
-            BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
+            BOOST_DI_WKND(BOOST_DI_MSVC)()(
                 using namespace detail;
                 int _[]{0, (
                     create<T>(

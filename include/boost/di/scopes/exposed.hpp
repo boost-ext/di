@@ -79,7 +79,7 @@ BOOST_DI_WKND(BOOST_DI_GCC)(
     TExpected* exposed<TScope>::scope<TExpected, TGiven>::iprovider::get(const type_traits::heap&) const noexcept {
         return nullptr;
     }
-)
+)()
 
 }}} // boost::di::scopes
 

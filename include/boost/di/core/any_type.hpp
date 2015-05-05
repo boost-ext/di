@@ -59,7 +59,7 @@ struct any_type {
         operator T&&() const {
             return injector_.template create_impl<T&&>();
         }
-    )
+    )()
 
     template<class T, class = is_not_same<T>, class = is_referable<const T&>, class = is_creatable<const T&, TError>>
     operator const T&() const {
