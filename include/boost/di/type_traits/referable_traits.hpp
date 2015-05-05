@@ -10,7 +10,7 @@
 #include "boost/di/aux_/compiler_specific.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 
-namespace boost { namespace di { namespace type_traits {
+namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 
 template<class T, class>
 struct referable_traits {
@@ -37,7 +37,7 @@ BOOST_DI_WKND(BOOST_DI_MSVC)(
 template<class T, class TDependency>
 using referable_traits_t = typename referable_traits<T, TDependency>::type;
 
-}}} // boost::di::type_traits
+}}}} // boost::di::v1::type_traits
 
 #endif
 

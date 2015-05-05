@@ -15,7 +15,7 @@
 #define BOOST_DI_CONCEPTS_CREATABLE_ATTR \
     BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<class T>
 struct abstract_type {
@@ -281,7 +281,7 @@ constexpr T creatable_error() {
     return creatable_error_impl<TInitialization, TName, I, T, aux::type_list<Ts...>>{};
 }
 
-}}} // boost::di::concepts
+}}}} // boost::di::v1::concepts
 
 #endif
 

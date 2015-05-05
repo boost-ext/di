@@ -14,7 +14,7 @@
 #include "boost/di/type_traits/memory_traits.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 
-namespace boost { namespace di { namespace core {
+namespace boost { namespace di { inline namespace v1 { namespace core {
 
 template<class...>
 struct provider;
@@ -101,7 +101,7 @@ template<
     const TInjector& injector_;
 };
 
-}}} // boost::di::core
+}}}} // boost::di::v1::core
 
 #endif
 

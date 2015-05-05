@@ -9,7 +9,7 @@
 
 #include <type_traits>
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 struct _ { constexpr _(...) { } };
 
@@ -113,7 +113,7 @@ struct is_unique_impl<T1, T2, Ts...>
 template<class... Ts>
 using is_unique = is_unique_impl<none_t, Ts...>;
 
-}}} // boost::di::aux
+}}}} // boost::di::v1::aux
 
 #endif
 

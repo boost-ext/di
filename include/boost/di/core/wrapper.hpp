@@ -10,7 +10,7 @@
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/concepts/creatable.hpp"
 
-namespace boost { namespace di { namespace core {
+namespace boost { namespace di { inline namespace v1 { namespace core {
 
 template<class T, class TWrapper, class = void>
 struct wrapper {
@@ -42,7 +42,7 @@ struct wrapper<T, TWrapper, BOOST_DI_REQUIRES_T(!std::is_convertible<TWrapper, T
     TWrapper wrapper_;
 };
 
-}}} // boost::di::core
+}}}} // boost::di::v1::core
 
 #endif
 

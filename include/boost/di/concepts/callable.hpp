@@ -13,7 +13,7 @@
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/fwd.hpp"
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<class...>
 struct policy {
@@ -82,7 +82,7 @@ struct is_callable<void> { // auto
 template<class... Ts>
 using callable = typename is_callable<Ts...>::type;
 
-}}} // boost::di::concepts
+}}}} // boost::di::v1::concepts
 
 #endif
 

@@ -19,7 +19,7 @@
     #define BOOST_DI_CFG boost::di::config
 #endif
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<class... TPolicies, BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>)>
 inline auto make_policies(const TPolicies&... args) noexcept {
@@ -37,7 +37,7 @@ public:
     }
 };
 
-}} // boost::di
+}}} // boost::di::v1
 
 #endif
 

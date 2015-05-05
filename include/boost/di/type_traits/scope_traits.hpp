@@ -12,7 +12,7 @@
 #include "boost/di/scopes/unique.hpp"
 #include "boost/di/scopes/singleton.hpp"
 
-namespace boost { namespace di { namespace type_traits {
+namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 
 template<class T>
 struct scope_traits {
@@ -92,7 +92,7 @@ struct scope_traits<const std::weak_ptr<T>&> {
 template<class T>
 using scope_traits_t = typename scope_traits<T>::type;
 
-}}} // boost::di::type_traits
+}}}} // boost::di::v1::type_traits
 
 #endif
 

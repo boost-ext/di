@@ -11,7 +11,7 @@
 #include "boost/di/aux_/compiler_specific.hpp"
 #include "boost/di/fwd.hpp"
 
-namespace boost { namespace di { namespace wrappers {
+namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 
 template<class T>
 struct unique {
@@ -108,7 +108,7 @@ struct unique<std::unique_ptr<T, TDeleter>> {
     std::unique_ptr<T, TDeleter> object;
 };
 
-}}} // boost::di::wrappers
+}}}} // boost::di::v1::wrappers
 
 #endif
 

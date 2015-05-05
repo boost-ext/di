@@ -11,7 +11,7 @@
 #include <type_traits>
 #include "boost/di/scopes/deduce.hpp"
 
-namespace boost { namespace di { namespace scopes {
+namespace boost { namespace di { inline namespace v1 { namespace scopes {
 
 template<class TScope = scopes::deduce>
 class exposed {
@@ -81,7 +81,7 @@ BOOST_DI_WKND(BOOST_DI_GCC)(
     }
 )()
 
-}}} // boost::di::scopes
+}}}} // boost::di::v1::scopes
 
 #endif
 

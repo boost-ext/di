@@ -17,7 +17,7 @@
 #include "boost/di/scopes/unique.hpp"
 #include "boost/di/concepts/boundable.hpp"
 
-namespace boost { namespace di { namespace detail {
+namespace boost { namespace di { inline namespace v1 { namespace detail {
 
 template<class... Ts, BOOST_DI_REQUIRES(aux::is_unique<Ts...>::value)>
 auto any_of() {
@@ -58,7 +58,7 @@ constexpr auto session_exit(const TName&) noexcept {
     return scopes::session_exit<TName>{};
 }
 
-}} // boost::di
+}}} // boost::di::v1
 
 #endif
 

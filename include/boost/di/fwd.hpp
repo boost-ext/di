@@ -9,7 +9,7 @@
 
 namespace boost {
 template<class> class shared_ptr;
-namespace di {
+namespace di { inline namespace v1 {
 namespace aux { struct none_t; }
 namespace core {
 template<class = void, class = aux::none_t, class = std::false_type>
@@ -29,7 +29,7 @@ class config;
 template<class...>
 class injector;
 
-}} // boost::di
+}}} // boost::di::v1
 
 #endif
 

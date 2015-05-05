@@ -11,7 +11,7 @@
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<class>
 struct provider {
@@ -36,7 +36,7 @@ auto providable_impl(T&& t) -> aux::is_valid_expr<
 template<class T>
 using providable = decltype(providable_impl<T>(std::declval<T>()));
 
-}}} // boost::di::concepts
+}}}} // boost::di::v1::concepts
 
 #endif
 

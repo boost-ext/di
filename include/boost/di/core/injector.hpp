@@ -23,7 +23,7 @@
 #include "boost/di/type_traits/referable_traits.hpp"
 #include "boost/di/concepts/creatable.hpp"
 
-namespace boost { namespace di { namespace core {
+namespace boost { namespace di { inline namespace v1 { namespace core {
 
 BOOST_DI_HAS_METHOD(call, call);
 
@@ -173,7 +173,7 @@ private:
     }
 };
 
-}}} // boost::di::core
+}}}} // boost::di::v1::core
 
 #endif
 

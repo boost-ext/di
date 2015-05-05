@@ -11,7 +11,7 @@
 #include "boost/di/type_traits/memory_traits.hpp"
 #include "boost/di/concepts/creatable.hpp"
 
-namespace boost { namespace di { namespace providers {
+namespace boost { namespace di { inline namespace v1 { namespace providers {
 
 class stack_over_heap {
 public:
@@ -50,7 +50,7 @@ public:
     }
 };
 
-}}} // boost::di::providers
+}}}} // boost::di::v1::providers
 
 #endif
 

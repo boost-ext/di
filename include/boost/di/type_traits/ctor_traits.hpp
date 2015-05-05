@@ -13,7 +13,7 @@
 #include "boost/di/inject.hpp"
 #include "boost/di/fwd.hpp"
 
-namespace boost { namespace di { namespace type_traits {
+namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 
 template<class, class>
 struct named { };
@@ -163,11 +163,11 @@ struct ctor_traits_impl<T, std::false_type>
     : di::ctor_traits<T>
 { };
 
-}}} // boost::di::type_traits
+}}}} // boost::di::v1::type_traits
 
 #include <string>
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
     template<
         class T
       , class Traits
@@ -175,7 +175,7 @@ namespace boost { namespace di {
     > struct ctor_traits<std::basic_string<T, Traits, TAllocator>> {
         BOOST_DI_INJECT_TRAITS();
     };
-}} // boost::di
+}}} // boost::di::v1
 
 namespace std {
     template<class>
@@ -187,7 +187,7 @@ namespace std {
     )()
 } // std
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
     template<class T>
     struct ctor_traits<std::initializer_list<T>> {
         BOOST_DI_INJECT_TRAITS();
@@ -199,7 +199,7 @@ namespace boost { namespace di {
             BOOST_DI_INJECT_TRAITS();
         };
     )()
-}} // boost::di
+}}} // boost::di::v1
 
 #endif
 

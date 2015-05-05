@@ -13,7 +13,7 @@
 #include "boost/di/core/dependency.hpp"
 #include "boost/di/scopes/exposed.hpp"
 
-namespace boost { namespace di { namespace core {
+namespace boost { namespace di { inline namespace v1 { namespace core {
 
 template<class T, class = void>
 struct get_deps {
@@ -61,7 +61,7 @@ BOOST_DI_WKND(BOOST_DI_MSVC)(
     using transform_t = aux::join_t<typename add_type_list<Ts>::type...>;
 )
 
-}}} // boost::di::core
+}}}} // boost::di::v1::core
 
 #endif
 

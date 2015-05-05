@@ -14,7 +14,7 @@
 #include "boost/di/concepts/configurable.hpp"
 #include "boost/di/config.hpp"
 
-namespace boost { namespace di { namespace detail {
+namespace boost { namespace di { inline namespace v1 { namespace detail {
 
 template<class>
 void create(const std::true_type&) { }
@@ -66,7 +66,7 @@ public:
     }
 };
 
-}} // boost::di
+}}} // boost::di::v1
 
 #endif
 

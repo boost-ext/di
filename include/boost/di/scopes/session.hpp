@@ -11,7 +11,7 @@
 #include "boost/di/wrappers/shared.hpp"
 #include "boost/di/fwd.hpp" // no_name
 
-namespace boost { namespace di { namespace scopes {
+namespace boost { namespace di { inline namespace v1 { namespace scopes {
 
 template<class = no_name>
 class session_entry { };
@@ -55,7 +55,7 @@ public:
     };
 };
 
-}}} // boost::di::scopes
+}}}} // boost::di::v1::scopes
 
 #endif
 

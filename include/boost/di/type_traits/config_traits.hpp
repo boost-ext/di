@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_TYPE_TRAITS_CONFIG_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_CONFIG_TRAITS_HPP
 
-namespace boost { namespace di { namespace type_traits {
+namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 
 template<class TConfig, class>
 struct config_traits {
@@ -19,7 +19,7 @@ struct config_traits<TConfig<T>, TInjector> {
     using type = TConfig<TInjector>;
 };
 
-}}} // boost::di::type_traits
+}}}} // boost::di::v1::type_traits
 
 #endif
 

@@ -11,7 +11,7 @@
 #include "boost/di/wrappers/unique.hpp"
 #include "boost/di/wrappers/shared.hpp"
 
-namespace boost { namespace di { namespace type_traits {
+namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 
 template<class T>
 struct wrapper_traits {
@@ -26,7 +26,7 @@ struct wrapper_traits<std::shared_ptr<T>> {
 template<class T>
 using wrapper_traits_t = typename wrapper_traits<T>::type;
 
-}}} // boost::di::type_traits
+}}}} // boost::di::v1::type_traits
 
 #endif
 

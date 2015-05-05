@@ -13,7 +13,7 @@
 #include "boost/di/core/injector.hpp"
 #include "boost/di/config.hpp"
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<
      class TConfig = ::BOOST_DI_CFG
@@ -24,7 +24,7 @@ template<
     return core::injector<TConfig, TDeps...>{core::init{}, args...};
 }
 
-}} // boost::di
+}}} // boost::di::v1
 
 #endif
 

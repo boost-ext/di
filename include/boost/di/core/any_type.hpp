@@ -12,7 +12,7 @@
 #include "boost/di/core/binder.hpp"
 #include "boost/di/concepts/creatable.hpp"
 
-namespace boost { namespace di { namespace core {
+namespace boost { namespace di { inline namespace v1 { namespace core {
 
 template<class TParent, class TInjector, class TError>
 struct any_type {
@@ -75,7 +75,7 @@ struct is_any_type : std::false_type { };
 template<class... TArgs>
 struct is_any_type<any_type<TArgs...>> : std::true_type { };
 
-}}} // boost::di::core
+}}}} // boost::di::v1::core
 
 #endif
 

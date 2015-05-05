@@ -46,7 +46,7 @@
 #define BOOST_DI_REQUIRES_MSG_T(...) \
     constraint_not_satisfied<__VA_ARGS__>::type
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<class...>
 struct constraint_not_satisfied { };
@@ -174,7 +174,7 @@ struct function_traits<R(T::*)(TArgs...) const> {
     using args = type_list<TArgs...>;
 };
 
-}}} // boost::di::aux
+}}}} // boost::di::v1::aux
 
 #endif
 

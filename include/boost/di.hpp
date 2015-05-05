@@ -42,7 +42,7 @@
 #ifndef BOOST_DI_AUX_UTILITY_HPP
 #define BOOST_DI_AUX_UTILITY_HPP
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 struct _ { constexpr _(...) { } };
 
@@ -146,7 +146,7 @@ struct is_unique_impl<T1, T2, Ts...>
 template<class... Ts>
 using is_unique = is_unique_impl<none_t, Ts...>;
 
-}}} // boost::di::aux
+}}}} // boost::di::v1::aux
 
 #endif
 
@@ -155,7 +155,7 @@ using is_unique = is_unique_impl<none_t, Ts...>;
 
 namespace boost {
 template<class> class shared_ptr;
-namespace di {
+namespace di { inline namespace v1 {
 namespace aux { struct none_t; }
 namespace core {
 template<class = void, class = aux::none_t, class = std::false_type>
@@ -175,7 +175,7 @@ class config;
 template<class...>
 class injector;
 
-}} // boost::di
+}}} // boost::di::v1
 
 #endif
 
@@ -216,7 +216,7 @@ class injector;
 #define BOOST_DI_REQUIRES_MSG_T(...) \
     constraint_not_satisfied<__VA_ARGS__>::type
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<class...>
 struct constraint_not_satisfied { };
@@ -344,14 +344,14 @@ struct function_traits<R(T::*)(TArgs...) const> {
     using args = type_list<TArgs...>;
 };
 
-}}} // boost::di::aux
+}}}} // boost::di::v1::aux
 
 #endif
 
 #ifndef BOOST_DI_CORE_POOL_HPP
 #define BOOST_DI_CORE_POOL_HPP
 
-namespace boost { namespace di { namespace core {
+namespace boost { namespace di { inline namespace v1 { namespace core {
 
 struct init { };
 
@@ -394,7 +394,7 @@ private:
     }
 };
 
-}}} // boost::di::core
+}}}} // boost::di::v1::core
 
 #endif
 
@@ -454,7 +454,7 @@ private:
 #ifndef BOOST_DI_WRAPPERS_UNIQUE_HPP
 #define BOOST_DI_WRAPPERS_UNIQUE_HPP
 
-namespace boost { namespace di { namespace wrappers {
+namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 
 template<class T>
 struct unique {
@@ -551,14 +551,14 @@ struct unique<std::unique_ptr<T, TDeleter>> {
     std::unique_ptr<T, TDeleter> object;
 };
 
-}}} // boost::di::wrappers
+}}}} // boost::di::v1::wrappers
 
 #endif
 
 #ifndef BOOST_DI_TYPE_TRAITS_MEMORY_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_MEMORY_TRAITS_HPP
 
-namespace boost { namespace di { namespace type_traits {
+namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 
 struct stack { };
 struct heap { };
@@ -646,14 +646,14 @@ struct memory_traits<T, std::enable_if_t<std::is_polymorphic<T>::value>> {
 template<class T>
 using memory_traits_t = typename memory_traits<T>::type;
 
-}}} // boost::di::type_traits
+}}}} // boost::di::v1::type_traits
 
 #endif
 
 #ifndef BOOST_DI_SCOPES_UNIQUE_HPP
 #define BOOST_DI_SCOPES_UNIQUE_HPP
 
-namespace boost { namespace di { namespace scopes {
+namespace boost { namespace di { inline namespace v1 { namespace scopes {
 
 class unique {
 public:
@@ -679,14 +679,14 @@ public:
     };
 };
 
-}}} // boost::di::scopes
+}}}} // boost::di::v1::scopes
 
 #endif
 
 #ifndef BOOST_DI_WRAPPERS_SHARED_HPP
 #define BOOST_DI_WRAPPERS_SHARED_HPP
 
-namespace boost { namespace di { namespace wrappers {
+namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 
 template<class T>
 struct shared {
@@ -761,14 +761,14 @@ struct shared<T&> {
     T& object;
 };
 
-}}} // boost::di::wrappers
+}}}} // boost::di::v1::wrappers
 
 #endif
 
 #ifndef BOOST_DI_SCOPES_SINGLETON_HPP
 #define BOOST_DI_SCOPES_SINGLETON_HPP
 
-namespace boost { namespace di { namespace scopes {
+namespace boost { namespace di { inline namespace v1 { namespace scopes {
 
 class singleton {
 public:
@@ -798,14 +798,14 @@ public:
     };
 };
 
-}}} // boost::di::scopes
+}}}} // boost::di::v1::scopes
 
 #endif
 
 #ifndef BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 
-namespace boost { namespace di { namespace type_traits {
+namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 
 template<class T>
 struct scope_traits {
@@ -885,14 +885,14 @@ struct scope_traits<const std::weak_ptr<T>&> {
 template<class T>
 using scope_traits_t = typename scope_traits<T>::type;
 
-}}} // boost::di::type_traits
+}}}} // boost::di::v1::type_traits
 
 #endif
 
 #ifndef BOOST_DI_SCOPES_DEDUCE_HPP
 #define BOOST_DI_SCOPES_DEDUCE_HPP
 
-namespace boost { namespace di { namespace scopes {
+namespace boost { namespace di { inline namespace v1 { namespace scopes {
 
 class deduce {
 public:
@@ -917,14 +917,14 @@ public:
     };
 };
 
-}}} // boost::di::scopes
+}}}} // boost::di::v1::scopes
 
 #endif
 
 #ifndef BOOST_DI_SCOPES_EXPOSED_HPP
 #define BOOST_DI_SCOPES_EXPOSED_HPP
 
-namespace boost { namespace di { namespace scopes {
+namespace boost { namespace di { inline namespace v1 { namespace scopes {
 
 template<class TScope = scopes::deduce>
 class exposed {
@@ -993,14 +993,14 @@ BOOST_DI_WKND(BOOST_DI_GCC)(
     }
 )()
 
-}}} // boost::di::scopes
+}}}} // boost::di::v1::scopes
 
 #endif
 
 #ifndef BOOST_DI_TYPE_TRAITS_WRAPPER_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_WRAPPER_TRAITS_HPP
 
-namespace boost { namespace di { namespace type_traits {
+namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 
 template<class T>
 struct wrapper_traits {
@@ -1015,14 +1015,14 @@ struct wrapper_traits<std::shared_ptr<T>> {
 template<class T>
 using wrapper_traits_t = typename wrapper_traits<T>::type;
 
-}}} // boost::di::type_traits
+}}}} // boost::di::v1::type_traits
 
 #endif
 
 #ifndef BOOST_DI_SCOPES_EXTERNAL_HPP
 #define BOOST_DI_SCOPES_EXTERNAL_HPP
 
-namespace boost { namespace di { namespace scopes {
+namespace boost { namespace di { inline namespace v1 { namespace scopes {
 
 BOOST_DI_HAS_METHOD(call_operator, operator());
 BOOST_DI_HAS_TYPE(result_type);
@@ -1150,7 +1150,7 @@ public:
     };
 };
 
-}}} // boost::di::scopes
+}}}} // boost::di::v1::scopes
 
 #endif
 
@@ -1357,7 +1357,7 @@ public:
 #ifndef BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 
-namespace boost { namespace di { namespace type_traits {
+namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 
 template<class, class>
 struct named { };
@@ -1507,9 +1507,9 @@ struct ctor_traits_impl<T, std::false_type>
     : di::ctor_traits<T>
 { };
 
-}}} // boost::di::type_traits
+}}}} // boost::di::v1::type_traits
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
     template<
         class T
       , class Traits
@@ -1517,7 +1517,7 @@ namespace boost { namespace di {
     > struct ctor_traits<std::basic_string<T, Traits, TAllocator>> {
         BOOST_DI_INJECT_TRAITS();
     };
-}} // boost::di
+}}} // boost::di::v1
 
 namespace std {
     template<class>
@@ -1529,7 +1529,7 @@ namespace std {
     )()
 } // std
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
     template<class T>
     struct ctor_traits<std::initializer_list<T>> {
         BOOST_DI_INJECT_TRAITS();
@@ -1541,14 +1541,14 @@ namespace boost { namespace di {
             BOOST_DI_INJECT_TRAITS();
         };
     )()
-}} // boost::di
+}}} // boost::di::v1
 
 #endif
 
 #ifndef BOOST_DI_CONCEPTS_SCOPABLE_HPP
 #define BOOST_DI_CONCEPTS_SCOPABLE_HPP
 
-namespace boost { namespace di { namespace concepts {
+namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
 template<class T>
 struct provider {
@@ -1574,7 +1574,7 @@ template<class T>
 using scopable = BOOST_DI_WKND(BOOST_DI_MSVC)
     (std::true_type)(decltype(scopable_impl(std::declval<T>())));
 
-}}} // boost::di::concepts
+}}}} // boost::di::v1::concepts
 
 #endif
 
@@ -1585,7 +1585,7 @@ using scopable = BOOST_DI_WKND(BOOST_DI_MSVC)
     #define BOOST_DI_CFG_DEPENDENCY_EXTENSIONS ::boost::di::aux::none_t
 #endif
 
-namespace boost { namespace di { namespace core {
+namespace boost { namespace di { inline namespace v1 { namespace core {
 
 BOOST_DI_HAS_METHOD(configure, configure);
 BOOST_DI_HAS_TYPE(deps);
@@ -1742,14 +1742,14 @@ struct is_dependency
     : std::is_base_of<dependency_base, T>
 { };
 
-}}} // boost::di::core
+}}}} // boost::di::v1::core
 
 #endif
 
 #ifndef BOOST_DI_CONCEPTS_CALLABLE_HPP
 #define BOOST_DI_CONCEPTS_CALLABLE_HPP
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<class...>
 struct policy {
@@ -1818,7 +1818,7 @@ struct is_callable<void> { // auto
 template<class... Ts>
 using callable = typename is_callable<Ts...>::type;
 
-}}} // boost::di::concepts
+}}}} // boost::di::v1::concepts
 
 #endif
 
@@ -1828,7 +1828,7 @@ using callable = typename is_callable<Ts...>::type;
 #define BOOST_DI_CONCEPTS_CREATABLE_ATTR \
     BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<class T>
 struct abstract_type {
@@ -2094,14 +2094,14 @@ constexpr T creatable_error() {
     return creatable_error_impl<TInitialization, TName, I, T, aux::type_list<Ts...>>{};
 }
 
-}}} // boost::di::concepts
+}}}} // boost::di::v1::concepts
 
 #endif
 
 #ifndef BOOST_DI_PROVIDERS_STACK_OVER_HEAP_HPP
 #define BOOST_DI_PROVIDERS_STACK_OVER_HEAP_HPP
 
-namespace boost { namespace di { namespace providers {
+namespace boost { namespace di { inline namespace v1 { namespace providers {
 
 class stack_over_heap {
 public:
@@ -2140,7 +2140,7 @@ public:
     }
 };
 
-}}} // boost::di::providers
+}}}} // boost::di::v1::providers
 
 #endif
 
@@ -2153,7 +2153,7 @@ public:
     #define BOOST_DI_CFG boost::di::config
 #endif
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<class... TPolicies, BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>)>
 inline auto make_policies(const TPolicies&... args) noexcept {
@@ -2171,14 +2171,14 @@ public:
     }
 };
 
-}} // boost::di
+}}} // boost::di::v1
 
 #endif
 
 #ifndef BOOST_DI_SCOPES_SESSION_HPP
 #define BOOST_DI_SCOPES_SESSION_HPP
 
-namespace boost { namespace di { namespace scopes {
+namespace boost { namespace di { inline namespace v1 { namespace scopes {
 
 template<class = no_name>
 class session_entry { };
@@ -2222,14 +2222,14 @@ public:
     };
 };
 
-}}} // boost::di::scopes
+}}}} // boost::di::v1::scopes
 
 #endif
 
 #ifndef BOOST_DI_SCOPES_SHARED_HPP
 #define BOOST_DI_SCOPES_SHARED_HPP
 
-namespace boost { namespace di { namespace scopes {
+namespace boost { namespace di { inline namespace v1 { namespace scopes {
 
 class shared {
 public:
@@ -2256,14 +2256,14 @@ public:
     };
 };
 
-}}} // boost::di::scopes
+}}}} // boost::di::v1::scopes
 
 #endif
 
 #ifndef BOOST_DI_CORE_TRANSFORM_HPP
 #define BOOST_DI_CORE_TRANSFORM_HPP
 
-namespace boost { namespace di { namespace core {
+namespace boost { namespace di { inline namespace v1 { namespace core {
 
 template<class T, class = void>
 struct get_deps {
@@ -2311,14 +2311,14 @@ BOOST_DI_WKND(BOOST_DI_MSVC)(
     using transform_t = aux::join_t<typename add_type_list<Ts>::type...>;
 )
 
-}}} // boost::di::core
+}}}} // boost::di::v1::core
 
 #endif
 
 #ifndef BOOST_DI_CONCEPTS_BOUNDABLE_HPP
 #define BOOST_DI_CONCEPTS_BOUNDABLE_HPP
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<class...>
 struct bound_type {
@@ -2445,14 +2445,14 @@ template<class... Ts>
 using boundable = BOOST_DI_WKND(BOOST_DI_MSVC)
     (std::true_type)(decltype(boundable_impl(std::declval<Ts>()...)));
 
-}}} // boost::di::concepts
+}}}} // boost::di::v1::concepts
 
 #endif
 
 #ifndef BOOST_DI_BINDINGS_HPP
 #define BOOST_DI_BINDINGS_HPP
 
-namespace boost { namespace di { namespace detail {
+namespace boost { namespace di { inline namespace v1 { namespace detail {
 
 template<class... Ts, BOOST_DI_REQUIRES(aux::is_unique<Ts...>::value)>
 auto any_of() {
@@ -2493,14 +2493,14 @@ constexpr auto session_exit(const TName&) noexcept {
     return scopes::session_exit<TName>{};
 }
 
-}} // boost::di
+}}} // boost::di::v1
 
 #endif
 
 #ifndef BOOST_DI_CORE_BINDER_HPP
 #define BOOST_DI_CORE_BINDER_HPP
 
-namespace boost { namespace di { namespace core {
+namespace boost { namespace di { inline namespace v1 { namespace core {
 
 class binder {
     template<class TDefault, class>
@@ -2539,14 +2539,14 @@ public:
     }
 };
 
-}}} // boost::di::core
+}}}} // boost::di::v1::core
 
 #endif
 
 #ifndef BOOST_DI_CORE_ANY_TYPE_HPP
 #define BOOST_DI_CORE_ANY_TYPE_HPP
 
-namespace boost { namespace di { namespace core {
+namespace boost { namespace di { inline namespace v1 { namespace core {
 
 template<class TParent, class TInjector, class TError>
 struct any_type {
@@ -2609,14 +2609,14 @@ struct is_any_type : std::false_type { };
 template<class... TArgs>
 struct is_any_type<any_type<TArgs...>> : std::true_type { };
 
-}}} // boost::di::core
+}}}} // boost::di::v1::core
 
 #endif
 
 #ifndef BOOST_DI_CORE_POLICY_HPP
 #define BOOST_DI_CORE_POLICY_HPP
 
-namespace boost { namespace di { namespace core {
+namespace boost { namespace di { inline namespace v1 { namespace core {
 
 BOOST_DI_HAS_METHOD(call_operator, operator());
 
@@ -2698,14 +2698,14 @@ private:
     }
 };
 
-}}} // boost::di::core
+}}}} // boost::di::v1::core
 
 #endif
 
 #ifndef BOOST_DI_CORE_PROVIDER_HPP
 #define BOOST_DI_CORE_PROVIDER_HPP
 
-namespace boost { namespace di { namespace core {
+namespace boost { namespace di { inline namespace v1 { namespace core {
 
 template<class...>
 struct provider;
@@ -2792,14 +2792,14 @@ template<
     const TInjector& injector_;
 };
 
-}}} // boost::di::core
+}}}} // boost::di::v1::core
 
 #endif
 
 #ifndef BOOST_DI_CORE_WRAPPER_HPP
 #define BOOST_DI_CORE_WRAPPER_HPP
 
-namespace boost { namespace di { namespace core {
+namespace boost { namespace di { inline namespace v1 { namespace core {
 
 template<class T, class TWrapper, class = void>
 struct wrapper {
@@ -2831,14 +2831,14 @@ struct wrapper<T, TWrapper, BOOST_DI_REQUIRES_T(!std::is_convertible<TWrapper, T
     TWrapper wrapper_;
 };
 
-}}} // boost::di::core
+}}}} // boost::di::v1::core
 
 #endif
 
 #ifndef BOOST_DI_TYPE_TRAITS_CONFIG_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_CONFIG_TRAITS_HPP
 
-namespace boost { namespace di { namespace type_traits {
+namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 
 template<class TConfig, class>
 struct config_traits {
@@ -2850,14 +2850,14 @@ struct config_traits<TConfig<T>, TInjector> {
     using type = TConfig<TInjector>;
 };
 
-}}} // boost::di::type_traits
+}}}} // boost::di::v1::type_traits
 
 #endif
 
 #ifndef BOOST_DI_TYPE_TRAITS_REFERABLE_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_REFERABLE_TRAITS_HPP
 
-namespace boost { namespace di { namespace type_traits {
+namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 
 template<class T, class>
 struct referable_traits {
@@ -2884,14 +2884,14 @@ BOOST_DI_WKND(BOOST_DI_MSVC)(
 template<class T, class TDependency>
 using referable_traits_t = typename referable_traits<T, TDependency>::type;
 
-}}} // boost::di::type_traits
+}}}} // boost::di::v1::type_traits
 
 #endif
 
 #ifndef BOOST_DI_CORE_INJECTOR_HPP
 #define BOOST_DI_CORE_INJECTOR_HPP
 
-namespace boost { namespace di { namespace core {
+namespace boost { namespace di { inline namespace v1 { namespace core {
 
 BOOST_DI_HAS_METHOD(call, call);
 
@@ -3041,14 +3041,14 @@ private:
     }
 };
 
-}}} // boost::di::core
+}}}} // boost::di::v1::core
 
 #endif
 
 #ifndef BOOST_DI_CONCEPTS_PROVIDABLE_HPP
 #define BOOST_DI_CONCEPTS_PROVIDABLE_HPP
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<class>
 struct provider {
@@ -3073,14 +3073,14 @@ auto providable_impl(T&& t) -> aux::is_valid_expr<
 template<class T>
 using providable = decltype(providable_impl<T>(std::declval<T>()));
 
-}}} // boost::di::concepts
+}}}} // boost::di::v1::concepts
 
 #endif
 
 #ifndef BOOST_DI_CONCEPTS_CONFIGURABLE_HPP
 #define BOOST_DI_CONCEPTS_CONFIGURABLE_HPP
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<class>
 struct config_type {
@@ -3134,14 +3134,14 @@ template<class T>
 using configurable = BOOST_DI_WKND(BOOST_DI_MSVC)
     (std::true_type)(decltype(is_configurable<T>(decltype(configurable_impl(std::declval<T>())){})));
 
-}}} // boost::di::concepts
+}}}} // boost::di::v1::concepts
 
 #endif
 
 #ifndef BOOST_DI_INJECTOR_HPP
 #define BOOST_DI_INJECTOR_HPP
 
-namespace boost { namespace di { namespace detail {
+namespace boost { namespace di { inline namespace v1 { namespace detail {
 
 template<class>
 void create(const std::true_type&) { }
@@ -3193,14 +3193,14 @@ public:
     }
 };
 
-}} // boost::di
+}}} // boost::di::v1
 
 #endif
 
 #ifndef BOOST_DI_MAKE_INJECTOR_HPP
 #define BOOST_DI_MAKE_INJECTOR_HPP
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<
      class TConfig = ::BOOST_DI_CFG
@@ -3211,7 +3211,7 @@ template<
     return core::injector<TConfig, TDeps...>{core::init{}, args...};
 }
 
-}} // boost::di
+}}} // boost::di::v1
 
 #endif
 

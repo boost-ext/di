@@ -10,7 +10,7 @@
 #include <memory>
 #include "boost/di/wrappers/shared.hpp"
 
-namespace boost { namespace di { namespace scopes {
+namespace boost { namespace di { inline namespace v1 { namespace scopes {
 
 class shared {
 public:
@@ -37,7 +37,7 @@ public:
     };
 };
 
-}}} // boost::di::scopes
+}}}} // boost::di::v1::scopes
 
 #endif
 

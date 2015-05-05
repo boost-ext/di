@@ -12,7 +12,7 @@
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
 
-namespace boost { namespace di { namespace concepts {
+namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
 template<class T>
 struct provider {
@@ -38,7 +38,7 @@ template<class T>
 using scopable = BOOST_DI_WKND(BOOST_DI_MSVC)
     (std::true_type)(decltype(scopable_impl(std::declval<T>())));
 
-}}} // boost::di::concepts
+}}}} // boost::di::v1::concepts
 
 #endif
 

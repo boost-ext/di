@@ -10,7 +10,7 @@
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 
-namespace boost { namespace di { namespace core {
+namespace boost { namespace di { inline namespace v1 { namespace core {
 
 struct init { };
 
@@ -53,7 +53,7 @@ private:
     }
 };
 
-}}} // boost::di::core
+}}}} // boost::di::v1::core
 
 #endif
 

@@ -10,7 +10,7 @@
 #include "boost/di/wrappers/unique.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
 
-namespace boost { namespace di { namespace scopes {
+namespace boost { namespace di { inline namespace v1 { namespace scopes {
 
 class unique {
 public:
@@ -36,7 +36,7 @@ public:
     };
 };
 
-}}} // boost::di::scopes
+}}}} // boost::di::v1::scopes
 
 #endif
 

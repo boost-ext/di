@@ -12,7 +12,7 @@
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/core/transform.hpp"
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<class...>
 struct bound_type {
@@ -139,7 +139,7 @@ template<class... Ts>
 using boundable = BOOST_DI_WKND(BOOST_DI_MSVC)
     (std::true_type)(decltype(boundable_impl(std::declval<Ts>()...)));
 
-}}} // boost::di::concepts
+}}}} // boost::di::v1::concepts
 
 #endif
 

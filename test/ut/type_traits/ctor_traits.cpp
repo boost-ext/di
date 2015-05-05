@@ -12,9 +12,6 @@ namespace boost { namespace di {
 
 struct traits { };
 
-template<class>
-struct ctor_traits;
-
 template<>
 struct ctor_traits<traits> {
     BOOST_DI_INJECT_TRAITS();

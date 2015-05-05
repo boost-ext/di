@@ -12,7 +12,7 @@
 #include "boost/di/core/binder.hpp"
 #include "boost/di/core/pool.hpp"
 
-namespace boost { namespace di { namespace core {
+namespace boost { namespace di { inline namespace v1 { namespace core {
 
 BOOST_DI_HAS_METHOD(call_operator, operator());
 
@@ -94,7 +94,7 @@ private:
     }
 };
 
-}}} // boost::di::core
+}}}} // boost::di::v1::core
 
 #endif
 

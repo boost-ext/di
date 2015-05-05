@@ -11,7 +11,7 @@
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/fwd.hpp"
 
-namespace boost { namespace di { namespace policies {
+namespace boost { namespace di { inline namespace v1 { namespace policies {
 
 template<class T>
 struct type {
@@ -183,7 +183,7 @@ inline auto constructible(const T& = {}) {
     return constructible_impl<or_<T>>{};
 }
 
-}}} // boost::di::policies
+}}}} // boost::di::v1::policies
 
 #endif
 

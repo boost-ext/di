@@ -19,7 +19,7 @@
     #define BOOST_DI_CFG_DEPENDENCY_EXTENSIONS ::boost::di::aux::none_t
 #endif
 
-namespace boost { namespace di { namespace core {
+namespace boost { namespace di { inline namespace v1 { namespace core {
 
 BOOST_DI_HAS_METHOD(configure, configure);
 BOOST_DI_HAS_TYPE(deps);
@@ -176,7 +176,7 @@ struct is_dependency
     : std::is_base_of<dependency_base, T>
 { };
 
-}}} // boost::di::core
+}}}} // boost::di::v1::core
 
 #endif
 

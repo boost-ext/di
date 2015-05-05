@@ -11,7 +11,7 @@
 #include "boost/di/fwd.hpp"
 #include "boost/di/aux_/utility.hpp"
 
-namespace boost { namespace di { namespace wrappers {
+namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 
 template<class T>
 struct shared {
@@ -86,7 +86,7 @@ struct shared<T&> {
     T& object;
 };
 
-}}} // boost::di::wrappers
+}}}} // boost::di::v1::wrappers
 
 #endif
 

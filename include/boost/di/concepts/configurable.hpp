@@ -11,7 +11,7 @@
 #include "boost/di/concepts/providable.hpp"
 #include "boost/di/concepts/callable.hpp"
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<class>
 struct config_type {
@@ -65,7 +65,7 @@ template<class T>
 using configurable = BOOST_DI_WKND(BOOST_DI_MSVC)
     (std::true_type)(decltype(is_configurable<T>(decltype(configurable_impl(std::declval<T>())){})));
 
-}}} // boost::di::concepts
+}}}} // boost::di::v1::concepts
 
 #endif
 

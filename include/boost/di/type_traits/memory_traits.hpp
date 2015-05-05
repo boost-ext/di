@@ -11,7 +11,7 @@
 #include "boost/di/fwd.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 
-namespace boost { namespace di { namespace type_traits {
+namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 
 struct stack { };
 struct heap { };
@@ -99,7 +99,7 @@ struct memory_traits<T, std::enable_if_t<std::is_polymorphic<T>::value>> {
 template<class T>
 using memory_traits_t = typename memory_traits<T>::type;
 
-}}} // boost::di::type_traits
+}}}} // boost::di::v1::type_traits
 
 #endif
 
