@@ -182,10 +182,6 @@ class injector;
 #ifndef BOOST_DI_AUX_TYPE_TRAITS_HPP
 #define BOOST_DI_AUX_TYPE_TRAITS_HPP
 
-#if defined(_MSC_VER)
-    #pragma warning(disable : 4503) // decorated name length exceeded, name was truncated
-#endif
-
 #define BOOST_DI_HAS_TYPE(name)                                     \
     template<class, class = void>                                   \
     struct has_##name : std::false_type { };                        \
@@ -207,20 +203,6 @@ class injector;
     template<class T, class... TArgs>                               \
     struct has_##name : decltype(has_##name##_impl<T, TArgs...>(0)) \
     { }
-
-#if defined(__clang__)
-    #define BOOST_DI_UNUSED __attribute__((unused))
-    #define BOOST_DI_ATTR_ERROR(...) [[deprecated(__VA_ARGS__)]]
-    #define BOOST_DI_CONSTEXPR constexpr
-#elif defined(__GNUC__)
-    #define BOOST_DI_UNUSED __attribute__((unused))
-    #define BOOST_DI_ATTR_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
-    #define BOOST_DI_CONSTEXPR constexpr
-#elif defined(_MSC_VER)
-    #define BOOST_DI_UNUSED
-    #define BOOST_DI_ATTR_ERROR(...) __declspec(deprecated(__VA_ARGS__))
-    #define BOOST_DI_CONSTEXPR
-#endif
 
 #define BOOST_DI_REQUIRES(...) \
     typename std::enable_if<__VA_ARGS__, int>::type = 0
@@ -416,6 +398,59 @@ private:
 
 #endif
 
+#ifndef BOOST_DI_AUX_CONFIG_HPP
+#define BOOST_DI_AUX_CONFIG_HPP
+
+#if defined(__clang__)
+    #define BOOST_DI_CLANG
+#elif defined(__GNUC__)
+    #define BOOST_DI_GCC
+#elif defined(_MSC_VER)
+    #define BOOST_DI_MSVC
+#endif
+
+#define BOOST_DI_WKND(T) BOOST_DI_WKND_IMPL_##T
+
+#define BOOST_DI_WKND(T) BOOST_DI_WKND_IMPL_##T
+#define BOOST_DI_WKND_NOT(T) BOOST_DI_WKND_IMPL_NOT_##T
+
+#if defined(BOOST_DI_CLANG)
+    #define BOOST_DI_UNUSED __attribute__((unused))
+    #define BOOST_DI_ATTR_ERROR(...) [[deprecated(__VA_ARGS__)]]
+    #define BOOST_DI_CONSTEXPR constexpr
+    #define BOOST_DI_WKND_IMPL_BOOST_DI_CLANG(...) __VA_ARGS__
+    #define BOOST_DI_WKND_IMPL_BOOST_DI_GCC(...)
+    #define BOOST_DI_WKND_IMPL_BOOST_DI_MSVC(...)
+    #define BOOST_DI_WKND_IMPL_NOT_BOOST_DI_CLANG(...)
+    #define BOOST_DI_WKND_IMPL_NOT_BOOST_DI_GCC(...) __VA_ARGS__
+    #define BOOST_DI_WKND_IMPL_NOT_BOOST_DI_MSVC(...) __VA_ARGS__
+#elif defined(BOOST_DI_GCC)
+    #define BOOST_DI_UNUSED __attribute__((unused))
+    #define BOOST_DI_ATTR_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
+    #define BOOST_DI_CONSTEXPR constexpr
+    #define BOOST_DI_WKND_IMPL_BOOST_DI_GCC(...) __VA_ARGS__
+    #define BOOST_DI_WKND_IMPL_BOOST_DI_CLANG(...)
+    #define BOOST_DI_WKND_IMPL_BOOST_DI_MSVC(...)
+    #define BOOST_DI_WKND_IMPL_NOT_BOOST_DI_GCC(...)
+    #define BOOST_DI_WKND_IMPL_NOT_BOOST_DI_CLANG(...) __VA_ARGS__
+    #define BOOST_DI_WKND_IMPL_NOT_BOOST_DI_MSVC(...) __VA_ARGS__
+#elif defined(BOOST_DI_MSVC)
+    #define BOOST_DI_UNUSED
+    #define BOOST_DI_ATTR_ERROR(...) __declspec(deprecated(__VA_ARGS__))
+    #define BOOST_DI_CONSTEXPR
+    #define BOOST_DI_WKND_IMPL_BOOST_DI_MSVC(...) __VA_ARGS__
+    #define BOOST_DI_WKND_IMPL_BOOST_DI_CLANG(...)
+    #define BOOST_DI_WKND_IMPL_BOOST_DI_GCC(...)
+    #define BOOST_DI_WKND_IMPL_NOT_BOOST_DI_MSVC(...)
+    #define BOOST_DI_WKND_IMPL_NOT_BOOST_DI_CLANG(...) __VA_ARGS__
+    #define BOOST_DI_WKND_IMPL_NOT_BOOST_DI_GCC(...) __VA_ARGS__
+
+    #pragma warning(disable : 4503) // decorated name length exceeded, name was truncated
+    #pragma warning(disable : 4822) // local class member function does not have a body
+#endif
+
+#endif
+
 #ifndef BOOST_DI_WRAPPERS_UNIQUE_HPP
 #define BOOST_DI_WRAPPERS_UNIQUE_HPP
 
@@ -472,11 +507,11 @@ struct unique<T*> {
         return std::unique_ptr<I>{object};
     }
 
-#if defined(_MSC_VER)
-    explicit unique(T* object)
-        : object(object)
-    { }
-#endif
+    BOOST_DI_WKND(BOOST_DI_MSVC)(
+        explicit unique(T* object)
+            : object(object)
+        { }
+    )
 
     T* object = nullptr;
 };
@@ -950,13 +985,13 @@ public:
     };
 };
 
-#if defined(__GNUC__) && !defined(__clang__)
+BOOST_DI_WKND(BOOST_DI_GCC)(
     template<class TScope>
     template<class TExpected, class TGiven>
     TExpected* exposed<TScope>::scope<TExpected, TGiven>::iprovider::get(const type_traits::heap&) const noexcept {
         return nullptr;
     }
-#endif
+)
 
 }}} // boost::di::scopes
 
@@ -1178,7 +1213,7 @@ public:
 #define BOOST_DI_REPEAT_9(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) m(6, __VA_ARGS__) m(7, __VA_ARGS__) m(8, __VA_ARGS__)
 #define BOOST_DI_REPEAT_10(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) m(6, __VA_ARGS__) m(7, __VA_ARGS__) m(8, __VA_ARGS__) m(9, __VA_ARGS__)
 
-#if defined(_MSC_VER)
+#if defined(BOOST_DI_MSVC)
     #define BOOST_DI_VD_IBP_CAT(a, b) BOOST_DI_VD_IBP_CAT_I(a, b)
     #define BOOST_DI_VD_IBP_CAT_I(a, b) BOOST_DI_VD_IBP_CAT_II(a ## b)
     #define BOOST_DI_VD_IBP_CAT_II(res) res
@@ -1217,10 +1252,6 @@ public:
 
 #ifndef BOOST_DI_INJECT_HPP
 #define BOOST_DI_INJECT_HPP
-
-#if defined(_MSC_VER)
-    #pragma warning(disable : 4822) // local class member function does not have a body
-#endif
 
 #if !defined(BOOST_DI_INJECTOR)
     #define BOOST_DI_INJECTOR boost_di_injector__
@@ -1492,10 +1523,10 @@ namespace std {
     template<class>
     class initializer_list;
 
-#if defined(_MSC_VER)
-    template<class>
-    class function;
-#endif
+    BOOST_DI_WKND(BOOST_DI_MSVC)(
+        template<class>
+        class function;
+    )
 } // std
 
 namespace boost { namespace di {
@@ -1504,12 +1535,12 @@ namespace boost { namespace di {
         BOOST_DI_INJECT_TRAITS();
     };
 
-#if defined(_MSC_VER)
-    template<class T>
-    struct ctor_traits<std::function<T>> {
-        BOOST_DI_INJECT_TRAITS();
-    };
-#endif
+    BOOST_DI_WKND(BOOST_DI_MSVC)(
+        template<class T>
+        struct ctor_traits<std::function<T>> {
+            BOOST_DI_INJECT_TRAITS();
+        };
+    )
 }} // boost::di
 
 #endif
@@ -1673,11 +1704,7 @@ public:
         return dependency<TScope, TExpected, TGiven, T>{*this };
     }
 
-    template<class T
-#if !defined(_MSC_VER)
-        , BOOST_DI_REQUIRES(concepts::scopable<T>())
-#endif
-        >
+    template<class T, BOOST_DI_REQUIRES(concepts::scopable<T>())>
     auto in(const T&) const noexcept {
         return dependency<T, TExpected, TGiven, TName>{};
     }
@@ -2274,16 +2301,17 @@ struct add_type_list<T, std::false_type, std::false_type> {
     using type = aux::type_list<dependency<scopes::exposed<>, T>>;
 };
 
-#if defined(_MSC_VER)
+BOOST_DI_WKND(BOOST_DI_MSVC)(
     template<class... Ts>
     struct transform : aux::join_t<typename add_type_list<Ts>::type...> { };
 
     template<class... Ts>
     using transform_t = typename transform<Ts...>::type;
-#else
+)
+BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
     template<class... Ts>
     using transform_t = aux::join_t<typename add_type_list<Ts>::type...>;
-#endif
+)
 
 }}} // boost::di::core
 
@@ -2403,11 +2431,7 @@ auto boundable_impl(I&&, T&&) ->
 
 template<class... TDeps> // bindings
 auto boundable_impl(aux::type_list<TDeps...>&&) ->
-#if defined(_MSC_VER)
-    std::true_type;
-#else
-    get_bindings_error<TDeps...>;
-#endif
+    BOOST_DI_WKND(BOOST_DI_MSVC)(std::true_type) BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(get_bindings_error<TDeps...>);
 
 template<class T, class... Ts> // any_of
 auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
@@ -2446,11 +2470,12 @@ template<
   , class TGiven = TExpected
   , BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, TGiven>)
 >
-#if defined(_MSC_VER)
+BOOST_DI_WKND(BOOST_DI_MSVC)(
     struct bind : core::bind<TExpected, TGiven> {};
-#else
+)
+BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
     core::bind<TExpected, TGiven> bind{};
-#endif
+)
 
 constexpr core::override override{};
 
@@ -2569,12 +2594,12 @@ struct any_type {
         return injector_.template create_impl<T&>();
     }
 
-#if !defined(__clang__) && !defined(_MSC_VER)
-    template<class T, class = is_not_same<T>, class = is_referable<T>, class = is_creatable<T&&, TError>>
-    operator T&&() const {
-        return injector_.template create_impl<T&&>();
-    }
-#endif
+    BOOST_DI_WKND(BOOST_DI_GCC)(
+        template<class T, class = is_not_same<T>, class = is_referable<T>, class = is_creatable<T&&, TError>>
+        operator T&&() const {
+            return injector_.template create_impl<T&&>();
+        }
+    )
 
     template<class T, class = is_not_same<T>, class = is_referable<const T&>, class = is_creatable<const T&, TError>>
     operator const T&() const {
@@ -2855,12 +2880,12 @@ struct referable_traits<const T&, TDependency> {
     using type = std::conditional_t<TDependency::template is_referable<const T&>::value, const T&, T>;
 };
 
-#if defined(_MSC_VER)
+BOOST_DI_WKND(BOOST_DI_MSVC)(
     template<class T, class TDependency>
     struct referable_traits<T&&, TDependency> {
         using type = std::conditional_t<TDependency::template is_referable<T&&>::value, T&&, T>;
     };
-#endif
+)
 
 template<class T, class TDependency>
 using referable_traits_t = typename referable_traits<T, TDependency>::type;
@@ -2910,28 +2935,27 @@ public:
     { }
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
-    static constexpr auto is_creatable() {
-        return decltype(is_creatable_impl(
-            std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>())
-        )::value;
-    }
+    BOOST_DI_WKND(BOOST_DI_MSVC)(
+        static constexpr auto is_creatable() { return std::true_type{}; }
+    )
+    BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
+        static constexpr auto is_creatable() {
+            return decltype(is_creatable_impl(
+                std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>())
+            )::value;
+        }
+    )
 
-    template<class T
-#if !defined(_MSC_VER)
-        , BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>())
-#endif
-        >
+    template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>())>
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }
 
-#if !defined(_MSC_VER)
     template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, is_root_t>())>
     BOOST_DI_CONCEPTS_CREATABLE_ATTR
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }
-#endif
 
     template<class TAction>
     void call(const TAction& action) {
@@ -3160,12 +3184,9 @@ public:
     template<
         class TConfig
       , class... TArgs
-#if !defined(_MSC_VER) && !defined(__clang__)
      , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>)
-#endif
     > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, T...>(injector) {
-#if !defined(_MSC_VER)
         using namespace detail;
         int _[]{0, (
             create<T>(
@@ -3176,7 +3197,6 @@ public:
                 >{}
             )
         , 0)...}; (void)_;
-#endif
     }
 };
 
@@ -3192,10 +3212,8 @@ namespace boost { namespace di {
 template<
      class TConfig = ::BOOST_DI_CFG
    , class... TDeps
-#if !defined(_MSC_VER)
    , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type_list<TDeps...>>)
    , BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>)
-#endif
 > inline auto make_injector(const TDeps&... args) noexcept {
     return core::injector<TConfig, TDeps...>{core::init{}, args...};
 }

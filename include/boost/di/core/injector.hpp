@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_CORE_INJECTOR_HPP
 #define BOOST_DI_CORE_INJECTOR_HPP
 
+#include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/core/binder.hpp"
@@ -60,28 +61,27 @@ public:
     { }
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
-    static constexpr auto is_creatable() {
-        return decltype(is_creatable_impl(
-            std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>())
-        )::value;
-    }
+    BOOST_DI_WKND(BOOST_DI_MSVC)(
+        static constexpr auto is_creatable() { return std::true_type{}; }
+    )
+    BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
+        static constexpr auto is_creatable() {
+            return decltype(is_creatable_impl(
+                std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>())
+            )::value;
+        }
+    )
 
-    template<class T
-#if !defined(_MSC_VER)
-        , BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>())
-#endif
-        >
+    template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>())>
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }
 
-#if !defined(_MSC_VER)
     template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, is_root_t>())>
     BOOST_DI_CONCEPTS_CREATABLE_ATTR
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }
-#endif
 
     template<class TAction>
     void call(const TAction& action) {

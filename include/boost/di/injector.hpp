@@ -47,12 +47,9 @@ public:
     template<
         class TConfig
       , class... TArgs
-#if !defined(_MSC_VER) && !defined(__clang__)
      , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>)
-#endif
     > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, T...>(injector) {
-#if !defined(_MSC_VER)
         using namespace detail;
         int _[]{0, (
             create<T>(
@@ -63,7 +60,6 @@ public:
                 >{}
             )
         , 0)...}; (void)_;
-#endif
     }
 };
 

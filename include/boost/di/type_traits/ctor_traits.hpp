@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 
+#include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/inject.hpp"
@@ -180,10 +181,10 @@ namespace std {
     template<class>
     class initializer_list;
 
-#if defined(_MSC_VER)
-    template<class>
-    class function;
-#endif
+    BOOST_DI_WKND(BOOST_DI_MSVC)(
+        template<class>
+        class function;
+    )
 } // std
 
 namespace boost { namespace di {
@@ -192,12 +193,12 @@ namespace boost { namespace di {
         BOOST_DI_INJECT_TRAITS();
     };
 
-#if defined(_MSC_VER)
-    template<class T>
-    struct ctor_traits<std::function<T>> {
-        BOOST_DI_INJECT_TRAITS();
-    };
-#endif
+    BOOST_DI_WKND(BOOST_DI_MSVC)(
+        template<class T>
+        struct ctor_traits<std::function<T>> {
+            BOOST_DI_INJECT_TRAITS();
+        };
+    )
 }} // boost::di
 
 #endif

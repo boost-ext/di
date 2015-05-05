@@ -8,6 +8,7 @@
 #define BOOST_DI_WRAPPERS_UNIQUE_HPP
 
 #include <memory>
+#include "boost/di/aux_/config.hpp"
 #include "boost/di/fwd.hpp"
 
 namespace boost { namespace di { namespace wrappers {
@@ -63,11 +64,11 @@ struct unique<T*> {
         return std::unique_ptr<I>{object};
     }
 
-#if defined(_MSC_VER)
-    explicit unique(T* object)
-        : object(object)
-    { }
-#endif
+    BOOST_DI_WKND(BOOST_DI_MSVC)(
+        explicit unique(T* object)
+            : object(object)
+        { }
+    )
 
     T* object = nullptr;
 };

@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_TYPE_TRAITS_REFERABLE_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_REFERABLE_TRAITS_HPP
 
+#include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 
 namespace boost { namespace di { namespace type_traits {
@@ -26,12 +27,12 @@ struct referable_traits<const T&, TDependency> {
     using type = std::conditional_t<TDependency::template is_referable<const T&>::value, const T&, T>;
 };
 
-#if defined(_MSC_VER)
+BOOST_DI_WKND(BOOST_DI_MSVC)(
     template<class T, class TDependency>
     struct referable_traits<T&&, TDependency> {
         using type = std::conditional_t<TDependency::template is_referable<T&&>::value, T&&, T>;
     };
-#endif
+)
 
 template<class T, class TDependency>
 using referable_traits_t = typename referable_traits<T, TDependency>::type;

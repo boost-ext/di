@@ -73,13 +73,13 @@ public:
     };
 };
 
-#if defined(__GNUC__) && !defined(__clang__)
+BOOST_DI_WKND(BOOST_DI_GCC)(
     template<class TScope>
     template<class TExpected, class TGiven>
     TExpected* exposed<TScope>::scope<TExpected, TGiven>::iprovider::get(const type_traits::heap&) const noexcept {
         return nullptr;
     }
-#endif
+)
 
 }}} // boost::di::scopes
 

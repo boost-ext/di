@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_BINDINGS_HPP
 #define BOOST_DI_BINDINGS_HPP
 
+#include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/core/dependency.hpp"
 #include "boost/di/scopes/deduce.hpp"
@@ -33,11 +34,12 @@ template<
   , class TGiven = TExpected
   , BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, TGiven>)
 >
-#if defined(_MSC_VER)
+BOOST_DI_WKND(BOOST_DI_MSVC)(
     struct bind : core::bind<TExpected, TGiven> {};
-#else
+)
+BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
     core::bind<TExpected, TGiven> bind{};
-#endif
+)
 
 constexpr core::override override{};
 

@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_CORE_ANY_TYPE_HPP
 #define BOOST_DI_CORE_ANY_TYPE_HPP
 
+#include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/core/binder.hpp"
 #include "boost/di/concepts/creatable.hpp"
@@ -53,12 +54,12 @@ struct any_type {
         return injector_.template create_impl<T&>();
     }
 
-#if !defined(__clang__) && !defined(_MSC_VER)
-    template<class T, class = is_not_same<T>, class = is_referable<T>, class = is_creatable<T&&, TError>>
-    operator T&&() const {
-        return injector_.template create_impl<T&&>();
-    }
-#endif
+    BOOST_DI_WKND(BOOST_DI_GCC)(
+        template<class T, class = is_not_same<T>, class = is_referable<T>, class = is_creatable<T&&, TError>>
+        operator T&&() const {
+            return injector_.template create_impl<T&&>();
+        }
+    )
 
     template<class T, class = is_not_same<T>, class = is_referable<const T&>, class = is_creatable<const T&, TError>>
     operator const T&() const {

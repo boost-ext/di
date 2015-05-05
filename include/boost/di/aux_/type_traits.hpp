@@ -7,10 +7,6 @@
 #ifndef BOOST_DI_AUX_TYPE_TRAITS_HPP
 #define BOOST_DI_AUX_TYPE_TRAITS_HPP
 
-#if defined(_MSC_VER)
-    #pragma warning(disable : 4503) // decorated name length exceeded, name was truncated
-#endif
-
 #include <memory>
 #include <type_traits>
 #include "boost/di/fwd.hpp"
@@ -37,20 +33,6 @@
     template<class T, class... TArgs>                               \
     struct has_##name : decltype(has_##name##_impl<T, TArgs...>(0)) \
     { }
-
-#if defined(__clang__)
-    #define BOOST_DI_UNUSED __attribute__((unused))
-    #define BOOST_DI_ATTR_ERROR(...) [[deprecated(__VA_ARGS__)]]
-    #define BOOST_DI_CONSTEXPR constexpr
-#elif defined(__GNUC__)
-    #define BOOST_DI_UNUSED __attribute__((unused))
-    #define BOOST_DI_ATTR_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
-    #define BOOST_DI_CONSTEXPR constexpr
-#elif defined(_MSC_VER)
-    #define BOOST_DI_UNUSED
-    #define BOOST_DI_ATTR_ERROR(...) __declspec(deprecated(__VA_ARGS__))
-    #define BOOST_DI_CONSTEXPR
-#endif
 
 #define BOOST_DI_REQUIRES(...) \
     typename std::enable_if<__VA_ARGS__, int>::type = 0
