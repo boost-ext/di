@@ -47,6 +47,38 @@ class injector : public pool<transform_t<TDeps...>>
     struct from_injector { };
     struct from_deps { };
 
+    template<
+        class T
+      , class TName = no_name
+      , class TIsRoot = std::false_type
+      , class TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
+      , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
+    > static auto try_create_impl() -> std::enable_if_t<std::is_convertible<
+       decltype(
+           std::declval<TDependency>().template try_create<T>(
+               provider<
+                   typename TDependency::expected
+                 , typename TDependency::given
+                 , TName
+                 , T
+                 , TCtor
+                 , injector
+               >{std::declval<injector>()}
+           )
+       ), T>::value
+       BOOST_DI_WKND(BOOST_DI_MSVC)(
+           && decltype(policy<pool_t>::template call<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot>(
+              ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{}, std::false_type{})
+           )::value
+       )
+    >;
+
+    static auto is_creatable_impl(...) -> std::false_type;
+
+    template<class T, class TName, class TIsRoot>
+    static auto is_creatable_impl(T&&, TName&&, TIsRoot&&)
+        -> aux::is_valid_expr<decltype(try_create_impl<T, TName, TIsRoot>())>;
+
 public:
     using deps = transform_t<TDeps...>;
 
@@ -83,7 +115,7 @@ public:
     template<class TAction>
     void call(const TAction& action) {
         call_impl(action, deps{});
-}
+    }
 
 private:
     template<class... TArgs>
@@ -103,32 +135,6 @@ private:
         return T{injector};
     }
 
-    template<
-        class T
-      , class TName = no_name
-      , class TIsRoot = std::false_type
-      , class TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
-      , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
-    > static auto try_create_impl() -> std::enable_if_t<std::is_convertible<
-       decltype(
-           std::declval<TDependency>().template try_create<T>(
-               provider<
-                   typename TDependency::expected
-                 , typename TDependency::given
-                 , TName
-                 , T
-                 , TCtor
-                 , injector
-               >{std::declval<injector>()}
-           )
-       ), T>::value
-       BOOST_DI_WKND(BOOST_DI_MSVC)(
-           && decltype(policy<pool_t>::template call<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot>(
-              ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{}, std::false_type{})
-           )::value
-       )
-    >;
-
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     auto create_impl() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
@@ -142,12 +148,6 @@ private:
         policy<pool_t>::template call<create_t, TName, TIsRoot>(((TConfig&)*this).policies(), dependency, ctor_t{}, std::true_type{});
         return wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
-
-    static auto is_creatable_impl(...) -> std::false_type;
-
-    template<class T, class TName, class TIsRoot>
-    static auto is_creatable_impl(T&&, TName&&, TIsRoot&&)
-        -> aux::is_valid_expr<decltype(try_create_impl<T, TName, TIsRoot>())>;
 
     template<class TAction, class... Ts>
     void call_impl(const TAction& action, const aux::type_list<Ts...>&) {
