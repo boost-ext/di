@@ -66,7 +66,7 @@ class injector : public pool<transform_t<TDeps...>>
                >{std::declval<injector>()}
            )
        ), T>::value
-       BOOST_DI_WKND(BOOST_DI_MSVC)(
+       BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
            && decltype(policy<pool_t>::template call<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot>(
               ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{}, std::false_type{})
            )::value

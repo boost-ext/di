@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_INJECTOR_HPP
 #define BOOST_DI_INJECTOR_HPP
 
+#include "boost/di/aux_/compiler_specific.hpp"
 #include "boost/di/core/injector.hpp"
 #include "boost/di/concepts/boundable.hpp"
 #include "boost/di/concepts/creatable.hpp"
@@ -50,16 +51,18 @@ public:
      , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>)
     > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, T...>(injector) {
-        using namespace detail;
-        int _[]{0, (
-            create<T>(
-                detail::is_creatable<
-                    typename std::is_same<concepts::configurable<TConfig>, std::true_type>::type
-                  , core::injector<TConfig, TArgs...>
-                  , T
-                >{}
+            BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
+                using namespace detail;
+                int _[]{0, (
+                    create<T>(
+                        detail::is_creatable<
+                            typename std::is_same<concepts::configurable<TConfig>, std::true_type>::type
+                          , core::injector<TConfig, TArgs...>
+                          , T
+                        >{}
+                    )
+                , 0)...}; (void)_;
             )
-        , 0)...}; (void)_;
     }
 };
 

@@ -137,7 +137,9 @@ auto boundable_impl(aux::type<TDeps...>&&) ->
 std::true_type boundable_impl(...);
 
 template<class... Ts>
-using boundable = decltype(boundable_impl(std::declval<Ts>()...));
+using boundable =
+    BOOST_DI_WKND(BOOST_DI_MSVC)(std::true_type)
+    BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(decltype(boundable_impl(std::declval<Ts>()...)));
 
 }}} // boost::di::concepts
 

@@ -398,8 +398,8 @@ private:
 
 #endif
 
-#ifndef BOOST_DI_AUX_CONFIG_HPP
-#define BOOST_DI_AUX_CONFIG_HPP
+#ifndef BOOST_DI_AUX_COMPILER_SPECIFIC_HPP
+#define BOOST_DI_AUX_COMPILER_SPECIFIC_HPP
 
 #if defined(__clang__)
     #define BOOST_DI_CLANG
@@ -437,7 +437,7 @@ private:
 #elif defined(BOOST_DI_MSVC)
     #define BOOST_DI_UNUSED
     #define BOOST_DI_ATTR_ERROR(...) __declspec(deprecated(__VA_ARGS__))
-    #define BOOST_DI_CONSTEXPR
+    #define BOOST_DI_CONSTEXPR inline
     #define BOOST_DI_WKND_IMPL_BOOST_DI_MSVC(...) __VA_ARGS__
     #define BOOST_DI_WKND_IMPL_BOOST_DI_CLANG(...)
     #define BOOST_DI_WKND_IMPL_BOOST_DI_GCC(...)
@@ -2445,7 +2445,9 @@ auto boundable_impl(aux::type<TDeps...>&&) ->
 std::true_type boundable_impl(...);
 
 template<class... Ts>
-using boundable = decltype(boundable_impl(std::declval<Ts>()...));
+using boundable =
+    BOOST_DI_WKND(BOOST_DI_MSVC)(std::true_type)
+    BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(decltype(boundable_impl(std::declval<Ts>()...)));
 
 }}} // boost::di::concepts
 
@@ -2941,7 +2943,7 @@ class injector : public pool<transform_t<TDeps...>>
                >{std::declval<injector>()}
            )
        ), T>::value
-       BOOST_DI_WKND(BOOST_DI_MSVC)(
+       BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
            && decltype(policy<pool_t>::template call<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot>(
               ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{}, std::false_type{})
            )::value
@@ -3140,7 +3142,10 @@ constexpr auto is_configurable(const std::false_type&) {
 
 template<class T>
 using configurable =
-    decltype(is_configurable<T>(decltype(configurable_impl(std::declval<T>())){}));
+    BOOST_DI_WKND(BOOST_DI_MSVC)(std::true_type)
+    BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
+        decltype(is_configurable<T>(decltype(configurable_impl(std::declval<T>())){}))
+    );
 
 }}} // boost::di::concepts
 
@@ -3186,16 +3191,18 @@ public:
      , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>)
     > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, T...>(injector) {
-        using namespace detail;
-        int _[]{0, (
-            create<T>(
-                detail::is_creatable<
-                    typename std::is_same<concepts::configurable<TConfig>, std::true_type>::type
-                  , core::injector<TConfig, TArgs...>
-                  , T
-                >{}
+            BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
+                using namespace detail;
+                int _[]{0, (
+                    create<T>(
+                        detail::is_creatable<
+                            typename std::is_same<concepts::configurable<TConfig>, std::true_type>::type
+                          , core::injector<TConfig, TArgs...>
+                          , T
+                        >{}
+                    )
+                , 0)...}; (void)_;
             )
-        , 0)...}; (void)_;
     }
 };
 
