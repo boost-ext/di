@@ -8,7 +8,7 @@
 #include "common/fakes/fake_provider.hpp"
 #include "common/fakes/fake_scope.hpp"
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 struct c { };
 
@@ -32,5 +32,5 @@ test create_from_scope = [] {
     expect_eq(1, fake_scope<>::calls());
 };
 
-}}} // boost::di::scopes
+}}}} // boost::di::v1::scopes
 

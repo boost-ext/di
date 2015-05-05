@@ -8,7 +8,7 @@
 #include "boost/di/scopes/shared.hpp"
 #include "common/fakes/fake_provider.hpp"
 
-namespace boost { namespace di { namespace scopes {
+namespace boost { namespace di { inline namespace v1 { namespace scopes {
 
 test create_shared = [] {
     shared::scope<int, int> shared;
@@ -19,5 +19,5 @@ test create_shared = [] {
     expect_eq(object1, object2);
 };
 
-}}} // boost::di::scopes
+}}}} // boost::di::v1::scopes
 

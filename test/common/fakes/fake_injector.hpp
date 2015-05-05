@@ -9,7 +9,7 @@
 
 #include "common/fakes/fake_config.hpp"
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<class TExpected = void>
 struct fake_injector : fake_config<> {
@@ -26,7 +26,7 @@ struct fake_injector : fake_config<> {
     }
 };
 
-}} // boost::di
+}}} // boost::di::v1
 
 #endif
 

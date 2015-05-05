@@ -11,7 +11,7 @@
 #include "boost/di/core/dependency.hpp"
 #include "common/fakes/fake_scope.hpp"
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<class T, class TScope = fake_scope<>>
 struct fake_dependency : TScope::template scope<T, T> {
@@ -30,7 +30,7 @@ struct is_dependency<fake_dependency<T, TScope>>
 
 } // core
 
-}} // boost::di
+}}} // boost::di::v1
 
 #endif
 

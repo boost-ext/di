@@ -8,7 +8,7 @@
 #include "boost/di/core/pool.hpp"
 #include "boost/di/bindings.hpp"
 
-namespace boost { namespace di { namespace concepts {
+namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
 template<class... TArgs>
 inline auto make_deps(const TArgs&...) noexcept {
@@ -26,5 +26,5 @@ test bind_to_type = [] {
     static_expect(!boundable<int, std::string>());
 };
 
-}}} // boost::di::concepts
+}}}} // boost::di::v1::concepts
 

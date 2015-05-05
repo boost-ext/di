@@ -7,7 +7,7 @@
 #include <type_traits>
 #include "boost/di/type_traits/scope_traits.hpp"
 
-namespace boost { namespace di { namespace type_traits {
+namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 
 struct c { };
 
@@ -41,5 +41,5 @@ test traits = [] {
     expect(std::is_same<scopes::unique, scope_traits<const int&&>::type>{});
 };
 
-}}} // boost::di::type_traits
+}}}} // boost::di::v1::type_traits
 

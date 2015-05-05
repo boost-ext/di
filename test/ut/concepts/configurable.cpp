@@ -7,7 +7,7 @@
 #include "boost/di/concepts/configurable.hpp"
 #include "boost/di/providers/heap.hpp"
 
-namespace boost { namespace di { namespace concepts {
+namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
 test none = [] {
     class config { };
@@ -59,5 +59,5 @@ test all = [] {
     static_expect(configurable<config>());
 };
 
-}}} // boost::di::concepts
+}}}} // boost::di::v1::concepts
 

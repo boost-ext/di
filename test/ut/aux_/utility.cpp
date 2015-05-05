@@ -7,7 +7,7 @@
 #include <type_traits>
 #include "boost/di/aux_/utility.hpp"
 
-namespace boost { namespace di { namespace aux {
+namespace boost { namespace di { inline namespace v1 { namespace aux {
 
 test join_types = [] {
     expect(std::is_same<type_list<>, join_t<>>{});
@@ -26,5 +26,5 @@ test at = [] {
     expect(std::is_same<void, at_key_t<void, short, pair<int, double>, pair<float, char>>>{});
 };
 
-}}} // boost::di::aux
+}}}} // boost::di::v1::aux
 

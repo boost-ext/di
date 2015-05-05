@@ -6,7 +6,7 @@
 //
 #include "boost/di/providers/stack_over_heap.hpp"
 
-namespace boost { namespace di { namespace providers {
+namespace boost { namespace di { inline namespace v1 { namespace providers {
 
 auto test_heap = [](auto type, auto init, auto... args) {
     using T = typename decltype(type)::type;
@@ -39,5 +39,5 @@ test get_with_args = [] {
     test_heap(test_type<uniform>{}, type_traits::uniform{}, int{}, double{});
 };
 
-}}} // boost::di::providers
+}}}} // boost::di::v1::providers
 

@@ -7,7 +7,7 @@
 #include <type_traits>
 #include "boost/di/bindings.hpp"
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 struct i { };
 struct impl : i { };
@@ -21,5 +21,5 @@ test bindings_types = [] {
     expect(std::is_same<scopes::session_exit<name>, decltype(session_exit(name{}))>{});
 };
 
-}} // boost::di
+}}} // boost::di::v1
 

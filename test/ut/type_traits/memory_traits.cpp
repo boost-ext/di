@@ -10,7 +10,7 @@
     #include <boost/shared_ptr.hpp>
 #endif
 
-namespace boost { namespace di { namespace type_traits {
+namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 
 struct c { };
 struct i { virtual ~i() noexcept = default; };
@@ -47,5 +47,5 @@ test traits = [] {
 #endif
 };
 
-}}} // boost::di::type_traits
+}}}} // boost::di::v1::type_traits
 

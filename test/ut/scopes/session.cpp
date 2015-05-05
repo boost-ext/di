@@ -7,7 +7,7 @@
 #include "boost/di/scopes/session.hpp"
 #include "common/fakes/fake_provider.hpp"
 
-namespace boost { namespace di { namespace scopes {
+namespace boost { namespace di { inline namespace v1 { namespace scopes {
 
 test create = [] {
     session<>::scope<int, int> session1;
@@ -46,5 +46,5 @@ test call = [] {
     expect_eq(nullptr, static_cast<std::shared_ptr<int>>(s.create<int>(fake_provider<int>{})));
 };
 
-}}} // boost::di::scopes
+}}}} // boost::di::v1::scopes
 

@@ -7,7 +7,7 @@
 #include "boost/di/core/dependency.hpp"
 #include "common/fakes/fake_injector.hpp"
 
-namespace boost { namespace di { namespace core {
+namespace boost { namespace di { inline namespace v1 { namespace core {
 
 test is_dependency_types = [] {
     expect(!is_dependency<void>{});
@@ -103,5 +103,5 @@ test to_with_deps = [] {
     expect(std::is_same<fake_injector<>, typename dep2::given>{});
 };
 
-}}} // boost::di::core
+}}}} // boost::di::v1::core
 

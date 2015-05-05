@@ -9,7 +9,7 @@
 #include "boost/di/core/injector.hpp"
 #include "common/fakes/fake_dependency.hpp"
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 test injector_empty = [] {
     using injector_t = injector<>;
@@ -40,5 +40,5 @@ test injector_with_module = [] {
     expect(std::is_same<aux::type_list<dep>, injector<module>::deps>{});
 };
 
-}} // boost::di
+}}} // boost::di::v1
 

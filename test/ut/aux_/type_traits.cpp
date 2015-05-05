@@ -8,7 +8,7 @@
 #include <string>
 #include "boost/di/aux_/type_traits.hpp"
 
-namespace boost { namespace di { namespace aux {
+namespace boost { namespace di { inline namespace v1 { namespace aux {
 
 BOOST_DI_HAS_TYPE(has);
 
@@ -167,5 +167,5 @@ test function_traits_parameters_type_const_methods = [] {
     expect(std::is_same<type_list<int, const double&>, typename function_traits<decltype(&c2::f3)>::args>{});
 };
 
-}}} // boost::di::aux
+}}}} // boost::di::v1::aux
 

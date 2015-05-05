@@ -7,7 +7,7 @@
 #include "boost/di/core/any_type.hpp"
 #include "common/fakes/fake_injector.hpp"
 
-namespace boost { namespace di { namespace core {
+namespace boost { namespace di { inline namespace v1 { namespace core {
 
 test is_any_types = [] {
     expect(!is_any_type<void>{});
@@ -21,5 +21,5 @@ test any_type_create = [] {
     expect_eq(0, static_cast<int>(any_type<void, fake_injector<>>{injector}));
 };
 
-}}} // boost::di::core
+}}}} // boost::di::v1::core
 

@@ -10,7 +10,7 @@
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/fwd.hpp"
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<
     class T
@@ -45,7 +45,7 @@ template<
     using resolve = TDefault;
 };
 
-}} // boost::di
+}}} // boost::di::v1
 
 #endif
 

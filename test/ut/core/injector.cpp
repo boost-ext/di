@@ -9,7 +9,7 @@
 #include "common/fakes/fake_dependency.hpp"
 #include "common/fakes/fake_config.hpp"
 
-namespace boost { namespace di { namespace core {
+namespace boost { namespace di { inline namespace v1 { namespace core {
 
 test def_ctor = [] {
     injector<di::config> injector_{core::init{}};
@@ -47,5 +47,5 @@ test call = [] {
     expect_eq(1, fake_scope<>::exit_calls());
 };
 
-}}} // boost::di::core
+}}}} // boost::di::v1::core
 

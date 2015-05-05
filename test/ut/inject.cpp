@@ -6,7 +6,7 @@
 //
 #include "boost/di/inject.hpp"
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 test empty_ctor = [] {
     struct c {
@@ -193,5 +193,5 @@ test c_traits_no_limits = [] {
     };
 #endif
 
-}} // boost::di
+}}} // boost::di::v1
 

@@ -7,12 +7,12 @@
 #ifndef BOOST_DI_FAKE_BINDER_HPP
 #define BOOST_DI_FAKE_BINDER_HPP
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<class>
 struct fake_binder { };
 
-}} // boost::di
+}}} // boost::di::v1
 
 #endif
 

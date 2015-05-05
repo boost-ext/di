@@ -10,7 +10,7 @@
     #include <boost/shared_ptr.hpp>
 #endif
 
-namespace boost { namespace di { namespace wrappers {
+namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 
 struct interface { virtual ~interface() noexcept = default; virtual void dummy() = 0; };
 struct implementation : public interface { virtual void dummy() { }; };
@@ -103,5 +103,5 @@ test to_unique_ptr_from_unique_ptr = [] {
     expect_eq(i, *object);
 };
 
-}}} // boost::di::wrappers
+}}}} // boost::di::v1::wrappers
 

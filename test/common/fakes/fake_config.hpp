@@ -10,7 +10,7 @@
 #include "boost/di/providers/heap.hpp"
 #include "boost/di/config.hpp"
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<class = void>
 struct fake_config {
@@ -23,7 +23,7 @@ struct fake_config {
     }
 };
 
-}} // boost::di
+}}} // boost::di::v1
 
 #endif
 

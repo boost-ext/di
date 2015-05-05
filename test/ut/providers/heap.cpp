@@ -7,7 +7,7 @@
 #include "boost/di/providers/heap.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
 
-namespace boost { namespace di { namespace providers {
+namespace boost { namespace di { inline namespace v1 { namespace providers {
 
 auto test_heap = [](auto type, auto init, auto memory, auto... args) {
     using T = typename decltype(type)::type;
@@ -38,5 +38,5 @@ test get_with_args = [] {
     test_heap(test_type<uniform>{}, type_traits::uniform{}, type_traits::heap{}, int{}, double{});
 };
 
-}}} // boost::di::providers
+}}}} // boost::di::v1::providers
 

@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_FAKE_SCOPE_HPP
 #define BOOST_DI_FAKE_SCOPE_HPP
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 struct fake_scope_entry { };
 struct fake_scope_exit { };
@@ -49,7 +49,7 @@ struct fake_scope {
     }
 };
 
-}} // boost::di
+}}} // boost::di::v1
 
 #endif
 

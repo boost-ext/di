@@ -6,7 +6,7 @@
 //
 #include "boost/di/concepts/creatable.hpp"
 
-namespace boost { namespace di { namespace concepts {
+namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
 struct d {
     d(int, double) { }
@@ -33,5 +33,5 @@ test is_creatable = [] {
     expect(!creatable<type_traits::uniform, u, float, short>::value);
 };
 
-}}} // boost::di::concepts
+}}}} // boost::di::v1::concepts
 

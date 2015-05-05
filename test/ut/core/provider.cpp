@@ -8,7 +8,7 @@
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "common/fakes/fake_injector.hpp"
 
-namespace boost { namespace di { namespace core {
+namespace boost { namespace di { inline namespace v1 { namespace core {
 
 test get_default = [] {
     fake_injector<int> injector;
@@ -31,5 +31,5 @@ test get_heap = [] {
     expect(ptr.get());
 };
 
-}}} // boost::di::core
+}}}} // boost::di::v1::core
 

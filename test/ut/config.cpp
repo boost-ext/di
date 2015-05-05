@@ -7,7 +7,7 @@
 #include <type_traits>
 #include "boost/di/config.hpp"
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 struct policy1 {
     template<class T>
@@ -29,5 +29,5 @@ test default_config = [] {
     expect(std::is_same<core::pool<aux::type_list<>>, decltype(config{}.policies())>{});
 };
 
-}} // boost::di
+}}} // boost::di::v1
 

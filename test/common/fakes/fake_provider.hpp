@@ -10,7 +10,7 @@
 #include "boost/di/type_traits/memory_traits.hpp"
 #include "common/fakes/fake_injector.hpp"
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 template<class T = aux::none_t>
 struct fake_provider {
@@ -32,7 +32,7 @@ struct fake_provider {
     fake_injector<T> injector_;
 };
 
-}} // boost::di
+}}} // boost::di::v1
 
 #endif
 

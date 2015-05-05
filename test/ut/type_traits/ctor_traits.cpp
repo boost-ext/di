@@ -8,7 +8,7 @@
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/core/any_type.hpp"
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 {
 
 struct traits { };
 
@@ -105,5 +105,5 @@ test inheriting_ctors_inject = [] {
     expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits<c3>::type>{});
 };
 
-}}} // boost::di::type_traits
+}}}} // boost::di::v1::type_traits
 
