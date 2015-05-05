@@ -45,7 +45,7 @@ template<
 
     template<class T>
     struct try_get_arg {
-        using type = std::conditional_t<TInjector::template is_creatable<T>(), T, void>;
+        using type = std::conditional_t<TInjector::template is_creatable<T>::value, T, void>;
     };
 
     template<class... TArgs>
@@ -55,7 +55,7 @@ template<
 
     template<class TName_, class T>
     struct try_get_arg<type_traits::named<TName_, T>> {
-        using type = std::conditional_t<TInjector::template is_creatable<T, TName_>(), T, void>;
+        using type = std::conditional_t<TInjector::template is_creatable<T, TName_>::value, T, void>;
     };
 
     template<class TMemory = type_traits::heap>

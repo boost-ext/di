@@ -61,23 +61,20 @@ public:
     { }
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
-    BOOST_DI_WKND(BOOST_DI_MSVC)(
-        static constexpr auto is_creatable() { return std::true_type{}; }
-    )
-    BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
-        static constexpr auto is_creatable() {
-            return decltype(is_creatable_impl(
+    using is_creatable =
+        BOOST_DI_WKND(BOOST_DI_MSVC)(aux::always<T>)
+        BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
+            decltype(is_creatable_impl(
                 std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>())
-            )::value;
-        }
-    )
+            )
+        );
 
-    template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>())>
+    template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>::value)>
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }
 
-    template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, is_root_t>())>
+    template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, is_root_t>::value)>
     BOOST_DI_CONCEPTS_CREATABLE_ATTR
     T create() const {
         return create_impl<T, no_name, is_root_t>();
@@ -86,7 +83,7 @@ public:
     template<class TAction>
     void call(const TAction& action) {
         call_impl(action, deps{});
-    }
+}
 
 private:
     template<class... TArgs>
@@ -125,11 +122,11 @@ private:
                >{std::declval<injector>()}
            )
        ), T>::value
-#if !defined(_MSC_VER)
-       && decltype(policy<pool_t>::template call<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot>(
-          ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{}, std::false_type{})
-       )::value
-#endif
+       BOOST_DI_WKND(BOOST_DI_MSVC)(
+           && decltype(policy<pool_t>::template call<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot>(
+              ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{}, std::false_type{})
+           )::value
+       )
     >;
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>

@@ -32,8 +32,8 @@ struct is_creatable
 template<class TInjector, class T>
 struct is_creatable<std::true_type, TInjector, T>
     : std::integral_constant<bool
-        , TInjector::template is_creatable<T>() ||
-          TInjector::template is_creatable<T*>()
+        , TInjector::template is_creatable<T>::value ||
+          TInjector::template is_creatable<T*>::value
       >
 { };
 

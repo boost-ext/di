@@ -1571,9 +1571,9 @@ auto scopable_impl(T&&) -> aux::is_valid_expr<
 >;
 
 template<class T>
-constexpr auto scopable() {
-    return decltype(scopable_impl(std::declval<T>()))::value;
-}
+using scopable =
+    BOOST_DI_WKND(BOOST_DI_MSVC)(std::true_type)
+    BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(decltype(scopable_impl(std::declval<T>())));
 
 }}} // boost::di::concepts
 
@@ -1704,7 +1704,7 @@ public:
         return dependency<TScope, TExpected, TGiven, T>{*this };
     }
 
-    template<class T, BOOST_DI_REQUIRES(concepts::scopable<T>())>
+    template<class T, BOOST_DI_REQUIRES(concepts::scopable<T>::value)>
     auto in(const T&) const noexcept {
         return dependency<T, TExpected, TGiven, TName>{};
     }
@@ -2431,7 +2431,8 @@ auto boundable_impl(I&&, T&&) ->
 
 template<class... TDeps> // bindings
 auto boundable_impl(aux::type_list<TDeps...>&&) ->
-    BOOST_DI_WKND(BOOST_DI_MSVC)(std::true_type) BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(get_bindings_error<TDeps...>);
+    BOOST_DI_WKND(BOOST_DI_MSVC)(std::true_type)
+    BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(get_bindings_error<TDeps...>);
 
 template<class T, class... Ts> // any_of
 auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
@@ -2573,7 +2574,7 @@ struct any_type {
     template<class T, class TError_>
     struct is_creatable_impl {
         static constexpr auto value =
-            std::is_same<TInjector, aux::none_t>::value || TInjector::template is_creatable<T>();
+            std::is_same<TInjector, aux::none_t>::value || TInjector::template is_creatable<T>::value;
     };
 
     template<class T>
@@ -2742,7 +2743,7 @@ template<
 
     template<class T>
     struct try_get_arg {
-        using type = std::conditional_t<TInjector::template is_creatable<T>(), T, void>;
+        using type = std::conditional_t<TInjector::template is_creatable<T>::value, T, void>;
     };
 
     template<class... TArgs>
@@ -2752,7 +2753,7 @@ template<
 
     template<class TName_, class T>
     struct try_get_arg<type_traits::named<TName_, T>> {
-        using type = std::conditional_t<TInjector::template is_creatable<T, TName_>(), T, void>;
+        using type = std::conditional_t<TInjector::template is_creatable<T, TName_>::value, T, void>;
     };
 
     template<class TMemory = type_traits::heap>
@@ -2935,23 +2936,20 @@ public:
     { }
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
-    BOOST_DI_WKND(BOOST_DI_MSVC)(
-        static constexpr auto is_creatable() { return std::true_type{}; }
-    )
-    BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
-        static constexpr auto is_creatable() {
-            return decltype(is_creatable_impl(
+    using is_creatable =
+        BOOST_DI_WKND(BOOST_DI_MSVC)(aux::always<T>)
+        BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(
+            decltype(is_creatable_impl(
                 std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>())
-            )::value;
-        }
-    )
+            )
+        );
 
-    template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>())>
+    template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>::value)>
     T create() const {
         return create_impl<T, no_name, is_root_t>();
     }
 
-    template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, is_root_t>())>
+    template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, is_root_t>::value)>
     BOOST_DI_CONCEPTS_CREATABLE_ATTR
     T create() const {
         return create_impl<T, no_name, is_root_t>();
@@ -2960,7 +2958,7 @@ public:
     template<class TAction>
     void call(const TAction& action) {
         call_impl(action, deps{});
-    }
+}
 
 private:
     template<class... TArgs>
@@ -2999,11 +2997,11 @@ private:
                >{std::declval<injector>()}
            )
        ), T>::value
-#if !defined(_MSC_VER)
-       && decltype(policy<pool_t>::template call<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot>(
-          ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{}, std::false_type{})
-       )::value
-#endif
+       BOOST_DI_WKND(BOOST_DI_MSVC)(
+           && decltype(policy<pool_t>::template call<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot>(
+              ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{}, std::false_type{})
+           )::value
+       )
     >;
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
@@ -3169,8 +3167,8 @@ struct is_creatable
 template<class TInjector, class T>
 struct is_creatable<std::true_type, TInjector, T>
     : std::integral_constant<bool
-        , TInjector::template is_creatable<T>() ||
-          TInjector::template is_creatable<T*>()
+        , TInjector::template is_creatable<T>::value ||
+          TInjector::template is_creatable<T*>::value
       >
 { };
 

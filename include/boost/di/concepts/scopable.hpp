@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_CONCEPTS_SCOPABLE_HPP
 #define BOOST_DI_CONCEPTS_SCOPABLE_HPP
 
+#include "boost/di/aux_/config.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
@@ -34,9 +35,9 @@ auto scopable_impl(T&&) -> aux::is_valid_expr<
 >;
 
 template<class T>
-constexpr auto scopable() {
-    return decltype(scopable_impl(std::declval<T>()))::value;
-}
+using scopable =
+    BOOST_DI_WKND(BOOST_DI_MSVC)(std::true_type)
+    BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(decltype(scopable_impl(std::declval<T>())));
 
 }}} // boost::di::concepts
 

@@ -123,7 +123,8 @@ auto boundable_impl(I&&, T&&) ->
 
 template<class... TDeps> // bindings
 auto boundable_impl(aux::type_list<TDeps...>&&) ->
-    BOOST_DI_WKND(BOOST_DI_MSVC)(std::true_type) BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(get_bindings_error<TDeps...>);
+    BOOST_DI_WKND(BOOST_DI_MSVC)(std::true_type)
+    BOOST_DI_WKND_NOT(BOOST_DI_MSVC)(get_bindings_error<TDeps...>);
 
 template<class T, class... Ts> // any_of
 auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
