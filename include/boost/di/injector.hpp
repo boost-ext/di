@@ -48,7 +48,7 @@ public:
     template<
         class TConfig
       , class... TArgs
-     , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>)
+      , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>)
     > injector(const core::injector<TConfig, TArgs...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, T...>(injector) {
             BOOST_DI_WKND(BOOST_DI_MSVC)()(
