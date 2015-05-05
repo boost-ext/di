@@ -13,6 +13,9 @@
 
 namespace boost { namespace di { namespace scopes {
 
+BOOST_DI_HAS_METHOD(call_operator, operator());
+BOOST_DI_HAS_TYPE(result_type);
+
 class external {
     struct injector {
         template<class T> T create() const;
@@ -36,7 +39,10 @@ public:
     };
 
     template<class TExpected, class TGiven>
-    struct scope<TExpected, TGiven&, std::enable_if_t<!aux::is_lambda_expr<TGiven, const injector&>::value && !aux::is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
+    struct scope<TExpected, TGiven&,
+        BOOST_DI_REQUIRES_T(!has_call_operator<TGiven, const injector&>::value &&
+                            !has_call_operator<TGiven, const injector&, const aux::type<aux::none_t>&>::value)
+    > {
         template<class>
         using is_referable = std::true_type;
 
@@ -72,14 +78,10 @@ public:
     };
 
     template<class TExpected, class TGiven>
-    struct scope<
-        TExpected
-      , TGiven
-      , std::enable_if_t<
-            !aux::is_lambda_expr<TGiven, const injector&>::value &&
-            !aux::has_call_operator<TExpected>::value &&
-             aux::has_call_operator<TGiven>::value
-        >
+    struct scope<TExpected, TGiven,
+        BOOST_DI_REQUIRES_T(!has_call_operator<TGiven, const injector&>::value &&
+                            !has_call_operator<TExpected>::value &&
+                             has_call_operator<TGiven>::value)
     > {
         template<class>
         using is_referable = std::false_type;
@@ -97,7 +99,10 @@ public:
     };
 
     template<class TExpected, class TGiven>
-    struct scope<TExpected, TGiven, std::enable_if_t<aux::is_lambda_expr<TGiven, const injector&>::value>> {
+    struct scope<TExpected, TGiven,
+        BOOST_DI_REQUIRES_T(has_call_operator<TGiven, const injector&>::value &&
+                           !has_result_type<TGiven>::value)
+    > {
         template<class>
         using is_referable = std::false_type;
 
@@ -113,9 +118,11 @@ public:
         TGiven object_;
     };
 
-#if !defined(_MSC_VER)
     template<class TExpected, class TGiven>
-    struct scope<TExpected, TGiven, std::enable_if_t<aux::is_lambda_expr<TGiven, const injector&, const aux::type<aux::none_t>&>::value>> {
+    struct scope<TExpected, TGiven,
+        BOOST_DI_REQUIRES_T(has_call_operator<TGiven, const injector&, const aux::type<aux::none_t>&>::value &&
+                           !has_result_type<TGiven>::value)
+    > {
         template<class>
         using is_referable = std::false_type;
 
@@ -130,7 +137,6 @@ public:
 
         TGiven object_;
     };
-#endif
 };
 
 }}} // boost::di::scopes
