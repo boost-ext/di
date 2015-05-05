@@ -14,7 +14,7 @@
 
 #include <boost/di/aux_/type_traits.hpp>
 
-namespace boost { namespace di { namespace aux {
+namespace boost { namespace di { inline namespace v1 { namespace aux {
 
 /*<<transform constructor container type to expected binding type `type[]`>>*/
 template<class T>
@@ -30,7 +30,7 @@ namespace concepts {
 template<class I, class T>
 auto boundable_impl(I[], T&&) -> std::true_type;
 
-}}} // boost::di::concepts
+}}}} // boost::di::v1::concepts
 
 #include <boost/di.hpp>
 
