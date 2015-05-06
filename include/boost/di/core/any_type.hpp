@@ -73,6 +73,11 @@ struct any_type<TParent, aux::none_t> {
     template<class T, class = is_not_same<T>>
     operator T&() const;
 
+    BOOST_DI_WKND(BOOST_DI_GCC)(
+        template<class T, class = is_not_same<T>>
+        operator T&&() const;
+    )()
+
     template<class T, class = is_not_same<T>>
     operator const T&() const;
 };
