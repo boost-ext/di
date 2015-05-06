@@ -2908,12 +2908,23 @@ class injector : public pool<transform_t<TDeps...>>
     struct from_injector { };
     struct from_deps { };
 
+    template<class, class>
+    struct policies_not_empty
+        : std::true_type
+    { };
+
+    template<class T>
+    struct policies_not_empty<T, pool<aux::type_list<>>>
+        : std::false_type
+    { };
+
     template<
         class T
       , class TName = no_name
       , class TIsRoot = std::false_type
       , class TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
       , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
+      , BOOST_DI_REQUIRES(policies_not_empty<T, decltype(((TConfig*)0)->policies())>::value)
     > static auto try_create_impl() -> std::enable_if_t<std::is_convertible<
        decltype(
            std::declval<TDependency>().template try_create<T>(
@@ -2932,6 +2943,28 @@ class injector : public pool<transform_t<TDeps...>>
               ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{}, std::false_type{})
            )::value
        )
+    >;
+
+    template<
+        class T
+      , class TName = no_name
+      , class TIsRoot = std::false_type
+      , class TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
+      , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
+      , BOOST_DI_REQUIRES(!policies_not_empty<T, decltype(((TConfig*)0)->policies())>::value)
+    > static auto try_create_impl() -> std::enable_if_t<std::is_convertible<
+       decltype(
+           std::declval<TDependency>().template try_create<T>(
+               provider<
+                   typename TDependency::expected
+                 , typename TDependency::given
+                 , TName
+                 , T
+                 , TCtor
+                 , injector
+               >{std::declval<injector>()}
+           )
+       ), T>::value
     >;
 
     static auto is_creatable_impl(...) -> std::false_type;
@@ -2996,8 +3029,12 @@ private:
         return T{injector};
     }
 
-    template<class T, class TName = no_name, class TIsRoot = std::false_type>
-    auto create_impl() const {
+    template<
+        class T
+      , class TName = no_name
+      , class TIsRoot = std::false_type
+      , BOOST_DI_REQUIRES(policies_not_empty<T, decltype(((TConfig*)0)->policies())>::value)
+    > auto create_impl() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;
@@ -3005,8 +3042,25 @@ private:
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
         using provider_t = core::provider<expected_t, given_t, TName, T, ctor_t, injector>;
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
-        using create_t = T;//type_traits::referable_traits_t<T, dependency_t>;
+        using create_t = type_traits::referable_traits_t<T, dependency_t>;
         policy<pool_t>::template call<create_t, TName, TIsRoot>(((TConfig&)*this).policies(), dependency, ctor_t{}, std::true_type{});
+        return wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
+    }
+
+    template<
+        class T
+      , class TName = no_name
+      , class TIsRoot = std::false_type
+      , BOOST_DI_REQUIRES(!policies_not_empty<T, decltype(((TConfig*)0)->policies())>::value)
+    > auto create_impl() const {
+        auto&& dependency = binder::resolve<T, TName>((injector*)this);
+        using dependency_t = std::remove_reference_t<decltype(dependency)>;
+        using expected_t = typename dependency_t::expected;
+        using given_t = typename dependency_t::given;
+        using ctor_t = typename type_traits::ctor_traits<given_t>::type;
+        using provider_t = core::provider<expected_t, given_t, TName, T, ctor_t, injector>;
+        using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
+        using create_t = type_traits::referable_traits_t<T, dependency_t>;
         return wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
 
