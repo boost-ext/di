@@ -1369,7 +1369,7 @@ BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_INJECTOR);
 
 template<class T, std::size_t>
 struct get {
-       using type = T;
+    using type = T;
 };
 
 template<class T>
