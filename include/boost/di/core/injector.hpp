@@ -90,7 +90,9 @@ class injector : public pool<transform_t<TDeps...>>
       , class TIsRoot = std::false_type
       , class TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
       , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
-      , BOOST_DI_REQUIRES(!policies_not_empty<T, decltype(((TConfig*)0)->policies())>::value)
+        BOOST_DI_WKND(BOOST_DI_MSVC)()(
+          , BOOST_DI_REQUIRES(!policies_not_empty<T, decltype(((TConfig*)0)->policies())>::value)
+        )
     > static auto try_create_impl() -> std::enable_if_t<std::is_convertible<
        decltype(
            std::declval<TDependency>().template try_create<T>(
