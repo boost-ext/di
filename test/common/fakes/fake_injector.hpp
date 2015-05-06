@@ -15,6 +15,11 @@ template<class TExpected = void>
 struct fake_injector : fake_config<> {
     using deps = void;
 
+    template<class T, class TName = no_name, class TIsRoot = std::false_type>
+    struct is_creatable
+        : std::true_type
+    { };
+
     template<class T>
     auto create() const noexcept {
         return create_impl<T>();

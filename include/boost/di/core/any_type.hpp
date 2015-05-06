@@ -19,7 +19,6 @@ struct any_type {
     template<class T>
     struct is_referable_impl {
         static constexpr auto value =
-            std::is_same<TInjector, aux::none_t>::value ||
             std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>::template
                 is_referable<T>::value;
     };
@@ -30,19 +29,13 @@ struct any_type {
     template<class T>
     using is_not_same = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
 
-    template<class T, class TError_>
-    struct is_creatable_impl {
-        static constexpr auto value =
-            std::is_same<TInjector, aux::none_t>::value || TInjector::template is_creatable<T>::value;
-    };
-
     template<class T>
-    struct is_creatable_impl<T, std::false_type> {
-        static constexpr auto value = true;
+    struct is_creatable_impl {
+        static constexpr auto value = TInjector::template is_creatable<T>::value;
     };
 
     template<class T, class TError_>
-    using is_creatable = std::enable_if_t<is_creatable_impl<T, TError_>::value>;
+    using is_creatable = std::enable_if_t<is_creatable_impl<T>::value>;
 
     template<class T, class = is_not_same<T>, class = is_creatable<T, TError>>
     operator T() {
@@ -67,6 +60,21 @@ struct any_type {
     }
 
     const TInjector& injector_;
+};
+
+template<class TParent>
+struct any_type<TParent, aux::none_t, std::false_type> {
+    template<class T>
+    using is_not_same = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
+
+    template<class T, class = is_not_same<T>>
+    operator T();
+
+    template<class T, class = is_not_same<T>>
+    operator T&() const;
+
+    template<class T, class = is_not_same<T>>
+    operator const T&() const;
 };
 
 template<class>
