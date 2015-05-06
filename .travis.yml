@@ -40,17 +40,6 @@ matrix:
             - llvm-toolchain-precise-3.5
 
     - os: linux
-      env: TOOLSET=clang-3.5 VARIANT=analyze
-      addons: &clang35
-        apt:
-          packages:
-            - clang-3.5
-            - libstdc++-5-dev
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.5
-
-    - os: linux
       env: TOOLSET=clang-3.6 VALGRIND=1
       addons: &clang36
         apt:
