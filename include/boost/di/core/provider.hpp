@@ -42,7 +42,7 @@ template<
 
     template<class... TArgs>
     struct try_get_arg<any_type<TArgs...>> {
-        using type = any_type<TParent, TInjector, std::true_type>;
+        using type = any_type<TParent, TInjector>;
     };
 
     template<class TName_, class T>
