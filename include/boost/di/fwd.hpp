@@ -12,7 +12,7 @@ template<class> class shared_ptr;
 namespace di { inline namespace v1 {
 namespace aux { struct none_t; }
 namespace core {
-template<class = void, class = aux::none_t>
+template<class = void, class = void>
 struct any_type;
 } // core
 namespace providers {

@@ -158,7 +158,7 @@ template<class> class shared_ptr;
 namespace di { inline namespace v1 {
 namespace aux { struct none_t; }
 namespace core {
-template<class = void, class = aux::none_t>
+template<class = void, class = void>
 struct any_type;
 } // core
 namespace providers {
@@ -2578,7 +2578,7 @@ struct any_type {
     }
 
     BOOST_DI_WKND(BOOST_DI_GCC)(
-        template<class T, class = is_not_same<T>, class = is_creatable<T&&>>
+        template<class T, class = is_not_same<T>, class = is_referable<T&&>, class = is_creatable<T&&>>
         operator T&&() const {
             return injector_.template create_impl<T&&>();
         }
@@ -2598,7 +2598,7 @@ struct any_type {
 };
 
 template<class TParent>
-struct any_type<TParent, aux::none_t> {
+struct any_type<TParent, void> {
     template<class T>
     using is_not_same = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
 
