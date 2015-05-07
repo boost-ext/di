@@ -30,19 +30,8 @@ else()
 endif()
 
 if (BIICODE)
-    include_directories(test/common)
-    include_directories(test)
-
     ADD_BII_TARGETS()
-    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -include test.hpp")
-    elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -include test.hpp")
-    elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /FI test.hpp")
-    endif()
-
-    target_compile_options(${BII_LIB_TARGET} INTERFACE ${CXX_EXTRA_FLAGS})
+    target_compile_options(${BII_LIB_TARGET} INTERFACE "-std=c++1y" ${CXX_EXTRA_FLAGS})
     return()
 endif()
 
