@@ -42,7 +42,7 @@ if (BIICODE)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /FI test.hpp")
     endif()
 
-    #target_compile_options(${BII_LIB_TARGET} INTERFACE ${CXX_EXTRA_FLAGS})
+    target_compile_options(${BII_LIB_TARGET} INTERFACE ${CXX_EXTRA_FLAGS})
     return()
 endif()
 

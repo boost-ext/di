@@ -2,7 +2,11 @@ build/*
 doc/*
 meta/*
 tools/*
+Jamroot
+index.html
 example/*
-test/pt/*
+test/ut/*
 test/msvc/*
+test/pt/*
 test/error/*
+test/common/*
