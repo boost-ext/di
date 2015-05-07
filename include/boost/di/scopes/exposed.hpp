@@ -30,7 +30,6 @@ public:
             virtual type get(const type_traits::stack&) const noexcept = 0;
         };
 
-
         template<class TInjector>
         class provider_impl : public iprovider {
         public:
