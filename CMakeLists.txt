@@ -7,6 +7,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(Boost.DI CXX)
 set(CXX_STANDARD "c++14")
+enable_testing()
+include_directories(include)
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     #if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.0)
@@ -27,8 +29,11 @@ else()
     message(WARNING "Unsupported compiler!")
 endif()
 
-enable_testing()
-include_directories(include)
+if (BIICODE)
+    ADD_BII_TARGETS()
+    target_compile_options(${BII_LIB_TARGET} INTERFACE ${CXX_EXTRA_FLAGS})
+    return()
+endif()
 
 add_subdirectory(example)
 add_subdirectory(test)
