@@ -3,6 +3,7 @@ doc/*
 meta/*
 tools/*
 Jamroot
+Jamfile.v2
 index.html
 example/*
 test/ut/*
