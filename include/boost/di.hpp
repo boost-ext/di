@@ -2577,17 +2577,17 @@ struct any_type {
         return injector_.template create_impl<T>();
     }
 
-    template<class T, class = is_not_same<T>, class = is_referable<T&>, class = is_creatable<T&>>
-    operator T&() const {
-        return injector_.template create_impl<T&>();
-    }
-
     BOOST_DI_WKND(BOOST_DI_GCC)(
-        template<class T, class = is_not_same<T>, class = is_referable<T&&>, class = is_creatable<T&&>>
+        template<class T, class = is_not_same<T>, class = is_creatable<T&&>>
         operator T&&() const {
             return injector_.template create_impl<T&&>();
         }
     )()
+
+    template<class T, class = is_not_same<T>, class = is_referable<T&>, class = is_creatable<T&>>
+    operator T&() const {
+        return injector_.template create_impl<T&>();
+    }
 
     template<class T, class = is_not_same<T>, class = is_referable<const T&>, class = is_creatable<const T&>>
     operator const T&() const {
