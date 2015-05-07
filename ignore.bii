@@ -1,4 +1,8 @@
-build
-doc
-meta
-tools
+build/*
+doc/*
+meta/*
+tools/*
+example/*
+test/pt/*
+test/msvc/*
+test/error/*

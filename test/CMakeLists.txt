@@ -21,6 +21,12 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /FI test.hpp")
 endif()
 
+if (BIICODE)
+    ADD_BII_TARGETS()
+    target_compile_options(${BII_LIB_TARGET} INTERFACE ${CXX_EXTRA_FLAGS})
+    return()
+endif()
+
 run_test(ut/inject)
 run_test(ut/aux_/preprocessor)
 run_test(ut/aux_/type_traits)
