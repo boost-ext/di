@@ -32,8 +32,8 @@ class injector : public pool<transform_t<TDeps...>>
                , public type_traits::config_traits<TConfig, injector<TConfig, TDeps...>>::type
                , _ {
     template<class...> friend struct provider;
-    template<class, class> friend struct any_type;
-    template<class, class> friend struct any_type_ref;
+    template<class, class, class> friend struct any_type;
+    template<class, class, class> friend struct any_type_ref;
     template<class> friend class scopes::exposed;
 
     using pool_t = pool<transform_t<TDeps...>>;

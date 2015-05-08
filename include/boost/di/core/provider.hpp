@@ -35,30 +35,32 @@ template<
   , aux::pair<TInitialization, aux::type_list<TCtor...>>
   , TInjector
 > {
+    using provider_t = decltype(std::declval<TInjector>().provider());
+
+    template<class TMemory, class... TArgs>
+    struct is_creatable {
+        static constexpr auto value =
+            provider_t::template is_creatable<TInitialization, TMemory, TGiven, TArgs...>::value;
+    };
+
     template<class T>
     struct try_get_arg {
         using type = std::conditional_t<TInjector::template is_creatable<T>::value, T, void>;
     };
 
     template<class... TArgs>
-    struct try_get_arg<any_type_ref_fwd<TArgs...>> {
-        using type = any_type_ref<TParent, TInjector>;
+    struct try_get_arg<any_type_fwd<TArgs...>> {
+        using type = any_type<TParent, TInjector, std::true_type>;
     };
 
     template<class... TArgs>
-    struct try_get_arg<any_type_fwd<TArgs...>> {
-        using type = any_type<TParent, TInjector>;
+    struct try_get_arg<any_type_ref_fwd<TArgs...>> {
+        using type = any_type_ref<TParent, TInjector, std::true_type>;
     };
 
     template<class TName_, class T>
     struct try_get_arg<type_traits::named<TName_, T>> {
         using type = std::conditional_t<TInjector::template is_creatable<T, TName_>::value, T, void>;
-    };
-
-    template<class TMemory, class... TArgs>
-    struct is_creatable {
-        static constexpr auto value = decltype(std::declval<TInjector>().provider())::template
-            is_creatable<TInitialization, TMemory, TGiven, typename try_get_arg<TCtor>::type...>::value;
     };
 
     template<class TMemory = type_traits::heap>
@@ -67,18 +69,23 @@ template<
       , std::conditional_t<std::is_same<TMemory, type_traits::stack>::value, TGiven, TGiven*>
     >;
 
-    template<class TMemory = type_traits::heap, BOOST_DI_REQUIRES(is_creatable<TMemory, TCtor...>::value)>
+    template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const {
+        return get_impl(memory, get_arg(aux::type<TCtor>{})...);
+    }
+
+    template<class TMemory, class... TArgs, BOOST_DI_REQUIRES(is_creatable<TMemory, TArgs...>::value)>
+    auto get_impl(const TMemory& memory, TArgs&&... args) const {
         return injector_.provider().template get<TExpected, TGiven>(
             TInitialization{}
           , memory
-          , get_arg(aux::type<TCtor>{})...
+          , std::forward<TArgs>(args)...
         );
     }
 
-    template<class TMemory = type_traits::heap, BOOST_DI_REQUIRES(!is_creatable<TMemory, TCtor...>::value)>
-    auto get(const TMemory& = {}) const {
-        return concepts::creatable_error<TInitialization, TName, TExpected*, TGiven*, TCtor...>();
+    template<class TMemory, class... TArgs, BOOST_DI_REQUIRES(!is_creatable<TMemory, TArgs...>::value)>
+    auto get_impl(const TMemory&, TArgs&&...) const {
+        return concepts::creatable_error<TInitialization, TName, TExpected*, TGiven*, TArgs...>();
     }
 
     template<class T>
@@ -87,13 +94,13 @@ template<
     }
 
     template<class... TArgs>
-    auto get_arg(const aux::type<any_type_ref_fwd<TArgs...>>&) const {
-        return any_type_ref<TParent, TInjector>{injector_};
+    auto get_arg(const aux::type<any_type_fwd<TArgs...>>&) const {
+        return any_type<TParent, TInjector>{injector_};
     }
 
     template<class... TArgs>
-    auto get_arg(const aux::type<any_type_fwd<TArgs...>>&) const {
-        return any_type<TParent, TInjector>{injector_};
+    auto get_arg(const aux::type<any_type_ref_fwd<TArgs...>>&) const {
+        return any_type_ref<TParent, TInjector>{injector_};
     }
 
     template<class T, class TName_>
