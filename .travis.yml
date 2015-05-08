@@ -69,6 +69,8 @@ matrix:
         apt:
           packages:
             - clang-3.7
+            - llvm-3.7-runtime
+            - llvm-3.7-dev
             - libstdc++-5-dev
           sources:
             - ubuntu-toolchain-r-test
@@ -121,9 +123,6 @@ matrix:
 
     - os: osx
       env: CMAKE_COMPILER=clang++
-
-install:
-    - if [ "${VARIANT}" == "analyze" ]; then sudo apt-get install compiler-rt; fi
 
 before_script:
   - git config --global user.name "Travis-CI"
