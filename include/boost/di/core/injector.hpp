@@ -33,6 +33,7 @@ class injector : public pool<transform_t<TDeps...>>
                , _ {
     template<class...> friend struct provider;
     template<class, class> friend struct any_type;
+    template<class, class> friend struct any_type_ref;
     template<class> friend class scopes::exposed;
 
     using pool_t = pool<transform_t<TDeps...>>;

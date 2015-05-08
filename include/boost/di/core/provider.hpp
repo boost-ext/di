@@ -41,7 +41,12 @@ template<
     };
 
     template<class... TArgs>
-    struct try_get_arg<any_type<TArgs...>> {
+    struct try_get_arg<any_type_ref_fwd<TArgs...>> {
+        using type = any_type_ref<TParent, TInjector>;
+    };
+
+    template<class... TArgs>
+    struct try_get_arg<any_type_fwd<TArgs...>> {
         using type = any_type<TParent, TInjector>;
     };
 
@@ -82,7 +87,12 @@ template<
     }
 
     template<class... TArgs>
-    auto get_arg(const aux::type<any_type<TArgs...>>&) const {
+    auto get_arg(const aux::type<any_type_ref_fwd<TArgs...>>&) const {
+        return any_type_ref<TParent, TInjector>{injector_};
+    }
+
+    template<class... TArgs>
+    auto get_arg(const aux::type<any_type_fwd<TArgs...>>&) const {
         return any_type<TParent, TInjector>{injector_};
     }
 

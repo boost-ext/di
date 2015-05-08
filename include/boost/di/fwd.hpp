@@ -12,8 +12,8 @@ template<class> class shared_ptr;
 namespace di { inline namespace v1 {
 namespace aux { struct none_t; }
 namespace core {
-template<class = void, class = void>
-struct any_type;
+template<class> struct any_type_fwd;
+template<class> struct any_type_ref_fwd;
 } // core
 namespace providers {
 class heap;

@@ -65,11 +65,11 @@ test ctors = [] {
     expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits<empty>::type>{});
     expect(std::is_same<aux::pair<direct, aux::type_list<int, double>>, ctor_traits<int_double>::type>{});
     expect(std::is_same<aux::pair<direct, aux::type_list<char*, const int&>>, ctor_traits<extensions>::type>{});
-    expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type<ctor2>, core::any_type<ctor2>>>, ctor_traits<ctor2>::type>{});
-    expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>, core::any_type<ctor_complex>>>, ctor_traits<ctor_complex>::type>{});
-    expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type<ctor1>>>, ctor_traits<ctor1>::type>{});
-    expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type<ctor_unique_ptr>>>, ctor_traits<ctor_unique_ptr>::type>{});
-    expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type<rvalue>>>, ctor_traits<rvalue>::type>{});
+    expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<ctor2>, core::any_type_fwd<ctor2>>>, ctor_traits<ctor2>::type>{});
+    expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>>>, ctor_traits<ctor_complex>::type>{});
+    expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<ctor1>>>, ctor_traits<ctor1>::type>{});
+    expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<ctor_unique_ptr>>>, ctor_traits<ctor_unique_ptr>::type>{});
+    expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<rvalue>>>, ctor_traits<rvalue>::type>{});
 };
 
 test uniforms = [] {
@@ -82,15 +82,15 @@ test uniforms = [] {
         int& i;
     };
     expect(std::is_same<aux::pair<uniform, aux::type_list<>>, ctor_traits<empty>::type>{});
-    expect(std::is_same<aux::pair<uniform, aux::type_list<core::any_type<ctor2_ref>, core::any_type<ctor2_ref>>>, ctor_traits<ctor2_ref>::type>{});
+    expect(std::is_same<aux::pair<uniform, aux::type_list<core::any_type_ref_fwd<ctor2_ref>, core::any_type_ref_fwd<ctor2_ref>>>, ctor_traits<ctor2_ref>::type>{});
 };
 
 test inheriting_ctors = [] {
     struct c0 { c0(int, double) { } };
     struct c1 : public c0 { using c0::c0; };
 
-    expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type<c0>, core::any_type<c0>>>, ctor_traits<c0>::type>{});
-    expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type<c1>, core::any_type<c1>>>, ctor_traits<c1>::type>{});
+    expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<c0>, core::any_type_fwd<c0>>>, ctor_traits<c0>::type>{});
+    expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<c1>, core::any_type_fwd<c1>>>, ctor_traits<c1>::type>{});
 };
 
 test inheriting_ctors_inject = [] {

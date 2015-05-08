@@ -158,8 +158,8 @@ template<class> class shared_ptr;
 namespace di { inline namespace v1 {
 namespace aux { struct none_t; }
 namespace core {
-template<class = void, class = void>
-struct any_type;
+template<class> struct any_type_fwd;
+template<class> struct any_type_ref_fwd;
 } // core
 namespace providers {
 class heap;
@@ -1384,8 +1384,12 @@ template<
   , std::size_t... TArgs
 > struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>>
     : std::conditional<
-          TIsConstructible<T, typename get<core::any_type<T>, TArgs>::type...>::value
-        , aux::type_list<typename get<core::any_type<T>, TArgs>::type...>
+          TIsConstructible<T, typename get<core::any_type_ref_fwd<T>, TArgs>::type...>::value
+        , std::conditional_t<
+               TIsConstructible<T, typename get<core::any_type_fwd<T>, TArgs>::type...>::value
+             , aux::type_list<typename get<core::any_type_fwd<T>, TArgs>::type...>
+             , aux::type_list<typename get<core::any_type_ref_fwd<T>, TArgs>::type...>
+          >
         , typename ctor_impl<
               TIsConstructible
             , T
@@ -2549,48 +2553,71 @@ public:
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
+template<class T, class TParent>
+using is_not_same = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
+
+template<class T, class TInjector>
+struct is_referable_impl {
+    static constexpr auto value =
+        std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>::template
+            is_referable<T>::value;
+};
+
+template<class T, class TInjector>
+using is_referable = std::enable_if_t<is_referable_impl<T, TInjector>::value>;
+
+template<class T, class TInjector>
+struct is_creatable_impl {
+    static constexpr auto value = TInjector::template is_creatable<T>::value;
+};
+
+template<class T, class TInjector>
+using is_creatable = std::enable_if_t<is_creatable_impl<T, TInjector>::value>;
+
 template<class TParent, class TInjector>
 struct any_type {
-    template<class T>
-    struct is_referable_impl {
-        static constexpr auto value =
-            std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>::template
-                is_referable<T>::value;
-    };
+    template<class T
+           , class = is_not_same<T, TParent>
+           , class = is_creatable<T, TInjector>
+    > operator T() {
+        return injector_.template create_impl<T>();
+    }
 
-    template<class T>
-    struct is_creatable_impl {
-        static constexpr auto value = TInjector::template is_creatable<T>::value;
-    };
+    const TInjector& injector_;
+};
 
-    template<class T>
-    using is_not_same = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
-
-    template<class T>
-    using is_referable = std::enable_if_t<is_referable_impl<T>::value>;
-
-    template<class T>
-    using is_creatable = std::enable_if_t<is_creatable_impl<T>::value>;
-
-    template<class T, class = is_not_same<T>, class = is_creatable<T>>
-    operator T() {
+template<class TParent, class TInjector>
+struct any_type_ref {
+    template<class T
+           , class = is_not_same<T, TParent>
+           , class = is_creatable<T, TInjector>
+    > operator T() {
         return injector_.template create_impl<T>();
     }
 
     BOOST_DI_WKND(BOOST_DI_GCC)(
-        template<class T, class = is_not_same<T>, class = is_referable<T&&>, class = is_creatable<T&&>>
-        operator T&&() const {
+        template<class T
+               , class = is_not_same<T, TParent>
+               , class = is_referable<T&&, TInjector>
+               , class = is_creatable<T&&, TInjector>
+        > operator T&&() const {
             return injector_.template create_impl<T&&>();
         }
     )()
 
-    template<class T, class = is_not_same<T>, class = is_referable<T&>, class = is_creatable<T&>>
-    operator T&() const {
+    template<class T
+           , class = is_not_same<T, TParent>
+           , class = is_referable<T&, TInjector>
+           , class = is_creatable<T&, TInjector>
+    > operator T&() const {
         return injector_.template create_impl<T&>();
     }
 
-    template<class T, class = is_not_same<T>, class = is_referable<const T&>, class = is_creatable<const T&>>
-    operator const T&() const {
+    template<class T
+           , class = is_not_same<T, TParent>
+           , class = is_referable<const T&, TInjector>
+           , class = is_creatable<const T&, TInjector>
+    > operator const T&() const {
         return injector_.template create_impl<const T&>();
     }
 
@@ -2598,30 +2625,27 @@ struct any_type {
 };
 
 template<class TParent>
-struct any_type<TParent, void> {
-    template<class T>
-    using is_not_same = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
+struct any_type_fwd {
+    template<class T, class = is_not_same<T, TParent>>
+    operator T();
+};
 
-    template<class T, class = is_not_same<T>>
+template<class TParent>
+struct any_type_ref_fwd {
+    template<class T, class = is_not_same<T, TParent>>
     operator T();
 
-    template<class T, class = is_not_same<T>>
+    template<class T, class = is_not_same<T, TParent>>
     operator T&() const;
 
     BOOST_DI_WKND(BOOST_DI_GCC)(
-        template<class T, class = is_not_same<T>>
+        template<class T, class = is_not_same<T, TParent>>
         operator T&&() const;
     )()
 
-    template<class T, class = is_not_same<T>>
+    template<class T, class = is_not_same<T, TParent>>
     operator const T&() const;
 };
-
-template<class>
-struct is_any_type : std::false_type { };
-
-template<class... TArgs>
-struct is_any_type<any_type<TArgs...>> : std::true_type { };
 
 }}}} // boost::di::v1::core
 
@@ -2746,7 +2770,12 @@ template<
     };
 
     template<class... TArgs>
-    struct try_get_arg<any_type<TArgs...>> {
+    struct try_get_arg<any_type_ref_fwd<TArgs...>> {
+        using type = any_type_ref<TParent, TInjector>;
+    };
+
+    template<class... TArgs>
+    struct try_get_arg<any_type_fwd<TArgs...>> {
         using type = any_type<TParent, TInjector>;
     };
 
@@ -2787,7 +2816,12 @@ template<
     }
 
     template<class... TArgs>
-    auto get_arg(const aux::type<any_type<TArgs...>>&) const {
+    auto get_arg(const aux::type<any_type_ref_fwd<TArgs...>>&) const {
+        return any_type_ref<TParent, TInjector>{injector_};
+    }
+
+    template<class... TArgs>
+    auto get_arg(const aux::type<any_type_fwd<TArgs...>>&) const {
         return any_type<TParent, TInjector>{injector_};
     }
 
@@ -2908,6 +2942,7 @@ class injector : public pool<transform_t<TDeps...>>
                , _ {
     template<class...> friend struct provider;
     template<class, class> friend struct any_type;
+    template<class, class> friend struct any_type_ref;
     template<class> friend class scopes::exposed;
 
     using pool_t = pool<transform_t<TDeps...>>;

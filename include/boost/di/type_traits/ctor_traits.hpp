@@ -39,8 +39,12 @@ template<
   , std::size_t... TArgs
 > struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>>
     : std::conditional<
-          TIsConstructible<T, typename get<core::any_type<T>, TArgs>::type...>::value
-        , aux::type_list<typename get<core::any_type<T>, TArgs>::type...>
+          TIsConstructible<T, typename get<core::any_type_ref_fwd<T>, TArgs>::type...>::value
+        , std::conditional_t<
+               TIsConstructible<T, typename get<core::any_type_fwd<T>, TArgs>::type...>::value
+             , aux::type_list<typename get<core::any_type_fwd<T>, TArgs>::type...>
+             , aux::type_list<typename get<core::any_type_ref_fwd<T>, TArgs>::type...>
+          >
         , typename ctor_impl<
               TIsConstructible
             , T
