@@ -37,7 +37,7 @@ bind_all() {
 benchmark() {
     CTOR=`[ "$2" == "ctor" ] && echo -n "-DBOOST_DI_INJECT(type, ...)=type(__VA_ARGS__)"`
     EXPOSED_OR_AUTO=`[ "$3" == "auto" ] && echo -n "-DEXPOSED_OR_AUTO(t1, t2)=t2" || echo -n "-DEXPOSED_OR_AUTO(t1, t2)=t1"`
-    (time clang++ -O2 di.cpp -std=c++1y -I ../../include "$CTOR" "$EXPOSED_OR_AUTO" `$4` -DCOMPLEX=$1) 2> /tmp/$0.dat
+    (time clang++ -O2 di.cpp -std=c++1y -I ../../include "$CTOR" "$EXPOSED_OR_AUTO" `$4` $5 -DCOMPLEX=$1) 2> /tmp/$0.dat
     if [[ "`grep error: /tmp/$0.dat`" != "" ]]; then
         >&2 cat /tmp/$0.dat
         exit
@@ -88,10 +88,11 @@ medium_complexity() {
 
 big_complexity() {
     for ((i=0; i<=10; ++i)); do
-        echo -n "$((100+(i*20))) "
-        benchmark big_complexity ctor auto "bind_interfaces_others 10 $i"
+        n=$((100+(i*20)));
+        echo -n "$n"
+        benchmark big_complexity ctor auto "bind_interfaces_others 10 $i" "-ftemplate-depth=$((n+10))"
         benchmark big_complexity ctor exposed "bind_interfaces_others 10 $i"
-        benchmark big_complexity inject auto "bind_interfaces_others 10 $i"
+        benchmark big_complexity inject auto "bind_interfaces_others 10 $i" "-ftemplate-depth=$((n+10))"
         benchmark big_complexity inject exposed "bind_interfaces_others 10 $i"
         echo
     done
