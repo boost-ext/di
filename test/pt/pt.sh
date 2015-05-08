@@ -89,7 +89,7 @@ medium_complexity() {
 big_complexity() {
     for ((i=0; i<=10; ++i)); do
         n=$((100+(i*20)));
-        echo -n "$n"
+        echo -n "$n "
         benchmark big_complexity ctor auto "bind_interfaces_others 10 $i" "-ftemplate-depth=$((n+10))"
         benchmark big_complexity ctor exposed "bind_interfaces_others 10 $i"
         benchmark big_complexity inject auto "bind_interfaces_others 10 $i" "-ftemplate-depth=$((n+10))"
@@ -100,5 +100,6 @@ big_complexity() {
 
 graph small_complexity "Small complexity | clang-3.4 -O2"
 graph medium_complexity "Medium complexity | clang-3.4 -O2"
-graph big_complexity "Big complexity | clang-3.4 -O2"
+#graph
+big_complexity "Big complexity | clang-3.4 -O2"
 
