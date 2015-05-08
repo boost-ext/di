@@ -64,13 +64,12 @@ matrix:
             - llvm-toolchain-precise
 
     - os: linux
-      env: TOOLSET=clang++-3.7 VARIANT=analyze
+      env: TOOLSET=clang-3.7 VARIANT=analyze
       addons: &clang37
         apt:
           packages:
             - clang-3.7
             - libstdc++-5-dev
-            - compiler-rt
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise
@@ -122,6 +121,9 @@ matrix:
 
     - os: osx
       env: CMAKE_COMPILER=clang++
+
+install:
+    - if [ "${VARIANT}" == "coverage" ]; then sudo apt get install compiler-rt; fi
 
 before_script:
   - git config --global user.name "Travis-CI"
