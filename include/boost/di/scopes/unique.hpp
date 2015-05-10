@@ -22,8 +22,8 @@ public:
 
         template<class T, class TProvider>
         auto try_create(const TProvider& provider) const -> decltype(
-            wrappers::unique<decltype(provider.try_get(type_traits::memory_traits_t<T>{}))>{
-                provider.try_get(type_traits::memory_traits_t<T>{})
+            wrappers::unique<decltype(provider.get(type_traits::memory_traits_t<T>{}))>{
+                provider.get(type_traits::memory_traits_t<T>{})
             }
         );
 

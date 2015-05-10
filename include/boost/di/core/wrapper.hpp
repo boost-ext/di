@@ -12,7 +12,9 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
-template<class T, class TWrapper, class = void>
+namespace successful {
+
+template<class T, class TWrapper>
 struct wrapper {
     using element_type = T;
 
@@ -27,8 +29,25 @@ struct wrapper {
     TWrapper wrapper_;
 };
 
+} // successful
+
+template<class T, class TWrapper, class = void>
+struct wrapper_impl {
+    using element_type = T;
+
+    inline operator T() const noexcept {
+        return wrapper_;
+    }
+
+    inline operator T() noexcept {
+        return wrapper_;
+    }
+
+    TWrapper wrapper_;
+};
+
 template<class T, class TWrapper>
-struct wrapper<T, TWrapper, BOOST_DI_REQUIRES_T(!std::is_convertible<TWrapper, T>::value)> {
+struct wrapper_impl<T, TWrapper, BOOST_DI_REQUIRES_T(!std::is_convertible<TWrapper, T>::value)> {
     using element_type = T;
 
     inline operator T() const noexcept {
@@ -41,6 +60,9 @@ struct wrapper<T, TWrapper, BOOST_DI_REQUIRES_T(!std::is_convertible<TWrapper, T
 
     TWrapper wrapper_;
 };
+
+template<class T, class TWrapper>
+using wrapper = wrapper_impl<T, TWrapper>;
 
 }}}} // boost::di::v1::core
 

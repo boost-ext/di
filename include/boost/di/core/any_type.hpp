@@ -90,6 +90,53 @@ struct any_type_ref {
     const TInjector& injector_;
 };
 
+namespace successful {
+
+template<class TParent, class TInjector>
+struct any_type {
+    template<class T, class = is_not_same<T, TParent>>
+    operator T() {
+        return injector_.template create_successful_impl<T>();
+    }
+
+    const TInjector& injector_;
+};
+
+template<class TParent, class TInjector>
+struct any_type_ref {
+    template<class T, class = is_not_same<T, TParent>>
+    operator T() {
+        return injector_.template create_successful_impl<T>();
+    }
+
+    BOOST_DI_WKND(BOOST_DI_GCC)(
+        template<class T
+               , class = is_not_same<T, TParent>
+               , class = is_referable<T&&, TInjector>
+        > operator T&&() const {
+            return injector_.template create_successful_impl<T&&>();
+        }
+    )()
+
+    template<class T
+           , class = is_not_same<T, TParent>
+           , class = is_referable<T&, TInjector>
+    > operator T&() const {
+        return injector_.template create_successful_impl<T&>();
+    }
+
+    template<class T
+           , class = is_not_same<T, TParent>
+           , class = is_referable<const T&, TInjector>
+    > operator const T&() const {
+        return injector_.template create_successful_impl<const T&>();
+    }
+
+    const TInjector& injector_;
+};
+
+} // successful
+
 template<class TParent>
 struct any_type_fwd {
     template<class T, class = is_not_same<T, TParent>>
