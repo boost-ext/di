@@ -49,7 +49,7 @@ public:
         class TConfig
       , class... TArgs
         BOOST_DI_WKND(BOOST_DI_GCC)(,BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>))()
-    > injector(const core::injector<TConfig, decltype(((TConfig*)0)->policies()), TArgs...>& injector) noexcept // non explicit
+    > injector(const core::injector<TConfig, BOOST_DI_WKND(BOOST_DI_MSVC)(core::pool<>)(decltype(((TConfig*)0)->policies())), TArgs...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, core::pool<>, T...>(injector) {
             BOOST_DI_WKND(BOOST_DI_MSVC)()(
                 using namespace detail;

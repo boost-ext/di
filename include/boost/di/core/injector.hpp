@@ -105,8 +105,8 @@ public:
         : injector{from_deps{}, arg(args, has_configure<decltype(args)>{})...}
     { }
 
-    template<class TConfig_, class TP, class... TDeps_>
-    explicit injector(const injector<TConfig_, TP, TDeps_...>& other) noexcept
+    template<class TConfig_, class TPolicies_, class... TDeps_>
+    explicit injector(const injector<TConfig_, TPolicies_, TDeps_...>& other) noexcept
         : injector{from_injector{}, other, deps{}}
     { }
 
