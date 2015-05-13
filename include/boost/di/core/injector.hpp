@@ -46,7 +46,7 @@ inline auto build(const TInjector& injector) noexcept {
     return T{injector};
 }
 
-template<class TConfig, class TPolicies, class... TDeps>
+template<class TConfig, class TPolicies = pool<>, class... TDeps>
 class injector : public pool<transform_t<TDeps...>>
                , public type_traits::config_traits_t<TConfig, injector<TConfig, TPolicies, TDeps...>>
                , _ {
@@ -239,9 +239,9 @@ private:
 };
 
 template<class TConfig, class... TDeps>
-class injector<TConfig, pool<aux::type_list<>>, TDeps...>
+class injector<TConfig, pool<>, TDeps...>
     : public pool<transform_t<TDeps...>>
-    , public type_traits::config_traits_t<TConfig, injector<TConfig, pool<aux::type_list<>>, TDeps...>>
+    , public type_traits::config_traits_t<TConfig, injector<TConfig, pool<>, TDeps...>>
     , _ {
     template<class...> friend struct provider;
     template<class> friend class scopes::exposed;

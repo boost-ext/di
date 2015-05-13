@@ -43,14 +43,14 @@ struct is_creatable<std::true_type, TInjector, T>
 template<class... T>
 class injector : public
      BOOST_DI_REQUIRES_MSG_T(concepts::boundable<aux::type<T...>>
-                           , core::injector<::BOOST_DI_CFG, core::pool<aux::type_list<>>, T...>) {
+                           , core::injector<::BOOST_DI_CFG, core::pool<>, T...>) {
 public:
     template<
         class TConfig
       , class... TArgs
         BOOST_DI_WKND(BOOST_DI_GCC)(,BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>))()
     > injector(const core::injector<TConfig, decltype(((TConfig*)0)->policies()), TArgs...>& injector) noexcept // non explicit
-        : core::injector<::BOOST_DI_CFG, core::pool<aux::type_list<>>, T...>(injector) {
+        : core::injector<::BOOST_DI_CFG, core::pool<>, T...>(injector) {
             BOOST_DI_WKND(BOOST_DI_MSVC)()(
                 using namespace detail;
                 int _[]{0, (

@@ -15,8 +15,8 @@ test make_injector_types = [] {
     using dep1 = core::dependency<scopes::deduce, int>;
     using dep2 = core::dependency<scopes::deduce, double>;
     expect(std::is_same<core::injector<::BOOST_DI_CFG>, decltype(make_injector())>{});
-    expect(std::is_same<core::injector<::BOOST_DI_CFG, dep1, dep2>, decltype(make_injector(dep1{}, dep2{}))>{});
-    expect(std::is_same<core::injector<config, dep1, dep2>, decltype(make_injector<di::config>(dep1{}, dep2{}))>{});
+    expect(std::is_same<core::injector<::BOOST_DI_CFG, core::pool<>, dep1, dep2>, decltype(make_injector(dep1{}, dep2{}))>{});
+    expect(std::is_same<core::injector<config, core::pool<>, dep1, dep2>, decltype(make_injector<di::config>(dep1{}, dep2{}))>{});
 };
 
 }}} // boost::di::v1

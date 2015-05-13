@@ -38,7 +38,7 @@ test call = [] {
     fake_scope<>::exit_calls() = 0;
 
     using dep1 = fake_dependency<int>;
-    injector<di::config, dep1> injector_{core::init{}};
+    injector<di::config, core::pool<>, dep1> injector_{core::init{}};
 
     injector_.call(fake_scope_entry{});
     expect_eq(1, fake_scope<>::entry_calls());
