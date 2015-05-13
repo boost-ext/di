@@ -2579,7 +2579,7 @@ struct any_type {
            , class = is_not_same<T, TParent>
            , class = is_creatable<T, TInjector, E>
     > operator T() {
-        return injector_.template create_impl(aux::type<T>{});
+        return injector_.create_impl(aux::type<T>{});
     }
 
     const TInjector& injector_;
@@ -2591,7 +2591,7 @@ struct any_type_ref {
            , class = is_not_same<T, TParent>
            , class = is_creatable<T, TInjector, E>
     > operator T() {
-        return injector_.template create_impl(aux::type<T>{});
+        return injector_.create_impl(aux::type<T>{});
     }
 
     BOOST_DI_WKND(BOOST_DI_GCC)(
@@ -2600,7 +2600,7 @@ struct any_type_ref {
                , class = is_referable<T&&, TInjector>
                , class = is_creatable<T&&, TInjector, E>
         > operator T&&() const {
-            return injector_.template create_impl(aux::type<T&&>{});
+            return injector_.create_impl(aux::type<T&&>{});
         }
     )()
 
@@ -2609,7 +2609,7 @@ struct any_type_ref {
            , class = is_referable<T&, TInjector>
            , class = is_creatable<T&, TInjector, E>
     > operator T&() const {
-        return injector_.template create_impl(aux::type<T&>{});
+        return injector_.create_impl(aux::type<T&>{});
     }
 
     template<class T
@@ -2617,7 +2617,7 @@ struct any_type_ref {
            , class = is_referable<const T&, TInjector>
            , class = is_creatable<const T&, TInjector, E>
     > operator const T&() const {
-        return injector_.template create_impl(aux::type<const T&>{});
+        return injector_.create_impl(aux::type<const T&>{});
     }
 
     const TInjector& injector_;
@@ -2629,7 +2629,7 @@ template<class TParent, class TInjector>
 struct any_type {
     template<class T, class = is_not_same<T, TParent>>
     operator T() {
-        return injector_.template create_successful_impl(aux::type<T>{});
+        return injector_.create_successful_impl(aux::type<T>{});
     }
 
     const TInjector& injector_;
@@ -2639,7 +2639,7 @@ template<class TParent, class TInjector>
 struct any_type_ref {
     template<class T, class = is_not_same<T, TParent>>
     operator T() {
-        return injector_.template create_successful_impl(aux::type<T>{});
+        return injector_.create_successful_impl(aux::type<T>{});
     }
 
     BOOST_DI_WKND(BOOST_DI_GCC)(
@@ -2647,7 +2647,7 @@ struct any_type_ref {
                , class = is_not_same<T, TParent>
                , class = is_referable<T&&, TInjector>
         > operator T&&() const {
-            return injector_.template create_successful_impl(aux::type<T&&>{});
+            return injector_.create_successful_impl(aux::type<T&&>{});
         }
     )()
 
@@ -2655,14 +2655,14 @@ struct any_type_ref {
            , class = is_not_same<T, TParent>
            , class = is_referable<T&, TInjector>
     > operator T&() const {
-        return injector_.template create_successful_impl(aux::type<T&>{});
+        return injector_.create_successful_impl(aux::type<T&>{});
     }
 
     template<class T
            , class = is_not_same<T, TParent>
            , class = is_referable<const T&, TInjector>
     > operator const T&() const {
-        return injector_.template create_successful_impl(aux::type<const T&>{});
+        return injector_.create_successful_impl(aux::type<const T&>{});
     }
 
     const TInjector& injector_;
@@ -2920,7 +2920,7 @@ template<
 
     template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const {
-        return get_impl(memory, injector_.template create_impl(aux::type<TCtor>{})...);
+        return get_impl(memory, injector_.create_impl(aux::type<TCtor>{})...);
     }
 
     template<class TMemory, class... TArgs, BOOST_DI_REQUIRES(is_creatable<TMemory, TArgs...>::value)>
@@ -2957,7 +2957,7 @@ template<
         return injector_.provider().template get<TExpected, TGiven>(
             TInitialization{}
           , memory
-          , injector_.template create_successful_impl(aux::type<TCtor>{})...
+          , injector_.create_successful_impl(aux::type<TCtor>{})...
         );
     }
 
