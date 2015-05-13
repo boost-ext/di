@@ -46,21 +46,6 @@ struct type_list { using type = type_list; };
 template<class... Ts>
 struct inherit : Ts... { using type = inherit; };
 
-template<class T>
-struct no_decay { using type = T; };
-
-template<class TDefault, class>
-static no_decay<TDefault> lookup(...);
-
-template<class, class TKey, class TValue>
-static no_decay<TValue> lookup(pair<TKey, TValue>*);
-
-template<class TDefault, class TKey, class... Ts>
-using at_key = decltype(lookup<TDefault, TKey>((inherit<Ts...>*)0));
-
-template<class TDefault, class TKey, class... Ts>
-using at_key_t = typename at_key<TDefault, TKey, Ts...>::type;
-
 template<class...>
 struct join;
 

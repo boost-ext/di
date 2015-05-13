@@ -17,14 +17,5 @@ test join_types = [] {
     expect(std::is_same<type_list<float, double>, join_t<type_list<>, type_list<float, double>>>{});
 };
 
-test at = [] {
-    expect(std::is_same<void, at_key_t<void, int>>{});
-    expect(std::is_same<double, at_key_t<void, int, pair<int, double>>>{});
-    expect(std::is_same<void, at_key_t<void, double, pair<int, double>>>{});
-    expect(std::is_same<double, at_key_t<void, int, pair<int, double>, pair<float, char>>>{});
-    expect(std::is_same<char, at_key_t<void, float, pair<int, double>, pair<float, char>>>{});
-    expect(std::is_same<void, at_key_t<void, short, pair<int, double>, pair<float, char>>>{});
-};
-
 }}}} // boost::di::v1::aux
 
