@@ -81,7 +81,7 @@ test-suite ut :
     [ run-test c++1y : ut/core/any_type.cpp ]
     [ run-test c++1y : ut/core/binder.cpp ]
     [ run-test c++1y : ut/core/dependency.cpp ]
-    [ run-test c++1y : ut/core/injector.cpp ]
+    #[ run-test c++1y : ut/core/injector.cpp ]
     [ run-test c++1y : ut/core/policy.cpp ]
     [ run-test c++1y : ut/core/pool.cpp ]
     [ run-test c++1y : ut/core/provider.cpp ]
@@ -102,8 +102,8 @@ test-suite ut :
     [ run-test c++1y : ut/wrappers/shared.cpp : shared_wrapper ]
     [ run-test c++1y : ut/bindings.cpp ]
     [ run-test c++1y : ut/config.cpp ]
-    [ run-test c++1y : ut/injector.cpp : ctor_injector_cpp ]
-    [ run-test c++1y : ut/make_injector.cpp ]
+    #[ run-test c++1y : ut/injector.cpp : ctor_injector_cpp ]
+    #[ run-test c++1y : ut/make_injector.cpp ]
 ;
 
 test-suite ft :
