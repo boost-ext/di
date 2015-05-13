@@ -28,6 +28,24 @@ namespace boost { namespace di { inline namespace v1 { namespace core {
 
 BOOST_DI_HAS_METHOD(call, call);
 
+template<class T>
+decltype(auto) arg(const T& arg, const std::false_type&) noexcept {
+    return arg;
+}
+
+template<class T>
+decltype(auto) arg(const T& arg, const std::true_type&) noexcept {
+    return arg.configure();
+}
+
+struct from_injector { };
+struct from_deps { };
+
+template<class T, class TInjector>
+inline auto build(const TInjector& injector) noexcept {
+    return T{injector};
+}
+
 template<class TConfig, class TPolicies, class... TDeps>
 class injector : public pool<transform_t<TDeps...>>
                , public type_traits::config_traits_t<TConfig, injector<TConfig, TPolicies, TDeps...>>
@@ -48,9 +66,6 @@ class injector : public pool<transform_t<TDeps...>>
       , _
       , config_t
     >;
-
-    struct from_injector { };
-    struct from_deps { };
 
     template<
         class T
@@ -132,11 +147,6 @@ private:
         : pool_t{init{}, pool_t{build<TArgs>(injector)...}}
         , config{*this}
     { }
-
-    template<class T, class TInjector>
-    inline auto build(const TInjector& injector) const noexcept {
-        return T{injector};
-    }
 
     template<class TIsRoot = std::false_type, class T>
     auto create_impl(const aux::type<T>&) const {
@@ -226,16 +236,6 @@ private:
 
     template<class, class TAction>
     void call_impl(const TAction&, const std::false_type&) { }
-
-    template<class T>
-    decltype(auto) arg(const T& arg, const std::false_type&) noexcept {
-        return arg;
-    }
-
-    template<class T>
-    decltype(auto) arg(const T& arg, const std::true_type&) noexcept {
-        return arg.configure();
-    }
 };
 
 template<class TConfig, class... TDeps>
@@ -259,9 +259,6 @@ class injector<TConfig, pool<aux::type_list<>>, TDeps...>
       , _
       , config_t
     >;
-
-    struct from_injector { };
-    struct from_deps { };
 
     template<
         class T
@@ -338,11 +335,6 @@ private:
         : pool_t{init{}, pool_t{build<TArgs>(injector)...}}
         , config{*this}
     { }
-
-    template<class T, class TInjector>
-    inline auto build(const TInjector& injector) const noexcept {
-        return T{injector};
-    }
 
     template<class TIsRoot = std::false_type, class T>
     auto create_impl(const aux::type<T>&) const {
@@ -428,16 +420,6 @@ private:
 
     template<class, class TAction>
     void call_impl(const TAction&, const std::false_type&) { }
-
-    template<class T>
-    decltype(auto) arg(const T& arg, const std::false_type&) noexcept {
-        return arg;
-    }
-
-    template<class T>
-    decltype(auto) arg(const T& arg, const std::true_type&) noexcept {
-        return arg.configure();
-    }
 };
 
 }}}} // boost::di::v1::core
