@@ -46,7 +46,7 @@ struct any_type {
            , class = is_not_same<T, TParent>
            , class = is_creatable<T, TInjector, E>
     > operator T() {
-        return injector_.template create_impl<T>();
+        return injector_.template create_impl(aux::type<T>{});
     }
 
     const TInjector& injector_;
@@ -58,7 +58,7 @@ struct any_type_ref {
            , class = is_not_same<T, TParent>
            , class = is_creatable<T, TInjector, E>
     > operator T() {
-        return injector_.template create_impl<T>();
+        return injector_.template create_impl(aux::type<T>{});
     }
 
     BOOST_DI_WKND(BOOST_DI_GCC)(
@@ -67,7 +67,7 @@ struct any_type_ref {
                , class = is_referable<T&&, TInjector>
                , class = is_creatable<T&&, TInjector, E>
         > operator T&&() const {
-            return injector_.template create_impl<T&&>();
+            return injector_.template create_impl(aux::type<T&&>{});
         }
     )()
 
@@ -76,7 +76,7 @@ struct any_type_ref {
            , class = is_referable<T&, TInjector>
            , class = is_creatable<T&, TInjector, E>
     > operator T&() const {
-        return injector_.template create_impl<T&>();
+        return injector_.template create_impl(aux::type<T&>{});
     }
 
     template<class T
@@ -84,7 +84,7 @@ struct any_type_ref {
            , class = is_referable<const T&, TInjector>
            , class = is_creatable<const T&, TInjector, E>
     > operator const T&() const {
-        return injector_.template create_impl<const T&>();
+        return injector_.template create_impl(aux::type<const T&>{});
     }
 
     const TInjector& injector_;

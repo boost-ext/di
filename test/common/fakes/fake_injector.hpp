@@ -22,11 +22,11 @@ struct fake_injector : fake_config<> {
 
     template<class T>
     auto create() const noexcept {
-        return create_impl<T>();
+        return create_impl(aux::type<T>{});
     }
 
     template<class T>
-    auto create_impl() const noexcept {
+    auto create_impl(const aux::type<T>&) const noexcept {
         return T{};
     }
 };

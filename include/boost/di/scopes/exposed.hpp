@@ -38,11 +38,11 @@ public:
             { }
 
             TExpected* get(const type_traits::heap&) const noexcept override {
-                return injector_.template create_impl<TExpected*>();
+                return injector_.template create_impl(aux::type<TExpected*>{});
             }
 
             type get(const type_traits::stack&) const noexcept override {
-                return injector_.template create_impl<type>();
+                return injector_.template create_impl(aux::type<type>{});
             }
 
         private:
