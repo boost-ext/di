@@ -96,7 +96,7 @@ template<class TParent, class TInjector>
 struct any_type {
     template<class T, class = is_not_same<T, TParent>>
     operator T() {
-        return injector_.template create_successful_impl<T>();
+        return injector_.template create_successful_impl(aux::type<T>{});
     }
 
     const TInjector& injector_;
@@ -106,7 +106,7 @@ template<class TParent, class TInjector>
 struct any_type_ref {
     template<class T, class = is_not_same<T, TParent>>
     operator T() {
-        return injector_.template create_successful_impl<T>();
+        return injector_.template create_successful_impl(aux::type<T>{});
     }
 
     BOOST_DI_WKND(BOOST_DI_GCC)(
@@ -114,7 +114,7 @@ struct any_type_ref {
                , class = is_not_same<T, TParent>
                , class = is_referable<T&&, TInjector>
         > operator T&&() const {
-            return injector_.template create_successful_impl<T&&>();
+            return injector_.template create_successful_impl(aux::type<T&&>{});
         }
     )()
 
@@ -122,14 +122,14 @@ struct any_type_ref {
            , class = is_not_same<T, TParent>
            , class = is_referable<T&, TInjector>
     > operator T&() const {
-        return injector_.template create_successful_impl<T&>();
+        return injector_.template create_successful_impl(aux::type<T&>{});
     }
 
     template<class T
            , class = is_not_same<T, TParent>
            , class = is_referable<const T&, TInjector>
     > operator const T&() const {
-        return injector_.template create_successful_impl<const T&>();
+        return injector_.template create_successful_impl(aux::type<const T&>{});
     }
 
     const TInjector& injector_;

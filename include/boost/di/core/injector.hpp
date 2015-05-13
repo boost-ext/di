@@ -22,6 +22,7 @@
 #include "boost/di/type_traits/config_traits.hpp"
 #include "boost/di/type_traits/referable_traits.hpp"
 #include "boost/di/concepts/creatable.hpp"
+#include "boost/di/config.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
@@ -140,7 +141,8 @@ public:
 
     template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>::value)>
     T create() const {
-        return create_successful_impl<T, no_name, is_root_t>();
+        //return create_successful_impl<T, no_name, is_root_t>();
+        return create_impl<T, no_name, is_root_t>();
     }
 
     template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, is_root_t>::value)>
@@ -271,8 +273,7 @@ private:
 };
 
 template< class... TDeps>
-class injector<di::config, TDeps...> : public pool<transform_t<TDeps...>>
-               , public di::config {
+class injector<di::config, TDeps...> : public pool<transform_t<TDeps...>>, public di::config {
     template<class...> friend struct provider;
     template<class> friend class scopes::exposed;
     template<class, class, class> friend struct any_type;
@@ -338,7 +339,7 @@ public:
 
     template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>::value)>
     T create() const {
-        return create_successful_impl<T, no_name, is_root_t>();
+        return create_successful_impl<is_root_t>(aux::type<T>{});
     }
 
     template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, is_root_t>::value)>
@@ -384,17 +385,37 @@ private:
         return wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
 
-    template<
-        class T
-      , class TName = no_name
-      , class TIsRoot = std::false_type
-    > auto create_successful_impl() const {
+    template<class TIsRoot = std::false_type, class T>
+    auto create_successful_impl(const aux::type<T>&) const {
+        auto&& dependency = binder::resolve<T>((injector*)this);
+        using dependency_t = std::remove_reference_t<decltype(dependency)>;
+        using expected_t = typename dependency_t::expected;
+        using given_t = typename dependency_t::given;
+        using ctor_t = typename type_traits::ctor_traits<given_t>::type;
+        using provider_t = successful::provider<expected_t, given_t, ctor_t, injector>;
+        using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
+        using create_t = type_traits::referable_traits_t<T, dependency_t>;
+        return successful::wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
+    }
+
+    template<class TIsRoot = std::false_type, class TParent>
+    auto create_successful_impl(const aux::type<any_type_fwd<TParent>>&) const {
+        return successful::any_type<TParent, injector>{*this};
+    }
+
+    template<class TIsRoot = std::false_type, class TParent>
+    auto create_successful_impl(const aux::type<any_type_ref_fwd<TParent>>&) const {
+        return successful::any_type_ref<TParent, injector>{*this};
+    }
+
+    template<class TIsRoot = std::false_type, class T, class TName>
+    auto create_successful_impl(const aux::type<type_traits::named<TName, T>>&) const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-        using provider_t = successful::provider<expected_t, given_t, TName, T, ctor_t, injector>;
+        using provider_t = successful::provider<expected_t, given_t, ctor_t, injector>;
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using create_t = type_traits::referable_traits_t<T, dependency_t>;
         return successful::wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};

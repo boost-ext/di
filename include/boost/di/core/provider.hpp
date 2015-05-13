@@ -150,16 +150,12 @@ struct provider;
 template<
     class TExpected
   , class TGiven
-  , class TName
-  , class TParent
   , class TInjector
   , class TInitialization
   , class... TCtor
 > struct provider<
     TExpected
   , TGiven
-  , TName
-  , TParent
   , aux::pair<TInitialization, aux::type_list<TCtor...>>
   , TInjector
 > {
@@ -168,28 +164,8 @@ template<
         return injector_.provider().template get<TExpected, TGiven>(
             TInitialization{}
           , memory
-          , get_arg(aux::type<TCtor>{})...
+          , injector_.template create_successful_impl(aux::type<TCtor>{})...
         );
-    }
-
-    template<class T>
-    auto get_arg(const aux::type<T>&) const {
-        return injector_.template create_successful_impl<T, no_name>();
-    }
-
-    template<class... TArgs>
-    auto get_arg(const aux::type<any_type_fwd<TArgs...>>&) const {
-        return successful::any_type<TParent, TInjector>{injector_};
-    }
-
-    template<class... TArgs>
-    auto get_arg(const aux::type<any_type_ref_fwd<TArgs...>>&) const {
-        return successful::any_type_ref<TParent, TInjector>{injector_};
-    }
-
-    template<class T, class TName_>
-    auto get_arg(const aux::type<type_traits::named<TName_, T>>&) const {
-        return injector_.template create_successful_impl<T, TName_>();
     }
 
     const TInjector& injector_;
