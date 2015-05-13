@@ -142,9 +142,9 @@ struct is_same_or_base_of {
 };
 
 template<class T>
-struct function_traits;
-    //: function_traits<decltype(&T::operator())>
-//{ };
+struct function_traits
+    : function_traits<decltype(&T::operator())>
+{ };
 
 template<class R, class... TArgs>
 struct function_traits<R(*)(TArgs...)> {
