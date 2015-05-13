@@ -19,6 +19,9 @@ struct config_traits<TConfig<T>, TInjector> {
     using type = TConfig<TInjector>;
 };
 
+template<class TConfig, class TInjector>
+using config_traits_t = typename config_traits<TConfig, TInjector>::type;
+
 }}}} // boost::di::v1::type_traits
 
 #endif

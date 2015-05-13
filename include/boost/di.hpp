@@ -3051,6 +3051,9 @@ struct config_traits<TConfig<T>, TInjector> {
     using type = TConfig<TInjector>;
 };
 
+template<class TConfig, class TInjector>
+using config_traits_t = typename config_traits<TConfig, TInjector>::type;
+
 }}}} // boost::di::v1::type_traits
 
 #endif
@@ -3098,7 +3101,7 @@ BOOST_DI_HAS_METHOD(call, call);
 
 template<class TConfig, class... TDeps>
 class injector : public pool<transform_t<TDeps...>>
-               , public type_traits::config_traits<TConfig, injector<TConfig, TDeps...>>::type
+               , public type_traits::config_traits_t<TConfig, injector<TConfig, TDeps...>>
                , _ {
     template<class...> friend struct provider;
     template<class> friend class scopes::exposed;
@@ -3110,7 +3113,7 @@ class injector : public pool<transform_t<TDeps...>>
 
     using pool_t = pool<transform_t<TDeps...>>;
     using is_root_t = std::true_type;
-    using config_t = typename type_traits::config_traits<TConfig, injector>::type;
+    using config_t = type_traits::config_traits_t<TConfig, injector>;
     using config = std::conditional_t<
         std::is_default_constructible<TConfig>::value
       , _
