@@ -3036,7 +3036,7 @@ inline auto build(const TInjector& injector) noexcept {
     return T{injector};
 }
 
-template<class TConfig, class TPolicies, class... TDeps>
+template<class TConfig, class TPolicies = pool<>, class... TDeps>
 class injector : public pool<transform_t<TDeps...>>
                , public type_traits::config_traits_t<TConfig, injector<TConfig, TPolicies, TDeps...>>
                , _ {
@@ -3229,9 +3229,9 @@ private:
 };
 
 template<class TConfig, class... TDeps>
-class injector<TConfig, pool<aux::type_list<>>, TDeps...>
+class injector<TConfig, pool<>, TDeps...>
     : public pool<transform_t<TDeps...>>
-    , public type_traits::config_traits_t<TConfig, injector<TConfig, pool<aux::type_list<>>, TDeps...>>
+    , public type_traits::config_traits_t<TConfig, injector<TConfig, pool<>, TDeps...>>
     , _ {
     template<class...> friend struct provider;
     template<class> friend class scopes::exposed;
@@ -3541,14 +3541,14 @@ struct is_creatable<std::true_type, TInjector, T>
 template<class... T>
 class injector : public
      BOOST_DI_REQUIRES_MSG_T(concepts::boundable<aux::type<T...>>
-                           , core::injector<::BOOST_DI_CFG, core::pool<aux::type_list<>>, T...>) {
+                           , core::injector<::BOOST_DI_CFG, core::pool<>, T...>) {
 public:
     template<
         class TConfig
       , class... TArgs
         BOOST_DI_WKND(BOOST_DI_GCC)(,BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>))()
     > injector(const core::injector<TConfig, decltype(((TConfig*)0)->policies()), TArgs...>& injector) noexcept // non explicit
-        : core::injector<::BOOST_DI_CFG, core::pool<aux::type_list<>>, T...>(injector) {
+        : core::injector<::BOOST_DI_CFG, core::pool<>, T...>(injector) {
             BOOST_DI_WKND(BOOST_DI_MSVC)()(
                 using namespace detail;
                 int _[]{0, (
