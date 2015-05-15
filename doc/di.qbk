@@ -121,6 +121,7 @@
 
 [include introduction.qbk]
 [include overview.qbk]
+[include comparison.qbk]
 [include tutorial.qbk]
 [include quick_user_guide.qbk]
 [include diagnostic_messages.qbk]
