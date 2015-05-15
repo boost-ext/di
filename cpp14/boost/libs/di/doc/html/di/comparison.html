@@ -27,12 +27,9 @@
 <a name="di.comparison"></a><a class="link" href="comparison.html" title="Comparison">Comparison</a>
 </h2></div></div></div>
 <div class="table">
-<a name="di.comparison.dependency_injection_libraries"></a><p class="title"><b>Table&#160;1.&#160;Dependency Injection Libraries</b></p>
-<div class="table-contents"><table class="table" summary="Dependency Injection Libraries">
+<a name="di.comparison.c_dependency_injection_libraries"></a><p class="title"><b>Table&#160;1.&#160;C++ Dependency Injection Libraries</b></p>
+<div class="table-contents"><table class="table" summary="C++ Dependency Injection Libraries">
 <colgroup>
-<col>
-<col>
-<col>
 <col>
 <col>
 <col>
@@ -59,21 +56,6 @@
                 Google Fruit
               </p>
             </th>
-<th>
-              <p>
-                Google Guice
-              </p>
-            </th>
-<th>
-              <p>
-                Dagger2
-              </p>
-            </th>
-<th>
-              <p>
-                Ninject
-              </p>
-            </th>
 </tr></thead>
 <tbody>
 <tr>
@@ -92,26 +74,7 @@
                 C++11
               </p>
             </td>
-<td>
-              <p>
-                C++11
-              </p>
-            </td>
-<td>
-              <p>
-                Java
-              </p>
-            </td>
-<td>
-              <p>
-                Java
-              </p>
-            </td>
-<td>
-              <p>
-                C#
-              </p>
-            </td>
+<td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
@@ -128,12 +91,6 @@
               <p>
                 Boost License
               </p>
-            </td>
-<td>
-            </td>
-<td>
-            </td>
-<td>
             </td>
 <td>
             </td>
@@ -159,12 +116,6 @@
                 Library
               </p>
             </td>
-<td>
-            </td>
-<td>
-            </td>
-<td>
-            </td>
 </tr>
 <tr>
 <td>
@@ -185,21 +136,6 @@
 <td>
               <p>
                 compile/run-time
-              </p>
-            </td>
-<td>
-              <p>
-                run-time
-              </p>
-            </td>
-<td>
-              <p>
-                compile-time (annottation processor)
-              </p>
-            </td>
-<td>
-              <p>
-                run-time
               </p>
             </td>
 </tr>
@@ -258,61 +194,6 @@
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
     <span class="identifier">fruit</span><span class="special">::</span><span class="identifier">Injector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">injector</span><span class="special">{</span><span class="identifier">module</span><span class="special">()};</span>
     <span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span> <span class="special">!=</span> <span class="number">42</span><span class="special">;</span>
-<span class="special">}</span>
-</pre>
-            </td>
-<td>
-<pre class="programlisting"><span class="identifier">import</span> <span class="identifier">com</span><span class="special">.</span><span class="identifier">google</span><span class="special">.</span><span class="identifier">inject</span><span class="special">.*;</span>
-
-<span class="keyword">class</span> <span class="identifier">Module</span> <span class="identifier">extends</span> <span class="identifier">AbstractModule</span> <span class="special">{</span>
-    <span class="error">@</span><span class="identifier">Override</span>
-    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="identifier">configure</span><span class="special">()</span> <span class="special">{</span>
-        <span class="identifier">bind</span><span class="special">(</span><span class="keyword">int</span><span class="special">.</span><span class="keyword">class</span><span class="special">).</span><span class="identifier">toInstance</span><span class="special">(</span><span class="number">42</span><span class="special">);</span>
-    <span class="special">}</span>
-<span class="special">}</span>
-
-<span class="keyword">public</span> <span class="keyword">class</span> <span class="identifier">guice</span> <span class="special">{</span>
-    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">main</span><span class="special">(</span><span class="identifier">String</span><span class="special">[]</span> <span class="identifier">args</span><span class="special">)</span> <span class="special">{</span>
-        <span class="identifier">Injector</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">Guice</span><span class="special">.</span><span class="identifier">createInjector</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">Module</span><span class="special">());</span>
-        <span class="identifier">System</span><span class="special">.</span><span class="identifier">exit</span><span class="special">(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">getInstance</span><span class="special">(</span><span class="keyword">int</span><span class="special">.</span><span class="keyword">class</span><span class="special">)</span> <span class="special">!=</span> <span class="number">42</span> <span class="special">?</span> <span class="number">1</span> <span class="special">:</span> <span class="number">0</span><span class="special">);</span>
-    <span class="special">}</span>
-<span class="special">}</span>
-</pre>
-            </td>
-<td>
-<pre class="programlisting"><span class="identifier">import</span> <span class="identifier">dagger</span><span class="special">.*;</span>
-
-<span class="error">@</span><span class="identifier">Module</span>
-<span class="keyword">class</span> <span class="identifier">AppModule</span> <span class="special">{</span>
-    <span class="error">@</span><span class="identifier">Provides</span> <span class="keyword">int</span> <span class="identifier">provideint</span><span class="special">()</span> <span class="special">{</span> <span class="keyword">return</span> <span class="number">42</span><span class="special">;</span> <span class="special">}</span>
-<span class="special">}</span>
-
-<span class="error">@</span><span class="identifier">Component</span><span class="special">(</span><span class="identifier">modules</span> <span class="special">=</span> <span class="identifier">AppModule</span><span class="special">.</span><span class="keyword">class</span><span class="special">)</span>
-<span class="identifier">interface</span> <span class="identifier">AppComponent</span> <span class="special">{</span>
-    <span class="keyword">int</span> <span class="identifier">build</span><span class="special">();</span>
-<span class="special">}</span>
-
-<span class="keyword">public</span> <span class="keyword">class</span> <span class="identifier">dagger2</span> <span class="special">{</span>
-    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">main</span><span class="special">(</span><span class="identifier">String</span><span class="special">[]</span> <span class="identifier">args</span><span class="special">)</span> <span class="special">{</span>
-        <span class="identifier">System</span><span class="special">.</span><span class="identifier">exit</span><span class="special">(</span><span class="identifier">Dagger_AppComponent</span><span class="special">.</span><span class="identifier">create</span><span class="special">().</span><span class="identifier">build</span><span class="special">()</span> <span class="special">!=</span> <span class="number">42</span> <span class="special">?</span> <span class="number">1</span> <span class="special">:</span> <span class="number">0</span><span class="special">);</span>
-   <span class="special">}</span>
-<span class="special">}</span>
-</pre>
-            </td>
-<td>
-<pre class="programlisting"><span class="keyword">using</span> <span class="identifier">Ninject</span><span class="special">;</span>
-
-<span class="keyword">class</span> <span class="identifier">Module</span> <span class="special">:</span> <span class="identifier">Ninject</span><span class="special">.</span><span class="identifier">Modules</span><span class="special">.</span><span class="identifier">NinjectModule</span> <span class="special">{</span>
-    <span class="keyword">public</span> <span class="identifier">override</span> <span class="keyword">void</span> <span class="identifier">Load</span><span class="special">()</span> <span class="special">{</span>
-        <span class="identifier">Bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">To</span><span class="special">(</span><span class="number">42</span><span class="special">);</span>
-    <span class="special">}</span>
-<span class="special">}</span>
-
-<span class="keyword">class</span> <span class="identifier">ninject</span> <span class="special">{</span>
-    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">Main</span><span class="special">(</span><span class="identifier">string</span><span class="special">[]</span> <span class="identifier">args</span><span class="special">)</span> <span class="special">{</span>
-        <span class="identifier">Ninject</span><span class="special">.</span><span class="identifier">IKernel</span> <span class="identifier">kernel</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">StandardKernel</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">Module</span><span class="special">());</span>
-        <span class="identifier">kernel</span><span class="special">.</span><span class="identifier">Get</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;();</span>
-    <span class="special">}</span>
 <span class="special">}</span>
 </pre>
             </td>
@@ -454,11 +335,219 @@
 <span class="identifier">End</span> <span class="identifier">of</span> <span class="identifier">assembler</span> <span class="identifier">dump</span><span class="special">.</span>
 </pre>
             </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="table">
+<a name="di.comparison.dependency_injection_libraries"></a><p class="title"><b>Table&#160;2.&#160;Dependency Injection Libraries</b></p>
+<div class="table-contents"><table class="table" summary="Dependency Injection Libraries">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Library
+              </p>
+            </th>
+<th>
+              <p>
+                Boost.DI
+              </p>
+            </th>
+<th>
+              <p>
+                Google Guice
+              </p>
+            </th>
+<th>
+              <p>
+                Dagger2
+              </p>
+            </th>
+<th>
+              <p>
+                Ninject
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
 <td>
+              <p>
+                Language
+              </p>
+            </td>
+<td>
+              <p>
+                C++14
+              </p>
+            </td>
+<td>
+              <p>
+                Java
+              </p>
+            </td>
+<td>
+              <p>
+                Java
+              </p>
+            </td>
+<td>
+              <p>
+                C#
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                License
+              </p>
+            </td>
+<td>
+              <p>
+                Boost License
+              </p>
             </td>
 <td>
             </td>
 <td>
+            </td>
+<td>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                Linkage
+              </p>
+            </td>
+<td>
+              <p>
+                Library
+              </p>
+            </td>
+<td>
+            </td>
+<td>
+            </td>
+<td>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                Approach
+              </p>
+            </td>
+<td>
+              <p>
+                compile-time
+              </p>
+            </td>
+<td>
+              <p>
+                run-time
+              </p>
+            </td>
+<td>
+              <p>
+                compile-time (annottation processor)
+              </p>
+            </td>
+<td>
+              <p>
+                run-time
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                Test - bind value
+              </p>
+            </td>
+<td>
+<pre class="programlisting"><span class="comment">// clang++ -O2</span>
+
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">module</span> <span class="special">{</span>
+    <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+        <span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">module</span><span class="special">{});</span>
+    <span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span> <span class="special">!=</span> <span class="number">42</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+            </td>
+<td>
+<pre class="programlisting"><span class="identifier">import</span> <span class="identifier">com</span><span class="special">.</span><span class="identifier">google</span><span class="special">.</span><span class="identifier">inject</span><span class="special">.*;</span>
+
+<span class="keyword">class</span> <span class="identifier">Module</span> <span class="identifier">extends</span> <span class="identifier">AbstractModule</span> <span class="special">{</span>
+    <span class="error">@</span><span class="identifier">Override</span>
+    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="identifier">configure</span><span class="special">()</span> <span class="special">{</span>
+        <span class="identifier">bind</span><span class="special">(</span><span class="keyword">int</span><span class="special">.</span><span class="keyword">class</span><span class="special">).</span><span class="identifier">toInstance</span><span class="special">(</span><span class="number">42</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="identifier">guice</span> <span class="special">{</span>
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">main</span><span class="special">(</span><span class="identifier">String</span><span class="special">[]</span> <span class="identifier">args</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">Injector</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">Guice</span><span class="special">.</span><span class="identifier">createInjector</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">Module</span><span class="special">());</span>
+        <span class="identifier">System</span><span class="special">.</span><span class="identifier">exit</span><span class="special">(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">getInstance</span><span class="special">(</span><span class="keyword">int</span><span class="special">.</span><span class="keyword">class</span><span class="special">)</span> <span class="special">!=</span> <span class="number">42</span> <span class="special">?</span> <span class="number">1</span> <span class="special">:</span> <span class="number">0</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+            </td>
+<td>
+<pre class="programlisting"><span class="identifier">import</span> <span class="identifier">dagger</span><span class="special">.*;</span>
+
+<span class="error">@</span><span class="identifier">Module</span>
+<span class="keyword">class</span> <span class="identifier">AppModule</span> <span class="special">{</span>
+    <span class="error">@</span><span class="identifier">Provides</span> <span class="keyword">int</span> <span class="identifier">provideint</span><span class="special">()</span> <span class="special">{</span> <span class="keyword">return</span> <span class="number">42</span><span class="special">;</span> <span class="special">}</span>
+<span class="special">}</span>
+
+<span class="error">@</span><span class="identifier">Component</span><span class="special">(</span><span class="identifier">modules</span> <span class="special">=</span> <span class="identifier">AppModule</span><span class="special">.</span><span class="keyword">class</span><span class="special">)</span>
+<span class="identifier">interface</span> <span class="identifier">AppComponent</span> <span class="special">{</span>
+    <span class="keyword">int</span> <span class="identifier">build</span><span class="special">();</span>
+<span class="special">}</span>
+
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="identifier">dagger2</span> <span class="special">{</span>
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">main</span><span class="special">(</span><span class="identifier">String</span><span class="special">[]</span> <span class="identifier">args</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">System</span><span class="special">.</span><span class="identifier">exit</span><span class="special">(</span><span class="identifier">Dagger_AppComponent</span><span class="special">.</span><span class="identifier">create</span><span class="special">().</span><span class="identifier">build</span><span class="special">()</span> <span class="special">!=</span> <span class="number">42</span> <span class="special">?</span> <span class="number">1</span> <span class="special">:</span> <span class="number">0</span><span class="special">);</span>
+   <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+            </td>
+<td>
+<pre class="programlisting"><span class="keyword">using</span> <span class="identifier">Ninject</span><span class="special">;</span>
+
+<span class="keyword">class</span> <span class="identifier">Module</span> <span class="special">:</span> <span class="identifier">Ninject</span><span class="special">.</span><span class="identifier">Modules</span><span class="special">.</span><span class="identifier">NinjectModule</span> <span class="special">{</span>
+    <span class="keyword">public</span> <span class="identifier">override</span> <span class="keyword">void</span> <span class="identifier">Load</span><span class="special">()</span> <span class="special">{</span>
+        <span class="identifier">Bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">To</span><span class="special">(</span><span class="number">42</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+
+<span class="keyword">class</span> <span class="identifier">ninject</span> <span class="special">{</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">Main</span><span class="special">(</span><span class="identifier">string</span><span class="special">[]</span> <span class="identifier">args</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">Ninject</span><span class="special">.</span><span class="identifier">IKernel</span> <span class="identifier">kernel</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">StandardKernel</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">Module</span><span class="special">());</span>
+        <span class="identifier">kernel</span><span class="special">.</span><span class="identifier">Get</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;();</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
             </td>
 </tr>
 </tbody>
