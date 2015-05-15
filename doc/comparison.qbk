@@ -1,0 +1,305 @@
+[/
+ /
+ / Copyright (c) 2012-2015 Krzysztof Jusiak (krzysztof at jusiak dot net)
+ /
+ / Distributed under the Boost Software License, Version 1.0.
+ / (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /
+ /]
+
+[section Comparison]
+
+[table C++ Dependency Injection Libraries
+    [[Library][Boost.DI][dicpp][Google Fruit]]
+    [[Language][C++14][C++11]]
+    [[License][Boost License][Boost License][]]
+    [[Linkage][Header only][Header only][Library]]
+    [[Approach][compile-time][run-time][compile/run-time]]
+    [[Test - bind value]
+    [
+        ```
+        // clang++ -O2
+
+        #include <boost/di.hpp>
+
+        namespace di = boost::di;
+
+        struct module {
+            auto configure() const noexcept {
+                return di::make_injector(
+                    di::bind<int>.to(42)
+                );
+            }
+        };
+
+        int main() {
+            auto injector = di::make_injector(module{});
+            return injector.create<int>() != 42;
+        }
+        ```
+    ]
+    [
+        ```
+        #include <di/registry.hpp>
+        #include <di/injector.hpp>
+        
+        void module(di::registry& r) {
+            r.add(r.type<int>().instance(new int{42}));
+        }
+        
+        int main() {
+            di::injector injector;
+            injector.install(module);
+            return injector.construct<int>() != 42;
+        }
+
+        ```
+    ]
+    [
+        ```
+        #include <fruit/fruit.h>
+
+        auto i = 42; // bindInstance doesn't support l-value's
+        
+        fruit::Component<int> module() {
+            return fruit::createComponent()
+                .bindInstance(i);
+        }
+        
+        int main() {
+            fruit::Injector<int> injector{module()};
+            return injector.get<int>() != 42;
+        }
+        ```
+    ]
+    ]
+    [[Assember - x86-64]
+    [
+        ```
+        gdb -batch -ex 'file ./di.out' -ex 'disassemble main'
+        Dump of assembler code for function main:
+           0x0000000000400620 <+0>:	xor    %eax,%eax
+           0x0000000000400622 <+2>:	retq   
+        End of assembler dump.
+        ```
+    ]
+    [
+        ```
+        gdb -batch -ex 'file ./dicpp.out' -ex 'disassemble main'
+        Dump of assembler code for function main:
+           0x0000000000404760 <+0>:	push   %rbx
+           0x0000000000404761 <+1>:	sub    $0xb0,%rsp
+           0x0000000000404768 <+8>:	lea    0x20(%rsp),%rbx
+           0x000000000040476d <+13>:	xor    %esi,%esi
+           0x000000000040476f <+15>:	mov    %rbx,%rdi
+           0x0000000000404772 <+18>:	callq  0x40b3d0 <_ZN2di8injectorC2ENS0_8localityE>
+           0x0000000000404777 <+23>:	movq   $0x404520,(%rsp)
+           0x000000000040477f <+31>:	movq   $0x405e50,0x18(%rsp)
+           0x0000000000404788 <+40>:	movq   $0x405e60,0x10(%rsp)
+           0x0000000000404791 <+49>:	mov    %rbx,%rdi
+           0x0000000000404794 <+52>:	callq  0x404520 <_Z6moduleRN2di8registryE>
+           0x0000000000404799 <+57>:	mov    0x10(%rsp),%rax
+           0x000000000040479e <+62>:	test   %rax,%rax
+           0x00000000004047a1 <+65>:	je     0x4047b1 <main+81>
+           0x00000000004047a3 <+67>:	lea    (%rsp),%rdi
+           0x00000000004047a7 <+71>:	mov    $0x3,%edx
+           0x00000000004047ac <+76>:	mov    %rdi,%rsi
+           0x00000000004047af <+79>:	callq  *%rax
+           0x00000000004047b1 <+81>:	lea    0x20(%rsp),%rdi
+           0x00000000004047b6 <+86>:	callq  0x405cf0 <_ZNK2di8registry9constructIiEENS_6traits13returned_typeIT_E4typeEv>
+           0x00000000004047bb <+91>:	cmp    $0x2a,%eax
+           0x00000000004047be <+94>:	setne  %al
+           0x00000000004047c1 <+97>:	movzbl %al,%ebx
+           0x00000000004047c4 <+100>:	lea    0x20(%rsp),%rdi
+           0x00000000004047c9 <+105>:	callq  0x40b7c0 <_ZN2di8registryD2Ev>
+           0x00000000004047ce <+110>:	mov    %ebx,%eax
+           0x00000000004047d0 <+112>:	add    $0xb0,%rsp
+           0x00000000004047d7 <+119>:	pop    %rbx
+           0x00000000004047d8 <+120>:	retq   
+           0x00000000004047d9 <+121>:	mov    %rax,%rbx
+           0x00000000004047dc <+124>:	mov    0x10(%rsp),%rcx
+           0x00000000004047e1 <+129>:	test   %rcx,%rcx
+           0x00000000004047e4 <+132>:	je     0x404801 <main+161>
+           0x00000000004047e6 <+134>:	lea    (%rsp),%rdi
+           0x00000000004047ea <+138>:	mov    $0x3,%edx
+           0x00000000004047ef <+143>:	mov    %rdi,%rsi
+           0x00000000004047f2 <+146>:	callq  *%rcx
+           0x00000000004047f4 <+148>:	jmp    0x404801 <main+161>
+           0x00000000004047f6 <+150>:	mov    %rax,%rdi
+           0x00000000004047f9 <+153>:	callq  0x405e40 <__clang_call_terminate>
+           0x00000000004047fe <+158>:	mov    %rax,%rbx
+           0x0000000000404801 <+161>:	lea    0x20(%rsp),%rdi
+           0x0000000000404806 <+166>:	callq  0x40b7c0 <_ZN2di8registryD2Ev>
+           0x000000000040480b <+171>:	mov    %rbx,%rdi
+           0x000000000040480e <+174>:	callq  0x404250 <_Unwind_Resume@plt>
+           0x0000000000404813 <+179>:	mov    %rax,%rdi
+           0x0000000000404816 <+182>:	callq  0x405e40 <__clang_call_terminate>
+        End of assembler dump.
+        ```
+    ]
+    [
+        ```
+        gdb -batch -ex 'file ./fruit.out' -ex 'disassemble main'
+        Dump of assembler code for function main:
+           0x00000000004017a0 <+0>:	push   %rbp
+           0x00000000004017a1 <+1>:	push   %rbx
+           0x00000000004017a2 <+2>:	sub    $0xc8,%rsp
+           0x00000000004017a9 <+9>:	lea    (%rsp),%rbx
+           0x00000000004017ad <+13>:	mov    %rbx,%rdi
+           0x00000000004017b0 <+16>:	callq  0x4015b0 <_Z6modulev>
+           0x00000000004017b5 <+21>:	lea    0xc0(%rsp),%rdi
+           0x00000000004017bd <+29>:	mov    %rbx,%rsi
+           0x00000000004017c0 <+32>:	callq  0x401a60 <_ZN5fruit8InjectorIJiEEC2ENS_9ComponentIJiEEE>
+           0x00000000004017c5 <+37>:	mov    0xa8(%rsp),%rdi
+           0x00000000004017cd <+45>:	test   %rdi,%rdi
+           0x00000000004017d0 <+48>:	je     0x4017d7 <main+55>
+           0x00000000004017d2 <+50>:	callq  0x401260 <_ZdlPv@plt>
+           0x00000000004017d7 <+55>:	mov    0x90(%rsp),%rdi
+           0x00000000004017df <+63>:	test   %rdi,%rdi
+           0x00000000004017e2 <+66>:	je     0x4017e9 <main+73>
+           0x00000000004017e4 <+68>:	callq  0x401260 <_ZdlPv@plt>
+           0x00000000004017e9 <+73>:	mov    0x48(%rsp),%rdi
+           0x00000000004017ee <+78>:	test   %rdi,%rdi
+           0x00000000004017f1 <+81>:	je     0x4017f8 <main+88>
+           0x00000000004017f3 <+83>:	callq  0x401260 <_ZdlPv@plt>
+           0x00000000004017f8 <+88>:	lea    0xc0(%rsp),%rdi
+           0x0000000000401800 <+96>:	callq  0x401b00 <_ZN5fruit8InjectorIJiEE3getIiEENS_4impl4meta17RemoveAnnotations5applyIT_E4typeEv>
+           0x0000000000401805 <+101>:	cmp    $0x2a,%eax
+           0x0000000000401808 <+104>:	setne  %al
+           0x000000000040180b <+107>:	movzbl %al,%ebp
+           0x000000000040180e <+110>:	mov    0xc0(%rsp),%rbx
+           0x0000000000401816 <+118>:	test   %rbx,%rbx
+           0x0000000000401819 <+121>:	je     0x40182b <main+139>
+           0x000000000040181b <+123>:	mov    %rbx,%rdi
+           0x000000000040181e <+126>:	callq  0x401eb0 <_ZN5fruit4impl15InjectorStorageD2Ev>
+           0x0000000000401823 <+131>:	mov    %rbx,%rdi
+           0x0000000000401826 <+134>:	callq  0x401260 <_ZdlPv@plt>
+           0x000000000040182b <+139>:	mov    %ebp,%eax
+           0x000000000040182d <+141>:	add    $0xc8,%rsp
+           0x0000000000401834 <+148>:	pop    %rbx
+           0x0000000000401835 <+149>:	pop    %rbp
+           0x0000000000401836 <+150>:	retq   
+           0x0000000000401837 <+151>:	mov    %rax,%rbx
+           0x000000000040183a <+154>:	mov    0xa8(%rsp),%rdi
+           0x0000000000401842 <+162>:	test   %rdi,%rdi
+           0x0000000000401845 <+165>:	je     0x40184c <main+172>
+           0x0000000000401847 <+167>:	callq  0x401260 <_ZdlPv@plt>
+           0x000000000040184c <+172>:	mov    0x90(%rsp),%rdi
+           0x0000000000401854 <+180>:	test   %rdi,%rdi
+           0x0000000000401857 <+183>:	je     0x40185e <main+190>
+           0x0000000000401859 <+185>:	callq  0x401260 <_ZdlPv@plt>
+           0x000000000040185e <+190>:	mov    0x48(%rsp),%rdi
+           0x0000000000401863 <+195>:	test   %rdi,%rdi
+           0x0000000000401866 <+198>:	je     0x4018a1 <main+257>
+           0x0000000000401868 <+200>:	callq  0x401260 <_ZdlPv@plt>
+           0x000000000040186d <+205>:	mov    %rbx,%rdi
+           0x0000000000401870 <+208>:	callq  0x401410 <_Unwind_Resume@plt>
+           0x0000000000401875 <+213>:	mov    %rax,%rbx
+           0x0000000000401878 <+216>:	mov    0xc0(%rsp),%rbp
+           0x0000000000401880 <+224>:	test   %rbp,%rbp
+           0x0000000000401883 <+227>:	je     0x401895 <main+245>
+           0x0000000000401885 <+229>:	mov    %rbp,%rdi
+           0x0000000000401888 <+232>:	callq  0x401eb0 <_ZN5fruit4impl15InjectorStorageD2Ev>
+           0x000000000040188d <+237>:	mov    %rbp,%rdi
+           0x0000000000401890 <+240>:	callq  0x401260 <_ZdlPv@plt>
+           0x0000000000401895 <+245>:	movq   $0x0,0xc0(%rsp)
+           0x00000000004018a1 <+257>:	mov    %rbx,%rdi
+           0x00000000004018a4 <+260>:	callq  0x401410 <_Unwind_Resume@plt>
+        End of assembler dump.
+        ```
+    ]
+    ]
+]
+
+[table Dependency Injection Libraries
+    [[Library][Boost.DI][Google Guice][Dagger2][Ninject]]
+    [[Language][C++14][Java][Java][C#]]
+    [[License][Boost License][][][]]
+    [[Linkage][Library][][][]]
+    [[Approach][compile-time][run-time][compile-time (annottation processor)][run-time]]
+    [[Test - bind value]
+    [
+        ```
+        // clang++ -O2
+
+        #include <boost/di.hpp>
+
+        namespace di = boost::di;
+
+        struct module {
+            auto configure() const noexcept {
+                return di::make_injector(
+                    di::bind<int>.to(42)
+                );
+            }
+        };
+
+        int main() {
+            auto injector = di::make_injector(module{});
+            return injector.create<int>() != 42;
+        }
+        ```
+    ]
+    [
+        ```
+        import com.google.inject.*;
+        
+        class Module extends AbstractModule {
+            @Override
+            protected void configure() {
+                bind(int.class).toInstance(42);
+            }
+        }
+        
+        public class guice {
+            public static void main(String[] args) {
+                Injector injector = Guice.createInjector(new Module());
+                System.exit(injector.getInstance(int.class) != 42 ? 1 : 0);
+            }
+        }
+        ```
+    ]
+    [
+        ```
+        import dagger.*;
+
+        @Module
+        class AppModule {
+            @Provides int provideint() { return 42; }
+        }
+        
+        @Component(modules = AppModule.class)
+        interface AppComponent {
+            int build();
+        }
+        
+        public class dagger2 {
+            public static void main(String[] args) {
+                System.exit(Dagger_AppComponent.create().build() != 42 ? 1 : 0);
+           }
+        }
+        ```
+    ]
+    [
+        ```
+        using Ninject;
+        
+        class Module : Ninject.Modules.NinjectModule {
+            public override void Load() {
+                Bind<int>().To(42);
+            }
+        }
+        
+        class ninject {
+            static void Main(string[] args) {
+                Ninject.IKernel kernel = new StandardKernel(new Module());
+                kernel.Get<int>();
+            }
+        }
+        ```
+    ]
+    ]
+]
+
+[endsect]
+
