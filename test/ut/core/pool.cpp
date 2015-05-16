@@ -145,7 +145,7 @@ test pool_of_pools = [] {
 
 test init_pool_from_other_empty_pool = [] {
     pool<aux::type_list<>> pempty_;
-    pool<aux::type_list<default_ctor>> p(init{}, pempty_);
+    pool<aux::type_list<default_ctor>> p(aux::type_list<>{}, pempty_);
 
     expect_eq(0, p.get<default_ctor>().i);
 };
@@ -159,18 +159,18 @@ test init_pfrom_other_subset_pool = [] {
         >
     >;
 
-    using pool_subset_t = pool<
-        aux::type_list<
-            trivial_ctor
-          , custom_ctor
-        >
+    using types = aux::type_list<
+        trivial_ctor
+      , custom_ctor
     >;
+
+    using pool_subset_t = pool<types>;
 
     trivial_ctor trivial_ctor_;
     custom_ctor custom_ctor_(42);
 
     pool_subset_t p1(trivial_ctor_, custom_ctor_);
-    pool_all_t p2(init{}, p1);
+    pool_all_t p2(types{}, p1);
 
     expect_eq(
         trivial_ctor_.i
@@ -218,8 +218,10 @@ template<class T1, class T2>
 struct base : T1, T2 { };
 
 test pool_flatten = [] {
-    using pool_flatten_t = pool<aux::type_list<trivial_ctor, custom_ctor, default_ctor>>;
-    using pool_t = pool<aux::type_list<custom_ctor, base<trivial_ctor, default_ctor>>>;
+    using types_flatten_t = aux::type_list<trivial_ctor, custom_ctor, default_ctor>;
+    using pool_flatten_t = pool<types_flatten_t>;
+    using types = aux::type_list<custom_ctor, base<trivial_ctor, default_ctor>>;
+    using pool_t = pool<types>;
     constexpr auto i = 42;
 
     custom_ctor c(i);
@@ -228,7 +230,7 @@ test pool_flatten = [] {
     base<trivial_ctor, default_ctor> b;
 
     pool_t p1(c, b);
-    pool_flatten_t p2(init{}, p1);
+    pool_flatten_t p2(types_flatten_t{}, p1);
 
     expect_eq(i, p2.get<custom_ctor>().i);
     expect_eq(0, p2.get<default_ctor>().i);

@@ -12,40 +12,19 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
-struct init { };
-template<class>
-struct init2 { };
-
 template<class = aux::type_list<>>
 class pool;
 
 template<class... TArgs>
 class pool<aux::type_list<TArgs...>> : public TArgs... {
-    template<class T, class = void>
-    struct get_ {
-        using type = aux::type_list<>;
-    };
-
-    template<class T>
-    struct get_<T, std::enable_if_t<!aux::is_braces_constructible<typename T::scope_t>::value>> {
-        using type = aux::type_list<T>;
-    };
-
-    using blah = aux::join_t<typename get_<TArgs>::type...>;
-
 public:
     template<class... Ts>
     explicit pool(const Ts&... args) noexcept
         : Ts(args)...
     { }
 
-    template<class TPool>
-    pool(const init&, const TPool& p) noexcept
-        : pool(init2<blah>{}, p)
-    { }
-
     template<class... Ts, class TPool>
-    pool(const init2<aux::type_list<Ts...>>&, const TPool& p) noexcept
+    pool(const aux::type_list<Ts...>&, const TPool& p) noexcept
         : pool(static_cast<const Ts&>(p)...)
     { }
 

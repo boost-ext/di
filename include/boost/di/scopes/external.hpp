@@ -27,6 +27,10 @@ public:
         template<class>
         using is_referable = std::false_type;
 
+        explicit scope(const TExpected& object)
+            : object_{object}
+        { }
+
         template<class, class TProvider>
         TExpected try_create(const TProvider&);
 
@@ -34,10 +38,6 @@ public:
         auto create(const TProvider&) const noexcept {
             return wrappers::unique<TExpected>{object_};
         }
-
-        explicit scope(TExpected object)
-            : object_{object}
-        { }
 
         TExpected object_;
     };
@@ -70,6 +70,10 @@ public:
         template<class T>
         using is_referable = typename wrappers::shared<TGiven>::template is_referable<aux::remove_accessors_t<T>>;
 
+        explicit scope(const std::shared_ptr<TGiven>& object)
+            : object_{object}
+        { }
+
         template<class, class TProvider>
         wrappers::shared<TGiven> try_create(const TProvider&);
 
@@ -77,10 +81,6 @@ public:
         auto create(const TProvider&) const noexcept {
             return wrappers::shared<TGiven>{object_};
         }
-
-        explicit scope(std::shared_ptr<TGiven> object)
-            : object_{object}
-        { }
 
         std::shared_ptr<TGiven> object_;
     };
@@ -94,6 +94,10 @@ public:
         template<class>
         using is_referable = std::false_type;
 
+        explicit scope(const TGiven& object)
+            : object_(object)
+        { }
+
         template<class T, class TProvider>
         auto try_create(const TProvider&) -> type_traits::wrapper_traits_t<decltype(std::declval<TGiven>()())>;
 
@@ -102,10 +106,6 @@ public:
             using wrapper = type_traits::wrapper_traits_t<decltype(std::declval<TGiven>()())>;
             return wrapper{object_()};
         }
-
-        explicit scope(const TGiven& object)
-            : object_(object)
-        { }
 
         TGiven object_;
     };
@@ -118,6 +118,10 @@ public:
         template<class>
         using is_referable = std::false_type;
 
+        explicit scope(const TGiven& object)
+            : object_(object)
+        { }
+
         template<class T, class TProvider>
         T try_create(const TProvider&);
 
@@ -126,9 +130,7 @@ public:
             using wrapper = type_traits::wrapper_traits_t<decltype((object_)(provider.injector_))>;
             return wrapper{(object_)(provider.injector_)};
         }
-        explicit scope(const TGiven& object)
-            : object_(object)
-        { }
+
         TGiven object_;
     };
 
@@ -140,6 +142,10 @@ public:
         template<class>
         using is_referable = std::false_type;
 
+        explicit scope(const TGiven& object)
+            : object_(object)
+        { }
+
         template<class T, class TProvider>
         T try_create(const TProvider&);
 
@@ -148,9 +154,6 @@ public:
             using wrapper = type_traits::wrapper_traits_t<decltype((object_)(provider.injector_, aux::type<T>{}))>;
             return wrapper{(object_)(provider.injector_, aux::type<T>{})};
         }
-        explicit scope(const TGiven& object)
-            : object_(object)
-        { }
 
         TGiven object_;
     };

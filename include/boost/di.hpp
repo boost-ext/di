@@ -338,40 +338,19 @@ struct function_traits<R(T::*)(TArgs...) const> {
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
-struct init { };
-template<class>
-struct init2 { };
-
 template<class = aux::type_list<>>
 class pool;
 
 template<class... TArgs>
 class pool<aux::type_list<TArgs...>> : public TArgs... {
-    template<class T, class = void>
-    struct get_ {
-        using type = aux::type_list<>;
-    };
-
-    template<class T>
-    struct get_<T, std::enable_if_t<!aux::is_braces_constructible<typename T::scope_t>::value>> {
-        using type = aux::type_list<T>;
-    };
-
-    using blah = aux::join_t<typename get_<TArgs>::type...>;
-
 public:
     template<class... Ts>
     explicit pool(const Ts&... args) noexcept
         : Ts(args)...
     { }
 
-    template<class TPool>
-    pool(const init&, const TPool& p) noexcept
-        : pool(init2<blah>{}, p)
-    { }
-
     template<class... Ts, class TPool>
-    pool(const init2<aux::type_list<Ts...>>&, const TPool& p) noexcept
+    pool(const aux::type_list<Ts...>&, const TPool& p) noexcept
         : pool(static_cast<const Ts&>(p)...)
     { }
 
@@ -1024,6 +1003,10 @@ public:
         template<class>
         using is_referable = std::false_type;
 
+        explicit scope(const TExpected& object)
+            : object_{object}
+        { }
+
         template<class, class TProvider>
         TExpected try_create(const TProvider&);
 
@@ -1031,10 +1014,6 @@ public:
         auto create(const TProvider&) const noexcept {
             return wrappers::unique<TExpected>{object_};
         }
-
-        explicit scope(TExpected object)
-            : object_{object}
-        { }
 
         TExpected object_;
     };
@@ -1067,6 +1046,10 @@ public:
         template<class T>
         using is_referable = typename wrappers::shared<TGiven>::template is_referable<aux::remove_accessors_t<T>>;
 
+        explicit scope(const std::shared_ptr<TGiven>& object)
+            : object_{object}
+        { }
+
         template<class, class TProvider>
         wrappers::shared<TGiven> try_create(const TProvider&);
 
@@ -1074,10 +1057,6 @@ public:
         auto create(const TProvider&) const noexcept {
             return wrappers::shared<TGiven>{object_};
         }
-
-        explicit scope(std::shared_ptr<TGiven> object)
-            : object_{object}
-        { }
 
         std::shared_ptr<TGiven> object_;
     };
@@ -1091,6 +1070,10 @@ public:
         template<class>
         using is_referable = std::false_type;
 
+        explicit scope(const TGiven& object)
+            : object_(object)
+        { }
+
         template<class T, class TProvider>
         auto try_create(const TProvider&) -> type_traits::wrapper_traits_t<decltype(std::declval<TGiven>()())>;
 
@@ -1099,10 +1082,6 @@ public:
             using wrapper = type_traits::wrapper_traits_t<decltype(std::declval<TGiven>()())>;
             return wrapper{object_()};
         }
-
-        explicit scope(const TGiven& object)
-            : object_(object)
-        { }
 
         TGiven object_;
     };
@@ -1115,6 +1094,10 @@ public:
         template<class>
         using is_referable = std::false_type;
 
+        explicit scope(const TGiven& object)
+            : object_(object)
+        { }
+
         template<class T, class TProvider>
         T try_create(const TProvider&);
 
@@ -1123,9 +1106,7 @@ public:
             using wrapper = type_traits::wrapper_traits_t<decltype((object_)(provider.injector_))>;
             return wrapper{(object_)(provider.injector_)};
         }
-        explicit scope(const TGiven& object)
-            : object_(object)
-        { }
+
         TGiven object_;
     };
 
@@ -1137,6 +1118,10 @@ public:
         template<class>
         using is_referable = std::false_type;
 
+        explicit scope(const TGiven& object)
+            : object_(object)
+        { }
+
         template<class T, class TProvider>
         T try_create(const TProvider&);
 
@@ -1145,9 +1130,6 @@ public:
             using wrapper = type_traits::wrapper_traits_t<decltype((object_)(provider.injector_, aux::type<T>{}))>;
             return wrapper{(object_)(provider.injector_, aux::type<T>{})};
         }
-        explicit scope(const TGiven& object)
-            : object_(object)
-        { }
 
         TGiven object_;
     };
@@ -1646,9 +1628,7 @@ template<
         , dependency<TScope, TExpected, TGiven, TName, TPriority>
       >
     , BOOST_DI_CFG_DEPENDENCY_EXTENSIONS {
-//private:
-    using scope_t = typename TScope::template scope<TExpected, TGiven>;
-
+private:
     template<class T>
     using is_not_narrowed = std::integral_constant<bool,
         (std::is_arithmetic<T>::value && std::is_same<TExpected, T>::value) || !std::is_arithmetic<T>::value
@@ -1678,6 +1658,7 @@ template<
     };
 
 public:
+    using creator = typename TScope::template scope<TExpected, TGiven>;
     using scope = TScope;
     using expected = TExpected;
     using given = std::remove_reference_t<TGiven>;
@@ -1688,7 +1669,7 @@ public:
 
     template<class T>
     explicit dependency(T&& object) noexcept
-        : scope_t{std::forward<T>(object)}
+        : creator(std::forward<T>(object))
     { }
 
     template<
@@ -1698,7 +1679,7 @@ public:
       , class TName_
       , class TPriority_
     > dependency(const dependency<TScope_, TExpected_, TGiven_, TName_, TPriority_>& other) noexcept
-        : scope_t(other)
+        : creator(other)
     { }
 
     template<class T> // no requirements
@@ -3037,6 +3018,10 @@ namespace boost { namespace di { inline namespace v1 { namespace core {
 
 BOOST_DI_HAS_METHOD(call, call);
 
+struct from_injector { };
+struct from_deps { };
+struct init { };
+
 template<class T>
 decltype(auto) arg(const T& arg, const std::false_type&) noexcept {
     return arg;
@@ -3047,13 +3032,27 @@ decltype(auto) arg(const T& arg, const std::true_type&) noexcept {
     return arg.configure();
 }
 
-struct from_injector { };
-struct from_deps { };
-
 template<class T, class TInjector>
 inline auto build(const TInjector& injector) noexcept {
     return T{injector};
 }
+
+template<class>
+struct externals_impl;
+
+template<class... TDeps>
+struct externals_impl<aux::type_list<TDeps...>>
+    : aux::join<
+          std::conditional_t<
+              std::is_default_constructible<typename TDeps::creator>::value
+            , aux::type_list<>
+            , aux::type_list<TDeps>
+          >...
+      >
+{ };
+
+template<class TDeps>
+using externals = typename externals_impl<TDeps>::type;
 
 template<class TConfig, class TPolicies = pool<>, class... TDeps>
 class injector : public pool<transform_t<TDeps...>>
@@ -3147,13 +3146,13 @@ public:
 private:
     template<class... TArgs>
     explicit injector(const from_deps&, const TArgs&... args) noexcept
-        : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
+        : pool_t{externals<deps>{}, pool<aux::type_list<TArgs...>>{args...}}
         , config{*this}
     { }
 
     template<class TInjector, class... TArgs>
     explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
-        : pool_t{init{}, pool_t{build<TArgs>(injector)...}}
+        : pool_t{externals<deps>{}, pool_t{build<TArgs>(injector)...}}
         , config{*this}
     { }
 
@@ -3335,13 +3334,13 @@ public:
 private:
     template<class... TArgs>
     explicit injector(const from_deps&, const TArgs&... args) noexcept
-        : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
+        : pool_t{externals<deps>{}, pool<aux::type_list<TArgs...>>{args...}}
         , config{*this}
     { }
 
     template<class TInjector, class... TArgs>
     explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
-        : pool_t{init{}, pool_t{build<TArgs>(injector)...}}
+        : pool_t{externals<deps>{}, pool_t{build<TArgs>(injector)...}}
         , config{*this}
     { }
 

@@ -15,6 +15,7 @@ namespace boost { namespace di { inline namespace v1 {
 
 template<class T, class TScope = fake_scope<>>
 struct fake_dependency : TScope::template scope<T, T> {
+    using creator = typename TScope::template scope<T, T>;
     using expected = T;
     using given = T;
     using scope = TScope;

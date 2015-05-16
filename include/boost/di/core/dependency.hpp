@@ -77,9 +77,7 @@ template<
         , dependency<TScope, TExpected, TGiven, TName, TPriority>
       >
     , BOOST_DI_CFG_DEPENDENCY_EXTENSIONS {
-//private:
-    using scope_t = typename TScope::template scope<TExpected, TGiven>;
-
+private:
     template<class T>
     using is_not_narrowed = std::integral_constant<bool,
         (std::is_arithmetic<T>::value && std::is_same<TExpected, T>::value) || !std::is_arithmetic<T>::value
@@ -109,6 +107,7 @@ template<
     };
 
 public:
+    using creator = typename TScope::template scope<TExpected, TGiven>;
     using scope = TScope;
     using expected = TExpected;
     using given = std::remove_reference_t<TGiven>;
@@ -119,7 +118,7 @@ public:
 
     template<class T>
     explicit dependency(T&& object) noexcept
-        : scope_t{std::forward<T>(object)}
+        : creator(std::forward<T>(object))
     { }
 
     template<
@@ -129,7 +128,7 @@ public:
       , class TName_
       , class TPriority_
     > dependency(const dependency<TScope_, TExpected_, TGiven_, TName_, TPriority_>& other) noexcept
-        : scope_t(other)
+        : creator(other)
     { }
 
     template<class T> // no requirements

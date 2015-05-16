@@ -28,6 +28,10 @@ namespace boost { namespace di { inline namespace v1 { namespace core {
 
 BOOST_DI_HAS_METHOD(call, call);
 
+struct from_injector { };
+struct from_deps { };
+struct init { };
+
 template<class T>
 decltype(auto) arg(const T& arg, const std::false_type&) noexcept {
     return arg;
@@ -38,13 +42,27 @@ decltype(auto) arg(const T& arg, const std::true_type&) noexcept {
     return arg.configure();
 }
 
-struct from_injector { };
-struct from_deps { };
-
 template<class T, class TInjector>
 inline auto build(const TInjector& injector) noexcept {
     return T{injector};
 }
+
+template<class>
+struct externals_impl;
+
+template<class... TDeps>
+struct externals_impl<aux::type_list<TDeps...>>
+    : aux::join<
+          std::conditional_t<
+              std::is_default_constructible<typename TDeps::creator>::value
+            , aux::type_list<>
+            , aux::type_list<TDeps>
+          >...
+      >
+{ };
+
+template<class TDeps>
+using externals = typename externals_impl<TDeps>::type;
 
 template<class TConfig, class TPolicies = pool<>, class... TDeps>
 class injector : public pool<transform_t<TDeps...>>
@@ -138,13 +156,13 @@ public:
 private:
     template<class... TArgs>
     explicit injector(const from_deps&, const TArgs&... args) noexcept
-        : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
+        : pool_t{externals<deps>{}, pool<aux::type_list<TArgs...>>{args...}}
         , config{*this}
     { }
 
     template<class TInjector, class... TArgs>
     explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
-        : pool_t{init{}, pool_t{build<TArgs>(injector)...}}
+        : pool_t{externals<deps>{}, pool_t{build<TArgs>(injector)...}}
         , config{*this}
     { }
 
@@ -326,13 +344,13 @@ public:
 private:
     template<class... TArgs>
     explicit injector(const from_deps&, const TArgs&... args) noexcept
-        : pool_t{init{}, pool<aux::type_list<TArgs...>>{args...}}
+        : pool_t{externals<deps>{}, pool<aux::type_list<TArgs...>>{args...}}
         , config{*this}
     { }
 
     template<class TInjector, class... TArgs>
     explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
-        : pool_t{init{}, pool_t{build<TArgs>(injector)...}}
+        : pool_t{externals<deps>{}, pool_t{build<TArgs>(injector)...}}
         , config{*this}
     { }
 
