@@ -13,17 +13,25 @@
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
 struct init { };
+template<class>
+struct init2 { };
 
 template<class = aux::type_list<>>
 class pool;
 
 template<class... TArgs>
 class pool<aux::type_list<TArgs...>> : public TArgs... {
-    template<class T, class TPool>
-    using is_base_of_pool = std::integral_constant<
-        bool
-      , std::is_base_of<T, pool>::value && std::is_base_of<T, TPool>::value
-    >;
+    template<class T, class = void>
+    struct get_ {
+        using type = aux::type_list<>;
+    };
+
+    template<class T>
+    struct get_<T, std::enable_if_t<!aux::is_braces_constructible<typename T::scope_t>::value>> {
+        using type = aux::type_list<T>;
+    };
+
+    using blah = aux::join_t<typename get_<TArgs>::type...>;
 
 public:
     template<class... Ts>
@@ -33,23 +41,17 @@ public:
 
     template<class TPool>
     pool(const init&, const TPool& p) noexcept
-        : pool(init_impl<TArgs>(p, is_base_of_pool<TArgs, TPool>{})...)
+        : pool(init2<blah>{}, p)
+    { }
+
+    template<class... Ts, class TPool>
+    pool(const init2<aux::type_list<Ts...>>&, const TPool& p) noexcept
+        : pool(static_cast<const Ts&>(p)...)
     { }
 
     template<class T>
     inline const T& get() const noexcept {
         return static_cast<const T&>(*this);
-    }
-
-private:
-    template<class T, class TPool>
-    inline const T& init_impl(const TPool& p, const std::true_type&) const noexcept {
-        return static_cast<const T&>(p);
-    }
-
-    template<class T, class TPool>
-    inline T init_impl(const TPool&, const std::false_type&) const noexcept {
-        return {};
     }
 };
 

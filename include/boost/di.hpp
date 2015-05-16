@@ -339,17 +339,25 @@ struct function_traits<R(T::*)(TArgs...) const> {
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
 struct init { };
+template<class>
+struct init2 { };
 
 template<class = aux::type_list<>>
 class pool;
 
 template<class... TArgs>
 class pool<aux::type_list<TArgs...>> : public TArgs... {
-    template<class T, class TPool>
-    using is_base_of_pool = std::integral_constant<
-        bool
-      , std::is_base_of<T, pool>::value && std::is_base_of<T, TPool>::value
-    >;
+    template<class T, class = void>
+    struct get_ {
+        using type = aux::type_list<>;
+    };
+
+    template<class T>
+    struct get_<T, std::enable_if_t<!aux::is_braces_constructible<typename T::scope_t>::value>> {
+        using type = aux::type_list<T>;
+    };
+
+    using blah = aux::join_t<typename get_<TArgs>::type...>;
 
 public:
     template<class... Ts>
@@ -359,23 +367,17 @@ public:
 
     template<class TPool>
     pool(const init&, const TPool& p) noexcept
-        : pool(init_impl<TArgs>(p, is_base_of_pool<TArgs, TPool>{})...)
+        : pool(init2<blah>{}, p)
+    { }
+
+    template<class... Ts, class TPool>
+    pool(const init2<aux::type_list<Ts...>>&, const TPool& p) noexcept
+        : pool(static_cast<const Ts&>(p)...)
     { }
 
     template<class T>
     inline const T& get() const noexcept {
         return static_cast<const T&>(*this);
-    }
-
-private:
-    template<class T, class TPool>
-    inline const T& init_impl(const TPool& p, const std::true_type&) const noexcept {
-        return static_cast<const T&>(p);
-    }
-
-    template<class T, class TPool>
-    inline T init_impl(const TPool&, const std::false_type&) const noexcept {
-        return {};
     }
 };
 
@@ -1030,6 +1032,10 @@ public:
             return wrappers::unique<TExpected>{object_};
         }
 
+        explicit scope(TExpected object)
+            : object_{object}
+        { }
+
         TExpected object_;
     };
 
@@ -1069,6 +1075,10 @@ public:
             return wrappers::shared<TGiven>{object_};
         }
 
+        explicit scope(std::shared_ptr<TGiven> object)
+            : object_{object}
+        { }
+
         std::shared_ptr<TGiven> object_;
     };
 
@@ -1090,6 +1100,10 @@ public:
             return wrapper{object_()};
         }
 
+        explicit scope(const TGiven& object)
+            : object_(object)
+        { }
+
         TGiven object_;
     };
 
@@ -1109,7 +1123,9 @@ public:
             using wrapper = type_traits::wrapper_traits_t<decltype((object_)(provider.injector_))>;
             return wrapper{(object_)(provider.injector_)};
         }
-
+        explicit scope(const TGiven& object)
+            : object_(object)
+        { }
         TGiven object_;
     };
 
@@ -1129,6 +1145,9 @@ public:
             using wrapper = type_traits::wrapper_traits_t<decltype((object_)(provider.injector_, aux::type<T>{}))>;
             return wrapper{(object_)(provider.injector_, aux::type<T>{})};
         }
+        explicit scope(const TGiven& object)
+            : object_(object)
+        { }
 
         TGiven object_;
     };
@@ -1627,7 +1646,7 @@ template<
         , dependency<TScope, TExpected, TGiven, TName, TPriority>
       >
     , BOOST_DI_CFG_DEPENDENCY_EXTENSIONS {
-private:
+//private:
     using scope_t = typename TScope::template scope<TExpected, TGiven>;
 
     template<class T>

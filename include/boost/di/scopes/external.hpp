@@ -35,6 +35,10 @@ public:
             return wrappers::unique<TExpected>{object_};
         }
 
+        explicit scope(TExpected object)
+            : object_{object}
+        { }
+
         TExpected object_;
     };
 
@@ -74,6 +78,10 @@ public:
             return wrappers::shared<TGiven>{object_};
         }
 
+        explicit scope(std::shared_ptr<TGiven> object)
+            : object_{object}
+        { }
+
         std::shared_ptr<TGiven> object_;
     };
 
@@ -95,6 +103,10 @@ public:
             return wrapper{object_()};
         }
 
+        explicit scope(const TGiven& object)
+            : object_(object)
+        { }
+
         TGiven object_;
     };
 
@@ -114,7 +126,9 @@ public:
             using wrapper = type_traits::wrapper_traits_t<decltype((object_)(provider.injector_))>;
             return wrapper{(object_)(provider.injector_)};
         }
-
+        explicit scope(const TGiven& object)
+            : object_(object)
+        { }
         TGiven object_;
     };
 
@@ -134,6 +148,9 @@ public:
             using wrapper = type_traits::wrapper_traits_t<decltype((object_)(provider.injector_, aux::type<T>{}))>;
             return wrapper{(object_)(provider.injector_, aux::type<T>{})};
         }
+        explicit scope(const TGiven& object)
+            : object_(object)
+        { }
 
         TGiven object_;
     };

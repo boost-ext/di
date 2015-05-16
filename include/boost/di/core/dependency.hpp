@@ -77,7 +77,7 @@ template<
         , dependency<TScope, TExpected, TGiven, TName, TPriority>
       >
     , BOOST_DI_CFG_DEPENDENCY_EXTENSIONS {
-private:
+//private:
     using scope_t = typename TScope::template scope<TExpected, TGiven>;
 
     template<class T>
