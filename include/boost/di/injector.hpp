@@ -45,13 +45,23 @@ class injector : public
      BOOST_DI_REQUIRES_MSG_T(concepts::boundable<aux::type<T...>>
                            , core::injector<::BOOST_DI_CFG, core::pool<>, T...>) {
 public:
+    #if defined(BOOST_DI_MSVC)
+        #define BOOST_DI_CORE_INJECTOR(TConfig, TArgs) \
+            core::injector<TConfig, core::pool<>, TArgs>
+    #else
+        #define BOOST_DI_CORE_INJECTOR(TConfig, TArgs) \
+            core::injector<TConfig, decltype(((TConfig*)0)->policies()), TArgs>
+    #endif
+
     template<
         class TConfig
       , class... TArgs
-        BOOST_DI_WKND(BOOST_DI_GCC)(,BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>))()
-    > injector(const core::injector<TConfig, BOOST_DI_WKND(BOOST_DI_MSVC)(core::pool<>)(decltype(((TConfig*)0)->policies())), TArgs...>& injector) noexcept // non explicit
+        #if defined(BOOST_DI_GCC)
+          , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>
+        #endif
+    > injector(const BOOST_DI_CORE_INJECTOR(TConfig, TArgs...)& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, core::pool<>, T...>(injector) {
-            BOOST_DI_WKND(BOOST_DI_MSVC)()(
+            #if !defined(BOOST_DI_MSVC)
                 using namespace detail;
                 int _[]{0, (
                     create<T>(
@@ -62,8 +72,10 @@ public:
                         >{}
                     )
                 , 0)...}; (void)_;
-            )
+            #endif
     }
+
+    #undef BOOST_DI_CORE_INJECTOR
 };
 
 }}} // boost::di::v1

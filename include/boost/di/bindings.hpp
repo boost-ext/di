@@ -33,8 +33,12 @@ template<
     class TExpected
   , class TGiven = TExpected
   , BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, TGiven>)
-> BOOST_DI_WKND(BOOST_DI_MSVC)
-    (struct bind : core::bind<TExpected, TGiven> {})(core::bind<TExpected, TGiven> bind{});
+>
+#if defined(BOOST_DI_MSVC)
+    struct bind : core::bind<TExpected, TGiven> {};
+#else
+    core::bind<TExpected, TGiven> bind{};
+#endif
 
 constexpr core::override override{};
 

@@ -70,8 +70,8 @@ template<
   , class TName
   , class TPriority
 > struct dependency
-    : TScope::template scope<TExpected, TGiven>
-    , dependency_base
+    : private dependency_base
+    , TScope::template scope<TExpected, TGiven>
     , dependency_impl<
           dependency_concept<TExpected, TName>
         , dependency<TScope, TExpected, TGiven, TName, TPriority>

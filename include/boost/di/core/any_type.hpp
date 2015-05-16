@@ -61,7 +61,7 @@ struct any_type_ref {
         return injector_.create_impl(aux::type<T>{});
     }
 
-    BOOST_DI_WKND(BOOST_DI_GCC)(
+    #if defined(BOOST_DI_GCC)
         template<class T
                , class = is_not_same<T, TParent>
                , class = is_referable<T&&, TInjector>
@@ -69,7 +69,7 @@ struct any_type_ref {
         > operator T&&() const {
             return injector_.create_impl(aux::type<T&&>{});
         }
-    )()
+    #endif
 
     template<class T
            , class = is_not_same<T, TParent>
@@ -109,14 +109,14 @@ struct any_type_ref {
         return injector_.create_successful_impl(aux::type<T>{});
     }
 
-    BOOST_DI_WKND(BOOST_DI_GCC)(
+    #if defined(BOOST_DI_GCC)
         template<class T
                , class = is_not_same<T, TParent>
                , class = is_referable<T&&, TInjector>
         > operator T&&() const {
             return injector_.create_successful_impl(aux::type<T&&>{});
         }
-    )()
+    #endif
 
     template<class T
            , class = is_not_same<T, TParent>
@@ -151,10 +151,10 @@ struct any_type_ref_fwd {
     template<class T, class = is_not_same<T, TParent>>
     operator T&() const;
 
-    BOOST_DI_WKND(BOOST_DI_GCC)(
+    #if defined(BOOST_DI_GCC)
         template<class T, class = is_not_same<T, TParent>>
         operator T&&() const;
-    )()
+    #endif
 
     template<class T, class = is_not_same<T, TParent>>
     operator const T&() const;

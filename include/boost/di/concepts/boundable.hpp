@@ -123,7 +123,11 @@ auto boundable_impl(I&&, T&&) ->
 
 template<class... TDeps> // bindings
 auto boundable_impl(aux::type_list<TDeps...>&&) ->
-    BOOST_DI_WKND(BOOST_DI_MSVC)(std::true_type)(get_bindings_error<TDeps...>);
+    #if defined(BOOST_DI_MSVC)
+        std::true_type;
+    #else
+        get_bindings_error<TDeps...>;
+    #endif
 
 template<class T, class... Ts> // any_of
 auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
@@ -136,8 +140,12 @@ auto boundable_impl(aux::type<TDeps...>&&) ->
 std::true_type boundable_impl(...);
 
 template<class... Ts>
-using boundable = BOOST_DI_WKND(BOOST_DI_MSVC)
-    (std::true_type)(decltype(boundable_impl(std::declval<Ts>()...)));
+using boundable =
+    #if defined(BOOST_DI_MSVC)
+        std::true_type;
+    #else
+        decltype(boundable_impl(std::declval<Ts>()...));
+    #endif
 
 }}}} // boost::di::v1::concepts
 

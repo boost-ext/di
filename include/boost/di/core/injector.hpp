@@ -102,11 +102,11 @@ class injector : public pool<transform_t<TDeps...>>
                >{std::declval<injector>()}
            )
        ), T>::value
-       BOOST_DI_WKND(BOOST_DI_MSVC)()(
+       #if !defined(BOOST_DI_MSVC)
            && decltype(policy<pool_t>::template call<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot>(
               ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{}, std::false_type{})
            )::value
-       )
+       #endif
     >;
 
     static auto is_creatable_impl(...) -> std::false_type;
@@ -129,12 +129,14 @@ public:
     { }
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
-    struct is_creatable
-        : BOOST_DI_WKND(BOOST_DI_MSVC)(std::true_type)(
+    struct is_creatable :
+        #if defined(BOOST_DI_MSVC)
+            std::true_type
+        #else
             decltype(is_creatable_impl(
                 std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>())
             )
-        )
+        #endif
     { };
 
     template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>::value)>
@@ -317,12 +319,14 @@ public:
     { }
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
-    struct is_creatable
-        : BOOST_DI_WKND(BOOST_DI_MSVC)(std::true_type)(
+    struct is_creatable :
+        #if defined(BOOST_DI_MSVC)
+            std::true_type
+        #else
             decltype(is_creatable_impl(
                 std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>())
             )
-        )
+        #endif
     { };
 
     template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>::value)>

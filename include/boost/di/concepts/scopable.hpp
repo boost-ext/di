@@ -35,8 +35,12 @@ auto scopable_impl(T&&) -> aux::is_valid_expr<
 >;
 
 template<class T>
-using scopable = BOOST_DI_WKND(BOOST_DI_MSVC)
-    (std::true_type)(decltype(scopable_impl(std::declval<T>())));
+using scopable =
+    #if defined(BOOST_DI_MSVC)
+        std::true_type;
+    #else
+        decltype(scopable_impl(std::declval<T>()));
+    #endif
 
 }}}} // boost::di::v1::concepts
 

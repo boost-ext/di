@@ -185,10 +185,10 @@ namespace std {
     template<class>
     class initializer_list;
 
-    BOOST_DI_WKND(BOOST_DI_MSVC)(
+    #if defined(BOOST_DI_MSVC)
         template<class>
         class function;
-    )()
+    #endif
 } // std
 
 namespace boost { namespace di { inline namespace v1 {
@@ -197,12 +197,12 @@ namespace boost { namespace di { inline namespace v1 {
         BOOST_DI_INJECT_TRAITS();
     };
 
-    BOOST_DI_WKND(BOOST_DI_MSVC)(
+    #if defined(BOOST_DI_MSVC)
         template<class T>
         struct ctor_traits<std::function<T>> {
             BOOST_DI_INJECT_TRAITS();
         };
-    )()
+    #endif
 }}} // boost::di::v1
 
 #endif

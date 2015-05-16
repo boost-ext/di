@@ -64,11 +64,11 @@ struct unique<T*> {
         return std::unique_ptr<I>{object};
     }
 
-    BOOST_DI_WKND(BOOST_DI_MSVC)(
+    #if defined(BOOST_DI_MSVC)
         explicit unique(T* object)
             : object(object)
         { }
-    )()
+    #endif
 
     T* object = nullptr;
 };
