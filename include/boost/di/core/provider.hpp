@@ -32,7 +32,9 @@ template<
             TInitialization
           , TMemory
           , TGiven
+            #if !defined(BOOST_DI_MSVC)
           , typename TInjector::template try_create<TCtor>...
+            #endif
         >::value
       , std::conditional_t<std::is_same<TMemory, type_traits::stack>::value, TGiven, TGiven*>
     >;

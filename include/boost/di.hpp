@@ -2822,7 +2822,9 @@ template<
             TInitialization
           , TMemory
           , TGiven
+            #if !defined(BOOST_DI_MSVC)
           , typename TInjector::template try_create<TCtor>...
+            #endif
         >::value
       , std::conditional_t<std::is_same<TMemory, type_traits::stack>::value, TGiven, TGiven*>
     >;
@@ -3131,9 +3133,13 @@ class injector : public pool<transform_t<TDeps...>>
     using try_create = decltype(try_create_impl(std::declval<T>(), std::declval<TIsRoot>()));
 
     template<class T, class TIsRoot = std::false_type>
-    using is_creatable = std::integral_constant<bool,
-        !std::is_same<decltype(try_create_impl(std::declval<T>(), std::declval<TIsRoot>())), void>::value
-    >;
+    struct is_creatable : std::integral_constant<bool,
+        #if defined(BOOST_DI_MSVC)
+            true
+        #else
+            !std::is_same<decltype(try_create_impl(std::declval<T>(), std::declval<TIsRoot>())), void>::value
+        #endif
+    > { };
 
 public:
     using deps = transform_t<TDeps...>;
@@ -3343,9 +3349,13 @@ class injector<TConfig, pool<>, TDeps...>
     using try_create = decltype(try_create_impl(std::declval<T>(), std::declval<TIsRoot>()));
 
     template<class T, class TIsRoot = std::false_type>
-    using is_creatable = std::integral_constant<bool,
-        !std::is_same<decltype(try_create_impl(std::declval<T>(), std::declval<TIsRoot>())), void>::value
-    >;
+    struct is_creatable : std::integral_constant<bool,
+        #if defined(BOOST_DI_MSVC)
+            true
+        #else
+            !std::is_same<decltype(try_create_impl(std::declval<T>(), std::declval<TIsRoot>())), void>::value
+        #endif
+    > { };
 
 public:
     using deps = transform_t<TDeps...>;
