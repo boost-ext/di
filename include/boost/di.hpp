@@ -2680,6 +2680,33 @@ struct any_type_ref_fwd {
 
 #endif
 
+#ifndef BOOST_DI_CORE_COPYABLE_HPP
+#define BOOST_DI_CORE_COPYABLE_HPP
+
+namespace boost { namespace di { inline namespace v1 { namespace core {
+
+template<class>
+struct copyable_impl;
+
+template<class T>
+struct to_be_copied : std::conditional<
+    std::is_default_constructible<typename T::creator>::value
+  , aux::type_list<>
+  , aux::type_list<T>
+> { };
+
+template<class... TDeps>
+struct copyable_impl<aux::type_list<TDeps...>>
+    : aux::join<typename to_be_copied<TDeps>::type...>
+{ };
+
+template<class TDeps>
+using copyable = typename copyable_impl<TDeps>::type;
+
+}}}} // boost::di::v1::core
+
+#endif
+
 #ifndef BOOST_DI_CORE_POLICY_HPP
 #define BOOST_DI_CORE_POLICY_HPP
 
@@ -3035,23 +3062,6 @@ inline auto build(const TInjector& injector) noexcept {
     return T{injector};
 }
 
-template<class>
-struct externals_impl;
-
-template<class... TDeps>
-struct externals_impl<aux::type_list<TDeps...>>
-    : aux::join<
-          std::conditional_t<
-              std::is_default_constructible<typename TDeps::creator>::value
-            , aux::type_list<>
-            , aux::type_list<TDeps>
-          >...
-      >
-{ };
-
-template<class TDeps>
-using externals = typename externals_impl<TDeps>::type;
-
 template<class TConfig, class TPolicies = pool<>, class... TDeps>
 class injector : public pool<transform_t<TDeps...>>
                , public type_traits::config_traits_t<TConfig, injector<TConfig, TPolicies, TDeps...>>
@@ -3146,13 +3156,13 @@ public:
 private:
     template<class... TArgs>
     explicit injector(const from_deps&, const TArgs&... args) noexcept
-        : pool_t{externals<deps>{}, pool<aux::type_list<TArgs...>>{args...}}
+        : pool_t{copyable<deps>{}, pool<aux::type_list<TArgs...>>{args...}}
         , config{*this}
     { }
 
     template<class TInjector, class... TArgs>
     explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
-        : pool_t{externals<deps>{}, pool_t{build<TArgs>(injector)...}}
+        : pool_t{copyable<deps>{}, pool_t{build<TArgs>(injector)...}}
         , config{*this}
     { }
 
@@ -3336,13 +3346,13 @@ public:
 private:
     template<class... TArgs>
     explicit injector(const from_deps&, const TArgs&... args) noexcept
-        : pool_t{externals<deps>{}, pool<aux::type_list<TArgs...>>{args...}}
+        : pool_t{copyable<deps>{}, pool<aux::type_list<TArgs...>>{args...}}
         , config{*this}
     { }
 
     template<class TInjector, class... TArgs>
     explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
-        : pool_t{externals<deps>{}, pool_t{build<TArgs>(injector)...}}
+        : pool_t{copyable<deps>{}, pool_t{build<TArgs>(injector)...}}
         , config{*this}
     { }
 
