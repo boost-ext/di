@@ -2553,8 +2553,7 @@ struct is_creatable_impl<T, TInjector, std::false_type> {
 template<class T, class TInjector>
 struct is_creatable_impl<T, TInjector, std::true_type> {
     static constexpr auto value =
-        //TInjector::template is_creatable<T>::value || TInjector::template is_creatable<T*>::value;
-        false;
+        TInjector::template is_creatable<T>::value || TInjector::template is_creatable<T*>::value;
 };
 
 template<class T, class TInjector, class TError>
@@ -2823,7 +2822,7 @@ template<
             TInitialization
           , TMemory
           , TGiven
-          , typename TInjector::template blah<TCtor>...
+          , typename TInjector::template try_create<TCtor>...
         >::value
       , std::conditional_t<std::is_same<TMemory, type_traits::stack>::value, TGiven, TGiven*>
     >;
@@ -3122,28 +3121,19 @@ class injector : public pool<transform_t<TDeps...>>
        #endif
        , T>;
 
-    static auto blah_impl(...) -> void;
+    static auto try_create_impl(...) -> void;
 
     template<class T, class TIsRoot>
-    static auto blah_impl(T&&, TIsRoot&&) ->
+    static auto try_create_impl(T&&, TIsRoot&&) ->
         decltype(try_create_impl<TIsRoot>(aux::type<T>{}));
 
     template<class T, class TIsRoot = std::false_type>
-    using blah = decltype(blah_impl(std::declval<T>(), std::declval<TIsRoot>()));
-
-    static auto is_creatable_impl(...) -> std::false_type;
-
-    template<class T, class TIsRoot>
-    static auto is_creatable_impl(T&&, TIsRoot&&) ->
-        aux::is_valid_expr<decltype(try_create_impl<TIsRoot>(aux::type<T>{}))>;
+    using try_create = decltype(try_create_impl(std::declval<T>(), std::declval<TIsRoot>()));
 
     template<class T, class TIsRoot = std::false_type>
-    using is_creatable =
-        #if defined(BOOST_DI_MSVC)
-            std::true_type;
-        #else
-            decltype(is_creatable_impl(std::declval<T>(), std::declval<TIsRoot>()));
-        #endif
+    using is_creatable = std::integral_constant<bool,
+        !std::is_same<decltype(try_create_impl(std::declval<T>(), std::declval<TIsRoot>())), void>::value
+    >;
 
 public:
     using deps = transform_t<TDeps...>;
@@ -3344,28 +3334,18 @@ class injector<TConfig, pool<>, TDeps...>
            )
        ), T>::value, T>;
 
-    static auto is_creatable_impl(...) -> std::false_type;
+    static auto try_create_impl(...) -> void;
 
     template<class T, class TIsRoot>
-    static auto is_creatable_impl(T&&, TIsRoot&&) ->
-        aux::is_valid_expr<decltype(try_create_impl<TIsRoot>(aux::type<T>{}))>;
+    static auto try_create_impl(T&&, TIsRoot&&) -> decltype(try_create_impl<TIsRoot>(aux::type<T>{}));
 
     template<class T, class TIsRoot = std::false_type>
-    using is_creatable =
-        #if defined(BOOST_DI_MSVC)
-            std::true_type;
-        #else
-            decltype(is_creatable_impl(std::declval<T>(), std::declval<TIsRoot>()));
-        #endif
-
-    static auto blah_impl(...) -> void;
-
-    template<class T, class TIsRoot>
-    static auto blah_impl(T&&, TIsRoot&&) ->
-        decltype(try_create_impl<TIsRoot>(aux::type<T>{}));
+    using try_create = decltype(try_create_impl(std::declval<T>(), std::declval<TIsRoot>()));
 
     template<class T, class TIsRoot = std::false_type>
-    using blah = decltype(blah_impl(std::declval<T>(), std::declval<TIsRoot>()));
+    using is_creatable = std::integral_constant<bool,
+        !std::is_same<decltype(try_create_impl(std::declval<T>(), std::declval<TIsRoot>())), void>::value
+    >;
 
 public:
     using deps = transform_t<TDeps...>;
@@ -3634,18 +3614,18 @@ public:
     > injector(const BOOST_DI_CORE_INJECTOR(TConfig, TArgs...)& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, core::pool<>, T...>(injector) {
             #if !defined(BOOST_DI_MSVC)
-                using namespace detail;
-                int _[]{0, (
-                    create<T>(
-                        std::integral_constant<bool,
-                            core::is_creatable_impl<
-                                typename std::is_same<concepts::configurable<TConfig>, std::true_type>::type
-                              , core::injector<TConfig, decltype(((TConfig*)0)->policies()), TArgs...>
-                              , T
-                            >::value
-                        >{}
-                    )
-                , 0)...}; (void)_;
+            using namespace detail;
+            int _[]{0, (
+            create<T>(
+                std::integral_constant<bool,
+                    core::is_creatable_impl<
+                        T
+                      , core::injector<TConfig, decltype(((TConfig*)0)->policies()), TArgs...>
+                      , typename std::is_same<concepts::configurable<TConfig>, std::true_type>::type
+                    >::value
+                >{}
+            )
+            , 0)...}; (void)_;
             #endif
     }
 

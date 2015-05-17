@@ -32,7 +32,7 @@ template<
             TInitialization
           , TMemory
           , TGiven
-          , typename TInjector::template blah<TCtor>...
+          , typename TInjector::template try_create<TCtor>...
         >::value
       , std::conditional_t<std::is_same<TMemory, type_traits::stack>::value, TGiven, TGiven*>
     >;

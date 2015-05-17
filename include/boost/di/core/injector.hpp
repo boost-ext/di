@@ -127,28 +127,19 @@ class injector : public pool<transform_t<TDeps...>>
        #endif
        , T>;
 
-    static auto blah_impl(...) -> void;
+    static auto try_create_impl(...) -> void;
 
     template<class T, class TIsRoot>
-    static auto blah_impl(T&&, TIsRoot&&) ->
+    static auto try_create_impl(T&&, TIsRoot&&) ->
         decltype(try_create_impl<TIsRoot>(aux::type<T>{}));
 
     template<class T, class TIsRoot = std::false_type>
-    using blah = decltype(blah_impl(std::declval<T>(), std::declval<TIsRoot>()));
-
-    static auto is_creatable_impl(...) -> std::false_type;
-
-    template<class T, class TIsRoot>
-    static auto is_creatable_impl(T&&, TIsRoot&&) ->
-        aux::is_valid_expr<decltype(try_create_impl<TIsRoot>(aux::type<T>{}))>;
+    using try_create = decltype(try_create_impl(std::declval<T>(), std::declval<TIsRoot>()));
 
     template<class T, class TIsRoot = std::false_type>
-    using is_creatable =
-        #if defined(BOOST_DI_MSVC)
-            std::true_type;
-        #else
-            decltype(is_creatable_impl(std::declval<T>(), std::declval<TIsRoot>()));
-        #endif
+    using is_creatable = std::integral_constant<bool,
+        !std::is_same<decltype(try_create_impl(std::declval<T>(), std::declval<TIsRoot>())), void>::value
+    >;
 
 public:
     using deps = transform_t<TDeps...>;
@@ -349,28 +340,18 @@ class injector<TConfig, pool<>, TDeps...>
            )
        ), T>::value, T>;
 
-    static auto is_creatable_impl(...) -> std::false_type;
+    static auto try_create_impl(...) -> void;
 
     template<class T, class TIsRoot>
-    static auto is_creatable_impl(T&&, TIsRoot&&) ->
-        aux::is_valid_expr<decltype(try_create_impl<TIsRoot>(aux::type<T>{}))>;
+    static auto try_create_impl(T&&, TIsRoot&&) -> decltype(try_create_impl<TIsRoot>(aux::type<T>{}));
 
     template<class T, class TIsRoot = std::false_type>
-    using is_creatable =
-        #if defined(BOOST_DI_MSVC)
-            std::true_type;
-        #else
-            decltype(is_creatable_impl(std::declval<T>(), std::declval<TIsRoot>()));
-        #endif
-
-    static auto blah_impl(...) -> void;
-
-    template<class T, class TIsRoot>
-    static auto blah_impl(T&&, TIsRoot&&) ->
-        decltype(try_create_impl<TIsRoot>(aux::type<T>{}));
+    using try_create = decltype(try_create_impl(std::declval<T>(), std::declval<TIsRoot>()));
 
     template<class T, class TIsRoot = std::false_type>
-    using blah = decltype(blah_impl(std::declval<T>(), std::declval<TIsRoot>()));
+    using is_creatable = std::integral_constant<bool,
+        !std::is_same<decltype(try_create_impl(std::declval<T>(), std::declval<TIsRoot>())), void>::value
+    >;
 
 public:
     using deps = transform_t<TDeps...>;
