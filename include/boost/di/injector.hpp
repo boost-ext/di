@@ -17,13 +17,13 @@
 namespace boost { namespace di { inline namespace v1 { namespace detail {
 
 template<class>
-void create(const std::false_type&) { }
+void create(const std::true_type&) { }
 
 template<class>
 BOOST_DI_CONCEPTS_CREATABLE_ATTR
 void
     create
-(const std::true_type&) { }
+(const std::false_type&) { }
 
 } // namespace detail
 
@@ -48,20 +48,20 @@ public:
         #endif
     > injector(const BOOST_DI_CORE_INJECTOR(TConfig, TArgs...)& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, core::pool<>, T...>(injector) {
-/*            #if !defined(BOOST_DI_MSVC)*/
-                //using namespace detail;
-                //int _[]{0, (
-                    //create<T>(
-                        //std::integral_constant<bool,
-                            //core::is_creatable_impl<
-                                //typename std::is_same<concepts::configurable<TConfig>, std::true_type>::type
-                              //, core::injector<TConfig, decltype(((TConfig*)0)->policies()), TArgs...>
-                              //, T
-                            //>::value
-                        //>{}
-                    //)
-                //, 0)...}; (void)_;
-            /*#endif*/
+            #if !defined(BOOST_DI_MSVC)
+                using namespace detail;
+                int _[]{0, (
+                    create<T>(
+                        std::integral_constant<bool,
+                            core::is_creatable_impl<
+                                typename std::is_same<concepts::configurable<TConfig>, std::true_type>::type
+                              , core::injector<TConfig, decltype(((TConfig*)0)->policies()), TArgs...>
+                              , T
+                            >::value
+                        >{}
+                    )
+                , 0)...}; (void)_;
+            #endif
     }
 
     #undef BOOST_DI_CORE_INJECTOR
