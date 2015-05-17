@@ -33,19 +33,19 @@ struct from_injector { };
 struct from_deps { };
 struct init { };
 
+template<class T, class TInjector>
+inline auto build(const TInjector& injector) noexcept {
+    return T{injector};
+}
+
 template<class T>
-decltype(auto) arg(const T& arg, const std::false_type&) noexcept {
+inline decltype(auto) arg(const T& arg, const std::false_type&) noexcept {
     return arg;
 }
 
 template<class T>
-decltype(auto) arg(const T& arg, const std::true_type&) noexcept {
+inline decltype(auto) arg(const T& arg, const std::true_type&) noexcept {
     return arg.configure();
-}
-
-template<class T, class TInjector>
-inline auto build(const TInjector& injector) noexcept {
-    return T{injector};
 }
 
 template<class TConfig, class TPolicies = pool<>, class... TDeps>
