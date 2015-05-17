@@ -2541,7 +2541,7 @@ struct is_referable_impl {
 template<class T, class TInjector>
 using is_referable = std::enable_if_t<is_referable_impl<T, TInjector>::value>;
 
-template<class T, class TInjector, class E>
+template<class T, class TInjector, class TError>
 struct is_creatable_impl {
     static constexpr auto value = TInjector::template is_creatable<T>::value;
 };
@@ -2551,14 +2551,14 @@ struct is_creatable_impl<T, TInjector, std::false_type> {
     static constexpr auto value = true;
 };
 
-template<class T, class TInjector, class E>
-using is_creatable = std::enable_if_t<is_creatable_impl<T, TInjector, E>::value>;
+template<class T, class TInjector, class TError>
+using is_creatable = std::enable_if_t<is_creatable_impl<T, TInjector, TError>::value>;
 
-template<class TParent, class TInjector, class E = std::false_type>
+template<class TParent, class TInjector, class TError = std::false_type>
 struct any_type {
     template<class T
            , class = is_not_same<T, TParent>
-           , class = is_creatable<T, TInjector, E>
+           , class = is_creatable<T, TInjector, TError>
     > operator T() {
         return injector_.create_impl(aux::type<T>{});
     }
@@ -2566,11 +2566,11 @@ struct any_type {
     const TInjector& injector_;
 };
 
-template<class TParent, class TInjector, class E = std::false_type>
+template<class TParent, class TInjector, class TError = std::false_type>
 struct any_type_ref {
     template<class T
            , class = is_not_same<T, TParent>
-           , class = is_creatable<T, TInjector, E>
+           , class = is_creatable<T, TInjector, TError>
     > operator T() {
         return injector_.create_impl(aux::type<T>{});
     }
@@ -2579,7 +2579,7 @@ struct any_type_ref {
         template<class T
                , class = is_not_same<T, TParent>
                , class = is_referable<T&&, TInjector>
-               , class = is_creatable<T&&, TInjector, E>
+               , class = is_creatable<T&&, TInjector, TError>
         > operator T&&() const {
             return injector_.create_impl(aux::type<T&&>{});
         }
@@ -2588,7 +2588,7 @@ struct any_type_ref {
     template<class T
            , class = is_not_same<T, TParent>
            , class = is_referable<T&, TInjector>
-           , class = is_creatable<T&, TInjector, E>
+           , class = is_creatable<T&, TInjector, TError>
     > operator T&() const {
         return injector_.create_impl(aux::type<T&>{});
     }
@@ -2596,7 +2596,7 @@ struct any_type_ref {
     template<class T
            , class = is_not_same<T, TParent>
            , class = is_referable<const T&, TInjector>
-           , class = is_creatable<const T&, TInjector, E>
+           , class = is_creatable<const T&, TInjector, TError>
     > operator const T&() const {
         return injector_.create_impl(aux::type<const T&>{});
     }
