@@ -57,7 +57,7 @@ public:
         class TConfig
       , class... TArgs
         #if defined(BOOST_DI_GCC)
-          , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>
+          , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>)
         #endif
     > injector(const BOOST_DI_CORE_INJECTOR(TConfig, TArgs...)& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, core::pool<>, T...>(injector) {
