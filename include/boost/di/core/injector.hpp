@@ -32,6 +32,7 @@ BOOST_DI_HAS_METHOD(call, call);
 struct from_injector { };
 struct from_deps { };
 struct init { };
+struct with_error { };
 
 template<class T, class TInjector>
 inline auto build(const TInjector& injector) noexcept {
@@ -60,6 +61,7 @@ class injector : public pool<transform_t<TDeps...>>
     template<class...> friend struct successful::provider;
     template<class, class> friend struct successful::any_type;
     template<class, class> friend struct successful::any_type_ref;
+    template<class, class, class> friend struct is_creatable_impl;
 
     using pool_t = pool<transform_t<TDeps...>>;
     using is_root_t = std::true_type;
@@ -95,11 +97,11 @@ class injector : public pool<transform_t<TDeps...>>
 
     template<class TIsRoot = std::false_type, class TParent>
     static auto try_create_impl(const aux::type<any_type_fwd<TParent>>&) ->
-        any_type<TParent, injector, std::true_type>;
+        any_type<TParent, injector, with_error>;
 
     template<class TIsRoot = std::false_type, class TParent>
     static auto try_create_impl(const aux::type<any_type_ref_fwd<TParent>>&) ->
-        any_type_ref<TParent, injector, std::true_type>;
+        any_type_ref<TParent, injector, with_error>;
 
     template<
         class TIsRoot = std::false_type
@@ -125,7 +127,6 @@ class injector : public pool<transform_t<TDeps...>>
        #endif
        , T, void>;
 
-                   public:
     static auto is_creatable_impl(...) -> std::false_type;
 
     template<class T, class TIsRoot>
@@ -285,6 +286,7 @@ class injector<TConfig, pool<>, TDeps...>
     template<class...> friend struct successful::provider;
     template<class, class> friend struct successful::any_type;
     template<class, class> friend struct successful::any_type_ref;
+    template<class, class, class> friend struct is_creatable_impl;
 
     using pool_t = pool<transform_t<TDeps...>>;
     using is_root_t = std::true_type;
@@ -308,17 +310,17 @@ class injector<TConfig, pool<>, TDeps...>
                  , typename TDependency::given
                  , TCtor
                  , injector
-               >{}
+               >{std::declval<injector>()}
            )
        ), T>::value, T, void>;
 
     template<class TIsRoot = std::false_type, class TParent>
     static auto try_create_impl(const aux::type<any_type_fwd<TParent>>&) ->
-        any_type<TParent, injector, std::true_type>;
+        any_type<TParent, injector, with_error>;
 
     template<class TIsRoot = std::false_type, class TParent>
     static auto try_create_impl(const aux::type<any_type_ref_fwd<TParent>>&) ->
-        any_type_ref<TParent, injector, std::true_type>;
+        any_type_ref<TParent, injector, with_error>;
 
     template<
         class TIsRoot = std::false_type
@@ -334,11 +336,10 @@ class injector<TConfig, pool<>, TDeps...>
                  , typename TDependency::given
                  , TCtor
                  , injector
-               >{}
+               >{std::declval<injector>()}
            )
        ), T>::value, T, void>;
 
-        public:
     static auto is_creatable_impl(...) -> std::false_type;
 
     template<class T, class TIsRoot>

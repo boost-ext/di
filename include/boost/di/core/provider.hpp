@@ -36,6 +36,8 @@ template<
         >::value
       , std::conditional_t<std::is_same<TMemory, type_traits::stack>::value, TGiven, TGiven*>
     >;
+
+    const TInjector& injector_;
 };
 
 template<class...>
