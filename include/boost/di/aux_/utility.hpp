@@ -15,18 +15,16 @@ struct _ { constexpr _(...) { } };
 
 namespace aux {
 
-struct none_t { };
-
 template<class...>
 struct type { };
+
+struct none_type { };
 
 template<class T, T>
 struct non_type { };
 
 template<class...>
-struct void_t {
-    using type = void;
-};
+struct void_t { using type = void; };
 
 template<class...>
 struct always : std::true_type { };
@@ -96,7 +94,7 @@ struct is_unique_impl<T1, T2, Ts...>
 { };
 
 template<class... Ts>
-using is_unique = is_unique_impl<none_t, Ts...>;
+using is_unique = is_unique_impl<none_type, Ts...>;
 
 }}}} // boost::di::v1::aux
 

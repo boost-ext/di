@@ -48,18 +48,16 @@ struct _ { constexpr _(...) { } };
 
 namespace aux {
 
-struct none_t { };
-
 template<class...>
 struct type { };
+
+struct none_type { };
 
 template<class T, T>
 struct non_type { };
 
 template<class...>
-struct void_t {
-    using type = void;
-};
+struct void_t { using type = void; };
 
 template<class...>
 struct always : std::true_type { };
@@ -129,7 +127,7 @@ struct is_unique_impl<T1, T2, Ts...>
 { };
 
 template<class... Ts>
-using is_unique = is_unique_impl<none_t, Ts...>;
+using is_unique = is_unique_impl<none_type, Ts...>;
 
 }}}} // boost::di::v1::aux
 
@@ -1553,7 +1551,7 @@ using scopable =
 #define BOOST_DI_CORE_DEPENDENCY_HPP
 
 #if !defined(BOOST_DI_CFG_DEPENDENCY_EXTENSIONS)
-    #define BOOST_DI_CFG_DEPENDENCY_EXTENSIONS ::boost::di::aux::none_t
+    #define BOOST_DI_CFG_DEPENDENCY_EXTENSIONS ::boost::di::aux::none_type
 #endif
 
 namespace boost { namespace di { inline namespace v1 { namespace core {

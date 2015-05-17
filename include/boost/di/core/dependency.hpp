@@ -16,7 +16,7 @@
 #include "boost/di/fwd.hpp"
 
 #if !defined(BOOST_DI_CFG_DEPENDENCY_EXTENSIONS)
-    #define BOOST_DI_CFG_DEPENDENCY_EXTENSIONS ::boost::di::aux::none_t
+    #define BOOST_DI_CFG_DEPENDENCY_EXTENSIONS ::boost::di::aux::none_type
 #endif
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
