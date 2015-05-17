@@ -103,18 +103,18 @@ test operator_and = [] {
 };
 
 test is_type_bound = [] {
-    expect(constructible_test(fake_policy<void, aux::none_t, aux::none_t, true>{}, is_bound<_>{}));
-    expect(!constructible_test(fake_policy<void, aux::none_t, aux::none_t, false>{}, is_bound<_>{}));
+    expect(constructible_test(fake_policy<void, aux::none_type, aux::none_type, true>{}, is_bound<_>{}));
+    expect(!constructible_test(fake_policy<void, aux::none_type, aux::none_type, false>{}, is_bound<_>{}));
 };
 
 test complex_opeartors = [] {
     using namespace operators;
     auto test = [](auto policy) { return constructible_test(policy, (std::is_integral<_>{} && std::is_same<_, int>{}) || is_bound<_>{}); };
-    expect(!test(fake_policy<void, aux::none_t, aux::none_t, false>{}));
-    expect(!test(fake_policy<double, aux::none_t, aux::none_t, false>{}));
-    expect(test(fake_policy<int, aux::none_t, aux::none_t, false>{}));
-    expect(test(fake_policy<int, aux::none_t, aux::none_t, true>{}));
-    expect(test(fake_policy<double, aux::none_t, aux::none_t, true>{}));
+    expect(!test(fake_policy<void, aux::none_type, aux::none_type, false>{}));
+    expect(!test(fake_policy<double, aux::none_type, aux::none_type, false>{}));
+    expect(test(fake_policy<int, aux::none_type, aux::none_type, false>{}));
+    expect(test(fake_policy<int, aux::none_type, aux::none_type, true>{}));
+    expect(test(fake_policy<double, aux::none_type, aux::none_type, true>{}));
 };
 
 }}}} // boost::di::v1::policies

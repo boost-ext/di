@@ -45,7 +45,7 @@ public:
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven&,
         BOOST_DI_REQUIRES_T(!has_call_operator<TGiven, const injector&>::value &&
-                            !has_call_operator<TGiven, const injector&, const aux::type<aux::none_t>&>::value)
+                            !has_call_operator<TGiven, const injector&, const aux::type<aux::none_type>&>::value)
     > {
         template<class>
         using is_referable = std::true_type;
@@ -136,7 +136,7 @@ public:
 
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven,
-        BOOST_DI_REQUIRES_T(has_call_operator<TGiven, const injector&, const aux::type<aux::none_t>&>::value &&
+        BOOST_DI_REQUIRES_T(has_call_operator<TGiven, const injector&, const aux::type<aux::none_type>&>::value &&
                            !has_result_type<TGiven>::value)
     > {
         template<class>

@@ -14,8 +14,8 @@ namespace boost { namespace di { inline namespace v1 {
 
 template<
     class T
-  , class TDependency = aux::none_t
-  , class TDeps = aux::none_t
+  , class TDependency = aux::none_type
+  , class TDeps = aux::none_type
   , bool  TResolve = true
 > struct fake_policy;
 

@@ -10,7 +10,6 @@
 namespace boost {
 template<class> class shared_ptr;
 namespace di { inline namespace v1 {
-namespace aux { struct none_t; }
 namespace core {
 template<class> struct any_type_fwd;
 template<class> struct any_type_ref_fwd;

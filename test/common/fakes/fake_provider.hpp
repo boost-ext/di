@@ -12,7 +12,7 @@
 
 namespace boost { namespace di { inline namespace v1 {
 
-template<class T = aux::none_t>
+template<class T = aux::none_type>
 struct fake_provider {
     T* get(const type_traits::heap& = {}) const noexcept {
         ++provide_calls();

@@ -50,7 +50,7 @@ template<
   , class TExpected
   , class TGiven = TExpected
   , class TName = no_name
-  , class TPriority = aux::none_t
+  , class TPriority = aux::none_type
 > struct dependency;
 
 struct dependency_base { };

@@ -139,7 +139,6 @@ using is_unique = is_unique_impl<none_type, Ts...>;
 namespace boost {
 template<class> class shared_ptr;
 namespace di { inline namespace v1 {
-namespace aux { struct none_t; }
 namespace core {
 template<class> struct any_type_fwd;
 template<class> struct any_type_ref_fwd;
@@ -302,14 +301,14 @@ struct function_traits
 template<class R, class... TArgs>
 struct function_traits<R(*)(TArgs...)> {
     using result_type = R;
-    using base_type = none_t;
+    using base_type = none_type;
     using args = type_list<TArgs...>;
 };
 
 template<class R, class... TArgs>
 struct function_traits<R(TArgs...)> {
     using result_type = R;
-    using base_type = none_t;
+    using base_type = none_type;
     using args = type_list<TArgs...>;
 };
 
@@ -1001,7 +1000,7 @@ public:
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven&,
         BOOST_DI_REQUIRES_T(!has_call_operator<TGiven, const injector&>::value &&
-                            !has_call_operator<TGiven, const injector&, const aux::type<aux::none_t>&>::value)
+                            !has_call_operator<TGiven, const injector&, const aux::type<aux::none_type>&>::value)
     > {
         template<class>
         using is_referable = std::true_type;
@@ -1092,7 +1091,7 @@ public:
 
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven,
-        BOOST_DI_REQUIRES_T(has_call_operator<TGiven, const injector&, const aux::type<aux::none_t>&>::value &&
+        BOOST_DI_REQUIRES_T(has_call_operator<TGiven, const injector&, const aux::type<aux::none_type>&>::value &&
                            !has_result_type<TGiven>::value)
     > {
         template<class>
@@ -1585,7 +1584,7 @@ template<
   , class TExpected
   , class TGiven = TExpected
   , class TName = no_name
-  , class TPriority = aux::none_t
+  , class TPriority = aux::none_type
 > struct dependency;
 
 struct dependency_base { };
