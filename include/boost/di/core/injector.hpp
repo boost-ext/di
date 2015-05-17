@@ -83,7 +83,7 @@ class injector : public pool<transform_t<TDeps...>>
                  , typename TDependency::given
                  , TCtor
                  , injector
-               >{std::declval<injector>()}
+               >{}
            )
        ), T>::value
        #if !defined(BOOST_DI_MSVC)
@@ -115,7 +115,7 @@ class injector : public pool<transform_t<TDeps...>>
                  , typename TDependency::given
                  , TCtor
                  , injector
-               >{std::declval<injector>()}
+               >{}
            )
        ), T>::value
        #if !defined(BOOST_DI_MSVC)
@@ -308,7 +308,7 @@ class injector<TConfig, pool<>, TDeps...>
                  , typename TDependency::given
                  , TCtor
                  , injector
-               >{std::declval<injector>()}
+               >{}
            )
        ), T>::value, T, void>;
 
@@ -334,7 +334,7 @@ class injector<TConfig, pool<>, TDeps...>
                  , typename TDependency::given
                  , TCtor
                  , injector
-               >{std::declval<injector>()}
+               >{}
            )
        ), T>::value, T, void>;
 

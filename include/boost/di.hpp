@@ -2810,20 +2810,16 @@ template<
 > struct try_provider<TExpected, TGiven, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
     using provider_t = decltype(std::declval<TInjector>().provider());
 
-    template<class TMemory, class... TArgs>
-    struct is_creatable {
-        static constexpr auto value =
-            provider_t::template is_creatable<TInitialization, TMemory, TGiven, TArgs...>::value;
-    };
-
     template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const -> std::enable_if_t<
-        //provider_t::template is_creatable<TInitialization, TMemory, TGiven, decltype(TInjector::try_create_impl(aux::type<TCtor>{}))...>::value
-        is_creatable<TMemory, decltype(TInjector::try_create_impl(aux::type<TCtor>{}))...>::value
+        provider_t::template is_creatable<
+            TInitialization
+          , TMemory
+          , TGiven
+          , decltype(TInjector::try_create_impl(aux::type<TCtor>{}))...
+        >::value
       , std::conditional_t<std::is_same<TMemory, type_traits::stack>::value, TGiven, TGiven*>
     >;
-
-    const TInjector& injector_;
 };
 
 template<class...>
@@ -3075,7 +3071,7 @@ class injector : public pool<transform_t<TDeps...>>
                  , typename TDependency::given
                  , TCtor
                  , injector
-               >{std::declval<injector>()}
+               >{}
            )
        ), T>::value
        #if !defined(BOOST_DI_MSVC)
@@ -3107,7 +3103,7 @@ class injector : public pool<transform_t<TDeps...>>
                  , typename TDependency::given
                  , TCtor
                  , injector
-               >{std::declval<injector>()}
+               >{}
            )
        ), T>::value
        #if !defined(BOOST_DI_MSVC)
@@ -3300,7 +3296,7 @@ class injector<TConfig, pool<>, TDeps...>
                  , typename TDependency::given
                  , TCtor
                  , injector
-               >{std::declval<injector>()}
+               >{}
            )
        ), T>::value, T, void>;
 
@@ -3326,7 +3322,7 @@ class injector<TConfig, pool<>, TDeps...>
                  , typename TDependency::given
                  , TCtor
                  , injector
-               >{std::declval<injector>()}
+               >{}
            )
        ), T>::value, T, void>;
 
