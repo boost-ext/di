@@ -28,6 +28,7 @@ public:
             virtual ~iprovider() noexcept = default;
             virtual TExpected* get(const type_traits::heap& = {}) const noexcept = 0;
             virtual type get(const type_traits::stack&) const noexcept = 0;
+            virtual iprovider* clone() const noexcept = 0;
         };
 
         template<class TInjector>
@@ -45,6 +46,10 @@ public:
                 return injector_.create_impl(aux::type<type>{});
             }
 
+            iprovider* clone() const noexcept override {
+                return new provider_impl(*this);
+            }
+
         private:
             TInjector injector_;
         };
@@ -55,7 +60,11 @@ public:
 
         template<class TInjector>
         explicit scope(const TInjector& injector) noexcept
-            : provider_{std::make_shared<provider_impl<TInjector>>(injector)}
+            : provider_{new provider_impl<TInjector>(injector)}
+        { }
+
+        explicit scope(const scope& other) noexcept
+            : provider_(other.provider_->clone())
         { }
 
         template<class T, class TProvider>
@@ -67,7 +76,7 @@ public:
         }
 
     private:
-        std::shared_ptr<iprovider> provider_;
+        std::unique_ptr<iprovider> provider_;
         typename TScope::template scope<TExpected, TGiven> scope_;
     };
 };
