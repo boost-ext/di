@@ -3168,7 +3168,7 @@ private:
 
     template<class TInjector, class... TArgs>
     explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
-        : pool_t{copyable<deps>{}, pool_t{build<TArgs>(injector)...}}
+        : pool_t{copyable<deps>{}, pool_t{TArgs(injector)...}}
         , config{*this}
     { }
 
@@ -3358,7 +3358,7 @@ private:
 
     template<class TInjector, class... TArgs>
     explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
-        : pool_t{copyable<deps>{}, pool_t{build<TArgs>(injector)...}}
+        : pool_t{copyable<deps>{}, pool_t{TArgs(injector)...}}
         , config{*this}
     { }
 
