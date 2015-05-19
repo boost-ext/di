@@ -83,7 +83,7 @@ class injector : public pool<transform_t<TDeps...>>
                  , typename TDependency::given
                  , TCtor
                  , injector
-               >{std::declval<injector>()}
+               >{}
            )
        ), T>::value
        #if !defined(BOOST_DI_MSVC)
@@ -138,6 +138,26 @@ public:
     void call(const TAction& action) {
         call_impl(action, deps{});
     }
+
+    template<class T>
+    struct try_create {
+        using type = std::conditional_t<is_creatable<T>::value, T, void>;
+    };
+
+    template<class TParent>
+    struct try_create<any_type_fwd<TParent>> {
+        using type = any_type<TParent, injector, std::true_type>;
+    };
+
+    template<class TParent>
+    struct try_create<any_type_ref_fwd<TParent>> {
+        using type = any_type_ref<TParent, injector, std::true_type>;
+    };
+
+    template<class TName, class T>
+    struct try_create<type_traits::named<TName, T>> {
+        using type = std::conditional_t<is_creatable<T, TName>::value, T, void>;
+    };
 
 private:
     template<class... TArgs>
@@ -278,7 +298,7 @@ class injector<TConfig, pool<>, TDeps...>
                  , typename TDependency::given
                  , TCtor
                  , injector
-               >{std::declval<injector>()}
+               >{}
            )
        ), T>::value
     >;
@@ -328,6 +348,26 @@ public:
     void call(const TAction& action) {
         call_impl(action, deps{});
     }
+
+    template<class T>
+    struct try_create {
+        using type = std::conditional_t<is_creatable<T>::value, T, void>;
+    };
+
+    template<class TParent>
+    struct try_create<any_type_fwd<TParent>> {
+        using type = any_type<TParent, injector, std::true_type>;
+    };
+
+    template<class TParent>
+    struct try_create<any_type_ref_fwd<TParent>> {
+        using type = any_type_ref<TParent, injector, std::true_type>;
+    };
+
+    template<class TName, class T>
+    struct try_create<type_traits::named<TName, T>> {
+        using type = std::conditional_t<is_creatable<T, TName>::value, T, void>;
+    };
 
 private:
     template<class... TArgs>

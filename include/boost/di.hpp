@@ -2880,39 +2880,16 @@ template<
 > struct try_provider<TExpected, TGiven, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
     using provider_t = decltype(std::declval<TInjector>().provider());
 
-    template<class TMemory, class... TArgs>
-    struct is_creatable {
-        static constexpr auto value =
-            provider_t::template is_creatable<TInitialization, TMemory, TGiven, TArgs...>::value;
-    };
-
-    template<class T>
-    struct get_arg {
-        using type = std::conditional_t<TInjector::template is_creatable<T>::value, T, void>;
-    };
-
-    template<class TParent>
-    struct get_arg<any_type_fwd<TParent>> {
-        using type = any_type<TParent, TInjector, std::true_type>;
-    };
-
-    template<class TParent>
-    struct get_arg<any_type_ref_fwd<TParent>> {
-        using type = any_type_ref<TParent, TInjector, std::true_type>;
-    };
-
-    template<class TName, class T>
-    struct get_arg<type_traits::named<TName, T>> {
-        using type = std::conditional_t<TInjector::template is_creatable<T, TName>::value, T, void>;
-    };
-
     template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const -> std::enable_if_t<
-        is_creatable<TMemory, typename get_arg<TCtor>::type...>::value
+        provider_t::template is_creatable<
+            TInitialization
+          , TMemory
+          , TGiven
+          , typename TInjector::template try_create<TCtor>::type...
+        >::value
       , std::conditional_t<std::is_same<TMemory, type_traits::stack>::value, TGiven, TGiven*>
     >;
-
-    const TInjector& injector_;
 };
 
 template<class...>
@@ -3103,7 +3080,7 @@ class injector : public pool<transform_t<TDeps...>>
                  , typename TDependency::given
                  , TCtor
                  , injector
-               >{std::declval<injector>()}
+               >{}
            )
        ), T>::value
        #if !defined(BOOST_DI_MSVC)
@@ -3158,6 +3135,26 @@ public:
     void call(const TAction& action) {
         call_impl(action, deps{});
     }
+
+    template<class T>
+    struct try_create {
+        using type = std::conditional_t<is_creatable<T>::value, T, void>;
+    };
+
+    template<class TParent>
+    struct try_create<any_type_fwd<TParent>> {
+        using type = any_type<TParent, injector, std::true_type>;
+    };
+
+    template<class TParent>
+    struct try_create<any_type_ref_fwd<TParent>> {
+        using type = any_type_ref<TParent, injector, std::true_type>;
+    };
+
+    template<class TName, class T>
+    struct try_create<type_traits::named<TName, T>> {
+        using type = std::conditional_t<is_creatable<T, TName>::value, T, void>;
+    };
 
 private:
     template<class... TArgs>
@@ -3298,7 +3295,7 @@ class injector<TConfig, pool<>, TDeps...>
                  , typename TDependency::given
                  , TCtor
                  , injector
-               >{std::declval<injector>()}
+               >{}
            )
        ), T>::value
     >;
@@ -3348,6 +3345,26 @@ public:
     void call(const TAction& action) {
         call_impl(action, deps{});
     }
+
+    template<class T>
+    struct try_create {
+        using type = std::conditional_t<is_creatable<T>::value, T, void>;
+    };
+
+    template<class TParent>
+    struct try_create<any_type_fwd<TParent>> {
+        using type = any_type<TParent, injector, std::true_type>;
+    };
+
+    template<class TParent>
+    struct try_create<any_type_ref_fwd<TParent>> {
+        using type = any_type_ref<TParent, injector, std::true_type>;
+    };
+
+    template<class TName, class T>
+    struct try_create<type_traits::named<TName, T>> {
+        using type = std::conditional_t<is_creatable<T, TName>::value, T, void>;
+    };
 
 private:
     template<class... TArgs>
