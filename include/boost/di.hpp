@@ -2872,17 +2872,15 @@ template<class...>
 struct try_provider;
 
 template<
-    class TExpected
-  , class TGiven
+    class TGiven
   , class TInjector
+  , class TProvider
   , class TInitialization
   , class... TCtor
-> struct try_provider<TExpected, TGiven, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
-    using provider_t = decltype(std::declval<TInjector>().provider());
-
+> struct try_provider<TGiven, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector, TProvider> {
     template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const -> std::enable_if_t<
-        provider_t::template is_creatable<
+        TProvider::template is_creatable<
             TInitialization
           , TMemory
           , TGiven
@@ -3076,10 +3074,10 @@ class injector : public pool<transform_t<TDeps...>>
        decltype(
            std::declval<TDependency>().template try_create<T>(
                try_provider<
-                   typename TDependency::expected
-                 , typename TDependency::given
+                   typename TDependency::given
                  , TCtor
                  , injector
+                 , decltype(((TConfig*)0)->provider())
                >{}
            )
        ), T>::value
@@ -3291,10 +3289,10 @@ class injector<TConfig, pool<>, TDeps...>
        decltype(
            std::declval<TDependency>().template try_create<T>(
                try_provider<
-                   typename TDependency::expected
-                 , typename TDependency::given
+                   typename TDependency::given
                  , TCtor
                  , injector
+                 , decltype(((TConfig*)0)->provider())
                >{}
            )
        ), T>::value

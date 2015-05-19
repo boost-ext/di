@@ -79,10 +79,10 @@ class injector : public pool<transform_t<TDeps...>>
        decltype(
            std::declval<TDependency>().template try_create<T>(
                try_provider<
-                   typename TDependency::expected
-                 , typename TDependency::given
+                   typename TDependency::given
                  , TCtor
                  , injector
+                 , decltype(((TConfig*)0)->provider())
                >{}
            )
        ), T>::value
@@ -294,10 +294,10 @@ class injector<TConfig, pool<>, TDeps...>
        decltype(
            std::declval<TDependency>().template try_create<T>(
                try_provider<
-                   typename TDependency::expected
-                 , typename TDependency::given
+                   typename TDependency::given
                  , TCtor
                  , injector
+                 , decltype(((TConfig*)0)->provider())
                >{}
            )
        ), T>::value
