@@ -58,10 +58,10 @@
     )
 
 #define BOOST_DI_GEN_TYPE_NAME(p, n) \
-    const ::boost::di::aux::type<arg##n, ::std::true_type>&
+    ::boost::di::aux::type<arg##n, ::std::true_type>
 
 #define BOOST_DI_GEN_TYPE_IMPL(n) \
-    const ::boost::di::aux::type<arg##n, ::std::false_type>&
+    ::boost::di::aux::type<arg##n, ::std::false_type>
 
 #define BOOST_DI_GEN_TYPE(p, n) \
     BOOST_DI_IF(BOOST_DI_IS_EMPTY(p), BOOST_DI_EAT, BOOST_DI_GEN_TYPE_IMPL)(n)

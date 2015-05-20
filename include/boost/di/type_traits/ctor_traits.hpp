@@ -108,7 +108,7 @@ template<class T>
 using arg_impl_t = typename arg_impl<T>::type;
 
 template<class T>
-struct arg<const aux::type<T, std::true_type>&> {
+struct arg<aux::type<T, std::true_type>> {
     using type = named<
         typename aux::function_traits<
             decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, name))
@@ -120,7 +120,7 @@ struct arg<const aux::type<T, std::true_type>&> {
 };
 
 template<class T>
-struct arg<const aux::type<T, std::false_type>&> {
+struct arg<aux::type<T, std::false_type>> {
     using type = arg_impl_t<typename aux::function_traits<
         decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, arg))
     >::args>;
