@@ -27,7 +27,7 @@ struct is_referable_impl {
 template<class T, class TInjector>
 using is_referable = std::enable_if_t<is_referable_impl<T, TInjector>::value>;
 
-template<class T, class TInjector, class TError>
+template<class T, class TInjector, class>
 struct is_creatable_impl {
     static constexpr auto value = TInjector::template is_creatable<T>::value;
 };
