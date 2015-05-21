@@ -1721,7 +1721,7 @@ public:
 };
 
 template<class T>
-using is_dependency = std::is_base_of<dependency_base, T>;
+struct is_dependency : std::is_base_of<dependency_base, T> { };
 
 }}}} // boost::di::v1::core
 
