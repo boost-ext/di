@@ -17,13 +17,13 @@
 #include "boost/di/scopes/unique.hpp"
 #include "boost/di/concepts/boundable.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace detail {
+namespace boost { namespace di { inline namespace v1 {
 
+namespace detail {
 template<class... Ts, BOOST_DI_REQUIRES(aux::is_unique<Ts...>::value)>
 auto any_of() {
     return aux::type_list<Ts...>{};
 }
-
 } // namespace detail
 
 template<class T1, class T2, class... Ts>

@@ -168,6 +168,12 @@ public:
     auto operator[](const override&) const noexcept {
         return dependency<TScope, TExpected, TGiven, TName, override>{*this};
     }
+
+    #if !defined(BOOST_DI_MSVC) // supports bind<i, impl>() using variable template
+        auto operator()() const noexcept {
+            return *this;
+        }
+    #endif
 };
 
 template<class T>

@@ -1711,6 +1711,12 @@ public:
     auto operator[](const override&) const noexcept {
         return dependency<TScope, TExpected, TGiven, TName, override>{*this};
     }
+
+    #if !defined(BOOST_DI_MSVC) // supports bind<i, impl>() using variable template
+        auto operator()() const noexcept {
+            return *this;
+        }
+    #endif
 };
 
 template<class T>
@@ -2436,13 +2442,13 @@ using boundable =
 #ifndef BOOST_DI_BINDINGS_HPP
 #define BOOST_DI_BINDINGS_HPP
 
-namespace boost { namespace di { inline namespace v1 { namespace detail {
+namespace boost { namespace di { inline namespace v1 {
 
+namespace detail {
 template<class... Ts, BOOST_DI_REQUIRES(aux::is_unique<Ts...>::value)>
 auto any_of() {
     return aux::type_list<Ts...>{};
 }
-
 } // namespace detail
 
 template<class T1, class T2, class... Ts>
