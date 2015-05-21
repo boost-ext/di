@@ -24,14 +24,20 @@ template<
   , class TInitialization
   , class... TCtor
 > struct try_provider<TGiven, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector, TProvider> {
+    template<class TMemory>
+    struct is_creatable {
+        static constexpr auto value =
+            TProvider::template is_creatable<
+                TInitialization
+              , TMemory
+              , TGiven
+              , typename TInjector::template try_create<TCtor>::type...
+            >::value;
+    };
+
     template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const -> std::enable_if_t<
-        TProvider::template is_creatable<
-            TInitialization
-          , TMemory
-          , TGiven
-          , typename TInjector::template try_create<TCtor>::type...
-        >::value
+        is_creatable<TMemory>::value
       , std::conditional_t<std::is_same<TMemory, type_traits::stack>::value, TGiven, TGiven*>
     >;
 };

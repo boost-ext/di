@@ -2823,14 +2823,20 @@ template<
   , class TInitialization
   , class... TCtor
 > struct try_provider<TGiven, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector, TProvider> {
+    template<class TMemory>
+    struct is_creatable {
+        static constexpr auto value =
+            TProvider::template is_creatable<
+                TInitialization
+              , TMemory
+              , TGiven
+              , typename TInjector::template try_create<TCtor>::type...
+            >::value;
+    };
+
     template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const -> std::enable_if_t<
-        TProvider::template is_creatable<
-            TInitialization
-          , TMemory
-          , TGiven
-          , typename TInjector::template try_create<TCtor>::type...
-        >::value
+        is_creatable<TMemory>::value
       , std::conditional_t<std::is_same<TMemory, type_traits::stack>::value, TGiven, TGiven*>
     >;
 };
@@ -3103,13 +3109,12 @@ class injector : public pool<transform_t<TDeps...>>
         -> aux::is_valid_expr<decltype(try_create_impl<T, TName, TIsRoot>())>;
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
-    using is_creatable =
-        #if defined(BOOST_DI_MSVC)
-            std::true_type
-        #else
-            decltype(is_creatable_impl(std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>()))
-        #endif
-    ;
+    #if defined(BOOST_DI_MSVC)
+        struct is_creatable : std::true_type { };
+    #else
+        using is_creatable =
+            decltype(is_creatable_impl(std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>()));
+    #endif
 
 public:
     using deps = transform_t<TDeps...>;
@@ -3169,7 +3174,7 @@ private:
 
     template<class TInjector, class... TArgs>
     explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
-        : pool_t{copyable<deps>{}, pool_t{TArgs(injector)...}}
+        : pool_t{copyable<deps>{}, pool_t{build<TArgs>(injector)...}}
         , config{*this}
     { }
 
@@ -3304,13 +3309,12 @@ class injector<TConfig, pool<>, TDeps...>
         -> aux::is_valid_expr<decltype(try_create_impl<T, TName, TIsRoot>())>;
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
-    using is_creatable =
-        #if defined(BOOST_DI_MSVC)
-            std::true_type
-        #else
-            decltype(is_creatable_impl(std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>()))
-        #endif
-    ;
+    #if defined(BOOST_DI_MSVC)
+        struct is_creatable : std::true_type { };
+    #else
+        using is_creatable =
+            decltype(is_creatable_impl(std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>()));
+    #endif
 
 public:
     using deps = transform_t<TDeps...>;
@@ -3370,7 +3374,7 @@ private:
 
     template<class TInjector, class... TArgs>
     explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
-        : pool_t{copyable<deps>{}, pool_t{TArgs(injector)...}}
+        : pool_t{copyable<deps>{}, pool_t{build<TArgs>(injector)...}}
         , config{*this}
     { }
 
