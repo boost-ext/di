@@ -14,7 +14,7 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
-template<class...>
+template<class, class, class, class>
 struct try_provider;
 
 template<
@@ -42,7 +42,7 @@ template<
     >;
 };
 
-template<class...>
+template<class, class, class, class, class>
 struct provider;
 
 template<
@@ -85,7 +85,7 @@ template<
 
 namespace successful {
 
-template<class...>
+template<class, class, class, class>
 struct provider;
 
 template<
