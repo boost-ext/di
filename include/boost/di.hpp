@@ -1712,17 +1712,16 @@ public:
         return dependency<TScope, TExpected, TGiven, TName, override>{*this};
     }
 
-    #if !defined(BOOST_DI_MSVC) // supports bind<i, impl>() using variable template
-        auto operator()() const noexcept {
+    // supports bind<i, impl>() when using variable templates
+    #if !defined(BOOST_DI_MSVC) && !defined(BOOST_DI_DISABLE_DEPENDENCY_CONVERSION)
+        const dependency& operator()() const noexcept {
             return *this;
         }
     #endif
 };
 
 template<class T>
-struct is_dependency
-    : std::is_base_of<dependency_base, T>
-{ };
+struct is_dependency : std::is_base_of<dependency_base, T> { };
 
 }}}} // boost::di::v1::core
 
