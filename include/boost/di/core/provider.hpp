@@ -9,11 +9,8 @@
 
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
-#include "boost/di/core/any_type.hpp"
-#include "boost/di/core/wrapper.hpp"
 #include "boost/di/concepts/creatable.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
-#include "boost/di/type_traits/ctor_traits.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 

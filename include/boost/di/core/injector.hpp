@@ -32,6 +32,7 @@ BOOST_DI_HAS_METHOD(call, call);
 struct from_injector { };
 struct from_deps { };
 struct init { };
+struct with_error { };
 
 template<class T, class TInjector>
 inline auto build(const TInjector& injector) noexcept {
@@ -59,6 +60,7 @@ class injector : public pool<transform_t<TDeps...>>
     template<class...> friend struct successful::provider;
     template<class, class> friend struct successful::any_type;
     template<class, class> friend struct successful::any_type_ref;
+    template<class, class, class> friend struct is_creatable_impl;
 
     using pool_t = pool<transform_t<TDeps...>>;
     using is_root_t = std::true_type;
@@ -99,6 +101,15 @@ class injector : public pool<transform_t<TDeps...>>
     static auto is_creatable_impl(T&&, TName&&, TIsRoot&&)
         -> aux::is_valid_expr<decltype(try_create_impl<T, TName, TIsRoot>())>;
 
+    template<class T, class TName = no_name, class TIsRoot = std::false_type>
+    using is_creatable =
+        #if defined(BOOST_DI_MSVC)
+            std::true_type
+        #else
+            decltype(is_creatable_impl(std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>()))
+        #endif
+    ;
+
 public:
     using deps = transform_t<TDeps...>;
 
@@ -111,17 +122,6 @@ public:
     explicit injector(const injector<TConfig_, TPolicies_, TDeps_...>& other) noexcept
         : injector{from_injector{}, other, deps{}}
     { }
-
-    template<class T, class TName = no_name, class TIsRoot = std::false_type>
-    struct is_creatable :
-        #if defined(BOOST_DI_MSVC)
-            std::true_type
-        #else
-            decltype(is_creatable_impl(
-                std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>())
-            )
-        #endif
-    { };
 
     template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>::value)>
     T create() const {
@@ -146,12 +146,12 @@ public:
 
     template<class TParent>
     struct try_create<any_type_fwd<TParent>> {
-        using type = any_type<TParent, injector, std::true_type>;
+        using type = any_type<TParent, injector, with_error>;
     };
 
     template<class TParent>
     struct try_create<any_type_ref_fwd<TParent>> {
-        using type = any_type_ref<TParent, injector, std::true_type>;
+        using type = any_type_ref<TParent, injector, with_error>;
     };
 
     template<class TName, class T>
@@ -274,6 +274,7 @@ class injector<TConfig, pool<>, TDeps...>
     template<class...> friend struct successful::provider;
     template<class, class> friend struct successful::any_type;
     template<class, class> friend struct successful::any_type_ref;
+    template<class, class, class> friend struct is_creatable_impl;
 
     using pool_t = pool<transform_t<TDeps...>>;
     using is_root_t = std::true_type;
@@ -309,6 +310,15 @@ class injector<TConfig, pool<>, TDeps...>
     static auto is_creatable_impl(T&&, TName&&, TIsRoot&&)
         -> aux::is_valid_expr<decltype(try_create_impl<T, TName, TIsRoot>())>;
 
+    template<class T, class TName = no_name, class TIsRoot = std::false_type>
+    using is_creatable =
+        #if defined(BOOST_DI_MSVC)
+            std::true_type
+        #else
+            decltype(is_creatable_impl(std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>()))
+        #endif
+    ;
+
 public:
     using deps = transform_t<TDeps...>;
 
@@ -317,21 +327,10 @@ public:
         : injector{from_deps{}, arg(args, has_configure<decltype(args)>{})...}
     { }
 
-    template<class TConfig_, class TP, class... TDeps_>
-    explicit injector(const injector<TConfig_, TP, TDeps_...>& other) noexcept
+    template<class TConfig_, class TPolicies_, class... TDeps_>
+    explicit injector(const injector<TConfig_, TPolicies_, TDeps_...>& other) noexcept
         : injector{from_injector{}, other, deps{}}
     { }
-
-    template<class T, class TName = no_name, class TIsRoot = std::false_type>
-    struct is_creatable :
-        #if defined(BOOST_DI_MSVC)
-            std::true_type
-        #else
-            decltype(is_creatable_impl(
-                std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>())
-            )
-        #endif
-    { };
 
     template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>::value)>
     T create() const {
@@ -356,12 +355,12 @@ public:
 
     template<class TParent>
     struct try_create<any_type_fwd<TParent>> {
-        using type = any_type<TParent, injector, std::true_type>;
+        using type = any_type<TParent, injector, with_error>;
     };
 
     template<class TParent>
     struct try_create<any_type_ref_fwd<TParent>> {
-        using type = any_type_ref<TParent, injector, std::true_type>;
+        using type = any_type_ref<TParent, injector, with_error>;
     };
 
     template<class TName, class T>

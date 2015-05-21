@@ -37,6 +37,12 @@ struct is_creatable_impl<T, TInjector, std::false_type> {
     static constexpr auto value = true;
 };
 
+template<class T, class TInjector>
+struct is_creatable_impl<T, TInjector, std::true_type> {
+    static constexpr auto value =
+        TInjector::template is_creatable<T>::value || TInjector::template is_creatable<T*>::value;
+};
+
 template<class T, class TInjector, class TError>
 using is_creatable = std::enable_if_t<is_creatable_impl<T, TInjector, TError>::value>;
 

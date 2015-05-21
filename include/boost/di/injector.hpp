@@ -25,19 +25,6 @@ void
     create
 (const std::false_type&) { }
 
-template<class...>
-struct is_creatable
-    : std::true_type
-{ };
-
-template<class TInjector, class T>
-struct is_creatable<std::true_type, TInjector, T>
-    : std::integral_constant<bool
-        , TInjector::template is_creatable<T>::value ||
-          TInjector::template is_creatable<T*>::value
-      >
-{ };
-
 } // namespace detail
 
 template<class... T>
@@ -62,16 +49,18 @@ public:
     > injector(const BOOST_DI_CORE_INJECTOR(TConfig, TArgs...)& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, core::pool<>, T...>(injector) {
             #if !defined(BOOST_DI_MSVC)
-                using namespace detail;
-                int _[]{0, (
-                    create<T>(
-                        detail::is_creatable<
-                            typename std::is_same<concepts::configurable<TConfig>, std::true_type>::type
+            using namespace detail;
+            int _[]{0, (
+                create<T>(
+                    std::integral_constant<bool,
+                        core::is_creatable_impl<
+                            T
                           , core::injector<TConfig, decltype(((TConfig*)0)->policies()), TArgs...>
-                          , T
-                        >{}
-                    )
-                , 0)...}; (void)_;
+                          , typename std::is_same<concepts::configurable<TConfig>, std::true_type>::type
+                        >::value
+                    >{}
+                )
+            , 0)...}; (void)_;
             #endif
     }
 
