@@ -62,7 +62,9 @@ inline decltype(auto) get_arg(const T& arg, const std::true_type&) noexcept {
            )::value
 
     #define BOOST_DI_APPLY_POLICY \
-        policy<pool_t>::template call<create_t, TName, TIsRoot>(((TConfig&)*this).policies(), dependency, ctor_t{}, std::true_type{});
+        policy<pool_t>::template call<create_t, TName, TIsRoot>( \
+            ((TConfig&)*this).policies(), dependency, ctor_t{}, std::true_type{} \
+        );
 
 #else
     #define BOOST_DI_TRY_POLICY
