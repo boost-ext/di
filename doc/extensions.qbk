@@ -9,6 +9,14 @@
 
 [section Extensions]
 
+[section Constructor Bindings]
+[import ../example/extensions/constructor_bindings.cpp]
+[constructor_bindings]
+[table
+    [[Full code example: [@example/extensions/constructor_bindings.cpp]]]
+]
+[endsect]
+
 [section Contextual Bindings]
 [import ../example/extensions/contextual_bindings.cpp]
 [contextual_bindings]
