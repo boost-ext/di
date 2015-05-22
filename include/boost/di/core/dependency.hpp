@@ -169,7 +169,7 @@ public:
         return dependency<TScope, TExpected, TGiven, TName, override>{*this};
     }
 
-    // supports bind<i, impl>() when using variable templates
+    // support for bind<i, impl>() when using variable templates
     #if !defined(BOOST_DI_MSVC) && !defined(BOOST_DI_DISABLE_DEPENDENCY_CONVERSION)
         const dependency& operator()() const noexcept {
             return *this;
