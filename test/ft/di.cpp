@@ -762,3 +762,25 @@ test smart_pointers = [] {
     injector.create<c>();
 };
 
+test cross_platform_bind = [] {
+    constexpr auto i = 42;
+
+    struct c {
+        c(int i_, std::unique_ptr<i1> i1_)
+            : i_(i_), i1_(std::move(i1_))
+        { }
+
+        int i_ = 0;
+        std::unique_ptr<i1> i1_;
+    };
+
+    auto injector = di::make_injector(
+        di::bind<i1, impl1>() // cross platform call dependency extension
+      , di::bind<int>.to(i)
+    );
+
+    auto object = injector.create<c>();
+    expect_eq(i, object.i_);
+    expect(dynamic_cast<impl1*>(object.i1_.get()));
+};
+

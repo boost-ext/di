@@ -16,7 +16,8 @@
 #include "boost/di/fwd.hpp"
 
 #if !defined(BOOST_DI_CFG_DEPENDENCY_EXTENSIONS)
-    #define BOOST_DI_CFG_DEPENDENCY_EXTENSIONS ::boost::di::aux::none_type
+    #include "boost/di/extensions/dependency/cross_platform_call.hpp"
+    #define BOOST_DI_CFG_DEPENDENCY_EXTENSIONS ::boost::di::v1::extensions::dependency::cross_platform_call
 #endif
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
@@ -45,14 +46,6 @@ struct dependency_impl<
 
 struct override { };
 
-template<
-    class TScope
-  , class TExpected
-  , class TGiven = TExpected
-  , class TName = no_name
-  , class TPriority = aux::none_type
-> struct dependency;
-
 struct dependency_base { };
 
 template<class I, class Impl>
@@ -76,7 +69,8 @@ template<
           dependency_concept<TExpected, TName>
         , dependency<TScope, TExpected, TGiven, TName, TPriority>
       >
-    , BOOST_DI_CFG_DEPENDENCY_EXTENSIONS {
+    , BOOST_DI_CFG_DEPENDENCY_EXTENSIONS::template
+          extension<dependency<TScope, TExpected, TGiven, TName, TPriority>> {
 private:
     template<class T>
     using is_not_narrowed = std::integral_constant<bool,
@@ -168,13 +162,6 @@ public:
     auto operator[](const override&) const noexcept {
         return dependency<TScope, TExpected, TGiven, TName, override>{*this};
     }
-
-    // support for bind<i, impl>() when using variable templates
-    #if !defined(BOOST_DI_MSVC) && !defined(BOOST_DI_DISABLE_DEPENDENCY_CONVERSION)
-        const dependency& operator()() const noexcept {
-            return *this;
-        }
-    #endif
 };
 
 template<class T>
