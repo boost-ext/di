@@ -169,7 +169,6 @@ int main() {
         )
     );
 
-            }
     injector.create<a>();
 }
 

@@ -48,6 +48,7 @@ di/examples/custom_policy.html
 di/examples/custom_provider.html
 di/examples/pool_provider.html
 di/extensions.html
+di/extensions/constructor_bindings.html
 di/extensions/contextual_bindings.html
 di/extensions/containers.html
 di/extensions/factory_assisted_injection.html
