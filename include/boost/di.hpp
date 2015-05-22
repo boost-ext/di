@@ -386,20 +386,23 @@ public:
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_ATTR_ERROR(...) [[deprecated(__VA_ARGS__)]]
     #define BOOST_DI_CONSTEXPR constexpr
-    #define BOOST_DI_LIKELY
+    #define BOOST_DI_LIKELY(...) __builtin_expect((__VA_ARGS__), 1)
+    #define BOOST_DI_UNLIKELY(...) __builtin_expect((__VA_ARGS__), 0)
 #elif defined(BOOST_DI_GCC)
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_ATTR_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
     #define BOOST_DI_CONSTEXPR constexpr
-    #define BOOST_DI_LIKELY
+    #define BOOST_DI_LIKELY(...) __builtin_expect((__VA_ARGS__), 1)
+    #define BOOST_DI_UNLIKELY(...) __builtin_expect((__VA_ARGS__), 0)
 #elif defined(BOOST_DI_MSVC)
+    #pragma warning(disable : 4503) // decorated name length exceeded, name was truncated
+    #pragma warning(disable : 4822) // local class member function does not have a body
+
     #define BOOST_DI_UNUSED
     #define BOOST_DI_ATTR_ERROR(...) __declspec(deprecated(__VA_ARGS__))
     #define BOOST_DI_CONSTEXPR inline
-    #define BOOST_DI_LIKELY
-
-    #pragma warning(disable : 4503) // decorated name length exceeded, name was truncated
-    #pragma warning(disable : 4822) // local class member function does not have a body
+    #define BOOST_DI_LIKELY(...)
+    #define BOOST_DI_UNLIKELY(...)
 #endif
 
 #endif
@@ -737,7 +740,7 @@ public:
 
         template<class, class TProvider>
         auto create(const TProvider& provider) {
-            if (!get_instance()) {
+            if (BOOST_DI_UNLIKELY(!get_instance())) {
                 get_instance() = std::shared_ptr<T>{provider.get()};
             }
             return wrappers::shared<T>{get_instance()};
@@ -914,7 +917,7 @@ public:
             }
 
             iprovider* clone() const noexcept override {
-                return new provider_impl(*this);
+                return new provider_impl(*this); // non-ownership pointer
             }
 
         private:
@@ -2193,7 +2196,7 @@ public:
 
         template<class, class TProvider>
         auto create(const TProvider& provider) {
-            if (in_scope_ && !object_) {
+            if (BOOST_DI_LIKELY(in_scope_) && BOOST_DI_UNLIKELY(!object_)) {
                 object_ = std::shared_ptr<T>{provider.get()};
             }
             return wrappers::shared<T>{object_};
@@ -2228,7 +2231,7 @@ public:
 
         template<class, class TProvider>
         auto create(const TProvider& provider) {
-            if (!object_) {
+            if (BOOST_DI_UNLIKELY(!object_)) {
                 object_ = std::shared_ptr<T>{provider.get()};
             }
             return wrappers::shared<T>{object_};

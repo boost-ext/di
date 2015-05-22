@@ -45,7 +45,7 @@ public:
             }
 
             iprovider* clone() const noexcept override {
-                return new provider_impl(*this);
+                return new provider_impl(*this); // non-ownership pointer
             }
 
         private:

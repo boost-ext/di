@@ -8,6 +8,7 @@
 #define BOOST_DI_SCOPES_SESSION_HPP
 
 #include <memory>
+#include "boost/di/aux_/compiler_specific.hpp"
 #include "boost/di/wrappers/shared.hpp"
 #include "boost/di/fwd.hpp" // no_name
 
@@ -43,7 +44,7 @@ public:
 
         template<class, class TProvider>
         auto create(const TProvider& provider) {
-            if (in_scope_ && !object_) {
+            if (BOOST_DI_LIKELY(in_scope_) && BOOST_DI_UNLIKELY(!object_)) {
                 object_ = std::shared_ptr<T>{provider.get()};
             }
             return wrappers::shared<T>{object_};

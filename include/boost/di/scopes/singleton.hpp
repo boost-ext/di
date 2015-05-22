@@ -7,6 +7,8 @@
 #ifndef BOOST_DI_SCOPES_SINGLETON_HPP
 #define BOOST_DI_SCOPES_SINGLETON_HPP
 
+#include <memory>
+#include "boost/di/aux_/compiler_specific.hpp"
 #include "boost/di/wrappers/shared.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace scopes {
@@ -25,7 +27,7 @@ public:
 
         template<class, class TProvider>
         auto create(const TProvider& provider) {
-            if (!get_instance()) {
+            if (BOOST_DI_UNLIKELY(!get_instance())) {
                 get_instance() = std::shared_ptr<T>{provider.get()};
             }
             return wrappers::shared<T>{get_instance()};
