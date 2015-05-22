@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_SCOPES_SINGLETON_HPP
 #define BOOST_DI_SCOPES_SINGLETON_HPP
 
-#include <memory>
 #include "boost/di/wrappers/shared.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace scopes {

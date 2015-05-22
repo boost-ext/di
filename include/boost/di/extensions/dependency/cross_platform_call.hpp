@@ -23,6 +23,8 @@ struct cross_platform_call {
     };
 };
 
+#define BOOST_DI_CFG_DEPENDENCY_EXTENSIONS ::boost::di::v1::extensions::dependency::cross_platform_call
+
 #endif
 
 }}}}} // boost::di::v1::extensions::dependency

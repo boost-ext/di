@@ -15,11 +15,6 @@
 #include "boost/di/concepts/scopable.hpp"
 #include "boost/di/fwd.hpp"
 
-#if !defined(BOOST_DI_CFG_DEPENDENCY_EXTENSIONS)
-    #include "boost/di/extensions/dependency/cross_platform_call.hpp"
-    #define BOOST_DI_CFG_DEPENDENCY_EXTENSIONS ::boost::di::v1::extensions::dependency::cross_platform_call
-#endif
-
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
 BOOST_DI_HAS_METHOD(configure, configure);

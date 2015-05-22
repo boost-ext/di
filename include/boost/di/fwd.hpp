@@ -19,13 +19,9 @@ struct no_name {
 
 class config;
 
-template<class...>
-class injector;
+template<class...> class injector;
 
-namespace aux {
-    struct none_type;
-};
-
+namespace aux { struct none_type; }
 namespace core {
 
 template<class> struct any_type_fwd;

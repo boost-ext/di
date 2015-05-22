@@ -7,8 +7,6 @@
 #ifndef BOOST_DI_SCOPES_EXPOSED_HPP
 #define BOOST_DI_SCOPES_EXPOSED_HPP
 
-#include <memory>
-#include <type_traits>
 #include "boost/di/scopes/deduce.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace scopes {

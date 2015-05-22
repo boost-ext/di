@@ -7,16 +7,24 @@
 #
 
 main() {
-    genereate_pph() {
+    generate_pph() {
         echo $1 >> $2/tmp.hpp
         cat $1 | egrep "^#include" | grep "boost\/di" | while read include; do
             file=`echo $include | sed "s/[^<^\"]*[\"<]\([^>\"]*\)[\">].*/\1/"`
 
             if [[ "`cat $2/tmp.hpp | grep $file`" == "" ]]; then
-                genereate_pph $file $2
+                generate_pph $file $2
                 cat $file | egrep "^#include" | grep -v "boost\/di" >> $2/includes.hpp
                 echo >> $2/pph.hpp
-                tail -n +7 $file | head -n -1 | egrep -v "^#include" | cat -s >> $2/pph.hpp
+                tail -n +7 $file | head -n -1 | egrep -v "^#include" | cat -s > $2/pph.hpp.tmp
+                ( IFS=''
+                while read -r line; do
+                    if [[ "$line" =~ "#include" ]]; then
+                        cat "`echo $line | sed 's/.*#include \"\(.*\)\"/\1/'`" | tail -n +7 | head -n -1
+                    else
+                        echo -e $line
+                    fi
+                done < $2/pph.hpp.tmp) >> $2/pph.hpp
             fi
         done
     }
@@ -60,7 +68,7 @@ main() {
     echo
     echo "#else"
     echo
-    genereate_pph "boost/di.hpp" "$tmp_dir"
+    generate_pph "boost/di.hpp" "$tmp_dir"
     cat $tmp_dir/includes.hpp | sort -u
     cat $tmp_dir/pph.hpp
     echo

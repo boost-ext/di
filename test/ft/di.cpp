@@ -8,6 +8,7 @@
 #if (__has_include(<boost/shared_ptr.hpp>))
     #include <boost/shared_ptr.hpp>
 #endif
+#include "boost/di/extensions/dependency/cross_platform_call.hpp"
 #include "boost/di.hpp"
 #include "boost/di/providers/heap.hpp"
 #include "boost/di/policies/constructible.hpp"
