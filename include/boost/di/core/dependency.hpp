@@ -56,6 +56,11 @@ struct bind : dependency<scopes::deduce, I, Impl> {
     };
 };
 
+template<class TDependency, class... Ts>
+struct extensions
+    : Ts::template extension<TDependency>...
+{ };
+
 template<
     class TScope
   , class TExpected
@@ -69,8 +74,13 @@ template<
           dependency_concept<TExpected, TName>
         , dependency<TScope, TExpected, TGiven, TName, TPriority>
       >
-    , BOOST_DI_CFG_DEPENDENCY_EXTENSIONS::template
-          extension<dependency<TScope, TExpected, TGiven, TName, TPriority>> {
+    #if defined(BOOST_DI_CFG_DEPENDENCY_EXTENSIONS) && !BOOST_DI_IS_EMPTY(BOOST_DI_CFG_DEPENDENCY_EXTENSIONS)
+    , extensions<
+          dependency<TScope, TExpected, TGiven, TName, TPriority>
+        , BOOST_DI_CFG_DEPENDENCY_EXTENSIONS
+      >
+    #endif
+{
 private:
     template<class T>
     using is_not_narrowed = std::integral_constant<bool,

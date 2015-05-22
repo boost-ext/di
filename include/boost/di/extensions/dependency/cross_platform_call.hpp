@@ -10,7 +10,7 @@
 namespace boost { namespace di { inline namespace v1 { namespace extensions { namespace dependency {
 
 /**
- * Supports for bind<i, impl>() when using variable templates
+ * Support for di::bind<i, impl>() when using variable templates
  */
 struct cross_platform_call {
     template<class TDependency>

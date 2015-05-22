@@ -137,16 +137,10 @@ using is_unique = is_unique_impl<none_type, Ts...>;
 #define BOOST_DI_FWD_HPP
 
 namespace boost {
+
 template<class> class shared_ptr;
+
 namespace di { inline namespace v1 {
-namespace core {
-template<class> struct any_type_fwd;
-template<class> struct any_type_ref_fwd;
-} // core
-namespace providers {
-class heap;
-class stack_over_heap;
-} // providers
 
 struct no_name {
     const char* operator()() const noexcept { return nullptr; }
@@ -156,6 +150,26 @@ class config;
 
 template<class...>
 class injector;
+
+namespace aux {
+    struct none_type;
+};
+
+namespace core {
+
+template<class> struct any_type_fwd;
+template<class> struct any_type_ref_fwd;
+
+template<
+    class TScope
+  , class TExpected
+  , class TGiven = TExpected
+  , class TName = no_name
+  , class TPriority = aux::none_type
+> struct dependency;
+} // core
+
+namespace providers { class heap; class stack_over_heap; } // providers
 
 }}} // boost::di::v1
 
@@ -1559,7 +1573,8 @@ using scopable =
 #define BOOST_DI_CORE_DEPENDENCY_HPP
 
 #if !defined(BOOST_DI_CFG_DEPENDENCY_EXTENSIONS)
-    #define BOOST_DI_CFG_DEPENDENCY_EXTENSIONS ::boost::di::aux::none_type
+    #include "boost/di/extensions/dependency/cross_platform_call.hpp"
+    #define BOOST_DI_CFG_DEPENDENCY_EXTENSIONS ::boost::di::v1::extensions::dependency::cross_platform_call
 #endif
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
@@ -1588,14 +1603,6 @@ struct dependency_impl<
 
 struct override { };
 
-template<
-    class TScope
-  , class TExpected
-  , class TGiven = TExpected
-  , class TName = no_name
-  , class TPriority = aux::none_type
-> struct dependency;
-
 struct dependency_base { };
 
 template<class I, class Impl>
@@ -1605,6 +1612,13 @@ struct bind : dependency<scopes::deduce, I, Impl> {
         using dependency<scopes::deduce, I, Impl, T>::dependency;
     };
 };
+
+template<class TDependency, class... Ts>
+struct extensions
+    : Ts::template extension<TDependency>...
+{ };
+
+#define EXP(...) BOOST_DI_IS_EMPTY(__VA_ARGS__)
 
 template<
     class TScope
@@ -1619,7 +1633,13 @@ template<
           dependency_concept<TExpected, TName>
         , dependency<TScope, TExpected, TGiven, TName, TPriority>
       >
-    , BOOST_DI_CFG_DEPENDENCY_EXTENSIONS {
+    #if defined(BOOST_DI_CFG_DEPENDENCY_EXTENSIONS) && EXP(BOOST_DI_CFG_DEPENDENCY_EXTENSIONS)
+    , extensions<
+          dependency<TScope, TExpected, TGiven, TName, TPriority>
+        , BOOST_DI_CFG_DEPENDENCY_EXTENSIONS
+      >
+    #endif
+{
 private:
     template<class T>
     using is_not_narrowed = std::integral_constant<bool,
@@ -1711,13 +1731,6 @@ public:
     auto operator[](const override&) const noexcept {
         return dependency<TScope, TExpected, TGiven, TName, override>{*this};
     }
-
-    // supports bind<i, impl>() when using variable templates
-    #if !defined(BOOST_DI_MSVC) && !defined(BOOST_DI_DISABLE_DEPENDENCY_CONVERSION)
-        const dependency& operator()() const noexcept {
-            return *this;
-        }
-    #endif
 };
 
 template<class T>
@@ -3074,7 +3087,9 @@ inline decltype(auto) get_arg(const T& arg, const std::true_type&) noexcept {
            )::value
 
     #define BOOST_DI_APPLY_POLICY \
-        policy<pool_t>::template call<create_t, TName, TIsRoot>(((TConfig&)*this).policies(), dependency, ctor_t{}, std::true_type{});
+        policy<pool_t>::template call<create_t, TName, TIsRoot>( \
+            ((TConfig&)*this).policies(), dependency, ctor_t{}, std::true_type{} \
+        );
 
 #else
     #define BOOST_DI_TRY_POLICY
