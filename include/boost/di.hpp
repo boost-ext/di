@@ -401,8 +401,8 @@ public:
     #define BOOST_DI_UNUSED
     #define BOOST_DI_ATTR_ERROR(...) __declspec(deprecated(__VA_ARGS__))
     #define BOOST_DI_CONSTEXPR inline
-    #define BOOST_DI_LIKELY(...)
-    #define BOOST_DI_UNLIKELY(...)
+    #define BOOST_DI_LIKELY(...) __VA_ARGS__
+    #define BOOST_DI_UNLIKELY(...) __VA_ARGS__
 #endif
 
 #endif
