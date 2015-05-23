@@ -1723,6 +1723,15 @@ public:
     auto operator[](const override&) const noexcept {
         return dependency<TScope, TExpected, TGiven, TName, override>{*this};
     }
+
+    /**
+     * Support for `di::bind<i, impl>()` when using variable templates
+     */
+    #if !defined(BOOST_DI_MSVC) && !defined(BOOST_DI_DISABLE_DEPENDENCY_CONVERSION)
+        const dependency& operator()() const noexcept {
+            return *this;
+        }
+    #endif
 };
 
 template<class T>

@@ -25,11 +25,11 @@
 ]
 [endsect]
 
-[section Containers]
-[import ../example/extensions/containers.cpp]
-[containers]
+[section Container Bingings]
+[import ../example/extensions/container_bindings.cpp]
+[container_bindings]
 [table
-    [[Full code example: [@example/extensions/containers.cpp]]]
+    [[Full code example: [@example/extensions/container_bindings.cpp]]]
 ]
 [endsect]
 
