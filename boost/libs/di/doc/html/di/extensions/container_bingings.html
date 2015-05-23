@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title>Containers</title>
+<title>Container Bingings</title>
 <link rel="stylesheet" href="../../../../../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="../../index.html" title="Boost.DI (Dependency Injection) C++14">
@@ -24,13 +24,13 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="di.extensions.containers"></a><a class="link" href="containers.html" title="Containers">Containers</a>
+<a name="di.extensions.container_bingings"></a><a class="link" href="container_bingings.html" title="Container Bingings">Container Bingings</a>
 </h3></div></div></div>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">/</span><span class="identifier">aux_</span><span class="special">/</span><span class="identifier">type_traits</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
 <span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">{</span> <span class="keyword">inline</span> <span class="keyword">namespace</span> <span class="identifier">v1</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">aux</span> <span class="special">{</span>
 
-<a class="co" name="di.extensions.containers.c0" href="containers.html#di.extensions.containers.c1"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<a class="co" name="di.extensions.container_bingings.c0" href="container_bingings.html#di.extensions.container_bingings.c1"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">deref_type</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&gt;</span> <span class="special">{</span>
     <span class="keyword">using</span> <span class="identifier">type</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">deref_type</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">[];</span>
 <span class="special">};</span>
@@ -39,7 +39,7 @@
 
 <span class="keyword">namespace</span> <span class="identifier">concepts</span> <span class="special">{</span>
 
-<a class="co" name="di.extensions.containers.c2" href="containers.html#di.extensions.containers.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">I</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<a class="co" name="di.extensions.container_bingings.c2" href="container_bingings.html#di.extensions.container_bingings.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">I</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">auto</span> <span class="identifier">boundable_impl</span><span class="special">(</span><span class="identifier">I</span><span class="special">[],</span> <span class="identifier">T</span><span class="special">&amp;&amp;)</span> <span class="special">-&gt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">true_type</span><span class="special">;</span>
 
 <span class="special">}}}}</span> <span class="comment">// boost::di::v1::concepts</span>
@@ -49,7 +49,7 @@
 <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 
 
-<a class="co" name="di.extensions.containers.c4" href="containers.html#di.extensions.containers.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">...</span> <span class="identifier">Ts</span><span class="special">&gt;</span>
+<a class="co" name="di.extensions.container_bingings.c4" href="container_bingings.html#di.extensions.container_bingings.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">...</span> <span class="identifier">Ts</span><span class="special">&gt;</span>
 <span class="keyword">class</span> <span class="identifier">all_of_impl</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">TInjector</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">I</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
@@ -89,7 +89,7 @@
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
     <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-        <a class="co" name="di.extensions.containers.c6" href="containers.html#di.extensions.containers.c7"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">[]&gt;.</span><span class="identifier">named</span><span class="special">(</span><span class="identifier">vector_shared</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">all_of</span><span class="special">&lt;</span><span class="identifier">implementation1</span><span class="special">,</span> <span class="identifier">implementation2</span><span class="special">&gt;)</span>
+        <a class="co" name="di.extensions.container_bingings.c6" href="container_bingings.html#di.extensions.container_bingings.c7"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">[]&gt;.</span><span class="identifier">named</span><span class="special">(</span><span class="identifier">vector_shared</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">all_of</span><span class="special">&lt;</span><span class="identifier">implementation1</span><span class="special">,</span> <span class="identifier">implementation2</span><span class="special">&gt;)</span>
       <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">[]&gt;.</span><span class="identifier">named</span><span class="special">(</span><span class="identifier">vector_unique</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">all_of</span><span class="special">&lt;</span><span class="identifier">implementation1</span><span class="special">&gt;)</span>
     <span class="special">);</span>
 
@@ -98,26 +98,26 @@
 </pre>
 <div class="calloutlist"><table border="0" summary="Callout list">
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.extensions.containers.c1"></a><a href="#di.extensions.containers.c0"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.extensions.container_bingings.c1"></a><a href="#di.extensions.container_bingings.c0"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             transform constructor container type to expected binding type <code class="computeroutput"><span class="identifier">type</span><span class="special">[]</span></code>
           </p></td>
 </tr>
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.extensions.containers.c3"></a><a href="#di.extensions.containers.c2"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.extensions.container_bingings.c3"></a><a href="#di.extensions.container_bingings.c2"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             allow binding <code class="computeroutput"><span class="identifier">type</span><span class="special">[]</span></code>
             to anything
           </p></td>
 </tr>
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.extensions.containers.c5"></a><a href="#di.extensions.containers.c4"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.extensions.container_bingings.c5"></a><a href="#di.extensions.container_bingings.c4"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             all types creator and adder to container type
           </p></td>
 </tr>
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.extensions.containers.c7"></a><a href="#di.extensions.containers.c6"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.extensions.container_bingings.c7"></a><a href="#di.extensions.container_bingings.c6"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             interface[] match with vector&lt;interface&gt;, vector&lt;unique_ptr&lt;interface&gt;&gt;,
             ..., list&lt;interface&gt;, queue&lt;shared_ptr&lt;interface&gt;, ...
@@ -128,7 +128,7 @@
 <colgroup><col></colgroup>
 <tbody><tr><td>
                 <p>
-                  Full code example: <a href="../../example/extensions/containers.cpp" target="_top">example/extensions/containers.cpp</a>
+                  Full code example: <a href="../../example/extensions/container_bindings.cpp" target="_top">example/extensions/container_bindings.cpp</a>
                 </p>
               </td></tr></tbody>
 </table></div>
