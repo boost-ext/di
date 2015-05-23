@@ -30,7 +30,9 @@ run_example(provider)
 
 run_example(introduction/coffee_maker)
 
-run_example(extensions/containers)
+run_example(extensions/constructor_bindings)
+run_example(extensions/container_bindings)
+#run_example(extensions/contextual_bindings)
 run_example(extensions/factory)
 run_example(extensions/testing)
 run_example(extensions/types_dumper)
