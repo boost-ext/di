@@ -63,19 +63,6 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise
 
-#    - os: linux
-      #env: TOOLSET=clang-3.7 VARIANT=analyze
-      #addons: &clang37
-        #apt:
-          #packages:
-            #- clang-3.7
-            #- llvm-3.7-runtime
-            #- llvm-3.7-dev
-            #- libstdc++-5-dev
-          #sources:
-            #- ubuntu-toolchain-r-test
-            #- llvm-toolchain-precise
-
     - os: linux
       env: CMAKE_COMPILER=clang++-3.7
       addons: &clang37
