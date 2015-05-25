@@ -15,13 +15,14 @@ struct interface { virtual ~interface() noexcept = default; virtual void dummy()
 struct implementation : interface { void dummy() override { } };
 
 #include <boost/di/fwd.hpp>
+#include <boost/di/concepts/creatable.hpp>
 
 /*<<to constructor dependency extension>>*/
 struct to_constructor_ext {
     /*<<implementation of to_constructor extensions>>*/
     template<class T, class... TCtor>
     struct to_constructor_impl {
-        template<class TInjector> // is_creatable
+        template<class TInjector>
         auto operator()(const TInjector& injector) const  {
             return std::make_unique<T>(injector.template create<TCtor>()...);
         }
@@ -33,8 +34,9 @@ struct to_constructor_ext {
     /*<<extension implementation, add `to_constructor` method to dependency>>*/
     template<class TScope, class TExpected, class... Ts>
     struct extension<boost::di::core::dependency<TScope, TExpected, Ts...>> {
-        template<class... TCtor>
-        auto to_constructor() const noexcept {
+        template<class... TCtor
+               , BOOST_DI_REQUIRES(boost::di::concepts::creatable<boost::di::type_traits::direct, TExpected, TCtor...>::value)
+        > auto to_constructor() const noexcept {
             const auto& self = static_cast<const boost::di::core::dependency<TScope, TExpected, Ts...>&>(*this);
             return self.to(to_constructor_impl<TExpected, TCtor...>{});
         }
