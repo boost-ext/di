@@ -1379,21 +1379,21 @@ struct ctor_impl;
 
 template<template<class...> class TIsConstructible, class T, std::size_t... TArgs>
 struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>> {
-    struct ctor_impl__ {
-        using type = typename ctor_impl<
-            TIsConstructible
-          , T
-          , std::make_index_sequence<sizeof...(TArgs) - 1>
-        >::type;
-    };
+    struct ctor_impl__
+        : ctor_impl<
+              TIsConstructible
+            , T
+            , std::make_index_sequence<sizeof...(TArgs) - 1>
+          >::type
+    { };
 
-    struct is_ctor_ref__ {
-        using type = aux::lazy_conditional_t<
-            TIsConstructible<T, get<core::any_type_ref_fwd<T>, TArgs>...>::value
-          , aux::type_list<get<core::any_type_ref_fwd<T>, TArgs>...>
-          , ctor_impl__
-        >;
-    };
+    struct is_ctor_ref__
+        : aux::lazy_conditional<
+              TIsConstructible<T, get<core::any_type_ref_fwd<T>, TArgs>...>::value
+            , aux::type_list<get<core::any_type_ref_fwd<T>, TArgs>...>
+            , ctor_impl__
+          >::type
+    { };
 
     using type = aux::lazy_conditional_t<
           TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value
