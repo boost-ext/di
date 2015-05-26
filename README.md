@@ -1,7 +1,7 @@
 Boost.DI: C++ Dependency Injection
 ===============================================
 [![Boost Libraries](https://raw.githubusercontent.com/krzysztof-jusiak/di/gh-pages/boost/boost.png)](http://www.boost.org)
-<a href="https://travis-ci.org/krzysztof-jusiak/di" target="_blank">![Build Status](https://img.shields.io/travis/krzysztof-jusiak/di/cpp14.svg)</a> 
+<a href="https://travis-ci.org/krzysztof-jusiak/di" target="_blank">![Build Status](https://img.shields.io/travis/krzysztof-jusiak/di/cpp14.svg)</a>
 <a href="https://ci.appveyor.com/project/krzysztof-jusiak/di" target="_blank">![Build Status](https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic/branch/cpp14?svg=true)</a>
 <a href="https://coveralls.io/r/krzysztof-jusiak/di?branch=cpp14" target="_blank">![Coveralls](http://img.shields.io/coveralls/krzysztof-jusiak/di/cpp14.svg)</a>
 <a href="http://github.com/krzysztof-jusiak/di/issues" target="_blank">![Github Issues](https://img.shields.io/github/issues/krzysztof-jusiak/di.svg)</a>
@@ -23,26 +23,23 @@ No Dependency injection                 | Dependency Injection
 ----------------------------------------|--------------------------------------------
 class coffee_maker {                    | class coffee_maker {
 public:                                 | public:
-    coffee_maker()                      |     coffee_maker(shared_ptr<iheater> heater
-      : heater{                         |                , unique_ptr<ipump> pump)
-          make_shared<electric_heater>()|         : heater(heater)
-        }                               |         , pump(move(pump))
-      , pump{                           |     { }
-          make_unique<heat_pump>(heater)|
-        }                               |     void brew() {
-    { }                                 |         heater->on();
-                                        |         pump->pump();
-    void brew() {                       |         clog << "coffee!" << endl;
-        heater->on();                   |         heater->off();
-        pump->pump();                   |     }
-        clog << "coffee"! << endl;      |
-        heater->off();                  | private:
-    }                                   |     shared_ptr<iheater> heater;
+    void brew() {                       |   coffee_maker(shared_ptr<iheater> heater
+        heater->on();                   |              , unique_ptr<ipump> pump)
+        pump->pump();                   |         : heater(heater), pump(move(pump))
+        clog << "coffee"! << endl;      |     { }
+        heater->off();                  |
+    }                                   |     void brew() {
+                                        |         heater->on();
+private:                                |         pump->pump();
+    shared_ptr<iheater> heater =        |         clog << "coffee!" << endl;
+        make_shared<electric_heater>(); |         heater->off();
+                                        |     }
+    unique_ptr<ipump> pump =            |
+        make_unique<heat_pump>(heater); | private:
+};                                      |     shared_ptr<iheater> heater;
                                         |     unique_ptr<ipump> pump;
-private:                                | };
-    shared_ptr<iheater> heater;         |
-    unique_ptr<ipump> pump;             |
-};                                      |
+                                        | };
+                                        |
 ```
 
 **Why Dependency Injection?**
@@ -55,9 +52,9 @@ private:                                | };
 --- | --- |
 
 **Why Dependency Injection Framework?**
-* add logger
+
+* To avoid maintaining boilerplate code | with dependency injection framework below examples are working OUT OF THE BOX, no changes required!
 ```cpp
-auto logger = make_unique<Logger>();
 auto electricity = make_shared<Electricity>();
 auto grinder = make_shared<Grinder>(electricity);
 auto heater = make_shared<Heater>(electricity);
@@ -65,13 +62,31 @@ auto pump = make_unique<Pump>(heater, electricity);
 auto coffeMaker = make_unique<CoffeMaker>(grinder, pump, heater);
 ```
 
-* change coffee makector constructor
-CoffeeMaker(shared_ptr<Grinder>, unique_ptr<Pump>, shared_ptr<Heater>)
+    * Scenario 1: Adding `logger` dependency
+    ```cpp
+    auto logger = make_unique<Logger>();
+    auto electricity = make_shared<Electricity>(logger);
+    auto grinder = make_shared<Grinder>(logger, electricity);
+    auto heater = make_shared<Heater>(logger, electricity);
+    auto pump = make_unique<Pump>(logger, heater, electricity);
+    auto coffeMaker = make_unique<CoffeMaker>(logger, grinder, pump, heater);
+    ```
 
-* change dependency order
-* better control of what and how is created
-    in our project we don't like raw pointers, with framework we can enforce such rule
-    I would like to see graph of what is actually created in our app
+    * Scenario 2: Change coffee maker constructor
+    ```cpp
+    CoffeeMaker(shared_ptr<Grinder>, unique_ptr<Electricity>, unique_ptr<Pump>, shared_ptr<Heater>);
+    ...
+    auto coffeMaker = make_unique<CoffeMaker>(logger, electricity, grinder, pump, heater);
+    ```
+
+    * Scenario 3: Change dependencies when order is important
+    ```cpp
+
+    ```
+
+* To have better control of what and how is created
+    * Example 1: Disallow raw pointers
+    * Example 2: Show objection creation graph
 
 **Why Boost.DI?**
 
@@ -80,7 +95,6 @@ CoffeeMaker(shared_ptr<Grinder>, unique_ptr<Pump>, shared_ptr<Heater>)
 * Boost.DI gives short diagnostic messages - [Diagnostic messages](#diagnostic_messages)
 
 > **Boost.DI is not intrusive**
-<p align="center"><img src="https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_1.png" alt="coffee maker"/></p>
 ```cpp
 Manual Dependency Injection             | Boost.DI (same as manual di)
 ----------------------------------------|-----------------------------------------
@@ -91,7 +105,6 @@ coffee_maker(shared_ptr<iheater> heater | coffee_maker(shared_ptr<iheater> heate
 *
 
 > **Boost.DI reduces boilerplate code**
-<p align="center"><img src="https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_2.png" alt="coffee maker"/></p>
 ```cpp
 Manual Dependency Injection             | Boost.DI
 ----------------------------------------|-----------------------------------------
@@ -110,8 +123,6 @@ int main() {                            | int main() {
    cm.brew();                           |
 }                                       |
 ```
-[![coffee maker](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_3_cd.png)](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_3_cd.png) | [![coffee maker](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_3_od.png)](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_3_od.png) |
---- | --- |
 ```cpp
 Manual Dependency Injection             | Boost.DI (only 1 new binding)
 ----------------------------------------|-----------------------------------------
@@ -139,8 +150,6 @@ int main() {                            | int main() {
    cm.brew();                           |
 }                                       |
 ```
-[![coffee maker](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_4_cd.png)](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_4_cd.png) | [![coffee maker](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_4_od.png)](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_4_od.png) |
---- | --- |
 ```cpp
 Manual Dependency Injection             | Boost.DI (no changes!)
 ----------------------------------------|-----------------------------------------
@@ -168,7 +177,6 @@ int main() {                            |
    cm.brew();                           |
 }                                       |
 ```
-<p align="center"><img src="https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_5.png" alt="coffee maker"/></p>
 ```cpp
 Manual Dependency Injection             | Boost.DI (no changes!)
 ----------------------------------------|-----------------------------------------
