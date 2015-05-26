@@ -65,6 +65,19 @@ struct always : std::true_type { };
 template<class...>
 struct never : std::false_type { };
 
+template<bool, class, class B>
+struct lazy_conditional {
+    using type = typename B::type;
+};
+
+template<class A, class B>
+struct lazy_conditional<true, A, B> {
+    using type = typename A::type;
+};
+
+template<bool V, class A, class B>
+using lazy_conditional_t = typename lazy_conditional<V, A, B>::type;
+
 template<class, class>
 struct pair { using type = pair; };
 
@@ -1348,36 +1361,46 @@ struct uniform { };
 
 BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_INJECTOR);
 
-template<class T, std::size_t>
-struct get {
-    using type = T;
-};
+#if defined(BOOST_DI_MSVC)
+    template<class T, std::size_t>
+    struct get_impl {
+        using type = T;
+    };
 
-template<class T>
-using get_t = typename T::type;
+    template<class T, std::size_t N>
+    using get = typename get_impl<T, N>::type;
+#else
+    template<class T, std::size_t>
+    using get = T;
+#endif
 
 template<template<class...> class, class, class>
 struct ctor_impl;
 
-template<
-    template<class...> class TIsConstructible
-  , class T
-  , std::size_t... TArgs
-> struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>>
-    : std::conditional<
-          TIsConstructible<T, typename get<core::any_type_ref_fwd<T>, TArgs>::type...>::value
-        , std::conditional_t<
-               TIsConstructible<T, typename get<core::any_type_fwd<T>, TArgs>::type...>::value
-             , aux::type_list<typename get<core::any_type_fwd<T>, TArgs>::type...>
-             , aux::type_list<typename get<core::any_type_ref_fwd<T>, TArgs>::type...>
-          >
-        , typename ctor_impl<
-              TIsConstructible
-            , T
-            , std::make_index_sequence<sizeof...(TArgs) - 1>
-          >::type
-      >
-{ };
+template<template<class...> class TIsConstructible, class T, std::size_t... TArgs>
+struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>> {
+    struct ctor_impl__ {
+        using type = typename ctor_impl<
+            TIsConstructible
+          , T
+          , std::make_index_sequence<sizeof...(TArgs) - 1>
+        >::type;
+    };
+
+    struct is_ctor_ref__ {
+        using type = aux::lazy_conditional_t<
+            TIsConstructible<T, get<core::any_type_ref_fwd<T>, TArgs>...>::value
+          , aux::type_list<get<core::any_type_ref_fwd<T>, TArgs>...>
+          , ctor_impl__
+        >;
+    };
+
+    using type = aux::lazy_conditional_t<
+          TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value
+        , aux::type_list<get<core::any_type_fwd<T>, TArgs>...>
+        , is_ctor_ref__
+    >;
+};
 
 template<template<class...> class TIsConstructible, class T>
 struct ctor_impl<TIsConstructible, T, std::index_sequence<>>
@@ -1385,12 +1408,11 @@ struct ctor_impl<TIsConstructible, T, std::index_sequence<>>
 { };
 
 template<template<class...> class TIsConstructible, class T>
-using ctor_impl_t =
-    typename ctor_impl<
-        TIsConstructible
-      , T
-      , std::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
-    >::type;
+using ctor_impl_t = typename ctor_impl<
+    TIsConstructible
+  , T
+  , std::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
+>::type;
 
 template<class...>
 struct ctor;
