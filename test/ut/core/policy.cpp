@@ -39,11 +39,9 @@ test call = [] {
     fake_dependency<int> dep;
     pool<aux::type_list<fake_policy>> policies;
 
-    policy<aux::type_list<>>::call<
-        int
-      , no_name
-      , std::false_type
-    >(policies, dep, aux::pair<type_traits::direct, aux::type_list<>>{}, std::false_type{});
+    policy::call<arg_wrapper<int, no_name, std::false_type, aux::type_list<>>>(
+        policies, dep, aux::pair<type_traits::direct, aux::type_list<>>{}
+    );
 
     expect_eq(1, fake_policy::calls());
 };
@@ -53,11 +51,9 @@ test call_long = [] {
     fake_dependency<int> dep;
     pool<aux::type_list<fake_policy_long>> policies;
 
-    policy<aux::type_list<>>::call<
-        int
-      , no_name
-      , std::false_type
-    >(policies, dep, aux::pair<type_traits::direct, aux::type_list<>>{}, std::false_type{});
+    policy::call<arg_wrapper<int, no_name, std::false_type, aux::type_list<>>>(
+        policies, dep, aux::pair<type_traits::direct, aux::type_list<>>{}
+    );
 
     expect_eq(1, fake_policy_long::calls());
 };
@@ -68,11 +64,9 @@ test call_policies = [] {
     fake_dependency<int> dep;
     pool<aux::type_list<fake_policy, fake_policy_long>> policies;
 
-    policy<aux::type_list<>>::call<
-        int
-      , no_name
-      , std::false_type
-    >(policies, dep, aux::pair<type_traits::direct, aux::type_list<>>{}, std::false_type{});
+    policy::call<arg_wrapper<int, no_name, std::false_type, aux::type_list<>>>(
+        policies, dep, aux::pair<type_traits::direct, aux::type_list<>>{}
+    );
 
     expect_eq(1, fake_policy::calls());
     expect_eq(1, fake_policy_long::calls());
