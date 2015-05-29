@@ -27,63 +27,23 @@
 <a name="di.extensions.contextual_bindings"></a><a class="link" href="contextual_bindings.html" title="Contextual Bindings">Contextual Bindings</a>
 </h3></div></div></div>
 <pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_CFG_NO_PREPROCESSED_HEADERS</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">units</span><span class="special">/</span><span class="identifier">detail</span><span class="special">/</span><span class="identifier">utility</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">/</span><span class="identifier">fwd</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">/</span><span class="identifier">aux_</span><span class="special">/</span><span class="identifier">utility</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
 <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
-
-<span class="keyword">struct</span> <span class="identifier">c</span> <span class="special">{</span>
-    <span class="identifier">c</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
-        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i</span> <span class="special">==</span> <span class="number">3</span><span class="special">);</span>
-    <span class="special">}</span>
-<span class="special">};</span>
-
-<span class="keyword">struct</span> <span class="identifier">b</span> <span class="special">{</span>
-    <span class="identifier">b</span><span class="special">(</span><span class="identifier">c</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
-        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i</span> <span class="special">==</span> <span class="number">2</span><span class="special">);</span>
-    <span class="special">}</span>
-<span class="special">};</span>
-
-<span class="keyword">struct</span> <span class="identifier">a</span> <span class="special">{</span>
-    <span class="identifier">a</span><span class="special">(</span><span class="identifier">b</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
-        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i</span> <span class="special">==</span> <span class="number">1</span><span class="special">);</span>
-    <span class="special">}</span>
-<span class="special">};</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">get_type</span><span class="special">;</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">get_type</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">type</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&gt;</span> <span class="special">{</span>
-    <span class="keyword">using</span> <span class="identifier">type</span> <span class="special">=</span> <span class="identifier">T</span><span class="special">;</span>
-<span class="special">};</span>
-
-<span class="keyword">class</span> <span class="identifier">build_types</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">config</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">auto</span> <span class="identifier">policies</span><span class="special">()</span> <span class="keyword">noexcept</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_policies</span><span class="special">([&amp;](</span><span class="keyword">auto</span> <span class="identifier">type</span><span class="special">,</span> <span class="keyword">auto</span> <span class="identifier">dependency</span><span class="special">,</span> <span class="keyword">auto</span><span class="special">...</span> <span class="identifier">ctor</span><span class="special">)</span> <span class="special">{</span>
-            <span class="keyword">using</span> <span class="identifier">arg</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="keyword">decltype</span><span class="special">(</span><span class="identifier">type</span><span class="special">)::</span><span class="identifier">type</span><span class="special">;</span>
-            <span class="identifier">types</span><span class="special">[</span><span class="identifier">v</span><span class="special">[</span><span class="identifier">i</span> <span class="special">-</span> <span class="number">1</span><span class="special">]].</span><span class="identifier">push_back</span><span class="special">(&amp;</span><span class="keyword">typeid</span><span class="special">(</span><span class="identifier">arg</span><span class="special">));</span>
-            <span class="keyword">auto</span> <span class="identifier">ctor_size</span> <span class="special">=</span> <span class="keyword">sizeof</span><span class="special">...(</span><span class="identifier">ctor</span><span class="special">);</span>
-            <span class="keyword">while</span> <span class="special">(</span><span class="identifier">ctor_size</span><span class="special">--)</span> <span class="special">{</span>
-                <span class="identifier">v</span><span class="special">.</span><span class="identifier">insert</span><span class="special">((</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()+</span><span class="identifier">i</span><span class="special">),</span> <span class="identifier">v</span><span class="special">[</span><span class="identifier">i</span><span class="special">-</span><span class="number">1</span><span class="special">]+</span><span class="number">1</span><span class="special">);</span>
-            <span class="special">}</span>
-            <span class="special">++</span><span class="identifier">i</span><span class="special">;</span>
-        <span class="special">});</span>
-    <span class="special">}</span>
-
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">type_info</span><span class="special">*&gt;&gt;</span> <span class="identifier">types</span><span class="special">;</span>
-
-<span class="keyword">private</span><span class="special">:</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">v</span> <span class="special">=</span> <span class="special">{</span> <span class="number">0</span> <span class="special">};</span>
-    <span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span>
-<span class="special">};</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">type_</span><span class="special">;</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">...</span> <span class="identifier">Ts</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">type_</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">type_list</span><span class="special">&lt;</span><span class="identifier">Ts</span><span class="special">...&gt;&gt;</span> <span class="special">{</span>
-    <span class="keyword">using</span> <span class="identifier">element_type</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">type_list</span><span class="special">&lt;</span><span class="identifier">Ts</span><span class="special">...&gt;;</span>
+    <span class="keyword">auto</span> <span class="identifier">dump</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">type_info</span><span class="special">*&gt;</span> <span class="identifier">v</span><span class="special">;</span>
+        <span class="special">[](...){}((</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(&amp;</span><span class="keyword">typeid</span><span class="special">(</span><span class="identifier">Ts</span><span class="special">)),</span> <span class="number">0</span><span class="special">)...);</span>
+        <span class="keyword">return</span> <span class="identifier">v</span><span class="special">;</span>
+    <span class="special">}</span>
 
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
     <span class="keyword">auto</span> <span class="identifier">type</span><span class="special">()</span> <span class="special">{</span>
@@ -93,7 +53,9 @@
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">type</span> <span class="special">{</span>
-    <span class="keyword">using</span> <span class="identifier">element_type</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">type_list</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;;</span>
+    <span class="keyword">auto</span> <span class="identifier">dump</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">type_info</span><span class="special">*&gt;{&amp;</span><span class="keyword">typeid</span><span class="special">(</span><span class="identifier">T</span><span class="special">)};</span>
+    <span class="special">}</span>
 
     <span class="keyword">auto</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span> <span class="special">{</span>
         <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">make_unique</span><span class="special">&lt;</span><span class="identifier">type_</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">type_list</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&gt;&gt;();</span>
@@ -118,75 +80,105 @@
 
 <span class="identifier">context_</span> <span class="identifier">context</span><span class="special">;</span>
 
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">R</span><span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">all</span> <span class="special">{</span>
-    <span class="keyword">using</span> <span class="identifier">type</span> <span class="special">=</span> <span class="identifier">R</span><span class="special">;</span>
-    <span class="identifier">T</span> <span class="identifier">object</span><span class="special">;</span>
-<span class="special">};</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">R</span><span class="special">&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">then_</span> <span class="special">{</span>
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-    <span class="keyword">auto</span> <span class="identifier">then</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">value</span><span class="special">)</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="identifier">all</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">R</span><span class="special">&gt;{</span><span class="identifier">value</span><span class="special">};</span>
-    <span class="special">}</span>
-<span class="special">};</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="identifier">then_</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">::</span><span class="identifier">element_type</span><span class="special">&gt;</span> <span class="identifier">when</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;&amp;)</span> <span class="special">{</span>
-    <span class="keyword">return</span> <span class="special">{};</span>
-<span class="special">}</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">TResult</span><span class="special">&gt;</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">TExpected</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">contextual</span> <span class="special">{</span>
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">...</span> <span class="identifier">Ts</span><span class="special">&gt;</span>
-    <span class="keyword">explicit</span> <span class="identifier">contextual</span><span class="special">(</span><span class="identifier">Ts</span><span class="special">&amp;&amp;...</span> <span class="identifier">args</span><span class="special">)</span>
-        <span class="special">:</span> <span class="identifier">types</span><span class="special">{</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">make_pair</span><span class="special">(</span><span class="identifier">create_types</span><span class="special">(</span><span class="keyword">typename</span> <span class="identifier">Ts</span><span class="special">::</span><span class="identifier">type</span><span class="special">{}),</span> <span class="identifier">args</span><span class="special">.</span><span class="identifier">object</span><span class="special">)...}</span>
-    <span class="special">{</span> <span class="special">}</span>
-
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">...</span> <span class="identifier">Ts</span><span class="special">&gt;</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">type_info</span><span class="special">*&gt;</span> <span class="identifier">create_types</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">aux</span><span class="special">::</span><span class="identifier">type_list</span><span class="special">&lt;</span><span class="identifier">Ts</span><span class="special">...&gt;&amp;)</span> <span class="keyword">const</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="special">{&amp;</span><span class="keyword">typeid</span><span class="special">(</span><span class="identifier">Ts</span><span class="special">)...};</span>
-    <span class="special">}</span>
-
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">TInjector</span><span class="special">&gt;</span>
-    <span class="keyword">auto</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="identifier">TInjector</span><span class="special">&amp;</span> <span class="identifier">injector</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">-&gt;</span> <span class="identifier">TResult</span> <span class="special">{</span>
-        <span class="keyword">const</span> <span class="keyword">auto</span><span class="special">&amp;</span> <span class="identifier">call_stack</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">types</span><span class="special">;</span>
-
-        <span class="keyword">for</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">auto</span><span class="special">&amp;</span> <span class="identifier">el</span> <span class="special">:</span> <span class="identifier">types</span><span class="special">)</span> <span class="special">{</span>
-            <span class="keyword">auto</span> <span class="identifier">level</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
-            <span class="keyword">auto</span> <span class="identifier">found</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">;</span>
-            <span class="keyword">for</span> <span class="special">(</span><span class="keyword">const</span> <span class="keyword">auto</span><span class="special">&amp;</span> <span class="identifier">t</span> <span class="special">:</span> <span class="identifier">el</span><span class="special">.</span><span class="identifier">first</span><span class="special">)</span> <span class="special">{</span>
-                <span class="keyword">const</span> <span class="keyword">auto</span><span class="special">&amp;</span> <span class="identifier">cs</span> <span class="special">=</span> <span class="identifier">call_stack</span><span class="special">.</span><span class="identifier">at</span><span class="special">(</span><span class="identifier">level</span><span class="special">);</span>
-                <span class="keyword">if</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">find</span><span class="special">(</span><span class="identifier">cs</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">cs</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">t</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">cs</span><span class="special">.</span><span class="identifier">end</span><span class="special">())</span> <span class="special">{</span>
-                    <span class="identifier">found</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
-                    <span class="keyword">break</span><span class="special">;</span>
-                <span class="special">}</span>
-                <span class="special">++</span><span class="identifier">level</span><span class="special">;</span>
-            <span class="special">}</span>
-
-            <span class="keyword">if</span> <span class="special">(</span><span class="identifier">found</span><span class="special">)</span> <span class="special">{</span>
-                <span class="keyword">return</span> <span class="identifier">el</span><span class="special">.</span><span class="identifier">second</span><span class="special">;</span>
-            <span class="special">}</span>
-        <span class="special">}</span>
-
+    <span class="keyword">auto</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="identifier">TInjector</span><span class="special">&amp;)</span> <span class="keyword">const</span> <span class="special">-&gt;</span> <span class="identifier">TExpected</span> <span class="special">{</span>
         <span class="keyword">return</span> <span class="special">{};</span>
     <span class="special">}</span>
 
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">type_info</span><span class="special">*&gt;,</span> <span class="identifier">TResult</span><span class="special">&gt;&gt;</span> <span class="identifier">types</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">type_info</span><span class="special">*&gt;,</span> <span class="identifier">TExpected</span><span class="special">&gt;&gt;</span> <span class="identifier">values_</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">contextual_ext</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">extension</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">TScope</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="keyword">class</span><span class="special">...</span> <span class="identifier">Ts</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">extension</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">core</span><span class="special">::</span><span class="identifier">dependency</span><span class="special">&lt;</span><span class="identifier">TScope</span><span class="special">,</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="identifier">Ts</span><span class="special">...&gt;&gt;</span> <span class="special">{</span>
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">TContext</span><span class="special">&gt;</span>
+        <span class="keyword">auto</span> <span class="identifier">when</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TContext</span><span class="special">&amp;</span> <span class="identifier">context</span><span class="special">)</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+            <span class="identifier">values_</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">make_pair</span><span class="special">(</span><span class="identifier">context</span><span class="special">.</span><span class="identifier">dump</span><span class="special">(),</span> <span class="identifier">TExpected</span><span class="special">{}));</span>
+            <span class="keyword">auto</span><span class="special">&amp;</span> <span class="identifier">self</span> <span class="special">=</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">core</span><span class="special">::</span><span class="identifier">dependency</span><span class="special">&lt;</span><span class="identifier">TScope</span><span class="special">,</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="identifier">Ts</span><span class="special">...&gt;&amp;&gt;(*</span><span class="keyword">this</span><span class="special">);</span>
+            <span class="keyword">return</span> <span class="identifier">self</span><span class="special">;</span>
+        <span class="special">}</span>
+
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+        <span class="keyword">auto</span> <span class="identifier">then</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;&amp;</span> <span class="identifier">value</span><span class="special">)</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+            <span class="identifier">values_</span><span class="special">.</span><span class="identifier">back</span><span class="special">().</span><span class="identifier">second</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">forward</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">value</span><span class="special">);</span>
+            <span class="keyword">auto</span><span class="special">&amp;</span> <span class="identifier">self</span> <span class="special">=</span> <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">core</span><span class="special">::</span><span class="identifier">dependency</span><span class="special">&lt;</span><span class="identifier">TScope</span><span class="special">,</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="identifier">Ts</span><span class="special">...&gt;&amp;&gt;(*</span><span class="keyword">this</span><span class="special">);</span>
+            <span class="keyword">return</span> <span class="identifier">self</span><span class="special">;//.</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">contextual</span><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">&gt;{</span><span class="identifier">values_</span><span class="special">});</span>
+        <span class="special">}</span>
+
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TProvider</span><span class="special">&gt;</span>
+        <span class="keyword">auto</span> <span class="identifier">create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TProvider</span><span class="special">&amp;</span> <span class="identifier">provider</span><span class="special">)</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+            <span class="keyword">return</span> <span class="number">42</span><span class="special">;</span>
+        <span class="special">}</span>
+
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">type_info</span><span class="special">*&gt;,</span> <span class="identifier">TExpected</span><span class="special">&gt;&gt;</span> <span class="identifier">values_</span><span class="special">;</span>
+    <span class="special">};</span>
+<span class="special">};</span>
+
+<a class="co" name="di.extensions.contextual_bindings.c0" href="contextual_bindings.html#di.extensions.contextual_bindings.c1"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="special">#</span><span class="identifier">define</span> <span class="identifier">BOOST_DI_CFG_DEPENDENCY_EXTENSIONS</span> <span class="special">::</span><span class="identifier">contextual_ext</span>
+
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">class</span> <span class="identifier">build_types</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">config</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+<span class="comment">/*    auto policies() noexcept {*/</span>
+        <span class="comment">//return di::make_policies([&amp;](auto type, auto de, auto... ctor) {</span>
+            <span class="comment">//using arg = typename decltype(type)::type;</span>
+            <span class="comment">//types[v[i - 1]].push_back(&amp;typeid(arg));</span>
+            <span class="comment">//auto ctor_size = sizeof...(ctor);</span>
+            <span class="comment">//while (ctor_size--) {</span>
+                <span class="comment">//v.insert((v.begin()+i), v[i-1]+1);</span>
+            <span class="comment">//}</span>
+            <span class="comment">//++i;</span>
+        <span class="comment">//});</span>
+    <span class="comment">/*}*/</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">type_info</span><span class="special">*&gt;&gt;</span> <span class="identifier">types</span><span class="special">;</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="comment">//std::vector&lt;int&gt; v = { 0 };</span>
+    <span class="comment">//int i = 1;</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">c</span> <span class="special">{</span>
+    <span class="identifier">c</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i</span> <span class="special">==</span> <span class="number">3</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">b</span> <span class="special">{</span>
+    <span class="identifier">b</span><span class="special">(</span><span class="identifier">c</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i</span> <span class="special">==</span> <span class="number">2</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">a</span> <span class="special">{</span>
+    <span class="identifier">a</span><span class="special">(</span><span class="identifier">b</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i</span> <span class="special">==</span> <span class="number">1</span><span class="special">);</span>
+    <span class="special">}</span>
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">&lt;</span><span class="identifier">build_types</span><span class="special">&gt;(</span>
+    <span class="comment">//auto injector = di::make_injector&lt;build_types&gt;(</span>
+    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
         <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">when</span><span class="special">(</span><span class="identifier">context</span> <span class="special">=</span> <span class="identifier">type</span><span class="special">&lt;</span><span class="identifier">a</span><span class="special">&gt;()</span> <span class="special">-&gt;</span> <span class="identifier">type</span><span class="special">&lt;</span><span class="identifier">b</span><span class="special">&gt;()</span> <span class="special">-&gt;</span> <span class="identifier">type</span><span class="special">&lt;</span><span class="identifier">c</span><span class="special">&gt;()).</span><span class="identifier">then</span><span class="special">(</span><span class="number">3</span><span class="special">)</span>
                      <span class="special">.</span><span class="identifier">when</span><span class="special">(</span><span class="identifier">context</span> <span class="special">=</span> <span class="identifier">type</span><span class="special">&lt;</span><span class="identifier">a</span><span class="special">&gt;()</span> <span class="special">-&gt;</span> <span class="identifier">type</span><span class="special">&lt;</span><span class="identifier">b</span><span class="special">&gt;()).</span><span class="identifier">then</span><span class="special">(</span><span class="number">2</span><span class="special">)</span>
                      <span class="special">.</span><span class="identifier">when</span><span class="special">(</span><span class="identifier">context</span> <span class="special">=</span> <span class="identifier">type</span><span class="special">&lt;</span><span class="identifier">a</span><span class="special">&gt;()).</span><span class="identifier">then</span><span class="special">(</span><span class="number">1</span><span class="special">)</span>
-        <span class="special">)</span>
     <span class="special">);</span>
 
     <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">a</span><span class="special">&gt;();</span>
 <span class="special">}</span>
 </pre>
+<div class="calloutlist"><table border="0" summary="Callout list"><tr>
+<td width="5%" valign="top" align="left"><p><a name="di.extensions.contextual_bindings.c1"></a><a href="#di.extensions.contextual_bindings.c0"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            define dependency extensions
+          </p></td>
+</tr></table></div>
 <div class="informaltable"><table class="table">
 <colgroup><col></colgroup>
 <tbody><tr><td>
