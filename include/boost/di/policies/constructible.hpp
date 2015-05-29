@@ -34,7 +34,7 @@ struct type_op {};
 template<class T, class = void>
 struct apply_impl {
     template<class TArg>
-    static auto apply(const TArg&) noexcept {
+    static constexpr auto apply(const TArg&) noexcept {
         return T{};
     }
 };
@@ -57,7 +57,7 @@ struct apply_impl<T<Ts...>, std::enable_if_t<!std::is_base_of<type_op, T<Ts...>>
     };
 
     template<class TArg>
-    static auto apply(const TArg&) noexcept {
+    static constexpr auto apply(const TArg&) noexcept {
         using type = typename TArg::type;
         return typename apply_placeholder<T, type, Ts...>::type{};
     }
@@ -66,7 +66,7 @@ struct apply_impl<T<Ts...>, std::enable_if_t<!std::is_base_of<type_op, T<Ts...>>
 template<class T>
 struct apply_impl<T, std::enable_if_t<std::is_base_of<type_op, T>::value>> {
     template<class TArg>
-    static auto apply(const TArg& data) noexcept {
+    static constexpr auto apply(const TArg& data) noexcept {
         return T::apply(data);
     }
 };
@@ -74,41 +74,53 @@ struct apply_impl<T, std::enable_if_t<std::is_base_of<type_op, T>::value>> {
 template<class T>
 struct not_ : type_op {
     template<class TArg>
-    static auto apply(const TArg& data) noexcept {
-        return std::integral_constant<bool
-          , !decltype(apply_impl<T>::apply(data))::value
-        >{};
+    static constexpr auto apply(const TArg& data) noexcept {
+        return !apply_impl<T>::apply(data);
     }
 };
 
-template<class... Ts>
-struct and_ : type_op {
+template<class...>
+struct and_;
+
+template<class T, class... Ts>
+struct and_<T, Ts...> : type_op {
     template<class TArg>
-    static auto apply(const TArg& data) noexcept {
-        return std::is_same<
-            aux::bool_list<decltype(apply_impl<Ts>::apply(data))::value...>
-          , aux::bool_list<(decltype(apply_impl<Ts>::apply(data)){}, true)...>
-        >{};
+    static constexpr auto apply(const TArg& data) noexcept {
+        return apply_impl<T>::apply(data) && and_<Ts...>::apply(data);
     }
 };
 
-template<class... Ts>
-struct or_ : type_op {
+template<>
+struct and_<> : type_op {
     template<class TArg>
-    static auto apply(const TArg& data) noexcept {
-        return std::integral_constant<bool
-          , !std::is_same<
-                aux::bool_list<decltype(apply_impl<Ts>::apply(data))::value...>
-              , aux::bool_list<(decltype(apply_impl<Ts>::apply(data)){}, false)...>
-            >::value
-        >{};
+    static constexpr auto apply(const TArg&) noexcept {
+        return true;
+    }
+};
+
+template<class...>
+struct or_;
+
+template<class T, class... Ts>
+struct or_<T, Ts...> : type_op {
+    template<class TArg>
+    static constexpr auto apply(const TArg& data) noexcept {
+        return apply_impl<T>::apply(data) || or_<Ts...>::apply(data);
+    }
+};
+
+template<>
+struct or_<> : type_op {
+    template<class TArg>
+    static constexpr auto apply(const TArg&) noexcept {
+        return false;
     }
 };
 
 template<class T>
 struct always : type_op {
     template<class TArg>
-    static auto apply(const TArg& data) noexcept {
+    static constexpr auto apply(const TArg& data) noexcept {
         return apply_impl<T>::apply(data);
     }
 };
@@ -116,17 +128,17 @@ struct always : type_op {
 template<class T>
 struct is_bound : type_op {
     template<class TArg>
-    static auto apply(const TArg&) noexcept {
+    static constexpr auto apply(const TArg&) noexcept {
         struct not_resolved { };
         using type = std::conditional_t<std::is_same<T, _>::value, typename TArg::type, T>;
         using dependency = typename TArg::template resolve<type, typename TArg::name, not_resolved>;
-        return std::integral_constant<bool, !std::is_same<dependency, not_resolved>::value>{};
+        return !std::is_same<dependency, not_resolved>::value;
     }
 };
 
 struct is_root : type_op {
     template<class TArg>
-    static auto apply(const TArg&) noexcept {
+    static constexpr auto apply(const TArg&) noexcept {
         return typename TArg::is_root{};
     }
 };
@@ -152,13 +164,13 @@ inline auto operator!(const T&) {
 
 template<class T>
 struct constructible_impl {
-    template<class TArg, BOOST_DI_REQUIRES(decltype(T::apply(TArg{}))::value)>
+    template<class TArg, BOOST_DI_REQUIRES(T::apply(TArg{}))>
     std::true_type operator()(const TArg& data) const {
         T::apply(data);
         return {};
     }
 
-    template<class TArg, BOOST_DI_REQUIRES(!decltype(T::apply(TArg{}))::value)>
+    template<class TArg, BOOST_DI_REQUIRES(!T::apply(TArg{}))>
     std::false_type operator()(const TArg&) const {
         dump_error<typename TArg::type>(typename TArg::ignore{});
         return {};
