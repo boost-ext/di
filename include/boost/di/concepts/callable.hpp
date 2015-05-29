@@ -80,7 +80,12 @@ struct is_callable<void> { // auto
 };
 
 template<class... Ts>
-using callable = typename is_callable<Ts...>::type;
+using callable =
+    #if defined(BOOST_DI_MSVC)
+        std::true_type;
+    #else
+        typename is_callable<Ts...>::type;
+    #endif
 
 }}}} // boost::di::v1::concepts
 

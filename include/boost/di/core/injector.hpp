@@ -72,7 +72,6 @@ inline decltype(auto) get_arg(const T& arg, const std::true_type&) noexcept {
                    , public type_traits::config_traits_t<TConfig, injector<TConfig, TPolicies, TDeps...>> \
                    , _
 
-#if !defined(BOOST_DI_MSVC)
     #define BOOST_DI_TRY_POLICY \
            && policy::template try_call< \
                   arg_wrapper<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot, pool_t> \
@@ -85,11 +84,6 @@ inline decltype(auto) get_arg(const T& arg, const std::true_type&) noexcept {
         policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>( \
             ((TConfig&)*this).policies(), dependency, ctor_t{} \
         );
-
-#else
-    #define BOOST_DI_TRY_POLICY
-    #define BOOST_DI_APPLY_POLICY
-#endif
 
     #include "boost/di/core/injector.ipp"
 

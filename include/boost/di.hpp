@@ -1827,7 +1827,12 @@ struct is_callable<void> { // auto
 };
 
 template<class... Ts>
-using callable = typename is_callable<Ts...>::type;
+using callable =
+    #if defined(BOOST_DI_MSVC)
+        std::true_type;
+    #else
+        typename is_callable<Ts...>::type;
+    #endif
 
 }}}} // boost::di::v1::concepts
 
@@ -3104,7 +3109,6 @@ inline decltype(auto) get_arg(const T& arg, const std::true_type&) noexcept {
                    , public type_traits::config_traits_t<TConfig, injector<TConfig, TPolicies, TDeps...>> \
                    , _
 
-#if !defined(BOOST_DI_MSVC)
     #define BOOST_DI_TRY_POLICY \
            && policy::template try_call< \
                   arg_wrapper<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot, pool_t> \
@@ -3117,11 +3121,6 @@ inline decltype(auto) get_arg(const T& arg, const std::true_type&) noexcept {
         policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>( \
             ((TConfig&)*this).policies(), dependency, ctor_t{} \
         );
-
-#else
-    #define BOOST_DI_TRY_POLICY
-    #define BOOST_DI_APPLY_POLICY
-#endif
 
 BOOST_DI_CORE_INJECTOR {
     template<class> friend class scopes::exposed;
@@ -3659,21 +3658,14 @@ class injector : public
      BOOST_DI_REQUIRES_MSG_T(concepts::boundable<aux::type<T...>>
                            , core::injector<::BOOST_DI_CFG, core::pool<>, T...>) {
 public:
-    #if defined(BOOST_DI_MSVC)
-        #define BOOST_DI_CORE_INJECTOR(TConfig, TArgs) \
-            core::injector<TConfig, core::pool<>, TArgs>
-    #else
-        #define BOOST_DI_CORE_INJECTOR(TConfig, TArgs) \
-            core::injector<TConfig, decltype(((TConfig*)0)->policies()), TArgs>
-    #endif
-
     template<
         class TConfig
-      , class... TArgs
+      , class TPolicies
+      , class... TDeps
         #if defined(BOOST_DI_GCC)
           , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>)
         #endif
-    > injector(const BOOST_DI_CORE_INJECTOR(TConfig, TArgs...)& injector) noexcept // non explicit
+    > injector(const core::injector<TConfig, TPolicies, TDeps...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, core::pool<>, T...>(injector) {
             #if !defined(BOOST_DI_MSVC)
             using namespace detail;
@@ -3682,7 +3674,7 @@ public:
                     std::integral_constant<bool,
                         core::is_creatable_impl<
                             T
-                          , core::injector<TConfig, decltype(((TConfig*)0)->policies()), TArgs...>
+                          , core::injector<TConfig, decltype(((TConfig*)0)->policies()), TDeps...>
                           , typename std::is_same<concepts::configurable<TConfig>, std::true_type>::type
                         >::value
                     >{}
@@ -3690,8 +3682,6 @@ public:
             , 0)...}; (void)_;
             #endif
     }
-
-    #undef BOOST_DI_CORE_INJECTOR
 };
 
 }}} // boost::di::v1
