@@ -16,43 +16,72 @@ namespace boost { namespace di { inline namespace v1 { namespace core {
 
 BOOST_DI_HAS_METHOD(call_operator, operator());
 
+
+template<class T>
+struct allow_void : T { };
+
+template<>
+struct allow_void<void> : std::true_type { };
+
 class policy {
     template<class TArg, class TPolicy, class TPolicies, class TDependency, class TCtor>
-    static auto call_impl(const TPolicies& policies, TDependency dependency, const TCtor& ctor) noexcept {
-        return call_impl_type<TArg>(static_cast<const TPolicy&>(policies), dependency, ctor);
+    static void call_impl(const TPolicies& policies, TDependency dependency, const TCtor& ctor) noexcept {
+        call_impl__<TArg>(static_cast<const TPolicy&>(policies), dependency, ctor);
     }
 
     template<class TArg, class TPolicy, class TDependency, class TCtor>
-    static auto call_impl_type(const TPolicy& policy, TDependency dependency, const TCtor& ctor) noexcept {
+    static void call_impl__(const TPolicy& policy, TDependency dependency, const TCtor& ctor) noexcept {
         call_impl_args<TArg>(policy, dependency, ctor);
-        using type = decltype(call_impl_args<TArg>(policy, dependency, ctor));
-        return std::conditional_t<std::is_same<type, void>::value, std::true_type, type>{};
     }
 
     template<class TArg, class TDependency, class TPolicy, class TInitialization, class... TCtor
            , BOOST_DI_REQUIRES(!has_call_operator<TPolicy, TArg, TDependency, TCtor...>::value)
-    > static auto call_impl_args(const TPolicy& policy, TDependency, const aux::pair<TInitialization, aux::type_list<TCtor...>>&) noexcept {
-        return (policy)(TArg{});
+    > static void call_impl_args(const TPolicy& policy
+                               , TDependency
+                               , const aux::pair<TInitialization, aux::type_list<TCtor...>>&) noexcept {
+        (policy)(TArg{});
     }
 
     template<class TArg, class TDependency, class TPolicy, class TInitialization, class... TCtor
            , BOOST_DI_REQUIRES(has_call_operator<TPolicy, TArg, TDependency, TCtor...>::value)>
-    static auto call_impl_args(const TPolicy& policy, TDependency dependency, const aux::pair<TInitialization, aux::type_list<TCtor...>>&) noexcept {
-        return (policy)(TArg{}, dependency, aux::type<TCtor>{}...);
+    static void call_impl_args(const TPolicy& policy
+                             , TDependency dependency
+                             , const aux::pair<TInitialization, aux::type_list<TCtor...>>&) noexcept {
+        (policy)(TArg{}, dependency, aux::type<TCtor>{}...);
     }
 
+    template<class, class, class, class, class = void>
+    struct try_call_impl;
+
+    template<class TArg, class TPolicy, class TDependency, class TInitialization, class... TCtor>
+    struct try_call_impl<TArg, TPolicy, TDependency, aux::pair<TInitialization, aux::type_list<TCtor...>>
+                       , BOOST_DI_REQUIRES_T(!has_call_operator<TPolicy, TArg, TDependency, TCtor...>::value)>
+        : allow_void<decltype((std::declval<TPolicy>())(std::declval<TArg>()))>
+    { };
+
+    template<class TArg, class TPolicy, class TDependency, class TInitialization, class... TCtor>
+    struct try_call_impl<TArg, TPolicy, TDependency, aux::pair<TInitialization, aux::type_list<TCtor...>>
+                       , BOOST_DI_REQUIRES_T(has_call_operator<TPolicy, TArg, TDependency, TCtor...>::value)>
+        : allow_void<decltype((std::declval<TPolicy>())(std::declval<TArg>(), std::declval<TDependency>(), aux::type<TCtor>{}...))>
+    { };
+
 public:
+    template<class, class, class, class>
+    struct try_call;
+
     template<class TArg, class TDependency, class TCtor, class... TPolicies>
-    static auto call(BOOST_DI_UNUSED const pool<aux::type_list<TPolicies...>>& policies
-                   , BOOST_DI_UNUSED TDependency dependency
-                   , const TCtor& ctor) noexcept
-   -> std::is_same<
+    struct try_call<TArg, pool_t<TPolicies...>, TDependency, TCtor>
+        : std::is_same<
             aux::bool_list<aux::always<TPolicies>::value...>
-          , aux::bool_list<decltype(call_impl<TArg, TPolicies>(policies, dependency, ctor))::value...>
+          , aux::bool_list<try_call_impl<TArg, TPolicies, TDependency, TCtor>::value...>
         >
-    {
+    { };
+
+    template<class TArg, class TDependency, class TCtor, class... TPolicies>
+    static void call(BOOST_DI_UNUSED const pool_t<TPolicies...>& policies
+                   , BOOST_DI_UNUSED TDependency dependency
+                   , BOOST_DI_UNUSED const TCtor& ctor) noexcept {
         int _[]{0, (call_impl<TArg, TPolicies>(policies, dependency, ctor), 0)...}; (void)_;
-        return {};
     }
 };
 

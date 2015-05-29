@@ -74,9 +74,12 @@ inline decltype(auto) get_arg(const T& arg, const std::true_type&) noexcept {
 
 #if !defined(BOOST_DI_MSVC)
     #define BOOST_DI_TRY_POLICY \
-           && decltype(policy::template call<arg_wrapper<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot, pool_t>>( \
-              ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{}) \
-           )::value
+           && policy::template try_call< \
+                  arg_wrapper<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot, pool_t> \
+                , TPolicies \
+                , TDependency \
+                , TCtor \
+              >::value
 
     #define BOOST_DI_APPLY_POLICY \
         policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>( \
