@@ -25,27 +25,27 @@ struct allow_void<void> : std::true_type { };
 
 class policy {
     template<class TArg, class TPolicy, class TPolicies, class TDependency, class TCtor>
-    static void call_impl(const TPolicies& policies, TDependency dependency, const TCtor& ctor) noexcept {
+    static void call_impl(const TPolicies& policies, TDependency& dependency, const TCtor& ctor) noexcept {
         call_impl__<TArg>(static_cast<const TPolicy&>(policies), dependency, ctor);
     }
 
     template<class TArg, class TPolicy, class TDependency, class TCtor>
-    static void call_impl__(const TPolicy& policy, TDependency dependency, const TCtor& ctor) noexcept {
+    static void call_impl__(const TPolicy& policy, TDependency& dependency, const TCtor& ctor) noexcept {
         call_impl_args<TArg>(policy, dependency, ctor);
     }
 
     template<class TArg, class TDependency, class TPolicy, class TInitialization, class... TCtor
-           , BOOST_DI_REQUIRES(!has_call_operator<TPolicy, TArg, TDependency, TCtor...>::value)
+           , BOOST_DI_REQUIRES(!has_call_operator<TPolicy, TArg, TDependency&, TCtor...>::value)
     > static void call_impl_args(const TPolicy& policy
-                               , TDependency
+                               , TDependency&
                                , const aux::pair<TInitialization, aux::type_list<TCtor...>>&) noexcept {
         (policy)(TArg{});
     }
 
     template<class TArg, class TDependency, class TPolicy, class TInitialization, class... TCtor
-           , BOOST_DI_REQUIRES(has_call_operator<TPolicy, TArg, TDependency, TCtor...>::value)>
+           , BOOST_DI_REQUIRES(has_call_operator<TPolicy, TArg, TDependency&, TCtor...>::value)>
     static void call_impl_args(const TPolicy& policy
-                             , TDependency dependency
+                             , TDependency& dependency
                              , const aux::pair<TInitialization, aux::type_list<TCtor...>>&) noexcept {
         (policy)(TArg{}, dependency, aux::type<TCtor>{}...);
     }
@@ -79,7 +79,7 @@ public:
 
     template<class TArg, class TDependency, class TCtor, class... TPolicies>
     static void call(BOOST_DI_UNUSED const pool_t<TPolicies...>& policies
-                   , BOOST_DI_UNUSED TDependency dependency
+                   , BOOST_DI_UNUSED TDependency& dependency
                    , BOOST_DI_UNUSED const TCtor& ctor) noexcept {
         int _[]{0, (call_impl<TArg, TPolicies>(policies, dependency, ctor), 0)...}; (void)_;
     }
