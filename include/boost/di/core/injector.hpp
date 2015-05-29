@@ -34,6 +34,23 @@ struct from_deps { };
 struct init { };
 struct with_error { };
 
+template<
+    class T
+  , class TName
+  , class TIsRoot
+  , class TDeps
+  , class TIgnore = std::false_type
+> struct arg_wrapper {
+    using type BOOST_DI_UNUSED = T;
+    using name BOOST_DI_UNUSED = TName;
+    using is_root BOOST_DI_UNUSED = TIsRoot;
+    using ignore = TIgnore;
+
+    template<class T_, class TName_, class TDefault_>
+    using resolve =
+        decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)0));
+};
+
 template<class T, class TInjector>
 inline auto build(const TInjector& injector) noexcept {
     return T{injector};
@@ -57,13 +74,13 @@ inline decltype(auto) get_arg(const T& arg, const std::true_type&) noexcept {
 
 #if !defined(BOOST_DI_MSVC)
     #define BOOST_DI_TRY_POLICY \
-           && decltype(policy<pool_t>::template call<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot>( \
-              ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{}, std::false_type{}) \
+           && decltype(policy::template call<arg_wrapper<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot, pool_t>>( \
+              ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{}) \
            )::value
 
     #define BOOST_DI_APPLY_POLICY \
-        policy<pool_t>::template call<create_t, TName, TIsRoot>( \
-            ((TConfig&)*this).policies(), dependency, ctor_t{}, std::true_type{} \
+        policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>( \
+            ((TConfig&)*this).policies(), dependency, ctor_t{} \
         );
 
 #else

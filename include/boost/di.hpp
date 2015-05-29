@@ -362,6 +362,9 @@ template<class = aux::type_list<>>
 class pool;
 
 template<class... TArgs>
+using pool_t = pool<aux::type_list<TArgs...>>;
+
+template<class... TArgs>
 class pool<aux::type_list<TArgs...>> : public TArgs... {
 public:
     template<class... Ts>
@@ -2165,7 +2168,7 @@ namespace boost { namespace di { inline namespace v1 {
 
 template<class... TPolicies, BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>)>
 inline auto make_policies(const TPolicies&... args) noexcept {
-    return core::pool<aux::type_list<TPolicies...>>(args...);
+    return core::pool_t<TPolicies...>(args...);
 }
 
 class config {
@@ -2758,81 +2761,43 @@ namespace boost { namespace di { inline namespace v1 { namespace core {
 
 BOOST_DI_HAS_METHOD(call_operator, operator());
 
-template<
-    class T
-  , class TName
-  , class TIsRoot
-  , class TDeps
-  , class TIgnore
-> struct arg_wrapper {
-    using type BOOST_DI_UNUSED = T;
-    using name BOOST_DI_UNUSED = TName;
-    using is_root BOOST_DI_UNUSED = TIsRoot;
-    using ignore = TIgnore;
-
-    template<class T_, class TName_, class TDefault_>
-    using resolve =
-        decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)nullptr));
-};
-
-template<class TDeps>
 class policy {
-public:
-    template<
-        class T
-      , class TName
-      , class TIsRoot
-      , class TInitialization
-      , class TDependency
-      , class TIgnore
-      , class... TCtor
-      , class... TPolicies
-    > static auto call(BOOST_DI_UNUSED const pool<aux::type_list<TPolicies...>>& policies
-                     , BOOST_DI_UNUSED TDependency dependency
-                     , aux::pair<TInitialization, aux::type_list<TCtor...>>, const TIgnore&) noexcept {
-
-        int _[]{0, (call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TIgnore, TCtor...>(
-            policies, dependency), 0)...}; (void)_;
-
-       return std::is_same<
-            aux::bool_list<aux::always<TPolicies>::value...>
-          , aux::bool_list<decltype(call_impl<TPolicies, T, TName, TIsRoot, TPolicies, TDependency, TIgnore, TCtor...>(policies, dependency))::value...>
-        >{};
+    template<class TArg, class TPolicy, class TPolicies, class TDependency, class TCtor>
+    static auto call_impl(const TPolicies& policies, TDependency dependency, const TCtor& ctor) noexcept {
+        return call_impl_type<TArg>(static_cast<const TPolicy&>(policies), dependency, ctor);
     }
 
-private:
-    template<
-        class TPolicy
-      , class T
-      , class TName
-      , class TIsRoot
-      , class TPolicies
-      , class TDependency
-      , class TIgnore
-      , class... TCtor
-    > static auto call_impl(const TPolicies& policies, TDependency dependency) noexcept {
-        return call_impl_type<arg_wrapper<T, TName, TIsRoot, TDeps, TIgnore>, TDependency, TPolicy, TCtor...>(
-            static_cast<const TPolicy&>(policies), dependency
-        );
-    }
-
-    template<class TArg, class TDependency, class TPolicy, class... TCtor>
-    static auto call_impl_type(const TPolicy& policy, TDependency dependency) noexcept {
-        call_impl_args<TArg, TDependency, TPolicy, TCtor...>(policy, dependency);
-        using type = decltype(call_impl_args<TArg, TDependency, TPolicy, TCtor...>(policy, dependency));
+    template<class TArg, class TPolicy, class TDependency, class TCtor>
+    static auto call_impl_type(const TPolicy& policy, TDependency dependency, const TCtor& ctor) noexcept {
+        call_impl_args<TArg>(policy, dependency, ctor);
+        using type = decltype(call_impl_args<TArg>(policy, dependency, ctor));
         return std::conditional_t<std::is_same<type, void>::value, std::true_type, type>{};
     }
 
-    template<class TArg, class TDependency, class TPolicy, class... TCtor
-           , BOOST_DI_REQUIRES(!has_call_operator<TPolicy, TArg, TDependency, TCtor...>::value)>
-    static auto call_impl_args(const TPolicy& policy, TDependency) noexcept {
+    template<class TArg, class TDependency, class TPolicy, class TInitialization, class... TCtor
+           , BOOST_DI_REQUIRES(!has_call_operator<TPolicy, TArg, TDependency, TCtor...>::value)
+    > static auto call_impl_args(const TPolicy& policy, TDependency, const aux::pair<TInitialization, aux::type_list<TCtor...>>&) noexcept {
         return (policy)(TArg{});
     }
 
-    template<class TArg, class TDependency, class TPolicy, class... TCtor
+    template<class TArg, class TDependency, class TPolicy, class TInitialization, class... TCtor
            , BOOST_DI_REQUIRES(has_call_operator<TPolicy, TArg, TDependency, TCtor...>::value)>
-    static auto call_impl_args(const TPolicy& policy, TDependency dependency) noexcept {
+    static auto call_impl_args(const TPolicy& policy, TDependency dependency, const aux::pair<TInitialization, aux::type_list<TCtor...>>&) noexcept {
         return (policy)(TArg{}, dependency, aux::type<TCtor>{}...);
+    }
+
+public:
+    template<class TArg, class TDependency, class TCtor, class... TPolicies>
+    static auto call(BOOST_DI_UNUSED const pool<aux::type_list<TPolicies...>>& policies
+                   , BOOST_DI_UNUSED TDependency dependency
+                   , const TCtor& ctor) noexcept
+   -> std::is_same<
+            aux::bool_list<aux::always<TPolicies>::value...>
+          , aux::bool_list<decltype(call_impl<TArg, TPolicies>(policies, dependency, ctor))::value...>
+        >
+    {
+        int _[]{0, (call_impl<TArg, TPolicies>(policies, dependency, ctor), 0)...}; (void)_;
+        return {};
     }
 };
 
@@ -3073,6 +3038,23 @@ struct from_deps { };
 struct init { };
 struct with_error { };
 
+template<
+    class T
+  , class TName
+  , class TIsRoot
+  , class TDeps
+  , class TIgnore = std::false_type
+> struct arg_wrapper {
+    using type BOOST_DI_UNUSED = T;
+    using name BOOST_DI_UNUSED = TName;
+    using is_root BOOST_DI_UNUSED = TIsRoot;
+    using ignore = TIgnore;
+
+    template<class T_, class TName_, class TDefault_>
+    using resolve =
+        decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)0));
+};
+
 template<class T, class TInjector>
 inline auto build(const TInjector& injector) noexcept {
     return T{injector};
@@ -3096,13 +3078,13 @@ inline decltype(auto) get_arg(const T& arg, const std::true_type&) noexcept {
 
 #if !defined(BOOST_DI_MSVC)
     #define BOOST_DI_TRY_POLICY \
-           && decltype(policy<pool_t>::template call<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot>( \
-              ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{}, std::false_type{}) \
+           && decltype(policy::template call<arg_wrapper<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot, pool_t>>( \
+              ((TConfig*)0)->policies(), std::declval<TDependency>(), TCtor{}) \
            )::value
 
     #define BOOST_DI_APPLY_POLICY \
-        policy<pool_t>::template call<create_t, TName, TIsRoot>( \
-            ((TConfig&)*this).policies(), dependency, ctor_t{}, std::true_type{} \
+        policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>( \
+            ((TConfig&)*this).policies(), dependency, ctor_t{} \
         );
 
 #else
@@ -3216,7 +3198,7 @@ public:
 private:
     template<class... TArgs>
     explicit injector(const from_deps&, const TArgs&... args) noexcept
-        : pool_t{copyable<deps>{}, pool<aux::type_list<TArgs...>>{args...}}
+        : pool_t{copyable<deps>{}, core::pool_t<TArgs...>{args...}}
         , config{*this}
     { }
 
@@ -3428,7 +3410,7 @@ public:
 private:
     template<class... TArgs>
     explicit injector(const from_deps&, const TArgs&... args) noexcept
-        : pool_t{copyable<deps>{}, pool<aux::type_list<TArgs...>>{args...}}
+        : pool_t{copyable<deps>{}, core::pool_t<TArgs...>{args...}}
         , config{*this}
     { }
 

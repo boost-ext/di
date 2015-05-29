@@ -173,12 +173,12 @@ struct constructible_impl {
     void dump_error(const std::false_type&) const { }
 };
 
-template<class T = aux::never<_>, std::enable_if_t<std::is_base_of<type_op, T>::value, int> = 0>
+template<class T = aux::never<_>, BOOST_DI_REQUIRES(std::is_base_of<type_op, T>::value)>
 inline auto constructible(const T& = {}) {
     return constructible_impl<T>{};
 }
 
-template<class T = aux::never<_>, std::enable_if_t<!std::is_base_of<type_op, T>::value, int> = 0>
+template<class T = aux::never<_>, BOOST_DI_REQUIRES(!std::is_base_of<type_op, T>::value)>
 inline auto constructible(const T& = {}) {
     return constructible_impl<or_<T>>{};
 }
