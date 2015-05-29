@@ -110,7 +110,7 @@ public:
 private:
     template<class... TArgs>
     explicit injector(const from_deps&, const TArgs&... args) noexcept
-        : pool_t{copyable<deps>{}, pool<aux::type_list<TArgs...>>{args...}}
+        : pool_t{copyable<deps>{}, core::pool_t<TArgs...>{args...}}
         , config{*this}
     { }
 

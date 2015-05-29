@@ -16,6 +16,9 @@ template<class = aux::type_list<>>
 class pool;
 
 template<class... TArgs>
+using pool_t = pool<aux::type_list<TArgs...>>;
+
+template<class... TArgs>
 class pool<aux::type_list<TArgs...>> : public TArgs... {
 public:
     template<class... Ts>
