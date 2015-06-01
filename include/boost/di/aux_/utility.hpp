@@ -32,19 +32,6 @@ struct always : std::true_type { };
 template<class...>
 struct never : std::false_type { };
 
-template<bool, class, class B>
-struct lazy_conditional {
-    using type = typename B::type;
-};
-
-template<class A, class B>
-struct lazy_conditional<true, A, B> {
-    using type = typename A::type;
-};
-
-template<bool V, class A, class B>
-using lazy_conditional_t = typename lazy_conditional<V, A, B>::type;
-
 template<class, class>
 struct pair { using type = pair; };
 
