@@ -163,7 +163,7 @@ public:
     /**
      * Support for `di::bind<i, impl>()` when using variable templates
      */
-    #if !defined(BOOST_DI_MSVC) && !defined(BOOST_DI_DISABLE_DEPENDENCY_CONVERSION)
+    #if defined(__cpp_variable_templates) && !defined(BOOST_DI_DISABLE_DEPENDENCY_CONVERSION)
         const dependency& operator()() const noexcept {
             return *this;
         }
