@@ -34,10 +34,10 @@ template<
   , class TGiven = TExpected
   , BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, TGiven>)
 >
-#if defined(BOOST_DI_MSVC)
-    struct bind : core::bind<TExpected, TGiven> {};
+#if defined(__cpp_variable_templates)
+    core::dependency<scopes::deduce, TExpected, TGiven> bind{};
 #else
-    core::bind<TExpected, TGiven> bind{};
+    struct bind : core::dependency<scopes::deduce, TExpected, TGiven> {};
 #endif
 
 constexpr core::override override{};

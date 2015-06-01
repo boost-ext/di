@@ -43,14 +43,6 @@ struct override { };
 
 struct dependency_base { };
 
-template<class I, class Impl>
-struct bind : dependency<scopes::deduce, I, Impl> {
-    template<class T>
-    struct named_ : dependency<scopes::deduce, I, Impl, T> {
-        using dependency<scopes::deduce, I, Impl, T>::dependency;
-    };
-};
-
 template<class TDependency, class... Ts>
 struct extensions
     : Ts::template extension<TDependency>...
