@@ -2525,54 +2525,339 @@ constexpr auto session_exit(const TName&) noexcept {
 
 #endif
 
-#ifndef BOOST_DI_CORE_BINDER_HPP
-#define BOOST_DI_CORE_BINDER_HPP
+#ifndef BOOST_DI_CORE_INJECTOR_HPP
+#define BOOST_DI_CORE_INJECTOR_HPP
 
-namespace boost { namespace di { inline namespace v1 { namespace core {
+#if defined(BOOST_DI_IS_ITERATING)
+    #define BOOST_DI_CORE_INJECTOR_POLICY(...) BOOST_DI_CORE_INJECTOR_POLICY_ELSE
+    #define BOOST_DI_CORE_INJECTOR_POLICY_ELSE(...) __VA_ARGS__
+#else
+    #define BOOST_DI_CORE_INJECTOR_POLICY(...) __VA_ARGS__ BOOST_DI_CORE_INJECTOR_POLICY_ELSE
+    #define BOOST_DI_CORE_INJECTOR_POLICY_ELSE(...)
 
-class binder {
-    template<class TDefault, class>
-    static TDefault resolve_impl(...) noexcept {
-        return {};
-    }
+#ifndef BOOST_DI_AUX_COMPILER_SPECIFIC_HPP
+#define BOOST_DI_AUX_COMPILER_SPECIFIC_HPP
 
-    template<class, class TConcept, class TDependency>
-    static decltype(auto)
-    resolve_impl(aux::pair<TConcept, TDependency>* dep) noexcept {
-        return static_cast<TDependency&>(*dep);
-    }
-
-    template<
-        class
-      , class TConcept
-      , class TScope
-      , class TExpected
-      , class TGiven
-      , class TName
-    > static decltype(auto)
-    resolve_impl(aux::pair<TConcept
-               , dependency<TScope, TExpected, TGiven, TName, override>>* dep) noexcept {
-        return static_cast<dependency<TScope, TExpected, TGiven, TName, override>&>(*dep);
-    }
-
-public:
-    template<
-        class T
-      , class TName = no_name
-      , class TDefault = dependency<scopes::deduce, aux::decay_t<T>>
-      , class TDeps = void
-    > static decltype(auto) resolve(TDeps* deps) noexcept {
-        using dependency = dependency_concept<aux::decay_t<T>, TName>;
-        return resolve_impl<TDefault, dependency>(deps);
-    }
-};
-
-}}}} // boost::di::v1::core
-
+#if defined(__clang__)
+    #define BOOST_DI_CLANG
+#elif defined(__GNUC__)
+    #define BOOST_DI_GCC
+#elif defined(_MSC_VER)
+    #define BOOST_DI_MSVC
 #endif
 
+#if defined(BOOST_DI_CLANG)
+    #define BOOST_DI_UNUSED __attribute__((unused))
+    #define BOOST_DI_ATTR_ERROR(...) [[deprecated(__VA_ARGS__)]]
+    #define BOOST_DI_CONSTEXPR constexpr
+    #define BOOST_DI_LIKELY(...) __builtin_expect((__VA_ARGS__), 1)
+    #define BOOST_DI_UNLIKELY(...) __builtin_expect((__VA_ARGS__), 0)
+#elif defined(BOOST_DI_GCC)
+    #define BOOST_DI_UNUSED __attribute__((unused))
+    #define BOOST_DI_ATTR_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
+    #define BOOST_DI_CONSTEXPR constexpr
+    #define BOOST_DI_LIKELY(...) __builtin_expect((__VA_ARGS__), 1)
+    #define BOOST_DI_UNLIKELY(...) __builtin_expect((__VA_ARGS__), 0)
+#elif defined(BOOST_DI_MSVC)
+    #pragma warning(disable : 4503) // decorated name length exceeded, name was truncated
+    #pragma warning(disable : 4822) // local class member function does not have a body
+
+    #define BOOST_DI_UNUSED
+    #define BOOST_DI_ATTR_ERROR(...) __declspec(deprecated(__VA_ARGS__))
+    #define BOOST_DI_CONSTEXPR inline
+    #define BOOST_DI_LIKELY(...) __VA_ARGS__
+    #define BOOST_DI_UNLIKELY(...) __VA_ARGS__
+#endif
+
+#endif
+#ifndef BOOST_DI_AUX_TYPE_TRAITS_HPP
+#define BOOST_DI_AUX_TYPE_TRAITS_HPP
+
+#include <memory>
+#include <type_traits>
+#include "boost/di/fwd.hpp"
+#include "boost/di/aux_/utility.hpp"
+
+#define BOOST_DI_HAS_TYPE(name)                                     \
+    template<class, class = void>                                   \
+    struct has_##name : std::false_type { };                        \
+                                                                    \
+    template<class T>                                               \
+    struct has_##name<                                              \
+        T, typename aux::void_t<typename T::name>::type             \
+    > : std::true_type { }
+
+#define BOOST_DI_HAS_METHOD(name, call_name)                        \
+    template<class T, class... TArgs>                               \
+    decltype(std::declval<T>().call_name(std::declval<TArgs>()...)  \
+           , std::true_type())                                      \
+    has_##name##_impl(int);                                         \
+                                                                    \
+    template<class, class...>                                       \
+    std::false_type has_##name##_impl(...);                         \
+                                                                    \
+    template<class T, class... TArgs>                               \
+    struct has_##name : decltype(has_##name##_impl<T, TArgs...>(0)) \
+    { }
+
+#define BOOST_DI_REQUIRES(...) \
+    typename std::enable_if<__VA_ARGS__, int>::type = 0
+
+#define BOOST_DI_REQUIRES_T(...) \
+    std::enable_if_t<__VA_ARGS__>
+
+#define BOOST_DI_REQUIRES_MSG(...) \
+    typename constraint_not_satisfied<__VA_ARGS__>::type = 0
+
+#define BOOST_DI_REQUIRES_MSG_T(...) \
+    constraint_not_satisfied<__VA_ARGS__>::type
+
+namespace boost { namespace di { inline namespace v1 {
+
+template<class...>
+struct constraint_not_satisfied { };
+
+template<>
+struct constraint_not_satisfied<std::true_type> {
+    using type = int;
+};
+
+template<class T>
+struct constraint_not_satisfied<std::true_type, T> {
+    using type = T;
+};
+
+namespace aux {
+
+template<class...>
+using is_valid_expr = std::true_type;
+
+template<class>
+struct is_smart_ptr : std::false_type { };
+
+template<class T, class TDeleter>
+struct is_smart_ptr<std::unique_ptr<T, TDeleter>>
+    : std::true_type
+{ };
+
+template<class T>
+struct is_smart_ptr<std::shared_ptr<T>>
+    : std::true_type
+{ };
+
+template<class T>
+struct is_smart_ptr<boost::shared_ptr<T>>
+    : std::true_type
+{ };
+
+template<class T>
+struct is_smart_ptr<std::weak_ptr<T>>
+    : std::true_type
+{ };
+
+template<class T, class... TArgs>
+decltype(void(T{std::declval<TArgs>()...}), std::true_type{})
+test_is_braces_constructible(int);
+
+template<class, class...>
+std::false_type test_is_braces_constructible(...);
+
+template<class T, class... TArgs>
+using is_braces_constructible =
+    decltype(test_is_braces_constructible<T, TArgs...>(0));
+
+template<class T, class... TArgs>
+using is_braces_constructible_t =
+    typename is_braces_constructible<T, TArgs...>::type;
+
+template<class T>
+using remove_accessors =
+    std::remove_cv<std::remove_pointer_t<std::remove_reference_t<T>>>;
+
+template<class T>
+using remove_accessors_t = typename remove_accessors<T>::type;
+
+template<class, class = void>
+struct deref_type;
+
+template<typename T>
+using deref_type_t = typename deref_type<T>::type;
+
+template<class T, class>
+struct deref_type {
+    using type = T;
+};
+
+template<class T>
+struct deref_type<T, std::enable_if_t<is_smart_ptr<T>::value>> {
+    using type = typename T::element_type;
+};
+
+template<class T>
+using decay =
+    deref_type<remove_accessors_t<deref_type_t<remove_accessors_t<T>>>>;
+
+template<class T>
+using decay_t = typename decay<T>::type;
+
+template<class T1, class T2>
+struct is_same_or_base_of {
+    static constexpr auto value =
+        std::is_same<aux::decay_t<T1>, aux::decay_t<T2>>::value ||
+        std::is_base_of<aux::decay_t<T2>, aux::decay_t<T1>>::value;
+};
+
+template<class T>
+struct function_traits
+    : function_traits<decltype(&T::operator())>
+{ };
+
+template<class R, class... TArgs>
+struct function_traits<R(*)(TArgs...)> {
+    using result_type = R;
+    using base_type = none_type;
+    using args = type_list<TArgs...>;
+};
+
+template<class R, class... TArgs>
+struct function_traits<R(TArgs...)> {
+    using result_type = R;
+    using base_type = none_type;
+    using args = type_list<TArgs...>;
+};
+
+template<class R, class T, class... TArgs>
+struct function_traits<R(T::*)(TArgs...)> {
+    using result_type = R;
+    using base_type = T;
+    using args = type_list<TArgs...>;
+};
+
+template<class R, class T, class... TArgs>
+struct function_traits<R(T::*)(TArgs...) const> {
+    using result_type = R;
+    using base_type = T;
+    using args = type_list<TArgs...>;
+};
+
+}}}} // boost::di::v1::aux
+
+#endif
+#ifndef BOOST_DI_AUX_UTILITY_HPP
+#define BOOST_DI_AUX_UTILITY_HPP
+
+#include <type_traits>
+
+namespace boost { namespace di { inline namespace v1 {
+
+struct _ { constexpr _(...) { } };
+
+namespace aux {
+
+template<class...>
+struct type { };
+
+struct none_type { };
+
+template<class T, T>
+struct non_type { };
+
+template<class...>
+struct void_t { using type = void; };
+
+template<class...>
+struct always : std::true_type { };
+
+template<class...>
+struct never : std::false_type { };
+
+template<bool, class, class B>
+struct lazy_conditional {
+    using type = typename B::type;
+};
+
+template<class A, class B>
+struct lazy_conditional<true, A, B> {
+    using type = typename A::type;
+};
+
+template<bool V, class A, class B>
+using lazy_conditional_t = typename lazy_conditional<V, A, B>::type;
+
+template<class, class>
+struct pair { using type = pair; };
+
+template<bool...>
+struct bool_list { using type = bool_list; };
+
+template<class...>
+struct type_list { using type = type_list; };
+
+template<class... Ts>
+struct inherit : Ts... { using type = inherit; };
+
+template<class...>
+struct join;
+
+template<>
+struct join<> { using type = type_list<>; };
+
+template<class... TArgs>
+struct join<type_list<TArgs...>> {
+    using type = type_list<TArgs...>;
+};
+
+template<class... TArgs1, class... TArgs2>
+struct join<type_list<TArgs1...>, type_list<TArgs2...>> {
+    using type = type_list<TArgs1..., TArgs2...>;
+};
+
+template<class... TArgs1, class... TArgs2, class... Ts>
+struct join<type_list<TArgs1...>, type_list<TArgs2...>, Ts...> {
+    using type = typename join<type_list<TArgs1..., TArgs2...>, Ts...>::type;
+};
+
+template<class... TArgs>
+using join_t = typename join<TArgs...>::type;
+
+template<class, class...>
+struct is_unique_impl;
+
+template<class...>
+struct not_unique : std::false_type {
+    using type = not_unique;
+};
+
+template<>
+struct not_unique<> : std::true_type {
+    using type = not_unique;
+};
+
+template<class T>
+struct is_unique_impl<T> : not_unique<> { };
+
+template<class T1, class T2, class... Ts>
+struct is_unique_impl<T1, T2, Ts...>
+    : std::conditional_t<
+          std::is_base_of<type<T2>, T1>::value
+        , not_unique<T2>
+        , is_unique_impl<inherit<T1, type<T2>>, Ts...>
+       >
+{ };
+
+template<class... Ts>
+using is_unique = is_unique_impl<none_type, Ts...>;
+
+}}}} // boost::di::v1::aux
+
+#endif
 #ifndef BOOST_DI_CORE_ANY_TYPE_HPP
 #define BOOST_DI_CORE_ANY_TYPE_HPP
+
+#include "boost/di/aux_/compiler_specific.hpp"
+#include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/core/binder.hpp"
+#include "boost/di/concepts/creatable.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
@@ -2731,9 +3016,60 @@ struct any_type_ref_fwd {
 }}}} // boost::di::v1::core
 
 #endif
+#ifndef BOOST_DI_CORE_BINDER_HPP
+#define BOOST_DI_CORE_BINDER_HPP
 
+#include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/aux_/utility.hpp"
+#include "boost/di/core/dependency.hpp"
+#include "boost/di/scopes/deduce.hpp"
+
+namespace boost { namespace di { inline namespace v1 { namespace core {
+
+class binder {
+    template<class TDefault, class>
+    static TDefault resolve_impl(...) noexcept {
+        return {};
+    }
+
+    template<class, class TConcept, class TDependency>
+    static decltype(auto)
+    resolve_impl(aux::pair<TConcept, TDependency>* dep) noexcept {
+        return static_cast<TDependency&>(*dep);
+    }
+
+    template<
+        class
+      , class TConcept
+      , class TScope
+      , class TExpected
+      , class TGiven
+      , class TName
+    > static decltype(auto)
+    resolve_impl(aux::pair<TConcept
+               , dependency<TScope, TExpected, TGiven, TName, override>>* dep) noexcept {
+        return static_cast<dependency<TScope, TExpected, TGiven, TName, override>&>(*dep);
+    }
+
+public:
+    template<
+        class T
+      , class TName = no_name
+      , class TDefault = dependency<scopes::deduce, aux::decay_t<T>>
+      , class TDeps = void
+    > static decltype(auto) resolve(TDeps* deps) noexcept {
+        using dependency = dependency_concept<aux::decay_t<T>, TName>;
+        return resolve_impl<TDefault, dependency>(deps);
+    }
+};
+
+}}}} // boost::di::v1::core
+
+#endif
 #ifndef BOOST_DI_CORE_COPYABLE_HPP
 #define BOOST_DI_CORE_COPYABLE_HPP
+
+#include "boost/di/aux_/type_traits.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
@@ -2758,9 +3094,13 @@ using copyable = typename copyable_impl<TDeps>::type;
 }}}} // boost::di::v1::core
 
 #endif
-
 #ifndef BOOST_DI_CORE_POLICY_HPP
 #define BOOST_DI_CORE_POLICY_HPP
+
+#include "boost/di/aux_/utility.hpp"
+#include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/core/binder.hpp"
+#include "boost/di/core/pool.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
@@ -2853,9 +3193,49 @@ public:
 }}}} // boost::di::v1::core
 
 #endif
+#ifndef BOOST_DI_CORE_POOL_HPP
+#define BOOST_DI_CORE_POOL_HPP
 
+#include "boost/di/aux_/utility.hpp"
+#include "boost/di/aux_/type_traits.hpp"
+
+namespace boost { namespace di { inline namespace v1 { namespace core {
+
+template<class = aux::type_list<>>
+class pool;
+
+template<class... TArgs>
+using pool_t = pool<aux::type_list<TArgs...>>;
+
+template<class... TArgs>
+class pool<aux::type_list<TArgs...>> : public TArgs... {
+public:
+    template<class... Ts>
+    explicit pool(const Ts&... args) noexcept
+        : Ts(args)...
+    { }
+
+    template<class... Ts, class TPool>
+    pool(const aux::type_list<Ts...>&, const TPool& p) noexcept
+        : pool(static_cast<const Ts&>(p)...)
+    { }
+
+    template<class T>
+    inline const T& get() const noexcept {
+        return static_cast<const T&>(*this);
+    }
+};
+
+}}}} // boost::di::v1::core
+
+#endif
 #ifndef BOOST_DI_CORE_PROVIDER_HPP
 #define BOOST_DI_CORE_PROVIDER_HPP
+
+#include "boost/di/aux_/utility.hpp"
+#include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/concepts/creatable.hpp"
+#include "boost/di/type_traits/memory_traits.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
@@ -2957,9 +3337,71 @@ template<
 }}}} // boost::di::v1::core
 
 #endif
+#ifndef BOOST_DI_CORE_TRANSFORM_HPP
+#define BOOST_DI_CORE_TRANSFORM_HPP
 
+#include "boost/di/aux_/compiler_specific.hpp"
+#include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/aux_/utility.hpp"
+#include "boost/di/core/dependency.hpp"
+#include "boost/di/scopes/exposed.hpp"
+
+namespace boost { namespace di { inline namespace v1 { namespace core {
+
+template<class T, class = void>
+struct get_deps {
+    using type = typename T::deps;
+};
+
+template<class T>
+struct get_deps<T, std::enable_if_t<has_configure<T>::value>> {
+    using result_type = typename aux::function_traits<
+        decltype(&T::configure)
+    >::result_type;
+
+    using type = typename result_type::deps;
+};
+
+template<
+    class T
+  , class = typename is_injector<T>::type
+  , class = typename is_dependency<T>::type
+> struct add_type_list;
+
+template<class T, class TAny>
+struct add_type_list<T, std::true_type, TAny> {
+    using type = typename get_deps<T>::type;
+};
+
+template<class T>
+struct add_type_list<T, std::false_type, std::true_type> {
+    using type = aux::type_list<T>;
+};
+
+template<class T>
+struct add_type_list<T, std::false_type, std::false_type> {
+    using type = aux::type_list<dependency<scopes::exposed<>, T>>;
+};
+
+#if defined(BOOST_DI_MSVC)
+    template<class... Ts>
+    struct transform : aux::join_t<typename add_type_list<Ts>::type...> { };
+
+    template<class... Ts>
+    using transform_t = typename transform<Ts...>::type;
+#else
+    template<class... Ts>
+    using transform_t = aux::join_t<typename add_type_list<Ts>::type...>;
+#endif
+
+}}}} // boost::di::v1::core
+
+#endif
 #ifndef BOOST_DI_CORE_WRAPPER_HPP
 #define BOOST_DI_CORE_WRAPPER_HPP
+
+#include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/concepts/creatable.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
@@ -3018,7 +3460,294 @@ using wrapper = wrapper_impl<T, TWrapper>;
 }}}} // boost::di::v1::core
 
 #endif
+#ifndef BOOST_DI_SCOPES_EXPOSED_HPP
+#define BOOST_DI_SCOPES_EXPOSED_HPP
 
+#include "boost/di/scopes/deduce.hpp"
+
+namespace boost { namespace di { inline namespace v1 { namespace scopes {
+
+template<class TScope = scopes::deduce>
+class exposed {
+public:
+    template<class TExpected, class TGiven>
+    class scope {
+        using type = std::conditional_t<
+            std::is_copy_constructible<TExpected>::value
+          , TExpected
+          , TExpected*
+        >;
+
+        struct iprovider {
+            virtual ~iprovider() noexcept = default;
+            virtual TExpected* get(const type_traits::heap& = {}) const noexcept = 0;
+            virtual type get(const type_traits::stack&) const noexcept = 0;
+            virtual iprovider* clone() const noexcept = 0;
+        };
+
+        template<class TInjector>
+        class provider_impl : public iprovider {
+        public:
+            explicit provider_impl(const TInjector& injector) noexcept
+                : injector_(injector)
+            { }
+
+            TExpected* get(const type_traits::heap&) const noexcept override {
+                return injector_.create_impl(aux::type<TExpected*>{});
+            }
+
+            type get(const type_traits::stack&) const noexcept override {
+                return injector_.create_impl(aux::type<type>{});
+            }
+
+            iprovider* clone() const noexcept override {
+                return new provider_impl(*this); // non-ownership pointer
+            }
+
+        private:
+            TInjector injector_;
+        };
+
+    public:
+        template<class>
+        using is_referable = std::false_type;
+
+        template<class TInjector>
+        explicit scope(const TInjector& injector) noexcept
+            : provider_{new provider_impl<TInjector>(injector)}
+        { }
+
+        explicit scope(const scope& other) noexcept
+            : provider_(other.provider_->clone())
+        { }
+
+        template<class T, class TProvider>
+        T try_create(const TProvider&);
+
+        template<class T, class TProvider>
+        auto create(const TProvider&) {
+            return scope_.template create<T>(*provider_);
+        }
+
+    private:
+        std::unique_ptr<iprovider> provider_;
+        typename TScope::template scope<TExpected, TGiven> scope_;
+    };
+};
+
+#if defined(BOOST_DI_GCC)
+    template<class TScope>
+    template<class TExpected, class TGiven>
+    TExpected* exposed<TScope>::scope<TExpected, TGiven>::iprovider::get(const type_traits::heap&) const noexcept {
+        return nullptr;
+    }
+#endif
+
+}}}} // boost::di::v1::scopes
+
+#endif
+#ifndef BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
+#define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
+
+#include "boost/di/aux_/compiler_specific.hpp"
+#include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/aux_/utility.hpp"
+#include "boost/di/inject.hpp"
+#include "boost/di/fwd.hpp"
+
+namespace boost { namespace di { inline namespace v1 { namespace type_traits {
+
+template<class, class>
+struct named { };
+struct direct { };
+struct uniform { };
+
+BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_INJECTOR);
+
+template<class T, std::size_t>
+struct get {
+    using type = T;
+};
+
+template<class T, std::size_t N>
+using get_t = typename get<T, N>::type;
+
+template<template<class...> class, class, class, class = void>
+struct ctor_impl;
+
+template<template<class...> class TIsConstructible, class T, std::size_t... TArgs>
+struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>
+    , BOOST_DI_REQUIRES_T((sizeof...(TArgs) > 0) && !TIsConstructible<T, get_t<core::any_type_fwd<T>, TArgs>...>::value)>
+    : std::conditional<
+           TIsConstructible<T, get_t<core::any_type_ref_fwd<T>, TArgs>...>::value
+         , aux::type_list<get_t<core::any_type_ref_fwd<T>, TArgs>...>
+         , typename ctor_impl<
+               TIsConstructible
+             , T
+             , std::make_index_sequence<sizeof...(TArgs) - 1>
+           >::type
+      >
+{ };
+
+template<template<class...> class TIsConstructible, class T, std::size_t... TArgs>
+struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>,
+      BOOST_DI_REQUIRES_T((sizeof...(TArgs) > 0) && TIsConstructible<T, get_t<core::any_type_fwd<T>, TArgs>...>::value)>
+    : aux::type_list<get_t<core::any_type_fwd<T>, TArgs>...>
+{ };
+
+template<template<class...> class TIsConstructible, class T>
+struct ctor_impl<TIsConstructible, T, std::index_sequence<>>
+    : aux::type_list<>
+{ };
+
+template<template<class...> class TIsConstructible, class T>
+using ctor_impl_t =
+    typename ctor_impl<
+        TIsConstructible
+      , T
+      , std::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
+    >::type;
+
+template<class...>
+struct ctor;
+
+template<class T>
+struct ctor<T, aux::type_list<>>
+    : aux::pair<uniform, ctor_impl_t<aux::is_braces_constructible, T>>
+{ };
+
+template<class T, class... TArgs>
+struct ctor<T, aux::type_list<TArgs...>>
+    : aux::pair<direct, aux::type_list<TArgs...>>
+{ };
+
+} // type_traits
+
+template<class T>
+struct ctor_traits
+    : type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>
+{ };
+
+namespace type_traits {
+
+template<class>
+struct parse_args;
+
+template<class T>
+struct arg {
+    using type = T;
+};
+
+template<class>
+struct arg_impl;
+
+template<class T>
+struct arg_impl<aux::type_list<T>> {
+    using type = T;
+};
+
+template<class T>
+using arg_impl_t = typename arg_impl<T>::type;
+
+template<class T>
+struct arg<aux::type<T, std::true_type>> {
+    using type = named<
+        typename aux::function_traits<
+            decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, name))
+        >::result_type
+      , arg_impl_t<typename aux::function_traits<
+            decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, arg))
+        >::args>
+    >;
+};
+
+template<class T>
+struct arg<aux::type<T, std::false_type>> {
+    using type = arg_impl_t<typename aux::function_traits<
+        decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, arg))
+    >::args>;
+};
+
+template<class... Ts>
+struct parse_args<aux::type_list<Ts...>>
+    : aux::type_list<typename arg<Ts>::type...>
+{ };
+
+template<class... Ts>
+using parse_args_t = typename parse_args<Ts...>::type;
+
+template<
+    class T
+  , class = typename BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<T>::type
+> struct ctor_traits;
+
+template<
+    class T
+  , class = typename BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<di::ctor_traits<T>>::type
+> struct ctor_traits_impl;
+
+template<class T>
+struct ctor_traits<T, std::true_type>
+    : aux::pair<direct, parse_args_t<typename T::BOOST_DI_INJECTOR::type>>
+{ };
+
+template<class T>
+struct ctor_traits<T, std::false_type>
+    : ctor_traits_impl<T>
+{ };
+
+template<class T>
+struct ctor_traits_impl<T, std::true_type>
+    : aux::pair<
+          direct
+        , parse_args_t<typename di::ctor_traits<T>::BOOST_DI_INJECTOR::type>
+      >
+{ };
+
+template<class T>
+struct ctor_traits_impl<T, std::false_type>
+    : di::ctor_traits<T>
+{ };
+
+}}}} // boost::di::v1::type_traits
+
+#include <string>
+
+namespace boost { namespace di { inline namespace v1 {
+    template<
+        class T
+      , class Traits
+      , class TAllocator
+    > struct ctor_traits<std::basic_string<T, Traits, TAllocator>> {
+        BOOST_DI_INJECT_TRAITS();
+    };
+}}} // boost::di::v1
+
+namespace std {
+    template<class>
+    class initializer_list;
+
+    #if defined(BOOST_DI_MSVC)
+        template<class>
+        class function;
+    #endif
+} // std
+
+namespace boost { namespace di { inline namespace v1 {
+    template<class T>
+    struct ctor_traits<std::initializer_list<T>> {
+        BOOST_DI_INJECT_TRAITS();
+    };
+
+    #if defined(BOOST_DI_MSVC)
+        template<class T>
+        struct ctor_traits<std::function<T>> {
+            BOOST_DI_INJECT_TRAITS();
+        };
+    #endif
+}}} // boost::di::v1
+
+#endif
 #ifndef BOOST_DI_TYPE_TRAITS_CONFIG_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_CONFIG_TRAITS_HPP
 
@@ -3040,9 +3769,11 @@ using config_traits_t = typename config_traits<TConfig, TInjector>::type;
 }}}} // boost::di::v1::type_traits
 
 #endif
-
 #ifndef BOOST_DI_TYPE_TRAITS_REFERABLE_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_REFERABLE_TRAITS_HPP
+
+#include "boost/di/aux_/compiler_specific.hpp"
+#include "boost/di/aux_/type_traits.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 
@@ -3074,54 +3805,635 @@ using referable_traits_t = typename referable_traits<T, TDependency>::type;
 }}}} // boost::di::v1::type_traits
 
 #endif
+#ifndef BOOST_DI_CONCEPTS_CREATABLE_HPP
+#define BOOST_DI_CONCEPTS_CREATABLE_HPP
 
+#include "boost/di/aux_/compiler_specific.hpp"
+#include "boost/di/aux_/utility.hpp"
+#include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/type_traits/ctor_traits.hpp"
+
+#define BOOST_DI_CONCEPTS_CREATABLE_ATTR \
+    BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
+
+namespace boost { namespace di { inline namespace v1 {
+
+template<class T>
+struct abstract_type {
+struct is_not_bound {
+    BOOST_DI_CONSTEXPR operator T*() const {
+        using constraint_not_satisfied = is_not_bound;
+        return
+            constraint_not_satisfied{}.error();
+    }
+
+    BOOST_DI_CONSTEXPR T*
+    error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?")
+    const;
+};
+
+struct is_not_fully_implemented {
+    BOOST_DI_CONSTEXPR operator T*() const {
+        using constraint_not_satisfied = is_not_fully_implemented;
+        return
+            constraint_not_satisfied{}.error();
+    }
+
+    BOOST_DI_CONSTEXPR T*
+    error(_ = "type not implemented, did you forget to implement all interface methods?")
+    const;
+};
+
+template<class TName>
+struct named {
+struct is_not_bound {
+    BOOST_DI_CONSTEXPR operator T*() const {
+        using constraint_not_satisfied = is_not_bound;
+        return
+            constraint_not_satisfied{}.error();
+    }
+
+    BOOST_DI_CONSTEXPR T*
+    error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>.named(name)'?")
+    const;
+};
+
+struct is_not_fully_implemented {
+    BOOST_DI_CONSTEXPR operator T*() const {
+        using constraint_not_satisfied = is_not_fully_implemented;
+        return
+            constraint_not_satisfied{}.error();
+    }
+
+    BOOST_DI_CONSTEXPR T*
+    error(_ = "type not implemented, did you forget to implement all interface methods?")
+    const;
+};
+
+};};
+
+template<class TParent>
+struct when_creating {
+    template<class T>
+    struct type {
+        template<class TName>
+        struct named {
+            BOOST_DI_CONSTEXPR T
+            error(_ = "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.named(name).to(value)`");
+        };
+
+        BOOST_DI_CONSTEXPR T
+        error(_ = "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.to(value)`");
+    };
+};
+
+template<class TParent, class TName = no_name>
+struct in_type {
+    template<class T>
+    using is_not_same = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
+
+    template<class T, class = is_not_same<T>>
+    BOOST_DI_CONSTEXPR operator T() {
+        return {};
+    }
+
+    template<class T, class = is_not_same<T>>
+    BOOST_DI_CONSTEXPR operator T&() const {
+        using constraint_not_satisfied = typename when_creating<TParent>::template type<T&>::template named<TName>;
+        return
+            constraint_not_satisfied{}.error();
+    }
+};
+
+template<class TParent>
+struct in_type<TParent, no_name> {
+    template<class T>
+    using is_not_same = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
+
+    template<class T, class = is_not_same<T>>
+    BOOST_DI_CONSTEXPR operator T() {
+        return {};
+    }
+
+    template<class T, class = is_not_same<T>>
+    BOOST_DI_CONSTEXPR operator T&() const {
+        using constraint_not_satisfied = typename when_creating<TParent>::template type<T&>;
+        return
+            constraint_not_satisfied{}.error();
+    }
+};
+
+template<class...>
+struct type;
+
+template<class T, class>
+struct in {
+    using type = in_type<T>;
+};
+
+template<class TParent, class TName, class T>
+struct in<TParent, type_traits::named<TName, T>> {
+    using type = in_type<TParent, TName>;
+};
+
+template<class T, class TInitialization, class... TArgs, class... TCtor>
+struct type<T, type_traits::direct, aux::pair<TInitialization, aux::type_list<TArgs...>>, TCtor...> {
+    BOOST_DI_CONSTEXPR operator T*() const {
+        return impl<T>();
+    }
+
+    template<class T_>
+    auto impl() const {
+        return new T{typename in<T_, TArgs>::type{}...};
+    }
+};
+
+template<class T, class TInitialization, class... TArgs, class... TCtor>
+struct type<T, type_traits::uniform, aux::pair<TInitialization, aux::type_list<TArgs...>>, TCtor...> {
+    BOOST_DI_CONSTEXPR operator T*() const {
+        return impl<T>(aux::is_braces_constructible<T, TCtor...>{});
+    }
+
+    template<class T_>
+    auto impl(const std::true_type&) const {
+        return new T_{typename in<T_, TArgs>::type{}...};
+    }
+
+    template<class T_>
+    auto impl(const std::false_type&) const {
+        return nullptr;
+    }
+};
+
+template<class T>
+struct type<T> {
+template<class To>
+struct is_not_convertible_to {
+    BOOST_DI_CONSTEXPR operator To() const {
+        using constraint_not_satisfied = is_not_convertible_to;
+        return
+            constraint_not_satisfied{}.error();
+    }
+
+    BOOST_DI_CONSTEXPR To
+    error(_ = "wrapper is not convertible to requested type, did you mistake the scope?")
+    const;
+};};
+
+template<class T>
+struct number_of_constructor_arguments_doesnt_match_for {
+template<int Given> struct given {
+template<int Expected> struct expected {
+    BOOST_DI_CONSTEXPR operator T*() const {
+        using constraint_not_satisfied = expected;
+        return
+            constraint_not_satisfied{}.error();
+    }
+
+    BOOST_DI_CONSTEXPR T*
+    error(_ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits")
+    const;
+};};};
+
+template<class T>
+struct number_of_constructor_arguments_is_out_of_range_for {
+template<int TMax> struct max {
+    BOOST_DI_CONSTEXPR operator T*() const {
+        using constraint_not_satisfied = max;
+        return
+            constraint_not_satisfied{}.error();
+    }
+
+    BOOST_DI_CONSTEXPR T*
+    error(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters")
+    const;
+};};
+
+namespace concepts {
+
+template<class>
+struct ctor_size;
+
+template<class TInit, class... TCtor>
+struct ctor_size<aux::pair<TInit, aux::type_list<TCtor...>>>
+    : std::integral_constant<int, sizeof...(TCtor)>
+{ };
+
+template<class...>
+struct creatable_error_impl;
+
+template<class T>
+using ctor_size_t = ctor_size<
+    typename type_traits::ctor<
+        aux::decay_t<T>
+      , type_traits::ctor_impl_t<std::is_constructible, aux::decay_t<T>>
+    >::type
+>;
+
+#define BOOST_DI_NAMED_ERROR(name, type, error_type, error) \
+    std::conditional_t< \
+        std::is_same<TName, no_name>::value \
+      , typename error_type<aux::decay_t<type>>::error \
+      , typename error_type<aux::decay_t<type>>::template named<TName>::error \
+    >
+
+template<class TInitialization, class TName, class I, class T, class... TCtor>
+struct creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TCtor...>>
+    : std::conditional_t<
+          std::is_abstract<aux::decay_t<T>>::value
+        , std::conditional_t<
+              std::is_same<I, T>::value
+            , BOOST_DI_NAMED_ERROR(TName, T, abstract_type, is_not_bound)
+            , BOOST_DI_NAMED_ERROR(TName, T, abstract_type, is_not_fully_implemented)
+          >
+        , std::conditional_t<
+              ctor_size_t<T>::value == sizeof...(TCtor)
+            , std::conditional_t<
+                  !sizeof...(TCtor)
+                , typename number_of_constructor_arguments_is_out_of_range_for<aux::decay_t<T>>::
+                      template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
+                , type<
+                      aux::decay_t<T>
+                    , TInitialization
+                    , typename type_traits::ctor_traits<aux::decay_t<T>>::type, TCtor...
+                  >
+              >
+            , typename number_of_constructor_arguments_doesnt_match_for<aux::decay_t<T>>::
+                  template given<sizeof...(TCtor)>::
+                  template expected<ctor_size_t<T>::value>
+          >
+      >
+{ };
+
+#undef BOOST_DI_NAMED_ERROR
+
+template<class TInit, class T, class... Ts>
+struct creatable {
+    static constexpr auto value = std::is_constructible<T, Ts...>::value;
+};
+
+template<class T, class... Ts>
+struct creatable<type_traits::uniform, T, Ts...> {
+    static constexpr auto value = aux::is_braces_constructible<T, Ts...>::value;
+};
+
+template<class TInitialization, class TName, class I, class T, class... Ts>
+constexpr T creatable_error() {
+    return creatable_error_impl<TInitialization, TName, I, T, aux::type_list<Ts...>>{};
+}
+
+}}}} // boost::di::v1::concepts
+
+#endif
+#ifndef BOOST_DI_CONFIG_HPP
+#define BOOST_DI_CONFIG_HPP
+
+#include "boost/di/aux_/utility.hpp"
+#include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/core/pool.hpp"
+#include "boost/di/concepts/callable.hpp"
+#include "boost/di/providers/stack_over_heap.hpp"
+
+#if defined(BOOST_DI_CFG)
+    class BOOST_DI_CFG;
+#else
+    #define BOOST_DI_CFG boost::di::config
+#endif
+
+namespace boost { namespace di { inline namespace v1 {
+
+template<class... TPolicies, BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>)>
+inline auto make_policies(const TPolicies&... args) noexcept {
+    return core::pool_t<TPolicies...>(args...);
+}
+
+class config {
+public:
+    auto provider() const noexcept {
+        return providers::stack_over_heap{};
+    }
+
+    auto policies() noexcept {
+        return make_policies();
+    }
+};
+
+}}} // boost::di::v1
+
+#endif
+
+    namespace boost { namespace di { inline namespace v1 { namespace core {
+
+    BOOST_DI_HAS_METHOD(call, call);
+
+    struct from_injector { };
+    struct from_deps { };
+    struct init { };
+    struct with_error { };
+
+    template<class T, class TInjector>
+    inline auto build(const TInjector& injector) noexcept {
+        return T{injector};
+    }
+
+    template<class T>
+    inline decltype(auto) get_arg(const T& arg, const std::false_type&) noexcept {
+        return arg;
+    }
+
+    template<class T>
+    inline decltype(auto) get_arg(const T& arg, const std::true_type&) noexcept {
+        return arg.configure();
+    }
+#endif
+
+template<class TConfig BOOST_DI_CORE_INJECTOR_POLICY(, class TPolicies = pool<>)(), class... TDeps>
+class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
+    : public pool<transform_t<TDeps...>>
+    , public type_traits::config_traits_t<
+          TConfig
+        , injector<TConfig, BOOST_DI_CORE_INJECTOR_POLICY(TPolicies)(pool<>), TDeps...>
+      >
+    , _ {
+    template<class> friend class scopes::exposed;
+    template<class, class, class> friend struct any_type;
+    template<class, class> friend struct successful::any_type;
+    template<class, class, class> friend struct any_type_ref;
+    template<class, class> friend struct successful::any_type_ref;
+    template<class, class, class, class> friend struct try_provider;
+    template<class, class, class, class, class> friend struct provider;
+    template<class, class, class, class> friend struct successful::provider;
+    template<class, class, class> friend struct is_creatable_impl;
+
+    using pool_t = pool<transform_t<TDeps...>>;
+    using is_root_t = std::true_type;
+    using config_t = type_traits::config_traits_t<TConfig, injector>;
+    using config = std::conditional_t<
+        std::is_default_constructible<TConfig>::value
+      , _
+      , config_t
+    >;
+
+    template<
+        class T
+      , class TName = no_name
+      , class TIsRoot = std::false_type
+      , class TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
+      , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
+    > static auto try_create_impl() -> std::enable_if_t<std::is_convertible<
+       decltype(
+           std::declval<TDependency>().template try_create<T>(
+               try_provider<
+                   typename TDependency::given
+                 , TCtor
+                 , injector
+                 , decltype(((TConfig*)0)->provider())
+               >{}
+           )
+       ), T>::value BOOST_DI_CORE_INJECTOR_POLICY(
+           && policy::template try_call<
+                  arg_wrapper<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot, pool_t>
+                , TPolicies
+                , TDependency
+                , TCtor
+              >::value)()
+    >;
+
+    static auto is_creatable_impl(...) -> std::false_type;
+
+    template<class T, class TName, class TIsRoot>
+    static auto is_creatable_impl(T&&, TName&&, TIsRoot&&)
+        -> aux::is_valid_expr<decltype(try_create_impl<T, TName, TIsRoot>())>;
+
+    template<class T, class TName = no_name, class TIsRoot = std::false_type>
+    #if defined(BOOST_DI_MSVC)
+        struct is_creatable : std::true_type { };
+    #else
+        using is_creatable =
+            decltype(is_creatable_impl(std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>()));
+    #endif
+
+    template<class T>
+    struct try_create {
+        using type = std::conditional_t<is_creatable<T>::value, T, void>;
+    };
+
+    template<class TParent>
+    struct try_create<any_type_fwd<TParent>> {
+        using type = any_type<TParent, injector, with_error>;
+    };
+
+    template<class TParent>
+    struct try_create<any_type_ref_fwd<TParent>> {
+        using type = any_type_ref<TParent, injector, with_error>;
+    };
+
+    template<class TName, class T>
+    struct try_create<type_traits::named<TName, T>> {
+        using type = std::conditional_t<is_creatable<T, TName>::value, T, void>;
+    };
+
+public:
+    using deps = transform_t<TDeps...>;
+
+    template<class... TArgs>
+    explicit injector(const init&, const TArgs&... args) noexcept
+        : injector{from_deps{}, get_arg(args, has_configure<decltype(args)>{})...}
+    { }
+
+    template<class TConfig_, class TPolicies_, class... TDeps_>
+    explicit injector(const injector<TConfig_, TPolicies_, TDeps_...>& other) noexcept
+        : injector{from_injector{}, other, deps{}}
+    { }
+
+    template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>::value)>
+    T create() const {
+        return create_successful_impl<is_root_t>(aux::type<T>{});
+    }
+
+    template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, is_root_t>::value)>
+    BOOST_DI_CONCEPTS_CREATABLE_ATTR
+    T create() const {
+        return create_impl<is_root_t>(aux::type<T>{});
+    }
+
+    template<class TAction>
+    void call(const TAction& action) {
+        call_impl(action, deps{});
+    }
+
+private:
+    template<class... TArgs>
+    explicit injector(const from_deps&, const TArgs&... args) noexcept
+        : pool_t{copyable<deps>{}, core::pool_t<TArgs...>{args...}}
+        , config{*this}
+    { }
+
+    template<class TInjector, class... TArgs>
+    explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
+        : pool_t{copyable<deps>{}, pool_t{build<TArgs>(injector)...}}
+        , config{*this}
+    { }
+
+    template<class TIsRoot = std::false_type, class T>
+    auto create_impl(const aux::type<T>&) const {
+        return create_impl__<TIsRoot, T>();
+    }
+
+    template<class TIsRoot = std::false_type, class TParent>
+    auto create_impl(const aux::type<any_type_fwd<TParent>>&) const {
+        return any_type<TParent, injector>{*this};
+    }
+
+    template<class TIsRoot = std::false_type, class TParent>
+    auto create_impl(const aux::type<any_type_ref_fwd<TParent>>&) const {
+        return any_type_ref<TParent, injector>{*this};
+    }
+
+    template<class TIsRoot = std::false_type, class T, class TName>
+    auto create_impl(const aux::type<type_traits::named<TName, T>>&) const {
+        return create_impl__<TIsRoot, T, TName>();
+    }
+
+    template<class TIsRoot = std::false_type, class T, class TName = no_name>
+    auto create_impl__() const {
+        auto&& dependency = binder::resolve<T, TName>((injector*)this);
+        using dependency_t = std::remove_reference_t<decltype(dependency)>;
+        using expected_t = typename dependency_t::expected;
+        using given_t = typename dependency_t::given;
+        using ctor_t = typename type_traits::ctor_traits<given_t>::type;
+        using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
+        using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
+        using create_t = type_traits::referable_traits_t<T, dependency_t>;
+        BOOST_DI_CORE_INJECTOR_POLICY(
+            policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>( \
+                ((TConfig&)*this).policies(), dependency, ctor_t{} \
+            );
+        )()
+        return wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
+    }
+
+    template<class TIsRoot = std::false_type, class T>
+    auto create_successful_impl(const aux::type<T>&) const {
+        return create_successful_impl__<TIsRoot, T>();
+    }
+
+    template<class TIsRoot = std::false_type, class TParent>
+    auto create_successful_impl(const aux::type<any_type_fwd<TParent>>&) const {
+        return successful::any_type<TParent, injector>{*this};
+    }
+
+    template<class TIsRoot = std::false_type, class TParent>
+    auto create_successful_impl(const aux::type<any_type_ref_fwd<TParent>>&) const {
+        return successful::any_type_ref<TParent, injector>{*this};
+    }
+
+    template<class TIsRoot = std::false_type, class T, class TName>
+    auto create_successful_impl(const aux::type<type_traits::named<TName, T>>&) const {
+        return create_successful_impl__<TIsRoot, T, TName>();
+    }
+
+    template<class TIsRoot = std::false_type, class T, class TName = no_name>
+    auto create_successful_impl__() const {
+        auto&& dependency = binder::resolve<T, TName>((injector*)this);
+        using dependency_t = std::remove_reference_t<decltype(dependency)>;
+        using expected_t = typename dependency_t::expected;
+        using given_t = typename dependency_t::given;
+        using ctor_t = typename type_traits::ctor_traits<given_t>::type;
+        using provider_t = successful::provider<expected_t, given_t, ctor_t, injector>;
+        using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
+        using create_t = type_traits::referable_traits_t<T, dependency_t>;
+        BOOST_DI_CORE_INJECTOR_POLICY(
+            policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>( \
+                ((TConfig&)*this).policies(), dependency, ctor_t{} \
+            );
+        )()
+        return successful::wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
+    }
+
+    template<class TAction, class... Ts>
+    void call_impl(const TAction& action, const aux::type_list<Ts...>&) {
+        int _[]{0, (call_impl<Ts>(action, has_call<Ts, const TAction&>{}), 0)...}; (void)_;
+    }
+
+    template<class T, class TAction>
+    void call_impl(const TAction& action, const std::true_type&) {
+        static_cast<T&>(*this).call(action);
+    }
+
+    template<class, class TAction>
+    void call_impl(const TAction&, const std::false_type&) { }
+};
+
+#undef BOOST_DI_CORE_INJECTOR_POLICY
+#undef BOOST_DI_CORE_INJECTOR_POLICY_ELSE
+
+#if defined(BOOST_DI_IS_ITERATING)
+    }}}} // boost::di::v1::core
+#else
+    #undef BOOST_DI_CORE_INJECTOR_HPP
+    #define BOOST_DI_IS_ITERATING
 #ifndef BOOST_DI_CORE_INJECTOR_HPP
 #define BOOST_DI_CORE_INJECTOR_HPP
 
-namespace boost { namespace di { inline namespace v1 { namespace core {
+#if defined(BOOST_DI_IS_ITERATING)
+    #define BOOST_DI_CORE_INJECTOR_POLICY(...) BOOST_DI_CORE_INJECTOR_POLICY_ELSE
+    #define BOOST_DI_CORE_INJECTOR_POLICY_ELSE(...) __VA_ARGS__
+#else
+    #define BOOST_DI_CORE_INJECTOR_POLICY(...) __VA_ARGS__ BOOST_DI_CORE_INJECTOR_POLICY_ELSE
+    #define BOOST_DI_CORE_INJECTOR_POLICY_ELSE(...)
 
-BOOST_DI_HAS_METHOD(call, call);
+    #include "boost/di/aux_/compiler_specific.hpp"
+    #include "boost/di/aux_/type_traits.hpp"
+    #include "boost/di/aux_/utility.hpp"
+    #include "boost/di/core/any_type.hpp"
+    #include "boost/di/core/binder.hpp"
+    #include "boost/di/core/copyable.hpp"
+    #include "boost/di/core/policy.hpp"
+    #include "boost/di/core/pool.hpp"
+    #include "boost/di/core/provider.hpp"
+    #include "boost/di/core/transform.hpp"
+    #include "boost/di/core/wrapper.hpp"
+    #include "boost/di/scopes/exposed.hpp"
+    #include "boost/di/type_traits/ctor_traits.hpp"
+    #include "boost/di/type_traits/config_traits.hpp"
+    #include "boost/di/type_traits/referable_traits.hpp"
+    #include "boost/di/concepts/creatable.hpp"
+    #include "boost/di/config.hpp"
 
-struct from_injector { };
-struct from_deps { };
-struct init { };
-struct with_error { };
+    namespace boost { namespace di { inline namespace v1 { namespace core {
 
-template<class T, class TInjector>
-inline auto build(const TInjector& injector) noexcept {
-    return T{injector};
-}
+    BOOST_DI_HAS_METHOD(call, call);
 
-template<class T>
-inline decltype(auto) get_arg(const T& arg, const std::false_type&) noexcept {
-    return arg;
-}
+    struct from_injector { };
+    struct from_deps { };
+    struct init { };
+    struct with_error { };
 
-template<class T>
-inline decltype(auto) get_arg(const T& arg, const std::true_type&) noexcept {
-    return arg.configure();
-}
+    template<class T, class TInjector>
+    inline auto build(const TInjector& injector) noexcept {
+        return T{injector};
+    }
 
-#define BOOST_DI_CORE_INJECTOR \
-    template<class TConfig, class TPolicies = pool<>, class... TDeps> \
-    class injector : public pool<transform_t<TDeps...>> \
-                   , public type_traits::config_traits_t<TConfig, injector<TConfig, TPolicies, TDeps...>> \
-                   , _
+    template<class T>
+    inline decltype(auto) get_arg(const T& arg, const std::false_type&) noexcept {
+        return arg;
+    }
 
-    #define BOOST_DI_TRY_POLICY \
-           && policy::template try_call< \
-                  arg_wrapper<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot, pool_t> \
-                , TPolicies \
-                , TDependency \
-                , TCtor \
-              >::value
+    template<class T>
+    inline decltype(auto) get_arg(const T& arg, const std::true_type&) noexcept {
+        return arg.configure();
+    }
+#endif
 
-    #define BOOST_DI_APPLY_POLICY \
-        policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>( \
-            ((TConfig&)*this).policies(), dependency, ctor_t{} \
-        );
-
-BOOST_DI_CORE_INJECTOR {
+template<class TConfig BOOST_DI_CORE_INJECTOR_POLICY(, class TPolicies = pool<>)(), class... TDeps>
+class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
+    : public pool<transform_t<TDeps...>>
+    , public type_traits::config_traits_t<
+          TConfig
+        , injector<TConfig, BOOST_DI_CORE_INJECTOR_POLICY(TPolicies)(pool<>), TDeps...>
+      >
+    , _ {
     template<class> friend class scopes::exposed;
     template<class, class, class> friend struct any_type;
     template<class, class> friend struct successful::any_type;
@@ -3157,8 +4469,13 @@ BOOST_DI_CORE_INJECTOR {
                  , decltype(((TConfig*)0)->provider())
                >{}
            )
-       ), T>::value
-       BOOST_DI_TRY_POLICY
+       ), T>::value BOOST_DI_CORE_INJECTOR_POLICY(
+           && policy::template try_call<
+                  arg_wrapper<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot, pool_t>
+                , TPolicies
+                , TDependency
+                , TCtor
+              >::value)()
     >;
 
     static auto is_creatable_impl(...) -> std::false_type;
@@ -3267,7 +4584,11 @@ private:
         using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using create_t = type_traits::referable_traits_t<T, dependency_t>;
-        BOOST_DI_APPLY_POLICY
+        BOOST_DI_CORE_INJECTOR_POLICY(
+            policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>( \
+                ((TConfig&)*this).policies(), dependency, ctor_t{} \
+            );
+        )()
         return wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
 
@@ -3301,7 +4622,11 @@ private:
         using provider_t = successful::provider<expected_t, given_t, ctor_t, injector>;
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using create_t = type_traits::referable_traits_t<T, dependency_t>;
-        BOOST_DI_APPLY_POLICY
+        BOOST_DI_CORE_INJECTOR_POLICY(
+            policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>( \
+                ((TConfig&)*this).policies(), dependency, ctor_t{} \
+            );
+        )()
         return successful::wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
 
@@ -3319,223 +4644,19 @@ private:
     void call_impl(const TAction&, const std::false_type&) { }
 };
 
-#undef BOOST_DI_CORE_INJECTOR
-#undef BOOST_DI_TRY_POLICY
-#undef BOOST_DI_APPLY_POLICY
+#undef BOOST_DI_CORE_INJECTOR_POLICY
+#undef BOOST_DI_CORE_INJECTOR_POLICY_ELSE
 
-#define BOOST_DI_CORE_INJECTOR \
-    template<class TConfig, class... TDeps> \
-    class injector<TConfig, pool<>, TDeps...> \
-        : public pool<transform_t<TDeps...>> \
-        , public type_traits::config_traits_t<TConfig, injector<TConfig, pool<>, TDeps...>> \
-        , _
+#if defined(BOOST_DI_IS_ITERATING)
+    }}}} // boost::di::v1::core
+#else
+    #undef BOOST_DI_CORE_INJECTOR_HPP
+    #define BOOST_DI_IS_ITERATING
+    #include "boost/di/core/injector.hpp"
+#endif
 
-#define BOOST_DI_TRY_POLICY
-#define BOOST_DI_APPLY_POLICY
-
-BOOST_DI_CORE_INJECTOR {
-    template<class> friend class scopes::exposed;
-    template<class, class, class> friend struct any_type;
-    template<class, class> friend struct successful::any_type;
-    template<class, class, class> friend struct any_type_ref;
-    template<class, class> friend struct successful::any_type_ref;
-    template<class, class, class, class> friend struct try_provider;
-    template<class, class, class, class, class> friend struct provider;
-    template<class, class, class, class> friend struct successful::provider;
-    template<class, class, class> friend struct is_creatable_impl;
-
-    using pool_t = pool<transform_t<TDeps...>>;
-    using is_root_t = std::true_type;
-    using config_t = type_traits::config_traits_t<TConfig, injector>;
-    using config = std::conditional_t<
-        std::is_default_constructible<TConfig>::value
-      , _
-      , config_t
-    >;
-
-    template<
-        class T
-      , class TName = no_name
-      , class TIsRoot = std::false_type
-      , class TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
-      , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
-    > static auto try_create_impl() -> std::enable_if_t<std::is_convertible<
-       decltype(
-           std::declval<TDependency>().template try_create<T>(
-               try_provider<
-                   typename TDependency::given
-                 , TCtor
-                 , injector
-                 , decltype(((TConfig*)0)->provider())
-               >{}
-           )
-       ), T>::value
-       BOOST_DI_TRY_POLICY
-    >;
-
-    static auto is_creatable_impl(...) -> std::false_type;
-
-    template<class T, class TName, class TIsRoot>
-    static auto is_creatable_impl(T&&, TName&&, TIsRoot&&)
-        -> aux::is_valid_expr<decltype(try_create_impl<T, TName, TIsRoot>())>;
-
-    template<class T, class TName = no_name, class TIsRoot = std::false_type>
-    #if defined(BOOST_DI_MSVC)
-        struct is_creatable : std::true_type { };
-    #else
-        using is_creatable =
-            decltype(is_creatable_impl(std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>()));
-    #endif
-
-    template<class T>
-    struct try_create {
-        using type = std::conditional_t<is_creatable<T>::value, T, void>;
-    };
-
-    template<class TParent>
-    struct try_create<any_type_fwd<TParent>> {
-        using type = any_type<TParent, injector, with_error>;
-    };
-
-    template<class TParent>
-    struct try_create<any_type_ref_fwd<TParent>> {
-        using type = any_type_ref<TParent, injector, with_error>;
-    };
-
-    template<class TName, class T>
-    struct try_create<type_traits::named<TName, T>> {
-        using type = std::conditional_t<is_creatable<T, TName>::value, T, void>;
-    };
-
-public:
-    using deps = transform_t<TDeps...>;
-
-    template<class... TArgs>
-    explicit injector(const init&, const TArgs&... args) noexcept
-        : injector{from_deps{}, get_arg(args, has_configure<decltype(args)>{})...}
-    { }
-
-    template<class TConfig_, class TPolicies_, class... TDeps_>
-    explicit injector(const injector<TConfig_, TPolicies_, TDeps_...>& other) noexcept
-        : injector{from_injector{}, other, deps{}}
-    { }
-
-    template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>::value)>
-    T create() const {
-        return create_successful_impl<is_root_t>(aux::type<T>{});
-    }
-
-    template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, is_root_t>::value)>
-    BOOST_DI_CONCEPTS_CREATABLE_ATTR
-    T create() const {
-        return create_impl<is_root_t>(aux::type<T>{});
-    }
-
-    template<class TAction>
-    void call(const TAction& action) {
-        call_impl(action, deps{});
-    }
-
-private:
-    template<class... TArgs>
-    explicit injector(const from_deps&, const TArgs&... args) noexcept
-        : pool_t{copyable<deps>{}, core::pool_t<TArgs...>{args...}}
-        , config{*this}
-    { }
-
-    template<class TInjector, class... TArgs>
-    explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
-        : pool_t{copyable<deps>{}, pool_t{build<TArgs>(injector)...}}
-        , config{*this}
-    { }
-
-    template<class TIsRoot = std::false_type, class T>
-    auto create_impl(const aux::type<T>&) const {
-        return create_impl__<TIsRoot, T>();
-    }
-
-    template<class TIsRoot = std::false_type, class TParent>
-    auto create_impl(const aux::type<any_type_fwd<TParent>>&) const {
-        return any_type<TParent, injector>{*this};
-    }
-
-    template<class TIsRoot = std::false_type, class TParent>
-    auto create_impl(const aux::type<any_type_ref_fwd<TParent>>&) const {
-        return any_type_ref<TParent, injector>{*this};
-    }
-
-    template<class TIsRoot = std::false_type, class T, class TName>
-    auto create_impl(const aux::type<type_traits::named<TName, T>>&) const {
-        return create_impl__<TIsRoot, T, TName>();
-    }
-
-    template<class TIsRoot = std::false_type, class T, class TName = no_name>
-    auto create_impl__() const {
-        auto&& dependency = binder::resolve<T, TName>((injector*)this);
-        using dependency_t = std::remove_reference_t<decltype(dependency)>;
-        using expected_t = typename dependency_t::expected;
-        using given_t = typename dependency_t::given;
-        using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-        using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
-        using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
-        using create_t = type_traits::referable_traits_t<T, dependency_t>;
-        BOOST_DI_APPLY_POLICY
-        return wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
-    }
-
-    template<class TIsRoot = std::false_type, class T>
-    auto create_successful_impl(const aux::type<T>&) const {
-        return create_successful_impl__<TIsRoot, T>();
-    }
-
-    template<class TIsRoot = std::false_type, class TParent>
-    auto create_successful_impl(const aux::type<any_type_fwd<TParent>>&) const {
-        return successful::any_type<TParent, injector>{*this};
-    }
-
-    template<class TIsRoot = std::false_type, class TParent>
-    auto create_successful_impl(const aux::type<any_type_ref_fwd<TParent>>&) const {
-        return successful::any_type_ref<TParent, injector>{*this};
-    }
-
-    template<class TIsRoot = std::false_type, class T, class TName>
-    auto create_successful_impl(const aux::type<type_traits::named<TName, T>>&) const {
-        return create_successful_impl__<TIsRoot, T, TName>();
-    }
-
-    template<class TIsRoot = std::false_type, class T, class TName = no_name>
-    auto create_successful_impl__() const {
-        auto&& dependency = binder::resolve<T, TName>((injector*)this);
-        using dependency_t = std::remove_reference_t<decltype(dependency)>;
-        using expected_t = typename dependency_t::expected;
-        using given_t = typename dependency_t::given;
-        using ctor_t = typename type_traits::ctor_traits<given_t>::type;
-        using provider_t = successful::provider<expected_t, given_t, ctor_t, injector>;
-        using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
-        using create_t = type_traits::referable_traits_t<T, dependency_t>;
-        BOOST_DI_APPLY_POLICY
-        return successful::wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
-    }
-
-    template<class TAction, class... Ts>
-    void call_impl(const TAction& action, const aux::type_list<Ts...>&) {
-        int _[]{0, (call_impl<Ts>(action, has_call<Ts, const TAction&>{}), 0)...}; (void)_;
-    }
-
-    template<class T, class TAction>
-    void call_impl(const TAction& action, const std::true_type&) {
-        static_cast<T&>(*this).call(action);
-    }
-
-    template<class, class TAction>
-    void call_impl(const TAction&, const std::false_type&) { }
-};
-
-#undef BOOST_DI_CORE_INJECTOR
-#undef BOOST_DI_TRY_POLICY
-#undef BOOST_DI_APPLY_POLICY
-
-}}}} // boost::di::v1::core
+#endif
+#endif
 
 #endif
 
