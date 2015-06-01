@@ -363,11 +363,6 @@ public:
     pool(const aux::type_list<Ts...>&, const TPool& p) noexcept
         : pool(static_cast<const Ts&>(p)...)
     { }
-
-    template<class T>
-    inline const T& get() const noexcept {
-        return static_cast<const T&>(*this);
-    }
 };
 
 }}}} // boost::di::v1::core
@@ -2758,19 +2753,6 @@ struct always : std::true_type { };
 template<class...>
 struct never : std::false_type { };
 
-template<bool, class, class B>
-struct lazy_conditional {
-    using type = typename B::type;
-};
-
-template<class A, class B>
-struct lazy_conditional<true, A, B> {
-    using type = typename A::type;
-};
-
-template<bool V, class A, class B>
-using lazy_conditional_t = typename lazy_conditional<V, A, B>::type;
-
 template<class, class>
 struct pair { using type = pair; };
 
@@ -3206,11 +3188,6 @@ public:
     pool(const aux::type_list<Ts...>&, const TPool& p) noexcept
         : pool(static_cast<const Ts&>(p)...)
     { }
-
-    template<class T>
-    inline const T& get() const noexcept {
-        return static_cast<const T&>(*this);
-    }
 };
 
 }}}} // boost::di::v1::core
@@ -4293,8 +4270,8 @@ private:
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using create_t = type_traits::referable_traits_t<T, dependency_t>;
         BOOST_DI_CORE_INJECTOR_POLICY(
-            policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>( \
-                ((TConfig&)*this).policies(), dependency, ctor_t{} \
+            policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>(
+                ((TConfig&)*this).policies(), dependency, ctor_t{}
             );
         )()
         return wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
@@ -4331,8 +4308,8 @@ private:
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using create_t = type_traits::referable_traits_t<T, dependency_t>;
         BOOST_DI_CORE_INJECTOR_POLICY(
-            policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>( \
-                ((TConfig&)*this).policies(), dependency, ctor_t{} \
+            policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>(
+                ((TConfig&)*this).policies(), dependency, ctor_t{}
             );
         )()
         return successful::wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
@@ -4572,8 +4549,8 @@ private:
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using create_t = type_traits::referable_traits_t<T, dependency_t>;
         BOOST_DI_CORE_INJECTOR_POLICY(
-            policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>( \
-                ((TConfig&)*this).policies(), dependency, ctor_t{} \
+            policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>(
+                ((TConfig&)*this).policies(), dependency, ctor_t{}
             );
         )()
         return wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
@@ -4610,8 +4587,8 @@ private:
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using create_t = type_traits::referable_traits_t<T, dependency_t>;
         BOOST_DI_CORE_INJECTOR_POLICY(
-            policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>( \
-                ((TConfig&)*this).policies(), dependency, ctor_t{} \
+            policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>(
+                ((TConfig&)*this).policies(), dependency, ctor_t{}
             );
         )()
         return successful::wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};

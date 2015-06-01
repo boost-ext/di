@@ -30,11 +30,6 @@ public:
     pool(const aux::type_list<Ts...>&, const TPool& p) noexcept
         : pool(static_cast<const Ts&>(p)...)
     { }
-
-    template<class T>
-    inline const T& get() const noexcept {
-        return static_cast<const T&>(*this);
-    }
 };
 
 }}}} // boost::di::v1::core

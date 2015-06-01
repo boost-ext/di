@@ -104,17 +104,17 @@ test get = [] {
 
     expect_eq(
         trivial_ctor_.object
-      , p.get<trivial_ctor_type>().object
+      , static_cast<const trivial_ctor_type&>(p).object
     );
 
     expect_eq(
         custom_ctor_.object
-      , p.get<custom_ctor_type>().object
+      , static_cast<const custom_ctor_type&>(p).object
     );
 
     expect_eq(
         default_ctor_.object
-      , p.get<default_ctor_type>().object
+      , static_cast<const default_ctor_type&>(p).object
     );
 };
 
@@ -134,12 +134,12 @@ test pool_of_pools = [] {
 
     expect_eq(
         trivial_ctor_.object
-      , p.get<trivial_ctor_type>().object
+      , static_cast<const trivial_ctor_type&>(p).object
     );
 
     expect_eq(
         default_ctor_.object
-      , p.get<default_ctor_type>().object
+      , static_cast<const default_ctor_type&>(p).object
     );
 };
 
@@ -147,7 +147,7 @@ test init_pool_from_other_empty_pool = [] {
     pool<aux::type_list<>> pempty_;
     pool<aux::type_list<default_ctor>> p(aux::type_list<>{}, pempty_);
 
-    expect_eq(0, p.get<default_ctor>().i);
+    expect_eq(0, static_cast<const default_ctor&>(p).i);
 };
 
 test init_pfrom_other_subset_pool = [] {
@@ -174,17 +174,17 @@ test init_pfrom_other_subset_pool = [] {
 
     expect_eq(
         trivial_ctor_.i
-      , p2.get<trivial_ctor>().i
+      , static_cast<const trivial_ctor&>(p2).i
     );
 
     expect_eq(
         0
-      , p2.get<default_ctor>().i
+      , static_cast<const default_ctor&>(p2).i
     );
 
     expect_eq(
         custom_ctor_.i
-      , p2.get<custom_ctor>().i
+      , static_cast<const custom_ctor&>(p2).i
     );
 };
 
@@ -197,7 +197,7 @@ test pool_from_pof_pools = [] {
     pool_t p1(ctor);
     pool_sub_t p2(p1);
 
-    expect_eq(i, p2.get<custom_ctor>().i);
+    expect_eq(i, static_cast<const custom_ctor&>(p2).i);
 };
 
 test pool_from_pof_pools_many = [] {
@@ -210,8 +210,8 @@ test pool_from_pof_pools_many = [] {
     pool_t p1(c, d);
     pool_sub_t p2(p1);
 
-    expect_eq(i, p2.get<custom_ctor>().i);
-    expect_eq(0, p2.get<default_ctor>().i);
+    expect_eq(i, static_cast<const custom_ctor&>(p2).i);
+    expect_eq(0, static_cast<const default_ctor&>(p2).i);
 };
 
 template<class T1, class T2>
@@ -232,9 +232,9 @@ test pool_flatten = [] {
     pool_t p1(c, b);
     pool_flatten_t p2(types_flatten_t{}, p1);
 
-    expect_eq(i, p2.get<custom_ctor>().i);
-    expect_eq(0, p2.get<default_ctor>().i);
-    expect_eq(0, p2.get<trivial_ctor>().i);
+    expect_eq(i, static_cast<const custom_ctor&>(p2).i);
+    expect_eq(0, static_cast<const default_ctor&>(p2).i);
+    expect_eq(0, static_cast<const trivial_ctor&>(p2).i);
 };
 
 }}}} // boost::di::v1::core
