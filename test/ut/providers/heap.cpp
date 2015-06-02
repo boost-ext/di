@@ -4,6 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#include "boost/di/aux_/compiler_specific.hpp"
 #include "boost/di/providers/heap.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
 
@@ -34,8 +35,10 @@ test get_with_args = [] {
     test_heap(test_type<direct>{}, type_traits::direct{}, type_traits::heap{}, int{}, double{});
     test_heap(test_type<direct>{}, type_traits::uniform{}, type_traits::stack{}, int{}, double{});
     test_heap(test_type<direct>{}, type_traits::uniform{}, type_traits::heap{}, int{}, double{});
+#if !defined(BOOST_DI_MSVC)
     test_heap(test_type<uniform>{}, type_traits::uniform{}, type_traits::stack{}, int{}, double{});
     test_heap(test_type<uniform>{}, type_traits::uniform{}, type_traits::heap{}, int{}, double{});
+#endif
 };
 
 }}}} // boost::di::v1::providers
