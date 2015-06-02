@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <memory>
+#include <functional>
 #include "boost/di.hpp"
 
 namespace di = boost::di;
@@ -154,30 +155,30 @@ test dynamic_binding_using_polymorphic_lambdas_with_dependend_interfaces = [] {
 double return_double(double d) { return d; }
 long return_long(long l) { return l; }
 
-test bind_to_function_ptr = [] {
-    constexpr auto i = 42;
-    constexpr auto d = 87.0;
+//test bind_to_function_ptr = [] {
+    //constexpr auto i = 42;
+    //constexpr auto d = 87.0;
 
-    struct functions {
-        functions(const std::function<int()>& fi, std::function<double()> fd)
-            : fi(fi)
-            , fd(fd)
-        { }
+    //struct functions {
+        //functions(const std::function<int()>& fi, std::function<double()> fd)
+            //: fi(fi)
+            //, fd(fd)
+        //{ }
 
-        std::function<int()> fi;
-        std::function<double()> fd;
-    };
+        //std::function<int()> fi;
+        //std::function<double()> fd;
+    //};
 
-    auto injector = di::make_injector(
-        di::bind<std::function<int()>>.to([&]{ return i; })
-      , di::bind<std::function<double()>>.to(std::bind(&return_double, d))
-    );
+    //auto injector = di::make_injector(
+        //di::bind<std::function<int()>>.to([&]{ return i; })
+      //, di::bind<std::function<double()>>.to(std::bind(&return_double, d))
+    //);
 
-    auto object = injector.create<functions>();
+    //auto object = injector.create<functions>();
 
-    expect_eq(i, object.fi());
-    expect_eq(d, object.fd());
-};
+    //expect_eq(i, object.fi());
+    //expect_eq(d, object.fd());
+//};
 
 test runtime_factory_impl = [] {
     constexpr auto i = 42;

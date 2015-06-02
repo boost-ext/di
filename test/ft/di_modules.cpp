@@ -54,6 +54,10 @@ test modules_mix_make_injector = [] {
             );
         }
 
+		explicit module2(int i)
+			: i_(i)
+		{ }
+
         int i_ = 0;
     };
 

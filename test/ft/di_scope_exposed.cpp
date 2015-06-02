@@ -287,6 +287,10 @@ test exposed_module_with_unique_ptr = [] {
             );
         }
 
+		explicit module(int i)
+			: i(i)
+		{ }
+
         int i = 0;
     };
 
