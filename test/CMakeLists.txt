@@ -58,7 +58,6 @@ run_test(ut/config)
 run_test(ut/injector)
 run_test(ut/make_injector)
 
-run_test(ft/bind)
 run_test(ft/di_bind)
 run_test(ft/di_config)
 run_test(ft/di_config_global_policies)
