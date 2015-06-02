@@ -112,8 +112,6 @@ test-suite ft :
     [ run-test c++1y : ft/di_config_global_policies.cpp ]
     [ run-test c++1y : ft/di_config_global_provider.cpp ]
     [ run-test c++1y : ft/di_inject.cpp ]
-    [ run-test c++1y : ft/di_inject_ctor_limit_size.cpp ]
-    [ run-test c++1y : ft/di_inject_limit_size.cpp ]
     [ run-test c++1y : ft/di_injector.cpp ]
     [ run-test c++1y : ft/di_modules.cpp ]
     [ run-test c++1y : ft/di_scope_exposed.cpp ]

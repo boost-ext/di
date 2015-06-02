@@ -14,6 +14,27 @@ auto other_name = []{};
 struct i1 { virtual ~i1() noexcept = default; virtual void dummy1() = 0; };
 struct impl1 : i1 { void dummy1() override { } };
 
+test inject_ctor_limit_size = [] {
+    struct c {
+        BOOST_DI_INJECT(c, int /*p1*/, int /*p2*/, int /*p3*/, int /*p4*/, int /*p5*/, int /*p6*/, int /*p7*/, int /*p8*/, int /*p9*/, int /*p10*/)
+        { }
+    };
+
+    auto injector = di::make_injector();
+    injector.create<c>();
+};
+
+test ctor_limit_size = [] {
+    struct c {
+        c(int /*p1*/, int /*p2*/, int /*p3*/, int /*p4*/, int /*p5*/, int /*p6*/, int /*p7*/, int /*p8*/, int /*p9*/, int /*p10*/)
+        { }
+    };
+
+    auto injector = di::make_injector();
+    injector.create<c>();
+};
+
+
 test inject_traits_no_limits = [] {
     struct c {
         BOOST_DI_INJECT_TRAITS_NO_LIMITS(int, int, int, int, int, int, int, int, int, int, int);

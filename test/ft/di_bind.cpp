@@ -102,7 +102,6 @@ test named_parameters_with_shared_scope = [] {
     expect(object.n1 != object.n2);
 };
 
-
 test any_of = [] {
     auto injector = di::make_injector(
         di::bind<impl1_2>
