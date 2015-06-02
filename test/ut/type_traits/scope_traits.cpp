@@ -26,7 +26,7 @@ test traits = [] {
     expect(std::is_same<scopes::unique, scope_traits<const int*>::type>{});
     expect(std::is_same<scopes::singleton, scope_traits<std::shared_ptr<int>>::type>{});
     expect(std::is_same<scopes::singleton, scope_traits<const std::shared_ptr<int>&>::type>{});
-#if (__has_include(<boost/shared_ptr.hpp>))
+#if __has_include(<boost/shared_ptr.hpp>)
     expect(std::is_same<scopes::singleton, scope_traits<boost::shared_ptr<int>>::type>{});
     expect(std::is_same<scopes::singleton, scope_traits<const boost::shared_ptr<int>&>::type>{});
 #endif

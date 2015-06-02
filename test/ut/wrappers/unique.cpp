@@ -6,7 +6,7 @@
 //
 #include <memory>
 #include "boost/di/wrappers/unique.hpp"
-#if (__has_include(<boost/shared_ptr.hpp>))
+#if __has_include(<boost/shared_ptr.hpp>)
     #include <boost/shared_ptr.hpp>
 #endif
 
@@ -53,7 +53,7 @@ test to_shared_ptr = [] {
     expect_eq(i, *object);
 };
 
-#if (__has_include(<boost/shared_ptr.hpp>))
+#if __has_include(<boost/shared_ptr.hpp>)
     test to_boost_shared_ptr = [] {
         boost::shared_ptr<int> object = unique<int*>{new int{i}};
         expect_eq(i, *object);
@@ -91,7 +91,7 @@ test to_shared_ptr_from_unique_ptr = [] {
     expect_eq(i, *object);
 };
 
-#if (__has_include(<boost/shared_ptr.hpp>))
+#if __has_include(<boost/shared_ptr.hpp>)
     test to_boost_shared_from_unique_ptr = [] {
         boost::shared_ptr<int> object = unique<std::unique_ptr<int>>{std::make_unique<int>(i)};
         expect_eq(i, *object);

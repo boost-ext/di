@@ -6,7 +6,7 @@
 //
 #include <memory>
 #include "boost/di/wrappers/shared.hpp"
-#if (__has_include(<boost/shared_ptr.hpp>))
+#if __has_include(<boost/shared_ptr.hpp>)
     #include <boost/shared_ptr.hpp>
 #endif
 
@@ -18,7 +18,7 @@ test to_shared_ptr = [] {
     expect_eq(i, object);
 };
 
-#if (__has_include(<boost/shared_ptr.hpp>))
+#if __has_include(<boost/shared_ptr.hpp>)
     test to_other_shared_ptr = [] {
         auto i = std::make_shared<int>(42);
         auto object = static_cast<boost::shared_ptr<int>>(shared<int>{i});

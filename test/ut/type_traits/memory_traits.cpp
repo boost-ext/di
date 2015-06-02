@@ -6,7 +6,7 @@
 //
 #include <type_traits>
 #include "boost/di/type_traits/memory_traits.hpp"
-#if (__has_include(<boost/shared_ptr.hpp>))
+#if __has_include(<boost/shared_ptr.hpp>)
     #include <boost/shared_ptr.hpp>
 #endif
 
@@ -41,7 +41,7 @@ test traits = [] {
     expect(std::is_same<stack, memory_traits<const int&&>::type>{});
     expect(std::is_same<heap, memory_traits<i>::type>{});
 
-#if (__has_include(<boost/shared_ptr.hpp>))
+#if __has_include(<boost/shared_ptr.hpp>)
     expect(std::is_same<heap, memory_traits<boost::shared_ptr<int>>::type>{});
     expect(std::is_same<heap, memory_traits<const boost::shared_ptr<int>&>::type>{});
 #endif

@@ -6,7 +6,11 @@
 //
 #include <memory>
 #include <string>
+#include "boost/di/aux_/compiler_specific.hpp"
 #include "boost/di/aux_/type_traits.hpp"
+#if __has_include(<boost/shared_ptr.hpp>)
+    #include <boost/shared_ptr.hpp>
+#endif
 
 namespace boost { namespace di { inline namespace v1 { namespace aux {
 
@@ -25,9 +29,9 @@ BOOST_DI_HAS_METHOD(call, call);
 
 test has_method = [] {
     struct a { };
-    struct call1 { void call(int); };
-    struct call2 { int call(const double&); };
-    struct call3 { int call(int, double = 0.0) const noexcept; };
+    struct call1 { void call(int) { }; };
+    struct call2 { int call(const double&) { }; };
+    struct call3 { int call(int, double = 0.0) const noexcept { }; };
 
     expect(!has_call<a, int>{});
     expect(!has_call<call1>{});
@@ -56,7 +60,7 @@ test is_smart_ptr_types = [] {
     expect(is_smart_ptr<std::unique_ptr<int, deleter<int>>>{});
     expect(is_smart_ptr<std::shared_ptr<int>>{});
     expect(is_smart_ptr<std::weak_ptr<int>>{});
-#if (__has_include(<boost/shared_ptr.hpp>))
+#if __has_include(<boost/shared_ptr.hpp>)
     expect(is_smart_ptr<boost::shared_ptr<int>>{});
 #endif
 };
@@ -69,19 +73,22 @@ test is_braces_constructible_types = [] {
     struct agg1 { int i = {}; };
     struct agg2 { int& i; double d = {}; };
 
-    expect(is_braces_constructible_t<int>{});
-    expect(is_braces_constructible_t<c>{});
-    expect(is_braces_constructible_t<ctor, int>{});
-    expect(!is_braces_constructible_t<ctor>{});
-    expect(is_braces_constructible_t<ctor_def_value>{});
-    expect(is_braces_constructible_t<ctor_def_value, int>{});
-    expect(is_braces_constructible_t<ctor_def>{});
-    expect(!is_braces_constructible_t<ctor_def, int>{});
-    expect(is_braces_constructible_t<agg1>{});
-    expect(is_braces_constructible_t<agg1, int>{});
-    expect(!is_braces_constructible_t<agg1, int, double>{});
-    expect(is_braces_constructible_t<agg2, int&>{});
-    expect(is_braces_constructible_t<agg2, int&, double>{});
+	expect(is_braces_constructible<int>{});
+	expect(is_braces_constructible<c>{});
+	expect(is_braces_constructible<ctor, int>{});
+	expect(!is_braces_constructible<ctor>{});
+	expect(is_braces_constructible<ctor_def_value>{});
+	expect(is_braces_constructible<ctor_def_value, int>{});
+	expect(is_braces_constructible<ctor_def>{});
+	expect(!is_braces_constructible<ctor_def, int>{});
+	expect(is_braces_constructible<agg1>{});
+
+	expect(!is_braces_constructible<agg1, int, double>{});
+#if !defined(BOOST_DI_MSVC)
+	expect(is_braces_constructible<agg1, int>{});
+	expect(is_braces_constructible<agg2, int&>{});
+	expect(is_braces_constructible<agg2, int&, double>{});
+#endif
 };
 
 test remove_accessors_types = [] {

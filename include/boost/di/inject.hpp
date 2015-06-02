@@ -97,7 +97,7 @@
         struct BOOST_DI_INJECTOR { \
             static void inject(__VA_ARGS__); \
             using type BOOST_DI_UNUSED = \
-                typename ::boost::di::aux::function_traits<decltype(inject)>::args; \
+                ::boost::di::aux::function_traits<decltype(inject)>::args; \
         }
 #endif
 

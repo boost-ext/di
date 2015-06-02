@@ -5,14 +5,14 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <memory>
-#if (__has_include(<boost/shared_ptr.hpp>))
+#if __has_include(<boost/shared_ptr.hpp>)
     #include <boost/shared_ptr.hpp>
 #endif
 #include "boost/di.hpp"
 
 namespace di = boost::di;
 
-#if (__has_include(<boost/shared_ptr.hpp>))
+#if __has_include(<boost/shared_ptr.hpp>)
     test conversion_to_boost_shared_ptr = [] {
         struct c {
             boost::shared_ptr<int> sp;

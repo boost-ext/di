@@ -82,7 +82,10 @@ test uniforms = [] {
         int& i;
     };
     expect(std::is_same<aux::pair<uniform, aux::type_list<>>, ctor_traits<empty>::type>{});
+
+#if !defined(BOOST_DI_MSVC)
     expect(std::is_same<aux::pair<uniform, aux::type_list<core::any_type_ref_fwd<ctor2_ref>, core::any_type_ref_fwd<ctor2_ref>>>, ctor_traits<ctor2_ref>::type>{});
+#endif
 };
 
 test inheriting_ctors = [] {
