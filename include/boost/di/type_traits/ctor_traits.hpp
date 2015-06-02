@@ -169,17 +169,20 @@ struct ctor_traits_impl<T, std::false_type>
 
 }}}} // boost::di::v1::type_traits
 
-#include <string>
 
-namespace boost { namespace di { inline namespace v1 {
-    template<
-        class T
-      , class Traits
-      , class TAllocator
-    > struct ctor_traits<std::basic_string<T, Traits, TAllocator>> {
-        BOOST_DI_INJECT_TRAITS();
-    };
-}}} // boost::di::v1
+#if __has_include(<string>)
+    #include <string>
+
+    namespace boost { namespace di { inline namespace v1 {
+        template<
+            class T
+          , class Traits
+          , class TAllocator
+        > struct ctor_traits<std::basic_string<T, Traits, TAllocator>> {
+            BOOST_DI_INJECT_TRAITS();
+        };
+    }}} // boost::di::v1
+#endif
 
 namespace std {
     template<class>
