@@ -422,11 +422,13 @@ test one_arg_class = [] {
     expect_eq(0, object.i);
 };
 
-test string_creation = [] {
-    struct string {
-        std::string str;
-    };
+#if __has_include(<string>)
+    test string_creation = [] {
+        struct string {
+            std::string str;
+        };
 
-    expect_eq("", di::make_injector().create<string>().str);
-};
+        expect_eq("", di::make_injector().create<string>().str);
+    };
+#endif
 
