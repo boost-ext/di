@@ -179,3 +179,80 @@ test bind_to_function_ptr = [] {
     expect_eq(d, object.fd());
 };
 
+test runtime_factory_impl = [] {
+    constexpr auto i = 42;
+
+    auto test = [&](bool debug_property) {
+        auto injector = make_injector(
+            di::bind<int>.to(i)
+          , di::bind<i1>.to([&](const auto& injector) -> std::shared_ptr<i1> {
+                if (debug_property) {
+                    return std::make_shared<impl1>();
+                }
+
+                return injector.template create<std::shared_ptr<impl1_int>>();
+            })
+        );
+
+        return injector.create<std::shared_ptr<i1>>();
+    };
+
+    {
+    auto object = test(false);
+    expect(dynamic_cast<impl1_int*>(object.get()));
+    expect_eq(i, dynamic_cast<impl1_int*>(object.get())->i);
+    }
+
+    {
+    auto object = test(true);
+    expect(dynamic_cast<impl1*>(object.get()));
+    }
+};
+
+struct call_operator {
+    bool& b;
+
+    template<class TInjector>
+    std::shared_ptr<i1> operator()(const TInjector& injector) const {
+        if (b) {
+            return injector.template create<std::shared_ptr<impl1>>();
+        }
+
+        return injector.template create<std::shared_ptr<impl1_int>>();
+    }
+};
+
+test runtime_factory_call_operator_impl = [] {
+    constexpr auto i = 42;
+
+    auto test = [&](bool debug_property) {
+        auto injector = make_injector(
+            di::bind<int>.to(i)
+          , di::bind<i1>.to(call_operator{debug_property})
+        );
+
+        return injector.create<std::shared_ptr<i1>>();
+    };
+
+    {
+    auto object = test(false);
+    expect(dynamic_cast<impl1_int*>(object.get()));
+    expect_eq(i, dynamic_cast<impl1_int*>(object.get())->i);
+    }
+
+    {
+    auto object = test(true);
+    expect(dynamic_cast<impl1*>(object.get()));
+    }
+};
+
+test scopes_injector_lambda_injector = [] {
+    constexpr short s = 42;
+    auto injector = di::make_injector(
+        di::bind<short>.to(s)
+      , di::bind<int>.to([](const auto& injector){ return static_cast<int>(injector.template create<short>()); })
+    );
+
+    expect_eq(s, injector.create<int>());
+};
+
