@@ -19,7 +19,7 @@ namespace di = boost::di;
         };
 
         auto injector = di::make_injector(
-            di::bind<int>.in(di::shared)
+            di::bind<int>().in(di::shared)
         );
 
         auto object = injector.create<c>();

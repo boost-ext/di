@@ -35,8 +35,8 @@ test named_to = [] {
     };
 
     auto injector = di::make_injector(
-        di::bind<int>.named(a).to(i)
-      , di::bind<double>.to(d).named(b)
+        di::bind<int>().named(a).to(i)
+      , di::bind<double>().to(d).named(b)
     );
 
     auto object = injector.create<c>();
@@ -55,7 +55,7 @@ test named_polymorphic = [] {
     };
 
     auto injector = di::make_injector(
-        di::bind<i1, impl1>.named(name)
+        di::bind<i1, impl1>().named(name)
     );
 
     auto object = injector.create<c>();
@@ -74,7 +74,7 @@ test named_with_ctor_def_decl = [] {
     constexpr auto i = 42;
 
     auto injector = di::make_injector(
-        di::bind<int>.to(i).named(name)
+        di::bind<int>().to(i).named(name)
     );
 
     auto object = injector.create<c>();
@@ -93,8 +93,8 @@ test named_parameters_with_shared_scope = [] {
     };
 
     auto injector = di::make_injector(
-        di::bind<i1, impl1>.named(a).in(di::unique)
-      , di::bind<i1>.named(b).to(std::make_shared<impl1>())
+        di::bind<i1, impl1>().named(a).in(di::unique)
+      , di::bind<i1>().named(b).to(std::make_shared<impl1>())
     );
 
     auto object = injector.create<c>();
@@ -104,7 +104,7 @@ test named_parameters_with_shared_scope = [] {
 
 test any_of = [] {
     auto injector = di::make_injector(
-        di::bind<impl1_2>
+        di::bind<impl1_2>()
     );
 
     auto object = injector.create<std::unique_ptr<impl1_2>>();
@@ -116,7 +116,7 @@ test any_of = [] {
 test any_of_with_scope = [] {
     auto test = [](auto scope, auto same) {
         auto injector = di::make_injector(
-            di::bind<di::any_of<i2, i1>, impl1_2>.in(scope)
+            di::bind<di::any_of<i2, i1>, impl1_2>().in(scope)
         );
 
         auto object_1 = injector.template create<std::shared_ptr<i1>>();
@@ -133,8 +133,8 @@ test any_of_with_scope = [] {
 test any_of_with_scope_split = [] {
     auto test = [](auto scope, auto same) {
         auto injector = di::make_injector(
-            di::bind<i1, impl1_2>.in(scope)
-          , di::bind<i2, impl1_2>.in(scope)
+            di::bind<i1, impl1_2>().in(scope)
+          , di::bind<i2, impl1_2>().in(scope)
         );
 
         auto object_1 = injector.template create<std::shared_ptr<i1>>();
@@ -150,7 +150,7 @@ test any_of_with_scope_split = [] {
 
 test any_of_unique = [] {
     auto injector = di::make_injector(
-        di::bind<di::any_of<i1, i2>, impl1_2>.in(di::unique)
+        di::bind<di::any_of<i1, i2>, impl1_2>().in(di::unique)
     );
 
     auto object_1 = injector.create<std::shared_ptr<i1>>();
@@ -162,7 +162,7 @@ test any_of_unique = [] {
 
 test bind_int_to_static_value = [] {
     auto injector = di::make_injector(
-        di::bind<int, std::integral_constant<int, 42>>
+        di::bind<int, std::integral_constant<int, 42>>()
     );
 
     auto object = injector.create<int>();
@@ -172,8 +172,8 @@ test bind_int_to_static_value = [] {
 
 test override_priority = [] {
     auto injector = di::make_injector(
-        di::bind<int>.to(12) [di::override]
-      , di::bind<int, std::integral_constant<int, 42>>
+        di::bind<int>().to(12) [di::override]
+      , di::bind<int, std::integral_constant<int, 42>>()
     );
 
     auto object = injector.create<int>();
@@ -183,8 +183,8 @@ test override_priority = [] {
 
 test override_priority_order = [] {
     auto injector = di::make_injector(
-        di::bind<int, std::integral_constant<int, 41>>
-      , di::bind<int>.to([]{return 42;}) [di::override]
+        di::bind<int, std::integral_constant<int, 41>>()
+      , di::bind<int>().to([]{return 42;}) [di::override]
     );
 
     expect_eq(42, injector.create<int>());
@@ -192,8 +192,8 @@ test override_priority_order = [] {
 
 test override_priority_interface = [] {
     auto injector = di::make_injector(
-        di::bind<i1, impl1>
-      , di::bind<i1, impl1_int> [di::override]
+        di::bind<i1, impl1>()
+      , di::bind<i1, impl1_int>() [di::override]
     );
 
     auto object = injector.create<std::unique_ptr<i1>>();
@@ -204,14 +204,14 @@ test override_priority_interface_module = [] {
     struct module {
         auto configure() const {
             return di::make_injector(
-                di::bind<i1, impl1_int>
+                di::bind<i1, impl1_int>()
             );
         }
     };
 
     auto injector = di::make_injector(
         module{}
-      , di::bind<i1, impl1> [di::override]
+      , di::bind<i1, impl1>() [di::override]
     );
 
     auto object = injector.create<std::unique_ptr<i1>>();
@@ -233,9 +233,9 @@ test override_priority_interface_module = [] {
         };
 
         auto injector = di::make_injector(
-            di::bind<i1, impl1>() // cross platform call dependency extension
-          , di::bind<i2, impl2> // requires variable templates
-          , di::bind<int>.to(i)
+            di::bind<i1, impl1>()() // cross platform call dependency extension
+          , di::bind<i2, impl2>() // requires variable templates
+          , di::bind<int>().to(i)
         );
 
         auto object = injector.create<c>();

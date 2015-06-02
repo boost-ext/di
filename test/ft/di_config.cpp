@@ -95,7 +95,7 @@ test constructible_policy = [] {
         double d = 0.0;
     };
 
-    auto injector = di::make_injector<config_policies>(di::bind<int>.to(42));
+    auto injector = di::make_injector<config_policies>(di::bind<int>().to(42));
     injector.create<example>();
 };
 
@@ -133,7 +133,7 @@ test call_custom_policies_with_exposed_injector = [] {
     policy::called() = 0;
 
     di::injector<i1> injector = di::make_injector<custom_policies>(
-        di::bind<i1, impl1>
+        di::bind<i1, impl1>()
     );
 
     auto object = injector.create<std::unique_ptr<i1>>();

@@ -80,7 +80,7 @@ test inject = [] {
     };
 
     auto injector = di::make_injector(
-        di::bind<int>.to(i)
+        di::bind<int>().to(i)
     );
 
     auto object = injector.create<c>();
@@ -104,7 +104,7 @@ test automatic_inject = [] {
     };
 
     auto injector = di::make_injector(
-        di::bind<int>.to(i)
+        di::bind<int>().to(i)
     );
 
     auto object = injector.create<c>();
@@ -126,7 +126,7 @@ test automatic_inject_with_initializer_list = [] {
     };
 
     auto injector = di::make_injector(
-        di::bind<int>.to(i)
+        di::bind<int>().to(i)
     );
 
     auto object = injector.create<c>();
@@ -200,14 +200,14 @@ test ctor_refs = [] {
         constexpr auto d = 0.0;
 
         auto injector = di::make_injector(
-            di::bind<int>.to(i)
-          , di::bind<double>.to(d)
-          , di::bind<std::string>.to("str")
-          , di::bind<std::string>.named(name).to("named str")
+            di::bind<int>().to(i)
+          , di::bind<double>().to(d)
+          , di::bind<std::string>().to("str")
+          , di::bind<std::string>().named(name).to("named str")
           , bind_i1
-          , di::bind<short>.to(short{42})
-          , di::bind<long>.to(123l)
-          , di::bind<std::function<int()>>.to([]{return 87;})
+          , di::bind<short>().to(short{42})
+          , di::bind<long>().to(123l)
+          , di::bind<std::function<int()>>().to([]{return 87;})
         );
 
         auto object = injector.template create<typename decltype(type)::type>();
@@ -219,13 +219,13 @@ test ctor_refs = [] {
         expect_eq(123, object.l);
     };
 
-    test(test_type<c>{}, di::bind<i1, impl1>);
-    test(test_type<c_inject>{}, di::bind<i1, impl1>);
-    test(test_type<c_aggregate>{}, di::bind<i1, impl1>);
+    test(test_type<c>{}, di::bind<i1, impl1>());
+    test(test_type<c_inject>{}, di::bind<i1, impl1>());
+    test(test_type<c_aggregate>{}, di::bind<i1, impl1>());
 
-    test(test_type<c>{}, di::bind<i1>.to(std::make_shared<impl1>()));
-    test(test_type<c_inject>{}, di::bind<i1>.to(std::make_shared<impl1>()));
-    test(test_type<c_aggregate>{}, di::bind<i1>.to(std::make_shared<impl1>()));
+    test(test_type<c>{}, di::bind<i1>().to(std::make_shared<impl1>()));
+    test(test_type<c_inject>{}, di::bind<i1>().to(std::make_shared<impl1>()));
+    test(test_type<c_aggregate>{}, di::bind<i1>().to(std::make_shared<impl1>()));
 };
 
 test refs_vs_copy = [] {
@@ -264,10 +264,10 @@ test refs_vs_copy = [] {
 
     {
     auto injector = di::make_injector(
-        di::bind<std::string>.named(name).to(ref)
-      , di::bind<int>.named(name).to(i)
-      , di::bind<int>.named(other_name).to(i)
-      , di::bind<int>.to(i)
+        di::bind<std::string>().named(name).to(ref)
+      , di::bind<int>().named(name).to(i)
+      , di::bind<int>().named(other_name).to(i)
+      , di::bind<int>().to(i)
     );
     auto object = injector.create<cc>();
     expect_eq(ref, object.str);
@@ -280,10 +280,10 @@ test refs_vs_copy = [] {
 
     {
     auto injector = di::make_injector(
-        di::bind<std::string>.named(name).to(ref)
-      , di::bind<int>.named(name).to(i)
-      , di::bind<int>.named(other_name).to(i)
-      , di::bind<int>.to(i)
+        di::bind<std::string>().named(name).to(ref)
+      , di::bind<int>().named(name).to(i)
+      , di::bind<int>().named(other_name).to(i)
+      , di::bind<int>().to(i)
     );
     auto object = injector.create<cc_inject>();
     expect_eq(ref, object.str);
@@ -296,10 +296,10 @@ test refs_vs_copy = [] {
 
     {
     auto injector = di::make_injector(
-        di::bind<std::string>.named(name).to(ref)
-      , di::bind<int>.named(name).to(i)
-      , di::bind<int>.named(other_name).to(i)
-      , di::bind<int>.to(i)
+        di::bind<std::string>().named(name).to(ref)
+      , di::bind<int>().named(name).to(i)
+      , di::bind<int>().named(other_name).to(i)
+      , di::bind<int>().to(i)
     );
     auto object = injector.create<cc>();
     expect_eq(ref, object.str);
@@ -312,10 +312,10 @@ test refs_vs_copy = [] {
 
     {
     auto injector = di::make_injector(
-        di::bind<std::string>.named(name).to(ref)
-      , di::bind<int>.named(name).to(i)
-      , di::bind<int>.named(other_name).to(i)
-      , di::bind<int>.to(i)
+        di::bind<std::string>().named(name).to(ref)
+      , di::bind<int>().named(name).to(i)
+      , di::bind<int>().named(other_name).to(i)
+      , di::bind<int>().to(i)
     );
     auto object = injector.create<cc_inject>();
     expect_eq(ref, object.str);
@@ -343,7 +343,7 @@ test create_with_default_values = [] {
     };
 
     auto injector = make_injector(
-        di::bind<int>.to(i)
+        di::bind<int>().to(i)
     );
 
     auto object = injector.create<default_values>();
@@ -364,7 +364,7 @@ test smart_pointers = [] {
     };
 
     auto injector = di::make_injector(
-        di::bind<i1, impl1>
+        di::bind<i1, impl1>()
     );
 
     injector.create<c>();
@@ -377,7 +377,7 @@ test one_arg_class = [] {
     };
 
     auto injector = di::make_injector(
-        di::bind<int>.in(di::unique)
+        di::bind<int>().in(di::unique)
     );
 
     auto object = injector.create<c>();

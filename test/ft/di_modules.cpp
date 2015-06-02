@@ -30,7 +30,7 @@ test modules_mix_make_injector = [] {
     const std::string s = "string";
 
     auto injector_string = make_injector(
-        di::bind<std::string>.to(s)
+        di::bind<std::string>().to(s)
     );
 
     struct empty {
@@ -42,7 +42,7 @@ test modules_mix_make_injector = [] {
     struct module1 {
         di::injector<i1> configure() const {
             return di::make_injector(
-                di::bind<i1, impl1>
+                di::bind<i1, impl1>()
             );
         }
     };
@@ -50,7 +50,7 @@ test modules_mix_make_injector = [] {
     struct module2 {
         di::injector<int> configure() const {
             return di::make_injector(
-                di::bind<int>.to(i_)
+                di::bind<int>().to(i_)
             );
         }
 
@@ -59,10 +59,10 @@ test modules_mix_make_injector = [] {
 
     auto injector = di::make_injector(
         empty{}
-      , di::bind<double>.to(d)
+      , di::bind<double>().to(d)
       , module1{}
       , make_injector(
-            di::bind<float>.to(f)
+            di::bind<float>().to(f)
         )
       , injector_string
       , module2{i}

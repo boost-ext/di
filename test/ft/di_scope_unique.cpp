@@ -15,7 +15,7 @@ test request_value_and_ptr_in_unique = [] {
     };
 
     auto injector = di::make_injector(
-        di::bind<int>.in(di::unique)
+        di::bind<int>().in(di::unique)
     );
 
     auto object = injector.create<c>();

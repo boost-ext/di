@@ -32,7 +32,7 @@ test scopes_external_shared = [] {
     auto i = std::make_shared<int>(42);
 
     auto injector = di::make_injector(
-        di::bind<int>.to(i)
+        di::bind<int>().to(i)
     );
 
     {
@@ -52,7 +52,7 @@ test scopes_external_lambda = [] {
     auto i = std::make_shared<int>(42);
 
     auto injector = di::make_injector(
-        di::bind<int>.to([&i]{return i;})
+        di::bind<int>().to([&i]{return i;})
     );
 
     {
@@ -72,7 +72,7 @@ test scopes_external_lambda_injector = [] {
     auto i = std::make_shared<int>(42);
 
     auto injector = di::make_injector(
-        di::bind<int>.to([&i](const auto&){return i;})
+        di::bind<int>().to([&i](const auto&){return i;})
     );
 
     {
@@ -105,8 +105,8 @@ test externals_ref_cref = [] {
     };
 
     auto injector = make_injector(
-        di::bind<int>.to(i)
-      , di::bind<double>.to(d)
+        di::bind<int>().to(i)
+      , di::bind<double>().to(d)
     );
 
     auto object = injector.create<refs>();
@@ -117,7 +117,7 @@ test externals_ref_cref = [] {
 
 test bind_chars_to_string = [] {
     auto injector = di::make_injector(
-        di::bind<std::string>.to("str")
+        di::bind<std::string>().to("str")
     );
 
     expect_eq("str", injector.create<std::string>());
@@ -126,14 +126,14 @@ test bind_chars_to_string = [] {
 test dynamic_binding_using_polymorphic_lambdas_with_dependend_interfaces = [] {
     auto test = [&](bool debug_property) {
         auto injector = make_injector(
-            di::bind<i1>.to([&](const auto& injector) -> std::shared_ptr<i1> {
+            di::bind<i1>().to([&](const auto& injector) -> std::shared_ptr<i1> {
                 if (debug_property) {
                     return std::make_shared<impl1>();
                 }
 
                 return injector.template create<std::shared_ptr<impl1_with_i2>>();
             })
-          , di::bind<i2, impl2>
+          , di::bind<i2, impl2>()
         );
 
         return injector.create<std::shared_ptr<i1>>();
@@ -184,8 +184,8 @@ test runtime_factory_impl = [] {
 
     auto test = [&](bool debug_property) {
         auto injector = make_injector(
-            di::bind<int>.to(i)
-          , di::bind<i1>.to([&](const auto& injector) -> std::shared_ptr<i1> {
+            di::bind<int>().to(i)
+          , di::bind<i1>().to([&](const auto& injector) -> std::shared_ptr<i1> {
                 if (debug_property) {
                     return std::make_shared<impl1>();
                 }
@@ -227,8 +227,8 @@ test runtime_factory_call_operator_impl = [] {
 
     auto test = [&](bool debug_property) {
         auto injector = make_injector(
-            di::bind<int>.to(i)
-          , di::bind<i1>.to(call_operator{debug_property})
+            di::bind<int>().to(i)
+          , di::bind<i1>().to(call_operator{debug_property})
         );
 
         return injector.create<std::shared_ptr<i1>>();
@@ -249,8 +249,8 @@ test runtime_factory_call_operator_impl = [] {
 test scopes_injector_lambda_injector = [] {
     constexpr short s = 42;
     auto injector = di::make_injector(
-        di::bind<short>.to(s)
-      , di::bind<int>.to([](const auto& injector){ return static_cast<int>(injector.template create<short>()); })
+        di::bind<short>().to(s)
+      , di::bind<int>().to([](const auto& injector){ return static_cast<int>(injector.template create<short>()); })
     );
 
     expect_eq(s, injector.create<int>());
