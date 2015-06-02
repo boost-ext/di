@@ -13,7 +13,7 @@ struct impl : i { };
 
 test error_bind_not_compatible_types = [] {
     auto injector = di::make_injector(
-        di::bind<int, impl>
+        di::bind<int, impl>()
     );
 
     injector.create<int>();

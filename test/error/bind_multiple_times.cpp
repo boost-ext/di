@@ -14,8 +14,8 @@ struct impl2 : i { };
 
 test error_bind_to_different_types = [] {
     di::make_injector(
-        di::bind<i, impl1>
-      , di::bind<i, impl2>
+        di::bind<i, impl1>()
+      , di::bind<i, impl2>()
     );
 };
 

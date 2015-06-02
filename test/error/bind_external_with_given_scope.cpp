@@ -10,7 +10,7 @@ namespace di = boost::di;
 
 test error_bind_external_with_given_scope = [] {
     di::make_injector(
-        di::bind<int>.in(di::unique).to(42)
+        di::bind<int>().in(di::unique).to(42)
     );
 };
 

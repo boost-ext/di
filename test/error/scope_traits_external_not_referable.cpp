@@ -14,7 +14,7 @@ test error_scope_traits_external_not_referable = [] {
     };
 
     auto injector = di::make_injector(
-        di::bind<int>.to(42) // lvalue can't be converted to reference
+        di::bind<int>().to(42) // lvalue can't be converted to reference
     );
 
     injector.create<c>();

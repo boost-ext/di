@@ -13,6 +13,6 @@ struct impl : i { void dummy() override { } };
 struct c { std::shared_ptr<i> i_; };
 
 test error_expose_polymorphic_type_without_binding = [] {
-    di::injector<c> injector = di::make_injector(); // di::bind<i, impl>
+    di::injector<c> injector = di::make_injector(); // di::bind<i, impl>()
 };
 
