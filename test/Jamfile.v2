@@ -100,7 +100,7 @@ test-suite ut :
     [ run-test c++1y : ut/type_traits/memory_traits.cpp ]
     [ run-test c++1y : ut/wrappers/unique.cpp : unique_wrapper ]
     [ run-test c++1y : ut/wrappers/shared.cpp : shared_wrapper ]
-    #[ run-test c++1y : ut/bindings.cpp ]
+    [ run-test c++1y : ut/bindings.cpp ]
     [ run-test c++1y : ut/config.cpp ]
     [ run-test c++1y : ut/injector.cpp : ctor_injector_cpp ]
     [ run-test c++1y : ut/make_injector.cpp ]

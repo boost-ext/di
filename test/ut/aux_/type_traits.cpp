@@ -30,8 +30,8 @@ BOOST_DI_HAS_METHOD(call, call);
 test has_method = [] {
     struct a { };
     struct call1 { void call(int) { }; };
-    struct call2 { int call(const double&) { }; };
-    struct call3 { int call(int, double = 0.0) const noexcept { }; };
+    struct call2 { int call(const double&) { return {}; }; };
+    struct call3 { int call(int, double = 0.0) const noexcept { return {}; }; };
 
     expect(!has_call<a, int>{});
     expect(!has_call<call1>{});

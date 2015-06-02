@@ -218,25 +218,30 @@ test override_priority_interface_module = [] {
     expect(dynamic_cast<impl1*>(object.get()));
 };
 
-test cross_platform_bind = [] {
-    constexpr auto i = 42;
+#if defined(__cpp_variable_templates)
+    test bind_mix = [] {
+        constexpr auto i = 42;
 
-    struct c {
-        c(int i_, std::unique_ptr<i1> i1_)
-            : i_(i_), i1_(std::move(i1_))
-        { }
+        struct c {
+            c(int i_, std::unique_ptr<i1> i1_, std::unique_ptr<i2> i2_)
+                : i_(i_), i1_(std::move(i1_)), i2_(std::move(i2_))
+            { }
 
-        int i_ = 0;
-        std::unique_ptr<i1> i1_;
+            int i_ = 0;
+            std::unique_ptr<i1> i1_;
+            std::unique_ptr<i2> i2_;
+        };
+
+        auto injector = di::make_injector(
+            di::bind<i1, impl1>() // cross platform call dependency extension
+          , di::bind<i2, impl2> // requires variable templates
+          , di::bind<int>.to(i)
+        );
+
+        auto object = injector.create<c>();
+        expect_eq(i, object.i_);
+        expect(dynamic_cast<impl1*>(object.i1_.get()));
+        expect(dynamic_cast<impl2*>(object.i2_.get()));
     };
-
-    auto injector = di::make_injector(
-        di::bind<i1, impl1>() // cross platform call dependency extension
-      , di::bind<int>.to(i)
-    );
-
-    auto object = injector.create<c>();
-    expect_eq(i, object.i_);
-    expect(dynamic_cast<impl1*>(object.i1_.get()));
-};
+#endif
 
