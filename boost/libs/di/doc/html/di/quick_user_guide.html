@@ -211,6 +211,39 @@
             </td>
 </tr></tbody>
 </table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Cross platform <code class="computeroutput"><span class="identifier">bind</span></code>
+                (Clang/GCC/MSVC)
+              </p>
+            </th>
+<th>
+              <p>
+                Test
+              </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+    <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">impl1</span><span class="special">&gt;()</span> <span class="comment">// brackets -&gt; MSVC 2015 doesn't support variable templates</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+            </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl1</span><span class="special">*&gt;(</span><span class="identifier">object</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>                                                                                                                            <span class="special">.</span>
+</pre>
+            </td>
+</tr></tbody>
+</table></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
           <a class="link" href="user_guide/injections.html" title="Injections">Injections</a>
         </li></ul></div>
