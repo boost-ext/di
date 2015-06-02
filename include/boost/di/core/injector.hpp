@@ -59,12 +59,15 @@
 
 template<class TConfig BOOST_DI_CORE_INJECTOR_POLICY(, class TPolicies = pool<>)(), class... TDeps>
 class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
-    : public pool<transform_t<TDeps...>>
+    : pool<transform_t<TDeps...>>
     , public type_traits::config_traits_t<
           TConfig
         , injector<TConfig, BOOST_DI_CORE_INJECTOR_POLICY(TPolicies)(pool<>), TDeps...>
       >
     , _ {
+
+    friend class binder;
+    template<class> friend class pool;
     template<class> friend class scopes::exposed;
     template<class, class, class> friend struct any_type;
     template<class, class> friend struct successful::any_type;
