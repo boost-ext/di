@@ -337,6 +337,15 @@ auto injector = di::make_injector(      | assert(42 == injector.create<int>());
     di::bind<int>.to(42)                |
 );                                      |
 ```
+```cpp
+Cross platform `bind` (Clang/GCC/MSVC)  | Test
+MSVC 2015 doesn't support variable      |
+templates                               |
+----------------------------------------|-----------------------------------------
+auto injector = di::make_injector(      | auto object = injector.create<unique_ptr<i1>>();
+    di::bind<i1, impl1>() // brackets   | assert(dynamic_cast<impl1*>(object.get()));
+);                                      |
+```
 
 *
 

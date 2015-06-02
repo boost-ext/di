@@ -130,6 +130,26 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
     ]
 ]
 
+[table
+[[Cross platform `bind` (Clang/GCC/MSVC) ][Test]]
+    [
+        [
+            ```
+            auto injector = di::make_injector(
+                di::bind<i1, impl1>() // brackets -> MSVC 2015 doesn't support variable templates
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.create<unique_ptr<i1>>();
+            assert(dynamic_cast<impl1*>(object.get()));                                                                                                                            .
+            ```
+        ]
+    ]
+]
+
 * __injections__
 
 [table

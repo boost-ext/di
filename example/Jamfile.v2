@@ -79,6 +79,7 @@ test-suite quick_user_guide :
     [ run-example c++1y : quick_user_guide/bindings2.cpp ]
     [ run-example c++1y : quick_user_guide/bindings3.cpp ]
     [ run-example c++1y : quick_user_guide/bindings4.cpp ]
+    [ run-example c++1y : quick_user_guide/bindings5.cpp ]
     [ run-example c++1y : quick_user_guide/injections1.cpp ]
     [ run-example c++1y : quick_user_guide/injections2.cpp ]
     [ run-example c++1y : quick_user_guide/injections3.cpp ]
