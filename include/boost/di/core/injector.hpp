@@ -120,7 +120,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     #if defined(BOOST_DI_MSVC)
-        struct is_creatable : std::true_type { };
+        struct is_creatable : std::false_type { };
     #else
         using is_creatable =
             decltype(is_creatable_impl(std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>()));
