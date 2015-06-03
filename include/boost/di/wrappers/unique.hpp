@@ -20,11 +20,6 @@ struct unique {
         return object;
     }
 
-    template<class I>
-    inline operator I*() const noexcept { // only for compilation clean
-        return {};
-    }
-
     inline operator T&&() noexcept {
         return std::move(object);
     }

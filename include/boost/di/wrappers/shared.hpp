@@ -8,8 +8,8 @@
 #define BOOST_DI_WRAPPERS_SHARED_HPP
 
 #include <memory>
-#include "boost/di/fwd.hpp"
 #include "boost/di/aux_/utility.hpp"
+#include "boost/di/fwd.hpp" // boost::shared_ptr
 
 namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 
