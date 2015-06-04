@@ -19,7 +19,7 @@ main() {
                 tail -n +7 $file | head -n -1 | egrep -v "^#include" | cat -s > $2/pph.hpp.tmp
                 ( IFS=''
                 while read -r line; do
-                    if [[ "$line" =~ "#include" ]]; then
+                    if [[ "$line" =~ "#include" ]] && [[ "$line" =~ ".ipp" ]]; then
                         cat "`echo $line | sed 's/.*#include \"\(.*\)\"/\1/'`" | tail -n +7 | head -n -1
                     else
                         echo -e $line
