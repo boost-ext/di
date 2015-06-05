@@ -4,7 +4,7 @@
 <title>make_injector</title>
 <link rel="stylesheet" href="../../../../../../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
-<link rel="home" href="../../../index.html" title="Boost.DI (Dependency Injection) C++14">
+<link rel="home" href="../../../index.html" title="Boost.DI / C++14 Dependency Injection Library / 1.0.0">
 <link rel="up" href="../injector.html" title="Injector">
 <link rel="prev" href="../injector.html" title="Injector">
 <link rel="next" href="../bindings.html" title="Bindings">
@@ -37,8 +37,11 @@
 <a name="di.user_guide.injector.make_injector.h1"></a>
           <span class="phrase"><a name="di.user_guide.injector.make_injector.synopsis"></a></span><a class="link" href="make_injector.html#di.user_guide.injector.make_injector.synopsis">Synopsis</a>
         </h6>
-<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">...</span> <span class="identifier">TBindings</span><span class="special">&gt;</span>
-<span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">TBindings</span><span class="special">...&gt;</span> <span class="keyword">inline</span> <span class="identifier">make_injector</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TBindings</span><span class="special">&amp;...)</span> <span class="keyword">noexcept</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span>
+    <span class="keyword">class</span> <span class="identifier">TConfig</span> <span class="special">=</span> <a class="link" href="../configuration.html#di.user_guide.configuration.synopsis">di::config</a>
+  <span class="special">,</span> <span class="keyword">class</span><span class="special">...</span> <span class="identifier">TBindings</span>
+<span class="special">&gt;</span> <span class="identifier">requires</span> <a class="link" href="../concepts/boundable.html" title="boundable">boundable</a><span class="special">&lt;</span><span class="identifier">TBindings</span><span class="special">...&gt;</span> <span class="special">&amp;&amp;</span> <a class="link" href="../concepts/configurable.html" title="configurable">configurable</a><span class="special">&lt;</span><span class="identifier">TConfig</span><span class="special">&gt;</span>
+<span class="keyword">auto</span> <span class="identifier">make_injector</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TBindings</span><span class="special">&amp;...)</span> <span class="keyword">noexcept</span><span class="special">;</span>
 </pre>
 <div class="table">
 <a name="di.user_guide.injector.make_injector.parameters"></a><p class="title"><b>Table&#160;6.&#160;Parameters</b></p>
@@ -81,13 +84,31 @@
 <tr>
 <td>
                   <p>
+                    <code class="computeroutput"><span class="identifier">TConfig</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <a class="link" href="../concepts/configurable.html" title="configurable">configurable</a>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Configuration
+                  </p>
+                </td>
+<td class="auto-generated">&#160;</td>
+<td class="auto-generated">&#160;</td>
+</tr>
+<tr>
+<td>
+                  <p>
                     <code class="computeroutput"><span class="identifier">TBindings</span><span class="special">...</span></code>
                   </p>
                 </td>
 <td>
                   <p>
-                    <a class="link" href="../bindings.html#di.user_guide.bindings.synopsis">Binding Model</a>
-                    type
+                    <a class="link" href="../concepts/boundable.html" title="boundable">boundable</a>
                   </p>
                 </td>
 <td>

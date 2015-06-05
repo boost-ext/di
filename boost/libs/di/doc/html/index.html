@@ -1,10 +1,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title>Boost.DI (Dependency Injection) C++14</title>
+<title>Boost.DI / C++14 Dependency Injection Library / 1.0.0</title>
 <link rel="stylesheet" href="../../../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
-<link rel="home" href="index.html" title="Boost.DI (Dependency Injection) C++14">
+<link rel="home" href="index.html" title="Boost.DI / C++14 Dependency Injection Library / 1.0.0">
 <link rel="next" href="di/introduction.html" title="Introduction &amp; Motivation">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -21,7 +21,7 @@
 <div class="chapter">
 <div class="titlepage"><div>
 <div><h2 class="title">
-<a name="di"></a>Boost.DI (Dependency Injection) C++14</h2></div>
+<a name="di"></a>Boost.DI / C++14 Dependency Injection Library / 1.0.0</h2></div>
 <div><div class="author"><h3 class="author">
 <span class="firstname">Krzysztof</span> <span class="surname">Jusiak</span>
 </h3></div></div>
@@ -38,11 +38,13 @@
 <dl class="toc">
 <dt><span class="section"><a href="di/introduction.html">Introduction &amp; Motivation</a></span></dt>
 <dt><span class="section"><a href="di/overview.html">Overview</a></span></dt>
-<dt><span class="section"><a href="di/comparison.html">Comparison</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="di/overview/comparison.html">Comparison</a></span></dt>
+<dt><span class="section"><a href="di/overview/performance.html">Performance</a></span></dt>
+<dt><span class="section"><a href="di/overview/diagnostic_messages.html">Diagnostic messages</a></span></dt>
+</dl></dd>
 <dt><span class="section"><a href="di/tutorial.html">Tutorial</a></span></dt>
 <dt><span class="section"><a href="di/quick_user_guide.html">Quick User Guide</a></span></dt>
-<dt><span class="section"><a href="di/diagnostic_messages.html">Diagnostic messages</a></span></dt>
-<dt><span class="section"><a href="di/performance.html">Performance</a></span></dt>
 <dt><span class="section"><a href="di/user_guide.html">User Guide</a></span></dt>
 <dd><dl>
 <dt><span class="section"><a href="di/user_guide/injector.html">Injector</a></span></dt>
@@ -61,8 +63,9 @@
 <dd><dl>
 <dt><span class="section"><a href="di/user_guide/scopes/deduce.html">deduce (default)</a></span></dt>
 <dt><span class="section"><a href="di/user_guide/scopes/unique.html">unique</a></span></dt>
-<dt><span class="section"><a href="di/user_guide/scopes/shared.html">shared</a></span></dt>
 <dt><span class="section"><a href="di/user_guide/scopes/singleton.html">singleton</a></span></dt>
+<dt><span class="section"><a href="di/user_guide/scopes/shared.html">shared</a></span></dt>
+<dt><span class="section"><a href="di/user_guide/scopes/session.html">session</a></span></dt>
 <dt><span class="section"><a href="di/user_guide/scopes/external.html">external</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="di/user_guide/modules.html">Modules</a></span></dt>
@@ -75,6 +78,14 @@
 <dt><span class="section"><a href="di/user_guide/policies.html">Policies</a></span></dt>
 <dd><dl><dt><span class="section"><a href="di/user_guide/policies/constructible.html">constructible</a></span></dt></dl></dd>
 <dt><span class="section"><a href="di/user_guide/concepts.html">Concepts</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="di/user_guide/concepts/boundable.html">boundable</a></span></dt>
+<dt><span class="section"><a href="di/user_guide/concepts/callable.html">callable</a></span></dt>
+<dt><span class="section"><a href="di/user_guide/concepts/configurable.html">configurable</a></span></dt>
+<dt><span class="section"><a href="di/user_guide/concepts/creatable.html">creatable</a></span></dt>
+<dt><span class="section"><a href="di/user_guide/concepts/providable.html">providable</a></span></dt>
+<dt><span class="section"><a href="di/user_guide/concepts/scopable.html">scopable</a></span></dt>
+</dl></dd>
 <dt><span class="section"><a href="di/user_guide/configuration.html">Configuration</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="di/examples.html">Examples</a></span></dt>
@@ -122,18 +133,23 @@
 <dt><span class="section"><a href="di/references.html">References</a></span></dt>
 </dl>
 </div>
-<p>
-    <a href="https://github.com/krzysztof-jusiak/di" target="_top"><span class="inlinemediaobject"><img src="https://img.shields.io/badge/boost.di-github-blue.svg"></span></a>
-    <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top"><span class="inlinemediaobject"><img src="http://img.shields.io/badge/license-boost-blue.svg"></span></a>
-    <a href="https://github.com/krzysztof-jusiak/di/releases/latest" target="_top"><span class="inlinemediaobject"><img src="http://img.shields.io/github/release/krzysztof-jusiak/di.svg"></span></a>
-    <a href="https://www.biicode.com/krzysztofjusiak/di" target="_top"><span class="inlinemediaobject"><img src="https://webapi.biicode.com/v1/badges/krzysztofjusiak/krzysztofjusiak/di/master"></span></a> <a href="https://gitter.im/krzysztof-jusiak/di" target="_top"><span class="inlinemediaobject"><img src="https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg"></span></a> &lt; <a href="https://travis-ci.org/krzysztof-jusiak/di" target="_top"><span class="inlinemediaobject"><img src="https://img.shields.io/travis/krzysztof-jusiak/di/cpp14.svg"></span></a>
-    <a href="https://ci.appveyor.com/project/krzysztof-jusiak/di" target="_top"><span class="inlinemediaobject"><img src="https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic/branch/cpp14?svg=true"></span></a> <a href="https://coveralls.io/r/krzysztof-jusiak/di?branch=cpp14" target="_top"><span class="inlinemediaobject"><img src="http://img.shields.io/coveralls/krzysztof-jusiak/di/cpp14.svg"></span></a>
-    <a href="http://github.com/krzysztof-jusiak/di/issues" target="_top"><span class="inlinemediaobject"><img src="https://img.shields.io/github/issues/krzysztof-jusiak/di.svg"></span></a>
-    &gt;
-  </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
+        Status
+        <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem">
+              <a href="https://github.com/krzysztof-jusiak/di" target="_top"><span class="inlinemediaobject"><img src="https://img.shields.io/badge/boost.di-github-blue.svg"></span></a>
+              <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top"><span class="inlinemediaobject"><img src="http://img.shields.io/badge/license-boost-blue.svg"></span></a>
+              <a href="https://github.com/krzysztof-jusiak/di/releases/latest" target="_top"><span class="inlinemediaobject"><img src="http://img.shields.io/github/release/krzysztof-jusiak/di.svg"></span></a>
+              <a href="https://www.biicode.com/krzysztofjusiak/di" target="_top"><span class="inlinemediaobject"><img src="https://webapi.biicode.com/v1/badges/krzysztofjusiak/krzysztofjusiak/di/master"></span></a>
+              <a href="https://gitter.im/krzysztof-jusiak/di" target="_top"><span class="inlinemediaobject"><img src="https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg"></span></a>
+              | <a href="https://travis-ci.org/krzysztof-jusiak/di" target="_top"><span class="inlinemediaobject"><img src="https://img.shields.io/travis/krzysztof-jusiak/di/cpp14.svg"></span></a>
+              <a href="https://ci.appveyor.com/project/krzysztof-jusiak/di" target="_top"><span class="inlinemediaobject"><img src="https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic/branch/cpp14?svg=true"></span></a>
+              <a href="https://coveralls.io/r/krzysztof-jusiak/di?branch=cpp14" target="_top"><span class="inlinemediaobject"><img src="http://img.shields.io/coveralls/krzysztof-jusiak/di/cpp14.svg"></span></a>
+              <a href="http://github.com/krzysztof-jusiak/di/issues" target="_top"><span class="inlinemediaobject"><img src="https://img.shields.io/github/issues/krzysztof-jusiak/di.svg"></span></a>
+            </li></ul></div>
+      </li></ul></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: June 05, 2015 at 10:18:10 GMT</small></p></td>
+<td align="left"><p><small>Last revised: June 05, 2015 at 16:53:31 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>

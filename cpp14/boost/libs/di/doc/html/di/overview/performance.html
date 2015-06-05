@@ -2,53 +2,50 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Performance</title>
-<link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
+<link rel="stylesheet" href="../../../../../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
-<link rel="home" href="../index.html" title="Boost.DI (Dependency Injection) C++14">
-<link rel="up" href="../index.html" title="Boost.DI (Dependency Injection) C++14">
-<link rel="prev" href="diagnostic_messages.html" title="Diagnostic messages">
-<link rel="next" href="user_guide.html" title="User Guide">
+<link rel="home" href="../../index.html" title="Boost.DI / C++14 Dependency Injection Library / 1.0.0">
+<link rel="up" href="../overview.html" title="Overview">
+<link rel="prev" href="comparison.html" title="Comparison">
+<link rel="next" href="diagnostic_messages.html" title="Diagnostic messages">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
-<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
-<td align="center"><a href="../../../../../index.html">Home</a></td>
-<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
 <td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
 <td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
-<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="diagnostic_messages.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="user_guide.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="comparison.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="diagnostic_messages.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="section">
-<div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="di.performance"></a><a class="link" href="performance.html" title="Performance">Performance</a>
-</h2></div></div></div>
+<div class="titlepage"><div><div><h3 class="title">
+<a name="di.overview.performance"></a><a class="link" href="performance.html" title="Performance">Performance</a>
+</h3></div></div></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
-<h3>
-<a name="di.performance.h0"></a>
-          <span class="phrase"><a name="di.performance.run_time"></a></span><a class="link" href="performance.html#di.performance.run_time">Run-time</a>
-        </h3>
+<h4>
+<a name="di.overview.performance.h0"></a>
+            <span class="phrase"><a name="di.overview.performance.run_time"></a></span><a class="link" href="performance.html#di.overview.performance.run_time">Run-time</a>
+          </h4>
 <p class="simpara">
-          <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem">
-                Environment
-                <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: square; ">
+            <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem">
+                  Environment
+                  <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: square; ">
 <li class="listitem">
-                      x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel
-                      GNU/Linux
-                    </li>
+                        x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel
+                        GNU/Linux
+                      </li>
 <li class="listitem">
-                      clang++3.4 -O2 / <code class="computeroutput"><span class="identifier">gdb</span>
-                      <span class="special">-</span><span class="identifier">batch</span>
-                      <span class="special">-</span><span class="identifier">ex</span>
-                      <span class="char">'file ./a.out'</span> <span class="special">-</span><span class="identifier">ex</span> <span class="char">'disassemble
-                      main'</span></code>
-                    </li>
+                        clang++3.4 -O2 / <code class="computeroutput">gdb -batch -ex 'file ./a.out' -ex
+                        'disassemble main'</code>
+                      </li>
 </ul></div>
-              </li></ul></div>
-        </p>
+                </li></ul></div>
+          </p>
 </li></ul></div>
 <div class="informaltable"><table class="table">
 <colgroup>
@@ -57,16 +54,15 @@
 </colgroup>
 <thead><tr>
 <th>
-              <p>
-                Create type wihtout bindings
-              </p>
-            </th>
+                <p>
+                  Create type wihtout bindings
+                </p>
+              </th>
 <th>
-              <p>
-                Asm x86-64 (same as <code class="computeroutput"><span class="keyword">return</span>
-                <span class="number">0</span></code>)
-              </p>
-            </th>
+                <p>
+                  Asm x86-64 (same as <code class="computeroutput">return 0</code>)
+                </p>
+              </th>
 </tr></thead>
 <tbody><tr>
 <td>
@@ -76,13 +72,13 @@
 <span class="special">}</span>
                                                                       <span class="special">.</span>
 </pre>
-            </td>
+              </td>
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">xor %eax,%eax
 retq
                                                                       .
 </pre>
-            </td>
+              </td>
 </tr></tbody>
 </table></div>
 <div class="informaltable"><table class="table">
@@ -92,15 +88,15 @@ retq
 </colgroup>
 <thead><tr>
 <th>
-              <p>
-                Create type with bound instance
-              </p>
-            </th>
+                <p>
+                  Create type with bound instance
+                </p>
+              </th>
 <th>
-              <p>
-                Asm x86-64 (same as <code class="computeroutput">return 42</code>)
-              </p>
-            </th>
+                <p>
+                  Asm x86-64 (same as <code class="computeroutput">return 42</code>)
+                </p>
+              </th>
 </tr></thead>
 <tbody><tr>
 <td>
@@ -113,13 +109,13 @@ retq
 <span class="special">}</span>
                                                                       <span class="special">.</span>
 </pre>
-            </td>
+              </td>
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">mov $0x2a,%eax
 retq
                                                                       .
 </pre>
-            </td>
+              </td>
 </tr></tbody>
 </table></div>
 <div class="informaltable"><table class="table">
@@ -129,15 +125,15 @@ retq
 </colgroup>
 <thead><tr>
 <th>
-              <p>
-                Create named type
-              </p>
-            </th>
+                <p>
+                  Create named type
+                </p>
+              </th>
 <th>
-              <p>
-                Asm x86-64 (same as <code class="computeroutput">return 42</code>)
-              </p>
-            </th>
+                <p>
+                  Asm x86-64 (same as <code class="computeroutput">return 42</code>)
+                </p>
+              </th>
 </tr></thead>
 <tbody><tr>
 <td>
@@ -161,13 +157,13 @@ retq
 <span class="special">}</span>
                                                                       <span class="special">.</span>
 </pre>
-            </td>
+              </td>
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">mov $0x2a,%eax
 retq
                                                                       .
 </pre>
-            </td>
+              </td>
 </tr></tbody>
 </table></div>
 <div class="informaltable"><table class="table">
@@ -177,15 +173,15 @@ retq
 </colgroup>
 <thead><tr>
 <th>
-              <p>
-                Create bound interface
-              </p>
-            </th>
+                <p>
+                  Create bound interface
+                </p>
+              </th>
 <th>
-              <p>
-                Asm x86-64 (same as <code class="computeroutput">make_unique</code>)
-              </p>
-            </th>
+                <p>
+                  Asm x86-64 (same as <code class="computeroutput">make_unique</code>)
+                </p>
+              </th>
 </tr></thead>
 <tbody><tr>
 <td>
@@ -201,7 +197,7 @@ retq
 <span class="special">}</span>
                                                                       <span class="special">.</span>
 </pre>
-            </td>
+              </td>
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">push   %rax
 mov    $0x8,%edi
@@ -215,7 +211,7 @@ pop    %rdx
 retq
                                                                       .
 </pre>
-            </td>
+              </td>
 </tr></tbody>
 </table></div>
 <div class="informaltable"><table class="table">
@@ -225,15 +221,15 @@ retq
 </colgroup>
 <thead><tr>
 <th>
-              <p>
-                Create bound interface via module
-              </p>
-            </th>
+                <p>
+                  Create bound interface via module
+                </p>
+              </th>
 <th>
-              <p>
-                Asm x86-64 (same as <code class="computeroutput">make_unique</code>)
-              </p>
-            </th>
+                <p>
+                  Asm x86-64 (same as <code class="computeroutput">make_unique</code>)
+                </p>
+              </th>
 </tr></thead>
 <tbody><tr>
 <td>
@@ -258,7 +254,7 @@ retq
 <span class="special">}</span>
                                                                       <span class="special">.</span>
 </pre>
-            </td>
+              </td>
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">push   %rax
 mov    $0x8,%edi
@@ -272,7 +268,7 @@ pop    %rdx
 retq
                                                                       .
 </pre>
-            </td>
+              </td>
 </tr></tbody>
 </table></div>
 <div class="informaltable"><table class="table">
@@ -282,15 +278,15 @@ retq
 </colgroup>
 <thead><tr>
 <th>
-              <p>
-                Create bound interface via exposed module
-              </p>
-            </th>
+                <p>
+                  Create bound interface via exposed module
+                </p>
+              </th>
 <th>
-              <p>
-                Asm x86-64
-              </p>
-            </th>
+                <p>
+                  Asm x86-64
+                </p>
+              </th>
 </tr></thead>
 <tbody><tr>
 <td>
@@ -315,7 +311,7 @@ retq
 <span class="special">}</span>
                                                                    <span class="special">.</span>
 </pre>
-            </td>
+              </td>
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">push   %rbp                               mov    (%rax),%ecx
 push   %rbx                               lea    -0x1(%rcx),%edx
@@ -347,26 +343,26 @@ mov    0x30(%rsp),%ecx                    add    $0x38,%rsp
 jmp    0x400b89 &lt;main+105&gt;                pop    %rbx
 pop    %rbp                               retq
 </pre>
-            </td>
+              </td>
 </tr></tbody>
 </table></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">
-<h3>
-<a name="di.performance.h1"></a>
-          <span class="phrase"><a name="di.performance.compile_time"></a></span><a class="link" href="performance.html#di.performance.compile_time">Compile-time</a>
-        </h3>
+<h4>
+<a name="di.overview.performance.h1"></a>
+            <span class="phrase"><a name="di.overview.performance.compile_time"></a></span><a class="link" href="performance.html#di.overview.performance.compile_time">Compile-time</a>
+          </h4>
 <p class="simpara">
-          <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem">
-                Environment
-                <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: square; ">
+            <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem">
+                  Environment
+                  <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: square; ">
 <li class="listitem">
-                      x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel
-                      GNU/Linux
-                    </li>
+                        x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel
+                        GNU/Linux
+                      </li>
 <li class="listitem">
 <p class="simpara">
-                      clang++3.4 -O2
-                    </p>
+                        clang++3.4 -O2
+                      </p>
 <div class="informaltable"><table class="table">
 <colgroup>
 <col>
@@ -374,15 +370,15 @@ pop    %rbp                               retq
 </colgroup>
 <thead><tr>
 <th>
-                              <p>
-                                Boost.DI header
-                              </p>
-                            </th>
+                                <p>
+                                  Boost.DI header
+                                </p>
+                              </th>
 <th>
-                              <p>
-                                Time [s]
-                              </p>
-                            </th>
+                                <p>
+                                  Time [s]
+                                </p>
+                              </th>
 </tr></thead>
 <tbody><tr>
 <td>
@@ -390,18 +386,18 @@ pop    %rbp                               retq
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span> <span class="special">}</span>
                                                                    <span class="special">.</span>
 </pre>
-                            </td>
+                              </td>
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="number">0.165</span>
                                                                    <span class="special">.</span>
 </pre>
-                            </td>
+                              </td>
 </tr></tbody>
 </table></div>
 </li>
 </ul></div>
-              </li></ul></div>
-        </p>
+                </li></ul></div>
+          </p>
 </li></ul></div>
 <pre class="programlisting"><span class="identifier">Legend</span><span class="special">:</span>
     <span class="identifier">ctor</span>    <span class="special">=</span> <span class="identifier">raw</span> <span class="identifier">constructor</span><span class="special">:</span> <span class="identifier">c</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">d</span><span class="special">);</span>
@@ -412,28 +408,28 @@ pop    %rbp                               retq
 <div class="informaltable"><table class="table">
 <colgroup><col></colgroup>
 <tbody><tr><td>
-              <p>
-                Test source code: <a href="../test/pt/di.cpp" target="_top">test/pt/di.cpp</a>
-              </p>
-            </td></tr></tbody>
+                <p>
+                  Test source code: <a href="../../test/pt/di.cpp" target="_top">test/pt/di.cpp</a>
+                </p>
+              </td></tr></tbody>
 </table></div>
 <p>
-      <a href="../images/small_complexity.png" target="_top"><span class="inlinemediaobject"><img src="../images/small_complexity.png"></span></a>
-    </p>
+        <a href="../../images/small_complexity.png" target="_top"><span class="inlinemediaobject"><img src="../../images/small_complexity.png"></span></a>
+      </p>
 <pre class="programlisting"><span class="special">*</span> <span class="number">4248897537</span> <span class="identifier">instances</span> <span class="identifier">created</span>
 <span class="special">*</span> <span class="number">132</span> <span class="identifier">different</span> <span class="identifier">types</span>
 <span class="special">*</span> <span class="number">10</span> <span class="identifier">modules</span>
 </pre>
 <p>
-      <a href="../images/medium_complexity.png" target="_top"><span class="inlinemediaobject"><img src="../images/medium_complexity.png"></span></a>
-    </p>
+        <a href="../../images/medium_complexity.png" target="_top"><span class="inlinemediaobject"><img src="../../images/medium_complexity.png"></span></a>
+      </p>
 <pre class="programlisting"><span class="special">*</span> <span class="number">1862039751439806464</span> <span class="identifier">instances</span> <span class="identifier">created</span>
 <span class="special">*</span> <span class="number">200</span> <span class="identifier">different</span> <span class="identifier">types</span>
 <span class="special">*</span> <span class="number">10</span> <span class="identifier">modules</span>
 </pre>
 <p>
-      <a href="../images/big_complexity.png" target="_top"><span class="inlinemediaobject"><img src="../images/big_complexity.png"></span></a>
-    </p>
+        <a href="../../images/big_complexity.png" target="_top"><span class="inlinemediaobject"><img src="../../images/big_complexity.png"></span></a>
+      </p>
 <pre class="programlisting"><span class="special">*</span> <span class="number">5874638529236910091</span> <span class="identifier">instances</span> <span class="identifier">created</span>
 <span class="special">*</span> <span class="number">310</span> <span class="identifier">different</span> <span class="identifier">types</span>
 <span class="special">*</span> <span class="number">100</span> <span class="identifier">different</span> <span class="identifier">interfaces</span>
@@ -441,29 +437,29 @@ pop    %rbp                               retq
 </pre>
 <div class="note"><table border="0" summary="Note">
 <tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/src/images/note.png"></td>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../doc/src/images/note.png"></td>
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-        To run compile time performance tests go to <code class="computeroutput"><span class="identifier">test</span><span class="special">/</span><span class="identifier">pt</span></code> directory
-        and run <code class="computeroutput"><span class="special">./</span><span class="identifier">pt</span><span class="special">.</span><span class="identifier">sh</span></code> script.
-      </p></td></tr>
+          To run compile time performance tests go to <code class="computeroutput"><span class="identifier">test</span><span class="special">/</span><span class="identifier">pt</span></code> directory
+          and run <code class="computeroutput"><span class="special">./</span><span class="identifier">pt</span><span class="special">.</span><span class="identifier">sh</span></code> script.
+        </p></td></tr>
 </table></div>
-<h4>
-<a name="di.performance.h2"></a>
-      <span class="phrase"><a name="di.performance.see_also"></a></span><a class="link" href="performance.html#di.performance.see_also">See
-      Also</a>
-    </h4>
+<h5>
+<a name="di.overview.performance.h2"></a>
+        <span class="phrase"><a name="di.overview.performance.see_also"></a></span><a class="link" href="performance.html#di.overview.performance.see_also">See
+        Also</a>
+      </h5>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-          <a class="link" href="user_guide.html" title="User Guide">User Guide</a>
-        </li>
+            <a class="link" href="../user_guide.html" title="User Guide">User Guide</a>
+          </li>
 <li class="listitem">
-          <a class="link" href="examples.html" title="Examples">Examples</a>
-        </li>
+            <a class="link" href="../examples.html" title="Examples">Examples</a>
+          </li>
 <li class="listitem">
-          <a class="link" href="rationale.html" title="Rationale">Rationale</a>
-        </li>
+            <a class="link" href="../rationale.html" title="Rationale">Rationale</a>
+          </li>
 </ul></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
@@ -476,7 +472,7 @@ pop    %rbp                               retq
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="diagnostic_messages.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="user_guide.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="comparison.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="diagnostic_messages.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
 </div>
 <div id="disqus_thread"></div>
 <script type="text/javascript">

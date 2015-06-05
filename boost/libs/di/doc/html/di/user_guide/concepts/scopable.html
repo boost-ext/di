@@ -1,0 +1,215 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>scopable</title>
+<link rel="stylesheet" href="../../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="../../../index.html" title="Boost.DI / C++14 Dependency Injection Library / 1.0.0">
+<link rel="up" href="../concepts.html" title="Concepts">
+<link rel="prev" href="providable.html" title="providable">
+<link rel="next" href="../configuration.html" title="Configuration">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="providable.html"><img src="../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../concepts.html"><img src="../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../configuration.html"><img src="../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="di.user_guide.concepts.scopable"></a><a class="link" href="scopable.html" title="scopable">scopable</a>
+</h4></div></div></div>
+<h6>
+<a name="di.user_guide.concepts.scopable.h0"></a>
+          <span class="phrase"><a name="di.user_guide.concepts.scopable.description"></a></span><a class="link" href="scopable.html#di.user_guide.concepts.scopable.description">Description</a>
+        </h6>
+<p>
+          Scope type requirement (used by <a class="link" href="../bindings.html#di.user_guide.bindings.synopsis">di::dependency</a>).
+        </p>
+<h6>
+<a name="di.user_guide.concepts.scopable.h1"></a>
+          <span class="phrase"><a name="di.user_guide.concepts.scopable.synopsis"></a></span><a class="link" href="scopable.html#di.user_guide.concepts.scopable.synopsis">Synopsis</a>
+        </h6>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">using</span> <span class="identifier">scopable</span><span class="special">;</span>
+</pre>
+<div class="table">
+<a name="di.user_guide.concepts.scopable.parameters"></a><p class="title"><b>Table&#160;47.&#160;Parameters</b></p>
+<div class="table-contents"><table class="table" summary="Parameters">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Parameter
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Returns
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">T</span></code>
+                  </p>
+                </td>
+<td>
+                  <p>
+                    Scope to be verified
+                  </p>
+                </td>
+<td>
+                  <p>
+                    <code class="computeroutput"><span class="identifier">true_type</span></code> if
+                    constraint is satisfied, <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">false_type</span></code>
+                    otherwise
+                  </p>
+                </td>
+</tr></tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="table">
+<a name="di.user_guide.concepts.scopable.error_types"></a><p class="title"><b>Table&#160;48.&#160;Error Types</b></p>
+<div class="table-contents"><table class="table" summary="Error Types">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Example
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Error
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Description
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">Scope</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">,</span> <span class="keyword">class</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">scope</span> <span class="special">{</span>
+        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TProvider</span><span class="special">&gt;</span>
+        <span class="keyword">auto</span> <span class="identifier">try_create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TProvider</span><span class="special">&amp;);</span>
+
+        <span class="comment">// template&lt;class T, class TProvider&gt;</span>
+        <span class="comment">// auto create(const TProvider&amp;);</span>
+    <span class="special">};</span>
+<span class="special">};</span>
+
+<a class="link" href="../injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">in</span><span class="special">(</span><span class="identifier">Scope</span><span class="special">{}).</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span> <span class="comment">// error, no method `in` found to be called</span>
+<span class="special">);</span>
+</pre>
+                </td>
+<td>
+                  <p>
+                    std::false_type
+                  </p>
+                </td>
+<td>
+                  <p>
+                    when <code class="computeroutput"><span class="identifier">T</span></code> doesn't
+                    satisfy calls: <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">scope</span><span class="special">&lt;</span><span class="identifier">I</span><span class="special">,</span> <span class="identifier">Impl</span><span class="special">&gt;::</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">TArg</span><span class="special">&gt;(</span><span class="identifier">TProvider</span><span class="special">{})</span></code> and <code class="computeroutput"><span class="identifier">T</span><span class="special">::</span><span class="identifier">scope</span><span class="special">&lt;</span><span class="identifier">I</span><span class="special">,</span> <span class="identifier">Impl</span><span class="special">&gt;::</span><span class="identifier">try_create</span><span class="special">&lt;</span><span class="identifier">TArg</span><span class="special">&gt;(</span><span class="identifier">TProvider</span><span class="special">{})</span></code>
+                  </p>
+                </td>
+</tr></tbody>
+</table></div>
+</div>
+<br class="table-break"><h6>
+<a name="di.user_guide.concepts.scopable.h2"></a>
+          <span class="phrase"><a name="di.user_guide.concepts.scopable.header"></a></span><a class="link" href="scopable.html#di.user_guide.concepts.scopable.header">Header</a>
+        </h6>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><a href="https://github.com/krzysztof-jusiak/di/blob/cpp14/include/boost/di.hpp" target="_top">boost/di.hpp</a><span class="special">&gt;</span>
+</pre>
+<h6>
+<a name="di.user_guide.concepts.scopable.h3"></a>
+          <span class="phrase"><a name="di.user_guide.concepts.scopable.namespace"></a></span><a class="link" href="scopable.html#di.user_guide.concepts.scopable.namespace">Namespace</a>
+        </h6>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">concepts</span>
+</pre>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../../../../doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Concept is not supported by MSVC 2015.
+          </p></td></tr>
+</table></div>
+<h6>
+<a name="di.user_guide.concepts.scopable.h4"></a>
+          <span class="phrase"><a name="di.user_guide.concepts.scopable.see_also"></a></span><a class="link" href="scopable.html#di.user_guide.concepts.scopable.see_also">See
+          Also</a>
+        </h6>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+              <a class="link" href="boundable.html" title="boundable">boundable</a>
+            </li>
+<li class="listitem">
+              <a class="link" href="callable.html" title="callable">callable</a>
+            </li>
+<li class="listitem">
+              <a class="link" href="configurable.html" title="configurable">configurable</a>
+            </li>
+<li class="listitem">
+              <a class="link" href="creatable.html" title="creatable">creatable</a>
+            </li>
+<li class="listitem">
+              <a class="link" href="providable.html" title="providable">providable</a>
+            </li>
+</ul></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2012-2015 Krzysztof
+      Jusiak | Distributed under the Boost Software License, Version 1.0.<p>
+        --- <a href="https://github.com/krzysztof-jusiak/di" target="_top">GitHub</a> ---
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="providable.html"><img src="../../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../concepts.html"><img src="../../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../configuration.html"><img src="../../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'boost-di';
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</body></html>

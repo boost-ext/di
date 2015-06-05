@@ -4,7 +4,7 @@
 <title>Injector</title>
 <link rel="stylesheet" href="../../../../../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
-<link rel="home" href="../../index.html" title="Boost.DI (Dependency Injection) C++14">
+<link rel="home" href="../../index.html" title="Boost.DI / C++14 Dependency Injection Library / 1.0.0">
 <link rel="up" href="../user_guide.html" title="User Guide">
 <link rel="prev" href="../user_guide.html" title="User Guide">
 <link rel="next" href="injector/make_injector.html" title="make_injector">
@@ -45,7 +45,7 @@
 
     <span class="keyword">explicit</span> <span class="identifier">injector</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TArgs</span><span class="special">&amp;...);</span>
 
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">requires</span> <a class="link" href="concepts/creatable.html" title="creatable">creatable</a><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span>
     <span class="identifier">T</span> <span class="identifier">create</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span><span class="special">;</span>
 
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">TAction</span><span class="special">&gt;</span>
@@ -98,8 +98,7 @@
               </td>
 <td>
                 <p>
-                  <a class="link" href="bindings.html#di.user_guide.bindings.synopsis">Binding Model</a>
-                  type
+                  <a class="link" href="concepts/boundable.html" title="boundable">boundable</a>
                 </p>
               </td>
 <td>
@@ -119,7 +118,7 @@
               </td>
 <td>
                 <p>
-                  <code class="computeroutput"><span class="identifier">variadic</span> <span class="identifier">list</span></code>
+                  <a class="link" href="concepts/boundable.html" title="boundable">boundable</a>
                 </p>
               </td>
 <td>
@@ -138,7 +137,7 @@
               </td>
 <td>
                 <p>
-                  Is constructible using given configuration
+                  <a class="link" href="concepts/creatable.html" title="creatable">creatable</a>
                 </p>
               </td>
 <td>
@@ -202,7 +201,7 @@
               </td>
 <td>
                 <p>
-                  __type_model__
+                  <a class="link" href="concepts/creatable.html" title="creatable">creatable</a>
                 </p>
               </td>
 <td>

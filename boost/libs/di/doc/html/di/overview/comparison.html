@@ -1,0 +1,583 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Comparison</title>
+<link rel="stylesheet" href="../../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="../../index.html" title="Boost.DI / C++14 Dependency Injection Library / 1.0.0">
+<link rel="up" href="../overview.html" title="Overview">
+<link rel="prev" href="../overview.html" title="Overview">
+<link rel="next" href="performance.html" title="Performance">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="performance.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="di.overview.comparison"></a><a class="link" href="comparison.html" title="Comparison">Comparison</a>
+</h3></div></div></div>
+<div class="table">
+<a name="di.overview.comparison.c_dependency_injection_libraries"></a><p class="title"><b>Table&#160;1.&#160;C++ Dependency Injection Libraries</b></p>
+<div class="table-contents"><table class="table" summary="C++ Dependency Injection Libraries">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Library
+                </p>
+              </th>
+<th>
+                <p>
+                  Boost.DI
+                </p>
+              </th>
+<th>
+                <p>
+                  dicpp
+                </p>
+              </th>
+<th>
+                <p>
+                  Google Fruit
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  Language
+                </p>
+              </td>
+<td>
+                <p>
+                  C++14
+                </p>
+              </td>
+<td>
+                <p>
+                  C++11
+                </p>
+              </td>
+<td class="auto-generated">&#160;</td>
+</tr>
+<tr>
+<td>
+                <p>
+                  License
+                </p>
+              </td>
+<td>
+                <p>
+                  Boost License
+                </p>
+              </td>
+<td>
+                <p>
+                  Boost License
+                </p>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Linkage
+                </p>
+              </td>
+<td>
+                <p>
+                  Header only
+                </p>
+              </td>
+<td>
+                <p>
+                  Header only
+                </p>
+              </td>
+<td>
+                <p>
+                  Library
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Approach
+                </p>
+              </td>
+<td>
+                <p>
+                  compile-time
+                </p>
+              </td>
+<td>
+                <p>
+                  run-time
+                </p>
+              </td>
+<td>
+                <p>
+                  compile/run-time
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Test - bind value
+                </p>
+              </td>
+<td>
+<pre class="programlisting">// clang++ -O2
+
+#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+struct module {
+    auto configure() const noexcept {
+        return di::make_injector(
+            di::bind&lt;int&gt;.to(42)
+        );
+    }
+};
+
+int main() {
+    auto injector = di::make_injector(module{});
+    return injector.create&lt;int&gt;() != 42;
+}
+</pre>
+              </td>
+<td>
+<pre class="programlisting">#include &lt;di/registry.hpp&gt;
+#include &lt;di/injector.hpp&gt;
+
+void module(di::registry&amp; r) {
+    r.add(r.type&lt;int&gt;().instance(new int{42}));
+}
+
+int main() {
+    di::injector injector;
+    injector.install(module);
+    return injector.construct&lt;int&gt;() != 42;
+}
+</pre>
+              </td>
+<td>
+<pre class="programlisting">#include &lt;fruit/fruit.h&gt;
+
+auto i = 42; // bindInstance doesn't support l-value's
+
+fruit::Component&lt;int&gt; module() {
+    return fruit::createComponent()
+        .bindInstance(i);
+}
+
+int main() {
+    fruit::Injector&lt;int&gt; injector{module()};
+    return injector.get&lt;int&gt;() != 42;
+}
+</pre>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Assember - x86-64
+                </p>
+              </td>
+<td>
+<pre class="programlisting">gdb -batch -ex 'file ./di.out' -ex 'disassemble main'
+Dump of assembler code for function main:
+   0x0000000000400620 &lt;+0&gt;:	xor    %eax,%eax
+   0x0000000000400622 &lt;+2&gt;:	retq
+End of assembler dump.
+</pre>
+              </td>
+<td>
+<pre class="programlisting">gdb -batch -ex 'file ./dicpp.out' -ex 'disassemble main'
+Dump of assembler code for function main:
+   0x0000000000404760 &lt;+0&gt;:	push   %rbx
+   0x0000000000404761 &lt;+1&gt;:	sub    $0xb0,%rsp
+   0x0000000000404768 &lt;+8&gt;:	lea    0x20(%rsp),%rbx
+   0x000000000040476d &lt;+13&gt;:	xor    %esi,%esi
+   0x000000000040476f &lt;+15&gt;:	mov    %rbx,%rdi
+   0x0000000000404772 &lt;+18&gt;:	callq  0x40b3d0 &lt;_ZN2di8injectorC2ENS0_8localityE&gt;
+   0x0000000000404777 &lt;+23&gt;:	movq   $0x404520,(%rsp)
+   0x000000000040477f &lt;+31&gt;:	movq   $0x405e50,0x18(%rsp)
+   0x0000000000404788 &lt;+40&gt;:	movq   $0x405e60,0x10(%rsp)
+   0x0000000000404791 &lt;+49&gt;:	mov    %rbx,%rdi
+   0x0000000000404794 &lt;+52&gt;:	callq  0x404520 &lt;_Z6moduleRN2di8registryE&gt;
+   0x0000000000404799 &lt;+57&gt;:	mov    0x10(%rsp),%rax
+   0x000000000040479e &lt;+62&gt;:	test   %rax,%rax
+   0x00000000004047a1 &lt;+65&gt;:	je     0x4047b1 &lt;main+81&gt;
+   0x00000000004047a3 &lt;+67&gt;:	lea    (%rsp),%rdi
+   0x00000000004047a7 &lt;+71&gt;:	mov    $0x3,%edx
+   0x00000000004047ac &lt;+76&gt;:	mov    %rdi,%rsi
+   0x00000000004047af &lt;+79&gt;:	callq  *%rax
+   0x00000000004047b1 &lt;+81&gt;:	lea    0x20(%rsp),%rdi
+   0x00000000004047b6 &lt;+86&gt;:	callq  0x405cf0 &lt;_ZNK2di8registry9constructIiEENS_6traits13returned_typeIT_E4typeEv&gt;
+   0x00000000004047bb &lt;+91&gt;:	cmp    $0x2a,%eax
+   0x00000000004047be &lt;+94&gt;:	setne  %al
+   0x00000000004047c1 &lt;+97&gt;:	movzbl %al,%ebx
+   0x00000000004047c4 &lt;+100&gt;:	lea    0x20(%rsp),%rdi
+   0x00000000004047c9 &lt;+105&gt;:	callq  0x40b7c0 &lt;_ZN2di8registryD2Ev&gt;
+   0x00000000004047ce &lt;+110&gt;:	mov    %ebx,%eax
+   0x00000000004047d0 &lt;+112&gt;:	add    $0xb0,%rsp
+   0x00000000004047d7 &lt;+119&gt;:	pop    %rbx
+   0x00000000004047d8 &lt;+120&gt;:	retq
+   0x00000000004047d9 &lt;+121&gt;:	mov    %rax,%rbx
+   0x00000000004047dc &lt;+124&gt;:	mov    0x10(%rsp),%rcx
+   0x00000000004047e1 &lt;+129&gt;:	test   %rcx,%rcx
+   0x00000000004047e4 &lt;+132&gt;:	je     0x404801 &lt;main+161&gt;
+   0x00000000004047e6 &lt;+134&gt;:	lea    (%rsp),%rdi
+   0x00000000004047ea &lt;+138&gt;:	mov    $0x3,%edx
+   0x00000000004047ef &lt;+143&gt;:	mov    %rdi,%rsi
+   0x00000000004047f2 &lt;+146&gt;:	callq  *%rcx
+   0x00000000004047f4 &lt;+148&gt;:	jmp    0x404801 &lt;main+161&gt;
+   0x00000000004047f6 &lt;+150&gt;:	mov    %rax,%rdi
+   0x00000000004047f9 &lt;+153&gt;:	callq  0x405e40 &lt;__clang_call_terminate&gt;
+   0x00000000004047fe &lt;+158&gt;:	mov    %rax,%rbx
+   0x0000000000404801 &lt;+161&gt;:	lea    0x20(%rsp),%rdi
+   0x0000000000404806 &lt;+166&gt;:	callq  0x40b7c0 &lt;_ZN2di8registryD2Ev&gt;
+   0x000000000040480b &lt;+171&gt;:	mov    %rbx,%rdi
+   0x000000000040480e &lt;+174&gt;:	callq  0x404250 &lt;_Unwind_Resume@plt&gt;
+   0x0000000000404813 &lt;+179&gt;:	mov    %rax,%rdi
+   0x0000000000404816 &lt;+182&gt;:	callq  0x405e40 &lt;__clang_call_terminate&gt;
+End of assembler dump.
+</pre>
+              </td>
+<td>
+<pre class="programlisting">gdb -batch -ex 'file ./fruit.out' -ex 'disassemble main'
+Dump of assembler code for function main:
+   0x00000000004017a0 &lt;+0&gt;:	push   %rbp
+   0x00000000004017a1 &lt;+1&gt;:	push   %rbx
+   0x00000000004017a2 &lt;+2&gt;:	sub    $0xc8,%rsp
+   0x00000000004017a9 &lt;+9&gt;:	lea    (%rsp),%rbx
+   0x00000000004017ad &lt;+13&gt;:	mov    %rbx,%rdi
+   0x00000000004017b0 &lt;+16&gt;:	callq  0x4015b0 &lt;_Z6modulev&gt;
+   0x00000000004017b5 &lt;+21&gt;:	lea    0xc0(%rsp),%rdi
+   0x00000000004017bd &lt;+29&gt;:	mov    %rbx,%rsi
+   0x00000000004017c0 &lt;+32&gt;:	callq  0x401a60 &lt;_ZN5fruit8InjectorIJiEEC2ENS_9ComponentIJiEEE&gt;
+   0x00000000004017c5 &lt;+37&gt;:	mov    0xa8(%rsp),%rdi
+   0x00000000004017cd &lt;+45&gt;:	test   %rdi,%rdi
+   0x00000000004017d0 &lt;+48&gt;:	je     0x4017d7 &lt;main+55&gt;
+   0x00000000004017d2 &lt;+50&gt;:	callq  0x401260 &lt;_ZdlPv@plt&gt;
+   0x00000000004017d7 &lt;+55&gt;:	mov    0x90(%rsp),%rdi
+   0x00000000004017df &lt;+63&gt;:	test   %rdi,%rdi
+   0x00000000004017e2 &lt;+66&gt;:	je     0x4017e9 &lt;main+73&gt;
+   0x00000000004017e4 &lt;+68&gt;:	callq  0x401260 &lt;_ZdlPv@plt&gt;
+   0x00000000004017e9 &lt;+73&gt;:	mov    0x48(%rsp),%rdi
+   0x00000000004017ee &lt;+78&gt;:	test   %rdi,%rdi
+   0x00000000004017f1 &lt;+81&gt;:	je     0x4017f8 &lt;main+88&gt;
+   0x00000000004017f3 &lt;+83&gt;:	callq  0x401260 &lt;_ZdlPv@plt&gt;
+   0x00000000004017f8 &lt;+88&gt;:	lea    0xc0(%rsp),%rdi
+   0x0000000000401800 &lt;+96&gt;:	callq  0x401b00 &lt;_ZN5fruit8InjectorIJiEE3getIiEENS_4impl4meta17RemoveAnnotations5applyIT_E4typeEv&gt;
+   0x0000000000401805 &lt;+101&gt;:	cmp    $0x2a,%eax
+   0x0000000000401808 &lt;+104&gt;:	setne  %al
+   0x000000000040180b &lt;+107&gt;:	movzbl %al,%ebp
+   0x000000000040180e &lt;+110&gt;:	mov    0xc0(%rsp),%rbx
+   0x0000000000401816 &lt;+118&gt;:	test   %rbx,%rbx
+   0x0000000000401819 &lt;+121&gt;:	je     0x40182b &lt;main+139&gt;
+   0x000000000040181b &lt;+123&gt;:	mov    %rbx,%rdi
+   0x000000000040181e &lt;+126&gt;:	callq  0x401eb0 &lt;_ZN5fruit4impl15InjectorStorageD2Ev&gt;
+   0x0000000000401823 &lt;+131&gt;:	mov    %rbx,%rdi
+   0x0000000000401826 &lt;+134&gt;:	callq  0x401260 &lt;_ZdlPv@plt&gt;
+   0x000000000040182b &lt;+139&gt;:	mov    %ebp,%eax
+   0x000000000040182d &lt;+141&gt;:	add    $0xc8,%rsp
+   0x0000000000401834 &lt;+148&gt;:	pop    %rbx
+   0x0000000000401835 &lt;+149&gt;:	pop    %rbp
+   0x0000000000401836 &lt;+150&gt;:	retq
+   0x0000000000401837 &lt;+151&gt;:	mov    %rax,%rbx
+   0x000000000040183a &lt;+154&gt;:	mov    0xa8(%rsp),%rdi
+   0x0000000000401842 &lt;+162&gt;:	test   %rdi,%rdi
+   0x0000000000401845 &lt;+165&gt;:	je     0x40184c &lt;main+172&gt;
+   0x0000000000401847 &lt;+167&gt;:	callq  0x401260 &lt;_ZdlPv@plt&gt;
+   0x000000000040184c &lt;+172&gt;:	mov    0x90(%rsp),%rdi
+   0x0000000000401854 &lt;+180&gt;:	test   %rdi,%rdi
+   0x0000000000401857 &lt;+183&gt;:	je     0x40185e &lt;main+190&gt;
+   0x0000000000401859 &lt;+185&gt;:	callq  0x401260 &lt;_ZdlPv@plt&gt;
+   0x000000000040185e &lt;+190&gt;:	mov    0x48(%rsp),%rdi
+   0x0000000000401863 &lt;+195&gt;:	test   %rdi,%rdi
+   0x0000000000401866 &lt;+198&gt;:	je     0x4018a1 &lt;main+257&gt;
+   0x0000000000401868 &lt;+200&gt;:	callq  0x401260 &lt;_ZdlPv@plt&gt;
+   0x000000000040186d &lt;+205&gt;:	mov    %rbx,%rdi
+   0x0000000000401870 &lt;+208&gt;:	callq  0x401410 &lt;_Unwind_Resume@plt&gt;
+   0x0000000000401875 &lt;+213&gt;:	mov    %rax,%rbx
+   0x0000000000401878 &lt;+216&gt;:	mov    0xc0(%rsp),%rbp
+   0x0000000000401880 &lt;+224&gt;:	test   %rbp,%rbp
+   0x0000000000401883 &lt;+227&gt;:	je     0x401895 &lt;main+245&gt;
+   0x0000000000401885 &lt;+229&gt;:	mov    %rbp,%rdi
+   0x0000000000401888 &lt;+232&gt;:	callq  0x401eb0 &lt;_ZN5fruit4impl15InjectorStorageD2Ev&gt;
+   0x000000000040188d &lt;+237&gt;:	mov    %rbp,%rdi
+   0x0000000000401890 &lt;+240&gt;:	callq  0x401260 &lt;_ZdlPv@plt&gt;
+   0x0000000000401895 &lt;+245&gt;:	movq   $0x0,0xc0(%rsp)
+   0x00000000004018a1 &lt;+257&gt;:	mov    %rbx,%rdi
+   0x00000000004018a4 &lt;+260&gt;:	callq  0x401410 &lt;_Unwind_Resume@plt&gt;
+End of assembler dump.
+</pre>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="table">
+<a name="di.overview.comparison.dependency_injection_libraries"></a><p class="title"><b>Table&#160;2.&#160;Dependency Injection Libraries</b></p>
+<div class="table-contents"><table class="table" summary="Dependency Injection Libraries">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  Library
+                </p>
+              </th>
+<th>
+                <p>
+                  Boost.DI
+                </p>
+              </th>
+<th>
+                <p>
+                  Google Guice
+                </p>
+              </th>
+<th>
+                <p>
+                  Dagger2
+                </p>
+              </th>
+<th>
+                <p>
+                  Ninject
+                </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  Language
+                </p>
+              </td>
+<td>
+                <p>
+                  C++14
+                </p>
+              </td>
+<td>
+                <p>
+                  Java
+                </p>
+              </td>
+<td>
+                <p>
+                  Java
+                </p>
+              </td>
+<td>
+                <p>
+                  C#
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  License
+                </p>
+              </td>
+<td>
+                <p>
+                  Boost License
+                </p>
+              </td>
+<td>
+              </td>
+<td>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Linkage
+                </p>
+              </td>
+<td>
+                <p>
+                  Library
+                </p>
+              </td>
+<td>
+              </td>
+<td>
+              </td>
+<td>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Approach
+                </p>
+              </td>
+<td>
+                <p>
+                  compile-time
+                </p>
+              </td>
+<td>
+                <p>
+                  run-time
+                </p>
+              </td>
+<td>
+                <p>
+                  compile-time (annottation processor)
+                </p>
+              </td>
+<td>
+                <p>
+                  run-time
+                </p>
+              </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  Test - bind value
+                </p>
+              </td>
+<td>
+<pre class="programlisting">// clang++ -O2
+
+#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+struct module {
+    auto configure() const noexcept {
+        return di::make_injector(
+            di::bind&lt;int&gt;.to(42)
+        );
+    }
+};
+
+int main() {
+    auto injector = di::make_injector(module{});
+    return injector.create&lt;int&gt;() != 42;
+}
+</pre>
+              </td>
+<td>
+<pre class="programlisting">import com.google.inject.*;
+
+class Module extends AbstractModule {
+    @Override
+    protected void configure() {
+        bind(int.class).toInstance(42);
+    }
+}
+
+public class guice {
+    public static void main(String[] args) {
+        Injector injector = Guice.createInjector(new Module());
+        System.exit(injector.getInstance(int.class) != 42 ? 1 : 0);
+    }
+}
+</pre>
+              </td>
+<td>
+<pre class="programlisting">import dagger.*;
+
+@Module
+class AppModule {
+    @Provides int provideint() { return 42; }
+}
+
+@Component(modules = AppModule.class)
+interface AppComponent {
+    int build();
+}
+
+public class dagger2 {
+    public static void main(String[] args) {
+        System.exit(Dagger_AppComponent.create().build() != 42 ? 1 : 0);
+   }
+}
+</pre>
+              </td>
+<td>
+<pre class="programlisting">using Ninject;
+
+class Module : Ninject.Modules.NinjectModule {
+    public override void Load() {
+        Bind&lt;int&gt;().To(42);
+    }
+}
+
+class ninject {
+    static void Main(string[] args) {
+        Ninject.IKernel kernel = new StandardKernel(new Module());
+        kernel.Get&lt;int&gt;();
+    }
+}
+</pre>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2012-2015 Krzysztof
+      Jusiak | Distributed under the Boost Software License, Version 1.0.<p>
+        --- <a href="https://github.com/krzysztof-jusiak/di" target="_top">GitHub</a> ---
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="performance.html"><img src="../../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'boost-di';
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</body></html>

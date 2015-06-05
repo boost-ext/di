@@ -4,7 +4,7 @@
 <title>bind</title>
 <link rel="stylesheet" href="../../../../../../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
-<link rel="home" href="../../../index.html" title="Boost.DI (Dependency Injection) C++14">
+<link rel="home" href="../../../index.html" title="Boost.DI / C++14 Dependency Injection Library / 1.0.0">
 <link rel="up" href="../bindings.html" title="Bindings">
 <link rel="prev" href="../bindings.html" title="Bindings">
 <link rel="next" href="../injections.html" title="Injections">
@@ -31,18 +31,30 @@
           <span class="phrase"><a name="di.user_guide.bindings.bind.description"></a></span><a class="link" href="bind.html#di.user_guide.bindings.bind.description">Description</a>
         </h6>
 <p>
-          Allows to bind interface to implementation and associate value with <a class="link" href="../bindings.html#di.user_guide.bindings.synopsis">Dependency Model</a>.
+          Allows to bind interface to implementation and associate value with <a class="link" href="../bindings.html#di.user_guide.bindings.synopsis">dependency</a>.
         </p>
 <h6>
 <a name="di.user_guide.bindings.bind.h1"></a>
           <span class="phrase"><a name="di.user_guide.bindings.bind.synopsis"></a></span><a class="link" href="bind.html#di.user_guide.bindings.bind.synopsis">Synopsis</a>
         </h6>
-<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TGiven</span> <span class="special">=</span> <span class="identifier">TExpected</span><span class="special">&gt;</span>
-<a class="link" href="../bindings.html#di.user_guide.bindings.synopsis">Dependency Model</a><span class="special">&lt;</span><a class="link" href="../scopes/deduce.html" title="deduce (default)">di::deduce</a><span class="special">,</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="identifier">TGiven</span><span class="special">&gt;</span> <span class="identifier">bind</span><span class="special">{};</span>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TGiven</span> <span class="special">=</span> <span class="identifier">TExpected</span><span class="special">&gt;</span> <span class="identifier">requires</span> <a class="link" href="../concepts/boundable.html" title="boundable">boundable</a><span class="special">&lt;</span><span class="identifier">TExpected</span><span class="special">,</span> <span class="identifier">TGiven</span><span class="special">&gt;</span>
+<a class="link" href="../bindings.html#di.user_guide.bindings.synopsis">dependency</a><span class="special">&lt;</span><a class="link" href="../scopes/deduce.html" title="deduce (default)">di::deduce</a><span class="special">,</span> <span class="identifier">TExpected</span><span class="special">,</span> <span class="identifier">TGiven</span><span class="special">&gt;</span> <span class="identifier">bind</span><span class="special">{};</span>
 
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">...</span> <span class="identifier">Ts</span><span class="special">&gt;</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T1</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T2</span><span class="special">,</span> <span class="keyword">class</span><span class="special">...</span> <span class="identifier">Ts</span><span class="special">&gt;</span>
 <span class="keyword">using</span> <span class="identifier">any_of</span><span class="special">;</span>
+
+<span class="keyword">struct</span> <span class="identifier">override</span> <span class="special">{</span> <span class="special">};</span> <span class="comment">// use to override bindings with `di::bind&lt;...&gt; [di::override]`</span>
 </pre>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../../../../doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            MSVC requires to use with brackets when using <code class="computeroutput"><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;...&gt;()</span></code>, due to lack of variable
+            templates.
+          </p></td></tr>
+</table></div>
 <div class="table">
 <a name="di.user_guide.bindings.bind.parameters"></a><p class="title"><b>Table&#160;8.&#160;Parameters</b></p>
 <div class="table-contents"><table class="table" summary="Parameters">
@@ -77,7 +89,7 @@
                 </td>
 <td>
                   <p>
-                    Type or any_of
+                    None
                   </p>
                 </td>
 <td>
@@ -94,7 +106,7 @@
                 </td>
 <td>
                   <p>
-                    Is same or base of <code class="computeroutput"><span class="identifier">TInterface</span></code>
+                    None
                   </p>
                 </td>
 <td>
@@ -106,12 +118,14 @@
 <tr>
 <td>
                   <p>
-                    <code class="computeroutput"><span class="identifier">Ts</span><span class="special">...</span></code>
+                    <code class="computeroutput"><span class="identifier">T1</span><span class="special">,</span>
+                    <span class="identifier">T2</span><span class="special">,</span>
+                    <span class="identifier">Ts</span><span class="special">...</span></code>
                   </p>
                 </td>
 <td>
                   <p>
-                    type list
+                    None
                   </p>
                 </td>
 <td>
@@ -132,8 +146,7 @@
 <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">any_of</span><span class="special">&lt;</span><span class="identifier">interface1</span><span class="special">,</span> <span class="identifier">interface2</span><span class="special">&gt;,</span> <span class="identifier">implementation</span><span class="special">&gt;</span>
 </pre>
 <p>
-          <span class="bold"><strong>Return type</strong></span>: <a class="link" href="../bindings.html#di.user_guide.bindings.synopsis">Dependency
-          Model</a>
+          <span class="bold"><strong>Return type</strong></span>: <a class="link" href="../bindings.html#di.user_guide.bindings.synopsis">dependency</a>
         </p>
 <h6>
 <a name="di.user_guide.bindings.bind.h3"></a>
@@ -173,6 +186,40 @@
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="../injector.html#di.user_guide.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;();</span>
 <span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl1</span><span class="special">*&gt;(</span><span class="identifier">object</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+                                                                                                           <span class="special">.</span>
+</pre>
+                </td>
+</tr></tbody>
+</table></div>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                  <p>
+                    Bind interface to implementation / override
+                  </p>
+                </th>
+<th>
+                  <p>
+                    Test
+                  </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="../injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
+    <a class="link" href="bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">impl1_1</span><span class="special">&gt;</span>
+  <span class="special">,</span> <a class="link" href="bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">impl1_2</span><span class="special">&gt;</span> <span class="special">[</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">override</span><span class="special">]</span>
+<span class="special">);</span>
+                                                                                   <span class="special">.</span>
+</pre>
+                </td>
+<td>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">object</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="../injector.html#di.user_guide.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">&gt;&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">impl1_2</span><span class="special">*&gt;(</span><span class="identifier">object</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span> <span class="comment">// binding overridden</span>
                                                                                                            <span class="special">.</span>
 </pre>
                 </td>
@@ -279,17 +326,6 @@
 </pre>
                 </td>
 </tr></tbody>
-</table></div>
-<div class="note"><table border="0" summary="Note">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../../doc/src/images/note.png"></td>
-<th align="left">Note</th>
-</tr>
-<tr><td align="left" valign="top"><p>
-            Values bind with <code class="computeroutput"><span class="identifier">to</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span></code>
-            always have higher priority than other bindings. See <a class="link" href="../scopes/external.html" title="external">external
-            scope</a> for further information.
-          </p></td></tr>
 </table></div>
 <h6>
 <a name="di.user_guide.bindings.bind.h5"></a>

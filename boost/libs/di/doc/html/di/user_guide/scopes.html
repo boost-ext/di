@@ -4,7 +4,7 @@
 <title>Scopes</title>
 <link rel="stylesheet" href="../../../../../../doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
-<link rel="home" href="../../index.html" title="Boost.DI (Dependency Injection) C++14">
+<link rel="home" href="../../index.html" title="Boost.DI / C++14 Dependency Injection Library / 1.0.0">
 <link rel="up" href="../user_guide.html" title="User Guide">
 <link rel="prev" href="annotations/named.html" title="(named = name)">
 <link rel="next" href="scopes/deduce.html" title="deduce (default)">
@@ -29,8 +29,9 @@
 <div class="toc"><dl class="toc">
 <dt><span class="section"><a href="scopes/deduce.html">deduce (default)</a></span></dt>
 <dt><span class="section"><a href="scopes/unique.html">unique</a></span></dt>
-<dt><span class="section"><a href="scopes/shared.html">shared</a></span></dt>
 <dt><span class="section"><a href="scopes/singleton.html">singleton</a></span></dt>
+<dt><span class="section"><a href="scopes/shared.html">shared</a></span></dt>
+<dt><span class="section"><a href="scopes/session.html">session</a></span></dt>
 <dt><span class="section"><a href="scopes/external.html">external</a></span></dt>
 </dl></div>
 <h5>
@@ -57,7 +58,7 @@
             <a class="link" href="scopes/singleton.html" title="singleton">singleton scope</a>
           </li>
 <li class="listitem">
-            <a class="link" href="../../">session scope</a>
+            <a class="link" href="scopes/session.html" title="session">session scope</a>
           </li>
 <li class="listitem">
             <a class="link" href="scopes/external.html" title="external">external scope</a>
@@ -134,8 +135,8 @@
               </td>
 <td>
                 <p>
-                  Type to which <a class="link" href="scopes.html#di.user_guide.scopes.wrapper_model">Wrapper
-                  Model</a> might be converted to
+                  Type to which <a class="link" href="scopes.html#di.user_guide.scopes.wrapper_model">wrapper</a>
+                  might be converted to
                 </p>
               </td>
 <td class="auto-generated">&#160;</td>
@@ -154,8 +155,7 @@
               </td>
 <td>
                 <p>
-                  Object type to be stored by <a class="link" href="scopes.html#di.user_guide.scopes.wrapper_model">Wrapper
-                  Model</a>
+                  Object type to be stored by <a class="link" href="scopes.html#di.user_guide.scopes.wrapper_model">wrapper</a>
                 </p>
               </td>
 <td class="auto-generated">&#160;</td>
@@ -174,8 +174,8 @@
               </td>
 <td>
                 <p>
-                  Conversion constructor - creates <a class="link" href="scopes.html#di.user_guide.scopes.wrapper_model">Wrapper
-                  Model</a> from <code class="computeroutput"><span class="identifier">TValueType</span></code>
+                  Conversion constructor - creates <a class="link" href="scopes.html#di.user_guide.scopes.wrapper_model">wrapper</a>
+                  from <code class="computeroutput"><span class="identifier">TValueType</span></code>
                   type
                 </p>
               </td>
@@ -200,9 +200,8 @@
               </td>
 <td>
                 <p>
-                  Converts <a class="link" href="scopes.html#di.user_guide.scopes.wrapper_model">Wrapper
-                  Model</a> to <code class="computeroutput"><span class="identifier">T</span></code>
-                  type
+                  Converts <a class="link" href="scopes.html#di.user_guide.scopes.wrapper_model">wrapper</a>
+                  to <code class="computeroutput"><span class="identifier">T</span></code> type
                 </p>
               </td>
 <td>
@@ -413,12 +412,12 @@
               </td>
 <td>
                 <p>
-                  <a class="link" href="providers.html#di.user_guide.providers.synopsis">Provider Model</a>
+                  <a class="link" href="concepts/providable.html" title="providable">providable</a>
                 </p>
               </td>
 <td>
                 <p>
-                  Instance provider
+                  Instance <a class="link" href="providers.html#di.user_guide.providers.synopsis">provider</a>
                 </p>
               </td>
 <td class="auto-generated">&#160;</td>
@@ -907,7 +906,7 @@
             <a class="link" href="scopes/singleton.html" title="singleton">singleton scope</a>
           </li>
 <li class="listitem">
-            <a class="link" href="../../">session scope</a>
+            <a class="link" href="scopes/session.html" title="session">session scope</a>
           </li>
 </ul></div>
 </div>
