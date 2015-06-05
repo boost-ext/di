@@ -19,7 +19,7 @@ Injector is a component used for creating dependencies configuration using [link
 
         explicit injector(const TArgs&...);
 
-        template<class T>
+        template<class T> requires __concepts_creatable__<T>
         T create() const noexcept;
 
         template<class TAction>
@@ -28,13 +28,13 @@ Injector is a component used for creating dependencies configuration using [link
 
 [table Parameters
     [[Parameter][Requirement][Description][Returns][Throw]]
-    [[`TDeps...`][__binding_model__ type][__bindings__ to be used as configuration]]
-    [[`deps`][`variadic list`][List of dependencies]]
-    [[`T`][Is constructible using given configuration][Object to be created]]
+    [[`TDeps...`][__concepts_boundable__][__bindings__ to be used as configuration]]
+    [[`deps`][__concepts_boundable__][List of dependencies]]
+    [[`T`][__concepts_creatable__][Object to be created]]
     [[`TAction`][None][Action to be called for scopes having `call(const TAction&)` method]]
 
     [[`injector(const TArgs&...))`][None][Create __injectors_injector__ with given bindings][][Does not throw]]
-    [[`create<T>())`][__type_model__][Create object `T`][`T` instance][Does not throw]]
+    [[`create<T>())`][__concepts_creatable__][Create object `T`][`T` instance][Does not throw]]
     [[`call(const TAction&)`][None][For all scopes which have `call(const TAction&)` call it with given action][][Does not throw]]
 ]
 
@@ -89,12 +89,16 @@ Injector is a component used for creating dependencies configuration using [link
 Creates [link di.user_guide.injector injector] type.
 
 [heading Synopsis]
-    template<class... TBindings>
-    injector<TBindings...> inline make_injector(const TBindings&...) noexcept;
+    template<
+        class TConfig = __di_config__
+      , class... TBindings
+    > requires __concepts_boundable__<TBindings...> && __concepts_configurable__<TConfig>
+    auto make_injector(const TBindings&...) noexcept;
 
 [table Parameters
     [[Parameter][Requirement][Description][Returns][Throw]]
-    [[`TBindings...`][__binding_model__ type][Bindings to be used as configuration]]
+    [[`TConfig`][__concepts_configurable__][Configuration]]
+    [[`TBindings...`][__concepts_boundable__][Bindings to be used as configuration]]
     [[`make_injector(TBindings...)`][None][Created __di_injector__ with bindings configuration][__di_injector__<TBindings...>][Does not throw]]
 ]
 

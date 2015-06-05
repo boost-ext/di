@@ -2066,19 +2066,19 @@ struct creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TCtor..
 
 #undef BOOST_DI_NAMED_ERROR
 
-template<class TInit, class T, class... Ts>
+template<class TInit, class T, class... TArgs>
 struct creatable {
-    static constexpr auto value = std::is_constructible<T, Ts...>::value;
+    static constexpr auto value = std::is_constructible<T, TArgs...>::value;
 };
 
-template<class T, class... Ts>
-struct creatable<type_traits::uniform, T, Ts...> {
-    static constexpr auto value = aux::is_braces_constructible<T, Ts...>::value;
+template<class T, class... TArgs>
+struct creatable<type_traits::uniform, T, TArgs...> {
+    static constexpr auto value = aux::is_braces_constructible<T, TArgs...>::value;
 };
 
-template<class TInitialization, class TName, class I, class T, class... Ts>
+template<class TInitialization, class TName, class I, class T, class... TArgs>
 constexpr T creatable_error() {
-    return creatable_error_impl<TInitialization, TName, I, T, aux::type_list<Ts...>>{};
+    return creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TArgs...>>{};
 }
 
 }}}} // boost::di::v1::concepts

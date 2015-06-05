@@ -31,7 +31,7 @@ Activation of `Module` is done by passing it into injector.
 
 [table Parameters
     [[Parameter][Requirement][Description][Returns][Throw]]
-    [[`configure()`][None][Create bindings configuration][__di_make_injector__<...>][Does not throw]]
+    [[`configure()`][None][Create bindings configuration][__di_injector__][Does not throw]]
 ]
 
 [heading Expression Semantics]

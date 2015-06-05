@@ -1,6 +1,6 @@
 [section Configuration]
 
-`Boost.DI` design distinguish few building blocks (above), which might be cofigured using [link di.user_guide.configuration BOOST_DI_CFG].
+`Boost.DI` design distinguish few building blocks (above), which might be configured using [link di.user_guide.configuration BOOST_DI_CFG].
 
 [heading Synopsis]
     template<class>
@@ -10,14 +10,14 @@
         auto provider() const;
     };
 
-    template<class... TArgs>
+    template<class... TArgs> requires __concepts_callable__<TArgs>...
     inline auto make_policies(const TArgs&... args) noexcept;
 
 [table Parameters
     [[Parameter][Requirement][Description][Returns][Throw]]
-    [[TArgs...][__policy_model__][Creates policies][__policy_model__ list][Does not throw]]
-    [[`policies()`][None][Configure default policies][__policy_model__ list][Does not throw]]
-    [[`provider()`][None][Configure default provider][__provider_model__][Does not throw]]
+    [[TArgs...][__concepts_callable__][Creates policies][__policy_model__ list][Does not throw]]
+    [[`policies()`][__concepts_callable__][Configure default policies][__policy_model__ list][Does not throw]]
+    [[`provider()`][__concepts_providable__][Configure default provider][__provider_model__][Does not throw]]
 ]
 
 The macros listed in the table below may be used to control the behaviour of `Boost.DI`.

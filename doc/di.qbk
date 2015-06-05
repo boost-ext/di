@@ -7,9 +7,9 @@
  /
  /]
 
-[library Boost.DI (Dependency Injection)
+[library Boost.DI / C++14 Dependency Injection Library /
     [quickbook 1.6]
-    [version C++14]
+    [version 1.0.0]
     [id di]
     [copyright 2012-2015 Krzysztof Jusiak | Distributed under the Boost Software License, Version 1.0.]
     [authors [Jusiak, Krzysztof]]
@@ -19,17 +19,18 @@
     [source-mode c++]
 ]
 
-[@https://github.com/krzysztof-jusiak/di [$https://img.shields.io/badge/boost.di-github-blue.svg [format PNG]]]
-[@http://www.boost.org/LICENSE_1_0.txt [$http://img.shields.io/badge/license-boost-blue.svg [format PNG]]]
-[@https://github.com/krzysztof-jusiak/di/releases/latest [$http://img.shields.io/github/release/krzysztof-jusiak/di.svg [format PNG]]]
-[@https://www.biicode.com/krzysztofjusiak/di [$https://webapi.biicode.com/v1/badges/krzysztofjusiak/krzysztofjusiak/di/master [format PNG]]]
-[@https://gitter.im/krzysztof-jusiak/di [$https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg [format PNG]]]
-<
-[@https://travis-ci.org/krzysztof-jusiak/di [$https://img.shields.io/travis/krzysztof-jusiak/di/cpp14.svg [format PNG]]]
-[@https://ci.appveyor.com/project/krzysztof-jusiak/di [$https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic/branch/cpp14?svg=true [format PNG]]]
-[@https://coveralls.io/r/krzysztof-jusiak/di?branch=cpp14 [$http://img.shields.io/coveralls/krzysztof-jusiak/di/cpp14.svg [format PNG]]]
-[@http://github.com/krzysztof-jusiak/di/issues [$https://img.shields.io/github/issues/krzysztof-jusiak/di.svg [format PNG]]]
->
+* Status
+
+    * [@https://github.com/krzysztof-jusiak/di [$https://img.shields.io/badge/boost.di-github-blue.svg [format PNG]]]
+      [@http://www.boost.org/LICENSE_1_0.txt [$http://img.shields.io/badge/license-boost-blue.svg [format PNG]]]
+      [@https://github.com/krzysztof-jusiak/di/releases/latest [$http://img.shields.io/github/release/krzysztof-jusiak/di.svg [format PNG]]]
+      [@https://www.biicode.com/krzysztofjusiak/di [$https://webapi.biicode.com/v1/badges/krzysztofjusiak/krzysztofjusiak/di/master [format PNG]]]
+      [@https://gitter.im/krzysztof-jusiak/di [$https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg [format PNG]]]
+    |
+      [@https://travis-ci.org/krzysztof-jusiak/di [$https://img.shields.io/travis/krzysztof-jusiak/di/cpp14.svg [format PNG]]]
+      [@https://ci.appveyor.com/project/krzysztof-jusiak/di [$https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic/branch/cpp14?svg=true [format PNG]]]
+      [@https://coveralls.io/r/krzysztof-jusiak/di?branch=cpp14 [$http://img.shields.io/coveralls/krzysztof-jusiak/di/cpp14.svg [format PNG]]]
+      [@http://github.com/krzysztof-jusiak/di/issues [$https://img.shields.io/github/issues/krzysztof-jusiak/di.svg [format PNG]]]
 
 [def __di_hpp__                                         [@https://github.com/krzysztof-jusiak/di/blob/cpp14/include/boost/di.hpp boost/di.hpp]]
 [def __di_inject_hpp__                                  [@https://github.com/krzysztof-jusiak/di/blob/cpp14/include/boost/di/inject.hpp boost/di/inject.hpp]]
@@ -40,8 +41,8 @@
 [def __core__                                           [link di.user_guide.injector Core]]
 
 [def __bindings__                                       [link di.user_guide.bindings Bindings]]
-[def __binding_model__                                  [link di.user_guide.bindings.synopsis Binding Model]]
-[def __dependency_model__                               [link di.user_guide.bindings.synopsis Dependency Model]]
+[def __binding_model__                                  [link di.user_guide.bindings.synopsis binding]]
+[def __dependency_model__                               [link di.user_guide.bindings.synopsis dependency]]
 [def __bindings_bind__                                  [link di.user_guide.bindings.bind bind]]
 [def __bindings_any_of__                                [link di.user_guide.bindings.bind bind]]
 
@@ -58,8 +59,8 @@
 
 [def __scopes__                                         [link di.user_guide.scopes Scopes]]
 [def __wrappers__                                       [link di.user_guide.scopes.wrapper_model Wrappers]]
-[def __wrapper_model__                                  [link di.user_guide.scopes.wrapper_model Wrapper Model]]
-[def __scope_model__                                    [link di.user_guide.scopes.synopsis Scope Model]]
+[def __wrapper_model__                                  [link di.user_guide.scopes.wrapper_model wrapper]]
+[def __scope_model__                                    [link di.user_guide.scopes.synopsis scope]]
 [def __scopes_deduce__                                  [link di.user_guide.scopes.deduce deduce scope]]
 [def __scopes_external__                                [link di.user_guide.scopes.external external scope]]
 [def __scopes_unique__                                  [link di.user_guide.scopes.unique unique scope]]
@@ -67,14 +68,21 @@
 [def __scopes_singleton__                               [link di.user_guide.scopes.singleton singleton scope]]
 [def __scopes_session__                                 [link di.user_guide.scopes.session session scope]]
 
+[def __concepts_boundable__                             [link di.user_guide.concepts.boundable boundable]]
+[def __concepts_callable__                              [link di.user_guide.concepts.callable callable]]
+[def __concepts_configurable__                          [link di.user_guide.concepts.configurable configurable]]
+[def __concepts_creatable__                             [link di.user_guide.concepts.creatable creatable]]
+[def __concepts_providable__                            [link di.user_guide.concepts.providable providable]]
+[def __concepts_scopable__                              [link di.user_guide.concepts.scopable scopable]]
+
 [def __modules__                                        [link di.user_guide.modules Modules]]
 
 [def __policies__                                       [link di.user_guide.policies Policies]]
-[def __policy_model__                                   [link di.user_guide.policies Policy Model]]
+[def __policy_model__                                   [link di.user_guide.policies policy]]
 [def __policies_constructible__                         [link di.user_guide.policies.constructible constructible]]
 
 [def __providers__                                      [link di.user_guide.providers Providers]]
-[def __provider_model__                                 [link di.user_guide.providers.synopsis Provider Model]]
+[def __provider_model__                                 [link di.user_guide.providers.synopsis provider]]
 [def __providers_heap__                                 [link di.user_guide.providers.heap heap]]
 [def __providers_stack_over_heap__                      [link di.user_guide.providers.heap stack_over_heap]]
 
@@ -121,11 +129,8 @@
 
 [include introduction.qbk]
 [include overview.qbk]
-[include comparison.qbk]
 [include tutorial.qbk]
 [include quick_user_guide.qbk]
-[include diagnostic_messages.qbk]
-[include performance.qbk]
 [include user_guide.qbk]
 [include examples.qbk]
 [include extensions.qbk]

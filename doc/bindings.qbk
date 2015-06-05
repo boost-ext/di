@@ -35,13 +35,13 @@ The glue between bindings and the core is __dependency_model__.
 
 [table Parameters
     [[Parameter][Requirement][Description][Returns][Throw]]
-    [[`TScope`][__scope_model__ type][Scope to be used]]
+    [[`TScope`][__concepts_scopable__][Scope to be used]]
     [[`TExpected`][None][Type to be returned]]
-    [[`TGiven`][Is convertible to `TExpected`][Type to be created]]
+    [[`TGiven`][None][Type to be created]]
     [[`TName`][None][Type annotation]]
-    [[`dependency(T)`][None][Intialize dependency from type `T`][][Does not throw]]
+    [[`dependency(T)`][None][Initialize dependency from type `T`][][Does not throw]]
     [[`to(T)`][None][Returns new __dependency_model__ with associated `T` value][__dependency_model__][Does not throw]]
-    [[`in(Scope)`][__scope_model__][Returns new __dependency_model__ using given scope][__dependency_model__][Does not throw]]
+    [[`in(Scope)`][__concepts_scopable__][Returns new __dependency_model__ using given scope][__dependency_model__][Does not throw]]
     [[`named(T)`][None][Returns new __dependency_model__ with given type annotation][__dependency_model__][Does not throw]]
 ]
 
@@ -61,17 +61,21 @@ The glue between bindings and the core is __dependency_model__.
 Allows to bind interface to implementation and associate value with __dependency_model__.
 
 [heading Synopsis]
-    template<class TExpected, class TGiven = TExpected>
+    template<class TExpected, class TGiven = TExpected> requires __concepts_boundable__<TExpected, TGiven>
     __dependency_model__<__di_scopes_deduce__, TExpected, TGiven> bind{};
 
-    template<class... Ts>
+    template<class T1, class T2, class... Ts>
     using any_of;
+
+    struct override { }; // use to override bindings with `di::bind<...> [di::override]`
+
+[warning MSVC requires to use with brackets when using `di::bind<...>()`, due to lack of variable templates.]
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`TInterface`][Type or any_of][Interface type]]
-    [[`TImplementation`][Is same or base of `TInterface`][Implementation type]]
-    [[`Ts...`][type list][List of interfaces]]
+    [[`TInterface`][None][Interface type]]
+    [[`TImplementation`][None][Implementation type]]
+    [[`T1, T2, Ts...`][None][List of interfaces]]
 ]
 
 [heading Expression Semantics]
@@ -99,6 +103,28 @@ Allows to bind interface to implementation and associate value with __dependency
             ```
             auto object = injector.__di_injector_create__<unique_ptr<i1>>();
             assert(dynamic_cast<impl1*>(object.get()));
+                                                                                                                       .
+            ```
+        ]
+    ]
+]
+
+[table
+[[Bind interface to implementation / override][Test]]
+    [
+        [
+            ```
+            auto injector = __di_make_injector__(
+                __di_bind__<i1, impl1_1>
+              , __di_bind__<i1, impl1_2> [di::override]
+            );
+                                                                                               .
+            ```
+        ]
+        [
+            ```
+            auto object = injector.__di_injector_create__<unique_ptr<i1>>();
+            assert(dynamic_cast<impl1_2*>(object.get())); // binding overridden
                                                                                                                        .
             ```
         ]
@@ -169,8 +195,6 @@ Allows to bind interface to implementation and associate value with __dependency
         ]
     ]
 ]
-
-[note Values bind with `to(T)` always have higher priority than other bindings. See __scopes_external__ for further information.]
 
 [heading More Examples]
     ``__examples_bindings__`` | ``__examples_dynamic_bindings__`` | ``__examples_multiple_interfaces__``

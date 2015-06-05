@@ -343,8 +343,8 @@ Right now, if we want to bind `value1` and `value2` we just need to use __annota
     auto configure() const {
         return __di_make_injector__(
             __di_bind__<ilogger, logger>
-          , __di_bind__<int>.__annotations_named__<first>.to(i_) // bind int named first to i_ member
-          , __di_bind__<int>.__annotations_named__<second>.to(0) // bind int named second to 0
+          , __di_bind__<int>.__annotations_named__(first).to(i_) // bind int named first to i_ member
+          , __di_bind__<int>.__annotations_named__(second).to(0) // bind int named second to 0
           , __di_bind__<std::string>.to("hello world")
         );
     }

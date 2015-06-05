@@ -13,7 +13,7 @@
 
 * C++14 compliant compiler with STL (memory, type\_traits headers) / Boost is not required
 
-[h6 Supported Compilers]
+[h6 Tested Compilers]
 
 * Clang-3.4+
 * GCC-5.1+
@@ -46,12 +46,6 @@ To get and test Boost.DI library:
     ./b2 -j4 ../test ../example
 ```
 
-[h6 Similar libraries]
-
-* C++ | [@https://bitbucket.org/cheez/dicpp dicpp] | [@https://github.com/google/fruit Fruit]
-* Java | [@https://github.com/google/dagger Dagger 2] | [@https://github.com/google/guice Guice]
-* C# | [@http://www.ninject.org Ninject]
-
 [heading See Also]
 * [link di.tutorial Tutorial]
 * [link di.quick_user_guide Quick user Guide]
@@ -60,6 +54,10 @@ To get and test Boost.DI library:
 * [link di.user_guide User Guide]
 * [link di.examples Examples]
 * [link di.rationale Rationale]
+
+[include comparison.qbk]
+[include performance.qbk]
+[include diagnostic_messages.qbk]
 
 [endsect]
 

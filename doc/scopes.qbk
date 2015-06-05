@@ -69,7 +69,7 @@ There are 3 basic types of wrappers.
     [[`TGiven`][None][Implementation to be created]]
     [[`TAction`][None][Action to be passed to scopes which handle it]]
     [[`T`][None][Constructor parameter type]]
-    [[`TProvider`][__provider_model__][Instance provider]]
+    [[`TProvider`][__concepts_providable__][Instance __provider_model__]]
     [[`call(TAction)`][None][call appropirate `call` method on scope][None][Does not throw]]
     [[`create(TProvider)`][None][create `TGiven` object and return wrappered `TExpected` instance][None][Does not throw]]
 ]
@@ -171,7 +171,7 @@ Default scope which will be converted to one of the scopes  __scopes_unique__ / 
     [[`TExpected`][None][Interface type to be expected by constructor]]
     [[`TGiven`][None][Implementation to be created]]
     [[`T`][None][Constructor parameter type]]
-    [[`TProvider`][__provider_model__][Instance provider]]
+    [[`TProvider`][__concepts_providable__][Instance __provider_model__]]
     [[`create(TProvider)`][None][create `TGiven` object and return wrappered `TExpected` instance][None][Does not throw]]
 ]
 
@@ -220,8 +220,6 @@ Default scope which will be converted to one of the scopes  __scopes_unique__ / 
     ]
 ]
 
-[note Deduce scope has lower priority than explicit __bindings_scope__ definition, so `shared_ptr` parameter might be forced to be unique.]
-
 [heading More Examples]
     ``__examples_deduce_scope__``
 
@@ -256,7 +254,7 @@ Scope representing unique value.
     [[`TExpected`][None][Interface type to be expected by constructor]]
     [[`TGiven`][None][Implementation to be created]]
     [[`T`][None][Constructor parameter type]]
-    [[`TProvider`][__provider_model__][Instance provider]]
+    [[`TProvider`][__concepts_providable__][Instance __provider_model__]]
     [[`create(TProvider)`][None][create `TGiven` object and return wrappered `TExpected` instance][None][Does not throw]]
 ]
 
@@ -313,6 +311,85 @@ Scope representing unique value.
 
 [endsect]
 
+[section singleton]
+
+[heading Description]
+Scope representing shared value between all instances and between threads.
+Singleton scope will be deduced in case of `shared_ptr` or `weak_ptr`.
+[note Singleton scope will convert between `std::shared_ptr` and `boost::shared_ptr` if required.]
+
+[heading Synopsis]
+    class singleton {
+    public:
+        template<class TExpected, class TGiven>
+        class scope {
+        public:
+            template<class T, class TProvider>
+            auto create(const TProvider&);
+    };
+
+[table Parameters
+    [[Parameter][Requirement][Description][Returns][Throw]]
+    [[`TExpected`][None][Interface type to be expected by constructor]]
+    [[`TGiven`][None][Implementation to be created]]
+    [[`T`][None][Constructor parameter type]]
+    [[`TName`][None][Named object]]
+    [[`TProvider`][__concepts_providable__][Instance __provider_model__]]
+    [[`create(TProvider)`][None][create `TGiven` object and return wrappered `TExpected` instance][None][Does not throw]]
+]
+
+[heading Header]
+    #include <__di_hpp__>
+
+[heading Namespace]
+    boost::di::scopes
+
+[table Conversions
+    [[Type]                     [session]]
+    [[T]                        [-]]
+    [[T&]                       [-]]
+    [[const T&]                 [-]]
+    [[T*]                       [-]]
+    [[const T*]                 [-]]
+    [[T&&]                      [-]]
+    [[unique_ptr<T>]            [-]]
+    [[shared_ptr<T>]            [\u2714]]
+    [[weak_ptr<T>]              [\u2714]]
+]
+
+[heading Examples]
+[table
+    [
+        [
+            ```
+            auto injector = __di_make_injector__(
+                __di_bind__<i1, impl1>.in(__di_scopes_singleton__)
+            );
+
+            ```
+        ]
+        [
+            ```
+            assert(injector.__di_injector_create__<shared_ptr<i1>>()
+                   ==
+                   injector.__di_injector_create__<shared_ptr<i1>>()
+            );
+            ```
+        ]
+    ]
+]
+
+[heading See Also]
+
+* __scopes__
+* __scopes_deduce__
+* __scopes_unique__
+* __scopes_shared__
+* __scopes_singleton__
+* __scopes_external__
+
+[endsect]
+
 [section shared]
 
 [heading Description]
@@ -334,7 +411,7 @@ Scope representing shared value between all instances within current thread.
     [[`TExpected`][None][Interface type to be expected by constructor]]
     [[`TGiven`][None][Implementation to be created]]
     [[`T`][None][Constructor parameter type]]
-    [[`TProvider`][__provider_model__][Instance provider]]
+    [[`TProvider`][__concepts_providable__][Instance __provider_model__]]
     [[`create(TProvider)`][None][create `TGiven` object and return wrappered `TExpected` instance][None][Does not throw]]
 ]
 
@@ -390,15 +467,13 @@ Scope representing shared value between all instances within current thread.
 
 [endsect]
 
-[section singleton]
+[section session]
 
 [heading Description]
-Scope representing shared value between all instances and between threads.
-Singleton scope will be deduced in case of `shared_ptr` or `weak_ptr`.
-[note Singleton scope will convert between `std::shared_ptr` and `boost::shared_ptr` if required.]
+Scope representing session/shared value between all instances.
 
 [heading Synopsis]
-    class singleton {
+    class session {
     public:
         template<class TExpected, class TGiven>
         class scope {
@@ -416,7 +491,7 @@ Singleton scope will be deduced in case of `shared_ptr` or `weak_ptr`.
     [[`TGiven`][None][Implementation to be created]]
     [[`T`][None][Constructor parameter type]]
     [[`TName`][None][Named object]]
-    [[`TProvider`][__provider_model__][Instance provider]]
+    [[`TProvider`][__concepts_providable__][Instance __provider_model__]]
     [[`create(TProvider)`][None][create `TGiven` object and return wrappered `TExpected` instance][None][Does not throw]]
     [[`call(const session_entry&)`][None][Trigger  scope entry][][Does not throw]]
     [[`call(const session_exit&)`][None][Trigger scope exit][][Does not throw]]
@@ -503,7 +578,7 @@ and managed by the library.
     [[`TExpected`][None][Interface type to be expected by constructor]]
     [[`TGiven`][None][Implementation to be created]]
     [[`T`][None][Constructor parameter type]]
-    [[`TProvider`][__provider_model__][Instance provider]]
+    [[`TProvider`][__concepts_providable__][Instance __provider_model__]]
     [[`create(TProvider)`][None][create `TGiven` object and return wrappered `TExpected` instance][None][Does not throw]]
 ]
 
