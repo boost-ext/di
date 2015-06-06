@@ -19,19 +19,6 @@
     [source-mode c++]
 ]
 
-* Status
-
-    * [@https://github.com/krzysztof-jusiak/di [$https://img.shields.io/badge/boost.di-github-blue.svg [format PNG]]]
-      [@http://www.boost.org/LICENSE_1_0.txt [$http://img.shields.io/badge/license-boost-blue.svg [format PNG]]]
-      [@https://github.com/krzysztof-jusiak/di/releases/latest [$http://img.shields.io/github/release/krzysztof-jusiak/di.svg [format PNG]]]
-      [@https://www.biicode.com/krzysztofjusiak/di [$https://webapi.biicode.com/v1/badges/krzysztofjusiak/krzysztofjusiak/di/master [format PNG]]]
-      [@https://gitter.im/krzysztof-jusiak/di [$https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg [format PNG]]]
-    |
-      [@https://travis-ci.org/krzysztof-jusiak/di [$https://img.shields.io/travis/krzysztof-jusiak/di/cpp14.svg [format PNG]]]
-      [@https://ci.appveyor.com/project/krzysztof-jusiak/di [$https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic/branch/cpp14?svg=true [format PNG]]]
-      [@https://coveralls.io/r/krzysztof-jusiak/di?branch=cpp14 [$http://img.shields.io/coveralls/krzysztof-jusiak/di/cpp14.svg [format PNG]]]
-      [@http://github.com/krzysztof-jusiak/di/issues [$https://img.shields.io/github/issues/krzysztof-jusiak/di.svg [format PNG]]]
-
 [def __di_hpp__                                         [@https://github.com/krzysztof-jusiak/di/blob/cpp14/include/boost/di.hpp boost/di.hpp]]
 [def __di_inject_hpp__                                  [@https://github.com/krzysztof-jusiak/di/blob/cpp14/include/boost/di/inject.hpp boost/di/inject.hpp]]
 

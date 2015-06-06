@@ -31,3 +31,5 @@ install html/example/modules : [ glob ../example/modules/*.* ] ;
 install html/example/tutorial : [ glob ../example/tutorial/*.* ] ;
 install html/test/pt : [ glob ../test/pt/di.cpp ] ;
 
+#target post-processing, comments, badges
+#
