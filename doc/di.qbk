@@ -127,3 +127,4 @@
 [include acknowledgements.qbk]
 [include references.qbk]
 
+[note *Disclaimer* Boost.DI is not an official Boost library.]
