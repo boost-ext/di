@@ -1,7 +1,7 @@
 index.html
 di/introduction.html
+di/introduction/dependency_injection_libraries.html
 di/overview.html
-di/overview/comparison.html
 di/overview/performance.html
 di/overview/diagnostic_messages.html
 di/overview/rationale.html
