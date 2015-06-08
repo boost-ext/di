@@ -7,7 +7,7 @@
  /
  /]
 
-[section Comparison]
+[section Dependency Injection libraries]
 
 [table C++ Dependency Injection Libraries
     [[Library][Boost.DI][dicpp][Google Fruit]]

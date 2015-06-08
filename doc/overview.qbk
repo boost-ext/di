@@ -55,7 +55,6 @@ To get and test Boost.DI library:
 * [link di.examples Examples]
 * [link di.rationale Rationale]
 
-[include comparison.qbk]
 [include performance.qbk]
 [include diagnostic_messages.qbk]
 [include rationale.qbk]

@@ -450,5 +450,7 @@ Following this approach has many advantages.
 * [link di.examples Examples]
 * [link di.rationale Rationale]
 
+[include libraries.qbk]
+
 [endsect]
 
