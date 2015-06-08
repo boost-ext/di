@@ -35,6 +35,6 @@ install html/test/pt : [ glob ../test/pt/di.cpp ] ;
 install post : quickbook : <location>. ;
 notfile . : @post-install : post ;
 actions post-install {
-    "tools/post.sh"  
+    "tools/post.sh"
 }
 

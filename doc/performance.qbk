@@ -9,6 +9,8 @@
 
 [section Performance]
 
+[tip [@http://melpon.org/wandbox/permlink/7GvmSoCitBISnnfi [_Try it yourself online!]]]
+
 * [h6 Run-time]
 
     * Environment
@@ -16,7 +18,7 @@
         * clang++3.4 -O2 / `gdb -batch -ex 'file ./a.out' -ex 'disassemble main'`
 
 [table
-[[Create type wihtout bindings][Asm x86-64 (same as `return 0`)]]
+[[Create type without bindings][Asm x86-64 (same as `return 0`)]]
     [
         [
             [c++] ```

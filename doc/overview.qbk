@@ -58,6 +58,7 @@ To get and test Boost.DI library:
 [include comparison.qbk]
 [include performance.qbk]
 [include diagnostic_messages.qbk]
+[include rationale.qbk]
 
 [endsect]
 

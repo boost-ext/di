@@ -122,9 +122,8 @@
 [include examples.qbk]
 [include extensions.qbk]
 [include projects.qbk]
-[include rationale.qbk]
 [include changelog.qbk]
 [include acknowledgements.qbk]
 [include references.qbk]
 
-[note *Disclaimer* Boost.DI is not an official Boost library.]
+[note *Disclaimer* Boost.DI is not an official Boost library / [@http://www.boost.org/community/review_schedule.html [_Check Boost Formal Review Schedule.]]]
