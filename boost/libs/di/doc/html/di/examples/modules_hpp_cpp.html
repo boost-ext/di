@@ -25,7 +25,19 @@
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="di.examples.modules_hpp_cpp"></a><a class="link" href="modules_hpp_cpp.html" title="Modules (hpp/cpp)">Modules (hpp/cpp)</a>
-</h3></div></div></div>
+<script>
+  (function() {
+    var cx = '008806701954934477933:tcfwebyj7eu';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:search></gcse:search>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">ibutton</span> <span class="special">{</span> <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">ibutton</span><span class="special">()</span> <span class="keyword">noexcept</span> <span class="special">=</span> <span class="keyword">default</span><span class="special">;</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">dummy</span><span class="special">()</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="special">};</span> <span class="keyword">struct</span> <span class="identifier">button</span> <span class="special">:</span> <span class="identifier">ibutton</span> <span class="special">{</span> <span class="keyword">void</span> <span class="identifier">dummy</span><span class="special">()</span> <span class="identifier">override</span> <span class="special">{</span> <span class="special">};</span> <span class="special">};</span>
 <span class="keyword">struct</span> <span class="identifier">iwindow</span> <span class="special">{</span> <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">iwindow</span><span class="special">()</span> <span class="keyword">noexcept</span> <span class="special">=</span> <span class="keyword">default</span><span class="special">;</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">dummy</span><span class="special">()</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="special">};</span> <span class="keyword">struct</span> <span class="identifier">window</span> <span class="special">:</span> <span class="identifier">iwindow</span> <span class="special">{</span> <span class="keyword">void</span> <span class="identifier">dummy</span><span class="special">()</span> <span class="identifier">override</span> <span class="special">{</span> <span class="special">};</span> <span class="special">};</span>
 <span class="keyword">struct</span> <span class="identifier">iboard</span> <span class="special">{</span> <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">iboard</span><span class="special">()</span> <span class="keyword">noexcept</span> <span class="special">=</span> <span class="keyword">default</span><span class="special">;</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">dummy</span><span class="special">()</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="special">};</span> <span class="keyword">struct</span> <span class="identifier">board</span> <span class="special">:</span> <span class="identifier">iboard</span> <span class="special">{</span> <span class="keyword">void</span> <span class="identifier">dummy</span><span class="special">()</span> <span class="identifier">override</span> <span class="special">{</span> <span class="special">};</span> <span class="special">};</span>
@@ -263,4 +275,5 @@
     })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
-</body></html>
+</body>
+</html>
