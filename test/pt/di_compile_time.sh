@@ -37,7 +37,7 @@ bind_all() {
 benchmark() {
     CTOR=`[ "$2" == "ctor" ] && echo -n "-DBOOST_DI_INJECT(type, ...)=type(__VA_ARGS__)"`
     EXPOSED_OR_AUTO=`[ "$3" == "auto" ] && echo -n "-DEXPOSED_OR_AUTO(t1, t2)=t2" || echo -n "-DEXPOSED_OR_AUTO(t1, t2)=t1"`
-    (time clang++ -O2 di.cpp -std=c++1y -I ../../include "$CTOR" "$EXPOSED_OR_AUTO" `$4` $5 -DCOMPLEX=$1) 2> /tmp/$0.dat
+    (time clang++ -O2 di_compile_time.cpp -std=c++1y -I ../../include "$CTOR" "$EXPOSED_OR_AUTO" `$4` $5 -DCOMPLEX=$1) 2> /tmp/$0.dat
     if [[ "`grep error: /tmp/$0.dat`" != "" ]]; then
         >&2 cat /tmp/$0.dat
         exit

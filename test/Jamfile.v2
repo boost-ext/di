@@ -123,6 +123,10 @@ test-suite ft :
     [ run-test c++1y : ft/di_scope_unique.cpp ]
 ;
 
+#test-suite pt :
+    #[ run-test c++1y : pt/di_run_time.cpp : : <optimization>speed <variant>release ]
+#;
+
 #test-suite error :
     #[ compile-fail-test c++1y : error/bind_external_repeated.cpp ]
     #[ compile-fail-test c++1y : error/bind_external_with_given_scope.cpp ]

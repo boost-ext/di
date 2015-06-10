@@ -11,7 +11,8 @@
 #include <vector>
 #include <cstdlib>
 #include <sstream>
-
+#include <functional>
+#include <type_traits>
 
 #if !defined(TEST_DEFAULT_REPORTER)
 	#if defined(_MSC_VER)
@@ -22,6 +23,23 @@
 #endif
 
 static std::map<void*, std::vector<std::string>> results;
+static std::vector<std::function<void()>> tests;
+static std::vector<std::function<void(const char*)>> tests_with_progname;
+
+#define HAS_METHOD(name, call_name)                                 \
+    template<class T, class... TArgs>                               \
+    decltype(std::declval<T>().call_name(std::declval<TArgs>()...)  \
+           , std::true_type())                                      \
+    has_##name##_impl(int);                                         \
+                                                                    \
+    template<class, class...>                                       \
+    std::false_type has_##name##_impl(...);                         \
+                                                                    \
+    template<class T, class... TArgs>                               \
+    struct has_##name : decltype(has_##name##_impl<T, TArgs...>(0)) \
+    { }
+
+HAS_METHOD(call_operator, operator());
 
 #define expect(...) \
     do { \
@@ -54,7 +72,17 @@ struct test {
     template<class Test>
     test(const Test& test) {
         results[this].push_back("run");
-        test();
+        add_test(test, has_call_operator<Test, const char*>{});
+    }
+
+    template<class Test>
+    void add_test(const Test& test, const std::true_type&) {
+        tests_with_progname.push_back(test);
+    }
+
+    template<class Test>
+    void add_test(const Test& test, const std::false_type&) {
+        tests.push_back(test);
     }
 };
 
@@ -73,6 +101,15 @@ struct test_type {
 int main(int argc, char** argv) {
     auto success = true;
     auto reporter = argc > 1 ? argv[1] : TEST_DEFAULT_REPORTER;
+
+    for (const auto& test : tests) {
+        test();
+    }
+
+    for (const auto& test : tests_with_progname) {
+        test(argv[0]);
+    }
+
     for (const auto& result : results) {
         if (result.second.size() > 1) {
             std::stringstream str;

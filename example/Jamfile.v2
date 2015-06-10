@@ -104,6 +104,10 @@ test-suite quick_user_guide :
     [ run-example c++1y : quick_user_guide/scopes7.cpp ]
 ;
 
+test-suite try_it_online :
+    [ run-example c++1y : try_it_online/main.cpp : -I../include/boost ]
+;
+
 test-suite tutorial :
     [ run-example c++1y : tutorial/tutorial1.cpp : -Itutorial ]
     [ run-example c++1y : tutorial/tutorial2.cpp : -Itutorial ]
