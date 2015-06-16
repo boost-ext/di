@@ -117,6 +117,7 @@
 [include introduction.qbk]
 [include overview.qbk]
 [include tutorial.qbk]
+[include try_it_online.qbk]
 [include quick_user_guide.qbk]
 [include user_guide.qbk]
 [include examples.qbk]
@@ -127,3 +128,4 @@
 [include references.qbk]
 
 [note *Disclaimer* Boost.DI is not an official Boost library / [@http://www.boost.org/community/review_schedule.html [_Check Boost Formal Review Schedule.]]]
+

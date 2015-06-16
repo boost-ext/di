@@ -4,17 +4,17 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <boost/di.hpp>
-
 #include <cstdio>
 #include <regex>
+#include <boost/di.hpp>
 
-#include <iostream>
-namespace di = boost::di;
+namespace {
 
-auto disassemble(const char* f, const char* progname) {
+auto disassemble(const std::string& f, const std::string& progname, const std::regex& rgx) {
+#if defined(_MSC_VER)
+    return "";
+#else
     FILE *in = nullptr;
-
     std::stringstream command;
     std::stringstream result;
     command << "gdb -batch -ex 'file ./" << progname << " ' -ex 'disassemble " << f << "'";
@@ -23,102 +23,174 @@ auto disassemble(const char* f, const char* progname) {
         return result.str();
     }
 
-    char buff[512];
-    while (fgets(buff, sizeof(buff), in)) {
-        result << buff;
+    char buff[1024];
+    bool first = true;
+    while (std::fgets(buff, sizeof(buff), in)) {
+        if (!first) {
+            std::smatch match;
+            std::string str{buff};
+            if (std::regex_search(str, match, rgx)) {
+                result << match[1];
+            }
+        }
+        first = false;
     }
 
     pclose(in);
+    expect(!result.str().empty());
     return result.str();
+#endif
 }
+
+bool is_same_asm(const char* progname, const std::string& name, const std::regex& rgx = std::regex{".*:(.*)"}) {
+    return disassemble("given_" + name, progname, rgx) == disassemble("expected_" + name, progname, rgx);
+}
+
+} // namespace
+
+namespace di = boost::di;
 
 struct i { virtual ~i() noexcept = default; virtual int dummy() = 0; };
 struct impl : i { impl(int i) : i_(i) { }; int dummy() override { return i_; }; int i_ = 0; };
 
-auto test_no_bindings() {
+// ---------------------------------------------------------------------------
+
+auto given_no_bindings() {
     auto injector = di::make_injector();
     return injector.create<int>();
 }
 
-//test no_bindings = [](auto progname) {
-    //std::cout << disassemble("test_no_bindings", progname) << std::endl;
-    //expect_eq(
-        //"blah"
-      //, disassemble("test_no_bindings", progname)
-    //);
-//};
+auto expected_no_bindings() {
+    return 0;
+}
 
-auto test_bind_int() {
+test no_bindings = [](auto progname) {
+    expect(is_same_asm(progname, "no_bindings"));
+};
+
+// ---------------------------------------------------------------------------
+
+auto given_bind_int() {
     auto injector = di::make_injector(
-        di::bind<int>.to(42)
+        di::bind<int>().to(42)
     );
 
     return injector.create<int>();
 }
 
-auto expect_asm(const char* progname, const char* f, const std::vector<std::string>& args) {
-    std::stringstream regex;
-    regex << "^Dump.*:\\n";
-    for (const auto& arg : args) {
-        regex << ".*" << arg << ".*\\n";
-    }
-    regex << ".*dump\\\\.\\n";
-
-    expect(std::regex_match(disassemble(f, progname), std::regex(regex.str())));
-        //std::regex("^Dump.*:\n.*mov.*0x2a.*\n.*retq.*\n.*dump\\.\n")));
-    std::cout << regex.str() << std::endl;
+auto expected_bind_int() {
+    return 42;
 }
 
 test bind_int = [](auto progname) {
-    expect_asm(progname, "test_bind_int", 
-        {
-            "mov.*0x2a"
-          , "retq"
-        }
-    );
+    expect(is_same_asm(progname, "bind_int"));
 };
 
-//test_perf bind_int = [] { };
+// ---------------------------------------------------------------------------
 
-//auto test_bind_interface() {
-    //auto injector = di::make_injector(
-        //di::bind<int>.to(42)
-      //, di::bind<i, impl>
-    //);
+auto given_bind_interface() {
+    auto injector = di::make_injector(
+        di::bind<i, impl>
+    );
 
-    //auto ptr = injector.create<std::unique_ptr<i>>();
-    //return ptr->dummy();
-//}
+    return injector.create<std::unique_ptr<i>>();
+}
 
-//test_perf bind_interface = [] { };
+auto expected_bind_interface() {
+    return std::make_unique<impl>(0);
+}
 
-//auto test_bind_interface_shared() {
-    //auto injector = di::make_injector(
-        //di::bind<int>.to(42)
-      //, di::bind<i, impl>.in(di::singleton)
-    //);
+test bind_interface = [](auto progname) {
+    expect(is_same_asm(progname, "bind_interface", std::regex{".*:([^ ]*).*"}));
+};
 
-    //auto ptr = injector.create<std::shared_ptr<i>>();
-    //return ptr->dummy();
-//}
+// ---------------------------------------------------------------------------
 
-//test_perf bind_intterface_shared = [] { };
+auto name_int = []{};
 
-//struct module {
-    //di::injector<i> configure() const noexcept {
-        //return  di::make_injector(
-            //di::bind<int>.to(42)
-          //, di::bind<i, impl>
-        //);
-    //};
-//};
+struct c {
+    BOOST_DI_INJECT(c, (named = name_int) int);
+};
 
-//auto test_exposed() {
-    //auto injector = di::make_injector(module{});
-    //auto* ptr =  injector.create<i*>();
-    //return ptr->dummy();
-//}
+c::c(int) { }
 
-//test_perf exposed = [] { };
+auto given_bind_named_int() {
+    auto injector = di::make_injector(
+        di::bind<int>().named(name_int).to(42)
+    );
 
+    return injector.create<c>();
+}
+
+auto expected_bind_named_int() {
+    return c{42};
+}
+
+test bind_named_int = [](auto progname) {
+    expect(is_same_asm(progname, "bind_named_int"));
+};
+
+// ---------------------------------------------------------------------------
+
+auto given_module_no_bindings() {
+    struct module {
+        auto configure() const noexcept {
+            return di::make_injector();
+        }
+    };
+
+    return di::make_injector(module{}).create<int>();
+}
+
+auto expected_module_no_bindings() {
+    return 0;
+}
+
+test module_no_bindings = [](auto progname) {
+    expect(is_same_asm(progname, "module_no_bindings"));
+};
+
+// ---------------------------------------------------------------------------
+
+auto given_module_bind_int() {
+    struct module {
+        auto configure() const noexcept {
+            return di::make_injector(
+                di::bind<int>().to(42)
+            );
+        }
+    };
+
+    return di::make_injector(module{}).create<int>();
+}
+
+auto expected_module_bind_int() {
+    return 42;
+}
+
+test module_bind_int = [](auto progname) {
+    expect(is_same_asm(progname, "module_bind_int"));
+};
+
+// ---------------------------------------------------------------------------
+
+auto given_bind_interface_shared() {
+    auto injector = di::make_injector(
+        di::bind<i, impl>.in(di::shared)
+    );
+
+    return injector.create<std::shared_ptr<i>>();
+}
+
+auto expected_bind_interface_shared() {
+    return std::make_shared<impl>(0);
+}
+
+#if 0
+    test bind_interface_shared = [](auto progname) {
+        expect(is_same_asm(progname, "bind_interface_shared", std::regex{".*:([^ ]*).*"}));
+    };
+#endif
+
+// ---------------------------------------------------------------------------
 

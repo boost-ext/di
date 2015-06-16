@@ -20,5 +20,11 @@ json() {
     }'
 }
 
-curl -H "Content-type: application/json" -d "`json $1`" http://melpon.org/wandbox/api/compile.json
+URL=`curl -H "Content-type: application/json" -d "\`json $1\`" http://melpon.org/wandbox/api/compile.json 2>/dev/null | grep url | awk '{print $3}' | tr -d '"'`
+
+if [[ $FRAME != "" ]]; then
+    echo '<iframe src="'$URL'" frameborder="0" style="height: 100%; width: 100%;" height="100%" width="100%"></iframe>'
+else
+    echo $URL
+fi
 
