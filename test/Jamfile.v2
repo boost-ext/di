@@ -31,12 +31,21 @@ project :
 ;
 
 rule run-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
-    toolset =
-        <toolset>gcc:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
-        <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
-        <toolset>darwin:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
-        <toolset>msvc:<cxxflags>"/FI common/test.hpp /W3"
-    ;
+    if $(defines) {
+        toolset =
+            <toolset>gcc:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra"
+            <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra"
+            <toolset>darwin:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra"
+            <toolset>msvc:<cxxflags>"/FI common/test.hpp /W3"
+        ;
+    } else {
+        toolset =
+            <toolset>gcc:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
+            <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
+            <toolset>darwin:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
+            <toolset>msvc:<cxxflags>"/FI common/test.hpp /W3"
+        ;
+    }
 
     if $(ctor) {
         defines += <define>BOOST_DI_CFG_CTOR <define>\"BOOST_DI_INJECT(type,...)=type(__VA_ARGS__)\" ;
@@ -51,9 +60,10 @@ rule run-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
 
 rule compile-fail-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
     toolset =
-        <toolset>gcc:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
-        <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
-        <toolset>darwin:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
+        <toolset>gcc:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra"
+        <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra"
+        <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra"
+        <toolset>darwin:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra"
         <toolset>msvc:<cxxflags>"/FI common/test.hpp /W3"
     ;
 
