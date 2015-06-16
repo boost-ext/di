@@ -14,6 +14,7 @@ env:
     - DOCUMENTATION=1 BOOST=boost_1_58_0
 
 matrix:
+  fast_finish: true
   include:
     - os: linux
       env: TOOLSET=clang-3.4 VALGRIND=1
