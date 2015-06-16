@@ -1,5 +1,6 @@
 #include <cassert>
-#include "di.hpp"
+#include <memory>
+#include "boost/di.hpp"
 
 struct i1 { virtual ~i1() = default; virtual void dummy1() = 0; };
 struct impl1 : i1 { void dummy1() override { } };

@@ -10,7 +10,7 @@ json() {
 
     echo -e -n ',
       "codes": [
-          { "file": "di.hpp", "code": '
+          { "file": "boost/di.hpp", "code": '
               json_escape `readlink -f \`dirname $0\``/../../include/boost/di.hpp
 
     echo -e '}],
