@@ -115,7 +115,7 @@ int main(int argc, char** argv) {
             std::stringstream str;
             str << reporter << " \"" << argv[0] << "\" \"" << result.first << "\"";
             for (const auto& error : result.second) {
-                std::system((str.str() + " " + error).c_str());
+                (void)std::system((str.str() + " " + error).c_str());
             }
             success = false;
         }

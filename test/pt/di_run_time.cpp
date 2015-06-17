@@ -5,41 +5,59 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <cstdio>
+#include <fstream>
 #include <regex>
-#include <boost/di.hpp>
+#include "boost/di.hpp"
 
 namespace {
 
 auto disassemble(const std::string& f, const std::string& progname, const std::regex& rgx) {
-#if defined(_MSC_VER)
+#if defined(COVERAGE)
     return "";
-#else
-    FILE *in = nullptr;
+#elif defined(_WIN32) || defined(_WIN64)
+    return "";
+#endif
+    std::string tmp_file = tmpnam(nullptr);
+    std::ofstream commands(tmp_file);
     std::stringstream command;
     std::stringstream result;
-    command << "gdb -batch -ex 'file ./" << progname << " ' -ex 'disassemble " << f << "'";
+    FILE *in = nullptr;
+
+#if defined(__APPLE__)
+    command << "lldb -s " << tmp_file;
+    commands << "file " << progname << std::endl;
+    commands << "di -n " << f << std::endl;
+    commands << "q" << std::endl;
+#elif defined(__linux)
+    command << "gdb --batch -x " << tmp_file;
+    commands << "file " << progname << std::endl;
+    commands << "disassemble " << f << std::endl;
+    commands << "q" << std::endl;
+#endif
 
     if (!(in = popen(command.str().c_str(), "r"))) {
         return result.str();
     }
 
     char buff[1024];
-    bool first = true;
+    auto is_asm = true;
     while (std::fgets(buff, sizeof(buff), in)) {
-        if (!first) {
+        std::string str{buff};
+        if (std::regex_match(str, std::regex{".*:$"})) {
+            is_asm = false;
+        }
+
+        if (is_asm) {
             std::smatch match;
-            std::string str{buff};
             if (std::regex_search(str, match, rgx)) {
                 result << match[1];
             }
         }
-        first = false;
     }
 
     pclose(in);
     expect(!result.str().empty());
     return result.str();
-#endif
 }
 
 bool is_same_asm(const char* progname, const std::string& name, const std::regex& rgx = std::regex{".*:(.*)"}) {
@@ -90,7 +108,7 @@ test bind_int = [](auto progname) {
 
 auto given_bind_interface() {
     auto injector = di::make_injector(
-        di::bind<i, impl>
+        di::bind<i, impl>()
     );
 
     return injector.create<std::unique_ptr<i>>();
@@ -176,7 +194,7 @@ test module_bind_int = [](auto progname) {
 
 auto given_bind_interface_shared() {
     auto injector = di::make_injector(
-        di::bind<i, impl>.in(di::shared)
+        di::bind<i, impl>().in(di::shared)
     );
 
     return injector.create<std::shared_ptr<i>>();

@@ -10,7 +10,7 @@ import feature : extend-feature compose ;
 
 extend-feature variant : coverage ;
 compose <variant>coverage :
-    <cxxflags>"-fprofile-arcs -ftest-coverage" <linkflags>"-fprofile-arcs"
+    <cxxflags>"-fprofile-arcs -ftest-coverage -DCOVERAGE" <linkflags>"-fprofile-arcs"
     <optimization>off
 ;
 
