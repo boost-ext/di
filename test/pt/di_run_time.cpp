@@ -14,24 +14,37 @@ namespace {
 auto disassemble(const std::string& f, const std::string& progname, const std::regex& rgx) {
 #if defined(COVERAGE)
     return std::string{};
-#elif defined(_WIN32) || defined(_WIN64)
-    return std::string{};
 #endif
-    std::string tmp_file = tmpnam(nullptr);
+    std::string tmp_file = std::tmpnam(nullptr);
+    struct remove_tmp_file {
+        explicit remove_tmp_file(const std::string& name)
+            : name(name)
+        { }
+
+        ~remove_tmp_file() {
+            std::remove(name.c_str());
+        }
+
+        std::string name;
+    } remove(tmp_file);
     std::ofstream commands(tmp_file);
     std::stringstream command;
     std::stringstream result;
     FILE *in = nullptr;
 
-#if defined(__APPLE__)
+#if defined(__linux)
+    command << "gdb --batch -x " << tmp_file;
+    commands << "file " << progname << std::endl;
+    commands << "disassemble " << f << std::endl;
+    commands << "q" << std::endl;
+#elif defined(__APPLE__)
     command << "lldb -s " << tmp_file;
     commands << "file " << progname << std::endl;
     commands << "di -n " << f << std::endl;
     commands << "q" << std::endl;
-#elif defined(__linux)
-    command << "gdb --batch -x " << tmp_file;
-    commands << "file " << progname << std::endl;
-    commands << "disassemble " << f << std::endl;
+#elif defined(_WIN32) || defined(_WIN64)
+    command << "cdb -cf " << tmp_file << " -z " << progname;
+    commands << "uf " << f << std::endl;
     commands << "q" << std::endl;
 #endif
 
