@@ -13,9 +13,9 @@ namespace {
 
 auto disassemble(const std::string& f, const std::string& progname, const std::regex& rgx) {
 #if defined(COVERAGE)
-    return "";
+    return std::string{};
 #elif defined(_WIN32) || defined(_WIN64)
-    return "";
+    return std::string{};
 #endif
     std::string tmp_file = tmpnam(nullptr);
     std::ofstream commands(tmp_file);
