@@ -9,8 +9,6 @@
 #include <regex>
 #include "boost/di.hpp"
 
-#include <iostream>
-
 #if !defined(COVERAGE)
 
 namespace {
@@ -61,7 +59,7 @@ auto disassemble(const std::string& f, const std::string& progname, const std::r
     return result.str();
 }
 
-bool is_same_asm(const char* progname, const std::string& name, const std::regex& rgx = std::regex{".*:(.*)"}) {
+bool check_opcodes(const char* progname, const std::string& name, const std::regex& rgx = std::regex{".*:(.*)"}) {
     return disassemble("given_" + name, progname, rgx) == disassemble("expected_" + name, progname, rgx);
 }
 
@@ -84,7 +82,7 @@ auto expected_no_bindings() {
 }
 
 test no_bindings = [](auto progname) {
-    expect(is_same_asm(progname, "no_bindings"));
+    expect(check_opcodes(progname, "no_bindings"));
 };
 
 // ---------------------------------------------------------------------------
@@ -102,7 +100,7 @@ auto expected_bind_int() {
 }
 
 test bind_int = [](auto progname) {
-    expect(is_same_asm(progname, "bind_int"));
+    expect(check_opcodes(progname, "bind_int"));
 };
 
 // ---------------------------------------------------------------------------
@@ -120,7 +118,7 @@ auto expected_bind_interface() {
 }
 
 test bind_interface = [](auto progname) {
-    expect(is_same_asm(progname, "bind_interface", std::regex{".*:([^ ]*).*"}));
+    expect(check_opcodes(progname, "bind_interface", std::regex{".*:([^ ]*).*"}));
 };
 
 // ---------------------------------------------------------------------------
@@ -146,7 +144,7 @@ auto expected_bind_named_int() {
 }
 
 test bind_named_int = [](auto progname) {
-    expect(is_same_asm(progname, "bind_named_int"));
+    expect(check_opcodes(progname, "bind_named_int"));
 };
 
 // ---------------------------------------------------------------------------
@@ -166,7 +164,7 @@ auto expected_module_no_bindings() {
 }
 
 test module_no_bindings = [](auto progname) {
-    expect(is_same_asm(progname, "module_no_bindings"));
+    expect(check_opcodes(progname, "module_no_bindings"));
 };
 
 // ---------------------------------------------------------------------------
@@ -188,7 +186,7 @@ auto expected_module_bind_int() {
 }
 
 test module_bind_int = [](auto progname) {
-    expect(is_same_asm(progname, "module_bind_int"));
+    expect(check_opcodes(progname, "module_bind_int"));
 };
 
 // ---------------------------------------------------------------------------
@@ -207,7 +205,7 @@ auto expected_bind_interface_shared() {
 
 #if 0
     test bind_interface_shared = [](auto progname) {
-        expect(is_same_asm(progname, "bind_interface_shared", std::regex{".*:([^ ]*).*"}));
+        expect(check_opcodes(progname, "bind_interface_shared", std::regex{".*:([^ ]*).*"}));
     };
 #endif
 
