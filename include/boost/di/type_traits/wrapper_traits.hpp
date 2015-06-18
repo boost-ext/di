@@ -20,7 +20,7 @@ struct wrapper_traits {
 
 template<class T>
 struct wrapper_traits<std::shared_ptr<T>> {
-    using type = wrappers::shared<T>;
+    using type = wrappers::shared<T, false>;
 };
 
 template<class T>

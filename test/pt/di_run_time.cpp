@@ -4,71 +4,59 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <cstdio>
+#include <cstdlib>
 #include <fstream>
 #include <regex>
 #include "boost/di.hpp"
 
+#include <iostream>
+
+#if !defined(COVERAGE)
+
 namespace {
 
 auto disassemble(const std::string& f, const std::string& progname, const std::regex& rgx) {
-#if defined(COVERAGE)
-    return std::string{};
-#endif
-    std::string tmp_file = std::tmpnam(nullptr);
-    struct remove_tmp_file {
-        explicit remove_tmp_file(const std::string& name)
-            : name(name)
-        { }
-
-        ~remove_tmp_file() {
-            std::remove(name.c_str());
-        }
-
-        std::string name;
-    } remove(tmp_file);
-    std::ofstream commands(tmp_file);
-    std::stringstream command;
     std::stringstream result;
-    FILE *in = nullptr;
+    std::string commands_file = std::tmpnam(nullptr);
+    std::ofstream commands{commands_file};
+    std::string output_file = std::tmpnam(nullptr);
+    std::stringstream command;
 
 #if defined(__linux)
-    command << "gdb --batch -x " << tmp_file;
+    command << "gdb --batch -x " << commands_file;
     commands << "file " << progname << std::endl;
     commands << "disassemble " << f << std::endl;
     commands << "q" << std::endl;
 #elif defined(__APPLE__)
-    command << "lldb -s " << tmp_file;
+    command << "lldb -s " << commands_file;
     commands << "file " << progname << std::endl;
     commands << "di -n " << f << std::endl;
     commands << "q" << std::endl;
 #elif defined(_WIN32) || defined(_WIN64)
-    command << "cdb -cf " << tmp_file << " -z " << progname;
+    command << "cdb -cf " << commands_file << " -z " << progname;
     commands << "uf " << f << std::endl;
     commands << "q" << std::endl;
 #endif
 
-    if (!(in = popen(command.str().c_str(), "r"))) {
+    if (std::system((command.str()  + " > " + output_file).c_str())) {
         return result.str();
     }
 
-    char buff[1024];
-    auto is_asm = true;
-    while (std::fgets(buff, sizeof(buff), in)) {
-        std::string str{buff};
-        if (std::regex_match(str, std::regex{".*:$"})) {
-            is_asm = false;
+    std::ifstream output{output_file};
+    auto is_asm = false;
+    for (std::string line; std::getline(output, line);) {
+        if (std::regex_match(line, std::regex{".*:$"})) {
+            is_asm = true;
         }
 
         if (is_asm) {
             std::smatch match;
-            if (std::regex_search(str, match, rgx)) {
-                result << match[1];
+            if (std::regex_search(line, match, rgx)) {
+                result << match[1] << std::endl;
             }
         }
     }
 
-    pclose(in);
     expect(!result.str().empty());
     return result.str();
 }
@@ -224,4 +212,6 @@ auto expected_bind_interface_shared() {
 #endif
 
 // ---------------------------------------------------------------------------
+
+#endif
 

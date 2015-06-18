@@ -636,7 +636,7 @@ public:
 
 namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 
-template<class T>
+template<class T, bool Ref = true>
 struct shared {
     using type = std::conditional_t<std::is_same<T, void>::value, _, T>;
 
@@ -687,7 +687,7 @@ struct shared {
         return *object;
     }
 
-    std::shared_ptr<T> object;
+    std::conditional_t<Ref, const std::shared_ptr<T>&, std::shared_ptr<T>> object;
 };
 
 template<class T>
@@ -967,7 +967,7 @@ struct wrapper_traits {
 
 template<class T>
 struct wrapper_traits<std::shared_ptr<T>> {
-    using type = wrappers::shared<T>;
+    using type = wrappers::shared<T, false>;
 };
 
 template<class T>
