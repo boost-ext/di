@@ -32,9 +32,9 @@ install html/example/modules : [ glob ../example/modules/*.* ] ;
 install html/example/tutorial : [ glob ../example/tutorial/*.* ] ;
 install html/test/pt : [ glob ../test/pt/di.cpp ] ;
 
-install post : quickbook : <location>. ;
-notfile . : @post-install : post ;
-actions post-install {
-    "tools/post.sh"
-}
+#install post : quickbook : <location>. ;
+#notfile . : @post-install : post ;
+#actions post-install {
+    #"tools/post.sh"
+#}
 
