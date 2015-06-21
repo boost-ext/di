@@ -20,11 +20,13 @@ boostbook quickbook : di.qbk :
     <xsl:param>chunk.first.sections=1
     <xsl:param>toc.section.depth=4
     <xsl:param>toc.max.depth=4
-    <xsl:param>generate.section.toc.level=4
+    <xsl:param>generate.section.toc.level=0
+    <xsl:param>html.stylesheet=boostbook.css
     <format>pdf:<xsl:param>boost.url.prefix=http://www.boost.org/doc/libs/release/libs/di/doc/html
     <format>pdf:<xsl:param>img.src.path=$(images_location)/
 ;
 
+install html/ : [ glob data/*.css ] ;
 install html/images : [ glob images/*.png ] ;
 install html/example : [ glob ../example/*.cpp ] ;
 install html/example/extensions : [ glob ../example/extensions/*.* ] ;
@@ -32,9 +34,9 @@ install html/example/modules : [ glob ../example/modules/*.* ] ;
 install html/example/tutorial : [ glob ../example/tutorial/*.* ] ;
 install html/test/pt : [ glob ../test/pt/di.cpp ] ;
 
-#install post : quickbook : <location>. ;
-#notfile . : @post-install : post ;
-#actions post-install {
-    #"tools/post.sh"
-#}
+install post : quickbook : <location>. ;
+notfile . : @post-install : post ;
+actions post-install {
+    "tools/post.sh"
+}
 

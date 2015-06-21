@@ -1,17 +1,13 @@
 #!/bin/bash
 
-HTML="`readlink -f \`dirname $0\`/../html`"
-
-#index.html
-sed -i -e 's/<div class=\"toc\">/<div class=\"toc\">\n<__badges__>\n<__search__>/' $HTML/index.html
-sed -i -e '/<__badges__>/{r tools/data/badges.html' -e 'd}' $HTML/index.html
-sed -i -e '/<__search__>/{r tools/data/search.html' -e 'd}' $HTML/index.html
+ROOT="`readlink -f \`dirname $0\``"
+HTML="`readlink -f $ROOT/../html`"
 
 #try it online
-#rm -f /tmp/di_try_it_online.tmp
-#FRAME=1 tools/try_it_online.sh ../example/try_it_online/main.cpp > /tmp/di_try_it_online.tmp
-#find $HTML -iname "*.html" | xargs sed -i -e '/\$try_it_online\$/{r /tmp/di_try_it_online.tmp' -e 'd}'
-#rm -f /tmp/di_try_it_online.tmp
+rm -f /tmp/di_try_it_online.tmp
+FRAME=1 tools/try_it_online.sh ../example/try_it_online/main.cpp > /tmp/di_try_it_online.tmp
+find $HTML -iname "*.html" | xargs sed -i -e '/\$try_it_online\$/{r /tmp/di_try_it_online.tmp' -e 'd}'
+rm -f /tmp/di_try_it_online.tmp
 
 #*.html
 for file in `find $HTML/di -iname "*.html"`; do
@@ -48,4 +44,6 @@ for file in `find $HTML/di -iname "*.html"`; do
     sed -i 's/\(class=\"section\".*href=\)"\([^"]*\)"\(.*\)/\1 "'$b_'\2" \3/' $file
     sed -i 's/<__root__>/'$b_'/g' $file
 done
+
+cp -f $ROOT/data/index.html $HTML/index.html
 
