@@ -87,7 +87,7 @@ Following this approach has many advantages.
 
 * *Boost.DI guarantees compile time creation*
 [table
-    [[Manual Dependency Injection][Boost.DI][]]
+    [[Manual Dependency Injection][Boost.DI]]
     [
         [
             ```
@@ -114,14 +114,12 @@ Following this approach has many advantages.
                 }
             ```
         ]
-        [[@images/coffee_maker_1.png [$images/coffee_maker_1.png]]
-        ]
     ]
 ]
 
 * *Boost.DI supports non-intrusive constructor injection*
 [table
-    [[Manual Dependency Injection][Boost.DI][]]
+    [[Manual Dependency Injection][Boost.DI]]
     [
         [
             ```
@@ -141,7 +139,8 @@ Following this approach has many advantages.
             ```
                 class coffee_maker {
                 public:
-                    coffee_maker(shared_ptr<iheater> heater, unique_ptr<ipump> pump); // no generation or constructor changes required
+                    // no generation or constructor changes required
+                    coffee_maker(shared_ptr<iheater> heater, unique_ptr<ipump> pump);
                 };
 
                 int main() {
@@ -154,14 +153,12 @@ Following this approach has many advantages.
                 }
             ```
         ]
-        [[@images/coffee_maker_1.png [$images/coffee_maker_1.png]]
-        ]
     ]
 ]
 
 * *Boost.DI reduces boilerplate code*
 [table
-    [[Manual Dependency Injection][Boost.DI][]]
+    [[Manual Dependency Injection][Boost.DI]]
     [
         [
             ```
@@ -194,7 +191,6 @@ Following this approach has many advantages.
                 }
             ```
         ]
-        [[@images/coffee_maker_2.png [$images/coffee_maker_2.png]]]
     ]
     [
         [
@@ -238,10 +234,6 @@ Following this approach has many advantages.
                 }
             ```
         ]
-        [
-            [@images/coffee_maker_3_cd.png [$images/coffee_maker_3_cd.png]]
-            [@images/coffee_maker_3_od.png [$images/coffee_maker_3_od.png]]
-        ]
     ]
     [
         [
@@ -274,10 +266,6 @@ Following this approach has many advantages.
         [
             *No changes!*
         ]
-        [
-            [@images/coffee_maker_4_cd.png [$images/coffee_maker_4_cd.png]]
-            [@images/coffee_maker_4_od.png [$images/coffee_maker_4_od.png]]
-        ]
     ]
     [
         [
@@ -293,9 +281,6 @@ Following this approach has many advantages.
         ]
         [
             *No changes!*
-        ]
-        [
-            [@images/coffee_maker_5.png [$images/coffee_maker_5.png]]
         ]
     ]
 ]
