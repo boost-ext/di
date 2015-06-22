@@ -89,7 +89,6 @@ The macros listed in the table below may be used to control the behaviour of `Bo
                     );
                 }
             };
-                                                                                               .
             ```
         ]
         [
@@ -102,7 +101,6 @@ The macros listed in the table below may be used to control the behaviour of `Bo
             #define BOOST_DI_CFG my_provider
             auto injector = __di_make_injector__();
             assert(0 == injector.__di_injector_create__<int>());
-                                                                                                                       .
             ```
         ]
     ]

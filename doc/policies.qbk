@@ -64,7 +64,6 @@ Policy has to be callable with at least one given type.
                     );
                 }
             };
-                                                                                               .
             ```
         ]
         [
@@ -77,7 +76,6 @@ Policy has to be callable with at least one given type.
             #define BOOST_DI_CFG my_policy
             auto injector = __di_make_injector__();
             injector.__di_injector_create__<int>(); // output: int
-                                                                                                                       .
             ```
         ]
     ]
@@ -115,7 +113,6 @@ Policy has to be callable with at least one given type.
                     );
                 }
             };
-                                                                                               .
             ```
         ]
         [
@@ -150,7 +147,6 @@ Policy has to be callable with at least one given type.
                 i1 // expected
                 impl1 // given
                 no_name // dependency
-                                                                                                                       .
             ```
         ]
     ]
@@ -219,7 +215,6 @@ Limits constructor parameters to explicitly allowed.
         struct example {
             example(int, double) { }
         };
-                                                                        .
         ```
     ]
     [
@@ -227,7 +222,6 @@ Limits constructor parameters to explicitly allowed.
         create example: is_root{} -> true
                int:     is_root{} -> false
                double:  is_root{} -> false
-                                                                          .
         ```
     ]
 ]]
@@ -237,14 +231,12 @@ Limits constructor parameters to explicitly allowed.
     [[
         ```
         struct example { };
-                                                                        .
         ```
     ]
     [
         ```
         create example without bindings:       is_bound<example>{} -> false
         create example with __di_bind__<example>: is_bound<example>{} -> true
-                                                                        .
         ```
     ]
 ]]
@@ -268,7 +260,6 @@ Limits constructor parameters to explicitly allowed.
                     );
                 }
             };
-                                                                        .
             ```
         ]
         [
@@ -281,7 +272,6 @@ Limits constructor parameters to explicitly allowed.
                                __di_bind__<double>.to(42.0)
                            ).__di_injector_create__<double>()
             );
-                                                                                            .
             ```
         ]
     ]

@@ -32,7 +32,7 @@ for file in `find $HTML/di -iname "*.html"`; do
     sed -i -e 's/\(\.\.\/\)\+more\/index\.htm/http:\/\/boost.org\/users\/index.html/' $file
     sed -i -e 's/\(\.\.\/\)\+more\/index\.htm/http:\/\/boost.org\/users\/index.html/' $file
 
-    f=`echo $file | sed "s/.*\(di\/.*\)/\1/"` # | sed 's#/#\\\\/#g'`
+    f=`echo $file | sed "s/.*\(di\/.*\)/\1/"`
     s=`echo $f | grep -o '/' | wc -l`
     f_="`basename $file`"
     b_=''
@@ -45,5 +45,9 @@ for file in `find $HTML/di -iname "*.html"`; do
     sed -i 's/<__root__>/'$b_'/g' $file
 done
 
-cp -f $ROOT/data/index.html $HTML/index.html
+echo '
+<script>
+    window.location.replace("di/introduction.html");
+</script>
+' > $HTML/index.html
 

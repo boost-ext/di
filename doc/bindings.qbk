@@ -96,14 +96,12 @@ Allows to bind interface to implementation and associate value with __dependency
             auto injector = __di_make_injector__(
                 __di_bind__<i1, impl1>
             );
-                                                                                               .
             ```
         ]
         [
             ```
             auto object = injector.__di_injector_create__<unique_ptr<i1>>();
             assert(dynamic_cast<impl1*>(object.get()));
-                                                                                                                       .
             ```
         ]
     ]
@@ -118,14 +116,12 @@ Allows to bind interface to implementation and associate value with __dependency
                 __di_bind__<i1, impl1_1>
               , __di_bind__<i1, impl1_2> [di::override]
             );
-                                                                                               .
             ```
         ]
         [
             ```
             auto object = injector.__di_injector_create__<unique_ptr<i1>>();
             assert(dynamic_cast<impl1_2*>(object.get())); // binding overridden
-                                                                                                                       .
             ```
         ]
     ]
@@ -139,7 +135,6 @@ Allows to bind interface to implementation and associate value with __dependency
             auto injector = __di_make_injector__(
                 __di_bind__<__bindings_any_of__<i1, i2>, impl>
             );
-                                                                                               .
             ```
         ]
         [
@@ -148,7 +143,6 @@ Allows to bind interface to implementation and associate value with __dependency
             auto object2 = injector.__di_injector_create__<shared_ptr<i2>>();
             assert(dynamic_cast<impl*>(object1.get()));
             assert(dynamic_cast<impl*>(object2.get()));
-                                                                                                                       .
             ```
         ]
     ]
@@ -164,13 +158,11 @@ Allows to bind interface to implementation and associate value with __dependency
             auto injector = __di_make_injector__(
                 __di_bind__<int, int_<42>>
             );
-                                                                                               .
             ```
         ]
         [
             ```
             assert(42 == injector.__di_injector_create__<int>());
-                                                                                                                       .
             ```
         ]
     ]
@@ -184,13 +176,11 @@ Allows to bind interface to implementation and associate value with __dependency
             auto injector = __di_make_injector__(
                 __di_bind__<int>.to(42)
             );
-                                                                                               .
             ```
         ]
         [
             ```
             assert(42 == injector.__di_injector_create__<int>());
-                                                                                                                       .
             ```
         ]
     ]

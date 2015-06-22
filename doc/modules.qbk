@@ -132,7 +132,6 @@ Activation of `Module` is done by passing it into injector.
             auto injector = __di_make_injector__(
                 module{42}
             );
-                                                                                               .
             ```
         ]
         [
@@ -144,7 +143,6 @@ Activation of `Module` is done by passing it into injector.
 
             // injector.create<unique_ptr<i1>>() // compile error
             // injector.create<unique_ptr<i2>>() // compile error
-                                                                                                                       .
             ```
         ]
     ]
@@ -173,7 +171,6 @@ Activation of `Module` is done by passing it into injector.
             auto injector = __di_make_injector__(
                 module{}
             );
-                                                                                               .
             ```
         ]
         [
@@ -183,7 +180,6 @@ Activation of `Module` is done by passing it into injector.
 
             auto up2 = injector.create<unique_ptr<i2>>();
             assert(dynamic_cast<impl2*>(up2.get()));
-                                                                                                                       .
             ```
         ]
     ]
@@ -213,14 +209,12 @@ Activation of `Module` is done by passing it into injector.
             auto injector = __di_make_injector__(
                 __di_bind__<i1>.__annotations_named__(my).to(module)
             );
-                                                                                               .
             ```
         ]
         [
             ```
             auto object = injector.__di_injector_create__<unique_ptr<c>>();
             assert(dynamic_cast<impl1*>(object->up.get()));
-                                                                                                                       .
             ```
         ]
     ]

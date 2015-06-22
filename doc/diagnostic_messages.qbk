@@ -18,14 +18,11 @@ Error messages were produced using [link di.user_guide.concepts concepts].
             ```
             auto injector = __di_make_injector__();
             injector.__di_injector_create__<unique_ptr<i1>>();
-
-                                                                                               .
             ```
         ]
         [
             ```
             error: allocating an object of abstract class type 'i1' return new (nothrow) T{forward<TArgs>(args)...};
-                                                                                                                       .
             ```
         ]
     ]
@@ -42,13 +39,11 @@ Error messages were produced using [link di.user_guide.concepts concepts].
             );
 
             injector.__di_injector_create__<int>();
-                                                                                               .
             ```
         ]
         [
             ```
             error: base class 'pair<int, no_name>' specified more than once as a direct base class
-                                                                                                                       .
             ```
         ]
     ]
@@ -70,13 +65,11 @@ Error messages were produced using [link di.user_guide.concepts concepts].
 
             auto injector = __di_make_injector__<all_bound>();
             injector.__di_injector_create__<int>();
-                                                                                               .
             ```
         ]
         [
             ```
             error: static_assert failed "Type T is not allowed"
-                                                                                                                       .
             ```
         ]
     ]
@@ -95,13 +88,11 @@ Error messages were produced using [link di.user_guide.concepts concepts].
             };
 
             __di_make_injector__().__di_injector_create__<c>();
-                                                                                               .
             ```
         ]
         [
             ```
             error: use of undeclared identifier 'named'
-                                                                                                                       .
             ```
         ]
     ]

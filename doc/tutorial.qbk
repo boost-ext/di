@@ -74,7 +74,7 @@ Thats all, our application should compile and don't print anything.
 
 So far everything seems to be really easy, so the next step will be
 to configure our dependencies, meaning what exactly will be passed
-to the application. We will do it using __injectors_make_injector__ functionality.
+to the application. We will do it using __di_make_injector__ functionality.
 To remind our requirements - we would like to print "hello world" if first command line argument
 is not equal 0.
 

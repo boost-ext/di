@@ -73,7 +73,6 @@ If the default behavior should be changed constructor has to be explicitly marke
                 __di_bind__<int>.to(42)
               , __di_bind__<double>.to(87.0)
             );
-                                                                                               .
             ```
         ]
         [
@@ -81,7 +80,6 @@ If the default behavior should be changed constructor has to be explicitly marke
             auto object = injector.__di_injector_create__<c>();
             assert(42 == object.a);
             assert(87.0 == object.d);
-                                                                                                                       .
             ```
         ]
     ]
@@ -101,7 +99,6 @@ If the default behavior should be changed constructor has to be explicitly marke
                 __di_bind__<int>.to(42)
               , __di_bind__<double>.to(87.0)
             );
-                                                                                               .
             ```
         ]
         [
@@ -109,7 +106,6 @@ If the default behavior should be changed constructor has to be explicitly marke
             auto object = injector.__di_injector_create__<c>();
             assert(42 == object.a);
             assert(87.0 == object.d);
-                                                                                                                       .
             ```
         ]
     ]
@@ -134,7 +130,6 @@ If the default behavior should be changed constructor has to be explicitly marke
                 __di_bind__<int>.to(42)
               , __di_bind__<double>.to(87.0)
             );
-                                                                                               .
             ```
         ]
         [
@@ -142,7 +137,6 @@ If the default behavior should be changed constructor has to be explicitly marke
             auto object = injector.__di_injector_create__<c>();
             assert(42 == object.a);
             assert(87.0 == object.d);
-                                                                                                                       .
             ```
         ]
     ]
@@ -206,7 +200,6 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
                 __di_bind__<int>.to(42)
               , __di_bind__<double>.to(87.0)
             );
-                                                                                               .
             ```
         ]
         [
@@ -214,7 +207,6 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
             auto object = injector.__di_injector_create__<c>();
             assert(42 == object.a);
             assert(87.0 == object.d);
-                                                                                                                       .
             ```
         ]
     ]
@@ -263,7 +255,6 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
                 __di_bind__<int>.to(42)
               , __di_bind__<double>.to(87.0)
             );
-                                                                                               .
             ```
         ]
         [
@@ -271,7 +262,6 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
             auto object = injector.__di_injector_create__<c>();
             assert(42 == object.a);
             assert(87.0 == object.d);
-                                                                                                                       .
             ```
         ]
     ]
@@ -290,14 +280,12 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
                 int i = 0;
                 double d = 0.0;
             };
-                                                                                               .
             ```
         ]
         [
             ```
             auto object = __di_make_injector__().__di_injector_create__<example>();
             assert(0 == object.i);
-                                                                                                                       .
             ```
         ]
     ]
@@ -318,7 +306,6 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
                 int i = 0;
                 double d = 0.0;
             };
-                                                                                               .
             ```
         ]
         [
@@ -326,7 +313,6 @@ Then `BOOST_DI_INJECT` become handy to point which constructor should be used.
             auto object = __di_make_injector__().__di_injector_create__<example>();
             assert(0 == object.i);
             assert(42.0 == object.d)
-                                                                                                                       .
             ```
         ]
     ]
@@ -374,13 +360,11 @@ and doesn't support __annotations__. Useful for generated constructors.
             };
 
             auto injector = __di_make_injector__();
-                                                                                               .
             ```
         ]
         [
             ```
             auto object = injector.__di_injector_create__<c>(); // compile clean
-                                                                                                                       .
             ```
         ]
     ]
@@ -443,7 +427,6 @@ might be defined in order to point which constructor should be used by `Boost.DI
                 __di_bind__<int>.to(42)
               , __di_bind__<double>.to(87.0)
             );
-                                                                                               .
             ```
         ]
         [
@@ -451,7 +434,6 @@ might be defined in order to point which constructor should be used by `Boost.DI
             auto object = injector.__di_injector_create__<c>();
             assert(42 == object.a);
             assert(87.0 == object.b);
-                                                                                                                       .
             ```
         ]
     ]
@@ -482,7 +464,6 @@ might be defined in order to point which constructor should be used by `Boost.DI
                 __di_bind__<int>.named(a).to(42)
               , __di_bind__<int>.named(b).to(87)
             );
-                                                                                               .
             ```
         ]
         [
@@ -490,7 +471,6 @@ might be defined in order to point which constructor should be used by `Boost.DI
             auto object = injector.__di_injector_create__<c>();
             assert(42 == object.a);
             assert(87 == object.b);
-                                                                                                                       .
             ```
         ]
     ]
@@ -521,13 +501,11 @@ might be defined in order to point which constructor should be used by `Boost.DI
             }} // boost::di
 
             auto injector = __di_make_injector__();
-                                                                                               .
             ```
         ]
         [
             ```
             auto object = injector.__di_injector_create__<c>(); // compile clean
-                                                                                                                       .
             ```
         ]
     ]

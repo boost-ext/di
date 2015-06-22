@@ -67,7 +67,6 @@ In order to inject proper values into `value1` and `value2` they have to be dist
                 __di_bind__<int>.__annotations_named__(int1).to(42)
               , __di_bind__<int>.__annotations_named__(int2).to(87)
             );
-                                                                                               .
             ```
         ]
         [
@@ -75,7 +74,6 @@ In order to inject proper values into `value1` and `value2` they have to be dist
             auto object = injector.__di_injector_create__<c>();
             assert(42 == c.a);
             assert(87 == c.b);
-                                                                                                                       .
             ```
         ]
     ]
@@ -111,7 +109,6 @@ In order to inject proper values into `value1` and `value2` they have to be dist
               , __di_bind__<int>.__annotations_named__(n2).to(87)
               , __di_bind__<string>.__annotations_named__(n1).to("str")
             );
-                                                                                               .
             ```
         ]
         [
@@ -122,7 +119,6 @@ In order to inject proper values into `value1` and `value2` they have to be dist
             assert(87 == object.i3);
             assert(0 == object.i3);
             assert("str" == c.s);
-                                                                                                                       .
             ```
         ]
     ]
@@ -151,7 +147,6 @@ In order to inject proper values into `value1` and `value2` they have to be dist
                 __di_bind__<int>.__annotations_named__(int1).to(42)
               , __di_bind__<int>.__annotations_named__(int2).to(87)
             );
-                                                                                               .
             ```
         ]
         [
@@ -159,7 +154,6 @@ In order to inject proper values into `value1` and `value2` they have to be dist
             auto object = injector.__di_injector_create__<c>();
             assert(42 == object.a);
             assert(87 == object.b);
-                                                                                                                       .
             ```
         ]
     ]
@@ -193,7 +187,6 @@ In order to inject proper values into `value1` and `value2` they have to be dist
                 __di_bind__<int>.__annotations_named__(int1).to(42)
               , __di_bind__<int>.__annotations_named__(int2).to(87)
             );
-                                                                                               .
             ```
         ]
         [
@@ -201,7 +194,6 @@ In order to inject proper values into `value1` and `value2` they have to be dist
             auto object = injector.__di_injector_create__<c>();
             assert(42 == object.a);
             assert(87 == object.b);
-                                                                                                                       .
             ```
         ]
     ]

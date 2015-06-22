@@ -1,9 +1,0 @@
-@startuml uml_dumper.png
-
-"grinder" ..> "pump" : swap grinder constructor order
-"grinder" ..> "heater"
-
-@enduml
-
-
-

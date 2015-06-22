@@ -74,8 +74,8 @@ Following this approach has many advantages.
 
 [table
     [
-        [[@http://www.youtube.com/watch?v=RlfLCWKxHJ0 [$http://img.youtube.com/vi/RlfLCWKxHJ0/0.jpg]]]
-        [[@http://www.youtube.com/watch?v=oK_XtfXPkqw [$http://image.slidesharecdn.com/nr73mexetqiybd1qpcem-140529143342-phpapp01/95/dependency-injection-for-android-5-638.jpg?cb=1401392113]]]
+        [[@http://www.youtube.com/watch?v=RlfLCWKxHJ0 [$http://img.youtube.com/vi/RlfLCWKxHJ0/0.jpg [width 75%] [height 75%] ]]]
+        [[@http://www.youtube.com/watch?v=oK_XtfXPkqw [$http://image.slidesharecdn.com/nr73mexetqiybd1qpcem-140529143342-phpapp01/95/dependency-injection-for-android-5-638.jpg?cb=1401392113 [width 75%] [height 75%] ]]]
     ]
 ]
 

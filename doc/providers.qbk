@@ -64,7 +64,6 @@ Boot.DI is released with 2 providers.
                     return heap_no_throw{};
                 }
             };
-                                                                                               .
             ```
         ]
         [
@@ -77,7 +76,6 @@ Boot.DI is released with 2 providers.
             #define BOOST_DI_CFG my_provider
             auto injector = __di_make_injector__();
             assert(0 == injector.__di_injector_create__<int>());
-                                                                                                                       .
             ```
         ]
     ]
