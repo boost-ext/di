@@ -71,7 +71,7 @@ template<
         return injector_.provider().template get<TExpected, TGiven>(
             TInitialization{}
           , memory
-          , std::forward<TArgs>(args)...
+          , static_cast<TArgs&&>(args)...
         );
     }
 

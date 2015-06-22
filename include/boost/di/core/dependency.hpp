@@ -109,7 +109,7 @@ public:
 
     template<class T>
     explicit dependency(T&& object) noexcept
-        : creator(std::forward<T>(object))
+        : creator(static_cast<T&&>(object))
     { }
 
     template<
@@ -137,7 +137,7 @@ public:
         using dependency = dependency<
             scopes::external, TExpected, typename str_traits<T>::type, TName
         >;
-        return dependency{std::forward<T>(object)};
+        return dependency{static_cast<T&&>(object)};
     }
 
     template<class T, BOOST_DI_REQUIRES(has_configure<T>::value)>

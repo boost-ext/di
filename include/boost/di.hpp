@@ -1660,7 +1660,7 @@ public:
 
     template<class T>
     explicit dependency(T&& object) noexcept
-        : creator(std::forward<T>(object))
+        : creator(static_cast<T&&>(object))
     { }
 
     template<
@@ -1688,7 +1688,7 @@ public:
         using dependency = dependency<
             scopes::external, TExpected, typename str_traits<T>::type, TName
         >;
-        return dependency{std::forward<T>(object)};
+        return dependency{static_cast<T&&>(object)};
     }
 
     template<class T, BOOST_DI_REQUIRES(has_configure<T>::value)>
@@ -2102,28 +2102,28 @@ public:
     auto get(const type_traits::direct&
            , const type_traits::heap&
            , TArgs&&... args) {
-        return new T(std::forward<TArgs>(args)...);
+        return new T(static_cast<TArgs&&>(args)...);
     }
 
     template<class, class T, class... TArgs>
     auto get(const type_traits::uniform&
            , const type_traits::heap&
            , TArgs&&... args) {
-        return new T{std::forward<TArgs>(args)...};
+        return new T{static_cast<TArgs&&>(args)...};
     }
 
     template<class, class T, class... TArgs>
     auto get(const type_traits::direct&
            , const type_traits::stack&
            , TArgs&&... args) const noexcept {
-        return T(std::forward<TArgs>(args)...);
+        return T(static_cast<TArgs&&>(args)...);
     }
 
     template<class, class T, class... TArgs>
     auto get(const type_traits::uniform&
            , const type_traits::stack&
            , TArgs&&... args) const noexcept {
-        return T{std::forward<TArgs>(args)...};
+        return T{static_cast<TArgs&&>(args)...};
     }
 };
 
@@ -2887,7 +2887,7 @@ template<
         return injector_.provider().template get<TExpected, TGiven>(
             TInitialization{}
           , memory
-          , std::forward<TArgs>(args)...
+          , static_cast<TArgs&&>(args)...
         );
     }
 

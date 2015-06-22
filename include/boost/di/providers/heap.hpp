@@ -24,14 +24,14 @@ public:
     auto get(const type_traits::direct&
            , const TMemory&
            , TArgs&&... args) const {
-        return new T(std::forward<TArgs>(args)...);
+        return new T(static_cast<TArgs&&>(args)...);
     }
 
     template<class, class T, class TMemory, class... TArgs>
     auto get(const type_traits::uniform&
            , const TMemory&
            , TArgs&&... args) const {
-        return new T{std::forward<TArgs>(args)...};
+        return new T{static_cast<TArgs&&>(args)...};
     }
 };
 
