@@ -21,7 +21,6 @@
 #endif
 
 namespace boost { namespace di {
-
 template<class, class>
 struct named_type { };
 

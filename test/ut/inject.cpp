@@ -144,13 +144,13 @@ test c_traits_no_limits = [] {
 };
 
 #if !defined(BOOST_DI_CFG_CTOR)
-    auto name = []{};
+    struct named_int_impl { } named_int;
 
     test named_param = [] {
         constexpr auto i = 42;
 
         struct c {
-            BOOST_DI_INJECT(explicit c, (named = name) int i)
+            BOOST_DI_INJECT(explicit c, (named = named_int) int i)
                 : i(i)
             { }
 
@@ -163,7 +163,7 @@ test c_traits_no_limits = [] {
     struct c_def_named {
         static constexpr auto N = 42;
 
-        BOOST_DI_INJECT(c_def_named, (named = name) int i1 = N, int i2 = N)
+        BOOST_DI_INJECT(c_def_named, (named = named_int) int i1 = N, int i2 = N)
             : i1(i1), i2(i2)
         { }
 
@@ -179,7 +179,7 @@ test c_traits_no_limits = [] {
     struct c_def_named_without_def {
         static constexpr auto N = 42;
 
-        BOOST_DI_INJECT(c_def_named_without_def, int i1 = N, (named = name) int i2 = N)
+        BOOST_DI_INJECT(c_def_named_without_def, int i1 = N, (named = named_int) int i2 = N)
             : i1(i1), i2(i2)
         { }
 
