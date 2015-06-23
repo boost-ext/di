@@ -72,6 +72,8 @@ int main() {
     /*<<define injector>>*/
     auto injector = di::make_injector<uml_dumper>(
         di::bind<i0, c0>
+      , di::bind<int>.named(int_1).to(42)
+      , di::bind<int>.named(int_2).to(42)
     );
 
     /*<<iterate through created objects with `types_dumper`>>*/
