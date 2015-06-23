@@ -1234,7 +1234,6 @@ public:
 #endif
 
 namespace boost { namespace di {
-
 template<class, class>
 struct named_type { };
 
@@ -1282,7 +1281,7 @@ struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
     static void BOOST_DI_CAT(BOOST_DI_INJECTOR, names)( \
         BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_NAME, __VA_ARGS__) \
     ); \
-    using BOOST_DI_INJECTOR BOOST_DI_UNUSED = typename ::boost::di::combine< \
+    using BOOST_DI_INJECTOR BOOST_DI_UNUSED = ::boost::di::combine< \
         typename ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>::args \
       , typename ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, names))>::args \
     >::type; \
@@ -1304,7 +1303,7 @@ struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
     #define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
         static void BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor)(__VA_ARGS__); \
         using BOOST_DI_INJECTOR BOOST_DI_UNUSED = \
-            typename ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>::args
+            ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>::args
 #endif
 
 #if !defined(BOOST_DI_INJECT)
