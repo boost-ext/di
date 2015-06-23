@@ -20,84 +20,78 @@
     #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
 #endif
 
-#define BOOST_DI_GEN_ARGS(i, ...) \
-    BOOST_DI_GEN_ARGS_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__,), i)
+namespace boost { namespace di {
 
-#define BOOST_DI_GEN_ARGS_IMPL(p, i) \
-    struct arg##i { \
-        BOOST_DI_IF(BOOST_DI_IBP(p), \
-            BOOST_DI_GEN_ARG_NAME \
-          , BOOST_DI_GEN_ARG)(p) \
-    };
+template<class, class>
+struct named_type { };
 
-#define BOOST_DI_GEN_ARG_NAME(p) \
-    BOOST_DI_GEN_NAME_ARG p );
+struct named_impl { template<class T> T operator=(const T&) const; };
+static constexpr BOOST_DI_UNUSED named_impl named{};
 
-#define BOOST_DI_GEN_NAME_ARG(p) \
-    static auto BOOST_DI_CAT(BOOST_DI_INJECTOR, name)() { \
-        auto p; return named; \
-    } static void BOOST_DI_CAT(BOOST_DI_INJECTOR, arg)(
+template<class T, class TName>
+struct combine_impl {
+	using type = named_type<TName, T>;
+};
 
-#define BOOST_DI_GEN_ARG(p) \
-    static void BOOST_DI_CAT(BOOST_DI_INJECTOR, arg)(p);
+template<class T>
+struct combine_impl<T, aux::none_type> {
+	using type = T;
+};
+
+template<class, class>
+struct combine;
+
+template<class... T1, class... T2>
+struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
+	using type = aux::type_list<typename combine_impl<T1, T2>::type...>;
+};
+}} // boost::di
 
 #define BOOST_DI_GEN_CTOR_IMPL(p, i) \
     BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
     BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_EAT p, p)
+#define BOOST_DI_GEN_CTOR(i, ...) BOOST_DI_GEN_CTOR_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__,), i)
+#define BOOST_DI_GEN_ARG_NAME(p) BOOST_DI_GEN_ARG_NAME_IMPL p )
+#define BOOST_DI_GEN_NONE_TYPE(p) ::boost::di::aux::none_type
+#define BOOST_DI_GEN_ARG_NAME_IMPL(p) decltype(::boost::di::p) BOOST_DI_EAT(
+#define BOOST_DI_GEN_NAME_IMPL(p, i) \
+    BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
+    BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_GEN_ARG_NAME, BOOST_DI_GEN_NONE_TYPE)(p)
+#define BOOST_DI_GEN_NAME(i, ...) BOOST_DI_GEN_NAME_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__,), i)
 
-#define BOOST_DI_GEN_CTOR(i, ...) \
-    BOOST_DI_GEN_CTOR_IMPL( \
-        BOOST_DI_ELEM(i, __VA_ARGS__,) \
-      , i \
+#define BOOST_DI_INJECT_TRAITS_EMPTY_IMPL(...) \
+    using BOOST_DI_INJECTOR BOOST_DI_UNUSED = ::boost::di::aux::type_list<>
+
+#define BOOST_DI_INJECT_TRAITS_IMPL(...) \
+    static void BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor)( \
+        BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__) \
+    ); \
+    static void BOOST_DI_CAT(BOOST_DI_INJECTOR, names)( \
+        BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_NAME, __VA_ARGS__) \
+    ); \
+    using BOOST_DI_INJECTOR BOOST_DI_UNUSED = typename ::boost::di::combine< \
+        typename ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>::args \
+      , typename ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, names))>::args \
+    >::type; \
+    static_assert( \
+        BOOST_DI_SIZE(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE \
+      , "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE" \
     )
-
-#define BOOST_DI_GEN_TYPE_LIST(i, ...) \
-    BOOST_DI_GEN_TYPE_LIST_IMPL( \
-        BOOST_DI_ELEM(i, __VA_ARGS__,) \
-      , i \
-    )
-
-#define BOOST_DI_GEN_TYPE_NAME(p, n) \
-    ::boost::di::aux::type<arg##n, ::std::true_type>
-
-#define BOOST_DI_GEN_TYPE_IMPL(n) \
-    ::boost::di::aux::type<arg##n, ::std::false_type>
-
-#define BOOST_DI_GEN_TYPE(p, n) \
-    BOOST_DI_IF(BOOST_DI_IS_EMPTY(p), BOOST_DI_EAT, BOOST_DI_GEN_TYPE_IMPL)(n)
-
-#define BOOST_DI_GEN_TYPE_LIST_IMPL(p, n) \
-    BOOST_DI_IF(n, BOOST_DI_COMMA, BOOST_DI_EAT)() \
-    BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_GEN_TYPE_NAME, BOOST_DI_GEN_TYPE)(p, n)
 
 #if !defined(BOOST_DI_INJECT_TRAITS)
     #define BOOST_DI_INJECT_TRAITS(...) \
-        struct BOOST_DI_INJECTOR { \
-            BOOST_DI_REPEAT( \
-                BOOST_DI_SIZE(__VA_ARGS__) \
-              , BOOST_DI_GEN_ARGS \
-              , __VA_ARGS__ \
-            ) \
-            using type BOOST_DI_UNUSED = ::boost::di::aux::type_list< \
-                BOOST_DI_REPEAT( \
-                    BOOST_DI_SIZE(__VA_ARGS__) \
-                  , BOOST_DI_GEN_TYPE_LIST \
-                  , __VA_ARGS__ \
-                ) \
-            >; \
-            static_assert( \
-                BOOST_DI_SIZE(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE \
-              , "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE" \
-            ); \
-        }
+        BOOST_DI_IF( \
+            BOOST_DI_IS_EMPTY(__VA_ARGS__) \
+          , BOOST_DI_INJECT_TRAITS_EMPTY_IMPL \
+          , BOOST_DI_INJECT_TRAITS_IMPL \
+        )(__VA_ARGS__)
 #endif
 
 #if !defined(BOOST_DI_INJECT_TRAITS_NO_LIMITS)
     #define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
-        struct BOOST_DI_INJECTOR { \
-            static void inject(__VA_ARGS__); \
-            using type BOOST_DI_UNUSED = ::boost::di::aux::function_traits<decltype(inject)>::args; \
-        }
+        static void BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor)(__VA_ARGS__); \
+        using BOOST_DI_INJECTOR BOOST_DI_UNUSED = \
+            typename ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>::args
 #endif
 
 #if !defined(BOOST_DI_INJECT)

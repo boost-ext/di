@@ -302,10 +302,8 @@ struct is_same_or_base_of {
         std::is_base_of<aux::decay_t<T2>, aux::decay_t<T1>>::value;
 };
 
-template<class T>
-struct function_traits
-    : function_traits<decltype(&T::operator())>
-{ };
+template<class>
+struct function_traits;
 
 template<class R, class... TArgs>
 struct function_traits<R(*)(TArgs...)> {
@@ -1235,84 +1233,78 @@ public:
     #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
 #endif
 
-#define BOOST_DI_GEN_ARGS(i, ...) \
-    BOOST_DI_GEN_ARGS_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__,), i)
+namespace boost { namespace di {
 
-#define BOOST_DI_GEN_ARGS_IMPL(p, i) \
-    struct arg##i { \
-        BOOST_DI_IF(BOOST_DI_IBP(p), \
-            BOOST_DI_GEN_ARG_NAME \
-          , BOOST_DI_GEN_ARG)(p) \
-    };
+template<class, class>
+struct named_type { };
 
-#define BOOST_DI_GEN_ARG_NAME(p) \
-    BOOST_DI_GEN_NAME_ARG p );
+struct named_impl { template<class T> T operator=(const T&) const; };
+static constexpr BOOST_DI_UNUSED named_impl named{};
 
-#define BOOST_DI_GEN_NAME_ARG(p) \
-    static auto BOOST_DI_CAT(BOOST_DI_INJECTOR, name)() { \
-        auto p; return named; \
-    } static void BOOST_DI_CAT(BOOST_DI_INJECTOR, arg)(
+template<class T, class TName>
+struct combine_impl {
+	using type = named_type<TName, T>;
+};
 
-#define BOOST_DI_GEN_ARG(p) \
-    static void BOOST_DI_CAT(BOOST_DI_INJECTOR, arg)(p);
+template<class T>
+struct combine_impl<T, aux::none_type> {
+	using type = T;
+};
+
+template<class, class>
+struct combine;
+
+template<class... T1, class... T2>
+struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
+	using type = aux::type_list<typename combine_impl<T1, T2>::type...>;
+};
+}} // boost::di
 
 #define BOOST_DI_GEN_CTOR_IMPL(p, i) \
     BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
     BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_EAT p, p)
+#define BOOST_DI_GEN_CTOR(i, ...) BOOST_DI_GEN_CTOR_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__,), i)
+#define BOOST_DI_GEN_ARG_NAME(p) BOOST_DI_GEN_ARG_NAME_IMPL p )
+#define BOOST_DI_GEN_NONE_TYPE(p) ::boost::di::aux::none_type
+#define BOOST_DI_GEN_ARG_NAME_IMPL(p) decltype(::boost::di::p) BOOST_DI_EAT(
+#define BOOST_DI_GEN_NAME_IMPL(p, i) \
+    BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
+    BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_GEN_ARG_NAME, BOOST_DI_GEN_NONE_TYPE)(p)
+#define BOOST_DI_GEN_NAME(i, ...) BOOST_DI_GEN_NAME_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__,), i)
 
-#define BOOST_DI_GEN_CTOR(i, ...) \
-    BOOST_DI_GEN_CTOR_IMPL( \
-        BOOST_DI_ELEM(i, __VA_ARGS__,) \
-      , i \
+#define BOOST_DI_INJECT_TRAITS_EMPTY_IMPL(...) \
+    using BOOST_DI_INJECTOR BOOST_DI_UNUSED = ::boost::di::aux::type_list<>
+
+#define BOOST_DI_INJECT_TRAITS_IMPL(...) \
+    static void BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor)( \
+        BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__) \
+    ); \
+    static void BOOST_DI_CAT(BOOST_DI_INJECTOR, names)( \
+        BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_NAME, __VA_ARGS__) \
+    ); \
+    using BOOST_DI_INJECTOR BOOST_DI_UNUSED = typename ::boost::di::combine< \
+        typename ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>::args \
+      , typename ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, names))>::args \
+    >::type; \
+    static_assert( \
+        BOOST_DI_SIZE(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE \
+      , "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE" \
     )
-
-#define BOOST_DI_GEN_TYPE_LIST(i, ...) \
-    BOOST_DI_GEN_TYPE_LIST_IMPL( \
-        BOOST_DI_ELEM(i, __VA_ARGS__,) \
-      , i \
-    )
-
-#define BOOST_DI_GEN_TYPE_NAME(p, n) \
-    ::boost::di::aux::type<arg##n, ::std::true_type>
-
-#define BOOST_DI_GEN_TYPE_IMPL(n) \
-    ::boost::di::aux::type<arg##n, ::std::false_type>
-
-#define BOOST_DI_GEN_TYPE(p, n) \
-    BOOST_DI_IF(BOOST_DI_IS_EMPTY(p), BOOST_DI_EAT, BOOST_DI_GEN_TYPE_IMPL)(n)
-
-#define BOOST_DI_GEN_TYPE_LIST_IMPL(p, n) \
-    BOOST_DI_IF(n, BOOST_DI_COMMA, BOOST_DI_EAT)() \
-    BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_GEN_TYPE_NAME, BOOST_DI_GEN_TYPE)(p, n)
 
 #if !defined(BOOST_DI_INJECT_TRAITS)
     #define BOOST_DI_INJECT_TRAITS(...) \
-        struct BOOST_DI_INJECTOR { \
-            BOOST_DI_REPEAT( \
-                BOOST_DI_SIZE(__VA_ARGS__) \
-              , BOOST_DI_GEN_ARGS \
-              , __VA_ARGS__ \
-            ) \
-            using type BOOST_DI_UNUSED = ::boost::di::aux::type_list< \
-                BOOST_DI_REPEAT( \
-                    BOOST_DI_SIZE(__VA_ARGS__) \
-                  , BOOST_DI_GEN_TYPE_LIST \
-                  , __VA_ARGS__ \
-                ) \
-            >; \
-            static_assert( \
-                BOOST_DI_SIZE(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE \
-              , "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE" \
-            ); \
-        }
+        BOOST_DI_IF( \
+            BOOST_DI_IS_EMPTY(__VA_ARGS__) \
+          , BOOST_DI_INJECT_TRAITS_EMPTY_IMPL \
+          , BOOST_DI_INJECT_TRAITS_IMPL \
+        )(__VA_ARGS__)
 #endif
 
 #if !defined(BOOST_DI_INJECT_TRAITS_NO_LIMITS)
     #define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
-        struct BOOST_DI_INJECTOR { \
-            static void inject(__VA_ARGS__); \
-            using type BOOST_DI_UNUSED = ::boost::di::aux::function_traits<decltype(inject)>::args; \
-        }
+        static void BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor)(__VA_ARGS__); \
+        using BOOST_DI_INJECTOR BOOST_DI_UNUSED = \
+            typename ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>::args
 #endif
 
 #if !defined(BOOST_DI_INJECT)
@@ -1332,8 +1324,6 @@ public:
 
 namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 
-template<class, class>
-struct named { };
 struct direct { };
 struct uniform { };
 
@@ -1405,52 +1395,6 @@ struct ctor_traits
 
 namespace type_traits {
 
-template<class>
-struct parse_args;
-
-template<class T>
-struct arg {
-    using type = T;
-};
-
-template<class>
-struct arg_impl;
-
-template<class T>
-struct arg_impl<aux::type_list<T>> {
-    using type = T;
-};
-
-template<class T>
-using arg_impl_t = typename arg_impl<T>::type;
-
-template<class T>
-struct arg<aux::type<T, std::true_type>> {
-    using type = named<
-        typename aux::function_traits<
-            decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, name))
-        >::result_type
-      , arg_impl_t<typename aux::function_traits<
-            decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, arg))
-        >::args>
-    >;
-};
-
-template<class T>
-struct arg<aux::type<T, std::false_type>> {
-    using type = arg_impl_t<typename aux::function_traits<
-        decltype(T::BOOST_DI_CAT(BOOST_DI_INJECTOR, arg))
-    >::args>;
-};
-
-template<class... Ts>
-struct parse_args<aux::type_list<Ts...>>
-    : aux::type_list<typename arg<Ts>::type...>
-{ };
-
-template<class... Ts>
-using parse_args_t = typename parse_args<Ts...>::type;
-
 template<
     class T
   , class = typename BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<T>::type
@@ -1463,7 +1407,7 @@ template<
 
 template<class T>
 struct ctor_traits<T, std::true_type>
-    : aux::pair<direct, parse_args_t<typename T::BOOST_DI_INJECTOR::type>>
+    : aux::pair<direct, typename T::BOOST_DI_INJECTOR>
 { };
 
 template<class T>
@@ -1473,10 +1417,7 @@ struct ctor_traits<T, std::false_type>
 
 template<class T>
 struct ctor_traits_impl<T, std::true_type>
-    : aux::pair<
-          direct
-        , parse_args_t<typename di::ctor_traits<T>::BOOST_DI_INJECTOR::type>
-      >
+    : aux::pair<direct, typename di::ctor_traits<T>::BOOST_DI_INJECTOR>
 { };
 
 template<class T>
@@ -1931,7 +1872,7 @@ struct in {
 };
 
 template<class TParent, class TName, class T>
-struct in<TParent, type_traits::named<TName, T>> {
+struct in<TParent, named_type<TName, T>> {
     using type = in_type<TParent, TName>;
 };
 
@@ -2470,12 +2411,11 @@ template<
     struct bind : core::dependency<scopes::deduce, TExpected, TGiven> {};
 #endif
 
-constexpr core::override override{};
-
-constexpr scopes::deduce deduce{};
-constexpr scopes::unique unique{};
-constexpr scopes::shared shared{};
-constexpr scopes::singleton singleton{};
+static constexpr BOOST_DI_UNUSED core::override override{};
+static constexpr BOOST_DI_UNUSED scopes::deduce deduce{};
+static constexpr BOOST_DI_UNUSED scopes::unique unique{};
+static constexpr BOOST_DI_UNUSED scopes::shared shared{};
+static constexpr BOOST_DI_UNUSED scopes::singleton singleton{};
 
 template<class TName>
 constexpr auto session(const TName&) noexcept {
@@ -3160,7 +3100,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     };
 
     template<class TName, class T>
-    struct try_create<type_traits::named<TName, T>> {
+    struct try_create<named_type<TName, T>> {
         using type = std::conditional_t<is_creatable<T, TName>::value, T, void>;
     };
 
@@ -3222,7 +3162,7 @@ private:
     }
 
     template<class TIsRoot = std::false_type, class T, class TName>
-    auto create_impl(const aux::type<type_traits::named<TName, T>>&) const {
+    auto create_impl(const aux::type<named_type<TName, T>>&) const {
         return create_impl__<TIsRoot, T, TName>();
     }
 
@@ -3260,7 +3200,7 @@ private:
     }
 
     template<class TIsRoot = std::false_type, class T, class TName>
-    auto create_successful_impl(const aux::type<type_traits::named<TName, T>>&) const {
+    auto create_successful_impl(const aux::type<named_type<TName, T>>&) const {
         return create_successful_impl__<TIsRoot, T, TName>();
     }
 
@@ -3385,7 +3325,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     };
 
     template<class TName, class T>
-    struct try_create<type_traits::named<TName, T>> {
+    struct try_create<named_type<TName, T>> {
         using type = std::conditional_t<is_creatable<T, TName>::value, T, void>;
     };
 
@@ -3447,7 +3387,7 @@ private:
     }
 
     template<class TIsRoot = std::false_type, class T, class TName>
-    auto create_impl(const aux::type<type_traits::named<TName, T>>&) const {
+    auto create_impl(const aux::type<named_type<TName, T>>&) const {
         return create_impl__<TIsRoot, T, TName>();
     }
 
@@ -3485,7 +3425,7 @@ private:
     }
 
     template<class TIsRoot = std::false_type, class T, class TName>
-    auto create_successful_impl(const aux::type<type_traits::named<TName, T>>&) const {
+    auto create_successful_impl(const aux::type<named_type<TName, T>>&) const {
         return create_successful_impl__<TIsRoot, T, TName>();
     }
 

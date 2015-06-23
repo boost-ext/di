@@ -141,10 +141,8 @@ struct is_same_or_base_of {
         std::is_base_of<aux::decay_t<T2>, aux::decay_t<T1>>::value;
 };
 
-template<class T>
-struct function_traits
-    : function_traits<decltype(&T::operator())>
-{ };
+template<class>
+struct function_traits;
 
 template<class R, class... TArgs>
 struct function_traits<R(*)(TArgs...)> {

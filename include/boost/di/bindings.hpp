@@ -40,12 +40,11 @@ template<
     struct bind : core::dependency<scopes::deduce, TExpected, TGiven> {};
 #endif
 
-constexpr core::override override{};
-
-constexpr scopes::deduce deduce{};
-constexpr scopes::unique unique{};
-constexpr scopes::shared shared{};
-constexpr scopes::singleton singleton{};
+static constexpr BOOST_DI_UNUSED core::override override{};
+static constexpr BOOST_DI_UNUSED scopes::deduce deduce{};
+static constexpr BOOST_DI_UNUSED scopes::unique unique{};
+static constexpr BOOST_DI_UNUSED scopes::shared shared{};
+static constexpr BOOST_DI_UNUSED scopes::singleton singleton{};
 
 template<class TName>
 constexpr auto session(const TName&) noexcept {
