@@ -220,6 +220,9 @@
 
 <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 </pre>
+<p>
+      <button class="TryItBtn" id="try_it_btn" onclick="show('https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/tutorial/tutorial1.cpp')">Run this code!</button><textarea style="display: none" id="code"></textarea><br /><textarea style="display: none" id="output"></textarea><div id="code_listing">
+    </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
 <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
@@ -232,17 +235,12 @@
 <span class="special">}</span>
 </pre>
 <p>
+      </div>
+    </p>
+<p>
       Thats all, our application should compile and don't print anything. <code class="computeroutput"><span class="identifier">value</span></code> should be <code class="computeroutput"><span class="keyword">false</span></code>
       and <code class="computeroutput"><span class="identifier">text</span></code> should be an <code class="computeroutput"><span class="identifier">empty</span> <span class="identifier">string</span></code>.
     </p>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-              <p>
-                Full code example: <a href="../example/tutorial/tutorial1.cpp" target="_top">example/tutorial/tutorial1.cpp</a>
-              </p>
-            </td></tr></tbody>
-</table></div>
 <p>
       So far everything seems to be really easy, so the next step will be to configure
       our dependencies, meaning what exactly will be passed to the application. We
@@ -255,19 +253,17 @@
       between compile time values and externals (given by user - <a class="link" href="user_guide/bindings/bind.html" title="bind">bind</a>)
       we set the value to <code class="computeroutput"><span class="number">1</span></code> for now.
     </p>
+<p>
+      <button class="TryItBtn" id="try_it_btn" onclick="show('https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/tutorial/tutorial2.cpp')">Run this code!</button><textarea style="display: none" id="code"></textarea><br /><textarea style="display: none" id="output"></textarea><div id="code_listing">
+    </p>
 <pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
     <a class="link" href="user_guide/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">integral_constant</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="number">1</span><span class="special">&gt;&gt;</span> <span class="comment">// compile-time value</span>
   <span class="special">,</span> <a class="link" href="user_guide/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="string">"hello world"</span><span class="special">)</span> <span class="comment">// run-time value</span>
 <span class="special">);</span>
 </pre>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-              <p>
-                Full code example: <a href="../example/tutorial/tutorial2.cpp" target="_top">example/tutorial/tutorial2.cpp</a>
-              </p>
-            </td></tr></tbody>
-</table></div>
+<p>
+      </div>
+    </p>
 <p>
       So, right now we have <a class="link" href="user_guide/injector.html" title="Injector">injector</a>
       configured and the output of our example application should always be "hello
@@ -277,6 +273,9 @@
       Let's continue then with our requirement that text should be displayed if first
       command line argument is not equal 0.
     </p>
+<p>
+      <button class="TryItBtn" id="try_it_btn" onclick="show('https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/tutorial/tutorial3.cpp')">Run this code!</button><textarea style="display: none" id="code"></textarea><br /><textarea style="display: none" id="output"></textarea><div id="code_listing">
+    </p>
 <pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">argc</span><span class="special">,</span> <span class="keyword">char</span><span class="special">**</span> <span class="identifier">argv</span><span class="special">)</span> <span class="special">{</span>
     <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
         <a class="link" href="user_guide/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">argc</span> <span class="special">&gt;</span> <span class="number">1</span> <span class="special">?</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">atoi</span><span class="special">(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">1</span><span class="special">])</span> <span class="special">:</span> <span class="number">0</span><span class="special">)</span>
@@ -285,14 +284,9 @@
     <span class="identifier">injector</span><span class="special">.</span><a class="link" href="user_guide/injector.html#di.user_guide.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;().</span><span class="identifier">start</span><span class="special">();</span>
 <span class="special">}</span>
 </pre>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-              <p>
-                Full code example: <a href="../example/tutorial/tutorial3.cpp" target="_top">example/tutorial/tutorial3.cpp</a>
-              </p>
-            </td></tr></tbody>
-</table></div>
+<p>
+      </div>
+    </p>
 <p>
       Great! Seems like our example application is working the way was required.
     </p>
@@ -362,6 +356,9 @@
       easier, we just have to bind <code class="computeroutput"><span class="identifier">ilogger</span></code>
       interface to <code class="computeroutput"><span class="identifier">logger</span></code> implementation.
     </p>
+<p>
+      <button class="TryItBtn" id="try_it_btn" onclick="show('https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/tutorial/tutorial4.cpp')">Run this code!</button><textarea style="display: none" id="code"></textarea><br /><textarea style="display: none" id="output"></textarea><div id="code_listing">
+    </p>
 <pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
     <a class="link" href="user_guide/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">,</span> <span class="identifier">logger</span><span class="special">&gt;</span>
   <span class="special">,</span> <a class="link" href="user_guide/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">argc</span> <span class="special">&gt;</span> <span class="number">1</span> <span class="special">?</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">atoi</span><span class="special">(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">1</span><span class="special">])</span> <span class="special">:</span> <span class="number">0</span><span class="special">)</span>
@@ -369,14 +366,9 @@
 <span class="special">);</span>
 <span class="identifier">injector</span><span class="special">.</span><a class="link" href="user_guide/injector.html#di.user_guide.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;&gt;()-&gt;</span><span class="identifier">start</span><span class="special">();</span> <span class="comment">// unique_ptr is not copyable</span>
 </pre>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-              <p>
-                Full code example: <a href="../example/tutorial/tutorial4.cpp" target="_top">example/tutorial/tutorial4.cpp</a>
-              </p>
-            </td></tr></tbody>
-</table></div>
+<p>
+      </div>
+    </p>
 <p>
       Yay, everything is working again. But oh, we wanted to use mock framework for
       tests, but we can't to do it, due to <code class="computeroutput"><span class="identifier">unique_ptr</span></code>
@@ -446,6 +438,9 @@
 <p>
       and the main function
     </p>
+<p>
+      <button class="TryItBtn" id="try_it_btn" onclick="show('https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/tutorial/tutorial5.cpp')">Run this code!</button><textarea style="display: none" id="code"></textarea><br /><textarea style="display: none" id="output"></textarea><div id="code_listing">
+    </p>
 <pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">argc</span><span class="special">,</span> <span class="keyword">char</span><span class="special">**</span> <span class="identifier">argv</span><span class="special">)</span> <span class="special">{</span>
     <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span><span class="identifier">module</span><span class="special">{</span><span class="identifier">argc</span> <span class="special">&gt;</span> <span class="number">1</span> <span class="special">?</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">atoi</span><span class="special">(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">1</span><span class="special">])</span> <span class="special">:</span> <span class="number">0</span><span class="special">});</span>
     <span class="identifier">injector</span><span class="special">.</span><a class="link" href="user_guide/injector.html#di.user_guide.injector.synopsis">create</a><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;().</span><span class="identifier">run</span><span class="special">();</span>
@@ -453,20 +448,18 @@
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-              <p>
-                Full code example: <a href="../example/tutorial/tutorial5.cpp" target="_top">example/tutorial/tutorial5.cpp</a>
-              </p>
-            </td></tr></tbody>
-</table></div>
+<p>
+      </div>
+    </p>
 <p>
       But using <code class="computeroutput"><span class="keyword">auto</span></code> force us to write
       module only in a header file. Such approach might not be suitable for large
       projects. In order to be able to write implementation in cpp file we are going
       to use module with explicit exposed type. The only thing we have to change
       is declaration of configure method and obviously write the definition as well.
+    </p>
+<p>
+      <button class="TryItBtn" id="try_it_btn" onclick="show('https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/tutorial/tutorial6.cpp')">Run this code!</button><textarea style="display: none" id="code"></textarea><br /><textarea style="display: none" id="output"></textarea><div id="code_listing">
     </p>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">module</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
@@ -487,6 +480,9 @@
 <span class="special">};</span>
 </pre>
 <p>
+      </div>
+    </p>
+<p>
       Our main function is not going to change, we still create <code class="computeroutput"><span class="identifier">app</span></code>.
     </p>
 <div class="note"><table border="0" summary="Note">
@@ -497,14 +493,6 @@
 <tr><td align="left" valign="top"><p>
         Many types might be exposed using <a class="link" href="user_guide/injector.html" title="Injector">di::injector</a>&lt;...&gt;.
       </p></td></tr>
-</table></div>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-              <p>
-                Full code example: <a href="../example/tutorial/tutorial6.cpp" target="_top">example/tutorial/tutorial6.cpp</a>
-              </p>
-            </td></tr></tbody>
 </table></div>
 <p>
       But in our company we have our <code class="computeroutput"><span class="identifier">string</span></code>
@@ -610,6 +598,9 @@
       use <a class="link" href="user_guide/annotations/named.html" title="(named = name)">named</a> property of
       <a class="link" href="user_guide/bindings/bind.html" title="bind">bind</a>.
     </p>
+<p>
+      <button class="TryItBtn" id="try_it_btn" onclick="show('https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/tutorial/tutorial7.cpp')">Run this code!</button><textarea style="display: none" id="code"></textarea><br /><textarea style="display: none" id="output"></textarea><div id="code_listing">
+    </p>
 <pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
     <span class="keyword">return</span> <a class="link" href="user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
         <a class="link" href="user_guide/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">,</span> <span class="identifier">logger</span><span class="special">&gt;</span>
@@ -620,19 +611,14 @@
 <span class="special">}</span>
 </pre>
 <p>
+      </div>
+    </p>
+<p>
       With such configuration <code class="computeroutput"><span class="identifier">value1</span></code>
       will be set to first <code class="computeroutput"><span class="keyword">int</span></code> command
       line argument and <code class="computeroutput"><span class="identifier">value2</span></code> to
       <code class="computeroutput"><span class="number">0</span></code>.
     </p>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-              <p>
-                Full code example: <a href="../example/tutorial/tutorial7.cpp" target="_top">example/tutorial/tutorial7.cpp</a>
-              </p>
-            </td></tr></tbody>
-</table></div>
 <p>
       That's pretty much it. Hope this tutorial helped you a bit with understanding
       basics concept of dependency injection framework and that creation of dependencies
