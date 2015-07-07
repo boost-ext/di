@@ -1,3 +1,9 @@
+//
+// Copyright (c) 2012-2015 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
 var cpp_code;
 var cpp_output;
 var di = get_cpp_file("https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/include/boost/di.hpp");
@@ -39,9 +45,9 @@ function show(file) {
 function compile_and_run() {
     document.getElementById("compile_and_run").firstChild.data = "Compiling...";
     cpp_output.setValue("");
-	var http = new XMLHttpRequest();
-	http.open("POST", "http://melpon.org/wandbox/api/compile.json", true);
-    http.onreadystatechange=function(){
+    var http = new XMLHttpRequest();
+    http.open("POST", "http://melpon.org/wandbox/api/compile.json", true);
+    http.onreadystatechange = function(){
         if (http.readyState == 4 && http.status == 200) {
             var output_json = JSON.parse(http.response);
             if ('status' in output_json && output_json.status == "0") {
@@ -59,17 +65,18 @@ function compile_and_run() {
             document.getElementById("compile_and_run").firstChild.data = "Compile & Run (Ctrl+Enter)";
         }
     }
-	http.send(
-		JSON.stringify({
-		  "code" : cpp_code.getValue()
-		, "codes" : [{
-			  "file" : "boost/di.hpp"
-			, "code" : di
-		   }]
-		 , "options": "warning,cpp-pedantic-errors,optimize,boost-nothing,c++14"
-		 , "compiler": "clang-head"
+
+    http.send(
+        JSON.stringify({
+          "code" : cpp_code.getValue()
+        , "codes" : [{
+              "file" : "boost/di.hpp"
+            , "code" : di
+           }]
+         , "options": "warning,cpp-pedantic-errors,optimize,boost-nothing,c++14"
+         , "compiler": "clang-head"
          , "compiler-option-raw": "-I."
-	}));
+    }));
 }
 
 function get_example(file) {

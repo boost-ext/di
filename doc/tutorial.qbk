@@ -52,6 +52,7 @@ Remember to include `Boost.DI` header and alias the `di` namespace for convenien
 namespace di = boost::di;
 ```
 
+$example_begin example/tutorial/tutorial1.cpp$
 ```
 #include <boost/di.hpp>
 
@@ -64,13 +65,10 @@ int main() {
     return 0;
 }
 ```
+$example_end$
 
 Thats all, our application should compile and don't print anything.
 `value` should be `false` and `text` should be an `empty string`.
-
-[table
-    [[Full code example: [@example/tutorial/tutorial1.cpp]]]
-]
 
 So far everything seems to be really easy, so the next step will be
 to configure our dependencies, meaning what exactly will be passed
@@ -82,15 +80,14 @@ First step will be to configure the text and value. To demonstrate different
 between compile time values and externals (given by user - __bindings_bind__) we set
 the value to `1` for now.
 
+$example_begin example/tutorial/tutorial2.cpp$
 ```
 auto injector = __di_make_injector__(
     __di_bind__<int, std::integral_constant<int, 1>> // compile-time value
   , __di_bind__<std::string>.to("hello world") // run-time value
 );
 ```
-[table
-    [[Full code example: [@example/tutorial/tutorial2.cpp]]]
-]
+$example_end$
 
 So, right now we have [link di.user_guide.injector injector] configured and the output of our example application
 should always be "hello world".
@@ -98,6 +95,7 @@ should always be "hello world".
 Let's continue then with our requirement that text should be displayed if first command
 line argument is not equal 0.
 
+$example_begin example/tutorial/tutorial3.cpp$
 ```
 int main(int argc, char** argv) {
     auto injector = __di_make_injector__(
@@ -107,9 +105,7 @@ int main(int argc, char** argv) {
     injector.__di_injector_create__<app>().start();
 }
 ```
-[table
-    [[Full code example: [@example/tutorial/tutorial3.cpp]]]
-]
+$example_end$
 
 Great! Seems like our example application is working the way was required.
 
@@ -162,6 +158,7 @@ Hmm, right now our example project isn't compiling, because `ilogger` can't be i
 to pure virtual method `log` not being implemented. Well, we have to configure `Boost.DI` the way `ilogger`
 will be actually instantiated by `logger`. There is nothing easier, we just have to bind `ilogger` interface to `logger` implementation.
 
+$example_begin example/tutorial/tutorial4.cpp$
 ```
     auto injector = __di_make_injector__(
         __di_bind__<ilogger, logger>
@@ -170,9 +167,8 @@ will be actually instantiated by `logger`. There is nothing easier, we just have
     );
     injector.__di_injector_create__<std::unique_ptr<app>>()->start(); // unique_ptr is not copyable
 ```
-[table
-    [[Full code example: [@example/tutorial/tutorial4.cpp]]]
-]
+$example_end$
+
 
 Yay, everything is working again. But oh, we wanted to use mock framework for tests, but we can't to do it,
 due to `unique_ptr` stilling our pointer :/ Well, let's say we will switch to `shared_ptr` instead for now and later in this tutorial we will solve this issue in a better way - without limiting ourselves.
@@ -219,6 +215,7 @@ private:
 
 and the main function
 
+$example_begin example/tutorial/tutorial5.cpp$
 ```
 int main(int argc, char** argv) {
     auto injector = __di_make_injector__(module{argc > 1 ? std::atoi(argv[1]) : 0});
@@ -228,15 +225,13 @@ int main(int argc, char** argv) {
 }
 
 ```
-
-[table
-    [[Full code example: [@example/tutorial/tutorial5.cpp]]]
-]
+$example_end$
 
 But using `auto` force us to write module only in a header file. Such approach might not be suitable for large projects. In order to be able to write
 implementation in cpp file we are going to use module with explicit exposed type.
 The only thing we have to change is declaration of configure method and obviously write the definition as well.
 
+$example_begin example/tutorial/tutorial6.cpp$
 ```
 class module {
 public:
@@ -256,14 +251,11 @@ private:
     int value_ = 0;
 };
 ```
+$example_end$
 
 Our main function is not going to change, we still create `app`.
 
 [note Many types might be exposed using __di_injector__<...>.]
-
-[table
-    [[Full code example: [@example/tutorial/tutorial6.cpp]]]
-]
 
 But in our company we have our `string` implementation, but we still want to support `std::string` as well, how to achieve that?
 For purpose of this tutorial let's assume our `custom_string` converts to `std::string`.
@@ -339,6 +331,7 @@ Or no intrusive way - when we can't change [link di.examples.constructor_signatu
 
 Right now, if we want to bind `value1` and `value2` we just need to use __annotations_named__ property of __bindings_bind__.
 
+$example_begin example/tutorial/tutorial7.cpp$
 ```
     auto configure() const {
         return __di_make_injector__(
@@ -349,12 +342,9 @@ Right now, if we want to bind `value1` and `value2` we just need to use __annota
         );
     }
 ```
+$example_end$
 
 With such configuration `value1` will be set to first `int` command line argument and `value2` to `0`.
-
-[table
-    [[Full code example: [@example/tutorial/tutorial7.cpp]]]
-]
 
 That's pretty much it. Hope this tutorial helped you a bit with understanding
 basics concept of dependency injection framework and that creation of dependencies won't be
