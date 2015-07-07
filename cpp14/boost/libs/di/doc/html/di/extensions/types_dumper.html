@@ -9,18 +9,13 @@
 <link rel="prev" href="factory_assisted_injection.html" title="Factory (Assisted Injection)">
 <link rel="next" href="uml_dumper.html" title="UML Dumper">
 </head>
-<style>
-#nav_ {
-    float:left;
-}
-#section_ {
-    width:1100px;
-    float:left;
-}
-#footer_ {
-    clear:both;
-}
-</style>
+
+<link rel="stylesheet" href="../../js/CodeMirror/lib/codemirror.css">
+<link rel="stylesheet" href="../../js/CodeMirror/theme/zenburn.css">
+<script src="../../js/CodeMirror/lib/codemirror.js"></script>
+<script src="../../js/CodeMirror/mode/clike/clike.js"></script>
+<script src="../../js/CodeMirror/addon/selection/active-line.js"></script>
+<script src="../../js/try_it_online.js"></script>
 
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -169,6 +164,9 @@
 
 <div class="toc2" id="section_">
 
+<p>
+        <button class="TryItBtn" id="try_it_btn" onclick="show('https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/extensions/types_dumper.cpp')">Run this code!</button><br /><textarea style="display: none" id="code"></textarea><br /><textarea style="display: none" id="output"></textarea><div id="code_listing">
+      </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
 <span class="keyword">auto</span> <span class="identifier">int_1</span> <span class="special">=</span> <span class="special">[]{</span> <span class="keyword">return</span> <span class="string">"first int"</span><span class="special">;</span> <span class="special">};</span>
@@ -266,21 +264,16 @@
 </td>
 </tr>
 </table></div>
-<div class="informaltable"><table class="table">
-<colgroup><col></colgroup>
-<tbody><tr><td>
-                <p>
-                  Full code example: <a href="../../example/extensions/types_dumper.cpp" target="_top">example/extensions/types_dumper.cpp</a>
-                </p>
-              </td></tr></tbody>
-</table></div>
+<p>
+        </div>
+      </p>
 </div>
 
 <div id="disqus_thread"></div>
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = 'boost-di';
-    
+
     /* * * DON'T EDIT BELOW THIS LINE * * */
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

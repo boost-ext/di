@@ -9,18 +9,13 @@
 <link rel="prev" href="../introduction.html" title="Introduction &amp; Motivation">
 <link rel="next" href="../overview.html" title="Overview">
 </head>
-<style>
-#nav_ {
-    float:left;
-}
-#section_ {
-    width:1100px;
-    float:left;
-}
-#footer_ {
-    clear:both;
-}
-</style>
+
+<link rel="stylesheet" href="../../js/CodeMirror/lib/codemirror.css">
+<link rel="stylesheet" href="../../js/CodeMirror/theme/zenburn.css">
+<script src="../../js/CodeMirror/lib/codemirror.js"></script>
+<script src="../../js/CodeMirror/mode/clike/clike.js"></script>
+<script src="../../js/CodeMirror/addon/selection/active-line.js"></script>
+<script src="../../js/try_it_online.js"></script>
 
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -295,16 +290,12 @@
 
 <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 
-<span class="keyword">struct</span> <span class="identifier">module</span> <span class="special">{</span>
-    <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
-        <span class="special">);</span>
-    <span class="special">}</span>
+<span class="keyword">auto</span> <span class="identifier">module</span> <span class="special">=</span> <span class="special">[]</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">);</span>
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">module</span><span class="special">{});</span>
+    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">module</span><span class="special">);</span>
     <span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span> <span class="special">!=</span> <span class="number">42</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
@@ -623,16 +614,12 @@
 
 <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 
-<span class="keyword">struct</span> <span class="identifier">module</span> <span class="special">{</span>
-    <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
-        <span class="special">);</span>
-    <span class="special">}</span>
+<span class="keyword">auto</span> <span class="identifier">module</span> <span class="special">=</span> <span class="special">[]</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">);</span>
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">module</span><span class="special">{});</span>
+    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">module</span><span class="special">);</span>
     <span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span> <span class="special">!=</span> <span class="number">42</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
@@ -703,7 +690,7 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = 'boost-di';
-    
+
     /* * * DON'T EDIT BELOW THIS LINE * * */
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

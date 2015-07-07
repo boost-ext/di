@@ -9,18 +9,13 @@
 <link rel="prev" href="../overview.html" title="Overview">
 <link rel="next" href="diagnostic_messages.html" title="Diagnostic messages">
 </head>
-<style>
-#nav_ {
-    float:left;
-}
-#section_ {
-    width:1100px;
-    float:left;
-}
-#footer_ {
-    clear:both;
-}
-</style>
+
+<link rel="stylesheet" href="../../js/CodeMirror/lib/codemirror.css">
+<link rel="stylesheet" href="../../js/CodeMirror/theme/zenburn.css">
+<script src="../../js/CodeMirror/lib/codemirror.js"></script>
+<script src="../../js/CodeMirror/mode/clike/clike.js"></script>
+<script src="../../js/CodeMirror/addon/selection/active-line.js"></script>
+<script src="../../js/try_it_online.js"></script>
 
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -421,7 +416,7 @@ retq
 <thead><tr>
 <th>
                 <p>
-                  Create bound interface via exposed module
+                  Create bound interface via exposed module (cost = type erasure)
                 </p>
               </th>
 <th>
@@ -454,35 +449,32 @@ retq
 </pre>
               </td>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">push   %rbp                               mov    (%rax),%ecx
-push   %rbx                               lea    -0x1(%rcx),%edx
-sub    $0x38,%rsp                         mov    %edx,(%rax)
-lea    0x10(%rsp),%rdi                    cmp    $0x1,%ecx
-lea    0x8(%rsp),%rsi                     jne    0x400bcd &lt;main+173&gt;
-callq  0x400bf0 &lt;_ZN5boost2di7exposed&gt;    mov    (%rbx),%rax
-mov    0x18(%rsp),%rdi                    mov    %rbx,%rdi
-mov    (%rdi),%rax                        callq  *0x10(%rax)
-lea    0x30(%rsp),%rsi                    lea    0xc(%rbx),%rax
-callq  *0x10(%rax)                        mov    $0x0,%ecx
-test   %rax,%rax                          test   %rcx,%rcx
-setne  %bpl                               je     0x400bb8 &lt;main+152&gt;
-je     0x400b57 &lt;main+55&gt;                 mov    $0xffffffff,%ecx
-mov    (%rax),%rcx                        lock   xadd %ecx,(%rax)
-mov    %rax,%rdi                          mov    %ecx,0x30(%rsp)
-callq  *0x8(%rcx)                         mov    0x30(%rsp),%ecx
-mov    0x20(%rsp),%rbx                    jmp    0x400bbf &lt;main+159&gt;
-test   %rbx,%rbx                          mov    (%rax),%ecx
-je     0x400bcd &lt;main+173&gt;                lea    -0x1(%rcx),%edx
-lea    0x8(%rbx),%rax                     mov    %edx,(%rax)
-mov    $0x0,%ecx                          cmp    $0x1,%ecx
-test   %rcx,%rcx                          jne    0x400bcd &lt;main+173&gt;
-je     0x400b82 &lt;main+98&gt;                 mov    (%rbx),%rax
-mov    $0xffffffff,%ecx                   mov    %rbx,%rdi
-lock   xadd %ecx,(%rax)                   callq  *0x18(%rax)
-mov    %ecx,0x30(%rsp)                    movzbl %bpl,%eax
-mov    0x30(%rsp),%ecx                    add    $0x38,%rsp
-jmp    0x400b89 &lt;main+105&gt;                pop    %rbx
-pop    %rbp                               retq
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">push   %rbx
+mov    0x2007e9(%rip),%al
+test   %al,%al
+jne    0x4009be &lt;main+46&gt;
+mov    $0x601180,%edi
+callq  0x4007e0 &lt;__cxa_guard_acquire@plt&gt;
+test   %eax,%eax
+je     0x4009be &lt;main+46&gt;
+movq   $0x400a00,0x2007b4(%rip
+mov    $0x601180,%edi
+callq  0x400820 &lt;__cxa_guard_release@plt&gt;
+mov    0x2007a3(%rip),%rax
+mov    $0x601168,%edi
+callq  *%rax
+test   %rax,%rax
+setne  %cl
+movzbl %cl,%ebx
+je     0x4009e0 &lt;main+80&gt;
+mov    (%rax),%rcx
+mov    %rax,%rdi
+callq  *0x8(%rcx)
+mov    %ebx,%eax
+pop    %rbx
+retq
+mov    %rax,%rdi
+callq  0x4009f0 &lt;__clang_call_terminate&gt;
 </pre>
               </td>
 </tr></tbody>
@@ -606,7 +598,7 @@ pop    %rbp                               retq
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = 'boost-di';
-    
+
     /* * * DON'T EDIT BELOW THIS LINE * * */
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
