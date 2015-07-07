@@ -177,7 +177,7 @@
 
 
 [table
-[[Create bound interface via exposed module][Asm x86-64]]
+[[Create bound interface via exposed module (cost = type erasure)][Asm x86-64]]
     [
         [
             [c++] ```
@@ -204,35 +204,32 @@
         ]
         [
             [teletype] ```
-        push   %rbp                               mov    (%rax),%ecx
-        push   %rbx                               lea    -0x1(%rcx),%edx
-        sub    $0x38,%rsp                         mov    %edx,(%rax)
-        lea    0x10(%rsp),%rdi                    cmp    $0x1,%ecx
-        lea    0x8(%rsp),%rsi                     jne    0x400bcd <main+173>
-        callq  0x400bf0 <_ZN5boost2di7exposed>    mov    (%rbx),%rax
-        mov    0x18(%rsp),%rdi                    mov    %rbx,%rdi
-        mov    (%rdi),%rax                        callq  *0x10(%rax)
-        lea    0x30(%rsp),%rsi                    lea    0xc(%rbx),%rax
-        callq  *0x10(%rax)                        mov    $0x0,%ecx
-        test   %rax,%rax                          test   %rcx,%rcx
-        setne  %bpl                               je     0x400bb8 <main+152>
-        je     0x400b57 <main+55>                 mov    $0xffffffff,%ecx
-        mov    (%rax),%rcx                        lock   xadd %ecx,(%rax)
-        mov    %rax,%rdi                          mov    %ecx,0x30(%rsp)
-        callq  *0x8(%rcx)                         mov    0x30(%rsp),%ecx
-        mov    0x20(%rsp),%rbx                    jmp    0x400bbf <main+159>
-        test   %rbx,%rbx                          mov    (%rax),%ecx
-        je     0x400bcd <main+173>                lea    -0x1(%rcx),%edx
-        lea    0x8(%rbx),%rax                     mov    %edx,(%rax)
-        mov    $0x0,%ecx                          cmp    $0x1,%ecx
-        test   %rcx,%rcx                          jne    0x400bcd <main+173>
-        je     0x400b82 <main+98>                 mov    (%rbx),%rax
-        mov    $0xffffffff,%ecx                   mov    %rbx,%rdi
-        lock   xadd %ecx,(%rax)                   callq  *0x18(%rax)
-        mov    %ecx,0x30(%rsp)                    movzbl %bpl,%eax
-        mov    0x30(%rsp),%ecx                    add    $0x38,%rsp
-        jmp    0x400b89 <main+105>                pop    %rbx
-        pop    %rbp                               retq
+            push   %rbx
+            mov    0x2007e9(%rip),%al
+            test   %al,%al
+            jne    0x4009be <main+46>
+            mov    $0x601180,%edi
+            callq  0x4007e0 <__cxa_guard_acquire@plt>
+            test   %eax,%eax
+            je     0x4009be <main+46>
+            movq   $0x400a00,0x2007b4(%rip
+            mov    $0x601180,%edi
+            callq  0x400820 <__cxa_guard_release@plt>
+            mov    0x2007a3(%rip),%rax
+            mov    $0x601168,%edi
+            callq  *%rax
+            test   %rax,%rax
+            setne  %cl
+            movzbl %cl,%ebx
+            je     0x4009e0 <main+80>
+            mov    (%rax),%rcx
+            mov    %rax,%rdi
+            callq  *0x8(%rcx)
+            mov    %ebx,%eax
+            pop    %rbx
+            retq
+            mov    %rax,%rdi
+            callq  0x4009f0 <__clang_call_terminate>
             ```
         ]
     ]

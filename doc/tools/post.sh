@@ -3,6 +3,8 @@
 ROOT="`readlink -f \`dirname $0\``"
 HTML="`readlink -f $ROOT/../html`"
 
+cp -r $ROOT/../js $HTML
+
 #try it online
 rm -f /tmp/di_try_it_online.tmp
 FRAME=1 tools/try_it_online.sh ../example/try_it_online/main.cpp > /tmp/di_try_it_online.tmp
@@ -43,6 +45,9 @@ for file in `find $HTML/di -iname "*.html"`; do
     sed -i 's/\(<span class=\"section\".*href=\".*\/'$f_'\">.*<\/span>\)/<b><u> \1 <\/u><\/b>/' $file
     sed -i 's/\(class=\"section\".*href=\)"\([^"]*\)"\(.*\)/\1 "'$b_'\2" \3/' $file
     sed -i 's/<__root__>/'$b_'/g' $file
+    sed -i 's/\$example_begin \([^\$]*\)\$/<button class="TryItBtn" id="try_it_btn" onclick="show(__quote__https:\/\/raw.githubusercontent.com\/krzysztof-jusiak\/di\/cpp14\/\1__quote__)">Run this code!<\/button><br \/><textarea style="display: none" id="code"><\/textarea><br \/><textarea style="display: none" id="output"><\/textarea><div id="code_listing">/g' $file
+    sed -i "s/__quote__/'/g" $file
+    sed -i 's/\$example_end.*/<\/div>/g' $file
 done
 
 echo '

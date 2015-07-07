@@ -10,91 +10,80 @@
 [section Examples]
 
 [section Hello World]
+$example_begin example/hello_world.cpp$
 [import ../example/hello_world.cpp]
 [hello_world]
-[table
-    [[Full code example: [@example/hello_world.cpp]]]
-]
+$example_end$
 [endsect]
 
 [section Bindings]
+$example_begin example/bindings.cpp$
 [import ../example/bindings.cpp]
 [bindings]
-[table
-    [[Full code example: [@example/bindings.cpp]]]
-]
+$example_end$
 [endsect]
 
 [section Dynamic Bindings]
+$example_begin example/dynamic_bindings.cpp$
 [import ../example/dynamic_bindings.cpp]
 [dynamic_bindings]
-[table
-    [[Full code example: [@example/dynamic_bindings.cpp]]]
-]
+$example_end$
 [endsect]
 
 [section Multiple Interfaces]
+$example_begin example/multiple_interfaces.cpp$
 [import ../example/multiple_interfaces.cpp]
 [multiple_interfaces]
-[table
-    [[Full code example: [@example/multiple_interfaces.cpp]]]
-]
+$example_end$
 [endsect]
 
 [section Constructor Injection]
+$example_begin example/constructor_injection.cpp$
 [import ../example/constructor_injection.cpp]
 [constructor_injection]
-[table
-    [[Full code example: [@example/constructor_injection.cpp]]]
-]
+$example_end$
 [endsect]
 
 [section Constructor Signature]
+$example_begin example/constructor_signature.cpp$
 [import ../example/constructor_signature.cpp]
 [constructor_signature]
-[table
-    [[Full code example: [@example/constructor_signature.cpp]]]
-]
+$example_end$
 [endsect]
 
 [section Annotations]
+$example_begin example/annotations.cpp$
 [import ../example/annotations.cpp]
 [annotations]
-[table
-    [[Full code example: [@example/annotations.cpp]]]
-]
+$example_end$
 [endsect]
 
 [section Deduce Scope]
+$example_begin example/deduce_scope.cpp$
 [import ../example/deduce_scope.cpp]
 [deduce_scope]
-[table
-    [[Full code example: [@example/deduce_scope.cpp]]]
-]
+$example_end$
 [endsect]
 
 [section Custom Scope]
+$example_begin example/custom_scope.cpp$
 [import ../example/custom_scope.cpp]
 [custom_scope]
-[table
-    [[Full code example: [@example/custom_scope.cpp]]]
-]
+$example_end$
 [endsect]
 
 [section Externals]
+$example_begin example/externals.cpp$
 [import ../example/externals.cpp]
 [externals]
-[table
-    [[Full code example: [@example/externals.cpp]]]
-]
+$example_end$
 [endsect]
 
 [section Modules]
+$example_begin example/modules.cpp$
 [import ../example/modules.cpp]
 [modules]
-[table
-    [[Full code example: [@example/modules.cpp]]]
-]
+$example_end$
 [endsect]
 
 [section Modules (hpp\/cpp)]
@@ -180,27 +169,24 @@
 [endsect]
 
 [section Custom Policy]
+$example_begin example/custom_policy.cpp$
 [import ../example/custom_policy.cpp]
 [custom_policy]
-[table
-    [[Full code example: [@example/custom_policy.cpp]]]
-]
+$example_end$
 [endsect]
 
 [section Custom Provider]
+$example_begin example/custom_provider.cpp$
 [import ../example/custom_provider.cpp]
 [custom_provider]
-[table
-    [[Full code example: [@example/custom_provider.cpp]]]
-]
+$example_end$
 [endsect]
 
 [section Pool Provider]
+$example_begin example/pool_provider.cpp$
 [import ../example/pool_provider.cpp]
 [pool_provider]
-[table
-    [[Full code example: [@example/pool_provider.cpp]]]
-]
+$example_end$
 [endsect]
 
 [endsect]

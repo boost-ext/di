@@ -10,67 +10,59 @@
 [section Extensions]
 
 [section Constructor Bindings]
+$example_begin example/extensions/constructor_bindings.cpp$
 [import ../example/extensions/constructor_bindings.cpp]
 [constructor_bindings]
-[table
-    [[Full code example: [@example/extensions/constructor_bindings.cpp]]]
-]
+$example_end$
 [endsect]
 
 [section Contextual Bindings]
+$example_begin example/extensions/contextual_bindings.cpp$
 [import ../example/extensions/contextual_bindings.cpp]
 [contextual_bindings]
-[table
-    [[Full code example: [@example/extensions/contextual_bindings.cpp]]]
-]
+$example_end$
 [endsect]
 
 [section Container Bingings]
+$example_begin example/extensions/container_bindings.cpp$
 [import ../example/extensions/container_bindings.cpp]
 [container_bindings]
-[table
-    [[Full code example: [@example/extensions/container_bindings.cpp]]]
-]
+$example_end$
 [endsect]
 
 [section Factory (Assisted Injection)]
+$example_begin example/extensions/factory.cpp$
 [import ../example/extensions/factory.cpp]
 [factory]
-[table
-    [[Full code example: [@example/extensions/factory.cpp]]]
-]
+$example_end$
 [endsect]
 
 [section Types dumper]
+$example_begin example/extensions/types_dumper.cpp$
 [import ../example/extensions/types_dumper.cpp]
 [types_dumper]
-[table
-    [[Full code example: [@example/extensions/types_dumper.cpp]]]
-]
+$example_end$
 [endsect]
 
 [section UML Dumper]
+$example_begin example/extensions/uml_dumper.cpp$
 [import ../example/extensions/uml_dumper.cpp]
 [uml_dumper]
-[table
-    [[Full code example: [@example/extensions/uml_dumper.cpp]]]
-]
+$example_end$
 [endsect]
 
 [section XML Injection]
+$example_begin example/extensions/xml_injection.cpp$
 [import ../example/extensions/xml_injection.cpp]
 [xml_injection]
-[table
-    [[Full code example: [@example/extensions/xml_injection.cpp]]]
-]
+$example_end$
 [endsect]
 
 [section Testing (Automatic Mocks Injection)]
+$example_begin example/extensions/testing.cpp$
 [import ../example/extensions/testing.cpp]
 [testing]
-[table
-    [[Full code example: [@example/extensions/testing.cpp]]]
-]
+$example_end$
 [endsect]
 
 [endsect]

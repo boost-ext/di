@@ -24,16 +24,12 @@
 
         namespace di = boost::di;
 
-        struct module {
-            auto configure() const noexcept {
-                return di::make_injector(
-                    di::bind<int>.to(42)
-                );
-            }
+        auto module = [] {
+            return di::bind<int>.to(42);
         };
 
         int main() {
-            auto injector = di::make_injector(module{});
+            auto injector = di::make_injector(module);
             return injector.create<int>() != 42;
         }
         ```
@@ -42,11 +38,11 @@
         ```
         #include <di/registry.hpp>
         #include <di/injector.hpp>
-        
+
         void module(di::registry& r) {
             r.add(r.type<int>().instance(new int{42}));
         }
-        
+
         int main() {
             di::injector injector;
             injector.install(module);
@@ -60,12 +56,12 @@
         #include <fruit/fruit.h>
 
         auto i = 42; // bindInstance doesn't support l-value's
-        
+
         fruit::Component<int> module() {
             return fruit::createComponent()
                 .bindInstance(i);
         }
-        
+
         int main() {
             fruit::Injector<int> injector{module()};
             return injector.get<int>() != 42;
@@ -79,7 +75,7 @@
         gdb -batch -ex 'file ./di.out' -ex 'disassemble main'
         Dump of assembler code for function main:
            0x0000000000400620 <+0>:	xor    %eax,%eax
-           0x0000000000400622 <+2>:	retq   
+           0x0000000000400622 <+2>:	retq
         End of assembler dump.
         ```
     ]
@@ -115,7 +111,7 @@
            0x00000000004047ce <+110>:	mov    %ebx,%eax
            0x00000000004047d0 <+112>:	add    $0xb0,%rsp
            0x00000000004047d7 <+119>:	pop    %rbx
-           0x00000000004047d8 <+120>:	retq   
+           0x00000000004047d8 <+120>:	retq
            0x00000000004047d9 <+121>:	mov    %rax,%rbx
            0x00000000004047dc <+124>:	mov    0x10(%rsp),%rcx
            0x00000000004047e1 <+129>:	test   %rcx,%rcx
@@ -178,7 +174,7 @@
            0x000000000040182d <+141>:	add    $0xc8,%rsp
            0x0000000000401834 <+148>:	pop    %rbx
            0x0000000000401835 <+149>:	pop    %rbp
-           0x0000000000401836 <+150>:	retq   
+           0x0000000000401836 <+150>:	retq
            0x0000000000401837 <+151>:	mov    %rax,%rbx
            0x000000000040183a <+154>:	mov    0xa8(%rsp),%rdi
            0x0000000000401842 <+162>:	test   %rdi,%rdi
@@ -226,16 +222,12 @@
 
         namespace di = boost::di;
 
-        struct module {
-            auto configure() const noexcept {
-                return di::make_injector(
-                    di::bind<int>.to(42)
-                );
-            }
+        auto module = [] {
+            return di::bind<int>.to(42);
         };
 
         int main() {
-            auto injector = di::make_injector(module{});
+            auto injector = di::make_injector(module);
             return injector.create<int>() != 42;
         }
         ```
@@ -243,14 +235,14 @@
     [
         ```
         import com.google.inject.*;
-        
+
         class Module extends AbstractModule {
             @Override
             protected void configure() {
                 bind(int.class).toInstance(42);
             }
         }
-        
+
         public class guice {
             public static void main(String[] args) {
                 Injector injector = Guice.createInjector(new Module());
@@ -267,12 +259,12 @@
         class AppModule {
             @Provides int provideint() { return 42; }
         }
-        
+
         @Component(modules = AppModule.class)
         interface AppComponent {
             int build();
         }
-        
+
         public class dagger2 {
             public static void main(String[] args) {
                 System.exit(Dagger_AppComponent.create().build() != 42 ? 1 : 0);
@@ -283,13 +275,13 @@
     [
         ```
         using Ninject;
-        
+
         class Module : Ninject.Modules.NinjectModule {
             public override void Load() {
                 Bind<int>().To(42);
             }
         }
-        
+
         class ninject {
             static void Main(string[] args) {
                 Ninject.IKernel kernel = new StandardKernel(new Module());
