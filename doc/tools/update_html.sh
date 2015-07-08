@@ -24,11 +24,11 @@ for file in `find $HTML/di -iname "*.html"`; do
     b=$((++b));
     e=`grep "table.*revision" -n $file | head -1 | cut -d':' -f1`
     e=$((--e));
+    e=$((--e));
     command="sed -n $b,${e}p $file"
     $command > /tmp/file
     sed -e '/<__content__>/{r /tmp/file' -e 'd}' /tmp/tmp.html > $file
 
-    sed -i -e '/<__comments__>/{r tools/data/comments.html' -e 'd}' $file
     sed -i -e 's/\(\.\.\/\)\+libs\/libraries\.htm/http:\/\/boost.org\/doc\/libs/' $file
     sed -i -e 's/\(\.\.\/\)\+more\/index\.htm/http:\/\/boost.org\/users\/index.html/' $file
     sed -i -e 's/\(\.\.\/\)\+more\/index\.htm/http:\/\/boost.org\/users\/index.html/' $file
