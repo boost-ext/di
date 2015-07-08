@@ -175,7 +175,7 @@
 
 <span class="keyword">class</span> <span class="identifier">custom_policy</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">config</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">auto</span> <span class="identifier">policies</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+    <span class="keyword">auto</span> <span class="identifier">policies</span><span class="special">(...)</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
         <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">;</span>
         <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">operators</span><span class="special">;</span>
         <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_policies</span><span class="special">(</span>
