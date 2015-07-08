@@ -33,7 +33,7 @@ function show(file) {
     run_it_btn.onclick = function() { toggle(file); };
     code_listing.style.display = 'none';
     var powered_by = document.createElement("text");
-    var powered_text = document.createTextNode("Powered by Wandbox");
+    var powered_text = document.createTextNode("Powered by Wandbox.");
     powered_by.appendChild(powered_text);
     powered_by.setAttribute("id", "powered_by");
     powered_by.setAttribute('style', 'font-size: 10px; text-align: right; display: block;');
@@ -101,6 +101,7 @@ function get_example(file) {
         lineNumbers: true,
         matchBrackets: true,
         styleActiveLine: true,
+        readOnly : true,
         mode: "text/x-c++src"
       });
 
