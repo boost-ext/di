@@ -30,7 +30,8 @@ public:
 
 class my_provider : public di::config {
 public:
-    auto provider(...) const noexcept {
+    template<class T>
+    auto provider(const T&) const noexcept {
         return heap_no_throw{};
     }
 };

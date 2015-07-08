@@ -14,7 +14,8 @@ namespace di = boost::di;
 
 class all_must_be_bound_unless_int : public di::config {
 public:
-    auto policies(...) const noexcept {
+    template<class T>
+    auto policies(const T&) const noexcept {
         using namespace di::policies;
         using namespace di::policies::operators;
 

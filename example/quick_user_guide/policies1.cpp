@@ -13,11 +13,11 @@ namespace di = boost::di;
 
 class print_types_policy : public di::config {
 public:
-    auto policies(...) const noexcept {
+    template<class T>
+    auto policies(const T&) const noexcept {
         return di::make_policies(
             [](auto type){
-                using T = decltype(type);
-                using arg = typename T::type;
+                using arg = typename decltype(type)::type;
                 std::cout << typeid(arg).name() << std::endl;
             }
         );
