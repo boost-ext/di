@@ -16,28 +16,35 @@ function get_cpp_file(file) {
 }
 
 function toggle(file) {
-    try_it_btn.firstChild.data = 'Run this code!';
-    try_it_btn.removeChild;
-    try_it_btn.onclick = function() { show(file); };
+    run_it_btn.firstChild.data = 'Run this code!';
+    run_it_btn.removeChild;
+    run_it_btn.onclick = function() { show(file); };
     code_listing.style.display = 'block';
     cpp_code.toTextArea();
     code.style.display = 'none';
     cpp_output.toTextArea();
     output.style.display = 'none';
     document.getElementById("compile_and_run").remove();
+    document.getElementById("powered_by").remove();
 }
 
 function show(file) {
-    try_it_btn.firstChild.data = 'Exit';
-    try_it_btn.onclick = function() { toggle(file); };
+    run_it_btn.firstChild.data = 'Exit';
+    run_it_btn.onclick = function() { toggle(file); };
     code_listing.style.display = 'none';
+    var powered_by = document.createElement("text");
+    var powered_text = document.createTextNode("Powered by Wandbox.");
+    powered_by.appendChild(powered_text);
+    powered_by.setAttribute("id", "powered_by");
+    powered_by.setAttribute('style', 'font-size: 10px; text-align: right; display: block;');
     var compile_btn = document.createElement("BUTTON");
     var compile_txt = document.createTextNode("Compile & Run (Ctrl+Enter)");
     compile_btn.setAttribute("id", "compile_and_run");
     compile_btn.setAttribute("class", "TryItBtn");
     compile_btn.appendChild(compile_txt);
     compile_btn.onclick = compile_and_run;
-    try_it_btn.parentNode.insertBefore(compile_btn, try_it_btn.nextSibling);
+    run_it_btn.parentNode.insertBefore(compile_btn, run_it_btn.nextSibling);
+    run_it_btn.parentNode.insertBefore(powered_by, compile_btn.nextSibling);
     get_example(file);
     compile_and_run();
 }
