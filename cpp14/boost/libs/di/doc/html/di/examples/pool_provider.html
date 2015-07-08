@@ -209,7 +209,8 @@
 <a class="co" name="di.examples.pool_provider.c6" href="pool_provider.html#di.examples.pool_provider.c7"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a>
 <span class="keyword">class</span> <span class="identifier">config</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">config</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">auto</span> <span class="identifier">provider</span><span class="special">(...)</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">auto</span> <span class="identifier">provider</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;)</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
         <span class="keyword">return</span> <span class="identifier">pool_provider</span><span class="special">{};</span>
     <span class="special">}</span>
 <span class="special">};</span>
@@ -267,7 +268,6 @@
 <p>
         </div>
       </p>
-</div>
 
 <div id="disqus_thread"></div>
 <script type="text/javascript">
