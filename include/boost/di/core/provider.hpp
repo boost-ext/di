@@ -53,7 +53,7 @@ template<
   , class TInitialization
   , class... TCtor
 > struct provider<TExpected, TGiven, TName, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
-    using provider_t = decltype(std::declval<TInjector>().provider());
+    using provider_t = decltype(std::declval<TInjector>().config_.provider(std::declval<TInjector>()));
 
     template<class TMemory, class... TArgs>
     struct is_creatable {
@@ -68,7 +68,7 @@ template<
 
     template<class TMemory, class... TArgs, BOOST_DI_REQUIRES(is_creatable<TMemory, TArgs...>::value)>
     auto get_impl(const TMemory& memory, TArgs&&... args) const {
-        return injector_.provider().template get<TExpected, TGiven>(
+        return injector_.config_.provider(injector_).template get<TExpected, TGiven>(
             TInitialization{}
           , memory
           , static_cast<TArgs&&>(args)...
@@ -97,7 +97,7 @@ template<
 > struct provider<TExpected, TGiven, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
     template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const {
-        return injector_.provider().template get<TExpected, TGiven>(
+        return injector_.config_.provider(injector_).template get<TExpected, TGiven>(
             TInitialization{}
           , memory
           , injector_.create_successful_impl(aux::type<TCtor>{})...

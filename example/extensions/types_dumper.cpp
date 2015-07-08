@@ -28,7 +28,7 @@ namespace di = boost::di;
 /*<<define `types dumper` directly in configuration>>*/
 class types_dumper : public di::config {
 public:
-    auto policies() noexcept {
+    auto policies(...) noexcept {
         return di::make_policies(
             [&](auto type, auto dependency, BOOST_DI_UNUSED auto... ctor) {
                 using T = decltype(type);

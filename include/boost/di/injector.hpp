@@ -48,7 +48,7 @@ public:
                     std::integral_constant<bool,
                         core::is_creatable_impl<
                             T
-                          , core::injector<TConfig, decltype(((TConfig*)0)->policies()), TDeps...>
+                          , core::injector<TConfig, decltype(((TConfig*)0)->policies(injector)), TDeps...>
                           , typename std::is_same<concepts::configurable<TConfig>, std::true_type>::type
                         >::value
                     >{}

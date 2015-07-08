@@ -33,6 +33,11 @@ test create = [] {
     expect_eq(0, injector_.create<int>());
 };
 
+test conversion = [] {
+    injector<di::config> injector_{core::init{}};
+    expect_eq(0, (int)injector_);
+};
+
 test call = [] {
     fake_scope<>::entry_calls() = 0;
     fake_scope<>::exit_calls() = 0;

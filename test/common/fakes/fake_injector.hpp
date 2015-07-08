@@ -12,7 +12,7 @@
 namespace boost { namespace di { inline namespace v1 {
 
 template<class TExpected = void>
-struct fake_injector : fake_config<> {
+struct fake_injector {
     using deps = void;
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
@@ -29,6 +29,12 @@ struct fake_injector : fake_config<> {
     auto create_impl(const aux::type<T>&) const noexcept {
         return T{};
     }
+
+    decltype(auto) config() const noexcept {
+        return config_;
+    }
+
+    fake_config<> config_;
 };
 
 }}} // boost::di::v1

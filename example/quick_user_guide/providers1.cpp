@@ -30,7 +30,7 @@ public:
 
 class my_provider : public di::config {
 public:
-    auto provider() const noexcept {
+    auto provider(...) const noexcept {
         return heap_no_throw{};
     }
 };

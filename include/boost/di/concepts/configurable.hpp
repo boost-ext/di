@@ -24,8 +24,8 @@ std::false_type configurable_impl(...);
 
 template<class T>
 auto configurable_impl(T&& t) -> aux::is_valid_expr<
-    decltype(static_cast<const T&>(t).provider())
-  , decltype(t.policies())
+    decltype(static_cast<const T&>(t).provider(static_cast<const T&>(t)))
+  , decltype(t.policies(static_cast<const T&>(t)))
 >;
 
 template<class T1, class T2>
@@ -51,8 +51,8 @@ struct get_configurable_error<std::true_type, std::true_type>
 template<class T>
 constexpr auto is_configurable(const std::true_type&) {
     return typename get_configurable_error<
-        decltype(providable<decltype(std::declval<T>().provider())>())
-      , decltype(callable<decltype(std::declval<T>().policies())>())
+        decltype(providable<decltype(std::declval<T>().provider(std::declval<T>()))>())
+      , decltype(callable<decltype(std::declval<T>().policies(std::declval<T>()))>())
     >::type{};
 }
 

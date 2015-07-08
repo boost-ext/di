@@ -39,7 +39,7 @@ public:
         std::cout << "@enduml" << std::endl;
     }
 
-    auto policies() noexcept {
+    auto policies(...) noexcept {
         /*<<define `uml dumper` directly in policies configuration>>*/
         return di::make_policies(
             [&](auto type, auto dependency, BOOST_DI_UNUSED auto... ctor) {

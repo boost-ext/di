@@ -21,7 +21,7 @@ template<
    , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type_list<TDeps...>>)
    , BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>)
 > inline auto make_injector(const TDeps&... args) noexcept {
-    return core::injector<TConfig, decltype(((TConfig*)0)->policies()), TDeps...>{core::init{}, args...};
+    return core::injector<TConfig, decltype(((TConfig*)0)->policies(0)), TDeps...>{core::init{}, args...};
 }
 
 }}} // boost::di::v1

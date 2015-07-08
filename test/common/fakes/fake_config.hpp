@@ -14,11 +14,11 @@ namespace boost { namespace di { inline namespace v1 {
 
 template<class = void>
 struct fake_config {
-    auto policies() const {
+    auto policies(...) const {
         return make_policies();
     }
 
-    auto provider() const {
+    auto provider(...) const {
         return providers::heap{};
     }
 };

@@ -20,7 +20,6 @@
 #include "boost/di/core/wrapper.hpp"
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
-#include "boost/di/type_traits/config_traits.hpp"
 #include "boost/di/type_traits/referable_traits.hpp"
 #include "boost/di/concepts/creatable.hpp"
 #include "boost/di/config.hpp"

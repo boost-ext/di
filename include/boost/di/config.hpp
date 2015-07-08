@@ -28,11 +28,11 @@ inline auto make_policies(const TPolicies&... args) noexcept {
 
 class config {
 public:
-    auto provider() const noexcept {
+    auto provider(...) const noexcept {
         return providers::stack_over_heap{};
     }
 
-    auto policies() noexcept {
+    auto policies(...) noexcept {
         return make_policies();
     }
 };

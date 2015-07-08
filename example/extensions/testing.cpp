@@ -32,27 +32,27 @@ struct i2 {
     virtual int get() = 0;
 };
 
+class not_implemented : public std::exception { };
+
+class expectations : public std::map<std::type_index, std::function<std::shared_ptr<void>()>> {
+public:
+    template<class T>
+    void will_return(T value) {
+        operator [](current) = [=]{ return std::make_shared<T>(value); };
+    }
+
+    void add(std::type_index type, std::function<std::shared_ptr<void>()> call) {
+        current = type;
+        operator [](current) = call;
+    }
+
+private:
+    std::type_index current{typeid(nullptr)};
+};
+
 /*<<`mocks provider` configuration>>*/
-template<class TInjector = di::_>
-class mocks_provider_impl : public di::config {
-    class not_implemented : public std::exception { };
-
-    class expectations : public std::map<std::type_index, std::function<std::shared_ptr<void>()>> {
-    public:
-        template<class T>
-        void will_return(T value) {
-            operator [](current) = [=]{ return std::make_shared<T>(value); };
-        }
-
-        void add(std::type_index type, std::function<std::shared_ptr<void>()> call) {
-            current = type;
-            operator [](current) = call;
-        }
-
-    private:
-        std::type_index current{typeid(nullptr)};
-    };
-
+class mocks_provider : public di::config {
+    template<class TInjector>
     struct mock_provider {
         template<class T>
         class mock {
@@ -122,35 +122,19 @@ class mocks_provider_impl : public di::config {
     };
 
 public:
-    explicit mocks_provider_impl(const TInjector& injector)
-        : injector_(injector)
-    { }
-
-    auto provider() const noexcept {
-        return mock_provider{expectations_};
+    template<class TInjector>
+    auto provider(const TInjector&) const noexcept {
+        return mock_provider<TInjector>{expectations_};
     }
 
-    /*<<extend injector functionality of call operator>>*/
-    template<class R, class T, class... TArgs>
-    expectations& operator()(R(T::*)(TArgs...)) {
-        expectations_.add(std::type_index(typeid(T))
-                        , []{ throw not_implemented{}; return nullptr; }
-        );
-        return expectations_;
-    }
-
-    /*<<extend injector functionality of conversion operator>>*/
-    template<class T>
-    operator T() const {
-        return injector_.template create<T>();
-    }
-
-private:
     expectations expectations_;
-    const TInjector& injector_;
 };
 
-using mocks_provider = mocks_provider_impl<>;
+template<class TInjector, class R, class T, class... TArgs>
+expectations& expect(TInjector& injector, R(T::*)(TArgs...)) {
+    injector.config().expectations_.add(std::type_index(typeid(T)), []{ throw not_implemented{}; return nullptr; });
+    return injector.config().expectations_;
+}
 
 struct test {
     template<class Test>
@@ -172,9 +156,11 @@ struct c {
 test unit_test = [] {
     /*<<create injector with `mocks_provider`>>*/
     auto mi = di::make_injector<mocks_provider>();
+
     /*<<set expectations>>*/
-    mi(&i1::get).will_return(42);
-    mi(&i2::get).will_return(123);
+    expect(mi, &i1::get).will_return(42);
+    expect(mi, &i2::get).will_return(123);
+
     /*<<create object to test with interfaces to be injected by di and int value passed directly to constructor>>*/
     c object{mi, mi, 87};
 };
@@ -183,13 +169,16 @@ test integration_test = [] {
     struct impl1 : i1 {
         int get() override { return 42; }
     };
+
     /*<<create injector with `mocks_provider`>>*/
     auto mi = di::make_injector<mocks_provider>(
         di::bind<int>.to(87) // custom value
       , di::bind<i1, impl1>  // original implementation
     );
+
     /*<<set expectations>>*/
-    mi(&i2::get).will_return(123); // fake
+    expect(mi, &i2::get).will_return(123); // fake
+
     /*<<create object to test with mocked `i1` and original `i2` and injected int value>>*/
     mi.create<c>();
 };

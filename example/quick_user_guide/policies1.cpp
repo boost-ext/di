@@ -13,7 +13,7 @@ namespace di = boost::di;
 
 class print_types_policy : public di::config {
 public:
-    auto policies() const noexcept {
+    auto policies(...) const noexcept {
         return di::make_policies(
             [](auto type){
                 using T = decltype(type);
