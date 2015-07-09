@@ -242,7 +242,11 @@ C++14
 C++11
 </p>
 </td>
-<td class="auto-generated">&#160;</td>
+<td>
+<p>
+C++11
+</p>
+</td>
 </tr>
 <tr>
 <td>
@@ -261,6 +265,9 @@ Boost License
 </p>
 </td>
 <td>
+<p>
+Apache 2.0
+</p>
 </td>
 </tr>
 <tr>
@@ -271,17 +278,17 @@ Linkage
 </td>
 <td>
 <p>
-Header only
+header only
 </p>
 </td>
 <td>
 <p>
-Header only
+header only
 </p>
 </td>
 <td>
 <p>
-Library
+library
 </p>
 </td>
 </tr>
@@ -553,7 +560,7 @@ C++14
 </td>
 <td>
 <p>
-Java
+Java 6
 </p>
 </td>
 <td>
@@ -579,10 +586,19 @@ Boost License
 </p>
 </td>
 <td>
+<p>
+Apache 2.0
+</p>
 </td>
 <td>
+<p>
+Apache 2.0
+</p>
 </td>
 <td>
+<p>
+Apache 2.0
+</p>
 </td>
 </tr>
 <tr>
@@ -593,14 +609,23 @@ Linkage
 </td>
 <td>
 <p>
-Library
+header only
 </p>
 </td>
 <td>
+<p>
+jar
+</p>
 </td>
 <td>
+<p>
+jar
+</p>
 </td>
 <td>
+<p>
+dll
+</p>
 </td>
 </tr>
 <tr>
@@ -676,10 +701,7 @@ Test - bind value
 <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">main</span><span class="special">(</span><span class="identifier">String</span><span class="special">[]</span> <span class="identifier">args</span><span class="special">)</span> <span class="special">{</span>
 <span class="identifier">Injector</span> <span class="identifier">injector</span> <span class="special">=</span>
 <span class="identifier">Guice</span><span class="special">.</span><span class="identifier">createInjector</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">Module</span><span class="special">());</span>
-<span class="identifier">System</span><span class="special">.</span><span class="identifier">exit</span><span class="special">(</span>
-<span class="identifier">injector</span><span class="special">.</span><span class="identifier">getInstance</span><span class="special">(</span><span class="keyword">int</span><span class="special">.</span><span class="keyword">class</span><span class="special">)</span>
-<span class="special">!=</span> <span class="number">42</span> <span class="special">?</span> <span class="number">1</span> <span class="special">:</span> <span class="number">0</span>
-<span class="special">);</span>
+<span class="identifier">System</span><span class="special">.</span><span class="identifier">exit</span><span class="special">(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">getInstance</span><span class="special">(</span><span class="keyword">int</span><span class="special">.</span><span class="keyword">class</span><span class="special">)</span> <span class="special">!=</span> <span class="number">42</span> <span class="special">?</span> <span class="number">1</span> <span class="special">:</span> <span class="number">0</span><span class="special">);</span>
 <span class="special">}</span>
 <span class="special">}</span>
 </pre>
