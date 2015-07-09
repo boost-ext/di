@@ -7,8 +7,38 @@
 <script src="<__root__>js/CodeMirror/mode/clike/clike.js"></script>
 <script src="<__root__>js/CodeMirror/addon/selection/active-line.js"></script>
 <script src="<__root__>js/run_this_code.js"></script>
+<script type="text/javascript">
 
-<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+function hideRows() {
+    for (i=0; i<10; ++i) {
+        var row = document.getElementById("row_" + i);
+        if (row != null) {
+            toggleNextRow.call(row);
+        }
+    }
+}
+
+function toggleNextRow() {
+	var parent = this.parentNode;
+	var tagName = "tr";
+
+	while (parent) {
+		if (parent.tagName && parent.tagName.toLowerCase() == tagName) {
+			var row = parent.parentNode.rows[parent.rowIndex];
+			if (row.style.display == 'none') {
+				row.style.display = '';
+			} else {
+				row.style.display = 'none';
+			}
+			return;
+		} else {
+			parent = parent.parentNode;
+		}
+  	}
+}
+</script>
+
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF" onload="hideRows()">
 <table cellpadding="2" width="100%"><tr>
 <td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="<__root__>../../../../boost.png"></td>
 <td align="center"><a href="../../../../index.html">Home</a></td>

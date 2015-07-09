@@ -10,7 +10,6 @@ FRAME=1 tools/try_it_online.sh ../example/try_it_online/main.cpp > /tmp/di_try_i
 find $HTML -iname "*.html" | xargs sed -i -e '/\$try_it_online\$/{r /tmp/di_try_it_online.tmp' -e 'd}'
 rm -f /tmp/di_try_it_online.tmp
 
-#*.html
 for file in `find $HTML/di -iname "*.html"`; do
     rm -f /tmp/file
 
@@ -47,6 +46,21 @@ for file in `find $HTML/di -iname "*.html"`; do
     sed -i 's/\$example_begin \([^\$]*\)\$/<button class="TryItBtn" id="run_it_btn" onclick="show(__quote__https:\/\/raw.githubusercontent.com\/krzysztof-jusiak\/di\/cpp14\/\1__quote__)">Run this code!<\/button><textarea style="display: none" id="code"><\/textarea><br \/><textarea style="display: none" id="output"><\/textarea><div id="code_listing">/g' $file
     sed -i "s/__quote__/'/g" $file
     sed -i 's/\$example_end.*/<\/div>/g' $file
+    sed -i 's/\.\.\/\.\.\/#/#/g' $file
+
+    if [[ $file =~ "libraries.html" ]]; then
+        id=0;
+        rm -f /tmp/tmp.html
+        while read line; do
+            if [[ $line =~ "Show Results" ]]; then
+                id=$((++id));
+                echo $line | sed  's/>\[Show Results/ id="row_'$id'" onclick="toggleNextRow.call(this);">[Show Results/' >> /tmp/tmp.html
+            else
+                echo $line >> /tmp/tmp.html
+            fi
+        done < $file
+        mv /tmp/tmp.html $file
+    fi
 done
 
 echo '
