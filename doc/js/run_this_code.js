@@ -106,7 +106,7 @@ function get_example(file) {
       });
 
     cpp_output.setSize(1100, 200);
-    cpp_output.setOption("theme", 'zenburn');
+    cpp_output.setOption("theme", 'mdn-like');
 
     cpp_code.setValue(get_cpp_file(file));
 }

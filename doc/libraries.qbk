@@ -10,12 +10,12 @@
 [section Dependency Injection libraries]
 
 [table C++ Dependency Injection Libraries
-    [[Library][Boost.DI][dicpp][Google Fruit]]
-    [[Language][C++14][C++11]]
-    [[License][Boost License][Boost License][]]
-    [[Linkage][Header only][Header only][Library]]
-    [[Approach][compile-time][run-time][compile/run-time]]
-    [[Test - bind value]
+    [[][Library][Boost.DI][dicpp][Google Fruit]]
+    [[][Language][C++14][C++11]]
+    [[][License][Boost License][Boost License][]]
+    [[][Linkage][Header only][Header only][Library]]
+    [[][Approach][compile-time][run-time][compile/run-time]]
+    [[][Test - bind value]
     [
         ```
         // clang++ -O2
@@ -69,7 +69,7 @@
         ```
     ]
     ]
-    [[Assember - x86-64]
+    [[[@# [Show Results]]][Assember - x86-64]
     [
         ```
         gdb -batch -ex 'file ./di.out' -ex 'disassemble main'
@@ -208,12 +208,12 @@
 ]
 
 [table Dependency Injection Libraries
-    [[Library][Boost.DI][Google Guice][Dagger2][Ninject]]
-    [[Language][C++14][Java][Java][C#]]
-    [[License][Boost License][][][]]
-    [[Linkage][Library][][][]]
-    [[Approach][compile-time][run-time][compile-time (annottation processor)][run-time]]
-    [[Test - bind value]
+    [[][Library][Boost.DI][Google Guice][Dagger2][Ninject]]
+    [[][Language][C++14][Java][Java][C#]]
+    [[][License][Boost License][][][]]
+    [[][Linkage][Library][][][]]
+    [[][Approach][compile-time][run-time][compile-time (annottation processor)][run-time]]
+    [[][Test - bind value]
     [
         ```
         // clang++ -O2
