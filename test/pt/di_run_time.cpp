@@ -169,6 +169,23 @@ test module_no_bindings = [](auto progname) {
 
 // ---------------------------------------------------------------------------
 
+auto given_lambda_module_no_bindings() {
+    auto module = [] {
+        return di::make_injector();
+    };
+    return di::make_injector(module()).create<int>();
+}
+
+auto expected_lambda_module_no_bindings() {
+    return 0;
+}
+
+test lambda_module_no_bindings = [](auto progname) {
+    expect(check_opcodes(progname, "lambda_module_no_bindings"));
+};
+
+// ---------------------------------------------------------------------------
+
 auto given_module_bind_int() {
     struct module {
         auto configure() const noexcept {
@@ -187,6 +204,26 @@ auto expected_module_bind_int() {
 
 test module_bind_int = [](auto progname) {
     expect(check_opcodes(progname, "module_bind_int"));
+};
+
+// ---------------------------------------------------------------------------
+
+auto given_lambda_module_bind_int() {
+    auto module = [] {
+        return di::make_injector(
+            di::bind<int>().to(42)
+        );
+    };
+
+    return di::make_injector(module()).create<int>();
+}
+
+auto expected_lambda_module_bind_int() {
+    return 42;
+}
+
+test lambda_module_bind_int = [](auto progname) {
+    expect(check_opcodes(progname, "lambda_module_bind_int"));
 };
 
 // ---------------------------------------------------------------------------

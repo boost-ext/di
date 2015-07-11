@@ -129,8 +129,8 @@ test-suite ft :
     [ run-test c++1y : ft/di_scope_exposed.cpp ]
     [ run-test c++1y : ft/di_scope_external.cpp ]
     [ run-test c++1y : ft/di_scope_session.cpp ]
-    [ run-test c++1y : ft/di_scope_shared.cpp ]
     [ run-test c++1y : ft/di_scope_unique.cpp ]
+    [ run-test c++1y : ft/di_wrapper_shared.cpp ]
 ;
 
 test-suite pt :

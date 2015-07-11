@@ -68,6 +68,6 @@ run_test(ft/di_modules)
 run_test(ft/di_scope_exposed)
 run_test(ft/di_scope_external)
 run_test(ft/di_scope_session)
-run_test(ft/di_scope_shared)
 run_test(ft/di_scope_unique)
+run_test(ft/di_wrapper_shared)
 
