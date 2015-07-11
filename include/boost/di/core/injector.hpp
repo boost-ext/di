@@ -33,7 +33,7 @@ struct from_deps { };
 struct init { };
 struct with_error { };
 
-#if defined(BOOST_DI_MSCVC)
+#if defined(BOOST_DI_MSVC)
     template<class T, class TInjector>
     inline auto build(const TInjector& injector) noexcept {
         return T{injector};

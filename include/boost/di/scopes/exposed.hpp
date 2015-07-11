@@ -16,7 +16,7 @@ class exposed {
 public:
     template<class TExpected, class TGiven>
     class scope {
-        #if defined(BOOST_DI_GCC)
+        #if defined(BOOST_DI_GCC) || defined(BOOST_DI_MSVC)
             using type = std::conditional_t<
                 std::is_copy_constructible<TExpected>::value
               , TExpected

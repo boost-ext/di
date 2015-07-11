@@ -880,7 +880,7 @@ class exposed {
 public:
     template<class TExpected, class TGiven>
     class scope {
-        #if defined(BOOST_DI_GCC)
+        #if defined(BOOST_DI_GCC) || defined(BOOST_DI_MSVC)
             using type = std::conditional_t<
                 std::is_copy_constructible<TExpected>::value
               , TExpected
@@ -2991,7 +2991,7 @@ struct from_deps { };
 struct init { };
 struct with_error { };
 
-#if defined(BOOST_DI_MSCVC)
+#if defined(BOOST_DI_MSVC)
     template<class T, class TInjector>
     inline auto build(const TInjector& injector) noexcept {
         return T{injector};
