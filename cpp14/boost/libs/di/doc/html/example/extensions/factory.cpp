@@ -22,7 +22,7 @@ struct implementation : interface { void dummy() override { } };
 constexpr di::no_name assisted{};
 
 template<class T>
-class factory {
+class factory_impl {
 public:
     template<class TInjector>
     auto operator()(const TInjector& injector) const {
@@ -50,7 +50,7 @@ private:
     }
 
     template<std::size_t N, class TInjector, class TArg, class... TArgs>
-    decltype(auto) create_impl(const TInjector&, const di::aux::type<di::named_type<di::no_name, TArg>>&, TArgs&&... args) const {
+    decltype(auto) create_impl(const TInjector&, const di::aux::type<di::detail::named_type<di::no_name, TArg>>&, TArgs&&... args) const {
         constexpr auto value = get_assisted_ctor_nr(N, typename di::type_traits::ctor_traits<T>::type{});
         return get<TArg>(std::integral_constant<std::size_t, value>{}, args...);
     }
@@ -78,7 +78,7 @@ private:
     }
 
     template<class TArg>
-    static constexpr auto is_assisted(const di::aux::type<di::named_type<di::no_name, TArg>>&) {
+    static constexpr auto is_assisted(const di::aux::type<di::detail::named_type<di::no_name, TArg>>&) {
         return true;
     }
 
@@ -97,6 +97,9 @@ private:
         return TCtor{};
     }
 };
+
+template<class T>
+factory_impl<T> factory{};
 
 //->
 
@@ -122,7 +125,7 @@ int main() {
         di::bind<int>.to(87)
       , di::bind<interface, implementation>
         /*<<bind `example_factory` to factory creating `example`>>*/
-      , di::bind<example_factory>.to(factory<example>{})
+      , di::bind<example_factory>.to(factory<example>)
     );
 
     auto f = injector.create<example_factory>();
