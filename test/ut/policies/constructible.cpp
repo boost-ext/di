@@ -6,7 +6,7 @@
 //
 #include <type_traits>
 #include "common/fakes/fake_policy.hpp"
-#include "boost/di/aux_/compiler_specific.hpp"
+#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/policies/constructible.hpp"
 
 #if !defined(BOOST_DI_MSVC)

@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_BINDINGS_HPP
 #define BOOST_DI_BINDINGS_HPP
 
-#include "boost/di/aux_/compiler_specific.hpp"
+#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/core/dependency.hpp"
 #include "boost/di/scopes/deduce.hpp"

@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <string>
-#include "boost/di/aux_/compiler_specific.hpp"
+#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/preprocessor.hpp"
 
 test cat = [] {

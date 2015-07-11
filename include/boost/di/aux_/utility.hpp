@@ -90,7 +90,7 @@ struct is_unique_impl<T1, T2, Ts...>
           std::is_base_of<type<T2>, T1>::value
         , not_unique<T2>
         , is_unique_impl<inherit<T1, type<T2>>, Ts...>
-       >
+      >
 { };
 
 template<class... Ts>

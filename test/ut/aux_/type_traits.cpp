@@ -6,7 +6,7 @@
 //
 #include <memory>
 #include <string>
-#include "boost/di/aux_/compiler_specific.hpp"
+#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #if __has_include(<boost/shared_ptr.hpp>)
     #include <boost/shared_ptr.hpp>

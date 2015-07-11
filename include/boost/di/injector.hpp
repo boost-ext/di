@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_INJECTOR_HPP
 #define BOOST_DI_INJECTOR_HPP
 
-#include "boost/di/aux_/compiler_specific.hpp"
+#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/core/injector.hpp"
 #include "boost/di/concepts/boundable.hpp"
 #include "boost/di/concepts/creatable.hpp"

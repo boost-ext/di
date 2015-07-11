@@ -8,7 +8,7 @@
 #define BOOST_DI_WRAPPERS_UNIQUE_HPP
 
 #include <memory>
-#include "boost/di/aux_/compiler_specific.hpp"
+#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/fwd.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace wrappers {

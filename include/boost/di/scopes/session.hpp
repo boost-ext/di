@@ -8,7 +8,7 @@
 #define BOOST_DI_SCOPES_SESSION_HPP
 
 #include <memory>
-#include "boost/di/aux_/compiler_specific.hpp"
+#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/wrappers/shared.hpp"
 #include "boost/di/fwd.hpp" // no_name
 
