@@ -17,7 +17,6 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     template<class, class, class, class> friend struct try_provider;
     template<class, class, class, class, class> friend struct provider;
     template<class, class, class, class> friend struct successful::provider;
-    template<class, class, class> friend struct is_creatable_impl;
 
     using pool_t = pool<transform_t<TDeps...>>;
     using is_root_t = std::true_type;
@@ -53,36 +52,22 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     static auto is_creatable_impl(T&&, TName&&, TIsRoot&&)
         -> aux::is_valid_expr<decltype(try_create_impl<T, TName, TIsRoot>())>;
 
-    template<class T, class TName = no_name, class TIsRoot = std::false_type>
-    #if defined(BOOST_DI_MSVC)
-        struct is_creatable : std::false_type { };
-    #else
-        using is_creatable =
-            decltype(is_creatable_impl(std::declval<T>(), std::declval<TName>(), std::declval<TIsRoot>()));
-    #endif
-
-    template<class T>
-    struct try_create {
-        using type = std::conditional_t<is_creatable<T>::value, T, void>;
-    };
-
-    template<class TParent>
-    struct try_create<any_type_fwd<TParent>> {
-        using type = any_type<TParent, injector, with_error>;
-    };
-
-    template<class TParent>
-    struct try_create<any_type_ref_fwd<TParent>> {
-        using type = any_type_ref<TParent, injector, with_error>;
-    };
-
-    template<class TName, class T>
-    struct try_create<named_type<TName, T>> {
-        using type = std::conditional_t<is_creatable<T, TName>::value, T, void>;
-    };
-
 public:
     using deps = transform_t<TDeps...>;
+
+    template<class T, class TName = no_name, class TIsRoot = std::false_type>
+    struct is_creatable {
+        static constexpr auto value =
+            #if defined(BOOST_DI_MSVC)
+                false
+            #else
+                decltype(is_creatable_impl(std::declval<T>()
+                                         , std::declval<TName>()
+                                         , std::declval<TIsRoot>())
+                )::value
+            #endif
+        ;
+    };
 
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
@@ -126,6 +111,26 @@ public:
     }
 
 private:
+    template<class T>
+    struct try_create {
+        using type = std::conditional_t<is_creatable<T>::value, T, void>;
+    };
+
+    template<class TParent>
+    struct try_create<any_type_fwd<TParent>> {
+        using type = any_type<TParent, injector, with_error>;
+    };
+
+    template<class TParent>
+    struct try_create<any_type_ref_fwd<TParent>> {
+        using type = any_type_ref<TParent, injector, with_error>;
+    };
+
+    template<class TName, class T>
+    struct try_create<detail::named_type<TName, T>> {
+        using type = std::conditional_t<is_creatable<T, TName>::value, T, void>;
+    };
+
     template<class... TArgs>
     explicit injector(const from_deps&, const TArgs&... args) noexcept
         : pool_t{copyable<deps>{}, core::pool_t<TArgs...>{args...}}
@@ -133,7 +138,11 @@ private:
 
     template<class TInjector, class... TArgs>
     explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
+    #if defined(BOOST_DI_MSVC)
         : pool_t{copyable<deps>{}, pool_t{build<TArgs>(injector)...}}
+    #else
+        : pool_t{copyable<deps>{}, pool_t{TArgs{injector}...}}
+    #endif
     { }
 
     template<class TIsRoot = std::false_type, class T>
@@ -152,7 +161,7 @@ private:
     }
 
     template<class TIsRoot = std::false_type, class T, class TName>
-    auto create_impl(const aux::type<named_type<TName, T>>&) const {
+    auto create_impl(const aux::type<detail::named_type<TName, T>>&) const {
         return create_impl__<TIsRoot, T, TName>();
     }
 
@@ -190,7 +199,7 @@ private:
     }
 
     template<class TIsRoot = std::false_type, class T, class TName>
-    auto create_successful_impl(const aux::type<named_type<TName, T>>&) const {
+    auto create_successful_impl(const aux::type<detail::named_type<TName, T>>&) const {
         return create_successful_impl__<TIsRoot, T, TName>();
     }
 

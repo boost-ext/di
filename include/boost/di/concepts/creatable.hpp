@@ -131,7 +131,7 @@ struct in {
 };
 
 template<class TParent, class TName, class T>
-struct in<TParent, named_type<TName, T>> {
+struct in<TParent, detail::named_type<TName, T>> {
     using type = in_type<TParent, TName>;
 };
 

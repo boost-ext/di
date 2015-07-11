@@ -43,14 +43,12 @@ public:
         : core::injector<::BOOST_DI_CFG, core::pool<>, T...>(injector) {
             #if !defined(BOOST_DI_MSVC)
             using namespace detail;
+            using injector_t = core::injector<TConfig, TPolicies, TDeps...>;
             int _[]{0, (
                 create<T>(
                     std::integral_constant<bool,
-                        core::is_creatable_impl<
-                            T
-                          , core::injector<TConfig, decltype(((TConfig*)0)->policies(injector)), TDeps...>
-                          , typename std::is_same<concepts::configurable<TConfig>, std::true_type>::type
-                        >::value
+                        injector_t::template is_creatable<T>::value ||
+                        injector_t::template is_creatable<T*>::value
                     >{}
                 )
             , 0)...}; (void)_;

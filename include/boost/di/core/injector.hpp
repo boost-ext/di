@@ -33,10 +33,12 @@ struct from_deps { };
 struct init { };
 struct with_error { };
 
-template<class T, class TInjector>
-inline auto build(const TInjector& injector) noexcept {
-    return T{injector};
-}
+#if defined(BOOST_DI_MSCVC)
+    template<class T, class TInjector>
+    inline auto build(const TInjector& injector) noexcept {
+        return T{injector};
+    }
+#endif
 
 template<class T>
 inline decltype(auto) get_arg(const T& arg, const std::false_type&) noexcept {

@@ -20,7 +20,7 @@
     #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
 #endif
 
-namespace boost { namespace di {
+namespace boost { namespace di { inline namespace v1 { namespace detail {
 template<class, class>
 struct named_type { };
 
@@ -44,7 +44,7 @@ template<class... T1, class... T2>
 struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
 	using type = aux::type_list<typename combine_impl<T1, T2>::type...>;
 };
-}} // boost::di
+}}}} // boost::di::v1::detail
 
 #define BOOST_DI_GEN_CTOR_IMPL(p, i) \
     BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
@@ -52,7 +52,7 @@ struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
 #define BOOST_DI_GEN_CTOR(i, ...) BOOST_DI_GEN_CTOR_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__,), i)
 #define BOOST_DI_GEN_ARG_NAME(p) BOOST_DI_GEN_ARG_NAME_IMPL p )
 #define BOOST_DI_GEN_NONE_TYPE(p) ::boost::di::aux::none_type
-#define BOOST_DI_GEN_ARG_NAME_IMPL(p) decltype(::boost::di::p) BOOST_DI_EAT(
+#define BOOST_DI_GEN_ARG_NAME_IMPL(p) decltype(::boost::di::detail::p) BOOST_DI_EAT(
 #define BOOST_DI_GEN_NAME_IMPL(p, i) \
     BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
     BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_GEN_ARG_NAME, BOOST_DI_GEN_NONE_TYPE)(p)
@@ -68,7 +68,7 @@ struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
     static void BOOST_DI_CAT(BOOST_DI_INJECTOR, names)( \
         BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_NAME, __VA_ARGS__) \
     ); \
-    using BOOST_DI_INJECTOR BOOST_DI_UNUSED = ::boost::di::combine< \
+    using BOOST_DI_INJECTOR BOOST_DI_UNUSED = ::boost::di::detail::combine< \
         typename ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>::args \
       , typename ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, names))>::args \
     >::type; \

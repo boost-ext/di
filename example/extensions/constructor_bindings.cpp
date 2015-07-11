@@ -6,6 +6,11 @@
 //
 
 //[constructor_bindings
+
+#include "boost/di.hpp"
+
+namespace di = boost::di;
+
 //<-
 #include <cassert>
 #include <memory>
@@ -14,43 +19,22 @@
 struct interface { virtual ~interface() noexcept = default; virtual void dummy() = 0; };
 struct implementation : interface { void dummy() override { } };
 
-#include <boost/di/fwd.hpp>
-#include <boost/di/concepts/creatable.hpp>
-
-/*<<to constructor dependency extension>>*/
-struct to_constructor_ext {
-    /*<<implementation of to_constructor extensions>>*/
-    template<class T, class... TCtor>
-    struct to_constructor_impl {
-        template<class TInjector>
-        auto operator()(const TInjector& injector) const  {
-            return std::make_unique<T>(injector.template create<TCtor>()...);
-        }
-    };
-
-    template<class>
-    struct extension;
-
-    /*<<extension implementation, add `to_constructor` method to dependency>>*/
-    template<class TScope, class TExpected, class... Ts>
-    struct extension<boost::di::core::dependency<TScope, TExpected, Ts...>> {
-        template<class... TCtor
-               , BOOST_DI_REQUIRES(boost::di::concepts::creatable<boost::di::type_traits::direct, TExpected, TCtor...>::value)
-        > auto to_constructor() const noexcept {
-            const auto& self = static_cast<const boost::di::core::dependency<TScope, TExpected, Ts...>&>(*this);
-            return self.to(to_constructor_impl<TExpected, TCtor...>{});
-        }
-    };
+/*<<to constructor extension>>*/
+template<class... TCtor>
+struct constructor_impl {
+    template<
+        class TInjector
+      , class T
+      , BOOST_DI_REQUIRES(boost::di::concepts::creatable<boost::di::type_traits::direct, typename T::expected, TCtor...>::value)
+    > auto operator()(const TInjector& injector, const T&) const  {
+        return std::make_unique<typename T::expected>(injector.template create<TCtor>()...);
+    }
 };
 
+template<class... TCtor>
+constructor_impl<TCtor...> constructor{};
+
 //->
-
-/*<<define dependency extensions>>*/
-#define BOOST_DI_CFG_DEPENDENCY_EXTENSIONS ::to_constructor_ext
-
-#include <boost/di.hpp>
-
-namespace di = boost::di;
 
 /*<<normal constructor - to_constructor binding is not needed for it>>*/
 struct ctor {
@@ -83,9 +67,9 @@ struct var_arg {
 int main() {
     auto injector = di::make_injector(
         /*<<define constructor types>>*/
-        di::bind<variadic>.to_constructor<int, std::string, std::unique_ptr<interface>>()
-      , di::bind<ctor>.to_constructor<int, std::string, std::unique_ptr<interface>>()
-      , di::bind<var_arg>.to_constructor<int, float, double>()
+        di::bind<variadic>.to(constructor<int, std::string, std::unique_ptr<interface>>)
+      , di::bind<ctor>.to(constructor<int, std::string, std::unique_ptr<interface>>)
+      , di::bind<var_arg>.to(constructor<int, float, double>)
 
         /*<<additional bindings>>*/
       , di::bind<interface, implementation>

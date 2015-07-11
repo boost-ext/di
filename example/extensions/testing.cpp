@@ -13,10 +13,6 @@
 #include <stdexcept>
 #include <typeindex>
 
-#if defined(__GNUC__)
-    #define BOOST_DI_DISABLE_DEPENDENCY_CONVERSION // wknd for GCC-5.1 with ambiguous operator()
-#endif
-
 //->
 #include <boost/di.hpp>
 

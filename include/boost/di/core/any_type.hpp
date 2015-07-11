@@ -15,7 +15,7 @@
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
 template<class T, class TParent>
-using is_not_same = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
+using is_not_same_t = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
 
 template<class T, class TInjector>
 struct is_referable_impl {
@@ -25,9 +25,9 @@ struct is_referable_impl {
 };
 
 template<class T, class TInjector>
-using is_referable = std::enable_if_t<is_referable_impl<T, TInjector>::value>;
+using is_referable_t = std::enable_if_t<is_referable_impl<T, TInjector>::value>;
 
-template<class T, class TInjector, class>
+template<class T, class TInjector, class TError>
 struct is_creatable_impl {
     static constexpr auto value = TInjector::template is_creatable<T>::value;
 };
@@ -37,20 +37,14 @@ struct is_creatable_impl<T, TInjector, std::false_type> {
     static constexpr auto value = true;
 };
 
-template<class T, class TInjector>
-struct is_creatable_impl<T, TInjector, std::true_type> {
-    static constexpr auto value =
-        TInjector::template is_creatable<T>::value || TInjector::template is_creatable<T*>::value;
-};
-
 template<class T, class TInjector, class TError>
-using is_creatable = std::enable_if_t<is_creatable_impl<T, TInjector, TError>::value>;
+using is_creatable_t = std::enable_if_t<is_creatable_impl<T, TInjector, TError>::value>;
 
 template<class TParent, class TInjector, class TError = std::false_type>
 struct any_type {
     template<class T
-           , class = is_not_same<T, TParent>
-           , class = is_creatable<T, TInjector, TError>
+           , class = is_not_same_t<T, TParent>
+           , class = is_creatable_t<T, TInjector, TError>
     > operator T() {
         return injector_.create_impl(aux::type<T>{});
     }
@@ -61,34 +55,34 @@ struct any_type {
 template<class TParent, class TInjector, class TError = std::false_type>
 struct any_type_ref {
     template<class T
-           , class = is_not_same<T, TParent>
-           , class = is_creatable<T, TInjector, TError>
+           , class = is_not_same_t<T, TParent>
+           , class = is_creatable_t<T, TInjector, TError>
     > operator T() {
         return injector_.create_impl(aux::type<T>{});
     }
 
     #if defined(BOOST_DI_GCC)
         template<class T
-               , class = is_not_same<T, TParent>
-               , class = is_referable<T&&, TInjector>
-               , class = is_creatable<T&&, TInjector, TError>
+               , class = is_not_same_t<T, TParent>
+               , class = is_referable_t<T&&, TInjector>
+               , class = is_creatable_t<T&&, TInjector, TError>
         > operator T&&() const {
             return injector_.create_impl(aux::type<T&&>{});
         }
     #endif
 
     template<class T
-           , class = is_not_same<T, TParent>
-           , class = is_referable<T&, TInjector>
-           , class = is_creatable<T&, TInjector, TError>
+           , class = is_not_same_t<T, TParent>
+           , class = is_referable_t<T&, TInjector>
+           , class = is_creatable_t<T&, TInjector, TError>
     > operator T&() const {
         return injector_.create_impl(aux::type<T&>{});
     }
 
     template<class T
-           , class = is_not_same<T, TParent>
-           , class = is_referable<const T&, TInjector>
-           , class = is_creatable<const T&, TInjector, TError>
+           , class = is_not_same_t<T, TParent>
+           , class = is_referable_t<const T&, TInjector>
+           , class = is_creatable_t<const T&, TInjector, TError>
     > operator const T&() const {
         return injector_.create_impl(aux::type<const T&>{});
     }
@@ -100,7 +94,7 @@ namespace successful {
 
 template<class TParent, class TInjector>
 struct any_type {
-    template<class T, class = is_not_same<T, TParent>>
+    template<class T, class = is_not_same_t<T, TParent>>
     operator T() {
         return injector_.create_successful_impl(aux::type<T>{});
     }
@@ -110,30 +104,30 @@ struct any_type {
 
 template<class TParent, class TInjector>
 struct any_type_ref {
-    template<class T, class = is_not_same<T, TParent>>
+    template<class T, class = is_not_same_t<T, TParent>>
     operator T() {
         return injector_.create_successful_impl(aux::type<T>{});
     }
 
     #if defined(BOOST_DI_GCC)
         template<class T
-               , class = is_not_same<T, TParent>
-               , class = is_referable<T&&, TInjector>
+               , class = is_not_same_t<T, TParent>
+               , class = is_referable_t<T&&, TInjector>
         > operator T&&() const {
             return injector_.create_successful_impl(aux::type<T&&>{});
         }
     #endif
 
     template<class T
-           , class = is_not_same<T, TParent>
-           , class = is_referable<T&, TInjector>
+           , class = is_not_same_t<T, TParent>
+           , class = is_referable_t<T&, TInjector>
     > operator T&() const {
         return injector_.create_successful_impl(aux::type<T&>{});
     }
 
     template<class T
-           , class = is_not_same<T, TParent>
-           , class = is_referable<const T&, TInjector>
+           , class = is_not_same_t<T, TParent>
+           , class = is_referable_t<const T&, TInjector>
     > operator const T&() const {
         return injector_.create_successful_impl(aux::type<const T&>{});
     }
@@ -145,24 +139,24 @@ struct any_type_ref {
 
 template<class TParent>
 struct any_type_fwd {
-    template<class T, class = is_not_same<T, TParent>>
+    template<class T, class = is_not_same_t<T, TParent>>
     operator T();
 };
 
 template<class TParent>
 struct any_type_ref_fwd {
-    template<class T, class = is_not_same<T, TParent>>
+    template<class T, class = is_not_same_t<T, TParent>>
     operator T();
 
-    template<class T, class = is_not_same<T, TParent>>
+    template<class T, class = is_not_same_t<T, TParent>>
     operator T&() const;
 
     #if defined(BOOST_DI_GCC)
-        template<class T, class = is_not_same<T, TParent>>
+        template<class T, class = is_not_same_t<T, TParent>>
         operator T&&() const;
     #endif
 
-    template<class T, class = is_not_same<T, TParent>>
+    template<class T, class = is_not_same_t<T, TParent>>
     operator const T&() const;
 };
 

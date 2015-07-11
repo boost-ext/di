@@ -7,6 +7,9 @@
 #ifndef BOOST_DI_CORE_DEPENDENCY_HPP
 #define BOOST_DI_CORE_DEPENDENCY_HPP
 
+#if __has_include(<string>)
+    #include <string>
+#endif
 #include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/scopes/exposed.hpp"
@@ -43,11 +46,6 @@ struct override { };
 
 struct dependency_base { };
 
-template<class TDependency, class... Ts>
-struct extensions
-    : Ts::template extension<TDependency>...
-{ };
-
 template<
     class TScope
   , class TExpected
@@ -60,14 +58,7 @@ template<
     , dependency_impl<
           dependency_concept<TExpected, TName>
         , dependency<TScope, TExpected, TGiven, TName, TPriority>
-      >
-    #if defined(BOOST_DI_CFG_DEPENDENCY_EXTENSIONS) && !BOOST_DI_IS_EMPTY(BOOST_DI_CFG_DEPENDENCY_EXTENSIONS)
-    , extensions<
-          dependency<TScope, TExpected, TGiven, TName, TPriority>
-        , BOOST_DI_CFG_DEPENDENCY_EXTENSIONS
-      >
-    #endif
-{
+      > {
 private:
     template<class T>
     using is_not_narrowed = std::integral_constant<bool,
@@ -87,10 +78,12 @@ private:
         using type = T;
     };
 
-    template<int N>
-    struct str_traits<const char(&)[N]> {
-        using type = std::string;
-    };
+    #if __has_include(<string>)
+        template<int N>
+        struct str_traits<const char(&)[N]> {
+            using type = std::string;
+        };
+    #endif
 
     template<class T>
     struct str_traits<std::shared_ptr<T>&> {
@@ -160,10 +153,7 @@ public:
         return dependency<TScope, TExpected, TGiven, TName, override>{*this};
     }
 
-    /**
-     * Support for `di::bind<i, impl>()` when using variable templates
-     */
-    #if defined(__cpp_variable_templates) && !defined(BOOST_DI_DISABLE_DEPENDENCY_CONVERSION)
+    #if defined(__cpp_variable_templates)
         const dependency& operator()() const noexcept {
             return *this;
         }

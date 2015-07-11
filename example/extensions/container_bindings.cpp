@@ -45,22 +45,24 @@ struct implementation2 : interface { };
 /*<<all types creator and adder to container type>>*/
 template<class... Ts>
 class all_of_impl {
+    template<class> struct type { };
+
 public:
     template<class TInjector, class I, class T>
-    auto add(const TInjector& injector, std::vector<std::shared_ptr<I>>& v, const di::aux::type<T>&) const {
+    auto add(const TInjector& injector, std::vector<std::shared_ptr<I>>& v, const type<T>&) const {
         v.push_back(injector.template create<std::shared_ptr<T>>());
     }
 
     template<class TInjector, class I, class T>
-    auto add(const TInjector& injector, std::vector<std::unique_ptr<I>>& v, const di::aux::type<T>&) const {
+    auto add(const TInjector& injector, std::vector<std::unique_ptr<I>>& v, const type<T>&) const {
         v.emplace_back(injector.template create<std::unique_ptr<T>>());
     }
 
-    template<class TInjector, class TContainer>
-    di::aux::remove_accessors_t<TContainer>
-    operator()(const TInjector& injector, const di::aux::type<TContainer>&) const {
-        di::aux::remove_accessors_t<TContainer> container;
-        [](...){}((add(injector, container, di::aux::type<Ts>{}), 0)...);
+    template<class TInjector, class T>
+    di::aux::remove_accessors_t<typename T::type>
+    operator()(const TInjector& injector, const T&) const {
+        di::aux::remove_accessors_t<typename T::type> container;
+        [](...){}((add(injector, container, type<Ts>{}), 0)...);
         return container;
     }
 };

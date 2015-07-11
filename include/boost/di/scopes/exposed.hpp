@@ -16,40 +16,67 @@ class exposed {
 public:
     template<class TExpected, class TGiven>
     class scope {
-        using type = std::conditional_t<
-            std::is_copy_constructible<TExpected>::value
-          , TExpected
-          , TExpected*
-        >;
+        #if defined(BOOST_DI_GCC)
+            using type = std::conditional_t<
+                std::is_copy_constructible<TExpected>::value
+              , TExpected
+              , TExpected*
+            >;
+        #else
+            using type = TExpected;
+        #endif
 
         struct iprovider {
-            virtual ~iprovider() noexcept = default;
-            virtual TExpected* get(const type_traits::heap& = {}) const noexcept = 0;
-            virtual type get(const type_traits::stack&) const noexcept = 0;
-            virtual iprovider* clone() const noexcept = 0;
+            TExpected* (*heap)(const iprovider*);
+            type (*stack)(const iprovider*);
+
+            auto get(const type_traits::heap& = {}) const noexcept {
+                return ((iprovider*)(this))->heap(this);
+            }
+
+            auto get(const type_traits::stack&) const noexcept {
+                return ((iprovider*)(this))->stack(this);
+            }
         };
 
         template<class TInjector>
-        class provider_impl : public iprovider {
-        public:
+        struct provider_impl {
+            TExpected* (*heap)(const provider_impl*);
+            type (*stack)(const provider_impl*);
+
+            template<class T>
+            static T create(const provider_impl* object) noexcept {
+                return object->injector.create_impl(aux::type<T>{});
+            }
+
             explicit provider_impl(const TInjector& injector) noexcept
-                : injector_(injector)
+                : provider_impl(injector
+                              , std::integral_constant<bool, TInjector::template is_creatable<TExpected*>::value>{}
+                              , std::integral_constant<bool, TInjector::template is_creatable<TExpected>::value>{}
+                  )
             { }
 
-            TExpected* get(const type_traits::heap&) const noexcept override {
-                return injector_.create_impl(aux::type<TExpected*>{});
-            }
+            provider_impl(const TInjector& injector, const std::true_type&, const std::true_type&) noexcept
+                : heap(&provider_impl::template create<TExpected*>)
+                , stack(&provider_impl::template create<type>)
+                , injector(injector)
+            { }
 
-            type get(const type_traits::stack&) const noexcept override {
-                return injector_.create_impl(aux::type<type>{});
-            }
+            provider_impl(const TInjector& injector, const std::false_type&, const std::true_type&) noexcept
+                : stack(&provider_impl::template create<type>)
+                , injector(injector)
+            { }
 
-            iprovider* clone() const noexcept override {
-                return new provider_impl(*this); // non-ownership pointer
-            }
+            provider_impl(const TInjector& injector, const std::true_type&, const std::false_type&) noexcept
+                : heap(&provider_impl::template create<TExpected*>)
+                , injector(injector)
+            { }
 
-        private:
-            TInjector injector_;
+            provider_impl(const TInjector& injector, const std::false_type&, const std::false_type&)
+                : injector(injector)
+            { }
+
+            TInjector injector;
         };
 
     public:
@@ -57,13 +84,11 @@ public:
         using is_referable = std::false_type;
 
         template<class TInjector>
-        explicit scope(const TInjector& injector) noexcept
-            : provider_{new provider_impl<TInjector>(injector)}
-        { }
-
-        explicit scope(const scope& other) noexcept
-            : provider_(other.provider_->clone())
-        { }
+        explicit scope(const TInjector& injector) noexcept {
+            static auto provider = provider_impl<TInjector>{injector};
+            provider.injector = injector;
+            provider_ = (iprovider*)&provider;
+        }
 
         template<class T, class TProvider>
         T try_create(const TProvider&);
@@ -74,18 +99,10 @@ public:
         }
 
     private:
-        std::unique_ptr<iprovider> provider_;
+        iprovider* provider_ = nullptr;
         typename TScope::template scope<TExpected, TGiven> scope_;
     };
 };
-
-#if defined(BOOST_DI_GCC)
-    template<class TScope>
-    template<class TExpected, class TGiven>
-    TExpected* exposed<TScope>::scope<TExpected, TGiven>::iprovider::get(const type_traits::heap&) const noexcept {
-        return nullptr;
-    }
-#endif
 
 }}}} // boost::di::v1::scopes
 

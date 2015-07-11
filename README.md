@@ -1036,38 +1036,34 @@ int main() {                            | pop    %rdx
 ```
 ```cpp
 Create bound interface via exposed      | Asm x86-64
-module                                  | cost = virtual call due to type erasure
+module                                  | cost = type erasure
 ----------------------------------------|----------------------------------------------------------------------
-struct module {                         | push   %rbp                               mov    (%rax),%ecx
-	di::injector<i1> configure() const {| push   %rbx                               lea    -0x1(%rcx),%edx
-		return di::make_injector(       | sub    $0x38,%rsp                         mov    %edx,(%rax)
-			di::bind<i1, impl1>         | lea    0x10(%rsp),%rdi                    cmp    $0x1,%ecx
-		);                              | lea    0x8(%rsp),%rsi                     jne    0x400bcd <main+173>
-	}                                   | callq  0x400bf0 <_ZN5boost2di7exposed>    mov    (%rbx),%rax
-};                                      | mov    0x18(%rsp),%rdi                    mov    %rbx,%rdi
-                                        | mov    (%rdi),%rax                        callq  *0x10(%rax)
-int main() {                            | lea    0x30(%rsp),%rsi                    lea    0xc(%rbx),%rax
-	auto injector = di::make_injector(  | callq  *0x10(%rax)                        mov    $0x0,%ecx
-        module{}                        | test   %rax,%rax                          test   %rcx,%rcx
-    );                                  | setne  %bpl                               je     0x400bb8 <main+152>
-                                        | je     0x400b57 <main+55>                 mov    $0xffffffff,%ecx
-	auto ptr = injector.create<         | mov    (%rax),%rcx                        lock   xadd %ecx,(%rax)
-        unique_ptr<i1>                  | mov    %rax,%rdi                          mov    %ecx,0x30(%rsp)
-    >();                                | callq  *0x8(%rcx)                         mov    0x30(%rsp),%ecx
-                                        | mov    0x20(%rsp),%rbx                    jmp    0x400bbf <main+159>
-	return ptr != nullptr;              | test   %rbx,%rbx                          mov    (%rax),%ecx
-}                                       | je     0x400bcd <main+173>                lea    -0x1(%rcx),%edx
-                                        | lea    0x8(%rbx),%rax                     mov    %edx,(%rax)
-                                        | mov    $0x0,%ecx                          cmp    $0x1,%ecx
-                                        | test   %rcx,%rcx                          jne    0x400bcd <main+173>
-                                        | je     0x400b82 <main+98>                 mov    (%rbx),%rax
-                                        | mov    $0xffffffff,%ecx                   mov    %rbx,%rdi
-                                        | lock   xadd %ecx,(%rax)                   callq  *0x18(%rax)
-                                        | mov    %ecx,0x30(%rsp)                    movzbl %bpl,%eax
-                                        | mov    0x30(%rsp),%ecx                    add    $0x38,%rsp
-                                        | jmp    0x400b89 <main+105>                pop    %rbx
-                                        |                                           pop    %rbp
-                                        | -->                                       retq
+struct module {                         | push   %rbx
+	di::injector<i1> configure() const {| mov    0x2007e9(%rip),%al
+		return di::make_injector(       | test   %al,%al
+			di::bind<i1, impl1>         | jne    0x4009be <main+46>
+		);                              | mov    $0x601180,%edi
+	}                                   | callq  0x4007e0 <__cxa_guard_acquire@plt>
+};                                      | test   %eax,%eax
+                                        | je     0x4009be <main+46>
+int main() {                            | movq   $0x400a00,0x2007b4(%rip
+	auto injector = di::make_injector(  | mov    $0x601180,%edi
+        module{}                        | callq  0x400820 <__cxa_guard_release@plt>
+    );                                  | mov    0x2007a3(%rip),%rax
+                                        | mov    $0x601168,%edi
+	auto ptr = injector.create<         | callq  *%rax
+        unique_ptr<i1>                  | test   %rax,%rax
+    >();                                | setne  %cl
+                                        | movzbl %cl,%ebx
+	return ptr != nullptr;              | je     0x4009e0 <main+80>
+}                                       | mov    (%rax),%rcx
+                                        | mov    %rax,%rdi
+                                        | callq  *0x8(%rcx)
+                                        | mov    %ebx,%eax
+                                        | pop    %rbx
+                                        | retq
+                                        | mov    %rax,%rdi
+                                        | callq  0x4009f0 <__clang_call_terminate>
 ```
 
 *

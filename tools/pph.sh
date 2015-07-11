@@ -66,6 +66,9 @@ main() {
     echo "#include \"boost/di/scopes/shared.hpp\""
     echo "#include \"boost/di/scopes/unique.hpp\""
     echo
+    echo "// providers"
+    echo "#include \"boost/di/providers/stack_over_heap.hpp\""
+    echo
     echo "#else"
     echo
     generate_pph "boost/di.hpp" "$tmp_dir"

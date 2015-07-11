@@ -9,6 +9,7 @@
 
 #include <memory>
 #include "boost/di/aux_/utility.hpp"
+#include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/fwd.hpp" // boost::shared_ptr
 
 namespace boost { namespace di { inline namespace v1 { namespace wrappers {
@@ -69,21 +70,20 @@ struct shared {
 
 template<class T>
 struct shared<T&> {
-    template<class I>
+    shared(T& object) : object(&object) { }
+    shared(const shared&) noexcept = default;
+    shared& operator=(const shared&) noexcept = default;
+
+    template<class I, BOOST_DI_REQUIRES(std::is_convertible<std::reference_wrapper<T>, I>::value)>
     inline operator I() const noexcept {
-        return object;
+        return *object;
     }
 
     inline operator T&() const noexcept {
-        return object;
+        return *object;
     }
 
-    template<class I>
-    inline operator I*() const noexcept { // only for compilation clean
-        return {};
-    }
-
-    T& object;
+    T* object = nullptr;
 };
 
 }}}} // boost::di::v1::wrappers
