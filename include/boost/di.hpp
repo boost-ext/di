@@ -1599,12 +1599,12 @@ private:
         using type = T;
     };
 
-    #if __has_include(<string>)
+    //#if __has_include(<string>)
         template<int N>
         struct str_traits<const char(&)[N]> {
             using type = std::string;
         };
-    #endif
+    //#endif
 
     template<class T>
     struct str_traits<std::shared_ptr<T>&> {
