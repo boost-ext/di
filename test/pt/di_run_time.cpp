@@ -15,9 +15,9 @@ namespace {
 
 auto disassemble(const std::string& f, const std::string& progname, const std::regex& rgx) {
     std::stringstream result;
-    std::string commands_file = std::tmpnam(nullptr);
+    std::string commands_file = "commands_file.tmp";
     std::ofstream commands{commands_file};
-    std::string output_file = std::tmpnam(nullptr);
+    std::string output_file = "output_file.tmp";
     std::stringstream command;
 
 #if defined(__linux)

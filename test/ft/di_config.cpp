@@ -17,7 +17,8 @@ static auto called = 0;
 
 class config : public di::config {
 public:
-    auto policies(...) const noexcept {
+    template<class T>
+    auto policies(const T&) const noexcept {
         return di::make_policies([](auto){++called;});
     }
 };
@@ -31,7 +32,8 @@ test call_policy_lambda = [] {
 
 class config_provider : public di::config {
 public:
-    auto provider(...) const noexcept {
+    template<class T>
+    auto provider(const T&) const noexcept {
         ++called;
         return di::providers::heap{};
     }
@@ -68,7 +70,8 @@ struct deleter_provider {
 
 class config_deleter_provider : public di::config {
 public:
-    auto provider(...) const noexcept {
+    template<class T>
+    auto provider(const T&) const noexcept {
         return deleter_provider{};
     }
 };
@@ -83,7 +86,8 @@ test call_provider_with_deleter = [] {
 #if !defined(BOOST_DI_MSVC)
     class config_policies : public di::config {
     public:
-        auto policies(...) const noexcept {
+        template<class T>
+        auto policies(const T&) const noexcept {
             using namespace di::policies;
             using namespace di::policies::operators;
             return di::make_policies(constructible(is_root{} || std::is_same<_, double>{} || is_bound<_>{}));
@@ -115,7 +119,8 @@ struct policy {
 
 class custom_policies : public di::config {
 public:
-    auto policies(...) const noexcept {
+    template<class T>
+    auto policies(const T&) const noexcept {
         return di::make_policies(
             policy{}
           , [](auto) { ++policy::called(); }
