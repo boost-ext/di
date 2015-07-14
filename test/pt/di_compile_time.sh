@@ -98,7 +98,8 @@ big_complexity() {
     done
 }
 
-graph small_complexity "Small complexity | clang-3.4 -O2"
-graph medium_complexity "Medium complexity | clang-3.4 -O2"
-graph big_complexity "Big complexity | clang-3.4 -O2"
+[[ -z "$COMPLEXITY" ]] && COMPLEXITY="small,medium,big"
+[[ $COMPLEXITY == *"small"* ]] && graph small_complexity "Small complexity | clang-3.4 -O2"
+[[ $COMPLEXITY == *"medium"* ]] && graph medium_complexity "Medium complexity | clang-3.4 -O2"
+[[ $COMPLEXITY == *"big"* ]] && graph big_complexity "Big complexity | clang-3.4 -O2"
 
