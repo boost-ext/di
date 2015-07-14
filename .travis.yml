@@ -25,6 +25,7 @@ matrix:
             - libstdc++-5-dev
             - valgrind
             - gdb
+            - bc
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.4
@@ -38,6 +39,7 @@ matrix:
             - libstdc++-5-dev
             - valgrind
             - gdb
+            - bc
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.5
@@ -51,6 +53,7 @@ matrix:
             - libstdc++-5-dev
             - valgrind
             - gdb
+            - bc
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.6
@@ -64,6 +67,7 @@ matrix:
             - libstdc++-5-dev
             - valgrind
             - gdb
+            - bc
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise
@@ -76,6 +80,7 @@ matrix:
             - clang-3.7
             - libstdc++-5-dev
             - gdb
+            - bc
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise
@@ -111,6 +116,7 @@ matrix:
             - g++-5
             - libstdc++-5-dev
             - gdb
+            - bc
           sources:
             - ubuntu-toolchain-r-test
 
