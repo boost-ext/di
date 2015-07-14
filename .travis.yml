@@ -121,10 +121,10 @@ matrix:
             - ubuntu-toolchain-r-test
 
     - os: osx
-      env: TOOLSET=clang BENCHMARK=quick MAX=2.0
+      env: TOOLSET=clang BENCHMARK=quick MAX=2.5
 
     - os: osx
-      env: CMAKE_COMPILER=clang++ BENCHMARK=quick MAX=2.0
+      env: CMAKE_COMPILER=clang++ BENCHMARK=quick MAX=2.5
 
 before_script:
   - git config --global user.name "Travis-CI"
