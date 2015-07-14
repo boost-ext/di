@@ -37,7 +37,7 @@ bind_all() {
 benchmark() {
     CTOR=`[ "$2" == "ctor" ] && echo -n "-DBOOST_DI_INJECT(type, ...)=type(__VA_ARGS__)"`
     EXPOSED_OR_AUTO=`[ "$3" == "auto" ] && echo -n "-DEXPOSED_OR_AUTO(t1, t2)=t2" || echo -n "-DEXPOSED_OR_AUTO(t1, t2)=t1"`
-    (time clang++ -O2 di_compile_time.cpp -std=c++1y -I ../../include "$CTOR" "$EXPOSED_OR_AUTO" `$4` $5 -DCOMPLEX=$1) 2> /tmp/$0.dat
+    (time $CXX -O2 di_compile_time.cpp -std=c++1y -I ../../include "$CTOR" "$EXPOSED_OR_AUTO" `$4` $5 -DCOMPLEX=$1) 2> /tmp/$0.dat
     if [[ "`grep error: /tmp/$0.dat`" != "" ]]; then
         >&2 cat /tmp/$0.dat
         exit
@@ -98,8 +98,23 @@ big_complexity() {
     done
 }
 
+verify() {
+    echo -n "$1[$MAX] "
+    [ $(echo "$1 < $MAX" | bc) -ne 1 ] && exit -1
+}
+
+quick() {
+    verify `benchmark small_complexity ctor auto "bind_others 200"`
+    verify `benchmark small_complexity ctor exposed "bind_others 200"`
+    verify `benchmark small_complexity inject auto "bind_others 200"`
+    verify `benchmark small_complexity inject exposed "bind_others 200"`
+    exit 0
+}
+
+[[ -z "$MAX" ]] && MAX="1.0"
 [[ -z "$COMPLEXITY" ]] && COMPLEXITY="small,medium,big"
-[[ $COMPLEXITY == *"small"* ]] && graph small_complexity "Small complexity | clang-3.4 -O2"
-[[ $COMPLEXITY == *"medium"* ]] && graph medium_complexity "Medium complexity | clang-3.4 -O2"
-[[ $COMPLEXITY == *"big"* ]] && graph big_complexity "Big complexity | clang-3.4 -O2"
+[[ $COMPLEXITY == *"small"* ]] && graph small_complexity "Small complexity | $CXX -O2"
+[[ $COMPLEXITY == *"medium"* ]] && graph medium_complexity "Medium complexity | $CXX -O2"
+[[ $COMPLEXITY == *"big"* ]] && graph big_complexity "Big complexity | $CXX -O2"
+[[ $COMPLEXITY == *"quick"* ]] && quick
 
