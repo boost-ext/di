@@ -57,7 +57,7 @@ test-suite example :
 
 test-suite extensions :
     [ run-example c++1y : extensions/constructor_bindings.cpp ]
-    [ run-example c++1y : extensions/container_bindings.cpp ]
+    [ run-example c++1y : extensions/multi_bindings.cpp ]
     #[ run-example c++1y : extensions/contextual_bindings.cpp ]
     [ run-example c++1y : extensions/factory.cpp ]
     [ run-example c++1y : extensions/testing.cpp ]

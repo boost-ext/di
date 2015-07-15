@@ -23,10 +23,10 @@ $example_begin example/extensions/contextual_bindings.cpp$
 $example_end$
 [endsect]
 
-[section Container Bingings]
-$example_begin example/extensions/container_bindings.cpp$
-[import ../example/extensions/container_bindings.cpp]
-[container_bindings]
+[section Multi Bingings]
+$example_begin example/extensions/multi_bindings.cpp$
+[import ../example/extensions/multi_bindings.cpp]
+[multi_bindings]
 $example_end$
 [endsect]
 
