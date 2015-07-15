@@ -8,6 +8,7 @@
 #define BOOST_DI_WRAPPERS_SHARED_HPP
 
 #include <memory>
+#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/fwd.hpp" // boost::shared_ptr
@@ -82,6 +83,13 @@ struct shared<T&> {
     inline operator T&() const noexcept {
         return *object;
     }
+
+#if defined(BOOST_DI_MSVC)
+    template<class I>
+    inline operator I*() const noexcept { // only for compilation clean
+        return *object;
+    }
+#endif
 
     T* object = nullptr;
 };
