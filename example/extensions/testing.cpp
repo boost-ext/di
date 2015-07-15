@@ -123,7 +123,7 @@ public:
         return mock_provider<TInjector>{expectations()};
     }
 
-    static auto& expectations() {
+    static ::expectations& expectations() {
         static ::expectations expectations_;
         return expectations_;
     }
