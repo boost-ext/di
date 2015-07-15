@@ -915,8 +915,13 @@ public:
 
             explicit provider_impl(const TInjector& injector) noexcept
                 : provider_impl(injector
+                          #if defined(BOOST_DI_MSVC)
+                              , std::true_type{}
+                              , std::true_type{}
+                          #else
                               , std::integral_constant<bool, TInjector::template is_creatable<TExpected*>::value>{}
                               , std::integral_constant<bool, TInjector::template is_creatable<TExpected>::value>{}
+                          #endif
                   )
             { }
 
