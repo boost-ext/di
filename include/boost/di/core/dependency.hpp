@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_CORE_DEPENDENCY_HPP
 #define BOOST_DI_CORE_DEPENDENCY_HPP
 
-#if __has_include(<string>)
+#if defined(BOOST_DI_MSVC) || __has_include(<string>)
     #include <string>
 #endif
 #include "boost/di/aux_/compiler.hpp"
