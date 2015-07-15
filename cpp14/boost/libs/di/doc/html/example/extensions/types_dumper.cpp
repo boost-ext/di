@@ -25,13 +25,17 @@ struct c3 { c3(std::shared_ptr<c1>, std::shared_ptr<c2>) { } };
 
 namespace di = boost::di;
 
+// doesn't work inside polices yet / tested with gcc-5.1 and clang-3.7
+static std::vector<int> v = { 0 };
+static int i = 1;
+
 /*<<define `types dumper` directly in configuration>>*/
 class types_dumper : public di::config {
 public:
     template<class _>
-    auto policies(const _&) noexcept {
+    static auto policies(const _&) noexcept {
         return di::make_policies(
-            [&](auto type, auto dependency, BOOST_DI_UNUSED auto... ctor) {
+            [](auto type, auto dependency, BOOST_DI_UNUSED auto... ctor) {
                 using T = decltype(type);
                 using arg = typename T::type;
                 using name = typename T::name;
@@ -55,10 +59,6 @@ public:
             }
         );
     }
-
-private:
-    std::vector<int> v = { 0 };
-    int i = 1;
 };
 
 int main() {

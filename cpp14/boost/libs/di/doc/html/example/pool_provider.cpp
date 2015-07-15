@@ -75,7 +75,7 @@ struct pool_provider {
 class config : public di::config {
 public:
     template<class T>
-    auto provider(const T&) const noexcept {
+    static auto provider(const T&) noexcept {
         return pool_provider{};
     }
 };

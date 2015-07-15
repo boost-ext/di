@@ -25,6 +25,10 @@ struct c3 { c3(std::shared_ptr<c1>, std::shared_ptr<c2>) { } };
 
 namespace di = boost::di;
 
+// doesn't work inside polices yet / tested with gcc-5.1 and clang-3.7
+std::vector<const std::type_info*> v = { &typeid(nullptr) };
+int i = 1;
+
 /**
  * http://plantuml.sourceforge.net/objects.html
  * ./uml_dumper | java -jar plantuml.jar -p > uml_dumper.png
@@ -40,7 +44,7 @@ public:
     }
 
     template<class _>
-    auto policies(const _&) noexcept {
+    static auto policies(const _&) noexcept {
         /*<<define `uml dumper` directly in policies configuration>>*/
         return di::make_policies(
             [&](auto type, auto dependency, BOOST_DI_UNUSED auto... ctor) {
@@ -63,10 +67,6 @@ public:
             }
         );
     }
-
-private:
-    std::vector<const std::type_info*> v = { &typeid(nullptr) };
-    int i = 1;
 };
 
 int main() {

@@ -240,7 +240,7 @@ function toggleNextRow() {
 <span class="keyword">class</span> <span class="identifier">config</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">config</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-    <span class="keyword">auto</span> <span class="identifier">provider</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;)</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+    <span class="keyword">static</span> <span class="keyword">auto</span> <span class="identifier">provider</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;)</span> <span class="keyword">noexcept</span> <span class="special">{</span>
         <span class="keyword">return</span> <span class="identifier">pool_provider</span><span class="special">{};</span>
     <span class="special">}</span>
 <span class="special">};</span>

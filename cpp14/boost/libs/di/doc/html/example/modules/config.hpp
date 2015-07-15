@@ -17,7 +17,7 @@
 class config : public di::config {
 public:
     template<class T>
-    auto policies(const T&) const noexcept {
+    static auto policies(const T&) noexcept {
         return di::make_policies(
             [](auto type){ std::cout << typeid(typename decltype(type)::type).name() << std::endl; }
         );
