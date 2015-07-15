@@ -86,8 +86,8 @@ struct shared<T&> {
 
 #if defined(BOOST_DI_MSVC)
     template<class I>
-    inline operator I*() const noexcept { // only for compilation clean
-        return *object;
+    inline operator I*() noexcept { // only for compilation clean
+        return {};
     }
 #endif
 
