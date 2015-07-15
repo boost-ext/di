@@ -937,7 +937,8 @@ public:
             { }
 
             provider_impl(const TInjector& injector, const std::false_type&, const std::false_type&)
-                : injector(injector)
+                : heap(&provider_impl::template create<TExpected*>) // for creatable error
+                , injector(injector)
             { }
 
             TInjector injector;
@@ -2110,12 +2111,12 @@ inline auto make_policies(const TPolicies&... args) noexcept {
 class config {
 public:
     template<class T>
-    auto provider(const T&) const noexcept {
+    static auto provider(const T&) noexcept {
         return providers::stack_over_heap{};
     }
 
     template<class T>
-    auto policies(const T&) noexcept {
+    static auto policies(const T&) noexcept {
         return make_policies();
     }
 };
@@ -2824,7 +2825,7 @@ template<
   , class TInitialization
   , class... TCtor
 > struct provider<TExpected, TGiven, TName, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
-    using provider_t = decltype(std::declval<TInjector>().config_.provider(std::declval<TInjector>()));
+    using provider_t = decltype(TInjector::config::provider(std::declval<TInjector>()));
 
     template<class TMemory, class... TArgs>
     struct is_creatable {
@@ -2839,7 +2840,7 @@ template<
 
     template<class TMemory, class... TArgs, BOOST_DI_REQUIRES(is_creatable<TMemory, TArgs...>::value)>
     auto get_impl(const TMemory& memory, TArgs&&... args) const {
-        return injector_.config_.provider(injector_).template get<TExpected, TGiven>(
+        return TInjector::config::provider(injector_).template get<TExpected, TGiven>(
             TInitialization{}
           , memory
           , static_cast<TArgs&&>(args)...
@@ -2868,7 +2869,7 @@ template<
 > struct provider<TExpected, TGiven, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
     template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const {
-        return injector_.config_.provider(injector_).template get<TExpected, TGiven>(
+        return TInjector::config::provider(injector_).template get<TExpected, TGiven>(
             TInitialization{}
           , memory
           , injector_.create_successful_impl(aux::type<TCtor>{})...
@@ -3040,7 +3041,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
                    typename TDependency::given
                  , TCtor
                  , injector
-                 , decltype(((TConfig*)0)->provider(std::declval<injector>()))
+                 , decltype(TConfig::provider(std::declval<injector>()))
                >{}
            )
        ), T>::value BOOST_DI_CORE_INJECTOR_POLICY(
@@ -3060,6 +3061,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
 
 public:
     using deps = transform_t<TDeps...>;
+    using config = TConfig;
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     struct is_creatable {
@@ -3099,10 +3101,6 @@ public:
     template<class T, BOOST_DI_REQUIRES(!has_deps<T>::value)>
     operator T() const {
         return create<T>();
-    }
-
-    TConfig& config() noexcept {
-        return config_;
     }
 
     template<class TAction>
@@ -3177,7 +3175,7 @@ private:
         using create_t = type_traits::referable_traits_t<T, dependency_t>;
         BOOST_DI_CORE_INJECTOR_POLICY(
             policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>(
-                ((TConfig&)config_).policies(*this), dependency, ctor_t{}
+                TConfig::policies(*this), dependency, ctor_t{}
             );
         )()
         return wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
@@ -3215,7 +3213,7 @@ private:
         using create_t = type_traits::referable_traits_t<T, dependency_t>;
         BOOST_DI_CORE_INJECTOR_POLICY(
             policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>(
-                ((TConfig&)config_).policies(*this), dependency, ctor_t{}
+                TConfig::policies(*this), dependency, ctor_t{}
             );
         )()
         return successful::wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
@@ -3233,8 +3231,6 @@ private:
 
     template<class, class TAction>
     void call_impl(const TAction&, const std::false_type&) { }
-
-    TConfig config_;
 };
 #undef BOOST_DI_CORE_INJECTOR_POLICY
 #undef BOOST_DI_CORE_INJECTOR_POLICY_ELSE
@@ -3271,7 +3267,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
                    typename TDependency::given
                  , TCtor
                  , injector
-                 , decltype(((TConfig*)0)->provider(std::declval<injector>()))
+                 , decltype(TConfig::provider(std::declval<injector>()))
                >{}
            )
        ), T>::value BOOST_DI_CORE_INJECTOR_POLICY(
@@ -3291,6 +3287,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
 
 public:
     using deps = transform_t<TDeps...>;
+    using config = TConfig;
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     struct is_creatable {
@@ -3330,10 +3327,6 @@ public:
     template<class T, BOOST_DI_REQUIRES(!has_deps<T>::value)>
     operator T() const {
         return create<T>();
-    }
-
-    TConfig& config() noexcept {
-        return config_;
     }
 
     template<class TAction>
@@ -3408,7 +3401,7 @@ private:
         using create_t = type_traits::referable_traits_t<T, dependency_t>;
         BOOST_DI_CORE_INJECTOR_POLICY(
             policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>(
-                ((TConfig&)config_).policies(*this), dependency, ctor_t{}
+                TConfig::policies(*this), dependency, ctor_t{}
             );
         )()
         return wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
@@ -3446,7 +3439,7 @@ private:
         using create_t = type_traits::referable_traits_t<T, dependency_t>;
         BOOST_DI_CORE_INJECTOR_POLICY(
             policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>(
-                ((TConfig&)config_).policies(*this), dependency, ctor_t{}
+                TConfig::policies(*this), dependency, ctor_t{}
             );
         )()
         return successful::wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
@@ -3464,8 +3457,6 @@ private:
 
     template<class, class TAction>
     void call_impl(const TAction&, const std::false_type&) { }
-
-    TConfig config_;
 };
 #undef BOOST_DI_CORE_INJECTOR_POLICY
 #undef BOOST_DI_CORE_INJECTOR_POLICY_ELSE
@@ -3522,8 +3513,8 @@ std::false_type configurable_impl(...);
 
 template<class T>
 auto configurable_impl(T&& t) -> aux::is_valid_expr<
-    decltype(static_cast<const T&>(t).provider(static_cast<const T&>(t)))
-  , decltype(t.policies(static_cast<const T&>(t)))
+    decltype(T::provider(static_cast<const T&>(t)))
+  , decltype(T::policies(static_cast<const T&>(t)))
 >;
 
 template<class T1, class T2>
@@ -3549,8 +3540,8 @@ struct get_configurable_error<std::true_type, std::true_type>
 template<class T>
 constexpr auto is_configurable(const std::true_type&) {
     return typename get_configurable_error<
-        decltype(providable<decltype(std::declval<T>().provider(std::declval<T>()))>())
-      , decltype(callable<decltype(std::declval<T>().policies(std::declval<T>()))>())
+        decltype(providable<decltype(T::provider(std::declval<T>()))>())
+      , decltype(callable<decltype(T::policies(std::declval<T>()))>())
     >::type{};
 }
 

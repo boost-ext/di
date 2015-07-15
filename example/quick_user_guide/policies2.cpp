@@ -17,7 +17,7 @@ struct impl1 : i1 { void dummy1() override { } };
 class print_types_info_policy : public di::config {
 public:
     template<class _>
-    auto policies(const _&) const noexcept {
+    static auto policies(const _&) noexcept {
         return di::make_policies(
             [](auto type, auto dep, BOOST_DI_UNUSED auto... ctor) {
                 using T = decltype(type);

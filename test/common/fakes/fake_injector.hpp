@@ -30,11 +30,7 @@ struct fake_injector {
         return T{};
     }
 
-    decltype(auto) config() const noexcept {
-        return config_;
-    }
-
-    fake_config<> config_;
+    using config = fake_config<>;
 };
 
 }}} // boost::di::v1

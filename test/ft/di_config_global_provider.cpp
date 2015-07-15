@@ -28,7 +28,7 @@ public:
 class global_provider : public di::config {
 public:
     template<class T>
-    auto provider(const T&) const noexcept {
+    static auto provider(const T&) noexcept {
         return custom_provider{};
     }
 };

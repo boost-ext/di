@@ -29,12 +29,12 @@ inline auto make_policies(const TPolicies&... args) noexcept {
 class config {
 public:
     template<class T>
-    auto provider(const T&) const noexcept {
+    static auto provider(const T&) noexcept {
         return providers::stack_over_heap{};
     }
 
     template<class T>
-    auto policies(const T&) noexcept {
+    static auto policies(const T&) noexcept {
         return make_policies();
     }
 };

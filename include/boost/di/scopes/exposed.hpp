@@ -73,7 +73,8 @@ public:
             { }
 
             provider_impl(const TInjector& injector, const std::false_type&, const std::false_type&)
-                : injector(injector)
+                : heap(&provider_impl::template create<TExpected*>) // for creatable error
+                , injector(injector)
             { }
 
             TInjector injector;

@@ -34,7 +34,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
                    typename TDependency::given
                  , TCtor
                  , injector
-                 , decltype(((TConfig*)0)->provider(std::declval<injector>()))
+                 , decltype(TConfig::provider(std::declval<injector>()))
                >{}
            )
        ), T>::value BOOST_DI_CORE_INJECTOR_POLICY(
@@ -54,6 +54,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
 
 public:
     using deps = transform_t<TDeps...>;
+    using config = TConfig;
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     struct is_creatable {
@@ -93,10 +94,6 @@ public:
     template<class T, BOOST_DI_REQUIRES(!has_deps<T>::value)>
     operator T() const {
         return create<T>();
-    }
-
-    TConfig& config() noexcept {
-        return config_;
     }
 
     template<class TAction>
@@ -171,7 +168,7 @@ private:
         using create_t = type_traits::referable_traits_t<T, dependency_t>;
         BOOST_DI_CORE_INJECTOR_POLICY(
             policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>(
-                ((TConfig&)config_).policies(*this), dependency, ctor_t{}
+                TConfig::policies(*this), dependency, ctor_t{}
             );
         )()
         return wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
@@ -209,7 +206,7 @@ private:
         using create_t = type_traits::referable_traits_t<T, dependency_t>;
         BOOST_DI_CORE_INJECTOR_POLICY(
             policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>(
-                ((TConfig&)config_).policies(*this), dependency, ctor_t{}
+                TConfig::policies(*this), dependency, ctor_t{}
             );
         )()
         return successful::wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
@@ -227,7 +224,5 @@ private:
 
     template<class, class TAction>
     void call_impl(const TAction&, const std::false_type&) { }
-
-    TConfig config_;
 };
 

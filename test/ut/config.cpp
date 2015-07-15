@@ -25,8 +25,8 @@ test make_policies_types = [] {
 };
 
 test default_config = [] {
-    expect(std::is_same<providers::stack_over_heap, decltype(config{}.provider(0))>{});
-    expect(std::is_same<core::pool<aux::type_list<>>, decltype(config{}.policies(0))>{});
+    expect(std::is_same<providers::stack_over_heap, decltype(config::provider(0))>{});
+    expect(std::is_same<core::pool<aux::type_list<>>, decltype(config::policies(0))>{});
 };
 
 }}} // boost::di::v1

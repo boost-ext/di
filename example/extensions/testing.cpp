@@ -119,17 +119,20 @@ class mocks_provider : public di::config {
 
 public:
     template<class TInjector>
-    auto provider(const TInjector&) const noexcept {
-        return mock_provider<TInjector>{expectations_};
+    static auto provider(const TInjector&) noexcept {
+        return mock_provider<TInjector>{expectations()};
     }
 
-    expectations expectations_;
+    static auto& expectations() {
+        static ::expectations expectations_;
+        return expectations_;
+    }
 };
 
 template<class TInjector, class R, class T, class... TArgs>
-expectations& expect(TInjector& injector, R(T::*)(TArgs...)) {
-    injector.config().expectations_.add(std::type_index(typeid(T)), []{ throw not_implemented{}; return nullptr; });
-    return injector.config().expectations_;
+expectations& expect(TInjector&, R(T::*)(TArgs...)) {
+    TInjector::config::expectations().add(std::type_index(typeid(T)), []{ throw not_implemented{}; return nullptr; });
+    return TInjector::config::expectations();
 }
 
 struct test {

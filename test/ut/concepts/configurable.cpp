@@ -17,7 +17,7 @@ test none = [] {
 test just_policies = [] {
     class config {
     public:
-        auto policies() const noexcept { return 0; }
+        static auto policies() noexcept { return 0; }
     };
     static_expect(!configurable<config>());
 };
@@ -25,7 +25,7 @@ test just_policies = [] {
 test just_provider = [] {
     class config {
     public:
-        auto provider() const noexcept { return 0; }
+        static auto provider() noexcept { return 0; }
     };
     static_expect(!configurable<config>());
 };
@@ -33,8 +33,8 @@ test just_provider = [] {
 test private_access = [] {
     class config {
     private:
-        auto policies() const noexcept { return 0; }
-        auto provider() const noexcept { return 0; }
+        static auto policies() noexcept { return 0; }
+        static auto provider() noexcept { return 0; }
     };
     static_expect(!configurable<config>());
 };
@@ -42,8 +42,8 @@ test private_access = [] {
 test inheritance = [] {
     class config_ {
     public:
-        auto policies() const noexcept { return 0; }
-        auto provider() const noexcept { return providers::heap{}; }
+        static auto policies() noexcept { return 0; }
+        static auto provider() noexcept { return providers::heap{}; }
     };
     class config : public config_ { };
     static_expect(configurable<config>());
@@ -52,8 +52,8 @@ test inheritance = [] {
 test all = [] {
     class config {
     public:
-        auto policies() const noexcept { return 0; }
-        auto provider() const noexcept { return providers::heap{}; }
+        static auto policies() noexcept { return 0; }
+        static auto provider() noexcept { return providers::heap{}; }
     };
 
     static_expect(configurable<config>());

@@ -29,7 +29,7 @@ struct global_policy {
 class custom_policies : public di::config {
 public:
     template<class T>
-    auto policies(const T&) const noexcept {
+    static auto policies(const T&) noexcept {
         return di::make_policies(custom_policy{});
     }
 };
@@ -37,7 +37,7 @@ public:
 class global_policies : public di::config {
 public:
     template<class T>
-    auto policies(const T&) const noexcept {
+    static auto policies(const T&) noexcept {
         return di::make_policies(global_policy{});
     }
 };
