@@ -78,12 +78,12 @@ private:
         using type = T;
     };
 
-	#if defined(BOOST_DI_MSVC)_||_has_include(<string>)
+    #if defined(BOOST_DI_MSVC) || __has_include(<string>)
         template<int N>
         struct str_traits<const char(&)[N]> {
             using type = std::string;
         };
-	#endif
+    #endif
 
     template<class T>
     struct str_traits<std::shared_ptr<T>&> {
