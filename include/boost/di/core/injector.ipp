@@ -29,25 +29,24 @@ public:
         class T
       , class TName = no_name
       , class TIsRoot = std::false_type
-      , class TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
-      , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
     > struct is_creatable : std::integral_constant<bool, std::is_convertible<
        decltype(
-           std::declval<TDependency>().template try_create<T>(
+           std::declval<std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>>().template try_create<T>(
                try_provider<
-                   typename TDependency::given
-                 , TCtor
+                   typename std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>::given
+				, typename type_traits::ctor_traits<typename std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>::given>::type
+                 //, TCtor
                  , injector
                  , decltype(TConfig::provider(std::declval<injector>()))
                >{}
            )
        ), T>::value BOOST_DI_CORE_INJECTOR_POLICY(
-           && policy::template try_call<
-                  arg_wrapper<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot, pool_t>
-                , TPolicies
-                , TDependency
-                , TCtor
-              >::value)()
+		   && policy::template try_call<
+				  arg_wrapper<type_traits::referable_traits_t<T, std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>>, TName, TIsRoot, pool_t>
+				, TPolicies
+				, std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
+				, typename type_traits::ctor_traits<typename std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>::given>::type
+			  >::value)()
     > {};
 
     template<class... TArgs>

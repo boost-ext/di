@@ -32,7 +32,7 @@
     #pragma warning(disable : 4822) // local class member function does not have a body
 
     #define BOOST_DI_UNUSED
-    #define BOOST_DI_ATTR_ERROR(...) // __declspec(deprecated(__VA_ARGS__))
+	#define BOOST_DI_ATTR_ERROR(...) __declspec(deprecated(__VA_ARGS__))
     #define BOOST_DI_CONSTEXPR inline
     #define BOOST_DI_LIKELY(...) __VA_ARGS__
     #define BOOST_DI_UNLIKELY(...) __VA_ARGS__

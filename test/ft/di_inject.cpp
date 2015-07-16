@@ -402,7 +402,7 @@ test smart_pointers = [] {
     };
 
     auto injector = di::make_injector(
-        di::bind<i1, impl1>()
+		di::bind<i1, impl1>()
     );
 
     injector.create<c>();
