@@ -11,7 +11,11 @@ namespace di = boost::di;
 struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
 struct impl : i { void dummy() override { } };
 
+struct c {
+    c(i*){}
+};
+
 test error_create_polymorphic_type_without_binding = [] {
-    di::make_injector().create<std::unique_ptr<i>>();
+    di::make_injector().create<c>();
 };
 

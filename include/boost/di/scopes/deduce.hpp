@@ -21,10 +21,14 @@ public:
             scope<TExpected, TGiven>::template is_referable<aux::remove_accessors_t<T>>;
 
         template<class T, class TProvider>
-        auto try_create(const TProvider& provider) -> decltype(
+decltype(
             typename type_traits::scope_traits_t<T>::template
-                scope<TExpected, TGiven>{}.template try_create<T>(provider)
-        );
+                scope<TExpected, TGiven>{}.template try_create<T>(std::declval<TProvider>())
+        )
+        try_create(const TProvider& provider);
+
+        template<class>
+        void try_create(...);
 
         template<class T, class TProvider>
         auto create(const TProvider& provider) {

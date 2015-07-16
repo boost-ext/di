@@ -21,13 +21,17 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     using pool_t = pool<transform_t<TDeps...>>;
     using is_root_t = std::true_type;
 
+public:
+    using deps = transform_t<TDeps...>;
+    using config = TConfig;
+
     template<
         class T
       , class TName = no_name
       , class TIsRoot = std::false_type
       , class TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
       , class TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type
-    > static auto try_create_impl() -> std::enable_if_t<std::is_convertible<
+    > struct is_creatable : std::integral_constant<bool, std::is_convertible<
        decltype(
            std::declval<TDependency>().template try_create<T>(
                try_provider<
@@ -44,31 +48,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
                 , TDependency
                 , TCtor
               >::value)()
-    >;
-
-    static auto is_creatable_impl(...) -> std::false_type;
-
-    template<class T, class TName, class TIsRoot>
-    static auto is_creatable_impl(T&&, TName&&, TIsRoot&&)
-        -> aux::is_valid_expr<decltype(try_create_impl<T, TName, TIsRoot>())>;
-
-public:
-    using deps = transform_t<TDeps...>;
-    using config = TConfig;
-
-    template<class T, class TName = no_name, class TIsRoot = std::false_type>
-    struct is_creatable {
-        static constexpr auto value =
-            #if defined(BOOST_DI_MSVC)
-                false
-            #else
-                decltype(is_creatable_impl(std::declval<T>()
-                                         , std::declval<TName>()
-                                         , std::declval<TIsRoot>())
-                )::value
-            #endif
-        ;
-    };
+    > {};
 
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
