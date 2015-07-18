@@ -25,6 +25,9 @@ public:
 decltype(wrappers::shared<T>{std::shared_ptr<T>{std::declval<TProvider>().get()}})
          try_create(const TProvider&);
 
+    template<class>
+    void try_create(...);
+
         template<class, class TProvider>
         auto create(const TProvider& provider) {
             if (BOOST_DI_UNLIKELY(!get_instance())) {
