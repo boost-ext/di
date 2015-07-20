@@ -99,21 +99,21 @@ test from_function_expr = [] {
 };
 
 #if !defined(BOOST_DI_MSVC)
-	test from_function_expr_with_expected_function_expr = [] {
-		constexpr auto i = 42;
-		external::scope<std::function<int()>, std::function<int()>> external{[&]{ return i; }};
-		std::function<int()> f = external.create<void>(fake_provider<>{});
-		expect_eq(i, f());
-	};
+    test from_function_expr_with_expected_function_expr = [] {
+        constexpr auto i = 42;
+        external::scope<std::function<int()>, std::function<int()>> external{[&]{ return i; }};
+        std::function<int()> f = external.create<void>(fake_provider<>{});
+        expect_eq(i, f());
+    };
 #endif
 
 test from_fucntion_expr_with_injector = [] {
-	auto expr = [](const auto& injector) {
-		return injector.template create<int>();
-	};
+    auto expr = [](const auto& injector) {
+        return injector.template create<int>();
+    };
 
-	external::scope<int, decltype(expr)> external{expr};
-	expect_eq(0, static_cast<int>(external.create<void>(fake_provider<int>{})));
+    external::scope<int, decltype(expr)> external{expr};
+    expect_eq(0, static_cast<int>(external.create<void>(fake_provider<int>{})));
 };
 
 }}}} // boost::di::v1::scopes

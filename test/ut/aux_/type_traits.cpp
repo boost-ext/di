@@ -73,21 +73,21 @@ test is_braces_constructible_types = [] {
     struct agg1 { int i = {}; };
     struct agg2 { int& i; double d = {}; };
 
-	expect(is_braces_constructible<int>{});
-	expect(is_braces_constructible<c>{});
-	expect(is_braces_constructible<ctor, int>{});
-	expect(!is_braces_constructible<ctor>{});
-	expect(is_braces_constructible<ctor_def_value>{});
-	expect(is_braces_constructible<ctor_def_value, int>{});
-	expect(is_braces_constructible<ctor_def>{});
-	expect(!is_braces_constructible<ctor_def, int>{});
-	expect(is_braces_constructible<agg1>{});
+    expect(is_braces_constructible<int>{});
+    expect(is_braces_constructible<c>{});
+    expect(is_braces_constructible<ctor, int>{});
+    expect(!is_braces_constructible<ctor>{});
+    expect(is_braces_constructible<ctor_def_value>{});
+    expect(is_braces_constructible<ctor_def_value, int>{});
+    expect(is_braces_constructible<ctor_def>{});
+    expect(!is_braces_constructible<ctor_def, int>{});
+    expect(is_braces_constructible<agg1>{});
 
-	expect(!is_braces_constructible<agg1, int, double>{});
+    expect(!is_braces_constructible<agg1, int, double>{});
 #if !defined(BOOST_DI_MSVC)
-	expect(is_braces_constructible<agg1, int>{});
-	expect(is_braces_constructible<agg2, int&>{});
-	expect(is_braces_constructible<agg2, int&, double>{});
+    expect(is_braces_constructible<agg1, int>{});
+    expect(is_braces_constructible<agg2, int&>{});
+    expect(is_braces_constructible<agg2, int&, double>{});
 #endif
 };
 

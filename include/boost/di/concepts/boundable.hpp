@@ -57,10 +57,10 @@ struct is_unique;
 
 template<class T>
 struct unique_dependency {
-	using type = aux::pair<
-		aux::pair<typename T::expected, typename T::name>
-	  , typename T::priority
-	>;
+    using type = aux::pair<
+        aux::pair<typename T::expected, typename T::name>
+      , typename T::priority
+    >;
 };
 
 template<class... TDeps>
@@ -138,7 +138,7 @@ std::true_type boundable_impl(...);
 
 template<class... Ts>
 struct boundable
-	: decltype(boundable_impl(std::declval<Ts>()...))
+    : decltype(boundable_impl(std::declval<Ts>()...))
 { };
 
 }}}} // boost::di::v1::concepts

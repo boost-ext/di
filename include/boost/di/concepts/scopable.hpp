@@ -30,13 +30,13 @@ std::false_type scopable_impl(...);
 
 template<class T>
 auto scopable_impl(T&&) -> aux::is_valid_expr<
-	decltype(std::declval<typename T::template scope<_, _>>().template create<_>(provider<_>{}))
+    decltype(std::declval<typename T::template scope<_, _>>().template create<_>(provider<_>{}))
   , decltype(std::declval<typename T::template scope<_, _>>().template try_create<_>(provider<_>{}))
 >;
 
 template<class T>
 struct scopable
-	: decltype(scopable_impl(std::declval<T>()))
+    : decltype(scopable_impl(std::declval<T>()))
 { };
 
 }}}} // boost::di::v1::concepts

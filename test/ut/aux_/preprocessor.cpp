@@ -16,12 +16,12 @@ test cat = [] {
 };
 
 #if !defined(BOOST_DI_MSVC)
-	test call = [] {
-		#define CAT BOOST_DI_CALL(BOOST_DI_CAT, in, t)
-			CAT i = 0;
-		#undef CAT
-		expect(!i);
-	};
+    test call = [] {
+        #define CAT BOOST_DI_CALL(BOOST_DI_CAT, in, t)
+            CAT i = 0;
+        #undef CAT
+        expect(!i);
+    };
 #endif
 
 test conditional = [] {

@@ -394,7 +394,7 @@ public:
     #pragma warning(disable : 4503) // decorated name length exceeded, name was truncated
     #pragma warning(disable : 4822) // local class member function does not have a body
     #define BOOST_DI_UNUSED
-	#define BOOST_DI_ATTR_ERROR(...) __declspec(deprecated(__VA_ARGS__))
+    #define BOOST_DI_ATTR_ERROR(...) __declspec(deprecated(__VA_ARGS__))
     #define BOOST_DI_LIKELY(...) __VA_ARGS__
     #define BOOST_DI_UNLIKELY(...) __VA_ARGS__
 #endif
@@ -1286,12 +1286,12 @@ static constexpr BOOST_DI_UNUSED named_impl named{};
 
 template<class T, class TName>
 struct combine_impl {
-	using type = named_type<TName, T>;
+    using type = named_type<TName, T>;
 };
 
 template<class T>
 struct combine_impl<T, aux::none_type> {
-	using type = T;
+    using type = T;
 };
 
 template<class, class>
@@ -1299,7 +1299,7 @@ struct combine;
 
 template<class... T1, class... T2>
 struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
-	using type = aux::type_list<typename combine_impl<T1, T2>::type...>;
+    using type = aux::type_list<typename combine_impl<T1, T2>::type...>;
 };
 }}}} // boost::di::v1::detail
 
@@ -1526,13 +1526,13 @@ std::false_type scopable_impl(...);
 
 template<class T>
 auto scopable_impl(T&&) -> aux::is_valid_expr<
-	decltype(std::declval<typename T::template scope<_, _>>().template create<_>(provider<_>{}))
+    decltype(std::declval<typename T::template scope<_, _>>().template create<_>(provider<_>{}))
   , decltype(std::declval<typename T::template scope<_, _>>().template try_create<_>(provider<_>{}))
 >;
 
 template<class T>
 struct scopable
-	: decltype(scopable_impl(std::declval<T>()))
+    : decltype(scopable_impl(std::declval<T>()))
 { };
 
 }}}} // boost::di::v1::concepts
@@ -2307,10 +2307,10 @@ struct is_unique;
 
 template<class T>
 struct unique_dependency {
-	using type = aux::pair<
-		aux::pair<typename T::expected, typename T::name>
-	  , typename T::priority
-	>;
+    using type = aux::pair<
+        aux::pair<typename T::expected, typename T::name>
+      , typename T::priority
+    >;
 };
 
 template<class... TDeps>
@@ -2388,7 +2388,7 @@ std::true_type boundable_impl(...);
 
 template<class... Ts>
 struct boundable
-	: decltype(boundable_impl(std::declval<Ts>()...))
+    : decltype(boundable_impl(std::declval<Ts>()...))
 { };
 
 }}}} // boost::di::v1::concepts
@@ -3029,19 +3029,19 @@ public:
            std::declval<std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>>().template try_create<T>(
                try_provider<
                    typename std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>::given
-				, typename type_traits::ctor_traits<typename std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>::given>::type
+                , typename type_traits::ctor_traits<typename std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>::given>::type
                  //, TCtor
                  , injector
                  , decltype(TConfig::provider(std::declval<injector>()))
                >{}
            )
        ), T>::value BOOST_DI_CORE_INJECTOR_POLICY(
-		   && policy::template try_call<
-				  arg_wrapper<type_traits::referable_traits_t<T, std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>>, TName, TIsRoot, pool_t>
-				, TPolicies
-				, std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
-				, typename type_traits::ctor_traits<typename std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>::given>::type
-			  >::value)()
+           && policy::template try_call<
+                  arg_wrapper<type_traits::referable_traits_t<T, std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>>, TName, TIsRoot, pool_t>
+                , TPolicies
+                , std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
+                , typename type_traits::ctor_traits<typename std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>::given>::type
+              >::value)()
     > {};
 
     template<class... TArgs>
@@ -3234,19 +3234,19 @@ public:
            std::declval<std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>>().template try_create<T>(
                try_provider<
                    typename std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>::given
-				, typename type_traits::ctor_traits<typename std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>::given>::type
+                , typename type_traits::ctor_traits<typename std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>::given>::type
                  //, TCtor
                  , injector
                  , decltype(TConfig::provider(std::declval<injector>()))
                >{}
            )
        ), T>::value BOOST_DI_CORE_INJECTOR_POLICY(
-		   && policy::template try_call<
-				  arg_wrapper<type_traits::referable_traits_t<T, std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>>, TName, TIsRoot, pool_t>
-				, TPolicies
-				, std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
-				, typename type_traits::ctor_traits<typename std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>::given>::type
-			  >::value)()
+           && policy::template try_call<
+                  arg_wrapper<type_traits::referable_traits_t<T, std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>>, TName, TIsRoot, pool_t>
+                , TPolicies
+                , std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
+                , typename type_traits::ctor_traits<typename std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>::given>::type
+              >::value)()
     > {};
 
     template<class... TArgs>
@@ -3438,7 +3438,7 @@ auto providable_impl(T&& t) -> aux::is_valid_expr<
 
 template<class T>
 struct providable
-	: decltype(providable_impl<T>(std::declval<T>()))
+    : decltype(providable_impl<T>(std::declval<T>()))
 { };
 
 }}}} // boost::di::v1::concepts
@@ -3500,7 +3500,7 @@ constexpr auto is_configurable(const std::false_type&) {
 
 template<class T>
 struct configurable
-	: decltype(is_configurable<T>(decltype(configurable_impl(std::declval<T>())){}))
+    : decltype(is_configurable<T>(decltype(configurable_impl(std::declval<T>())){}))
 { };
 
 }}}} // boost::di::v1::concepts

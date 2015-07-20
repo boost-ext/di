@@ -71,17 +71,17 @@ struct c {
 c::c(int i) : i(i) { }
 
 #if !defined(BOOST_DI_MSVC)
-	test named_with_ctor_def_decl = [] {
-		constexpr auto i = 42;
+    test named_with_ctor_def_decl = [] {
+        constexpr auto i = 42;
 
-		auto injector = di::make_injector(
-			di::bind<int>().to(i).named(name)
-		);
+        auto injector = di::make_injector(
+            di::bind<int>().to(i).named(name)
+        );
 
-		auto object = injector.create<c>();
+        auto object = injector.create<c>();
 
-		expect_eq(i, object.i);
-	};
+        expect_eq(i, object.i);
+    };
 #endif
 
 test named_parameters_with_shared_scope = [] {

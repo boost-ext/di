@@ -256,13 +256,13 @@ test ctor_refs = [] {
     test(test_type<c>{}, di::bind<i1, impl1>());
     test(test_type<c_inject>{}, di::bind<i1, impl1>());
 #if !defined(BOOST_DI_MSVC)
-	test(test_type<c_aggregate>{}, di::bind<i1, impl1>());
+    test(test_type<c_aggregate>{}, di::bind<i1, impl1>());
 #endif
 
     test(test_type<c>{}, di::bind<i1>().to(std::make_shared<impl1>()));
     test(test_type<c_inject>{}, di::bind<i1>().to(std::make_shared<impl1>()));
 #if !defined(BOOST_DI_MSVC)
-	test(test_type<c_aggregate>{}, di::bind<i1>().to(std::make_shared<impl1>()));
+    test(test_type<c_aggregate>{}, di::bind<i1>().to(std::make_shared<impl1>()));
 #endif
 };
 
@@ -402,7 +402,7 @@ test smart_pointers = [] {
     };
 
     auto injector = di::make_injector(
-		di::bind<i1, impl1>()
+        di::bind<i1, impl1>()
     );
 
     injector.create<c>();

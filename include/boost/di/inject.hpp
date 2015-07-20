@@ -29,12 +29,12 @@ static constexpr BOOST_DI_UNUSED named_impl named{};
 
 template<class T, class TName>
 struct combine_impl {
-	using type = named_type<TName, T>;
+    using type = named_type<TName, T>;
 };
 
 template<class T>
 struct combine_impl<T, aux::none_type> {
-	using type = T;
+    using type = T;
 };
 
 template<class, class>
@@ -42,7 +42,7 @@ struct combine;
 
 template<class... T1, class... T2>
 struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
-	using type = aux::type_list<typename combine_impl<T1, T2>::type...>;
+    using type = aux::type_list<typename combine_impl<T1, T2>::type...>;
 };
 }}}} // boost::di::v1::detail
 

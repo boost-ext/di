@@ -15,11 +15,11 @@
 #include <type_traits>
 
 #if !defined(TEST_DEFAULT_REPORTER)
-	#if defined(_MSC_VER)
-		#define TEST_DEFAULT_REPORTER "common\\text_reporter.bat"
-	#else
-    	#define TEST_DEFAULT_REPORTER "common/text_reporter.sh"
-	#endif
+    #if defined(_MSC_VER)
+        #define TEST_DEFAULT_REPORTER "common\\text_reporter.bat"
+    #else
+        #define TEST_DEFAULT_REPORTER "common/text_reporter.sh"
+    #endif
 #endif
 
 static std::map<void*, std::vector<std::string>> results;
