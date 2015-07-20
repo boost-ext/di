@@ -29,7 +29,7 @@ void
 
 template<class... T>
 class injector : public
-     BOOST_DI_REQUIRES_MSG_T(concepts::boundable<aux::type<T...>>
+     BOOST_DI_REQUIRES_MSG_T(typename concepts::boundable<aux::type<T...>>::type
                            , core::injector<::BOOST_DI_CFG, core::pool<>, T...>) {
 public:
     template<

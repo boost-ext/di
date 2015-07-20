@@ -56,14 +56,16 @@ template<class>
 struct is_unique;
 
 template<class T>
-using unique_dependency = aux::pair<
-    aux::pair<typename T::expected, typename T::name>
-  , typename T::priority
->;
+struct unique_dependency {
+	using type = aux::pair<
+		aux::pair<typename T::expected, typename T::name>
+	  , typename T::priority
+	>;
+};
 
 template<class... TDeps>
 struct is_unique<aux::type_list<TDeps...>>
-    : aux::is_unique<unique_dependency<TDeps>...>
+    : aux::is_unique<typename unique_dependency<TDeps>::type...>
 { };
 
 template<class>
@@ -86,7 +88,7 @@ struct get_is_unique_error;
 
 template<class... TDeps>
 struct get_is_unique_error<aux::type_list<TDeps...>>
-    : get_is_unique_error_impl<typename aux::is_unique<unique_dependency<TDeps>...>::type>
+    : get_is_unique_error_impl<typename aux::is_unique<typename unique_dependency<TDeps>::type...>::type>
 { };
 
 template<class... TDeps>
@@ -122,12 +124,7 @@ auto boundable_impl(I&&, T&&) ->
     >;
 
 template<class... TDeps> // bindings
-auto boundable_impl(aux::type_list<TDeps...>&&) ->
-    #if defined(BOOST_DI_MSVC)
-        std::true_type;
-    #else
-        get_bindings_error<TDeps...>;
-    #endif
+auto boundable_impl(aux::type_list<TDeps...>&&) -> get_bindings_error<TDeps...>;
 
 template<class T, class... Ts> // any_of
 auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
@@ -140,12 +137,9 @@ auto boundable_impl(aux::type<TDeps...>&&) ->
 std::true_type boundable_impl(...);
 
 template<class... Ts>
-using boundable =
-    #if defined(BOOST_DI_MSVC)
-        std::true_type;
-    #else
-        decltype(boundable_impl(std::declval<Ts>()...));
-    #endif
+struct boundable
+	: decltype(boundable_impl(std::declval<Ts>()...))
+{ };
 
 }}}} // boost::di::v1::concepts
 
