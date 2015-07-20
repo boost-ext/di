@@ -51,13 +51,8 @@ public:
 
             explicit provider_impl(const TInjector& injector) noexcept
                 : provider_impl(injector
-                          #if defined(BOOST_DI_MSVC)
-                              , std::true_type{}
-                              , std::true_type{}
-                          #else
                               , std::integral_constant<bool, TInjector::template is_creatable<TExpected*>::value>{}
                               , std::integral_constant<bool, TInjector::template is_creatable<TExpected>::value>{}
-                          #endif
                   )
             { }
 
@@ -98,6 +93,9 @@ public:
 
         template<class T, class TProvider>
         T try_create(const TProvider&);
+
+        template<class T>
+        void try_create(...);
 
         template<class T, class TProvider>
         auto create(const TProvider&) {

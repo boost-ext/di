@@ -41,18 +41,15 @@ public:
         #endif
     > injector(const core::injector<TConfig, TPolicies, TDeps...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, core::pool<>, T...>(injector) {
-            #if !defined(BOOST_DI_MSVC)
-            using namespace detail;
             using injector_t = core::injector<TConfig, TPolicies, TDeps...>;
             int _[]{0, (
-                create<T>(
+                detail::create<T>(
                     std::integral_constant<bool,
                         injector_t::template is_creatable<T>::value ||
                         injector_t::template is_creatable<T*>::value
                     >{}
                 )
             , 0)...}; (void)_;
-            #endif
     }
 };
 
