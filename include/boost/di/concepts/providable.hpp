@@ -34,7 +34,9 @@ auto providable_impl(T&& t) -> aux::is_valid_expr<
 >;
 
 template<class T>
-using providable = decltype(providable_impl<T>(std::declval<T>()));
+struct providable
+	: decltype(providable_impl<T>(std::declval<T>()))
+{ };
 
 }}}} // boost::di::v1::concepts
 
