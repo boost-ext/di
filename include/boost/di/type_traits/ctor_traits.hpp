@@ -21,22 +21,17 @@ struct uniform { };
 BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_INJECTOR);
 
 template<class T, std::size_t>
-struct get {
-    using type = T;
-};
-
-template<class T, std::size_t N>
-using get_t = typename get<T, N>::type;
+using get = T;
 
 template<template<class...> class, class, class, class = void>
 struct ctor_impl;
 
 template<template<class...> class TIsConstructible, class T, std::size_t... TArgs>
 struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>
-    , BOOST_DI_REQUIRES_T((sizeof...(TArgs) > 0) && !TIsConstructible<T, get_t<core::any_type_fwd<T>, TArgs>...>::value)>
+    , BOOST_DI_REQUIRES_T((sizeof...(TArgs) > 0) && !TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
     : std::conditional<
-           TIsConstructible<T, get_t<core::any_type_ref_fwd<T>, TArgs>...>::value
-         , aux::type_list<get_t<core::any_type_ref_fwd<T>, TArgs>...>
+           TIsConstructible<T, get<core::any_type_ref_fwd<T>, TArgs>...>::value
+         , aux::type_list<get<core::any_type_ref_fwd<T>, TArgs>...>
          , typename ctor_impl<
                TIsConstructible
              , T
@@ -47,8 +42,8 @@ struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>
 
 template<template<class...> class TIsConstructible, class T, std::size_t... TArgs>
 struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>,
-      BOOST_DI_REQUIRES_T((sizeof...(TArgs) > 0) && TIsConstructible<T, get_t<core::any_type_fwd<T>, TArgs>...>::value)>
-    : aux::type_list<get_t<core::any_type_fwd<T>, TArgs>...>
+      BOOST_DI_REQUIRES_T((sizeof...(TArgs) > 0) && TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
+    : aux::type_list<get<core::any_type_fwd<T>, TArgs>...>
 { };
 
 template<template<class...> class TIsConstructible, class T>
