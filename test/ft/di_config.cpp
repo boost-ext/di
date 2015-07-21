@@ -83,27 +83,25 @@ test call_provider_with_deleter = [] {
     expect_eq(1, deleter_provider::called());
 };
 
-#if !defined(BOOST_DI_MSVC)
-    class config_policies : public di::config {
-    public:
-        template<class T>
-        static auto policies(const T&) noexcept {
-            using namespace di::policies;
-            using namespace di::policies::operators;
-            return di::make_policies(constructible(is_root{} || std::is_same<di::_, double>{} || is_bound<di::_>{}));
-        }
-    };
+class config_policies : public di::config {
+public:
+	template<class T>
+	static auto policies(const T&) noexcept {
+		using namespace di::policies;
+		using namespace di::policies::operators;
+		return di::make_policies(constructible(is_root{} || std::is_same<di::_, double>{} || is_bound<di::_>{}));
+	}
+};
 
-    test constructible_policy = [] {
-        struct example {
-            int i = 0;
-            double d = 0.0;
-        };
+test constructible_policy = [] {
+	struct example {
+		int i = 0;
+		double d = 0.0;
+	};
 
-        auto injector = di::make_injector<config_policies>(di::bind<int>().to(42));
-        injector.create<example>();
-    };
-#endif
+	auto injector = di::make_injector<config_policies>(di::bind<int>().to(42));
+	injector.create<example>();
+};
 
 struct policy {
     static auto& called() {
