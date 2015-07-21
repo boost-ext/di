@@ -205,7 +205,7 @@ namespace providers { class heap; class stack_over_heap; } // providers
     std::enable_if_t<__VA_ARGS__>
 
 #define BOOST_DI_REQUIRES_MSG(...) \
-    typename constraint_not_satisfied<typename __VA_ARGS__::type>::type = 0
+    typename constraint_not_satisfied<__VA_ARGS__>::type = 0
 
 #define BOOST_DI_REQUIRES_MSG_T(...) \
     constraint_not_satisfied<__VA_ARGS__>::type
@@ -1531,9 +1531,12 @@ auto scopable_impl(T&&) -> aux::is_valid_expr<
 >;
 
 template<class T>
-struct scopable
-    : decltype(scopable_impl(std::declval<T>()))
-{ };
+struct scopable__ {
+    using type = decltype(scopable_impl(std::declval<T>()));
+};
+
+template<class T>
+using scopable = typename scopable__<T>::type;
 
 }}}} // boost::di::v1::concepts
 
@@ -2387,9 +2390,12 @@ auto boundable_impl(aux::type<TDeps...>&&) ->
 std::true_type boundable_impl(...);
 
 template<class... Ts>
-struct boundable
-    : decltype(boundable_impl(std::declval<Ts>()...))
-{ };
+struct boundable__ {
+    using type = decltype(boundable_impl(std::declval<Ts>()...));
+};
+
+template<class... Ts>
+using boundable = typename boundable__<Ts...>::type;
 
 }}}} // boost::di::v1::concepts
 
@@ -3437,9 +3443,12 @@ auto providable_impl(T&& t) -> aux::is_valid_expr<
 >;
 
 template<class T>
-struct providable
-    : decltype(providable_impl<T>(std::declval<T>()))
-{ };
+struct providable__ {
+    using type = decltype(providable_impl<T>(std::declval<T>()));
+};
+
+template<class T>
+using providable = typename providable__<T>::type;
 
 }}}} // boost::di::v1::concepts
 
@@ -3499,9 +3508,12 @@ constexpr auto is_configurable(const std::false_type&) {
 }
 
 template<class T>
-struct configurable
-    : decltype(is_configurable<T>(decltype(configurable_impl(std::declval<T>())){}))
-{ };
+struct configurable__ {
+    using type = decltype(is_configurable<T>(decltype(configurable_impl(std::declval<T>())){}));
+};
+
+template<class T>
+using configurable = typename configurable__<T>::type;
 
 }}}} // boost::di::v1::concepts
 
