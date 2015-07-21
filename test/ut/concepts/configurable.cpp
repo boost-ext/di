@@ -44,9 +44,11 @@ private:
     static auto provider(const T&) noexcept { return providers::heap{}; }
 };
 
-test private_access = [] {
-    static_expect(std::is_same<config_type<config_private_access>::is_not_configurable, configurable<config_private_access>>::value);
-};
+#if !defined(BOOST_DI_MSVC)
+	test private_access = [] {
+		static_expect(std::is_same<config_type<config_private_access>::is_not_configurable, configurable<config_private_access>>::value);
+	};
+#endif
 
 class config_inheritance_impl {
 public:

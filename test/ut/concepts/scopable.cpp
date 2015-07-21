@@ -44,11 +44,14 @@ class scope_private_access {
     };
 };
 
-test private_access = [] {
-    static_expect(!scopable<scope_private_access>::value);
-};
+#if !defined(BOOST_DI_MSVC)
+	test private_access = [] {
+		static_expect(!scopable<scope_private_access>::value);
+	};
+#endif
 
 class scope_missing_create {
+public:
     template<class, class>
     struct scope {
         template<class T, class TProvider>

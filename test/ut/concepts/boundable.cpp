@@ -7,9 +7,6 @@
 #include "boost/di/concepts/boundable.hpp"
 #include "common/fakes/fake_dependency.hpp"
 
-#include <iostream>
-#include <boost/units/detail/utility.hpp>
-
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
 struct a { };

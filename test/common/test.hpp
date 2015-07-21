@@ -68,7 +68,7 @@ HAS_METHOD(call_operator, operator());
         } \
     } while (false)
 
-#define static_expect(...) static_assert((__VA_ARGS__), "")
+#define static_expect(...) static_assert((__VA_ARGS__), "static_expect")
 
 struct test {
     template<class Test>

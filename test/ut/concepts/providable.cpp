@@ -27,11 +27,14 @@ class provider_private_access {
     }
 };
 
-test private_access = [] {
-    static_expect(std::is_same<provider<provider_private_access>::is_not_providable, providable<provider_private_access>>::value);
-};
+#if !defined(BOOST_DI_MSVC)
+	test private_access = [] {
+		static_expect(std::is_same<provider<provider_private_access>::is_not_providable, providable<provider_private_access>>::value);
+	};
+#endif
 
 class provider_missing_is_creatable {
+public:
     template<class, class T, class TInit, class TMemory, class... TArgs>
     T get(const TInit&, const TMemory&, TArgs&&...) const {
         return {};
@@ -39,10 +42,11 @@ class provider_missing_is_creatable {
 };
 
 test missing_is_creatable = [] {
-    static_expect(std::is_same<provider<provider_missing_is_creatable>::is_not_providable, providable<provider_missing_is_creatable>>::value);
+	static_expect(std::is_same<provider<provider_missing_is_creatable>::is_not_providable, providable<provider_missing_is_creatable>>::value);
 };
 
 class provider_wrong_get {
+public:
     template<class...>
     struct is_creatable {
         static constexpr auto value = true;
@@ -55,7 +59,7 @@ class provider_wrong_get {
 };
 
 test wrong_get = [] {
-    static_expect(std::is_same<provider<provider_wrong_get>::is_not_providable, providable<provider_wrong_get>>::value);
+	static_expect(std::is_same<provider<provider_wrong_get>::is_not_providable, providable<provider_wrong_get>>::value);
 };
 
 test providable_providers = [] {

@@ -49,21 +49,21 @@ struct get_configurable_error<std::true_type, std::true_type>
 { };
 
 template<class T>
-constexpr auto is_configurable(const std::true_type&) {
-    return typename get_configurable_error<
-        decltype(providable<decltype(T::provider(std::declval<T>()))>())
-      , decltype(callable<decltype(T::policies(std::declval<T>()))>())
-    >::type{};
+auto is_configurable(const std::true_type&) {
+	return typename get_configurable_error<
+		decltype(providable<decltype(T::provider(std::declval<T>()))>())
+	  , decltype(callable<decltype(T::policies(std::declval<T>()))>())
+	>::type{};
 }
 
 template<class T>
-constexpr auto is_configurable(const std::false_type&) {
-    return typename config_type<T>::is_not_configurable{};
+auto is_configurable(const std::false_type&) {
+	return typename config_type<T>::is_not_configurable{};
 }
 
 template<class T>
 struct configurable__ {
-    using type = decltype(is_configurable<T>(decltype(configurable_impl(std::declval<T>())){}));
+	using type = decltype(is_configurable<T>(decltype(configurable_impl(std::declval<T>())){}));
 };
 
 template<class T>
