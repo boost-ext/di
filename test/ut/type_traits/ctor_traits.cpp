@@ -78,7 +78,7 @@ test uniforms = [] {
         int i = 0;
     };
     struct ctor2_ref {
-        std::unique_ptr<void> ptr;
+        std::unique_ptr<int> ptr;
         int& i;
     };
     expect(std::is_same<aux::pair<uniform, aux::type_list<>>, ctor_traits<empty>::type>{});
