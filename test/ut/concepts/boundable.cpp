@@ -23,6 +23,8 @@ test bind_expected_given = [] {
 test bind_deps = [] {
     static_expect(boundable<aux::type_list<>>::value);
     static_expect(boundable<aux::type_list<fake_dependency<int>>>::value);
+    static_expect(std::is_same<bound_type<int, no_name>::is_bound_more_than_once, boundable<aux::type_list<fake_dependency<int>, fake_dependency<int>>>>::value);
+    static_expect(std::is_same<bound_type<double, no_name>::is_bound_more_than_once, boundable<aux::type_list<fake_dependency<double>, fake_dependency<int>, fake_dependency<double>>>>::value);
     static_expect(std::is_same<bound_type<int>::is_neither_a_dependency_nor_an_injector, boundable<aux::type_list<int>>>::value);
 };
 
