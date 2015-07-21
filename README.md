@@ -1196,7 +1196,7 @@ BOOST_DI_INJECTOR                       | Named used internally by Boost.DI
 ```
 
 **Contributing**
-* Extensions (e.g. see [Extensions]())
+* Extensions (e.g. see [Extensions](example/extensions))
 * Core (for example. bug fixes / improvements of compilation/run-time times)
 
 ---
