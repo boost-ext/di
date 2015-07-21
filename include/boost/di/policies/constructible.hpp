@@ -23,9 +23,8 @@ struct not_allowed_by {
             constraint_not_satisfied{}.error();
     }
 
-    constexpr T
-    error(_ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>!")
-    const;
+    static inline T
+    error(_ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>!");
 };};
 
 struct _ { };
@@ -35,7 +34,7 @@ template<class T, class = void>
 struct apply_impl {
     template<class TArg>
     static constexpr auto apply(const TArg&) noexcept {
-        return T{};
+        return T::value;
     }
 };
 
@@ -165,13 +164,13 @@ inline auto operator!(const T&) {
 
 template<class T>
 struct constructible_impl {
-    template<class TArg, BOOST_DI_REQUIRES(T::apply(TArg{}))>
+    template<class TArg, bool Applayable = T::apply(TArg{}), BOOST_DI_REQUIRES(Applayable)>
     std::true_type operator()(const TArg& data) const {
         T::apply(data);
         return {};
     }
 
-    template<class TArg, BOOST_DI_REQUIRES(!T::apply(TArg{}))>
+    template<class TArg, bool Applayable = T::apply(TArg{}), BOOST_DI_REQUIRES(!Applayable)>
     std::false_type operator()(const TArg&) const {
         dump_error<typename TArg::type>(typename TArg::ignore{});
         return {};
