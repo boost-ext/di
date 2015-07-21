@@ -5,8 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include "boost/di.hpp"
-#include "boost/di/providers/heap.hpp"
-#include "boost/di/policies/constructible.hpp"
 
 namespace di = boost::di;
 
