@@ -18,14 +18,6 @@ struct fake_scope {
     struct scope {
         explicit scope(const TExpected& = {}) { }
 
-        void call(const fake_scope_entry&) noexcept {
-            ++entry_calls();
-        }
-
-        void call(const fake_scope_exit&) noexcept {
-            ++exit_calls();
-        }
-
         template<class T, class TProvider>
         T create(const TProvider&) const noexcept {
             ++calls();
@@ -34,16 +26,6 @@ struct fake_scope {
     };
 
     static int& calls() {
-        static auto calls = 0;
-        return calls;
-    }
-
-    static int& entry_calls() {
-        static auto calls = 0;
-        return calls;
-    }
-
-    static int& exit_calls() {
         static auto calls = 0;
         return calls;
     }

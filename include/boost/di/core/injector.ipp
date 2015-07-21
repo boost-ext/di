@@ -75,11 +75,6 @@ public:
         return create<T>();
     }
 
-    template<class TAction>
-    void call(const TAction& action) {
-        call_impl(action, deps{});
-    }
-
 private:
     template<class T>
     struct try_create {
@@ -190,18 +185,5 @@ private:
         )()
         return successful::wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
-
-    template<class TAction, class... Ts>
-    void call_impl(const TAction& action, const aux::type_list<Ts...>&) {
-        int _[]{0, (call_impl<Ts>(action, has_call<Ts, const TAction&>{}), 0)...}; (void)_;
-    }
-
-    template<class T, class TAction>
-    void call_impl(const TAction& action, const std::true_type&) {
-        static_cast<T&>(*this).call(action);
-    }
-
-    template<class, class TAction>
-    void call_impl(const TAction&, const std::false_type&) { }
 };
 

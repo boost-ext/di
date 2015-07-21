@@ -111,7 +111,7 @@ quick() {
     exit 0
 }
 
-[[ -z "$MAX" ]] && MAX="1.0"
+[[ -z "$MAX" ]] && MAX="10.0"
 [[ -z "$COMPLEXITY" ]] && COMPLEXITY="small,medium,big"
 [[ $COMPLEXITY == *"small"* ]] && graph small_complexity "Small complexity | $CXX -O2"
 [[ $COMPLEXITY == *"medium"* ]] && graph medium_complexity "Medium complexity | $CXX -O2"
