@@ -592,11 +592,8 @@ public:
         using is_referable = std::false_type;
 
         template<class T, class TProvider>
-decltype(
-            wrappers::unique<decltype(std::declval<TProvider>().get(type_traits::memory_traits_t<T>{}))>{
-            std::declval<TProvider>().get(type_traits::memory_traits_t<T>{})
-            }
-        )
+        decltype(wrappers::unique<decltype(std::declval<TProvider>().get(type_traits::memory_traits_t<T>{}))>{
+            std::declval<TProvider>().get(type_traits::memory_traits_t<T>{})})
         try_create(const TProvider&) const;
 
         template<class T, class TProvider>
@@ -714,11 +711,11 @@ public:
         using is_referable = typename wrappers::shared<T>::template is_referable<T_>;
 
         template<class, class TProvider>
-decltype(wrappers::shared<T>{std::shared_ptr<T>{std::declval<TProvider>().get()}})
-         try_create(const TProvider&);
+        decltype(wrappers::shared<T>{std::shared_ptr<T>{std::declval<TProvider>().get()}})
+        try_create(const TProvider&);
 
-    template<class>
-    void try_create(...);
+        template<class>
+        void try_create(...);
 
         template<class, class TProvider>
         auto create(const TProvider& provider) {
@@ -842,10 +839,8 @@ public:
             scope<TExpected, TGiven>::template is_referable<aux::remove_accessors_t<T>>;
 
         template<class T, class TProvider>
-decltype(
-            typename type_traits::scope_traits_t<T>::template
-                scope<TExpected, TGiven>{}.template try_create<T>(std::declval<TProvider>())
-        )
+        decltype(typename type_traits::scope_traits_t<T>::template
+            scope<TExpected, TGiven>{}.template try_create<T>(std::declval<TProvider>()))
         try_create(const TProvider& provider);
 
         template<class>
@@ -2911,29 +2906,29 @@ public:
     using deps = transform_t<TDeps...>;
     using config = TConfig;
 
-    template<
-        class T
-      , class TName = no_name
-      , class TIsRoot = std::false_type
-    > struct is_creatable : std::integral_constant<bool, std::is_convertible<
-       decltype(
-           std::declval<std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>>().template try_create<T>(
-               try_provider<
-                   typename std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>::given
-                , typename type_traits::ctor_traits<typename std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>::given>::type
-                 //, TCtor
-                 , injector
-                 , decltype(TConfig::provider(std::declval<injector>()))
-               >{}
-           )
-       ), T>::value BOOST_DI_CORE_INJECTOR_POLICY(
-           && policy::template try_call<
-                  arg_wrapper<type_traits::referable_traits_t<T, std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>>, TName, TIsRoot, pool_t>
-                , TPolicies
-                , std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
-                , typename type_traits::ctor_traits<typename std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>::given>::type
-              >::value)()
-    > {};
+    template<class T, class TName = no_name, class TIsRoot = std::false_type>
+    struct is_creatable {
+        using TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>;
+        using TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type;
+
+        static constexpr auto value = std::is_convertible<
+            decltype(
+                std::declval<TDependency>().template try_create<T>(
+                    try_provider<
+                        typename TDependency::given
+                      , TCtor
+                      , injector
+                      , decltype(TConfig::provider(std::declval<injector>()))
+                    >{}
+                )
+            ), T>::value BOOST_DI_CORE_INJECTOR_POLICY(&&
+            policy::template try_call<
+                arg_wrapper<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot, pool_t>
+              , TPolicies
+              , TDependency
+              , TCtor
+            >::value)();
+    };
 
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
@@ -3098,29 +3093,29 @@ public:
     using deps = transform_t<TDeps...>;
     using config = TConfig;
 
-    template<
-        class T
-      , class TName = no_name
-      , class TIsRoot = std::false_type
-    > struct is_creatable : std::integral_constant<bool, std::is_convertible<
-       decltype(
-           std::declval<std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>>().template try_create<T>(
-               try_provider<
-                   typename std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>::given
-                , typename type_traits::ctor_traits<typename std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>::given>::type
-                 //, TCtor
-                 , injector
-                 , decltype(TConfig::provider(std::declval<injector>()))
-               >{}
-           )
-       ), T>::value BOOST_DI_CORE_INJECTOR_POLICY(
-           && policy::template try_call<
-                  arg_wrapper<type_traits::referable_traits_t<T, std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>>, TName, TIsRoot, pool_t>
-                , TPolicies
-                , std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>
-                , typename type_traits::ctor_traits<typename std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>::given>::type
-              >::value)()
-    > {};
+    template<class T, class TName = no_name, class TIsRoot = std::false_type>
+    struct is_creatable {
+        using TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>;
+        using TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type;
+
+        static constexpr auto value = std::is_convertible<
+            decltype(
+                std::declval<TDependency>().template try_create<T>(
+                    try_provider<
+                        typename TDependency::given
+                      , TCtor
+                      , injector
+                      , decltype(TConfig::provider(std::declval<injector>()))
+                    >{}
+                )
+            ), T>::value BOOST_DI_CORE_INJECTOR_POLICY(&&
+            policy::template try_call<
+                arg_wrapper<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot, pool_t>
+              , TPolicies
+              , TDependency
+              , TCtor
+            >::value)();
+    };
 
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
