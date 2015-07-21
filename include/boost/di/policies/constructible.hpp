@@ -27,7 +27,6 @@ struct not_allowed_by {
     error(_ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>!");
 };};
 
-struct _ { };
 struct type_op {};
 
 template<class T, class = void>

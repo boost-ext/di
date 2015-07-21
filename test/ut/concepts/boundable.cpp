@@ -5,25 +5,48 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include "boost/di/concepts/boundable.hpp"
-#include "boost/di/core/pool.hpp"
-#include "boost/di/bindings.hpp"
+#include "common/fakes/fake_dependency.hpp"
+
+#include <iostream>
+#include <boost/units/detail/utility.hpp>
 
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
-template<class... TArgs>
-inline auto make_deps(const TArgs&...) noexcept {
-    return aux::type_list<TArgs...>{};
-}
+struct a { };
+struct b : a { };
+struct c : a { };
+struct d { };
 
-test empty_deps = [] {
-    auto deps = make_deps();
-    static_expect(boundable<decltype(deps)>());
+test bind_expected_given = [] {
+    static_expect(boundable<int, int>::value);
+    static_expect(boundable<int, short>::value);
+    static_expect(std::is_same<bound_type<std::string>::is_not_base_of<int>, boundable<int, std::string>>::value);
 };
 
-test bind_to_type = [] {
-    static_expect(boundable<int, int>());
-    static_expect(boundable<int, short>());
-    static_expect(!boundable<int, std::string>());
+test bind_deps = [] {
+    static_expect(boundable<aux::type_list<>>::value);
+    static_expect(boundable<aux::type_list<fake_dependency<int>>>::value);
+    static_expect(std::is_same<bound_type<int>::is_neither_a_dependency_nor_an_injector, boundable<aux::type_list<int>>>::value);
+};
+
+test bind_any_of = [] {
+    static_expect(boundable<aux::type_list<a, c>, c>::value);
+    static_expect(std::is_same<
+        aux::type_list<
+            bound_type<d>::is_not_base_of<a>
+          , bound_type<d>::is_not_base_of<b>
+          , bound_type<d>::is_not_base_of<c>
+        >
+      , boundable<aux::type_list<a, b, c>, d>
+    >::value);
+};
+
+test bind_injector = [] {
+    static_expect(boundable<aux::type<>>::value);
+    static_expect(boundable<aux::type<int>>::value);
+    static_expect(std::is_same<bound_type<int>::is_bound_more_than_once, boundable<aux::type<int, int>>>::value);
+    static_expect(std::is_same<bound_type<int>::is_bound_more_than_once, boundable<aux::type<int, double, int, float, double>>>::value);
+    static_expect(std::is_same<bound_type<double>::is_bound_more_than_once, boundable<aux::type<int, double, float, double>>>::value);
 };
 
 }}}} // boost::di::v1::concepts

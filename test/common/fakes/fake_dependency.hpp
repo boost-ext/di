@@ -20,6 +20,7 @@ struct fake_dependency : core::dependency_base, TScope::template scope<T, T> {
     using given = T;
     using scope = TScope;
     using name = no_name;
+    using priority = aux::none_type;
 };
 
 }}} // boost::di::v1

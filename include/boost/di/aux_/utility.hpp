@@ -11,7 +11,7 @@
 
 namespace boost { namespace di { inline namespace v1 {
 
-struct _ { constexpr _(...) { } };
+struct _ { _(...) { } };
 
 namespace aux {
 
