@@ -80,7 +80,7 @@ test operator_or = [] {
 	};
 
 	test_pass(int{}, double{}, int{});
-	//test_pass(double{}, int{}, int{});
+	test_pass(double{}, int{}, int{});
 	test_fail(int{}, double{}, float{});
 	test_fail(double{}, int{}, float{});
 };
@@ -115,7 +115,7 @@ test complex_opeartors = [] {
 	expect(!test(fake_policy<double, aux::none_type, aux::none_type, false>{}));
 	expect(test(fake_policy<int, aux::none_type, aux::none_type, false>{}));
 	expect(test(fake_policy<int, aux::none_type, aux::none_type, true>{}));
-	//expect(test(fake_policy<double, aux::none_type, aux::none_type, true>{}));
+	expect(test(fake_policy<double, aux::none_type, aux::none_type, true>{}));
 };
 
 }}}} // boost::di::v1::policies

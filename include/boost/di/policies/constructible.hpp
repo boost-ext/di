@@ -78,41 +78,25 @@ struct not_ : type_op {
     }
 };
 
-template<class...>
-struct and_;
-
-template<class T, class... Ts>
-struct and_<T, Ts...> : type_op {
+template<class... Ts>
+struct and_ : type_op {
     template<class TArg>
     static constexpr auto apply(const TArg& data) noexcept {
-        return apply_impl<T>::apply(data) && and_<Ts...>::apply(data);
+        return std::is_same<
+            aux::bool_list<apply_impl<Ts>::apply(data)...>
+          , aux::bool_list<aux::always<Ts>::value...>
+        >::value;
     }
 };
 
-template<>
-struct and_<> : type_op {
-    template<class TArg>
-    static constexpr auto apply(const TArg&) noexcept {
-        return true;
-    }
-};
-
-template<class...>
-struct or_;
-
-template<class T, class... Ts>
-struct or_<T, Ts...> : type_op {
+template<class... Ts>
+struct or_ : type_op {
     template<class TArg>
     static constexpr auto apply(const TArg& data) noexcept {
-        return apply_impl<T>::apply(data) || or_<Ts...>::apply(data);
-    }
-};
-
-template<>
-struct or_<> : type_op {
-    template<class TArg>
-    static constexpr auto apply(const TArg&) noexcept {
-        return false;
+        return !std::is_same<
+            aux::bool_list<apply_impl<Ts>::apply(data)...>
+          , aux::bool_list<aux::never<Ts>::value...>
+        >::value;
     }
 };
 
