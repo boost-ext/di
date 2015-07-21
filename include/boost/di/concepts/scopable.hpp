@@ -35,9 +35,12 @@ auto scopable_impl(T&&) -> aux::is_valid_expr<
 >;
 
 template<class T>
-struct scopable
-    : decltype(scopable_impl(std::declval<T>()))
-{ };
+struct scopable__ {
+    using type = decltype(scopable_impl(std::declval<T>()));
+};
+
+template<class T>
+using scopable = typename scopable__<T>::type;
 
 }}}} // boost::di::v1::concepts
 

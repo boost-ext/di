@@ -137,10 +137,12 @@ auto boundable_impl(aux::type<TDeps...>&&) ->
 std::true_type boundable_impl(...);
 
 template<class... Ts>
-//struct boundable
-    //: decltype(boundable_impl(std::declval<Ts>()...))
-//{ };
-using boundable = decltype(boundable_impl(std::declval<Ts>()...));
+struct boundable__ {
+    using type = decltype(boundable_impl(std::declval<Ts>()...));
+};
+
+template<class... Ts>
+using boundable = typename boundable__<Ts...>::type;
 
 }}}} // boost::di::v1::concepts
 
