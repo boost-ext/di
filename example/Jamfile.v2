@@ -100,7 +100,6 @@ test-suite quick_user_guide :
     [ run-example c++1y : quick_user_guide/scopes3.cpp ]
     [ run-example c++1y : quick_user_guide/scopes4.cpp ]
     [ run-example c++1y : quick_user_guide/scopes5.cpp ]
-    [ run-example c++1y : quick_user_guide/scopes6.cpp ]
 ;
 
 test-suite try_it_online :

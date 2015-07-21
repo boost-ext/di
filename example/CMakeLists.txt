@@ -67,7 +67,6 @@ run_example(quick_user_guide/scopes2)
 run_example(quick_user_guide/scopes3)
 run_example(quick_user_guide/scopes4)
 run_example(quick_user_guide/scopes5)
-run_example(quick_user_guide/scopes6)
 
 run_example(tutorial/tutorial1)
 run_example(tutorial/tutorial2)

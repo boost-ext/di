@@ -50,25 +50,13 @@ public:
         template<class>
         using is_referable = std::false_type;
 
-        void call(const entry&) {
-            in_scope_ = true;
-        }
-
-        void call(const exit&) {
-            in_scope_ = false;
-        }
-
         template<class, class TProvider>
         custom_wrapper try_create(const TProvider&) const noexcept;
 
         /*<<create shared_ptr when in scope out of provider pointer>>*/
         template<class, class TProvider>
         custom_wrapper create(const TProvider& provider) const noexcept {
-            if (in_scope_) {
-                return std::shared_ptr<T>{provider.get()};
-            }
-
-            return std::shared_ptr<T>{};
+            return std::shared_ptr<T>{provider.get()};
         }
 
     private:
@@ -82,16 +70,7 @@ int main() {
         di::bind<int>.in(custom_scope{})
     );
 
-    /*<<not in scope>>*/
-    assert(!injector.create<example>().sp_);
-
-    /*<<in scope>>*/
-    injector.call(custom_scope::entry());
     assert(injector.create<example>().sp_);
-
-    /*<<not in scope>>*/
-    injector.call(custom_scope::exit());
-    assert(!injector.create<example>().sp_);
 }
 
 //]
