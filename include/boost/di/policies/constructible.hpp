@@ -145,12 +145,12 @@ inline auto operator!(const T&) {
 
 template<class T>
 struct constructible_impl {
-    template<class TArg, bool Applayable = T::template apply<TArg>::value, BOOST_DI_REQUIRES(Applayable)>
+    template<class TArg, BOOST_DI_REQUIRES(T::template apply<TArg>::value)>
     std::true_type operator()(const TArg&) const {
         return {};
     }
 
-    template<class TArg, bool Applayable = T::template apply<TArg>::value, BOOST_DI_REQUIRES(!Applayable)>
+    template<class TArg, BOOST_DI_REQUIRES(!T::template apply<TArg>::value)>
     std::false_type operator()(const TArg&) const {
         dump_error<typename TArg::type>(typename TArg::ignore{});
         return {};
