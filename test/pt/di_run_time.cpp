@@ -230,7 +230,7 @@ test lambda_module_bind_int = [](auto progname) {
 
 auto given_bind_interface_shared() {
     auto injector = di::make_injector(
-        di::bind<i, impl>().in(di::shared)
+        di::bind<i, impl>().in(di::singleton)
     );
 
     return injector.create<std::shared_ptr<i>>();

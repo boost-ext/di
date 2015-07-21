@@ -7,7 +7,7 @@
 #include <memory>
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/scopes/unique.hpp"
-#include "boost/di/scopes/shared.hpp"
+#include "boost/di/scopes/singleton.hpp"
 #include "common/fakes/fake_injector.hpp"
 #include "common/fakes/fake_provider.hpp"
 #include "common/fakes/fake_scope.hpp"
@@ -29,8 +29,8 @@ test create_unique = [] {
     expect_eq(0, i);
 };
 
-test create_shared = [] {
-    std::shared_ptr<int> i = exposed<scopes::shared>::scope<int, int>{fake_injector<int*>{}}.create<int>(fake_provider<int>{});
+test create_singleton = [] {
+    std::shared_ptr<int> i = exposed<scopes::singleton>::scope<int, int>{fake_injector<int*>{}}.create<int>(fake_provider<int>{});
     expect(!i);
 };
 

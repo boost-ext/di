@@ -28,12 +28,14 @@
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/scopes/exposed.hpp"
-#include "boost/di/scopes/session.hpp"
 #include "boost/di/scopes/singleton.hpp"
-#include "boost/di/scopes/shared.hpp"
 #include "boost/di/scopes/unique.hpp"
 
+// policies
+#include "boost/di/policies/constructible.hpp"
+
 // providers
+#include "boost/di/providers/heap.hpp"
 #include "boost/di/providers/stack_over_heap.hpp"
 
 #else
@@ -144,30 +146,11 @@ template<class> class shared_ptr;
 
 namespace di { inline namespace v1 {
 
-struct no_name {
-    const char* operator()() const noexcept { return nullptr; }
-};
-
 class config;
-
 template<class...> class injector;
-
-namespace aux { struct none_type; }
-namespace core {
-
-template<class> struct any_type_fwd;
-template<class> struct any_type_ref_fwd;
-
-template<
-    class TScope
-  , class TExpected
-  , class TGiven = TExpected
-  , class TName = no_name
-  , class TPriority = aux::none_type
-> struct dependency;
-} // core
-
+struct no_name { const char* operator()() const noexcept { return nullptr; } };
 namespace providers { class heap; class stack_over_heap; } // providers
+namespace core { template<class> struct any_type_fwd; template<class> struct any_type_ref_fwd; }
 
 }}} // boost::di::v1
 
@@ -1580,9 +1563,9 @@ struct dependency_base { };
 template<
     class TScope
   , class TExpected
-  , class TGiven
-  , class TName
-  , class TPriority
+  , class TGiven = TExpected
+  , class TName = no_name
+  , class TPriority = aux::none_type
 > struct dependency
     : private dependency_base
     , TScope::template scope<TExpected, TGiven>
@@ -2125,91 +2108,6 @@ public:
 
 #endif
 
-#ifndef BOOST_DI_SCOPES_SESSION_HPP
-#define BOOST_DI_SCOPES_SESSION_HPP
-
-namespace boost { namespace di { inline namespace v1 { namespace scopes {
-
-template<class = no_name>
-class session_entry { };
-
-template<class = no_name>
-class session_exit { };
-
-template<class TName = no_name>
-class session {
-public:
-    template<class, class T>
-    class scope {
-    public:
-        template<class T_>
-        using is_referable = typename wrappers::shared<T>::template is_referable<T_>;
-
-        void call(const session_entry<TName>&) noexcept {
-            in_scope_ = true;
-        }
-
-        void call(const session_exit<TName>&) noexcept {
-            in_scope_ = false;
-            object_.reset();
-        }
-
-        template<class, class TProvider>
-        auto try_create(const TProvider& provider)
-            -> decltype(wrappers::shared<T>{std::shared_ptr<T>{provider.get()}});
-
-        template<class, class TProvider>
-        auto create(const TProvider& provider) {
-            if (BOOST_DI_LIKELY(in_scope_) && BOOST_DI_UNLIKELY(!object_)) {
-                object_ = std::shared_ptr<T>{provider.get()};
-            }
-            return wrappers::shared<T>{object_};
-        }
-
-    private:
-        std::shared_ptr<T> object_;
-        bool in_scope_ = false;
-    };
-};
-
-}}}} // boost::di::v1::scopes
-
-#endif
-
-#ifndef BOOST_DI_SCOPES_SHARED_HPP
-#define BOOST_DI_SCOPES_SHARED_HPP
-
-namespace boost { namespace di { inline namespace v1 { namespace scopes {
-
-class shared {
-public:
-    template<class, class T>
-    class scope {
-    public:
-        template<class T_>
-        using is_referable = typename wrappers::shared<T>::template is_referable<T_>;
-
-        template<class, class TProvider>
-        auto try_create(const TProvider& provider)
-            -> decltype(wrappers::shared<T>{std::shared_ptr<T>{provider.get()}});
-
-        template<class, class TProvider>
-        auto create(const TProvider& provider) {
-            if (BOOST_DI_UNLIKELY(!object_)) {
-                object_ = std::shared_ptr<T>{provider.get()};
-            }
-            return wrappers::shared<T>{object_};
-        }
-
-    private:
-        std::shared_ptr<T> object_;
-    };
-};
-
-}}}} // boost::di::v1::scopes
-
-#endif
-
 #ifndef BOOST_DI_CORE_TRANSFORM_HPP
 #define BOOST_DI_CORE_TRANSFORM_HPP
 
@@ -2433,23 +2331,7 @@ template<
 static constexpr BOOST_DI_UNUSED core::override override{};
 static constexpr BOOST_DI_UNUSED scopes::deduce deduce{};
 static constexpr BOOST_DI_UNUSED scopes::unique unique{};
-static constexpr BOOST_DI_UNUSED scopes::shared shared{};
 static constexpr BOOST_DI_UNUSED scopes::singleton singleton{};
-
-template<class TName>
-constexpr auto session(const TName&) noexcept {
-    return scopes::session<TName>{};
-}
-
-template<class TName>
-constexpr auto session_entry(const TName&) noexcept {
-    return scopes::session_entry<TName>{};
-}
-
-template<class TName>
-constexpr auto session_exit(const TName&) noexcept {
-    return scopes::session_exit<TName>{};
-}
 
 }}} // boost::di::v1
 
@@ -3583,6 +3465,208 @@ template<
 }
 
 }}} // boost::di::v1
+
+#endif
+
+#ifndef BOOS_DI_POLICIES_CONSTRUCTIBLE_HPP
+#define BOOS_DI_POLICIES_CONSTRUCTIBLE_HPP
+
+namespace boost { namespace di { inline namespace v1 { namespace policies {
+
+template<class T>
+struct type {
+template<class TPolicy>
+struct not_allowed_by {
+    operator T() const {
+        using constraint_not_satisfied = not_allowed_by;
+        return
+            constraint_not_satisfied{}.error();
+    }
+
+    static inline T
+    error(_ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>!");
+};};
+
+struct type_op {};
+
+template<class T, class = void>
+struct apply_impl {
+    template<class>
+    struct apply : T { };
+};
+
+template<template<class...> class T, class... Ts>
+struct apply_impl<T<Ts...>, std::enable_if_t<!std::is_base_of<type_op, T<Ts...>>::value>> {
+    template<class TOp, class>
+    struct apply_placeholder_impl {
+        using type = TOp;
+    };
+
+    template<class TOp>
+    struct apply_placeholder_impl<_, TOp> {
+        using type = TOp;
+    };
+
+    template<template<class...> class TExpr, class TOp, class... TArgs>
+    struct apply_placeholder {
+        using type = TExpr<typename apply_placeholder_impl<TArgs, TOp>::type...>;
+    };
+
+    template<class TArg>
+    struct apply : apply_placeholder<T, typename TArg::type, Ts...>::type
+    { };
+};
+
+template<class T>
+struct apply_impl<T, std::enable_if_t<std::is_base_of<type_op, T>::value>> {
+    template<class TArg>
+    struct apply : T::template apply<TArg>::type { };
+};
+
+template<class T>
+struct not_ : type_op {
+    template<class TArg>
+    struct apply : std::integral_constant<bool,
+        !apply_impl<T>::template apply<TArg>::value
+    > { };
+};
+
+template<class... Ts>
+struct and_ : type_op {
+    template<class TArg>
+    struct apply : std::is_same<
+        aux::bool_list<apply_impl<Ts>::template apply<TArg>::value...>
+      , aux::bool_list<aux::always<Ts>::value...>
+    > { };
+};
+
+template<class... Ts>
+struct or_ : type_op {
+    template<class TArg>
+    struct apply : std::integral_constant<bool,
+        !std::is_same<
+            aux::bool_list<apply_impl<Ts>::template apply<TArg>::value...>
+          , aux::bool_list<aux::never<Ts>::value...>
+        >::value
+    > { };
+};
+
+template<class T>
+struct always : type_op {
+    template<class TArg>
+    struct apply : apply_impl<T>::template apply<TArg>::type { };
+};
+
+template<class T>
+struct is_bound : type_op {
+    struct not_resolved { };
+
+    template<class TArg>
+    struct apply : std::integral_constant<bool,
+        !std::is_same<
+            typename TArg::template resolve<
+                std::conditional_t<
+                    std::is_same<T, _>::value
+                  , typename TArg::type
+                  , T
+                >
+              , typename TArg::name
+              , not_resolved
+            >
+          , not_resolved
+         >::value>
+    { };
+};
+
+struct is_root : type_op {
+    template<class TArg>
+    struct apply : TArg::is_root { };
+};
+
+namespace operators {
+
+template<class X, class Y>
+inline auto operator||(const X&, const Y&) {
+    return or_<X, Y>{};
+}
+
+template<class X, class Y>
+inline auto operator&&(const X&, const Y&) {
+    return and_<X, Y>{};
+}
+
+template<class T>
+inline auto operator!(const T&) {
+    return not_<T>{};
+}
+
+} // operators
+
+template<class T>
+struct constructible_impl {
+    template<class TArg, BOOST_DI_REQUIRES(T::template apply<TArg>::value)>
+    std::true_type operator()(const TArg&) const {
+        return {};
+    }
+
+    template<class TArg, BOOST_DI_REQUIRES(!T::template apply<TArg>::value)>
+    std::false_type operator()(const TArg&) const {
+        dump_error<typename TArg::type>(typename TArg::ignore{});
+        return {};
+    }
+
+    template<class T_>
+    void dump_error(const std::true_type&) const {
+        void(static_cast<T_>(typename type<T_>::template not_allowed_by<T>{}));
+    }
+
+    template<class>
+    void dump_error(const std::false_type&) const { }
+};
+
+template<class T = aux::never<_>, BOOST_DI_REQUIRES(std::is_base_of<type_op, T>::value)>
+inline auto constructible(const T& = {}) {
+    return constructible_impl<T>{};
+}
+
+template<class T = aux::never<_>, BOOST_DI_REQUIRES(!std::is_base_of<type_op, T>::value)>
+inline auto constructible(const T& = {}) {
+    return constructible_impl<or_<T>>{};
+}
+
+}}}} // boost::di::v1::policies
+
+#endif
+
+#ifndef BOOST_DI_PROVIDERS_HEAP_HPP
+#define BOOST_DI_PROVIDERS_HEAP_HPP
+
+namespace boost { namespace di { inline namespace v1 { namespace providers {
+
+class heap {
+public:
+    template<class TInitialization, class TMemory, class T, class... TArgs>
+    struct is_creatable {
+        static constexpr auto value =
+            concepts::creatable<TInitialization, T, TArgs...>::value;
+    };
+
+    template<class, class T, class TMemory, class... TArgs>
+    auto get(const type_traits::direct&
+           , const TMemory&
+           , TArgs&&... args) const {
+        return new T(static_cast<TArgs&&>(args)...);
+    }
+
+    template<class, class T, class TMemory, class... TArgs>
+    auto get(const type_traits::uniform&
+           , const TMemory&
+           , TArgs&&... args) const {
+        return new T{static_cast<TArgs&&>(args)...};
+    }
+};
+
+}}}} // boost::di::v1::providers
 
 #endif
 

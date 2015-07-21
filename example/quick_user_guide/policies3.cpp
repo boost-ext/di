@@ -20,7 +20,7 @@ public:
         using namespace di::policies::operators;
 
         return di::make_policies(
-            constructible(std::is_same<_, int>{} || is_bound<_>{})
+            constructible(std::is_same<di::_, int>{} || is_bound<di::_>{})
         );
     }
 };

@@ -61,12 +61,14 @@ main() {
     echo "#include \"boost/di/scopes/deduce.hpp\""
     echo "#include \"boost/di/scopes/external.hpp\""
     echo "#include \"boost/di/scopes/exposed.hpp\""
-    echo "#include \"boost/di/scopes/session.hpp\""
     echo "#include \"boost/di/scopes/singleton.hpp\""
-    echo "#include \"boost/di/scopes/shared.hpp\""
     echo "#include \"boost/di/scopes/unique.hpp\""
     echo
+    echo "// policies"
+    echo "#include \"boost/di/policies/constructible.hpp\""
+    echo
     echo "// providers"
+    echo "#include \"boost/di/providers/heap.hpp\""
     echo "#include \"boost/di/providers/stack_over_heap.hpp\""
     echo
     echo "#else"

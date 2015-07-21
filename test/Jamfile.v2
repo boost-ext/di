@@ -103,8 +103,6 @@ test-suite ut :
     [ run-test c++1y : ut/scopes/deduce.cpp ]
     [ run-test c++1y : ut/scopes/exposed.cpp ]
     [ run-test c++1y : ut/scopes/external.cpp ]
-    [ run-test c++1y : ut/scopes/session.cpp ]
-    [ run-test c++1y : ut/scopes/shared.cpp ]
     [ run-test c++1y : ut/scopes/singleton.cpp ]
     [ run-test c++1y : ut/scopes/unique.cpp ]
     [ run-test c++1y : ut/type_traits/ctor_traits.cpp ]
@@ -128,7 +126,6 @@ test-suite ft :
     [ run-test c++1y : ft/di_modules.cpp ]
     [ run-test c++1y : ft/di_scope_exposed.cpp ]
     [ run-test c++1y : ft/di_scope_external.cpp ]
-    [ run-test c++1y : ft/di_scope_session.cpp ]
     [ run-test c++1y : ft/di_scope_unique.cpp ]
     [ run-test c++1y : ft/di_wrapper_shared.cpp ]
 ;

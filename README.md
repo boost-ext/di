@@ -1195,10 +1195,14 @@ BOOST_DI_INJECTOR                       | Named used internally by Boost.DI
                                         | [default=boost_di_injector__]
 ```
 
-**Similar libraries**
-* C++ | [dicpp](https://bitbucket.org/cheez/dicpp) | [Fruit](https://github.com/google/fruit)
-* Java | [Dagger 2](https://github.com/google/dagger) | [Guice](https://github.com/google/guice)
-* C# | [Ninject](http://www.ninject.org)
+**Contributing**
+* Extensions (e.g. see [Extensions]())
+* Core (for example. bug fixes / improvements of compilation/run-time times)
+
+---
+
+[![Stories in Ready](https://badge.waffle.io/krzysztof-jusiak/di.svg?label=ready&title=Ready)](http://waffle.io/krzysztof-jusiak/di)
+[![Throughput Graph](https://graphs.waffle.io/krzysztof-jusiak/di/throughput.svg)](https://waffle.io/krzysztof-jusiak/di/metrics)
 
 ---
 

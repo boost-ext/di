@@ -22,9 +22,6 @@ test bindings_types = [] {
 #endif
     expect(std::is_base_of<core::dependency<scopes::deduce, int>, aux::remove_accessors_t<decltype(bind<int>())>>{});
     expect(std::is_base_of<core::dependency<scopes::deduce, i, impl>, aux::remove_accessors_t<decltype(bind<i, impl>())>>{});
-    expect(std::is_base_of<scopes::session<name>, decltype(session(name{}))>{});
-    expect(std::is_base_of<scopes::session_entry<name>, decltype(session_entry(name{}))>{});
-    expect(std::is_base_of<scopes::session_exit<name>, decltype(session_exit(name{}))>{});
 };
 
 }}} // boost::di::v1

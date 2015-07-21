@@ -11,9 +11,7 @@
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/core/dependency.hpp"
 #include "boost/di/scopes/deduce.hpp"
-#include "boost/di/scopes/session.hpp"
 #include "boost/di/scopes/singleton.hpp"
-#include "boost/di/scopes/shared.hpp"
 #include "boost/di/scopes/unique.hpp"
 #include "boost/di/concepts/boundable.hpp"
 
@@ -43,23 +41,7 @@ template<
 static constexpr BOOST_DI_UNUSED core::override override{};
 static constexpr BOOST_DI_UNUSED scopes::deduce deduce{};
 static constexpr BOOST_DI_UNUSED scopes::unique unique{};
-static constexpr BOOST_DI_UNUSED scopes::shared shared{};
 static constexpr BOOST_DI_UNUSED scopes::singleton singleton{};
-
-template<class TName>
-constexpr auto session(const TName&) noexcept {
-    return scopes::session<TName>{};
-}
-
-template<class TName>
-constexpr auto session_entry(const TName&) noexcept {
-    return scopes::session_entry<TName>{};
-}
-
-template<class TName>
-constexpr auto session_exit(const TName&) noexcept {
-    return scopes::session_exit<TName>{};
-}
 
 }}} // boost::di::v1
 

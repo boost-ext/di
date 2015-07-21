@@ -126,7 +126,6 @@ test any_of_with_scope = [] {
     };
 
     test(di::unique, false);
-    test(di::shared, true);
     test(di::singleton, true);
 };
 
@@ -144,7 +143,6 @@ test any_of_with_scope_split = [] {
     };
 
     test(di::unique, false);
-    test(di::shared, false);
     test(di::singleton, false);
 };
 

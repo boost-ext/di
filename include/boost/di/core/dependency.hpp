@@ -49,9 +49,9 @@ struct dependency_base { };
 template<
     class TScope
   , class TExpected
-  , class TGiven
-  , class TName
-  , class TPriority
+  , class TGiven = TExpected
+  , class TName = no_name
+  , class TPriority = aux::none_type
 > struct dependency
     : private dependency_base
     , TScope::template scope<TExpected, TGiven>
