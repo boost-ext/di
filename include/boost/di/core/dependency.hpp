@@ -7,10 +7,10 @@
 #ifndef BOOST_DI_CORE_DEPENDENCY_HPP
 #define BOOST_DI_CORE_DEPENDENCY_HPP
 
+#include "boost/di/aux_/compiler.hpp"
 #if defined(BOOST_DI_MSVC) || __has_include(<string>)
     #include <string>
 #endif
-#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/scopes/external.hpp"
