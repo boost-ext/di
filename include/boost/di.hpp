@@ -1739,9 +1739,12 @@ struct is_callable_impl;
 
 template<class T, class... Ts>
 struct is_callable_impl<T, Ts...> {
+    using callable_with_arg = decltype(callable_impl(std::declval<T>(), arg{}));
+    using callable_with_arg_and_dep =
+        decltype(callable_impl(std::declval<T>(), arg{}, core::dependency<scopes::deduce, T>{}, ctor{}));
+
     using type = std::conditional_t<
-        decltype(callable_impl(std::declval<T>(), arg{})){} ||
-        decltype(callable_impl(std::declval<T>(), arg{}, core::dependency<scopes::deduce, T>{}, ctor{})){}
+        callable_with_arg::value || callable_with_arg_and_dep::value
       , typename is_callable_impl<Ts...>::type
       , typename policy<T>::is_not_callable
     >;
@@ -3495,7 +3498,7 @@ struct get_configurable_error<std::true_type, std::true_type>
 { };
 
 template<class T>
-constexpr auto is_configurable(const std::true_type&) {
+auto is_configurable(const std::true_type&) {
     return typename get_configurable_error<
         decltype(providable<decltype(T::provider(std::declval<T>()))>())
       , decltype(callable<decltype(T::policies(std::declval<T>()))>())
@@ -3503,7 +3506,7 @@ constexpr auto is_configurable(const std::true_type&) {
 }
 
 template<class T>
-constexpr auto is_configurable(const std::false_type&) {
+auto is_configurable(const std::false_type&) {
     return typename config_type<T>::is_not_configurable{};
 }
 
