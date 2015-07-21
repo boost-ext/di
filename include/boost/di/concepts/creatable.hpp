@@ -270,7 +270,7 @@ struct creatable<type_traits::uniform, T, TArgs...> {
 };
 
 template<class TInitialization, class TName, class I, class T, class... TArgs>
-constexpr T creatable_error() {
+T creatable_error() {
     return creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TArgs...>>{};
 }
 
