@@ -64,7 +64,7 @@ rule compile-fail-test ( std * : src + : ctor * : defines * : preprocessed_heade
         <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
         <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
         <toolset>darwin:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
-        <toolset>msvc:<cxxflags>"/FI common/test.hpp /W3"
+        <toolset>msvc:<cxxflags>"/FI common/test.hpp /W3 /WX"
     ;
 
     if $(ctor) {
