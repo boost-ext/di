@@ -5,7 +5,7 @@
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
 language: c++
-sudo: required
+sudo: false
 env:
   global:
     - secure: "A27gNApbElRr3fqZXifVPKkB+xbxMYDFINGk2RDqul1X1Zg51M7e+ohHO9BwhEYiOGmCnFfbsVUP11XyFIH6kzWmxw9mhy8YDglbYfeyu6grxtU3mHElz8W7wO5OCPFPWXQf23sVYE8AWyjj6M+t3oyLJhPXCcYI7uMHEQm10CQ="
@@ -138,10 +138,10 @@ script:
   - if [ "${CMAKE_COMPILER}" != "" ]; then (cd build && CXX=${CMAKE_COMPILER} cmake .. && make -j2 all && make test); fi
   - if [ "${VALGRIND}" != "" ]; then (find .. -type f -executable | grep "\.test" | xargs -i% valgrind --error-exitcode=-1 %); fi
   - if [ "${TOOLSET}" != "" ] && [ "${BENCHMARK}" != "" ]; then (cd test/pt && CXX=${TOOLSET} COMPLEXITY=${BENCHMARK} ./di_compile_time.sh); fi
-  - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (travis_wait travis_retry wget --quiet http://sourceforge.net/projects/boost/files/boost/1.58.0/${BOOST}.tar.gz && tar zxf ${BOOST}.tar.gz && mkdir ${BOOST}/libs/di && cp -r build doc example include ${BOOST}/libs/di && sudo apt-get install xsltproc && cd ${BOOST}/libs/di/doc && ../build/b2 -sBOOST_ROOT=../build && git clone https://github.com/krzysztof-jusiak/di.git && cd di && git checkout -b gh-pages --track origin/gh-pages && git reset --hard && rm -rf cpp14/boost/libs/di/doc/html && cp -r ../html cpp14/boost/libs/di/doc && git add -A . && git commit -am "doc regeneration" && git push --force --quiet "https://${GH_TOKEN}@github.com/krzysztof-jusiak/di"); fi
+  - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (travis_wait travis_retry wget --quiet http://sourceforge.net/projects/boost/files/boost/1.58.0/${BOOST}.tar.gz && tar zxf ${BOOST}.tar.gz && mkdir ${BOOST}/libs/di && cp -r build doc example include ${BOOST}/libs/di && cd ${BOOST}/libs/di/doc && ../build/b2 -sBOOST_ROOT=../build && git clone https://github.com/krzysztof-jusiak/di.git && cd di && git checkout -b gh-pages --track origin/gh-pages && git reset --hard && rm -rf cpp14/boost/libs/di/doc/html && cp -r ../html cpp14/boost/libs/di/doc && git add -A . && git commit -am "doc regeneration" && git push --force --quiet "https://${GH_TOKEN}@github.com/krzysztof-jusiak/di"); fi
 
 after_success:
-  - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${VARIANT}" == "coverage" ]; then (sudo pip install requests[security] cpp-coveralls && coveralls -r . -b test/ --gcov /usr/bin/${GCOV} --repo-token c3V44Hj0ZTKzz4kaa3gIlVjInFiyNRZ4f); fi
+  - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${VARIANT}" == "coverage" ]; then (pip install requests[security] cpp-coveralls && coveralls -r . -b test/ --gcov /usr/bin/${GCOV} --repo-token c3V44Hj0ZTKzz4kaa3gIlVjInFiyNRZ4f); fi
 
 notifications:
   webhooks:
