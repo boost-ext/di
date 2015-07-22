@@ -8,7 +8,7 @@
 
 namespace di = boost::di;
 
-test error_injector_ctor_ambiguous = [] {
+test injector_ctor_ambiguous = [] {
     struct ctor {
         ctor(int, double) { }
         ctor(double, int) { }

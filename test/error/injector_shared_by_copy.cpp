@@ -8,7 +8,7 @@
 
 namespace di = boost::di;
 
-test error_injector_shared_by_copy = [] {
+test injector_shared_by_copy = [] {
     struct c {
         c(int*) { }
     };

@@ -16,7 +16,7 @@ public:
     }
 };
 
-test error_policy_constructible = [] {
+test policy_constructible = [] {
     auto injector = di::make_injector<config>();
     injector.create<int>();
 };

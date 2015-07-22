@@ -8,7 +8,7 @@
 
 namespace di = boost::di;
 
-test error_scope_traits_external_not_referable = [] {
+test scope_traits_external_not_referable = [] {
     struct c {
         c(int&) { }
     };

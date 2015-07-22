@@ -10,7 +10,7 @@ namespace di = boost::di;
 
 struct c { };
 
-test error_exposed_multiple_times = [] {
+test exposed_multiple_times = [] {
     di::injector<c, c> injector = di::make_injector();
 };
 

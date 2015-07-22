@@ -11,7 +11,7 @@ namespace di = boost::di;
 struct i { };
 struct impl : i { };
 
-test error_bind_not_compatible_types = [] {
+test bind_not_compatible_types = [] {
     auto injector = di::make_injector(
         di::bind<int, impl>()
     );

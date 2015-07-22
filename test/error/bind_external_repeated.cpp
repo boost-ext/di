@@ -8,7 +8,7 @@
 
 namespace di = boost::di;
 
-test error_bind_multiple_times = [] {
+test bind_multiple_times = [] {
     di::make_injector(
         di::bind<int>().to(42)
       , di::bind<int>().to(87)

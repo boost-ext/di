@@ -9,7 +9,7 @@
 
 namespace di = boost::di;
 
-test error_ctor_inject_limit_out_of_range = [] {
+test ctor_inject_limit_out_of_range = [] {
     struct c {
         BOOST_DI_INJECT(c, int, int, int, int) { }
     };

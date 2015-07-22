@@ -17,7 +17,7 @@ struct c {
     c(int, std::unique_ptr<i>) {}
 };
 
-test error_exposed_not_creatable = [] {
+test exposed_not_creatable = [] {
     di::injector<i> injector = di::make_injector();
 };
 

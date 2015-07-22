@@ -11,7 +11,7 @@ namespace di = boost::di;
 struct i { };
 struct impl : i { };
 
-test error_bind_external_with_given_type = [] {
+test bind_external_with_given_type = [] {
     di::make_injector(
         di::bind<i, impl>().to(impl{})
     );

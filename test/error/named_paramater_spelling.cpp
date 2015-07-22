@@ -10,7 +10,7 @@ namespace di = boost::di;
 
 struct name {} name;
 
-test error_bind_external_with_given_scope = [] {
+test bind_external_with_given_scope = [] {
     struct c {
         BOOST_DI_INJECT(c, (NAMED = name) int) { }
     };

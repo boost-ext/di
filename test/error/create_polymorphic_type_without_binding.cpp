@@ -15,7 +15,7 @@ struct c {
     c(i*){}
 };
 
-test error_create_polymorphic_type_without_binding = [] {
+test create_polymorphic_type_without_binding = [] {
     di::make_injector().create<c>();
 };
 
