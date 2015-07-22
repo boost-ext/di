@@ -8,151 +8,162 @@ language: c++
 sudo: false
 env:
   global:
-    - secure: "A27gNApbElRr3fqZXifVPKkB+xbxMYDFINGk2RDqul1X1Zg51M7e+ohHO9BwhEYiOGmCnFfbsVUP11XyFIH6kzWmxw9mhy8YDglbYfeyu6grxtU3mHElz8W7wO5OCPFPWXQf23sVYE8AWyjj6M+t3oyLJhPXCcYI7uMHEQm10CQ="
+  - secure: A27gNApbElRr3fqZXifVPKkB+xbxMYDFINGk2RDqul1X1Zg51M7e+ohHO9BwhEYiOGmCnFfbsVUP11XyFIH6kzWmxw9mhy8YDglbYfeyu6grxtU3mHElz8W7wO5OCPFPWXQf23sVYE8AWyjj6M+t3oyLJhPXCcYI7uMHEQm10CQ=
 
 matrix:
   fast_finish: true
-
   include:
-    - os: linux
-      env: DOCUMENTATION=1
-      addons:
-        apt:
-          packages:
-            - xsltproc
-
-    - os: linux
-      env: TOOLSET=clang-3.4 VALGRIND=1 BENCHMARK=quick
-      addons: &clang34
-        apt:
-          packages:
-            - clang-3.4
-            - libstdc++-5-dev
-            - valgrind
-            - gdb
-            - bc
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.4
-
-    - os: linux
-      env: TOOLSET=clang-3.5 VALGRIND=1 BENCHMARK=quick
-      addons: &clang35
-        apt:
-          packages:
-            - clang-3.5
-            - libstdc++-5-dev
-            - valgrind
-            - gdb
-            - bc
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.5
-
-    - os: linux
-      env: TOOLSET=clang-3.6 VALGRIND=1 BENCHMARK=quick
-      addons: &clang36
-        apt:
-          packages:
-            - clang-3.6
-            - libstdc++-5-dev
-            - valgrind
-            - gdb
-            - bc
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.6
-
-    - os: linux
-      env: TOOLSET=clang-3.7 VALGRIND=1 BENCHMARK=quick
-      addons: &clang37
-        apt:
-          packages:
-            - clang-3.7
-            - libstdc++-5-dev
-            - valgrind
-            - gdb
-            - bc
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise
-
-    - os: linux
-      env: CMAKE_COMPILER=clang++-3.7 BENCHMARK=quick
-      addons: &clang37
-        apt:
-          packages:
-            - clang-3.7
-            - libstdc++-5-dev
-            - gdb
-            - bc
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise
-
-    - os: linux
-      env: TOOLSET=gcc-5 GCOV=gcov-5 VARIANT=coverage VALGRIND=1
-      addons: &gcc5
-        apt:
-          packages:
-            - g++-5
-            - libstdc++-5-dev
-            - valgrind
-            - gdb
-          sources:
-            - ubuntu-toolchain-r-test
-
-    - os: linux
-      env: TOOLSET=gcc-5 VARIANT=analyze
-      addons: &gcc5
-        apt:
-          packages:
-            - g++-5
-            - libstdc++-5-dev
-            - gdb
-          sources:
-            - ubuntu-toolchain-r-test
-
-    - os: linux
-      env: CMAKE_COMPILER=g++-5 BENCHMARK=quick
-      addons: &gcc5
-        apt:
-          packages:
-            - g++-5
-            - libstdc++-5-dev
-            - gdb
-            - bc
-          sources:
-            - ubuntu-toolchain-r-test
-
-    - os: osx
-      env: TOOLSET=clang BENCHMARK=quick
-
-    - os: osx
-      env: CMAKE_COMPILER=clang++ BENCHMARK=quick
+  - os: linux
+    env: DOCUMENTATION=1
+    addons:
+      apt:
+        packages:
+        - xsltproc
+  - os: linux
+    env: TOOLSET=clang-3.4 VALGRIND=1 BENCHMARK=quick
+    addons:
+      apt:
+        packages:
+        - clang-3.4
+        - libstdc++-5-dev
+        - valgrind
+        - gdb
+        - bc
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise-3.4
+  - os: linux
+    env: TOOLSET=clang-3.5 VALGRIND=1 BENCHMARK=quick
+    addons:
+      apt:
+        packages:
+        - clang-3.5
+        - libstdc++-5-dev
+        - valgrind
+        - gdb
+        - bc
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise-3.5
+  - os: linux
+    env: TOOLSET=clang-3.6 VALGRIND=1 BENCHMARK=quick
+    addons:
+      apt:
+        packages:
+        - clang-3.6
+        - libstdc++-5-dev
+        - valgrind
+        - gdb
+        - bc
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise-3.6
+  - os: linux
+    env: TOOLSET=clang-3.7 VALGRIND=1 BENCHMARK=quick
+    addons:
+      apt:
+        packages:
+        - clang-3.7
+        - libstdc++-5-dev
+        - valgrind
+        - gdb
+        - bc
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise
+  - os: linux
+    env: CMAKE_COMPILER=clang++-3.7 BENCHMARK=quick
+    addons:
+      apt:
+        packages:
+        - clang-3.7
+        - libstdc++-5-dev
+        - gdb
+        - bc
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise
+  - os: linux
+    env: TOOLSET=gcc-5 GCOV=gcov-5 VARIANT=coverage VALGRIND=1
+    addons:
+      apt:
+        packages:
+        - g++-5
+        - libstdc++-5-dev
+        - valgrind
+        - gdb
+        sources:
+        - ubuntu-toolchain-r-test
+  - os: linux
+    env: TOOLSET=gcc-5 VARIANT=analyze
+    addons:
+      apt:
+        packages:
+        - g++-5
+        - libstdc++-5-dev
+        - gdb
+        sources:
+        - ubuntu-toolchain-r-test
+  - os: linux
+    env: CMAKE_COMPILER=g++-5 BENCHMARK=quick
+    addons:
+      apt:
+        packages:
+        - g++-5
+        - libstdc++-5-dev
+        - gdb
+        - bc
+        sources:
+        - ubuntu-toolchain-r-test
+  - os: osx
+    env: TOOLSET=clang BENCHMARK=quick
+  - os: osx
+    env: CMAKE_COMPILER=clang++ BENCHMARK=quick
 
 before_script:
-  - git config --global user.name "Travis-CI"
-  - git config --global user.email "travis@ci.net"
-  - git config --global push.default simple
-  - (cd build && ./bootstrap.sh)
+- git config --global user.name "Travis-CI"
+- git config --global user.email "travis@ci.net"
+- git config --global push.default simple
+- (cd build && ./bootstrap.sh)
 
 script:
-  - if [ "${TOOLSET}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off ${VARIANT}); fi
-  - if [ "${TOOLSET}" != "" ]; then (cd example && ../build/b2 -sBOOST_ROOT=../build -j2 -q --toolset=${TOOLSET} debug-symbols=off); fi
-  - if [ "${CMAKE_COMPILER}" != "" ]; then (cd build && CXX=${CMAKE_COMPILER} cmake .. && make -j2 all && make test); fi
-  - if [ "${VALGRIND}" != "" ]; then (find .. -type f -executable | grep "\.test" | xargs -i% valgrind --error-exitcode=-1 %); fi
-  - if [ "${TOOLSET}" != "" ] && [ "${BENCHMARK}" != "" ]; then (cd test/pt && CXX=${TOOLSET} COMPLEXITY=${BENCHMARK} ./di_compile_time.sh); fi
-  - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (git clone --quiet --recursive  --depth=1 --single-branch https://github.com/boostorg/boost.git && mkdir boost/libs/di && cp -r build doc example include boost/libs/di && cd boost/libs/di/doc && ../build/b2 -sBOOST_ROOT=../build && git clone https://github.com/krzysztof-jusiak/di.git && cd di && git checkout -b gh-pages --track origin/gh-pages && git reset --hard && rm -rf cpp14/boost/libs/di/doc/html && cp -r ../html cpp14/boost/libs/di/doc && git add -A . && git commit -am "doc regeneration" && git push --force --quiet "https://${GH_TOKEN}@github.com/krzysztof-jusiak/di"); fi
+- if [ "${TOOLSET}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2
+  -q --toolset=${TOOLSET} debug-symbols=off ${VARIANT}); fi
+- if [ "${TOOLSET}" != "" ]; then (cd example && ../build/b2 -sBOOST_ROOT=../build
+  -j2 -q --toolset=${TOOLSET} debug-symbols=off); fi
+- if [ "${CMAKE_COMPILER}" != "" ]; then (cd build && CXX=${CMAKE_COMPILER} cmake
+  .. && make -j2 all && make test); fi
+- if [ "${VALGRIND}" != "" ]; then (find .. -type f -executable | grep "\.test" |
+  xargs -i% valgrind --error-exitcode=-1 %); fi
+- if [ "${TOOLSET}" != "" ] && [ "${BENCHMARK}" != "" ]; then (cd test/pt && CXX=${TOOLSET}
+  COMPLEXITY=${BENCHMARK} ./di_compile_time.sh); fi
+- if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (git
+  clone --quiet --recursive  --depth=1 --single-branch https://github.com/boostorg/boost.git
+  && mkdir boost/libs/di && cp -r build doc example include boost/libs/di && cd boost/libs/di/doc
+  && ../build/b2 -sBOOST_ROOT=../build && git clone https://github.com/krzysztof-jusiak/di.git
+  && cd di && git checkout -b gh-pages --track origin/gh-pages && git reset --hard
+  && rm -rf cpp14/boost/libs/di/doc/html && cp -r ../html cpp14/boost/libs/di/doc
+  && git add -A . && git commit -am "doc regeneration" && git push --force --quiet
+  "https://${GH_TOKEN}@github.com/krzysztof-jusiak/di"); fi
 
 after_success:
-  - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${VARIANT}" == "coverage" ]; then (pip install requests[security] cpp-coveralls && coveralls -r . -b test/ --gcov /usr/bin/${GCOV} --repo-token c3V44Hj0ZTKzz4kaa3gIlVjInFiyNRZ4f); fi
+- if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${VARIANT}" == "coverage" ]; then (pip
+  install requests[security] cpp-coveralls && coveralls -r . -b test/ --gcov /usr/bin/${GCOV}
+  --repo-token c3V44Hj0ZTKzz4kaa3gIlVjInFiyNRZ4f); fi
 
 notifications:
   webhooks:
     urls:
-      - https://webhooks.gitter.im/e/743f46341bea58bbe3ca
+    - https://webhooks.gitter.im/e/743f46341bea58bbe3ca
   on_success: change
   on_failure: always
   on_start: false
 
+deploy:
+  provider: biicode
+  user: krzysztofjusiak
+  password:
+    secure: KsevDYugDKdSNvjW5FSTMrNh+dNXl2scbRB4jauIPczY/V4lWZPejQ2mV/QTl1JLcAbaK4jbS7H/yI+9d5djBxLdBlPqpIhLRJM4eEly8qkdq+pL5PoicvUZz0y4VbKGP+Gb//C5+lKukYfUr66XfhBzRUpoGXE+CSkwuLNiD2w=
+  on:
+    repo: krzysztof-jusiak/di
+    branch: cpp14
