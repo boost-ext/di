@@ -1,0 +1,303 @@
+...found 261 targets...
+...updating 60 targets...
+compile-c-c++ bin\bind_external_repeated.test\msvc-14.0\debug\threading-multi\bind_external_repeated.obj
+bind_external_repeated.cpp
+error\bind_external_repeated.cpp(15): error C2783: 'auto boost::di::v1::make_injector(const TDeps &...) noexcept': could not deduce template argument for '__formal'
+Z:\include\boost/di.hpp(3417): note: see declaration of 'boost::di::v1::make_injector'
+(failed-as-expected) bin\bind_external_repeated.test\msvc-14.0\debug\threading-multi\bind_external_repeated.obj
+**passed** bin\bind_external_repeated.test\msvc-14.0\debug\threading-multi\bind_external_repeated.test
+compile-c-c++ bin\bind_external_with_given_scope.test\msvc-14.0\debug\threading-multi\bind_external_with_given_scope.obj
+bind_external_with_given_scope.cpp
+error\bind_external_with_given_scope.cpp(13): error C2783: 'auto boost::di::v1::core::dependency<T,TExpected,TGiven,TName,boost::di::v1::aux::none_type>::to(const T &) noexcept const': could not deduce template argument for '__formal'
+        with
+        [
+            T=boost::di::v1::scopes::unique,
+            TExpected=int,
+            TGiven=int,
+            TName=boost::di::v1::no_name
+        ]
+Z:\include\boost/di.hpp(1650): note: see declaration of 'boost::di::v1::core::dependency<T,TExpected,TGiven,TName,boost::di::v1::aux::none_type>::to'
+        with
+        [
+            T=boost::di::v1::scopes::unique,
+            TExpected=int,
+            TGiven=int,
+            TName=boost::di::v1::no_name
+        ]
+Z:\include\boost/di.hpp(1642): note: see declaration of 'boost::di::v1::core::dependency<T,TExpected,TGiven,TName,boost::di::v1::aux::none_type>::to'
+        with
+        [
+            T=boost::di::v1::scopes::unique,
+            TExpected=int,
+            TGiven=int,
+            TName=boost::di::v1::no_name
+        ]
+error\bind_external_with_given_scope.cpp(13): error C2783: 'auto boost::di::v1::core::dependency<T,TExpected,TGiven,TName,boost::di::v1::aux::none_type>::to(T &&) noexcept const': could not deduce template argument for '__formal'
+        with
+        [
+            T=boost::di::v1::scopes::unique,
+            TExpected=int,
+            TGiven=int,
+            TName=boost::di::v1::no_name
+        ]
+Z:\include\boost/di.hpp(1634): note: see declaration of 'boost::di::v1::core::dependency<T,TExpected,TGiven,TName,boost::di::v1::aux::none_type>::to'
+        with
+        [
+            T=boost::di::v1::scopes::unique,
+            TExpected=int,
+            TGiven=int,
+            TName=boost::di::v1::no_name
+        ]
+(failed-as-expected) bin\bind_external_with_given_scope.test\msvc-14.0\debug\threading-multi\bind_external_with_given_scope.obj
+**passed** bin\bind_external_with_given_scope.test\msvc-14.0\debug\threading-multi\bind_external_with_given_scope.test
+compile-c-c++ bin\bind_external_with_given_type.test\msvc-14.0\debug\threading-multi\bind_external_with_given_type.obj
+bind_external_with_given_type.cpp
+error\bind_external_with_given_type.cpp(16): error C2783: 'auto boost::di::v1::core::dependency<boost::di::v1::scopes::deduce,TExpected,TGiven,boost::di::v1::no_name,boost::di::v1::aux::none_type>::to(const T &) noexcept const': could not deduce template argument for '__formal'
+        with
+        [
+            TExpected=i,
+            TGiven=impl
+        ]
+Z:\include\boost/di.hpp(1650): note: see declaration of 'boost::di::v1::core::dependency<boost::di::v1::scopes::deduce,TExpected,TGiven,boost::di::v1::no_name,boost::di::v1::aux::none_type>::to'
+        with
+        [
+            TExpected=i,
+            TGiven=impl
+        ]
+Z:\include\boost/di.hpp(1642): note: see declaration of 'boost::di::v1::core::dependency<boost::di::v1::scopes::deduce,TExpected,TGiven,boost::di::v1::no_name,boost::di::v1::aux::none_type>::to'
+        with
+        [
+            TExpected=i,
+            TGiven=impl
+        ]
+error\bind_external_with_given_type.cpp(16): error C2783: 'auto boost::di::v1::core::dependency<boost::di::v1::scopes::deduce,TExpected,TGiven,boost::di::v1::no_name,boost::di::v1::aux::none_type>::to(T &&) noexcept const': could not deduce template argument for '__formal'
+        with
+        [
+            TExpected=i,
+            TGiven=impl
+        ]
+Z:\include\boost/di.hpp(1634): note: see declaration of 'boost::di::v1::core::dependency<boost::di::v1::scopes::deduce,TExpected,TGiven,boost::di::v1::no_name,boost::di::v1::aux::none_type>::to'
+        with
+        [
+            TExpected=i,
+            TGiven=impl
+        ]
+(failed-as-expected) bin\bind_external_with_given_type.test\msvc-14.0\debug\threading-multi\bind_external_with_given_type.obj
+**passed** bin\bind_external_with_given_type.test\msvc-14.0\debug\threading-multi\bind_external_with_given_type.test
+compile-c-c++ bin\bind_multiple_times.test\msvc-14.0\debug\threading-multi\bind_multiple_times.obj
+bind_multiple_times.cpp
+error\bind_multiple_times.cpp(19): error C2783: 'auto boost::di::v1::make_injector(const TDeps &...) noexcept': could not deduce template argument for '__formal'
+Z:\include\boost/di.hpp(3417): note: see declaration of 'boost::di::v1::make_injector'
+(failed-as-expected) bin\bind_multiple_times.test\msvc-14.0\debug\threading-multi\bind_multiple_times.obj
+**passed** bin\bind_multiple_times.test\msvc-14.0\debug\threading-multi\bind_multiple_times.test
+compile-c-c++ bin\bind_not_compatible_types.test\msvc-14.0\debug\threading-multi\bind_not_compatible_types.obj
+bind_not_compatible_types.cpp
+error\bind_not_compatible_types.cpp(16): error C2794: 'type': is not a member of any direct or indirect base class of 'boost::di::v1::constraint_not_satisfied<boost::di::v1::bound_type<_Ty>::is_not_base_of<int>>'
+        with
+        [
+            _Ty=impl
+        ]
+error\bind_not_compatible_types.cpp(16): error C2972: 'boost::di::v1::bind': template parameter 'unnamed-parameter': the type of non-type argument is invalid
+Z:\include\boost/di.hpp(2318): note: see declaration of 'boost::di::v1::bind'
+error\bind_not_compatible_types.cpp(16): error C2955: 'boost::di::v1::bind': use of class template requires template argument list
+Z:\include\boost/di.hpp(2318): note: see declaration of 'boost::di::v1::bind'
+error\bind_not_compatible_types.cpp(19): error C3536: 'injector': cannot be used before it is initialized
+error\bind_not_compatible_types.cpp(19): error C2228: left of '.create' must have class/struct/union
+error\bind_not_compatible_types.cpp(19): note: type is 'int'
+error\bind_not_compatible_types.cpp(19): error C2062: type 'int' unexpected
+(failed-as-expected) bin\bind_not_compatible_types.test\msvc-14.0\debug\threading-multi\bind_not_compatible_types.obj
+**passed** bin\bind_not_compatible_types.test\msvc-14.0\debug\threading-multi\bind_not_compatible_types.test
+compile-c-c++ bin\bind_repeated.test\msvc-14.0\debug\threading-multi\bind_repeated.obj
+bind_repeated.cpp
+error\bind_repeated.cpp(19): error C2783: 'auto boost::di::v1::make_injector(const TDeps &...) noexcept': could not deduce template argument for '__formal'
+Z:\include\boost/di.hpp(3417): note: see declaration of 'boost::di::v1::make_injector'
+(failed-as-expected) bin\bind_repeated.test\msvc-14.0\debug\threading-multi\bind_repeated.obj
+**passed** bin\bind_repeated.test\msvc-14.0\debug\threading-multi\bind_repeated.test
+compile-c-c++ bin\bind_to_different_types.test\msvc-14.0\debug\threading-multi\bind_to_different_types.obj
+bind_to_different_types.cpp
+error\bind_to_different_types.cpp(19): error C2783: 'auto boost::di::v1::make_injector(const TDeps &...) noexcept': could not deduce template argument for '__formal'
+Z:\include\boost/di.hpp(3417): note: see declaration of 'boost::di::v1::make_injector'
+(failed-as-expected) bin\bind_to_different_types.test\msvc-14.0\debug\threading-multi\bind_to_different_types.obj
+**passed** bin\bind_to_different_types.test\msvc-14.0\debug\threading-multi\bind_to_different_types.test
+compile-c-c++ bin\create_polymorphic_type_without_binding.test\msvc-14.0\debug\threading-multi\create_polymorphic_type_without_binding.obj
+create_polymorphic_type_without_binding.cpp
+error\create_polymorphic_type_without_binding.cpp(19): error C2220: warning treated as error - no 'object' file generated
+error\create_polymorphic_type_without_binding.cpp(19): warning C4996: 'boost::di::v1::core::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<>>>::create': creatable constraint not satisfied
+        with
+        [
+            TConfig=boost::di::v1::config
+        ]
+Z:\include\boost/di.hpp(3132): note: see declaration of 'boost::di::v1::core::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<>>>::create'
+        with
+        [
+            TConfig=boost::di::v1::config
+        ]
+error\create_polymorphic_type_without_binding.cpp(22): warning C4506: no definition for inline function 'i *boost::di::v1::abstract_type<i>::is_not_bound::error(boost::di::v1::_)'
+(failed-as-expected) bin\create_polymorphic_type_without_binding.test\msvc-14.0\debug\threading-multi\create_polymorphic_type_without_binding.obj
+**passed** bin\create_polymorphic_type_without_binding.test\msvc-14.0\debug\threading-multi\create_polymorphic_type_without_binding.test
+compile-c-c++ bin\ctor_inject_limit_out_of_range.test\msvc-14.0\debug\threading-multi\ctor_inject_limit_out_of_range.obj
+ctor_inject_limit_out_of_range.cpp
+error\ctor_inject_limit_out_of_range.cpp(14): error C2338: Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE
+(failed-as-expected) bin\ctor_inject_limit_out_of_range.test\msvc-14.0\debug\threading-multi\ctor_inject_limit_out_of_range.obj
+**passed** bin\ctor_inject_limit_out_of_range.test\msvc-14.0\debug\threading-multi\ctor_inject_limit_out_of_range.test
+compile-c-c++ bin\ctor_limit_out_of_range.test\msvc-14.0\debug\threading-multi\ctor_limit_out_of_range.obj
+ctor_limit_out_of_range.cpp
+error\ctor_limit_out_of_range.cpp(19): error C2220: warning treated as error - no 'object' file generated
+error\ctor_limit_out_of_range.cpp(19): warning C4996: 'boost::di::v1::core::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<>>>::create': creatable constraint not satisfied
+        with
+        [
+            TConfig=boost::di::v1::config
+        ]
+Z:\include\boost/di.hpp(3132): note: see declaration of 'boost::di::v1::core::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<>>>::create'
+        with
+        [
+            TConfig=boost::di::v1::config
+        ]
+error\ctor_limit_out_of_range.cpp(22): warning C4506: no definition for inline function '<lambda_8c5a8c25a3efc21201fac650e73fb38f>::()::c *boost::di::v1::number_of_constructor_arguments_is_out_of_range_for<<lambda_8c5a8c25a3efc21201fac650e73fb38f>::()::c>::max<3>::error(boost::di::v1::_)'
+(failed-as-expected) bin\ctor_limit_out_of_range.test\msvc-14.0\debug\threading-multi\ctor_limit_out_of_range.obj
+**passed** bin\ctor_limit_out_of_range.test\msvc-14.0\debug\threading-multi\ctor_limit_out_of_range.test
+compile-c-c++ bin\exposed_multiple_times.test\msvc-14.0\debug\threading-multi\exposed_multiple_times.obj
+exposed_multiple_times.cpp
+Z:\include\boost/di.hpp(3390): error C2614: 'boost::di::v1::injector<c,c>': illegal member initialization: 'injector<boost::di::v1::config,boost::di::v1::core::pool<boost::di::v1::aux::type_list<> >,c,c>' is not a base or member
+error\exposed_multiple_times.cpp(14): note: see reference to function template instantiation 'boost::di::v1::injector<c,c>::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<>>,>(const boost::di::v1::core::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<>>> &) noexcept' being compiled
+        with
+        [
+            TConfig=boost::di::v1::config
+        ]
+error\exposed_multiple_times.cpp(14): note: see reference to function template instantiation 'boost::di::v1::injector<c,c>::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<>>,>(const boost::di::v1::core::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<>>> &) noexcept' being compiled
+        with
+        [
+            TConfig=boost::di::v1::config
+        ]
+(failed-as-expected) bin\exposed_multiple_times.test\msvc-14.0\debug\threading-multi\exposed_multiple_times.obj
+**passed** bin\exposed_multiple_times.test\msvc-14.0\debug\threading-multi\exposed_multiple_times.test
+compile-c-c++ bin\exposed_not_creatable.test\msvc-14.0\debug\threading-multi\exposed_not_creatable.obj
+exposed_not_creatable.cpp
+Z:\include\boost/di.hpp(3399): error C2220: warning treated as error - no 'object' file generated
+Z:\include\boost/di.hpp(3399): warning C4996: 'boost::di::v1::detail::create': creatable constraint not satisfied
+Z:\include\boost/di.hpp(3373): note: see declaration of 'boost::di::v1::detail::create'
+error\exposed_not_creatable.cpp(21): note: see reference to function template instantiation 'boost::di::v1::injector<i>::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<>>,>(const boost::di::v1::core::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<>>> &) noexcept' being compiled
+        with
+        [
+            TConfig=boost::di::v1::config
+        ]
+error\exposed_not_creatable.cpp(21): note: see reference to function template instantiation 'boost::di::v1::injector<i>::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<>>,>(const boost::di::v1::core::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<>>> &) noexcept' being compiled
+        with
+        [
+            TConfig=boost::di::v1::config
+        ]
+error\exposed_not_creatable.cpp(24): warning C4506: no definition for inline function 'i *boost::di::v1::abstract_type<i>::is_not_bound::error(boost::di::v1::_)'
+(failed-as-expected) bin\exposed_not_creatable.test\msvc-14.0\debug\threading-multi\exposed_not_creatable.obj
+**passed** bin\exposed_not_creatable.test\msvc-14.0\debug\threading-multi\exposed_not_creatable.test
+compile-c-c++ bin\exposed_polymorphic_type_without_binding.test\msvc-14.0\debug\threading-multi\exposed_polymorphic_type_without_binding.obj
+exposed_polymorphic_type_without_binding.cpp
+Z:\include\boost/di.hpp(3399): error C2220: warning treated as error - no 'object' file generated
+Z:\include\boost/di.hpp(3399): warning C4996: 'boost::di::v1::detail::create': creatable constraint not satisfied
+Z:\include\boost/di.hpp(3373): note: see declaration of 'boost::di::v1::detail::create'
+error\exposed_polymorphic_type_without_binding.cpp(16): note: see reference to function template instantiation 'boost::di::v1::injector<c>::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<>>,>(const boost::di::v1::core::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<>>> &) noexcept' being compiled
+        with
+        [
+            TConfig=boost::di::v1::config
+        ]
+error\exposed_polymorphic_type_without_binding.cpp(16): note: see reference to function template instantiation 'boost::di::v1::injector<c>::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<>>,>(const boost::di::v1::core::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<>>> &) noexcept' being compiled
+        with
+        [
+            TConfig=boost::di::v1::config
+        ]
+error\exposed_polymorphic_type_without_binding.cpp(19): warning C4506: no definition for inline function 'i *boost::di::v1::abstract_type<i>::is_not_bound::error(boost::di::v1::_)'
+(failed-as-expected) bin\exposed_polymorphic_type_without_binding.test\msvc-14.0\debug\threading-multi\exposed_polymorphic_type_without_binding.obj
+**passed** bin\exposed_polymorphic_type_without_binding.test\msvc-14.0\debug\threading-multi\exposed_polymorphic_type_without_binding.test
+compile-c-c++ bin\inject_limit_out_of_range.test\msvc-14.0\debug\threading-multi\inject_limit_out_of_range.obj
+inject_limit_out_of_range.cpp
+error\inject_limit_out_of_range.cpp(14): error C2338: Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE
+(failed-as-expected) bin\inject_limit_out_of_range.test\msvc-14.0\debug\threading-multi\inject_limit_out_of_range.obj
+**passed** bin\inject_limit_out_of_range.test\msvc-14.0\debug\threading-multi\inject_limit_out_of_range.test
+compile-c-c++ bin\injector_ctor_ambiguous.test\msvc-14.0\debug\threading-multi\injector_ctor_ambiguous.obj
+injector_ctor_ambiguous.cpp
+error\injector_ctor_ambiguous.cpp(17): error C2220: warning treated as error - no 'object' file generated
+error\injector_ctor_ambiguous.cpp(17): warning C4996: 'boost::di::v1::core::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<>>>::create': creatable constraint not satisfied
+        with
+        [
+            TConfig=boost::di::v1::config
+        ]
+Z:\include\boost/di.hpp(3132): note: see declaration of 'boost::di::v1::core::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<>>>::create'
+        with
+        [
+            TConfig=boost::di::v1::config
+        ]
+error\injector_ctor_ambiguous.cpp(20): warning C4506: no definition for inline function '<lambda_88e1c1abce36a573969889258daf9a0b>::()::ctor *boost::di::v1::number_of_constructor_arguments_is_out_of_range_for<<lambda_88e1c1abce36a573969889258daf9a0b>::()::ctor>::max<10>::error(boost::di::v1::_)'
+(failed-as-expected) bin\injector_ctor_ambiguous.test\msvc-14.0\debug\threading-multi\injector_ctor_ambiguous.obj
+**passed** bin\injector_ctor_ambiguous.test\msvc-14.0\debug\threading-multi\injector_ctor_ambiguous.test
+compile-c-c++ bin\injector_shared_by_copy.test\msvc-14.0\debug\threading-multi\injector_shared_by_copy.obj
+injector_shared_by_copy.cpp
+error\injector_shared_by_copy.cpp(17): error C2039: 'shared': is not a member of 'boost::di'
+Z:\include\boost/di.hpp(3598): note: see declaration of 'boost::di'
+error\injector_shared_by_copy.cpp(17): error C2065: 'shared': undeclared identifier
+error\injector_shared_by_copy.cpp(20): error C3536: 'injector': cannot be used before it is initialized
+error\injector_shared_by_copy.cpp(20): error C2228: left of '.create' must have class/struct/union
+error\injector_shared_by_copy.cpp(20): note: type is 'int'
+error\injector_shared_by_copy.cpp(20): error C2059: syntax error: ')'
+(failed-as-expected) bin\injector_shared_by_copy.test\msvc-14.0\debug\threading-multi\injector_shared_by_copy.obj
+**passed** bin\injector_shared_by_copy.test\msvc-14.0\debug\threading-multi\injector_shared_by_copy.test
+compile-c-c++ bin\make_injector_wrong_arg.test\msvc-14.0\debug\threading-multi\make_injector_wrong_arg.obj
+make_injector_wrong_arg.cpp
+error\make_injector_wrong_arg.cpp(13): error C2783: 'auto boost::di::v1::make_injector(const TDeps &...) noexcept': could not deduce template argument for '__formal'
+Z:\include\boost/di.hpp(3417): note: see declaration of 'boost::di::v1::make_injector'
+(failed-as-expected) bin\make_injector_wrong_arg.test\msvc-14.0\debug\threading-multi\make_injector_wrong_arg.obj
+**passed** bin\make_injector_wrong_arg.test\msvc-14.0\debug\threading-multi\make_injector_wrong_arg.test
+compile-c-c++ bin\named_paramater_spelling.test\msvc-14.0\debug\threading-multi\named_paramater_spelling.obj
+named_paramater_spelling.cpp
+error\named_paramater_spelling.cpp(15): error C2039: 'NAMED': is not a member of 'boost::di::v1::detail'
+Z:\include\boost/di.hpp(3364): note: see declaration of 'boost::di::v1::detail'
+error\named_paramater_spelling.cpp(15): error C2065: 'NAMED': undeclared identifier
+(failed-as-expected) bin\named_paramater_spelling.test\msvc-14.0\debug\threading-multi\named_paramater_spelling.obj
+**passed** bin\named_paramater_spelling.test\msvc-14.0\debug\threading-multi\named_paramater_spelling.test
+compile-c-c++ bin\policy_constructible.test\msvc-14.0\debug\threading-multi\policy_constructible.obj
+policy_constructible.cpp
+error\policy_constructible.cpp(21): error C2220: warning treated as error - no 'object' file generated
+error\policy_constructible.cpp(21): warning C4996: 'boost::di::v1::core::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<boost::di::v1::policies::constructible_impl<T>>>>::create': creatable constraint not satisfied
+        with
+        [
+            TConfig=config,
+            T=boost::di::v1::policies::is_bound<boost::di::v1::_>
+        ]
+Z:\include\boost/di.hpp(2945): note: see declaration of 'boost::di::v1::core::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<boost::di::v1::policies::constructible_impl<T>>>>::create'
+        with
+        [
+            TConfig=config,
+            T=boost::di::v1::policies::is_bound<boost::di::v1::_>
+        ]
+error\policy_constructible.cpp(24): warning C4506: no definition for inline function 'int boost::di::v1::policies::type<T_>::not_allowed_by<T>::error(boost::di::v1::_)'
+        with
+        [
+            T_=int,
+            T=boost::di::v1::policies::is_bound<boost::di::v1::_>
+        ]
+(failed-as-expected) bin\policy_constructible.test\msvc-14.0\debug\threading-multi\policy_constructible.obj
+**passed** bin\policy_constructible.test\msvc-14.0\debug\threading-multi\policy_constructible.test
+compile-c-c++ bin\scope_traits_external_not_referable.test\msvc-14.0\debug\threading-multi\scope_traits_external_not_referable.obj
+scope_traits_external_not_referable.cpp
+error\scope_traits_external_not_referable.cpp(20): error C2220: warning treated as error - no 'object' file generated
+error\scope_traits_external_not_referable.cpp(20): warning C4996: 'boost::di::v1::core::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<>>,boost::di::v1::core::dependency<boost::di::v1::scopes::external,TExpected,int,TName,boost::di::v1::aux::none_type>>::create': creatable constraint not satisfied
+        with
+        [
+            TConfig=boost::di::v1::config,
+            TExpected=int,
+            TName=boost::di::v1::no_name
+        ]
+Z:\include\boost/di.hpp(3132): note: see declaration of 'boost::di::v1::core::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<>>,boost::di::v1::core::dependency<boost::di::v1::scopes::external,TExpected,int,TName,boost::di::v1::aux::none_type>>::create'
+        with
+        [
+            TConfig=boost::di::v1::config,
+            TExpected=int,
+            TName=boost::di::v1::no_name
+        ]
+error\scope_traits_external_not_referable.cpp(23): warning C4506: no definition for inline function 'int boost::di::v1::when_creating<TParent>::type<T &>::error(boost::di::v1::_)'
+        with
+        [
+            TParent=<lambda_5f1a87a1c496e589c261e1ec51d0e75c>::()::c,
+            T=int
+        ]
+(failed-as-expected) bin\scope_traits_external_not_referable.test\msvc-14.0\debug\threading-multi\scope_traits_external_not_referable.obj
+**passed** bin\scope_traits_external_not_referable.test\msvc-14.0\debug\threading-multi\scope_traits_external_not_referable.test
+...updated 60 targets...
