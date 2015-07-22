@@ -10,16 +10,17 @@ env:
   global:
     - secure: "A27gNApbElRr3fqZXifVPKkB+xbxMYDFINGk2RDqul1X1Zg51M7e+ohHO9BwhEYiOGmCnFfbsVUP11XyFIH6kzWmxw9mhy8YDglbYfeyu6grxtU3mHElz8W7wO5OCPFPWXQf23sVYE8AWyjj6M+t3oyLJhPXCcYI7uMHEQm10CQ="
 
-  matrix:
-    - DOCUMENTATION=1 BOOST=boost_1_58_0
+matrix:
+  fast_finish: true
+
+  include:
+    - os: linux
+      env: DOCUMENTATION=1 BOOST=boost_1_58_0
       addons:
         apt:
           packages:
             - xsltproc
 
-matrix:
-  fast_finish: true
-  include:
     - os: linux
       env: TOOLSET=clang-3.4 VALGRIND=1 BENCHMARK=quick
       addons: &clang34
