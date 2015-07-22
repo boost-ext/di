@@ -150,9 +150,6 @@ error/exposed_multiple_times.cpp:14:24: note: in instantiation of template class
     di::injector<c, c> injector = di::make_injector();
                        ^
 1 error generated.
-error/exposed_not_creatable.cpp:21:21: error: unused variable 'injector' [-Werror,-Wunused-variable]
-    di::injector<i> injector = di::make_injector();
-                    ^
 In file included from error/exposed_not_creatable.cpp:8:
 ../include/boost/di.hpp:3393:25: warning: 'create' is deprecated: creatable constraint not satisfied [-Wdeprecated-declarations]
                 detail::create<T>(
@@ -163,10 +160,13 @@ error/exposed_not_creatable.cpp:21:32: note: in instantiation of function templa
 ../include/boost/di.hpp:3372:5: note: 'create<i>' has been explicitly marked deprecated here
     create
     ^
+../include/boost/di.hpp:1772:5: error: inline function 'boost::di::v1::abstract_type<i>::is_not_bound::error' is not defined [-Werror,-Wundefined-inline]
+    error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?");
+    ^
+../include/boost/di.hpp:1768:40: note: used here
+            constraint_not_satisfied{}.error();
+                                       ^
 1 warning and 1 error generated.
-error/exposed_polymorphic_type_without_binding.cpp:16:21: error: unused variable 'injector' [-Werror,-Wunused-variable]
-    di::injector<c> injector = di::make_injector(); // di::bind<i, impl>()
-                    ^
 In file included from error/exposed_polymorphic_type_without_binding.cpp:7:
 ../include/boost/di.hpp:3393:25: warning: 'create' is deprecated: creatable constraint not satisfied [-Wdeprecated-declarations]
                 detail::create<T>(
@@ -177,6 +177,12 @@ error/exposed_polymorphic_type_without_binding.cpp:16:32: note: in instantiation
 ../include/boost/di.hpp:3372:5: note: 'create<c>' has been explicitly marked deprecated here
     create
     ^
+../include/boost/di.hpp:1772:5: error: inline function 'boost::di::v1::abstract_type<i>::is_not_bound::error' is not defined [-Werror,-Wundefined-inline]
+    error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?");
+    ^
+../include/boost/di.hpp:1768:40: note: used here
+            constraint_not_satisfied{}.error();
+                                       ^
 1 warning and 1 error generated.
 error/inject_limit_out_of_range.cpp:14:9: error: static_assert failed "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE"
         BOOST_DI_INJECT(c, int, int, int, int) { }
@@ -299,19 +305,37 @@ note: (skipping 3 expansions in backtrace; use -fmacro-backtrace-limit=0 to see 
     >::type; \
      ^
 3 errors generated.
-error/policy_constructible.cpp:21:14: warning: 'create' is deprecated: creatable constraint not satisfied [-Wdeprecated-declarations]
-    injector.create<int>();
+error/policy_constructible.cpp:25:14: warning: 'create' is deprecated: creatable constraint not satisfied [-Wdeprecated-declarations]
+    injector.create<c>();
              ^
-../include/boost/di.hpp:2945:7: note: 'create<int, 0>' has been explicitly marked deprecated here
+../include/boost/di.hpp:2945:7: note: 'create<c, 0>' has been explicitly marked deprecated here
     T create() const {
       ^
+../include/boost/di.hpp:3441:5: error: inline function 'boost::di::v1::policies::type<float>::not_allowed_by<boost::di::v1::policies::is_bound<boost::di::v1::_> >::error' is not defined [-Werror,-Wundefined-inline]
+    error(_ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>!");
+    ^
+../include/boost/di.hpp:3437:40: note: used here
+            constraint_not_satisfied{}.error();
+                                       ^
+../include/boost/di.hpp:3441:5: error: inline function 'boost::di::v1::policies::type<double>::not_allowed_by<boost::di::v1::policies::is_bound<boost::di::v1::_> >::error' is not defined [-Werror,-Wundefined-inline]
+    error(_ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>!");
+    ^
+../include/boost/di.hpp:3437:40: note: used here
+            constraint_not_satisfied{}.error();
+                                       ^
+../include/boost/di.hpp:3441:5: error: inline function 'boost::di::v1::policies::type<c>::not_allowed_by<boost::di::v1::policies::is_bound<boost::di::v1::_> >::error' is not defined [-Werror,-Wundefined-inline]
+    error(_ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>!");
+    ^
+../include/boost/di.hpp:3437:40: note: used here
+            constraint_not_satisfied{}.error();
+                                       ^
 ../include/boost/di.hpp:3441:5: error: inline function 'boost::di::v1::policies::type<int>::not_allowed_by<boost::di::v1::policies::is_bound<boost::di::v1::_> >::error' is not defined [-Werror,-Wundefined-inline]
     error(_ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>!");
     ^
 ../include/boost/di.hpp:3437:40: note: used here
             constraint_not_satisfied{}.error();
                                        ^
-1 warning and 1 error generated.
+1 warning and 4 errors generated.
 error/scope_traits_external_not_referable.cpp:20:14: warning: 'create' is deprecated: creatable constraint not satisfied [-Wdeprecated-declarations]
     injector.create<c>();
              ^

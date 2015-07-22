@@ -60,9 +60,9 @@ rule run-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
 
 rule compile-fail-test ( std * : src + : ctor * : defines * ) {
     toolset =
-        <toolset>gcc:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
-        <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror -Wno-error=deprecated-declarations"
-        <toolset>darwin:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror -Wno-error=deprecated-declarations"
+        <toolset>gcc:<cxxflags>"-std=$(std) -include common/test.hpp -Werror"
+        <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp -Wno-all -Werror -Wno-error=deprecated-declarations"
+        <toolset>darwin:<cxxflags>"-std=$(std) -include common/test.hpp -Wno-all -Werror -Wno-error=deprecated-declarations"
         <toolset>msvc:<cxxflags>"/FI common/test.hpp /W3 /WX"
     ;
 

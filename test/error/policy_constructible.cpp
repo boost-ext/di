@@ -16,8 +16,12 @@ public:
     }
 };
 
+struct c {
+    c(int, double, float) { }
+};
+
 test policy_constructible = [] {
     auto injector = di::make_injector<config>();
-    injector.create<int>();
+    injector.create<c>();
 };
 
