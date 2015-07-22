@@ -254,8 +254,8 @@ error\named_paramater_spelling.cpp(15): error C2065: 'NAMED': undeclared identif
 **passed** bin\named_paramater_spelling.test\msvc-14.0\debug\threading-multi\named_paramater_spelling.test
 compile-c-c++ bin\policy_constructible.test\msvc-14.0\debug\threading-multi\policy_constructible.obj
 policy_constructible.cpp
-error\policy_constructible.cpp(21): error C2220: warning treated as error - no 'object' file generated
-error\policy_constructible.cpp(21): warning C4996: 'boost::di::v1::core::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<boost::di::v1::policies::constructible_impl<T>>>>::create': creatable constraint not satisfied
+error\policy_constructible.cpp(25): error C2220: warning treated as error - no 'object' file generated
+error\policy_constructible.cpp(25): warning C4996: 'boost::di::v1::core::injector<TConfig,boost::di::v1::core::pool<boost::di::v1::aux::type_list<boost::di::v1::policies::constructible_impl<T>>>>::create': creatable constraint not satisfied
         with
         [
             TConfig=config,
@@ -267,10 +267,28 @@ Z:\include\boost/di.hpp(2945): note: see declaration of 'boost::di::v1::core::in
             TConfig=config,
             T=boost::di::v1::policies::is_bound<boost::di::v1::_>
         ]
-error\policy_constructible.cpp(24): warning C4506: no definition for inline function 'int boost::di::v1::policies::type<T_>::not_allowed_by<T>::error(boost::di::v1::_)'
+error\policy_constructible.cpp(28): warning C4506: no definition for inline function 'double boost::di::v1::policies::type<T_>::not_allowed_by<T>::error(boost::di::v1::_)'
+        with
+        [
+            T_=double,
+            T=boost::di::v1::policies::is_bound<boost::di::v1::_>
+        ]
+error\policy_constructible.cpp(28): warning C4506: no definition for inline function 'int boost::di::v1::policies::type<T_>::not_allowed_by<T>::error(boost::di::v1::_)'
         with
         [
             T_=int,
+            T=boost::di::v1::policies::is_bound<boost::di::v1::_>
+        ]
+error\policy_constructible.cpp(28): warning C4506: no definition for inline function 'float boost::di::v1::policies::type<T_>::not_allowed_by<T>::error(boost::di::v1::_)'
+        with
+        [
+            T_=float,
+            T=boost::di::v1::policies::is_bound<boost::di::v1::_>
+        ]
+error\policy_constructible.cpp(28): warning C4506: no definition for inline function 'c boost::di::v1::policies::type<T_>::not_allowed_by<T>::error(boost::di::v1::_)'
+        with
+        [
+            T_=c,
             T=boost::di::v1::policies::is_bound<boost::di::v1::_>
         ]
 (failed-as-expected) bin\policy_constructible.test\msvc-14.0\debug\threading-multi\policy_constructible.obj
