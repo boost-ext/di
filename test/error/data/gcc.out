@@ -509,44 +509,15 @@ error/named_paramater_spelling.cpp:15:9: note: in expansion of macro ‘BOOST_DI
 error/named_paramater_spelling.cpp:15:9: note: in expansion of macro ‘BOOST_DI_INJECT’
          BOOST_DI_INJECT(c, (NAMED = name) int) { }
          ^
-error/policy_constructible.cpp: In static member function ‘static auto config::policies()’:
-error/policy_constructible.cpp:15:57: error: ‘_’ was not declared in this scope
-         return di::make_policies(constructible(is_bound<_>{}));
-                                                         ^
-error/policy_constructible.cpp:15:57: note: suggested alternatives:
 In file included from error/policy_constructible.cpp:7:0:
-../include/boost/di.hpp:51:8: note:   ‘boost::di::v1::_’
- struct _ { _(...) { } };
-        ^
-../include/boost/di.hpp:51:8: note:   ‘boost::di::v1::_’
-error/policy_constructible.cpp:15:58: error: template argument 1 is invalid
-         return di::make_policies(constructible(is_bound<_>{}));
-                                                          ^
+../include/boost/di.hpp:3441:5: error: inline function ‘static T boost::di::v1::policies::type<T>::not_allowed_by<TPolicy>::error(boost::di::v1::_) [with TPolicy = boost::di::v1::policies::is_bound<boost::di::v1::_>; T = int]’ used but never defined [-Werror]
+     error(_ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>!");
+     ^
 error/policy_constructible.cpp: In lambda function:
-error/policy_constructible.cpp:20:47: error: no matching function for call to ‘make_injector()’
-     auto injector = di::make_injector<config>();
-                                               ^
-In file included from error/policy_constructible.cpp:7:0:
-../include/boost/di.hpp:3417:15: note: candidate: template<class TConfig, class ... TDeps, typename boost::di::v1::constraint_not_satisfied<boost::di::v1::concepts::boundable<boost::di::v1::aux::type_list<TArgs2 ...> > >::type <anonymous>, typename boost::di::v1::constraint_not_satisfied<boost::di::v1::concepts::configurable<TConfig> >::type <anonymous> > auto boost::di::v1::make_injector(const TDeps& ...)
- > inline auto make_injector(const TDeps&... args) noexcept {
-               ^
-../include/boost/di.hpp:3417:15: note:   template argument deduction/substitution failed:
-In file included from error/policy_constructible.cpp:7:0:
-../include/boost/di.hpp:191:60: error: no type named ‘type’ in ‘struct boost::di::v1::constraint_not_satisfied<boost::di::v1::config_type<config>::is_not_configurable>’
-     typename constraint_not_satisfied<__VA_ARGS__>::type = 0
-                                                            ^
-../include/boost/di.hpp:3416:6: note: in expansion of macro ‘BOOST_DI_REQUIRES_MSG’
-    , BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>)
-      ^
-../include/boost/di.hpp:191:60: note: invalid template non-type parameter
-     typename constraint_not_satisfied<__VA_ARGS__>::type = 0
-                                                            ^
-../include/boost/di.hpp:3416:6: note: in expansion of macro ‘BOOST_DI_REQUIRES_MSG’
-    , BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>)
-      ^
-error/policy_constructible.cpp:21:21: error: expected primary-expression before ‘int’
+error/policy_constructible.cpp:21:27: error: call to ‘boost::di::v1::core::injector<config, boost::di::v1::core::pool<boost::di::v1::aux::type_list<boost::di::v1::policies::constructible_impl<boost::di::v1::policies::is_bound<boost::di::v1::_> > > > >::create<int, 0>’ declared with attribute error: creatable constraint not satisfied
      injector.create<int>();
-                     ^
+                           ^
+cc1plus: all warnings being treated as errors
 In file included from error/scope_traits_external_not_referable.cpp:7:0:
 ../include/boost/di.hpp:1823:9: error: inline function ‘static T boost::di::v1::when_creating<TParent>::type<T>::error(boost::di::v1::_) [with T = int&; TParent = <lambda()>::c]’ used but never defined [-Werror]
          error(_ = "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.to(value)`");

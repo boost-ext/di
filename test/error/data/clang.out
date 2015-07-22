@@ -299,22 +299,19 @@ note: (skipping 3 expansions in backtrace; use -fmacro-backtrace-limit=0 to see 
     >::type; \
      ^
 3 errors generated.
-error/policy_constructible.cpp:15:57: error: use of undeclared identifier '_'
-        return di::make_policies(constructible(is_bound<_>{}));
-                                                        ^
-error/policy_constructible.cpp:20:21: error: no matching function for call to 'make_injector'
-    auto injector = di::make_injector<config>();
-                    ^~~~~~~~~~~~~~~~~~~~~~~~~
-../include/boost/di.hpp:3417:15: note: candidate template ignored: substitution failure [with TConfig = config, TDeps = <>, $2 = 0]: no type named 'type' in 'boost::di::v1::constraint_not_satisfied<boost::di::v1::config_type<config>::is_not_configurable>'
-> inline auto make_injector(const TDeps&... args) noexcept {
-              ^
-error/policy_constructible.cpp:21:24: error: expected '(' for function-style cast or type construction
+error/policy_constructible.cpp:21:14: warning: 'create' is deprecated: creatable constraint not satisfied [-Wdeprecated-declarations]
     injector.create<int>();
-                    ~~~^
-error/policy_constructible.cpp:21:26: error: expected expression
-    injector.create<int>();
-                         ^
-4 errors generated.
+             ^
+../include/boost/di.hpp:2945:7: note: 'create<int, 0>' has been explicitly marked deprecated here
+    T create() const {
+      ^
+../include/boost/di.hpp:3441:5: error: inline function 'boost::di::v1::policies::type<int>::not_allowed_by<boost::di::v1::policies::is_bound<boost::di::v1::_> >::error' is not defined [-Werror,-Wundefined-inline]
+    error(_ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>!");
+    ^
+../include/boost/di.hpp:3437:40: note: used here
+            constraint_not_satisfied{}.error();
+                                       ^
+1 warning and 1 error generated.
 error/scope_traits_external_not_referable.cpp:20:14: warning: 'create' is deprecated: creatable constraint not satisfied [-Wdeprecated-declarations]
     injector.create<c>();
              ^

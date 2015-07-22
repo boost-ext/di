@@ -10,9 +10,9 @@ namespace di = boost::di;
 
 class config : public di::config {
 public:
-    static auto policies() noexcept {
+    static auto policies(...) noexcept {
         using namespace di::policies;
-        return di::make_policies(constructible(is_bound<_>{}));
+        return di::make_policies(constructible(is_bound<di::_>{}));
     }
 };
 
