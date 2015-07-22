@@ -1,0 +1,330 @@
+error/bind_external_repeated.cpp:12:5: error: no matching function for call to 'make_injector'
+    di::make_injector(
+    ^~~~~~~~~~~~~~~~~
+../include/boost/di.hpp:3417:15: note: candidate template ignored: substitution failure [with TConfig = boost::di::v1::config, TDeps = <boost::di::v1::core::dependency<boost::di::v1::scopes::external, int, int, boost::di::v1::no_name, boost::di::v1::aux::none_type>, boost::di::v1::core::dependency<boost::di::v1::scopes::external, int, int, boost::di::v1::no_name, boost::di::v1::aux::none_type>>]: no type named 'type' in 'boost::di::v1::constraint_not_satisfied<boost::di::v1::bound_type<int, boost::di::v1::no_name>::is_bound_more_than_once>'
+> inline auto make_injector(const TDeps&... args) noexcept {
+              ^
+1 error generated.
+error/bind_external_with_given_scope.cpp:13:40: error: no matching member function for call to 'to'
+        di::bind<int>().in(di::unique).to(42)
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~
+../include/boost/di.hpp:1633:41: note: candidate template ignored: disabled by 'enable_if' [with T = int]
+    template<class T, BOOST_DI_REQUIRES(externable<T>::value)>
+                                        ^
+../include/boost/di.hpp:185:29: note: expanded from macro 'BOOST_DI_REQUIRES'
+    typename std::enable_if<__VA_ARGS__, int>::type = 0
+                            ^
+../include/boost/di.hpp:1641:41: note: candidate template ignored: disabled by 'enable_if' [with T = int]
+    template<class T, BOOST_DI_REQUIRES(has_configure<T>::value)>
+                                        ^
+../include/boost/di.hpp:185:29: note: expanded from macro 'BOOST_DI_REQUIRES'
+    typename std::enable_if<__VA_ARGS__, int>::type = 0
+                            ^
+../include/boost/di.hpp:1649:41: note: candidate template ignored: disabled by 'enable_if' [with T = int]
+    template<class T, BOOST_DI_REQUIRES(has_deps<T>::value)>
+                                        ^
+../include/boost/di.hpp:185:29: note: expanded from macro 'BOOST_DI_REQUIRES'
+    typename std::enable_if<__VA_ARGS__, int>::type = 0
+                            ^
+1 error generated.
+error/bind_external_with_given_type.cpp:16:29: error: no matching member function for call to 'to'
+        di::bind<i, impl>().to(impl{})
+        ~~~~~~~~~~~~~~~~~~~~^~
+../include/boost/di.hpp:1633:41: note: candidate template ignored: disabled by 'enable_if' [with T = impl]
+    template<class T, BOOST_DI_REQUIRES(externable<T>::value)>
+                                        ^
+../include/boost/di.hpp:185:29: note: expanded from macro 'BOOST_DI_REQUIRES'
+    typename std::enable_if<__VA_ARGS__, int>::type = 0
+                            ^
+../include/boost/di.hpp:1641:41: note: candidate template ignored: disabled by 'enable_if' [with T = impl]
+    template<class T, BOOST_DI_REQUIRES(has_configure<T>::value)>
+                                        ^
+../include/boost/di.hpp:185:29: note: expanded from macro 'BOOST_DI_REQUIRES'
+    typename std::enable_if<__VA_ARGS__, int>::type = 0
+                            ^
+../include/boost/di.hpp:1649:41: note: candidate template ignored: disabled by 'enable_if' [with T = impl]
+    template<class T, BOOST_DI_REQUIRES(has_deps<T>::value)>
+                                        ^
+../include/boost/di.hpp:185:29: note: expanded from macro 'BOOST_DI_REQUIRES'
+    typename std::enable_if<__VA_ARGS__, int>::type = 0
+                            ^
+1 error generated.
+error/bind_multiple_times.cpp:16:5: error: no matching function for call to 'make_injector'
+    di::make_injector(
+    ^~~~~~~~~~~~~~~~~
+../include/boost/di.hpp:3417:15: note: candidate template ignored: substitution failure [with TConfig = boost::di::v1::config, TDeps = <boost::di::v1::core::dependency<boost::di::v1::scopes::deduce, i, impl1, boost::di::v1::no_name, boost::di::v1::aux::none_type>, boost::di::v1::core::dependency<boost::di::v1::scopes::deduce, i, impl2, boost::di::v1::no_name, boost::di::v1::aux::none_type>>]: no type named 'type' in 'boost::di::v1::constraint_not_satisfied<boost::di::v1::bound_type<i, boost::di::v1::no_name>::is_bound_more_than_once>'
+> inline auto make_injector(const TDeps&... args) noexcept {
+              ^
+1 error generated.
+In file included from error/bind_not_compatible_types.cpp:7:
+../include/boost/di.hpp:2313:5: error: no type named 'type' in 'boost::di::v1::constraint_not_satisfied<boost::di::v1::bound_type<impl>::is_not_base_of<int> >'
+  , BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, TGiven>)
+    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../include/boost/di.hpp:191:58: note: expanded from macro 'BOOST_DI_REQUIRES_MSG'
+    typename constraint_not_satisfied<__VA_ARGS__>::type = 0
+                                                         ^
+error/bind_not_compatible_types.cpp:16:13: note: while substituting prior template arguments into non-type template parameter [with TExpected = int, TGiven = impl]
+        di::bind<int, impl>()
+            ^~~~~~~~~~~~~~~
+error/bind_not_compatible_types.cpp:16:27: note: while checking a default template argument used here
+        di::bind<int, impl>()
+            ~~~~~~~~~~~~~~^
+error/bind_not_compatible_types.cpp:19:24: error: expected '(' for function-style cast or type construction
+    injector.create<int>();
+                    ~~~^
+error/bind_not_compatible_types.cpp:19:26: error: expected expression
+    injector.create<int>();
+                         ^
+3 errors generated.
+error/bind_repeated.cpp:16:5: error: no matching function for call to 'make_injector'
+    di::make_injector(
+    ^~~~~~~~~~~~~~~~~
+../include/boost/di.hpp:3417:15: note: candidate template ignored: substitution failure [with TConfig = boost::di::v1::config, TDeps = <boost::di::v1::core::dependency<boost::di::v1::scopes::deduce, i, impl1, boost::di::v1::no_name, boost::di::v1::aux::none_type>, boost::di::v1::core::dependency<boost::di::v1::scopes::deduce, i, impl1, boost::di::v1::no_name, boost::di::v1::aux::none_type>>]: no type named 'type' in 'boost::di::v1::constraint_not_satisfied<boost::di::v1::bound_type<i, boost::di::v1::no_name>::is_bound_more_than_once>'
+> inline auto make_injector(const TDeps&... args) noexcept {
+              ^
+1 error generated.
+error/bind_to_different_types.cpp:16:5: error: no matching function for call to 'make_injector'
+    di::make_injector(
+    ^~~~~~~~~~~~~~~~~
+../include/boost/di.hpp:3417:15: note: candidate template ignored: substitution failure [with TConfig = boost::di::v1::config, TDeps = <boost::di::v1::core::dependency<boost::di::v1::scopes::deduce, i, impl1, boost::di::v1::no_name, boost::di::v1::aux::none_type>, boost::di::v1::core::dependency<boost::di::v1::scopes::deduce, i, impl2, boost::di::v1::no_name, boost::di::v1::aux::none_type>>]: no type named 'type' in 'boost::di::v1::constraint_not_satisfied<boost::di::v1::bound_type<i, boost::di::v1::no_name>::is_bound_more_than_once>'
+> inline auto make_injector(const TDeps&... args) noexcept {
+              ^
+1 error generated.
+error/create_polymorphic_type_without_binding.cpp:19:25: warning: 'create' is deprecated: creatable constraint not satisfied [-Wdeprecated-declarations]
+    di::make_injector().create<c>();
+                        ^
+../include/boost/di.hpp:3132:7: note: 'create<c, 0>' has been explicitly marked deprecated here
+    T create() const {
+      ^
+../include/boost/di.hpp:1772:5: error: inline function 'boost::di::v1::abstract_type<i>::is_not_bound::error' is not defined [-Werror,-Wundefined-inline]
+    error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?");
+    ^
+../include/boost/di.hpp:1768:40: note: used here
+            constraint_not_satisfied{}.error();
+                                       ^
+1 warning and 1 error generated.
+error/ctor_inject_limit_out_of_range.cpp:14:9: error: static_assert failed "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE"
+        BOOST_DI_INJECT(c, int, int, int, int) { }
+        ^
+../include/boost/di.hpp:1329:9: note: expanded from macro 'BOOST_DI_INJECT'
+        BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
+        ^
+../include/boost/di.hpp:1316:13: note: expanded from macro 'BOOST_DI_INJECT_TRAITS'
+          , BOOST_DI_INJECT_TRAITS_IMPL \
+            ^
+../include/boost/di.hpp:1154:56: note: expanded from macro 'BOOST_DI_IF'
+#define BOOST_DI_IF(cond, t, f) BOOST_DI_IF_I(cond, t, f)
+                                                       ^
+note: (skipping 3 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+../include/boost/di.hpp:1173:30: note: expanded from macro 'BOOST_DI_IIF_0'
+#define BOOST_DI_IIF_0(t, f) f
+                             ^
+../include/boost/di.hpp:1235:33: note: expanded from macro 'BOOST_DI_IIF_II'
+    #define BOOST_DI_IIF_II(id) id
+                                ^
+../include/boost/di.hpp:1306:5: note: expanded from macro 'BOOST_DI_INJECT_TRAITS_IMPL'
+    static_assert( \
+    ^
+1 error generated.
+error/ctor_limit_out_of_range.cpp:19:14: warning: 'create' is deprecated: creatable constraint not satisfied [-Wdeprecated-declarations]
+    injector.create<c>();
+             ^
+../include/boost/di.hpp:3132:7: note: 'create<c, 0>' has been explicitly marked deprecated here
+    T create() const {
+      ^
+../include/boost/di.hpp:1943:5: error: function 'boost::di::v1::number_of_constructor_arguments_is_out_of_range_for<c>::max<3>::error' has internal linkage but is not defined [-Werror,-Wundefined-internal]
+    error(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters");
+    ^
+../include/boost/di.hpp:1939:40: note: used here
+            constraint_not_satisfied{}.error();
+                                       ^
+1 warning and 1 error generated.
+In file included from error/exposed_multiple_times.cpp:7:
+../include/boost/di.hpp:3379:6: error: no type named 'type' in 'boost::di::v1::constraint_not_satisfied<boost::di::v1::bound_type<c>::is_bound_more_than_once, boost::di::v1::core::injector<boost::di::v1::config, boost::di::v1::core::pool<boost::di::v1::aux::type_list<> >, c, c> >'
+     BOOST_DI_REQUIRES_MSG_T(concepts::boundable<aux::type<T...>>
+     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../include/boost/di.hpp:194:44: note: expanded from macro 'BOOST_DI_REQUIRES_MSG_T'
+    constraint_not_satisfied<__VA_ARGS__>::type
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+error/exposed_multiple_times.cpp:14:24: note: in instantiation of template class 'boost::di::v1::injector<c, c>' requested here
+    di::injector<c, c> injector = di::make_injector();
+                       ^
+1 error generated.
+error/exposed_not_creatable.cpp:21:21: error: unused variable 'injector' [-Werror,-Wunused-variable]
+    di::injector<i> injector = di::make_injector();
+                    ^
+In file included from error/exposed_not_creatable.cpp:8:
+../include/boost/di.hpp:3393:25: warning: 'create' is deprecated: creatable constraint not satisfied [-Wdeprecated-declarations]
+                detail::create<T>(
+                        ^
+error/exposed_not_creatable.cpp:21:32: note: in instantiation of function template specialization 'boost::di::v1::injector<i>::injector<boost::di::v1::config, boost::di::v1::core::pool<boost::di::v1::aux::type_list<> >>' requested here
+    di::injector<i> injector = di::make_injector();
+                               ^
+../include/boost/di.hpp:3372:5: note: 'create<i>' has been explicitly marked deprecated here
+    create
+    ^
+1 warning and 1 error generated.
+error/exposed_polymorphic_type_without_binding.cpp:16:21: error: unused variable 'injector' [-Werror,-Wunused-variable]
+    di::injector<c> injector = di::make_injector(); // di::bind<i, impl>()
+                    ^
+In file included from error/exposed_polymorphic_type_without_binding.cpp:7:
+../include/boost/di.hpp:3393:25: warning: 'create' is deprecated: creatable constraint not satisfied [-Wdeprecated-declarations]
+                detail::create<T>(
+                        ^
+error/exposed_polymorphic_type_without_binding.cpp:16:32: note: in instantiation of function template specialization 'boost::di::v1::injector<c>::injector<boost::di::v1::config, boost::di::v1::core::pool<boost::di::v1::aux::type_list<> >>' requested here
+    di::injector<c> injector = di::make_injector(); // di::bind<i, impl>()
+                               ^
+../include/boost/di.hpp:3372:5: note: 'create<c>' has been explicitly marked deprecated here
+    create
+    ^
+1 warning and 1 error generated.
+error/inject_limit_out_of_range.cpp:14:9: error: static_assert failed "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE"
+        BOOST_DI_INJECT(c, int, int, int, int) { }
+        ^
+../include/boost/di.hpp:1329:9: note: expanded from macro 'BOOST_DI_INJECT'
+        BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
+        ^
+../include/boost/di.hpp:1316:13: note: expanded from macro 'BOOST_DI_INJECT_TRAITS'
+          , BOOST_DI_INJECT_TRAITS_IMPL \
+            ^
+../include/boost/di.hpp:1154:56: note: expanded from macro 'BOOST_DI_IF'
+#define BOOST_DI_IF(cond, t, f) BOOST_DI_IF_I(cond, t, f)
+                                                       ^
+note: (skipping 3 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+../include/boost/di.hpp:1173:30: note: expanded from macro 'BOOST_DI_IIF_0'
+#define BOOST_DI_IIF_0(t, f) f
+                             ^
+../include/boost/di.hpp:1235:33: note: expanded from macro 'BOOST_DI_IIF_II'
+    #define BOOST_DI_IIF_II(id) id
+                                ^
+../include/boost/di.hpp:1306:5: note: expanded from macro 'BOOST_DI_INJECT_TRAITS_IMPL'
+    static_assert( \
+    ^
+1 error generated.
+error/injector_ctor_ambiguous.cpp:17:25: warning: 'create' is deprecated: creatable constraint not satisfied [-Wdeprecated-declarations]
+    di::make_injector().create<ctor>();
+                        ^
+../include/boost/di.hpp:3132:7: note: 'create<ctor, 0>' has been explicitly marked deprecated here
+    T create() const {
+      ^
+../include/boost/di.hpp:1943:5: error: function 'boost::di::v1::number_of_constructor_arguments_is_out_of_range_for<ctor>::max<10>::error' has internal linkage but is not defined [-Werror,-Wundefined-internal]
+    error(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters");
+    ^
+../include/boost/di.hpp:1939:40: note: used here
+            constraint_not_satisfied{}.error();
+                                       ^
+1 warning and 1 error generated.
+error/injector_shared_by_copy.cpp:17:32: error: no member named 'shared' in namespace 'boost::di'
+        di::bind<int>().in(di::shared)
+                           ~~~~^
+error/injector_shared_by_copy.cpp:20:21: error: 'c' does not refer to a value
+    injector.create<c>();
+                    ^
+error/injector_shared_by_copy.cpp:12:12: note: declared here
+    struct c {
+           ^
+error/injector_shared_by_copy.cpp:20:24: error: expected expression
+    injector.create<c>();
+                       ^
+3 errors generated.
+error/make_injector_wrong_arg.cpp:13:21: error: no matching function for call to 'make_injector'
+    auto injector = di::make_injector(neither_module_nor_injector_nor_module{});
+                    ^~~~~~~~~~~~~~~~~
+../include/boost/di.hpp:3417:15: note: candidate template ignored: substitution failure [with TConfig = boost::di::v1::config, TDeps = <neither_module_nor_injector_nor_module>]: no type named 'type' in 'boost::di::v1::constraint_not_satisfied<boost::di::v1::bound_type<neither_module_nor_injector_nor_module>::is_neither_a_dependency_nor_an_injector>'
+> inline auto make_injector(const TDeps&... args) noexcept {
+              ^
+1 error generated.
+error/named_paramater_spelling.cpp:15:29: error: no member named 'NAMED' in namespace 'boost::di::v1::detail'
+        BOOST_DI_INJECT(c, (NAMED = name) int) { }
+                            ^
+../include/boost/di.hpp:1329:32: note: expanded from macro 'BOOST_DI_INJECT'
+        BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
+                               ^
+../include/boost/di.hpp:1317:11: note: expanded from macro 'BOOST_DI_INJECT_TRAITS'
+        )(__VA_ARGS__)
+          ^
+../include/boost/di.hpp:1300:72: note: expanded from macro 'BOOST_DI_INJECT_TRAITS_IMPL'
+        BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_NAME, __VA_ARGS__) \
+                                                                       ^
+note: (skipping 9 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+../include/boost/di.hpp:1289:81: note: expanded from macro 'BOOST_DI_GEN_NAME_IMPL'
+    BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_GEN_ARG_NAME, BOOST_DI_GEN_NONE_TYPE)(p)
+                                                                                ^
+../include/boost/di.hpp:1284:61: note: expanded from macro 'BOOST_DI_GEN_ARG_NAME'
+#define BOOST_DI_GEN_ARG_NAME(p) BOOST_DI_GEN_ARG_NAME_IMPL p )
+                                                            ^
+../include/boost/di.hpp:1286:69: note: expanded from macro 'BOOST_DI_GEN_ARG_NAME_IMPL'
+#define BOOST_DI_GEN_ARG_NAME_IMPL(p) decltype(::boost::di::detail::p) BOOST_DI_EAT(
+                                                                    ^
+error/named_paramater_spelling.cpp:15:9: error: no type named 'args' in the global namespace
+        BOOST_DI_INJECT(c, (NAMED = name) int) { }
+        ^
+../include/boost/di.hpp:1329:9: note: expanded from macro 'BOOST_DI_INJECT'
+        BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
+        ^
+../include/boost/di.hpp:1316:13: note: expanded from macro 'BOOST_DI_INJECT_TRAITS'
+          , BOOST_DI_INJECT_TRAITS_IMPL \
+            ^
+../include/boost/di.hpp:1154:56: note: expanded from macro 'BOOST_DI_IF'
+#define BOOST_DI_IF(cond, t, f) BOOST_DI_IF_I(cond, t, f)
+                                                       ^
+note: (skipping 3 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+../include/boost/di.hpp:1173:30: note: expanded from macro 'BOOST_DI_IIF_0'
+#define BOOST_DI_IIF_0(t, f) f
+                             ^
+../include/boost/di.hpp:1235:33: note: expanded from macro 'BOOST_DI_IIF_II'
+    #define BOOST_DI_IIF_II(id) id
+                                ^
+../include/boost/di.hpp:1304:103: note: expanded from macro 'BOOST_DI_INJECT_TRAITS_IMPL'
+      , typename ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, names))>::args \
+                                                                                                    ~~^
+error/named_paramater_spelling.cpp:15:9: error: expected ';' after attributes list
+../include/boost/di.hpp:1329:9: note: expanded from macro 'BOOST_DI_INJECT'
+        BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
+        ^
+../include/boost/di.hpp:1316:13: note: expanded from macro 'BOOST_DI_INJECT_TRAITS'
+          , BOOST_DI_INJECT_TRAITS_IMPL \
+            ^
+../include/boost/di.hpp:1154:56: note: expanded from macro 'BOOST_DI_IF'
+#define BOOST_DI_IF(cond, t, f) BOOST_DI_IF_I(cond, t, f)
+                                                       ^
+note: (skipping 3 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+../include/boost/di.hpp:1173:30: note: expanded from macro 'BOOST_DI_IIF_0'
+#define BOOST_DI_IIF_0(t, f) f
+                             ^
+../include/boost/di.hpp:1235:33: note: expanded from macro 'BOOST_DI_IIF_II'
+    #define BOOST_DI_IIF_II(id) id
+                                ^
+../include/boost/di.hpp:1305:6: note: expanded from macro 'BOOST_DI_INJECT_TRAITS_IMPL'
+    >::type; \
+     ^
+3 errors generated.
+error/policy_constructible.cpp:15:57: error: use of undeclared identifier '_'
+        return di::make_policies(constructible(is_bound<_>{}));
+                                                        ^
+error/policy_constructible.cpp:20:21: error: no matching function for call to 'make_injector'
+    auto injector = di::make_injector<config>();
+                    ^~~~~~~~~~~~~~~~~~~~~~~~~
+../include/boost/di.hpp:3417:15: note: candidate template ignored: substitution failure [with TConfig = config, TDeps = <>, $2 = 0]: no type named 'type' in 'boost::di::v1::constraint_not_satisfied<boost::di::v1::config_type<config>::is_not_configurable>'
+> inline auto make_injector(const TDeps&... args) noexcept {
+              ^
+error/policy_constructible.cpp:21:24: error: expected '(' for function-style cast or type construction
+    injector.create<int>();
+                    ~~~^
+error/policy_constructible.cpp:21:26: error: expected expression
+    injector.create<int>();
+                         ^
+4 errors generated.
+error/scope_traits_external_not_referable.cpp:20:14: warning: 'create' is deprecated: creatable constraint not satisfied [-Wdeprecated-declarations]
+    injector.create<c>();
+             ^
+../include/boost/di.hpp:3132:7: note: 'create<c, 0>' has been explicitly marked deprecated here
+    T create() const {
+      ^
+../include/boost/di.hpp:1823:9: error: function 'boost::di::v1::when_creating<c>::type<int &>::error' has internal linkage but is not defined [-Werror,-Wundefined-internal]
+        error(_ = "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.to(value)`");
+        ^
+../include/boost/di.hpp:1859:40: note: used here
+            constraint_not_satisfied{}.error();
+                                       ^
+1 warning and 1 error generated.
