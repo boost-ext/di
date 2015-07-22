@@ -1,4 +1,0 @@
-Dump of assembler code for function _Z28given_lambda_module_bind_intv:
-   0x0000000000407400 <+0>:	mov    $0x2a,%eax
-   0x0000000000407405 <+5>:	retq   
-End of assembler dump.
