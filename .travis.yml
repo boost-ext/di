@@ -12,10 +12,10 @@ env:
 
   matrix:
     - DOCUMENTATION=1 BOOST=boost_1_58_0
-    addons:
-      apt:
-        packages:
-          - xsltproc
+      addons:
+        apt:
+          packages:
+            - xsltproc
 
 matrix:
   fast_finish: true
