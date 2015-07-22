@@ -12,22 +12,22 @@
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
 template<class>
-struct copyable_impl;
+struct copyable;
 
 template<class T>
-struct to_be_copied : std::conditional<
+struct copyable_impl : std::conditional<
     std::is_default_constructible<typename T::creator>::value
   , aux::type_list<>
   , aux::type_list<T>
 > { };
 
 template<class... TDeps>
-struct copyable_impl<aux::type_list<TDeps...>>
-    : aux::join<typename to_be_copied<TDeps>::type...>
+struct copyable<aux::type_list<TDeps...>>
+    : aux::join<typename copyable_impl<TDeps>::type...>
 { };
 
 template<class TDeps>
-using copyable = typename copyable_impl<TDeps>::type;
+using copyable_t = typename copyable<TDeps>::type;
 
 }}}} // boost::di::v1::core
 

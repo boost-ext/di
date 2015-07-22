@@ -98,15 +98,15 @@ private:
 
     template<class... TArgs>
     explicit injector(const from_deps&, const TArgs&... args) noexcept
-        : pool_t{copyable<deps>{}, core::pool_t<TArgs...>{args...}}
+        : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{args...}}
     { }
 
     template<class TInjector, class... TArgs>
     explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
     #if defined(BOOST_DI_MSVC)
-        : pool_t{copyable<deps>{}, pool_t{build<TArgs>(injector)...}}
+        : pool_t{copyable_t<deps>{}, pool_t{build<TArgs>(injector)...}}
     #else
-        : pool_t{copyable<deps>{}, pool_t{TArgs{injector}...}}
+        : pool_t{copyable_t<deps>{}, pool_t{TArgs{injector}...}}
     #endif
     { }
 

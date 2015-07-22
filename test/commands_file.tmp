@@ -1,0 +1,3 @@
+file bin/di_run_time.test/gcc-5.1.0/release/di_run_time
+disassemble given_lambda_module_bind_int
+q
