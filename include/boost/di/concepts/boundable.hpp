@@ -29,11 +29,10 @@ struct bound_type {
 namespace concepts {
 
 template<class... TDeps>
-using is_supported =
-    std::is_same<
-       aux::bool_list<aux::always<TDeps>::value...>
-     , aux::bool_list<(core::is_injector<TDeps>::value || core::is_dependency<TDeps>::value)...>
-    >;
+struct is_supported : std::is_same<
+   aux::bool_list<aux::always<TDeps>::value...>
+ , aux::bool_list<(core::is_injector<TDeps>::value || core::is_dependency<TDeps>::value)...>
+> { };
 
 template<class...>
 struct get_not_supported;
