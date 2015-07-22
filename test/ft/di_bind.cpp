@@ -231,8 +231,8 @@ test override_priority_interface_module = [] {
         };
 
         auto injector = di::make_injector(
-            di::bind<i1, impl1>()() // cross platform call dependency extension
-          , di::bind<i2, impl2>() // requires variable templates
+            di::bind<i1, impl1>() // cross platform call dependency extension
+          , di::bind<i2, impl2> // requires variable templates
           , di::bind<int>().to(i)
         );
 
