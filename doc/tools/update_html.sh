@@ -5,10 +5,10 @@ HTML="`readlink -f $ROOT/../html`"
 
 cp -r $ROOT/../js $HTML
 
-rm -f /tmp/di_try_it_online.tmp
-FRAME=1 tools/try_it_online.sh ../example/try_it_online/main.cpp > /tmp/di_try_it_online.tmp
-find $HTML -iname "*.html" | xargs sed -i -e '/\$try_it_online\$/{r /tmp/di_try_it_online.tmp' -e 'd}'
-rm -f /tmp/di_try_it_online.tmp
+#rm -f /tmp/di_try_it_online.tmp
+#FRAME=1 tools/try_it_online.sh ../example/try_it_online/main.cpp > /tmp/di_try_it_online.tmp
+#find $HTML -iname "*.html" | xargs sed -i -e '/\$try_it_online\$/{r /tmp/di_try_it_online.tmp' -e 'd}'
+#rm -f /tmp/di_try_it_online.tmp
 
 for file in `find $HTML/di -iname "*.html"`; do
     rm -f /tmp/file
@@ -43,24 +43,39 @@ for file in `find $HTML/di -iname "*.html"`; do
     sed -i 's/\(<span class=\"section\".*href=\".*\/'$f_'\">.*<\/span>\)/<b><u> \1 <\/u><\/b>/' $file
     sed -i 's/\(class=\"section\".*href=\)"\([^"]*\)"\(.*\)/\1 "'$b_'\2" \3/' $file
     sed -i 's/<__root__>/'$b_'/g' $file
-    sed -i 's/\$example_begin \([^\$]*\)\$/<button class="TryItBtn" id="run_it_btn" onclick="show(__quote__https:\/\/raw.githubusercontent.com\/krzysztof-jusiak\/di\/cpp14\/\1__quote__)">Run this code!<\/button><textarea style="display: none" id="code"><\/textarea><br \/><textarea style="display: none" id="output"><\/textarea><div id="code_listing">/g' $file
-    sed -i "s/__quote__/'/g" $file
-    sed -i 's/\$example_end.*/<\/div>/g' $file
     sed -i 's/\.\.\/\.\.\/#/#/g' $file
 
     if [[ $file =~ "libraries.html" ]]; then
         id=0;
         rm -f /tmp/tmp.html
-        while read line; do
+        while IFS='' read line; do
             if [[ $line =~ "Show Results" ]]; then
                 id=$((++id));
-                echo $line | sed  's/>\[Show Results/ id="row_'$id'" onclick="toggleNextRow.call(this);">[Show Results/' >> /tmp/tmp.html
+                echo "$line" | sed 's/>\[Show Results/ id="row_'$id'" onclick="toggleNextRow.call(this);">[Show Results/' >> /tmp/tmp.html
             else
-                echo $line >> /tmp/tmp.html
+                echo "$line" >> /tmp/tmp.html
             fi
         done < $file
         mv /tmp/tmp.html $file
     fi
+
+    if [[ $file =~ "tutorial.html" ]]; then
+        id=0;
+        rm -f /tmp/tmp.html
+        while IFS='' read line; do
+            if [[ $line =~ "\$example_begin" ]]; then
+                id=$((++id));
+                echo "$line" | sed 's/\$example_begin \([^\$]*\)\$/<button class="TryItBtn" id="run_it_btn_'$id'" onclick="show('$id', __quote__https:\/\/raw.githubusercontent.com\/krzysztof-jusiak\/di\/cpp14\/\1__quote__)">Run this code!<\/button><textarea style="display: none" id="code_'$id'"><\/textarea><br \/><textarea style="display: none" id="output_'$id'"><\/textarea><div id="code_listing_'$id'">/' >> /tmp/tmp.html
+            else
+                echo "$line" >> /tmp/tmp.html
+            fi
+        done < $file
+        mv /tmp/tmp.html $file
+    fi
+
+    sed -i 's/\$example_begin \([^\$]*\)\$/<button class="TryItBtn" id="run_it_btn_1" onclick="show(1, __quote__https:\/\/raw.githubusercontent.com\/krzysztof-jusiak\/di\/cpp14\/\1__quote__)">Run this code!<\/button><textarea style="display: none" id="code_1"><\/textarea><br \/><textarea style="display: none" id="output_1"><\/textarea><div id="code_listing_1">/g' $file
+    sed -i "s/__quote__/'/g" $file
+    sed -i 's/\$example_end.*/<\/div>/g' $file
 done
 
 echo '
