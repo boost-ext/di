@@ -139,7 +139,7 @@ script:
   COMPLEXITY=${BENCHMARK} ./di_compile_time.sh); fi
 - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (git
   clone --quiet --recursive --depth=1 --single-branch https://github.com/boostorg/boost.git
-  && cd boost && bjam headers && mkdir libs/di && cp -r build doc example include libs/di
+  && cd boost && ./bootstrap.sh && bjam headers && mkdir libs/di && cp -r build doc example include libs/di
   && cd libs/di/doc && ../build/b2 -sBOOST_ROOT=../build && git clone https://github.com/krzysztof-jusiak/di.git
   && cd di && git checkout -b gh-pages --track origin/gh-pages && git reset --hard
   && rm -rf cpp14/boost/libs/di/doc/html && cp -r ../html cpp14/boost/libs/di/doc
