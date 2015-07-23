@@ -53,7 +53,7 @@ public:
         );
     }
 
-    int i_ = 0;
+    int i_;
 };
 
 class exposed_module {

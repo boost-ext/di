@@ -17,8 +17,8 @@
 
 namespace di = boost::di;
 
-auto rows = []{};
-auto colls = []{};
+static auto rows = []{};
+static auto colls = []{};
 
 class model {
 public:

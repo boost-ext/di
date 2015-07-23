@@ -88,8 +88,8 @@ void manual_di() {
 
 void automatic_di() {
     struct coffee_maker {
-        std::shared_ptr<iheater> heater = {};
-        std::unique_ptr<ipump> pump = {};
+        std::shared_ptr<iheater> heater;
+        std::unique_ptr<ipump> pump;
 
         void brew() {
             heater->on();

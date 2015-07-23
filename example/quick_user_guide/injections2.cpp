@@ -10,8 +10,8 @@
 namespace di = boost::di;
 
 struct c {
-    int a = 0;
-    double d = 0.0;
+    int a; // = 0; MSVC_2015 doesn't support defaults
+    double d; // = 0.0;
 };
 
 int main() {

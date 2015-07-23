@@ -74,7 +74,7 @@ private:
 };
 
 template<class TIf, class... TImpl>
-inject_from_xml<TIf, xml_list<TImpl...>> xml{};
+struct xml : inject_from_xml<TIf, xml_list<TImpl...>> { };
 
 //->
 
@@ -91,7 +91,7 @@ class xml_module {
 public:
     auto configure() const {
         return di::make_injector(
-            di::bind<interface>().to(xml<interface, implementation1, implementation2>)
+            di::bind<interface>().to(xml<interface, implementation1, implementation2>())
         );
     }
 };

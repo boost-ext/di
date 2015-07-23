@@ -17,10 +17,14 @@ struct impl1 : i1 { void dummy1() override { } };
 struct impl2 : i2 { void dummy2() override { } };
 
 struct c {
+    c(const std::shared_ptr<i1>& sp, std::unique_ptr<i2> up, int& i, double d)
+        : sp(sp), up(std::move(up)), i(i), d(d)
+    { }
+
     std::shared_ptr<i1> sp; /*singleton*/
     std::unique_ptr<i2> up; /*unique*/
     int& i; /*external*/
-    double d = 0.0; /*unique*/
+    double d; /*unique*/
 };
 
 int main() {
@@ -43,5 +47,9 @@ int main() {
     assert(&i == &object2->i);
     assert(87.0 == object1->d);
     assert(87.0 == object2->d);
+
+    i = 12;
+    assert(i == object2->i);
+    assert(&i == &object2->i);
 }
 

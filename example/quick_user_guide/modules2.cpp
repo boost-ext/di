@@ -23,12 +23,12 @@ struct c {
 
     std::shared_ptr<i1> i1_;
     std::shared_ptr<i2> i2_;
-    int i = 0;
+    int i;
 };
 
 struct module {
     di::injector<c> configure() const noexcept;
-    int i = 0;
+    int i;
 };
 
 di::injector<c> module::configure() const noexcept {

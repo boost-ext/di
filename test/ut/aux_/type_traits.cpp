@@ -72,6 +72,7 @@ test is_braces_constructible_types = [] {
     struct ctor_def { ctor_def() noexcept = default; };
     struct agg1 { int i = {}; };
     struct agg2 { int& i; double d = {}; };
+    struct agg3 { int i; double d; float f; };
 
     expect(is_braces_constructible<int>{});
     expect(is_braces_constructible<c>{});
@@ -89,6 +90,7 @@ test is_braces_constructible_types = [] {
     expect(is_braces_constructible<agg2, int&>{});
     expect(is_braces_constructible<agg2, int&, double>{});
 #endif
+    expect(is_braces_constructible<agg3, int, double, float>{});
 };
 
 test remove_accessors_types = [] {

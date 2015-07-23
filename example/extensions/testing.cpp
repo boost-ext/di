@@ -80,7 +80,7 @@ class mocks_provider : public di::config {
           , !std::is_same<
                 not_resolved
               , decltype(di::core::binder::resolve<T, di::no_name, not_resolved>((TInjector*)nullptr))
-            >{}
+            >::value
         >;
 
         template<

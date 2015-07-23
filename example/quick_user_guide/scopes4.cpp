@@ -6,7 +6,6 @@
 //
 #include <boost/di.hpp>
 #include <memory>
-#include <functional>
 #include <cassert>
 
 namespace di = boost::di;
@@ -32,12 +31,7 @@ int main() {
      , di::bind<short>().to([]{return 87;})
      , di::bind<i2>().to(
            [&](const auto& injector) -> std::shared_ptr<i2> {
-              if (b) {
-                  return injector.template
-                     create<std::shared_ptr<impl2>>();
-              }
-
-              return nullptr;
+              return b ? (std::shared_ptr<impl2>)injector : nullptr;
            }
        )
     );
