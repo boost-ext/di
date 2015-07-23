@@ -26,4 +26,5 @@ install:
 
 build_script:
   - cd test && ..\build\b2 -sBOOST_ROOT=..\build -j2 -q --toolset=msvc-14.0 analyze
+  - cd example && ..\build\b2 -sBOOST_ROOT=..\build -j2 -q --toolset=msvc-14.0 analyze
 
