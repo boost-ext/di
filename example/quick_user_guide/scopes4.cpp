@@ -31,7 +31,7 @@ int main() {
      , di::bind<short>().to([]{return 87;})
      , di::bind<i2>().to(
            [&](const auto& injector) -> std::shared_ptr<i2> {
-              return b ? (std::shared_ptr<impl2>)injector : nullptr;
+              return b ? (const std::shared_ptr<impl2>&)injector : nullptr;
            }
        )
     );

@@ -37,8 +37,8 @@ public:
                 [&](const auto& injector) -> std::shared_ptr<interface> {
                     switch(id) {
                         default: return nullptr;
-                        case e1: return (std::shared_ptr<implementation1>)injector;
-                        case e2: return (std::shared_ptr<implementation2>)injector;
+                        case e1: return (const std::shared_ptr<implementation1>&)injector;
+                        case e2: return (const std::shared_ptr<implementation2>&)injector;
                     }
 
                     return nullptr;
