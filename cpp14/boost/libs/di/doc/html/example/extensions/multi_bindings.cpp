@@ -62,13 +62,13 @@ public:
     di::aux::remove_accessors_t<typename T::type>
     operator()(const TInjector& injector, const T&) const {
         di::aux::remove_accessors_t<typename T::type> container;
-        [](...){}((add(injector, container, type<Ts>{}), 0)...);
+        int _[]{0, (add(injector, container, type<Ts>{}), 0)...}; (void)_; // enforce order
         return container;
     }
 };
 
 template<class... Ts>
-all_of_impl<Ts...> all_of{};
+struct all_of : all_of_impl<Ts...> { };
 
 auto vector_shared = []{};
 auto vector_unique = []{};
@@ -79,19 +79,29 @@ struct example {
       , (named = vector_unique) std::vector<std::unique_ptr<interface>> v2
     ) {
         assert(v1.size() == 2);
+        assert(dynamic_cast<implementation1*>(v1[0].get()));
+        assert(dynamic_cast<implementation2*>(v1[1].get()));
+
         assert(v2.size() == 1);
+        assert(dynamic_cast<implementation1*>(v2[0].get()));
     }
 };
 
 int main() {
     auto injector = di::make_injector(
         /*<<interface[] match with vector<interface>, vector<unique_ptr<interface>>, ..., list<interface>, queue<shared_ptr<interface>, ...>>*/
-        di::bind<interface[]>.named(vector_shared).to(all_of<implementation1, implementation2>)
-      , di::bind<interface[]>.named(vector_unique).to(all_of<implementation1>)
+        di::bind<interface[]>().to(all_of<implementation1, implementation2>())
+      , di::bind<interface[]>().named(vector_shared).to(all_of<implementation1, implementation2>())
+      , di::bind<interface[]>().named(vector_unique).to(all_of<implementation1>())
     );
 
     injector.create<example>();
-}
 
+    /*<<create vector>>*/
+    std::vector<std::unique_ptr<interface>> v = injector;
+    assert(v.size() == 2);
+    assert(dynamic_cast<implementation1*>(v[0].get()));
+    assert(dynamic_cast<implementation2*>(v[1].get()));
+}
 //]
 

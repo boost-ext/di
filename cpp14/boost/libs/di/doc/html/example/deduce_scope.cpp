@@ -51,7 +51,7 @@ struct example {
 int main() {
     /*<<create injector with deduced `interface`>>*/
     auto injector = di::make_injector(
-        di::bind<interface, implementation> // => di::bind<interface, implementation>.in(di::deduce)
+        di::bind<interface, implementation>() // => di::bind<interface, implementation>().in(di::deduce)
     );
 
     /*<<create `example`>>*/

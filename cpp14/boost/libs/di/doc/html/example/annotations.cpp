@@ -35,9 +35,9 @@ private:
 int main() {
     /*<<make injector and bind named parameters>>*/
     auto injector = di::make_injector(
-        di::bind<int>.named(int_1).to(42)
-      , di::bind<int>.named(int_2).to(87)
-      , di::bind<int>.to(123)
+        di::bind<int>().named(int_1).to(42)
+      , di::bind<int>().named(int_2).to(87)
+      , di::bind<int>().to(123)
     );
 
     /*<<create `annotations`>>*/

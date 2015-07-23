@@ -195,7 +195,7 @@ function toggleNextRow() {
 <div class="toc2" id="section_">
 
 <p>
-        <button class="TryItBtn" id="run_it_btn" onclick="show('https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/extensions/xml_injection.cpp')">Run this code!</button><textarea style="display: none" id="code"></textarea><br /><textarea style="display: none" id="output"></textarea><div id="code_listing">
+        <button class="TryItBtn" id="run_it_btn_1" onclick="show(1, 'https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/extensions/xml_injection.cpp')">Run this code!</button><textarea style="display: none" id="code_1"></textarea><br /><textarea style="display: none" id="output_1"></textarea><div id="code_listing_1">
       </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
@@ -207,7 +207,7 @@ function toggleNextRow() {
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
         <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ixml_parser</span><span class="special">,</span> <span class="identifier">xml_parser_stub</span><span class="special">&gt;</span>
+            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ixml_parser</span><span class="special">,</span> <span class="identifier">xml_parser_stub</span><span class="special">&gt;()</span>
         <span class="special">);</span>
     <span class="special">}</span>
 <span class="special">};</span>
@@ -216,7 +216,7 @@ function toggleNextRow() {
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
         <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">xml</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation1</span><span class="special">,</span> <span class="identifier">implementation2</span><span class="special">&gt;)</span>
+            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">xml</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation1</span><span class="special">,</span> <span class="identifier">implementation2</span><span class="special">&gt;())</span>
         <span class="special">);</span>
     <span class="special">}</span>
 <span class="special">};</span>

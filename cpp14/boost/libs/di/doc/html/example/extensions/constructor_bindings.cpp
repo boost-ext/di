@@ -32,7 +32,7 @@ struct constructor_impl {
 };
 
 template<class... TCtor>
-constructor_impl<TCtor...> constructor{};
+struct constructor : constructor_impl<TCtor...> { };
 
 //->
 
@@ -57,31 +57,21 @@ struct variadic {
     }
 };
 
-/*<<variadic arguments `c-style`>>*/
-struct var_arg {
-    explicit var_arg(int i, ...) {
-        assert(i == 2);
-    }
-};
-
 int main() {
     auto injector = di::make_injector(
         /*<<define constructor types>>*/
-        di::bind<variadic>.to(constructor<int, std::string, std::unique_ptr<interface>>)
-      , di::bind<ctor>.to(constructor<int, std::string, std::unique_ptr<interface>>)
-      , di::bind<var_arg>.to(constructor<int, float, double>)
+        di::bind<variadic>().to(constructor<int, std::string, std::unique_ptr<interface>>())
+      , di::bind<ctor>().to(constructor<int, std::string, std::unique_ptr<interface>>())
 
         /*<<additional bindings>>*/
-      , di::bind<interface, implementation>
-      , di::bind<int>.to(2)
-      , di::bind<std::string>.to("hello")
-
+      , di::bind<interface, implementation>()
+      , di::bind<int>().to(2)
+      , di::bind<std::string>().to("hello")
     );
 
     /*<<create types using defined constructors>>*/
     injector.create<ctor>();
     injector.create<variadic>();
-    injector.create<var_arg>();
 }
 
 //]

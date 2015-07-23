@@ -195,7 +195,7 @@ function toggleNextRow() {
 <div class="toc2" id="section_">
 
 <p>
-        <button class="TryItBtn" id="run_it_btn" onclick="show('https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/hello_world.cpp')">Run this code!</button><textarea style="display: none" id="code"></textarea><br /><textarea style="display: none" id="output"></textarea><div id="code_listing">
+        <button class="TryItBtn" id="run_it_btn_1" onclick="show(1, 'https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/hello_world.cpp')">Run this code!</button><textarea style="display: none" id="code_1"></textarea><br /><textarea style="display: none" id="output_1"></textarea><div id="code_listing_1">
       </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
@@ -227,9 +227,9 @@ function toggleNextRow() {
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
     <a class="co" name="di.examples.hello_world.c2" href="hello_world.html#di.examples.hello_world.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">,</span> <span class="identifier">logger</span><span class="special">&gt;</span>
-      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ilogic</span><span class="special">,</span> <span class="identifier">logic</span><span class="special">&gt;</span>
-      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
+        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">,</span> <span class="identifier">logger</span><span class="special">&gt;()</span>
+      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ilogic</span><span class="special">,</span> <span class="identifier">logic</span><span class="special">&gt;()</span>
+      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
     <span class="special">);</span>
 
     <a class="co" name="di.examples.hello_world.c4" href="hello_world.html#di.examples.hello_world.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">hello_world</span><span class="special">&gt;().</span><span class="identifier">run</span><span class="special">();</span>

@@ -122,10 +122,10 @@ int main() {
     using example_factory = std::function<std::unique_ptr<example>(int, double)>;
 
     auto injector = di::make_injector(
-        di::bind<int>.to(87)
-      , di::bind<interface, implementation>
+        di::bind<int>().to(87)
+      , di::bind<interface, implementation>()
         /*<<bind `example_factory` to factory creating `example`>>*/
-      , di::bind<example_factory>.to(factory<example>)
+      , di::bind<example_factory>().to(factory<example>)
     );
 
     auto f = injector.create<example_factory>();

@@ -195,7 +195,7 @@ function toggleNextRow() {
 <div class="toc2" id="section_">
 
 <p>
-        <button class="TryItBtn" id="run_it_btn" onclick="show('https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/modules.cpp')">Run this code!</button><textarea style="display: none" id="code"></textarea><br /><textarea style="display: none" id="output"></textarea><div id="code_listing">
+        <button class="TryItBtn" id="run_it_btn_1" onclick="show(1, 'https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/modules.cpp')">Run this code!</button><textarea style="display: none" id="code_1"></textarea><br /><textarea style="display: none" id="output_1"></textarea><div id="code_listing_1">
       </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
@@ -218,7 +218,7 @@ function toggleNextRow() {
 <span class="keyword">public</span><span class="special">:</span>
     <a class="co" name="di.examples.modules.c0" href="modules.html#di.examples.modules.c1"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
         <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation1</span><span class="special">&gt;</span>
+            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation1</span><span class="special">&gt;()</span>
         <span class="special">);</span>
     <span class="special">}</span>
 <span class="special">};</span>
@@ -227,18 +227,18 @@ function toggleNextRow() {
 <span class="keyword">public</span><span class="special">:</span>
     <a class="co" name="di.examples.modules.c2" href="modules.html#di.examples.modules.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
         <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">i_</span><span class="special">)</span>
+            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">i_</span><span class="special">)</span>
         <span class="special">);</span>
     <span class="special">}</span>
 
-    <span class="keyword">int</span> <span class="identifier">i_</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">i_</span><span class="special">;</span>
 <span class="special">};</span>
 
 <span class="keyword">class</span> <span class="identifier">exposed_module</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <a class="co" name="di.examples.modules.c4" href="modules.html#di.examples.modules.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">data</span><span class="special">&gt;</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
         <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation2</span><span class="special">&gt;</span>
+            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation2</span><span class="special">&gt;()</span>
         <span class="special">);</span>
     <span class="special">}</span>
 <span class="special">};</span>

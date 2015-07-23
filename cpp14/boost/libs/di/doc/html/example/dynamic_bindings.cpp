@@ -33,12 +33,12 @@ public:
     auto configure() const {
         return di::make_injector(
             /*<<bind `interface` to lazy lambda expression>>*/
-            di::bind<interface>.to(
+            di::bind<interface>().to(
                 [&](const auto& injector) -> std::shared_ptr<interface> {
                     switch(id) {
                         default: return nullptr;
-                        case e1: return injector.template create<std::shared_ptr<implementation1>>();
-                        case e2: return injector.template create<std::shared_ptr<implementation2>>();
+                        case e1: return (const std::shared_ptr<implementation1>&)injector;
+                        case e2: return (const std::shared_ptr<implementation2>&)injector;
                     }
 
                     return nullptr;

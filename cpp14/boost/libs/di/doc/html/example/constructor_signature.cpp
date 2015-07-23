@@ -56,9 +56,9 @@ public:
 int main() {
     /*<<make injector>>*/
     auto injector = di::make_injector(
-        di::bind<interface1, implementation1>
-      , di::bind<interface2, implementation2>
-      , di::bind<int>.to(42)
+        di::bind<interface1, implementation1>()
+      , di::bind<interface2, implementation2>()
+      , di::bind<int>().to(42)
     );
 
     /*<create different examples using the same injector configuration>*/

@@ -19,31 +19,31 @@
 <script type="text/javascript">
 
 function hideRows() {
-for (i=0; i<10; ++i) {
-var row = document.getElementById("row_" + i);
-if (row != null) {
-toggleNextRow.call(row);
-}
-}
+    for (i=0; i<10; ++i) {
+        var row = document.getElementById("row_" + i);
+        if (row != null) {
+            toggleNextRow.call(row);
+        }
+    }
 }
 
 function toggleNextRow() {
-var parent = this.parentNode;
-var tagName = "tr";
+	var parent = this.parentNode;
+	var tagName = "tr";
 
-while (parent) {
-if (parent.tagName && parent.tagName.toLowerCase() == tagName) {
-var row = parent.parentNode.rows[parent.rowIndex];
-if (row.style.display == 'none') {
-row.style.display = '';
-} else {
-row.style.display = 'none';
-}
-return;
-} else {
-parent = parent.parentNode;
-}
-}
+	while (parent) {
+		if (parent.tagName && parent.tagName.toLowerCase() == tagName) {
+			var row = parent.parentNode.rows[parent.rowIndex];
+			if (row.style.display == 'none') {
+				row.style.display = '';
+			} else {
+				row.style.display = 'none';
+			}
+			return;
+		} else {
+			parent = parent.parentNode;
+		}
+  	}
 }
 </script>
 
@@ -64,7 +64,7 @@ parent = parent.parentNode;
 <div><div class="author"><h3 class="author">
 </h3></div></div>
 <div><p class="copyright">Copyright &#169; 2012-2015 Krzysztof
-Jusiak | Distributed under the Boost Software License, Version 1.0.</p></div>
+      Jusiak | Distributed under the Boost Software License, Version 1.0.</p></div>
 <div><div class="legalnotice">
 </div></div>
 </div></div>
@@ -82,16 +82,16 @@ Jusiak | Distributed under the Boost Software License, Version 1.0.</p></div>
 <a href="https://gitter.im/krzysztof-jusiak/di" target="_blank"><span class="inlinemediaobject"><img src="https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg"></span></a>
 <hr />
 <script>
-(function() {
-var cx = '008806701954934477933:tcfwebyj7eu';
-var gcse = document.createElement('script');
-gcse.type = 'text/javascript';
-gcse.async = true;
-gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
-'//cse.google.com/cse.js?cx=' + cx;
-var s = document.getElementsByTagName('script')[0];
-s.parentNode.insertBefore(gcse, s);
-})();
+  (function() {
+    var cx = '008806701954934477933:tcfwebyj7eu';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//cse.google.com/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
 </script>
 <gcse:search></gcse:search>
 </div>
@@ -205,306 +205,306 @@ s.parentNode.insertBefore(gcse, s);
 </colgroup>
 <thead><tr>
 <th>
-<p>
-Library
-</p>
-</th>
+                <p>
+                  Library
+                </p>
+              </th>
 <th>
-<p>
-Boost.DI
-</p>
-</th>
+                <p>
+                  Boost.DI
+                </p>
+              </th>
 <th>
-<p>
-dicpp
-</p>
-</th>
+                <p>
+                  dicpp
+                </p>
+              </th>
 <th>
-<p>
-Google Fruit
-</p>
-</th>
+                <p>
+                  Google Fruit
+                </p>
+              </th>
 </tr></thead>
 <tbody>
 <tr>
 <td>
-<p>
-Language
-</p>
-</td>
+                <p>
+                  Language
+                </p>
+              </td>
 <td>
-<p>
-C++14
-</p>
-</td>
+                <p>
+                  C++14
+                </p>
+              </td>
 <td>
-<p>
-C++11
-</p>
-</td>
+                <p>
+                  C++11
+                </p>
+              </td>
 <td>
-<p>
-C++11
-</p>
-</td>
+                <p>
+                  C++11
+                </p>
+              </td>
 </tr>
 <tr>
 <td>
-<p>
-License
-</p>
-</td>
+                <p>
+                  License
+                </p>
+              </td>
 <td>
-<p>
-Boost License
-</p>
-</td>
+                <p>
+                  Boost License
+                </p>
+              </td>
 <td>
-<p>
-Boost License
-</p>
-</td>
+                <p>
+                  Boost License
+                </p>
+              </td>
 <td>
-<p>
-Apache 2.0
-</p>
-</td>
+                <p>
+                  Apache 2.0
+                </p>
+              </td>
 </tr>
 <tr>
 <td>
-<p>
-Linkage
-</p>
-</td>
+                <p>
+                  Linkage
+                </p>
+              </td>
 <td>
-<p>
-header only
-</p>
-</td>
+                <p>
+                  header only
+                </p>
+              </td>
 <td>
-<p>
-header only
-</p>
-</td>
+                <p>
+                  header only
+                </p>
+              </td>
 <td>
-<p>
-library
-</p>
-</td>
+                <p>
+                  library
+                </p>
+              </td>
 </tr>
 <tr>
 <td>
-<p>
-Approach
-</p>
-</td>
+                <p>
+                  Approach
+                </p>
+              </td>
 <td>
-<p>
-compile-time
-</p>
-</td>
+                <p>
+                  compile-time
+                </p>
+              </td>
 <td>
-<p>
-run-time
-</p>
-</td>
+                <p>
+                  run-time
+                </p>
+              </td>
 <td>
-<p>
-compile/run-time
-</p>
-</td>
+                <p>
+                  compile/run-time
+                </p>
+              </td>
 </tr>
 <tr>
 <td>
-<p>
-Test - bind value
-</p>
-</td>
+                <p>
+                  Test - bind value
+                </p>
+              </td>
 <td>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
 <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 
 <span class="keyword">auto</span> <span class="identifier">module</span> <span class="special">=</span> <span class="special">[]</span> <span class="special">{</span>
-<span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">);</span>
+    <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">);</span>
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">module</span><span class="special">());</span>
-<span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span> <span class="special">!=</span> <span class="number">42</span><span class="special">;</span>
+    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">module</span><span class="special">());</span>
+    <span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span> <span class="special">!=</span> <span class="number">42</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
-</td>
+              </td>
 <td>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">di</span><span class="special">/</span><span class="identifier">registry</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">di</span><span class="special">/</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
 <span class="keyword">void</span> <span class="identifier">module</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">registry</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">)</span> <span class="special">{</span>
-<span class="identifier">r</span><span class="special">.</span><span class="identifier">add</span><span class="special">(</span><span class="identifier">r</span><span class="special">.</span><span class="identifier">type</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">instance</span><span class="special">(</span><span class="keyword">new</span> <span class="keyword">int</span><span class="special">{</span><span class="number">42</span><span class="special">}));</span>
+    <span class="identifier">r</span><span class="special">.</span><span class="identifier">add</span><span class="special">(</span><span class="identifier">r</span><span class="special">.</span><span class="identifier">type</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">instance</span><span class="special">(</span><span class="keyword">new</span> <span class="keyword">int</span><span class="special">{</span><span class="number">42</span><span class="special">}));</span>
 <span class="special">}</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span> <span class="identifier">injector</span><span class="special">;</span>
-<span class="identifier">injector</span><span class="special">.</span><span class="identifier">install</span><span class="special">(</span><span class="identifier">module</span><span class="special">);</span>
-<span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span> <span class="special">!=</span> <span class="number">42</span><span class="special">;</span>
+    <span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span> <span class="identifier">injector</span><span class="special">;</span>
+    <span class="identifier">injector</span><span class="special">.</span><span class="identifier">install</span><span class="special">(</span><span class="identifier">module</span><span class="special">);</span>
+    <span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">construct</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span> <span class="special">!=</span> <span class="number">42</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
-</td>
+              </td>
 <td>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">fruit</span><span class="special">/</span><span class="identifier">fruit</span><span class="special">.</span><span class="identifier">h</span><span class="special">&gt;</span>
 
 <span class="keyword">auto</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">42</span><span class="special">;</span> <span class="comment">// bindInstance doesn't support l-value's</span>
 
 <span class="identifier">fruit</span><span class="special">::</span><span class="identifier">Component</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">module</span><span class="special">()</span> <span class="special">{</span>
-<span class="keyword">return</span> <span class="identifier">fruit</span><span class="special">::</span><span class="identifier">createComponent</span><span class="special">()</span>
-<span class="special">.</span><span class="identifier">bindInstance</span><span class="special">(</span><span class="identifier">i</span><span class="special">);</span>
+    <span class="keyword">return</span> <span class="identifier">fruit</span><span class="special">::</span><span class="identifier">createComponent</span><span class="special">()</span>
+        <span class="special">.</span><span class="identifier">bindInstance</span><span class="special">(</span><span class="identifier">i</span><span class="special">);</span>
 <span class="special">}</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-<span class="identifier">fruit</span><span class="special">::</span><span class="identifier">Injector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">injector</span><span class="special">{</span><span class="identifier">module</span><span class="special">()};</span>
-<span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span> <span class="special">!=</span> <span class="number">42</span><span class="special">;</span>
+    <span class="identifier">fruit</span><span class="special">::</span><span class="identifier">Injector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">injector</span><span class="special">{</span><span class="identifier">module</span><span class="special">()};</span>
+    <span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span> <span class="special">!=</span> <span class="number">42</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
-</td>
+              </td>
 </tr>
 <tr>
 <td>
-<p>
-<a href="#" target="_top" id="row_1" onclick="toggleNextRow.call(this);">[Show Results]</a>
-</p>
-</td>
+                <p>
+                  <a href="#" target="_top" id="row_1" onclick="toggleNextRow.call(this);">[Show Results]</a>
+                </p>
+              </td>
 <td class="auto-generated">&#160;</td>
 <td class="auto-generated">&#160;</td>
 <td class="auto-generated">&#160;</td>
 </tr>
 <tr>
 <td>
-<p>
-Assember - x86-64
-</p>
-</td>
+                <p>
+                  Assember - x86-64
+                </p>
+              </td>
 <td>
-<pre class="programlisting"><span class="keyword">xor</span> <span class="special">%</span><span class="identifier">eax</span><span class="special">,%</span><span class="identifier">eax</span>
+<pre class="programlisting"><span class="keyword">xor</span>    <span class="special">%</span><span class="identifier">eax</span><span class="special">,%</span><span class="identifier">eax</span>
 <span class="identifier">retq</span>
 </pre>
-</td>
+              </td>
 <td>
-<pre class="programlisting"><span class="identifier">push</span> <span class="special">%</span><span class="identifier">rbx</span>
-<span class="identifier">sub</span> <span class="error">$</span><span class="number">0xb0</span><span class="special">,%</span><span class="identifier">rsp</span>
-<span class="identifier">lea</span> <span class="number">0x20</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rbx</span>
-<span class="keyword">xor</span> <span class="special">%</span><span class="identifier">esi</span><span class="special">,%</span><span class="identifier">esi</span>
-<span class="identifier">mov</span> <span class="special">%</span><span class="identifier">rbx</span><span class="special">,%</span><span class="identifier">rdi</span>
-<span class="identifier">callq</span> <span class="number">0x40b3d0</span> <span class="special">&lt;</span><span class="identifier">_ZN2di8injectorC2ENS0_8localityE</span><span class="special">&gt;</span>
-<span class="identifier">movq</span> <span class="error">$</span><span class="number">0x404520</span><span class="special">,(%</span><span class="identifier">rsp</span><span class="special">)</span>
-<span class="identifier">movq</span> <span class="error">$</span><span class="number">0x405e50</span><span class="special">,</span><span class="number">0x18</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">)</span>
-<span class="identifier">movq</span> <span class="error">$</span><span class="number">0x405e60</span><span class="special">,</span><span class="number">0x10</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">)</span>
-<span class="identifier">mov</span> <span class="special">%</span><span class="identifier">rbx</span><span class="special">,%</span><span class="identifier">rdi</span>
-<span class="identifier">callq</span> <span class="number">0x404520</span> <span class="special">&lt;</span><span class="identifier">_Z6moduleRN2di8registryE</span><span class="special">&gt;</span>
-<span class="identifier">mov</span> <span class="number">0x10</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rax</span>
-<span class="identifier">test</span> <span class="special">%</span><span class="identifier">rax</span><span class="special">,%</span><span class="identifier">rax</span>
-<span class="identifier">je</span> <span class="number">0x4047b1</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">81</span><span class="special">&gt;</span>
-<span class="identifier">lea</span> <span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
-<span class="identifier">mov</span> <span class="error">$</span><span class="number">0x3</span><span class="special">,%</span><span class="identifier">edx</span>
-<span class="identifier">mov</span> <span class="special">%</span><span class="identifier">rdi</span><span class="special">,%</span><span class="identifier">rsi</span>
-<span class="identifier">callq</span> <span class="special">*%</span><span class="identifier">rax</span>
-<span class="identifier">lea</span> <span class="number">0x20</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
-<span class="identifier">callq</span> <span class="number">0x405cf0</span> <span class="special">&lt;</span><span class="identifier">_ZNK2di8registry9constructIiEENS_6traits13returned_typeIT_E4typeEv</span><span class="special">&gt;</span>
-<span class="identifier">cmp</span> <span class="error">$</span><span class="number">0x2a</span><span class="special">,%</span><span class="identifier">eax</span>
-<span class="identifier">setne</span> <span class="special">%</span><span class="identifier">al</span>
+<pre class="programlisting"><span class="identifier">push</span>   <span class="special">%</span><span class="identifier">rbx</span>
+<span class="identifier">sub</span>    <span class="error">$</span><span class="number">0xb0</span><span class="special">,%</span><span class="identifier">rsp</span>
+<span class="identifier">lea</span>    <span class="number">0x20</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rbx</span>
+<span class="keyword">xor</span>    <span class="special">%</span><span class="identifier">esi</span><span class="special">,%</span><span class="identifier">esi</span>
+<span class="identifier">mov</span>    <span class="special">%</span><span class="identifier">rbx</span><span class="special">,%</span><span class="identifier">rdi</span>
+<span class="identifier">callq</span>  <span class="number">0x40b3d0</span> <span class="special">&lt;</span><span class="identifier">_ZN2di8injectorC2ENS0_8localityE</span><span class="special">&gt;</span>
+<span class="identifier">movq</span>   <span class="error">$</span><span class="number">0x404520</span><span class="special">,(%</span><span class="identifier">rsp</span><span class="special">)</span>
+<span class="identifier">movq</span>   <span class="error">$</span><span class="number">0x405e50</span><span class="special">,</span><span class="number">0x18</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">)</span>
+<span class="identifier">movq</span>   <span class="error">$</span><span class="number">0x405e60</span><span class="special">,</span><span class="number">0x10</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">)</span>
+<span class="identifier">mov</span>    <span class="special">%</span><span class="identifier">rbx</span><span class="special">,%</span><span class="identifier">rdi</span>
+<span class="identifier">callq</span>  <span class="number">0x404520</span> <span class="special">&lt;</span><span class="identifier">_Z6moduleRN2di8registryE</span><span class="special">&gt;</span>
+<span class="identifier">mov</span>    <span class="number">0x10</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rax</span>
+<span class="identifier">test</span>   <span class="special">%</span><span class="identifier">rax</span><span class="special">,%</span><span class="identifier">rax</span>
+<span class="identifier">je</span>     <span class="number">0x4047b1</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">81</span><span class="special">&gt;</span>
+<span class="identifier">lea</span>    <span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
+<span class="identifier">mov</span>    <span class="error">$</span><span class="number">0x3</span><span class="special">,%</span><span class="identifier">edx</span>
+<span class="identifier">mov</span>    <span class="special">%</span><span class="identifier">rdi</span><span class="special">,%</span><span class="identifier">rsi</span>
+<span class="identifier">callq</span>  <span class="special">*%</span><span class="identifier">rax</span>
+<span class="identifier">lea</span>    <span class="number">0x20</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
+<span class="identifier">callq</span>  <span class="number">0x405cf0</span> <span class="special">&lt;</span><span class="identifier">_ZNK2di8registry9constructIiEENS_6traits13returned_typeIT_E4typeEv</span><span class="special">&gt;</span>
+<span class="identifier">cmp</span>    <span class="error">$</span><span class="number">0x2a</span><span class="special">,%</span><span class="identifier">eax</span>
+<span class="identifier">setne</span>  <span class="special">%</span><span class="identifier">al</span>
 <span class="identifier">movzbl</span> <span class="special">%</span><span class="identifier">al</span><span class="special">,%</span><span class="identifier">ebx</span>
-<span class="identifier">lea</span> <span class="number">0x20</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
-<span class="identifier">callq</span> <span class="number">0x40b7c0</span> <span class="special">&lt;</span><span class="identifier">_ZN2di8registryD2Ev</span><span class="special">&gt;</span>
-<span class="identifier">mov</span> <span class="special">%</span><span class="identifier">ebx</span><span class="special">,%</span><span class="identifier">eax</span>
-<span class="identifier">add</span> <span class="error">$</span><span class="number">0xb0</span><span class="special">,%</span><span class="identifier">rsp</span>
-<span class="identifier">pop</span> <span class="special">%</span><span class="identifier">rbx</span>
+<span class="identifier">lea</span>    <span class="number">0x20</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
+<span class="identifier">callq</span>  <span class="number">0x40b7c0</span> <span class="special">&lt;</span><span class="identifier">_ZN2di8registryD2Ev</span><span class="special">&gt;</span>
+<span class="identifier">mov</span>    <span class="special">%</span><span class="identifier">ebx</span><span class="special">,%</span><span class="identifier">eax</span>
+<span class="identifier">add</span>    <span class="error">$</span><span class="number">0xb0</span><span class="special">,%</span><span class="identifier">rsp</span>
+<span class="identifier">pop</span>    <span class="special">%</span><span class="identifier">rbx</span>
 <span class="identifier">retq</span>
-<span class="identifier">mov</span> <span class="special">%</span><span class="identifier">rax</span><span class="special">,%</span><span class="identifier">rbx</span>
-<span class="identifier">mov</span> <span class="number">0x10</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rcx</span>
-<span class="identifier">test</span> <span class="special">%</span><span class="identifier">rcx</span><span class="special">,%</span><span class="identifier">rcx</span>
-<span class="identifier">je</span> <span class="number">0x404801</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">161</span><span class="special">&gt;</span>
-<span class="identifier">lea</span> <span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
-<span class="identifier">mov</span> <span class="error">$</span><span class="number">0x3</span><span class="special">,%</span><span class="identifier">edx</span>
-<span class="identifier">mov</span> <span class="special">%</span><span class="identifier">rdi</span><span class="special">,%</span><span class="identifier">rsi</span>
-<span class="identifier">callq</span> <span class="special">*%</span><span class="identifier">rcx</span>
-<span class="identifier">jmp</span> <span class="number">0x404801</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">161</span><span class="special">&gt;</span>
-<span class="identifier">mov</span> <span class="special">%</span><span class="identifier">rax</span><span class="special">,%</span><span class="identifier">rdi</span>
-<span class="identifier">callq</span> <span class="number">0x405e40</span> <span class="special">&lt;</span><span class="identifier">__clang_call_terminate</span><span class="special">&gt;</span>
-<span class="identifier">mov</span> <span class="special">%</span><span class="identifier">rax</span><span class="special">,%</span><span class="identifier">rbx</span>
-<span class="identifier">lea</span> <span class="number">0x20</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
-<span class="identifier">callq</span> <span class="number">0x40b7c0</span> <span class="special">&lt;</span><span class="identifier">_ZN2di8registryD2Ev</span><span class="special">&gt;</span>
-<span class="identifier">mov</span> <span class="special">%</span><span class="identifier">rbx</span><span class="special">,%</span><span class="identifier">rdi</span>
-<span class="identifier">callq</span> <span class="number">0x404250</span> <span class="special">&lt;</span><span class="identifier">_Unwind_Resume</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
-<span class="identifier">mov</span> <span class="special">%</span><span class="identifier">rax</span><span class="special">,%</span><span class="identifier">rdi</span>
-<span class="identifier">callq</span> <span class="number">0x405e40</span> <span class="special">&lt;</span><span class="identifier">__clang_call_terminate</span><span class="special">&gt;</span>
+<span class="identifier">mov</span>    <span class="special">%</span><span class="identifier">rax</span><span class="special">,%</span><span class="identifier">rbx</span>
+<span class="identifier">mov</span>    <span class="number">0x10</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rcx</span>
+<span class="identifier">test</span>   <span class="special">%</span><span class="identifier">rcx</span><span class="special">,%</span><span class="identifier">rcx</span>
+<span class="identifier">je</span>     <span class="number">0x404801</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">161</span><span class="special">&gt;</span>
+<span class="identifier">lea</span>    <span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
+<span class="identifier">mov</span>    <span class="error">$</span><span class="number">0x3</span><span class="special">,%</span><span class="identifier">edx</span>
+<span class="identifier">mov</span>    <span class="special">%</span><span class="identifier">rdi</span><span class="special">,%</span><span class="identifier">rsi</span>
+<span class="identifier">callq</span>  <span class="special">*%</span><span class="identifier">rcx</span>
+<span class="identifier">jmp</span>    <span class="number">0x404801</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">161</span><span class="special">&gt;</span>
+<span class="identifier">mov</span>    <span class="special">%</span><span class="identifier">rax</span><span class="special">,%</span><span class="identifier">rdi</span>
+<span class="identifier">callq</span>  <span class="number">0x405e40</span> <span class="special">&lt;</span><span class="identifier">__clang_call_terminate</span><span class="special">&gt;</span>
+<span class="identifier">mov</span>    <span class="special">%</span><span class="identifier">rax</span><span class="special">,%</span><span class="identifier">rbx</span>
+<span class="identifier">lea</span>    <span class="number">0x20</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
+<span class="identifier">callq</span>  <span class="number">0x40b7c0</span> <span class="special">&lt;</span><span class="identifier">_ZN2di8registryD2Ev</span><span class="special">&gt;</span>
+<span class="identifier">mov</span>    <span class="special">%</span><span class="identifier">rbx</span><span class="special">,%</span><span class="identifier">rdi</span>
+<span class="identifier">callq</span>  <span class="number">0x404250</span> <span class="special">&lt;</span><span class="identifier">_Unwind_Resume</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
+<span class="identifier">mov</span>    <span class="special">%</span><span class="identifier">rax</span><span class="special">,%</span><span class="identifier">rdi</span>
+<span class="identifier">callq</span>  <span class="number">0x405e40</span> <span class="special">&lt;</span><span class="identifier">__clang_call_terminate</span><span class="special">&gt;</span>
 </pre>
-</td>
+              </td>
 <td>
-<pre class="programlisting"><span class="identifier">push</span> <span class="special">%</span><span class="identifier">rbp</span>
-<span class="identifier">push</span> <span class="special">%</span><span class="identifier">rbx</span>
-<span class="identifier">sub</span> <span class="error">$</span><span class="number">0xc8</span><span class="special">,%</span><span class="identifier">rsp</span>
-<span class="identifier">lea</span> <span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rbx</span>
-<span class="identifier">mov</span> <span class="special">%</span><span class="identifier">rbx</span><span class="special">,%</span><span class="identifier">rdi</span>
-<span class="identifier">callq</span> <span class="number">0x4015b0</span> <span class="special">&lt;</span><span class="identifier">_Z6modulev</span><span class="special">&gt;</span>
-<span class="identifier">lea</span> <span class="number">0xc0</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
-<span class="identifier">mov</span> <span class="special">%</span><span class="identifier">rbx</span><span class="special">,%</span><span class="identifier">rsi</span>
-<span class="identifier">callq</span> <span class="number">0x401a60</span> <span class="special">&lt;</span><span class="identifier">_ZN5fruit8InjectorIJiEEC2ENS_9ComponentIJiEEE</span><span class="special">&gt;</span>
-<span class="identifier">mov</span> <span class="number">0xa8</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
-<span class="identifier">test</span> <span class="special">%</span><span class="identifier">rdi</span><span class="special">,%</span><span class="identifier">rdi</span>
-<span class="identifier">je</span> <span class="number">0x4017d7</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">55</span><span class="special">&gt;</span>
-<span class="identifier">callq</span> <span class="number">0x401260</span> <span class="special">&lt;</span><span class="identifier">_ZdlPv</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
-<span class="identifier">mov</span> <span class="number">0x90</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
-<span class="identifier">test</span> <span class="special">%</span><span class="identifier">rdi</span><span class="special">,%</span><span class="identifier">rdi</span>
-<span class="identifier">je</span> <span class="number">0x4017e9</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">73</span><span class="special">&gt;</span>
-<span class="identifier">callq</span> <span class="number">0x401260</span> <span class="special">&lt;</span><span class="identifier">_ZdlPv</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
-<span class="identifier">mov</span> <span class="number">0x48</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
-<span class="identifier">test</span> <span class="special">%</span><span class="identifier">rdi</span><span class="special">,%</span><span class="identifier">rdi</span>
-<span class="identifier">je</span> <span class="number">0x4017f8</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">88</span><span class="special">&gt;</span>
-<span class="identifier">callq</span> <span class="number">0x401260</span> <span class="special">&lt;</span><span class="identifier">_ZdlPv</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
-<span class="identifier">lea</span> <span class="number">0xc0</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
-<span class="identifier">callq</span> <span class="number">0x401b00</span> <span class="special">&lt;</span><span class="identifier">_ZN5fruit8InjectorIJiEE3getIiEENS_4impl4meta17RemoveAnnotations5applyIT_E4typeEv</span><span class="special">&gt;</span>
-<span class="identifier">cmp</span> <span class="error">$</span><span class="number">0x2a</span><span class="special">,%</span><span class="identifier">eax</span>
-<span class="identifier">setne</span> <span class="special">%</span><span class="identifier">al</span>
+<pre class="programlisting"><span class="identifier">push</span>   <span class="special">%</span><span class="identifier">rbp</span>
+<span class="identifier">push</span>   <span class="special">%</span><span class="identifier">rbx</span>
+<span class="identifier">sub</span>    <span class="error">$</span><span class="number">0xc8</span><span class="special">,%</span><span class="identifier">rsp</span>
+<span class="identifier">lea</span>    <span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rbx</span>
+<span class="identifier">mov</span>    <span class="special">%</span><span class="identifier">rbx</span><span class="special">,%</span><span class="identifier">rdi</span>
+<span class="identifier">callq</span>  <span class="number">0x4015b0</span> <span class="special">&lt;</span><span class="identifier">_Z6modulev</span><span class="special">&gt;</span>
+<span class="identifier">lea</span>    <span class="number">0xc0</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
+<span class="identifier">mov</span>    <span class="special">%</span><span class="identifier">rbx</span><span class="special">,%</span><span class="identifier">rsi</span>
+<span class="identifier">callq</span>  <span class="number">0x401a60</span> <span class="special">&lt;</span><span class="identifier">_ZN5fruit8InjectorIJiEEC2ENS_9ComponentIJiEEE</span><span class="special">&gt;</span>
+<span class="identifier">mov</span>    <span class="number">0xa8</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
+<span class="identifier">test</span>   <span class="special">%</span><span class="identifier">rdi</span><span class="special">,%</span><span class="identifier">rdi</span>
+<span class="identifier">je</span>     <span class="number">0x4017d7</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">55</span><span class="special">&gt;</span>
+<span class="identifier">callq</span>  <span class="number">0x401260</span> <span class="special">&lt;</span><span class="identifier">_ZdlPv</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
+<span class="identifier">mov</span>    <span class="number">0x90</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
+<span class="identifier">test</span>   <span class="special">%</span><span class="identifier">rdi</span><span class="special">,%</span><span class="identifier">rdi</span>
+<span class="identifier">je</span>     <span class="number">0x4017e9</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">73</span><span class="special">&gt;</span>
+<span class="identifier">callq</span>  <span class="number">0x401260</span> <span class="special">&lt;</span><span class="identifier">_ZdlPv</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
+<span class="identifier">mov</span>    <span class="number">0x48</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
+<span class="identifier">test</span>   <span class="special">%</span><span class="identifier">rdi</span><span class="special">,%</span><span class="identifier">rdi</span>
+<span class="identifier">je</span>     <span class="number">0x4017f8</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">88</span><span class="special">&gt;</span>
+<span class="identifier">callq</span>  <span class="number">0x401260</span> <span class="special">&lt;</span><span class="identifier">_ZdlPv</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
+<span class="identifier">lea</span>    <span class="number">0xc0</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
+<span class="identifier">callq</span>  <span class="number">0x401b00</span> <span class="special">&lt;</span><span class="identifier">_ZN5fruit8InjectorIJiEE3getIiEENS_4impl4meta17RemoveAnnotations5applyIT_E4typeEv</span><span class="special">&gt;</span>
+<span class="identifier">cmp</span>    <span class="error">$</span><span class="number">0x2a</span><span class="special">,%</span><span class="identifier">eax</span>
+<span class="identifier">setne</span>  <span class="special">%</span><span class="identifier">al</span>
 <span class="identifier">movzbl</span> <span class="special">%</span><span class="identifier">al</span><span class="special">,%</span><span class="identifier">ebp</span>
-<span class="identifier">mov</span> <span class="number">0xc0</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rbx</span>
-<span class="identifier">test</span> <span class="special">%</span><span class="identifier">rbx</span><span class="special">,%</span><span class="identifier">rbx</span>
-<span class="identifier">je</span> <span class="number">0x40182b</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">139</span><span class="special">&gt;</span>
-<span class="identifier">mov</span> <span class="special">%</span><span class="identifier">rbx</span><span class="special">,%</span><span class="identifier">rdi</span>
-<span class="identifier">callq</span> <span class="number">0x401eb0</span> <span class="special">&lt;</span><span class="identifier">_ZN5fruit4impl15InjectorStorageD2Ev</span><span class="special">&gt;</span>
-<span class="identifier">mov</span> <span class="special">%</span><span class="identifier">rbx</span><span class="special">,%</span><span class="identifier">rdi</span>
-<span class="identifier">callq</span> <span class="number">0x401260</span> <span class="special">&lt;</span><span class="identifier">_ZdlPv</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
-<span class="identifier">mov</span> <span class="special">%</span><span class="identifier">ebp</span><span class="special">,%</span><span class="identifier">eax</span>
-<span class="identifier">add</span> <span class="error">$</span><span class="number">0xc8</span><span class="special">,%</span><span class="identifier">rsp</span>
-<span class="identifier">pop</span> <span class="special">%</span><span class="identifier">rbx</span>
-<span class="identifier">pop</span> <span class="special">%</span><span class="identifier">rbp</span>
+<span class="identifier">mov</span>    <span class="number">0xc0</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rbx</span>
+<span class="identifier">test</span>   <span class="special">%</span><span class="identifier">rbx</span><span class="special">,%</span><span class="identifier">rbx</span>
+<span class="identifier">je</span>     <span class="number">0x40182b</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">139</span><span class="special">&gt;</span>
+<span class="identifier">mov</span>    <span class="special">%</span><span class="identifier">rbx</span><span class="special">,%</span><span class="identifier">rdi</span>
+<span class="identifier">callq</span>  <span class="number">0x401eb0</span> <span class="special">&lt;</span><span class="identifier">_ZN5fruit4impl15InjectorStorageD2Ev</span><span class="special">&gt;</span>
+<span class="identifier">mov</span>    <span class="special">%</span><span class="identifier">rbx</span><span class="special">,%</span><span class="identifier">rdi</span>
+<span class="identifier">callq</span>  <span class="number">0x401260</span> <span class="special">&lt;</span><span class="identifier">_ZdlPv</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
+<span class="identifier">mov</span>    <span class="special">%</span><span class="identifier">ebp</span><span class="special">,%</span><span class="identifier">eax</span>
+<span class="identifier">add</span>    <span class="error">$</span><span class="number">0xc8</span><span class="special">,%</span><span class="identifier">rsp</span>
+<span class="identifier">pop</span>    <span class="special">%</span><span class="identifier">rbx</span>
+<span class="identifier">pop</span>    <span class="special">%</span><span class="identifier">rbp</span>
 <span class="identifier">retq</span>
-<span class="identifier">mov</span> <span class="special">%</span><span class="identifier">rax</span><span class="special">,%</span><span class="identifier">rbx</span>
-<span class="identifier">mov</span> <span class="number">0xa8</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
-<span class="identifier">test</span> <span class="special">%</span><span class="identifier">rdi</span><span class="special">,%</span><span class="identifier">rdi</span>
-<span class="identifier">je</span> <span class="number">0x40184c</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">172</span><span class="special">&gt;</span>
-<span class="identifier">callq</span> <span class="number">0x401260</span> <span class="special">&lt;</span><span class="identifier">_ZdlPv</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
-<span class="identifier">mov</span> <span class="number">0x90</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
-<span class="identifier">test</span> <span class="special">%</span><span class="identifier">rdi</span><span class="special">,%</span><span class="identifier">rdi</span>
-<span class="identifier">je</span> <span class="number">0x40185e</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">190</span><span class="special">&gt;</span>
-<span class="identifier">callq</span> <span class="number">0x401260</span> <span class="special">&lt;</span><span class="identifier">_ZdlPv</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
-<span class="identifier">mov</span> <span class="number">0x48</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
-<span class="identifier">test</span> <span class="special">%</span><span class="identifier">rdi</span><span class="special">,%</span><span class="identifier">rdi</span>
-<span class="identifier">je</span> <span class="number">0x4018a1</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">257</span><span class="special">&gt;</span>
-<span class="identifier">callq</span> <span class="number">0x401260</span> <span class="special">&lt;</span><span class="identifier">_ZdlPv</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
-<span class="identifier">mov</span> <span class="special">%</span><span class="identifier">rbx</span><span class="special">,%</span><span class="identifier">rdi</span>
-<span class="identifier">callq</span> <span class="number">0x401410</span> <span class="special">&lt;</span><span class="identifier">_Unwind_Resume</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
-<span class="identifier">mov</span> <span class="special">%</span><span class="identifier">rax</span><span class="special">,%</span><span class="identifier">rbx</span>
-<span class="identifier">mov</span> <span class="number">0xc0</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rbp</span>
-<span class="identifier">test</span> <span class="special">%</span><span class="identifier">rbp</span><span class="special">,%</span><span class="identifier">rbp</span>
-<span class="identifier">je</span> <span class="number">0x401895</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">245</span><span class="special">&gt;</span>
-<span class="identifier">mov</span> <span class="special">%</span><span class="identifier">rbp</span><span class="special">,%</span><span class="identifier">rdi</span>
-<span class="identifier">callq</span> <span class="number">0x401eb0</span> <span class="special">&lt;</span><span class="identifier">_ZN5fruit4impl15InjectorStorageD2Ev</span><span class="special">&gt;</span>
-<span class="identifier">mov</span> <span class="special">%</span><span class="identifier">rbp</span><span class="special">,%</span><span class="identifier">rdi</span>
-<span class="identifier">callq</span> <span class="number">0x401260</span> <span class="special">&lt;</span><span class="identifier">_ZdlPv</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
-<span class="identifier">movq</span> <span class="error">$</span><span class="number">0x0</span><span class="special">,</span><span class="number">0xc0</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">)</span>
-<span class="identifier">mov</span> <span class="special">%</span><span class="identifier">rbx</span><span class="special">,%</span><span class="identifier">rdi</span>
-<span class="identifier">callq</span> <span class="number">0x401410</span> <span class="special">&lt;</span><span class="identifier">_Unwind_Resume</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
+<span class="identifier">mov</span>    <span class="special">%</span><span class="identifier">rax</span><span class="special">,%</span><span class="identifier">rbx</span>
+<span class="identifier">mov</span>    <span class="number">0xa8</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
+<span class="identifier">test</span>   <span class="special">%</span><span class="identifier">rdi</span><span class="special">,%</span><span class="identifier">rdi</span>
+<span class="identifier">je</span>     <span class="number">0x40184c</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">172</span><span class="special">&gt;</span>
+<span class="identifier">callq</span>  <span class="number">0x401260</span> <span class="special">&lt;</span><span class="identifier">_ZdlPv</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
+<span class="identifier">mov</span>    <span class="number">0x90</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
+<span class="identifier">test</span>   <span class="special">%</span><span class="identifier">rdi</span><span class="special">,%</span><span class="identifier">rdi</span>
+<span class="identifier">je</span>     <span class="number">0x40185e</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">190</span><span class="special">&gt;</span>
+<span class="identifier">callq</span>  <span class="number">0x401260</span> <span class="special">&lt;</span><span class="identifier">_ZdlPv</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
+<span class="identifier">mov</span>    <span class="number">0x48</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rdi</span>
+<span class="identifier">test</span>   <span class="special">%</span><span class="identifier">rdi</span><span class="special">,%</span><span class="identifier">rdi</span>
+<span class="identifier">je</span>     <span class="number">0x4018a1</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">257</span><span class="special">&gt;</span>
+<span class="identifier">callq</span>  <span class="number">0x401260</span> <span class="special">&lt;</span><span class="identifier">_ZdlPv</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
+<span class="identifier">mov</span>    <span class="special">%</span><span class="identifier">rbx</span><span class="special">,%</span><span class="identifier">rdi</span>
+<span class="identifier">callq</span>  <span class="number">0x401410</span> <span class="special">&lt;</span><span class="identifier">_Unwind_Resume</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
+<span class="identifier">mov</span>    <span class="special">%</span><span class="identifier">rax</span><span class="special">,%</span><span class="identifier">rbx</span>
+<span class="identifier">mov</span>    <span class="number">0xc0</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">),%</span><span class="identifier">rbp</span>
+<span class="identifier">test</span>   <span class="special">%</span><span class="identifier">rbp</span><span class="special">,%</span><span class="identifier">rbp</span>
+<span class="identifier">je</span>     <span class="number">0x401895</span> <span class="special">&lt;</span><span class="identifier">main</span><span class="special">+</span><span class="number">245</span><span class="special">&gt;</span>
+<span class="identifier">mov</span>    <span class="special">%</span><span class="identifier">rbp</span><span class="special">,%</span><span class="identifier">rdi</span>
+<span class="identifier">callq</span>  <span class="number">0x401eb0</span> <span class="special">&lt;</span><span class="identifier">_ZN5fruit4impl15InjectorStorageD2Ev</span><span class="special">&gt;</span>
+<span class="identifier">mov</span>    <span class="special">%</span><span class="identifier">rbp</span><span class="special">,%</span><span class="identifier">rdi</span>
+<span class="identifier">callq</span>  <span class="number">0x401260</span> <span class="special">&lt;</span><span class="identifier">_ZdlPv</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
+<span class="identifier">movq</span>   <span class="error">$</span><span class="number">0x0</span><span class="special">,</span><span class="number">0xc0</span><span class="special">(%</span><span class="identifier">rsp</span><span class="special">)</span>
+<span class="identifier">mov</span>    <span class="special">%</span><span class="identifier">rbx</span><span class="special">,%</span><span class="identifier">rdi</span>
+<span class="identifier">callq</span>  <span class="number">0x401410</span> <span class="special">&lt;</span><span class="identifier">_Unwind_Resume</span><span class="error">@</span><span class="identifier">plt</span><span class="special">&gt;</span>
 </pre>
-</td>
+              </td>
 </tr>
 </tbody>
 </table></div>
@@ -521,146 +521,146 @@ Assember - x86-64
 </colgroup>
 <thead><tr>
 <th>
-<p>
-Library
-</p>
-</th>
+                <p>
+                  Library
+                </p>
+              </th>
 <th>
-<p>
-Boost.DI
-</p>
-</th>
+                <p>
+                  Boost.DI
+                </p>
+              </th>
 <th>
-<p>
-Google Guice
-</p>
-</th>
+                <p>
+                  Google Guice
+                </p>
+              </th>
 <th>
-<p>
-Dagger2
-</p>
-</th>
+                <p>
+                  Dagger2
+                </p>
+              </th>
 <th>
-<p>
-Ninject
-</p>
-</th>
+                <p>
+                  Ninject
+                </p>
+              </th>
 </tr></thead>
 <tbody>
 <tr>
 <td>
-<p>
-Language
-</p>
-</td>
+                <p>
+                  Language
+                </p>
+              </td>
 <td>
-<p>
-C++14
-</p>
-</td>
+                <p>
+                  C++14
+                </p>
+              </td>
 <td>
-<p>
-Java 6
-</p>
-</td>
+                <p>
+                  Java 6
+                </p>
+              </td>
 <td>
-<p>
-Java
-</p>
-</td>
+                <p>
+                  Java
+                </p>
+              </td>
 <td>
-<p>
-C#
-</p>
-</td>
+                <p>
+                  C#
+                </p>
+              </td>
 </tr>
 <tr>
 <td>
-<p>
-License
-</p>
-</td>
+                <p>
+                  License
+                </p>
+              </td>
 <td>
-<p>
-Boost License
-</p>
-</td>
+                <p>
+                  Boost License
+                </p>
+              </td>
 <td>
-<p>
-Apache 2.0
-</p>
-</td>
+                <p>
+                  Apache 2.0
+                </p>
+              </td>
 <td>
-<p>
-Apache 2.0
-</p>
-</td>
+                <p>
+                  Apache 2.0
+                </p>
+              </td>
 <td>
-<p>
-Apache 2.0
-</p>
-</td>
+                <p>
+                  Apache 2.0
+                </p>
+              </td>
 </tr>
 <tr>
 <td>
-<p>
-Linkage
-</p>
-</td>
+                <p>
+                  Linkage
+                </p>
+              </td>
 <td>
-<p>
-header only
-</p>
-</td>
+                <p>
+                  header only
+                </p>
+              </td>
 <td>
-<p>
-jar
-</p>
-</td>
+                <p>
+                  jar
+                </p>
+              </td>
 <td>
-<p>
-jar
-</p>
-</td>
+                <p>
+                  jar
+                </p>
+              </td>
 <td>
-<p>
-dll
-</p>
-</td>
+                <p>
+                  dll
+                </p>
+              </td>
 </tr>
 <tr>
 <td>
-<p>
-Approach
-</p>
-</td>
+                <p>
+                  Approach
+                </p>
+              </td>
 <td>
-<p>
-compile-time
-</p>
-</td>
+                <p>
+                  compile-time
+                </p>
+              </td>
 <td>
-<p>
-run-time
-</p>
-</td>
+                <p>
+                  run-time
+                </p>
+              </td>
 <td>
-<p>
-compile-time (annottation processor)
-</p>
-</td>
+                <p>
+                  compile-time (annottation processor)
+                </p>
+              </td>
 <td>
-<p>
-run-time
-</p>
-</td>
+                <p>
+                  run-time
+                </p>
+              </td>
 </tr>
 <tr>
 <td>
-<p>
-<a href="#" target="_top" id="row_2" onclick="toggleNextRow.call(this);">[Show Results]</a>
-</p>
-</td>
+                <p>
+                  <a href="#" target="_top" id="row_2" onclick="toggleNextRow.call(this);">[Show Results]</a>
+                </p>
+              </td>
 <td class="auto-generated">&#160;</td>
 <td class="auto-generated">&#160;</td>
 <td class="auto-generated">&#160;</td>
@@ -668,81 +668,81 @@ run-time
 </tr>
 <tr>
 <td>
-<p>
-Test - bind value
-</p>
-</td>
+                <p>
+                  Test - bind value
+                </p>
+              </td>
 <td>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
 <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 
 <span class="keyword">auto</span> <span class="identifier">module</span> <span class="special">=</span> <span class="special">[]</span> <span class="special">{</span>
-<span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">);</span>
+    <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">);</span>
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-<span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">module</span><span class="special">());</span>
-<span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span> <span class="special">!=</span> <span class="number">42</span><span class="special">;</span>
+    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">module</span><span class="special">());</span>
+    <span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;()</span> <span class="special">!=</span> <span class="number">42</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
-</td>
+              </td>
 <td>
 <pre class="programlisting"><span class="identifier">import</span> <span class="identifier">com</span><span class="special">.</span><span class="identifier">google</span><span class="special">.</span><span class="identifier">inject</span><span class="special">.*;</span>
 
 <span class="keyword">class</span> <span class="identifier">Module</span> <span class="identifier">extends</span> <span class="identifier">AbstractModule</span> <span class="special">{</span>
-<span class="error">@</span><span class="identifier">Override</span>
-<span class="keyword">protected</span> <span class="keyword">void</span> <span class="identifier">configure</span><span class="special">()</span> <span class="special">{</span>
-<span class="identifier">bind</span><span class="special">(</span><span class="keyword">int</span><span class="special">.</span><span class="keyword">class</span><span class="special">).</span><span class="identifier">toInstance</span><span class="special">(</span><span class="number">42</span><span class="special">);</span>
-<span class="special">}</span>
+    <span class="error">@</span><span class="identifier">Override</span>
+    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="identifier">configure</span><span class="special">()</span> <span class="special">{</span>
+        <span class="identifier">bind</span><span class="special">(</span><span class="keyword">int</span><span class="special">.</span><span class="keyword">class</span><span class="special">).</span><span class="identifier">toInstance</span><span class="special">(</span><span class="number">42</span><span class="special">);</span>
+    <span class="special">}</span>
 <span class="special">}</span>
 
 <span class="keyword">public</span> <span class="keyword">class</span> <span class="identifier">guice</span> <span class="special">{</span>
-<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">main</span><span class="special">(</span><span class="identifier">String</span><span class="special">[]</span> <span class="identifier">args</span><span class="special">)</span> <span class="special">{</span>
-<span class="identifier">Injector</span> <span class="identifier">injector</span> <span class="special">=</span>
-<span class="identifier">Guice</span><span class="special">.</span><span class="identifier">createInjector</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">Module</span><span class="special">());</span>
-<span class="identifier">System</span><span class="special">.</span><span class="identifier">exit</span><span class="special">(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">getInstance</span><span class="special">(</span><span class="keyword">int</span><span class="special">.</span><span class="keyword">class</span><span class="special">)</span> <span class="special">!=</span> <span class="number">42</span> <span class="special">?</span> <span class="number">1</span> <span class="special">:</span> <span class="number">0</span><span class="special">);</span>
-<span class="special">}</span>
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">main</span><span class="special">(</span><span class="identifier">String</span><span class="special">[]</span> <span class="identifier">args</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">Injector</span> <span class="identifier">injector</span> <span class="special">=</span>
+        <span class="identifier">Guice</span><span class="special">.</span><span class="identifier">createInjector</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">Module</span><span class="special">());</span>
+        <span class="identifier">System</span><span class="special">.</span><span class="identifier">exit</span><span class="special">(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">getInstance</span><span class="special">(</span><span class="keyword">int</span><span class="special">.</span><span class="keyword">class</span><span class="special">)</span> <span class="special">!=</span> <span class="number">42</span> <span class="special">?</span> <span class="number">1</span> <span class="special">:</span> <span class="number">0</span><span class="special">);</span>
+    <span class="special">}</span>
 <span class="special">}</span>
 </pre>
-</td>
+              </td>
 <td>
 <pre class="programlisting"><span class="identifier">import</span> <span class="identifier">dagger</span><span class="special">.*;</span>
 
 <span class="error">@</span><span class="identifier">Module</span>
 <span class="keyword">class</span> <span class="identifier">AppModule</span> <span class="special">{</span>
-<span class="error">@</span><span class="identifier">Provides</span> <span class="keyword">int</span> <span class="identifier">provideint</span><span class="special">()</span> <span class="special">{</span> <span class="keyword">return</span> <span class="number">42</span><span class="special">;</span> <span class="special">}</span>
+    <span class="error">@</span><span class="identifier">Provides</span> <span class="keyword">int</span> <span class="identifier">provideint</span><span class="special">()</span> <span class="special">{</span> <span class="keyword">return</span> <span class="number">42</span><span class="special">;</span> <span class="special">}</span>
 <span class="special">}</span>
 
 <span class="error">@</span><span class="identifier">Component</span><span class="special">(</span><span class="identifier">modules</span> <span class="special">=</span> <span class="identifier">AppModule</span><span class="special">.</span><span class="keyword">class</span><span class="special">)</span>
 <span class="identifier">interface</span> <span class="identifier">AppComponent</span> <span class="special">{</span>
-<span class="keyword">int</span> <span class="identifier">build</span><span class="special">();</span>
+    <span class="keyword">int</span> <span class="identifier">build</span><span class="special">();</span>
 <span class="special">}</span>
 
 <span class="keyword">public</span> <span class="keyword">class</span> <span class="identifier">dagger2</span> <span class="special">{</span>
-<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">main</span><span class="special">(</span><span class="identifier">String</span><span class="special">[]</span> <span class="identifier">args</span><span class="special">)</span> <span class="special">{</span>
-<span class="identifier">System</span><span class="special">.</span><span class="identifier">exit</span><span class="special">(</span><span class="identifier">Dagger_AppComponent</span><span class="special">.</span><span class="identifier">create</span><span class="special">().</span><span class="identifier">build</span><span class="special">()</span> <span class="special">!=</span> <span class="number">42</span> <span class="special">?</span> <span class="number">1</span> <span class="special">:</span> <span class="number">0</span><span class="special">);</span>
-<span class="special">}</span>
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">main</span><span class="special">(</span><span class="identifier">String</span><span class="special">[]</span> <span class="identifier">args</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">System</span><span class="special">.</span><span class="identifier">exit</span><span class="special">(</span><span class="identifier">Dagger_AppComponent</span><span class="special">.</span><span class="identifier">create</span><span class="special">().</span><span class="identifier">build</span><span class="special">()</span> <span class="special">!=</span> <span class="number">42</span> <span class="special">?</span> <span class="number">1</span> <span class="special">:</span> <span class="number">0</span><span class="special">);</span>
+   <span class="special">}</span>
 <span class="special">}</span>
 </pre>
-</td>
+              </td>
 <td>
 <pre class="programlisting"><span class="keyword">using</span> <span class="identifier">Ninject</span><span class="special">;</span>
 
 <span class="keyword">class</span> <span class="identifier">Module</span> <span class="special">:</span> <span class="identifier">Ninject</span><span class="special">.</span><span class="identifier">Modules</span><span class="special">.</span><span class="identifier">NinjectModule</span> <span class="special">{</span>
-<span class="keyword">public</span> <span class="identifier">override</span> <span class="keyword">void</span> <span class="identifier">Load</span><span class="special">()</span> <span class="special">{</span>
-<span class="identifier">Bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">To</span><span class="special">(</span><span class="number">42</span><span class="special">);</span>
-<span class="special">}</span>
+    <span class="keyword">public</span> <span class="identifier">override</span> <span class="keyword">void</span> <span class="identifier">Load</span><span class="special">()</span> <span class="special">{</span>
+        <span class="identifier">Bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">To</span><span class="special">(</span><span class="number">42</span><span class="special">);</span>
+    <span class="special">}</span>
 <span class="special">}</span>
 
 <span class="keyword">class</span> <span class="identifier">ninject</span> <span class="special">{</span>
-<span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">Main</span><span class="special">(</span><span class="identifier">string</span><span class="special">[]</span> <span class="identifier">args</span><span class="special">)</span> <span class="special">{</span>
-<span class="identifier">Ninject</span><span class="special">.</span><span class="identifier">IKernel</span> <span class="identifier">kernel</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">StandardKernel</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">Module</span><span class="special">());</span>
-<span class="identifier">kernel</span><span class="special">.</span><span class="identifier">Get</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;();</span>
-<span class="special">}</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">Main</span><span class="special">(</span><span class="identifier">string</span><span class="special">[]</span> <span class="identifier">args</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">Ninject</span><span class="special">.</span><span class="identifier">IKernel</span> <span class="identifier">kernel</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">StandardKernel</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">Module</span><span class="special">());</span>
+        <span class="identifier">kernel</span><span class="special">.</span><span class="identifier">Get</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;();</span>
+    <span class="special">}</span>
 <span class="special">}</span>
 </pre>
-</td>
+              </td>
 </tr>
 </tbody>
 </table></div>
@@ -753,15 +753,15 @@ Test - bind value
 <hr />
 <div id="disqus_thread"></div>
 <script type="text/javascript">
-/bin /boot /dev /etc /fastboot /home /lib /lib64 /media /mnt /nonexistent /opt /proc /root /run /sbin /selinux /srv /sys /tmp /usr /var acknowledgements.qbk annotations.qbk bindings.qbk changelog.qbk concepts.qbk config.qbk data diagnostic_messages.qbk di.qbk examples.qbk extensions.qbk html images injections.qbk injector.qbk introduction.qbk Jamfile.v2 js libraries.qbk modules.qbk overview.qbk performance.qbk policies.qbk projects.qbk providers.qbk quickbook_HTML.manifest quick_user_guide.qbk rationale.qbk references.qbk scopes.qbk style testing.qbk tools try_it_online.qbk tutorial.qbk user_guide.qbk acknowledgements.qbk annotations.qbk bindings.qbk changelog.qbk concepts.qbk config.qbk data diagnostic_messages.qbk di.qbk examples.qbk extensions.qbk html images injections.qbk injector.qbk introduction.qbk Jamfile.v2 js libraries.qbk modules.qbk overview.qbk performance.qbk policies.qbk projects.qbk providers.qbk quickbook_HTML.manifest quick_user_guide.qbk rationale.qbk references.qbk scopes.qbk style testing.qbk tools try_it_online.qbk tutorial.qbk user_guide.qbk CONFIGURATION VARIABLES acknowledgements.qbk annotations.qbk bindings.qbk changelog.qbk concepts.qbk config.qbk data diagnostic_messages.qbk di.qbk examples.qbk extensions.qbk html images injections.qbk injector.qbk introduction.qbk Jamfile.v2 js libraries.qbk modules.qbk overview.qbk performance.qbk policies.qbk projects.qbk providers.qbk quickbook_HTML.manifest quick_user_guide.qbk rationale.qbk references.qbk scopes.qbk style testing.qbk tools try_it_online.qbk tutorial.qbk user_guide.qbk acknowledgements.qbk annotations.qbk bindings.qbk changelog.qbk concepts.qbk config.qbk data diagnostic_messages.qbk di.qbk examples.qbk extensions.qbk html images injections.qbk injector.qbk introduction.qbk Jamfile.v2 js libraries.qbk modules.qbk overview.qbk performance.qbk policies.qbk projects.qbk providers.qbk quickbook_HTML.manifest quick_user_guide.qbk rationale.qbk references.qbk scopes.qbk style testing.qbk tools try_it_online.qbk tutorial.qbk user_guide.qbk data/ html/ images/ js/ style/ tools/
-var disqus_shortname = 'boost-di';
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'boost-di';
 
-/bin /boot /dev /etc /fastboot /home /lib /lib64 /media /mnt /nonexistent /opt /proc /root /run /sbin /selinux /srv /sys /tmp /usr /var acknowledgements.qbk annotations.qbk bindings.qbk changelog.qbk concepts.qbk config.qbk data diagnostic_messages.qbk di.qbk examples.qbk extensions.qbk html images injections.qbk injector.qbk introduction.qbk Jamfile.v2 js libraries.qbk modules.qbk overview.qbk performance.qbk policies.qbk projects.qbk providers.qbk quickbook_HTML.manifest quick_user_guide.qbk rationale.qbk references.qbk scopes.qbk style testing.qbk tools try_it_online.qbk tutorial.qbk user_guide.qbk acknowledgements.qbk annotations.qbk bindings.qbk changelog.qbk concepts.qbk config.qbk data diagnostic_messages.qbk di.qbk examples.qbk extensions.qbk html images injections.qbk injector.qbk introduction.qbk Jamfile.v2 js libraries.qbk modules.qbk overview.qbk performance.qbk policies.qbk projects.qbk providers.qbk quickbook_HTML.manifest quick_user_guide.qbk rationale.qbk references.qbk scopes.qbk style testing.qbk tools try_it_online.qbk tutorial.qbk user_guide.qbk DON'T EDIT BELOW THIS LINE acknowledgements.qbk annotations.qbk bindings.qbk changelog.qbk concepts.qbk config.qbk data diagnostic_messages.qbk di.qbk examples.qbk extensions.qbk html images injections.qbk injector.qbk introduction.qbk Jamfile.v2 js libraries.qbk modules.qbk overview.qbk performance.qbk policies.qbk projects.qbk providers.qbk quickbook_HTML.manifest quick_user_guide.qbk rationale.qbk references.qbk scopes.qbk style testing.qbk tools try_it_online.qbk tutorial.qbk user_guide.qbk acknowledgements.qbk annotations.qbk bindings.qbk changelog.qbk concepts.qbk config.qbk data diagnostic_messages.qbk di.qbk examples.qbk extensions.qbk html images injections.qbk injector.qbk introduction.qbk Jamfile.v2 js libraries.qbk modules.qbk overview.qbk performance.qbk policies.qbk projects.qbk providers.qbk quickbook_HTML.manifest quick_user_guide.qbk rationale.qbk references.qbk scopes.qbk style testing.qbk tools try_it_online.qbk tutorial.qbk user_guide.qbk data/ html/ images/ js/ style/ tools/
-(function() {
-var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-})();
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 
@@ -775,9 +775,9 @@ dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-<span class="bold"><strong>Disclaimer</strong></span> Boost.DI is not an official Boost
-library / <a href="http://www.boost.org/community/review_schedule.html" target="_top"><span class="underline">Check Boost Formal Review Schedule.</span></a>
-</p></td></tr>
+      <span class="bold"><strong>Disclaimer</strong></span> Boost.DI is not an official Boost
+      library / <a href="http://www.boost.org/community/review_schedule.html" target="_top"><span class="underline">Check Boost Formal Review Schedule.</span></a>
+    </p></td></tr>
 </table></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

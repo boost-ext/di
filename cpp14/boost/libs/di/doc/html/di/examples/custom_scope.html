@@ -195,7 +195,7 @@ function toggleNextRow() {
 <div class="toc2" id="section_">
 
 <p>
-        <button class="TryItBtn" id="run_it_btn" onclick="show('https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/custom_scope.cpp')">Run this code!</button><textarea style="display: none" id="code"></textarea><br /><textarea style="display: none" id="output"></textarea><div id="code_listing">
+        <button class="TryItBtn" id="run_it_btn_1" onclick="show(1, 'https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/custom_scope.cpp')">Run this code!</button><textarea style="display: none" id="code_1"></textarea><br /><textarea style="display: none" id="output_1"></textarea><div id="code_listing_1">
       </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
@@ -236,24 +236,12 @@ function toggleNextRow() {
         <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">&gt;</span>
         <span class="keyword">using</span> <span class="identifier">is_referable</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">false_type</span><span class="special">;</span>
 
-        <span class="keyword">void</span> <span class="identifier">call</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">entry</span><span class="special">&amp;)</span> <span class="special">{</span>
-            <span class="identifier">in_scope_</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">;</span>
-        <span class="special">}</span>
-
-        <span class="keyword">void</span> <span class="identifier">call</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">exit</span><span class="special">&amp;)</span> <span class="special">{</span>
-            <span class="identifier">in_scope_</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
-        <span class="special">}</span>
-
         <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TProvider</span><span class="special">&gt;</span>
         <span class="identifier">custom_wrapper</span> <span class="identifier">try_create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TProvider</span><span class="special">&amp;)</span> <span class="keyword">const</span> <span class="keyword">noexcept</span><span class="special">;</span>
 
         <a class="co" name="di.examples.custom_scope.c8" href="custom_scope.html#di.examples.custom_scope.c9"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TProvider</span><span class="special">&gt;</span>
         <span class="identifier">custom_wrapper</span> <span class="identifier">create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TProvider</span><span class="special">&amp;</span> <span class="identifier">provider</span><span class="special">)</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
-            <span class="keyword">if</span> <span class="special">(</span><span class="identifier">in_scope_</span><span class="special">)</span> <span class="special">{</span>
-                <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;{</span><span class="identifier">provider</span><span class="special">.</span><span class="identifier">get</span><span class="special">()};</span>
-            <span class="special">}</span>
-
-            <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;{};</span>
+            <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;{</span><span class="identifier">provider</span><span class="special">.</span><span class="identifier">get</span><span class="special">()};</span>
         <span class="special">}</span>
 
     <span class="keyword">private</span><span class="special">:</span>
@@ -263,16 +251,10 @@ function toggleNextRow() {
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
     <a class="co" name="di.examples.custom_scope.c10" href="custom_scope.html#di.examples.custom_scope.c11"><img src="../../../../../../doc/src/images/callouts/6.png" alt="6" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;.</span><span class="identifier">in</span><span class="special">(</span><span class="identifier">custom_scope</span><span class="special">{})</span>
+        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">in</span><span class="special">(</span><span class="identifier">custom_scope</span><span class="special">{})</span>
     <span class="special">);</span>
 
-    <a class="co" name="di.examples.custom_scope.c12" href="custom_scope.html#di.examples.custom_scope.c13"><img src="../../../../../../doc/src/images/callouts/7.png" alt="7" border="0"></a><span class="identifier">assert</span><span class="special">(!</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;().</span><span class="identifier">sp_</span><span class="special">);</span>
-
-    <a class="co" name="di.examples.custom_scope.c14" href="custom_scope.html#di.examples.custom_scope.c15"><img src="../../../../../../doc/src/images/callouts/8.png" alt="8" border="0"></a><span class="identifier">injector</span><span class="special">.</span><span class="identifier">call</span><span class="special">(</span><span class="identifier">custom_scope</span><span class="special">::</span><span class="identifier">entry</span><span class="special">());</span>
     <span class="identifier">assert</span><span class="special">(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;().</span><span class="identifier">sp_</span><span class="special">);</span>
-
-    <a class="co" name="di.examples.custom_scope.c16" href="custom_scope.html#di.examples.custom_scope.c17"><img src="../../../../../../doc/src/images/callouts/9.png" alt="9" border="0"></a><span class="identifier">injector</span><span class="special">.</span><span class="identifier">call</span><span class="special">(</span><span class="identifier">custom_scope</span><span class="special">::</span><span class="identifier">exit</span><span class="special">());</span>
-    <span class="identifier">assert</span><span class="special">(!</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;().</span><span class="identifier">sp_</span><span class="special">);</span>
 <span class="special">}</span>
 </pre>
 <div class="calloutlist"><table border="0" summary="Callout list">
@@ -311,24 +293,6 @@ function toggleNextRow() {
 <td valign="top" align="left"><p>
             create injector with <code class="computeroutput"><span class="keyword">int</span></code>
             in <code class="computeroutput"><span class="identifier">custom</span> <span class="identifier">scope</span></code>
-          </p></td>
-</tr>
-<tr>
-<td width="5%" valign="top" align="left"><p><a name="di.examples.custom_scope.c13"></a><a href="#di.examples.custom_scope.c12"><img src="../../../../../../doc/src/images/callouts/7.png" alt="7" border="0"></a> </p></td>
-<td valign="top" align="left"><p>
-            not in scope
-          </p></td>
-</tr>
-<tr>
-<td width="5%" valign="top" align="left"><p><a name="di.examples.custom_scope.c15"></a><a href="#di.examples.custom_scope.c14"><img src="../../../../../../doc/src/images/callouts/8.png" alt="8" border="0"></a> </p></td>
-<td valign="top" align="left"><p>
-            in scope
-          </p></td>
-</tr>
-<tr>
-<td width="5%" valign="top" align="left"><p><a name="di.examples.custom_scope.c17"></a><a href="#di.examples.custom_scope.c16"><img src="../../../../../../doc/src/images/callouts/9.png" alt="9" border="0"></a> </p></td>
-<td valign="top" align="left"><p>
-            not in scope
           </p></td>
 </tr>
 </table></div>

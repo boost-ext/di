@@ -251,7 +251,7 @@ function toggleNextRow() {
 <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 </pre>
 <p>
-      <button class="TryItBtn" id="run_it_btn" onclick="show('https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/tutorial/tutorial1.cpp')">Run this code!</button><textarea style="display: none" id="code"></textarea><br /><textarea style="display: none" id="output"></textarea><div id="code_listing">
+      <button class="TryItBtn" id="run_it_btn_1" onclick="show(1, 'https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/tutorial/tutorial1.cpp')">Run this code!</button><textarea style="display: none" id="code_1"></textarea><br /><textarea style="display: none" id="output_1"></textarea><div id="code_listing_1">
     </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
@@ -284,7 +284,7 @@ function toggleNextRow() {
       we set the value to <code class="computeroutput"><span class="number">1</span></code> for now.
     </p>
 <p>
-      <button class="TryItBtn" id="run_it_btn" onclick="show('https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/tutorial/tutorial2.cpp')">Run this code!</button><textarea style="display: none" id="code"></textarea><br /><textarea style="display: none" id="output"></textarea><div id="code_listing">
+      <button class="TryItBtn" id="run_it_btn_2" onclick="show(2, 'https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/tutorial/tutorial2.cpp')">Run this code!</button><textarea style="display: none" id="code_2"></textarea><br /><textarea style="display: none" id="output_2"></textarea><div id="code_listing_2">
     </p>
 <pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
     <a class="link" href="user_guide/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">integral_constant</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="number">1</span><span class="special">&gt;&gt;</span> <span class="comment">// compile-time value</span>
@@ -304,7 +304,7 @@ function toggleNextRow() {
       command line argument is not equal 0.
     </p>
 <p>
-      <button class="TryItBtn" id="run_it_btn" onclick="show('https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/tutorial/tutorial3.cpp')">Run this code!</button><textarea style="display: none" id="code"></textarea><br /><textarea style="display: none" id="output"></textarea><div id="code_listing">
+      <button class="TryItBtn" id="run_it_btn_3" onclick="show(3, 'https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/tutorial/tutorial3.cpp')">Run this code!</button><textarea style="display: none" id="code_3"></textarea><br /><textarea style="display: none" id="output_3"></textarea><div id="code_listing_3">
     </p>
 <pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">argc</span><span class="special">,</span> <span class="keyword">char</span><span class="special">**</span> <span class="identifier">argv</span><span class="special">)</span> <span class="special">{</span>
     <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
@@ -387,7 +387,7 @@ function toggleNextRow() {
       interface to <code class="computeroutput"><span class="identifier">logger</span></code> implementation.
     </p>
 <p>
-      <button class="TryItBtn" id="run_it_btn" onclick="show('https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/tutorial/tutorial4.cpp')">Run this code!</button><textarea style="display: none" id="code"></textarea><br /><textarea style="display: none" id="output"></textarea><div id="code_listing">
+      <button class="TryItBtn" id="run_it_btn_4" onclick="show(4, 'https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/tutorial/tutorial4.cpp')">Run this code!</button><textarea style="display: none" id="code_4"></textarea><br /><textarea style="display: none" id="output_4"></textarea><div id="code_listing_4">
     </p>
 <pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
     <a class="link" href="user_guide/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">,</span> <span class="identifier">logger</span><span class="special">&gt;</span>
@@ -469,7 +469,7 @@ function toggleNextRow() {
       and the main function
     </p>
 <p>
-      <button class="TryItBtn" id="run_it_btn" onclick="show('https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/tutorial/tutorial5.cpp')">Run this code!</button><textarea style="display: none" id="code"></textarea><br /><textarea style="display: none" id="output"></textarea><div id="code_listing">
+      <button class="TryItBtn" id="run_it_btn_5" onclick="show(5, 'https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/tutorial/tutorial5.cpp')">Run this code!</button><textarea style="display: none" id="code_5"></textarea><br /><textarea style="display: none" id="output_5"></textarea><div id="code_listing_5">
     </p>
 <pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">argc</span><span class="special">,</span> <span class="keyword">char</span><span class="special">**</span> <span class="identifier">argv</span><span class="special">)</span> <span class="special">{</span>
     <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span><span class="identifier">module</span><span class="special">{</span><span class="identifier">argc</span> <span class="special">&gt;</span> <span class="number">1</span> <span class="special">?</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">atoi</span><span class="special">(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">1</span><span class="special">])</span> <span class="special">:</span> <span class="number">0</span><span class="special">});</span>
@@ -489,7 +489,7 @@ function toggleNextRow() {
       is declaration of configure method and obviously write the definition as well.
     </p>
 <p>
-      <button class="TryItBtn" id="run_it_btn" onclick="show('https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/tutorial/tutorial6.cpp')">Run this code!</button><textarea style="display: none" id="code"></textarea><br /><textarea style="display: none" id="output"></textarea><div id="code_listing">
+      <button class="TryItBtn" id="run_it_btn_6" onclick="show(6, 'https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/tutorial/tutorial6.cpp')">Run this code!</button><textarea style="display: none" id="code_6"></textarea><br /><textarea style="display: none" id="output_6"></textarea><div id="code_listing_6">
     </p>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">module</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
@@ -629,7 +629,7 @@ function toggleNextRow() {
       <a class="link" href="user_guide/bindings/bind.html" title="bind">bind</a>.
     </p>
 <p>
-      <button class="TryItBtn" id="run_it_btn" onclick="show('https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/tutorial/tutorial7.cpp')">Run this code!</button><textarea style="display: none" id="code"></textarea><br /><textarea style="display: none" id="output"></textarea><div id="code_listing">
+      <button class="TryItBtn" id="run_it_btn_7" onclick="show(7, 'https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/tutorial/tutorial7.cpp')">Run this code!</button><textarea style="display: none" id="code_7"></textarea><br /><textarea style="display: none" id="output_7"></textarea><div id="code_listing_7">
     </p>
 <pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
     <span class="keyword">return</span> <a class="link" href="user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
