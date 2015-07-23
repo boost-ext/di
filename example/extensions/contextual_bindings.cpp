@@ -154,7 +154,7 @@ struct a {
 int main() {
     //auto injector = di::make_injector<build_types>(
     auto injector = di::make_injector(
-        di::bind<int>.when(context = type<a>() -> type<b>() -> type<c>()).then(3)
+        di::bind<int>().when(context = type<a>() -> type<b>() -> type<c>()).then(3)
                      .when(context = type<a>() -> type<b>()).then(2)
                      .when(context = type<a>()).then(1)
     );

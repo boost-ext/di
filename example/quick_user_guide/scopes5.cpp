@@ -31,7 +31,7 @@ struct custom_scope {
 
 int main() {
     auto injector = di::make_injector(
-        di::bind<i1, impl1>.in(custom_scope{})
+        di::bind<i1, impl1>().in(custom_scope{})
     );
 
     assert(injector.create<std::shared_ptr<i1>>()

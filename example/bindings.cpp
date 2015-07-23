@@ -78,14 +78,14 @@ int main() {
 
     /*<<create injector with configuration>>*/
     auto injector = di::make_injector(
-        di::bind<interface1, implementation1>
-      , di::bind<interface2, implementation2>
-      , di::bind<int>.to(42)
-      , di::bind<std::string>.named(some_name).to("some_name")
-      , di::bind<float>.to(f)
-      , di::bind<double>.to(d)
-      , di::bind<std::function<int()>>.to([]{return 87;})
-      , di::bind<int>.named(int_name).to(123)
+        di::bind<interface1, implementation1>()
+      , di::bind<interface2, implementation2>()
+      , di::bind<int>().to(42)
+      , di::bind<std::string>().named(some_name).to("some_name")
+      , di::bind<float>().to(f)
+      , di::bind<double>().to(d)
+      , di::bind<std::function<int()>>().to([]{return 87;})
+      , di::bind<int>().named(int_name).to(123)
     );
 
     /*<<create `service_app`>>*/

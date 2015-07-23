@@ -67,7 +67,7 @@ public:
 int main() {
     /*<<create injector with `int` in `custom scope`>>*/
     auto injector = di::make_injector(
-        di::bind<int>.in(custom_scope{})
+        di::bind<int>().in(custom_scope{})
     );
 
     assert(injector.create<example>().sp_);

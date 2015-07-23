@@ -64,7 +64,7 @@ struct ctor_inject_traits_no_limits {
 int main() {
     /*<<make injector>>*/
     auto injector = di::make_injector(
-        di::bind<int>.named(name).to(42)
+        di::bind<int>().named(name).to(42)
     );
 
     /*<<create dependencies>>*/

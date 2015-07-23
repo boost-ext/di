@@ -86,8 +86,8 @@ struct example {
 int main() {
     auto injector = di::make_injector(
         /*<<interface[] match with vector<interface>, vector<unique_ptr<interface>>, ..., list<interface>, queue<shared_ptr<interface>, ...>>*/
-        di::bind<interface[]>.named(vector_shared).to(all_of<implementation1, implementation2>)
-      , di::bind<interface[]>.named(vector_unique).to(all_of<implementation1>)
+        di::bind<interface[]>().named(vector_shared).to(all_of<implementation1, implementation2>)
+      , di::bind<interface[]>().named(vector_unique).to(all_of<implementation1>)
     );
 
     injector.create<example>();

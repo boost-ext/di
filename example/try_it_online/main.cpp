@@ -15,8 +15,8 @@ namespace di = boost::di;
 
 int main() {
     auto injector = di::make_injector(
-        di::bind<i1, impl1>
-      , di::bind<int>.to(42)
+        di::bind<i1, impl1>()
+      , di::bind<int>().to(42)
     );
 
     injector.create<example>();

@@ -25,8 +25,8 @@ c::c(int a, int b) : a(a), b(b) { }
 
 int main() {
     auto injector = di::make_injector(
-        di::bind<int>.named(int1).to(42)
-      , di::bind<int>.named(int2).to(87)
+        di::bind<int>().named(int1).to(42)
+      , di::bind<int>().named(int2).to(87)
     );
 
     auto object = injector.create<c>();

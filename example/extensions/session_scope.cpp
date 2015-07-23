@@ -79,7 +79,7 @@ auto name = []{};
 
 test session_call = [] {
     auto injector = di::make_injector(
-        di::bind<i1, impl1>().in(di::session(name))
+        di::bind<i1, impl1>()().in(di::session(name))
     );
 
     {
@@ -171,7 +171,7 @@ auto my_session = []{};
 
 int main() {
     auto injector = di::make_injector(
-        di::bind<i1, impl1>.in(
+        di::bind<i1, impl1>().in(
             di::session(my_session)
         )
     );

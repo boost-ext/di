@@ -32,9 +32,9 @@ struct c {
 
 int main() {
     auto injector = di::make_injector(
-        di::bind<int>.named(n1).to(42)
-      , di::bind<int>.named(n2).to(87)
-      , di::bind<std::string>.named(n1).to("str")
+        di::bind<int>().named(n1).to(42)
+      , di::bind<int>().named(n2).to(87)
+      , di::bind<std::string>().named(n1).to("str")
     );
 
     auto object = injector.create<c>();

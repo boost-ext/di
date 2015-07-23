@@ -27,10 +27,10 @@ int main() {
     auto i = 42;
 
     auto injector = di::make_injector(
-        di::bind<i1, impl1>
-      , di::bind<i2, impl2>
-      , di::bind<int>.to(i)
-      , di::bind<double>.to(87.0)
+        di::bind<i1, impl1>()
+      , di::bind<i2, impl2>()
+      , di::bind<int>().to(i)
+      , di::bind<double>().to(87.0)
     );
 
     auto object1 = injector.create<std::unique_ptr<c>>();

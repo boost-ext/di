@@ -55,10 +55,10 @@ public:
 
     auto configure() const {
         return di::make_injector(
-            di::bind<ilogger, logger>
-          , di::bind<int>.named(first).to(i_)
-          , di::bind<int>.named(second).to(0)
-          , di::bind<std::string>.to("hello world")
+            di::bind<ilogger, logger>()
+          , di::bind<int>().named(first).to(i_)
+          , di::bind<int>().named(second).to(0)
+          , di::bind<std::string>().to("hello world")
         );
     }
 

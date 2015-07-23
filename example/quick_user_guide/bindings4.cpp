@@ -11,7 +11,7 @@ namespace di = boost::di;
 
 int main() {
     auto injector = di::make_injector(
-        di::bind<int>.to(42)
+        di::bind<int>().to(42)
     );
 
     assert(42 == injector.create<int>());

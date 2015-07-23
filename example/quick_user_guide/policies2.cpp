@@ -44,7 +44,7 @@ public:
 
 int main() {
     auto injector = di::make_injector<print_types_info_policy>(
-        di::bind<i1, impl1>
+        di::bind<i1, impl1>()
     );
 
     injector.create<std::unique_ptr<i1>>();

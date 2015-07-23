@@ -67,14 +67,14 @@ struct var_arg {
 int main() {
     auto injector = di::make_injector(
         /*<<define constructor types>>*/
-        di::bind<variadic>.to(constructor<int, std::string, std::unique_ptr<interface>>)
-      , di::bind<ctor>.to(constructor<int, std::string, std::unique_ptr<interface>>)
-      , di::bind<var_arg>.to(constructor<int, float, double>)
+        di::bind<variadic>().to(constructor<int, std::string, std::unique_ptr<interface>>)
+      , di::bind<ctor>().to(constructor<int, std::string, std::unique_ptr<interface>>)
+      , di::bind<var_arg>().to(constructor<int, float, double>)
 
         /*<<additional bindings>>*/
-      , di::bind<interface, implementation>
-      , di::bind<int>.to(2)
-      , di::bind<std::string>.to("hello")
+      , di::bind<interface, implementation>()
+      , di::bind<int>().to(2)
+      , di::bind<std::string>().to("hello")
 
     );
 

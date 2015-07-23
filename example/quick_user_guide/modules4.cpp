@@ -27,11 +27,11 @@ struct c {
 int main() {
     di::injector<i1> module =
         di::make_injector(
-            di::bind<i1, impl1>
+            di::bind<i1, impl1>()
         );
 
     auto injector = di::make_injector(
-        di::bind<i1>.named(my).to(module)
+        di::bind<i1>().named(my).to(module)
     );
 
     auto object = injector.create<std::unique_ptr<c>>();

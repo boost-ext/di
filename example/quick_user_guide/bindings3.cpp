@@ -15,7 +15,7 @@ template<int N> using int_ =
 
 int main() {
     auto injector = di::make_injector(
-        di::bind<int, int_<42>>
+        di::bind<int, int_<42>>()
     );
 
     assert(42 == injector.create<int>());

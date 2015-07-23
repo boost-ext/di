@@ -15,7 +15,7 @@ struct impl1 : i1 { void dummy1() override { } };
 
 int main() {
     auto injector = di::make_injector(
-        di::bind<i1, impl1>.in(di::singleton)
+        di::bind<i1, impl1>().in(di::singleton)
     );
 
     assert(injector.create<std::shared_ptr<i1>>()

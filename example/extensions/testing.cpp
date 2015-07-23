@@ -171,8 +171,8 @@ test integration_test = [] {
 
     /*<<create injector with `mocks_provider`>>*/
     auto mi = di::make_injector<mocks_provider>(
-        di::bind<int>.to(87) // custom value
-      , di::bind<i1, impl1>  // original implementation
+        di::bind<int>().to(87) // custom value
+      , di::bind<i1, impl1>()  // original implementation
     );
 
     /*<<set expectations>>*/

@@ -32,7 +32,7 @@ public:
 int main() {
     /*<<create injector with binding `implementation` to `interface1` and `interface2` using `di::any_of`>>*/
     auto injector = di::make_injector(
-        di::bind<di::any_of<interface1, interface2>, implementation>
+        di::bind<di::any_of<interface1, interface2>, implementation>()
     );
 
     injector.create<multiple_interfaces>();

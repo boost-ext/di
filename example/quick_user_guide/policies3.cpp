@@ -29,7 +29,7 @@ int main() {
     assert(0 == di::make_injector().create<int>());
     //di::make_injector().create<double>(); // compile error
     assert(42.0 == make_injector(
-                     di::bind<double>.to(42.0)
+                     di::bind<double>().to(42.0)
                  ).create<double>()
     );
 }
