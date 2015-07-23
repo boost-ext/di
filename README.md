@@ -244,12 +244,10 @@ Manual Dependency Injection             | Boost.DI
 
 **How To Start?**
 
-* Get C++14 compliant compiler (Clang-3.4+, GCC-5.1+, Visual Studio 2015\*+) with STL (memory, type\_traits headers) / Boost is not required
+* Get C++14 compliant compiler (Clang-3.4+, GCC-5.1+, Visual Studio 2015+) with STL (memory, type\_traits headers) / Boost is not required
 * [Read Quick User Guide](#quick_user_guide)
 * [Read Tutorial](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/tutorial.html)
 * [Read Documentation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
-
-\* - limited support
 
 > To get started the only file you need is `di.hpp`:
 
@@ -262,7 +260,7 @@ Manual Dependency Injection             | Boost.DI
 ```
 
 ```sh
-    $CXX -std=c++1y -I. main.cpp
+    $CXX -std=c++14 -I. main.cpp
 ```
 
 > To get and test Boost.DI library:
@@ -1196,7 +1194,7 @@ BOOST_DI_INJECTOR                       | Named used internally by Boost.DI
 ```
 
 **Contributing**
-* Extensions (e.g. see [Extensions](example/extensions))
+* Extensions (e.g. see [extensions](example/extensions))
 * Core (for example. bug fixes / improvements of compilation/run-time times)
 
 ---
