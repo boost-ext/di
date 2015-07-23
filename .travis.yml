@@ -138,7 +138,7 @@ script:
 - if [ "${TOOLSET}" != "" ] && [ "${BENCHMARK}" != "" ]; then (cd test/pt && CXX=${TOOLSET}
   COMPLEXITY=${BENCHMARK} ./di_compile_time.sh); fi
 - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (git
-  clone --quiet --recursive  --depth=1 --single-branch https://github.com/boostorg/boost.git
+  clone --quiet --recursive --depth=1 --single-branch https://github.com/boostorg/boost.git
   && mkdir boost/libs/di && cp -r build doc example include boost/libs/di && cd boost/libs/di/doc
   && ../build/b2 -sBOOST_ROOT=../build && git clone https://github.com/krzysztof-jusiak/di.git
   && cd di && git checkout -b gh-pages --track origin/gh-pages && git reset --hard
@@ -167,3 +167,4 @@ deploy:
   on:
     repo: krzysztof-jusiak/di
     branch: cpp14
+

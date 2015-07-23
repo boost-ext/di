@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <cstdlib>
+#include <cstdio>
 #include <fstream>
 #include <regex>
 #include "boost/di.hpp"
@@ -13,34 +14,43 @@
 
 namespace {
 
+template<class TFStream = std::ofstream>
+struct file : std::string, TFStream {
+    file(const std::string& name) // non explicit
+        : std::string{name}, TFStream{name}
+    { }
+
+    ~file() {
+        std::remove(this->c_str());
+    }
+};
+
 auto disassemble(const std::string& f, const std::string& progname, const std::regex& rgx) {
-    std::stringstream result;
-    std::string commands_file = "commands_file.tmp";
-    std::ofstream commands{commands_file};
-    std::string output_file = "output_file.tmp";
+    file<> commands{f + ".cmd"};
     std::stringstream command;
 
 #if defined(__linux)
-    command << "gdb --batch -x " << commands_file;
+    command << "gdb --batch -x " << commands;
     commands << "file " << progname << std::endl;
     commands << "disassemble " << f << std::endl;
     commands << "q" << std::endl;
 #elif defined(__APPLE__)
-    command << "lldb -s " << commands_file;
+    command << "lldb -s " << commands;
     commands << "file " << progname << std::endl;
     commands << "di -n " << f << std::endl;
     commands << "q" << std::endl;
 #elif defined(_WIN32) || defined(_WIN64)
-    command << "cdb -cf " << commands_file << " -z " << progname;
+    command << "cdb -cf " << commands << " -z " << progname;
     commands << "uf " << f << std::endl;
     commands << "q" << std::endl;
 #endif
 
-    if (std::system((command.str()  + " > " + output_file).c_str())) {
+    std::stringstream result;
+    if (std::system((command.str()  + " > " + f + ".out").c_str())) {
         return result.str();
     }
 
-    std::ifstream output{output_file};
+    file<std::ifstream> output{f + ".out"};
     auto is_asm = false;
     for (std::string line; std::getline(output, line);) {
         if (std::regex_match(line, std::regex{".*:$"})) {
