@@ -4,7 +4,6 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
-include_directories(${CMAKE_CURRENT_LIST_DIR}/common)
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 
 function(run_test test)
@@ -13,12 +12,12 @@ function(run_test test)
     add_test(test.${tmp} test.${tmp})
 endfunction()
 
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -include test.hpp")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -include test.hpp")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /FI test.hpp")
+if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -include common/test.hpp")
+elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -include common/test.hpp")
+elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "MSVC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /FI common\test.hpp")
 endif()
 
 run_test(ut/inject)
