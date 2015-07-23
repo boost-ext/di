@@ -10,7 +10,7 @@ function(run_example example)
     add_test(example.${tmp} example.${tmp})
 endfunction()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I tutorial")
+include_directories("tutorial")
 
 run_example(annotations)
 #run_example(bindings)

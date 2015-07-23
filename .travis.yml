@@ -132,7 +132,7 @@ script:
 - if [ "${TOOLSET}" != "" ]; then (cd example && ../build/b2 -sBOOST_ROOT=../build
   -j2 -q --toolset=${TOOLSET} debug-symbols=off); fi
 - if [ "${CMAKE_COMPILER}" != "" ]; then (cd build && CXX=${CMAKE_COMPILER} cmake
-  .. && make -j2 all && make test); fi
+  .. && cmake --build . && ctest --output-on-failure); fi
 - if [ "${VALGRIND}" != "" ]; then (find .. -type f -executable | grep "\.test" |
   xargs -i% valgrind --error-exitcode=-1 %); fi
 - if [ "${TOOLSET}" != "" ] && [ "${BENCHMARK}" != "" ]; then (cd test/pt && CXX=${TOOLSET}
