@@ -52,14 +52,13 @@ template<
   , class TGiven = TExpected
   , class TName = no_name
   , class TPriority = aux::none_type
-> struct dependency
-    : private dependency_base
-    , TScope::template scope<TExpected, TGiven>
-    , dependency_impl<
+> class dependency
+    : dependency_base
+    , public TScope::template scope<TExpected, TGiven>
+    , public dependency_impl<
           dependency_concept<TExpected, TName>
         , dependency<TScope, TExpected, TGiven, TName, TPriority>
       > {
-private:
     template<class T>
     using is_not_narrowed = std::integral_constant<bool,
         (std::is_arithmetic<T>::value && std::is_same<TExpected, T>::value) || !std::is_arithmetic<T>::value
