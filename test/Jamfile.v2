@@ -35,7 +35,7 @@ rule run-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
         <toolset>gcc:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
         <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
         <toolset>darwin:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
-        <toolset>msvc:<cxxflags>"/FI common/test.hpp /W3 /WX"
+        <toolset>msvc:<cxxflags>"/FI common/test.hpp /W3"
     ;
 
     if $(ctor) {
