@@ -140,18 +140,22 @@ using is_unique = is_unique_impl<none_type, Ts...>;
 #ifndef BOOST_DI_FWD_HPP
 #define BOOST_DI_FWD_HPP
 
+namespace std {
+    template<class> class initializer_list;
+    template<class> struct char_traits;
+} // std
+
 namespace boost {
+    template<class> class shared_ptr;
+} // boost
 
-template<class> class shared_ptr;
-
-namespace di { inline namespace v1 {
-
-class config;
-template<class...> class injector;
-struct no_name { const char* operator()() const noexcept { return nullptr; } };
-namespace providers { class heap; class stack_over_heap; } // providers
-namespace core { template<class> struct any_type_fwd; template<class> struct any_type_ref_fwd; }
-
+namespace boost { namespace di { inline namespace v1 {
+    class config;
+    struct no_name { constexpr auto operator()() const noexcept { return ""; } };
+    template<class...> class injector;
+    template<class, class = void> struct ctor_traits;
+    namespace providers { class heap; class stack_over_heap; }
+    namespace core { template<class> struct any_type_fwd; template<class> struct any_type_ref_fwd; }
 }}} // boost::di::v1
 
 #endif
@@ -1053,7 +1057,8 @@ public:
     template<class TExpected, class TGiven>
     struct scope<TExpected, std::shared_ptr<TGiven>> {
         template<class T>
-        using is_referable = typename wrappers::shared<TGiven>::template is_referable<aux::remove_accessors_t<T>>;
+        using is_referable =
+            typename wrappers::shared<TGiven>::template is_referable<aux::remove_accessors_t<T>>;
 
         explicit scope(const std::shared_ptr<TGiven>& object)
             : object_{object}
@@ -1084,7 +1089,8 @@ public:
         { }
 
         template<class T, class TProvider>
-        auto try_create(const TProvider&) -> type_traits::wrapper_traits_t<decltype(std::declval<TGiven>()())>;
+        type_traits::wrapper_traits_t<decltype(std::declval<TGiven>()())>
+        try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
@@ -1398,19 +1404,10 @@ struct ctor<T, aux::type_list<TArgs...>>
     : aux::pair<direct, aux::type_list<TArgs...>>
 { };
 
-} // type_traits
-
-template<class T>
-struct ctor_traits
-    : type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>
-{ };
-
-namespace type_traits {
-
 template<
     class T
   , class = typename BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<T>::type
-> struct ctor_traits;
+> struct ctor_traits__;
 
 template<
     class T
@@ -1418,12 +1415,12 @@ template<
 > struct ctor_traits_impl;
 
 template<class T>
-struct ctor_traits<T, std::true_type>
+struct ctor_traits__<T, std::true_type>
     : aux::pair<direct, typename T::BOOST_DI_INJECTOR>
 { };
 
 template<class T>
-struct ctor_traits<T, std::false_type>
+struct ctor_traits__<T, std::false_type>
     : ctor_traits_impl<T>
 { };
 
@@ -1437,44 +1434,23 @@ struct ctor_traits_impl<T, std::false_type>
     : di::ctor_traits<T>
 { };
 
-}}}} // boost::di::v1::type_traits
+} // type_traits
 
-#if __has_include(<string>)
-    #include <string>
+template<class T, class>
+struct ctor_traits
+    : type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>
+{ };
 
-    namespace boost { namespace di { inline namespace v1 {
-        template<
-            class T
-          , class Traits
-          , class TAllocator
-        > struct ctor_traits<std::basic_string<T, Traits, TAllocator>> {
-            BOOST_DI_INJECT_TRAITS();
-        };
-    }}} // boost::di::v1
-#endif
+template<class T>
+struct ctor_traits<std::initializer_list<T>> {
+    BOOST_DI_INJECT_TRAITS();
+};
 
-namespace std {
-    template<class>
-    class initializer_list;
+template<class T>
+struct ctor_traits<T, BOOST_DI_REQUIRES_T(std::is_same<std::char_traits<char>, typename T::traits_type>::value)> {
+    BOOST_DI_INJECT_TRAITS();
+};
 
-    #if defined(BOOST_DI_MSVC)
-        template<class>
-        class function;
-    #endif
-} // std
-
-namespace boost { namespace di { inline namespace v1 {
-    template<class T>
-    struct ctor_traits<std::initializer_list<T>> {
-        BOOST_DI_INJECT_TRAITS();
-    };
-
-    #if defined(BOOST_DI_MSVC)
-        template<class T>
-        struct ctor_traits<std::function<T>> {
-            BOOST_DI_INJECT_TRAITS();
-        };
-    #endif
 }}} // boost::di::v1
 
 #endif
@@ -1518,10 +1494,6 @@ using scopable = typename scopable__<T>::type;
 
 #ifndef BOOST_DI_CORE_DEPENDENCY_HPP
 #define BOOST_DI_CORE_DEPENDENCY_HPP
-
-#if defined(BOOST_DI_MSVC) || __has_include(<string>)
-    #include <string>
-#endif
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
@@ -1578,19 +1550,17 @@ template<
     >;
 
     template<class T>
-    struct str_traits {
+    struct ref_traits {
         using type = T;
     };
 
-    #if defined(BOOST_DI_MSVC) || __has_include(<string>)
-        template<int N>
-        struct str_traits<const char(&)[N]> {
-            using type = std::string;
-        };
-    #endif
+    template<int N>
+    struct ref_traits<const char(&)[N]> {
+        using type = TExpected;
+    };
 
     template<class T>
-    struct str_traits<std::shared_ptr<T>&> {
+    struct ref_traits<std::shared_ptr<T>&> {
         using type = std::shared_ptr<T>;
     };
 
@@ -1632,7 +1602,7 @@ public:
     template<class T, BOOST_DI_REQUIRES(externable<T>::value)>
     auto to(T&& object) const noexcept {
         using dependency = dependency<
-            scopes::external, TExpected, typename str_traits<T>::type, TName
+            scopes::external, TExpected, typename ref_traits<T>::type, TName
         >;
         return dependency{static_cast<T&&>(object)};
     }
@@ -1988,7 +1958,7 @@ struct creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TCtor..
                 , type<
                       aux::decay_t<T>
                     , TInitialization
-                    , typename type_traits::ctor_traits<aux::decay_t<T>>::type, TCtor...
+                    , typename type_traits::ctor_traits__<aux::decay_t<T>>::type, TCtor...
                   >
               >
             , typename number_of_constructor_arguments_doesnt_match_for<aux::decay_t<T>>::
@@ -2903,7 +2873,7 @@ public:
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     struct is_creatable {
         using TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>;
-        using TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type;
+        using TCtor = typename type_traits::ctor_traits__<typename TDependency::given>::type;
 
         static constexpr auto value = std::is_convertible<
             decltype(
@@ -3011,7 +2981,7 @@ private:
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;
         using given_t = typename dependency_t::given;
-        using ctor_t = typename type_traits::ctor_traits<given_t>::type;
+        using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
         using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using create_t = type_traits::referable_traits_t<T, dependency_t>;
@@ -3049,7 +3019,7 @@ private:
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;
         using given_t = typename dependency_t::given;
-        using ctor_t = typename type_traits::ctor_traits<given_t>::type;
+        using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
         using provider_t = successful::provider<expected_t, given_t, ctor_t, injector>;
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using create_t = type_traits::referable_traits_t<T, dependency_t>;
@@ -3090,7 +3060,7 @@ public:
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     struct is_creatable {
         using TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>;
-        using TCtor = typename type_traits::ctor_traits<typename TDependency::given>::type;
+        using TCtor = typename type_traits::ctor_traits__<typename TDependency::given>::type;
 
         static constexpr auto value = std::is_convertible<
             decltype(
@@ -3198,7 +3168,7 @@ private:
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;
         using given_t = typename dependency_t::given;
-        using ctor_t = typename type_traits::ctor_traits<given_t>::type;
+        using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
         using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using create_t = type_traits::referable_traits_t<T, dependency_t>;
@@ -3236,7 +3206,7 @@ private:
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;
         using given_t = typename dependency_t::given;
-        using ctor_t = typename type_traits::ctor_traits<given_t>::type;
+        using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
         using provider_t = successful::provider<expected_t, given_t, ctor_t, injector>;
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using create_t = type_traits::referable_traits_t<T, dependency_t>;

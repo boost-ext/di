@@ -77,7 +77,8 @@ public:
     template<class TExpected, class TGiven>
     struct scope<TExpected, std::shared_ptr<TGiven>> {
         template<class T>
-        using is_referable = typename wrappers::shared<TGiven>::template is_referable<aux::remove_accessors_t<T>>;
+        using is_referable =
+            typename wrappers::shared<TGiven>::template is_referable<aux::remove_accessors_t<T>>;
 
         explicit scope(const std::shared_ptr<TGiven>& object)
             : object_{object}
@@ -108,7 +109,8 @@ public:
         { }
 
         template<class T, class TProvider>
-        auto try_create(const TProvider&) -> type_traits::wrapper_traits_t<decltype(std::declval<TGiven>()())>;
+        type_traits::wrapper_traits_t<decltype(std::declval<TGiven>()())>
+        try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {

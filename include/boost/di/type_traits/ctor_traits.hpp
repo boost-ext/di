@@ -72,19 +72,10 @@ struct ctor<T, aux::type_list<TArgs...>>
     : aux::pair<direct, aux::type_list<TArgs...>>
 { };
 
-} // type_traits
-
-template<class T>
-struct ctor_traits
-    : type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>
-{ };
-
-namespace type_traits {
-
 template<
     class T
   , class = typename BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<T>::type
-> struct ctor_traits;
+> struct ctor_traits__;
 
 template<
     class T
@@ -92,12 +83,12 @@ template<
 > struct ctor_traits_impl;
 
 template<class T>
-struct ctor_traits<T, std::true_type>
+struct ctor_traits__<T, std::true_type>
     : aux::pair<direct, typename T::BOOST_DI_INJECTOR>
 { };
 
 template<class T>
-struct ctor_traits<T, std::false_type>
+struct ctor_traits__<T, std::false_type>
     : ctor_traits_impl<T>
 { };
 
@@ -111,44 +102,23 @@ struct ctor_traits_impl<T, std::false_type>
     : di::ctor_traits<T>
 { };
 
-}}}} // boost::di::v1::type_traits
+} // type_traits
 
-#if __has_include(<string>)
-    #include <string>
+template<class T, class>
+struct ctor_traits
+    : type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>
+{ };
 
-    namespace boost { namespace di { inline namespace v1 {
-        template<
-            class T
-          , class Traits
-          , class TAllocator
-        > struct ctor_traits<std::basic_string<T, Traits, TAllocator>> {
-            BOOST_DI_INJECT_TRAITS();
-        };
-    }}} // boost::di::v1
-#endif
+template<class T>
+struct ctor_traits<std::initializer_list<T>> {
+    BOOST_DI_INJECT_TRAITS();
+};
 
-namespace std {
-    template<class>
-    class initializer_list;
+template<class T>
+struct ctor_traits<T, BOOST_DI_REQUIRES_T(std::is_same<std::char_traits<char>, typename T::traits_type>::value)> {
+    BOOST_DI_INJECT_TRAITS();
+};
 
-    #if defined(BOOST_DI_MSVC)
-        template<class>
-        class function;
-    #endif
-} // std
-
-namespace boost { namespace di { inline namespace v1 {
-    template<class T>
-    struct ctor_traits<std::initializer_list<T>> {
-        BOOST_DI_INJECT_TRAITS();
-    };
-
-    #if defined(BOOST_DI_MSVC)
-        template<class T>
-        struct ctor_traits<std::function<T>> {
-            BOOST_DI_INJECT_TRAITS();
-        };
-    #endif
 }}} // boost::di::v1
 
 #endif

@@ -247,7 +247,7 @@ struct creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TCtor..
                 , type<
                       aux::decay_t<T>
                     , TInitialization
-                    , typename type_traits::ctor_traits<aux::decay_t<T>>::type, TCtor...
+                    , typename type_traits::ctor_traits__<aux::decay_t<T>>::type, TCtor...
                   >
               >
             , typename number_of_constructor_arguments_doesnt_match_for<aux::decay_t<T>>::

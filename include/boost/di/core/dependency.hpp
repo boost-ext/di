@@ -8,9 +8,6 @@
 #define BOOST_DI_CORE_DEPENDENCY_HPP
 
 #include "boost/di/aux_/compiler.hpp"
-#if defined(BOOST_DI_MSVC) || __has_include(<string>)
-    #include <string>
-#endif
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/scopes/external.hpp"
@@ -73,19 +70,17 @@ template<
     >;
 
     template<class T>
-    struct str_traits {
+    struct ref_traits {
         using type = T;
     };
 
-    #if defined(BOOST_DI_MSVC) || __has_include(<string>)
-        template<int N>
-        struct str_traits<const char(&)[N]> {
-            using type = std::string;
-        };
-    #endif
+    template<int N>
+    struct ref_traits<const char(&)[N]> {
+        using type = TExpected;
+    };
 
     template<class T>
-    struct str_traits<std::shared_ptr<T>&> {
+    struct ref_traits<std::shared_ptr<T>&> {
         using type = std::shared_ptr<T>;
     };
 
@@ -127,7 +122,7 @@ public:
     template<class T, BOOST_DI_REQUIRES(externable<T>::value)>
     auto to(T&& object) const noexcept {
         using dependency = dependency<
-            scopes::external, TExpected, typename str_traits<T>::type, TName
+            scopes::external, TExpected, typename ref_traits<T>::type, TName
         >;
         return dependency{static_cast<T&&>(object)};
     }

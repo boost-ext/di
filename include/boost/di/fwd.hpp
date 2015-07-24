@@ -7,18 +7,22 @@
 #ifndef BOOST_DI_FWD_HPP
 #define BOOST_DI_FWD_HPP
 
+namespace std {
+    template<class> class initializer_list;
+    template<class> struct char_traits;
+} // std
+
 namespace boost {
+    template<class> class shared_ptr;
+} // boost
 
-template<class> class shared_ptr;
-
-namespace di { inline namespace v1 {
-
-class config;
-template<class...> class injector;
-struct no_name { const char* operator()() const noexcept { return nullptr; } };
-namespace providers { class heap; class stack_over_heap; } // providers
-namespace core { template<class> struct any_type_fwd; template<class> struct any_type_ref_fwd; }
-
+namespace boost { namespace di { inline namespace v1 {
+    class config;
+    struct no_name { constexpr auto operator()() const noexcept { return ""; } };
+    template<class...> class injector;
+    template<class, class = void> struct ctor_traits;
+    namespace providers { class heap; class stack_over_heap; }
+    namespace core { template<class> struct any_type_fwd; template<class> struct any_type_ref_fwd; }
 }}} // boost::di::v1
 
 #endif
