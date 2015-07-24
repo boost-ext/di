@@ -115,12 +115,14 @@ struct ctor_traits<std::initializer_list<T>> {
 };
 
 template<class T>
-struct ctor_traits<T, BOOST_DI_REQUIRES_T(std::is_same<std::char_traits<char>, typename T::traits_type>::value)> {
+struct ctor_traits<T, BOOST_DI_REQUIRES_T(
+    std::is_same<std::char_traits<char>, typename T::traits_type>::value)> {
     BOOST_DI_INJECT_TRAITS();
 };
 
 template<class T>
-struct ctor_traits<T, BOOST_DI_REQUIRES_T(std::is_arithmetic<T>::value || std::is_enum<T>::value)> {
+struct ctor_traits<T, BOOST_DI_REQUIRES_T(
+    std::is_arithmetic<T>::value || std::is_enum<T>::value)> {
     BOOST_DI_INJECT_TRAITS();
 };
 
