@@ -13,6 +13,7 @@ namespace di = boost::di;
 
 //<-
 #include <cassert>
+#include <string>
 #include <memory>
 #include <tuple>
 

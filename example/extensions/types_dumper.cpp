@@ -8,6 +8,7 @@
 //[types_dumper
 //<-
 #include <iostream>
+#include <string>
 #include <memory>
 #include <vector>
 #include <typeinfo>
