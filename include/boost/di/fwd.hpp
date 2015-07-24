@@ -7,11 +7,6 @@
 #ifndef BOOST_DI_FWD_HPP
 #define BOOST_DI_FWD_HPP
 
-namespace std {
-    template<class> class initializer_list;
-    template<class> struct char_traits;
-} // std
-
 namespace boost {
     template<class> class shared_ptr;
 } // boost

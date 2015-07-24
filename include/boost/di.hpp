@@ -140,11 +140,6 @@ using is_unique = is_unique_impl<none_type, Ts...>;
 #ifndef BOOST_DI_FWD_HPP
 #define BOOST_DI_FWD_HPP
 
-namespace std {
-    template<class> class initializer_list;
-    template<class> struct char_traits;
-} // std
-
 namespace boost {
     template<class> class shared_ptr;
 } // boost
@@ -1443,8 +1438,13 @@ struct ctor_traits<std::initializer_list<T>> {
     BOOST_DI_INJECT_TRAITS();
 };
 
+template<>
+struct ctor_traits<std::string> {//BOOST_DI_REQUIRES_T(std::is_same<std::char_traits<char>, typename T::traits_type>::value)> {
+    BOOST_DI_INJECT_TRAITS();
+};
+
 template<class T>
-struct ctor_traits<T, BOOST_DI_REQUIRES_T(std::is_same<std::char_traits<char>, typename T::traits_type>::value)> {
+struct ctor_traits<T, BOOST_DI_REQUIRES_T(std::is_arithmetic<T>::value || std::is_enum<T>::value)> {
     BOOST_DI_INJECT_TRAITS();
 };
 
