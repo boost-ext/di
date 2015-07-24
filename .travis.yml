@@ -9,6 +9,7 @@ sudo: false
 env:
   global:
   - secure: A27gNApbElRr3fqZXifVPKkB+xbxMYDFINGk2RDqul1X1Zg51M7e+ohHO9BwhEYiOGmCnFfbsVUP11XyFIH6kzWmxw9mhy8YDglbYfeyu6grxtU3mHElz8W7wO5OCPFPWXQf23sVYE8AWyjj6M+t3oyLJhPXCcYI7uMHEQm10CQ=
+  - VALGRIND="valgrind --leak-check=full --error-exitcode=1"
 
 matrix:
   fast_finish: true
@@ -20,7 +21,7 @@ matrix:
         packages:
         - xsltproc
   - os: linux
-    env: TOOLSET=clang-3.4 MEMCHECK=--memcheck=valgrind BENCHMARK=quick
+    env: TOOLSET=clang-3.4 MEMCHECK=${VALGRIND} BENCHMARK=quick
     addons:
       apt:
         packages:
@@ -33,7 +34,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.4
   - os: linux
-    env: TOOLSET=clang-3.5 MEMCHECK=--memcheck=valgrind BENCHMARK=quick
+    env: TOOLSET=clang-3.5 MEMCHECK=${VALGRIND} BENCHMARK=quick
     addons:
       apt:
         packages:
@@ -46,7 +47,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.5
   - os: linux
-    env: TOOLSET=clang-3.6 MEMCHECK=--memcheck=valgrind BENCHMARK=quick
+    env: TOOLSET=clang-3.6 MEMCHECK=${VALGRIND} BENCHMARK=quick
     addons:
       apt:
         packages:
@@ -59,7 +60,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.6
   - os: linux
-    env: TOOLSET=clang-3.7 MEMCHECK=--memcheck=valgrind BENCHMARK=quick
+    env: TOOLSET=clang-3.7 MEMCHECK=${VALGRIND} BENCHMARK=quick
     addons:
       apt:
         packages:
@@ -84,7 +85,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise
   - os: linux
-    env: TOOLSET=gcc-5 GCOV=gcov-5 VARIANT=coverage MEMCHECK=--memcheck=valgrind
+    env: TOOLSET=gcc-5 GCOV=gcov-5 VARIANT=coverage MEMCHECK=${VALGRIND}
     addons:
       apt:
         packages:
