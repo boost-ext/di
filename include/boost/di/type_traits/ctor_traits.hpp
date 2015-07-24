@@ -115,7 +115,7 @@ struct ctor_traits<std::initializer_list<T>> {
 };
 
 template<>
-struct ctor_traits<std::string> {//BOOST_DI_REQUIRES_T(std::is_same<std::char_traits<char>, typename T::traits_type>::value)> {
+struct ctor_traits<std::string> {
     BOOST_DI_INJECT_TRAITS();
 };
 
