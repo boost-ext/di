@@ -6,6 +6,9 @@
 //
 #include <type_traits>
 #include "boost/di/type_traits/scope_traits.hpp"
+#if __has_include(<boost/shared_ptr.hpp>)
+    #include <boost/shared_ptr.hpp>
+#endif
 
 namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 
