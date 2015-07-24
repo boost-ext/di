@@ -17,7 +17,7 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
 elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL Clang)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -include common/test.hpp")
 elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /FI common\test.hpp")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /FIcommon/test.hpp")
 endif()
 
 run_test(ut/inject)
