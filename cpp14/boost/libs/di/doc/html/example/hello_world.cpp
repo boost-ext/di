@@ -8,6 +8,7 @@
 //[hello_world
 //<-
 #include <cassert>
+#include <string>
 #include <iostream>
 #include <memory>
 //->
