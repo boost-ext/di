@@ -6,6 +6,9 @@
 #
 
 import testing ;
+import feature : extend-feature compose ;
+
+.argv = [ modules.peek : ARGV ] ;
 
 project di :
     requirements
@@ -25,6 +28,12 @@ rule run-example ( std : src + : cxxflags * : property * ) {
         <toolset>darwin:<cxxflags>"-std=$(std) -pedantic -pedantic-errors -Wall -Wextra -Werror $(cxx_flags)"
         <toolset>msvc:<cxxflags>"/W3 $(cxx_flags)"
     ;
+
+    local memcheck = [ MATCH --memcheck=(.*) : $(.argv) ] ;
+
+    if ${memcheck} {
+        toolset += <testing.launcher>$(memcheck) ;
+    }
 
     run $(src) : : : $(toolset) : $(property) ;
 }

@@ -20,7 +20,7 @@ matrix:
         packages:
         - xsltproc
   - os: linux
-    env: TOOLSET=clang-3.4 VALGRIND=1 BENCHMARK=quick
+    env: TOOLSET=clang-3.4 MEMCHECK=--memcheck=valgrind BENCHMARK=quick
     addons:
       apt:
         packages:
@@ -33,7 +33,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.4
   - os: linux
-    env: TOOLSET=clang-3.5 VALGRIND=1 BENCHMARK=quick
+    env: TOOLSET=clang-3.5 MEMCHECK=--memcheck=valgrind BENCHMARK=quick
     addons:
       apt:
         packages:
@@ -46,7 +46,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.5
   - os: linux
-    env: TOOLSET=clang-3.6 VALGRIND=1 BENCHMARK=quick
+    env: TOOLSET=clang-3.6 MEMCHECK=--memcheck=valgrind BENCHMARK=quick
     addons:
       apt:
         packages:
@@ -59,7 +59,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.6
   - os: linux
-    env: TOOLSET=clang-3.7 VALGRIND=1 BENCHMARK=quick
+    env: TOOLSET=clang-3.7 MEMCHECK=--memcheck=valgrind BENCHMARK=quick
     addons:
       apt:
         packages:
@@ -84,7 +84,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise
   - os: linux
-    env: TOOLSET=gcc-5 GCOV=gcov-5 VARIANT=coverage VALGRIND=1
+    env: TOOLSET=gcc-5 GCOV=gcov-5 VARIANT=coverage MEMCHECK=--memcheck=valgrind
     addons:
       apt:
         packages:
@@ -128,13 +128,11 @@ before_script:
 
 script:
 - if [ "${TOOLSET}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2
-  -q --toolset=${TOOLSET} debug-symbols=off ${VARIANT}); fi
+  -q --toolset=${TOOLSET} debug-symbols=off ${VARIANT} ${MEMCHECK}); fi
 - if [ "${TOOLSET}" != "" ]; then (cd example && ../build/b2 -sBOOST_ROOT=../build
-  -j2 -q --toolset=${TOOLSET} debug-symbols=off); fi
+  -j2 -q --toolset=${TOOLSET} debug-symbols=off ${MEMCHECK}); fi
 - if [ "${CMAKE_COMPILER}" != "" ]; then (cd build && CXX=${CMAKE_COMPILER} cmake
   .. && cmake --build . && ctest --output-on-failure); fi
-- if [ "${VALGRIND}" != "" ]; then (find .. -type f -executable | grep "\.test" |
-  xargs -i% valgrind --error-exitcode=-1 %); fi
 - if [ "${TOOLSET}" != "" ] && [ "${BENCHMARK}" != "" ]; then (cd test/pt && CXX=${TOOLSET}
   COMPLEXITY=${BENCHMARK} ./di_compile_time.sh); fi
 - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (git

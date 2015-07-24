@@ -6,7 +6,10 @@
 #
 
 import testing ;
+import modules ;
 import feature : extend-feature compose ;
+
+.argv = [ modules.peek : ARGV ] ;
 
 extend-feature variant : coverage ;
 compose <variant>coverage :
@@ -44,6 +47,12 @@ rule run-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
 
     if ! $(preprocessed_headers) {
         defines += <define>BOOST_DI_CFG_NO_PREPROCESSED_HEADERS ;
+    }
+
+    local memcheck = [ MATCH --memcheck=(.*) : $(.argv) ] ;
+
+    if ${memcheck} {
+        toolset += <testing.launcher>$(memcheck) ;
     }
 
     run $(src) : : : $(toolset) $(defines) : $(ctor) ;
