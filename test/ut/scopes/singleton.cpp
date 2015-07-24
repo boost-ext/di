@@ -12,10 +12,8 @@ namespace boost { namespace di { inline namespace v1 { namespace scopes {
 
 test create_singleton = [] {
     singleton::scope<int, int> singleton;
-
     std::shared_ptr<int> object1 = singleton.create<int>(fake_provider<int>{});
     std::shared_ptr<int> object2 = singleton.create<int>(fake_provider<int>{});
-
     expect_eq(object1, object2);
 };
 

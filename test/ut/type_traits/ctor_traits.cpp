@@ -62,6 +62,9 @@ test ctors = [] {
         rvalue(int&&) { };
     };
 
+    enum e { };
+    enum class ec { };
+
     static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<empty>::type>{});
     static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<traits>::type>{});
     static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<empty>::type>{});
@@ -72,6 +75,8 @@ test ctors = [] {
     static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<ctor1>>>, ctor_traits__<ctor1>::type>{});
     static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<ctor_unique_ptr>>>, ctor_traits__<ctor_unique_ptr>::type>{});
     static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<rvalue>>>, ctor_traits__<rvalue>::type>{});
+    static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<e>::type>{});
+    static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<ec>::type>{});
 };
 
 test uniforms = [] {

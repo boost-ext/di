@@ -119,6 +119,11 @@ struct ctor_traits<T, BOOST_DI_REQUIRES_T(std::is_same<std::char_traits<char>, t
     BOOST_DI_INJECT_TRAITS();
 };
 
+template<class T>
+struct ctor_traits<T, BOOST_DI_REQUIRES_T(std::is_arithmetic<T>::value || std::is_enum<T>::value)> {
+    BOOST_DI_INJECT_TRAITS();
+};
+
 }}} // boost::di::v1
 
 #endif
