@@ -30,7 +30,7 @@ matrix:
   fast_finish: true
 
 install:
-  - cinst drmemory
+  - cinst drmemory -Version 1.8.1-RC1
   - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat
   - git submodule update --init --recursive
   - IF %CFG%==bjam cd build && bootstrap.bat --with-toolset=msvc-14.0

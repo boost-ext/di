@@ -20,6 +20,7 @@ matrix:
       apt:
         packages:
         - xsltproc
+        - biicode
   - os: linux
     env: TOOLSET=clang-3.4 MEMCHECK=${VALGRIND} BENCHMARK=quick
     addons:
