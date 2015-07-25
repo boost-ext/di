@@ -35,7 +35,9 @@ install:
   - cinst drmemory
   - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat
   - git submodule update --init --recursive
-  - IF %CFG%==bjam cd build && bootstrap.bat --with-toolset=msvc-14.0
+  - IF %CFG%==bjam_test_analyze cd build && bootstrap.bat --with-toolset=msvc-14.0
+  - IF %CFG%==bjam_test_memcheck cd build && bootstrap.bat --with-toolset=msvc-14.0
+  - IF %CFG%==bjam_example cd build && bootstrap.bat --with-toolset=msvc-14.0
   - set PATH=C:\Program Files (x86)\Dr. Memory\bin;%PATH%
 
 build_script:
