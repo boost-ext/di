@@ -48,7 +48,7 @@ test-suite example :
       : -Imodules -DBOOST_DI_CFG=config
     ]
     [ run-example c++1y : annotations.cpp ]
-    #[ run-example c++1y : bindings.cpp ]
+    [ run-example c++1y : bindings.cpp ]
     [ run-example c++1y : constructor_injection.cpp ]
     [ run-example c++1y : constructor_signature.cpp ]
     [ run-example c++1y : custom_policy.cpp ]

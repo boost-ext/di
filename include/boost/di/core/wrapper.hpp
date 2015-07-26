@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_CORE_WRAPPER_HPP
 #define BOOST_DI_CORE_WRAPPER_HPP
 
+#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/concepts/creatable.hpp"
 
@@ -19,11 +20,23 @@ struct wrapper {
     using element_type = T;
 
     inline operator T() const noexcept {
-        return wrapper_;
+        return
+            #if defined(BOOST_DI_MSVC)
+                static_cast<T&&>(wrapper_)
+            #else
+                wrapper_
+            #endif
+        ;
     }
 
     inline operator T() noexcept {
-        return wrapper_;
+        return
+            #if defined(BOOST_DI_MSVC)
+                static_cast<T&&>(wrapper_)
+            #else
+                wrapper_
+            #endif
+        ;
     }
 
     TWrapper wrapper_;

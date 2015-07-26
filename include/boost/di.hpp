@@ -2734,11 +2734,23 @@ struct wrapper {
     using element_type = T;
 
     inline operator T() const noexcept {
-        return wrapper_;
+        return
+            #if defined(BOOST_DI_MSVC)
+                static_cast<T&&>(wrapper_)
+            #else
+                wrapper_
+            #endif
+        ;
     }
 
     inline operator T() noexcept {
-        return wrapper_;
+        return
+            #if defined(BOOST_DI_MSVC)
+                static_cast<T&&>(wrapper_)
+            #else
+                wrapper_
+            #endif
+        ;
     }
 
     TWrapper wrapper_;
