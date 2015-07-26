@@ -9,6 +9,7 @@ sudo: false
 env:
   global:
   - secure: A27gNApbElRr3fqZXifVPKkB+xbxMYDFINGk2RDqul1X1Zg51M7e+ohHO9BwhEYiOGmCnFfbsVUP11XyFIH6kzWmxw9mhy8YDglbYfeyu6grxtU3mHElz8W7wO5OCPFPWXQf23sVYE8AWyjj6M+t3oyLJhPXCcYI7uMHEQm10CQ=
+  - secure: d8G/0j4J6QMWhZHBfSsKJFEIo7bCqwP/oA84tVQkYO/a+y7bFQLb8eKhkNxvGO1O7Gpzyp58h0KbIl/W2XjGWXkQfoxmG44mBfP2T0dTiOlJ6k76sopVcj+47TX1kq+x+TINCo1O3HS7X2nQ9BJe8W7u033m3imuYIZpMNv6ab4=
   - VALGRIND=--memcheck="valgrind --leak-check=full --error-exitcode=1"
 
 matrix:
@@ -85,7 +86,7 @@ matrix:
         #- ubuntu-toolchain-r-test
         #- llvm-toolchain-precise
   - os: linux
-    env: TOOLSET=gcc-5 GCOV=gcov-5 VARIANT=coverage MEMCHECK=${VALGRIND}
+    env: TOOLSET=gcc-5 GCOV=gcov-5 VARIANT=coverage MEMCHECK=${VALGRIND} BIICODE=1
     addons:
       apt:
         packages:
@@ -149,6 +150,12 @@ after_success:
 - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${VARIANT}" == "coverage" ]; then (pip
   install requests[security] cpp-coveralls && coveralls -r . -b test/ --gcov /usr/bin/${GCOV}
   --repo-token c3V44Hj0ZTKzz4kaa3gIlVjInFiyNRZ4f); fi
+- if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${BIICODE}" != "" ]; then (mkdir biicode && cd biicode
+  && travis_wait travis_retry wget https://s3.amazonaws.com/biibinaries/release/3.3/bii-ubuntu-64_3_3.deb
+  && dpkg -x bii-ubuntu-64_3_3.deb . && export PATH=`$PWD/opt/biicode`:$PATH && bii init di
+  && cd di && bii new krzysztofjusiak/di && cd blocks/krzysztofjusiak/di
+  && git clone https://github.com/krzysztof-jusiak/di.git . 
+  && bii user krzysztofjusiak -p ${BIICODE_PASS} && bii publish); fi
 
 notifications:
   webhooks:
