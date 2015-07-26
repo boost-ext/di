@@ -138,8 +138,7 @@ test automatic_inject_with_initializer_list = [] {
 test ctor_refs = [] {
     struct c {
         BOOST_DI_INJECT(c
-                      , const std::shared_ptr<i1>& sp
-                      , int& i
+                      , const std::shared_ptr<i1>& sp , int& i
                       , const double& d
                       , const std::string& str
                       , (named = name) const std::string& nstr
@@ -184,17 +183,17 @@ test ctor_refs = [] {
         short s = 0;
     };
 
+
     struct c_aggregate {
         const std::shared_ptr<i1>& sp;
         int& i;
         const double& d;
-        std::string str;
-        std::string nstr;
-        std::function<int()> f;
-        long l;
-        short s;
+        std::string str = {};
+        std::string nstr = {};
+        std::function<int()> f = {};
+        long l = 0;
+        short s = 0;
     };
-
     auto test = [](auto type, const auto& bind_i1) {
         auto i = 0;
         constexpr auto d = 0.0;
