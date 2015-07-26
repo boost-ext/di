@@ -13,7 +13,7 @@ endfunction()
 include_directories("tutorial")
 
 run_example(annotations)
-#run_example(bindings)
+run_example(bindings)
 run_example(constructor_injection)
 run_example(constructor_signature)
 run_example(custom_policy)

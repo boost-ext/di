@@ -137,7 +137,6 @@ test automatic_inject_with_initializer_list = [] {
 
 test ctor_refs = [] {
     struct c {
-#if !defined(BOOST_DI_MSVC)
         BOOST_DI_INJECT(c
                       , const std::shared_ptr<i1>& sp
                       , int& i
@@ -148,17 +147,6 @@ test ctor_refs = [] {
                       , long&& l
                       , short s)
             : i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)
-#else
-        BOOST_DI_INJECT(c
-                      , const std::shared_ptr<i1>& sp
-                      , int& i
-                      , const double& d
-                      , const std::string& str
-                      , (named = name) const std::string& nstr
-                      , long&& l
-                      , short s)
-            : i(i), d(d), str(str), nstr(nstr), l(std::move(l)), s(s)
-#endif
         {
             sp->dummy1();
         }
@@ -167,15 +155,12 @@ test ctor_refs = [] {
         const double& d;
         std::string str;
         std::string nstr;
-#if !defined(BOOST_DI_MSVC)
         std::function<int()> f;
-#endif
         long l = 0;
         short s = 0;
     };
 
     struct c_inject {
-#if !defined(BOOST_DI_MSVC)
         BOOST_DI_INJECT(c_inject
                       , const std::shared_ptr<i1>& sp
                       , int& i
@@ -186,17 +171,6 @@ test ctor_refs = [] {
                       , long&& l
                       , short s)
             : i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)
-#else
-        BOOST_DI_INJECT(c_inject
-                      , const std::shared_ptr<i1>& sp
-                      , int& i
-                      , const double& d
-                      , const std::string& str
-                      , (named = name) const std::string& nstr
-                      , long&& l
-                      , short s)
-            : i(i), d(d), str(str), nstr(nstr), l(std::move(l)), s(s)
-#endif
         {
             sp->dummy1();
         }
@@ -205,9 +179,7 @@ test ctor_refs = [] {
         const double& d;
         std::string str;
         std::string nstr;
-#if !defined(BOOST_DI_MSVC)
         std::function<int()> f;
-#endif
         long l = 0;
         short s = 0;
     };
@@ -216,13 +188,11 @@ test ctor_refs = [] {
         const std::shared_ptr<i1>& sp;
         int& i;
         const double& d;
-        std::string str = {};
-        std::string nstr = {};
-#if !defined(BOOST_DI_MSVC)
-        std::function<int()> f = {};
-#endif
-        long l = 0;
-        short s = 0;
+        std::string str;
+        std::string nstr;
+        std::function<int()> f;
+        long l;
+        short s;
     };
 
     auto test = [](auto type, const auto& bind_i1) {
@@ -237,9 +207,7 @@ test ctor_refs = [] {
           , bind_i1
           , di::bind<short>().to(short{42})
           , di::bind<long>().to(123l)
-#if !defined(BOOST_DI_MSVC)
           , di::bind<std::function<int()>>().to([]{return 87;})
-#endif
         );
 
         auto object = injector.template create<typename decltype(type)::type>();
@@ -247,9 +215,7 @@ test ctor_refs = [] {
         expect_eq(&d, &object.d);
         expect_eq("str", object.str);
         expect_eq(42, object.s);
-#if !defined(BOOST_DI_MSVC)
         expect_eq(87, object.f());
-#endif
         expect_eq(123, object.l);
     };
 
