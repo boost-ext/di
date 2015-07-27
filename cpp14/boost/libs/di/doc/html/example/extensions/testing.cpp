@@ -12,6 +12,7 @@
 #include <map>
 #include <stdexcept>
 #include <typeindex>
+#include <functional>
 
 //->
 #include <boost/di.hpp>
@@ -89,10 +90,8 @@ class mocks_provider : public di::config {
           , class TInitialization
           , class TMemory
           , class... TArgs
-          , std::enable_if_t<is_resolvable<I>{} || !std::is_polymorphic<T>{}, int> = 0
-        > auto get(const TInitialization&
-                 , const TMemory&
-                 , TArgs&&... args) const {
+        > std::enable_if_t<is_resolvable<I>::value || !std::is_polymorphic<T>::value, T*>
+        get(const TInitialization&, const TMemory&, TArgs&&... args) const {
             return new T{std::forward<TArgs>(args)...};
         }
 
@@ -102,10 +101,8 @@ class mocks_provider : public di::config {
           , class TInitialization
           , class TMemory
           , class... TArgs
-          , std::enable_if_t<!is_resolvable<I>{} && std::is_polymorphic<T>{}, int> = 0
-        > auto get(const TInitialization&
-                 , const TMemory&
-                 , TArgs&&...) const {
+        > std::enable_if_t<!is_resolvable<I>::value && std::is_polymorphic<T>::value, T*>
+        get(const TInitialization&, const TMemory&, TArgs&&...) const {
             return reinterpret_cast<T*>(new mock<T>{expectations_});
         }
 
@@ -120,19 +117,19 @@ class mocks_provider : public di::config {
 public:
     template<class TInjector>
     static auto provider(const TInjector&) noexcept {
-        return mock_provider<TInjector>{expectations()};
+        return mock_provider<TInjector>{get_expectations()};
     }
 
-    static ::expectations& expectations() {
-        static ::expectations expectations_;
+    static expectations& get_expectations() {
+        static expectations expectations_;
         return expectations_;
     }
 };
 
 template<class TInjector, class R, class T, class... TArgs>
 expectations& expect(TInjector&, R(T::*)(TArgs...)) {
-    TInjector::config::expectations().add(std::type_index(typeid(T)), []{ throw not_implemented{}; return nullptr; });
-    return TInjector::config::expectations();
+    TInjector::config::get_expectations().add(std::type_index(typeid(T)), []{ throw not_implemented{}; return nullptr; });
+    return TInjector::config::get_expectations();
 }
 
 struct test {
