@@ -6,6 +6,9 @@
 //
 #include "boost/di.hpp"
 #include <functional>
+#if __has_include(<boost/function.hpp>)
+    #include <boost/function.hpp>
+#endif
 
 namespace di = boost::di;
 
@@ -342,6 +345,24 @@ test refs_vs_copy = [] {
     expect_eq(&i, &object.ii);
     }
 };
+
+#if __has_include(<boost/function.hpp>)
+    test create_with_boost_function = [] {
+        struct c {
+            BOOST_DI_INJECT(c, const boost::function<int()>& f1, boost::function<double(double)> f2) {
+                expect_eq(42, f1());
+                expect_eq(87.0, f2(87.0));
+            }
+        };
+
+        auto injector = di::make_injector(
+            di::bind<boost::function<int()>>.to([]{return 42;})
+          , di::bind<boost::function<double(double)>>.to([](double d){return d;})
+        );
+
+        injector.create<c>();
+    };
+#endif
 
 test create_with_default_values = [] {
     constexpr auto i = 42;
