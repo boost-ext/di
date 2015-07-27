@@ -367,11 +367,13 @@ public:
     #define BOOST_DI_ATTR_ERROR(...) [[deprecated(__VA_ARGS__)]]
     #define BOOST_DI_LIKELY(...) __builtin_expect((__VA_ARGS__), 1)
     #define BOOST_DI_UNLIKELY(...) __builtin_expect((__VA_ARGS__), 0)
+    #define BOOST_DI_TYPE_WKND(T)
 #elif defined(BOOST_DI_GCC)
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_ATTR_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
     #define BOOST_DI_LIKELY(...) __builtin_expect((__VA_ARGS__), 1)
     #define BOOST_DI_UNLIKELY(...) __builtin_expect((__VA_ARGS__), 0)
+    #define BOOST_DI_TYPE_WKND(T)
 #elif defined(BOOST_DI_MSVC)
     #pragma warning(disable : 4503) // decorated name length exceeded, name was truncated
     #pragma warning(disable : 4822) // local class member function does not have a body
@@ -379,6 +381,7 @@ public:
     #define BOOST_DI_ATTR_ERROR(...) __declspec(deprecated(__VA_ARGS__))
     #define BOOST_DI_LIKELY(...) __VA_ARGS__
     #define BOOST_DI_UNLIKELY(...) __VA_ARGS__
+    #define BOOST_DI_TYPE_WKND(T) (T&&)
 #endif
 
 #endif
@@ -1722,8 +1725,10 @@ using callable = typename is_callable<Ts...>::type;
 #ifndef BOOST_DI_CONCEPTS_CREATABLE_HPP
 #define BOOST_DI_CONCEPTS_CREATABLE_HPP
 
-#define BOOST_DI_CONCEPTS_CREATABLE_ATTR \
-    BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
+#if !defined(BOOST_DI_CONCEPTS_CREATABLE_ATTR)
+    #define BOOST_DI_CONCEPTS_CREATABLE_ATTR \
+        BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
+#endif
 
 namespace boost { namespace di { inline namespace v1 {
 
@@ -2734,23 +2739,11 @@ struct wrapper {
     using element_type = T;
 
     inline operator T() const noexcept {
-        return
-            #if defined(BOOST_DI_MSVC)
-                static_cast<T&&>(wrapper_)
-            #else
-                wrapper_
-            #endif
-        ;
+        return BOOST_DI_TYPE_WKND(T)wrapper_;
     }
 
     inline operator T() noexcept {
-        return
-            #if defined(BOOST_DI_MSVC)
-                static_cast<T&&>(wrapper_)
-            #else
-                wrapper_
-            #endif
-        ;
+        return BOOST_DI_TYPE_WKND(T)wrapper_;
     }
 
     TWrapper wrapper_;
@@ -2917,13 +2910,13 @@ public:
 
     template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>::value)>
     T create() const {
-        return create_successful_impl<is_root_t>(aux::type<T>{});
+        return BOOST_DI_TYPE_WKND(T)create_successful_impl<is_root_t>(aux::type<T>{});
     }
 
     template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, is_root_t>::value)>
     BOOST_DI_CONCEPTS_CREATABLE_ATTR
     T create() const {
-        return create_impl<is_root_t>(aux::type<T>{});
+        return BOOST_DI_TYPE_WKND(T)create_impl<is_root_t>(aux::type<T>{});
     }
 
     template<class T, BOOST_DI_REQUIRES(!has_deps<T>::value)>
@@ -3104,13 +3097,13 @@ public:
 
     template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>::value)>
     T create() const {
-        return create_successful_impl<is_root_t>(aux::type<T>{});
+        return BOOST_DI_TYPE_WKND(T)create_successful_impl<is_root_t>(aux::type<T>{});
     }
 
     template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, is_root_t>::value)>
     BOOST_DI_CONCEPTS_CREATABLE_ATTR
     T create() const {
-        return create_impl<is_root_t>(aux::type<T>{});
+        return BOOST_DI_TYPE_WKND(T)create_impl<is_root_t>(aux::type<T>{});
     }
 
     template<class T, BOOST_DI_REQUIRES(!has_deps<T>::value)>
