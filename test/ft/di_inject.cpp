@@ -138,18 +138,20 @@ test automatic_inject_with_initializer_list = [] {
 test ctor_refs = [] {
     struct c {
         BOOST_DI_INJECT(c
-                      , const std::shared_ptr<i1>& sp , int& i
+                      , const std::shared_ptr<i1>& sp
+                      , int& i
                       , const double& d
                       , const std::string& str
                       , (named = name) const std::string& nstr
                       , const std::function<int()>& f
                       , long&& l
                       , short s)
-            : i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)
+            : sp(sp), i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)
         {
-            sp->dummy1();
+            expect_eq("named str", nstr);
         }
 
+        std::shared_ptr<i1> sp;
         int& i;
         const double& d;
         std::string str;
@@ -160,29 +162,24 @@ test ctor_refs = [] {
     };
 
     struct c_inject {
-        BOOST_DI_INJECT(c_inject
-                      , const std::shared_ptr<i1>& sp
-                      , int& i
-                      , const double& d
-                      , const std::string& str
-                      , (named = name) const std::string& nstr
-                      , std::function<int()> f
-                      , long&& l
-                      , short s)
-            : i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)
-        {
-            sp->dummy1();
-        }
+        c_inject(const std::shared_ptr<i1>& sp
+                , int& i
+                , const double& d
+                , const std::string& str
+                , std::function<int()> f
+                , long&& l
+                , short s)
+            : sp(sp), i(i), d(d), str(str), f(f), l(std::move(l)), s(s)
+        { }
 
+        std::shared_ptr<i1> sp;
         int& i;
         const double& d;
         std::string str;
-        std::string nstr;
         std::function<int()> f;
         long l = 0;
         short s = 0;
     };
-
 
     struct c_aggregate {
         const std::shared_ptr<i1>& sp;
@@ -194,6 +191,7 @@ test ctor_refs = [] {
         long l = 0;
         short s = 0;
     };
+
     auto test = [](auto type, const auto& bind_i1) {
         auto i = 0;
         constexpr auto d = 0.0;
@@ -210,6 +208,7 @@ test ctor_refs = [] {
         );
 
         auto object = injector.template create<typename decltype(type)::type>();
+        expect(dynamic_cast<impl1*>(object.sp.get()));
         expect_eq(&i, &object.i);
         expect_eq(&d, &object.d);
         expect_eq("str", object.str);
