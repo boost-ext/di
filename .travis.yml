@@ -147,14 +147,13 @@ script:
   "https://${GH_TOKEN}@github.com/krzysztof-jusiak/di"); fi
 
 after_success:
-- if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${VARIANT}" == "coverage" ]; then (pip
-  install requests[security] cpp-coveralls && coveralls -r . -b test/ --gcov /usr/bin/${GCOV}
-  --repo-token c3V44Hj0ZTKzz4kaa3gIlVjInFiyNRZ4f); fi
+- if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${VARIANT}" == "coverage" ]; then (
+  coveralls -r . -b test/ --gcov /usr/bin/${GCOV} --repo-token c3V44Hj0ZTKzz4kaa3gIlVjInFiyNRZ4f); fi
 - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${BIICODE}" != "" ]; then (mkdir biicode && cd biicode
   && travis_wait travis_retry wget https://s3.amazonaws.com/biibinaries/release/3.3/bii-ubuntu-64_3_3.deb
-  && dpkg -x bii-ubuntu-64_3_3.deb . && export PATH=`$PWD/opt/biicode`:$PATH && bii init di
+  && dpkg -x bii-ubuntu-64_3_3.deb . && export PATH=$PWD/opt/biicode:$PATH && bii init di
   && cd di && bii new krzysztofjusiak/di && cd blocks/krzysztofjusiak/di
-  && git clone https://github.com/krzysztof-jusiak/di.git . 
+  && git clone https://github.com/krzysztof-jusiak/di.git .
   && bii user krzysztofjusiak -p ${BIICODE_PASS} && bii publish); fi
 
 notifications:
@@ -164,13 +163,4 @@ notifications:
   on_success: change
   on_failure: always
   on_start: false
-
-deploy:
-  provider: biicode
-  user: krzysztofjusiak
-  password:
-    secure: KsevDYugDKdSNvjW5FSTMrNh+dNXl2scbRB4jauIPczY/V4lWZPejQ2mV/QTl1JLcAbaK4jbS7H/yI+9d5djBxLdBlPqpIhLRJM4eEly8qkdq+pL5PoicvUZz0y4VbKGP+Gb//C5+lKukYfUr66XfhBzRUpoGXE+CSkwuLNiD2w=
-  on:
-    repo: krzysztof-jusiak/di
-    branch: cpp14
 
