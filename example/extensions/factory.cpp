@@ -27,7 +27,7 @@ public:
     template<class TInjector>
     auto operator()(const TInjector& injector) const {
         return [&](auto&&... args) {
-            using ctor = typename di::type_traits::ctor_traits<T>::type;
+            using ctor = typename di::type_traits::ctor_traits__<T>::type;
             return this->create(injector, ctor{}, std::forward<decltype(args)>(args)...);
         };
     }
@@ -51,7 +51,7 @@ private:
 
     template<std::size_t N, class TInjector, class TArg, class... TArgs>
     decltype(auto) create_impl(const TInjector&, const di::aux::type<di::detail::named_type<di::no_name, TArg>>&, TArgs&&... args) const {
-        constexpr auto value = get_assisted_ctor_nr(N, typename di::type_traits::ctor_traits<T>::type{});
+        constexpr auto value = get_assisted_ctor_nr(N, typename di::type_traits::ctor_traits__<T>::type{});
         return get<TArg>(std::integral_constant<std::size_t, value>{}, args...);
     }
 
@@ -62,10 +62,7 @@ private:
 
     template<class... Args>
     static constexpr auto sum(std::size_t index, std::size_t N, bool I, Args... V) {
-        if (index < N) {
-            return static_cast<int>(I) + sum(index + 1, N, V...);
-        }
-        return static_cast<int>(I);
+        return index < N ?  static_cast<int>(I) + sum(index + 1, N, V...) : static_cast<int>(I);
     }
 
     static constexpr auto sum(std::size_t, std::size_t) {
@@ -99,7 +96,7 @@ private:
 };
 
 template<class T>
-factory_impl<T> factory{};
+struct factory : factory_impl<T> { };
 
 //->
 
@@ -125,7 +122,7 @@ int main() {
         di::bind<int>().to(87)
       , di::bind<interface, implementation>()
         /*<<bind `example_factory` to factory creating `example`>>*/
-      , di::bind<example_factory>().to(factory<example>)
+      , di::bind<example_factory>().to(factory<example>())
     );
 
     auto f = injector.create<example_factory>();

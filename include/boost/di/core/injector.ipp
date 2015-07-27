@@ -61,13 +61,13 @@ public:
 
     template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>::value)>
     T create() const {
-        return create_successful_impl<is_root_t>(aux::type<T>{});
+        return BOOST_DI_TYPE_WKND(T)create_successful_impl<is_root_t>(aux::type<T>{});
     }
 
     template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, is_root_t>::value)>
     BOOST_DI_CONCEPTS_CREATABLE_ATTR
     T create() const {
-        return create_impl<is_root_t>(aux::type<T>{});
+        return BOOST_DI_TYPE_WKND(T)create_impl<is_root_t>(aux::type<T>{});
     }
 
     template<class T, BOOST_DI_REQUIRES(!has_deps<T>::value)>
