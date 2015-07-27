@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include "boost/di.hpp"
+#include <functional>
 
 namespace di = boost::di;
 
@@ -13,6 +14,14 @@ auto other_name = []{};
 
 struct i1 { virtual ~i1() noexcept = default; virtual void dummy1() = 0; };
 struct impl1 : i1 { void dummy1() override { } };
+
+template<class T>
+struct function : std::function<T> {
+    template<class U, BOOST_DI_REQUIRES(has_call_operator<U>::value)>
+    function(const U& f)
+        : std::function<T>(f)
+    { }
+};
 
 test inject_ctor_limit_size = [] {
     struct c {
@@ -143,7 +152,7 @@ test ctor_refs = [] {
                       , const double& d
                       , const std::string& str
                       , (named = name) const std::string& nstr
-                      , const std::function<int()>& f
+                      , std::function<int()> f
                       , long&& l
                       , short s)
             : sp(sp), i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)
@@ -163,12 +172,16 @@ test ctor_refs = [] {
 
     struct c_inject {
         c_inject(const std::shared_ptr<i1>& sp
-                , int& i
-                , const double& d
-                , const std::string& str
-                , std::function<int()> f
-                , long&& l
-                , short s)
+               , int& i
+               , const double& d
+               , const std::string& str
+#if defined(BOOST_DI_MSVC)
+               , function<int()> f
+#else
+               , std::function<int()> f
+#endif
+               , long&& l
+               , short s)
             : sp(sp), i(i), d(d), str(str), f(f), l(std::move(l)), s(s)
         { }
 
@@ -205,6 +218,7 @@ test ctor_refs = [] {
           , di::bind<short>().to(short{42})
           , di::bind<long>().to(123l)
           , di::bind<std::function<int()>>().to([]{return 87;})
+          , di::bind<function<int()>>().to([]{return 87;})
         );
 
         auto object = injector.template create<typename decltype(type)::type>();

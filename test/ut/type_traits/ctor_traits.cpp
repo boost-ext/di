@@ -7,6 +7,7 @@
 #include <type_traits>
 #include <initializer_list>
 #include <string>
+#include <functional>
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/core/any_type.hpp"
 
@@ -83,6 +84,10 @@ test ctors = [] {
         conv_explicit(int, ctor_conv_explicit) { }
     };
 
+    struct func {
+        func(const std::function<int()>&) { }
+    };
+
     static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<empty>::type>{});
     static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<traits>::type>{});
     static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<empty>::type>{});
@@ -99,6 +104,7 @@ test ctors = [] {
     static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<ctor_conv>>>, ctor_traits__<ctor_conv>::type>{});
     static_expect(std::is_same<aux::pair<uniform, aux::type_list<>>, ctor_traits__<conv>::type>{});
     static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<conv_explicit>, core::any_type_fwd<conv_explicit>>>, ctor_traits__<conv_explicit>::type>{});
+    static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<func>>>, ctor_traits__<func>::type>{});
 };
 
 test uniforms = [] {
