@@ -9,7 +9,7 @@ sudo: false
 env:
   global:
   - secure: "A27gNApbElRr3fqZXifVPKkB+xbxMYDFINGk2RDqul1X1Zg51M7e+ohHO9BwhEYiOGmCnFfbsVUP11XyFIH6kzWmxw9mhy8YDglbYfeyu6grxtU3mHElz8W7wO5OCPFPWXQf23sVYE8AWyjj6M+t3oyLJhPXCcYI7uMHEQm10CQ="
-  - secure: "e/jsV4SY0u02AwlUbQk9+O1v7xc94BOupShehiX4eiriuBKRmB4QXnxHgCX6SrZRdGuLljWH01sem9zrzzurRVmYH0d2k5JETjedt9i/oPfBKfzHmopS1tfOe8GPuuG7+hC6AD6fcvGogMuDbi9c3HABm/PeOtjaScPHEGY8U0k="
+  - secure: "ZuVetJkuR2omX0SKv01h8SCe35kpOBYR1WzS3tlhuqk8DMDcKzgRrJmGXhJYD1/K7fl+Ss5Q/NK/uCeZhsutduCfzq0X0BKj6w4yvGYtY6urG7f3XUfWmA0WHvkjMBaYaI+PzALLfzg3YLDgpxPQHJPnN3cg/uNCdFdg+0M2GeM="
   - VALGRIND=--memcheck="valgrind --leak-check=full --error-exitcode=1"
 
 matrix:
@@ -155,7 +155,7 @@ after_success:
   && dpkg -x bii-ubuntu-64_3_3.deb . && export PATH=$PWD/opt/biicode:$PATH && bii init di
   && cd di && bii new krzysztofjusiak/di && cd blocks/krzysztofjusiak/di
   && git clone https://github.com/krzysztof-jusiak/di.git .
-  && bii user krzysztofjusiak -p ${BIICODE_PASS} && bii publish); fi
+  && bii user "krzysztofjusiak" -p "${BIICODE_PASS}" && bii publish); fi
 
 notifications:
   webhooks:
