@@ -1,8 +1,8 @@
 Boost.DI: C++ Dependency Injection
 ===============================================
 [![Boost Libraries](https://raw.githubusercontent.com/krzysztof-jusiak/di/gh-pages/boost/boost.png)](http://www.boost.org)
-<a href="https://travis-ci.org/krzysztof-jusiak/di" target="_blank">![Build Status](https://img.shields.io/travis/krzysztof-jusiak/di/cpp14.svg)</a>
-<a href="https://ci.appveyor.com/project/krzysztof-jusiak/di" target="_blank">![Build Status](https://ci.appveyor.com/api/projects/status/1il4knxh7tq9o5ic/branch/cpp14?svg=true)</a>
+<a href="https://travis-ci.org/krzysztof-jusiak/di" target="_blank">![Build Status](https://img.shields.io/travis/krzysztof-jusiak/di/cpp14.svg?label=linux/osx)</a>
+<a href="https://ci.appveyor.com/project/krzysztof-jusiak/di" target="_blank">![Build Status](https://img.shields.io/appveyor/ci/krzysztof-jusiak/di/cpp14.svg?label=windows)</a>
 <a href="https://coveralls.io/r/krzysztof-jusiak/di?branch=cpp14" target="_blank">![Coveralls](http://img.shields.io/coveralls/krzysztof-jusiak/di/cpp14.svg)</a>
 <a href="http://github.com/krzysztof-jusiak/di/issues" target="_blank">![Github Issues](https://img.shields.io/github/issues/krzysztof-jusiak/di.svg)</a>
 
