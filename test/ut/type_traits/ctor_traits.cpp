@@ -21,6 +21,16 @@ struct ctor_traits<traits> {
 
 namespace type_traits {
 
+struct ctor_conv {
+    template<class T>
+    ctor_conv(T&&);
+};
+
+struct ctor_conv_explicit {
+    template<class T>
+    explicit ctor_conv_explicit(T&&);
+};
+
 test ctors = [] {
     struct empty {
         BOOST_DI_INJECT_TRAITS();
@@ -77,6 +87,8 @@ test ctors = [] {
     static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<rvalue>>>, ctor_traits__<rvalue>::type>{});
     static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<e>::type>{});
     static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<ec>::type>{});
+    static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<ctor_conv>>>, ctor_traits__<ctor_conv>::type>{});
+    static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<ctor_conv>>>, ctor_traits__<ctor_conv>::type>{});
 };
 
 test uniforms = [] {
