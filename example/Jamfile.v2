@@ -69,7 +69,7 @@ test-suite extensions :
     [ run-example c++1y : extensions/multi_bindings.cpp ]
     #[ run-example c++1y : extensions/contextual_bindings.cpp ]
     #[ run-example c++1y : extensions/factory.cpp ]
-    #[ run-example c++1y : extensions/testing.cpp ]
+    [ run-example c++1y : extensions/testing.cpp ]
     [ run-example c++1y : extensions/types_dumper.cpp ]
     [ run-example c++1y : extensions/uml_dumper.cpp ]
     [ run-example c++1y : extensions/xml_injection.cpp ]
