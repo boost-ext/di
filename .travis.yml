@@ -12,14 +12,12 @@ env:
   - secure: "S1svDigJfTlkxkkp14OOiWje6nT1j06k3cAAvbnI6lNGbf1VxQlJ/Q5SAxEV8ITYvDnJGy/yaoT/tipa5pgFVJ2qpAx/zo8oWGfDAyBSk8LWzuocU5rShvq3eJDJW4199RSdGalXtS1C+7hohJNSy9QP4iODvQA5j90+fbCPdh0="
   - BII_USER=krzysztofjusiak
   - VALGRIND=--memcheck="valgrind --leak-check=full --error-exitcode=1"
-  - STD_LIB_CPP=cxxflags="-stdlib=libc++ -I${TRAVIS_BUILD_DIR}/libcxx/build/include/c++/v1/"
-  - STD_LIB_LD=linkflags="-L${TRAVIS_BUILD_DIR}/libcxx/build/lib/ -lc++"
 
 matrix:
   fast_finish: true
   include:
   - os: linux
-    env: DOCUMENTATION=1
+    env: DOCUMENTATION=ON
     addons:
       apt:
         packages:
@@ -64,7 +62,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.6
   - os: linux
-    env: TOOLSET=clang-3.6 MEMCHECK=${VALGRIND} BENCHMARK=quick STD_LIB=${STD_LIB_CPP} STD_LD=${STD_LIB_LD} CXX_=clang++-3.6 CC_=clang-3.6
+    env: TOOLSET=clang-3.6 MEMCHECK=${VALGRIND} LIBCXX=clang++-3.6
     addons:
       apt:
         packages:
@@ -101,7 +99,7 @@ matrix:
         #- ubuntu-toolchain-r-test
         #- llvm-toolchain-precise
   - os: linux
-    env: TOOLSET=gcc-5 GCOV=gcov-5 VARIANT=coverage MEMCHECK=${VALGRIND} BIICODE=1
+    env: TOOLSET=gcc-5 GCOV=gcov-5 VARIANT=coverage MEMCHECK=${VALGRIND} BIICODE=ON
     addons:
       apt:
         packages:
@@ -144,16 +142,19 @@ before_script:
 - (cd build && ./bootstrap.sh)
 
 install:
-- if [ "${STD_LIB}" != "" ]; then (export CXX=${CXX_} && export CC=${CC_} && svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx &&
+- if [ "${LIBCXX}" != "" ]; then (export CXX=${LIBCXX} &&
+  svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx &&
   mkdir libcxx/build && cd libcxx/build && cmake .. -DLIBCXX_CXX_ABI=libstdc++
-  -DLIBCXX_CXX_ABI_INCLUDE_PATHS="/usr/include/c++/4.6;/usr/include/c++/4.6/x86_64-linux-gnu" &&
-  make cxx -j2); fi
+  -DLIBCXX_CXX_ABI_INCLUDE_PATHS="/usr/include/c++/4.6;/usr/include/c++/4.6/x86_64-linux-gnu" && make cxx -j2) &&
+  export CXXFLAGS="-stdlib=libc++ -I${TRAVIS_BUILD_DIR}/libcxx/build/include/c++/v1/"
+  export LDFLAGS="-L${TRAVIS_BUILD_DIR}/libcxx/build/lib/ -lc++" &&
+  export LD_LIBRARY_PATH=${TRAVIS_BUILD_DIR}/libcxx/build/lib/; fi
 
 script:
-- if [ "${TOOLSET}" != "" ]; then (export LD_LIBRARY_PATH=${TRAVIS_BUILD_DIR}/libcxx/build/lib/ && cd test && ../build/b2 -sBOOST_ROOT=../build -j2
-  -q --toolset=${TOOLSET} debug-symbols=off ${VARIANT} ${MEMCHECK} cxxflags="-stdlib=libc++ -I${TRAVIS_BUILD_DIR}/libcxx/build/include/c++/v1/" linkflags="-L${TRAVIS_BUILD_DIR}/libcxx/build/lib/ -lc++"); fi
+- if [ "${TOOLSET}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2
+  -q --toolset=${TOOLSET} debug-symbols=off ${VARIANT} ${MEMCHECK} cxxflags=${CXX_FLAGS} linkflags=${LD_FLAGS}); fi
 - if [ "${TOOLSET}" != "" ]; then (cd example && ../build/b2 -sBOOST_ROOT=../build
-  -j2 -q --toolset=${TOOLSET} debug-symbols=off ${MEMCHECK} ${STD_LIB} ${STD_LD}); fi
+  -j2 -q --toolset=${TOOLSET} debug-symbols=off ${MEMCHECK} cxxflags=${CXX_FLAGS} linkflags=${LD_FLAGS}); fi
 - if [ "${CMAKE_COMPILER}" != "" ]; then (cd build && CXX=${CMAKE_COMPILER} cmake
   .. && cmake --build . && ctest --output-on-failure); fi
 - if [ "${TOOLSET}" != "" ] && [ "${BENCHMARK}" != "" ]; then (cd test/pt && CXX=${TOOLSET}
@@ -164,7 +165,7 @@ script:
   && cd libs/di/doc && ../build/b2 -sBOOST_ROOT=../build && git clone https://github.com/krzysztof-jusiak/di.git
   && cd di && git checkout -b gh-pages --track origin/gh-pages && git reset --hard
   && rm -rf cpp14/boost/libs/di/doc/html && cp -r ../html cpp14/boost/libs/di/doc
-  && git add -A . && git commit -am "doc regeneration" && git push --force --quiet
+  && git add -A . && git commit -am "update" && git push --force --quiet
   "https://${GH_TOKEN}@github.com/krzysztof-jusiak/di"); fi
 
 after_success:
