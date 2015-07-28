@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="../index.html" title="Boost.DI / C++14 Dependency Injection Library / 1.0.0">
 <link rel="up" href="../index.html" title="Boost.DI / C++14 Dependency Injection Library / 1.0.0">
-<link rel="prev" href="try_it_online.html" title="Try it online!">
+<link rel="prev" href="cheatsheet.html" title="Cheatsheet">
 <link rel="next" href="user_guide.html" title="User Guide">
 </head>
 
@@ -106,6 +106,7 @@ function toggleNextRow() {
 <dt><span class="section"><a href= "../di/overview/rationale.html" >Rationale</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href= "../di/tutorial.html" >Tutorial</a></span></dt>
+<dt><span class="section"><a href= "../di/cheatsheet.html" >Cheatsheet</a></span></dt>
 <dt><span class="section"><a href= "../di/try_it_online.html" >Try it online!</a></span></dt>
 <dt><b><u> <span class="section"><a href= "../di/quick_user_guide.html" >Quick User Guide</a></span> </u></b></dt>
 <dt><span class="section"><a href= "../di/user_guide.html" >User Guide</a></span></dt>
@@ -311,7 +312,7 @@ function toggleNextRow() {
 <tbody><tr>
 <td>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <a class="link" href="user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a><span class="special">(</span>
-    <a class="link" href="user_guide/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><a class="link" href="user_guide/bindings/bind.html" title="bind">bind</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">i2</span><span class="special">&gt;,</span> <span class="identifier">impl</span><span class="special">&gt;</span>
+    <a class="link" href="user_guide/bindings/bind.html" title="bind">di::bind</a><span class="special">&lt;</span><a class="link" href="user_guide/bindings/bind.html" title="bind">di::any_of</a><span class="special">&lt;</span><span class="identifier">i1</span><span class="special">,</span> <span class="identifier">i2</span><span class="special">&gt;,</span> <span class="identifier">impl</span><span class="special">&gt;</span>
 <span class="special">);</span>
 </pre>
             </td>
