@@ -75,7 +75,7 @@ matrix:
         #sources:
         #- ubuntu-toolchain-r-test
         #- llvm-toolchain-precise-3.6
-#  - os: linux
+  #- os: linux
     #env: TOOLSET=clang-3.7 MEMCHECK=${VALGRIND} BENCHMARK=quick
     #addons:
       #apt:
@@ -100,7 +100,7 @@ matrix:
         #sources:
         #- ubuntu-toolchain-r-test
         #- llvm-toolchain-precise
- - os: linux
+  - os: linux
     env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} BENCHMARK=quick
     addons:
       apt:
@@ -124,7 +124,7 @@ matrix:
         - bc
         sources:
         - ubuntu-toolchain-r-test
-        - llvm-toolchain-precise#
+        - llvm-toolchain-precise
   - os: linux
     env: TOOLSET=gcc-5 GCOV=gcov-5 VARIANT=coverage MEMCHECK=${VALGRIND} BIICODE=1
     addons:
