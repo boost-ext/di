@@ -144,8 +144,8 @@ before_script:
 
 install:
 - if [ "${STD_LIB}" != "" ]; then (svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx &&
-  mkdir libcxx/build && (cd libcxx/build && cmake .. -DLIBCXX_CXX_ABI=libstdc++
-  -DLIBCXX_CXX_ABI_INCLUDE_PATHS="/usr/include/c++/4.6;/usr/include/c++/4.6/x86_64-linux-gnu") &&
+  mkdir libcxx/build && cd libcxx/build && cmake .. -DLIBCXX_CXX_ABI=libstdc++
+  -DLIBCXX_CXX_ABI_INCLUDE_PATHS="/usr/include/c++/4.6;/usr/include/c++/4.6/x86_64-linux-gnu" &&
   make -C libcxx/build cxx -j2)
 
 script:
