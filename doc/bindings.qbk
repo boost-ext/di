@@ -133,7 +133,7 @@ Allows to bind interface to implementation and associate value with __dependency
         [
             ```
             auto injector = __di_make_injector__(
-                __di_bind__<__bindings_any_of__<i1, i2>, impl>
+                __di_bind__<__di_any_of__<i1, i2>, impl>
             );
             ```
         ]

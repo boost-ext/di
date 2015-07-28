@@ -27,7 +27,6 @@
 [def __binding_model__                                  [link di.user_guide.bindings.synopsis binding]]
 [def __dependency_model__                               [link di.user_guide.bindings.synopsis dependency]]
 [def __bindings_bind__                                  [link di.user_guide.bindings.bind bind]]
-[def __bindings_any_of__                                [link di.user_guide.bindings.bind bind]]
 
 [def __injections__                                     [link di.user_guide.injections Injections]]
 [def __injections_automatic__                           [link di.user_guide.injections.automatic automatic]]
@@ -99,6 +98,7 @@
 [def __rationale__                                      [link di.rationale Rationale]]
 
 [def __di_bind__                                        [link di.user_guide.bindings.bind di::bind]]
+[def __di_any_of__                                      [link di.user_guide.bindings.bind di::any_of]]
 [def __di_injector__                                    [link di.user_guide.injector di::injector]]
 [def __di_injector_create__                             [link di.user_guide.injector.synopsis create]]
 [def __di_make_injector__                               [link di.user_guide.injector.make_injector di::make_injector]]
@@ -114,6 +114,7 @@
 [include overview.qbk]
 [include tutorial.qbk]
 [include try_it_online.qbk]
+[include cheatsheet.qbk]
 [include quick_user_guide.qbk]
 [include user_guide.qbk]
 [include examples.qbk]

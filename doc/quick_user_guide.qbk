@@ -70,7 +70,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
         [
             ```
             auto injector = __di_make_injector__(
-                __di_bind__<__bindings_any_of__<i1, i2>, impl>
+                __di_bind__<__di_any_of__<i1, i2>, impl>
             );
             ```
         ]
