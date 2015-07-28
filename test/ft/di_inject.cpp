@@ -198,7 +198,7 @@ test ctor_refs = [] {
     };
 
     struct c_aggregate {
-        const std::shared_ptr<i1>& sp;
+        std::shared_ptr<i1> sp;
         int& i;
         const double& d;
         std::string str = {};
@@ -236,15 +236,15 @@ test ctor_refs = [] {
 
     test(test_type<c>{}, di::bind<i1, impl1>());
     test(test_type<c_inject>{}, di::bind<i1, impl1>());
-//#if !defined(BOOST_DI_MSVC)
-    //test(test_type<c_aggregate>{}, di::bind<i1, impl1>());
-//#endif
+#if !defined(BOOST_DI_MSVC)
+    test(test_type<c_aggregate>{}, di::bind<i1, impl1>());
+#endif
 
     test(test_type<c>{}, di::bind<i1>().to(std::make_shared<impl1>()));
     test(test_type<c_inject>{}, di::bind<i1>().to(std::make_shared<impl1>()));
-//#if !defined(BOOST_DI_MSVC)
-    //test(test_type<c_aggregate>{}, di::bind<i1>().to(std::make_shared<impl1>()));
-//#endif
+#if !defined(BOOST_DI_MSVC)
+    test(test_type<c_aggregate>{}, di::bind<i1>().to(std::make_shared<impl1>()));
+#endif
 };
 
 test refs_vs_copy = [] {

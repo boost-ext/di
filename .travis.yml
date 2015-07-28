@@ -36,12 +36,36 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.4
   - os: linux
+    env: TOOLSET=clang-3.4 MEMCHECK=${VALGRIND} LIBCXX=clang++-3.4
+    addons:
+      apt:
+        packages:
+        - clang-3.4
+        - valgrind
+        - gdb
+        - bc
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise-3.4
+  - os: linux
     env: TOOLSET=clang-3.5 MEMCHECK=${VALGRIND} BENCHMARK=quick
     addons:
       apt:
         packages:
         - clang-3.5
         - libstdc++-5-dev
+        - valgrind
+        - gdb
+        - bc
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise-3.5
+  - os: linux
+    env: TOOLSET=clang-3.5 MEMCHECK=${VALGRIND} LIBCXX=clang++-3.5
+    addons:
+      apt:
+        packages:
+        - clang-3.5
         - valgrind
         - gdb
         - bc
@@ -116,6 +140,15 @@ matrix:
         packages:
         - g++-5
         - libstdc++-5-dev
+        - gdb
+        sources:
+        - ubuntu-toolchain-r-test
+  - os: linux
+    env: TOOLSET=gcc-5 MEMCHECK=${VALGRIND} LIBCXX=g++-5
+    addons:
+      apt:
+        packages:
+        - g++-5
         - gdb
         sources:
         - ubuntu-toolchain-r-test
