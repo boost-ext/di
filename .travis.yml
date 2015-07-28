@@ -12,7 +12,8 @@ env:
   - secure: "S1svDigJfTlkxkkp14OOiWje6nT1j06k3cAAvbnI6lNGbf1VxQlJ/Q5SAxEV8ITYvDnJGy/yaoT/tipa5pgFVJ2qpAx/zo8oWGfDAyBSk8LWzuocU5rShvq3eJDJW4199RSdGalXtS1C+7hohJNSy9QP4iODvQA5j90+fbCPdh0="
   - BII_USER=krzysztofjusiak
   - VALGRIND=--memcheck="valgrind --leak-check=full --error-exitcode=1"
-  - STD_LIB_CPP=cxxflags="-stdlib=libc++ -I${TRAVIS_BUILD_DIR}/libcxx/build/include/c++/v1/" linkflags="-L${TRAVIS_BUILD_DIR}/libcxx/build/lib/ -lc++"
+  - STD_LIB_CPP=cxxflags="-stdlib=libc++ -I${TRAVIS_BUILD_DIR}/libcxx/build/include/c++/v1/"
+  - STD_LIB_LD=linkflags="-L${TRAVIS_BUILD_DIR}/libcxx/build/lib/ -lc++"
 
 matrix:
   fast_finish: true
@@ -63,7 +64,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.6
   - os: linux
-    env: TOOLSET=clang-3.6 MEMCHECK=${VALGRIND} BENCHMARK=quick STD_LIB=${STD_LIB_CPP} CXX_=clang++-3.6 CC_=clang-3.6
+    env: TOOLSET=clang-3.6 MEMCHECK=${VALGRIND} BENCHMARK=quick STD_LIB=${STD_LIB_CPP} STD_LD=${STD_LIB_LD} CXX_=clang++-3.6 CC_=clang-3.6
     addons:
       apt:
         packages:
@@ -150,9 +151,9 @@ install:
 
 script:
 - if [ "${TOOLSET}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2
-  -q --toolset=${TOOLSET} debug-symbols=off ${VARIANT} ${MEMCHECK} ${STD_LIB}); fi
+  -q --toolset=${TOOLSET} debug-symbols=off ${VARIANT} ${MEMCHECK} ${STD_LIB} ${STD_LD}); fi
 - if [ "${TOOLSET}" != "" ]; then (cd example && ../build/b2 -sBOOST_ROOT=../build
-  -j2 -q --toolset=${TOOLSET} debug-symbols=off ${MEMCHECK} ${STD_LIB}); fi
+  -j2 -q --toolset=${TOOLSET} debug-symbols=off ${MEMCHECK} ${STD_LIB} ${STD_LD}); fi
 - if [ "${CMAKE_COMPILER}" != "" ]; then (cd build && CXX=${CMAKE_COMPILER} cmake
   .. && cmake --build . && ctest --output-on-failure); fi
 - if [ "${TOOLSET}" != "" ] && [ "${BENCHMARK}" != "" ]; then (cd test/pt && CXX=${TOOLSET}
