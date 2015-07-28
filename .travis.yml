@@ -147,10 +147,10 @@ install:
 - if [ "${STD_LIB}" != "" ]; then (export CXX=${CXX_} && export CC=${CC_} && svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx &&
   mkdir libcxx/build && cd libcxx/build && cmake .. -DLIBCXX_CXX_ABI=libstdc++
   -DLIBCXX_CXX_ABI_INCLUDE_PATHS="/usr/include/c++/4.6;/usr/include/c++/4.6/x86_64-linux-gnu" &&
-  make cxx -j2 && export LD_LIBRARY_PATH=${TRAVIS_BUILD_DIR}/libcxx/build/lib/); fi
+  make cxx -j2); fi
 
 script:
-- if [ "${TOOLSET}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2
+- if [ "${TOOLSET}" != "" ]; then (export LD_LIBRARY_PATH=${TRAVIS_BUILD_DIR}/libcxx/build/lib/ && cd test && ../build/b2 -sBOOST_ROOT=../build -j2
   -q --toolset=${TOOLSET} debug-symbols=off ${VARIANT} ${MEMCHECK} cxxflags="-stdlib=libc++ -I${TRAVIS_BUILD_DIR}/libcxx/build/include/c++/v1/" linkflags="-L${TRAVIS_BUILD_DIR}/libcxx/build/lib/ -lc++"); fi
 - if [ "${TOOLSET}" != "" ]; then (cd example && ../build/b2 -sBOOST_ROOT=../build
   -j2 -q --toolset=${TOOLSET} debug-symbols=off ${MEMCHECK} ${STD_LIB} ${STD_LD}); fi
