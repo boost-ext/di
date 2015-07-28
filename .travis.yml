@@ -149,7 +149,7 @@ script:
 
 after_success:
 - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${VARIANT}" == "coverage" ]; then (pip
-  install cpp-coveralls && coveralls -r . -b test/ --gcov /usr/bin/${GCOV}
+  install --user travis requests[security] cpp-coveralls && coveralls -r . -b test/ --gcov /usr/bin/${GCOV}
   --repo-token c3V44Hj0ZTKzz4kaa3gIlVjInFiyNRZ4f); fi
 - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${BIICODE}" != "" ]; then (mkdir biicode && cd biicode
   && wget https://s3.amazonaws.com/biibinaries/release/3.3/bii-ubuntu-64_3_3.deb
