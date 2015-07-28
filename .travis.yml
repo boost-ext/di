@@ -12,7 +12,7 @@ env:
   - secure: "S1svDigJfTlkxkkp14OOiWje6nT1j06k3cAAvbnI6lNGbf1VxQlJ/Q5SAxEV8ITYvDnJGy/yaoT/tipa5pgFVJ2qpAx/zo8oWGfDAyBSk8LWzuocU5rShvq3eJDJW4199RSdGalXtS1C+7hohJNSy9QP4iODvQA5j90+fbCPdh0="
   - BII_USER=krzysztofjusiak
   - VALGRIND=--memcheck="valgrind --leak-check=full --error-exitcode=1"
-  - STD_LIB_CPP=cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++"
+  - STD_LIB_CPP=cxxflags="-stdlib=libc++ -I${TRAVIS_BUILD_DIR}/libcxx/build/include/c++/v1/" linkflags="-L${TRAVIS_BUILD_DIR}/libcxx/build/lib/ -lc++"
 
 matrix:
   fast_finish: true
@@ -62,19 +62,18 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.6
-#  - os: linux
-    #env: TOOLSET=clang-3.6 MEMCHECK=${VALGRIND} BENCHMARK=quick STD_LIB=${STD_LIB_CPP}
-    #addons:
-      #apt:
-        #packages:
-        #- clang-3.6
-        #- libc++
-        #- valgrind
-        #- gdb
-        #- bc
-        #sources:
-        #- ubuntu-toolchain-r-test
-        #- llvm-toolchain-precise-3.6
+  - os: linux
+    env: TOOLSET=clang-3.6 MEMCHECK=${VALGRIND} BENCHMARK=quick STD_LIB=${STD_LIB_CPP}
+    addons:
+      apt:
+        packages:
+        - clang-3.6
+        - valgrind
+        - gdb
+        - bc
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise-3.6
   #- os: linux
     #env: TOOLSET=clang-3.7 MEMCHECK=${VALGRIND} BENCHMARK=quick
     #addons:
@@ -142,6 +141,12 @@ before_script:
 - git config --global user.email "travis@ci.net"
 - git config --global push.default simple
 - (cd build && ./bootstrap.sh)
+
+install:
+- if [ "${STD_LIB}" != "" ]; then (svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx &&
+  mkdir libcxx/build && (cd libcxx/build && cmake .. -DLIBCXX_CXX_ABI=libstdc++
+  -DLIBCXX_CXX_ABI_INCLUDE_PATHS="/usr/include/c++/4.6;/usr/include/c++/4.6/x86_64-linux-gnu") &&
+  make -C libcxx/build cxx -j2)
 
 script:
 - if [ "${TOOLSET}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2
