@@ -63,7 +63,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.6
   - os: linux
-    env: TOOLSET=clang-3.6 MEMCHECK=${VALGRIND} BENCHMARK=quick STD_LIB=${STD_LIB_CPP} CXX=clang++-3.6 CC=clang-3.6
+    env: TOOLSET=clang-3.6 MEMCHECK=${VALGRIND} BENCHMARK=quick STD_LIB=${STD_LIB_CPP} CXX_=clang++-3.6 CC_=clang-3.6
     addons:
       apt:
         packages:
@@ -143,7 +143,7 @@ before_script:
 - (cd build && ./bootstrap.sh)
 
 install:
-- if [ "${STD_LIB}" != "" ]; then (svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx &&
+- if [ "${STD_LIB}" != "" ]; then (export CXX=${CXX_} && export CC=${CC_} && svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx &&
   mkdir libcxx/build && cd libcxx/build && cmake .. -DLIBCXX_CXX_ABI=libstdc++
   -DLIBCXX_CXX_ABI_INCLUDE_PATHS="/usr/include/c++/4.6;/usr/include/c++/4.6/x86_64-linux-gnu" &&
   make -C libcxx/build cxx -j2); fi
