@@ -148,13 +148,13 @@ install:
   -DLIBCXX_CXX_ABI_INCLUDE_PATHS="/usr/include/c++/4.6;/usr/include/c++/4.6/x86_64-linux-gnu" && make cxx -j2) &&
   export CXXFLAGS="-stdlib=libc++ -I${TRAVIS_BUILD_DIR}/libcxx/build/include/c++/v1/"
   export LDFLAGS="-L${TRAVIS_BUILD_DIR}/libcxx/build/lib/ -lc++" &&
-  export LD_LIBRARY_PATH=${TRAVIS_BUILD_DIR}/libcxx/build/lib/; fi
+  export LD_LIBRARY_PATH="${TRAVIS_BUILD_DIR}/libcxx/build/lib/:$LD_LIBRARY_PATH"; fi
 
 script:
 - if [ "${TOOLSET}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2
-  -q --toolset=${TOOLSET} debug-symbols=off ${VARIANT} ${MEMCHECK} cxxflags=${CXX_FLAGS} linkflags=${LD_FLAGS}); fi
+  -q --toolset=${TOOLSET} debug-symbols=off ${VARIANT} ${MEMCHECK} cxxflags="$CXXFLAGS" linkflags="$LDFLAGS"); fi
 - if [ "${TOOLSET}" != "" ]; then (cd example && ../build/b2 -sBOOST_ROOT=../build
-  -j2 -q --toolset=${TOOLSET} debug-symbols=off ${MEMCHECK} cxxflags=${CXX_FLAGS} linkflags=${LD_FLAGS}); fi
+  -j2 -q --toolset=${TOOLSET} debug-symbols=off ${MEMCHECK} cxxflags="$CXXFLAGS" linkflags="$LDFLAGS"); fi
 - if [ "${CMAKE_COMPILER}" != "" ]; then (cd build && CXX=${CMAKE_COMPILER} cmake
   .. && cmake --build . && ctest --output-on-failure); fi
 - if [ "${TOOLSET}" != "" ] && [ "${BENCHMARK}" != "" ]; then (cd test/pt && CXX=${TOOLSET}
