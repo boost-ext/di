@@ -12,6 +12,7 @@ env:
   - secure: "S1svDigJfTlkxkkp14OOiWje6nT1j06k3cAAvbnI6lNGbf1VxQlJ/Q5SAxEV8ITYvDnJGy/yaoT/tipa5pgFVJ2qpAx/zo8oWGfDAyBSk8LWzuocU5rShvq3eJDJW4199RSdGalXtS1C+7hohJNSy9QP4iODvQA5j90+fbCPdh0="
   - BII_USER=krzysztofjusiak
   - VALGRIND=--memcheck="valgrind --leak-check=full --error-exitcode=1"
+  - STD_LIB_CPP=cxxflags="-stdlib=libc++" linkflags="-stdlib=libc++"
 
 matrix:
   fast_finish: true
@@ -55,6 +56,19 @@ matrix:
         packages:
         - clang-3.6
         - libstdc++-5-dev
+        - valgrind
+        - gdb
+        - bc
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise-3.6
+  - os: linux
+    env: TOOLSET=clang-3.6 MEMCHECK=${VALGRIND} BENCHMARK=quick STD_LIB=${STD_LIB_CPP}
+    addons:
+      apt:
+        packages:
+        - clang-3.6
+        - libc++
         - valgrind
         - gdb
         - bc
@@ -131,9 +145,9 @@ before_script:
 
 script:
 - if [ "${TOOLSET}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2
-  -q --toolset=${TOOLSET} debug-symbols=off ${VARIANT} ${MEMCHECK}); fi
+  -q --toolset=${TOOLSET} debug-symbols=off ${VARIANT} ${MEMCHECK} ${STD_LIB}); fi
 - if [ "${TOOLSET}" != "" ]; then (cd example && ../build/b2 -sBOOST_ROOT=../build
-  -j2 -q --toolset=${TOOLSET} debug-symbols=off ${MEMCHECK}); fi
+  -j2 -q --toolset=${TOOLSET} debug-symbols=off ${MEMCHECK} ${STD_LIB}); fi
 - if [ "${CMAKE_COMPILER}" != "" ]; then (cd build && CXX=${CMAKE_COMPILER} cmake
   .. && cmake --build . && ctest --output-on-failure); fi
 - if [ "${TOOLSET}" != "" ] && [ "${BENCHMARK}" != "" ]; then (cd test/pt && CXX=${TOOLSET}
