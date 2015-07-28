@@ -4,6 +4,7 @@ meta/*
 tools/*
 example/*
 test/*
+include/boost/di/*
 Jamroot
 Jamfile.v2
 index.html
