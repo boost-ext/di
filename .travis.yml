@@ -156,7 +156,7 @@ after_success:
   && dpkg -x bii-ubuntu-64_3_3.deb . && export PATH=$PWD/opt/biicode:$PATH && bii init di
   && cd di && bii new krzysztofjusiak/di && cd blocks/krzysztofjusiak/di
   && git clone https://github.com/krzysztof-jusiak/di.git .
-  && bii user "${BII_USER}" -p \"${BII_PASSWORD}\" && bii publish -r); fi
+  && bii user "${BII_USER}" -p \\"${BII_PASSWORD}\\" && bii publish -r); fi
 
 notifications:
   webhooks:
