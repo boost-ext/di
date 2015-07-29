@@ -41,7 +41,7 @@ public:
         { }
 
         template<class, class TProvider>
-        TExpected try_create(const TProvider&);
+        static TExpected try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
@@ -64,7 +64,7 @@ public:
         { }
 
         template<class, class TProvider>
-        wrappers::shared<TGiven&> try_create(const TProvider&);
+        static wrappers::shared<TGiven&> try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
@@ -85,7 +85,7 @@ public:
         { }
 
         template<class, class TProvider>
-        wrappers::shared<TGiven> try_create(const TProvider&);
+        static wrappers::shared<TGiven> try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
@@ -110,7 +110,7 @@ public:
 
         template<class T, class TProvider>
         type_traits::wrapper_traits_t<decltype(std::declval<TGiven>()())>
-        try_create(const TProvider&);
+        static try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
@@ -134,7 +134,7 @@ public:
         { }
 
         template<class T, class TProvider>
-        T try_create(const TProvider&);
+        static T try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider& provider) const noexcept {
@@ -158,7 +158,7 @@ public:
         { }
 
         template<class T, class TProvider>
-        T try_create(const TProvider&);
+        static T try_create(const TProvider&);
 
         template<class T, class TProvider>
         auto create(const TProvider& provider) const noexcept {

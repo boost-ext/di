@@ -16,13 +16,20 @@ template<bool Priority = false>
 struct fake_scope {
     template<class TExpected, class>
     struct scope {
-        explicit scope(const TExpected& = {}) { }
+        explicit scope(const TExpected& value = {})
+            : object(value)
+        { }
 
         template<class T, class TProvider>
         T create(const TProvider&) const noexcept {
             ++calls();
             return T{};
         }
+
+        template<class T, class TProvider>
+        static T try_create(const TProvider&);
+
+        TExpected object;
     };
 
     static int& calls() {

@@ -152,6 +152,11 @@ public:
             return *this;
         }
     #endif
+
+    using creator::try_create;
+
+    template<class>
+    static void try_create(...);
 };
 
 template<class T>

@@ -23,7 +23,7 @@ public:
         template<class T, class TProvider>
         decltype(wrappers::unique<decltype(std::declval<TProvider>().get(type_traits::memory_traits_t<T>{}))>{
             std::declval<TProvider>().get(type_traits::memory_traits_t<T>{})})
-        try_create(const TProvider&) const;
+        static try_create(const TProvider&);
 
         template<class T, class TProvider>
         auto create(const TProvider& provider) const {

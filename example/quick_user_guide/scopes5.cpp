@@ -20,7 +20,7 @@ struct custom_scope {
         using is_referable = std::false_type;
 
         template<class T, class TProvider>
-        auto try_create(const TProvider& provider) -> decltype(std::shared_ptr<TExpected>{provider.get()});
+        static auto try_create(const TProvider& provider) -> decltype(std::shared_ptr<TExpected>{provider.get()});
 
         template<class T, class TProvider>
         auto create(const TProvider& provider) {

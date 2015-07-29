@@ -596,7 +596,7 @@ public:
         template<class T, class TProvider>
         decltype(wrappers::unique<decltype(std::declval<TProvider>().get(type_traits::memory_traits_t<T>{}))>{
             std::declval<TProvider>().get(type_traits::memory_traits_t<T>{})})
-        try_create(const TProvider&) const;
+        static try_create(const TProvider&);
 
         template<class T, class TProvider>
         auto create(const TProvider& provider) const {
@@ -707,10 +707,7 @@ public:
 
         template<class, class TProvider>
         decltype(wrappers::shared<T>{std::shared_ptr<T>{std::declval<TProvider>().get()}})
-        try_create(const TProvider&);
-
-        template<class>
-        void try_create(...);
+        static try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider& provider) {
@@ -836,10 +833,7 @@ public:
         template<class T, class TProvider>
         decltype(typename type_traits::scope_traits_t<T>::template
             scope<TExpected, TGiven>{}.template try_create<T>(std::declval<TProvider>()))
-        try_create(const TProvider& provider);
-
-        template<class>
-        void try_create(...);
+        static try_create(const TProvider&);
 
         template<class T, class TProvider>
         auto create(const TProvider& provider) {
@@ -940,10 +934,7 @@ public:
         }
 
         template<class T, class TProvider>
-        T try_create(const TProvider&);
-
-        template<class T>
-        void try_create(...);
+        static T try_create(const TProvider&);
 
         template<class T, class TProvider>
         auto create(const TProvider&) {
@@ -1016,7 +1007,7 @@ public:
         { }
 
         template<class, class TProvider>
-        TExpected try_create(const TProvider&);
+        static TExpected try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
@@ -1039,7 +1030,7 @@ public:
         { }
 
         template<class, class TProvider>
-        wrappers::shared<TGiven&> try_create(const TProvider&);
+        static wrappers::shared<TGiven&> try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
@@ -1060,7 +1051,7 @@ public:
         { }
 
         template<class, class TProvider>
-        wrappers::shared<TGiven> try_create(const TProvider&);
+        static wrappers::shared<TGiven> try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
@@ -1085,7 +1076,7 @@ public:
 
         template<class T, class TProvider>
         type_traits::wrapper_traits_t<decltype(std::declval<TGiven>()())>
-        try_create(const TProvider&);
+        static try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
@@ -1109,7 +1100,7 @@ public:
         { }
 
         template<class T, class TProvider>
-        T try_create(const TProvider&);
+        static T try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider& provider) const noexcept {
@@ -1133,7 +1124,7 @@ public:
         { }
 
         template<class T, class TProvider>
-        T try_create(const TProvider&);
+        static T try_create(const TProvider&);
 
         template<class T, class TProvider>
         auto create(const TProvider& provider) const noexcept {
@@ -1634,6 +1625,11 @@ public:
             return *this;
         }
     #endif
+
+    using creator::try_create;
+
+    template<class>
+    static void try_create(...);
 };
 
 template<class T>
@@ -2881,7 +2877,7 @@ public:
 
         static constexpr auto value = std::is_convertible<
             decltype(
-                std::declval<TDependency>().template try_create<T>(
+                TDependency::template try_create<T>(
                     try_provider<
                         typename TDependency::given
                       , TCtor
@@ -3068,7 +3064,7 @@ public:
 
         static constexpr auto value = std::is_convertible<
             decltype(
-                std::declval<TDependency>().template try_create<T>(
+                TDependency::template try_create<T>(
                     try_provider<
                         typename TDependency::given
                       , TCtor

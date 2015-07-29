@@ -23,10 +23,7 @@ public:
 
         template<class, class TProvider>
         decltype(wrappers::shared<T>{std::shared_ptr<T>{std::declval<TProvider>().get()}})
-        try_create(const TProvider&);
-
-        template<class>
-        void try_create(...);
+        static try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider& provider) {

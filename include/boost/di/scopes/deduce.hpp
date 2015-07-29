@@ -23,10 +23,7 @@ public:
         template<class T, class TProvider>
         decltype(typename type_traits::scope_traits_t<T>::template
             scope<TExpected, TGiven>{}.template try_create<T>(std::declval<TProvider>()))
-        try_create(const TProvider& provider);
-
-        template<class>
-        void try_create(...);
+        static try_create(const TProvider&);
 
         template<class T, class TProvider>
         auto create(const TProvider& provider) {

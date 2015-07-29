@@ -32,7 +32,7 @@ public:
 
         static constexpr auto value = std::is_convertible<
             decltype(
-                std::declval<TDependency>().template try_create<T>(
+                TDependency::template try_create<T>(
                     try_provider<
                         typename TDependency::given
                       , TCtor

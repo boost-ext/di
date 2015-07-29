@@ -6,6 +6,7 @@
 //
 #include "boost/di/core/dependency.hpp"
 #include "common/fakes/fake_injector.hpp"
+#include "common/fakes/fake_scope.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
@@ -16,23 +17,11 @@ test is_dependency_types = [] {
     expect(is_dependency<dependency<scopes::deduce, double, double>>{});
 };
 
-struct fake_scope {
-    template<class T, class>
-    struct scope {
-        explicit scope(T object, int injector = 0)
-            : object(object), injector(injector)
-        { }
-
-        T object;
-        int injector = 0;
-    };
-};
-
 struct name { };
 
 test types = [] {
-    using dep = dependency<fake_scope, int, double, name>;
-    expect(std::is_same<fake_scope, typename dep::scope>{});
+    using dep = dependency<fake_scope<>, int, double, name>;
+    expect(std::is_same<fake_scope<>, typename dep::scope>{});
     expect(std::is_same<int, typename dep::expected>{});
     expect(std::is_same<double, typename dep::given>{});
     expect(std::is_same<name, typename dep::name>{});
@@ -45,7 +34,7 @@ test def_ctor = [] {
 
 test ctor = [] {
     constexpr auto i = 42;
-    dependency<fake_scope, int> dep{i};
+    dependency<fake_scope<>, int> dep{i};
     expect_eq(i, dep.object);
 };
 
@@ -58,8 +47,8 @@ test named = [] {
 };
 
 test in = [] {
-    using dep1 = dependency<fake_scope, int>;
-    expect(std::is_same<fake_scope, typename dep1::scope>{});
+    using dep1 = dependency<fake_scope<>, int>;
+    expect(std::is_same<fake_scope<>, typename dep1::scope>{});
 
     using dep2 = decltype(dep1{}.in(scopes::deduce{}));
     expect(std::is_same<scopes::deduce, typename dep2::scope>{});
