@@ -66,29 +66,6 @@ namespace aux {
 template<class...>
 using is_valid_expr = std::true_type;
 
-template<class>
-struct is_smart_ptr : std::false_type { };
-
-template<class T, class TDeleter>
-struct is_smart_ptr<std::unique_ptr<T, TDeleter>>
-    : std::true_type
-{ };
-
-template<class T>
-struct is_smart_ptr<std::shared_ptr<T>>
-    : std::true_type
-{ };
-
-template<class T>
-struct is_smart_ptr<boost::shared_ptr<T>>
-    : std::true_type
-{ };
-
-template<class T>
-struct is_smart_ptr<std::weak_ptr<T>>
-    : std::true_type
-{ };
-
 template<class T, class... TArgs>
 decltype(void(T{std::declval<TArgs>()...}), std::true_type{})
 test_is_braces_constructible(int);
@@ -111,25 +88,36 @@ using remove_accessors =
 template<class T>
 using remove_accessors_t = typename remove_accessors<T>::type;
 
-template<class, class = void>
-struct deref_type;
-
-template<typename T>
-using deref_type_t = typename deref_type<T>::type;
-
-template<class T, class>
+template<class T>
 struct deref_type {
     using type = T;
 };
 
-template<class T>
-struct deref_type<T, std::enable_if_t<is_smart_ptr<T>::value>> {
-    using type = typename T::element_type;
+template<class T, class TDeleter>
+struct deref_type<std::unique_ptr<T, TDeleter>> {
+    using type = T;
 };
 
 template<class T>
-using decay =
-    deref_type<remove_accessors_t<deref_type_t<remove_accessors_t<T>>>>;
+struct deref_type<std::shared_ptr<T>> {
+    using type = T;
+};
+
+template<class T>
+struct deref_type<boost::shared_ptr<T>> {
+    using type = T;
+};
+
+template<class T>
+struct deref_type<std::weak_ptr<T>> {
+    using type = T;
+};
+
+template<typename T>
+using deref_type_t = typename deref_type<T>::type;
+
+template<class T>
+using decay = deref_type<remove_accessors_t<deref_type_t<remove_accessors_t<T>>>>;
 
 template<class T>
 using decay_t = typename decay<T>::type;

@@ -20,9 +20,9 @@ test has_type = [] {
     struct a { };
     struct c { using has = void; };
 
-    expect(has_has<c>{});
-    expect(!has_has<void>{});
-    expect(!has_has<a>{});
+    static_expect(has_has<c>{});
+    static_expect(!has_has<void>{});
+    static_expect(!has_has<a>{});
 };
 
 BOOST_DI_HAS_METHOD(call, call);
@@ -33,17 +33,17 @@ test has_method = [] {
     struct call2 { int call(const double&) { return {}; }; };
     struct call3 { int call(int, double = 0.0) const noexcept { return {}; }; };
 
-    expect(!has_call<a, int>{});
-    expect(!has_call<call1>{});
-    expect(has_call<call1, int>{});
-    expect(has_call<call2, double>{});
-    expect(has_call<call2, const double&>{});
-    expect(!has_call<call2, std::string>{});
-    expect(has_call<call2, float>{}); // convertible to double
-    expect(!has_call<call3>{});
-    expect(has_call<call3, int>{});
-    expect(has_call<call3, int, double>{});
-    expect(!has_call<call3, int, double, float>{});
+    static_expect(!has_call<a, int>{});
+    static_expect(!has_call<call1>{});
+    static_expect(has_call<call1, int>{});
+    static_expect(has_call<call2, double>{});
+    static_expect(has_call<call2, const double&>{});
+    static_expect(!has_call<call2, std::string>{});
+    static_expect(has_call<call2, float>{}); // convertible to double
+    static_expect(!has_call<call3>{});
+    static_expect(has_call<call3, int>{});
+    static_expect(has_call<call3, int, double>{});
+    static_expect(!has_call<call3, int, double, float>{});
 };
 
 template<class T>
@@ -51,18 +51,6 @@ struct deleter {
     void operator()(T* ptr) const noexcept {
         delete ptr;
     }
-};
-
-test is_smart_ptr_types = [] {
-    expect(!is_smart_ptr<void>{});
-    expect(!is_smart_ptr<int>{});
-    expect(is_smart_ptr<std::unique_ptr<int>>{});
-    expect(is_smart_ptr<std::unique_ptr<int, deleter<int>>>{});
-    expect(is_smart_ptr<std::shared_ptr<int>>{});
-    expect(is_smart_ptr<std::weak_ptr<int>>{});
-#if __has_include(<boost/shared_ptr.hpp>)
-    expect(is_smart_ptr<boost::shared_ptr<int>>{});
-#endif
 };
 
 test is_braces_constructible_types = [] {
@@ -74,47 +62,58 @@ test is_braces_constructible_types = [] {
     struct agg2 { int& i; double d = {}; };
     struct agg3 { int i; double d; float f; };
 
-    expect(is_braces_constructible<int>{});
-    expect(is_braces_constructible<c>{});
-    expect(is_braces_constructible<ctor, int>{});
-    expect(!is_braces_constructible<ctor>{});
-    expect(is_braces_constructible<ctor_def_value>{});
-    expect(is_braces_constructible<ctor_def_value, int>{});
-    expect(is_braces_constructible<ctor_def>{});
-    expect(!is_braces_constructible<ctor_def, int>{});
-    expect(is_braces_constructible<agg1>{});
+    static_expect(is_braces_constructible<int>{});
+    static_expect(is_braces_constructible<c>{});
+    static_expect(is_braces_constructible<ctor, int>{});
+    static_expect(!is_braces_constructible<ctor>{});
+    static_expect(is_braces_constructible<ctor_def_value>{});
+    static_expect(is_braces_constructible<ctor_def_value, int>{});
+    static_expect(is_braces_constructible<ctor_def>{});
+    static_expect(!is_braces_constructible<ctor_def, int>{});
+    static_expect(is_braces_constructible<agg1>{});
 
-    expect(!is_braces_constructible<agg1, int, double>{});
+    static_expect(!is_braces_constructible<agg1, int, double>{});
 #if !defined(BOOST_DI_MSVC)
-    expect(is_braces_constructible<agg1, int>{});
-    expect(is_braces_constructible<agg2, int&>{});
-    expect(is_braces_constructible<agg2, int&, double>{});
+    static_expect(is_braces_constructible<agg1, int>{});
+    static_expect(is_braces_constructible<agg2, int&>{});
+    static_expect(is_braces_constructible<agg2, int&, double>{});
 #endif
-    expect(is_braces_constructible<agg3, int, double, float>{});
+    static_expect(is_braces_constructible<agg3, int, double, float>{});
 };
 
 test remove_accessors_types = [] {
-    expect(std::is_same<int, remove_accessors_t<int>>{});
-    expect(std::is_same<int, remove_accessors_t<int&>>{});
-    expect(std::is_same<int, remove_accessors_t<int*>>{});
-    expect(std::is_same<int, remove_accessors_t<const int*>>{});
+    static_expect(std::is_same<int, remove_accessors_t<int>>{});
+    static_expect(std::is_same<int, remove_accessors_t<int&>>{});
+    static_expect(std::is_same<int, remove_accessors_t<int*>>{});
+    static_expect(std::is_same<int, remove_accessors_t<const int*>>{});
 };
+
+test deref_types = [] {
+    static_expect(std::is_same<deref_type_t<void>, void>{});
+    static_expect(std::is_same<deref_type_t<int>, int>{});
+    static_expect(std::is_same<deref_type_t<std::unique_ptr<int>>, int>{});
+    static_expect(std::is_same<deref_type_t<std::unique_ptr<int, deleter<int>>>, int>{});
+    static_expect(std::is_same<deref_type_t<std::shared_ptr<int>>, int>{});
+    static_expect(std::is_same<deref_type_t<boost::shared_ptr<int>>, int>{});
+    static_expect(std::is_same<deref_type_t<std::weak_ptr<int>>, int>{});
+};
+
 
 test decay_types = [] {
     auto test = [] (auto type) {
         using T = decltype(type);
-        expect(std::is_same<T, decay_t<T>>{});
-        expect(std::is_same<T, decay_t<T*>>{});
-        expect(std::is_same<T, decay_t<const T*>>{});
-        expect(std::is_same<T, decay_t<const T>>{});
-        expect(std::is_same<T, decay_t<const T&>>{});
-        expect(std::is_same<T, decay_t<T&>>{});
-        expect(std::is_same<T, decay_t<std::shared_ptr<T>>>{});
-        expect(std::is_same<T, decay_t<const std::shared_ptr<T>&>>{});
-        expect(std::is_same<T, decay_t<std::shared_ptr<T>&>>{});
-        expect(std::is_same<T, decay_t<volatile T>>{});
-        expect(std::is_same<T, decay_t<T&&>>{});
-        expect(std::is_same<T, decay_t<const T&&>>{});
+        static_expect(std::is_same<T, decay_t<T>>{});
+        static_expect(std::is_same<T, decay_t<T*>>{});
+        static_expect(std::is_same<T, decay_t<const T*>>{});
+        static_expect(std::is_same<T, decay_t<const T>>{});
+        static_expect(std::is_same<T, decay_t<const T&>>{});
+        static_expect(std::is_same<T, decay_t<T&>>{});
+        static_expect(std::is_same<T, decay_t<std::shared_ptr<T>>>{});
+        static_expect(std::is_same<T, decay_t<const std::shared_ptr<T>&>>{});
+        static_expect(std::is_same<T, decay_t<std::shared_ptr<T>&>>{});
+        static_expect(std::is_same<T, decay_t<volatile T>>{});
+        static_expect(std::is_same<T, decay_t<T&&>>{});
+        static_expect(std::is_same<T, decay_t<const T&&>>{});
     };
 
     struct c { };
@@ -139,41 +138,41 @@ struct c2 {
 };
 
 test function_traits_parameters_type_functions = [] {
-    expect(std::is_same<void, typename function_traits<decltype(&f1)>::result_type>{});
-    expect(std::is_same<type_list<>, typename function_traits<decltype(&f1)>::args>{});
+    static_expect(std::is_same<void, typename function_traits<decltype(&f1)>::result_type>{});
+    static_expect(std::is_same<type_list<>, typename function_traits<decltype(&f1)>::args>{});
 
-    expect(std::is_same<int, typename function_traits<decltype(&f2)>::result_type>{});
-    expect(std::is_same<type_list<int>, typename function_traits<decltype(&f2)>::args>{});
+    static_expect(std::is_same<int, typename function_traits<decltype(&f2)>::result_type>{});
+    static_expect(std::is_same<type_list<int>, typename function_traits<decltype(&f2)>::args>{});
 
-    expect(std::is_same<int, typename function_traits<decltype(&f3)>::result_type>{});
-    expect(std::is_same<type_list<int, const double&>, typename function_traits<decltype(&f3)>::args>{});
+    static_expect(std::is_same<int, typename function_traits<decltype(&f3)>::result_type>{});
+    static_expect(std::is_same<type_list<int, const double&>, typename function_traits<decltype(&f3)>::args>{});
 };
 
 test function_traits_parameters_type_methods = [] {
-    expect(std::is_same<void, typename function_traits<decltype(&c1::f1)>::result_type>{});
-    expect(std::is_same<c1, typename function_traits<decltype(&c1::f1)>::base_type>{});
-    expect(std::is_same<type_list<>, typename function_traits<decltype(&c1::f1)>::args>{});
+    static_expect(std::is_same<void, typename function_traits<decltype(&c1::f1)>::result_type>{});
+    static_expect(std::is_same<c1, typename function_traits<decltype(&c1::f1)>::base_type>{});
+    static_expect(std::is_same<type_list<>, typename function_traits<decltype(&c1::f1)>::args>{});
 
-    expect(std::is_same<int, typename function_traits<decltype(&c1::f2)>::result_type>{});
-    expect(std::is_same<c1, typename function_traits<decltype(&c1::f2)>::base_type>{});
-    expect(std::is_same<type_list<int>, typename function_traits<decltype(&c1::f2)>::args>{});
+    static_expect(std::is_same<int, typename function_traits<decltype(&c1::f2)>::result_type>{});
+    static_expect(std::is_same<c1, typename function_traits<decltype(&c1::f2)>::base_type>{});
+    static_expect(std::is_same<type_list<int>, typename function_traits<decltype(&c1::f2)>::args>{});
 
-    expect(std::is_same<int, typename function_traits<decltype(&c1::f3)>::result_type>{});
-    expect(std::is_same<c1, typename function_traits<decltype(&c1::f3)>::base_type>{});
-    expect(std::is_same<type_list<int, const double&>, typename function_traits<decltype(&c1::f3)>::args>{});
+    static_expect(std::is_same<int, typename function_traits<decltype(&c1::f3)>::result_type>{});
+    static_expect(std::is_same<c1, typename function_traits<decltype(&c1::f3)>::base_type>{});
+    static_expect(std::is_same<type_list<int, const double&>, typename function_traits<decltype(&c1::f3)>::args>{});
 };
 
 test function_traits_parameters_type_const_methods = [] {
-    expect(std::is_same<void, typename function_traits<decltype(&c2::f1)>::result_type>{});
-    expect(std::is_same<type_list<>, typename function_traits<decltype(&c2::f1)>::args>{});
+    static_expect(std::is_same<void, typename function_traits<decltype(&c2::f1)>::result_type>{});
+    static_expect(std::is_same<type_list<>, typename function_traits<decltype(&c2::f1)>::args>{});
 
-    expect(std::is_same<int, typename function_traits<decltype(&c2::f2)>::result_type>{});
-    expect(std::is_same<c2, typename function_traits<decltype(&c2::f2)>::base_type>{});
-    expect(std::is_same<type_list<int>, typename function_traits<decltype(&c2::f2)>::args>{});
+    static_expect(std::is_same<int, typename function_traits<decltype(&c2::f2)>::result_type>{});
+    static_expect(std::is_same<c2, typename function_traits<decltype(&c2::f2)>::base_type>{});
+    static_expect(std::is_same<type_list<int>, typename function_traits<decltype(&c2::f2)>::args>{});
 
-    expect(std::is_same<int, typename function_traits<decltype(&c2::f3)>::result_type>{});
-    expect(std::is_same<c2, typename function_traits<decltype(&c2::f3)>::base_type>{});
-    expect(std::is_same<type_list<int, const double&>, typename function_traits<decltype(&c2::f3)>::args>{});
+    static_expect(std::is_same<int, typename function_traits<decltype(&c2::f3)>::result_type>{});
+    static_expect(std::is_same<c2, typename function_traits<decltype(&c2::f3)>::base_type>{});
+    static_expect(std::is_same<type_list<int, const double&>, typename function_traits<decltype(&c2::f3)>::args>{});
 };
 
 }}}} // boost::di::v1::aux

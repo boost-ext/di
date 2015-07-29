@@ -13,11 +13,11 @@
 #include "boost/di/concepts/callable.hpp"
 #include "boost/di/providers/stack_over_heap.hpp"
 
-#if defined(BOOST_DI_CFG)
+#if defined(BOOST_DI_CFG) // __wknd__
     class BOOST_DI_CFG;
-#else
-    #define BOOST_DI_CFG boost::di::config
-#endif
+#else // __wknd__
+    #define BOOST_DI_CFG boost::di::config // __wknd__
+#endif // __wknd__
 
 namespace boost { namespace di { inline namespace v1 {
 

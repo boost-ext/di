@@ -11,7 +11,6 @@
 //->
 #define BOOST_DI_CFG custom_policy
 #include <boost/di.hpp>
-#include <boost/di/policies/constructible.hpp>
 
 namespace di = boost::di;
 

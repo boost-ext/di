@@ -36,9 +36,9 @@ public:
         class TConfig
       , class TPolicies
       , class... TDeps
-        #if defined(BOOST_DI_GCC)
+        #if defined(BOOST_DI_GCC) // __wknd__
           , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>)
-        #endif
+        #endif // __wknd__
     > injector(const core::injector<TConfig, TPolicies, TDeps...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, core::pool<>, T...>(injector) {
             using injector_t = core::injector<TConfig, TPolicies, TDeps...>;

@@ -11,6 +11,19 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
+struct def1 { struct creator { }; };
+struct def2 { struct creator { }; };
+struct ctor1 { struct creator { creator(int) {} }; };
+struct ctor2 { struct creator { creator(int) {} }; };
+
+test default_constructible = [] {
+    static_expect(std::is_same<aux::type_list<>, copyable_t<aux::type_list<>>>::value);
+    static_expect(std::is_same<aux::type_list<>, copyable_t<aux::type_list<def1>>>::value);
+    static_expect(std::is_same<aux::type_list<>, copyable_t<aux::type_list<def1, def2>>>::value);
+    static_expect(std::is_same<aux::type_list<ctor1>, copyable_t<aux::type_list<def1, ctor1, def2>>>::value);
+    static_expect(std::is_same<aux::type_list<ctor1, ctor2>, copyable_t<aux::type_list<def1, ctor1, def2, ctor2>>>::value);
+};
+
 test def_ctor = [] {
     injector<di::config> injector_{core::init{}};
     expect(std::is_same<aux::type_list<>, decltype(injector_)::deps>{});

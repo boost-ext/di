@@ -27,12 +27,12 @@ struct referable_traits<const T&, TDependency> {
     using type = std::conditional_t<TDependency::template is_referable<const T&>::value, const T&, T>;
 };
 
-#if defined(BOOST_DI_MSVC)
+#if defined(BOOST_DI_MSVC) // __wknd__
     template<class T, class TDependency>
     struct referable_traits<T&&, TDependency> {
         using type = std::conditional_t<TDependency::template is_referable<T&&>::value, T&&, T>;
     };
-#endif
+#endif // __wknd__
 
 template<class T, class TDependency>
 using referable_traits_t = typename referable_traits<T, TDependency>::type;

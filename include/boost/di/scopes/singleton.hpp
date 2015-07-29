@@ -22,8 +22,8 @@ public:
         using is_referable = typename wrappers::shared<T>::template is_referable<T_>;
 
         template<class, class TProvider>
-        decltype(wrappers::shared<T>{std::shared_ptr<T>{std::declval<TProvider>().get()}})
-        static try_create(const TProvider&);
+        static decltype(wrappers::shared<T>{std::shared_ptr<T>{std::declval<TProvider>().get()}})
+        try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider& provider) {

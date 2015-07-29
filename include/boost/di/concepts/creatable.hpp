@@ -12,10 +12,9 @@
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 
-#if !defined(BOOST_DI_CONCEPTS_CREATABLE_ATTR)
-    #define BOOST_DI_CONCEPTS_CREATABLE_ATTR \
-        BOOST_DI_ATTR_ERROR("creatable constraint not satisfied")
-#endif
+#if !defined(BOOST_DI_CONCEPTS_CREATABLE_ATTR) // __wknd__
+    #define BOOST_DI_CONCEPTS_CREATABLE_ATTR BOOST_DI_ATTR_ERROR("creatable constraint not satisfied") // __wknd__
+#endif // __wknd__
 
 namespace boost { namespace di { inline namespace v1 {
 

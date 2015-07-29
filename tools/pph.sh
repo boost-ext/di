@@ -6,31 +6,7 @@
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
 
-main() {
-    generate_pph() {
-        echo $1 >> $2/tmp.hpp
-        cat $1 | egrep "^#include" | grep "boost\/di" | while read include; do
-            file=`echo $include | sed "s/[^<^\"]*[\"<]\([^>\"]*\)[\">].*/\1/"`
-
-            if [[ "`cat $2/tmp.hpp | grep $file`" == "" ]]; then
-                generate_pph $file $2
-                cat $file | egrep "^#include" | grep -v "boost\/di" >> $2/includes.hpp
-                echo >> $2/pph.hpp
-                tail -n +7 $file | head -n -1 | egrep -v "^#include" | cat -s > $2/pph.hpp.tmp
-                ( IFS=''
-                while read -r line; do
-                    if [[ "$line" =~ "#include" ]] && [[ "$line" =~ ".ipp" ]]; then
-                        cat "`echo $line | sed 's/.*#include \"\(.*\)\"/\1/'`" | tail -n +7 | head -n -1
-                    else
-                        echo -e $line
-                    fi
-                done < $2/pph.hpp.tmp) >> $2/pph.hpp
-            fi
-        done
-    }
-
-    tmp_dir=`mktemp -d`
-
+pph() {
     echo "//"
     echo "// Copyright (c) 2012-2015 Krzysztof Jusiak (krzysztof at jusiak dot net)"
     echo "//"
@@ -73,17 +49,34 @@ main() {
     echo
     echo "#else"
     echo
-    generate_pph "boost/di.hpp" "$tmp_dir"
-    cat $tmp_dir/includes.hpp | sort -u
-    cat $tmp_dir/pph.hpp
+    echo "#include <memory>"
+    echo "#include <type_traits>"
+    echo
+    rm -rf tmp && mkdir tmp && cp -r boost tmp && cd tmp && touch type_traits memory
+    find . -iname "*.hpp" | xargs sed -i "s/\(.*\)__wknd__/\/\/\/\/\1/"
+    tail -n +10 "boost/di/aux_/compiler.hpp" | head -n -3 | sed '/^$/d'
+    tail -n +11 "boost/di/aux_/preprocessor.hpp" | head -n -3 | sed '/^$/d'
+    tail -n +10 "boost/di/fwd.hpp" | head -n -3 | sed '/^$/d'
+    tail -n +11 "boost/di/aux_/utility.hpp" | head -n -3 | sed '/^$/d'
+    tail -n +15 "boost/di/aux_/type_traits.hpp" | head -n -3 | sed '/^$/d'
+    tail -n +15 "boost/di/inject.hpp" | head -n -3
+    g++ -std=c++1y -C -P -nostdinc -nostdinc++ -E -I. "boost/di.hpp" \
+        -D"BOOST_DI_HAS_METHOD(name, call_name)=template<class T, class... TArgs> decltype(std::declval<T>().call_name(std::declval<TArgs>()...), std::true_type()) has_##name##_impl(int); template<class, class...> std::false_type has_##name##_impl(...); template<class T, class... TArgs> struct has_##name : decltype(has_##name##_impl<T, TArgs...>(0)) { }" \
+        -D"BOOST_DI_HAS_TYPE(name)=template<class, class = void> struct has_##name : std::false_type { }; template<class T> struct has_##name<T, typename aux::void_t<typename T::name>::type> : std::true_type { }" \
+        -DBOOST_DI_CFG_NO_PREPROCESSED_HEADERS \
+        -DBOOST_DI_AUX_COMPILER_HPP \
+        -DBOOST_DI_AUX_PREPROCESSOR_HPP \
+        -DBOOST_DI_AUX_TYPE_TRAITS_HPP \
+        -DBOOST_DI_AUX_UTILITY_HPP \
+        -DBOOST_DI_FWD_HPP \
+        -DBOOST_DI_INJECT_HPP 2>/dev/null | sed "s/\/\/\/\///" | g++ -P -E -I. -fpreprocessed -
+    cd .. && rm -rf tmp
     echo
     echo "#endif"
     echo
     echo "#endif"
     echo
-
-    rm -rf $tmp_dir
 }
 
-cd "`readlink -f \`dirname $0\``/../include" && main "boost/di.hpp" > "boost/di.hpp"
+cd "`readlink -f \`dirname $0\``/../include" && pph > "boost/di.hpp"
 

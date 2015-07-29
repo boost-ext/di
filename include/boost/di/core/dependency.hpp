@@ -147,11 +147,11 @@ public:
         return dependency<TScope, TExpected, TGiven, TName, override>{*this};
     }
 
-    #if defined(__cpp_variable_templates)
+    #if defined(__cpp_variable_templates) // __wknd__
         const dependency& operator()() const noexcept {
             return *this;
         }
-    #endif
+    #endif // __wknd__
 
     using creator::try_create;
 

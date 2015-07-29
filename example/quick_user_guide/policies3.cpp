@@ -5,10 +5,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #define BOOST_DI_CFG all_must_be_bound_unless_int
-#include <boost/di.hpp>
-#include <boost/di/policies/constructible.hpp>
 #include <type_traits>
 #include <cassert>
+#include <boost/di.hpp>
 
 namespace di = boost::di;
 

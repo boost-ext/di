@@ -111,19 +111,19 @@ struct ctor_traits
 
 template<class T>
 struct ctor_traits<std::initializer_list<T>> {
-    BOOST_DI_INJECT_TRAITS();
+    using BOOST_DI_INJECTOR = aux::type_list<>;
 };
 
 template<class T>
 struct ctor_traits<T, BOOST_DI_REQUIRES_T(
     std::is_same<std::char_traits<char>, typename T::traits_type>::value)> {
-    BOOST_DI_INJECT_TRAITS();
+    using BOOST_DI_INJECTOR = aux::type_list<>;
 };
 
 template<class T>
 struct ctor_traits<T, BOOST_DI_REQUIRES_T(
     std::is_arithmetic<T>::value || std::is_enum<T>::value)> {
-    BOOST_DI_INJECT_TRAITS();
+    using BOOST_DI_INJECTOR = aux::type_list<>;
 };
 
 }}} // boost::di::v1

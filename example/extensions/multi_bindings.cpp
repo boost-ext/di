@@ -12,9 +12,10 @@
 #include <vector>
 //->
 
-#include <boost/di/aux_/type_traits.hpp>
-
 namespace boost { namespace di { inline namespace v1 { namespace aux {
+
+template<class>
+struct deref_type;
 
 /*<<transform constructor container type to expected binding type `type[]`>>*/
 template<class T>

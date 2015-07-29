@@ -11,7 +11,7 @@
 #define MODULE_MODEL_HPP
 //->
 
-#include <boost/di/fwd.hpp>
+#include <boost/di.hpp>
 
 namespace di = boost::di;
 

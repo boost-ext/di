@@ -21,9 +21,10 @@ public:
         using is_referable = std::false_type;
 
         template<class T, class TProvider>
-        decltype(wrappers::unique<decltype(std::declval<TProvider>().get(type_traits::memory_traits_t<T>{}))>{
-            std::declval<TProvider>().get(type_traits::memory_traits_t<T>{})})
-        static try_create(const TProvider&);
+        static decltype(wrappers::unique<decltype(
+            std::declval<TProvider>().get(type_traits::memory_traits_t<T>{}))>{
+                std::declval<TProvider>().get(type_traits::memory_traits_t<T>{})})
+        try_create(const TProvider&);
 
         template<class T, class TProvider>
         auto create(const TProvider& provider) const {

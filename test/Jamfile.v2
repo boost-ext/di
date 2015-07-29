@@ -87,7 +87,6 @@ test-suite ut :
     [ run-test c++1y : ut/concepts/scopable.cpp ]
     [ run-test c++1y : ut/core/any_type.cpp ]
     [ run-test c++1y : ut/core/binder.cpp ]
-    [ run-test c++1y : ut/core/copyable.cpp ]
     [ run-test c++1y : ut/core/dependency.cpp ]
     [ run-test c++1y : ut/core/injector.cpp ]
     [ run-test c++1y : ut/core/policy.cpp ]

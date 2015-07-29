@@ -12,7 +12,7 @@
 
 #include <iostream>
 //->
-#include <boost/di/config.hpp>
+#include <boost/di.hpp>
 
 class config : public di::config {
 public:
