@@ -130,7 +130,7 @@ test-suite ft :
 ;
 
 test-suite pt :
-    #[ run-test c++1y : pt/di_run_time.cpp : : <optimization>speed <variant>release ]
+    [ run-test c++1y : pt/di_run_time.cpp : : <optimization>speed <variant>release ]
 ;
 
 test-suite error :
