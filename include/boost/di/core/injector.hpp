@@ -4,10 +4,10 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#if !defined(BOOST_DI_CORE_INJECTOR_POLICY)
-
 #ifndef BOOST_DI_CORE_INJECTOR_HPP
 #define BOOST_DI_CORE_INJECTOR_HPP
+
+#if !defined(BOOST_DI_CORE_INJECTOR_POLICY)
 
 #include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/type_traits.hpp"
@@ -71,21 +71,9 @@ inline decltype(auto) get_arg(const T& arg, const std::true_type&) noexcept {
 
 #define BOOST_DI_CORE_INJECTOR_POLICY(...) __VA_ARGS__ BOOST_DI_CORE_INJECTOR_POLICY_ELSE
 #define BOOST_DI_CORE_INJECTOR_POLICY_ELSE(...)
-    #include "boost/di/core/injector.hpp"
-#undef BOOST_DI_CORE_INJECTOR_POLICY
-#undef BOOST_DI_CORE_INJECTOR_POLICY_ELSE
-
-#define BOOST_DI_CORE_INJECTOR_POLICY(...) BOOST_DI_CORE_INJECTOR_POLICY_ELSE
-#define BOOST_DI_CORE_INJECTOR_POLICY_ELSE(...) __VA_ARGS__
-    #include "boost/di/core/injector.hpp"
-#undef BOOST_DI_CORE_INJECTOR_POLICY
-#undef BOOST_DI_CORE_INJECTOR_POLICY_ELSE
-
-}}}} // boost::di::v1::core
+#define BOOST_DI_INJECTOR_ITERATE
 
 #endif
-
-#else
 
 template<class TConfig BOOST_DI_CORE_INJECTOR_POLICY(, class TPolicies = pool<>)(), class... TDeps>
 class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
@@ -269,6 +257,18 @@ private:
         return successful::wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
 };
+
+#if defined(BOOST_DI_INJECTOR_ITERATE)
+    #undef BOOST_DI_CORE_INJECTOR_HPP
+    #undef BOOST_DI_INJECTOR_ITERATE
+    #undef BOOST_DI_CORE_INJECTOR_POLICY
+    #undef BOOST_DI_CORE_INJECTOR_POLICY_ELSE
+    #define BOOST_DI_CORE_INJECTOR_POLICY(...) BOOST_DI_CORE_INJECTOR_POLICY_ELSE
+    #define BOOST_DI_CORE_INJECTOR_POLICY_ELSE(...) __VA_ARGS__
+    #include "boost/di/core/injector.hpp"
+#endif
+
+}} // boost::di::v1::core
 
 #endif
 

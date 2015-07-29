@@ -2427,7 +2427,8 @@ private:
         return successful::wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
 };
-}}}}
+}}
+}}
 namespace boost { namespace di { inline namespace v1 {
 template<class>
 struct provider {
