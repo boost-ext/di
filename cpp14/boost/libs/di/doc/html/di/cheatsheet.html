@@ -195,7 +195,145 @@ function toggleNextRow() {
 
 <div class="toc2" id="section_">
 
-<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Function
+              </p>
+            </th>
+<th>
+              <p>
+                Requirements
+              </p>
+            </th>
+<th>
+              <p>
+                Description
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <a class="link" href="user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a>(TDeps...)
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="user_guide/concepts/boundable.html" title="boundable">boundable</a>&lt;TDeps...&gt;
+              </p>
+            </td>
+<td>
+              <p>
+                create <a class="link" href="user_guide/injector.html" title="Injector">Injector</a>
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <a class="link" href="user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a>&lt;TConfig&gt;(TDeps...)
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="user_guide/concepts/boundable.html" title="boundable">boundable</a>&lt;TDeps...&gt;
+                &amp;&amp; <a class="link" href="user_guide/concepts/configurable.html" title="configurable">configurable</a>&lt;TConfig&gt;
+              </p>
+            </td>
+<td>
+              <p>
+                create <a class="link" href="user_guide/injector.html" title="Injector">Injector</a> with
+                <a class="link" href="user_guide/configuration.html#di.user_guide.configuration.synopsis">di::config</a>
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <a class="link" href="user_guide/bindings/bind.html" title="bind">di::bind</a>&lt;I,
+                Impl&gt;
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="user_guide/concepts/boundable.html" title="boundable">boundable</a>&lt;I,
+                Impl&gt;
+              </p>
+            </td>
+<td>
+              <p>
+                create <a class="link" href="user_guide/bindings.html" title="Bindings">Bindings</a>
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <a class="link" href="user_guide/bindings/bind.html" title="bind">di::bind</a>&lt;I,
+                Impl&gt;.named(name)
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="user_guide/concepts/boundable.html" title="boundable">boundable</a>&lt;I,
+                Impl&gt;
+              </p>
+            </td>
+<td>
+              <p>
+                create <a class="link" href="user_guide/bindings.html" title="Bindings">Bindings</a>
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <a class="link" href="user_guide/bindings/bind.html" title="bind">di::bind</a>&lt;T&gt;.to(T{})
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="user_guide/concepts/boundable.html" title="boundable">boundable</a>&lt;T&gt;
+              </p>
+            </td>
+<td>
+              <p>
+                create <a class="link" href="user_guide/bindings.html" title="Bindings">Bindings</a> with
+                given <code class="computeroutput"><span class="identifier">T</span><span class="special">{}</span></code>
+                value
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <a class="link" href="user_guide/bindings/bind.html" title="bind">di::bind</a>&lt;T&gt;.named(name).to(T{})
+              </p>
+            </td>
+<td>
+              <p>
+                <a class="link" href="user_guide/concepts/boundable.html" title="boundable">boundable</a>&lt;T&gt;
+              </p>
+            </td>
+<td>
+              <p>
+                create <a class="link" href="user_guide/bindings.html" title="Bindings">Bindings</a> with
+                given <code class="computeroutput"><span class="identifier">T</span><span class="special">{}</span></code>
+                value named <code class="computeroutput"><span class="keyword">auto</span> <span class="identifier">name</span>
+                <span class="special">=</span> <span class="special">[]{}</span></code>
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
 
 <br />
 <hr />
