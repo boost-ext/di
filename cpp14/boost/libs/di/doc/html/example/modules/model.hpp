@@ -11,7 +11,7 @@
 #define MODEL_HPP
 
 #include <memory>
-#include <boost/di/inject.hpp>
+#include <boost/di.hpp>
 #include "common.hpp"
 //->
 
