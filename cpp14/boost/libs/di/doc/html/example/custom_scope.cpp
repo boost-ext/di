@@ -51,7 +51,7 @@ public:
         using is_referable = std::false_type;
 
         template<class, class TProvider>
-        custom_wrapper try_create(const TProvider&) const noexcept;
+        static custom_wrapper try_create(const TProvider&);
 
         /*<<create shared_ptr when in scope out of provider pointer>>*/
         template<class, class TProvider>
