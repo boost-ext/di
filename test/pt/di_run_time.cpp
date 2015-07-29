@@ -46,7 +46,7 @@ auto disassemble(const std::string& f, const std::string& progname, const std::r
 #endif
 
     std::stringstream result;
-    if (std::system(("\"" + command.str()  + "\" > " + f + ".out").c_str())) {
+    if (std::system((command.str()  + " > " + f + ".out").c_str())) {
         return result.str();
     }
 
