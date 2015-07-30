@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[factory
+//[assisted_injection
 //<-
 #include <cassert>
 #include <memory>
@@ -22,7 +22,7 @@ struct implementation : interface { void dummy() override { } };
 constexpr di::no_name assisted{};
 
 template<class T>
-class factory_impl {
+class assisted_injection_impl {
 public:
     template<class TInjector>
     auto operator()(const TInjector& injector) const {
@@ -96,16 +96,16 @@ private:
 };
 
 template<class T>
-struct factory : factory_impl<T> { };
+struct assisted_injection : assisted_injection_impl<T> { };
 
 //->
 
 struct example {
-    /*<<define `example` constructor using `assisted` as factory creation parameters>>*/
+    /*<<define `example` constructor using `assisted` as assisted_injection creation parameters>>*/
     BOOST_DI_INJECT(example
-                  , (named = assisted) int date /*from factory*/
+                  , (named = assisted) int date /*from assisted_injection*/
                   , std::unique_ptr<interface> up /*from injector*/
-                  , (named = assisted) double factor /*from factory*/
+                  , (named = assisted) double factor /*from assisted_injection*/
                   , int i /*from injector*/) {
         assert(i == 87);
         assert(dynamic_cast<implementation*>(up.get()));
@@ -115,17 +115,17 @@ struct example {
 };
 
 int main() {
-    /*<<factory declaration using std function>>*/
-    using example_factory = std::function<std::unique_ptr<example>(int, double)>;
+    /*<<assisted_injection declaration using std function>>*/
+    using example_assisted_injection = std::function<std::unique_ptr<example>(int, double)>;
 
     auto injector = di::make_injector(
         di::bind<int>().to(87)
       , di::bind<interface, implementation>()
-        /*<<bind `example_factory` to factory creating `example`>>*/
-      , di::bind<example_factory>().to(factory<example>())
+        /*<<bind `example_assisted_injection` to assisted_injection creating `example`>>*/
+      , di::bind<example_assisted_injection>().to(assisted_injection<example>())
     );
 
-    auto f = injector.create<example_factory>();
+    auto f = injector.create<example_assisted_injection>();
     f(42, 123.0);
 }
 
