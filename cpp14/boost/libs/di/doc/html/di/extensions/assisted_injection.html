@@ -1,13 +1,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title>Externals</title>
+<title>Assisted Injection</title>
 <link rel="stylesheet" href="../../style/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="../../index.html" title="Boost.DI / C++14 Dependency Injection Library / 1.0.0">
-<link rel="up" href="../examples.html" title="Examples">
-<link rel="prev" href="custom_scope.html" title="Custom Scope">
-<link rel="next" href="modules.html" title="Modules">
+<link rel="up" href="../extensions.html" title="Extensions">
+<link rel="prev" href="multi_bindings.html" title="Multi Bindings">
+<link rel="next" href="xml_injection.html" title="XML Injection">
 </head>
 
 <link rel="stylesheet" href="../../js/CodeMirror/lib/codemirror.css">
@@ -106,8 +106,8 @@ function toggleNextRow() {
 <dt><span class="section"><a href= "../../di/overview/rationale.html" >Rationale</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href= "../../di/tutorial.html" >Tutorial</a></span></dt>
-<dt><span class="section"><a href= "../../di/cheatsheet.html" >Cheatsheet</a></span></dt>
 <dt><span class="section"><a href= "../../di/try_it_online.html" >Try it online!</a></span></dt>
+<dt><span class="section"><a href= "../../di/cheatsheet.html" >Cheatsheet</a></span></dt>
 <dt><span class="section"><a href= "../../di/quick_user_guide.html" >Quick User Guide</a></span></dt>
 <dt><span class="section"><a href= "../../di/user_guide.html" >User Guide</a></span></dt>
 <dd><dl>
@@ -128,14 +128,13 @@ function toggleNextRow() {
 <dt><span class="section"><a href= "../../di/user_guide/scopes/deduce.html" >deduce (default)</a></span></dt>
 <dt><span class="section"><a href= "../../di/user_guide/scopes/unique.html" >unique</a></span></dt>
 <dt><span class="section"><a href= "../../di/user_guide/scopes/singleton.html" >singleton</a></span></dt>
-<dt><span class="section"><a href= "../../di/user_guide/scopes/shared.html" >shared</a></span></dt>
-<dt><span class="section"><a href= "../../di/user_guide/scopes/session.html" >session</a></span></dt>
 <dt><span class="section"><a href= "../../di/user_guide/scopes/external.html" >external</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href= "../../di/user_guide/modules.html" >Modules</a></span></dt>
 <dt><span class="section"><a href= "../../di/user_guide/providers.html" >Providers</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href= "../../di/user_guide/providers/stack_over_heap_default.html" >stack_over_heap (default)</a></span></dt>
+<dt><span class="section"><a href= "../../di/user_guide/providers/stack_over_heap_default.html" >stack_over_heap
+        (default)</a></span></dt>
 <dt><span class="section"><a href= "../../di/user_guide/providers/heap.html" >heap</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href= "../../di/user_guide/policies.html" >Policies</a></span></dt>
@@ -162,7 +161,6 @@ function toggleNextRow() {
 <dt><span class="section"><a href= "../../di/examples/annotations.html" >Annotations</a></span></dt>
 <dt><span class="section"><a href= "../../di/examples/deduce_scope.html" >Deduce Scope</a></span></dt>
 <dt><span class="section"><a href= "../../di/examples/custom_scope.html" >Custom Scope</a></span></dt>
-<dt><b><u> <span class="section"><a href= "../../di/examples/externals.html" >Externals</a></span> </u></b></dt>
 <dt><span class="section"><a href= "../../di/examples/modules.html" >Modules</a></span></dt>
 <dt><span class="section"><a href= "../../di/examples/modules_hpp_cpp.html" >Modules (hpp/cpp)</a></span></dt>
 <dt><span class="section"><a href= "../../di/examples/custom_policy.html" >Custom Policy</a></span></dt>
@@ -172,17 +170,18 @@ function toggleNextRow() {
 <dt><span class="section"><a href= "../../di/extensions.html" >Extensions</a></span></dt>
 <dd><dl>
 <dt><span class="section"><a href= "../../di/extensions/constructor_bindings.html" >Constructor Bindings</a></span></dt>
-<dt><span class="section"><a href= "../../di/extensions/contextual_bindings.html" >Contextual Bindings</a></span></dt>
-<dt><span class="section"><a href= "../../di/extensions/container_bingings.html" >Container Bingings</a></span></dt>
-<dt><span class="section"><a href= "../../di/extensions/factory_assisted_injection.html" >Factory (Assisted Injection)</a></span></dt>
+<dt><span class="section"><a href= "../../di/extensions/multi_bindings.html" >Multi Bindings</a></span></dt>
+<dt><b><u> <span class="section"><a href= "../../di/extensions/assisted_injection.html" >Assisted Injection</a></span> </u></b></dt>
+<dt><span class="section"><a href= "../../di/extensions/xml_injection.html" >XML Injection</a></span></dt>
 <dt><span class="section"><a href= "../../di/extensions/types_dumper.html" >Types dumper</a></span></dt>
 <dt><span class="section"><a href= "../../di/extensions/uml_dumper.html" >UML Dumper</a></span></dt>
-<dt><span class="section"><a href= "../../di/extensions/xml_injection.html" >XML Injection</a></span></dt>
-<dt><span class="section"><a href= "../../di/extensions/testing_automatic_mocks_injectio.html" >Testing (Automatic Mocks Injection)</a></span></dt>
+<dt><span class="section"><a href= "../../di/extensions/mocks_provider.html" >Mocks Provider</a></span></dt>
+<dt><span class="section"><a href= "../../di/extensions/session_scope.html" >Session Scope</a></span></dt>
+<dt><span class="section"><a href= "../../di/extensions/shared_scope.html" >Shared Scope</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href= "../../di/projects.html" >Projects</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href= "../../di/projects/boost_meta_state_machine_depende.html" >Boost.MSM + Boost.DI</a></span></dt>
+<dt><span class="section"><a href= "../../di/projects/boost_meta_state_machine_depende.html" >Boost Meta State Machine - Dependency Injection Extension</a></span></dt>
 <dt><span class="section"><a href= "../../di/projects/match_3_switcher_game.html" >Match-3 Switcher Game</a></span></dt>
 <dt><span class="section"><a href= "../../di/projects/automatic_mocks_injector.html" >Automatic Mocks Injector</a></span></dt>
 </dl></dd>
@@ -196,7 +195,7 @@ function toggleNextRow() {
 <div class="toc2" id="section_">
 
 <p>
-        <button class="TryItBtn" id="run_it_btn_1" onclick="show(1, 'https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/externals.cpp')">Run this code!</button><textarea style="display: none" id="code_1"></textarea><br /><textarea style="display: none" id="output_1"></textarea><div id="code_listing_1">
+        <button class="TryItBtn" id="run_it_btn_1" onclick="show(1, 'https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/extensions/injections/assisted_injection.cpp')">Run this code!</button><textarea style="display: none" id="code_1"></textarea><br /><textarea style="display: none" id="output_1"></textarea><div id="code_listing_1">
       </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
@@ -204,45 +203,51 @@ function toggleNextRow() {
 
 
 <span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
-    <span class="identifier">example</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;</span> <span class="identifier">p</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
-        <span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">implementation2</span><span class="special">*&gt;(</span><span class="identifier">p</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
-        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i</span> <span class="special">==</span> <span class="number">42</span><span class="special">);</span>
+    <a class="co" name="di.extensions.assisted_injection.c0" href="assisted_injection.html#di.extensions.assisted_injection.c1"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">example</span>
+                  <span class="special">,</span> <span class="special">(</span><span class="identifier">named</span> <span class="special">=</span> <span class="identifier">assisted</span><span class="special">)</span> <span class="keyword">int</span> <span class="identifier">date</span> <span class="comment">/*from assisted_injection*/</span>
+                  <span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;</span> <span class="identifier">up</span> <span class="comment">/*from injector*/</span>
+                  <span class="special">,</span> <span class="special">(</span><span class="identifier">named</span> <span class="special">=</span> <span class="identifier">assisted</span><span class="special">)</span> <span class="keyword">double</span> <span class="identifier">factor</span> <span class="comment">/*from assisted_injection*/</span>
+                  <span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i</span> <span class="comment">/*from injector*/</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i</span> <span class="special">==</span> <span class="number">87</span><span class="special">);</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">*&gt;(</span><span class="identifier">up</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">date</span> <span class="special">==</span> <span class="number">42</span><span class="special">);</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">factor</span> <span class="special">==</span> <span class="number">123.0</span><span class="special">);</span>
     <span class="special">}</span>
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <a class="co" name="di.examples.externals.c0" href="externals.html#di.examples.externals.c1"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="keyword">auto</span> <span class="identifier">config</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation1</span><span class="special">&gt;()</span>
+    <a class="co" name="di.extensions.assisted_injection.c2" href="assisted_injection.html#di.extensions.assisted_injection.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="keyword">using</span> <span class="identifier">example_assisted_injection</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">)&gt;;</span>
+
+    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="number">87</span><span class="special">)</span>
+      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">,</span> <span class="identifier">implementation</span><span class="special">&gt;()</span>
+        <a class="co" name="di.extensions.assisted_injection.c4" href="assisted_injection.html#di.extensions.assisted_injection.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">example_assisted_injection</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">assisted_injection</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;())</span>
     <span class="special">);</span>
 
-    <a class="co" name="di.examples.externals.c2" href="externals.html#di.examples.externals.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-        <span class="identifier">config</span>
-      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
-      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">make_shared</span><span class="special">&lt;</span><span class="identifier">implementation2</span><span class="special">&gt;())</span> <span class="special">[</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">override</span><span class="special">]</span>
-    <span class="special">);</span>
-
-    <a class="co" name="di.examples.externals.c4" href="externals.html#di.examples.externals.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>
+    <span class="keyword">auto</span> <span class="identifier">f</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example_assisted_injection</span><span class="special">&gt;();</span>
+    <span class="identifier">f</span><span class="special">(</span><span class="number">42</span><span class="special">,</span> <span class="number">123.0</span><span class="special">);</span>
 <span class="special">}</span>
 </pre>
 <div class="calloutlist"><table border="0" summary="Callout list">
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.examples.externals.c1"></a><a href="#di.examples.externals.c0"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.extensions.assisted_injection.c1"></a><a href="#di.extensions.assisted_injection.c0"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
-            create injector with <code class="computeroutput"><span class="identifier">interface</span></code>
-            binding to <code class="computeroutput"><span class="identifier">implementation1</span></code>
+            define <code class="computeroutput"><span class="identifier">example</span></code> constructor
+            using <code class="computeroutput"><span class="identifier">assisted</span></code> as assisted_injection
+            creation parameters
           </p></td>
 </tr>
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.examples.externals.c3"></a><a href="#di.examples.externals.c2"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.extensions.assisted_injection.c3"></a><a href="#di.extensions.assisted_injection.c2"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
-            create injector with external <code class="computeroutput"><span class="identifier">interface</span></code>
-            binding to <code class="computeroutput"><span class="identifier">implementation2</span></code>
+            assisted_injection declaration using std function
           </p></td>
 </tr>
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.examples.externals.c5"></a><a href="#di.examples.externals.c4"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.extensions.assisted_injection.c5"></a><a href="#di.extensions.assisted_injection.c4"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
-            create <code class="computeroutput"><span class="identifier">example</span></code>
+            bind <code class="computeroutput"><span class="identifier">example_assisted_injection</span></code>
+            to assisted_injection creating <code class="computeroutput"><span class="identifier">example</span></code>
           </p></td>
 </tr>
 </table></div>

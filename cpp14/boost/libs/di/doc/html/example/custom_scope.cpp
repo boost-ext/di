@@ -14,14 +14,6 @@
 
 namespace di = boost::di;
 
-struct example {
-    explicit example(const std::shared_ptr<int>& sp)
-        : sp_(sp)
-    { }
-
-    std::shared_ptr<int> sp_;
-};
-
 /*<define scope class>*/
 class custom_scope {
 public:
@@ -58,10 +50,15 @@ public:
         custom_wrapper create(const TProvider& provider) const noexcept {
             return std::shared_ptr<T>{provider.get()};
         }
-
-    private:
-        bool in_scope_ = false;
     };
+};
+
+struct example {
+    explicit example(const std::shared_ptr<int>& sp)
+        : sp_(sp)
+    { }
+
+    std::shared_ptr<int> sp_;
 };
 
 int main() {

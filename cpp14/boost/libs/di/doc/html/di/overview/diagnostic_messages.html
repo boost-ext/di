@@ -106,8 +106,8 @@ function toggleNextRow() {
 <dt><span class="section"><a href= "../../di/overview/rationale.html" >Rationale</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href= "../../di/tutorial.html" >Tutorial</a></span></dt>
-<dt><span class="section"><a href= "../../di/cheatsheet.html" >Cheatsheet</a></span></dt>
 <dt><span class="section"><a href= "../../di/try_it_online.html" >Try it online!</a></span></dt>
+<dt><span class="section"><a href= "../../di/cheatsheet.html" >Cheatsheet</a></span></dt>
 <dt><span class="section"><a href= "../../di/quick_user_guide.html" >Quick User Guide</a></span></dt>
 <dt><span class="section"><a href= "../../di/user_guide.html" >User Guide</a></span></dt>
 <dd><dl>
@@ -128,14 +128,13 @@ function toggleNextRow() {
 <dt><span class="section"><a href= "../../di/user_guide/scopes/deduce.html" >deduce (default)</a></span></dt>
 <dt><span class="section"><a href= "../../di/user_guide/scopes/unique.html" >unique</a></span></dt>
 <dt><span class="section"><a href= "../../di/user_guide/scopes/singleton.html" >singleton</a></span></dt>
-<dt><span class="section"><a href= "../../di/user_guide/scopes/shared.html" >shared</a></span></dt>
-<dt><span class="section"><a href= "../../di/user_guide/scopes/session.html" >session</a></span></dt>
 <dt><span class="section"><a href= "../../di/user_guide/scopes/external.html" >external</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href= "../../di/user_guide/modules.html" >Modules</a></span></dt>
 <dt><span class="section"><a href= "../../di/user_guide/providers.html" >Providers</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href= "../../di/user_guide/providers/stack_over_heap_default.html" >stack_over_heap (default)</a></span></dt>
+<dt><span class="section"><a href= "../../di/user_guide/providers/stack_over_heap_default.html" >stack_over_heap
+        (default)</a></span></dt>
 <dt><span class="section"><a href= "../../di/user_guide/providers/heap.html" >heap</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href= "../../di/user_guide/policies.html" >Policies</a></span></dt>
@@ -162,7 +161,6 @@ function toggleNextRow() {
 <dt><span class="section"><a href= "../../di/examples/annotations.html" >Annotations</a></span></dt>
 <dt><span class="section"><a href= "../../di/examples/deduce_scope.html" >Deduce Scope</a></span></dt>
 <dt><span class="section"><a href= "../../di/examples/custom_scope.html" >Custom Scope</a></span></dt>
-<dt><span class="section"><a href= "../../di/examples/externals.html" >Externals</a></span></dt>
 <dt><span class="section"><a href= "../../di/examples/modules.html" >Modules</a></span></dt>
 <dt><span class="section"><a href= "../../di/examples/modules_hpp_cpp.html" >Modules (hpp/cpp)</a></span></dt>
 <dt><span class="section"><a href= "../../di/examples/custom_policy.html" >Custom Policy</a></span></dt>
@@ -172,17 +170,18 @@ function toggleNextRow() {
 <dt><span class="section"><a href= "../../di/extensions.html" >Extensions</a></span></dt>
 <dd><dl>
 <dt><span class="section"><a href= "../../di/extensions/constructor_bindings.html" >Constructor Bindings</a></span></dt>
-<dt><span class="section"><a href= "../../di/extensions/contextual_bindings.html" >Contextual Bindings</a></span></dt>
-<dt><span class="section"><a href= "../../di/extensions/container_bingings.html" >Container Bingings</a></span></dt>
-<dt><span class="section"><a href= "../../di/extensions/factory_assisted_injection.html" >Factory (Assisted Injection)</a></span></dt>
+<dt><span class="section"><a href= "../../di/extensions/multi_bindings.html" >Multi Bindings</a></span></dt>
+<dt><span class="section"><a href= "../../di/extensions/assisted_injection.html" >Assisted Injection</a></span></dt>
+<dt><span class="section"><a href= "../../di/extensions/xml_injection.html" >XML Injection</a></span></dt>
 <dt><span class="section"><a href= "../../di/extensions/types_dumper.html" >Types dumper</a></span></dt>
 <dt><span class="section"><a href= "../../di/extensions/uml_dumper.html" >UML Dumper</a></span></dt>
-<dt><span class="section"><a href= "../../di/extensions/xml_injection.html" >XML Injection</a></span></dt>
-<dt><span class="section"><a href= "../../di/extensions/testing_automatic_mocks_injectio.html" >Testing (Automatic Mocks Injection)</a></span></dt>
+<dt><span class="section"><a href= "../../di/extensions/mocks_provider.html" >Mocks Provider</a></span></dt>
+<dt><span class="section"><a href= "../../di/extensions/session_scope.html" >Session Scope</a></span></dt>
+<dt><span class="section"><a href= "../../di/extensions/shared_scope.html" >Shared Scope</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href= "../../di/projects.html" >Projects</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href= "../../di/projects/boost_meta_state_machine_depende.html" >Boost.MSM + Boost.DI</a></span></dt>
+<dt><span class="section"><a href= "../../di/projects/boost_meta_state_machine_depende.html" >Boost Meta State Machine - Dependency Injection Extension</a></span></dt>
 <dt><span class="section"><a href= "../../di/projects/match_3_switcher_game.html" >Match-3 Switcher Game</a></span></dt>
 <dt><span class="section"><a href= "../../di/projects/automatic_mocks_injector.html" >Automatic Mocks Injector</a></span></dt>
 </dl></dd>
@@ -197,6 +196,9 @@ function toggleNextRow() {
 
 <p>
         Error messages were produced using <a class="link" href="../user_guide/concepts.html" title="Concepts">concepts</a>.
+      </p>
+<p>
+        <button class="TryItBtn" id="run_it_btn_1" onclick="show(1, 'https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/errors/create_interface_without_bound_implementation.cpp')">Run this code!</button><textarea style="display: none" id="code_1"></textarea><br /><textarea style="display: none" id="output_1"></textarea><div id="code_listing_1">
       </p>
 <div class="informaltable"><table class="table">
 <colgroup>
@@ -227,6 +229,12 @@ injector.<a class="link" href="../user_guide/injector.html#di.user_guide.injecto
               </td>
 </tr></tbody>
 </table></div>
+<p>
+        </div>
+      </p>
+<p>
+        <button class="TryItBtn" id="run_it_btn_2" onclick="show(2, 'https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/errors/ambigious_binding.cpp')">Run this code!</button><textarea style="display: none" id="code_2"></textarea><br /><textarea style="display: none" id="output_2"></textarea><div id="code_listing_2">
+      </p>
 <div class="informaltable"><table class="table">
 <colgroup>
 <col>
@@ -246,12 +254,10 @@ injector.<a class="link" href="../user_guide/injector.html#di.user_guide.injecto
 </tr></thead>
 <tbody><tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">auto injector = <a class="link" href="../user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a>(
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><a class="link" href="../user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a>(
     <a class="link" href="../user_guide/bindings/bind.html" title="bind">di::bind</a>&lt;int&gt;.to(42)
-  , <a class="link" href="../user_guide/bindings/bind.html" title="bind">di::bind</a>&lt;int&gt;.to(87)
+  , <a class="link" href="../user_guide/bindings/bind.html" title="bind">di::bind</a>&lt;int&gt;.to(87) // [di::override]]
 );
-
-injector.<a class="link" href="../user_guide/injector.html#di.user_guide.injector.synopsis">create</a>&lt;int&gt;();
 </pre>
               </td>
 <td>
@@ -260,6 +266,12 @@ injector.<a class="link" href="../user_guide/injector.html#di.user_guide.injecto
               </td>
 </tr></tbody>
 </table></div>
+<p>
+        </div>
+      </p>
+<p>
+        <button class="TryItBtn" id="run_it_btn_3" onclick="show(3, 'https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/errors/create_not_bound_object_with_all_bound_policy.cpp')">Run this code!</button><textarea style="display: none" id="code_3"></textarea><br /><textarea style="display: none" id="output_3"></textarea><div id="code_listing_3">
+      </p>
 <div class="informaltable"><table class="table">
 <colgroup>
 <col>
@@ -279,16 +291,17 @@ injector.<a class="link" href="../user_guide/injector.html#di.user_guide.injecto
 </tr></thead>
 <tbody><tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">class all_bound : public <a class="link" href="../user_guide/configuration.html#di.user_guide.configuration.synopsis">di::config</a> {
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">class must_be_bound : public <a class="link" href="../user_guide/configuration.html#di.user_guide.configuration.synopsis">di::config</a> {
 public:
-    auto policies() const noexcept {
+    static auto policies(...) {
+        using namespace di::policies;
         return <a class="link" href="../user_guide/configuration.html#di.user_guide.configuration.synopsis">di::make_policies</a>(
             constructible(is_bound&lt;_&gt;{})
         );
     }
 };
 
-auto injector = <a class="link" href="../user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a>&lt;all_bound&gt;();
+auto injector = <a class="link" href="../user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a>&lt;must_be_bound&gt;();
 injector.<a class="link" href="../user_guide/injector.html#di.user_guide.injector.synopsis">create</a>&lt;int&gt;();
 </pre>
               </td>
@@ -298,6 +311,12 @@ injector.<a class="link" href="../user_guide/injector.html#di.user_guide.injecto
               </td>
 </tr></tbody>
 </table></div>
+<p>
+        </div>
+      </p>
+<p>
+        <button class="TryItBtn" id="run_it_btn_4" onclick="show(4, 'https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/errors/expose_type_without_bound_implementation.cpp')">Run this code!</button><textarea style="display: none" id="code_4"></textarea><br /><textarea style="display: none" id="output_4"></textarea><div id="code_listing_4">
+      </p>
 <div class="informaltable"><table class="table">
 <colgroup>
 <col>
@@ -306,7 +325,7 @@ injector.<a class="link" href="../user_guide/injector.html#di.user_guide.injecto
 <thead><tr>
 <th>
                 <p>
-                  Wrong annotation (NAMED instead of named)
+                  Expose type without bound implementation
                 </p>
               </th>
 <th>
@@ -317,22 +336,22 @@ injector.<a class="link" href="../user_guide/injector.html#di.user_guide.injecto
 </tr></thead>
 <tbody><tr>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">auto name = []{};
-
-struct c {
-    <a class="link" href="../user_guide/injections/inject.html#di.user_guide.injections.inject.boost_di_inject">BOOST_DI_INJECT</a>(c
-        , (NAMED = name) int) { }
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">struct example {
+    example(unique_ptr&lt;interface&gt;) { }
 };
 
-<a class="link" href="../user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a>().<a class="link" href="../user_guide/injector.html#di.user_guide.injector.synopsis">create</a>&lt;c&gt;();
+<a class="link" href="../user_guide/injector.html" title="Injector">di::injector</a>&lt;example&gt; injector = <a class="link" href="../user_guide/injector/make_injector.html" title="make_injector">di::make_injector</a>();
 </pre>
               </td>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">error: use of undeclared identifier 'named'
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">error: static_assert failed "Type T is not allowed"
 </pre>
               </td>
 </tr></tbody>
 </table></div>
+<p>
+        </div>
+      </p>
 <h5>
 <a name="di.overview.diagnostic_messages.h0"></a>
         <span class="phrase"><a name="di.overview.diagnostic_messages.see_also"></a></span><a class="link" href="diagnostic_messages.html#di.overview.diagnostic_messages.see_also">See

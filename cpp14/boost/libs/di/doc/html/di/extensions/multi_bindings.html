@@ -1,13 +1,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title>Multi Bingings</title>
+<title>Multi Bindings</title>
 <link rel="stylesheet" href="../../style/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="../../index.html" title="Boost.DI / C++14 Dependency Injection Library / 1.0.0">
 <link rel="up" href="../extensions.html" title="Extensions">
-<link rel="prev" href="contextual_bindings.html" title="Contextual Bindings">
-<link rel="next" href="factory_assisted_injection.html" title="Factory (Assisted Injection)">
+<link rel="prev" href="constructor_bindings.html" title="Constructor Bindings">
+<link rel="next" href="assisted_injection.html" title="Assisted Injection">
 </head>
 
 <link rel="stylesheet" href="../../js/CodeMirror/lib/codemirror.css">
@@ -106,8 +106,8 @@ function toggleNextRow() {
 <dt><span class="section"><a href= "../../di/overview/rationale.html" >Rationale</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href= "../../di/tutorial.html" >Tutorial</a></span></dt>
-<dt><span class="section"><a href= "../../di/cheatsheet.html" >Cheatsheet</a></span></dt>
 <dt><span class="section"><a href= "../../di/try_it_online.html" >Try it online!</a></span></dt>
+<dt><span class="section"><a href= "../../di/cheatsheet.html" >Cheatsheet</a></span></dt>
 <dt><span class="section"><a href= "../../di/quick_user_guide.html" >Quick User Guide</a></span></dt>
 <dt><span class="section"><a href= "../../di/user_guide.html" >User Guide</a></span></dt>
 <dd><dl>
@@ -128,14 +128,13 @@ function toggleNextRow() {
 <dt><span class="section"><a href= "../../di/user_guide/scopes/deduce.html" >deduce (default)</a></span></dt>
 <dt><span class="section"><a href= "../../di/user_guide/scopes/unique.html" >unique</a></span></dt>
 <dt><span class="section"><a href= "../../di/user_guide/scopes/singleton.html" >singleton</a></span></dt>
-<dt><span class="section"><a href= "../../di/user_guide/scopes/shared.html" >shared</a></span></dt>
-<dt><span class="section"><a href= "../../di/user_guide/scopes/session.html" >session</a></span></dt>
 <dt><span class="section"><a href= "../../di/user_guide/scopes/external.html" >external</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href= "../../di/user_guide/modules.html" >Modules</a></span></dt>
 <dt><span class="section"><a href= "../../di/user_guide/providers.html" >Providers</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href= "../../di/user_guide/providers/stack_over_heap_default.html" >stack_over_heap (default)</a></span></dt>
+<dt><span class="section"><a href= "../../di/user_guide/providers/stack_over_heap_default.html" >stack_over_heap
+        (default)</a></span></dt>
 <dt><span class="section"><a href= "../../di/user_guide/providers/heap.html" >heap</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href= "../../di/user_guide/policies.html" >Policies</a></span></dt>
@@ -162,7 +161,6 @@ function toggleNextRow() {
 <dt><span class="section"><a href= "../../di/examples/annotations.html" >Annotations</a></span></dt>
 <dt><span class="section"><a href= "../../di/examples/deduce_scope.html" >Deduce Scope</a></span></dt>
 <dt><span class="section"><a href= "../../di/examples/custom_scope.html" >Custom Scope</a></span></dt>
-<dt><span class="section"><a href= "../../di/examples/externals.html" >Externals</a></span></dt>
 <dt><span class="section"><a href= "../../di/examples/modules.html" >Modules</a></span></dt>
 <dt><span class="section"><a href= "../../di/examples/modules_hpp_cpp.html" >Modules (hpp/cpp)</a></span></dt>
 <dt><span class="section"><a href= "../../di/examples/custom_policy.html" >Custom Policy</a></span></dt>
@@ -172,17 +170,18 @@ function toggleNextRow() {
 <dt><span class="section"><a href= "../../di/extensions.html" >Extensions</a></span></dt>
 <dd><dl>
 <dt><span class="section"><a href= "../../di/extensions/constructor_bindings.html" >Constructor Bindings</a></span></dt>
-<dt><span class="section"><a href= "../../di/extensions/contextual_bindings.html" >Contextual Bindings</a></span></dt>
-<dt><span class="section"><a href= "../../di/extensions/container_bingings.html" >Container Bingings</a></span></dt>
-<dt><span class="section"><a href= "../../di/extensions/factory_assisted_injection.html" >Factory (Assisted Injection)</a></span></dt>
+<dt><b><u> <span class="section"><a href= "../../di/extensions/multi_bindings.html" >Multi Bindings</a></span> </u></b></dt>
+<dt><span class="section"><a href= "../../di/extensions/assisted_injection.html" >Assisted Injection</a></span></dt>
+<dt><span class="section"><a href= "../../di/extensions/xml_injection.html" >XML Injection</a></span></dt>
 <dt><span class="section"><a href= "../../di/extensions/types_dumper.html" >Types dumper</a></span></dt>
 <dt><span class="section"><a href= "../../di/extensions/uml_dumper.html" >UML Dumper</a></span></dt>
-<dt><span class="section"><a href= "../../di/extensions/xml_injection.html" >XML Injection</a></span></dt>
-<dt><span class="section"><a href= "../../di/extensions/testing_automatic_mocks_injectio.html" >Testing (Automatic Mocks Injection)</a></span></dt>
+<dt><span class="section"><a href= "../../di/extensions/mocks_provider.html" >Mocks Provider</a></span></dt>
+<dt><span class="section"><a href= "../../di/extensions/session_scope.html" >Session Scope</a></span></dt>
+<dt><span class="section"><a href= "../../di/extensions/shared_scope.html" >Shared Scope</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href= "../../di/projects.html" >Projects</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href= "../../di/projects/boost_meta_state_machine_depende.html" >Boost.MSM + Boost.DI</a></span></dt>
+<dt><span class="section"><a href= "../../di/projects/boost_meta_state_machine_depende.html" >Boost Meta State Machine - Dependency Injection Extension</a></span></dt>
 <dt><span class="section"><a href= "../../di/projects/match_3_switcher_game.html" >Match-3 Switcher Game</a></span></dt>
 <dt><span class="section"><a href= "../../di/projects/automatic_mocks_injector.html" >Automatic Mocks Injector</a></span></dt>
 </dl></dd>
@@ -196,14 +195,14 @@ function toggleNextRow() {
 <div class="toc2" id="section_">
 
 <p>
-        <button class="TryItBtn" id="run_it_btn_1" onclick="show(1, 'https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/extensions/multi_bindings.cpp')">Run this code!</button><textarea style="display: none" id="code_1"></textarea><br /><textarea style="display: none" id="output_1"></textarea><div id="code_listing_1">
+        <button class="TryItBtn" id="run_it_btn_1" onclick="show(1, 'https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/extensions/bindings/multi_bindings.cpp')">Run this code!</button><textarea style="display: none" id="code_1"></textarea><br /><textarea style="display: none" id="output_1"></textarea><div id="code_listing_1">
       </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">{</span> <span class="keyword">inline</span> <span class="keyword">namespace</span> <span class="identifier">v1</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">aux</span> <span class="special">{</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">deref_type</span><span class="special">;</span>
 
-<a class="co" name="di.extensions.multi_bingings.c0" href="multi_bingings.html#di.extensions.multi_bingings.c1"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<a class="co" name="di.extensions.multi_bindings.c0" href="multi_bindings.html#di.extensions.multi_bindings.c1"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">deref_type</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&gt;</span> <span class="special">{</span>
     <span class="keyword">using</span> <span class="identifier">type</span> <span class="special">=</span> <span class="keyword">typename</span> <span class="identifier">deref_type</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">[];</span>
 <span class="special">};</span>
@@ -212,7 +211,7 @@ function toggleNextRow() {
 
 <span class="keyword">namespace</span> <span class="identifier">concepts</span> <span class="special">{</span>
 
-<a class="co" name="di.extensions.multi_bingings.c2" href="multi_bingings.html#di.extensions.multi_bingings.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">I</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<a class="co" name="di.extensions.multi_bindings.c2" href="multi_bindings.html#di.extensions.multi_bindings.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">I</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">auto</span> <span class="identifier">boundable_impl</span><span class="special">(</span><span class="identifier">I</span><span class="special">[],</span> <span class="identifier">T</span><span class="special">&amp;&amp;)</span> <span class="special">-&gt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">true_type</span><span class="special">;</span>
 
 <span class="special">}}}}</span> <span class="comment">// boost::di::v1::concepts</span>
@@ -222,7 +221,7 @@ function toggleNextRow() {
 <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 
 
-<a class="co" name="di.extensions.multi_bingings.c4" href="multi_bingings.html#di.extensions.multi_bingings.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">...</span> <span class="identifier">Ts</span><span class="special">&gt;</span>
+<a class="co" name="di.extensions.multi_bindings.c4" href="multi_bindings.html#di.extensions.multi_bindings.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">...</span> <span class="identifier">Ts</span><span class="special">&gt;</span>
 <span class="keyword">class</span> <span class="identifier">all_of_impl</span> <span class="special">{</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">type</span> <span class="special">{</span> <span class="special">};</span>
 
@@ -268,14 +267,14 @@ function toggleNextRow() {
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
     <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-        <a class="co" name="di.extensions.multi_bingings.c6" href="multi_bingings.html#di.extensions.multi_bingings.c7"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">[]&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">all_of</span><span class="special">&lt;</span><span class="identifier">implementation1</span><span class="special">,</span> <span class="identifier">implementation2</span><span class="special">&gt;())</span>
+        <a class="co" name="di.extensions.multi_bindings.c6" href="multi_bindings.html#di.extensions.multi_bindings.c7"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">[]&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">all_of</span><span class="special">&lt;</span><span class="identifier">implementation1</span><span class="special">,</span> <span class="identifier">implementation2</span><span class="special">&gt;())</span>
       <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">[]&gt;().</span><span class="identifier">named</span><span class="special">(</span><span class="identifier">vector_shared</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">all_of</span><span class="special">&lt;</span><span class="identifier">implementation1</span><span class="special">,</span> <span class="identifier">implementation2</span><span class="special">&gt;())</span>
       <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">[]&gt;().</span><span class="identifier">named</span><span class="special">(</span><span class="identifier">vector_unique</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">all_of</span><span class="special">&lt;</span><span class="identifier">implementation1</span><span class="special">&gt;())</span>
     <span class="special">);</span>
 
     <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>
 
-    <a class="co" name="di.extensions.multi_bingings.c8" href="multi_bingings.html#di.extensions.multi_bingings.c9"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;&gt;</span> <span class="identifier">v</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">;</span>
+    <a class="co" name="di.extensions.multi_bindings.c8" href="multi_bindings.html#di.extensions.multi_bindings.c9"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;&gt;</span> <span class="identifier">v</span> <span class="special">=</span> <span class="identifier">injector</span><span class="special">;</span>
     <span class="identifier">assert</span><span class="special">(</span><span class="identifier">v</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="number">2</span><span class="special">);</span>
     <span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">implementation1</span><span class="special">*&gt;(</span><span class="identifier">v</span><span class="special">[</span><span class="number">0</span><span class="special">].</span><span class="identifier">get</span><span class="special">()));</span>
     <span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">implementation2</span><span class="special">*&gt;(</span><span class="identifier">v</span><span class="special">[</span><span class="number">1</span><span class="special">].</span><span class="identifier">get</span><span class="special">()));</span>
@@ -283,33 +282,33 @@ function toggleNextRow() {
 </pre>
 <div class="calloutlist"><table border="0" summary="Callout list">
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.extensions.multi_bingings.c1"></a><a href="#di.extensions.multi_bingings.c0"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.extensions.multi_bindings.c1"></a><a href="#di.extensions.multi_bindings.c0"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             transform constructor container type to expected binding type <code class="computeroutput"><span class="identifier">type</span><span class="special">[]</span></code>
           </p></td>
 </tr>
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.extensions.multi_bingings.c3"></a><a href="#di.extensions.multi_bingings.c2"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.extensions.multi_bindings.c3"></a><a href="#di.extensions.multi_bindings.c2"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             allow binding <code class="computeroutput"><span class="identifier">type</span><span class="special">[]</span></code>
             to anything
           </p></td>
 </tr>
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.extensions.multi_bingings.c5"></a><a href="#di.extensions.multi_bingings.c4"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.extensions.multi_bindings.c5"></a><a href="#di.extensions.multi_bindings.c4"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             all types creator and adder to container type
           </p></td>
 </tr>
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.extensions.multi_bingings.c7"></a><a href="#di.extensions.multi_bingings.c6"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.extensions.multi_bindings.c7"></a><a href="#di.extensions.multi_bindings.c6"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             interface[] match with vector&lt;interface&gt;, vector&lt;unique_ptr&lt;interface&gt;&gt;,
             ..., list&lt;interface&gt;, queue&lt;shared_ptr&lt;interface&gt;, ...
           </p></td>
 </tr>
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.extensions.multi_bingings.c9"></a><a href="#di.extensions.multi_bingings.c8"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.extensions.multi_bindings.c9"></a><a href="#di.extensions.multi_bindings.c8"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             create vector
           </p></td>

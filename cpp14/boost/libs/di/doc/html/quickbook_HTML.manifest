@@ -24,8 +24,6 @@ di/user_guide/scopes.html
 di/user_guide/scopes/deduce.html
 di/user_guide/scopes/unique.html
 di/user_guide/scopes/singleton.html
-di/user_guide/scopes/shared.html
-di/user_guide/scopes/session.html
 di/user_guide/scopes/external.html
 di/user_guide/modules.html
 di/user_guide/providers.html
@@ -51,7 +49,6 @@ di/examples/constructor_signature.html
 di/examples/annotations.html
 di/examples/deduce_scope.html
 di/examples/custom_scope.html
-di/examples/externals.html
 di/examples/modules.html
 di/examples/modules_hpp_cpp.html
 di/examples/custom_policy.html
@@ -59,13 +56,14 @@ di/examples/custom_provider.html
 di/examples/pool_provider.html
 di/extensions.html
 di/extensions/constructor_bindings.html
-di/extensions/contextual_bindings.html
-di/extensions/multi_bingings.html
-di/extensions/factory_assisted_injection.html
+di/extensions/multi_bindings.html
+di/extensions/assisted_injection.html
+di/extensions/xml_injection.html
 di/extensions/types_dumper.html
 di/extensions/uml_dumper.html
-di/extensions/xml_injection.html
-di/extensions/testing_automatic_mocks_injectio.html
+di/extensions/mocks_provider.html
+di/extensions/session_scope.html
+di/extensions/shared_scope.html
 di/projects.html
 di/projects/boost_meta_state_machine_depende.html
 di/projects/match_3_switcher_game.html

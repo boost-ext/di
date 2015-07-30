@@ -1,0 +1,136 @@
+#
+# Copyright (c) 2012-2015 Krzysztof Jusiak (krzysztof at jusiak dot net)
+#
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#
+
+import testing ;
+import feature : extend-feature compose ;
+
+.argv = [ modules.peek : ARGV ] ;
+
+project di :
+    requirements
+        <include>../include
+        <include>.
+;
+
+rule run-example ( std : src + : cxxflags * : property * ) {
+    cxx_flags = "" ;
+    if $(cxxflags) {
+        cxx_flags = "$(cxxflags)" ;
+    }
+
+    toolset =
+        <toolset>gcc:<cxxflags>"-std=$(std) -pedantic -pedantic-errors -Wall -Wextra -Werror $(cxx_flags)"
+        <toolset>clang:<cxxflags>"-std=$(std) -pedantic -pedantic-errors -Wall -Wextra -Werror $(cxx_flags)"
+        <toolset>darwin:<cxxflags>"-std=$(std) -pedantic -pedantic-errors -Wall -Wextra -Werror $(cxx_flags)"
+        <toolset>msvc:<cxxflags>"/W3 $(cxx_flags)"
+    ;
+
+    local memcheck = [ MATCH --memcheck=(.*) : $(.argv) ] ;
+
+    if ${memcheck} {
+        toolset += <testing.launcher>$(memcheck) ;
+    }
+
+    run $(src) : : : $(toolset) : $(property) ;
+}
+
+test-suite example :
+    [ run-example c++1y : modules/model.cpp
+                          modules/module_model.cpp
+                          modules/view.cpp
+                          modules/module_view.cpp
+                          modules/controller.cpp
+                          modules/main.cpp
+      : -Imodules -DBOOST_DI_CFG=config
+    ]
+    [ run-example c++1y : annotations.cpp ]
+    [ run-example c++1y : bindings.cpp ]
+    [ run-example c++1y : constructor_injection.cpp ]
+    [ run-example c++1y : constructor_signature.cpp ]
+    [ run-example c++1y : custom_policy.cpp ]
+    [ run-example c++1y : custom_provider.cpp ]
+    [ run-example c++1y : custom_scope.cpp ]
+    [ run-example c++1y : deduce_scope.cpp ]
+    [ run-example c++1y : dynamic_bindings.cpp ]
+    [ run-example c++1y : hello_world.cpp ]
+    [ run-example c++1y : modules.cpp ]
+    [ run-example c++1y : multiple_interfaces.cpp ]
+    [ run-example c++1y : pool_provider.cpp ]
+    [ run-example c++1y : provider.cpp ]
+;
+
+test-suite extensions :
+    [ run-example c++1y : extensions/bindings/constructor_bindings.cpp ]
+    [ run-example c++1y : extensions/bindings/multi_bindings.cpp ]
+    [ run-example c++1y : extensions/injections/assisted_injection.cpp ]
+    [ run-example c++1y : extensions/injections/xml_injection.cpp ]
+    [ run-example c++1y : extensions/policies/types_dumper.cpp ]
+    [ run-example c++1y : extensions/policies/uml_dumper.cpp ]
+    [ run-example c++1y : extensions/providers/mocks_provider.cpp ]
+    [ run-example c++1y : extensions/scopes/session_scope.cpp ]
+    [ run-example c++1y : extensions/scopes/shared_scope.cpp ]
+;
+
+test-suite introduction :
+    [ run-example c++1y : introduction/coffee_maker.cpp ]
+;
+
+test-suite performance :
+    [ run-example c++1y : performance/create_bound_interface.cpp ]
+    [ run-example c++1y : performance/create_bound_interface_via_exposed_module.cpp ]
+    [ run-example c++1y : performance/create_bound_interface_via_module.cpp ]
+    [ run-example c++1y : performance/create_named_type.cpp ]
+    [ run-example c++1y : performance/create_type_with_bound_instance.cpp ]
+    [ run-example c++1y : performance/create_type_without_bindings.cpp ]
+;
+
+test-suite quick_user_guide :
+    [ run-example c++1y : quick_user_guide/annotations1.cpp ]
+    [ run-example c++1y : quick_user_guide/annotations2.cpp ]
+    [ run-example c++1y : quick_user_guide/annotations3.cpp ]
+    [ run-example c++1y : quick_user_guide/annotations4.cpp ]
+    [ run-example c++1y : quick_user_guide/bindings1.cpp ]
+    [ run-example c++1y : quick_user_guide/bindings2.cpp ]
+    [ run-example c++1y : quick_user_guide/bindings3.cpp ]
+    [ run-example c++1y : quick_user_guide/bindings4.cpp ]
+    [ run-example c++1y : quick_user_guide/bindings5.cpp ]
+    [ run-example c++1y : quick_user_guide/injections1.cpp ]
+    [ run-example c++1y : quick_user_guide/injections2.cpp ]
+    [ run-example c++1y : quick_user_guide/injections3.cpp ]
+    [ run-example c++1y : quick_user_guide/injections4.cpp ]
+    [ run-example c++1y : quick_user_guide/injections5.cpp ]
+    [ run-example c++1y : quick_user_guide/injections6.cpp ]
+    [ run-example c++1y : quick_user_guide/injector1.cpp ]
+    [ run-example c++1y : quick_user_guide/modules1.cpp ]
+    [ run-example c++1y : quick_user_guide/modules2.cpp ]
+    [ run-example c++1y : quick_user_guide/modules3.cpp ]
+    [ run-example c++1y : quick_user_guide/modules4.cpp ]
+    [ run-example c++1y : quick_user_guide/policies1.cpp ]
+    [ run-example c++1y : quick_user_guide/policies2.cpp ]
+    [ run-example c++1y : quick_user_guide/policies3.cpp ]
+    [ run-example c++1y : quick_user_guide/providers1.cpp ]
+    [ run-example c++1y : quick_user_guide/scopes1.cpp ]
+    [ run-example c++1y : quick_user_guide/scopes2.cpp ]
+    [ run-example c++1y : quick_user_guide/scopes3.cpp ]
+    [ run-example c++1y : quick_user_guide/scopes4.cpp ]
+    [ run-example c++1y : quick_user_guide/scopes5.cpp ]
+;
+
+test-suite try_it_online :
+    [ run-example c++1y : try_it_online/main.cpp : -I../include/boost ]
+;
+
+test-suite tutorial :
+    [ run-example c++1y : tutorial/tutorial1.cpp : -Itutorial ]
+    [ run-example c++1y : tutorial/tutorial2.cpp : -Itutorial ]
+    [ run-example c++1y : tutorial/tutorial3.cpp : -Itutorial ]
+    [ run-example c++1y : tutorial/tutorial4.cpp : -Itutorial ]
+    [ run-example c++1y : tutorial/tutorial5.cpp : -Itutorial ]
+    [ run-example c++1y : tutorial/tutorial6.cpp : -Itutorial ]
+    [ run-example c++1y : tutorial/tutorial7.cpp : -Itutorial ]
+;
+
