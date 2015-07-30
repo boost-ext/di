@@ -79,6 +79,15 @@ test-suite introduction :
     [ run-example c++1y : introduction/coffee_maker.cpp ]
 ;
 
+test-suite performance :
+    [ run-example c++1y : performance/create_bound_interface.cpp ]
+    [ run-example c++1y : performance/create_bound_interface_via_exposed_module.cpp ]
+    [ run-example c++1y : performance/create_bound_interface_via_module.cpp ]
+    [ run-example c++1y : performance/create_named_type.cpp ]
+    [ run-example c++1y : performance/create_type_with_bound_instance.cpp ]
+    [ run-example c++1y : performance/create_type_without_bindings.cpp ]
+;
+
 test-suite quick_user_guide :
     [ run-example c++1y : quick_user_guide/annotations1.cpp ]
     [ run-example c++1y : quick_user_guide/annotations2.cpp ]

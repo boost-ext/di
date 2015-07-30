@@ -29,6 +29,13 @@ run_example(provider)
 
 run_example(introduction/coffee_maker)
 
+run_example(performance/create_bound_interface)
+run_example(performance/create_bound_interface_via_exposed_module)
+run_example(performance/create_bound_interface_via_module)
+run_example(performance/create_named_type)
+run_example(performance/create_type_with_bound_instance)
+run_example(performance/create_type_without_bindings)
+
 run_example(extensions/bindings/constructor_bindings)
 run_example(extensions/bindings/multi_bindings)
 run_example(extensions/injections/assisted_injection)
