@@ -20,6 +20,7 @@ namespace di = boost::di;
 struct interface1 { virtual ~interface1() noexcept = default; };
 struct interface2 { virtual ~interface2() noexcept = default; };
 struct implementation1 : interface1 { };
+struct implementation1_2 : interface1 { };
 struct implementation2 : interface2 { };
 auto some_name = []{};
 auto int_name = []{};
@@ -34,7 +35,7 @@ struct service {
           , (named = int_name) const int ni)
         : sp(sp)
     {
-        assert(dynamic_cast<implementation1*>(sp.get()));
+        assert(dynamic_cast<implementation1_2*>(sp.get())); // overridden
         assert(!b); // default initialization
         assert(i == 42);
         assert(f() == 87);
@@ -58,7 +59,7 @@ struct app {
       , d(d)
     {
         assert(dynamic_cast<implementation2*>(ap.get()));
-        assert(dynamic_cast<implementation1*>(sp.get()));
+        assert(dynamic_cast<implementation1_2*>(sp.get())); // overridden
         assert(copy.sp.get() == sp.get());
         assert(i == 42);
         assert(str == "some_name");
@@ -77,16 +78,22 @@ int main() {
     float f = 0.f;
     double d = 0.f;
 
+    /*<<create injector with `interface` binding to `implementation1`>>*/
+    auto config = di::make_injector(
+        di::bind<interface1, implementation1>()
+    );
+
     /*<<create injector with configuration>>*/
     auto injector = di::make_injector(
-        di::bind<interface1, implementation1>()
-      , di::bind<interface2, implementation2>()
+        di::bind<interface2, implementation2>()
       , di::bind<int>().to(42)
       , di::bind<std::string>().named(some_name).to("some_name")
       , di::bind<float>().to(f)
       , di::bind<double>().to(d)
       , di::bind<std::function<int()>>().to([]{return 87;})
       , di::bind<int>().named(int_name).to(123)
+      , config
+      , di::bind<interface1>().to(std::make_shared<implementation1_2>()) [di::override]
     );
 
     /*<<create `service_app`>>*/
