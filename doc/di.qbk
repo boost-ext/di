@@ -46,9 +46,7 @@
 [def __scopes_deduce__                                  [link di.user_guide.scopes.deduce deduce scope]]
 [def __scopes_external__                                [link di.user_guide.scopes.external external scope]]
 [def __scopes_unique__                                  [link di.user_guide.scopes.unique unique scope]]
-[def __scopes_shared__                                  [link di.user_guide.scopes.shared shared scope]]
 [def __scopes_singleton__                               [link di.user_guide.scopes.singleton singleton scope]]
-[def __scopes_session__                                 [link di.user_guide.scopes.session session scope]]
 
 [def __concepts_boundable__                             [link di.user_guide.concepts.boundable boundable]]
 [def __concepts_callable__                              [link di.user_guide.concepts.callable callable]]
@@ -104,8 +102,6 @@
 [def __di_make_injector__                               [link di.user_guide.injector.make_injector di::make_injector]]
 [def __di_scopes_deduce__                               [link di.user_guide.scopes.deduce di::deduce]]
 [def __di_scopes_unique__                               [link di.user_guide.scopes.unique di::unique]]
-[def __di_scopes_shared__                               [link di.user_guide.scopes.shared di::shared]]
-[def __di_scopes_session__                              [link di.user_guide.scopes.session di::session]]
 [def __di_scopes_singleton__                            [link di.user_guide.scopes.singleton di::singleton]]
 [def __di_scopes_external__                             [link di.user_guide.scopes.external di::external]]
 [def __di_dependency__                                  [link di.user_guide.bindings.synopsis di::dependency]]

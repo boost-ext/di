@@ -59,7 +59,7 @@ for file in `find $HTML/di -iname "*.html"`; do
         mv /tmp/tmp.html $file
     fi
 
-    if [[ $file =~ "tutorial.html" ]]; then
+    if [[ `grep -c "\$example_begin" $file` -gt 1 ]]; then
         id=0;
         rm -f /tmp/tmp.html
         while IFS='' read line; do

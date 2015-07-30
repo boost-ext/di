@@ -9,14 +9,13 @@
 
 [section Performance]
 
-[tip [@http://melpon.org/wandbox/permlink/7GvmSoCitBISnnfi [_Try it yourself online!]]]
-
 * [h6 Run-time]
 
     * Environment
         * x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
         * clang++3.4 -O2 / `gdb -batch -ex 'file ./a.out' -ex 'disassemble main'`
 
+$example_begin example/performance/create_type_without_bindings.cpp$
 [table
 [[Create type without bindings][Asm x86-64 (same as `return 0`)]]
     [
@@ -36,8 +35,9 @@
         ]
     ]
 ]
+$example_end$
 
-
+$example_begin example/performance/create_type_with_bound_instance.cpp$
 [table
 [[Create type with bound instance][Asm x86-64 (same as `return 42`)]]
     [
@@ -60,8 +60,9 @@
         ]
     ]
 ]
+$example_end$
 
-
+$example_begin example/extensions/providers/create_named_type.cpp$
 [table
 [[Create named type][Asm x86-64 (same as `return 42`)]]
     [
@@ -95,8 +96,9 @@
         ]
     ]
 ]
+$example_end$
 
-
+$example_begin example/extensions/providers/create_bound_interface.cpp$
 [table
 [[Create bound interface][Asm x86-64 (same as `make_unique`)]]
     [
@@ -130,8 +132,10 @@
         ]
     ]
 ]
+$example_end$
 
 
+$example_begin example/extensions/providers/create_bound_interface_via_module.cpp$
 [table
 [[Create bound interface via module][Asm x86-64 (same as `make_unique`)]]
     [
@@ -174,8 +178,9 @@
         ]
     ]
 ]
+$example_end$
 
-
+$example_begin example/extensions/providers/create_bound_interface_via_exposed_module.cpp$
 [table
 [[Create bound interface via exposed module (cost = type erasure)][Asm x86-64]]
     [
@@ -234,6 +239,7 @@
         ]
     ]
 ]
+$example_end$
 
 * [h6 Compile-time]
 

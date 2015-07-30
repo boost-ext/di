@@ -72,13 +72,6 @@ $example_begin example/custom_scope.cpp$
 $example_end$
 [endsect]
 
-[section Externals]
-$example_begin example/externals.cpp$
-[import ../example/externals.cpp]
-[externals]
-$example_end$
-[endsect]
-
 [section Modules]
 $example_begin example/modules.cpp$
 [import ../example/modules.cpp]

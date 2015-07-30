@@ -10,57 +10,64 @@
 [section Extensions]
 
 [section Constructor Bindings]
-$example_begin example/extensions/constructor_bindings.cpp$
-[import ../example/extensions/constructor_bindings.cpp]
+$example_begin example/extensions/bindings/constructor_bindings.cpp$
+[import ../example/extensions/bindings/constructor_bindings.cpp]
 [constructor_bindings]
 $example_end$
 [endsect]
 
-[section Contextual Bindings]
-$example_begin example/extensions/contextual_bindings.cpp$
-[import ../example/extensions/contextual_bindings.cpp]
-[contextual_bindings]
-$example_end$
-[endsect]
-
-[section Multi Bingings]
-$example_begin example/extensions/multi_bindings.cpp$
-[import ../example/extensions/multi_bindings.cpp]
+[section Multi Bindings]
+$example_begin example/extensions/bindings/multi_bindings.cpp$
+[import ../example/extensions/bindings/multi_bindings.cpp]
 [multi_bindings]
 $example_end$
 [endsect]
 
-[section Factory (Assisted Injection)]
-$example_begin example/extensions/factory.cpp$
-[import ../example/extensions/factory.cpp]
-[factory]
+[section Assisted Injection]
+$example_begin example/extensions/injections/assisted_injection.cpp$
+[import ../example/extensions/injections/assisted_injection.cpp]
+[assisted_injection]
+$example_end$
+[endsect]
+
+[section XML Injection]
+$example_begin example/extensions/injections/xml_injection.cpp$
+[import ../example/extensions/injections/xml_injection.cpp]
+[xml_injection]
 $example_end$
 [endsect]
 
 [section Types dumper]
-$example_begin example/extensions/types_dumper.cpp$
-[import ../example/extensions/types_dumper.cpp]
+$example_begin example/extensions/policies/types_dumper.cpp$
+[import ../example/extensions/policies/types_dumper.cpp]
 [types_dumper]
 $example_end$
 [endsect]
 
 [section UML Dumper]
-$example_begin example/extensions/uml_dumper.cpp$
-[import ../example/extensions/uml_dumper.cpp]
+$example_begin example/extensions/policies/uml_dumper.cpp$
+[import ../example/extensions/policies/uml_dumper.cpp]
 [uml_dumper]
 $example_end$
 [endsect]
 
-[section XML Injection]
-$example_begin example/extensions/xml_injection.cpp$
-[import ../example/extensions/xml_injection.cpp]
-[xml_injection]
+[section Mocks Provider]
+$example_begin example/extensions/providers/mocks_provider.cpp$
+[import ../example/extensions/providers/mocks_provider.cpp]
+[testing]
 $example_end$
 [endsect]
 
-[section Testing (Automatic Mocks Injection)]
-$example_begin example/extensions/testing.cpp$
-[import ../example/extensions/testing.cpp]
+[section Session Scope]
+$example_begin example/extensions/scopes/session_scope.cpp$
+[import ../example/extensions/scopes/session_scope.cpp]
+[testing]
+$example_end$
+[endsect]
+
+[section Shared Scope]
+$example_begin example/extensions/scopes/shared_scope.cpp$
+[import ../example/extensions/scopes/shared_scope.cpp]
 [testing]
 $example_end$
 [endsect]
