@@ -97,7 +97,6 @@ private:
 
 template<class T>
 struct assisted_injection : assisted_injection_impl<T> { };
-
 //->
 
 struct example {

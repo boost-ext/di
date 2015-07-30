@@ -9,12 +9,12 @@
 //<-
 #include <cassert>
 #include <typeinfo>
+#include <iostream>
 //->
 #include <boost/di.hpp>
 
 namespace di = boost::di;
 
-#include <iostream>
 //<-
 struct interface { virtual ~interface() noexcept = default; };
 struct implementation1 : interface { };
@@ -75,7 +75,6 @@ private:
 
 template<class TIf, class... TImpl>
 struct xml : inject_from_xml<TIf, xml_list<TImpl...>> { };
-
 //->
 
 class module {
