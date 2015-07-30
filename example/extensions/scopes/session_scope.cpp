@@ -81,7 +81,7 @@ auto my_session = []{};
 
 int main() {
     auto injector = di::make_injector(
-        di::bind<interface1, implementation1>.in(session(my_session))
+        di::bind<interface1, implementation1>().in(session(my_session))
     );
 
     assert(!injector.create<std::shared_ptr<interface1>>());
