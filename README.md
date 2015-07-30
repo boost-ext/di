@@ -1074,7 +1074,7 @@ int main() {                            | movq   $0x400a00,0x2007b4(%rip
 ```cpp
 Boost.DI header                         | Time [s]
 ----------------------------------------|-----------------------------------------
-#include <boost/di.hpp>                 | 0.165
+#include <boost/di.hpp>                 | 0.110
 int main() { }                          |
 ```
 ```cpp
