@@ -85,43 +85,43 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.6
-  #- os: linux
-    #env: TOOLSET=clang-3.7 MEMCHECK=${VALGRIND} BENCHMARK=quick
-    #addons:
-      #apt:
-        #packages:
-        #- clang-3.7
-        #- libstdc++-5-dev
-        #- valgrind
-        #- gdb
-        #- bc
-        #sources:
-        #- ubuntu-toolchain-r-test
-        #- llvm-toolchain-precise
-  #- os: linux
-    #env: TOOLSET=clang-3.7 MEMCHECK=${VALGRIND} LIBCXX=clang++-3.7
-    #addons:
-      #apt:
-        #packages:
-        #- clang-3.7
-        #- valgrind
-        #- gdb
-        #- bc
-        #sources:
-        #- ubuntu-toolchain-r-test
-        #- llvm-toolchain-precise-3.7
-  #- os: linux
-    #env: CMAKE_COMPILER=clang++-3.7 BENCHMARK=quick
-    #addons:
-      #apt:
-        #packages:
-        #- clang-3.7
-        #- libstdc++-5-dev
-        #- gdb
-        #- bc
-        #sources:
-        #- ubuntu-toolchain-r-test
-        #- llvm-toolchain-precise
+  - os: linux
+    env: TOOLSET=clang-3.7 MEMCHECK=${VALGRIND} BENCHMARK=quick
+    addons:
+      apt:
+        packages:
+        - clang-3.7
+        - libstdc++-5-dev
+        - valgrind
+        - gdb
+        - bc
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise
+  - os: linux
+    env: TOOLSET=clang-3.7 MEMCHECK=${VALGRIND} LIBCXX=clang++-3.7
+    addons:
+      apt:
+        packages:
+        - clang-3.7
+        - valgrind
+        - gdb
+        - bc
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise-3.7
+  - os: linux
+    env: CMAKE_COMPILER=clang++-3.7 BENCHMARK=quick
+    addons:
+      apt:
+        packages:
+        - clang-3.7
+        - libstdc++-5-dev
+        - gdb
+        - bc
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise
   - os: linux
     env: TOOLSET=gcc-5 GCOV=gcov-5 VARIANT=coverage MEMCHECK=${VALGRIND} BIICODE=ON
     addons:

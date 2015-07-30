@@ -1,5 +1,11 @@
 Boost.DI: C++ Dependency Injection
 ===============================================
+<a href="http://www.boost.org/LICENSE_1_0.txt" target="_blank">![Boost Licence](http://img.shields.io/badge/license-boost-blue.svg)</a>
+<a href="https://github.com/krzysztof-jusiak/di/releases/latest" target="_blank">![Github Release](http://img.shields.io/github/release/krzysztof-jusiak/di.svg)</a>
+<a href="https://www.biicode.com/krzysztofjusiak/di" target="_blank">![Bii](https://webapi.biicode.com/v1/badges/krzysztofjusiak/krzysztofjusiak/di/master)</a>
+<a href="http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/try_it_online.html" target="_blank">![Try Boost.DI Online](https://img.shields.io/badge/try%20boost.di-online-orange.svg)</a>
+<a href="https://gitter.im/krzysztof-jusiak/di" target="_blank">![Gitter Chat](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)</a>
+
 [![Boost Libraries](https://raw.githubusercontent.com/krzysztof-jusiak/di/gh-pages/boost/boost.png)](http://www.boost.org)
 <a href="https://travis-ci.org/krzysztof-jusiak/di" target="_blank">![Build Status](https://img.shields.io/travis/krzysztof-jusiak/di/cpp14.svg?label=linux/osx)</a>
 <a href="https://ci.appveyor.com/project/krzysztof-jusiak/di" target="_blank">![Build Status](https://img.shields.io/appveyor/ci/krzysztof-jusiak/di/cpp14.svg?label=windows)</a>
@@ -11,11 +17,6 @@ Boost.DI: C++ Dependency Injection
 **Dependency Injection (DI)** involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state.
 It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.
 
-<a href="http://www.boost.org/LICENSE_1_0.txt" target="_blank">![Boost Licence](http://img.shields.io/badge/license-boost-blue.svg)</a>
-<a href="https://github.com/krzysztof-jusiak/di/releases/latest" target="_blank">![Github Release](http://img.shields.io/github/release/krzysztof-jusiak/di.svg)</a>
-<a href="https://www.biicode.com/krzysztofjusiak/di" target="_blank">![Bii](https://webapi.biicode.com/v1/badges/krzysztofjusiak/krzysztofjusiak/di/master)</a>
-<a href="http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/try_it_online.html" target="_blank">![Try Boost.DI Online](https://img.shields.io/badge/try%20boost.di-online-orange.svg)</a>
-<a href="https://gitter.im/krzysztof-jusiak/di" target="_blank">![Gitter Chat](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)</a>
 
 > **"Let's make some coffee!"**
 <p align="center"><img src="https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker.png" alt="coffee maker"/></p>
