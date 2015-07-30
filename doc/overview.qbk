@@ -46,18 +46,30 @@ To get and test Boost.DI library:
     ./b2 -j4 ../test ../example
 ```
 
+[h6 Design]
+[@images/di.png [$images/di.png [width 75%] [height 75%] ]]
+Generated with [@http://plantuml.sourceforge.net PlantUML].
+
+[table
+    [ [Component] [Description] ]
+    [ [__bindings__] [DSL to create dependencies representation which will be used by core to resolve types] ]
+    [ [__core__] [Responsible for resolving requested types (implementation detail)] ]
+    [ [__providers__] [Responsible for providing object instance] ]
+    [ [__scopes__] [Responsible for maintain objects life time] ]
+    [ [__wrappers__] [Responsible for conversion to required type] ]
+    [ [__policies__] [Compile time assertions for types] ]
+]
+
 [heading See Also]
 * [link di.tutorial Tutorial]
 * [link di.quick_user_guide Quick user Guide]
-* [link di.diagnostic_messages Diagnostic messages]
-* [link di.performance Performance]
+* [link di.overview.diagnostic_messages Diagnostic messages]
+* [link di.overview.performance Performance]
 * [link di.user_guide User Guide]
 * [link di.examples Examples]
-* [link di.rationale Rationale]
 
 [include performance.qbk]
 [include diagnostic_messages.qbk]
-[include rationale.qbk]
 
 [endsect]
 

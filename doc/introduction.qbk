@@ -81,9 +81,9 @@ Following this approach has many advantages.
 
 [h6 Why Boost.DI?]
 
-* *Boost.DI has none or minimal run-time overhead* - [link di.performance.run_time Run-time Performance]
-* *Boost.DI compiles fast* - [link di.performance.compile_time Compile-time Performance]
-* *Boost.DI gives short diagnostic messages* - [link di.diagnostic_messages Diagnostic Messages]
+* *Boost.DI has none or minimal run-time overhead* - [link di.overview.performance.run_time Run-time Performance]
+* *Boost.DI compiles fast* - [link di.overview.performance.compile_time Compile-time Performance]
+* *Boost.DI gives short diagnostic messages* - [link di.overview.diagnostic_messages Diagnostic Messages]
 
 * *Boost.DI guarantees compile time creation*
 [table
@@ -429,11 +429,10 @@ Following this approach has many advantages.
 * [link di.overview Overview]
 * [link di.tutorial Tutorial]
 * [link di.quick_user_guide Quick user Guide]
-* [link di.diagnostic_messages Diagnostic messages]
-* [link di.performance Performance]
+* [link di.overview.diagnostic_messages Diagnostic messages]
+* [link di.overview.performance Performance]
 * [link di.user_guide User Guide]
 * [link di.examples Examples]
-* [link di.rationale Rationale]
 
 [include libraries.qbk]
 

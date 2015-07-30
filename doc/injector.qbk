@@ -74,7 +74,7 @@ Injector is a component used for creating dependencies configuration using [link
     assert(0 == injector.__di_injector_create__<int>());
 
 [heading More Examples]
-    ``__examples_hello_world__`` | ``__examples_modules__`` | ``__examples_uml_dumper__`` | ``__examples_custom_provider__`` | ``__examples_custom_scope__``
+    ``__examples_hello_world__`` | ``__examples_modules__`` | ``__extensions_uml_dumper__`` | ``__examples_custom_provider__`` | ``__examples_custom_scope__``
 
 [heading See Also]
 
@@ -128,7 +128,7 @@ Creates [link di.user_guide.injector injector] type.
 ]
 
 [heading More Examples]
-    ``__examples_hello_world__`` | ``__examples_modules__`` | ``__examples_uml_dumper__`` | ``__examples_custom_provider__`` | ``__examples_custom_scope__`` | ``__examples_custom_policy__``
+    ``__examples_hello_world__`` | ``__examples_modules__`` | ``__extensions_uml_dumper__`` | ``__examples_custom_provider__`` | ``__examples_custom_scope__`` | ``__examples_custom_policy__``
 
 [heading See Also]
 

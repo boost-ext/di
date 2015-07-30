@@ -69,8 +69,8 @@
 [def __di_config__                                      [link di.user_guide.configuration.synopsis di::config]]
 [def __di_make_policies__                               [link di.user_guide.configuration.synopsis di::make_policies]]
 
-[def __performance__                                    [link di.performance Performance]]
-[def __diagnostic_messages__                            [link di.diagnostic_messages Diagnostic messages]]
+[def __performance__                                    [link di.overview.performance Performance]]
+[def __diagnostic_messages__                            [link di.overview.diagnostic_messages Diagnostic messages]]
 
 [def __examples__                                       [link di.examples Examples]]
 [def __examples_hello_world__                           [link di.examples.hello_world Hello World]]
@@ -83,17 +83,14 @@
 [def __examples_custom_policy__                         [link di.examples.custom_policy Custom Policy]]
 [def __examples_custom_scope__                          [link di.examples.custom_scope Custom Scope]]
 [def __examples_deduce_scope__                          [link di.examples.deduce_scope Deduce Scope]]
-[def __examples_uml_dumper__                            [link di.examples.uml_dumper UML Dumper]]
 [def __examples_annotations__                           [link di.examples.annotations Annotations]]
 [def __examples_provider__                              [link di.examples.provider Provider]]
-[def __examples_externals__                             [link di.examples.externals Externals]]
 [def __examples_multiple_interfaces__                   [link di.examples.multiple_interfaces Multiple Interfaces]]
 [def __examples_types_dumper__                          [link di.examples.types_dumper Types Dumper]]
 [def __examples_modules_hpp_cpp__                       [link di.examples.modules_hpp_cpp Modules (hpp/cpp)]]
 
 [def __extensions__                                     [link di.examples Extensions]]
-
-[def __rationale__                                      [link di.rationale Rationale]]
+[def __extensions_uml_dumper__                          [link di.extensions.uml_dumper UML Dumper]]
 
 [def __di_bind__                                        [link di.user_guide.bindings.bind di::bind]]
 [def __di_any_of__                                      [link di.user_guide.bindings.bind di::any_of]]

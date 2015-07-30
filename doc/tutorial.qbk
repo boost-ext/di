@@ -352,11 +352,10 @@ a problem for you anymore.
 
 [heading See Also]
 * [link di.quick_user_guide Quick User Guide]
-* [link di.diagnostic_messages Diagnostic messages]
-* [link di.performance Performance]
+* [link di.overview.diagnostic_messages Diagnostic messages]
+* [link di.overview.performance Performance]
 * [link di.user_guide User Guide]
 * [link di.examples Examples]
-* [link di.rationale Rationale]
 
 [endsect]
 

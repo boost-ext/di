@@ -70,13 +70,13 @@
     [[[@# [Show Results]]]]
     [[Assember - x86-64]
     [
-        ```
-       xor    %eax,%eax
-       retq
+        [teletype] ```
+        xor    %eax,%eax
+        retq
         ```
     ]
     [
-        ```
+        [teletype] ```
         push   %rbx
         sub    $0xb0,%rsp
         lea    0x20(%rsp),%rbx
@@ -127,7 +127,7 @@
         ```
     ]
     [
-        ```
+        [teletype] ```
 	    push   %rbp
 	    push   %rbx
 	    sub    $0xc8,%rsp
