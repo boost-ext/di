@@ -90,7 +90,7 @@ struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
     #define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
         static void BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor)(__VA_ARGS__); \
         using BOOST_DI_INJECTOR BOOST_DI_UNUSED = \
-            ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>::args
+            typename ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>::args
 #endif
 
 #if !defined(BOOST_DI_INJECT)
