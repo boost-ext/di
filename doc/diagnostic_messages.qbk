@@ -11,6 +11,7 @@
 
 Error messages were produced using [link di.user_guide.concepts concepts].
 
+$example_begin example/errors/create_interface_without_bound_implementation.cpp$
 [table
 [[Create interface without bound implementation][Error message]]
     [
@@ -27,18 +28,18 @@ Error messages were produced using [link di.user_guide.concepts concepts].
         ]
     ]
 ]
+$example_end$
 
+$example_begin example/errors/ambigious_binding.cpp$
 [table
 [[Ambiguous binding][Error message]]
     [
         [
             ```
-            auto injector = __di_make_injector__(
+            __di_make_injector__(
                 __di_bind__<int>.to(42)
-              , __di_bind__<int>.to(87)
+              , __di_bind__<int>.to(87) // [di::override]]
             );
-
-            injector.__di_injector_create__<int>();
             ```
         ]
         [
@@ -48,22 +49,25 @@ Error messages were produced using [link di.user_guide.concepts concepts].
         ]
     ]
 ]
+$example_end$
 
+$example_begin example/errors/create_not_bound_object_with_all_bound_policy.cpp$
 [table
 [[Create not bound object with all bound policy][Error message]]
     [
         [
             ```
-            class all_bound : public __di_config__ {
+            class must_be_bound : public __di_config__ {
             public:
-                auto policies() const noexcept {
+                static auto policies(...) {
+                    using namespace di::policies;
                     return __di_make_policies__(
                         constructible(is_bound<_>{})
                     );
                 }
             };
 
-            auto injector = __di_make_injector__<all_bound>();
+            auto injector = __di_make_injector__<must_be_bound>();
             injector.__di_injector_create__<int>();
             ```
         ]
@@ -74,29 +78,30 @@ Error messages were produced using [link di.user_guide.concepts concepts].
         ]
     ]
 ]
+$example_end$
 
+$example_begin example/errors/expose_type_without_bound_implementation.cpp$
 [table
-[[Wrong annotation (NAMED instead of named)][Error message]]
+[[Expose type without bound implementation][Error message]]
     [
         [
             ```
-            auto name = []{};
-
-            struct c {
-                __injections_boost_di_inject__(c
-                    , (NAMED = name) int) { }
+            struct example {
+                example(unique_ptr<interface>) { }
             };
 
-            __di_make_injector__().__di_injector_create__<c>();
+            __di_injector__<example> injector = __di_make_injector__();
             ```
         ]
         [
             ```
-            error: use of undeclared identifier 'named'
+            error: static_assert failed "Type T is not allowed"
             ```
         ]
     ]
 ]
+$example_end$
+
 
 [heading See Also]
 * [link di.performance Performance]
