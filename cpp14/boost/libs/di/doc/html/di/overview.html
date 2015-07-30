@@ -103,7 +103,6 @@ function toggleNextRow() {
 <dd><dl>
 <dt><span class="section"><a href= "../di/overview/performance.html" >Performance</a></span></dt>
 <dt><span class="section"><a href= "../di/overview/diagnostic_messages.html" >Diagnostic messages</a></span></dt>
-<dt><span class="section"><a href= "../di/overview/rationale.html" >Rationale</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href= "../di/tutorial.html" >Tutorial</a></span></dt>
 <dt><span class="section"><a href= "../di/try_it_online.html" >Try it online!</a></span></dt>
@@ -245,8 +244,109 @@ cd di/build
 ./bootstrap.sh
 ./b2 -j4 ../test ../example
 </pre>
-<h4>
+<h3>
 <a name="di.overview.h3"></a>
+      <span class="phrase"><a name="di.overview.design"></a></span><a class="link" href="overview.html#di.overview.design">Design</a>
+    </h3>
+<p>
+      <a href="../images/di.png" target="_top"><span class="inlinemediaobject"><img src="../images/di.png" width="75%"></span></a>
+      Generated with <a href="http://plantuml.sourceforge.net" target="_top">PlantUML</a>.
+    </p>
+<div class="informaltable"><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Component
+              </p>
+            </th>
+<th>
+              <p>
+                Description
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <a class="link" href="user_guide/bindings.html" title="Bindings">Bindings</a>
+              </p>
+            </td>
+<td>
+              <p>
+                DSL to create dependencies representation which will be used by core
+                to resolve types
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <a class="link" href="user_guide/injector.html" title="Injector">Core</a>
+              </p>
+            </td>
+<td>
+              <p>
+                Responsible for resolving requested types (implementation detail)
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <a class="link" href="user_guide/providers.html" title="Providers">Providers</a>
+              </p>
+            </td>
+<td>
+              <p>
+                Responsible for providing object instance
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <a class="link" href="user_guide/scopes.html" title="Scopes">Scopes</a>
+              </p>
+            </td>
+<td>
+              <p>
+                Responsible for maintain objects life time
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <a class="link" href="user_guide/scopes.html#di.user_guide.scopes.wrapper_model">Wrappers</a>
+              </p>
+            </td>
+<td>
+              <p>
+                Responsible for conversion to required type
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <a class="link" href="user_guide/policies.html" title="Policies">Policies</a>
+              </p>
+            </td>
+<td>
+              <p>
+                Compile time assertions for types
+              </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+<h4>
+<a name="di.overview.h4"></a>
       <span class="phrase"><a name="di.overview.see_also"></a></span><a class="link" href="overview.html#di.overview.see_also">See
       Also</a>
     </h4>
@@ -258,19 +358,16 @@ cd di/build
           <a class="link" href="quick_user_guide.html" title="Quick User Guide">Quick user Guide</a>
         </li>
 <li class="listitem">
-          <a class="link" href="../">Diagnostic messages</a>
+          <a class="link" href="overview/diagnostic_messages.html" title="Diagnostic messages">Diagnostic messages</a>
         </li>
 <li class="listitem">
-          <a class="link" href="../">Performance</a>
+          <a class="link" href="overview/performance.html" title="Performance">Performance</a>
         </li>
 <li class="listitem">
           <a class="link" href="user_guide.html" title="User Guide">User Guide</a>
         </li>
 <li class="listitem">
           <a class="link" href="examples.html" title="Examples">Examples</a>
-        </li>
-<li class="listitem">
-          <a class="link" href="../">Rationale</a>
         </li>
 </ul></div>
 

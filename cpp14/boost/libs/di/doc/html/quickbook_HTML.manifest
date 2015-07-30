@@ -4,7 +4,6 @@ di/introduction/dependency_injection_libraries.html
 di/overview.html
 di/overview/performance.html
 di/overview/diagnostic_messages.html
-di/overview/rationale.html
 di/tutorial.html
 di/try_it_online.html
 di/cheatsheet.html
