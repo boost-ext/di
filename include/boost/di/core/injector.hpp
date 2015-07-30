@@ -17,7 +17,7 @@
 #include "boost/di/core/policy.hpp"
 #include "boost/di/core/pool.hpp"
 #include "boost/di/core/provider.hpp"
-#include "boost/di/core/transform.hpp"
+#include "boost/di/core/bindings.hpp"
 #include "boost/di/core/wrapper.hpp"
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
@@ -77,7 +77,7 @@ inline decltype(auto) get_arg(const T& arg, const std::true_type&) noexcept {
 
 template<class TConfig BOOST_DI_CORE_INJECTOR_POLICY(, class TPolicies = pool<>)(), class... TDeps>
 class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
-    : pool<transform_t<TDeps...>> {
+    : pool<bindings_t<TDeps...>> {
     friend class binder;
     template<class> friend class pool;
     template<class> friend class scopes::exposed;
@@ -89,11 +89,11 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     template<class, class, class, class, class> friend struct provider;
     template<class, class, class, class> friend struct successful::provider;
 
-    using pool_t = pool<transform_t<TDeps...>>;
+    using pool_t = pool<bindings_t<TDeps...>>;
     using is_root_t = std::true_type;
 
 public:
-    using deps = transform_t<TDeps...>;
+    using deps = bindings_t<TDeps...>;
     using config = TConfig;
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>

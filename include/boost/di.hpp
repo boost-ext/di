@@ -6,43 +6,25 @@
 //
 #ifndef BOOST_DI_HPP
 #define BOOST_DI_HPP
-
 #if (__cplusplus < 201305L && _MSC_VER < 1900)
-
-   #error "Boost.DI requires C++14 support (Clang-3.4+, GCC-5.1+, MSVC-2015+)"
-
+#error "Boost.DI requires C++14 support (Clang-3.4+, GCC-5.1+, MSVC-2015+)"
 #elif defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)
-
-// config
 #include "boost/di/config.hpp"
-
-// bindings
 #include "boost/di/bindings.hpp"
-
-// injections
 #include "boost/di/inject.hpp"
 #include "boost/di/injector.hpp"
 #include "boost/di/make_injector.hpp"
-
-// scopes
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/unique.hpp"
-
-// policies
 #include "boost/di/policies/constructible.hpp"
-
-// providers
 #include "boost/di/providers/heap.hpp"
 #include "boost/di/providers/stack_over_heap.hpp"
-
 #else
-
 #include <memory>
 #include <type_traits>
-
 #if defined(__clang__)
     #define BOOST_DI_CLANG
 #elif defined(__GNUC__)
@@ -63,8 +45,8 @@
     #define BOOST_DI_UNLIKELY(...) __builtin_expect((__VA_ARGS__), 0)
     #define BOOST_DI_TYPE_WKND(T)
 #elif defined(BOOST_DI_MSVC)
-    #pragma warning(disable : 4503) // decorated name length exceeded, name was truncated
-    #pragma warning(disable : 4822) // local class member function does not have a body
+    #pragma warning(disable : 4503)
+    #pragma warning(disable : 4822)
     #define BOOST_DI_UNUSED
     #define BOOST_DI_ATTR_ERROR(...) __declspec(deprecated(__VA_ARGS__))
     #define BOOST_DI_LIKELY(...) __VA_ARGS__
@@ -157,7 +139,7 @@
 #endif
 namespace boost {
     template<class> class shared_ptr;
-} // boost
+}
 namespace boost { namespace di { inline namespace v1 {
     class config;
     struct no_name { constexpr auto operator()() const noexcept { return ""; } };
@@ -165,7 +147,7 @@ namespace boost { namespace di { inline namespace v1 {
     template<class, class = void> struct ctor_traits;
     namespace providers { class heap; class stack_over_heap; }
     namespace core { template<class> struct any_type_fwd; template<class> struct any_type_ref_fwd; }
-}}} // boost::di::v1
+}}}
 namespace boost { namespace di { inline namespace v1 {
 struct _ { _(...) { } };
 namespace aux {
@@ -228,7 +210,7 @@ struct is_unique_impl<T1, T2, Ts...>
 { };
 template<class... Ts>
 using is_unique = is_unique_impl<none_type, Ts...>;
-}}}} // boost::di::v1::aux
+}}}}
 #define BOOST_DI_HAS_TYPE(name)                                     \
     template<class, class = void>                                   \
     struct has_##name : std::false_type { };                        \
@@ -345,41 +327,33 @@ struct function_traits<R(T::*)(TArgs...) const> {
     using base_type = T;
     using args = type_list<TArgs...>;
 };
-}}}} // boost::di::v1::aux
+}}}}
 #if !defined(BOOST_DI_INJECTOR)
     #define BOOST_DI_INJECTOR boost_di_injector__
 #endif
-
 #if !defined(BOOST_DI_CFG_CTOR_LIMIT_SIZE)
     #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
 #endif
-
 namespace boost { namespace di { inline namespace v1 { namespace detail {
 template<class, class>
 struct named_type { };
-
 struct named_impl { template<class T> T operator=(const T&) const; };
 static constexpr BOOST_DI_UNUSED named_impl named{};
-
 template<class T, class TName>
 struct combine_impl {
     using type = named_type<TName, T>;
 };
-
 template<class T>
 struct combine_impl<T, aux::none_type> {
     using type = T;
 };
-
 template<class, class>
 struct combine;
-
 template<class... T1, class... T2>
 struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
     using type = aux::type_list<typename combine_impl<T1, T2>::type...>;
 };
-}}}} // boost::di::v1::detail
-
+}}}}
 #define BOOST_DI_GEN_CTOR_IMPL(p, i) \
     BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
     BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_EAT p, p)
@@ -391,10 +365,8 @@ struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
     BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
     BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_GEN_ARG_NAME, BOOST_DI_GEN_NONE_TYPE)(p)
 #define BOOST_DI_GEN_NAME(i, ...) BOOST_DI_GEN_NAME_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__,), i)
-
 #define BOOST_DI_INJECT_TRAITS_EMPTY_IMPL(...) \
     using BOOST_DI_INJECTOR BOOST_DI_UNUSED = ::boost::di::aux::type_list<>
-
 #define BOOST_DI_INJECT_TRAITS_IMPL(...) \
     static void BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor)( \
         BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__) \
@@ -410,7 +382,6 @@ struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
         BOOST_DI_SIZE(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE \
       , "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE" \
     )
-
 #if !defined(BOOST_DI_INJECT_TRAITS)
     #define BOOST_DI_INJECT_TRAITS(...) \
         BOOST_DI_IF( \
@@ -419,14 +390,12 @@ struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
           , BOOST_DI_INJECT_TRAITS_IMPL \
         )(__VA_ARGS__)
 #endif
-
 #if !defined(BOOST_DI_INJECT_TRAITS_NO_LIMITS)
     #define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
         static void BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor)(__VA_ARGS__); \
         using BOOST_DI_INJECTOR BOOST_DI_UNUSED = \
             ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>::args
 #endif
-
 #if !defined(BOOST_DI_INJECT)
     #define BOOST_DI_INJECT(type, ...) \
         BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
@@ -1599,12 +1568,12 @@ struct add_type_list<T, std::false_type, std::false_type> {
 };
 #if defined(BOOST_DI_MSVC)
     template<class... Ts>
-    struct transform : aux::join_t<typename add_type_list<Ts>::type...> { };
+    struct bindings : aux::join_t<typename add_type_list<Ts>::type...> { };
     template<class... Ts>
-    using transform_t = typename transform<Ts...>::type;
+    using bindings_t = typename bindings<Ts...>::type;
 #else
     template<class... Ts>
-    using transform_t = aux::join_t<typename add_type_list<Ts>::type...>;
+    using bindings_t = aux::join_t<typename add_type_list<Ts>::type...>;
 #endif
 }}}}
 namespace boost { namespace di { inline namespace v1 {
@@ -1672,7 +1641,7 @@ template<class... TDeps>
 using get_bindings_error =
     std::conditional_t<
         is_supported<TDeps...>::value
-      , typename get_is_unique_error<core::transform_t<TDeps...>>::type
+      , typename get_is_unique_error<core::bindings_t<TDeps...>>::type
       , typename bound_type<typename get_not_supported<TDeps...>::type>::
             is_neither_a_dependency_nor_an_injector
     >;
@@ -2145,7 +2114,7 @@ inline decltype(auto) get_arg(const T& arg, const std::true_type&) noexcept {
 }
 template<class TConfig , class TPolicies = pool<> , class... TDeps>
 class injector
-    : pool<transform_t<TDeps...>> {
+    : pool<bindings_t<TDeps...>> {
     friend class binder;
     template<class> friend class pool;
     template<class> friend class scopes::exposed;
@@ -2156,10 +2125,10 @@ class injector
     template<class, class, class, class> friend struct try_provider;
     template<class, class, class, class, class> friend struct provider;
     template<class, class, class, class> friend struct successful::provider;
-    using pool_t = pool<transform_t<TDeps...>>;
+    using pool_t = pool<bindings_t<TDeps...>>;
     using is_root_t = std::true_type;
 public:
-    using deps = transform_t<TDeps...>;
+    using deps = bindings_t<TDeps...>;
     using config = TConfig;
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     struct is_creatable {
@@ -2288,7 +2257,7 @@ private:
 };
 template<class TConfig , class... TDeps>
 class injector <TConfig, pool<>, TDeps...>
-    : pool<transform_t<TDeps...>> {
+    : pool<bindings_t<TDeps...>> {
     friend class binder;
     template<class> friend class pool;
     template<class> friend class scopes::exposed;
@@ -2299,10 +2268,10 @@ class injector <TConfig, pool<>, TDeps...>
     template<class, class, class, class> friend struct try_provider;
     template<class, class, class, class, class> friend struct provider;
     template<class, class, class, class> friend struct successful::provider;
-    using pool_t = pool<transform_t<TDeps...>>;
+    using pool_t = pool<bindings_t<TDeps...>>;
     using is_root_t = std::true_type;
 public:
-    using deps = transform_t<TDeps...>;
+    using deps = bindings_t<TDeps...>;
     using config = TConfig;
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     struct is_creatable {
@@ -2702,8 +2671,6 @@ public:
     }
 };
 }}}}
-
 #endif
-
 #endif
 

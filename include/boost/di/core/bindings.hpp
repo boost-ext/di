@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_CORE_TRANSFORM_HPP
-#define BOOST_DI_CORE_TRANSFORM_HPP
+#ifndef BOOST_DI_CORE_BINDINGS_HPP
+#define BOOST_DI_CORE_BINDINGS_HPP
 
 #include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/type_traits.hpp"
@@ -52,13 +52,13 @@ struct add_type_list<T, std::false_type, std::false_type> {
 
 #if defined(BOOST_DI_MSVC) // __wknd__
     template<class... Ts>
-    struct transform : aux::join_t<typename add_type_list<Ts>::type...> { };
+    struct bindings : aux::join_t<typename add_type_list<Ts>::type...> { };
 
     template<class... Ts>
-    using transform_t = typename transform<Ts...>::type;
+    using bindings_t = typename bindings<Ts...>::type;
 #else // __wknd__
     template<class... Ts>
-    using transform_t = aux::join_t<typename add_type_list<Ts>::type...>;
+    using bindings_t = aux::join_t<typename add_type_list<Ts>::type...>;
 #endif // __wknd__
 
 }}}} // boost::di::v1::core

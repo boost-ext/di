@@ -10,7 +10,7 @@
 #include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
-#include "boost/di/core/transform.hpp"
+#include "boost/di/core/bindings.hpp"
 
 namespace boost { namespace di { inline namespace v1 {
 
@@ -94,7 +94,7 @@ template<class... TDeps>
 using get_bindings_error =
     std::conditional_t<
         is_supported<TDeps...>::value
-      , typename get_is_unique_error<core::transform_t<TDeps...>>::type
+      , typename get_is_unique_error<core::bindings_t<TDeps...>>::type
       , typename bound_type<typename get_not_supported<TDeps...>::type>::
             is_neither_a_dependency_nor_an_injector
     >;
