@@ -62,7 +62,7 @@ $example_begin example/performance/create_type_with_bound_instance.cpp$
 ]
 $example_end$
 
-$example_begin example/extensions/providers/create_named_type.cpp$
+$example_begin example/performance/create_named_type.cpp$
 [table
 [[Create named type][Asm x86-64 (same as `return 42`)]]
     [
@@ -98,7 +98,7 @@ $example_begin example/extensions/providers/create_named_type.cpp$
 ]
 $example_end$
 
-$example_begin example/extensions/providers/create_bound_interface.cpp$
+$example_begin example/performance/create_bound_interface.cpp$
 [table
 [[Create bound interface][Asm x86-64 (same as `make_unique`)]]
     [
@@ -134,8 +134,7 @@ $example_begin example/extensions/providers/create_bound_interface.cpp$
 ]
 $example_end$
 
-
-$example_begin example/extensions/providers/create_bound_interface_via_module.cpp$
+$example_begin example/performance/create_bound_interface_via_module.cpp$
 [table
 [[Create bound interface via module][Asm x86-64 (same as `make_unique`)]]
     [
@@ -180,7 +179,7 @@ $example_begin example/extensions/providers/create_bound_interface_via_module.cp
 ]
 $example_end$
 
-$example_begin example/extensions/providers/create_bound_interface_via_exposed_module.cpp$
+$example_begin example/performance/create_bound_interface_via_exposed_module.cpp$
 [table
 [[Create bound interface via exposed module (cost = type erasure)][Asm x86-64]]
     [
