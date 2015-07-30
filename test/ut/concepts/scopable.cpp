@@ -21,11 +21,14 @@ test none = [] {
 struct scope_type {
     template<class, class>
     struct scope {
-        template<class T, class TProvider>
-        T create(const TProvider&);
+        template<class>
+        using is_referable = std::false_type;
 
         template<class T, class TProvider>
-        T try_create(const TProvider&);
+        static T try_create(const TProvider&);
+
+        template<class T, class TProvider>
+        T create(const TProvider&);
     };
 };
 
@@ -54,13 +57,48 @@ class scope_missing_create {
 public:
     template<class, class>
     struct scope {
+        template<class>
+        using is_referable = std::false_type;
+
         template<class T, class TProvider>
-        T try_create(const TProvider&);
+        static T try_create(const TProvider&);
     };
 };
 
 test missing_create = [] {
     static_expect(!scopable<scope_missing_create>::value);
+};
+
+class scope_missing_try_create {
+public:
+    template<class, class>
+    struct scope {
+        template<class>
+        using is_referable = std::false_type;
+
+        template<class T, class TProvider>
+        T create(const TProvider&);
+    };
+};
+
+test missing_try_create = [] {
+    static_expect(!scopable<scope_missing_try_create>::value);
+};
+
+class scope_missing_is_referable {
+public:
+    template<class, class>
+    struct scope {
+        template<class T, class TProvider>
+        static T try_create(const TProvider&);
+
+        template<class T, class TProvider>
+        T create(const TProvider&);
+    };
+};
+
+test missing_is_referable = [] {
+    static_expect(!scopable<scope_missing_is_referable>::value);
 };
 
 test scopable_scopes = [] {
