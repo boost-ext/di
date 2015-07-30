@@ -3,6 +3,7 @@
 <a href="https://www.biicode.com/krzysztofjusiak/di" target="_blank">![Bii](https://webapi.biicode.com/v1/badges/krzysztofjusiak/krzysztofjusiak/di/master)</a>
 <a href="http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/try_it_online.html" target="_blank">![Try Boost.DI Online](https://img.shields.io/badge/try%20boost.di-online-orange.svg)</a>
 <a href="https://gitter.im/krzysztof-jusiak/di" target="_blank">![Gitter Chat](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)</a>
+===============================================
 
 Boost.DI: C++ Dependency Injection
 ===============================================
