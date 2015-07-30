@@ -54,21 +54,21 @@ $example_end$
 [section Mocks Provider]
 $example_begin example/extensions/providers/mocks_provider.cpp$
 [import ../example/extensions/providers/mocks_provider.cpp]
-[testing]
+[mocks_provider]
 $example_end$
 [endsect]
 
 [section Session Scope]
 $example_begin example/extensions/scopes/session_scope.cpp$
 [import ../example/extensions/scopes/session_scope.cpp]
-[testing]
+[session_scope]
 $example_end$
 [endsect]
 
 [section Shared Scope]
 $example_begin example/extensions/scopes/shared_scope.cpp$
 [import ../example/extensions/scopes/shared_scope.cpp]
-[testing]
+[shared_scope]
 $example_end$
 [endsect]
 
