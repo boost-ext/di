@@ -429,3 +429,56 @@ test string_creation = [] {
     expect_eq("", di::make_injector().create<string>().str);
 };
 
+template<class T>
+struct template_inject {
+    BOOST_DI_INJECT(template_inject, T value)
+        : value_(value)
+    { }
+
+    T value_;
+};
+
+test inject_inside_template = [] {
+    constexpr auto i = 42;
+
+    auto injector = di::make_injector(
+        di::bind<int>().to(i)
+    );
+
+    auto object = injector.create<template_inject<int>>();
+    expect_eq(i, object.value_);
+};
+
+template<class T>
+struct template_inject_no_limits {
+    BOOST_DI_INJECT_TRAITS_NO_LIMITS(T value);
+    template_inject_no_limits(T value)
+        : value_(value)
+    { }
+
+    T value_;
+};
+
+test inject_inside_template_no_limits = [] {
+    constexpr auto i = 42;
+
+    auto injector = di::make_injector(
+        di::bind<int>().to(i)
+    );
+
+    auto object = injector.create<template_inject_no_limits<int>>();
+    expect_eq(i, object.value_);
+};
+
+test create_conversion = [] {
+    constexpr auto i = 42;
+
+    auto injector = di::make_injector(
+        di::bind<i1, impl1>()
+      , di::bind<int>.to(i)
+    );
+
+    expect_eq(i, (int)injector);
+    expect(dynamic_cast<impl1*>(((const std::unique_ptr<i1>&)injector).get()));
+};
+

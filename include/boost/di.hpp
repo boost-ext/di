@@ -38,12 +38,14 @@
     #define BOOST_DI_LIKELY(...) __builtin_expect((__VA_ARGS__), 1)
     #define BOOST_DI_UNLIKELY(...) __builtin_expect((__VA_ARGS__), 0)
     #define BOOST_DI_TYPE_WKND(T)
+    #define BOOST_DI_TYPENMAE_WKND typename
 #elif defined(BOOST_DI_GCC)
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_ATTR_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
     #define BOOST_DI_LIKELY(...) __builtin_expect((__VA_ARGS__), 1)
     #define BOOST_DI_UNLIKELY(...) __builtin_expect((__VA_ARGS__), 0)
     #define BOOST_DI_TYPE_WKND(T)
+    #define BOOST_DI_TYPENMAE_WKND typename
 #elif defined(BOOST_DI_MSVC)
     #pragma warning(disable : 4503)
     #pragma warning(disable : 4822)
@@ -52,6 +54,7 @@
     #define BOOST_DI_LIKELY(...) __VA_ARGS__
     #define BOOST_DI_UNLIKELY(...) __VA_ARGS__
     #define BOOST_DI_TYPE_WKND(T) (T&&)
+    #define BOOST_DI_TYPENMAE_WKND
 #endif
 #define BOOST_DI_IF(cond, t, f) BOOST_DI_IF_I(cond, t, f)
 #define BOOST_DI_REPEAT(i, m, ...) BOOST_DI_REPEAT_N(i, m, __VA_ARGS__)
@@ -374,7 +377,7 @@ struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
     static void BOOST_DI_CAT(BOOST_DI_INJECTOR, names)( \
         BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_NAME, __VA_ARGS__) \
     ); \
-    using BOOST_DI_INJECTOR BOOST_DI_UNUSED = typename ::boost::di::detail::combine< \
+    using BOOST_DI_INJECTOR BOOST_DI_UNUSED = BOOST_DI_TYPENMAE_WKND ::boost::di::detail::combine< \
         typename ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>::args \
       , typename ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, names))>::args \
     >::type; \
@@ -393,8 +396,8 @@ struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
 #if !defined(BOOST_DI_INJECT_TRAITS_NO_LIMITS)
     #define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
         static void BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor)(__VA_ARGS__); \
-        using BOOST_DI_INJECTOR BOOST_DI_UNUSED = \
-            typename ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>::args
+        using BOOST_DI_INJECTOR BOOST_DI_UNUSED = BOOST_DI_TYPENMAE_WKND \
+            ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>::args
 #endif
 #if !defined(BOOST_DI_INJECT)
     #define BOOST_DI_INJECT(type, ...) \

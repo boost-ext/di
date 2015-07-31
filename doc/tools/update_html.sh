@@ -5,10 +5,11 @@ HTML="`readlink -f $ROOT/../html`"
 
 cp -r $ROOT/../js $HTML
 
-rm -f /tmp/di_try_it_online.tmp
-FRAME=1 tools/try_it_online.sh ../example/try_it_online/main.cpp > /tmp/di_try_it_online.tmp
-find $HTML -iname "*.html" | xargs sed -i -e '/\$try_it_online\$/{r /tmp/di_try_it_online.tmp' -e 'd}'
-rm -f /tmp/di_try_it_online.tmp
+if [[ $TRY_IT_ONLINE != "" ]]; then
+    rm -f /tmp/di_try_it_online.tmp FRAME=1 tools/try_it_online.sh ../example/try_it_online/main.cpp > /tmp/di_try_it_online.tmp
+    find $HTML -iname "*.html" | xargs sed -i -e '/\$try_it_online\$/{r /tmp/di_try_it_online.tmp' -e 'd}'
+    rm -f /tmp/di_try_it_online.tmp
+fi
 
 for file in `find $HTML/di -iname "*.html"`; do
     rm -f /tmp/file
