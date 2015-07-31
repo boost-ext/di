@@ -33,17 +33,26 @@ auto compail_fail(const std::string& defines, const std::string&, const std::str
     source_code << "}" << std::endl;
 
     std::stringstream errors;
+    std::string compiler;
+
     #if defined(BOOST_DI_GCC)
-        errors << "-Werror";
+        compiler = "g++";
+        errors << "-c -std=c++1y -Werror ";
     #elif defined(BOOST_DI_CLANG)
-        errors << "-Wno-all -Werror -Wno-error=deprecated-declarations";
+        compiler = "clang++";
+        errors << "-c -std=c++1y -Wno-all -Werror -Wno-error=deprecated-declarations";
     #elif defined(BOOST_DI_MSVC)
-        errors << "/W3 /WX";
+        compiler = "cl";
+        errors << "/c /W3 /WX";
     #endif
 
+    if (auto cxx = std::getenv("CXX")) {
+        compiler = cxx;
+    }
+
     std::stringstream command;
-    command << std::getenv("CXX")
-            << " -c -std=c++1y -I../include "
+    command << compiler
+            << "  -I../include "
             << defines
             << " " << errors.str()
             << " " << source_code;
