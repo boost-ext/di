@@ -44,6 +44,10 @@ template<class... T1, class... T2>
 struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
     using type = aux::type_list<typename combine_impl<T1, T2>::type...>;
 };
+
+template<class T1, class T2>
+using combine_t = typename combine<T1, T2>::type;
+
 }}}} // boost::di::v1::detail
 
 #define BOOST_DI_GEN_CTOR_IMPL(p, i) \
@@ -68,10 +72,10 @@ struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
     static void BOOST_DI_CAT(BOOST_DI_INJECTOR, names)( \
         BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_NAME, __VA_ARGS__) \
     ); \
-    using BOOST_DI_INJECTOR BOOST_DI_UNUSED = BOOST_DI_TYPENMAE_WKND ::boost::di::detail::combine< \
-        typename ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>::args \
-      , typename ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, names))>::args \
-    >::type; \
+    using BOOST_DI_INJECTOR BOOST_DI_UNUSED = ::boost::di::detail::combine_t< \
+        ::boost::di::aux::function_traits_t<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))> \
+      , ::boost::di::aux::function_traits_t<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, names))> \
+    >; \
     static_assert( \
         BOOST_DI_SIZE(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE \
       , "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE" \
@@ -89,8 +93,8 @@ struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
 #if !defined(BOOST_DI_INJECT_TRAITS_NO_LIMITS)
     #define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
         static void BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor)(__VA_ARGS__); \
-        using BOOST_DI_INJECTOR BOOST_DI_UNUSED = BOOST_DI_TYPENMAE_WKND \
-            ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>::args
+        using BOOST_DI_INJECTOR BOOST_DI_UNUSED = \
+            ::boost::di::aux::function_traits_t<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>
 #endif
 
 #if !defined(BOOST_DI_INJECT)

@@ -431,7 +431,7 @@ test string_creation = [] {
 
 template<class T>
 struct template_inject {
-    BOOST_DI_INJECT(template_inject, T value)
+    BOOST_DI_INJECT(explicit template_inject, T value)
         : value_(value)
     { }
 
@@ -475,7 +475,7 @@ test create_conversion = [] {
 
     auto injector = di::make_injector(
         di::bind<i1, impl1>()
-      , di::bind<int>.to(i)
+      , di::bind<int>().to(i)
     );
 
     expect_eq(i, (int)injector);

@@ -160,6 +160,9 @@ struct function_traits<R(T::*)(TArgs...) const> {
     using args = type_list<TArgs...>;
 };
 
+template<class T>
+using function_traits_t = typename function_traits<T>::args;
+
 }}}} // boost::di::v1::aux
 
 #endif
