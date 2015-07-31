@@ -17,6 +17,12 @@
     [[__di_bind__<I, Impl>.named(name)][__concepts_boundable__<I, Impl>][create __bindings__]]
     [[__di_bind__<T>.to(T{})][__concepts_boundable__<T>][create __bindings__ with given `T{}` value]]
     [[__di_bind__<T>.named(name).to(T{})][__concepts_boundable__<T>][create __bindings__ with given `T{}` value named `auto name = []{}`]]
+    [[c(int, double);][][]]
+    [[BOOST_DI_INJECT(c, int, double)][][]]
+    [[BOOST_DI_INJECT(c) = default;][][]]
+    [[BOOST_DI_INJECT(explicit c);][][]]
+    [[template<class...> BOOST_DI_INJECT(explicit c);][][]]
+    [[BOOST_DI_INJECT_TRAITS(int, double); c(int, double){}][][]]
 ]
 
 [endsect]
