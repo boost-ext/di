@@ -38,14 +38,12 @@
     #define BOOST_DI_LIKELY(...) __builtin_expect((__VA_ARGS__), 1)
     #define BOOST_DI_UNLIKELY(...) __builtin_expect((__VA_ARGS__), 0)
     #define BOOST_DI_TYPE_WKND(T)
-    #define BOOST_DI_TYPENMAE_WKND typename
 #elif defined(BOOST_DI_GCC)
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_ATTR_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
     #define BOOST_DI_LIKELY(...) __builtin_expect((__VA_ARGS__), 1)
     #define BOOST_DI_UNLIKELY(...) __builtin_expect((__VA_ARGS__), 0)
     #define BOOST_DI_TYPE_WKND(T)
-    #define BOOST_DI_TYPENMAE_WKND typename
 #elif defined(BOOST_DI_MSVC)
     #pragma warning(disable : 4503)
     #pragma warning(disable : 4822)
@@ -54,7 +52,6 @@
     #define BOOST_DI_LIKELY(...) __VA_ARGS__
     #define BOOST_DI_UNLIKELY(...) __VA_ARGS__
     #define BOOST_DI_TYPE_WKND(T) (T&&)
-    #define BOOST_DI_TYPENMAE_WKND
 #endif
 #define BOOST_DI_IF(cond, t, f) BOOST_DI_IF_I(cond, t, f)
 #define BOOST_DI_REPEAT(i, m, ...) BOOST_DI_REPEAT_N(i, m, __VA_ARGS__)
@@ -330,6 +327,8 @@ struct function_traits<R(T::*)(TArgs...) const> {
     using base_type = T;
     using args = type_list<TArgs...>;
 };
+template<class T>
+using function_traits_t = typename function_traits<T>::args;
 }}}}
 #if !defined(BOOST_DI_INJECTOR)
     #define BOOST_DI_INJECTOR boost_di_injector__
@@ -356,6 +355,8 @@ template<class... T1, class... T2>
 struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
     using type = aux::type_list<typename combine_impl<T1, T2>::type...>;
 };
+template<class T1, class T2>
+using combine_t = typename combine<T1, T2>::type;
 }}}}
 #define BOOST_DI_GEN_CTOR_IMPL(p, i) \
     BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
@@ -377,10 +378,10 @@ struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
     static void BOOST_DI_CAT(BOOST_DI_INJECTOR, names)( \
         BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_NAME, __VA_ARGS__) \
     ); \
-    using BOOST_DI_INJECTOR BOOST_DI_UNUSED = BOOST_DI_TYPENMAE_WKND ::boost::di::detail::combine< \
-        typename ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>::args \
-      , typename ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, names))>::args \
-    >::type; \
+    using BOOST_DI_INJECTOR BOOST_DI_UNUSED = ::boost::di::detail::combine_t< \
+        ::boost::di::aux::function_traits_t<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))> \
+      , ::boost::di::aux::function_traits_t<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, names))> \
+    >; \
     static_assert( \
         BOOST_DI_SIZE(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE \
       , "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE" \
@@ -396,8 +397,8 @@ struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
 #if !defined(BOOST_DI_INJECT_TRAITS_NO_LIMITS)
     #define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
         static void BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor)(__VA_ARGS__); \
-        using BOOST_DI_INJECTOR BOOST_DI_UNUSED = BOOST_DI_TYPENMAE_WKND \
-            ::boost::di::aux::function_traits<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>::args
+        using BOOST_DI_INJECTOR BOOST_DI_UNUSED = \
+            ::boost::di::aux::function_traits_t<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>
 #endif
 #if !defined(BOOST_DI_INJECT)
     #define BOOST_DI_INJECT(type, ...) \
