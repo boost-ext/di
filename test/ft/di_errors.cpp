@@ -250,7 +250,7 @@ test injector_shared_by_copy = [] {
         };
 
         auto injector = di::make_injector(
-            di::bind<int>().in(di::shared)
+            di::bind<int>().in(di::singleton)
         );
 
         injector.create<c>();
