@@ -25,37 +25,39 @@ struct file : std::string, TFStream {
 };
 
 auto compail_fail(const std::string& defines, const std::string&, const std::string& code) {
-    file<> source_code{"error.cpp"};
-    source_code << "#include <boost/di.hpp>" << std::endl;
-    source_code << "namespace di = boost::di;" << std::endl;
-    source_code << "int main() {" << std::endl;
-    source_code << code;
-    source_code << "}" << std::endl;
+    std::stringstream command; {
+        file<> source_code{"error.cpp"};
+        source_code << "#include <boost/di.hpp>" << std::endl;
+        source_code << "namespace di = boost::di;" << std::endl;
+        source_code << "int main() {" << std::endl;
+        source_code << code;
+        source_code << "}" << std::endl;
 
-    std::stringstream errors;
-    std::string compiler;
+        std::stringstream errors;
+        std::string compiler;
 
-    #if defined(BOOST_DI_GCC)
-        compiler = "g++";
-        errors << "-c -std=c++1y -Werror ";
-    #elif defined(BOOST_DI_CLANG)
-        compiler = "clang++";
-        errors << "-c -std=c++1y -Wno-all -Werror -Wno-error=deprecated-declarations";
-    #elif defined(BOOST_DI_MSVC)
-        compiler = "cl";
-        errors << "/c /W3 /WX";
-    #endif
+        #if defined(BOOST_DI_GCC)
+            compiler = "g++";
+            errors << "-c -std=c++1y -Werror ";
+        #elif defined(BOOST_DI_CLANG)
+            compiler = "clang++";
+            errors << "-c -std=c++1y -Wno-all -Werror -Wno-error=deprecated-declarations";
+        #elif defined(BOOST_DI_MSVC)
+            compiler = "cl";
+            errors << "/c /EHsc /W3 /WX";
+        #endif
 
-    if (auto cxx = std::getenv("CXX")) {
-        compiler = cxx;
+        if (auto cxx = std::getenv("CXX")) {
+            compiler = cxx;
+        }
+
+        command << compiler
+                << "  -I../include "
+                << defines
+                << " " << errors.str()
+                << " " << source_code;
     }
 
-    std::stringstream command;
-    command << compiler
-            << "  -I../include "
-            << defines
-            << " " << errors.str()
-            << " " << source_code;
     return std::system(command.str().c_str());
 }
 
