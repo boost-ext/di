@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_WRAPPERS_UNIQUE_HPP
 #define BOOST_DI_WRAPPERS_UNIQUE_HPP
 
-#include <memory>
 #include "boost/di/aux_/compiler.hpp"
 #include "boost/di/fwd.hpp"
 
@@ -21,17 +20,30 @@ struct unique {
     }
 
     inline operator T&&() noexcept {
-        return std::move(object);
+        return static_cast<T&&>(object);
     }
 
     T object;
 };
 
 template<class T>
+struct scoped_ptr {
+    ~scoped_ptr() {
+        delete ptr;
+    }
+
+    operator T*() const noexcept {
+        return ptr;
+    }
+
+    T* ptr;
+};
+
+template<class T>
 struct unique<T*> {
     template<class I>
     inline operator I() const noexcept {
-        return *std::unique_ptr<I>{object};
+        return *scoped_ptr<I>{object};
     }
 
     template<class I>
@@ -54,9 +66,9 @@ struct unique<T*> {
         return boost::shared_ptr<I>{object};
     }
 
-    template<class I>
-    inline operator std::unique_ptr<I>() const noexcept {
-        return std::unique_ptr<I>{object};
+    template<class I, class D>
+    inline operator std::unique_ptr<I, D>() const noexcept {
+        return std::unique_ptr<I, D>{object};
     }
 
     #if defined(BOOST_DI_MSVC) // __wknd__
@@ -97,7 +109,7 @@ struct unique<std::unique_ptr<T, TDeleter>> {
 
     template<class I, class D>
     inline operator std::unique_ptr<I, D>() noexcept {
-        return std::move(object);
+        return static_cast<std::unique_ptr<T, TDeleter>&&>(object);
     }
 
     std::unique_ptr<T, TDeleter> object;

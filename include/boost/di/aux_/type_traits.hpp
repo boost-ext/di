@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_AUX_TYPE_TRAITS_HPP
 #define BOOST_DI_AUX_TYPE_TRAITS_HPP
 
-#include <memory>
 #include <type_traits>
 #include "boost/di/fwd.hpp"
 #include "boost/di/aux_/utility.hpp"

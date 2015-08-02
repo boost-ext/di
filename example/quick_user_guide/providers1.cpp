@@ -6,6 +6,7 @@
 //
 #include <new>
 #include <cassert>
+#include <utility>
 #include <boost/di.hpp>
 
 namespace di = boost::di;

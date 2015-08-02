@@ -32,15 +32,14 @@ pph() {
     echo "#include \"boost/di/providers/heap.hpp\""
     echo "#include \"boost/di/providers/stack_over_heap.hpp\""
     echo "#else"
-    echo "#include <memory>"
     echo "#include <type_traits>"
-    rm -rf tmp && mkdir tmp && cp -r boost tmp && cd tmp && touch type_traits memory
+    rm -rf tmp && mkdir tmp && cp -r boost tmp && cd tmp && touch type_traits
     find . -iname "*.hpp" | xargs sed -i "s/\(.*\)__wknd__/\/\/\/\/\1/"
     tail -n +10 "boost/di/aux_/compiler.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
     tail -n +11 "boost/di/aux_/preprocessor.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
     tail -n +10 "boost/di/fwd.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
     tail -n +11 "boost/di/aux_/utility.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
-    tail -n +15 "boost/di/aux_/type_traits.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
+    tail -n +14 "boost/di/aux_/type_traits.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
     tail -n +15 "boost/di/inject.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
     g++ -std=c++1y -C -P -nostdinc -nostdinc++ -E -I. "boost/di.hpp" \
         -D"BOOST_DI_HAS_METHOD(name, call_name)=template<class T, class... TArgs> decltype(std::declval<T>().call_name(std::declval<TArgs>()...), std::true_type()) has_##name##_impl(int); template<class, class...> std::false_type has_##name##_impl(...); template<class T, class... TArgs> struct has_##name : decltype(has_##name##_impl<T, TArgs...>(0)) { }" \

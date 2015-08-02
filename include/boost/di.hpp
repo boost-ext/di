@@ -23,7 +23,6 @@
 #include "boost/di/providers/heap.hpp"
 #include "boost/di/providers/stack_over_heap.hpp"
 #else
-#include <memory>
 #include <type_traits>
 #if defined(__clang__)
     #define BOOST_DI_CLANG
@@ -137,6 +136,13 @@
     #define BOOST_DI_DETAIL_IS_EMPTY_IIF_1(t, ...) t
     #define BOOST_DI_DETAIL_IS_EMPTY_PROCESS(...) BOOST_DI_IBP(BOOST_DI_DETAIL_IS_EMPTY_NON_FUNCTION_C __VA_ARGS__ ())
 #endif
+namespace std {
+    template<class> class shared_ptr;
+    template<class> class weak_ptr;
+    template<class, class> class unique_ptr;
+    template<class> struct char_traits;
+    template<class> class initializer_list;
+}
 namespace boost {
     template<class> class shared_ptr;
 }
@@ -210,6 +216,33 @@ struct is_unique_impl<T1, T2, Ts...>
 { };
 template<class... Ts>
 using is_unique = is_unique_impl<none_type, Ts...>;
+template<int...>
+struct index_sequence {
+    using type = index_sequence;
+};
+template<typename, typename>
+struct concat;
+template<int... I1, int... I2>
+struct concat<index_sequence<I1...>, index_sequence<I2...>>
+    : index_sequence<I1..., (sizeof...(I1) + I2)...>
+{ };
+template<int N>
+struct make_index_sequence_impl
+    : concat<
+          typename make_index_sequence_impl<N/2>::type
+        , typename make_index_sequence_impl<N - N/2>::type
+      >::type
+{ };
+template<>
+struct make_index_sequence_impl<0>
+    : index_sequence<>
+{ };
+template<>
+struct make_index_sequence_impl<1>
+    : index_sequence<1>
+{ };
+template<int N>
+using make_index_sequence = typename make_index_sequence_impl<N>::type;
 }}}}
 #define BOOST_DI_HAS_TYPE(name)                                     \
     template<class, class = void>                                   \
@@ -435,15 +468,25 @@ struct unique {
         return object;
     }
     inline operator T&&() noexcept {
-        return std::move(object);
+        return static_cast<T&&>(object);
     }
     T object;
+};
+template<class T>
+struct scoped_ptr {
+    ~scoped_ptr() {
+        delete ptr;
+    }
+    operator T*() const noexcept {
+        return ptr;
+    }
+    T* ptr;
 };
 template<class T>
 struct unique<T*> {
     template<class I>
     inline operator I() const noexcept {
-        return *std::unique_ptr<I>{object};
+        return *scoped_ptr<I>{object};
     }
     template<class I>
     inline operator I*() const noexcept {
@@ -461,9 +504,9 @@ struct unique<T*> {
     inline operator boost::shared_ptr<I>() const noexcept {
         return boost::shared_ptr<I>{object};
     }
-    template<class I>
-    inline operator std::unique_ptr<I>() const noexcept {
-        return std::unique_ptr<I>{object};
+    template<class I, class D>
+    inline operator std::unique_ptr<I, D>() const noexcept {
+        return std::unique_ptr<I, D>{object};
     }
     #if defined(BOOST_DI_MSVC)
         explicit unique(T* object)
@@ -496,7 +539,7 @@ struct unique<std::unique_ptr<T, TDeleter>> {
     }
     template<class I, class D>
     inline operator std::unique_ptr<I, D>() noexcept {
-        return std::move(object);
+        return static_cast<std::unique_ptr<T, TDeleter>&&>(object);
     }
     std::unique_ptr<T, TDeleter> object;
 };
@@ -618,12 +661,7 @@ struct shared {
     };
     template<class I>
     inline operator boost::shared_ptr<I>() const noexcept {
-        using sp = sp_holder<boost::shared_ptr<T>>;
-        if (auto* deleter = std::get_deleter<sp, T>(object)) {
-            return deleter->object;
-        } else {
             return {object.get(), sp_holder<std::shared_ptr<T>>{object}};
-        }
     }
     template<class I>
     inline operator std::weak_ptr<I>() const noexcept {
@@ -984,12 +1022,12 @@ namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 struct direct { };
 struct uniform { };
 BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_INJECTOR);
-template<class T, std::size_t>
+template<class T, int>
 using get = T;
 template<template<class...> class, class, class, class = void>
 struct ctor_impl;
-template<template<class...> class TIsConstructible, class T, std::size_t... TArgs>
-struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>
+template<template<class...> class TIsConstructible, class T, int... TArgs>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>
     , BOOST_DI_REQUIRES_T((sizeof...(TArgs) > 0) && !TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
     : std::conditional<
            TIsConstructible<T, get<core::any_type_ref_fwd<T>, TArgs>...>::value
@@ -997,17 +1035,17 @@ struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>
          , typename ctor_impl<
                TIsConstructible
              , T
-             , std::make_index_sequence<sizeof...(TArgs) - 1>
+             , aux::make_index_sequence<sizeof...(TArgs) - 1>
            >::type
       >
 { };
-template<template<class...> class TIsConstructible, class T, std::size_t... TArgs>
-struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>,
+template<template<class...> class TIsConstructible, class T, int... TArgs>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>,
       BOOST_DI_REQUIRES_T((sizeof...(TArgs) > 0) && TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
     : aux::type_list<get<core::any_type_fwd<T>, TArgs>...>
 { };
 template<template<class...> class TIsConstructible, class T>
-struct ctor_impl<TIsConstructible, T, std::index_sequence<>>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<>>
     : aux::type_list<>
 { };
 template<template<class...> class TIsConstructible, class T>
@@ -1015,7 +1053,7 @@ using ctor_impl_t =
     typename ctor_impl<
         TIsConstructible
       , T
-      , std::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
+      , aux::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
     >::type;
 template<class...>
 struct ctor;

@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_TYPE_TRAITS_WRAPPER_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_WRAPPER_TRAITS_HPP
 
-#include <memory>
 #include "boost/di/wrappers/unique.hpp"
 #include "boost/di/wrappers/shared.hpp"
 

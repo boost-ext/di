@@ -20,14 +20,14 @@ struct uniform { };
 
 BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_INJECTOR);
 
-template<class T, std::size_t>
+template<class T, int>
 using get = T;
 
 template<template<class...> class, class, class, class = void>
 struct ctor_impl;
 
-template<template<class...> class TIsConstructible, class T, std::size_t... TArgs>
-struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>
+template<template<class...> class TIsConstructible, class T, int... TArgs>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>
     , BOOST_DI_REQUIRES_T((sizeof...(TArgs) > 0) && !TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
     : std::conditional<
            TIsConstructible<T, get<core::any_type_ref_fwd<T>, TArgs>...>::value
@@ -35,19 +35,19 @@ struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>
          , typename ctor_impl<
                TIsConstructible
              , T
-             , std::make_index_sequence<sizeof...(TArgs) - 1>
+             , aux::make_index_sequence<sizeof...(TArgs) - 1>
            >::type
       >
 { };
 
-template<template<class...> class TIsConstructible, class T, std::size_t... TArgs>
-struct ctor_impl<TIsConstructible, T, std::index_sequence<TArgs...>,
+template<template<class...> class TIsConstructible, class T, int... TArgs>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>,
       BOOST_DI_REQUIRES_T((sizeof...(TArgs) > 0) && TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
     : aux::type_list<get<core::any_type_fwd<T>, TArgs>...>
 { };
 
 template<template<class...> class TIsConstructible, class T>
-struct ctor_impl<TIsConstructible, T, std::index_sequence<>>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<>>
     : aux::type_list<>
 { };
 
@@ -56,7 +56,7 @@ using ctor_impl_t =
     typename ctor_impl<
         TIsConstructible
       , T
-      , std::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
+      , aux::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
     >::type;
 
 template<class...>

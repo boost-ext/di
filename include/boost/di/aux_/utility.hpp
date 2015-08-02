@@ -96,6 +96,40 @@ struct is_unique_impl<T1, T2, Ts...>
 template<class... Ts>
 using is_unique = is_unique_impl<none_type, Ts...>;
 
+template<int...>
+struct index_sequence {
+    using type = index_sequence;
+};
+
+template<typename, typename>
+struct concat;
+
+template<int... I1, int... I2>
+struct concat<index_sequence<I1...>, index_sequence<I2...>>
+    : index_sequence<I1..., (sizeof...(I1) + I2)...>
+{ };
+
+template<int N>
+struct make_index_sequence_impl
+    : concat<
+          typename make_index_sequence_impl<N/2>::type
+        , typename make_index_sequence_impl<N - N/2>::type
+      >::type
+{ };
+
+template<>
+struct make_index_sequence_impl<0>
+    : index_sequence<>
+{ };
+
+template<>
+struct make_index_sequence_impl<1>
+    : index_sequence<1>
+{ };
+
+template<int N>
+using make_index_sequence = typename make_index_sequence_impl<N>::type;
+
 }}}} // boost::di::v1::aux
 
 #endif
