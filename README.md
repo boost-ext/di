@@ -1200,7 +1200,7 @@ BOOST_DI_INJECTOR                       | Named used internally by Boost.DI
 
 ---
 
-[![Stories in Ready](https://badge.waffle.io/krzysztof-jusiak/di.svg?label=ready&title=Ready)](http://waffle.io/krzysztof-jusiak/di)
+[![Stories in Progress](https://badge.waffle.io/krzysztof-jusiak/di.svg??label=waffle%3Ain%20progress&title=In%20Progress)](http://waffle.io/krzysztof-jusiak/di)
 [![Throughput Graph](https://graphs.waffle.io/krzysztof-jusiak/di/throughput.svg)](https://waffle.io/krzysztof-jusiak/di/metrics)
 
 ---
