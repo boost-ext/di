@@ -114,6 +114,11 @@ struct ctor_traits<std::initializer_list<T>> {
     using BOOST_DI_INJECTOR = aux::type_list<>;
 };
 
+//template<class CharT, class Traits, class Allocator>
+//struct ctor_traits<std::basic_string<CharT, Traits, Allocator>> {
+    //using BOOST_DI_INJECTOR = aux::type_list<>;
+//};
+
 template<class T>
 struct ctor_traits<T, BOOST_DI_REQUIRES_T(
     std::is_same<std::char_traits<char>, typename T::traits_type>::value)> {

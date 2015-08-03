@@ -136,11 +136,22 @@
     #define BOOST_DI_DETAIL_IS_EMPTY_IIF_1(t, ...) t
     #define BOOST_DI_DETAIL_IS_EMPTY_PROCESS(...) BOOST_DI_IBP(BOOST_DI_DETAIL_IS_EMPTY_NON_FUNCTION_C __VA_ARGS__ ())
 #endif
+#ifdef _LIBCPP_VERSION
+_LIBCPP_BEGIN_NAMESPACE_STD
+#else
 namespace std {
+#endif
     template<class> class shared_ptr;
     template<class> class weak_ptr;
     template<class, class> class unique_ptr;
     template<class> struct char_traits;
+   
+#ifdef _LIBCPP_VERSION
+_LIBCPP_END_NAMESPACE_STD
+#else
+}
+#endif
+namespace std {
     template<class> class initializer_list;
 }
 namespace boost {
@@ -680,7 +691,7 @@ struct shared<T&> {
     shared(T& object) : object(&object) { }
     shared(const shared&) noexcept = default;
     shared& operator=(const shared&) noexcept = default;
-    template<class I, BOOST_DI_REQUIRES(std::is_convertible<std::reference_wrapper<T>, I>::value)>
+    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T&, I>::value)>
     inline operator I() const noexcept {
         return *object;
     }

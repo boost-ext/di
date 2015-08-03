@@ -7,11 +7,23 @@
 #ifndef BOOST_DI_FWD_HPP
 #define BOOST_DI_FWD_HPP
 
+#ifdef _LIBCPP_VERSION
+_LIBCPP_BEGIN_NAMESPACE_STD
+#else
 namespace std {
+#endif
     template<class> class shared_ptr;
     template<class> class weak_ptr;
     template<class, class> class unique_ptr;
     template<class> struct char_traits;
+    //template<class, class, class> class basic_string;
+#ifdef _LIBCPP_VERSION
+_LIBCPP_END_NAMESPACE_STD
+#else
+} // std
+#endif
+
+namespace std {
     template<class> class initializer_list;
 } // std
 

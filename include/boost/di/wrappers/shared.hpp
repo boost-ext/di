@@ -74,7 +74,7 @@ struct shared<T&> {
     shared(const shared&) noexcept = default;
     shared& operator=(const shared&) noexcept = default;
 
-    template<class I, BOOST_DI_REQUIRES(std::is_convertible<std::reference_wrapper<T>, I>::value)> // TODO
+    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T&, I>::value)>
     inline operator I() const noexcept {
         return *object;
     }
