@@ -44,12 +44,7 @@ struct shared {
 
     template<class I>
     inline operator boost::shared_ptr<I>() const noexcept {
-        //using sp = sp_holder<boost::shared_ptr<T>>;
-        //if (auto* deleter = std::get_deleter<sp, T>(object)) {
-            //return deleter->object;
-        //} else {
-            return {object.get(), sp_holder<std::shared_ptr<T>>{object}};
-        //}
+        return {object.get(), sp_holder<std::shared_ptr<T>>{object}};
     }
 
     template<class I>

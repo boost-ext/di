@@ -33,7 +33,7 @@ public:
         template<class TProvider>
         auto create_impl(const TProvider& provider) {
             static std::shared_ptr<T> object{provider.get()};
-            return wrappers::shared<T, true>{object};
+            return wrappers::shared<T>{object};
         }
     };
 };

@@ -665,7 +665,7 @@ struct shared {
     };
     template<class I>
     inline operator boost::shared_ptr<I>() const noexcept {
-            return {object.get(), sp_holder<std::shared_ptr<T>>{object}};
+        return {object.get(), sp_holder<std::shared_ptr<T>>{object}};
     }
     template<class I>
     inline operator std::weak_ptr<I>() const noexcept {
@@ -713,7 +713,7 @@ public:
         template<class TProvider>
         auto create_impl(const TProvider& provider) {
             static std::shared_ptr<T> object{provider.get()};
-            return wrappers::shared<T, true>{object};
+            return wrappers::shared<T>{object};
         }
     };
 };
