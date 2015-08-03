@@ -34,22 +34,16 @@
 #if defined(BOOST_DI_CLANG)
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_ATTR_ERROR(...) [[deprecated(__VA_ARGS__)]]
-    #define BOOST_DI_LIKELY(...) __builtin_expect((__VA_ARGS__), 1)
-    #define BOOST_DI_UNLIKELY(...) __builtin_expect((__VA_ARGS__), 0)
     #define BOOST_DI_TYPE_WKND(T)
 #elif defined(BOOST_DI_GCC)
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_ATTR_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
-    #define BOOST_DI_LIKELY(...) __builtin_expect((__VA_ARGS__), 1)
-    #define BOOST_DI_UNLIKELY(...) __builtin_expect((__VA_ARGS__), 0)
     #define BOOST_DI_TYPE_WKND(T)
 #elif defined(BOOST_DI_MSVC)
     #pragma warning(disable : 4503)
     #pragma warning(disable : 4822)
     #define BOOST_DI_UNUSED
     #define BOOST_DI_ATTR_ERROR(...) __declspec(deprecated(__VA_ARGS__))
-    #define BOOST_DI_LIKELY(...) __VA_ARGS__
-    #define BOOST_DI_UNLIKELY(...) __VA_ARGS__
     #define BOOST_DI_TYPE_WKND(T) (T&&)
 #endif
 #define BOOST_DI_IF(cond, t, f) BOOST_DI_IF_I(cond, t, f)
@@ -713,15 +707,13 @@ public:
         try_create(const TProvider&);
         template<class, class TProvider>
         auto create(const TProvider& provider) {
-            if (BOOST_DI_UNLIKELY(!get_instance())) {
-                get_instance() = std::shared_ptr<T>{provider.get()};
-            }
-            return wrappers::shared<T>{get_instance()};
+            return create_impl(provider);
         }
     private:
-        static std::shared_ptr<T>& get_instance() noexcept {
-            static std::shared_ptr<T> object;
-            return object;
+        template<class TProvider>
+        auto create_impl(const TProvider& provider) {
+            static std::shared_ptr<T> object{provider.get()};
+            return wrappers::shared<T, true>{object};
         }
     };
 };

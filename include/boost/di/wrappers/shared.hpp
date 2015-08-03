@@ -10,7 +10,7 @@
 #include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
-#include "boost/di/fwd.hpp" // boost::shared_ptr
+#include "boost/di/fwd.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 

@@ -26,16 +26,14 @@ public:
 
         template<class, class TProvider>
         auto create(const TProvider& provider) {
-            if (BOOST_DI_UNLIKELY(!get_instance())) {
-                get_instance() = std::shared_ptr<T>{provider.get()};
-            }
-            return wrappers::shared<T>{get_instance()};
+            return create_impl(provider);
         }
 
     private:
-        static std::shared_ptr<T>& get_instance() noexcept {
-            static std::shared_ptr<T> object;
-            return object;
+        template<class TProvider>
+        auto create_impl(const TProvider& provider) {
+            static std::shared_ptr<T> object{provider.get()};
+            return wrappers::shared<T, true>{object};
         }
     };
 };
