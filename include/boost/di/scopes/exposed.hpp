@@ -41,8 +41,8 @@ public:
 
         template<class TInjector>
         struct provider_impl {
-            TExpected* (*heap)(const provider_impl*);
-            type (*stack)(const provider_impl*);
+            TExpected* (*heap)(const provider_impl*) = nullptr;
+            type (*stack)(const provider_impl*) = nullptr;
 
             template<class T>
             static T create(const provider_impl* object) noexcept {

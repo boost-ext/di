@@ -62,6 +62,8 @@ Injector is a component used for creating dependencies configuration using [link
     #include <__di_hpp__>
 
 [heading Examples]
+$example_begin example/quick_user_guide/injector1.cpp$
+
     auto injector_exposed_empty = di::injector<>;
     auto injector_empty = di::make_injector();
 
@@ -72,6 +74,7 @@ Injector is a component used for creating dependencies configuration using [link
     );
 
     assert(0 == injector.__di_injector_create__<int>());
+$example_end$
 
 [heading More Examples]
     ``__examples_hello_world__`` | ``__examples_modules__`` | ``__extensions_uml_dumper__`` | ``__examples_custom_provider__`` | ``__examples_custom_scope__``
@@ -111,6 +114,7 @@ Creates [link di.user_guide.injector injector] type.
     #include <__di_hpp__>
 
 [heading Examples]
+$example_begin example/quick_user_guide/injector1.cpp$
 [table
 [[create empty injector][]]
     [
@@ -126,6 +130,7 @@ Creates [link di.user_guide.injector injector] type.
         ]
     ]
 ]
+$example_end$
 
 [heading More Examples]
     ``__examples_hello_world__`` | ``__examples_modules__`` | ``__extensions_uml_dumper__`` | ``__examples_custom_provider__`` | ``__examples_custom_scope__`` | ``__examples_custom_policy__``

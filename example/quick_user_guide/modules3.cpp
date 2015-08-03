@@ -24,7 +24,7 @@ struct module {
 di::injector<i1, i2> module::configure() const noexcept {
     return di::make_injector(
         di::bind<i1, impl1>()
-      , di::bind<i2, impl2>()
+      , di::bind<i2, impl2>(
     );
 }
 
