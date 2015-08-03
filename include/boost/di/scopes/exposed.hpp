@@ -27,8 +27,8 @@ public:
         #endif // __wknd__
 
         struct iprovider {
-            TExpected* (*heap)(const iprovider*);
-            type (*stack)(const iprovider*);
+            TExpected* (*heap)(const iprovider*) = nullptr;
+            type (*stack)(const iprovider*) = nullptr;
 
             auto get(const type_traits::heap& = {}) const noexcept {
                 return ((iprovider*)(this))->heap(this);

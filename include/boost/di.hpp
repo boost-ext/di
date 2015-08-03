@@ -145,7 +145,6 @@ namespace std {
     template<class> class weak_ptr;
     template<class, class> class unique_ptr;
     template<class> struct char_traits;
-   
 #ifdef _LIBCPP_VERSION
 _LIBCPP_END_NAMESPACE_STD
 #else
@@ -829,8 +828,8 @@ public:
             using type = TExpected;
         #endif
         struct iprovider {
-            TExpected* (*heap)(const iprovider*);
-            type (*stack)(const iprovider*);
+            TExpected* (*heap)(const iprovider*) = nullptr;
+            type (*stack)(const iprovider*) = nullptr;
             auto get(const type_traits::heap& = {}) const noexcept {
                 return ((iprovider*)(this))->heap(this);
             }
