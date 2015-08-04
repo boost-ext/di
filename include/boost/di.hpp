@@ -302,10 +302,10 @@ template<class T, class... TArgs>
 using is_braces_constructible_t =
     typename is_braces_constructible<T, TArgs...>::type;
 template<class T>
-using remove_accessors =
+using remove_specifiers =
     std::remove_cv<std::remove_pointer_t<std::remove_reference_t<T>>>;
 template<class T>
-using remove_accessors_t = typename remove_accessors<T>::type;
+using remove_specifiers_t = typename remove_specifiers<T>::type;
 template<class T>
 struct deref_type {
     using type = T;
@@ -329,7 +329,7 @@ struct deref_type<std::weak_ptr<T>> {
 template<typename T>
 using deref_type_t = typename deref_type<T>::type;
 template<class T>
-using decay = deref_type<remove_accessors_t<deref_type_t<remove_accessors_t<T>>>>;
+using decay = deref_type<remove_specifiers_t<deref_type_t<remove_specifiers_t<T>>>>;
 template<class T>
 using decay_t = typename decay<T>::type;
 template<class T1, class T2>
@@ -790,7 +790,7 @@ public:
     public:
         template<class T>
         using is_referable = typename type_traits::scope_traits_t<T>::template
-            scope<TExpected, TGiven>::template is_referable<aux::remove_accessors_t<T>>;
+            scope<TExpected, TGiven>::template is_referable<aux::remove_specifiers_t<T>>;
         template<class T, class TProvider>
         static decltype(typename type_traits::scope_traits_t<T>::template
             scope<TExpected, TGiven>{}.template try_create<T>(std::declval<TProvider>()))
@@ -947,7 +947,7 @@ public:
     struct scope<TExpected, std::shared_ptr<TGiven>> {
         template<class T>
         using is_referable =
-            typename wrappers::shared<TGiven>::template is_referable<aux::remove_accessors_t<T>>;
+            typename wrappers::shared<TGiven>::template is_referable<aux::remove_specifiers_t<T>>;
         explicit scope(const std::shared_ptr<TGiven>& object)
             : object_{object}
         { }
@@ -1626,6 +1626,7 @@ template<class...>
 struct bound_type {
     struct is_bound_more_than_once { };
     struct is_neither_a_dependency_nor_an_injector { };
+    struct has_disallowed_specifiers;
     template<class>
     struct is_not_base_of { };
     template<class>
@@ -1703,12 +1704,20 @@ using get_any_of_error =
 template<class I, class T>
 auto boundable_impl(I&&, T&&) ->
     std::conditional_t<
-        std::is_base_of<I, T>::value || std::is_convertible<T, I>::value
-      , std::true_type
+        !std::is_same<I, aux::remove_specifiers_t<I>>::value
+      , typename bound_type<I>::has_disallowed_specifiers
       , std::conditional_t<
-            std::is_base_of<I, T>::value
-          , typename bound_type<T>::template is_not_convertible_to<I>
-          , typename bound_type<T>::template is_not_base_of<I>
+            !std::is_same<T, aux::remove_specifiers_t<T>>::value
+          , typename bound_type<T>::has_disallowed_specifiers
+          , std::conditional_t<
+                std::is_base_of<I, T>::value || std::is_convertible<T, I>::value
+              , std::true_type
+              , std::conditional_t<
+                    std::is_base_of<I, T>::value
+                  , typename bound_type<T>::template is_not_convertible_to<I>
+                  , typename bound_type<T>::template is_not_base_of<I>
+                >
+            >
         >
     >;
 template<class... TDeps>

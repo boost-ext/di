@@ -18,6 +18,9 @@ test bind_expected_given = [] {
     static_expect(boundable<int, int>::value);
     static_expect(boundable<int, short>::value);
     static_expect(std::is_same<bound_type<std::string>::is_not_base_of<int>, boundable<int, std::string>>::value);
+    static_expect(std::is_same<bound_type<int*>::has_disallowed_specifiers, boundable<int*, int>>::value);
+    static_expect(std::is_same<bound_type<int*>::has_disallowed_specifiers, boundable<int, int*>>::value);
+    static_expect(std::is_same<bound_type<double*>::has_disallowed_specifiers, boundable<int, double*>>::value);
 };
 
 test bind_deps = [] {

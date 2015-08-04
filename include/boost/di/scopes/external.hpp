@@ -78,7 +78,7 @@ public:
     struct scope<TExpected, std::shared_ptr<TGiven>> {
         template<class T>
         using is_referable =
-            typename wrappers::shared<TGiven>::template is_referable<aux::remove_accessors_t<T>>;
+            typename wrappers::shared<TGiven>::template is_referable<aux::remove_specifiers_t<T>>;
 
         explicit scope(const std::shared_ptr<TGiven>& object)
             : object_{object}

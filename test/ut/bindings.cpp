@@ -20,8 +20,8 @@ test bindings_types = [] {
     expect(std::is_base_of<core::dependency<scopes::deduce, int>, decltype(bind<int>)>{});
     expect(std::is_base_of<core::dependency<scopes::deduce, i, impl>, decltype(bind<i, impl>)>{});
 #endif
-    expect(std::is_base_of<core::dependency<scopes::deduce, int>, aux::remove_accessors_t<decltype(bind<int>())>>{});
-    expect(std::is_base_of<core::dependency<scopes::deduce, i, impl>, aux::remove_accessors_t<decltype(bind<i, impl>())>>{});
+    expect(std::is_base_of<core::dependency<scopes::deduce, int>, aux::remove_specifiers_t<decltype(bind<int>())>>{});
+    expect(std::is_base_of<core::dependency<scopes::deduce, i, impl>, aux::remove_specifiers_t<decltype(bind<i, impl>())>>{});
 };
 
 }}} // boost::di::v1

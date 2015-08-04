@@ -81,11 +81,11 @@ test is_braces_constructible_types = [] {
     static_expect(is_braces_constructible<agg3, int, double, float>{});
 };
 
-test remove_accessors_types = [] {
-    static_expect(std::is_same<int, remove_accessors_t<int>>{});
-    static_expect(std::is_same<int, remove_accessors_t<int&>>{});
-    static_expect(std::is_same<int, remove_accessors_t<int*>>{});
-    static_expect(std::is_same<int, remove_accessors_t<const int*>>{});
+test remove_specifiers_types = [] {
+    static_expect(std::is_same<int, remove_specifiers_t<int>>{});
+    static_expect(std::is_same<int, remove_specifiers_t<int&>>{});
+    static_expect(std::is_same<int, remove_specifiers_t<int*>>{});
+    static_expect(std::is_same<int, remove_specifiers_t<const int*>>{});
 };
 
 test deref_types = [] {

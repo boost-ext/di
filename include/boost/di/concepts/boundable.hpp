@@ -18,6 +18,7 @@ template<class...>
 struct bound_type {
     struct is_bound_more_than_once { };
     struct is_neither_a_dependency_nor_an_injector { };
+    struct has_disallowed_specifiers;
 
     template<class>
     struct is_not_base_of { };
@@ -113,12 +114,20 @@ using get_any_of_error =
 template<class I, class T> // expected -> given
 auto boundable_impl(I&&, T&&) ->
     std::conditional_t<
-        std::is_base_of<I, T>::value || std::is_convertible<T, I>::value
-      , std::true_type
+        !std::is_same<I, aux::remove_specifiers_t<I>>::value
+      , typename bound_type<I>::has_disallowed_specifiers
       , std::conditional_t<
-            std::is_base_of<I, T>::value
-          , typename bound_type<T>::template is_not_convertible_to<I>
-          , typename bound_type<T>::template is_not_base_of<I>
+            !std::is_same<T, aux::remove_specifiers_t<T>>::value
+          , typename bound_type<T>::has_disallowed_specifiers
+          , std::conditional_t<
+                std::is_base_of<I, T>::value || std::is_convertible<T, I>::value
+              , std::true_type
+              , std::conditional_t<
+                    std::is_base_of<I, T>::value
+                  , typename bound_type<T>::template is_not_convertible_to<I>
+                  , typename bound_type<T>::template is_not_base_of<I>
+                >
+            >
         >
     >;
 

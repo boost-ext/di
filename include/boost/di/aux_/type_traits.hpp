@@ -81,11 +81,11 @@ using is_braces_constructible_t =
     typename is_braces_constructible<T, TArgs...>::type;
 
 template<class T>
-using remove_accessors =
+using remove_specifiers =
     std::remove_cv<std::remove_pointer_t<std::remove_reference_t<T>>>;
 
 template<class T>
-using remove_accessors_t = typename remove_accessors<T>::type;
+using remove_specifiers_t = typename remove_specifiers<T>::type;
 
 template<class T>
 struct deref_type {
@@ -116,7 +116,7 @@ template<typename T>
 using deref_type_t = typename deref_type<T>::type;
 
 template<class T>
-using decay = deref_type<remove_accessors_t<deref_type_t<remove_accessors_t<T>>>>;
+using decay = deref_type<remove_specifiers_t<deref_type_t<remove_specifiers_t<T>>>>;
 
 template<class T>
 using decay_t = typename decay<T>::type;
