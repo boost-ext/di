@@ -589,6 +589,9 @@ function toggleNextRow() {
 <a name="di.user_guide.injector.h4"></a>
         <span class="phrase"><a name="di.user_guide.injector.examples"></a></span><a class="link" href="injector.html#di.user_guide.injector.examples">Examples</a>
       </h5>
+<p>
+        <button class="TryItBtn" id="run_it_btn_1" onclick="show(1, 'https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/quick_user_guide/injector1.cpp')">Run this code!</button><textarea style="display: none" id="code_1"></textarea><br /><textarea style="display: none" id="output_1"></textarea><div id="code_listing_1">
+      </p>
 <pre class="programlisting"><span class="keyword">auto</span> <span class="identifier">injector_exposed_empty</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;&gt;;</span>
 <span class="keyword">auto</span> <span class="identifier">injector_empty</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">();</span>
 
@@ -600,6 +603,9 @@ function toggleNextRow() {
 
 <span class="identifier">assert</span><span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">injector</span><span class="special">.</span><a class="link" href="injector.html#di.user_guide.injector.synopsis">create</a><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;());</span>
 </pre>
+<p>
+        </div>
+      </p>
 <h5>
 <a name="di.user_guide.injector.h5"></a>
         <span class="phrase"><a name="di.user_guide.injector.more_examples"></a></span><a class="link" href="injector.html#di.user_guide.injector.more_examples">More
