@@ -8,13 +8,14 @@
 #define BOOST_DI_WRAPPERS_UNIQUE_HPP
 
 #include "boost/di/aux_/compiler.hpp"
+#include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/fwd.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 
 template<class T>
 struct unique {
-    template<class I>
+    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T, I>::value)>
     inline operator I() const noexcept {
         return object;
     }

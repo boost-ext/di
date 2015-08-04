@@ -269,6 +269,21 @@ test injector_shared_by_copy = [] {
     );
 };
 
+test bind_wrapper_not_convertible = [] {
+    expect_compile_fail(
+        "", ".*",
+        struct c {
+            c(int*) { }
+        };
+
+        auto injector = di::make_injector(
+            di::bind<int>().to(42)
+        );
+
+        injector.create<c>();
+    );
+};
+
 test make_injector_wrong_arg = [] {
     expect_compile_fail(
         "", ".*",
