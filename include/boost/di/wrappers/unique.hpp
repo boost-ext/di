@@ -13,7 +13,12 @@
 namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 
 template<class T>
-struct unique {
+class unique {
+public:
+    explicit unique(const T& object)
+        : object(object)
+    { }
+
     template<class I>
     inline operator I() const noexcept {
         return object;
@@ -23,11 +28,17 @@ struct unique {
         return static_cast<T&&>(object);
     }
 
+private:
     T object;
 };
 
 template<class T>
-struct unique<T*> {
+class unique<T*> {
+public:
+    explicit unique(T* object)
+        : object(object)
+    { }
+
     template<class I>
     inline operator I() const noexcept {
         struct scoped_ptr { T* ptr; ~scoped_ptr() { delete ptr; } };
@@ -59,17 +70,17 @@ struct unique<T*> {
         return std::unique_ptr<I, D>{object};
     }
 
-    #if defined(BOOST_DI_MSVC) // __pph__
-        explicit unique(T* object)
-            : object(object)
-        { }
-    #endif // __pph__
-
+private:
     T* object = nullptr;
 };
 
 template<class T, class TDeleter>
-struct unique<std::unique_ptr<T, TDeleter>> {
+class unique<std::unique_ptr<T, TDeleter>> {
+public:
+    explicit unique(std::unique_ptr<T, TDeleter> object)
+        : object(static_cast<std::unique_ptr<T, TDeleter>&&>(object))
+    { }
+
     template<class I>
     inline operator I() const noexcept {
         return *object;
@@ -100,6 +111,7 @@ struct unique<std::unique_ptr<T, TDeleter>> {
         return static_cast<std::unique_ptr<T, TDeleter>&&>(object);
     }
 
+private:
     std::unique_ptr<T, TDeleter> object;
 };
 

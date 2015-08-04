@@ -15,7 +15,8 @@
 namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 
 template<class T>
-struct shared {
+class shared {
+public:
     template<class>
     struct is_referable
         : std::true_type
@@ -25,6 +26,10 @@ struct shared {
     struct is_referable<std::shared_ptr<I>>
         : std::false_type
     { };
+
+    explicit shared(const std::shared_ptr<T>& object)
+        : object(object)
+    { }
 
     template<class I>
     inline operator std::shared_ptr<I>() const noexcept {
@@ -53,11 +58,13 @@ struct shared {
         return *object;
     }
 
+private:
     std::shared_ptr<T> object;
 };
 
 template<class T>
-struct shared<T*> {
+class shared<T*> {
+public:
     template<class>
     struct is_referable
         : std::true_type
@@ -68,6 +75,10 @@ struct shared<T*> {
         : std::false_type
     { };
 
+    explicit shared(T* object)
+        : object(object)
+    { }
+
     inline operator T&() noexcept {
         return *object;
     }
@@ -76,12 +87,19 @@ struct shared<T*> {
         return *object;
     }
 
+private:
     T* object = nullptr;
 };
 
 template<class T>
-struct shared<T&> {
-    shared(T& object) // non explicit
+class shared<T&> {
+public:
+    template<class>
+    struct is_referable
+        : std::true_type
+    { };
+
+    explicit shared(T& object)
         : object(&object)
     { }
 
