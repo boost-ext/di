@@ -60,9 +60,9 @@ public:
     }
 
     template<class TInjector, class T>
-    di::aux::remove_specifiers_t<typename T::type>
+    di::aux::remove_accessors_t<typename T::type>
     operator()(const TInjector& injector, const T&) const {
-        di::aux::remove_specifiers_t<typename T::type> container;
+        di::aux::remove_accessors_t<typename T::type> container;
         int _[]{0, (add(injector, container, type<Ts>{}), 0)...}; (void)_; // enforce order
         return container;
     }

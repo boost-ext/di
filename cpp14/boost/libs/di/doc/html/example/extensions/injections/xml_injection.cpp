@@ -7,7 +7,6 @@
 
 //[xml_injection
 //<-
-#include <memory>
 #include <cassert>
 #include <typeinfo>
 #include <iostream>
