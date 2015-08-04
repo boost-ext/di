@@ -82,7 +82,7 @@ test call_provider_with_deleter = [] {
     expect_eq(1, deleter_provider::called());
 };
 
-class config_policies : public di::config {
+class must_be_bound : public di::config {
 public:
     template<class T>
     static auto policies(const T&) noexcept {
@@ -93,13 +93,42 @@ public:
 };
 
 test constructible_policy = [] {
-    struct example {
+    struct c {
         int i = 0;
         double d = 0.0;
     };
 
-    auto injector = di::make_injector<config_policies>(di::bind<int>().to(42));
-    injector.create<example>();
+    auto injector = di::make_injector<must_be_bound>(
+        di::bind<int>().to(42)
+    );
+
+    injector.create<c>();
+};
+
+class disallow_raw_pointers : public di::config {
+public:
+    template<class T>
+    static auto policies(const T&) noexcept {
+        using namespace di::policies;
+        using namespace di::policies::operators;
+        return di::make_policies(constructible(is_root{} || !std::is_pointer<di::_>{}));
+    }
+};
+
+test constructible_policy_disallow_raw_pointers = [] {
+    struct c {
+        c(int, double) { }
+    };
+
+    {
+    auto injector = di::make_injector<disallow_raw_pointers>();
+    injector.create<c>();
+    }
+
+    {
+    di::injector<c> injector = di::make_injector<disallow_raw_pointers>();
+    injector.create<c>();
+    }
 };
 
 struct policy {
