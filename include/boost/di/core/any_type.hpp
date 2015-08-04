@@ -61,7 +61,7 @@ struct any_type_ref {
         return injector_.create_impl(aux::type<T>{});
     }
 
-    #if defined(BOOST_DI_GCC) // __wknd__
+    #if defined(BOOST_DI_GCC) // __pph__
         template<class T
                , class = is_not_same_t<T, TParent>
                , class = is_referable_t<T&&, TInjector>
@@ -69,7 +69,7 @@ struct any_type_ref {
         > operator T&&() const {
             return injector_.create_impl(aux::type<T&&>{});
         }
-    #endif // __wknd__
+    #endif // __pph__
 
     template<class T
            , class = is_not_same_t<T, TParent>
@@ -109,14 +109,14 @@ struct any_type_ref {
         return injector_.create_successful_impl(aux::type<T>{});
     }
 
-    #if defined(BOOST_DI_GCC) // __wknd__
+    #if defined(BOOST_DI_GCC) // __pph__
         template<class T
                , class = is_not_same_t<T, TParent>
                , class = is_referable_t<T&&, TInjector>
         > operator T&&() const {
             return injector_.create_successful_impl(aux::type<T&&>{});
         }
-    #endif // __wknd__
+    #endif // __pph__
 
     template<class T
            , class = is_not_same_t<T, TParent>
@@ -151,10 +151,10 @@ struct any_type_ref_fwd {
     template<class T, class = is_not_same_t<T, TParent>>
     operator T&() const;
 
-    #if defined(BOOST_DI_GCC) // __wknd__
+    #if defined(BOOST_DI_GCC) // __pph__
         template<class T, class = is_not_same_t<T, TParent>>
         operator T&&() const;
-    #endif // __wknd__
+    #endif // __pph__
 
     template<class T, class = is_not_same_t<T, TParent>>
     operator const T&() const;

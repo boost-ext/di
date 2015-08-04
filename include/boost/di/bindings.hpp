@@ -32,11 +32,11 @@ template<
   , class TGiven = TExpected
   , BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, TGiven>)
 >
-#if defined(__cpp_variable_templates) // __wknd__
+#if defined(__cpp_variable_templates) // __pph__
     core::dependency<scopes::deduce, TExpected, TGiven> bind{};
-#else // __wknd__
+#else // __pph__
     struct bind : core::dependency<scopes::deduce, TExpected, TGiven> {};
-#endif // __wknd__
+#endif // __pph__
 
 static constexpr BOOST_DI_UNUSED core::override override{};
 static constexpr BOOST_DI_UNUSED scopes::deduce deduce{};

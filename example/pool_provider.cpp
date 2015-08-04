@@ -47,9 +47,10 @@ struct pool_deleter {
 
 /*<define `example` class as usual>*/
 struct example {
-    explicit example(int i, std::unique_ptr<interface, pool_deleter<interface>> up) {
+    explicit example(int i, std::unique_ptr<interface, pool_deleter<interface>> up, std::shared_ptr<interface> sp) {
         assert(i == 42);
         assert(dynamic_cast<implementation*>(up.get()));
+        assert(dynamic_cast<implementation*>(sp.get()));
     }
 };
 

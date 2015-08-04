@@ -16,15 +16,15 @@ class exposed {
 public:
     template<class TExpected, class TGiven>
     class scope {
-        #if defined(BOOST_DI_GCC) || defined(BOOST_DI_MSVC) // __wknd__
+        #if defined(BOOST_DI_GCC) || defined(BOOST_DI_MSVC) // __pph__
             using type = std::conditional_t<
                 std::is_copy_constructible<TExpected>::value
               , TExpected
               , TExpected*
             >;
-        #else // __wknd__
+        #else // __pph__
             using type = TExpected;
-        #endif // __wknd__
+        #endif // __pph__
 
         struct iprovider {
             TExpected* (*heap)(const iprovider*) = nullptr;

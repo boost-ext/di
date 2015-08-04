@@ -50,16 +50,16 @@ struct add_type_list<T, std::false_type, std::false_type> {
     using type = aux::type_list<dependency<scopes::exposed<>, T>>;
 };
 
-#if defined(BOOST_DI_MSVC) // __wknd__
+#if defined(BOOST_DI_MSVC) // __pph__
     template<class... Ts>
     struct bindings : aux::join_t<typename add_type_list<Ts>::type...> { };
 
     template<class... Ts>
     using bindings_t = typename bindings<Ts...>::type;
-#else // __wknd__
+#else // __pph__
     template<class... Ts>
     using bindings_t = aux::join_t<typename add_type_list<Ts>::type...>;
-#endif // __wknd__
+#endif // __pph__
 
 }}}} // boost::di::v1::core
 

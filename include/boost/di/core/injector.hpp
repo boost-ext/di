@@ -52,12 +52,12 @@ struct copyable<aux::type_list<TDeps...>>
 template<class TDeps>
 using copyable_t = typename copyable<TDeps>::type;
 
-#if defined(BOOST_DI_MSVC) // __wknd__
+#if defined(BOOST_DI_MSVC) // __pph__
     template<class T, class TInjector>
     inline auto build(const TInjector& injector) noexcept {
         return T{injector};
     }
-#endif // __wknd__
+#endif // __pph__
 
 template<class T>
 inline decltype(auto) get_arg(const T& arg, const std::false_type&) noexcept {
@@ -174,11 +174,11 @@ private:
 
     template<class TInjector, class... TArgs>
     explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
-    #if defined(BOOST_DI_MSVC) // __wknd__
+    #if defined(BOOST_DI_MSVC) // __pph__
         : pool_t{copyable_t<deps>{}, pool_t{build<TArgs>(injector)...}}
-    #else // __wknd__
+    #else // __pph__
         : pool_t{copyable_t<deps>{}, pool_t{TArgs{injector}...}}
-    #endif // __wknd__
+    #endif // __pph__
     { }
 
     template<class TIsRoot = std::false_type, class T>

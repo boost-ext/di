@@ -59,11 +59,11 @@ struct unique<T*> {
         return std::unique_ptr<I, D>{object};
     }
 
-    #if defined(BOOST_DI_MSVC) // __wknd__
+    #if defined(BOOST_DI_MSVC) // __pph__
         explicit unique(T* object)
             : object(object)
         { }
-    #endif // __wknd__
+    #endif // __pph__
 
     T* object = nullptr;
 };

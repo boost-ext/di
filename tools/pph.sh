@@ -34,7 +34,7 @@ pph() {
     echo "#else"
     echo "#include <type_traits>"
     rm -rf tmp && mkdir tmp && cp -r boost tmp && cd tmp && touch type_traits
-    find . -iname "*.hpp" | xargs sed -i "s/\(.*\)__wknd__/\/\/\/\/\1/"
+    find . -iname "*.hpp" | xargs sed -i "s/\(.*\)__pph__/\/\/\/\/\1/"
     tail -n +10 "boost/di/aux_/compiler.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
     tail -n +11 "boost/di/aux_/preprocessor.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
     tail -n +10 "boost/di/fwd.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
