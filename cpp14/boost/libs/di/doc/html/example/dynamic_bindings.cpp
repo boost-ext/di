@@ -62,8 +62,6 @@ int main() {
     /*<<create interface with `id = e2`>>*/
     assert(dynamic_cast<implementation2*>(injector.create<std::shared_ptr<interface>>().get()));
     (void)id;
-
-    return 0;
 }
 
 //]

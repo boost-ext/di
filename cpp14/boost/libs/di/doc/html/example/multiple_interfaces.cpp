@@ -36,8 +36,6 @@ int main() {
     );
 
     injector.create<multiple_interfaces>();
-
-    return 0;
 }
 
 //]

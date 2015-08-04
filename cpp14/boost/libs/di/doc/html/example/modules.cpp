@@ -78,8 +78,6 @@ int main() {
 
     /*<<create `app`>>*/
     injector.create<app>();
-
-    return 0;
 }
 
 //]

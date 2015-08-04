@@ -34,7 +34,5 @@ int main() {
     );
 
     injector.create<app>().run();
-
-    return 0;
 }
 

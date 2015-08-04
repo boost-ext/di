@@ -56,8 +56,6 @@ int main() {
 
     /*<<create `example`>>*/
     injector.create<example>();
-
-    return 0;
 }
 
 //]

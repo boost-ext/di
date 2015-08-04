@@ -105,8 +105,6 @@ int main() {
 
     d = 42.f;
     assert(service_app.d == 42.f);
-
-    return 0;
 }
 
 //]

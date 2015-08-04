@@ -42,8 +42,6 @@ int main() {
 
     /*<<create `annotations`>>*/
     injector.create<annotations>();
-
-    return 0;
 }
 
 //]

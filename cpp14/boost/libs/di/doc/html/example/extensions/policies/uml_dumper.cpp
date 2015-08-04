@@ -82,7 +82,6 @@ int main() {
     injector.create<c3>();
 
     /*<<output [@images/uml_dumper.png [$images/uml_dumper.png [width 75%] [height 75%] ]]>>*/
-    return 0;
 }
 
 //]
