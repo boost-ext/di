@@ -66,8 +66,4 @@ test(ft/di_errors)
 test(ft/di_inject)
 test(ft/di_injector)
 test(ft/di_modules)
-test(ft/di_scope_exposed)
-test(ft/di_scope_external)
-test(ft/di_scope_unique)
-test(ft/di_wrapper_shared)
 

@@ -99,10 +99,6 @@ test-suite ft :
     [ test c++1y : ft/di_inject.cpp ]
     [ test c++1y : ft/di_injector.cpp ]
     [ test c++1y : ft/di_modules.cpp ]
-    [ test c++1y : ft/di_scope_exposed.cpp ]
-    [ test c++1y : ft/di_scope_external.cpp ]
-    [ test c++1y : ft/di_scope_unique.cpp ]
-    [ test c++1y : ft/di_wrapper_shared.cpp ]
 ;
 
 test-suite pt :

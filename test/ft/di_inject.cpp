@@ -10,6 +10,9 @@
 #if __has_include(<boost/function.hpp>)
     #include <boost/function.hpp>
 #endif
+#if __has_include(<boost/shared_ptr.hpp>)
+    #include <boost/shared_ptr.hpp>
+#endif
 
 namespace di = boost::di;
 
@@ -482,4 +485,33 @@ test create_conversion = [] {
     expect_eq(i, (int)injector);
     expect(dynamic_cast<impl1*>(((const std::unique_ptr<i1>&)injector).get()));
 };
+
+test request_value_and_ptr_in_unique = [] {
+    struct c {
+        int i = 0;
+        int* ptr = nullptr;
+    };
+
+    auto injector = di::make_injector(
+        di::bind<int>().in(di::unique)
+    );
+
+    auto object = injector.create<c>();
+    delete object.ptr;
+};
+
+#if __has_include(<boost/shared_ptr.hpp>)
+    test conversion_to_boost_shared_ptr = [] {
+        struct c {
+            boost::shared_ptr<int> sp;
+        };
+
+        auto injector = di::make_injector(
+            di::bind<int>().in(di::singleton)
+        );
+
+        auto object = injector.create<c>();
+        expect(object.sp.get());
+    };
+#endif
 
