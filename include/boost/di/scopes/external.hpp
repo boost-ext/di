@@ -8,7 +8,8 @@
 #define BOOST_DI_SCOPES_EXTERNAL_HPP
 
 #include "boost/di/aux_/type_traits.hpp"
-#include "boost/di/type_traits/wrapper_traits.hpp"
+#include "boost/di/wrappers/shared.hpp"
+#include "boost/di/wrappers/unique.hpp"
 
 namespace boost { namespace di { inline namespace v1 {
 
@@ -29,6 +30,19 @@ class external {
         using expected = TExpected;
         using given = TGiven;
     };
+
+    template<class T>
+    struct wrapper_traits {
+        using type = wrappers::unique<T>;
+    };
+
+    template<class T>
+    struct wrapper_traits<std::shared_ptr<T>> {
+        using type = wrappers::shared<T>;
+    };
+
+    template<class T>
+    using wrapper_traits_t = typename wrapper_traits<T>::type;
 
 public:
     template<class TExpected, class, class = void>
@@ -109,12 +123,12 @@ public:
         { }
 
         template<class T, class TProvider>
-        type_traits::wrapper_traits_t<decltype(std::declval<TGiven>()())>
+        wrapper_traits_t<decltype(std::declval<TGiven>()())>
         static try_create(const TProvider&);
 
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
-            using wrapper = type_traits::wrapper_traits_t<decltype(std::declval<TGiven>()())>;
+            using wrapper = wrapper_traits_t<decltype(std::declval<TGiven>()())>;
             return wrapper{object_()};
         }
 
@@ -138,7 +152,7 @@ public:
 
         template<class, class TProvider>
         auto create(const TProvider& provider) const noexcept {
-            using wrapper = type_traits::wrapper_traits_t<decltype((object_)(provider.injector_))>;
+            using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_))>;
             return wrapper{(object_)(provider.injector_)};
         }
 
@@ -162,7 +176,7 @@ public:
 
         template<class T, class TProvider>
         auto create(const TProvider& provider) const noexcept {
-            using wrapper = type_traits::wrapper_traits_t<decltype((object_)(provider.injector_, arg<T, TExpected, TGiven>{}))>;
+            using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_, arg<T, TExpected, TGiven>{}))>;
             return wrapper{(object_)(provider.injector_, arg<T, TExpected, TGiven>{})};
         }
 

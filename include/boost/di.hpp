@@ -641,9 +641,8 @@ public:
 };
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace wrappers {
-template<class T, bool Ref = true>
+template<class T>
 struct shared {
-    using type = std::conditional_t<std::is_same<T, void>::value, _, T>;
     template<class>
     struct is_referable
         : std::true_type
@@ -671,13 +670,13 @@ struct shared {
     inline operator std::weak_ptr<I>() const noexcept {
         return object;
     }
-    inline operator type&() noexcept {
+    inline operator T&() noexcept {
         return *object;
     }
-    inline operator const type&() const noexcept {
+    inline operator const T&() const noexcept {
         return *object;
     }
-    std::conditional_t<Ref, const std::shared_ptr<T>&, std::shared_ptr<T>> object;
+    std::shared_ptr<T> object;
 };
 template<class T>
 struct shared<T&> {
@@ -883,18 +882,6 @@ public:
     };
 };
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace type_traits {
-template<class T>
-struct wrapper_traits {
-    using type = wrappers::unique<T>;
-};
-template<class T>
-struct wrapper_traits<std::shared_ptr<T>> {
-    using type = wrappers::shared<T, false>;
-};
-template<class T>
-using wrapper_traits_t = typename wrapper_traits<T>::type;
-}}}}
 namespace boost { namespace di { inline namespace v1 {
 template<class T, class... TArgs> decltype(std::declval<T>().operator()(std::declval<TArgs>()...), std::true_type()) has_call_operator_impl(int); template<class, class...> std::false_type has_call_operator_impl(...); template<class T, class... TArgs> struct has_call_operator : decltype(has_call_operator_impl<T, TArgs...>(0)) { };
 namespace scopes {
@@ -909,6 +896,16 @@ class external {
         using expected = TExpected;
         using given = TGiven;
     };
+    template<class T>
+    struct wrapper_traits {
+        using type = wrappers::unique<T>;
+    };
+    template<class T>
+    struct wrapper_traits<std::shared_ptr<T>> {
+        using type = wrappers::shared<T>;
+    };
+    template<class T>
+    using wrapper_traits_t = typename wrapper_traits<T>::type;
 public:
     template<class TExpected, class, class = void>
     struct scope {
@@ -971,11 +968,11 @@ public:
             : object_(object)
         { }
         template<class T, class TProvider>
-        type_traits::wrapper_traits_t<decltype(std::declval<TGiven>()())>
+        wrapper_traits_t<decltype(std::declval<TGiven>()())>
         static try_create(const TProvider&);
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
-            using wrapper = type_traits::wrapper_traits_t<decltype(std::declval<TGiven>()())>;
+            using wrapper = wrapper_traits_t<decltype(std::declval<TGiven>()())>;
             return wrapper{object_()};
         }
         TGiven object_;
@@ -994,7 +991,7 @@ public:
         static T try_create(const TProvider&);
         template<class, class TProvider>
         auto create(const TProvider& provider) const noexcept {
-            using wrapper = type_traits::wrapper_traits_t<decltype((object_)(provider.injector_))>;
+            using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_))>;
             return wrapper{(object_)(provider.injector_)};
         }
         TGiven object_;
@@ -1013,7 +1010,7 @@ public:
         static T try_create(const TProvider&);
         template<class T, class TProvider>
         auto create(const TProvider& provider) const noexcept {
-            using wrapper = type_traits::wrapper_traits_t<decltype((object_)(provider.injector_, arg<T, TExpected, TGiven>{}))>;
+            using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_, arg<T, TExpected, TGiven>{}))>;
             return wrapper{(object_)(provider.injector_, arg<T, TExpected, TGiven>{})};
         }
         TGiven object_;

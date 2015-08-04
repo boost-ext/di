@@ -82,7 +82,6 @@ test-suite ut :
     [ test c++1y : ut/type_traits/memory_traits.cpp ]
     [ test c++1y : ut/type_traits/referable_traits.cpp ]
     [ test c++1y : ut/type_traits/scope_traits.cpp ]
-    [ test c++1y : ut/type_traits/wrapper_traits.cpp ]
     [ test c++1y : ut/wrappers/unique.cpp : unique_wrapper ]
     [ test c++1y : ut/wrappers/shared.cpp : shared_wrapper ]
     [ test c++1y : ut/bindings.cpp : bindings_cpp ]
