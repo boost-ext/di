@@ -61,6 +61,7 @@ test-suite example :
     [ example c++1y : multiple_interfaces.cpp ]
     [ example c++1y : pool_provider.cpp ]
     [ example c++1y : provider.cpp ]
+    #[ example c++1y : share_no_memory_header.cpp ]
 ;
 
 test-suite extensions :
