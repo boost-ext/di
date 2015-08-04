@@ -13,7 +13,7 @@ import feature : extend-feature compose ;
 
 extend-feature variant : coverage ;
 compose <variant>coverage :
-    <cxxflags>"-fprofile-arcs -ftest-coverage -DCOVERAGE" <linkflags>"-fprofile-arcs"
+    <toolset>gcc:<cxxflags>"-fprofile-arcs -ftest-coverage -DCOVERAGE" <linkflags>"-fprofile-arcs"
     <optimization>off
 ;
 
@@ -33,7 +33,7 @@ project :
         <include>../include
 ;
 
-rule run-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
+rule test ( std * : src + : property * : defines * ) {
     toolset =
         <toolset>gcc:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
         <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
@@ -41,81 +41,72 @@ rule run-test ( std * : src + : ctor * : defines * : preprocessed_headers * ) {
         <toolset>msvc:<cxxflags>"/FI common/test.hpp /W3"
     ;
 
-    if $(ctor) {
-        defines += <define>BOOST_DI_CFG_CTOR <define>\"BOOST_DI_INJECT(type,...)=type(__VA_ARGS__)\" ;
-    }
-
-    if ! $(preprocessed_headers) {
-        defines += <define>BOOST_DI_CFG_NO_PREPROCESSED_HEADERS ;
-    }
-
     local memcheck = [ MATCH --memcheck=(.*) : $(.argv) ] ;
 
     if ${memcheck} {
         toolset += <testing.launcher>$(memcheck) ;
     }
 
-    run $(src) : : : $(toolset) $(defines) : $(ctor) ;
+    run $(src) : : : $(toolset) $(defines) : $(property) ;
 }
 
 test-suite ut :
-    [ run-test c++1y : ut/inject.cpp ]
-    [ run-test c++1y : ut/inject.cpp : ctor_inject ]
-    [ run-test c++1y : ut/aux_/preprocessor.cpp ]
-    [ run-test c++1y : ut/aux_/type_traits.cpp ]
-    [ run-test c++1y : ut/aux_/utility.cpp ]
-    [ run-test c++1y : ut/concepts/boundable.cpp ]
-    [ run-test c++1y : ut/concepts/callable.cpp ]
-    [ run-test c++1y : ut/concepts/configurable.cpp ]
-    [ run-test c++1y : ut/concepts/creatable.cpp ]
-    [ run-test c++1y : ut/concepts/providable.cpp ]
-    [ run-test c++1y : ut/concepts/scopable.cpp ]
-    [ run-test c++1y : ut/core/any_type.cpp ]
-    [ run-test c++1y : ut/core/binder.cpp ]
-    [ run-test c++1y : ut/core/bindings.cpp ]
-    [ run-test c++1y : ut/core/dependency.cpp ]
-    [ run-test c++1y : ut/core/injector.cpp ]
-    [ run-test c++1y : ut/core/policy.cpp ]
-    [ run-test c++1y : ut/core/pool.cpp ]
-    [ run-test c++1y : ut/core/provider.cpp ]
-    [ run-test c++1y : ut/core/wrapper.cpp ]
-    [ run-test c++1y : ut/policies/constructible.cpp ]
-    [ run-test c++1y : ut/providers/heap.cpp ]
-    [ run-test c++1y : ut/providers/stack_over_heap.cpp ]
-    [ run-test c++1y : ut/scopes/deduce.cpp ]
-    [ run-test c++1y : ut/scopes/exposed.cpp ]
-    [ run-test c++1y : ut/scopes/external.cpp ]
-    [ run-test c++1y : ut/scopes/singleton.cpp ]
-    [ run-test c++1y : ut/scopes/unique.cpp ]
-    [ run-test c++1y : ut/type_traits/ctor_traits.cpp ]
-    [ run-test c++1y : ut/type_traits/memory_traits.cpp ]
-    [ run-test c++1y : ut/type_traits/referable_traits.cpp ]
-    [ run-test c++1y : ut/type_traits/scope_traits.cpp ]
-    [ run-test c++1y : ut/type_traits/wrapper_traits.cpp ]
-    [ run-test c++1y : ut/wrappers/unique.cpp : unique_wrapper ]
-    [ run-test c++1y : ut/wrappers/shared.cpp : shared_wrapper ]
-    [ run-test c++1y : ut/bindings.cpp : bindings_cpp ]
-    [ run-test c++1y : ut/config.cpp ]
-    [ run-test c++1y : ut/injector.cpp : ctor_injector_cpp ]
-    [ run-test c++1y : ut/make_injector.cpp ]
+    [ test c++1y : ut/inject.cpp ]
+    [ test c++1y : ut/aux_/preprocessor.cpp ]
+    [ test c++1y : ut/aux_/type_traits.cpp ]
+    [ test c++1y : ut/aux_/utility.cpp ]
+    [ test c++1y : ut/concepts/boundable.cpp ]
+    [ test c++1y : ut/concepts/callable.cpp ]
+    [ test c++1y : ut/concepts/configurable.cpp ]
+    [ test c++1y : ut/concepts/creatable.cpp ]
+    [ test c++1y : ut/concepts/providable.cpp ]
+    [ test c++1y : ut/concepts/scopable.cpp ]
+    [ test c++1y : ut/core/any_type.cpp ]
+    [ test c++1y : ut/core/binder.cpp ]
+    [ test c++1y : ut/core/bindings.cpp ]
+    [ test c++1y : ut/core/dependency.cpp ]
+    [ test c++1y : ut/core/injector.cpp ]
+    [ test c++1y : ut/core/policy.cpp ]
+    [ test c++1y : ut/core/pool.cpp ]
+    [ test c++1y : ut/core/provider.cpp ]
+    [ test c++1y : ut/core/wrapper.cpp ]
+    [ test c++1y : ut/policies/constructible.cpp ]
+    [ test c++1y : ut/providers/heap.cpp ]
+    [ test c++1y : ut/providers/stack_over_heap.cpp ]
+    [ test c++1y : ut/scopes/deduce.cpp ]
+    [ test c++1y : ut/scopes/exposed.cpp ]
+    [ test c++1y : ut/scopes/external.cpp ]
+    [ test c++1y : ut/scopes/singleton.cpp ]
+    [ test c++1y : ut/scopes/unique.cpp ]
+    [ test c++1y : ut/type_traits/ctor_traits.cpp ]
+    [ test c++1y : ut/type_traits/memory_traits.cpp ]
+    [ test c++1y : ut/type_traits/referable_traits.cpp ]
+    [ test c++1y : ut/type_traits/scope_traits.cpp ]
+    [ test c++1y : ut/type_traits/wrapper_traits.cpp ]
+    [ test c++1y : ut/wrappers/unique.cpp : unique_wrapper ]
+    [ test c++1y : ut/wrappers/shared.cpp : shared_wrapper ]
+    [ test c++1y : ut/bindings.cpp : bindings_cpp ]
+    [ test c++1y : ut/config.cpp ]
+    [ test c++1y : ut/injector.cpp : injector_cpp ]
+    [ test c++1y : ut/make_injector.cpp ]
 ;
 
 test-suite ft :
-    [ run-test c++1y : ft/di_bind.cpp ]
-    [ run-test c++1y : ft/di_config.cpp ]
-    [ run-test c++1y : ft/di_config_global_policies.cpp ]
-    [ run-test c++1y : ft/di_config_global_provider.cpp ]
-    [ run-test c++1y : ft/di_errors.cpp ]
-    [ run-test c++1y : ft/di_inject.cpp ]
-    [ run-test c++1y : ft/di_injector.cpp ]
-    [ run-test c++1y : ft/di_modules.cpp ]
-    [ run-test c++1y : ft/di_scope_exposed.cpp ]
-    [ run-test c++1y : ft/di_scope_external.cpp ]
-    [ run-test c++1y : ft/di_scope_unique.cpp ]
-    [ run-test c++1y : ft/di_wrapper_shared.cpp ]
+    [ test c++1y : ft/di_bind.cpp ]
+    [ test c++1y : ft/di_config.cpp ]
+    [ test c++1y : ft/di_config_global_policies.cpp ]
+    [ test c++1y : ft/di_config_global_provider.cpp ]
+    [ test c++1y : ft/di_errors.cpp ]
+    [ test c++1y : ft/di_inject.cpp ]
+    [ test c++1y : ft/di_injector.cpp ]
+    [ test c++1y : ft/di_modules.cpp ]
+    [ test c++1y : ft/di_scope_exposed.cpp ]
+    [ test c++1y : ft/di_scope_external.cpp ]
+    [ test c++1y : ft/di_scope_unique.cpp ]
+    [ test c++1y : ft/di_wrapper_shared.cpp ]
 ;
 
 test-suite pt :
-    [ run-test c++1y : pt/di_run_time.cpp : : <optimization>speed <variant>release ]
+    [ test c++1y : pt/di_run_time.cpp : : <optimization>speed <variant>release ]
 ;
 
