@@ -98,7 +98,6 @@ test deref_types = [] {
     static_expect(std::is_same<deref_type_t<std::weak_ptr<int>>, int>{});
 };
 
-
 test decay_types = [] {
     auto test = [] (auto type) {
         using T = decltype(type);
