@@ -76,6 +76,12 @@ struct shared<T*> {
         return *object;
     }
 
+    #if defined(BOOST_DI_MSVC) // __pph__
+        explicit shared(T* object)
+            : object(object)
+        { }
+    #endif // __pph__
+
     T* object = nullptr;
 };
 

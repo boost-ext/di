@@ -682,6 +682,11 @@ struct shared<T*> {
     inline operator const T&() const noexcept {
         return *object;
     }
+    #if defined(BOOST_DI_MSVC)
+        explicit shared(T* object)
+            : object(object)
+        { }
+    #endif
     T* object = nullptr;
 };
 template<class T>
