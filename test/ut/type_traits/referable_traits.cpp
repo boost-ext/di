@@ -29,7 +29,6 @@ test is_referable = [] {
     static_expect(std::is_same<int, referable_traits_t<const int&, dep<int, std::false_type>>>::value);
     static_expect(std::is_same<const int&, referable_traits_t<const int&, dep<int, std::true_type>>>::value);
     static_expect(std::is_same<int&&, referable_traits_t<int&&, dep<int, std::true_type>>>::value);
-
 };
 
 }}}} // boost::di::v1::type_traits
