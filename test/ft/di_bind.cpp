@@ -216,6 +216,16 @@ test override_priority_interface_module = [] {
     expect(dynamic_cast<impl1*>(object.get()));
 };
 
+test bind_non_interface_in_singleton_scope = [] {
+    struct c { };
+
+    auto injector = di::make_injector(
+        di::bind<c>().in(di::singleton)
+    );
+
+    expect_eq(injector.create<std::shared_ptr<c>>(), injector.create<std::shared_ptr<c>>());
+};
+
 #if defined(__cpp_variable_templates)
     test bind_mix = [] {
         constexpr auto i = 42;
