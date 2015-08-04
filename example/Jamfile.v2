@@ -59,9 +59,9 @@ test-suite example :
     [ example c++1y : hello_world.cpp ]
     [ example c++1y : modules.cpp ]
     [ example c++1y : multiple_interfaces.cpp ]
-    #[ example c++1y : only_cpp_types.cpp ]
     [ example c++1y : pool_provider.cpp ]
     [ example c++1y : provider.cpp ]
+    #[ example c++1y : share_no_memory_header.cpp ]
 ;
 
 test-suite extensions :

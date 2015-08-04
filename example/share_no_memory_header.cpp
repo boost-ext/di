@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[only_cpp_types
+//[share_no_memory_header
 //<-
 #include <cassert>
 //->
