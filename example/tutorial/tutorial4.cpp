@@ -41,7 +41,5 @@ int main(int argc, char** argv) {
     );
 
     injector.create<std::unique_ptr<app>>()->run();
-
-    return 0;
 }
 

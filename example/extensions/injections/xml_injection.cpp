@@ -122,8 +122,6 @@ int main() {
     auto object = injector.create<std::shared_ptr<interface>>();
     assert(!object.get());
     }
-
-    return 0;
 }
 
 //]

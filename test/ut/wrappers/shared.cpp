@@ -39,5 +39,17 @@ test to_weak_ptr = [] {
     expect(!object.lock());
 };
 
+test shared_with_ptr = [] {
+    auto i = new int{42};
+
+    struct scoped_ptr {
+        int* object;
+        ~scoped_ptr() { delete object; }
+    } ptr{i};
+
+    shared<int*> object{ptr.object};
+    expect_eq(i, &static_cast<int&>(object));
+};
+
 }}}} // boost::di::v1::wrappers
 

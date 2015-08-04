@@ -49,8 +49,6 @@ int main() {
 
     injector.create<example>();
     }
-
-    return 0;
 }
 
 //]

@@ -58,8 +58,6 @@ di::injector<app> module::configure() const {
 int main(int argc, char** argv) {
     auto injector = di::make_injector(module(argc > 1 ? std::atoi(argv[1]) : 0));
     injector.create<app>().run();
-
-    return 0;
 }
 
 

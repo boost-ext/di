@@ -31,18 +31,13 @@ struct shared {
         return object;
     }
 
-    template<class TSharedPtr>
-    struct sp_holder {
-        TSharedPtr object;
-
-        void operator()(...) noexcept {
-            object.reset();
-        }
-    };
-
     template<class I>
     inline operator boost::shared_ptr<I>() const noexcept {
-        return {object.get(), sp_holder<std::shared_ptr<T>>{object}};
+        struct sp_holder {
+            std::shared_ptr<T> object;
+            void operator()(...) noexcept { object.reset(); }
+        };
+        return {object.get(), sp_holder{object}};
     }
 
     template<class I>
@@ -62,10 +57,33 @@ struct shared {
 };
 
 template<class T>
+struct shared<T*> {
+    template<class>
+    struct is_referable
+        : std::true_type
+    { };
+
+    template<class I>
+    struct is_referable<std::shared_ptr<I>>
+        : std::false_type
+    { };
+
+    inline operator T&() noexcept {
+        return *object;
+    }
+
+    inline operator const T&() const noexcept {
+        return *object;
+    }
+
+    T* object = nullptr;
+};
+
+template<class T>
 struct shared<T&> {
-    shared(T& object) : object(&object) { }
-    shared(const shared&) noexcept = default;
-    shared& operator=(const shared&) noexcept = default;
+    shared(T& object) // non explicit
+        : object(&object)
+    { }
 
     template<class I, BOOST_DI_REQUIRES(std::is_convertible<T&, I>::value)>
     inline operator I() const noexcept {

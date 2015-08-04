@@ -83,7 +83,6 @@ int main() {
                 (i[second int] -> i)
                 (c -> c)
     ]>>*/
-    return 0;
 }
 
 //]

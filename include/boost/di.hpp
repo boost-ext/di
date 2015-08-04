@@ -477,20 +477,11 @@ struct unique {
     T object;
 };
 template<class T>
-struct scoped_ptr {
-    ~scoped_ptr() {
-        delete ptr;
-    }
-    operator T*() const noexcept {
-        return ptr;
-    }
-    T* ptr;
-};
-template<class T>
 struct unique<T*> {
     template<class I>
     inline operator I() const noexcept {
-        return *scoped_ptr<I>{object};
+        struct scoped_ptr { T* ptr; ~scoped_ptr() { delete ptr; } };
+        return *scoped_ptr{object}.ptr;
     }
     template<class I>
     inline operator I*() const noexcept {
@@ -655,16 +646,13 @@ struct shared {
     inline operator std::shared_ptr<I>() const noexcept {
         return object;
     }
-    template<class TSharedPtr>
-    struct sp_holder {
-        TSharedPtr object;
-        void operator()(...) noexcept {
-            object.reset();
-        }
-    };
     template<class I>
     inline operator boost::shared_ptr<I>() const noexcept {
-        return {object.get(), sp_holder<std::shared_ptr<T>>{object}};
+        struct sp_holder {
+            std::shared_ptr<T> object;
+            void operator()(...) noexcept { object.reset(); }
+        };
+        return {object.get(), sp_holder{object}};
     }
     template<class I>
     inline operator std::weak_ptr<I>() const noexcept {
@@ -679,10 +667,28 @@ struct shared {
     std::shared_ptr<T> object;
 };
 template<class T>
+struct shared<T*> {
+    template<class>
+    struct is_referable
+        : std::true_type
+    { };
+    template<class I>
+    struct is_referable<std::shared_ptr<I>>
+        : std::false_type
+    { };
+    inline operator T&() noexcept {
+        return *object;
+    }
+    inline operator const T&() const noexcept {
+        return *object;
+    }
+    T* object = nullptr;
+};
+template<class T>
 struct shared<T&> {
-    shared(T& object) : object(&object) { }
-    shared(const shared&) noexcept = default;
-    shared& operator=(const shared&) noexcept = default;
+    shared(T& object)
+        : object(&object)
+    { }
     template<class I, BOOST_DI_REQUIRES(std::is_convertible<T&, I>::value)>
     inline operator I() const noexcept {
         return *object;
@@ -694,10 +700,32 @@ struct shared<T&> {
 };
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace scopes {
+std::false_type has_shared_ptr__(...);
+template<class T>
+auto has_shared_ptr__(T&&) -> aux::is_valid_expr<decltype(std::shared_ptr<T>{})>;
 class singleton {
 public:
-    template<class, class T>
+    template<class, class T, class = decltype(has_shared_ptr__(std::declval<T>()))>
     class scope {
+    public:
+        template<class T_>
+        using is_referable = typename wrappers::shared<T*>::template is_referable<T_>;
+        template<class, class TProvider>
+        static decltype(wrappers::shared<T*>{std::declval<TProvider>().get()})
+        try_create(const TProvider&);
+        template<class, class TProvider>
+        auto create(const TProvider& provider) {
+            return create_impl(provider);
+        }
+    private:
+        template<class TProvider>
+        auto create_impl(const TProvider& provider) {
+            static struct scoped_ptr { T* ptr; ~scoped_ptr() { delete ptr; } } object{provider.get()};
+            return wrappers::shared<T*>{object.ptr};
+        }
+    };
+    template<class _, class T>
+    class scope<_, T, std::true_type> {
     public:
         template<class T_>
         using is_referable = typename wrappers::shared<T>::template is_referable<T_>;

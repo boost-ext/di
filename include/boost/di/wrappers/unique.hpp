@@ -27,23 +27,11 @@ struct unique {
 };
 
 template<class T>
-struct scoped_ptr {
-    ~scoped_ptr() {
-        delete ptr;
-    }
-
-    operator T*() const noexcept {
-        return ptr;
-    }
-
-    T* ptr;
-};
-
-template<class T>
 struct unique<T*> {
     template<class I>
     inline operator I() const noexcept {
-        return *scoped_ptr<I>{object};
+        struct scoped_ptr { T* ptr; ~scoped_ptr() { delete ptr; } };
+        return *scoped_ptr{object}.ptr;
     }
 
     template<class I>

@@ -52,9 +52,8 @@ public:
 
         template<class T, class TProvider>
         auto create(const TProvider& provider) {
-            static std::shared_ptr<TGiven> null;
             using type = decltype(scope_.template create<T>(provider));
-            return get_session() ? scope_.template create<T>(provider) : type{null};
+            return get_session() ? scope_.template create<T>(provider) : type{nullptr};
         }
 
     private:

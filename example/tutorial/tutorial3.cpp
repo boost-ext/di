@@ -35,7 +35,5 @@ int main(int argc, char** argv) {
     );
 
     injector.create<app>().run();
-
-    return 0;
 }
 
