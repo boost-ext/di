@@ -12,7 +12,7 @@
 //->
 #include <boost/di.hpp>
 
-namespace di  = boost::di;
+namespace di = boost::di;
 
 //<-
 struct interface1 { virtual ~interface1() noexcept = default; };

@@ -239,25 +239,5 @@ test lambda_module_bind_int = [](auto progname) {
 
 // ---------------------------------------------------------------------------
 
-auto given_bind_interface_shared() {
-    auto injector = di::make_injector(
-        di::bind<i, impl>().in(di::singleton)
-    );
-
-    return injector.create<std::shared_ptr<i>>();
-}
-
-auto expected_bind_interface_shared() {
-    return std::make_shared<impl>(0);
-}
-
-#if 0
-    test bind_interface_shared = [](auto progname) {
-        expect(check_opcodes(progname, "bind_interface_shared", std::regex{".*:([^ ]*).*"}));
-    };
-#endif
-
-// ---------------------------------------------------------------------------
-
 #endif
 
