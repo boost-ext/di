@@ -37,7 +37,7 @@
     #define BOOST_DI_TYPE_WKND(T)
 #elif defined(BOOST_DI_GCC)
     #define BOOST_DI_UNUSED __attribute__((unused))
-    #define BOOST_DI_ATTR_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
+    #define BOOST_DI_ATTR_ERROR(...) [[deprecated(__VA_ARGS__)]]
     #define BOOST_DI_TYPE_WKND(T)
 #elif defined(BOOST_DI_MSVC)
     #pragma warning(disable : 4503)
@@ -467,7 +467,7 @@ public:
 namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 template<class T>
 struct unique {
-    template<class I>
+    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T, I>::value)>
     inline operator I() const noexcept {
         return object;
     }
@@ -852,8 +852,8 @@ public:
             using type = TExpected;
         #endif
         struct iprovider {
-            TExpected* (*heap)(const iprovider*) = nullptr;
-            type (*stack)(const iprovider*) = nullptr;
+            TExpected* (*heap)(const iprovider*);
+            type (*stack)(const iprovider*);
             auto get(const type_traits::heap& = {}) const noexcept {
                 return ((iprovider*)(this))->heap(this);
             }
@@ -863,8 +863,8 @@ public:
         };
         template<class TInjector>
         struct provider_impl {
-            TExpected* (*heap)(const provider_impl*) = nullptr;
-            type (*stack)(const provider_impl*) = nullptr;
+            TExpected* (*heap)(const provider_impl*);
+            type (*stack)(const provider_impl*);
             template<class T>
             static T create(const provider_impl* object) noexcept {
                 return object->injector.create_impl(aux::type<T>{});

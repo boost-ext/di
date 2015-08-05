@@ -11,6 +11,7 @@
 #include <fstream>
 #include <regex>
 #include <string>
+#include <vector>
 
 namespace {
 
@@ -19,15 +20,16 @@ struct file : std::string, TFStream {
     file(const std::string& name) // non explicit
         : std::string{name}, TFStream{name}
     { }
-
-    ~file() {
-        std::remove(this->c_str());
-    }
 };
 
-auto compail_fail(const std::string& defines, const std::string&, const std::string& code) {
+template<class... TArgs>
+auto errors(const TArgs&... args) {
+    return std::vector<std::string>{(".*" + std::string{args} + ".*")...};
+}
+
+auto compail_fail(int id, const std::string& defines, const std::vector<std::string>& errors, const std::string& code) {
     std::stringstream command; {
-        file<> source_code{"error.cpp"};
+        file<> source_code{std::string{"error"} + std::to_string(id) + ".cpp"};
         source_code << "#include <boost/di.hpp>" << std::endl;
         source_code << "namespace di = boost::di;" << std::endl;
         source_code << "int main() {" << std::endl;
@@ -56,20 +58,45 @@ auto compail_fail(const std::string& defines, const std::string&, const std::str
                 << "  -I../include "
                 << defines
                 << " " << errors.str()
-                << " " << source_code;
+                << " " << source_code
+                << " 2> error" << id << ".out";
     }
 
-    return std::system(command.str().c_str());
+    expect(std::system(command.str().c_str()));
+
+    file<std::ifstream> output{std::string{"error"} + std::to_string(id) + ".out"};
+    std::vector<bool> matches(errors.size(), false);
+    auto lines = 0;
+    for (std::string line; std::getline(output, line);) {
+        auto i = 0;
+        for (const auto& rgx : errors) {
+            if (std::regex_match(line, std::regex{rgx})) {
+                matches[i] = true;
+            }
+            ++i;
+        }
+        ++lines;
+    }
+
+    if (!errors.empty()) {
+        constexpr auto MAX_ERROR_LINES_COUNT = 50;
+        expect(lines < MAX_ERROR_LINES_COUNT);
+    }
+
+    //expect_eq(std::find(matches.begin(), matches.end(), false), matches.end());
 }
 
 } // namespace
 
 #define expect_compile_fail(defines, error, ...) \
-    expect(compail_fail(defines, error, #__VA_ARGS__))
+    compail_fail(__LINE__, defines, error, #__VA_ARGS__)
 
 test bind_external_repeated = [] {
     expect_compile_fail(
-        "", ".*",
+        "",
+        errors(
+            "constraint_not_satisfied<.*bound_type<int, .*no_name>::is_bound_more_than_once"
+        ),
         di::make_injector(
             di::bind<int>().to(42)
           , di::bind<int>().to(87)
@@ -79,7 +106,8 @@ test bind_external_repeated = [] {
 
 test bind_external_with_given_scope = [] {
     expect_compile_fail(
-        "", ".*",
+        "",
+        errors(),
         di::make_injector(
             di::bind<int>().in(di::unique).to(42)
         );
@@ -88,7 +116,8 @@ test bind_external_with_given_scope = [] {
 
 test bind_external_with_given_type = [] {
     expect_compile_fail(
-        "", ".*",
+        "",
+        errors(),
         struct i { };
         struct impl : i { };
 
@@ -100,7 +129,8 @@ test bind_external_with_given_type = [] {
 
 test bind_multiple_times = [] {
     expect_compile_fail(
-        "", ".*",
+        "",
+        errors("constraint_not_satisfied<.*bound_type<i, .*no_name>::is_bound_more_than_once"),
         struct i { };
         struct impl1 : i { };
         struct impl2 : i { };
@@ -114,7 +144,8 @@ test bind_multiple_times = [] {
 
 test bind_not_compatible_types = [] {
     expect_compile_fail(
-        "", ".*",
+        "",
+        errors("constraint_not_satisfied<.*bound_type<impl>::is_not_base_of<int>"),
         struct i { };
         struct impl : i { };
 
@@ -128,7 +159,8 @@ test bind_not_compatible_types = [] {
 
 test bind_repeated = [] {
     expect_compile_fail(
-        "", ".*",
+        "",
+        errors("constraint_not_satisfied<.*bound_type<i, .*no_name>::is_bound_more_than_once"),
         struct i { };
         struct impl1 : i { };
         struct impl2 : i { };
@@ -142,7 +174,8 @@ test bind_repeated = [] {
 
 test bind_to_different_types = [] {
     expect_compile_fail(
-        "", ".*",
+        "",
+        errors("constraint_not_satisfied<.*bound_type<i, .*no_name>::is_bound_more_than_once"),
         struct i { };
         struct impl1 : i { };
         struct impl2 : i { };
@@ -156,7 +189,13 @@ test bind_to_different_types = [] {
 
 test create_polymorphic_type_without_binding = [] {
     expect_compile_fail(
-        "", ".*",
+        "",
+        errors(
+            "creatable constraint not satisfied"
+          , "create<c>()"
+          , "abstract_type<.>::is_not_bound"
+          , "type not bound, did you forget to add: 'di::bind<interface, implementation>'?"
+        ),
         struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
         struct impl : i { void dummy() override { } };
 
@@ -170,34 +209,34 @@ test create_polymorphic_type_without_binding = [] {
 
 test ctor_inject_limit_out_of_range = [] {
     expect_compile_fail(
-        "-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3", ".*",
+        "-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3",
+        errors("Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE"),
         struct c {
             BOOST_DI_INJECT(c, int, int, int, int) { }
         };
 
         auto injector = di::make_injector();
-
         injector.create<c>();
     );
 };
 
 test ctor_limit_out_of_range = [] {
     expect_compile_fail(
-        "-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3", ".*",
-
+        "-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3",
+        errors("number_of_constructor_arguments_is_out_of_range_for<c>::max<3>"),
         struct c {
             c(int, int, int, int) { }
         };
 
         auto injector = di::make_injector();
-
         injector.create<c>();
     );
 };
 
 test exposed_multiple_times = [] {
     expect_compile_fail(
-        "", ".*",
+        "",
+        errors("constraint_not_satisfied<.*bound_type<c>::is_bound_more_than_once"),
         struct c { };
         di::injector<c, c> injector = di::make_injector();
     );
@@ -205,7 +244,13 @@ test exposed_multiple_times = [] {
 
 test exposed_not_creatable = [] {
     expect_compile_fail(
-        "", ".*",
+        "-include memory",
+        errors(
+            "creatable constraint not satisfied"
+          , "create<T>"
+          , "abstract_type<.>::is_not_bound"
+          , "type not bound, did you forget to add: 'di::bind<interface, implementation>'?"
+        ),
         struct i {
             virtual ~i() noexcept = default; virtual void dummy() = 0;
         };
@@ -220,7 +265,13 @@ test exposed_not_creatable = [] {
 
 test exposed_polymorphic_type_without_binding = [] {
     expect_compile_fail(
-        "", ".*",
+        "-include memory",
+        errors(
+            "creatable constraint not satisfied"
+          , "create<T>"
+          , "abstract_type<.>::is_not_bound"
+          , "type not bound, did you forget to add: 'di::bind<interface, implementation>'?"
+        ),
         struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
         struct impl : i { void dummy() override { } };
         struct c { std::shared_ptr<i> i_; };
@@ -229,22 +280,13 @@ test exposed_polymorphic_type_without_binding = [] {
     );
 };
 
-test inject_limit_out_of_range = [] {
-    expect_compile_fail(
-        "-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3", ".*",
-        struct c {
-            BOOST_DI_INJECT(c, int, int, int, int) { }
-        };
-
-        auto injector = di::make_injector();
-
-        injector.create<c>();
-    );
-};
-
 test injector_ctor_ambiguous = [] {
     expect_compile_fail(
-        "", ".*",
+        "",
+        errors(
+            "creatable constraint not satisfied",
+            "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters"
+        ),
         struct ctor {
             ctor(int, double) { }
             ctor(double, int) { }
@@ -256,7 +298,12 @@ test injector_ctor_ambiguous = [] {
 
 test injector_shared_by_copy = [] {
     expect_compile_fail(
-        "", ".*",
+        "",
+        errors(
+            "creatable constraint not satisfied",
+            "type<.*>::is_not_convertible_to<.*>",
+            "wrapper is not convertible to requested type, did you mistake the scope?"
+        ),
         struct c {
             c(int*) { }
         };
@@ -271,7 +318,12 @@ test injector_shared_by_copy = [] {
 
 test bind_wrapper_not_convertible = [] {
     expect_compile_fail(
-        "", ".*",
+        "",
+        errors(
+            "creatable constraint not satisfied",
+            "type<.*>::is_not_convertible_to<.*>",
+            "wrapper is not convertible to requested type, did you mistake the scope?"
+        ),
         struct c {
             c(int*) { }
         };
@@ -286,7 +338,8 @@ test bind_wrapper_not_convertible = [] {
 
 test make_injector_wrong_arg = [] {
     expect_compile_fail(
-        "", ".*",
+        "",
+        errors("constraint_not_satisfied<.*bound_type<.*neither_module_nor_injector_nor_module>::is_neither_a_dependency_nor_an_injector"),
         struct neither_module_nor_injector_nor_module { };
         auto injector = di::make_injector(neither_module_nor_injector_nor_module{});
     );
@@ -294,7 +347,8 @@ test make_injector_wrong_arg = [] {
 
 test named_paramater_spelling = [] {
     expect_compile_fail(
-        "", ".*",
+        "",
+        errors(),
         auto name = []{};
         struct c {
             BOOST_DI_INJECT(c, (NAMED = name) int) { }
@@ -303,8 +357,22 @@ test named_paramater_spelling = [] {
 };
 
 test policy_constructible = [] {
+    auto errors_ = errors(
+        "creatable constraint not satisfied",
+        "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>",
+    #if defined(BOOST_DI_GCC)
+        "type<.*>::not_allowed_by.*int",
+        "type<.*>::not_allowed_by.*double",
+        "type<.*>::not_allowed_by.*float"
+    #elif defined(BOOST_DI_CLANG)
+        "type<int>::not_allowed_by",
+        "type<double>::not_allowed_by",
+        "type<float>::not_allowed_by"
+    #endif
+    );
+
     expect_compile_fail(
-        "", ".*",
+        "", errors_,
         class config : public di::config {
         public:
             static auto policies(...) noexcept {
@@ -324,13 +392,18 @@ test policy_constructible = [] {
 
 test scope_traits_external_not_referable = [] {
     expect_compile_fail(
-        "", ".*",
+        "",
+        errors(
+            "creatable constraint not satisfied",
+            "when_creating<.*>::type<.*>",
+            "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.to\\(value\\)`"
+        ),
         struct c {
             c(int&) { }
         };
 
         auto injector = di::make_injector(
-            di::bind<int>().to(42) // lvalue can't be converted to reference
+            di::bind<int>().to(42) // lvalue can't be converted to a reference
         );
 
         injector.create<c>();
@@ -339,7 +412,7 @@ test scope_traits_external_not_referable = [] {
 
 test circular_dependencies_simple = [] {
     expect_compile_fail(
-        "", ".*",
+        "", errors(),
         struct cd2;
         struct cd1 { cd1(cd2*) { }; };
         struct cd2 { cd2(cd1*) { }; };
@@ -351,7 +424,7 @@ test circular_dependencies_simple = [] {
 
 test circular_dependencies_complex = [] {
     expect_compile_fail(
-        "", ".*",
+        "", errors(),
         struct cd2;
         struct cd5;
         struct cd1 { cd1(cd2*) { }; };

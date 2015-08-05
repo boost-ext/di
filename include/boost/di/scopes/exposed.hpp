@@ -27,8 +27,8 @@ public:
         #endif // __pph__
 
         struct iprovider {
-            TExpected* (*heap)(const iprovider*) = nullptr;
-            type (*stack)(const iprovider*) = nullptr;
+            TExpected* (*heap)(const iprovider*);
+            type (*stack)(const iprovider*);
 
             auto get(const type_traits::heap& = {}) const noexcept {
                 return ((iprovider*)(this))->heap(this);
@@ -41,8 +41,8 @@ public:
 
         template<class TInjector>
         struct provider_impl {
-            TExpected* (*heap)(const provider_impl*) = nullptr;
-            type (*stack)(const provider_impl*) = nullptr;
+            TExpected* (*heap)(const provider_impl*);
+            type (*stack)(const provider_impl*);
 
             template<class T>
             static T create(const provider_impl* object) noexcept {

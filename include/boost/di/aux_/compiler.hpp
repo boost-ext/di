@@ -21,7 +21,7 @@
     #define BOOST_DI_TYPE_WKND(T)
 #elif defined(BOOST_DI_GCC)
     #define BOOST_DI_UNUSED __attribute__((unused))
-    #define BOOST_DI_ATTR_ERROR(...) __attribute__ ((error(__VA_ARGS__)))
+    #define BOOST_DI_ATTR_ERROR(...) [[deprecated(__VA_ARGS__)]]
     #define BOOST_DI_TYPE_WKND(T)
 #elif defined(BOOST_DI_MSVC)
     #pragma warning(disable : 4503) // decorated name length exceeded, name was truncated
