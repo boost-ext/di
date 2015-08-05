@@ -22,7 +22,7 @@ branches:
 environment:
   fast_finish: true
   global:
-    DRMEMORY: "drmemory -light -batch -exit_code_if_errors 1"
+    DRMEMORY: "drmemory -batch -exit_code_if_errors 1"
 
   matrix:
   - CFG: cmake
