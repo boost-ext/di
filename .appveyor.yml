@@ -22,7 +22,7 @@ branches:
 environment:
   fast_finish: true
   global:
-    DRMEMORY: --memcheck="drmemory -batch -exit_code_if_errors 1"
+    DRMEMORY: "drmemory -light -batch -exit_code_if_errors 1"
 
   matrix:
   - CFG: cmake
@@ -40,6 +40,6 @@ install:
 
 build_script:
   - IF %CFG%==bjam pushd . && cd test && ..\build\b2 -sBOOST_ROOT=..\build -j2 -q --toolset=msvc-14.0 analyze && popd
-  - IF %CFG%==bjam pushd . && cd example && ..\build\b2 -sBOOST_ROOT=..\build -j2 -q --toolset=msvc-14.0&& popd
+  - IF %CFG%==bjam pushd . && cd example && ..\build\b2 -sBOOST_ROOT=..\build -j2 -q --toolset=msvc-14.0 --memcheck="%DRMEMORY%" && popd
   - IF %CFG%==cmake pushd . && cd build && cmake .. && cmake --build . && ctest --output-on-failure
 
