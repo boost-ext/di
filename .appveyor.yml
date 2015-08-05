@@ -25,7 +25,7 @@ environment:
     DRMEMORY: "drmemory -batch -exit_code_if_errors 1"
 
   matrix:
-  - CFG: cmake
+  #- CFG: cmake
   - CFG: bjam
 
 matrix:
