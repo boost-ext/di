@@ -39,7 +39,7 @@ install:
   - set PATH=C:\Program Files (x86)\Dr. Memory\bin;%PATH%
 
 build_script:
-  - IF %CFG%==bjam pushd . && cd test && ..\build\b2 -sBOOST_ROOT=..\build -j2 -q --toolset=msvc-14.0 analyze --memcheck="%DRMEMORY%" && popd
+  - IF %CFG%==bjam pushd . && cd test && ..\build\b2 -sBOOST_ROOT=..\build -j2 -q --toolset=msvc-14.0 analyze --memcheck="drmemory -batch -exit_code_if_errors 1" && popd
   - IF %CFG%==bjam pushd . && cd example && ..\build\b2 -sBOOST_ROOT=..\build -j2 -q --toolset=msvc-14.0 --memcheck="%DRMEMORY%" && popd
   - IF %CFG%==cmake pushd . && cd build && cmake .. && cmake --build . && ctest --output-on-failure
 
