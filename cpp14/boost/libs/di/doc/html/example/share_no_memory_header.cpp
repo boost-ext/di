@@ -11,7 +11,7 @@
 //->
 #include <boost/di.hpp>
 
-namespace di  = boost::di;
+namespace di = boost::di;
 
 //<-
 struct interface { virtual ~interface() noexcept = default; };
@@ -23,7 +23,7 @@ class example {
 public:
     example(interface& i1, interface& i2, int i) {
         assert(dynamic_cast<implementation*>(&i1) == dynamic_cast<implementation*>(&i2));
-        assert(42.0 == i);
+        assert(42 == i);
     }
 };
 
