@@ -47,8 +47,10 @@
 
 namespace boost { namespace di { inline namespace v1 {
 
-template<class...>
-struct constraint_not_satisfied { };
+template<class... Ts>
+struct constraint_not_satisfied {
+    static_assert(aux::never<Ts...>::value, "constraint not satisfied");
+};
 
 template<>
 struct constraint_not_satisfied<std::true_type> {

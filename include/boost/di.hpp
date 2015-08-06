@@ -273,8 +273,10 @@ using make_index_sequence = typename make_index_sequence_impl<N>::type;
 #define BOOST_DI_REQUIRES_MSG_T(...) \
     constraint_not_satisfied<__VA_ARGS__>::type
 namespace boost { namespace di { inline namespace v1 {
-template<class...>
-struct constraint_not_satisfied { };
+template<class... Ts>
+struct constraint_not_satisfied {
+    static_assert(aux::never<Ts...>::value, "constraint not satisfied");
+};
 template<>
 struct constraint_not_satisfied<std::true_type> {
     using type = int;
