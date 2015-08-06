@@ -182,7 +182,7 @@ test ctor_refs = [] {
                , int& i
                , const double& d
                , const std::string& str
-#if defined(BOOST_DI_MSVC)
+#if defined(_MSC_VER)
                , function<int()> f
 #else
                , std::function<int()> f
@@ -240,13 +240,13 @@ test ctor_refs = [] {
 
     test(test_type<c>{}, di::bind<i1, impl1>());
     test(test_type<c_inject>{}, di::bind<i1, impl1>());
-#if !defined(BOOST_DI_MSVC)
+#if !defined(_MSC_VER)
     test(test_type<c_aggregate>{}, di::bind<i1, impl1>());
 #endif
 
     test(test_type<c>{}, di::bind<i1>().to(std::make_shared<impl1>()));
     test(test_type<c_inject>{}, di::bind<i1>().to(std::make_shared<impl1>()));
-#if !defined(BOOST_DI_MSVC)
+#if !defined(_MSC_VER)
     test(test_type<c_aggregate>{}, di::bind<i1>().to(std::make_shared<impl1>()));
 #endif
 };

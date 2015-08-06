@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <string>
-#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/preprocessor.hpp"
 
 test cat = [] {
@@ -15,7 +14,7 @@ test cat = [] {
     expect(!i);
 };
 
-#if !defined(BOOST_DI_MSVC)
+#if !defined(_MSC_VER)
     test call = [] {
         #define CAT BOOST_DI_CALL(BOOST_DI_CAT, in, t)
             CAT i = 0;

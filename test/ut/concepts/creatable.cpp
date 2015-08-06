@@ -28,7 +28,7 @@ test is_creatable = [] {
     expect(creatable<type_traits::uniform, u>::value);
     expect(!creatable<type_traits::uniform, u, float, short>::value);
 
-#if !defined(BOOST_DI_MSVC)
+#if !defined(_MSC_VER)
     expect(creatable<type_traits::uniform, u, int, double>::value);
     expect(creatable<type_traits::uniform, u, int>::value);
 #endif

@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_CONCEPTS_BOUNDABLE_HPP
 #define BOOST_DI_CONCEPTS_BOUNDABLE_HPP
 
-#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/core/bindings.hpp"

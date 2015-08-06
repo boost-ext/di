@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/aux_/compiler.hpp"
 #include <memory>
 #include <cstdlib>
 #include <cstdio>
@@ -39,13 +38,13 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
         std::stringstream errors;
         std::string compiler;
 
-        #if defined(BOOST_DI_GCC)
+        #if defined(__GNUC__)
             compiler = "g++";
             errors << "-c -std=c++1y -Werror ";
-        #elif defined(BOOST_DI_CLANG)
+        #elif defined(__clang__)
             compiler = "clang++";
             errors << "-c -std=c++1y -Wno-all -Werror -Wno-error=deprecated-declarations";
-        #elif defined(BOOST_DI_MSVC)
+        #elif defined(_MSC_VER)
             compiler = "cl";
             errors << "/c /EHsc /W3 /WX";
         #endif
@@ -360,11 +359,11 @@ test policy_constructible = [] {
     auto errors_ = errors(
         "creatable constraint not satisfied",
         "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>",
-    #if defined(BOOST_DI_GCC)
+    #if defined(__GNUC__)
         "type<.*>::not_allowed_by.*int",
         "type<.*>::not_allowed_by.*double",
         "type<.*>::not_allowed_by.*float"
-    #elif defined(BOOST_DI_CLANG)
+    #elif defined(__clang__)
         "type<int>::not_allowed_by",
         "type<double>::not_allowed_by",
         "type<float>::not_allowed_by"

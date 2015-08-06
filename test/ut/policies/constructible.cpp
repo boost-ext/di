@@ -6,7 +6,6 @@
 //
 #include <type_traits>
 #include "common/fakes/fake_policy.hpp"
-#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/policies/constructible.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace policies {

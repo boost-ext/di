@@ -30,6 +30,11 @@ struct fake_injector {
         return T{};
     }
 
+    template<class T>
+    auto create_successful_impl(const aux::type<T>&) const noexcept {
+        return T{};
+    }
+
     using config = fake_config<>;
 };
 

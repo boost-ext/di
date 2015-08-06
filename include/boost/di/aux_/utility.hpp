@@ -101,31 +101,41 @@ struct index_sequence {
     using type = index_sequence;
 };
 
-template<typename, typename>
-struct concat;
-
-template<int... I1, int... I2>
-struct concat<index_sequence<I1...>, index_sequence<I2...>>
-    : index_sequence<I1..., (sizeof...(I1) + I2)...>
-{ };
-
-template<int N>
-struct make_index_sequence_impl
-    : concat<
-          typename make_index_sequence_impl<N/2>::type
-        , typename make_index_sequence_impl<N - N/2>::type
-      >::type
-{ };
+template<int>
+struct make_index_sequence_impl;
 
 template<>
-struct make_index_sequence_impl<0>
-    : index_sequence<>
-{ };
+struct make_index_sequence_impl<0> : index_sequence<> { };
 
 template<>
-struct make_index_sequence_impl<1>
-    : index_sequence<1>
-{ };
+struct make_index_sequence_impl<1> : index_sequence<1> { };
+
+template<>
+struct make_index_sequence_impl<2> : index_sequence<1, 2> { };
+
+template<>
+struct make_index_sequence_impl<3> : index_sequence<1, 2, 3> { };
+
+template<>
+struct make_index_sequence_impl<4> : index_sequence<1, 2, 3, 4> { };
+
+template<>
+struct make_index_sequence_impl<5> : index_sequence<1, 2, 3, 4, 5> { };
+
+template<>
+struct make_index_sequence_impl<6> : index_sequence<1, 2, 3, 4, 5, 6> { };
+
+template<>
+struct make_index_sequence_impl<7> : index_sequence<1, 2, 3, 4, 5, 6, 7> { };
+
+template<>
+struct make_index_sequence_impl<8> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8> { };
+
+template<>
+struct make_index_sequence_impl<9> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9> { };
+
+template<>
+struct make_index_sequence_impl<10> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9, 10> { };
 
 template<int N>
 using make_index_sequence = typename make_index_sequence_impl<N>::type;

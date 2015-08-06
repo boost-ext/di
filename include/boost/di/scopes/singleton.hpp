@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_SCOPES_SINGLETON_HPP
 #define BOOST_DI_SCOPES_SINGLETON_HPP
 
-#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/wrappers/shared.hpp"
 
@@ -38,7 +37,7 @@ public:
     private:
         template<class TProvider>
         auto create_impl(const TProvider& provider) {
-            static struct scoped_ptr { T* ptr; ~scoped_ptr() { delete ptr; } } object{provider.get()};
+            static struct scoped_ptr { T* ptr; ~scoped_ptr() noexcept { delete ptr; } } object{provider.get()};
             return wrappers::shared<T*>{object.ptr};
         }
     };

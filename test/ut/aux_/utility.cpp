@@ -28,5 +28,19 @@ test is_unique_types = [] {
     static_expect(std::is_same<not_unique<int>, is_unique<float, int, double, int>::type>::value);
 };
 
+test index_sequence_types = [] {
+    static_expect(std::is_same<index_sequence<>, make_index_sequence<0>>::value);
+    static_expect(std::is_same<index_sequence<1>, make_index_sequence<1>>::value);
+    static_expect(std::is_same<index_sequence<1, 2>, make_index_sequence<2>>::value);
+    static_expect(std::is_same<index_sequence<1, 2, 3>, make_index_sequence<3>>::value);
+    static_expect(std::is_same<index_sequence<1, 2, 3, 4>, make_index_sequence<4>>::value);
+    static_expect(std::is_same<index_sequence<1, 2, 3, 4, 5>, make_index_sequence<5>>::value);
+    static_expect(std::is_same<index_sequence<1, 2, 3, 4, 5, 6>, make_index_sequence<6>>::value);
+    static_expect(std::is_same<index_sequence<1, 2, 3, 4, 5, 6, 7>, make_index_sequence<7>>::value);
+    static_expect(std::is_same<index_sequence<1, 2, 3, 4, 5, 6, 7, 8>, make_index_sequence<8>>::value);
+    static_expect(std::is_same<index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9>, make_index_sequence<9>>::value);
+    static_expect(std::is_same<index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9, 10>, make_index_sequence<10>>::value);
+};
+
 }}}} // boost::di::v1::aux
 

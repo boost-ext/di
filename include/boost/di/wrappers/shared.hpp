@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_WRAPPERS_SHARED_HPP
 #define BOOST_DI_WRAPPERS_SHARED_HPP
 
-#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/fwd.hpp"
@@ -76,7 +75,7 @@ struct shared<T*> {
         return *object;
     }
 
-    #if defined(BOOST_DI_MSVC) // __pph__
+    #if defined(_MSC_VER) // __pph__
         explicit shared(T* object)
             : object(object)
         { }

@@ -6,7 +6,6 @@
 //
 #include <memory>
 #include <functional>
-#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "common/fakes/fake_provider.hpp"
 #include "common/fakes/fake_injector.hpp"
@@ -99,7 +98,7 @@ test from_function_expr = [] {
     }
 };
 
-#if !defined(BOOST_DI_MSVC)
+#if !defined(_MSC_VER)
     test from_function_expr_with_expected_function_expr = [] {
         constexpr auto i = 42;
         external::scope<std::function<int()>, std::function<int()>> external{[&]{ return i; }};

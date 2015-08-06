@@ -44,7 +44,7 @@ private:
     static auto provider(const T&) noexcept { return providers::heap{}; }
 };
 
-#if !defined(BOOST_DI_MSVC)
+#if !defined(_MSC_VER)
     test private_access = [] {
         static_expect(std::is_same<config_type<config_private_access>::is_not_configurable, configurable<config_private_access>>::value);
     };

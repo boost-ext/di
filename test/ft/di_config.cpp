@@ -45,43 +45,6 @@ test call_provider = [] {
     expect_eq(1, called);
 };
 
-struct deleter_provider {
-    static auto& called() {
-        static auto i = 0;
-        return i;
-    }
-
-    template<class...>
-    struct is_creatable {
-        static constexpr auto value = true;
-    };
-
-    template<class I, class T, class TInitialization, class TMemory, class... TArgs>
-    auto get(const TInitialization& // direct/uniform
-           , const TMemory& // stack/heap
-           , TArgs&&... args) const {
-            ++called();
-        return std::unique_ptr<T, std::default_delete<I>>{
-            new T(std::forward<TArgs>(args)...)
-        };
-    }
-};
-
-class config_deleter_provider : public di::config {
-public:
-    template<class T>
-    static auto provider(const T&) noexcept {
-        return deleter_provider{};
-    }
-};
-
-test call_provider_with_deleter = [] {
-    deleter_provider::called() = 0;
-    auto injector = di::make_injector<config_deleter_provider>();
-    injector.create<int>();
-    expect_eq(1, deleter_provider::called());
-};
-
 class must_be_bound : public di::config {
 public:
     template<class T>

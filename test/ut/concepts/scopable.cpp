@@ -47,7 +47,7 @@ class scope_private_access {
     };
 };
 
-#if !defined(BOOST_DI_MSVC)
+#if !defined(_MSC_VER)
     test private_access = [] {
         static_expect(!scopable<scope_private_access>::value);
     };

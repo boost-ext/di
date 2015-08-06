@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <memory>
-#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/providers/stack_over_heap.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace providers {
@@ -38,7 +37,7 @@ test get_with_args = [] {
     struct uniform { int i = 0; double d = 0.0; };
     test_stack(test_type<direct>{}, type_traits::direct{}, int{}, double{});
     test_heap(test_type<direct>{}, type_traits::uniform{}, int{}, double{});
-#if !defined(BOOST_DI_MSVC)
+#if !defined(_MSC_VER)
     test_heap(test_type<uniform>{}, type_traits::uniform{}, int{}, double{});
 #endif
 };

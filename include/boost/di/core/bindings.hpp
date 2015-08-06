@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_CORE_BINDINGS_HPP
 #define BOOST_DI_CORE_BINDINGS_HPP
 
-#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/core/dependency.hpp"
@@ -50,7 +49,7 @@ struct add_type_list<T, std::false_type, std::false_type> {
     using type = aux::type_list<dependency<scopes::exposed<>, T>>;
 };
 
-#if defined(BOOST_DI_MSVC) // __pph__
+#if defined(_MSC_VER) // __pph__
     template<class... Ts>
     struct bindings : aux::join_t<typename add_type_list<Ts>::type...> { };
 

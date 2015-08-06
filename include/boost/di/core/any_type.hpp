@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_CORE_ANY_TYPE_HPP
 #define BOOST_DI_CORE_ANY_TYPE_HPP
 
-#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/core/binder.hpp"
 #include "boost/di/concepts/creatable.hpp"
@@ -61,7 +60,7 @@ struct any_type_ref {
         return injector_.create_impl(aux::type<T>{});
     }
 
-    #if defined(BOOST_DI_GCC) // __pph__
+    #if defined(__GNUC__) // __pph__
         template<class T
                , class = is_not_same_t<T, TParent>
                , class = is_referable_t<T&&, TInjector>
@@ -109,7 +108,7 @@ struct any_type_ref {
         return injector_.create_successful_impl(aux::type<T>{});
     }
 
-    #if defined(BOOST_DI_GCC) // __pph__
+    #if defined(__GNUC__) // __pph__
         template<class T
                , class = is_not_same_t<T, TParent>
                , class = is_referable_t<T&&, TInjector>
@@ -151,7 +150,7 @@ struct any_type_ref_fwd {
     template<class T, class = is_not_same_t<T, TParent>>
     operator T&() const;
 
-    #if defined(BOOST_DI_GCC) // __pph__
+    #if defined(__GNUC__) // __pph__
         template<class T, class = is_not_same_t<T, TParent>>
         operator T&&() const;
     #endif // __pph__

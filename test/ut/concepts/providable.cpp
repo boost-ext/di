@@ -27,7 +27,7 @@ class provider_private_access {
     }
 };
 
-#if !defined(BOOST_DI_MSVC)
+#if !defined(_MSC_VER)
     test private_access = [] {
         static_expect(std::is_same<provider<provider_private_access>::is_not_providable, providable<provider_private_access>>::value);
     };

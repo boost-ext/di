@@ -28,7 +28,7 @@ struct constructor_impl {
       , class T
       , BOOST_DI_REQUIRES(boost::di::concepts::creatable<boost::di::type_traits::direct, typename T::expected, TCtor...>::value)
     > auto operator()(const TInjector& injector, const T&) const  {
-        return std::make_unique<typename T::expected>(injector.template create<TCtor>()...);
+        return new typename T::expected{injector.template create<TCtor>()...};
     }
 };
 

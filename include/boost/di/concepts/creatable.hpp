@@ -13,7 +13,7 @@
 #include "boost/di/type_traits/ctor_traits.hpp"
 
 #if !defined(BOOST_DI_CONCEPTS_CREATABLE_ATTR) // __pph__
-    #define BOOST_DI_CONCEPTS_CREATABLE_ATTR BOOST_DI_ATTR_ERROR("creatable constraint not satisfied") // __pph__
+    #define BOOST_DI_CONCEPTS_CREATABLE_ATTR BOOST_DI_DEPRECATED("creatable constraint not satisfied") // __pph__
 #endif // __pph__
 
 namespace boost { namespace di { inline namespace v1 {

@@ -52,7 +52,7 @@ struct copyable<aux::type_list<TDeps...>>
 template<class TDeps>
 using copyable_t = typename copyable<TDeps>::type;
 
-#if defined(BOOST_DI_MSVC) // __pph__
+#if defined(_MSC_VER) // __pph__
     template<class T, class TInjector>
     inline auto build(const TInjector& injector) noexcept {
         return T{injector};
@@ -174,7 +174,7 @@ private:
 
     template<class TInjector, class... TArgs>
     explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
-    #if defined(BOOST_DI_MSVC) // __pph__
+    #if defined(_MSC_VER) // __pph__
         : pool_t{copyable_t<deps>{}, pool_t{build<TArgs>(injector)...}}
     #else // __pph__
         : pool_t{copyable_t<deps>{}, pool_t{TArgs{injector}...}}

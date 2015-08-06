@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_INJECTOR_HPP
 #define BOOST_DI_INJECTOR_HPP
 
-#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/core/injector.hpp"
 #include "boost/di/concepts/boundable.hpp"
 #include "boost/di/concepts/creatable.hpp"
@@ -36,7 +35,7 @@ public:
         class TConfig
       , class TPolicies
       , class... TDeps
-        #if defined(BOOST_DI_GCC) // __pph__
+        #if defined(__GNUC__) // __pph__
           , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>)
         #endif // __pph__
     > injector(const core::injector<TConfig, TPolicies, TDeps...>& injector) noexcept // non explicit

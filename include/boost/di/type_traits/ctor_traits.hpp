@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_CTOR_TRAITS_HPP
 
-#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/inject.hpp"

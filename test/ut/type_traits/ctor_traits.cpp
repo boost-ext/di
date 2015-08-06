@@ -119,7 +119,7 @@ test uniforms = [] {
     };
     static_expect(std::is_same<aux::pair<uniform, aux::type_list<>>, ctor_traits__<empty>::type>{});
 
-#if !defined(BOOST_DI_MSVC)
+#if !defined(_MSC_VER)
     static_expect(std::is_same<aux::pair<uniform, aux::type_list<core::any_type_ref_fwd<ctor2_ref>, core::any_type_ref_fwd<ctor2_ref>>>, ctor_traits__<ctor2_ref>::type>{});
 #endif
 };

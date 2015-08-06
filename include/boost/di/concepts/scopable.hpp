@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_CONCEPTS_SCOPABLE_HPP
 #define BOOST_DI_CONCEPTS_SCOPABLE_HPP
 
-#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"

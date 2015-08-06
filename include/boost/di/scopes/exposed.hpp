@@ -16,7 +16,7 @@ class exposed {
 public:
     template<class TExpected, class TGiven>
     class scope {
-        #if defined(BOOST_DI_GCC) || defined(BOOST_DI_MSVC) // __pph__
+        #if defined(__GNUC__) || defined(_MSC_VER) // __pph__
             using type = std::conditional_t<
                 std::is_copy_constructible<TExpected>::value
               , TExpected
@@ -27,8 +27,8 @@ public:
         #endif // __pph__
 
         struct iprovider {
-            TExpected* (*heap)(const iprovider*);
-            type (*stack)(const iprovider*);
+            TExpected* (*heap)(const iprovider*) = nullptr;
+            type (*stack)(const iprovider*) = nullptr;
 
             auto get(const type_traits::heap& = {}) const noexcept {
                 return ((iprovider*)(this))->heap(this);
@@ -41,12 +41,17 @@ public:
 
         template<class TInjector>
         struct provider_impl {
-            TExpected* (*heap)(const provider_impl*);
-            type (*stack)(const provider_impl*);
+            TExpected* (*heap)(const provider_impl*) = nullptr;
+            type (*stack)(const provider_impl*) = nullptr;
 
             template<class T>
             static T create(const provider_impl* object) noexcept {
                 return object->injector.create_impl(aux::type<T>{});
+            }
+
+            template<class T>
+            static T create_successful(const provider_impl* object) noexcept {
+                return object->injector.create_successful_impl(aux::type<T>{});
             }
 
             explicit provider_impl(const TInjector& injector) noexcept
@@ -57,23 +62,23 @@ public:
             { }
 
             provider_impl(const TInjector& injector, const std::true_type&, const std::true_type&) noexcept
-                : heap(&provider_impl::template create<TExpected*>)
-                , stack(&provider_impl::template create<type>)
+                : heap(&provider_impl::template create_successful<TExpected*>)
+                , stack(&provider_impl::template create_successful<type>)
                 , injector(injector)
             { }
 
             provider_impl(const TInjector& injector, const std::false_type&, const std::true_type&) noexcept
-                : stack(&provider_impl::template create<type>)
+                : stack(&provider_impl::template create_successful<type>)
                 , injector(injector)
             { }
 
             provider_impl(const TInjector& injector, const std::true_type&, const std::false_type&) noexcept
-                : heap(&provider_impl::template create<TExpected*>)
+                : heap(&provider_impl::template create_successful<TExpected*>)
                 , injector(injector)
             { }
 
             provider_impl(const TInjector& injector, const std::false_type&, const std::false_type&)
-                : heap(&provider_impl::template create<TExpected*>) // for creatable error
+                : heap(&provider_impl::template create<TExpected*>) // creatable constraint not satisfied
                 , injector(injector)
             { }
 

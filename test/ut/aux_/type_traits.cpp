@@ -6,7 +6,6 @@
 //
 #include <memory>
 #include <string>
-#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #if __has_include(<boost/shared_ptr.hpp>)
     #include <boost/shared_ptr.hpp>
@@ -73,7 +72,7 @@ test is_braces_constructible_types = [] {
     static_expect(is_braces_constructible<agg1>{});
 
     static_expect(!is_braces_constructible<agg1, int, double>{});
-#if !defined(BOOST_DI_MSVC)
+#if !defined(_MSC_VER)
     static_expect(is_braces_constructible<agg1, int>{});
     static_expect(is_braces_constructible<agg2, int&>{});
     static_expect(is_braces_constructible<agg2, int&, double>{});
