@@ -14,10 +14,10 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 
+BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_CAT(has_, BOOST_DI_INJECTOR), BOOST_DI_INJECTOR);
+
 struct direct { };
 struct uniform { };
-
-BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_INJECTOR);
 
 template<class T, int>
 using get = T;

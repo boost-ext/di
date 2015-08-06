@@ -27,7 +27,7 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
-BOOST_DI_HAS_METHOD(call, call);
+BOOST_DI_HAS_METHOD(has_call, call);
 
 struct from_injector { };
 struct from_deps { };

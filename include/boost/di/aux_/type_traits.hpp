@@ -11,27 +11,26 @@
 #include "boost/di/fwd.hpp"
 #include "boost/di/aux_/utility.hpp"
 
-#define BOOST_DI_HAS_TYPE(name)                                     \
+#define BOOST_DI_HAS_TYPE(name, call_name)                          \
     template<class, class = void>                                   \
-    struct has_##name : std::false_type { };                        \
+    struct name : std::false_type { };                              \
                                                                     \
     template<class T>                                               \
-    struct has_##name<                                              \
-        T, typename aux::void_t<typename T::name>::type             \
+    struct name<                                                    \
+        T, typename aux::void_t<typename T::call_name>::type        \
     > : std::true_type { }
 
 #define BOOST_DI_HAS_METHOD(name, call_name)                        \
     template<class T, class... TArgs>                               \
     decltype(std::declval<T>().call_name(std::declval<TArgs>()...)  \
            , std::true_type())                                      \
-    has_##name##_impl(int);                                         \
+    name##_impl(int);                                               \
                                                                     \
     template<class, class...>                                       \
-    std::false_type has_##name##_impl(...);                         \
+    std::false_type name##_impl(...);                               \
                                                                     \
     template<class T, class... TArgs>                               \
-    struct has_##name : decltype(has_##name##_impl<T, TArgs...>(0)) \
-    { }
+    struct name : decltype(name##_impl<T, TArgs...>(0)) { }
 
 #define BOOST_DI_REQUIRES(...) \
     typename std::enable_if<__VA_ARGS__, int>::type = 0
@@ -163,6 +162,8 @@ struct function_traits<R(T::*)(TArgs...) const> {
 
 template<class T>
 using function_traits_t = typename function_traits<T>::args;
+
+BOOST_DI_HAS_METHOD(is_callable, operator());
 
 }}}} // boost::di::v1::aux
 

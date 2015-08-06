@@ -13,7 +13,7 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace aux {
 
-BOOST_DI_HAS_TYPE(has);
+BOOST_DI_HAS_TYPE(has_has, has);
 
 test has_type = [] {
     struct a { };
@@ -24,7 +24,7 @@ test has_type = [] {
     static_expect(!has_has<a>{});
 };
 
-BOOST_DI_HAS_METHOD(call, call);
+BOOST_DI_HAS_METHOD(has_call, call);
 
 test has_method = [] {
     struct a { };

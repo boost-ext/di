@@ -11,13 +11,9 @@
 #include "boost/di/wrappers/shared.hpp"
 #include "boost/di/wrappers/unique.hpp"
 
-namespace boost { namespace di { inline namespace v1 {
+namespace boost { namespace di { inline namespace v1 { namespace scopes {
 
-BOOST_DI_HAS_METHOD(call_operator, operator());
-
-namespace scopes {
-
-BOOST_DI_HAS_TYPE(result_type);
+BOOST_DI_HAS_TYPE(has_result_type, result_type);
 
 class external {
     struct injector {
@@ -67,8 +63,8 @@ public:
 
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven&,
-        BOOST_DI_REQUIRES_T(!has_call_operator<TGiven, const injector&>::value &&
-                            !has_call_operator<TGiven, const injector&, const arg<aux::none_type, TExpected, TGiven>&>::value)
+        BOOST_DI_REQUIRES_T(!aux::is_callable<TGiven, const injector&>::value &&
+                            !aux::is_callable<TGiven, const injector&, const arg<aux::none_type, TExpected, TGiven>&>::value)
     > {
         template<class>
         using is_referable = std::true_type;
@@ -111,9 +107,9 @@ public:
 
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven,
-        BOOST_DI_REQUIRES_T(!has_call_operator<TGiven, const injector&>::value &&
-                            !has_call_operator<TExpected>::value &&
-                             has_call_operator<TGiven>::value)
+        BOOST_DI_REQUIRES_T(!aux::is_callable<TGiven, const injector&>::value &&
+                            !aux::is_callable<TExpected>::value &&
+                             aux::is_callable<TGiven>::value)
     > {
         template<class>
         using is_referable = std::false_type;
@@ -137,7 +133,7 @@ public:
 
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven,
-        BOOST_DI_REQUIRES_T(has_call_operator<TGiven, const injector&>::value &&
+        BOOST_DI_REQUIRES_T(aux::is_callable<TGiven, const injector&>::value &&
                            !has_result_type<TGiven>::value)
     > {
         template<class>
@@ -161,7 +157,7 @@ public:
 
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven,
-        BOOST_DI_REQUIRES_T(has_call_operator<TGiven, const injector&, const arg<aux::none_type, TExpected, TGiven>&>::value &&
+        BOOST_DI_REQUIRES_T(aux::is_callable<TGiven, const injector&, const arg<aux::none_type, TExpected, TGiven>&>::value &&
                            !has_result_type<TGiven>::value)
     > {
         template<class>

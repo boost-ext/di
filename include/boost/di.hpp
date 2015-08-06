@@ -244,26 +244,25 @@ struct make_index_sequence_impl<10> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9, 
 template<int N>
 using make_index_sequence = typename make_index_sequence_impl<N>::type;
 }}}}
-#define BOOST_DI_HAS_TYPE(name)                                     \
+#define BOOST_DI_HAS_TYPE(name, call_name)                          \
     template<class, class = void>                                   \
-    struct has_##name : std::false_type { };                        \
+    struct name : std::false_type { };                              \
                                                                     \
     template<class T>                                               \
-    struct has_##name<                                              \
-        T, typename aux::void_t<typename T::name>::type             \
+    struct name<                                                    \
+        T, typename aux::void_t<typename T::call_name>::type        \
     > : std::true_type { }
 #define BOOST_DI_HAS_METHOD(name, call_name)                        \
     template<class T, class... TArgs>                               \
     decltype(std::declval<T>().call_name(std::declval<TArgs>()...)  \
            , std::true_type())                                      \
-    has_##name##_impl(int);                                         \
+    name##_impl(int);                                               \
                                                                     \
     template<class, class...>                                       \
-    std::false_type has_##name##_impl(...);                         \
+    std::false_type name##_impl(...);                               \
                                                                     \
     template<class T, class... TArgs>                               \
-    struct has_##name : decltype(has_##name##_impl<T, TArgs...>(0)) \
-    { }
+    struct name : decltype(name##_impl<T, TArgs...>(0)) { }
 #define BOOST_DI_REQUIRES(...) \
     typename std::enable_if<__VA_ARGS__, int>::type = 0
 #define BOOST_DI_REQUIRES_T(...) \
@@ -364,6 +363,7 @@ struct function_traits<R(T::*)(TArgs...) const> {
 };
 template<class T>
 using function_traits_t = typename function_traits<T>::args;
+BOOST_DI_HAS_METHOD(is_callable, operator());
 }}}}
 #if !defined(BOOST_DI_INJECTOR)
     #define BOOST_DI_INJECTOR boost_di_injector__
@@ -889,9 +889,7 @@ public:
     };
 };
 }}}}
-namespace boost { namespace di { inline namespace v1 {
-template<class T, class... TArgs> decltype(std::declval<T>().operator()(std::declval<TArgs>()...), std::true_type()) has_call_operator_impl(int); template<class, class...> std::false_type has_call_operator_impl(...); template<class T, class... TArgs> struct has_call_operator : decltype(has_call_operator_impl<T, TArgs...>(0)) { };
-namespace scopes {
+namespace boost { namespace di { inline namespace v1 { namespace scopes {
 template<class, class = void> struct has_result_type : std::false_type { }; template<class T> struct has_result_type<T, typename aux::void_t<typename T::result_type>::type> : std::true_type { };
 class external {
     struct injector {
@@ -931,8 +929,8 @@ public:
     };
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven&,
-        BOOST_DI_REQUIRES_T(!has_call_operator<TGiven, const injector&>::value &&
-                            !has_call_operator<TGiven, const injector&, const arg<aux::none_type, TExpected, TGiven>&>::value)
+        BOOST_DI_REQUIRES_T(!aux::is_callable<TGiven, const injector&>::value &&
+                            !aux::is_callable<TGiven, const injector&, const arg<aux::none_type, TExpected, TGiven>&>::value)
     > {
         template<class>
         using is_referable = std::true_type;
@@ -965,9 +963,9 @@ public:
     };
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven,
-        BOOST_DI_REQUIRES_T(!has_call_operator<TGiven, const injector&>::value &&
-                            !has_call_operator<TExpected>::value &&
-                             has_call_operator<TGiven>::value)
+        BOOST_DI_REQUIRES_T(!aux::is_callable<TGiven, const injector&>::value &&
+                            !aux::is_callable<TExpected>::value &&
+                             aux::is_callable<TGiven>::value)
     > {
         template<class>
         using is_referable = std::false_type;
@@ -986,7 +984,7 @@ public:
     };
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven,
-        BOOST_DI_REQUIRES_T(has_call_operator<TGiven, const injector&>::value &&
+        BOOST_DI_REQUIRES_T(aux::is_callable<TGiven, const injector&>::value &&
                            !has_result_type<TGiven>::value)
     > {
         template<class>
@@ -1005,7 +1003,7 @@ public:
     };
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven,
-        BOOST_DI_REQUIRES_T(has_call_operator<TGiven, const injector&, const arg<aux::none_type, TExpected, TGiven>&>::value &&
+        BOOST_DI_REQUIRES_T(aux::is_callable<TGiven, const injector&, const arg<aux::none_type, TExpected, TGiven>&>::value &&
                            !has_result_type<TGiven>::value)
     > {
         template<class>
@@ -1025,9 +1023,9 @@ public:
 };
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace type_traits {
+BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_CAT(has_, BOOST_DI_INJECTOR), BOOST_DI_INJECTOR);
 struct direct { };
 struct uniform { };
-BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_INJECTOR);
 template<class T, int>
 using get = T;
 template<template<class...> class, class, class, class = void>
@@ -1914,7 +1912,6 @@ struct any_type_ref_fwd {
 };
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
-template<class T, class... TArgs> decltype(std::declval<T>().operator()(std::declval<TArgs>()...), std::true_type()) has_call_operator_impl(int); template<class, class...> std::false_type has_call_operator_impl(...); template<class T, class... TArgs> struct has_call_operator : decltype(has_call_operator_impl<T, TArgs...>(0)) { };
 template<
     class T
   , class TName
@@ -1943,14 +1940,14 @@ class policy {
         call_impl_args<TArg>(policy, dependency, ctor);
     }
     template<class TArg, class TDependency, class TPolicy, class TInitialization, class... TCtor
-           , BOOST_DI_REQUIRES(!has_call_operator<TPolicy, TArg, TDependency&, TCtor...>::value)
+           , BOOST_DI_REQUIRES(!aux::is_callable<TPolicy, TArg, TDependency&, TCtor...>::value)
     > static void call_impl_args(const TPolicy& policy
                                , TDependency&
                                , const aux::pair<TInitialization, aux::type_list<TCtor...>>&) noexcept {
         (policy)(TArg{});
     }
     template<class TArg, class TDependency, class TPolicy, class TInitialization, class... TCtor
-           , BOOST_DI_REQUIRES(has_call_operator<TPolicy, TArg, TDependency&, TCtor...>::value)>
+           , BOOST_DI_REQUIRES(aux::is_callable<TPolicy, TArg, TDependency&, TCtor...>::value)>
     static void call_impl_args(const TPolicy& policy
                              , TDependency& dependency
                              , const aux::pair<TInitialization, aux::type_list<TCtor...>>&) noexcept {
@@ -1960,12 +1957,12 @@ class policy {
     struct try_call_impl;
     template<class TArg, class TPolicy, class TDependency, class TInitialization, class... TCtor>
     struct try_call_impl<TArg, TPolicy, TDependency, aux::pair<TInitialization, aux::type_list<TCtor...>>
-                       , BOOST_DI_REQUIRES_T(!has_call_operator<TPolicy, TArg, TDependency, TCtor...>::value)>
+                       , BOOST_DI_REQUIRES_T(!aux::is_callable<TPolicy, TArg, TDependency, TCtor...>::value)>
         : allow_void<decltype((std::declval<TPolicy>())(std::declval<TArg>()))>
     { };
     template<class TArg, class TPolicy, class TDependency, class TInitialization, class... TCtor>
     struct try_call_impl<TArg, TPolicy, TDependency, aux::pair<TInitialization, aux::type_list<TCtor...>>
-                       , BOOST_DI_REQUIRES_T(has_call_operator<TPolicy, TArg, TDependency, TCtor...>::value)>
+                       , BOOST_DI_REQUIRES_T(aux::is_callable<TPolicy, TArg, TDependency, TCtor...>::value)>
         : allow_void<decltype((std::declval<TPolicy>())(std::declval<TArg>(), std::declval<TDependency>(), aux::type<TCtor>{}...))>
     { };
 public:

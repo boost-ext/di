@@ -42,8 +42,8 @@ pph() {
     tail -n +14 "boost/di/aux_/type_traits.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
     tail -n +15 "boost/di/inject.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
     g++ -std=c++1y -C -P -nostdinc -nostdinc++ -E -I. "boost/di.hpp" \
-        -D"BOOST_DI_HAS_METHOD(name, call_name)=template<class T, class... TArgs> decltype(std::declval<T>().call_name(std::declval<TArgs>()...), std::true_type()) has_##name##_impl(int); template<class, class...> std::false_type has_##name##_impl(...); template<class T, class... TArgs> struct has_##name : decltype(has_##name##_impl<T, TArgs...>(0)) { }" \
-        -D"BOOST_DI_HAS_TYPE(name)=template<class, class = void> struct has_##name : std::false_type { }; template<class T> struct has_##name<T, typename aux::void_t<typename T::name>::type> : std::true_type { }" \
+        -D"BOOST_DI_HAS_TYPE(name, call_name)=template<class, class = void> struct name : std::false_type { }; template<class T> struct name<T, typename aux::void_t<typename T::call_name>::type> : std::true_type { }" \
+        -D"BOOST_DI_HAS_METHOD(name, call_name)=template<class T, class... TArgs> decltype(std::declval<T>().call_name(std::declval<TArgs>()...), std::true_type()) name##_impl(int); template<class, class...> std::false_type name##_impl(...); template<class T, class... TArgs> struct name : decltype(name##_impl<T, TArgs...>(0)) { }" \
         -DBOOST_DI_CFG_NO_PREPROCESSED_HEADERS \
         -DBOOST_DI_AUX_COMPILER_HPP \
         -DBOOST_DI_AUX_PREPROCESSOR_HPP \

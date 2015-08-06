@@ -16,8 +16,8 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
-BOOST_DI_HAS_METHOD(configure, configure);
-BOOST_DI_HAS_TYPE(deps);
+BOOST_DI_HAS_METHOD(has_configure, configure);
+BOOST_DI_HAS_TYPE(has_deps, deps);
 
 template<class T, class U = std::remove_reference_t<T>>
 struct is_injector :
