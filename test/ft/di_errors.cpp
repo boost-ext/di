@@ -12,7 +12,6 @@
 #include <regex>
 #include <string>
 #include <vector>
-#include <iostream>
 
 namespace {
 
@@ -82,11 +81,9 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
     std::vector<bool> matches(errors.size(), false);
     auto lines = 0;
     for (std::string line; std::getline(output, line);) {
-        std::cout << "dupa: " << line << std::endl;
         auto i = 0;
         for (const auto& rgx : errors) {
             if (std::regex_match(line, std::regex{rgx})) {
-        std::cout << "match: " << line << std::endl;
                 matches[i] = true;
             }
             ++i;
@@ -330,180 +327,196 @@ test exposed_not_creatable = [] {
     );
 };
 
-//test exposed_polymorphic_type_without_binding = [] {
-    //expect_compile_fail(
-        //"-include memory",
-        //errors(
-            //"creatable constraint not satisfied"
-          //, "create<T>"
-          //, "abstract_type<.>::is_not_bound"
-          //, "type not bound, did you forget to add: 'di::bind<interface, implementation>'?"
-        //),
-        //struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
-        //struct impl : i { void dummy() override { } };
-        //struct c { std::shared_ptr<i> i_; };
+test exposed_polymorphic_type_without_binding = [] {
+    auto errors_ = errors(
+            "creatable constraint not satisfied"
+          , "abstract_type<.*>::is_not_bound"
+        #if !defined(_MSC_VER)
+          , "create<T>"
+          , "type not bound, did you forget to add: 'di::bind<interface, implementation>'?"
+        #endif
+    );
 
-        //di::injector<c> injector = di::make_injector(); // di::bind<i, impl>()
-    //);
-//};
+    expect_compile_fail("<include> memory", errors_,
+        struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
+        struct impl : i { void dummy() override { } };
+        struct c { std::shared_ptr<i> i_; };
 
-//test injector_ctor_ambiguous = [] {
-    //expect_compile_fail(
-        //"",
-        //errors(
-            //"creatable constraint not satisfied",
-            //"increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters"
-        //),
-        //struct ctor {
-            //ctor(int, double) { }
-            //ctor(double, int) { }
-        //};
+        di::injector<c> injector = di::make_injector(); // di::bind<i, impl>()
+    );
+};
 
-        //di::make_injector().create<ctor>();
-    //);
-//};
+test injector_ctor_ambiguous = [] {
+    auto errors_ = errors(
+        #if defined(__GNUC__)
+            "number_of_constructor_arguments_is_out_of_range_for<.*>::max<.*>.*= 10.*=.*ctor"
+        #else
+            "number_of_constructor_arguments_is_out_of_range_for<.*ctor>::max<10>"
+        #endif
+    );
 
-//test injector_shared_by_copy = [] {
-    //expect_compile_fail(
-        //"",
-        //errors(
-            //"creatable constraint not satisfied",
-            //"type<.*>::is_not_convertible_to<.*>",
-            //"wrapper is not convertible to requested type, did you mistake the scope?"
-        //),
-        //struct c {
-            //c(int*) { }
-        //};
+    expect_compile_fail("", errors_,
+        struct ctor {
+            ctor(int, double) { }
+            ctor(double, int) { }
+        };
 
-        //auto injector = di::make_injector(
-            //di::bind<int>().in(di::singleton)
-        //);
+        di::make_injector().create<ctor>();
+    );
+};
 
-        //injector.create<c>();
-    //);
-//};
+test injector_shared_by_copy = [] {
+    auto errors_ = errors(
+        "creatable constraint not satisfied",
+        "type<.*>::is_not_convertible_to<.*>"
+        #if !defined(_MSC_VER)
+          , "wrapper is not convertible to requested type, did you mistake the scope?"
+        #endif
+    );
 
-//test bind_wrapper_not_convertible = [] {
-    //expect_compile_fail(
-        //"",
-        //errors(
-            //"creatable constraint not satisfied",
-            //"type<.*>::is_not_convertible_to<.*>",
-            //"wrapper is not convertible to requested type, did you mistake the scope?"
-        //),
-        //struct c {
-            //c(int*) { }
-        //};
+    expect_compile_fail("", errors_,
+        struct c {
+            c(int*) { }
+        };
 
-        //auto injector = di::make_injector(
-            //di::bind<int>().to(42)
-        //);
+        auto injector = di::make_injector(
+            di::bind<int>().in(di::singleton)
+        );
 
-        //injector.create<c>();
-    //);
-//};
+        injector.create<c>();
+    );
+};
 
-//test make_injector_wrong_arg = [] {
-    //expect_compile_fail(
-        //"",
-        //errors("constraint_not_satisfied<.*bound_type<.*neither_module_nor_injector_nor_module>::is_neither_a_dependency_nor_an_injector"),
-        //struct neither_module_nor_injector_nor_module { };
-        //auto injector = di::make_injector(neither_module_nor_injector_nor_module{});
-    //);
-//};
+test bind_wrapper_not_convertible = [] {
+    auto errors_ = errors(
+        "creatable constraint not satisfied",
+        "type<.*>::is_not_convertible_to<.*>"
+        #if !defined(_MSC_VER)
+          , "wrapper is not convertible to requested type, did you mistake the scope?"
+        #endif
+    );
 
-//test named_paramater_spelling = [] {
-    //expect_compile_fail(
-        //"",
-        //errors(),
-        //auto name = []{};
-        //struct c {
-            //BOOST_DI_INJECT(c, (NAMED = name) int) { }
-        //};
-    //);
-//};
+    expect_compile_fail("", errors_,
+        struct c {
+            c(int*) { }
+        };
 
-//test policy_constructible = [] {
-    //auto errors_ = errors(
-        //"creatable constraint not satisfied",
-        //"type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>",
-    //#if defined(__GNUC__)
-        //"type<.*>::not_allowed_by.*int",
-        //"type<.*>::not_allowed_by.*double",
-        //"type<.*>::not_allowed_by.*float"
-    //#elif defined(__clang__)
-        //"type<int>::not_allowed_by",
-        //"type<double>::not_allowed_by",
-        //"type<float>::not_allowed_by"
-    //#else
-        //".*"
-    //#endif
-    //);
+        auto injector = di::make_injector(
+            di::bind<int>().to(42)
+        );
 
-    //expect_compile_fail(
-        //"", errors_,
-        //class config : public di::config {
-        //public:
-            //static auto policies(...) noexcept {
-                //using namespace di::policies;
-                //return di::make_policies(constructible(is_bound<di::_>{}));
-            //}
-        //};
+        injector.create<c>();
+    );
+};
 
-        //struct c {
-            //c(int, double, float) { }
-        //};
+test make_injector_wrong_arg = [] {
+    auto errors_ = errors(
+        #if defined(_MSC_VER)
+            "constraint_not_satisfied<.*bound_type<T>::is_neither_a_dependency_nor_an_injector",
+            "T=.*neither_module_nor_injector_nor_module"
+        #else
+            "constraint_not_satisfied<.*bound_type<.*neither_module_nor_injector_nor_module>::is_neither_a_dependency_nor_an_injector"
+        #endif
+    );
 
-        //auto injector = di::make_injector<config>();
-        //injector.create<c>();
-    //);
-//};
+    expect_compile_fail("", errors_,
+        struct neither_module_nor_injector_nor_module { };
+        auto injector = di::make_injector(neither_module_nor_injector_nor_module{});
+    );
+};
 
-//test scope_traits_external_not_referable = [] {
-    //expect_compile_fail(
-        //"",
-        //errors(
-            //"creatable constraint not satisfied",
-            //"when_creating<.*>::type<.*>",
-            //"reference type not bound, did you forget to add `auto value = ...; di::bind<T>.to\\(value\\)`"
-        //),
-        //struct c {
-            //c(int&) { }
-        //};
+test named_paramater_spelling = [] {
+    expect_compile_fail("", errors(),
+        auto name = []{};
+        struct c {
+            BOOST_DI_INJECT(c, (NAMED = name) int) { }
+        };
+    );
+};
 
-        //auto injector = di::make_injector(
-            //di::bind<int>().to(42) // lvalue can't be converted to a reference
-        //);
+test policy_constructible = [] {
+    auto errors_ = errors(
+        "creatable constraint not satisfied",
+    #if defined(__GNUC__)
+        "type<.*>::not_allowed_by.*int",
+        "type<.*>::not_allowed_by.*double",
+        "type<.*>::not_allowed_by.*float"
+        "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>",
+    #elif defined(__clang__)
+        "type<int>::not_allowed_by",
+        "type<double>::not_allowed_by",
+        "type<float>::not_allowed_by"
+        "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>",
+    #else
+        "type<.*>::not_allowed_by", "=int",
+        "type<.*>::not_allowed_by", "=float",
+        "type<.*>::not_allowed_by", "=double"
+    #endif
+    );
 
-        //injector.create<c>();
-    //);
-//};
+    expect_compile_fail("", errors_,
+        class config : public di::config {
+        public:
+            static auto policies(...) noexcept {
+                using namespace di::policies;
+                return di::make_policies(constructible(is_bound<di::_>{}));
+            }
+        };
 
-//test circular_dependencies_simple = [] {
-    //expect_compile_fail(
-        //"", errors(),
-        //struct cd2;
-        //struct cd1 { cd1(cd2*) { }; };
-        //struct cd2 { cd2(cd1*) { }; };
+        struct c {
+            c(int, double, float) { }
+        };
 
-        //auto injector = di::make_injector();
-        //injector.create<cd1>();
-    //);
-//};
+        auto injector = di::make_injector<config>();
+        injector.create<c>();
+    );
+};
 
-//test circular_dependencies_complex = [] {
-    //expect_compile_fail(
-        //"", errors(),
-        //struct cd2;
-        //struct cd5;
-        //struct cd1 { cd1(cd2*) { }; };
-        //struct cd2 { cd2(cd1*) { }; };
-        //struct cd3 { cd3(cd5*) { }; };
-        //struct cd4 { cd4(cd3*) { }; };
-        //struct cd5 { cd5(cd4*) { }; };
+test scope_traits_external_not_referable = [] {
+    auto errors_ = errors(
+        "creatable constraint not satisfied",
+        "when_creating<.*>::type<.*>"
+        #if !defined(_MSC_VER)
+          , "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.to\\(value\\)`"
+        #endif
+    );
 
-        //auto injector = di::make_injector();
-        //injector.create<cd5>();
-    //);
-//};
+    expect_compile_fail("", errors_,
+        struct c {
+            c(int&) { }
+        };
+
+        auto injector = di::make_injector(
+            di::bind<int>().to(42) // lvalue can't be converted to a reference
+        );
+
+        injector.create<c>();
+    );
+};
+
+test circular_dependencies_simple = [] {
+    expect_compile_fail("", errors(),
+        struct cd2;
+        struct cd1 { cd1(cd2*) { }; };
+        struct cd2 { cd2(cd1*) { }; };
+
+        auto injector = di::make_injector();
+        injector.create<cd1>();
+    );
+};
+
+test circular_dependencies_complex = [] {
+    expect_compile_fail("", errors(),
+        struct cd2;
+        struct cd5;
+        struct cd1 { cd1(cd2*) { }; };
+        struct cd2 { cd2(cd1*) { }; };
+        struct cd3 { cd3(cd5*) { }; };
+        struct cd4 { cd4(cd3*) { }; };
+        struct cd5 { cd5(cd4*) { }; };
+
+        auto injector = di::make_injector();
+        injector.create<cd5>();
+    );
+};
 
