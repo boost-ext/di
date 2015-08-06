@@ -367,8 +367,8 @@ test injector_ctor_ambiguous = [] {
 
 test injector_shared_by_copy = [] {
     auto errors_ = errors(
-        "creatable constraint not satisfied",
-        "type<.*>::is_not_convertible_to<.*>"
+            "creatable constraint not satisfied",
+            "type<.*>::is_not_convertible_to<.*>"
         #if !defined(_MSC_VER)
           , "wrapper is not convertible to requested type, did you mistake the scope?"
         #endif
@@ -389,8 +389,8 @@ test injector_shared_by_copy = [] {
 
 test bind_wrapper_not_convertible = [] {
     auto errors_ = errors(
-        "creatable constraint not satisfied",
-        "type<.*>::is_not_convertible_to<.*>"
+            "creatable constraint not satisfied",
+            "type<.*>::is_not_convertible_to<.*>"
         #if !defined(_MSC_VER)
           , "wrapper is not convertible to requested type, did you mistake the scope?"
         #endif
@@ -474,8 +474,8 @@ test policy_constructible = [] {
 
 test scope_traits_external_not_referable = [] {
     auto errors_ = errors(
-        "creatable constraint not satisfied",
-        "when_creating<.*>::type<.*>"
+            "creatable constraint not satisfied",
+            "when_creating<.*>::type<.*>"
         #if !defined(_MSC_VER)
           , "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.to\\(value\\)`"
         #endif
