@@ -7,6 +7,7 @@
 #include <memory>
 #include <cstdlib>
 #include <cstdio>
+#include <stdexcept>
 #include <fstream>
 #include <regex>
 #include <string>
@@ -83,7 +84,7 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
     }
 
     if (std::find(matches.begin(), matches.end(), false) != matches.end()) {
-        std::abort();
+        throw std::runtime_error(command.str());
     }
 }
 
