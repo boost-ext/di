@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+
 namespace {
 
 template<class TFStream = std::ofstream>
@@ -54,9 +55,17 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
             compiler = cxx;
         }
 
+        auto include_rgx = std::regex{"<include>"};
+
+        #if defined(_MSC_VER)
+            auto defines_ = std::regex_replace(defines, include_rgx, "/FI");
+        #else
+            auto defines_ = std::regex_replace(defines, include_rgx, "-include");
+        #endif
+
         command << compiler
                 << "  -I../include "
-                << defines
+                << defines_
                 << " " << errors.str()
                 << " " << source_code << " "
         #if defined(_MSC_VER)
@@ -230,14 +239,16 @@ test bind_to_different_types = [] {
 };
 
 test create_polymorphic_type_without_binding = [] {
-    expect_compile_fail(
-        "",
-        errors(
+    auto errors_ = errors(
             "creatable constraint not satisfied"
+          , "abstract_type<.*>::is_not_bound"
+        #if !defined(_MSC_VER)
           , "create<c>()"
-          , "abstract_type<.>::is_not_bound"
           , "type not bound, did you forget to add: 'di::bind<interface, implementation>'?"
-        ),
+        #endif
+    );
+
+    expect_compile_fail("", errors_,
         struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
         struct impl : i { void dummy() override { } };
 
@@ -249,68 +260,75 @@ test create_polymorphic_type_without_binding = [] {
     );
 };
 
-//test ctor_inject_limit_out_of_range = [] {
-    //expect_compile_fail(
-        //"-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3",
-        //errors("Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE"),
-        //struct c {
-            //BOOST_DI_INJECT(c, int, int, int, int) { }
-        //};
+test ctor_inject_limit_out_of_range = [] {
+    expect_compile_fail("-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3",
+        errors("Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE"),
+        struct c {
+            BOOST_DI_INJECT(c, int, int, int, int) { }
+        };
 
-        //auto injector = di::make_injector();
-        //injector.create<c>();
-    //);
-//};
+        auto injector = di::make_injector();
+        injector.create<c>();
+    );
+};
 
-//test ctor_limit_out_of_range = [] {
-    //auto errors_ = errors(
-    //#if defined(__GNUC__)
-        //"number_of_constructor_arguments_is_out_of_range_for<.*>::max<.*>.*= 3.*=.*c"
-    //#elif defined(__clang__)
-        //"number_of_constructor_arguments_is_out_of_range_for<.*c>::max<3>"
-    //#endif
-    //);
+test ctor_limit_out_of_range = [] {
+    auto errors_ = errors(
+    #if defined(__GNUC__)
+        "number_of_constructor_arguments_is_out_of_range_for<.*>::max<.*>.*= 3.*=.*c"
+    #else
+        "number_of_constructor_arguments_is_out_of_range_for<.*c>::max<3>"
+    #endif
+    );
 
-    //expect_compile_fail(
-        //"-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3", errors_,
-        //struct c {
-            //c(int, int, int, int) { }
-        //};
+    expect_compile_fail("-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3", errors_,
+        struct c {
+            c(int, int, int, int) { }
+        };
 
-        //auto injector = di::make_injector();
-        //injector.create<c>();
-    //);
-//};
+        auto injector = di::make_injector();
+        injector.create<c>();
+    );
+};
 
-//test exposed_multiple_times = [] {
-    //expect_compile_fail(
-        //"",
-        //errors("constraint_not_satisfied<.*bound_type<.*c>::is_bound_more_than_once"),
-        //struct c { };
-        //di::injector<c, c> injector = di::make_injector();
-    //);
-//};
+test exposed_multiple_times = [] {
+    auto errors_ = errors(
+        #if defined(_MSC_VER)
+            "constraint_not_satisfied<.*bound_type<T>::is_bound_more_than_once",
+            "T=.*c"
+        #else
+            "constraint_not_satisfied<.*bound_type<.*c>::is_bound_more_than_once"
+        #endif
+    );
 
-//test exposed_not_creatable = [] {
-    //expect_compile_fail(
-        //"-include memory",
-        //errors(
-            //"creatable constraint not satisfied"
-          //, "create<T>"
-          //, "abstract_type<.>::is_not_bound"
-          //, "type not bound, did you forget to add: 'di::bind<interface, implementation>'?"
-        //),
-        //struct i {
-            //virtual ~i() noexcept = default; virtual void dummy() = 0;
-        //};
+    expect_compile_fail("", errors_,
+        struct c { };
+        di::injector<c, c> injector = di::make_injector();
+    );
+};
 
-        //struct c {
-            //c(int, std::unique_ptr<i>) {}
-        //};
+test exposed_not_creatable = [] {
+    auto errors_ = errors(
+            "creatable constraint not satisfied"
+          , "abstract_type<.*>::is_not_bound"
+        #if !defined(_MSC_VER)
+          , "create<T>"
+          , "type not bound, did you forget to add: 'di::bind<interface, implementation>'?"
+        #endif
+    );
 
-        //di::injector<i> injector = di::make_injector();
-    //);
-//};
+    expect_compile_fail("<include> memory", errors_,
+        struct i {
+            virtual ~i() noexcept = default; virtual void dummy() = 0;
+        };
+
+        struct c {
+            c(int, std::unique_ptr<i>) {}
+        };
+
+        di::injector<i> injector = di::make_injector();
+    );
+};
 
 //test exposed_polymorphic_type_without_binding = [] {
     //expect_compile_fail(
