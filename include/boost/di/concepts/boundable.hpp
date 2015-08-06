@@ -18,12 +18,7 @@ struct bound_type {
     struct is_bound_more_than_once { };
     struct is_neither_a_dependency_nor_an_injector { };
     struct has_disallowed_specifiers;
-
-    template<class>
-    struct is_not_base_of { };
-
-    template<class>
-    struct is_not_convertible_to { };
+    template<class> struct is_not_related_to { };
 };
 
 namespace concepts {
@@ -121,11 +116,7 @@ auto boundable_impl(I&&, T&&) ->
           , std::conditional_t<
                 std::is_base_of<I, T>::value || std::is_convertible<T, I>::value
               , std::true_type
-              , std::conditional_t<
-                    std::is_base_of<I, T>::value
-                  , typename bound_type<T>::template is_not_convertible_to<I>
-                  , typename bound_type<T>::template is_not_base_of<I>
-                >
+              , typename bound_type<T>::template is_not_related_to<I>
             >
         >
     >;

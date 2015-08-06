@@ -82,7 +82,9 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
         expect(lines < MAX_ERROR_LINES_COUNT);
     }
 
-    //expect_eq(std::find(matches.begin(), matches.end(), false), matches.end());
+    if (std::find(matches.begin(), matches.end(), false) != matches.end()) {
+        std::abort();
+    }
 }
 
 } // namespace
@@ -129,7 +131,7 @@ test bind_external_with_given_type = [] {
 test bind_multiple_times = [] {
     expect_compile_fail(
         "",
-        errors("constraint_not_satisfied<.*bound_type<i, .*no_name>::is_bound_more_than_once"),
+        errors("constraint_not_satisfied<.*bound_type<.*i, .*no_name>::is_bound_more_than_once"),
         struct i { };
         struct impl1 : i { };
         struct impl2 : i { };
@@ -144,7 +146,7 @@ test bind_multiple_times = [] {
 test bind_not_compatible_types = [] {
     expect_compile_fail(
         "",
-        errors("constraint_not_satisfied<.*bound_type<impl>::is_not_base_of<int>"),
+        errors("constraint_not_satisfied<.*bound_type<.*impl>::is_not_related_to<int>"),
         struct i { };
         struct impl : i { };
 
@@ -159,7 +161,7 @@ test bind_not_compatible_types = [] {
 test bind_repeated = [] {
     expect_compile_fail(
         "",
-        errors("constraint_not_satisfied<.*bound_type<i, .*no_name>::is_bound_more_than_once"),
+        errors("constraint_not_satisfied<.*bound_type<.*i, .*no_name>::is_bound_more_than_once"),
         struct i { };
         struct impl1 : i { };
         struct impl2 : i { };
@@ -174,7 +176,7 @@ test bind_repeated = [] {
 test bind_to_different_types = [] {
     expect_compile_fail(
         "",
-        errors("constraint_not_satisfied<.*bound_type<i, .*no_name>::is_bound_more_than_once"),
+        errors("constraint_not_satisfied<.*bound_type<.*i, .*no_name>::is_bound_more_than_once"),
         struct i { };
         struct impl1 : i { };
         struct impl2 : i { };
@@ -220,9 +222,16 @@ test ctor_inject_limit_out_of_range = [] {
 };
 
 test ctor_limit_out_of_range = [] {
+    auto errors_ = errors(
+    #if defined(__GNUC__)
+        "number_of_constructor_arguments_is_out_of_range_for<.*>::max<.*>.*= 3.*=.*c"
+    #elif defined(__clang__)
+        "number_of_constructor_arguments_is_out_of_range_for<.*c>::max<3>"
+    #endif
+    );
+
     expect_compile_fail(
-        "-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3",
-        errors("number_of_constructor_arguments_is_out_of_range_for<c>::max<3>"),
+        "-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3", errors_,
         struct c {
             c(int, int, int, int) { }
         };
@@ -235,7 +244,7 @@ test ctor_limit_out_of_range = [] {
 test exposed_multiple_times = [] {
     expect_compile_fail(
         "",
-        errors("constraint_not_satisfied<.*bound_type<c>::is_bound_more_than_once"),
+        errors("constraint_not_satisfied<.*bound_type<.*c>::is_bound_more_than_once"),
         struct c { };
         di::injector<c, c> injector = di::make_injector();
     );
@@ -367,6 +376,8 @@ test policy_constructible = [] {
         "type<int>::not_allowed_by",
         "type<double>::not_allowed_by",
         "type<float>::not_allowed_by"
+    #else
+        ".*"
     #endif
     );
 

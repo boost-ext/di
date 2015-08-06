@@ -7,6 +7,7 @@
 #include "boost/di/concepts/boundable.hpp"
 #include "common/fakes/fake_dependency.hpp"
 
+#include <iostream>
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
 struct a { };
@@ -17,7 +18,7 @@ struct d { };
 test bind_expected_given = [] {
     static_expect(boundable<int, int>::value);
     static_expect(boundable<int, short>::value);
-    static_expect(std::is_same<bound_type<std::string>::is_not_base_of<int>, boundable<int, std::string>>::value);
+    static_expect(std::is_same<bound_type<std::string>::is_not_related_to<int>, boundable<int, std::string>>::value);
     static_expect(std::is_same<bound_type<int*>::has_disallowed_specifiers, boundable<int*, int>>::value);
     static_expect(std::is_same<bound_type<int*>::has_disallowed_specifiers, boundable<int, int*>>::value);
     static_expect(std::is_same<bound_type<double*>::has_disallowed_specifiers, boundable<int, double*>>::value);
@@ -35,9 +36,9 @@ test bind_any_of = [] {
     static_expect(boundable<aux::type_list<a, c>, c>::value);
     static_expect(std::is_same<
         aux::type_list<
-            bound_type<d>::is_not_base_of<a>
-          , bound_type<d>::is_not_base_of<b>
-          , bound_type<d>::is_not_base_of<c>
+            bound_type<d>::is_not_related_to<a>
+          , bound_type<d>::is_not_related_to<b>
+          , bound_type<d>::is_not_related_to<c>
         >
       , boundable<aux::type_list<a, b, c>, d>
     >::value);
