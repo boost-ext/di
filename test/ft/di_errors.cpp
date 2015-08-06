@@ -440,13 +440,13 @@ test policy_constructible = [] {
     #if defined(__GNUC__)
         "type<.*>::not_allowed_by.*int",
         "type<.*>::not_allowed_by.*double",
-        "type<.*>::not_allowed_by.*float"
-        "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>",
+        "type<.*>::not_allowed_by.*float",
+        "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>"
     #elif defined(__clang__)
         "type<int>::not_allowed_by",
         "type<double>::not_allowed_by",
-        "type<float>::not_allowed_by"
-        "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>",
+        "type<float>::not_allowed_by",
+        "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>"
     #else
         "type<.*>::not_allowed_by", "=int",
         "type<.*>::not_allowed_by", "=float",
