@@ -7,7 +7,7 @@
 
 //[constructor_bindings
 
-#include "boost/di.hpp"
+#include <boost/di.hpp>
 
 namespace di = boost::di;
 
