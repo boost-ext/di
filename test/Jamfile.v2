@@ -45,7 +45,7 @@ rule test ( std * : src + : property * : defines * : options * ) {
 
     if ${memcheck} && ! DISABLE_MEMCHECK in $(options) {
         toolset += <testing.launcher>$(memcheck) ;
-    } 
+    }
 
     run $(src) : : : $(toolset) <define>BOOST_DI_CFG_NO_PREPROCESSED_HEADERS $(defines) : $(property) ;
 }
