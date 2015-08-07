@@ -19,9 +19,9 @@ compose <variant>coverage :
 
 extend-feature variant : analyze ;
 compose <variant>analyze :
-    <toolset>gcc:<cxxflags>"-fsanitize=undefined,address" <linkflags>"-fsanitize=undefined,address"
-    <toolset>clang:<cxxflags>"-fsanitize=undefined,address" <linkflags>"-fsanitize=undefined,address"
-    <toolset>darwin:<cxxflags>"-fsanitize=undefined,address" <linkflags>"-fsanitize=undefined,address"
+    <toolset>gcc:<cxxflags>"-fsanitize=undefined,address" <toolset>gcc:<linkflags>"-fsanitize=undefined,address"
+    <toolset>clang:<cxxflags>"-fsanitize=undefined,address" <toolset>clang:<linkflags>"-fsanitize=undefined,address"
+    <toolset>darwin:<cxxflags>"-fsanitize=undefined,address" <toolset>darwin:<linkflags>"-fsanitize=undefined,address"
     <toolset>msvc:<cxxflags>"/analyze"
     <optimization>off
 ;
