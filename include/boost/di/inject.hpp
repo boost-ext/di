@@ -11,14 +11,7 @@
 #include "boost/di/aux_/preprocessor.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
-
-#if !defined(BOOST_DI_INJECTOR)
-    #define BOOST_DI_INJECTOR boost_di_injector__
-#endif
-
-#if !defined(BOOST_DI_CFG_CTOR_LIMIT_SIZE)
-    #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
-#endif
+#include "boost/di/type_traits/ctor_traits.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace detail {
 template<class, class>
@@ -63,18 +56,18 @@ using combine_t = typename combine<T1, T2>::type;
 #define BOOST_DI_GEN_NAME(i, ...) BOOST_DI_GEN_NAME_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__,), i)
 
 #define BOOST_DI_INJECT_TRAITS_EMPTY_IMPL(...) \
-    using BOOST_DI_INJECTOR BOOST_DI_UNUSED = ::boost::di::aux::type_list<>
+    using boost_di_inject__ BOOST_DI_UNUSED = ::boost::di::aux::type_list<>
 
 #define BOOST_DI_INJECT_TRAITS_IMPL(...) \
-    static void BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor)( \
+    static void boost_di_inject_ctor__( \
         BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__) \
     ); \
-    static void BOOST_DI_CAT(BOOST_DI_INJECTOR, names)( \
+    static void boost_di_inject_name__( \
         BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_NAME, __VA_ARGS__) \
     ); \
-    using BOOST_DI_INJECTOR BOOST_DI_UNUSED = ::boost::di::detail::combine_t< \
-        ::boost::di::aux::function_traits_t<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))> \
-      , ::boost::di::aux::function_traits_t<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, names))> \
+    using boost_di_inject__ BOOST_DI_UNUSED = ::boost::di::detail::combine_t< \
+        ::boost::di::aux::function_traits_t<decltype(boost_di_inject_ctor__)> \
+      , ::boost::di::aux::function_traits_t<decltype(boost_di_inject_name__)> \
     >; \
     static_assert( \
         BOOST_DI_SIZE(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE \
@@ -92,9 +85,9 @@ using combine_t = typename combine<T1, T2>::type;
 
 #if !defined(BOOST_DI_INJECT_TRAITS_NO_LIMITS)
     #define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
-        static void BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor)(__VA_ARGS__); \
-        using BOOST_DI_INJECTOR BOOST_DI_UNUSED = \
-            ::boost::di::aux::function_traits_t<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>
+        static void boost_di_inject_ctor__(__VA_ARGS__); \
+        using boost_di_inject__ BOOST_DI_UNUSED = \
+            ::boost::di::aux::function_traits_t<decltype(boost_di_inject_ctor__)>
 #endif
 
 #if !defined(BOOST_DI_INJECT)

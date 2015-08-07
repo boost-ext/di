@@ -32,23 +32,16 @@
     template<class T, class... TArgs>                               \
     struct name : decltype(name##_impl<T, TArgs...>(0)) { }
 
-#define BOOST_DI_REQUIRES(...) \
-    typename std::enable_if<__VA_ARGS__, int>::type = 0
-
-#define BOOST_DI_REQUIRES_T(...) \
-    std::enable_if_t<__VA_ARGS__>
-
-#define BOOST_DI_REQUIRES_MSG(...) \
-    typename constraint_not_satisfied<__VA_ARGS__>::type = 0
-
-#define BOOST_DI_REQUIRES_MSG_T(...) \
-    constraint_not_satisfied<__VA_ARGS__>::type
+#define BOOST_DI_REQUIRES(...) typename std::enable_if<__VA_ARGS__, int>::type = 0 // __pph__
+#define BOOST_DI_REQUIRES_T(...) std::enable_if_t<__VA_ARGS__> // __pph__
+#define BOOST_DI_REQUIRES_MSG(...) typename constraint_not_satisfied<__VA_ARGS__>::type = 0 // __pph__
+#define BOOST_DI_REQUIRES_MSG_T(...) constraint_not_satisfied<__VA_ARGS__>::type // __pph__
 
 namespace boost { namespace di { inline namespace v1 {
 
 template<class... Ts>
 struct constraint_not_satisfied {
-    static_assert(aux::never<Ts...>::value, "constraint not satisfied");
+    static_assert(aux::never<Ts...>::value, "constraint not satisfied"); // for msvc
 };
 
 template<>

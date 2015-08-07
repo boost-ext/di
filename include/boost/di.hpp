@@ -39,118 +39,6 @@
     #define BOOST_DI_DEPRECATED(...) __declspec(deprecated(__VA_ARGS__))
     #define BOOST_DI_TYPE_WKND(T) (T&&)
 #endif
-#define BOOST_DI_IF(cond, t, f) BOOST_DI_IF_I(cond, t, f)
-#define BOOST_DI_REPEAT(i, m, ...) BOOST_DI_REPEAT_N(i, m, __VA_ARGS__)
-#define BOOST_DI_CAT(a, ...) BOOST_DI_PRIMITIVE_CAT(a, __VA_ARGS__)
-#define BOOST_DI_CALL(m, ...) m(__VA_ARGS__)
-#define BOOST_DI_EMPTY()
-#define BOOST_DI_COMMA() ,
-#define BOOST_DI_EAT(...)
-#define BOOST_DI_EXPAND(...) __VA_ARGS__
-#define BOOST_DI_SIZE(...) BOOST_DI_CAT(BOOST_DI_VARIADIC_SIZE_I(__VA_ARGS__, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1,),)
-#define BOOST_DI_PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
-#define BOOST_DI_ELEM(n, ...) BOOST_DI_ELEM_I(n,__VA_ARGS__)
-#define BOOST_DI_IS_EMPTY(...) BOOST_DI_DETAIL_IS_EMPTY_IIF(BOOST_DI_IBP(__VA_ARGS__))(BOOST_DI_DETAIL_IS_EMPTY_GEN_ZERO, BOOST_DI_DETAIL_IS_EMPTY_PROCESS)(__VA_ARGS__)
-#define BOOST_DI_DETAIL_IS_EMPTY_PRIMITIVE_CAT(a, b) a ## b
-#define BOOST_DI_DETAIL_IS_EMPTY_IIF(bit) BOOST_DI_DETAIL_IS_EMPTY_PRIMITIVE_CAT(BOOST_DI_DETAIL_IS_EMPTY_IIF_,bit)
-#define BOOST_DI_DETAIL_IS_EMPTY_NON_FUNCTION_C(...) ()
-#define BOOST_DI_DETAIL_IS_EMPTY_GEN_ZERO(...) 0
-#define BOOST_DI_VARIADIC_SIZE_I(e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, size, ...) size
-#define BOOST_DI_IF_I(cond, t, f) BOOST_DI_IIF(cond, t, f)
-#define BOOST_DI_IIF_0(t, f) f
-#define BOOST_DI_IIF_1(t, f) t
-#define BOOST_DI_IIF_2(t, f) t
-#define BOOST_DI_IIF_3(t, f) t
-#define BOOST_DI_IIF_4(t, f) t
-#define BOOST_DI_IIF_5(t, f) t
-#define BOOST_DI_IIF_6(t, f) t
-#define BOOST_DI_IIF_7(t, f) t
-#define BOOST_DI_IIF_8(t, f) t
-#define BOOST_DI_IIF_9(t, f) t
-#define BOOST_DI_ELEM_I(n, ...) BOOST_DI_CAT(BOOST_DI_CAT(BOOST_DI_ELEM, n)(__VA_ARGS__,),)
-#define BOOST_DI_ELEM0(p1, ...) p1
-#define BOOST_DI_ELEM1(p1, p2, ...) p2
-#define BOOST_DI_ELEM2(p1, p2, p3, ...) p3
-#define BOOST_DI_ELEM3(p1, p2, p3, p4, ...) p4
-#define BOOST_DI_ELEM4(p1, p2, p3, p4, p5, ...) p5
-#define BOOST_DI_ELEM5(p1, p2, p3, p4, p5, p6, ...) p6
-#define BOOST_DI_ELEM6(p1, p2, p3, p4, p5, p6, p7, ...) p7
-#define BOOST_DI_ELEM7(p1, p2, p3, p4, p5, p6, p7, p8, ...) p8
-#define BOOST_DI_ELEM8(p1, p2, p3, p4, p5, p6, p7, p8, p9, ...) p9
-#define BOOST_DI_ELEM9(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, ...) p10
-#define BOOST_DI_REPEAT_N(i, m, ...) BOOST_DI_REPEAT_##i(m, __VA_ARGS__)
-#define BOOST_DI_REPEAT_1(m, ...) m(0, __VA_ARGS__)
-#define BOOST_DI_REPEAT_2(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__)
-#define BOOST_DI_REPEAT_3(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__)
-#define BOOST_DI_REPEAT_4(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__)
-#define BOOST_DI_REPEAT_5(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__)
-#define BOOST_DI_REPEAT_6(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__)
-#define BOOST_DI_REPEAT_7(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) m(6, __VA_ARGS__)
-#define BOOST_DI_REPEAT_8(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) m(6, __VA_ARGS__) m(7, __VA_ARGS__)
-#define BOOST_DI_REPEAT_9(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) m(6, __VA_ARGS__) m(7, __VA_ARGS__) m(8, __VA_ARGS__)
-#define BOOST_DI_REPEAT_10(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) m(6, __VA_ARGS__) m(7, __VA_ARGS__) m(8, __VA_ARGS__) m(9, __VA_ARGS__)
-#if defined(_MSC_VER)
-    #define BOOST_DI_VD_IBP_CAT(a, b) BOOST_DI_VD_IBP_CAT_I(a, b)
-    #define BOOST_DI_VD_IBP_CAT_I(a, b) BOOST_DI_VD_IBP_CAT_II(a ## b)
-    #define BOOST_DI_VD_IBP_CAT_II(res) res
-    #define BOOST_DI_IBP_SPLIT(i, ...) BOOST_DI_VD_IBP_CAT(BOOST_DI_IBP_PRIMITIVE_CAT(BOOST_DI_IBP_SPLIT_,i)(__VA_ARGS__),BOOST_DI_EMPTY())
-    #define BOOST_DI_IBP_IS_VARIADIC_C(...) 1 1
-    #define BOOST_DI_IBP_SPLIT_0(a, ...) a
-    #define BOOST_DI_IBP_SPLIT_1(a, ...) __VA_ARGS__
-    #define BOOST_DI_IBP_CAT(a, ...) BOOST_DI_IBP_PRIMITIVE_CAT(a,__VA_ARGS__)
-    #define BOOST_DI_IBP_PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
-    #define BOOST_DI_IBP_IS_VARIADIC_R_1 1,
-    #define BOOST_DI_IBP_IS_VARIADIC_R_BOOST_DI_IBP_IS_VARIADIC_C 0,
-    #define BOOST_DI_IBP(...) BOOST_DI_IBP_SPLIT(0, BOOST_DI_IBP_CAT(BOOST_DI_IBP_IS_VARIADIC_R_, BOOST_DI_IBP_IS_VARIADIC_C __VA_ARGS__))
-    #define BOOST_DI_IIF(bit, t, f) BOOST_DI_IIF_OO((bit, t, f))
-    #define BOOST_DI_IIF_OO(par) BOOST_DI_IIF_I ## par
-    #define BOOST_DI_IIF_I(bit, t, f) BOOST_DI_IIF_ ## bit(t, f)
-    #define BOOST_DI_DETAIL_IS_EMPTY_IIF_0(t, b) b
-    #define BOOST_DI_DETAIL_IS_EMPTY_IIF_1(t, b) t
-    #define BOOST_DI_DETAIL_IS_EMPTY_PROCESS(...) BOOST_DI_IBP(BOOST_DI_DETAIL_IS_EMPTY_NON_FUNCTION_C __VA_ARGS__ ())
-#else
-    #define BOOST_DI_IBP_SPLIT(i, ...) BOOST_DI_PRIMITIVE_CAT(BOOST_DI_IBP_SPLIT_, i)(__VA_ARGS__)
-    #define BOOST_DI_IBP_SPLIT_0(a, ...) a
-    #define BOOST_DI_IBP_SPLIT_1(a, ...) __VA_ARGS__
-    #define BOOST_DI_IBP_IS_VARIADIC_C(...) 1
-    #define BOOST_DI_IBP_IS_VARIADIC_R_1 1,
-    #define BOOST_DI_IBP_IS_VARIADIC_R_BOOST_DI_IBP_IS_VARIADIC_C 0,
-    #define BOOST_DI_IBP(...) BOOST_DI_IBP_SPLIT(0, BOOST_DI_CAT( BOOST_DI_IBP_IS_VARIADIC_R_, BOOST_DI_IBP_IS_VARIADIC_C __VA_ARGS__))
-    #define BOOST_DI_IIF(bit, t, f) BOOST_DI_IIF_I(bit, t, f)
-    #define BOOST_DI_IIF_I(bit, t, f) BOOST_DI_IIF_II(BOOST_DI_IIF_ ## bit(t, f))
-    #define BOOST_DI_IIF_II(id) id
-    #define BOOST_DI_DETAIL_IS_EMPTY_IIF_0(t, ...) __VA_ARGS__
-    #define BOOST_DI_DETAIL_IS_EMPTY_IIF_1(t, ...) t
-    #define BOOST_DI_DETAIL_IS_EMPTY_PROCESS(...) BOOST_DI_IBP(BOOST_DI_DETAIL_IS_EMPTY_NON_FUNCTION_C __VA_ARGS__ ())
-#endif
-#ifdef _LIBCPP_VERSION
-_LIBCPP_BEGIN_NAMESPACE_STD
-#else
-namespace std {
-#endif
-    template<class> class shared_ptr;
-    template<class> class weak_ptr;
-    template<class, class> class unique_ptr;
-    template<class> struct char_traits;
-#ifdef _LIBCPP_VERSION
-_LIBCPP_END_NAMESPACE_STD
-#else
-}
-#endif
-namespace std {
-    template<class> class initializer_list;
-}
-namespace boost {
-    template<class> class shared_ptr;
-}
-namespace boost { namespace di { inline namespace v1 {
-    class config;
-    struct no_name { constexpr auto operator()() const noexcept { return ""; } };
-    template<class...> class injector;
-    template<class, class = void> struct ctor_traits;
-    namespace providers { class heap; class stack_over_heap; }
-    namespace core { template<class> struct any_type_fwd; template<class> struct any_type_ref_fwd; }
-}}}
 namespace boost { namespace di { inline namespace v1 {
 struct _ { _(...) { } };
 namespace aux {
@@ -244,33 +132,39 @@ struct make_index_sequence_impl<10> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9, 
 template<int N>
 using make_index_sequence = typename make_index_sequence_impl<N>::type;
 }}}}
-#define BOOST_DI_HAS_TYPE(name, call_name)                          \
-    template<class, class = void>                                   \
-    struct name : std::false_type { };                              \
-                                                                    \
-    template<class T>                                               \
-    struct name<                                                    \
-        T, typename aux::void_t<typename T::call_name>::type        \
-    > : std::true_type { }
-#define BOOST_DI_HAS_METHOD(name, call_name)                        \
-    template<class T, class... TArgs>                               \
-    decltype(std::declval<T>().call_name(std::declval<TArgs>()...)  \
-           , std::true_type())                                      \
-    name##_impl(int);                                               \
-                                                                    \
-    template<class, class...>                                       \
-    std::false_type name##_impl(...);                               \
-                                                                    \
-    template<class T, class... TArgs>                               \
-    struct name : decltype(name##_impl<T, TArgs...>(0)) { }
-#define BOOST_DI_REQUIRES(...) \
-    typename std::enable_if<__VA_ARGS__, int>::type = 0
-#define BOOST_DI_REQUIRES_T(...) \
-    std::enable_if_t<__VA_ARGS__>
-#define BOOST_DI_REQUIRES_MSG(...) \
-    typename constraint_not_satisfied<__VA_ARGS__>::type = 0
-#define BOOST_DI_REQUIRES_MSG_T(...) \
-    constraint_not_satisfied<__VA_ARGS__>::type
+#ifdef _LIBCPP_VERSION
+_LIBCPP_BEGIN_NAMESPACE_STD
+#else
+namespace std {
+#endif
+    template<class> class shared_ptr;
+    template<class> class weak_ptr;
+    template<class, class> class unique_ptr;
+    template<class> struct char_traits;
+#ifdef _LIBCPP_VERSION
+_LIBCPP_END_NAMESPACE_STD
+#else
+}
+#endif
+namespace std {
+    template<class> class initializer_list;
+}
+namespace boost {
+    template<class> class shared_ptr;
+}
+namespace boost { namespace di { inline namespace v1 {
+    class config;
+    struct no_name { constexpr auto operator()() const noexcept { return ""; } };
+    template<class...> class injector;
+    template<class, class = void> struct ctor_traits;
+    namespace providers { class heap; class stack_over_heap; }
+    namespace core { template<class> struct any_type_fwd; template<class> struct any_type_ref_fwd; }
+    namespace detail { template<class, class> struct named_type; }
+}}}
+#define BOOST_DI_REQUIRES(...) typename std::enable_if<__VA_ARGS__, int>::type = 0
+#define BOOST_DI_REQUIRES_T(...) std::enable_if_t<__VA_ARGS__>
+#define BOOST_DI_REQUIRES_MSG(...) typename constraint_not_satisfied<__VA_ARGS__>::type = 0
+#define BOOST_DI_REQUIRES_MSG_T(...) constraint_not_satisfied<__VA_ARGS__>::type
 namespace boost { namespace di { inline namespace v1 {
 template<class... Ts>
 struct constraint_not_satisfied {
@@ -363,87 +257,8 @@ struct function_traits<R(T::*)(TArgs...) const> {
 };
 template<class T>
 using function_traits_t = typename function_traits<T>::args;
-BOOST_DI_HAS_METHOD(is_callable, operator());
+template<class T, class... TArgs> decltype(std::declval<T>().operator()(std::declval<TArgs>()...) , std::true_type()) is_callable_impl(int); template<class, class...> std::false_type is_callable_impl(...); template<class T, class... TArgs> struct is_callable : decltype(is_callable_impl<T, TArgs...>(0)) { };
 }}}}
-#if !defined(BOOST_DI_INJECTOR)
-    #define BOOST_DI_INJECTOR boost_di_injector__
-#endif
-#if !defined(BOOST_DI_CFG_CTOR_LIMIT_SIZE)
-    #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
-#endif
-namespace boost { namespace di { inline namespace v1 { namespace detail {
-template<class, class>
-struct named_type { };
-struct named_impl { template<class T> T operator=(const T&) const; };
-static constexpr BOOST_DI_UNUSED named_impl named{};
-template<class T, class TName>
-struct combine_impl {
-    using type = named_type<TName, T>;
-};
-template<class T>
-struct combine_impl<T, aux::none_type> {
-    using type = T;
-};
-template<class, class>
-struct combine;
-template<class... T1, class... T2>
-struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
-    using type = aux::type_list<typename combine_impl<T1, T2>::type...>;
-};
-template<class T1, class T2>
-using combine_t = typename combine<T1, T2>::type;
-}}}}
-#define BOOST_DI_GEN_CTOR_IMPL(p, i) \
-    BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
-    BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_EAT p, p)
-#define BOOST_DI_GEN_CTOR(i, ...) BOOST_DI_GEN_CTOR_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__,), i)
-#define BOOST_DI_GEN_ARG_NAME(p) BOOST_DI_GEN_ARG_NAME_IMPL p )
-#define BOOST_DI_GEN_NONE_TYPE(p) ::boost::di::aux::none_type
-#define BOOST_DI_GEN_ARG_NAME_IMPL(p) decltype(::boost::di::detail::p) BOOST_DI_EAT(
-#define BOOST_DI_GEN_NAME_IMPL(p, i) \
-    BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
-    BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_GEN_ARG_NAME, BOOST_DI_GEN_NONE_TYPE)(p)
-#define BOOST_DI_GEN_NAME(i, ...) BOOST_DI_GEN_NAME_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__,), i)
-#define BOOST_DI_INJECT_TRAITS_EMPTY_IMPL(...) \
-    using BOOST_DI_INJECTOR BOOST_DI_UNUSED = ::boost::di::aux::type_list<>
-#define BOOST_DI_INJECT_TRAITS_IMPL(...) \
-    static void BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor)( \
-        BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__) \
-    ); \
-    static void BOOST_DI_CAT(BOOST_DI_INJECTOR, names)( \
-        BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_NAME, __VA_ARGS__) \
-    ); \
-    using BOOST_DI_INJECTOR BOOST_DI_UNUSED = ::boost::di::detail::combine_t< \
-        ::boost::di::aux::function_traits_t<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))> \
-      , ::boost::di::aux::function_traits_t<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, names))> \
-    >; \
-    static_assert( \
-        BOOST_DI_SIZE(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE \
-      , "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE" \
-    )
-#if !defined(BOOST_DI_INJECT_TRAITS)
-    #define BOOST_DI_INJECT_TRAITS(...) \
-        BOOST_DI_IF( \
-            BOOST_DI_IS_EMPTY(__VA_ARGS__) \
-          , BOOST_DI_INJECT_TRAITS_EMPTY_IMPL \
-          , BOOST_DI_INJECT_TRAITS_IMPL \
-        )(__VA_ARGS__)
-#endif
-#if !defined(BOOST_DI_INJECT_TRAITS_NO_LIMITS)
-    #define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
-        static void BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor)(__VA_ARGS__); \
-        using BOOST_DI_INJECTOR BOOST_DI_UNUSED = \
-            ::boost::di::aux::function_traits_t<decltype(BOOST_DI_CAT(BOOST_DI_INJECTOR, ctor))>
-#endif
-#if !defined(BOOST_DI_INJECT)
-    #define BOOST_DI_INJECT(type, ...) \
-        BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
-        type(BOOST_DI_REPEAT( \
-            BOOST_DI_SIZE(__VA_ARGS__) \
-          , BOOST_DI_GEN_CTOR \
-          , __VA_ARGS__) \
-        )
-#endif
 namespace boost { namespace di { inline namespace v1 { namespace core {
 template<class = aux::type_list<>>
 class pool;
@@ -890,7 +705,7 @@ public:
 };
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace scopes {
-template<class, class = void> struct has_result_type : std::false_type { }; template<class T> struct has_result_type<T, typename aux::void_t<typename T::result_type>::type> : std::true_type { };
+template<class, class = void> struct has_result_type : std::false_type { }; template<class T> struct has_result_type< T, typename aux::void_t<typename T::result_type>::type > : std::true_type { };
 class external {
     struct injector {
         template<class T> T create() const;
@@ -1022,8 +837,11 @@ public:
     };
 };
 }}}}
+#if !defined(BOOST_DI_CFG_CTOR_LIMIT_SIZE)
+#define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
+#endif
 namespace boost { namespace di { inline namespace v1 { namespace type_traits {
-BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_CAT(has_, BOOST_DI_INJECTOR), BOOST_DI_INJECTOR);
+template<class, class = void> struct is_injectable : std::false_type { }; template<class T> struct is_injectable< T, typename aux::void_t<typename T::boost_di_inject__>::type > : std::true_type { };
 struct direct { };
 struct uniform { };
 template<class T, int>
@@ -1071,15 +889,15 @@ struct ctor<T, aux::type_list<TArgs...>>
 { };
 template<
     class T
-  , class = typename BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<T>::type
+  , class = typename is_injectable<T>::type
 > struct ctor_traits__;
 template<
     class T
-  , class = typename BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<di::ctor_traits<T>>::type
+  , class = typename is_injectable<di::ctor_traits<T>>::type
 > struct ctor_traits_impl;
 template<class T>
 struct ctor_traits__<T, std::true_type>
-    : aux::pair<direct, typename T::BOOST_DI_INJECTOR>
+    : aux::pair<direct, typename T::boost_di_inject__>
 { };
 template<class T>
 struct ctor_traits__<T, std::false_type>
@@ -1087,7 +905,7 @@ struct ctor_traits__<T, std::false_type>
 { };
 template<class T>
 struct ctor_traits_impl<T, std::true_type>
-    : aux::pair<direct, typename di::ctor_traits<T>::BOOST_DI_INJECTOR>
+    : aux::pair<direct, typename di::ctor_traits<T>::boost_di_inject__>
 { };
 template<class T>
 struct ctor_traits_impl<T, std::false_type>
@@ -1100,17 +918,17 @@ struct ctor_traits
 { };
 template<class T>
 struct ctor_traits<std::initializer_list<T>> {
-    using BOOST_DI_INJECTOR = aux::type_list<>;
+    using boost_di_inject__ = aux::type_list<>;
 };
 template<class T>
 struct ctor_traits<T, BOOST_DI_REQUIRES_T(
     std::is_same<std::char_traits<char>, typename T::traits_type>::value)> {
-    using BOOST_DI_INJECTOR = aux::type_list<>;
+    using boost_di_inject__ = aux::type_list<>;
 };
 template<class T>
 struct ctor_traits<T, BOOST_DI_REQUIRES_T(
     std::is_arithmetic<T>::value || std::is_enum<T>::value)> {
-    using BOOST_DI_INJECTOR = aux::type_list<>;
+    using boost_di_inject__ = aux::type_list<>;
 };
 }}}
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
@@ -1139,8 +957,8 @@ template<class T>
 using scopable = typename scopable__<T>::type;
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
-template<class T, class... TArgs> decltype(std::declval<T>().configure(std::declval<TArgs>()...), std::true_type()) has_configure_impl(int); template<class, class...> std::false_type has_configure_impl(...); template<class T, class... TArgs> struct has_configure : decltype(has_configure_impl<T, TArgs...>(0)) { };
-template<class, class = void> struct has_deps : std::false_type { }; template<class T> struct has_deps<T, typename aux::void_t<typename T::deps>::type> : std::true_type { };
+template<class T, class... TArgs> decltype(std::declval<T>().configure(std::declval<TArgs>()...) , std::true_type()) has_configure_impl(int); template<class, class...> std::false_type has_configure_impl(...); template<class T, class... TArgs> struct has_configure : decltype(has_configure_impl<T, TArgs...>(0)) { };
+template<class, class = void> struct has_deps : std::false_type { }; template<class T> struct has_deps< T, typename aux::void_t<typename T::deps>::type > : std::true_type { };
 template<class T, class U = std::remove_reference_t<T>>
 struct is_injector :
     std::integral_constant<bool, has_deps<U>::value || has_configure<U>::value>{};
@@ -1316,7 +1134,7 @@ template<class... Ts>
 using callable = typename is_callable<Ts...>::type;
 }}}}
 #if !defined(BOOST_DI_CONCEPTS_CREATABLE_ATTR)
-    #define BOOST_DI_CONCEPTS_CREATABLE_ATTR BOOST_DI_DEPRECATED("creatable constraint not satisfied")
+#define BOOST_DI_CONCEPTS_CREATABLE_ATTR BOOST_DI_DEPRECATED("creatable constraint not satisfied")
 #endif
 namespace boost { namespace di { inline namespace v1 {
 template<class T>
@@ -1565,7 +1383,7 @@ public:
 #if defined(BOOST_DI_CFG)
     class BOOST_DI_CFG;
 #else
-    #define BOOST_DI_CFG boost::di::config
+#define BOOST_DI_CFG boost::di::config
 #endif
 namespace boost { namespace di { inline namespace v1 {
 template<class... TPolicies, BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>)>
@@ -2127,7 +1945,7 @@ template<class T, class TDependency>
 using referable_traits_t = typename referable_traits<T, TDependency>::type;
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
-template<class T, class... TArgs> decltype(std::declval<T>().call(std::declval<TArgs>()...), std::true_type()) has_call_impl(int); template<class, class...> std::false_type has_call_impl(...); template<class T, class... TArgs> struct has_call : decltype(has_call_impl<T, TArgs...>(0)) { };
+template<class T, class... TArgs> decltype(std::declval<T>().call(std::declval<TArgs>()...) , std::true_type()) has_call_impl(int); template<class, class...> std::false_type has_call_impl(...); template<class T, class... TArgs> struct has_call : decltype(has_call_impl<T, TArgs...>(0)) { };
 struct from_injector { };
 struct from_deps { };
 struct init { };
@@ -2719,6 +2537,162 @@ public:
     }
 };
 }}}}
+#define BOOST_DI_IF(cond, t, f) BOOST_DI_IF_I(cond, t, f)
+#define BOOST_DI_REPEAT(i, m, ...) BOOST_DI_REPEAT_N(i, m, __VA_ARGS__)
+#define BOOST_DI_CAT(a, ...) BOOST_DI_PRIMITIVE_CAT(a, __VA_ARGS__)
+#define BOOST_DI_EMPTY()
+#define BOOST_DI_COMMA() ,
+#define BOOST_DI_EAT(...)
+#define BOOST_DI_EXPAND(...) __VA_ARGS__
+#define BOOST_DI_SIZE(...) BOOST_DI_CAT(BOOST_DI_VARIADIC_SIZE_I(__VA_ARGS__, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1,),)
+#define BOOST_DI_PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
+#define BOOST_DI_ELEM(n, ...) BOOST_DI_ELEM_I(n,__VA_ARGS__)
+#define BOOST_DI_IS_EMPTY(...) BOOST_DI_DETAIL_IS_EMPTY_IIF(BOOST_DI_IBP(__VA_ARGS__))(BOOST_DI_DETAIL_IS_EMPTY_GEN_ZERO, BOOST_DI_DETAIL_IS_EMPTY_PROCESS)(__VA_ARGS__)
+#define BOOST_DI_DETAIL_IS_EMPTY_PRIMITIVE_CAT(a, b) a ## b
+#define BOOST_DI_DETAIL_IS_EMPTY_IIF(bit) BOOST_DI_DETAIL_IS_EMPTY_PRIMITIVE_CAT(BOOST_DI_DETAIL_IS_EMPTY_IIF_,bit)
+#define BOOST_DI_DETAIL_IS_EMPTY_NON_FUNCTION_C(...) ()
+#define BOOST_DI_DETAIL_IS_EMPTY_GEN_ZERO(...) 0
+#define BOOST_DI_VARIADIC_SIZE_I(e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, size, ...) size
+#define BOOST_DI_IF_I(cond, t, f) BOOST_DI_IIF(cond, t, f)
+#define BOOST_DI_IIF_0(t, f) f
+#define BOOST_DI_IIF_1(t, f) t
+#define BOOST_DI_IIF_2(t, f) t
+#define BOOST_DI_IIF_3(t, f) t
+#define BOOST_DI_IIF_4(t, f) t
+#define BOOST_DI_IIF_5(t, f) t
+#define BOOST_DI_IIF_6(t, f) t
+#define BOOST_DI_IIF_7(t, f) t
+#define BOOST_DI_IIF_8(t, f) t
+#define BOOST_DI_IIF_9(t, f) t
+#define BOOST_DI_ELEM_I(n, ...) BOOST_DI_CAT(BOOST_DI_CAT(BOOST_DI_ELEM, n)(__VA_ARGS__,),)
+#define BOOST_DI_ELEM0(p1, ...) p1
+#define BOOST_DI_ELEM1(p1, p2, ...) p2
+#define BOOST_DI_ELEM2(p1, p2, p3, ...) p3
+#define BOOST_DI_ELEM3(p1, p2, p3, p4, ...) p4
+#define BOOST_DI_ELEM4(p1, p2, p3, p4, p5, ...) p5
+#define BOOST_DI_ELEM5(p1, p2, p3, p4, p5, p6, ...) p6
+#define BOOST_DI_ELEM6(p1, p2, p3, p4, p5, p6, p7, ...) p7
+#define BOOST_DI_ELEM7(p1, p2, p3, p4, p5, p6, p7, p8, ...) p8
+#define BOOST_DI_ELEM8(p1, p2, p3, p4, p5, p6, p7, p8, p9, ...) p9
+#define BOOST_DI_ELEM9(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, ...) p10
+#define BOOST_DI_REPEAT_N(i, m, ...) BOOST_DI_REPEAT_##i(m, __VA_ARGS__)
+#define BOOST_DI_REPEAT_1(m, ...) m(0, __VA_ARGS__)
+#define BOOST_DI_REPEAT_2(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__)
+#define BOOST_DI_REPEAT_3(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__)
+#define BOOST_DI_REPEAT_4(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__)
+#define BOOST_DI_REPEAT_5(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__)
+#define BOOST_DI_REPEAT_6(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__)
+#define BOOST_DI_REPEAT_7(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) m(6, __VA_ARGS__)
+#define BOOST_DI_REPEAT_8(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) m(6, __VA_ARGS__) m(7, __VA_ARGS__)
+#define BOOST_DI_REPEAT_9(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) m(6, __VA_ARGS__) m(7, __VA_ARGS__) m(8, __VA_ARGS__)
+#define BOOST_DI_REPEAT_10(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) m(6, __VA_ARGS__) m(7, __VA_ARGS__) m(8, __VA_ARGS__) m(9, __VA_ARGS__)
+#if defined(_MSC_VER)
+    #define BOOST_DI_VD_IBP_CAT(a, b) BOOST_DI_VD_IBP_CAT_I(a, b)
+    #define BOOST_DI_VD_IBP_CAT_I(a, b) BOOST_DI_VD_IBP_CAT_II(a ## b)
+    #define BOOST_DI_VD_IBP_CAT_II(res) res
+    #define BOOST_DI_IBP_SPLIT(i, ...) BOOST_DI_VD_IBP_CAT(BOOST_DI_IBP_PRIMITIVE_CAT(BOOST_DI_IBP_SPLIT_,i)(__VA_ARGS__),BOOST_DI_EMPTY())
+    #define BOOST_DI_IBP_IS_VARIADIC_C(...) 1 1
+    #define BOOST_DI_IBP_SPLIT_0(a, ...) a
+    #define BOOST_DI_IBP_SPLIT_1(a, ...) __VA_ARGS__
+    #define BOOST_DI_IBP_CAT(a, ...) BOOST_DI_IBP_PRIMITIVE_CAT(a,__VA_ARGS__)
+    #define BOOST_DI_IBP_PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
+    #define BOOST_DI_IBP_IS_VARIADIC_R_1 1,
+    #define BOOST_DI_IBP_IS_VARIADIC_R_BOOST_DI_IBP_IS_VARIADIC_C 0,
+    #define BOOST_DI_IBP(...) BOOST_DI_IBP_SPLIT(0, BOOST_DI_IBP_CAT(BOOST_DI_IBP_IS_VARIADIC_R_, BOOST_DI_IBP_IS_VARIADIC_C __VA_ARGS__))
+    #define BOOST_DI_IIF(bit, t, f) BOOST_DI_IIF_OO((bit, t, f))
+    #define BOOST_DI_IIF_OO(par) BOOST_DI_IIF_I ## par
+    #define BOOST_DI_IIF_I(bit, t, f) BOOST_DI_IIF_ ## bit(t, f)
+    #define BOOST_DI_DETAIL_IS_EMPTY_IIF_0(t, b) b
+    #define BOOST_DI_DETAIL_IS_EMPTY_IIF_1(t, b) t
+    #define BOOST_DI_DETAIL_IS_EMPTY_PROCESS(...) BOOST_DI_IBP(BOOST_DI_DETAIL_IS_EMPTY_NON_FUNCTION_C __VA_ARGS__ ())
+#else
+    #define BOOST_DI_IBP_SPLIT(i, ...) BOOST_DI_PRIMITIVE_CAT(BOOST_DI_IBP_SPLIT_, i)(__VA_ARGS__)
+    #define BOOST_DI_IBP_SPLIT_0(a, ...) a
+    #define BOOST_DI_IBP_SPLIT_1(a, ...) __VA_ARGS__
+    #define BOOST_DI_IBP_IS_VARIADIC_C(...) 1
+    #define BOOST_DI_IBP_IS_VARIADIC_R_1 1,
+    #define BOOST_DI_IBP_IS_VARIADIC_R_BOOST_DI_IBP_IS_VARIADIC_C 0,
+    #define BOOST_DI_IBP(...) BOOST_DI_IBP_SPLIT(0, BOOST_DI_CAT( BOOST_DI_IBP_IS_VARIADIC_R_, BOOST_DI_IBP_IS_VARIADIC_C __VA_ARGS__))
+    #define BOOST_DI_IIF(bit, t, f) BOOST_DI_IIF_I(bit, t, f)
+    #define BOOST_DI_IIF_I(bit, t, f) BOOST_DI_IIF_II(BOOST_DI_IIF_ ## bit(t, f))
+    #define BOOST_DI_IIF_II(id) id
+    #define BOOST_DI_DETAIL_IS_EMPTY_IIF_0(t, ...) __VA_ARGS__
+    #define BOOST_DI_DETAIL_IS_EMPTY_IIF_1(t, ...) t
+    #define BOOST_DI_DETAIL_IS_EMPTY_PROCESS(...) BOOST_DI_IBP(BOOST_DI_DETAIL_IS_EMPTY_NON_FUNCTION_C __VA_ARGS__ ())
+#endif
+namespace boost { namespace di { inline namespace v1 { namespace detail {
+template<class, class>
+struct named_type { };
+struct named_impl { template<class T> T operator=(const T&) const; };
+static constexpr BOOST_DI_UNUSED named_impl named{};
+template<class T, class TName>
+struct combine_impl {
+    using type = named_type<TName, T>;
+};
+template<class T>
+struct combine_impl<T, aux::none_type> {
+    using type = T;
+};
+template<class, class>
+struct combine;
+template<class... T1, class... T2>
+struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
+    using type = aux::type_list<typename combine_impl<T1, T2>::type...>;
+};
+template<class T1, class T2>
+using combine_t = typename combine<T1, T2>::type;
+}}}}
+#define BOOST_DI_GEN_CTOR_IMPL(p, i) \
+    BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
+    BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_EAT p, p)
+#define BOOST_DI_GEN_CTOR(i, ...) BOOST_DI_GEN_CTOR_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__,), i)
+#define BOOST_DI_GEN_ARG_NAME(p) BOOST_DI_GEN_ARG_NAME_IMPL p )
+#define BOOST_DI_GEN_NONE_TYPE(p) ::boost::di::aux::none_type
+#define BOOST_DI_GEN_ARG_NAME_IMPL(p) decltype(::boost::di::detail::p) BOOST_DI_EAT(
+#define BOOST_DI_GEN_NAME_IMPL(p, i) \
+    BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
+    BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_GEN_ARG_NAME, BOOST_DI_GEN_NONE_TYPE)(p)
+#define BOOST_DI_GEN_NAME(i, ...) BOOST_DI_GEN_NAME_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__,), i)
+#define BOOST_DI_INJECT_TRAITS_EMPTY_IMPL(...) \
+    using boost_di_inject__ BOOST_DI_UNUSED = ::boost::di::aux::type_list<>
+#define BOOST_DI_INJECT_TRAITS_IMPL(...) \
+    static void boost_di_inject_ctor__( \
+        BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__) \
+    ); \
+    static void boost_di_inject_name__( \
+        BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_NAME, __VA_ARGS__) \
+    ); \
+    using boost_di_inject__ BOOST_DI_UNUSED = ::boost::di::detail::combine_t< \
+        ::boost::di::aux::function_traits_t<decltype(boost_di_inject_ctor__)> \
+      , ::boost::di::aux::function_traits_t<decltype(boost_di_inject_name__)> \
+    >; \
+    static_assert( \
+        BOOST_DI_SIZE(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE \
+      , "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE" \
+    )
+#if !defined(BOOST_DI_INJECT_TRAITS)
+    #define BOOST_DI_INJECT_TRAITS(...) \
+        BOOST_DI_IF( \
+            BOOST_DI_IS_EMPTY(__VA_ARGS__) \
+          , BOOST_DI_INJECT_TRAITS_EMPTY_IMPL \
+          , BOOST_DI_INJECT_TRAITS_IMPL \
+        )(__VA_ARGS__)
+#endif
+#if !defined(BOOST_DI_INJECT_TRAITS_NO_LIMITS)
+    #define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
+        static void boost_di_inject_ctor__(__VA_ARGS__); \
+        using boost_di_inject__ BOOST_DI_UNUSED = \
+            ::boost::di::aux::function_traits_t<decltype(boost_di_inject_ctor__)>
+#endif
+#if !defined(BOOST_DI_INJECT)
+    #define BOOST_DI_INJECT(type, ...) \
+        BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
+        type(BOOST_DI_REPEAT( \
+            BOOST_DI_SIZE(__VA_ARGS__) \
+          , BOOST_DI_GEN_CTOR \
+          , __VA_ARGS__) \
+        )
+#endif
 #endif
 #endif
 

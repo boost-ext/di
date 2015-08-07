@@ -36,21 +36,17 @@ pph() {
     rm -rf tmp && mkdir tmp && cp -r boost tmp && cd tmp && touch type_traits
     find . -iname "*.hpp" | xargs sed -i "s/\(.*\)__pph__/\/\/\/\/\1/"
     tail -n +10 "boost/di/aux_/compiler.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
-    tail -n +10 "boost/di/aux_/preprocessor.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
-    tail -n +10 "boost/di/fwd.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
-    tail -n +11 "boost/di/aux_/utility.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
-    tail -n +14 "boost/di/aux_/type_traits.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
-    tail -n +15 "boost/di/inject.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
     g++ -std=c++1y -C -P -nostdinc -nostdinc++ -E -I. "boost/di.hpp" \
-        -D"BOOST_DI_HAS_TYPE(name, call_name)=template<class, class = void> struct name : std::false_type { }; template<class T> struct name<T, typename aux::void_t<typename T::call_name>::type> : std::true_type { }" \
-        -D"BOOST_DI_HAS_METHOD(name, call_name)=template<class T, class... TArgs> decltype(std::declval<T>().call_name(std::declval<TArgs>()...), std::true_type()) name##_impl(int); template<class, class...> std::false_type name##_impl(...); template<class T, class... TArgs> struct name : decltype(name##_impl<T, TArgs...>(0)) { }" \
         -DBOOST_DI_CFG_NO_PREPROCESSED_HEADERS \
         -DBOOST_DI_AUX_COMPILER_HPP \
         -DBOOST_DI_AUX_PREPROCESSOR_HPP \
-        -DBOOST_DI_AUX_TYPE_TRAITS_HPP \
-        -DBOOST_DI_AUX_UTILITY_HPP \
-        -DBOOST_DI_FWD_HPP \
-        -DBOOST_DI_INJECT_HPP 2>/dev/null | sed "s/\/\/\/\///" | g++ -P -E -I. -fpreprocessed -
+        -DBOOST_DI_INJECT_HPP 2>/dev/null | \
+            sed "s/\/\/\/\///" | \
+            sed "s/[ $]*#define/##define/g" | \
+            g++ -P -E -I. -fpreprocessed - 2>/dev/null | \
+            sed "s/^##define/#define/g"
+    tail -n +10 "boost/di/aux_/preprocessor.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
+    tail -n +15 "boost/di/inject.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
     cd .. && rm -rf tmp
     echo "#endif"
     echo "#endif"

@@ -7,20 +7,20 @@
 #ifndef BOOST_DI_FWD_HPP
 #define BOOST_DI_FWD_HPP
 
-#ifdef _LIBCPP_VERSION
+#ifdef _LIBCPP_VERSION // __pph__
 _LIBCPP_BEGIN_NAMESPACE_STD
-#else
+#else // __pph__
 namespace std {
-#endif
+#endif // __pph__
     template<class> class shared_ptr;
     template<class> class weak_ptr;
     template<class, class> class unique_ptr;
     template<class> struct char_traits;
-#ifdef _LIBCPP_VERSION
+#ifdef _LIBCPP_VERSION // __pph__
 _LIBCPP_END_NAMESPACE_STD
-#else
+#else // __pph__
 } // std
-#endif
+#endif // __pph__
 
 namespace std {
     template<class> class initializer_list;
@@ -37,6 +37,7 @@ namespace boost { namespace di { inline namespace v1 {
     template<class, class = void> struct ctor_traits;
     namespace providers { class heap; class stack_over_heap; }
     namespace core { template<class> struct any_type_fwd; template<class> struct any_type_ref_fwd; }
+    namespace detail { template<class, class> struct named_type; }
 }}} // boost::di::v1
 
 #endif

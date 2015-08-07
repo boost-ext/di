@@ -9,12 +9,15 @@
 
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
-#include "boost/di/inject.hpp"
 #include "boost/di/fwd.hpp"
+
+#if !defined(BOOST_DI_CFG_CTOR_LIMIT_SIZE) // __pph__
+    #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10 // __pph__
+#endif // __pph__
 
 namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 
-BOOST_DI_CALL(BOOST_DI_HAS_TYPE, BOOST_DI_CAT(has_, BOOST_DI_INJECTOR), BOOST_DI_INJECTOR);
+BOOST_DI_HAS_TYPE(is_injectable, boost_di_inject__);
 
 struct direct { };
 struct uniform { };
@@ -73,17 +76,17 @@ struct ctor<T, aux::type_list<TArgs...>>
 
 template<
     class T
-  , class = typename BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<T>::type
+  , class = typename is_injectable<T>::type
 > struct ctor_traits__;
 
 template<
     class T
-  , class = typename BOOST_DI_CAT(has_, BOOST_DI_INJECTOR)<di::ctor_traits<T>>::type
+  , class = typename is_injectable<di::ctor_traits<T>>::type
 > struct ctor_traits_impl;
 
 template<class T>
 struct ctor_traits__<T, std::true_type>
-    : aux::pair<direct, typename T::BOOST_DI_INJECTOR>
+    : aux::pair<direct, typename T::boost_di_inject__>
 { };
 
 template<class T>
@@ -93,7 +96,7 @@ struct ctor_traits__<T, std::false_type>
 
 template<class T>
 struct ctor_traits_impl<T, std::true_type>
-    : aux::pair<direct, typename di::ctor_traits<T>::BOOST_DI_INJECTOR>
+    : aux::pair<direct, typename di::ctor_traits<T>::boost_di_inject__>
 { };
 
 template<class T>
@@ -110,19 +113,19 @@ struct ctor_traits
 
 template<class T>
 struct ctor_traits<std::initializer_list<T>> {
-    using BOOST_DI_INJECTOR = aux::type_list<>;
+    using boost_di_inject__ = aux::type_list<>;
 };
 
 template<class T>
 struct ctor_traits<T, BOOST_DI_REQUIRES_T(
     std::is_same<std::char_traits<char>, typename T::traits_type>::value)> {
-    using BOOST_DI_INJECTOR = aux::type_list<>;
+    using boost_di_inject__ = aux::type_list<>;
 };
 
 template<class T>
 struct ctor_traits<T, BOOST_DI_REQUIRES_T(
     std::is_arithmetic<T>::value || std::is_enum<T>::value)> {
-    using BOOST_DI_INJECTOR = aux::type_list<>;
+    using boost_di_inject__ = aux::type_list<>;
 };
 
 }}} // boost::di::v1

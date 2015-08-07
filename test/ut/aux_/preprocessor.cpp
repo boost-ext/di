@@ -14,15 +14,6 @@ test cat = [] {
     expect(!i);
 };
 
-#if !defined(_MSC_VER)
-    test call = [] {
-        #define CAT BOOST_DI_CALL(BOOST_DI_CAT, in, t)
-            CAT i = 0;
-        #undef CAT
-        expect(!i);
-    };
-#endif
-
 test conditional = [] {
     expect_eq(false, BOOST_DI_IF(0, true, false));
     expect_eq(true, BOOST_DI_IF(1, true, false));
@@ -35,7 +26,7 @@ test args_size = [] {
     expect_eq(10, BOOST_DI_SIZE(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10));
 };
 
-test is_parenthesis = [] {
+test is_bracket = [] {
     expect(!BOOST_DI_IBP());
     expect(BOOST_DI_IBP(()));
     expect(BOOST_DI_IBP((named = name)));
