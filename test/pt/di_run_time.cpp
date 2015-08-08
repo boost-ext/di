@@ -20,10 +20,6 @@ struct file : std::string, TFStream {
     file(const std::string& name) // non explicit
         : std::string{name}, TFStream{name}
     { }
-
-    ~file() {
-        std::remove(this->c_str());
-    }
 };
 
 auto disassemble(const std::string& f, const std::string& progname, const std::regex& rgx) {
