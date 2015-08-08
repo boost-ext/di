@@ -8,20 +8,6 @@
 #define BOOST_DI_HPP
 #if (__cplusplus < 201305L && _MSC_VER < 1900)
 #error "Boost.DI requires C++14 support (Clang-3.4+, GCC-5.1+, MSVC-2015+)"
-#elif defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)
-#include "boost/di/config.hpp"
-#include "boost/di/bindings.hpp"
-#include "boost/di/inject.hpp"
-#include "boost/di/injector.hpp"
-#include "boost/di/make_injector.hpp"
-#include "boost/di/scopes/deduce.hpp"
-#include "boost/di/scopes/external.hpp"
-#include "boost/di/scopes/exposed.hpp"
-#include "boost/di/scopes/singleton.hpp"
-#include "boost/di/scopes/unique.hpp"
-#include "boost/di/policies/constructible.hpp"
-#include "boost/di/providers/heap.hpp"
-#include "boost/di/providers/stack_over_heap.hpp"
 #else
 #include <type_traits>
 #if defined(__clang__)

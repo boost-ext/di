@@ -17,30 +17,30 @@ pph() {
     echo "#define BOOST_DI_HPP"
     echo "#if (__cplusplus < 201305L && _MSC_VER < 1900)"
     echo "#error \"Boost.DI requires C++14 support (Clang-3.4+, GCC-5.1+, MSVC-2015+)\""
-    echo "#elif defined(BOOST_DI_CFG_NO_PREPROCESSED_HEADERS)"
-    echo "#include \"boost/di/config.hpp"\"
-    echo "#include \"boost/di/bindings.hpp"\"
-    echo "#include \"boost/di/inject.hpp\""
-    echo "#include \"boost/di/injector.hpp\""
-    echo "#include \"boost/di/make_injector.hpp\""
-    echo "#include \"boost/di/scopes/deduce.hpp\""
-    echo "#include \"boost/di/scopes/external.hpp\""
-    echo "#include \"boost/di/scopes/exposed.hpp\""
-    echo "#include \"boost/di/scopes/singleton.hpp\""
-    echo "#include \"boost/di/scopes/unique.hpp\""
-    echo "#include \"boost/di/policies/constructible.hpp\""
-    echo "#include \"boost/di/providers/heap.hpp\""
-    echo "#include \"boost/di/providers/stack_over_heap.hpp\""
     echo "#else"
     echo "#include <type_traits>"
     rm -rf tmp && mkdir tmp && cp -r boost tmp && cd tmp && touch type_traits
     find . -iname "*.hpp" | xargs sed -i "s/\(.*\)__pph__/\/\/\/\/\1/"
     tail -n +10 "boost/di/aux_/compiler.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
-    g++ -std=c++1y -C -P -nostdinc -nostdinc++ -E -I. "boost/di.hpp" \
-        -DBOOST_DI_CFG_NO_PREPROCESSED_HEADERS \
+
+    echo '#include "boost/di/config.hpp"
+          #include "boost/di/bindings.hpp"
+          #include "boost/di/inject.hpp"
+          #include "boost/di/injector.hpp"
+          #include "boost/di/make_injector.hpp"
+          #include "boost/di/scopes/deduce.hpp"
+          #include "boost/di/scopes/external.hpp"
+          #include "boost/di/scopes/exposed.hpp"
+          #include "boost/di/scopes/singleton.hpp"
+          #include "boost/di/scopes/unique.hpp"
+          #include "boost/di/policies/constructible.hpp"
+          #include "boost/di/providers/heap.hpp"
+          #include "boost/di/providers/stack_over_heap.hpp"' > tmp.hpp
+
+    g++ -std=c++1y -C -P -nostdinc -nostdinc++ -E -I. \
         -DBOOST_DI_AUX_COMPILER_HPP \
         -DBOOST_DI_AUX_PREPROCESSOR_HPP \
-        -DBOOST_DI_INJECT_HPP 2>/dev/null | \
+        -DBOOST_DI_INJECT_HPP tmp.hpp 2>/dev/null | \
             sed "s/\/\/\/\///" | \
             sed "s/[ $]*#define/##define/g" | \
             g++ -P -E -I. -fpreprocessed - 2>/dev/null | \

@@ -47,7 +47,7 @@ rule test ( std * : src + : property * : defines * : options * ) {
         toolset += <testing.launcher>$(memcheck) ;
     }
 
-    run $(src) : : : $(toolset) <define>BOOST_DI_CFG_NO_PREPROCESSED_HEADERS $(defines) : $(property) ;
+    run $(src) : : : $(toolset) $(defines) : $(property) ;
 }
 
 test-suite ut :
