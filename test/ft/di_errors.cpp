@@ -62,9 +62,9 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
             auto include = std::regex_replace(defines, include_rgx, "-include");
         #endif
 
-        std::string flags = "-I../include";
+        std::string flags = "-I../include -I../../include"; // bjam, cmake
         if (auto cxxflags = std::getenv("CXXFLAGS")) {
-            flags = cxxflags;
+            flags += " " + std::string{cxxflags};
         }
 
         command << compiler

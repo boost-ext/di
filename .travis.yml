@@ -203,7 +203,6 @@ install:
   export CXXFLAGS="-stdlib=libc++ -I${TRAVIS_BUILD_DIR}/libcxx/include"
   export LDFLAGS="-L${TRAVIS_BUILD_DIR}/libcxx/lib -lc++" &&
   export LD_LIBRARY_PATH="${TRAVIS_BUILD_DIR}/libcxx/lib:$LD_LIBRARY_PATH"; fi
-- export CXXFLAGS="$CXXFLAGS -I $PWD/include"
 
 script:
 - if [ "${TOOLSET}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2
