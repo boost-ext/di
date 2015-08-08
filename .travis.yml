@@ -197,12 +197,13 @@ before_script:
 - (cd build && ./bootstrap.sh)
 
 install:
-- export CXX=${COMPILER}
+- export CXX="${COMPILER}"
 - if [ "${LIBCXX}" != "" ]; then (svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx &&
   cd libcxx/lib && ./buildit && ln -f -s libc++.so.1.0 libc++.so.1) &&
   export CXXFLAGS="-stdlib=libc++ -I${TRAVIS_BUILD_DIR}/libcxx/include"
   export LDFLAGS="-L${TRAVIS_BUILD_DIR}/libcxx/lib -lc++" &&
   export LD_LIBRARY_PATH="${TRAVIS_BUILD_DIR}/libcxx/lib:$LD_LIBRARY_PATH"; fi
+- export CXXFLAGS="$CXXFLAGS -I $PWD/include"
 
 script:
 - if [ "${TOOLSET}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2

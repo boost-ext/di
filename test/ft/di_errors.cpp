@@ -57,20 +57,25 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
         auto include_rgx = std::regex{"<include>"};
 
         #if defined(_MSC_VER)
-            auto defines_ = std::regex_replace(defines, include_rgx, "/FI");
+            auto include = std::regex_replace(defines, include_rgx, "/FI");
         #else
-            auto defines_ = std::regex_replace(defines, include_rgx, "-include");
+            auto include = std::regex_replace(defines, include_rgx, "-include");
         #endif
 
+        std::string flags = "-I../include";
+        if (auto cxxflags = std::getenv("CXXFLAGS")) {
+            flags = cxxflags;
+        }
+
         command << compiler
-                << "  -I../include "
-                << defines_
+                << " " << flags
+                << " " << include
                 << " " << errors.str()
-                << " " << source_code << " "
+                << " " << source_code
         #if defined(_MSC_VER)
-                << ">"
+                << " >"
         #else
-                << "2>"
+                << " 2>"
         #endif
                 << " error" << id << ".out";
     }
