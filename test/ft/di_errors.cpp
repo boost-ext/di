@@ -39,12 +39,12 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
         std::stringstream errors;
         std::string compiler;
 
-        #if defined(__GNUC__)
-            compiler = "g++";
-            errors << "-c -std=c++1y -Werror ";
-        #elif defined(__clang__)
+        #if defined(__clang__)
             compiler = "clang++";
             errors << "-c -std=c++1y -Wno-all -Werror -Wno-error=deprecated-declarations";
+        #elif defined(__GNUC__) && !defined(__clang__)
+            compiler = "g++";
+            errors << "-c -std=c++1y -Werror ";
         #elif defined(_MSC_VER)
             compiler = "cl";
             errors << "/c /EHsc /W3 /WX";
@@ -237,8 +237,10 @@ test bind_to_different_types = [] {
 
 test create_polymorphic_type_without_binding = [] {
     auto errors_ = errors(
-            "creatable constraint not satisfied"
-          , "abstract_type<.*>::is_not_bound"
+        #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+            "creatable constraint not satisfied",
+        #endif
+            "abstract_type<.*>::is_not_bound"
         #if !defined(_MSC_VER)
           , "create<c>()"
           , "type not bound, did you forget to add: 'di::bind<interface, implementation>'?"
@@ -271,7 +273,7 @@ test ctor_inject_limit_out_of_range = [] {
 
 test ctor_limit_out_of_range = [] {
     auto errors_ = errors(
-    #if defined(__GNUC__)
+    #if defined(__GNUC__) && !defined(__clang__)
         "number_of_constructor_arguments_is_out_of_range_for<.*>::max<.*>.*= 3.*=.*c"
     #else
         "number_of_constructor_arguments_is_out_of_range_for<.*c>::max<3>"
@@ -306,8 +308,10 @@ test exposed_multiple_times = [] {
 
 test exposed_not_creatable = [] {
     auto errors_ = errors(
-            "creatable constraint not satisfied"
-          , "abstract_type<.*>::is_not_bound"
+        #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+            "creatable constraint not satisfied",
+        #endif
+           "abstract_type<.*>::is_not_bound"
         #if !defined(_MSC_VER)
           , "create<T>"
           , "type not bound, did you forget to add: 'di::bind<interface, implementation>'?"
@@ -329,8 +333,10 @@ test exposed_not_creatable = [] {
 
 test exposed_polymorphic_type_without_binding = [] {
     auto errors_ = errors(
-            "creatable constraint not satisfied"
-          , "abstract_type<.*>::is_not_bound"
+        #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+            "creatable constraint not satisfied",
+        #endif
+            "abstract_type<.*>::is_not_bound"
         #if !defined(_MSC_VER)
           , "create<T>"
           , "type not bound, did you forget to add: 'di::bind<interface, implementation>'?"
@@ -348,7 +354,7 @@ test exposed_polymorphic_type_without_binding = [] {
 
 test injector_ctor_ambiguous = [] {
     auto errors_ = errors(
-        #if defined(__GNUC__)
+        #if defined(__GNUC__) && !defined(__clang__)
             "number_of_constructor_arguments_is_out_of_range_for<.*>::max<.*>.*= 10.*=.*ctor"
         #else
             "number_of_constructor_arguments_is_out_of_range_for<.*ctor>::max<10>"
@@ -367,7 +373,9 @@ test injector_ctor_ambiguous = [] {
 
 test injector_shared_by_copy = [] {
     auto errors_ = errors(
+        #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
             "creatable constraint not satisfied",
+        #endif
             "type<.*>::is_not_convertible_to<.*>"
         #if !defined(_MSC_VER)
           , "wrapper is not convertible to requested type, did you mistake the scope?"
@@ -389,7 +397,9 @@ test injector_shared_by_copy = [] {
 
 test bind_wrapper_not_convertible = [] {
     auto errors_ = errors(
+        #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
             "creatable constraint not satisfied",
+        #endif
             "type<.*>::is_not_convertible_to<.*>"
         #if !defined(_MSC_VER)
           , "wrapper is not convertible to requested type, did you mistake the scope?"
@@ -436,8 +446,10 @@ test named_paramater_spelling = [] {
 
 test policy_constructible = [] {
     auto errors_ = errors(
+    #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
         "creatable constraint not satisfied",
-    #if defined(__GNUC__)
+    #endif
+    #if defined(__GNUC__) && !defined(__clang__)
         "type<.*>::not_allowed_by.*int",
         "type<.*>::not_allowed_by.*double",
         "type<.*>::not_allowed_by.*float",
@@ -474,7 +486,9 @@ test policy_constructible = [] {
 
 test scope_traits_external_not_referable = [] {
     auto errors_ = errors(
+        #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
             "creatable constraint not satisfied",
+        #endif
             "when_creating<.*>::type<.*>"
         #if !defined(_MSC_VER)
           , "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.to\\(value\\)`"
