@@ -198,7 +198,8 @@ before_script:
 
 install:
 - if [ "${LIBCXX}" != "" ]; then (export CXX=${LIBCXX} &&
-  svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx && cd libcxx/lib && ./buildit) &&
+  svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx &&
+  cd libcxx/lib && ./buildit && ln -f -s libc++.so.1.0 libc++.so) &&
   export CXXFLAGS="-stdlib=libc++ -I${TRAVIS_BUILD_DIR}/libcxx/include"
   export LDFLAGS="-L${TRAVIS_BUILD_DIR}/libcxx/lib -lc++" &&
   export LD_LIBRARY_PATH="${TRAVIS_BUILD_DIR}/libcxx/lib:$LD_LIBRARY_PATH"; fi
