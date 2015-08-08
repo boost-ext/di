@@ -199,9 +199,9 @@ before_script:
 install:
 - if [ "${LIBCXX}" != "" ]; then (export CXX=${LIBCXX} &&
   svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx && cd libcxx/lib && ./buildit) &&
-  export CXXFLAGS="-stdlib=libc++ -I${TRAVIS_BUILD_DIR}/libcxx/build/include/c++/v1/"
-  export LDFLAGS="-L${TRAVIS_BUILD_DIR}/libcxx/build/lib/ -lc++" &&
-  export LD_LIBRARY_PATH="${TRAVIS_BUILD_DIR}/libcxx/build/lib/:$LD_LIBRARY_PATH"; fi
+  export CXXFLAGS="-stdlib=libc++ -I${TRAVIS_BUILD_DIR}/libcxx/include"
+  export LDFLAGS="-L${TRAVIS_BUILD_DIR}/libcxx/lib -lc++" &&
+  export LD_LIBRARY_PATH="${TRAVIS_BUILD_DIR}/libcxx/lib:$LD_LIBRARY_PATH"; fi
 
 script:
 - if [ "${TOOLSET}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2
