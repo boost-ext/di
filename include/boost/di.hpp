@@ -428,10 +428,6 @@ struct shared<T*> {
     struct is_referable
         : std::true_type
     { };
-    template<class I>
-    struct is_referable<std::shared_ptr<I>>
-        : std::false_type
-    { };
     inline operator T&() noexcept {
         return *object;
     }
@@ -447,7 +443,11 @@ struct shared<T*> {
 };
 template<class T>
 struct shared<T&> {
-    shared(T& object)
+    template<class>
+    struct is_referable
+        : std::true_type
+    { };
+    explicit shared(T& object)
         : object(&object)
     { }
     template<class I, BOOST_DI_REQUIRES(std::is_convertible<T&, I>::value)>
