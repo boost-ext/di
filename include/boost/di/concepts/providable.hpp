@@ -11,17 +11,20 @@
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
 
-namespace boost { namespace di { inline namespace v1 {
+namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
-template<class>
-struct provider {
-    struct is_not_providable { };
-};
-
-namespace concepts {
+#define BOOST_DI_PROVIDABLE_ERROR \
+    static_assert(aux::constraint_not_satisfied<T>::value, "providable constraint not satisfied")
 
 template<class T>
-typename provider<T>::is_not_providable providable_impl(...);
+struct config {
+    struct is_not_providable { BOOST_DI_PROVIDABLE_ERROR; };
+};
+
+#undef BOOST_DI_PROVIDABLE_ERROR
+
+template<class T>
+typename config<T>::is_not_providable providable_impl(...);
 
 template<class T>
 auto providable_impl(T&& t) -> aux::is_valid_expr<

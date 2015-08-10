@@ -31,11 +31,8 @@ namespace boost {
 } // boost
 
 namespace boost { namespace di { inline namespace v1 {
-    class config;
     struct no_name { constexpr auto operator()() const noexcept { return ""; } };
-    template<class...> class injector;
     template<class, class = void> struct ctor_traits;
-    namespace providers { class heap; class stack_over_heap; }
     namespace core { template<class> struct any_type_fwd; template<class> struct any_type_ref_fwd; }
     namespace detail { template<class, class> struct named_type; }
 }}} // boost::di::v1

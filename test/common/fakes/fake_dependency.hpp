@@ -13,13 +13,13 @@
 
 namespace boost { namespace di { inline namespace v1 {
 
-template<class T, class TScope = fake_scope<>, class TIsReferable = std::false_type>
+template<class T, class TScope = fake_scope<>, class TIsReferable = std::false_type, class TName = no_name>
 struct fake_dependency : core::dependency_base, TScope::template scope<T, T> {
     using creator = typename TScope::template scope<T, T>;
     using expected = T;
     using given = T;
     using scope = TScope;
-    using name = no_name;
+    using name = TName;
     using priority = aux::none_type;
 
     template<class>

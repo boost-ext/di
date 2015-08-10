@@ -11,17 +11,24 @@
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/core/bindings.hpp"
 
-namespace boost { namespace di { inline namespace v1 {
+namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
-template<class...>
-struct bound_type {
-    struct is_bound_more_than_once { };
-    struct is_neither_a_dependency_nor_an_injector { };
-    struct has_disallowed_specifiers;
-    template<class> struct is_not_related_to { };
+#define BOOST_DI_BOUNDABLE_ERROR \
+    static_assert(aux::constraint_not_satisfied<T>::value, "boundable constraint not satisfied")
+
+template<class T, class...>
+struct bind {
+    template<class TName>
+    struct named {
+        struct is_bound_more_than_once  { BOOST_DI_BOUNDABLE_ERROR; };
+    };
+    struct is_bound_more_than_once  { BOOST_DI_BOUNDABLE_ERROR; };
+    struct is_neither_a_dependency_nor_an_injector { BOOST_DI_BOUNDABLE_ERROR; };
+    struct has_disallowed_specifiers { BOOST_DI_BOUNDABLE_ERROR; };
+    template<class> struct is_not_related_to { BOOST_DI_BOUNDABLE_ERROR; };
 };
 
-namespace concepts {
+#undef BOOST_DI_BOUNDABLE_ERROR
 
 template<class... TDeps>
 struct is_supported : std::is_same<
@@ -69,12 +76,17 @@ struct get_is_unique_error_impl
 
 template<class T, class TName, class TPriority>
 struct get_is_unique_error_impl<aux::not_unique<aux::pair<aux::pair<T, TName>, TPriority>>> {
-    using type = typename bound_type<T, TName>::is_bound_more_than_once;
+    using type = typename bind<T>::template named<TName>::is_bound_more_than_once;
+};
+
+template<class T, class TPriority>
+struct get_is_unique_error_impl<aux::not_unique<aux::pair<aux::pair<T, no_name>, TPriority>>> {
+    using type = typename bind<T>::is_bound_more_than_once;
 };
 
 template<class T>
 struct get_is_unique_error_impl<aux::not_unique<T>> {
-    using type = typename bound_type<T>::is_bound_more_than_once;
+    using type = typename bind<T>::is_bound_more_than_once;
 };
 
 template<class>
@@ -90,8 +102,7 @@ using get_bindings_error =
     std::conditional_t<
         is_supported<TDeps...>::value
       , typename get_is_unique_error<core::bindings_t<TDeps...>>::type
-      , typename bound_type<typename get_not_supported<TDeps...>::type>::
-            is_neither_a_dependency_nor_an_injector
+      , typename bind<typename get_not_supported<TDeps...>::type>::is_neither_a_dependency_nor_an_injector
     >;
 
 template<class... Ts>
@@ -109,14 +120,14 @@ template<class I, class T> // expected -> given
 auto boundable_impl(I&&, T&&) ->
     std::conditional_t<
         !std::is_same<I, aux::remove_specifiers_t<I>>::value
-      , typename bound_type<I>::has_disallowed_specifiers
+      , typename bind<I>::has_disallowed_specifiers
       , std::conditional_t<
             !std::is_same<T, aux::remove_specifiers_t<T>>::value
-          , typename bound_type<T>::has_disallowed_specifiers
+          , typename bind<T>::has_disallowed_specifiers
           , std::conditional_t<
                 std::is_base_of<I, T>::value || std::is_convertible<T, I>::value
               , std::true_type
-              , typename bound_type<T>::template is_not_related_to<I>
+              , typename bind<T>::template is_not_related_to<I>
             >
         >
     >;

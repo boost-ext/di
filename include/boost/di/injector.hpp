@@ -24,21 +24,16 @@ void
     create
 (const std::false_type&) { }
 
-} // namespace detail
+template<class T, class...>
+class injector :
+    T { };
 
 template<class... T>
-class injector : public
-     BOOST_DI_REQUIRES_MSG_T(concepts::boundable<aux::type<T...>>
-                           , core::injector<::BOOST_DI_CFG, core::pool<>, T...>) {
+class injector<std::true_type, T...>
+    : public core::injector<::BOOST_DI_CFG, core::pool<>, T...> {
 public:
-    template<
-        class TConfig
-      , class TPolicies
-      , class... TDeps
-        #if defined(__GNUC__) // __pph__
-          , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>)
-        #endif // __pph__
-    > injector(const core::injector<TConfig, TPolicies, TDeps...>& injector) noexcept // non explicit
+    template<class TConfig, class TPolicies, class... TDeps>
+    injector(const core::injector<TConfig, TPolicies, TDeps...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, core::pool<>, T...>(injector) {
             using injector_t = core::injector<TConfig, TPolicies, TDeps...>;
             int _[]{0, (
@@ -51,6 +46,11 @@ public:
             , 0)...}; (void)_;
     }
 };
+
+} // namespace detail
+
+template<class... T>
+using injector = detail::injector<concepts::boundable<aux::type<T...>>, T...>;
 
 }}} // boost::di::v1
 

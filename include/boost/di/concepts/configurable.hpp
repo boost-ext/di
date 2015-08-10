@@ -11,14 +11,7 @@
 #include "boost/di/concepts/providable.hpp"
 #include "boost/di/concepts/callable.hpp"
 
-namespace boost { namespace di { inline namespace v1 {
-
-template<class>
-struct config_type {
-    struct is_not_configurable { };
-};
-
-namespace concepts {
+namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
 std::false_type configurable_impl(...);
 
@@ -58,7 +51,7 @@ auto is_configurable(const std::true_type&) {
 
 template<class T>
 auto is_configurable(const std::false_type&) {
-    return typename config_type<T>::is_not_configurable{};
+    return typename policy<T>::is_not_configurable{};
 }
 
 template<class T>

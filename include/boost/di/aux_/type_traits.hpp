@@ -32,29 +32,14 @@
     template<class T, class... TArgs>                               \
     struct name : decltype(name##_impl<T, TArgs...>(0)) { }
 
-#define BOOST_DI_REQUIRES(...) typename std::enable_if<__VA_ARGS__, int>::type = 0 // __pph__
-#define BOOST_DI_REQUIRES_T(...) std::enable_if_t<__VA_ARGS__> // __pph__
-#define BOOST_DI_REQUIRES_MSG(...) typename constraint_not_satisfied<__VA_ARGS__>::type = 0 // __pph__
-#define BOOST_DI_REQUIRES_MSG_T(...) constraint_not_satisfied<__VA_ARGS__>::type // __pph__
+#define BOOST_DI_REQUIRES(...) typename ::std::enable_if<__VA_ARGS__, int>::type = 0 // __pph__
+#define BOOST_DI_REQUIRES_T(...) ::std::enable_if_t<__VA_ARGS__> // __pph__
+#define BOOST_DI_REQUIRES_(...) typename __VA_ARGS__::value_type = 0 // __pph__
 
-namespace boost { namespace di { inline namespace v1 {
+namespace boost { namespace di { inline namespace v1 { namespace aux {
 
-template<class... Ts>
-struct constraint_not_satisfied {
-    static_assert(aux::never<Ts...>::value, "constraint not satisfied"); // for msvc
-};
-
-template<>
-struct constraint_not_satisfied<std::true_type> {
-    using type = int;
-};
-
-template<class T>
-struct constraint_not_satisfied<std::true_type, T> {
-    using type = T;
-};
-
-namespace aux {
+template<class...>
+struct constraint_not_satisfied : std::false_type { };
 
 template<class...>
 using is_valid_expr = std::true_type;

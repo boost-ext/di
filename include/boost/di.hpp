@@ -139,32 +139,17 @@ namespace boost {
     template<class> class shared_ptr;
 }
 namespace boost { namespace di { inline namespace v1 {
-    class config;
     struct no_name { constexpr auto operator()() const noexcept { return ""; } };
-    template<class...> class injector;
     template<class, class = void> struct ctor_traits;
-    namespace providers { class heap; class stack_over_heap; }
     namespace core { template<class> struct any_type_fwd; template<class> struct any_type_ref_fwd; }
     namespace detail { template<class, class> struct named_type; }
 }}}
-#define BOOST_DI_REQUIRES(...) typename std::enable_if<__VA_ARGS__, int>::type = 0
-#define BOOST_DI_REQUIRES_T(...) std::enable_if_t<__VA_ARGS__>
-#define BOOST_DI_REQUIRES_MSG(...) typename constraint_not_satisfied<__VA_ARGS__>::type = 0
-#define BOOST_DI_REQUIRES_MSG_T(...) constraint_not_satisfied<__VA_ARGS__>::type
-namespace boost { namespace di { inline namespace v1 {
-template<class... Ts>
-struct constraint_not_satisfied {
-    static_assert(aux::never<Ts...>::value, "constraint not satisfied");
-};
-template<>
-struct constraint_not_satisfied<std::true_type> {
-    using type = int;
-};
-template<class T>
-struct constraint_not_satisfied<std::true_type, T> {
-    using type = T;
-};
-namespace aux {
+#define BOOST_DI_REQUIRES(...) typename ::std::enable_if<__VA_ARGS__, int>::type = 0
+#define BOOST_DI_REQUIRES_T(...) ::std::enable_if_t<__VA_ARGS__>
+#define BOOST_DI_REQUIRES_(...) typename __VA_ARGS__::value_type = 0
+namespace boost { namespace di { inline namespace v1 { namespace aux {
+template<class...>
+struct constraint_not_satisfied : std::false_type { };
 template<class...>
 using is_valid_expr = std::true_type;
 template<class T, class... TArgs>
@@ -1063,13 +1048,12 @@ public:
 template<class T>
 struct is_dependency : std::is_base_of<dependency_base, T> { };
 }}}}
-namespace boost { namespace di { inline namespace v1 {
-template<class...>
+namespace boost { namespace di { inline namespace v1 { namespace concepts {
+template<class T>
 struct policy {
-    struct is_not_callable { };
-    struct is_not_configurable { };
+    struct is_not_callable { static_assert(aux::constraint_not_satisfied<T>::value, "callable constraint not satisfied"); };
+    struct is_not_configurable { static_assert(aux::constraint_not_satisfied<T>::value, "callable constraint not satisfied"); };
 };
-namespace concepts {
 struct arg {
     using type = void;
     using name = no_name;
@@ -1114,7 +1098,7 @@ struct is_callable<core::pool<aux::type_list<Ts...>>>
 { };
 template<>
 struct is_callable<void> {
-    using type = policy<>::is_not_configurable;
+    using type = typename policy<void>::is_not_configurable;
 };
 template<class... Ts>
 using callable = typename is_callable<Ts...>::type;
@@ -1122,7 +1106,7 @@ using callable = typename is_callable<Ts...>::type;
 #if !defined(BOOST_DI_CONCEPTS_CREATABLE_ATTR)
 #define BOOST_DI_CONCEPTS_CREATABLE_ATTR BOOST_DI_DEPRECATED("creatable constraint not satisfied")
 #endif
-namespace boost { namespace di { inline namespace v1 {
+namespace boost { namespace di { inline namespace v1 { namespace concepts {
 template<class T>
 struct abstract_type {
 struct is_not_bound {
@@ -1276,7 +1260,6 @@ template<int TMax> struct max {
     static inline T*
     error(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters");
 };};
-namespace concepts {
 template<class>
 struct ctor_size;
 template<class TInit, class... TCtor>
@@ -1372,7 +1355,7 @@ public:
 #define BOOST_DI_CFG boost::di::config
 #endif
 namespace boost { namespace di { inline namespace v1 {
-template<class... TPolicies, BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>)>
+template<class... TPolicies, BOOST_DI_REQUIRES_(concepts::callable<TPolicies...>)>
 inline auto make_policies(const TPolicies&... args) noexcept {
     return core::pool_t<TPolicies...>(args...);
 }
@@ -1427,15 +1410,18 @@ struct add_type_list<T, std::false_type, std::false_type> {
     using bindings_t = aux::join_t<typename add_type_list<Ts>::type...>;
 #endif
 }}}}
-namespace boost { namespace di { inline namespace v1 {
-template<class...>
-struct bound_type {
-    struct is_bound_more_than_once { };
-    struct is_neither_a_dependency_nor_an_injector { };
-    struct has_disallowed_specifiers;
-    template<class> struct is_not_related_to { };
+namespace boost { namespace di { inline namespace v1 { namespace concepts {
+template<class T, class...>
+struct bind {
+    template<class TName>
+    struct named {
+        struct is_bound_more_than_once { static_assert(aux::constraint_not_satisfied<T>::value, "boundable constraint not satisfied"); };
+    };
+    struct is_bound_more_than_once { static_assert(aux::constraint_not_satisfied<T>::value, "boundable constraint not satisfied"); };
+    struct is_neither_a_dependency_nor_an_injector { static_assert(aux::constraint_not_satisfied<T>::value, "boundable constraint not satisfied"); };
+    struct has_disallowed_specifiers { static_assert(aux::constraint_not_satisfied<T>::value, "boundable constraint not satisfied"); };
+    template<class> struct is_not_related_to { static_assert(aux::constraint_not_satisfied<T>::value, "boundable constraint not satisfied"); };
 };
-namespace concepts {
 template<class... TDeps>
 struct is_supported : std::is_same<
    aux::bool_list<aux::always<TDeps>::value...>
@@ -1474,11 +1460,15 @@ struct get_is_unique_error_impl
 { };
 template<class T, class TName, class TPriority>
 struct get_is_unique_error_impl<aux::not_unique<aux::pair<aux::pair<T, TName>, TPriority>>> {
-    using type = typename bound_type<T, TName>::is_bound_more_than_once;
+    using type = typename bind<T>::template named<TName>::is_bound_more_than_once;
+};
+template<class T, class TPriority>
+struct get_is_unique_error_impl<aux::not_unique<aux::pair<aux::pair<T, no_name>, TPriority>>> {
+    using type = typename bind<T>::is_bound_more_than_once;
 };
 template<class T>
 struct get_is_unique_error_impl<aux::not_unique<T>> {
-    using type = typename bound_type<T>::is_bound_more_than_once;
+    using type = typename bind<T>::is_bound_more_than_once;
 };
 template<class>
 struct get_is_unique_error;
@@ -1491,8 +1481,7 @@ using get_bindings_error =
     std::conditional_t<
         is_supported<TDeps...>::value
       , typename get_is_unique_error<core::bindings_t<TDeps...>>::type
-      , typename bound_type<typename get_not_supported<TDeps...>::type>::
-            is_neither_a_dependency_nor_an_injector
+      , typename bind<typename get_not_supported<TDeps...>::type>::is_neither_a_dependency_nor_an_injector
     >;
 template<class... Ts>
 using get_any_of_error =
@@ -1508,14 +1497,14 @@ template<class I, class T>
 auto boundable_impl(I&&, T&&) ->
     std::conditional_t<
         !std::is_same<I, aux::remove_specifiers_t<I>>::value
-      , typename bound_type<I>::has_disallowed_specifiers
+      , typename bind<I>::has_disallowed_specifiers
       , std::conditional_t<
             !std::is_same<T, aux::remove_specifiers_t<T>>::value
-          , typename bound_type<T>::has_disallowed_specifiers
+          , typename bind<T>::has_disallowed_specifiers
           , std::conditional_t<
                 std::is_base_of<I, T>::value || std::is_convertible<T, I>::value
               , std::true_type
-              , typename bound_type<T>::template is_not_related_to<I>
+              , typename bind<T>::template is_not_related_to<I>
             >
         >
     >;
@@ -1547,7 +1536,7 @@ using any_of = decltype(detail::any_of<T1, T2, Ts...>());
 template<
     class TExpected
   , class TGiven = TExpected
-  , BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, TGiven>)
+  , BOOST_DI_REQUIRES_(concepts::boundable<TExpected, TGiven>)
 >
 #if defined(__cpp_variable_templates)
     core::dependency<scopes::deduce, TExpected, TGiven> bind{};
@@ -1898,10 +1887,10 @@ template<class T, class TWrapper>
 struct wrapper_impl<T, TWrapper, BOOST_DI_REQUIRES_T(!std::is_convertible<TWrapper, T>::value)> {
     using element_type = T;
     inline operator T() const noexcept {
-        return typename type<TWrapper>::template is_not_convertible_to<T>{};
+        return typename concepts::type<TWrapper>::template is_not_convertible_to<T>{};
     }
     inline operator T() noexcept {
-        return typename type<TWrapper>::template is_not_convertible_to<T>{};
+        return typename concepts::type<TWrapper>::template is_not_convertible_to<T>{};
     }
     TWrapper wrapper_;
 };
@@ -2250,14 +2239,13 @@ private:
 };
 }}
 }}
-namespace boost { namespace di { inline namespace v1 {
-template<class>
-struct provider {
-    struct is_not_providable { };
-};
-namespace concepts {
+namespace boost { namespace di { inline namespace v1 { namespace concepts {
 template<class T>
-typename provider<T>::is_not_providable providable_impl(...);
+struct config {
+    struct is_not_providable { static_assert(aux::constraint_not_satisfied<T>::value, "providable constraint not satisfied"); };
+};
+template<class T>
+typename config<T>::is_not_providable providable_impl(...);
 template<class T>
 auto providable_impl(T&& t) -> aux::is_valid_expr<
     decltype(t.template get<_, _>(type_traits::direct{}, type_traits::heap{}))
@@ -2274,12 +2262,7 @@ struct providable__ {
 template<class T>
 using providable = typename providable__<T>::type;
 }}}}
-namespace boost { namespace di { inline namespace v1 {
-template<class>
-struct config_type {
-    struct is_not_configurable { };
-};
-namespace concepts {
+namespace boost { namespace di { inline namespace v1 { namespace concepts {
 std::false_type configurable_impl(...);
 template<class T>
 auto configurable_impl(T&& t) -> aux::is_valid_expr<
@@ -2311,7 +2294,7 @@ auto is_configurable(const std::true_type&) {
 }
 template<class T>
 auto is_configurable(const std::false_type&) {
-    return typename config_type<T>::is_not_configurable{};
+    return typename policy<T>::is_not_configurable{};
 }
 template<class T>
 struct configurable__ {
@@ -2328,20 +2311,15 @@ BOOST_DI_CONCEPTS_CREATABLE_ATTR
 void
     create
 (const std::false_type&) { }
-}
+template<class T, class...>
+class injector :
+    T { };
 template<class... T>
-class injector : public
-     BOOST_DI_REQUIRES_MSG_T(concepts::boundable<aux::type<T...>>
-                           , core::injector<::BOOST_DI_CFG, core::pool<>, T...>) {
+class injector<std::true_type, T...>
+    : public core::injector<::BOOST_DI_CFG, core::pool<>, T...> {
 public:
-    template<
-        class TConfig
-      , class TPolicies
-      , class... TDeps
-        #if defined(__GNUC__)
-          , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>)
-        #endif
-    > injector(const core::injector<TConfig, TPolicies, TDeps...>& injector) noexcept
+    template<class TConfig, class TPolicies, class... TDeps>
+    injector(const core::injector<TConfig, TPolicies, TDeps...>& injector) noexcept
         : core::injector<::BOOST_DI_CFG, core::pool<>, T...>(injector) {
             using injector_t = core::injector<TConfig, TPolicies, TDeps...>;
             int _[]{0, (
@@ -2354,13 +2332,16 @@ public:
             , 0)...}; (void)_;
     }
 };
+}
+template<class... T>
+using injector = detail::injector<concepts::boundable<aux::type<T...>>, T...>;
 }}}
 namespace boost { namespace di { inline namespace v1 {
 template<
      class TConfig = ::BOOST_DI_CFG
    , class... TDeps
-   , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type_list<TDeps...>>)
-   , BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>)
+   , BOOST_DI_REQUIRES_(concepts::boundable<aux::type_list<TDeps...>>)
+   , BOOST_DI_REQUIRES_(concepts::configurable<TConfig>)
 > inline auto make_injector(const TDeps&... args) noexcept {
     return core::injector<TConfig, decltype(((TConfig*)0)->policies(0)), TDeps...>{core::init{}, args...};
 }

@@ -52,11 +52,11 @@ struct wrapper_impl<T, TWrapper, BOOST_DI_REQUIRES_T(!std::is_convertible<TWrapp
     using element_type = T;
 
     inline operator T() const noexcept {
-        return typename type<TWrapper>::template is_not_convertible_to<T>{};
+        return typename concepts::type<TWrapper>::template is_not_convertible_to<T>{};
     }
 
     inline operator T() noexcept {
-        return typename type<TWrapper>::template is_not_convertible_to<T>{};
+        return typename concepts::type<TWrapper>::template is_not_convertible_to<T>{};
     }
 
     TWrapper wrapper_;

@@ -16,7 +16,7 @@
     #define BOOST_DI_CONCEPTS_CREATABLE_ATTR BOOST_DI_DEPRECATED("creatable constraint not satisfied") // __pph__
 #endif // __pph__
 
-namespace boost { namespace di { inline namespace v1 {
+namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
 template<class T>
 struct abstract_type {
@@ -201,8 +201,6 @@ template<int TMax> struct max {
     static inline T*
     error(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters");
 };};
-
-namespace concepts {
 
 template<class>
 struct ctor_size;

@@ -13,15 +13,18 @@
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/fwd.hpp"
 
-namespace boost { namespace di { inline namespace v1 {
+namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
-template<class...>
+#define BOOST_DI_CALLABLE_ERROR \
+    static_assert(aux::constraint_not_satisfied<T>::value, "callable constraint not satisfied")
+
+template<class T>
 struct policy {
-    struct is_not_callable { };
-    struct is_not_configurable { };
+    struct is_not_callable { BOOST_DI_CALLABLE_ERROR; };
+    struct is_not_configurable { BOOST_DI_CALLABLE_ERROR; };
 };
 
-namespace concepts {
+#undef BOOST_DI_CALLABLE_ERROR
 
 struct arg {
     using type = void;
@@ -79,7 +82,7 @@ struct is_callable<core::pool<aux::type_list<Ts...>>>
 
 template<>
 struct is_callable<void> { // auto
-    using type = policy<>::is_not_configurable;
+    using type = typename policy<void>::is_not_configurable;
 };
 
 template<class... Ts>
