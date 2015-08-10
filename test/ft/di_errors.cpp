@@ -115,12 +115,10 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
 
 test bind_external_repeated = [] {
     auto errors_ = errors(
-        #if defined(_MSC_VER)
-            "constraint_not_satisfied<.*type<T,TName,is_bound_more_than_once>",
-            "T=.*int",
-            "TName=.*no_name"
-        #else
             "boundable constraint not satisfied",
+        #if defined(_MSC_VER)
+            "bind<.*>::is_bound_more_than_once", "=.*int"
+        #else
             "bind<.*int>::is_bound_more_than_once"
         #endif
     );
@@ -154,12 +152,10 @@ test bind_external_with_given_type = [] {
 
 test bind_multiple_times = [] {
     auto errors_ = errors(
-        #if defined(_MSC_VER)
-            "constraint_not_satisfied<.*bound_type<T,TName>::is_bound_more_than_once",
-            "T=.*i",
-            "TName=.*no_name"
-        #else
             "boundable constraint not satisfied",
+        #if defined(_MSC_VER)
+            "bind<.*>::is_bound_more_than_once", "=.*i"
+        #else
             "bind<.*i>::is_bound_more_than_once"
         #endif
     );
@@ -178,11 +174,11 @@ test bind_multiple_times = [] {
 
 test bind_not_compatible_types = [] {
     auto errors_ = errors(
+            "boundable constraint not satisfied",
         #if defined(_MSC_VER)
-            "constraint_not_satisfied<.*bound_type<.*>::is_not_related_to<int>",
+            "bind<.*>::is_not_related_to<int>",
             "=.*impl"
         #else
-            "boundable constraint not satisfied",
             "bind<.*impl>::is_not_related_to<int>"
         #endif
     );
@@ -201,12 +197,10 @@ test bind_not_compatible_types = [] {
 
 test bind_repeated = [] {
     auto errors_ = errors(
-        #if defined(_MSC_VER)
-            "constraint_not_satisfied<.*bound_type<T,TName>::is_bound_more_than_once",
-            "T=.*i",
-            "TName=.*no_name"
-        #else
             "boundable constraint not satisfied",
+        #if defined(_MSC_VER)
+            "bind<.*>::is_bound_more_than_once", "=.*i"
+        #else
             "bind<.*i>::is_bound_more_than_once"
         #endif
     );
@@ -225,12 +219,10 @@ test bind_repeated = [] {
 
 test bind_to_different_types = [] {
     auto errors_ = errors(
-        #if defined(_MSC_VER)
-            "constraint_not_satisfied<.*bound_type<T,TName>::is_bound_more_than_once",
-            "T=.*i",
-            "TName=.*no_name"
-        #else
             "boundable constraint not satisfied",
+        #if defined(_MSC_VER)
+            "bind<.*>::is_bound_more_than_once", "=.*i"
+        #else
             "bind<.*i>::is_bound_more_than_once"
         #endif
     );
@@ -304,11 +296,10 @@ test ctor_limit_out_of_range = [] {
 
 test exposed_multiple_times = [] {
     auto errors_ = errors(
-        #if defined(_MSC_VER)
-            "constraint_not_satisfied<.*bound_type<T>::is_bound_more_than_once",
-            "T=.*c"
-        #else
             "boundable constraint not satisfied",
+        #if defined(_MSC_VER)
+            "bind<.*>::is_bound_more_than_once", "=.*c"
+        #else
             "bind<.*c>::is_bound_more_than_once"
         #endif
     );
@@ -434,11 +425,10 @@ test bind_wrapper_not_convertible = [] {
 
 test make_injector_wrong_arg = [] {
     auto errors_ = errors(
-        #if defined(_MSC_VER)
-            "constraint_not_satisfied<.*bound_type<T>::is_neither_a_dependency_nor_an_injector",
-            "T=.*neither_module_nor_injector_nor_module"
-        #else
             "boundable constraint not satisfied",
+        #if defined(_MSC_VER)
+            "bind<.*>::is_neither_a_dependency_nor_an_injector", "=.*neither_module_nor_injector_nor_module"
+        #else
             "bind<.*neither_module_nor_injector_nor_module>::is_neither_a_dependency_nor_an_injector"
         #endif
     );
