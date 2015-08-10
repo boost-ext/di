@@ -82,7 +82,7 @@ struct is_callable<core::pool<aux::type_list<Ts...>>>
 
 template<>
 struct is_callable<void> { // auto
-    using type = typename policy<void>::is_not_configurable;
+    using type = policy<void>::is_not_configurable;
 };
 
 template<class... Ts>
