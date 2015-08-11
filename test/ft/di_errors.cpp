@@ -10,8 +10,9 @@
 #include <stdexcept>
 #include <fstream>
 #include <regex>
-#include <string>
 #include <vector>
+#include <string>
+#include <sstream>
 #include <iostream>
 
 namespace {
