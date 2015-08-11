@@ -43,7 +43,7 @@ test call = [] {
         policies, dep, aux::pair<type_traits::direct, aux::type_list<>>{}
     );
 
-    expect_eq(1, fake_policy::calls());
+    expect(1 == fake_policy::calls());
 };
 
 test call_long = [] {
@@ -55,7 +55,7 @@ test call_long = [] {
         policies, dep, aux::pair<type_traits::direct, aux::type_list<>>{}
     );
 
-    expect_eq(1, fake_policy_long::calls());
+    expect(1 == fake_policy_long::calls());
 };
 
 test call_policies = [] {
@@ -68,8 +68,8 @@ test call_policies = [] {
         policies, dep, aux::pair<type_traits::direct, aux::type_list<>>{}
     );
 
-    expect_eq(1, fake_policy::calls());
-    expect_eq(1, fake_policy_long::calls());
+    expect(1 == fake_policy::calls());
+    expect(1 == fake_policy_long::calls());
 };
 
 }}}} // boost::di::v1::core

@@ -13,7 +13,7 @@ test create_shared = [] {
     shared::scope<int, int> shared;
     std::shared_ptr<int> object1 = shared.create<int>(fake_provider<int>{});
     std::shared_ptr<int> object2 = shared.create<int>(fake_provider<int>{});
-    expect_eq(object1, object2);
+    expect(object1 == object2);
 };
 
 }}}} // boost::di::v1::scopes

@@ -18,32 +18,32 @@ struct implementation : public interface { virtual void dummy() { }; };
 
 test from_arithmetic = [] {
     const int i = 42;
-    expect_eq(i, static_cast<int>(external::scope<int, int>{i}.create<void>(fake_provider<>{})));
+    expect(i == static_cast<int>(external::scope<int, int>{i}.create<void>(fake_provider<>{})));
 };
 
 test from_string = [] {
     const std::string s = "string";
     std::string object = external::scope<std::string, std::string>{s}.create<void>(fake_provider<>{});
-    expect_eq(s, object);
+    expect(s == object);
 };
 
 test from_ref = [] {
     struct c { } c_;
     c& c_ref_ = external::scope<c, c&>{c_}.create<void>(fake_provider<>{});
-    expect_eq(&c_, &c_ref_);
+    expect(&c_ == &c_ref_);
 };
 
 test from_const_ref = [] {
     struct c { } c_;
     const c& c_ref_ = external::scope<c, c&>{c_}.create<void>(fake_provider<>{});
-    expect_eq(&c_, &c_ref_);
+    expect(&c_ == &c_ref_);
 };
 
 test from_shared_ptr = [] {
     struct c { };
     auto c_ = std::make_shared<c>();
     std::shared_ptr<c> sp_c = external::scope<c, std::shared_ptr<c>>{c_}.create<void>(fake_provider<>{});
-    expect_eq(c_, sp_c);
+    expect(c_ == sp_c);
 };
 
 test from_context = [] {
@@ -73,7 +73,7 @@ test from_context = [] {
 test from_if_shared_ptr = [] {
     auto i = std::make_shared<implementation>();
     std::shared_ptr<interface> c = external::scope<interface, std::shared_ptr<interface>>{i}.create<void>(fake_provider<>{});
-    expect_eq(i, c);
+    expect(i == c);
 };
 
 test from_function_expr = [] {
@@ -95,7 +95,7 @@ test from_function_expr = [] {
     {
     flag = true;
     std::shared_ptr<interface> sp = external.create<void>(fake_provider<>{});
-    expect_eq(nullptr, sp);
+    expect(nullptr == sp);
     }
 };
 
@@ -104,7 +104,7 @@ test from_function_expr = [] {
         constexpr auto i = 42;
         external::scope<std::function<int()>, std::function<int()>> external{[&]{ return i; }};
         std::function<int()> f = external.create<void>(fake_provider<>{});
-        expect_eq(i, f());
+        expect(i == f());
     };
 #endif
 
@@ -114,7 +114,7 @@ test from_fucntion_expr_with_injector = [] {
     };
 
     external::scope<int, decltype(expr)> external{expr};
-    expect_eq(0, static_cast<int>(external.create<void>(fake_provider<int>{})));
+    expect(0 == static_cast<int>(external.create<void>(fake_provider<int>{})));
 };
 
 }}}} // boost::di::v1::scopes

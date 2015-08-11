@@ -46,13 +46,13 @@ test call_policies_via_global_config = [] {
     global_called = 0;
     auto injector = di::make_injector();
     injector.create<int>();
-    expect_eq(1, global_called);
+    expect(1 == global_called);
 };
 
 test call_custom_policies_although_global_config = [] {
     custom_called = 0;
     auto injector = di::make_injector<custom_policies>();
     injector.create<int>();
-    expect_eq(1, custom_called);
+    expect(1 == custom_called);
 };
 

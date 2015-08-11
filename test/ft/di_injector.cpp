@@ -22,7 +22,7 @@ struct complex1 {
 
 test empty_injector = [] {
     auto injector = di::make_injector();
-    expect_eq(0, injector.create<int>());
+    expect(0 == injector.create<int>());
 };
 
 test create_using_copy = [] {

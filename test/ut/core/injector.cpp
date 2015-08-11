@@ -43,12 +43,12 @@ test ctor_injector = [] {
 
 test create = [] {
     injector<di::config> injector_{core::init{}};
-    expect_eq(0, injector_.create<int>());
+    expect(0 == injector_.create<int>());
 };
 
 test conversion = [] {
     injector<di::config> injector_{core::init{}};
-    expect_eq(0, (int)injector_);
+    expect(0 == (int)injector_);
 };
 
 }}}} // boost::di::v1::core

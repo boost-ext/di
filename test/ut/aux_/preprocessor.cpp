@@ -15,15 +15,15 @@ test cat = [] {
 };
 
 test conditional = [] {
-    expect_eq(false, BOOST_DI_IF(0, true, false));
-    expect_eq(true, BOOST_DI_IF(1, true, false));
+    expect(false == BOOST_DI_IF(0, true, false));
+    expect(true == BOOST_DI_IF(1, true, false));
 };
 
 test args_size = [] {
-    expect_eq(1, BOOST_DI_SIZE());
-    expect_eq(1, BOOST_DI_SIZE(p1));
-    expect_eq(3, BOOST_DI_SIZE(p1, p2, p3));
-    expect_eq(10, BOOST_DI_SIZE(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10));
+    expect(1 == BOOST_DI_SIZE());
+    expect(1 == BOOST_DI_SIZE(p1));
+    expect(3 == BOOST_DI_SIZE(p1, p2, p3));
+    expect(10 == BOOST_DI_SIZE(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10));
 };
 
 test is_bracket = [] {
@@ -34,18 +34,18 @@ test is_bracket = [] {
 };
 
 test arg = [] {
-    expect_eq(1, BOOST_DI_ELEM(0,  1, 2, 3, ...));
-    expect_eq(2, BOOST_DI_ELEM(1,  1, 2, 3, ...));
-    expect_eq(3, BOOST_DI_ELEM(2,  1, 2, 3, ...));
+    expect(1 == BOOST_DI_ELEM(0,  1, 2, 3, ...));
+    expect(2 == BOOST_DI_ELEM(1,  1, 2, 3, ...));
+    expect(3 == BOOST_DI_ELEM(2,  1, 2, 3, ...));
 };
 
 test eval_repeat = [] {
     #define Q_IMPL(...) std::string{#__VA_ARGS__}
     #define Q(...) Q_IMPL(__VA_ARGS__)
     #define M(i, ...) i
-    expect_eq(std::string{"0"}, Q(BOOST_DI_REPEAT(1, M, ...)));
-    expect_eq(std::string{"0 1"}, Q(BOOST_DI_REPEAT(2, M, ...)));
-    expect_eq(std::string{"0 1 2"}, Q(BOOST_DI_REPEAT(3, M, ...)));
+    expect(std::string{"0"} == Q(BOOST_DI_REPEAT(1, M, ...)));
+    expect(std::string{"0 1"} == Q(BOOST_DI_REPEAT(2, M, ...)));
+    expect(std::string{"0 1 2"} == Q(BOOST_DI_REPEAT(3, M, ...)));
     #undef M
     #undef Q
     #undef Q_IMPL

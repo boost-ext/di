@@ -42,7 +42,7 @@ test empty_module = [] {
     };
 
     auto injector = di::make_injector(empty{});
-    expect_eq(0, injector.create<int>());
+    expect(0 == injector.create<int>());
 };
 
 test modules_mix_make_injector = [] {
@@ -95,10 +95,10 @@ test modules_mix_make_injector = [] {
     );
 
     expect(dynamic_cast<impl1*>(injector.create<std::unique_ptr<i1>>().get()));
-    expect_eq(i, injector.create<int>());
-    expect_eq(d, injector.create<double>());
-    expect_eq(f, injector.create<float>());
-    expect_eq(s, injector.create<std::string>());
+    expect(i == injector.create<int>());
+    expect(d == injector.create<double>());
+    expect(f == injector.create<float>());
+    expect(s == injector.create<std::string>());
 };
 
 test empty_exposed_module = [] {
@@ -109,7 +109,7 @@ test empty_exposed_module = [] {
     };
 
     auto injector = di::make_injector(empty{});
-    expect_eq(0, injector.create<int>());
+    expect(0 == injector.create<int>());
 };
 
 test exposed_type = [] {
@@ -135,7 +135,7 @@ test exposed_type_by_injector = [] {
 
     auto object = injector.create<std::shared_ptr<complex2>>();
     expect(dynamic_cast<i1*>(object->c1.i1_.get()));
-    expect_eq(i, object->i);
+    expect(i == object->i);
 };
 
 test exposed_type_by_module = [] {
@@ -154,7 +154,7 @@ test exposed_type_by_module = [] {
 
     auto object = injector.create<std::shared_ptr<complex2>>();
     expect(dynamic_cast<i1*>(object->c1.i1_.get()));
-    expect_eq(i, object->i);
+    expect(i == object->i);
 };
 
 test exposed_type_by_module_twice = [] {
@@ -173,7 +173,7 @@ test exposed_type_by_module_twice = [] {
 
     auto object = injector.create<std::shared_ptr<complex2>>();
     expect(dynamic_cast<i1*>(object->c1.i1_.get()));
-    expect_eq(i, object->i);
+    expect(i == object->i);
 };
 
 test exposed_type_by_module_mix = [] {
@@ -221,7 +221,7 @@ test exposed_many = [] {
     {
     auto object = injector.create<std::shared_ptr<complex2>>();
     expect(dynamic_cast<i1*>(object->c1.i1_.get()));
-    expect_eq(i, object->i);
+    expect(i == object->i);
     }
 
     {
@@ -237,7 +237,7 @@ test exposed_with_external = [] {
         di::bind<int>().to(i)
     );
 
-    expect_eq(i, injector.create<int>());
+    expect(i == injector.create<int>());
 };
 
 test exposed_bind_deduced = [] {
@@ -255,7 +255,7 @@ test exposed_bind_deduced = [] {
         di::bind<int>().to(module{})
     );
 
-    expect_eq(i, injector.create<int>());
+    expect(i == injector.create<int>());
 };
 
 test exposed_bind = [] {
@@ -283,7 +283,7 @@ test exposed_bind = [] {
 
     auto object = injector.create<c>();
 
-    expect_eq(i, object.i);
+    expect(i == object.i);
 };
 
 test exposed_bind_interface = [] {

@@ -102,20 +102,9 @@ test get = [] {
 
     pool_t p(custom_ctor_, trivial_ctor_, default_ctor_);
 
-    expect_eq(
-        trivial_ctor_.object
-      , static_cast<const trivial_ctor_type&>(p).object
-    );
-
-    expect_eq(
-        custom_ctor_.object
-      , static_cast<const custom_ctor_type&>(p).object
-    );
-
-    expect_eq(
-        default_ctor_.object
-      , static_cast<const default_ctor_type&>(p).object
-    );
+    expect(trivial_ctor_.object == static_cast<const trivial_ctor_type&>(p).object);
+    expect(custom_ctor_.object == static_cast<const custom_ctor_type&>(p).object);
+    expect(default_ctor_.object == static_cast<const default_ctor_type&>(p).object);
 };
 
 test pool_of_pools = [] {
@@ -132,22 +121,15 @@ test pool_of_pools = [] {
 
     pool_t p(p1_, p2_);
 
-    expect_eq(
-        trivial_ctor_.object
-      , static_cast<const trivial_ctor_type&>(p).object
-    );
-
-    expect_eq(
-        default_ctor_.object
-      , static_cast<const default_ctor_type&>(p).object
-    );
+    expect(trivial_ctor_.object == static_cast<const trivial_ctor_type&>(p).object);
+    expect(default_ctor_.object == static_cast<const default_ctor_type&>(p).object);
 };
 
 test init_pool_from_other_empty_pool = [] {
     pool<aux::type_list<>> pempty_;
     pool<aux::type_list<default_ctor>> p(aux::type_list<>{}, pempty_);
 
-    expect_eq(0, static_cast<const default_ctor&>(p).i);
+    expect(0 == static_cast<const default_ctor&>(p).i);
 };
 
 test init_pfrom_other_subset_pool = [] {
@@ -172,20 +154,9 @@ test init_pfrom_other_subset_pool = [] {
     pool_subset_t p1(trivial_ctor_, custom_ctor_);
     pool_all_t p2(types{}, p1);
 
-    expect_eq(
-        trivial_ctor_.i
-      , static_cast<const trivial_ctor&>(p2).i
-    );
-
-    expect_eq(
-        0
-      , static_cast<const default_ctor&>(p2).i
-    );
-
-    expect_eq(
-        custom_ctor_.i
-      , static_cast<const custom_ctor&>(p2).i
-    );
+    expect(trivial_ctor_.i == static_cast<const trivial_ctor&>(p2).i);
+    expect(0 == static_cast<const default_ctor&>(p2).i);
+    expect(custom_ctor_.i == static_cast<const custom_ctor&>(p2).i);
 };
 
 test pool_from_pof_pools = [] {
@@ -197,7 +168,7 @@ test pool_from_pof_pools = [] {
     pool_t p1(ctor);
     pool_sub_t p2(p1);
 
-    expect_eq(i, static_cast<const custom_ctor&>(p2).i);
+    expect(i == static_cast<const custom_ctor&>(p2).i);
 };
 
 test pool_from_pof_pools_many = [] {
@@ -210,8 +181,8 @@ test pool_from_pof_pools_many = [] {
     pool_t p1(c, d);
     pool_sub_t p2(p1);
 
-    expect_eq(i, static_cast<const custom_ctor&>(p2).i);
-    expect_eq(0, static_cast<const default_ctor&>(p2).i);
+    expect(i == static_cast<const custom_ctor&>(p2).i);
+    expect(0 == static_cast<const default_ctor&>(p2).i);
 };
 
 template<class T1, class T2>
@@ -232,9 +203,9 @@ test pool_flatten = [] {
     pool_t p1(c, b);
     pool_flatten_t p2(types_flatten_t{}, p1);
 
-    expect_eq(i, static_cast<const custom_ctor&>(p2).i);
-    expect_eq(0, static_cast<const default_ctor&>(p2).i);
-    expect_eq(0, static_cast<const trivial_ctor&>(p2).i);
+    expect(i == static_cast<const custom_ctor&>(p2).i);
+    expect(0 == static_cast<const default_ctor&>(p2).i);
+    expect(0 == static_cast<const trivial_ctor&>(p2).i);
 };
 
 }}}} // boost::di::v1::core

@@ -111,8 +111,8 @@ test inject = [] {
 
     auto object = injector.create<c>();
 
-    expect_eq(i, object.i);
-    expect_eq(0.0, object.d);
+    expect(i == object.i);
+    expect(0.0 == object.d);
 };
 
 test automatic_inject = [] {
@@ -135,8 +135,8 @@ test automatic_inject = [] {
 
     auto object = injector.create<c>();
 
-    expect_eq(i, object.i);
-    expect_eq(0.0, object.d);
+    expect(i == object.i);
+    expect(0.0 == object.d);
 };
 
 test automatic_inject_with_initializer_list = [] {
@@ -157,8 +157,8 @@ test automatic_inject_with_initializer_list = [] {
 
     auto object = injector.create<c>();
 
-    expect_eq(i, object.i);
-    expect_eq(0, object.il.size());
+    expect(i == object.i);
+    expect(0 == object.il.size());
 };
 
 test ctor_refs = [] {
@@ -174,7 +174,7 @@ test ctor_refs = [] {
                       , short s)
             : sp(sp), i(i), d(d), str(str), nstr(nstr), f(f), l(std::move(l)), s(s)
         {
-            expect_eq("named str", nstr);
+            expect("named str" == nstr);
         }
 
         std::shared_ptr<i1> sp;
@@ -240,12 +240,12 @@ test ctor_refs = [] {
 
         auto object = injector.template create<typename get_type<decltype(type)>::type>();
         expect(dynamic_cast<impl1*>(object.sp.get()));
-        expect_eq(&i, &object.i);
-        expect_eq(&d, &object.d);
-        expect_eq("str", object.str);
-        expect_eq(42, object.s);
-        expect_eq(87, object.f());
-        expect_eq(123, object.l);
+        expect(&i == &object.i);
+        expect(&d == &object.d);
+        expect("str" == object.str);
+        expect(42 == object.s);
+        expect(87 == object.f());
+        expect(123 == object.l);
     };
 
     test(di::aux::type<c>{}, di::bind<i1, impl1>());
@@ -303,12 +303,12 @@ test refs_vs_copy = [] {
       , di::bind<int>().to(i)
     );
     auto object = injector.create<cc>();
-    expect_eq(ref, object.str);
-    expect_eq(i, object.i);
-    expect_eq(i, object.i_ref);
-    expect_eq(&i, &object.i_ref);
-    expect_eq(i, object.ii);
-    expect_eq(&i, &object.ii);
+    expect(ref == object.str);
+    expect(i == object.i);
+    expect(i == object.i_ref);
+    expect(&i == &object.i_ref);
+    expect(i == object.ii);
+    expect(&i == &object.ii);
     }
 
     {
@@ -319,12 +319,12 @@ test refs_vs_copy = [] {
       , di::bind<int>().to(i)
     );
     auto object = injector.create<cc_inject>();
-    expect_eq(ref, object.str);
-    expect_eq(i, object.i);
-    expect_eq(i, object.i_ref);
-    expect_eq(&i, &object.i_ref);
-    expect_eq(i, object.ii);
-    expect_eq(&i, &object.ii);
+    expect(ref == object.str);
+    expect(i == object.i);
+    expect(i == object.i_ref);
+    expect(&i == &object.i_ref);
+    expect(i == object.ii);
+    expect(&i == &object.ii);
     }
 
     {
@@ -335,12 +335,12 @@ test refs_vs_copy = [] {
       , di::bind<int>().to(i)
     );
     auto object = injector.create<cc>();
-    expect_eq(ref, object.str);
-    expect_eq(i, object.i);
-    expect_eq(i, object.i_ref);
-    expect_eq(&i, &object.i_ref);
-    expect_eq(i, object.ii);
-    expect_eq(&i, &object.ii);
+    expect(ref == object.str);
+    expect(i == object.i);
+    expect(i == object.i_ref);
+    expect(&i == &object.i_ref);
+    expect(i == object.ii);
+    expect(&i == &object.ii);
     }
 
     {
@@ -351,12 +351,12 @@ test refs_vs_copy = [] {
       , di::bind<int>().to(i)
     );
     auto object = injector.create<cc_inject>();
-    expect_eq(ref, object.str);
-    expect_eq(i, object.i);
-    expect_eq(i, object.i_ref);
-    expect_eq(&i, &object.i_ref);
-    expect_eq(i, object.ii);
-    expect_eq(&i, &object.ii);
+    expect(ref == object.str);
+    expect(i == object.i);
+    expect(i == object.i_ref);
+    expect(&i == &object.i_ref);
+    expect(i == object.ii);
+    expect(&i == &object.ii);
     }
 };
 
@@ -364,8 +364,8 @@ test refs_vs_copy = [] {
     test create_with_boost_function = [] {
         struct c {
             BOOST_DI_INJECT(c, const boost::function<int()>& f1, boost::function<double(double)> f2) {
-                expect_eq(42, f1());
-                expect_eq(87.0, f2(87.0));
+                expect(42 == f1());
+                expect(87.0 == f2(87.0));
             }
         };
 
@@ -399,9 +399,9 @@ test create_with_default_values = [] {
 
     auto object = injector.create<default_values>();
 
-    expect_eq(i, object.i);
-    expect_eq(42.0, object.f);
-    expect_eq(87.0, object.d);
+    expect(i == object.i);
+    expect(42.0 == object.f);
+    expect(87.0 == object.d);
 };
 
 test smart_pointers = [] {
@@ -410,7 +410,7 @@ test smart_pointers = [] {
             expect(dynamic_cast<impl1*>(up1.get()));
             expect(dynamic_cast<impl1*>(sp1.get()));
             expect(dynamic_cast<impl1*>(sp2.get()));
-            expect_eq(sp1, sp2);
+            expect(sp1 == sp2);
         }
     };
 
@@ -432,7 +432,7 @@ test one_arg_class = [] {
     );
 
     auto object = injector.create<c>();
-    expect_eq(0, object.i);
+    expect(0 == object.i);
 };
 
 test string_creation = [] {
@@ -440,7 +440,7 @@ test string_creation = [] {
         std::string str;
     };
 
-    expect_eq("", di::make_injector().create<string>().str);
+    expect("" == di::make_injector().create<string>().str);
 };
 
 template<class T>
@@ -460,7 +460,7 @@ test inject_inside_template = [] {
     );
 
     auto object = injector.create<template_inject<int>>();
-    expect_eq(i, object.value_);
+    expect(i == object.value_);
 };
 
 template<class T>
@@ -481,7 +481,7 @@ test inject_inside_template_no_limits = [] {
     );
 
     auto object = injector.create<template_inject_no_limits<int>>();
-    expect_eq(i, object.value_);
+    expect(i == object.value_);
 };
 
 test create_conversion = [] {
@@ -492,7 +492,7 @@ test create_conversion = [] {
       , di::bind<int>().to(i)
     );
 
-    expect_eq(i, (int)injector);
+    expect(i == (int)injector);
     expect(dynamic_cast<impl1*>(((const std::unique_ptr<i1>&)injector).get()));
 };
 

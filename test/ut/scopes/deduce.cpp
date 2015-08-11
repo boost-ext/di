@@ -22,14 +22,14 @@ struct scope_traits<c> {
 namespace scopes {
 
 test create = [] {
-    expect_eq(0, static_cast<int>(deduce::scope<int, int>{}.create<int>(fake_provider<int>{})));
+    expect(0 == static_cast<int>(deduce::scope<int, int>{}.create<int>(fake_provider<int>{})));
 };
 
 test create_from_scope = [] {
     fake_scope<>::calls() = 0;
     c c_ = deduce::scope<c, c>{}.create<c>(fake_provider<c>{});
     (void)c_;
-    expect_eq(1, fake_scope<>::calls());
+    expect(1 == fake_scope<>::calls());
 };
 
 }}}} // boost::di::v1::scopes

@@ -15,14 +15,14 @@ namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 test to_shared_ptr = [] {
     auto i = std::make_shared<int>(42);
     auto object = static_cast<std::shared_ptr<int>>(shared<int>{i});
-    expect_eq(i, object);
+    expect(i == object);
 };
 
 #if __has_include(<boost/shared_ptr.hpp>)
     test to_other_shared_ptr = [] {
         auto i = std::make_shared<int>(42);
         auto object = static_cast<boost::shared_ptr<int>>(shared<int>{i});
-        expect_eq(i.get(), object.get());
+        expect(i.get() == object.get());
     };
 #endif
 
@@ -33,7 +33,7 @@ test to_weak_ptr = [] {
     auto i = std::make_shared<int>(42);
     object = static_cast<std::weak_ptr<int>>(shared<int>{i});
     auto object_ = object.lock();
-    expect_eq(i, object_);
+    expect(i == object_);
     }
 
     expect(!object.lock());
@@ -48,7 +48,7 @@ test shared_with_ptr = [] {
     } ptr{i};
 
     shared<int*> object{ptr.object};
-    expect_eq(i, &static_cast<int&>(object));
+    expect(i == &static_cast<int&>(object));
 };
 
 }}}} // boost::di::v1::wrappers

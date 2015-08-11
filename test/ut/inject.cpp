@@ -36,7 +36,7 @@ struct c_def {
 };
 
 test explicit_with_default = [] {
-    expect_eq(c_def::N, c_def{}.i);
+    expect(c_def::N == c_def{}.i);
 };
 
 test set_to_default = [] {
@@ -47,7 +47,7 @@ test set_to_default = [] {
 
     c c_;
 
-    expect_eq(0, c_.i);
+    expect(0 == c_.i);
 };
 
 test params = [] {
@@ -65,8 +65,8 @@ test params = [] {
 
     c c_(i, d);
 
-    expect_eq(i, c_.i);
-    expect_eq(d, c_.d);
+    expect(i == c_.i);
+    expect(d == c_.d);
 };
 
 test traits = [] {
@@ -86,8 +86,8 @@ test traits = [] {
 
     c c_(i, d);
 
-    expect_eq(i, c_.i);
-    expect_eq(d, c_.d);
+    expect(i == c_.i);
+    expect(d == c_.d);
 };
 
 test function = [] {
@@ -107,8 +107,8 @@ test function = [] {
 
     c c_(i, d);
 
-    expect_eq(i, c_.i);
-    expect_eq(d, c_.d);
+    expect(i == c_.i);
+    expect(d == c_.d);
 };
 
 test inheriting_ctors = [] {
@@ -130,8 +130,8 @@ test inheriting_ctors = [] {
 
     c1 c1_(i, d);
 
-    expect_eq(i, c1_.i);
-    expect_eq(d, c1_.d);
+    expect(i == c1_.i);
+    expect(d == c1_.d);
 };
 
 test c_traits_no_limits = [] {
@@ -157,7 +157,7 @@ test c_traits_no_limits = [] {
             int i = 0;
         };
 
-        expect_eq(i, c{i}.i);
+        expect(i == c{i}.i);
     };
 
     struct c_def_named {
@@ -172,8 +172,8 @@ test c_traits_no_limits = [] {
     };
 
     test named_def_param = [] {
-        expect_eq(c_def_named::N, c_def_named{}.i1);
-        expect_eq(c_def_named::N, c_def_named{}.i2);
+        expect(c_def_named::N == c_def_named{}.i1);
+        expect(c_def_named::N == c_def_named{}.i2);
     };
 
     struct c_def_named_without_def {
@@ -188,8 +188,8 @@ test c_traits_no_limits = [] {
     };
 
     test named_def_param_without_def = [] {
-        expect_eq(c_def_named_without_def::N, c_def_named_without_def{c_def_named_without_def::N}.i1);
-        expect_eq(c_def_named_without_def::N, c_def_named_without_def{c_def_named_without_def::N}.i2);
+        expect(c_def_named_without_def::N == c_def_named_without_def{c_def_named_without_def::N}.i1);
+        expect(c_def_named_without_def::N == c_def_named_without_def{c_def_named_without_def::N}.i2);
     };
 #endif
 

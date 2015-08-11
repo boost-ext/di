@@ -38,6 +38,6 @@ test call_provider_via_global_config = [] {
     called = 0;
     auto injector = di::make_injector();
     injector.create<int>();
-    expect_eq(1, called);
+    expect(1 == called);
 };
 

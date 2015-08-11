@@ -11,7 +11,7 @@ namespace boost { namespace di { inline namespace v1 { namespace core {
 
 test successful_wrapper = [] {
     static_expect(std::is_same<int, successful::wrapper<int, fake_wrapper>::element_type>::value);
-    expect_eq(0, static_cast<int>(wrapper<int, fake_wrapper>{}));
+    expect(0 == static_cast<int>(wrapper<int, fake_wrapper>{}));
 };
 
 }}}} // boost::di::v1::core

@@ -54,8 +54,8 @@ test named_to = [] {
 
     auto object = injector.create<c>();
 
-    expect_eq(i, object.i_);
-    expect_eq(d, object.d_);
+    expect(i == object.i_);
+    expect(d == object.d_);
 };
 
 test named_polymorphic = [] {
@@ -92,7 +92,7 @@ test named_with_ctor_def_decl = [] {
 
     auto object = injector.create<c>();
 
-    expect_eq(i, object.i);
+    expect(i == object.i);
 };
 
 test named_parameters_with_shared_scope = [] {
@@ -135,7 +135,7 @@ test any_of_with_scope = [] {
         std::shared_ptr<i1> object_1 = injector;
         std::shared_ptr<i1> object_2 = injector;
         auto result = dynamic_cast<impl1_2*>(object_1.get()) == dynamic_cast<impl1_2*>(object_2.get());
-        expect_eq(result, same);
+        expect(result == same);
     };
 
     test(di::unique, false);
@@ -152,7 +152,7 @@ test any_of_with_scope_split = [] {
         std::shared_ptr<i1> object_1 = injector;
         std::shared_ptr<i2> object_2 = injector;
         auto result = dynamic_cast<impl1_2*>(object_1.get()) == dynamic_cast<impl1_2*>(object_2.get());
-        expect_eq(result, same);
+        expect(result == same);
     };
 
     test(di::unique, false);
@@ -178,7 +178,7 @@ test bind_int_to_static_value = [] {
 
     auto object = injector.create<int>();
 
-    expect_eq(42, object);
+    expect(42 == object);
 };
 
 test override_priority = [] {
@@ -189,7 +189,7 @@ test override_priority = [] {
 
     auto object = injector.create<int>();
 
-    expect_eq(12, object);
+    expect(12 == object);
 };
 
 test override_priority_order = [] {
@@ -198,7 +198,7 @@ test override_priority_order = [] {
       , di::bind<int>().to([]{return 42;}) [di::override]
     );
 
-    expect_eq(42, injector.create<int>());
+    expect(42 == injector.create<int>());
 };
 
 test override_priority_interface = [] {
@@ -236,7 +236,7 @@ test bind_non_interface_in_singleton_scope = [] {
         di::bind<c>().in(di::singleton)
     );
 
-    expect_eq(injector.create<std::shared_ptr<c>>(), injector.create<std::shared_ptr<c>>());
+    expect(injector.create<std::shared_ptr<c>>() == injector.create<std::shared_ptr<c>>());
 };
 
 #if 0
@@ -274,14 +274,14 @@ test scopes_external_shared = [] {
 
     {
     auto object = injector.create<std::shared_ptr<int>>();
-    expect_eq(i.get(), object.get());
-    expect_eq(42, *i);
+    expect(i.get() == object.get());
+    expect(42 == *i);
     }
 
     {
     ++*i;
     auto object = injector.create<std::shared_ptr<int>>();
-    expect_eq(43, *i);
+    expect(43 == *i);
     }
 };
 
@@ -294,14 +294,14 @@ test scopes_external_lambda = [] {
 
     {
     auto object = injector.create<std::shared_ptr<int>>();
-    expect_eq(i.get(), object.get());
-    expect_eq(42, *i);
+    expect(i.get() == object.get());
+    expect(42 == *i);
     }
 
     {
     ++*i;
     auto object = injector.create<std::shared_ptr<int>>();
-    expect_eq(43, *i);
+    expect(43 == *i);
     }
 };
 
@@ -314,14 +314,14 @@ test scopes_external_lambda_injector = [] {
 
     {
     auto object = injector.create<std::shared_ptr<int>>();
-    expect_eq(i.get(), object.get());
-    expect_eq(42, *i);
+    expect(i.get() == object.get());
+    expect(42 == *i);
     }
 
     {
     ++*i;
     auto object = injector.create<std::shared_ptr<int>>();
-    expect_eq(43, *i);
+    expect(43 == *i);
     }
 };
 
@@ -348,8 +348,8 @@ test externals_ref_cref = [] {
 
     auto object = injector.create<refs>();
 
-    expect_eq(i, object.i_);
-    expect_eq(d, object.d_);
+    expect(i == object.i_);
+    expect(d == object.d_);
 };
 
 test bind_chars_to_string = [] {
@@ -357,7 +357,7 @@ test bind_chars_to_string = [] {
         di::bind<std::string>().to("str")
     );
 
-    expect_eq("str", injector.create<std::string>());
+    expect("str" == injector.create<std::string>());
 };
 
 test dynamic_binding_using_polymorphic_lambdas_with_dependend_interfaces = [] {
@@ -413,8 +413,8 @@ long return_long(long l) { return l; }
 
         auto object = injector.create<functions>();
 
-        expect_eq(i, object.fi());
-        expect_eq(d, object.fd());
+        expect(i == object.fi());
+        expect(d == object.fd());
     };
 #endif
 
@@ -439,7 +439,7 @@ test runtime_factory_impl = [] {
     {
     auto object = test(false);
     expect(dynamic_cast<impl1_int*>(object.get()));
-    expect_eq(i, dynamic_cast<impl1_int*>(object.get())->i);
+    expect(i == dynamic_cast<impl1_int*>(object.get())->i);
     }
 
     {
@@ -476,7 +476,7 @@ test runtime_factory_call_operator_impl = [] {
     {
     auto object = test(false);
     expect(dynamic_cast<impl1_int*>(object.get()));
-    expect_eq(i, dynamic_cast<impl1_int*>(object.get())->i);
+    expect(i == dynamic_cast<impl1_int*>(object.get())->i);
     }
 
     {
@@ -492,7 +492,7 @@ test scopes_injector_lambda_injector = [] {
       , di::bind<int>().to([](const auto& injector){ return static_cast<int>(injector.template create<short>()); })
     );
 
-    expect_eq(s, injector.create<int>());
+    expect(s == injector.create<int>());
 };
 
 #if defined(__cpp_variable_templates)
@@ -516,7 +516,7 @@ test scopes_injector_lambda_injector = [] {
         );
 
         auto object = injector.create<c>();
-        expect_eq(i, object.i_);
+        expect(i == object.i_);
         expect(dynamic_cast<impl1*>(object.i1_.get()));
         expect(dynamic_cast<impl2*>(object.i2_.get()));
     };

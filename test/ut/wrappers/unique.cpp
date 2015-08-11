@@ -19,12 +19,12 @@ constexpr auto i = 42;
 
 test to_value = [] {
     auto object = static_cast<int>(unique<int>{i});
-    expect_eq(i, object);
+    expect(i == object);
 };
 
 test to_rvalue = [] {
     auto object = static_cast<int&&>(unique<int>{i});
-    expect_eq(i, object);
+    expect(i == object);
 };
 
 test to_interface = [] {
@@ -35,39 +35,39 @@ test to_interface = [] {
 
 test to_ptr = [] {
     auto object = std::unique_ptr<int>{static_cast<int*>(unique<int*>{new int{i}})};
-    expect_eq(i, *object);
+    expect(i == *object);
 };
 
 test to_const_ptr = [] {
     std::unique_ptr<const int> object = unique<int*>{new int{i}};
-    expect_eq(i, *object);
+    expect(i == *object);
 };
 
 test to_copy = [] {
     auto object = static_cast<int>(unique<int*>{new int{i}});
-    expect_eq(i, object);
+    expect(i == object);
 };
 
 test to_shared_ptr = [] {
     std::shared_ptr<int> object = unique<int*>{new int{i}};
-    expect_eq(i, *object);
+    expect(i == *object);
 };
 
 #if __has_include(<boost/shared_ptr.hpp>)
     test to_boost_shared_ptr = [] {
         boost::shared_ptr<int> object = unique<int*>{new int{i}};
-        expect_eq(i, *object);
+        expect(i == *object);
     };
 #endif
 
 test to_unique_ptr = [] {
     std::unique_ptr<int> object = unique<int*>{new int{i}};
-    expect_eq(i, *object);
+    expect(i == *object);
 };
 
 test to_unique_ptr_from_unique_ptr = [] {
     std::unique_ptr<int> object = unique<std::unique_ptr<int>>{std::make_unique<int>(i)};
-    expect_eq(i, *object);
+    expect(i == *object);
 };
 
 }}}} // boost::di::v1::wrappers

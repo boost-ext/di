@@ -25,8 +25,8 @@ public:
 test call_policy_lambda = [] {
     called = 0;
     auto injector = di::make_injector<config>();
-    expect_eq(0, injector.create<int>());
-    expect_eq(1, called);
+    expect(0 == injector.create<int>());
+    expect(1 == called);
 };
 
 class config_provider : public di::config {
@@ -42,7 +42,7 @@ test call_provider = [] {
     called = 0;
     auto injector = di::make_injector<config_provider>();
     injector.create<int>();
-    expect_eq(1, called);
+    expect(1 == called);
 };
 
 class must_be_bound : public di::config {
@@ -122,7 +122,7 @@ test call_custom_policies = [] {
     policy::called() = 0;
     auto injector = di::make_injector<custom_policies>();
     injector.create<int>();
-    expect_eq(3, policy::called());
+    expect(3 == policy::called());
 };
 
 test call_custom_policies_with_exposed_injector = [] {
@@ -134,6 +134,6 @@ test call_custom_policies_with_exposed_injector = [] {
 
     auto object = injector.create<std::unique_ptr<i1>>();
     expect(dynamic_cast<i1*>(object.get()));
-    expect_eq(3, policy::called());
+    expect(3 == policy::called());
 };
 

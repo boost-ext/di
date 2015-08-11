@@ -11,12 +11,12 @@ namespace boost { namespace di { inline namespace v1 { namespace core {
 
 test any_type_create = [] {
     fake_injector<> injector;
-    expect_eq(0, static_cast<int>(any_type<void, fake_injector<>>{injector}));
+    expect(0 == static_cast<int>(any_type<void, fake_injector<>>{injector}));
 };
 
 test any_type_ref_create = [] {
     fake_injector<> injector;
-    expect_eq(0, static_cast<int>(any_type_ref<void, fake_injector<>>{injector}));
+    expect(0 == static_cast<int>(any_type_ref<void, fake_injector<>>{injector}));
 };
 
 }}}} // boost::di::v1::core
