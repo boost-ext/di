@@ -6,6 +6,7 @@
 //
 #include <memory>
 #include <string>
+#include <functional>
 #include "boost/di.hpp"
 
 namespace di = boost::di;

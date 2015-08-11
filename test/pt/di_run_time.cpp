@@ -12,7 +12,6 @@
 #include <regex>
 #include <string>
 #include <limits.h>
-
 #if defined(__linux)
     #include <unistd.h>
 #elif defined(__APPLE__)
@@ -20,7 +19,6 @@
 #elif defined(_WIN32) || defined(_WIN64)
     #include <Windows.h>
 #endif
-
 #include "boost/di.hpp"
 
 #if !defined(COVERAGE)
