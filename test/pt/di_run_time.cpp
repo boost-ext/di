@@ -8,9 +8,19 @@
 #include <cstdlib>
 #include <cstdio>
 #include <fstream>
+#include <sstream>
 #include <regex>
-#include <unistd.h>
+#include <string>
 #include <limits.h>
+
+#if defined(__linux)
+    #include <unistd.h>
+#elif defined(__APPLE__)
+    #include <mach-o/dyld.h>
+#elif defined(_WIN32) || defined(_WIN64)
+    #include <Windows.h>
+#endif
+
 #include "boost/di.hpp"
 
 #if !defined(COVERAGE)
@@ -39,7 +49,7 @@ auto disassemble(const std::string& f, const std::regex& rgx) {
     commands << "disassemble " << f << std::endl;
     commands << "q" << std::endl;
 #elif defined(__APPLE__)
-    auto size = sizeof(progname);
+    auto size = static_cast<unsigned int>(sizeof(progname));
     _NSGetExecutablePath(progname, &size);
     command << "lldb -s " << commands;
     commands << "file " << progname << std::endl;
