@@ -11,17 +11,25 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
-struct def1 { struct creator { }; };
-struct def2 { struct creator { }; };
-struct ctor1 { struct creator { creator(int) {} }; };
-struct ctor2 { struct creator { creator(int) {} }; };
+struct no_ctor {
+    template<class...> struct scope { };
+};
+
+struct ctor {
+    template<class...> struct scope { scope(int) { } };
+};
+
+struct def1 { using expected = int; using given = int; using scope = no_ctor; };
+struct def2 { using expected = int; using given = int; using scope = no_ctor; };
+struct def_ctor1 { using expected = int; using given = int; using scope = ctor; };
+struct def_ctor2 { using expected = int; using given = int; using scope = ctor; };
 
 test default_constructible = [] {
     static_expect(std::is_same<aux::type_list<>, copyable_t<aux::type_list<>>>::value);
     static_expect(std::is_same<aux::type_list<>, copyable_t<aux::type_list<def1>>>::value);
     static_expect(std::is_same<aux::type_list<>, copyable_t<aux::type_list<def1, def2>>>::value);
-    static_expect(std::is_same<aux::type_list<ctor1>, copyable_t<aux::type_list<def1, ctor1, def2>>>::value);
-    static_expect(std::is_same<aux::type_list<ctor1, ctor2>, copyable_t<aux::type_list<def1, ctor1, def2, ctor2>>>::value);
+    static_expect(std::is_same<aux::type_list<def_ctor1>, copyable_t<aux::type_list<def1, def_ctor1, def2>>>::value);
+    static_expect(std::is_same<aux::type_list<def_ctor1, def_ctor2>, copyable_t<aux::type_list<def1, def_ctor1, def2, def_ctor2>>>::value);
 };
 
 test def_ctor = [] {

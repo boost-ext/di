@@ -34,7 +34,7 @@ namespace boost { namespace di { inline namespace v1 {
     struct no_name { constexpr auto operator()() const noexcept { return ""; } };
     template<class, class = void> struct ctor_traits;
     namespace core { template<class> struct any_type_fwd; template<class> struct any_type_ref_fwd; }
-    namespace detail { template<class, class> struct named_type; }
+    namespace detail { template<class, class> struct named_type; template<class, class...> class injector; }
 }}} // boost::di::v1
 
 #endif

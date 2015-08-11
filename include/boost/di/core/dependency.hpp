@@ -8,6 +8,7 @@
 #define BOOST_DI_CORE_DEPENDENCY_HPP
 
 #include "boost/di/aux_/utility.hpp"
+#include "boost/di/type_traits/referable_traits.hpp"
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/scopes/deduce.hpp"
@@ -50,11 +51,17 @@ template<
   , class TPriority = aux::none_type
 > class dependency
     : dependency_base
-    , public TScope::template scope<TExpected, TGiven>
-    , public dependency_impl<
+    , TScope::template scope<TExpected, TGiven>
+    , dependency_impl<
           dependency_concept<TExpected, TName>
         , dependency<TScope, TExpected, TGiven, TName, TPriority>
       > {
+    template<class, class, class, class, class> friend class dependency;
+    template<class, class, class...> friend class injector;
+    template<class, class> friend struct is_referable_impl;
+    template<class, class> friend struct type_traits::referable_traits;
+    friend class binder;
+
     template<class T>
     using is_not_narrowed = std::integral_constant<bool,
         (std::is_arithmetic<T>::value && std::is_same<TExpected, T>::value) || !std::is_arithmetic<T>::value
@@ -83,8 +90,8 @@ template<
         using type = std::shared_ptr<T>;
     };
 
+
 public:
-    using creator = typename TScope::template scope<TExpected, TGiven>;
     using scope = TScope;
     using expected = TExpected;
     using given = std::remove_reference_t<TGiven>;
@@ -95,7 +102,7 @@ public:
 
     template<class T>
     explicit dependency(T&& object) noexcept
-        : creator(static_cast<T&&>(object))
+        : TScope::template scope<TExpected, TGiven>(static_cast<T&&>(object))
     { }
 
     template<
@@ -105,7 +112,7 @@ public:
       , class TName_
       , class TPriority_
     > dependency(const dependency<TScope_, TExpected_, TGiven_, TName_, TPriority_>& other) noexcept
-        : creator(other)
+        : TScope::template scope<TExpected, TGiven>(other)
     { }
 
     template<class T> // no requirements
@@ -152,10 +159,9 @@ public:
         }
     #endif // __pph__
 
-    using creator::try_create;
-
-    template<class>
-    static void try_create(...);
+private:
+    using TScope::template scope<TExpected, TGiven>::try_create;
+    template<class> static void try_create(...);
 };
 
 template<class T>

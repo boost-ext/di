@@ -16,9 +16,9 @@ template<bool Priority = false>
 struct fake_scope {
     template<class TExpected, class>
     struct scope {
-        explicit scope(const TExpected& value = {})
-            : object(value)
-        { }
+        explicit scope(const TExpected& = {}) {
+            ++ctor_calls();
+        }
 
         template<class T, class TProvider>
         auto create(const TProvider&) const noexcept {
@@ -28,11 +28,14 @@ struct fake_scope {
 
         template<class T, class TProvider>
         static T try_create(const TProvider&);
-
-        TExpected object;
     };
 
-    static int& calls() {
+    static auto& ctor_calls() {
+        static auto ctor_calls = 0;
+        return ctor_calls;
+    }
+
+    static auto& calls() {
         static auto calls = 0;
         return calls;
     }

@@ -24,7 +24,7 @@ struct fake_provider {
         return T{};
     }
 
-    static int& provide_calls() {
+    static auto& provide_calls() {
         static int calls = 0;
         return calls;
     }

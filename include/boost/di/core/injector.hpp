@@ -24,6 +24,7 @@
 #include "boost/di/type_traits/referable_traits.hpp"
 #include "boost/di/concepts/creatable.hpp"
 #include "boost/di/config.hpp"
+#include "boost/di/fwd.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
@@ -39,7 +40,10 @@ struct copyable;
 
 template<class T>
 struct copyable_impl : std::conditional<
-    std::is_default_constructible<typename T::creator>::value
+    std::is_default_constructible<
+        typename T::scope::template scope<
+            typename T::expected, typename T::given>
+    >::value
   , aux::type_list<>
   , aux::type_list<T>
 > { };
@@ -88,13 +92,11 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     template<class, class, class, class> friend struct try_provider;
     template<class, class, class, class, class> friend struct provider;
     template<class, class, class, class> friend struct successful::provider;
+    template<class, class, class> friend struct is_creatable_impl;
+    template<class, class...> friend class detail::injector;
 
     using pool_t = pool<bindings_t<TDeps...>>;
     using is_root_t = std::true_type;
-
-public:
-    using deps = bindings_t<TDeps...>;
-    using config = TConfig;
 
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     struct is_creatable {
@@ -119,6 +121,10 @@ public:
               , TCtor
             >::value)();
     };
+
+public:
+    using deps = bindings_t<TDeps...>;
+    using config = TConfig;
 
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept

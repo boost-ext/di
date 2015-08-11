@@ -10,6 +10,7 @@
 #error "Boost.DI requires C++14 support (Clang-3.4+, GCC-5.1+, MSVC-2015+)"
 #else
 #include <type_traits>
+#define BOOST_DI_VERSION 101000
 #if defined(__clang__)
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
@@ -142,9 +143,9 @@ namespace boost { namespace di { inline namespace v1 {
     struct no_name { constexpr auto operator()() const noexcept { return ""; } };
     template<class, class = void> struct ctor_traits;
     namespace core { template<class> struct any_type_fwd; template<class> struct any_type_ref_fwd; }
-    namespace detail { template<class, class> struct named_type; }
+    namespace detail { template<class, class> struct named_type; template<class, class...> class injector; }
 }}}
-#define BOOST_DI_REQUIRES(...) typename ::std::enable_if<__VA_ARGS__, int>::type = 0
+#define BOOST_DI_REQUIRES(...) ::std::enable_if_t<__VA_ARGS__, int> = 0
 #define BOOST_DI_REQUIRES_T(...) ::std::enable_if_t<__VA_ARGS__>
 #define BOOST_DI_REQUIRES_(...) typename __VA_ARGS__::value_type = 0
 namespace boost { namespace di { inline namespace v1 { namespace aux {
@@ -247,6 +248,28 @@ public:
         : pool(static_cast<const Ts&>(p)...)
     { }
 };
+}}}}
+namespace boost { namespace di { inline namespace v1 { namespace type_traits {
+template<class T, class>
+struct referable_traits {
+    using type = T;
+};
+template<class T, class TDependency>
+struct referable_traits<T&, TDependency> {
+    using type = std::conditional_t<TDependency::template is_referable<T&>::value, T&, T>;
+};
+template<class T, class TDependency>
+struct referable_traits<const T&, TDependency> {
+    using type = std::conditional_t<TDependency::template is_referable<const T&>::value, const T&, T>;
+};
+#if defined(_MSC_VER)
+    template<class T, class TDependency>
+    struct referable_traits<T&&, TDependency> {
+        using type = std::conditional_t<TDependency::template is_referable<T&&>::value, T&&, T>;
+    };
+#endif
+template<class T, class TDependency>
+using referable_traits_t = typename referable_traits<T, TDependency>::type;
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 template<class T>
@@ -955,11 +978,16 @@ template<
   , class TPriority = aux::none_type
 > class dependency
     : dependency_base
-    , public TScope::template scope<TExpected, TGiven>
-    , public dependency_impl<
+    , TScope::template scope<TExpected, TGiven>
+    , dependency_impl<
           dependency_concept<TExpected, TName>
         , dependency<TScope, TExpected, TGiven, TName, TPriority>
       > {
+    template<class, class, class, class, class> friend class dependency;
+    template<class, class, class...> friend class injector;
+    template<class, class> friend struct is_referable_impl;
+    template<class, class> friend struct type_traits::referable_traits;
+    friend class binder;
     template<class T>
     using is_not_narrowed = std::integral_constant<bool,
         (std::is_arithmetic<T>::value && std::is_same<TExpected, T>::value) || !std::is_arithmetic<T>::value
@@ -984,7 +1012,6 @@ template<
         using type = std::shared_ptr<T>;
     };
 public:
-    using creator = typename TScope::template scope<TExpected, TGiven>;
     using scope = TScope;
     using expected = TExpected;
     using given = std::remove_reference_t<TGiven>;
@@ -993,7 +1020,7 @@ public:
     dependency() noexcept { }
     template<class T>
     explicit dependency(T&& object) noexcept
-        : creator(static_cast<T&&>(object))
+        : TScope::template scope<TExpected, TGiven>(static_cast<T&&>(object))
     { }
     template<
         class TScope_
@@ -1002,7 +1029,7 @@ public:
       , class TName_
       , class TPriority_
     > dependency(const dependency<TScope_, TExpected_, TGiven_, TName_, TPriority_>& other) noexcept
-        : creator(other)
+        : TScope::template scope<TExpected, TGiven>(other)
     { }
     template<class T>
     auto named(const T&) const noexcept {
@@ -1041,9 +1068,9 @@ public:
             return *this;
         }
     #endif
-    using creator::try_create;
-    template<class>
-    static void try_create(...);
+private:
+    using TScope::template scope<TExpected, TGiven>::try_create;
+    template<class> static void try_create(...);
 };
 template<class T>
 struct is_dependency : std::is_base_of<dependency_base, T> { };
@@ -1897,28 +1924,6 @@ struct wrapper_impl<T, TWrapper, BOOST_DI_REQUIRES_T(!std::is_convertible<TWrapp
 template<class T, class TWrapper>
 using wrapper = wrapper_impl<T, TWrapper>;
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace type_traits {
-template<class T, class>
-struct referable_traits {
-    using type = T;
-};
-template<class T, class TDependency>
-struct referable_traits<T&, TDependency> {
-    using type = std::conditional_t<TDependency::template is_referable<T&>::value, T&, T>;
-};
-template<class T, class TDependency>
-struct referable_traits<const T&, TDependency> {
-    using type = std::conditional_t<TDependency::template is_referable<const T&>::value, const T&, T>;
-};
-#if defined(_MSC_VER)
-    template<class T, class TDependency>
-    struct referable_traits<T&&, TDependency> {
-        using type = std::conditional_t<TDependency::template is_referable<T&&>::value, T&&, T>;
-    };
-#endif
-template<class T, class TDependency>
-using referable_traits_t = typename referable_traits<T, TDependency>::type;
-}}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
 template<class T, class... TArgs> decltype(std::declval<T>().call(std::declval<TArgs>()...) , std::true_type()) has_call_impl(int); template<class, class...> std::false_type has_call_impl(...); template<class T, class... TArgs> struct has_call : decltype(has_call_impl<T, TArgs...>(0)) { };
 struct from_injector { };
@@ -1929,7 +1934,10 @@ template<class>
 struct copyable;
 template<class T>
 struct copyable_impl : std::conditional<
-    std::is_default_constructible<typename T::creator>::value
+    std::is_default_constructible<
+        typename T::scope::template scope<
+            typename T::expected, typename T::given>
+    >::value
   , aux::type_list<>
   , aux::type_list<T>
 > { };
@@ -1966,11 +1974,10 @@ class injector
     template<class, class, class, class> friend struct try_provider;
     template<class, class, class, class, class> friend struct provider;
     template<class, class, class, class> friend struct successful::provider;
+    template<class, class, class> friend struct is_creatable_impl;
+    template<class, class...> friend class detail::injector;
     using pool_t = pool<bindings_t<TDeps...>>;
     using is_root_t = std::true_type;
-public:
-    using deps = bindings_t<TDeps...>;
-    using config = TConfig;
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     struct is_creatable {
         using TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>;
@@ -1987,6 +1994,9 @@ public:
                 )
             ), T>::value && policy::template try_call< arg_wrapper<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot, pool_t> , TPolicies , TDependency , TCtor >::value ;
     };
+public:
+    using deps = bindings_t<TDeps...>;
+    using config = TConfig;
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
         : injector{from_deps{}, get_arg(args, has_configure<decltype(args)>{})...}
@@ -2109,11 +2119,10 @@ class injector <TConfig, pool<>, TDeps...>
     template<class, class, class, class> friend struct try_provider;
     template<class, class, class, class, class> friend struct provider;
     template<class, class, class, class> friend struct successful::provider;
+    template<class, class, class> friend struct is_creatable_impl;
+    template<class, class...> friend class detail::injector;
     using pool_t = pool<bindings_t<TDeps...>>;
     using is_root_t = std::true_type;
-public:
-    using deps = bindings_t<TDeps...>;
-    using config = TConfig;
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     struct is_creatable {
         using TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>;
@@ -2130,6 +2139,9 @@ public:
                 )
             ), T>::value ;
     };
+public:
+    using deps = bindings_t<TDeps...>;
+    using config = TConfig;
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
         : injector{from_deps{}, get_arg(args, has_configure<decltype(args)>{})...}

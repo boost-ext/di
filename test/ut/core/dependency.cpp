@@ -33,9 +33,9 @@ test def_ctor = [] {
 };
 
 test ctor = [] {
-    constexpr auto i = 42;
-    dependency<fake_scope<>, int> dep{i};
-    expect(i == dep.object);
+    fake_scope<>::ctor_calls() = 0;
+    dependency<fake_scope<>, int> dep{0};
+    expect(1 == fake_scope<>::ctor_calls());
 };
 
 test named = [] {
