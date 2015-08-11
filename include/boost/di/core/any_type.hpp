@@ -138,7 +138,7 @@ struct any_type_ref {
 
 template<class TParent>
 struct any_type_fwd {
-    template<class T, class = is_not_same_t<T, TParent>>
+    template<class T, class = is_not_same_t<T, TParent>, class = std::enable_if_t<!(std::is_const<T>::value && std::is_reference<T>::value)>>
     operator T();
 };
 

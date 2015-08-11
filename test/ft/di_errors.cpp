@@ -113,23 +113,7 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
 #define expect_compile_fail(defines, error, ...) \
     compail_fail(__LINE__, defines, error, #__VA_ARGS__)
 
-test bind_external_repeated = [] {
-    auto errors_ = errors(
-            "boundable constraint not satisfied",
-        #if defined(_MSC_VER)
-            "bind<.*>::is_bound_more_than_once", "=.*int"
-        #else
-            "bind<.*int>::is_bound_more_than_once"
-        #endif
-    );
-
-    expect_compile_fail("", errors_,
-        di::make_injector(
-            di::bind<int>().to(42)
-          , di::bind<int>().to(87)
-        );
-    );
-};
+// ---------------------------------------------------------------------------
 
 test bind_external_with_given_scope = [] {
     expect_compile_fail("", errors(),
@@ -146,6 +130,24 @@ test bind_external_with_given_type = [] {
 
         di::make_injector(
             di::bind<i, impl>().to(impl{})
+        );
+    );
+};
+
+test bind_external_repeated = [] {
+    auto errors_ = errors(
+            "boundable constraint not satisfied",
+        #if defined(_MSC_VER)
+            "bind<.*>::is_bound_more_than_once", "=.*int"
+        #else
+            "bind<.*int>::is_bound_more_than_once"
+        #endif
+    );
+
+    expect_compile_fail("", errors_,
+        di::make_injector(
+            di::bind<int>().to(42)
+          , di::bind<int>().to(87)
         );
     );
 };
@@ -239,6 +241,40 @@ test bind_to_different_types = [] {
     );
 };
 
+test exposed_multiple_times = [] {
+    auto errors_ = errors(
+            "boundable constraint not satisfied",
+        #if defined(_MSC_VER)
+            "bind<.*>::is_bound_more_than_once", "=.*c"
+        #else
+            "bind<.*c>::is_bound_more_than_once"
+        #endif
+    );
+
+    expect_compile_fail("", errors_,
+        struct c { };
+        di::injector<c, c> injector = di::make_injector();
+    );
+};
+
+test make_injector_wrong_arg = [] {
+    auto errors_ = errors(
+            "boundable constraint not satisfied",
+        #if defined(_MSC_VER)
+            "bind<.*>::is_neither_a_dependency_nor_an_injector", "=.*neither_module_nor_injector_nor_module"
+        #else
+            "bind<.*neither_module_nor_injector_nor_module>::is_neither_a_dependency_nor_an_injector"
+        #endif
+    );
+
+    expect_compile_fail("", errors_,
+        struct neither_module_nor_injector_nor_module { };
+        auto injector = di::make_injector(neither_module_nor_injector_nor_module{});
+    );
+};
+
+// ---------------------------------------------------------------------------
+
 test create_polymorphic_type_without_binding = [] {
     auto errors_ = errors(
         #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
@@ -260,53 +296,6 @@ test create_polymorphic_type_without_binding = [] {
         };
 
         di::make_injector().create<c>();
-    );
-};
-
-test ctor_inject_limit_out_of_range = [] {
-    expect_compile_fail("-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3",
-        errors("Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE"),
-        struct c {
-            BOOST_DI_INJECT(c, int, int, int, int) { }
-        };
-
-        auto injector = di::make_injector();
-        injector.create<c>();
-    );
-};
-
-test ctor_limit_out_of_range = [] {
-    auto errors_ = errors(
-    #if defined(__GNUC__) && !defined(__clang__)
-        "number_of_constructor_arguments_is_out_of_range_for<.*>::max<.*>.*= 3.*=.*c"
-    #else
-        "number_of_constructor_arguments_is_out_of_range_for<.*c>::max<3>"
-    #endif
-    );
-
-    expect_compile_fail("-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3", errors_,
-        struct c {
-            c(int, int, int, int) { }
-        };
-
-        auto injector = di::make_injector();
-        injector.create<c>();
-    );
-};
-
-test exposed_multiple_times = [] {
-    auto errors_ = errors(
-            "boundable constraint not satisfied",
-        #if defined(_MSC_VER)
-            "bind<.*>::is_bound_more_than_once", "=.*c"
-        #else
-            "bind<.*c>::is_bound_more_than_once"
-        #endif
-    );
-
-    expect_compile_fail("", errors_,
-        struct c { };
-        di::injector<c, c> injector = di::make_injector();
     );
 };
 
@@ -353,25 +342,6 @@ test exposed_polymorphic_type_without_binding = [] {
         struct c { std::shared_ptr<i> i_; };
 
         di::injector<c> injector = di::make_injector(); // di::bind<i, impl>()
-    );
-};
-
-test injector_ctor_ambiguous = [] {
-    auto errors_ = errors(
-        #if defined(__GNUC__) && !defined(__clang__)
-            "number_of_constructor_arguments_is_out_of_range_for<.*>::max<.*>.*= 10.*=.*ctor"
-        #else
-            "number_of_constructor_arguments_is_out_of_range_for<.*ctor>::max<10>"
-        #endif
-    );
-
-    expect_compile_fail("", errors_,
-        struct ctor {
-            ctor(int, double) { }
-            ctor(double, int) { }
-        };
-
-        di::make_injector().create<ctor>();
     );
 };
 
@@ -423,28 +393,27 @@ test bind_wrapper_not_convertible = [] {
     );
 };
 
-test make_injector_wrong_arg = [] {
+test scope_traits_external_not_referable = [] {
     auto errors_ = errors(
-            "boundable constraint not satisfied",
-        #if defined(_MSC_VER)
-            "bind<.*>::is_neither_a_dependency_nor_an_injector", "=.*neither_module_nor_injector_nor_module"
-        #else
-            "bind<.*neither_module_nor_injector_nor_module>::is_neither_a_dependency_nor_an_injector"
+        #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+            "creatable constraint not satisfied",
+        #endif
+            "when_creating<.*>::type<.*>"
+        #if !defined(_MSC_VER)
+          , "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.to\\(value\\)`"
         #endif
     );
 
     expect_compile_fail("", errors_,
-        struct neither_module_nor_injector_nor_module { };
-        auto injector = di::make_injector(neither_module_nor_injector_nor_module{});
-    );
-};
-
-test named_paramater_spelling = [] {
-    expect_compile_fail("", errors(),
-        auto name = []{};
         struct c {
-            BOOST_DI_INJECT(c, (NAMED = name) int) { }
+            c(int&) { }
         };
+
+        auto injector = di::make_injector(
+            di::bind<int>().to(42) // lvalue can't be converted to a reference
+        );
+
+        injector.create<c>();
     );
 };
 
@@ -488,27 +457,64 @@ test policy_constructible = [] {
     );
 };
 
-test scope_traits_external_not_referable = [] {
+// ---------------------------------------------------------------------------
+
+test ctor_inject_limit_out_of_range = [] {
+    expect_compile_fail("-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3",
+        errors("Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE"),
+        struct c {
+            BOOST_DI_INJECT(c, int, int, int, int) { }
+        };
+
+        auto injector = di::make_injector();
+        injector.create<c>();
+    );
+};
+
+test ctor_limit_out_of_range = [] {
     auto errors_ = errors(
-        #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
-            "creatable constraint not satisfied",
-        #endif
-            "when_creating<.*>::type<.*>"
-        #if !defined(_MSC_VER)
-          , "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.to\\(value\\)`"
+    #if defined(__GNUC__) && !defined(__clang__)
+        "number_of_constructor_arguments_is_out_of_range_for<.*>::max<.*>.*= 3.*=.*c"
+    #else
+        "number_of_constructor_arguments_is_out_of_range_for<.*c>::max<3>"
+    #endif
+    );
+
+    expect_compile_fail("-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3", errors_,
+        struct c {
+            c(int, int, int, int) { }
+        };
+
+        auto injector = di::make_injector();
+        injector.create<c>();
+    );
+};
+
+test injector_ctor_ambiguous = [] {
+    auto errors_ = errors(
+        #if defined(__GNUC__) && !defined(__clang__)
+            "number_of_constructor_arguments_is_out_of_range_for<.*>::max<.*>.*= 10.*=.*ctor"
+        #else
+            "number_of_constructor_arguments_is_out_of_range_for<.*ctor>::max<10>"
         #endif
     );
 
     expect_compile_fail("", errors_,
-        struct c {
-            c(int&) { }
+        struct ctor {
+            ctor(int, double) { }
+            ctor(double, int) { }
         };
 
-        auto injector = di::make_injector(
-            di::bind<int>().to(42) // lvalue can't be converted to a reference
-        );
+        di::make_injector().create<ctor>();
+    );
+};
 
-        injector.create<c>();
+test named_paramater_spelling = [] {
+    expect_compile_fail("", errors(),
+        auto name = []{};
+        struct c {
+            BOOST_DI_INJECT(c, (NAMED = name) int) { }
+        };
     );
 };
 
@@ -537,4 +543,6 @@ test circular_dependencies_complex = [] {
         injector.create<cd5>();
     );
 };
+
+// ---------------------------------------------------------------------------
 

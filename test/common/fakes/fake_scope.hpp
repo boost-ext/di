@@ -21,7 +21,7 @@ struct fake_scope {
         { }
 
         template<class T, class TProvider>
-        T create(const TProvider&) const noexcept {
+        auto create(const TProvider&) const noexcept {
             ++calls();
             return T{};
         }
