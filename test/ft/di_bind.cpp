@@ -132,8 +132,8 @@ test any_of_with_scope = [] {
             di::bind<di::any_of<i2, i1>, impl1_2>().in(scope)
         );
 
-        auto object_1 = injector.template create<std::shared_ptr<i1>>();
-        auto object_2 = injector.template create<std::shared_ptr<i2>>();
+        std::shared_ptr<i1> object_1 = injector;
+        std::shared_ptr<i1> object_2 = injector;
         auto result = dynamic_cast<impl1_2*>(object_1.get()) == dynamic_cast<impl1_2*>(object_2.get());
         expect_eq(result, same);
     };
@@ -149,8 +149,8 @@ test any_of_with_scope_split = [] {
           , di::bind<i2, impl1_2>().in(scope)
         );
 
-        auto object_1 = injector.template create<std::shared_ptr<i1>>();
-        auto object_2 = injector.template create<std::shared_ptr<i2>>();
+        std::shared_ptr<i1> object_1 = injector;
+        std::shared_ptr<i2> object_2 = injector;
         auto result = dynamic_cast<impl1_2*>(object_1.get()) == dynamic_cast<impl1_2*>(object_2.get());
         expect_eq(result, same);
     };
