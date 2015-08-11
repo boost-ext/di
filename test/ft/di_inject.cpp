@@ -19,12 +19,20 @@ namespace di = boost::di;
 auto name = []{};
 auto other_name = []{};
 
+template<class>
+struct get_type;
+
+template<class T>
+struct get_type<di::aux::type<T>> {
+    using type = T;
+};
+
 struct i1 { virtual ~i1() noexcept = default; virtual void dummy1() = 0; };
 struct impl1 : i1 { void dummy1() override { } };
 
 template<class T>
 struct function : std::function<T> {
-    template<class U, BOOST_DI_REQUIRES(has_call_operator<U>::value)>
+    template<class U, BOOST_DI_REQUIRES(di::aux::is_callable<U>::value)>
     function(const U& f)
         : std::function<T>(f)
     { }
@@ -228,7 +236,7 @@ test ctor_refs = [] {
           , di::bind<function<int()>>().to([]{return 87;})
         );
 
-        auto object = injector.template create<typename decltype(type)::type>();
+        auto object = injector.template create<typename get_type<decltype(type)>::type>();
         expect(dynamic_cast<impl1*>(object.sp.get()));
         expect_eq(&i, &object.i);
         expect_eq(&d, &object.d);
@@ -238,16 +246,16 @@ test ctor_refs = [] {
         expect_eq(123, object.l);
     };
 
-    test(test_type<c>{}, di::bind<i1, impl1>());
-    test(test_type<c_inject>{}, di::bind<i1, impl1>());
+    test(di::aux::type<c>{}, di::bind<i1, impl1>());
+    test(di::aux::type<c_inject>{}, di::bind<i1, impl1>());
 #if !defined(_MSC_VER)
-    test(test_type<c_aggregate>{}, di::bind<i1, impl1>());
+    test(di::aux::type<c_aggregate>{}, di::bind<i1, impl1>());
 #endif
 
-    test(test_type<c>{}, di::bind<i1>().to(std::make_shared<impl1>()));
-    test(test_type<c_inject>{}, di::bind<i1>().to(std::make_shared<impl1>()));
+    test(di::aux::type<c>{}, di::bind<i1>().to(std::make_shared<impl1>()));
+    test(di::aux::type<c_inject>{}, di::bind<i1>().to(std::make_shared<impl1>()));
 #if !defined(_MSC_VER)
-    test(test_type<c_aggregate>{}, di::bind<i1>().to(std::make_shared<impl1>()));
+    test(di::aux::type<c_aggregate>{}, di::bind<i1>().to(std::make_shared<impl1>()));
 #endif
 };
 

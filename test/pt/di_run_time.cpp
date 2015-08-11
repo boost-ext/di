@@ -9,6 +9,8 @@
 #include <cstdio>
 #include <fstream>
 #include <regex>
+#include <unistd.h>
+#include <limits.h>
 #include "boost/di.hpp"
 
 #if !defined(COVERAGE)
@@ -22,21 +24,29 @@ struct file : std::string, TFStream {
     { }
 };
 
-auto disassemble(const std::string& f, const std::string& progname, const std::regex& rgx) {
+auto disassemble(const std::string& f, const std::regex& rgx) {
     file<> commands{f + ".cmd"};
     std::stringstream command;
+    char progname[FILENAME_MAX];
 
 #if defined(__linux)
+    auto len = 0;
+    if ((len = readlink("/proc/self/exe", progname, sizeof(progname)-1)) != -1) {
+        progname[len] = '\0';
+    }
     command << "gdb --batch -x " << commands;
     commands << "file " << progname << std::endl;
     commands << "disassemble " << f << std::endl;
     commands << "q" << std::endl;
 #elif defined(__APPLE__)
+    auto size = sizeof(progname);
+    _NSGetExecutablePath(progname, &size);
     command << "lldb -s " << commands;
     commands << "file " << progname << std::endl;
     commands << "di -n " << f << std::endl;
     commands << "q" << std::endl;
 #elif defined(_WIN32) || defined(_WIN64)
+    GetModuleFileName(nullptr, progname, FILENAME_MAX);
     command << "cdb -cf " << commands << " -z " << progname;
     commands << "uf " << f << std::endl;
     commands << "q" << std::endl;
@@ -66,8 +76,8 @@ auto disassemble(const std::string& f, const std::string& progname, const std::r
     return result.str();
 }
 
-bool check_opcodes(const char* progname, const std::string& name, const std::regex& rgx = std::regex{".*:(.*)"}) {
-    return disassemble("given_" + name, progname, rgx) == disassemble("expected_" + name, progname, rgx);
+bool check_opcodes(const std::string& name, const std::regex& rgx = std::regex{".*:(.*)"}) {
+    return disassemble("given_" + name, rgx) == disassemble("expected_" + name, rgx);
 }
 
 } // namespace
@@ -88,8 +98,8 @@ auto expected_no_bindings() {
     return 0;
 }
 
-test no_bindings = [](auto progname) {
-    expect(check_opcodes(progname, "no_bindings"));
+test no_bindings = [] {
+    expect(check_opcodes("no_bindings"));
 };
 
 // ---------------------------------------------------------------------------
@@ -106,8 +116,8 @@ auto expected_bind_int() {
     return 42;
 }
 
-test bind_int = [](auto progname) {
-    expect(check_opcodes(progname, "bind_int"));
+test bind_int = [] {
+    expect(check_opcodes("bind_int"));
 };
 
 // ---------------------------------------------------------------------------
@@ -124,8 +134,8 @@ auto expected_bind_interface() {
     return std::make_unique<impl>(0);
 }
 
-test bind_interface = [](auto progname) {
-    expect(check_opcodes(progname, "bind_interface", std::regex{".*:([^ ]*).*"}));
+test bind_interface = [] {
+    expect(check_opcodes("bind_interface", std::regex{".*:([^ ]*).*"}));
 };
 
 // ---------------------------------------------------------------------------
@@ -150,8 +160,8 @@ auto expected_bind_named_int() {
     return c{42};
 }
 
-test bind_named_int = [](auto progname) {
-    expect(check_opcodes(progname, "bind_named_int"));
+test bind_named_int = [] {
+    expect(check_opcodes("bind_named_int"));
 };
 
 // ---------------------------------------------------------------------------
@@ -170,8 +180,8 @@ auto expected_module_no_bindings() {
     return 0;
 }
 
-test module_no_bindings = [](auto progname) {
-    expect(check_opcodes(progname, "module_no_bindings"));
+test module_no_bindings = [] {
+    expect(check_opcodes("module_no_bindings"));
 };
 
 // ---------------------------------------------------------------------------
@@ -187,8 +197,8 @@ auto expected_lambda_module_no_bindings() {
     return 0;
 }
 
-test lambda_module_no_bindings = [](auto progname) {
-    expect(check_opcodes(progname, "lambda_module_no_bindings"));
+test lambda_module_no_bindings = [] {
+    expect(check_opcodes("lambda_module_no_bindings"));
 };
 
 // ---------------------------------------------------------------------------
@@ -209,8 +219,8 @@ auto expected_module_bind_int() {
     return 42;
 }
 
-test module_bind_int = [](auto progname) {
-    expect(check_opcodes(progname, "module_bind_int"));
+test module_bind_int = [] {
+    expect(check_opcodes("module_bind_int"));
 };
 
 // ---------------------------------------------------------------------------
@@ -229,8 +239,8 @@ auto expected_lambda_module_bind_int() {
     return 42;
 }
 
-test lambda_module_bind_int = [](auto progname) {
-    expect(check_opcodes(progname, "lambda_module_bind_int"));
+test lambda_module_bind_int = [] {
+    expect(check_opcodes("lambda_module_bind_int"));
 };
 
 // ---------------------------------------------------------------------------
