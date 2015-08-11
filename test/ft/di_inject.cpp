@@ -5,7 +5,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <memory>
+#include <string>
 #include <functional>
+#include <initializer_list>
 #if __has_include(<boost/function.hpp>)
     #include <boost/function.hpp>
 #endif
