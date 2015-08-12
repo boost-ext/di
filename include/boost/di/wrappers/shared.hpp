@@ -16,19 +16,22 @@ namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 template<class T>
 struct shared {
     template<class>
-    struct is_referable
+    struct is_referable_impl
         : std::true_type
     { };
 
     template<class I>
-    struct is_referable<std::shared_ptr<I>>
+    struct is_referable_impl<std::shared_ptr<I>>
         : std::false_type
     { };
 
     template<class I>
-    struct is_referable<boost::shared_ptr<I>>
+    struct is_referable_impl<boost::shared_ptr<I>>
         : std::false_type
     { };
+
+    template<class T_>
+    using is_referable = is_referable_impl<aux::remove_specifiers_t<T_>>;
 
     template<class I>
     inline operator std::shared_ptr<I>() const noexcept {
