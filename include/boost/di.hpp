@@ -1643,6 +1643,13 @@ struct any_type {
     > operator T() {
         return injector_.create_impl(aux::type<T>{});
     }
+    template<class T
+           , class = is_not_same_t<T, TParent>
+           , class = is_referable_t<const T&, TInjector>
+           , class = is_creatable_t<const T&, TInjector, TError>
+    > operator const T&() const {
+        return injector_.create_impl(aux::type<const T&>{});
+    }
     const TInjector& injector_;
 };
 template<class TParent, class TInjector, class TError = std::false_type>
@@ -1684,6 +1691,12 @@ struct any_type {
     template<class T, class = is_not_same_t<T, TParent>>
     operator T() {
         return injector_.create_successful_impl(aux::type<T>{});
+    }
+    template<class T
+           , class = is_not_same_t<T, TParent>
+           , class = is_referable_t<const T&, TInjector>
+    > operator const T&() const {
+        return injector_.create_successful_impl(aux::type<const T&>{});
     }
     const TInjector& injector_;
 };
