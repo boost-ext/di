@@ -532,9 +532,11 @@ test request_value_and_ptr_in_unique = [] {
         constexpr auto i = 42;
 
         struct c {
-            c(const boost::shared_ptr<int>& sp)
+            c(const boost::shared_ptr<int>& sp, int& i_)
                 : sp(sp)
-            { }
+            {
+                expect(i_ == i);
+            }
 
             boost::shared_ptr<int> sp;
         };
