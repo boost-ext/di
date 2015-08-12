@@ -14,7 +14,7 @@
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
 template<class T, class TParent>
-using is_not_same_t = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
+using is_not_same_t = BOOST_DI_REQUIRES__(!aux::is_same_or_base_of<T, TParent>::value);
 
 template<class T, class TInjector>
 struct is_referable_impl {
@@ -24,7 +24,7 @@ struct is_referable_impl {
 };
 
 template<class T, class TInjector>
-using is_referable_t = std::enable_if_t<is_referable_impl<T, TInjector>::value>;
+using is_referable_t = BOOST_DI_REQUIRES__(is_referable_impl<T, TInjector>::value);
 
 template<class T, class TInjector, class TError>
 struct is_creatable_impl {
@@ -37,7 +37,7 @@ struct is_creatable_impl<T, TInjector, std::false_type> {
 };
 
 template<class T, class TInjector, class TError>
-using is_creatable_t = std::enable_if_t<is_creatable_impl<T, TInjector, TError>::value>;
+using is_creatable_t = BOOST_DI_REQUIRES__(is_creatable_impl<T, TInjector, TError>::value);
 
 template<class TParent, class TInjector, class TError = std::false_type>
 struct any_type {
@@ -153,7 +153,7 @@ struct any_type_ref {
 
 template<class TParent>
 struct any_type_fwd {
-    template<class T, class = is_not_same_t<T, TParent>, class = std::enable_if_t<!(std::is_const<T>::value && std::is_reference<T>::value)>>
+    template<class T, class = is_not_same_t<T, TParent>>
     operator T();
 };
 
