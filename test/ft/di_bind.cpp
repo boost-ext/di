@@ -253,7 +253,7 @@ test bind_const_ref_type_in_singleton_scope = [] {
     };
 
     auto injector = di::make_injector(
-        di::bind<int>.in(di::singleton)
+        di::bind<int>().in(di::singleton)
     );
 
     injector.create<c_inject>();
