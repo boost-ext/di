@@ -511,7 +511,44 @@ test request_value_and_ptr_in_unique = [] {
 };
 
 #if __has_include(<boost/shared_ptr.hpp>)
-    test conversion_to_boost_shared_ptr = [] {
+    test conversion_to_boost_shared_ptr_inject = [] {
+        struct c {
+            BOOST_DI_INJECT(c, const boost::shared_ptr<int>& sp)
+                : sp(sp)
+            { }
+
+            boost::shared_ptr<int> sp;
+        };
+
+        auto injector = di::make_injector(
+            di::bind<int>().in(di::singleton)
+        );
+
+        auto object = injector.create<c>();
+        expect(object.sp.get());
+    };
+
+/*    test conversion_to_boost_shared_ctor_referable = [] {*/
+        //constexpr auto i = 42;
+
+        //struct c {
+            //c(const boost::shared_ptr<int>& sp)
+                //: sp(sp)
+            //{ }
+
+            //boost::shared_ptr<int> sp;
+        //};
+
+        //auto injector = di::make_injector(
+            //di::bind<int>().to(i).in(di::singleton)
+        //);
+
+        //auto object = injector.create<c>();
+        //expect(object.sp.get());
+        //expect(i, *object.sp);
+    /*};*/
+
+    test conversion_to_boost_shared_ptr_uniform = [] {
         struct c {
             boost::shared_ptr<int> sp;
         };

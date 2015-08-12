@@ -7,9 +7,6 @@
 #include <memory>
 #include <string>
 #include "boost/di/aux_/type_traits.hpp"
-#if __has_include(<boost/shared_ptr.hpp>)
-    #include <boost/shared_ptr.hpp>
-#endif
 
 namespace boost { namespace di { inline namespace v1 { namespace aux {
 
@@ -107,8 +104,11 @@ test decay_types = [] {
         static_expect(std::is_same<T, decay_t<const T&>>{});
         static_expect(std::is_same<T, decay_t<T&>>{});
         static_expect(std::is_same<T, decay_t<std::shared_ptr<T>>>{});
+        static_expect(std::is_same<T, decay_t<boost::shared_ptr<T>>>{});
         static_expect(std::is_same<T, decay_t<const std::shared_ptr<T>&>>{});
+        static_expect(std::is_same<T, decay_t<const boost::shared_ptr<T>&>>{});
         static_expect(std::is_same<T, decay_t<std::shared_ptr<T>&>>{});
+        static_expect(std::is_same<T, decay_t<boost::shared_ptr<T>&>>{});
         static_expect(std::is_same<T, decay_t<volatile T>>{});
         static_expect(std::is_same<T, decay_t<T&&>>{});
         static_expect(std::is_same<T, decay_t<const T&&>>{});
