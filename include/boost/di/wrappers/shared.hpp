@@ -26,6 +26,11 @@ struct shared {
     { };
 
     template<class I>
+    struct is_referable<boost::shared_ptr<I>>
+        : std::false_type
+    { };
+
+    template<class I>
     inline operator std::shared_ptr<I>() const noexcept {
         return object;
     }
