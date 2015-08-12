@@ -13,18 +13,22 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
-#define BOOST_DI_PROVIDABLE_ERROR \
+#define BOOST_DI_PROVIDABLE_ERROR(T) \
     static_assert(aux::constraint_not_satisfied<T>::value, "providable constraint not satisfied")
 
+struct get { };
+struct is_creatable { };
+
 template<class T>
-struct config {
-    struct is_not_providable { BOOST_DI_PROVIDABLE_ERROR; };
+struct provider {
+    template<class...>
+    struct requires_ { BOOST_DI_PROVIDABLE_ERROR(T); };
 };
 
 #undef BOOST_DI_PROVIDABLE_ERROR
 
 template<class T>
-typename config<T>::is_not_providable providable_impl(...);
+typename provider<T>::template requires_<get, is_creatable> providable_impl(...);
 
 template<class T>
 auto providable_impl(T&& t) -> aux::is_valid_expr<

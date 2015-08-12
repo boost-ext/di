@@ -12,7 +12,7 @@ namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
 test none = [] {
     struct none_providable { };
-    static_expect(std::is_same<config<none_providable>::is_not_providable, providable<none_providable>>::value);
+    static_expect(std::is_same<provider<none_providable>::requires_<get, is_creatable>, providable<none_providable>>::value);
 };
 
 class provider_private_access {
@@ -29,7 +29,7 @@ class provider_private_access {
 
 #if !defined(_MSC_VER)
     test private_access = [] {
-        static_expect(std::is_same<config<provider_private_access>::is_not_providable, providable<provider_private_access>>::value);
+        static_expect(std::is_same<provider<provider_private_access>::requires_<get, is_creatable>, providable<provider_private_access>>::value);
     };
 #endif
 
@@ -42,7 +42,7 @@ public:
 };
 
 test missing_is_creatable = [] {
-    static_expect(std::is_same<config<provider_missing_is_creatable>::is_not_providable, providable<provider_missing_is_creatable>>::value);
+    static_expect(std::is_same<provider<provider_missing_is_creatable>::requires_<get, is_creatable>, providable<provider_missing_is_creatable>>::value);
 };
 
 class provider_wrong_get {
@@ -59,7 +59,7 @@ public:
 };
 
 test wrong_get = [] {
-    static_expect(std::is_same<config<provider_wrong_get>::is_not_providable, providable<provider_wrong_get>>::value);
+    static_expect(std::is_same<provider<provider_wrong_get>::requires_<get, is_creatable>, providable<provider_wrong_get>>::value);
 };
 
 test providable_providers = [] {

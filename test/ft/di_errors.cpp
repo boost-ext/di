@@ -86,9 +86,10 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
 
     file<std::ifstream> output{std::string{"error"} + std::to_string(id) + ".out"};
     std::vector<bool> matches(errors.size(), false);
+    std::vector<std::string> out;
     auto lines = 0;
     for (std::string line; std::getline(output, line);) {
-        std::clog << line << std::endl;
+        out.push_back(line);
         auto i = 0;
         for (const auto& rgx : errors) {
             if (std::regex_match(line, std::regex{rgx})) {
@@ -100,11 +101,16 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
     }
 
     if (!errors.empty()) {
-        constexpr auto MAX_ERROR_LINES_COUNT = 50;
-        expect(lines < MAX_ERROR_LINES_COUNT);
+        constexpr auto MAX_ERROR_LINES_COUNT = 64;
+        if (lines >= MAX_ERROR_LINES_COUNT) {
+            throw std::runtime_error(command.str() + " | lines < MAX_ERROR_LINES_COUNT");
+        }
     }
 
     if (std::find(matches.begin(), matches.end(), false) != matches.end()) {
+        for (const auto& line : out) {
+            std::clog << line << std::endl;
+        }
         throw std::runtime_error(command.str());
     }
 }
@@ -139,6 +145,40 @@ test bind_external_with_given_value = [] {
     expect_compile_fail("", errors(),
         di::make_injector(
             di::bind<int, std::integral_constant<int, 0>>.to(42);
+        );
+    );
+};
+
+test bind_has_disallowed_specifiers_expected = [] {
+    auto errors_ = errors(
+            "boundable constraint not satisfied",
+        #if defined(_MSC_VER)
+            "bind<.*>::has_disallowed_specifiers", "=.*int.*\\*"
+        #else
+            "bind<.*int.*\\*>::has_disallowed_specifiers"
+        #endif
+    );
+
+    expect_compile_fail("", errors_,
+        di::make_injector(
+            di::bind<int*>()
+        );
+    );
+};
+
+test bind_has_disallowed_specifiers_given = [] {
+    auto errors_ = errors(
+            "boundable constraint not satisfied",
+        #if defined(_MSC_VER)
+            "bind<.*>::has_disallowed_specifiers", "=.*const.*int.*&"
+        #else
+            "bind<const.*int.*&>::has_disallowed_specifiers"
+        #endif
+    );
+
+    expect_compile_fail("", errors_,
+        di::make_injector(
+            di::bind<int, const int&>()
         );
     );
 };
@@ -183,6 +223,28 @@ test bind_multiple_times = [] {
     );
 };
 
+test bind_any_of_not_related = [] {
+    auto errors_ = errors(
+            "boundable constraint not satisfied",
+        #if defined(_MSC_VER)
+            "bind<.*>::is_not_related_to<int>",
+            "=.*impl"
+        #else
+            "bind<.*c>::is_not_related_to<.*a>.*bind<.*c>::is_not_related_to<.*b>"
+        #endif
+    );
+
+    expect_compile_fail("", errors_,
+        struct a { };
+        struct b : a { };
+        struct c { };
+
+        di::make_injector(
+            di::bind<di::any_of<a, b>, c>()
+        );
+    );
+};
+
 test bind_not_compatible_types = [] {
     auto errors_ = errors(
             "boundable constraint not satisfied",
@@ -198,11 +260,9 @@ test bind_not_compatible_types = [] {
         struct i { };
         struct impl : i { };
 
-        auto injector = di::make_injector(
+        di::make_injector(
             di::bind<int, impl>()
         );
-
-        injector.create<int>();
     );
 };
 
@@ -278,9 +338,99 @@ test make_injector_wrong_arg = [] {
 
     expect_compile_fail("", errors_,
         struct neither_module_nor_injector_nor_module { };
-        auto injector = di::make_injector(neither_module_nor_injector_nor_module{});
+        di::make_injector(neither_module_nor_injector_nor_module{});
     );
 };
+
+test bind_in_not_scopable = [] {
+    expect_compile_fail("", errors(),
+        struct not_scopable { };
+        di::bind<int>().in(not_scopable{});
+    );
+};
+
+// ---------------------------------------------------------------------------
+
+test dummy_config = [] {
+    expect_compile_fail("", errors(),
+        struct dummy_config { };
+        auto injector = di::make_injector<dummy_config>();
+    );
+};
+
+test config_wrong_policy = [] {
+    auto errors_ = errors(
+            "callable constraint not satisfied",
+        #if defined(_MSC_VER)
+            "policy<.*>::is_not_callable", "=.*int"
+        #else
+            "policy<.*int>::is_not_callable"
+        #endif
+    );
+
+    expect_compile_fail("", errors("callable constraint not satisfied"),
+        struct test_config : di::config {
+            static auto policies(...) { return 42; }
+        };
+        auto injector = di::make_injector<test_config>();
+    );
+};
+
+test config_policy_not_callable = [] {
+    auto errors_ = errors(
+            "callable constraint not satisfied",
+        #if defined(_MSC_VER)
+            "policy<.*>::requires_<.*call_operator>", "=.*dummy"
+        #else
+            "policy<.*dummy>::requires_<.*call_operator>"
+        #endif
+    );
+
+    expect_compile_fail("", errors_,
+        struct test_config : di::config {
+            struct dummy { };
+            static auto policies(...) { return di::make_policies(dummy{}); }
+        };
+        auto injector = di::make_injector<test_config>();
+    );
+};
+
+test config_not_providable = [] {
+    auto errors_ = errors(
+            "providable constraint not satisfied",
+        #if defined(_MSC_VER)
+            "config<.*>::requires_<.*get, .*is_creatable>", "=.*dummy"
+        #else
+            "provider<.*dummy>::requires_<.*get, .*is_creatable>"
+        #endif
+    );
+
+    expect_compile_fail("", errors_,
+        struct test_config : di::config {
+            struct dummy { };
+            static auto provider(...) { return dummy{}; }
+        };
+        auto injector = di::make_injector<test_config>();
+    );
+};
+
+//test config_wrong_provider = [] {
+    //auto errors_ = errors(
+            //"configurable constraint not satisfied",
+        //#if defined(_MSC_VER)
+            //"config<.*>::is_not_providable", "=.*test_config"
+        //#else
+            //"config<.*test_config>::requires_<.*provider<.*providable_type(...)>.*policies<.*callable_type(...)>"
+        //#endif
+    //);
+
+    //expect_compile_fail("", errors_,
+        //struct test_config : di::config {
+            //static auto provider() { return di::providers::heap{}; }
+        //};
+        //auto injector = di::make_injector<test_config>();
+    //);
+//};
 
 // ---------------------------------------------------------------------------
 

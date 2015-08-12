@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
 #define static_assert(...) struct _ { }
 #include "boost/di/concepts/configurable.hpp"
 #include "boost/di/providers/heap.hpp"
@@ -13,8 +12,8 @@
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
 test none = [] {
-    class config { };
-    expect(std::is_same<policy<config>::is_not_configurable, configurable<config>>::value);
+    class test_config { };
+    expect(std::is_same<config<test_config>::requires_<provider<providable_type(...)>, policies<callable_type(...)>>, configurable<test_config>>::value);
 };
 
 class config_just_policies {
@@ -24,7 +23,7 @@ public:
 };
 
 test just_policies = [] {
-    expect(std::is_same<policy<config_just_policies>::is_not_configurable, configurable<config_just_policies>>::value);
+    expect(std::is_same<config<config_just_policies>::requires_<provider<providable_type(...)>, policies<callable_type(...)>>, configurable<config_just_policies>>::value);
 };
 
 class config_just_provider {
@@ -34,7 +33,7 @@ public:
 };
 
 test just_provider = [] {
-    expect(std::is_same<policy<config_just_provider>::is_not_configurable, configurable<config_just_provider>>::value);
+    expect(std::is_same<config<config_just_provider>::requires_<provider<providable_type(...)>, policies<callable_type(...)>>, configurable<config_just_provider>>::value);
 };
 
 class config_private_access {
@@ -48,7 +47,7 @@ private:
 
 #if !defined(_MSC_VER)
     test private_access = [] {
-        expect(std::is_same<policy<config_private_access>::is_not_configurable, configurable<config_private_access>>::value);
+        expect(std::is_same<config<config_private_access>::requires_<provider<providable_type(...)>, policies<callable_type(...)>>, configurable<config_private_access>>::value);
     };
 #endif
 

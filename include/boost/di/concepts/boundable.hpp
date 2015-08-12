@@ -28,6 +28,9 @@ struct bind {
     template<class> struct is_not_related_to { BOOST_DI_BOUNDABLE_ERROR; };
 };
 
+template<class T, class...>
+struct any_of { BOOST_DI_BOUNDABLE_ERROR; };
+
 #undef BOOST_DI_BOUNDABLE_ERROR
 
 template<class... TDeps>
@@ -113,7 +116,7 @@ using get_any_of_error =
           , aux::bool_list<std::is_same<std::true_type, Ts>::value...>
         >::value
       , std::true_type
-      , aux::type_list<Ts...>
+      , any_of<Ts...>
     >;
 
 template<class I, class T> // expected -> given
@@ -139,7 +142,7 @@ template<class T, class... Ts> // any_of
 auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
     get_any_of_error<decltype(boundable_impl(std::declval<Ts>(), std::declval<T>()))...>;
 
-template<class... TDeps> // injector
+template<class... TDeps> // make_injector
 auto boundable_impl(aux::type<TDeps...>&&) ->
     typename get_is_unique_error_impl<typename aux::is_unique<TDeps...>::type>::type;
 

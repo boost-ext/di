@@ -14,7 +14,7 @@
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
 template<class T>
-struct provider {
+struct provider__ {
     template<class TMemory = type_traits::heap>
     std::conditional_t<std::is_same<TMemory, type_traits::stack>::value, T, T*>
     try_get(const TMemory& = {}) const;
@@ -30,8 +30,8 @@ std::false_type scopable_impl(...);
 template<class T>
 auto scopable_impl(T&&) -> aux::is_valid_expr<
     typename T::template scope<_, _>::template is_referable<_>
-  , decltype(T::template scope<_, _>::template try_create<_>(provider<_>{}))
-  , decltype(std::declval<typename T::template scope<_, _>>().template create<_>(provider<_>{}))
+  , decltype(T::template scope<_, _>::template try_create<_>(provider__<_>{}))
+  , decltype(std::declval<typename T::template scope<_, _>>().template create<_>(provider__<_>{}))
 >;
 
 template<class T>

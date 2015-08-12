@@ -169,8 +169,6 @@ test any_of_unique = [] {
     expect(dynamic_cast<impl1_2*>(object_1.get()) != dynamic_cast<impl1_2*>(object_2.get()));
 };
 
-
-
 test bind_int_to_static_value = [] {
     auto injector = di::make_injector(
         di::bind<int, std::integral_constant<int, 42>>()
