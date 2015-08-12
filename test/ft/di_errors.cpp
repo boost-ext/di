@@ -135,6 +135,14 @@ test bind_external_with_given_type = [] {
     );
 };
 
+test bind_external_with_given_value = [] {
+    expect_compile_fail("", errors(),
+        di::make_injector(
+            di::bind<int, std::integral_constant<int, 0>>.to(42);
+        );
+    );
+};
+
 test bind_external_repeated = [] {
     auto errors_ = errors(
             "boundable constraint not satisfied",

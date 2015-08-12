@@ -10,8 +10,8 @@
 #undef NDEBUG
 #include <cassert>
 
-#define expect(...) assert((__VA_ARGS__))
-#define static_expect(...) static_assert((__VA_ARGS__), "")
+#define expect(...) assert((__VA_ARGS__) && "fail")
+#define static_expect(...) static_assert((__VA_ARGS__), "fail")
 
 struct test {
     template<class Test>
