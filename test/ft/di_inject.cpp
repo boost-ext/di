@@ -528,25 +528,25 @@ test request_value_and_ptr_in_unique = [] {
         expect(object.sp.get());
     };
 
-/*    test conversion_to_boost_shared_ctor_referable = [] {*/
-        //constexpr auto i = 42;
+    test conversion_to_boost_shared_ctor_referable = [] {
+        constexpr auto i = 42;
 
-        //struct c {
-            //c(const boost::shared_ptr<int>& sp)
-                //: sp(sp)
-            //{ }
+        struct c {
+            c(const boost::shared_ptr<int>& sp)
+                : sp(sp)
+            { }
 
-            //boost::shared_ptr<int> sp;
-        //};
+            boost::shared_ptr<int> sp;
+        };
 
-        //auto injector = di::make_injector(
-            //di::bind<int>().to(i).in(di::singleton)
-        //);
+        auto injector = di::make_injector(
+            di::bind<int>().to(std::make_shared<int>(i))
+        );
 
-        //auto object = injector.create<c>();
-        //expect(object.sp.get());
-        //expect(i, *object.sp);
-    /*};*/
+        auto object = injector.create<c>();
+        expect(object.sp.get());
+        expect(i == *object.sp);
+    };
 
     test conversion_to_boost_shared_ptr_uniform = [] {
         struct c {
