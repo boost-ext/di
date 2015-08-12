@@ -30,7 +30,7 @@ using any_of = decltype(detail::any_of<T1, T2, Ts...>());
 template<
     class TExpected
   , class TGiven = TExpected
-  , BOOST_DI_REQUIRES_(concepts::boundable<TExpected, TGiven>)
+  , BOOST_DI_REQUIRES_TYPE(concepts::boundable<TExpected, TGiven>)
 >
 #if defined(__cpp_variable_templates) // __pph__
     core::dependency<scopes::deduce, TExpected, TGiven> bind{};

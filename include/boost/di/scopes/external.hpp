@@ -63,7 +63,7 @@ public:
 
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven&,
-        BOOST_DI_REQUIRES_T(!aux::is_callable<TGiven, const injector&>::value &&
+        BOOST_DI_REQUIRES__(!aux::is_callable<TGiven, const injector&>::value &&
                             !aux::is_callable<TGiven, const injector&, const arg<aux::none_type, TExpected, TGiven>&>::value)
     > {
         template<class>
@@ -107,7 +107,7 @@ public:
 
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven,
-        BOOST_DI_REQUIRES_T(!aux::is_callable<TGiven, const injector&>::value &&
+        BOOST_DI_REQUIRES__(!aux::is_callable<TGiven, const injector&>::value &&
                             !aux::is_callable<TExpected>::value &&
                              aux::is_callable<TGiven>::value)
     > {
@@ -133,7 +133,7 @@ public:
 
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven,
-        BOOST_DI_REQUIRES_T(aux::is_callable<TGiven, const injector&>::value &&
+        BOOST_DI_REQUIRES__(aux::is_callable<TGiven, const injector&>::value &&
                            !has_result_type<TGiven>::value)
     > {
         template<class>
@@ -157,7 +157,7 @@ public:
 
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven,
-        BOOST_DI_REQUIRES_T(aux::is_callable<TGiven, const injector&, const arg<aux::none_type, TExpected, TGiven>&>::value &&
+        BOOST_DI_REQUIRES__(aux::is_callable<TGiven, const injector&, const arg<aux::none_type, TExpected, TGiven>&>::value &&
                            !has_result_type<TGiven>::value)
     > {
         template<class>

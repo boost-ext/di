@@ -69,13 +69,13 @@ class policy {
 
     template<class TArg, class TPolicy, class TDependency, class TInitialization, class... TCtor>
     struct try_call_impl<TArg, TPolicy, TDependency, aux::pair<TInitialization, aux::type_list<TCtor...>>
-                       , BOOST_DI_REQUIRES_T(!aux::is_callable<TPolicy, TArg, TDependency, TCtor...>::value)>
+                       , BOOST_DI_REQUIRES__(!aux::is_callable<TPolicy, TArg, TDependency, TCtor...>::value)>
         : allow_void<decltype((std::declval<TPolicy>())(std::declval<TArg>()))>
     { };
 
     template<class TArg, class TPolicy, class TDependency, class TInitialization, class... TCtor>
     struct try_call_impl<TArg, TPolicy, TDependency, aux::pair<TInitialization, aux::type_list<TCtor...>>
-                       , BOOST_DI_REQUIRES_T(aux::is_callable<TPolicy, TArg, TDependency, TCtor...>::value)>
+                       , BOOST_DI_REQUIRES__(aux::is_callable<TPolicy, TArg, TDependency, TCtor...>::value)>
         : allow_void<decltype((std::declval<TPolicy>())(std::declval<TArg>(), std::declval<TDependency>(), aux::type<TCtor>{}...))>
     { };
 

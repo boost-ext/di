@@ -90,7 +90,6 @@ template<
         using type = std::shared_ptr<T>;
     };
 
-
 public:
     using scope = TScope;
     using expected = TExpected;

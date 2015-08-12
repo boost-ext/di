@@ -30,7 +30,7 @@ struct ctor_impl;
 
 template<template<class...> class TIsConstructible, class T, int... TArgs>
 struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>
-    , BOOST_DI_REQUIRES_T((sizeof...(TArgs) > 0) && !TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
+    , BOOST_DI_REQUIRES__((sizeof...(TArgs) > 0) && !TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
     : std::conditional<
            TIsConstructible<T, get<core::any_type_ref_fwd<T>, TArgs>...>::value
          , aux::type_list<get<core::any_type_ref_fwd<T>, TArgs>...>
@@ -44,7 +44,7 @@ struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>
 
 template<template<class...> class TIsConstructible, class T, int... TArgs>
 struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>,
-      BOOST_DI_REQUIRES_T((sizeof...(TArgs) > 0) && TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
+      BOOST_DI_REQUIRES__((sizeof...(TArgs) > 0) && TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
     : aux::type_list<get<core::any_type_fwd<T>, TArgs>...>
 { };
 
@@ -117,13 +117,13 @@ struct ctor_traits<std::initializer_list<T>> {
 };
 
 template<class T>
-struct ctor_traits<T, BOOST_DI_REQUIRES_T(
+struct ctor_traits<T, BOOST_DI_REQUIRES__(
     std::is_same<std::char_traits<char>, typename T::traits_type>::value)> {
     using boost_di_inject__ = aux::type_list<>;
 };
 
 template<class T>
-struct ctor_traits<T, BOOST_DI_REQUIRES_T(
+struct ctor_traits<T, BOOST_DI_REQUIRES__(
     std::is_arithmetic<T>::value || std::is_enum<T>::value)> {
     using boost_di_inject__ = aux::type_list<>;
 };

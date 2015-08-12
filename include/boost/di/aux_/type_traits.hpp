@@ -32,9 +32,9 @@
     template<class T, class... TArgs>                               \
     struct name : decltype(name##_impl<T, TArgs...>(0)) { }
 
+#define BOOST_DI_REQUIRES__(...) ::std::enable_if_t<__VA_ARGS__>
 #define BOOST_DI_REQUIRES(...) ::std::enable_if_t<__VA_ARGS__, int> = 0 // __pph__
-#define BOOST_DI_REQUIRES_T(...) ::std::enable_if_t<__VA_ARGS__> // __pph__
-#define BOOST_DI_REQUIRES_(...) typename __VA_ARGS__::value_type = 0 // __pph__
+#define BOOST_DI_REQUIRES_TYPE(...) typename __VA_ARGS__::value_type = 0 // __pph__
 
 namespace boost { namespace di { inline namespace v1 { namespace aux {
 
