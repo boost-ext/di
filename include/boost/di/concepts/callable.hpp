@@ -15,18 +15,13 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
-#define BOOST_DI_CALLABLE_ERROR(T) \
-    static_assert(aux::constraint_not_satisfied<T>::value, "callable constraint not satisfied")
-
 struct call_operator { };
 
 template<class T>
 struct policy {
-    template<class...>
-    struct requires_ { BOOST_DI_CALLABLE_ERROR(T); };
+    template<class = call_operator>
+    struct requires_ { BOOST_DI_CONCEPT_ASSERT(T, callable, "policy requires `auto operator()() const`"); };
 };
-
-#undef BOOST_DI_CALLABLE_ERROR
 
 struct arg {
     using type = void;
@@ -63,7 +58,7 @@ struct is_callable_impl<T, Ts...> {
     using type = std::conditional_t<
         callable_with_arg::value || callable_with_arg_and_dep::value
       , typename is_callable_impl<Ts...>::type
-      , typename policy<T>::template requires_<call_operator>
+      , typename policy<T>::template requires_<>
     >;
 };
 
@@ -84,7 +79,7 @@ struct is_callable<core::pool<aux::type_list<Ts...>>>
 
 template<>
 struct is_callable<void> { // auto
-    using type = policy<void>::template requires_<call_operator>;
+    using type = policy<void>::requires_<>;
 };
 
 template<class... Ts>

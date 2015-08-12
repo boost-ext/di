@@ -13,22 +13,15 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
-#define BOOST_DI_CONFIGURABLE_ERROR(T) \
-    static_assert(aux::constraint_not_satisfied<T>::value, "configurable constraint not satisfied")
-
-template<class T>
-struct policies { BOOST_DI_CONFIGURABLE_ERROR(T); };
-
-template<class T>
-struct config {
-    template<class...>
-    struct requires_ { BOOST_DI_CONFIGURABLE_ERROR(T); };
-};
-
+template<class> struct policies { };
 struct providable_type { };
 struct callable_type { };
 
-#undef BOOST_DI_CONFIGURABLE_ERROR
+template<class T>
+struct config {
+    template<class = provider<providable_type(...)>, class = policies<callable_type(...)>>
+    struct requires_ { BOOST_DI_CONCEPT_ASSERT(T, configurable, "configuration has to be providable and callable"); };
+};
 
 std::false_type configurable_impl(...);
 
@@ -68,7 +61,7 @@ auto is_configurable(const std::true_type&) {
 
 template<class T>
 auto is_configurable(const std::false_type&) {
-    return typename config<T>::template requires_<provider<providable_type(...)>, policies<callable_type(...)>>{};
+    return typename config<T>::template requires_<>{};
 }
 
 template<class T>

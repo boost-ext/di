@@ -62,6 +62,7 @@ template<
     template<class, class> friend struct type_traits::referable_traits;
     friend class binder;
 
+    //TODO int, float -> should not compiler
     template<class T>
     using is_not_narrowed = std::integral_constant<bool,
         (std::is_arithmetic<T>::value && std::is_same<TExpected, T>::value) || !std::is_arithmetic<T>::value
@@ -114,7 +115,7 @@ public:
         : TScope::template scope<TExpected, TGiven>(other)
     { }
 
-    template<class T> // no requirements
+    template<class T, BOOST_DI_REQUIRES(std::is_same<TName, no_name>::value && !std::is_same<T, no_name>::value)>
     auto named(const T&) const noexcept {
         return dependency<TScope, TExpected, TGiven, T>{*this};
     }
@@ -122,6 +123,11 @@ public:
     template<class T, BOOST_DI_REQUIRES(concepts::scopable<T>::value)>
     auto in(const T&) const noexcept {
         return dependency<T, TExpected, TGiven, TName>{};
+    }
+
+    auto in(...) const noexcept {
+        BOOST_DI_CONCEPT_ASSERT(TScope, scopable, "type is not scopable");
+        return *this;
     }
 
     template<class T, BOOST_DI_REQUIRES(externable<T>::value)>
@@ -146,6 +152,11 @@ public:
             scopes::exposed<TScope>, TExpected, T, TName
         >;
         return dependency{object};
+    }
+
+    auto to(...) const noexcept {
+        BOOST_DI_CONCEPT_ASSERT(TScope, boundable, "given type is neither a value nor an injector");
+        return *this;
     }
 
     auto operator[](const override&) const noexcept {

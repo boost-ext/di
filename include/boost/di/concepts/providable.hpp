@@ -13,22 +13,17 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
-#define BOOST_DI_PROVIDABLE_ERROR(T) \
-    static_assert(aux::constraint_not_satisfied<T>::value, "providable constraint not satisfied")
-
 struct get { };
 struct is_creatable { };
 
 template<class T>
 struct provider {
-    template<class...>
-    struct requires_ { BOOST_DI_PROVIDABLE_ERROR(T); };
+    template<class = get, class = is_creatable>
+    struct requires_ { BOOST_DI_CONCEPT_ASSERT(T, providable, "type requires `auto get() const` and `is_creatable`"); };
 };
 
-#undef BOOST_DI_PROVIDABLE_ERROR
-
 template<class T>
-typename provider<T>::template requires_<get, is_creatable> providable_impl(...);
+typename provider<T>::template requires_<> providable_impl(...);
 
 template<class T>
 auto providable_impl(T&& t) -> aux::is_valid_expr<
