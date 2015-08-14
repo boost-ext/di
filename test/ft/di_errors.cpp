@@ -168,12 +168,7 @@ test bind_has_disallowed_specifiers_expected = [] {
 
 test bind_has_disallowed_specifiers_given = [] {
     auto errors_ = errors(
-            "constraint not satisfied",
-        #if defined(_MSC_VER)
-            "bind<.*>::has_disallowed_specifiers", "=.*const.*int.*&"
-        #else
-            "bind<const.*int.*&>::has_disallowed_specifiers"
-        #endif
+        "constraint not satisfied", "bind<const.*int.*&>::has_disallowed_specifiers"
     );
 
     expect_compile_fail("", errors_,
@@ -227,8 +222,7 @@ test bind_any_of_not_related = [] {
     auto errors_ = errors(
             "constraint not satisfied",
         #if defined(_MSC_VER)
-            "bind<.*>::is_not_related_to<int>",
-            "=.*impl"
+            "bind<.*>::is_not_related_to<.*a>.*bind<.*>::is_not_related_to<.*b>", "=.*c"
         #else
             "bind<.*c>::is_not_related_to<.*a>.*bind<.*c>::is_not_related_to<.*b>"
         #endif
@@ -399,9 +393,9 @@ test config_not_providable = [] {
     auto errors_ = errors(
             "constraint not satisfied",
         #if defined(_MSC_VER)
-            "config<.*>::requires_<.*get, .*is_creatable>", "=.*dummy"
+            "provider<.*>::requires_<.*get,.*is_creatable>", "=.*dummy"
         #else
-            "provider<.*dummy>::requires_<.*get, .*is_creatable>"
+            "provider<.*dummy>::requires_<.*get,.*is_creatable>"
         #endif
     );
 
@@ -418,7 +412,7 @@ test config_wrong_provider = [] {
     auto errors_ = errors(
             "constraint not satisfied",
         #if defined(_MSC_VER)
-            "config<.*>::is_not_providable", "=.*test_config"
+            "config<.*>::requires_<.*provider<.*providable_type.*(...)>.*policies<.*callable_type.*(...)>", "=.*test_config"
         #else
             "config<.*test_config>::requires_<.*provider<.*providable_type.*(...)>.*policies<.*callable_type.*(...)>"
         #endif
@@ -581,20 +575,17 @@ test policy_constructible = [] {
     #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
         "creatable constraint not satisfied",
     #endif
+    #if defined(__GNUC__) || defined(__clang__)
+        "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>",
+    #endif
     #if defined(__GNUC__) && !defined(__clang__)
         "type<.*>::not_allowed_by.*int",
         "type<.*>::not_allowed_by.*double",
-        "type<.*>::not_allowed_by.*float",
-        "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>"
-    #elif defined(__clang__)
+        "type<.*>::not_allowed_by.*float"
+    #else
         "type<int>::not_allowed_by",
         "type<double>::not_allowed_by",
-        "type<float>::not_allowed_by",
-        "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>"
-    #else
-        "type<.*>::not_allowed_by", "=int",
-        "type<.*>::not_allowed_by", "=float",
-        "type<.*>::not_allowed_by", "=double"
+        "type<float>::not_allowed_by"
     #endif
     );
 

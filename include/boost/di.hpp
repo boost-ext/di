@@ -1458,7 +1458,7 @@ struct bind {
     template<class> struct is_not_related_to : std::false_type { };
 };
 template<class T, class...>
-struct any_of { };
+struct any_of : std::false_type { };
 template<class... TDeps>
 struct is_supported : std::is_same<
    aux::bool_list<aux::always<TDeps>::value...>
