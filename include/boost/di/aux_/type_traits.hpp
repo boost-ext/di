@@ -34,15 +34,17 @@
 
 #define BOOST_DI_REQUIRES__(...) ::std::enable_if_t<__VA_ARGS__>
 #define BOOST_DI_REQUIRES(...) ::std::enable_if_t<__VA_ARGS__, int> = 0 // __pph__
-#define BOOST_DI_REQUIRES_TYPE(...) typename __VA_ARGS__::value_type = 0 // __pph__
-
-#define BOOST_DI_CONCEPT_ASSERT(T, concept, msg) \
-    static_assert(::boost::di::aux::constraint_not_satisfied<T>::value, #concept " constraint not satisfied, " msg)
+#define BOOST_DI_REQUIRES_TYPE(...) typename ::boost::di::aux::concept_check<__VA_ARGS__>::type = 0 // __pph__
 
 namespace boost { namespace di { inline namespace v1 { namespace aux {
 
-template<class...>
-struct constraint_not_satisfied : std::false_type { };
+template<class T>
+struct concept_check { static_assert(T::value, "constraint not satisfied"); };
+
+template<>
+struct concept_check<std::true_type> {
+    using type = int;
+};
 
 template<class...>
 using is_valid_expr = std::true_type;

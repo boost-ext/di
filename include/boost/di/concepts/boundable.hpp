@@ -16,17 +16,15 @@ namespace boost { namespace di { inline namespace v1 { namespace concepts {
 template<class T, class...>
 struct bind {
     template<class TName>
-    struct named {
-        struct is_bound_more_than_once  { BOOST_DI_CONCEPT_ASSERT(T, boundable, "bindings requires to be unique"); };
-    };
-    struct is_bound_more_than_once  { BOOST_DI_CONCEPT_ASSERT(T, boundable, "bindings requires to be unique"); };
-    struct is_neither_a_dependency_nor_an_injector { BOOST_DI_CONCEPT_ASSERT(T, boundable, "type has to be created by di::bind or di::make_injector"); };
-    struct has_disallowed_specifiers { BOOST_DI_CONCEPT_ASSERT(T, boundable, "const, reference, pointer, volatile are not allowed in di::bind"); };
-    template<class> struct is_not_related_to { BOOST_DI_CONCEPT_ASSERT(T, boundable, "given type is neither convertible nor base of the base type"); };
+    struct named { struct is_bound_more_than_once  { }; };
+    struct is_bound_more_than_once  { };
+    struct is_neither_a_dependency_nor_an_injector { };
+    struct has_disallowed_specifiers { };
+    template<class> struct is_not_related_to { };
 };
 
 template<class T, class...>
-struct any_of { BOOST_DI_CONCEPT_ASSERT(T, boundable, "any of"); };
+struct any_of { };
 
 template<class... TDeps>
 struct is_supported : std::is_same<

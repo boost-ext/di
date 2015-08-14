@@ -146,10 +146,14 @@ namespace boost { namespace di { inline namespace v1 {
     namespace detail { template<class, class> struct named_type; template<class, class...> class injector; }
 }}}
 #define BOOST_DI_REQUIRES(...) ::std::enable_if_t<__VA_ARGS__, int> = 0
-#define BOOST_DI_REQUIRES_TYPE(...) typename __VA_ARGS__::value_type = 0
+#define BOOST_DI_REQUIRES_TYPE(...) typename ::boost::di::aux::concept_check<__VA_ARGS__>::type = 0
 namespace boost { namespace di { inline namespace v1 { namespace aux {
-template<class...>
-struct constraint_not_satisfied : std::false_type { };
+template<class T>
+struct concept_check { static_assert(T::value, "constraint not satisfied"); };
+template<>
+struct concept_check<std::true_type> {
+    using type = int;
+};
 template<class...>
 using is_valid_expr = std::true_type;
 template<class T, class... TArgs>
@@ -1037,10 +1041,6 @@ public:
     auto in(const T&) const noexcept {
         return dependency<T, TExpected, TGiven, TName>{};
     }
-    auto in(...) const noexcept {
-        static_assert(::boost::di::aux::constraint_not_satisfied<TScope>::value, "scopable" " constraint not satisfied, " "type is not scopable");
-        return *this;
-    }
     template<class T, BOOST_DI_REQUIRES(externable<T>::value)>
     auto to(T&& object) const noexcept {
         using dependency = dependency<
@@ -1062,10 +1062,6 @@ public:
         >;
         return dependency{object};
     }
-    auto to(...) const noexcept {
-        static_assert(::boost::di::aux::constraint_not_satisfied<TScope>::value, "boundable" " constraint not satisfied, " "given type is neither a value nor an injector");
-        return *this;
-    }
     auto operator[](const override&) const noexcept {
         return dependency<TScope, TExpected, TGiven, TName, override>{*this};
     }
@@ -1085,8 +1081,8 @@ namespace boost { namespace di { inline namespace v1 { namespace concepts {
 struct call_operator { };
 template<class T>
 struct policy {
-    template<class = call_operator>
-    struct requires_ { static_assert(::boost::di::aux::constraint_not_satisfied<T>::value, "callable" " constraint not satisfied, " "policy requires `auto operator()() const`"); };
+    template<class>
+    struct requires_ { };
 };
 struct arg {
     using type = void;
@@ -1115,7 +1111,7 @@ struct is_callable_impl<T, Ts...> {
     using type = std::conditional_t<
         callable_with_arg::value || callable_with_arg_and_dep::value
       , typename is_callable_impl<Ts...>::type
-      , typename policy<T>::template requires_<>
+      , typename policy<T>::template requires_<call_operator>
     >;
 };
 template<>
@@ -1132,7 +1128,7 @@ struct is_callable<core::pool<aux::type_list<Ts...>>>
 { };
 template<>
 struct is_callable<void> {
-    using type = policy<void>::requires_<>;
+    using type = policy<void>::requires_<call_operator>;
 };
 template<class... Ts>
 using callable = typename is_callable<Ts...>::type;
@@ -1448,16 +1444,14 @@ namespace boost { namespace di { inline namespace v1 { namespace concepts {
 template<class T, class...>
 struct bind {
     template<class TName>
-    struct named {
-        struct is_bound_more_than_once { static_assert(::boost::di::aux::constraint_not_satisfied<T>::value, "boundable" " constraint not satisfied, " "bindings requires to be unique"); };
-    };
-    struct is_bound_more_than_once { static_assert(::boost::di::aux::constraint_not_satisfied<T>::value, "boundable" " constraint not satisfied, " "bindings requires to be unique"); };
-    struct is_neither_a_dependency_nor_an_injector { static_assert(::boost::di::aux::constraint_not_satisfied<T>::value, "boundable" " constraint not satisfied, " "type has to be created by di::bind or di::make_injector"); };
-    struct has_disallowed_specifiers { static_assert(::boost::di::aux::constraint_not_satisfied<T>::value, "boundable" " constraint not satisfied, " "const, reference, pointer, volatile are not allowed in di::bind"); };
-    template<class> struct is_not_related_to { static_assert(::boost::di::aux::constraint_not_satisfied<T>::value, "boundable" " constraint not satisfied, " "given type is neither convertible nor base of the base type"); };
+    struct named { struct is_bound_more_than_once { }; };
+    struct is_bound_more_than_once { };
+    struct is_neither_a_dependency_nor_an_injector { };
+    struct has_disallowed_specifiers { };
+    template<class> struct is_not_related_to { };
 };
 template<class T, class...>
-struct any_of { static_assert(::boost::di::aux::constraint_not_satisfied<T>::value, "boundable" " constraint not satisfied, " "any of"); };
+struct any_of { };
 template<class... TDeps>
 struct is_supported : std::is_same<
    aux::bool_list<aux::always<TDeps>::value...>
@@ -2278,11 +2272,11 @@ struct get { };
 struct is_creatable { };
 template<class T>
 struct provider {
-    template<class = get, class = is_creatable>
-    struct requires_ { static_assert(::boost::di::aux::constraint_not_satisfied<T>::value, "providable" " constraint not satisfied, " "type requires `auto get() const` and `is_creatable`"); };
+    template<class...>
+    struct requires_ { };
 };
 template<class T>
-typename provider<T>::template requires_<> providable_impl(...);
+typename provider<T>::template requires_<get, is_creatable> providable_impl(...);
 template<class T>
 auto providable_impl(T&& t) -> aux::is_valid_expr<
     decltype(t.template get<_, _>(type_traits::direct{}, type_traits::heap{}))
@@ -2305,8 +2299,8 @@ struct providable_type { };
 struct callable_type { };
 template<class T>
 struct config {
-    template<class = provider<providable_type(...)>, class = policies<callable_type(...)>>
-    struct requires_ { static_assert(::boost::di::aux::constraint_not_satisfied<T>::value, "configurable" " constraint not satisfied, " "configuration has to be providable and callable"); };
+    template<class...>
+    struct requires_ { };
 };
 std::false_type configurable_impl(...);
 template<class T>
@@ -2339,7 +2333,7 @@ auto is_configurable(const std::true_type&) {
 }
 template<class T>
 auto is_configurable(const std::false_type&) {
-    return typename config<T>::template requires_<>{};
+    return typename config<T>::template requires_<provider<providable_type(...)>, policies<callable_type(...)>>{};
 }
 template<class T>
 struct configurable__ {

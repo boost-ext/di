@@ -19,8 +19,8 @@ struct call_operator { };
 
 template<class T>
 struct policy {
-    template<class = call_operator>
-    struct requires_ { BOOST_DI_CONCEPT_ASSERT(T, callable, "policy requires `auto operator()() const`"); };
+    template<class>
+    struct requires_ { };
 };
 
 struct arg {
@@ -58,7 +58,7 @@ struct is_callable_impl<T, Ts...> {
     using type = std::conditional_t<
         callable_with_arg::value || callable_with_arg_and_dep::value
       , typename is_callable_impl<Ts...>::type
-      , typename policy<T>::template requires_<>
+      , typename policy<T>::template requires_<call_operator>
     >;
 };
 
@@ -79,7 +79,7 @@ struct is_callable<core::pool<aux::type_list<Ts...>>>
 
 template<>
 struct is_callable<void> { // auto
-    using type = policy<void>::requires_<>;
+    using type = policy<void>::requires_<call_operator>;
 };
 
 template<class... Ts>

@@ -125,11 +125,6 @@ public:
         return dependency<T, TExpected, TGiven, TName>{};
     }
 
-    auto in(...) const noexcept {
-        BOOST_DI_CONCEPT_ASSERT(TScope, scopable, "type is not scopable");
-        return *this;
-    }
-
     template<class T, BOOST_DI_REQUIRES(externable<T>::value)>
     auto to(T&& object) const noexcept {
         using dependency = dependency<
@@ -152,11 +147,6 @@ public:
             scopes::exposed<TScope>, TExpected, T, TName
         >;
         return dependency{object};
-    }
-
-    auto to(...) const noexcept {
-        BOOST_DI_CONCEPT_ASSERT(TScope, boundable, "given type is neither a value nor an injector");
-        return *this;
     }
 
     auto operator[](const override&) const noexcept {

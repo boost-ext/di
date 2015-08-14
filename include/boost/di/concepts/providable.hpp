@@ -18,12 +18,12 @@ struct is_creatable { };
 
 template<class T>
 struct provider {
-    template<class = get, class = is_creatable>
-    struct requires_ { BOOST_DI_CONCEPT_ASSERT(T, providable, "type requires `auto get() const` and `is_creatable`"); };
+    template<class...>
+    struct requires_ { };
 };
 
 template<class T>
-typename provider<T>::template requires_<> providable_impl(...);
+typename provider<T>::template requires_<get, is_creatable> providable_impl(...);
 
 template<class T>
 auto providable_impl(T&& t) -> aux::is_valid_expr<

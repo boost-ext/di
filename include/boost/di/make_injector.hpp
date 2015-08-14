@@ -24,12 +24,6 @@ template<
     return core::injector<TConfig, decltype(((TConfig*)0)->policies(0)), TDeps...>{core::init{}, args...};
 }
 
-/*template<class TConfig = ::BOOST_DI_CFG, class...>*/
-//inline auto make_injector(...) noexcept {
-    //BOOST_DI_CONCEPT_ASSERT(TConfig, boundable, "given type is neither a value nor an injector");
-    //return core::injector<TConfig, core::pool<>>{core::init{}};
-/*}*/
-
 }}} // boost::di::v1
 
 #endif
