@@ -120,8 +120,8 @@ auto boundable_impl(I&&, T&&) ->
       , std::conditional_t<
             !std::is_same<T, aux::remove_specifiers_t<T>>::value
           , typename bind<T>::has_disallowed_specifiers
-          , std::conditional_t<
-                std::is_base_of<I, T>::value || std::is_convertible<T, I>::value
+          , std::conditional_t<std::is_base_of<I, T>::value ||
+                (std::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value)
               , std::true_type
               , typename bind<T>::template is_not_related_to<I>
             >

@@ -77,6 +77,19 @@ test is_braces_constructible_types = [] {
     static_expect(is_braces_constructible<agg3, int, double, float>{});
 };
 
+test is_narrowed_types = [] {
+    static_expect(!is_narrowed<int, int>::value);
+    static_expect(!is_narrowed<float, float>::value);
+    static_expect(!is_narrowed<double, double>::value);
+    static_expect(is_narrowed<int, double>::value);
+    static_expect(is_narrowed<int, float>::value);
+    static_expect(is_narrowed<float, int>::value);
+    static_expect(is_narrowed<double, int>::value);
+    static_expect(is_narrowed<float, double>::value);
+    struct c {};
+    static_expect(!is_narrowed<int, c>::value);
+};
+
 test remove_specifiers_types = [] {
     static_expect(std::is_same<int, remove_specifiers_t<int>>{});
     static_expect(std::is_same<int, remove_specifiers_t<int&>>{});

@@ -218,23 +218,20 @@ test bind_multiple_times = [] {
     );
 };
 
-test bind_any_of_not_related = [] {
+test bind_narrowed_type = [] {
     auto errors_ = errors(
             "constraint not satisfied",
         #if defined(_MSC_VER)
-            "bind<.*>::is_not_related_to<.*a>.*bind<.*>::is_not_related_to<.*b>", "=.*c"
+            "bind<.*>::is_not_related_to<int>",
+            "=.*double"
         #else
-            "bind<.*c>::is_not_related_to<.*a>.*bind<.*c>::is_not_related_to<.*b>"
+            "bind<.*double>::is_not_related_to<int>"
         #endif
     );
 
     expect_compile_fail("", errors_,
-        struct a { };
-        struct b : a { };
-        struct c { };
-
         di::make_injector(
-            di::bind<di::any_of<a, b>, c>()
+            di::bind<int, double>()
         );
     );
 };
@@ -256,6 +253,27 @@ test bind_not_compatible_types = [] {
 
         di::make_injector(
             di::bind<int, impl>()
+        );
+    );
+};
+
+test bind_any_of_not_related = [] {
+    auto errors_ = errors(
+            "constraint not satisfied",
+        #if defined(_MSC_VER)
+            "bind<.*>::is_not_related_to<.*a>.*bind<.*>::is_not_related_to<.*b>", "=.*c"
+        #else
+            "bind<.*c>::is_not_related_to<.*a>.*bind<.*c>::is_not_related_to<.*b>"
+        #endif
+    );
+
+    expect_compile_fail("", errors_,
+        struct a { };
+        struct b : a { };
+        struct c { };
+
+        di::make_injector(
+            di::bind<di::any_of<a, b>, c>()
         );
     );
 };

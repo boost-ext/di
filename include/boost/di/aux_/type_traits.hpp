@@ -63,6 +63,11 @@ template<class T, class... TArgs>
 using is_braces_constructible_t =
     typename is_braces_constructible<T, TArgs...>::type;
 
+template<class TSrc, class TDst>
+using is_narrowed = std::integral_constant<bool,
+    std::is_arithmetic<TDst>::value && !std::is_same<TSrc, TDst>::value
+>;
+
 template<class T>
 using remove_specifiers =
     std::remove_cv<std::remove_pointer_t<std::remove_reference_t<T>>>;

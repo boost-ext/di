@@ -62,18 +62,11 @@ template<
     template<class, class> friend struct type_traits::referable_traits;
     friend class binder;
 
-    //TODO int, float -> should not compiler
-    template<class T>
-    using is_not_narrowed = std::integral_constant<bool,
-        (std::is_arithmetic<T>::value && std::is_same<TExpected, T>::value) || !std::is_arithmetic<T>::value
-    >;
-
     template<class T>
     using externable = std::integral_constant<bool,
         !is_injector<T>::value &&
         std::is_same<TScope, scopes::deduce>::value &&
-        std::is_same<TExpected, TGiven>::value &&
-        is_not_narrowed<T>::value
+        std::is_same<TExpected, TGiven>::value
     >;
 
     template<class T>
@@ -125,7 +118,7 @@ public:
         return dependency<T, TExpected, TGiven, TName>{};
     }
 
-    template<class T, BOOST_DI_REQUIRES(externable<T>::value) = 0>
+    template<class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value) = 0>
     auto to(T&& object) const noexcept {
         using dependency = dependency<
             scopes::external, TExpected, typename ref_traits<T>::type, TName

@@ -167,6 +167,10 @@ using is_braces_constructible =
 template<class T, class... TArgs>
 using is_braces_constructible_t =
     typename is_braces_constructible<T, TArgs...>::type;
+template<class TSrc, class TDst>
+using is_narrowed = std::integral_constant<bool,
+    std::is_arithmetic<TDst>::value && !std::is_same<TSrc, TDst>::value
+>;
 template<class T>
 using remove_specifiers =
     std::remove_cv<std::remove_pointer_t<std::remove_reference_t<T>>>;
@@ -998,15 +1002,10 @@ template<
     template<class, class> friend struct type_traits::referable_traits;
     friend class binder;
     template<class T>
-    using is_not_narrowed = std::integral_constant<bool,
-        (std::is_arithmetic<T>::value && std::is_same<TExpected, T>::value) || !std::is_arithmetic<T>::value
-    >;
-    template<class T>
     using externable = std::integral_constant<bool,
         !is_injector<T>::value &&
         std::is_same<TScope, scopes::deduce>::value &&
-        std::is_same<TExpected, TGiven>::value &&
-        is_not_narrowed<T>::value
+        std::is_same<TExpected, TGiven>::value
     >;
     template<class T>
     struct ref_traits {
@@ -1048,7 +1047,7 @@ public:
     auto in(const T&) const noexcept {
         return dependency<T, TExpected, TGiven, TName>{};
     }
-    template<class T, BOOST_DI_REQUIRES(externable<T>::value) = 0>
+    template<class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value) = 0>
     auto to(T&& object) const noexcept {
         using dependency = dependency<
             scopes::external, TExpected, typename ref_traits<T>::type, TName
@@ -1086,7 +1085,7 @@ struct is_dependency : std::is_base_of<dependency_base, T> { };
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
 struct call_operator { };
-template<class T>
+template<class>
 struct policy {
     template<class>
     struct requires_ : std::false_type { };
@@ -1448,7 +1447,7 @@ struct add_type_list<T, std::false_type, std::false_type> {
 #endif
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
-template<class T, class...>
+template<class...>
 struct bind {
     template<class TName>
     struct named { struct is_bound_more_than_once : std::false_type { }; };
@@ -1457,7 +1456,7 @@ struct bind {
     struct has_disallowed_specifiers : std::false_type { };
     template<class> struct is_not_related_to : std::false_type { };
 };
-template<class T, class...>
+template<class...>
 struct any_of : std::false_type { };
 template<class... TDeps>
 struct is_supported : std::is_same<
@@ -1538,8 +1537,8 @@ auto boundable_impl(I&&, T&&) ->
       , std::conditional_t<
             !std::is_same<T, aux::remove_specifiers_t<T>>::value
           , typename bind<T>::has_disallowed_specifiers
-          , std::conditional_t<
-                std::is_base_of<I, T>::value || std::is_convertible<T, I>::value
+          , std::conditional_t<std::is_base_of<I, T>::value ||
+                (std::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value)
               , std::true_type
               , typename bind<T>::template is_not_related_to<I>
             >
@@ -2271,7 +2270,7 @@ private:
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
 struct get { };
 struct is_creatable { };
-template<class T>
+template<class>
 struct provider {
     template<class...>
     struct requires_ : std::false_type { };
@@ -2298,7 +2297,7 @@ namespace boost { namespace di { inline namespace v1 { namespace concepts {
 template<class> struct policies { };
 struct providable_type { };
 struct callable_type { };
-template<class T>
+template<class>
 struct config {
     template<class...>
     struct requires_ : std::false_type { };
