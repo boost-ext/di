@@ -17,13 +17,7 @@ template<class T>
 struct type {
 template<class TPolicy>
 struct not_allowed_by {
-    operator T() const {
-        using constraint_not_satisfied = not_allowed_by;
-        return
-            constraint_not_satisfied{}.error();
-    }
-
-    static inline T
+    static inline std::false_type
     error(_ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>!");
 };};
 
@@ -151,17 +145,9 @@ struct constructible_impl {
 
     template<class TArg, BOOST_DI_REQUIRES(!T::template apply<TArg>::value) = 0>
     std::false_type operator()(const TArg&) const {
-        dump_error<typename TArg::type>(typename TArg::ignore{});
-        return {};
+        using constraint_not_satisfied = typename type<typename TArg::type>::template not_allowed_by<T>;
+        return constraint_not_satisfied{}.error();
     }
-
-    template<class T_>
-    void dump_error(const std::true_type&) const {
-        void(static_cast<T_>(typename type<T_>::template not_allowed_by<T>{}));
-    }
-
-    template<class>
-    void dump_error(const std::false_type&) const { }
 };
 
 template<class T = aux::never<_>, BOOST_DI_REQUIRES(std::is_base_of<type_op, T>::value) = 0>

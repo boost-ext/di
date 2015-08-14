@@ -1755,17 +1755,11 @@ struct any_type_ref_fwd {
 };
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
-template<
-    class T
-  , class TName
-  , class TIsRoot
-  , class TDeps
-  , class TIgnore = std::false_type
-> struct arg_wrapper {
+template<class T, class TName, class TIsRoot, class TDeps>
+struct arg_wrapper {
     using type BOOST_DI_UNUSED = T;
     using name BOOST_DI_UNUSED = TName;
     using is_root BOOST_DI_UNUSED = TIsRoot;
-    using ignore = TIgnore;
     template<class T_, class TName_, class TDefault_>
     using resolve = decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)0));
 };
@@ -2096,7 +2090,7 @@ private:
         using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using create_t = type_traits::referable_traits_t<T, dependency_t>;
-        policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>( TConfig::policies(*this), dependency, ctor_t{} );
+        policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>( TConfig::policies(*this), dependency, ctor_t{} );
         return wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
     template<class TIsRoot = std::false_type, class T>
@@ -2125,7 +2119,7 @@ private:
         using provider_t = successful::provider<expected_t, given_t, ctor_t, injector>;
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using create_t = type_traits::referable_traits_t<T, dependency_t>;
-        policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>( TConfig::policies(*this), dependency, ctor_t{} );
+        policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>( TConfig::policies(*this), dependency, ctor_t{} );
         return successful::wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
     }
 };
@@ -2393,12 +2387,7 @@ template<class T>
 struct type {
 template<class TPolicy>
 struct not_allowed_by {
-    operator T() const {
-        using constraint_not_satisfied = not_allowed_by;
-        return
-            constraint_not_satisfied{}.error();
-    }
-    static inline T
+    static inline std::false_type
     error(_ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>!");
 };};
 struct type_op {};
@@ -2505,15 +2494,9 @@ struct constructible_impl {
     }
     template<class TArg, BOOST_DI_REQUIRES(!T::template apply<TArg>::value) = 0>
     std::false_type operator()(const TArg&) const {
-        dump_error<typename TArg::type>(typename TArg::ignore{});
-        return {};
+        using constraint_not_satisfied = typename type<typename TArg::type>::template not_allowed_by<T>;
+        return constraint_not_satisfied{}.error();
     }
-    template<class T_>
-    void dump_error(const std::true_type&) const {
-        void(static_cast<T_>(typename type<T_>::template not_allowed_by<T>{}));
-    }
-    template<class>
-    void dump_error(const std::false_type&) const { }
 };
 template<class T = aux::never<_>, BOOST_DI_REQUIRES(std::is_base_of<type_op, T>::value) = 0>
 inline auto constructible(const T& = {}) {

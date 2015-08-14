@@ -218,7 +218,7 @@ private:
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using create_t = type_traits::referable_traits_t<T, dependency_t>;
         BOOST_DI_CORE_INJECTOR_POLICY(
-            policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>(
+            policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>(
                 TConfig::policies(*this), dependency, ctor_t{}
             );
         )()
@@ -256,7 +256,7 @@ private:
         using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
         using create_t = type_traits::referable_traits_t<T, dependency_t>;
         BOOST_DI_CORE_INJECTOR_POLICY(
-            policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t, std::true_type>>(
+            policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>(
                 TConfig::policies(*this), dependency, ctor_t{}
             );
         )()

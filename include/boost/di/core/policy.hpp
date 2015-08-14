@@ -15,17 +15,11 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
-template<
-    class T
-  , class TName
-  , class TIsRoot
-  , class TDeps
-  , class TIgnore = std::false_type
-> struct arg_wrapper {
+template<class T, class TName, class TIsRoot, class TDeps>
+struct arg_wrapper {
     using type BOOST_DI_UNUSED = T;
     using name BOOST_DI_UNUSED = TName;
     using is_root BOOST_DI_UNUSED = TIsRoot;
-    using ignore = TIgnore;
 
     template<class T_, class TName_, class TDefault_>
     using resolve = decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)0));
