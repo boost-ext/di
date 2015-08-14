@@ -58,6 +58,7 @@ di/extensions/constructor_bindings.html
 di/extensions/multi_bindings.html
 di/extensions/assisted_injection.html
 di/extensions/xml_injection.html
+di/extensions/inject_required.html
 di/extensions/types_dumper.html
 di/extensions/uml_dumper.html
 di/extensions/mocks_provider.html
