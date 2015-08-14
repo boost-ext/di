@@ -19,7 +19,7 @@ struct is_creatable { };
 template<class T>
 struct provider {
     template<class...>
-    struct requires_ { };
+    struct requires_ : std::false_type { };
 };
 
 template<class T>

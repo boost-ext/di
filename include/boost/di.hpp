@@ -145,8 +145,8 @@ namespace boost { namespace di { inline namespace v1 {
     namespace core { template<class> struct any_type_fwd; template<class> struct any_type_ref_fwd; }
     namespace detail { template<class, class> struct named_type; template<class, class...> class injector; }
 }}}
-#define BOOST_DI_REQUIRES(...) ::std::enable_if_t<__VA_ARGS__, int> = 0
-#define BOOST_DI_REQUIRES_TYPE(...) typename ::boost::di::aux::concept_check<__VA_ARGS__>::type = 0
+#define BOOST_DI_REQUIRES(...) typename ::std::enable_if<__VA_ARGS__, int>::type = 0
+#define BOOST_DI_REQUIRES_TYPE(...) typename ::boost::di::aux::concept_check<__VA_ARGS__>::type
 namespace boost { namespace di { inline namespace v1 { namespace aux {
 template<class T>
 struct concept_check { static_assert(T::value, "constraint not satisfied"); };
@@ -1082,7 +1082,7 @@ struct call_operator { };
 template<class T>
 struct policy {
     template<class>
-    struct requires_ { };
+    struct requires_ : std::false_type { };
 };
 struct arg {
     using type = void;
@@ -1385,7 +1385,7 @@ public:
 #define BOOST_DI_CFG boost::di::config
 #endif
 namespace boost { namespace di { inline namespace v1 {
-template<class... TPolicies, BOOST_DI_REQUIRES_TYPE(concepts::callable<TPolicies...>)>
+template<class... TPolicies, BOOST_DI_REQUIRES_TYPE(concepts::callable<TPolicies...>) = 0>
 inline auto make_policies(const TPolicies&... args) noexcept {
     return core::pool_t<TPolicies...>(args...);
 }
@@ -1444,11 +1444,11 @@ namespace boost { namespace di { inline namespace v1 { namespace concepts {
 template<class T, class...>
 struct bind {
     template<class TName>
-    struct named { struct is_bound_more_than_once { }; };
-    struct is_bound_more_than_once { };
-    struct is_neither_a_dependency_nor_an_injector { };
-    struct has_disallowed_specifiers { };
-    template<class> struct is_not_related_to { };
+    struct named { struct is_bound_more_than_once : std::false_type { }; };
+    struct is_bound_more_than_once : std::false_type { };
+    struct is_neither_a_dependency_nor_an_injector : std::false_type { };
+    struct has_disallowed_specifiers : std::false_type { };
+    template<class> struct is_not_related_to : std::false_type { };
 };
 template<class T, class...>
 struct any_of { };
@@ -1566,7 +1566,7 @@ using any_of = decltype(detail::any_of<T1, T2, Ts...>());
 template<
     class TExpected
   , class TGiven = TExpected
-  , BOOST_DI_REQUIRES_TYPE(concepts::boundable<TExpected, TGiven>)
+  , BOOST_DI_REQUIRES_TYPE(concepts::boundable<TExpected, TGiven>) = 0
 >
 #if defined(__cpp_variable_templates)
     core::dependency<scopes::deduce, TExpected, TGiven> bind{};
@@ -2273,7 +2273,7 @@ struct is_creatable { };
 template<class T>
 struct provider {
     template<class...>
-    struct requires_ { };
+    struct requires_ : std::false_type { };
 };
 template<class T>
 typename provider<T>::template requires_<get, is_creatable> providable_impl(...);
@@ -2300,7 +2300,7 @@ struct callable_type { };
 template<class T>
 struct config {
     template<class...>
-    struct requires_ { };
+    struct requires_ : std::false_type { };
 };
 std::false_type configurable_impl(...);
 template<class T>
@@ -2350,12 +2350,8 @@ BOOST_DI_CONCEPTS_CREATABLE_ATTR
 void
     create
 (const std::false_type&) { }
-template<class T, class...>
-class injector :
-    T { };
 template<class... T>
-class injector<std::true_type, T...>
-    : public core::injector<::BOOST_DI_CFG, core::pool<>, T...> {
+class injector<int, T...> : public core::injector<::BOOST_DI_CFG, core::pool<>, T...> {
 public:
     template<class TConfig, class TPolicies, class... TDeps>
     injector(const core::injector<TConfig, TPolicies, TDeps...>& injector) noexcept
@@ -2373,14 +2369,14 @@ public:
 };
 }
 template<class... T>
-using injector = detail::injector<concepts::boundable<aux::type<T...>>, T...>;
+using injector = detail::injector<BOOST_DI_REQUIRES_TYPE(concepts::boundable<aux::type<T...>>), T...>;
 }}}
 namespace boost { namespace di { inline namespace v1 {
 template<
      class TConfig = ::BOOST_DI_CFG
    , class... TDeps
-   , BOOST_DI_REQUIRES_TYPE(concepts::boundable<aux::type_list<TDeps...>>)
-   , BOOST_DI_REQUIRES_TYPE(concepts::configurable<TConfig>)
+   , BOOST_DI_REQUIRES_TYPE(concepts::boundable<aux::type_list<TDeps...>>) = 0
+   , BOOST_DI_REQUIRES_TYPE(concepts::configurable<TConfig>) = 0
 > inline auto make_injector(const TDeps&... args) noexcept {
     return core::injector<TConfig, decltype(((TConfig*)0)->policies(0)), TDeps...>{core::init{}, args...};
 }

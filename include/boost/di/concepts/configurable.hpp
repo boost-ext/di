@@ -20,7 +20,7 @@ struct callable_type { };
 template<class T>
 struct config {
     template<class...>
-    struct requires_ { };
+    struct requires_ : std::false_type { };
 };
 
 std::false_type configurable_impl(...);

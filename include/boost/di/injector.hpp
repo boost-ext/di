@@ -24,13 +24,8 @@ void
     create
 (const std::false_type&) { }
 
-template<class T, class...>
-class injector :
-    T { };
-
 template<class... T>
-class injector<std::true_type, T...>
-    : public core::injector<::BOOST_DI_CFG, core::pool<>, T...> {
+class injector<int, T...> : public core::injector<::BOOST_DI_CFG, core::pool<>, T...> {
 public:
     template<class TConfig, class TPolicies, class... TDeps>
     injector(const core::injector<TConfig, TPolicies, TDeps...>& injector) noexcept // non explicit
@@ -50,7 +45,7 @@ public:
 } // namespace detail
 
 template<class... T>
-using injector = detail::injector<concepts::boundable<aux::type<T...>>, T...>;
+using injector = detail::injector<BOOST_DI_REQUIRES_TYPE(concepts::boundable<aux::type<T...>>), T...>;
 
 }}} // boost::di::v1
 

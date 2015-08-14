@@ -16,11 +16,11 @@ namespace boost { namespace di { inline namespace v1 { namespace concepts {
 template<class T, class...>
 struct bind {
     template<class TName>
-    struct named { struct is_bound_more_than_once  { }; };
-    struct is_bound_more_than_once  { };
-    struct is_neither_a_dependency_nor_an_injector { };
-    struct has_disallowed_specifiers { };
-    template<class> struct is_not_related_to { };
+    struct named { struct is_bound_more_than_once : std::false_type { }; };
+    struct is_bound_more_than_once : std::false_type { };
+    struct is_neither_a_dependency_nor_an_injector : std::false_type { };
+    struct has_disallowed_specifiers : std::false_type { };
+    template<class> struct is_not_related_to : std::false_type { };
 };
 
 template<class T, class...>

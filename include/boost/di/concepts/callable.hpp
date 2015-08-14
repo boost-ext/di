@@ -20,7 +20,7 @@ struct call_operator { };
 template<class T>
 struct policy {
     template<class>
-    struct requires_ { };
+    struct requires_ : std::false_type { };
 };
 
 struct arg {
