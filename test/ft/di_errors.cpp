@@ -151,7 +151,7 @@ test bind_external_with_given_value = [] {
 
 test bind_has_disallowed_specifiers_expected = [] {
     auto errors_ = errors(
-            "boundable constraint not satisfied",
+            "constraint not satisfied",
         #if defined(_MSC_VER)
             "bind<.*>::has_disallowed_specifiers", "=.*int.*\\*"
         #else
@@ -168,7 +168,7 @@ test bind_has_disallowed_specifiers_expected = [] {
 
 test bind_has_disallowed_specifiers_given = [] {
     auto errors_ = errors(
-            "boundable constraint not satisfied",
+            "constraint not satisfied",
         #if defined(_MSC_VER)
             "bind<.*>::has_disallowed_specifiers", "=.*const.*int.*&"
         #else
@@ -185,7 +185,7 @@ test bind_has_disallowed_specifiers_given = [] {
 
 test bind_external_repeated = [] {
     auto errors_ = errors(
-            "boundable constraint not satisfied",
+            "constraint not satisfied",
         #if defined(_MSC_VER)
             "bind<.*>::is_bound_more_than_once", "=.*int"
         #else
@@ -203,7 +203,7 @@ test bind_external_repeated = [] {
 
 test bind_multiple_times = [] {
     auto errors_ = errors(
-            "boundable constraint not satisfied",
+            "constraint not satisfied",
         #if defined(_MSC_VER)
             "bind<.*>::is_bound_more_than_once", "=.*i"
         #else
@@ -225,7 +225,7 @@ test bind_multiple_times = [] {
 
 test bind_any_of_not_related = [] {
     auto errors_ = errors(
-            "boundable constraint not satisfied",
+            "constraint not satisfied",
         #if defined(_MSC_VER)
             "bind<.*>::is_not_related_to<int>",
             "=.*impl"
@@ -247,7 +247,7 @@ test bind_any_of_not_related = [] {
 
 test bind_not_compatible_types = [] {
     auto errors_ = errors(
-            "boundable constraint not satisfied",
+            "constraint not satisfied",
         #if defined(_MSC_VER)
             "bind<.*>::is_not_related_to<int>",
             "=.*impl"
@@ -268,7 +268,7 @@ test bind_not_compatible_types = [] {
 
 test bind_repeated = [] {
     auto errors_ = errors(
-            "boundable constraint not satisfied",
+            "constraint not satisfied",
         #if defined(_MSC_VER)
             "bind<.*>::is_bound_more_than_once", "=.*i"
         #else
@@ -290,7 +290,7 @@ test bind_repeated = [] {
 
 test bind_to_different_types = [] {
     auto errors_ = errors(
-            "boundable constraint not satisfied",
+            "constraint not satisfied",
         #if defined(_MSC_VER)
             "bind<.*>::is_bound_more_than_once", "=.*i"
         #else
@@ -312,7 +312,7 @@ test bind_to_different_types = [] {
 
 test exposed_multiple_times = [] {
     auto errors_ = errors(
-            "boundable constraint not satisfied",
+            "constraint not satisfied",
         #if defined(_MSC_VER)
             "bind<.*>::is_bound_more_than_once", "=.*c"
         #else
@@ -328,7 +328,7 @@ test exposed_multiple_times = [] {
 
 test make_injector_wrong_arg = [] {
     auto errors_ = errors(
-            "boundable constraint not satisfied",
+            "constraint not satisfied",
         #if defined(_MSC_VER)
             "bind<.*>::is_neither_a_dependency_nor_an_injector", "=.*neither_module_nor_injector_nor_module"
         #else
@@ -360,15 +360,15 @@ test dummy_config = [] {
 
 test config_wrong_policy = [] {
     auto errors_ = errors(
-            "callable constraint not satisfied",
+            "constraint not satisfied",
         #if defined(_MSC_VER)
-            "policy<.*>::is_not_callable", "=.*int"
+            "policy<.*>::requires_<.*call_operator>", "=.*int"
         #else
-            "policy<.*int>::is_not_callable"
+            "policy<.*int>::requires_<.*call_operator>"
         #endif
     );
 
-    expect_compile_fail("", errors("callable constraint not satisfied"),
+    expect_compile_fail("", errors_,
         struct test_config : di::config {
             static auto policies(...) { return 42; }
         };
@@ -378,7 +378,7 @@ test config_wrong_policy = [] {
 
 test config_policy_not_callable = [] {
     auto errors_ = errors(
-            "callable constraint not satisfied",
+            "constraint not satisfied",
         #if defined(_MSC_VER)
             "policy<.*>::requires_<.*call_operator>", "=.*dummy"
         #else
@@ -397,7 +397,7 @@ test config_policy_not_callable = [] {
 
 test config_not_providable = [] {
     auto errors_ = errors(
-            "providable constraint not satisfied",
+            "constraint not satisfied",
         #if defined(_MSC_VER)
             "config<.*>::requires_<.*get, .*is_creatable>", "=.*dummy"
         #else
@@ -414,23 +414,23 @@ test config_not_providable = [] {
     );
 };
 
-//test config_wrong_provider = [] {
-    //auto errors_ = errors(
-            //"configurable constraint not satisfied",
-        //#if defined(_MSC_VER)
-            //"config<.*>::is_not_providable", "=.*test_config"
-        //#else
-            //"config<.*test_config>::requires_<.*provider<.*providable_type(...)>.*policies<.*callable_type(...)>"
-        //#endif
-    //);
+test config_wrong_provider = [] {
+    auto errors_ = errors(
+            "constraint not satisfied",
+        #if defined(_MSC_VER)
+            "config<.*>::is_not_providable", "=.*test_config"
+        #else
+            "config<.*test_config>::requires_<.*provider<.*providable_type.*(...)>.*policies<.*callable_type.*(...)>"
+        #endif
+    );
 
-    //expect_compile_fail("", errors_,
-        //struct test_config : di::config {
-            //static auto provider() { return di::providers::heap{}; }
-        //};
-        //auto injector = di::make_injector<test_config>();
-    //);
-//};
+    expect_compile_fail("", errors_,
+        struct test_config : di::config {
+            static auto provider() { return di::providers::heap{}; }
+        };
+        auto injector = di::make_injector<test_config>();
+    );
+};
 
 // ---------------------------------------------------------------------------
 
