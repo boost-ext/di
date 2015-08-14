@@ -712,7 +712,7 @@ public:
 };
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace scopes {
-template<class, class = void> struct has_result_type : std::false_type { }; template<class T> struct has_result_type< T, typename aux::void_t<typename T::result_type>::type > : std::true_type { };
+template<class, class = void> struct has_result_type : std::false_type { }; template<class T> struct has_result_type<T, typename aux::void_t<typename T::result_type>::type> : std::true_type { };
 class external {
     struct injector {
         template<class T> T create() const;
@@ -848,7 +848,7 @@ public:
 #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
 #endif
 namespace boost { namespace di { inline namespace v1 { namespace type_traits {
-template<class, class = void> struct is_injectable : std::false_type { }; template<class T> struct is_injectable< T, typename aux::void_t<typename T::boost_di_inject__>::type > : std::true_type { };
+template<class, class = void> struct is_injectable : std::false_type { }; template<class T> struct is_injectable<T, typename aux::void_t<typename T::boost_di_inject__>::type> : std::true_type { };
 struct direct { };
 struct uniform { };
 template<class T, int>
@@ -965,7 +965,7 @@ using scopable = typename scopable__<T>::type;
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
 template<class T, class... TArgs> decltype(std::declval<T>().configure(std::declval<TArgs>()...) , std::true_type()) has_configure_impl(int); template<class, class...> std::false_type has_configure_impl(...); template<class T, class... TArgs> struct has_configure : decltype(has_configure_impl<T, TArgs...>(0)) { };
-template<class, class = void> struct has_deps : std::false_type { }; template<class T> struct has_deps< T, typename aux::void_t<typename T::deps>::type > : std::true_type { };
+template<class, class = void> struct has_deps : std::false_type { }; template<class T> struct has_deps<T, typename aux::void_t<typename T::deps>::type> : std::true_type { };
 template<class T, class U = std::remove_reference_t<T>>
 struct is_injector :
     std::integral_constant<bool, has_deps<U>::value || has_configure<U>::value>{};

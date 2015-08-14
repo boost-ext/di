@@ -11,25 +11,25 @@
 #include "boost/di/fwd.hpp"
 #include "boost/di/aux_/utility.hpp"
 
-#define BOOST_DI_HAS_TYPE(name, call_name)                          \
-    template<class, class = void>                                   \
-    struct name : std::false_type { };                              \
-                                                                    \
-    template<class T>                                               \
-    struct name<                                                    \
-        T, typename aux::void_t<typename T::call_name>::type        \
-    > : std::true_type { }
+#define BOOST_DI_HAS_TYPE(name, call_name)                              \
+    template<class, class = void>                                       \
+    struct name : std::false_type { };                                  \
+                                                                        \
+    template<class T>                                                   \
+    struct name<T, typename aux::void_t<typename T::call_name>::type>   \
+        : std::true_type                                                \
+    { }
 
-#define BOOST_DI_HAS_METHOD(name, call_name)                        \
-    template<class T, class... TArgs>                               \
-    decltype(std::declval<T>().call_name(std::declval<TArgs>()...)  \
-           , std::true_type())                                      \
-    name##_impl(int);                                               \
-                                                                    \
-    template<class, class...>                                       \
-    std::false_type name##_impl(...);                               \
-                                                                    \
-    template<class T, class... TArgs>                               \
+#define BOOST_DI_HAS_METHOD(name, call_name)                            \
+    template<class T, class... TArgs>                                   \
+    decltype(std::declval<T>().call_name(std::declval<TArgs>()...)      \
+           , std::true_type())                                          \
+    name##_impl(int);                                                   \
+                                                                        \
+    template<class, class...>                                           \
+    std::false_type name##_impl(...);                                   \
+                                                                        \
+    template<class T, class... TArgs>                                   \
     struct name : decltype(name##_impl<T, TArgs...>(0)) { }
 
 #define BOOST_DI_REQUIRES(...) typename ::std::enable_if<__VA_ARGS__, int>::type // __pph__
