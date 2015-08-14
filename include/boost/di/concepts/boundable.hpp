@@ -13,7 +13,7 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
-template<class T, class...>
+template<class...>
 struct bind {
     template<class TName>
     struct named { struct is_bound_more_than_once : std::false_type { }; };
@@ -23,8 +23,8 @@ struct bind {
     template<class> struct is_not_related_to : std::false_type { };
 };
 
-template<class T, class...>
-struct any_of { };
+template<class...>
+struct any_of : std::false_type { };
 
 template<class... TDeps>
 struct is_supported : std::is_same<

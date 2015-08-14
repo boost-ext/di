@@ -17,7 +17,7 @@ template<class> struct policies { };
 struct providable_type { };
 struct callable_type { };
 
-template<class T>
+template<class>
 struct config {
     template<class...>
     struct requires_ : std::false_type { };

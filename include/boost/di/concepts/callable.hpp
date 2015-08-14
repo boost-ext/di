@@ -17,7 +17,7 @@ namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
 struct call_operator { };
 
-template<class T>
+template<class>
 struct policy {
     template<class>
     struct requires_ : std::false_type { };

@@ -16,7 +16,7 @@ namespace boost { namespace di { inline namespace v1 { namespace concepts {
 struct get { };
 struct is_creatable { };
 
-template<class T>
+template<class>
 struct provider {
     template<class...>
     struct requires_ : std::false_type { };
