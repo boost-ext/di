@@ -33,7 +33,7 @@
     struct name : decltype(name##_impl<T, TArgs...>(0)) { }
 
 #define BOOST_DI_REQUIRES(...) typename ::std::enable_if<__VA_ARGS__, int>::type // __pph__
-#define BOOST_DI_REQUIRES_TYPE(...) typename ::boost::di::aux::concept_check<__VA_ARGS__>::type // __pph__
+#define BOOST_DI_REQUIRES_MSG(...) typename ::boost::di::aux::concept_check<__VA_ARGS__>::type // __pph__
 
 namespace boost { namespace di { inline namespace v1 { namespace aux {
 

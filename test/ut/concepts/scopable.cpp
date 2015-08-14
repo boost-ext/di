@@ -50,6 +50,7 @@ class scope_private_access {
 #if !defined(_MSC_VER)
     test private_access = [] {
         static_expect(!scopable<scope_private_access>::value);
+        static_expect(std::is_same<scope<scope_private_access>::requires_<is_referable, try_create, create>, scopable<scope_private_access>>::value);
     };
 #endif
 
@@ -67,6 +68,7 @@ public:
 
 test missing_create = [] {
     static_expect(!scopable<scope_missing_create>::value);
+    static_expect(std::is_same<scope<scope_missing_create>::requires_<is_referable, try_create, create>, scopable<scope_missing_create>>::value);
 };
 
 class scope_missing_try_create {
@@ -83,6 +85,7 @@ public:
 
 test missing_try_create = [] {
     static_expect(!scopable<scope_missing_try_create>::value);
+    static_expect(std::is_same<scope<scope_missing_try_create>::requires_<is_referable, try_create, create>, scopable<scope_missing_try_create>>::value);
 };
 
 class scope_missing_is_referable {
@@ -99,6 +102,7 @@ public:
 
 test missing_is_referable = [] {
     static_expect(!scopable<scope_missing_is_referable>::value);
+    static_expect(std::is_same<scope<scope_missing_is_referable>::requires_<is_referable, try_create, create>, scopable<scope_missing_is_referable>>::value);
 };
 
 test scopable_scopes = [] {

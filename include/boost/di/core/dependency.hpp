@@ -113,7 +113,7 @@ public:
         return dependency<TScope, TExpected, TGiven, T>{*this};
     }
 
-    template<class T, BOOST_DI_REQUIRES(concepts::scopable<T>::value) = 0>
+    template<class T, BOOST_DI_REQUIRES_MSG(concepts::scopable<T>) = 0>
     auto in(const T&) const noexcept {
         return dependency<T, TExpected, TGiven, TName>{};
     }

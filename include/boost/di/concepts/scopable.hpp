@@ -13,6 +13,16 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
+struct is_referable { };
+struct try_create { };
+struct create { };
+
+template<class>
+struct scope {
+    template<class...>
+    struct requires_ : std::false_type { };
+};
+
 template<class T>
 struct provider__ {
     template<class TMemory = type_traits::heap>
@@ -25,7 +35,8 @@ struct provider__ {
     }
 };
 
-std::false_type scopable_impl(...);
+template<class T>
+typename scope<T>::template requires_<is_referable, try_create, create> scopable_impl(...);
 
 template<class T>
 auto scopable_impl(T&&) -> aux::is_valid_expr<
@@ -36,7 +47,7 @@ auto scopable_impl(T&&) -> aux::is_valid_expr<
 
 template<class T>
 struct scopable__ {
-    using type = decltype(scopable_impl(std::declval<T>()));
+    using type = decltype(scopable_impl<T>(std::declval<T>()));
 };
 
 template<class T>

@@ -146,7 +146,7 @@ namespace boost { namespace di { inline namespace v1 {
     namespace detail { template<class, class> struct named_type; template<class, class...> class injector; }
 }}}
 #define BOOST_DI_REQUIRES(...) typename ::std::enable_if<__VA_ARGS__, int>::type
-#define BOOST_DI_REQUIRES_TYPE(...) typename ::boost::di::aux::concept_check<__VA_ARGS__>::type
+#define BOOST_DI_REQUIRES_MSG(...) typename ::boost::di::aux::concept_check<__VA_ARGS__>::type
 namespace boost { namespace di { inline namespace v1 { namespace aux {
 template<class T>
 struct concept_check { static_assert(T::value, "constraint not satisfied"); };
@@ -939,6 +939,14 @@ struct ctor_traits<T, BOOST_DI_REQUIRES(
 };
 }}}
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
+struct is_referable { };
+struct try_create { };
+struct create { };
+template<class>
+struct scope {
+    template<class...>
+    struct requires_ : std::false_type { };
+};
 template<class T>
 struct provider__ {
     template<class TMemory = type_traits::heap>
@@ -949,7 +957,8 @@ struct provider__ {
         return nullptr;
     }
 };
-std::false_type scopable_impl(...);
+template<class T>
+typename scope<T>::template requires_<is_referable, try_create, create> scopable_impl(...);
 template<class T>
 auto scopable_impl(T&&) -> aux::is_valid_expr<
     typename T::template scope<_, _>::template is_referable<_>
@@ -958,7 +967,7 @@ auto scopable_impl(T&&) -> aux::is_valid_expr<
 >;
 template<class T>
 struct scopable__ {
-    using type = decltype(scopable_impl(std::declval<T>()));
+    using type = decltype(scopable_impl<T>(std::declval<T>()));
 };
 template<class T>
 using scopable = typename scopable__<T>::type;
@@ -1043,7 +1052,7 @@ public:
     auto named(const T&) const noexcept {
         return dependency<TScope, TExpected, TGiven, T>{*this};
     }
-    template<class T, BOOST_DI_REQUIRES(concepts::scopable<T>::value) = 0>
+    template<class T, BOOST_DI_REQUIRES_MSG(concepts::scopable<T>) = 0>
     auto in(const T&) const noexcept {
         return dependency<T, TExpected, TGiven, TName>{};
     }
@@ -1391,7 +1400,7 @@ public:
 #define BOOST_DI_CFG boost::di::config
 #endif
 namespace boost { namespace di { inline namespace v1 {
-template<class... TPolicies, BOOST_DI_REQUIRES_TYPE(concepts::callable<TPolicies...>) = 0>
+template<class... TPolicies, BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>) = 0>
 inline auto make_policies(const TPolicies&... args) noexcept {
     return core::pool_t<TPolicies...>(args...);
 }
@@ -1572,7 +1581,7 @@ using any_of = decltype(detail::any_of<T1, T2, Ts...>());
 template<
     class TExpected
   , class TGiven = TExpected
-  , BOOST_DI_REQUIRES_TYPE(concepts::boundable<TExpected, TGiven>) = 0
+  , BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, TGiven>) = 0
 >
 #if defined(__cpp_variable_templates)
     core::dependency<scopes::deduce, TExpected, TGiven> bind{};
@@ -2369,14 +2378,14 @@ public:
 };
 }
 template<class... T>
-using injector = detail::injector<BOOST_DI_REQUIRES_TYPE(concepts::boundable<aux::type<T...>>), T...>;
+using injector = detail::injector<BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>), T...>;
 }}}
 namespace boost { namespace di { inline namespace v1 {
 template<
      class TConfig = ::BOOST_DI_CFG
    , class... TDeps
-   , BOOST_DI_REQUIRES_TYPE(concepts::boundable<aux::type_list<TDeps...>>) = 0
-   , BOOST_DI_REQUIRES_TYPE(concepts::configurable<TConfig>) = 0
+   , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type_list<TDeps...>>) = 0
+   , BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>) = 0
 > inline auto make_injector(const TDeps&... args) noexcept {
     return core::injector<TConfig, decltype(((TConfig*)0)->policies(0)), TDeps...>{core::init{}, args...};
 }

@@ -45,7 +45,7 @@ public:
 } // namespace detail
 
 template<class... T>
-using injector = detail::injector<BOOST_DI_REQUIRES_TYPE(concepts::boundable<aux::type<T...>>), T...>;
+using injector = detail::injector<BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>), T...>;
 
 }}} // boost::di::v1
 

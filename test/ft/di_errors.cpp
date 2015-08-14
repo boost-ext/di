@@ -141,10 +141,39 @@ test bind_external_with_given_type = [] {
     );
 };
 
+test bind_named_to_named = [] {
+    expect_compile_fail("", errors(),
+        struct a { };
+        struct b { };
+
+        di::make_injector(
+            di::bind<int>().named(a{}).named(b{})
+        );
+    );
+};
+
 test bind_external_with_given_value = [] {
     expect_compile_fail("", errors(),
         di::make_injector(
             di::bind<int, std::integral_constant<int, 0>>.to(42);
+        );
+    );
+};
+
+test bind_in_not_scopable_type = [] {
+    auto errors_ = errors(
+            "constraint not satisfied",
+        #if defined(_MSC_VER)
+            "scope<.*>::requires_<.*is_referable,.*try_create,.*create>", "=.*dummy"
+        #else
+            "scope<.*dummy>::requires_<.*is_referable,.*try_create,.*create>"
+        #endif
+    );
+
+    expect_compile_fail("", errors_,
+        struct dummy {};
+        auto injector = di::make_injector(
+            di::bind<int>().in(dummy{})
         );
     );
 };
@@ -342,15 +371,15 @@ test make_injector_wrong_arg = [] {
     auto errors_ = errors(
             "constraint not satisfied",
         #if defined(_MSC_VER)
-            "bind<.*>::is_neither_a_dependency_nor_an_injector", "=.*neither_module_nor_injector_nor_module"
+            "bind<.*>::is_neither_a_dependency_nor_an_injector", "=.*dummy"
         #else
-            "bind<.*neither_module_nor_injector_nor_module>::is_neither_a_dependency_nor_an_injector"
+            "bind<.*dummy>::is_neither_a_dependency_nor_an_injector"
         #endif
     );
 
     expect_compile_fail("", errors_,
-        struct neither_module_nor_injector_nor_module { };
-        di::make_injector(neither_module_nor_injector_nor_module{});
+        struct dummy { };
+        di::make_injector(dummy{});
     );
 };
 
