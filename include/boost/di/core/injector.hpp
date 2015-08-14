@@ -136,18 +136,18 @@ public:
         : injector{from_injector{}, other, deps{}}
     { }
 
-    template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>::value)>
+    template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, is_root_t>::value) = 0>
     T create() const {
         return BOOST_DI_TYPE_WKND(T)create_successful_impl<is_root_t>(aux::type<T>{});
     }
 
-    template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, is_root_t>::value)>
+    template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, is_root_t>::value) = 0>
     BOOST_DI_CONCEPTS_CREATABLE_ATTR
     T create() const {
         return BOOST_DI_TYPE_WKND(T)create_impl<is_root_t>(aux::type<T>{});
     }
 
-    template<class T, BOOST_DI_REQUIRES(!has_deps<T>::value)>
+    template<class T, BOOST_DI_REQUIRES(!has_deps<T>::value) = 0>
     operator T() const {
         return create<T>();
     }

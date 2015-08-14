@@ -14,7 +14,7 @@ namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 
 template<class T>
 struct unique {
-    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T, I>::value)>
+    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T, I>::value) = 0>
     inline operator I() const noexcept {
         return object;
     }

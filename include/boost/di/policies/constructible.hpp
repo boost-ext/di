@@ -144,12 +144,12 @@ inline auto operator!(const T&) {
 
 template<class T>
 struct constructible_impl {
-    template<class TArg, BOOST_DI_REQUIRES(T::template apply<TArg>::value)>
+    template<class TArg, BOOST_DI_REQUIRES(T::template apply<TArg>::value) = 0>
     std::true_type operator()(const TArg&) const {
         return {};
     }
 
-    template<class TArg, BOOST_DI_REQUIRES(!T::template apply<TArg>::value)>
+    template<class TArg, BOOST_DI_REQUIRES(!T::template apply<TArg>::value) = 0>
     std::false_type operator()(const TArg&) const {
         dump_error<typename TArg::type>(typename TArg::ignore{});
         return {};
@@ -164,12 +164,12 @@ struct constructible_impl {
     void dump_error(const std::false_type&) const { }
 };
 
-template<class T = aux::never<_>, BOOST_DI_REQUIRES(std::is_base_of<type_op, T>::value)>
+template<class T = aux::never<_>, BOOST_DI_REQUIRES(std::is_base_of<type_op, T>::value) = 0>
 inline auto constructible(const T& = {}) {
     return constructible_impl<T>{};
 }
 
-template<class T = aux::never<_>, BOOST_DI_REQUIRES(!std::is_base_of<type_op, T>::value)>
+template<class T = aux::never<_>, BOOST_DI_REQUIRES(!std::is_base_of<type_op, T>::value) = 0>
 inline auto constructible(const T& = {}) {
     return constructible_impl<or_<T>>{};
 }

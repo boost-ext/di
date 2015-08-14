@@ -41,7 +41,7 @@ class external {
     using wrapper_traits_t = typename wrapper_traits<T>::type;
 
 public:
-    template<class TExpected, class, class = void>
+    template<class TExpected, class, class = int>
     struct scope {
         template<class>
         using is_referable = std::false_type;
@@ -63,8 +63,8 @@ public:
 
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven&,
-        BOOST_DI_REQUIRES__(!aux::is_callable<TGiven, const injector&>::value &&
-                            !aux::is_callable<TGiven, const injector&, const arg<aux::none_type, TExpected, TGiven>&>::value)
+        BOOST_DI_REQUIRES(!aux::is_callable<TGiven, const injector&>::value &&
+                          !aux::is_callable<TGiven, const injector&, const arg<aux::none_type, TExpected, TGiven>&>::value)
     > {
         template<class>
         using is_referable = std::true_type;
@@ -107,9 +107,9 @@ public:
 
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven,
-        BOOST_DI_REQUIRES__(!aux::is_callable<TGiven, const injector&>::value &&
-                            !aux::is_callable<TExpected>::value &&
-                             aux::is_callable<TGiven>::value)
+        BOOST_DI_REQUIRES(!aux::is_callable<TGiven, const injector&>::value &&
+                          !aux::is_callable<TExpected>::value &&
+                           aux::is_callable<TGiven>::value)
     > {
         template<class>
         using is_referable = std::false_type;
@@ -133,8 +133,8 @@ public:
 
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven,
-        BOOST_DI_REQUIRES__(aux::is_callable<TGiven, const injector&>::value &&
-                           !has_result_type<TGiven>::value)
+        BOOST_DI_REQUIRES(aux::is_callable<TGiven, const injector&>::value &&
+                         !has_result_type<TGiven>::value)
     > {
         template<class>
         using is_referable = std::false_type;
@@ -157,8 +157,8 @@ public:
 
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven,
-        BOOST_DI_REQUIRES__(aux::is_callable<TGiven, const injector&, const arg<aux::none_type, TExpected, TGiven>&>::value &&
-                           !has_result_type<TGiven>::value)
+        BOOST_DI_REQUIRES(aux::is_callable<TGiven, const injector&, const arg<aux::none_type, TExpected, TGiven>&>::value &&
+                         !has_result_type<TGiven>::value)
     > {
         template<class>
         using is_referable = std::false_type;

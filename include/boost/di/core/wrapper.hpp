@@ -32,7 +32,7 @@ struct wrapper {
 
 } // successful
 
-template<class T, class TWrapper, class = void>
+template<class T, class TWrapper, class = int>
 struct wrapper_impl {
     using element_type = T;
 
@@ -48,7 +48,7 @@ struct wrapper_impl {
 };
 
 template<class T, class TWrapper>
-struct wrapper_impl<T, TWrapper, BOOST_DI_REQUIRES__(!std::is_convertible<TWrapper, T>::value)> {
+struct wrapper_impl<T, TWrapper, BOOST_DI_REQUIRES(!std::is_convertible<TWrapper, T>::value)> {
     using element_type = T;
 
     inline operator T() const noexcept {

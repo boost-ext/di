@@ -115,17 +115,17 @@ public:
         : TScope::template scope<TExpected, TGiven>(other)
     { }
 
-    template<class T, BOOST_DI_REQUIRES(std::is_same<TName, no_name>::value && !std::is_same<T, no_name>::value)>
+    template<class T, BOOST_DI_REQUIRES(std::is_same<TName, no_name>::value && !std::is_same<T, no_name>::value) = 0>
     auto named(const T&) const noexcept {
         return dependency<TScope, TExpected, TGiven, T>{*this};
     }
 
-    template<class T, BOOST_DI_REQUIRES(concepts::scopable<T>::value)>
+    template<class T, BOOST_DI_REQUIRES(concepts::scopable<T>::value) = 0>
     auto in(const T&) const noexcept {
         return dependency<T, TExpected, TGiven, TName>{};
     }
 
-    template<class T, BOOST_DI_REQUIRES(externable<T>::value)>
+    template<class T, BOOST_DI_REQUIRES(externable<T>::value) = 0>
     auto to(T&& object) const noexcept {
         using dependency = dependency<
             scopes::external, TExpected, typename ref_traits<T>::type, TName
@@ -133,7 +133,7 @@ public:
         return dependency{static_cast<T&&>(object)};
     }
 
-    template<class T, BOOST_DI_REQUIRES(has_configure<T>::value)>
+    template<class T, BOOST_DI_REQUIRES(has_configure<T>::value) = 0>
     auto to(const T& object) const noexcept {
         using dependency = dependency<
             scopes::exposed<TScope>, TExpected, decltype(std::declval<T>().configure()), TName
@@ -141,7 +141,7 @@ public:
         return dependency{object.configure()};
     }
 
-    template<class T, BOOST_DI_REQUIRES(has_deps<T>::value)>
+    template<class T, BOOST_DI_REQUIRES(has_deps<T>::value) = 0>
     auto to(const T& object) const noexcept {
         using dependency = dependency<
             scopes::exposed<TScope>, TExpected, T, TName
