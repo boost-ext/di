@@ -14,13 +14,13 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
-template<class T, class = void>
+template<class T, class = int>
 struct get_deps {
     using type = typename T::deps;
 };
 
 template<class T>
-struct get_deps<T, std::enable_if_t<has_configure<T>::value>> {
+struct get_deps<T, BOOST_DI_REQUIRES(has_configure<T>::value)> {
     using result_type = typename aux::function_traits<
         decltype(&T::configure)
     >::result_type;

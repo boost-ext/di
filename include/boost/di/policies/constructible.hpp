@@ -29,14 +29,14 @@ struct not_allowed_by {
 
 struct type_op {};
 
-template<class T, class = void>
+template<class T, class = int>
 struct apply_impl {
     template<class>
     struct apply : T { };
 };
 
 template<template<class...> class T, class... Ts>
-struct apply_impl<T<Ts...>, std::enable_if_t<!std::is_base_of<type_op, T<Ts...>>::value>> {
+struct apply_impl<T<Ts...>, BOOST_DI_REQUIRES(!std::is_base_of<type_op, T<Ts...>>::value)> {
     template<class TOp, class>
     struct apply_placeholder_impl {
         using type = TOp;
@@ -58,7 +58,7 @@ struct apply_impl<T<Ts...>, std::enable_if_t<!std::is_base_of<type_op, T<Ts...>>
 };
 
 template<class T>
-struct apply_impl<T, std::enable_if_t<std::is_base_of<type_op, T>::value>> {
+struct apply_impl<T, BOOST_DI_REQUIRES(std::is_base_of<type_op, T>::value)> {
     template<class TArg>
     struct apply : T::template apply<TArg>::type { };
 };

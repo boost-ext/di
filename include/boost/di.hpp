@@ -324,7 +324,7 @@ struct unique<T*> {
 namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 struct stack { };
 struct heap { };
-template<class T, class = void>
+template<class T, class = int>
 struct memory_traits {
     using type = stack;
 };
@@ -385,7 +385,7 @@ struct memory_traits<const std::weak_ptr<T>&> {
     using type = heap;
 };
 template<class T>
-struct memory_traits<T, std::enable_if_t<std::is_polymorphic<T>::value>> {
+struct memory_traits<T, BOOST_DI_REQUIRES(std::is_polymorphic<T>::value)> {
     using type = heap;
 };
 template<class T>
@@ -1201,7 +1201,7 @@ struct when_creating {
 template<class TParent, class TName = no_name>
 struct in_type {
     template<class T>
-    using is_not_same = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
+    using is_not_same = BOOST_DI_REQUIRES(!aux::is_same_or_base_of<T, TParent>::value);
     template<class T, class = is_not_same<T>>
     operator T() {
         return {};
@@ -1216,7 +1216,7 @@ struct in_type {
 template<class TParent>
 struct in_type<TParent, no_name> {
     template<class T>
-    using is_not_same = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
+    using is_not_same = BOOST_DI_REQUIRES(!aux::is_same_or_base_of<T, TParent>::value);
     template<class T, class = is_not_same<T>>
     operator T() {
         return {};
@@ -1409,12 +1409,12 @@ public:
 };
 }}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
-template<class T, class = void>
+template<class T, class = int>
 struct get_deps {
     using type = typename T::deps;
 };
 template<class T>
-struct get_deps<T, std::enable_if_t<has_configure<T>::value>> {
+struct get_deps<T, BOOST_DI_REQUIRES(has_configure<T>::value)> {
     using result_type = typename aux::function_traits<
         decltype(&T::configure)
     >::result_type;
@@ -2402,13 +2402,13 @@ struct not_allowed_by {
     error(_ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>!");
 };};
 struct type_op {};
-template<class T, class = void>
+template<class T, class = int>
 struct apply_impl {
     template<class>
     struct apply : T { };
 };
 template<template<class...> class T, class... Ts>
-struct apply_impl<T<Ts...>, std::enable_if_t<!std::is_base_of<type_op, T<Ts...>>::value>> {
+struct apply_impl<T<Ts...>, BOOST_DI_REQUIRES(!std::is_base_of<type_op, T<Ts...>>::value)> {
     template<class TOp, class>
     struct apply_placeholder_impl {
         using type = TOp;
@@ -2426,7 +2426,7 @@ struct apply_impl<T<Ts...>, std::enable_if_t<!std::is_base_of<type_op, T<Ts...>>
     { };
 };
 template<class T>
-struct apply_impl<T, std::enable_if_t<std::is_base_of<type_op, T>::value>> {
+struct apply_impl<T, BOOST_DI_REQUIRES(std::is_base_of<type_op, T>::value)> {
     template<class TArg>
     struct apply : T::template apply<TArg>::type { };
 };

@@ -15,7 +15,7 @@ namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 struct stack { };
 struct heap { };
 
-template<class T, class = void>
+template<class T, class = int>
 struct memory_traits {
     using type = stack;
 };
@@ -91,7 +91,7 @@ struct memory_traits<const std::weak_ptr<T>&> {
 };
 
 template<class T>
-struct memory_traits<T, std::enable_if_t<std::is_polymorphic<T>::value>> {
+struct memory_traits<T, BOOST_DI_REQUIRES(std::is_polymorphic<T>::value)> {
     using type = heap;
 };
 

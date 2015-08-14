@@ -86,7 +86,7 @@ struct when_creating {
 template<class TParent, class TName = no_name>
 struct in_type {
     template<class T>
-    using is_not_same = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
+    using is_not_same = BOOST_DI_REQUIRES(!aux::is_same_or_base_of<T, TParent>::value);
 
     template<class T, class = is_not_same<T>>
     operator T() {
@@ -104,7 +104,7 @@ struct in_type {
 template<class TParent>
 struct in_type<TParent, no_name> {
     template<class T>
-    using is_not_same = std::enable_if_t<!aux::is_same_or_base_of<T, TParent>::value>;
+    using is_not_same = BOOST_DI_REQUIRES(!aux::is_same_or_base_of<T, TParent>::value);
 
     template<class T, class = is_not_same<T>>
     operator T() {
