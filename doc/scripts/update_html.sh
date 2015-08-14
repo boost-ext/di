@@ -7,7 +7,7 @@ cp -r $ROOT/../js $HTML
 
 if [[ $TRY_IT_ONLINE != "" ]]; then
     rm -f /tmp/di_try_it_online.tmp
-    FRAME=ON tools/try_it_online.sh ../example/try_it_online/main.cpp > /tmp/di_try_it_online.tmp
+    FRAME=ON scripts/try_it_online.sh ../example/try_it_online/main.cpp > /tmp/di_try_it_online.tmp
     find $HTML -iname "*.html" | xargs sed -i -e '/\$try_it_online\$/{r /tmp/di_try_it_online.tmp' -e 'd}'
     rm -f /tmp/di_try_it_online.tmp
 fi
