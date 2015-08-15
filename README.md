@@ -17,7 +17,8 @@ Boost.DI: C++ Dependency Injection
 **Dependency Injection (DI)** involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state.
 It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.
 
-[![Dependency Injection](http://img.youtube.com/vi/IKD2-MAkXyQ/0.jpg)](http://www.youtube.com/watch?v=IKD2-MAkXyQ)
+[![Dependency Injection](http://img.youtube.com/vi/IKD2-MAkXyQ/0.jpg)](http://www.youtube.com/watch?v=IKD2-MAkXyQ) |
+--- |
 
 > **"Let's make some coffee!"**
 <p align="center"><img src="https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker.png" alt="coffee maker"/></p>
@@ -54,195 +55,16 @@ private:                                |         pump->pump();
 [![The Clean Code Talks - Don't Look For Things!](http://img.youtube.com/vi/RlfLCWKxHJ0/0.jpg)](http://www.youtube.com/watch?v=RlfLCWKxHJ0) | [![DAGGER 2 - A New Type of dependency injection](http://image.slidesharecdn.com/nr73mexetqiybd1qpcem-140529143342-phpapp01/95/dependency-injection-for-android-5-638.jpg?cb=1401392113)](http://www.youtube.com/watch?v=oK_XtfXPkqw) |
 --- | --- |
 
-**Why Dependency Injection Framework?**
-
-* To avoid maintaining boilerplate code | with dependency injection framework below examples are working OUT OF THE BOX, no changes required!
-```cpp
-auto electricity = make_shared<Electricity>();
-auto grinder = make_shared<Grinder>(electricity);
-auto heater = make_shared<Heater>(electricity);
-auto pump = make_unique<Pump>(heater, electricity);
-auto coffeMaker = make_unique<CoffeMaker>(grinder, pump, heater);
-```
-
-    * Scenario 1: Adding `logger` dependency
-    ```cpp
-    auto logger = make_unique<Logger>();
-    auto electricity = make_shared<Electricity>(logger);
-    auto grinder = make_shared<Grinder>(logger, electricity);
-    auto heater = make_shared<Heater>(logger, electricity);
-    auto pump = make_unique<Pump>(logger, heater, electricity);
-    auto coffeMaker = make_unique<CoffeMaker>(logger, grinder, pump, heater);
-    ```
-
-    * Scenario 2: Change coffee maker constructor
-    ```cpp
-    CoffeeMaker(shared_ptr<Grinder>, unique_ptr<Electricity>, unique_ptr<Pump>, shared_ptr<Heater>);
-    ...
-    auto coffeMaker = make_unique<CoffeMaker>(logger, electricity, grinder, pump, heater);
-    ```
-
-    * Scenario 3: Change dependencies when order is important
-    ```cpp
-
-    ```
-
-* To have better control of what and how is created
-    * Example 1: Disallow raw pointers
-    * Example 2: Show objection creation graph
-
 **Why Boost.DI?**
 
 * Boost.DI has none or minimal run-time overhead - [Run-time performance](#run_time_performance)
 * Boost.DI compiles fast - [Compile-time performance](#compile_time_performance)
 * Boost.DI gives short diagnostic messages - [Diagnostic messages](#diagnostic_messages)
-
-> **Boost.DI is not intrusive**
-```cpp
-Manual Dependency Injection             | Boost.DI (same as manual di)
-----------------------------------------|-----------------------------------------
-coffee_maker(shared_ptr<iheater> heater | coffee_maker(shared_ptr<iheater> heater
-           , unique_ptr<ipump> pump);   |            , unique_ptr<ipump> pump);
-```
-
-*
-
-> **Boost.DI reduces boilerplate code**
-```cpp
-Manual Dependency Injection             | Boost.DI
-----------------------------------------|-----------------------------------------
-int main() {                            | int main() {
-   // has to be before pump             |     auto injector = di::make_injector(
-   auto heater = shared_ptr<iheater>{   |         di::bind<ipump, heat_pump>
-       make_shared<electric_heater>()   |       , di::bind<iheater, electric_heater>
-   };                                   |     );
-                                        |
-   // has to be after heater            |     auto cm = injector.create<coffee_maker>();
-   auto pump = unique_ptr<ipump>{       |     cm.brew();
-       make_unique<heat_pump>(heater)   | }
-   };                                   |
-                                        |
-   coffee_maker cm{heater, move(pump)}; |
-   cm.brew();                           |
-}                                       |
-```
-```cpp
-Manual Dependency Injection             | Boost.DI (only 1 new binding)
-----------------------------------------|-----------------------------------------
-int main() {                            | int main() {
-   // has to be before pump             |     auto injector = di::make_injector(
-   auto heater = shared_ptr<iheater>{   |         di::bind<ipump, heat_pump>
-       make_shared<electric_heater>()   |       , di::bind<iheater, electric_heater>
-   };                                   |       , di::bind<igrinder, grinder> // new
-                                        |     );
-   // has to be before pump             |
-   // and after heater                  |     auto cm = injector.create<coffee_maker>();
-   auto grinder = unique_ptr<igrinder>{ |     cm.brew();
-       make_unique<grinder>(heater)     | }
-   };                                   |
-                                        |
-   // has to be after                   |
-   // heater and grinder                |
-   auto pump = unique_ptr<ipump>{       |
-       make_unique<heat_pump>(          |
-           heater, grinder              |
-       )                                |
-   };                                   |
-                                        |
-   coffee_maker cm{heater, move(pump)}; |
-   cm.brew();                           |
-}                                       |
-```
-```cpp
-Manual Dependency Injection             | Boost.DI (no changes!)
-----------------------------------------|-----------------------------------------
-int main() {                            |
-   // has to be before pump             |
-   auto heater = shared_ptr<iheater>{   |
-       make_shared<electric_heater>()   |
-   };                                   |
-                                        |
-   // has to be after                   |
-   // heater and grinder                |
-   auto pump = unique_ptr<ipump>{       |
-       make_unique<heat_pump>(          |
-           heater                       |                    ✔
-       )                                |
-   };                                   |
-                                        |
-   // has to be before pump             |
-   // and after heater                  |
-   auto grinder = unique_ptr<igrinder>{ |
-     make_unique<grinder>(heater, pump) |
-   };                                   |
-                                        |
-   coffee_maker cm{heater, move(pump)}; |
-   cm.brew();                           |
-}                                       |
-```
-```cpp
-Manual Dependency Injection             | Boost.DI (no changes!)
-----------------------------------------|-----------------------------------------
-int main() {                            |
-   ...                                  |
-   auto grinder = unique_ptr<igrinder>{ |                    ✔
-     make_unique<grinder>(pump, heater) |
-   };                                   |
-   ...                                  |
-}                                       |
-```
-
-*
-
-> **Boost.DI reduces testing effort**
-```cpp
-Manual Dependency Injection             | Boost.DI
-----------------------------------------|--------------------------------------------
-auto heater_mock = create_heater_mock{};| auto injector = di::make_injector<mocks_provider>();
-auto pump_mock = create_pump_mock{};    | auto cm = injector.create<coffee_maker>();
-coffee_maker cm{heater_mock, pump_mock};| expect_call(&iheater::on);
-expect_call(&ipump::pump);              | expect_call(&ipump::pump);
-expect_call(&iheater::off);             | expect_call(&iheater::off);
-cm.brew();                              | cm.brew();
-```
-
-*
-
-> **Boost.DI gives better control of what and how is created**
-```cpp
-Manual Dependency Injection             | Boost.DI
-----------------------------------------|--------------------------------------------
-                                        | class allow_only_smart_ptrs : public di::config {
-                                        | public:
-                                        |   auto policies() const noexcept {
-                                        |     return di::make_policies(
-                                        |       constructible(
-                                        |         is_smart_ptr<di::policies::_>{}
-                  ?                     |     );
-                                        |   }
-                                        | };
-                                        |
-                                        | auto injector = di::make_injector();
-                                        | injector.create<int>(); // compile error
-                                        | injector.create<unique_ptr<int>>(); // okay
-```
-
-*
-
-> **Boost.DI gives better understanding about objects hierarchy**
-```cpp
-Manual Dependency Injection             | Boost.DI
-----------------------------------------|--------------------------------------------
-                 ?                      | injector = di::make_injector<types_dumper>();
-                                        | auto cm = injector.create<coffee_maker>();
-----------------------------------------|--------------------------------------------
-                                        | (coffee_maker)
-                                        |     (shared_ptr<iheater> -> electric_heater)
-                 ?                      |     (unique_ptr<ipump> -> heat_pump)
-                                        |         (shared_ptr<iheater> -> electric_heater)
-                                        |
-```
-<p align="center"><img src="https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker_uml.png" alt="coffee maker"/></p>
+* Boost.DI is not intrusive [link to tutorial]
+* Boost.DI reduces boilerplate code [link to tutorial]
+* Boost.DI reduces testing effort [link to tutorial]
+* Boost.DI gives better control of what and how is created [link to tutorial]
+* Boost.DI gives better understanding about objects hierarchy [link to tutorial]
 
 **How To Start?**
 
