@@ -17,7 +17,7 @@ Boost.DI: C++ Dependency Injection
 **Dependency Injection (DI)** involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state.
 It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.
 
-[![Dependency Injection](http://img.youtube.com/vi/IKD2-MAkXyQ/0.jpg)](http://www.youtube.com/watch?v=IKD2-MAkXyQ) |
+[![Dependency Injection](http://img.youtube.com/vi/IKD2-MAkXyQ/0.jpg)](http://www.youtube.com/watch?v=IKD2-MAkXyQ){:height="36px" width="36px"} |
 --- |
 
 > **"Let's make some coffee!"**
@@ -68,7 +68,7 @@ private:                                |         pump->pump();
 
 **How To Start?**
 
-* Get C++14 compliant compiler (Clang-3.4+, GCC-5.1+, Visual Studio 2015+) with STL (memory, type\_traits headers) / Boost is not required
+* Get C++14 compliant compiler (Clang-3.4+, GCC-5.1+, Visual Studio 2015+) with STL (type\_traits header) / Boost is not required
 * [Read Quick User Guide](#quick_user_guide)
 * [Read Tutorial](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/tutorial.html)
 * [Read Documentation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
@@ -1011,10 +1011,6 @@ BOOST_DI_CFG_CTOR_LIMIT_SIZE            | Limits number of allowed consturctor
 ----------------------------------------|-----------------------------------------
 BOOST_DI_CFG                            | Global configuration allows to customize
                                         | provider and policies
-----------------------------------------|-----------------------------------------
-BOOST_DI_INJECTOR                       | Named used internally by Boost.DI
-                                        | to define constructor traits
-                                        | [default=boost_di_injector__]
 ```
 
 **Contributing**
