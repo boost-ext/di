@@ -37,13 +37,6 @@ $example_begin example/extensions/injections/xml_injection.cpp$
 $example_end$
 [endsect]
 
-[section Inject Required]
-$example_begin example/extensions/policies/inject_required.cpp$
-[import ../example/extensions/policies/inject_required.cpp]
-[inject_required]
-$example_end$
-[endsect]
-
 [section Types dumper]
 $example_begin example/extensions/policies/types_dumper.cpp$
 [import ../example/extensions/policies/types_dumper.cpp]
