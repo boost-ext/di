@@ -799,12 +799,6 @@ test access_injector_exposed_create_succesful_impl = [] {
     );
 };
 
-test access_dependency_is_referable = [] {
-    expect_compile_fail("", errors(),
-        using type = std::remove_reference_t<decltype(di::bind<int>())>::is_referable<int>;
-    );
-};
-
 test access_dependency_try_create = [] {
     expect_compile_fail("", errors(),
         di::bind<int>().try_create<int>();
@@ -817,6 +811,14 @@ test access_dependency_create = [] {
         di::bind<int>().create<int>(provider{});
     );
 };
+
+#if !defined(_MSC_VER)
+    test access_dependency_is_referable = [] {
+        expect_compile_fail("", errors(),
+            using type = std::remove_reference_t<decltype(di::bind<int>())>::is_referable<int>;
+        );
+    };
+#endif
 
 // ---------------------------------------------------------------------------
 
