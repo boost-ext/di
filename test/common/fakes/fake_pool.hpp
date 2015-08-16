@@ -9,10 +9,10 @@
 
 namespace boost { namespace di { inline namespace v1 {
 
-template<class... T>
-struct fake_pool : T...  { };
+template<class... Ts>
+struct fake_pool : Ts... { };
 
-}} // boost::di::v1
+}}} // boost::di::v1
 
 #endif
 

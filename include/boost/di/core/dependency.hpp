@@ -54,9 +54,7 @@ template<
           dependency_concept<TExpected, TName>
         , dependency<TScope, TExpected, TGiven, TName, TPriority>
       > {
-    template<class, class, class, class, class>
-    friend class dependency;
-
+    template<class, class, class, class, class> friend class dependency;
     using scope_t = typename TScope::template scope<TExpected, TGiven>;
 
     template<class T>

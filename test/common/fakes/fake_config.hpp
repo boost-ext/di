@@ -7,8 +7,8 @@
 #ifndef BOOST_DI_FAKE_CONFIG_HPP
 #define BOOST_DI_FAKE_CONFIG_HPP
 
+#include "boost/di/aux_/utility.hpp"
 #include "boost/di/providers/heap.hpp"
-#include "boost/di/config.hpp"
 
 namespace boost { namespace di { inline namespace v1 {
 
@@ -16,7 +16,7 @@ template<class = void>
 struct fake_config {
     template<class T>
     static auto policies(const T&) noexcept {
-        return make_policies();
+        return aux::type_list<>{};
     }
 
     template<class T>

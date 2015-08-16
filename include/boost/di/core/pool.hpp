@@ -13,14 +13,13 @@
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
 template<class = aux::type_list<>>
-class pool;
+struct pool;
 
 template<class... TArgs>
 using pool_t = pool<aux::type_list<TArgs...>>;
 
 template<class... TArgs>
-class pool<aux::type_list<TArgs...>> : public TArgs... {
-public:
+struct pool<aux::type_list<TArgs...>> : TArgs... {
     template<class... Ts>
     explicit pool(const Ts&... args) noexcept
         : Ts(args)...

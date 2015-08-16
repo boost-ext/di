@@ -9,9 +9,9 @@
 
 #include "boost/di/core/injector.hpp"
 #include "boost/di/concepts/boundable.hpp"
-#include "boost/di/concepts/creatable.hpp"
 #include "boost/di/concepts/configurable.hpp"
 #include "boost/di/config.hpp"
+#include "boost/di/fwd.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace detail {
 
@@ -24,9 +24,11 @@ void
     create
 (const std::false_type&) { }
 
+template<class, class...>
+struct injector;
+
 template<class... T>
-class injector<int, T...> : public core::injector<::BOOST_DI_CFG, core::pool<>, T...> {
-public:
+struct injector<int, T...> : core::injector<::BOOST_DI_CFG, core::pool<>, T...> {
     template<class TConfig, class TPolicies, class... TDeps>
     injector(const core::injector<TConfig, TPolicies, TDeps...>& injector) noexcept // non explicit
         : core::injector<::BOOST_DI_CFG, core::pool<>, T...>(injector) {
@@ -34,8 +36,8 @@ public:
             int _[]{0, (
                 detail::create<T>(
                     std::integral_constant<bool,
-                        core::inj<injector_t>::template is_creatable<T>::value ||
-                        core::inj<injector_t>::template is_creatable<T*>::value
+                        core::injector__<injector_t>::template is_creatable<T>::value ||
+                        core::injector__<injector_t>::template is_creatable<T*>::value
                     >{}
                 )
             , 0)...}; (void)_;

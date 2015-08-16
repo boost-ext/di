@@ -7,6 +7,8 @@
 #ifndef BOOST_DI_FAKE_SCOPE_HPP
 #define BOOST_DI_FAKE_SCOPE_HPP
 
+#include <type_traits>
+
 namespace boost { namespace di { inline namespace v1 {
 
 struct fake_scope_entry { };
@@ -16,18 +18,21 @@ template<bool Priority = false>
 struct fake_scope {
     template<class TExpected, class>
     struct scope {
+        template<class T>
+        using is_referable = std::false_type;
+
         explicit scope(const TExpected& = {}) {
             ++ctor_calls();
         }
+
+        template<class T, class TProvider>
+        static T try_create(const TProvider&);
 
         template<class T, class TProvider>
         auto create(const TProvider&) const noexcept {
             ++calls();
             return T{};
         }
-
-        template<class T, class TProvider>
-        static T try_create(const TProvider&);
     };
 
     static auto& ctor_calls() {

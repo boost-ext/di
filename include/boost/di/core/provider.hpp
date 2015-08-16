@@ -11,6 +11,7 @@
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/concepts/creatable.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
+#include "boost/di/fwd.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
@@ -31,7 +32,7 @@ template<
                 TInitialization
               , TMemory
               , TGiven
-              , typename inj<TInjector>::template try_create<TCtor>::type...
+              , typename injector__<TInjector>::template try_create<TCtor>::type...
             >::value;
     };
 
@@ -63,7 +64,7 @@ template<
 
     template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const {
-        return get_impl(memory, ((const inj<TInjector>&)injector_).create_impl(aux::type<TCtor>{})...);
+        return get_impl(memory, ((const injector__<TInjector>&)injector_).create_impl(aux::type<TCtor>{})...);
     }
 
     template<class TMemory, class... TArgs, BOOST_DI_REQUIRES(is_creatable<TMemory, TArgs...>::value) = 0>
@@ -100,7 +101,7 @@ template<
         return TInjector::config::provider(injector_).template get<TExpected, TGiven>(
             TInitialization{}
           , memory
-          , ((const inj<TInjector>&)injector_).create_successful_impl(aux::type<TCtor>{})...
+          , ((const injector__<TInjector>&)injector_).create_successful_impl(aux::type<TCtor>{})...
         );
     }
 
