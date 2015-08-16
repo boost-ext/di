@@ -1045,7 +1045,7 @@ template<
 public:
     using scope = TScope;
     using expected = TExpected;
-    using given = std::remove_reference_t<TGiven>;
+    using given = TGiven;
     using name = TName;
     using priority = TPriority;
     dependency() noexcept { }
@@ -1867,7 +1867,7 @@ template<
     template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const -> std::enable_if_t<
         is_creatable<TMemory>::value
-      , std::conditional_t<std::is_same<TMemory, type_traits::stack>::value, TGiven, TGiven*>
+      , std::conditional_t<std::is_same<TMemory, type_traits::stack>::value, TGiven, std::remove_reference_t<TGiven>*>
     >;
 };
 template<class, class, class, class, class>

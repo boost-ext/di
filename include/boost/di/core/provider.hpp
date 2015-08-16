@@ -9,8 +9,8 @@
 
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
-#include "boost/di/concepts/creatable.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
+#include "boost/di/concepts/creatable.hpp"
 #include "boost/di/fwd.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
@@ -39,7 +39,7 @@ template<
     template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const -> std::enable_if_t<
         is_creatable<TMemory>::value
-      , std::conditional_t<std::is_same<TMemory, type_traits::stack>::value, TGiven, TGiven*>
+      , std::conditional_t<std::is_same<TMemory, type_traits::stack>::value, TGiven, std::remove_reference_t<TGiven>*>
     >;
 };
 

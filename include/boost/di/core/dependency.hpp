@@ -82,7 +82,7 @@ template<
 public:
     using scope = TScope;
     using expected = TExpected;
-    using given = std::remove_reference_t<TGiven>; // TODO
+    using given = TGiven;
     using name = TName;
     using priority = TPriority;
 
