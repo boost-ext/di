@@ -64,7 +64,7 @@ template<
 
     template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const {
-        return get_impl(memory, ((const injector__<TInjector>&)injector_).create_impl(aux::type<TCtor>{})...);
+        return get_impl(memory, static_cast<const injector__<TInjector>&>(injector_).create_impl(aux::type<TCtor>{})...);
     }
 
     template<class TMemory, class... TArgs, BOOST_DI_REQUIRES(is_creatable<TMemory, TArgs...>::value) = 0>
@@ -101,7 +101,7 @@ template<
         return TInjector::config::provider(injector_).template get<TExpected, TGiven>(
             TInitialization{}
           , memory
-          , ((const injector__<TInjector>&)injector_).create_successful_impl(aux::type<TCtor>{})...
+          , static_cast<const injector__<TInjector>&>(injector_).create_successful_impl(aux::type<TCtor>{})...
         );
     }
 

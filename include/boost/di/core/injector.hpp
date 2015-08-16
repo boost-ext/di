@@ -225,14 +225,16 @@ private:
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
         using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
-        using wrapper_t = decltype(((dependency__<dependency_t>&&)dependency).template create<T>(provider_t{*this}));
+        using wrapper_t = decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this}));
         using create_t = type_traits::referable_traits_t<T, dependency__<dependency_t>>;
         BOOST_DI_CORE_INJECTOR_POLICY(
             policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>(
                 TConfig::policies(*this), dependency, ctor_t{}
             );
         )()
-        return wrapper<create_t, wrapper_t>{((dependency__<dependency_t>&&)dependency).template create<T>(provider_t{*this})};
+        return wrapper<create_t, wrapper_t>{
+            static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this})
+        };
     }
 
     template<class TIsRoot = std::false_type, class T, class TName = no_name>
@@ -243,14 +245,16 @@ private:
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
         using provider_t = successful::provider<expected_t, given_t, ctor_t, injector>;
-        using wrapper_t = decltype(((dependency__<dependency_t>&&)dependency).template create<T>(provider_t{*this}));
+        using wrapper_t = decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this}));
         using create_t = type_traits::referable_traits_t<T, dependency__<dependency_t>>;
         BOOST_DI_CORE_INJECTOR_POLICY(
             policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>(
                 TConfig::policies(*this), dependency, ctor_t{}
             );
         )()
-        return successful::wrapper<create_t, wrapper_t>{((dependency__<dependency_t>&&)dependency).template create<T>(provider_t{*this})};
+        return successful::wrapper<create_t, wrapper_t>{
+            static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this})
+        };
     }
 };
 
