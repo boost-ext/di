@@ -19,7 +19,7 @@ using is_not_same_t = BOOST_DI_REQUIRES(!aux::is_same_or_base_of<T, TParent>::va
 template<class T, class TInjector>
 struct is_referable_impl {
     static constexpr auto value =
-        std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>::template
+        dep<std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>>::template
             is_referable<T>::value;
 };
 

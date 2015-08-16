@@ -49,18 +49,15 @@ template<
   , class TGiven = TExpected
   , class TName = no_name
   , class TPriority = aux::none_type
-> class dependency
-    : dependency_base
-    , TScope::template scope<TExpected, TGiven>
-    , dependency_impl<
+> class dependency : dependency_base, TScope::template scope<TExpected, TGiven>
+    , public dependency_impl<
           dependency_concept<TExpected, TName>
         , dependency<TScope, TExpected, TGiven, TName, TPriority>
       > {
-    template<class, class, class, class, class> friend class dependency;
-    template<class, class, class...> friend class injector;
-    template<class, class> friend struct is_referable_impl;
-    template<class, class> friend struct type_traits::referable_traits;
-    friend class binder;
+    template<class, class, class, class, class>
+    friend class dependency;
+
+    using scope_t = typename TScope::template scope<TExpected, TGiven>;
 
     template<class T>
     using externable = std::integral_constant<bool,
@@ -87,7 +84,7 @@ template<
 public:
     using scope = TScope;
     using expected = TExpected;
-    using given = std::remove_reference_t<TGiven>;
+    using given = std::remove_reference_t<TGiven>; // TODO
     using name = TName;
     using priority = TPriority;
 
@@ -95,7 +92,7 @@ public:
 
     template<class T>
     explicit dependency(T&& object) noexcept
-        : TScope::template scope<TExpected, TGiven>(static_cast<T&&>(object))
+        : scope_t(static_cast<T&&>(object))
     { }
 
     template<
@@ -105,7 +102,7 @@ public:
       , class TName_
       , class TPriority_
     > dependency(const dependency<TScope_, TExpected_, TGiven_, TName_, TPriority_>& other) noexcept
-        : TScope::template scope<TExpected, TGiven>(other)
+        : scope_t(other)
     { }
 
     template<class T, BOOST_DI_REQUIRES(std::is_same<TName, no_name>::value && !std::is_same<T, no_name>::value) = 0>
@@ -152,8 +149,10 @@ public:
         }
     #endif // __pph__
 
-private:
-    using TScope::template scope<TExpected, TGiven>::try_create;
+protected:
+    using scope_t::is_referable;
+    using scope_t::create;
+    using scope_t::try_create;
     template<class> static void try_create(...);
 };
 

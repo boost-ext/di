@@ -105,7 +105,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
 
         static constexpr auto value = std::is_convertible<
             decltype(
-                TDependency::template try_create<T>(
+                dep<TDependency>::template try_create<T>(
                     try_provider<
                         typename TDependency::given
                       , TCtor
@@ -115,7 +115,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
                 )
             ), T>::value BOOST_DI_CORE_INJECTOR_POLICY(&&
             policy::template try_call<
-                arg_wrapper<type_traits::referable_traits_t<T, TDependency>, TName, TIsRoot, pool_t>
+                arg_wrapper<type_traits::referable_traits_t<T, dep<TDependency>>, TName, TIsRoot, pool_t>
               , TPolicies
               , TDependency
               , TCtor
@@ -215,14 +215,14 @@ private:
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
         using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
-        using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
-        using create_t = type_traits::referable_traits_t<T, dependency_t>;
+        using wrapper_t = decltype(((dep<dependency_t>&&)dependency).template create<T>(provider_t{*this}));
+        using create_t = type_traits::referable_traits_t<T, dep<dependency_t>>;
         BOOST_DI_CORE_INJECTOR_POLICY(
             policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>(
                 TConfig::policies(*this), dependency, ctor_t{}
             );
         )()
-        return wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
+        return wrapper<create_t, wrapper_t>{((dep<dependency_t>&&)dependency).template create<T>(provider_t{*this})};
     }
 
     template<class TIsRoot = std::false_type, class T>
@@ -253,14 +253,14 @@ private:
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
         using provider_t = successful::provider<expected_t, given_t, ctor_t, injector>;
-        using wrapper_t = decltype(dependency.template create<T>(provider_t{*this}));
-        using create_t = type_traits::referable_traits_t<T, dependency_t>;
+        using wrapper_t = decltype(((dep<dependency_t>&&)dependency).template create<T>(provider_t{*this}));
+        using create_t = type_traits::referable_traits_t<T, dep<dependency_t>>;
         BOOST_DI_CORE_INJECTOR_POLICY(
             policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>(
                 TConfig::policies(*this), dependency, ctor_t{}
             );
         )()
-        return successful::wrapper<create_t, wrapper_t>{dependency.template create<T>(provider_t{*this})};
+        return successful::wrapper<create_t, wrapper_t>{((dep<dependency_t>&&)dependency).template create<T>(provider_t{*this})};
     }
 };
 

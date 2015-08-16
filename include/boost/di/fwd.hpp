@@ -33,7 +33,16 @@ namespace boost {
 namespace boost { namespace di { inline namespace v1 {
     struct no_name { constexpr auto operator()() const noexcept { return ""; } };
     template<class, class = int> struct ctor_traits;
-    namespace core { template<class> struct any_type_fwd; template<class> struct any_type_ref_fwd; }
+    namespace core { template<class> struct any_type_fwd; template<class> struct any_type_ref_fwd;
+
+        template<class T>
+        struct dep : T {
+            using T::try_create;
+            using T::is_referable;
+            using T::create;
+        };
+
+    }
     namespace detail { template<class, class> struct named_type; template<class, class...> class injector; }
 }}} // boost::di::v1
 
