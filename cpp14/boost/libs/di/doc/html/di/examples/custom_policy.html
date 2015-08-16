@@ -171,7 +171,6 @@ function toggleNextRow() {
 <dt><span class="section"><a href= "../../di/extensions/constructor_bindings.html" >Constructor Bindings</a></span></dt>
 <dt><span class="section"><a href= "../../di/extensions/multi_bindings.html" >Multi Bindings</a></span></dt>
 <dt><span class="section"><a href= "../../di/extensions/assisted_injection.html" >Assisted Injection</a></span></dt>
-<dt><span class="section"><a href= "../../di/extensions/inject_required.html" >Inject Required</a></span></dt>
 <dt><span class="section"><a href= "../../di/extensions/xml_injection.html" >XML Injection</a></span></dt>
 <dt><span class="section"><a href= "../../di/extensions/types_dumper.html" >Types dumper</a></span></dt>
 <dt><span class="section"><a href= "../../di/extensions/uml_dumper.html" >UML Dumper</a></span></dt>
@@ -207,9 +206,7 @@ function toggleNextRow() {
     <span class="keyword">static</span> <span class="keyword">auto</span> <span class="identifier">policies</span><span class="special">(...)</span> <span class="keyword">noexcept</span> <span class="special">{</span>
         <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">;</span>
         <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">operators</span><span class="special">;</span>
-        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_policies</span><span class="special">(</span>
-            <span class="identifier">constructible</span><span class="special">(</span><span class="identifier">is_root</span><span class="special">{}</span> <span class="special">||</span> <span class="identifier">is_bound</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">_</span><span class="special">&gt;{})</span>
-        <span class="special">);</span>
+        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_policies</span><span class="special">(</span><span class="identifier">constructible</span><span class="special">(</span><span class="identifier">is_bound</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">_</span><span class="special">&gt;{}));</span>
     <span class="special">}</span>
 <span class="special">};</span>
 
