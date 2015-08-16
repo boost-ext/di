@@ -51,9 +51,15 @@ namespace boost { namespace di { inline namespace v1 {
         template<class T>
         struct injector__ : T {
             using T::try_create;
-            using T::is_creatable;
             using T::create_impl;
             using T::create_successful_impl;
+
+            #if defined(_MSC_VER) // __pph__
+                template<class... Ts> using is_creatable =
+                    typename T::template is_creatable<Ts...>;
+            #else // __pph__
+                using T::is_creatable;
+            #endif // __pph__
         };
     } // core
 

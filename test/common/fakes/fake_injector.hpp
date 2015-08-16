@@ -24,11 +24,7 @@ struct fake_injector {
         return create_impl(aux::type<T>{});
     }
 
-#if defined(_MSC_VER)
-public:
-#else
 protected:
-#endif
     template<class, class = no_name, class = std::false_type>
     struct is_creatable
         : std::true_type
