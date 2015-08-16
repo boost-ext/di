@@ -148,15 +148,13 @@ namespace boost { namespace di { inline namespace v1 {
         template<class> struct any_type_fwd;
         template<class> struct any_type_ref_fwd;
         template<class T>
-        class dependency__ : public T {
-        public:
+        struct dependency__ : T {
             using T::try_create;
             using T::is_referable;
             using T::create;
         };
         template<class T>
-        class injector__ : public T {
-        public:
+        struct injector__ : T {
             using T::try_create;
             using T::is_creatable;
             using T::create_impl;
