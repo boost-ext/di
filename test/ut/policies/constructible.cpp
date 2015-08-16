@@ -5,8 +5,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <type_traits>
-#include "common/fakes/fake_policy.hpp"
+#include "boost/di/aux_/utility.hpp"
 #include "boost/di/policies/constructible.hpp"
+#include "boost/di/inject.hpp"
+#include "boost/di/fwd.hpp"
+#include "common/fakes/fake_policy.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace policies {
 
@@ -105,6 +108,13 @@ test operator_and = [] {
 test is_type_bound = [] {
     expect(constructible_test(fake_policy<void, aux::none_type, aux::none_type, true>{}, is_bound<_>{}));
     expect(!constructible_test(fake_policy<void, aux::none_type, aux::none_type, false>{}, is_bound<_>{}));
+};
+
+test is_type_injected = [] {
+    struct inject { BOOST_DI_INJECT(inject, int, double) { } };
+    expect(!constructible_test(fake_policy<aux::none_type>{}, is_injected<_>{}));
+    expect(!constructible_test(fake_policy<int>{}, is_injected<_>{}));
+    expect(constructible_test(fake_policy<inject>{}, is_injected<_>{}));
 };
 
 test complex_opeartors = [] {
