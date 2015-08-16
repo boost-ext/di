@@ -743,3 +743,80 @@ test circular_dependencies_complex = [] {
 
 // ---------------------------------------------------------------------------
 
+test access_injector_is_creatable = [] {
+    expect_compile_fail("", errors(),
+        auto injector = di::make_injector();
+        using type = decltype(injector)::is_creatable<int>;
+    );
+};
+
+test access_injector_try_create = [] {
+    expect_compile_fail("", errors(),
+        auto injector = di::make_injector();
+        injector.try_create<int>();
+    );
+};
+
+test access_injector_create_impl = [] {
+    expect_compile_fail("", errors(),
+        auto injector = di::make_injector();
+        injector.create_impl(di::aux::type<int>{});
+    );
+};
+
+test access_injector_create_succesful_impl = [] {
+    expect_compile_fail("", errors(),
+        auto injector = di::make_injector();
+        injector.create_successful_impl(di::aux::type<int>{});
+    );
+};
+
+test access_injector_exposed_is_creatable = [] {
+    expect_compile_fail("", errors(),
+        di::injector<> injector = di::make_injector();
+        using type = decltype(injector)::is_creatable<int>;
+    );
+};
+
+test access_injector_exposed_try_create = [] {
+    expect_compile_fail("", errors(),
+        di::injector<> injector = di::make_injector();
+        injector.try_create<int>();
+    );
+};
+
+test access_injector_exposed_create_impl = [] {
+    expect_compile_fail("", errors(),
+        di::injector<> injector = di::make_injector();
+        injector.create_impl(di::aux::type<int>{});
+    );
+};
+
+test access_injector_exposed_create_succesful_impl = [] {
+    expect_compile_fail("", errors(),
+        di::injector<> injector = di::make_injector();
+        injector.create_successful_impl(di::aux::type<int>{});
+    );
+};
+
+test access_dependency_is_referable = [] {
+    expect_compile_fail("", errors(),
+        using type = std::remove_reference_t<decltype(di::bind<int>())>::is_referable<int>;
+    );
+};
+
+test access_dependency_try_create = [] {
+    expect_compile_fail("", errors(),
+        di::bind<int>().try_create<int>();
+    );
+};
+
+test access_dependency_create = [] {
+    expect_compile_fail("", errors(),
+        struct provider { };
+        di::bind<int>().create<int>(provider{});
+    );
+};
+
+// ---------------------------------------------------------------------------
+
