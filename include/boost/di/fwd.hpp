@@ -42,6 +42,14 @@ namespace boost { namespace di { inline namespace v1 {
             using T::create;
         };
 
+        template<class T>
+        struct inj : T {
+            using T::create_impl;
+            using T::create_successful_impl;
+            using T::is_creatable;
+            using T::try_create;
+        };
+
     }
     namespace detail { template<class, class> struct named_type; template<class, class...> class injector; }
 }}} // boost::di::v1

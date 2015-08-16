@@ -80,24 +80,13 @@ inline decltype(auto) get_arg(const T& arg, const std::true_type&) noexcept {
 #endif
 
 template<class TConfig BOOST_DI_CORE_INJECTOR_POLICY(, class TPolicies = pool<>)(), class... TDeps>
-class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
-    : pool<bindings_t<TDeps...>> {
-    friend class binder;
-    template<class> friend class pool;
-    template<class> friend class scopes::exposed;
-    template<class, class, class> friend struct any_type;
-    template<class, class> friend struct successful::any_type;
-    template<class, class, class> friend struct any_type_ref;
-    template<class, class> friend struct successful::any_type_ref;
-    template<class, class, class, class> friend struct try_provider;
-    template<class, class, class, class, class> friend struct provider;
-    template<class, class, class, class> friend struct successful::provider;
-    template<class, class, class> friend struct is_creatable_impl;
-    template<class, class...> friend class detail::injector;
-
+class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : pool<bindings_t<TDeps...>> {
     using pool_t = pool<bindings_t<TDeps...>>;
     using is_root_t = std::true_type;
+    template<class> friend class pool;
+    friend class binder;
 
+protected:
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     struct is_creatable {
         using TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>;
@@ -152,7 +141,7 @@ public:
         return create<T>();
     }
 
-private:
+protected:
     template<class T>
     struct try_create {
         using type = std::conditional_t<is_creatable<T>::value, T, void>;
@@ -172,20 +161,6 @@ private:
     struct try_create<detail::named_type<TName, T>> {
         using type = std::conditional_t<is_creatable<T, TName>::value, T, void>;
     };
-
-    template<class... TArgs>
-    explicit injector(const from_deps&, const TArgs&... args) noexcept
-        : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{args...}}
-    { }
-
-    template<class TInjector, class... TArgs>
-    explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
-    #if defined(_MSC_VER) // __pph__
-        : pool_t{copyable_t<deps>{}, pool_t{build<TArgs>(injector)...}}
-    #else // __pph__
-        : pool_t{copyable_t<deps>{}, pool_t{TArgs{injector}...}}
-    #endif // __pph__
-    { }
 
     template<class TIsRoot = std::false_type, class T>
     auto create_impl(const aux::type<T>&) const {
@@ -207,24 +182,6 @@ private:
         return create_impl__<TIsRoot, T, TName>();
     }
 
-    template<class TIsRoot = std::false_type, class T, class TName = no_name>
-    auto create_impl__() const {
-        auto&& dependency = binder::resolve<T, TName>((injector*)this);
-        using dependency_t = std::remove_reference_t<decltype(dependency)>;
-        using expected_t = typename dependency_t::expected;
-        using given_t = typename dependency_t::given;
-        using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
-        using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
-        using wrapper_t = decltype(((dep<dependency_t>&&)dependency).template create<T>(provider_t{*this}));
-        using create_t = type_traits::referable_traits_t<T, dep<dependency_t>>;
-        BOOST_DI_CORE_INJECTOR_POLICY(
-            policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>(
-                TConfig::policies(*this), dependency, ctor_t{}
-            );
-        )()
-        return wrapper<create_t, wrapper_t>{((dep<dependency_t>&&)dependency).template create<T>(provider_t{*this})};
-    }
-
     template<class TIsRoot = std::false_type, class T>
     auto create_successful_impl(const aux::type<T>&) const {
         return create_successful_impl__<TIsRoot, T>();
@@ -243,6 +200,39 @@ private:
     template<class TIsRoot = std::false_type, class T, class TName>
     auto create_successful_impl(const aux::type<detail::named_type<TName, T>>&) const {
         return create_successful_impl__<TIsRoot, T, TName>();
+    }
+
+private:
+    template<class... TArgs>
+    explicit injector(const from_deps&, const TArgs&... args) noexcept
+        : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{args...}}
+    { }
+
+    template<class TInjector, class... TArgs>
+    explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
+    #if defined(_MSC_VER) // __pph__
+        : pool_t{copyable_t<deps>{}, pool_t{build<TArgs>(injector)...}}
+    #else // __pph__
+        : pool_t{copyable_t<deps>{}, pool_t{TArgs{injector}...}}
+    #endif // __pph__
+    { }
+
+    template<class TIsRoot = std::false_type, class T, class TName = no_name>
+    auto create_impl__() const {
+        auto&& dependency = binder::resolve<T, TName>((injector*)this);
+        using dependency_t = std::remove_reference_t<decltype(dependency)>;
+        using expected_t = typename dependency_t::expected;
+        using given_t = typename dependency_t::given;
+        using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
+        using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
+        using wrapper_t = decltype(((dep<dependency_t>&&)dependency).template create<T>(provider_t{*this}));
+        using create_t = type_traits::referable_traits_t<T, dep<dependency_t>>;
+        BOOST_DI_CORE_INJECTOR_POLICY(
+            policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>(
+                TConfig::policies(*this), dependency, ctor_t{}
+            );
+        )()
+        return wrapper<create_t, wrapper_t>{((dep<dependency_t>&&)dependency).template create<T>(provider_t{*this})};
     }
 
     template<class TIsRoot = std::false_type, class T, class TName = no_name>

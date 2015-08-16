@@ -46,18 +46,18 @@ public:
 
             template<class T>
             static T create(const provider_impl* object) noexcept {
-                return object->injector.create_impl(aux::type<T>{});
+                return ((const core::inj<TInjector>&)object->injector).create_impl(aux::type<T>{});
             }
 
             template<class T>
             static T create_successful(const provider_impl* object) noexcept {
-                return object->injector.create_successful_impl(aux::type<T>{});
+                return ((const core::inj<TInjector>&)object->injector).create_successful_impl(aux::type<T>{});
             }
 
             explicit provider_impl(const TInjector& injector) noexcept
                 : provider_impl(injector
-                              , std::integral_constant<bool, TInjector::template is_creatable<TExpected*>::value>{}
-                              , std::integral_constant<bool, TInjector::template is_creatable<TExpected>::value>{}
+                              , std::integral_constant<bool, core::inj<TInjector>::template is_creatable<TExpected*>::value>{}
+                              , std::integral_constant<bool, core::inj<TInjector>::template is_creatable<TExpected>::value>{}
                   )
             { }
 

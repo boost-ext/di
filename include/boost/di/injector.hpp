@@ -34,8 +34,8 @@ public:
             int _[]{0, (
                 detail::create<T>(
                     std::integral_constant<bool,
-                        injector_t::template is_creatable<T>::value ||
-                        injector_t::template is_creatable<T*>::value
+                        core::inj<injector_t>::template is_creatable<T>::value ||
+                        core::inj<injector_t>::template is_creatable<T*>::value
                     >{}
                 )
             , 0)...}; (void)_;

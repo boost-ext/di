@@ -149,6 +149,13 @@ namespace boost { namespace di { inline namespace v1 {
             using T::is_referable;
             using T::create;
         };
+        template<class T>
+        struct inj : T {
+            using T::create_impl;
+            using T::create_successful_impl;
+            using T::is_creatable;
+            using T::try_create;
+        };
     }
     namespace detail { template<class, class> struct named_type; template<class, class...> class injector; }
 }}}
@@ -666,16 +673,16 @@ public:
             type (*stack)(const provider_impl*) = nullptr;
             template<class T>
             static T create(const provider_impl* object) noexcept {
-                return object->injector.create_impl(aux::type<T>{});
+                return ((const core::inj<TInjector>&)object->injector).create_impl(aux::type<T>{});
             }
             template<class T>
             static T create_successful(const provider_impl* object) noexcept {
-                return object->injector.create_successful_impl(aux::type<T>{});
+                return ((const core::inj<TInjector>&)object->injector).create_successful_impl(aux::type<T>{});
             }
             explicit provider_impl(const TInjector& injector) noexcept
                 : provider_impl(injector
-                              , std::integral_constant<bool, TInjector::template is_creatable<TExpected*>::value>{}
-                              , std::integral_constant<bool, TInjector::template is_creatable<TExpected>::value>{}
+                              , std::integral_constant<bool, core::inj<TInjector>::template is_creatable<TExpected*>::value>{}
+                              , std::integral_constant<bool, core::inj<TInjector>::template is_creatable<TExpected>::value>{}
                   )
             { }
             provider_impl(const TInjector& injector, const std::true_type&, const std::true_type&) noexcept
@@ -1646,7 +1653,7 @@ template<class T, class TInjector>
 using is_referable_t = BOOST_DI_REQUIRES(is_referable_impl<T, TInjector>::value);
 template<class T, class TInjector, class TError>
 struct is_creatable_impl {
-    static constexpr auto value = TInjector::template is_creatable<T>::value;
+    static constexpr auto value = inj<TInjector>::template is_creatable<T>::value;
 };
 template<class T, class TInjector>
 struct is_creatable_impl<T, TInjector, std::false_type> {
@@ -1660,14 +1667,14 @@ struct any_type {
            , class = is_not_same_t<T, TParent>
            , class = is_creatable_t<T, TInjector, TError>
     > operator T() {
-        return injector_.create_impl(aux::type<T>{});
+        return ((const core::inj<TInjector>&)injector_).create_impl(aux::type<T>{});
     }
     template<class T
            , class = is_not_same_t<T, TParent>
            , class = is_referable_t<const T&, TInjector>
            , class = is_creatable_t<const T&, TInjector, TError>
     > operator const T&() const {
-        return injector_.create_impl(aux::type<const T&>{});
+        return ((const core::inj<TInjector>&)injector_).create_impl(aux::type<const T&>{});
     }
     const TInjector& injector_;
 };
@@ -1677,7 +1684,7 @@ struct any_type_ref {
            , class = is_not_same_t<T, TParent>
            , class = is_creatable_t<T, TInjector, TError>
     > operator T() {
-        return injector_.create_impl(aux::type<T>{});
+        return ((const core::inj<TInjector>&)injector_).create_impl(aux::type<T>{});
     }
     #if defined(__GNUC__)
         template<class T
@@ -1685,7 +1692,7 @@ struct any_type_ref {
                , class = is_referable_t<T&&, TInjector>
                , class = is_creatable_t<T&&, TInjector, TError>
         > operator T&&() const {
-            return injector_.create_impl(aux::type<T&&>{});
+            return ((const core::inj<TInjector>&)injector_).create_impl(aux::type<T&&>{});
         }
     #endif
     template<class T
@@ -1693,14 +1700,14 @@ struct any_type_ref {
            , class = is_referable_t<T&, TInjector>
            , class = is_creatable_t<T&, TInjector, TError>
     > operator T&() const {
-        return injector_.create_impl(aux::type<T&>{});
+        return ((const core::inj<TInjector>&)injector_).create_impl(aux::type<T&>{});
     }
     template<class T
            , class = is_not_same_t<T, TParent>
            , class = is_referable_t<const T&, TInjector>
            , class = is_creatable_t<const T&, TInjector, TError>
     > operator const T&() const {
-        return injector_.create_impl(aux::type<const T&>{});
+        return ((const core::inj<TInjector>&)injector_).create_impl(aux::type<const T&>{});
     }
     const TInjector& injector_;
 };
@@ -1709,13 +1716,13 @@ template<class TParent, class TInjector>
 struct any_type {
     template<class T, class = is_not_same_t<T, TParent>>
     operator T() {
-        return injector_.create_successful_impl(aux::type<T>{});
+        return ((const core::inj<TInjector>&)injector_).create_successful_impl(aux::type<T>{});
     }
     template<class T
            , class = is_not_same_t<T, TParent>
            , class = is_referable_t<const T&, TInjector>
     > operator const T&() const {
-        return injector_.create_successful_impl(aux::type<const T&>{});
+        return ((const core::inj<TInjector>&)injector_).create_successful_impl(aux::type<const T&>{});
     }
     const TInjector& injector_;
 };
@@ -1723,27 +1730,27 @@ template<class TParent, class TInjector>
 struct any_type_ref {
     template<class T, class = is_not_same_t<T, TParent>>
     operator T() {
-        return injector_.create_successful_impl(aux::type<T>{});
+        return ((const core::inj<TInjector>&)injector_).create_successful_impl(aux::type<T>{});
     }
     #if defined(__GNUC__)
         template<class T
                , class = is_not_same_t<T, TParent>
                , class = is_referable_t<T&&, TInjector>
         > operator T&&() const {
-            return injector_.create_successful_impl(aux::type<T&&>{});
+            return ((const core::inj<TInjector>&)injector_).create_successful_impl(aux::type<T&&>{});
         }
     #endif
     template<class T
            , class = is_not_same_t<T, TParent>
            , class = is_referable_t<T&, TInjector>
     > operator T&() const {
-        return injector_.create_successful_impl(aux::type<T&>{});
+        return ((const core::inj<TInjector>&)injector_).create_successful_impl(aux::type<T&>{});
     }
     template<class T
            , class = is_not_same_t<T, TParent>
            , class = is_referable_t<const T&, TInjector>
     > operator const T&() const {
-        return injector_.create_successful_impl(aux::type<const T&>{});
+        return ((const core::inj<TInjector>&)injector_).create_successful_impl(aux::type<const T&>{});
     }
     const TInjector& injector_;
 };
@@ -1850,7 +1857,7 @@ template<
                 TInitialization
               , TMemory
               , TGiven
-              , typename TInjector::template try_create<TCtor>::type...
+              , typename inj<TInjector>::template try_create<TCtor>::type...
             >::value;
     };
     template<class TMemory = type_traits::heap>
@@ -1877,7 +1884,7 @@ template<
     };
     template<class TMemory = type_traits::heap>
     auto get(const TMemory& memory = {}) const {
-        return get_impl(memory, injector_.create_impl(aux::type<TCtor>{})...);
+        return get_impl(memory, ((const inj<TInjector>&)injector_).create_impl(aux::type<TCtor>{})...);
     }
     template<class TMemory, class... TArgs, BOOST_DI_REQUIRES(is_creatable<TMemory, TArgs...>::value) = 0>
     auto get_impl(const TMemory& memory, TArgs&&... args) const {
@@ -1908,7 +1915,7 @@ template<
         return TInjector::config::provider(injector_).template get<TExpected, TGiven>(
             TInitialization{}
           , memory
-          , injector_.create_successful_impl(aux::type<TCtor>{})...
+          , ((const inj<TInjector>&)injector_).create_successful_impl(aux::type<TCtor>{})...
         );
     }
     const TInjector& injector_;
@@ -1992,22 +1999,12 @@ inline decltype(auto) get_arg(const T& arg, const std::true_type&) noexcept {
     return arg.configure();
 }
 template<class TConfig , class TPolicies = pool<> , class... TDeps>
-class injector
-    : pool<bindings_t<TDeps...>> {
-    friend class binder;
-    template<class> friend class pool;
-    template<class> friend class scopes::exposed;
-    template<class, class, class> friend struct any_type;
-    template<class, class> friend struct successful::any_type;
-    template<class, class, class> friend struct any_type_ref;
-    template<class, class> friend struct successful::any_type_ref;
-    template<class, class, class, class> friend struct try_provider;
-    template<class, class, class, class, class> friend struct provider;
-    template<class, class, class, class> friend struct successful::provider;
-    template<class, class, class> friend struct is_creatable_impl;
-    template<class, class...> friend class detail::injector;
+class injector : pool<bindings_t<TDeps...>> {
     using pool_t = pool<bindings_t<TDeps...>>;
     using is_root_t = std::true_type;
+    template<class> friend class pool;
+    friend class binder;
+protected:
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     struct is_creatable {
         using TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>;
@@ -2048,7 +2045,7 @@ public:
     operator T() const {
         return create<T>();
     }
-private:
+protected:
     template<class T>
     struct try_create {
         using type = std::conditional_t<is_creatable<T>::value, T, void>;
@@ -2065,18 +2062,6 @@ private:
     struct try_create<detail::named_type<TName, T>> {
         using type = std::conditional_t<is_creatable<T, TName>::value, T, void>;
     };
-    template<class... TArgs>
-    explicit injector(const from_deps&, const TArgs&... args) noexcept
-        : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{args...}}
-    { }
-    template<class TInjector, class... TArgs>
-    explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
-    #if defined(_MSC_VER)
-        : pool_t{copyable_t<deps>{}, pool_t{build<TArgs>(injector)...}}
-    #else
-        : pool_t{copyable_t<deps>{}, pool_t{TArgs{injector}...}}
-    #endif
-    { }
     template<class TIsRoot = std::false_type, class T>
     auto create_impl(const aux::type<T>&) const {
         return create_impl__<TIsRoot, T>();
@@ -2092,19 +2077,6 @@ private:
     template<class TIsRoot = std::false_type, class T, class TName>
     auto create_impl(const aux::type<detail::named_type<TName, T>>&) const {
         return create_impl__<TIsRoot, T, TName>();
-    }
-    template<class TIsRoot = std::false_type, class T, class TName = no_name>
-    auto create_impl__() const {
-        auto&& dependency = binder::resolve<T, TName>((injector*)this);
-        using dependency_t = std::remove_reference_t<decltype(dependency)>;
-        using expected_t = typename dependency_t::expected;
-        using given_t = typename dependency_t::given;
-        using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
-        using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
-        using wrapper_t = decltype(((dep<dependency_t>&&)dependency).template create<T>(provider_t{*this}));
-        using create_t = type_traits::referable_traits_t<T, dep<dependency_t>>;
-        policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>( TConfig::policies(*this), dependency, ctor_t{} );
-        return wrapper<create_t, wrapper_t>{((dep<dependency_t>&&)dependency).template create<T>(provider_t{*this})};
     }
     template<class TIsRoot = std::false_type, class T>
     auto create_successful_impl(const aux::type<T>&) const {
@@ -2122,6 +2094,32 @@ private:
     auto create_successful_impl(const aux::type<detail::named_type<TName, T>>&) const {
         return create_successful_impl__<TIsRoot, T, TName>();
     }
+private:
+    template<class... TArgs>
+    explicit injector(const from_deps&, const TArgs&... args) noexcept
+        : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{args...}}
+    { }
+    template<class TInjector, class... TArgs>
+    explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
+    #if defined(_MSC_VER)
+        : pool_t{copyable_t<deps>{}, pool_t{build<TArgs>(injector)...}}
+    #else
+        : pool_t{copyable_t<deps>{}, pool_t{TArgs{injector}...}}
+    #endif
+    { }
+    template<class TIsRoot = std::false_type, class T, class TName = no_name>
+    auto create_impl__() const {
+        auto&& dependency = binder::resolve<T, TName>((injector*)this);
+        using dependency_t = std::remove_reference_t<decltype(dependency)>;
+        using expected_t = typename dependency_t::expected;
+        using given_t = typename dependency_t::given;
+        using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
+        using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
+        using wrapper_t = decltype(((dep<dependency_t>&&)dependency).template create<T>(provider_t{*this}));
+        using create_t = type_traits::referable_traits_t<T, dep<dependency_t>>;
+        policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>( TConfig::policies(*this), dependency, ctor_t{} );
+        return wrapper<create_t, wrapper_t>{((dep<dependency_t>&&)dependency).template create<T>(provider_t{*this})};
+    }
     template<class TIsRoot = std::false_type, class T, class TName = no_name>
     auto create_successful_impl__() const {
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
@@ -2137,22 +2135,12 @@ private:
     }
 };
 template<class TConfig , class... TDeps>
-class injector <TConfig, pool<>, TDeps...>
-    : pool<bindings_t<TDeps...>> {
-    friend class binder;
-    template<class> friend class pool;
-    template<class> friend class scopes::exposed;
-    template<class, class, class> friend struct any_type;
-    template<class, class> friend struct successful::any_type;
-    template<class, class, class> friend struct any_type_ref;
-    template<class, class> friend struct successful::any_type_ref;
-    template<class, class, class, class> friend struct try_provider;
-    template<class, class, class, class, class> friend struct provider;
-    template<class, class, class, class> friend struct successful::provider;
-    template<class, class, class> friend struct is_creatable_impl;
-    template<class, class...> friend class detail::injector;
+class injector <TConfig, pool<>, TDeps...> : pool<bindings_t<TDeps...>> {
     using pool_t = pool<bindings_t<TDeps...>>;
     using is_root_t = std::true_type;
+    template<class> friend class pool;
+    friend class binder;
+protected:
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     struct is_creatable {
         using TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>;
@@ -2193,7 +2181,7 @@ public:
     operator T() const {
         return create<T>();
     }
-private:
+protected:
     template<class T>
     struct try_create {
         using type = std::conditional_t<is_creatable<T>::value, T, void>;
@@ -2210,18 +2198,6 @@ private:
     struct try_create<detail::named_type<TName, T>> {
         using type = std::conditional_t<is_creatable<T, TName>::value, T, void>;
     };
-    template<class... TArgs>
-    explicit injector(const from_deps&, const TArgs&... args) noexcept
-        : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{args...}}
-    { }
-    template<class TInjector, class... TArgs>
-    explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
-    #if defined(_MSC_VER)
-        : pool_t{copyable_t<deps>{}, pool_t{build<TArgs>(injector)...}}
-    #else
-        : pool_t{copyable_t<deps>{}, pool_t{TArgs{injector}...}}
-    #endif
-    { }
     template<class TIsRoot = std::false_type, class T>
     auto create_impl(const aux::type<T>&) const {
         return create_impl__<TIsRoot, T>();
@@ -2238,18 +2214,6 @@ private:
     auto create_impl(const aux::type<detail::named_type<TName, T>>&) const {
         return create_impl__<TIsRoot, T, TName>();
     }
-    template<class TIsRoot = std::false_type, class T, class TName = no_name>
-    auto create_impl__() const {
-        auto&& dependency = binder::resolve<T, TName>((injector*)this);
-        using dependency_t = std::remove_reference_t<decltype(dependency)>;
-        using expected_t = typename dependency_t::expected;
-        using given_t = typename dependency_t::given;
-        using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
-        using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
-        using wrapper_t = decltype(((dep<dependency_t>&&)dependency).template create<T>(provider_t{*this}));
-        using create_t = type_traits::referable_traits_t<T, dep<dependency_t>>;
-        return wrapper<create_t, wrapper_t>{((dep<dependency_t>&&)dependency).template create<T>(provider_t{*this})};
-    }
     template<class TIsRoot = std::false_type, class T>
     auto create_successful_impl(const aux::type<T>&) const {
         return create_successful_impl__<TIsRoot, T>();
@@ -2265,6 +2229,31 @@ private:
     template<class TIsRoot = std::false_type, class T, class TName>
     auto create_successful_impl(const aux::type<detail::named_type<TName, T>>&) const {
         return create_successful_impl__<TIsRoot, T, TName>();
+    }
+private:
+    template<class... TArgs>
+    explicit injector(const from_deps&, const TArgs&... args) noexcept
+        : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{args...}}
+    { }
+    template<class TInjector, class... TArgs>
+    explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
+    #if defined(_MSC_VER)
+        : pool_t{copyable_t<deps>{}, pool_t{build<TArgs>(injector)...}}
+    #else
+        : pool_t{copyable_t<deps>{}, pool_t{TArgs{injector}...}}
+    #endif
+    { }
+    template<class TIsRoot = std::false_type, class T, class TName = no_name>
+    auto create_impl__() const {
+        auto&& dependency = binder::resolve<T, TName>((injector*)this);
+        using dependency_t = std::remove_reference_t<decltype(dependency)>;
+        using expected_t = typename dependency_t::expected;
+        using given_t = typename dependency_t::given;
+        using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
+        using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
+        using wrapper_t = decltype(((dep<dependency_t>&&)dependency).template create<T>(provider_t{*this}));
+        using create_t = type_traits::referable_traits_t<T, dep<dependency_t>>;
+        return wrapper<create_t, wrapper_t>{((dep<dependency_t>&&)dependency).template create<T>(provider_t{*this})};
     }
     template<class TIsRoot = std::false_type, class T, class TName = no_name>
     auto create_successful_impl__() const {
@@ -2374,8 +2363,8 @@ public:
             int _[]{0, (
                 detail::create<T>(
                     std::integral_constant<bool,
-                        injector_t::template is_creatable<T>::value ||
-                        injector_t::template is_creatable<T*>::value
+                        core::inj<injector_t>::template is_creatable<T>::value ||
+                        core::inj<injector_t>::template is_creatable<T*>::value
                     >{}
                 )
             , 0)...}; (void)_;

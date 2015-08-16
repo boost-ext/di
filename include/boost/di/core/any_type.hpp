@@ -28,7 +28,7 @@ using is_referable_t = BOOST_DI_REQUIRES(is_referable_impl<T, TInjector>::value)
 
 template<class T, class TInjector, class TError>
 struct is_creatable_impl {
-    static constexpr auto value = TInjector::template is_creatable<T>::value;
+    static constexpr auto value = inj<TInjector>::template is_creatable<T>::value;
 };
 
 template<class T, class TInjector>
@@ -45,7 +45,7 @@ struct any_type {
            , class = is_not_same_t<T, TParent>
            , class = is_creatable_t<T, TInjector, TError>
     > operator T() {
-        return injector_.create_impl(aux::type<T>{});
+        return ((const core::inj<TInjector>&)injector_).create_impl(aux::type<T>{});
     }
 
     template<class T
@@ -53,7 +53,7 @@ struct any_type {
            , class = is_referable_t<const T&, TInjector>
            , class = is_creatable_t<const T&, TInjector, TError>
     > operator const T&() const {
-        return injector_.create_impl(aux::type<const T&>{});
+        return ((const core::inj<TInjector>&)injector_).create_impl(aux::type<const T&>{});
     }
 
     const TInjector& injector_;
@@ -65,7 +65,7 @@ struct any_type_ref {
            , class = is_not_same_t<T, TParent>
            , class = is_creatable_t<T, TInjector, TError>
     > operator T() {
-        return injector_.create_impl(aux::type<T>{});
+        return ((const core::inj<TInjector>&)injector_).create_impl(aux::type<T>{});
     }
 
     #if defined(__GNUC__) // __pph__
@@ -74,7 +74,7 @@ struct any_type_ref {
                , class = is_referable_t<T&&, TInjector>
                , class = is_creatable_t<T&&, TInjector, TError>
         > operator T&&() const {
-            return injector_.create_impl(aux::type<T&&>{});
+            return ((const core::inj<TInjector>&)injector_).create_impl(aux::type<T&&>{});
         }
     #endif // __pph__
 
@@ -83,7 +83,7 @@ struct any_type_ref {
            , class = is_referable_t<T&, TInjector>
            , class = is_creatable_t<T&, TInjector, TError>
     > operator T&() const {
-        return injector_.create_impl(aux::type<T&>{});
+        return ((const core::inj<TInjector>&)injector_).create_impl(aux::type<T&>{});
     }
 
     template<class T
@@ -91,7 +91,7 @@ struct any_type_ref {
            , class = is_referable_t<const T&, TInjector>
            , class = is_creatable_t<const T&, TInjector, TError>
     > operator const T&() const {
-        return injector_.create_impl(aux::type<const T&>{});
+        return ((const core::inj<TInjector>&)injector_).create_impl(aux::type<const T&>{});
     }
 
     const TInjector& injector_;
@@ -103,14 +103,14 @@ template<class TParent, class TInjector>
 struct any_type {
     template<class T, class = is_not_same_t<T, TParent>>
     operator T() {
-        return injector_.create_successful_impl(aux::type<T>{});
+        return ((const core::inj<TInjector>&)injector_).create_successful_impl(aux::type<T>{});
     }
 
     template<class T
            , class = is_not_same_t<T, TParent>
            , class = is_referable_t<const T&, TInjector>
     > operator const T&() const {
-        return injector_.create_successful_impl(aux::type<const T&>{});
+        return ((const core::inj<TInjector>&)injector_).create_successful_impl(aux::type<const T&>{});
     }
 
     const TInjector& injector_;
@@ -120,7 +120,7 @@ template<class TParent, class TInjector>
 struct any_type_ref {
     template<class T, class = is_not_same_t<T, TParent>>
     operator T() {
-        return injector_.create_successful_impl(aux::type<T>{});
+        return ((const core::inj<TInjector>&)injector_).create_successful_impl(aux::type<T>{});
     }
 
     #if defined(__GNUC__) // __pph__
@@ -128,7 +128,7 @@ struct any_type_ref {
                , class = is_not_same_t<T, TParent>
                , class = is_referable_t<T&&, TInjector>
         > operator T&&() const {
-            return injector_.create_successful_impl(aux::type<T&&>{});
+            return ((const core::inj<TInjector>&)injector_).create_successful_impl(aux::type<T&&>{});
         }
     #endif // __pph__
 
@@ -136,14 +136,14 @@ struct any_type_ref {
            , class = is_not_same_t<T, TParent>
            , class = is_referable_t<T&, TInjector>
     > operator T&() const {
-        return injector_.create_successful_impl(aux::type<T&>{});
+        return ((const core::inj<TInjector>&)injector_).create_successful_impl(aux::type<T&>{});
     }
 
     template<class T
            , class = is_not_same_t<T, TParent>
            , class = is_referable_t<const T&, TInjector>
     > operator const T&() const {
-        return injector_.create_successful_impl(aux::type<const T&>{});
+        return ((const core::inj<TInjector>&)injector_).create_successful_impl(aux::type<const T&>{});
     }
 
     const TInjector& injector_;
