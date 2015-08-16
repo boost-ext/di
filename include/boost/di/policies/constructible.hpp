@@ -88,11 +88,6 @@ struct or_ : detail::type_op {
 
 } // detail
 
-struct is_root : detail::type_op {
-    template<class TArg>
-    struct apply : TArg::is_root { };
-};
-
 template<class T>
 struct is_bound : detail::type_op {
     struct not_resolved { };
@@ -149,12 +144,12 @@ inline auto operator!(const T&) {
 
 template<class T>
 struct constructible_impl {
-    template<class TArg, BOOST_DI_REQUIRES(T::template apply<TArg>::value) = 0>
+    template<class TArg, BOOST_DI_REQUIRES(TArg::is_root::value || T::template apply<TArg>::value) = 0>
     std::true_type operator()(const TArg&) const {
         return {};
     }
 
-    template<class TArg, BOOST_DI_REQUIRES(!T::template apply<TArg>::value) = 0>
+    template<class TArg, BOOST_DI_REQUIRES(!TArg::is_root::value && !T::template apply<TArg>::value) = 0>
     std::false_type operator()(const TArg&) const {
         using constraint_not_satisfied = typename detail::type<typename TArg::type>::template not_allowed_by<T>;
         return constraint_not_satisfied{}.error();

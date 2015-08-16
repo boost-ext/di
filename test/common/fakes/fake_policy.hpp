@@ -27,6 +27,7 @@ template<
     using type = T;
     using name = no_name;
     using dependency = TDependency;
+    using is_root = std::false_type;
 
     template<class, class, class>
     using resolve = TDependency;
@@ -40,6 +41,7 @@ template<
     using type = T;
     using name = no_name;
     using dependency = TDependency;
+    using is_root = std::false_type;
 
     template<class, class, class TDefault>
     using resolve = TDefault;

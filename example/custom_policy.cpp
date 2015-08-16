@@ -19,9 +19,7 @@ public:
     static auto policies(...) noexcept {
         using namespace di::policies;
         using namespace di::policies::operators;
-        return di::make_policies(
-            constructible(is_root{} || is_bound<di::_>{})
-        );
+        return di::make_policies(constructible(is_bound<di::_>{}));
     }
 };
 

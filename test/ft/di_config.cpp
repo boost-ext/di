@@ -51,7 +51,7 @@ public:
     static auto policies(const T&) noexcept {
         using namespace di::policies;
         using namespace di::policies::operators;
-        return di::make_policies(constructible(is_root{} || std::is_same<di::_, double>{} || is_bound<di::_>{}));
+        return di::make_policies(constructible(std::is_same<di::_, double>{} || is_bound<di::_>{}));
     }
 };
 
@@ -74,7 +74,7 @@ public:
     static auto policies(const T&) noexcept {
         using namespace di::policies;
         using namespace di::policies::operators;
-        return di::make_policies(constructible(is_root{} || !std::is_pointer<di::_>{}));
+        return di::make_policies(constructible(!std::is_pointer<di::_>{}));
     }
 };
 
