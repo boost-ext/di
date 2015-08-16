@@ -2006,7 +2006,11 @@ template<class TConfig , class TPolicies = pool<> , class... TDeps>
 class injector : pool<bindings_t<TDeps...>> {
     friend class binder; template<class> friend struct pool;
     using pool_t = pool<bindings_t<TDeps...>>;
+#if defined(_MSC_VER)
+public:
+#else
 protected:
+#endif
     template<class, class = no_name, class = std::false_type> struct is_creatable;
 public:
     using deps = bindings_t<TDeps...>;
@@ -2145,7 +2149,11 @@ template<class TConfig , class... TDeps>
 class injector <TConfig, pool<>, TDeps...> : pool<bindings_t<TDeps...>> {
     friend class binder; template<class> friend struct pool;
     using pool_t = pool<bindings_t<TDeps...>>;
+#if defined(_MSC_VER)
+public:
+#else
 protected:
+#endif
     template<class, class = no_name, class = std::false_type> struct is_creatable;
 public:
     using deps = bindings_t<TDeps...>;

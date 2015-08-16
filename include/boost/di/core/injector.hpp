@@ -84,7 +84,11 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : po
     friend class binder; template<class> friend struct pool;
     using pool_t = pool<bindings_t<TDeps...>>;
 
+#if defined(_MSC_VER) // __pph__
+public:
+#else // __pph__
 protected:
+#endif // __pph__
     template<class, class = no_name, class = std::false_type> struct is_creatable;
 
 public:
