@@ -164,9 +164,9 @@ test bind_in_not_scopable_type = [] {
     auto errors_ = errors(
             "constraint not satisfied",
         #if defined(_MSC_VER)
-            "scope<.*>::requires_<.*is_referable,.*try_create,.*create>", "=.*dummy"
+            "scope<.*>::requires_<.*scope<.*>::is_referable,.*scope<.*>::try_create,.*scope<.*>::create>", "=.*dummy"
         #else
-            "scope<.*dummy>::requires_<.*is_referable,.*try_create,.*create>"
+            "scope<.*dummy>::requires_<.*scope<.*>::is_referable,.*scope<.*>::try_create,.*scope<.*>::create>"
         #endif
     );
 

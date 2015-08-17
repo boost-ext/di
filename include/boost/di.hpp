@@ -963,11 +963,11 @@ struct ctor_traits<T, BOOST_DI_REQUIRES(
 };
 }}}
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
-struct is_referable { };
-struct try_create { };
-struct create { };
-template<class>
+template<class...>
 struct scope {
+    struct is_referable { };
+    struct try_create { };
+    struct create { };
     template<class...>
     struct requires_ : std::false_type { };
 };
@@ -982,7 +982,11 @@ struct provider__ {
     }
 };
 template<class T>
-typename scope<T>::template requires_<is_referable, try_create, create> scopable_impl(...);
+typename scope<T>::template requires_<
+    typename scope<_, _>::is_referable
+  , typename scope<_, _>::try_create
+  , typename scope<_, _>::create
+> scopable_impl(...);
 template<class T>
 auto scopable_impl(T&&) -> aux::is_valid_expr<
     typename T::template scope<_, _>::template is_referable<_>
