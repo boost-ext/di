@@ -136,7 +136,7 @@ matrix:
         - bc
         sources:
         - ubuntu-toolchain-r-test
-        - llvm-toolchain-precise-3.8
+        - llvm-toolchain-precise
 
   - os: linux
     env: CMAKE=ON BENCHMARK=quick COMPILER=clang++-3.8
@@ -186,10 +186,6 @@ matrix:
     env: TOOLSET=clang BENCHMARK=quick COMPILER=clang++
   - os: osx
     env: CMAKE=ON BENCHMARK=quick COMPILER=clang++
-  allow_failures:
-    - env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.8
-    - env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} BENCHMARK=quick COMPILER=clang++-3.8
-    - env: CMAKE=ON BENCHMARK=quick COMPILER=clang++-3.8
 
 before_script:
 - git config --global user.name "Travis-CI"
