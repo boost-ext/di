@@ -490,11 +490,27 @@ test create_polymorphic_type_without_binding = [] {
     expect_compile_fail("", errors_,
         struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
         struct impl : i { void dummy() override { } };
+        struct c { c(i*) { } };
+        di::make_injector().create<c>();
+    );
+};
 
-        struct c {
-            c(i*) { }
-        };
+test create_polymorphic_type_without_binding_named = [] {
+    auto errors_ = errors(
+        #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+            "creatable constraint not satisfied",
+        #endif
+            "abstract_type<.*>::named<.*>::is_not_bound"
+        #if !defined(_MSC_VER)
+          , "type not bound, did you forget to add: 'di::bind<interface, implementation>.named\\(name\\)'?"
+        #endif
+    );
 
+    expect_compile_fail("", errors_,
+        struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
+        struct impl : i { void dummy() override { } };
+        struct dummy { };
+        struct c { BOOST_DI_INJECT(c, (named = dummy{}) i*) { } };
         di::make_injector().create<c>();
     );
 };
@@ -512,14 +528,8 @@ test exposed_not_creatable = [] {
     );
 
     expect_compile_fail("<include> memory", errors_,
-        struct i {
-            virtual ~i() noexcept = default; virtual void dummy() = 0;
-        };
-
-        struct c {
-            c(int, std::unique_ptr<i>) {}
-        };
-
+        struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
+        struct c { c(int, std::unique_ptr<i>) { } };
         di::injector<i> injector = di::make_injector();
     );
 };
@@ -540,8 +550,47 @@ test exposed_polymorphic_type_without_binding = [] {
         struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
         struct impl : i { void dummy() override { } };
         struct c { std::shared_ptr<i> i_; };
-
         di::injector<c> injector = di::make_injector(); // di::bind<i, impl>()
+    );
+};
+
+test create_not_fully_implemented_type = [] {
+    auto errors_ = errors(
+        #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+            "creatable constraint not satisfied",
+        #endif
+            "abstract_type<.*>::is_not_fully_implemented"
+        #if !defined(_MSC_VER)
+          , "create<c>()"
+          , "type not implemented, did you forget to implement all interface methods?"
+        #endif
+    );
+
+    expect_compile_fail("", errors_,
+        struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
+        struct impl : i { };
+        struct c { c(i*) { } };
+        di::make_injector(di::bind<i, impl>()).create<c>();
+    );
+};
+
+test create_not_fully_implemented_type_named = [] {
+    auto errors_ = errors(
+        #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+            "creatable constraint not satisfied",
+        #endif
+            "abstract_type<.*>::named<.*>::is_not_fully_implemented"
+        #if !defined(_MSC_VER)
+          , "type not implemented, did you forget to implement all interface methods?"
+        #endif
+    );
+
+    expect_compile_fail("", errors_,
+        struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
+        struct impl : i { };
+        struct dummy { };
+        struct c { BOOST_DI_INJECT(c, (named = dummy{}) i*) { } };
+        di::make_injector(di::bind<i, impl>().named(dummy{})).create<c>();
     );
 };
 
@@ -557,9 +606,7 @@ test injector_shared_by_copy = [] {
     );
 
     expect_compile_fail("", errors_,
-        struct c {
-            c(int*) { }
-        };
+        struct c { c(int*) { } };
 
         auto injector = di::make_injector(
             di::bind<int>().in(di::singleton)
@@ -581,9 +628,7 @@ test bind_wrapper_not_convertible = [] {
     );
 
     expect_compile_fail("", errors_,
-        struct c {
-            c(int*) { }
-        };
+        struct c { c(int*) { } };
 
         auto injector = di::make_injector(
             di::bind<int>().to(42)
@@ -605,14 +650,33 @@ test scope_traits_external_not_referable = [] {
     );
 
     expect_compile_fail("", errors_,
-        struct c {
-            c(int&) { }
-        };
+        struct c { c(int&) { } };
 
         auto injector = di::make_injector(
             di::bind<int>().to(42) // lvalue can't be converted to a reference
         );
 
+        injector.create<c>();
+    );
+};
+
+test scope_traits_external_not_referable_named = [] {
+    auto errors_ = errors(
+        #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+            "creatable constraint not satisfied",
+        #endif
+            "type<.*>::has_not_bound_reference<.*>::named<.*>"
+        #if !defined(_MSC_VER)
+          , "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.named\\(name\\).to\\(value\\)`"
+        #endif
+    );
+
+    expect_compile_fail("", errors_,
+        struct dummy { };
+        struct c { BOOST_DI_INJECT(c, (named = dummy{}) int&) { } };
+        auto injector = di::make_injector(
+            di::bind<int>().named(dummy{}).to(42) // lvalue can't be converted to a reference
+        );
         injector.create<c>();
     );
 };
@@ -645,10 +709,7 @@ test policy_constructible = [] {
             }
         };
 
-        struct c {
-            c(int, double, float) { }
-        };
-
+        struct c { c(int, double, float) { } };
         auto injector = di::make_injector<config>();
         injector.create<c>();
     );
@@ -659,10 +720,7 @@ test policy_constructible = [] {
 test ctor_inject_limit_out_of_range = [] {
     expect_compile_fail("-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3",
         errors("Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE"),
-        struct c {
-            BOOST_DI_INJECT(c, int, int, int, int) { }
-        };
-
+        struct c { BOOST_DI_INJECT(c, int, int, int, int) { } };
         auto injector = di::make_injector();
         injector.create<c>();
     );
@@ -678,10 +736,7 @@ test ctor_limit_out_of_range = [] {
     );
 
     expect_compile_fail("-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3", errors_,
-        struct c {
-            c(int, int, int, int) { }
-        };
-
+        struct c { c(int, int, int, int) { } };
         auto injector = di::make_injector();
         injector.create<c>();
     );
@@ -706,12 +761,30 @@ test injector_ctor_ambiguous = [] {
     );
 };
 
+test ctor_number_of_args_is_not_equal = [] {
+    auto errors_ = errors(
+    #if defined(__GNUC__) && !defined(__clang__)
+        "number_of_constructor_arguments_is_not_equal_for<.*>::given<.*>::expected<.*>.*= 4.*= 2.*=.*c"
+    #else
+        "number_of_constructor_arguments_is_not_equal_for<.*c>::given<2>::expected<4>"
+    #endif
+    );
+
+    expect_compile_fail("", errors_,
+        struct c {
+            BOOST_DI_INJECT_TRAITS(int, int); // 2
+            c(int, int, int, int) { } // 4
+        };
+
+        auto injector = di::make_injector();
+        injector.create<c>();
+    );
+};
+
 test named_paramater_spelling = [] {
     expect_compile_fail("", errors(),
         auto name = []{};
-        struct c {
-            BOOST_DI_INJECT(c, (NAMED = name) int) { }
-        };
+        struct c { BOOST_DI_INJECT(c, (NAMED = name) int) { } };
     );
 };
 
@@ -720,7 +793,6 @@ test circular_dependencies_simple = [] {
         struct cd2;
         struct cd1 { cd1(cd2*) { }; };
         struct cd2 { cd2(cd1*) { }; };
-
         auto injector = di::make_injector();
         injector.create<cd1>();
     );
@@ -735,7 +807,6 @@ test circular_dependencies_complex = [] {
         struct cd3 { cd3(cd5*) { }; };
         struct cd4 { cd4(cd3*) { }; };
         struct cd5 { cd5(cd4*) { }; };
-
         auto injector = di::make_injector();
         injector.create<cd5>();
     );
