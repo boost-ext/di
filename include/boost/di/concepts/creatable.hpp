@@ -10,11 +10,11 @@
 #include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/core/any_type.hpp" // is_not_same_t
 #include "boost/di/type_traits/ctor_traits.hpp"
 
-#if !defined(BOOST_DI_CONCEPTS_CREATABLE_ATTR) // __pph__
-    #define BOOST_DI_CONCEPTS_CREATABLE_ATTR BOOST_DI_DEPRECATED("creatable constraint not satisfied") // __pph__
-#endif // __pph__
+#define BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG \
+    BOOST_DI_DEPRECATED("creatable constraint not satisfied")
 
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
 
@@ -65,99 +65,50 @@ struct is_not_fully_implemented {
     static inline T*
     error(_ = "type not implemented, did you forget to implement all interface methods?");
 };
-
 };};
-
-template<class TParent>
-struct when_creating {
-    template<class T>
-    struct type {
-        template<class TName>
-        struct named {
-            static inline T
-            error(_ = "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.named(name).to(value)`");
-        };
-
-        static inline T
-        error(_ = "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.to(value)`");
-    };
-};
-
-template<class TParent, class TName = no_name>
-struct in_type {
-    template<class T>
-    using is_not_same = BOOST_DI_REQUIRES(!aux::is_same_or_base_of<T, TParent>::value);
-
-    template<class T, class = is_not_same<T>>
-    operator T() {
-        return {};
-    }
-
-    template<class T, class = is_not_same<T>>
-    operator T&() const {
-        using constraint_not_satisfied = typename when_creating<TParent>::template type<T&>::template named<TName>;
-        return
-            constraint_not_satisfied{}.error();
-    }
-};
-
-template<class TParent>
-struct in_type<TParent, no_name> {
-    template<class T>
-    using is_not_same = BOOST_DI_REQUIRES(!aux::is_same_or_base_of<T, TParent>::value);
-
-    template<class T, class = is_not_same<T>>
-    operator T() {
-        return {};
-    }
-
-    template<class T, class = is_not_same<T>>
-    operator T&() const {
-        using constraint_not_satisfied = typename when_creating<TParent>::template type<T&>;
-        return
-            constraint_not_satisfied{}.error();
-    }
-};
 
 template<class...>
 struct type;
 
-template<class T, class>
-struct in {
-    using type = in_type<T>;
+template<class TParent, class = no_name>
+struct try_create__ {
+    template<class T, class = core::is_not_same_t<T, TParent>>
+    operator T() { return {}; }
+
+    template<class T, class = core::is_not_same_t<T, TParent>>
+    operator T&() const {
+        using constraint_not_satisfied =
+            typename type<TParent>::template has_not_bound_reference<T&>;
+        return
+            constraint_not_satisfied{}.error();
+    }
 };
 
-template<class TParent, class TName, class T>
-struct in<TParent, detail::named_type<TName, T>> {
-    using type = in_type<TParent, TName>;
+template<class TParent, class TName, class _>
+struct try_create__<TParent, detail::named_type<TName, _>> {
+    template<class T, class = core::is_not_same_t<T, TParent>>
+    operator T() { return {}; }
+
+    template<class T, class = core::is_not_same_t<T, TParent>>
+    operator T&() const {
+        using constraint_not_satisfied =
+            typename type<TParent>::template has_not_bound_reference<T&>::template named<TName>;
+        return
+            constraint_not_satisfied{}.error();
+    }
 };
 
 template<class T, class TInitialization, class... TArgs, class... TCtor>
 struct type<T, type_traits::direct, aux::pair<TInitialization, aux::type_list<TArgs...>>, TCtor...> {
     operator T*() const {
-        return impl<T>();
-    }
-
-    template<class T_>
-    auto impl() const {
-        return new T{typename in<T_, TArgs>::type{}...};
+        return new T(try_create__<T, TArgs>{}...);
     }
 };
 
 template<class T, class TInitialization, class... TArgs, class... TCtor>
 struct type<T, type_traits::uniform, aux::pair<TInitialization, aux::type_list<TArgs...>>, TCtor...> {
     operator T*() const {
-        return impl<T>(aux::is_braces_constructible<T, TCtor...>{});
-    }
-
-    template<class T_>
-    auto impl(const std::true_type&) const {
-        return new T_{typename in<T_, TArgs>::type{}...};
-    }
-
-    template<class T_>
-    auto impl(const std::false_type&) const {
-        return nullptr;
+        return new T{try_create__<T, TArgs>{}...};
     }
 };
 
@@ -173,10 +124,21 @@ struct is_not_convertible_to {
 
     static inline To
     error(_ = "wrapper is not convertible to requested type, did you mistake the scope?");
+};
+template<class TReference>
+struct has_not_bound_reference {
+    template<class TName>
+    struct named {
+        static inline TReference
+        error(_ = "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.named(name).to(value)`");
+    };
+
+    static inline TReference
+    error(_ = "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.to(value)`");
 };};
 
 template<class T>
-struct number_of_constructor_arguments_doesnt_match_for {
+struct number_of_constructor_arguments_is_not_equal_for {
 template<int Given> struct given {
 template<int Expected> struct expected {
     operator T*() const {
@@ -249,7 +211,7 @@ struct creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TCtor..
                     , typename type_traits::ctor_traits__<aux::decay_t<T>>::type, TCtor...
                   >
               >
-            , typename number_of_constructor_arguments_doesnt_match_for<aux::decay_t<T>>::
+            , typename number_of_constructor_arguments_is_not_equal_for<aux::decay_t<T>>::
                   template given<sizeof...(TCtor)>::
                   template expected<ctor_size_t<T>::value>
           >

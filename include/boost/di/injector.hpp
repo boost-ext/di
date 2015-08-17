@@ -19,7 +19,7 @@ template<class>
 void create(const std::true_type&) { }
 
 template<class>
-BOOST_DI_CONCEPTS_CREATABLE_ATTR
+BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG
 void
     create
 (const std::false_type&) { }

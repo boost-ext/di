@@ -598,7 +598,7 @@ test scope_traits_external_not_referable = [] {
         #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
             "creatable constraint not satisfied",
         #endif
-            "when_creating<.*>::type<.*>"
+            "type<.*>::has_not_bound_reference<.*>"
         #if !defined(_MSC_VER)
           , "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.to\\(value\\)`"
         #endif

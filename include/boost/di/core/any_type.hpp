@@ -9,7 +9,6 @@
 
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/core/binder.hpp"
-#include "boost/di/concepts/creatable.hpp"
 #include "boost/di/fwd.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace core {

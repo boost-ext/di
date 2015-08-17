@@ -107,7 +107,7 @@ public:
     }
 
     template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, std::true_type>::value) = 0>
-    BOOST_DI_CONCEPTS_CREATABLE_ATTR
+    BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG
     T create() const {
         return BOOST_DI_TYPE_WKND(T)create_impl<std::true_type>(aux::type<T>{});
     }

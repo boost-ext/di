@@ -14,14 +14,6 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace policies { namespace detail {
 
-template<class T>
-struct type {
-template<class TPolicy>
-struct not_allowed_by {
-    static inline std::false_type
-    error(_ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>!");
-};};
-
 struct type_op { };
 
 template<class T, class = int>
@@ -89,6 +81,20 @@ struct or_ : detail::type_op {
 } // detail
 
 template<class T>
+struct type {
+template<class TPolicy>
+struct not_allowed_by {
+    operator std::false_type() const {
+        using constraint_not_satisfied = not_allowed_by;
+        return
+            constraint_not_satisfied{}.error();
+    }
+
+    static inline std::false_type
+    error(_ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>!");
+};};
+
+template<class T>
 struct is_bound : detail::type_op {
     struct not_resolved { };
 
@@ -151,8 +157,7 @@ struct constructible_impl {
 
     template<class TArg, BOOST_DI_REQUIRES(!TArg::is_root::value && !T::template apply<TArg>::value) = 0>
     std::false_type operator()(const TArg&) const {
-        using constraint_not_satisfied = typename detail::type<typename TArg::type>::template not_allowed_by<T>;
-        return constraint_not_satisfied{}.error();
+        return typename type<typename TArg::type>::template not_allowed_by<T>{};
     }
 };
 
