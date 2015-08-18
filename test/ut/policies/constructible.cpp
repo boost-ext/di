@@ -113,7 +113,12 @@ test is_type_bound = [] {
 test is_type_injected = [] {
     struct inject { BOOST_DI_INJECT(inject, int, double) { } };
     expect(!constructible_test(fake_policy<aux::none_type>{}, is_injected<_>{}));
-    expect(!constructible_test(fake_policy<int>{}, is_injected<_>{}));
+    expect(constructible_test(fake_policy<int>{}, is_injected<_>{})); // fundamental
+    expect(constructible_test(fake_policy<double>{}, is_injected<_>{})); // fundamental
+    expect(constructible_test(fake_policy<float>{}, is_injected<_>{})); // fundamental
+    expect(constructible_test(fake_policy<int&>{}, is_injected<_>{})); // fundamental
+    expect(constructible_test(fake_policy<const int&>{}, is_injected<_>{})); // fundamental
+    expect(constructible_test(fake_policy<const int*>{}, is_injected<_>{})); // fundamental
     expect(constructible_test(fake_policy<inject>{}, is_injected<_>{}));
 };
 

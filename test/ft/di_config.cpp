@@ -55,7 +55,7 @@ public:
     }
 };
 
-test constructible_policy = [] {
+test constructible_policy_must_be_bound = [] {
     struct c {
         int i = 0;
         double d = 0.0;
@@ -90,6 +90,31 @@ test constructible_policy_disallow_raw_pointers = [] {
 
     {
     di::injector<c> injector = di::make_injector<disallow_raw_pointers>();
+    injector.create<c>();
+    }
+};
+
+class must_be_injected : public di::config {
+public:
+    template<class T>
+    static auto policies(const T&) noexcept {
+        using namespace di::policies;
+        using namespace di::policies::operators;
+        return di::make_policies(constructible(is_injected<di::_>{}));
+    }
+};
+
+test constructible_policy_must_be_injected = [] {
+    struct d { BOOST_DI_INJECT(d, int, double) { } };
+    struct c { BOOST_DI_INJECT(c, int, d) { } };
+
+    {
+    auto injector = di::make_injector<must_be_injected>();
+    injector.create<c>();
+    }
+
+    {
+    di::injector<c> injector = di::make_injector<must_be_injected>();
     injector.create<c>();
     }
 };

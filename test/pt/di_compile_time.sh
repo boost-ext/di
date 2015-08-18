@@ -8,40 +8,49 @@
 
 bind_interfaces() {
     for ((i=1; i<=$1; ++i)); do
-        echo -n "-DMODULE$i -DBIND_INTERFACES$i(...)=__VA_ARGS__ -DBIND_OTHERS$i(...)= "
+        echo "#define MODULE$i"
+        echo "#define BIND_INTERFACES$i(...) __VA_ARGS__"
+        echo "#define BIND_OTHERS$i(...) "
     done
 }
 
 bind_others() {
     for ((i=1; i<=$1; ++i)); do
-        echo -n "-DMODULE$i -DBIND_INTERFACES$i(...)= -DNO_CTOR_INTERFACES$i -DBIND_OTHERS$i(...)=__VA_ARGS__ "
+        echo "#define MODULE$i"
+        echo "#define BIND_INTERFACES$i(...)"
+        echo "#define NO_CTOR_INTERFACES$i"
+        echo "#define BIND_OTHERS$i(...) __VA_ARGS__"
     done
 }
 
 bind_interfaces_others() {
     for ((i=1; i<=$1; ++i)); do
         if [ "$2" -ge "$1" ]; then
-            echo -n "-DMODULE$i -DBIND_INTERFACES$i(...)=__VA_ARGS__, -DBIND_OTHERS$i(...)=__VA_ARGS__ "
+            echo "#define MODULE$i"
+            echo "#define BIND_INTERFACES$i(...) __VA_ARGS__,"
+            echo "#define BIND_OTHERS$i(...) __VA_ARGS__"
         else
-            echo -n "-DMODULE$i -DBIND_INTERFACES$i(...)=__VA_ARGS__ -DBIND_OTHERS$i(...)= "
+            echo "#define MODULE$i"
+            echo "#define BIND_INTERFACES$i(...) __VA_ARGS__"
+            echo "#define BIND_OTHERS$i(...)"
         fi
     done
 }
 
 bind_all() {
     for ((i=1; i<=$1; ++i)); do
-        echo -n "-DMODULE$i -DBIND_INTERFACES$i(...)=__VA_ARGS__, -DBIND_OTHERS$i(...)=__VA_ARGS__ "
+        echo "#define MODULE$i"
+        echo "#define BIND_INTERFACES$i(...) __VA_ARGS__,"
+        echo "#define BIND_OTHERS$i(...) __VA_ARGS__"
     done
 }
 
 benchmark() {
-    CTOR=`[ "$2" == "ctor" ] && echo -n "-DBOOST_DI_INJECT(type, ...)=type(__VA_ARGS__)"`
-    EXPOSED_OR_AUTO=`[ "$3" == "auto" ] && echo -n "-DEXPOSED_OR_AUTO(t1, t2)=t2" || echo -n "-DEXPOSED_OR_AUTO(t1, t2)=t1"`
-    (time $CXX -O2 di_compile_time.cpp -std=c++1y -I ../../include "$CTOR" "$EXPOSED_OR_AUTO" `$4` $5 -DCOMPLEX=$1) 2> /tmp/$0.dat
-    if [[ "`grep error: /tmp/$0.dat`" != "" ]]; then
-        >&2 cat /tmp/$0.dat
-        exit
-    fi
+    [ "$2" == "ctor" ] && echo "#define BOOST_DI_INJECT(type, ...) type(__VA_ARGS__)" > /tmp/$0.hpp
+    [ "$3" == "auto" ] && echo "#define EXPOSED_OR_AUTO(t1, t2) t2" >> /tmp/$0.hpp || echo "#define EXPOSED_OR_AUTO(t1, t2) t1" >> /tmp/$0.hpp
+    echo "`$4`" >> /tmp/$0.hpp
+    (time $CXX di_compile_time.cpp -I ../../include $CXXFLAGS $CXXINC /tmp/$0.hpp $5 -DCOMPLEX=$1) 2> /tmp/$0.dat
+    if [[ "`grep error: /tmp/$0.dat`" != "" ]]; then >&2 cat /tmp/$0.dat; exit; fi
     cat /tmp/$0.dat | grep real | awk '{print $2}' | sed "s/0m\(.*\)s/\1/" | tr '\n' ' '
 }
 
@@ -87,7 +96,7 @@ medium_complexity() {
 }
 
 big_complexity() {
-    for ((i=0; i<=10; ++i)); do
+    for ((i=10; i<=10; ++i)); do
         n=$((100+(i*20)));
         echo -n "$n "
         benchmark big_complexity ctor auto "bind_interfaces_others 10 $i" "-ftemplate-depth=$((n+10))"
@@ -111,10 +120,14 @@ quick() {
     exit 0
 }
 
+[[ -z "$CXX" ]] && CXX="clang++"
+[[ -z "$CXXFLAGS" ]] && CXXFLAGS="-O2 -std=c++1y"
+[[ -z "$CXXINC" ]] && CXXINC="-include"
 [[ -z "$MAX" ]] && MAX="10.0"
 [[ -z "$COMPLEXITY" ]] && COMPLEXITY="small,medium,big"
-[[ $COMPLEXITY == *"small"* ]] && graph small_complexity "Small complexity | $CXX -O2"
-[[ $COMPLEXITY == *"medium"* ]] && graph medium_complexity "Medium complexity | $CXX -O2"
-[[ $COMPLEXITY == *"big"* ]] && graph big_complexity "Big complexity | $CXX -O2"
+
+[[ $COMPLEXITY == *"small"* ]] && graph small_complexity "Small complexity | $CXX $CXXFLAGS"
+[[ $COMPLEXITY == *"medium"* ]] && graph medium_complexity "Medium complexity | $CXX $CXXFLAGS"
+[[ $COMPLEXITY == *"big"* ]] && graph big_complexity "Big complexity | $CXX $CXXFLAGS"
 [[ $COMPLEXITY == *"quick"* ]] && quick
 

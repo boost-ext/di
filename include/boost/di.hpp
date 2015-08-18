@@ -2459,16 +2459,13 @@ struct is_bound : detail::type_op {
 };
 template<class T>
 struct is_injected : detail::type_op {
-    template<class TArg>
-    struct apply
-        : type_traits::is_injectable<
-              std::conditional_t<
-                  std::is_same<T, _>::value
-                , typename TArg::type
-                , T
-              >
-          >::type
-    { };
+    template<class TArg
+           , class U = aux::decay_t<std::conditional_t<std::is_same<T, _>::value, typename TArg::type, T>>
+    > struct apply : std::conditional_t<
+        std::is_fundamental<U>::value
+      , std::true_type
+      , typename type_traits::is_injectable<U>::type
+    > { };
 };
 namespace operators {
 template<class X, class Y>
