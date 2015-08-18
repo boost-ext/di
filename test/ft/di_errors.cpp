@@ -729,9 +729,9 @@ test ctor_inject_limit_out_of_range = [] {
 test ctor_limit_out_of_range = [] {
     auto errors_ = errors(
     #if defined(__GNUC__) && !defined(__clang__)
-        "number_of_constructor_arguments_is_out_of_range_for<.*>::max<.*>.*= 3.*=.*c"
+        "type<.*>::has_to_many_constructor_parameters::max<.*>.*= 3.*=.*c"
     #else
-        "number_of_constructor_arguments_is_out_of_range_for<.*c>::max<3>"
+        "type<.*c>::has_to_many_constructor_parameters::max<3>"
     #endif
     );
 
@@ -745,9 +745,9 @@ test ctor_limit_out_of_range = [] {
 test injector_ctor_ambiguous = [] {
     auto errors_ = errors(
         #if defined(__GNUC__) && !defined(__clang__)
-            "number_of_constructor_arguments_is_out_of_range_for<.*>::max<.*>.*= 10.*=.*ctor"
+            "type<.*>::has_to_many_constructor_parameters::max<.*>.*= 10.*=.*ctor"
         #else
-            "number_of_constructor_arguments_is_out_of_range_for<.*ctor>::max<10>"
+            "type<.*ctor>::has_to_many_constructor_parameters::max<10>"
         #endif
     );
 
@@ -764,9 +764,9 @@ test injector_ctor_ambiguous = [] {
 test ctor_number_of_args_is_not_equal = [] {
     auto errors_ = errors(
     #if defined(__GNUC__) && !defined(__clang__)
-        "number_of_constructor_arguments_is_not_equal_for<.*>::given<.*>::expected<.*>.*= 4.*= 2.*=.*c"
+        "type<.*>::has_ambiguous_number_of_constructor_parameters::given<.*>::expected<.*>.*= 4.*= 2.*=.*c"
     #else
-        "number_of_constructor_arguments_is_not_equal_for<.*c>::given<2>::expected<4>"
+        "type<.*c>::has_ambiguous_number_of_constructor_parameters::given<2>::expected<4>"
     #endif
     );
 

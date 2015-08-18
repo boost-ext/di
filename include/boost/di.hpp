@@ -1422,9 +1422,8 @@ struct has_not_bound_reference {
     };
     static inline TReference
     error(_ = "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.to(value)`");
-};};
-template<class T>
-struct number_of_constructor_arguments_is_not_equal_for {
+};
+struct has_ambiguous_number_of_constructor_parameters {
 template<int Given> struct given {
 template<int Expected> struct expected {
     operator T*() const {
@@ -1435,8 +1434,7 @@ template<int Expected> struct expected {
     static inline T*
     error(_ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits");
 };};};
-template<class T>
-struct number_of_constructor_arguments_is_out_of_range_for {
+struct has_to_many_constructor_parameters {
 template<int TMax> struct max {
     operator T*() const {
         using constraint_not_satisfied = max;
@@ -1446,6 +1444,7 @@ template<int TMax> struct max {
     static inline T*
     error(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters");
 };};
+};
 template<class>
 struct ctor_size;
 template<class TInit, class... TCtor>
@@ -1474,7 +1473,7 @@ struct creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TCtor..
               ctor_size_t<T>::value == sizeof...(TCtor)
             , std::conditional_t<
                   !sizeof...(TCtor)
-                , typename number_of_constructor_arguments_is_out_of_range_for<aux::decay_t<T>>::
+                , typename type<aux::decay_t<T>>::has_to_many_constructor_parameters::
                       template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
                 , type<
                       aux::decay_t<T>
@@ -1482,7 +1481,7 @@ struct creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TCtor..
                     , typename type_traits::ctor_traits__<aux::decay_t<T>>::type, TCtor...
                   >
               >
-            , typename number_of_constructor_arguments_is_not_equal_for<aux::decay_t<T>>::
+            , typename type<aux::decay_t<T>>::has_ambiguous_number_of_constructor_parameters::
                   template given<sizeof...(TCtor)>::
                   template expected<ctor_size_t<T>::value>
           >
