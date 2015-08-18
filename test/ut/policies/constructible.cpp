@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <type_traits>
+#include <memory>
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/policies/constructible.hpp"
 #include "boost/di/inject.hpp"
@@ -120,6 +121,9 @@ test is_type_injected = [] {
     expect(constructible_test(fake_policy<const int&>{}, is_injected<_>{})); // fundamental
     expect(constructible_test(fake_policy<const int*>{}, is_injected<_>{})); // fundamental
     expect(constructible_test(fake_policy<inject>{}, is_injected<_>{}));
+    expect(constructible_test(fake_policy<const inject&>{}, is_injected<_>{}));
+    expect(constructible_test(fake_policy<inject&>{}, is_injected<_>{}));
+    expect(constructible_test(fake_policy<std::shared_ptr<inject>>{}, is_injected<_>{}));
 };
 
 test complex_opeartors = [] {
