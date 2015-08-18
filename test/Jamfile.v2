@@ -102,5 +102,6 @@ test-suite ft :
 
 test-suite pt :
     [ test c++1y : pt/di_run_time.cpp : : <optimization>speed <variant>release ]
+    [ test c++1y : pt/di_compile_time.cpp ]
 ;
 

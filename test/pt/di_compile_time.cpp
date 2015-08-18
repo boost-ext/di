@@ -4,6 +4,14 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <cstdlib>
+#include <chrono>
+
+const char cpp[] = R"(
 #include <memory>
 #include <boost/di.hpp>
 
@@ -851,4 +859,174 @@ int main() {
 
     injector.create<COMPLEX>();
 }
+)";
+
+/*medium_complexity() {*/
+    //for ((i=0; i<=10; ++i)); do
+        //echo -n "$((i*20)) "
+        //benchmark medium_complexity ctor auto "bind_others $i"
+        //benchmark medium_complexity inject auto "bind_others $i"
+        //benchmark medium_complexity ctor exposed "bind_others $i"
+        //benchmark medium_complexity inject exposed "bind_others $i"
+        //echo
+    //done
+//}
+
+//big_complexity() {
+    //for ((i=10; i<=10; ++i)); do
+        //n=$((100+(i*20)));
+        //echo -n "$n "
+        //benchmark big_complexity ctor auto "bind_interfaces_others 10 $i" "-ftemplate-depth=$((n+10))"
+        //benchmark big_complexity ctor exposed "bind_interfaces_others 10 $i"
+        //benchmark big_complexity inject auto "bind_interfaces_others 10 $i" "-ftemplate-depth=$((n+10))"
+        //benchmark big_complexity inject exposed "bind_interfaces_others 10 $i"
+        //echo
+    //done
+//}
+
+//quick() {
+    //verify `benchmark small_complexity ctor auto "bind_others 200"`
+    //verify `benchmark small_complexity ctor exposed "bind_others 200"`
+    //verify `benchmark small_complexity inject auto "bind_others 200"`
+    //verify `benchmark small_complexity inject exposed "bind_others 200"`
+    //exit 0
+//}
+
+//[[ -z "$CXX" ]] && CXX="clang++"
+//[[ -z "$CXXFLAGS" ]] && CXXFLAGS="-O2 -std=c++1y"
+//[[ -z "$CXXINC" ]] && CXXINC="-include"
+//[[ -z "$MAX" ]] && MAX="10.0"
+/*[[ -z "$COMPLEXITY" ]] && COMPLEXITY="small,medium,big"*/
+
+template<class TFStream = std::ofstream>
+struct file : std::string, TFStream {
+    file(const std::string& name) // non explicit
+        : std::string{name}, TFStream{name}
+    { }
+};
+
+auto bind_interfaces(int n) {
+    std::stringstream result;
+    for (auto i = 1; i <= n; ++i) {
+        result << "#define MODULE" << i << "\n"
+               << "#define BIND_INTERFACES" << i << "(...) __VA_ARGS__\n"
+               << "#define BIND_OTHERS" << i << "(...)\n";
+    }
+    return result.str();
+}
+
+auto bind_others(int n) {
+    std::stringstream result;
+    for (auto i = 1; i <= n; ++i) {
+        result << "#define MODULE" << i << "\n"
+               << "#define BIND_INTERFACES" << i << "(...)\n"
+               << "#define NO_CTOR_INTERFACES" << i << "\n"
+               << "#define BIND_OTHERS" << i << "(...) __VA_ARGS__\n";
+    }
+    return result.str();
+}
+
+auto bind_interfaces_others(int n, int m) {
+    std::stringstream result;
+    for (auto i = 1; i <= n; ++i) {
+        if (m > n) {
+            result << "#define MODULE" << i << "\n"
+                   << "#define BIND_INTERFACES" << i << "(...) __VA_ARGS__,\n"
+                   << "#define BIND_OTHERS" << i << "(...) __VA_ARGS__\n";
+        } else {
+            result << "#define MODULE" << i << "\n"
+                   << "#define BIND_INTERFACES" << i << "(...) __VA_ARGS__\n"
+                   << "#define BIND_OTHERS" << i << "(...)\n";
+        }
+    }
+    return result.str();
+}
+
+auto bind_all(int n) {
+    std::stringstream result;
+    for (auto i = 1; i <= n; ++i) {
+        result << "#define MODULE" << i << "\n"
+               << "#define BIND_INTERFACES" << i << "(...) __VA_ARGS__,\n"
+               << "#define BIND_OTHERS" << i << "(...) __VA_ARGS__\n";
+    }
+    return result.str();
+}
+
+enum class config_create { CTOR, INJECT };
+enum class config_configure { AUTO, EXPOSED };
+
+void benchmark(config_create create
+             , config_configure configure
+             , const std::string& complexity
+             , const std::string& configs) {
+    std::stringstream defines;
+
+    defines << "#define COMPLEX " << complexity << "\n";
+
+    if (create == config_create::CTOR) {
+        defines << "#define BOOST_DI_INJECT(type, ...) type(__VA_ARGS__)\n";
+    }
+
+    if (configure == config_configure::AUTO) {
+        defines << "#define EXPOSED_OR_AUTO(t1, t2) t2\n";
+    } else {
+        defines << "#define EXPOSED_OR_AUTO(t1, t2) t1\n";
+    }
+
+    file<> source_code{"benchmark.cpp"};
+    source_code << defines.str() << configs << cpp;
+
+    std::string cxx;
+    std::string cxxflags = "-I../include -I../../include ";
+
+    #if defined(__clang__)
+        cxx = "clang++";
+        cxxflags += "-std=c++1y";
+    #elif defined(__GNUC__) && !defined(__clang__)
+        cxx = "g++";
+        cxxflags += "-std=c++1y";
+    #elif defined(_MSC_VER)
+        cxx = "cl";
+        cxxflags += "/c";
+    #endif
+
+    std::stringstream command;
+    command << cxx << " " << cxxflags << " " << source_code
+    #if defined(_MSC_VER)
+            << " >"
+    #else
+            << " 2>"
+    #endif
+            << " benchmark.out";
+
+    using namespace std::chrono;
+
+    auto start = high_resolution_clock::now();
+    auto result = std::system(command.str().c_str());
+    auto end = high_resolution_clock::now();
+    expect(!result);
+
+    std::cout << duration<double>(end - start).count() << std::endl;
+    expect(false);
+}
+
+test small = [] {
+    benchmark(config_create::CTOR, config_configure::AUTO, "small_complexity", bind_others(1));
+/*    for (auto i = 0; i <= 10; ++i) {*/
+        //std::cout << i*20 << std::endl;
+        //benchmark small_complexity ctor auto "bind_others $i"
+        //benchmark small_complexity inject auto "bind_others $i"
+        //benchmark small_complexity ctor exposed "bind_others $i"
+        //benchmark small_complexity inject exposed "bind_others $i"
+    /*}*/
+};
+
+test medium = [] {
+};
+
+test big = [] {
+};
+
+test quick = [] {
+};
 
