@@ -8,7 +8,6 @@
 #define BOOST_DI_CORE_DEPENDENCY_HPP
 
 #include "boost/di/aux_/utility.hpp"
-#include "boost/di/type_traits/referable_traits.hpp"
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/scopes/deduce.hpp"
@@ -21,8 +20,9 @@ BOOST_DI_HAS_METHOD(has_configure, configure);
 BOOST_DI_HAS_TYPE(has_deps, deps);
 
 template<class T, class U = std::remove_reference_t<T>>
-struct is_injector :
-    std::integral_constant<bool, has_deps<U>::value || has_configure<U>::value>{};
+struct is_injector
+    : std::integral_constant<bool, has_deps<U>::value || has_configure<U>::value>
+{ };
 
 template<class, class>
 struct dependency_concept { };

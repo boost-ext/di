@@ -24,12 +24,33 @@ struct def2 { using expected = int; using given = int; using scope = no_ctor; };
 struct def_ctor1 { using expected = int; using given = int; using scope = ctor; };
 struct def_ctor2 { using expected = int; using given = int; using scope = ctor; };
 
-test default_constructible = [] {
+test copyable_types = [] {
     static_expect(std::is_same<aux::type_list<>, copyable_t<aux::type_list<>>>::value);
     static_expect(std::is_same<aux::type_list<>, copyable_t<aux::type_list<def1>>>::value);
     static_expect(std::is_same<aux::type_list<>, copyable_t<aux::type_list<def1, def2>>>::value);
     static_expect(std::is_same<aux::type_list<def_ctor1>, copyable_t<aux::type_list<def1, def_ctor1, def2>>>::value);
     static_expect(std::is_same<aux::type_list<def_ctor1, def_ctor2>, copyable_t<aux::type_list<def1, def_ctor1, def2, def_ctor2>>>::value);
+};
+
+template<class T, class TIsReferable>
+using dep = fake_dependency<T, fake_scope<>, TIsReferable>;
+
+struct c { };
+
+test referable_types = [] {
+    static_expect(std::is_same<int, referable_t<int, dep<int, std::false_type>>>::value);
+    static_expect(std::is_same<int, referable_t<int, dep<int, std::true_type>>>::value);
+    static_expect(std::is_same<c, referable_t<const c&, dep<c, std::false_type>>>::value);
+    static_expect(std::is_same<const c&, referable_t<const c&, dep<c, std::true_type>>>::value);
+    static_expect(std::is_same<c, referable_t<c&, dep<c, std::false_type>>>::value);
+    static_expect(std::is_same<c&, referable_t<c&, dep<c, std::true_type>>>::value);
+    static_expect(std::is_same<c, referable_t<c&, dep<c, std::false_type>>>::value);
+    static_expect(std::is_same<c&&, referable_t<c&&, dep<c, std::true_type>>>::value);
+    static_expect(std::is_same<int, referable_t<int&, dep<int, std::false_type>>>::value);
+    static_expect(std::is_same<int&, referable_t<int&, dep<int, std::true_type>>>::value);
+    static_expect(std::is_same<int, referable_t<const int&, dep<int, std::false_type>>>::value);
+    static_expect(std::is_same<const int&, referable_t<const int&, dep<int, std::true_type>>>::value);
+    static_expect(std::is_same<int&&, referable_t<int&&, dep<int, std::true_type>>>::value);
 };
 
 test def_ctor = [] {

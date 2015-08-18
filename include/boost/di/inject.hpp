@@ -14,6 +14,7 @@
 #include "boost/di/type_traits/ctor_traits.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace detail {
+
 template<class, class>
 struct named_type { };
 
