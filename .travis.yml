@@ -239,7 +239,7 @@ after_success:
   --repo-token "${COVERALLS_REPO_TOKEN}"); fi
 - if [ "${BENCHMARK}" != "" ]; then (git
   clone https://github.com/krzysztof-jusiak/di.git benchmarks
-  && git checkout -b benchmarks -t origin/benchmarks
+  && cd benchmarks && git checkout -b benchmarks -t origin/benchmarks
   && find ../test -iname "*.json" | xargs -i% cp % . && git add -A . && git commit -am "update"
   && git push --force --quiet "https://${GH_TOKEN}@github.com/krzysztof-jusiak/di"); fi
 - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${BIICODE}" != "" ]; then (mkdir biicode && cd biicode
