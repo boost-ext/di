@@ -324,15 +324,21 @@ auto is_benchmark(const std::string& name) {
 
 }
 
-test small = !is_benchmark("ON") ? none{} : [] {
-    benchmark("small", false/*interfaces*/, 0/*min modules*/, 10/*max modules*/);
+test small = [] {
+    if (is_benchmark("ON")) {
+        benchmark("small", false/*interfaces*/, 0/*min modules*/, 10/*max modules*/);
+    }
 };
 
-test big = !is_benchmark("ON") ? none{} : [] {
-    benchmark("big", true/*interfaces*/, 0/*min modules*/, 10/*max modules*/);
+test big = [] {
+    if (is_benchmark("ON")) {
+        benchmark("big", true/*interfaces*/, 0/*min modules*/, 10/*max modules*/);
+    }
 };
 
-test quick = !is_benchmark("QUICK") ? none{} : [] {
-    benchmark("quick", false/*interfaces*/, 1/*min modules*/, 1/*max modules*/);
+test quick = [] {
+    if (is_benchmark("QUICK")) {
+        benchmark("quick", false/*interfaces*/, 1/*min modules*/, 1/*max modules*/);
+    }
 };
 

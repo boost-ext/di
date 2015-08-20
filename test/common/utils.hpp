@@ -19,8 +19,6 @@
     #include <Windows.h>
 #endif
 
-struct none { none(...) { } void operator()(...) const { } };
-
 template<class TFStream = std::ofstream>
 struct file : std::string, TFStream {
     file(const std::string& name) // non explicit
