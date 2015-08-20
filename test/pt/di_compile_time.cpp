@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <cstdlib>
@@ -311,7 +310,6 @@ auto benchmark = [](const std::string& complexity, bool interfaces = false, int 
     };
 
     json ds{complexity};
-    std::cerr << "dupa" << std::endl;
     perform(ds, "ctor/auto", generator::config_create::CTOR, generator::config_configure::ALL);
     perform(ds, "inject/all", generator::config_create::INJECT, generator::config_configure::ALL);
     perform(ds, "ctor/exposed", generator::config_create::CTOR, generator::config_configure::EXPOSED);
