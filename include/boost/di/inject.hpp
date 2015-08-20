@@ -75,31 +75,25 @@ using combine_t = typename combine<T1, T2>::type;
       , "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE" \
     )
 
-#if !defined(BOOST_DI_INJECT_TRAITS)
-    #define BOOST_DI_INJECT_TRAITS(...) \
-        BOOST_DI_IF( \
-            BOOST_DI_IS_EMPTY(__VA_ARGS__) \
-          , BOOST_DI_INJECT_TRAITS_EMPTY_IMPL \
-          , BOOST_DI_INJECT_TRAITS_IMPL \
-        )(__VA_ARGS__)
-#endif
+#define BOOST_DI_INJECT_TRAITS(...) \
+    BOOST_DI_IF( \
+        BOOST_DI_IS_EMPTY(__VA_ARGS__) \
+      , BOOST_DI_INJECT_TRAITS_EMPTY_IMPL \
+      , BOOST_DI_INJECT_TRAITS_IMPL \
+    )(__VA_ARGS__)
 
-#if !defined(BOOST_DI_INJECT_TRAITS_NO_LIMITS)
-    #define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
-        static void boost_di_inject_ctor__(__VA_ARGS__); \
-        using boost_di_inject__ BOOST_DI_UNUSED = \
-            ::boost::di::aux::function_traits_t<decltype(boost_di_inject_ctor__)>
-#endif
+#define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
+    static void boost_di_inject_ctor__(__VA_ARGS__); \
+    using boost_di_inject__ BOOST_DI_UNUSED = \
+        ::boost::di::aux::function_traits_t<decltype(boost_di_inject_ctor__)>
 
-#if !defined(BOOST_DI_INJECT)
-    #define BOOST_DI_INJECT(type, ...) \
-        BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
-        type(BOOST_DI_REPEAT( \
-            BOOST_DI_SIZE(__VA_ARGS__) \
-          , BOOST_DI_GEN_CTOR \
-          , __VA_ARGS__) \
-        )
-#endif
+#define BOOST_DI_INJECT(type, ...) \
+    BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
+    type(BOOST_DI_REPEAT( \
+        BOOST_DI_SIZE(__VA_ARGS__) \
+      , BOOST_DI_GEN_CTOR \
+      , __VA_ARGS__) \
+    )
 
 #endif
 
