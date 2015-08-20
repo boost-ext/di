@@ -4,12 +4,12 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <map>
 #include <iomanip>
 #include <fstream>
 #include <sstream>
 #include <cstdlib>
 #include <chrono>
+#include <regex>
 
 namespace {
 
@@ -20,10 +20,7 @@ struct file : std::string, TFStream {
     { }
 };
 
-enum class config_create { CTOR, INJECT };
-enum class config_configure { ALL, EXPOSED };
-
-std::string compiler() {
+std::string cxx() {
     if (auto cpp = std::getenv("CXX")) {
         return cpp;
     }
@@ -37,25 +34,74 @@ std::string compiler() {
     #endif
 }
 
-std::map<std::string, std::string> complexities = {
-    {"small_complexity", "x99" }
-  , {"medium_complexity", "c0" }
-  , {"big_complexity", "c0, c1, c2, c3, c4, c5, c6, c7, c8, c9" }
-};
+std::string cxxflags(bool internal = false) {
+    std::string cppflags;
 
-std::string generate(const std::string& complexity
-                   , config_create create
-                   , config_configure configure
-                   , bool bindings = false
-                   , bool interfaces = false
-                   , int modules = 0) {
-    file<> source_code{"benchmark.cpp"};
-    source_code << "#include <memory>\n";
-    source_code << "#include <boost/di.hpp>\n";
-    source_code << "namespace di = boost::di;\n";
+    if (internal) {
+        cppflags += "-I../include -I../../include ";
 
-    auto gen_structs = [&](const std::string& name, const std::string& constructor, const std::string& base = "") {
-        for (auto i = 0; i < 100; ++i) {
+        #if defined(__clang__)
+            cppflags += "-std=c++1y";
+        #elif defined(__GNUC__) && !defined(__clang__)
+            cppflags += "-std=c++1y";
+        #elif defined(_MSC_VER)
+            cppflags += "";
+        #endif
+    }
+
+    if (auto flags = std::getenv("CXXFLAGS")) {
+        cppflags += cppflags.empty() ? flags : std::string{" "} + flags;
+    }
+
+    return cppflags;
+}
+
+class generator {
+    static constexpr auto SOURCE_FILE = "benchmark.cpp";
+    static constexpr auto MAX_CTOR_ARGS = 10;
+    static constexpr auto MAX_TYPES = 100;
+    static constexpr auto MAX_COMPLEX_TYPES = 10;
+    static constexpr auto MAX_MODULES = 10;
+
+public:
+    enum class config_create { CTOR, INJECT };
+    enum class config_configure { ALL, EXPOSED };
+
+    generator(config_create create, config_configure configure, bool interfaces = false, int modules = 0)
+        : create_(create)
+        , configure_(configure)
+        , interfaces_(interfaces)
+        , modules_(modules)
+        , source_code_(SOURCE_FILE)
+    { }
+
+    std::string generate() {
+        gen_header();
+        gen_basic_types("x", "x");
+        if (interfaces_) {
+            gen_basic_types("i", "", "i"); // interfaces_
+            gen_basic_types("impl", "x", "i"); // implementations
+        }
+        gen_complex_types();
+        gen_modules();
+        gen_main();
+
+        return source_code_;
+    }
+
+private:
+    void gen_header() {
+        if (interfaces_) {
+            source_code_ << "#include <memory>\n";
+        }
+        source_code_ << "#include <boost/di.hpp>\n";
+        source_code_ << "namespace di = boost::di;\n";
+    }
+
+    void gen_basic_types(const std::string& name
+                       , const std::string& constructor
+                       , const std::string& base = "") {
+        for (auto i = 0; i < MAX_TYPES; ++i) {
             std::stringstream ctor;
 
             auto extend = [&](auto i) {
@@ -88,131 +134,120 @@ std::string generate(const std::string& complexity
                 if (constructor == "") {
                     return args.str();
                 }
-                for (auto j = i - 10 ; j < i; ++j) {
+                for (auto j = i - MAX_CTOR_ARGS ; j < i; ++j) {
                     if (j >= 0) {
-                        args << (j > 0 && j != i-10 ? "," : "") << constructor << std::setfill('0') << std::setw(2) << j;
+                        args << (j > 0 && j != i - MAX_CTOR_ARGS ? "," : "")
+                             << constructor << std::setfill('0') << std::setw(2) << j;
                     }
                 }
                 return args.str();
             };
 
-            if (create == config_create::INJECT) {
-                ctor << "BOOST_DI_INJECT(" << name << std::setfill('0') << std::setw(2) << i << (i ? ", " : "") << ctor_args(i) << ") { }";
+            if (create_ == config_create::INJECT) {
+                ctor << "BOOST_DI_INJECT(" << name
+                     << std::setfill('0') << std::setw(2) << i << (i ? ", " : "")
+                     << ctor_args(i) << ") { }";
             } else {
-                ctor << name << std::setfill('0') << std::setw(2) << i << "(" << ctor_args(i) << ") { }";
+                ctor << name << std::setfill('0')
+                     << std::setw(2) << i << "("
+                     << ctor_args(i) << ") { }";
             }
 
-            source_code << "struct " << name << std::setfill('0') << std::setw(2) << i
+            source_code_ << "struct " << name << std::setfill('0') << std::setw(2) << i
                         << extend(i) << " { "
                         << ctor.str()
                         << interface(i)
                         << implementation()
                         << " };\n";
         }
-    };
-
-    gen_structs("x", "x");
-    gen_structs("i", "", "i");
-    gen_structs("impl", "x", "i");
-
-    for (auto i = 0; i < 10; ++i) {
-        source_code << "struct c" << i << "{";
-        if (create == config_create::INJECT) {
-            source_code << "BOOST_DI_INJECT(c" << i;
-        } else {
-            source_code << "c" << i << "(";
-        }
-
-        for (auto j = 0; j < 10; ++j) {
-            source_code << (j || create == config_create::INJECT ? ", " : "")
-                        << "std::unique_ptr<i" << std::setfill('0') << std::setw(2) << (i*10)+j << ">";
-        }
-        source_code << ") { } };\n";
     }
 
-    for (auto i = 0; i < 10; ++i) {
-        if (i < modules) {
-            source_code << "struct module" << i << " {\n";
-            if (configure == config_configure::EXPOSED) {
-                source_code << "\tdi::injector<c" << i << "> ";
+    void gen_complex_types() {
+        for (auto i = 0; i < MAX_COMPLEX_TYPES; ++i) {
+            source_code_ << "struct c" << i << "{";
+            if (create_ == config_create::INJECT) {
+                source_code_ << "BOOST_DI_INJECT(c" << i;
             } else {
-                source_code << "\tauto ";
+                source_code_ << "c" << i << "(";
             }
-            source_code << "configure() const noexcept {\n";
-            source_code << "\t\treturn di::make_injector(\n";
 
-            if (interfaces) {
-                for (auto j = 0; j < 10; ++j) {
-                    source_code << "\t\t" << (j ? ", " : "  ")
-                                << "di::bind<i" << std::setfill('0') << std::setw(2) << j + (i*10)
-                                << ", impl" << std::setfill('0') << std::setw(2) << j + (i * 10) << ">()\n";
+            for (auto j = 0; j < MAX_COMPLEX_TYPES; ++j) {
+                source_code_ << (j || create_ == config_create::INJECT ? ", " : "")
+                            << (interfaces_ ? "std::unique_ptr<" : "")
+                            << (interfaces_ ? ((i * MAX_COMPLEX_TYPES) + j < modules_ * MAX_COMPLEX_TYPES ? "i" : "impl") : "x")
+                            << std::setfill('0') << std::setw(2) << (i * MAX_COMPLEX_TYPES)+j
+                            << (interfaces_ ? ">" : "");
+            }
+            source_code_ << ") { } };\n";
+        }
+
+        if (create_ == config_create::INJECT) {
+            source_code_ << "struct c { BOOST_DI_INJECT(c, ";
+        } else {
+            source_code_ << "struct c { c(";
+        }
+
+        for (auto i = 0; i < MAX_COMPLEX_TYPES; ++i) {
+            source_code_ << (i ? ", " : "") << "c" << i;
+        }
+        source_code_ << ") { } };\n";
+    }
+
+    void gen_modules() {
+        for (auto i = 0; i < MAX_MODULES; ++i) {
+            if (i < modules_) {
+                source_code_ << "struct module" << i << " {\n";
+                if (configure_ == config_configure::EXPOSED) {
+                    source_code_ << "\tdi::injector<c" << i << "> ";
+                } else {
+                    source_code_ << "\tauto ";
                 }
-            }
+                source_code_ << "configure() const noexcept {\n";
+                source_code_ << "\t\treturn di::make_injector(\n";
 
-            if (bindings) {
-                for (auto j = 0; j < 10; ++j) {
-                    source_code << "\t\t" << (j || interfaces ? ", " : "  ")
-                                << "di::bind<x" << std::setfill('0') << std::setw(2) << j + (i*10)
+                if (interfaces_) {
+                    for (auto j = 0; j < MAX_MODULES; ++j) {
+                        source_code_ << "\t\t" << (j ? ", " : "  ")
+                                    << "di::bind<i" << std::setfill('0') << std::setw(2) << j + (i * MAX_MODULES)
+                                    << ", impl" << std::setfill('0') << std::setw(2) << j + (i * MAX_MODULES) << ">()\n";
+                    }
+                }
+
+                for (auto j = 0; j < MAX_MODULES; ++j) {
+                    source_code_ << "\t\t" << (j || interfaces_ ? ", " : "  ")
+                                << "di::bind<x" << std::setfill('0') << std::setw(2) << j + (i * MAX_MODULES)
                                 << ">().in(di::unique)\n";
                 }
+
+                source_code_ << "\t\t);\n\t}\n};\n";
             }
-
-            source_code << "\t\t);\n\t}\n};\n";
         }
     }
 
-    source_code << "struct " << complexity << " { ";
-    if (create == config_create::INJECT) {
-        source_code << "BOOST_DI_INJECT(" << complexity << ", ";
-    } else {
-        source_code << complexity << "(";
-    }
-
-    source_code << complexities[complexity];
-
-    source_code << ") { } };\n";
-
-    source_code << "int main() {\n";
-    source_code << "\tauto injector = di::make_injector(\n";
-    for (auto i = 0; i < 10; ++i) {
-        if (i < modules) {
-            source_code << "\t\t" << (i ? ", " : "  ") << "module" << i << "{}\n";
+    void gen_main() {
+        source_code_ << "int main() {\n";
+        source_code_ << "\tauto injector = di::make_injector(\n";
+        for (auto i = 0; i < MAX_MODULES; ++i) {
+            if (i < modules_) {
+                source_code_ << "\t\t" << (i ? ", " : "  ") << "module" << i << "{}\n";
+            }
         }
+        source_code_ << "\t);\n\tinjector.create<c>();\n}\n\n";
     }
-    source_code << "\t);\n}\n";
 
-    return source_code;
-}
-
-auto measure(const std::string& file) {
-    std::stringstream command;
-    std::string cxx{compiler()};
-    std::string cxxflags = "-I../include -I../../include ";
-
-    #if defined(__clang__)
-        cxxflags += "-std=c++1y";
-    #elif defined(__GNUC__) && !defined(__clang__)
-        cxxflags += "-std=c++1y";
-    #elif defined(_MSC_VER)
-        cxxflags += "";
-    #endif
-
-    command << cxx << " " << cxxflags << " " << file;
-
-    using namespace std::chrono;
-    auto start = high_resolution_clock::now();
-    auto result = std::system(command.str().c_str());
-    auto end = high_resolution_clock::now();
-    expect(!result);
-
-    return duration<double>(end - start).count();
-}
+private:
+    config_create create_;
+    config_configure configure_;
+    bool interfaces_ = false;
+    int modules_ = 0;
+    file<> source_code_;
+};
 
 class json {
 static constexpr auto header = R"(
 {
   "title": {
-    "text": "Small complexity | clang++ -O2"
+    "text": "%title%"
   },
   "xAxis": {
     "title": {
@@ -236,8 +271,9 @@ static constexpr auto footer = R"(
 )";
 
 public:
-    explicit json(const std::string& name) : file_{name} {
-        file_ << header;
+    explicit json(const std::string& name)
+        : file_{name + "_" + cxx() + ".json"} {
+        file_ << std::regex_replace(header, std::regex{"%title%"}, name + " complexity | " + cxx() + " " + cxxflags());
     }
 
     ~json() {
@@ -283,53 +319,50 @@ private:
     json& data_;
 };
 
+auto measure(const std::string& file) {
+    std::stringstream command;
+    command << cxx() << " " << cxxflags(true) << " " << file;
+
+    using namespace std::chrono;
+    auto start = high_resolution_clock::now();
+    auto result = std::system(command.str().c_str());
+    auto end = high_resolution_clock::now();
+    expect(!result);
+
+    return duration<double>(end - start).count();
 }
 
-auto benchmark = [](const std::string& complexity, int n = 10) {
-    json ds{complexity + std::string{"_"} + compiler() + ".json"};
-
-    {
-        auto _ = series{ds, "ctor/auto"};
-        for (auto i = 0; i <= n; ++i) {
-            ds.data(i*20, measure(generate(complexity, config_create::CTOR, config_configure::ALL)));
+auto benchmark = [](const std::string& complexity, bool interfaces = false, int modules_min = 0, int modules_max = 10) {
+    auto perform = [&](auto& ds, auto name, auto create, auto configure) {
+        auto _ = series{ds, name};
+        for (auto i = modules_min; i <= modules_max; ++i) {
+            auto file = generator{create, configure, interfaces, i}.generate();
+            ds.data(i * 10 * (interfaces ? 2 : 1), measure(file));
         }
-    }
+    };
 
-    {
-        auto _ = series{ds, "inject/all"};
-        for (auto i = 0; i <= n; ++i) {
-            ds.data(i*20, measure(generate(complexity, config_create::INJECT, config_configure::ALL)));
-        }
-    }
-
-    {
-        auto _ = series{ds, "ctor/exposed"};
-        for (auto i = 0; i <= n; ++i) {
-            ds.data(i*20, measure(generate(complexity, config_create::CTOR, config_configure::EXPOSED)));
-        }
-    }
-
-    {
-        auto _ = series{ds, "inject/exposed"};
-        for (auto i = 0; i <= n; ++i) {
-            ds.data(i*20, measure(generate(complexity, config_create::INJECT, config_configure::EXPOSED)));
-        }
-    }
+    json ds{complexity};
+    perform(ds, "ctor/auto", generator::config_create::CTOR, generator::config_configure::ALL);
+    perform(ds, "inject/all", generator::config_create::INJECT, generator::config_configure::ALL);
+    perform(ds, "ctor/exposed", generator::config_create::CTOR, generator::config_configure::EXPOSED);
+    perform(ds, "inject/exposed", generator::config_create::INJECT, generator::config_configure::EXPOSED);
 };
 
-test small = [] {
-    generate("small_complexity", config_create::CTOR, config_configure::ALL, false, true, 10);
-    //benchmark("small_complexity", 2);
+auto is_benchmark(const std::string& name) {
+    return std::string{std::getenv("BENCHMARK")} == name;
+}
+
+}
+
+test small = !is_benchmark("ON") ? []{} : [] {
+    benchmark("small", false/*interfaces*/, 0/*min modules*/, 10/*max modules*/);
 };
 
-test medium = [] {
-    //benchmark("medium_complexity", bind_others, 2);
+test big = !is_benchmark("ON") ? []{} : [] {
+    benchmark("big", true/*interfaces*/, 0/*min modules*/, 10/*max modules*/);
 };
 
-test big = [] {
-    //benchmark("big_complexity", bind_all, 2);
-};
-
-test quick = [] {
+test quick = !is_benchmark("QUICK") ? []{} : [] {
+    benchmark("quick", false/*interfaces*/, 1/*min modules*/, 1/*max modules*/);
 };
 

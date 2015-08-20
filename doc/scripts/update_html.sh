@@ -19,7 +19,7 @@ for file in `find $HTML/di -iname "*.html"`; do
     f=`grep "</head>" -n $file | head -1 | cut -d':' -f1`
     h="sed -n $s,${f}p $file"
     $h > /tmp/head
-    sed -e '/<__head__>/{r /tmp/head' -e 'd}' templates/page.html > /tmp/tmp.html
+    sed -e '/<__head__>/{r /tmp/head' -e 'd}' templates/layout.html > /tmp/tmp.html
 
     b=`grep "</div></div></div>" -n $file | head -1 | cut -d':' -f1`
     b=$((++b));
