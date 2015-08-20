@@ -24,7 +24,7 @@ matrix:
         packages:
         - xsltproc
   - os: linux
-    env: TOOLSET=clang-3.4 MEMCHECK=${VALGRIND} BENCHMARK=quick COMPILER=/usr/local/clang-3.4/bin/clang++
+    env: TOOLSET=clang-3.4 MEMCHECK=${VALGRIND} BENCHMARK=ON COMPILER=/usr/local/clang-3.4/bin/clang++
     addons:
       apt:
         packages:
@@ -63,7 +63,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.4
   - os: linux
-    env: TOOLSET=clang-3.5 MEMCHECK=${VALGRIND} BENCHMARK=quick COMPILER=clang++-3.5
+    env: TOOLSET=clang-3.5 MEMCHECK=${VALGRIND} BENCHMARK=ON COMPILER=clang++-3.5
     addons:
       apt:
         packages:
@@ -88,7 +88,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.5
   - os: linux
-    env: TOOLSET=clang-3.6 MEMCHECK=${VALGRIND} BENCHMARK=quick COMPILER=clang++-3.6
+    env: TOOLSET=clang-3.6 MEMCHECK=${VALGRIND} BENCHMARK=ON COMPILER=clang++-3.6
     addons:
       apt:
         packages:
@@ -113,7 +113,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.6
   - os: linux
-    env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} BENCHMARK=quick COMPILER=clang++-3.8
+    env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} BENCHMARK=ON COMPILER=clang++-3.8
     addons:
       apt:
         packages:
@@ -139,7 +139,7 @@ matrix:
         - llvm-toolchain-precise
 
   - os: linux
-    env: CMAKE=ON BENCHMARK=quick COMPILER=clang++-3.8
+    env: CMAKE=ON COMPILER=clang++-3.8
     addons:
       apt:
         packages:
@@ -172,7 +172,18 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
   - os: linux
-    env: CMAKE=ON BENCHMARK=quick COMPILER=g++-5
+    env: TOOLSET=gcc-5 BENCHMARK=ON COMPILER=g++-5
+    addons:
+      apt:
+        packages:
+        - g++-5
+        - libstdc++-5-dev
+        - gdb
+        - bc
+        sources:
+        - ubuntu-toolchain-r-test
+  - os: linux
+    env: CMAKE=ON COMPILER=g++-5
     addons:
       apt:
         packages:
@@ -183,13 +194,13 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
   - os: osx
-    env: TOOLSET=clang BENCHMARK=quick COMPILER=clang++
+    env: TOOLSET=clang COMPILER=clang++
   - os: osx
-    env: CMAKE=ON BENCHMARK=quick COMPILER=clang++
+    env: CMAKE=ON COMPILER=clang++
   allow_failures:
     - env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.8
-    - env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} BENCHMARK=quick COMPILER=clang++-3.8
-    - env: CMAKE=ON BENCHMARK=quick COMPILER=clang++-3.8
+    - env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} BENCHMARK=ON COMPILER=clang++-3.8
+    - env: CMAKE=ON COMPILER=clang++-3.8
 
 before_script:
 - git config --global user.name "Travis-CI"
@@ -212,14 +223,12 @@ script:
   -j2 -q --toolset=${TOOLSET} debug-symbols=off ${MEMCHECK} cxxflags=" $CXXFLAGS" linkflags=" $LDFLAGS"); fi
 - if [ "${CMAKE}" != "" ]; then (cd build && cmake
   .. && cmake --build . && ctest --output-on-failure); fi
-- if [ "${TOOLSET}" != "" ] && [ "${BENCHMARK}" != "" ]; then (
-  cd test/pt && COMPLEXITY=${BENCHMARK} ./di_compile_time.sh); fi
 - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (git
   clone --quiet --recursive --depth=1 --single-branch https://github.com/boostorg/boost.git
   && cd boost && ./bootstrap.sh && ./b2 headers && mkdir libs/di && cp -r ../build ../doc ../example ../include libs/di
   && cd libs/di/doc && ../build/b2 -sBOOST_ROOT=../build && TRY_IT_ONLINE=ON scripts/update_html.sh
   && git clone https://github.com/krzysztof-jusiak/di.git
-  && cd di && git checkout -b gh-pages --track origin/gh-pages && git reset --hard
+  && cd di && git checkout -b gh-pages -t origin/gh-pages && git reset --hard
   && rm -rf cpp14/boost/libs/di/doc/html && cp -r ../html cpp14/boost/libs/di/doc
   && git add -A . && git commit -am "update" && git push --force --quiet
   "https://${GH_TOKEN}@github.com/krzysztof-jusiak/di"); fi
@@ -228,6 +237,11 @@ after_success:
 - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${VARIANT}" == "coverage" ]; then (pip
   install --user travis requests[security] cpp-coveralls && coveralls -r . -b test/ --gcov /usr/bin/${GCOV}
   --repo-token "${COVERALLS_REPO_TOKEN}"); fi
+- if [ "${BENCHMARK}" != "" ]; then (git
+  clone https://github.com/krzysztof-jusiak/di.git benchmarks
+  && git checkout -b benchmarks -t origin/benchmarks
+  && find ../test -iname "*.json" | xargs -i% cp % . && git add -A . && git commit -am "update"
+  && git push --force --quiet "https://${GH_TOKEN}@github.com/krzysztof-jusiak/di"); fi
 - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${BIICODE}" != "" ]; then (mkdir biicode && cd biicode
   && wget https://s3.amazonaws.com/biibinaries/release/3.3/bii-ubuntu-64_3_3.deb
   && dpkg -x bii-ubuntu-64_3_3.deb . && export PATH=$PWD/opt/biicode:$PATH && bii init di
