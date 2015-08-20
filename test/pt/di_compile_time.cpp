@@ -324,13 +324,13 @@ auto is_benchmark(const std::string& name) {
 
 }
 
-test small = [] {
+test small_complexity = [] {
     if (is_benchmark("ON")) {
         benchmark("small", false/*interfaces*/, 0/*min modules*/, 10/*max modules*/);
     }
 };
 
-test big = [] {
+test big_complexity = [] {
     if (is_benchmark("ON")) {
         benchmark("big", true/*interfaces*/, 0/*min modules*/, 10/*max modules*/);
     }
