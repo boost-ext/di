@@ -4,6 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#if !defined(COVERAGE)
+
 #include <iomanip>
 #include <sstream>
 #include <cstdlib>
@@ -339,4 +341,6 @@ test quick = [] {
         benchmark("quick", false/*interfaces*/, 1/*min modules*/, 1/*max modules*/);
     }
 };
+
+#endif
 
