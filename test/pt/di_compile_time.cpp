@@ -5,59 +5,16 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <iomanip>
-#include <fstream>
 #include <sstream>
 #include <cstdlib>
 #include <chrono>
 #include <regex>
+#include "common/utils.hpp"
 
 namespace {
 
-template<class TFStream = std::ofstream>
-struct file : std::string, TFStream {
-    file(const std::string& name) // non explicit
-        : std::string{name}, TFStream{name}
-    { }
-};
-
-std::string cxx() {
-    if (auto cpp = std::getenv("CXX")) {
-        return cpp;
-    }
-
-    #if defined(__clang__)
-        return "clang++";
-    #elif defined(__GNUC__) && !defined(__clang__)
-        return "g++";
-    #elif defined(_MSC_VER)
-        return "cl";
-    #endif
-}
-
-std::string cxxflags(bool internal = false) {
-    std::string cppflags;
-
-    if (internal) {
-        cppflags += "-I../include -I../../include ";
-
-        #if defined(__clang__)
-            cppflags += "-std=c++1y";
-        #elif defined(__GNUC__) && !defined(__clang__)
-            cppflags += "-std=c++1y";
-        #elif defined(_MSC_VER)
-            cppflags += "";
-        #endif
-    }
-
-    if (auto flags = std::getenv("CXXFLAGS")) {
-        cppflags += cppflags.empty() ? flags : std::string{" "} + flags;
-    }
-
-    return cppflags;
-}
-
 class generator {
-    static constexpr auto SOURCE_FILE = "benchmark.cpp";
+    static constexpr auto SOURCE_FILE = "benchmark";
     static constexpr auto MAX_CTOR_ARGS = 10;
     static constexpr auto MAX_TYPES = 100;
     static constexpr auto MAX_COMPLEX_TYPES = 10;
@@ -72,14 +29,14 @@ public:
         , configure_(configure)
         , interfaces_(interfaces)
         , modules_(modules)
-        , source_code_(SOURCE_FILE)
+        , source_code_(gen_name(create, configure, interfaces, modules))
     { }
 
     std::string generate() {
         gen_header();
         gen_basic_types("x", "x");
         if (interfaces_) {
-            gen_basic_types("i", "", "i"); // interfaces_
+            gen_basic_types("i", "", "i"); // interfaces
             gen_basic_types("impl", "x", "i"); // implementations
         }
         gen_complex_types();
@@ -90,6 +47,16 @@ public:
     }
 
 private:
+    std::string gen_name(config_create create, config_configure configure, bool interfaces, int modules) const {
+        std::stringstream name;
+        name << SOURCE_FILE
+             << "_" << static_cast<int>(create)
+             << "_" << static_cast<int>(configure)
+             << "_" << interfaces
+             << "_" << modules << ".cpp";
+        return name.str();
+    }
+
     void gen_header() {
         if (interfaces_) {
             source_code_ << "#include <memory>\n";
@@ -154,11 +121,11 @@ private:
             }
 
             source_code_ << "struct " << name << std::setfill('0') << std::setw(2) << i
-                        << extend(i) << " { "
-                        << ctor.str()
-                        << interface(i)
-                        << implementation()
-                        << " };\n";
+                         << extend(i) << " { "
+                         << ctor.str()
+                         << interface(i)
+                         << implementation()
+                         << " };\n";
         }
     }
 
@@ -208,8 +175,8 @@ private:
                 if (interfaces_) {
                     for (auto j = 0; j < MAX_MODULES; ++j) {
                         source_code_ << "\t\t" << (j ? ", " : "  ")
-                                    << "di::bind<i" << std::setfill('0') << std::setw(2) << j + (i * MAX_MODULES)
-                                    << ", impl" << std::setfill('0') << std::setw(2) << j + (i * MAX_MODULES) << ">()\n";
+                                     << "di::bind<i" << std::setfill('0') << std::setw(2) << j + (i * MAX_MODULES)
+                                     << ", impl" << std::setfill('0') << std::setw(2) << j + (i * MAX_MODULES) << ">()\n";
                     }
                 }
 
@@ -349,7 +316,7 @@ auto benchmark = [](const std::string& complexity, bool interfaces = false, int 
 };
 
 auto is_benchmark(const std::string& name) {
-    return std::string{std::getenv("BENCHMARK")} == name;
+    return std::getenv("BENCHMARK") && std::string{std::getenv("BENCHMARK")} == name;
 }
 
 }

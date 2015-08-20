@@ -11,51 +11,29 @@
 #include <sstream>
 #include <regex>
 #include <string>
-#include <limits.h>
-#if defined(__linux)
-    #include <unistd.h>
-#elif defined(__APPLE__)
-    #include <mach-o/dyld.h>
-#elif defined(_WIN32) || defined(_WIN64)
-    #include <Windows.h>
-#endif
+#include "common/utils.hpp"
 #include "boost/di.hpp"
 
 #if !defined(COVERAGE)
 
 namespace {
 
-template<class TFStream = std::ofstream>
-struct file : std::string, TFStream {
-    file(const std::string& name) // non explicit
-        : std::string{name}, TFStream{name}
-    { }
-};
-
 auto disassemble(const std::string& f, const std::regex& rgx) {
     file<> commands{f + ".cmd"};
     std::stringstream command;
-    char progname[FILENAME_MAX];
 
 #if defined(__linux)
-    auto len = 0;
-    if ((len = readlink("/proc/self/exe", progname, sizeof(progname)-1)) != -1) {
-        progname[len] = '\0';
-    }
     command << "gdb --batch -x " << commands;
-    commands << "file " << progname << std::endl;
+    commands << "file " << get_module_file_name() << std::endl;
     commands << "disassemble " << f << std::endl;
     commands << "q" << std::endl;
 #elif defined(__APPLE__)
-    auto size = static_cast<unsigned int>(sizeof(progname));
-    _NSGetExecutablePath(progname, &size);
     command << "lldb -s " << commands;
-    commands << "file " << progname << std::endl;
+    commands << "file " << get_module_file_name() << std::endl;
     commands << "di -n " << f << std::endl;
     commands << "q" << std::endl;
 #elif defined(_WIN32) || defined(_WIN64)
-    GetModuleFileName(nullptr, progname, FILENAME_MAX);
-    command << "cdb -cf " << commands << " -z " << progname;
+    command << "cdb -cf " << commands << " -z " << get_module_file_name();
     commands << "uf " << f << std::endl;
     commands << "q" << std::endl;
 #endif

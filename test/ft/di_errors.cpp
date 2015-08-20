@@ -14,15 +14,9 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include "common/utils.hpp"
 
 namespace {
-
-template<class TFStream = std::ofstream>
-struct file : std::string, TFStream {
-    file(const std::string& name) // non explicit
-        : std::string{name}, TFStream{name}
-    { }
-};
 
 template<class... TArgs>
 auto errors(const TArgs&... args) {
@@ -39,22 +33,14 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
         source_code << "}" << std::endl;
 
         std::stringstream errors;
-        std::string compiler;
 
         #if defined(__clang__)
-            compiler = "clang++";
-            errors << "-c -std=c++1y -Wno-all -Werror -Wno-error=deprecated-declarations";
+            errors << "-c -Wno-all -Werror -Wno-error=deprecated-declarations";
         #elif defined(__GNUC__) && !defined(__clang__)
-            compiler = "g++";
-            errors << "-c -std=c++1y -Werror ";
+            errors << "-c -Werror ";
         #elif defined(_MSC_VER)
-            compiler = "cl";
             errors << "/c /EHsc /W3 /WX";
         #endif
-
-        if (auto cxx = std::getenv("CXX")) {
-            compiler = cxx;
-        }
 
         auto include_rgx = std::regex{"<include>"};
 
@@ -64,13 +50,8 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
             auto include = std::regex_replace(defines, include_rgx, "-include");
         #endif
 
-        std::string flags = "-I../include -I../../include"; // bjam, cmake
-        if (auto cxxflags = std::getenv("CXXFLAGS")) {
-            flags += " " + std::string{cxxflags};
-        }
-
-        command << compiler
-                << " " << flags
+        command << cxx()
+                << " " << cxxflags(true)
                 << " " << include
                 << " " << errors.str()
                 << " " << source_code
