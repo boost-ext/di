@@ -20,11 +20,6 @@ struct test {
     }
 };
 
-struct test_skip {
-    template<class Test>
-    test_skip(const Test&) { }
-};
-
 int main() { }
 
 #endif
