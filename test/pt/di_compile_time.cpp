@@ -4,6 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <cstdlib>
@@ -65,66 +66,67 @@ private:
         source_code_ << "namespace di = boost::di;\n";
     }
 
+    auto gen_derived(const std::string& name, const std::string& base, int i) {
+        std::stringstream result;
+        if (base != "" && name != base) {
+            result << " : " << base << std::setfill('0') << std::setw(2) << i;
+        }
+        return result.str();
+    };
+
+    auto gen_interface(const std::string& name, const std::string& base, int i) {
+        std::stringstream result;
+        if (name == base) {
+            result << " virtual ~" << name << std::setfill('0') << std::setw(2) << i
+                   << "() noexcept = default; virtual void dummy() = 0;";
+        }
+        return result.str();
+    };
+
+    auto gen_implementation(const std::string& name, const std::string& base) {
+        std::stringstream result;
+        if (base != "" && name != base) {
+            result << " void dummy() override { }";
+        }
+        return result.str();
+    };
+
+    auto gen_ctor_args(const std::string& constructor, int i) {
+        std::stringstream args;
+        if (constructor == "") {
+            return args.str();
+        }
+        for (auto j = i - MAX_CTOR_ARGS ; j < i; ++j) {
+            if (j >= 0) {
+                args << (j > 0 && j != i - MAX_CTOR_ARGS ? "," : "")
+                     << constructor << std::setfill('0') << std::setw(2) << j;
+            }
+        }
+        return args.str();
+    };
+
     void gen_basic_types(const std::string& name
                        , const std::string& constructor
                        , const std::string& base = "") {
         for (auto i = 0; i < MAX_TYPES; ++i) {
             std::stringstream ctor;
 
-            auto extend = [&](auto i) {
-                std::stringstream result;
-                if (base != "" && name != base) {
-                    result << " : " << base << std::setfill('0') << std::setw(2) << i;
-                }
-                return result.str();
-            };
-
-            auto interface = [&](auto i) {
-                std::stringstream result;
-                if (name == base) {
-                    result << " virtual ~" << name << std::setfill('0') << std::setw(2) << i
-                           << "() noexcept = default; virtual void dummy() = 0;";
-                }
-                return result.str();
-            };
-
-            auto implementation = [&]() {
-                std::stringstream result;
-                if (base != "" && name != base) {
-                    result << " void dummy() override { }";
-                }
-                return result.str();
-            };
-
-            auto ctor_args = [&](auto i) {
-                std::stringstream args;
-                if (constructor == "") {
-                    return args.str();
-                }
-                for (auto j = i - MAX_CTOR_ARGS ; j < i; ++j) {
-                    if (j >= 0) {
-                        args << (j > 0 && j != i - MAX_CTOR_ARGS ? "," : "")
-                             << constructor << std::setfill('0') << std::setw(2) << j;
-                    }
-                }
-                return args.str();
-            };
 
             if (create_ == config_create::INJECT) {
                 ctor << "BOOST_DI_INJECT(" << name
                      << std::setfill('0') << std::setw(2) << i << (i ? ", " : "")
-                     << ctor_args(i) << ") { }";
+                     << gen_ctor_args(constructor, i) << ") { }";
             } else {
                 ctor << name << std::setfill('0')
                      << std::setw(2) << i << "("
-                     << ctor_args(i) << ") { }";
+                     << gen_ctor_args(constructor, i) << ") { }";
             }
 
             source_code_ << "struct " << name << std::setfill('0') << std::setw(2) << i
-                         << extend(i) << " { "
+                         << gen_derived(name, base, i) << " { "
                          << ctor.str()
-                         << interface(i)
-                         << implementation()
+                         << gen_interface(name, base, i)
+                         << gen_implementation(name, base)
                          << " };\n";
         }
     }
@@ -309,6 +311,7 @@ auto benchmark = [](const std::string& complexity, bool interfaces = false, int 
     };
 
     json ds{complexity};
+    std::cerr << "dupa" << std::endl;
     perform(ds, "ctor/auto", generator::config_create::CTOR, generator::config_configure::ALL);
     perform(ds, "inject/all", generator::config_create::INJECT, generator::config_configure::ALL);
     perform(ds, "ctor/exposed", generator::config_create::CTOR, generator::config_configure::EXPOSED);
