@@ -18,6 +18,7 @@ configuration:
 branches:
   except:
     - gh-pages
+    - benchmarks
 
 environment:
   fast_finish: true

@@ -14,6 +14,11 @@ env:
   - BII_USER=krzysztofjusiak
   - VALGRIND=--memcheck="valgrind --leak-check=full --error-exitcode=1"
 
+branches:
+  except:
+    - gh-pages
+    - benchmarks
+
 matrix:
   fast_finish: true
   include:
