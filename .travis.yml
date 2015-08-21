@@ -245,7 +245,7 @@ after_success:
 - if [ "${BENCHMARK}" != "" ]; then (git
   clone https://github.com/krzysztof-jusiak/di.git benchmarks
   && cd benchmarks && git checkout -b benchmarks -t origin/benchmarks
-  && find ../test -iname "*.json" | xargs -I% cp % . && git add -A . && git commit -am "update"
+  && find ../build/test ../test -iname "*.json" | xargs -I% cp % . && git add -A . && git commit -am "update"
   && git push --force --quiet "https://${GH_TOKEN}@github.com/krzysztof-jusiak/di"); fi
 - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${BIICODE}" != "" ]; then (mkdir biicode && cd biicode
   && wget https://s3.amazonaws.com/biibinaries/release/3.3/bii-ubuntu-64_3_3.deb
