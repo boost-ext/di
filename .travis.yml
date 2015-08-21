@@ -29,7 +29,7 @@ matrix:
         packages:
         - xsltproc
   - os: linux
-    env: TOOLSET=clang-3.4 MEMCHECK=${VALGRIND} BENCHMARK=ON COMPILER=/usr/local/clang-3.4/bin/clang++
+    env: TOOLSET=clang-3.4 MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=/usr/local/clang-3.4/bin/clang++
     addons:
       apt:
         packages:
@@ -68,7 +68,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.4
   - os: linux
-    env: TOOLSET=clang-3.5 MEMCHECK=${VALGRIND} BENCHMARK=ON COMPILER=clang++-3.5
+    env: TOOLSET=clang-3.5 MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.5
     addons:
       apt:
         packages:
@@ -93,7 +93,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.5
   - os: linux
-    env: TOOLSET=clang-3.6 MEMCHECK=${VALGRIND} BENCHMARK=ON COMPILER=clang++-3.6
+    env: TOOLSET=clang-3.6 MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.6
     addons:
       apt:
         packages:
@@ -118,7 +118,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.6
   - os: linux
-    env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} BENCHMARK=ON COMPILER=clang++-3.8
+    env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.8
     addons:
       apt:
         packages:
@@ -177,7 +177,7 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
   - os: linux
-    env: TOOLSET=gcc-5 BENCHMARK=ON COMPILER=g++-5
+    env: TOOLSET=gcc-5 BENCHMARK=QUICK COMPILER=g++-5
     addons:
       apt:
         packages:
@@ -188,7 +188,7 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
   - os: linux
-    env: CMAKE=ON COMPILER=g++-5
+    env: CMAKE=ON BENCHMARK=ON COMPILER=g++-5
     addons:
       apt:
         packages:
@@ -201,10 +201,10 @@ matrix:
   - os: osx
     env: TOOLSET=clang COMPILER=clang++
   - os: osx
-    env: CMAKE=ON COMPILER=clang++
+    env: CMAKE=ON BENCHMARK=ON COMPILER=clang++
   allow_failures:
     - env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.8
-    - env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} BENCHMARK=ON COMPILER=clang++-3.8
+    - env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.8
     - env: CMAKE=ON COMPILER=clang++-3.8
 
 before_script:
@@ -227,7 +227,7 @@ script:
 - if [ "${TOOLSET}" != "" ]; then (cd example && ../build/b2 -sBOOST_ROOT=../build
   -j2 -q --toolset=${TOOLSET} debug-symbols=off ${MEMCHECK} cxxflags=" $CXXFLAGS" linkflags=" $LDFLAGS"); fi
 - if [ "${CMAKE}" != "" ]; then (cd build && cmake
-  .. && cmake --build . && ctest --output-on-failure); fi
+  .. && cmake --build . && travis_wait ctest --output-on-failure); fi
 - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (git
   clone --quiet --recursive --depth=1 --single-branch https://github.com/boostorg/boost.git
   && cd boost && ./bootstrap.sh && ./b2 headers && mkdir libs/di && cp -r ../build ../doc ../example ../include libs/di

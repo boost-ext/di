@@ -66,3 +66,7 @@ test(ft/di_inject)
 test(ft/di_injector)
 test(ft/di_modules)
 
+test(pt/di_compile_time)
+set(CMAKE_BUILD_TYPE Release)
+test(pt/di_run_time)
+
