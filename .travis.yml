@@ -118,11 +118,11 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.6
   - os: linux
-    env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.8
+    env: TOOLSET=clang-3.7 MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.7
     addons:
       apt:
         packages:
-        - clang-3.8
+        - clang-3.7
         - libstdc++-5-dev
         - valgrind
         - gdb
@@ -131,11 +131,11 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise
   - os: linux
-    env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.8
+    env: TOOLSET=clang-3.7 MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.7
     addons:
       apt:
         packages:
-        - clang-3.8
+        - clang-3.7
         - valgrind
         - gdb
         - bc
@@ -144,11 +144,11 @@ matrix:
         - llvm-toolchain-precise
 
   - os: linux
-    env: CMAKE=ON COMPILER=clang++-3.8
+    env: CMAKE=ON COMPILER=clang++-3.7
     addons:
       apt:
         packages:
-        - clang-3.8
+        - clang-3.7
         - libstdc++-5-dev
         - gdb
         - bc
@@ -203,9 +203,9 @@ matrix:
   - os: osx
     env: CMAKE=ON BENCHMARK=ON COMPILER=clang++
   allow_failures:
-    - env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.8
-    - env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.8
-    - env: CMAKE=ON COMPILER=clang++-3.8
+    - env: TOOLSET=clang-3.7 MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.7
+    - env: TOOLSET=clang-3.7 MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.7
+    - env: CMAKE=ON COMPILER=clang++-3.7
 
 before_script:
 - git config --global user.name "Travis-CI"
