@@ -1724,7 +1724,8 @@ using is_allowed = std::conditional_t<
   , typename bind<T>::has_disallowed_specifiers
 >;
 template<class... Ts>
-auto boundable_impl(any_of<Ts...>&&) -> get_any_of_error<is_allowed<Ts>...>;
+auto boundable_impl(any_of<Ts...>&&) ->
+    get_any_of_error<is_allowed<Ts>...>;
 template<class I, class T>
 auto boundable_impl(I&&, T&&) ->
     std::conditional_t<
@@ -1752,8 +1753,7 @@ struct boundable__ {
 template<class... Ts>
 using boundable = typename boundable__<Ts...>::type;
 }}}}
-namespace boost { namespace di { inline namespace v1 {
-namespace detail {
+namespace boost { namespace di { inline namespace v1 { namespace detail {
 template<class...>
 struct bind;
 template<class TScope, class... Ts>

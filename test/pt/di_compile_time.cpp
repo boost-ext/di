@@ -179,7 +179,7 @@ private:
                     for (auto j = 0; j < MAX_MODULES; ++j) {
                         source_code_ << "\t\t" << (j ? ", " : "  ")
                                      << "di::bind<i" << std::setfill('0') << std::setw(2) << j + (i * MAX_MODULES)
-                                     << ", impl" << std::setfill('0') << std::setw(2) << j + (i * MAX_MODULES) << ">()\n";
+                                     << ">().to<" << std::setfill('0') << std::setw(2) << j + (i * MAX_MODULES) << ">()\n";
                     }
                 }
 

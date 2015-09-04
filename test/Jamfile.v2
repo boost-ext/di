@@ -55,7 +55,7 @@ test-suite ut :
     [ test c++1y : ut/aux_/preprocessor.cpp ]
     [ test c++1y : ut/aux_/type_traits.cpp ]
     [ test c++1y : ut/aux_/utility.cpp ]
-    #[ test c++1y : ut/concepts/boundable.cpp ]
+    [ test c++1y : ut/concepts/boundable.cpp ]
     [ test c++1y : ut/concepts/callable.cpp ]
     [ test c++1y : ut/concepts/configurable.cpp ]
     [ test c++1y : ut/concepts/creatable.cpp ]
