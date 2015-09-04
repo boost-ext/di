@@ -121,7 +121,8 @@ using is_allowed = std::conditional_t<
 template<class... Ts> // expected
 auto boundable_impl(any_of<Ts...>&&) ->
     //BOOST_DI_REQUIRES(aux::is_unique<Ts...>::value) = 0>
-    get_any_of_error<is_allowed<Ts>...>;
+    //get_any_of_error<is_allowed<Ts>...>;
+std::true_type;
 
 template<class I, class T> // expected -> given
 auto boundable_impl(I&&, T&&) ->
