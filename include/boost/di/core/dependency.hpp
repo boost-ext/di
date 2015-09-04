@@ -105,18 +105,45 @@ public:
 
     template<class T, BOOST_DI_REQUIRES(std::is_same<TName, no_name>::value && !std::is_same<T, no_name>::value) = 0>
     auto named(const T&) const noexcept {
-        return dependency<TScope, TExpected, TGiven, T>{*this};
+        return dependency<
+            TScope
+          , TExpected
+          , TGiven
+          , T
+          , TPriority
+        >{*this};
     }
 
     template<class T, BOOST_DI_REQUIRES_MSG(concepts::scopable<T>) = 0>
     auto in(const T&) const noexcept {
-        return dependency<T, TExpected, TGiven, TName>{};
+        return dependency<
+            T
+          , TExpected
+          , TGiven
+          , TName
+          , TPriority
+        >{};
+    }
+
+    template<class T, BOOST_DI_REQUIRES_MSG(typename concepts::boundable__<TExpected, T>::type) = 0>
+    auto to() const noexcept {
+        return dependency<
+            TScope
+          , TExpected
+          , T
+          , TName
+          , TPriority
+        >{};
     }
 
     template<class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value) = 0>
     auto to(T&& object) const noexcept {
         using dependency = dependency<
-            scopes::external, TExpected, typename ref_traits<T>::type, TName
+            scopes::external
+          , TExpected
+          , typename ref_traits<T>::type
+          , TName
+          , TPriority
         >;
         return dependency{static_cast<T&&>(object)};
     }
@@ -124,7 +151,11 @@ public:
     template<class T, BOOST_DI_REQUIRES(has_configure<T>::value) = 0>
     auto to(const T& object) const noexcept {
         using dependency = dependency<
-            scopes::exposed<TScope>, TExpected, decltype(std::declval<T>().configure()), TName
+            scopes::exposed<TScope>
+          , TExpected
+          , decltype(std::declval<T>().configure())
+          , TName
+          , TPriority
         >;
         return dependency{object.configure()};
     }
@@ -132,13 +163,23 @@ public:
     template<class T, BOOST_DI_REQUIRES(has_deps<T>::value) = 0>
     auto to(const T& object) const noexcept {
         using dependency = dependency<
-            scopes::exposed<TScope>, TExpected, T, TName
+            scopes::exposed<TScope>
+          , TExpected
+          , T
+          , TName
+          , TPriority
         >;
         return dependency{object};
     }
 
     auto operator[](const override&) const noexcept {
-        return dependency<TScope, TExpected, TGiven, TName, override>{*this};
+        return dependency<
+            TScope
+          , TExpected
+          , TGiven
+          , TName
+          , override
+        >{*this};
     }
 
     #if defined(__cpp_variable_templates) // __pph__

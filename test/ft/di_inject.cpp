@@ -60,7 +60,6 @@ test ctor_limit_size = [] {
     injector.create<c>();
 };
 
-
 test inject_traits_no_limits = [] {
     struct c {
         BOOST_DI_INJECT_TRAITS_NO_LIMITS(int, int, int, int, int, int, int, int, int, int, int);
@@ -248,10 +247,10 @@ test ctor_refs = [] {
         expect(123 == object.l);
     };
 
-    test(di::aux::type<c>{}, di::bind<i1, impl1>());
-    test(di::aux::type<c_inject>{}, di::bind<i1, impl1>());
+    test(di::aux::type<c>{}, di::bind<i1>().to<impl1>());
+    test(di::aux::type<c_inject>{}, di::bind<i1>().to<impl1>());
 #if !defined(_MSC_VER)
-    test(di::aux::type<c_aggregate>{}, di::bind<i1, impl1>());
+    test(di::aux::type<c_aggregate>{}, di::bind<i1>().to<impl1>());
 #endif
 
     test(di::aux::type<c>{}, di::bind<i1>().to(std::make_shared<impl1>()));
@@ -415,7 +414,7 @@ test smart_pointers = [] {
     };
 
     auto injector = di::make_injector(
-        di::bind<i1, impl1>()
+        di::bind<i1>().to<impl1>()
     );
 
     injector.create<c>();
@@ -445,7 +444,7 @@ test string_creation = [] {
 
 template<class T>
 struct template_inject {
-    BOOST_DI_INJECT(explicit template_inject, T value)
+    BOOST_DI_INJECT(/*explicit*/ template_inject, T value)
         : value_(value)
     { }
 
@@ -488,7 +487,7 @@ test create_conversion = [] {
     constexpr auto i = 42;
 
     auto injector = di::make_injector(
-        di::bind<i1, impl1>()
+        di::bind<i1>().to<impl1>()
       , di::bind<int>().to(i)
     );
 
@@ -533,8 +532,7 @@ test request_value_and_ptr_in_unique = [] {
 
         struct c {
             c(const boost::shared_ptr<int>& sp, int& i_)
-                : sp(sp)
-            {
+                : sp(sp) {
                 expect(i_ == i);
             }
 

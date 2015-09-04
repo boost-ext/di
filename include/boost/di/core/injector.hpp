@@ -109,7 +109,29 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : po
     using pool_t = pool<bindings_t<TDeps...>>;
 
 protected:
-    template<class, class = no_name, class = std::false_type> struct is_creatable;
+    template<class T, class TName = no_name, class TIsRoot = std::false_type>
+    struct is_creatable {
+        using TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>;
+        using TCtor = typename type_traits::ctor_traits__<typename TDependency::given>::type;
+
+        static constexpr auto value = std::is_convertible<
+            decltype(
+                dependency__<TDependency>::template try_create<T>(
+                    try_provider<
+                        typename TDependency::given
+                      , TCtor
+                      , injector
+                      , decltype(TConfig::provider(std::declval<injector>()))
+                    >{}
+                )
+            ), T>::value BOOST_DI_CORE_INJECTOR_POLICY(&&
+            policy::template try_call<
+                arg_wrapper<referable_t<T, dependency__<TDependency>>, TName, TIsRoot, pool_t>
+              , TPolicies
+              , TDependency
+              , TCtor
+            >::value)();
+    };
 
 public:
     using deps = bindings_t<TDeps...>;
@@ -142,30 +164,6 @@ public:
     }
 
 protected:
-    template<class T, class TName, class TIsRoot>
-    struct is_creatable {
-        using TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>;
-        using TCtor = typename type_traits::ctor_traits__<typename TDependency::given>::type;
-
-        static constexpr auto value = std::is_convertible<
-            decltype(
-                dependency__<TDependency>::template try_create<T>(
-                    try_provider<
-                        typename TDependency::given
-                      , TCtor
-                      , injector
-                      , decltype(TConfig::provider(std::declval<injector>()))
-                    >{}
-                )
-            ), T>::value BOOST_DI_CORE_INJECTOR_POLICY(&&
-            policy::template try_call<
-                arg_wrapper<referable_t<T, dependency__<TDependency>>, TName, TIsRoot, pool_t>
-              , TPolicies
-              , TDependency
-              , TCtor
-            >::value)();
-    };
-
     template<class T>
     struct try_create {
         using type = std::conditional_t<is_creatable<T>::value, T, void>;

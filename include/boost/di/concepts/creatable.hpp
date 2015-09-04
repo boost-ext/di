@@ -28,7 +28,7 @@ struct is_not_bound {
     }
 
     static inline T*
-    error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?");
+    error(_ = "type not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?");
 };
 
 struct is_not_fully_implemented {
@@ -52,7 +52,7 @@ struct is_not_bound {
     }
 
     static inline T*
-    error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>.named(name)'?");
+    error(_ = "type not bound, did you forget to add: 'di::bind<interface>.named(name).to<implementation>()'?");
 };
 
 struct is_not_fully_implemented {

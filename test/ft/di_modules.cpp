@@ -64,7 +64,7 @@ test modules_mix_make_injector = [] {
     struct module1 {
         di::injector<i1> configure() const {
             return di::make_injector(
-                di::bind<i1, impl1>()
+                di::bind<i1>().to<impl1>()
             );
         }
     };
@@ -114,7 +114,7 @@ test empty_exposed_module = [] {
 
 test exposed_type = [] {
     di::injector<complex1> injector = di::make_injector(
-        di::bind<i1, impl1>()
+        di::bind<i1>().to<impl1>()
     );
 
     auto object = injector.create<std::shared_ptr<complex1>>();
@@ -125,7 +125,7 @@ test exposed_type_by_injector = [] {
     constexpr auto i = 42;
 
     di::injector<complex1> injector1 = di::make_injector(
-        di::bind<i1, impl1>()
+        di::bind<i1>().to<impl1>()
     );
 
     auto injector = di::make_injector(
@@ -141,7 +141,7 @@ test exposed_type_by_injector = [] {
 test exposed_type_by_module = [] {
     struct module {
         di::injector<complex1> configure() const {
-            return di::make_injector(di::bind<i1, impl1>());
+            return di::make_injector(di::bind<i1>().to<impl1>());
         }
     };
 
@@ -160,7 +160,7 @@ test exposed_type_by_module = [] {
 test exposed_type_by_module_twice = [] {
     struct module {
         di::injector<complex1> configure() const {
-            return di::make_injector(di::bind<i1, impl1>());
+            return di::make_injector(di::bind<i1>().to<impl1>());
         }
     };
 
@@ -181,7 +181,7 @@ test exposed_type_by_module_mix = [] {
 
     struct module1 {
         di::injector<complex1> configure() const {
-            return di::make_injector(di::bind<i1, impl1>());
+            return di::make_injector(di::bind<i1>().to<impl1>());
         }
     };
 
@@ -210,7 +210,7 @@ test exposed_many = [] {
     constexpr auto i = 42;
 
     di::injector<complex1, i1> injector1 = di::make_injector(
-        di::bind<i1, impl1>()
+        di::bind<i1>().to<impl1>()
     );
 
     auto injector = di::make_injector(
@@ -296,7 +296,7 @@ test exposed_bind_interface = [] {
     };
 
     di::injector<i1> module = di::make_injector(
-        di::bind<i1, impl1>()
+        di::bind<i1>().to<impl1>()
     );
 
     auto injector = di::make_injector(
@@ -320,7 +320,7 @@ test exposed_bind_interface_module = [] {
     struct module {
         di::injector<i1> configure() const noexcept {
             return di::make_injector(
-                di::bind<i1, impl1>()
+                di::bind<i1>().to<impl1>()
             );
         }
     };
@@ -349,8 +349,8 @@ test exposed_module_with_unique_ptr = [] {
     struct module {
         di::injector<c> configure() const noexcept {
             return di::make_injector(
-                di::bind<i1, impl1>()
-              , di::bind<i2, impl2>()
+                di::bind<i1>().to<impl1>()
+              , di::bind<i2>().to<impl2>()
               , di::bind<int>().to(i)
             );
         }

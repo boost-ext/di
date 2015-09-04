@@ -110,7 +110,7 @@ test bind_int = [] {
 
 auto given_bind_interface() {
     auto injector = di::make_injector(
-        di::bind<i, impl>()
+        di::bind<i>().to<impl>()
     );
 
     return injector.create<std::unique_ptr<i>>();

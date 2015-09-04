@@ -18,24 +18,29 @@
 namespace boost { namespace di { inline namespace v1 {
 
 namespace detail {
+
+template<class T>
+struct type_ {
+    using type = T;
+};
+
 template<class... Ts, BOOST_DI_REQUIRES(aux::is_unique<Ts...>::value) = 0>
-auto any_of() {
-    return aux::type_list<Ts...>{};
-}
+aux::type_list<Ts...> any_of(Ts&&...);
+
+template<class T>
+type_<T> any_of(T&&);
+
+template<class... Ts>
+using any_of_t = typename decltype(detail::any_of(std::declval<Ts>()...))::type;
+
 } // namespace detail
 
-template<class T1, class T2, class... Ts>
-using any_of = decltype(detail::any_of<T1, T2, Ts...>());
-
-template<
-    class TExpected
-  , class TGiven = TExpected
-  , BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, TGiven>) = 0
->
 #if defined(__cpp_variable_templates) // __pph__
-    core::dependency<scopes::deduce, TExpected, TGiven> bind{};
+    template<class... Ts, BOOST_DI_REQUIRES_MSG(concepts::boundable<concepts::any_of<Ts...>>) = 0>
+    core::dependency<scopes::deduce, detail::any_of_t<Ts...>> bind{};
 #else // __pph__
-    struct bind : core::dependency<scopes::deduce, TExpected, TGiven> {};
+    template<class... Ts>
+    struct bind : core::dependency<scopes::deduce, detail::any_of_t<Ts...>> { };
 #endif // __pph__
 
 static constexpr BOOST_DI_UNUSED core::override override{};

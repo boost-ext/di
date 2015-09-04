@@ -154,7 +154,7 @@ test call_custom_policies_with_exposed_injector = [] {
     policy::called() = 0;
 
     di::injector<i1> injector = di::make_injector<custom_policies>(
-        di::bind<i1, impl1>()
+        di::bind<i1>().to<impl1>()
     );
 
     auto object = injector.create<std::unique_ptr<i1>>();

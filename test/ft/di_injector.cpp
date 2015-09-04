@@ -60,7 +60,7 @@ test create_ptr = [] {
     };
 
     auto injector = di::make_injector(
-        di::bind<i1, impl1>()
+        di::bind<i1>().to<impl1>()
     );
 
     injector.create<c>();
@@ -70,7 +70,7 @@ test create_interface_when_impl_with_one_arg_ctor = [] {
     struct impl : i1 { impl(int) { } void dummy1() override { } };
 
     auto injector = di::make_injector(
-        di::bind<i1, impl>()
+        di::bind<i1>().to<impl>()
     );
 
     auto object = injector.create<std::unique_ptr<i1>>();
@@ -80,7 +80,7 @@ test create_interface_when_impl_with_one_arg_ctor = [] {
 test injectors_mix = [] {
     auto injector = di::make_injector(
         di::make_injector(
-            di::bind<i1, impl1>()
+            di::bind<i1>().to<impl1>()
         )
     );
 

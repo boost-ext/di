@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-//#define static_assert(...) struct _ { }
 #include <string>
 #include "boost/di/concepts/boundable.hpp"
 #include "common/fakes/fake_dependency.hpp"
@@ -20,7 +19,7 @@ test bind_expected_given = [] {
     expect(boundable<int, int>::value);
     expect(std::is_same<bind<short>::is_not_related_to<int>, boundable<int, short>>::value);
     expect(std::is_same<bind<std::string>::is_not_related_to<int>, boundable<int, std::string>>::value);
-    expect(std::is_same<bind<int*>::has_disallowed_specifiers, boundable<int*, int>>::value);
+    expect(std::is_same<any_of<bind<int*>::has_disallowed_specifiers, std::true_type>, boundable<int*, int>>::value);
     expect(std::is_same<bind<int*>::has_disallowed_specifiers, boundable<int, int*>>::value);
     expect(std::is_same<bind<double*>::has_disallowed_specifiers, boundable<int, double*>>::value);
 };

@@ -9,6 +9,7 @@
 
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/core/dependency.hpp"
 #include "boost/di/core/bindings.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
@@ -53,12 +54,10 @@ template<class>
 struct is_unique;
 
 template<class T>
-struct unique_dependency {
-    using type = aux::pair<
-        aux::pair<typename T::expected, typename T::name>
-      , typename T::priority
-    >;
-};
+struct unique_dependency : aux::pair<
+    aux::pair<typename T::expected, typename T::name>
+  , typename T::priority
+> { };
 
 template<class... TDeps>
 struct is_unique<aux::type_list<TDeps...>>
@@ -112,19 +111,25 @@ using get_any_of_error =
       , any_of<Ts...>
     >;
 
+template<class T>
+using is_allowed = std::conditional_t<
+    std::is_same<T, aux::remove_specifiers_t<T>>::value
+  , std::true_type
+  , typename bind<T>::has_disallowed_specifiers
+>;
+
+template<class... Ts> // expected
+auto boundable_impl(any_of<Ts...>&&) -> std::true_type;//get_any_of_error<is_allowed<Ts>...>;
+
 template<class I, class T> // expected -> given
 auto boundable_impl(I&&, T&&) ->
     std::conditional_t<
-        !std::is_same<I, aux::remove_specifiers_t<I>>::value
-      , typename bind<I>::has_disallowed_specifiers
-      , std::conditional_t<
-            !std::is_same<T, aux::remove_specifiers_t<T>>::value
-          , typename bind<T>::has_disallowed_specifiers
-          , std::conditional_t<std::is_base_of<I, T>::value ||
-                (std::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value)
-              , std::true_type
-              , typename bind<T>::template is_not_related_to<I>
-            >
+        !std::is_same<T, aux::remove_specifiers_t<T>>::value // I is already verified
+      , typename bind<T>::has_disallowed_specifiers
+      , std::conditional_t<std::is_base_of<I, T>::value ||
+            (std::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value)
+          , std::true_type
+          , typename bind<T>::template is_not_related_to<I>
         >
     >;
 
