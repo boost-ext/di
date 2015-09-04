@@ -155,7 +155,7 @@ test any_of_with_scope_split = [] {
         #else
             di::bind<i1>().in(scope).template to<impl1_2>()
           , di::bind<i2>().in(scope).template to<impl1_2>()
-        #else
+        #endif
         );
 
         std::shared_ptr<i1> object_1 = injector;
