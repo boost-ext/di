@@ -1772,7 +1772,8 @@ template<class... Ts>
     typename
 #endif
     detail::bind<
-        BOOST_DI_REQUIRES_MSG(concepts::boundable<concepts::any_of<Ts...>>)
+        //BOOST_DI_REQUIRES_MSG(concepts::boundable<concepts::any_of<Ts...>>)
+    int
       , scopes::deduce
       , Ts...
     >::type
