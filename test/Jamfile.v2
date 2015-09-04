@@ -94,7 +94,7 @@ test-suite ft :
     [ test c++1y : ft/di_config.cpp ]
     [ test c++1y : ft/di_config_global_policies.cpp ]
     [ test c++1y : ft/di_config_global_provider.cpp ]
-    #[ test c++1y : ft/di_errors.cpp : : : DISABLE_MEMCHECK ]
+    [ test c++1y : ft/di_errors.cpp : : : DISABLE_MEMCHECK ]
     [ test c++1y : ft/di_inject.cpp ]
     [ test c++1y : ft/di_injector.cpp ]
     [ test c++1y : ft/di_modules.cpp ]

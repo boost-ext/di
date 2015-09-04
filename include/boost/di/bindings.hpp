@@ -15,33 +15,36 @@
 #include "boost/di/scopes/unique.hpp"
 #include "boost/di/concepts/boundable.hpp"
 
-namespace boost { namespace di { inline namespace v1 {
+namespace boost { namespace di { inline namespace v1 { namespace detail {
 
-namespace detail {
+template<class...>
+struct bind;
 
-template<class T>
-struct type_ {
-    using type = T;
+template<class TScope, class... Ts>
+struct bind<int, TScope, Ts...> {
+    using type = core::dependency<TScope, aux::type_list<Ts...>>;
 };
 
-template<class... Ts, BOOST_DI_REQUIRES(aux::is_unique<Ts...>::value) = 0>
-aux::type_list<Ts...> any_of(Ts&&...);
-
-template<class T>
-type_<T> any_of(T&&);
-
-template<class... Ts>
-using any_of_t = typename decltype(detail::any_of(std::declval<Ts>()...))::type;
+template<class TScope, class T>
+struct bind<int, TScope, T> {
+    using type = core::dependency<TScope, T>;
+};
 
 } // namespace detail
 
-#if defined(__cpp_variable_templates) // __pph__
-    template<class... Ts, BOOST_DI_REQUIRES_MSG(concepts::boundable<concepts::any_of<Ts...>>) = 0>
-    core::dependency<scopes::deduce, detail::any_of_t<Ts...>> bind{};
-#else // __pph__
-    template<class... Ts>
-    struct bind : core::dependency<scopes::deduce, detail::any_of_t<Ts...>> { };
+template<class... Ts>
+#if !defined(__cpp_variable_templates) // __pph__
+    struct bind :
 #endif // __pph__
+    typename detail::bind<
+        BOOST_DI_REQUIRES_MSG(concepts::boundable<concepts::any_of<Ts...>>)
+      , scopes::deduce
+      , Ts...
+    >::type
+#if defined(__cpp_variable_templates) // __pph__
+    bind
+#endif // __pph__
+{ };
 
 static constexpr BOOST_DI_UNUSED core::override override{};
 static constexpr BOOST_DI_UNUSED scopes::deduce deduce{};

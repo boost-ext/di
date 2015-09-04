@@ -301,7 +301,7 @@ test bind_any_of_not_related = [] {
         struct c { };
         int main() {
             di::make_injector(
-                di::bind<di::any_of<a>>().to<b>().to<c>()
+                di::bind<a, b>().to<c>()
             );
         }
     );
@@ -588,7 +588,7 @@ test create_not_fully_implemented_type = [] {
             "abstract_type<.*>::is_not_fully_implemented"
         #if !defined(_MSC_VER)
           , "create<c>()"
-          , "type not implemented, did you forget to implement all interface methods?"
+          , "type is not implemented, did you forget to implement all interface methods?"
         #endif
     );
 
@@ -597,7 +597,7 @@ test create_not_fully_implemented_type = [] {
         struct impl : i { };
         struct c { c(i*) { } };
         int main() {
-            di::make_injector(di::bind<i>()).create<c>();.to<impl>()
+            di::make_injector(di::bind<i>().to<impl>()).create<c>();
         }
     );
 };
@@ -609,7 +609,7 @@ test create_not_fully_implemented_type_named = [] {
         #endif
             "abstract_type<.*>::named<.*>::is_not_fully_implemented"
         #if !defined(_MSC_VER)
-          , "type not implemented, did you forget to implement all interface methods?"
+          , "type is not implemented, did you forget to implement all interface methods?"
         #endif
     );
 
@@ -619,7 +619,7 @@ test create_not_fully_implemented_type_named = [] {
         struct dummy { };
         struct c { BOOST_DI_INJECT(c, (named = dummy{}) i*) { } };
         int main() {
-            di::make_injector(di::bind<i>().named(dummy{})).create<c>();.to<impl>()
+            di::make_injector(di::bind<i>().named(dummy{}).to<impl>()).create<c>();
         }
     );
 };
@@ -675,7 +675,7 @@ test scope_traits_external_not_referable = [] {
         #endif
             "type<.*>::has_not_bound_reference<.*>"
         #if !defined(_MSC_VER)
-          , "reference type is not bound, did you forget to add `auto value = ...; di::bind<T>.to\\(value\\)`"
+          , "reference is not bound, did you forget to add `auto value = ...; di::bind<T>.to\\(value\\)`"
         #endif
     );
 
@@ -697,7 +697,7 @@ test scope_traits_external_not_referable_named = [] {
         #endif
             "type<.*>::has_not_bound_reference<.*>::named<.*>"
         #if !defined(_MSC_VER)
-          , "reference type is not bound, did you forget to add `auto value = ...; di::bind<T>.named\\(name\\).to\\(value\\)`"
+          , "reference is not bound, did you forget to add `auto value = ...; di::bind<T>.named\\(name\\).to\\(value\\)`"
         #endif
     );
 

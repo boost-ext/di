@@ -1372,7 +1372,7 @@ struct is_not_bound {
             constraint_not_satisfied{}.error();
     }
     static inline T*
-    error(_ = "type not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?");
+    error(_ = "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?");
 };
 struct is_not_fully_implemented {
     operator T*() const {
@@ -1381,7 +1381,7 @@ struct is_not_fully_implemented {
             constraint_not_satisfied{}.error();
     }
     static inline T*
-    error(_ = "type not implemented, did you forget to implement all interface methods?");
+    error(_ = "type is not implemented, did you forget to implement all interface methods?");
 };
 template<class TName>
 struct named {
@@ -1392,7 +1392,7 @@ struct is_not_bound {
             constraint_not_satisfied{}.error();
     }
     static inline T*
-    error(_ = "type not bound, did you forget to add: 'di::bind<interface>.named(name).to<implementation>()'?");
+    error(_ = "type is not bound, did you forget to add: 'di::bind<interface>.named(name).to<implementation>()'?");
 };
 struct is_not_fully_implemented {
     operator T*() const {
@@ -1401,7 +1401,7 @@ struct is_not_fully_implemented {
             constraint_not_satisfied{}.error();
     }
     static inline T*
-    error(_ = "type not implemented, did you forget to implement all interface methods?");
+    error(_ = "type is not implemented, did you forget to implement all interface methods?");
 };
 };};
 template<class...>
@@ -1459,10 +1459,10 @@ struct has_not_bound_reference {
     template<class TName>
     struct named {
         static inline TReference
-        error(_ = "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.named(name).to(value)`");
+        error(_ = "reference is not bound, did you forget to add `auto value = ...; di::bind<T>.named(name).to(value)`");
     };
     static inline TReference
-    error(_ = "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.to(value)`");
+    error(_ = "reference is not bound, did you forget to add `auto value = ...; di::bind<T>.to(value)`");
 };
 struct has_ambiguous_number_of_constructor_parameters {
 template<int Given> struct given {
@@ -1724,7 +1724,7 @@ using is_allowed = std::conditional_t<
   , typename bind<T>::has_disallowed_specifiers
 >;
 template<class... Ts>
-auto boundable_impl(any_of<Ts...>&&) -> std::true_type;
+auto boundable_impl(any_of<Ts...>&&) -> get_any_of_error<is_allowed<Ts>...>;
 template<class I, class T>
 auto boundable_impl(I&&, T&&) ->
     std::conditional_t<
@@ -1754,24 +1754,30 @@ using boundable = typename boundable__<Ts...>::type;
 }}}}
 namespace boost { namespace di { inline namespace v1 {
 namespace detail {
-template<class T>
-struct type_ {
-    using type = T;
+template<class...>
+struct bind;
+template<class TScope, class... Ts>
+struct bind<int, TScope, Ts...> {
+    using type = core::dependency<TScope, aux::type_list<Ts...>>;
 };
-template<class... Ts, BOOST_DI_REQUIRES(aux::is_unique<Ts...>::value) = 0>
-aux::type_list<Ts...> any_of(Ts&&...);
-template<class T>
-type_<T> any_of(T&&);
-template<class... Ts>
-using any_of_t = typename decltype(detail::any_of(std::declval<Ts>()...))::type;
+template<class TScope, class T>
+struct bind<int, TScope, T> {
+    using type = core::dependency<TScope, T>;
+};
 }
-#if defined(__cpp_variable_templates)
-    template<class... Ts, BOOST_DI_REQUIRES_MSG(concepts::boundable<concepts::any_of<Ts...>>) = 0>
-    core::dependency<scopes::deduce, detail::any_of_t<Ts...>> bind{};
-#else
-    template<class... Ts>
-    struct bind : core::dependency<scopes::deduce, detail::any_of_t<Ts...>> { };
+template<class... Ts>
+#if !defined(__cpp_variable_templates)
+    struct bind :
 #endif
+    typename detail::bind<
+        BOOST_DI_REQUIRES_MSG(concepts::boundable<concepts::any_of<Ts...>>)
+      , scopes::deduce
+      , Ts...
+    >::type
+#if defined(__cpp_variable_templates)
+    bind
+#endif
+{ };
 static constexpr BOOST_DI_UNUSED core::override override{};
 static constexpr BOOST_DI_UNUSED scopes::deduce deduce{};
 static constexpr BOOST_DI_UNUSED scopes::unique unique{};

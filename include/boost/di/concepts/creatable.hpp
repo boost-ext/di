@@ -28,7 +28,7 @@ struct is_not_bound {
     }
 
     static inline T*
-    error(_ = "type not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?");
+    error(_ = "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?");
 };
 
 struct is_not_fully_implemented {
@@ -39,7 +39,7 @@ struct is_not_fully_implemented {
     }
 
     static inline T*
-    error(_ = "type not implemented, did you forget to implement all interface methods?");
+    error(_ = "type is not implemented, did you forget to implement all interface methods?");
 };
 
 template<class TName>
@@ -52,7 +52,7 @@ struct is_not_bound {
     }
 
     static inline T*
-    error(_ = "type not bound, did you forget to add: 'di::bind<interface>.named(name).to<implementation>()'?");
+    error(_ = "type is not bound, did you forget to add: 'di::bind<interface>.named(name).to<implementation>()'?");
 };
 
 struct is_not_fully_implemented {
@@ -63,7 +63,7 @@ struct is_not_fully_implemented {
     }
 
     static inline T*
-    error(_ = "type not implemented, did you forget to implement all interface methods?");
+    error(_ = "type is not implemented, did you forget to implement all interface methods?");
 };
 };};
 
@@ -132,11 +132,11 @@ struct has_not_bound_reference {
     template<class TName>
     struct named {
         static inline TReference
-        error(_ = "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.named(name).to(value)`");
+        error(_ = "reference is not bound, did you forget to add `auto value = ...; di::bind<T>.named(name).to(value)`");
     };
 
     static inline TReference
-    error(_ = "reference type not bound, did you forget to add `auto value = ...; di::bind<T>.to(value)`");
+    error(_ = "reference is not bound, did you forget to add `auto value = ...; di::bind<T>.to(value)`");
 };
 
 struct has_ambiguous_number_of_constructor_parameters {

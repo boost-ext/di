@@ -28,12 +28,5 @@ test bindings_types = [] {
     static_expect(std::is_base_of<core::dependency<scopes::deduce, aux::type_list<i1, i2>, impl>, aux::remove_specifiers_t<decltype(bind<i1, i2>().to<impl>())>>{});
 };
 
-test any_of = [] {
-    static_expect(std::is_same<int, detail::any_of_t<int>>::value);
-    static_expect(std::is_same<i1, detail::any_of_t<i1>>::value);
-    static_expect(std::is_same<aux::type_list<int, double>, detail::any_of_t<int, double>>::value);
-    static_expect(std::is_same<aux::type_list<i1, i2>, detail::any_of_t<i1, i2>>::value);
-};
-
 }}} // boost::di::v1
 

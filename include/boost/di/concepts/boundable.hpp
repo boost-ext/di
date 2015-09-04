@@ -119,7 +119,7 @@ using is_allowed = std::conditional_t<
 >;
 
 template<class... Ts> // expected
-auto boundable_impl(any_of<Ts...>&&) -> std::true_type;//get_any_of_error<is_allowed<Ts>...>;
+auto boundable_impl(any_of<Ts...>&&) -> get_any_of_error<is_allowed<Ts>...>;
 
 template<class I, class T> // expected -> given
 auto boundable_impl(I&&, T&&) ->
@@ -138,6 +138,7 @@ auto boundable_impl(aux::type_list<TDeps...>&&) -> get_bindings_error<TDeps...>;
 
 template<class T, class... Ts> // any_of
 auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
+    //BOOST_DI_REQUIRES(aux::is_unique<Ts...>::value) = 0>
     get_any_of_error<decltype(boundable_impl(std::declval<Ts>(), std::declval<T>()))...>;
 
 template<class... TDeps> // make_injector
