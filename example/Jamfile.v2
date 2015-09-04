@@ -40,11 +40,11 @@ rule example ( std : src + : cxxflags * : property * ) {
 
 test-suite example :
     [ example c++1y : modules/model.cpp
-                          modules/module_model.cpp
-                          modules/view.cpp
-                          modules/module_view.cpp
-                          modules/controller.cpp
-                          modules/main.cpp
+                      modules/module_model.cpp
+                      modules/view.cpp
+                      modules/module_view.cpp
+                      modules/controller.cpp
+                      modules/main.cpp
       : -Imodules -DBOOST_DI_CFG=config
     ]
     [ example c++1y : annotations.cpp ]
