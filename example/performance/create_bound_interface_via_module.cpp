@@ -17,7 +17,7 @@ struct implementation : interface { void dummy() override { } };
 struct module {
     auto configure() const noexcept {
         return di::make_injector(
-            di::bind<interface, implementation>()
+            di::bind<interface>().to<implementation>()
         );
     }
 };

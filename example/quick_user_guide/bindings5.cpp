@@ -16,9 +16,9 @@ struct impl1 : i1 { void dummy1() override { } };
 int main() {
     auto injector = di::make_injector(
         #if defined(__cpp_variable_templates)
-            di::bind<i1, impl1>
+            di::bind<i1>.to<impl1>()
         #else
-            di::bind<i1, impl1>() // cross platform `bind`, MSVC 2015 doesn't support variable templates
+            di::bind<i1>().to<impl1>() // cross platform `bind`, MSVC 2015 doesn't support variable templates
         #endif
     );
 

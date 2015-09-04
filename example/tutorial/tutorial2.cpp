@@ -29,7 +29,7 @@ private:
 
 int main() {
     auto injector = di::make_injector(
-        di::bind<int, std::integral_constant<int, 1>>() // compile-time value
+        di::bind<int>().to<std::integral_constant<int, 1>>() // compile-time value
       , di::bind<std::string>().to("hello world") // run-time value
     );
 

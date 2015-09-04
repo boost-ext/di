@@ -27,7 +27,7 @@ struct c {
 int main() {
     di::injector<i1> module =
         di::make_injector(
-            di::bind<i1, impl1>()
+            di::bind<i1>().to<impl1>()
         );
 
     auto injector = di::make_injector(

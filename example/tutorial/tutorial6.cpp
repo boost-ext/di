@@ -49,7 +49,7 @@ module::module(int i)
 
 di::injector<app> module::configure() const {
     return di::make_injector(
-        di::bind<ilogger, logger>()
+        di::bind<ilogger>().to<logger>()
       , di::bind<int>().to(i_)
       , di::bind<std::string>().to("hello world")
     );

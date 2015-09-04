@@ -29,7 +29,7 @@ public:
 
 int main() {
     auto injector = di::make_injector(
-        di::bind<interface, implementation>()
+        di::bind<interface>().to<implementation>()
       , di::bind<int>().to(42)
     );
 

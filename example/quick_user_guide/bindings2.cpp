@@ -16,7 +16,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 
 int main() {
     auto injector = di::make_injector(
-        di::bind<di::any_of<i1, i2>, impl>()
+        di::bind<i1, i2>().to<impl>()
     );
 
     auto object1 = injector.create<std::shared_ptr<i1>>();

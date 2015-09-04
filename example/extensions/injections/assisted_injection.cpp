@@ -119,7 +119,7 @@ int main() {
 
     auto injector = di::make_injector(
         di::bind<int>().to(87)
-      , di::bind<interface, implementation>()
+      , di::bind<interface>().to<implementation>()
         /*<<bind `example_assisted_injection` to assisted_injection creating `example`>>*/
       , di::bind<example_assisted_injection>().to(assisted_injection<example>())
     );

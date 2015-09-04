@@ -31,8 +31,8 @@ int main() {
     auto i = 42;
 
     auto injector = di::make_injector(
-        di::bind<i1, impl1>()
-      , di::bind<i2, impl2>()
+        di::bind<i1>().to<impl1>()
+      , di::bind<i2>().to<impl2>()
       , di::bind<int>().to(i)
       , di::bind<double>().to(87.0)
     );

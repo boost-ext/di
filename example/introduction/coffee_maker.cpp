@@ -99,8 +99,8 @@ void automatic_di() {
     };
 
     auto injector = di::make_injector(
-        di::bind<ipump, heat_pump>()
-      , di::bind<iheater, electric_heater>()
+        di::bind<ipump>().to<heat_pump>()
+      , di::bind<iheater>().to<electric_heater>()
     );
 
     auto cm = injector.create<coffee_maker>();

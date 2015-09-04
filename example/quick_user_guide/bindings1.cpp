@@ -15,7 +15,7 @@ struct impl1 : i1 { void dummy1() override { } };
 
 int main() {
     auto injector = di::make_injector(
-        di::bind<i1, impl1>()
+        di::bind<i1>().to<impl1>()
     );
 
     auto object = injector.create<std::unique_ptr<i1>>();

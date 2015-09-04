@@ -80,12 +80,12 @@ int main() {
 
     /*<<create injector with `interface` binding to `implementation1`>>*/
     auto config = di::make_injector(
-        di::bind<interface1, implementation1>()
+        di::bind<interface1>().to<implementation1>()
     );
 
     /*<<create injector with configuration>>*/
     auto injector = di::make_injector(
-        di::bind<interface2, implementation2>()
+        di::bind<interface2>().to<implementation2>()
       , di::bind<int>().to(42)
       , di::bind<std::string>().named(some_name).to("some_name")
       , di::bind<float>().to(f)
