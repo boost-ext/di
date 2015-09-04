@@ -1768,8 +1768,10 @@ struct bind<int, TScope, T> {
 template<class... Ts>
 #if !defined(__cpp_variable_templates)
     struct bind :
+#else
+    typename
 #endif
-    typename detail::bind<
+    detail::bind<
         BOOST_DI_REQUIRES_MSG(concepts::boundable<concepts::any_of<Ts...>>)
       , scopes::deduce
       , Ts...
