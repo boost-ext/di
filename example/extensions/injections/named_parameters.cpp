@@ -18,67 +18,85 @@ namespace di = boost::di;
 struct interface { virtual ~interface() = default; virtual void dummy() = 0; };
 struct implementation : interface { void dummy() override { } };
 
-int constexpr strlen(char const *input, int i = 0) {
-    return !*input ? i : strlen(input + 1, i + 1);
+long constexpr const_strlen(char const *input, long i = 0) {
+    return !*input ? i : const_strlen(input + 1, i + 1);
 }
 
-unsigned constexpr const_hash(char const *input, int m = 0, int i = 0) {
-    //std::cout << *input << " " << i << std::endl;
+long constexpr const_hash(char const *input, long m = 0, long i = 0) {
     return *input && i < m ? static_cast<long>(*input) + 33 * const_hash(input + 1, m, i+1) : 5381;
 }
 
-unsigned constexpr get_type(char const *input) {
-    int i = 0;
-    int j = 0;
-    int e = 0;
-    bool n = false;
-    for (i = 0; i < strlen(input); ++i) {
-        //std::cout << input[i] << std::endl;
+auto constexpr const_type(long N, char const *input) {
+    auto i = 0;
+    auto j = 0;
+    auto e = 0;
+    auto n = false;
+    for (i = 0; i < const_strlen(input); ++i) {
         if (input[i] == ' ') {
             n = true;
-    //std::cout << "true" << i << std::endl;
         } else if (n == true && input[i] != ' ') {
             e = i;
             n = false;
-    //std::cout << "name" << i << std::endl;
         } else if (input[i] == ',') {
-    //std::cout << "comma" << i << std::endl;
-            auto q = i - e;
-            j = q;
+            j = i - e;
             break;
         }
     }
-
-    //std::cout << "i=" << e << std::endl;
-    return const_hash(input + e, j);
+    if (!j) {
+        j = i - e;
+    }
+    return std::make_pair(N + i + 1, const_hash(input + e, j));
 }
 
-template<class>
-struct function_traits;
-
-template<class C, class T>
-struct get_tn {
-    using type = di::aux::type_list<std::integral_constant<long, get_type(C::str)>, T>;
+template<long N, class C, class T>
+struct get_type {
+    using type = std::integral_constant<long, const_type(N, &C::boost_di_inject_str__[N]).second>;
+    using next = std::integral_constant<long, const_type(N, &C::boost_di_inject_str__[N]).first>;
 };
+
+template<long, class, class...>
+struct named_types_impl;
+
+template<long N, class R, class T>
+struct named_types_impl<N, R, T> {
+    using type = di::aux::type_list<typename get_type<N, R, T>::type>;
+};
+
+template<long N, class R, class T, class... TArgs>
+struct named_types_impl<N, R, T, TArgs...> {
+    using type = di::aux::join_t<
+        di::aux::type_list<typename get_type<N, R, T>::type>
+      , typename named_types_impl<get_type<N, R, T>::next::value, R, TArgs...>::type
+    >;
+};
+
+template<class>
+struct named_types;
 
 template<class R, class... TArgs>
-struct function_traits<R(TArgs...)> {
-    using type = di::aux::type_list<typename get_tn<R, TArgs>::type...>;
-};
+struct named_types<R(TArgs...)>
+    : named_types_impl<0, R, TArgs...>
+{ };
 
 template<class T>
-using function_traits_t = typename function_traits<T>::type;
+using named_types_t = typename named_types<T>::type;
 
-#define INJECT(type, ...) \
-    static constexpr auto str = #__VA_ARGS__; \
-    static void ctor(__VA_ARGS__); \
-    using f = function_traits_t<decltype(ctor<di::_>)>; \
+#define $inject(type, ...) \
+    static type boost_di_inject_ctor__(__VA_ARGS__); \
+    static constexpr auto boost_di_inject_str__ = #__VA_ARGS__; \
+    using boost_di_inject__ = ::boost::di::detail::combine_t< \
+        ::boost::di::aux::function_traits_t<decltype(boost_di_inject_ctor__)> \
+      , named_types_t<decltype(boost_di_inject_ctor__)> \
+    >; \
     type(__VA_ARGS__)
+
+#define $(name) \
+    std::integral_constant<long, const_hash(#name, const_strlen(#name))>{}
 //->
 
 struct example {
     /*<<inject constructor using automatic named parameters>>*/
-    INJECT(example, int i, std::unique_ptr<interface> up, int value) {
+    $inject(example, int i, std::unique_ptr<interface> up, int value) {
         assert(i == 42);
         assert(dynamic_cast<implementation*>(up.get()));
         assert(value == 87);
@@ -86,14 +104,14 @@ struct example {
 };
 
 int main() {
-/*    auto injector = di::make_injector(*/
-        //[><<bind named parameters>><]
-        //di::bind<int>().named(_N(i)).to(42)
-      //, di::bind<interface>().named(_N(up)).to<implementation>()
-      //, di::bind<int>().named(_N(value)).to(87)
-    //);
+   auto injector = di::make_injector(
+        /*<<bind named parameters>>*/
+        di::bind<int>().named($(i)).to(42)
+      , di::bind<interface>().named($(up)).to<implementation>()
+      , di::bind<int>().named($(value)).to(87)
+    );
 
-    /*injector.create<example>();*/
+    injector.create<example>();
 }
 
 //]
