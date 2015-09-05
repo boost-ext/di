@@ -58,17 +58,15 @@ template<long, class, class...>
 struct named_types_impl;
 
 template<long N, class R, class T>
-struct named_types_impl<N, R, T> {
-    using type = di::aux::type_list<typename get_type<N, R, T>::type>;
-};
+struct named_types_impl<N, R, T>
+    : di::aux::type_list<typename get_type<N, R, T>::type>
+{ };
 
 template<long N, class R, class T, class... TArgs>
-struct named_types_impl<N, R, T, TArgs...> {
-    using type = di::aux::join_t<
-        di::aux::type_list<typename get_type<N, R, T>::type>
-      , typename named_types_impl<get_type<N, R, T>::next::value, R, TArgs...>::type
-    >;
-};
+struct named_types_impl<N, R, T, TArgs...> : di::aux::join_t<
+    di::aux::type_list<typename get_type<N, R, T>::type>
+  , typename named_types_impl<get_type<N, R, T>::next::value, R, TArgs...>::type
+> { };
 
 template<class>
 struct named_types;
