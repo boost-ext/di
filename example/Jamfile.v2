@@ -25,7 +25,7 @@ rule example ( std : src + : cxxflags * : property * ) {
     toolset =
         #<toolset>gcc:<cxxflags>"-std=$(std) -pedantic -pedantic-errors -Wall -Wextra -Werror $(cxx_flags)"
         <toolset>gcc:<cxxflags>"-std=$(std) -Wall -Wextra -Werror $(cxx_flags)"
-        <toolset>clang:<cxxflags>"-std=$(std) -pedantic -pedantic-errors -Wall -Wextra -Werror $(cxx_flags)"
+        <toolset>clang:<cxxflags>"-std=$(std) -Wno-dollar-in-identifier-extension -pedantic -pedantic-errors -Wall -Wextra -Werror $(cxx_flags)"
         <toolset>darwin:<cxxflags>"-std=$(std) -pedantic -pedantic-errors -Wall -Wextra -Werror $(cxx_flags)"
         <toolset>msvc:<cxxflags>"/W3 $(cxx_flags)"
     ;
