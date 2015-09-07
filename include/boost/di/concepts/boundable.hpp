@@ -111,17 +111,15 @@ using get_any_of_error =
       , any_of<Ts...>
     >;
 
-template<class T>
-using is_allowed = std::conditional_t<
-    std::is_same<T, aux::remove_specifiers_t<T>>::value
-  , std::true_type
-  , typename bind<T>::has_disallowed_specifiers
->;
+auto boundable_impl(any_of<>&&) -> std::true_type;
 
-template<class... Ts> // expected
-auto boundable_impl(any_of<Ts...>&&) ->
-    //BOOST_DI_REQUIRES(aux::is_unique<Ts...>::value) = 0>
-    get_any_of_error<is_allowed<Ts>...>;
+template<class T, class... Ts> // expected
+auto boundable_impl(any_of<T, Ts...>&&) ->
+    std::conditional_t<
+        std::is_same<T, aux::remove_specifiers_t<T>>::value
+      , decltype(boundable_impl(std::declval<any_of<Ts...>>()))
+      , typename bind<T>::has_disallowed_specifiers
+    >;
 
 template<class I, class T> // expected -> given
 auto boundable_impl(I&&, T&&) ->

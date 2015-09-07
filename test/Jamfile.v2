@@ -38,7 +38,7 @@ rule test ( std * : src + : property * : defines * : options * ) {
         <toolset>gcc:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
         <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
         <toolset>darwin:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
-        <toolset>msvc:<cxxflags>"/FI common/test.hpp /W3"
+        <toolset>msvc:<cxxflags>"/FI common/test.hpp /W3 /Ze /D_CRT_SECURE_NO_WARNINGS"
     ;
 
     local memcheck = [ MATCH --memcheck=(.*) : $(.argv) ] ;

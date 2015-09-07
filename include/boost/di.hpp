@@ -1717,15 +1717,14 @@ using get_any_of_error =
       , std::true_type
       , any_of<Ts...>
     >;
-template<class T>
-using is_allowed = std::conditional_t<
-    std::is_same<T, aux::remove_specifiers_t<T>>::value
-  , std::true_type
-  , typename bind<T>::has_disallowed_specifiers
->;
-template<class... Ts>
-auto boundable_impl(any_of<Ts...>&&) ->
-    get_any_of_error<is_allowed<Ts>...>;
+auto boundable_impl(any_of<>&&) -> std::true_type;
+template<class T, class... Ts>
+auto boundable_impl(any_of<T, Ts...>&&) ->
+    std::conditional_t<
+        std::is_same<T, aux::remove_specifiers_t<T>>::value
+      , decltype(boundable_impl(std::declval<any_of<Ts...>>()))
+      , typename bind<T>::has_disallowed_specifiers
+    >;
 template<class I, class T>
 auto boundable_impl(I&&, T&&) ->
     std::conditional_t<
