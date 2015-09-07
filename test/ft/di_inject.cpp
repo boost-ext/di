@@ -444,7 +444,7 @@ test string_creation = [] {
 
 template<class T>
 struct template_inject {
-    BOOST_DI_INJECT(/*explicit*/ template_inject, T value)
+    BOOST_DI_INJECT(explicit template_inject, T value)
         : value_(value)
     { }
 
