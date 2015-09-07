@@ -239,7 +239,7 @@ function toggleNextRow() {
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
     <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface1</span><span class="special">,</span> <span class="identifier">implementation1</span><span class="special">&gt;().</span><span class="identifier">in</span><span class="special">(</span><span class="identifier">shared</span><span class="special">)</span> <span class="comment">// di::unique will fail (sp1 == sp2)</span>
+        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface1</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">implementation1</span><span class="special">&gt;().</span><span class="identifier">in</span><span class="special">(</span><span class="identifier">shared</span><span class="special">)</span> <span class="comment">// di::unique will fail (sp1 == sp2)</span>
     <span class="special">);</span>
 
     <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>

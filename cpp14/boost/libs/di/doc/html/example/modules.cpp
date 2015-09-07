@@ -39,7 +39,7 @@ public:
     /*<<module configuration>>*/
     auto configure() const {
         return di::make_injector(
-            di::bind<interface, implementation1>()
+            di::bind<interface>().to<implementation1>()
         );
     }
 };
@@ -61,7 +61,7 @@ public:
     /*<<module configuration with exposed `data`>>*/
     di::injector<data> configure() const {
         return di::make_injector(
-            di::bind<interface, implementation2>()
+            di::bind<interface>().to<implementation2>()
         );
     }
 };

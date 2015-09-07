@@ -65,7 +65,7 @@ int main() {
       , di::bind<ctor>().to(constructor<int, std::string, std::unique_ptr<interface>>())
 
         /*<<additional bindings>>*/
-      , di::bind<interface, implementation>()
+      , di::bind<interface>().to<implementation>()
       , di::bind<int>().to(2)
       , di::bind<std::string>().to("hello")
     );

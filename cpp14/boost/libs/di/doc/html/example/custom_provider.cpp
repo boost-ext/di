@@ -62,7 +62,7 @@ int main() {
     /*<<make injector with simple configuration>>*/
     auto injector = di::make_injector<config>(
         di::bind<int>().to(42)
-      , di::bind<interface, implementation>()
+      , di::bind<interface>().to<implementation>()
     );
 
     /*<<create `example` using `custom_provider`>>*/

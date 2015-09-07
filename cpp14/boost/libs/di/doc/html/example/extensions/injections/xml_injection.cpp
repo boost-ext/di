@@ -82,7 +82,7 @@ class module {
 public:
     auto configure() const {
         return di::make_injector(
-            di::bind<ixml_parser, xml_parser_stub>()
+            di::bind<ixml_parser>().to<xml_parser_stub>()
         );
     }
 };

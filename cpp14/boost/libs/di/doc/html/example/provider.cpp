@@ -46,7 +46,7 @@ struct usage {
 int main() {
     /*<<define injector>>*/
     auto injector = di::make_injector(
-        di::bind<provider<int>, transaction>()
+        di::bind<provider<int>>().to<transaction>()
     );
 
     /*<<create `usage`>>*/
