@@ -69,7 +69,7 @@ test-suite extensions :
     [ example c++1y : extensions/bindings/constructor_bindings.cpp ]
     [ example c++1y : extensions/bindings/multi_bindings.cpp ]
     [ example c++1y : extensions/injections/assisted_injection.cpp ]
-    [ example c++1z : extensions/injections/named_parameters.cpp ]
+    #[ example c++1z : extensions/injections/named_parameters.cpp ]
     [ example c++1y : extensions/injections/xml_injection.cpp ]
     [ example c++1y : extensions/policies/types_dumper.cpp ]
     [ example c++1y : extensions/policies/uml_dumper.cpp ]
