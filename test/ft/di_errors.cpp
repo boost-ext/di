@@ -169,12 +169,7 @@ test bind_in_not_scopable_type = [] {
 
 test bind_has_disallowed_specifiers_expected = [] {
     auto errors_ = errors(
-            "constraint not satisfied",
-        #if defined(_MSC_VER)
-            "bind<.*>::has_disallowed_specifiers", "=.*int.*\\*"
-        #else
-            "bind<.*int.*\\*>::has_disallowed_specifiers"
-        #endif
+        "constraint not satisfied", "bind<.*int.*\\*>::has_disallowed_specifiers"
     );
 
     expect_compile_fail("", errors_,
@@ -202,12 +197,7 @@ test bind_has_disallowed_specifiers_given = [] {
 
 test bind_external_repeated = [] {
     auto errors_ = errors(
-            "constraint not satisfied",
-        #if defined(_MSC_VER)
-            "bind<.*>::is_bound_more_than_once", "=.*int"
-        #else
-            "bind<.*int>::is_bound_more_than_once"
-        #endif
+        "constraint not satisfied", "bind<.*int>::is_bound_more_than_once"
     );
 
     expect_compile_fail("", errors_,
@@ -222,12 +212,7 @@ test bind_external_repeated = [] {
 
 test bind_multiple_times = [] {
     auto errors_ = errors(
-            "constraint not satisfied",
-        #if defined(_MSC_VER)
-            "bind<.*>::is_bound_more_than_once", "=.*i"
-        #else
-            "bind<.*i>::is_bound_more_than_once"
-        #endif
+        "constraint not satisfied", "bind<.*i>::is_bound_more_than_once"
     );
 
     expect_compile_fail("", errors_,
@@ -309,12 +294,7 @@ test bind_any_of_not_related = [] {
 
 test bind_repeated = [] {
     auto errors_ = errors(
-            "constraint not satisfied",
-        #if defined(_MSC_VER)
-            "bind<.*>::is_bound_more_than_once", "=.*i"
-        #else
-            "bind<.*i>::is_bound_more_than_once"
-        #endif
+            "constraint not satisfied", "bind<.*i>::is_bound_more_than_once"
     );
 
     expect_compile_fail("", errors_,
@@ -332,12 +312,7 @@ test bind_repeated = [] {
 
 test bind_to_different_types = [] {
     auto errors_ = errors(
-            "constraint not satisfied",
-        #if defined(_MSC_VER)
-            "bind<.*>::is_bound_more_than_once", "=.*i"
-        #else
-            "bind<.*i>::is_bound_more_than_once"
-        #endif
+            "constraint not satisfied", "bind<.*i>::is_bound_more_than_once"
     );
 
     expect_compile_fail("", errors_,
