@@ -86,7 +86,7 @@ template<
 
 template<class T>
 struct ctor_traits__<T, std::true_type>
-    : aux::pair<direct, typename T::boost_di_inject__>
+    : aux::pair<direct, typename T::boost_di_inject__::type>
 { };
 
 template<class T>
@@ -96,7 +96,7 @@ struct ctor_traits__<T, std::false_type>
 
 template<class T>
 struct ctor_traits_impl<T, std::true_type>
-    : aux::pair<direct, typename di::ctor_traits<T>::boost_di_inject__>
+    : aux::pair<direct, typename di::ctor_traits<T>::boost_di_inject__::type>
 { };
 
 template<class T>
