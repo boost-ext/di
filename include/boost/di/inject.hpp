@@ -84,16 +84,7 @@ using combine_t = typename combine<T1, T2>::type;
     )
 
 #define BOOST_DI_INJECT_TRAITS(...) \
-    BOOST_DI_IF( \
-        BOOST_DI_IS_EMPTY(__VA_ARGS__) \
-      , BOOST_DI_INJECT_TRAITS_EMPTY_IMPL \
-      , BOOST_DI_INJECT_TRAITS_IMPL \
-    )(__VA_ARGS__)
-
-#define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
-    static void boost_di_inject_ctor__(__VA_ARGS__); \
-    using boost_di_inject__ BOOST_DI_UNUSED = \
-        ::boost::di::aux::function_traits_t<decltype(boost_di_inject_ctor__)>
+    BOOST_DI_INJECT_TRAITS2((), __VA_ARGS__)
 
 #define BOOST_DI_INJECT_TRAITS2(type, ...) \
     BOOST_DI_IF( \
@@ -102,11 +93,16 @@ using combine_t = typename combine<T1, T2>::type;
       , BOOST_DI_INJECT_TRAITS_IMPL \
     )(type, __VA_ARGS__)
 
+#define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
+    static void boost_di_inject_ctor__(__VA_ARGS__); \
+    using boost_di_inject__ BOOST_DI_UNUSED = \
+        ::boost::di::aux::function_traits_t<decltype(boost_di_inject_ctor__)>
+
 #define BOOST_DI_INJECT_TRAITS_T(...) BOOST_DI_INJECT_TRAITS2(__VA_ARGS__)
-#define BOOST_DI_INJECT_TRAITS_(type, ...) BOOST_DI_INJECT_TRAITS(__VA_ARGS__)
+#define BOOST_DI_INJECT_TRAITS_(type, ...) BOOST_DI_INJECT_TRAITS2((), __VA_ARGS__)
 
 #define BOOST_DI_INJECT(type, ...) \
-    BOOST_DI_IF(BOOST_DI_IBP(type), BOOST_DI_INJECT_TRAITS_T, BOOST_DI_INJECT_TRAITS_)(type, __VA_ARGS__) \
+    BOOST_DI_IF(BOOST_DI_IBP(type), BOOST_DI_INJECT_TRAITS_T, BOOST_DI_INJECT_TRAITS_)(type, __VA_ARGS__); \
     BOOST_DI_IF(BOOST_DI_IBP(type), INJECT_T, INJECT_)(type) \
     (BOOST_DI_REPEAT( \
         BOOST_DI_SIZE(__VA_ARGS__) \
