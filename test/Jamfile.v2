@@ -33,12 +33,12 @@ project :
         <include>../include
 ;
 
-rule test ( std * : src + : property * : defines * : options * ) {
+rule test ( src + : property * : defines * : options * ) {
     toolset =
-        #<toolset>gcc:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
-        <toolset>gcc:<cxxflags>"-std=$(std) -include common/test.hpp -Wall -Wextra -Werror"
-        <toolset>clang:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
-        <toolset>darwin:<cxxflags>"-std=$(std) -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
+        <toolset>gcc:<cxxflags>"-std=c++1y -include common/test.hpp -Wall -Wextra -Werror" # no pedantic due to gcc bug
+        <toolset>gcc-6.0.0:<cxxflags>"-std=c++1z"
+        <toolset>clang:<cxxflags>"-std=c++1y -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
+        <toolset>darwin:<cxxflags>"-std=c++1y -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
         <toolset>msvc:<cxxflags>"/FI common/test.hpp /W3 /D_CRT_SECURE_NO_WARNINGS"
     ;
 
@@ -52,57 +52,57 @@ rule test ( std * : src + : property * : defines * : options * ) {
 }
 
 test-suite ut :
-    [ test c++1y : ut/inject.cpp ]
-    [ test c++1y : ut/aux_/preprocessor.cpp ]
-    [ test c++1y : ut/aux_/type_traits.cpp ]
-    [ test c++1y : ut/aux_/utility.cpp ]
-    [ test c++1y : ut/concepts/boundable.cpp ]
-    [ test c++1y : ut/concepts/callable.cpp ]
-    [ test c++1y : ut/concepts/configurable.cpp ]
-    [ test c++1y : ut/concepts/creatable.cpp ]
-    [ test c++1y : ut/concepts/providable.cpp ]
-    [ test c++1y : ut/concepts/scopable.cpp ]
-    [ test c++1y : ut/core/any_type.cpp ]
-    [ test c++1y : ut/core/binder.cpp ]
-    [ test c++1y : ut/core/bindings.cpp ]
-    [ test c++1y : ut/core/dependency.cpp ]
-    [ test c++1y : ut/core/injector.cpp ]
-    [ test c++1y : ut/core/policy.cpp ]
-    [ test c++1y : ut/core/pool.cpp ]
-    [ test c++1y : ut/core/provider.cpp ]
-    [ test c++1y : ut/core/wrapper.cpp ]
-    [ test c++1y : ut/policies/constructible.cpp ]
-    [ test c++1y : ut/providers/heap.cpp ]
-    [ test c++1y : ut/providers/stack_over_heap.cpp ]
-    [ test c++1y : ut/scopes/deduce.cpp ]
-    [ test c++1y : ut/scopes/exposed.cpp ]
-    [ test c++1y : ut/scopes/external.cpp ]
-    [ test c++1y : ut/scopes/singleton.cpp ]
-    [ test c++1y : ut/scopes/unique.cpp ]
-    [ test c++1y : ut/type_traits/ctor_traits.cpp ]
-    [ test c++1y : ut/type_traits/memory_traits.cpp ]
-    [ test c++1y : ut/type_traits/scope_traits.cpp ]
-    [ test c++1y : ut/wrappers/unique.cpp : unique_wrapper ]
-    [ test c++1y : ut/wrappers/shared.cpp : shared_wrapper ]
-    [ test c++1y : ut/bindings.cpp : bindings_cpp ]
-    [ test c++1y : ut/config.cpp ]
-    [ test c++1y : ut/injector.cpp : injector_cpp ]
-    [ test c++1y : ut/make_injector.cpp ]
+    [ test ut/inject.cpp ]
+    [ test ut/aux_/preprocessor.cpp ]
+    [ test ut/aux_/type_traits.cpp ]
+    [ test ut/aux_/utility.cpp ]
+    [ test ut/concepts/boundable.cpp ]
+    [ test ut/concepts/callable.cpp ]
+    [ test ut/concepts/configurable.cpp ]
+    [ test ut/concepts/creatable.cpp ]
+    [ test ut/concepts/providable.cpp ]
+    [ test ut/concepts/scopable.cpp ]
+    [ test ut/core/any_type.cpp ]
+    [ test ut/core/binder.cpp ]
+    [ test ut/core/bindings.cpp ]
+    [ test ut/core/dependency.cpp ]
+    [ test ut/core/injector.cpp ]
+    [ test ut/core/policy.cpp ]
+    [ test ut/core/pool.cpp ]
+    [ test ut/core/provider.cpp ]
+    [ test ut/core/wrapper.cpp ]
+    [ test ut/policies/constructible.cpp ]
+    [ test ut/providers/heap.cpp ]
+    [ test ut/providers/stack_over_heap.cpp ]
+    [ test ut/scopes/deduce.cpp ]
+    [ test ut/scopes/exposed.cpp ]
+    [ test ut/scopes/external.cpp ]
+    [ test ut/scopes/singleton.cpp ]
+    [ test ut/scopes/unique.cpp ]
+    [ test ut/type_traits/ctor_traits.cpp ]
+    [ test ut/type_traits/memory_traits.cpp ]
+    [ test ut/type_traits/scope_traits.cpp ]
+    [ test ut/wrappers/unique.cpp : unique_wrapper ]
+    [ test ut/wrappers/shared.cpp : shared_wrapper ]
+    [ test ut/bindings.cpp : bindings_cpp ]
+    [ test ut/config.cpp ]
+    [ test ut/injector.cpp : injector_cpp ]
+    [ test ut/make_injector.cpp ]
 ;
 
 test-suite ft :
-    [ test c++1y : ft/di_bind.cpp ]
-    [ test c++1y : ft/di_config.cpp ]
-    [ test c++1y : ft/di_config_global_policies.cpp ]
-    [ test c++1y : ft/di_config_global_provider.cpp ]
-    [ test c++1y : ft/di_errors.cpp : : : DISABLE_MEMCHECK ]
-    [ test c++1z : ft/di_inject.cpp ]
-    [ test c++1y : ft/di_injector.cpp ]
-    [ test c++1y : ft/di_modules.cpp ]
+    [ test ft/di_bind.cpp ]
+    [ test ft/di_config.cpp ]
+    [ test ft/di_config_global_policies.cpp ]
+    [ test ft/di_config_global_provider.cpp ]
+    [ test ft/di_errors.cpp : : : DISABLE_MEMCHECK ]
+    [ test ft/di_inject.cpp ]
+    [ test ft/di_injector.cpp ]
+    [ test ft/di_modules.cpp ]
 ;
 
 test-suite pt :
-    [ test c++1y : pt/di_compile_time.cpp ]
-    [ test c++1y : pt/di_run_time.cpp : : <optimization>speed <variant>release ]
+    [ test pt/di_compile_time.cpp ]
+    [ test pt/di_run_time.cpp : : <optimization>speed <variant>release ]
 ;
 
