@@ -2856,7 +2856,7 @@ auto ctor__(T*) -> aux::function_traits_t<decltype(&T::ctor)>;
         static void ctor(__VA_ARGS__); \
         using type BOOST_DI_UNUSED = ::boost::di::aux::function_traits_t<decltype(ctor)>; \
     }
-#define BOOST_DI_INJECT_TRAITS_T(...) BOOST_DI_INJECT_TRAITS2(__VA_ARGS__)
+#define BOOST_DI_INJECT_TRAITS_T(T, ...) BOOST_DI_INJECT_TRAITS2(T, __VA_ARGS__)
 #define BOOST_DI_INJECT_TRAITS_(T, ...) BOOST_DI_INJECT_TRAITS2((), __VA_ARGS__)
 #define BOOST_DI_INJECT(T, ...) \
     BOOST_DI_IF(BOOST_DI_IBP(T), BOOST_DI_INJECT_TRAITS_T, BOOST_DI_INJECT_TRAITS_)(T, __VA_ARGS__); \
