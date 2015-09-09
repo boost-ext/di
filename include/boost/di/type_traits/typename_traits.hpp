@@ -7,9 +7,23 @@
 #ifndef BOOST_DI_TYPE_TRAITS_TYPENAME_TRAITS_HPP
 #define BOOST_DI_TYPE_TRAITS_TYPENAME_TRAITS_HPP
 
+#include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/fwd.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace type_traits {
+
+template<class T>
+struct cast {
+    using type = T&&;
+};
+
+template<template<class...> class T, class... Ts>
+struct cast<T<std::false_type, Ts...>> {
+    using type = typename T<std::false_type, Ts...>::element_type;
+};
+
+template<class T>
+using cast_t = typename cast<T>::type;
 
 template<class T, class>
 struct typename_traits {

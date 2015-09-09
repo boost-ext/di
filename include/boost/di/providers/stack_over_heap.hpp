@@ -9,6 +9,7 @@
 
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
+#include "boost/di/type_traits/typename_traits.hpp"
 #include "boost/di/concepts/creatable.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace providers {
@@ -25,28 +26,28 @@ public:
     auto get(const type_traits::direct&
            , const type_traits::heap&
            , TArgs&&... args) {
-        return new T(static_cast<TArgs&&>(args)...);
+        return new T(static_cast<type_traits::cast_t<TArgs>>(args)...);
     }
 
     template<class, class T, class... TArgs>
     auto get(const type_traits::uniform&
            , const type_traits::heap&
            , TArgs&&... args) {
-        return new T{static_cast<TArgs&&>(args)...};
+        return new T{static_cast<type_traits::cast_t<TArgs>>(args)...};
     }
 
     template<class, class T, class... TArgs>
     auto get(const type_traits::direct&
            , const type_traits::stack&
            , TArgs&&... args) const noexcept {
-        return T(static_cast<TArgs&&>(args)...);
+        return T(static_cast<type_traits::cast_t<TArgs>>(args)...);
     }
 
     template<class, class T, class... TArgs>
     auto get(const type_traits::uniform&
            , const type_traits::stack&
            , TArgs&&... args) const noexcept {
-        return T{static_cast<TArgs&&>(args)...};
+        return T{static_cast<type_traits::cast_t<TArgs>>(args)...};
     }
 };
 

@@ -1006,12 +1006,13 @@ template<
   , class TGiven = TExpected
   , class TName = no_name
   , class TPriority = aux::none_type
+  , class TBase = TExpected
 > class dependency : dependency_base, TScope::template scope<TExpected, TGiven>
     , public dependency_impl<
-          dependency_concept<TExpected, TName>
-        , dependency<TScope, TExpected, TGiven, TName, TPriority>
+          dependency_concept<TBase, TName>
+        , dependency<TScope, TExpected, TGiven, TName, TPriority, TBase>
       > {
-    template<class, class, class, class, class> friend class dependency;
+    template<class, class, class, class, class, class> friend class dependency;
     using scope_t = typename TScope::template scope<TExpected, TGiven>;
     template<class T>
     using externable = std::integral_constant<bool,
@@ -1037,6 +1038,7 @@ public:
     using given = TGiven;
     using name = TName;
     using priority = TPriority;
+    using base = TBase;
     dependency() noexcept { }
     template<class T>
     explicit dependency(T&& object) noexcept
@@ -1048,7 +1050,8 @@ public:
       , class TGiven_
       , class TName_
       , class TPriority_
-    > dependency(const dependency<TScope_, TExpected_, TGiven_, TName_, TPriority_>& other) noexcept
+      , class TBase_
+    > dependency(const dependency<TScope_, TExpected_, TGiven_, TName_, TPriority_, TBase_>& other) noexcept
         : scope_t(other)
     { }
     template<class T, BOOST_DI_REQUIRES(std::is_same<TName, no_name>::value && !std::is_same<T, no_name>::value) = 0>
@@ -1059,6 +1062,7 @@ public:
           , TGiven
           , T
           , TPriority
+          , TBase
         >{*this};
     }
     template<class T, BOOST_DI_REQUIRES_MSG(concepts::scopable<T>) = 0>
@@ -1069,6 +1073,7 @@ public:
           , TGiven
           , TName
           , TPriority
+          , TBase
         >{};
     }
     template<class T, BOOST_DI_REQUIRES_MSG(typename concepts::boundable__<TExpected, T>::type) = 0>
@@ -1079,16 +1084,18 @@ public:
           , T
           , TName
           , TPriority
+          , TBase
         >{};
     }
-    template<class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value) = 0>
+    template<class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value || std::is_same<_, TExpected>::value) = 0>
     auto to(T&& object) const noexcept {
         using dependency = dependency<
             scopes::external
-          , TExpected
+          , std::conditional_t<std::is_same<TExpected, _>::value, typename ref_traits<T>::type, TExpected>
           , typename ref_traits<T>::type
           , TName
           , TPriority
+          , TBase
         >;
         return dependency{static_cast<T&&>(object)};
     }
@@ -1100,6 +1107,7 @@ public:
           , decltype(std::declval<T>().configure())
           , TName
           , TPriority
+          , TBase
         >;
         return dependency{object.configure()};
     }
@@ -1111,6 +1119,7 @@ public:
           , T
           , TName
           , TPriority
+          , TBase
         >;
         return dependency{object};
     }
@@ -1193,6 +1202,80 @@ struct is_callable<void> {
 template<class... Ts>
 using callable = typename is_callable<Ts...>::type;
 }}}}
+namespace boost { namespace di { inline namespace v1 { namespace type_traits {
+template<class T>
+struct cast {
+    using type = T&&;
+};
+template<template<class...> class T, class... Ts>
+struct cast<T<std::false_type, Ts...>> {
+    using type = typename T<std::false_type, Ts...>::element_type;
+};
+template<class T>
+using cast_t = typename cast<T>::type;
+template<class T, class>
+struct typename_traits {
+    using type = T;
+};
+template<class T>
+struct typename_traits<_, T> {
+    using type = T;
+};
+template<class T>
+struct typename_traits<_&, T> {
+    using type = T&;
+};
+template<class T>
+struct typename_traits<const _&, T> {
+    using type = const T&;
+};
+template<class T>
+struct typename_traits<_&&, T> {
+    using type = T&&;
+};
+template<class T>
+struct typename_traits<_*, T> {
+    using type = T*;
+};
+template<class T>
+struct typename_traits<const _*, T> {
+    using type = const T*;
+};
+template<class T, template<class...> class TDeleter>
+struct typename_traits<std::unique_ptr<_, TDeleter<_>>, T> {
+    using type = std::unique_ptr<T, TDeleter<T>>;
+};
+template<class T, template<class...> class TDeleter>
+struct typename_traits<const std::unique_ptr<_, TDeleter<_>>&, T> {
+    using type = const std::unique_ptr<T, TDeleter<T>>&;
+};
+template<class T>
+struct typename_traits<std::shared_ptr<_>, T> {
+    using type = std::shared_ptr<T>;
+};
+template<class T>
+struct typename_traits<const std::shared_ptr<_>&, T> {
+    using type = std::shared_ptr<T>;
+};
+template<class T>
+struct typename_traits<boost::shared_ptr<_>, T> {
+    using type = boost::shared_ptr<T>;
+};
+template<class T>
+struct typename_traits<const boost::shared_ptr<_>&, T> {
+    using type = boost::shared_ptr<T>;
+};
+template<class T>
+struct typename_traits<std::weak_ptr<_>, T> {
+    using type = std::weak_ptr<T>;
+};
+template<class T>
+struct typename_traits<const std::weak_ptr<_>&, T> {
+    using type = std::weak_ptr<T>;
+};
+template<class T, class U>
+using typename_traits_t = typename typename_traits<T, U>::type;
+}}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
 class binder {
     template<class TDefault, class>
@@ -1211,10 +1294,11 @@ class binder {
       , class TExpected
       , class TGiven
       , class TName
+      , class TBase
     > static decltype(auto)
     resolve_impl(aux::pair<TConcept
-               , dependency<TScope, TExpected, TGiven, TName, override>>* dep) noexcept {
-        return static_cast<dependency<TScope, TExpected, TGiven, TName, override>&>(*dep);
+               , dependency<TScope, TExpected, TGiven, TName, override, TBase>>* dep) noexcept {
+        return static_cast<dependency<TScope, TExpected, TGiven, TName, override, TBase>&>(*dep);
     }
 public:
     template<
@@ -1454,6 +1538,15 @@ struct is_not_convertible_to {
     static inline To
     error(_ = "wrapper is not convertible to requested type, did you mistake the scope?");
 };
+struct has_not_bound_generic_types {
+    operator T() const {
+        using constraint_not_satisfied = has_not_bound_generic_types;
+        return
+            constraint_not_satisfied{}.error();
+    }
+    static inline T
+    error(_ = "generic type is not bound, did you forget to add di::bind<di::_>.to<implementation>()?");
+};
 template<class TReference>
 struct has_not_bound_reference {
     template<class TName>
@@ -1553,25 +1646,25 @@ public:
     auto get(const type_traits::direct&
            , const type_traits::heap&
            , TArgs&&... args) {
-        return new T(static_cast<TArgs&&>(args)...);
+        return new T(static_cast<type_traits::cast_t<TArgs>>(args)...);
     }
     template<class, class T, class... TArgs>
     auto get(const type_traits::uniform&
            , const type_traits::heap&
            , TArgs&&... args) {
-        return new T{static_cast<TArgs&&>(args)...};
+        return new T{static_cast<type_traits::cast_t<TArgs>>(args)...};
     }
     template<class, class T, class... TArgs>
     auto get(const type_traits::direct&
            , const type_traits::stack&
            , TArgs&&... args) const noexcept {
-        return T(static_cast<TArgs&&>(args)...);
+        return T(static_cast<type_traits::cast_t<TArgs>>(args)...);
     }
     template<class, class T, class... TArgs>
     auto get(const type_traits::uniform&
            , const type_traits::stack&
            , TArgs&&... args) const noexcept {
-        return T{static_cast<TArgs&&>(args)...};
+        return T{static_cast<type_traits::cast_t<TArgs>>(args)...};
     }
 };
 }}}}
@@ -1671,7 +1764,7 @@ template<class>
 struct is_unique;
 template<class T>
 struct unique_dependency : aux::pair<
-    aux::pair<typename T::expected, typename T::name>
+    aux::pair<typename T::base, typename T::name>
   , typename T::priority
 > { };
 template<class... TDeps>
@@ -1731,7 +1824,7 @@ auto boundable_impl(I&&, T&&) ->
         !std::is_same<T, aux::remove_specifiers_t<T>>::value
       , typename bind<T>::has_disallowed_specifiers
       , std::conditional_t<std::is_base_of<I, T>::value ||
-            (std::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value)
+            (std::is_same<_, I>::value || (std::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value))
           , std::true_type
           , typename bind<T>::template is_not_related_to<I>
         >
@@ -1934,7 +2027,7 @@ template<
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
 namespace successful {
-template<class T, class TWrapper>
+template<class, class T, class TWrapper>
 struct wrapper {
     using element_type = T;
     inline operator T() const noexcept {
@@ -1946,7 +2039,7 @@ struct wrapper {
     TWrapper wrapper_;
 };
 }
-template<class T, class TWrapper, class = int>
+template<class, class T, class TWrapper, class = int>
 struct wrapper_impl {
     using element_type = T;
     inline operator T() const noexcept {
@@ -1958,7 +2051,7 @@ struct wrapper_impl {
     TWrapper wrapper_;
 };
 template<class T, class TWrapper>
-struct wrapper_impl<T, TWrapper, BOOST_DI_REQUIRES(!std::is_convertible<TWrapper, T>::value)> {
+struct wrapper_impl<std::true_type, T, TWrapper, BOOST_DI_REQUIRES(!std::is_convertible<TWrapper, T>::value)> {
     using element_type = T;
     inline operator T() const noexcept {
         return typename concepts::type<TWrapper>::template is_not_convertible_to<T>{};
@@ -1968,8 +2061,8 @@ struct wrapper_impl<T, TWrapper, BOOST_DI_REQUIRES(!std::is_convertible<TWrapper
     }
     TWrapper wrapper_;
 };
-template<class T, class TWrapper>
-using wrapper = wrapper_impl<T, TWrapper>;
+template<class TCast, class T, class TWrapper>
+using wrapper = wrapper_impl<TCast, T, TWrapper>;
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
 template<class T, class... TArgs> decltype(std::declval<T>().call(std::declval<TArgs>()...) , std::true_type()) has_call_impl(int); template<class, class...> std::false_type has_call_impl(...); template<class T, class... TArgs> struct has_call : decltype(has_call_impl<T, TArgs...>(0)) { };
@@ -2037,9 +2130,14 @@ protected:
     struct is_creatable {
         using TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>;
         using TCtor = typename type_traits::ctor_traits__<typename TDependency::given>::type;
+        using type = std::conditional_t<
+            std::is_same<_, typename TDependency::given>::value
+          , void
+          , type_traits::typename_traits_t<T, typename TDependency::given>
+        >;
         static constexpr auto value = std::is_convertible<
             decltype(
-                dependency__<TDependency>::template try_create<T>(
+                dependency__<TDependency>::template try_create<type>(
                     try_provider<
                         typename TDependency::given
                       , TCtor
@@ -2047,7 +2145,7 @@ protected:
                       , decltype(TConfig::provider(std::declval<injector>()))
                     >{}
                 )
-            ), T>::value && policy::template try_call< arg_wrapper<referable_t<T, dependency__<TDependency>>, TName, TIsRoot, pool_t> , TPolicies , TDependency , TCtor >::value ;
+            ), type>::value && policy::template try_call< arg_wrapper<referable_t<type, dependency__<TDependency>>, TName, TIsRoot, pool_t> , TPolicies , TDependency , TCtor >::value ;
     };
 public:
     using deps = bindings_t<TDeps...>;
@@ -2076,7 +2174,7 @@ public:
 protected:
     template<class T>
     struct try_create {
-        using type = std::conditional_t<is_creatable<T>::value, T, void>;
+        using type = std::conditional_t<is_creatable<T>::value, typename is_creatable<T>::type, void>;
     };
     template<class TParent>
     struct try_create<any_type_fwd<TParent>> {
@@ -2088,7 +2186,7 @@ protected:
     };
     template<class TName, class T>
     struct try_create<detail::named_type<TName, T>> {
-        using type = std::conditional_t<is_creatable<T, TName>::value, T, void>;
+        using type = std::conditional_t<is_creatable<T, TName>::value, typename is_creatable<T, TName>::type, void>;
     };
     template<class TIsRoot = std::false_type, class T>
     auto create_impl(const aux::type<T>&) const {
@@ -2142,12 +2240,13 @@ private:
         using expected_t = typename dependency_t::expected;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
+        using type_t = type_traits::typename_traits_t<T, given_t>;
         using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
-        using wrapper_t = decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this}));
-        using create_t = referable_t<T, dependency__<dependency_t>>;
+        using wrapper_t = decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<type_t>(provider_t{*this}));
+        using create_t = referable_t<type_t, dependency__<dependency_t>>;
         policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>( TConfig::policies(*this), dependency, ctor_t{} );
-        return wrapper<create_t, wrapper_t>{
-            static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this})
+        return wrapper<typename std::is_same<type_t, T>::type, create_t, wrapper_t>{
+            static_cast<dependency__<dependency_t>&&>(dependency).template create<type_t>(provider_t{*this})
         };
     }
     template<class TIsRoot = std::false_type, class T, class TName = no_name>
@@ -2157,12 +2256,13 @@ private:
         using expected_t = typename dependency_t::expected;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
+        using type_t = type_traits::typename_traits_t<T, given_t>;
         using provider_t = successful::provider<expected_t, given_t, ctor_t, injector>;
-        using wrapper_t = decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this}));
-        using create_t = referable_t<T, dependency__<dependency_t>>;
+        using wrapper_t = decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<type_t>(provider_t{*this}));
+        using create_t = referable_t<type_t, dependency__<dependency_t>>;
         policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>( TConfig::policies(*this), dependency, ctor_t{} );
-        return successful::wrapper<create_t, wrapper_t>{
-            static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this})
+        return successful::wrapper<typename std::is_same<type_t, T>::type, create_t, wrapper_t>{
+            static_cast<dependency__<dependency_t>&&>(dependency).template create<type_t>(provider_t{*this})
         };
     }
 };
@@ -2175,9 +2275,14 @@ protected:
     struct is_creatable {
         using TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>;
         using TCtor = typename type_traits::ctor_traits__<typename TDependency::given>::type;
+        using type = std::conditional_t<
+            std::is_same<_, typename TDependency::given>::value
+          , void
+          , type_traits::typename_traits_t<T, typename TDependency::given>
+        >;
         static constexpr auto value = std::is_convertible<
             decltype(
-                dependency__<TDependency>::template try_create<T>(
+                dependency__<TDependency>::template try_create<type>(
                     try_provider<
                         typename TDependency::given
                       , TCtor
@@ -2185,7 +2290,7 @@ protected:
                       , decltype(TConfig::provider(std::declval<injector>()))
                     >{}
                 )
-            ), T>::value ;
+            ), type>::value ;
     };
 public:
     using deps = bindings_t<TDeps...>;
@@ -2214,7 +2319,7 @@ public:
 protected:
     template<class T>
     struct try_create {
-        using type = std::conditional_t<is_creatable<T>::value, T, void>;
+        using type = std::conditional_t<is_creatable<T>::value, typename is_creatable<T>::type, void>;
     };
     template<class TParent>
     struct try_create<any_type_fwd<TParent>> {
@@ -2226,7 +2331,7 @@ protected:
     };
     template<class TName, class T>
     struct try_create<detail::named_type<TName, T>> {
-        using type = std::conditional_t<is_creatable<T, TName>::value, T, void>;
+        using type = std::conditional_t<is_creatable<T, TName>::value, typename is_creatable<T, TName>::type, void>;
     };
     template<class TIsRoot = std::false_type, class T>
     auto create_impl(const aux::type<T>&) const {
@@ -2280,11 +2385,12 @@ private:
         using expected_t = typename dependency_t::expected;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
+        using type_t = type_traits::typename_traits_t<T, given_t>;
         using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
-        using wrapper_t = decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this}));
-        using create_t = referable_t<T, dependency__<dependency_t>>;
-        return wrapper<create_t, wrapper_t>{
-            static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this})
+        using wrapper_t = decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<type_t>(provider_t{*this}));
+        using create_t = referable_t<type_t, dependency__<dependency_t>>;
+        return wrapper<typename std::is_same<type_t, T>::type, create_t, wrapper_t>{
+            static_cast<dependency__<dependency_t>&&>(dependency).template create<type_t>(provider_t{*this})
         };
     }
     template<class TIsRoot = std::false_type, class T, class TName = no_name>
@@ -2294,11 +2400,12 @@ private:
         using expected_t = typename dependency_t::expected;
         using given_t = typename dependency_t::given;
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
+        using type_t = type_traits::typename_traits_t<T, given_t>;
         using provider_t = successful::provider<expected_t, given_t, ctor_t, injector>;
-        using wrapper_t = decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this}));
-        using create_t = referable_t<T, dependency__<dependency_t>>;
-        return successful::wrapper<create_t, wrapper_t>{
-            static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this})
+        using wrapper_t = decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<type_t>(provider_t{*this}));
+        using create_t = referable_t<type_t, dependency__<dependency_t>>;
+        return successful::wrapper<typename std::is_same<type_t, T>::type, create_t, wrapper_t>{
+            static_cast<dependency__<dependency_t>&&>(dependency).template create<type_t>(provider_t{*this})
         };
     }
 };
@@ -2562,13 +2669,13 @@ public:
     auto get(const type_traits::direct&
            , const TMemory&
            , TArgs&&... args) const {
-        return new T(static_cast<TArgs&&>(args)...);
+        return new T(static_cast<type_traits::cast_t<TArgs>>(args)...);
     }
     template<class, class T, class TMemory, class... TArgs>
     auto get(const type_traits::uniform&
            , const TMemory&
            , TArgs&&... args) const {
-        return new T{static_cast<TArgs&&>(args)...};
+        return new T{static_cast<type_traits::cast_t<TArgs>>(args)...};
     }
 };
 }}}}

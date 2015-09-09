@@ -55,7 +55,7 @@ struct is_unique;
 
 template<class T>
 struct unique_dependency : aux::pair<
-    aux::pair<typename T::expected, typename T::name>
+    aux::pair<typename T::base, typename T::name>
   , typename T::priority
 > { };
 
@@ -127,7 +127,7 @@ auto boundable_impl(I&&, T&&) ->
         !std::is_same<T, aux::remove_specifiers_t<T>>::value // I is already verified
       , typename bind<T>::has_disallowed_specifiers
       , std::conditional_t<std::is_base_of<I, T>::value ||
-            (std::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value)
+            (std::is_same<_, I>::value || (std::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value))
           , std::true_type
           , typename bind<T>::template is_not_related_to<I>
         >

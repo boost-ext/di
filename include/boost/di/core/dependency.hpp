@@ -49,12 +49,13 @@ template<
   , class TGiven = TExpected
   , class TName = no_name
   , class TPriority = aux::none_type
+  , class TBase = TExpected
 > class dependency : dependency_base, TScope::template scope<TExpected, TGiven>
     , public dependency_impl<
-          dependency_concept<TExpected, TName>
-        , dependency<TScope, TExpected, TGiven, TName, TPriority>
+          dependency_concept<TBase, TName>
+        , dependency<TScope, TExpected, TGiven, TName, TPriority, TBase>
       > {
-    template<class, class, class, class, class> friend class dependency;
+    template<class, class, class, class, class, class> friend class dependency;
     using scope_t = typename TScope::template scope<TExpected, TGiven>;
 
     template<class T>
@@ -85,6 +86,7 @@ public:
     using given = TGiven;
     using name = TName;
     using priority = TPriority;
+    using base = TBase;
 
     dependency() noexcept { }
 
@@ -99,7 +101,8 @@ public:
       , class TGiven_
       , class TName_
       , class TPriority_
-    > dependency(const dependency<TScope_, TExpected_, TGiven_, TName_, TPriority_>& other) noexcept
+      , class TBase_
+    > dependency(const dependency<TScope_, TExpected_, TGiven_, TName_, TPriority_, TBase_>& other) noexcept
         : scope_t(other)
     { }
 
@@ -111,6 +114,7 @@ public:
           , TGiven
           , T
           , TPriority
+          , TBase
         >{*this};
     }
 
@@ -122,6 +126,7 @@ public:
           , TGiven
           , TName
           , TPriority
+          , TBase
         >{};
     }
 
@@ -133,17 +138,19 @@ public:
           , T
           , TName
           , TPriority
+          , TBase
         >{};
     }
 
-    template<class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value) = 0>
+    template<class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value || std::is_same<_, TExpected>::value) = 0>
     auto to(T&& object) const noexcept {
         using dependency = dependency<
             scopes::external
-          , TExpected
+          , std::conditional_t<std::is_same<TExpected, _>::value, typename ref_traits<T>::type, TExpected>
           , typename ref_traits<T>::type
           , TName
           , TPriority
+          , TBase
         >;
         return dependency{static_cast<T&&>(object)};
     }
@@ -156,6 +163,7 @@ public:
           , decltype(std::declval<T>().configure())
           , TName
           , TPriority
+          , TBase
         >;
         return dependency{object.configure()};
     }
@@ -168,6 +176,7 @@ public:
           , T
           , TName
           , TPriority
+          , TBase
         >;
         return dependency{object};
     }

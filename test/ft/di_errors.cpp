@@ -724,6 +724,28 @@ test policy_constructible = [] {
     );
 };
 
+#if defined(__cpp_concepts)
+    test create_auto_type_without_binding = [] {
+        auto errors_ = errors(
+            #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+                "creatable constraint not satisfied",
+            #endif
+                "type<.*>::has_not_bound_generic_types"
+            #if !defined(_MSC_VER)
+              , "create<c>()"
+              , "generic type is not bound, did you forget to add di::bind<di::_>.to<implementation>()?"
+            #endif
+        );
+
+        expect_compile_fail("", errors_,
+            struct c { BOOST_DI_INJECT(c, auto) { } };
+            int main() {
+                di::make_injector().create<c>();
+            }
+        );
+    };
+#endif
+
 // ---------------------------------------------------------------------------
 
 test ctor_inject_limit_out_of_range = [] {

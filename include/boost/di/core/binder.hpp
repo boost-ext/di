@@ -33,10 +33,11 @@ class binder {
       , class TExpected
       , class TGiven
       , class TName
+      , class TBase
     > static decltype(auto)
     resolve_impl(aux::pair<TConcept
-               , dependency<TScope, TExpected, TGiven, TName, override>>* dep) noexcept {
-        return static_cast<dependency<TScope, TExpected, TGiven, TName, override>&>(*dep);
+               , dependency<TScope, TExpected, TGiven, TName, override, TBase>>* dep) noexcept {
+        return static_cast<dependency<TScope, TExpected, TGiven, TName, override, TBase>&>(*dep);
     }
 
 public:

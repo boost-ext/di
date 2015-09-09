@@ -127,6 +127,16 @@ struct is_not_convertible_to {
     error(_ = "wrapper is not convertible to requested type, did you mistake the scope?");
 };
 
+struct has_not_bound_generic_types {
+    operator T() const {
+        using constraint_not_satisfied = has_not_bound_generic_types;
+        return
+            constraint_not_satisfied{}.error();
+    }
+    static inline T
+    error(_ = "generic type is not bound, did you forget to add di::bind<di::_>.to<implementation>()?");
+};
+
 template<class TReference>
 struct has_not_bound_reference {
     template<class TName>

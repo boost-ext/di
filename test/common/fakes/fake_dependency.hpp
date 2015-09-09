@@ -21,6 +21,7 @@ struct fake_dependency : core::dependency_base, TScope::template scope<T, T> {
     using scope = TScope;
     using name = TName;
     using priority = aux::none_type;
+    using base = T;
 
     template<class>
     using is_referable = TIsReferable;

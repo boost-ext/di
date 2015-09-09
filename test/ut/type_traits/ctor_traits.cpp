@@ -125,6 +125,15 @@ test uniforms = [] {
 #endif
 };
 
+struct t1 {
+    template<class T>
+    t1(int, T) { }
+};
+
+test templates = [] {
+    static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<t1>, core::any_type_fwd<t1>>>, ctor_traits__<t1>::type>{});
+};
+
 test inheriting_ctors = [] {
     struct c0 { c0(int, double) { } };
     struct c1 : public c0 { using c0::c0; };
