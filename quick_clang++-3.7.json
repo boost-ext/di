@@ -1,0 +1,37 @@
+
+{
+  "title": {
+    "text": "quick complexity | clang++-3.7 "
+  },
+  "xAxis": {
+    "title": {
+      "text": "Number of bindings"
+    },
+    "floor": 0
+  },
+
+  "yAxis": {
+    "title": {
+      "text": "Time [s]"
+    },
+    "floor": 0
+  },
+  "series": [
+    {
+      "name": "ctor/auto",
+      "data": [[10, 4.29708]]
+    },
+    {
+      "name": "inject/all",
+      "data": [[10, 1.81684]]
+    },
+    {
+      "name": "ctor/exposed",
+      "data": [[10, 5.49026]]
+    },
+    {
+      "name": "inject/exposed",
+      "data": [[10, 2.50454]]
+    }
+  ]
+}
