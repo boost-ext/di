@@ -724,6 +724,7 @@ test policy_constructible = [] {
     );
 };
 
+#if 0
 #if defined(__cpp_concepts)
     test create_auto_type_without_binding = [] {
         auto errors_ = errors(
@@ -744,6 +745,7 @@ test policy_constructible = [] {
             }
         );
     };
+#endif
 #endif
 
 // ---------------------------------------------------------------------------
