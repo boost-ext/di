@@ -23,7 +23,8 @@ rule example ( src + : cxxflags * : property * ) {
     }
 
     toolset =
-        <toolset>gcc:<cxxflags>"-std=c++1y -pedantic -pedantic-errors -Wall -Wextra -Werror $(cxx_flags)"
+        <toolset>gcc:<cxxflags>"-std=c++1y -Wall -Wextra -Werror $(cxx_flags)"
+        <toolset>gcc-6.0.0:<cxxflags>"-std=c++1z"
         <toolset>clang:<cxxflags>"-std=c++1y -Wno-dollar-in-identifier-extension -pedantic -pedantic-errors -Wall -Wextra -Werror $(cxx_flags)"
         <toolset>darwin:<cxxflags>"-std=c++1y -pedantic -pedantic-errors -Wall -Wextra -Werror $(cxx_flags)"
         <toolset>msvc:<cxxflags>"/W3 $(cxx_flags)"
@@ -68,7 +69,7 @@ test-suite extensions :
     [ example extensions/bindings/constructor_bindings.cpp ]
     [ example extensions/bindings/multi_bindings.cpp ]
     [ example extensions/injections/assisted_injection.cpp ]
-    #[ example extensions/injections/named_parameters.cpp ]
+    [ example extensions/injections/named_parameters.cpp ]
     [ example extensions/injections/xml_injection.cpp ]
     [ example extensions/policies/types_dumper.cpp ]
     [ example extensions/policies/uml_dumper.cpp ]

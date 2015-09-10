@@ -747,3 +747,4 @@ test inject_template_many_types = [] {
         injector.create<c_concept_and_types>();
     };
 #endif
+

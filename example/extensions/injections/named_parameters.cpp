@@ -12,6 +12,10 @@
 //->
 #include <boost/di.hpp>
 
+#if !defined(__cpp_constexpr)
+    int main() { }
+#else
+
 namespace di = boost::di;
 
 //<-
@@ -79,7 +83,7 @@ struct named_types<R(TArgs...)>
 template<class T>
 using named_types_t = typename named_types<T>::type;
 
-#define $inject(type, ...) \
+#define INJECT(type, ...) \
     static type boost_di_inject_ctor__(__VA_ARGS__); \
     static constexpr auto boost_di_inject_str__ = #__VA_ARGS__; \
     using boost_di_inject__ = ::boost::di::detail::combine_t< \
@@ -88,13 +92,13 @@ using named_types_t = typename named_types<T>::type;
     >; \
     type(__VA_ARGS__)
 
-#define $(name) \
-    std::integral_constant<long, const_hash(#name, const_strlen(#name))>{}
+#define NAMED(name) \
+    named(std::integral_constant<long, const_hash(#name, const_strlen(#name))>{})
 //->
 
 struct example {
     /*<<inject constructor using automatic named parameters>>*/
-    $inject(example, int i, std::unique_ptr<interface> up, int value) {
+    INJECT(example, int i, std::unique_ptr<interface> up, int value) {
         assert(i == 42);
         assert(dynamic_cast<implementation*>(up.get()));
         assert(value == 87);
@@ -104,13 +108,15 @@ struct example {
 int main() {
    auto injector = di::make_injector(
         /*<<bind named parameters>>*/
-        di::bind<int>().named($(i)).to(42)
-      , di::bind<interface>().named($(up)).to<implementation>()
-      , di::bind<int>().named($(value)).to(87)
+        di::bind<int>().NAMED(i).to(42)
+      , di::bind<interface>().NAMED(up).to<implementation>()
+      , di::bind<int>().NAMED(value).to(87)
     );
 
     injector.create<example>();
 }
 
 //]
+
+#endif
 
