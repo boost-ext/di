@@ -112,8 +112,8 @@ using decay_t = typename decay<T>::type;
 template<class T1, class T2>
 struct is_same_or_base_of {
     static constexpr auto value =
-        std::is_same<aux::decay_t<T1>, aux::decay_t<T2>>::value ||
-        std::is_base_of<aux::decay_t<T2>, aux::decay_t<T1>>::value;
+        std::is_same<decay_t<T1>, decay_t<T2>>::value ||
+        std::is_base_of<decay_t<T2>, decay_t<T1>>::value;
 };
 
 template<class>
@@ -124,6 +124,34 @@ struct function_traits<R(*)(TArgs...)> {
     using result_type = R;
     using base_type = none_type;
     using args = type_list<TArgs...>;
+};
+
+template<class R, class... TArgs>
+struct function_traits<R(*)(TArgs..., ...)> {
+    template<int, class, class...>
+    struct add_variadic;
+
+    template<int, int, class T>
+    struct add_variadic_impl {
+        using type = T;
+    };
+
+    template<int N, class T>
+    struct add_variadic_impl<N, N, T> {
+        using type = T(...);
+    };
+
+    template<int N, int... Ns, class... Ts>
+    struct add_variadic<N, index_sequence<Ns...>, Ts...> {
+        using type = type_list<typename add_variadic_impl<N, Ns, Ts>::type...>;
+    };
+
+    using result_type = R;
+    using base_type = none_type;
+    using args = typename add_variadic<
+        sizeof...(TArgs)
+      , make_index_sequence<sizeof...(TArgs)>, TArgs...
+    >::type;
 };
 
 template<class R, class... TArgs>
