@@ -2783,29 +2783,32 @@ struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
 };
 template<class T1, class T2>
 using combine_t = typename combine<T1, T2>::type;
-aux::type_list<> ctor__(...);
+template<class>
+aux::type_list<> ctor_impl__(...);
 template<class T>
-auto ctor__(T*) -> aux::function_traits_t<decltype(&T::template ctor<_>)>;
+auto ctor_impl__(T*) -> aux::function_traits_t<decltype(&T::template ctor<_>)>;
 template<class T>
-auto ctor__(T*) -> aux::function_traits_t<decltype(&T::template ctor<_, _>)>;
+auto ctor_impl__(T*) -> aux::function_traits_t<decltype(&T::template ctor<_, _>)>;
 template<class T>
-auto ctor__(T*) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _>)>;
+auto ctor_impl__(T*) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _>)>;
 template<class T>
-auto ctor__(T*) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _, _>)>;
+auto ctor_impl__(T*) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _, _>)>;
 template<class T>
-auto ctor__(T*) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _, _, _>)>;
+auto ctor_impl__(T*) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _, _, _>)>;
 template<class T>
-auto ctor__(T*) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _, _, _, _>)>;
+auto ctor_impl__(T*) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _, _, _, _>)>;
 template<class T>
-auto ctor__(T*) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _, _, _, _, _>)>;
+auto ctor_impl__(T*) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _, _, _, _, _>)>;
 template<class T>
-auto ctor__(T*) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _, _, _, _, _, _>)>;
+auto ctor_impl__(T*) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _, _, _, _, _, _>)>;
 template<class T>
-auto ctor__(T*) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _, _, _, _, _, _, _>)>;
+auto ctor_impl__(T*) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _, _, _, _, _, _, _>)>;
 template<class T>
-auto ctor__(T*) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _, _, _, _, _, _, _, _>)>;
+auto ctor_impl__(T*) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _, _, _, _, _, _, _, _>)>;
 template<class T>
 auto ctor__(T*) -> aux::function_traits_t<decltype(&T::ctor)>;
+template<class T>
+decltype(ctor_impl__<T>((T*)0)) ctor__(...);
 }}}}
 #define BOOST_DI_GEN_CTOR_IMPL(p, i) \
     BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
@@ -2835,7 +2838,7 @@ auto ctor__(T*) -> aux::function_traits_t<decltype(&T::ctor)>;
             BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_NAME, __VA_ARGS__) \
         ); \
         using type BOOST_DI_UNUSED = ::boost::di::detail::combine_t< \
-            decltype(::boost::di::detail::ctor__((boost_di_inject__*)0)) \
+            decltype(::boost::di::detail::ctor__<boost_di_inject__>((boost_di_inject__*)0)) \
           , ::boost::di::aux::function_traits_t<decltype(name)> \
         >; \
         static_assert( \
