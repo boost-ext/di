@@ -562,6 +562,8 @@ test request_value_and_ptr_in_unique = [] {
     };
 #endif
 
+
+#if !defined(_MSC_VER)
 auto type_t = []{};
 
 struct Dummy_impl {
@@ -614,6 +616,7 @@ test inject_template_many_types = [] {
     );
     injector.create<c_many_t>();
 };
+#endif
 
 #if defined(__cpp_concepts)
     struct c_auto {

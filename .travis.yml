@@ -202,10 +202,6 @@ matrix:
     env: TOOLSET=clang COMPILER=clang++
   - os: osx
     env: CMAKE=ON BENCHMARK=ON COMPILER=clang++
-  allow_failures:
-    - env: TOOLSET=clang-3.7 MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.7
-    - env: TOOLSET=clang-3.7 MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.7
-    - env: CMAKE=ON COMPILER=clang++-3.7
 
 before_script:
 - git config --global user.name "Travis-CI"
