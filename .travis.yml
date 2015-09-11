@@ -202,6 +202,12 @@ matrix:
     env: TOOLSET=clang COMPILER=clang++
   - os: osx
     env: CMAKE=ON BENCHMARK=ON COMPILER=clang++
+  - os: osx
+    osx_image: xcode7
+    env: TOOLSET=clang COMPILER=clang++
+  - os: osx
+    osx_image: xcode7
+    env: CMAKE=ON BENCHMARK=ON COMPILER=clang++
 
 before_script:
 - git config --global user.name "Travis-CI"
