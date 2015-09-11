@@ -81,7 +81,12 @@ auto ctor__(T*) -> aux::function_traits_t<decltype(&T::ctor)>;
 template<class T>
 decltype(ctor_impl__<T>((T*)0)) ctor__(...);
 
-}}}} // boost::di::v1::detail
+} // detail
+
+template<class... Ts>
+using inject = aux::type_list<Ts...>;
+
+}}} // boost::di::v1
 
 #define BOOST_DI_GEN_CTOR_IMPL(p, i) \
     BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
@@ -133,12 +138,6 @@ decltype(ctor_impl__<T>((T*)0)) ctor__(...);
       , BOOST_DI_INJECT_TRAITS_EMPTY_IMPL \
       , BOOST_DI_INJECT_TRAITS_IMPL \
     )(T, __VA_ARGS__)
-
-#define BOOST_DI_INJECT_TRAITS_NO_LIMITS(...) \
-    struct boost_di_inject__ { \
-        static void ctor(__VA_ARGS__); \
-        using type BOOST_DI_UNUSED = ::boost::di::aux::function_traits_t<decltype(ctor)>; \
-    }
 
 #define BOOST_DI_INJECT_TRAITS_T(T, ...) BOOST_DI_INJECT_TRAITS2(T, __VA_ARGS__)
 #define BOOST_DI_INJECT_TRAITS_(T, ...) BOOST_DI_INJECT_TRAITS2((), __VA_ARGS__)

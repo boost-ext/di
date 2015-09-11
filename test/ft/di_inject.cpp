@@ -62,7 +62,7 @@ test ctor_limit_size = [] {
 
 test inject_traits_no_limits = [] {
     struct c {
-        BOOST_DI_INJECT_TRAITS_NO_LIMITS(int, int, int, int, int, int, int, int, int, int, int);
+        using boost_di_inject__ = di::inject<int, int, int, int, int, int, int, int, int, int, int>;
         c(int, int, int, int, int, int, int, int, int, int, int) { }
     };
 
@@ -78,7 +78,7 @@ namespace boost { namespace di {
 
 template<>
 struct ctor_traits<c_no_limits> {
-    BOOST_DI_INJECT_TRAITS_NO_LIMITS(int, int, int, int, int, int, int, int, int, int, int);
+    using boost_di_inject__ = di::inject<int, int, int, int, int, int, int, int, int, int, int>;
 };
 
 }} // boost::di
@@ -464,7 +464,7 @@ test inject_inside_template = [] {
 
 template<class T>
 struct template_inject_no_limits {
-    BOOST_DI_INJECT_TRAITS_NO_LIMITS(T value);
+    using boost_di_inject__ = di::inject<T>;
     template_inject_no_limits(T value)
         : value_(value)
     { }
