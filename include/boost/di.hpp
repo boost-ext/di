@@ -243,29 +243,6 @@ struct function_traits<R(*)(TArgs...)> {
     using args = type_list<TArgs...>;
 };
 template<class R, class... TArgs>
-struct function_traits<R(*)(TArgs..., ...)> {
-    template<int, class, class...>
-    struct add_variadic;
-    template<int, int, class T>
-    struct add_variadic_impl {
-        using type = T;
-    };
-    template<int N, class T>
-    struct add_variadic_impl<N, N, T> {
-        using type = T(...);
-    };
-    template<int N, int... Ns, class... Ts>
-    struct add_variadic<N, index_sequence<Ns...>, Ts...> {
-        using type = type_list<typename add_variadic_impl<N, Ns, Ts>::type...>;
-    };
-    using result_type = R;
-    using base_type = none_type;
-    using args = typename add_variadic<
-        sizeof...(TArgs)
-      , make_index_sequence<sizeof...(TArgs)>, TArgs...
-    >::type;
-};
-template<class R, class... TArgs>
 struct function_traits<R(TArgs...)> {
     using result_type = R;
     using base_type = none_type;
@@ -877,7 +854,6 @@ namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 template<class, class = void> struct is_injectable : std::false_type { }; template<class T> struct is_injectable<T, typename aux::void_t<typename T::boost_di_inject__>::type> : std::true_type { };
 struct direct { };
 struct uniform { };
-struct variadic { };
 template<class T, int>
 using get = T;
 template<template<class...> class, class, class, class = int>
