@@ -565,6 +565,8 @@ test request_value_and_ptr_in_unique = [] {
 
 #if !defined(_MSC_VER)
 auto type_t = []{};
+auto type_1 = []{};
+auto type_2 = []{};
 
 struct Dummy_impl {
     void dummy() { }
@@ -616,6 +618,26 @@ test inject_template_many_types = [] {
     );
     injector.create<c_many_t>();
 };
+
+struct c_diff_t {
+    BOOST_DI_INJECT((template<class T1, class T2>)c_diff_t
+                  , (named = type_1) T1, int i, (named = type_2) T2 ii) {
+        expect(i == 42);
+        expect(std::is_same<T1, Dummy_impl>::value);
+        expect(std::is_same<T2, int>::value);
+        expect(ii == 87);
+    }
+};
+
+test inject_template_diff_types = [] {
+    auto injector = di::make_injector(
+        di::bind<di::_>().named(type_1).to<Dummy_impl>()
+      , di::bind<di::_>().named(type_2).to(87)
+      , di::bind<int>().to(42)
+    );
+    injector.create<c_diff_t>();
+};
+
 #endif
 
 #if defined(__cpp_concepts)
