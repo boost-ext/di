@@ -54,8 +54,8 @@ struct ctor_traits<ctor_di_traits> {
 
 struct ctor_inject_traits_no_limits {
     /*<<constructor with 20 parameters>>*/
-    BOOST_DI_INJECT_TRAITS_NO_LIMITS(int, int, int, int, int, int, int, int, int, int
-                                   , int, int, int, int, int, int, int, int, int, int);
+    using boost_di_inject__ = di::inject<int, int, int, int, int, int, int, int, int, int
+                                       , int, int, int, int, int, int, int, int, int, int>;
 
     ctor_inject_traits_no_limits(int, int, int, int, int, int, int, int, int, int
                                , int, int, int, int, int, int, int, int, int, int) { }
