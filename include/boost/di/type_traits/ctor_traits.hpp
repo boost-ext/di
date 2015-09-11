@@ -21,6 +21,7 @@ BOOST_DI_HAS_TYPE(is_injectable, boost_di_inject__);
 
 struct direct { };
 struct uniform { };
+struct variadic { }; // internal use only
 
 template<class T, int>
 using get = T;
