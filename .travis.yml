@@ -201,7 +201,7 @@ matrix:
   - os: osx
     env: TOOLSET=clang COMPILER=clang++
   - os: osx
-    env: CMAKE=ON BENCHMARK=ON COMPILER=clang++
+    env: CMAKE=ON COMPILER=clang++
   - os: osx
     osx_image: xcode7
     env: TOOLSET=clang COMPILER=clang++
@@ -215,13 +215,19 @@ before_script:
 - git config --global push.default simple
 - (cd build && ./bootstrap.sh)
 
+before_install:
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then (
+    wget http://www.cmake.org/files/v2.8/cmake-2.8.12.2-Darwin64-universal.tar.gz
+    && tar xfz cmake-2.8.12.2-Darwin64-universal.tar.gz)
+    && export PATH="`pwd`/cmake-2.8.12.2-Darwin64-universal/CMake 2.8-12.app/Contents/bin":$PATH:; fi
+
 install:
 - export CXX="${COMPILER}"
-- if [ "${LIBCXX}" != "" ]; then (svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx &&
-  cd libcxx/lib && ./buildit && ln -f -s libc++.so.1.0 libc++.so.1) &&
-  export CXXFLAGS="-stdlib=libc++ -I${TRAVIS_BUILD_DIR}/libcxx/include"
-  export LDFLAGS="-L${TRAVIS_BUILD_DIR}/libcxx/lib -lc++" &&
-  export LD_LIBRARY_PATH="${TRAVIS_BUILD_DIR}/libcxx/lib:$LD_LIBRARY_PATH"; fi
+- if [ "${LIBCXX}" != "" ]; then (svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx
+  && cd libcxx/lib && ./buildit && ln -f -s libc++.so.1.0 libc++.so.1)
+  && export CXXFLAGS="-stdlib=libc++ -I${TRAVIS_BUILD_DIR}/libcxx/include"
+  && export LDFLAGS="-L${TRAVIS_BUILD_DIR}/libcxx/lib -lc++"
+  && export LD_LIBRARY_PATH="${TRAVIS_BUILD_DIR}/libcxx/lib:$LD_LIBRARY_PATH"; fi
 
 script:
 - if [ "${TOOLSET}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2
