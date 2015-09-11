@@ -64,7 +64,7 @@ test(ft/di_config_global_provider)
 test(ft/di_errors)
 test(ft/di_inject)
 test(ft/di_injector)
-test(ft/di_modules)
+#test(ft/di_modules)
 
 test(pt/di_compile_time)
 set(CMAKE_BUILD_TYPE Release)
