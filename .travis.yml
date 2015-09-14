@@ -252,7 +252,7 @@ before_script:
 - (cd build && ./bootstrap.sh)
 
 before_install:
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then (brew install cmake);
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then (brew install cmake); fi
 
 install:
 - export CXX="${COMPILER}"
