@@ -20,6 +20,10 @@ branches:
     - benchmarks
 
 matrix:
+  allow_failures:
+   - env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.8
+   - env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.8
+   - env: CMAKE=ON COMPILER=clang++-3.8
   fast_finish: true
   include:
   - os: linux
