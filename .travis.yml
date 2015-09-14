@@ -142,7 +142,6 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.7
-
   - os: linux
     env: CMAKE=ON COMPILER=clang++-3.7
     addons:
@@ -155,6 +154,43 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.7
+  - os: linux
+    env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.8
+    addons:
+      apt:
+        packages:
+        - clang-3.8
+        - libstdc++-5-dev
+        - valgrind
+        - gdb
+        - bc
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise
+  - os: linux
+    env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.8
+    addons:
+      apt:
+        packages:
+        - clang-3.8
+        - valgrind
+        - gdb
+        - bc
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise
+  - os: linux
+    env: CMAKE=ON COMPILER=clang++-3.8
+    addons:
+      apt:
+        packages:
+        - clang-3.8
+        - libstdc++-5-dev
+        - gdb
+        - bc
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise
   - os: linux
     env: TOOLSET=gcc-5 GCOV=gcov-5 VARIANT=coverage MEMCHECK=${VALGRIND} BIICODE=ON COMPILER=g++-5
     addons:
@@ -216,10 +252,7 @@ before_script:
 - (cd build && ./bootstrap.sh)
 
 before_install:
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then (
-    wget http://www.cmake.org/files/v2.8/cmake-2.8.12.2-Darwin64-universal.tar.gz
-    && tar xfz cmake-2.8.12.2-Darwin64-universal.tar.gz)
-    && export PATH="`pwd`/cmake-2.8.12.2-Darwin64-universal/CMake 2.8-12.app/Contents/bin":$PATH:; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then (brew install cmake);
 
 install:
 - export CXX="${COMPILER}"
