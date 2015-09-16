@@ -237,7 +237,7 @@ using is_container = std::integral_constant<bool,
 >;
 template<class T>
 struct deref_type<T, BOOST_DI_REQUIRES(is_container<T>::value)> {
-    using type = typename deref_type<typename T::value_type>::type[];
+    using type = typename deref_type<typename T::value_type>::type*[];
 };
 template<typename T>
 using deref_type_t = typename deref_type<T>::type;
@@ -1179,7 +1179,7 @@ public:
         >;
         return dependency{object};
     }
-    template<class T, BOOST_DI_REQUIRES(std::is_same<T, T>::value && !is_array<TExpected>::value) = 0, BOOST_DI_REQUIRES_MSG(typename concepts::boundable__<TExpected, T>::type) = 0>
+    template<class T, BOOST_DI_REQUIRES(aux::always<T>::value && !is_array<TExpected>::value) = 0, BOOST_DI_REQUIRES_MSG(typename concepts::boundable__<TExpected, T>::type) = 0>
     auto to() const noexcept {
         return dependency<
             TScope

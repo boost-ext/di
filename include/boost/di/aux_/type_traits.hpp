@@ -117,7 +117,7 @@ using is_container = std::integral_constant<bool,
 
 template<class T>
 struct deref_type<T, BOOST_DI_REQUIRES(is_container<T>::value)> {
-    using type = typename deref_type<typename T::value_type>::type[];
+    using type = typename deref_type<typename T::value_type>::type*[];
 };
 
 template<typename T>

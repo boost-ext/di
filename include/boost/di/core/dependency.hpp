@@ -228,7 +228,7 @@ public:
         return dependency{object};
     }
 
-    template<class T, BOOST_DI_REQUIRES(std::is_same<T, T>::value && !is_array<TExpected>::value) = 0, BOOST_DI_REQUIRES_MSG(typename concepts::boundable__<TExpected, T>::type) = 0>
+    template<class T, BOOST_DI_REQUIRES(aux::always<T>::value && !is_array<TExpected>::value) = 0, BOOST_DI_REQUIRES_MSG(typename concepts::boundable__<TExpected, T>::type) = 0>
     auto to() const noexcept {
         return dependency<
             TScope

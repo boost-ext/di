@@ -534,39 +534,43 @@ test scopes_injector_lambda_injector = [] {
     };
 #endif
 
-/*test multi_bindings_inject_named = [] {*/
-    //struct c_vector {
-        //BOOST_DI_INJECT(c_vector,
-            //(named = a) const std::vector<std::shared_ptr<i1>>& v1
-          //, (named = b) std::vector<std::unique_ptr<i1>> v2
-        //) {
-            //expect(v1.size() == 2);
-            //expect(dynamic_cast<impl1*>(v1[0].get()));
-            //expect(dynamic_cast<impl1_2*>(v1[1].get()));
+test multi_bindings_inject_named = [] {
+    struct c_vector {
+        BOOST_DI_INJECT(c_vector,
+            (named = a) const std::vector<std::shared_ptr<i1>>& v1
+          , (named = b) std::vector<std::unique_ptr<i1>> v2
+        ) {
+            expect(v1.size() == 2);
+            expect(dynamic_cast<impl1*>(v1[0].get()));
+            expect(dynamic_cast<impl1_2*>(v1[1].get()));
 
-            //expect(v2.size() == 1);
-            //expect(dynamic_cast<impl1*>(v2[0].get()));
-        //}
-    //};
+            expect(v2.size() == 1);
+            expect(dynamic_cast<impl1*>(v2[0].get()));
+        }
+    };
 
-    //auto injector = di::make_injector(
-        //di::bind<i1[]>().to<impl1, decltype(a)>()
-      //, di::bind<i1[]>().named(a).to<i1, class Impl2>()
-      //, di::bind<i1[]>().named(b).to<impl1>()
-      //, di::bind<i1>().to<impl1>()
-      //, di::bind<i1>().to<impl1_2>().named<class Impl2>()
-      //, di::bind<i1>().to<impl1_2>().named(a)
-    //);
+    auto injector = di::make_injector(
+        di::bind<i1*[]>().to<impl1, decltype(a)>()
+      , di::bind<i1*[]>().named(a).to<i1, class Impl2>()
+      , di::bind<i1*[]>().named(b).to<impl1>()
+      , di::bind<i1>().to<impl1>()
+      , di::bind<i1>().to<impl1_2>().named<class Impl2>()
+      , di::bind<i1>().to<impl1_2>().named(a)
+    );
 
-    //injector.create<c_vector>();
-/*}*/
+    (void)injector;
+    //expect(std::is_convertible<impl1, i1>::value);
+    expect(std::is_convertible<i1, impl1>::value);
+    expect(std::is_abstract<class i>::value);
+    //injector.create<std::vector<std::shared_ptr<i1>>>();
+};
 
 test multi_bindings_containers = [] {
     auto injector = di::make_injector(
-        di::bind<int[]>.to<int, class Int42>()
-      , di::bind<int>.to(11)
-      , di::bind<int>.to(42).named<class Int42>()
-      , di::bind<int>.to(87).named<class Int42>() [di::override]
+        di::bind<int*[]>().to<int, class Int42>()
+      , di::bind<int>().to(11)
+      , di::bind<int>().to(42).named<class Int42>()
+      , di::bind<int>().to(87).named<class Int42>() [di::override]
     );
 
     auto v = injector.create<std::vector<int>>();
