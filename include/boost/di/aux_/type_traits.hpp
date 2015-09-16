@@ -75,7 +75,7 @@ using remove_specifiers =
 template<class T>
 using remove_specifiers_t = typename remove_specifiers<T>::type;
 
-template<class T>
+template<class T, class = int>
 struct deref_type {
     using type = T;
 };
@@ -98,6 +98,26 @@ struct deref_type<boost::shared_ptr<T>> {
 template<class T>
 struct deref_type<std::weak_ptr<T>> {
     using type = T;
+};
+
+std::false_type is_container_impl(...);
+
+template<class T>
+auto is_container_impl(T&& t) -> is_valid_expr<
+    decltype(t.begin())
+  , decltype(t.end())
+>;
+
+BOOST_DI_HAS_TYPE(has_traits_type, traits_type);
+
+template<class T>
+using is_container = std::integral_constant<bool,
+    decltype(is_container_impl(std::declval<T>()))::value && !has_traits_type<T>::value /*std::string*/
+>;
+
+template<class T>
+struct deref_type<T, BOOST_DI_REQUIRES(is_container<T>::value)> {
+    using type = typename deref_type<typename T::value_type>::type[];
 };
 
 template<typename T>

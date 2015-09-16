@@ -7,6 +7,15 @@
 #include <memory>
 #include <string>
 #include <functional>
+#include <string>
+#include <vector>
+#include <list>
+#include <queue>
+#include <stack>
+#include <forward_list>
+#include <deque>
+#include <set>
+#include <unordered_set>
 #include "boost/di.hpp"
 
 namespace di = boost::di;
@@ -524,4 +533,53 @@ test scopes_injector_lambda_injector = [] {
         expect(dynamic_cast<impl2*>(object.i2_.get()));
     };
 #endif
+
+/*test multi_bindings_inject_named = [] {*/
+    //struct c_vector {
+        //BOOST_DI_INJECT(c_vector,
+            //(named = a) const std::vector<std::shared_ptr<i1>>& v1
+          //, (named = b) std::vector<std::unique_ptr<i1>> v2
+        //) {
+            //expect(v1.size() == 2);
+            //expect(dynamic_cast<impl1*>(v1[0].get()));
+            //expect(dynamic_cast<impl1_2*>(v1[1].get()));
+
+            //expect(v2.size() == 1);
+            //expect(dynamic_cast<impl1*>(v2[0].get()));
+        //}
+    //};
+
+    //auto injector = di::make_injector(
+        //di::bind<i1[]>().to<impl1, decltype(a)>()
+      //, di::bind<i1[]>().named(a).to<i1, class Impl2>()
+      //, di::bind<i1[]>().named(b).to<impl1>()
+      //, di::bind<i1>().to<impl1>()
+      //, di::bind<i1>().to<impl1_2>().named<class Impl2>()
+      //, di::bind<i1>().to<impl1_2>().named(a)
+    //);
+
+    //injector.create<c_vector>();
+/*}*/
+
+test multi_bindings_containers = [] {
+    auto injector = di::make_injector(
+        di::bind<int[]>.to<int, class Int42>()
+      , di::bind<int>.to(11)
+      , di::bind<int>.to(42).named<class Int42>()
+      , di::bind<int>.to(87).named<class Int42>() [di::override]
+    );
+
+    auto v = injector.create<std::vector<int>>();
+    expect(v.size() == 2);
+    expect(v[0] == 11);
+    expect(v[1] == 87);
+    expect(injector.create<std::list<int>>().size() == 2);
+    expect(!injector.create<std::forward_list<int>>().empty());
+    expect(injector.create<std::stack<int>>().size() == 2);
+    expect(injector.create<std::queue<int>>().size() == 2);
+    expect(injector.create<std::priority_queue<int>>().size() == 2);
+    expect(injector.create<std::deque<int>>().size() == 2);
+    expect(injector.create<std::set<int>>().size() == 2);
+    expect(injector.create<std::unordered_set<int>>().size() == 2);
+};
 

@@ -24,6 +24,8 @@ _LIBCPP_END_NAMESPACE_STD
 
 namespace std {
     template<class> class initializer_list;
+    template<class> class move_iterator;
+    template<class T> move_iterator<T> make_move_iterator(T);
 } // std
 
 namespace boost {

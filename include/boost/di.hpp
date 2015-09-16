@@ -135,6 +135,8 @@ _LIBCPP_END_NAMESPACE_STD
 #endif
 namespace std {
     template<class> class initializer_list;
+    template<class> class move_iterator;
+    template<class T> move_iterator<T> make_move_iterator(T);
 }
 namespace boost {
     template<class> class shared_ptr;
@@ -202,7 +204,7 @@ using remove_specifiers =
     std::remove_cv<std::remove_pointer_t<std::remove_reference_t<T>>>;
 template<class T>
 using remove_specifiers_t = typename remove_specifiers<T>::type;
-template<class T>
+template<class T, class = int>
 struct deref_type {
     using type = T;
 };
@@ -221,6 +223,21 @@ struct deref_type<boost::shared_ptr<T>> {
 template<class T>
 struct deref_type<std::weak_ptr<T>> {
     using type = T;
+};
+std::false_type is_container_impl(...);
+template<class T>
+auto is_container_impl(T&& t) -> is_valid_expr<
+    decltype(t.begin())
+  , decltype(t.end())
+>;
+template<class, class = void> struct has_traits_type : std::false_type { }; template<class T> struct has_traits_type<T, typename aux::void_t<typename T::traits_type>::type> : std::true_type { };
+template<class T>
+using is_container = std::integral_constant<bool,
+    decltype(is_container_impl(std::declval<T>()))::value && !has_traits_type<T>::value
+>;
+template<class T>
+struct deref_type<T, BOOST_DI_REQUIRES(is_container<T>::value)> {
+    using type = typename deref_type<typename T::value_type>::type[];
 };
 template<typename T>
 using deref_type_t = typename deref_type<T>::type;
@@ -1000,6 +1017,45 @@ struct dependency_impl<
 { };
 struct override { };
 struct dependency_base { };
+template<class T, class U>
+struct t_traits {
+    using type = std::conditional_t<std::is_convertible<U, T>::value, U, di::detail::named_type<U, T>>;
+    using type_ = std::conditional_t<std::is_convertible<U, T>::value, U, T>;
+};
+template<class T, class U>
+struct t_traits<std::shared_ptr<T>, U> {
+    using type = std::conditional_t<std::is_convertible<U, T>::value, std::shared_ptr<U>, di::detail::named_type<U, std::shared_ptr<T>>>;
+    using type_ = std::conditional_t<std::is_convertible<U, T>::value, std::shared_ptr<U>, std::shared_ptr<T>>;
+};
+template<class T, class D, class U>
+struct t_traits<std::unique_ptr<T, D>, U> {
+    using type = std::conditional_t<std::is_convertible<U, T>::value, std::unique_ptr<U, D>, di::detail::named_type<U, std::unique_ptr<T, D>>>;
+    using type_ = std::conditional_t<std::is_convertible<U, T>::value, std::unique_ptr<U, D>, std::unique_ptr<T, D>>;
+};
+template<class T, class U>
+using t_traits_t = typename t_traits<T, U>::type;
+template<class T, class U>
+using t_traits_t_ = typename t_traits<T, U>::type_;
+template<class>
+struct is_array : std::false_type { };
+template<class T>
+struct is_array<T[]> : std::true_type { };
+template<class... Ts>
+struct multi_bindings_impl {
+    template<class TInjector, class TArg>
+    di::aux::remove_specifiers_t<typename TArg::type>
+    operator()(const TInjector& injector, const TArg&) const {
+        using T = di::aux::remove_specifiers_t<typename TArg::type>;
+        using TArray = typename T::value_type;
+        TArray array[sizeof...(Ts)] = {
+            static_cast<t_traits_t_<TArray, Ts>>(
+                static_cast<const di::core::injector__<TInjector>&>(injector).template
+                    create_successful_impl(di::aux::type<t_traits_t<TArray, Ts>>{})
+            )...
+        };
+        return T(std::make_move_iterator(array), std::make_move_iterator(array + sizeof...(Ts)));
+    }
+};
 template<
     class TScope
   , class TExpected
@@ -1065,23 +1121,23 @@ public:
           , TBase
         >{*this};
     }
+    template<class T, BOOST_DI_REQUIRES(std::is_same<TName, no_name>::value && !std::is_same<T, no_name>::value) = 0>
+    auto named() const noexcept {
+        return dependency<
+            TScope
+          , TExpected
+          , TGiven
+          , T
+          , TPriority
+          , TBase
+        >{*this};
+    }
     template<class T, BOOST_DI_REQUIRES_MSG(concepts::scopable<T>) = 0>
     auto in(const T&) const noexcept {
         return dependency<
             T
           , TExpected
           , TGiven
-          , TName
-          , TPriority
-          , TBase
-        >{};
-    }
-    template<class T, BOOST_DI_REQUIRES_MSG(typename concepts::boundable__<TExpected, T>::type) = 0>
-    auto to() const noexcept {
-        return dependency<
-            TScope
-          , TExpected
-          , T
           , TName
           , TPriority
           , TBase
@@ -1122,6 +1178,21 @@ public:
           , TBase
         >;
         return dependency{object};
+    }
+    template<class T, BOOST_DI_REQUIRES(std::is_same<T, T>::value && !is_array<TExpected>::value) = 0, BOOST_DI_REQUIRES_MSG(typename concepts::boundable__<TExpected, T>::type) = 0>
+    auto to() const noexcept {
+        return dependency<
+            TScope
+          , TExpected
+          , T
+          , TName
+          , TPriority
+          , TBase
+        >{};
+    }
+    template<class... Ts, BOOST_DI_REQUIRES((sizeof...(Ts) > 0) && is_array<TExpected>::value) = 0>
+    auto to() const noexcept {
+        return to(multi_bindings_impl<Ts...>());
     }
     auto operator[](const override&) const noexcept {
         return dependency<
@@ -1829,6 +1900,8 @@ auto boundable_impl(I&&, T&&) ->
           , typename bind<T>::template is_not_related_to<I>
         >
     >;
+template<class I, class T>
+auto boundable_impl(I[], T&&) -> std::true_type;
 template<class... TDeps>
 auto boundable_impl(aux::type_list<TDeps...>&&) -> get_bindings_error<TDeps...>;
 template<class T, class... Ts>
