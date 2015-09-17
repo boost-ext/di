@@ -535,11 +535,9 @@ test scopes_injector_lambda_injector = [] {
 #endif
 
 test multi_bindings_inject_named = [] {
-    struct c_vector {
-        BOOST_DI_INJECT(c_vector,
-            (named = a) const std::vector<std::shared_ptr<i1>>& v1
-          , (named = b) std::vector<std::unique_ptr<i1>> v2
-        ) {
+    struct c {
+        BOOST_DI_INJECT(c, (named = a) const std::vector<std::shared_ptr<i1>>& v1
+                         , (named = b) std::vector<std::unique_ptr<i1>> v2) {
             expect(v1.size() == 2);
             expect(dynamic_cast<impl1*>(v1[0].get()));
             expect(dynamic_cast<impl1_2*>(v1[1].get()));
@@ -558,7 +556,7 @@ test multi_bindings_inject_named = [] {
       , di::bind<i1>().to<impl1_2>().named(a)
     );
 
-    injector.create<c_vector>();
+    injector.create<c>();
 };
 
 test multi_bindings_containers = [] {
@@ -583,7 +581,35 @@ test multi_bindings_containers = [] {
     expect(injector.create<std::unordered_set<int>>().size() == 2);
 };
 
-test multi_bindings_with_exposed_module = [] {
-    //
+test multi_bindings_ctor_with_exposed_module = [] {
+    struct c {
+        c(std::vector<std::unique_ptr<i1>> v) {
+            expect(v.size() == 5);
+            expect(dynamic_cast<impl1*>(v[0].get()));
+            expect(dynamic_cast<impl1_2*>(v[1].get()));
+            expect(dynamic_cast<impl1_2*>(v[2].get()));
+            expect(dynamic_cast<impl1*>(v[3].get()));
+            expect(dynamic_cast<impl1_int*>(v[4].get()));
+        }
+    };
+
+    di::injector<i1> module = di::make_injector(
+        di::bind<i1>().to<impl1>()
+    );
+
+    di::injector<i1> module2 = di::make_injector(
+        di::bind<i1>().to<impl1_int>()
+    );
+
+    auto injector = di::make_injector(
+        di::bind<i1*[]>().to<impl1, impl1_2, impl1_2, i1/*via module*/, di::named<class ExposedI1>>()
+      , module
+      , di::bind<i1>().named<class ExposedI1>().to(module2)
+    );
+
+    injector.create<c>();
+};
+
+test multi_bindings_with_scope = [] {
 };
 
