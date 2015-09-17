@@ -37,6 +37,8 @@ namespace boost { namespace di { inline namespace v1 {
         constexpr auto operator()() const noexcept { return ""; }
     };
 
+    template<class> struct named;
+
     template<class, class = int> struct ctor_traits;
 
     namespace core {

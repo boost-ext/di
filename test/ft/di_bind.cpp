@@ -550,24 +550,20 @@ test multi_bindings_inject_named = [] {
     };
 
     auto injector = di::make_injector(
-        di::bind<i1*[]>().to<impl1, decltype(a)>()
-      , di::bind<i1*[]>().named(a).to<i1, class Impl2>()
+        di::bind<i1*[]>().to<impl1, di::named<decltype(a)>>()
+      , di::bind<i1*[]>().named(a).to<i1, di::named<class Impl2>>()
       , di::bind<i1*[]>().named(b).to<impl1>()
       , di::bind<i1>().to<impl1>()
       , di::bind<i1>().to<impl1_2>().named<class Impl2>()
       , di::bind<i1>().to<impl1_2>().named(a)
     );
 
-    (void)injector;
-    //expect(std::is_convertible<impl1, i1>::value);
-    expect(std::is_convertible<i1, impl1>::value);
-    expect(std::is_abstract<class i>::value);
-    //injector.create<std::vector<std::shared_ptr<i1>>>();
+    injector.create<c_vector>();
 };
 
 test multi_bindings_containers = [] {
     auto injector = di::make_injector(
-        di::bind<int*[]>().to<int, class Int42>()
+        di::bind<int*[]>().to<int, di::named<class Int42>>()
       , di::bind<int>().to(11)
       , di::bind<int>().to(42).named<class Int42>()
       , di::bind<int>().to(87).named<class Int42>() [di::override]
@@ -585,5 +581,9 @@ test multi_bindings_containers = [] {
     expect(injector.create<std::deque<int>>().size() == 2);
     expect(injector.create<std::set<int>>().size() == 2);
     expect(injector.create<std::unordered_set<int>>().size() == 2);
+};
+
+test multi_bindings_with_exposed_module = [] {
+    //
 };
 

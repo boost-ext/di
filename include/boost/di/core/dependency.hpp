@@ -45,20 +45,38 @@ struct dependency_base { };
 
 template<class T, class U>
 struct t_traits {
-    using type = std::conditional_t<std::is_convertible<U, T>::value, U, di::detail::named_type<U, T>>;
-    using type_ = std::conditional_t<std::is_convertible<U, T>::value, U, T>;
+    using type = U;
+    using type_ = U;
+};
+
+template<class T, class U>
+struct t_traits<T, named<U>> {
+    using type = detail::named_type<U, T>;
+    using type_ = T;
 };
 
 template<class T, class U>
 struct t_traits<std::shared_ptr<T>, U> {
-    using type = std::conditional_t<std::is_convertible<U, T>::value, std::shared_ptr<U>, di::detail::named_type<U, std::shared_ptr<T>>>;
-    using type_ = std::conditional_t<std::is_convertible<U, T>::value, std::shared_ptr<U>, std::shared_ptr<T>>;
+    using type = std::shared_ptr<U>;
+    using type_ = std::shared_ptr<U>;
+};
+
+template<class T, class U>
+struct t_traits<std::shared_ptr<T>, named<U>> {
+    using type = detail::named_type<U, std::shared_ptr<T>>;
+    using type_ = std::shared_ptr<T>;
 };
 
 template<class T, class D, class U>
 struct t_traits<std::unique_ptr<T, D>, U> {
-    using type = std::conditional_t<std::is_convertible<U, T>::value, std::unique_ptr<U, D>, di::detail::named_type<U, std::unique_ptr<T, D>>>;
-    using type_ = std::conditional_t<std::is_convertible<U, T>::value, std::unique_ptr<U, D>, std::unique_ptr<T, D>>;
+    using type = std::unique_ptr<U, D>;
+    using type_ = std::unique_ptr<U, D>;
+};
+
+template<class T, class D, class U>
+struct t_traits<std::unique_ptr<T, D>, named<U>> {
+    using type = di::detail::named_type<U, std::unique_ptr<T, D>>;
+    using type_ = std::unique_ptr<T, D>;
 };
 
 template<class T, class U>
