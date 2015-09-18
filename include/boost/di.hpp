@@ -208,26 +208,22 @@ struct deref_type {
 };
 template<class T, class TDeleter>
 struct deref_type<std::unique_ptr<T, TDeleter>> {
-    using type = T;
+    using type = remove_specifiers_t<typename deref_type<T>::type>;
 };
 template<class T>
 struct deref_type<std::shared_ptr<T>> {
-    using type = T;
+    using type = remove_specifiers_t<typename deref_type<T>::type>;
 };
 template<class T>
 struct deref_type<boost::shared_ptr<T>> {
-    using type = T;
+    using type = remove_specifiers_t<typename deref_type<T>::type>;
 };
 template<class T>
 struct deref_type<std::weak_ptr<T>> {
-    using type = T;
+    using type = remove_specifiers_t<typename deref_type<T>::type>;
 };
-template<typename T>
-using deref_type_t = typename deref_type<T>::type;
 template<class T>
-using decay = deref_type<remove_specifiers_t<deref_type_t<remove_specifiers_t<T>>>>;
-template<class T>
-using decay_t = typename decay<T>::type;
+using decay_t = typename deref_type<remove_specifiers_t<T>>::type;
 template<class T1, class T2>
 struct is_same_or_base_of {
     static constexpr auto value =
@@ -820,7 +816,7 @@ public:
         template<class T, class TProvider>
         static T try_create(const TProvider&);
         template<class, class TProvider>
-        auto create(const TProvider& provider) const noexcept {
+        auto create(const TProvider& provider) noexcept {
             using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_))>;
             return wrapper{(object_)(provider.injector_)};
         }
@@ -839,7 +835,7 @@ public:
         template<class T, class TProvider>
         static T try_create(const TProvider&);
         template<class T, class TProvider>
-        auto create(const TProvider& provider) const noexcept {
+        auto create(const TProvider& provider) noexcept {
             using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_, arg<T, TExpected, TGiven>{}))>;
             return wrapper{(object_)(provider.injector_, arg<T, TExpected, TGiven>{})};
         }

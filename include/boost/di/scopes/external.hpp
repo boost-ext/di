@@ -147,7 +147,7 @@ public:
         static T try_create(const TProvider&);
 
         template<class, class TProvider>
-        auto create(const TProvider& provider) const noexcept {
+        auto create(const TProvider& provider) noexcept {
             using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_))>;
             return wrapper{(object_)(provider.injector_)};
         }
@@ -171,7 +171,7 @@ public:
         static T try_create(const TProvider&);
 
         template<class T, class TProvider>
-        auto create(const TProvider& provider) const noexcept {
+        auto create(const TProvider& provider) noexcept {
             using wrapper = wrapper_traits_t<decltype((object_)(provider.injector_, arg<T, TExpected, TGiven>{}))>;
             return wrapper{(object_)(provider.injector_, arg<T, TExpected, TGiven>{})};
         }

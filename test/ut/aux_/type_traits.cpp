@@ -98,13 +98,13 @@ test remove_specifiers_types = [] {
 };
 
 test deref_types = [] {
-    static_expect(std::is_same<deref_type_t<void>, void>{});
-    static_expect(std::is_same<deref_type_t<int>, int>{});
-    static_expect(std::is_same<deref_type_t<std::unique_ptr<int>>, int>{});
-    static_expect(std::is_same<deref_type_t<std::unique_ptr<int, deleter<int>>>, int>{});
-    static_expect(std::is_same<deref_type_t<std::shared_ptr<int>>, int>{});
-    static_expect(std::is_same<deref_type_t<boost::shared_ptr<int>>, int>{});
-    static_expect(std::is_same<deref_type_t<std::weak_ptr<int>>, int>{});
+    static_expect(std::is_same<typename deref_type<void>::type, void>{});
+    static_expect(std::is_same<typename deref_type<int>::type, int>{});
+    static_expect(std::is_same<typename deref_type<std::unique_ptr<int>>::type, int>{});
+    static_expect(std::is_same<typename deref_type<std::unique_ptr<int, deleter<int>>>::type, int>{});
+    static_expect(std::is_same<typename deref_type<std::shared_ptr<int>>::type, int>{});
+    static_expect(std::is_same<typename deref_type<boost::shared_ptr<int>>::type, int>{});
+    static_expect(std::is_same<typename deref_type<std::weak_ptr<int>>::type, int>{});
 };
 
 test decay_types = [] {
