@@ -40,30 +40,27 @@ struct xml_parser_stub : ixml_parser {
     }
 };
 
-template<typename... Ts>
+template<class...>
 struct xml_list { };
 
-template<class TIf, typename TImpl>
+template<class... TImpl>
 class inject_from_xml {
 public:
-    template<class TInjector>
-    auto operator()(const TInjector& injector) const {
+    template<class TInjector, class T>
+    auto operator()(const TInjector& injector, const T&) const {
         auto parser = injector.template create<std::unique_ptr<ixml_parser>>();
-        auto parsed = parser->parse(typeid(TIf).name());
-        return create_impl(injector, parsed, TImpl{});
+        auto parsed = parser->parse(typeid(typename T::expected).name());
+        return create_impl(injector, parsed, xml_list<TImpl...>{});
     }
 
 private:
-    template<class TInjector, typename T, typename... Ts>
+    template<class TInjector, class T, class... Ts>
     std::shared_ptr<interface> create_impl(const TInjector& injector
                                          , const std::string& parsed
                                          , const xml_list<T, Ts...>&) const {
-        auto impl = typeid(T).name();
-        if (impl == parsed) {
-            return injector.template create<std::shared_ptr<T>>();
-        }
-
-        return create_impl(injector, parsed, xml_list<Ts...>{});
+        return typeid(T).name() == parsed ?
+            injector.template create<std::shared_ptr<T>>() :
+            create_impl(injector, parsed, xml_list<Ts...>{});
     }
 
     template<class TInjector>
@@ -74,8 +71,8 @@ private:
     }
 };
 
-template<class TIf, class... TImpl>
-struct xml : inject_from_xml<TIf, xml_list<TImpl...>> { };
+template<class... TImpl>
+struct xml : inject_from_xml<TImpl...> { };
 //->
 
 class module {
@@ -91,7 +88,7 @@ class xml_module {
 public:
     auto configure() const {
         return di::make_injector(
-            di::bind<interface>().to(xml<interface, implementation1, implementation2>())
+            di::bind<interface>().to(xml<implementation1, implementation2>())
         );
     }
 };

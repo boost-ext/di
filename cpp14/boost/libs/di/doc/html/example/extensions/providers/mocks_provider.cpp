@@ -128,7 +128,9 @@ public:
 
 template<class TInjector, class R, class T, class... TArgs>
 expectations& expect(TInjector&, R(T::*)(TArgs...)) {
-    TInjector::config::get_expectations().add(std::type_index(typeid(T)), []{ throw not_implemented{}; return nullptr; });
+    TInjector::config::get_expectations().add(
+        std::type_index(typeid(T)), []{ throw not_implemented{}; return nullptr; }
+    );
     return TInjector::config::get_expectations();
 }
 
