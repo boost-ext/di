@@ -144,7 +144,7 @@ struct function_traits<R(T::*)(TArgs...) const> {
 template<class T>
 using function_traits_t = typename function_traits<T>::args;
 
-BOOST_DI_HAS_METHOD(is_callable, operator());
+BOOST_DI_HAS_METHOD(is_callable_with, operator());
 
 }}}} // boost::di::v1::aux
 

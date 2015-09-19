@@ -498,6 +498,20 @@ test scopes_injector_lambda_injector = [] {
     expect(s == injector.create<int>());
 };
 
+test bind_function_to_callable = [] {
+    struct functions {
+        BOOST_DI_INJECT(functions, const std::function<int(int)>& f) {
+            expect(f(42) == 42);
+        }
+    };
+
+    auto injector = di::make_injector(
+        di::bind<std::function<int(int)>>().to([](const auto&){ return [](int i){ return i;}; })
+    );
+
+    injector.create<functions>();
+};
+
 #if defined(__cpp_variable_templates)
     test bind_mix = [] {
         constexpr auto i = 42;

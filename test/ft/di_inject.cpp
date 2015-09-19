@@ -34,7 +34,7 @@ struct impl1 : i1 { void dummy1() override { } };
 
 template<class T>
 struct function : std::function<T> {
-    template<class U, BOOST_DI_REQUIRES(di::aux::is_callable<U>::value) = 0>
+    template<class U, BOOST_DI_REQUIRES(di::aux::is_callable_with<U>::value) = 0>
     function(const U& f)
         : std::function<T>(f)
     { }

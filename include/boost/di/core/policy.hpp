@@ -43,7 +43,7 @@ class policy {
     }
 
     template<class TArg, class TDependency, class TPolicy, class TInitialization, class... TCtor
-           , BOOST_DI_REQUIRES(!aux::is_callable<TPolicy, TArg, TDependency&, TCtor...>::value) = 0>
+           , BOOST_DI_REQUIRES(!aux::is_callable_with<TPolicy, TArg, TDependency&, TCtor...>::value) = 0>
     static void call_impl_args(const TPolicy& policy
                              , TDependency&
                              , const aux::pair<TInitialization, aux::type_list<TCtor...>>&) noexcept {
@@ -51,7 +51,7 @@ class policy {
     }
 
     template<class TArg, class TDependency, class TPolicy, class TInitialization, class... TCtor
-           , BOOST_DI_REQUIRES(aux::is_callable<TPolicy, TArg, TDependency&, TCtor...>::value) = 0>
+           , BOOST_DI_REQUIRES(aux::is_callable_with<TPolicy, TArg, TDependency&, TCtor...>::value) = 0>
     static void call_impl_args(const TPolicy& policy
                              , TDependency& dependency
                              , const aux::pair<TInitialization, aux::type_list<TCtor...>>&) noexcept {
@@ -63,13 +63,13 @@ class policy {
 
     template<class TArg, class TPolicy, class TDependency, class TInitialization, class... TCtor>
     struct try_call_impl<TArg, TPolicy, TDependency, aux::pair<TInitialization, aux::type_list<TCtor...>>
-                       , BOOST_DI_REQUIRES(!aux::is_callable<TPolicy, TArg, TDependency, TCtor...>::value)>
+                       , BOOST_DI_REQUIRES(!aux::is_callable_with<TPolicy, TArg, TDependency, TCtor...>::value)>
         : allow_void<decltype((std::declval<TPolicy>())(std::declval<TArg>()))>
     { };
 
     template<class TArg, class TPolicy, class TDependency, class TInitialization, class... TCtor>
     struct try_call_impl<TArg, TPolicy, TDependency, aux::pair<TInitialization, aux::type_list<TCtor...>>
-                       , BOOST_DI_REQUIRES(aux::is_callable<TPolicy, TArg, TDependency, TCtor...>::value)>
+                       , BOOST_DI_REQUIRES(aux::is_callable_with<TPolicy, TArg, TDependency, TCtor...>::value)>
         : allow_void<decltype((std::declval<TPolicy>())(std::declval<TArg>(), std::declval<TDependency>(), aux::type<TCtor>{}...))>
     { };
 
