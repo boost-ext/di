@@ -55,11 +55,11 @@ class no_implicit_conversions : public T {
 BOOST_DI_HAS_TYPE(has_result_type, result_type);
 
 template<class TGiven, class TProvider, class... Ts>
-using is_call = std::integral_constant<bool,
+struct is_call : std::integral_constant<bool,
     aux::is_callable_with<TGiven, no_implicit_conversions<
         aux::remove_specifiers_t<decltype(std::declval<TProvider>().injector_)>
     >, Ts...>::value && !has_result_type<TGiven>::value
->;
+> { };
 
 } // detail
 

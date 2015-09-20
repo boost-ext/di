@@ -131,6 +131,7 @@ namespace std {
     template<class, class> class vector;
     template<class, class> class list;
     template<class, class, class> class set;
+    template<class> class move_iterator;
 #ifdef _LIBCPP_VERSION
 _LIBCPP_END_NAMESPACE_STD
 #else
@@ -138,7 +139,6 @@ _LIBCPP_END_NAMESPACE_STD
 #endif
 namespace std {
     template<class> class initializer_list;
-    template<class> class move_iterator;
 }
 namespace boost {
     template<class> class shared_ptr;
@@ -936,11 +936,11 @@ class no_implicit_conversions : public T {
 };
 template<class, class = void> struct has_result_type : std::false_type { }; template<class T> struct has_result_type<T, typename aux::void_t<typename T::result_type>::type> : std::true_type { };
 template<class TGiven, class TProvider, class... Ts>
-using is_call = std::integral_constant<bool,
+struct is_call : std::integral_constant<bool,
     aux::is_callable_with<TGiven, no_implicit_conversions<
         aux::remove_specifiers_t<decltype(std::declval<TProvider>().injector_)>
     >, Ts...>::value && !has_result_type<TGiven>::value
->;
+> { };
 }
 class external {
 public:
