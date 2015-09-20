@@ -16,13 +16,6 @@ $example_begin example/extensions/bindings/constructor_bindings.cpp$
 $example_end$
 [endsect]
 
-[section Multi Bindings]
-$example_begin example/extensions/bindings/multi_bindings.cpp$
-[import ../example/extensions/bindings/multi_bindings.cpp]
-[multi_bindings]
-$example_end$
-[endsect]
-
 [section Assisted Injection]
 $example_begin example/extensions/injections/assisted_injection.cpp$
 [import ../example/extensions/injections/assisted_injection.cpp]
