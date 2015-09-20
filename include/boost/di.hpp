@@ -131,6 +131,7 @@ namespace std {
     template<class, class> class vector;
     template<class, class> class list;
     template<class, class, class> class set;
+    template<class> class move_iterator;
 #ifdef _LIBCPP_VERSION
 _LIBCPP_END_NAMESPACE_STD
 #else
@@ -138,7 +139,6 @@ _LIBCPP_END_NAMESPACE_STD
 #endif
 namespace std {
     template<class> class initializer_list;
-    template<class> class move_iterator;
 }
 namespace boost {
     template<class> class shared_ptr;
