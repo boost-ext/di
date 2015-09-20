@@ -16,6 +16,7 @@
 #include <deque>
 #include <set>
 #include <unordered_set>
+#include <initializer_list>
 #include "boost/di.hpp"
 
 namespace di = boost::di;
@@ -694,3 +695,4 @@ test bind_forward_decl = [] {
 };
 
 #endif
+

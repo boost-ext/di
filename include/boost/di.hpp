@@ -128,6 +128,9 @@ namespace std {
     template<class> class weak_ptr;
     template<class, class> class unique_ptr;
     template<class> struct char_traits;
+    template<class, class> class vector;
+    template<class, class> class list;
+    template<class, class, class> class set;
 #ifdef _LIBCPP_VERSION
 _LIBCPP_END_NAMESPACE_STD
 #else
@@ -135,11 +138,7 @@ _LIBCPP_END_NAMESPACE_STD
 #endif
 namespace std {
     template<class> class initializer_list;
-    template<class, class> class vector;
-    template<class, class> class list;
-    template<class, class, class> class set;
     template<class> class move_iterator;
-    template<class T> move_iterator<T> make_move_iterator(T);
 }
 namespace boost {
     template<class> class shared_ptr;
@@ -433,11 +432,11 @@ public:
         struct provider {
             auto get(const type_traits::stack&) const {
                 return T(
-                    std::make_move_iterator(array)
-                  , std::make_move_iterator(array + sizeof...(Ts))
+                    std::move_iterator<TArray*>(array)
+                  , std::move_iterator<TArray*>(array + sizeof...(Ts))
                 );
             }
-            TArray* array;
+            TArray* array = nullptr;
         };
         return scope_.template create<T>(provider{array});
     }

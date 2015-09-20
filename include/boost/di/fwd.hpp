@@ -16,6 +16,9 @@ namespace std {
     template<class> class weak_ptr;
     template<class, class> class unique_ptr;
     template<class> struct char_traits;
+    template<class, class> class vector;
+    template<class, class> class list;
+    template<class, class, class> class set;
 #ifdef _LIBCPP_VERSION // __pph__
 _LIBCPP_END_NAMESPACE_STD
 #else // __pph__
@@ -24,11 +27,7 @@ _LIBCPP_END_NAMESPACE_STD
 
 namespace std {
     template<class> class initializer_list;
-    template<class, class> class vector;
-    template<class, class> class list;
-    template<class, class, class> class set;
     template<class> class move_iterator;
-    template<class T> move_iterator<T> make_move_iterator(T);
 } // std
 
 namespace boost {

@@ -97,21 +97,14 @@ public:
         };
 
         struct provider {
-/*            auto get(const type_traits::heap&) const {*/
-                //return new T(
-                    //std::make_move_iterator(array)
-                  //, std::make_move_iterator(array + sizeof...(Ts))
-                //);
-            /*}*/
-
             auto get(const type_traits::stack&) const {
                 return T(
-                    std::make_move_iterator(array)
-                  , std::make_move_iterator(array + sizeof...(Ts))
+                    std::move_iterator<TArray*>(array)
+                  , std::move_iterator<TArray*>(array + sizeof...(Ts))
                 );
             }
 
-            TArray* array;
+            TArray* array = nullptr;
         };
 
         return scope_.template create<T>(provider{array});
