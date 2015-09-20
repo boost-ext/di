@@ -8,6 +8,7 @@
 #define BOOST_DI_CORE_MULTI_BINDINGS_HPP
 
 #include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
 #include "boost/di/fwd.hpp"
 
@@ -97,17 +98,20 @@ public:
         };
 
         struct provider {
-            auto get(const type_traits::stack&) const {
-                return T(
-                    std::move_iterator<TArray*>(array)
-                  , std::move_iterator<TArray*>(array + sizeof...(Ts))
+            auto get(const type_traits::stack& memory) const {
+                return TInjector::config::provider(injector_).template get<T, T>(
+                    type_traits::direct{}
+                  , memory
+                  , std::move_iterator<TArray*>(array_)
+                  , std::move_iterator<TArray*>(array_ + sizeof...(Ts))
                 );
             }
 
-            TArray* array = nullptr;
+            const TInjector& injector_;
+            TArray* array_ = nullptr;
         };
 
-        return scope_.template create<T>(provider{array});
+        return scope_.template create<T>(provider{injector, array});
     }
 
 private:
