@@ -86,10 +86,10 @@ class multi_bindings {
 public:
     template<class TInjector, class TArg>
     di::aux::remove_specifiers_t<typename TArg::type>
-        //auto
     operator()(const TInjector& injector, const TArg&) {
         using T = di::aux::remove_specifiers_t<typename TArg::type>;
         using TArray = typename get<T>::type;
+
         TArray array[sizeof...(Ts)] = {
             static_cast<t_traits_t_<TArray, Ts>>(
                 static_cast<const di::core::injector__<TInjector>&>(injector).template
