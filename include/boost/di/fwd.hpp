@@ -19,7 +19,6 @@ namespace std {
     template<class, class> class vector;
     template<class, class> class list;
     template<class, class, class> class set;
-    template<class> class move_iterator;
 #ifdef _LIBCPP_VERSION // __pph__
 _LIBCPP_END_NAMESPACE_STD
 #else // __pph__
@@ -28,6 +27,7 @@ _LIBCPP_END_NAMESPACE_STD
 
 namespace std {
     template<class> class initializer_list;
+    template<class> class move_iterator;
 } // std
 
 namespace boost {

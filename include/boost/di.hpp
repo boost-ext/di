@@ -131,7 +131,6 @@ namespace std {
     template<class, class> class vector;
     template<class, class> class list;
     template<class, class, class> class set;
-    template<class> class move_iterator;
 #ifdef _LIBCPP_VERSION
 _LIBCPP_END_NAMESPACE_STD
 #else
@@ -139,6 +138,7 @@ _LIBCPP_END_NAMESPACE_STD
 #endif
 namespace std {
     template<class> class initializer_list;
+    template<class> class move_iterator;
 }
 namespace boost {
     template<class> class shared_ptr;
@@ -511,6 +511,19 @@ struct get<std::set<TKey, TCompare, TAllocator>> {
 };
 template<class TScope, class TExpected, class TGiven, class... Ts>
 class multi_bindings {
+    template<class TInjector, class TArray, class T>
+    struct provider {
+        auto get(const type_traits::stack& memory) const {
+            return TInjector::config::provider(injector_).template get<T, T>(
+                type_traits::direct{}
+              , memory
+              , std::move_iterator<TArray*>(array_)
+              , std::move_iterator<TArray*>(array_ + sizeof...(Ts))
+            );
+        }
+        const TInjector& injector_;
+        TArray* array_ = nullptr;
+    };
 public:
     template<class TInjector, class TArg>
     di::aux::remove_specifiers_t<typename TArg::type>
@@ -523,19 +536,7 @@ public:
                     create_successful_impl(di::aux::type<t_traits_t<TArray, Ts>>{})
             )...
         };
-        struct provider {
-            auto get(const type_traits::stack& memory) const {
-                return TInjector::config::provider(injector_).template get<T, T>(
-                    type_traits::direct{}
-                  , memory
-                  , std::move_iterator<TArray*>(array_)
-                  , std::move_iterator<TArray*>(array_ + sizeof...(Ts))
-                );
-            }
-            const TInjector& injector_;
-            TArray* array_ = nullptr;
-        };
-        return scope_.template create<T>(provider{injector, array});
+        return scope_.template create<T>(provider<TInjector, TArray, T>{injector, array});
     }
 private:
     typename TScope::template scope<TExpected, TGiven> scope_;
