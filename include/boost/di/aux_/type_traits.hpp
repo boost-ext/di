@@ -100,6 +100,21 @@ struct deref_type<std::weak_ptr<T>> {
     using type = remove_specifiers_t<typename deref_type<T>::type>;
 };
 
+template<class T, class TAllocator>
+struct deref_type<std::vector<T, TAllocator>> {
+    using type = remove_specifiers_t<typename deref_type<T>::type>*[];
+};
+
+//template<class T, class TAllocator>
+//struct deref_type<std::list<T, TAllocator>> {
+    //using type = remove_specifiers_t<typename deref_type<T>::type>*[];
+//};
+
+template<class TKey, class TCompare, class TAllocator>
+struct deref_type<std::set<TKey, TCompare, TAllocator>> {
+    using type = remove_specifiers_t<typename deref_type<TKey>::type>*[];
+};
+
 template<class T>
 using decay_t = typename deref_type<remove_specifiers_t<T>>::type;
 
@@ -145,6 +160,12 @@ template<class T>
 using function_traits_t = typename function_traits<T>::args;
 
 BOOST_DI_HAS_METHOD(is_callable_with, operator());
+
+template<class>
+struct is_array : std::false_type { };
+
+template<class T>
+struct is_array<T[]> : std::true_type { };
 
 }}}} // boost::di::v1::aux
 

@@ -7,6 +7,15 @@
 #include <memory>
 #include <string>
 #include <functional>
+#include <string>
+#include <vector>
+#include <list>
+#include <queue>
+#include <stack>
+#include <forward_list>
+#include <deque>
+#include <set>
+#include <unordered_set>
 #include "boost/di.hpp"
 
 namespace di = boost::di;
@@ -539,3 +548,149 @@ test bind_function_to_callable = [] {
     };
 #endif
 
+#if 0
+test multi_bindings_inject_named = [] {
+    struct c {
+        BOOST_DI_INJECT(c, (named = a) const std::vector<std::shared_ptr<i1>>& v1
+                         , (named = b) std::vector<std::unique_ptr<i1>> v2) {
+            expect(v1.size() == 2);
+            expect(dynamic_cast<impl1*>(v1[0].get()));
+            expect(dynamic_cast<impl1_2*>(v1[1].get()));
+
+            expect(v2.size() == 1);
+            expect(dynamic_cast<impl1*>(v2[0].get()));
+        }
+    };
+
+    auto injector = di::make_injector(
+        di::bind<i1*[]>().to<impl1, di::named<decltype(a)>>()
+      , di::bind<i1*[]>().named(a).to<i1, di::named<class Impl2>>()
+      , di::bind<i1*[]>().named(b).to<impl1>()
+      , di::bind<i1>().to<impl1>()
+      , di::bind<i1>().to<impl1_2>().named<class Impl2>()
+      , di::bind<i1>().to<impl1_2>().named(a)
+    );
+
+    injector.create<c>();
+};
+
+test multi_bindings_containers = [] {
+    auto injector = di::make_injector(
+        di::bind<int*[]>().to<int, di::named<class Int42>>()
+      , di::bind<int>().to(11)
+      , di::bind<int>().to(42).named<class Int42>()
+      , di::bind<int>().to(87).named<class Int42>() [di::override]
+    );
+
+    auto v = injector.create<std::vector<int>>();
+    expect(v.size() == 2);
+    expect(v[0] == 11);
+    expect(v[1] == 87);
+    //expect(injector.create<std::list<int>>().size() == 2);
+    //expect(!injector.create<std::forward_list<int>>().empty());
+    //expect(injector.create<std::stack<int>>().size() == 2);
+    //expect(injector.create<std::queue<int>>().size() == 2);
+    //expect(injector.create<std::priority_queue<int>>().size() == 2);
+    //expect(injector.create<std::deque<int>>().size() == 2);
+    expect(injector.create<std::set<int>>().size() == 2);
+    //expect(injector.create<std::unordered_set<int>>().size() == 2);
+};
+
+test multi_bindings_ctor_with_exposed_module = [] {
+    struct c {
+        c(std::vector<std::unique_ptr<i1>> v) {
+            expect(v.size() == 5);
+            expect(dynamic_cast<impl1*>(v[0].get()));
+            expect(dynamic_cast<impl1_2*>(v[1].get()));
+            expect(dynamic_cast<impl1_2*>(v[2].get()));
+            expect(dynamic_cast<impl1*>(v[3].get()));
+            expect(dynamic_cast<impl1_int*>(v[4].get()));
+        }
+    };
+
+    di::injector<i1> module = di::make_injector(
+        di::bind<i1>().to<impl1>()
+    );
+
+    di::injector<i1> module2 = di::make_injector(
+        di::bind<i1>().to<impl1_int>()
+    );
+
+    auto injector = di::make_injector(
+        di::bind<i1*[]>().to<impl1, impl1_2, impl1_2, i1/*via module*/, di::named<class ExposedI1>>()
+      , module
+      , di::bind<i1>().named<class ExposedI1>().to(module2)
+    );
+
+    injector.create<c>();
+};
+
+test multi_bindings_share_object_between_list_and_parameter = [] {
+    struct c {
+        c(std::vector<std::shared_ptr<i1>> v, std::shared_ptr<i1> i) {
+            expect(v.size() == 2);
+            expect(dynamic_cast<impl1*>(v[0].get()));
+            expect(dynamic_cast<impl1_2*>(v[1].get()));
+            expect(i == v[0]);
+        }
+    };
+
+    auto injector = di::make_injector(
+        di::bind<i1*[]>().to<i1, di::named<class Impl1_2>>()
+      , di::bind<i1>().to<impl1>().in(di::singleton) /*deduced as singleton as well*/
+      , di::bind<i1>().to<impl1_2>().named<class Impl1_2>()
+    );
+
+    injector.create<c>();
+};
+
+test multi_bindings_template_type = [] {
+    //di::bind<di::_*[]>().to<int>()
+};
+
+test multi_bindings_with_scope = [] {
+   //struct c {
+        //c(std::shared_ptr<std::vector<std::shared_ptr<i1>>> v1
+        //, std::shared_ptr<std::vector<std::shared_ptr<i1>>> v2) {
+        ////, std::vector<std::shared_ptr<i1>>& v3) {
+            //expect(v1 == v2);
+            ////expect(*v2 == v3);
+        //}
+    //};
+
+    //auto injector = di::make_injector(
+        //di::bind<i1*[]>().to<impl1>()
+    //);
+
+    //injector.create<c>();
+};
+
+test multi_bindings_with_initializer_list = [] {
+    auto injector = di::make_injector(
+        di::bind<int*[]>().to({1, 2, 3, 4})
+    );
+
+    auto v = injector.create<std::vector<int>>();
+    expect(v.size() == 4);
+    expect(v[0] == 1);
+    expect(v[1] == 2);
+    expect(v[2] == 3);
+    expect(v[3] == 4);
+
+    //expect(injector.create<std::list<int>>().size() == 4);
+    //expect(!injector.create<std::forward_list<int>>().empty());
+    //expect(injector.create<std::stack<int>>().size() == 4);
+    //expect(injector.create<std::queue<int>>().size() == 4);
+    ////expect(injector.create<std::priority_queue<int>>().size() == 4);
+    //expect(injector.create<std::deque<int>>().size() == 4);
+    expect(injector.create<std::set<int>>().size() == 4);
+    //expect(injector.create<std::unordered_set<int>>().size() == 4);
+};
+
+test bind_forward_decl = [] {
+    //di::make_injector(
+        //di::bind<class InterfaceFwd>().to<class ImplementationFwd>()
+    //);
+};
+
+#endif

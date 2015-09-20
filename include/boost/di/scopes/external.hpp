@@ -21,7 +21,7 @@ template<class T>
 struct callable_base : callable_base_impl, std::conditional_t<std::is_class<T>::value, T, aux::none_type> { };
 
 template<typename T>
-std::false_type is_callable_impl(T*, aux::non_type<void (callable_base_impl::*)(...), &T::operator()>* = 0);
+std::false_type is_callable_impl(T*, aux::non_type<void(callable_base_impl::*)(...), &T::operator()>* = 0);
 std::true_type is_callable_impl(...);
 
 template<class T>
@@ -104,6 +104,26 @@ public:
         }
 
         std::shared_ptr<TGiven> object_;
+    };
+
+    template<class TExpected, class TGiven>
+    struct scope<TExpected, std::initializer_list<TGiven>> {
+        template<class>
+        using is_referable = std::false_type;
+
+        explicit scope(const std::initializer_list<TGiven>& object)
+            : object_(object)
+        { }
+
+        template<class, class TProvider>
+        static std::initializer_list<TGiven> try_create(const TProvider&);
+
+        template<class, class TProvider>
+        auto create(const TProvider&) const noexcept {
+            return wrappers::unique<std::initializer_list<TGiven>>{object_};
+        }
+
+        std::initializer_list<TGiven> object_;
     };
 
     template<class TExpected, class TGiven>

@@ -8,6 +8,7 @@
 #define BOOST_DI_CORE_DEPENDENCY_HPP
 
 #include "boost/di/aux_/utility.hpp"
+#include "boost/di/core/multi_bindings.hpp"
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/scopes/deduce.hpp"
@@ -107,6 +108,18 @@ public:
     { }
 
     template<class T, BOOST_DI_REQUIRES(std::is_same<TName, no_name>::value && !std::is_same<T, no_name>::value) = 0>
+    auto named() const noexcept {
+        return dependency<
+            TScope
+          , TExpected
+          , TGiven
+          , T
+          , TPriority
+          , TBase
+        >{*this};
+    }
+
+    template<class T, BOOST_DI_REQUIRES(std::is_same<TName, no_name>::value && !std::is_same<T, no_name>::value) = 0>
     auto named(const T&) const noexcept {
         return dependency<
             TScope
@@ -130,7 +143,7 @@ public:
         >{};
     }
 
-    template<class T, BOOST_DI_REQUIRES_MSG(typename concepts::boundable__<TExpected, T>::type) = 0>
+    template<class T, BOOST_DI_REQUIRES(aux::always<T>::value && !aux::is_array<TExpected>::value) = 0, BOOST_DI_REQUIRES_MSG(typename concepts::boundable__<TExpected, T>::type) = 0>
     auto to() const noexcept {
         return dependency<
             TScope
@@ -140,6 +153,11 @@ public:
           , TPriority
           , TBase
         >{};
+    }
+
+    template<class... Ts, BOOST_DI_REQUIRES((sizeof...(Ts) > 0) && aux::is_array<TExpected>::value) = 0>
+    auto to() const noexcept {
+        return to(multi_bindings<TScope, TExpected, TGiven, Ts...>{});
     }
 
     template<class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value || std::is_same<_, TExpected>::value) = 0>
@@ -174,6 +192,19 @@ public:
             scopes::exposed<TScope>
           , TExpected
           , T
+          , TName
+          , TPriority
+          , TBase
+        >;
+        return dependency{object};
+    }
+
+    template<class T>
+    auto to(std::initializer_list<T>&& object) const noexcept {
+        using dependency = dependency<
+            scopes::external
+          , TExpected
+          , std::initializer_list<T>
           , TName
           , TPriority
           , TBase

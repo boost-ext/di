@@ -133,6 +133,9 @@ auto boundable_impl(I&&, T&&) ->
         >
     >;
 
+template<class I, class T> // array[]
+auto boundable_impl(I[], T&&) -> std::true_type;
+
 template<class... TDeps> // bindings
 auto boundable_impl(aux::type_list<TDeps...>&&) -> get_bindings_error<TDeps...>;
 
