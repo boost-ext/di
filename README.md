@@ -17,8 +17,7 @@ Boost.DI: C++ Dependency Injection
 **Dependency Injection (DI)** involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state.
 It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.
 
-[![Dependency Injection](http://41.media.tumblr.com/c5b2e9096e2b877c856ef549ad211ac0/tumblr_nnzn556v7F1qc0howo5_1280.png){:height="36px" width="36px"}](http://www.youtube.com/watch?v=IKD2-MAkXyQ) |
---- |
+<a href="http://www.youtube.com/watch?v=IKD2-MAkXyQ"><img src="http://41.media.tumblr.com/c5b2e9096e2b877c856ef549ad211ac0/tumblr_nnzn556v7F1qc0howo5_1280.png" align="center" height="100" width="150" ></a>
 
 > **"Let's make some coffee!"**
 <p align="center"><img src="https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker.png" alt="coffee maker"/></p>
