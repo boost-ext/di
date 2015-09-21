@@ -111,6 +111,21 @@ using get_any_of_error =
       , any_of<Ts...>
     >;
 
+template<bool, class...>
+struct is_related {
+    static constexpr auto value = true; // allows incomplete types
+};
+
+template<class I, class T>
+struct is_related<true, I, T> {
+    static constexpr auto value =
+        std::is_base_of<I, T>::value || (
+            std::is_same<_, I>::value || (
+                std::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value
+            )
+        );
+};
+
 auto boundable_impl(any_of<>&&) -> std::true_type;
 
 template<class T, class... Ts> // expected
@@ -126,8 +141,8 @@ auto boundable_impl(I&&, T&&) ->
     std::conditional_t<
         !std::is_same<T, aux::remove_specifiers_t<T>>::value // I is already verified
       , typename bind<T>::has_disallowed_specifiers
-      , std::conditional_t<std::is_base_of<I, T>::value ||
-            (std::is_same<_, I>::value || (std::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value))
+      , std::conditional_t<
+            is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value
           , std::true_type
           , typename bind<T>::template is_not_related_to<I>
         >

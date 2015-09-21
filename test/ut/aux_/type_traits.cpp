@@ -196,5 +196,16 @@ test function_traits_parameters_type_const_methods = [] {
     static_expect(std::is_same<type_list<int, const double&>, typename function_traits<decltype(&c2::f3)>::args>{});
 };
 
+class fwd;
+test is_complete_types = [] {
+    struct c;
+    static_expect(!is_complete<c>::value);
+    static_expect(!is_complete<class Fwd>::value);
+    static_expect(!is_complete<fwd>::value);
+    struct complete { };
+    static_expect(is_complete<complete>::value);
+    static_expect(is_complete<int>::value);
+};
+
 }}}} // boost::di::v1::aux
 

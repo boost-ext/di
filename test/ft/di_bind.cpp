@@ -44,6 +44,20 @@ auto a = []{};
 auto b = []{};
 struct name_{ } name;
 
+test forward_decl = [] {
+    di::make_injector(
+        di::bind<class InterfaceFwd>().to<class ImplementationFwd>()
+    );
+
+    di::make_injector(
+        di::bind<class InterfaceFwd>().to<impl1>()
+    );
+
+    di::make_injector(
+        di::bind<i1>().to<class Impl>()
+    );
+};
+
 test named_to = [] {
     constexpr auto i = 42;
     constexpr auto d = 87.0;
@@ -689,10 +703,5 @@ test multi_bindings_with_initializer_list = [] {
     //expect(injector.create<std::unordered_set<int>>().size() == 4);
 };
 
-test bind_forward_decl = [] {
-    //di::make_injector(
-        //di::bind<class InterfaceFwd>().to<class ImplementationFwd>()
-    //);
-};
-
 #endif
+

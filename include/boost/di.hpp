@@ -276,6 +276,11 @@ template<class>
 struct is_array : std::false_type { };
 template<class T>
 struct is_array<T[]> : std::true_type { };
+std::false_type is_complete_impl(...);
+template<class T>
+auto is_complete_impl(T*) -> aux::is_valid_expr<std::integral_constant<int, sizeof(T)>>;
+template<class T>
+using is_complete = decltype(is_complete_impl((aux::remove_specifiers_t<T>*)0));
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
 template<class = aux::type_list<>>
@@ -1956,6 +1961,19 @@ using get_any_of_error =
       , std::true_type
       , any_of<Ts...>
     >;
+template<bool, class...>
+struct is_related {
+    static constexpr auto value = true;
+};
+template<class I, class T>
+struct is_related<true, I, T> {
+    static constexpr auto value =
+        std::is_base_of<I, T>::value || (
+            std::is_same<_, I>::value || (
+                std::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value
+            )
+        );
+};
 auto boundable_impl(any_of<>&&) -> std::true_type;
 template<class T, class... Ts>
 auto boundable_impl(any_of<T, Ts...>&&) ->
@@ -1969,8 +1987,8 @@ auto boundable_impl(I&&, T&&) ->
     std::conditional_t<
         !std::is_same<T, aux::remove_specifiers_t<T>>::value
       , typename bind<T>::has_disallowed_specifiers
-      , std::conditional_t<std::is_base_of<I, T>::value ||
-            (std::is_same<_, I>::value || (std::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value))
+      , std::conditional_t<
+            is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value
           , std::true_type
           , typename bind<T>::template is_not_related_to<I>
         >
