@@ -276,16 +276,26 @@ template<class>
 struct is_array : std::false_type { };
 template<class T>
 struct is_array<T[]> : std::true_type { };
-template<class, class>
-struct is_complete_impl
-    : std::false_type
-{ };
-template<class T>
-struct is_complete_impl<T, decltype(sizeof(T))>
-    : std::true_type
-{ };
-template<class T>
-using is_complete = typename is_complete_impl<T, std::size_t>::type;
+#if defined(_MSC_VER)
+    template<class T>
+    struct is_complete {
+        static T & getT();
+        static char (& pass(T))[2];
+        static char pass(...);
+        static const bool value = sizeof(pass(getT()))==2;
+    };
+#else
+    template<class, class>
+    struct is_complete_impl
+        : std::false_type
+    { };
+    template<class T>
+    struct is_complete_impl<T, decltype(sizeof(T))>
+        : std::true_type
+    { };
+    template<class T>
+    using is_complete = typename is_complete_impl<T, std::size_t>::type;
+#endif
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
 template<class = aux::type_list<>>
@@ -533,12 +543,13 @@ class multi_bindings {
     struct provider {
         template<class TMemory = type_traits::heap>
         auto get(const TMemory& memory = {}) const {
-            return TInjector::config::provider(injector_).template get<typename get_<T>::type, typename get_<T>::type>(
-                type_traits::direct{}
-              , memory
-              , std::move_iterator<TArray*>(array_)
-              , std::move_iterator<TArray*>(array_ + sizeof...(Ts))
-            );
+            return TInjector::config::provider(injector_).template
+                get<typename get_<T>::type, typename get_<T>::type>(
+                    type_traits::direct{}
+                  , memory
+                  , std::move_iterator<TArray*>(array_)
+                  , std::move_iterator<TArray*>(array_ + sizeof...(Ts))
+                );
         }
         const TInjector& injector_;
         TArray* array_ = nullptr;
