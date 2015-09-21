@@ -174,7 +174,7 @@ template<class T>
 std::false_type is_complete_impl(...);
 
 template<class T>
-using is_complete = decltype(is_complete_impl<T>(0));
+struct is_complete : decltype(is_complete_impl<T>(0)) { };
 
 }}}} // boost::di::v1::aux
 

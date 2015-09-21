@@ -203,6 +203,8 @@ test is_complete_types = [] {
     static_expect(!is_complete<class Fwd>::value);
     static_expect(!is_complete<fwd>::value);
     struct complete { };
+    struct i { virtual ~i() = 0; };
+    static_expect(is_complete<i>::value);
     static_expect(is_complete<complete>::value);
     static_expect(is_complete<int>::value);
 };
