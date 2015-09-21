@@ -81,12 +81,24 @@ struct get<std::set<TKey, TCompare, TAllocator>> {
     using type = TKey;
 };
 
+template<class T>
+struct get_ {
+    using type = T;
+};
+
+template<class T>
+struct get_<std::shared_ptr<T>> {
+    using type = T;
+};
+
+
 template<class TScope, class TExpected, class TGiven, class... Ts>
 class multi_bindings {
     template<class TInjector, class TArray, class T>
     struct provider {
-        auto get(const type_traits::stack& memory) const {
-            return TInjector::config::provider(injector_).template get<T, T>(
+        template<class TMemory = type_traits::heap>
+        auto get(const TMemory& memory = {}) const {
+            return TInjector::config::provider(injector_).template get<typename get_<T>::type, typename get_<T>::type>(
                 type_traits::direct{}
               , memory
               , std::move_iterator<TArray*>(array_)
@@ -98,25 +110,32 @@ class multi_bindings {
         TArray* array_ = nullptr;
     };
 
+    template<class T, class TInjector>
+    struct wrapper {
+        operator T() const {
+            using TArray = typename get<T>::type;
+            TArray array[sizeof...(Ts)] = {
+                static_cast<t_traits_t_<TArray, Ts>>(
+                    static_cast<const di::core::injector__<TInjector>&>(injector_).template
+                        create_successful_impl(di::aux::type<t_traits_t<TArray, Ts>>{})
+                )...
+            };
+
+            return scope_.template create<T>(
+                provider<TInjector, TArray, T>{injector_, array}
+            );
+        }
+
+        const TInjector& injector_;
+        typename TScope::template scope<TExpected, typename get_<T>::type>& scope_;
+    };
+
 public:
     template<class TInjector, class TArg>
-    di::aux::remove_specifiers_t<typename TArg::type>
-    operator()(const TInjector& injector, const TArg&) {
-        using T = di::aux::remove_specifiers_t<typename TArg::type>;
-        using TArray = typename get<T>::type;
-
-        TArray array[sizeof...(Ts)] = {
-            static_cast<t_traits_t_<TArray, Ts>>(
-                static_cast<const di::core::injector__<TInjector>&>(injector).template
-                    create_successful_impl(di::aux::type<t_traits_t<TArray, Ts>>{})
-            )...
-        };
-
-        return scope_.template create<T>(provider<TInjector, TArray, T>{injector, array});
+    auto operator()(const TInjector& injector, const TArg&) {
+        typename TScope::template scope<TExpected, typename get_<di::aux::remove_specifiers_t<typename TArg::type>>::type> scope;
+        return wrapper<di::aux::remove_specifiers_t<typename TArg::type>, TInjector>{injector, scope};
     }
-
-private:
-    typename TScope::template scope<TExpected, TGiven> scope_;
 };
 
 }}}} // boost::di::v1::core

@@ -549,8 +549,6 @@ test bind_function_to_callable = [] {
     };
 #endif
 
-#if 0
-
 test multi_bindings_inject_named = [] {
     struct c {
         BOOST_DI_INJECT(c, (named = a) const std::vector<std::shared_ptr<i1>>& v1
@@ -651,20 +649,20 @@ test multi_bindings_template_type = [] {
 };
 
 test multi_bindings_with_scope = [] {
-   //struct c {
-        //c(std::shared_ptr<std::vector<std::shared_ptr<i1>>> v1
-        //, std::shared_ptr<std::vector<std::shared_ptr<i1>>> v2) {
-        ////, std::vector<std::shared_ptr<i1>>& v3) {
-            //expect(v1 == v2);
-            ////expect(*v2 == v3);
-        //}
-    //};
+   struct c {
+        c(std::shared_ptr<std::vector<std::shared_ptr<i1>>> v1
+        , std::shared_ptr<std::vector<std::shared_ptr<i1>>> v2) {
+        //, std::vector<std::shared_ptr<i1>>& v3) {
+            expect(v1 == v2);
+            //expect(*v2 == v3);
+        }
+    };
 
-    //auto injector = di::make_injector(
-        //di::bind<i1*[]>().to<impl1>()
-    //);
+    auto injector = di::make_injector(
+        di::bind<i1*[]>().to<impl1>()
+    );
 
-    //injector.create<c>();
+    injector.create<c>();
 };
 
 test multi_bindings_with_initializer_list = [] {
@@ -695,4 +693,3 @@ test bind_forward_decl = [] {
     //);
 };
 
-#endif
