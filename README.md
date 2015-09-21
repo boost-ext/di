@@ -476,17 +476,17 @@ auto injector = di::make_injector(      |
         in(custom_scope{}).to<impl1>()  |
 );                                      |
 ```
-| Type/Scope | unique | shared | singleton | session | external |
+| Type/Scope | unique | singleton | external |
 |------------|--------|--------|-----------|---------|----------|
-| T | ✔ | - | - | - | ✔ |
-| T& | - | ✔ | ✔ | ✔ | ✔ |
-| const T& | ✔ (temporary) | - | - | - | ✔ |
+| T | ✔ | - | ✔ |
+| T& | - | ✔  | ✔ |
+| const T& | ✔ (temporary) | ✔ | ✔ |
 | T* (transfer ownership) | ✔ | - | - | - | ✔ |
-| const T* | ✔ | - | - | - | ✔ |
-| T&& | ✔ | - | - | - | - |
-| unique\_ptr<T> | ✔ | - | - | - | ✔ |
-| shared\_ptr<T> | ✔ | ✔ | ✔ | ✔ | ✔ |
-| weak\_ptr<T> | - | ✔ | ✔ | ✔ | ✔ |
+| const T* | ✔ | - | ✔ |
+| T&& | ✔ | - | - |
+| unique\_ptr<T> | ✔ |  - | ✔ |
+| shared\_ptr<T> | ✔ | ✔ | ✔ |
+| weak\_ptr<T> | - | ✔ | ✔ |
 
 *
 
