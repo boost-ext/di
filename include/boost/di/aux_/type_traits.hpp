@@ -167,13 +167,18 @@ struct is_array : std::false_type { };
 template<class T>
 struct is_array<T[]> : std::true_type { };
 
-std::false_type is_complete_impl(...);
+template<class, class>
+struct is_complete_impl
+    : std::false_type
+{ };
 
 template<class T>
-auto is_complete_impl(T*) -> aux::is_valid_expr<std::integral_constant<int, sizeof(T)>>;
+struct is_complete_impl<T, decltype(sizeof(T))>
+    : std::true_type
+{ };
 
 template<class T>
-using is_complete = decltype(is_complete_impl((aux::remove_specifiers_t<T>*)0));
+using is_complete = typename is_complete_impl<T, std::size_t>::type;
 
 }}}} // boost::di::v1::aux
 

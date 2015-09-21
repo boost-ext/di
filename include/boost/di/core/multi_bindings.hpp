@@ -98,12 +98,13 @@ class multi_bindings {
     struct provider {
         template<class TMemory = type_traits::heap>
         auto get(const TMemory& memory = {}) const {
-            return TInjector::config::provider(injector_).template get<typename get_<T>::type, typename get_<T>::type>(
-                type_traits::direct{}
-              , memory
-              , std::move_iterator<TArray*>(array_)
-              , std::move_iterator<TArray*>(array_ + sizeof...(Ts))
-            );
+            return TInjector::config::provider(injector_).template
+                get<typename get_<T>::type, typename get_<T>::type>(
+                    type_traits::direct{}
+                  , memory
+                  , std::move_iterator<TArray*>(array_)
+                  , std::move_iterator<TArray*>(array_ + sizeof...(Ts))
+                );
         }
 
         const TInjector& injector_;
