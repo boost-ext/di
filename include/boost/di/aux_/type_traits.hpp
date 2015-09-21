@@ -167,28 +167,14 @@ struct is_array : std::false_type { };
 template<class T>
 struct is_array<T[]> : std::true_type { };
 
-#if defined(_MSC_VER) // __pph__
-    template<class T>
-    struct is_complete {
-        static T& getT();
-        static char (&check(T))[2];
-        static char check(...);
-        static constexpr auto value = sizeof(check(getT())) == 2;
-    };
-#else // __pph__
-    template<class, class>
-    struct is_complete_impl
-        : std::false_type
-    { };
+template<class T, class = decltype(sizeof(T))>
+std::true_type is_complete_impl(int);
 
-    template<class T>
-    struct is_complete_impl<T, decltype(sizeof(T))>
-        : std::true_type
-    { };
+template<class T>
+std::false_type is_complete_impl(...);
 
-    template<class T>
-    using is_complete = typename is_complete_impl<T, std::size_t>::type;
-#endif // __pph__
+template<class T>
+using is_complete = decltype(is_complete_impl<T>(0));
 
 }}}} // boost::di::v1::aux
 
