@@ -281,7 +281,7 @@ std::true_type is_complete_impl(int);
 template<class T>
 std::false_type is_complete_impl(...);
 template<class T>
-using is_complete = decltype(is_complete_impl<T>(0));
+struct is_complete : decltype(is_complete_impl<T>(0)) { };
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
 template<class = aux::type_list<>>
