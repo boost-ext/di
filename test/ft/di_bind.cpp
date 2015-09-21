@@ -549,6 +549,8 @@ test bind_function_to_callable = [] {
     };
 #endif
 
+#if 0
+
 test multi_bindings_inject_named = [] {
     struct c {
         BOOST_DI_INJECT(c, (named = a) const std::vector<std::shared_ptr<i1>>& v1
@@ -693,3 +695,4 @@ test bind_forward_decl = [] {
     //);
 };
 
+#endif
