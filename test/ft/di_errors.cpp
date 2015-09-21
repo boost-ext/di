@@ -84,7 +84,12 @@ auto compail_fail(int id
     }
 
     if (!errors.empty()) {
-        constexpr auto MAX_ERROR_LINES_COUNT = 64;
+        #if defined(_MSC_VER)
+            constexpr auto MAX_ERROR_LINES_COUNT = 128;
+        #else
+            constexpr auto MAX_ERROR_LINES_COUNT = 64;
+        #endif
+
         if (lines >= MAX_ERROR_LINES_COUNT) {
             throw std::runtime_error(command.str() + " | lines < MAX_ERROR_LINES_COUNT");
         }
