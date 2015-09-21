@@ -10,7 +10,7 @@
 #error "Boost.DI requires C++14 support (Clang-3.4+, GCC-5.1+, MSVC-2015+)"
 #else
 #include <type_traits>
-#define BOOST_DI_VERSION 101000
+#define BOOST_DI_VERSION 100000
 #if defined(__clang__)
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]

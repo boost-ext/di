@@ -22,7 +22,7 @@ pph() {
     # BOOST_DI_VERSION % 100 is the patch level
     # BOOST_DI_VERSION / 100 % 1000 is the minor version
     # BOOST_DI_VERSION / 100000 is the major version
-    echo "#define BOOST_DI_VERSION 101000"
+    echo "#define BOOST_DI_VERSION 100000"
     rm -rf tmp && mkdir tmp && cp -r boost tmp && cd tmp && touch type_traits
     find . -iname "*.hpp" | xargs sed -i "s/\(.*\)__pph__/\/\/\/\/\1/"
     tail -n +10 "boost/di/aux_/compiler.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
