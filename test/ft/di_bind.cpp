@@ -4,20 +4,13 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#include <initializer_list> // has to be before, because of bug in clang < 3.7
+#include "boost/di.hpp"
 #include <memory>
 #include <string>
 #include <functional>
-#include <string>
 #include <vector>
-#include <list>
-#include <queue>
-#include <stack>
-#include <forward_list>
-#include <deque>
 #include <set>
-#include <unordered_set>
-#include <initializer_list>
-#include "boost/di.hpp"
 
 namespace di = boost::di;
 
@@ -563,8 +556,7 @@ test bind_function_to_callable = [] {
     };
 #endif
 
-#if 0
-
+#if !defined(_MSC_VER)
 test multi_bindings_inject_named = [] {
     struct c {
         BOOST_DI_INJECT(c, (named = a) const std::vector<std::shared_ptr<i1>>& v1

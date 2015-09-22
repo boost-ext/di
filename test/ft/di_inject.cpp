@@ -562,7 +562,6 @@ test request_value_and_ptr_in_unique = [] {
     };
 #endif
 
-
 #if !defined(_MSC_VER)
 auto type_t = []{};
 auto type_1 = []{};
