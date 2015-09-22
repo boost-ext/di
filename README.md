@@ -17,8 +17,7 @@ Boost.DI: C++ Dependency Injection
 **Dependency Injection (DI)** involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state.
 It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.
 
-[![Dependency Injection](http://img.youtube.com/vi/IKD2-MAkXyQ/0.jpg)](http://www.youtube.com/watch?v=IKD2-MAkXyQ) |
---- |
+<p align="center"><a href="http://www.youtube.com/watch?v=IKD2-MAkXyQ"><img src="http://41.media.tumblr.com/c5b2e9096e2b877c856ef549ad211ac0/tumblr_nnzn556v7F1qc0howo5_1280.png" height="200" width="350" ></a></p>
 
 > **"Let's make some coffee!"**
 <p align="center"><img src="https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker.png" alt="coffee maker"/></p>
@@ -131,7 +130,7 @@ auto injector = di::make_injector();    | assert(0 == injector.create<int>());
 Bind interface to implementation        | Test
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector(      | auto object = injector.create<unique_ptr<i1>>();
-    di::bind<i1, impl1>                 | assert(dynamic_cast<impl1*>(object.get()));
+    di::bind<i1>.to<impl1>()            | assert(dynamic_cast<impl1*>(object.get()));
 );                                      |
 ```
 ```cpp
@@ -139,22 +138,12 @@ Bind different interfaces to one        | Test
 implementation                          |
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector(      | auto object1 = injector.create<shared_ptr<i1>>();
-    di::bind<di::any_of<i1, i2>, impl>  | auto object2 = injector.create<shared_ptr<i2>>();
+    di::bind<i1, i2>.to<impl>()         | auto object2 = injector.create<shared_ptr<i2>>();
 );                                      | assert(dynamic_cast<impl*>(object1.get()));
                                         | assert(dynamic_cast<impl*>(object2.get()));
 ```
 ```cpp
-Bind type to compile time value         | Test
-----------------------------------------|-----------------------------------------
-template<int N> using int_ =            | assert(42 == injector.create<int>());
-    integral_constant<int, N>;          |
-                                        |
-auto injector = di::make_injector(      |
-    di::bind<int, int_<42>>             |
-);                                      |
-```
-```cpp
-Bind type to value (see external scope) | Test
+Bind type to value                      | Test
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector(      | assert(42 == injector.create<int>());
     di::bind<int>.to(42)                |
@@ -164,9 +153,34 @@ auto injector = di::make_injector(      | assert(42 == injector.create<int>());
 Cross platform `bind` (Clang/GCC/MSVC)  | Test
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector(      | auto object = injector.create<unique_ptr<i1>>();
-    di::bind<i1, impl1>() // brackets   | assert(dynamic_cast<impl1*>(object.get()));
+    di::bind<i1>().to<impl>()           | assert(dynamic_cast<impl1*>(object.get()));
     // MSVC 2015 doesnt support variable|
     // templates                        |
+);                                      |
+```
+```cpp
+Advanced binding                        | Test
+----------------------------------------|-----------------------------------------
+auto l = 42l;                           | assert(42 == injector.create<int>());
+auto b = false;                         | assert(injector.create<shared_ptr<i1>>()
+                                        |        ==
+auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>()
+   di::bind<int>.to(0)                  | );
+ , di::bind<int>.to(42) [di::override]  | assert(l == injector.create<long&>());
+ , di::bind<i1>.to(make_shared<impl>()) | assert(&l == &injector.create<long&>());
+ , di::bind<long>.to(l)                 | assert(87 == injector.create<short>());
+ , di::bind<short>.to([]{return 87;})   | {
+ , di::bind<i2>.to(                     | auto object = injector.create<shared_ptr<i2>>();
+     [&](const auto& injector)          | assert(nullptr == object);
+        -> shared_ptr<i2> {             | }
+            if (b) {                    | {
+              return injector.template  | b = true;
+                create<                 | auto object = injector.create<shared_ptr<i2>>();
+                  shared_ptr<impl2>>(); | assert(dynamic_cast<impl2*>(object.get()));
+            }                           | }
+            return nullptr;             |
+     }                                  |
+   )                                    |
 );                                      |
 ```
 
@@ -409,8 +423,8 @@ struct c {                              | auto object1 = injector.create<unique_
 auto i = 42;                            | assert(&i == &object2->i);
                                         | assert(87.0 == object1->d);
 auto injector = di::make_injector(      | assert(87.0 == object2->d);
-    di::bind<i1, impl1>                 |
-  , di::bind<i2, impl2>                 |
+    di::bind<i1>.to<impl1>()            |
+  , di::bind<i2>.to<impl2>()            |
   , di::bind<int>.to(i)                 |
   , di::bind<double>.to(87.0)           |
 );                                      |
@@ -430,15 +444,7 @@ auto injector = di::make_injector(      | assert(87.0 == object2->d);
 Unique scope                            | Test
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector(      | assert(injector.create<shared_ptr<i1>>()
-    di::bind<i1, impl1>.in(di::unique)  |        !=
-);                                      |        injector.create<shared_ptr<i1>>()
-                                        | );
-```
-```cpp
-Shared scope (shared per one thread)    | Test
-----------------------------------------|-----------------------------------------
-auto injector = di::make_injector(      | assert(injector.create<shared_ptr<i1>>()
-    di::bind<i1, impl1>.in(di::shared)  |        ==
+ di::bind<i1>.in(di::unique).to<impl1>()|        !=
 );                                      |        injector.create<shared_ptr<i1>>()
                                         | );
 ```
@@ -446,50 +452,9 @@ auto injector = di::make_injector(      | assert(injector.create<shared_ptr<i1>>
 Singleton scope (shared between threads)| Test
 ----------------------------------------|-----------------------------------------
 auto injector = di::make_injector(      | assert(injector.create<shared_ptr<i1>>()
-   di::bind<i1, impl1>.in(di::singleton)|        ==
-);                                      |        injector.create<shared_ptr<i1>>()
-                                        | );
-```
-```cpp
-Session scope                           | Test
-----------------------------------------|-----------------------------------------
-auto my_session = []{};                 | assert(nullptr == injector.create<shared_ptr<i1>>());
-                                        |
-auto injector = di::make_injector(      | injector.call(di::session_entry(my_session));
-    di::bind<i1, impl1>.in(             |
-        di::session(my_session)         | assert(injector.create<shared_ptr<i1>>()
-    )                                   |        ==
-);                                      |        injector.create<shared_ptr<i1>>()
-                                        | );
-                                        |
-                                        | injector.call(di::session_exit(my_session));
-                                        |
-                                        | assert(nullptr == injector.create<shared_ptr<i1>>());
-```
-```cpp
-External scope                          | Test
-----------------------------------------|-----------------------------------------
-auto l = 42l;                           | assert(42 == injector.create<int>());
-auto b = false;                         | assert(injector.create<shared_ptr<i1>>()
-                                        |        ==
-auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>()
-   di::bind<int>.to(0)                  | );
- , di::bind<int>.to(42) [di::override]  | assert(l == injector.create<long&>());
- , di::bind<i1>.to(make_shared<impl>()) | assert(&l == &injector.create<long&>());
- , di::bind<long>.to(l)                 | assert(87 == injector.create<short>());
- , di::bind<short>.to([]{return 87;})   | {
- , di::bind<i2>.to(                     | auto object = injector.create<shared_ptr<i2>>();
-     [&](const auto& injector)          | assert(nullptr == object);
-        -> shared_ptr<i2> {             | }
-            if (b) {                    | {
-              return injector.template  | b = true;
-                create<                 | auto object = injector.create<shared_ptr<i2>>();
-                  shared_ptr<impl2>>(); | assert(dynamic_cast<impl2*>(object.get()));
-            }                           | }
-            return nullptr;             |
-     }                                  |
-   )                                    |
-);                                      |
+    di::bind<i1>.                       |        ==
+        in(di::singleton).to<impl1>()   |        injector.create<shared_ptr<i1>>()
+);                                      | );
 ```
 ```cpp
 Custom scope                            | Test
@@ -506,20 +471,21 @@ struct custom_scope {                   | assert(injector.create<shared_ptr<i1>>
 };                                      |
                                         |
 auto injector = di::make_injector(      |
-  di::bind<i1, impl1>.in(custom_scope{})|
+    di::bind<i1>.                       |
+        in(custom_scope{}).to<impl1>()  |
 );                                      |
 ```
-| Type/Scope | unique | shared | singleton | session | external |
+| Type/Scope | unique | singleton | external |
 |------------|--------|--------|-----------|---------|----------|
-| T | ✔ | - | - | - | ✔ |
-| T& | - | ✔ | ✔ | ✔ | ✔ |
-| const T& | ✔ (temporary) | - | - | - | ✔ |
+| T | ✔ | - | ✔ |
+| T& | - | ✔  | ✔ |
+| const T& | ✔ (temporary) | ✔ | ✔ |
 | T* (transfer ownership) | ✔ | - | - | - | ✔ |
-| const T* | ✔ | - | - | - | ✔ |
-| T&& | ✔ | - | - | - | - |
-| unique\_ptr<T> | ✔ | - | - | - | ✔ |
-| shared\_ptr<T> | ✔ | ✔ | ✔ | ✔ | ✔ |
-| weak\_ptr<T> | - | ✔ | ✔ | ✔ | ✔ |
+| const T* | ✔ | - | ✔ |
+| T&& | ✔ | - | - |
+| unique\_ptr<T> | ✔ |  - | ✔ |
+| shared\_ptr<T> | ✔ | ✔ | ✔ |
+| weak\_ptr<T> | - | ✔ | ✔ |
 
 *
 
@@ -543,7 +509,7 @@ struct c {                              | auto object = injector.create<unique_p
 struct module1 {                        |
     auto configure() const noexcept {   |
         return di::make_injector(       |
-            di::bind<i1, impl1>         |
+            di::bind<i1>.t<impl1>()     |
           , di::bind<int>.to(42)        |
         );                              |
     }                                   |
@@ -552,7 +518,7 @@ struct module1 {                        |
 struct module2 {                        |
     auto configure() const noexcept {   |
         return di::make_injector(       |
-            di::bind<i2, impl2>         |
+            di::bind<i2>.to<impl2>()    |
         );                              |
     };                                  |
 };                                      |
@@ -585,8 +551,8 @@ struct module {                         |
 di::injector<c> // expose c             |
 module::configure() const noexcept {    |
     return di::make_injector(           |
-        di::bind<i1, impl1>             |
-      , di::bind<i2, impl2>             |
+        di::bind<i1>.to<impl1>()        |
+      , di::bind<i2>.to<impl2>()        |
       , di::bind<int>.to(i)             |
     );                                  |
 }                                       |
@@ -608,8 +574,8 @@ struct module {                         | auto up1 = injector.create<unique_ptr<
 di::injector<i1, i2> // expose i1, i2   |
 module::configure() const noexcept {    |
     return di::make_injector(           |
-        di::bind<i1, impl1>             |
-      , di::bind<i2, impl2>             |
+        di::bind<i1>.to<impl1>()        |
+      , di::bind<i2>.to<impl2>()        |
     );                                  |
 }                                       |
                                         |
@@ -633,7 +599,7 @@ struct c {                              |
                                         |
 di::injector<i1> module =               |
     di::make_injector(                  |
-        di::bind<i1, impl1>             |
+        di::bind<i1>.to<impl1>()        |
     );                                  |
                                         |
 auto injector = di::make_injector(      |
@@ -704,7 +670,7 @@ Define policies configuration           | Test
 ----------------------------------------|-----------------------------------------
 class print_types_info_policy           | // per injector policy
     : public di::config {               | auto injector = di::make_injector<print_types_info_policy>(
-public:                                 |     di::bind<i1, impl1>
+public:                                 |     di::bind<i1>.to<impl1>()
   auto policies() const noexcept {      | );
     return di::make_policies(           |
       [](auto type                      | injector.create<unique_ptr<i1>>();
@@ -722,7 +688,7 @@ public:                                 |     di::bind<i1, impl1>
          using given =                  | // global policy
             typename D::given;          | #define BOOST_DI_CFG my_policy
          using name =                   | auto injector = di::make_injector(
-            typename D::name;           |     di::bind<i1, impl1>
+            typename D::name;           |     di::bind<i1>.to<impl1>()
          auto ctor_s = sizeof...(ctor); | );
                                         |
          cout << ctor_s                 | injector.create<unique_ptr<i1>>();
@@ -823,7 +789,7 @@ Create bound interface                  | Asm x86-64 (same as `make_unique`)
 ----------------------------------------|-----------------------------------------
 int main() {                            | push   %rax
     auto injector = di::make_injector(  | mov    $0x8,%edi
-        di::bind<i1, impl1>             | callq  0x4007b0 <_Znwm@plt>
+        di::bind<i1>.to<impl1>()        | callq  0x4007b0 <_Znwm@plt>
     );                                  | movq   $0x400a30,(%rax)
                                         | mov    $0x8,%esi
     auto ptr = injector.create<         | mov    %rax,%rdi
@@ -839,7 +805,7 @@ Create bound interface via module       | Asm x86-64 (same as `make_unique`)
 struct module {                         | push   %rax
 	auto configure() const noexcept {   | mov    $0x8,%edi
 		return di::make_injector(       | callq  0x4007b0 <_Znwm@plt>
-			di::bind<i1, impl1>         | movq   $0x400a10,(%rax)
+			di::bind<i1>.to<impl1>()    | movq   $0x400a10,(%rax)
 		);                              | mov    $0x8,%esi
 	}                                   | mov    %rax,%rdi
 };                                      | callq  0x400960 <_ZdlPvm>
@@ -863,7 +829,7 @@ module                                  | cost = type erasure
 struct module {                         | push   %rbx
 	di::injector<i1> configure() const {| mov    0x2007e9(%rip),%al
 		return di::make_injector(       | test   %al,%al
-			di::bind<i1, impl1>         | jne    0x4009be <main+46>
+			di::bind<i1>.to<impl1>()    | jne    0x4009be <main+46>
 		);                              | mov    $0x601180,%edi
 	}                                   | callq  0x4007e0 <__cxa_guard_acquire@plt>
 };                                      | test   %eax,%eax
@@ -945,14 +911,14 @@ injector.create<i*>();                  |     injector.create<i*>();
                                         |     T create() const {
                                         |       ^
                                         | error: inline function 'boost::di::abstract_type<i>::is_not_bound::error' is not defined
-                                        |     error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?")
+                                        |     error(_ = "type not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?")
                                         |     ^
                                         | note: used here
                                         |     constraint_not_satisfied{}.error();
                                         |
                                         |[gcc]----------------------------------------
                                         | error: inline function ‘constexpr T* boost::di::abstract_type<T>::is_not_bound::error(boost::di::_) const [with T = i]’ used but never defined
-                                        |      error(_ = "type not bound, did you forget to add: 'di::bind<interface, implementation>'?")
+                                        |      error(_ = "type not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?")
                                         |      ^
                                         | error: call to ‘boost::di::core::injector<boost::di::config>::create<i*, 0>’ declared with attribute error: creatable constraint not satisfied
                                         |      injector.create<i*>();
