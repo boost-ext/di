@@ -65,8 +65,8 @@ public:
     }
 
 private:
-    static bool& get_session() {
-        static bool is_in_session = false;
+    static auto& get_session() {
+        static auto is_in_session = false;
         return is_in_session;
     }
 };
