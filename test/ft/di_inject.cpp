@@ -14,6 +14,7 @@
 #if __has_include(<boost/shared_ptr.hpp>)
     #include <boost/shared_ptr.hpp>
 #endif
+#include "common/common.hpp"
 #include "boost/di.hpp"
 
 namespace di = boost::di;
@@ -31,14 +32,6 @@ struct get_type<di::aux::type<T>> {
 
 struct i1 { virtual ~i1() noexcept = default; virtual void dummy1() = 0; };
 struct impl1 : i1 { void dummy1() override { } };
-
-template<class T>
-struct function : std::function<T> {
-    template<class U, BOOST_DI_REQUIRES(di::aux::is_callable_with<U>::value) = 0>
-    function(const U& f)
-        : std::function<T>(f)
-    { }
-};
 
 test inject_ctor_limit_size = [] {
     struct c {

@@ -8,6 +8,7 @@
 #include <string>
 #include <functional>
 #include "boost/di/scopes/external.hpp"
+#include "common/common.hpp"
 #include "common/fakes/fake_provider.hpp"
 #include "common/fakes/fake_injector.hpp"
 
@@ -99,16 +100,14 @@ test from_function_expr = [] {
     }
 };
 
-#if !defined(_MSC_VER)
-    test from_function_expr_with_expected_function_expr = [] {
-        constexpr auto i = 42;
-        external::scope<std::function<int()>, std::function<int()>> external{[&]{ return i; }};
-        std::function<int()> f = external.create<void>(fake_provider<>{});
-        expect(i == f());
-    };
-#endif
+test from_function_expr_with_expected_function_expr = [] {
+    constexpr auto i = 42;
+    external::scope<function<int()>, function<int()>> external{[&]{ return i; }};
+    function<int()> f = external.create<void>(fake_provider<>{});
+    expect(i == f());
+};
 
-test from_fucntion_expr_with_injector = [] {
+test from_function_expr_with_injector = [] {
     auto expr = [](const auto& injector) {
         return injector.template create<int>();
     };

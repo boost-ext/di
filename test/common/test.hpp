@@ -7,6 +7,10 @@
 #ifndef BOOST_DI_TEST_HPP
 #define BOOST_DI_TEST_HPP
 
+#if defined(_MSC_VER)
+    #define __has_include(...) 0
+#endif
+
 #undef NDEBUG
 #include <cassert>
 
