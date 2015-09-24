@@ -91,7 +91,6 @@ struct get_<std::shared_ptr<T>> {
     using type = T;
 };
 
-
 template<class TScope, class TExpected, class TGiven, class... Ts>
 class multi_bindings {
     template<class TInjector, class TArray, class T>
@@ -107,6 +106,10 @@ class multi_bindings {
                 );
         }
 
+        provider(const TInjector& injector, TArray* array)
+            : injector_(injector), array_(array)
+        { }
+
         const TInjector& injector_;
         TArray* array_ = nullptr;
     };
@@ -117,13 +120,13 @@ class multi_bindings {
             using TArray = typename get<T>::type;
             TArray array[sizeof...(Ts)] = {
                 static_cast<t_traits_t_<TArray, Ts>>(
-                    static_cast<const di::core::injector__<TInjector>&>(injector_).template
+                    static_cast<const di::core::injector__<TInjector>&>(injector_).
                         create_successful_impl(di::aux::type<t_traits_t<TArray, Ts>>{})
                 )...
             };
 
             return scope_.template create<T>(
-                provider<TInjector, TArray, T>{injector_, array}
+                provider<TInjector, TArray, T>(injector_, array)
             );
         }
 

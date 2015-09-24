@@ -556,7 +556,6 @@ test bind_function_to_callable = [] {
     };
 #endif
 
-#if !defined(_MSC_VER)
 test multi_bindings_inject_named = [] {
     struct c {
         BOOST_DI_INJECT(c, (named = a) const std::vector<std::shared_ptr<i1>>& v1
@@ -694,6 +693,4 @@ test multi_bindings_with_initializer_list = [] {
     expect(injector.create<std::set<int>>().size() == 4);
     //expect(injector.create<std::unordered_set<int>>().size() == 4);
 };
-
-#endif
 

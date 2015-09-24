@@ -143,7 +143,7 @@ public:
         >{};
     }
 
-    template<class T, BOOST_DI_REQUIRES(aux::always<T>::value && !aux::is_array<TExpected>::value) = 0, BOOST_DI_REQUIRES_MSG(typename concepts::boundable__<TExpected, T>::type) = 0>
+    template<class T, BOOST_DI_REQUIRES(!aux::is_array<TExpected, T>::value) = 0, BOOST_DI_REQUIRES_MSG(typename concepts::boundable__<TExpected, T>::type) = 0>
     auto to() const noexcept {
         return dependency<
             TScope
@@ -155,7 +155,7 @@ public:
         >{};
     }
 
-    template<class... Ts, BOOST_DI_REQUIRES((sizeof...(Ts) > 0) && aux::is_array<TExpected>::value) = 0>
+    template<class... Ts, BOOST_DI_REQUIRES(aux::is_array<TExpected, Ts...>::value) = 0>
     auto to() const noexcept {
         return to(multi_bindings<TScope, TExpected, TGiven, Ts...>{});
     }

@@ -276,10 +276,10 @@ struct function_traits<R(T::*)(TArgs...) const> {
 template<class T>
 using function_traits_t = typename function_traits<T>::args;
 template<class T, class... TArgs> decltype(std::declval<T>().operator()(std::declval<TArgs>()...) , std::true_type()) is_callable_with_impl(int); template<class, class...> std::false_type is_callable_with_impl(...); template<class T, class... TArgs> struct is_callable_with : decltype(is_callable_with_impl<T, TArgs...>(0)) { };
-template<class>
+template<class, class...>
 struct is_array : std::false_type { };
-template<class T>
-struct is_array<T[]> : std::true_type { };
+template<class T, class... Ts>
+struct is_array<T[], Ts...> : std::true_type { };
 template<class T, class = decltype(sizeof(T))>
 std::true_type is_complete_impl(int);
 template<class T>
@@ -541,6 +541,9 @@ class multi_bindings {
                   , std::move_iterator<TArray*>(array_ + sizeof...(Ts))
                 );
         }
+        provider(const TInjector& injector, TArray* array)
+            : injector_(injector), array_(array)
+        { }
         const TInjector& injector_;
         TArray* array_ = nullptr;
     };
@@ -550,12 +553,12 @@ class multi_bindings {
             using TArray = typename get<T>::type;
             TArray array[sizeof...(Ts)] = {
                 static_cast<t_traits_t_<TArray, Ts>>(
-                    static_cast<const di::core::injector__<TInjector>&>(injector_).template
+                    static_cast<const di::core::injector__<TInjector>&>(injector_).
                         create_successful_impl(di::aux::type<t_traits_t<TArray, Ts>>{})
                 )...
             };
             return scope_.template create<T>(
-                provider<TInjector, TArray, T>{injector_, array}
+                provider<TInjector, TArray, T>(injector_, array)
             );
         }
         const TInjector& injector_;
@@ -1217,7 +1220,7 @@ public:
           , TBase
         >{};
     }
-    template<class T, BOOST_DI_REQUIRES(aux::always<T>::value && !aux::is_array<TExpected>::value) = 0, BOOST_DI_REQUIRES_MSG(typename concepts::boundable__<TExpected, T>::type) = 0>
+    template<class T, BOOST_DI_REQUIRES(!aux::is_array<TExpected, T>::value) = 0, BOOST_DI_REQUIRES_MSG(typename concepts::boundable__<TExpected, T>::type) = 0>
     auto to() const noexcept {
         return dependency<
             TScope
@@ -1228,7 +1231,7 @@ public:
           , TBase
         >{};
     }
-    template<class... Ts, BOOST_DI_REQUIRES((sizeof...(Ts) > 0) && aux::is_array<TExpected>::value) = 0>
+    template<class... Ts, BOOST_DI_REQUIRES(aux::is_array<TExpected, Ts...>::value) = 0>
     auto to() const noexcept {
         return to(multi_bindings<TScope, TExpected, TGiven, Ts...>{});
     }

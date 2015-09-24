@@ -161,11 +161,11 @@ using function_traits_t = typename function_traits<T>::args;
 
 BOOST_DI_HAS_METHOD(is_callable_with, operator());
 
-template<class>
+template<class, class...>
 struct is_array : std::false_type { };
 
-template<class T>
-struct is_array<T[]> : std::true_type { };
+template<class T, class... Ts>
+struct is_array<T[], Ts...> : std::true_type { };
 
 template<class T, class = decltype(sizeof(T))>
 std::true_type is_complete_impl(int);
