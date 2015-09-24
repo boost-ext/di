@@ -15,16 +15,20 @@
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
     #define BOOST_DI_TYPE_WKND(T)
+    #define BOOST_DI_DECLTYPE_WKND(...) decltype(__VA_ARGS__)
 #elif defined(__GNUC__)
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
     #define BOOST_DI_TYPE_WKND(T)
+    #define BOOST_DI_DECLTYPE_WKND(...) decltype(__VA_ARGS__)
 #elif defined(_MSC_VER)
     #pragma warning(disable : 4503)
     #pragma warning(disable : 4822)
     #define BOOST_DI_UNUSED
     #define BOOST_DI_DEPRECATED(...) __declspec(deprecated(__VA_ARGS__))
     #define BOOST_DI_TYPE_WKND(T) (T&&)
+    namespace boost { namespace di { inline namespace v1 { namespace detail { template<class T> T get_type__(T); }}}}
+    #define BOOST_DI_DECLTYPE_WKND(...) decltype(::boost::di::v1::detail::get_type__(__VA_ARGS__))
 #endif
 namespace boost { namespace di { inline namespace v1 {
 struct _ { _(...) { } };
@@ -2899,6 +2903,7 @@ public:
 #define BOOST_DI_REPEAT_9(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) m(6, __VA_ARGS__) m(7, __VA_ARGS__) m(8, __VA_ARGS__)
 #define BOOST_DI_REPEAT_10(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) m(6, __VA_ARGS__) m(7, __VA_ARGS__) m(8, __VA_ARGS__) m(9, __VA_ARGS__)
 #if defined(_MSC_VER)
+    #define BOOST_DI_EAT_IF_NONE BOOST_DI_EAT(
     #define BOOST_DI_VD_IBP_CAT(a, b) BOOST_DI_VD_IBP_CAT_I(a, b)
     #define BOOST_DI_VD_IBP_CAT_I(a, b) BOOST_DI_VD_IBP_CAT_II(a ## b)
     #define BOOST_DI_VD_IBP_CAT_II(res) res
@@ -2918,6 +2923,7 @@ public:
     #define BOOST_DI_DETAIL_IS_EMPTY_IIF_1(t, b) t
     #define BOOST_DI_DETAIL_IS_EMPTY_PROCESS(...) BOOST_DI_IBP(BOOST_DI_DETAIL_IS_EMPTY_NON_FUNCTION_C __VA_ARGS__ ())
 #else
+    #define BOOST_DI_EAT_IF_NONE
     #define BOOST_DI_IBP_SPLIT(i, ...) BOOST_DI_PRIMITIVE_CAT(BOOST_DI_IBP_SPLIT_, i)(__VA_ARGS__)
     #define BOOST_DI_IBP_SPLIT_0(a, ...) a
     #define BOOST_DI_IBP_SPLIT_1(a, ...) __VA_ARGS__
@@ -2953,32 +2959,26 @@ struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
 };
 template<class T1, class T2>
 using combine_t = typename combine<T1, T2>::type;
-template<class>
-aux::type_list<> ctor_impl__(...);
 template<class T>
-auto ctor_impl__(int) -> aux::function_traits_t<decltype(&T::template ctor<_>)>;
+auto ctor_impl4__(int) -> aux::function_traits_t<BOOST_DI_DECLTYPE_WKND(&T::template ctor<_, _, _, _>)>;
 template<class T>
-auto ctor_impl__(int) -> aux::function_traits_t<decltype(&T::template ctor<_, _>)>;
+aux::type_list<> ctor_impl4__(...);
 template<class T>
-auto ctor_impl__(int) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _>)>;
+auto ctor_impl3__(int) -> aux::function_traits_t<BOOST_DI_DECLTYPE_WKND(&T::template ctor<_, _, _>)>;
 template<class T>
-auto ctor_impl__(int) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _, _>)>;
+decltype(ctor_impl4__<T>(0)) ctor_impl3__(...);
 template<class T>
-auto ctor_impl__(int) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _, _, _>)>;
+auto ctor_impl2__(int) -> aux::function_traits_t<BOOST_DI_DECLTYPE_WKND(&T::template ctor<_, _>)>;
 template<class T>
-auto ctor_impl__(int) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _, _, _, _>)>;
+decltype(ctor_impl3__<T>(0)) ctor_impl2__(...);
 template<class T>
-auto ctor_impl__(int) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _, _, _, _, _>)>;
+auto ctor_impl1__(int) -> aux::function_traits_t<BOOST_DI_DECLTYPE_WKND(&T::template ctor<_>)>;
 template<class T>
-auto ctor_impl__(int) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _, _, _, _, _, _>)>;
+decltype(ctor_impl2__<T>(0)) ctor_impl1__(...);
 template<class T>
-auto ctor_impl__(int) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _, _, _, _, _, _, _>)>;
+auto ctor__(int) -> aux::function_traits_t<BOOST_DI_DECLTYPE_WKND(&T::ctor)>;
 template<class T>
-auto ctor_impl__(int) -> aux::function_traits_t<decltype(&T::template ctor<_, _, _, _, _, _, _, _, _, _>)>;
-template<class T>
-auto ctor__(int) -> aux::function_traits_t<decltype(&T::ctor)>;
-template<class T>
-decltype(ctor_impl__<T>(0)) ctor__(...);
+decltype(ctor_impl1__<T>(0)) ctor__(...);
 }
 template<class... Ts>
 using inject = aux::type_list<Ts...>;
@@ -2996,7 +2996,7 @@ using inject = aux::type_list<Ts...>;
 #define BOOST_DI_GEN_NAME(i, ...) BOOST_DI_GEN_NAME_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__,), i)
 #define BOOST_DI_T_INJECT_IMPL(...) __VA_ARGS__
 #define BOOST_DI_T_INJECT_IMPL__(type) type
-#define BOOST_DI_T_INJECT(type) BOOST_DI_T_INJECT__ type )
+#define BOOST_DI_T_INJECT(type) BOOST_DI_T_INJECT__ type BOOST_DI_EAT_IF_NONE )
 #define BOOST_DI_T_INJECT__(...) __VA_ARGS__ BOOST_DI_T_INJECT_IMPL(
 #define BOOST_DI_T_GET(...) __VA_ARGS__ BOOST_DI_EAT(
 #define BOOST_DI_INJECT_TRAITS_T(T, ...) BOOST_DI_INJECT_TRAITS__(T, __VA_ARGS__)

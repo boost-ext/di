@@ -562,7 +562,6 @@ test request_value_and_ptr_in_unique = [] {
     };
 #endif
 
-#if !defined(_MSC_VER)
 auto type_t = []{};
 auto type_1 = []{};
 auto type_2 = []{};
@@ -639,8 +638,6 @@ test inject_template_diff_types = [] {
     );
     injector.create<c_diff_t>();
 };
-
-#endif
 
 #if defined(__cpp_concepts)
     struct c_auto {
