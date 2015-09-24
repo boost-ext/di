@@ -71,11 +71,6 @@ struct get<std::vector<T, TAllocator>> {
     using type = T;
 };
 
-/*template<class T, class TAllocator>*/
-//struct get<std::list<T, TAllocator>> {
-    //using type = T;
-//};
-
 template<class TKey, class TCompare, class TAllocator>
 struct get<std::set<TKey, TCompare, TAllocator>> {
     using type = TKey;

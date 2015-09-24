@@ -105,11 +105,6 @@ struct deref_type<std::vector<T, TAllocator>> {
     using type = remove_specifiers_t<typename deref_type<T>::type>*[];
 };
 
-//template<class T, class TAllocator>
-//struct deref_type<std::list<T, TAllocator>> {
-    //using type = remove_specifiers_t<typename deref_type<T>::type>*[];
-//};
-
 template<class TKey, class TCompare, class TAllocator>
 struct deref_type<std::set<TKey, TCompare, TAllocator>> {
     using type = remove_specifiers_t<typename deref_type<TKey>::type>*[];

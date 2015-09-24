@@ -4,11 +4,12 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <initializer_list> // has to be before, because of bug in clang < 3.7
+#include <initializer_list> // has to be before, due to the bug in clang < 3.7
 #include "boost/di.hpp"
 #include <memory>
 #include <string>
 #include <functional>
+#include <iterator>
 #include <vector>
 #include <set>
 
@@ -529,33 +530,6 @@ test bind_function_to_callable = [] {
     injector.create<functions>();
 };
 
-#if defined(__cpp_variable_templates)
-    test bind_mix = [] {
-        constexpr auto i = 42;
-
-        struct c {
-            c(int i_, std::unique_ptr<i1> i1_, std::unique_ptr<i2> i2_)
-                : i_(i_), i1_(std::move(i1_)), i2_(std::move(i2_))
-            { }
-
-            int i_ = 0;
-            std::unique_ptr<i1> i1_;
-            std::unique_ptr<i2> i2_;
-        };
-
-        auto injector = di::make_injector(
-            di::bind<i1>().to<impl1>() // cross compiler call
-          , di::bind<i2>.to<impl2>() // requires variable templates
-          , di::bind<int>().to(i)
-        );
-
-        auto object = injector.create<c>();
-        expect(i == object.i_);
-        expect(dynamic_cast<impl1*>(object.i1_.get()));
-        expect(dynamic_cast<impl2*>(object.i2_.get()));
-    };
-#endif
-
 test multi_bindings_inject_named = [] {
     struct c {
         BOOST_DI_INJECT(c, (named = a) const std::vector<std::shared_ptr<i1>>& v1
@@ -582,6 +556,13 @@ test multi_bindings_inject_named = [] {
 };
 
 test multi_bindings_containers = [] {
+    auto test = [](auto object) {
+        expect(object.size() == 2);
+        auto it = object.begin();
+        expect(*(std::next(it, 0)) == 11);
+        expect(*(std::next(it, 1)) == 87);
+    };
+
     auto injector = di::make_injector(
         di::bind<int*[]>().to<int, di::named<class Int42>>()
       , di::bind<int>().to(11)
@@ -589,18 +570,8 @@ test multi_bindings_containers = [] {
       , di::bind<int>().to(87).named<class Int42>() [di::override]
     );
 
-    auto v = injector.create<std::vector<int>>();
-    expect(v.size() == 2);
-    expect(v[0] == 11);
-    expect(v[1] == 87);
-    //expect(injector.create<std::list<int>>().size() == 2);
-    //expect(!injector.create<std::forward_list<int>>().empty());
-    //expect(injector.create<std::stack<int>>().size() == 2);
-    //expect(injector.create<std::queue<int>>().size() == 2);
-    //expect(injector.create<std::priority_queue<int>>().size() == 2);
-    //expect(injector.create<std::deque<int>>().size() == 2);
-    expect(injector.create<std::set<int>>().size() == 2);
-    //expect(injector.create<std::unordered_set<int>>().size() == 2);
+    test(injector.create<std::vector<int>>());
+    test(injector.create<std::set<int>>());
 };
 
 test multi_bindings_ctor_with_exposed_module = [] {
@@ -673,24 +644,47 @@ test multi_bindings_with_scope = [] {
 };
 
 test multi_bindings_with_initializer_list = [] {
+    auto test = [](auto object) {
+        expect(object.size() == 4);
+        auto it = object.begin();
+        expect(*(std::next(it, 0)) == 1);
+        expect(*(std::next(it, 1)) == 2);
+        expect(*(std::next(it, 2)) == 3);
+        expect(*(std::next(it, 3)) == 4);
+    };
+
     auto injector = di::make_injector(
         di::bind<int*[]>().to({1, 2, 3, 4})
     );
 
-    auto v = injector.create<std::vector<int>>();
-    expect(v.size() == 4);
-    expect(v[0] == 1);
-    expect(v[1] == 2);
-    expect(v[2] == 3);
-    expect(v[3] == 4);
-
-    //expect(injector.create<std::list<int>>().size() == 4);
-    //expect(!injector.create<std::forward_list<int>>().empty());
-    //expect(injector.create<std::stack<int>>().size() == 4);
-    //expect(injector.create<std::queue<int>>().size() == 4);
-    ////expect(injector.create<std::priority_queue<int>>().size() == 4);
-    //expect(injector.create<std::deque<int>>().size() == 4);
-    expect(injector.create<std::set<int>>().size() == 4);
-    //expect(injector.create<std::unordered_set<int>>().size() == 4);
+    test(injector.create<std::vector<int>>());
+    test(injector.create<std::set<int>>());
 };
+
+#if defined(__cpp_variable_templates)
+    test bind_mix = [] {
+        constexpr auto i = 42;
+
+        struct c {
+            c(int i_, std::unique_ptr<i1> i1_, std::unique_ptr<i2> i2_)
+                : i_(i_), i1_(std::move(i1_)), i2_(std::move(i2_))
+            { }
+
+            int i_ = 0;
+            std::unique_ptr<i1> i1_;
+            std::unique_ptr<i2> i2_;
+        };
+
+        auto injector = di::make_injector(
+            di::bind<i1>().to<impl1>() // cross compiler call
+          , di::bind<i2>.to<impl2>() // requires variable templates
+          , di::bind<int>().to(i)
+        );
+
+        auto object = injector.create<c>();
+        expect(i == object.i_);
+        expect(dynamic_cast<impl1*>(object.i1_.get()));
+        expect(dynamic_cast<impl2*>(object.i2_.get()));
+    };
+#endif
 
