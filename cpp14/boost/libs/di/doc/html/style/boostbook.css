@@ -786,3 +786,24 @@ th {
   word-wrap: break-word;
 }
 
+.invisible {
+    display: none;
+}
+
+.none {
+    margin: 0 0 0 0;
+    padding: 0 0 0 10px;
+}
+
+.collapsed {
+    margin: 0 0 0 0;
+    padding: 0 0 0 10px;
+    background: url('../images/collapsed.png') no-repeat 0 .5em;
+}
+
+.expanded {
+    margin: 0 0 0 0;
+    padding: 0 0 0 10px;
+    background: url('../images/expanded.png') no-repeat 0 .5em;
+}
+

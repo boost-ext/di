@@ -12,6 +12,7 @@
 
 <link rel="stylesheet" href="../js/CodeMirror/lib/codemirror.css">
 <link rel="stylesheet" href="../js/CodeMirror/theme/mdn-like.css">
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="../js/CodeMirror/lib/codemirror.js"></script>
 <script src="../js/CodeMirror/mode/clike/clike.js"></script>
 <script src="../js/CodeMirror/addon/selection/active-line.js"></script>
@@ -188,6 +189,24 @@ function toggleNextRow() {
 <dt><b><u> <span class="section"><a href= "../di/acknowledgements.html" >Acknowledgements</a></span> </u></b></dt>
 <dt><span class="section"><a href= "../di/references.html" >References</a></span></dt>
 </dl>
+
+<script>
+    $('dt').each(function() {
+      var $dt = $(this);
+      $dt.addClass($dt.next().is('dd') ? 'collapsed' : 'none');
+    });
+
+    <!--$('dd').addClass('invisible');-->
+
+    $('dt').click(function () {
+          var $dt = $(this);
+          if ($dt.next().is('dd')) {
+            $dt.next().toggleClass('invisible');
+            $dt.toggleClass('expanded', 'collapsed');
+          }
+    });
+</script>
+
 </div>
 </div>
 
