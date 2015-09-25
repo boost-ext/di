@@ -7,13 +7,15 @@
 
 //[multi_bindings
 //<-
+#include <initializer_list> // has to be before, due to the bug in clang < 3.7
+//->
+#include <boost/di.hpp>
+//<-
 #include <memory>
 #include <cassert>
 #include <vector>
 #include <set>
 //->
-
-#include <boost/di.hpp>
 
 namespace di = boost::di;
 

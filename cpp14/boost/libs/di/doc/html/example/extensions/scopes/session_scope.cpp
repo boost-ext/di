@@ -52,8 +52,8 @@ public:
 
         template<class T, class TProvider>
         auto create(const TProvider& provider) {
-            using type = decltype(scope_.template create<T>(provider));
-            return get_session() ? scope_.template create<T>(provider) : type{nullptr};
+            static std::shared_ptr<TGiven> null{nullptr};
+            return get_session() ? scope_.template create<T>(provider) : null;
         }
 
     private:
@@ -80,7 +80,7 @@ auto my_session = []{};
 
 int main() {
     auto injector = di::make_injector(
-        di::bind<interface1>().in(session(my_session)).to<implementation1>()
+        di::bind<interface1>().to<implementation1>().in(session(my_session))
     );
 
     assert(!injector.create<std::shared_ptr<interface1>>());

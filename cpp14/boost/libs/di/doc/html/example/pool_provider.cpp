@@ -70,13 +70,13 @@ T* pool_allocator<T>::allocate() {
 }
 
 template<class T>
-void pool_allocator<T>::deallocate(T* ptr) {
+void pool_allocator<T>::deallocate(di::aux::owner<T*> ptr) {
     return ::operator delete(ptr);
 }
 
 template<class T>
 struct pool_deleter {
-    void operator()(T* ptr) const noexcept {
+    void operator()(di::aux::owner<T*> ptr) const noexcept {
         pool_allocator<T>::deallocate(ptr);
     }
 };
