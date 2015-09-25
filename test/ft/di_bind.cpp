@@ -288,6 +288,30 @@ test bind_const_ref_type_in_singleton_scope = [] {
     di::make_injector().create<c>();
 };
 
+test bind_shared_ptr_ref = [] {
+    struct c {
+        c(std::shared_ptr<int>& sp1, std::shared_ptr<int>& sp2) {
+            expect(sp1 == sp2);
+        }
+    };
+
+    di::make_injector().create<c>();
+};
+
+test bind_shared_ptr_interface = [] {
+    struct c {
+        c(std::shared_ptr<i1> sp1, i1& sp2) {
+            expect(sp1.get() == &sp2);
+        }
+    };
+
+    auto injector = di::make_injector(
+        di::bind<i1>().to<impl1>()
+    );
+
+    injector.create<c>();
+};
+
 test scopes_external_shared = [] {
     auto i = std::make_shared<int>(42);
 

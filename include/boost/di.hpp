@@ -38,6 +38,8 @@ struct type { };
 struct none_type { };
 template<class T, T>
 struct non_type { };
+template<class T>
+using owner = T;
 template<class...>
 struct void_t { using type = void; };
 template<class...>
@@ -585,17 +587,22 @@ struct unique {
 };
 template<class T>
 struct unique<T*> {
+    #if defined(_MSC_VER)
+        explicit unique(T* object)
+            : object(object)
+        { }
+    #endif
     template<class I>
     inline operator I() const noexcept {
-        struct scoped_ptr { T* ptr; ~scoped_ptr() noexcept { delete ptr; } };
+        struct scoped_ptr { aux::owner<T*> ptr; ~scoped_ptr() noexcept { delete ptr; } };
         return *scoped_ptr{object}.ptr;
     }
     template<class I>
-    inline operator I*() const noexcept {
+    inline operator aux::owner<I*>() const noexcept {
         return object;
     }
     template<class I>
-    inline operator const I*() const noexcept {
+    inline operator aux::owner<const I*>() const noexcept {
         return object;
     }
     template<class I>
@@ -610,11 +617,6 @@ struct unique<T*> {
     inline operator std::unique_ptr<I, D>() const noexcept {
         return std::unique_ptr<I, D>{object};
     }
-    #if defined(_MSC_VER)
-        explicit unique(T* object)
-            : object(object)
-        { }
-    #endif
     T* object = nullptr;
 };
 }}}}
@@ -641,7 +643,7 @@ public:
 };
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace wrappers {
-template<class T>
+template<class T, class U = std::shared_ptr<T>>
 struct shared {
     template<class>
     struct is_referable_impl
@@ -649,7 +651,7 @@ struct shared {
     { };
     template<class I>
     struct is_referable_impl<std::shared_ptr<I>>
-        : std::false_type
+        : std::is_same<I, T>
     { };
     template<class I>
     struct is_referable_impl<boost::shared_ptr<I>>
@@ -669,6 +671,9 @@ struct shared {
         };
         return {object.get(), sp_holder{object}};
     }
+    inline operator std::shared_ptr<T>&() noexcept {
+        return object;
+    }
     template<class I>
     inline operator std::weak_ptr<I>() const noexcept {
         return object;
@@ -679,7 +684,7 @@ struct shared {
     inline operator const T&() const noexcept {
         return *object;
     }
-    std::shared_ptr<T> object;
+    U object;
 };
 template<class T>
 struct shared<T*> {
@@ -687,17 +692,17 @@ struct shared<T*> {
     struct is_referable
         : std::true_type
     { };
+    #if defined(_MSC_VER)
+        explicit shared(T* object)
+            : object(object)
+        { }
+    #endif
     inline operator T&() noexcept {
         return *object;
     }
     inline operator const T&() const noexcept {
         return *object;
     }
-    #if defined(_MSC_VER)
-        explicit shared(T* object)
-            : object(object)
-        { }
-    #endif
     T* object = nullptr;
 };
 template<class T>
@@ -740,7 +745,7 @@ public:
     private:
         template<class TProvider>
         auto create_impl(const TProvider& provider) {
-            static struct scoped_ptr { T* ptr; ~scoped_ptr() noexcept { delete ptr; } } object{provider.get()};
+            static struct scoped_ptr { aux::owner<T*> ptr; ~scoped_ptr() noexcept { delete ptr; } } object{provider.get()};
             return wrappers::shared<T*>{object.ptr};
         }
     };
@@ -750,7 +755,7 @@ public:
         template<class T_>
         using is_referable = typename wrappers::shared<T>::template is_referable<T_>;
         template<class, class TProvider>
-        static decltype(wrappers::shared<T>{std::shared_ptr<T>{std::declval<TProvider>().get()}})
+        static decltype(wrappers::shared<T>{std::shared_ptr<T>{std::shared_ptr<T>{std::declval<TProvider>().get()}}})
         try_create(const TProvider&);
         template<class, class TProvider>
         auto create(const TProvider& provider) {
@@ -760,7 +765,7 @@ public:
         template<class TProvider>
         auto create_impl(const TProvider& provider) {
             static std::shared_ptr<T> object{provider.get()};
-            return wrappers::shared<T>{object};
+            return wrappers::shared<T, std::shared_ptr<T>&>{object};
         }
     };
 };
@@ -1368,7 +1373,7 @@ struct cast {
 };
 template<template<class...> class T, class... Ts>
 struct cast<T<std::false_type, Ts...>> {
-    using type = typename T<std::false_type, Ts...>::element_type;
+    using type = typename T<std::false_type, Ts...>::value_type;
 };
 template<class T>
 using cast_t = typename cast<T>::type;
@@ -2205,7 +2210,7 @@ namespace boost { namespace di { inline namespace v1 { namespace core {
 namespace successful {
 template<class, class T, class TWrapper>
 struct wrapper {
-    using element_type = T;
+    using value_type = T;
     inline operator T() const noexcept {
         return BOOST_DI_TYPE_WKND(T)wrapper_;
     }
@@ -2217,7 +2222,7 @@ struct wrapper {
 }
 template<class, class T, class TWrapper, class = int>
 struct wrapper_impl {
-    using element_type = T;
+    using value_type = T;
     inline operator T() const noexcept {
         return wrapper_;
     }
@@ -2228,7 +2233,7 @@ struct wrapper_impl {
 };
 template<class T, class TWrapper>
 struct wrapper_impl<std::true_type, T, TWrapper, BOOST_DI_REQUIRES(!std::is_convertible<TWrapper, T>::value)> {
-    using element_type = T;
+    using value_type = T;
     inline operator T() const noexcept {
         return typename concepts::type<TWrapper>::template is_not_convertible_to<T>{};
     }

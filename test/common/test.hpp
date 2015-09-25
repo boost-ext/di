@@ -7,15 +7,20 @@
 #ifndef BOOST_DI_TEST_HPP
 #define BOOST_DI_TEST_HPP
 
+#include <cstdio>
+#include <cstdlib>
+
 #if defined(_MSC_VER)
     #define __has_include(...) 0
 #endif
 
-#undef NDEBUG
-#include <cassert>
-
-#define expect(...) assert((__VA_ARGS__) && "fail")
+#define expect(...) (void)((__VA_ARGS__) || (expect_fail__(#__VA_ARGS__, __FILE__, __LINE__), 0))
 #define static_expect(...) static_assert((__VA_ARGS__), "fail")
+
+void expect_fail__(const char *msg, const char *file, int line) {
+    std::printf("%s:%d:%s\n", file, line, msg);
+    std::exit(-1);
+}
 
 struct test {
     template<class Test>

@@ -17,7 +17,7 @@ namespace successful {
 
 template<class, class T, class TWrapper>
 struct wrapper {
-    using element_type = T;
+    using value_type = T;
 
     inline operator T() const noexcept {
         return BOOST_DI_TYPE_WKND(T)wrapper_;
@@ -34,7 +34,7 @@ struct wrapper {
 
 template<class, class T, class TWrapper, class = int>
 struct wrapper_impl {
-    using element_type = T;
+    using value_type = T;
 
     inline operator T() const noexcept {
         return wrapper_;
@@ -49,7 +49,7 @@ struct wrapper_impl {
 
 template<class T, class TWrapper>
 struct wrapper_impl<std::true_type, T, TWrapper, BOOST_DI_REQUIRES(!std::is_convertible<TWrapper, T>::value)> {
-    using element_type = T;
+    using value_type = T;
 
     inline operator T() const noexcept {
         return typename concepts::type<TWrapper>::template is_not_convertible_to<T>{};

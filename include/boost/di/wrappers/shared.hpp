@@ -13,7 +13,7 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 
-template<class T>
+template<class T, class U = std::shared_ptr<T>>
 struct shared {
     template<class>
     struct is_referable_impl
@@ -22,7 +22,7 @@ struct shared {
 
     template<class I>
     struct is_referable_impl<std::shared_ptr<I>>
-        : std::false_type
+        : std::is_same<I, T>
     { };
 
     template<class I>
@@ -47,6 +47,10 @@ struct shared {
         return {object.get(), sp_holder{object}};
     }
 
+    inline operator std::shared_ptr<T>&() noexcept {
+        return object;
+    }
+
     template<class I>
     inline operator std::weak_ptr<I>() const noexcept {
         return object;
@@ -60,7 +64,7 @@ struct shared {
         return *object;
     }
 
-    std::shared_ptr<T> object;
+    U object;
 };
 
 template<class T>
@@ -70,6 +74,12 @@ struct shared<T*> {
         : std::true_type
     { };
 
+    #if defined(_MSC_VER) // __pph__
+        explicit shared(T* object)
+            : object(object)
+        { }
+    #endif // __pph__
+
     inline operator T&() noexcept {
         return *object;
     }
@@ -77,12 +87,6 @@ struct shared<T*> {
     inline operator const T&() const noexcept {
         return *object;
     }
-
-    #if defined(_MSC_VER) // __pph__
-        explicit shared(T* object)
-            : object(object)
-        { }
-    #endif // __pph__
 
     T* object = nullptr;
 };

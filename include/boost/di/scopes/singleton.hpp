@@ -37,7 +37,7 @@ public:
     private:
         template<class TProvider>
         auto create_impl(const TProvider& provider) {
-            static struct scoped_ptr { T* ptr; ~scoped_ptr() noexcept { delete ptr; } } object{provider.get()};
+            static struct scoped_ptr { aux::owner<T*> ptr; ~scoped_ptr() noexcept { delete ptr; } } object{provider.get()};
             return wrappers::shared<T*>{object.ptr};
         }
     };
@@ -49,7 +49,7 @@ public:
         using is_referable = typename wrappers::shared<T>::template is_referable<T_>;
 
         template<class, class TProvider>
-        static decltype(wrappers::shared<T>{std::shared_ptr<T>{std::declval<TProvider>().get()}})
+        static decltype(wrappers::shared<T>{std::shared_ptr<T>{std::shared_ptr<T>{std::declval<TProvider>().get()}}})
         try_create(const TProvider&);
 
         template<class, class TProvider>
@@ -61,7 +61,7 @@ public:
         template<class TProvider>
         auto create_impl(const TProvider& provider) {
             static std::shared_ptr<T> object{provider.get()};
-            return wrappers::shared<T>{object};
+            return wrappers::shared<T, std::shared_ptr<T>&>{object};
         }
     };
 };

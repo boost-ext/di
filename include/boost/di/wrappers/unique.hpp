@@ -8,6 +8,7 @@
 #define BOOST_DI_WRAPPERS_UNIQUE_HPP
 
 #include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/aux_/utility.hpp"
 #include "boost/di/fwd.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace wrappers {
@@ -28,20 +29,26 @@ struct unique {
 
 template<class T>
 struct unique<T*> {
+    #if defined(_MSC_VER) // __pph__
+        explicit unique(T* object)
+            : object(object)
+        { }
+    #endif // __pph__
+
     template<class I>
     inline operator I() const noexcept {
-        struct scoped_ptr { T* ptr; ~scoped_ptr() noexcept { delete ptr; } };
+        struct scoped_ptr { aux::owner<T*> ptr; ~scoped_ptr() noexcept { delete ptr; } };
         return *scoped_ptr{object}.ptr;
     }
 
     template<class I>
-    inline operator I*() const noexcept {
-        return object; // ownership transfer
+    inline operator aux::owner<I*>() const noexcept {
+        return object;
     }
 
     template<class I>
-    inline operator const I*() const noexcept {
-        return object; // ownership transfer
+    inline operator aux::owner<const I*>() const noexcept {
+        return object;
     }
 
     template<class I>
@@ -58,12 +65,6 @@ struct unique<T*> {
     inline operator std::unique_ptr<I, D>() const noexcept {
         return std::unique_ptr<I, D>{object};
     }
-
-    #if defined(_MSC_VER) // __pph__
-        explicit unique(T* object)
-            : object(object)
-        { }
-    #endif // __pph__
 
     T* object = nullptr;
 };

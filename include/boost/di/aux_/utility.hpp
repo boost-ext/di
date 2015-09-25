@@ -23,6 +23,9 @@ struct none_type { };
 template<class T, T>
 struct non_type { };
 
+template<class T>
+using owner = T;
+
 template<class...>
 struct void_t { using type = void; };
 

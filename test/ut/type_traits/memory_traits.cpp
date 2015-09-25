@@ -10,18 +10,12 @@
 #if __has_include(<boost/shared_ptr.hpp>)
     #include <boost/shared_ptr.hpp>
 #endif
+#include "common/common.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 
 struct c { };
 struct i { virtual ~i() noexcept = default; };
-
-template<class T>
-struct deleter {
-    void operator()(T* ptr) const noexcept {
-        delete ptr;
-    }
-};
 
 test traits = [] {
     static_expect(std::is_same<stack, memory_traits<int>::type>{});

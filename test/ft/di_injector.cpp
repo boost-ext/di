@@ -56,7 +56,7 @@ test create_using_shared_ptr = [] {
 
 test create_ptr = [] {
     struct c {
-        c(i1* ptr) { delete ptr; }
+        c(di::aux::owner<i1*> ptr) { delete ptr; }
     };
 
     auto injector = di::make_injector(

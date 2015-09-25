@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <memory>
+#include "boost/di/aux_/utility.hpp"
 #include "boost/di/wrappers/shared.hpp"
 #if __has_include(<boost/shared_ptr.hpp>)
     #include <boost/shared_ptr.hpp>
@@ -43,7 +44,7 @@ test shared_with_ptr = [] {
     auto i = new int{42};
 
     struct scoped_ptr {
-        int* object;
+        aux::owner<int*> object;
         ~scoped_ptr() { delete object; }
     } ptr{i};
 

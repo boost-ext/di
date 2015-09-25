@@ -491,7 +491,7 @@ test create_conversion = [] {
 test request_value_and_ptr_in_unique = [] {
     struct c {
         int i = 0;
-        int* ptr = nullptr;
+        owner<int*> ptr = nullptr;
     };
 
     auto injector = di::make_injector(

@@ -19,7 +19,7 @@ struct cast {
 
 template<template<class...> class T, class... Ts>
 struct cast<T<std::false_type, Ts...>> {
-    using type = typename T<std::false_type, Ts...>::element_type;
+    using type = typename T<std::false_type, Ts...>::value_type;
 };
 
 template<class T>

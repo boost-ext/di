@@ -15,6 +15,7 @@
 #include <set>
 #include <unordered_set>
 #include "boost/di/aux_/type_traits.hpp"
+#include "common/common.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace aux {
 
@@ -48,13 +49,6 @@ test has_method = [] {
     static_expect(has_call<call3, int>{});
     static_expect(has_call<call3, int, double>{});
     static_expect(!has_call<call3, int, double, float>{});
-};
-
-template<class T>
-struct deleter {
-    void operator()(T* ptr) const noexcept {
-        delete ptr;
-    }
 };
 
 test is_braces_constructible_types = [] {
