@@ -13,7 +13,7 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 
-template<class T, class U = std::shared_ptr<T>>
+template<class T, class TObject = std::shared_ptr<T>>
 struct shared {
     template<class>
     struct is_referable_impl
@@ -38,6 +38,10 @@ struct shared {
         return object;
     }
 
+    inline operator std::shared_ptr<T>&() noexcept {
+        return object;
+    }
+
     template<class I>
     inline operator boost::shared_ptr<I>() const noexcept {
         struct sp_holder {
@@ -45,10 +49,6 @@ struct shared {
             void operator()(...) noexcept { object.reset(); }
         };
         return {object.get(), sp_holder{object}};
-    }
-
-    inline operator std::shared_ptr<T>&() noexcept {
-        return object;
     }
 
     template<class I>
@@ -64,7 +64,7 @@ struct shared {
         return *object;
     }
 
-    U object;
+    TObject object;
 };
 
 template<class T>

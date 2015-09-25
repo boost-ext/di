@@ -15,7 +15,7 @@ namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 
 test to_shared_ptr = [] {
     auto i = std::make_shared<int>(42);
-    auto object = static_cast<std::shared_ptr<int>>(shared<int>{i});
+    auto object = static_cast<const std::shared_ptr<int>&>(shared<int>{i});
     expect(i == object);
 };
 

@@ -12,11 +12,11 @@
 #include "boost/di/aux_/utility.hpp"
 
 #define BOOST_DI_HAS_TYPE(name, call_name)                              \
-    template<class, class = void>                                       \
+    template<class, class = int>                                        \
     struct name : std::false_type { };                                  \
                                                                         \
     template<class T>                                                   \
-    struct name<T, typename aux::void_t<typename T::call_name>::type>   \
+    struct name<T, typename aux::valid_t<typename T::call_name>::type>  \
         : std::true_type                                                \
     { }
 

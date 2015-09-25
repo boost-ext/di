@@ -41,7 +41,7 @@ struct non_type { };
 template<class T>
 using owner = T;
 template<class...>
-struct void_t { using type = void; };
+struct valid_t { using type = int; };
 template<class...>
 struct always : std::true_type { };
 template<class...>
@@ -309,7 +309,7 @@ struct pool<aux::type_list<TArgs...>> : TArgs... {
 #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
 #endif
 namespace boost { namespace di { inline namespace v1 { namespace type_traits {
-template<class, class = void> struct is_injectable : std::false_type { }; template<class T> struct is_injectable<T, typename aux::void_t<typename T::boost_di_inject__>::type> : std::true_type { };
+template<class, class = int> struct is_injectable : std::false_type { }; template<class T> struct is_injectable<T, typename aux::valid_t<typename T::boost_di_inject__>::type> : std::true_type { };
 struct direct { };
 struct uniform { };
 template<class T, int>
@@ -643,7 +643,7 @@ public:
 };
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace wrappers {
-template<class T, class U = std::shared_ptr<T>>
+template<class T, class TObject = std::shared_ptr<T>>
 struct shared {
     template<class>
     struct is_referable_impl
@@ -663,6 +663,9 @@ struct shared {
     inline operator std::shared_ptr<I>() const noexcept {
         return object;
     }
+    inline operator std::shared_ptr<T>&() noexcept {
+        return object;
+    }
     template<class I>
     inline operator boost::shared_ptr<I>() const noexcept {
         struct sp_holder {
@@ -670,9 +673,6 @@ struct shared {
             void operator()(...) noexcept { object.reset(); }
         };
         return {object.get(), sp_holder{object}};
-    }
-    inline operator std::shared_ptr<T>&() noexcept {
-        return object;
     }
     template<class I>
     inline operator std::weak_ptr<I>() const noexcept {
@@ -684,7 +684,7 @@ struct shared {
     inline operator const T&() const noexcept {
         return *object;
     }
-    U object;
+    TObject object;
 };
 template<class T>
 struct shared<T*> {
@@ -969,7 +969,7 @@ template<class T>
 class no_implicit_conversions : public T {
     template<class U> operator U() const;
 };
-template<class, class = void> struct has_result_type : std::false_type { }; template<class T> struct has_result_type<T, typename aux::void_t<typename T::result_type>::type> : std::true_type { };
+template<class, class = int> struct has_result_type : std::false_type { }; template<class T> struct has_result_type<T, typename aux::valid_t<typename T::result_type>::type> : std::true_type { };
 template<class TGiven, class TProvider, class... Ts>
 struct is_call : std::integral_constant<bool,
     aux::is_callable_with<TGiven, no_implicit_conversions<
@@ -1118,7 +1118,7 @@ using scopable = typename scopable__<T>::type;
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
 template<class T, class... TArgs> decltype(std::declval<T>().configure(std::declval<TArgs>()...) , std::true_type()) has_configure_impl(int); template<class, class...> std::false_type has_configure_impl(...); template<class T, class... TArgs> struct has_configure : decltype(has_configure_impl<T, TArgs...>(0)) { };
-template<class, class = void> struct has_deps : std::false_type { }; template<class T> struct has_deps<T, typename aux::void_t<typename T::deps>::type> : std::true_type { };
+template<class, class = int> struct has_deps : std::false_type { }; template<class T> struct has_deps<T, typename aux::valid_t<typename T::deps>::type> : std::true_type { };
 template<class T, class U = std::remove_reference_t<T>>
 struct is_injector
     : std::integral_constant<bool, has_deps<U>::value || has_configure<U>::value>

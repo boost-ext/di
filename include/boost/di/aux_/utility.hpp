@@ -27,7 +27,7 @@ template<class T>
 using owner = T;
 
 template<class...>
-struct void_t { using type = void; };
+struct valid_t { using type = int; };
 
 template<class...>
 struct always : std::true_type { };
