@@ -687,25 +687,6 @@ struct shared {
     TObject object;
 };
 template<class T>
-struct shared<T*> {
-    template<class>
-    struct is_referable
-        : std::true_type
-    { };
-    #if defined(_MSC_VER)
-        explicit shared(T* object)
-            : object(object)
-        { }
-    #endif
-    inline operator T&() noexcept {
-        return *object;
-    }
-    inline operator const T&() const noexcept {
-        return *object;
-    }
-    T* object = nullptr;
-};
-template<class T>
 struct shared<T&> {
     template<class>
     struct is_referable
@@ -714,6 +695,7 @@ struct shared<T&> {
     explicit shared(T& object)
         : object(&object)
     { }
+    explicit shared(T&&);
     template<class I, BOOST_DI_REQUIRES(std::is_convertible<T&, I>::value) = 0>
     inline operator I() const noexcept {
         return *object;
@@ -734,9 +716,9 @@ public:
     class scope {
     public:
         template<class T_>
-        using is_referable = typename wrappers::shared<T*>::template is_referable<T_>;
+        using is_referable = typename wrappers::shared<T&>::template is_referable<T_>;
         template<class, class TProvider>
-        static decltype(wrappers::shared<T*>{std::declval<TProvider>().get()})
+        static decltype(wrappers::shared<T&>{std::declval<TProvider>().get(type_traits::stack{})})
         try_create(const TProvider&);
         template<class, class TProvider>
         auto create(const TProvider& provider) {
@@ -745,8 +727,8 @@ public:
     private:
         template<class TProvider>
         auto create_impl(const TProvider& provider) {
-            static struct scoped_ptr { aux::owner<T*> ptr; ~scoped_ptr() noexcept { delete ptr; } } object{provider.get()};
-            return wrappers::shared<T*>{object.ptr};
+            static T object{provider.get(type_traits::stack{})};
+            return wrappers::shared<T&>(object);
         }
     };
     template<class _, class T>

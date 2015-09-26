@@ -68,30 +68,6 @@ struct shared {
 };
 
 template<class T>
-struct shared<T*> {
-    template<class>
-    struct is_referable
-        : std::true_type
-    { };
-
-    #if defined(_MSC_VER) // __pph__
-        explicit shared(T* object)
-            : object(object)
-        { }
-    #endif // __pph__
-
-    inline operator T&() noexcept {
-        return *object;
-    }
-
-    inline operator const T&() const noexcept {
-        return *object;
-    }
-
-    T* object = nullptr;
-};
-
-template<class T>
 struct shared<T&> {
     template<class>
     struct is_referable
@@ -101,6 +77,8 @@ struct shared<T&> {
     explicit shared(T& object)
         : object(&object)
     { }
+
+    explicit shared(T&&); // for compilation
 
     template<class I, BOOST_DI_REQUIRES(std::is_convertible<T&, I>::value) = 0>
     inline operator I() const noexcept {

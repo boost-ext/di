@@ -8,6 +8,7 @@
 #define BOOST_DI_SCOPES_SINGLETON_HPP
 
 #include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/type_traits/memory_traits.hpp" // type_traits::stack
 #include "boost/di/wrappers/shared.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace scopes {
@@ -23,10 +24,10 @@ public:
     class scope {
     public:
         template<class T_>
-        using is_referable = typename wrappers::shared<T*>::template is_referable<T_>;
+        using is_referable = typename wrappers::shared<T&>::template is_referable<T_>;
 
         template<class, class TProvider>
-        static decltype(wrappers::shared<T*>{std::declval<TProvider>().get()})
+        static decltype(wrappers::shared<T&>{std::declval<TProvider>().get(type_traits::stack{})})
         try_create(const TProvider&);
 
         template<class, class TProvider>
@@ -37,8 +38,8 @@ public:
     private:
         template<class TProvider>
         auto create_impl(const TProvider& provider) {
-            static struct scoped_ptr { aux::owner<T*> ptr; ~scoped_ptr() noexcept { delete ptr; } } object{provider.get()};
-            return wrappers::shared<T*>{object.ptr};
+            static T object{provider.get(type_traits::stack{})};
+            return wrappers::shared<T&>(object);
         }
     };
 
