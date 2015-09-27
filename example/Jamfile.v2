@@ -60,11 +60,10 @@ test-suite example :
     [ example fwd_bindings.cpp ]
     [ example hello_world.cpp ]
     [ example modules.cpp ]
-    [ example multi_bindings.cpp ]
+    [ example multiple_bindings.cpp ]
     [ example multiple_interfaces.cpp ]
     [ example pool_provider.cpp ]
     [ example provider.cpp ]
-    [ example share_no_memory_header.cpp ]
 ;
 
 test-suite extensions :

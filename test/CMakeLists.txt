@@ -58,6 +58,7 @@ test(ut/injector)
 test(ut/make_injector)
 
 test(ft/di_bind)
+test(ft/di_bind_no_memory_header)
 test(ft/di_config)
 test(ft/di_config_global_policies)
 test(ft/di_config_global_provider)

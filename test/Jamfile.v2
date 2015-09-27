@@ -92,6 +92,7 @@ test-suite ut :
 
 test-suite ft :
     [ test ft/di_bind.cpp ]
+    [ test ft/di_bind_no_memory_header.cpp ]
     [ test ft/di_config.cpp ]
     [ test ft/di_config_global_policies.cpp ]
     [ test ft/di_config_global_provider.cpp ]

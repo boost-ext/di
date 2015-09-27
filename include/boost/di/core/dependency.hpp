@@ -8,10 +8,10 @@
 #define BOOST_DI_CORE_DEPENDENCY_HPP
 
 #include "boost/di/aux_/utility.hpp"
-#include "boost/di/core/multi_bindings.hpp"
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/scopes/deduce.hpp"
+#include "boost/di/scopes/multiple.hpp"
 #include "boost/di/concepts/scopable.hpp"
 #include "boost/di/fwd.hpp"
 
@@ -157,7 +157,14 @@ public:
 
     template<class... Ts, BOOST_DI_REQUIRES(aux::is_array<TExpected, Ts...>::value) = 0>
     auto to() const noexcept {
-        return to(multi_bindings<TScope, TExpected, TGiven, Ts...>{});
+        return dependency<
+            scopes::multiple<TScope, Ts...>
+          , TExpected
+          , TGiven
+          , TName
+          , TPriority
+          , TBase
+        >{};
     }
 
     template<class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value || std::is_same<_, TExpected>::value) = 0>

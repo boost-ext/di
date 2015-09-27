@@ -305,100 +305,53 @@ struct pool<aux::type_list<TArgs...>> : TArgs... {
     { }
 };
 }}}}
-#if !defined(BOOST_DI_CFG_CTOR_LIMIT_SIZE)
-#define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
-#endif
-namespace boost { namespace di { inline namespace v1 { namespace type_traits {
-template<class, class = int> struct is_injectable : std::false_type { }; template<class T> struct is_injectable<T, typename aux::valid_t<typename T::boost_di_inject__>::type> : std::true_type { };
-struct direct { };
-struct uniform { };
-template<class T, int>
-using get = T;
-template<template<class...> class, class, class, class = int>
-struct ctor_impl;
-template<template<class...> class TIsConstructible, class T, int... TArgs>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>
-    , BOOST_DI_REQUIRES((sizeof...(TArgs) > 0) && !TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
-    : std::conditional<
-           TIsConstructible<T, get<core::any_type_ref_fwd<T>, TArgs>...>::value
-         , aux::type_list<get<core::any_type_ref_fwd<T>, TArgs>...>
-         , typename ctor_impl<
-               TIsConstructible
-             , T
-             , aux::make_index_sequence<sizeof...(TArgs) - 1>
-           >::type
-      >
-{ };
-template<template<class...> class TIsConstructible, class T, int... TArgs>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>,
-      BOOST_DI_REQUIRES((sizeof...(TArgs) > 0) && TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
-    : aux::type_list<get<core::any_type_fwd<T>, TArgs>...>
-{ };
-template<template<class...> class TIsConstructible, class T>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<>>
-    : aux::type_list<>
-{ };
-template<template<class...> class TIsConstructible, class T>
-using ctor_impl_t =
-    typename ctor_impl<
-        TIsConstructible
-      , T
-      , aux::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
-    >::type;
-template<class...>
-struct ctor;
+namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 template<class T>
-struct ctor<T, aux::type_list<>>
-    : aux::pair<uniform, ctor_impl_t<aux::is_braces_constructible, T>>
-{ };
-template<class T, class... TArgs>
-struct ctor<T, aux::type_list<TArgs...>>
-    : aux::pair<direct, aux::type_list<TArgs...>>
-{ };
-template<
-    class T
-  , class = typename is_injectable<T>::type
-> struct ctor_traits__;
-template<
-    class T
-  , class = typename is_injectable<di::ctor_traits<T>>::type
-> struct ctor_traits_impl;
-template<class T>
-struct ctor_traits__<T, std::true_type>
-    : aux::pair<direct, typename T::boost_di_inject__::type>
-{ };
-template<class T>
-struct ctor_traits__<T, std::false_type>
-    : ctor_traits_impl<T>
-{ };
-template<class T>
-struct ctor_traits_impl<T, std::true_type>
-    : aux::pair<direct, typename di::ctor_traits<T>::boost_di_inject__::type>
-{ };
-template<class T>
-struct ctor_traits_impl<T, std::false_type>
-    : di::ctor_traits<T>
-{ };
-}
-template<class T, class>
-struct ctor_traits
-    : type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>
-{ };
-template<class T>
-struct ctor_traits<std::initializer_list<T>> {
-    using boost_di_inject__ = aux::type_list<>;
+struct unique {
+    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T, I>::value) = 0>
+    inline operator I() const noexcept {
+        return object;
+    }
+    inline operator T&&() noexcept {
+        return static_cast<T&&>(object);
+    }
+    T object;
 };
 template<class T>
-struct ctor_traits<T, BOOST_DI_REQUIRES(
-    std::is_same<std::char_traits<char>, typename T::traits_type>::value)> {
-    using boost_di_inject__ = aux::type_list<>;
+struct unique<T*> {
+    #if defined(_MSC_VER)
+        explicit unique(T* object)
+            : object(object)
+        { }
+    #endif
+    template<class I>
+    inline operator I() const noexcept {
+        struct scoped_ptr { aux::owner<T*> ptr; ~scoped_ptr() noexcept { delete ptr; } };
+        return *scoped_ptr{object}.ptr;
+    }
+    template<class I>
+    inline operator aux::owner<I*>() const noexcept {
+        return object;
+    }
+    template<class I>
+    inline operator aux::owner<const I*>() const noexcept {
+        return object;
+    }
+    template<class I>
+    inline operator std::shared_ptr<I>() const noexcept {
+        return std::shared_ptr<I>{object};
+    }
+    template<class I>
+    inline operator boost::shared_ptr<I>() const noexcept {
+        return boost::shared_ptr<I>{object};
+    }
+    template<class I, class D>
+    inline operator std::unique_ptr<I, D>() const noexcept {
+        return std::unique_ptr<I, D>{object};
+    }
+    T* object = nullptr;
 };
-template<class T>
-struct ctor_traits<T, BOOST_DI_REQUIRES(
-    std::is_arithmetic<T>::value || std::is_enum<T>::value)> {
-    using boost_di_inject__ = aux::type_list<>;
-};
-}}}
+}}}}
 namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 struct stack { };
 struct heap { };
@@ -468,157 +421,6 @@ struct memory_traits<T, BOOST_DI_REQUIRES(std::is_polymorphic<T>::value)> {
 };
 template<class T>
 using memory_traits_t = typename memory_traits<T>::type;
-}}}}
-namespace boost { namespace di { inline namespace v1 { namespace core {
-template<class T, class U>
-struct t_traits {
-    using type = U;
-    using type_ = U;
-};
-template<class T, class U>
-struct t_traits<T, named<U>> {
-    using type = detail::named_type<U, T>;
-    using type_ = T;
-};
-template<class T, class U>
-struct t_traits<std::shared_ptr<T>, U> {
-    using type = std::shared_ptr<U>;
-    using type_ = std::shared_ptr<U>;
-};
-template<class T, class U>
-struct t_traits<std::shared_ptr<T>, named<U>> {
-    using type = detail::named_type<U, std::shared_ptr<T>>;
-    using type_ = std::shared_ptr<T>;
-};
-template<class T, class D, class U>
-struct t_traits<std::unique_ptr<T, D>, U> {
-    using type = std::unique_ptr<U, D>;
-    using type_ = std::unique_ptr<U, D>;
-};
-template<class T, class D, class U>
-struct t_traits<std::unique_ptr<T, D>, named<U>> {
-    using type = di::detail::named_type<U, std::unique_ptr<T, D>>;
-    using type_ = std::unique_ptr<T, D>;
-};
-template<class T, class U>
-using t_traits_t = typename t_traits<T, U>::type;
-template<class T, class U>
-using t_traits_t_ = typename t_traits<T, U>::type_;
-template<class T>
-struct get {
-    using type = T;
-};
-template<class T>
-struct get<std::shared_ptr<T>> {
-    using type = typename get<T>::type;
-};
-template<class T, class TAllocator>
-struct get<std::vector<T, TAllocator>> {
-    using type = T;
-};
-template<class TKey, class TCompare, class TAllocator>
-struct get<std::set<TKey, TCompare, TAllocator>> {
-    using type = TKey;
-};
-template<class T>
-struct get_ {
-    using type = T;
-};
-template<class T>
-struct get_<std::shared_ptr<T>> {
-    using type = T;
-};
-template<class TScope, class TExpected, class TGiven, class... Ts>
-class multi_bindings {
-    template<class TInjector, class TArray, class T>
-    struct provider {
-        template<class TMemory = type_traits::heap>
-        auto get(const TMemory& memory = {}) const {
-            return TInjector::config::provider(injector_).template
-                get<typename get_<T>::type, typename get_<T>::type>(
-                    type_traits::direct{}
-                  , memory
-                  , std::move_iterator<TArray*>(array_)
-                  , std::move_iterator<TArray*>(array_ + sizeof...(Ts))
-                );
-        }
-        provider(const TInjector& injector, TArray* array)
-            : injector_(injector), array_(array)
-        { }
-        const TInjector& injector_;
-        TArray* array_ = nullptr;
-    };
-    template<class T, class TInjector>
-    struct wrapper {
-        operator T() const {
-            using TArray = typename get<T>::type;
-            TArray array[sizeof...(Ts)] = {
-                static_cast<t_traits_t_<TArray, Ts>>(
-                    static_cast<const di::core::injector__<TInjector>&>(injector_).
-                        create_successful_impl(di::aux::type<t_traits_t<TArray, Ts>>{})
-                )...
-            };
-            return scope_.template create<T>(
-                provider<TInjector, TArray, T>(injector_, array)
-            );
-        }
-        const TInjector& injector_;
-        typename TScope::template scope<TExpected, typename get_<T>::type>& scope_;
-    };
-public:
-    template<class TInjector, class TArg>
-    auto operator()(const TInjector& injector, const TArg&) {
-        typename TScope::template scope<TExpected, typename get_<di::aux::remove_specifiers_t<typename TArg::type>>::type> scope;
-        return wrapper<di::aux::remove_specifiers_t<typename TArg::type>, TInjector>{injector, scope};
-    }
-};
-}}}}
-namespace boost { namespace di { inline namespace v1 { namespace wrappers {
-template<class T>
-struct unique {
-    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T, I>::value) = 0>
-    inline operator I() const noexcept {
-        return object;
-    }
-    inline operator T&&() noexcept {
-        return static_cast<T&&>(object);
-    }
-    T object;
-};
-template<class T>
-struct unique<T*> {
-    #if defined(_MSC_VER)
-        explicit unique(T* object)
-            : object(object)
-        { }
-    #endif
-    template<class I>
-    inline operator I() const noexcept {
-        struct scoped_ptr { aux::owner<T*> ptr; ~scoped_ptr() noexcept { delete ptr; } };
-        return *scoped_ptr{object}.ptr;
-    }
-    template<class I>
-    inline operator aux::owner<I*>() const noexcept {
-        return object;
-    }
-    template<class I>
-    inline operator aux::owner<const I*>() const noexcept {
-        return object;
-    }
-    template<class I>
-    inline operator std::shared_ptr<I>() const noexcept {
-        return std::shared_ptr<I>{object};
-    }
-    template<class I>
-    inline operator boost::shared_ptr<I>() const noexcept {
-        return boost::shared_ptr<I>{object};
-    }
-    template<class I, class D>
-    inline operator std::unique_ptr<I, D>() const noexcept {
-        return std::unique_ptr<I, D>{object};
-    }
-    T* object = nullptr;
-};
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace scopes {
 class unique {
@@ -1060,6 +862,219 @@ public:
     };
 };
 }}}}
+#if !defined(BOOST_DI_CFG_CTOR_LIMIT_SIZE)
+#define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
+#endif
+namespace boost { namespace di { inline namespace v1 { namespace type_traits {
+template<class, class = int> struct is_injectable : std::false_type { }; template<class T> struct is_injectable<T, typename aux::valid_t<typename T::boost_di_inject__>::type> : std::true_type { };
+struct direct { };
+struct uniform { };
+template<class T, int>
+using get = T;
+template<template<class...> class, class, class, class = int>
+struct ctor_impl;
+template<template<class...> class TIsConstructible, class T, int... TArgs>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>
+    , BOOST_DI_REQUIRES((sizeof...(TArgs) > 0) && !TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
+    : std::conditional<
+           TIsConstructible<T, get<core::any_type_ref_fwd<T>, TArgs>...>::value
+         , aux::type_list<get<core::any_type_ref_fwd<T>, TArgs>...>
+         , typename ctor_impl<
+               TIsConstructible
+             , T
+             , aux::make_index_sequence<sizeof...(TArgs) - 1>
+           >::type
+      >
+{ };
+template<template<class...> class TIsConstructible, class T, int... TArgs>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>,
+      BOOST_DI_REQUIRES((sizeof...(TArgs) > 0) && TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
+    : aux::type_list<get<core::any_type_fwd<T>, TArgs>...>
+{ };
+template<template<class...> class TIsConstructible, class T>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<>>
+    : aux::type_list<>
+{ };
+template<template<class...> class TIsConstructible, class T>
+using ctor_impl_t =
+    typename ctor_impl<
+        TIsConstructible
+      , T
+      , aux::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
+    >::type;
+template<class...>
+struct ctor;
+template<class T>
+struct ctor<T, aux::type_list<>>
+    : aux::pair<uniform, ctor_impl_t<aux::is_braces_constructible, T>>
+{ };
+template<class T, class... TArgs>
+struct ctor<T, aux::type_list<TArgs...>>
+    : aux::pair<direct, aux::type_list<TArgs...>>
+{ };
+template<
+    class T
+  , class = typename is_injectable<T>::type
+> struct ctor_traits__;
+template<
+    class T
+  , class = typename is_injectable<di::ctor_traits<T>>::type
+> struct ctor_traits_impl;
+template<class T>
+struct ctor_traits__<T, std::true_type>
+    : aux::pair<direct, typename T::boost_di_inject__::type>
+{ };
+template<class T>
+struct ctor_traits__<T, std::false_type>
+    : ctor_traits_impl<T>
+{ };
+template<class T>
+struct ctor_traits_impl<T, std::true_type>
+    : aux::pair<direct, typename di::ctor_traits<T>::boost_di_inject__::type>
+{ };
+template<class T>
+struct ctor_traits_impl<T, std::false_type>
+    : di::ctor_traits<T>
+{ };
+}
+template<class T, class>
+struct ctor_traits
+    : type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>
+{ };
+template<class T>
+struct ctor_traits<std::initializer_list<T>> {
+    using boost_di_inject__ = aux::type_list<>;
+};
+template<class T>
+struct ctor_traits<T, BOOST_DI_REQUIRES(
+    std::is_same<std::char_traits<char>, typename T::traits_type>::value)> {
+    using boost_di_inject__ = aux::type_list<>;
+};
+template<class T>
+struct ctor_traits<T, BOOST_DI_REQUIRES(
+    std::is_arithmetic<T>::value || std::is_enum<T>::value)> {
+    using boost_di_inject__ = aux::type_list<>;
+};
+}}}
+namespace boost { namespace di { inline namespace v1 { namespace type_traits {
+template<class T, class U>
+struct t_traits {
+    using type = U;
+    using type_ = U;
+};
+template<class T, class U>
+struct t_traits<T, named<U>> {
+    using type = di::detail::named_type<U, T>;
+    using type_ = T;
+};
+template<class T, class U>
+struct t_traits<std::shared_ptr<T>, U> {
+    using type = std::shared_ptr<U>;
+    using type_ = std::shared_ptr<U>;
+};
+template<class T, class U>
+struct t_traits<std::shared_ptr<T>, named<U>> {
+    using type = di::detail::named_type<U, std::shared_ptr<T>>;
+    using type_ = std::shared_ptr<T>;
+};
+template<class T, class D, class U>
+struct t_traits<std::unique_ptr<T, D>, U> {
+    using type = std::unique_ptr<U, D>;
+    using type_ = std::unique_ptr<U, D>;
+};
+template<class T, class D, class U>
+struct t_traits<std::unique_ptr<T, D>, named<U>> {
+    using type = di::detail::named_type<U, std::unique_ptr<T, D>>;
+    using type_ = std::unique_ptr<T, D>;
+};
+template<class T, class U>
+using t_traits_t = typename t_traits<T, U>::type;
+template<class T, class U>
+using t_traits_t_ = typename t_traits<T, U>::type_;
+}}}}
+namespace boost { namespace di { inline namespace v1 { namespace scopes {
+template<class T>
+struct get {
+    using type = T;
+};
+template<class T>
+struct get<std::shared_ptr<T>> {
+    using type = typename get<T>::type;
+};
+template<class T, class TAllocator>
+struct get<std::vector<T, TAllocator>> {
+    using type = T;
+};
+template<class TKey, class TCompare, class TAllocator>
+struct get<std::set<TKey, TCompare, TAllocator>> {
+    using type = TKey;
+};
+template<class T>
+struct get_ {
+    using type = T;
+};
+template<class T>
+struct get_<std::shared_ptr<T>> {
+    using type = T;
+};
+template<class TScope, class... Ts>
+class multiple {
+    template<class TInjector, class TArray, class T>
+    struct provider {
+        template<class TMemory = type_traits::heap>
+        auto get(const TMemory& memory = {}) const {
+            return TInjector::config::provider(injector_).template
+                get<typename get_<T>::type, typename get_<T>::type>(
+                    type_traits::direct{}
+                  , memory
+                  , std::move_iterator<TArray*>(array_)
+                  , std::move_iterator<TArray*>(array_ + sizeof...(Ts))
+                );
+        }
+        provider(const TInjector& injector, TArray* array)
+            : injector_(injector), array_(array)
+        { }
+        const TInjector& injector_;
+        TArray* array_ = nullptr;
+    };
+    template<class T, class TScope_, class TInjector>
+    struct wrapper {
+        operator T() const {
+            using TArray = typename get<T>::type;
+            TArray array[sizeof...(Ts)] = {
+                static_cast<type_traits::t_traits_t_<TArray, Ts>>(
+                    static_cast<const di::core::injector__<TInjector>&>(injector_).
+                        create_successful_impl(di::aux::type<type_traits::t_traits_t<TArray, Ts>>{})
+                )...
+            };
+            return scope_.template create<T>(
+                provider<TInjector, TArray, T>(injector_, array)
+            );
+        }
+        TScope_& scope_;
+        const TInjector& injector_;
+    };
+public:
+    template<class TExpected, class TGiven>
+    class scope {
+    public:
+        template<class>
+        using is_referable = std::false_type;
+        template<class T, class TProvider>
+        static T try_create(const TProvider&);
+        template<class T, class TProvider>
+        auto create(const TProvider& provider) const {
+            using type = di::aux::remove_specifiers_t<T>;
+            using scope_t = typename TScope::template scope<TExpected, typename get_<type>::type>;
+            scope_t scope;
+            return wrapper<type
+                         , scope_t
+                         , di::aux::remove_specifiers_t<decltype(provider.injector_)>
+                   >{scope, provider.injector_};
+        }
+    };
+};
+}}}}
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
 template<class...>
 struct scope {
@@ -1219,7 +1234,14 @@ public:
     }
     template<class... Ts, BOOST_DI_REQUIRES(aux::is_array<TExpected, Ts...>::value) = 0>
     auto to() const noexcept {
-        return to(multi_bindings<TScope, TExpected, TGiven, Ts...>{});
+        return dependency<
+            scopes::multiple<TScope, Ts...>
+          , TExpected
+          , TGiven
+          , TName
+          , TPriority
+          , TBase
+        >{};
     }
     template<class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value || std::is_same<_, TExpected>::value) = 0>
     auto to(T&& object) const noexcept {
