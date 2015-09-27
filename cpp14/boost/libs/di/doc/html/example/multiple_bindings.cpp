@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[multi_bindings
+//[multiple_bindings
 //<-
 #include <initializer_list> // has to be before, due to the bug in clang < 3.7
 //->
