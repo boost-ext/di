@@ -27,6 +27,10 @@ struct wrapper {
         return BOOST_DI_TYPE_WKND(T)wrapper_;
     }
 
+    T operator*() const {
+        return BOOST_DI_TYPE_WKND(T)wrapper_;
+    }
+
     TWrapper wrapper_;
 };
 

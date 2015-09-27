@@ -73,10 +73,8 @@ class multiple {
         operator T() const {
             using TArray = typename get<T>::type;
             TArray array[sizeof...(Ts)] = {
-                static_cast<type_traits::t_traits_t_<TArray, Ts>>(
-                    static_cast<const di::core::injector__<TInjector>&>(injector_).
-                        create_successful_impl(di::aux::type<type_traits::t_traits_t<TArray, Ts>>{})
-                )...
+                *static_cast<const di::core::injector__<TInjector>&>(injector_).
+                    create_successful_impl(di::aux::type<type_traits::rebind_traits_t<TArray, Ts>>{})...
             };
 
             return scope_.template create<T>(
@@ -103,10 +101,11 @@ public:
             using type = di::aux::remove_specifiers_t<T>;
             using scope_t = typename TScope::template scope<TExpected, typename get_<type>::type>;
             scope_t scope;
-            return wrapper<type
-                         , scope_t
-                         , di::aux::remove_specifiers_t<decltype(provider.injector_)>
-                   >{scope, provider.injector_};
+            return wrapper<
+                type
+              , scope_t
+              , di::aux::remove_specifiers_t<decltype(provider.injector_)>
+            >{scope, provider.injector_};
         }
     };
 };

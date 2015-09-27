@@ -252,7 +252,7 @@ test exposed_bind_deduced = [] {
     };
 
     auto injector = di::make_injector(
-        di::bind<int>().to(module{})
+        di::bind<int>().to<module>()
     );
 
     expect(i == injector.create<int>());

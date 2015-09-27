@@ -67,6 +67,12 @@ template<
     >;
 
     template<class T>
+    using specific = std::integral_constant<bool,
+       is_injector<T>::value ||
+       aux::is_array<TExpected, T>::value
+    >;
+
+    template<class T>
     struct ref_traits {
         using type = T;
     };
@@ -143,7 +149,7 @@ public:
         >{};
     }
 
-    template<class T, BOOST_DI_REQUIRES(!aux::is_array<TExpected, T>::value) = 0, BOOST_DI_REQUIRES_MSG(typename concepts::boundable__<TExpected, T>::type) = 0>
+    template<class T, BOOST_DI_REQUIRES(!specific<T>::value) = 0, BOOST_DI_REQUIRES_MSG(typename concepts::boundable__<TExpected, T>::type) = 0>
     auto to() const noexcept {
         return dependency<
             TScope
@@ -181,7 +187,7 @@ public:
     }
 
     template<class T, BOOST_DI_REQUIRES(has_configure<T>::value) = 0>
-    auto to(const T& object) const noexcept {
+    auto to(const T& object = {}) const noexcept {
         using dependency = dependency<
             scopes::exposed<TScope>
           , TExpected
@@ -194,7 +200,7 @@ public:
     }
 
     template<class T, BOOST_DI_REQUIRES(has_deps<T>::value) = 0>
-    auto to(const T& object) const noexcept {
+    auto to(const T& object = {}) const noexcept {
         using dependency = dependency<
             scopes::exposed<TScope>
           , TExpected

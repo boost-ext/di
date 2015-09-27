@@ -958,39 +958,31 @@ struct ctor_traits<T, BOOST_DI_REQUIRES(
 }}}
 namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 template<class T, class U>
-struct t_traits {
+struct rebind_traits {
     using type = U;
-    using type_ = U;
 };
 template<class T, class U>
-struct t_traits<T, named<U>> {
+struct rebind_traits<T, named<U>> {
     using type = di::detail::named_type<U, T>;
-    using type_ = T;
 };
 template<class T, class U>
-struct t_traits<std::shared_ptr<T>, U> {
+struct rebind_traits<std::shared_ptr<T>, U> {
     using type = std::shared_ptr<U>;
-    using type_ = std::shared_ptr<U>;
 };
 template<class T, class U>
-struct t_traits<std::shared_ptr<T>, named<U>> {
+struct rebind_traits<std::shared_ptr<T>, named<U>> {
     using type = di::detail::named_type<U, std::shared_ptr<T>>;
-    using type_ = std::shared_ptr<T>;
 };
 template<class T, class D, class U>
-struct t_traits<std::unique_ptr<T, D>, U> {
+struct rebind_traits<std::unique_ptr<T, D>, U> {
     using type = std::unique_ptr<U, D>;
-    using type_ = std::unique_ptr<U, D>;
 };
 template<class T, class D, class U>
-struct t_traits<std::unique_ptr<T, D>, named<U>> {
+struct rebind_traits<std::unique_ptr<T, D>, named<U>> {
     using type = di::detail::named_type<U, std::unique_ptr<T, D>>;
-    using type_ = std::unique_ptr<T, D>;
 };
 template<class T, class U>
-using t_traits_t = typename t_traits<T, U>::type;
-template<class T, class U>
-using t_traits_t_ = typename t_traits<T, U>::type_;
+using rebind_traits_t = typename rebind_traits<T, U>::type;
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace scopes {
 template<class T>
@@ -1042,10 +1034,8 @@ class multiple {
         operator T() const {
             using TArray = typename get<T>::type;
             TArray array[sizeof...(Ts)] = {
-                static_cast<type_traits::t_traits_t_<TArray, Ts>>(
-                    static_cast<const di::core::injector__<TInjector>&>(injector_).
-                        create_successful_impl(di::aux::type<type_traits::t_traits_t<TArray, Ts>>{})
-                )...
+                *static_cast<const di::core::injector__<TInjector>&>(injector_).
+                    create_successful_impl(di::aux::type<type_traits::rebind_traits_t<TArray, Ts>>{})...
             };
             return scope_.template create<T>(
                 provider<TInjector, TArray, T>(injector_, array)
@@ -1067,10 +1057,11 @@ public:
             using type = di::aux::remove_specifiers_t<T>;
             using scope_t = typename TScope::template scope<TExpected, typename get_<type>::type>;
             scope_t scope;
-            return wrapper<type
-                         , scope_t
-                         , di::aux::remove_specifiers_t<decltype(provider.injector_)>
-                   >{scope, provider.injector_};
+            return wrapper<
+                type
+              , scope_t
+              , di::aux::remove_specifiers_t<decltype(provider.injector_)>
+            >{scope, provider.injector_};
         }
     };
 };
@@ -1155,6 +1146,11 @@ template<
         std::is_same<TExpected, TGiven>::value
     >;
     template<class T>
+    using specific = std::integral_constant<bool,
+       is_injector<T>::value ||
+       aux::is_array<TExpected, T>::value
+    >;
+    template<class T>
     struct ref_traits {
         using type = T;
     };
@@ -1221,7 +1217,7 @@ public:
           , TBase
         >{};
     }
-    template<class T, BOOST_DI_REQUIRES(!aux::is_array<TExpected, T>::value) = 0, BOOST_DI_REQUIRES_MSG(typename concepts::boundable__<TExpected, T>::type) = 0>
+    template<class T, BOOST_DI_REQUIRES(!specific<T>::value) = 0, BOOST_DI_REQUIRES_MSG(typename concepts::boundable__<TExpected, T>::type) = 0>
     auto to() const noexcept {
         return dependency<
             TScope
@@ -1256,7 +1252,7 @@ public:
         return dependency{static_cast<T&&>(object)};
     }
     template<class T, BOOST_DI_REQUIRES(has_configure<T>::value) = 0>
-    auto to(const T& object) const noexcept {
+    auto to(const T& object = {}) const noexcept {
         using dependency = dependency<
             scopes::exposed<TScope>
           , TExpected
@@ -1268,7 +1264,7 @@ public:
         return dependency{object.configure()};
     }
     template<class T, BOOST_DI_REQUIRES(has_deps<T>::value) = 0>
-    auto to(const T& object) const noexcept {
+    auto to(const T& object = {}) const noexcept {
         using dependency = dependency<
             scopes::exposed<TScope>
           , TExpected
@@ -2219,6 +2215,9 @@ struct wrapper {
         return BOOST_DI_TYPE_WKND(T)wrapper_;
     }
     inline operator T() noexcept {
+        return BOOST_DI_TYPE_WKND(T)wrapper_;
+    }
+    T operator*() const {
         return BOOST_DI_TYPE_WKND(T)wrapper_;
     }
     TWrapper wrapper_;
