@@ -7,13 +7,7 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <list>
-#include <queue>
-#include <stack>
-#include <forward_list>
-#include <deque>
 #include <set>
-#include <unordered_set>
 #include "boost/di/aux_/type_traits.hpp"
 #include "common/common.hpp"
 
@@ -129,11 +123,14 @@ test decay_types = [] {
         static_expect(std::is_same<T, decay_t<const T&&>>{});
         static_expect(std::is_same<T*[], decay_t<std::vector<std::shared_ptr<T>>>>{});
         static_expect(std::is_same<T*[], decay_t<std::shared_ptr<std::vector<std::shared_ptr<T>>>>>{});
+        static_expect(std::is_same<T*[], decay_t<std::set<std::shared_ptr<T>>>>{});
+        static_expect(std::is_same<T*[], decay_t<std::shared_ptr<std::set<std::shared_ptr<T>>>>>{});
     };
 
     struct c { };
     test(c{});
     test(int{});
+    test(_{});
 };
 
 void f1() { }
