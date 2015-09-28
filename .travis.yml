@@ -93,6 +93,18 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.5
   - os: linux
+    env: TOOLSET=clang-3.5 VARIANT=analyze COMPILER=clang++-3.5
+    addons:
+      apt:
+        packages:
+        - clang-3.5
+        - valgrind
+        - gdb
+        - bc
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise-3.5
+  - os: linux
     env: TOOLSET=clang-3.6 MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.6
     addons:
       apt:
@@ -107,6 +119,18 @@ matrix:
         - llvm-toolchain-precise-3.6
   - os: linux
     env: TOOLSET=clang-3.6 MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.6
+    addons:
+      apt:
+        packages:
+        - clang-3.6
+        - valgrind
+        - gdb
+        - bc
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise-3.6
+  - os: linux
+    env: TOOLSET=clang-3.6 VARIANT=analyze COMPILER=clang++-3.6
     addons:
       apt:
         packages:
@@ -181,6 +205,18 @@ matrix:
         - llvm-toolchain-precise
   - os: linux
     env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.8
+    addons:
+      apt:
+        packages:
+        - clang-3.8
+        - valgrind
+        - gdb
+        - bc
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise
+  - os: linux
+    env: TOOLSET=clang-3.8 VARIANT=analyze COMPILER=clang++-3.8
     addons:
       apt:
         packages:
