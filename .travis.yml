@@ -143,6 +143,18 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.7
   - os: linux
+    env: TOOLSET=clang-3.7 VARIANT=analyze COMPILER=clang++-3.7
+    addons:
+      apt:
+        packages:
+        - clang-3.7
+        - valgrind
+        - gdb
+        - bc
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise-3.7
+  - os: linux
     env: CMAKE=ON COMPILER=clang++-3.7
     addons:
       apt:
