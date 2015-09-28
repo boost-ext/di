@@ -285,10 +285,15 @@ matrix:
   - os: osx
     env: TOOLSET=clang COMPILER=clang++
   - os: osx
+    env: TOOLSET=clang VARIANT=analyze COMPILER=clang++
+  - os: osx
     env: CMAKE=ON COMPILER=clang++
   - os: osx
     osx_image: xcode7
     env: TOOLSET=clang COMPILER=clang++
+  - os: osx
+    osx_image: xcode7
+    env: TOOLSET=clang VARIANT=analyze COMPILER=clang++
   - os: osx
     osx_image: xcode7
     env: CMAKE=ON BENCHMARK=ON COMPILER=clang++
