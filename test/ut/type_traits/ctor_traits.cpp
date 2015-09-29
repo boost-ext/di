@@ -134,16 +134,16 @@ struct t2 {
     BOOST_DI_INJECT((template<class T>) t2, T, const T&, std::unique_ptr<T>);
 };
 
-auto n = []{};
+struct named_type_t { } named_type;
 
 struct t3 {
-    BOOST_DI_INJECT((template<class T1, class T2, class T3>) t3, T1, int, const T2*, (named = n) T3&);
+    BOOST_DI_INJECT((template<class T1, class T2, class T3>) t3, T1, int, const T2*, (named = named_type) T3&);
 };
 
 test templates = [] {
     static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<t1>, core::any_type_fwd<t1>>>, ctor_traits__<t1>::type>{});
     static_expect(std::is_same<aux::pair<direct, aux::type_list<_, const _&, std::unique_ptr<_>>>, ctor_traits__<t2>::type>{});
-    static_expect(std::is_same<aux::pair<direct, aux::type_list<_, int, const _*, detail::named_type<decltype(n), _&>>>, ctor_traits__<t3>::type>{});
+    static_expect(std::is_same<aux::pair<direct, aux::type_list<_, int, const _*, detail::named_type<named_type_t, _&>>>, ctor_traits__<t3>::type>{});
 };
 
 test inheriting_ctors = [] {
