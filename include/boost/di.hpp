@@ -941,6 +941,10 @@ template<class T, class>
 struct ctor_traits
     : type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>
 { };
+template<>
+struct ctor_traits<_> {
+    using boost_di_inject__ = aux::type_list<>;
+};
 template<class T>
 struct ctor_traits<std::initializer_list<T>> {
     using boost_di_inject__ = aux::type_list<>;
@@ -1239,7 +1243,7 @@ public:
           , TBase
         >{};
     }
-    template<class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value || std::is_same<_, TExpected>::value) = 0>
+    template<class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value || std::is_same<TExpected, _>::value) = 0>
     auto to(T&& object) const noexcept {
         using dependency = dependency<
             scopes::external
