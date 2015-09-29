@@ -233,9 +233,7 @@ struct creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TCtor..
 #undef BOOST_DI_NAMED_ERROR
 
 template<class TInit, class T, class... TArgs>
-struct creatable {
-    static constexpr auto value = std::is_constructible<T, TArgs...>::value;
-};
+struct creatable;
 
 template<class T, class... TArgs>
 struct creatable<type_traits::uniform, T, TArgs...> {

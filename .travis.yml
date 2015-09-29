@@ -93,18 +93,6 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.5
   - os: linux
-    env: TOOLSET=clang-3.5 VARIANT=analyze COMPILER=clang++-3.5
-    addons:
-      apt:
-        packages:
-        - clang-3.5
-        - valgrind
-        - gdb
-        - bc
-        sources:
-        - ubuntu-toolchain-r-test
-        - llvm-toolchain-precise-3.5
-  - os: linux
     env: TOOLSET=clang-3.6 MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.6
     addons:
       apt:
@@ -130,18 +118,6 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.6
   - os: linux
-    env: TOOLSET=clang-3.6 VARIANT=analyze COMPILER=clang++-3.6
-    addons:
-      apt:
-        packages:
-        - clang-3.6
-        - valgrind
-        - gdb
-        - bc
-        sources:
-        - ubuntu-toolchain-r-test
-        - llvm-toolchain-precise-3.6
-  - os: linux
     env: TOOLSET=clang-3.7 MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.7
     addons:
       apt:
@@ -156,18 +132,6 @@ matrix:
         - llvm-toolchain-precise-3.7
   - os: linux
     env: TOOLSET=clang-3.7 MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.7
-    addons:
-      apt:
-        packages:
-        - clang-3.7
-        - valgrind
-        - gdb
-        - bc
-        sources:
-        - ubuntu-toolchain-r-test
-        - llvm-toolchain-precise-3.7
-  - os: linux
-    env: TOOLSET=clang-3.7 VARIANT=analyze COMPILER=clang++-3.7
     addons:
       apt:
         packages:
@@ -205,18 +169,6 @@ matrix:
         - llvm-toolchain-precise
   - os: linux
     env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.8
-    addons:
-      apt:
-        packages:
-        - clang-3.8
-        - valgrind
-        - gdb
-        - bc
-        sources:
-        - ubuntu-toolchain-r-test
-        - llvm-toolchain-precise
-  - os: linux
-    env: TOOLSET=clang-3.8 VARIANT=analyze COMPILER=clang++-3.8
     addons:
       apt:
         packages:
@@ -285,15 +237,10 @@ matrix:
   - os: osx
     env: TOOLSET=clang COMPILER=clang++
   - os: osx
-    env: TOOLSET=clang VARIANT=analyze COMPILER=clang++
-  - os: osx
     env: CMAKE=ON COMPILER=clang++
   - os: osx
     osx_image: xcode7
     env: TOOLSET=clang COMPILER=clang++
-  - os: osx
-    osx_image: xcode7
-    env: TOOLSET=clang VARIANT=analyze COMPILER=clang++
   - os: osx
     osx_image: xcode7
     env: CMAKE=ON BENCHMARK=ON COMPILER=clang++

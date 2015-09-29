@@ -1786,9 +1786,7 @@ struct creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TCtor..
       >
 { };
 template<class TInit, class T, class... TArgs>
-struct creatable {
-    static constexpr auto value = std::is_constructible<T, TArgs...>::value;
-};
+struct creatable;
 template<class T, class... TArgs>
 struct creatable<type_traits::uniform, T, TArgs...> {
     static constexpr auto value = aux::is_braces_constructible<T, TArgs...>::value;
@@ -2704,8 +2702,6 @@ namespace boost { namespace di { inline namespace v1 {
 template<
      class TConfig = ::BOOST_DI_CFG
    , class... TDeps
-   , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type_list<TDeps...>>) = 0
-   , BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>) = 0
 > inline auto make_injector(const TDeps&... args) noexcept {
     return core::injector<TConfig, decltype(((TConfig*)0)->policies(0)), TDeps...>{core::init{}, args...};
 }
