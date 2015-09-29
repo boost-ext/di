@@ -144,7 +144,7 @@ test c_traits_no_limits = [] {
 };
 
 #if !defined(BOOST_DI_CFG_CTOR)
-    struct named_int_impl { } named_int;
+    struct named_int_t { } named_int;
 
     test named_param = [] {
         constexpr auto i = 42;
@@ -193,11 +193,11 @@ test c_traits_no_limits = [] {
     };
 #endif
 
-auto a = []{};
+struct named_type_t { } named_type;
 
 struct c_t {
     BOOST_DI_INJECT((template<class T1, class T2, class T3>) c_t
-                   , T1 i, const T2& d, (named = a) const T3 f)
+                   , T1 i, const T2& d, (named = named_type) const T3 f)
         : i(i), d(d), f(f)
     { }
 
