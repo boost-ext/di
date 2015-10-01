@@ -103,6 +103,24 @@ struct typename_traits<const std::weak_ptr<_>&, T> {
 template<class T, class U>
 using typename_traits_t = typename typename_traits<T, U>::type;
 
+template<class, class T>
+struct given_traits {
+    using type = T;
+};
+
+template<class T, class... Ts>
+struct given_traits<T, core::array<_, Ts...>> {
+    using type = core::array<T, Ts...>;
+};
+
+template<class T, class... Ts>
+struct given_traits<const T&, core::array<_, Ts...>> {
+    using type = core::array<T, Ts...>;
+};
+
+template<class T, class U>
+using given_traits_t = typename given_traits<T, U>::type;
+
 }}}} // boost::di::v1::type_traits
 
 #endif

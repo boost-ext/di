@@ -113,27 +113,23 @@ protected:
     template<class T, class TName = no_name, class TIsRoot = std::false_type>
     struct is_creatable {
         using TDependency = std::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>;
-        using TCtor = typename type_traits::ctor_traits__<typename TDependency::given>::type;
-
-        using type = std::conditional_t<
-            std::is_same<_, typename TDependency::given>::value
-          , void
-          , type_traits::typename_traits_t<T, typename TDependency::given>
-        >;
+        using TGiven = type_traits::given_traits_t<T, typename TDependency::given>;
+        using TCtor = typename type_traits::ctor_traits__<TGiven>::type;
+        using Type = std::conditional_t<std::is_same<_, TGiven>::value, void, type_traits::typename_traits_t<T, TGiven>>;
 
         static constexpr auto value = std::is_convertible<
             decltype(
-                dependency__<TDependency>::template try_create<type>(
+                dependency__<TDependency>::template try_create<Type>(
                     try_provider<
-                        typename TDependency::given
+                        TGiven
                       , TCtor
                       , injector
                       , decltype(TConfig::provider(std::declval<injector>()))
                     >{}
                 )
-            ), type>::value BOOST_DI_CORE_INJECTOR_POLICY(&&
+            ), Type>::value BOOST_DI_CORE_INJECTOR_POLICY(&&
             policy::template try_call<
-                arg_wrapper<referable_t<type, dependency__<TDependency>>, TName, TIsRoot, pool_t>
+                arg_wrapper<referable_t<Type, dependency__<TDependency>>, TName, TIsRoot, pool_t>
               , TPolicies
               , TDependency
               , TCtor
@@ -154,16 +150,16 @@ public:
         : injector{from_injector{}, other, deps{}}
     { }
 
-    template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, std::true_type>::value) = 0>
+    template<class T>//, BOOST_DI_REQUIRES(is_creatable<T, no_name, std::true_type>::value) = 0>
     T create() const {
         return BOOST_DI_TYPE_WKND(T)create_successful_impl<std::true_type>(aux::type<T>{});
     }
 
-    template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, std::true_type>::value) = 0>
-    BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG
-    T create() const {
-        return BOOST_DI_TYPE_WKND(T)create_impl<std::true_type>(aux::type<T>{});
-    }
+    //template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, std::true_type>::value) = 0>
+    //BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG
+    //T create() const {
+        //return BOOST_DI_TYPE_WKND(T)create_impl<std::true_type>(aux::type<T>{});
+    //}
 
     template<class T, BOOST_DI_REQUIRES(!has_deps<T>::value) = 0>
     operator T() const {
@@ -171,24 +167,29 @@ public:
     }
 
 protected:
-    template<class T>
+    template<class T, bool = false>
     struct try_create {
         using type = std::conditional_t<is_creatable<T>::value, typename is_creatable<T>::type, void>;
     };
 
-    template<class TParent>
-    struct try_create<any_type_fwd<TParent>> {
+    template<class TParent, bool B>
+    struct try_create<any_type_fwd<TParent>, B> {
         using type = any_type<TParent, injector, with_error>;
     };
 
-    template<class TParent>
-    struct try_create<any_type_ref_fwd<TParent>> {
+    template<class TParent, bool B>
+    struct try_create<any_type_ref_fwd<TParent>, B> {
         using type = any_type_ref<TParent, injector, with_error>;
     };
 
-    template<class TName, class T>
-    struct try_create<detail::named_type<TName, T>> {
+    template<class TName, class T, bool B>
+    struct try_create<detail::named_type<TName, T>, B> {
         using type = std::conditional_t<is_creatable<T, TName>::value, typename is_creatable<T, TName>::type, void>;
+    };
+
+    template<bool B>
+    struct try_create<self, B> {
+        using type = injector;
     };
 
     template<class TIsRoot = std::false_type, class T>
@@ -231,6 +232,11 @@ protected:
         return create_successful_impl__<TIsRoot, T, TName>();
     }
 
+    template<class TIsRoot = std::false_type>
+    auto create_successful_impl(const aux::type<self>&) const {
+        return *this;
+    }
+
 private:
     template<class... TArgs>
     explicit injector(const from_deps&, const TArgs&... args) noexcept
@@ -251,9 +257,9 @@ private:
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;
-        using given_t = typename dependency_t::given;
-        using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
+        using given_t = type_traits::given_traits_t<T, typename dependency_t::given>;
         using type_t = type_traits::typename_traits_t<T, given_t>;
+        using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
         using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
         using wrapper_t = decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<type_t>(provider_t{*this}));
         using create_t = referable_t<type_t, dependency__<dependency_t>>;
@@ -272,7 +278,7 @@ private:
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = std::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;
-        using given_t = typename dependency_t::given;
+        using given_t = type_traits::given_traits_t<T, typename dependency_t::given>;
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
         using type_t = type_traits::typename_traits_t<T, given_t>;
         using provider_t = successful::provider<expected_t, given_t, ctor_t, injector>;

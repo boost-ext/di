@@ -8,10 +8,10 @@
 #define BOOST_DI_CORE_DEPENDENCY_HPP
 
 #include "boost/di/aux_/utility.hpp"
+#include "boost/di/core/array.hpp"
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/scopes/external.hpp"
 #include "boost/di/scopes/deduce.hpp"
-#include "boost/di/scopes/multiple.hpp"
 #include "boost/di/concepts/scopable.hpp"
 #include "boost/di/fwd.hpp"
 
@@ -164,9 +164,9 @@ public:
     template<class... Ts, BOOST_DI_REQUIRES(aux::is_array<TExpected, Ts...>::value) = 0>
     auto to() const noexcept {
         return dependency<
-            scopes::multiple<TScope, Ts...>
+            TScope
           , TExpected
-          , TGiven
+          , array<_, Ts...>
           , TName
           , TPriority
           , TBase

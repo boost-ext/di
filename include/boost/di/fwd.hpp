@@ -40,6 +40,7 @@ namespace boost { namespace di { inline namespace v1 {
 
     template<class> struct named;
     template<class, class = int> struct ctor_traits;
+    struct self { };
 
     namespace core {
         template<class> struct any_type_fwd;
@@ -65,6 +66,10 @@ namespace boost { namespace di { inline namespace v1 {
                 using T::is_creatable;
             #endif // __pph__
         };
+
+        template<class, class...>
+        struct array;
+
     } // core
 
     namespace concepts { template<class...> struct boundable__; } // concepts
