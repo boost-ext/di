@@ -33,8 +33,25 @@ struct array : array__<typename T::value_type, sizeof...(Ts)>, T {
     { }
 };
 
-template<class... Ts>
-struct array<_, Ts...> { };
+template<class T, std::size_t N, class... Ts>
+struct array<std::array<T, N>, Ts...> : std::array<T, N> {
+    using boost_di_inject__ = aux::type_list<self>;
+
+    template<class TInjector>
+    explicit array(const TInjector& injector)
+        : std::array<T, N>{
+            *static_cast<const core::injector__<TInjector>&>(injector).
+                create_successful_impl(aux::type<type_traits::rebind_traits_t<T, Ts>>{})...
+         }
+    { }
+};
+
+template<class T, class... Ts>
+struct array<T*[], Ts...>
+{ };
+
+//TODO std::array
+//compile errors
 
 }}}} // boost::di::v1::core
 

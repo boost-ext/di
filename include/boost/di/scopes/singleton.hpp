@@ -9,6 +9,7 @@
 
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/type_traits/memory_traits.hpp" // type_traits::stack
+#include "boost/di/type_traits/typename_traits.hpp" // type_traits::stack
 #include "boost/di/wrappers/shared.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace scopes {
@@ -47,22 +48,22 @@ public:
     class scope<_, T, std::true_type> {
     public:
         template<class T_>
-        using is_referable = typename wrappers::shared<T>::template is_referable<T_>;
+        using is_referable = typename wrappers::shared<type_traits::given_traits_t<T, T_>>::template is_referable<T_>;
 
-        template<class, class TProvider>
-        static decltype(wrappers::shared<T>{std::shared_ptr<T>{std::shared_ptr<T>{std::declval<TProvider>().get()}}})
+        template<class T_, class TProvider>
+        static decltype(wrappers::shared<type_traits::given_traits_t<T, T_>>{std::shared_ptr<type_traits::given_traits_t<T_, T>>{std::shared_ptr<type_traits::given_traits_t<T_, T>>{std::declval<TProvider>().get()}}})
         try_create(const TProvider&);
 
-        template<class, class TProvider>
+        template<class T_, class TProvider>
         auto create(const TProvider& provider) {
-            return create_impl(provider);
+            return create_impl<T_>(provider);
         }
 
     private:
-        template<class TProvider>
+        template<class T_, class TProvider>
         auto create_impl(const TProvider& provider) {
-            static std::shared_ptr<T> object{provider.get()};
-            return wrappers::shared<T, std::shared_ptr<T>&>{object};
+            static std::shared_ptr<type_traits::given_traits_t<T_, T>> object{provider.get()};
+            return wrappers::shared<type_traits::given_traits_t<T_, T>, std::shared_ptr<type_traits::given_traits_t<T_, T>>&>{object};
         }
     };
 };

@@ -9,7 +9,6 @@
 #include <memory>
 #include <string>
 #include <functional>
-#include <iterator>
 #include <vector>
 #include <set>
 
@@ -554,16 +553,36 @@ test bind_function_to_callable = [] {
     injector.create<functions>();
 };
 
-//test multi_bindings_empty = [] {
-    //struct c {
-        //c(std::vector<int> v) {
-            //expect(v.empty());
-        //}
-    //};
+test multi_bindings_empty = [] {
+    struct c {
+        c(std::vector<int> v) {
+            expect(v.empty());
+        }
+    };
 
-    //auto injector = di::make_injector();
-    //injector.create<c>();
-//};
+    auto injector = di::make_injector();
+    injector.create<c>();
+};
+
+test multi_bindings_containers = [] {
+    auto test = [](auto object) {
+        expect(object.size() == 2);
+        auto it = object.begin();
+        expect(*(std::next(it, 0)) == 11);
+        expect(*(std::next(it, 1)) == 87);
+    };
+
+    auto injector = di::make_injector(
+        di::bind<int[]>().to<int, di::named<class Int42>>()
+      , di::bind<int>().to(11)
+      , di::bind<int>().to(42).named<class Int42>()
+      , di::bind<int>().to(87).named<class Int42>() [di::override]
+    );
+
+    test(injector.create<std::vector<int>>());
+    test(injector.create<std::set<int>>());
+    test(injector.create<std::array<int, 2>>());
+};
 
 test multi_bindings_inject_named = [] {
     struct c {
@@ -588,25 +607,6 @@ test multi_bindings_inject_named = [] {
     );
 
     injector.create<c>();
-};
-
-test multi_bindings_containers = [] {
-    auto test = [](auto object) {
-        expect(object.size() == 2);
-        auto it = object.begin();
-        expect(*(std::next(it, 0)) == 11);
-        expect(*(std::next(it, 1)) == 87);
-    };
-
-    auto injector = di::make_injector(
-        di::bind<int*[]>().to<int, di::named<class Int42>>()
-      , di::bind<int>().to(11)
-      , di::bind<int>().to(42).named<class Int42>()
-      , di::bind<int>().to(87).named<class Int42>() [di::override]
-    );
-
-    test(injector.create<std::vector<int>>());
-    test(injector.create<std::set<int>>());
 };
 
 test multi_bindings_ctor_with_exposed_module = [] {
@@ -658,8 +658,7 @@ test multi_bindings_share_object_between_list_and_parameter = [] {
 };
 
 /*struct c_t {*/
-    //BOOST_DI_INJECT((template<class T>)c_t, std::vector<T>) {
-    //}
+    //BOOST_DI_INJECT((template<class T>)c_t, std::vector<T>) { }
 //};
 
 //test multi_bindings_template_type = [] {
@@ -669,22 +668,22 @@ test multi_bindings_share_object_between_list_and_parameter = [] {
     //injector.create<c_t>();
 /*};*/
 
-/*test multi_bindings_with_scope = [] {*/
-   //struct c {
-        //c(std::shared_ptr<std::vector<std::shared_ptr<i1>>> v1
-        //, std::shared_ptr<std::vector<std::shared_ptr<i1>>> v2) {
-        ////, std::vector<std::shared_ptr<i1>>& v3) {
-            //expect(v1 == v2);
-            ////expect(*v2 == v3);
-        //}
-    //};
+test multi_bindings_with_scope = [] {
+   struct c {
+        c(std::shared_ptr<std::vector<std::shared_ptr<i1>>> v1
+        , std::shared_ptr<std::vector<std::shared_ptr<i1>>> v2
+        , std::vector<std::shared_ptr<i1>>& v3) {
+            expect(v1 == v2);
+            expect(*v2 == v3);
+        }
+    };
 
-    //auto injector = di::make_injector(
-        //di::bind<i1*[]>().to<impl1>()
-    //);
+    auto injector = di::make_injector(
+        di::bind<i1*[]>().to<impl1>()
+    );
 
-    //injector.create<c>();
-/*};*/
+    injector.create<c>();
+};
 
 test multi_bindings_with_initializer_list = [] {
     auto test = [](auto object) {
@@ -697,7 +696,7 @@ test multi_bindings_with_initializer_list = [] {
     };
 
     auto injector = di::make_injector(
-        di::bind<int*[]>().to({1, 2, 3, 4})
+        di::bind<int[]>().to({1, 2, 3, 4})
     );
 
     test(injector.create<std::vector<int>>());

@@ -135,6 +135,7 @@ namespace std {
     template<class, class> class unique_ptr;
     template<class> struct char_traits;
     template<class, class> class vector;
+    template<class, std::size_t> class array;
     template<class, class, class> class set;
     template<class> class move_iterator;
 #ifdef _LIBCPP_VERSION
@@ -237,11 +238,15 @@ struct deref_type<std::weak_ptr<T>> {
 };
 template<class T, class TAllocator>
 struct deref_type<std::vector<T, TAllocator>> {
-    using type = remove_specifiers_t<typename deref_type<T>::type>*[];
+    using type = core::array<remove_specifiers_t<typename deref_type<T>::type>*[]>;
+};
+template<class T, std::size_t N>
+struct deref_type<std::array<T, N>> {
+    using type = core::array<remove_specifiers_t<typename deref_type<T>::type>*[]>;
 };
 template<class TKey, class TCompare, class TAllocator>
 struct deref_type<std::set<TKey, TCompare, TAllocator>> {
-    using type = remove_specifiers_t<typename deref_type<TKey>::type>*[];
+    using type = core::array<remove_specifiers_t<typename deref_type<TKey>::type>*[]>;
 };
 template<class T>
 using decay_t = typename deref_type<remove_specifiers_t<T>>::type;
@@ -354,8 +359,20 @@ struct array : array__<typename T::value_type, sizeof...(Ts)>, T {
           , std::move_iterator<value_type*>(array_ + sizeof...(Ts)))
     { }
 };
-template<class... Ts>
-struct array<_, Ts...> { };
+template<class T, std::size_t N, class... Ts>
+struct array<std::array<T, N>, Ts...> : std::array<T, N> {
+    using boost_di_inject__ = aux::type_list<self>;
+    template<class TInjector>
+    explicit array(const TInjector& injector)
+        : std::array<T, N>{
+            *static_cast<const core::injector__<TInjector>&>(injector).
+                create_successful_impl(aux::type<type_traits::rebind_traits_t<T, Ts>>{})...
+         }
+    { }
+};
+template<class T, class... Ts>
+struct array<T*[], Ts...>
+{ };
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 template<class T>
@@ -496,6 +513,102 @@ public:
     };
 };
 }}}}
+namespace boost { namespace di { inline namespace v1 { namespace type_traits {
+template<class T>
+struct cast {
+    using type = T&&;
+};
+template<template<class...> class T, class... Ts>
+struct cast<T<std::false_type, Ts...>> {
+    using type = typename T<std::false_type, Ts...>::value_type;
+};
+template<class T>
+using cast_t = typename cast<T>::type;
+template<class T, class>
+struct typename_traits {
+    using type = T;
+};
+template<class T>
+struct typename_traits<_, T> {
+    using type = T;
+};
+template<class T>
+struct typename_traits<_&, T> {
+    using type = T&;
+};
+template<class T>
+struct typename_traits<const _&, T> {
+    using type = const T&;
+};
+template<class T>
+struct typename_traits<_&&, T> {
+    using type = T&&;
+};
+template<class T>
+struct typename_traits<_*, T> {
+    using type = T*;
+};
+template<class T>
+struct typename_traits<const _*, T> {
+    using type = const T*;
+};
+template<class T, template<class...> class TDeleter>
+struct typename_traits<std::unique_ptr<_, TDeleter<_>>, T> {
+    using type = std::unique_ptr<T, TDeleter<T>>;
+};
+template<class T, template<class...> class TDeleter>
+struct typename_traits<const std::unique_ptr<_, TDeleter<_>>&, T> {
+    using type = const std::unique_ptr<T, TDeleter<T>>&;
+};
+template<class T>
+struct typename_traits<std::shared_ptr<_>, T> {
+    using type = std::shared_ptr<T>;
+};
+template<class T>
+struct typename_traits<const std::shared_ptr<_>&, T> {
+    using type = std::shared_ptr<T>;
+};
+template<class T>
+struct typename_traits<boost::shared_ptr<_>, T> {
+    using type = boost::shared_ptr<T>;
+};
+template<class T>
+struct typename_traits<const boost::shared_ptr<_>&, T> {
+    using type = boost::shared_ptr<T>;
+};
+template<class T>
+struct typename_traits<std::weak_ptr<_>, T> {
+    using type = std::weak_ptr<T>;
+};
+template<class T>
+struct typename_traits<const std::weak_ptr<_>&, T> {
+    using type = std::weak_ptr<T>;
+};
+template<class T, class U>
+using typename_traits_t = typename typename_traits<T, U>::type;
+template<class, class T>
+struct given_traits {
+    using type = T;
+};
+template<class T, class X, class... Ts>
+struct given_traits<T, core::array<X*[], Ts...>> {
+    using type = core::array<T, Ts...>;
+};
+template<class T, class X, class... Ts>
+struct given_traits<const T&, core::array<X*[], Ts...>> {
+    using type = core::array<T, Ts...>;
+};
+template<class T, class X, class... Ts>
+struct given_traits<T&, core::array<X*[], Ts...>> {
+    using type = core::array<T, Ts...>;
+};
+template<class T, class X, class... Ts>
+struct given_traits<std::shared_ptr<T>, core::array<X*[], Ts...>> {
+    using type = core::array<T, Ts...>;
+};
+template<class T, class U>
+using given_traits_t = typename given_traits<T, U>::type;
+}}}}
 namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 template<class T, class TObject = std::shared_ptr<T>>
 struct shared {
@@ -589,19 +702,19 @@ public:
     class scope<_, T, std::true_type> {
     public:
         template<class T_>
-        using is_referable = typename wrappers::shared<T>::template is_referable<T_>;
-        template<class, class TProvider>
-        static decltype(wrappers::shared<T>{std::shared_ptr<T>{std::shared_ptr<T>{std::declval<TProvider>().get()}}})
+        using is_referable = typename wrappers::shared<type_traits::given_traits_t<T, T_>>::template is_referable<T_>;
+        template<class T_, class TProvider>
+        static decltype(wrappers::shared<type_traits::given_traits_t<T, T_>>{std::shared_ptr<type_traits::given_traits_t<T_, T>>{std::shared_ptr<type_traits::given_traits_t<T_, T>>{std::declval<TProvider>().get()}}})
         try_create(const TProvider&);
-        template<class, class TProvider>
+        template<class T_, class TProvider>
         auto create(const TProvider& provider) {
-            return create_impl(provider);
+            return create_impl<T_>(provider);
         }
     private:
-        template<class TProvider>
+        template<class T_, class TProvider>
         auto create_impl(const TProvider& provider) {
-            static std::shared_ptr<T> object{provider.get()};
-            return wrappers::shared<T, std::shared_ptr<T>&>{object};
+            static std::shared_ptr<type_traits::given_traits_t<T_, T>> object{provider.get()};
+            return wrappers::shared<type_traits::given_traits_t<T_, T>, std::shared_ptr<type_traits::given_traits_t<T_, T>>&>{object};
         }
     };
 };
@@ -1053,6 +1166,18 @@ using scopable = typename scopable__<T>::type;
 namespace boost { namespace di { inline namespace v1 { namespace core {
 template<class T, class... TArgs> decltype(std::declval<T>().configure(std::declval<TArgs>()...) , std::true_type()) has_configure_impl(int); template<class, class...> std::false_type has_configure_impl(...); template<class T, class... TArgs> struct has_configure : decltype(has_configure_impl<T, TArgs...>(0)) { };
 template<class, class = int> struct has_deps : std::false_type { }; template<class T> struct has_deps<T, typename aux::valid_t<typename T::deps>::type> : std::true_type { };
+template<class>
+struct array_type;
+template<class T>
+struct array_type<T*[]> {
+    using type = T*[];
+};
+template<class T>
+struct array_type<T[]> {
+    using type = T*[];
+};
+template<class T>
+using array_type_t = typename array_type<T>::type;
 template<class T, class U = std::remove_reference_t<T>>
 struct is_injector
     : std::integral_constant<bool, has_deps<U>::value || has_configure<U>::value>
@@ -1178,11 +1303,11 @@ public:
     auto to() const noexcept {
         return dependency<
             TScope
-          , TExpected
-          , array<_, Ts...>
+          , array<array_type_t<TExpected>, Ts...>
+          , array<array_type_t<TExpected>, Ts...>
           , TName
           , TPriority
-          , TBase
+          , array<array_type_t<TExpected>>
         >{};
     }
     template<class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value || std::is_same<TExpected, _>::value) = 0>
@@ -1229,7 +1354,7 @@ public:
           , std::initializer_list<T>
           , TName
           , TPriority
-          , TBase
+          , array<array_type_t<TExpected>>
         >;
         return dependency{object};
     }
@@ -1311,94 +1436,6 @@ struct is_callable<void> {
 };
 template<class... Ts>
 using callable = typename is_callable<Ts...>::type;
-}}}}
-namespace boost { namespace di { inline namespace v1 { namespace type_traits {
-template<class T>
-struct cast {
-    using type = T&&;
-};
-template<template<class...> class T, class... Ts>
-struct cast<T<std::false_type, Ts...>> {
-    using type = typename T<std::false_type, Ts...>::value_type;
-};
-template<class T>
-using cast_t = typename cast<T>::type;
-template<class T, class>
-struct typename_traits {
-    using type = T;
-};
-template<class T>
-struct typename_traits<_, T> {
-    using type = T;
-};
-template<class T>
-struct typename_traits<_&, T> {
-    using type = T&;
-};
-template<class T>
-struct typename_traits<const _&, T> {
-    using type = const T&;
-};
-template<class T>
-struct typename_traits<_&&, T> {
-    using type = T&&;
-};
-template<class T>
-struct typename_traits<_*, T> {
-    using type = T*;
-};
-template<class T>
-struct typename_traits<const _*, T> {
-    using type = const T*;
-};
-template<class T, template<class...> class TDeleter>
-struct typename_traits<std::unique_ptr<_, TDeleter<_>>, T> {
-    using type = std::unique_ptr<T, TDeleter<T>>;
-};
-template<class T, template<class...> class TDeleter>
-struct typename_traits<const std::unique_ptr<_, TDeleter<_>>&, T> {
-    using type = const std::unique_ptr<T, TDeleter<T>>&;
-};
-template<class T>
-struct typename_traits<std::shared_ptr<_>, T> {
-    using type = std::shared_ptr<T>;
-};
-template<class T>
-struct typename_traits<const std::shared_ptr<_>&, T> {
-    using type = std::shared_ptr<T>;
-};
-template<class T>
-struct typename_traits<boost::shared_ptr<_>, T> {
-    using type = boost::shared_ptr<T>;
-};
-template<class T>
-struct typename_traits<const boost::shared_ptr<_>&, T> {
-    using type = boost::shared_ptr<T>;
-};
-template<class T>
-struct typename_traits<std::weak_ptr<_>, T> {
-    using type = std::weak_ptr<T>;
-};
-template<class T>
-struct typename_traits<const std::weak_ptr<_>&, T> {
-    using type = std::weak_ptr<T>;
-};
-template<class T, class U>
-using typename_traits_t = typename typename_traits<T, U>::type;
-template<class, class T>
-struct given_traits {
-    using type = T;
-};
-template<class T, class... Ts>
-struct given_traits<T, core::array<_, Ts...>> {
-    using type = core::array<T, Ts...>;
-};
-template<class T, class... Ts>
-struct given_traits<const T&, core::array<_, Ts...>> {
-    using type = core::array<T, Ts...>;
-};
-template<class T, class U>
-using given_traits_t = typename given_traits<T, U>::type;
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
 class binder {

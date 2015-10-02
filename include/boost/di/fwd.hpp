@@ -17,6 +17,7 @@ namespace std {
     template<class, class> class unique_ptr;
     template<class> struct char_traits;
     template<class, class> class vector;
+    template<class, std::size_t> class array;
     template<class, class, class> class set;
     template<class> class move_iterator;
 #ifdef _LIBCPP_VERSION // __pph__

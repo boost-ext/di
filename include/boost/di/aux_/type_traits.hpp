@@ -102,12 +102,17 @@ struct deref_type<std::weak_ptr<T>> {
 
 template<class T, class TAllocator>
 struct deref_type<std::vector<T, TAllocator>> {
-    using type = remove_specifiers_t<typename deref_type<T>::type>*[];
+    using type = core::array<remove_specifiers_t<typename deref_type<T>::type>*[]>;
+};
+
+template<class T, std::size_t N>
+struct deref_type<std::array<T, N>> {
+    using type = core::array<remove_specifiers_t<typename deref_type<T>::type>*[]>;
 };
 
 template<class TKey, class TCompare, class TAllocator>
 struct deref_type<std::set<TKey, TCompare, TAllocator>> {
-    using type = remove_specifiers_t<typename deref_type<TKey>::type>*[];
+    using type = core::array<remove_specifiers_t<typename deref_type<TKey>::type>*[]>;
 };
 
 template<class T>

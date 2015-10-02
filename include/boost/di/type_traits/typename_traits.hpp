@@ -108,13 +108,23 @@ struct given_traits {
     using type = T;
 };
 
-template<class T, class... Ts>
-struct given_traits<T, core::array<_, Ts...>> {
+template<class T, class X, class... Ts>
+struct given_traits<T, core::array<X*[], Ts...>> {
     using type = core::array<T, Ts...>;
 };
 
-template<class T, class... Ts>
-struct given_traits<const T&, core::array<_, Ts...>> {
+template<class T, class X, class... Ts>
+struct given_traits<const T&, core::array<X*[], Ts...>> {
+    using type = core::array<T, Ts...>;
+};
+
+template<class T, class X, class... Ts>
+struct given_traits<T&, core::array<X*[], Ts...>> {
+    using type = core::array<T, Ts...>;
+};
+
+template<class T, class X, class... Ts>
+struct given_traits<std::shared_ptr<T>, core::array<X*[], Ts...>> {
     using type = core::array<T, Ts...>;
 };
 

@@ -20,6 +20,22 @@ namespace boost { namespace di { inline namespace v1 { namespace core {
 BOOST_DI_HAS_METHOD(has_configure, configure);
 BOOST_DI_HAS_TYPE(has_deps, deps);
 
+template<class>
+struct array_type;
+
+template<class T>
+struct array_type<T*[]> {
+    using type = T*[];
+};
+
+template<class T>
+struct array_type<T[]> {
+    using type = T*[];
+};
+
+template<class T>
+using array_type_t = typename array_type<T>::type;
+
 template<class T, class U = std::remove_reference_t<T>>
 struct is_injector
     : std::integral_constant<bool, has_deps<U>::value || has_configure<U>::value>
@@ -165,11 +181,11 @@ public:
     auto to() const noexcept {
         return dependency<
             TScope
-          , TExpected
-          , array<_, Ts...>
+          , array<array_type_t<TExpected>, Ts...>
+          , array<array_type_t<TExpected>, Ts...>
           , TName
           , TPriority
-          , TBase
+          , array<array_type_t<TExpected>>
         >{};
     }
 
@@ -220,7 +236,7 @@ public:
           , std::initializer_list<T>
           , TName
           , TPriority
-          , TBase
+          , array<array_type_t<TExpected>>
         >;
         return dependency{object};
     }
