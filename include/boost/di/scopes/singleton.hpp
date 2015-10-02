@@ -46,19 +46,20 @@ public:
 
     template<class _, class T>
     class scope<_, T, std::true_type> {
+        template<class T_>
+        using get_type = std::conditional_t<std::is_same<T_, type_traits::given_traits_t<T_, T>>::value, T, type_traits::given_traits_t<T_, T>>;
+
     public:
         template<class T_>
-        using is_referable = typename wrappers::shared<type_traits::given_traits_t<T, T_>>::template is_referable<T_>;
+        using is_referable = typename wrappers::shared<get_type<T>>::template is_referable<T_>;
 
         template<class T_, class TProvider>
-        static decltype(wrappers::shared<type_traits::given_traits_t<T, T_>>{std::shared_ptr<type_traits::given_traits_t<T_, T>>{std::shared_ptr<type_traits::given_traits_t<T_, T>>{std::declval<TProvider>().get()}}})
+        static decltype(wrappers::shared<get_type<T_>>{std::shared_ptr<get_type<T_>>{std::shared_ptr<get_type<T_>>{std::declval<TProvider>().get()}}})
         try_create(const TProvider&);
 
         template<class T_, class TProvider>
         auto create(const TProvider& provider) {
-            using given_t = type_traits::given_traits_t<T_, T>;
-            using type = std::conditional_t<std::is_same<T_, given_t>::value, T, given_t>;
-            return create_impl<type>(provider);
+            return create_impl<get_type<T_>>(provider);
         }
 
     private:

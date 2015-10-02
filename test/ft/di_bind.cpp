@@ -556,8 +556,10 @@ test bind_function_to_callable = [] {
 
 test multi_bindings_empty = [] {
     struct c {
-        c(std::vector<int> v) {
+        c(std::vector<int> v, std::array<int, 0> a, const std::set<std::unique_ptr<i1>>& s) {
             expect(v.empty());
+            expect(a.empty());
+            expect(s.empty());
         }
     };
 
@@ -658,16 +660,19 @@ test multi_bindings_share_object_between_list_and_parameter = [] {
     injector.create<c>();
 };
 
-/*struct c_t {*/
-    //BOOST_DI_INJECT((template<class T>)c_t, std::vector<T>) { }
-//};
+struct c_t {
+    BOOST_DI_INJECT((template<class T>)c_t
+                   , std::vector<T>)
+    { }
+};
 
-//test multi_bindings_template_type = [] {
-    //auto injector = di::make_injector(
-        ////di::bind<di::_*[]>().to<int>()
-    //);
+test multi_bindings_template_type = [] {
+    auto injector = di::make_injector(
+        di::bind<di::_[]>().to<int>()
+    );
+    (void)injector;
     //injector.create<c_t>();
-/*};*/
+};
 
 test multi_bindings_with_scope = [] {
    struct c {
