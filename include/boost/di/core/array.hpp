@@ -22,7 +22,7 @@ struct array__<T, 0> { T array_[1]; };
 template<class T, class... Ts>
 struct array : array__<typename T::value_type, sizeof...(Ts)>, T {
     using value_type = typename T::value_type;
-	using array__<value_type, sizeof...(Ts)>::array_;
+    using array__<value_type, sizeof...(Ts)>::array_;
     using boost_di_inject__ = aux::type_list<self>;
 
     template<bool... Bs>
