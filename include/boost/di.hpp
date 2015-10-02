@@ -125,7 +125,7 @@ struct make_index_sequence_impl<10> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9, 
 template<int N>
 using make_index_sequence = typename make_index_sequence_impl<N>::type;
 }}}}
-#ifdef _LIBCPP_VERSION
+#if defined(_LIBCPP_VERSION)
 _LIBCPP_BEGIN_NAMESPACE_STD
 #else
 namespace std {
@@ -138,7 +138,7 @@ namespace std {
     template<class, std::size_t> struct array;
     template<class, class, class> class set;
     template<class> class move_iterator;
-#ifdef _LIBCPP_VERSION
+#if defined(_LIBCPP_VERSION)
 _LIBCPP_END_NAMESPACE_STD
 #else
 }
@@ -349,7 +349,8 @@ struct array__<T, 0> { T array_[1]; };
 template<class T, class... Ts>
 struct array : array__<typename T::value_type, sizeof...(Ts)>, T {
     using value_type = typename T::value_type;
- using array__<value_type, sizeof...(Ts)>::array_;
+    using array_t = array__<value_type, sizeof...(Ts)>;
+    using array_t::array_;
     using boost_di_inject__ = aux::type_list<self>;
     template<bool... Bs>
     struct and_ : std::is_same<aux::type_list<typename aux::always<std::integral_constant<bool, Bs>>::type...>, aux::type_list<std::integral_constant<bool, Bs>...>> { };
@@ -359,10 +360,10 @@ struct array : array__<typename T::value_type, sizeof...(Ts)>, T {
     { }
     template<class TInjector>
     array(const TInjector& injector, const std::true_type&)
-        : array__<value_type, sizeof...(Ts)>{{
+        : array_t{{
             *static_cast<const core::injector__<TInjector>&>(injector).
-                create_successful_impl(aux::type<type_traits::rebind_traits_t<value_type, Ts>>{})...}
-         }
+                create_successful_impl(aux::type<type_traits::rebind_traits_t<value_type, Ts>>{})...
+         }}
         , T(std::move_iterator<value_type*>(array_)
           , std::move_iterator<value_type*>(array_ + sizeof...(Ts)))
     { }
@@ -376,13 +377,14 @@ struct array : array__<typename T::value_type, sizeof...(Ts)>, T {
 };
 template<class T, std::size_t N, class... Ts>
 struct array<std::array<T, N>, Ts...> : std::array<T, N> {
+    using array_t = std::array<T, N>;
     using boost_di_inject__ = aux::type_list<self>;
     template<class TInjector>
     explicit array(const TInjector& injector)
-        : std::array<T, N>{{
+        : array_t{{
             *static_cast<const core::injector__<TInjector>&>(injector).
-                create_successful_impl(aux::type<type_traits::rebind_traits_t<T, Ts>>{})...}
-         }
+                create_successful_impl(aux::type<type_traits::rebind_traits_t<T, Ts>>{})...
+         }}
     { }
 };
 template<class T, class... Ts>

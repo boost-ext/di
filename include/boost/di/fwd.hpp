@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_FWD_HPP
 #define BOOST_DI_FWD_HPP
 
-#ifdef _LIBCPP_VERSION // __pph__
+#if defined(_LIBCPP_VERSION) // __pph__
 _LIBCPP_BEGIN_NAMESPACE_STD
 #else // __pph__
 namespace std {
@@ -17,10 +17,14 @@ namespace std {
     template<class, class> class unique_ptr;
     template<class> struct char_traits;
     template<class, class> class vector;
+#if defined(_MSC_VER)
+    template<class, std::size_t> class array;
+#else
     template<class, std::size_t> struct array;
+#endif
     template<class, class, class> class set;
     template<class> class move_iterator;
-#ifdef _LIBCPP_VERSION // __pph__
+#if defined(_LIBCPP_VERSION) // __pph__
 _LIBCPP_END_NAMESPACE_STD
 #else // __pph__
 } // std
