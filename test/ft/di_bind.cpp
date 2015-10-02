@@ -11,6 +11,7 @@
 #include <functional>
 #include <vector>
 #include <set>
+#include <array>
 
 namespace di = boost::di;
 

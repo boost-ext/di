@@ -56,14 +56,16 @@ public:
 
         template<class T_, class TProvider>
         auto create(const TProvider& provider) {
-            return create_impl<T_>(provider);
+            using given_t = type_traits::given_traits_t<T_, T>;
+            using type = std::conditional_t<std::is_same<T_, given_t>::value, T, given_t>;
+            return create_impl<type>(provider);
         }
 
     private:
         template<class T_, class TProvider>
         auto create_impl(const TProvider& provider) {
-            static std::shared_ptr<type_traits::given_traits_t<T_, T>> object{provider.get()};
-            return wrappers::shared<type_traits::given_traits_t<T_, T>, std::shared_ptr<type_traits::given_traits_t<T_, T>>&>{object};
+            static std::shared_ptr<T_> object{provider.get()};
+            return wrappers::shared<T_, std::shared_ptr<T_>&>{object};
         }
     };
 };

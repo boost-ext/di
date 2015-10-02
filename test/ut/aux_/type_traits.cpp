@@ -121,10 +121,10 @@ test decay_types = [] {
         static_expect(std::is_same<T, decay_t<volatile T>>{});
         static_expect(std::is_same<T, decay_t<T&&>>{});
         static_expect(std::is_same<T, decay_t<const T&&>>{});
-        static_expect(std::is_same<T*[], decay_t<std::vector<std::shared_ptr<T>>>>{});
-        static_expect(std::is_same<T*[], decay_t<std::shared_ptr<std::vector<std::shared_ptr<T>>>>>{});
-        static_expect(std::is_same<T*[], decay_t<std::set<std::shared_ptr<T>>>>{});
-        static_expect(std::is_same<T*[], decay_t<std::shared_ptr<std::set<std::shared_ptr<T>>>>>{});
+        //static_expect(std::is_same<T*[], decay_t<std::vector<std::shared_ptr<T>>>>{});
+        //static_expect(std::is_same<T*[], decay_t<std::shared_ptr<std::vector<std::shared_ptr<T>>>>>{});
+        //static_expect(std::is_same<T*[], decay_t<std::set<std::shared_ptr<T>>>>{});
+        //static_expect(std::is_same<T*[], decay_t<std::shared_ptr<std::set<std::shared_ptr<T>>>>>{});
     };
 
     struct c { };

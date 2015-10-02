@@ -100,13 +100,13 @@ struct deref_type<std::weak_ptr<T>> {
     using type = remove_specifiers_t<typename deref_type<T>::type>;
 };
 
-template<class T, class TAllocator>
-struct deref_type<std::vector<T, TAllocator>> {
+template<class T, std::size_t N>
+struct deref_type<std::array<T, N>> {
     using type = core::array<remove_specifiers_t<typename deref_type<T>::type>*[]>;
 };
 
-template<class T, std::size_t N>
-struct deref_type<std::array<T, N>> {
+template<class T, class TAllocator>
+struct deref_type<std::vector<T, TAllocator>> {
     using type = core::array<remove_specifiers_t<typename deref_type<T>::type>*[]>;
 };
 
