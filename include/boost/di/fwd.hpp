@@ -17,11 +17,11 @@ namespace std {
     template<class, class> class unique_ptr;
     template<class> struct char_traits;
     template<class, class> class vector;
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) // __pph__
     template<class, std::size_t> class array;
-#else
+#else // __pph__
     template<class, std::size_t> struct array;
-#endif
+#endif // __pph__
     template<class, class, class> class set;
     template<class> class move_iterator;
 #if defined(_LIBCPP_VERSION) // __pph__
