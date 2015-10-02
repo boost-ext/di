@@ -135,7 +135,11 @@ namespace std {
     template<class, class> class unique_ptr;
     template<class> struct char_traits;
     template<class, class> class vector;
+#if defined(_MSC_VER)
+    template<class, std::size_t> class array;
+#else
     template<class, std::size_t> struct array;
+#endif
     template<class, class, class> class set;
     template<class> class move_iterator;
 #if defined(_LIBCPP_VERSION)
