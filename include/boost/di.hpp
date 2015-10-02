@@ -2336,9 +2336,14 @@ public:
     explicit injector(const injector<TConfig_, TPolicies_, TDeps_...>& other) noexcept
         : injector{from_injector{}, other, deps{}}
     { }
-    template<class T>
+    template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, std::true_type>::value) = 0>
     T create() const {
         return BOOST_DI_TYPE_WKND(T)create_successful_impl<std::true_type>(aux::type<T>{});
+    }
+    template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, std::true_type>::value) = 0>
+    BOOST_DI_DEPRECATED("creatable constraint not satisfied")
+    T create() const {
+        return BOOST_DI_TYPE_WKND(T)create_impl<std::true_type>(aux::type<T>{});
     }
     template<class T, BOOST_DI_REQUIRES(!has_deps<T>::value) = 0>
     operator T() const {
@@ -2481,9 +2486,14 @@ public:
     explicit injector(const injector<TConfig_, TPolicies_, TDeps_...>& other) noexcept
         : injector{from_injector{}, other, deps{}}
     { }
-    template<class T>
+    template<class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, std::true_type>::value) = 0>
     T create() const {
         return BOOST_DI_TYPE_WKND(T)create_successful_impl<std::true_type>(aux::type<T>{});
+    }
+    template<class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, std::true_type>::value) = 0>
+    BOOST_DI_DEPRECATED("creatable constraint not satisfied")
+    T create() const {
+        return BOOST_DI_TYPE_WKND(T)create_impl<std::true_type>(aux::type<T>{});
     }
     template<class T, BOOST_DI_REQUIRES(!has_deps<T>::value) = 0>
     operator T() const {
