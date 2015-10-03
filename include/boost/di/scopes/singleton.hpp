@@ -9,7 +9,6 @@
 
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/type_traits/memory_traits.hpp" // type_traits::stack
-#include "boost/di/type_traits/typename_traits.hpp" // type_traits::stack
 #include "boost/di/wrappers/shared.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace scopes {
@@ -46,20 +45,17 @@ public:
 
     template<class _, class T>
     class scope<_, T, std::true_type> {
-        template<class T_>
-        using get_type = std::conditional_t<std::is_same<T_, type_traits::given_traits_t<T_, T>>::value, T, type_traits::given_traits_t<T_, T>>;
-
     public:
         template<class T_>
-        using is_referable = typename wrappers::shared<get_type<T>>::template is_referable<T_>;
+        using is_referable = typename wrappers::shared<T>::template is_referable<T_>;
 
-        template<class T_, class TProvider>
-        static decltype(wrappers::shared<get_type<T_>>{std::shared_ptr<get_type<T_>>{std::shared_ptr<get_type<T_>>{std::declval<TProvider>().get()}}})
+        template<class, class TProvider, class T_ = aux::decay_t<decltype(std::declval<TProvider>().get())>>
+        static decltype(wrappers::shared<T_>{std::shared_ptr<T_>{std::shared_ptr<T_>{std::declval<TProvider>().get()}}})
         try_create(const TProvider&);
 
         template<class T_, class TProvider>
         auto create(const TProvider& provider) {
-            return create_impl<get_type<T_>>(provider);
+            return create_impl<aux::decay_t<decltype(provider.get())>>(provider);
         }
 
     private:
