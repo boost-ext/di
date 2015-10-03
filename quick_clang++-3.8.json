@@ -19,19 +19,19 @@
   "series": [
     {
       "name": "ctor/auto",
-      "data": [[10, 3.96079]]
+      "data": [[10, 3.14766]]
     },
     {
       "name": "inject/all",
-      "data": [[10, 1.77472]]
+      "data": [[10, 1.60922]]
     },
     {
       "name": "ctor/exposed",
-      "data": [[10, 3.97224]]
+      "data": [[10, 4.00295]]
     },
     {
       "name": "inject/exposed",
-      "data": [[10, 2.4637]]
+      "data": [[10, 2.39264]]
     }
   ]
 }
