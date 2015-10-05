@@ -299,13 +299,23 @@ test exposed_bind_interface = [] {
         di::bind<i1>().to<impl1>()
     );
 
-    auto injector = di::make_injector(
-        di::bind<i1>().named(name).to(module)
-    );
+    {
+        auto injector = di::make_injector(
+            di::bind<i1>().to(module).named(name)
+        );
 
-    auto object = injector.create<std::unique_ptr<c>>();
+        auto object = injector.create<std::unique_ptr<c>>();
+        expect(dynamic_cast<impl1*>(object->i.get()));
+    }
 
-    expect(dynamic_cast<impl1*>(object->i.get()));
+    {
+        auto injector = di::make_injector(
+            di::bind<i1>().named(name).to(module)
+        );
+
+        auto object = injector.create<std::unique_ptr<c>>();
+        expect(dynamic_cast<impl1*>(object->i.get()));
+    }
 };
 
 test exposed_bind_interface_module = [] {

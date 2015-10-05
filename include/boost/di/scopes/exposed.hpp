@@ -12,6 +12,8 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace scopes {
 
+BOOST_DI_HAS_TYPE(has_deps, deps);
+
 template<class TScope = scopes::deduce>
 class exposed {
 public:
@@ -90,7 +92,7 @@ public:
         template<class>
         using is_referable = std::false_type;
 
-        template<class TInjector>
+        template<class TInjector, BOOST_DI_REQUIRES(has_deps<TInjector>::value) = 0>
         explicit scope(const TInjector& injector) noexcept {
             static auto provider = provider_impl<TInjector>{injector};
             provider.injector = injector;
