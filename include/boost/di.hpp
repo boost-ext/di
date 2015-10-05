@@ -200,35 +200,22 @@ struct concept_check<std::true_type> {
 };
 template<class...>
 using is_valid_expr = std::true_type;
-#if defined(_MSC_VER)
-    template<class T, class... TArgs>
-    decltype(void(T(std::declval<TArgs>()...)), std::true_type{})
-    test_is_constructible(int);
-    template<class, class...>
-    std::false_type test_is_constructible(...);
-    template<class T, class... TArgs>
-    using is_constructible =
-        decltype(test_is_constructible<T, TArgs...>(0));
-    template<class T, class... TArgs>
-    using is_constructible_t =
-        typename is_constructible<T, TArgs...>::type;
-#else
-    template<class T, class... TArgs>
-    using is_constructible = std::is_constructible<T, TArgs...>;
-    template<class T, class... TArgs>
-    using is_constructible_t = typename std::is_constructible<T, TArgs...>::type;
-#endif
 template<class T, class... TArgs>
-decltype(void(T{std::declval<TArgs>()...}), std::true_type{})
-test_is_braces_constructible(int);
+decltype(void(T(std::declval<TArgs>()...)), std::true_type{}) test_is_constructible(int);
+template<class, class...>
+std::false_type test_is_constructible(...);
+template<class T, class... TArgs>
+using is_constructible = decltype(test_is_constructible<T, TArgs...>(0));
+template<class T, class... TArgs>
+using is_constructible_t = typename is_constructible<T, TArgs...>::type;
+template<class T, class... TArgs>
+decltype(void(T{std::declval<TArgs>()...}), std::true_type{}) test_is_braces_constructible(int);
 template<class, class...>
 std::false_type test_is_braces_constructible(...);
 template<class T, class... TArgs>
-using is_braces_constructible =
-    decltype(test_is_braces_constructible<T, TArgs...>(0));
+using is_braces_constructible = decltype(test_is_braces_constructible<T, TArgs...>(0));
 template<class T, class... TArgs>
-using is_braces_constructible_t =
-    typename is_braces_constructible<T, TArgs...>::type;
+using is_braces_constructible_t = typename is_braces_constructible<T, TArgs...>::type;
 template<class TSrc, class TDst>
 using is_narrowed = std::integral_constant<bool,
     std::is_arithmetic<TDst>::value && !std::is_same<TSrc, TDst>::value
