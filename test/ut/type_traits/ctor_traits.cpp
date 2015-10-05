@@ -90,6 +90,10 @@ test ctors = [] {
         func(const std::function<int()>&) { }
     };
 
+    struct vaarg {
+        vaarg(int, ...) { }
+    };
+
     static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<empty>::type>{});
     static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<traits>::type>{});
     static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<empty>::type>{});
@@ -107,6 +111,7 @@ test ctors = [] {
     static_expect(std::is_same<aux::pair<uniform, aux::type_list<>>, ctor_traits__<conv>::type>{});
     static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<conv_explicit>, core::any_type_fwd<conv_explicit>>>, ctor_traits__<conv_explicit>::type>{});
     static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<func>>>, ctor_traits__<func>::type>{});
+    static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>>>, ctor_traits__<vaarg>::type>{});
 };
 
 test uniforms = [] {
