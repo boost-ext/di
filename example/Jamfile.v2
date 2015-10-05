@@ -49,6 +49,7 @@ test-suite example :
       : -Imodules -DBOOST_DI_CFG=config
     ]
     [ example annotations.cpp ]
+    [ example automatic_injection.cpp ]
     [ example bindings.cpp ]
     [ example constructor_injection.cpp ]
     [ example constructor_signature.cpp ]
