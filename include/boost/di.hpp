@@ -200,6 +200,24 @@ struct concept_check<std::true_type> {
 };
 template<class...>
 using is_valid_expr = std::true_type;
+#if defined(_MSC_VER)
+    template<class T, class... TArgs>
+    decltype(void(T(std::declval<TArgs>()...)), std::true_type{})
+    test_is_constructible(int);
+    template<class, class...>
+    std::false_type test_is_constructible(...);
+    template<class T, class... TArgs>
+    using is_constructible =
+        decltype(test_is_constructible<T, TArgs...>(0));
+    template<class T, class... TArgs>
+    using is_constructible_t =
+        typename is_constructible<T, TArgs...>::type;
+#else
+    template<class T, class... TArgs>
+    using is_constructible = std::is_constructible<T, TArgs...>;
+    template<class T, class... TArgs>
+    using is_constructible_t = typename std::is_constructible<T, TArgs...>::type;
+#endif
 template<class T, class... TArgs>
 decltype(void(T{std::declval<TArgs>()...}), std::true_type{})
 test_is_braces_constructible(int);
@@ -1028,7 +1046,7 @@ struct ctor_traits_impl<T, std::false_type>
 }
 template<class T, class>
 struct ctor_traits
-    : type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>
+    : type_traits::ctor<T , type_traits::ctor_impl_t<aux::is_constructible, T>>
 { };
 template<>
 struct ctor_traits<_> {
@@ -1772,7 +1790,7 @@ template<class T>
 using ctor_size_t = ctor_size<
     typename type_traits::ctor<
         aux::decay_t<T>
-      , type_traits::ctor_impl_t<std::is_constructible, aux::decay_t<T>>
+      , type_traits::ctor_impl_t<aux::is_constructible, aux::decay_t<T>>
     >::type
 >;
 template<class TInitialization, class TName, class I, class T, class... TCtor>
@@ -1804,7 +1822,7 @@ struct creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TCtor..
 { };
 template<class TInit, class T, class... TArgs>
 struct creatable {
-    static constexpr auto value = std::is_constructible<T, TArgs...>::value;
+    static constexpr auto value = aux::is_constructible<T, TArgs...>::value;
 };
 template<class T, class... TArgs>
 struct creatable<type_traits::uniform, T, TArgs...> {

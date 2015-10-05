@@ -108,7 +108,7 @@ struct ctor_traits_impl<T, std::false_type>
 
 template<class T, class>
 struct ctor_traits
-    : type_traits::ctor<T, type_traits::ctor_impl_t<std::is_constructible, T>>
+    : type_traits::ctor<T , type_traits::ctor_impl_t<aux::is_constructible, T>>
 { };
 
 template<>

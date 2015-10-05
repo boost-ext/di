@@ -191,7 +191,7 @@ template<class T>
 using ctor_size_t = ctor_size<
     typename type_traits::ctor<
         aux::decay_t<T>
-      , type_traits::ctor_impl_t<std::is_constructible, aux::decay_t<T>>
+      , type_traits::ctor_impl_t<aux::is_constructible, aux::decay_t<T>>
     >::type
 >;
 
@@ -234,7 +234,7 @@ struct creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TCtor..
 
 template<class TInit, class T, class... TArgs>
 struct creatable {
-    static constexpr auto value = std::is_constructible<T, TArgs...>::value;
+    static constexpr auto value = aux::is_constructible<T, TArgs...>::value;
 };
 
 template<class T, class... TArgs>
