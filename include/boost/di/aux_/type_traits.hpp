@@ -127,8 +127,34 @@ using is_polymorphic = integral_constant<bool, __is_polymorphic(T)>;
 template<class T>
 using is_class = integral_constant<bool, __is_class(T)>;
 
-template<class T, class U>
-using is_convertible = integral_constant<bool, __is_convertible_to(T, U)>;
+#if defined(__clang__) || defined(_MSC_VER) // __pph__
+    template<class T, class U>
+    using is_convertible = integral_constant<bool, __is_convertible_to(T, U)>;
+#else // __pph__
+  template<typename _From, typename _To>
+    class __is_convertible_helper
+    {
+       template<typename _To1>
+ static void __test_aux(_To1);
+
+      template<typename _From1, typename _To1,
+        typename = decltype(__test_aux<_To1>(declval<_From1>()))>
+ static true_type
+ __test(int);
+
+      template<typename, typename>
+ static false_type
+ __test(...);
+
+    public:
+      typedef decltype(__test<_From, _To>(0)) type;
+    };
+
+  template<typename _From, typename _To>
+    struct is_convertible
+    : public __is_convertible_helper<_From, _To>::type
+    { };
+#endif // __pph__
 
 template<class T, class U>
 using is_base_of = integral_constant<bool, __is_base_of(T, U)>;
