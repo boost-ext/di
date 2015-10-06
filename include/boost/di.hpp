@@ -33,8 +33,8 @@
 _LIBCPP_BEGIN_NAMESPACE_STD
 #else
 namespace std {
-    using size_t = unsigned long;
 #endif
+    using size_t = unsigned long;
     template<class> class shared_ptr;
     template<class> class weak_ptr;
     template<class, class> class unique_ptr;
