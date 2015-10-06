@@ -51,7 +51,7 @@ struct dependency_impl
 
 template<class... Ts, class TName, class TDependency>
 struct dependency_impl<
-    dependency_concept<aux::type_list<Ts...>, TName>
+    dependency_concept<concepts::any_of<Ts...>, TName>
   , TDependency
 > : aux::pair<dependency_concept<Ts, TName>, TDependency>...
 { };

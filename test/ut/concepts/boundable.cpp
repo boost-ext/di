@@ -34,14 +34,14 @@ test bind_deps = [] {
 };
 
 test bind_any_of = [] {
-    expect(boundable<aux::type_list<a, c>, c>::value);
+    expect(boundable<any_of<a, c>, c>::value);
     expect(std::is_same<
         any_of<
             bind<d>::is_not_related_to<a>
           , bind<d>::is_not_related_to<b>
           , bind<d>::is_not_related_to<c>
         >
-      , boundable<aux::type_list<a, b, c>, d>
+      , boundable<any_of<a, b, c>, d>
     >::value);
 };
 

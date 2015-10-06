@@ -77,7 +77,11 @@ namespace boost { namespace di { inline namespace v1 {
 
     } // core
 
-    namespace concepts { template<class...> struct boundable__; } // concepts
+    namespace concepts { template<class...> struct boundable__; 
+template<class...>
+struct any_of;
+
+    } // concepts
 
     namespace detail {
         template<class, class> struct named_type;

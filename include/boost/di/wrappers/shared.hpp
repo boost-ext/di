@@ -33,7 +33,7 @@ struct shared {
     template<class T_>
     using is_referable = is_referable_impl<aux::remove_specifiers_t<T_>>;
 
-    template<class I>
+    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T*, I*>::value) = 0>
     inline operator std::shared_ptr<I>() const noexcept {
         return object;
     }
@@ -42,7 +42,7 @@ struct shared {
         return object;
     }
 
-    template<class I>
+    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T*, I*>::value) = 0>
     inline operator boost::shared_ptr<I>() const noexcept {
         struct sp_holder {
             std::shared_ptr<T> object;
@@ -51,7 +51,7 @@ struct shared {
         return {object.get(), sp_holder{object}};
     }
 
-    template<class I>
+    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T*, I*>::value) = 0>
     inline operator std::weak_ptr<I>() const noexcept {
         return object;
     }
@@ -78,9 +78,9 @@ struct shared<T&> {
         : object(&object)
     { }
 
-    explicit shared(T&&); // for compilation
+    explicit shared(T&&); // compilation clean
 
-    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T&, I>::value) = 0>
+    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T, I>::value) = 0>
     inline operator I() const noexcept {
         return *object;
     }

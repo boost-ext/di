@@ -22,7 +22,7 @@ struct bind;
 
 template<class TScope, class... Ts>
 struct bind<int, TScope, Ts...> {
-    using type = core::dependency<TScope, aux::type_list<Ts...>>;
+    using type = core::dependency<TScope, concepts::any_of<Ts...>>;
 };
 
 template<class TScope, class T>

@@ -184,7 +184,10 @@ namespace boost { namespace di { inline namespace v1 {
         template<class, class...>
         struct array;
     }
-    namespace concepts { template<class...> struct boundable__; }
+    namespace concepts { template<class...> struct boundable__;
+template<class...>
+struct any_of;
+    }
     namespace detail {
         template<class, class> struct named_type;
     }
@@ -418,28 +421,28 @@ struct unique<T*> {
             : object(object)
         { }
     #endif
-    template<class I>
+    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T, I>::value) = 0>
     inline operator I() const noexcept {
         struct scoped_ptr { aux::owner<T*> ptr; ~scoped_ptr() noexcept { delete ptr; } };
         return *scoped_ptr{object}.ptr;
     }
-    template<class I>
+    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T*, I*>::value) = 0>
     inline operator aux::owner<I*>() const noexcept {
         return object;
     }
-    template<class I>
+    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T*, const I*>::value) = 0>
     inline operator aux::owner<const I*>() const noexcept {
         return object;
     }
-    template<class I>
+    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T*, I*>::value) = 0>
     inline operator std::shared_ptr<I>() const noexcept {
         return std::shared_ptr<I>{object};
     }
-    template<class I>
+    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T*, I*>::value) = 0>
     inline operator boost::shared_ptr<I>() const noexcept {
         return boost::shared_ptr<I>{object};
     }
-    template<class I, class D>
+    template<class I, class D, BOOST_DI_REQUIRES(std::is_convertible<T*, I*>::value) = 0>
     inline operator std::unique_ptr<I, D>() const noexcept {
         return std::unique_ptr<I, D>{object};
     }
@@ -555,14 +558,14 @@ struct shared {
     { };
     template<class T_>
     using is_referable = is_referable_impl<aux::remove_specifiers_t<T_>>;
-    template<class I>
+    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T*, I*>::value) = 0>
     inline operator std::shared_ptr<I>() const noexcept {
         return object;
     }
     inline operator std::shared_ptr<T>&() noexcept {
         return object;
     }
-    template<class I>
+    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T*, I*>::value) = 0>
     inline operator boost::shared_ptr<I>() const noexcept {
         struct sp_holder {
             std::shared_ptr<T> object;
@@ -570,7 +573,7 @@ struct shared {
         };
         return {object.get(), sp_holder{object}};
     }
-    template<class I>
+    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T*, I*>::value) = 0>
     inline operator std::weak_ptr<I>() const noexcept {
         return object;
     }
@@ -592,7 +595,7 @@ struct shared<T&> {
         : object(&object)
     { }
     explicit shared(T&&);
-    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T&, I>::value) = 0>
+    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T, I>::value) = 0>
     inline operator I() const noexcept {
         return *object;
     }
@@ -1120,7 +1123,7 @@ struct dependency_impl
 { };
 template<class... Ts, class TName, class TDependency>
 struct dependency_impl<
-    dependency_concept<aux::type_list<Ts...>, TName>
+    dependency_concept<concepts::any_of<Ts...>, TName>
   , TDependency
 > : aux::pair<dependency_concept<Ts, TName>, TDependency>...
 { };
@@ -2034,7 +2037,7 @@ auto boundable_impl(I[], T&&) -> std::true_type;
 template<class... TDeps>
 auto boundable_impl(aux::type_list<TDeps...>&&) -> get_bindings_error<TDeps...>;
 template<class T, class... Ts>
-auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
+auto boundable_impl(concepts::any_of<Ts...>&&, T&&) ->
     get_any_of_error<decltype(boundable_impl(std::declval<Ts>(), std::declval<T>()))...>;
 template<class... TDeps>
 auto boundable_impl(aux::type<TDeps...>&&) ->
@@ -2052,7 +2055,7 @@ template<class...>
 struct bind;
 template<class TScope, class... Ts>
 struct bind<int, TScope, Ts...> {
-    using type = core::dependency<TScope, aux::type_list<Ts...>>;
+    using type = core::dependency<TScope, concepts::any_of<Ts...>>;
 };
 template<class TScope, class T>
 struct bind<int, TScope, T> {

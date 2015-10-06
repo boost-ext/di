@@ -155,7 +155,7 @@ template<class... TDeps> // bindings
 auto boundable_impl(aux::type_list<TDeps...>&&) -> get_bindings_error<TDeps...>;
 
 template<class T, class... Ts> // any_of
-auto boundable_impl(aux::type_list<Ts...>&&, T&&) ->
+auto boundable_impl(concepts::any_of<Ts...>&&, T&&) ->
     get_any_of_error<decltype(boundable_impl(std::declval<Ts>(), std::declval<T>()))...>;
 
 template<class... TDeps> // make_injector
