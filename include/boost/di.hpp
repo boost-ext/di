@@ -29,6 +29,9 @@
     namespace boost { namespace di { inline namespace v1 { namespace detail { template<class T> T get_type__(T); }}}}
     #define BOOST_DI_DECLTYPE_WKND(...) decltype(::boost::di::v1::detail::get_type__(__VA_ARGS__))
 #endif
+#if __has_include(<__config>)
+    #include <__config>
+#endif
 #if defined(_LIBCPP_VERSION)
 _LIBCPP_BEGIN_NAMESPACE_STD
 #else
