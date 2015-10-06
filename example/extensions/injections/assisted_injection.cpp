@@ -50,7 +50,7 @@ private:
     }
 
     template<std::size_t N, class TInjector, class TArg, class... TArgs>
-    decltype(auto) create_impl(const TInjector&, const di::aux::type<di::detail::named_type<di::no_name, TArg>>&, TArgs&&... args) const {
+    decltype(auto) create_impl(const TInjector&, const di::aux::type<di::named<di::no_name, TArg>>&, TArgs&&... args) const {
         constexpr auto value = get_assisted_ctor_nr(N, typename di::type_traits::ctor_traits__<T>::type{});
         return get<TArg>(std::integral_constant<std::size_t, value>{}, args...);
     }
@@ -75,7 +75,7 @@ private:
     }
 
     template<class TArg>
-    static constexpr auto is_assisted(const di::aux::type<di::detail::named_type<di::no_name, TArg>>&) {
+    static constexpr auto is_assisted(const di::aux::type<di::named<di::no_name, TArg>>&) {
         return true;
     }
 

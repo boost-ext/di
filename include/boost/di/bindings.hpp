@@ -53,9 +53,6 @@ static constexpr BOOST_DI_UNUSED scopes::deduce deduce{};
 static constexpr BOOST_DI_UNUSED scopes::unique unique{};
 static constexpr BOOST_DI_UNUSED scopes::singleton singleton{};
 
-template<class>
-struct named { };
-
 }}} // boost::di::v1
 
 #endif

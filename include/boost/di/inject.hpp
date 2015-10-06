@@ -13,17 +13,18 @@
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace detail {
+namespace boost { namespace di { inline namespace v1 {
 
-template<class, class>
-struct named_type { };
+template<class, class> struct named;
+
+namespace detail {
 
 struct named_impl { template<class T> T operator=(const T&) const; };
 static constexpr BOOST_DI_UNUSED named_impl named{};
 
 template<class T, class TName>
 struct combine_impl {
-    using type = named_type<TName, T>;
+    using type = di::named<TName, T>;
 };
 
 template<class T>

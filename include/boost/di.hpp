@@ -157,7 +157,7 @@ namespace boost { namespace di { inline namespace v1 {
     struct no_name {
         constexpr auto operator()() const noexcept { return ""; }
     };
-    template<class> struct named;
+    template<class, class = void> struct named { };
     template<class, class = int> struct ctor_traits;
     struct self { };
     namespace core {
@@ -184,13 +184,7 @@ namespace boost { namespace di { inline namespace v1 {
         template<class, class...>
         struct array;
     }
-    namespace concepts { template<class...> struct boundable__;
-template<class...>
-struct any_of;
-    }
-    namespace detail {
-        template<class, class> struct named_type;
-    }
+    namespace concepts { template<class...> struct boundable__; template<class...> struct any_of; }
 }}}
 #define BOOST_DI_REQUIRES(...) typename ::std::enable_if<__VA_ARGS__, int>::type
 #define BOOST_DI_REQUIRES_MSG(...) typename ::boost::di::aux::concept_check<__VA_ARGS__>::type
@@ -332,7 +326,7 @@ struct rebind_traits {
 };
 template<class T, class U>
 struct rebind_traits<T, named<U>> {
-    using type = di::detail::named_type<U, T>;
+    using type = named<U, T>;
 };
 template<class T, class U>
 struct rebind_traits<std::shared_ptr<T>, U> {
@@ -340,7 +334,7 @@ struct rebind_traits<std::shared_ptr<T>, U> {
 };
 template<class T, class U>
 struct rebind_traits<std::shared_ptr<T>, named<U>> {
-    using type = di::detail::named_type<U, std::shared_ptr<T>>;
+    using type = named<U, std::shared_ptr<T>>;
 };
 template<class T, class D, class U>
 struct rebind_traits<std::unique_ptr<T, D>, U> {
@@ -348,7 +342,7 @@ struct rebind_traits<std::unique_ptr<T, D>, U> {
 };
 template<class T, class D, class U>
 struct rebind_traits<std::unique_ptr<T, D>, named<U>> {
-    using type = di::detail::named_type<U, std::unique_ptr<T, D>>;
+    using type = named<U, std::unique_ptr<T, D>>;
 };
 template<class T, class U>
 using rebind_traits_t = typename rebind_traits<T, U>::type;
@@ -1693,7 +1687,7 @@ struct try_create__ {
     }
 };
 template<class TParent, class TName, class _>
-struct try_create__<TParent, detail::named_type<TName, _>> {
+struct try_create__<TParent, named<TName, _>> {
     template<class T, class = core::is_not_same_t<T, TParent>>
     operator T() { return {}; }
     template<class T, class = core::is_not_same_t<T, TParent>>
@@ -2081,8 +2075,6 @@ static constexpr BOOST_DI_UNUSED core::override override{};
 static constexpr BOOST_DI_UNUSED scopes::deduce deduce{};
 static constexpr BOOST_DI_UNUSED scopes::unique unique{};
 static constexpr BOOST_DI_UNUSED scopes::singleton singleton{};
-template<class>
-struct named { };
 }}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
 template<class T, class TName, class TIsRoot, class TDeps>
@@ -2392,7 +2384,7 @@ protected:
         using type = any_type_ref<TParent, injector, with_error>;
     };
     template<class TName, class T, bool B>
-    struct try_create<detail::named_type<TName, T>, B> {
+    struct try_create<named<TName, T>, B> {
         using type = std::conditional_t<is_creatable<T, TName>::value, typename is_creatable<T, TName>::type, void>;
     };
     template<bool B>
@@ -2412,7 +2404,7 @@ protected:
         return any_type_ref<TParent, injector>{*this};
     }
     template<class TIsRoot = std::false_type, class T, class TName>
-    auto create_impl(const aux::type<detail::named_type<TName, T>>&) const {
+    auto create_impl(const aux::type<named<TName, T>>&) const {
         return create_impl__<TIsRoot, T, TName>();
     }
     template<class TIsRoot = std::false_type, class T>
@@ -2428,7 +2420,7 @@ protected:
         return successful::any_type_ref<TParent, injector>{*this};
     }
     template<class TIsRoot = std::false_type, class T, class TName>
-    auto create_successful_impl(const aux::type<detail::named_type<TName, T>>&) const {
+    auto create_successful_impl(const aux::type<named<TName, T>>&) const {
         return create_successful_impl__<TIsRoot, T, TName>();
     }
     template<class TIsRoot = std::false_type>
@@ -2542,7 +2534,7 @@ protected:
         using type = any_type_ref<TParent, injector, with_error>;
     };
     template<class TName, class T, bool B>
-    struct try_create<detail::named_type<TName, T>, B> {
+    struct try_create<named<TName, T>, B> {
         using type = std::conditional_t<is_creatable<T, TName>::value, typename is_creatable<T, TName>::type, void>;
     };
     template<bool B>
@@ -2562,7 +2554,7 @@ protected:
         return any_type_ref<TParent, injector>{*this};
     }
     template<class TIsRoot = std::false_type, class T, class TName>
-    auto create_impl(const aux::type<detail::named_type<TName, T>>&) const {
+    auto create_impl(const aux::type<named<TName, T>>&) const {
         return create_impl__<TIsRoot, T, TName>();
     }
     template<class TIsRoot = std::false_type, class T>
@@ -2578,7 +2570,7 @@ protected:
         return successful::any_type_ref<TParent, injector>{*this};
     }
     template<class TIsRoot = std::false_type, class T, class TName>
-    auto create_successful_impl(const aux::type<detail::named_type<TName, T>>&) const {
+    auto create_successful_impl(const aux::type<named<TName, T>>&) const {
         return create_successful_impl__<TIsRoot, T, TName>();
     }
     template<class TIsRoot = std::false_type>
@@ -2984,14 +2976,14 @@ public:
     #define BOOST_DI_DETAIL_IS_EMPTY_IIF_1(t, ...) t
     #define BOOST_DI_DETAIL_IS_EMPTY_PROCESS(...) BOOST_DI_IBP(BOOST_DI_DETAIL_IS_EMPTY_NON_FUNCTION_C __VA_ARGS__ ())
 #endif
-namespace boost { namespace di { inline namespace v1 { namespace detail {
-template<class, class>
-struct named_type { };
+namespace boost { namespace di { inline namespace v1 {
+template<class, class> struct named;
+namespace detail {
 struct named_impl { template<class T> T operator=(const T&) const; };
 static constexpr BOOST_DI_UNUSED named_impl named{};
 template<class T, class TName>
 struct combine_impl {
-    using type = named_type<TName, T>;
+    using type = di::named<TName, T>;
 };
 template<class T>
 struct combine_impl<T, aux::none_type> {

@@ -18,7 +18,7 @@ struct rebind_traits {
 
 template<class T, class U>
 struct rebind_traits<T, named<U>> {
-    using type = di::detail::named_type<U, T>;
+    using type = named<U, T>;
 };
 
 template<class T, class U>
@@ -28,7 +28,7 @@ struct rebind_traits<std::shared_ptr<T>, U> {
 
 template<class T, class U>
 struct rebind_traits<std::shared_ptr<T>, named<U>> {
-    using type = di::detail::named_type<U, std::shared_ptr<T>>;
+    using type = named<U, std::shared_ptr<T>>;
 };
 
 template<class T, class D, class U>
@@ -38,7 +38,7 @@ struct rebind_traits<std::unique_ptr<T, D>, U> {
 
 template<class T, class D, class U>
 struct rebind_traits<std::unique_ptr<T, D>, named<U>> {
-    using type = di::detail::named_type<U, std::unique_ptr<T, D>>;
+    using type = named<U, std::unique_ptr<T, D>>;
 };
 
 template<class T, class U>

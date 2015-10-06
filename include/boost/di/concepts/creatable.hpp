@@ -85,7 +85,7 @@ struct try_create__ {
 };
 
 template<class TParent, class TName, class _>
-struct try_create__<TParent, detail::named_type<TName, _>> {
+struct try_create__<TParent, named<TName, _>> {
     template<class T, class = core::is_not_same_t<T, TParent>>
     operator T() { return {}; }
 

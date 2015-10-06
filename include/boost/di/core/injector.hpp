@@ -183,7 +183,7 @@ protected:
     };
 
     template<class TName, class T, bool B>
-    struct try_create<detail::named_type<TName, T>, B> {
+    struct try_create<named<TName, T>, B> {
         using type = std::conditional_t<is_creatable<T, TName>::value, typename is_creatable<T, TName>::type, void>;
     };
 
@@ -208,7 +208,7 @@ protected:
     }
 
     template<class TIsRoot = std::false_type, class T, class TName>
-    auto create_impl(const aux::type<detail::named_type<TName, T>>&) const {
+    auto create_impl(const aux::type<named<TName, T>>&) const {
         return create_impl__<TIsRoot, T, TName>();
     }
 
@@ -228,7 +228,7 @@ protected:
     }
 
     template<class TIsRoot = std::false_type, class T, class TName>
-    auto create_successful_impl(const aux::type<detail::named_type<TName, T>>&) const {
+    auto create_successful_impl(const aux::type<named<TName, T>>&) const {
         return create_successful_impl__<TIsRoot, T, TName>();
     }
 

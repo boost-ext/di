@@ -43,7 +43,7 @@ namespace boost { namespace di { inline namespace v1 {
         constexpr auto operator()() const noexcept { return ""; }
     };
 
-    template<class> struct named;
+    template<class, class = void> struct named { };
     template<class, class = int> struct ctor_traits;
     struct self { };
 
@@ -77,15 +77,9 @@ namespace boost { namespace di { inline namespace v1 {
 
     } // core
 
-    namespace concepts { template<class...> struct boundable__; 
-template<class...>
-struct any_of;
+    //TODO remove
+    namespace concepts { template<class...> struct boundable__; template<class...> struct any_of; } // concepts
 
-    } // concepts
-
-    namespace detail {
-        template<class, class> struct named_type;
-    } // detail
 }}} // boost::di::v1
 
 #endif
