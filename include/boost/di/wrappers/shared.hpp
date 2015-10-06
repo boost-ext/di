@@ -17,23 +17,23 @@ template<class T, class TObject = std::shared_ptr<T>>
 struct shared {
     template<class>
     struct is_referable_impl
-        : std::true_type
+        : aux::true_type
     { };
 
     template<class I>
     struct is_referable_impl<std::shared_ptr<I>>
-        : std::is_same<I, T>
+        : aux::is_same<I, T>
     { };
 
     template<class I>
     struct is_referable_impl<boost::shared_ptr<I>>
-        : std::false_type
+        : aux::false_type
     { };
 
     template<class T_>
     using is_referable = is_referable_impl<aux::remove_specifiers_t<T_>>;
 
-    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T*, I*>::value) = 0>
+    template<class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
     inline operator std::shared_ptr<I>() const noexcept {
         return object;
     }
@@ -42,7 +42,7 @@ struct shared {
         return object;
     }
 
-    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T*, I*>::value) = 0>
+    template<class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
     inline operator boost::shared_ptr<I>() const noexcept {
         struct sp_holder {
             std::shared_ptr<T> object;
@@ -51,7 +51,7 @@ struct shared {
         return {object.get(), sp_holder{object}};
     }
 
-    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T*, I*>::value) = 0>
+    template<class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
     inline operator std::weak_ptr<I>() const noexcept {
         return object;
     }
@@ -71,7 +71,7 @@ template<class T>
 struct shared<T&> {
     template<class>
     struct is_referable
-        : std::true_type
+        : aux::true_type
     { };
 
     explicit shared(T& object)
@@ -80,7 +80,7 @@ struct shared<T&> {
 
     explicit shared(T&&); // compilation clean
 
-    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T, I>::value) = 0>
+    template<class I, BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
     inline operator I() const noexcept {
         return *object;
     }

@@ -20,8 +20,8 @@ public:
     template<class TExpected, class TGiven>
     class scope {
         #if defined(__GNUC__) || defined(_MSC_VER) // __pph__
-            using type = std::conditional_t<
-                std::is_copy_constructible<TExpected>::value
+            using type = aux::conditional_t<
+                aux::is_copy_constructible<TExpected>::value
               , TExpected
               , TExpected*
             >;
@@ -59,28 +59,28 @@ public:
 
             explicit provider_impl(const TInjector& injector) noexcept
                 : provider_impl(injector
-                              , std::integral_constant<bool, core::injector__<TInjector>::template is_creatable<TExpected*>::value>{}
-                              , std::integral_constant<bool, core::injector__<TInjector>::template is_creatable<TExpected>::value>{}
+                              , aux::integral_constant<bool, core::injector__<TInjector>::template is_creatable<TExpected*>::value>{}
+                              , aux::integral_constant<bool, core::injector__<TInjector>::template is_creatable<TExpected>::value>{}
                   )
             { }
 
-            provider_impl(const TInjector& injector, const std::true_type&, const std::true_type&) noexcept
+            provider_impl(const TInjector& injector, const aux::true_type&, const aux::true_type&) noexcept
                 : heap(&provider_impl::template create_successful<TExpected*>)
                 , stack(&provider_impl::template create_successful<type>)
                 , injector(injector)
             { }
 
-            provider_impl(const TInjector& injector, const std::false_type&, const std::true_type&) noexcept
+            provider_impl(const TInjector& injector, const aux::false_type&, const aux::true_type&) noexcept
                 : stack(&provider_impl::template create_successful<type>)
                 , injector(injector)
             { }
 
-            provider_impl(const TInjector& injector, const std::true_type&, const std::false_type&) noexcept
+            provider_impl(const TInjector& injector, const aux::true_type&, const aux::false_type&) noexcept
                 : heap(&provider_impl::template create_successful<TExpected*>)
                 , injector(injector)
             { }
 
-            provider_impl(const TInjector& injector, const std::false_type&, const std::false_type&)
+            provider_impl(const TInjector& injector, const aux::false_type&, const aux::false_type&)
                 : heap(&provider_impl::template create<TExpected*>) // creatable constraint not satisfied
                 , injector(injector)
             { }
@@ -90,7 +90,7 @@ public:
 
     public:
         template<class>
-        using is_referable = std::false_type;
+        using is_referable = aux::false_type;
 
         template<class TInjector, BOOST_DI_REQUIRES(has_deps<TInjector>::value) = 0>
         explicit scope(const TInjector& injector) noexcept {

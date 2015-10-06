@@ -37,9 +37,9 @@ template<
     };
 
     template<class TMemory = type_traits::heap>
-    auto get(const TMemory& memory = {}) const -> std::enable_if_t<
+    auto get(const TMemory& memory = {}) const -> aux::enable_if_t<
         is_creatable<TMemory>::value
-      , std::conditional_t<std::is_same<TMemory, type_traits::stack>::value, TGiven, std::remove_reference_t<TGiven>*>
+      , aux::conditional_t<aux::is_same<TMemory, type_traits::stack>::value, TGiven, aux::remove_reference_t<TGiven>*>
     >;
 };
 
@@ -54,7 +54,7 @@ template<
   , class TInitialization
   , class... TCtor
 > struct provider<TExpected, TGiven, TName, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
-    using provider_t = decltype(TInjector::config::provider(std::declval<TInjector>()));
+    using provider_t = decltype(TInjector::config::provider(aux::declval<TInjector>()));
 
     template<class TMemory, class... TArgs>
     struct is_creatable {

@@ -35,17 +35,17 @@ template<
 > struct add_type_list;
 
 template<class T, class TAny>
-struct add_type_list<T, std::true_type, TAny> {
+struct add_type_list<T, aux::true_type, TAny> {
     using type = typename get_deps<T>::type;
 };
 
 template<class T>
-struct add_type_list<T, std::false_type, std::true_type> {
+struct add_type_list<T, aux::false_type, aux::true_type> {
     using type = aux::type_list<T>;
 };
 
 template<class T>
-struct add_type_list<T, std::false_type, std::false_type> {
+struct add_type_list<T, aux::false_type, aux::false_type> {
     using type = aux::type_list<dependency<scopes::exposed<>, T>>;
 };
 

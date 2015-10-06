@@ -181,7 +181,7 @@ struct ctor_size;
 
 template<class TInit, class... TCtor>
 struct ctor_size<aux::pair<TInit, aux::type_list<TCtor...>>>
-    : std::integral_constant<int, sizeof...(TCtor)>
+    : aux::integral_constant<int, sizeof...(TCtor)>
 { };
 
 template<class...>
@@ -196,24 +196,24 @@ using ctor_size_t = ctor_size<
 >;
 
 #define BOOST_DI_NAMED_ERROR(name, type, error_type, error) \
-    std::conditional_t< \
-        std::is_same<TName, no_name>::value \
+    aux::conditional_t< \
+        aux::is_same<TName, no_name>::value \
       , typename error_type<aux::decay_t<type>>::error \
       , typename error_type<aux::decay_t<type>>::template named<TName>::error \
     >
 
 template<class TInitialization, class TName, class I, class T, class... TCtor>
 struct creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TCtor...>>
-    : std::conditional_t<
-          std::is_abstract<aux::decay_t<T>>::value
-        , std::conditional_t<
-              std::is_same<I, T>::value
+    : aux::conditional_t<
+          aux::is_abstract<aux::decay_t<T>>::value
+        , aux::conditional_t<
+              aux::is_same<I, T>::value
             , BOOST_DI_NAMED_ERROR(TName, T, abstract_type, is_not_bound)
             , BOOST_DI_NAMED_ERROR(TName, T, abstract_type, is_not_fully_implemented)
           >
-        , std::conditional_t<
+        , aux::conditional_t<
               ctor_size_t<T>::value == sizeof...(TCtor)
-            , std::conditional_t<
+            , aux::conditional_t<
                   !sizeof...(TCtor)
                 , typename type<aux::decay_t<T>>::has_to_many_constructor_parameters::
                       template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>

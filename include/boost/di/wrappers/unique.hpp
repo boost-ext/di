@@ -15,7 +15,7 @@ namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 
 template<class T>
 struct unique {
-    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T, I>::value) = 0>
+    template<class I, BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
     inline operator I() const noexcept {
         return object;
     }
@@ -35,33 +35,33 @@ struct unique<T*> {
         { }
     #endif // __pph__
 
-    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T, I>::value) = 0>
+    template<class I, BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
     inline operator I() const noexcept {
         struct scoped_ptr { aux::owner<T*> ptr; ~scoped_ptr() noexcept { delete ptr; } };
         return *scoped_ptr{object}.ptr;
     }
 
-    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T*, I*>::value) = 0>
+    template<class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
     inline operator aux::owner<I*>() const noexcept {
         return object;
     }
 
-    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T*, const I*>::value) = 0>
+    template<class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, const I*>::value) = 0>
     inline operator aux::owner<const I*>() const noexcept {
         return object;
     }
 
-    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T*, I*>::value) = 0>
+    template<class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
     inline operator std::shared_ptr<I>() const noexcept {
         return std::shared_ptr<I>{object};
     }
 
-    template<class I, BOOST_DI_REQUIRES(std::is_convertible<T*, I*>::value) = 0>
+    template<class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
     inline operator boost::shared_ptr<I>() const noexcept {
         return boost::shared_ptr<I>{object};
     }
 
-    template<class I, class D, BOOST_DI_REQUIRES(std::is_convertible<T*, I*>::value) = 0>
+    template<class I, class D, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
     inline operator std::unique_ptr<I, D>() const noexcept {
         return std::unique_ptr<I, D>{object};
     }

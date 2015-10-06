@@ -16,13 +16,13 @@
 namespace boost { namespace di { inline namespace v1 { namespace detail {
 
 template<class>
-void create(const std::true_type&) { }
+void create(const aux::true_type&) { }
 
 template<class>
 BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG
 void
     create
-(const std::false_type&) { }
+(const aux::false_type&) { }
 
 template<class, class...>
 struct injector;
@@ -35,7 +35,7 @@ struct injector<int, T...> : core::injector<::BOOST_DI_CFG, core::pool<>, T...> 
             using injector_t = core::injector<TConfig, TPolicies, TDeps...>;
             int _[]{0, (
                 detail::create<T>(
-                    std::integral_constant<bool,
+                    aux::integral_constant<bool,
                         core::injector__<injector_t>::template is_creatable<T>::value ||
                         core::injector__<injector_t>::template is_creatable<T*>::value
                     >{}

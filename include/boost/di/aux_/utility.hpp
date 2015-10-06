@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_AUX_UTILITY_HPP
 #define BOOST_DI_AUX_UTILITY_HPP
 
-#include <type_traits>
+#include "boost/di/aux_/type_traits.hpp"
 
 namespace boost { namespace di { inline namespace v1 {
 
@@ -30,19 +30,16 @@ template<class...>
 struct valid_t { using type = int; };
 
 template<class...>
-struct always : std::true_type { };
+struct always : true_type { };
 
 template<class...>
-struct never : std::false_type { };
+struct never : false_type { };
 
 template<class, class>
 struct pair { using type = pair; };
 
 template<bool...>
 struct bool_list { using type = bool_list; };
-
-template<class...>
-struct type_list { using type = type_list; };
 
 template<class... Ts>
 struct inherit : Ts... { using type = inherit; };
@@ -75,12 +72,12 @@ template<class, class...>
 struct is_unique_impl;
 
 template<class...>
-struct not_unique : std::false_type {
+struct not_unique : false_type {
     using type = not_unique;
 };
 
 template<>
-struct not_unique<> : std::true_type {
+struct not_unique<> : true_type {
     using type = not_unique;
 };
 
@@ -89,8 +86,8 @@ struct is_unique_impl<T> : not_unique<> { };
 
 template<class T1, class T2, class... Ts>
 struct is_unique_impl<T1, T2, Ts...>
-    : std::conditional_t<
-          std::is_base_of<type<T2>, T1>::value
+    : conditional_t<
+          is_base_of<type<T2>, T1>::value
         , not_unique<T2>
         , is_unique_impl<inherit<T1, type<T2>>, Ts...>
       >

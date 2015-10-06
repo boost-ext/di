@@ -27,15 +27,15 @@ struct array : array__<typename T::value_type, sizeof...(Ts)>, T {
     using boost_di_inject__ = aux::type_list<self>;
 
     template<bool... Bs>
-    struct and_ : std::is_same<aux::type_list<typename aux::always<std::integral_constant<bool, Bs>>::type...>, aux::type_list<std::integral_constant<bool, Bs>...>> { };
+    struct and_ : aux::is_same<aux::type_list<typename aux::always<aux::integral_constant<bool, Bs>>::type...>, aux::type_list<aux::integral_constant<bool, Bs>...>> { };
 
     template<class TInjector>
     explicit array(const TInjector& injector)
-        : array(injector, std::true_type{})//, typename and_<core::injector__<TInjector>::template is_creatable<type_traits::rebind_traits_t<value_type, Ts>>::value...>::type{})
+        : array(injector, aux::true_type{})//, typename and_<core::injector__<TInjector>::template is_creatable<type_traits::rebind_traits_t<value_type, Ts>>::value...>::type{})
     { }
 
     template<class TInjector>
-    array(const TInjector& injector, const std::true_type&)
+    array(const TInjector& injector, const aux::true_type&)
         : array_t{{
             *static_cast<const core::injector__<TInjector>&>(injector).
                 create_successful_impl(aux::type<type_traits::rebind_traits_t<value_type, Ts>>{})...
@@ -45,7 +45,7 @@ struct array : array__<typename T::value_type, sizeof...(Ts)>, T {
     { }
 
     template<class TInjector>
-    explicit array(const TInjector& injector, const std::false_type&) {
+    explicit array(const TInjector& injector, const aux::false_type&) {
         int _[]{0, (
             static_cast<const core::injector__<TInjector>&>(injector).
                 create_impl(aux::type<type_traits::rebind_traits_t<value_type, Ts>>{})

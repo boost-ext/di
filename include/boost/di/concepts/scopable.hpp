@@ -20,13 +20,13 @@ struct scope {
     struct create { };
 
     template<class...>
-    struct requires_ : std::false_type { };
+    struct requires_ : aux::false_type { };
 };
 
 template<class T>
 struct provider__ {
     template<class TMemory = type_traits::heap>
-    std::conditional_t<std::is_same<TMemory, type_traits::stack>::value, T, T*>
+    aux::conditional_t<aux::is_same<TMemory, type_traits::stack>::value, T, T*>
     try_get(const TMemory& = {}) const;
 
     template<class TMemory = type_traits::heap>
@@ -46,12 +46,12 @@ template<class T>
 auto scopable_impl(T&&) -> aux::is_valid_expr<
     typename T::template scope<_, _>::template is_referable<_>
   , decltype(T::template scope<_, _>::template try_create<_>(provider__<_>{}))
-  , decltype(std::declval<typename T::template scope<_, _>>().template create<_>(provider__<_>{}))
+  , decltype(aux::declval<typename T::template scope<_, _>>().template create<_>(provider__<_>{}))
 >;
 
 template<class T>
 struct scopable__ {
-    using type = decltype(scopable_impl<T>(std::declval<T>()));
+    using type = decltype(scopable_impl<T>(aux::declval<T>()));
 };
 
 template<class T>

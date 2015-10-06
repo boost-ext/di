@@ -13,21 +13,21 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace scopes {
 
-std::false_type has_shared_ptr__(...);
+aux::false_type has_shared_ptr__(...);
 
 template<class T>
 auto has_shared_ptr__(T&&) -> aux::is_valid_expr<decltype(std::shared_ptr<T>{})>;
 
 class singleton {
 public:
-    template<class, class T, class = decltype(has_shared_ptr__(std::declval<T>()))>
+    template<class, class T, class = decltype(has_shared_ptr__(aux::declval<T>()))>
     class scope {
     public:
         template<class T_>
         using is_referable = typename wrappers::shared<T&>::template is_referable<T_>;
 
         template<class, class TProvider>
-        static decltype(wrappers::shared<T&>{std::declval<TProvider>().get(type_traits::stack{})})
+        static decltype(wrappers::shared<T&>{aux::declval<TProvider>().get(type_traits::stack{})})
         try_create(const TProvider&);
 
         template<class, class TProvider>
@@ -44,13 +44,13 @@ public:
     };
 
     template<class _, class T>
-    class scope<_, T, std::true_type> {
+    class scope<_, T, aux::true_type> {
     public:
         template<class T_>
         using is_referable = typename wrappers::shared<T>::template is_referable<T_>;
 
-        template<class, class TProvider, class T_ = aux::decay_t<decltype(std::declval<TProvider>().get())>>
-        static decltype(wrappers::shared<T_>{std::shared_ptr<T_>{std::shared_ptr<T_>{std::declval<TProvider>().get()}}})
+        template<class, class TProvider, class T_ = aux::decay_t<decltype(aux::declval<TProvider>().get())>>
+        static decltype(wrappers::shared<T_>{std::shared_ptr<T_>{std::shared_ptr<T_>{aux::declval<TProvider>().get()}}})
         try_create(const TProvider&);
 
         template<class T_, class TProvider>

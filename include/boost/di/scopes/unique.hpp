@@ -18,12 +18,12 @@ public:
     class scope {
     public:
         template<class>
-        using is_referable = std::false_type;
+        using is_referable = aux::false_type;
 
         template<class T, class TProvider>
         static decltype(wrappers::unique<decltype(
-            std::declval<TProvider>().get(type_traits::memory_traits_t<T>{}))>{
-                std::declval<TProvider>().get(type_traits::memory_traits_t<T>{})})
+            aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{}))>{
+                aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{})})
         try_create(const TProvider&);
 
         template<class T, class TProvider>

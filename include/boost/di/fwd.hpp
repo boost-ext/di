@@ -11,6 +11,7 @@
 _LIBCPP_BEGIN_NAMESPACE_STD
 #else // __pph__
 namespace std {
+    using size_t = unsigned long; // todo remove
 #endif // __pph__
     template<class> class shared_ptr;
     template<class> class weak_ptr;

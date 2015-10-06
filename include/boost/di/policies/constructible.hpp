@@ -23,7 +23,7 @@ struct apply_impl {
 };
 
 template<template<class...> class T, class... Ts>
-struct apply_impl<T<Ts...>, BOOST_DI_REQUIRES(!std::is_base_of<type_op, T<Ts...>>::value)> {
+struct apply_impl<T<Ts...>, BOOST_DI_REQUIRES(!aux::is_base_of<type_op, T<Ts...>>::value)> {
     template<class TOp, class>
     struct apply_placeholder_impl {
         using type = TOp;
@@ -45,7 +45,7 @@ struct apply_impl<T<Ts...>, BOOST_DI_REQUIRES(!std::is_base_of<type_op, T<Ts...>
 };
 
 template<class T>
-struct apply_impl<T, BOOST_DI_REQUIRES(std::is_base_of<type_op, T>::value)> {
+struct apply_impl<T, BOOST_DI_REQUIRES(aux::is_base_of<type_op, T>::value)> {
     template<class TArg>
     struct apply : T::template apply<TArg>::type { };
 };
@@ -53,7 +53,7 @@ struct apply_impl<T, BOOST_DI_REQUIRES(std::is_base_of<type_op, T>::value)> {
 template<class T>
 struct not_ : detail::type_op {
     template<class TArg>
-    struct apply : std::integral_constant<bool,
+    struct apply : aux::integral_constant<bool,
         !detail::apply_impl<T>::template apply<TArg>::value
     > { };
 };
@@ -61,7 +61,7 @@ struct not_ : detail::type_op {
 template<class... Ts>
 struct and_ : detail::type_op {
     template<class TArg>
-    struct apply : std::is_same<
+    struct apply : aux::is_same<
         aux::bool_list<detail::apply_impl<Ts>::template apply<TArg>::value...>
       , aux::bool_list<aux::always<Ts>::value...>
     > { };
@@ -70,8 +70,8 @@ struct and_ : detail::type_op {
 template<class... Ts>
 struct or_ : detail::type_op {
     template<class TArg>
-    struct apply : std::integral_constant<bool,
-        !std::is_same<
+    struct apply : aux::integral_constant<bool,
+        !aux::is_same<
             aux::bool_list<detail::apply_impl<Ts>::template apply<TArg>::value...>
           , aux::bool_list<aux::never<Ts>::value...>
         >::value
@@ -84,13 +84,13 @@ template<class T>
 struct type {
 template<class TPolicy>
 struct not_allowed_by {
-    operator std::false_type() const {
+    operator aux::false_type() const {
         using constraint_not_satisfied = not_allowed_by;
         return
             constraint_not_satisfied{}.error();
     }
 
-    static inline std::false_type
+    static inline aux::false_type
     error(_ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>!");
 };};
 
@@ -99,11 +99,11 @@ struct is_bound : detail::type_op {
     struct not_resolved { };
 
     template<class TArg>
-    struct apply : std::integral_constant<bool,
-        !std::is_same<
+    struct apply : aux::integral_constant<bool,
+        !aux::is_same<
             typename TArg::template resolve<
-                std::conditional_t<
-                    std::is_same<T, _>::value
+                aux::conditional_t<
+                    aux::is_same<T, _>::value
                   , typename TArg::type
                   , T
                 >
@@ -118,11 +118,11 @@ struct is_bound : detail::type_op {
 template<class T>
 struct is_injected : detail::type_op {
     template<class TArg
-           , class U = aux::decay_t<std::conditional_t<std::is_same<T, _>::value, typename TArg::type, T>>
-    > struct apply : std::conditional_t<
-        std::is_class<U>::value
+           , class U = aux::decay_t<aux::conditional_t<aux::is_same<T, _>::value, typename TArg::type, T>>
+    > struct apply : aux::conditional_t<
+        aux::is_class<U>::value
       , typename type_traits::is_injectable<U>::type
-      , std::true_type
+      , aux::true_type
     > { };
 };
 
@@ -148,22 +148,22 @@ inline auto operator!(const T&) {
 template<class T>
 struct constructible_impl {
     template<class TArg, BOOST_DI_REQUIRES(TArg::is_root::value || T::template apply<TArg>::value) = 0>
-    std::true_type operator()(const TArg&) const {
+    aux::true_type operator()(const TArg&) const {
         return {};
     }
 
     template<class TArg, BOOST_DI_REQUIRES(!TArg::is_root::value && !T::template apply<TArg>::value) = 0>
-    std::false_type operator()(const TArg&) const {
+    aux::false_type operator()(const TArg&) const {
         return typename type<typename TArg::type>::template not_allowed_by<T>{};
     }
 };
 
-template<class T = aux::never<_>, BOOST_DI_REQUIRES(std::is_base_of<detail::type_op, T>::value) = 0>
+template<class T = aux::never<_>, BOOST_DI_REQUIRES(aux::is_base_of<detail::type_op, T>::value) = 0>
 inline auto constructible(const T& = {}) {
     return constructible_impl<T>{};
 }
 
-template<class T = aux::never<_>, BOOST_DI_REQUIRES(!std::is_base_of<detail::type_op, T>::value) = 0>
+template<class T = aux::never<_>, BOOST_DI_REQUIRES(!aux::is_base_of<detail::type_op, T>::value) = 0>
 inline auto constructible(const T& = {}) {
     return constructible_impl<detail::or_<T>>{};
 }

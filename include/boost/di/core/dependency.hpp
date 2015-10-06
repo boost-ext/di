@@ -36,9 +36,9 @@ struct array_type<T[]> {
 template<class T>
 using array_type_t = typename array_type<T>::type;
 
-template<class T, class U = std::remove_reference_t<T>>
+template<class T, class U = aux::remove_reference_t<T>>
 struct is_injector
-    : std::integral_constant<bool, has_deps<U>::value || has_configure<U>::value>
+    : aux::integral_constant<bool, has_deps<U>::value || has_configure<U>::value>
 { };
 
 template<class, class>
@@ -76,14 +76,14 @@ template<
     using scope_t = typename TScope::template scope<TExpected, TGiven>;
 
     template<class T>
-    using externable = std::integral_constant<bool,
+    using externable = aux::integral_constant<bool,
         !is_injector<T>::value &&
-        std::is_same<TScope, scopes::deduce>::value &&
-        std::is_same<TExpected, TGiven>::value
+        aux::is_same<TScope, scopes::deduce>::value &&
+        aux::is_same<TExpected, TGiven>::value
     >;
 
     template<class T>
-    using specific = std::integral_constant<bool,
+    using specific = aux::integral_constant<bool,
        is_injector<T>::value ||
        aux::is_array<TExpected, T>::value
     >;
@@ -129,7 +129,7 @@ public:
         : scope_t(other)
     { }
 
-    template<class T, BOOST_DI_REQUIRES(std::is_same<TName, no_name>::value && !std::is_same<T, no_name>::value) = 0>
+    template<class T, BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
     auto named() const noexcept {
         return dependency<
             TScope
@@ -141,7 +141,7 @@ public:
         >{*this};
     }
 
-    template<class T, BOOST_DI_REQUIRES(std::is_same<TName, no_name>::value && !std::is_same<T, no_name>::value) = 0>
+    template<class T, BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
     auto named(const T&) const noexcept {
         return dependency<
             TScope
@@ -189,11 +189,11 @@ public:
         >{};
     }
 
-    template<class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value || std::is_same<TExpected, _>::value) = 0>
+    template<class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value || aux::is_same<TExpected, _>::value) = 0>
     auto to(T&& object) const noexcept {
         using dependency = dependency<
             scopes::external
-          , std::conditional_t<std::is_same<TExpected, _>::value, typename ref_traits<T>::type, TExpected>
+          , aux::conditional_t<aux::is_same<TExpected, _>::value, typename ref_traits<T>::type, TExpected>
           , typename ref_traits<T>::type
           , TName
           , TPriority
@@ -207,7 +207,7 @@ public:
         using dependency = dependency<
             scopes::exposed<TScope>
           , TExpected
-          , decltype(std::declval<T>().configure())
+          , decltype(aux::declval<T>().configure())
           , TName
           , TPriority
           , TBase
@@ -265,7 +265,7 @@ protected:
 };
 
 template<class T>
-struct is_dependency : std::is_base_of<dependency_base, T> { };
+struct is_dependency : aux::is_base_of<dependency_base, T> { };
 
 }}}} // boost::di::v1::core
 

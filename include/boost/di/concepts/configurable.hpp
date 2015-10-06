@@ -20,10 +20,10 @@ struct callable_type { };
 template<class>
 struct config {
     template<class...>
-    struct requires_ : std::false_type { };
+    struct requires_ : aux::false_type { };
 };
 
-std::false_type configurable_impl(...);
+aux::false_type configurable_impl(...);
 
 template<class T>
 auto configurable_impl(T&& t) -> aux::is_valid_expr<
@@ -37,36 +37,36 @@ struct get_configurable_error
 { };
 
 template<class T>
-struct get_configurable_error<std::true_type, T> {
+struct get_configurable_error<aux::true_type, T> {
     using type = T;
 };
 
 template<class T>
-struct get_configurable_error<T, std::true_type> {
+struct get_configurable_error<T, aux::true_type> {
     using type = T;
 };
 
 template<>
-struct get_configurable_error<std::true_type, std::true_type>
-    : std::true_type
+struct get_configurable_error<aux::true_type, aux::true_type>
+    : aux::true_type
 { };
 
 template<class T>
-auto is_configurable(const std::true_type&) {
+auto is_configurable(const aux::true_type&) {
     return typename get_configurable_error<
-        decltype(providable<decltype(T::provider(std::declval<T>()))>())
-      , decltype(callable<decltype(T::policies(std::declval<T>()))>())
+        decltype(providable<decltype(T::provider(aux::declval<T>()))>())
+      , decltype(callable<decltype(T::policies(aux::declval<T>()))>())
     >::type{};
 }
 
 template<class T>
-auto is_configurable(const std::false_type&) {
+auto is_configurable(const aux::false_type&) {
     return typename config<T>::template requires_<provider<providable_type(...)>, policies<callable_type(...)>>{};
 }
 
 template<class T>
 struct configurable__ {
-    using type = decltype(is_configurable<T>(decltype(configurable_impl(std::declval<T>())){}));
+    using type = decltype(is_configurable<T>(decltype(configurable_impl(aux::declval<T>())){}));
 };
 
 template<class T>

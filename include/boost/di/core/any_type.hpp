@@ -19,7 +19,7 @@ using is_not_same_t = BOOST_DI_REQUIRES(!aux::is_same_or_base_of<T, TParent>::va
 template<class T, class TInjector>
 struct is_referable_impl {
     static constexpr auto value =
-        dependency__<std::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>>::template
+        dependency__<aux::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>>::template
             is_referable<T>::value;
 };
 
@@ -32,14 +32,14 @@ struct is_creatable_impl {
 };
 
 template<class T, class TInjector>
-struct is_creatable_impl<T, TInjector, std::false_type> {
+struct is_creatable_impl<T, TInjector, aux::false_type> {
     static constexpr auto value = true;
 };
 
 template<class T, class TInjector, class TError>
 using is_creatable_t = BOOST_DI_REQUIRES(is_creatable_impl<T, TInjector, TError>::value);
 
-template<class TParent, class TInjector, class TError = std::false_type>
+template<class TParent, class TInjector, class TError = aux::false_type>
 struct any_type {
     template<class T
            , class = is_not_same_t<T, TParent>
@@ -59,7 +59,7 @@ struct any_type {
     const TInjector& injector_;
 };
 
-template<class TParent, class TInjector, class TError = std::false_type>
+template<class TParent, class TInjector, class TError = aux::false_type>
 struct any_type_ref {
     template<class T
            , class = is_not_same_t<T, TParent>

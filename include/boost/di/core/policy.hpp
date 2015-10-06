@@ -29,7 +29,7 @@ template<class T>
 struct allow_void : T { };
 
 template<>
-struct allow_void<void> : std::true_type { };
+struct allow_void<void> : aux::true_type { };
 
 class policy {
     template<class TArg, class TPolicy, class TPolicies, class TDependency, class TCtor>
@@ -64,13 +64,13 @@ class policy {
     template<class TArg, class TPolicy, class TDependency, class TInitialization, class... TCtor>
     struct try_call_impl<TArg, TPolicy, TDependency, aux::pair<TInitialization, aux::type_list<TCtor...>>
                        , BOOST_DI_REQUIRES(!aux::is_callable_with<TPolicy, TArg, TDependency, TCtor...>::value)>
-        : allow_void<decltype((std::declval<TPolicy>())(std::declval<TArg>()))>
+        : allow_void<decltype((aux::declval<TPolicy>())(aux::declval<TArg>()))>
     { };
 
     template<class TArg, class TPolicy, class TDependency, class TInitialization, class... TCtor>
     struct try_call_impl<TArg, TPolicy, TDependency, aux::pair<TInitialization, aux::type_list<TCtor...>>
                        , BOOST_DI_REQUIRES(aux::is_callable_with<TPolicy, TArg, TDependency, TCtor...>::value)>
-        : allow_void<decltype((std::declval<TPolicy>())(std::declval<TArg>(), std::declval<TDependency>(), aux::type<TCtor>{}...))>
+        : allow_void<decltype((aux::declval<TPolicy>())(aux::declval<TArg>(), aux::declval<TDependency>(), aux::type<TCtor>{}...))>
     { };
 
 public:
@@ -79,7 +79,7 @@ public:
 
     template<class TArg, class TDependency, class TCtor, class... TPolicies>
     struct try_call<TArg, pool_t<TPolicies...>, TDependency, TCtor>
-        : std::is_same<
+        : aux::is_same<
             aux::bool_list<aux::always<TPolicies>::value...>
           , aux::bool_list<try_call_impl<TArg, TPolicies, TDependency, TCtor>::value...>
         >

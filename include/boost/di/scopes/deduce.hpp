@@ -21,7 +21,7 @@ public:
 
         template<class T, class TProvider>
         static decltype(typename type_traits::scope_traits_t<T>::template
-            scope<TExpected, TGiven>{}.template try_create<T>(std::declval<TProvider>()))
+            scope<TExpected, TGiven>{}.template try_create<T>(aux::declval<TProvider>()))
         try_create(const TProvider&);
 
         template<class T, class TProvider>

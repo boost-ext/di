@@ -19,7 +19,7 @@ struct is_creatable { };
 template<class>
 struct provider {
     template<class...>
-    struct requires_ : std::false_type { };
+    struct requires_ : aux::false_type { };
 };
 
 template<class T>
@@ -37,7 +37,7 @@ auto providable_impl(T&& t) -> aux::is_valid_expr<
 
 template<class T>
 struct providable__ {
-    using type = decltype(providable_impl<T>(std::declval<T>()));
+    using type = decltype(providable_impl<T>(aux::declval<T>()));
 };
 
 template<class T>

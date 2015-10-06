@@ -20,13 +20,13 @@ struct call_operator { };
 template<class>
 struct policy {
     template<class>
-    struct requires_ : std::false_type { };
+    struct requires_ : aux::false_type { };
 };
 
 struct arg {
     using type = void;
     using name = no_name;
-    using is_root = std::false_type;
+    using is_root = aux::false_type;
 
     template<class, class, class>
     struct resolve;
@@ -34,7 +34,7 @@ struct arg {
 
 struct ctor { };
 
-std::false_type callable_impl(...);
+aux::false_type callable_impl(...);
 
 template<class T, class TArg>
 auto callable_impl(T&& t, TArg&& arg) -> aux::is_valid_expr<
@@ -51,11 +51,11 @@ struct is_callable_impl;
 
 template<class T, class... Ts>
 struct is_callable_impl<T, Ts...> {
-    using callable_with_arg = decltype(callable_impl(std::declval<T>(), arg{}));
+    using callable_with_arg = decltype(callable_impl(aux::declval<T>(), arg{}));
     using callable_with_arg_and_dep =
-        decltype(callable_impl(std::declval<T>(), arg{}, core::dependency<scopes::deduce, T>{}, ctor{}));
+        decltype(callable_impl(aux::declval<T>(), arg{}, core::dependency<scopes::deduce, T>{}, ctor{}));
 
-    using type = std::conditional_t<
+    using type = aux::conditional_t<
         callable_with_arg::value || callable_with_arg_and_dep::value
       , typename is_callable_impl<Ts...>::type
       , typename policy<T>::template requires_<call_operator>
@@ -64,7 +64,7 @@ struct is_callable_impl<T, Ts...> {
 
 template<>
 struct is_callable_impl<>
-    : std::true_type
+    : aux::true_type
 { };
 
 template<class... Ts>

@@ -17,11 +17,11 @@ namespace detail {
 struct callable_base_impl { void operator()(...) { } };
 
 template<class T>
-struct callable_base : callable_base_impl, std::conditional_t<std::is_class<T>::value, T, aux::none_type> { };
+struct callable_base : callable_base_impl, aux::conditional_t<aux::is_class<T>::value, T, aux::none_type> { };
 
 template<typename T>
-std::false_type is_callable_impl(T*, aux::non_type<void(callable_base_impl::*)(...), &T::operator()>* = 0);
-std::true_type is_callable_impl(...);
+aux::false_type is_callable_impl(T*, aux::non_type<void(callable_base_impl::*)(...), &T::operator()>* = 0);
+aux::true_type is_callable_impl(...);
 
 template<class T>
 struct is_callable : decltype(is_callable_impl((callable_base<T>*)0)) { };
@@ -54,9 +54,9 @@ class no_implicit_conversions : public T {
 BOOST_DI_HAS_TYPE(has_result_type, result_type);
 
 template<class TGiven, class TProvider, class... Ts>
-struct is_call : std::integral_constant<bool,
+struct is_call : aux::integral_constant<bool,
     aux::is_callable_with<TGiven, no_implicit_conversions<
-        aux::remove_specifiers_t<decltype(std::declval<TProvider>().injector_)>
+        aux::remove_specifiers_t<decltype(aux::declval<TProvider>().injector_)>
     >, Ts...>::value && !has_result_type<TGiven>::value
 > { };
 
@@ -67,7 +67,7 @@ public:
     template<class TExpected, class, class = int>
     struct scope {
         template<class>
-        using is_referable = std::false_type;
+        using is_referable = aux::false_type;
 
         explicit scope(const TExpected& object)
             : object_{object}
@@ -108,7 +108,7 @@ public:
     template<class TExpected, class TGiven>
     struct scope<TExpected, std::initializer_list<TGiven>> {
         template<class>
-        using is_referable = std::false_type;
+        using is_referable = aux::false_type;
 
         explicit scope(const std::initializer_list<TGiven>& object)
             : object_(object)
@@ -128,7 +128,7 @@ public:
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven&, BOOST_DI_REQUIRES(!detail::is_callable<TGiven>::value)> {
         template<class>
-        using is_referable = std::true_type;
+        using is_referable = aux::true_type;
 
         explicit scope(TGiven& object)
             : object_{object}
@@ -148,7 +148,7 @@ public:
     template<class TExpected, class TGiven>
     struct scope<TExpected, TGiven, BOOST_DI_REQUIRES(detail::is_callable<TGiven>::value)> {
         template<class>
-        using is_referable = std::false_type;
+        using is_referable = aux::false_type;
 
         explicit scope(const TGiven& object)
             : object_(object)
@@ -170,7 +170,7 @@ public:
                                aux::is_callable_with<TGiven>::value &&
                               !detail::is_callable<TExpected>::value) = 0>
         auto create(const TProvider&) const noexcept {
-            using wrapper = detail::wrapper_traits_t<decltype(std::declval<TGiven>()())>;
+            using wrapper = detail::wrapper_traits_t<decltype(aux::declval<TGiven>()())>;
             return wrapper{object_()};
         }
 
