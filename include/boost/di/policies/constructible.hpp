@@ -120,9 +120,9 @@ struct is_injected : detail::type_op {
     template<class TArg
            , class U = aux::decay_t<std::conditional_t<std::is_same<T, _>::value, typename TArg::type, T>>
     > struct apply : std::conditional_t<
-        std::is_fundamental<U>::value
-      , std::true_type
+        std::is_class<U>::value
       , typename type_traits::is_injectable<U>::type
+      , std::true_type
     > { };
 };
 
