@@ -2384,7 +2384,7 @@ protected:
         using type = any_type_ref<TParent, injector, with_error>;
     };
     template<class TName, class T, bool B>
-    struct try_create<named<TName, T>, B> {
+    struct try_create<di::named<TName, T>, B> {
         using type = std::conditional_t<is_creatable<T, TName>::value, typename is_creatable<T, TName>::type, void>;
     };
     template<bool B>
@@ -2404,7 +2404,7 @@ protected:
         return any_type_ref<TParent, injector>{*this};
     }
     template<class TIsRoot = std::false_type, class T, class TName>
-    auto create_impl(const aux::type<named<TName, T>>&) const {
+    auto create_impl(const aux::type<di::named<TName, T>>&) const {
         return create_impl__<TIsRoot, T, TName>();
     }
     template<class TIsRoot = std::false_type, class T>
@@ -2420,7 +2420,7 @@ protected:
         return successful::any_type_ref<TParent, injector>{*this};
     }
     template<class TIsRoot = std::false_type, class T, class TName>
-    auto create_successful_impl(const aux::type<named<TName, T>>&) const {
+    auto create_successful_impl(const aux::type<di::named<TName, T>>&) const {
         return create_successful_impl__<TIsRoot, T, TName>();
     }
     template<class TIsRoot = std::false_type>
@@ -2534,7 +2534,7 @@ protected:
         using type = any_type_ref<TParent, injector, with_error>;
     };
     template<class TName, class T, bool B>
-    struct try_create<named<TName, T>, B> {
+    struct try_create<di::named<TName, T>, B> {
         using type = std::conditional_t<is_creatable<T, TName>::value, typename is_creatable<T, TName>::type, void>;
     };
     template<bool B>
@@ -2554,7 +2554,7 @@ protected:
         return any_type_ref<TParent, injector>{*this};
     }
     template<class TIsRoot = std::false_type, class T, class TName>
-    auto create_impl(const aux::type<named<TName, T>>&) const {
+    auto create_impl(const aux::type<di::named<TName, T>>&) const {
         return create_impl__<TIsRoot, T, TName>();
     }
     template<class TIsRoot = std::false_type, class T>
@@ -2570,7 +2570,7 @@ protected:
         return successful::any_type_ref<TParent, injector>{*this};
     }
     template<class TIsRoot = std::false_type, class T, class TName>
-    auto create_successful_impl(const aux::type<named<TName, T>>&) const {
+    auto create_successful_impl(const aux::type<di::named<TName, T>>&) const {
         return create_successful_impl__<TIsRoot, T, TName>();
     }
     template<class TIsRoot = std::false_type>
