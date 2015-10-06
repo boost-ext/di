@@ -4,6 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#include <type_traits>
 #include "boost/di/concepts/callable.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
@@ -39,9 +40,9 @@ test is_concept_callable = [] {
     static_expect(std::is_same<policy<non_match_callable_type>::requires_<call_operator>, callable<non_match_callable_type>>::value);
     static_expect(std::is_same<policy<non_match_callable_type_specific>::requires_<call_operator>, callable<non_match_callable_type_specific>>::value);
 
-    static_expect(callable<callable_type>());
-    static_expect(callable<callable_type_return>());
-    static_expect(callable<callable_type_extended>());
+    static_expect(callable<callable_type>::value);
+    static_expect(callable<callable_type_return>::value);
+    static_expect(callable<callable_type_extended>::value);
 };
 
 }}}} // boost::di::v1::concepts

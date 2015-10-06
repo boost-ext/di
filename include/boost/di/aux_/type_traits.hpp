@@ -9,26 +9,26 @@
 
 #include "boost/di/fwd.hpp"
 
-#define BOOST_DI_HAS_TYPE(name, call_name)                              \
-    template<class, class = int>                                        \
-    struct name : ::boost::di::aux::false_type { };                     \
-                                                                        \
-    template<class T>                                                   \
-    struct name<T, typename aux::valid_t<typename T::call_name>::type>  \
-        : ::boost::di::aux::true_type                                   \
+#define BOOST_DI_HAS_TYPE(name, call_name)                                          \
+    template<class, class = int>                                                    \
+    struct name : ::boost::di::aux::false_type { };                                 \
+                                                                                    \
+    template<class T>                                                               \
+    struct name<T, typename ::boost::di::aux::valid_t<typename T::call_name>::type> \
+        : ::boost::di::aux::true_type                                               \
     { }
 
-#define BOOST_DI_HAS_METHOD(name, call_name)                            \
-    template<class T, class... TArgs>                                   \
-    decltype(::boost::di::aux::declval<T>().call_name(                  \
-             ::boost::di::aux::declval<TArgs>()...)                     \
-           , ::boost::di::aux::true_type())                             \
-    name##_impl(int);                                                   \
-                                                                        \
-    template<class, class...>                                           \
-    ::boost::di::aux::false_type name##_impl(...);                      \
-                                                                        \
-    template<class T, class... TArgs>                                   \
+#define BOOST_DI_HAS_METHOD(name, call_name)                                        \
+    template<class T, class... TArgs>                                               \
+    decltype(::boost::di::aux::declval<T>().call_name(                              \
+             ::boost::di::aux::declval<TArgs>()...)                                 \
+           , ::boost::di::aux::true_type())                                         \
+    name##_impl(int);                                                               \
+                                                                                    \
+    template<class, class...>                                                       \
+    ::boost::di::aux::false_type name##_impl(...);                                  \
+                                                                                    \
+    template<class T, class... TArgs>                                               \
     struct name : decltype(name##_impl<T, TArgs...>(0)) { }
 
 #define BOOST_DI_REQUIRES(...) typename ::boost::di::aux::enable_if<__VA_ARGS__, int>::type // __pph__
@@ -39,6 +39,10 @@ namespace boost { namespace di { inline namespace v1 { namespace aux {
 //TODO remove
 template<class...>
 struct type_list { using type = type_list; };
+
+//TODO remove
+template<class...>
+struct valid_t { using type = int; };
 
 template<bool B, class T, class F>
 struct conditional { using type = T; };
@@ -57,7 +61,6 @@ struct integral_constant {
 
 using true_type = integral_constant<bool, true>;
 using false_type = integral_constant<bool, false>;
-
 
 template<class T> struct add_rvalue_reference { using type = T&&;};
 template<> struct add_rvalue_reference<void> {typedef void type;};
@@ -178,10 +181,9 @@ using remove_specifiers =
 template<class T>
 using remove_specifiers_t = typename remove_specifiers<T>::type;
 
-template<class TSrc, class TDst>
+template<class TSrc, class TDst, class U = remove_specifiers_t<TDst>>
 using is_narrowed = integral_constant<bool,
-    //!is_class<remove_specifiers_t<TDst>>::value && !is_same<TSrc, TDst>::value
-      false
+    !is_class<TSrc>::value && !is_class<U>::value && !is_same<TSrc, U>::value
 >;
 
 template<class T>

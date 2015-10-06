@@ -27,9 +27,6 @@ template<class T>
 using owner = T;
 
 template<class...>
-struct valid_t { using type = int; };
-
-template<class...>
 struct always : true_type { };
 
 template<class...>

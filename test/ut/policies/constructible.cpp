@@ -16,12 +16,12 @@ namespace boost { namespace di { inline namespace v1 { namespace policies {
 
 template<class TPolicy, class T = std::false_type>
 bool constructible_test(const TPolicy&, const T& arg = {}) noexcept {
-    return decltype(constructible(arg)(fake_policy<TPolicy>{})){};
+    return decltype(constructible(arg)(fake_policy<TPolicy>{}))::value;
 }
 
 template<class T = std::false_type, class T_, class TDependency, class TDeps, bool TResolve>
 bool constructible_test(const fake_policy<T_, TDependency, TDeps, TResolve>& policy, const T& arg = {}) noexcept {
-    return decltype(constructible(arg)(policy)){};
+    return decltype(constructible(arg)(policy))::value;
 }
 
 test nothing_is_allowed = [] {

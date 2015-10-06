@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <string>
+#include <type_traits>
 #include "boost/di/concepts/boundable.hpp"
 #include "common/fakes/fake_dependency.hpp"
 

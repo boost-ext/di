@@ -96,6 +96,8 @@ namespace boost { namespace di { inline namespace v1 {
 namespace boost { namespace di { inline namespace v1 { namespace aux {
 template<class...>
 struct type_list { using type = type_list; };
+template<class...>
+struct valid_t { using type = int; };
 template<bool B, class T, class F>
 struct conditional { using type = T; };
 template<class T, class F>
@@ -194,9 +196,9 @@ using remove_specifiers =
     remove_cv<remove_pointer_t<remove_reference_t<T>>>;
 template<class T>
 using remove_specifiers_t = typename remove_specifiers<T>::type;
-template<class TSrc, class TDst>
+template<class TSrc, class TDst, class U = remove_specifiers_t<TDst>>
 using is_narrowed = integral_constant<bool,
-      false
+    !is_class<TSrc>::value && !is_class<U>::value && !is_same<TSrc, U>::value
 >;
 template<class T>
 struct deref_type {
@@ -284,8 +286,6 @@ template<class T, T>
 struct non_type { };
 template<class T>
 using owner = T;
-template<class...>
-struct valid_t { using type = int; };
 template<class...>
 struct always : true_type { };
 template<class...>
@@ -797,7 +797,7 @@ public:
 };
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace scopes {
-template<class, class = int> struct has_deps : ::boost::di::aux::false_type { }; template<class T> struct has_deps<T, typename aux::valid_t<typename T::deps>::type> : ::boost::di::aux::true_type { };
+template<class, class = int> struct has_deps : ::boost::di::aux::false_type { }; template<class T> struct has_deps<T, typename ::boost::di::aux::valid_t<typename T::deps>::type> : ::boost::di::aux::true_type { };
 template<class TScope = scopes::deduce>
 class exposed {
 public:
@@ -910,7 +910,7 @@ template<class T>
 class no_implicit_conversions : public T {
     template<class U> operator U() const;
 };
-template<class, class = int> struct has_result_type : ::boost::di::aux::false_type { }; template<class T> struct has_result_type<T, typename aux::valid_t<typename T::result_type>::type> : ::boost::di::aux::true_type { };
+template<class, class = int> struct has_result_type : ::boost::di::aux::false_type { }; template<class T> struct has_result_type<T, typename ::boost::di::aux::valid_t<typename T::result_type>::type> : ::boost::di::aux::true_type { };
 template<class TGiven, class TProvider, class... Ts>
 struct is_call : aux::integral_constant<bool,
     aux::is_callable_with<TGiven, no_implicit_conversions<
@@ -1023,7 +1023,7 @@ public:
 #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
 #endif
 namespace boost { namespace di { inline namespace v1 { namespace type_traits {
-template<class, class = int> struct is_injectable : ::boost::di::aux::false_type { }; template<class T> struct is_injectable<T, typename aux::valid_t<typename T::boost_di_inject__>::type> : ::boost::di::aux::true_type { };
+template<class, class = int> struct is_injectable : ::boost::di::aux::false_type { }; template<class T> struct is_injectable<T, typename ::boost::di::aux::valid_t<typename T::boost_di_inject__>::type> : ::boost::di::aux::true_type { };
 struct direct { };
 struct uniform { };
 template<class T, int>
@@ -1156,7 +1156,7 @@ using scopable = typename scopable__<T>::type;
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
 template<class T, class... TArgs> decltype(::boost::di::aux::declval<T>().configure( ::boost::di::aux::declval<TArgs>()...) , ::boost::di::aux::true_type()) has_configure_impl(int); template<class, class...> ::boost::di::aux::false_type has_configure_impl(...); template<class T, class... TArgs> struct has_configure : decltype(has_configure_impl<T, TArgs...>(0)) { };
-template<class, class = int> struct has_deps : ::boost::di::aux::false_type { }; template<class T> struct has_deps<T, typename aux::valid_t<typename T::deps>::type> : ::boost::di::aux::true_type { };
+template<class, class = int> struct has_deps : ::boost::di::aux::false_type { }; template<class T> struct has_deps<T, typename ::boost::di::aux::valid_t<typename T::deps>::type> : ::boost::di::aux::true_type { };
 template<class>
 struct array_type;
 template<class T>
