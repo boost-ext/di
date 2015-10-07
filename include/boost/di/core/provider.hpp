@@ -37,7 +37,7 @@ template<
     };
 
     template<class TMemory = type_traits::heap>
-    auto get(const TMemory& memory = {}) const -> aux::enable_if_t<
+    auto get(const TMemory& = {}) const -> aux::enable_if_t<
         is_creatable<TMemory>::value
       , aux::conditional_t<aux::is_same<TMemory, type_traits::stack>::value, TGiven, aux::remove_reference_t<TGiven>*>
     >;

@@ -9,6 +9,7 @@
 #include <vector>
 #include <set>
 #include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/fwd.hpp"
 #include "common/common.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace aux {
@@ -118,13 +119,11 @@ test decay_types = [] {
         static_expect(std::is_same<T, decay_t<const boost::shared_ptr<T>&>>::value);
         static_expect(std::is_same<T, decay_t<std::shared_ptr<T>&>>::value);
         static_expect(std::is_same<T, decay_t<boost::shared_ptr<T>&>>::value);
-        static_expect(std::is_same<T, decay_t<volatile T>>::value);
         static_expect(std::is_same<T, decay_t<T&&>>::value);
-        static_expect(std::is_same<T, decay_t<const T&&>>::value);
-        //static_expect(std::is_same<T*[], decay_t<std::vector<std::shared_ptr<T>>>>::value);
-        //static_expect(std::is_same<T*[], decay_t<std::shared_ptr<std::vector<std::shared_ptr<T>>>>>::value);
-        //static_expect(std::is_same<T*[], decay_t<std::set<std::shared_ptr<T>>>>::value);
-        //static_expect(std::is_same<T*[], decay_t<std::shared_ptr<std::set<std::shared_ptr<T>>>>>::value);
+        static_expect(std::is_same<core::array<T*[]>, decay_t<std::vector<std::shared_ptr<T>>>>::value);
+        static_expect(std::is_same<core::array<T*[]>, decay_t<std::shared_ptr<std::vector<std::shared_ptr<T>>>>>::value);
+        static_expect(std::is_same<core::array<T*[]>, decay_t<std::set<std::shared_ptr<T>>>>::value);
+        static_expect(std::is_same<core::array<T*[]>, decay_t<std::shared_ptr<std::set<std::shared_ptr<T>>>>>::value);
     };
 
     struct c { };
