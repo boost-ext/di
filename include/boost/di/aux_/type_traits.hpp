@@ -238,6 +238,20 @@ using is_unique = is_unique_impl<none_type, Ts...>;
 
 BOOST_DI_HAS_METHOD(is_callable_with, operator());
 
+struct callable_base_impl { void operator()(...) { } };
+
+template<class T>
+struct callable_base
+    : callable_base_impl, aux::conditional_t<aux::is_class<T>::value, T, aux::none_type>
+{ };
+
+template<typename T>
+aux::false_type is_callable_impl(T*, aux::non_type<void(callable_base_impl::*)(...), &T::operator()>* = 0);
+aux::true_type is_callable_impl(...);
+
+template<class T>
+struct is_callable : decltype(is_callable_impl((callable_base<T>*)0)) { };
+
 template<class>
 struct function_traits;
 
