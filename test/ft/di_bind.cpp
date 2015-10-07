@@ -11,7 +11,6 @@
 #include <functional>
 #include <vector>
 #include <set>
-#include <array>
 
 namespace di = boost::di;
 
@@ -556,9 +555,8 @@ test bind_function_to_callable = [] {
 
 test multi_bindings_empty = [] {
     struct c {
-        c(std::vector<int> v, std::array<int, 0> a, const std::set<std::unique_ptr<i1>>& s) {
+        c(std::vector<int> v, const std::set<std::unique_ptr<i1>>& s) {
             expect(v.empty());
-            expect(a.empty());
             expect(s.empty());
         }
     };
@@ -584,7 +582,6 @@ test multi_bindings_containers = [] {
 
     test(injector.create<std::vector<int>>());
     test(injector.create<std::set<int>>());
-    test(injector.create<std::array<int, 2>>());
 };
 
 test multi_bindings_inject_named = [] {

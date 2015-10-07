@@ -8,6 +8,7 @@
 #define BOOST_DI_CORE_ARRAY_HPP
 
 #include "boost/di/aux_/utility.hpp"
+#include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/type_traits/rebind_traits.hpp"
 #include "boost/di/fwd.hpp"
 
@@ -51,20 +52,6 @@ struct array : array__<typename T::value_type, sizeof...(Ts)>, T {
                 create_impl(aux::type<type_traits::rebind_traits_t<value_type, Ts>>{})
         , 0)...}; (void)_;
     }
-};
-
-template<class T, std::size_t N, class... Ts>
-struct array<std::array<T, N>, Ts...> : std::array<T, N> {
-    using array_t = std::array<T, N>;
-    using boost_di_inject__ = aux::type_list<self>;
-
-    template<class TInjector>
-    explicit array(const TInjector& injector)
-        : array_t{{
-            *static_cast<const core::injector__<TInjector>&>(injector).
-                create_successful_impl(aux::type<type_traits::rebind_traits_t<T, Ts>>{})...
-         }}
-    { }
 };
 
 template<class T, class... Ts>

@@ -7,13 +7,17 @@
 #ifndef BOOST_DI_AUX_UTILITY_HPP
 #define BOOST_DI_AUX_UTILITY_HPP
 
-#include "boost/di/aux_/type_traits.hpp"
-
 namespace boost { namespace di { inline namespace v1 {
 
 struct _ { _(...) { } };
 
 namespace aux {
+
+template<class...>
+struct type_list { using type = type_list; };
+
+template<class...>
+struct valid_t { using type = int; };
 
 template<class...>
 struct type { };
@@ -27,10 +31,14 @@ template<class T>
 using owner = T;
 
 template<class...>
-struct always : true_type { };
+struct always {
+    static constexpr auto value = true;
+};
 
 template<class...>
-struct never : false_type { };
+struct never {
+    static constexpr auto value = false;
+};
 
 template<class, class>
 struct pair { using type = pair; };
@@ -64,34 +72,6 @@ struct join<type_list<TArgs1...>, type_list<TArgs2...>, Ts...> {
 
 template<class... TArgs>
 using join_t = typename join<TArgs...>::type;
-
-template<class, class...>
-struct is_unique_impl;
-
-template<class...>
-struct not_unique : false_type {
-    using type = not_unique;
-};
-
-template<>
-struct not_unique<> : true_type {
-    using type = not_unique;
-};
-
-template<class T>
-struct is_unique_impl<T> : not_unique<> { };
-
-template<class T1, class T2, class... Ts>
-struct is_unique_impl<T1, T2, Ts...>
-    : conditional_t<
-          is_base_of<type<T2>, T1>::value
-        , not_unique<T2>
-        , is_unique_impl<inherit<T1, type<T2>>, Ts...>
-      >
-{ };
-
-template<class... Ts>
-using is_unique = is_unique_impl<none_type, Ts...>;
 
 template<int...>
 struct index_sequence {

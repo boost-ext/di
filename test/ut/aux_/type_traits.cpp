@@ -194,5 +194,16 @@ test is_complete_types = [] {
     static_expect(is_complete<int>::value);
 };
 
+test is_unique_types = [] {
+    static_expect(is_unique<>::value);
+    static_expect(is_unique<int>::value);
+    static_expect(is_unique<int, double, float>::value);
+    static_expect(!is_unique<int, int>::value);
+    static_expect(!is_unique<int, double, int>::value);
+    static_expect(!is_unique<int, double, double, int, int>::value);
+    static_expect(std::is_same<not_unique<int>, is_unique<int, int>::type>::value);
+    static_expect(std::is_same<not_unique<int>, is_unique<float, int, double, int>::type>::value);
+};
+
 }}}} // boost::di::v1::aux
 

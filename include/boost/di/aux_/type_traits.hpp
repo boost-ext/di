@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_AUX_TYPE_TRAITS_HPP
 #define BOOST_DI_AUX_TYPE_TRAITS_HPP
 
+#include "boost/di/aux_/utility.hpp"
 #include "boost/di/fwd.hpp"
 
 #define BOOST_DI_HAS_TYPE(name, call_name)                                          \
@@ -35,14 +36,6 @@
 #define BOOST_DI_REQUIRES_MSG(...) typename ::boost::di::aux::concept_check<__VA_ARGS__>::type // __pph__
 
 namespace boost { namespace di { inline namespace v1 { namespace aux {
-
-//TODO remove
-template<class...>
-struct type_list { using type = type_list; };
-
-//TODO remove
-template<class...>
-struct valid_t { using type = int; };
 
 template<bool B, class T, class F>
 struct conditional { using type = T; };
@@ -132,27 +125,21 @@ using is_class = integral_constant<bool, __is_class(T)>;
     using is_convertible = integral_constant<bool, __is_convertible_to(T, U)>;
 #else // __pph__
   template<typename _From, typename _To>
-    class __is_convertible_helper
-    {
-       template<typename _To1>
- static void __test_aux(_To1);
+    class __is_convertible_helper {
+       template<typename _To1> static void __test_aux(_To1);
 
       template<typename _From1, typename _To1,
-        typename = decltype(__test_aux<_To1>(declval<_From1>()))>
- static true_type
- __test(int);
+      typename = decltype(__test_aux<_To1>(declval<_From1>()))>
+      static true_type __test(int);
 
-      template<typename, typename>
- static false_type
- __test(...);
+      template<typename, typename> static false_type __test(...);
 
     public:
       typedef decltype(__test<_From, _To>(0)) type;
     };
 
   template<typename _From, typename _To>
-    struct is_convertible
-    : public __is_convertible_helper<_From, _To>::type
+    struct is_convertible : public __is_convertible_helper<_From, _To>::type
     { };
 #endif // __pph__
 
@@ -183,10 +170,10 @@ template<class T, class... TArgs>
 using is_constructible_t = typename is_constructible<T, TArgs...>::type;
 
 template<class T>
-using is_copy_constructible = is_constructible<T, const T&>;
+using is_copy_constructible = integral_constant<bool, __is_constructible(T, const T&)>;
 
 template<class T>
-using is_default_constructible = is_constructible<T>;
+using is_default_constructible = integral_constant<bool, __is_constructible(T)>;
 
 template<class T, class... TArgs>
 decltype(void(T{declval<TArgs>()...}), true_type{}) test_is_braces_constructible(int);
@@ -235,11 +222,6 @@ struct deref_type<boost::shared_ptr<T>> {
 template<class T>
 struct deref_type<std::weak_ptr<T>> {
     using type = remove_specifiers_t<typename deref_type<T>::type>;
-};
-
-template<class T, std::size_t N>
-struct deref_type<std::array<T, N>> {
-    using type = core::array<remove_specifiers_t<typename deref_type<T>::type>*[]>;
 };
 
 template<class T, class TAllocator>
@@ -308,6 +290,34 @@ false_type is_complete_impl(...);
 
 template<class T>
 struct is_complete : decltype(is_complete_impl<T>(0)) { };
+
+template<class, class...>
+struct is_unique_impl;
+
+template<class...>
+struct not_unique : false_type {
+    using type = not_unique;
+};
+
+template<>
+struct not_unique<> : true_type {
+    using type = not_unique;
+};
+
+template<class T>
+struct is_unique_impl<T> : not_unique<> { };
+
+template<class T1, class T2, class... Ts>
+struct is_unique_impl<T1, T2, Ts...>
+    : conditional_t<
+          is_base_of<type<T2>, T1>::value
+        , not_unique<T2>
+        , is_unique_impl<inherit<T1, type<T2>>, Ts...>
+      >
+{ };
+
+template<class... Ts>
+using is_unique = is_unique_impl<none_type, Ts...>;
 
 }}}} // boost::di::v1::aux
 

@@ -7,22 +7,21 @@
 #ifndef BOOST_DI_FWD_HPP
 #define BOOST_DI_FWD_HPP
 
+// libc++
+#if __has_include(<__config>) // __pph__
+    #include <__config> // __pph__
+#endif // __pph__
+
 #if defined(_LIBCPP_VERSION) // __pph__
 _LIBCPP_BEGIN_NAMESPACE_STD
 #else // __pph__
 namespace std {
 #endif // __pph__
-    using size_t = unsigned long; // todo remove
     template<class> class shared_ptr;
     template<class> class weak_ptr;
     template<class, class> class unique_ptr;
     template<class> struct char_traits;
     template<class, class> class vector;
-#if defined(_MSC_VER) // __pph__
-    template<class, std::size_t> class array;
-#else // __pph__
-    template<class, std::size_t> struct array;
-#endif // __pph__
     template<class, class, class> class set;
     template<class> class move_iterator;
 #if defined(_LIBCPP_VERSION) // __pph__

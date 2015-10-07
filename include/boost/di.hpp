@@ -29,6 +29,83 @@
     namespace boost { namespace di { inline namespace v1 { namespace detail { template<class T> T get_type__(T); }}}}
     #define BOOST_DI_DECLTYPE_WKND(...) decltype(::boost::di::v1::detail::get_type__(__VA_ARGS__))
 #endif
+namespace boost { namespace di { inline namespace v1 {
+struct _ { _(...) { } };
+namespace aux {
+template<class...>
+struct type_list { using type = type_list; };
+template<class...>
+struct valid_t { using type = int; };
+template<class...>
+struct type { };
+struct none_type { };
+template<class T, T>
+struct non_type { };
+template<class T>
+using owner = T;
+template<class...>
+struct always {
+    static constexpr auto value = true;
+};
+template<class...>
+struct never {
+    static constexpr auto value = false;
+};
+template<class, class>
+struct pair { using type = pair; };
+template<bool...>
+struct bool_list { using type = bool_list; };
+template<class... Ts>
+struct inherit : Ts... { using type = inherit; };
+template<class...>
+struct join;
+template<>
+struct join<> { using type = type_list<>; };
+template<class... TArgs>
+struct join<type_list<TArgs...>> {
+    using type = type_list<TArgs...>;
+};
+template<class... TArgs1, class... TArgs2>
+struct join<type_list<TArgs1...>, type_list<TArgs2...>> {
+    using type = type_list<TArgs1..., TArgs2...>;
+};
+template<class... TArgs1, class... TArgs2, class... Ts>
+struct join<type_list<TArgs1...>, type_list<TArgs2...>, Ts...> {
+    using type = typename join<type_list<TArgs1..., TArgs2...>, Ts...>::type;
+};
+template<class... TArgs>
+using join_t = typename join<TArgs...>::type;
+template<int...>
+struct index_sequence {
+    using type = index_sequence;
+};
+template<int>
+struct make_index_sequence_impl;
+template<>
+struct make_index_sequence_impl<0> : index_sequence<> { };
+template<>
+struct make_index_sequence_impl<1> : index_sequence<1> { };
+template<>
+struct make_index_sequence_impl<2> : index_sequence<1, 2> { };
+template<>
+struct make_index_sequence_impl<3> : index_sequence<1, 2, 3> { };
+template<>
+struct make_index_sequence_impl<4> : index_sequence<1, 2, 3, 4> { };
+template<>
+struct make_index_sequence_impl<5> : index_sequence<1, 2, 3, 4, 5> { };
+template<>
+struct make_index_sequence_impl<6> : index_sequence<1, 2, 3, 4, 5, 6> { };
+template<>
+struct make_index_sequence_impl<7> : index_sequence<1, 2, 3, 4, 5, 6, 7> { };
+template<>
+struct make_index_sequence_impl<8> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8> { };
+template<>
+struct make_index_sequence_impl<9> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9> { };
+template<>
+struct make_index_sequence_impl<10> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9, 10> { };
+template<int N>
+using make_index_sequence = typename make_index_sequence_impl<N>::type;
+}}}}
 #if __has_include(<__config>)
     #include <__config>
 #endif
@@ -37,17 +114,11 @@ _LIBCPP_BEGIN_NAMESPACE_STD
 #else
 namespace std {
 #endif
-    using size_t = unsigned long;
     template<class> class shared_ptr;
     template<class> class weak_ptr;
     template<class, class> class unique_ptr;
     template<class> struct char_traits;
     template<class, class> class vector;
-#if defined(_MSC_VER)
-    template<class, std::size_t> class array;
-#else
-    template<class, std::size_t> struct array;
-#endif
     template<class, class, class> class set;
     template<class> class move_iterator;
 #if defined(_LIBCPP_VERSION)
@@ -97,10 +168,6 @@ namespace boost { namespace di { inline namespace v1 {
 #define BOOST_DI_REQUIRES(...) typename ::boost::di::aux::enable_if<__VA_ARGS__, int>::type
 #define BOOST_DI_REQUIRES_MSG(...) typename ::boost::di::aux::concept_check<__VA_ARGS__>::type
 namespace boost { namespace di { inline namespace v1 { namespace aux {
-template<class...>
-struct type_list { using type = type_list; };
-template<class...>
-struct valid_t { using type = int; };
 template<bool B, class T, class F>
 struct conditional { using type = T; };
 template<class T, class F>
@@ -167,23 +234,17 @@ using is_class = integral_constant<bool, __is_class(T)>;
     using is_convertible = integral_constant<bool, __is_convertible_to(T, U)>;
 #else
   template<typename _From, typename _To>
-    class __is_convertible_helper
-    {
-       template<typename _To1>
- static void __test_aux(_To1);
+    class __is_convertible_helper {
+       template<typename _To1> static void __test_aux(_To1);
       template<typename _From1, typename _To1,
-        typename = decltype(__test_aux<_To1>(declval<_From1>()))>
- static true_type
- __test(int);
-      template<typename, typename>
- static false_type
- __test(...);
+      typename = decltype(__test_aux<_To1>(declval<_From1>()))>
+      static true_type __test(int);
+      template<typename, typename> static false_type __test(...);
     public:
       typedef decltype(__test<_From, _To>(0)) type;
     };
   template<typename _From, typename _To>
-    struct is_convertible
-    : public __is_convertible_helper<_From, _To>::type
+    struct is_convertible : public __is_convertible_helper<_From, _To>::type
     { };
 #endif
 template<class T, class U>
@@ -205,9 +266,9 @@ using is_constructible = decltype(test_is_constructible<T, TArgs...>(0));
 template<class T, class... TArgs>
 using is_constructible_t = typename is_constructible<T, TArgs...>::type;
 template<class T>
-using is_copy_constructible = is_constructible<T, const T&>;
+using is_copy_constructible = integral_constant<bool, __is_constructible(T, const T&)>;
 template<class T>
-using is_default_constructible = is_constructible<T>;
+using is_default_constructible = integral_constant<bool, __is_constructible(T)>;
 template<class T, class... TArgs>
 decltype(void(T{declval<TArgs>()...}), true_type{}) test_is_braces_constructible(int);
 template<class, class...>
@@ -244,10 +305,6 @@ struct deref_type<boost::shared_ptr<T>> {
 template<class T>
 struct deref_type<std::weak_ptr<T>> {
     using type = remove_specifiers_t<typename deref_type<T>::type>;
-};
-template<class T, std::size_t N>
-struct deref_type<std::array<T, N>> {
-    using type = core::array<remove_specifiers_t<typename deref_type<T>::type>*[]>;
 };
 template<class T, class TAllocator>
 struct deref_type<std::vector<T, TAllocator>> {
@@ -300,45 +357,6 @@ template<class T>
 false_type is_complete_impl(...);
 template<class T>
 struct is_complete : decltype(is_complete_impl<T>(0)) { };
-}}}}
-namespace boost { namespace di { inline namespace v1 {
-struct _ { _(...) { } };
-namespace aux {
-template<class...>
-struct type { };
-struct none_type { };
-template<class T, T>
-struct non_type { };
-template<class T>
-using owner = T;
-template<class...>
-struct always : true_type { };
-template<class...>
-struct never : false_type { };
-template<class, class>
-struct pair { using type = pair; };
-template<bool...>
-struct bool_list { using type = bool_list; };
-template<class... Ts>
-struct inherit : Ts... { using type = inherit; };
-template<class...>
-struct join;
-template<>
-struct join<> { using type = type_list<>; };
-template<class... TArgs>
-struct join<type_list<TArgs...>> {
-    using type = type_list<TArgs...>;
-};
-template<class... TArgs1, class... TArgs2>
-struct join<type_list<TArgs1...>, type_list<TArgs2...>> {
-    using type = type_list<TArgs1..., TArgs2...>;
-};
-template<class... TArgs1, class... TArgs2, class... Ts>
-struct join<type_list<TArgs1...>, type_list<TArgs2...>, Ts...> {
-    using type = typename join<type_list<TArgs1..., TArgs2...>, Ts...>::type;
-};
-template<class... TArgs>
-using join_t = typename join<TArgs...>::type;
 template<class, class...>
 struct is_unique_impl;
 template<class...>
@@ -361,36 +379,6 @@ struct is_unique_impl<T1, T2, Ts...>
 { };
 template<class... Ts>
 using is_unique = is_unique_impl<none_type, Ts...>;
-template<int...>
-struct index_sequence {
-    using type = index_sequence;
-};
-template<int>
-struct make_index_sequence_impl;
-template<>
-struct make_index_sequence_impl<0> : index_sequence<> { };
-template<>
-struct make_index_sequence_impl<1> : index_sequence<1> { };
-template<>
-struct make_index_sequence_impl<2> : index_sequence<1, 2> { };
-template<>
-struct make_index_sequence_impl<3> : index_sequence<1, 2, 3> { };
-template<>
-struct make_index_sequence_impl<4> : index_sequence<1, 2, 3, 4> { };
-template<>
-struct make_index_sequence_impl<5> : index_sequence<1, 2, 3, 4, 5> { };
-template<>
-struct make_index_sequence_impl<6> : index_sequence<1, 2, 3, 4, 5, 6> { };
-template<>
-struct make_index_sequence_impl<7> : index_sequence<1, 2, 3, 4, 5, 6, 7> { };
-template<>
-struct make_index_sequence_impl<8> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8> { };
-template<>
-struct make_index_sequence_impl<9> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9> { };
-template<>
-struct make_index_sequence_impl<10> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9, 10> { };
-template<int N>
-using make_index_sequence = typename make_index_sequence_impl<N>::type;
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
 template<class = aux::type_list<>>
@@ -470,18 +458,6 @@ struct array : array__<typename T::value_type, sizeof...(Ts)>, T {
                 create_impl(aux::type<type_traits::rebind_traits_t<value_type, Ts>>{})
         , 0)...}; (void)_;
     }
-};
-template<class T, std::size_t N, class... Ts>
-struct array<std::array<T, N>, Ts...> : std::array<T, N> {
-    using array_t = std::array<T, N>;
-    using boost_di_inject__ = aux::type_list<self>;
-    template<class TInjector>
-    explicit array(const TInjector& injector)
-        : array_t{{
-            *static_cast<const core::injector__<TInjector>&>(injector).
-                create_successful_impl(aux::type<type_traits::rebind_traits_t<T, Ts>>{})...
-         }}
-    { }
 };
 template<class T, class... Ts>
 struct array<T*[], Ts...> { };

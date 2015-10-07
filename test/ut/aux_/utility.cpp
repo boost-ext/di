@@ -17,17 +17,6 @@ test join_types = [] {
     static_expect(std::is_same<type_list<float, double>, join_t<type_list<>, type_list<float, double>>>{});
 };
 
-test is_unique_types = [] {
-    static_expect(is_unique<>::value);
-    static_expect(is_unique<int>::value);
-    static_expect(is_unique<int, double, float>::value);
-    static_expect(!is_unique<int, int>::value);
-    static_expect(!is_unique<int, double, int>::value);
-    static_expect(!is_unique<int, double, double, int, int>::value);
-    static_expect(std::is_same<not_unique<int>, is_unique<int, int>::type>::value);
-    static_expect(std::is_same<not_unique<int>, is_unique<float, int, double, int>::type>::value);
-};
-
 test index_sequence_types = [] {
     static_expect(std::is_same<index_sequence<>, make_index_sequence<0>>::value);
     static_expect(std::is_same<index_sequence<1>, make_index_sequence<1>>::value);
