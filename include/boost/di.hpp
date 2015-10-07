@@ -263,7 +263,7 @@ decltype(void(T(declval<TArgs>()...)), true_type{}) test_is_constructible(int);
 template<class, class...>
 false_type test_is_constructible(...);
 template<class T, class... TArgs>
-using is_constructible = decltype(test_is_constructible<T, TArgs...>(0));
+struct is_constructible : decltype(test_is_constructible<T, TArgs...>(0)) { };
 template<class T, class... TArgs>
 using is_constructible_t = typename is_constructible<T, TArgs...>::type;
 template<class T>
