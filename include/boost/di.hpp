@@ -248,18 +248,21 @@ template<class T, class... TArgs>
 using is_constructible = decltype(test_is_constructible<T, TArgs...>(0));
 template<class T, class... TArgs>
 using is_constructible_t = typename is_constructible<T, TArgs...>::type;
-#if defined(__clang__) || defined(_MSC_VER)
+#if defined(_MSC_VER)
     template<class T>
     struct is_copy_constructible : integral_constant<bool, __is_constructible(T, const T&)> { };
     template<class T>
     struct is_default_constructible : integral_constant<bool, __is_constructible(T)> { };
-    template<class T, class U>
-    struct is_convertible : integral_constant<bool, __is_convertible_to(T, U)> { };
 #else
     template<class T>
     using is_copy_constructible = is_constructible<T, const T&>;
     template<class T>
     using is_default_constructible = is_constructible<T>;
+#endif
+#if defined(__clang__) || defined(_MSC_VER)
+    template<class T, class U>
+    struct is_convertible : integral_constant<bool, __is_convertible_to(T, U)> { };
+#else
   template<typename _From, typename _To>
     class __is_convertible_helper {
        template<typename _To1> static void __test_aux(_To1);
