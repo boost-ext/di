@@ -230,24 +230,6 @@ template<class T>
 struct is_polymorphic : integral_constant<bool, __is_polymorphic(T)> { };
 template<class T>
 struct is_class : integral_constant<bool, __is_class(T)> { };
-#if defined(__clang__) || defined(_MSC_VER)
-    template<class T, class U>
-    struct is_convertible : integral_constant<bool, __is_convertible_to(T, U)> { };
-#else
-  template<typename _From, typename _To>
-    class __is_convertible_helper {
-       template<typename _To1> static void __test_aux(_To1);
-      template<typename _From1, typename _To1,
-      typename = decltype(__test_aux<_To1>(declval<_From1>()))>
-      static true_type __test(int);
-      template<typename, typename> static false_type __test(...);
-    public:
-      typedef decltype(__test<_From, _To>(0)) type;
-    };
-  template<typename _From, typename _To>
-    struct is_convertible : public __is_convertible_helper<_From, _To>::type
-    { };
-#endif
 template<class T, class U>
 struct is_base_of : integral_constant<bool, __is_base_of(T, U)> { };
 template<class T>
@@ -263,13 +245,35 @@ decltype(void(T(declval<TArgs>()...)), true_type{}) test_is_constructible(int);
 template<class, class...>
 false_type test_is_constructible(...);
 template<class T, class... TArgs>
-struct is_constructible : decltype(test_is_constructible<T, TArgs...>(0)) { };
+using is_constructible = decltype(test_is_constructible<T, TArgs...>(0));
 template<class T, class... TArgs>
 using is_constructible_t = typename is_constructible<T, TArgs...>::type;
-template<class T>
-struct is_copy_constructible : is_constructible<T, const T&> { };
-template<class T>
-struct is_default_constructible : is_constructible<T> { };
+#if defined(__clang__) || defined(_MSC_VER)
+    template<class T>
+    struct is_copy_constructible : integral_constant<bool, __is_constructible(T, const T&)> { };
+    template<class T>
+    struct is_default_constructible : integral_constant<bool, __is_constructible(T)> { };
+    template<class T, class U>
+    struct is_convertible : integral_constant<bool, __is_convertible_to(T, U)> { };
+#else
+    template<class T>
+    using is_copy_constructible = is_constructible<T, const T&>;
+    template<class T>
+    using is_default_constructible = is_constructible<T>;
+  template<typename _From, typename _To>
+    class __is_convertible_helper {
+       template<typename _To1> static void __test_aux(_To1);
+      template<typename _From1, typename _To1,
+      typename = decltype(__test_aux<_To1>(declval<_From1>()))>
+      static true_type __test(int);
+      template<typename, typename> static false_type __test(...);
+    public:
+      typedef decltype(__test<_From, _To>(0)) type;
+    };
+  template<typename _From, typename _To>
+    struct is_convertible : public __is_convertible_helper<_From, _To>::type
+    { };
+#endif
 template<class T, class... TArgs>
 decltype(void(T{declval<TArgs>()...}), true_type{}) test_is_braces_constructible(int);
 template<class, class...>
