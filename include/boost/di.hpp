@@ -23,6 +23,7 @@
 #elif defined(_MSC_VER)
     #pragma warning(disable : 4503)
     #pragma warning(disable : 4822)
+    #define __has_include(...) 0
     #define BOOST_DI_UNUSED
     #define BOOST_DI_DEPRECATED(...) __declspec(deprecated(__VA_ARGS__))
     #define BOOST_DI_TYPE_WKND(T) (T&&)
@@ -224,14 +225,14 @@ struct is_same : false_type {};
 template<class T>
 struct is_same<T, T> : true_type {};
 template<class T>
-using is_abstract = integral_constant<bool, __is_abstract(T)>;
+struct is_abstract : integral_constant<bool, __is_abstract(T)> { };
 template<class T>
-using is_polymorphic = integral_constant<bool, __is_polymorphic(T)>;
+struct is_polymorphic : integral_constant<bool, __is_polymorphic(T)> { };
 template<class T>
-using is_class = integral_constant<bool, __is_class(T)>;
+struct is_class : integral_constant<bool, __is_class(T)> { };
 #if defined(__clang__) || defined(_MSC_VER)
     template<class T, class U>
-    using is_convertible = integral_constant<bool, __is_convertible_to(T, U)>;
+    struct is_convertible : integral_constant<bool, __is_convertible_to(T, U)> { };
 #else
   template<typename _From, typename _To>
     class __is_convertible_helper {
@@ -248,7 +249,7 @@ using is_class = integral_constant<bool, __is_class(T)>;
     { };
 #endif
 template<class T, class U>
-using is_base_of = integral_constant<bool, __is_base_of(T, U)>;
+struct is_base_of : integral_constant<bool, __is_base_of(T, U)> { };
 template<class T>
 struct concept_check { static_assert(T::value, "constraint not satisfied"); };
 template<>
@@ -266,9 +267,9 @@ using is_constructible = decltype(test_is_constructible<T, TArgs...>(0));
 template<class T, class... TArgs>
 using is_constructible_t = typename is_constructible<T, TArgs...>::type;
 template<class T>
-using is_copy_constructible = integral_constant<bool, __is_constructible(T, const T&)>;
+struct is_copy_constructible : is_constructible<T, const T&> { };
 template<class T>
-using is_default_constructible = integral_constant<bool, __is_constructible(T)>;
+struct is_default_constructible : is_constructible<T> { };
 template<class T, class... TArgs>
 decltype(void(T{declval<TArgs>()...}), true_type{}) test_is_braces_constructible(int);
 template<class, class...>

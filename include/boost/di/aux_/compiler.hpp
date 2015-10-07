@@ -20,6 +20,7 @@
 #elif defined(_MSC_VER)
     #pragma warning(disable : 4503) // decorated name length exceeded, name was truncated
     #pragma warning(disable : 4822) // local class member function does not have a body
+    #define __has_include(...) 0
     #define BOOST_DI_UNUSED
     #define BOOST_DI_DEPRECATED(...) __declspec(deprecated(__VA_ARGS__)) // error C2059: syntax error: '<L_ATTRIBUTE_SPECIFIER>'
     #define BOOST_DI_TYPE_WKND(T) (T&&)
