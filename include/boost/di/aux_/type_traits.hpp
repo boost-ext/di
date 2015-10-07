@@ -58,6 +58,7 @@ template<class T> struct concept_check { static_assert(T::value, "constraint not
 template<> struct concept_check<true_type> { using type = int; };
 
 template<class T> T&& declval();
+template<class T> T decval(T);
 
 //remove
 template< class T > struct remove_reference      {typedef T type;};

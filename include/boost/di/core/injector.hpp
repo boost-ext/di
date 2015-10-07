@@ -112,7 +112,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : po
 protected:
     template<class T, class TName = no_name, class TIsRoot = aux::false_type>
     struct is_creatable {
-        using dependency_t = aux::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>;
+        using dependency_t = binder::resolve_t<injector, T, TName>;
         using given_t = type_traits::given_traits_t<T, typename dependency_t::given>;
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
         using type = aux::conditional_t<aux::is_same<_, given_t>::value, void, type_traits::typename_traits_t<T, given_t>>;

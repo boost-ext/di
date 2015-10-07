@@ -185,6 +185,7 @@ template<bool B, class T = void> using enable_if_t = typename enable_if<B, T>::t
 template<class T> struct concept_check { static_assert(T::value, "constraint not satisfied"); };
 template<> struct concept_check<true_type> { using type = int; };
 template<class T> T&& declval();
+template<class T> T decval(T);
 template< class T > struct remove_reference {typedef T type;};
 template< class T > struct remove_reference<T&> {typedef T type;};
 template< class T > struct remove_reference<T&&> {typedef T type;};
@@ -1516,16 +1517,27 @@ class binder {
                , dependency<TScope, TExpected, TGiven, TName, override, TBase>>* dep) noexcept {
         return static_cast<dependency<TScope, TExpected, TGiven, TName, override, TBase>&>(*dep);
     }
+    template<class TDeps, class T, class TName, class TDefault>
+    struct resolve__ {
+        using dependency = dependency_concept<aux::decay_t<T>, TName>;
+        using type = decltype(aux::decval(resolve_impl<TDefault, dependency>((TDeps*)0)));
+    };
 public:
     template<
         class T
       , class TName = no_name
       , class TDefault = dependency<scopes::deduce, aux::decay_t<T>>
-      , class TDeps = void
+      , class TDeps
     > static decltype(auto) resolve(TDeps* deps) noexcept {
         using dependency = dependency_concept<aux::decay_t<T>, TName>;
         return resolve_impl<TDefault, dependency>(deps);
     }
+    template<
+        class TDeps
+      , class T
+      , class TName = no_name
+      , class TDefault = dependency<scopes::deduce, aux::decay_t<T>>
+    > using resolve_t = typename resolve__<TDeps, T, TName, TDefault>::type;
 };
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
@@ -1534,8 +1546,7 @@ using is_not_same_t = BOOST_DI_REQUIRES(!aux::is_same_or_base_of<T, TParent>::va
 template<class T, class TInjector>
 struct is_referable_impl {
     static constexpr auto value =
-        dependency__<aux::remove_reference_t<decltype(binder::resolve<T>((TInjector*)nullptr))>>::template
-            is_referable<T>::value;
+        dependency__<binder::resolve_t<TInjector, T>>::template is_referable<T>::value;
 };
 template<class T, class TInjector>
 using is_referable_t = BOOST_DI_REQUIRES(is_referable_impl<T, TInjector>::value);
@@ -2362,7 +2373,7 @@ class injector : pool<bindings_t<TDeps...>> {
 protected:
     template<class T, class TName = no_name, class TIsRoot = aux::false_type>
     struct is_creatable {
-        using dependency_t = aux::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>;
+        using dependency_t = binder::resolve_t<injector, T, TName>;
         using given_t = type_traits::given_traits_t<T, typename dependency_t::given>;
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
         using type = aux::conditional_t<aux::is_same<_, given_t>::value, void, type_traits::typename_traits_t<T, given_t>>;
@@ -2512,7 +2523,7 @@ class injector <TConfig, pool<>, TDeps...> : pool<bindings_t<TDeps...>> {
 protected:
     template<class T, class TName = no_name, class TIsRoot = aux::false_type>
     struct is_creatable {
-        using dependency_t = aux::remove_reference_t<decltype(binder::resolve<T, TName>((injector*)0))>;
+        using dependency_t = binder::resolve_t<injector, T, TName>;
         using given_t = type_traits::given_traits_t<T, typename dependency_t::given>;
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
         using type = aux::conditional_t<aux::is_same<_, given_t>::value, void, type_traits::typename_traits_t<T, given_t>>;
