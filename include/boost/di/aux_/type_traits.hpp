@@ -172,24 +172,18 @@ using is_braces_constructible_t = typename is_braces_constructible<T, TArgs...>:
     template<class T, class U>
     struct is_convertible : integral_constant<bool, __is_convertible_to(T, U)> { };
 #else // __pph__
-
-  template<typename _From, typename _To>
-    class __is_convertible_helper {
-       template<typename _To1> static void __test_aux(_To1);
-
-      template<typename _From1, typename _To1,
-      typename = decltype(__test_aux<_To1>(declval<_From1>()))>
-      static true_type __test(int);
-
-      template<typename, typename> static false_type __test(...);
-
-    public:
-      typedef decltype(__test<_From, _To>(0)) type;
+    struct test_is_convertible__ {
+        template<class T> static void test(T);
     };
 
-  template<typename _From, typename _To>
-    struct is_convertible : public __is_convertible_helper<_From, _To>::type
-    { };
+    template<class T, class U, class = decltype(test_is_convertible__::test<U>(declval<T>()))>
+    true_type test_is_convertible(int);
+
+    template<class, class>
+    false_type test_is_convertible(...);
+
+    template<class T, class U>
+    using is_convertible = decltype(test_is_convertible<T, U>(0));
 #endif // __pph__
 
 template<class TSrc, class TDst, class U = remove_specifiers_t<TDst>>

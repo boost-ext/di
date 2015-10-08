@@ -97,7 +97,6 @@ struct not_allowed_by {
 template<class T>
 struct is_bound : detail::type_op {
     struct not_resolved { };
-
     template<class TArg>
     struct apply : aux::integral_constant<bool,
         !aux::is_same<
