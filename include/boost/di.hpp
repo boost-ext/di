@@ -2410,7 +2410,6 @@ template<class TCast, class T, class TWrapper>
 using wrapper = wrapper_impl<TCast, T, TWrapper>;
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
-template<class T, class... TArgs> decltype(::boost::di::aux::declval<T>().call( ::boost::di::aux::declval<TArgs>()...) , ::boost::di::aux::true_type()) has_call_impl(int); template<class, class...> ::boost::di::aux::false_type has_call_impl(...); template<class T, class... TArgs> struct has_call : decltype(has_call_impl<T, TArgs...>(0)) { };
 struct from_injector { };
 struct from_deps { };
 struct init { };
