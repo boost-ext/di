@@ -183,6 +183,11 @@ protected:
     };
 
     template<class TParent, bool B>
+    struct try_create<any_type_1st_fwd<TParent>, B> {
+        using type = any_type_1st<TParent, injector, with_error>;
+    };
+
+    template<class TParent, bool B>
     struct try_create<any_type_1st_ref_fwd<TParent>, B> {
         using type = any_type_1st_ref<TParent, injector, with_error>;
     };
@@ -213,6 +218,11 @@ protected:
     }
 
     template<class TIsRoot = aux::false_type, class TParent>
+    auto create_impl(const aux::type<any_type_1st_fwd<TParent>>&) const {
+        return any_type_1st<TParent, injector>{*this};
+    }
+
+    template<class TIsRoot = aux::false_type, class TParent>
     auto create_impl(const aux::type<any_type_1st_ref_fwd<TParent>>&) const {
         return any_type_1st_ref<TParent, injector>{*this};
     }
@@ -235,6 +245,11 @@ protected:
     template<class TIsRoot = aux::false_type, class TParent>
     auto create_successful_impl(const aux::type<any_type_ref_fwd<TParent>>&) const {
         return successful::any_type_ref<TParent, injector>{*this};
+    }
+
+    template<class TIsRoot = aux::false_type, class TParent>
+    auto create_successful_impl(const aux::type<any_type_1st_fwd<TParent>>&) const {
+        return successful::any_type_1st<TParent, injector>{*this};
     }
 
     template<class TIsRoot = aux::false_type, class TParent>

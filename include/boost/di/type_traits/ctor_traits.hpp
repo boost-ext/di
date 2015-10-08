@@ -28,6 +28,33 @@ using get = T;
 template<template<class...> class, class, class, class = int>
 struct ctor_impl;
 
+template<template<class...> class TIsConstructible, class T>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<>>
+    : aux::type_list<>
+{ };
+
+template<template<class...> class TIsConstructible, class T>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<1>
+    , BOOST_DI_REQUIRES(TIsConstructible<T, core::any_type_1st_fwd<T>>::value)>
+    : aux::type_list<core::any_type_1st_fwd<T>>
+{ };
+
+template<template<class...> class TIsConstructible, class T>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<1>
+    , BOOST_DI_REQUIRES(!TIsConstructible<T, core::any_type_1st_fwd<T>>::value)>
+    : aux::conditional_t<
+          TIsConstructible<T, core::any_type_1st_ref_fwd<T>>::value
+        , aux::type_list<core::any_type_1st_ref_fwd<T>>
+        , aux::type_list<>
+      >
+{ };
+
+template<template<class...> class TIsConstructible, class T, int... TArgs>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>,
+      BOOST_DI_REQUIRES((sizeof...(TArgs) > 1) && TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
+    : aux::type_list<get<core::any_type_fwd<T>, TArgs>...>
+{ };
+
 template<template<class...> class TIsConstructible, class T, int... TArgs>
 struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>
     , BOOST_DI_REQUIRES((sizeof...(TArgs) > 1) && !TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
@@ -40,26 +67,6 @@ struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>
              , aux::make_index_sequence<sizeof...(TArgs) - 1>
            >::type
       >
-{ };
-
-template<template<class...> class TIsConstructible, class T, int... TArgs>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>,
-      BOOST_DI_REQUIRES((sizeof...(TArgs) > 1) && TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
-    : aux::type_list<get<core::any_type_fwd<T>, TArgs>...>
-{ };
-
-template<template<class...> class TIsConstructible, class T>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<1>>
-    : aux::conditional_t<
-          TIsConstructible<T, core::any_type_1st_ref_fwd<T>>::value
-        , aux::type_list<core::any_type_1st_ref_fwd<T>>
-        , aux::type_list<>
-      >
-{ };
-
-template<template<class...> class TIsConstructible, class T>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<>>
-    : aux::type_list<>
 { };
 
 template<template<class...> class TIsConstructible, class T>

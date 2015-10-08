@@ -143,6 +143,7 @@ namespace boost { namespace di { inline namespace v1 {
     namespace core {
         template<class> struct any_type_fwd;
         template<class> struct any_type_ref_fwd;
+        template<class> struct any_type_1st_fwd;
         template<class> struct any_type_1st_ref_fwd;
         template<class T>
         struct dependency__ : T {
@@ -998,6 +999,29 @@ template<class T, int>
 using get = T;
 template<template<class...> class, class, class, class = int>
 struct ctor_impl;
+template<template<class...> class TIsConstructible, class T>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<>>
+    : aux::type_list<>
+{ };
+template<template<class...> class TIsConstructible, class T>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<1>
+    , BOOST_DI_REQUIRES(TIsConstructible<T, core::any_type_1st_fwd<T>>::value)>
+    : aux::type_list<core::any_type_1st_fwd<T>>
+{ };
+template<template<class...> class TIsConstructible, class T>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<1>
+    , BOOST_DI_REQUIRES(!TIsConstructible<T, core::any_type_1st_fwd<T>>::value)>
+    : aux::conditional_t<
+          TIsConstructible<T, core::any_type_1st_ref_fwd<T>>::value
+        , aux::type_list<core::any_type_1st_ref_fwd<T>>
+        , aux::type_list<>
+      >
+{ };
+template<template<class...> class TIsConstructible, class T, int... TArgs>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>,
+      BOOST_DI_REQUIRES((sizeof...(TArgs) > 1) && TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
+    : aux::type_list<get<core::any_type_fwd<T>, TArgs>...>
+{ };
 template<template<class...> class TIsConstructible, class T, int... TArgs>
 struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>
     , BOOST_DI_REQUIRES((sizeof...(TArgs) > 1) && !TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
@@ -1010,23 +1034,6 @@ struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>
              , aux::make_index_sequence<sizeof...(TArgs) - 1>
            >::type
       >
-{ };
-template<template<class...> class TIsConstructible, class T, int... TArgs>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>,
-      BOOST_DI_REQUIRES((sizeof...(TArgs) > 1) && TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
-    : aux::type_list<get<core::any_type_fwd<T>, TArgs>...>
-{ };
-template<template<class...> class TIsConstructible, class T>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<1>>
-    : aux::conditional_t<
-          TIsConstructible<T, core::any_type_1st_ref_fwd<T>>::value
-        , aux::type_list<core::any_type_1st_ref_fwd<T>>
-        , aux::type_list<>
-      >
-{ };
-template<template<class...> class TIsConstructible, class T>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<>>
-    : aux::type_list<>
 { };
 template<template<class...> class TIsConstructible, class T>
 using ctor_impl_t =
@@ -1610,6 +1617,23 @@ struct any_type_ref {
     const TInjector& injector_;
 };
 template<class TParent, class TInjector, class TError = aux::false_type>
+struct any_type_1st {
+    template<class T
+           , class = is_not_same_t<T, TParent>
+           , class = is_creatable_t<T, TInjector, TError>>
+    operator T() {
+        return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T>{});
+    }
+    template<class T
+           , class = is_not_same_t<T, TParent>
+           , class = is_referable_t<const T&, TInjector>
+           , class = is_creatable_t<const T&, TInjector, TError>>
+    operator const T&() const {
+        return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<const T&>{});
+    }
+    const TInjector& injector_;
+};
+template<class TParent, class TInjector, class TError = aux::false_type>
 struct any_type_1st_ref {
     template<class T
            , class = is_not_same_t<T, TParent>
@@ -1678,6 +1702,20 @@ struct any_type_ref {
     const TInjector& injector_;
 };
 template<class TParent, class TInjector>
+struct any_type_1st {
+    template<class T, class = is_not_same_t<T, TParent>>
+    operator T() {
+        return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
+    }
+    template<class T
+           , class = is_not_same_t<T, TParent>
+           , class = is_referable_t<const T&, TInjector>>
+    operator const T&() const {
+        return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<const T&>{});
+    }
+    const TInjector& injector_;
+};
+template<class TParent, class TInjector>
 struct any_type_1st_ref {
     template<class T, class = is_not_same_t<T, TParent>>
     operator T() {
@@ -1723,6 +1761,11 @@ struct any_type_ref_fwd {
     #endif
     template<class T>
     operator const T&() const;
+};
+template<class TParent>
+struct any_type_1st_fwd {
+    template<class T, class = is_not_same_t<T, TParent>>
+    operator T();
 };
 template<class TParent>
 struct any_type_1st_ref_fwd {
@@ -2492,6 +2535,10 @@ protected:
         using type = any_type_ref<TParent, injector, with_error>;
     };
     template<class TParent, bool B>
+    struct try_create<any_type_1st_fwd<TParent>, B> {
+        using type = any_type_1st<TParent, injector, with_error>;
+    };
+    template<class TParent, bool B>
     struct try_create<any_type_1st_ref_fwd<TParent>, B> {
         using type = any_type_1st_ref<TParent, injector, with_error>;
     };
@@ -2516,6 +2563,10 @@ protected:
         return any_type_ref<TParent, injector>{*this};
     }
     template<class TIsRoot = aux::false_type, class TParent>
+    auto create_impl(const aux::type<any_type_1st_fwd<TParent>>&) const {
+        return any_type_1st<TParent, injector>{*this};
+    }
+    template<class TIsRoot = aux::false_type, class TParent>
     auto create_impl(const aux::type<any_type_1st_ref_fwd<TParent>>&) const {
         return any_type_1st_ref<TParent, injector>{*this};
     }
@@ -2534,6 +2585,10 @@ protected:
     template<class TIsRoot = aux::false_type, class TParent>
     auto create_successful_impl(const aux::type<any_type_ref_fwd<TParent>>&) const {
         return successful::any_type_ref<TParent, injector>{*this};
+    }
+    template<class TIsRoot = aux::false_type, class TParent>
+    auto create_successful_impl(const aux::type<any_type_1st_fwd<TParent>>&) const {
+        return successful::any_type_1st<TParent, injector>{*this};
     }
     template<class TIsRoot = aux::false_type, class TParent>
     auto create_successful_impl(const aux::type<any_type_1st_ref_fwd<TParent>>&) const {
@@ -2654,6 +2709,10 @@ protected:
         using type = any_type_ref<TParent, injector, with_error>;
     };
     template<class TParent, bool B>
+    struct try_create<any_type_1st_fwd<TParent>, B> {
+        using type = any_type_1st<TParent, injector, with_error>;
+    };
+    template<class TParent, bool B>
     struct try_create<any_type_1st_ref_fwd<TParent>, B> {
         using type = any_type_1st_ref<TParent, injector, with_error>;
     };
@@ -2678,6 +2737,10 @@ protected:
         return any_type_ref<TParent, injector>{*this};
     }
     template<class TIsRoot = aux::false_type, class TParent>
+    auto create_impl(const aux::type<any_type_1st_fwd<TParent>>&) const {
+        return any_type_1st<TParent, injector>{*this};
+    }
+    template<class TIsRoot = aux::false_type, class TParent>
     auto create_impl(const aux::type<any_type_1st_ref_fwd<TParent>>&) const {
         return any_type_1st_ref<TParent, injector>{*this};
     }
@@ -2696,6 +2759,10 @@ protected:
     template<class TIsRoot = aux::false_type, class TParent>
     auto create_successful_impl(const aux::type<any_type_ref_fwd<TParent>>&) const {
         return successful::any_type_ref<TParent, injector>{*this};
+    }
+    template<class TIsRoot = aux::false_type, class TParent>
+    auto create_successful_impl(const aux::type<any_type_1st_fwd<TParent>>&) const {
+        return successful::any_type_1st<TParent, injector>{*this};
     }
     template<class TIsRoot = aux::false_type, class TParent>
     auto create_successful_impl(const aux::type<any_type_1st_ref_fwd<TParent>>&) const {
