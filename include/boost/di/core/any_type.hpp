@@ -40,18 +40,15 @@ using is_creatable_t = BOOST_DI_REQUIRES(is_creatable_impl<T, TInjector, TError>
 
 template<class TParent, class TInjector, class TError = aux::false_type>
 struct any_type {
-    template<class T
-           , class = is_not_same_t<T, TParent>
-           , class = is_creatable_t<T, TInjector, TError>
-    > operator T() {
+    template<class T, class = is_creatable_t<T, TInjector, TError>>
+    operator T() {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T>{});
     }
 
     template<class T
-           , class = is_not_same_t<T, TParent>
            , class = is_referable_t<const T&, TInjector>
-           , class = is_creatable_t<const T&, TInjector, TError>
-    > operator const T&() const {
+           , class = is_creatable_t<const T&, TInjector, TError>>
+    operator const T&() const {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<const T&>{});
     }
 
@@ -60,16 +57,13 @@ struct any_type {
 
 template<class TParent, class TInjector, class TError = aux::false_type>
 struct any_type_ref {
-    template<class T
-           , class = is_not_same_t<T, TParent>
-           , class = is_creatable_t<T, TInjector, TError>
-    > operator T() {
+    template<class T, class = is_creatable_t<T, TInjector, TError>>
+    operator T() {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T>{});
     }
 
     #if defined(__GNUC__) // __pph__
         template<class T
-               , class = is_not_same_t<T, TParent>
                , class = is_referable_t<T&&, TInjector>
                , class = is_creatable_t<T&&, TInjector, TError>
         > operator T&&() const {
@@ -78,18 +72,54 @@ struct any_type_ref {
     #endif // __pph__
 
     template<class T
+           , class = is_referable_t<T&, TInjector>
+           , class = is_creatable_t<T&, TInjector, TError>>
+    operator T&() const {
+        return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T&>{});
+    }
+
+    template<class T
+           , class = is_referable_t<const T&, TInjector>
+           , class = is_creatable_t<const T&, TInjector, TError>>
+    operator const T&() const {
+        return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<const T&>{});
+    }
+
+    const TInjector& injector_;
+};
+
+template<class TParent, class TInjector, class TError = aux::false_type>
+struct any_type_1st_ref {
+    template<class T
+           , class = is_not_same_t<T, TParent>
+           , class = is_creatable_t<T, TInjector, TError>>
+    operator T() {
+        return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T>{});
+    }
+
+    #if defined(__GNUC__) // __pph__
+        template<class T
+               , class = is_not_same_t<T, TParent>
+               , class = is_referable_t<T&&, TInjector>
+               , class = is_creatable_t<T&&, TInjector, TError>>
+        operator T&&() const {
+            return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T&&>{});
+        }
+    #endif // __pph__
+
+    template<class T
            , class = is_not_same_t<T, TParent>
            , class = is_referable_t<T&, TInjector>
-           , class = is_creatable_t<T&, TInjector, TError>
-    > operator T&() const {
+           , class = is_creatable_t<T&, TInjector, TError>>
+    operator T&() const {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T&>{});
     }
 
     template<class T
            , class = is_not_same_t<T, TParent>
            , class = is_referable_t<const T&, TInjector>
-           , class = is_creatable_t<const T&, TInjector, TError>
-    > operator const T&() const {
+           , class = is_creatable_t<const T&, TInjector, TError>>
+    operator const T&() const {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<const T&>{});
     }
 
@@ -100,15 +130,13 @@ namespace successful {
 
 template<class TParent, class TInjector>
 struct any_type {
-    template<class T, class = is_not_same_t<T, TParent>>
+    template<class T>
     operator T() {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
     }
 
-    template<class T
-           , class = is_not_same_t<T, TParent>
-           , class = is_referable_t<const T&, TInjector>
-    > operator const T&() const {
+    template<class T, class = is_referable_t<const T&, TInjector>>
+    operator const T&() const {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<const T&>{});
     }
 
@@ -117,6 +145,33 @@ struct any_type {
 
 template<class TParent, class TInjector>
 struct any_type_ref {
+    template<class T>
+    operator T() {
+        return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
+    }
+
+    #if defined(__GNUC__) // __pph__
+        template<class T, class = is_referable_t<T&&, TInjector>>
+        operator T&&() const {
+            return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T&&>{});
+        }
+    #endif // __pph__
+
+    template<class T, class = is_referable_t<T&, TInjector>>
+    operator T&() const {
+        return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T&>{});
+    }
+
+    template<class T, class = is_referable_t<const T&, TInjector>>
+    operator const T&() const {
+        return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<const T&>{});
+    }
+
+    const TInjector& injector_;
+};
+
+template<class TParent, class TInjector>
+struct any_type_1st_ref {
     template<class T, class = is_not_same_t<T, TParent>>
     operator T() {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
@@ -125,23 +180,23 @@ struct any_type_ref {
     #if defined(__GNUC__) // __pph__
         template<class T
                , class = is_not_same_t<T, TParent>
-               , class = is_referable_t<T&&, TInjector>
-        > operator T&&() const {
+               , class = is_referable_t<T&&, TInjector>>
+        operator T&&() const {
             return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T&&>{});
         }
     #endif // __pph__
 
     template<class T
            , class = is_not_same_t<T, TParent>
-           , class = is_referable_t<T&, TInjector>
-    > operator T&() const {
+           , class = is_referable_t<T&, TInjector>>
+    operator T&() const {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T&>{});
     }
 
     template<class T
            , class = is_not_same_t<T, TParent>
-           , class = is_referable_t<const T&, TInjector>
-    > operator const T&() const {
+           , class = is_referable_t<const T&, TInjector>>
+    operator const T&() const {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<const T&>{});
     }
 
@@ -152,12 +207,29 @@ struct any_type_ref {
 
 template<class TParent>
 struct any_type_fwd {
-    template<class T, class = is_not_same_t<T, TParent>>
+    template<class T>
     operator T();
 };
 
 template<class TParent>
 struct any_type_ref_fwd {
+    template<class T>
+    operator T();
+
+    template<class T>
+    operator T&() const;
+
+    #if defined(__GNUC__) // __pph__
+        template<class T>
+        operator T&&() const;
+    #endif // __pph__
+
+    template<class T>
+    operator const T&() const;
+};
+
+template<class TParent>
+struct any_type_1st_ref_fwd {
     template<class T, class = is_not_same_t<T, TParent>>
     operator T();
 

@@ -27,12 +27,9 @@ struct array : array__<typename T::value_type, sizeof...(Ts)>, T {
     using array_t::array_;
     using boost_di_inject__ = aux::type_list<self>;
 
-    template<bool... Bs>
-    struct and_ : aux::is_same<aux::type_list<typename aux::always<aux::integral_constant<bool, Bs>>::type...>, aux::type_list<aux::integral_constant<bool, Bs>...>> { };
-
     template<class TInjector>
     explicit array(const TInjector& injector)
-        : array(injector, aux::true_type{})//, typename and_<core::injector__<TInjector>::template is_creatable<type_traits::rebind_traits_t<value_type, Ts>>::value...>::type{})
+        : array(injector, aux::true_type{})
     { }
 
     template<class TInjector>

@@ -50,6 +50,7 @@ namespace boost { namespace di { inline namespace v1 {
     namespace core {
         template<class> struct any_type_fwd;
         template<class> struct any_type_ref_fwd;
+        template<class> struct any_type_1st_ref_fwd;
 
         template<class T>
         struct dependency__ : T {
