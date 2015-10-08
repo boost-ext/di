@@ -171,6 +171,7 @@ namespace boost { namespace di { inline namespace v1 {
 #define BOOST_DI_REQUIRES(...) typename ::boost::di::aux::enable_if<__VA_ARGS__, int>::type
 #define BOOST_DI_REQUIRES_MSG(...) typename ::boost::di::aux::concept_check<__VA_ARGS__>::type
 namespace boost { namespace di { inline namespace v1 { namespace aux {
+template<class T> T&& declval();
 template<class T, T V>
 struct integral_constant {
     using type = integral_constant;
@@ -186,13 +187,10 @@ template<class T> struct enable_if<true, T> { using type = T; };
 template<bool B, class T = void> using enable_if_t = typename enable_if<B, T>::type;
 template<class T> struct concept_check { static_assert(T::value, "constraint not satisfied"); };
 template<> struct concept_check<true_type> { using type = int; };
-template<class T> T&& declval();
-template<class T> T decval(T);
-template< class T > struct remove_reference {typedef T type;};
-template< class T > struct remove_reference<T&> {typedef T type;};
-template< class T > struct remove_reference<T&&> {typedef T type;};
-template< class T >
-using remove_reference_t = typename remove_reference<T>::type;
+template<class T> struct remove_reference { using type = T;};
+template<class T> struct remove_reference<T&> { using type = T;};
+template<class T> struct remove_reference<T&&> { using type = T;};
+template<class T> using remove_reference_t = typename remove_reference<T>::type;
 template<class T> struct remove_specifiers { using type = T; };
 template<class T> struct remove_specifiers<const T> { using type = T; };
 template<class T> struct remove_specifiers<T&> { using type = T; };
@@ -1526,7 +1524,7 @@ class binder {
     template<class TDeps, class T, class TName, class TDefault>
     struct resolve__ {
         using dependency = dependency_concept<aux::decay_t<T>, TName>;
-        using type = decltype(aux::decval(resolve_impl<TDefault, dependency>((TDeps*)0)));
+        using type = aux::remove_reference_t<decltype(resolve_impl<TDefault, dependency>((TDeps*)0))>;
     };
 public:
     template<

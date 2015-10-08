@@ -43,7 +43,7 @@ class binder {
     template<class TDeps, class T, class TName, class TDefault>
     struct resolve__ {
         using dependency = dependency_concept<aux::decay_t<T>, TName>;
-        using type = decltype(aux::decval(resolve_impl<TDefault, dependency>((TDeps*)0)));
+        using type = aux::remove_reference_t<decltype(resolve_impl<TDefault, dependency>((TDeps*)0))>;
     };
 
 public:

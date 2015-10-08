@@ -37,6 +37,8 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace aux {
 
+template<class T> T&& declval();
+
 template<class T, T V>
 struct integral_constant {
     using type = integral_constant;
@@ -57,15 +59,10 @@ template<bool B, class T = void> using enable_if_t = typename enable_if<B, T>::t
 template<class T> struct concept_check { static_assert(T::value, "constraint not satisfied"); };
 template<> struct concept_check<true_type> { using type = int; };
 
-template<class T> T&& declval();
-template<class T> T decval(T);
-
-//remove
-template< class T > struct remove_reference      {typedef T type;};
-template< class T > struct remove_reference<T&>  {typedef T type;};
-template< class T > struct remove_reference<T&&>  {typedef T type;};
-template< class T >
-using remove_reference_t = typename remove_reference<T>::type;
+template<class T> struct remove_reference { using type = T;};
+template<class T> struct remove_reference<T&> { using type = T;};
+template<class T> struct remove_reference<T&&> { using type = T;};
+template<class T> using remove_reference_t = typename remove_reference<T>::type;
 
 template<class T> struct remove_specifiers { using type = T; };
 template<class T> struct remove_specifiers<const T> { using type = T; };
