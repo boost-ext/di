@@ -120,11 +120,6 @@ template<class T> struct is_same<T, T> : true_type { };
 
 template<class T, class U> struct is_base_of : integral_constant<bool, __is_base_of(T, U)> { };
 
-template<class T, class U>
-struct is_same_or_base_of {
-    static constexpr auto value = is_same<T, U>::value || is_base_of<T, U>::value;
-};
-
 template<class T> struct is_class : integral_constant<bool, __is_class(T)> { };
 template<class T> struct is_abstract : integral_constant<bool, __is_abstract(T)> { };
 template<class T> struct is_polymorphic : integral_constant<bool, __is_polymorphic(T)> { };

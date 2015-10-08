@@ -14,7 +14,7 @@
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
 template<class T, class TParent>
-using is_not_same_t = BOOST_DI_REQUIRES(!aux::is_same_or_base_of<T, TParent>::value);
+using is_not_same_t = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value);
 
 template<class T, class TInjector>
 struct is_referable_impl {
