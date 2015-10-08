@@ -10,26 +10,26 @@
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/fwd.hpp"
 
-#define BOOST_DI_HAS_TYPE(name, call_name)                                          \
-    template<class, class = int>                                                    \
-    struct name : ::boost::di::aux::false_type { };                                 \
-                                                                                    \
-    template<class T>                                                               \
-    struct name<T, typename ::boost::di::aux::valid_t<typename T::call_name>::type> \
-        : ::boost::di::aux::true_type                                               \
+#define BOOST_DI_HAS_TYPE(name, call_name)                              \
+    template<class, class = int>                                        \
+    struct name : ::boost::di::aux::false_type { };                     \
+                                                                        \
+    template<class T>                                                   \
+    struct name<T, ::boost::di::aux::valid_t<typename T::call_name>>    \
+        : ::boost::di::aux::true_type                                   \
     { }
 
-#define BOOST_DI_HAS_METHOD(name, call_name)                                        \
-    template<class T, class... TArgs>                                               \
-    decltype(::boost::di::aux::declval<T>().call_name(                              \
-             ::boost::di::aux::declval<TArgs>()...)                                 \
-           , ::boost::di::aux::true_type())                                         \
-    name##_impl(int);                                                               \
-                                                                                    \
-    template<class, class...>                                                       \
-    ::boost::di::aux::false_type name##_impl(...);                                  \
-                                                                                    \
-    template<class T, class... TArgs>                                               \
+#define BOOST_DI_HAS_METHOD(name, call_name)                            \
+    template<class T, class... TArgs>                                   \
+    decltype(::boost::di::aux::declval<T>().call_name(                  \
+             ::boost::di::aux::declval<TArgs>()...)                     \
+           , ::boost::di::aux::true_type())                             \
+    name##_impl(int);                                                   \
+                                                                        \
+    template<class, class...>                                           \
+    ::boost::di::aux::false_type name##_impl(...);                      \
+                                                                        \
+    template<class T, class... TArgs>                                   \
     struct name : decltype(name##_impl<T, TArgs...>(0)) { }
 
 #define BOOST_DI_REQUIRES(...) typename ::boost::di::aux::enable_if<__VA_ARGS__, int>::type // __pph__

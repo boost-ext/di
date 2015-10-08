@@ -17,7 +17,10 @@ template<class...>
 struct type_list { using type = type_list; };
 
 template<class...>
-struct valid_t { using type = int; };
+struct valid { using type = int; };
+
+template<class... Ts>
+using valid_t = typename valid<Ts...>::type;
 
 template<class...>
 struct type { };

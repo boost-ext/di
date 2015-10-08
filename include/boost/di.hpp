@@ -36,7 +36,9 @@ namespace aux {
 template<class...>
 struct type_list { using type = type_list; };
 template<class...>
-struct valid_t { using type = int; };
+struct valid { using type = int; };
+template<class... Ts>
+using valid_t = typename valid<Ts...>::type;
 template<class...>
 struct type { };
 struct none_type { };
@@ -764,7 +766,7 @@ public:
 };
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace scopes {
-template<class, class = int> struct has_deps : ::boost::di::aux::false_type { }; template<class T> struct has_deps<T, typename ::boost::di::aux::valid_t<typename T::deps>::type> : ::boost::di::aux::true_type { };
+template<class, class = int> struct has_deps : ::boost::di::aux::false_type { }; template<class T> struct has_deps<T, ::boost::di::aux::valid_t<typename T::deps>> : ::boost::di::aux::true_type { };
 template<class TScope = scopes::deduce>
 class exposed {
 public:
@@ -869,7 +871,7 @@ template<class T>
 class no_implicit_conversions : public T {
     template<class U> operator U() const;
 };
-template<class, class = int> struct has_result_type : ::boost::di::aux::false_type { }; template<class T> struct has_result_type<T, typename ::boost::di::aux::valid_t<typename T::result_type>::type> : ::boost::di::aux::true_type { };
+template<class, class = int> struct has_result_type : ::boost::di::aux::false_type { }; template<class T> struct has_result_type<T, ::boost::di::aux::valid_t<typename T::result_type>> : ::boost::di::aux::true_type { };
 template<class TGiven, class TProvider, class... Ts>
 struct is_expr : aux::integral_constant<bool,
     aux::is_callable_with<TGiven, no_implicit_conversions<
@@ -982,7 +984,7 @@ public:
 #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
 #endif
 namespace boost { namespace di { inline namespace v1 { namespace type_traits {
-template<class, class = int> struct is_injectable : ::boost::di::aux::false_type { }; template<class T> struct is_injectable<T, typename ::boost::di::aux::valid_t<typename T::boost_di_inject__>::type> : ::boost::di::aux::true_type { };
+template<class, class = int> struct is_injectable : ::boost::di::aux::false_type { }; template<class T> struct is_injectable<T, ::boost::di::aux::valid_t<typename T::boost_di_inject__>> : ::boost::di::aux::true_type { };
 struct direct { };
 struct uniform { };
 template<class T, int>
@@ -1129,7 +1131,7 @@ using scopable = typename scopable__<T>::type;
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
 template<class T, class... TArgs> decltype(::boost::di::aux::declval<T>().configure( ::boost::di::aux::declval<TArgs>()...) , ::boost::di::aux::true_type()) has_configure_impl(int); template<class, class...> ::boost::di::aux::false_type has_configure_impl(...); template<class T, class... TArgs> struct has_configure : decltype(has_configure_impl<T, TArgs...>(0)) { };
-template<class, class = int> struct has_deps : ::boost::di::aux::false_type { }; template<class T> struct has_deps<T, typename ::boost::di::aux::valid_t<typename T::deps>::type> : ::boost::di::aux::true_type { };
+template<class, class = int> struct has_deps : ::boost::di::aux::false_type { }; template<class T> struct has_deps<T, ::boost::di::aux::valid_t<typename T::deps>> : ::boost::di::aux::true_type { };
 template<class>
 struct array_type;
 template<class T>
