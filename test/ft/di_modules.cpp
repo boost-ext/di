@@ -382,3 +382,28 @@ test exposed_module_with_unique_ptr = [] {
     expect(42 == object->i);
 };
 
+test exposed_by_lambda_expr = [] {
+    auto m1 = [] {
+        return di::make_injector(
+            di::bind<int>().to(42)
+        );
+    };
+
+    auto m2 = []() -> di::injector<i1> {
+        return di::make_injector(
+            di::bind<i1>().to<impl1>()
+        );
+    };
+
+    struct c {
+        c(int i, di::aux::owner<i1*> o) {
+            expect(i == 42);
+            expect(dynamic_cast<impl1*>(o));
+            delete o;
+        }
+    };
+
+    auto injector = di::make_injector(m1(), m2());
+    injector.create<c>();
+};
+
