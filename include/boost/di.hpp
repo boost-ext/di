@@ -1572,12 +1572,6 @@ struct any_type {
     operator T() {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T>{});
     }
-    template<class T
-           , class = is_referable_t<const T&, TInjector>
-           , class = is_creatable_t<const T&, TInjector, TError>>
-    operator const T&() const {
-        return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<const T&>{});
-    }
     const TInjector& injector_;
 };
 template<class TParent, class TInjector, class TError = aux::false_type>
@@ -1615,13 +1609,6 @@ struct any_type_1st {
            , class = is_creatable_t<T, TInjector, TError>>
     operator T() {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T>{});
-    }
-    template<class T
-           , class = is_not_same_t<T, TParent>
-           , class = is_referable_t<const T&, TInjector>
-           , class = is_creatable_t<const T&, TInjector, TError>>
-    operator const T&() const {
-        return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<const T&>{});
     }
     const TInjector& injector_;
 };
@@ -1665,10 +1652,6 @@ struct any_type {
     operator T() {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
     }
-    template<class T, class = is_referable_t<const T&, TInjector>>
-    operator const T&() const {
-        return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<const T&>{});
-    }
     const TInjector& injector_;
 };
 template<class TParent, class TInjector>
@@ -1698,12 +1681,6 @@ struct any_type_1st {
     template<class T, class = is_not_same_t<T, TParent>>
     operator T() {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
-    }
-    template<class T
-           , class = is_not_same_t<T, TParent>
-           , class = is_referable_t<const T&, TInjector>>
-    operator const T&() const {
-        return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<const T&>{});
     }
     const TInjector& injector_;
 };
@@ -1740,6 +1717,9 @@ template<class TParent>
 struct any_type_fwd {
     template<class T>
     operator T();
+private:
+    template<class T>
+    operator const T&() const;
 };
 template<class TParent>
 struct any_type_ref_fwd {
@@ -1758,6 +1738,9 @@ template<class TParent>
 struct any_type_1st_fwd {
     template<class T, class = is_not_same_t<T, TParent>>
     operator T();
+private:
+    template<class T, class = is_not_same_t<T, TParent>>
+    operator const T&() const;
 };
 template<class TParent>
 struct any_type_1st_ref_fwd {

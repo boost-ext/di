@@ -99,7 +99,7 @@ test ctors = [] {
     static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<empty>::type>{});
     static_expect(std::is_same<aux::pair<direct, aux::type_list<int, double>>, ctor_traits__<int_double>::type>{});
     static_expect(std::is_same<aux::pair<direct, aux::type_list<char*, const int&>>, ctor_traits__<extensions>::type>{});
-    static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<ctor2>, core::any_type_fwd<ctor2>>>, ctor_traits__<ctor2>::type>{});
+    static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_ref_fwd<ctor2>, core::any_type_ref_fwd<ctor2>>>, ctor_traits__<ctor2>::type>{});
     static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>>>, ctor_traits__<ctor_complex>::type>{});
     static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_1st_fwd<ctor1>>>, ctor_traits__<ctor1>::type>{});
     static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_1st_fwd<ctor_unique_ptr>>>, ctor_traits__<ctor_unique_ptr>::type>{});
@@ -109,7 +109,7 @@ test ctors = [] {
     static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_1st_fwd<ctor_conv>>>, ctor_traits__<ctor_conv>::type>{});
     static_expect(std::is_same<aux::pair<uniform, aux::type_list<>>, ctor_traits__<conv>::type>{});
     static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<conv_explicit>, core::any_type_fwd<conv_explicit>>>, ctor_traits__<conv_explicit>::type>{});
-    static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_1st_fwd<func>>>, ctor_traits__<func>::type>{});
+    static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_1st_ref_fwd<func>>>, ctor_traits__<func>::type>{});
     static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>>>, ctor_traits__<vaarg>::type>{});
 };
 
