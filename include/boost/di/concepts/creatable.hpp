@@ -10,7 +10,6 @@
 #include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
-#include "boost/di/core/any_type.hpp" // is_not_same_t
 #include "boost/di/type_traits/ctor_traits.hpp"
 
 #define BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG \
@@ -72,10 +71,10 @@ struct type;
 
 template<class TParent, class = no_name>
 struct try_create__ {
-    template<class T, class = core::is_not_same_t<T, TParent>>
+    template<class T, class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)>
     operator T() { return {}; }
 
-    template<class T, class = core::is_not_same_t<T, TParent>>
+    template<class T, class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)>
     operator T&() const {
         using constraint_not_satisfied =
             typename type<TParent>::template has_not_bound_reference<T&>;
@@ -86,10 +85,10 @@ struct try_create__ {
 
 template<class TParent, class TName, class _>
 struct try_create__<TParent, named<TName, _>> {
-    template<class T, class = core::is_not_same_t<T, TParent>>
+    template<class T, class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)>
     operator T() { return {}; }
 
-    template<class T, class = core::is_not_same_t<T, TParent>>
+    template<class T, class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)>
     operator T&() const {
         using constraint_not_satisfied =
             typename type<TParent>::template has_not_bound_reference<T&>::template named<TName>;
