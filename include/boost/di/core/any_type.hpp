@@ -55,7 +55,7 @@ struct any_type_ref {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T>{});
     }
 
-    #if defined(__GNUC__) // __pph__
+    #if defined(__GNUC__) && !defined(__clang__) // __pph__
         template<class T
                , class = is_referable_t<T&&, TInjector>
                , class = is_creatable_t<T&&, TInjector, TError>
@@ -102,7 +102,7 @@ struct any_type_1st_ref {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T>{});
     }
 
-    #if defined(__GNUC__) // __pph__
+    #if defined(__GNUC__) && !defined(__clang__) // __pph__
         template<class T
                , class = is_not_same_t<T, TParent>
                , class = is_referable_t<T&&, TInjector>
@@ -150,7 +150,7 @@ struct any_type_ref {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
     }
 
-    #if defined(__GNUC__) // __pph__
+    #if defined(__GNUC__) && !defined(__clang__) // __pph__
         template<class T, class = is_referable_t<T&&, TInjector>>
         operator T&&() const {
             return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T&&>{});
@@ -187,7 +187,7 @@ struct any_type_1st_ref {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
     }
 
-    #if defined(__GNUC__) // __pph__
+    #if defined(__GNUC__) && !defined(__clang__) // __pph__
         template<class T
                , class = is_not_same_t<T, TParent>
                , class = is_referable_t<T&&, TInjector>>
@@ -222,7 +222,7 @@ struct any_type_fwd {
 
 private:
     template<class T>
-    operator const T&() const;
+    operator const T&() const = delete;
 };
 
 template<class TParent>
@@ -233,7 +233,7 @@ struct any_type_ref_fwd {
     template<class T>
     operator T&() const;
 
-    #if defined(__GNUC__) // __pph__
+    #if defined(__GNUC__) && !defined(__clang__) // __pph__
         template<class T>
         operator T&&() const;
     #endif // __pph__
@@ -249,7 +249,7 @@ struct any_type_1st_fwd {
 
 private:
     template<class T, class = is_not_same_t<T, TParent>>
-    operator const T&() const;
+    operator const T&() const = delete;
 };
 
 template<class TParent>
@@ -260,7 +260,7 @@ struct any_type_1st_ref_fwd {
     template<class T, class = is_not_same_t<T, TParent>>
     operator T&() const;
 
-    #if defined(__GNUC__) // __pph__
+    #if defined(__GNUC__) && !defined(__clang__) // __pph__
         template<class T, class = is_not_same_t<T, TParent>>
         operator T&&() const;
     #endif // __pph__
