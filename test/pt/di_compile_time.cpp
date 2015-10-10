@@ -188,7 +188,8 @@ private:
                                 << ">().in(di::unique)\n";
                 }
                 source_code_ << "\t);\n";
-                source_code_ << "\tstruct module : decltype(i) { module(const decltype(i)& object) : decltype(i)(object){} };\n";
+                source_code_ << "\tusing injector_t = decltype(i);\n";
+                source_code_ << "\tstruct module : injector_t { module(const injector_t& object) : injector_t(object){} };\n";
                 source_code_ << "\treturn module{i};\n";
                 source_code_ << "\n};\n";
             }
