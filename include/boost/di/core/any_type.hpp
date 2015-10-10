@@ -131,6 +131,13 @@ struct any_type {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
     }
 
+    #if defined(_MSC_VER) // __pph__
+        template<class T, class = BOOST_DI_REQUIRES(is_referable__<const T&, TInjector>::value)>
+        operator const T&() const {
+            return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<const T&>{});
+        }
+    #endif // __pph__
+
     const TInjector& injector_;
 };
 
@@ -167,6 +174,13 @@ struct any_type_1st {
     operator T() {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
     }
+
+    #if defined(_MSC_VER) // __pph__
+        template<class T, class = BOOST_DI_REQUIRES(is_referable__<const T&, TInjector>::value)>
+        operator const T&() const {
+            return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<const T&>{});
+        }
+    #endif // __pph__
 
     const TInjector& injector_;
 };
@@ -211,9 +225,11 @@ struct any_type_fwd {
     template<class T>
     operator T();
 
-private:
-    template<class T>
-    operator const T&() const = delete;
+    #if !defined(_MSC_VER) // __pph__
+    private:
+        template<class T>
+        operator const T&() const = delete;
+    #endif // __pph__
 };
 
 template<class TParent>
@@ -238,9 +254,11 @@ struct any_type_1st_fwd {
     template<class T, class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)>
     operator T();
 
-private:
-    template<class T, class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)>
-    operator const T&() const = delete;
+    #if !defined(_MSC_VER) // __pph__
+    private:
+        template<class T, class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)>
+        operator const T&() const = delete;
+    #endif // __pph__
 };
 
 template<class TParent>

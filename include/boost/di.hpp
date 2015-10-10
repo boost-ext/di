@@ -255,6 +255,17 @@ template<class T, class... TArgs>
 using is_braces_constructible = decltype(test_is_braces_constructible<T, TArgs...>(0));
 template<class T, class... TArgs>
 using is_braces_constructible_t = typename is_braces_constructible<T, TArgs...>::type;
+#if defined(_MSC_VER)
+    template<class T>
+    struct is_copy_constructible : integral_constant<bool, __is_constructible(T, const T&)> { };
+    template<class T>
+    struct is_default_constructible : integral_constant<bool, __is_constructible(T)> { };
+#else
+    template<class T>
+    using is_copy_constructible = is_constructible<T, const T&>;
+    template<class T>
+    using is_default_constructible = is_constructible<T>;
+#endif
 #if defined(__clang__) || defined(_MSC_VER)
     template<class T, class U>
     struct is_convertible : integral_constant<bool, __is_convertible_to(T, U)> { };
@@ -763,7 +774,7 @@ public:
     class scope {
         #if defined(__GNUC__) || defined(_MSC_VER)
             using type = aux::conditional_t<
-                aux::is_constructible<TExpected, const TExpected&>::value
+                aux::is_copy_constructible<TExpected>::value
               , TExpected
               , TExpected*
             >;
@@ -2055,6 +2066,12 @@ struct any_type {
     operator T() {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
     }
+    #if defined(_MSC_VER)
+        template<class T, class = BOOST_DI_REQUIRES(is_referable__<const T&, TInjector>::value)>
+        operator const T&() const {
+            return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<const T&>{});
+        }
+    #endif
     const TInjector& injector_;
 };
 template<class TParent, class TInjector>
@@ -2085,6 +2102,12 @@ struct any_type_1st {
     operator T() {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
     }
+    #if defined(_MSC_VER)
+        template<class T, class = BOOST_DI_REQUIRES(is_referable__<const T&, TInjector>::value)>
+        operator const T&() const {
+            return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<const T&>{});
+        }
+    #endif
     const TInjector& injector_;
 };
 template<class TParent, class TInjector>
@@ -2120,9 +2143,11 @@ template<class TParent>
 struct any_type_fwd {
     template<class T>
     operator T();
-private:
-    template<class T>
-    operator const T&() const = delete;
+    #if !defined(_MSC_VER)
+    private:
+        template<class T>
+        operator const T&() const = delete;
+    #endif
 };
 template<class TParent>
 struct any_type_ref_fwd {
@@ -2141,9 +2166,11 @@ template<class TParent>
 struct any_type_1st_fwd {
     template<class T, class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)>
     operator T();
-private:
-    template<class T, class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)>
-    operator const T&() const = delete;
+    #if !defined(_MSC_VER)
+    private:
+        template<class T, class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)>
+        operator const T&() const = delete;
+    #endif
 };
 template<class TParent>
 struct any_type_1st_ref_fwd {
@@ -2358,7 +2385,7 @@ template<class>
 struct copyable;
 template<class T>
 struct copyable_impl : aux::conditional<
-    aux::is_constructible<
+    aux::is_default_constructible<
         typename T::scope::template scope<
             typename T::expected, typename T::given>
     >::value
