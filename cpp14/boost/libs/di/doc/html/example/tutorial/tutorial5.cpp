@@ -34,22 +34,12 @@ private:
     std::shared_ptr<ilogger> logger_;
 };
 
-class module {
-public:
-    explicit module(int i)
-        : i_(i)
-    { }
-
-    auto configure() const {
-        return di::make_injector(
-            di::bind<ilogger>().to<logger>()
-          , di::bind<int>().to(i_)
-          , di::bind<std::string>().to("hello world")
-        );
-    }
-
-private:
-    int i_ = 0;
+auto module(int i) {
+    return di::make_injector(
+        di::bind<ilogger>().to<logger>()
+      , di::bind<int>().to(i)
+      , di::bind<std::string>().to("hello world")
+    );
 };
 
 int main(int argc, char** argv) {

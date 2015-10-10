@@ -220,28 +220,22 @@ function toggleNextRow() {
 <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 
 
-<span class="keyword">class</span> <span class="identifier">module</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ixml_parser</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">xml_parser_stub</span><span class="special">&gt;()</span>
-        <span class="special">);</span>
-    <span class="special">}</span>
+<span class="keyword">auto</span> <span class="identifier">module</span> <span class="special">=</span> <span class="special">[]</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ixml_parser</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">xml_parser_stub</span><span class="special">&gt;()</span>
+    <span class="special">);</span>
 <span class="special">};</span>
 
-<span class="keyword">class</span> <span class="identifier">xml_module</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">auto</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">xml</span><span class="special">&lt;</span><span class="identifier">implementation1</span><span class="special">,</span> <span class="identifier">implementation2</span><span class="special">&gt;())</span>
-        <span class="special">);</span>
-    <span class="special">}</span>
+<span class="keyword">auto</span> <span class="identifier">xml_module</span> <span class="special">=</span> <span class="special">[]</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">xml</span><span class="special">&lt;</span><span class="identifier">implementation1</span><span class="special">,</span> <span class="identifier">implementation2</span><span class="special">&gt;())</span>
+    <span class="special">);</span>
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
     <a class="co" name="di.extensions.xml_injection.c0" href="xml_injection.html#di.extensions.xml_injection.c1"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-        <span class="identifier">module</span><span class="special">{}</span>
-      <span class="special">,</span> <span class="identifier">xml_module</span><span class="special">{}</span>
+        <span class="identifier">module</span><span class="special">()</span>
+      <span class="special">,</span> <span class="identifier">xml_module</span><span class="special">()</span>
     <span class="special">);</span>
 
     <a class="co" name="di.extensions.xml_injection.c2" href="xml_injection.html#di.extensions.xml_injection.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="special">{</span>

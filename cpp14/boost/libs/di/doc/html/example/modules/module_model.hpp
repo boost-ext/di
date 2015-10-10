@@ -17,10 +17,7 @@ namespace di = boost::di;
 
 class model;
 
-class module_model {
-public:
-    di::injector<model> configure() const noexcept;
-};
+di::injector<model> module_model() noexcept;
 
 //<-
 #endif

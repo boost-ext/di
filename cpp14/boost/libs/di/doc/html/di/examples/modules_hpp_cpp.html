@@ -284,8 +284,8 @@ function toggleNextRow() {
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-        <span class="identifier">module_view</span><span class="special">{}</span>
-      <span class="special">,</span> <span class="identifier">module_model</span><span class="special">{}</span>
+        <span class="identifier">module_view</span><span class="special">()</span>
+      <span class="special">,</span> <span class="identifier">module_model</span><span class="special">()</span>
     <span class="special">);</span>
 
     <span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">controller</span><span class="special">&gt;().</span><span class="identifier">run</span><span class="special">();</span>
@@ -337,10 +337,7 @@ function toggleNextRow() {
 
 <span class="keyword">class</span> <span class="identifier">model</span><span class="special">;</span>
 
-<span class="keyword">class</span> <span class="identifier">module_model</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">model</span><span class="special">&gt;</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span><span class="special">;</span>
-<span class="special">};</span>
+<span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">model</span><span class="special">&gt;</span> <span class="identifier">module_model</span><span class="special">()</span> <span class="keyword">noexcept</span><span class="special">;</span>
 </pre>
 <div class="informaltable"><table class="table">
 <colgroup><col></colgroup>
@@ -352,7 +349,7 @@ function toggleNextRow() {
 </table></div>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">model</span><span class="special">&gt;</span> <span class="identifier">module_model</span><span class="special">::</span><span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+<span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">model</span><span class="special">&gt;</span> <span class="identifier">module_model</span><span class="special">()</span> <span class="keyword">noexcept</span> <span class="special">{</span>
     <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
         <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">iboard</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">board</span><span class="special">&gt;()</span>
       <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">named</span><span class="special">(</span><span class="identifier">rows</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
@@ -374,10 +371,7 @@ function toggleNextRow() {
 
 <span class="keyword">class</span> <span class="identifier">view</span><span class="special">;</span>
 
-<span class="keyword">class</span> <span class="identifier">module_view</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">view</span><span class="special">&gt;</span> <span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span><span class="special">;</span>
-<span class="special">};</span>
+<span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">view</span><span class="special">&gt;</span> <span class="identifier">module_view</span><span class="special">()</span> <span class="keyword">noexcept</span><span class="special">;</span>
 </pre>
 <div class="informaltable"><table class="table">
 <colgroup><col></colgroup>
@@ -389,7 +383,7 @@ function toggleNextRow() {
 </table></div>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 
-<span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">view</span><span class="special">&gt;</span> <span class="identifier">module_view</span><span class="special">::</span><span class="identifier">configure</span><span class="special">()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+<span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">view</span><span class="special">&gt;</span> <span class="identifier">module_view</span><span class="special">()</span> <span class="keyword">noexcept</span> <span class="special">{</span>
     <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
         <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ibutton</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">button</span><span class="special">&gt;()</span>
       <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">iwindow</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">window</span><span class="special">&gt;()</span>

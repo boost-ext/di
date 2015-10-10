@@ -16,7 +16,7 @@
 
 namespace di = boost::di;
 
-di::injector<view> module_view::configure() const noexcept {
+di::injector<view> module_view() noexcept {
     return di::make_injector(
         di::bind<ibutton>().to<button>()
       , di::bind<iwindow>().to<window>()
