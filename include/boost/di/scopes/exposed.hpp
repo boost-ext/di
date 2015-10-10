@@ -21,7 +21,7 @@ public:
     class scope {
         #if defined(__GNUC__) || defined(_MSC_VER) // __pph__
             using type = aux::conditional_t<
-                aux::is_copy_constructible<TExpected>::value
+                aux::is_constructible<TExpected, const TExpected&>::value
               , TExpected
               , TExpected*
             >;

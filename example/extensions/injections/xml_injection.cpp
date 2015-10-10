@@ -75,29 +75,23 @@ template<class... TImpl>
 struct xml : inject_from_xml<TImpl...> { };
 //->
 
-class module {
-public:
-    auto configure() const {
-        return di::make_injector(
-            di::bind<ixml_parser>().to<xml_parser_stub>()
-        );
-    }
+auto module = [] {
+    return di::make_injector(
+        di::bind<ixml_parser>().to<xml_parser_stub>()
+    );
 };
 
-class xml_module {
-public:
-    auto configure() const {
-        return di::make_injector(
-            di::bind<interface>().to(xml<implementation1, implementation2>())
-        );
-    }
+auto xml_module = [] {
+    return di::make_injector(
+        di::bind<interface>().to(xml<implementation1, implementation2>())
+    );
 };
 
 int main() {
     /*<<make injector>>*/
     auto injector = di::make_injector(
-        module{}
-      , xml_module{}
+        module()
+      , xml_module()
     );
 
     /*<<create `interface` from xml configuration>>*/

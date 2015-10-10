@@ -14,16 +14,14 @@ namespace di = boost::di;
 struct interface { virtual ~interface() noexcept = default; virtual void dummy() = 0;};
 struct implementation : interface { void dummy() override { } };
 
-struct module {
-    auto configure() const noexcept {
-        return di::make_injector(
-            di::bind<interface>().to<implementation>()
-        );
-    }
+auto module = [] {
+    return di::make_injector(
+        di::bind<interface>().to<implementation>()
+    );
 };
 
 auto test() {
-    auto injector = di::make_injector(module{});
+    auto injector = di::make_injector(module());
     return injector.create<std::unique_ptr<interface>>();
 }
 

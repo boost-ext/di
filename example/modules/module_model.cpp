@@ -16,7 +16,7 @@
 
 namespace di = boost::di;
 
-di::injector<model> module_model::configure() const noexcept {
+di::injector<model> module_model() noexcept {
     return di::make_injector(
         di::bind<iboard>().to<board>()
       , di::bind<int>().named(rows).to(42)

@@ -38,7 +38,7 @@ struct copyable;
 
 template<class T>
 struct copyable_impl : aux::conditional<
-    aux::is_default_constructible<
+    aux::is_constructible<
         typename T::scope::template scope<
             typename T::expected, typename T::given>
     >::value
@@ -86,16 +86,6 @@ using referable_t = typename referable<T, TDependency>::type;
     }
 #endif // __pph__
 
-template<class T>
-inline decltype(auto) get_arg(const T& arg, const aux::false_type&) noexcept {
-    return arg;
-}
-
-template<class T>
-inline decltype(auto) get_arg(const T& arg, const aux::true_type&) noexcept {
-    return arg.configure();
-}
-
 #define BOOST_DI_CORE_INJECTOR_POLICY(...) __VA_ARGS__ BOOST_DI_CORE_INJECTOR_POLICY_ELSE
 #define BOOST_DI_CORE_INJECTOR_POLICY_ELSE(...)
 #define BOOST_DI_INJECTOR_ITERATE
@@ -140,7 +130,7 @@ public:
 
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
-        : injector{from_deps{}, get_arg(args, has_configure<decltype(args)>{})...}
+        : injector{from_deps{}, args...}
     { }
 
     template<class TConfig_, class TPolicies_, class... TDeps_>

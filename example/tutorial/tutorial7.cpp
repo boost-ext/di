@@ -48,23 +48,13 @@ void app::run() const {
     }
 }
 
-class module {
-public:
-    explicit module(int i)
-        : i_(i)
-    { }
-
-    auto configure() const {
-        return di::make_injector(
-            di::bind<ilogger>().to<logger>()
-          , di::bind<int>().named(first).to(i_)
-          , di::bind<int>().named(second).to(0)
-          , di::bind<std::string>().to("hello world")
-        );
-    }
-
-private:
-    int i_ = 0;
+auto module(int i) {
+    return di::make_injector(
+        di::bind<ilogger>().to<logger>()
+      , di::bind<int>().named(first).to(static_cast<int>(i))
+      , di::bind<int>().named(second).to(0)
+      , di::bind<std::string>().to("hello world")
+    );
 };
 
 int main(int argc, char** argv) {

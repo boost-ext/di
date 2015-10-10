@@ -34,23 +34,10 @@ private:
     std::shared_ptr<ilogger> logger_;
 };
 
-class module {
-public:
-    explicit module(int i);
-    di::injector<app> configure() const;
-
-private:
-    int i_ = 0;
-};
-
-module::module(int i)
-    : i_(i)
-{ }
-
-di::injector<app> module::configure() const {
+di::injector<app> module(int i) {
     return di::make_injector(
         di::bind<ilogger>().to<logger>()
-      , di::bind<int>().to(i_)
+      , di::bind<int>().to(static_cast<int>(i))
       , di::bind<std::string>().to("hello world")
     );
 }
@@ -59,5 +46,4 @@ int main(int argc, char** argv) {
     auto injector = di::make_injector(module(argc > 1 ? std::atoi(argv[1]) : 0));
     injector.create<app>().run();
 }
-
 

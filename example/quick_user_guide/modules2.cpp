@@ -26,22 +26,17 @@ struct c {
     int i;
 };
 
-struct module {
-    di::injector<c> configure() const noexcept;
-    int i;
-};
-
-di::injector<c> module::configure() const noexcept {
+di::injector<c> module(int i) noexcept {
     return di::make_injector(
         di::bind<i1>().to<impl1>()
       , di::bind<i2>().to<impl2>()
-      , di::bind<int>().to(i)
+      , di::bind<int>().to(static_cast<int>(i))
     );
 }
 
 int main() {
     auto injector = di::make_injector(
-        module{42}
+        module(42)
     );
 
     auto object = injector.create<c>();

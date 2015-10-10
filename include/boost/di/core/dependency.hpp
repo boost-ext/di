@@ -17,7 +17,6 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
-BOOST_DI_HAS_METHOD(has_configure, configure);
 BOOST_DI_HAS_TYPE(has_deps, deps);
 
 template<class>
@@ -37,9 +36,7 @@ template<class T>
 using array_type_t = typename array_type<T>::type;
 
 template<class T, class U = aux::remove_reference_t<T>>
-struct is_injector
-    : aux::integral_constant<bool, has_deps<U>::value || has_configure<U>::value>
-{ };
+using is_injector = has_deps<U>;
 
 template<class, class>
 struct dependency_concept { };
@@ -200,19 +197,6 @@ public:
           , TBase
         >;
         return dependency{static_cast<T&&>(object)};
-    }
-
-    template<class T, BOOST_DI_REQUIRES(has_configure<T>::value) = 0>
-    auto to(const T& object = {}) const noexcept {
-        using dependency = dependency<
-            scopes::exposed<TScope>
-          , TExpected
-          , decltype(aux::declval<T>().configure())
-          , TName
-          , TPriority
-          , TBase
-        >;
-        return dependency{object.configure()};
     }
 
     template<class T, BOOST_DI_REQUIRES(has_deps<T>::value) = 0>

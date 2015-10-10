@@ -153,13 +153,11 @@ test bind_named_int = [] {
 // ---------------------------------------------------------------------------
 
 auto given_module_no_bindings() {
-    struct module {
-        auto configure() const noexcept {
-            return di::make_injector();
-        }
+    auto module = [] {
+        return di::make_injector();
     };
 
-    return di::make_injector(module{}).create<int>();
+    return di::make_injector(module()).create<int>();
 }
 
 auto expected_module_no_bindings() {
@@ -190,28 +188,6 @@ test lambda_module_no_bindings = [] {
 // ---------------------------------------------------------------------------
 
 auto given_module_bind_int() {
-    struct module {
-        auto configure() const noexcept {
-            return di::make_injector(
-                di::bind<int>().to(42)
-            );
-        }
-    };
-
-    return di::make_injector(module{}).create<int>();
-}
-
-auto expected_module_bind_int() {
-    return 42;
-}
-
-test module_bind_int = [] {
-    expect(check_opcodes("module_bind_int"));
-};
-
-// ---------------------------------------------------------------------------
-
-auto given_lambda_module_bind_int() {
     auto module = [] {
         return di::make_injector(
             di::bind<int>().to(42)
@@ -221,12 +197,12 @@ auto given_lambda_module_bind_int() {
     return di::make_injector(module()).create<int>();
 }
 
-auto expected_lambda_module_bind_int() {
+auto expected_module_bind_int() {
     return 42;
 }
 
-test lambda_module_bind_int = [] {
-    expect(check_opcodes("lambda_module_bind_int"));
+test module_bind_int = [] {
+    expect(check_opcodes("module_bind_int"));
 };
 
 // ---------------------------------------------------------------------------

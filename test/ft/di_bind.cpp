@@ -236,16 +236,14 @@ test override_priority_interface = [] {
 };
 
 test override_priority_interface_module = [] {
-    struct module {
-        auto configure() const {
-            return di::make_injector(
-                di::bind<i1>().to<impl1_int>()
-            );
-        }
+    auto module = [] {
+        return di::make_injector(
+            di::bind<i1>().to<impl1_int>()
+        );
     };
 
     auto injector = di::make_injector(
-        module{}
+        module()
       , di::bind<i1>().to<impl1>() [di::override]
     );
 

@@ -14,20 +14,6 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
-template<class T, class = int>
-struct get_deps {
-    using type = typename T::deps;
-};
-
-template<class T>
-struct get_deps<T, BOOST_DI_REQUIRES(has_configure<T>::value)> {
-    using result_type = typename aux::function_traits<
-        decltype(&T::configure)
-    >::result_type;
-
-    using type = typename result_type::deps;
-};
-
 template<
     class T
   , class = typename is_injector<T>::type
@@ -36,7 +22,7 @@ template<
 
 template<class T, class TAny>
 struct add_type_list<T, aux::true_type, TAny> {
-    using type = typename get_deps<T>::type;
+    using type = typename T::deps;
 };
 
 template<class T>

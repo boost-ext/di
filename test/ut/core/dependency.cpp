@@ -68,20 +68,6 @@ test to = [] {
     expect(std::is_same<int, typename dep2::given>::value);
 };
 
-test to_with_configure = [] {
-    struct module {
-        fake_injector<> configure() const noexcept { return {}; }
-    };
-
-    using dep1 = dependency<scopes::deduce, int>;
-    expect(std::is_same<scopes::deduce, typename dep1::scope>::value);
-
-    using dep2 = decltype(dep1{}.to(module{}));
-    expect(std::is_same<scopes::exposed<scopes::deduce>, typename dep2::scope>::value);
-    expect(std::is_same<int, typename dep2::expected>::value);
-    expect(std::is_same<fake_injector<>, typename dep2::given>::value);
-};
-
 test to_with_deps = [] {
     using dep1 = dependency<scopes::deduce, int>;
     expect(std::is_same<scopes::deduce, typename dep1::scope>::value);

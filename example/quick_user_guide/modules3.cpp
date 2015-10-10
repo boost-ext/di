@@ -15,22 +15,17 @@ struct i2 { virtual ~i2() noexcept = default; virtual void dummy2() = 0; };
 struct impl1 : i1 { void dummy1() override { } };
 struct impl2 : i2 { void dummy2() override { } };
 
-struct module {
-    di::injector<i1, i2> configure() const noexcept;
 
-    int i = 0;
-};
-
-di::injector<i1, i2> module::configure() const noexcept {
+auto module = []() -> di::injector<i1, i2> {
     return di::make_injector(
         di::bind<i1>().to<impl1>()
       , di::bind<i2>().to<impl2>()
     );
-}
+};
 
 int main() {
     auto injector = di::make_injector(
-        module{}
+        module()
     );
 
     auto up1 = injector.create<std::unique_ptr<i1>>();

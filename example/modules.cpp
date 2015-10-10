@@ -34,36 +34,25 @@ struct app {
     }
 };
 
-class module1 {
-public:
-    /*<<module configuration>>*/
-    auto configure() const {
-        return di::make_injector(
-            di::bind<interface>().to<implementation1>()
-        );
-    }
+/*<<`module1` configuration>>*/
+auto module1 = [] {
+    return di::make_injector(
+        di::bind<interface>().to<implementation1>()
+    );
 };
 
-class module2 {
-public:
-    /*<<module configuration>>*/
-    auto configure() const {
-        return di::make_injector(
-            di::bind<int>().to(i_)
-        );
-    }
+/*<<`module2` configuration>>*/
+auto module2(int i) {
+    return di::make_injector(
+        di::bind<int>().to(static_cast<int>(i))
+    );
+}
 
-    int i_;
-};
-
-class exposed_module {
-public:
-    /*<<module configuration with exposed `data`>>*/
-    di::injector<data> configure() const {
-        return di::make_injector(
-            di::bind<interface>().to<implementation2>()
-        );
-    }
+/*<<module configuration with exposed `data`>>*/
+auto exposed_module = []() -> di::injector<data> {
+    return di::make_injector(
+        di::bind<interface>().to<implementation2>()
+    );
 };
 
 int main() {
@@ -71,9 +60,9 @@ int main() {
 
     /*<<create injector and pass `module1`, `module2` and `exposed_module`>>*/
     auto injector = di::make_injector(
-        module1{}
-      , module2{i}
-      , exposed_module{}
+        module1()
+      , module2(i)
+      , exposed_module()
     );
 
     /*<<create `app`>>*/

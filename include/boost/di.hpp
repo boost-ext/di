@@ -247,17 +247,6 @@ template<class T, class... TArgs>
 using is_constructible = decltype(test_is_constructible<T, TArgs...>(0));
 template<class T, class... TArgs>
 using is_constructible_t = typename is_constructible<T, TArgs...>::type;
-#if defined(_MSC_VER)
-    template<class T>
-    struct is_copy_constructible : integral_constant<bool, __is_constructible(T, const T&)> { };
-    template<class T>
-    struct is_default_constructible : integral_constant<bool, __is_constructible(T)> { };
-#else
-    template<class T>
-    using is_copy_constructible = is_constructible<T, const T&>;
-    template<class T>
-    using is_default_constructible = is_constructible<T>;
-#endif
 template<class T, class... TArgs>
 decltype(void(T{declval<TArgs>()...}), true_type{}) test_is_braces_constructible(int);
 template<class, class...>
@@ -774,7 +763,7 @@ public:
     class scope {
         #if defined(__GNUC__) || defined(_MSC_VER)
             using type = aux::conditional_t<
-                aux::is_copy_constructible<TExpected>::value
+                aux::is_constructible<TExpected, const TExpected&>::value
               , TExpected
               , TExpected*
             >;
@@ -1130,7 +1119,6 @@ template<class T>
 using scopable = typename scopable__<T>::type;
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
-template<class T, class... TArgs> decltype(::boost::di::aux::declval<T>().configure( ::boost::di::aux::declval<TArgs>()...) , ::boost::di::aux::true_type()) has_configure_impl(int); template<class, class...> ::boost::di::aux::false_type has_configure_impl(...); template<class T, class... TArgs> struct has_configure : decltype(has_configure_impl<T, TArgs...>(0)) { };
 template<class, class = int> struct has_deps : ::boost::di::aux::false_type { }; template<class T> struct has_deps<T, ::boost::di::aux::valid_t<typename T::deps>> : ::boost::di::aux::true_type { };
 template<class>
 struct array_type;
@@ -1145,9 +1133,7 @@ struct array_type<T[]> {
 template<class T>
 using array_type_t = typename array_type<T>::type;
 template<class T, class U = aux::remove_reference_t<T>>
-struct is_injector
-    : aux::integral_constant<bool, has_deps<U>::value || has_configure<U>::value>
-{ };
+using is_injector = has_deps<U>;
 template<class, class>
 struct dependency_concept { };
 template<class T, class TDependency>
@@ -1287,18 +1273,6 @@ public:
           , TBase
         >;
         return dependency{static_cast<T&&>(object)};
-    }
-    template<class T, BOOST_DI_REQUIRES(has_configure<T>::value) = 0>
-    auto to(const T& object = {}) const noexcept {
-        using dependency = dependency<
-            scopes::exposed<TScope>
-          , TExpected
-          , decltype(aux::declval<T>().configure())
-          , TName
-          , TPriority
-          , TBase
-        >;
-        return dependency{object.configure()};
     }
     template<class T, BOOST_DI_REQUIRES(has_deps<T>::value) = 0>
     auto to(const T& object = {}) const noexcept {
@@ -1744,17 +1718,6 @@ public:
 };
 }}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
-template<class T, class = int>
-struct get_deps {
-    using type = typename T::deps;
-};
-template<class T>
-struct get_deps<T, BOOST_DI_REQUIRES(has_configure<T>::value)> {
-    using result_type = typename aux::function_traits<
-        decltype(&T::configure)
-    >::result_type;
-    using type = typename result_type::deps;
-};
 template<
     class T
   , class = typename is_injector<T>::type
@@ -1762,7 +1725,7 @@ template<
 > struct add_type_list;
 template<class T, class TAny>
 struct add_type_list<T, aux::true_type, TAny> {
-    using type = typename get_deps<T>::type;
+    using type = typename T::deps;
 };
 template<class T>
 struct add_type_list<T, aux::false_type, aux::true_type> {
@@ -2395,7 +2358,7 @@ template<class>
 struct copyable;
 template<class T>
 struct copyable_impl : aux::conditional<
-    aux::is_default_constructible<
+    aux::is_constructible<
         typename T::scope::template scope<
             typename T::expected, typename T::given>
     >::value
@@ -2434,14 +2397,6 @@ using referable_t = typename referable<T, TDependency>::type;
         return T{injector};
     }
 #endif
-template<class T>
-inline decltype(auto) get_arg(const T& arg, const aux::false_type&) noexcept {
-    return arg;
-}
-template<class T>
-inline decltype(auto) get_arg(const T& arg, const aux::true_type&) noexcept {
-    return arg.configure();
-}
 template<class TConfig , class TPolicies = pool<> , class... TDeps>
 class injector : pool<bindings_t<TDeps...>> {
     friend class binder; template<class> friend struct pool;
@@ -2470,7 +2425,7 @@ public:
     using config = TConfig;
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
-        : injector{from_deps{}, get_arg(args, has_configure<decltype(args)>{})...}
+        : injector{from_deps{}, args...}
     { }
     template<class TConfig_, class TPolicies_, class... TDeps_>
     explicit injector(const injector<TConfig_, TPolicies_, TDeps_...>& other) noexcept
@@ -2644,7 +2599,7 @@ public:
     using config = TConfig;
     template<class... TArgs>
     explicit injector(const init&, const TArgs&... args) noexcept
-        : injector{from_deps{}, get_arg(args, has_configure<decltype(args)>{})...}
+        : injector{from_deps{}, args...}
     { }
     template<class TConfig_, class TPolicies_, class... TDeps_>
     explicit injector(const injector<TConfig_, TPolicies_, TDeps_...>& other) noexcept

@@ -29,26 +29,22 @@ struct c {
     int i = 0;
 };
 
-struct module1 {
-    auto configure() const noexcept {
-        return di::make_injector(
-            di::bind<i1>().to<impl1>()
-          , di::bind<int>().to(42)
-        );
-    }
+auto module1 = [] {
+    return di::make_injector(
+        di::bind<i1>().to<impl1>()
+      , di::bind<int>().to(42)
+    );
 };
 
-struct module2 {
-    auto configure() const noexcept {
-        return di::make_injector(
-            di::bind<i2>().to<impl2>()
-        );
-    };
+auto module2 = [] {
+    return di::make_injector(
+        di::bind<i2>().to<impl2>()
+    );
 };
 
 int main() {
     auto injector = di::make_injector(
-        module1{}, module2{}
+        module1(), module2()
     );
 
     auto object = injector.create<std::unique_ptr<c>>();

@@ -21,41 +21,29 @@ struct implementation1 : interface { };
 struct implementation2 : interface { };
 //->
 
-class dynamic_bindings {
-public:
-    dynamic_bindings& operator=(const dynamic_bindings&) = delete;
-
-    explicit dynamic_bindings(eid& id)
-        : id(id)
-    { }
-
-    /*<<module configuration>>*/
-    auto configure() const {
-        return di::make_injector(
-            /*<<bind `interface` to lazy lambda expression>>*/
-            di::bind<interface>().to(
-                [&](const auto& injector) -> std::shared_ptr<interface> {
-                    switch(id) {
-                        default: return nullptr;
-                        case e1: return (const std::shared_ptr<implementation1>&)injector;
-                        case e2: return (const std::shared_ptr<implementation2>&)injector;
-                    }
-
-                    return nullptr;
+/*<<module configuration>>*/
+auto dynamic_bindings = [](eid& id) {
+    return di::make_injector(
+        /*<<bind `interface` to lazy lambda expression>>*/
+        di::bind<interface>().to(
+            [&](const auto& injector) -> std::shared_ptr<interface> {
+                switch(id) {
+                    default: return nullptr;
+                    case e1: return (const std::shared_ptr<implementation1>&)injector;
+                    case e2: return (const std::shared_ptr<implementation2>&)injector;
                 }
-            )
-        );
-    }
 
-private:
-    eid& id;
+                return nullptr;
+            }
+        )
+    );
 };
 
 int main() {
     auto id = e1;
 
     /*<<create interface with `id = e1`>>*/
-    auto injector = di::make_injector(dynamic_bindings{id});
+    auto injector = di::make_injector(dynamic_bindings(id));
     assert(dynamic_cast<implementation1*>(injector.create<std::shared_ptr<interface>>().get()));
 
     id = e2;

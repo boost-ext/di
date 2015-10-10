@@ -134,20 +134,6 @@ using is_constructible = decltype(test_is_constructible<T, TArgs...>(0));
 template<class T, class... TArgs>
 using is_constructible_t = typename is_constructible<T, TArgs...>::type;
 
-#if defined(_MSC_VER) // __pph__
-    template<class T>
-    struct is_copy_constructible : integral_constant<bool, __is_constructible(T, const T&)> { };
-
-    template<class T>
-    struct is_default_constructible : integral_constant<bool, __is_constructible(T)> { };
-#else // __pph__
-    template<class T>
-    using is_copy_constructible = is_constructible<T, const T&>;
-
-    template<class T>
-    using is_default_constructible = is_constructible<T>;
-#endif // __pph__
-
 template<class T, class... TArgs>
 decltype(void(T{declval<TArgs>()...}), true_type{}) test_is_braces_constructible(int);
 
