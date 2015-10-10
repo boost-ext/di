@@ -34,13 +34,13 @@ private:
     std::shared_ptr<ilogger> logger_;
 };
 
-auto module(int i) {
+auto module(const int& i) {
     return di::make_injector(
         di::bind<ilogger>().to<logger>()
       , di::bind<int>().to(i)
       , di::bind<std::string>().to("hello world")
     );
-};
+}
 
 int main(int argc, char** argv) {
     auto injector = di::make_injector(module(argc > 1 ? std::atoi(argv[1]) : 0));

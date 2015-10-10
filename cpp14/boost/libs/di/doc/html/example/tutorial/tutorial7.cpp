@@ -55,7 +55,7 @@ auto module(const int& i) {
       , di::bind<int>().named(second).to(0)
       , di::bind<std::string>().to("hello world")
     );
-};
+}
 
 int main(int argc, char** argv) {
     auto injector = di::make_injector(module(argc > 1 ? std::atoi(argv[1]) : 0));
