@@ -1120,6 +1120,8 @@ using scopable = typename scopable__<T>::type;
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
 template<class, class = int> struct has_deps : ::boost::di::aux::false_type { }; template<class T> struct has_deps<T, ::boost::di::aux::valid_t<typename T::deps>> : ::boost::di::aux::true_type { };
+template<class T, class U = aux::remove_reference_t<T>>
+using is_injector = has_deps<U>;
 template<class>
 struct array_type;
 template<class T>
@@ -1132,8 +1134,6 @@ struct array_type<T[]> {
 };
 template<class T>
 using array_type_t = typename array_type<T>::type;
-template<class T, class U = aux::remove_reference_t<T>>
-using is_injector = has_deps<U>;
 template<class, class>
 struct dependency_concept { };
 template<class T, class TDependency>

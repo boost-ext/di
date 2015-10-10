@@ -19,6 +19,9 @@ namespace boost { namespace di { inline namespace v1 { namespace core {
 
 BOOST_DI_HAS_TYPE(has_deps, deps);
 
+template<class T, class U = aux::remove_reference_t<T>>
+using is_injector = has_deps<U>;
+
 template<class>
 struct array_type;
 
@@ -34,9 +37,6 @@ struct array_type<T[]> {
 
 template<class T>
 using array_type_t = typename array_type<T>::type;
-
-template<class T, class U = aux::remove_reference_t<T>>
-using is_injector = has_deps<U>;
 
 template<class, class>
 struct dependency_concept { };
