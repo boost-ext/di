@@ -166,18 +166,17 @@ private:
     void gen_modules() {
         for (auto i = 0; i < MAX_MODULES; ++i) {
             if (i < modules_) {
-                source_code_ << "struct module" << i << " {\n";
                 if (configure_ == config_configure::EXPOSED) {
-                    source_code_ << "\tdi::injector<c" << i << "> ";
+                    source_code_ << "di::injector<c" << i << "> ";
                 } else {
-                    source_code_ << "\tauto ";
+                    source_code_ << "auto ";
                 }
-                source_code_ << "configure() const noexcept {\n";
-                source_code_ << "\t\treturn di::make_injector(\n";
+                source_code_ << "module" << i << "() noexcept {\n";
+                source_code_ << "\tauto i = di::make_injector(\n";
 
                 if (interfaces_) {
                     for (auto j = 0; j < MAX_MODULES; ++j) {
-                        source_code_ << "\t\t" << (j ? ", " : "  ")
+                        source_code_ << "\t" << (j ? ", " : "  ")
                                      << "di::bind<i" << std::setfill('0') << std::setw(2) << j + (i * MAX_MODULES)
                                      << ">().to<impl" << std::setfill('0') << std::setw(2) << j + (i * MAX_MODULES) << ">()\n";
                     }
@@ -188,8 +187,10 @@ private:
                                 << "di::bind<x" << std::setfill('0') << std::setw(2) << j + (i * MAX_MODULES)
                                 << ">().in(di::unique)\n";
                 }
-
-                source_code_ << "\t\t);\n\t}\n};\n";
+                source_code_ << "\t);\n";
+                source_code_ << "\tstruct module : decltype(i) { module(const decltype(i)& object) : decltype(i)(object){} };\n";
+                source_code_ << "\treturn module{i};\n";
+                source_code_ << "\n};\n";
             }
         }
     }
@@ -199,7 +200,7 @@ private:
         source_code_ << "\tauto injector = di::make_injector(\n";
         for (auto i = 0; i < MAX_MODULES; ++i) {
             if (i < modules_) {
-                source_code_ << "\t\t" << (i ? ", " : "  ") << "module" << i << "{}\n";
+                source_code_ << "\t\t" << (i ? ", " : "  ") << "module" << i << "()\n";
             }
         }
         source_code_ << "\t);\n\tinjector.create<c>();\n}\n\n";
