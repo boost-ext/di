@@ -348,7 +348,7 @@ di::injector<i1> m2() noexcept {
     return di::make_injector(
         di::bind<i1>().to<impl1>()
     );
-};
+}
 
 test exposed_by_lambda_expr_and_func = [] {
     auto m1 = [] {
