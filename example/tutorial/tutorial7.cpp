@@ -48,10 +48,10 @@ void app::run() const {
     }
 }
 
-auto module(int i) {
+auto module(const int& i) {
     return di::make_injector(
         di::bind<ilogger>().to<logger>()
-      , di::bind<int>().named(first).to(static_cast<int>(i))
+      , di::bind<int>().named(first).to(i)
       , di::bind<int>().named(second).to(0)
       , di::bind<std::string>().to("hello world")
     );

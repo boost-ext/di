@@ -34,10 +34,10 @@ private:
     std::shared_ptr<ilogger> logger_;
 };
 
-di::injector<app> module(int i) {
+di::injector<app> module(const int& i) {
     return di::make_injector(
         di::bind<ilogger>().to<logger>()
-      , di::bind<int>().to(static_cast<int>(i))
+      , di::bind<int>().to(i)
       , di::bind<std::string>().to("hello world")
     );
 }

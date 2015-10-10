@@ -63,9 +63,9 @@ test modules_mix_make_injector = [] {
         );
     };
 
-    auto module2 = [](int i_) -> di::injector<int> {
+    auto module2 = [](const int& i) -> di::injector<int> {
         return di::make_injector(
-            di::bind<int>().to(static_cast<int>(i_))
+            di::bind<int>().to(i)
         );
     };
 
@@ -326,11 +326,11 @@ test exposed_module_with_unique_ptr = [] {
         int i = 0;
     };
 
-    auto module = [](int i) -> di::injector<c> {
+    auto module = [](const int& i) -> di::injector<c> {
         return di::make_injector(
             di::bind<i1>().to<impl1>()
           , di::bind<i2>().to<impl2>()
-          , di::bind<int>().to(static_cast<int>(i))
+          , di::bind<int>().to(i)
         );
     };
 
@@ -344,16 +344,16 @@ test exposed_module_with_unique_ptr = [] {
     expect(42 == object->i);
 };
 
-test exposed_by_lambda_expr = [] {
+di::injector<i1> m2() noexcept {
+    return di::make_injector(
+        di::bind<i1>().to<impl1>()
+    );
+};
+
+test exposed_by_lambda_expr_and_func = [] {
     auto m1 = [] {
         return di::make_injector(
             di::bind<int>().to(42)
-        );
-    };
-
-    auto m2 = []() -> di::injector<i1> {
-        return di::make_injector(
-            di::bind<i1>().to<impl1>()
         );
     };
 

@@ -26,11 +26,11 @@ struct c {
     int i;
 };
 
-di::injector<c> module(int i) noexcept {
+di::injector<c> module(const int& i) noexcept {
     return di::make_injector(
         di::bind<i1>().to<impl1>()
       , di::bind<i2>().to<impl2>()
-      , di::bind<int>().to(static_cast<int>(i))
+      , di::bind<int>().to(i)
     );
 }
 

@@ -42,9 +42,9 @@ auto module1 = [] {
 };
 
 /*<<`module2` configuration>>*/
-auto module2(int i) {
+auto module2(const int& i) {
     return di::make_injector(
-        di::bind<int>().to(static_cast<int>(i))
+        di::bind<int>().to(i)
     );
 }
 
