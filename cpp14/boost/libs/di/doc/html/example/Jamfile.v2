@@ -48,7 +48,7 @@ test-suite example :
               modules/main.cpp
       : -Imodules -DBOOST_DI_CFG=config
     ]
-    [ example annotations.cpp ]
+    [ example annotations.cpp : -Wno-gnu-string-literal-operator-template ]
     [ example automatic_injection.cpp ]
     [ example bindings.cpp ]
     [ example constructor_injection.cpp ]
@@ -70,7 +70,7 @@ test-suite example :
 test-suite extensions :
     [ example extensions/bindings/constructor_bindings.cpp ]
     [ example extensions/injections/assisted_injection.cpp ]
-    [ example extensions/injections/named_parameters.cpp ]
+    [ example extensions/injections/named_parameters.cpp : -Wno-attributes -Wno-gnu-string-literal-operator-template ]
     [ example extensions/injections/xml_injection.cpp ]
     [ example extensions/policies/types_dumper.cpp ]
     [ example extensions/policies/uml_dumper.cpp ]

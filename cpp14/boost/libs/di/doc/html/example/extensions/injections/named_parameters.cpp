@@ -27,7 +27,7 @@ struct pair { long begin; long end; };
 
 template<class T, T... Chars>
 constexpr auto operator""_s() {
-    return std::integral_constant<long, const_hash(chars<Chars...>{}, sizeof...(Chars) + 1)>{};
+    return di::aux::integral_constant<long, const_hash(chars<Chars...>{}, sizeof...(Chars) + 1)>{};
 }
 
 long constexpr const_hash(char const *input, long m = 0, long i = 0) {
@@ -39,7 +39,7 @@ long constexpr const_hash(const chars<C, Chars...>&, long m = 0, long i = 0) {
     return C && i < m ? static_cast<long>(C) + 33 * const_hash(chars<Chars...>{}, m, i + 1) : 5381;
 }
 
-long constexpr const_hash(const chars<>&, long m = 0, long i = 0) {
+long constexpr const_hash(const chars<>&, ...) {
     return 5381;
 }
 
@@ -69,10 +69,10 @@ constexpr bool has_names(const char* input) {
 
 template<class T, class TArg, int N>
 struct parse {
-    static constexpr auto name = get_name(T::boost_di_inject_str__, N - 1);
-    using type = std::conditional_t<name.begin == name.end
+    static constexpr auto name = get_name(T::str, N - 1);
+    using type = di::aux::conditional_t<name.begin == name.end
       , TArg
-      , di::named<std::integral_constant<long, const_hash(&T::boost_di_inject_str__[name.begin], name.end)>, TArg>
+      , di::named<di::aux::integral_constant<long, const_hash(&T::str[name.begin], name.end)>, TArg>
     >;
 };
 
@@ -80,35 +80,55 @@ template<class, class, class...>
 struct args_impl;
 
 template<class T, class... TArgs, int... Ns>
-struct args_impl<T, di::aux::index_sequence<Ns...>, TArgs...>
-    : di::aux::type_list<typename parse<T, TArgs, Ns>::type...>
-{ };
+struct args_impl<T, di::aux::index_sequence<Ns...>, TArgs...> {
+    using type = di::aux::type_list<typename parse<T, TArgs, Ns>::type...>;
+};
 
 template<class>
 struct args;
 
 template<bool, class R, class... TArgs>
-struct args__ : args_impl<R, di::aux::make_index_sequence<sizeof...(TArgs)>, TArgs...>::type { };
+struct args__ {
+    using type = typename args_impl<R, di::aux::make_index_sequence<sizeof...(TArgs)>, TArgs...>::type;
+};
 
 template<class R, class... TArgs>
-struct args__<false, R, TArgs...> : di::aux::type_list<TArgs...> { };
+struct args__<false, R, TArgs...> {
+    using type = di::aux::type_list<TArgs...>;
+};
 
 template<class R, class... TArgs>
-struct args<R(TArgs...)>
-    : args__<has_names(R::boost_di_inject_str__), R, TArgs...>::type
-{ };
+struct args<R(*)(TArgs...)> {
+    using type = typename args__<has_names(R::str), R, TArgs...>::type;
+};
 
 template<class R>
-struct args<R()> : di::aux::type_list<> { };
+struct args<R(*)()> {
+    using type = di::aux::type_list<>;
+};
 
 template<class T>
 using args_t = typename args<T>::type;
 
-#define $inject(type, ...) \
-    static constexpr auto boost_di_inject_str__ = #__VA_ARGS__; \
-    static type boost_di_inject_ctor__(__VA_ARGS__); \
-    using boost_di_inject__ = args_t<decltype(boost_di_inject_ctor__)>; \
-    type(__VA_ARGS__)
+template<class T>
+decltype(T()) ctor_impl1__(...);
+
+template<class T>
+auto ctor_impl1__(int) -> decltype(&T::template ctor<di::_>);
+
+template<class T>
+decltype(ctor_impl1__<T>(0)) ctor__(...);
+
+template<class T>
+auto ctor__(int) -> decltype(&T::ctor);
+
+#define $inject(T, ...) \
+    struct boost_di_inject__ { \
+        static constexpr auto str = #__VA_ARGS__; \
+        static boost_di_inject__ ctor(__VA_ARGS__); \
+        using type = args_t<decltype(ctor__<boost_di_inject__>(0))>; \
+    }; \
+    T(__VA_ARGS__)
 
 //->
 
