@@ -80,33 +80,34 @@ template<class, class, class...>
 struct args_impl;
 
 template<class T, class... TArgs, int... Ns>
-struct args_impl<T, di::aux::index_sequence<Ns...>, TArgs...> {
-    using type = di::aux::type_list<typename parse<T, TArgs, Ns>::type...>;
-};
+struct args_impl<T, di::aux::index_sequence<Ns...>, TArgs...>
+    : di::aux::type_list<typename parse<T, TArgs, Ns>::type...>
+{ };
 
-template<class, bool>
+template<class>
 struct args;
 
-template<class R, class... TArgs>
-struct args<R(TArgs...), true> {
-    using type = typename args_impl<R, di::aux::make_index_sequence<sizeof...(TArgs)>, TArgs...>::type;
-};
+template<bool, class R, class... TArgs>
+struct args__ : args_impl<R, di::aux::make_index_sequence<sizeof...(TArgs)>, TArgs...>::type { };
 
 template<class R, class... TArgs>
-struct args<R(TArgs...), false> {
-    using type = aux::type_list<TArgs...>;
-};
+struct args__<false, R, TArgs...> : di::aux::type_list<TArgs...> { };
 
-template<class T, bool B>
-using args_t = typename args<T, B>::type;
+template<class R, class... TArgs>
+struct args<R(TArgs...)>
+    : args__<has_names(R::boost_di_inject_str__), R, TArgs...>::type
+{ };
+
+template<class R>
+struct args<R()> : di::aux::type_list<> { };
+
+template<class T>
+using args_t = typename args<T>::type;
 
 #define $inject(type, ...) \
     static constexpr auto boost_di_inject_str__ = #__VA_ARGS__; \
     static type boost_di_inject_ctor__(__VA_ARGS__); \
-    using boost_di_inject__ = ::boost::di::args_t< \
-        decltype(boost_di_inject_ctor__) \
-      , ::boost::di::has_names(boost_di_inject_str__) \
-    >; \
+    using boost_di_inject__ = args_t<decltype(boost_di_inject_ctor__)>; \
     type(__VA_ARGS__)
 
 //->
