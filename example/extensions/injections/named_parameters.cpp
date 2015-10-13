@@ -12,9 +12,6 @@
 //->
 #include <boost/di.hpp>
 
-#include <iostream>
-#include <boost/units/detail/utility.hpp>
-
 #if !defined(__cpp_constexpr)
     int main() { }
 #else
