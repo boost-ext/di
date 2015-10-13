@@ -13,9 +13,7 @@
 
 namespace di = boost::di;
 
-auto int_1 = []{};
-auto int_2 = []{};
-
+//<-
 template<char...>
 struct string { };
 
@@ -23,6 +21,11 @@ template<class T, T... Chars>
 constexpr auto operator""_s() {
     return string<Chars...>{};
 }
+
+//->
+
+auto int_1 = []{};
+auto int_2 = []{};
 
 class annotations {
 public:
