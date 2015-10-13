@@ -219,16 +219,9 @@ function toggleNextRow() {
 
 <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 
+
 <span class="keyword">auto</span> <span class="identifier">int_1</span> <span class="special">=</span> <span class="special">[]{};</span>
 <span class="keyword">auto</span> <span class="identifier">int_2</span> <span class="special">=</span> <span class="special">[]{};</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">...&gt;</span>
-<span class="keyword">struct</span> <span class="identifier">string</span> <span class="special">{</span> <span class="special">};</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">T</span><span class="special">...</span> <span class="identifier">Chars</span><span class="special">&gt;</span>
-<span class="keyword">constexpr</span> <span class="keyword">auto</span> <span class="keyword">operator</span><span class="string">""</span><span class="identifier">_s</span><span class="special">()</span> <span class="special">{</span>
-    <span class="keyword">return</span> <span class="identifier">string</span><span class="special">&lt;</span><span class="identifier">Chars</span><span class="special">...&gt;{};</span>
-<span class="special">}</span>
 
 <span class="keyword">class</span> <span class="identifier">annotations</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
