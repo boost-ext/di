@@ -13,8 +13,7 @@ pph() {
     echo "// Distributed under the Boost Software License, Version 1.0."
     echo "// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)"
     echo "//"
-    echo "#ifndef BOOST_DI_HPP"
-    echo "#define BOOST_DI_HPP"
+    echo "#pragma once"
     echo "#if (__cplusplus < 201305L && _MSC_VER < 1900)"
     echo "#error \"Boost.DI requires C++14 support (Clang-3.4+, GCC-5.1+, MSVC-2015+)\""
     echo "#else"
@@ -51,7 +50,6 @@ pph() {
     tail -n +10 "boost/di/aux_/preprocessor.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
     tail -n +15 "boost/di/inject.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
     cd .. && rm -rf tmp
-    echo "#endif"
     echo "#endif"
     echo
 }

@@ -4,8 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_HPP
-#define BOOST_DI_HPP
+#pragma once
 #if (__cplusplus < 201305L && _MSC_VER < 1900)
 #error "Boost.DI requires C++14 support (Clang-3.4+, GCC-5.1+, MSVC-2015+)"
 #else
@@ -3207,6 +3206,5 @@ using inject = aux::type_list<Ts...>;
       , BOOST_DI_GEN_CTOR \
       , __VA_ARGS__) \
     )
-#endif
 #endif
 
