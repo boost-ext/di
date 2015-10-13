@@ -63,6 +63,10 @@ constexpr pair get_name(const char* input, int N, int Q = 0, int i = 0) {
         );
 }
 
+constexpr bool has_names(const char* input) {
+    return *input ? *input == '"' ? true : has_names(input + 1) : false;
+}
+
 template<class T, class TArg, int N>
 struct parse {
     static constexpr auto name = get_name(T::boost_di_inject_str__, N - 1);
@@ -80,21 +84,29 @@ struct args_impl<T, di::aux::index_sequence<Ns...>, TArgs...> {
     using type = di::aux::type_list<typename parse<T, TArgs, Ns>::type...>;
 };
 
-template<class>
+template<class, bool>
 struct args;
 
 template<class R, class... TArgs>
-struct args<R(TArgs...)> {
+struct args<R(TArgs...), true> {
     using type = typename args_impl<R, di::aux::make_index_sequence<sizeof...(TArgs)>, TArgs...>::type;
 };
 
-template<class T>
-using args_t = typename args<T>::type;
+template<class R, class... TArgs>
+struct args<R(TArgs...), false> {
+    using type = aux::type_list<TArgs...>;
+};
+
+template<class T, bool B>
+using args_t = typename args<T, B>::type;
 
 #define $inject(type, ...) \
     static constexpr auto boost_di_inject_str__ = #__VA_ARGS__; \
     static type boost_di_inject_ctor__(__VA_ARGS__); \
-    using boost_di_inject__ = args_t<decltype(boost_di_inject_ctor__)>; \
+    using boost_di_inject__ = ::boost::di::args_t< \
+        decltype(boost_di_inject_ctor__) \
+      , ::boost::di::has_names(boost_di_inject_str__) \
+    >; \
     type(__VA_ARGS__)
 
 //->
