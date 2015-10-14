@@ -28,8 +28,17 @@ struct array : array__<typename T::value_type, sizeof...(Ts)>, T {
     using boost_di_inject__ = aux::type_list<self>;
 
     template<class TInjector>
+    struct is_creatable_impl : aux::is_same<
+        aux::bool_list<aux::always<Ts>::value...>
+      , aux::bool_list<
+            core::injector__<TInjector>::template
+                is_creatable<type_traits::rebind_traits_t<value_type, Ts>>::value...
+        >
+    > { };
+
+    template<class TInjector, BOOST_DI_REQUIRES(aux::is_constructible<T, std::move_iterator<value_type*>, std::move_iterator<value_type*>>::value) = 0>
     explicit array(const TInjector& injector)
-        : array(injector, aux::true_type{})
+        : array(injector, is_creatable_impl<TInjector>{})
     { }
 
     template<class TInjector>

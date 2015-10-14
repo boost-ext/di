@@ -495,6 +495,29 @@ test create_polymorphic_type_without_binding = [] {
     );
 };
 
+test create_polymorphic_type_without_binding_using_multi_bindings = [] {
+    auto errors_ = errors(
+        #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+            "creatable constraint not satisfied",
+        #endif
+            "abstract_type<.*>::is_not_bound"
+        #if !defined(_MSC_VER)
+          , "create<c>()"
+          , "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?"
+        #endif
+    );
+
+    expect_compile_fail("<include> memory <include> vector", errors_,
+        struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
+        struct impl : i { void dummy() override { } };
+        struct c { c(std::vector<std::unique_ptr<i>>) { } };
+        int main() {
+            auto injector = di::make_injector(di::bind<i*[]>().to<i, i>());
+            injector.create<c>();
+        }
+    );
+};
+
 test create_polymorphic_type_without_binding_named = [] {
     auto errors_ = errors(
         #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
