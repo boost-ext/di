@@ -12,7 +12,7 @@
 //->
 #include <boost/di.hpp>
 
-#if !defined(__cpp_constexpr)
+#if defined(_MSC_VER)
     int main() { }
 #else
 

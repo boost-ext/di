@@ -219,36 +219,60 @@ function toggleNextRow() {
 
 <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 
-
 <span class="keyword">auto</span> <span class="identifier">int_1</span> <span class="special">=</span> <span class="special">[]{};</span>
-<span class="keyword">auto</span> <span class="identifier">int_2</span> <span class="special">=</span> <span class="special">[]{};</span>
+<span class="keyword">struct</span> <span class="identifier">int_2_t</span> <span class="special">{</span> <span class="special">}</span> <span class="identifier">int_2</span><span class="special">;</span>
 
-<span class="keyword">class</span> <span class="identifier">annotations</span> <span class="special">{</span>
+<span class="keyword">class</span> <span class="identifier">annotations1</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-    <a class="co" name="di.examples.annotations.c0" href="annotations.html#di.examples.annotations.c1"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">annotations</span><span class="special">,</span> <span class="special">(</span><span class="identifier">named</span> <span class="special">=</span> <span class="identifier">int_1</span><span class="special">)</span> <span class="keyword">int</span> <span class="identifier">i1</span><span class="special">,</span> <span class="special">(</span><span class="identifier">named</span> <span class="special">=</span> <span class="identifier">int_2</span><span class="special">)</span> <span class="keyword">int</span> <span class="identifier">i2</span><span class="special">,</span> <span class="special">(</span><span class="identifier">named</span> <span class="special">=</span> <span class="string">"int3"</span><span class="identifier">_s</span><span class="special">)</span> <span class="keyword">int</span> <span class="identifier">i3</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i4</span><span class="special">)</span>
-        <span class="special">:</span> <span class="identifier">i1</span><span class="special">(</span><span class="identifier">i1</span><span class="special">),</span> <span class="identifier">i2</span><span class="special">(</span><span class="identifier">i2</span><span class="special">),</span> <span class="identifier">i3</span><span class="special">(</span><span class="identifier">i3</span><span class="special">),</span> <span class="identifier">i4</span><span class="special">(</span><span class="identifier">i4</span><span class="special">)</span> <span class="special">{</span>
+    <a class="co" name="di.examples.annotations.c0" href="annotations.html#di.examples.annotations.c1"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">annotations1</span><span class="special">,</span> <span class="special">(</span><span class="identifier">named</span> <span class="special">=</span> <span class="identifier">int_1</span><span class="special">)</span> <span class="keyword">int</span> <span class="identifier">i1</span><span class="special">,</span> <span class="special">(</span><span class="identifier">named</span> <span class="special">=</span> <span class="identifier">int_2</span><span class="special">)</span> <span class="keyword">int</span> <span class="identifier">i2</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i3</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">i1</span><span class="special">(</span><span class="identifier">i1</span><span class="special">),</span> <span class="identifier">i2</span><span class="special">(</span><span class="identifier">i2</span><span class="special">),</span> <span class="identifier">i3</span><span class="special">(</span><span class="identifier">i3</span><span class="special">)</span> <span class="special">{</span>
         <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i1</span> <span class="special">==</span> <span class="number">42</span><span class="special">);</span>
         <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i2</span> <span class="special">==</span> <span class="number">87</span><span class="special">);</span>
-        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i3</span> <span class="special">==</span> <span class="number">23</span><span class="special">);</span>
-        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i4</span> <span class="special">==</span> <span class="number">123</span><span class="special">);</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i3</span> <span class="special">==</span> <span class="number">123</span><span class="special">);</span>
     <span class="special">}</span>
 
 <span class="keyword">private</span><span class="special">:</span>
     <span class="keyword">int</span> <span class="identifier">i1</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
     <span class="keyword">int</span> <span class="identifier">i2</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
     <span class="keyword">int</span> <span class="identifier">i3</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
-    <span class="keyword">int</span> <span class="identifier">i4</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">};</span>
+
+
+<span class="keyword">class</span> <span class="identifier">annotations2</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <a class="co" name="di.examples.annotations.c2" href="annotations.html#di.examples.annotations.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">annotations2</span><span class="special">,</span> <span class="special">(</span><span class="identifier">named</span> <span class="special">=</span> <span class="string">"int1"</span><span class="identifier">_s</span><span class="special">)</span> <span class="keyword">int</span> <span class="identifier">i1</span><span class="special">,</span> <span class="special">(</span><span class="identifier">named</span> <span class="special">=</span> <span class="string">"int2"</span><span class="identifier">_s</span><span class="special">)</span> <span class="keyword">int</span> <span class="identifier">i2</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i3</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">i1</span><span class="special">(</span><span class="identifier">i1</span><span class="special">),</span> <span class="identifier">i2</span><span class="special">(</span><span class="identifier">i2</span><span class="special">),</span> <span class="identifier">i3</span><span class="special">(</span><span class="identifier">i3</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i1</span> <span class="special">==</span> <span class="number">42</span><span class="special">);</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i2</span> <span class="special">==</span> <span class="number">87</span><span class="special">);</span>
+        <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i3</span> <span class="special">==</span> <span class="number">123</span><span class="special">);</span>
+    <span class="special">}</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="keyword">int</span> <span class="identifier">i1</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">i2</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">int</span> <span class="identifier">i3</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <a class="co" name="di.examples.annotations.c2" href="annotations.html#di.examples.annotations.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">named</span><span class="special">(</span><span class="identifier">int_1</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
-      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">named</span><span class="special">(</span><span class="identifier">int_2</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="number">87</span><span class="special">)</span>
-      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">named</span><span class="special">(</span><span class="string">"int3"</span><span class="identifier">_s</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="number">23</span><span class="special">)</span>
-      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="number">123</span><span class="special">)</span>
-    <span class="special">);</span>
+    <span class="special">{</span>
+        <a class="co" name="di.examples.annotations.c4" href="annotations.html#di.examples.annotations.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">named</span><span class="special">(</span><span class="identifier">int_1</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+          <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">named</span><span class="special">(</span><span class="identifier">int_2</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="number">87</span><span class="special">)</span>
+          <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="number">123</span><span class="special">)</span>
+        <span class="special">);</span>
 
-    <a class="co" name="di.examples.annotations.c4" href="annotations.html#di.examples.annotations.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">annotations</span><span class="special">&gt;();</span>
+        <a class="co" name="di.examples.annotations.c6" href="annotations.html#di.examples.annotations.c7"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">annotations1</span><span class="special">&gt;();</span>
+    <span class="special">}</span>
+
+    <span class="special">{</span>
+        <a class="co" name="di.examples.annotations.c8" href="annotations.html#di.examples.annotations.c9"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
+            <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">named</span><span class="special">(</span><span class="string">"int1"</span><span class="identifier">_s</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
+          <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">named</span><span class="special">(</span><span class="string">"int2"</span><span class="identifier">_s</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="number">87</span><span class="special">)</span>
+          <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="number">123</span><span class="special">)</span>
+        <span class="special">);</span>
+
+        <a class="co" name="di.examples.annotations.c10" href="annotations.html#di.examples.annotations.c11"><img src="../../../../../../doc/src/images/callouts/6.png" alt="6" border="0"></a><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">annotations2</span><span class="special">&gt;();</span>
+    <span class="special">}</span>
 <span class="special">}</span>
 </pre>
 <div class="calloutlist"><table border="0" summary="Callout list">
@@ -262,11 +286,30 @@ function toggleNextRow() {
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="di.examples.annotations.c3"></a><a href="#di.examples.annotations.c2"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
-            make injector and bind named parameters
+            Constructor with named parameters of the same <code class="computeroutput"><span class="keyword">int</span></code>
+            type
           </p></td>
 </tr>
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="di.examples.annotations.c5"></a><a href="#di.examples.annotations.c4"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            make injector and bind named parameters
+          </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="di.examples.annotations.c7"></a><a href="#di.examples.annotations.c6"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            create <code class="computeroutput"><span class="identifier">annotations</span></code>
+          </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="di.examples.annotations.c9"></a><a href="#di.examples.annotations.c8"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            make injector and bind named parameters
+          </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="di.examples.annotations.c11"></a><a href="#di.examples.annotations.c10"><img src="../../../../../../doc/src/images/callouts/6.png" alt="6" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             create <code class="computeroutput"><span class="identifier">annotations</span></code>
           </p></td>
