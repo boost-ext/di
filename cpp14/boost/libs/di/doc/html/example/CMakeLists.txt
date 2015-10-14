@@ -15,7 +15,7 @@ include_directories("tutorial")
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-attributes")
 elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL Clang)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-gnu-string-literal-operator-template -Wno-dollar-in-identifier-extension")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unknown-attributes -Wno-gnu-string-literal-operator-template -Wno-dollar-in-identifier-extension")
 endif()
 
 example(annotations)
