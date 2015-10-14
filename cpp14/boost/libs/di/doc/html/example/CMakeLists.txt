@@ -10,8 +10,6 @@ function(example example)
     add_test(example.${tmp} example.${tmp})
 endfunction()
 
-include_directories("tutorial")
-
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-attributes")
 elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL Clang)
@@ -83,6 +81,8 @@ example(quick_user_guide/scopes2)
 example(quick_user_guide/scopes3)
 example(quick_user_guide/scopes4)
 example(quick_user_guide/scopes5)
+
+include_directories("tutorial")
 
 example(tutorial/tutorial1)
 example(tutorial/tutorial2)
