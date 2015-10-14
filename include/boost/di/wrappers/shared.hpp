@@ -31,7 +31,7 @@ struct shared {
     { };
 
     template<class T_>
-    using is_referable = is_referable_impl<aux::remove_specifiers_t<T_>>;
+    using is_referable = is_referable_impl<aux::remove_qualifiers_t<T_>>;
 
     template<class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
     inline operator std::shared_ptr<I>() const noexcept {

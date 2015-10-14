@@ -87,11 +87,11 @@ test is_narrowed_types = [] {
     static_expect(!is_narrowed<int, c>::value);
 };
 
-test remove_specifiers_types = [] {
-    static_expect(std::is_same<int, remove_specifiers_t<int>>::value);
-    static_expect(std::is_same<int, remove_specifiers_t<int&>>::value);
-    static_expect(std::is_same<int, remove_specifiers_t<int*>>::value);
-    static_expect(std::is_same<int, remove_specifiers_t<const int*>>::value);
+test remove_qualifiers_types = [] {
+    static_expect(std::is_same<int, remove_qualifiers_t<int>>::value);
+    static_expect(std::is_same<int, remove_qualifiers_t<int&>>::value);
+    static_expect(std::is_same<int, remove_qualifiers_t<int*>>::value);
+    static_expect(std::is_same<int, remove_qualifiers_t<const int*>>::value);
 };
 
 test deref_types = [] {

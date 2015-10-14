@@ -192,45 +192,45 @@ template<class T> struct remove_reference { using type = T;};
 template<class T> struct remove_reference<T&> { using type = T;};
 template<class T> struct remove_reference<T&&> { using type = T;};
 template<class T> using remove_reference_t = typename remove_reference<T>::type;
-template<class T> struct remove_specifiers { using type = T; };
-template<class T> struct remove_specifiers<const T> { using type = T; };
-template<class T> struct remove_specifiers<T&> { using type = T; };
-template<class T> struct remove_specifiers<const T&> { using type = T; };
-template<class T> struct remove_specifiers<T*> { using type = T; };
-template<class T> struct remove_specifiers<const T*> { using type = T; };
-template<class T> struct remove_specifiers<T* const &> { using type = T; };
-template<class T> struct remove_specifiers<T* const> { using type = T; };
-template<class T> struct remove_specifiers<const T* const> { using type = T; };
-template<class T> struct remove_specifiers<T&&> { using type = T; };
-template<class T> using remove_specifiers_t = typename remove_specifiers<T>::type;
+template<class T> struct remove_qualifiers { using type = T; };
+template<class T> struct remove_qualifiers<const T> { using type = T; };
+template<class T> struct remove_qualifiers<T&> { using type = T; };
+template<class T> struct remove_qualifiers<const T&> { using type = T; };
+template<class T> struct remove_qualifiers<T*> { using type = T; };
+template<class T> struct remove_qualifiers<const T*> { using type = T; };
+template<class T> struct remove_qualifiers<T* const &> { using type = T; };
+template<class T> struct remove_qualifiers<T* const> { using type = T; };
+template<class T> struct remove_qualifiers<const T* const> { using type = T; };
+template<class T> struct remove_qualifiers<T&&> { using type = T; };
+template<class T> using remove_qualifiers_t = typename remove_qualifiers<T>::type;
 template<class T>
 struct deref_type { using type = T; };
 template<class T, class TDeleter>
 struct deref_type<std::unique_ptr<T, TDeleter>> {
-    using type = remove_specifiers_t<typename deref_type<T>::type>;
+    using type = remove_qualifiers_t<typename deref_type<T>::type>;
 };
 template<class T>
 struct deref_type<std::shared_ptr<T>> {
-    using type = remove_specifiers_t<typename deref_type<T>::type>;
+    using type = remove_qualifiers_t<typename deref_type<T>::type>;
 };
 template<class T>
 struct deref_type<boost::shared_ptr<T>> {
-    using type = remove_specifiers_t<typename deref_type<T>::type>;
+    using type = remove_qualifiers_t<typename deref_type<T>::type>;
 };
 template<class T>
 struct deref_type<std::weak_ptr<T>> {
-    using type = remove_specifiers_t<typename deref_type<T>::type>;
+    using type = remove_qualifiers_t<typename deref_type<T>::type>;
 };
 template<class T, class TAllocator>
 struct deref_type<std::vector<T, TAllocator>> {
-    using type = core::array<remove_specifiers_t<typename deref_type<T>::type>*[]>;
+    using type = core::array<remove_qualifiers_t<typename deref_type<T>::type>*[]>;
 };
 template<class TKey, class TCompare, class TAllocator>
 struct deref_type<std::set<TKey, TCompare, TAllocator>> {
-    using type = core::array<remove_specifiers_t<typename deref_type<TKey>::type>*[]>;
+    using type = core::array<remove_qualifiers_t<typename deref_type<TKey>::type>*[]>;
 };
 template<class T>
-using decay_t = typename deref_type<remove_specifiers_t<T>>::type;
+using decay_t = typename deref_type<remove_qualifiers_t<T>>::type;
 template<class, class> struct is_same : false_type { };
 template<class T> struct is_same<T, T> : true_type { };
 template<class T, class U> struct is_base_of : integral_constant<bool, __is_base_of(T, U)> { };
@@ -279,7 +279,7 @@ using is_braces_constructible_t = typename is_braces_constructible<T, TArgs...>:
     template<class T, class U>
     using is_convertible = decltype(test_is_convertible<T, U>(0));
 #endif
-template<class TSrc, class TDst, class U = remove_specifiers_t<TDst>>
+template<class TSrc, class TDst, class U = remove_qualifiers_t<TDst>>
 using is_narrowed = integral_constant<bool,
     !is_class<TSrc>::value && !is_class<U>::value && !is_same<TSrc, U>::value
 >;
@@ -584,7 +584,7 @@ struct shared {
         : aux::false_type
     { };
     template<class T_>
-    using is_referable = is_referable_impl<aux::remove_specifiers_t<T_>>;
+    using is_referable = is_referable_impl<aux::remove_qualifiers_t<T_>>;
     template<class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
     inline operator std::shared_ptr<I>() const noexcept {
         return object;
@@ -874,7 +874,7 @@ template<class, class = int> struct has_result_type : ::boost::di::aux::false_ty
 template<class TGiven, class TProvider, class... Ts>
 struct is_expr : aux::integral_constant<bool,
     aux::is_callable_with<TGiven, no_implicit_conversions<
-        aux::remove_specifiers_t<decltype(aux::declval<TProvider>().injector_)>
+        aux::remove_qualifiers_t<decltype(aux::declval<TProvider>().injector_)>
     >, Ts...>::value && !has_result_type<TGiven>::value
 > { };
 }
@@ -899,7 +899,7 @@ public:
     struct scope<TExpected, std::shared_ptr<TGiven>> {
         template<class T>
         using is_referable =
-            typename wrappers::shared<TGiven>::template is_referable<aux::remove_specifiers_t<T>>;
+            typename wrappers::shared<TGiven>::template is_referable<aux::remove_qualifiers_t<T>>;
         explicit scope(const std::shared_ptr<TGiven>& object)
             : object_{object}
         { }
@@ -1853,14 +1853,14 @@ auto boundable_impl(any_of<>&&) -> aux::true_type;
 template<class T, class... Ts>
 auto boundable_impl(any_of<T, Ts...>&&) ->
     aux::conditional_t<
-        aux::is_same<T, aux::remove_specifiers_t<T>>::value
+        aux::is_same<T, aux::remove_qualifiers_t<T>>::value
       , decltype(boundable_impl(aux::declval<any_of<Ts...>>()))
       , typename bind<T>::has_disallowed_specifiers
     >;
 template<class I, class T>
 auto boundable_impl(I&&, T&&) ->
     aux::conditional_t<
-        !aux::is_same<T, aux::remove_specifiers_t<T>>::value
+        !aux::is_same<T, aux::remove_qualifiers_t<T>>::value
       , typename bind<T>::has_disallowed_specifiers
       , aux::conditional_t<
             is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value

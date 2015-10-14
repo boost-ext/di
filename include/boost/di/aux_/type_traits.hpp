@@ -64,53 +64,53 @@ template<class T> struct remove_reference<T&> { using type = T;};
 template<class T> struct remove_reference<T&&> { using type = T;};
 template<class T> using remove_reference_t = typename remove_reference<T>::type;
 
-template<class T> struct remove_specifiers { using type = T; };
-template<class T> struct remove_specifiers<const T> { using type = T; };
-template<class T> struct remove_specifiers<T&> { using type = T; };
-template<class T> struct remove_specifiers<const T&> { using type = T; };
-template<class T> struct remove_specifiers<T*> { using type = T; };
-template<class T> struct remove_specifiers<const T*> { using type = T; };
-template<class T> struct remove_specifiers<T* const &> { using type = T; };
-template<class T> struct remove_specifiers<T* const> { using type = T; };
-template<class T> struct remove_specifiers<const T* const> { using type = T; };
-template<class T> struct remove_specifiers<T&&> { using type = T; };
-template<class T> using remove_specifiers_t = typename remove_specifiers<T>::type;
+template<class T> struct remove_qualifiers { using type = T; };
+template<class T> struct remove_qualifiers<const T> { using type = T; };
+template<class T> struct remove_qualifiers<T&> { using type = T; };
+template<class T> struct remove_qualifiers<const T&> { using type = T; };
+template<class T> struct remove_qualifiers<T*> { using type = T; };
+template<class T> struct remove_qualifiers<const T*> { using type = T; };
+template<class T> struct remove_qualifiers<T* const &> { using type = T; };
+template<class T> struct remove_qualifiers<T* const> { using type = T; };
+template<class T> struct remove_qualifiers<const T* const> { using type = T; };
+template<class T> struct remove_qualifiers<T&&> { using type = T; };
+template<class T> using remove_qualifiers_t = typename remove_qualifiers<T>::type;
 
 template<class T>
 struct deref_type { using type = T; };
 
 template<class T, class TDeleter>
 struct deref_type<std::unique_ptr<T, TDeleter>> {
-    using type = remove_specifiers_t<typename deref_type<T>::type>;
+    using type = remove_qualifiers_t<typename deref_type<T>::type>;
 };
 
 template<class T>
 struct deref_type<std::shared_ptr<T>> {
-    using type = remove_specifiers_t<typename deref_type<T>::type>;
+    using type = remove_qualifiers_t<typename deref_type<T>::type>;
 };
 
 template<class T>
 struct deref_type<boost::shared_ptr<T>> {
-    using type = remove_specifiers_t<typename deref_type<T>::type>;
+    using type = remove_qualifiers_t<typename deref_type<T>::type>;
 };
 
 template<class T>
 struct deref_type<std::weak_ptr<T>> {
-    using type = remove_specifiers_t<typename deref_type<T>::type>;
+    using type = remove_qualifiers_t<typename deref_type<T>::type>;
 };
 
 template<class T, class TAllocator>
 struct deref_type<std::vector<T, TAllocator>> {
-    using type = core::array<remove_specifiers_t<typename deref_type<T>::type>*[]>;
+    using type = core::array<remove_qualifiers_t<typename deref_type<T>::type>*[]>;
 };
 
 template<class TKey, class TCompare, class TAllocator>
 struct deref_type<std::set<TKey, TCompare, TAllocator>> {
-    using type = core::array<remove_specifiers_t<typename deref_type<TKey>::type>*[]>;
+    using type = core::array<remove_qualifiers_t<typename deref_type<TKey>::type>*[]>;
 };
 
 template<class T>
-using decay_t = typename deref_type<remove_specifiers_t<T>>::type;
+using decay_t = typename deref_type<remove_qualifiers_t<T>>::type;
 
 template<class, class> struct is_same : false_type { };
 template<class T> struct is_same<T, T> : true_type { };
@@ -176,7 +176,7 @@ using is_braces_constructible_t = typename is_braces_constructible<T, TArgs...>:
     using is_convertible = decltype(test_is_convertible<T, U>(0));
 #endif // __pph__
 
-template<class TSrc, class TDst, class U = remove_specifiers_t<TDst>>
+template<class TSrc, class TDst, class U = remove_qualifiers_t<TDst>>
 using is_narrowed = integral_constant<bool,
     !is_class<TSrc>::value && !is_class<U>::value && !is_same<TSrc, U>::value
 >;

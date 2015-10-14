@@ -131,7 +131,7 @@ auto boundable_impl(any_of<>&&) -> aux::true_type;
 template<class T, class... Ts> // expected
 auto boundable_impl(any_of<T, Ts...>&&) ->
     aux::conditional_t<
-        aux::is_same<T, aux::remove_specifiers_t<T>>::value
+        aux::is_same<T, aux::remove_qualifiers_t<T>>::value
       , decltype(boundable_impl(aux::declval<any_of<Ts...>>()))
       , typename bind<T>::has_disallowed_specifiers
     >;
@@ -139,7 +139,7 @@ auto boundable_impl(any_of<T, Ts...>&&) ->
 template<class I, class T> // expected -> given
 auto boundable_impl(I&&, T&&) ->
     aux::conditional_t<
-        !aux::is_same<T, aux::remove_specifiers_t<T>>::value // I is already verified
+        !aux::is_same<T, aux::remove_qualifiers_t<T>>::value // I is already verified
       , typename bind<T>::has_disallowed_specifiers
       , aux::conditional_t<
             is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value

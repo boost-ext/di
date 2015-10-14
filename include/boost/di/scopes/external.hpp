@@ -44,7 +44,7 @@ BOOST_DI_HAS_TYPE(has_result_type, result_type);
 template<class TGiven, class TProvider, class... Ts>
 struct is_expr : aux::integral_constant<bool,
     aux::is_callable_with<TGiven, no_implicit_conversions<
-        aux::remove_specifiers_t<decltype(aux::declval<TProvider>().injector_)>
+        aux::remove_qualifiers_t<decltype(aux::declval<TProvider>().injector_)>
     >, Ts...>::value && !has_result_type<TGiven>::value
 > { };
 
@@ -76,7 +76,7 @@ public:
     struct scope<TExpected, std::shared_ptr<TGiven>> {
         template<class T>
         using is_referable =
-            typename wrappers::shared<TGiven>::template is_referable<aux::remove_specifiers_t<T>>;
+            typename wrappers::shared<TGiven>::template is_referable<aux::remove_qualifiers_t<T>>;
 
         explicit scope(const std::shared_ptr<TGiven>& object)
             : object_{object}
