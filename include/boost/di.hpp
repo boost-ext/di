@@ -3153,6 +3153,9 @@ decltype(ctor_impl1__<T>(0)) ctor__(...);
 template<class... Ts>
 using inject = aux::type_list<Ts...>;
 }}}
+#define BOOST_DI_HAS_NAME(i, ...) BOOST_DI_IF(BOOST_DI_IBP(BOOST_DI_ELEM(i, __VA_ARGS__,)),1,)
+#define BOOST_DI_HAS_NAMES(...) \
+        BOOST_DI_IF(BOOST_DI_IS_EMPTY(BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_HAS_NAME, __VA_ARGS__)), 0, 1)
 #define BOOST_DI_GEN_CTOR_IMPL(p, i) \
     BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
     BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_EAT p, p)
@@ -3179,19 +3182,27 @@ using inject = aux::type_list<Ts...>;
       , BOOST_DI_INJECT_TRAITS_EMPTY_IMPL \
       , BOOST_DI_INJECT_TRAITS_IMPL \
     )(T, __VA_ARGS__)
+#define BOOST_DI_INJECT_TRAITS_IMPL_1(T, ...) \
+    BOOST_DI_T_GET T)\
+    static void ctor( \
+        BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__) \
+    ); \
+    static void name( \
+        BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_NAME, __VA_ARGS__) \
+    ); \
+    using type BOOST_DI_UNUSED = ::boost::di::detail::combine_t< \
+        decltype(::boost::di::detail::ctor__<boost_di_inject__>(0)) \
+      , ::boost::di::aux::function_traits_t<decltype(name)> \
+    >;
+#define BOOST_DI_INJECT_TRAITS_IMPL_0(T, ...) \
+    BOOST_DI_T_GET T)\
+    static void ctor( \
+        BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__) \
+    ); \
+    using type BOOST_DI_UNUSED = decltype(::boost::di::detail::ctor__<boost_di_inject__>(0));
 #define BOOST_DI_INJECT_TRAITS_IMPL(T, ...) \
     struct boost_di_inject__ {\
-        BOOST_DI_T_GET T)\
-        static void ctor( \
-            BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__) \
-        ); \
-        static void name( \
-            BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_NAME, __VA_ARGS__) \
-        ); \
-        using type BOOST_DI_UNUSED = ::boost::di::detail::combine_t< \
-            decltype(::boost::di::detail::ctor__<boost_di_inject__>(0)) \
-          , ::boost::di::aux::function_traits_t<decltype(name)> \
-        >; \
+        BOOST_DI_CAT(BOOST_DI_INJECT_TRAITS_IMPL_, BOOST_DI_HAS_NAMES(__VA_ARGS__))(T, __VA_ARGS__) \
         static_assert( \
             BOOST_DI_SIZE(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE \
           , "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE" \
