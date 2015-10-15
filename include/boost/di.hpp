@@ -392,34 +392,18 @@ struct rebind_traits<std::unique_ptr<T, D>, named<U>> {
 };
 template<class T, class U>
 using rebind_traits_t = typename rebind_traits<T, U>::type;
-template<class T, class U>
-struct rebind_traits2 {
-    using type = U;
-};
-template<class T, class U>
-struct rebind_traits2<T, named<U>> {
-    using type = T;
-};
-template<class T, class U>
-struct rebind_traits2<std::shared_ptr<T>, U> {
-    using type = std::shared_ptr<U>;
-};
-template<class T, class U>
-struct rebind_traits2<std::shared_ptr<T>, named<U>> {
-    using type = std::shared_ptr<T>;
-};
-template<class T, class D, class U>
-struct rebind_traits2<std::unique_ptr<T, D>, U> {
-    using type = std::unique_ptr<U, D>;
-};
-template<class T, class D, class U>
-struct rebind_traits2<std::unique_ptr<T, D>, named<U>> {
-    using type = std::unique_ptr<T, D>;
-};
-template<class T, class U>
-using rebind_traits2_t = typename rebind_traits2<T, U>::type;
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
+template<class T>
+struct remove_named {
+    using type = T;
+};
+template<class TName, class T>
+struct remove_named<di::named<TName, T>> {
+    using type = T;
+};
+template<class T>
+using remove_named_t = typename remove_named<T>::type;
 template<class T, int N>
 struct array_impl { T array_[N]; };
 template<class T, class... Ts>
@@ -429,8 +413,8 @@ struct array : array_impl<typename T::value_type, sizeof...(Ts)>, T {
     using array_t::array_;
     using boost_di_inject__ = aux::type_list<type_traits::rebind_traits_t<value_type, Ts>...>;
     template<BOOST_DI_REQUIRES(aux::is_constructible<T, std::move_iterator<value_type*>, std::move_iterator<value_type*>>::value) = 0>
-    explicit array(type_traits::rebind_traits2_t<value_type, Ts>... args)
-        : array_t{{static_cast<type_traits::rebind_traits2_t<value_type, Ts>&&>(args)...}}
+    explicit array(remove_named_t<type_traits::rebind_traits_t<value_type, Ts>>... args)
+        : array_t{{static_cast<remove_named_t<type_traits::rebind_traits_t<value_type, Ts>>&&>(args)...}}
         , T(std::move_iterator<value_type*>(array_)
           , std::move_iterator<value_type*>(array_ + sizeof...(Ts)))
     { }
