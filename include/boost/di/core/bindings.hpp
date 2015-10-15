@@ -18,32 +18,32 @@ template<
     class T
   , class = typename is_injector<T>::type
   , class = typename is_dependency<T>::type
-> struct add_type_list;
+> struct bindings_impl;
 
 template<class T, class TAny>
-struct add_type_list<T, aux::true_type, TAny> {
+struct bindings_impl<T, aux::true_type, TAny> {
     using type = typename T::deps;
 };
 
 template<class T>
-struct add_type_list<T, aux::false_type, aux::true_type> {
+struct bindings_impl<T, aux::false_type, aux::true_type> {
     using type = aux::type_list<T>;
 };
 
 template<class T>
-struct add_type_list<T, aux::false_type, aux::false_type> {
+struct bindings_impl<T, aux::false_type, aux::false_type> {
     using type = aux::type_list<dependency<scopes::exposed<>, T>>;
 };
 
 #if defined(_MSC_VER) // __pph__
     template<class... Ts>
-    struct bindings : aux::join_t<typename add_type_list<Ts>::type...> { };
+    struct bindings : aux::join_t<typename bindings_impl<Ts>::type...> { };
 
     template<class... Ts>
     using bindings_t = typename bindings<Ts...>::type;
 #else // __pph__
     template<class... Ts>
-    using bindings_t = aux::join_t<typename add_type_list<Ts>::type...>;
+    using bindings_t = aux::join_t<typename bindings_impl<Ts>::type...>;
 #endif // __pph__
 
 }}}} // boost::di::v1::core
