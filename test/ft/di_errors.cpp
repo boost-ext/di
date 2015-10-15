@@ -1,5 +1,4 @@
-//
-// Copyright (c) 2012-2015 Krzysztof Jusiak (krzysztof at jusiak dot net)
+// // Copyright (c) 2012-2015 Krzysztof Jusiak (krzysztof at jusiak dot net)
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -512,7 +511,36 @@ test create_polymorphic_type_without_binding_using_multi_bindings = [] {
         struct impl : i { void dummy() override { } };
         struct c { c(std::vector<std::unique_ptr<i>>) { } };
         int main() {
-            auto injector = di::make_injector(di::bind<i*[]>().to<i, i>());
+            auto injector = di::make_injector(
+                di::bind<i*[]>().to<i, i>()
+            );
+            injector.create<c>();
+        }
+    );
+};
+
+test create_polymorphic_type_without_binding_using_multi_bindings_named = [] {
+    auto errors_ = errors(
+        #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+            "creatable constraint not satisfied",
+        #endif
+            "abstract_type<.*>::named<.*>::is_not_bound"
+        #if !defined(_MSC_VER)
+          , "create<c>()"
+          , "type is not bound, did you forget to add: 'di::bind<interface>.named\\(name\\).to<implementation>()'?"
+        #endif
+    );
+
+    expect_compile_fail("<include> memory <include> set", errors_,
+        struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
+        struct impl : i { void dummy() override { } };
+        struct c { c(std::set<std::unique_ptr<i>>) { } };
+        int main() {
+            auto injector = di::make_injector(
+                di::bind<i*[]>().to<i, di::named<class I>>()
+              , di::bind<i>().to<impl>()
+              , di::bind<i>().named<class I>()
+            );
             injector.create<c>();
         }
     );
