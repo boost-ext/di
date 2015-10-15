@@ -22,39 +22,14 @@ struct array : array_impl<typename T::value_type, sizeof...(Ts)>, T {
     using value_type = typename T::value_type;
     using array_t = array_impl<value_type, sizeof...(Ts)>;
     using array_t::array_;
-    using boost_di_inject__ = aux::type_list<self>;
+    using boost_di_inject__ = aux::type_list<type_traits::rebind_traits_t<value_type, Ts>...>;
 
-    template<class TInjector>
-    struct is_creatable_impl : aux::is_same<
-        aux::bool_list<aux::always<Ts>::value...>
-      , aux::bool_list<
-            core::injector__<TInjector>::template
-                is_creatable<type_traits::rebind_traits_t<value_type, Ts>>::value...
-        >
-    > { };
-
-    template<class TInjector, BOOST_DI_REQUIRES(aux::is_constructible<T, std::move_iterator<value_type*>, std::move_iterator<value_type*>>::value) = 0>
-    explicit array(const TInjector& injector)
-        : array(injector, is_creatable_impl<TInjector>{})
-    { }
-
-    template<class TInjector>
-    array(const TInjector& injector, const aux::true_type&)
-        : array_t{{
-            *static_cast<const core::injector__<TInjector>&>(injector).
-                create_successful_impl(aux::type<type_traits::rebind_traits_t<value_type, Ts>>{})...
-          }}
+    template<BOOST_DI_REQUIRES(aux::is_constructible<T, std::move_iterator<value_type*>, std::move_iterator<value_type*>>::value) = 0>
+    explicit array(type_traits::rebind_traits2_t<value_type, Ts>... args)
+        : array_t{{static_cast<type_traits::rebind_traits2_t<value_type, Ts>&&>(args)...}}
         , T(std::move_iterator<value_type*>(array_)
           , std::move_iterator<value_type*>(array_ + sizeof...(Ts)))
     { }
-
-    template<class TInjector>
-    array(const TInjector& injector, const aux::false_type&) {
-        int _[]{0, (
-            static_cast<const core::injector__<TInjector>&>(injector).
-                create_impl(aux::type<type_traits::rebind_traits_t<value_type, Ts>>{})
-        , 0)...}; (void)_;
-    }
 };
 
 template<class T>

@@ -45,7 +45,6 @@ namespace boost { namespace di { inline namespace v1 {
 
     template<class, class = void> struct named { };
     template<class, class = int> struct ctor_traits;
-    struct self { };
 
     namespace core {
         template<class> struct any_type_fwd;

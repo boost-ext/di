@@ -156,39 +156,34 @@ public:
     }
 
 protected:
-    template<class T, bool = false>
+    template<class T>
     struct try_create {
         using type = aux::conditional_t<is_creatable<T>::value, typename is_creatable<T>::type, void>;
     };
 
-    template<class TParent, bool B>
-    struct try_create<any_type_fwd<TParent>, B> {
+    template<class TParent>
+    struct try_create<any_type_fwd<TParent>> {
         using type = any_type<TParent, injector, with_error>;
     };
 
-    template<class TParent, bool B>
-    struct try_create<any_type_ref_fwd<TParent>, B> {
+    template<class TParent>
+    struct try_create<any_type_ref_fwd<TParent>> {
         using type = any_type_ref<TParent, injector, with_error>;
     };
 
-    template<class TParent, bool B>
-    struct try_create<any_type_1st_fwd<TParent>, B> {
+    template<class TParent>
+    struct try_create<any_type_1st_fwd<TParent>> {
         using type = any_type_1st<TParent, injector, with_error>;
     };
 
-    template<class TParent, bool B>
-    struct try_create<any_type_1st_ref_fwd<TParent>, B> {
+    template<class TParent>
+    struct try_create<any_type_1st_ref_fwd<TParent>> {
         using type = any_type_1st_ref<TParent, injector, with_error>;
     };
 
-    template<class TName, class T, bool B>
-    struct try_create<di::named<TName, T>, B> {
+    template<class TName, class T>
+    struct try_create<di::named<TName, T>> {
         using type = aux::conditional_t<is_creatable<T, TName>::value, typename is_creatable<T, TName>::type, void>;
-    };
-
-    template<bool B>
-    struct try_create<self, B> {
-        using type = injector;
     };
 
     template<class TIsRoot = aux::false_type, class T>
@@ -249,11 +244,6 @@ protected:
     template<class TIsRoot = aux::false_type, class T, class TName>
     auto create_successful_impl(const aux::type<di::named<TName, T>>&) const {
         return create_successful_impl__<TIsRoot, T, TName>();
-    }
-
-    template<class TIsRoot = aux::false_type>
-    auto create_successful_impl(const aux::type<self>&) const {
-        return *this;
     }
 
 private:

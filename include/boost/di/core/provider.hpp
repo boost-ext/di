@@ -15,6 +15,15 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
+#if defined(BOOST_DI_CFG_DIAGNOSTICS_CALL_STACK) // __pph__
+    template<class T>
+    struct creating {
+        static inline T type();
+        static void creatable(const aux::true_type&) { }
+        static void creatable(const aux::false_type&) { type(); }
+    };
+#endif // __pph__
+
 template<class, class, class, class>
 struct try_provider;
 
@@ -69,6 +78,12 @@ template<
 
     template<class TMemory, class... TArgs, BOOST_DI_REQUIRES(is_creatable<TMemory, TArgs...>::value) = 0>
     auto get_impl(const TMemory& memory, TArgs&&... args) const {
+        #if defined(BOOST_DI_CFG_DIAGNOSTICS_CALL_STACK) // __pph__
+            (void)creating<TGiven>::creatable(
+                aux::integral_constant<bool, injector__<TInjector>::template is_creatable<TGiven>::value>{}
+            );
+        #endif // __pph__
+
         return TInjector::config::provider(injector_).template get<TExpected, TGiven>(
             TInitialization{}
           , memory

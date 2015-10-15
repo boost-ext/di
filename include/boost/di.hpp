@@ -140,7 +140,6 @@ namespace boost { namespace di { inline namespace v1 {
     };
     template<class, class = void> struct named { };
     template<class, class = int> struct ctor_traits;
-    struct self { };
     namespace core {
         template<class> struct any_type_fwd;
         template<class> struct any_type_ref_fwd;
@@ -393,6 +392,32 @@ struct rebind_traits<std::unique_ptr<T, D>, named<U>> {
 };
 template<class T, class U>
 using rebind_traits_t = typename rebind_traits<T, U>::type;
+template<class T, class U>
+struct rebind_traits2 {
+    using type = U;
+};
+template<class T, class U>
+struct rebind_traits2<T, named<U>> {
+    using type = T;
+};
+template<class T, class U>
+struct rebind_traits2<std::shared_ptr<T>, U> {
+    using type = std::shared_ptr<U>;
+};
+template<class T, class U>
+struct rebind_traits2<std::shared_ptr<T>, named<U>> {
+    using type = std::shared_ptr<T>;
+};
+template<class T, class D, class U>
+struct rebind_traits2<std::unique_ptr<T, D>, U> {
+    using type = std::unique_ptr<U, D>;
+};
+template<class T, class D, class U>
+struct rebind_traits2<std::unique_ptr<T, D>, named<U>> {
+    using type = std::unique_ptr<T, D>;
+};
+template<class T, class U>
+using rebind_traits2_t = typename rebind_traits2<T, U>::type;
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
 template<class T, int N>
@@ -402,35 +427,13 @@ struct array : array_impl<typename T::value_type, sizeof...(Ts)>, T {
     using value_type = typename T::value_type;
     using array_t = array_impl<value_type, sizeof...(Ts)>;
     using array_t::array_;
-    using boost_di_inject__ = aux::type_list<self>;
-    template<class TInjector>
-    struct is_creatable_impl : aux::is_same<
-        aux::bool_list<aux::always<Ts>::value...>
-      , aux::bool_list<
-            core::injector__<TInjector>::template
-                is_creatable<type_traits::rebind_traits_t<value_type, Ts>>::value...
-        >
-    > { };
-    template<class TInjector, BOOST_DI_REQUIRES(aux::is_constructible<T, std::move_iterator<value_type*>, std::move_iterator<value_type*>>::value) = 0>
-    explicit array(const TInjector& injector)
-        : array(injector, is_creatable_impl<TInjector>{})
-    { }
-    template<class TInjector>
-    array(const TInjector& injector, const aux::true_type&)
-        : array_t{{
-            *static_cast<const core::injector__<TInjector>&>(injector).
-                create_successful_impl(aux::type<type_traits::rebind_traits_t<value_type, Ts>>{})...
-          }}
+    using boost_di_inject__ = aux::type_list<type_traits::rebind_traits_t<value_type, Ts>...>;
+    template<BOOST_DI_REQUIRES(aux::is_constructible<T, std::move_iterator<value_type*>, std::move_iterator<value_type*>>::value) = 0>
+    explicit array(type_traits::rebind_traits2_t<value_type, Ts>... args)
+        : array_t{{static_cast<type_traits::rebind_traits2_t<value_type, Ts>&&>(args)...}}
         , T(std::move_iterator<value_type*>(array_)
           , std::move_iterator<value_type*>(array_ + sizeof...(Ts)))
     { }
-    template<class TInjector>
-    array(const TInjector& injector, const aux::false_type&) {
-        int _[]{0, (
-            static_cast<const core::injector__<TInjector>&>(injector).
-                create_impl(aux::type<type_traits::rebind_traits_t<value_type, Ts>>{})
-        , 0)...}; (void)_;
-    }
 };
 template<class T>
 struct array<T> : T {
@@ -2228,6 +2231,14 @@ public:
 };
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
+#if defined(BOOST_DI_CFG_DIAGNOSTICS_CALL_STACK)
+    template<class T>
+    struct creating {
+        static inline T type();
+        static void creatable(const aux::true_type&) { }
+        static void creatable(const aux::false_type&) { type(); }
+    };
+#endif
 template<class, class, class, class>
 struct try_provider;
 template<
@@ -2275,6 +2286,11 @@ template<
     }
     template<class TMemory, class... TArgs, BOOST_DI_REQUIRES(is_creatable<TMemory, TArgs...>::value) = 0>
     auto get_impl(const TMemory& memory, TArgs&&... args) const {
+        #if defined(BOOST_DI_CFG_DIAGNOSTICS_CALL_STACK)
+            (void)creating<TGiven>::creatable(
+                aux::integral_constant<bool, injector__<TInjector>::template is_creatable<TGiven>::value>{}
+            );
+        #endif
         return TInjector::config::provider(injector_).template get<TExpected, TGiven>(
             TInitialization{}
           , memory
@@ -2318,9 +2334,6 @@ struct wrapper {
         return BOOST_DI_TYPE_WKND(T)wrapper_;
     }
     inline operator T() noexcept {
-        return BOOST_DI_TYPE_WKND(T)wrapper_;
-    }
-    T operator*() const {
         return BOOST_DI_TYPE_WKND(T)wrapper_;
     }
     TWrapper wrapper_;
@@ -2471,33 +2484,29 @@ public:
         return create<T>();
     }
 protected:
-    template<class T, bool = false>
+    template<class T>
     struct try_create {
         using type = aux::conditional_t<is_creatable<T>::value, typename is_creatable<T>::type, void>;
     };
-    template<class TParent, bool B>
-    struct try_create<any_type_fwd<TParent>, B> {
+    template<class TParent>
+    struct try_create<any_type_fwd<TParent>> {
         using type = any_type<TParent, injector, with_error>;
     };
-    template<class TParent, bool B>
-    struct try_create<any_type_ref_fwd<TParent>, B> {
+    template<class TParent>
+    struct try_create<any_type_ref_fwd<TParent>> {
         using type = any_type_ref<TParent, injector, with_error>;
     };
-    template<class TParent, bool B>
-    struct try_create<any_type_1st_fwd<TParent>, B> {
+    template<class TParent>
+    struct try_create<any_type_1st_fwd<TParent>> {
         using type = any_type_1st<TParent, injector, with_error>;
     };
-    template<class TParent, bool B>
-    struct try_create<any_type_1st_ref_fwd<TParent>, B> {
+    template<class TParent>
+    struct try_create<any_type_1st_ref_fwd<TParent>> {
         using type = any_type_1st_ref<TParent, injector, with_error>;
     };
-    template<class TName, class T, bool B>
-    struct try_create<di::named<TName, T>, B> {
+    template<class TName, class T>
+    struct try_create<di::named<TName, T>> {
         using type = aux::conditional_t<is_creatable<T, TName>::value, typename is_creatable<T, TName>::type, void>;
-    };
-    template<bool B>
-    struct try_create<self, B> {
-        using type = injector;
     };
     template<class TIsRoot = aux::false_type, class T>
     auto create_impl(const aux::type<T>&) const {
@@ -2546,10 +2555,6 @@ protected:
     template<class TIsRoot = aux::false_type, class T, class TName>
     auto create_successful_impl(const aux::type<di::named<TName, T>>&) const {
         return create_successful_impl__<TIsRoot, T, TName>();
-    }
-    template<class TIsRoot = aux::false_type>
-    auto create_successful_impl(const aux::type<self>&) const {
-        return *this;
     }
 private:
     template<class... TArgs>
@@ -2645,33 +2650,29 @@ public:
         return create<T>();
     }
 protected:
-    template<class T, bool = false>
+    template<class T>
     struct try_create {
         using type = aux::conditional_t<is_creatable<T>::value, typename is_creatable<T>::type, void>;
     };
-    template<class TParent, bool B>
-    struct try_create<any_type_fwd<TParent>, B> {
+    template<class TParent>
+    struct try_create<any_type_fwd<TParent>> {
         using type = any_type<TParent, injector, with_error>;
     };
-    template<class TParent, bool B>
-    struct try_create<any_type_ref_fwd<TParent>, B> {
+    template<class TParent>
+    struct try_create<any_type_ref_fwd<TParent>> {
         using type = any_type_ref<TParent, injector, with_error>;
     };
-    template<class TParent, bool B>
-    struct try_create<any_type_1st_fwd<TParent>, B> {
+    template<class TParent>
+    struct try_create<any_type_1st_fwd<TParent>> {
         using type = any_type_1st<TParent, injector, with_error>;
     };
-    template<class TParent, bool B>
-    struct try_create<any_type_1st_ref_fwd<TParent>, B> {
+    template<class TParent>
+    struct try_create<any_type_1st_ref_fwd<TParent>> {
         using type = any_type_1st_ref<TParent, injector, with_error>;
     };
-    template<class TName, class T, bool B>
-    struct try_create<di::named<TName, T>, B> {
+    template<class TName, class T>
+    struct try_create<di::named<TName, T>> {
         using type = aux::conditional_t<is_creatable<T, TName>::value, typename is_creatable<T, TName>::type, void>;
-    };
-    template<bool B>
-    struct try_create<self, B> {
-        using type = injector;
     };
     template<class TIsRoot = aux::false_type, class T>
     auto create_impl(const aux::type<T>&) const {
@@ -2720,10 +2721,6 @@ protected:
     template<class TIsRoot = aux::false_type, class T, class TName>
     auto create_successful_impl(const aux::type<di::named<TName, T>>&) const {
         return create_successful_impl__<TIsRoot, T, TName>();
-    }
-    template<class TIsRoot = aux::false_type>
-    auto create_successful_impl(const aux::type<self>&) const {
-        return *this;
     }
 private:
     template<class... TArgs>
