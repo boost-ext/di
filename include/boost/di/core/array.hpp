@@ -43,7 +43,7 @@ struct array : array_impl<typename T::value_type, sizeof...(Ts)>, T {
         : array_t{{
             *static_cast<const core::injector__<TInjector>&>(injector).
                 create_successful_impl(aux::type<type_traits::rebind_traits_t<value_type, Ts>>{})...
-         }}
+          }}
         , T(std::move_iterator<value_type*>(array_)
           , std::move_iterator<value_type*>(array_ + sizeof...(Ts)))
     { }
