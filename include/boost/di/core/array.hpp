@@ -15,15 +15,12 @@
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
 template<class T, int N>
-struct array__ { T array_[N]; };
-
-template<class T>
-struct array__<T, 0> { T array_[1]; };
+struct array_impl { T array_[N]; };
 
 template<class T, class... Ts>
-struct array : array__<typename T::value_type, sizeof...(Ts)>, T {
+struct array : array_impl<typename T::value_type, sizeof...(Ts)>, T {
     using value_type = typename T::value_type;
-    using array_t = array__<value_type, sizeof...(Ts)>;
+    using array_t = array_impl<value_type, sizeof...(Ts)>;
     using array_t::array_;
     using boost_di_inject__ = aux::type_list<self>;
 
@@ -52,7 +49,7 @@ struct array : array__<typename T::value_type, sizeof...(Ts)>, T {
     { }
 
     template<class TInjector>
-    explicit array(const TInjector& injector, const aux::false_type&) {
+    array(const TInjector& injector, const aux::false_type&) {
         int _[]{0, (
             static_cast<const core::injector__<TInjector>&>(injector).
                 create_impl(aux::type<type_traits::rebind_traits_t<value_type, Ts>>{})
@@ -60,8 +57,20 @@ struct array : array__<typename T::value_type, sizeof...(Ts)>, T {
     }
 };
 
+template<class T>
+struct array<T> : T {
+    using boost_di_inject__ = aux::type_list<>;
+};
+
+template<class T>
+struct array<T*[]> {
+    using boost_di_inject__ = aux::type_list<>;
+};
+
 template<class T, class... Ts>
-struct array<T*[], Ts...> { };
+struct array<T*[], Ts...> {
+    using boost_di_inject__ = aux::type_list<>;
+};
 
 }}}} // boost::di::v1::core
 
