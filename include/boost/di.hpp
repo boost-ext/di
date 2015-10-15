@@ -420,17 +420,11 @@ struct array : array_impl<typename T::value_type, sizeof...(Ts)>, T {
     { }
 };
 template<class T>
-struct array<T> : T {
-    using boost_di_inject__ = aux::type_list<>;
-};
+struct array<T> : T { };
 template<class T>
-struct array<T*[]> {
-    using boost_di_inject__ = aux::type_list<>;
-};
+struct array<T*[]> { };
 template<class T, class... Ts>
-struct array<T*[], Ts...> {
-    using boost_di_inject__ = aux::type_list<>;
-};
+struct array<T*[], Ts...> { };
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 template<class T>
