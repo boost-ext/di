@@ -1403,99 +1403,77 @@ using callable = typename is_callable<Ts...>::type;
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace type_traits {
 template<class T>
-struct cast {
+struct generic_cast {
     using type = T&&;
 };
 template<template<class...> class T, class... Ts>
-struct cast<T<aux::false_type, Ts...>> {
+struct generic_cast<T<aux::false_type, Ts...>> {
     using type = typename T<aux::false_type, Ts...>::value_type;
 };
 template<class T>
-using cast_t = typename cast<T>::type;
+using generic_cast_t = typename generic_cast<T>::type;
 template<class T, class>
-struct typename_traits {
+struct generic_traits {
     using type = T;
 };
 template<class T>
-struct typename_traits<_, T> {
+struct generic_traits<_, T> {
     using type = T;
 };
 template<class T>
-struct typename_traits<_&, T> {
+struct generic_traits<_&, T> {
     using type = T&;
 };
 template<class T>
-struct typename_traits<const _&, T> {
+struct generic_traits<const _&, T> {
     using type = const T&;
 };
 template<class T>
-struct typename_traits<_&&, T> {
+struct generic_traits<_&&, T> {
     using type = T&&;
 };
 template<class T>
-struct typename_traits<_*, T> {
+struct generic_traits<_*, T> {
     using type = T*;
 };
 template<class T>
-struct typename_traits<const _*, T> {
+struct generic_traits<const _*, T> {
     using type = const T*;
 };
 template<class T, template<class...> class TDeleter>
-struct typename_traits<std::unique_ptr<_, TDeleter<_>>, T> {
+struct generic_traits<std::unique_ptr<_, TDeleter<_>>, T> {
     using type = std::unique_ptr<T, TDeleter<T>>;
 };
 template<class T, template<class...> class TDeleter>
-struct typename_traits<const std::unique_ptr<_, TDeleter<_>>&, T> {
+struct generic_traits<const std::unique_ptr<_, TDeleter<_>>&, T> {
     using type = const std::unique_ptr<T, TDeleter<T>>&;
 };
 template<class T>
-struct typename_traits<std::shared_ptr<_>, T> {
+struct generic_traits<std::shared_ptr<_>, T> {
     using type = std::shared_ptr<T>;
 };
 template<class T>
-struct typename_traits<const std::shared_ptr<_>&, T> {
+struct generic_traits<const std::shared_ptr<_>&, T> {
     using type = std::shared_ptr<T>;
 };
 template<class T>
-struct typename_traits<boost::shared_ptr<_>, T> {
+struct generic_traits<boost::shared_ptr<_>, T> {
     using type = boost::shared_ptr<T>;
 };
 template<class T>
-struct typename_traits<const boost::shared_ptr<_>&, T> {
+struct generic_traits<const boost::shared_ptr<_>&, T> {
     using type = boost::shared_ptr<T>;
 };
 template<class T>
-struct typename_traits<std::weak_ptr<_>, T> {
+struct generic_traits<std::weak_ptr<_>, T> {
     using type = std::weak_ptr<T>;
 };
 template<class T>
-struct typename_traits<const std::weak_ptr<_>&, T> {
+struct generic_traits<const std::weak_ptr<_>&, T> {
     using type = std::weak_ptr<T>;
 };
 template<class T, class U>
-using typename_traits_t = typename typename_traits<T, U>::type;
-template<class, class T>
-struct given_traits {
-    using type = T;
-};
-template<class T, class X, class... Ts>
-struct given_traits<T, core::array<X[], Ts...>> {
-    using type = core::array<T, Ts...>;
-};
-template<class T, class X, class... Ts>
-struct given_traits<const T&, core::array<X[], Ts...>> {
-    using type = core::array<T, Ts...>;
-};
-template<class T, class X, class... Ts>
-struct given_traits<T&, core::array<X[], Ts...>> {
-    using type = core::array<T, Ts...>;
-};
-template<class T, class X, class... Ts>
-struct given_traits<std::shared_ptr<T>, core::array<X[], Ts...>> {
-    using type = core::array<T, Ts...>;
-};
-template<class T, class U>
-using given_traits_t = typename given_traits<T, U>::type;
+using generic_traits_t = typename generic_traits<T, U>::type;
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
 template<class T>
@@ -1697,25 +1675,25 @@ public:
     auto get(const type_traits::direct&
            , const type_traits::heap&
            , TArgs&&... args) {
-        return new T(static_cast<type_traits::cast_t<TArgs>>(args)...);
+        return new T(static_cast<type_traits::generic_cast_t<TArgs>>(args)...);
     }
     template<class, class T, class... TArgs>
     auto get(const type_traits::uniform&
            , const type_traits::heap&
            , TArgs&&... args) {
-        return new T{static_cast<type_traits::cast_t<TArgs>>(args)...};
+        return new T{static_cast<type_traits::generic_cast_t<TArgs>>(args)...};
     }
     template<class, class T, class... TArgs>
     auto get(const type_traits::direct&
            , const type_traits::stack&
            , TArgs&&... args) const noexcept {
-        return T(static_cast<type_traits::cast_t<TArgs>>(args)...);
+        return T(static_cast<type_traits::generic_cast_t<TArgs>>(args)...);
     }
     template<class, class T, class... TArgs>
     auto get(const type_traits::uniform&
            , const type_traits::stack&
            , TArgs&&... args) const noexcept {
-        return T{static_cast<type_traits::cast_t<TArgs>>(args)...};
+        return T{static_cast<type_traits::generic_cast_t<TArgs>>(args)...};
     }
 };
 }}}}
@@ -2373,6 +2351,30 @@ struct wrapper_impl<aux::true_type, T, TWrapper, BOOST_DI_REQUIRES(!aux::is_conv
 template<class TCast, class T, class TWrapper>
 using wrapper = wrapper_impl<TCast, T, TWrapper>;
 }}}}
+namespace boost { namespace di { inline namespace v1 { namespace type_traits {
+template<class, class T>
+struct array_traits {
+    using type = T;
+};
+template<class T, class X, class... Ts>
+struct array_traits<T, core::array<X[], Ts...>> {
+    using type = core::array<T, Ts...>;
+};
+template<class T, class X, class... Ts>
+struct array_traits<const T&, core::array<X[], Ts...>> {
+    using type = core::array<T, Ts...>;
+};
+template<class T, class X, class... Ts>
+struct array_traits<T&, core::array<X[], Ts...>> {
+    using type = core::array<T, Ts...>;
+};
+template<class T, class X, class... Ts>
+struct array_traits<std::shared_ptr<T>, core::array<X[], Ts...>> {
+    using type = core::array<T, Ts...>;
+};
+template<class T, class U>
+using array_traits_t = typename array_traits<T, U>::type;
+}}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
 struct from_injector { };
 struct from_deps { };
@@ -2429,9 +2431,9 @@ protected:
     template<class T, class TName = no_name, class TIsRoot = aux::false_type>
     struct is_creatable {
         using dependency_t = binder::resolve_t<injector, T, TName>;
-        using given_t = type_traits::given_traits_t<T, typename dependency_t::given>;
+        using given_t = type_traits::array_traits_t<T, typename dependency_t::given>;
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
-        using type = aux::conditional_t<aux::is_same<_, given_t>::value, void, type_traits::typename_traits_t<T, given_t>>;
+        using type = aux::conditional_t<aux::is_same<_, given_t>::value, void, type_traits::generic_traits_t<T, given_t>>;
         static constexpr auto value = aux::is_convertible<
             decltype(
                 dependency__<dependency_t>::template try_create<type>(
@@ -2567,8 +2569,8 @@ private:
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = aux::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;
-        using given_t = type_traits::given_traits_t<T, typename dependency_t::given>;
-        using type_t = type_traits::typename_traits_t<T, given_t>;
+        using given_t = type_traits::array_traits_t<T, typename dependency_t::given>;
+        using type_t = type_traits::generic_traits_t<T, given_t>;
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
         using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
         using wrapper_t = decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<type_t>(provider_t{*this}));
@@ -2583,9 +2585,9 @@ private:
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = aux::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;
-        using given_t = type_traits::given_traits_t<T, typename dependency_t::given>;
+        using given_t = type_traits::array_traits_t<T, typename dependency_t::given>;
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
-        using type_t = type_traits::typename_traits_t<T, given_t>;
+        using type_t = type_traits::generic_traits_t<T, given_t>;
         using provider_t = successful::provider<expected_t, given_t, ctor_t, injector>;
         using wrapper_t = decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<type_t>(provider_t{*this}));
         using create_t = referable_t<type_t, dependency__<dependency_t>>;
@@ -2603,9 +2605,9 @@ protected:
     template<class T, class TName = no_name, class TIsRoot = aux::false_type>
     struct is_creatable {
         using dependency_t = binder::resolve_t<injector, T, TName>;
-        using given_t = type_traits::given_traits_t<T, typename dependency_t::given>;
+        using given_t = type_traits::array_traits_t<T, typename dependency_t::given>;
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
-        using type = aux::conditional_t<aux::is_same<_, given_t>::value, void, type_traits::typename_traits_t<T, given_t>>;
+        using type = aux::conditional_t<aux::is_same<_, given_t>::value, void, type_traits::generic_traits_t<T, given_t>>;
         static constexpr auto value = aux::is_convertible<
             decltype(
                 dependency__<dependency_t>::template try_create<type>(
@@ -2741,8 +2743,8 @@ private:
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = aux::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;
-        using given_t = type_traits::given_traits_t<T, typename dependency_t::given>;
-        using type_t = type_traits::typename_traits_t<T, given_t>;
+        using given_t = type_traits::array_traits_t<T, typename dependency_t::given>;
+        using type_t = type_traits::generic_traits_t<T, given_t>;
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
         using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
         using wrapper_t = decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<type_t>(provider_t{*this}));
@@ -2756,9 +2758,9 @@ private:
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = aux::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;
-        using given_t = type_traits::given_traits_t<T, typename dependency_t::given>;
+        using given_t = type_traits::array_traits_t<T, typename dependency_t::given>;
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
-        using type_t = type_traits::typename_traits_t<T, given_t>;
+        using type_t = type_traits::generic_traits_t<T, given_t>;
         using provider_t = successful::provider<expected_t, given_t, ctor_t, injector>;
         using wrapper_t = decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<type_t>(provider_t{*this}));
         using create_t = referable_t<type_t, dependency__<dependency_t>>;
@@ -3027,13 +3029,13 @@ public:
     auto get(const type_traits::direct&
            , const TMemory&
            , TArgs&&... args) const {
-        return new T(static_cast<type_traits::cast_t<TArgs>>(args)...);
+        return new T(static_cast<type_traits::generic_cast_t<TArgs>>(args)...);
     }
     template<class, class T, class TMemory, class... TArgs>
     auto get(const type_traits::uniform&
            , const TMemory&
            , TArgs&&... args) const {
-        return new T{static_cast<type_traits::cast_t<TArgs>>(args)...};
+        return new T{static_cast<type_traits::generic_cast_t<TArgs>>(args)...};
     }
 };
 }}}}

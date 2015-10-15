@@ -20,8 +20,9 @@
 #include "boost/di/core/bindings.hpp"
 #include "boost/di/core/wrapper.hpp"
 #include "boost/di/scopes/exposed.hpp"
+#include "boost/di/type_traits/array_traits.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
-#include "boost/di/type_traits/typename_traits.hpp"
+#include "boost/di/type_traits/generic_traits.hpp"
 #include "boost/di/concepts/creatable.hpp"
 #include "boost/di/config.hpp"
 #include "boost/di/fwd.hpp"
@@ -101,9 +102,9 @@ protected:
     template<class T, class TName = no_name, class TIsRoot = aux::false_type>
     struct is_creatable {
         using dependency_t = binder::resolve_t<injector, T, TName>;
-        using given_t = type_traits::given_traits_t<T, typename dependency_t::given>;
+        using given_t = type_traits::array_traits_t<T, typename dependency_t::given>;
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
-        using type = aux::conditional_t<aux::is_same<_, given_t>::value, void, type_traits::typename_traits_t<T, given_t>>;
+        using type = aux::conditional_t<aux::is_same<_, given_t>::value, void, type_traits::generic_traits_t<T, given_t>>;
 
         static constexpr auto value = aux::is_convertible<
             decltype(
@@ -275,8 +276,8 @@ private:
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = aux::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;
-        using given_t = type_traits::given_traits_t<T, typename dependency_t::given>;
-        using type_t = type_traits::typename_traits_t<T, given_t>;
+        using given_t = type_traits::array_traits_t<T, typename dependency_t::given>;
+        using type_t = type_traits::generic_traits_t<T, given_t>;
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
         using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
         using wrapper_t = decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<type_t>(provider_t{*this}));
@@ -296,9 +297,9 @@ private:
         auto&& dependency = binder::resolve<T, TName>((injector*)this);
         using dependency_t = aux::remove_reference_t<decltype(dependency)>;
         using expected_t = typename dependency_t::expected;
-        using given_t = type_traits::given_traits_t<T, typename dependency_t::given>;
+        using given_t = type_traits::array_traits_t<T, typename dependency_t::given>;
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
-        using type_t = type_traits::typename_traits_t<T, given_t>;
+        using type_t = type_traits::generic_traits_t<T, given_t>;
         using provider_t = successful::provider<expected_t, given_t, ctor_t, injector>;
         using wrapper_t = decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<type_t>(provider_t{*this}));
         using create_t = referable_t<type_t, dependency__<dependency_t>>;
