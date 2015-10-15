@@ -17,23 +17,23 @@ struct array_traits {
     using type = T;
 };
 
-template<class T, class X, class... Ts>
-struct array_traits<T, core::array<X[], Ts...>> {
+template<class T, class U, class... Ts>
+struct array_traits<T, core::array<U[], Ts...>> {
     using type = core::array<T, Ts...>;
 };
 
-template<class T, class X, class... Ts>
-struct array_traits<const T&, core::array<X[], Ts...>> {
+template<class T, class U, class... Ts>
+struct array_traits<const T&, core::array<U[], Ts...>> {
     using type = core::array<T, Ts...>;
 };
 
-template<class T, class X, class... Ts>
-struct array_traits<T&, core::array<X[], Ts...>> {
+template<class T, class U, class... Ts>
+struct array_traits<T&, core::array<U[], Ts...>> {
     using type = core::array<T, Ts...>;
 };
 
-template<class T, class X, class... Ts>
-struct array_traits<std::shared_ptr<T>, core::array<X[], Ts...>> {
+template<class T, class U, class... Ts>
+struct array_traits<std::shared_ptr<T>, core::array<U[], Ts...>> {
     using type = core::array<T, Ts...>;
 };
 
