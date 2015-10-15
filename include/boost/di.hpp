@@ -420,7 +420,7 @@ struct array : array_impl<typename T::value_type, sizeof...(Ts)>, T {
         : array_t{{
             *static_cast<const core::injector__<TInjector>&>(injector).
                 create_successful_impl(aux::type<type_traits::rebind_traits_t<value_type, Ts>>{})...
-         }}
+          }}
         , T(std::move_iterator<value_type*>(array_)
           , std::move_iterator<value_type*>(array_ + sizeof...(Ts)))
     { }
@@ -1145,9 +1145,7 @@ template<class T>
 using scopable = typename scopable__<T>::type;
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
-template<class, class = int> struct has_deps : ::boost::di::aux::false_type { }; template<class T> struct has_deps<T, ::boost::di::aux::valid_t<typename T::deps>> : ::boost::di::aux::true_type { };
-template<class T, class U = aux::remove_reference_t<T>>
-using is_injector = has_deps<U>;
+template<class, class = int> struct is_injector : ::boost::di::aux::false_type { }; template<class T> struct is_injector<T, ::boost::di::aux::valid_t<typename T::deps>> : ::boost::di::aux::true_type { };
 template<class>
 struct array_type;
 template<class T>
@@ -1190,7 +1188,7 @@ template<
     using scope_t = typename TScope::template scope<TExpected, TGiven>;
     template<class T>
     using externable = aux::integral_constant<bool,
-        !is_injector<T>::value &&
+        !is_injector<aux::remove_reference_t<T>>::value &&
         aux::is_same<TScope, scopes::deduce>::value &&
         aux::is_same<TExpected, TGiven>::value
     >;
@@ -1300,7 +1298,7 @@ public:
         >;
         return dependency{static_cast<T&&>(object)};
     }
-    template<class T, BOOST_DI_REQUIRES(has_deps<T>::value) = 0>
+    template<class T, BOOST_DI_REQUIRES(is_injector<T>::value) = 0>
     auto to(const T& object = {}) const noexcept {
         using dependency = dependency<
             scopes::exposed<TScope>
@@ -2466,7 +2464,7 @@ public:
     T create() const {
         return BOOST_DI_TYPE_WKND(T)create_impl<aux::true_type>(aux::type<T>{});
     }
-    template<class T, BOOST_DI_REQUIRES(!has_deps<T>::value) = 0>
+    template<class T, BOOST_DI_REQUIRES(!is_injector<T>::value) = 0>
     operator T() const {
         return create<T>();
     }
@@ -2640,7 +2638,7 @@ public:
     T create() const {
         return BOOST_DI_TYPE_WKND(T)create_impl<aux::true_type>(aux::type<T>{});
     }
-    template<class T, BOOST_DI_REQUIRES(!has_deps<T>::value) = 0>
+    template<class T, BOOST_DI_REQUIRES(!is_injector<T>::value) = 0>
     operator T() const {
         return create<T>();
     }

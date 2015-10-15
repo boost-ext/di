@@ -149,7 +149,7 @@ public:
         return BOOST_DI_TYPE_WKND(T)create_impl<aux::true_type>(aux::type<T>{});
     }
 
-    template<class T, BOOST_DI_REQUIRES(!has_deps<T>::value) = 0>
+    template<class T, BOOST_DI_REQUIRES(!is_injector<T>::value) = 0>
     operator T() const {
         return create<T>();
     }

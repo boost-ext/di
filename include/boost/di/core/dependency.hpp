@@ -17,10 +17,7 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
-BOOST_DI_HAS_TYPE(has_deps, deps);
-
-template<class T, class U = aux::remove_reference_t<T>>
-using is_injector = has_deps<U>;
+BOOST_DI_HAS_TYPE(is_injector, deps);
 
 template<class>
 struct array_type;
@@ -74,7 +71,7 @@ template<
 
     template<class T>
     using externable = aux::integral_constant<bool,
-        !is_injector<T>::value &&
+        !is_injector<aux::remove_reference_t<T>>::value &&
         aux::is_same<TScope, scopes::deduce>::value &&
         aux::is_same<TExpected, TGiven>::value
     >;
@@ -199,7 +196,7 @@ public:
         return dependency{static_cast<T&&>(object)};
     }
 
-    template<class T, BOOST_DI_REQUIRES(has_deps<T>::value) = 0>
+    template<class T, BOOST_DI_REQUIRES(is_injector<T>::value) = 0>
     auto to(const T& object = {}) const noexcept {
         using dependency = dependency<
             scopes::exposed<TScope>
