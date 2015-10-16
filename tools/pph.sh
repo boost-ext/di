@@ -17,6 +17,13 @@ pph() {
     echo "#if (__cplusplus < 201305L && _MSC_VER < 1900)"
     echo "#error \"Boost.DI requires C++14 support (Clang-3.4+, GCC-5.1+, MSVC-2015+)\""
     echo "#else"
+    echo "#if defined(__clang__)"
+    echo "    #pragma clang diagnostic push"
+    echo "#elif defined(__GNUC__)"
+    echo "    #pragma GCC diagnostic push"
+    echo "#elif defined(_MSC_VER)"
+    echo "    #pragma warning(push)"
+    echo "#endif"
     # BOOST_DI_VERSION % 100 is the patch level
     # BOOST_DI_VERSION / 100 % 1000 is the minor version
     # BOOST_DI_VERSION / 100000 is the major version
@@ -50,6 +57,14 @@ pph() {
     tail -n +10 "boost/di/aux_/preprocessor.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
     tail -n +15 "boost/di/inject.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
     cd .. && rm -rf tmp
+    echo "#endif"
+    echo "#if defined(__clang__)"
+    echo "    #pragma clang diagnostic pop"
+    echo "    #pragma clang diagnostic warning \"-Wdeprecated-declarations\""
+    echo "#elif defined(__GNUC__)"
+    echo "    #pragma GCC diagnostic pop"
+    echo "#elif defined(_MSC_VER)"
+    echo "    #pragma warning(push)"
     echo "#endif"
     echo
 }

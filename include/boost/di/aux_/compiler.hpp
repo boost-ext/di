@@ -8,11 +8,14 @@
 #define BOOST_DI_AUX_COMPILER_HPP
 
 #if defined(__clang__)
+    #pragma clang diagnostic error "-Wundefined-inline"
+    #pragma clang diagnostic error "-Wundefined-internal"
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
     #define BOOST_DI_TYPE_WKND(T)
     #define BOOST_DI_DECLTYPE_WKND(...) decltype(__VA_ARGS__)
 #elif defined(__GNUC__)
+    #pragma GCC diagnostic error "-Werror"
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
     #define BOOST_DI_TYPE_WKND(T)

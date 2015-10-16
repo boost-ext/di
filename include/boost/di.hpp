@@ -8,13 +8,23 @@
 #if (__cplusplus < 201305L && _MSC_VER < 1900)
 #error "Boost.DI requires C++14 support (Clang-3.4+, GCC-5.1+, MSVC-2015+)"
 #else
+#if defined(__clang__)
+    #pragma clang diagnostic push
+#elif defined(__GNUC__)
+    #pragma GCC diagnostic push
+#elif defined(_MSC_VER)
+    #pragma warning(push)
+#endif
 #define BOOST_DI_VERSION 100000
 #if defined(__clang__)
+    #pragma clang diagnostic error "-Wundefined-inline"
+    #pragma clang diagnostic error "-Wundefined-internal"
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
     #define BOOST_DI_TYPE_WKND(T)
     #define BOOST_DI_DECLTYPE_WKND(...) decltype(__VA_ARGS__)
 #elif defined(__GNUC__)
+    #pragma GCC diagnostic error "-Werror"
     #define BOOST_DI_UNUSED __attribute__((unused))
     #define BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
     #define BOOST_DI_TYPE_WKND(T)
@@ -3208,5 +3218,13 @@ using inject = aux::type_list<Ts...>;
       , BOOST_DI_GEN_CTOR \
       , __VA_ARGS__) \
     )
+#endif
+#if defined(__clang__)
+    #pragma clang diagnostic pop
+    #pragma clang diagnostic warning "-Wdeprecated-declarations"
+#elif defined(__GNUC__)
+    #pragma GCC diagnostic pop
+#elif defined(_MSC_VER)
+    #pragma warning(push)
 #endif
 
