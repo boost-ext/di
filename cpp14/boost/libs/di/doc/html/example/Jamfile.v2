@@ -70,7 +70,7 @@ test-suite example :
 test-suite extensions :
     [ example extensions/bindings/constructor_bindings.cpp ]
     [ example extensions/injections/assisted_injection.cpp ]
-    [ example extensions/injections/named_parameters.cpp : -Wno-attributes -Wno-unknown-attributes -Wno-gnu-string-literal-operator-template -Wno-dollar-in-identifier-extension ]
+    #[ example extensions/injections/named_parameters.cpp : -Wno-attributes -Wno-unknown-attributes -Wno-gnu-string-literal-operator-template -Wno-dollar-in-identifier-extension ]
     [ example extensions/injections/xml_injection.cpp ]
     [ example extensions/policies/types_dumper.cpp ]
     [ example extensions/policies/uml_dumper.cpp ]
