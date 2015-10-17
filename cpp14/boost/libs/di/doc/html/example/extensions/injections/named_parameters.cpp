@@ -21,7 +21,12 @@ namespace di = boost::di;
 #if defined(__clang__)
     #pragma clang diagnostic ignored "-Wgnu-string-literal-operator-template"
     #pragma clang diagnostic ignored "-Wdollar-in-identifier-extension"
-    #pragma clang diagnostic ignored "-Wunknown-attributes"
+
+    #if (__clang_major__ == 3) && (__clang_minor__ > 4)
+        #pragma clang diagnostic ignored "-Wunknown-attributes"
+    #else
+        #pragma clang diagnostic ignored "-Wattributes"
+    #endif
 #elif defined(__GNUC__)
     #pragma GCC diagnostic ignored "-Wattributes"
 #endif
