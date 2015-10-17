@@ -12,13 +12,20 @@
 //->
 #include <boost/di.hpp>
 
-#if defined(_MSC_VER)
-    int main() { }
-#else
-
 namespace di = boost::di;
 
 //<-
+#if defined(_MSC_VER)
+    int main() { }
+#else
+#if defined(__clang__)
+    #pragma clang diagnostic ignored "-Wgnu-string-literal-operator-template"
+    #pragma clang diagnostic ignored "-Wdollar-in-identifier-extension"
+    #pragma clang diagnostic ignored "-Wunknown-attributes"
+#elif defined(__GNUC__)
+    #pragma GCC diagnostic ignored "-Wattributes"
+#endif
+
 struct interface { virtual ~interface() = default; virtual void dummy() = 0; };
 struct implementation : interface { void dummy() override { } };
 
