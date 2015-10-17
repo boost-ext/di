@@ -29,7 +29,7 @@ matrix:
         packages:
         - xsltproc
   - os: linux
-    env: TOOLSET=clang-3.4 MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=/usr/local/clang-3.4/bin/clang++
+    env: BJAM=clang MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=/usr/local/clang-3.4/bin/clang++
     addons:
       apt:
         packages:
@@ -42,7 +42,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.4
   - os: linux
-    env: TOOLSET=clang-3.4 MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=/usr/local/clang-3.4/bin/clang++
+    env: BJAM=clang MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=/usr/local/clang-3.4/bin/clang++
     addons:
       apt:
         packages:
@@ -55,7 +55,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.4
   - os: linux
-    env: TOOLSET=clang-3.4 VARIANT=analyze COMPILER=/usr/local/clang-3.4/bin/clang++
+    env: BJAM=clang VARIANT=analyze COMPILER=/usr/local/clang-3.4/bin/clang++
     addons:
       apt:
         packages:
@@ -68,7 +68,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.4
   - os: linux
-    env: TOOLSET=clang-3.5 MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.5
+    env: BJAM=clang MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.5
     addons:
       apt:
         packages:
@@ -81,7 +81,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.5
   - os: linux
-    env: TOOLSET=clang-3.5 MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.5
+    env: BJAM=clang MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.5
     addons:
       apt:
         packages:
@@ -93,7 +93,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.5
   - os: linux
-    env: TOOLSET=clang-3.6 MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.6
+    env: BJAM=clang MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.6
     addons:
       apt:
         packages:
@@ -106,7 +106,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.6
   - os: linux
-    env: TOOLSET=clang-3.6 MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.6
+    env: BJAM=clang MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.6
     addons:
       apt:
         packages:
@@ -118,7 +118,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.6
   - os: linux
-    env: TOOLSET=clang-3.7 MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.7
+    env: BJAM=clang MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.7
     addons:
       apt:
         packages:
@@ -131,7 +131,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.7
   - os: linux
-    env: TOOLSET=clang-3.7 MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.7
+    env: BJAM=clang MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.7
     addons:
       apt:
         packages:
@@ -155,7 +155,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.7
   - os: linux
-    env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.8
+    env: BJAM=clang MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.8
     addons:
       apt:
         packages:
@@ -168,7 +168,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise
   - os: linux
-    env: TOOLSET=clang-3.8 MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.8
+    env: BJAM=clang MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.8
     addons:
       apt:
         packages:
@@ -192,7 +192,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise
   - os: linux
-    env: TOOLSET=gcc-5 GCOV=gcov-5 VARIANT=coverage MEMCHECK=${VALGRIND} BIICODE=ON COMPILER=g++-5
+    env: BJAM=gcc GCOV=gcov-5 VARIANT=coverage MEMCHECK=${VALGRIND} BIICODE=ON COMPILER=g++-5
     addons:
       apt:
         packages:
@@ -203,7 +203,7 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
   - os: linux
-    env: TOOLSET=gcc-5 VARIANT=analyze COMPILER=g++-5
+    env: BJAM=gcc VARIANT=analyze COMPILER=g++-5
     addons:
       apt:
         packages:
@@ -213,7 +213,7 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
   - os: linux
-    env: TOOLSET=gcc-5 BENCHMARK=QUICK COMPILER=g++-5
+    env: BJAM=gcc BENCHMARK=QUICK COMPILER=g++-5
     addons:
       apt:
         packages:
@@ -235,12 +235,12 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
   - os: osx
-    env: TOOLSET=clang COMPILER=clang++
+    env: BJAM=clang COMPILER=clang++
   - os: osx
     env: CMAKE=ON COMPILER=clang++
   - os: osx
     osx_image: xcode7
-    env: TOOLSET=clang COMPILER=clang++
+    env: BJAM=clang COMPILER=clang++
   - os: osx
     osx_image: xcode7
     env: CMAKE=ON BENCHMARK=ON COMPILER=clang++
@@ -263,10 +263,12 @@ install:
   && export LD_LIBRARY_PATH="${TRAVIS_BUILD_DIR}/libcxx/lib:$LD_LIBRARY_PATH"; fi
 
 script:
-- if [ "${TOOLSET}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2 -q
-  --user-config=../config.jam debug-symbols=off ${VARIANT} ${MEMCHECK} cxxflags=" $CXXFLAGS" linkflags=" $LDFLAGS"); fi
-- if [ "${TOOLSET}" != "" ]; then (cd example && ../build/b2 -sBOOST_ROOT=../build -j2 -q
-  --user-config=../config.jam debug-symbols=off ${MEMCHECK} cxxflags=" $CXXFLAGS" linkflags=" $LDFLAGS"); fi
+- if [ "${BJAM}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2 -q
+  --toolset=${BJAM} --user-config=../config.jam debug-symbols=off
+  ${VARIANT} ${MEMCHECK} cxxflags=" $CXXFLAGS" linkflags=" $LDFLAGS"); fi
+- if [ "${BJAM}" != "" ]; then (cd example && ../build/b2 -sBOOST_ROOT=../build -j2 -q
+  --toolset=${BJAM} --user-config=../config.jam debug-symbols=off
+  ${MEMCHECK} cxxflags=" $CXXFLAGS" linkflags=" $LDFLAGS"); fi
 - if [ "${CMAKE}" != "" ]; then (cd build && cmake
   .. && cmake --build . && travis_wait ctest --output-on-failure); fi
 - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (git
