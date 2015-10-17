@@ -34,6 +34,10 @@ private:
 
 //<-
 #if !defined(_MSC_VER)
+    #if defined(__clang__)
+        #pragma clang diagnostic ignored "-Wgnu-string-literal-operator-template"
+    #endif
+
     template<char...>
     struct string { };
 
