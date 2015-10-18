@@ -264,10 +264,10 @@ install:
 
 script:
 - if [ "${BJAM}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2 -q
-  --toolset=${BJAM} --user-config=../config.jam debug-symbols=off
+  --toolset=${BJAM} --user-config=../user-config.jam debug-symbols=off
   ${VARIANT} ${MEMCHECK} cxxflags=" $CXXFLAGS" linkflags=" $LDFLAGS"); fi
 - if [ "${BJAM}" != "" ]; then (cd example && ../build/b2 -sBOOST_ROOT=../build -j2 -q
-  --toolset=${BJAM} --user-config=../config.jam debug-symbols=off
+  --toolset=${BJAM} --user-config=../user-config.jam debug-symbols=off
   ${MEMCHECK} cxxflags=" $CXXFLAGS" linkflags=" $LDFLAGS"); fi
 - if [ "${CMAKE}" != "" ]; then (cd build && cmake
   .. && cmake --build . && travis_wait ctest --output-on-failure); fi
