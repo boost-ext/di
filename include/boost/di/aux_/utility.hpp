@@ -14,9 +14,6 @@ struct _ { _(...) { } };
 namespace aux {
 
 template<class...>
-struct type_list { using type = type_list; };
-
-template<class...>
 struct valid { using type = int; };
 
 template<class... Ts>
@@ -43,11 +40,14 @@ struct never {
     static constexpr auto value = false;
 };
 
-template<class, class>
-struct pair { using type = pair; };
+template<class...>
+struct type_list { using type = type_list; };
 
 template<bool...>
 struct bool_list { using type = bool_list; };
+
+template<class, class>
+struct pair { using type = pair; };
 
 template<class... Ts>
 struct inherit : Ts... { using type = inherit; };
