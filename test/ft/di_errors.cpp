@@ -705,9 +705,9 @@ test scope_traits_external_not_referable = [] {
         #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
             "creatable constraint not satisfied",
         #endif
-            "type<.*>::has_not_bound_reference<.*>"
+            "type<.*>::is_not_convertible_to<.*>"
         #if !defined(_MSC_VER)
-          , "reference is not bound, did you forget to add `auto value = ...; di::bind<T>.to\\(value\\)`"
+          , "wrapper is not convertible to requested type, did you mistake the scope?"
         #endif
     );
 
@@ -727,9 +727,9 @@ test scope_traits_external_not_referable_named = [] {
         #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
             "creatable constraint not satisfied",
         #endif
-            "type<.*>::has_not_bound_reference<.*>::named<.*>"
+            "type<.*>::is_not_convertible_to<.*>"
         #if !defined(_MSC_VER)
-          , "reference is not bound, did you forget to add `auto value = ...; di::bind<T>.named\\(name\\).to\\(value\\)`"
+          , "wrapper is not convertible to requested type, did you mistake the scope?"
         #endif
     );
 

@@ -13,10 +13,15 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
-template<class T, class TInjector>
+template<class T, class TInjector, class TError = aux::false_type>
 struct is_referable__ {
     static constexpr auto value =
         dependency__<binder::resolve_t<TInjector, T>>::template is_referable<T>::value;
+};
+
+template<class T, class TInjector>
+struct is_referable__<T, TInjector, aux::true_type> {
+    static constexpr auto value = true;
 };
 
 template<class T, class TInjector, class TError>
@@ -39,7 +44,7 @@ struct any_type {
     const TInjector& injector_;
 };
 
-template<class TParent, class TInjector, class TError = aux::false_type>
+template<class TParent, class TInjector, class TError = aux::false_type, class TX = aux::false_type>
 struct any_type_ref {
     template<class T, class = BOOST_DI_REQUIRES(is_creatable__<T, TInjector, TError>::value)>
     operator T() {
@@ -48,7 +53,7 @@ struct any_type_ref {
 
     #if defined(__GNUC__) && !defined(__clang__) // __pph__
         template<class T
-               , class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector>::value)
+               , class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector, TX>::value)
                , class = BOOST_DI_REQUIRES(is_creatable__<T&&, TInjector, TError>::value)
         > operator T&&() const {
             return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T&&>{});
@@ -56,14 +61,14 @@ struct any_type_ref {
     #endif // __pph__
 
     template<class T
-           , class = BOOST_DI_REQUIRES(is_referable__<T&, TInjector>::value)
+           , class = BOOST_DI_REQUIRES(is_referable__<T&, TInjector, TX>::value)
            , class = BOOST_DI_REQUIRES(is_creatable__<T&, TInjector, TError>::value)>
     operator T&() const {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T&>{});
     }
 
     template<class T
-           , class = BOOST_DI_REQUIRES(is_referable__<const T&, TInjector>::value)
+           , class = BOOST_DI_REQUIRES(is_referable__<const T&, TInjector, TX>::value)
            , class = BOOST_DI_REQUIRES(is_creatable__<const T&, TInjector, TError>::value)>
     operator const T&() const {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<const T&>{});
@@ -84,7 +89,7 @@ struct any_type_1st {
     const TInjector& injector_;
 };
 
-template<class TParent, class TInjector, class TError = aux::false_type>
+template<class TParent, class TInjector, class TError = aux::false_type, class TX = aux::false_type>
 struct any_type_1st_ref {
     template<class T
            , class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)
@@ -96,7 +101,7 @@ struct any_type_1st_ref {
     #if defined(__GNUC__) && !defined(__clang__) // __pph__
         template<class T
                , class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)
-               , class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector>::value)
+               , class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector, TX>::value)
                , class = BOOST_DI_REQUIRES(is_creatable__<T&&, TInjector, TError>::value)>
         operator T&&() const {
             return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T&&>{});
@@ -105,7 +110,7 @@ struct any_type_1st_ref {
 
     template<class T
            , class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)
-           , class = BOOST_DI_REQUIRES(is_referable__<T&, TInjector>::value)
+           , class = BOOST_DI_REQUIRES(is_referable__<T&, TInjector, TX>::value)
            , class = BOOST_DI_REQUIRES(is_creatable__<T&, TInjector, TError>::value)>
     operator T&() const {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T&>{});
@@ -113,7 +118,7 @@ struct any_type_1st_ref {
 
     template<class T
            , class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)
-           , class = BOOST_DI_REQUIRES(is_referable__<const T&, TInjector>::value)
+           , class = BOOST_DI_REQUIRES(is_referable__<const T&, TInjector, TX>::value)
            , class = BOOST_DI_REQUIRES(is_creatable__<const T&, TInjector, TError>::value)>
     operator const T&() const {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<const T&>{});

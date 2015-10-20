@@ -198,7 +198,7 @@ protected:
 
     template<class TIsRoot = aux::false_type, class TParent>
     auto create_impl(const aux::type<any_type_ref_fwd<TParent>>&) const {
-        return any_type_ref<TParent, injector>{*this};
+        return any_type_ref<TParent, injector, aux::false_type, aux::true_type>{*this};
     }
 
     template<class TIsRoot = aux::false_type, class TParent>
@@ -208,7 +208,7 @@ protected:
 
     template<class TIsRoot = aux::false_type, class TParent>
     auto create_impl(const aux::type<any_type_1st_ref_fwd<TParent>>&) const {
-        return any_type_1st_ref<TParent, injector>{*this};
+        return any_type_1st_ref<TParent, injector, aux::false_type, aux::true_type>{*this};
     }
 
     template<class TIsRoot = aux::false_type, class T, class TName>
@@ -271,13 +271,12 @@ private:
         using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
         using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
         using wrapper_t = decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<type_t>(provider_t{*this}));
-        using create_t = referable_t<type_t, dependency__<dependency_t>>;
         BOOST_DI_CORE_INJECTOR_POLICY(
-            policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>(
+            policy::template call<arg_wrapper<type_t, TName, TIsRoot, pool_t>>(
                 TConfig::policies(*this), dependency, ctor_t{}
             );
         )()
-        return wrapper<typename aux::is_same<type_t, T>::type, create_t, wrapper_t>{
+        return wrapper<typename aux::is_same<type_t, T>::type, type_t, wrapper_t>{
             static_cast<dependency__<dependency_t>&&>(dependency).template create<type_t>(provider_t{*this})
         };
     }
