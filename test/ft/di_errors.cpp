@@ -487,7 +487,6 @@ test create_polymorphic_type_without_binding = [] {
 
     expect_compile_fail("", errors_,
         struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
-        struct impl : i { void dummy() override { } };
         struct c { c(i*) { } };
         int main() {
             di::make_injector().create<c>();
@@ -509,7 +508,6 @@ test create_polymorphic_type_without_binding_using_multi_bindings = [] {
 
     expect_compile_fail("<include> memory <include> vector", errors_,
         struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
-        struct impl : i { void dummy() override { } };
         struct c { c(std::vector<std::unique_ptr<i>>) { } };
         int main() {
             auto injector = di::make_injector(
@@ -560,7 +558,6 @@ test create_polymorphic_type_without_binding_named = [] {
 
     expect_compile_fail("", errors_,
         struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
-        struct impl : i { void dummy() override { } };
         struct dummy { };
         struct c { BOOST_DI_INJECT(c, (named = dummy{}) i*) { } };
         int main() {
@@ -604,7 +601,6 @@ test exposed_polymorphic_type_without_binding = [] {
 
     expect_compile_fail("<include> memory", errors_,
         struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
-        struct impl : i { void dummy() override { } };
         struct c { std::shared_ptr<i> i_; };
         int main() {
             di::injector<c> injector = di::make_injector(); // di::bind<i>().to<impl>()
@@ -781,17 +777,89 @@ test policy_constructible = [] {
     );
 };
 
-#if 0
+test create_error_with_call_stack = [] {
+    auto errors_ = errors(
+        #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+            "creatable constraint not satisfied",
+        #endif
+            "abstract_type<.*>::is_not_bound"
+        #if defined(__GNUC__) && !defined(__clang__)
+          , "creating<.*>.*c"
+          , "creating<.*>.*c1"
+          , "creating<.*>.*c2"
+        #else
+          , "creating<c>"
+          , "creating<c1>"
+          , "creating<c2>"
+        #endif
+        #if !defined(_MSC_VER)
+          , "create<c>()"
+          , "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?"
+        #endif
+    );
+
+    expect_compile_fail("-DBOOST_DI_CFG_DIAGNOSTICS_CALL_STACK", errors_,
+        struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
+        struct c2 { c2(i*) { } };
+        struct c1 { c1(int, double, const c2&) { } };
+        struct c { c(int, c1) { } };
+        int main() {
+            di::make_injector().create<c>();
+        }
+    );
+};
+
+test create_generic_type_without_binding = [] {
+    auto errors_ = errors(
+        #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+            "creatable constraint not satisfied",
+        #endif
+            "generic_type<.*>::is_not_bound"
+        #if !defined(_MSC_VER)
+          , "create<c>()"
+          , "type is not bound, did you forget to add: 'di::bind<di::_>.to<type>()'?"
+        #endif
+    );
+
+    expect_compile_fail("", errors_,
+        struct c { BOOST_DI_INJECT((template<class T>)c, const T&) { } };
+        int main() {
+            di::make_injector().create<c>();
+        }
+    );
+};
+
+test create_generic_named_type_without_binding = [] {
+    auto errors_ = errors(
+        #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+            "creatable constraint not satisfied",
+        #endif
+            "generic_type<.*>::named<.*>::is_not_bound"
+        #if !defined(_MSC_VER)
+          , "create<c>()"
+          , "type is not bound, did you forget to add: 'di::bind<di::_>.named\\(name\\).to<type>()'?"
+        #endif
+    );
+
+    expect_compile_fail("", errors_,
+        auto generic = []{};
+        struct c { BOOST_DI_INJECT((template<class T>) c, (named = generic) T) { } };
+        int main() {
+            di::make_injector().create<c>();
+        }
+    );
+};
+
 #if defined(__cpp_concepts)
     test create_auto_type_without_binding = [] {
         auto errors_ = errors(
             #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
                 "creatable constraint not satisfied",
             #endif
-                "type<.*>::has_not_bound_generic_types"
+                "generic_type<.*>::is_not_bound"
             #if !defined(_MSC_VER)
               , "create<c>()"
-              , "generic type is not bound, did you forget to add di::bind<di::_>.to<implementation>()?"
+              , "type is not bound, did you forget to add: 'di::bind<di::_>.to<type>()'?"
             #endif
         );
 
@@ -802,7 +870,27 @@ test policy_constructible = [] {
             }
         );
     };
-#endif
+
+    test create_auto_named_type_without_binding = [] {
+        auto errors_ = errors(
+            #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+                "creatable constraint not satisfied",
+            #endif
+                "generic_type<.*>::named<.*>::is_not_bound"
+            #if !defined(_MSC_VER)
+              , "create<c>()"
+              , "type is not bound, did you forget to add: 'di::bind<di::_>.named\\(name\\).to<type>()'?"
+            #endif
+        );
+
+        expect_compile_fail("", errors_,
+            auto generic = []{};
+            struct c { BOOST_DI_INJECT(c, (named = generic) auto) { } };
+            int main() {
+                di::make_injector().create<c>();
+            }
+        );
+    };
 #endif
 
 // ---------------------------------------------------------------------------

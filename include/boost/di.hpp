@@ -39,9 +39,7 @@
     namespace boost { namespace di { inline namespace v1 { namespace detail { template<class T> T get_type__(T); }}}}
     #define BOOST_DI_DECLTYPE_WKND(...) decltype(::boost::di::v1::detail::get_type__(__VA_ARGS__))
 #endif
-namespace boost { namespace di { inline namespace v1 {
-struct _ { _(...) { } };
-namespace aux {
+namespace boost { namespace di { inline namespace v1 { namespace aux {
 template<class...>
 struct valid { using type = int; };
 template<class... Ts>
@@ -117,7 +115,16 @@ template<>
 struct make_index_sequence_impl<10> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9, 10> { };
 template<int N>
 using make_index_sequence = typename make_index_sequence_impl<N>::type;
-}}}}
+}
+class _ {
+    struct internal { };
+public:
+    using boost_di_inject__ = aux::type_list<internal>;
+    _(...) { }
+private:
+    _(internal) = delete;
+};
+}}}
 #if __has_include(<__config>)
     #include <__config>
 #endif
@@ -294,6 +301,8 @@ using is_narrowed = integral_constant<bool,
 >;
 template<class, class...> struct is_array : false_type { };
 template<class T, class... Ts> struct is_array<T[], Ts...> : true_type { };
+template<class T> struct is_generic : false_type { };
+template<> struct is_generic<_> : true_type { };
 template<class T, class = decltype(sizeof(T))>
 true_type is_complete_impl(int);
 template<class T>
@@ -1509,6 +1518,29 @@ struct is_not_fully_implemented {
 };
 };};
 template<class T>
+struct generic_type {
+struct is_not_bound {
+    operator T*() const {
+        using constraint_not_satisfied = is_not_bound;
+        return
+            constraint_not_satisfied{}.error();
+    }
+    static inline T*
+    error(_ = "type is not bound, did you forget to add: 'di::bind<di::_>.to<type>()'?");
+};
+template<class TName>
+struct named {
+struct is_not_bound {
+    operator T*() const {
+        using constraint_not_satisfied = is_not_bound;
+        return
+            constraint_not_satisfied{}.error();
+    }
+    static inline T*
+    error(_ = "type is not bound, did you forget to add: 'di::bind<di::_>.named(name).to<type>()'?");
+};
+};};
+template<class T>
 struct type {
 template<class To>
 struct is_not_convertible_to {
@@ -1567,12 +1599,16 @@ struct creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TCtor..
             , aux::conditional_t< aux::is_same<TName, no_name>::value , typename abstract_type<aux::decay_t<T>>::is_not_fully_implemented , typename abstract_type<aux::decay_t<T>>::template named<TName>::is_not_fully_implemented >
           >
         , aux::conditional_t<
-              ctor_size_t<T>::value == sizeof...(TCtor)
-            , typename type<aux::decay_t<T>>::has_to_many_constructor_parameters::
-                  template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
-            , typename type<aux::decay_t<T>>::has_ambiguous_number_of_constructor_parameters::
-                  template given<sizeof...(TCtor)>::
-                  template expected<ctor_size_t<T>::value>
+              aux::is_generic<aux::decay_t<T>>::value
+            , aux::conditional_t< aux::is_same<TName, no_name>::value , typename generic_type<aux::decay_t<T>>::is_not_bound , typename generic_type<aux::decay_t<T>>::template named<TName>::is_not_bound >
+            , aux::conditional_t<
+                  ctor_size_t<T>::value == sizeof...(TCtor)
+                , typename type<aux::decay_t<T>>::has_to_many_constructor_parameters::
+                      template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
+                , typename type<aux::decay_t<T>>::has_ambiguous_number_of_constructor_parameters::
+                      template given<sizeof...(TCtor)>::
+                      template expected<ctor_size_t<T>::value>
+              >
           >
       >
 { };
@@ -1909,7 +1945,7 @@ struct any_type {
     }
     const TInjector& injector_;
 };
-template<class TParent, class TInjector, class TError = aux::false_type, class TX = aux::false_type>
+template<class TParent, class TInjector, class TError = aux::false_type, class TRefError = aux::false_type>
 struct any_type_ref {
     template<class T, class = BOOST_DI_REQUIRES(is_creatable__<T, TInjector, TError>::value)>
     operator T() {
@@ -1917,20 +1953,20 @@ struct any_type_ref {
     }
     #if defined(__GNUC__) && !defined(__clang__)
         template<class T
-               , class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector, TX>::value)
+               , class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector, TRefError>::value)
                , class = BOOST_DI_REQUIRES(is_creatable__<T&&, TInjector, TError>::value)
         > operator T&&() const {
             return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T&&>{});
         }
     #endif
     template<class T
-           , class = BOOST_DI_REQUIRES(is_referable__<T&, TInjector, TX>::value)
+           , class = BOOST_DI_REQUIRES(is_referable__<T&, TInjector, TRefError>::value)
            , class = BOOST_DI_REQUIRES(is_creatable__<T&, TInjector, TError>::value)>
     operator T&() const {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T&>{});
     }
     template<class T
-           , class = BOOST_DI_REQUIRES(is_referable__<const T&, TInjector, TX>::value)
+           , class = BOOST_DI_REQUIRES(is_referable__<const T&, TInjector, TRefError>::value)
            , class = BOOST_DI_REQUIRES(is_creatable__<const T&, TInjector, TError>::value)>
     operator const T&() const {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<const T&>{});
@@ -1947,7 +1983,7 @@ struct any_type_1st {
     }
     const TInjector& injector_;
 };
-template<class TParent, class TInjector, class TError = aux::false_type, class TX = aux::false_type>
+template<class TParent, class TInjector, class TError = aux::false_type, class TRefError = aux::false_type>
 struct any_type_1st_ref {
     template<class T
            , class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)
@@ -1958,7 +1994,7 @@ struct any_type_1st_ref {
     #if defined(__GNUC__) && !defined(__clang__)
         template<class T
                , class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)
-               , class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector, TX>::value)
+               , class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector, TRefError>::value)
                , class = BOOST_DI_REQUIRES(is_creatable__<T&&, TInjector, TError>::value)>
         operator T&&() const {
             return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T&&>{});
@@ -1966,14 +2002,14 @@ struct any_type_1st_ref {
     #endif
     template<class T
            , class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)
-           , class = BOOST_DI_REQUIRES(is_referable__<T&, TInjector, TX>::value)
+           , class = BOOST_DI_REQUIRES(is_referable__<T&, TInjector, TRefError>::value)
            , class = BOOST_DI_REQUIRES(is_creatable__<T&, TInjector, TError>::value)>
     operator T&() const {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T&>{});
     }
     template<class T
            , class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)
-           , class = BOOST_DI_REQUIRES(is_referable__<const T&, TInjector, TX>::value)
+           , class = BOOST_DI_REQUIRES(is_referable__<const T&, TInjector, TRefError>::value)
            , class = BOOST_DI_REQUIRES(is_creatable__<const T&, TInjector, TError>::value)>
     operator const T&() const {
         return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<const T&>{});
