@@ -121,6 +121,7 @@ class _ {
 public:
     using boost_di_inject__ = aux::type_list<internal>;
     _(...) { }
+    template<class T> operator T() { return {}; }
 private:
     _(internal) = delete;
 };
@@ -2194,7 +2195,7 @@ public:
 };
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
-#if defined(BOOST_DI_CFG_DIAGNOSTICS_CALL_STACK)
+#if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL >= 2)
     template<class T>
     struct creating {
         static inline T type();
@@ -2249,7 +2250,7 @@ template<
     }
     template<class TMemory, class... TArgs, BOOST_DI_REQUIRES(is_creatable<TMemory, TArgs...>::value) = 0>
     auto get_impl(const TMemory& memory, TArgs&&... args) const {
-        #if defined(BOOST_DI_CFG_DIAGNOSTICS_CALL_STACK)
+        #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL >= 2)
             (void)creating<TGiven>::creatable(
                 aux::integral_constant<bool, injector__<TInjector>::template is_creatable<TGiven>::value>{}
             );
@@ -2262,7 +2263,10 @@ template<
     }
     template<class TMemory, class... TArgs, BOOST_DI_REQUIRES(!is_creatable<TMemory, TArgs...>::value) = 0>
     auto get_impl(const TMemory&, TArgs&&...) const {
-        return concepts::creatable_error<TInitialization, TName, TExpected*, TGiven*, TArgs...>();
+        #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL > 0)
+            return concepts::creatable_error<TInitialization, TName, TExpected*, TGiven*, TArgs...>();
+        #else
+        #endif
     }
     const TInjector& injector_;
 };
@@ -2317,10 +2321,18 @@ template<class T, class TWrapper>
 struct wrapper_impl<aux::true_type, T, TWrapper, BOOST_DI_REQUIRES(!aux::is_convertible<TWrapper, T>::value)> {
     using value_type = T;
     inline operator T() const noexcept {
-        return typename concepts::type<TWrapper>::template is_not_convertible_to<T>{};
+        #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL > 0)
+            return typename concepts::type<TWrapper>::template is_not_convertible_to<T>{};
+        #else
+            return _{};
+        #endif
     }
     inline operator T() noexcept {
-        return typename concepts::type<TWrapper>::template is_not_convertible_to<T>{};
+        #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL > 0)
+            return typename concepts::type<TWrapper>::template is_not_convertible_to<T>{};
+        #else
+            return _{};
+        #endif
     }
     TWrapper wrapper_;
 };

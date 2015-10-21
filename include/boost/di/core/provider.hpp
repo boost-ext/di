@@ -15,7 +15,7 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace core {
 
-#if defined(BOOST_DI_CFG_DIAGNOSTICS_CALL_STACK) // __pph__
+#if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL >= 2) // __pph__
     template<class T>
     struct creating {
         static inline T type();
@@ -78,7 +78,7 @@ template<
 
     template<class TMemory, class... TArgs, BOOST_DI_REQUIRES(is_creatable<TMemory, TArgs...>::value) = 0>
     auto get_impl(const TMemory& memory, TArgs&&... args) const {
-        #if defined(BOOST_DI_CFG_DIAGNOSTICS_CALL_STACK) // __pph__
+        #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL >= 2) // __pph__
             (void)creating<TGiven>::creatable(
                 aux::integral_constant<bool, injector__<TInjector>::template is_creatable<TGiven>::value>{}
             );
@@ -93,7 +93,10 @@ template<
 
     template<class TMemory, class... TArgs, BOOST_DI_REQUIRES(!is_creatable<TMemory, TArgs...>::value) = 0>
     auto get_impl(const TMemory&, TArgs&&...) const {
-        return concepts::creatable_error<TInitialization, TName, TExpected*, TGiven*, TArgs...>();
+        #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL > 0) // __pph__
+            return concepts::creatable_error<TInitialization, TName, TExpected*, TGiven*, TArgs...>();
+        #else // __pph__
+        #endif // __pph__
     }
 
     const TInjector& injector_;

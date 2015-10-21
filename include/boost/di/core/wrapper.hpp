@@ -52,11 +52,19 @@ struct wrapper_impl<aux::true_type, T, TWrapper, BOOST_DI_REQUIRES(!aux::is_conv
     using value_type = T;
 
     inline operator T() const noexcept {
-        return typename concepts::type<TWrapper>::template is_not_convertible_to<T>{};
+        #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL > 0) // __pph__
+            return typename concepts::type<TWrapper>::template is_not_convertible_to<T>{};
+        #else // __pph__
+            return _{};
+        #endif // __pph__
     }
 
     inline operator T() noexcept {
-        return typename concepts::type<TWrapper>::template is_not_convertible_to<T>{};
+        #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL > 0) // __pph__
+            return typename concepts::type<TWrapper>::template is_not_convertible_to<T>{};
+        #else // __pph__
+            return _{};
+        #endif // __pph__
     }
 
     TWrapper wrapper_;
