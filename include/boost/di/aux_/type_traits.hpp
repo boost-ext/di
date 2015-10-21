@@ -128,8 +128,13 @@ decltype(void(T(declval<TArgs>()...)), true_type{}) test_is_constructible(int);
 template<class, class...>
 false_type test_is_constructible(...);
 
-template<class T, class... TArgs>
-using is_constructible = decltype(test_is_constructible<T, TArgs...>(0));
+#if defined(_MSC_VER) // __pph__
+    template<class T, class... TArgs>
+    struct is_constructible : decltype(test_is_constructible<T, TArgs...>(0)) { };
+#else // __pph__
+    template<class T, class... TArgs>
+    using is_constructible = decltype(test_is_constructible<T, TArgs...>(0));
+#endif // __pph__
 
 template<class T, class... TArgs>
 using is_constructible_t = typename is_constructible<T, TArgs...>::type;
@@ -140,13 +145,8 @@ decltype(void(T{declval<TArgs>()...}), true_type{}) test_is_braces_constructible
 template<class, class...>
 false_type test_is_braces_constructible(...);
 
-#if defined(_MSC_VER) // __pph__
-    template<class T, class... TArgs>
-    struct is_braces_constructible : decltype(test_is_braces_constructible<T, TArgs...>(0)) { };
-#else // __pph__
-    template<class T, class... TArgs>
-    using is_braces_constructible = decltype(test_is_braces_constructible<T, TArgs...>(0));
-#endif // __pph__
+template<class T, class... TArgs>
+using is_braces_constructible = decltype(test_is_braces_constructible<T, TArgs...>(0));
 
 template<class T, class... TArgs>
 using is_braces_constructible_t = typename is_braces_constructible<T, TArgs...>::type;
