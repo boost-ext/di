@@ -24,10 +24,10 @@ pph() {
     echo "#elif defined(_MSC_VER)"
     echo "    #pragma warning(push)"
     echo "#endif"
-    # BOOST_DI_VERSION % 100 is the patch level
-    # BOOST_DI_VERSION / 100 % 1000 is the minor version
-    # BOOST_DI_VERSION / 100000 is the major version
-    echo "#define BOOST_DI_VERSION 100000"
+    echo "#define BOOST_DI_VERSION 1'0'0"
+    echo "#if !defined(BOOST_DI_CFG_DIAGNOSTICS_LEVEL)"
+    echo "    #define BOOST_DI_CFG_DIAGNOSTICS_LEVEL 1"
+    echo "#endif"
     rm -rf tmp && mkdir tmp && cp -r boost tmp && cd tmp && touch type_traits
     find . -iname "*.hpp" | xargs sed -i "s/\(.*\)__pph__/\/\/\/\/\1/"
     tail -n +10 "boost/di/aux_/compiler.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
@@ -60,9 +60,14 @@ pph() {
     echo "#endif"
     echo "#if defined(__clang__)"
     echo "    #pragma clang diagnostic pop"
-    echo "    #pragma clang diagnostic warning \"-Wdeprecated-declarations\""
+    echo "    #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL > 0)"
+    echo "        #pragma clang diagnostic warning \"-Wdeprecated-declarations\""
+    echo "    #else"
+    echo "        #pragma clang diagnostic error \"-Wdeprecated-declarations\""
+    echo "    #endif"
     echo "#elif defined(__GNUC__)"
     echo "    #pragma GCC diagnostic pop"
+    echo "    #pragma GCC diagnostic error \"-Wdeprecated-declarations\""
     echo "#elif defined(_MSC_VER)"
     echo "    #pragma warning(push)"
     echo "#endif"

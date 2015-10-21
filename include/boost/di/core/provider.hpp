@@ -92,10 +92,11 @@ template<
     }
 
     template<class TMemory, class... TArgs, BOOST_DI_REQUIRES(!is_creatable<TMemory, TArgs...>::value) = 0>
-    auto get_impl(const TMemory&, TArgs&&...) const {
+    TGiven* get_impl(const TMemory&, TArgs&&...) const {
         #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL > 0) // __pph__
             return concepts::creatable_error<TInitialization, TName, TExpected*, TGiven*, TArgs...>();
         #else // __pph__
+            return {};
         #endif // __pph__
     }
 

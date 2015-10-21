@@ -798,7 +798,7 @@ test create_error_with_call_stack = [] {
         #endif
     );
 
-    expect_compile_fail("-DBOOST_DI_CFG_DIAGNOSTICS_CALL_STACK", errors_,
+    expect_compile_fail("-DBOOST_DI_CFG_DIAGNOSTICS_LEVEL=2", errors_,
         struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
         struct c2 { c2(i*) { } };
         struct c1 { c1(int, double, const c2&) { } };
