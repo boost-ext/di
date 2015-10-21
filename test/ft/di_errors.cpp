@@ -172,9 +172,9 @@ test bind_in_not_scopable_type = [] {
     );
 };
 
-test bind_has_disallowed_specifiers_expected = [] {
+test bind_has_disallowed_qualifiers_expected = [] {
     auto errors_ = errors(
-        "constraint not satisfied", "bind<.*int.*\\*>::has_disallowed_specifiers"
+        "constraint not satisfied", "bind<.*int.*\\*>::has_disallowed_qualifiers"
     );
 
     expect_compile_fail("", errors_,
@@ -186,15 +186,43 @@ test bind_has_disallowed_specifiers_expected = [] {
     );
 };
 
-test bind_has_disallowed_specifiers_given = [] {
+test bind_has_disallowed_qualifiers_given = [] {
     auto errors_ = errors(
-        "constraint not satisfied", "bind<const.*int.*&>::has_disallowed_specifiers"
+        "constraint not satisfied", "bind<const.*int.*&>::has_disallowed_qualifiers"
     );
 
     expect_compile_fail("", errors_,
         int main() {
             di::make_injector(
                 di::bind<int>().to<const int&>()
+            );
+        }
+    );
+};
+
+test bind_has_disallowed_qualifiers_expected_complex = [] {
+    auto errors_ = errors(
+        "constraint not satisfied", "bind<.*shared_ptr.*int.*>::has_disallowed_qualifiers"
+    );
+
+    expect_compile_fail("<include> memory", errors_,
+        int main() {
+            di::make_injector(
+                di::bind<std::shared_ptr<int>>()
+            );
+        }
+    );
+};
+
+test bind_has_disallowed_qualifiers_given_complex = [] {
+    auto errors_ = errors(
+        "constraint not satisfied", "bind<.*shared_ptr.*int.*>::has_disallowed_qualifiers"
+    );
+
+    expect_compile_fail("<include> memory", errors_,
+        int main() {
+            di::make_injector(
+                di::bind<int, std::shared_ptr<int>>()
             );
         }
     );

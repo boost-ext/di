@@ -1719,7 +1719,7 @@ struct bind {
     struct named { struct is_bound_more_than_once : aux::false_type { }; };
     struct is_bound_more_than_once : aux::false_type { };
     struct is_neither_a_dependency_nor_an_injector : aux::false_type { };
-    struct has_disallowed_specifiers : aux::false_type { };
+    struct has_disallowed_qualifiers : aux::false_type { };
     template<class> struct is_not_related_to : aux::false_type { };
 };
 template<class...>
@@ -1810,15 +1810,15 @@ auto boundable_impl(any_of<>&&) -> aux::true_type;
 template<class T, class... Ts>
 auto boundable_impl(any_of<T, Ts...>&&) ->
     aux::conditional_t<
-        aux::is_same<T, aux::remove_qualifiers_t<T>>::value
+        aux::is_same<T, aux::decay_t<T>>::value
       , decltype(boundable_impl(aux::declval<any_of<Ts...>>()))
-      , typename bind<T>::has_disallowed_specifiers
+      , typename bind<T>::has_disallowed_qualifiers
     >;
 template<class I, class T>
 auto boundable_impl(I&&, T&&) ->
     aux::conditional_t<
-        !aux::is_same<T, aux::remove_qualifiers_t<T>>::value
-      , typename bind<T>::has_disallowed_specifiers
+        !aux::is_same<T, aux::decay_t<T>>::value
+      , typename bind<T>::has_disallowed_qualifiers
       , aux::conditional_t<
             is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value
           , aux::true_type

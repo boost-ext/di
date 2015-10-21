@@ -20,9 +20,9 @@ test bind_expected_given = [] {
     expect(boundable<int, int>::value);
     expect(std::is_same<bind<short>::is_not_related_to<int>, boundable<int, short>>::value);
     expect(std::is_same<bind<std::string>::is_not_related_to<int>, boundable<int, std::string>>::value);
-    expect(std::is_same<bind<int*>::has_disallowed_specifiers, boundable<any_of<int*, int>>>::value);
-    expect(std::is_same<bind<int*>::has_disallowed_specifiers, boundable<any_of<int, int*>>>::value);
-    expect(std::is_same<bind<double*>::has_disallowed_specifiers, boundable<any_of<int, double*>>>::value);
+    expect(std::is_same<bind<int*>::has_disallowed_qualifiers, boundable<any_of<int*, int>>>::value);
+    expect(std::is_same<bind<int*>::has_disallowed_qualifiers, boundable<any_of<int, int*>>>::value);
+    expect(std::is_same<bind<double*>::has_disallowed_qualifiers, boundable<any_of<int, double*>>>::value);
 };
 
 test bind_deps = [] {
