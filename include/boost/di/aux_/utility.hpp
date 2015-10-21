@@ -9,6 +9,9 @@
 
 namespace boost { namespace di { inline namespace v1 { namespace aux {
 
+template<class T>
+using owner = T;
+
 template<class...>
 struct valid { using type = int; };
 
@@ -22,9 +25,6 @@ struct none_type { };
 
 template<class T, T>
 struct non_type { };
-
-template<class T>
-using owner = T;
 
 template<class...>
 struct always {
@@ -128,7 +128,6 @@ public:
 private:
     _(internal) = delete;
 };
-
 
 }}} // boost::di::v1
 

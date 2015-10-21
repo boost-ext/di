@@ -43,6 +43,8 @@
     #define BOOST_DI_DECLTYPE_WKND(...) decltype(::boost::di::v1::detail::get_type__(__VA_ARGS__))
 #endif
 namespace boost { namespace di { inline namespace v1 { namespace aux {
+template<class T>
+using owner = T;
 template<class...>
 struct valid { using type = int; };
 template<class... Ts>
@@ -52,8 +54,6 @@ struct type { };
 struct none_type { };
 template<class T, T>
 struct non_type { };
-template<class T>
-using owner = T;
 template<class...>
 struct always {
     static constexpr auto value = true;
