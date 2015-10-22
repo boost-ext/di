@@ -92,7 +92,8 @@ template<int Expected> struct expected {
 
     static inline T*
     error(_ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits");
-};};};
+};};
+};
 
 struct has_to_many_constructor_parameters {
 template<int TMax> struct max {
@@ -104,9 +105,7 @@ template<int TMax> struct max {
 
     static inline T*
     error(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters");
-};};
-
-};
+};};};
 
 template<class>
 struct ctor_size;

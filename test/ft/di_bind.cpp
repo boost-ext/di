@@ -690,6 +690,24 @@ test multi_bindings_with_initializer_list = [] {
     test(injector.create<std::set<int>>());
 };
 
+test multi_bindings_with_initializer_list_with_ptr_type = [] {
+    auto test = [](auto object) {
+        expect(object.size() == 4);
+        auto it = object.begin();
+        expect(*(std::next(it, 0)) == 1);
+        expect(*(std::next(it, 1)) == 2);
+        expect(*(std::next(it, 2)) == 3);
+        expect(*(std::next(it, 3)) == 4);
+    };
+
+    auto injector = di::make_injector(
+        di::bind<int*[]>().to({1, 2, 3, 4})
+    );
+
+    test(injector.create<std::vector<int>>());
+    test(injector.create<std::set<int>>());
+};
+
 #if defined(__cpp_variable_templates)
     test bind_mix = [] {
         constexpr auto i = 42;

@@ -1456,7 +1456,8 @@ template<int Expected> struct expected {
     }
     static inline T*
     error(_ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits");
-};};};
+};};
+};
 struct has_to_many_constructor_parameters {
 template<int TMax> struct max {
     operator T*() const {
@@ -1466,8 +1467,7 @@ template<int TMax> struct max {
     }
     static inline T*
     error(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters");
-};};
-};
+};};};
 template<class>
 struct ctor_size;
 template<class TInit, class... TCtor>
@@ -2988,6 +2988,10 @@ struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
 };
 template<class T1, class T2>
 using combine_t = typename combine<T1, T2>::type;
+template<class T>
+auto ctor__(int) -> aux::function_traits_t<decltype(&T::ctor)>;
+template<class T>
+aux::type_list<> ctor__(...);
 }
 template<class... Ts>
 using inject = aux::type_list<Ts...>;
@@ -3010,7 +3014,7 @@ using inject = aux::type_list<Ts...>;
     static void ctor( \
         BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__) \
     ); \
-    using type BOOST_DI_UNUSED = ::boost::di::aux::function_traits_t<decltype(ctor)>;
+    using type BOOST_DI_UNUSED = decltype(::boost::di::detail::ctor__<boost_di_inject__>(0));
 #define BOOST_DI_INJECT_TRAITS_IMPL_1(...) \
     static void ctor( \
         BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__) \
@@ -3019,7 +3023,7 @@ using inject = aux::type_list<Ts...>;
         BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_NAME, __VA_ARGS__) \
     ); \
     using type BOOST_DI_UNUSED = ::boost::di::detail::combine_t< \
-        ::boost::di::aux::function_traits_t<decltype(ctor)> \
+        decltype(::boost::di::detail::ctor__<boost_di_inject__>(0))\
       , ::boost::di::aux::function_traits_t<decltype(name)> \
     >;
 #define BOOST_DI_INJECT_TRAITS_EMPTY_IMPL(...) \
