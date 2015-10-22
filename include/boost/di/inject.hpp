@@ -43,36 +43,6 @@ struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
 template<class T1, class T2>
 using combine_t = typename combine<T1, T2>::type;
 
-template<class T>
-auto ctor_impl4__(int) -> aux::function_traits_t<BOOST_DI_DECLTYPE_WKND(&T::template ctor<_, _, _, _>)>;
-
-template<class T>
-aux::type_list<> ctor_impl4__(...);
-
-template<class T>
-auto ctor_impl3__(int) -> aux::function_traits_t<BOOST_DI_DECLTYPE_WKND(&T::template ctor<_, _, _>)>;
-
-template<class T>
-decltype(ctor_impl4__<T>(0)) ctor_impl3__(...);
-
-template<class T>
-auto ctor_impl2__(int) -> aux::function_traits_t<BOOST_DI_DECLTYPE_WKND(&T::template ctor<_, _>)>;
-
-template<class T>
-decltype(ctor_impl3__<T>(0)) ctor_impl2__(...);
-
-template<class T>
-auto ctor_impl1__(int) -> aux::function_traits_t<BOOST_DI_DECLTYPE_WKND(&T::template ctor<_>)>;
-
-template<class T>
-decltype(ctor_impl2__<T>(0)) ctor_impl1__(...);
-
-template<class T>
-auto ctor__(int) -> aux::function_traits_t<BOOST_DI_DECLTYPE_WKND(&T::ctor)>;
-
-template<class T>
-decltype(ctor_impl1__<T>(0)) ctor__(...);
-
 } // detail
 
 template<class... Ts>
@@ -94,23 +64,14 @@ using inject = aux::type_list<Ts...>;
     BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
     BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_GEN_ARG_NAME, BOOST_DI_GEN_NONE_TYPE)(p)
 #define BOOST_DI_GEN_NAME(i, ...) BOOST_DI_GEN_NAME_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__,), i)
-#define BOOST_DI_T_INJECT_IMPL(...) __VA_ARGS__
-#define BOOST_DI_T_INJECT_IMPL__(type) type
-#define BOOST_DI_T_INJECT(type) BOOST_DI_T_INJECT__ type BOOST_DI_EAT_IF_NONE )
-#define BOOST_DI_T_INJECT__(...) __VA_ARGS__ BOOST_DI_T_INJECT_IMPL(
-#define BOOST_DI_T_GET(...) __VA_ARGS__ BOOST_DI_EAT(
-#define BOOST_DI_INJECT_TRAITS_T(T, ...) BOOST_DI_INJECT_TRAITS__(T, __VA_ARGS__)
-#define BOOST_DI_INJECT_TRAITS_T__(T, ...) BOOST_DI_INJECT_TRAITS__((), __VA_ARGS__)
-#define BOOST_DI_INJECT_TRAITS_EMPTY_IMPL(...) \
-    using boost_di_inject__ BOOST_DI_UNUSED = ::boost::di::aux::type_list<>
-#define BOOST_DI_INJECT_TRAITS__(T, ...) \
-    BOOST_DI_IF( \
-        BOOST_DI_IS_EMPTY(__VA_ARGS__) \
-      , BOOST_DI_INJECT_TRAITS_EMPTY_IMPL \
-      , BOOST_DI_INJECT_TRAITS_IMPL \
-    )(T, __VA_ARGS__)
-#define BOOST_DI_INJECT_TRAITS_IMPL_1(T, ...) \
-    BOOST_DI_T_GET T)\
+
+#define BOOST_DI_INJECT_TRAITS_IMPL_0(...) \
+    static void ctor( \
+        BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__) \
+    ); \
+    using type BOOST_DI_UNUSED = ::boost::di::aux::function_traits_t<decltype(ctor)>;
+
+#define BOOST_DI_INJECT_TRAITS_IMPL_1(...) \
     static void ctor( \
         BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__) \
     ); \
@@ -118,29 +79,32 @@ using inject = aux::type_list<Ts...>;
         BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_NAME, __VA_ARGS__) \
     ); \
     using type BOOST_DI_UNUSED = ::boost::di::detail::combine_t< \
-        decltype(::boost::di::detail::ctor__<boost_di_inject__>(0)) \
+        ::boost::di::aux::function_traits_t<decltype(ctor)> \
       , ::boost::di::aux::function_traits_t<decltype(name)> \
     >;
-#define BOOST_DI_INJECT_TRAITS_IMPL_0(T, ...) \
-    BOOST_DI_T_GET T)\
-    static void ctor( \
-        BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__) \
-    ); \
-    using type BOOST_DI_UNUSED = decltype(::boost::di::detail::ctor__<boost_di_inject__>(0));
-#define BOOST_DI_INJECT_TRAITS_IMPL(T, ...) \
+
+#define BOOST_DI_INJECT_TRAITS_EMPTY_IMPL(...) \
+    using boost_di_inject__ BOOST_DI_UNUSED = ::boost::di::aux::type_list<>
+
+#define BOOST_DI_INJECT_TRAITS_IMPL(...) \
     struct boost_di_inject__ {\
-        BOOST_DI_CAT(BOOST_DI_INJECT_TRAITS_IMPL_, BOOST_DI_HAS_NAMES(__VA_ARGS__))(T, __VA_ARGS__) \
+        BOOST_DI_CAT(BOOST_DI_INJECT_TRAITS_IMPL_, BOOST_DI_HAS_NAMES(__VA_ARGS__))(__VA_ARGS__) \
         static_assert( \
             BOOST_DI_SIZE(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE \
           , "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE" \
         );\
     }
 
-#define BOOST_DI_INJECT_TRAITS(...) BOOST_DI_INJECT_TRAITS__((), __VA_ARGS__)
+#define BOOST_DI_INJECT_TRAITS(...) \
+    BOOST_DI_IF( \
+        BOOST_DI_IS_EMPTY(__VA_ARGS__) \
+      , BOOST_DI_INJECT_TRAITS_EMPTY_IMPL \
+      , BOOST_DI_INJECT_TRAITS_IMPL \
+    )(__VA_ARGS__)
+
 #define BOOST_DI_INJECT(T, ...) \
-    BOOST_DI_IF(BOOST_DI_IBP(T), BOOST_DI_INJECT_TRAITS_T, BOOST_DI_INJECT_TRAITS_T__)(T, __VA_ARGS__); \
-    BOOST_DI_IF(BOOST_DI_IBP(T), BOOST_DI_T_INJECT, BOOST_DI_T_INJECT_IMPL__)(T) \
-    (BOOST_DI_REPEAT( \
+    BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
+    T(BOOST_DI_REPEAT( \
         BOOST_DI_SIZE(__VA_ARGS__) \
       , BOOST_DI_GEN_CTOR \
       , __VA_ARGS__) \

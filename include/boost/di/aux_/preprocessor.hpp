@@ -59,7 +59,6 @@
 #define BOOST_DI_REPEAT_10(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) m(6, __VA_ARGS__) m(7, __VA_ARGS__) m(8, __VA_ARGS__) m(9, __VA_ARGS__)
 
 #if defined(_MSC_VER)
-    #define BOOST_DI_EAT_IF_NONE BOOST_DI_EAT(
     #define BOOST_DI_VD_IBP_CAT(a, b) BOOST_DI_VD_IBP_CAT_I(a, b)
     #define BOOST_DI_VD_IBP_CAT_I(a, b) BOOST_DI_VD_IBP_CAT_II(a ## b)
     #define BOOST_DI_VD_IBP_CAT_II(res) res
@@ -79,7 +78,6 @@
     #define BOOST_DI_DETAIL_IS_EMPTY_IIF_1(t, b) t
     #define BOOST_DI_DETAIL_IS_EMPTY_PROCESS(...) BOOST_DI_IBP(BOOST_DI_DETAIL_IS_EMPTY_NON_FUNCTION_C __VA_ARGS__ ())
 #else
-    #define BOOST_DI_EAT_IF_NONE
     #define BOOST_DI_IBP_SPLIT(i, ...) BOOST_DI_PRIMITIVE_CAT(BOOST_DI_IBP_SPLIT_, i)(__VA_ARGS__)
     #define BOOST_DI_IBP_SPLIT_0(a, ...) a
     #define BOOST_DI_IBP_SPLIT_1(a, ...) __VA_ARGS__

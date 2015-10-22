@@ -7,7 +7,11 @@
 #ifndef BOOST_DI_AUX_UTILITY_HPP
 #define BOOST_DI_AUX_UTILITY_HPP
 
-namespace boost { namespace di { inline namespace v1 { namespace aux {
+namespace boost { namespace di { inline namespace v1 {
+
+struct _ { _(...) { } };
+
+namespace aux {
 
 template<class T>
 using owner = T;
@@ -116,20 +120,7 @@ struct make_index_sequence_impl<10> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9, 
 template<int N>
 using make_index_sequence = typename make_index_sequence_impl<N>::type;
 
-} // aux
-
-class _ {
-    struct internal { };
-
-public:
-    using boost_di_inject__ = aux::type_list<internal>;
-    _(...) { }
-
-private:
-    _(internal) = delete;
-};
-
-}}} // boost::di::v1
+}}}} // boost::di::v1::aux
 
 #endif
 

@@ -127,11 +127,6 @@ struct ctor_traits
     : type_traits::ctor<T , type_traits::ctor_impl_t<aux::is_constructible, T>>
 { };
 
-template<>
-struct ctor_traits<_> {
-    using boost_di_inject__ = aux::type_list<>;
-};
-
 template<class T>
 struct ctor_traits<std::initializer_list<T>> {
     using boost_di_inject__ = aux::type_list<>;

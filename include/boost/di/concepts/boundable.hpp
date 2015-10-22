@@ -119,11 +119,8 @@ struct is_related {
 template<class I, class T>
 struct is_related<true, I, T> {
     static constexpr auto value =
-        aux::is_base_of<I, T>::value || (
-            aux::is_same<_, I>::value || (
-                aux::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value
-            )
-        );
+        aux::is_base_of<I, T>::value ||
+        (aux::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value);
 };
 
 auto boundable_impl(any_of<>&&) -> aux::true_type;

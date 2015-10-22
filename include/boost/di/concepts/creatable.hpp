@@ -67,33 +67,6 @@ struct is_not_fully_implemented {
 };};
 
 template<class T>
-struct generic_type {
-struct is_not_bound {
-    operator T*() const {
-        using constraint_not_satisfied = is_not_bound;
-        return
-            constraint_not_satisfied{}.error();
-    }
-
-    static inline T*
-    error(_ = "type is not bound, did you forget to add: 'di::bind<di::_>.to<type>()'?");
-};
-
-template<class TName>
-struct named {
-struct is_not_bound {
-    operator T*() const {
-        using constraint_not_satisfied = is_not_bound;
-        return
-            constraint_not_satisfied{}.error();
-    }
-
-    static inline T*
-    error(_ = "type is not bound, did you forget to add: 'di::bind<di::_>.named(name).to<type>()'?");
-};
-};};
-
-template<class T>
 struct type {
 
 template<class To>
@@ -171,16 +144,12 @@ struct creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TCtor..
             , BOOST_DI_NAMED_ERROR(TName, T, abstract_type, is_not_fully_implemented)
           >
         , aux::conditional_t<
-              aux::is_generic<aux::decay_t<T>>::value
-            , BOOST_DI_NAMED_ERROR(TName, T, generic_type, is_not_bound)
-            , aux::conditional_t<
-                  ctor_size_t<T>::value == sizeof...(TCtor)
-                , typename type<aux::decay_t<T>>::has_to_many_constructor_parameters::
-                      template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
-                , typename type<aux::decay_t<T>>::has_ambiguous_number_of_constructor_parameters::
-                      template given<sizeof...(TCtor)>::
-                      template expected<ctor_size_t<T>::value>
-              >
+              ctor_size_t<T>::value == sizeof...(TCtor)
+            , typename type<aux::decay_t<T>>::has_to_many_constructor_parameters::
+                  template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>
+            , typename type<aux::decay_t<T>>::has_ambiguous_number_of_constructor_parameters::
+                  template given<sizeof...(TCtor)>::
+                  template expected<ctor_size_t<T>::value>
           >
       >
 { };

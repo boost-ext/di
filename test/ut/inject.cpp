@@ -193,30 +193,5 @@ test c_traits_no_limits = [] {
     };
 #endif
 
-struct named_type_t { } named_type;
-
-struct c_t {
-    BOOST_DI_INJECT((template<class T1, class T2, class T3>) c_t
-                   , T1 i, const T2& d, (named = named_type) const T3 f)
-        : i(i), d(d), f(f)
-    { }
-
-    int i = 0;
-    double d = 0.0;
-    float f = 0.0;
-};
-
-test templates = [] {
-    constexpr auto i = 1;
-    constexpr auto d = 2.0;
-    constexpr auto f = 2.f;
-
-    c_t c_(i, d, f);
-
-    expect(i == c_.i);
-    expect(d == c_.d);
-    expect(f == c_.f);
-};
-
 }}} // boost::di::v1
 

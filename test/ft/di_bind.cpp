@@ -655,20 +655,6 @@ test multi_bindings_share_object_between_list_and_parameter = [] {
     injector.create<c>();
 };
 
-struct c_t {
-    BOOST_DI_INJECT((template<class T>)c_t
-                   , std::vector<T>)
-    { }
-};
-
-test multi_bindings_template_type = [] {
-    auto injector = di::make_injector(
-        di::bind<di::_[]>().to<int>()
-    );
-    (void)injector;
-    //injector.create<c_t>();
-};
-
 test multi_bindings_with_scope = [] {
    struct c {
         c(std::shared_ptr<std::vector<std::shared_ptr<i1>>> v1

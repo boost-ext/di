@@ -189,9 +189,6 @@ using is_narrowed = integral_constant<bool,
 template<class, class...> struct is_array : false_type { };
 template<class T, class... Ts> struct is_array<T[], Ts...> : true_type { };
 
-template<class T> struct is_generic : false_type { };
-template<> struct is_generic<_> : true_type { };
-
 template<class T, class = decltype(sizeof(T))>
 true_type is_complete_impl(int);
 

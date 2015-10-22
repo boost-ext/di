@@ -183,11 +183,11 @@ public:
         >{};
     }
 
-    template<class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value || aux::is_same<TExpected, _>::value) = 0>
+    template<class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value) = 0>
     auto to(T&& object) const noexcept {
         using dependency = dependency<
             scopes::external
-          , aux::conditional_t<aux::is_same<TExpected, _>::value, typename ref_traits<T>::type, TExpected>
+          , TExpected
           , typename ref_traits<T>::type
           , TName
           , TPriority
