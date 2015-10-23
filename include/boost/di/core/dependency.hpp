@@ -175,7 +175,7 @@ public:
     auto to() const noexcept {
         return dependency<
             TScope
-          , array<array_type_t<TExpected>, Ts...>
+          , TExpected
           , array<array_type_t<TExpected>, Ts...>
           , TName
           , TPriority
