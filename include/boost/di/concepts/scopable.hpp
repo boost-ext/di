@@ -8,7 +8,6 @@
 #define BOOST_DI_CONCEPTS_SCOPABLE_HPP
 
 #include "boost/di/aux_/type_traits.hpp"
-#include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
 
 namespace boost { namespace di { inline namespace v1 { namespace concepts {
