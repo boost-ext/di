@@ -891,20 +891,20 @@ struct is_expr : aux::integral_constant<bool,
 }
 class external {
 public:
-    template<class TExpected, class, class = int>
+    template<class, class TGiven, class = int>
     struct scope {
         template<class>
         using is_referable = aux::false_type;
-        explicit scope(const TExpected& object)
+        explicit scope(const TGiven& object)
             : object_{object}
         { }
         template<class, class TProvider>
-        static TExpected try_create(const TProvider&);
+        static TGiven try_create(const TProvider&);
         template<class, class TProvider>
         auto create(const TProvider&) const noexcept {
-            return wrappers::unique<TExpected>{object_};
+            return wrappers::unique<TGiven>{object_};
         }
-        TExpected object_;
+        TGiven object_;
     };
     template<class TExpected, class TGiven>
     struct scope<TExpected, std::shared_ptr<TGiven>> {
