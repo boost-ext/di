@@ -36,6 +36,17 @@ test resolve_types_not_found_by_name = [] {
     expect(std::is_same<result, dependency<scopes::deduce, int>>{});
 };
 
+test resolve_types_not_found_inheritence = [] {
+    struct deps
+        : dependency<scopes::unique, _, int, no_name>
+    { };
+
+    struct any : _ { };
+
+    using result = std::remove_reference_t<decltype(binder::resolve<any>((deps*)nullptr))>;
+    expect(std::is_same<result, dependency<scopes::deduce, any>>{});
+};
+
 test resolve_types_found_by_name = [] {
     struct name { };
     struct deps : dependency<scopes::unique, int, int, name> { };
