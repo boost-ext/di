@@ -495,35 +495,15 @@ struct memory_traits {
     using type = stack;
 };
 template<class T>
-struct memory_traits<T&> {
-    using type = stack;
-};
-template<class T>
-struct memory_traits<const T&> {
-    using type = stack;
-};
-template<class T>
 struct memory_traits<T*> {
     using type = heap;
 };
 template<class T>
-struct memory_traits<const T*> {
-    using type = heap;
-};
-template<class T>
-struct memory_traits<T&&> {
-    using type = stack;
-};
-template<class T>
-struct memory_traits<const T&&> {
-    using type = stack;
+struct memory_traits<const T&> {
+    using type = typename memory_traits<T>::type;
 };
 template<class T, class TDeleter>
 struct memory_traits<std::unique_ptr<T, TDeleter>> {
-    using type = heap;
-};
-template<class T, class TDeleter>
-struct memory_traits<const std::unique_ptr<T, TDeleter>&> {
     using type = heap;
 };
 template<class T>
@@ -531,23 +511,11 @@ struct memory_traits<std::shared_ptr<T>> {
     using type = heap;
 };
 template<class T>
-struct memory_traits<const std::shared_ptr<T>&> {
-    using type = heap;
-};
-template<class T>
 struct memory_traits<boost::shared_ptr<T>> {
     using type = heap;
 };
 template<class T>
-struct memory_traits<const boost::shared_ptr<T>&> {
-    using type = heap;
-};
-template<class T>
 struct memory_traits<std::weak_ptr<T>> {
-    using type = heap;
-};
-template<class T>
-struct memory_traits<const std::weak_ptr<T>&> {
     using type = heap;
 };
 template<class T>
@@ -699,39 +667,7 @@ struct scope_traits<T&> {
     using type = scopes::singleton;
 };
 template<class T>
-struct scope_traits<const T&> {
-    using type = scopes::singleton;
-};
-template<class T>
-struct scope_traits<T*> {
-    using type = scopes::unique;
-};
-template<class T>
-struct scope_traits<const T*> {
-    using type = scopes::unique;
-};
-template<class T>
-struct scope_traits<T&&> {
-    using type = scopes::unique;
-};
-template<class T>
-struct scope_traits<const T&&> {
-    using type = scopes::unique;
-};
-template<class T, class TDeleter>
-struct scope_traits<std::unique_ptr<T, TDeleter>> {
-    using type = scopes::unique;
-};
-template<class T, class TDeleter>
-struct scope_traits<const std::unique_ptr<T, TDeleter>&> {
-    using type = scopes::unique;
-};
-template<class T>
 struct scope_traits<std::shared_ptr<T>> {
-    using type = scopes::singleton;
-};
-template<class T>
-struct scope_traits<const std::shared_ptr<T>&> {
     using type = scopes::singleton;
 };
 template<class T>
@@ -739,15 +675,7 @@ struct scope_traits<boost::shared_ptr<T>> {
     using type = scopes::singleton;
 };
 template<class T>
-struct scope_traits<const boost::shared_ptr<T>&> {
-    using type = scopes::singleton;
-};
-template<class T>
 struct scope_traits<std::weak_ptr<T>> {
-    using type = scopes::singleton;
-};
-template<class T>
-struct scope_traits<const std::weak_ptr<T>&> {
     using type = scopes::singleton;
 };
 template<class T>
