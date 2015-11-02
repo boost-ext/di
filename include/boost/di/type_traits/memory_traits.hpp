@@ -49,6 +49,7 @@ template<class T>
 struct memory_traits<std::weak_ptr<T>> {
     using type = heap;
 };
+
 template<class T>
 struct memory_traits<T, BOOST_DI_REQUIRES(aux::is_polymorphic<T>::value)> {
     using type = heap;
