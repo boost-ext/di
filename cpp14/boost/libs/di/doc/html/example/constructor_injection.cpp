@@ -26,7 +26,7 @@ struct ctor_inject {
 struct ctor_inject_traits {
     /*<<constructor with less intrusive named parameter using traits>>*/
     BOOST_DI_INJECT_TRAITS(int, (named = name) int);
-    ctor_inject_traits(int i1, int i2 = 0) {
+    explicit ctor_inject_traits(int i1, int i2 = 0) {
         assert(i1 == 0);
         assert(i2 == 42);
     }
@@ -34,7 +34,7 @@ struct ctor_inject_traits {
 
 struct ctor_di_traits {
     /*<<class without any changes>>*/
-    ctor_di_traits(int i1, int i2 = 0) {
+    explicit ctor_di_traits(int i1, int i2 = 0) {
         assert(i1 == 0);
         assert(i2 == 42);
     }
