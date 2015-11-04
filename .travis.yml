@@ -243,7 +243,7 @@ matrix:
     env: BJAM=clang COMPILER=clang++
   - os: osx
     osx_image: xcode7
-    env: CMAKE=ON BENCHMARK=ON COMPILER=clang++
+    env: CMAKE=ON COMPILER=clang++
   - os: osx
     osx_image: xcode7.1
     env: BJAM=clang COMPILER=clang++
