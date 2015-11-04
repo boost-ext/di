@@ -71,7 +71,7 @@ bool check_opcodes(const std::string& name, const std::regex& rgx = std::regex{"
 namespace di = boost::di;
 
 struct i { virtual ~i() noexcept = default; virtual int dummy() = 0; };
-struct impl : i { impl(int i) : i_(i) { }; int dummy() override { return i_; }; int i_ = 0; };
+struct impl : i { explicit impl(int i) : i_(i) { }; int dummy() override { return i_; }; int i_ = 0; };
 
 // ---------------------------------------------------------------------------
 
@@ -129,7 +129,7 @@ test bind_interface = [] {
 auto name_int = []{};
 
 struct c {
-    BOOST_DI_INJECT(c, (named = name_int) int);
+    BOOST_DI_INJECT(explicit c, (named = name_int) int);
 };
 
 c::c(int) { }

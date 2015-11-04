@@ -15,7 +15,7 @@
 namespace boost { namespace di { inline namespace v1 { namespace scopes {
 
 struct interface { virtual ~interface() noexcept = default; virtual void dummy() = 0; };
-struct implementation : public interface { virtual void dummy() { }; };
+struct implementation : public interface { void dummy() override { }; };
 
 test from_arithmetic = [] {
     const int i = 42;

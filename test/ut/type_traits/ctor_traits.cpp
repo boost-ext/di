@@ -26,7 +26,7 @@ namespace type_traits {
 
 struct ctor_conv {
     template<class T>
-    ctor_conv(T&&);
+    ctor_conv(T&&); // non explicit
 };
 
 struct ctor_conv_explicit {
@@ -48,7 +48,7 @@ test ctors = [] {
     };
 
     struct ctor1 {
-        ctor1(int);
+        explicit ctor1(int);
     };
 
     struct ctor2 {
@@ -68,11 +68,11 @@ test ctors = [] {
     };
 
     struct ctor_unique_ptr {
-        ctor_unique_ptr(std::unique_ptr<int>) { }
+        explicit ctor_unique_ptr(std::unique_ptr<int>) { }
     };
 
     struct rvalue {
-        rvalue(int&&) { };
+        explicit rvalue(int&&) { };
     };
 
     enum e { };
@@ -87,11 +87,11 @@ test ctors = [] {
     };
 
     struct func {
-        func(const std::function<int()>&) { }
+        explicit func(const std::function<int()>&) { }
     };
 
     struct vaarg {
-        vaarg(int, ...) { }
+        explicit vaarg(int, ...) { }
     };
 
     static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<empty>::type>{});

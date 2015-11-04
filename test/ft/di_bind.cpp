@@ -18,7 +18,7 @@ struct i1 { virtual ~i1() noexcept = default; virtual void dummy1() = 0; };
 struct i2 { virtual ~i2() noexcept = default; virtual void dummy2() = 0; };
 struct i3 { virtual ~i3() noexcept = default; virtual void dummy3() = 0; };
 struct impl1 : i1 { void dummy1() override { } };
-struct impl1_int : i1 { impl1_int(int i) : i(i) { } void dummy1() override { } int i = 0; };
+struct impl1_int : i1 { explicit impl1_int(int i) : i(i) { } void dummy1() override { } int i = 0; };
 struct impl2 : i2 { void dummy2() override { } };
 struct impl1_2 : i1, i2 { void dummy1() override { } void dummy2() override { } };
 struct impl4 : impl1_2 { };
@@ -433,7 +433,6 @@ test dynamic_binding_using_polymorphic_lambdas_with_dependend_interfaces = [] {
 };
 
 double return_double(double d) { return d; }
-long return_long(long l) { return l; }
 
 test bind_to_function_ptr = [] {
     constexpr auto i = 42;
@@ -528,18 +527,18 @@ test runtime_factory_call_operator_impl = [] {
 };
 
 test scopes_injector_lambda_injector = [] {
-    constexpr short s = 42;
+    constexpr double d = 42.0;
     auto injector = di::make_injector(
-        di::bind<short>().to(s)
-      , di::bind<int>().to([](const auto& injector){ return static_cast<int>(injector.template create<short>()); })
+        di::bind<double>().to(d)
+      , di::bind<int>().to([](const auto& injector){ return static_cast<int>(injector.template create<double>()); })
     );
 
-    expect(s == injector.create<int>());
+    expect(static_cast<int>(d) == injector.create<int>());
 };
 
 test bind_function_to_callable = [] {
     struct functions {
-        BOOST_DI_INJECT(functions, const std::function<int(int)>& f) {
+        BOOST_DI_INJECT(explicit functions, const std::function<int(int)>& f) {
             expect(f(42) == 42);
         }
     };
@@ -609,7 +608,7 @@ test multi_bindings_inject_named = [] {
 
 test multi_bindings_ctor_with_exposed_module = [] {
     struct c {
-        c(std::vector<std::unique_ptr<i1>> v) {
+        explicit c(std::vector<std::unique_ptr<i1>> v) {
             expect(v.size() == 5);
             expect(dynamic_cast<impl1*>(v[0].get()));
             expect(dynamic_cast<impl1_2*>(v[1].get()));

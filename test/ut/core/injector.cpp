@@ -16,7 +16,7 @@ struct no_ctor {
 };
 
 struct ctor {
-    template<class...> struct scope { scope(int) { } };
+    template<class...> struct scope { explicit scope(int) { } };
 };
 
 struct def1 { using expected = int; using given = int; using scope = no_ctor; };

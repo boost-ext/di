@@ -376,7 +376,7 @@ test create_with_default_values = [] {
     struct default_values {
         BOOST_DI_INJECT_TRAITS(int);
 
-        default_values(int i, float f = 42.0, double d = 87.0)
+        explicit default_values(int i, float f = 42.0, double d = 87.0)
             : i(i), f(f), d(d)
         { }
 
@@ -415,7 +415,7 @@ test smart_pointers = [] {
 
 test one_arg_class = [] {
     struct c {
-        c(int i) : i(i) { }
+        explicit c(int i) : i(i) { }
         int i = 0;
     };
 
@@ -458,7 +458,7 @@ test inject_inside_template = [] {
 template<class T>
 struct template_inject_no_limits {
     using boost_di_inject__ = di::inject<T>;
-    template_inject_no_limits(T value)
+    explicit template_inject_no_limits(T value)
         : value_(value)
     { }
 
@@ -505,7 +505,7 @@ test request_value_and_ptr_in_unique = [] {
 #if __has_include(<boost/shared_ptr.hpp>)
     test conversion_to_boost_shared_ptr_inject = [] {
         struct c {
-            BOOST_DI_INJECT(c, const boost::shared_ptr<int>& sp)
+            BOOST_DI_INJECT(explicit c, const boost::shared_ptr<int>& sp)
                 : sp(sp)
             { }
 

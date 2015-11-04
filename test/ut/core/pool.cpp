@@ -12,7 +12,7 @@ namespace boost { namespace di { inline namespace v1 { namespace core {
 
 template<class T>
 struct allocator {
-    allocator(T* object) // non explicit
+    explicit allocator(T* object) // non explicit
         : object(object)
     { }
 
@@ -28,7 +28,7 @@ struct trivial_ctor {
 };
 
 struct default_ctor {
-    default_ctor(int i = 0)
+    explicit default_ctor(int i = 0)
         : i(i)
     { }
 

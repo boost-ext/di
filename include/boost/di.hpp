@@ -854,7 +854,7 @@ public:
     struct scope<TExpected, std::initializer_list<TGiven>> {
         template<class>
         using is_referable = aux::false_type;
-        explicit scope(const std::initializer_list<TGiven>& object)
+        scope(const std::initializer_list<TGiven>& object)
             : object_(object)
         { }
         template<class, class TProvider>
@@ -1040,7 +1040,7 @@ public:
       , class TName_
       , class TPriority_
       , class TBase_
-    > dependency(const dependency<TScope_, TExpected_, TGiven_, TName_, TPriority_, TBase_>& other) noexcept
+    > explicit dependency(const dependency<TScope_, TExpected_, TGiven_, TName_, TPriority_, TBase_>& other) noexcept
         : scope_t(other)
     { }
     template<class T, BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>

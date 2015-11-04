@@ -15,7 +15,7 @@ test bind_and_create_value = [] {
     static auto i = 42;
 
     struct c {
-        c(int& i_) {
+        explicit c(int& i_) {
             expect(&i_ == &i);
         }
     };
@@ -31,7 +31,7 @@ test bind_and_create_value_via_inject = [] {
     static auto i = 42;
 
     struct c {
-        BOOST_DI_INJECT(c, int& i_) {
+        BOOST_DI_INJECT(explicit c, int& i_) {
             expect(&i_ == &i);
         }
     };

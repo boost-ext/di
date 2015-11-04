@@ -119,7 +119,7 @@ public:
       , class TName_
       , class TPriority_
       , class TBase_
-    > dependency(const dependency<TScope_, TExpected_, TGiven_, TName_, TPriority_, TBase_>& other) noexcept
+    > explicit dependency(const dependency<TScope_, TExpected_, TGiven_, TName_, TPriority_, TBase_>& other) noexcept
         : scope_t(other)
     { }
 

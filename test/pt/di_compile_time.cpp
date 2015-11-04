@@ -295,13 +295,12 @@ auto measure(const std::string& file) {
     std::stringstream command;
     command << cxx() << " " << cxxflags(true) << " " << file;
 
-    using namespace std::chrono;
-    auto start = high_resolution_clock::now();
+    auto start = std::chrono::high_resolution_clock::now();
     auto result = std::system(command.str().c_str());
-    auto end = high_resolution_clock::now();
+    auto end = std::chrono::high_resolution_clock::now();
     expect(!result);
 
-    return duration<double>(end - start).count();
+    return std::chrono::duration<double>(end - start).count();
 }
 
 auto benchmark = [](const std::string& complexity, bool interfaces = false, int modules_min = 0, int modules_max = 10) {

@@ -98,7 +98,7 @@ public:
         template<class>
         using is_referable = aux::false_type;
 
-        explicit scope(const std::initializer_list<TGiven>& object)
+        scope(const std::initializer_list<TGiven>& object)
             : object_(object)
         { }
 

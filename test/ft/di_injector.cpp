@@ -56,7 +56,7 @@ test create_using_shared_ptr = [] {
 
 test create_ptr = [] {
     struct c {
-        c(di::aux::owner<i1*> ptr) { delete ptr; }
+        explicit c(di::aux::owner<i1*> ptr) { delete ptr; }
     };
 
     auto injector = di::make_injector(
@@ -67,7 +67,7 @@ test create_ptr = [] {
 };
 
 test create_interface_when_impl_with_one_arg_ctor = [] {
-    struct impl : i1 { impl(int) { } void dummy1() override { } };
+    struct impl : i1 { explicit impl(int) { } void dummy1() override { } };
 
     auto injector = di::make_injector(
         di::bind<i1>().to<impl>()

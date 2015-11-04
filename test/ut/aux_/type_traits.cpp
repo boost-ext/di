@@ -48,8 +48,8 @@ test has_method = [] {
 
 test is_braces_constructible_types = [] {
     struct c { };
-    struct ctor { ctor(int) { } };
-    struct ctor_def_value { ctor_def_value(int = 0) { } };
+    struct ctor { explicit ctor(int) { } };
+    struct ctor_def_value { explicit ctor_def_value(int = 0) { } };
     struct ctor_def { ctor_def() noexcept = default; };
     struct agg1 { int i = {}; };
     struct agg2 { int& i; double d = {}; };

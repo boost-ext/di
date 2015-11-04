@@ -236,7 +236,7 @@ test exposed_bind = [] {
     static constexpr auto i = 42;
 
     struct c {
-        BOOST_DI_INJECT(c, (named = name) int i)
+        BOOST_DI_INJECT(explicit c, (named = name) int i)
             : i(i)
         { }
 
@@ -292,7 +292,7 @@ test exposed_bind_interface = [] {
 
 test exposed_bind_interface_module = [] {
     struct c {
-        BOOST_DI_INJECT(c, (named = name) std::unique_ptr<i1> i)
+        BOOST_DI_INJECT(explicit c, (named = name) std::unique_ptr<i1> i)
             : i(std::move(i))
         { }
 

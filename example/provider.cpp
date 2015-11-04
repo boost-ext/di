@@ -24,7 +24,7 @@ public:
 /*<<`transaction` provider>>*/
 struct transaction : provider<int> {
     /*<<implementation of `provider` requirement >>*/
-    virtual int get() const {
+    int get() const override {
         return next();
     }
 
