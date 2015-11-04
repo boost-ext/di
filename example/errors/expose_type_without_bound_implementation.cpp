@@ -12,7 +12,7 @@ namespace di = boost::di;
 struct interface { virtual ~interface() noexcept = default; virtual void dummy() = 0; };
 
 struct example {
-    example(std::unique_ptr<interface>) { }
+    explicit example(std::unique_ptr<interface>) { }
 };
 
 int main() {

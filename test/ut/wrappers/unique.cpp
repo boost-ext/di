@@ -13,7 +13,7 @@
 namespace boost { namespace di { inline namespace v1 { namespace wrappers {
 
 struct interface { virtual ~interface() noexcept = default; virtual void dummy() = 0; };
-struct implementation : public interface { virtual void dummy() { }; };
+struct implementation : public interface { void dummy() override { }; };
 
 constexpr auto i = 42;
 
