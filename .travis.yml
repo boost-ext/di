@@ -235,8 +235,16 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
   - os: osx
+    osx_image: xcode6.1
     env: BJAM=clang COMPILER=clang++
   - os: osx
+    osx_image: xcode6.1
+    env: CMAKE=ON COMPILER=clang++
+  - os: osx
+    osx_image: xcode6.4
+    env: BJAM=clang COMPILER=clang++
+  - os: osx
+    osx_image: xcode6.4
     env: CMAKE=ON COMPILER=clang++
   - os: osx
     osx_image: xcode7
@@ -249,6 +257,12 @@ matrix:
     env: BJAM=clang COMPILER=clang++
   - os: osx
     osx_image: xcode7.1
+    env: CMAKE=ON BENCHMARK=ON COMPILER=clang++
+  - os: osx
+    osx_image: xcode7.2b1
+    env: BJAM=clang COMPILER=clang++
+  - os: osx
+    osx_image: xcode7.2b1
     env: CMAKE=ON BENCHMARK=ON COMPILER=clang++
 
 before_script:
