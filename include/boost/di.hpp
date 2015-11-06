@@ -19,6 +19,9 @@
 #elif defined(_MSC_VER)
     #pragma warning(push)
 #endif
+#if defined(BOOST_DI_CFG_FWD)
+    BOOST_DI_CFG_FWD
+#endif
 #if defined(__clang__)
     #pragma clang diagnostic error "-Wundefined-inline"
     #pragma clang diagnostic error "-Wundefined-internal"
@@ -1477,18 +1480,15 @@ public:
     }
 };
 }}}}
-#if defined(BOOST_DI_CFG)
-    class BOOST_DI_CFG;
-#else
-#define BOOST_DI_CFG boost::di::config
+#if !defined(BOOST_DI_CFG)
+#define BOOST_DI_CFG boost::di::v1::config
 #endif
 namespace boost { namespace di { inline namespace v1 {
 template<class... TPolicies, BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>) = 0>
 inline auto make_policies(const TPolicies&... args) noexcept {
     return core::pool_t<TPolicies...>(args...);
 }
-class config {
-public:
+struct config {
     template<class T>
     static auto provider(const T&) noexcept {
         return providers::stack_over_heap{};
@@ -2618,14 +2618,14 @@ BOOST_DI_DEPRECATED("creatable constraint not satisfied")
 void
     create
 (const aux::false_type&) { }
-template<class, class...>
+template<class, class, class...>
 struct injector;
-template<class... T>
-struct injector<int, T...> : core::injector<::BOOST_DI_CFG, core::pool<>, T...> {
-    template<class TConfig, class TPolicies, class... TDeps>
-    injector(const core::injector<TConfig, TPolicies, TDeps...>& injector) noexcept
-        : core::injector<::BOOST_DI_CFG, core::pool<>, T...>(injector) {
-            using injector_t = core::injector<TConfig, TPolicies, TDeps...>;
+template<class TConfig, class... T>
+struct injector<TConfig, int, T...> : core::injector<TConfig, core::pool<>, T...> {
+    template<class... Ts>
+    injector(const core::injector<Ts...>& injector) noexcept
+        : core::injector<TConfig, core::pool<>, T...>(injector) {
+            using injector_t = core::injector<Ts...>;
             int _[]{0, (
                 detail::create<T>(
                     aux::integral_constant<bool,
@@ -2638,7 +2638,7 @@ struct injector<int, T...> : core::injector<::BOOST_DI_CFG, core::pool<>, T...> 
 };
 }
 template<class... T>
-using injector = detail::injector<BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>), T...>;
+using injector = detail::injector<::BOOST_DI_CFG, BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>), T...>;
 }}}
 namespace boost { namespace di { inline namespace v1 {
 template<

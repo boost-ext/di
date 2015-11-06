@@ -13,10 +13,8 @@
 #include "boost/di/concepts/callable.hpp"
 #include "boost/di/providers/stack_over_heap.hpp"
 
-#if defined(BOOST_DI_CFG) // __pph__
-    class BOOST_DI_CFG;
-#else // __pph__
-    #define BOOST_DI_CFG boost::di::config // __pph__
+#if !defined(BOOST_DI_CFG) // __pph__
+    #define BOOST_DI_CFG boost::di::v1::config // __pph__
 #endif // __pph__
 
 namespace boost { namespace di { inline namespace v1 {
@@ -26,8 +24,7 @@ inline auto make_policies(const TPolicies&... args) noexcept {
     return core::pool_t<TPolicies...>(args...);
 }
 
-class config {
-public:
+struct config {
     template<class T>
     static auto provider(const T&) noexcept {
         return providers::stack_over_heap{};

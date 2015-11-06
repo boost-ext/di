@@ -24,15 +24,15 @@ void
     create
 (const aux::false_type&) { }
 
-template<class, class...>
+template<class, class, class...>
 struct injector;
 
-template<class... T>
-struct injector<int, T...> : core::injector<::BOOST_DI_CFG, core::pool<>, T...> {
-    template<class TConfig, class TPolicies, class... TDeps>
-    injector(const core::injector<TConfig, TPolicies, TDeps...>& injector) noexcept // non explicit
-        : core::injector<::BOOST_DI_CFG, core::pool<>, T...>(injector) {
-            using injector_t = core::injector<TConfig, TPolicies, TDeps...>;
+template<class TConfig, class... T>
+struct injector<TConfig, int, T...> : core::injector<TConfig, core::pool<>, T...> {
+    template<class... Ts>
+    injector(const core::injector<Ts...>& injector) noexcept // non explicit
+        : core::injector<TConfig, core::pool<>, T...>(injector) {
+            using injector_t = core::injector<Ts...>;
             int _[]{0, (
                 detail::create<T>(
                     aux::integral_constant<bool,
@@ -47,7 +47,7 @@ struct injector<int, T...> : core::injector<::BOOST_DI_CFG, core::pool<>, T...> 
 } // namespace detail
 
 template<class... T>
-using injector = detail::injector<BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>), T...>;
+using injector = detail::injector<::BOOST_DI_CFG, BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>), T...>;
 
 }}} // boost::di::v1
 

@@ -28,6 +28,9 @@ pph() {
     echo "#elif defined(_MSC_VER)"
     echo "    #pragma warning(push)"
     echo "#endif"
+    echo "#if defined(BOOST_DI_CFG_FWD)"
+    echo "    BOOST_DI_CFG_FWD"
+    echo "#endif"
     rm -rf tmp && mkdir tmp && cp -r boost tmp && cd tmp && touch type_traits
     find . -iname "*.hpp" | xargs sed -i "s/\(.*\)__pph__/\/\/\/\/\1/"
     tail -n +10 "boost/di/aux_/compiler.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
