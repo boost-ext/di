@@ -9,6 +9,7 @@
 //<-
 #include <memory>
 //->
+class custom_policy;
 #define BOOST_DI_CFG custom_policy
 #include <boost/di.hpp>
 

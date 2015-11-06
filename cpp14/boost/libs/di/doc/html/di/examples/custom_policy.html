@@ -215,7 +215,8 @@ function toggleNextRow() {
 <p>
         <button class="TryItBtn" id="run_it_btn_1" onclick="show(1, 'https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/example/custom_policy.cpp')">Run this code!</button><textarea style="display: none" id="code_1"></textarea><br /><textarea style="display: none" id="output_1"></textarea><div id="code_listing_1">
       </p>
-<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_CFG</span> <span class="identifier">custom_policy</span>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">custom_policy</span><span class="special">;</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_DI_CFG</span> <span class="identifier">custom_policy</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
 <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
