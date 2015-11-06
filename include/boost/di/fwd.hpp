@@ -7,6 +7,8 @@
 #ifndef BOOST_DI_FWD_HPP
 #define BOOST_DI_FWD_HPP
 
+#define BOOST_DI_NAMESPACE ::boost::di::v1 // __pph__
+
 // libc++
 #if __has_include(<__config>) // __pph__
     #include <__config> // __pph__

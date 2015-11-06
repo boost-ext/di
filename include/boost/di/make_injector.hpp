@@ -16,7 +16,7 @@
 namespace boost { namespace di { inline namespace v1 {
 
 template<
-     class TConfig = ::BOOST_DI_CFG
+     class TConfig = BOOST_DI_CFG
    , class... TDeps
    , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type_list<TDeps...>>) = 0
    , BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>) = 0

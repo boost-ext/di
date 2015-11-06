@@ -120,6 +120,7 @@ struct make_index_sequence_impl<10> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9, 
 template<int N>
 using make_index_sequence = typename make_index_sequence_impl<N>::type;
 }}}}
+#define BOOST_DI_NAMESPACE ::boost::di::v1
 #if __has_include(<__config>)
     #include <__config>
 #endif
@@ -180,8 +181,8 @@ namespace boost { namespace di { inline namespace v1 {
     }
     namespace concepts { template<class...> struct boundable__; template<class...> struct any_of; }
 }}}
-#define BOOST_DI_REQUIRES(...) typename ::boost::di::aux::enable_if<__VA_ARGS__, int>::type
-#define BOOST_DI_REQUIRES_MSG(...) typename ::boost::di::aux::concept_check<__VA_ARGS__>::type
+#define BOOST_DI_REQUIRES(...) typename BOOST_DI_NAMESPACE::aux::enable_if<__VA_ARGS__, int>::type
+#define BOOST_DI_REQUIRES_MSG(...) typename BOOST_DI_NAMESPACE::aux::concept_check<__VA_ARGS__>::type
 namespace boost { namespace di { inline namespace v1 { namespace aux {
 template<class T> T&& declval();
 template<class T, T V>
@@ -329,7 +330,7 @@ struct is_unique_impl<T1, T2, Ts...>
 { };
 template<class... Ts>
 using is_unique = is_unique_impl<none_type, Ts...>;
-template<class T, class... TArgs> decltype(::boost::di::aux::declval<T>().operator()( ::boost::di::aux::declval<TArgs>()...) , ::boost::di::aux::true_type()) is_callable_with_impl(int); template<class, class...> ::boost::di::aux::false_type is_callable_with_impl(...); template<class T, class... TArgs> struct is_callable_with : decltype(is_callable_with_impl<T, TArgs...>(0)) { };
+template<class T, class... TArgs> decltype(BOOST_DI_NAMESPACE::aux::declval<T>().operator()( BOOST_DI_NAMESPACE::aux::declval<TArgs>()...) , BOOST_DI_NAMESPACE::aux::true_type()) is_callable_with_impl(int); template<class, class...> BOOST_DI_NAMESPACE::aux::false_type is_callable_with_impl(...); template<class T, class... TArgs> struct is_callable_with : decltype(is_callable_with_impl<T, TArgs...>(0)) { };
 struct callable_base_impl { void operator()(...) { } };
 template<class T>
 struct callable_base
@@ -707,7 +708,7 @@ public:
 };
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace scopes {
-template<class, class = int> struct has_deps : ::boost::di::aux::false_type { }; template<class T> struct has_deps<T, ::boost::di::aux::valid_t<typename T::deps>> : ::boost::di::aux::true_type { };
+template<class, class = int> struct has_deps : BOOST_DI_NAMESPACE::aux::false_type { }; template<class T> struct has_deps<T, BOOST_DI_NAMESPACE::aux::valid_t<typename T::deps>> : BOOST_DI_NAMESPACE::aux::true_type { };
 template<class TScope = scopes::deduce>
 class exposed {
 public:
@@ -812,7 +813,7 @@ template<class T>
 class no_implicit_conversions : public T {
     template<class U> operator U() const;
 };
-template<class, class = int> struct has_result_type : ::boost::di::aux::false_type { }; template<class T> struct has_result_type<T, ::boost::di::aux::valid_t<typename T::result_type>> : ::boost::di::aux::true_type { };
+template<class, class = int> struct has_result_type : BOOST_DI_NAMESPACE::aux::false_type { }; template<class T> struct has_result_type<T, BOOST_DI_NAMESPACE::aux::valid_t<typename T::result_type>> : BOOST_DI_NAMESPACE::aux::true_type { };
 template<class TGiven, class TProvider, class... Ts>
 struct is_expr : aux::integral_constant<bool,
     aux::is_callable_with<TGiven, no_implicit_conversions<
@@ -960,7 +961,7 @@ template<class T>
 using scopable = typename scopable__<T>::type;
 }}}}
 namespace boost { namespace di { inline namespace v1 { namespace core {
-template<class, class = int> struct is_injector : ::boost::di::aux::false_type { }; template<class T> struct is_injector<T, ::boost::di::aux::valid_t<typename T::deps>> : ::boost::di::aux::true_type { };
+template<class, class = int> struct is_injector : BOOST_DI_NAMESPACE::aux::false_type { }; template<class T> struct is_injector<T, BOOST_DI_NAMESPACE::aux::valid_t<typename T::deps>> : BOOST_DI_NAMESPACE::aux::true_type { };
 template<class>
 struct array_type;
 template<class T>
@@ -1220,7 +1221,7 @@ using callable = typename is_callable<Ts...>::type;
 #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
 #endif
 namespace boost { namespace di { inline namespace v1 { namespace type_traits {
-template<class, class = int> struct is_injectable : ::boost::di::aux::false_type { }; template<class T> struct is_injectable<T, ::boost::di::aux::valid_t<typename T::boost_di_inject__>> : ::boost::di::aux::true_type { };
+template<class, class = int> struct is_injectable : BOOST_DI_NAMESPACE::aux::false_type { }; template<class T> struct is_injectable<T, BOOST_DI_NAMESPACE::aux::valid_t<typename T::boost_di_inject__>> : BOOST_DI_NAMESPACE::aux::true_type { };
 struct direct { };
 struct uniform { };
 template<class T, int>
@@ -1481,7 +1482,7 @@ public:
 };
 }}}}
 #if !defined(BOOST_DI_CFG)
-#define BOOST_DI_CFG boost::di::v1::config
+#define BOOST_DI_CFG BOOST_DI_NAMESPACE::config
 #endif
 namespace boost { namespace di { inline namespace v1 {
 template<class... TPolicies, BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>) = 0>
@@ -2638,11 +2639,11 @@ struct injector<TConfig, int, T...> : core::injector<TConfig, core::pool<>, T...
 };
 }
 template<class... T>
-using injector = detail::injector<::BOOST_DI_CFG, BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>), T...>;
+using injector = detail::injector<BOOST_DI_CFG, BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>), T...>;
 }}}
 namespace boost { namespace di { inline namespace v1 {
 template<
-     class TConfig = ::BOOST_DI_CFG
+     class TConfig = BOOST_DI_CFG
    , class... TDeps
    , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type_list<TDeps...>>) = 0
    , BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>) = 0

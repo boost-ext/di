@@ -47,7 +47,7 @@ struct injector<TConfig, int, T...> : core::injector<TConfig, core::pool<>, T...
 } // namespace detail
 
 template<class... T>
-using injector = detail::injector<::BOOST_DI_CFG, BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>), T...>;
+using injector = detail::injector<BOOST_DI_CFG, BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>), T...>;
 
 }}} // boost::di::v1
 
