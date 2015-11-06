@@ -24,7 +24,10 @@ struct abstract_type {
       return constraint_not_satisfied{}.error();
     }
 
-    static inline T* error(_ = "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?");
+    // clang-format off
+    static inline T*
+	error(_ = "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?");
+    // clang-format on
   };
 
   struct is_not_fully_implemented {
@@ -33,7 +36,10 @@ struct abstract_type {
       return constraint_not_satisfied{}.error();
     }
 
-    static inline T* error(_ = "type is not implemented, did you forget to implement all interface methods?");
+    // clang-format off
+    static inline T*
+	error(_ = "type is not implemented, did you forget to implement all interface methods?");
+    // clang-format on
   };
 
   template <class TName>
@@ -44,8 +50,10 @@ struct abstract_type {
         return constraint_not_satisfied{}.error();
       }
 
-      static inline T* error(
-          _ = "type is not bound, did you forget to add: 'di::bind<interface>.named(name).to<implementation>()'?");
+      // clang-format off
+      static inline T*
+	  error(_ = "type is not bound, did you forget to add: 'di::bind<interface>.named(name).to<implementation>()'?");
+      // clang-format on
     };
 
     struct is_not_fully_implemented {
@@ -54,7 +62,10 @@ struct abstract_type {
         return constraint_not_satisfied{}.error();
       }
 
-      static inline T* error(_ = "type is not implemented, did you forget to implement all interface methods?");
+      // clang-format off
+      static inline T*
+	  error(_ = "type is not implemented, did you forget to implement all interface methods?");
+      // clang-format on
     };
   };
 };
@@ -68,7 +79,10 @@ struct type {
       return constraint_not_satisfied{}.error();
     }
 
-    static inline To error(_ = "wrapper is not convertible to requested type, did you mistake the scope?");
+    // clang-format off
+    static inline To
+	error(_ = "wrapper is not convertible to requested type, did you mistake the scope?");
+    // clang-format on
   };
 
   struct has_ambiguous_number_of_constructor_parameters {
@@ -81,7 +95,10 @@ struct type {
           return constraint_not_satisfied{}.error();
         }
 
-        static inline T* error(_ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits");
+        // clang-format off
+        static inline T*
+		error(_ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits");
+        // clang-format on
       };
     };
   };
@@ -94,8 +111,10 @@ struct type {
         return constraint_not_satisfied{}.error();
       }
 
-      static inline T* error(
-          _ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters");
+      // clang-format off
+      static inline T*
+	  error(_ = "increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters");
+      // clang-format on
     };
   };
 };

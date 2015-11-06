@@ -83,8 +83,10 @@ struct type {
       return constraint_not_satisfied{}.error();
     }
 
-    static inline aux::false_type error(
-        _ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>!");
+    // clang-format off
+    static inline aux::false_type
+	error(_ = "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>!");
+    // clang-format on
   };
 };
 

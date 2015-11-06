@@ -18,8 +18,12 @@ namespace detail {
 template <class>
 void create(const aux::true_type&) {}
 
+// clang-format off
 template <class>
-BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG void create(const aux::false_type&) {}
+BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG void
+	create
+(const aux::false_type&) {}
+// clang-format on
 
 template <class, class, class...>
 struct injector;
