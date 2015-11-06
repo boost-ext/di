@@ -29,7 +29,7 @@ matrix:
         packages:
         - xsltproc
   - os: linux
-    env: CLANG_COMPLETE=ON
+    env: STYLE_CHECK=ON
   - os: linux
     env: BJAM=clang MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=/usr/local/clang-3.4/bin/clang++
     addons:
@@ -293,7 +293,7 @@ script:
   ${MEMCHECK} cxxflags=" $CXXFLAGS" linkflags=" $LDFLAGS"); fi
 - if [ "${CMAKE}" != "" ]; then (cd build && cmake
   .. && cmake --build . && travis_wait ctest --output-on-failure); fi
-- if [ "${CLANG_COMPLETE}" != "" ]; then (find include example test -iname "*.hpp" -or -iname "*.cpp" |
+- if [ "${STYLE_CHECK}" != "" ]; then (find include example test -iname "*.hpp" -or -iname "*.cpp" |
   xargs clang-format - && exit `git ls-files -m | wc -l`); fi
 - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (git
   clone --quiet --recursive --depth=1 --single-branch https://github.com/boostorg/boost.git
