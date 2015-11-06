@@ -85,4 +85,5 @@ namespace boost { namespace di { inline namespace v1 {
 }
 
 cd "`readlink -f \`dirname $0\``/../include" && pph > "boost/di.hpp"
+clang-format -i "boost/di.hpp"
 

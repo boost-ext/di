@@ -55,8 +55,8 @@ class example_with_different_parameters_order_and_types {
     assert(42 == i);
   }
 
-  std::shared_ptr<interface1>
-      up_;  // in order to delete pointer - Boost.DI always transfer ownership to user in case of pointers
+  // in order to delete pointer - Boost.DI always transfer ownership to user in case of pointers
+  std::shared_ptr<interface1> up_;
 };
 
 int main() {
