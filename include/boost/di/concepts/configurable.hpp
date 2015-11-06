@@ -13,66 +13,58 @@
 
 namespace concepts {
 
-template<class> struct policies { };
-struct providable_type { };
-struct callable_type { };
+template <class>
+struct policies {};
+struct providable_type {};
+struct callable_type {};
 
-template<class>
+template <class>
 struct config {
-    template<class...>
-    struct requires_ : aux::false_type { };
+  template <class...>
+  struct requires_ : aux::false_type {};
 };
 
 aux::false_type configurable_impl(...);
 
-template<class T>
-auto configurable_impl(T&& t) -> aux::is_valid_expr<
-    decltype(T::provider(static_cast<const T&>(t)))
-  , decltype(T::policies(static_cast<const T&>(t)))
->;
+template <class T>
+auto configurable_impl(T&& t) -> aux::is_valid_expr<decltype(T::provider(static_cast<const T&>(t))),
+                                                    decltype(T::policies(static_cast<const T&>(t)))>;
 
-template<class T1, class T2>
-struct get_configurable_error
-    : aux::type_list<T1, T2>
-{ };
+template <class T1, class T2>
+struct get_configurable_error : aux::type_list<T1, T2> {};
 
-template<class T>
+template <class T>
 struct get_configurable_error<aux::true_type, T> {
-    using type = T;
+  using type = T;
 };
 
-template<class T>
+template <class T>
 struct get_configurable_error<T, aux::true_type> {
-    using type = T;
+  using type = T;
 };
 
-template<>
-struct get_configurable_error<aux::true_type, aux::true_type>
-    : aux::true_type
-{ };
+template <>
+struct get_configurable_error<aux::true_type, aux::true_type> : aux::true_type {};
 
-template<class T>
+template <class T>
 auto is_configurable(const aux::true_type&) {
-    return typename get_configurable_error<
-        decltype(providable<decltype(T::provider(aux::declval<T>()))>())
-      , decltype(callable<decltype(T::policies(aux::declval<T>()))>())
-    >::type{};
+  return typename get_configurable_error<decltype(providable<decltype(T::provider(aux::declval<T>()))>()),
+                                         decltype(callable<decltype(T::policies(aux::declval<T>()))>())>::type{};
 }
 
-template<class T>
+template <class T>
 auto is_configurable(const aux::false_type&) {
-    return typename config<T>::template requires_<provider<providable_type(...)>, policies<callable_type(...)>>{};
+  return typename config<T>::template requires_<provider<providable_type(...)>, policies<callable_type(...)>>{};
 }
 
-template<class T>
+template <class T>
 struct configurable__ {
-    using type = decltype(is_configurable<T>(decltype(configurable_impl(aux::declval<T>())){}));
+  using type = decltype(is_configurable<T>(decltype(configurable_impl(aux::declval<T>())){}));
 };
 
-template<class T>
+template <class T>
 using configurable = typename configurable__<T>::type;
 
-} // concepts
+}  // concepts
 
 #endif
-

@@ -11,40 +11,39 @@
 
 namespace type_traits {
 
-template<class T, class U>
+template <class T, class U>
 struct rebind_traits {
-    using type = U;
+  using type = U;
 };
 
-template<class T, class U>
+template <class T, class U>
 struct rebind_traits<T, named<U>> {
-    using type = named<U, T>;
+  using type = named<U, T>;
 };
 
-template<class T, class U>
+template <class T, class U>
 struct rebind_traits<std::shared_ptr<T>, U> {
-    using type = std::shared_ptr<U>;
+  using type = std::shared_ptr<U>;
 };
 
-template<class T, class U>
+template <class T, class U>
 struct rebind_traits<std::shared_ptr<T>, named<U>> {
-    using type = named<U, std::shared_ptr<T>>;
+  using type = named<U, std::shared_ptr<T>>;
 };
 
-template<class T, class D, class U>
+template <class T, class D, class U>
 struct rebind_traits<std::unique_ptr<T, D>, U> {
-    using type = std::unique_ptr<U, D>;
+  using type = std::unique_ptr<U, D>;
 };
 
-template<class T, class D, class U>
+template <class T, class D, class U>
 struct rebind_traits<std::unique_ptr<T, D>, named<U>> {
-    using type = named<U, std::unique_ptr<T, D>>;
+  using type = named<U, std::unique_ptr<T, D>>;
 };
 
-template<class T, class U>
+template <class T, class U>
 using rebind_traits_t = typename rebind_traits<T, U>::type;
 
-} // type_traits
+}  // type_traits
 
 #endif
-

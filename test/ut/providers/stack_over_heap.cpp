@@ -10,38 +10,42 @@
 
 namespace providers {
 
-template<class T, class TInit, class... TArgs>
+template <class T, class TInit, class... TArgs>
 auto test_heap(const aux::type<T>&, const TInit& init, const TArgs&... args) {
-    std::unique_ptr<T> object{stack_over_heap{}.get<T, T>(init, type_traits::heap{}, args...)};
-    expect(object.get());
+  std::unique_ptr<T> object{stack_over_heap{}.get<T, T>(init, type_traits::heap{}, args...)};
+  expect(object.get());
 }
 
-template<class T, class TInit, class... TArgs>
+template <class T, class TInit, class... TArgs>
 auto test_stack(const aux::type<T>&, const TInit& init, const TArgs&... args) {
-    T object = stack_over_heap{}.get<T, T>(init, type_traits::stack{}, args...);
-    (void)object;
+  T object = stack_over_heap{}.get<T, T>(init, type_traits::stack{}, args...);
+  (void)object;
 }
 
 test get_no_args = [] {
-    struct c { };
-    test_stack(aux::type<int>{}, type_traits::direct{});
-    test_heap(aux::type<int>{}, type_traits::uniform{});
-    test_stack(aux::type<int>{}, type_traits::uniform{});
-    test_heap(aux::type<c>{}, type_traits::direct{});
-    test_stack(aux::type<c>{}, type_traits::direct{});
-    test_heap(aux::type<c>{}, type_traits::uniform{});
-    test_stack(aux::type<c>{}, type_traits::uniform{});
+  struct c {};
+  test_stack(aux::type<int>{}, type_traits::direct{});
+  test_heap(aux::type<int>{}, type_traits::uniform{});
+  test_stack(aux::type<int>{}, type_traits::uniform{});
+  test_heap(aux::type<c>{}, type_traits::direct{});
+  test_stack(aux::type<c>{}, type_traits::direct{});
+  test_heap(aux::type<c>{}, type_traits::uniform{});
+  test_stack(aux::type<c>{}, type_traits::uniform{});
 };
 
 test get_with_args = [] {
-    struct direct { direct(int, double) { } };
-    struct uniform { int i = 0; double d = 0.0; };
-    test_stack(aux::type<direct>{}, type_traits::direct{}, int{}, double{});
-    test_heap(aux::type<direct>{}, type_traits::uniform{}, int{}, double{});
+  struct direct {
+    direct(int, double) {}
+  };
+  struct uniform {
+    int i = 0;
+    double d = 0.0;
+  };
+  test_stack(aux::type<direct>{}, type_traits::direct{}, int{}, double{});
+  test_heap(aux::type<direct>{}, type_traits::uniform{}, int{}, double{});
 #if !defined(_MSC_VER)
-    test_heap(aux::type<uniform>{}, type_traits::uniform{}, int{}, double{});
+  test_heap(aux::type<uniform>{}, type_traits::uniform{}, int{}, double{});
 #endif
 };
 
-} // providers
-
+}  // providers

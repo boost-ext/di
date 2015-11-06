@@ -15,13 +15,11 @@
 #include <boost/di.hpp>
 
 class config : public di::config {
-public:
-    template<class T>
-    static auto policies(const T&) noexcept {
-        return di::make_policies(
-            [](auto type){ std::cout << typeid(typename decltype(type)::type).name() << std::endl; }
-        );
-    }
+ public:
+  template <class T>
+  static auto policies(const T&) noexcept {
+    return di::make_policies([](auto type) { std::cout << typeid(typename decltype(type)::type).name() << std::endl; });
+  }
 };
 
 //<-
@@ -29,4 +27,3 @@ public:
 //->
 
 //]
-

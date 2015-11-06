@@ -14,171 +14,161 @@ namespace scopes {
 
 namespace detail {
 
-template<class T, class TExpected, class TGiven>
+template <class T, class TExpected, class TGiven>
 struct arg {
-    using type = T;
-    using expected = TExpected;
-    using given = TGiven;
+  using type = T;
+  using expected = TExpected;
+  using given = TGiven;
 };
 
-template<class T>
+template <class T>
 struct wrapper_traits {
-    using type = wrappers::unique<T>;
+  using type = wrappers::unique<T>;
 };
 
-template<class T>
+template <class T>
 struct wrapper_traits<std::shared_ptr<T>> {
-    using type = wrappers::shared<T>;
+  using type = wrappers::shared<T>;
 };
 
-template<class T>
+template <class T>
 using wrapper_traits_t = typename wrapper_traits<T>::type;
 
-template<class T>
+template <class T>
 class no_implicit_conversions : public T {
-    template<class U> operator U() const;
+  template <class U>
+  operator U() const;
 };
 
 BOOST_DI_HAS_TYPE(has_result_type, result_type);
 
-template<class TGiven, class TProvider, class... Ts>
-struct is_expr : aux::integral_constant<bool,
-    aux::is_callable_with<TGiven, no_implicit_conversions<
-        aux::remove_qualifiers_t<decltype(aux::declval<TProvider>().injector_)>
-    >, Ts...>::value && !has_result_type<TGiven>::value
-> { };
+template <class TGiven, class TProvider, class... Ts>
+struct is_expr
+    : aux::integral_constant<bool, aux::is_callable_with<TGiven, no_implicit_conversions<aux::remove_qualifiers_t<
+                                                                     decltype(aux::declval<TProvider>().injector_)>>,
+                                                         Ts...>::value &&
+                                       !has_result_type<TGiven>::value> {};
 
-} // detail
+}  // detail
 
 class external {
-public:
-    template<class, class TGiven, class = int>
-    struct scope {
-        template<class>
-        using is_referable = aux::false_type;
+ public:
+  template <class, class TGiven, class = int>
+  struct scope {
+    template <class>
+    using is_referable = aux::false_type;
 
-        explicit scope(const TGiven& object)
-            : object_{object}
-        { }
+    explicit scope(const TGiven& object) : object_{object} {}
 
-        template<class, class TProvider>
-        static TGiven try_create(const TProvider&);
+    template <class, class TProvider>
+    static TGiven try_create(const TProvider&);
 
-        template<class, class TProvider>
-        auto create(const TProvider&) const noexcept {
-            return wrappers::unique<TGiven>{object_};
-        }
+    template <class, class TProvider>
+    auto create(const TProvider&) const noexcept {
+      return wrappers::unique<TGiven>{object_};
+    }
 
-        TGiven object_;
-    };
+    TGiven object_;
+  };
 
-    template<class TExpected, class TGiven>
-    struct scope<TExpected, std::shared_ptr<TGiven>> {
-        template<class T>
-        using is_referable =
-            typename wrappers::shared<TGiven>::template is_referable<aux::remove_qualifiers_t<T>>;
+  template <class TExpected, class TGiven>
+  struct scope<TExpected, std::shared_ptr<TGiven>> {
+    template <class T>
+    using is_referable = typename wrappers::shared<TGiven>::template is_referable<aux::remove_qualifiers_t<T>>;
 
-        explicit scope(const std::shared_ptr<TGiven>& object)
-            : object_{object}
-        { }
+    explicit scope(const std::shared_ptr<TGiven>& object) : object_{object} {}
 
-        template<class, class TProvider>
-        static wrappers::shared<TGiven> try_create(const TProvider&);
+    template <class, class TProvider>
+    static wrappers::shared<TGiven> try_create(const TProvider&);
 
-        template<class, class TProvider>
-        auto create(const TProvider&) const noexcept {
-            return wrappers::shared<TGiven>{object_};
-        }
+    template <class, class TProvider>
+    auto create(const TProvider&) const noexcept {
+      return wrappers::shared<TGiven>{object_};
+    }
 
-        std::shared_ptr<TGiven> object_;
-    };
+    std::shared_ptr<TGiven> object_;
+  };
 
-    template<class TExpected, class TGiven>
-    struct scope<TExpected, std::initializer_list<TGiven>> {
-        template<class>
-        using is_referable = aux::false_type;
+  template <class TExpected, class TGiven>
+  struct scope<TExpected, std::initializer_list<TGiven>> {
+    template <class>
+    using is_referable = aux::false_type;
 
-        scope(const std::initializer_list<TGiven>& object)
-            : object_(object)
-        { }
+    scope(const std::initializer_list<TGiven>& object) : object_(object) {}
 
-        template<class, class TProvider>
-        static std::initializer_list<TGiven> try_create(const TProvider&);
+    template <class, class TProvider>
+    static std::initializer_list<TGiven> try_create(const TProvider&);
 
-        template<class, class TProvider>
-        auto create(const TProvider&) const noexcept {
-            return wrappers::unique<std::initializer_list<TGiven>>{object_};
-        }
+    template <class, class TProvider>
+    auto create(const TProvider&) const noexcept {
+      return wrappers::unique<std::initializer_list<TGiven>>{object_};
+    }
 
-        std::initializer_list<TGiven> object_;
-    };
+    std::initializer_list<TGiven> object_;
+  };
 
-    template<class TExpected, class TGiven>
-    struct scope<TExpected, TGiven&, BOOST_DI_REQUIRES(!aux::is_callable<TGiven>::value)> {
-        template<class>
-        using is_referable = aux::true_type;
+  template <class TExpected, class TGiven>
+  struct scope<TExpected, TGiven&, BOOST_DI_REQUIRES(!aux::is_callable<TGiven>::value)> {
+    template <class>
+    using is_referable = aux::true_type;
 
-        explicit scope(TGiven& object)
-            : object_{object}
-        { }
+    explicit scope(TGiven& object) : object_{object} {}
 
-        template<class, class TProvider>
-        static wrappers::shared<TGiven&> try_create(const TProvider&);
+    template <class, class TProvider>
+    static wrappers::shared<TGiven&> try_create(const TProvider&);
 
-        template<class, class TProvider>
-        auto create(const TProvider&) const noexcept {
-            return object_;
-        }
+    template <class, class TProvider>
+    auto create(const TProvider&) const noexcept {
+      return object_;
+    }
 
-        wrappers::shared<TGiven&> object_;
-    };
+    wrappers::shared<TGiven&> object_;
+  };
 
-    template<class TExpected, class TGiven>
-    struct scope<TExpected, TGiven, BOOST_DI_REQUIRES(aux::is_callable<TGiven>::value)> {
-        template<class>
-        using is_referable = aux::false_type;
+  template <class TExpected, class TGiven>
+  struct scope<TExpected, TGiven, BOOST_DI_REQUIRES(aux::is_callable<TGiven>::value)> {
+    template <class>
+    using is_referable = aux::false_type;
 
-        explicit scope(const TGiven& object)
-            : object_(object)
-        { }
+    explicit scope(const TGiven& object) : object_(object) {}
 
-        template<class T, class TProvider>
-        T static try_create(const TProvider&);
+    template <class T, class TProvider>
+    T static try_create(const TProvider&);
 
-        template<class, class TProvider,
-            BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value &&
-                               aux::is_callable<TGiven>::value &&
-                               aux::is_callable<TExpected>::value) = 0>
-        auto create(const TProvider&) const noexcept {
-            return wrappers::unique<TExpected>{object_};
-        }
+    template <class, class TProvider,
+              BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable<TGiven>::value &&
+                                aux::is_callable<TExpected>::value) = 0>
+    auto create(const TProvider&) const noexcept {
+      return wrappers::unique<TExpected>{object_};
+    }
 
-        template<class T, class TProvider,
-            BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value &&
-                               aux::is_callable_with<TGiven>::value &&
-                              !aux::is_callable<TExpected>::value) = 0>
-        auto create(const TProvider&) const noexcept {
-            using wrapper = detail::wrapper_traits_t<decltype(aux::declval<TGiven>()())>;
-            return wrapper{object_()};
-        }
+    template <class T, class TProvider,
+              BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable_with<TGiven>::value &&
+                                !aux::is_callable<TExpected>::value) = 0>
+    auto create(const TProvider&) const noexcept {
+      using wrapper = detail::wrapper_traits_t<decltype(aux::declval<TGiven>()())>;
+      return wrapper{object_()};
+    }
 
-        template<class, class TProvider, BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider>::value) = 0>
-        auto create(const TProvider& provider) noexcept {
-            using wrapper = detail::wrapper_traits_t<decltype((object_)(provider.injector_))>;
-            return wrapper{(object_)(provider.injector_)};
-        }
+    template <class, class TProvider, BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider>::value) = 0>
+    auto create(const TProvider& provider) noexcept {
+      using wrapper = detail::wrapper_traits_t<decltype((object_)(provider.injector_))>;
+      return wrapper{(object_)(provider.injector_)};
+    }
 
-        template<class T, class TProvider, BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
-        auto create(const TProvider& provider) noexcept {
-            using wrapper = detail::wrapper_traits_t<decltype((object_)(provider.injector_, detail::arg<T, TExpected, TGiven>{}))>;
-            return wrapper{(object_)(provider.injector_, detail::arg<T, TExpected, TGiven>{})};
-        }
+    template <
+        class T, class TProvider,
+        BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
+    auto create(const TProvider& provider) noexcept {
+      using wrapper =
+          detail::wrapper_traits_t<decltype((object_)(provider.injector_, detail::arg<T, TExpected, TGiven>{}))>;
+      return wrapper{(object_)(provider.injector_, detail::arg<T, TExpected, TGiven>{})};
+    }
 
-        TGiven object_;
-    };
+    TGiven object_;
+  };
 };
 
-} // scopes
+}  // scopes
 
 #endif
-

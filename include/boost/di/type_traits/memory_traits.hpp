@@ -12,53 +12,52 @@
 
 namespace type_traits {
 
-struct stack { };
-struct heap { };
+struct stack {};
+struct heap {};
 
-template<class T, class = int>
+template <class T, class = int>
 struct memory_traits {
-    using type = stack;
+  using type = stack;
 };
 
-template<class T>
+template <class T>
 struct memory_traits<T*> {
-    using type = heap;
+  using type = heap;
 };
 
-template<class T>
+template <class T>
 struct memory_traits<const T&> {
-    using type = typename memory_traits<T>::type;
+  using type = typename memory_traits<T>::type;
 };
 
-template<class T, class TDeleter>
+template <class T, class TDeleter>
 struct memory_traits<std::unique_ptr<T, TDeleter>> {
-    using type = heap;
+  using type = heap;
 };
 
-template<class T>
+template <class T>
 struct memory_traits<std::shared_ptr<T>> {
-    using type = heap;
+  using type = heap;
 };
 
-template<class T>
+template <class T>
 struct memory_traits<boost::shared_ptr<T>> {
-    using type = heap;
+  using type = heap;
 };
 
-template<class T>
+template <class T>
 struct memory_traits<std::weak_ptr<T>> {
-    using type = heap;
+  using type = heap;
 };
 
-template<class T>
+template <class T>
 struct memory_traits<T, BOOST_DI_REQUIRES(aux::is_polymorphic<T>::value)> {
-    using type = heap;
+  using type = heap;
 };
 
-template<class T>
+template <class T>
 using memory_traits_t = typename memory_traits<T>::type;
 
-} // type_traits
+}  // type_traits
 
 #endif
-

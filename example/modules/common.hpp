@@ -11,13 +11,30 @@
 #define COMMON_HPP
 //->
 
-struct ibutton { virtual ~ibutton() noexcept = default; virtual void dummy() = 0; }; struct button : ibutton { void dummy() override { }; };
-struct iwindow { virtual ~iwindow() noexcept = default; virtual void dummy() = 0; }; struct window : iwindow { void dummy() override { }; };
-struct iboard { virtual ~iboard() noexcept = default; virtual void dummy() = 0; }; struct board : iboard { void dummy() override { }; };
+struct ibutton {
+  virtual ~ibutton() noexcept = default;
+  virtual void dummy() = 0;
+};
+struct button : ibutton {
+  void dummy() override{};
+};
+struct iwindow {
+  virtual ~iwindow() noexcept = default;
+  virtual void dummy() = 0;
+};
+struct window : iwindow {
+  void dummy() override{};
+};
+struct iboard {
+  virtual ~iboard() noexcept = default;
+  virtual void dummy() = 0;
+};
+struct board : iboard {
+  void dummy() override{};
+};
 
 //<-
 #endif
 //->
 
 //]
-

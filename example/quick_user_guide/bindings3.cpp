@@ -10,14 +10,11 @@
 
 namespace di = boost::di;
 
-template<int N> using int_ =
-    std::integral_constant<int, N>;
+template <int N>
+using int_ = std::integral_constant<int, N>;
 
 int main() {
-    auto injector = di::make_injector(
-        di::bind<int>().to<int_<42>>()
-    );
+  auto injector = di::make_injector(di::bind<int>().to<int_<42>>());
 
-    assert(42 == injector.create<int>());
+  assert(42 == injector.create<int>());
 }
-

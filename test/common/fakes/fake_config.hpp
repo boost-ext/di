@@ -10,18 +10,17 @@
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/providers/heap.hpp"
 
-template<class = void>
+template <class = void>
 struct fake_config {
-    template<class T>
-    static auto policies(const T&) noexcept {
-        return aux::type_list<>{};
-    }
+  template <class T>
+  static auto policies(const T&) noexcept {
+    return aux::type_list<>{};
+  }
 
-    template<class T>
-    static auto provider(const T&) noexcept {
-        return providers::heap{};
-    }
+  template <class T>
+  static auto provider(const T&) noexcept {
+    return providers::heap{};
+  }
 };
 
 #endif
-

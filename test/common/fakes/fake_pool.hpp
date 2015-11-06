@@ -7,8 +7,7 @@
 #ifndef BOOST_DI_FAKE_POOL_HPP
 #define BOOST_DI_FAKE_POOL_HPP
 
-template<class... Ts>
-struct fake_pool : Ts... { };
+template <class... Ts>
+struct fake_pool : Ts... {};
 
 #endif
-

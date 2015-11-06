@@ -14,46 +14,45 @@ auto custom_called = false;
 auto global_called = false;
 
 struct custom_policy {
-    template<class T>
-    void operator()(const T&) const noexcept {
-        custom_called = true;
-    }
+  template <class T>
+  void operator()(const T&) const noexcept {
+    custom_called = true;
+  }
 };
 
 struct global_policy {
-    template<class T>
-    void operator()(const T&) const noexcept {
-        global_called = true;
-    }
+  template <class T>
+  void operator()(const T&) const noexcept {
+    global_called = true;
+  }
 };
 
 class custom_policies : public di::config {
-public:
-    template<class T>
-    static auto policies(const T&) noexcept {
-        return di::make_policies(custom_policy{});
-    }
+ public:
+  template <class T>
+  static auto policies(const T&) noexcept {
+    return di::make_policies(custom_policy{});
+  }
 };
 
 class global_policies : public di::config {
-public:
-    template<class T>
-    static auto policies(const T&) noexcept {
-        return di::make_policies(global_policy{});
-    }
+ public:
+  template <class T>
+  static auto policies(const T&) noexcept {
+    return di::make_policies(global_policy{});
+  }
 };
 
 test call_policies_via_global_config = [] {
-    global_called = 0;
-    auto injector = di::make_injector();
-    injector.create<int>();
-    expect(1 == global_called);
+  global_called = 0;
+  auto injector = di::make_injector();
+  injector.create<int>();
+  expect(1 == global_called);
 };
 
 test call_custom_policies_although_global_config = [] {
-    custom_called = 0;
-    auto injector = di::make_injector<custom_policies>();
-    injector.create<int>();
-    expect(1 == custom_called);
+  custom_called = 0;
+  auto injector = di::make_injector<custom_policies>();
+  injector.create<int>();
+  expect(1 == custom_called);
 };
-

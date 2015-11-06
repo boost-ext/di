@@ -16,49 +16,38 @@
 
 namespace di = boost::di;
 
-auto first = []{};
-auto second = []{};
+auto first = [] {};
+auto second = [] {};
 
 class app {
-public:
-    BOOST_DI_INJECT(app, (named = first) int value1
-                       , (named = second) int value2
-                       , const std::string& text
-                       , std::shared_ptr<ilogger> logger);
+ public:
+  BOOST_DI_INJECT(app, (named = first) int value1, (named = second) int value2, const std::string& text,
+                  std::shared_ptr<ilogger> logger);
 
-    void run() const;
+  void run() const;
 
-private:
-    int value1_ = 0;
-    int value2_ = 0;
-    std::string text_;
-    std::shared_ptr<ilogger> logger_;
+ private:
+  int value1_ = 0;
+  int value2_ = 0;
+  std::string text_;
+  std::shared_ptr<ilogger> logger_;
 };
 
-app::app(int value1
-       , int value2
-       , const std::string& text
-       , std::shared_ptr<ilogger> logger)
-       : value1_(value1), value2_(value2) , text_(text), logger_(logger)
-{ }
+app::app(int value1, int value2, const std::string& text, std::shared_ptr<ilogger> logger)
+    : value1_(value1), value2_(value2), text_(text), logger_(logger) {}
 
 void app::run() const {
-    if (value1_ || value2_) {
-        logger_->log(text_);
-    }
+  if (value1_ || value2_) {
+    logger_->log(text_);
+  }
 }
 
 auto module(const int& i) {
-    return di::make_injector(
-        di::bind<ilogger>().to<logger>()
-      , di::bind<int>().named(first).to(i)
-      , di::bind<int>().named(second).to(0)
-      , di::bind<std::string>().to("hello world")
-    );
+  return di::make_injector(di::bind<ilogger>().to<logger>(), di::bind<int>().named(first).to(i),
+                           di::bind<int>().named(second).to(0), di::bind<std::string>().to("hello world"));
 }
 
 int main(int argc, char** argv) {
-    auto injector = di::make_injector(module(argc > 1 ? std::atoi(argv[1]) : 0));
-    injector.create<app>().run();
+  auto injector = di::make_injector(module(argc > 1 ? std::atoi(argv[1]) : 0));
+  injector.create<app>().run();
 }
-

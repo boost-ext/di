@@ -11,29 +11,28 @@
 namespace scopes {
 
 class deduce {
-public:
-    template<class TExpected, class TGiven>
-    class scope {
-    public:
-        template<class T>
-        using is_referable = typename type_traits::scope_traits_t<T>::template
-            scope<TExpected, TGiven>::template is_referable<T>;
+ public:
+  template <class TExpected, class TGiven>
+  class scope {
+   public:
+    template <class T>
+    using is_referable =
+        typename type_traits::scope_traits_t<T>::template scope<TExpected, TGiven>::template is_referable<T>;
 
-        template<class T, class TProvider>
-        static decltype(typename type_traits::scope_traits_t<T>::template
-            scope<TExpected, TGiven>{}.template try_create<T>(aux::declval<TProvider>()))
-        try_create(const TProvider&);
+    template <class T, class TProvider>
+    static decltype(typename type_traits::scope_traits_t<T>::template scope<TExpected, TGiven>{}.template try_create<T>(
+        aux::declval<TProvider>()))
+    try_create(const TProvider&);
 
-        template<class T, class TProvider>
-        auto create(const TProvider& provider) {
-            using scope_traits = type_traits::scope_traits_t<T>;
-            using scope = typename scope_traits::template scope<TExpected, TGiven>;
-            return scope{}.template create<T>(provider);
-        }
-    };
+    template <class T, class TProvider>
+    auto create(const TProvider& provider) {
+      using scope_traits = type_traits::scope_traits_t<T>;
+      using scope = typename scope_traits::template scope<TExpected, TGiven>;
+      return scope{}.template create<T>(provider);
+    }
+  };
 };
 
-} // scopes
+}  // scopes
 
 #endif
-

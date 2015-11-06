@@ -7,38 +7,37 @@
 #include <memory>
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/wrappers/shared.hpp"
-#if __has_include(<boost/shared_ptr.hpp>)
-    #include <boost/shared_ptr.hpp>
+#if __has_include(<boost / shared_ptr.hpp>)
+#include <boost/shared_ptr.hpp>
 #endif
 
 namespace wrappers {
 
 test to_shared_ptr = [] {
-    auto i = std::make_shared<int>(42);
-    auto object = static_cast<const std::shared_ptr<int>&>(shared<int>{i});
-    expect(i == object);
+  auto i = std::make_shared<int>(42);
+  auto object = static_cast<const std::shared_ptr<int>&>(shared<int>{i});
+  expect(i == object);
 };
 
-#if __has_include(<boost/shared_ptr.hpp>)
-    test to_other_shared_ptr = [] {
-        auto i = std::make_shared<int>(42);
-        auto object = static_cast<boost::shared_ptr<int>>(shared<int>{i});
-        expect(i.get() == object.get());
-    };
+#if __has_include(<boost / shared_ptr.hpp>)
+test to_other_shared_ptr = [] {
+  auto i = std::make_shared<int>(42);
+  auto object = static_cast<boost::shared_ptr<int>>(shared<int>{i});
+  expect(i.get() == object.get());
+};
 #endif
 
 test to_weak_ptr = [] {
-    std::weak_ptr<int> object;
+  std::weak_ptr<int> object;
 
-    {
+  {
     auto i = std::make_shared<int>(42);
     object = static_cast<std::weak_ptr<int>>(shared<int>{i});
     auto object_ = object.lock();
     expect(i == object_);
-    }
+  }
 
-    expect(!object.lock());
+  expect(!object.lock());
 };
 
-} // wrappers
-
+}  // wrappers

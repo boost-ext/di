@@ -16,59 +16,51 @@ namespace di = boost::di;
 
 /*<define scope class>*/
 class custom_scope {
-public:
-    /*<define `entry`, `exit` actions>*/
-    class entry { };
-    class exit { };
+ public:
+  /*<define `entry`, `exit` actions>*/
+  class entry {};
+  class exit {};
 
-    template<class T, class>
-    class scope {
-        /*<define wrapper for shared_ptr conversion>*/
-        class custom_wrapper {
-        public:
-            custom_wrapper(const std::shared_ptr<T>& object) // non explicit
-                : object_(object)
-            { }
+  template <class T, class>
+  class scope {
+    /*<define wrapper for shared_ptr conversion>*/
+    class custom_wrapper {
+     public:
+      custom_wrapper(const std::shared_ptr<T>& object)  // non explicit
+          : object_(object) {}
 
-            /*<<conversion operator to shared_ptr>>*/
-            inline operator std::shared_ptr<T>() const noexcept {
-                return object_;
-            }
+      /*<<conversion operator to shared_ptr>>*/
+      inline operator std::shared_ptr<T>() const noexcept { return object_; }
 
-            std::shared_ptr<T> object_;
-        };
-
-    public:
-        template<class>
-        using is_referable = std::false_type;
-
-        template<class, class TProvider>
-        static custom_wrapper try_create(const TProvider&);
-
-        /*<<create shared_ptr when in scope out of provider pointer>>*/
-        template<class, class TProvider>
-        custom_wrapper create(const TProvider& provider) const noexcept {
-            return std::shared_ptr<T>{provider.get()};
-        }
+      std::shared_ptr<T> object_;
     };
+
+   public:
+    template <class>
+    using is_referable = std::false_type;
+
+    template <class, class TProvider>
+    static custom_wrapper try_create(const TProvider&);
+
+    /*<<create shared_ptr when in scope out of provider pointer>>*/
+    template <class, class TProvider>
+    custom_wrapper create(const TProvider& provider) const noexcept {
+      return std::shared_ptr<T>{provider.get()};
+    }
+  };
 };
 
 struct example {
-    explicit example(const std::shared_ptr<int>& sp)
-        : sp_(sp)
-    { }
+  explicit example(const std::shared_ptr<int>& sp) : sp_(sp) {}
 
-    std::shared_ptr<int> sp_;
+  std::shared_ptr<int> sp_;
 };
 
 int main() {
-    /*<<create injector with `int` in `custom scope`>>*/
-    auto injector = di::make_injector(
-        di::bind<int>().in(custom_scope{})
-    );
+  /*<<create injector with `int` in `custom scope`>>*/
+  auto injector = di::make_injector(di::bind<int>().in(custom_scope{}));
 
-    assert(injector.create<example>().sp_);
+  assert(injector.create<example>().sp_);
 }
 
 //]
-

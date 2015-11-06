@@ -15,45 +15,38 @@ namespace core {
 
 namespace successful {
 
-template<class T, class TWrapper>
+template <class T, class TWrapper>
 struct wrapper {
-    using value_type = T;
+  using value_type = T;
 
-    inline operator T() noexcept {
-        return BOOST_DI_TYPE_WKND(T)wrapper_;
-    }
+  inline operator T() noexcept { return BOOST_DI_TYPE_WKND(T) wrapper_; }
 
-    TWrapper wrapper_;
+  TWrapper wrapper_;
 };
 
-} // successful
+}  // successful
 
-template<class T, class TWrapper, class = int>
+template <class T, class TWrapper, class = int>
 struct wrapper_impl {
-    using value_type = T;
+  using value_type = T;
 
-    inline operator T() noexcept {
-        return wrapper_;
-    }
+  inline operator T() noexcept { return wrapper_; }
 
-    TWrapper wrapper_;
+  TWrapper wrapper_;
 };
 
-template<class T, class TWrapper>
+template <class T, class TWrapper>
 struct wrapper_impl<T, TWrapper, BOOST_DI_REQUIRES(!aux::is_convertible<TWrapper, T>::value)> {
-    using value_type = T;
+  using value_type = T;
 
-    inline operator T() noexcept {
-        return typename concepts::type<TWrapper>::template is_not_convertible_to<T>{};
-    }
+  inline operator T() noexcept { return typename concepts::type<TWrapper>::template is_not_convertible_to<T>{}; }
 
-    TWrapper wrapper_;
+  TWrapper wrapper_;
 };
 
-template<class T, class TWrapper>
+template <class T, class TWrapper>
 using wrapper = wrapper_impl<T, TWrapper>;
 
-} // core
+}  // core
 
 #endif
-

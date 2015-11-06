@@ -12,45 +12,46 @@
 //->
 #include <boost/di.hpp>
 
-namespace di  = boost::di;
+namespace di = boost::di;
 
 //<-
 enum eid { e1 = 1, e2 = 2 };
-struct interface { virtual ~interface() noexcept = default; };
-struct implementation1 : interface { };
-struct implementation2 : interface { };
+struct interface {
+  virtual ~interface() noexcept = default;
+};
+struct implementation1 : interface {};
+struct implementation2 : interface {};
 //->
 
 /*<<module configuration>>*/
 auto dynamic_bindings = [](eid& id) {
-    return di::make_injector(
-        /*<<bind `interface` to lazy lambda expression>>*/
-        di::bind<interface>().to(
-            [&](const auto& injector) -> std::shared_ptr<interface> {
-                switch(id) {
-                    default: return nullptr;
-                    case e1: return (const std::shared_ptr<implementation1>&)injector;
-                    case e2: return (const std::shared_ptr<implementation2>&)injector;
-                }
+  return di::make_injector(
+      /*<<bind `interface` to lazy lambda expression>>*/
+      di::bind<interface>().to([&](const auto& injector) -> std::shared_ptr<interface> {
+        switch (id) {
+          default:
+            return nullptr;
+          case e1:
+            return (const std::shared_ptr<implementation1>&)injector;
+          case e2:
+            return (const std::shared_ptr<implementation2>&)injector;
+        }
 
-                return nullptr;
-            }
-        )
-    );
+        return nullptr;
+      }));
 };
 
 int main() {
-    auto id = e1;
+  auto id = e1;
 
-    /*<<create interface with `id = e1`>>*/
-    auto injector = di::make_injector(dynamic_bindings(id));
-    assert(dynamic_cast<implementation1*>(injector.create<std::shared_ptr<interface>>().get()));
+  /*<<create interface with `id = e1`>>*/
+  auto injector = di::make_injector(dynamic_bindings(id));
+  assert(dynamic_cast<implementation1*>(injector.create<std::shared_ptr<interface>>().get()));
 
-    id = e2;
-    /*<<create interface with `id = e2`>>*/
-    assert(dynamic_cast<implementation2*>(injector.create<std::shared_ptr<interface>>().get()));
-    (void)id;
+  id = e2;
+  /*<<create interface with `id = e2`>>*/
+  assert(dynamic_cast<implementation2*>(injector.create<std::shared_ptr<interface>>().get()));
+  (void)id;
 }
 
 //]
-

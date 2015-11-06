@@ -9,40 +9,37 @@
 
 #include <type_traits>
 
-struct fake_scope_entry { };
-struct fake_scope_exit { };
+struct fake_scope_entry {};
+struct fake_scope_exit {};
 
-template<bool Priority = false>
+template <bool Priority = false>
 struct fake_scope {
-    template<class TExpected, class>
-    struct scope {
-        template<class T>
-        using is_referable = std::false_type;
+  template <class TExpected, class>
+  struct scope {
+    template <class T>
+    using is_referable = std::false_type;
 
-        explicit scope(const TExpected& = {}) {
-            ++ctor_calls();
-        }
+    explicit scope(const TExpected& = {}) { ++ctor_calls(); }
 
-        template<class T, class TProvider>
-        static T try_create(const TProvider&);
+    template <class T, class TProvider>
+    static T try_create(const TProvider&);
 
-        template<class T, class TProvider>
-        auto create(const TProvider&) const noexcept {
-            ++calls();
-            return T{};
-        }
-    };
-
-    static auto& ctor_calls() {
-        static auto ctor_calls = 0;
-        return ctor_calls;
+    template <class T, class TProvider>
+    auto create(const TProvider&) const noexcept {
+      ++calls();
+      return T{};
     }
+  };
 
-    static auto& calls() {
-        static auto calls = 0;
-        return calls;
-    }
+  static auto& ctor_calls() {
+    static auto ctor_calls = 0;
+    return ctor_calls;
+  }
+
+  static auto& calls() {
+    static auto calls = 0;
+    return calls;
+  }
 };
 
 #endif
-

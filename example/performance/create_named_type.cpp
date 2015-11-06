@@ -10,26 +10,20 @@
 
 namespace di = boost::di;
 
-auto my_int = []{};
+auto my_int = [] {};
 
 struct c {
-    BOOST_DI_INJECT(c
-        , (named = my_int) int i)
-        : i(i)
-    { }
+  BOOST_DI_INJECT(c, (named = my_int) int i) : i(i) {}
 
-    int i = 0;
+  int i = 0;
 };
 
 auto test() {
-    auto injector = di::make_injector(
-        di::bind<int>().named(my_int).to(42)
-    );
+  auto injector = di::make_injector(di::bind<int>().named(my_int).to(42));
 
-    return injector.create<c>().i;
+  return injector.create<c>().i;
 }
 
 int main(int, char** argv) {
-    std::system(("gdb -batch -ex 'file " + std::string{argv[0]} + "' -ex 'disassemble test'").c_str());
+  std::system(("gdb -batch -ex 'file " + std::string{argv[0]} + "' -ex 'disassemble test'").c_str());
 }
-

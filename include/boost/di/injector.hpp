@@ -15,39 +15,32 @@
 
 namespace detail {
 
-template<class>
-void create(const aux::true_type&) { }
+template <class>
+void create(const aux::true_type&) {}
 
-template<class>
-BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG
-void
-    create
-(const aux::false_type&) { }
+template <class>
+BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG void create(const aux::false_type&) {}
 
-template<class, class, class...>
+template <class, class, class...>
 struct injector;
 
-template<class TConfig, class... T>
+template <class TConfig, class... T>
 struct injector<TConfig, int, T...> : core::injector<TConfig, core::pool<>, T...> {
-    template<class... Ts>
-    injector(const core::injector<Ts...>& injector) noexcept // non explicit
-        : core::injector<TConfig, core::pool<>, T...>(injector) {
-            using injector_t = core::injector<Ts...>;
-            int _[]{0, (
-                detail::create<T>(
-                    aux::integral_constant<bool,
-                        core::injector__<injector_t>::template is_creatable<T>::value ||
-                        core::injector__<injector_t>::template is_creatable<T*>::value
-                    >{}
-                )
-            , 0)...}; (void)_;
-    }
+  template <class... Ts>
+  injector(const core::injector<Ts...>& injector) noexcept  // non explicit
+      : core::injector<TConfig, core::pool<>, T...>(injector) {
+    using injector_t = core::injector<Ts...>;
+    int _[]{0, (detail::create<T>(aux::integral_constant < bool,
+                                  core::injector__<injector_t>::template is_creatable<T>::value ||
+                                      core::injector__<injector_t>::template is_creatable<T*>::value > {}),
+                0)...};
+    (void)_;
+  }
 };
 
-} // namespace detail
+}  // detail
 
-template<class... T>
+template <class... T>
 using injector = detail::injector<BOOST_DI_CFG, BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>), T...>;
 
 #endif
-

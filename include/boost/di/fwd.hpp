@@ -10,46 +10,56 @@
 #include "boost/di/fwd_ext.hpp"
 
 struct no_name {
-    constexpr auto operator()() const noexcept { return ""; }
+  constexpr auto operator()() const noexcept { return ""; }
 };
 
-template<class, class = void> struct named { };
-template<class, class = int> struct ctor_traits;
+template <class, class = void>
+struct named {};
+template <class, class = int>
+struct ctor_traits;
 
 namespace core {
-    template<class> struct any_type_fwd;
-    template<class> struct any_type_ref_fwd;
-    template<class> struct any_type_1st_fwd;
-    template<class> struct any_type_1st_ref_fwd;
+template <class>
+struct any_type_fwd;
+template <class>
+struct any_type_ref_fwd;
+template <class>
+struct any_type_1st_fwd;
+template <class>
+struct any_type_1st_ref_fwd;
 
-    template<class T>
-    struct dependency__ : T {
-        using T::try_create;
-        using T::is_referable;
-        using T::create;
-    };
+template <class T>
+struct dependency__ : T {
+  using T::try_create;
+  using T::is_referable;
+  using T::create;
+};
 
-    template<class T>
-    struct injector__ : T {
-        using T::try_create;
-        using T::create_impl;
-        using T::create_successful_impl;
+template <class T>
+struct injector__ : T {
+  using T::try_create;
+  using T::create_impl;
+  using T::create_successful_impl;
 
-        #if defined(_MSC_VER) // __pph__
-            template<class... Ts> using is_creatable =
-                typename T::template is_creatable<Ts...>;
-        #else // __pph__
-            using T::is_creatable;
-        #endif // __pph__
-    };
+#if defined(_MSC_VER)  // __pph__
+  template <class... Ts>
+  using is_creatable = typename T::template is_creatable<Ts...>;
+#else   // __pph__
+  using T::is_creatable;
+#endif  // __pph__
+};
 
-    template<class, class...>
-    struct array;
+template <class, class...>
+struct array;
 
-} // core
+}  // core
 
-//TODO remove
-namespace concepts { template<class...> struct boundable__; template<class...> struct any_of; } // concepts
+// TODO remove
+namespace concepts {
+template <class...>
+struct boundable__;
+template <class...>
+struct any_of;
+}  // concepts
 
 #endif
-

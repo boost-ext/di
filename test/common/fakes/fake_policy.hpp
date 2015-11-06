@@ -10,40 +10,29 @@
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/fwd.hpp"
 
-template<
-    class T
-  , class TDependency = aux::none_type
-  , class TDeps = aux::none_type
-  , bool  TResolve = true
-> struct fake_policy;
+template <class T, class TDependency = aux::none_type, class TDeps = aux::none_type, bool TResolve = true>
+struct fake_policy;
 
-template<
-    class T
-  , class TDependency
-  , class TDeps
-> struct fake_policy<T, TDependency, TDeps, true> {
-    using type = T;
-    using name = no_name;
-    using dependency = TDependency;
-    using is_root = std::false_type;
+template <class T, class TDependency, class TDeps>
+struct fake_policy<T, TDependency, TDeps, true> {
+  using type = T;
+  using name = no_name;
+  using dependency = TDependency;
+  using is_root = std::false_type;
 
-    template<class, class, class>
-    using resolve = TDependency;
+  template <class, class, class>
+  using resolve = TDependency;
 };
 
-template<
-    class T
-  , class TDependency
-  , class TDeps
-> struct fake_policy<T, TDependency, TDeps, false> {
-    using type = T;
-    using name = no_name;
-    using dependency = TDependency;
-    using is_root = std::false_type;
+template <class T, class TDependency, class TDeps>
+struct fake_policy<T, TDependency, TDeps, false> {
+  using type = T;
+  using name = no_name;
+  using dependency = TDependency;
+  using is_root = std::false_type;
 
-    template<class, class, class TDefault>
-    using resolve = TDefault;
+  template <class, class, class TDefault>
+  using resolve = TDefault;
 };
 
 #endif
-

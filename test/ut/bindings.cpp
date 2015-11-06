@@ -9,21 +9,37 @@
 #include "boost/di/concepts/boundable.hpp"
 #include "boost/di/bindings.hpp"
 
-struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
-struct i1 { virtual ~i1() noexcept = default; virtual void dummy1() = 0; };
-struct i2 { virtual ~i2() noexcept = default; virtual void dummy2() = 0; };
-struct impl : i, i1, i2 { void dummy() override { } void dummy1() override { } void dummy2() override { } };
+struct i {
+  virtual ~i() noexcept = default;
+  virtual void dummy() = 0;
+};
+struct i1 {
+  virtual ~i1() noexcept = default;
+  virtual void dummy1() = 0;
+};
+struct i2 {
+  virtual ~i2() noexcept = default;
+  virtual void dummy2() = 0;
+};
+struct impl : i, i1, i2 {
+  void dummy() override {}
+  void dummy1() override {}
+  void dummy2() override {}
+};
 
 test bindings_types = [] {
 #if defined(__cpp_variable_templates)
-    static_expect(std::is_base_of<core::dependency<scopes::deduce, int>, decltype(bind<int>)>{});
-    static_expect(std::is_base_of<core::dependency<scopes::deduce, i>, decltype(bind<i>)>{});
-    static_expect(std::is_base_of<core::dependency<scopes::deduce, i, impl>, decltype(bind<i>.to<impl>())>{});
-    static_expect(std::is_base_of<core::dependency<scopes::deduce, concepts::any_of<i1, i2>, impl>, decltype(bind<i1, i2>.to<impl>())>{});
+  static_expect(std::is_base_of<core::dependency<scopes::deduce, int>, decltype(bind<int>)>{});
+  static_expect(std::is_base_of<core::dependency<scopes::deduce, i>, decltype(bind<i>)>{});
+  static_expect(std::is_base_of<core::dependency<scopes::deduce, i, impl>, decltype(bind<i>.to<impl>())>{});
+  static_expect(std::is_base_of<core::dependency<scopes::deduce, concepts::any_of<i1, i2>, impl>,
+                                decltype(bind<i1, i2>.to<impl>())>{});
 #endif
-    static_expect(std::is_base_of<core::dependency<scopes::deduce, int>, aux::remove_qualifiers_t<decltype(bind<int>())>>{});
-    static_expect(std::is_base_of<core::dependency<scopes::deduce, i>, aux::remove_qualifiers_t<decltype(bind<i>())>>{});
-    static_expect(std::is_base_of<core::dependency<scopes::deduce, i, impl>, aux::remove_qualifiers_t<decltype(bind<i>().to<impl>())>>{});
-    static_expect(std::is_base_of<core::dependency<scopes::deduce, concepts::any_of<i1, i2>, impl>, aux::remove_qualifiers_t<decltype(bind<i1, i2>().to<impl>())>>{});
+  static_expect(
+      std::is_base_of<core::dependency<scopes::deduce, int>, aux::remove_qualifiers_t<decltype(bind<int>())>>{});
+  static_expect(std::is_base_of<core::dependency<scopes::deduce, i>, aux::remove_qualifiers_t<decltype(bind<i>())>>{});
+  static_expect(std::is_base_of<core::dependency<scopes::deduce, i, impl>,
+                                aux::remove_qualifiers_t<decltype(bind<i>().to<impl>())>>{});
+  static_expect(std::is_base_of<core::dependency<scopes::deduce, concepts::any_of<i1, i2>, impl>,
+                                aux::remove_qualifiers_t<decltype(bind<i1, i2>().to<impl>())>>{});
 };
-

@@ -9,30 +9,29 @@
 namespace concepts {
 
 struct d {
-    d(int, double) { }
+  d(int, double) {}
 };
 
 struct u {
-    int i = {};
-    double d = {};
+  int i = {};
+  double d = {};
 };
 
 test is_creatable = [] {
-    expect(creatable<type_traits::direct, int>::value);
-    expect(creatable<type_traits::uniform, int>::value);
-    expect(creatable<type_traits::direct, d, int, double>::value);
-    expect(!creatable<type_traits::direct, d, int>::value);
-    expect(creatable<type_traits::uniform, d, int, double>::value);
-    expect(!creatable<type_traits::uniform, d, int>::value);
-    expect(!creatable<type_traits::direct, u, int, double>::value);
-    expect(creatable<type_traits::uniform, u>::value);
-    expect(!creatable<type_traits::uniform, u, float, short>::value);
+  expect(creatable<type_traits::direct, int>::value);
+  expect(creatable<type_traits::uniform, int>::value);
+  expect(creatable<type_traits::direct, d, int, double>::value);
+  expect(!creatable<type_traits::direct, d, int>::value);
+  expect(creatable<type_traits::uniform, d, int, double>::value);
+  expect(!creatable<type_traits::uniform, d, int>::value);
+  expect(!creatable<type_traits::direct, u, int, double>::value);
+  expect(creatable<type_traits::uniform, u>::value);
+  expect(!creatable<type_traits::uniform, u, float, short>::value);
 
 #if !defined(_MSC_VER)
-    expect(creatable<type_traits::uniform, u, int, double>::value);
-    expect(creatable<type_traits::uniform, u, int>::value);
+  expect(creatable<type_traits::uniform, u, int, double>::value);
+  expect(creatable<type_traits::uniform, u, int>::value);
 #endif
 };
 
-} // concepts
-
+}  // concepts

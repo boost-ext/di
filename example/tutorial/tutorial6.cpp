@@ -17,33 +17,28 @@
 namespace di = boost::di;
 
 class app {
-public:
-    app(int value, const std::string& text, std::shared_ptr<ilogger> logger)
-        : value_(value), text_(text), logger_(logger)
-    { }
+ public:
+  app(int value, const std::string& text, std::shared_ptr<ilogger> logger)
+      : value_(value), text_(text), logger_(logger) {}
 
-    void run() const {
-        if (value_) {
-            logger_->log(text_);
-        }
+  void run() const {
+    if (value_) {
+      logger_->log(text_);
     }
+  }
 
-private:
-    int value_ = 0;
-    std::string text_;
-    std::shared_ptr<ilogger> logger_;
+ private:
+  int value_ = 0;
+  std::string text_;
+  std::shared_ptr<ilogger> logger_;
 };
 
 di::injector<app> module(const int& i) {
-    return di::make_injector(
-        di::bind<ilogger>().to<logger>()
-      , di::bind<int>().to(i)
-      , di::bind<std::string>().to("hello world")
-    );
+  return di::make_injector(di::bind<ilogger>().to<logger>(), di::bind<int>().to(i),
+                           di::bind<std::string>().to("hello world"));
 }
 
 int main(int argc, char** argv) {
-    auto injector = di::make_injector(module(argc > 1 ? std::atoi(argv[1]) : 0));
-    injector.create<app>().run();
+  auto injector = di::make_injector(module(argc > 1 ? std::atoi(argv[1]) : 0));
+  injector.create<app>().run();
 }
-

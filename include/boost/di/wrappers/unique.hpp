@@ -13,63 +13,61 @@
 
 namespace wrappers {
 
-template<class T>
+template <class T>
 struct unique {
-    template<class I, BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
-    inline operator I() const noexcept {
-        return object;
-    }
+  template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
+  inline operator I() const noexcept {
+    return object;
+  }
 
-    inline operator T&&() noexcept {
-        return static_cast<T&&>(object);
-    }
+  inline operator T &&() noexcept { return static_cast<T&&>(object); }
 
-    T object;
+  T object;
 };
 
-template<class T>
+template <class T>
 struct unique<T*> {
-    #if defined(_MSC_VER) // __pph__
-        explicit unique(T* object)
-            : object(object)
-        { }
-    #endif // __pph__
+#if defined(_MSC_VER)  // __pph__
+  explicit unique(T* object) : object(object) {}
+#endif  // __pph__
 
-    template<class I, BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
-    inline operator I() const noexcept {
-        struct scoped_ptr { aux::owner<T*> ptr; ~scoped_ptr() noexcept { delete ptr; } };
-        return *scoped_ptr{object}.ptr;
-    }
+  template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
+  inline operator I() const noexcept {
+    struct scoped_ptr {
+      aux::owner<T*> ptr;
+      ~scoped_ptr() noexcept { delete ptr; }
+    };
+    return *scoped_ptr{object}.ptr;
+  }
 
-    template<class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
-    inline operator aux::owner<I*>() const noexcept {
-        return object;
-    }
+  template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
+  inline operator aux::owner<I*>() const noexcept {
+    return object;
+  }
 
-    template<class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, const I*>::value) = 0>
-    inline operator aux::owner<const I*>() const noexcept {
-        return object;
-    }
+  template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, const I*>::value) = 0>
+  inline operator aux::owner<const I*>() const noexcept {
+    return object;
+  }
 
-    template<class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
-    inline operator std::shared_ptr<I>() const noexcept {
-        return std::shared_ptr<I>{object};
-    }
+  template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
+  inline operator std::shared_ptr<I>() const noexcept {
+    return std::shared_ptr<I>{object};
+  }
 
-    template<class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
-    inline operator boost::shared_ptr<I>() const noexcept {
-        return boost::shared_ptr<I>{object};
-    }
+  template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
+  inline operator boost::shared_ptr<I>() const noexcept {
+    return boost::shared_ptr<I>{object};
+  }
 
-    template<class I, class D, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
-    inline operator std::unique_ptr<I, D>() const noexcept {
-        return std::unique_ptr<I, D>{object};
-    }
+  template <class I, class D, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
+  inline operator std::unique_ptr<I, D>() const noexcept {
+    return std::unique_ptr<I, D>{object};
+  }
 
-    T* object = nullptr;
+  T* object = nullptr;
 };
 
-} // wrappers
+}  // wrappers
 
 #endif
-

@@ -13,14 +13,11 @@
 #include "boost/di/core/injector.hpp"
 #include "boost/di/config.hpp"
 
-template<
-     class TConfig = BOOST_DI_CFG
-   , class... TDeps
-   , BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type_list<TDeps...>>) = 0
-   , BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>) = 0
-> inline auto make_injector(const TDeps&... args) noexcept {
-    return core::injector<TConfig, decltype(((TConfig*)0)->policies(0)), TDeps...>{core::init{}, args...};
+template <class TConfig = BOOST_DI_CFG, class... TDeps,
+          BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type_list<TDeps...>>) = 0,
+          BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>) = 0>
+inline auto make_injector(const TDeps&... args) noexcept {
+  return core::injector<TConfig, decltype(((TConfig*)0)->policies(0)), TDeps...>{core::init{}, args...};
 }
 
 #endif
-

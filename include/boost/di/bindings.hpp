@@ -17,36 +17,33 @@
 
 namespace detail {
 
-template<class...>
+template <class...>
 struct bind;
 
-template<class TScope, class... Ts>
+template <class TScope, class... Ts>
 struct bind<int, TScope, Ts...> {
-    using type = core::dependency<TScope, concepts::any_of<Ts...>>;
+  using type = core::dependency<TScope, concepts::any_of<Ts...>>;
 };
 
-template<class TScope, class T>
+template <class TScope, class T>
 struct bind<int, TScope, T> {
-    using type = core::dependency<TScope, T>;
+  using type = core::dependency<TScope, T>;
 };
 
-} // namespace detail
+}  // detail
 
-template<class... Ts>
-#if !defined(__cpp_variable_templates) // __pph__
-    struct bind :
-#else // __pph__
-    typename
-#endif // __pph__
-    detail::bind<
-        BOOST_DI_REQUIRES_MSG(concepts::boundable<concepts::any_of<Ts...>>)
-      , scopes::deduce
-      , Ts...
-    >::type
-#if defined(__cpp_variable_templates) // __pph__
-    bind
-#endif // __pph__
-{ };
+template <class... Ts>
+#if !defined(__cpp_variable_templates)  // __pph__
+struct bind :
+#else   // __pph__
+typename
+#endif  // __pph__
+    detail::bind<BOOST_DI_REQUIRES_MSG(concepts::boundable<concepts::any_of<Ts...>>), scopes::deduce, Ts...>::type
+#if defined(__cpp_variable_templates)  // __pph__
+        bind
+#endif  // __pph__
+{
+};
 
 static constexpr BOOST_DI_UNUSED core::override override{};
 static constexpr BOOST_DI_UNUSED scopes::deduce deduce{};
@@ -54,4 +51,3 @@ static constexpr BOOST_DI_UNUSED scopes::unique unique{};
 static constexpr BOOST_DI_UNUSED scopes::singleton singleton{};
 
 #endif
-

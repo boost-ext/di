@@ -11,28 +11,27 @@
 
 namespace type_traits {
 
-struct c { };
+struct c {};
 
 test traits = [] {
-    static_expect(std::is_same<scopes::unique, scope_traits<int>::type>{});
-    static_expect(std::is_same<scopes::unique, scope_traits<c>::type>{});
-    static_expect(std::is_same<scopes::singleton, scope_traits<const int&>::type>{});
-    static_expect(std::is_same<scopes::unique, scope_traits<int*>::type>{});
-    static_expect(std::is_same<scopes::unique, scope_traits<const int*>::type>{});
-    static_expect(std::is_same<scopes::singleton, scope_traits<std::shared_ptr<int>>::type>{});
-    static_expect(std::is_same<scopes::singleton, scope_traits<const std::shared_ptr<int>&>::type>{});
-    static_expect(std::is_same<scopes::singleton, scope_traits<boost::shared_ptr<int>>::type>{});
-    static_expect(std::is_same<scopes::singleton, scope_traits<const boost::shared_ptr<int>&>::type>{});
-    static_expect(std::is_same<scopes::singleton, scope_traits<std::weak_ptr<int>>::type>{});
-    static_expect(std::is_same<scopes::singleton, scope_traits<const std::weak_ptr<int>&>::type>{});
-    static_expect(std::is_same<scopes::singleton, scope_traits<int&>::type>{});
-    static_expect(std::is_same<scopes::unique, scope_traits<std::unique_ptr<int>>::type>{});
-    static_expect(std::is_same<scopes::unique, scope_traits<std::unique_ptr<int, deleter<int>>>::type>{});
-    static_expect(std::is_same<scopes::singleton, scope_traits<std::shared_ptr<int>>::type>{});
-    static_expect(std::is_same<scopes::singleton, scope_traits<std::weak_ptr<int>>::type>{});
-    static_expect(std::is_same<scopes::unique, scope_traits<int&&>::type>{});
-    static_expect(std::is_same<scopes::unique, scope_traits<const int&&>::type>{});
+  static_expect(std::is_same<scopes::unique, scope_traits<int>::type>{});
+  static_expect(std::is_same<scopes::unique, scope_traits<c>::type>{});
+  static_expect(std::is_same<scopes::singleton, scope_traits<const int&>::type>{});
+  static_expect(std::is_same<scopes::unique, scope_traits<int*>::type>{});
+  static_expect(std::is_same<scopes::unique, scope_traits<const int*>::type>{});
+  static_expect(std::is_same<scopes::singleton, scope_traits<std::shared_ptr<int>>::type>{});
+  static_expect(std::is_same<scopes::singleton, scope_traits<const std::shared_ptr<int>&>::type>{});
+  static_expect(std::is_same<scopes::singleton, scope_traits<boost::shared_ptr<int>>::type>{});
+  static_expect(std::is_same<scopes::singleton, scope_traits<const boost::shared_ptr<int>&>::type>{});
+  static_expect(std::is_same<scopes::singleton, scope_traits<std::weak_ptr<int>>::type>{});
+  static_expect(std::is_same<scopes::singleton, scope_traits<const std::weak_ptr<int>&>::type>{});
+  static_expect(std::is_same<scopes::singleton, scope_traits<int&>::type>{});
+  static_expect(std::is_same<scopes::unique, scope_traits<std::unique_ptr<int>>::type>{});
+  static_expect(std::is_same<scopes::unique, scope_traits<std::unique_ptr<int, deleter<int>>>::type>{});
+  static_expect(std::is_same<scopes::singleton, scope_traits<std::shared_ptr<int>>::type>{});
+  static_expect(std::is_same<scopes::singleton, scope_traits<std::weak_ptr<int>>::type>{});
+  static_expect(std::is_same<scopes::unique, scope_traits<int&&>::type>{});
+  static_expect(std::is_same<scopes::unique, scope_traits<const int&&>::type>{});
 };
 
-} // type_traits
-
+}  // type_traits

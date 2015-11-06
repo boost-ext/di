@@ -10,17 +10,16 @@
 
 namespace di = boost::di;
 
-struct i1 { virtual ~i1() noexcept = default; virtual void dummy1() = 0; };
-struct impl1 : i1 { void dummy1() override { } };
+struct i1 {
+  virtual ~i1() noexcept = default;
+  virtual void dummy1() = 0;
+};
+struct impl1 : i1 {
+  void dummy1() override {}
+};
 
 int main() {
-    auto injector = di::make_injector(
-        di::bind<i1>().in(di::unique).to<impl1>()
-    );
+  auto injector = di::make_injector(di::bind<i1>().in(di::unique).to<impl1>());
 
-    assert(injector.create<std::shared_ptr<i1>>()
-           !=
-           injector.create<std::shared_ptr<i1>>()
-    );
+  assert(injector.create<std::shared_ptr<i1>>() != injector.create<std::shared_ptr<i1>>());
 }
-

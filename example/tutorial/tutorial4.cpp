@@ -16,30 +16,26 @@
 namespace di = boost::di;
 
 class app {
-public:
-    app(int value, const std::string& text, std::unique_ptr<ilogger> logger)
-        : value_(value), text_(text), logger_(std::move(logger))
-    { }
+ public:
+  app(int value, const std::string& text, std::unique_ptr<ilogger> logger)
+      : value_(value), text_(text), logger_(std::move(logger)) {}
 
-    void run() const {
-        if (value_) {
-            logger_->log(text_);
-        }
+  void run() const {
+    if (value_) {
+      logger_->log(text_);
     }
+  }
 
-private:
-    int value_ = 0;
-    std::string text_;
-    std::unique_ptr<ilogger> logger_;
+ private:
+  int value_ = 0;
+  std::string text_;
+  std::unique_ptr<ilogger> logger_;
 };
 
 int main(int argc, char** argv) {
-    auto injector = di::make_injector(
-        di::bind<ilogger>().to<logger>()
-      , di::bind<int>().to(argc > 1 ? std::atoi(argv[1]) : 0)
-      , di::bind<std::string>().to("hello world")
-    );
+  auto injector =
+      di::make_injector(di::bind<ilogger>().to<logger>(), di::bind<int>().to(argc > 1 ? std::atoi(argv[1]) : 0),
+                        di::bind<std::string>().to("hello world"));
 
-    injector.create<std::unique_ptr<app>>()->run();
+  injector.create<std::unique_ptr<app>>()->run();
 }
-

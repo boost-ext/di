@@ -13,29 +13,23 @@
 namespace providers {
 
 class heap {
-public:
-    template<class TInitialization, class TMemory, class T, class... TArgs>
-    struct is_creatable {
-        static constexpr auto value =
-            concepts::creatable<TInitialization, T, TArgs...>::value;
-    };
+ public:
+  template <class TInitialization, class TMemory, class T, class... TArgs>
+  struct is_creatable {
+    static constexpr auto value = concepts::creatable<TInitialization, T, TArgs...>::value;
+  };
 
-    template<class, class T, class TMemory, class... TArgs>
-    auto get(const type_traits::direct&
-           , const TMemory&
-           , TArgs&&... args) const {
-        return new T(static_cast<TArgs&&>(args)...);
-    }
+  template <class, class T, class TMemory, class... TArgs>
+  auto get(const type_traits::direct&, const TMemory&, TArgs&&... args) const {
+    return new T(static_cast<TArgs&&>(args)...);
+  }
 
-    template<class, class T, class TMemory, class... TArgs>
-    auto get(const type_traits::uniform&
-           , const TMemory&
-           , TArgs&&... args) const {
-        return new T{static_cast<TArgs&&>(args)...};
-    }
+  template <class, class T, class TMemory, class... TArgs>
+  auto get(const type_traits::uniform&, const TMemory&, TArgs&&... args) const {
+    return new T{static_cast<TArgs&&>(args)...};
+  }
 };
 
-} // providers
+}  // providers
 
 #endif
-

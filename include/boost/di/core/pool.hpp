@@ -12,26 +12,21 @@
 
 namespace core {
 
-template<class = aux::type_list<>>
+template <class = aux::type_list<>>
 struct pool;
 
-template<class... TArgs>
+template <class... TArgs>
 using pool_t = pool<aux::type_list<TArgs...>>;
 
-template<class... TArgs>
+template <class... TArgs>
 struct pool<aux::type_list<TArgs...>> : TArgs... {
-    template<class... Ts>
-    explicit pool(const Ts&... args) noexcept
-        : Ts(args)...
-    { }
+  template <class... Ts>
+  explicit pool(const Ts&... args) noexcept : Ts(args)... {}
 
-    template<class... Ts, class TPool>
-    pool(const aux::type_list<Ts...>&, const TPool& p) noexcept
-        : pool(static_cast<const Ts&>(p)...)
-    { }
+  template <class... Ts, class TPool>
+  pool(const aux::type_list<Ts...>&, const TPool& p) noexcept : pool(static_cast<const Ts&>(p)...) {}
 };
 
-} // core
+}  // core
 
 #endif
-

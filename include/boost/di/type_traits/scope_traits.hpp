@@ -12,35 +12,34 @@
 
 namespace type_traits {
 
-template<class T>
+template <class T>
 struct scope_traits {
-    using type = scopes::unique;
+  using type = scopes::unique;
 };
 
-template<class T>
+template <class T>
 struct scope_traits<T&> {
-    using type = scopes::singleton;
+  using type = scopes::singleton;
 };
 
-template<class T>
+template <class T>
 struct scope_traits<std::shared_ptr<T>> {
-    using type = scopes::singleton;
+  using type = scopes::singleton;
 };
 
-template<class T>
+template <class T>
 struct scope_traits<boost::shared_ptr<T>> {
-    using type = scopes::singleton;
+  using type = scopes::singleton;
 };
 
-template<class T>
+template <class T>
 struct scope_traits<std::weak_ptr<T>> {
-    using type = scopes::singleton;
+  using type = scopes::singleton;
 };
 
-template<class T>
+template <class T>
 using scope_traits_t = typename scope_traits<T>::type;
 
-} // type_traits
+}  // type_traits
 
 #endif
-

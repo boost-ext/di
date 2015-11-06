@@ -12,37 +12,34 @@
 #include "common/fakes/fake_config.hpp"
 #include "common/fakes/fake_pool.hpp"
 
-template<class TExpected = void>
+template <class TExpected = void>
 struct fake_injector {
-    using deps = fake_pool<>;
-    using config = fake_config<>;
+  using deps = fake_pool<>;
+  using config = fake_config<>;
 
-    template<class T>
-    auto create() const noexcept {
-        return create_impl(aux::type<T>{});
-    }
+  template <class T>
+  auto create() const noexcept {
+    return create_impl(aux::type<T>{});
+  }
 
-protected:
-    template<class, class = no_name, class = std::false_type>
-    struct is_creatable
-        : std::true_type
-    { };
+ protected:
+  template <class, class = no_name, class = std::false_type>
+  struct is_creatable : std::true_type {};
 
-    template<class T>
-    struct try_create {
-        using type = void;
-    };
+  template <class T>
+  struct try_create {
+    using type = void;
+  };
 
-    template<class T>
-    auto create_impl(const aux::type<T>&) const noexcept {
-        return T{};
-    }
+  template <class T>
+  auto create_impl(const aux::type<T>&) const noexcept {
+    return T{};
+  }
 
-    template<class T>
-    auto create_successful_impl(const aux::type<T>&) const noexcept {
-        return T{};
-    }
+  template <class T>
+  auto create_successful_impl(const aux::type<T>&) const noexcept {
+    return T{};
+  }
 };
 
 #endif
-

@@ -11,11 +11,10 @@
 namespace di = boost::di;
 
 auto test() {
-    auto injector = di::make_injector();
-    return injector.create<int>();
+  auto injector = di::make_injector();
+  return injector.create<int>();
 }
 
 int main(int, char** argv) {
-    std::system(("gdb -batch -ex 'file " + std::string{argv[0]} + "' -ex 'disassemble test'").c_str());
+  std::system(("gdb -batch -ex 'file " + std::string{argv[0]} + "' -ex 'disassemble test'").c_str());
 }
-

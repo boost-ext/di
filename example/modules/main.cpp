@@ -17,13 +17,9 @@
 namespace di = boost::di;
 
 int main() {
-   auto injector = di::make_injector(
-        module_view()
-      , module_model()
-    );
+  auto injector = di::make_injector(module_view(), module_model());
 
-    return injector.create<controller>().run();
+  return injector.create<controller>().run();
 }
 
 //]
-

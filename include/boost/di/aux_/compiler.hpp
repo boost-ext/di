@@ -8,24 +8,24 @@
 #define BOOST_DI_AUX_COMPILER_HPP
 
 #if defined(__clang__)
-    #pragma clang diagnostic error "-Wundefined-inline"
-    #pragma clang diagnostic error "-Wundefined-internal"
-    #define BOOST_DI_UNUSED __attribute__((unused))
-    #define BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
-    #define BOOST_DI_TYPE_WKND(T)
+#pragma clang diagnostic error "-Wundefined-inline"
+#pragma clang diagnostic error "-Wundefined-internal"
+#define BOOST_DI_UNUSED __attribute__((unused))
+#define BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
+#define BOOST_DI_TYPE_WKND(T)
 #elif defined(__GNUC__)
-    #pragma GCC diagnostic error "-Werror"
-    #define BOOST_DI_UNUSED __attribute__((unused))
-    #define BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
-    #define BOOST_DI_TYPE_WKND(T)
+#pragma GCC diagnostic error "-Werror"
+#define BOOST_DI_UNUSED __attribute__((unused))
+#define BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
+#define BOOST_DI_TYPE_WKND(T)
 #elif defined(_MSC_VER)
-    #pragma warning(disable : 4503) // decorated name length exceeded, name was truncated
-    #pragma warning(disable : 4822) // local class member function does not have a body
-    #define __has_include(...) 0
-    #define BOOST_DI_UNUSED
-    #define BOOST_DI_DEPRECATED(...) __declspec(deprecated(__VA_ARGS__)) // error C2059: syntax error: '<L_ATTRIBUTE_SPECIFIER>'
-    #define BOOST_DI_TYPE_WKND(T) (T&&)
+#pragma warning(disable : 4503)  // decorated name length exceeded, name was truncated
+#pragma warning(disable : 4822)  // local class member function does not have a body
+#define __has_include(...) 0
+#define BOOST_DI_UNUSED
+#define BOOST_DI_DEPRECATED(...) \
+  __declspec(deprecated(__VA_ARGS__))  // error C2059: syntax error: '<L_ATTRIBUTE_SPECIFIER>'
+#define BOOST_DI_TYPE_WKND(T) (T && )
 #endif
 
 #endif
-

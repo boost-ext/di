@@ -24,4 +24,3 @@ di::injector<model> module_model() noexcept;
 //->
 
 //]
-

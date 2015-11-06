@@ -9,21 +9,18 @@
 namespace di = boost::di;
 
 class must_be_bound : public di::config {
-public:
-    static auto policies(...) {
-        using namespace di::policies;
-        return di::make_policies(
-            constructible(is_bound<di::_>{})
-        );
-    }
+ public:
+  static auto policies(...) {
+    using namespace di::policies;
+    return di::make_policies(constructible(is_bound<di::_>{}));
+  }
 };
 
 struct example {
-    example(int, double, float) { }
+  example(int, double, float) {}
 };
 
 int main() {
-    auto injector = di::make_injector<must_be_bound>();
-    injector.create<example>();
+  auto injector = di::make_injector<must_be_bound>();
+  injector.create<example>();
 }
-

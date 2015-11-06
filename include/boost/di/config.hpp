@@ -13,26 +13,25 @@
 #include "boost/di/concepts/callable.hpp"
 #include "boost/di/providers/stack_over_heap.hpp"
 
-#if !defined(BOOST_DI_CFG) // __pph__
-    #define BOOST_DI_CFG BOOST_DI_NAMESPACE::config // __pph__
-#endif // __pph__
+#if !defined(BOOST_DI_CFG)                       // __pph__
+#define BOOST_DI_CFG BOOST_DI_NAMESPACE::config  // __pph__
+#endif                                           // __pph__
 
-template<class... TPolicies, BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>) = 0>
+template <class... TPolicies, BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>) = 0>
 inline auto make_policies(const TPolicies&... args) noexcept {
-    return core::pool_t<TPolicies...>(args...);
+  return core::pool_t<TPolicies...>(args...);
 }
 
 struct config {
-    template<class T>
-    static auto provider(const T&) noexcept {
-        return providers::stack_over_heap{};
-    }
+  template <class T>
+  static auto provider(const T&) noexcept {
+    return providers::stack_over_heap{};
+  }
 
-    template<class T>
-    static auto policies(const T&) noexcept {
-        return make_policies();
-    }
+  template <class T>
+  static auto policies(const T&) noexcept {
+    return make_policies();
+  }
 };
 
 #endif
-

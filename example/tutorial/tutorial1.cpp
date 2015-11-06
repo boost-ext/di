@@ -11,24 +11,21 @@
 namespace di = boost::di;
 
 class app {
-public:
-    app(int value, const std::string& text)
-        : value_(value), text_(text)
-    { }
+ public:
+  app(int value, const std::string& text) : value_(value), text_(text) {}
 
-    void run() const {
-        if (value_) {
-            std::cout << text_ << std::endl;
-        }
+  void run() const {
+    if (value_) {
+      std::cout << text_ << std::endl;
     }
+  }
 
-private:
-    int value_ = 0;
-    std::string text_;
+ private:
+  int value_ = 0;
+  std::string text_;
 };
 
 int main() {
-    auto injector = di::make_injector();
-    injector.create<app>().run();
+  auto injector = di::make_injector();
+  injector.create<app>().run();
 }
-

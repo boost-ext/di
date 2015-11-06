@@ -15,24 +15,24 @@
 namespace scopes {
 
 test create_deduce = [] {
-    int i = exposed<>::scope<int, int>{fake_injector<int>{}}.create<int>(fake_provider<int>{});
-    expect(0 == i);
+  int i = exposed<>::scope<int, int>{fake_injector<int>{}}.create<int>(fake_provider<int>{});
+  expect(0 == i);
 };
 
 test create_fake = [] {
-    int i = exposed<fake_scope<>>::scope<int, int>{fake_injector<int>{}}.create<int>(fake_provider<int>{});
-    expect(0 == i);
+  int i = exposed<fake_scope<>>::scope<int, int>{fake_injector<int>{}}.create<int>(fake_provider<int>{});
+  expect(0 == i);
 };
 
 test create_unique = [] {
-    int i = exposed<scopes::unique>::scope<int, int>{fake_injector<int>{}}.create<int>(fake_provider<int>{});
-    expect(0 == i);
+  int i = exposed<scopes::unique>::scope<int, int>{fake_injector<int>{}}.create<int>(fake_provider<int>{});
+  expect(0 == i);
 };
 
 test create_singleton = [] {
-    std::shared_ptr<int> i = exposed<scopes::singleton>::scope<int, int>{fake_injector<int*>{}}.create<int>(fake_provider<int>{});
-    expect(!i);
+  std::shared_ptr<int> i =
+      exposed<scopes::singleton>::scope<int, int>{fake_injector<int*>{}}.create<int>(fake_provider<int>{});
+  expect(!i);
 };
 
-} // scopes
-
+}  // scopes

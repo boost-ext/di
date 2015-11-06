@@ -14,31 +14,30 @@ namespace di = boost::di;
 auto called = 0;
 
 class custom_provider {
-public:
-    template<class...>
-    struct is_creatable {
-        static constexpr auto value = true;
-    };
+ public:
+  template <class...>
+  struct is_creatable {
+    static constexpr auto value = true;
+  };
 
-    template<class, class T,class TInitialization, class TMemory, class... TArgs>
-    auto get(const TInitialization&, const TMemory&, TArgs&&... args) const {
-        ++called;
-        return new T(std::forward<TArgs>(args)...);
-    }
+  template <class, class T, class TInitialization, class TMemory, class... TArgs>
+  auto get(const TInitialization&, const TMemory&, TArgs&&... args) const {
+    ++called;
+    return new T(std::forward<TArgs>(args)...);
+  }
 };
 
 class global_provider : public di::config {
-public:
-    template<class T>
-    static auto provider(const T&) noexcept {
-        return custom_provider{};
-    }
+ public:
+  template <class T>
+  static auto provider(const T&) noexcept {
+    return custom_provider{};
+  }
 };
 
 test call_provider_via_global_config = [] {
-    called = 0;
-    auto injector = di::make_injector();
-    injector.create<int>();
-    expect(1 == called);
+  called = 0;
+  auto injector = di::make_injector();
+  injector.create<int>();
+  expect(1 == called);
 };
-

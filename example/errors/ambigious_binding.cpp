@@ -10,9 +10,6 @@
 namespace di = boost::di;
 
 int main() {
-    di::make_injector(
-        di::bind<int>.to(42)
-      , di::bind<int>.to(87) // [di::override]
-    );
+  di::make_injector(di::bind<int>.to(42), di::bind<int>.to(87)  // [di::override]
+                    );
 }
-

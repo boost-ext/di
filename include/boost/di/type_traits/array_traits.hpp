@@ -12,35 +12,34 @@
 
 namespace type_traits {
 
-template<class, class T>
+template <class, class T>
 struct array_traits {
-    using type = T;
+  using type = T;
 };
 
-template<class T, class U, class... Ts>
+template <class T, class U, class... Ts>
 struct array_traits<T, core::array<U[], Ts...>> {
-    using type = core::array<T, Ts...>;
+  using type = core::array<T, Ts...>;
 };
 
-template<class T, class U, class... Ts>
+template <class T, class U, class... Ts>
 struct array_traits<const T&, core::array<U[], Ts...>> {
-    using type = core::array<T, Ts...>;
+  using type = core::array<T, Ts...>;
 };
 
-template<class T, class U, class... Ts>
+template <class T, class U, class... Ts>
 struct array_traits<T&, core::array<U[], Ts...>> {
-    using type = core::array<T, Ts...>;
+  using type = core::array<T, Ts...>;
 };
 
-template<class T, class U, class... Ts>
+template <class T, class U, class... Ts>
 struct array_traits<std::shared_ptr<T>, core::array<U[], Ts...>> {
-    using type = core::array<T, Ts...>;
+  using type = core::array<T, Ts...>;
 };
 
-template<class T, class U>
+template <class T, class U>
 using array_traits_t = typename array_traits<T, U>::type;
 
-} // type_traits
+}  // type_traits
 
 #endif
-

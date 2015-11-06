@@ -12,33 +12,35 @@
 namespace di = boost::di;
 
 class heap_no_throw {
-public:
-    template<class...>
-    struct is_creatable {
-        static constexpr auto value = true;
-    };
+ public:
+  template <class...>
+  struct is_creatable {
+    static constexpr auto value = true;
+  };
 
-    template<
-      class // interface
-    , class T // implementation
-    , class TInit // direct()/uniform{}
-    , class TMemory // heap/stack
-    , class... TArgs>
-    auto get(const TInit&, const TMemory&, TArgs&&... args) const noexcept {
-        return new (std::nothrow) T{std::forward<TArgs>(args)...};
-    }
+  template <class  // interface
+            ,
+            class T  // implementation
+            ,
+            class TInit  // direct()/uniform{}
+            ,
+            class TMemory  // heap/stack
+            ,
+            class... TArgs>
+  auto get(const TInit&, const TMemory&, TArgs&&... args) const noexcept {
+    return new (std::nothrow) T{std::forward<TArgs>(args)...};
+  }
 };
 
 class my_provider : public di::config {
-public:
-    template<class T>
-    static auto provider(const T&) noexcept {
-        return heap_no_throw{};
-    }
+ public:
+  template <class T>
+  static auto provider(const T&) noexcept {
+    return heap_no_throw{};
+  }
 };
 
 int main() {
-    auto injector = di::make_injector<my_provider>();
-    assert(0 == injector.create<int>());
+  auto injector = di::make_injector<my_provider>();
+  assert(0 == injector.create<int>());
 }
-

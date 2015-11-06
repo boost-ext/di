@@ -24,4 +24,3 @@ di::injector<view> module_view() noexcept;
 //->
 
 //]
-

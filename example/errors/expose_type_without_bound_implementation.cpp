@@ -9,13 +9,13 @@
 
 namespace di = boost::di;
 
-struct interface { virtual ~interface() noexcept = default; virtual void dummy() = 0; };
-
-struct example {
-    explicit example(std::unique_ptr<interface>) { }
+struct interface {
+  virtual ~interface() noexcept = default;
+  virtual void dummy() = 0;
 };
 
-int main() {
-    di::injector<example> injector = di::make_injector();
-}
+struct example {
+  explicit example(std::unique_ptr<interface>) {}
+};
 
+int main() { di::injector<example> injector = di::make_injector(); }

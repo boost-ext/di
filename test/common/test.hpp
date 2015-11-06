@@ -11,25 +11,24 @@
 #include <cstdlib>
 
 #if defined(_MSC_VER)
-    #define __has_include(...) 0
+#define __has_include(...) 0
 #endif
 
 #define expect(...) (void)((__VA_ARGS__) || (expect_fail__(#__VA_ARGS__, __FILE__, __LINE__), 0))
 #define static_expect(...) static_assert((__VA_ARGS__), "fail")
 
 void expect_fail__(const char *msg, const char *file, int line) {
-    std::printf("%s:%d:%s\n", file, line, msg);
-    std::exit(-1);
+  std::printf("%s:%d:%s\n", file, line, msg);
+  std::exit(-1);
 }
 
 struct test {
-    template<class Test>
-    test(const Test& test) {
-        test();
-    }
+  template <class Test>
+  test(const Test &test) {
+    test();
+  }
 };
 
-int main() { }
+int main() {}
 
 #endif
-

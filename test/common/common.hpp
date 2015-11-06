@@ -10,23 +10,19 @@
 #include <functional>
 #include <utility>
 
-template<class T>
+template <class T>
 using owner = T;
 
-template<class T>
+template <class T>
 struct function : std::function<T> {
-    template<class U, class = decltype(std::declval<U>()())>
-    function(const U& f) // non explicit
-        : std::function<T>(f)
-    { }
+  template <class U, class = decltype(std::declval<U>()())>
+  function(const U& f)  // non explicit
+      : std::function<T>(f) {}
 };
 
-template<class T>
+template <class T>
 struct deleter {
-    void operator()(owner<T*> ptr) const noexcept {
-        delete ptr;
-    }
+  void operator()(owner<T*> ptr) const noexcept { delete ptr; }
 };
 
 #endif
-

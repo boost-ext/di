@@ -31,10 +31,10 @@ pph() {
     echo "#if defined(BOOST_DI_CFG_FWD)"
     echo "    BOOST_DI_CFG_FWD"
     echo "#endif"
-    rm -rf tmp && mkdir tmp && cp -r boost tmp && cd tmp && touch type_traits
-    find . -iname "*.hpp" | xargs sed -i "s/BOOST_DI_NAMESPACE/::boost::di::v1/"
-    find . -iname "*.hpp" | xargs sed -i "s/\(.*\)__pph__/\/\/\/\/\1/"
-    tail -n +10 "boost/di/aux_/compiler.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
+    rm -rf tmp && mkdir tmp && cp -r boost tmp && cd tmp
+    find . -iname "*.hpp" | xargs sed -i "s/BOOST_DI_NAMESPACE/::boost::di::v1/g"
+    find . -iname "*.hpp" | xargs sed -i "s/\(.*\)__pph__/\/\/\/\/\1/g"
+    tail -n +10 "boost/di/aux_/compiler.hpp" | head -n -2 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
 
     echo '
         #include "boost/di/fwd_ext.hpp"
@@ -61,8 +61,8 @@ namespace boost { namespace di { inline namespace v1 {
             sed "s/[ $]*#define/##define/g" | \
             g++ -P -E -I. -fpreprocessed - 2>/dev/null | \
             sed "s/^##define/#define/g"
-    tail -n +10 "boost/di/aux_/preprocessor.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
-    tail -n +15 "boost/di/inject.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
+    tail -n +10 "boost/di/aux_/preprocessor.hpp" | head -n -2 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
+    tail -n +15 "boost/di/inject.hpp" | head -n -2 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
     echo "}}}"
     cd .. && rm -rf tmp
     echo "#endif"

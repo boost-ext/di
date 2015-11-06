@@ -10,7 +10,6 @@
 namespace di = boost::di;
 
 int main() {
-    auto injector = di::make_injector();
-    assert(0 == injector.create<int>());
+  auto injector = di::make_injector();
+  assert(0 == injector.create<int>());
 }
-

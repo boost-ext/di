@@ -8,12 +8,10 @@
 #define BOOST_DI_FAKE_WRAPPER_HPP
 
 struct fake_wrapper {
-    template<class T>
-    operator T() const {
-        return {};
-    }
+  template <class T>
+  operator T() const {
+    return {};
+  }
 };
 
 #endif
-
-

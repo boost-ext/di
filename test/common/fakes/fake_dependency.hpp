@@ -11,19 +11,18 @@
 #include "boost/di/core/dependency.hpp"
 #include "common/fakes/fake_scope.hpp"
 
-template<class T, class TScope = fake_scope<>, class TIsReferable = std::false_type, class TName = no_name>
+template <class T, class TScope = fake_scope<>, class TIsReferable = std::false_type, class TName = no_name>
 struct fake_dependency : core::dependency_base, TScope::template scope<T, T> {
-    using creator = typename TScope::template scope<T, T>;
-    using expected = T;
-    using given = T;
-    using scope = TScope;
-    using name = TName;
-    using priority = aux::none_type;
-    using base = T;
+  using creator = typename TScope::template scope<T, T>;
+  using expected = T;
+  using given = T;
+  using scope = TScope;
+  using name = TName;
+  using priority = aux::none_type;
+  using base = T;
 
-    template<class>
-    using is_referable = TIsReferable;
+  template <class>
+  using is_referable = TIsReferable;
 };
 
 #endif
-

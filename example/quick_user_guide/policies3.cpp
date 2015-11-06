@@ -13,24 +13,18 @@ class all_must_be_bound_unless_int;
 namespace di = boost::di;
 
 class all_must_be_bound_unless_int : public di::config {
-public:
-    template<class T>
-    static auto policies(const T&) noexcept {
-        using namespace di::policies;
-        using namespace di::policies::operators;
+ public:
+  template <class T>
+  static auto policies(const T&) noexcept {
+    using namespace di::policies;
+    using namespace di::policies::operators;
 
-        return di::make_policies(
-            constructible(std::is_same<di::_, int>{} || is_bound<di::_>{})
-        );
-    }
+    return di::make_policies(constructible(std::is_same<di::_, int>{} || is_bound<di::_>{}));
+  }
 };
 
 int main() {
-    assert(0 == di::make_injector().create<int>());
-    //di::make_injector().create<double>(); // compile error
-    assert(42.0 == make_injector(
-                     di::bind<double>().to(42.0)
-                 ).create<double>()
-    );
+  assert(0 == di::make_injector().create<int>());
+  // di::make_injector().create<double>(); // compile error
+  assert(42.0 == make_injector(di::bind<double>().to(42.0)).create<double>());
 }
-

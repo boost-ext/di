@@ -11,21 +11,21 @@
 
 namespace di = boost::di;
 
-struct interface { virtual ~interface() noexcept = default; virtual void dummy() = 0;};
-struct implementation : interface { void dummy() override { } };
-
-auto module = [] {
-    return di::make_injector(
-        di::bind<interface>().to<implementation>()
-    );
+struct interface {
+  virtual ~interface() noexcept = default;
+  virtual void dummy() = 0;
+};
+struct implementation : interface {
+  void dummy() override {}
 };
 
+auto module = [] { return di::make_injector(di::bind<interface>().to<implementation>()); };
+
 auto test() {
-    auto injector = di::make_injector(module());
-    return injector.create<std::unique_ptr<interface>>();
+  auto injector = di::make_injector(module());
+  return injector.create<std::unique_ptr<interface>>();
 }
 
 int main(int, char** argv) {
-    std::system(("gdb -batch -ex 'file " + std::string{argv[0]} + "' -ex 'disassemble test'").c_str());
+  std::system(("gdb -batch -ex 'file " + std::string{argv[0]} + "' -ex 'disassemble test'").c_str());
 }
-

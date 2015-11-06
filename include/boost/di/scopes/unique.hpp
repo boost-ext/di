@@ -13,29 +13,27 @@
 namespace scopes {
 
 class unique {
-public:
-    template<class, class>
-    class scope {
-    public:
-        template<class>
-        using is_referable = aux::false_type;
+ public:
+  template <class, class>
+  class scope {
+   public:
+    template <class>
+    using is_referable = aux::false_type;
 
-        template<class T, class TProvider>
-        static decltype(wrappers::unique<decltype(
-            aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{}))>{
-                aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{})})
-        try_create(const TProvider&);
+    template <class T, class TProvider>
+    static decltype(wrappers::unique<decltype(aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{}))>{
+        aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{})})
+    try_create(const TProvider&);
 
-        template<class T, class TProvider>
-        auto create(const TProvider& provider) const {
-            using memory = type_traits::memory_traits_t<T>;
-            using wrapper = wrappers::unique<decltype(provider.get(memory{}))>;
-            return wrapper{provider.get(memory{})};
-        }
-    };
+    template <class T, class TProvider>
+    auto create(const TProvider& provider) const {
+      using memory = type_traits::memory_traits_t<T>;
+      using wrapper = wrappers::unique<decltype(provider.get(memory{}))>;
+      return wrapper{provider.get(memory{})};
+    }
+  };
 };
 
-} // scopes
+}  // scopes
 
 #endif
-
