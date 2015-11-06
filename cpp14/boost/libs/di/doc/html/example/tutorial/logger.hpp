@@ -15,10 +15,8 @@
 //->
 
 class logger : public ilogger {
-public:
-    void log(const std::string& text) override {
-        std::clog << text << std::endl;
-    }
+ public:
+  void log(const std::string& text) override { std::clog << text << std::endl; }
 };
 
 //<-
@@ -26,4 +24,3 @@ public:
 //->
 
 //]
-

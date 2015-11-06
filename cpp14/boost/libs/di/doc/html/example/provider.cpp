@@ -14,44 +14,39 @@
 
 namespace di = boost::di;
 
-template<typename T>
+template <typename T>
 class provider {
-public:
-    virtual ~provider() noexcept = default;
-    virtual T get() const = 0;
+ public:
+  virtual ~provider() noexcept = default;
+  virtual T get() const = 0;
 };
 
 /*<<`transaction` provider>>*/
 struct transaction : provider<int> {
-    /*<<implementation of `provider` requirement >>*/
-    int get() const override {
-        return next();
-    }
+  /*<<implementation of `provider` requirement >>*/
+  int get() const override { return next(); }
 
-    static int& next() {
-        static int i = 0;
-        return ++i;
-    }
+  static int& next() {
+    static int i = 0;
+    return ++i;
+  }
 };
 
 /*<<example `usage ` class>>*/
 struct usage {
-    usage(int i, std::unique_ptr<provider<int>> p) {
-        assert(i == 0);
-        assert(p->get() == 1);
-        assert(p->get() == 2);
-    }
+  usage(int i, std::unique_ptr<provider<int>> p) {
+    assert(i == 0);
+    assert(p->get() == 1);
+    assert(p->get() == 2);
+  }
 };
 
 int main() {
-    /*<<define injector>>*/
-    auto injector = di::make_injector(
-        di::bind<provider<int>>().to<transaction>()
-    );
+  /*<<define injector>>*/
+  auto injector = di::make_injector(di::bind<provider<int>>().to<transaction>());
 
-    /*<<create `usage`>>*/
-    injector.create<usage>();
+  /*<<create `usage`>>*/
+  injector.create<usage>();
 }
 
 //]
-

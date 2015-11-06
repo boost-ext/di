@@ -212,9 +212,27 @@ function toggleNextRow() {
 
 <div class="toc2" id="section_">
 
-<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">ibutton</span> <span class="special">{</span> <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">ibutton</span><span class="special">()</span> <span class="keyword">noexcept</span> <span class="special">=</span> <span class="keyword">default</span><span class="special">;</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">dummy</span><span class="special">()</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="special">};</span> <span class="keyword">struct</span> <span class="identifier">button</span> <span class="special">:</span> <span class="identifier">ibutton</span> <span class="special">{</span> <span class="keyword">void</span> <span class="identifier">dummy</span><span class="special">()</span> <span class="identifier">override</span> <span class="special">{</span> <span class="special">};</span> <span class="special">};</span>
-<span class="keyword">struct</span> <span class="identifier">iwindow</span> <span class="special">{</span> <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">iwindow</span><span class="special">()</span> <span class="keyword">noexcept</span> <span class="special">=</span> <span class="keyword">default</span><span class="special">;</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">dummy</span><span class="special">()</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="special">};</span> <span class="keyword">struct</span> <span class="identifier">window</span> <span class="special">:</span> <span class="identifier">iwindow</span> <span class="special">{</span> <span class="keyword">void</span> <span class="identifier">dummy</span><span class="special">()</span> <span class="identifier">override</span> <span class="special">{</span> <span class="special">};</span> <span class="special">};</span>
-<span class="keyword">struct</span> <span class="identifier">iboard</span> <span class="special">{</span> <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">iboard</span><span class="special">()</span> <span class="keyword">noexcept</span> <span class="special">=</span> <span class="keyword">default</span><span class="special">;</span> <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">dummy</span><span class="special">()</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="special">};</span> <span class="keyword">struct</span> <span class="identifier">board</span> <span class="special">:</span> <span class="identifier">iboard</span> <span class="special">{</span> <span class="keyword">void</span> <span class="identifier">dummy</span><span class="special">()</span> <span class="identifier">override</span> <span class="special">{</span> <span class="special">};</span> <span class="special">};</span>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">ibutton</span> <span class="special">{</span>
+  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">ibutton</span><span class="special">()</span> <span class="keyword">noexcept</span> <span class="special">=</span> <span class="keyword">default</span><span class="special">;</span>
+  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">dummy</span><span class="special">()</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">button</span> <span class="special">:</span> <span class="identifier">ibutton</span> <span class="special">{</span>
+  <span class="keyword">void</span> <span class="identifier">dummy</span><span class="special">()</span> <span class="identifier">override</span><span class="special">{};</span>
+<span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">iwindow</span> <span class="special">{</span>
+  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">iwindow</span><span class="special">()</span> <span class="keyword">noexcept</span> <span class="special">=</span> <span class="keyword">default</span><span class="special">;</span>
+  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">dummy</span><span class="special">()</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">window</span> <span class="special">:</span> <span class="identifier">iwindow</span> <span class="special">{</span>
+  <span class="keyword">void</span> <span class="identifier">dummy</span><span class="special">()</span> <span class="identifier">override</span><span class="special">{};</span>
+<span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">iboard</span> <span class="special">{</span>
+  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">iboard</span><span class="special">()</span> <span class="keyword">noexcept</span> <span class="special">=</span> <span class="keyword">default</span><span class="special">;</span>
+  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">dummy</span><span class="special">()</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">};</span>
+<span class="keyword">struct</span> <span class="identifier">board</span> <span class="special">:</span> <span class="identifier">iboard</span> <span class="special">{</span>
+  <span class="keyword">void</span> <span class="identifier">dummy</span><span class="special">()</span> <span class="identifier">override</span><span class="special">{};</span>
+<span class="special">};</span>
 </pre>
 <div class="informaltable"><table class="table">
 <colgroup><col></colgroup>
@@ -227,13 +245,11 @@ function toggleNextRow() {
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">di</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
 <span class="keyword">class</span> <span class="identifier">config</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">config</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-    <span class="keyword">static</span> <span class="keyword">auto</span> <span class="identifier">policies</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;)</span> <span class="keyword">noexcept</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_policies</span><span class="special">(</span>
-            <span class="special">[](</span><span class="keyword">auto</span> <span class="identifier">type</span><span class="special">){</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="keyword">typeid</span><span class="special">(</span><span class="keyword">typename</span> <span class="keyword">decltype</span><span class="special">(</span><span class="identifier">type</span><span class="special">)::</span><span class="identifier">type</span><span class="special">).</span><span class="identifier">name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="special">}</span>
-        <span class="special">);</span>
-    <span class="special">}</span>
+ <span class="keyword">public</span><span class="special">:</span>
+  <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+  <span class="keyword">static</span> <span class="keyword">auto</span> <span class="identifier">policies</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;)</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_policies</span><span class="special">([](</span><span class="keyword">auto</span> <span class="identifier">type</span><span class="special">)</span> <span class="special">{</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="keyword">typeid</span><span class="special">(</span><span class="keyword">typename</span> <span class="keyword">decltype</span><span class="special">(</span><span class="identifier">type</span><span class="special">)::</span><span class="identifier">type</span><span class="special">).</span><span class="identifier">name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="special">});</span>
+  <span class="special">}</span>
 <span class="special">};</span>
 </pre>
 <div class="informaltable"><table class="table">
@@ -245,16 +261,13 @@ function toggleNextRow() {
               </td></tr></tbody>
 </table></div>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">controller</span> <span class="special">{</span>
-    <span class="identifier">controller</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">view</span><span class="special">&gt;&amp;</span> <span class="identifier">view</span>
-             <span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">model</span><span class="special">&gt;&amp;</span> <span class="identifier">model</span><span class="special">)</span>
-        <span class="special">:</span> <span class="identifier">view_</span><span class="special">(</span><span class="identifier">view</span><span class="special">),</span> <span class="identifier">model_</span><span class="special">(</span><span class="identifier">model</span><span class="special">)</span>
-    <span class="special">{</span> <span class="special">}</span>
+  <span class="identifier">controller</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">view</span><span class="special">&gt;&amp;</span> <span class="identifier">view</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">model</span><span class="special">&gt;&amp;</span> <span class="identifier">model</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">view_</span><span class="special">(</span><span class="identifier">view</span><span class="special">),</span> <span class="identifier">model_</span><span class="special">(</span><span class="identifier">model</span><span class="special">)</span> <span class="special">{}</span>
 
-    <span class="keyword">int</span> <span class="identifier">run</span><span class="special">();</span>
+  <span class="keyword">int</span> <span class="identifier">run</span><span class="special">();</span>
 
-<span class="keyword">private</span><span class="special">:</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">view</span><span class="special">&gt;</span> <span class="identifier">view_</span><span class="special">;</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">model</span><span class="special">&gt;</span> <span class="identifier">model_</span><span class="special">;</span>
+ <span class="keyword">private</span><span class="special">:</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">view</span><span class="special">&gt;</span> <span class="identifier">view_</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">model</span><span class="special">&gt;</span> <span class="identifier">model_</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
 <div class="informaltable"><table class="table">
@@ -266,10 +279,10 @@ function toggleNextRow() {
               </td></tr></tbody>
 </table></div>
 <pre class="programlisting"><span class="keyword">int</span> <span class="identifier">controller</span><span class="special">::</span><span class="identifier">run</span><span class="special">()</span> <span class="special">{</span>
-    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">view_</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span>
-    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">model_</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span>
+  <span class="identifier">assert</span><span class="special">(</span><span class="identifier">view_</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span>
+  <span class="identifier">assert</span><span class="special">(</span><span class="identifier">model_</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span>
 
-    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+  <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <div class="informaltable"><table class="table">
@@ -283,12 +296,9 @@ function toggleNextRow() {
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-   <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-        <span class="identifier">module_view</span><span class="special">()</span>
-      <span class="special">,</span> <span class="identifier">module_model</span><span class="special">()</span>
-    <span class="special">);</span>
+  <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">module_view</span><span class="special">(),</span> <span class="identifier">module_model</span><span class="special">());</span>
 
-    <span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">controller</span><span class="special">&gt;().</span><span class="identifier">run</span><span class="special">();</span>
+  <span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">controller</span><span class="special">&gt;().</span><span class="identifier">run</span><span class="special">();</span>
 <span class="special">}</span>
 </pre>
 <div class="informaltable"><table class="table">
@@ -301,12 +311,12 @@ function toggleNextRow() {
 </table></div>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 
-<span class="keyword">static</span> <span class="keyword">auto</span> <span class="identifier">rows</span> <span class="special">=</span> <span class="special">[]{};</span>
-<span class="keyword">static</span> <span class="keyword">auto</span> <span class="identifier">colls</span> <span class="special">=</span> <span class="special">[]{};</span>
+<span class="keyword">static</span> <span class="keyword">auto</span> <span class="identifier">rows</span> <span class="special">=</span> <span class="special">[]</span> <span class="special">{};</span>
+<span class="keyword">static</span> <span class="keyword">auto</span> <span class="identifier">colls</span> <span class="special">=</span> <span class="special">[]</span> <span class="special">{};</span>
 
 <span class="keyword">class</span> <span class="identifier">model</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">model</span><span class="special">,</span> <span class="special">(</span><span class="identifier">named</span> <span class="special">=</span> <span class="identifier">rows</span><span class="special">)</span> <span class="keyword">int</span><span class="special">,</span> <span class="special">(</span><span class="identifier">named</span> <span class="special">=</span> <span class="identifier">colls</span><span class="special">)</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">iboard</span><span class="special">&gt;);</span>
+ <span class="keyword">public</span><span class="special">:</span>
+  <span class="identifier">BOOST_DI_INJECT</span><span class="special">(</span><span class="identifier">model</span><span class="special">,</span> <span class="special">(</span><span class="identifier">named</span> <span class="special">=</span> <span class="identifier">rows</span><span class="special">)</span> <span class="keyword">int</span><span class="special">,</span> <span class="special">(</span><span class="identifier">named</span> <span class="special">=</span> <span class="identifier">colls</span><span class="special">)</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">iboard</span><span class="special">&gt;);</span>
 <span class="special">};</span>
 </pre>
 <div class="informaltable"><table class="table">
@@ -318,9 +328,9 @@ function toggleNextRow() {
               </td></tr></tbody>
 </table></div>
 <pre class="programlisting"><span class="identifier">model</span><span class="special">::</span><span class="identifier">model</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">rows</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">colls</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">iboard</span><span class="special">&gt;</span> <span class="identifier">b</span><span class="special">)</span> <span class="special">{</span>
-    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">rows</span> <span class="special">==</span> <span class="number">42</span><span class="special">);</span>
-    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">colls</span> <span class="special">==</span> <span class="number">42</span><span class="special">);</span>
-    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">b</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span>
+  <span class="identifier">assert</span><span class="special">(</span><span class="identifier">rows</span> <span class="special">==</span> <span class="number">42</span><span class="special">);</span>
+  <span class="identifier">assert</span><span class="special">(</span><span class="identifier">colls</span> <span class="special">==</span> <span class="number">42</span><span class="special">);</span>
+  <span class="identifier">assert</span><span class="special">(</span><span class="identifier">b</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span>
 <span class="special">}</span>
 </pre>
 <div class="informaltable"><table class="table">
@@ -350,11 +360,8 @@ function toggleNextRow() {
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 
 <span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">model</span><span class="special">&gt;</span> <span class="identifier">module_model</span><span class="special">()</span> <span class="keyword">noexcept</span> <span class="special">{</span>
-    <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">iboard</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">board</span><span class="special">&gt;()</span>
-      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">named</span><span class="special">(</span><span class="identifier">rows</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
-      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">named</span><span class="special">(</span><span class="identifier">colls</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
-    <span class="special">);</span>
+  <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">iboard</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">board</span><span class="special">&gt;(),</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">named</span><span class="special">(</span><span class="identifier">rows</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">),</span>
+                           <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">named</span><span class="special">(</span><span class="identifier">colls</span><span class="special">).</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">));</span>
 <span class="special">}</span>
 </pre>
 <div class="informaltable"><table class="table">
@@ -384,10 +391,7 @@ function toggleNextRow() {
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 
 <span class="identifier">di</span><span class="special">::</span><span class="identifier">injector</span><span class="special">&lt;</span><span class="identifier">view</span><span class="special">&gt;</span> <span class="identifier">module_view</span><span class="special">()</span> <span class="keyword">noexcept</span> <span class="special">{</span>
-    <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ibutton</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">button</span><span class="special">&gt;()</span>
-      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">iwindow</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">window</span><span class="special">&gt;()</span>
-    <span class="special">);</span>
+  <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ibutton</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">button</span><span class="special">&gt;(),</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">iwindow</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">window</span><span class="special">&gt;());</span>
 <span class="special">}</span>
 </pre>
 <div class="informaltable"><table class="table">
@@ -399,8 +403,8 @@ function toggleNextRow() {
               </td></tr></tbody>
 </table></div>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">view</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">view</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">iwindow</span><span class="special">&gt;,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ibutton</span><span class="special">&gt;);</span>
+ <span class="keyword">public</span><span class="special">:</span>
+  <span class="identifier">view</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">iwindow</span><span class="special">&gt;,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ibutton</span><span class="special">&gt;);</span>
 <span class="special">};</span>
 </pre>
 <div class="informaltable"><table class="table">
@@ -412,8 +416,8 @@ function toggleNextRow() {
               </td></tr></tbody>
 </table></div>
 <pre class="programlisting"><span class="identifier">view</span><span class="special">::</span><span class="identifier">view</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">iwindow</span><span class="special">&gt;</span> <span class="identifier">w</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ibutton</span><span class="special">&gt;</span> <span class="identifier">b</span><span class="special">)</span> <span class="special">{</span>
-    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">w</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span>
-    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">b</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span>
+  <span class="identifier">assert</span><span class="special">(</span><span class="identifier">w</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span>
+  <span class="identifier">assert</span><span class="special">(</span><span class="identifier">b</span><span class="special">.</span><span class="identifier">get</span><span class="special">());</span>
 <span class="special">}</span>
 </pre>
 <div class="informaltable"><table class="table">

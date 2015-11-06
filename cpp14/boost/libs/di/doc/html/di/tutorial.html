@@ -344,16 +344,14 @@ function toggleNextRow() {
       instead.
     </p>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">ilogger</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">ilogger</span><span class="special">()</span> <span class="keyword">noexcept</span> <span class="special">=</span> <span class="keyword">default</span><span class="special">;</span>
-    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">log</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+ <span class="keyword">public</span><span class="special">:</span>
+  <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">ilogger</span><span class="special">()</span> <span class="keyword">noexcept</span> <span class="special">=</span> <span class="keyword">default</span><span class="special">;</span>
+  <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">log</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">logger</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">ilogger</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">void</span> <span class="identifier">log</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">text</span><span class="special">)</span> <span class="identifier">override</span> <span class="special">{</span>
-        <span class="identifier">std</span><span class="special">::</span><span class="identifier">clog</span> <span class="special">&lt;&lt;</span> <span class="identifier">text</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-    <span class="special">}</span>
+ <span class="keyword">public</span><span class="special">:</span>
+  <span class="keyword">void</span> <span class="identifier">log</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">text</span><span class="special">)</span> <span class="identifier">override</span> <span class="special">{</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">clog</span> <span class="special">&lt;&lt;</span> <span class="identifier">text</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="special">}</span>
 <span class="special">};</span>
 </pre>
 <p>

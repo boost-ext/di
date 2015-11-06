@@ -18,21 +18,26 @@ class interface;
 class implementation;
 
 auto configuration = [] {
-    return di::make_injector(
-        /*<<binding using fwd declarations, no checking whether types are related*/
-        di::bind<interface>().to<implementation>()
-    );
+  return di::make_injector(
+      /*<<binding using fwd declarations, no checking whether types are related*/
+      di::bind<interface>().to<implementation>());
 };
 
 /*<<binding using fwd declarations, no checking whether types are related*/
-class interface { public: virtual ~interface() noexcept = default; virtual void dummy() = 0; };
-class implementation : public interface { public: void dummy() override { } };
+class interface {
+ public:
+  virtual ~interface() noexcept = default;
+  virtual void dummy() = 0;
+};
+class implementation : public interface {
+ public:
+  void dummy() override {}
+};
 
 int main() {
-    /*<<make injector configuration>>*/
-    auto injector = configuration();
-    assert(dynamic_cast<implementation*>(injector.create<std::unique_ptr<interface>>().get()));
+  /*<<make injector configuration>>*/
+  auto injector = configuration();
+  assert(dynamic_cast<implementation*>(injector.create<std::unique_ptr<interface>>().get()));
 }
 
 //]
-

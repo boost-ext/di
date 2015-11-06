@@ -222,36 +222,30 @@ function toggleNextRow() {
 <span class="keyword">namespace</span> <span class="identifier">di</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">di</span><span class="special">;</span>
 
 <span class="keyword">class</span> <span class="identifier">custom_policy</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">config</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="keyword">static</span> <span class="keyword">auto</span> <span class="identifier">policies</span><span class="special">(...)</span> <span class="keyword">noexcept</span> <span class="special">{</span>
-        <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">;</span>
-        <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">operators</span><span class="special">;</span>
-        <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_policies</span><span class="special">(</span><span class="identifier">constructible</span><span class="special">(</span><span class="identifier">is_bound</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">_</span><span class="special">&gt;{}));</span>
-    <span class="special">}</span>
+ <span class="keyword">public</span><span class="special">:</span>
+  <span class="keyword">static</span> <span class="keyword">auto</span> <span class="identifier">policies</span><span class="special">(...)</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">;</span>
+    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">policies</span><span class="special">::</span><span class="identifier">operators</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_policies</span><span class="special">(</span><span class="identifier">constructible</span><span class="special">(</span><span class="identifier">is_bound</span><span class="special">&lt;</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">_</span><span class="special">&gt;{}));</span>
+  <span class="special">}</span>
 <span class="special">};</span>
 
 <span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
-    <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+  <span class="identifier">example</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">double</span><span class="special">)</span> <span class="special">{}</span>
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <a class="co" name="di.examples.custom_policy.c0" href="custom_policy.html#di.examples.custom_policy.c1"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="special">{</span>
-    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">&lt;</span><span class="identifier">custom_policy</span><span class="special">&gt;(</span>
-        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
-      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="number">87.0</span><span class="special">)</span>
-    <span class="special">);</span>
+  <a class="co" name="di.examples.custom_policy.c0" href="custom_policy.html#di.examples.custom_policy.c1"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a><span class="special">{</span>
+    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">&lt;</span><span class="identifier">custom_policy</span><span class="special">&gt;(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">),</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="number">87.0</span><span class="special">));</span>
 
     <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>
-    <span class="special">}</span>
+  <span class="special">}</span>
 
-    <a class="co" name="di.examples.custom_policy.c2" href="custom_policy.html#di.examples.custom_policy.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="special">{</span>
-    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">)</span>
-      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="number">87.0</span><span class="special">)</span>
-    <span class="special">);</span>
+  <a class="co" name="di.examples.custom_policy.c2" href="custom_policy.html#di.examples.custom_policy.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="special">{</span>
+    <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="number">42</span><span class="special">),</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="number">87.0</span><span class="special">));</span>
 
     <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;();</span>
-    <span class="special">}</span>
+  <span class="special">}</span>
 <span class="special">}</span>
 </pre>
 <div class="calloutlist"><table border="0" summary="Callout list">

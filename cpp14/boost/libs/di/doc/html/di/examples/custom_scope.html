@@ -221,55 +221,48 @@ function toggleNextRow() {
 
 <a class="co" name="di.examples.custom_scope.c0" href="custom_scope.html#di.examples.custom_scope.c1"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a>
 <span class="keyword">class</span> <span class="identifier">custom_scope</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <a class="co" name="di.examples.custom_scope.c2" href="custom_scope.html#di.examples.custom_scope.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a>
-    <span class="keyword">class</span> <span class="identifier">entry</span> <span class="special">{</span> <span class="special">};</span>
-    <span class="keyword">class</span> <span class="identifier">exit</span> <span class="special">{</span> <span class="special">};</span>
+ <span class="keyword">public</span><span class="special">:</span>
+  <a class="co" name="di.examples.custom_scope.c2" href="custom_scope.html#di.examples.custom_scope.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a>
+  <span class="keyword">class</span> <span class="identifier">entry</span> <span class="special">{};</span>
+  <span class="keyword">class</span> <span class="identifier">exit</span> <span class="special">{};</span>
 
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">class</span><span class="special">&gt;</span>
-    <span class="keyword">class</span> <span class="identifier">scope</span> <span class="special">{</span>
-        <a class="co" name="di.examples.custom_scope.c4" href="custom_scope.html#di.examples.custom_scope.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a>
-        <span class="keyword">class</span> <span class="identifier">custom_wrapper</span> <span class="special">{</span>
-        <span class="keyword">public</span><span class="special">:</span>
-            <span class="identifier">custom_wrapper</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">object</span><span class="special">)</span> <span class="comment">// non explicit</span>
-                <span class="special">:</span> <span class="identifier">object_</span><span class="special">(</span><span class="identifier">object</span><span class="special">)</span>
-            <span class="special">{</span> <span class="special">}</span>
+  <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">class</span><span class="special">&gt;</span>
+  <span class="keyword">class</span> <span class="identifier">scope</span> <span class="special">{</span>
+    <a class="co" name="di.examples.custom_scope.c4" href="custom_scope.html#di.examples.custom_scope.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a>
+    <span class="keyword">class</span> <span class="identifier">custom_wrapper</span> <span class="special">{</span>
+     <span class="keyword">public</span><span class="special">:</span>
+      <span class="identifier">custom_wrapper</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">object</span><span class="special">)</span>  <span class="comment">// non explicit</span>
+          <span class="special">:</span> <span class="identifier">object_</span><span class="special">(</span><span class="identifier">object</span><span class="special">)</span> <span class="special">{}</span>
 
-            <a class="co" name="di.examples.custom_scope.c6" href="custom_scope.html#di.examples.custom_scope.c7"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="keyword">inline</span> <span class="keyword">operator</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
-                <span class="keyword">return</span> <span class="identifier">object_</span><span class="special">;</span>
-            <span class="special">}</span>
+      <a class="co" name="di.examples.custom_scope.c6" href="custom_scope.html#di.examples.custom_scope.c7"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="keyword">inline</span> <span class="keyword">operator</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;()</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">object_</span><span class="special">;</span> <span class="special">}</span>
 
-            <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">object_</span><span class="special">;</span>
-        <span class="special">};</span>
-
-    <span class="keyword">public</span><span class="special">:</span>
-        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">&gt;</span>
-        <span class="keyword">using</span> <span class="identifier">is_referable</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">false_type</span><span class="special">;</span>
-
-        <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TProvider</span><span class="special">&gt;</span>
-        <span class="keyword">static</span> <span class="identifier">custom_wrapper</span> <span class="identifier">try_create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TProvider</span><span class="special">&amp;);</span>
-
-        <a class="co" name="di.examples.custom_scope.c8" href="custom_scope.html#di.examples.custom_scope.c9"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TProvider</span><span class="special">&gt;</span>
-        <span class="identifier">custom_wrapper</span> <span class="identifier">create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TProvider</span><span class="special">&amp;</span> <span class="identifier">provider</span><span class="special">)</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
-            <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;{</span><span class="identifier">provider</span><span class="special">.</span><span class="identifier">get</span><span class="special">()};</span>
-        <span class="special">}</span>
+      <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">object_</span><span class="special">;</span>
     <span class="special">};</span>
+
+   <span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span><span class="special">&gt;</span>
+    <span class="keyword">using</span> <span class="identifier">is_referable</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">false_type</span><span class="special">;</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TProvider</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="identifier">custom_wrapper</span> <span class="identifier">try_create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TProvider</span><span class="special">&amp;);</span>
+
+    <a class="co" name="di.examples.custom_scope.c8" href="custom_scope.html#di.examples.custom_scope.c9"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">TProvider</span><span class="special">&gt;</span>
+    <span class="identifier">custom_wrapper</span> <span class="identifier">create</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">TProvider</span><span class="special">&amp;</span> <span class="identifier">provider</span><span class="special">)</span> <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="special">{</span>
+      <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;{</span><span class="identifier">provider</span><span class="special">.</span><span class="identifier">get</span><span class="special">()};</span>
+    <span class="special">}</span>
+  <span class="special">};</span>
 <span class="special">};</span>
 
 <span class="keyword">struct</span> <span class="identifier">example</span> <span class="special">{</span>
-    <span class="keyword">explicit</span> <span class="identifier">example</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;&amp;</span> <span class="identifier">sp</span><span class="special">)</span>
-        <span class="special">:</span> <span class="identifier">sp_</span><span class="special">(</span><span class="identifier">sp</span><span class="special">)</span>
-    <span class="special">{</span> <span class="special">}</span>
+  <span class="keyword">explicit</span> <span class="identifier">example</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;&amp;</span> <span class="identifier">sp</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">sp_</span><span class="special">(</span><span class="identifier">sp</span><span class="special">)</span> <span class="special">{}</span>
 
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">sp_</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">sp_</span><span class="special">;</span>
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <a class="co" name="di.examples.custom_scope.c10" href="custom_scope.html#di.examples.custom_scope.c11"><img src="../../../../../../doc/src/images/callouts/6.png" alt="6" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">in</span><span class="special">(</span><span class="identifier">custom_scope</span><span class="special">{})</span>
-    <span class="special">);</span>
+  <a class="co" name="di.examples.custom_scope.c10" href="custom_scope.html#di.examples.custom_scope.c11"><img src="../../../../../../doc/src/images/callouts/6.png" alt="6" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">in</span><span class="special">(</span><span class="identifier">custom_scope</span><span class="special">{}));</span>
 
-    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;().</span><span class="identifier">sp_</span><span class="special">);</span>
+  <span class="identifier">assert</span><span class="special">(</span><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">example</span><span class="special">&gt;().</span><span class="identifier">sp_</span><span class="special">);</span>
 <span class="special">}</span>
 </pre>
 <div class="calloutlist"><table border="0" summary="Callout list">

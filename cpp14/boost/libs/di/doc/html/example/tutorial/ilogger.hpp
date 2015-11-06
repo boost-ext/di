@@ -14,9 +14,9 @@
 //->
 
 class ilogger {
-public:
-    virtual ~ilogger() noexcept = default;
-    virtual void log(const std::string&) = 0;
+ public:
+  virtual ~ilogger() noexcept = default;
+  virtual void log(const std::string&) = 0;
 };
 
 //<-
@@ -24,4 +24,3 @@ public:
 //->
 
 //]
-

@@ -15,8 +15,8 @@
 //->
 
 class view {
-public:
-    view(std::unique_ptr<iwindow>, std::shared_ptr<ibutton>);
+ public:
+  view(std::unique_ptr<iwindow>, std::shared_ptr<ibutton>);
 };
 
 //<-
@@ -24,4 +24,3 @@ public:
 //->
 
 //]
-

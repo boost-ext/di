@@ -12,11 +12,10 @@
 //->
 
 int controller::run() {
-    assert(view_.get());
-    assert(model_.get());
+  assert(view_.get());
+  assert(model_.get());
 
-    return 0;
+  return 0;
 }
 
 //]
-

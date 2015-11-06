@@ -221,36 +221,28 @@ function toggleNextRow() {
 
 <a class="co" name="di.examples.hello_world.c0" href="hello_world.html#di.examples.hello_world.c1"><img src="../../../../../../doc/src/images/callouts/1.png" alt="1" border="0"></a>
 <span class="keyword">class</span> <span class="identifier">hello_world</span> <span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-    <span class="identifier">hello_world</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger</span>
-              <span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogic</span><span class="special">&gt;</span> <span class="identifier">logic</span>
-              <span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">value</span><span class="special">)</span>
-        <span class="special">:</span> <span class="identifier">logger_</span><span class="special">(</span><span class="identifier">logger</span><span class="special">)</span>
-        <span class="special">,</span> <span class="identifier">logic_</span><span class="special">(</span><span class="identifier">logic</span><span class="special">)</span>
-        <span class="special">,</span> <span class="identifier">value_</span><span class="special">(</span><span class="identifier">value</span><span class="special">)</span>
-    <span class="special">{</span> <span class="special">}</span>
+ <span class="keyword">public</span><span class="special">:</span>
+  <span class="identifier">hello_world</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogic</span><span class="special">&gt;</span> <span class="identifier">logic</span><span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">value</span><span class="special">)</span>
+      <span class="special">:</span> <span class="identifier">logger_</span><span class="special">(</span><span class="identifier">logger</span><span class="special">),</span> <span class="identifier">logic_</span><span class="special">(</span><span class="identifier">logic</span><span class="special">),</span> <span class="identifier">value_</span><span class="special">(</span><span class="identifier">value</span><span class="special">)</span> <span class="special">{}</span>
 
-    <span class="keyword">int</span> <span class="identifier">run</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
-        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">value_</span><span class="special">)</span> <span class="special">{</span>
-            <span class="identifier">logger_</span><span class="special">-&gt;</span><span class="identifier">log</span><span class="special">(</span><span class="string">"hello world"</span><span class="special">);</span>
-            <span class="identifier">logic_</span><span class="special">-&gt;</span><span class="identifier">do_it</span><span class="special">();</span>
-        <span class="special">}</span>
-        <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+  <span class="keyword">int</span> <span class="identifier">run</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">value_</span><span class="special">)</span> <span class="special">{</span>
+      <span class="identifier">logger_</span><span class="special">-&gt;</span><span class="identifier">log</span><span class="special">(</span><span class="string">"hello world"</span><span class="special">);</span>
+      <span class="identifier">logic_</span><span class="special">-&gt;</span><span class="identifier">do_it</span><span class="special">();</span>
     <span class="special">}</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+  <span class="special">}</span>
 
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger_</span><span class="special">;</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogic</span><span class="special">&gt;</span> <span class="identifier">logic_</span><span class="special">;</span>
-    <span class="keyword">bool</span> <span class="identifier">value_</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;</span> <span class="identifier">logger_</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">ilogic</span><span class="special">&gt;</span> <span class="identifier">logic_</span><span class="special">;</span>
+  <span class="keyword">bool</span> <span class="identifier">value_</span><span class="special">;</span>
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
-    <a class="co" name="di.examples.hello_world.c2" href="hello_world.html#di.examples.hello_world.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-        <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">logger</span><span class="special">&gt;()</span>
-      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ilogic</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">logic</span><span class="special">&gt;()</span>
-      <span class="special">,</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
-    <span class="special">);</span>
+  <a class="co" name="di.examples.hello_world.c2" href="hello_world.html#di.examples.hello_world.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span>
+      <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ilogger</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">logger</span><span class="special">&gt;(),</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ilogic</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">logic</span><span class="special">&gt;(),</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">bool</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="keyword">true</span><span class="special">));</span>
 
-    <a class="co" name="di.examples.hello_world.c4" href="hello_world.html#di.examples.hello_world.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">hello_world</span><span class="special">&gt;().</span><span class="identifier">run</span><span class="special">();</span>
+  <a class="co" name="di.examples.hello_world.c4" href="hello_world.html#di.examples.hello_world.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="keyword">return</span> <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">hello_world</span><span class="special">&gt;().</span><span class="identifier">run</span><span class="special">();</span>
 <span class="special">}</span>
 </pre>
 <div class="calloutlist"><table border="0" summary="Callout list">
@@ -274,8 +266,8 @@ function toggleNextRow() {
             create <code class="computeroutput"><span class="identifier">hello_world</span></code> and
             run
           </p>
-<pre class="programlisting">        hello world
-    </pre>
+<pre class="programlisting">      hello world
+  </pre>
 </td>
 </tr>
 </table></div>

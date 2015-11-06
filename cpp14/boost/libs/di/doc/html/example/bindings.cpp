@@ -17,95 +17,76 @@
 namespace di = boost::di;
 
 //<-
-struct interface1 { virtual ~interface1() noexcept = default; };
-struct interface2 { virtual ~interface2() noexcept = default; };
-struct implementation1 : interface1 { };
-struct implementation1_2 : interface1 { };
-struct implementation2 : interface2 { };
-auto some_name = []{};
-auto int_name = []{};
+struct interface1 {
+  virtual ~interface1() noexcept = default;
+};
+struct interface2 {
+  virtual ~interface2() noexcept = default;
+};
+struct implementation1 : interface1 {};
+struct implementation1_2 : interface1 {};
+struct implementation2 : interface2 {};
+auto some_name = [] {};
+auto int_name = [] {};
 //->
 
 struct service {
-    BOOST_DI_INJECT(service
-          , const std::shared_ptr<interface1>& sp
-          , bool b
-          , int i
-          , std::function<int()> f
-          , (named = int_name) const int ni)
-        : sp(sp)
-    {
-        assert(dynamic_cast<implementation1_2*>(sp.get())); // overridden
-        assert(!b); // default initialization
-        assert(i == 42);
-        assert(f() == 87);
-        assert(ni == 123);
-    }
+  BOOST_DI_INJECT(service, const std::shared_ptr<interface1>& sp, bool b, int i, std::function<int()> f,
+                  (named = int_name) const int ni)
+      : sp(sp) {
+    assert(dynamic_cast<implementation1_2*>(sp.get()));  // overridden
+    assert(!b);                                          // default initialization
+    assert(i == 42);
+    assert(f() == 87);
+    assert(ni == 123);
+  }
 
-    std::shared_ptr<interface1> sp;
+  std::shared_ptr<interface1> sp;
 };
 
 struct app {
-    BOOST_DI_INJECT(app
-      , service copy
-      , std::shared_ptr<interface1> sp
-      , std::unique_ptr<interface2> ap
-      , int i
-      , (named = some_name)const std::string& s
-      , float& f
-      , const double& d)
-      : str(s)
-      , f(f)
-      , d(d)
-    {
-        assert(dynamic_cast<implementation2*>(ap.get()));
-        assert(dynamic_cast<implementation1_2*>(sp.get())); // overridden
-        assert(copy.sp.get() == sp.get());
-        assert(i == 42);
-        assert(str == "some_name");
-        assert(f == 0.f);
-        assert(d == 0.f);
-    }
+  BOOST_DI_INJECT(app, service copy, std::shared_ptr<interface1> sp, std::unique_ptr<interface2> ap, int i,
+                  (named = some_name) const std::string& s, float& f, const double& d)
+      : str(s), f(f), d(d) {
+    assert(dynamic_cast<implementation2*>(ap.get()));
+    assert(dynamic_cast<implementation1_2*>(sp.get()));  // overridden
+    assert(copy.sp.get() == sp.get());
+    assert(i == 42);
+    assert(str == "some_name");
+    assert(f == 0.f);
+    assert(d == 0.f);
+  }
 
-    app& operator=(const app&) = delete;
+  app& operator=(const app&) = delete;
 
-    std::string str;
-    float& f;
-    const double& d;
+  std::string str;
+  float& f;
+  const double& d;
 };
 
 int main() {
-    float f = 0.f;
-    double d = 0.f;
+  float f = 0.f;
+  double d = 0.f;
 
-    /*<<create injector with `interface` binding to `implementation1`>>*/
-    auto config = di::make_injector(
-        di::bind<interface1>().to<implementation1>()
-    );
+  /*<<create injector with `interface` binding to `implementation1`>>*/
+  auto config = di::make_injector(di::bind<interface1>().to<implementation1>());
 
-    /*<<create injector with configuration>>*/
-    auto injector = di::make_injector(
-        di::bind<interface2>().to<implementation2>()
-      , di::bind<int>().to(42)
-      , di::bind<std::string>().named(some_name).to("some_name")
-      , di::bind<float>().to(f)
-      , di::bind<double>().to(d)
-      , di::bind<std::function<int()>>().to([]{return 87;})
-      , di::bind<int>().named(int_name).to(123)
-      , config
-      , di::bind<interface1>().to(std::make_shared<implementation1_2>()) [di::override]
-    );
+  /*<<create injector with configuration>>*/
+  auto injector = di::make_injector(di::bind<interface2>().to<implementation2>(), di::bind<int>().to(42),
+                                    di::bind<std::string>().named(some_name).to("some_name"), di::bind<float>().to(f),
+                                    di::bind<double>().to(d), di::bind<std::function<int()>>().to([] { return 87; }),
+                                    di::bind<int>().named(int_name).to(123), config,
+                                    di::bind<interface1>().to(std::make_shared<implementation1_2>())[di::override]);
 
-    /*<<create `service_app`>>*/
-    auto service_app = injector.create<app>();
+  /*<<create `service_app`>>*/
+  auto service_app = injector.create<app>();
 
-    /*<<verify parameter `f` affection by `service_app`>>*/
-    service_app.f = 42.f;
-    assert(f == 42.f);
+  /*<<verify parameter `f` affection by `service_app`>>*/
+  service_app.f = 42.f;
+  assert(f == 42.f);
 
-    d = 42.f;
-    assert(service_app.d == 42.f);
+  d = 42.f;
+  assert(service_app.d == 42.f);
 }
 
 //]
-
