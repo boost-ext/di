@@ -12,7 +12,7 @@
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/unique.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace concepts {
+namespace concepts {
 
 template<class T>
 using scopable_error = typename scope<T>::template requires_<
@@ -121,5 +121,5 @@ test scopable_scopes = [] {
     static_expect(scopable<scopes::unique>::value);
 };
 
-}}}} // boost::di::v1::concepts
+} // concepts
 

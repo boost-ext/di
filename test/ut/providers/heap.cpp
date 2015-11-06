@@ -9,7 +9,7 @@
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace providers {
+namespace providers {
 
 template<class T, class TInit, class TMemory, class... TArgs>
 auto test_heap(const aux::type<T>&, const TInit& init, const TMemory& memory, const TArgs&... args) {
@@ -42,5 +42,5 @@ test get_with_args = [] {
 #endif
 };
 
-}}}} // boost::di::v1::providers
+} // providers
 

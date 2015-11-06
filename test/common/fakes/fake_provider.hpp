@@ -10,8 +10,6 @@
 #include "boost/di/type_traits/memory_traits.hpp"
 #include "common/fakes/fake_injector.hpp"
 
-namespace boost { namespace di { inline namespace v1 {
-
 template<class T = aux::none_type>
 struct fake_provider {
     auto get(const type_traits::heap& = {}) const noexcept {
@@ -31,8 +29,6 @@ struct fake_provider {
 
     fake_injector<T> injector_;
 };
-
-}}} // boost::di::v1
 
 #endif
 

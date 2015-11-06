@@ -12,8 +12,6 @@
 #include "common/fakes/fake_config.hpp"
 #include "common/fakes/fake_pool.hpp"
 
-namespace boost { namespace di { inline namespace v1 {
-
 template<class TExpected = void>
 struct fake_injector {
     using deps = fake_pool<>;
@@ -45,8 +43,6 @@ protected:
         return T{};
     }
 };
-
-}}} // boost::di::v1
 
 #endif
 

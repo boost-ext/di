@@ -6,7 +6,7 @@
 //
 #include "boost/di/concepts/creatable.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace concepts {
+namespace concepts {
 
 struct d {
     d(int, double) { }
@@ -34,5 +34,5 @@ test is_creatable = [] {
 #endif
 };
 
-}}}} // boost::di::v1::concepts
+} // concepts
 

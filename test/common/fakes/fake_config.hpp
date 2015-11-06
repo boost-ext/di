@@ -10,8 +10,6 @@
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/providers/heap.hpp"
 
-namespace boost { namespace di { inline namespace v1 {
-
 template<class = void>
 struct fake_config {
     template<class T>
@@ -24,8 +22,6 @@ struct fake_config {
         return providers::heap{};
     }
 };
-
-}}} // boost::di::v1
 
 #endif
 

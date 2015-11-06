@@ -11,7 +11,7 @@
     #include <boost/shared_ptr.hpp>
 #endif
 
-namespace boost { namespace di { inline namespace v1 { namespace wrappers {
+namespace wrappers {
 
 test to_shared_ptr = [] {
     auto i = std::make_shared<int>(42);
@@ -40,5 +40,5 @@ test to_weak_ptr = [] {
     expect(!object.lock());
 };
 
-}}}} // boost::di::v1::wrappers
+} // wrappers
 

@@ -12,7 +12,7 @@
 #include "boost/di/fwd.hpp"
 #include "common/common.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace aux {
+namespace aux {
 
 BOOST_DI_HAS_TYPE(has_has, has);
 
@@ -204,5 +204,5 @@ test is_unique_types = [] {
     static_expect(std::is_same<not_unique<int>, is_unique<float, int, double, int>::type>::value);
 };
 
-}}}} // boost::di::v1::aux
+} // aux
 

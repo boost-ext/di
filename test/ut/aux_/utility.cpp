@@ -7,7 +7,7 @@
 #include <type_traits>
 #include "boost/di/aux_/utility.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace aux {
+namespace aux {
 
 test join_types = [] {
     static_expect(std::is_same<type_list<>, join_t<>>{});
@@ -31,5 +31,5 @@ test index_sequence_types = [] {
     static_expect(std::is_same<index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9, 10>, make_index_sequence<10>>::value);
 };
 
-}}}} // boost::di::v1::aux
+} // aux
 

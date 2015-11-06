@@ -9,7 +9,7 @@
 #include "common/fakes/fake_dependency.hpp"
 #include "common/fakes/fake_config.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 
 struct no_ctor {
     template<class...> struct scope { };
@@ -54,31 +54,31 @@ test referable_types = [] {
 };
 
 test def_ctor = [] {
-    injector<di::config> injector_{core::init{}};
+    injector<config> injector_{core::init{}};
     expect(std::is_same<aux::type_list<>, decltype(injector_)::deps>{});
 };
 
 test ctor = [] {
     using dep1 = fake_dependency<int>;
     using dep2 = fake_dependency<double>;
-    injector<di::config, dep1, dep2> injector_{core::init{}};
+    injector<config, dep1, dep2> injector_{core::init{}};
 };
 
 test ctor_injector = [] {
-    injector<di::config> injector1{core::init{}};
-    injector<di::config> injector2{injector1};
+    injector<config> injector1{core::init{}};
+    injector<config> injector2{injector1};
     (void)injector2;
 };
 
 test create = [] {
-    injector<di::config> injector_{core::init{}};
+    injector<config> injector_{core::init{}};
     expect(0 == injector_.create<int>());
 };
 
 test conversion = [] {
-    injector<di::config> injector_{core::init{}};
+    injector<config> injector_{core::init{}};
     expect(0 == (int)injector_);
 };
 
-}}}} // boost::di::v1::core
+} // core
 

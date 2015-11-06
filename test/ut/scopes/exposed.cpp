@@ -12,7 +12,7 @@
 #include "common/fakes/fake_provider.hpp"
 #include "common/fakes/fake_scope.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace scopes {
+namespace scopes {
 
 test create_deduce = [] {
     int i = exposed<>::scope<int, int>{fake_injector<int>{}}.create<int>(fake_provider<int>{});
@@ -34,5 +34,5 @@ test create_singleton = [] {
     expect(!i);
 };
 
-}}}} // boost::di::v1::scopes
+} // scopes
 

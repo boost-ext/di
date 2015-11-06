@@ -7,12 +7,8 @@
 #ifndef BOOST_DI_FAKE_POOL_HPP
 #define BOOST_DI_FAKE_POOL_HPP
 
-namespace boost { namespace di { inline namespace v1 {
-
 template<class... Ts>
 struct fake_pool : Ts... { };
-
-}}} // boost::di::v1
 
 #endif
 

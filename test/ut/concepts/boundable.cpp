@@ -9,7 +9,7 @@
 #include "boost/di/concepts/boundable.hpp"
 #include "common/fakes/fake_dependency.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace concepts {
+namespace concepts {
 
 struct a { };
 struct b : a { };
@@ -54,5 +54,5 @@ test bind_injector = [] {
     expect(std::is_same<bind<double>::is_bound_more_than_once, boundable<aux::type<int, double, float, double>>>::value);
 };
 
-}}}} // boost::di::v1::concepts
+} // concepts
 

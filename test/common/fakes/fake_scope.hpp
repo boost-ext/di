@@ -9,8 +9,6 @@
 
 #include <type_traits>
 
-namespace boost { namespace di { inline namespace v1 {
-
 struct fake_scope_entry { };
 struct fake_scope_exit { };
 
@@ -45,8 +43,6 @@ struct fake_scope {
         return calls;
     }
 };
-
-}}} // boost::di::v1
 
 #endif
 

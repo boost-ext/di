@@ -8,7 +8,7 @@
 #include "boost/di/scopes/exposed.hpp"
 #include "common/fakes/fake_dependency.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 
 template<class... TDeps>
 struct fake_injector {
@@ -23,5 +23,5 @@ test bindings_deps = [] {
     static_expect(std::is_same<aux::type_list<fake_dependency<int>, fake_dependency<double>, dependency<scopes::exposed<>, int>>, bindings_t<fake_injector<fake_dependency<int>, fake_dependency<double>>, int>>::value);
 };
 
-}}}} // boost::di::v1::core
+} // core
 

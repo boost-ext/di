@@ -12,7 +12,7 @@
 #include "common/fakes/fake_provider.hpp"
 #include "common/fakes/fake_injector.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace scopes {
+namespace scopes {
 
 struct interface { virtual ~interface() noexcept = default; virtual void dummy() = 0; };
 struct implementation : public interface { void dummy() override { }; };
@@ -116,5 +116,5 @@ test from_function_expr_with_injector = [] {
     expect(0 == static_cast<int>(external.create<void>(fake_provider<int>{})));
 };
 
-}}}} // boost::di::v1::scopes
+} // scopes
 

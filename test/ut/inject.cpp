@@ -6,8 +6,6 @@
 //
 #include "boost/di/inject.hpp"
 
-namespace boost { namespace di { inline namespace v1 {
-
 test empty_ctor = [] {
     struct c {
         BOOST_DI_INJECT(c,) { }
@@ -192,6 +190,4 @@ test c_traits_no_limits = [] {
         expect(c_def_named_without_def::N == c_def_named_without_def{c_def_named_without_def::N}.i2);
     };
 #endif
-
-}}} // boost::di::v1
 

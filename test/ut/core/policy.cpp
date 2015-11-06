@@ -8,7 +8,7 @@
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "common/fakes/fake_dependency.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 
 struct fake_policy {
     template<class T>
@@ -72,5 +72,5 @@ test call_policies = [] {
     expect(1 == fake_policy_long::calls());
 };
 
-}}}} // boost::di::v1::core
+} // core
 

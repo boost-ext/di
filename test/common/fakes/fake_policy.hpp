@@ -10,8 +10,6 @@
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/fwd.hpp"
 
-namespace boost { namespace di { inline namespace v1 {
-
 template<
     class T
   , class TDependency = aux::none_type
@@ -46,8 +44,6 @@ template<
     template<class, class, class TDefault>
     using resolve = TDefault;
 };
-
-}}} // boost::di::v1
 
 #endif
 

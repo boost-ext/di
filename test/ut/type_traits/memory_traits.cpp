@@ -12,7 +12,7 @@
 #endif
 #include "common/common.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace type_traits {
+namespace type_traits {
 
 struct c { };
 struct i { virtual ~i() noexcept = default; };
@@ -42,5 +42,5 @@ test traits = [] {
 #endif
 };
 
-}}}} // boost::di::v1::type_traits
+} // type_traits
 

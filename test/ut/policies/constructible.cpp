@@ -12,7 +12,7 @@
 #include "boost/di/fwd.hpp"
 #include "common/fakes/fake_policy.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace policies {
+namespace policies {
 
 template<class TPolicy, class T = std::false_type>
 bool constructible_test(const TPolicy&, const T& arg = {}) noexcept {
@@ -136,6 +136,6 @@ test complex_opeartors = [] {
     expect(test(fake_policy<double, aux::none_type, aux::none_type, true>{}));
 };
 
-}}}} // boost::di::v1::policies
+} // policies
 
 

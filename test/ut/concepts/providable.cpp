@@ -9,7 +9,7 @@
 #include "boost/di/providers/heap.hpp"
 #include "boost/di/providers/stack_over_heap.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace concepts {
+namespace concepts {
 
 test none = [] {
     struct none_providable { };
@@ -68,5 +68,5 @@ test providable_providers = [] {
     static_expect(providable<providers::stack_over_heap>::value);
 };
 
-}}}} // boost::di::v1::concepts
+} // concepts
 

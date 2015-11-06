@@ -9,8 +9,6 @@
 #include "boost/di/core/injector.hpp"
 #include "common/fakes/fake_dependency.hpp"
 
-namespace boost { namespace di { inline namespace v1 {
-
 test injector_empty = [] {
     using injector_t = injector<>;
     expect(std::is_same<aux::type_list<>, injector_t::deps>{});
@@ -28,6 +26,4 @@ test injector_with_injector = [] {
     using dep2 = core::dependency<scopes::exposed<scopes::deduce>, double>;
     expect(std::is_same<aux::type_list<dep1, dep2>, injector_t::deps>{});
 };
-
-}}} // boost::di::v1
 

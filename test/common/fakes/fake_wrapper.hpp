@@ -7,16 +7,12 @@
 #ifndef BOOST_DI_FAKE_WRAPPER_HPP
 #define BOOST_DI_FAKE_WRAPPER_HPP
 
-namespace boost { namespace di { inline namespace v1 {
-
 struct fake_wrapper {
     template<class T>
     operator T() const {
         return {};
     }
 };
-
-}}} // boost::di::v1
 
 #endif
 

@@ -8,7 +8,7 @@
 #include "boost/di/scopes/singleton.hpp"
 #include "common/fakes/fake_provider.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace scopes {
+namespace scopes {
 
 test create_singleton = [] {
     singleton::scope<int, int> singleton;
@@ -34,5 +34,5 @@ test create_singleton_from_ptr_to_const_ptr = [] {
     expect(&object1 == &object2);
 };
 
-}}}} // boost::di::v1::scopes
+} // scopes
 

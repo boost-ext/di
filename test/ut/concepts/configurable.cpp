@@ -9,7 +9,7 @@
 #include "boost/di/providers/heap.hpp"
 #include "boost/di/config.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace concepts {
+namespace concepts {
 
 test none = [] {
     class test_config { };
@@ -19,7 +19,7 @@ test none = [] {
 class config_just_policies {
 public:
     template<class T>
-    static auto policies(const T&) noexcept { return di::make_policies(); }
+    static auto policies(const T&) noexcept { return make_policies(); }
 };
 
 test just_policies = [] {
@@ -39,7 +39,7 @@ test just_provider = [] {
 class config_private_access {
 private:
     template<class T>
-    static auto policies(const T&) noexcept { return di::make_policies(); }
+    static auto policies(const T&) noexcept { return make_policies(); }
 
     template<class T>
     static auto provider(const T&) noexcept { return providers::heap{}; }
@@ -54,7 +54,7 @@ private:
 class config_inheritance_impl {
 public:
     template<class T>
-    static auto policies(const T&) noexcept { return di::make_policies(); }
+    static auto policies(const T&) noexcept { return make_policies(); }
 
     template<class T>
     static auto provider(const T&) noexcept { return providers::heap{}; }
@@ -69,7 +69,7 @@ test inheritance = [] {
 class config_okay {
 public:
     template<class T>
-    static auto policies(const T&) noexcept { return di::make_policies(); }
+    static auto policies(const T&) noexcept { return make_policies(); }
 
     template<class T>
     static auto provider(const T&) noexcept { return providers::heap{}; }
@@ -79,5 +79,5 @@ test okay = [] {
     expect(configurable<config_okay>::value);
 };
 
-}}}} // boost::di::v1::concepts
+} // concepts
 

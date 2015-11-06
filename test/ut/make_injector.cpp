@@ -9,8 +9,6 @@
 #include "boost/di/core/dependency.hpp"
 #include "boost/di/config.hpp"
 
-namespace boost { namespace di { inline namespace v1 {
-
 test make_injector_types = [] {
     using dep1 = core::dependency<scopes::deduce, int>;
     using dep2 = core::dependency<scopes::deduce, double>;
@@ -18,6 +16,4 @@ test make_injector_types = [] {
     expect(std::is_same<core::injector<BOOST_DI_CFG, core::pool<>, dep1, dep2>, decltype(make_injector(dep1{}, dep2{}))>{});
     expect(std::is_same<core::injector<config, core::pool<>, dep1, dep2>, decltype(make_injector<config>(dep1{}, dep2{}))>{});
 };
-
-}}} // boost::di::v1
 

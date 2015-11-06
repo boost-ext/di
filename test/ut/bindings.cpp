@@ -9,8 +9,6 @@
 #include "boost/di/concepts/boundable.hpp"
 #include "boost/di/bindings.hpp"
 
-namespace boost { namespace di { inline namespace v1 {
-
 struct i { virtual ~i() noexcept = default; virtual void dummy() = 0; };
 struct i1 { virtual ~i1() noexcept = default; virtual void dummy1() = 0; };
 struct i2 { virtual ~i2() noexcept = default; virtual void dummy2() = 0; };
@@ -28,6 +26,4 @@ test bindings_types = [] {
     static_expect(std::is_base_of<core::dependency<scopes::deduce, i, impl>, aux::remove_qualifiers_t<decltype(bind<i>().to<impl>())>>{});
     static_expect(std::is_base_of<core::dependency<scopes::deduce, concepts::any_of<i1, i2>, impl>, aux::remove_qualifiers_t<decltype(bind<i1, i2>().to<impl>())>>{});
 };
-
-}}} // boost::di::v1
 

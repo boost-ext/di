@@ -32,22 +32,26 @@ pph() {
     echo "    BOOST_DI_CFG_FWD"
     echo "#endif"
     rm -rf tmp && mkdir tmp && cp -r boost tmp && cd tmp && touch type_traits
+    find . -iname "*.hpp" | xargs sed -i "s/BOOST_DI_NAMESPACE/::boost::di::v1/"
     find . -iname "*.hpp" | xargs sed -i "s/\(.*\)__pph__/\/\/\/\/\1/"
     tail -n +10 "boost/di/aux_/compiler.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
 
-    echo '#include "boost/di/config.hpp"
-          #include "boost/di/bindings.hpp"
-          #include "boost/di/inject.hpp"
-          #include "boost/di/injector.hpp"
-          #include "boost/di/make_injector.hpp"
-          #include "boost/di/scopes/deduce.hpp"
-          #include "boost/di/scopes/external.hpp"
-          #include "boost/di/scopes/exposed.hpp"
-          #include "boost/di/scopes/singleton.hpp"
-          #include "boost/di/scopes/unique.hpp"
-          #include "boost/di/policies/constructible.hpp"
-          #include "boost/di/providers/heap.hpp"
-          #include "boost/di/providers/stack_over_heap.hpp"' > tmp.hpp
+    echo '
+        #include "boost/di/fwd_ext.hpp"
+namespace boost { namespace di { inline namespace v1 {
+        #include "boost/di/config.hpp"
+        #include "boost/di/bindings.hpp"
+        #include "boost/di/inject.hpp"
+        #include "boost/di/injector.hpp"
+        #include "boost/di/make_injector.hpp"
+        #include "boost/di/scopes/deduce.hpp"
+        #include "boost/di/scopes/external.hpp"
+        #include "boost/di/scopes/exposed.hpp"
+        #include "boost/di/scopes/singleton.hpp"
+        #include "boost/di/scopes/unique.hpp"
+        #include "boost/di/policies/constructible.hpp"
+        #include "boost/di/providers/heap.hpp"
+        #include "boost/di/providers/stack_over_heap.hpp"' > tmp.hpp
 
     g++ -std=c++1y -C -P -nostdinc -nostdinc++ -E -I. \
         -DBOOST_DI_AUX_COMPILER_HPP \
@@ -59,6 +63,7 @@ pph() {
             sed "s/^##define/#define/g"
     tail -n +10 "boost/di/aux_/preprocessor.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
     tail -n +15 "boost/di/inject.hpp" | head -n -3 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
+    echo "}}}"
     cd .. && rm -rf tmp
     echo "#endif"
     echo "#if defined(__clang__)"

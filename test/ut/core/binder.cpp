@@ -8,7 +8,7 @@
 #include "boost/di/core/binder.hpp"
 #include "boost/di/scopes/unique.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 
 test resolve_types_default = [] {
     struct deps { };
@@ -93,5 +93,5 @@ test resolve_types_found_priority_order = [] {
     expect(std::is_same<result, dependency<scopes::unique, int, int, no_name, override>>{});
 };
 
-}}}} // boost::di::v1::core
+} // core
 

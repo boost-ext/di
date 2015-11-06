@@ -7,7 +7,7 @@
 #include <type_traits>
 #include "boost/di/concepts/callable.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace concepts {
+namespace concepts {
 
 struct non_callable_type { };
 
@@ -45,5 +45,5 @@ test is_concept_callable = [] {
     static_expect(callable<callable_type_extended>::value);
 };
 
-}}}} // boost::di::v1::concepts
+} // concepts
 

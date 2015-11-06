@@ -8,7 +8,7 @@
 #include "boost/di/providers/stack_over_heap.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace providers {
+namespace providers {
 
 template<class T, class TInit, class... TArgs>
 auto test_heap(const aux::type<T>&, const TInit& init, const TArgs&... args) {
@@ -43,5 +43,5 @@ test get_with_args = [] {
 #endif
 };
 
-}}}} // boost::di::v1::providers
+} // providers
 

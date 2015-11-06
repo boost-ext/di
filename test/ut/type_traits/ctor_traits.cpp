@@ -13,8 +13,6 @@
 #include "boost/di/core/any_type.hpp"
 #include "boost/di/inject.hpp"
 
-namespace boost { namespace di { inline namespace v1 {
-
 struct traits { };
 
 template<>
@@ -165,5 +163,5 @@ test special_std_types = [] {
     static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<std::initializer_list<int>>::type>{});
 };
 
-}}}} // boost::di::v1::type_traits
+} // type_traits
 
