@@ -13,7 +13,7 @@
 #include "boost/di/config.hpp"
 #include "boost/di/fwd.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace detail {
+namespace detail {
 
 template<class>
 void create(const aux::true_type&) { }
@@ -48,8 +48,6 @@ struct injector<TConfig, int, T...> : core::injector<TConfig, core::pool<>, T...
 
 template<class... T>
 using injector = detail::injector<BOOST_DI_CFG, BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>), T...>;
-
-}}} // boost::di::v1
 
 #endif
 

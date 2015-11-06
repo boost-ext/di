@@ -47,7 +47,7 @@ rule test ( src + : property * : defines * : options * ) {
         toolset += <testing.launcher>$(memcheck) ;
     }
 
-    run $(src) : : : $(toolset) $(defines) : $(property) ;
+    run $(src) : : : $(toolset) <define>BOOST_DI_NAMESPACE= $(defines) : $(property) ;
 }
 
 test-suite ut :

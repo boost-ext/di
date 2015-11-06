@@ -11,7 +11,7 @@
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/concepts/creatable.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 
 namespace successful {
 
@@ -53,7 +53,7 @@ struct wrapper_impl<T, TWrapper, BOOST_DI_REQUIRES(!aux::is_convertible<TWrapper
 template<class T, class TWrapper>
 using wrapper = wrapper_impl<T, TWrapper>;
 
-}}}} // boost::di::v1::core
+} // core
 
 #endif
 

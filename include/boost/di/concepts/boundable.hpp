@@ -12,7 +12,7 @@
 #include "boost/di/core/dependency.hpp"
 #include "boost/di/core/bindings.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace concepts {
+namespace concepts {
 
 template<class...>
 struct bind {
@@ -169,7 +169,7 @@ struct boundable__ {
 template<class... Ts>
 using boundable = typename boundable__<Ts...>::type;
 
-}}}} // boost::di::v1::concepts
+} // concepts
 
 #endif
 

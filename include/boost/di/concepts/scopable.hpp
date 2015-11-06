@@ -10,7 +10,7 @@
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace concepts {
+namespace concepts {
 
 template<class...>
 struct scope {
@@ -56,7 +56,7 @@ struct scopable__ {
 template<class T>
 using scopable = typename scopable__<T>::type;
 
-}}}} // boost::di::v1::concepts
+} // concepts
 
 #endif
 

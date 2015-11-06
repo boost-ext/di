@@ -35,7 +35,7 @@
 #define BOOST_DI_REQUIRES(...) typename BOOST_DI_NAMESPACE::aux::enable_if<__VA_ARGS__, int>::type // __pph__
 #define BOOST_DI_REQUIRES_MSG(...) typename BOOST_DI_NAMESPACE::aux::concept_check<__VA_ARGS__>::type // __pph__
 
-namespace boost { namespace di { inline namespace v1 { namespace aux {
+namespace aux {
 
 template<class T> T&& declval();
 
@@ -272,7 +272,7 @@ struct function_traits<R(T::*)(TArgs...) const> {
 template<class T>
 using function_traits_t = typename function_traits<T>::args;
 
-}}}} // boost::di::v1::aux
+} // aux
 
 #endif
 

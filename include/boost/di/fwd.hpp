@@ -7,8 +7,6 @@
 #ifndef BOOST_DI_FWD_HPP
 #define BOOST_DI_FWD_HPP
 
-#define BOOST_DI_NAMESPACE ::boost::di::v1 // __pph__
-
 // libc++
 #if __has_include(<__config>) // __pph__
     #include <__config> // __pph__
@@ -40,50 +38,47 @@ namespace boost {
     template<class> class shared_ptr;
 } // boost
 
-namespace boost { namespace di { inline namespace v1 {
-    struct no_name {
-        constexpr auto operator()() const noexcept { return ""; }
+struct no_name {
+    constexpr auto operator()() const noexcept { return ""; }
+};
+
+template<class, class = void> struct named { };
+template<class, class = int> struct ctor_traits;
+
+namespace core {
+    template<class> struct any_type_fwd;
+    template<class> struct any_type_ref_fwd;
+    template<class> struct any_type_1st_fwd;
+    template<class> struct any_type_1st_ref_fwd;
+
+    template<class T>
+    struct dependency__ : T {
+        using T::try_create;
+        using T::is_referable;
+        using T::create;
     };
 
-    template<class, class = void> struct named { };
-    template<class, class = int> struct ctor_traits;
+    template<class T>
+    struct injector__ : T {
+        using T::try_create;
+        using T::create_impl;
+        using T::create_successful_impl;
 
-    namespace core {
-        template<class> struct any_type_fwd;
-        template<class> struct any_type_ref_fwd;
-        template<class> struct any_type_1st_fwd;
-        template<class> struct any_type_1st_ref_fwd;
+        #if defined(_MSC_VER) // __pph__
+            template<class... Ts> using is_creatable =
+                typename T::template is_creatable<Ts...>;
+        #else // __pph__
+            using T::is_creatable;
+        #endif // __pph__
+    };
 
-        template<class T>
-        struct dependency__ : T {
-            using T::try_create;
-            using T::is_referable;
-            using T::create;
-        };
+    template<class, class...>
+    struct array;
 
-        template<class T>
-        struct injector__ : T {
-            using T::try_create;
-            using T::create_impl;
-            using T::create_successful_impl;
+} // core
 
-            #if defined(_MSC_VER) // __pph__
-                template<class... Ts> using is_creatable =
-                    typename T::template is_creatable<Ts...>;
-            #else // __pph__
-                using T::is_creatable;
-            #endif // __pph__
-        };
-
-        template<class, class...>
-        struct array;
-
-    } // core
-
-    //TODO remove
-    namespace concepts { template<class...> struct boundable__; template<class...> struct any_of; } // concepts
-
-}}} // boost::di::v1
+//TODO remove
+namespace concepts { template<class...> struct boundable__; template<class...> struct any_of; } // concepts
 
 #endif
 

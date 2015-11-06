@@ -10,7 +10,7 @@
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/fwd.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace type_traits {
+namespace type_traits {
 
 template<class, class T>
 struct array_traits {
@@ -40,7 +40,7 @@ struct array_traits<std::shared_ptr<T>, core::array<U[], Ts...>> {
 template<class T, class U>
 using array_traits_t = typename array_traits<T, U>::type;
 
-}}}} // boost::di::v1::type_traits
+} // type_traits
 
 #endif
 

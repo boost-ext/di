@@ -15,7 +15,7 @@
 #include "boost/di/scopes/unique.hpp"
 #include "boost/di/concepts/boundable.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace detail {
+namespace detail {
 
 template<class...>
 struct bind;
@@ -52,8 +52,6 @@ static constexpr BOOST_DI_UNUSED core::override override{};
 static constexpr BOOST_DI_UNUSED scopes::deduce deduce{};
 static constexpr BOOST_DI_UNUSED scopes::unique unique{};
 static constexpr BOOST_DI_UNUSED scopes::singleton singleton{};
-
-}}} // boost::di::v1
 
 #endif
 

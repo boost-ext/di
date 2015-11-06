@@ -11,7 +11,7 @@
 #include "boost/di/concepts/providable.hpp"
 #include "boost/di/concepts/callable.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace concepts {
+namespace concepts {
 
 template<class> struct policies { };
 struct providable_type { };
@@ -72,7 +72,7 @@ struct configurable__ {
 template<class T>
 using configurable = typename configurable__<T>::type;
 
-}}}} // boost::di::v1::concepts
+} // concepts
 
 #endif
 

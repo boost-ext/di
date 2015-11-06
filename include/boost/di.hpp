@@ -41,7 +41,6 @@
     #define BOOST_DI_DEPRECATED(...) __declspec(deprecated(__VA_ARGS__))
     #define BOOST_DI_TYPE_WKND(T) (T&&)
 #endif
-namespace boost { namespace di { inline namespace v1 {
 struct _ { _(...) { } };
 namespace aux {
 template<class T>
@@ -147,7 +146,6 @@ namespace std {
 namespace boost {
     template<class> class shared_ptr;
 }
-namespace boost { namespace di { inline namespace v1 {
     struct no_name {
         constexpr auto operator()() const noexcept { return ""; }
     };
@@ -183,7 +181,7 @@ namespace boost { namespace di { inline namespace v1 {
 }}}
 #define BOOST_DI_REQUIRES(...) typename BOOST_DI_NAMESPACE::aux::enable_if<__VA_ARGS__, int>::type
 #define BOOST_DI_REQUIRES_MSG(...) typename BOOST_DI_NAMESPACE::aux::concept_check<__VA_ARGS__>::type
-namespace boost { namespace di { inline namespace v1 { namespace aux {
+namespace aux {
 template<class T> T&& declval();
 template<class T, T V>
 struct integral_constant {
@@ -366,7 +364,7 @@ struct function_traits<R(T::*)(TArgs...) const> {
 template<class T>
 using function_traits_t = typename function_traits<T>::args;
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 template<class = aux::type_list<>>
 struct pool;
 template<class... TArgs>
@@ -383,7 +381,7 @@ struct pool<aux::type_list<TArgs...>> : TArgs... {
     { }
 };
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace type_traits {
+namespace type_traits {
 template<class T, class U>
 struct rebind_traits {
     using type = U;
@@ -411,7 +409,7 @@ struct rebind_traits<std::unique_ptr<T, D>, named<U>> {
 template<class T, class U>
 using rebind_traits_t = typename rebind_traits<T, U>::type;
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 template<class T>
 struct remove_named {
     using type = T;
@@ -444,7 +442,7 @@ struct array<T*[]> { };
 template<class T, class... Ts>
 struct array<T*[], Ts...> { };
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace wrappers {
+namespace wrappers {
 template<class T>
 struct unique {
     template<class I, BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
@@ -491,7 +489,7 @@ struct unique<T*> {
     T* object = nullptr;
 };
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace type_traits {
+namespace type_traits {
 struct stack { };
 struct heap { };
 template<class T, class = int>
@@ -529,7 +527,7 @@ struct memory_traits<T, BOOST_DI_REQUIRES(aux::is_polymorphic<T>::value)> {
 template<class T>
 using memory_traits_t = typename memory_traits<T>::type;
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace scopes {
+namespace scopes {
 class unique {
 public:
     template<class, class>
@@ -551,7 +549,7 @@ public:
     };
 };
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace wrappers {
+namespace wrappers {
 template<class T, class TObject = std::shared_ptr<T>>
 struct shared {
     template<class>
@@ -615,7 +613,7 @@ struct shared<T&> {
     T* object = nullptr;
 };
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace scopes {
+namespace scopes {
 aux::false_type has_shared_ptr__(...);
 template<class T>
 auto has_shared_ptr__(T&&) -> aux::is_valid_expr<decltype(std::shared_ptr<T>{})>;
@@ -661,7 +659,7 @@ public:
     };
 };
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace type_traits {
+namespace type_traits {
 template<class T>
 struct scope_traits {
     using type = scopes::unique;
@@ -685,7 +683,7 @@ struct scope_traits<std::weak_ptr<T>> {
 template<class T>
 using scope_traits_t = typename scope_traits<T>::type;
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace scopes {
+namespace scopes {
 class deduce {
 public:
     template<class TExpected, class TGiven>
@@ -707,7 +705,7 @@ public:
     };
 };
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace scopes {
+namespace scopes {
 template<class, class = int> struct has_deps : BOOST_DI_NAMESPACE::aux::false_type { }; template<class T> struct has_deps<T, BOOST_DI_NAMESPACE::aux::valid_t<typename T::deps>> : BOOST_DI_NAMESPACE::aux::true_type { };
 template<class TScope = scopes::deduce>
 class exposed {
@@ -791,7 +789,7 @@ public:
     };
 };
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace scopes {
+namespace scopes {
 namespace detail {
 template<class T, class TExpected, class TGiven>
 struct arg {
@@ -922,7 +920,7 @@ public:
     };
 };
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace concepts {
+namespace concepts {
 template<class...>
 struct scope {
     struct is_referable { };
@@ -960,7 +958,7 @@ struct scopable__ {
 template<class T>
 using scopable = typename scopable__<T>::type;
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 template<class, class = int> struct is_injector : BOOST_DI_NAMESPACE::aux::false_type { }; template<class T> struct is_injector<T, BOOST_DI_NAMESPACE::aux::valid_t<typename T::deps>> : BOOST_DI_NAMESPACE::aux::true_type { };
 template<class>
 struct array_type;
@@ -1161,7 +1159,7 @@ protected:
 template<class T>
 struct is_dependency : aux::is_base_of<dependency_base, T> { };
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace concepts {
+namespace concepts {
 struct call_operator { };
 template<class>
 struct policy {
@@ -1220,7 +1218,7 @@ using callable = typename is_callable<Ts...>::type;
 #if !defined(BOOST_DI_CFG_CTOR_LIMIT_SIZE)
 #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
 #endif
-namespace boost { namespace di { inline namespace v1 { namespace type_traits {
+namespace type_traits {
 template<class, class = int> struct is_injectable : BOOST_DI_NAMESPACE::aux::false_type { }; template<class T> struct is_injectable<T, BOOST_DI_NAMESPACE::aux::valid_t<typename T::boost_di_inject__>> : BOOST_DI_NAMESPACE::aux::true_type { };
 struct direct { };
 struct uniform { };
@@ -1324,7 +1322,7 @@ struct ctor_traits<T, BOOST_DI_REQUIRES(!aux::is_class<T>::value)> {
     using boost_di_inject__ = aux::type_list<>;
 };
 }}}
-namespace boost { namespace di { inline namespace v1 { namespace concepts {
+namespace concepts {
 template<class T>
 struct abstract_type {
 struct is_not_bound {
@@ -1447,7 +1445,7 @@ T creatable_error() {
     return creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TArgs...>>{};
 }
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace providers {
+namespace providers {
 class stack_over_heap {
 public:
     template<class TInitialization, class TMemory, class T, class... TArgs>
@@ -1484,7 +1482,6 @@ public:
 #if !defined(BOOST_DI_CFG)
 #define BOOST_DI_CFG BOOST_DI_NAMESPACE::config
 #endif
-namespace boost { namespace di { inline namespace v1 {
 template<class... TPolicies, BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>) = 0>
 inline auto make_policies(const TPolicies&... args) noexcept {
     return core::pool_t<TPolicies...>(args...);
@@ -1500,7 +1497,7 @@ struct config {
     }
 };
 }}}
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 template<
     class T
   , class = typename is_injector<T>::type
@@ -1528,7 +1525,7 @@ struct bindings_impl<T, aux::false_type, aux::false_type> {
     using bindings_t = aux::join_t<typename bindings_impl<Ts>::type...>;
 #endif
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace concepts {
+namespace concepts {
 template<class...>
 struct bind {
     template<class TName>
@@ -1656,7 +1653,7 @@ struct boundable__ {
 template<class... Ts>
 using boundable = typename boundable__<Ts...>::type;
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace detail {
+namespace detail {
 template<class...>
 struct bind;
 template<class TScope, class... Ts>
@@ -1688,7 +1685,7 @@ static constexpr BOOST_DI_UNUSED scopes::deduce deduce{};
 static constexpr BOOST_DI_UNUSED scopes::unique unique{};
 static constexpr BOOST_DI_UNUSED scopes::singleton singleton{};
 }}}
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 class binder {
     template<class TDefault, class>
     static TDefault resolve_impl(...) noexcept {
@@ -1735,7 +1732,7 @@ public:
     > using resolve_t = typename resolve__<TDeps, T, TName, TDefault>::type;
 };
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 template<class T, class TInjector, class TError = aux::false_type>
 struct is_referable__ {
     static constexpr auto value =
@@ -1943,7 +1940,7 @@ struct any_type_1st_ref_fwd {
     operator const T&() const;
 };
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 template<class T, class TName, class TIsRoot, class TDeps>
 struct arg_wrapper {
     using type BOOST_DI_UNUSED = T;
@@ -2009,7 +2006,7 @@ public:
     }
 };
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL >= 2)
     template<class T>
     struct creating {
@@ -2110,7 +2107,7 @@ template<
 };
 }
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 namespace successful {
 template<class T, class TWrapper>
 struct wrapper {
@@ -2140,7 +2137,7 @@ struct wrapper_impl<T, TWrapper, BOOST_DI_REQUIRES(!aux::is_convertible<TWrapper
 template<class T, class TWrapper>
 using wrapper = wrapper_impl<T, TWrapper>;
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace type_traits {
+namespace type_traits {
 template<class, class T>
 struct array_traits {
     using type = T;
@@ -2164,7 +2161,7 @@ struct array_traits<std::shared_ptr<T>, core::array<U[], Ts...>> {
 template<class T, class U>
 using array_traits_t = typename array_traits<T, U>::type;
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 struct from_injector { };
 struct from_deps { };
 struct init { };
@@ -2536,7 +2533,7 @@ private:
 };
 }}
 }}
-namespace boost { namespace di { inline namespace v1 { namespace concepts {
+namespace concepts {
 struct get { };
 struct is_creatable { };
 template<class>
@@ -2562,7 +2559,7 @@ struct providable__ {
 template<class T>
 using providable = typename providable__<T>::type;
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace concepts {
+namespace concepts {
 template<class> struct policies { };
 struct providable_type { };
 struct callable_type { };
@@ -2611,7 +2608,7 @@ struct configurable__ {
 template<class T>
 using configurable = typename configurable__<T>::type;
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace detail {
+namespace detail {
 template<class>
 void create(const aux::true_type&) { }
 template<class>
@@ -2641,7 +2638,6 @@ struct injector<TConfig, int, T...> : core::injector<TConfig, core::pool<>, T...
 template<class... T>
 using injector = detail::injector<BOOST_DI_CFG, BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T...>>), T...>;
 }}}
-namespace boost { namespace di { inline namespace v1 {
 template<
      class TConfig = BOOST_DI_CFG
    , class... TDeps
@@ -2651,7 +2647,7 @@ template<
     return core::injector<TConfig, decltype(((TConfig*)0)->policies(0)), TDeps...>{core::init{}, args...};
 }
 }}}
-namespace boost { namespace di { inline namespace v1 { namespace policies { namespace detail {
+namespace policies { namespace detail {
 struct type_op { };
 template<class T, class = int>
 struct apply_impl {
@@ -2782,7 +2778,7 @@ inline auto constructible(const T& = {}) {
     return constructible_impl<detail::or_<T>>{};
 }
 }}}}
-namespace boost { namespace di { inline namespace v1 { namespace providers {
+namespace providers {
 class heap {
 public:
     template<class TInitialization, class TMemory, class T, class... TArgs>
@@ -2887,7 +2883,6 @@ public:
     #define BOOST_DI_DETAIL_IS_EMPTY_IIF_1(t, ...) t
     #define BOOST_DI_DETAIL_IS_EMPTY_PROCESS(...) BOOST_DI_IBP(BOOST_DI_DETAIL_IS_EMPTY_NON_FUNCTION_C __VA_ARGS__ ())
 #endif
-namespace boost { namespace di { inline namespace v1 {
 template<class, class> struct named;
 namespace detail {
 struct named_impl { template<class T> T operator=(const T&) const; };

@@ -12,13 +12,10 @@
 #include "boost/di/core/pool.hpp"
 #include "boost/di/concepts/callable.hpp"
 #include "boost/di/providers/stack_over_heap.hpp"
-#include "boost/di/fwd.hpp"
 
 #if !defined(BOOST_DI_CFG) // __pph__
     #define BOOST_DI_CFG BOOST_DI_NAMESPACE::config // __pph__
 #endif // __pph__
-
-namespace boost { namespace di { inline namespace v1 {
 
 template<class... TPolicies, BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>) = 0>
 inline auto make_policies(const TPolicies&... args) noexcept {
@@ -36,8 +33,6 @@ struct config {
         return make_policies();
     }
 };
-
-}}} // boost::di::v1
 
 #endif
 

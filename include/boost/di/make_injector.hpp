@@ -13,8 +13,6 @@
 #include "boost/di/core/injector.hpp"
 #include "boost/di/config.hpp"
 
-namespace boost { namespace di { inline namespace v1 {
-
 template<
      class TConfig = BOOST_DI_CFG
    , class... TDeps
@@ -23,8 +21,6 @@ template<
 > inline auto make_injector(const TDeps&... args) noexcept {
     return core::injector<TConfig, decltype(((TConfig*)0)->policies(0)), TDeps...>{core::init{}, args...};
 }
-
-}}} // boost::di::v1
 
 #endif
 

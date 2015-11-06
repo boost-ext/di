@@ -10,7 +10,7 @@
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/concepts/creatable.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace providers {
+namespace providers {
 
 class heap {
 public:
@@ -35,7 +35,7 @@ public:
     }
 };
 
-}}}} // boost::di::v1::providers
+} // providers
 
 #endif
 

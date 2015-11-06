@@ -15,7 +15,7 @@
     #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10 // __pph__
 #endif // __pph__
 
-namespace boost { namespace di { inline namespace v1 { namespace type_traits {
+namespace type_traits {
 
 BOOST_DI_HAS_TYPE(is_injectable, boost_di_inject__);
 
@@ -97,7 +97,7 @@ template<
 
 template<
     class T
-  , class = typename is_injectable<di::ctor_traits<T>>::type
+  , class = typename is_injectable<ctor_traits<T>>::type
 > struct ctor_traits_impl;
 
 template<class T>
@@ -112,12 +112,12 @@ struct ctor_traits__<T, aux::false_type>
 
 template<class T>
 struct ctor_traits_impl<T, aux::true_type>
-    : aux::pair<direct, typename di::ctor_traits<T>::boost_di_inject__::type>
+    : aux::pair<direct, typename ctor_traits<T>::boost_di_inject__::type>
 { };
 
 template<class T>
 struct ctor_traits_impl<T, aux::false_type>
-    : di::ctor_traits<T>
+    : ctor_traits<T>
 { };
 
 } // type_traits
@@ -142,8 +142,6 @@ template<class T>
 struct ctor_traits<T, BOOST_DI_REQUIRES(!aux::is_class<T>::value)> {
     using boost_di_inject__ = aux::type_list<>;
 };
-
-}}} // boost::di::v1
 
 #endif
 

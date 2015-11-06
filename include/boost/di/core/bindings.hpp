@@ -12,7 +12,7 @@
 #include "boost/di/core/dependency.hpp"
 #include "boost/di/scopes/exposed.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 
 template<
     class T
@@ -46,7 +46,7 @@ struct bindings_impl<T, aux::false_type, aux::false_type> {
     using bindings_t = aux::join_t<typename bindings_impl<Ts>::type...>;
 #endif // __pph__
 
-}}}} // boost::di::v1::core
+} // core
 
 #endif
 

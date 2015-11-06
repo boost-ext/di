@@ -12,7 +12,7 @@
 #include "boost/di/core/dependency.hpp"
 #include "boost/di/scopes/deduce.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 
 class binder {
     template<class TDefault, class>
@@ -65,7 +65,7 @@ public:
     > using resolve_t = typename resolve__<TDeps, T, TName, TDefault>::type;
 };
 
-}}}} // boost::di::v1::core
+} // core
 
 #endif
 

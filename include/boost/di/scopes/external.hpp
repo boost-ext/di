@@ -10,7 +10,7 @@
 #include "boost/di/wrappers/shared.hpp"
 #include "boost/di/wrappers/unique.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace scopes {
+namespace scopes {
 
 namespace detail {
 
@@ -178,7 +178,7 @@ public:
     };
 };
 
-}}}} // boost::di::v1::scopes
+} // scopes
 
 #endif
 

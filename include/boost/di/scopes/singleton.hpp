@@ -11,7 +11,7 @@
 #include "boost/di/type_traits/memory_traits.hpp" // type_traits::stack
 #include "boost/di/wrappers/shared.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace scopes {
+namespace scopes {
 
 aux::false_type has_shared_ptr__(...);
 
@@ -67,7 +67,7 @@ public:
     };
 };
 
-}}}} // boost::di::v1::scopes
+} // scopes
 
 #endif
 

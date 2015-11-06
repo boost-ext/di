@@ -10,7 +10,7 @@
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/fwd.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace scopes {
+namespace scopes {
 
 BOOST_DI_HAS_TYPE(has_deps, deps);
 
@@ -113,7 +113,7 @@ public:
     };
 };
 
-}}}} // boost::di::v1::scopes
+} // scopes
 
 #endif
 

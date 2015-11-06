@@ -11,7 +11,7 @@
 #include "boost/di/core/binder.hpp"
 #include "boost/di/fwd.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 
 template<class T, class TInjector, class TError = aux::false_type>
 struct is_referable__ {
@@ -265,7 +265,7 @@ struct any_type_1st_ref_fwd {
     operator const T&() const;
 };
 
-}}}} // boost::di::v1::core
+} // core
 
 #endif
 

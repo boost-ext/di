@@ -13,7 +13,7 @@
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/fwd.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace concepts {
+namespace concepts {
 
 struct call_operator { };
 
@@ -85,7 +85,7 @@ struct is_callable<void> { // auto
 template<class... Ts>
 using callable = typename is_callable<Ts...>::type;
 
-}}}} // boost::di::v1::concepts
+} // concepts
 
 #endif
 

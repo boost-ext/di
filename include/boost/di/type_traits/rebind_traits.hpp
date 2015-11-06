@@ -9,7 +9,7 @@
 
 #include "boost/di/fwd.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace type_traits {
+namespace type_traits {
 
 template<class T, class U>
 struct rebind_traits {
@@ -44,8 +44,7 @@ struct rebind_traits<std::unique_ptr<T, D>, named<U>> {
 template<class T, class U>
 using rebind_traits_t = typename rebind_traits<T, U>::type;
 
-}}}} // boost::di::v1::type_traits
+} // type_traits
 
 #endif
-
 

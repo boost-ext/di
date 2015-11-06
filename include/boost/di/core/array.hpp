@@ -12,7 +12,7 @@
 #include "boost/di/type_traits/rebind_traits.hpp"
 #include "boost/di/fwd.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 
 template<class T>
 struct remove_named {
@@ -20,7 +20,7 @@ struct remove_named {
 };
 
 template<class TName, class T>
-struct remove_named<di::named<TName, T>> {
+struct remove_named<named<TName, T>> {
     using type = T;
 };
 
@@ -54,7 +54,7 @@ struct array<T*[]> { };
 template<class T, class... Ts>
 struct array<T*[], Ts...> { };
 
-}}}} // boost::di::v1::core
+} // core
 
 #endif
 

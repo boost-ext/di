@@ -11,7 +11,7 @@
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/fwd.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace wrappers {
+namespace wrappers {
 
 template<class T, class TObject = std::shared_ptr<T>>
 struct shared {
@@ -92,7 +92,7 @@ struct shared<T&> {
     T* object = nullptr;
 };
 
-}}}} // boost::di::v1::wrappers
+} // wrappers
 
 #endif
 

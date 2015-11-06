@@ -13,8 +13,6 @@
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 
-namespace boost { namespace di { inline namespace v1 {
-
 template<class, class> struct named;
 
 namespace detail {
@@ -24,7 +22,7 @@ static constexpr BOOST_DI_UNUSED named_impl named{};
 
 template<class T, class TName>
 struct combine_impl {
-    using type = di::named<TName, T>;
+    using type = BOOST_DI_NAMESPACE::named<TName, T>;
 };
 
 template<class T>
@@ -54,8 +52,6 @@ aux::type_list<> ctor__(...);
 template<class... Ts>
 using inject = aux::type_list<Ts...>;
 
-}}} // boost::di::v1
-
 #define BOOST_DI_HAS_NAME(i, ...) BOOST_DI_IF(BOOST_DI_IBP(BOOST_DI_ELEM(i, __VA_ARGS__,)),1,)
 #define BOOST_DI_HAS_NAMES(...) \
         BOOST_DI_IF(BOOST_DI_IS_EMPTY(BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_HAS_NAME, __VA_ARGS__)), 0, 1)
@@ -64,8 +60,8 @@ using inject = aux::type_list<Ts...>;
     BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_EAT p, p)
 #define BOOST_DI_GEN_CTOR(i, ...) BOOST_DI_GEN_CTOR_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__,), i)
 #define BOOST_DI_GEN_ARG_NAME(p) BOOST_DI_GEN_ARG_NAME_IMPL p )
-#define BOOST_DI_GEN_NONE_TYPE(p) ::boost::di::aux::none_type
-#define BOOST_DI_GEN_ARG_NAME_IMPL(p) decltype(::boost::di::detail::p) BOOST_DI_EAT(
+#define BOOST_DI_GEN_NONE_TYPE(p) BOOST_DI_NAMESPACE::aux::none_type
+#define BOOST_DI_GEN_ARG_NAME_IMPL(p) decltype(BOOST_DI_NAMESPACE::detail::p) BOOST_DI_EAT(
 #define BOOST_DI_GEN_NAME_IMPL(p, i) \
     BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
     BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_GEN_ARG_NAME, BOOST_DI_GEN_NONE_TYPE)(p)
@@ -75,7 +71,7 @@ using inject = aux::type_list<Ts...>;
     static void ctor( \
         BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__) \
     ); \
-    using type BOOST_DI_UNUSED = decltype(::boost::di::detail::ctor__<boost_di_inject__>(0));
+    using type BOOST_DI_UNUSED = decltype(BOOST_DI_NAMESPACE::detail::ctor__<boost_di_inject__>(0));
 
 #define BOOST_DI_INJECT_TRAITS_IMPL_1(...) \
     static void ctor( \
@@ -84,13 +80,13 @@ using inject = aux::type_list<Ts...>;
     static void name( \
         BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_NAME, __VA_ARGS__) \
     ); \
-    using type BOOST_DI_UNUSED = ::boost::di::detail::combine_t< \
-        decltype(::boost::di::detail::ctor__<boost_di_inject__>(0))\
-      , ::boost::di::aux::function_traits_t<decltype(name)> \
+    using type BOOST_DI_UNUSED = BOOST_DI_NAMESPACE::detail::combine_t< \
+        decltype(BOOST_DI_NAMESPACE::detail::ctor__<boost_di_inject__>(0))\
+      , BOOST_DI_NAMESPACE::aux::function_traits_t<decltype(name)> \
     >;
 
 #define BOOST_DI_INJECT_TRAITS_EMPTY_IMPL(...) \
-    using boost_di_inject__ BOOST_DI_UNUSED = ::boost::di::aux::type_list<>
+    using boost_di_inject__ BOOST_DI_UNUSED = BOOST_DI_NAMESPACE::aux::type_list<>
 
 #define BOOST_DI_INJECT_TRAITS_IMPL(...) \
     struct boost_di_inject__ {\

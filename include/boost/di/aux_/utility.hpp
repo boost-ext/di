@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_AUX_UTILITY_HPP
 #define BOOST_DI_AUX_UTILITY_HPP
 
-namespace boost { namespace di { inline namespace v1 {
 
 struct _ { _(...) { } };
 
@@ -120,7 +119,7 @@ struct make_index_sequence_impl<10> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9, 
 template<int N>
 using make_index_sequence = typename make_index_sequence_impl<N>::type;
 
-}}}} // boost::di::v1::aux
+} // aux
 
 #endif
 

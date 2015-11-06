@@ -10,7 +10,7 @@
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 
 template<class = aux::type_list<>>
 struct pool;
@@ -31,7 +31,7 @@ struct pool<aux::type_list<TArgs...>> : TArgs... {
     { }
 };
 
-}}}} // boost::di::v1::core
+} // core
 
 #endif
 

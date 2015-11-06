@@ -12,7 +12,7 @@
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/fwd.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace policies { namespace detail {
+namespace policies { namespace detail {
 
 struct type_op { };
 
@@ -167,7 +167,7 @@ inline auto constructible(const T& = {}) {
     return constructible_impl<detail::or_<T>>{};
 }
 
-}}}} // boost::di::v1::policies
+} // policies
 
 #endif
 

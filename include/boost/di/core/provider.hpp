@@ -13,7 +13,7 @@
 #include "boost/di/concepts/creatable.hpp"
 #include "boost/di/fwd.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 
 #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL >= 2) // __pph__
     template<class T>
@@ -130,9 +130,7 @@ template<
     const TInjector& injector_;
 };
 
-} // successful
-
-}}}} // boost::di::v1::core
+}} // successful::core
 
 #endif
 

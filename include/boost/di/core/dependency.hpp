@@ -15,7 +15,7 @@
 #include "boost/di/concepts/scopable.hpp"
 #include "boost/di/fwd.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 
 BOOST_DI_HAS_TYPE(is_injector, deps);
 
@@ -248,7 +248,7 @@ protected:
 template<class T>
 struct is_dependency : aux::is_base_of<dependency_base, T> { };
 
-}}}} // boost::di::v1::core
+} // core
 
 #endif
 

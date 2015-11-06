@@ -11,7 +11,7 @@
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace concepts {
+namespace concepts {
 
 struct get { };
 struct is_creatable { };
@@ -43,7 +43,7 @@ struct providable__ {
 template<class T>
 using providable = typename providable__<T>::type;
 
-}}}} // boost::di::v1::concepts
+} // concepts
 
 #endif
 

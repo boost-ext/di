@@ -15,7 +15,7 @@
 #define BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG \
     BOOST_DI_DEPRECATED("creatable constraint not satisfied")
 
-namespace boost { namespace di { inline namespace v1 { namespace concepts {
+namespace concepts {
 
 template<class T>
 struct abstract_type {
@@ -170,7 +170,7 @@ T creatable_error() {
     return creatable_error_impl<TInitialization, TName, I, T, aux::type_list<TArgs...>>{};
 }
 
-}}}} // boost::di::v1::concepts
+} // concepts
 
 #endif
 

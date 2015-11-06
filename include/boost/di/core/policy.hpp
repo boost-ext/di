@@ -13,7 +13,7 @@
 #include "boost/di/core/binder.hpp"
 #include "boost/di/core/pool.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 
 template<class T, class TName, class TIsRoot, class TDeps>
 struct arg_wrapper {
@@ -93,7 +93,7 @@ public:
     }
 };
 
-}}}} // boost::di::v1::core
+} // core
 
 #endif
 

@@ -26,7 +26,7 @@
 #include "boost/di/config.hpp"
 #include "boost/di/fwd.hpp"
 
-namespace boost { namespace di { inline namespace v1 { namespace core {
+namespace core {
 
 struct from_injector { };
 struct from_deps { };
@@ -180,7 +180,7 @@ protected:
     };
 
     template<class TName, class T>
-    struct try_create<di::named<TName, T>> {
+    struct try_create<named<TName, T>> {
         using type = aux::conditional_t<is_creatable<T, TName>::value, T, void>;
     };
 
@@ -210,7 +210,7 @@ protected:
     }
 
     template<class TIsRoot = aux::false_type, class T, class TName>
-    auto create_impl(const aux::type<di::named<TName, T>>&) const {
+    auto create_impl(const aux::type<named<TName, T>>&) const {
         return create_impl__<TIsRoot, T, TName>();
     }
 
@@ -240,7 +240,7 @@ protected:
     }
 
     template<class TIsRoot = aux::false_type, class T, class TName>
-    auto create_successful_impl(const aux::type<di::named<TName, T>>&) const {
+    auto create_successful_impl(const aux::type<named<TName, T>>&) const {
         return create_successful_impl__<TIsRoot, T, TName>();
     }
 
@@ -307,9 +307,8 @@ private:
     #define BOOST_DI_CORE_INJECTOR_POLICY(...) BOOST_DI_CORE_INJECTOR_POLICY_ELSE
     #define BOOST_DI_CORE_INJECTOR_POLICY_ELSE(...) __VA_ARGS__
     #include "boost/di/core/injector.hpp"
+    } // core
 #endif
-
-}} // boost::di::v1::core
 
 #endif
 
