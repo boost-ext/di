@@ -47,13 +47,13 @@ test create_using_const_ptr = [] {
 
 test create_using_unique_ptr = [] {
   auto injector = di::make_injector();
-  auto object = injector.create<std::unique_ptr<empty>>();
+  auto object = injector.create<std::unique_ptr<empty> >();
   expect(object.get());
 };
 
 test create_using_shared_ptr = [] {
   auto injector = di::make_injector();
-  auto object = injector.create<std::shared_ptr<empty>>();
+  auto object = injector.create<std::shared_ptr<empty> >();
   expect(object.get());
 };
 
@@ -75,13 +75,20 @@ test create_interface_when_impl_with_one_arg_ctor = [] {
 
   auto injector = di::make_injector(di::bind<i1>().to<impl>());
 
-  auto object = injector.create<std::unique_ptr<i1>>();
+  auto object = injector.create<std::unique_ptr<i1> >();
   expect(object.get());
 };
 
 test injectors_mix = [] {
   auto injector = di::make_injector(di::make_injector(di::bind<i1>().to<impl1>()));
-
-  auto object = injector.create<std::shared_ptr<complex1>>();
+  auto object = injector.create<std::shared_ptr<complex1> >();
   expect(object->i1_.get());
+};
+
+test injector_ctor = [] {
+  auto injector = di::make_injector(di::bind<int>.to([] { return 42; }));
+  di::injector<int> i = di::make_injector(injector);
+  auto b = i;
+  auto c((b));
+  (void)c;
 };

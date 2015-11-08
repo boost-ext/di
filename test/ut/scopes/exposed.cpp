@@ -20,7 +20,7 @@ test create_deduce = [] {
 };
 
 test create_fake = [] {
-  int i = exposed<fake_scope<>>::scope<int, int>{fake_injector<int>{}}.create<int>(fake_provider<int>{});
+  int i = exposed<fake_scope<> >::scope<int, int>{fake_injector<int>{}}.create<int>(fake_provider<int>{});
   expect(0 == i);
 };
 

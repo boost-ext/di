@@ -7,6 +7,7 @@
 #include <type_traits>
 #include "boost/di/injector.hpp"
 #include "boost/di/core/injector.hpp"
+#include "boost/di/scopes/external.hpp"
 #include "common/fakes/fake_dependency.hpp"
 
 test injector_empty = [] {
@@ -21,7 +22,7 @@ test injector_exposed = [] {
 };
 
 test injector_with_injector = [] {
-  using injector_t = injector<injector<int, double>>;
+  using injector_t = injector<injector<int, double> >;
   using dep1 = core::dependency<scopes::exposed<scopes::deduce>, int>;
   using dep2 = core::dependency<scopes::exposed<scopes::deduce>, double>;
   expect(std::is_same<aux::type_list<dep1, dep2>, injector_t::deps>{});

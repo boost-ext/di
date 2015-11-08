@@ -127,7 +127,9 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
   }
 
   template <class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, aux::true_type>::value) = 0>
+  // clang-format off
   BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG T create() const {
+    // clang-format on
     return BOOST_DI_TYPE_WKND(T) create_impl<aux::true_type>(aux::type<T>{});
   }
 
@@ -255,14 +257,9 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     using provider_t = core::provider<expected_t, given_t, TName, ctor_t, injector>;
     using wrapper_t =
         decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this}));
-    BOOST_DI_CORE_INJECTOR_POLICY(
-            policy::template call<arg_wrapper<T, TName, TIsRoot, pool_t>>(
-                TConfig::policies(*this), dependency, ctor_t{}
-            );
-        )()
-        return wrapper<T, wrapper_t>{
-            static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this})
-        };
+    BOOST_DI_CORE_INJECTOR_POLICY(policy::template call<arg_wrapper<T, TName, TIsRoot, pool_t>>(
+                                      TConfig::policies(*this), dependency, ctor_t{});)() return wrapper<T, wrapper_t>{
+        static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this})};
   }
 
   template <class TIsRoot = aux::false_type, class T, class TName = no_name>
@@ -277,13 +274,9 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
         decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this}));
     using create_t = referable_t<T, dependency__<dependency_t>>;
     BOOST_DI_CORE_INJECTOR_POLICY(
-            policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>(
-                TConfig::policies(*this), dependency, ctor_t{}
-            );
-        )()
-        return successful::wrapper<create_t, wrapper_t>{
-            static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this})
-        };
+        policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>(
+            TConfig::policies(*this), dependency, ctor_t{});)() return successful::wrapper<create_t, wrapper_t>{
+        static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this})};
   }
 };
 

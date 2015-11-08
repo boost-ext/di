@@ -29,11 +29,12 @@ struct try_provider;
 
 template <class TGiven, class TInjector, class TProvider, class TInitialization, class... TCtor>
 struct try_provider<TGiven, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector, TProvider> {
+  using injector = TInjector;
+
   template <class TMemory>
   struct is_creatable {
-    static constexpr auto value =
-        TProvider::template is_creatable<TInitialization, TMemory, TGiven,
-                                         typename injector__<TInjector>::template try_create<TCtor>::type...>::value;
+    static constexpr auto value = TProvider::template is_creatable<
+        TInitialization, TMemory, TGiven, typename injector__<TInjector>::template try_create<TCtor>::type...>::value;
   };
 
   template <class TMemory = type_traits::heap>
@@ -48,6 +49,7 @@ struct provider;
 template <class TExpected, class TGiven, class TName, class TInjector, class TInitialization, class... TCtor>
 struct provider<TExpected, TGiven, TName, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
   using provider_t = decltype(TInjector::config::provider(aux::declval<TInjector>()));
+  using injector = TInjector;
 
   template <class TMemory, class... TArgs>
   struct is_creatable {
@@ -88,6 +90,8 @@ struct provider;
 
 template <class TExpected, class TGiven, class TInjector, class TInitialization, class... TCtor>
 struct provider<TExpected, TGiven, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
+  using injector = TInjector;
+
   template <class TMemory = type_traits::heap>
   auto get(const TMemory& memory = {}) const {
     return TInjector::config::provider(injector_).template get<TExpected, TGiven>(

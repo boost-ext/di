@@ -30,7 +30,6 @@ class exposed {
       type (*stack)(const iprovider*) = nullptr;
 
       auto get(const type_traits::heap& = {}) const noexcept { return ((iprovider*)(this))->heap(this); }
-
       auto get(const type_traits::stack&) const noexcept { return ((iprovider*)(this))->stack(this); }
     };
 
@@ -83,7 +82,7 @@ class exposed {
     template <class TInjector, BOOST_DI_REQUIRES(has_deps<TInjector>::value) = 0>
     explicit scope(const TInjector& injector) noexcept {
       static auto provider = provider_impl<TInjector>{injector};
-      provider.injector = injector;
+      provider = provider_impl<TInjector>{injector};
       provider_ = (iprovider*)&provider;
     }
 
