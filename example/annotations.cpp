@@ -32,6 +32,23 @@ class annotations1 {
   int i3 = 0;
 };
 
+class annotations2 {
+ public:
+  /*<<Constructor with named parameters of the same `int` type>>*/
+  BOOST_DI_INJECT(annotations2, (named = int_1) int i1, (named = int_2) int i2, int i3);
+
+ private:
+  int i1 = 0;
+  int i2 = 0;
+  int i3 = 0;
+};
+
+annotations2::annotations2(int i1, int i2, int i3) {
+  assert(i1 == 42);
+  assert(i2 == 87);
+  assert(i3 == 123);
+}
+
 //<-
 #if !defined(_MSC_VER)
 #if defined(__clang__)
@@ -51,10 +68,10 @@ constexpr auto operator""_s() {
 //<-
 #if !defined(_MSC_VER)
 //->
-class annotations2 {
+class annotations3 {
  public:
   /*<<Constructor with named parameters of the same `int` type>>*/
-  BOOST_DI_INJECT(annotations2, (named = "int1"_s) int i1, (named = "int2"_s) int i2, int i3) : i1(i1), i2(i2), i3(i3) {
+  BOOST_DI_INJECT(annotations3, (named = "int1"_s) int i1, (named = "int2"_s) int i2, int i3) : i1(i1), i2(i2), i3(i3) {
     assert(i1 == 42);
     assert(i2 == 87);
     assert(i3 == 123);
@@ -77,6 +94,7 @@ int main() {
 
     /*<<create `annotations`>>*/
     injector.create<annotations1>();
+    injector.create<annotations2>();
   }
 
 //<-
@@ -88,7 +106,7 @@ int main() {
                                       di::bind<int>().to(123));
 
     /*<<create `annotations`>>*/
-    injector.create<annotations2>();
+    injector.create<annotations3>();
   }
 //<-
 #endif
