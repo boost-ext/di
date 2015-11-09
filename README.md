@@ -67,7 +67,9 @@ private:                                |         pump->pump();
 
 **How To Start?**
 
-* Get C++14 compliant compiler (Clang-3.4+, GCC-5.1+, Visual Studio 2015+) with STL (type\_traits header) / Boost is not required
+* Get C++14 compliant compiler (Clang-3.4+, GCC-5.1+, Visual Studio 2015+)
+	* STL is not required (when available supports std::unique\_ptr, std::shared\_ptr, std::weak\_ptr)
+	* Boost is not required (when available supports boost::shared\_ptr)
 * [Read Quick User Guide](#quick_user_guide)
 * [Read Tutorial](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/tutorial.html)
 * [Read Documentation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
@@ -864,7 +866,7 @@ int main() {                            | movq   $0x400a00,0x2007b4(%rip
 ```cpp
 Boost.DI header                         | Time [s]
 ----------------------------------------|-----------------------------------------
-#include <boost/di.hpp>                 | 0.110
+#include <boost/di.hpp>                 | 0.050
 int main() { }                          |
 ```
 ```cpp
