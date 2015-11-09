@@ -127,9 +127,11 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
   }
 
   template <class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, aux::true_type>::value) = 0>
-  // clang-format off
-  BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG T create() const {
-    // clang-format on
+  BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG T
+      // clang-format off
+  create
+      // clang-format on
+      () const {
     return BOOST_DI_TYPE_WKND(T) create_impl<aux::true_type>(aux::type<T>{});
   }
 

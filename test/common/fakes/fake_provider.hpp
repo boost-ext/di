@@ -28,7 +28,7 @@ struct fake_provider {
   }
 
   fake_injector<T> injector_;
-  using injector = fake_injector<T>;
+  using injector_t = fake_injector<T>;
 };
 
 #endif

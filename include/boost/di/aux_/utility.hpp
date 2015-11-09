@@ -42,6 +42,11 @@ struct never {
   static constexpr auto value = false;
 };
 
+template <class T, class...>
+struct identity {
+  using type = T;
+};
+
 template <class...>
 struct type_list {
   using type = type_list;

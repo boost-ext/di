@@ -82,7 +82,7 @@ class exposed {
     template <class TInjector, BOOST_DI_REQUIRES(has_deps<TInjector>::value) = 0>
     explicit scope(const TInjector& injector) noexcept {
       static auto provider = provider_impl<TInjector>{injector};
-      provider = provider_impl<TInjector>{injector};
+      provider.injector = injector;
       provider_ = (iprovider*)&provider;
     }
 

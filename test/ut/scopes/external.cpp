@@ -50,7 +50,7 @@ test from_const_ref = [] {
 test from_shared_ptr = [] {
   struct c {};
   auto c_ = std::make_shared<c>();
-  std::shared_ptr<c> sp_c = external::scope<c, std::shared_ptr<c> >{c_}.create<void>(fake_provider<>{});
+  std::shared_ptr<c> sp_c = external::scope<c, std::shared_ptr<c>>{c_}.create<void>(fake_provider<>{});
   expect(c_ == sp_c);
 };
 
@@ -63,14 +63,14 @@ test from_context = [] {
   auto c2 = std::make_shared<c>();
 
   {
-    std::shared_ptr<c> c1_ = external::scope<c, std::shared_ptr<c> >{c1}.create<void>(fake_provider<>{});
-    std::shared_ptr<c> c2_ = external::scope<c, std::shared_ptr<c> >{c2}.create<void>(fake_provider<>{});
+    std::shared_ptr<c> c1_ = external::scope<c, std::shared_ptr<c>>{c1}.create<void>(fake_provider<>{});
+    std::shared_ptr<c> c2_ = external::scope<c, std::shared_ptr<c>>{c2}.create<void>(fake_provider<>{});
     expect(c1_ != c2_);
   }
 
   {
-    std::shared_ptr<c> c1_ = external::scope<c, std::shared_ptr<c> >{c1}.create<void>(fake_provider<>{});
-    std::shared_ptr<c> c2_ = external::scope<c, std::shared_ptr<c> >{c1}.create<void>(fake_provider<>{});
+    std::shared_ptr<c> c1_ = external::scope<c, std::shared_ptr<c>>{c1}.create<void>(fake_provider<>{});
+    std::shared_ptr<c> c2_ = external::scope<c, std::shared_ptr<c>>{c1}.create<void>(fake_provider<>{});
     expect(c1_ == c2_);
   }
 };
@@ -78,7 +78,7 @@ test from_context = [] {
 test from_if_shared_ptr = [] {
   auto i = std::make_shared<implementation>();
   std::shared_ptr<interface> c =
-      external::scope<interface, std::shared_ptr<interface> >{i}.create<void>(fake_provider<>{});
+      external::scope<interface, std::shared_ptr<interface>>{i}.create<void>(fake_provider<>{});
   expect(i == c);
 };
 
@@ -107,7 +107,7 @@ test from_function_expr = [] {
 
 test from_function_expr_with_expected_function_expr = [] {
   constexpr auto i = 42;
-  external::scope<function<int()>, function<int()> > external{[&] { return i; }};
+  external::scope<function<int()>, function<int()>> external{[&] { return i; }};
   function<int()> f = external.create<void>(fake_provider<>{});
   expect(i == f());
 };

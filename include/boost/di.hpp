@@ -104,6 +104,10 @@ template <class...>
 struct never {
   static constexpr auto value = false;
 };
+template <class T, class...>
+struct identity {
+  using type = T;
+};
 template <class...>
 struct type_list {
   using type = type_list;
@@ -850,7 +854,7 @@ class exposed {
     template <class TInjector, BOOST_DI_REQUIRES(has_deps<TInjector>::value) = 0>
     explicit scope(const TInjector& injector) noexcept {
       static auto provider = provider_impl<TInjector>{injector};
-      provider = provider_impl<TInjector>{injector};
+      provider.injector = injector;
       provider_ = (iprovider*)&provider;
     }
     template <class T, class TProvider>
@@ -896,10 +900,10 @@ struct has_result_type<T, ::boost::di::v1::aux::valid_t<typename T::result_type>
 template <class TGiven, class TProvider, class... Ts>
 struct is_expr
     : aux::integral_constant<
-          bool,
-          aux::is_callable_with<TGiven, no_implicit_conversions<aux::remove_qualifiers_t<typename TProvider::injector>>,
-                                Ts...>::value &&
-              !has_result_type<TGiven>::value> {};
+          bool, aux::is_callable_with<TGiven,
+                                      no_implicit_conversions<aux::remove_qualifiers_t<typename TProvider::injector_t>>,
+                                      Ts...>::value &&
+                    !has_result_type<TGiven>::value> {};
 ;
 }
 class external {
@@ -956,10 +960,6 @@ class external {
     }
     wrappers::shared<TGiven&> object_;
   };
-  template <class, class T>
-  struct sec {
-    using type = T;
-  };
   template <class TExpected, class TGiven>
   struct scope<TExpected, TGiven, BOOST_DI_REQUIRES(aux::is_callable<TGiven>::value)> {
     template <class>
@@ -973,14 +973,14 @@ class external {
               BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable_with<TGiven>::value &&
                                 !aux::is_callable<TExpected>::value) = 0>
     static auto try_create(const TProvider&) noexcept
-        -> detail::wrapper_traits_t<decltype(aux::declval<typename sec<T, TGiven>::type>()())>;
+        -> detail::wrapper_traits_t<decltype(aux::declval<typename aux::identity<TGiven, T>::type>()())>;
     template <class, class TProvider, BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider>::value) = 0>
-    static detail::wrapper_traits_t<decltype(aux::declval<TGiven>()(aux::declval<typename TProvider::injector>()))>
+    static detail::wrapper_traits_t<decltype(aux::declval<TGiven>()(aux::declval<typename TProvider::injector_t>()))>
     try_create(const TProvider&) noexcept;
     template <
         class T, class TProvider,
         BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
-    static detail::wrapper_traits_t<decltype(aux::declval<TGiven>()(aux::declval<typename TProvider::injector>(),
+    static detail::wrapper_traits_t<decltype(aux::declval<TGiven>()(aux::declval<typename TProvider::injector_t>(),
                                                                     aux::declval<detail::arg<T, TExpected, TGiven>>()))>
     try_create(const TProvider&) noexcept;
     template <class, class TProvider,
@@ -1913,7 +1913,7 @@ template <class, class, class, class>
 struct try_provider;
 template <class TGiven, class TInjector, class TProvider, class TInitialization, class... TCtor>
 struct try_provider<TGiven, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector, TProvider> {
-  using injector = TInjector;
+  using injector_t = TInjector;
   template <class TMemory>
   struct is_creatable {
     static constexpr auto value =
@@ -1930,7 +1930,7 @@ struct provider;
 template <class TExpected, class TGiven, class TName, class TInjector, class TInitialization, class... TCtor>
 struct provider<TExpected, TGiven, TName, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
   using provider_t = decltype(TInjector::config::provider(aux::declval<TInjector>()));
-  using injector = TInjector;
+  using injector_t = TInjector;
   template <class TMemory, class... TArgs>
   struct is_creatable {
     static constexpr auto value = provider_t::template is_creatable<TInitialization, TMemory, TGiven, TArgs...>::value;
@@ -1962,7 +1962,7 @@ template <class, class, class, class>
 struct provider;
 template <class TExpected, class TGiven, class TInjector, class TInitialization, class... TCtor>
 struct provider<TExpected, TGiven, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
-  using injector = TInjector;
+  using injector_t = TInjector;
   template <class TMemory = type_traits::heap>
   auto get(const TMemory& memory = {}) const {
     return TInjector::config::provider(injector_).template get<TExpected, TGiven>(
@@ -2098,9 +2098,12 @@ class injector : pool<bindings_t<TDeps...>> {
     return BOOST_DI_TYPE_WKND(T) create_successful_impl<aux::true_type>(aux::type<T>{});
   }
   template <class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, aux::true_type>::value) = 0>
-  // clang-format off
-  BOOST_DI_DEPRECATED("creatable constraint not satisfied") T create() const {
-    // clang-format on
+  BOOST_DI_DEPRECATED("creatable constraint not satisfied")
+  T
+      // clang-format off
+  create
+      // clang-format on
+      () const {
     return BOOST_DI_TYPE_WKND(T) create_impl<aux::true_type>(aux::type<T>{});
   }
   template <class T, BOOST_DI_REQUIRES(!is_injector<T>::value) = 0>
@@ -2261,9 +2264,12 @@ class injector<TConfig, pool<>, TDeps...> : pool<bindings_t<TDeps...>> {
     return BOOST_DI_TYPE_WKND(T) create_successful_impl<aux::true_type>(aux::type<T>{});
   }
   template <class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, aux::true_type>::value) = 0>
-  // clang-format off
-  BOOST_DI_DEPRECATED("creatable constraint not satisfied") T create() const {
-    // clang-format on
+  BOOST_DI_DEPRECATED("creatable constraint not satisfied")
+  T
+      // clang-format off
+  create
+      // clang-format on
+      () const {
     return BOOST_DI_TYPE_WKND(T) create_impl<aux::true_type>(aux::type<T>{});
   }
   template <class T, BOOST_DI_REQUIRES(!is_injector<T>::value) = 0>
@@ -2462,7 +2468,9 @@ template <class>
 void create(const aux::true_type&) {}
 // clang-format off
 template <class>
-BOOST_DI_DEPRECATED("creatable constraint not satisfied") void create(const aux::false_type&) {}
+BOOST_DI_DEPRECATED("creatable constraint not satisfied") void
+create
+(const aux::false_type&) {}
 // clang-format on
 template <class, class, class...>
 struct injector;
@@ -2472,13 +2480,13 @@ struct injector<TConfig, int, T...> : core::injector<TConfig, core::pool<>, T...
   injector(const core::injector<Ts...>& injector) noexcept : core::injector<TConfig, core::pool<>, T...>(injector) {
     using injector_t = core::injector<Ts...>;
     int _[]{0,
+            // clang-format off
             (detail::
-                 // clang-format off
-             create<T>
-             // clang-format on
-             (aux::integral_constant < bool, core::injector__<injector_t>::template is_creatable<T>::value ||
-                                                 core::injector__<injector_t>::template is_creatable<T*>::value > {}),
+create<T> (
+     aux::integral_constant < bool, core::injector__<injector_t>::template is_creatable<T>::value ||
+      core::injector__<injector_t>::template is_creatable<T*>::value > {}),
              0)...};
+    // clang-format on
     (void)_;
   }
 };

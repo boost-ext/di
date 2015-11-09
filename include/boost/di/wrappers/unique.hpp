@@ -20,7 +20,7 @@ struct unique {
     return object;
   }
 
-  inline operator T&&() noexcept { return static_cast<T&&>(object); }
+  inline operator T &&() noexcept { return static_cast<T&&>(object); }
 
   T object;
 };
