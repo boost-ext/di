@@ -904,7 +904,6 @@ struct is_expr
                                       no_implicit_conversions<aux::remove_qualifiers_t<typename TProvider::injector_t>>,
                                       Ts...>::value &&
                     !has_result_type<TGiven>::value> {};
-;
 }
 class external {
  public:
