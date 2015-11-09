@@ -159,8 +159,8 @@ struct Dummy_impl {
 auto dummy_concept = [] {};
 
 struct example {
-  BOOST_DI_INJECT(example, int i, auto t) {
-    assert(42 == i);
+  BOOST_DI_INJECT(example, auto t) {
+    // assert(42 == i);
     std::cout << typeid(t).name() << std::endl;
     // static_assert(std::is_same<decltype(t), int>::value, "is int");
   }  //, (named = dummy_concept)Dummy d) {}

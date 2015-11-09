@@ -22,11 +22,11 @@ example(deduce_scope)
 example(dynamic_bindings)
 example(fwd_bindings)
 example(hello_world)
+example(lazy)
 example(modules)
 example(multiple_bindings)
 example(multiple_interfaces)
 example(pool_provider)
-example(provider)
 
 example(introduction/coffee_maker)
 

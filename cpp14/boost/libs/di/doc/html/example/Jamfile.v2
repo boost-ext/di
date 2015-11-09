@@ -59,11 +59,11 @@ test-suite example :
     [ example dynamic_bindings.cpp ]
     [ example fwd_bindings.cpp ]
     [ example hello_world.cpp ]
+    [ example lazy.cpp ]
     [ example modules.cpp ]
     [ example multiple_bindings.cpp ]
     [ example multiple_interfaces.cpp ]
     [ example pool_provider.cpp ]
-    [ example provider.cpp ]
 ;
 
 test-suite extensions :
