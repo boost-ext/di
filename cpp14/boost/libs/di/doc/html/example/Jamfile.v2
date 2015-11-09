@@ -69,6 +69,7 @@ test-suite example :
 test-suite extensions :
     [ example extensions/bindings/constructor_bindings.cpp ]
     [ example extensions/injections/assisted_injection.cpp ]
+    [ example extensions/injections/concepts.cpp ]
     [ example extensions/injections/named_parameters.cpp ]
     [ example extensions/injections/xml_injection.cpp ]
     [ example extensions/policies/types_dumper.cpp ]
