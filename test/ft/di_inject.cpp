@@ -365,10 +365,32 @@ test one_arg_class = [] {
     int i = 0;
   };
 
+  struct c_implicit {
+    c_implicit(int i) : i(i) {}
+    int i = 0;
+  };
+
+  struct c_named {
+    BOOST_DI_INJECT(c_named, (named = name) int i) : i(i) {}
+    int i = 0;
+  };
+
   auto injector = di::make_injector(di::bind<int>().in(di::unique));
 
-  auto object = injector.create<c>();
-  expect(0 == object.i);
+  {
+    auto object = injector.create<c>();
+    expect(0 == object.i);
+  }
+
+  {
+    auto object = injector.create<c_implicit>();
+    expect(0 == object.i);
+  }
+
+  {
+    auto object = injector.create<c_named>();
+    expect(0 == object.i);
+  }
 };
 
 test string_creation = [] {
