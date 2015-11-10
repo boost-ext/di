@@ -12,6 +12,7 @@ endfunction()
 
 example(annotations)
 example(automatic_injection)
+example(bind_non_owning_ptr)
 example(bindings)
 example(constructor_injection)
 example(constructor_signature)

@@ -49,6 +49,7 @@ test-suite example :
     ]
     [ example annotations.cpp ]
     [ example automatic_injection.cpp ]
+    [ example bind_non_owning_ptr.cpp ]
     [ example bindings.cpp ]
     [ example constructor_injection.cpp ]
     [ example constructor_signature.cpp ]

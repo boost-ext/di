@@ -39,77 +39,89 @@ template <class T, class>
 struct generic_traits {
   using type = T;
 };
+
 template <class T>
 struct generic_traits<di::_, T> {
   using type = T;
 };
+
 template <class T>
 struct generic_traits<di::_&, T> {
   using type = T&;
 };
+
 template <class T>
 struct generic_traits<const di::_&, T> {
   using type = const T&;
 };
+
 template <class T>
 struct generic_traits<di::_&&, T> {
   using type = T&&;
 };
+
 template <class T>
 struct generic_traits<di::_*, T> {
   using type = T*;
 };
+
 template <class T>
 struct generic_traits<const di::_*, T> {
   using type = const T*;
 };
+
 template <class T, template <class...> class TDeleter>
 struct generic_traits<std::unique_ptr<di::_, TDeleter<di::_>>, T> {
   using type = std::unique_ptr<T, TDeleter<T>>;
 };
+
 template <class T, template <class...> class TDeleter>
 struct generic_traits<const std::unique_ptr<di::_, TDeleter<di::_>>&, T> {
   using type = const std::unique_ptr<T, TDeleter<T>>&;
 };
+
 template <class T>
 struct generic_traits<std::shared_ptr<di::_>, T> {
   using type = std::shared_ptr<T>;
 };
+
 template <class T>
 struct generic_traits<const std::shared_ptr<di::_>&, T> {
   using type = std::shared_ptr<T>;
 };
+
 template <class T>
 struct generic_traits<boost::shared_ptr<di::_>, T> {
   using type = boost::shared_ptr<T>;
 };
+
 template <class T>
 struct generic_traits<const boost::shared_ptr<di::_>&, T> {
   using type = boost::shared_ptr<T>;
 };
+
 template <class T>
 struct generic_traits<std::weak_ptr<di::_>, T> {
   using type = std::weak_ptr<T>;
 };
+
 template <class T>
 struct generic_traits<const std::weak_ptr<di::_>&, T> {
   using type = std::weak_ptr<T>;
 };
+
 template <class T, class U>
 using generic_traits_t = typename generic_traits<T, U>::type;
 
-template <class T>
-struct generic_cast {
-  using type = T&&;
-};
-
-template <template <class...> class T, class X>
-struct generic_cast<T<X>> {
-  using type = di::aux::remove_qualifiers_t<X>;  // generic_traits
-};
+template <template <class...> class TWrapper, class T, class... Ts, template <class> class X, class Y>
+auto generic_cast(TWrapper<T, X<Y>> arg) {
+  return static_cast<generic_traits_t<T, di::aux::remove_qualifiers_t<Y>>>(arg.wrapper_);
+}
 
 template <class T>
-using generic_cast_t = typename generic_cast<T>::type;
+decltype(auto) generic_cast(T&& arg) {
+  return arg;
+}
 
 struct generics_provider {
   template <class TInitialization, class TMemory, class T, class... TArgs>
@@ -121,14 +133,14 @@ struct generics_provider {
   auto get(const di::type_traits::direct&, const TMemory&  // stack/heap
            ,
            TArgs&&... args) const {
-    return new T(generic_cast_t<TArgs>(args)...);
+    return new T(generic_cast(args)...);
   }
 
   template <class, class T, class TMemory, class... TArgs>
   auto get(const di::type_traits::uniform&, const TMemory&  // stack/heap
            ,
            TArgs&&... args) const {
-    return new T{generic_cast_t<TArgs>(args)...};
+    return new T{generic_cast(args)...};
   }
 };
 
@@ -155,6 +167,7 @@ struct example {
   BOOST_DI_INJECT(example, int i, auto t, (named = dummy_concept) auto d) {
     assert(42 == i);
     static_assert(std::is_same<decltype(t), int>::value, "");
+    assert(87 == t);
     static_assert(std::is_same<decltype(d), DummyImpl>::value, "");
   }
 };
