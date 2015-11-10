@@ -272,13 +272,11 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     using given_t = type_traits::array_traits_t<T, typename dependency_t::given>;
     using ctor_t = typename type_traits::ctor_traits__<given_t>::type;
     using provider_t = successful::provider<expected_t, given_t, ctor_t, injector>;
-    using wrapper_t =
-        decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this}));
-    using create_t = referable_t<T, dependency__<dependency_t>>;
     BOOST_DI_CORE_INJECTOR_POLICY(
+        using create_t = referable_t<T, dependency__<dependency_t>>;
         policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>(
-            TConfig::policies(*this), dependency, ctor_t{});)() return successful::wrapper<create_t, wrapper_t>{
-        static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this})};
+            TConfig::policies(*this), dependency, ctor_t{});)()
+    return static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this});
   }
 };
 
