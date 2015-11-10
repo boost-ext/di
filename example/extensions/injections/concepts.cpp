@@ -9,6 +9,7 @@
 //<-
 #include <cassert>
 #include <type_traits>
+#include <memory>
 //->
 #include <boost/di.hpp>
 
@@ -114,19 +115,19 @@ template <class T, class U>
 using generic_traits_t = typename generic_traits<T, U>::type;
 
 template <template <class...> class TWrapper, class T, class... Ts, template <class> class X, class Y>
-auto generic_cast(TWrapper<T, X<Y>> arg) {
-  return static_cast<generic_traits_t<T, di::aux::remove_qualifiers_t<Y>>>(arg.wrapper_);
+auto generic_cast(const TWrapper<T, X<Y>>& arg) {
+  return arg.wrapper_.operator generic_traits_t<T, di::aux::remove_qualifiers_t<Y>>();
 }
 
 template <class T>
-decltype(auto) generic_cast(T&& arg) {
+decltype(auto) generic_cast(const T& arg) {
   return arg;
 }
 
 struct generics_provider {
   template <class TInitialization, class TMemory, class T, class... TArgs>
   struct is_creatable {
-    static constexpr auto value = di::concepts::creatable<TInitialization, T, TArgs...>::value;
+    static constexpr auto value = true;
   };
 
   template <class, class T, class TMemory, class... TArgs>
@@ -164,11 +165,13 @@ struct DummyImpl {
 auto dummy_concept = [] {};
 
 struct example {
-  BOOST_DI_INJECT(example, int i, auto t, (named = dummy_concept) auto d) {
+  BOOST_DI_INJECT(example, int i, auto t, (named = dummy_concept)Dummy d,
+                  (named = dummy_concept)std::unique_ptr<Dummy> up) {
     assert(42 == i);
     static_assert(std::is_same<decltype(t), int>::value, "");
     assert(87 == t);
     static_assert(std::is_same<decltype(d), DummyImpl>::value, "");
+    static_assert(std::is_same<decltype(up), std::unique_ptr<DummyImpl>>::value, "");
   }
 };
 

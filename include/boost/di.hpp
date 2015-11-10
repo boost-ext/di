@@ -29,7 +29,9 @@ BOOST_DI_CFG_FWD
 #define BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
 #define BOOST_DI_TYPE_WKND(T)
 #elif defined(__GNUC__)
+#if (__GNUC__ < 6)
 #pragma GCC diagnostic error "-Werror"
+#endif
 #define BOOST_DI_UNUSED __attribute__((unused))
 #define BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
 #define BOOST_DI_TYPE_WKND(T)

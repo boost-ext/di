@@ -125,8 +125,8 @@ test is_type_injected = [] {
 };
 
 test complex_opeartors = [] {
-  using namespace operators;
   auto test = [](auto policy) {
+    using namespace operators;
     return constructible_test(policy, (std::is_integral<_>{} && std::is_same<_, int>{}) || is_bound<_>{});
   };
   expect(!test(fake_policy<void, aux::none_type, aux::none_type, false>{}));

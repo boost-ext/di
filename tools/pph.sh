@@ -35,7 +35,7 @@ pph() {
     find . -iname "*.hpp" | xargs sed -i "s/BOOST_DI_NAMESPACE/::boost::di::v1/g"
     find . -iname "*.hpp" | xargs sed -i "s/\(.*\)__pph__/\/\/\/\/\1/g"
     find . -iname "*.hpp" | xargs sed -i "s/.*\(clang-format.*\)/\/\/\/\/\1/g"
-    tail -n +10 "boost/di/aux_/compiler.hpp" | head -n -2 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
+    tail -n +10 "boost/di/aux_/compiler.hpp" | head -n -2 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g" | sed "s/\/\/\/\///"
 
     echo '
         #include "boost/di/fwd_ext.hpp"
