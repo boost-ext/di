@@ -1074,12 +1074,12 @@ struct dependency_impl<dependency_concept<concepts::any_of<Ts...>, TName>, TDepe
 struct override {};
 struct dependency_base {};
 template <class TScope, class TExpected, class TGiven = TExpected, class TName = no_name,
-          class TPriority = aux::none_type, class TBase = TExpected>
+          class TPriority = aux::none_type>
 class dependency : dependency_base,
                    TScope::template scope<TExpected, TGiven>,
-                   public dependency_impl<dependency_concept<TBase, TName>,
-                                          dependency<TScope, TExpected, TGiven, TName, TPriority, TBase>> {
-  template <class, class, class, class, class, class>
+                   public dependency_impl<dependency_concept<TExpected, TName>,
+                                          dependency<TScope, TExpected, TGiven, TName, TPriority>> {
+  template <class, class, class, class, class>
   friend class dependency;
   using scope_t = typename TScope::template scope<TExpected, TGiven>;
   template <class T>
@@ -1107,49 +1107,48 @@ class dependency : dependency_base,
   using given = TGiven;
   using name = TName;
   using priority = TPriority;
-  using base = TBase;
   dependency() noexcept {}
   template <class T>
   explicit dependency(T&& object) noexcept : scope_t(static_cast<T&&>(object)) {}
-  template <class TScope_, class TExpected_, class TGiven_, class TName_, class TPriority_, class TBase_>
-  explicit dependency(const dependency<TScope_, TExpected_, TGiven_, TName_, TPriority_, TBase_>& other) noexcept
+  template <class TScope_, class TExpected_, class TGiven_, class TName_, class TPriority_>
+  explicit dependency(const dependency<TScope_, TExpected_, TGiven_, TName_, TPriority_>& other) noexcept
       : scope_t(other) {}
   template <class T, BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
   auto named() const noexcept {
-    return dependency<TScope, TExpected, TGiven, T, TPriority, TBase>{*this};
+    return dependency<TScope, TExpected, TGiven, T, TPriority>{*this};
   }
   template <class T, BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
   auto named(const T&) const noexcept {
-    return dependency<TScope, TExpected, TGiven, T, TPriority, TBase>{*this};
+    return dependency<TScope, TExpected, TGiven, T, TPriority>{*this};
   }
   template <class T, BOOST_DI_REQUIRES_MSG(concepts::scopable<T>) = 0>
   auto in(const T&) const noexcept {
-    return dependency<T, TExpected, TGiven, TName, TPriority, TBase>{};
+    return dependency<T, TExpected, TGiven, TName, TPriority>{};
   }
   template <class T, BOOST_DI_REQUIRES(!specific<T>::value) = 0,
             BOOST_DI_REQUIRES_MSG(typename concepts::boundable__<TExpected, T>::type) = 0>
   auto to() const noexcept {
-    return dependency<TScope, TExpected, T, TName, TPriority, TBase>{};
+    return dependency<TScope, TExpected, T, TName, TPriority>{};
   }
   template <class... Ts, BOOST_DI_REQUIRES(aux::is_array<TExpected, Ts...>::value) = 0>
   auto to() const noexcept {
-    return dependency<TScope, TExpected, array<array_type_t<TExpected>, Ts...>, TName, TPriority,
-                      array<array_type_t<TExpected>>>{};
+    return dependency<TScope, array<array_type_t<TExpected>>, array<array_type_t<TExpected>, Ts...>, TName,
+                      TPriority>{};
   }
   template <class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value) = 0>
   auto to(T&& object) const noexcept {
-    using dependency = dependency<scopes::external, TExpected, typename ref_traits<T>::type, TName, TPriority, TBase>;
+    using dependency = dependency<scopes::external, TExpected, typename ref_traits<T>::type, TName, TPriority>;
     return dependency{static_cast<T&&>(object)};
   }
   template <class T, BOOST_DI_REQUIRES(is_injector<T>::value) = 0>
   auto to(const T& object = {}) const noexcept {
-    using dependency = dependency<scopes::exposed<TScope>, TExpected, T, TName, TPriority, TBase>;
+    using dependency = dependency<scopes::exposed<TScope>, TExpected, T, TName, TPriority>;
     return dependency{object};
   }
   template <class T>
   auto to(std::initializer_list<T>&& object) const noexcept {
-    using dependency = dependency<scopes::external, TExpected, std::initializer_list<T>, TName, TPriority,
-                                  array<array_type_t<TExpected>>>;
+    using dependency =
+        dependency<scopes::external, array<array_type_t<TExpected>>, std::initializer_list<T>, TName, TPriority>;
     return dependency{object};
   }
   auto operator[](const override&) const noexcept {
@@ -1516,7 +1515,7 @@ struct get_not_supported<T, TDeps...> : aux::conditional<core::is_injector<T>::v
 template <class>
 struct is_unique;
 template <class T>
-struct unique_dependency : aux::pair<aux::pair<typename T::base, typename T::name>, typename T::priority> {};
+struct unique_dependency : aux::pair<aux::pair<typename T::expected, typename T::name>, typename T::priority> {};
 template <class... TDeps>
 struct is_unique<aux::type_list<TDeps...>> : aux::is_unique<typename unique_dependency<TDeps>::type...> {};
 template <class>
@@ -1622,10 +1621,10 @@ class binder {
   static decltype(auto) resolve_impl(aux::pair<TConcept, TDependency>* dep) noexcept {
     return static_cast<TDependency&>(*dep);
   }
-  template <class, class TConcept, class TScope, class TExpected, class TGiven, class TName, class TBase>
+  template <class, class TConcept, class TScope, class TExpected, class TGiven, class TName>
   static decltype(auto) resolve_impl(
-      aux::pair<TConcept, dependency<TScope, TExpected, TGiven, TName, override, TBase>>* dep) noexcept {
-    return static_cast<dependency<TScope, TExpected, TGiven, TName, override, TBase>&>(*dep);
+      aux::pair<TConcept, dependency<TScope, TExpected, TGiven, TName, override>>* dep) noexcept {
+    return static_cast<dependency<TScope, TExpected, TGiven, TName, override>&>(*dep);
   }
   template <class TDeps, class T, class TName, class TDefault>
   struct resolve__ {
@@ -1978,20 +1977,17 @@ namespace core {
 namespace successful {
 template <class T, class TWrapper>
 struct wrapper {
-  using value_type = T;
   inline operator T() noexcept { return BOOST_DI_TYPE_WKND(T) wrapper_; }
   TWrapper wrapper_;
 };
 }
 template <class T, class TWrapper, class = int>
 struct wrapper_impl {
-  using value_type = T;
   inline operator T() noexcept { return wrapper_; }
   TWrapper wrapper_;
 };
 template <class T, class TWrapper>
 struct wrapper_impl<T, TWrapper, BOOST_DI_REQUIRES(!aux::is_convertible<TWrapper, T>::value)> {
-  using value_type = T;
   inline operator T() noexcept { return typename concepts::type<TWrapper>::template is_not_convertible_to<T>{}; }
   TWrapper wrapper_;
 };

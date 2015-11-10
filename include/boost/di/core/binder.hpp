@@ -25,10 +25,10 @@ class binder {
     return static_cast<TDependency&>(*dep);
   }
 
-  template <class, class TConcept, class TScope, class TExpected, class TGiven, class TName, class TBase>
+  template <class, class TConcept, class TScope, class TExpected, class TGiven, class TName>
   static decltype(auto) resolve_impl(
-      aux::pair<TConcept, dependency<TScope, TExpected, TGiven, TName, override, TBase>>* dep) noexcept {
-    return static_cast<dependency<TScope, TExpected, TGiven, TName, override, TBase>&>(*dep);
+      aux::pair<TConcept, dependency<TScope, TExpected, TGiven, TName, override>>* dep) noexcept {
+    return static_cast<dependency<TScope, TExpected, TGiven, TName, override>&>(*dep);
   }
 
   template <class TDeps, class T, class TName, class TDefault>

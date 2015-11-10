@@ -51,7 +51,7 @@ template <class>
 struct is_unique;
 
 template <class T>
-struct unique_dependency : aux::pair<aux::pair<typename T::base, typename T::name>, typename T::priority> {};
+struct unique_dependency : aux::pair<aux::pair<typename T::expected, typename T::name>, typename T::priority> {};
 
 template <class... TDeps>
 struct is_unique<aux::type_list<TDeps...>> : aux::is_unique<typename unique_dependency<TDeps>::type...> {};

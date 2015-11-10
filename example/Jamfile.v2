@@ -58,6 +58,7 @@ test-suite example :
     [ example custom_scope.cpp ]
     [ example deduce_scope.cpp ]
     [ example dynamic_bindings.cpp ]
+    [ example eager_singletons.cpp ]
     [ example fwd_bindings.cpp ]
     [ example hello_world.cpp ]
     [ example lazy.cpp ]

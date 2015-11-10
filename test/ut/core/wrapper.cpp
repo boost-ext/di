@@ -10,9 +10,6 @@
 
 namespace core {
 
-test successful_wrapper = [] {
-  static_expect(std::is_same<int, successful::wrapper<int, fake_wrapper>::value_type>::value);
-  expect(0 == static_cast<int>(wrapper<int, fake_wrapper>{}));
-};
+test successful_wrapper = [] { expect(0 == static_cast<int>(wrapper<int, fake_wrapper>{})); };
 
 }  // core
