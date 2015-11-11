@@ -27,10 +27,10 @@ typename provider<T>::template requires_<get, is_creatable> providable_impl(...)
 
 template <class T>
 auto providable_impl(T&& t)
-    -> aux::is_valid_expr<decltype(t.template get<_, _>(type_traits::direct{}, type_traits::heap{})),
-                          decltype(t.template get<_, _>(type_traits::direct{}, type_traits::heap{}, int{})),
-                          decltype(t.template get<_, _>(type_traits::uniform{}, type_traits::stack{})),
-                          decltype(t.template get<_, _>(type_traits::uniform{}, type_traits::stack{}, int{})),
+    -> aux::is_valid_expr<decltype(t.template get<_>(type_traits::direct{}, type_traits::heap{})),
+                          decltype(t.template get<_>(type_traits::direct{}, type_traits::heap{}, int{})),
+                          decltype(t.template get<_>(type_traits::uniform{}, type_traits::stack{})),
+                          decltype(t.template get<_>(type_traits::uniform{}, type_traits::stack{}, int{})),
                           decltype(T::template is_creatable<type_traits::direct, type_traits::heap, _>::value),
                           decltype(T::template is_creatable<type_traits::uniform, type_traits::stack, _, int>::value)>;
 

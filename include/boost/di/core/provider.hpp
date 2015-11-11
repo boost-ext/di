@@ -44,11 +44,11 @@ struct try_provider<TGiven, aux::pair<TInitialization, aux::type_list<TCtor...>>
       aux::conditional_t<aux::is_same<TMemory, type_traits::stack>::value, TGiven, aux::remove_reference_t<TGiven>*>>;
 };
 
-template <class, class, class, class, class>
+template <class, class, class, class>
 struct provider;
 
-template <class TExpected, class TGiven, class TName, class TInjector, class TInitialization, class... TCtor>
-struct provider<TExpected, TGiven, TName, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
+template <class TGiven, class TName, class TInjector, class TInitialization, class... TCtor>
+struct provider<TGiven, TName, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
   using provider_t = decltype(TInjector::config::provider(aux::declval<TInjector>()));
   using injector_t = TInjector;
 
@@ -69,13 +69,13 @@ struct provider<TExpected, TGiven, TName, aux::pair<TInitialization, aux::type_l
 #endif  // __pph__
 
     return TInjector::config::provider(injector_)
-        .template get<TExpected, TGiven>(TInitialization{}, memory, static_cast<TArgs&&>(args)...);
+        .template get<TGiven>(TInitialization{}, memory, static_cast<TArgs&&>(args)...);
   }
 
   template <class TMemory, class... TArgs, BOOST_DI_REQUIRES(!is_creatable<TMemory, TArgs...>::value) = 0>
   TGiven* get_impl(const TMemory&, TArgs&&...) const {
 #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL > 0)  // __pph__
-    return concepts::creatable_error<TInitialization, TName, TExpected*, TGiven*, TArgs...>();
+    return concepts::creatable_error<TInitialization, TName, TGiven*, TArgs...>();
 #else   // __pph__
     return {};
 #endif  // __pph__
@@ -86,16 +86,16 @@ struct provider<TExpected, TGiven, TName, aux::pair<TInitialization, aux::type_l
 
 namespace successful {
 
-template <class, class, class, class>
+template <class, class, class>
 struct provider;
 
-template <class TExpected, class TGiven, class TInjector, class TInitialization, class... TCtor>
-struct provider<TExpected, TGiven, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
+template <class TGiven, class TInjector, class TInitialization, class... TCtor>
+struct provider<TGiven, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
   using injector_t = TInjector;
 
   template <class TMemory = type_traits::heap>
   auto get(const TMemory& memory = {}) const {
-    return TInjector::config::provider(injector_).template get<TExpected, TGiven>(
+    return TInjector::config::provider(injector_).template get<TGiven>(
         TInitialization{}, memory,
         static_cast<const injector__<TInjector>&>(injector_).create_successful_impl(aux::type<TCtor>{})...);
   }

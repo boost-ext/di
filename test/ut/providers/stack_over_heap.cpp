@@ -12,13 +12,13 @@ namespace providers {
 
 template <class T, class TInit, class... TArgs>
 auto test_heap(const aux::type<T>&, const TInit& init, const TArgs&... args) {
-  std::unique_ptr<T> object{stack_over_heap{}.get<T, T>(init, type_traits::heap{}, args...)};
+  std::unique_ptr<T> object{stack_over_heap{}.get<T>(init, type_traits::heap{}, args...)};
   expect(object.get());
 }
 
 template <class T, class TInit, class... TArgs>
 auto test_stack(const aux::type<T>&, const TInit& init, const TArgs&... args) {
-  T object = stack_over_heap{}.get<T, T>(init, type_traits::stack{}, args...);
+  T object = stack_over_heap{}.get<T>(init, type_traits::stack{}, args...);
   (void)object;
 }
 

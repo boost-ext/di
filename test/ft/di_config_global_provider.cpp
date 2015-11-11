@@ -20,7 +20,7 @@ class custom_provider {
     static constexpr auto value = true;
   };
 
-  template <class, class T, class TInitialization, class TMemory, class... TArgs>
+  template <class T, class TInitialization, class TMemory, class... TArgs>
   auto get(const TInitialization&, const TMemory&, TArgs&&... args) const {
     ++called;
     return new T(std::forward<TArgs>(args)...);

@@ -13,7 +13,7 @@ namespace providers {
 
 template <class T, class TInit, class TMemory, class... TArgs>
 auto test_heap(const aux::type<T>&, const TInit& init, const TMemory& memory, const TArgs&... args) {
-  std::unique_ptr<T> object{heap{}.get<T, T>(init, memory, args...)};
+  std::unique_ptr<T> object{heap{}.get<T>(init, memory, args...)};
   expect(object.get());
 }
 

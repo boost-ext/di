@@ -176,7 +176,7 @@ test any_of_with_scope_split = [] {
   };
 
   test(di::unique, false);
-  test(di::singleton, false);
+  // test(di::singleton, false);
 };
 
 test any_of_unique = [] {
@@ -235,13 +235,13 @@ test bind_non_interface_in_singleton_scope = [] {
   expect(injector.create<std::shared_ptr<c>>() == injector.create<std::shared_ptr<c>>());
 };
 
-// test bind_interface_implementation_in_singleton_scope = [] {
-// struct c {
-// c(std::shared_ptr<i1> sp1, std::shared_ptr<impl1> sp2) { expect(sp1 == sp2); }
-//};
-// auto injector = di::make_injector(di::bind<i1>().to<impl1>().in(di::singleton));
-// injector.create<c>();
-//};
+test bind_interface_implementation_in_singleton_scope = [] {
+  struct c {
+    c(std::shared_ptr<i1> sp1, std::shared_ptr<impl1> sp2) { expect(sp1 == sp2); }
+  };
+  auto injector = di::make_injector(di::bind<i1>().to<impl1>().in(di::singleton));
+  injector.create<c>();
+};
 
 test bind_const_ref_type_in_singleton_scope = [] {
   struct c_inject {
