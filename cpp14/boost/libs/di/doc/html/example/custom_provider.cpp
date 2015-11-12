@@ -36,14 +36,14 @@ struct custom_provider {
     static constexpr auto value = true;
   };
 
-  template <class, class T, class TMemory, class... TArgs>
+  template <class T, class TMemory, class... TArgs>
   auto get(const di::type_traits::direct&, const TMemory&  // stack/heap
            ,
            TArgs&&... args) const {
     return new T(std::forward<TArgs>(args)...);
   }
 
-  template <class, class T, class TMemory, class... TArgs>
+  template <class T, class TMemory, class... TArgs>
   auto get(const di::type_traits::uniform&, const TMemory&  // stack/heap
            ,
            TArgs&&... args) const {

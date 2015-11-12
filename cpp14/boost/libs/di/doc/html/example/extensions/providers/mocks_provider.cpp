@@ -71,22 +71,41 @@ class mocks_provider : public di::config {
       const expectations& expectations_;
     };
 
-    struct not_resolved {};
+    template <class>
+    static std::false_type resolve_impl(...);
+
+    template <class TKey>
+    static std::true_type resolve_impl(TKey*);
+
+    template <class TKey, class T>
+    struct resolve : decltype(resolve_impl<TKey>((T*)0)) {};
+
+    template <class>
+    struct transform;
 
     template <class T>
-    using is_resolvable = std::integral_constant<
-        bool, !std::is_same<not_resolved, decltype(di::core::binder::resolve<T, di::no_name, not_resolved>(
-                                              (TInjector*) nullptr))>::value>;
+    struct given {
+      using type = typename T::given;
+    };
 
-    template <class I, class T, class TInitialization, class TMemory, class... TArgs>
-    std::enable_if_t<is_resolvable<I>::value || !std::is_polymorphic<T>::value, T*> get(const TInitialization&,
+    template <class... Ts>
+    struct map : Ts... {};
+
+    template <class... Ts>
+    struct transform<di::aux::type_list<Ts...>> : map<di::aux::type<typename given<Ts>::type>...> {};
+
+    template <class T>
+    using is_resolvable = resolve<di::aux::type<T>, transform<typename TInjector::deps>>;
+
+    template <class T, class TInitialization, class TMemory, class... TArgs>
+    std::enable_if_t<is_resolvable<T>::value || !std::is_polymorphic<T>::value, T*> get(const TInitialization&,
                                                                                         const TMemory&,
                                                                                         TArgs&&... args) const {
       return new T{std::forward<TArgs>(args)...};
     }
 
-    template <class I, class T, class TInitialization, class TMemory, class... TArgs>
-    std::enable_if_t<!is_resolvable<I>::value && std::is_polymorphic<T>::value, T*> get(const TInitialization&,
+    template <class T, class TInitialization, class TMemory, class... TArgs>
+    std::enable_if_t<!is_resolvable<T>::value && std::is_polymorphic<T>::value, T*> get(const TInitialization&,
                                                                                         const TMemory&,
                                                                                         TArgs&&...) const {
       return reinterpret_cast<T*>(new mock<T>{expectations_});
