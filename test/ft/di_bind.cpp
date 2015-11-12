@@ -239,7 +239,7 @@ test bind_interface_implementation_in_singleton_scope = [] {
   struct c {
     c(std::shared_ptr<i1> sp1, std::shared_ptr<impl1> sp2) { expect(sp1 == sp2); }
   };
-  auto injector = di::make_injector(di::bind<i1>().to<impl1>().in(di::singleton));
+  auto injector = di::make_injector(di::bind<i1, impl1>().to<impl1>().in(di::singleton));
   injector.create<c>();
 };
 

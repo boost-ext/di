@@ -20,14 +20,8 @@ auto has_shared_ptr__(T && ) -> aux::is_valid_expr<decltype(std::shared_ptr<T>{}
 
 class singleton {
  public:
-  template <class, class>
-  class scope_impl;
-
-  template <class, class T>
-  using scope = scope_impl<T, decltype(has_shared_ptr__(aux::declval<T>()))>;
-
-  template <class T>
-  class scope_impl<T, aux::false_type> {
+  template <class, class T, class = decltype(has_shared_ptr__(aux::declval<T>()))>
+  class scope {
    public:
     template <class T_>
     using is_referable = typename wrappers::shared<T&>::template is_referable<T_>;
@@ -49,8 +43,8 @@ class singleton {
     }
   };
 
-  template <class T>
-  class scope_impl<T, aux::true_type> {
+  template <class _, class T>
+  class scope<_, T, aux::true_type> {
    public:
     template <class T_>
     using is_referable = typename wrappers::shared<T>::template is_referable<T_>;

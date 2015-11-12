@@ -65,7 +65,7 @@ test-suite example :
     [ example modules.cpp ]
     [ example multiple_bindings.cpp ]
     [ example multiple_interfaces.cpp ]
-    [ example pool_provider.cpp ]
+    #[ example pool_provider.cpp ]
 ;
 
 test-suite extensions :
@@ -76,7 +76,7 @@ test-suite extensions :
     [ example extensions/injections/xml_injection.cpp ]
     [ example extensions/policies/types_dumper.cpp ]
     [ example extensions/policies/uml_dumper.cpp ]
-    [ example extensions/providers/mocks_provider.cpp ]
+    #[ example extensions/providers/mocks_provider.cpp ]
     [ example extensions/scopes/session_scope.cpp ]
     [ example extensions/scopes/shared_scope.cpp ]
 ;

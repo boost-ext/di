@@ -18,9 +18,7 @@ class heap_no_throw {
     static constexpr auto value = true;
   };
 
-  template <class  // interface
-            ,
-            class T  // implementation
+  template <class T  // implementation
             ,
             class TInit  // direct()/uniform{}
             ,

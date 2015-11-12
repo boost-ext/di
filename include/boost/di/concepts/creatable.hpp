@@ -30,15 +30,45 @@ struct abstract_type {
     // clang-format on
   };
 
-  struct is_not_fully_implemented {
+  template <class TName>
+  struct named {
+    struct is_not_bound {
+      operator T*() const {
+        using constraint_not_satisfied = is_not_bound;
+        return constraint_not_satisfied{}.error();
+      }
+
+      // clang-format off
+      static inline T*
+	  error(_ = "type is not bound, did you forget to add: 'di::bind<interface>.named(name).to<implementation>()'?");
+      // clang-format on
+    };
+
+    struct is_not_fully_implemented {
+      operator T*() const {
+        using constraint_not_satisfied = is_not_fully_implemented;
+        return constraint_not_satisfied{}.error();
+      }
+
+      // clang-format off
+      static inline T*
+	  error(_ = "type is not implemented, did you forget to implement all interface methods?");
+      // clang-format on
+    };
+  };
+};
+
+template <class T>
+struct polymorphic_type {
+  struct is_not_bound {
     operator T*() const {
-      using constraint_not_satisfied = is_not_fully_implemented;
+      using constraint_not_satisfied = is_not_bound;
       return constraint_not_satisfied{}.error();
     }
 
     // clang-format off
     static inline T*
-	error(_ = "type is not implemented, did you forget to implement all interface methods?");
+	error(_ = "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?");
     // clang-format on
   };
 
@@ -125,29 +155,26 @@ struct ctor_size;
 template <class TInit, class... TCtor>
 struct ctor_size<aux::pair<TInit, aux::type_list<TCtor...>>> : aux::integral_constant<int, sizeof...(TCtor)> {};
 
-template <class, class, class T, class = aux::decay_t<T>, class...>
-struct creatable_error_impl;
-
 template <class T>
 using ctor_size_t = ctor_size<typename type_traits::ctor<T, type_traits::ctor_impl_t<aux::is_constructible, T>>::type>;
 
-#define BOOST_DI_NAMED_ERROR(name, type, error_type, error)                                 \
-  aux::conditional_t<aux::is_same<TName, no_name>::value, typename error_type<type>::error, \
-                     typename error_type<type>::template named<TName>::error>
+#define BOOST_DI_NAMED_ERROR(name, type, error_type, error)
 
-template <class TInitialization, class TName, class _, class T, class... TCtor>
-struct creatable_error_impl<TInitialization, TName, _, T, aux::type_list<TCtor...>>
+template <class TInitialization, class TName, class _, class TCtor, class T = aux::decay_<_>>
+struct creatable_error_impl
     : aux::conditional_t<
           aux::is_abstract<T>::value,
-          aux::conditional_t<aux::is_polymorphic<T>::value, BOOST_DI_NAMED_ERROR(TName, T, abstract_type, is_not_bound),
-                             BOOST_DI_NAMED_ERROR(TName, T, abstract_type, is_not_fully_implemented)>,
           aux::conditional_t<
-              ctor_size_t<T>::value == sizeof...(TCtor),
-              typename type<T>::has_to_many_constructor_parameters::template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>,
-              typename type<T>::has_ambiguous_number_of_constructor_parameters::template given<sizeof...(
-                  TCtor)>::template expected<ctor_size_t<T>::value>>> {};
-
-#undef BOOST_DI_NAMED_ERROR
+              aux::is_polymorphic<T>::value,
+              aux::conditional_t<aux::is_same<TName, no_name>::value, typename polymorphic_type<T>::error,
+                                 typename polymorphic_type<T>::template named<TName>::error>,
+              aux::conditional_t<aux::is_same<TName, no_name>::value, typename abstract_type<T>::error,
+                                 typename abstract_type<T>::template named<TName>::error>>
+              aux::conditional_t<
+                  ctor_size_t<T>::value == sizeof...(TCtor),
+                  typename type<T>::has_to_many_constructor_parameters::template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>,
+                  typename type<T>::has_ambiguous_number_of_constructor_parameters::template given<sizeof...(
+                      TCtor)>::template expected<ctor_size_t<T>::value>>> {};
 
 template <class TInit, class T, class... TArgs>
 struct creatable {

@@ -103,14 +103,14 @@ struct pool_provider {
     static constexpr auto value = true;
   };
 
-  template <class I, class T, class TInitialization, class TMemory, class... TArgs>
+  template <class T, class TInitialization, class TMemory, class... TArgs>
   auto get(const TInitialization&  // direct/uniform
            ,
            const TMemory&  // stack/heap
            ,
            TArgs&&... args) const {
     auto memory = pool_allocator<T>::allocate();
-    return std::unique_ptr<T, pool_deleter<I>>{new (memory) T(std::forward<TArgs>(args)...)};
+    return std::unique_ptr<T, pool_deleter<T>>{new (memory) T(std::forward<TArgs>(args)...)};
   }
 };
 

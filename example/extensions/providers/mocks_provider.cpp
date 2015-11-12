@@ -78,14 +78,14 @@ class mocks_provider : public di::config {
         bool, !std::is_same<not_resolved, decltype(di::core::binder::resolve<T, di::no_name, not_resolved>(
                                               (TInjector*) nullptr))>::value>;
 
-    template <class I, class T, class TInitialization, class TMemory, class... TArgs>
+    template <class T, class TInitialization, class TMemory, class... TArgs>
     std::enable_if_t<is_resolvable<I>::value || !std::is_polymorphic<T>::value, T*> get(const TInitialization&,
                                                                                         const TMemory&,
                                                                                         TArgs&&... args) const {
       return new T{std::forward<TArgs>(args)...};
     }
 
-    template <class I, class T, class TInitialization, class TMemory, class... TArgs>
+    template <class T, class TInitialization, class TMemory, class... TArgs>
     std::enable_if_t<!is_resolvable<I>::value && std::is_polymorphic<T>::value, T*> get(const TInitialization&,
                                                                                         const TMemory&,
                                                                                         TArgs&&...) const {
