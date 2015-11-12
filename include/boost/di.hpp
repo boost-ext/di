@@ -1151,6 +1151,10 @@ class dependency : dependency_base,
         dependency<scopes::external, array<array_type_t<TExpected>>, std::initializer_list<T>, TName, TPriority>;
     return dependency{object};
   }
+  template <
+      class T, class...,
+      BOOST_DI_REQUIRES(!aux::is_same<aux::true_type, typename concepts::boundable__<TExpected, T>::type>::value) = 0>
+  dependency to(...) const noexcept;
   auto operator[](const override&) const noexcept {
     return dependency<TScope, TExpected, TGiven, TName, override>{*this};
   }
