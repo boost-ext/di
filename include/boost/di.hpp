@@ -8,7 +8,7 @@
 #if (__cplusplus < 201305L && _MSC_VER < 1900)
 #error "Boost.DI requires C++14 support (Clang-3.4+, GCC-5.1+, MSVC-2015+)"
 #else
-#define BOOST_DI_VERSION 1'0'0
+#define BOOST_DI_VERSION 0'9'0
 #if !defined(BOOST_DI_CFG_DIAGNOSTICS_LEVEL)
 #define BOOST_DI_CFG_DIAGNOSTICS_LEVEL 1
 #endif

@@ -243,6 +243,14 @@ test bind_interface_implementation_in_singleton_scope = [] {
   injector.create<c>();
 };
 
+test bind_interface_implementation_ref_in_singleton_scope = [] {
+  struct c {
+    c(const std::shared_ptr<i1>& sp1, const std::shared_ptr<impl1>& sp2) { expect(sp1 == sp2); }
+  };
+  auto injector = di::make_injector(di::bind<i1, impl1>().to<impl1>().in(di::singleton));
+  injector.create<c>();
+};
+
 test bind_const_ref_type_in_singleton_scope = [] {
   struct c_inject {
     BOOST_DI_INJECT(c_inject, const int& i1, const int& i2) { expect(&i1 == &i2); }
