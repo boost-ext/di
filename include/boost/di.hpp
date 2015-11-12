@@ -1299,16 +1299,6 @@ struct abstract_type {
  error(_ = "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?");
     // clang-format on
   };
-  struct is_not_fully_implemented {
-    operator T*() const {
-      using constraint_not_satisfied = is_not_fully_implemented;
-      return constraint_not_satisfied{}.error();
-    }
-    // clang-format off
-    static inline T*
- error(_ = "type is not implemented, did you forget to implement all interface methods?");
-    // clang-format on
-  };
   template <class TName>
   struct named {
     struct is_not_bound {
@@ -1319,16 +1309,6 @@ struct abstract_type {
       // clang-format off
       static inline T*
    error(_ = "type is not bound, did you forget to add: 'di::bind<interface>.named(name).to<implementation>()'?");
-      // clang-format on
-    };
-    struct is_not_fully_implemented {
-      operator T*() const {
-        using constraint_not_satisfied = is_not_fully_implemented;
-        return constraint_not_satisfied{}.error();
-      }
-      // clang-format off
-      static inline T*
-   error(_ = "type is not implemented, did you forget to implement all interface methods?");
       // clang-format on
     };
   };
@@ -1343,7 +1323,7 @@ struct type {
     }
     // clang-format off
     static inline To
- error(_ = "wrapper is not convertible to requested type, did you mistake the scope?");
+ error(_ = "scope is not convertible to the requested type, did you mistake it by using: 'di::bind<T>.in(scope)'?");
     // clang-format on
   };
   struct has_ambiguous_number_of_constructor_parameters {
@@ -1380,26 +1360,21 @@ template <class>
 struct ctor_size;
 template <class TInit, class... TCtor>
 struct ctor_size<aux::pair<TInit, aux::type_list<TCtor...>>> : aux::integral_constant<int, sizeof...(TCtor)> {};
-template <class, class, class T, class = aux::decay_t<T>, class...>
-struct creatable_error_impl;
+template <class... TCtor>
+struct ctor_size<aux::type_list<TCtor...>> : aux::integral_constant<int, sizeof...(TCtor)> {};
 template <class T>
 using ctor_size_t = ctor_size<typename type_traits::ctor<T, type_traits::ctor_impl_t<aux::is_constructible, T>>::type>;
-template <class TInitialization, class TName, class _, class T, class... TCtor>
-struct creatable_error_impl<TInitialization, TName, _, T, aux::type_list<TCtor...>>
+template <class TInitialization, class TName, class _, class TCtor, class T = aux::decay_t<_>>
+struct creatable_error_impl
     : aux::conditional_t<
-          aux::is_abstract<T>::value,
+          aux::is_polymorphic<T>::value,
+          aux::conditional_t<aux::is_same<TName, no_name>::value, typename abstract_type<T>::is_not_bound,
+                             typename abstract_type<T>::template named<TName>::is_not_bound>,
           aux::conditional_t<
-              aux::is_polymorphic<T>::value,
-              aux::conditional_t<aux::is_same<TName, no_name>::value, typename abstract_type<T>::is_not_bound,
-                                 typename abstract_type<T>::template named<TName>::is_not_bound>,
-              aux::conditional_t<aux::is_same<TName, no_name>::value,
-                                 typename abstract_type<T>::is_not_fully_implemented,
-                                 typename abstract_type<T>::template named<TName>::is_not_fully_implemented>>,
-          aux::conditional_t<
-              ctor_size_t<T>::value == sizeof...(TCtor),
+              ctor_size_t<T>::value == ctor_size<TCtor>::value,
               typename type<T>::has_to_many_constructor_parameters::template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>,
-              typename type<T>::has_ambiguous_number_of_constructor_parameters::template given<sizeof...(
-                  TCtor)>::template expected<ctor_size_t<T>::value>>> {};
+              typename type<T>::has_ambiguous_number_of_constructor_parameters::template given<
+                  ctor_size<TCtor>::value>::template expected<ctor_size_t<T>::value>>> {};
 template <class TInit, class T, class... TArgs>
 struct creatable {
   static constexpr auto value = aux::is_constructible<T, TArgs...>::value;
@@ -2420,10 +2395,15 @@ struct config {
   template <class...>
   struct requires_ : aux::false_type {};
 };
+template <class T>
+struct injector {
+  using config = T;
+  using deps = aux::type_list<>;
+};
 aux::false_type configurable_impl(...);
 template <class T>
-auto configurable_impl(T&& t) -> aux::is_valid_expr<decltype(T::provider(static_cast<const T&>(t))),
-                                                    decltype(T::policies(static_cast<const T&>(t)))>;
+auto configurable_impl(T && ) -> aux::is_valid_expr<decltype(T::provider(aux::declval<injector<T>>())),
+                                                    decltype(T::policies(aux::declval<injector<T>>()))>;
 template <class T1, class T2>
 struct get_configurable_error : aux::type_list<T1, T2> {};
 template <class T>
@@ -2438,8 +2418,9 @@ template <>
 struct get_configurable_error<aux::true_type, aux::true_type> : aux::true_type {};
 template <class T>
 auto is_configurable(const aux::true_type&) {
-  return typename get_configurable_error<decltype(providable<decltype(T::provider(aux::declval<T>()))>()),
-                                         decltype(callable<decltype(T::policies(aux::declval<T>()))>())>::type{};
+  return
+      typename get_configurable_error<decltype(providable<decltype(T::provider(aux::declval<injector<T>>()))>()),
+                                      decltype(callable<decltype(T::policies(aux::declval<injector<T>>()))>())>::type{};
 }
 template <class T>
 auto is_configurable(const aux::false_type&) {

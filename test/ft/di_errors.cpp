@@ -492,10 +492,10 @@ int main() { di::make_injector<test_config>(); }
 #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
           "creatable constraint not satisfied",
 #endif
-          "abstract_type<.*>::is_not_fully_implemented"
+          "abstract_type<.*>::is_not_bound"
 #if !defined(_MSC_VER)
           ,
-          "create<c>()", "type is not implemented, did you forget to implement all interface methods?"
+          "create", "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?"
 #endif
           );
 
@@ -514,10 +514,11 @@ int main() { di::make_injector<test_config>(); }
 #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
           "creatable constraint not satisfied",
 #endif
-          "abstract_type<.*>::named<.*>::is_not_fully_implemented"
+          "abstract_type<.*>::named<.*>::is_not_bound"
 #if !defined(_MSC_VER)
           ,
-          "type is not implemented, did you forget to implement all interface methods?"
+          "create",
+          "type is not bound, did you forget to add: 'di::bind<interface>.named\\(name\\).to<implementation>()'?"
 #endif
           );
 
@@ -540,7 +541,7 @@ int main() { di::make_injector<test_config>(); }
           "type<.*>::is_not_convertible_to<.*>"
 #if !defined(_MSC_VER)
           ,
-          "wrapper is not convertible to requested type, did you mistake the scope?"
+          "scope is not convertible to the requested type, did you mistake it by using: 'di::bind<T>.in\\(scope\\)'?"
 #endif
           );
 
@@ -558,7 +559,7 @@ int main() { di::make_injector<test_config>(); }
           "type<.*>::is_not_convertible_to<.*>"
 #if !defined(_MSC_VER)
           ,
-          "wrapper is not convertible to requested type, did you mistake the scope?"
+          "scope is not convertible to the requested type, did you mistake it by using: 'di::bind<T>.in\\(scope\\)'?"
 #endif
           );
 
@@ -576,7 +577,7 @@ int main() { di::make_injector<test_config>(); }
           "type<.*>::is_not_convertible_to<.*>"
 #if !defined(_MSC_VER)
           ,
-          "wrapper is not convertible to requested type, did you mistake the scope?"
+          "scope is not convertible to the requested type, did you mistake it by using: 'di::bind<T>.in\\(scope\\)'?"
 #endif
           );
 
@@ -595,7 +596,7 @@ int main() { di::make_injector<test_config>(); }
           "type<.*>::is_not_convertible_to<.*>"
 #if !defined(_MSC_VER)
           ,
-          "wrapper is not convertible to requested type, did you mistake the scope?"
+          "scope is not convertible to the requested type, did you mistake it by using: 'di::bind<T>.in\\(scope\\)'?"
 #endif
           );
 

@@ -64,32 +64,28 @@ struct implementation : interface {};
 //->
 
 /*<example `pool allocator`>*/
-template <class T>
 struct pool_allocator {
-  static T* allocate();
-  static void deallocate(T*);
+  template <class T>
+  static di::aux::owner<T*> allocate();
+  static void deallocate(di::aux::owner<void*>);
 };
 
 //<-
 template <class T>
-T* pool_allocator<T>::allocate() {
+di::aux::owner<T*> pool_allocator::allocate() {
   return (T*)::operator new(sizeof(T));
 }
 
-template <class T>
-void pool_allocator<T>::deallocate(di::aux::owner<T*> ptr) {
-  return ::operator delete(ptr);
-}
+void pool_allocator::deallocate(di::aux::owner<void*> ptr) { return ::operator delete(ptr); }
 
-template <class T>
 struct pool_deleter {
-  void operator()(di::aux::owner<T*> ptr) const noexcept { pool_allocator<T>::deallocate(ptr); }
+  void operator()(di::aux::owner<void*> ptr) const noexcept { pool_allocator::deallocate(ptr); }
 };
 //->
 
 /*<define `example` class as usual>*/
 struct example {
-  explicit example(int i, std::unique_ptr<interface, pool_deleter<interface>> up, std::shared_ptr<interface> sp) {
+  explicit example(int i, std::unique_ptr<interface, pool_deleter> up, std::shared_ptr<interface> sp) {
     assert(i == 42);
     assert(dynamic_cast<implementation*>(up.get()));
     assert(dynamic_cast<implementation*>(sp.get()));
@@ -109,8 +105,8 @@ struct pool_provider {
            const TMemory&  // stack/heap
            ,
            TArgs&&... args) const {
-    auto memory = pool_allocator<T>::allocate();
-    return std::unique_ptr<T, pool_deleter<T>>{new (memory) T(std::forward<TArgs>(args)...)};
+    auto memory = pool_allocator::allocate<T>();
+    return std::unique_ptr<T, pool_deleter>{new (memory) T(std::forward<TArgs>(args)...)};
   }
 };
 
