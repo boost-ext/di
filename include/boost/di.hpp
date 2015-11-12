@@ -1465,6 +1465,7 @@ struct bind {
   struct is_bound_more_than_once : aux::false_type {};
   struct is_neither_a_dependency_nor_an_injector : aux::false_type {};
   struct has_disallowed_qualifiers : aux::false_type {};
+  struct is_abstract : aux::false_type {};
   template <class>
   struct is_not_related_to : aux::false_type {};
 };
@@ -1526,6 +1527,14 @@ struct is_related<true, I, T> {
   static constexpr auto value =
       aux::is_base_of<I, T>::value || (aux::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value);
 };
+template <bool, class>
+struct is_abstract {
+  static constexpr auto value = false;
+};
+template <class T>
+struct is_abstract<true, T> {
+  static constexpr auto value = aux::is_abstract<T>::value;
+};
 auto boundable_impl(any_of<> && ) -> aux::true_type;
 template <class T, class... Ts>
 auto boundable_impl(any_of<T, Ts...> && ) -> aux::conditional_t<aux::is_same<T, aux::decay_t<T>>::value,
@@ -1535,7 +1544,9 @@ template <class I, class T>
 auto boundable_impl(I&&, T && ) -> aux::conditional_t<
     !aux::is_same<T, aux::decay_t<T>>::value, typename bind<T>::has_disallowed_qualifiers,
     aux::conditional_t<is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value,
-                       aux::true_type, typename bind<T>::template is_not_related_to<I>>>;
+                       aux::conditional_t<is_abstract<aux::is_complete<T>::value, T>::value,
+                                          typename bind<T>::is_abstract, aux::true_type>,
+                       typename bind<T>::template is_not_related_to<I>>>;
 template <class I, class T>
 auto boundable_impl(I[], T && ) -> aux::true_type;
 template <class... TDeps>

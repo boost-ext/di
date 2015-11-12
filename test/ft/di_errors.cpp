@@ -219,6 +219,44 @@ test bind_any_of_not_related = [] {
                       struct c{}; int main() { di::make_injector(di::bind<a, b>().to<c>()); });
 };
 
+test bind_is_abstract_type = [] {
+  auto errors_ = errors("constraint not satisfied",
+#if defined(_MSC_VER)
+                        "bind<.*>::is_abstract", "=.*impl"
+#else
+                        "bind<.*impl>::is_abstract"
+#endif
+                        );
+
+  expect_compile_fail("", errors_,
+                      struct i {
+                        virtual ~i() noexcept = default;
+                        virtual void dummy() = 0;
+                      };
+                      struct impl
+                      : i{};
+                      struct c{c(i*){}}; int main(){di::make_injector(di::bind<i>().to<impl>())});
+};
+
+test bind_is_abstract_type_named = [] {
+  auto errors_ = errors("constraint not satisfied",
+#if defined(_MSC_VER)
+                        "bind<.*>::is_abstract", "=.*impl"
+#else
+                        "bind<.*impl>::is_abstract"
+#endif
+                        );
+  expect_compile_fail("", errors_,
+                      struct i {
+                        virtual ~i() noexcept = default;
+                        virtual void dummy() = 0;
+                      };
+                      struct impl
+                      : i{};
+                      struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{})i*){}};
+                      int main() { di::make_injector(di::bind<i>().named(dummy{}).to<impl>()); });
+};
+
 test bind_repeated = [] {
   auto errors_ = errors("constraint not satisfied", "bind<.*i>::is_bound_more_than_once");
 
@@ -485,52 +523,6 @@ int main() { di::make_injector<test_config>(); }
                           struct c { std::shared_ptr<i> i_; }; int main() {
                             di::injector<c> injector = di::make_injector();  // di::bind<i>().to<impl>()
                           });
-    };
-
-    test create_not_fully_implemented_type = [] {
-      auto errors_ = errors(
-#if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
-          "creatable constraint not satisfied",
-#endif
-          "abstract_type<.*>::is_not_bound"
-#if !defined(_MSC_VER)
-          ,
-          "create", "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?"
-#endif
-          );
-
-      expect_compile_fail("", errors_,
-                          struct i {
-                            virtual ~i() noexcept = default;
-                            virtual void dummy() = 0;
-                          };
-                          struct impl
-                          : i{};
-                          struct c{c(i*){}}; int main() { di::make_injector(di::bind<i>().to<impl>()).create<c>(); });
-    };
-
-    test create_not_fully_implemented_type_named = [] {
-      auto errors_ = errors(
-#if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
-          "creatable constraint not satisfied",
-#endif
-          "abstract_type<.*>::named<.*>::is_not_bound"
-#if !defined(_MSC_VER)
-          ,
-          "create",
-          "type is not bound, did you forget to add: 'di::bind<interface>.named\\(name\\).to<implementation>()'?"
-#endif
-          );
-
-      expect_compile_fail("", errors_,
-                          struct i {
-                            virtual ~i() noexcept = default;
-                            virtual void dummy() = 0;
-                          };
-                          struct impl
-                          : i{};
-                          struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{})i*){}};
-                          int main() { di::make_injector(di::bind<i>().named(dummy{}).to<impl>()).create<c>(); });
     };
 
     test injector_shared_by_copy = [] {
