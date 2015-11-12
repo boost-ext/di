@@ -17,7 +17,7 @@ pph() {
     echo "#if (__cplusplus < 201305L && _MSC_VER < 1900)"
     echo "#error \"Boost.DI requires C++14 support (Clang-3.4+, GCC-5.1+, MSVC-2015+)\""
     echo "#else"
-    echo "#define BOOST_DI_VERSION 1'0'0"
+    echo "#define BOOST_DI_VERSION 0'9'0"
     echo "#if !defined(BOOST_DI_CFG_DIAGNOSTICS_LEVEL)"
     echo "#define BOOST_DI_CFG_DIAGNOSTICS_LEVEL 1"
     echo "#endif"
