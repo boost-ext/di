@@ -15,7 +15,7 @@
 namespace concepts {
 
 template <class...>
-struct bind {
+struct type_ {
   template <class TName>
   struct named {
     struct is_bound_more_than_once : aux::false_type {};
@@ -62,17 +62,17 @@ struct get_is_unique_error_impl : aux::true_type {};
 
 template <class T, class TName, class TPriority>
 struct get_is_unique_error_impl<aux::not_unique<aux::pair<aux::pair<T, TName>, TPriority>>> {
-  using type = typename bind<T>::template named<TName>::is_bound_more_than_once;
+  using type = typename type_<T>::template named<TName>::is_bound_more_than_once;
 };
 
 template <class T, class TPriority>
 struct get_is_unique_error_impl<aux::not_unique<aux::pair<aux::pair<T, no_name>, TPriority>>> {
-  using type = typename bind<T>::is_bound_more_than_once;
+  using type = typename type_<T>::is_bound_more_than_once;
 };
 
 template <class T>
 struct get_is_unique_error_impl<aux::not_unique<T>> {
-  using type = typename bind<T>::is_bound_more_than_once;
+  using type = typename type_<T>::is_bound_more_than_once;
 };
 
 template <class>
@@ -85,7 +85,7 @@ struct get_is_unique_error<aux::type_list<TDeps...>>
 template <class... TDeps>
 using get_bindings_error = aux::conditional_t<
     is_supported<TDeps...>::value, typename get_is_unique_error<core::bindings_t<TDeps...>>::type,
-    typename bind<typename get_not_supported<TDeps...>::type>::is_neither_a_dependency_nor_an_injector>;
+    typename type_<typename get_not_supported<TDeps...>::type>::is_neither_a_dependency_nor_an_injector>;
 
 template <class... Ts>
 using get_any_of_error =
@@ -119,17 +119,17 @@ auto boundable_impl(any_of<> && ) -> aux::true_type;
 template <class T, class... Ts>  // expected
 auto boundable_impl(any_of<T, Ts...> && ) -> aux::conditional_t<aux::is_same<T, aux::decay_t<T>>::value,
                                                                 decltype(boundable_impl(aux::declval<any_of<Ts...>>())),
-                                                                typename bind<T>::has_disallowed_qualifiers>;
+                                                                typename type_<T>::has_disallowed_qualifiers>;
 
 template <class I, class T>  // expected -> given
 auto boundable_impl(I&&, T && ) -> aux::conditional_t<
     !aux::is_same<T, aux::decay_t<T>>::value  // I is already verified
     ,
-    typename bind<T>::has_disallowed_qualifiers,
+    typename type_<T>::has_disallowed_qualifiers,
     aux::conditional_t<is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value,
                        aux::conditional_t<is_abstract<aux::is_complete<T>::value, T>::value,
-                                          typename bind<T>::is_abstract, aux::true_type>,
-                       typename bind<T>::template is_not_related_to<I>>>;
+                                          typename type_<T>::is_abstract, aux::true_type>,
+                       typename type_<T>::template is_not_related_to<I>>>;
 
 template <class I, class T>  // array[]
 auto boundable_impl(I[], T && ) -> aux::true_type;

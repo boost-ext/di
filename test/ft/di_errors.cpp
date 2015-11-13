@@ -119,9 +119,8 @@ test bind_named_to_named = [] {
 };
 
 test bind_external_with_given_value = [] {
-  expect_compile_fail("", errors(), int main() {
-    di::make_injector(di::bind<int>>.to(42);.to < std::integral_constant<int>().to<0>());
-  });
+  expect_compile_fail("", errors(),
+                      int main() { di::make_injector(di::bind<int>().to<std::integral_constant<int>>(0)); });
 };
 
 test bind_in_not_scopable_type = [] {
@@ -139,38 +138,38 @@ test bind_in_not_scopable_type = [] {
 };
 
 test bind_has_disallowed_qualifiers_expected = [] {
-  auto errors_ = errors("constraint not satisfied", "bind<.*int.*\\*>::has_disallowed_qualifiers");
+  auto errors_ = errors("constraint not satisfied", "type_<.*int.*\\*>::has_disallowed_qualifiers");
 
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int*>()); });
 };
 
 test bind_has_disallowed_qualifiers_given = [] {
-  auto errors_ = errors("constraint not satisfied", "bind<const.*int.*&>::has_disallowed_qualifiers");
+  auto errors_ = errors("constraint not satisfied", "type_<const.*int.*&>::has_disallowed_qualifiers");
 
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>().to<const int&>()); });
 };
 
 test bind_has_disallowed_qualifiers_expected_complex = [] {
-  auto errors_ = errors("constraint not satisfied", "bind<.*shared_ptr.*int.*>::has_disallowed_qualifiers");
+  auto errors_ = errors("constraint not satisfied", "type_<.*shared_ptr.*int.*>::has_disallowed_qualifiers");
 
   expect_compile_fail("<include> memory", errors_, int main() { di::make_injector(di::bind<std::shared_ptr<int>>()); });
 };
 
 test bind_has_disallowed_qualifiers_given_complex = [] {
-  auto errors_ = errors("constraint not satisfied", "bind<.*shared_ptr.*int.*>::has_disallowed_qualifiers");
+  auto errors_ = errors("constraint not satisfied", "type_<.*shared_ptr.*int.*>::has_disallowed_qualifiers");
 
   expect_compile_fail("<include> memory", errors_,
                       int main() { di::make_injector(di::bind<int, std::shared_ptr<int>>()); });
 };
 
 test bind_external_repeated = [] {
-  auto errors_ = errors("constraint not satisfied", "bind<.*int>::is_bound_more_than_once");
+  auto errors_ = errors("constraint not satisfied", "type_<.*int>::is_bound_more_than_once");
 
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>().to(42), di::bind<int>().to(87)); });
 };
 
 test bind_multiple_times = [] {
-  auto errors_ = errors("constraint not satisfied", "bind<.*i>::is_bound_more_than_once");
+  auto errors_ = errors("constraint not satisfied", "type_<.*i>::is_bound_more_than_once");
 
   expect_compile_fail("", errors_, struct i{}; struct impl1
                       : i{};
@@ -182,9 +181,9 @@ test bind_multiple_times = [] {
 test bind_narrowed_type = [] {
   auto errors_ = errors("constraint not satisfied",
 #if defined(_MSC_VER)
-                        "bind<.*>::is_not_related_to<int>", "=.*double"
+                        "type_<.*>::is_not_related_to<int>", "=.*double"
 #else
-                        "bind<.*double>::is_not_related_to<int>"
+                        "type_<.*double>::is_not_related_to<int>"
 #endif
                         );
 
@@ -194,9 +193,9 @@ test bind_narrowed_type = [] {
 test bind_not_compatible_types = [] {
   auto errors_ = errors("constraint not satisfied",
 #if defined(_MSC_VER)
-                        "bind<.*>::is_not_related_to<int>", "=.*impl"
+                        "type_<.*>::is_not_related_to<int>", "=.*impl"
 #else
-                        "bind<.*impl>::is_not_related_to<int>"
+                        "type_<.*impl>::is_not_related_to<int>"
 #endif
                         );
 
@@ -208,9 +207,9 @@ test bind_not_compatible_types = [] {
 test bind_any_of_not_related = [] {
   auto errors_ = errors("constraint not satisfied",
 #if defined(_MSC_VER)
-                        "bind<.*>::is_not_related_to<.*a>.*bind<.*>::is_not_related_to<.*b>", "=.*c"
+                        "type_<.*>::is_not_related_to<.*a>.*type_<.*>::is_not_related_to<.*b>", "=.*c"
 #else
-                        "bind<.*c>::is_not_related_to<.*a>.*bind<.*c>::is_not_related_to<.*b>"
+                        "type_<.*c>::is_not_related_to<.*a>.*type_<.*c>::is_not_related_to<.*b>"
 #endif
                         );
 
@@ -222,9 +221,9 @@ test bind_any_of_not_related = [] {
 test bind_is_abstract_type = [] {
   auto errors_ = errors("constraint not satisfied",
 #if defined(_MSC_VER)
-                        "bind<.*>::is_abstract", "=.*impl"
+                        "type_<.*>::is_abstract", "=.*impl"
 #else
-                        "bind<.*impl>::is_abstract"
+                        "type_<.*impl>::is_abstract"
 #endif
                         );
 
@@ -235,15 +234,15 @@ test bind_is_abstract_type = [] {
                       };
                       struct impl
                       : i{};
-                      struct c{c(i*){}}; int main(){di::make_injector(di::bind<i>().to<impl>())});
+                      struct c{c(i*){}}; int main() { di::make_injector(di::bind<i>().to<impl>()); });
 };
 
 test bind_is_abstract_type_named = [] {
   auto errors_ = errors("constraint not satisfied",
 #if defined(_MSC_VER)
-                        "bind<.*>::is_abstract", "=.*impl"
+                        "type_<.*>::is_abstract", "=.*impl"
 #else
-                        "bind<.*impl>::is_abstract"
+                        "type_<.*impl>::is_abstract"
 #endif
                         );
   expect_compile_fail("", errors_,
@@ -258,7 +257,7 @@ test bind_is_abstract_type_named = [] {
 };
 
 test bind_repeated = [] {
-  auto errors_ = errors("constraint not satisfied", "bind<.*i>::is_bound_more_than_once");
+  auto errors_ = errors("constraint not satisfied", "type_<.*i>::is_bound_more_than_once");
 
   expect_compile_fail("", errors_, struct i{}; struct impl1
                       : i{};
@@ -268,7 +267,7 @@ test bind_repeated = [] {
 };
 
 test bind_to_different_types = [] {
-  auto errors_ = errors("constraint not satisfied", "bind<.*i>::is_bound_more_than_once");
+  auto errors_ = errors("constraint not satisfied", "type_<.*i>::is_bound_more_than_once");
 
   expect_compile_fail("", errors_, struct i{}; struct impl1
                       : i{};
@@ -280,9 +279,9 @@ test bind_to_different_types = [] {
 test exposed_multiple_times = [] {
   auto errors_ = errors("constraint not satisfied",
 #if defined(_MSC_VER)
-                        "bind<.*>::is_bound_more_than_once", "=.*c"
+                        "type_<.*>::is_bound_more_than_once", "=.*c"
 #else
-                        "bind<.*c>::is_bound_more_than_once"
+                        "type_<.*c>::is_bound_more_than_once"
 #endif
                         );
 
@@ -292,9 +291,9 @@ test exposed_multiple_times = [] {
 test make_injector_wrong_arg = [] {
   auto errors_ = errors("constraint not satisfied",
 #if defined(_MSC_VER)
-                        "bind<.*>::is_neither_a_dependency_nor_an_injector", "=.*dummy"
+                        "type_<.*>::is_neither_a_dependency_nor_an_injector", "=.*dummy"
 #else
-                        "bind<.*dummy>::is_neither_a_dependency_nor_an_injector"
+                        "type_<.*dummy>::is_neither_a_dependency_nor_an_injector"
 #endif
                         );
 
@@ -815,7 +814,7 @@ int main() { di::make_injector<test_config>(); }
 
 #if !defined(_MSC_VER)
     test access_dependency_is_referable = [] {
-      expect_compile_fail("", errors(), int main() {
+      expect_compile_fail("<include> type_traits", errors(), int main() {
         using type = std::remove_reference_t<decltype(di::bind<int>())>::is_referable<int>;
       });
     };

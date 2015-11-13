@@ -32,14 +32,14 @@ pph() {
     echo "BOOST_DI_CFG_FWD"
     echo "#endif"
     rm -rf tmp && mkdir tmp && cp -r boost tmp && cd tmp
-    find . -iname "*.hpp" | xargs sed -i "s/BOOST_DI_NAMESPACE/::boost::di::v1/g"
+    find . -iname "*.hpp" | xargs sed -i "s/BOOST_DI_NAMESPACE/::boost::di::v0_9_0/g"
     find . -iname "*.hpp" | xargs sed -i "s/\(.*\)__pph__/\/\/\/\/\1/g"
     find . -iname "*.hpp" | xargs sed -i "s/.*\(clang-format.*\)/\/\/\/\/\1/g"
     tail -n +10 "boost/di/aux_/compiler.hpp" | head -n -2 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g" | sed "s/\/\/\/\///"
 
     echo '
         #include "boost/di/fwd_ext.hpp"
-namespace boost { namespace di { inline namespace v1 {
+namespace boost { namespace di { inline namespace v0_9_0 {
         #include "boost/di/config.hpp"
         #include "boost/di/bindings.hpp"
         #include "boost/di/inject.hpp"

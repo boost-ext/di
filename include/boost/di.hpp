@@ -80,7 +80,7 @@ class shared_ptr;
 }
 namespace boost {
 namespace di {
-inline namespace v1 {
+inline namespace v0_9_0 {
 struct _ {
   _(...) {}
 };
@@ -220,8 +220,8 @@ struct boundable__;
 template <class...>
 struct any_of;
 }
-#define BOOST_DI_REQUIRES(...) typename ::boost::di::v1::aux::enable_if<__VA_ARGS__, int>::type
-#define BOOST_DI_REQUIRES_MSG(...) typename ::boost::di::v1::aux::concept_check<__VA_ARGS__>::type
+#define BOOST_DI_REQUIRES(...) typename ::boost::di::v0_9_0::aux::enable_if<__VA_ARGS__, int>::type
+#define BOOST_DI_REQUIRES_MSG(...) typename ::boost::di::v0_9_0::aux::concept_check<__VA_ARGS__>::type
 namespace aux {
 template <class T>
 T&& declval();
@@ -435,11 +435,11 @@ struct is_unique_impl<T1, T2, Ts...>
 template <class... Ts>
 using is_unique = is_unique_impl<none_type, Ts...>;
 template <class T, class... TArgs>
-decltype(::boost::di::v1::aux::declval<T>().operator()(::boost::di::v1::aux::declval<TArgs>()...),
-         ::boost::di::v1::aux::true_type())
+decltype(::boost::di::v0_9_0::aux::declval<T>().operator()(::boost::di::v0_9_0::aux::declval<TArgs>()...),
+         ::boost::di::v0_9_0::aux::true_type())
 is_callable_with_impl(int);
 template <class, class...>
-::boost::di::v1::aux::false_type is_callable_with_impl(...);
+::boost::di::v0_9_0::aux::false_type is_callable_with_impl(...);
 template <class T, class... TArgs>
 struct is_callable_with : decltype(is_callable_with_impl<T, TArgs...>(0)) {};
 struct callable_base_impl {
@@ -799,9 +799,9 @@ class deduce {
 }
 namespace scopes {
 template <class, class = int>
-struct has_deps : ::boost::di::v1::aux::false_type {};
+struct has_deps : ::boost::di::v0_9_0::aux::false_type {};
 template <class T>
-struct has_deps<T, ::boost::di::v1::aux::valid_t<typename T::deps>> : ::boost::di::v1::aux::true_type {};
+struct has_deps<T, ::boost::di::v0_9_0::aux::valid_t<typename T::deps>> : ::boost::di::v0_9_0::aux::true_type {};
 template <class TScope = scopes::deduce>
 class exposed {
  public:
@@ -896,9 +896,10 @@ class no_implicit_conversions : public T {
   operator U() const;
 };
 template <class, class = int>
-struct has_result_type : ::boost::di::v1::aux::false_type {};
+struct has_result_type : ::boost::di::v0_9_0::aux::false_type {};
 template <class T>
-struct has_result_type<T, ::boost::di::v1::aux::valid_t<typename T::result_type>> : ::boost::di::v1::aux::true_type {};
+struct has_result_type<T, ::boost::di::v0_9_0::aux::valid_t<typename T::result_type>>
+    : ::boost::di::v0_9_0::aux::true_type {};
 template <class TGiven, class TProvider, class... Ts>
 struct is_expr
     : aux::integral_constant<
@@ -1049,9 +1050,9 @@ using scopable = typename scopable__<T>::type;
 }
 namespace core {
 template <class, class = int>
-struct is_injector : ::boost::di::v1::aux::false_type {};
+struct is_injector : ::boost::di::v0_9_0::aux::false_type {};
 template <class T>
-struct is_injector<T, ::boost::di::v1::aux::valid_t<typename T::deps>> : ::boost::di::v1::aux::true_type {};
+struct is_injector<T, ::boost::di::v0_9_0::aux::valid_t<typename T::deps>> : ::boost::di::v0_9_0::aux::true_type {};
 template <class>
 struct array_type;
 template <class T>
@@ -1221,10 +1222,10 @@ using callable = typename is_callable<Ts...>::type;
 #endif
 namespace type_traits {
 template <class, class = int>
-struct is_injectable : ::boost::di::v1::aux::false_type {};
+struct is_injectable : ::boost::di::v0_9_0::aux::false_type {};
 template <class T>
-struct is_injectable<T, ::boost::di::v1::aux::valid_t<typename T::boost_di_inject__>>
-    : ::boost::di::v1::aux::true_type {};
+struct is_injectable<T, ::boost::di::v0_9_0::aux::valid_t<typename T::boost_di_inject__>>
+    : ::boost::di::v0_9_0::aux::true_type {};
 struct direct {};
 struct uniform {};
 template <class T, int>
@@ -1418,7 +1419,7 @@ class stack_over_heap {
 };
 }
 #if !defined(BOOST_DI_CFG)
-#define BOOST_DI_CFG ::boost::di::v1::config
+#define BOOST_DI_CFG ::boost::di::v0_9_0::config
 #endif
 template <class... TPolicies, BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>) = 0>
 inline auto make_policies(const TPolicies&... args) noexcept {
@@ -1461,7 +1462,7 @@ using bindings_t = aux::join_t<typename bindings_impl<Ts>::type...>;
 }
 namespace concepts {
 template <class...>
-struct bind {
+struct type_ {
   template <class TName>
   struct named {
     struct is_bound_more_than_once : aux::false_type {};
@@ -1498,15 +1499,15 @@ template <class>
 struct get_is_unique_error_impl : aux::true_type {};
 template <class T, class TName, class TPriority>
 struct get_is_unique_error_impl<aux::not_unique<aux::pair<aux::pair<T, TName>, TPriority>>> {
-  using type = typename bind<T>::template named<TName>::is_bound_more_than_once;
+  using type = typename type_<T>::template named<TName>::is_bound_more_than_once;
 };
 template <class T, class TPriority>
 struct get_is_unique_error_impl<aux::not_unique<aux::pair<aux::pair<T, no_name>, TPriority>>> {
-  using type = typename bind<T>::is_bound_more_than_once;
+  using type = typename type_<T>::is_bound_more_than_once;
 };
 template <class T>
 struct get_is_unique_error_impl<aux::not_unique<T>> {
-  using type = typename bind<T>::is_bound_more_than_once;
+  using type = typename type_<T>::is_bound_more_than_once;
 };
 template <class>
 struct get_is_unique_error;
@@ -1516,7 +1517,7 @@ struct get_is_unique_error<aux::type_list<TDeps...>>
 template <class... TDeps>
 using get_bindings_error = aux::conditional_t<
     is_supported<TDeps...>::value, typename get_is_unique_error<core::bindings_t<TDeps...>>::type,
-    typename bind<typename get_not_supported<TDeps...>::type>::is_neither_a_dependency_nor_an_injector>;
+    typename type_<typename get_not_supported<TDeps...>::type>::is_neither_a_dependency_nor_an_injector>;
 template <class... Ts>
 using get_any_of_error =
     aux::conditional_t<aux::is_same<aux::bool_list<aux::always<Ts>::value...>,
@@ -1543,14 +1544,14 @@ auto boundable_impl(any_of<> && ) -> aux::true_type;
 template <class T, class... Ts>
 auto boundable_impl(any_of<T, Ts...> && ) -> aux::conditional_t<aux::is_same<T, aux::decay_t<T>>::value,
                                                                 decltype(boundable_impl(aux::declval<any_of<Ts...>>())),
-                                                                typename bind<T>::has_disallowed_qualifiers>;
+                                                                typename type_<T>::has_disallowed_qualifiers>;
 template <class I, class T>
 auto boundable_impl(I&&, T && ) -> aux::conditional_t<
-    !aux::is_same<T, aux::decay_t<T>>::value, typename bind<T>::has_disallowed_qualifiers,
+    !aux::is_same<T, aux::decay_t<T>>::value, typename type_<T>::has_disallowed_qualifiers,
     aux::conditional_t<is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value,
                        aux::conditional_t<is_abstract<aux::is_complete<T>::value, T>::value,
-                                          typename bind<T>::is_abstract, aux::true_type>,
-                       typename bind<T>::template is_not_related_to<I>>>;
+                                          typename type_<T>::is_abstract, aux::true_type>,
+                       typename type_<T>::template is_not_related_to<I>>>;
 template <class I, class T>
 auto boundable_impl(I[], T && ) -> aux::true_type;
 template <class... TDeps>
@@ -2723,7 +2724,7 @@ struct named_impl {
 static constexpr BOOST_DI_UNUSED named_impl named{};
 template <class T, class TName>
 struct combine_impl {
-  using type = ::boost::di::v1::named<TName, T>;
+  using type = ::boost::di::v0_9_0::named<TName, T>;
 };
 template <class T>
 struct combine_impl<T, aux::none_type> {
@@ -2751,23 +2752,23 @@ using inject = aux::type_list<Ts...>;
   BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_EAT p, p)
 #define BOOST_DI_GEN_CTOR(i, ...) BOOST_DI_GEN_CTOR_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__, ), i)
 #define BOOST_DI_GEN_ARG_NAME(p) BOOST_DI_GEN_ARG_NAME_IMPL p )
-#define BOOST_DI_GEN_NONE_TYPE(p) ::boost::di::v1::aux::none_type
-#define BOOST_DI_GEN_ARG_NAME_IMPL(p) decltype(::boost::di::v1::detail::p) BOOST_DI_EAT(
+#define BOOST_DI_GEN_NONE_TYPE(p) ::boost::di::v0_9_0::aux::none_type
+#define BOOST_DI_GEN_ARG_NAME_IMPL(p) decltype(::boost::di::v0_9_0::detail::p) BOOST_DI_EAT(
 #define BOOST_DI_GEN_NAME_IMPL(p, i) \
   BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
     BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_GEN_ARG_NAME, BOOST_DI_GEN_NONE_TYPE)(p)
 #define BOOST_DI_GEN_NAME(i, ...) BOOST_DI_GEN_NAME_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__, ), i)
 #define BOOST_DI_INJECT_TRAITS_IMPL_0(...)                                                       \
   static void ctor(BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__)); \
-  using type BOOST_DI_UNUSED = decltype(::boost::di::v1::detail::ctor__<boost_di_inject__>(0));
-#define BOOST_DI_INJECT_TRAITS_IMPL_1(...)                                                                \
-  static void ctor(BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__));          \
-  static void name(BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_NAME, __VA_ARGS__));          \
-  using type BOOST_DI_UNUSED =                                                                            \
-      ::boost::di::v1::detail::combine_t<decltype(::boost::di::v1::detail::ctor__<boost_di_inject__>(0)), \
-                                         ::boost::di::v1::aux::function_traits_t<decltype(name)>>;
+  using type BOOST_DI_UNUSED = decltype(::boost::di::v0_9_0::detail::ctor__<boost_di_inject__>(0));
+#define BOOST_DI_INJECT_TRAITS_IMPL_1(...)                                                                        \
+  static void ctor(BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__));                  \
+  static void name(BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_NAME, __VA_ARGS__));                  \
+  using type BOOST_DI_UNUSED =                                                                                    \
+      ::boost::di::v0_9_0::detail::combine_t<decltype(::boost::di::v0_9_0::detail::ctor__<boost_di_inject__>(0)), \
+                                             ::boost::di::v0_9_0::aux::function_traits_t<decltype(name)>>;
 #define BOOST_DI_INJECT_TRAITS_EMPTY_IMPL(...) \
-  using boost_di_inject__ BOOST_DI_UNUSED = ::boost::di::v1::aux::type_list<>
+  using boost_di_inject__ BOOST_DI_UNUSED = ::boost::di::v0_9_0::aux::type_list<>
 #define BOOST_DI_INJECT_TRAITS_IMPL(...)                                                                                                                                                                                                                                                                       \
   struct boost_di_inject__ {                                                                                                                                                                                                                                                                                   \
     BOOST_DI_CAT(BOOST_DI_INJECT_TRAITS_IMPL_, BOOST_DI_HAS_NAMES(__VA_ARGS__))(__VA_ARGS__) \
