@@ -9,6 +9,14 @@
 #error "Boost.DI requires C++14 support (Clang-3.4+, GCC-5.1+, MSVC-2015+)"
 #else
 #define BOOST_DI_VERSION 0'9'0
+#define BOOST_DI_NAMESPACE_BEGIN \
+  namespace boost {              \
+  namespace di {                 \
+  inline namespace v0_9_0 {
+#define BOOST_DI_NAMESPACE_END \
+  }                            \
+  }                            \
+  }
 #if !defined(BOOST_DI_CFG_DIAGNOSTICS_LEVEL)
 #define BOOST_DI_CFG_DIAGNOSTICS_LEVEL 1
 #endif
@@ -78,9 +86,7 @@ namespace boost {
 template <class>
 class shared_ptr;
 }
-namespace boost {
-namespace di {
-inline namespace v0_9_0 {
+BOOST_DI_NAMESPACE_BEGIN
 struct _ {
   _(...) {}
 };
@@ -2786,9 +2792,7 @@ using inject = aux::type_list<Ts...>;
 #define BOOST_DI_INJECT(T, ...)        \
   BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
   T(BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__))
-}
-}
-}
+BOOST_DI_NAMESPACE_END
 #endif
 #if defined(__clang__)
 #pragma clang diagnostic pop

@@ -236,18 +236,18 @@ matrix:
         - bc
         sources:
         - ubuntu-toolchain-r-test
-  #- os: osx
-    #osx_image: xcode6.1
-    #env: BJAM=clang COMPILER=clang++
-  #- os: osx
-    #osx_image: xcode6.1
-    #env: CMAKE=ON COMPILER=clang++
   - os: osx
-    osx_image: xcode6.4
+    osx_image: xcode6.1
     env: BJAM=clang COMPILER=clang++
   - os: osx
-    osx_image: xcode6.4
+    osx_image: xcode6.1
     env: CMAKE=ON COMPILER=clang++
+  #- os: osx
+    #osx_image: xcode6.4
+    #env: BJAM=clang COMPILER=clang++
+  #- os: osx
+    #osx_image: xcode6.4
+    #env: CMAKE=ON COMPILER=clang++
   - os: osx
     osx_image: xcode7
     env: BJAM=clang COMPILER=clang++

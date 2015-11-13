@@ -7,6 +7,7 @@
 #
 
 pph() {
+	version=$1 revision=$2 patch=$3
     echo "//"
     echo "// Copyright (c) 2012-2015 Krzysztof Jusiak (krzysztof at jusiak dot net)"
     echo "//"
@@ -17,7 +18,9 @@ pph() {
     echo "#if (__cplusplus < 201305L && _MSC_VER < 1900)"
     echo "#error \"Boost.DI requires C++14 support (Clang-3.4+, GCC-5.1+, MSVC-2015+)\""
     echo "#else"
-    echo "#define BOOST_DI_VERSION 0'9'0"
+    echo "#define BOOST_DI_VERSION $version'$revision'$patch"
+    echo "#define BOOST_DI_NAMESPACE_BEGIN namespace boost { namespace di { inline namespace v${version}_${revision}_${patch} {"
+    echo "#define BOOST_DI_NAMESPACE_END }}}"
     echo "#if !defined(BOOST_DI_CFG_DIAGNOSTICS_LEVEL)"
     echo "#define BOOST_DI_CFG_DIAGNOSTICS_LEVEL 1"
     echo "#endif"
@@ -32,14 +35,14 @@ pph() {
     echo "BOOST_DI_CFG_FWD"
     echo "#endif"
     rm -rf tmp && mkdir tmp && cp -r boost tmp && cd tmp
-    find . -iname "*.hpp" | xargs sed -i "s/BOOST_DI_NAMESPACE/::boost::di::v0_9_0/g"
+    find . -iname "*.hpp" | xargs sed -i "s/BOOST_DI_NAMESPACE/::boost::di::v${version}_${revision}_${patch}/g"
     find . -iname "*.hpp" | xargs sed -i "s/\(.*\)__pph__/\/\/\/\/\1/g"
     find . -iname "*.hpp" | xargs sed -i "s/.*\(clang-format.*\)/\/\/\/\/\1/g"
     tail -n +10 "boost/di/aux_/compiler.hpp" | head -n -2 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g" | sed "s/\/\/\/\///"
 
     echo '
         #include "boost/di/fwd_ext.hpp"
-namespace boost { namespace di { inline namespace v0_9_0 {
+		BOOST_DI_NAMESPACE_BEGIN
         #include "boost/di/config.hpp"
         #include "boost/di/bindings.hpp"
         #include "boost/di/inject.hpp"
@@ -65,7 +68,7 @@ namespace boost { namespace di { inline namespace v0_9_0 {
             sed "s/^##define/#define/g"
     tail -n +10 "boost/di/aux_/preprocessor.hpp" | head -n -2 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
     tail -n +15 "boost/di/inject.hpp" | head -n -2 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
-    echo "}}}"
+    echo "BOOST_DI_NAMESPACE_END"
     cd .. && rm -rf tmp
     echo "#endif"
     echo "#if defined(__clang__)"
@@ -84,6 +87,6 @@ namespace boost { namespace di { inline namespace v0_9_0 {
     echo
 }
 
-cd "`readlink -f \`dirname $0\``/../include" && pph > "boost/di.hpp"
+cd "`readlink -f \`dirname $0\``/../include" && pph `head -1 ../CHANGELOG  | sed "s/.*\[\(.*\)\].*/\1/" | tr '.' ' '` > "boost/di.hpp"
 clang-format -i "boost/di.hpp"
 
