@@ -39,7 +39,7 @@ example(performance/create_type_with_bound_instance)
 example(performance/create_type_without_bindings)
 
 example(extensions/bindings/constructor_bindings)
-example(extensions/injections/assisted_injection)
+#example(extensions/injections/assisted_injection)
 example(extensions/injections/named_parameters)
 example(extensions/injections/xml_injection)
 example(extensions/policies/types_dumper)
