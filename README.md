@@ -82,7 +82,9 @@ private:                                |         pump->pump();
 ```sh
 	curl https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/include/boost/di.hpp \
 		--create-dirs -o boost/di.hpp
+```
 
+```sh
 	cat << EOF > main.cpp
 	#include <boost/di.hpp>
 
@@ -95,7 +97,9 @@ private:                                |         pump->pump();
 
 		return injector.create<int>();
 	}
+```
 
+```sh
     $CXX -std=c++14 -I. -fno-exceptions \
 			  		    -fno-rtti \
 						-nostdinc \
