@@ -7,7 +7,6 @@
 #include <memory>
 #include <cstdlib>
 #include <cstdio>
-#include <stdexcept>
 #include <fstream>
 #include <regex>
 #include <vector>
@@ -85,7 +84,8 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
 #endif
 
     if (lines >= MAX_ERROR_LINES_COUNT) {
-      throw std::runtime_error(command.str() + " | lines < MAX_ERROR_LINES_COUNT");
+      std::clog << command.str() << " | lines < MAX_ERROR_LINES_COUNT" << std::endl;
+      expect(false);
     }
   }
 
@@ -93,7 +93,8 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
     for (const auto& line : out) {
       std::clog << line << std::endl;
     }
-    throw std::runtime_error(command.str());
+    std::clog << command.str() << std::endl;
+    expect(false);
   }
 }
 

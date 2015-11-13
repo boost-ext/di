@@ -29,8 +29,6 @@ struct i2 {
   virtual int get() = 0;
 };
 
-class not_implemented : public std::exception {};
-
 class expectations : public std::map<std::type_index, std::function<std::shared_ptr<void>()>> {
  public:
   template <class T>
@@ -64,7 +62,7 @@ class mocks_provider : public di::config {
           return *(int*)it->second().get();
         }
 
-        throw not_implemented{};
+        assert(false && "not implemented");
       }
 
      private:
@@ -134,7 +132,7 @@ class mocks_provider : public di::config {
 template <class TInjector, class R, class T, class... TArgs>
 expectations& expect(TInjector&, R (T::*)(TArgs...)) {
   TInjector::config::get_expectations().add(std::type_index(typeid(T)), [] {
-    throw not_implemented{};
+    assert(false && "not implemented");
     return nullptr;
   });
   return TInjector::config::get_expectations();

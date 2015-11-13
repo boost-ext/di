@@ -34,10 +34,10 @@ project boost.di :
 
 rule test ( src + : property * : defines * : options * ) {
     toolset =
-        <toolset>gcc:<cxxflags>"-std=c++1y -include common/test.hpp -Wall -Wextra -Werror" # no pedantic due to gcc bug
+        <toolset>gcc:<cxxflags>"-std=c++1y -include common/test.hpp -fno-exceptions -Wall -Wextra -Werror" # no pedantic due to gcc bug
         <toolset>gcc-6.0.0:<cxxflags>"-std=c++1z"
-        <toolset>clang:<cxxflags>"-std=c++1y -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
-        <toolset>darwin:<cxxflags>"-std=c++1y -include common/test.hpp -pedantic -pedantic-errors -Wall -Wextra -Werror"
+        <toolset>clang:<cxxflags>"-std=c++1y -include common/test.hpp -fno-exceptions -pedantic -pedantic-errors -Wall -Wextra -Werror"
+        <toolset>darwin:<cxxflags>"-std=c++1y -include common/test.hpp -fno-exceptions -pedantic -pedantic-errors -Wall -Wextra -Werror"
         <toolset>msvc:<cxxflags>"/FI common/test.hpp /W3 /D_CRT_SECURE_NO_WARNINGS"
     ;
 
@@ -91,7 +91,6 @@ test-suite ut :
 
 test-suite ft :
     [ test ft/di_bind.cpp ]
-    [ test ft/di_bind_no_memory_header.cpp ]
     [ test ft/di_config.cpp ]
     [ test ft/di_config_global_policies.cpp ]
     [ test ft/di_config_global_provider.cpp ]
@@ -99,6 +98,8 @@ test-suite ft :
     [ test ft/di_inject.cpp ]
     [ test ft/di_injector.cpp ]
     [ test ft/di_modules.cpp ]
+    [ test ft/di_no_memory_inc.cpp ]
+    [ test ft/di_no_std_inc.cpp ]
 ;
 
 test-suite pt :
