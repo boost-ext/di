@@ -43,10 +43,11 @@ class electric_heater : public iheater {
 };
 
 void no_di() {
-  struct coffee_maker {
+  class coffee_maker {
     std::shared_ptr<iheater> heater = std::make_shared<electric_heater>();
     std::unique_ptr<ipump> pump = std::make_unique<heat_pump>(heater);
 
+  public:
     void brew() {
       heater->on();
       pump->pump();
@@ -59,15 +60,21 @@ void no_di() {
 }
 
 void manual_di() {
-  struct coffee_maker {
-    std::shared_ptr<iheater> heater;
-    std::unique_ptr<ipump> pump;
+  class coffee_maker {
+  public:
+    coffee_maker(const std::shared_ptr<iheater>& heater, std::unique_ptr<ipump> pump)
+        : heater(heater), pump(std::move(pump))
+    { }
 
     void brew() {
       heater->on();
       pump->pump();
       heater->off();
     }
+
+  private:
+    std::shared_ptr<iheater> heater;
+    std::unique_ptr<ipump> pump;
   };
 
   // has to be before pump
@@ -82,14 +89,20 @@ void manual_di() {
 
 void automatic_di() {
   struct coffee_maker {
-    std::shared_ptr<iheater> heater;
-    std::unique_ptr<ipump> pump;
+  public:
+    coffee_maker(const std::shared_ptr<iheater>& heater, std::unique_ptr<ipump> pump)
+        : heater(heater), pump(std::move(pump))
+    { }
 
     void brew() {
       heater->on();
       pump->pump();
       heater->off();
     }
+
+  private:
+    std::shared_ptr<iheater> heater;
+    std::unique_ptr<ipump> pump;
   };
 
   auto injector = di::make_injector(di::bind<ipump>().to<heat_pump>(), di::bind<iheater>().to<electric_heater>());
