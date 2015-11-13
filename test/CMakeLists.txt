@@ -66,6 +66,7 @@ test(ft/di_inject)
 test(ft/di_injector)
 test(ft/di_modules)
 test(ft/di_no_memory_inc)
+set_source_files_properties(ft/di_no_std_inc.cpp PROPERTIES COMPILE_FLAGS -DBOOST_DI_TEST_HPP)
 test(ft/di_no_std_inc)
 
 test(pt/di_compile_time)
