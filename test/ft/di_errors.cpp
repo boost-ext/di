@@ -415,6 +415,17 @@ int main() { di::make_injector<test_config>(); }
 
     // ---------------------------------------------------------------------------
 
+    test mismatch_between_ctor_declaration_and_definition = [] {
+      expect_compile_fail("", errors(), struct c { BOOST_DI_INJECT(c, int, double); }; c::c(int) {} int main(){});
+    };
+
+    test mismatch_between_ctor_declaration_and_definition_named = [] {
+      expect_compile_fail("", errors(), struct c { BOOST_DI_INJECT(c, int, (named = int{}) double); };
+                          c::c(double, int) {} int main(){});
+    };
+
+    // ---------------------------------------------------------------------------
+
     test create_polymorphic_type_without_binding = [] {
       auto errors_ = errors(
 #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
