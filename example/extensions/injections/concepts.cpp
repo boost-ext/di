@@ -21,7 +21,7 @@ int main() {}
 
 namespace boost {
 namespace di {
-namespace v1 {
+namespace v0_9_0 {
 namespace detail {
 template <class T>
 auto ctor__(int) -> aux::function_traits_t<decltype(&T::template ctor<di::_>)>;
