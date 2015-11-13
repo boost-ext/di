@@ -19,22 +19,17 @@ namespace di = boost::di;
 int main() {}
 #else
 
-namespace boost {
-namespace di {
-namespace v0_9_0 {
-namespace detail {
-template <class T>
-auto ctor__(int) -> aux::function_traits_t<decltype(&T::template ctor<di::_>)>;
+BOOST_DI_NAMESPACE_BEGIN namespace detail {
+  template <class T>
+  auto ctor__(int)->aux::function_traits_t<decltype(&T::template ctor<di::_>)>;
 
-template <class T>
-auto ctor__(int) -> aux::function_traits_t<decltype(&T::template ctor<di::_, di::_>)>;
+  template <class T>
+  auto ctor__(int)->aux::function_traits_t<decltype(&T::template ctor<di::_, di::_>)>;
 
-template <class T>
-auto ctor__(int) -> aux::function_traits_t<decltype(&T::template ctor<di::_, di::_, di::_>)>;
+  template <class T>
+  auto ctor__(int)->aux::function_traits_t<decltype(&T::template ctor<di::_, di::_, di::_>)>;
 }
-}
-}
-}
+BOOST_DI_NAMESPACE_END
 
 template <class T, class>
 struct generic_traits {

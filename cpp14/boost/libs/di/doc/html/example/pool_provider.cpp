@@ -14,44 +14,38 @@
 #include <boost/di.hpp>
 
 //<-
-namespace boost {
-namespace di {
-inline namespace v0_9_0 {
-namespace wrappers {
+BOOST_DI_NAMESPACE_BEGIN namespace wrappers {
+  template <class T, class TDeleter>
+  struct unique<std::unique_ptr<T, TDeleter>> {
+    template <class I>
+    inline operator I() const noexcept {
+      return *object;
+    }
 
-template <class T, class TDeleter>
-struct unique<std::unique_ptr<T, TDeleter>> {
-  template <class I>
-  inline operator I() const noexcept {
-    return *object;
-  }
+    template <class I>
+    inline operator I*() noexcept {
+      return object.release();
+    }
 
-  template <class I>
-  inline operator I*() noexcept {
-    return object.release();
-  }
+    template <class I>
+    inline operator const I*() noexcept {
+      return object.release();
+    }
 
-  template <class I>
-  inline operator const I*() noexcept {
-    return object.release();
-  }
+    template <class I>
+    inline operator std::shared_ptr<I>() noexcept {
+      return {object.release(), object.get_deleter()};
+    }
 
-  template <class I>
-  inline operator std::shared_ptr<I>() noexcept {
-    return {object.release(), object.get_deleter()};
-  }
+    template <class I, class D>
+    inline operator std::unique_ptr<I, D>() noexcept {
+      return static_cast<std::unique_ptr<T, TDeleter>&&>(object);
+    }
 
-  template <class I, class D>
-  inline operator std::unique_ptr<I, D>() noexcept {
-    return static_cast<std::unique_ptr<T, TDeleter>&&>(object);
-  }
-
-  std::unique_ptr<T, TDeleter> object;
-};
+    std::unique_ptr<T, TDeleter> object;
+  };
 }
-}
-}
-}  // boost::di::v1::wrappers
+BOOST_DI_NAMESPACE_END
 //->
 
 namespace di = boost::di;
