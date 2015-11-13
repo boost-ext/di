@@ -19,7 +19,6 @@ namespace core {
 template <class T>
 struct creating {
   creating() { type(); }
-
   static inline T type(_ = "creating...");
 };
 #endif  // __pph__
@@ -27,34 +26,34 @@ struct creating {
 template <class, class, class, class>
 struct try_provider;
 
-template <class TGiven, class TInjector, class TProvider, class TInitialization, class... TCtor>
-struct try_provider<TGiven, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector, TProvider> {
+template <class T, class TInjector, class TProvider, class TInitialization, class... TCtor>
+struct try_provider<T, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector, TProvider> {
   using injector_t = TInjector;
 
   template <class TMemory>
   struct is_creatable {
     static constexpr auto value =
-        TProvider::template is_creatable<TInitialization, TMemory, TGiven,
+        TProvider::template is_creatable<TInitialization, TMemory, T,
                                          typename injector__<TInjector>::template try_create<TCtor>::type...>::value;
   };
 
   template <class TMemory = type_traits::heap>
   auto get(const TMemory& = {}) const -> aux::enable_if_t<
       is_creatable<TMemory>::value,
-      aux::conditional_t<aux::is_same<TMemory, type_traits::stack>::value, TGiven, aux::remove_reference_t<TGiven>*>>;
+      aux::conditional_t<aux::is_same<TMemory, type_traits::stack>::value, T, aux::remove_reference_t<T>*>>;
 };
 
 template <class, class, class, class>
 struct provider;
 
-template <class TGiven, class TName, class TInjector, class TInitialization, class... TCtor>
-struct provider<TGiven, TName, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
+template <class T, class TName, class TInjector, class TInitialization, class... TCtor>
+struct provider<T, TName, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
   using provider_t = decltype(TInjector::config::provider(aux::declval<TInjector>()));
   using injector_t = TInjector;
 
   template <class TMemory, class... TArgs>
   struct is_creatable {
-    static constexpr auto value = provider_t::template is_creatable<TInitialization, TMemory, TGiven, TArgs...>::value;
+    static constexpr auto value = provider_t::template is_creatable<TInitialization, TMemory, T, TArgs...>::value;
   };
 
   template <class TMemory = type_traits::heap>
@@ -65,17 +64,17 @@ struct provider<TGiven, TName, aux::pair<TInitialization, aux::type_list<TCtor..
   template <class TMemory, class... TArgs, BOOST_DI_REQUIRES(is_creatable<TMemory, TArgs...>::value) = 0>
   auto get_impl(const TMemory& memory, TArgs&&... args) const {
 #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL >= 2)  // __pph__
-    (void)aux::conditional_t<injector__<TInjector>::template is_creatable<TGiven>::value, _, creating<TGiven>>{};
+    (void)aux::conditional_t<injector__<TInjector>::template is_creatable<T>::value, _, creating<T>>{};
 #endif  // __pph__
 
     return TInjector::config::provider(injector_)
-        .template get<TGiven>(TInitialization{}, memory, static_cast<TArgs&&>(args)...);
+        .template get<T>(TInitialization{}, memory, static_cast<TArgs&&>(args)...);
   }
 
   template <class TMemory, class... TArgs, BOOST_DI_REQUIRES(!is_creatable<TMemory, TArgs...>::value) = 0>
-  TGiven* get_impl(const TMemory&, TArgs&&...) const {
+  T* get_impl(const TMemory&, TArgs&&...) const {
 #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL > 0)  // __pph__
-    return concepts::creatable_error<TInitialization, TName, TGiven*, TArgs...>();
+    return concepts::creatable_error<TInitialization, TName, T*, TArgs...>();
 #else   // __pph__
     return {};
 #endif  // __pph__
@@ -89,13 +88,13 @@ namespace successful {
 template <class, class, class>
 struct provider;
 
-template <class TGiven, class TInjector, class TInitialization, class... TCtor>
-struct provider<TGiven, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
+template <class T, class TInjector, class TInitialization, class... TCtor>
+struct provider<T, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
   using injector_t = TInjector;
 
   template <class TMemory = type_traits::heap>
   auto get(const TMemory& memory = {}) const {
-    return TInjector::config::provider(injector_).template get<TGiven>(
+    return TInjector::config::provider(injector_).template get<T>(
         TInitialization{}, memory,
         static_cast<const injector__<TInjector>&>(injector_).create_successful_impl(aux::type<TCtor>{})...);
   }
