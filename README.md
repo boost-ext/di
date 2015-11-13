@@ -86,7 +86,15 @@ private:                                |         pump->pump();
 ```
 
 ```sh
-    $CXX -std=c++14 -I. -fno-exceptions -fno-rtti -nostdinc -nostdinc++ -pedantic -pedantic-errors -Wall -Wextra -Werror main.cpp
+    $CXX -std=c++14 -I. -fno-exceptions \
+			  		    -fno-rtti \
+						-nostdinc \
+						-nostdinc++ \
+						-pedantic \
+						-pedantic-errors \
+						-Wall \
+						-Wextra \
+						-Werror main.cpp
 ```
 
 > To get and test Boost.DI library:
