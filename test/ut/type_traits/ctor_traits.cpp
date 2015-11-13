@@ -119,15 +119,14 @@ test ctors = [] {
 #if defined(_MSC_VER)
   static_expect(
       std::is_same<aux::pair<direct, aux::type_list<core::any_type_1st_fwd<func>>>, ctor_traits__<func>::type>{});
-  static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<ctor2>, core::any_type_fwd<ctor2>>>,
-                             ctor_traits__<ctor2>::type>{});
 #else
   static_expect(
       std::is_same<aux::pair<direct, aux::type_list<core::any_type_1st_ref_fwd<func>>>, ctor_traits__<func>::type>{});
+#endif
+
   static_expect(
       std::is_same<aux::pair<direct, aux::type_list<core::any_type_ref_fwd<ctor2>, core::any_type_ref_fwd<ctor2>>>,
                    ctor_traits__<ctor2>::type>{});
-#endif
 
 #if defined(__GNUC__) && !defined(__clang__)
   static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_1st_ref_fwd<rvalue>>>,

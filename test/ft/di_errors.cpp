@@ -98,7 +98,7 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
   }
 }
 
-}  // namespace
+}
 
 #define expect_compile_fail(defines, error, ...) compail_fail(__LINE__, defines, error, #__VA_ARGS__)
 
@@ -241,11 +241,11 @@ test bind_is_abstract_type = [] {
 test bind_is_abstract_type_with_missing_error = [] {
   auto errors_ = errors("constraint not satisfied",
 #if defined(_MSC_VER)
-                        "type_<.*>::is_abstract", "=.*impl",
+                        "type_<.*>::is_abstract", "=.*impl", "void i::dummy.*is abstract"
 #else
-                        "type_<.*impl>::is_abstract",
+                        "type_<.*impl>::is_abstract", "pure.*impl", "virtual void dummy().*=.*0"
 #endif
-                        "pure.*impl", "virtual void dummy().*=.*0");
+  );
 
   expect_compile_fail("-DBOOST_DI_CFG_DIAGNOSTICS_LEVEL=2", errors_,
                       struct i {
@@ -686,6 +686,7 @@ int main() { di::make_injector<test_config>(); }
 #endif
           );
 
+#if !defined(_MSC_VER) // TODO
       expect_compile_fail("-DBOOST_DI_CFG_DIAGNOSTICS_LEVEL=2", errors_,
                           struct i {
                             virtual ~i() noexcept = default;
@@ -693,6 +694,7 @@ int main() { di::make_injector<test_config>(); }
                           };
                           struct c2{c2(i*){}}; struct c1{c1(int, double, const c2&){}}; struct c{c(int, c1){}};
                           int main() { di::make_injector().create<c>(); });
+#endif
     };
 
     // ---------------------------------------------------------------------------
@@ -711,6 +713,8 @@ int main() { di::make_injector<test_config>(); }
       auto errors_ = errors(
 #if defined(__GNUC__) && !defined(__clang__)
           "type<.*>::has_to_many_constructor_parameters::max<.*>.*= 3.*=.*c"
+#elif defined(_MSC_VER)
+          "type<.*>::has_to_many_constructor_parameters::max<3>", "T=.*c"
 #else
           "type<.*c>::has_to_many_constructor_parameters::max<3>"
 #endif
@@ -726,6 +730,8 @@ int main() { di::make_injector<test_config>(); }
       auto errors_ = errors(
 #if defined(__GNUC__) && !defined(__clang__)
           "type<.*>::has_to_many_constructor_parameters::max<.*>.*= 10.*=.*ctor"
+#elif defined(_MSC_VER)
+          "type<.*>::has_to_many_constructor_parameters::max<10>", "T=.*ctor"
 #else
           "type<.*ctor>::has_to_many_constructor_parameters::max<10>"
 #endif
@@ -739,6 +745,8 @@ int main() { di::make_injector<test_config>(); }
       auto errors_ = errors(
 #if defined(__GNUC__) && !defined(__clang__)
           "type<.*>::has_ambiguous_number_of_constructor_parameters::given<.*>::expected<.*>.*= 4.*= 2.*=.*c"
+#elif defined(_MSC_VER)
+          "type<.*>::has_ambiguous_number_of_constructor_parameters::given<2>::expected<4>", "T=.*c"
 #else
           "type<.*c>::has_ambiguous_number_of_constructor_parameters::given<2>::expected<4>"
 #endif
