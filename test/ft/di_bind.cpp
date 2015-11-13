@@ -502,7 +502,7 @@ test bind_non_owning_ptr = [] {
   struct c {
     c(Pointer& ptr) { expect(i == ptr); }
   };
-  auto module = [](Pointer* ptr) { return di::bind<Pointer>.to(*ptr); };
+  auto module = [](Pointer* ptr) { return di::bind<Pointer>().to(*ptr); };
   di::aux::owner<Pointer*> ptr{new Pointer{i}};
   auto injector = di::make_injector(module(ptr));
 
