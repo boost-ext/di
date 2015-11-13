@@ -46,7 +46,7 @@ BOOST_DI_CFG_FWD
 #elif defined(_MSC_VER)
 #pragma warning(disable : 4503)
 #pragma warning(disable : 4822)
-#pragma warning(error : 4505)
+#pragma warning(disable : 4505)
 #pragma warning(error : 4506)
 #pragma warning(error : 4996)
 #define __has_include(...) 0
