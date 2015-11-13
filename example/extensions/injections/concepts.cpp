@@ -19,17 +19,27 @@ namespace di = boost::di;
 int main() {}
 #else
 
-BOOST_DI_NAMESPACE_BEGIN namespace detail {
-  template <class T>
-  auto ctor__(int)->aux::function_traits_t<decltype(&T::template ctor<di::_>)>;
+template <class T>
+auto ctor__(int) -> di::aux::function_traits_t<decltype(&T::template ctor<di::_>)>;
 
-  template <class T>
-  auto ctor__(int)->aux::function_traits_t<decltype(&T::template ctor<di::_, di::_>)>;
+template <class T>
+auto ctor__(int) -> di::aux::function_traits_t<decltype(&T::template ctor<di::_, di::_>)>;
 
-  template <class T>
-  auto ctor__(int)->aux::function_traits_t<decltype(&T::template ctor<di::_, di::_, di::_>)>;
-}
-BOOST_DI_NAMESPACE_END
+template <class T>
+auto ctor__(int) -> di::aux::function_traits_t<decltype(&T::template ctor<di::_, di::_, di::_>)>;
+
+template <class T>
+auto ctor__(int) -> di::aux::function_traits_t<decltype(&T::ctor)>;
+
+template <class T>
+di::aux::type_list<> ctor__(...);
+
+#undef BOOST_DI_INJECT_TRAITS_IMPL_1
+#define BOOST_DI_INJECT_TRAITS_IMPL_1(...)                                                       \
+  static void ctor(BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__)); \
+  static void name(BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_NAME, __VA_ARGS__)); \
+  using type BOOST_DI_UNUSED =                                                                   \
+      di::detail::combine_t<decltype(ctor__<boost_di_inject__>(0)), di::aux::function_traits_t<decltype(name)>>;
 
 template <class T, class>
 struct generic_traits {
