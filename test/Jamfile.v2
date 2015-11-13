@@ -34,7 +34,7 @@ project boost.di :
 
 rule test ( src + : property * : defines * : options * ) {
     toolset =
-        <toolset>gcc:<cxxflags>"-std=c++1y -include common/test.hpp -fno-exceptions -Wall -Wextra -Werror" # no pedantic due to gcc bug
+        <toolset>gcc:<cxxflags>"-std=c++1y -include common/test.hpp -fno-exceptions -pedantic -pedantic-errors -Wall -Wextra -Werror"
         <toolset>gcc-6.0.0:<cxxflags>"-std=c++1z"
         <toolset>clang:<cxxflags>"-std=c++1y -include common/test.hpp -fno-exceptions -pedantic -pedantic-errors -Wall -Wextra -Werror"
         <toolset>darwin:<cxxflags>"-std=c++1y -include common/test.hpp -fno-exceptions -pedantic -pedantic-errors -Wall -Wextra -Werror"
