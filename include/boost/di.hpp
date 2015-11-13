@@ -1467,7 +1467,7 @@ using bindings_t = aux::join_t<typename bindings_impl<Ts>::type...>;
 #endif
 }
 namespace concepts {
-template <class...>
+template <class T, class...>
 struct type_ {
   template <class TName>
   struct named {
@@ -1476,7 +1476,16 @@ struct type_ {
   struct is_bound_more_than_once : aux::false_type {};
   struct is_neither_a_dependency_nor_an_injector : aux::false_type {};
   struct has_disallowed_qualifiers : aux::false_type {};
-  struct is_abstract : aux::false_type {};
+  struct is_abstract :
+#if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL >= 2)
+      // clang-format off
+      decltype(
+    T{}
+   ),
+// clang-format on
+#endif
+      aux::false_type {
+  };
   template <class>
   struct is_not_related_to : aux::false_type {};
 };

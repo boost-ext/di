@@ -237,6 +237,25 @@ test bind_is_abstract_type = [] {
                       struct c{c(i*){}}; int main() { di::make_injector(di::bind<i>().to<impl>()); });
 };
 
+test bind_is_abstract_type_with_missing_error = [] {
+  auto errors_ = errors("constraint not satisfied",
+#if defined(_MSC_VER)
+                        "type_<.*>::is_abstract", "=.*impl",
+#else
+                        "type_<.*impl>::is_abstract",
+#endif
+                        "pure.*impl", "virtual void dummy().*=.*0");
+
+  expect_compile_fail("-DBOOST_DI_CFG_DIAGNOSTICS_LEVEL=2", errors_,
+                      struct i {
+                        virtual ~i() noexcept = default;
+                        virtual void dummy() = 0;
+                      };
+                      struct impl
+                      : i{};
+                      struct c{c(i*){}}; int main() { di::make_injector(di::bind<i>().to<impl>()); });
+};
+
 test bind_is_abstract_type_named = [] {
   auto errors_ = errors("constraint not satisfied",
 #if defined(_MSC_VER)
