@@ -87,6 +87,7 @@ curl https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/include/boost/d
 cat << EOF > main.cpp
 #include <boost/di.hpp>
 int main() { }
+EOF
 ```
 
 ```sh
