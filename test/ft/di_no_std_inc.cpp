@@ -24,4 +24,4 @@ int main() {
   auto injector = di::make_injector(di::bind<int>().to(42), di::bind<i1>().to<impl1>());
 
   injector.create<c>();
-};
+}
