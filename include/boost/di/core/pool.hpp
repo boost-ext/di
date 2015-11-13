@@ -24,7 +24,9 @@ struct pool<aux::type_list<TArgs...>> : TArgs... {
   explicit pool(const Ts&... args) noexcept : Ts(args)... {}
 
   template <class... Ts, class TPool>
-  pool(const aux::type_list<Ts...>&, const TPool& p) noexcept : pool(static_cast<const Ts&>(p)...) {}
+  pool(const aux::type_list<Ts...>&, const TPool& p) noexcept : pool(static_cast<const Ts&>(p)...) {
+    (void)p;
+  }
 };
 
 }  // core

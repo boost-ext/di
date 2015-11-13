@@ -167,7 +167,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
   };
 
   template <class TName, class T>
-  struct try_create<named<TName, T>> {
+  struct try_create<BOOST_DI_NAMESPACE::named<TName, T>> {
     using type = aux::conditional_t<is_creatable<T, TName>::value, T, void>;
   };
 
@@ -197,7 +197,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
   }
 
   template <class TIsRoot = aux::false_type, class T, class TName>
-  auto create_impl(const aux::type<named<TName, T>>&)const {
+  auto create_impl(const aux::type<BOOST_DI_NAMESPACE::named<TName, T>>&)const {
     return create_impl__<TIsRoot, T, TName>();
   }
 
@@ -227,7 +227,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
   }
 
   template <class TIsRoot = aux::false_type, class T, class TName>
-  auto create_successful_impl(const aux::type<named<TName, T>>&)const {
+  auto create_successful_impl(const aux::type<BOOST_DI_NAMESPACE::named<TName, T>>&)const {
     return create_successful_impl__<TIsRoot, T, TName>();
   }
 

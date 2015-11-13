@@ -493,7 +493,9 @@ struct pool<aux::type_list<TArgs...>> : TArgs... {
   template <class... Ts>
   explicit pool(const Ts&... args) noexcept : Ts(args)... {}
   template <class... Ts, class TPool>
-  pool(const aux::type_list<Ts...>&, const TPool& p) noexcept : pool(static_cast<const Ts&>(p)...) {}
+  pool(const aux::type_list<Ts...>&, const TPool& p) noexcept : pool(static_cast<const Ts&>(p)...) {
+    (void)p;
+  }
 };
 }
 namespace type_traits {
@@ -2132,7 +2134,7 @@ class injector : pool<bindings_t<TDeps...>> {
     using type = any_type_1st_ref<TParent, injector, with_error>;
   };
   template <class TName, class T>
-  struct try_create<named<TName, T>> {
+  struct try_create<::boost::di::v0_9_0::named<TName, T>> {
     using type = aux::conditional_t<is_creatable<T, TName>::value, T, void>;
   };
   template <class TIsRoot = aux::false_type, class T>
@@ -2156,7 +2158,7 @@ class injector : pool<bindings_t<TDeps...>> {
     return any_type_1st_ref<TParent, injector, aux::false_type, aux::true_type>{*this};
   }
   template <class TIsRoot = aux::false_type, class T, class TName>
-  auto create_impl(const aux::type<named<TName, T>>&) const {
+  auto create_impl(const aux::type<::boost::di::v0_9_0::named<TName, T>>&) const {
     return create_impl__<TIsRoot, T, TName>();
   }
   template <class TIsRoot = aux::false_type, class T>
@@ -2180,7 +2182,7 @@ class injector : pool<bindings_t<TDeps...>> {
     return successful::any_type_1st_ref<TParent, injector>{*this};
   }
   template <class TIsRoot = aux::false_type, class T, class TName>
-  auto create_successful_impl(const aux::type<named<TName, T>>&) const {
+  auto create_successful_impl(const aux::type<::boost::di::v0_9_0::named<TName, T>>&) const {
     return create_successful_impl__<TIsRoot, T, TName>();
   }
 
@@ -2296,7 +2298,7 @@ class injector<TConfig, pool<>, TDeps...> : pool<bindings_t<TDeps...>> {
     using type = any_type_1st_ref<TParent, injector, with_error>;
   };
   template <class TName, class T>
-  struct try_create<named<TName, T>> {
+  struct try_create<::boost::di::v0_9_0::named<TName, T>> {
     using type = aux::conditional_t<is_creatable<T, TName>::value, T, void>;
   };
   template <class TIsRoot = aux::false_type, class T>
@@ -2320,7 +2322,7 @@ class injector<TConfig, pool<>, TDeps...> : pool<bindings_t<TDeps...>> {
     return any_type_1st_ref<TParent, injector, aux::false_type, aux::true_type>{*this};
   }
   template <class TIsRoot = aux::false_type, class T, class TName>
-  auto create_impl(const aux::type<named<TName, T>>&) const {
+  auto create_impl(const aux::type<::boost::di::v0_9_0::named<TName, T>>&) const {
     return create_impl__<TIsRoot, T, TName>();
   }
   template <class TIsRoot = aux::false_type, class T>
@@ -2344,7 +2346,7 @@ class injector<TConfig, pool<>, TDeps...> : pool<bindings_t<TDeps...>> {
     return successful::any_type_1st_ref<TParent, injector>{*this};
   }
   template <class TIsRoot = aux::false_type, class T, class TName>
-  auto create_successful_impl(const aux::type<named<TName, T>>&) const {
+  auto create_successful_impl(const aux::type<::boost::di::v0_9_0::named<TName, T>>&) const {
     return create_successful_impl__<TIsRoot, T, TName>();
   }
 
