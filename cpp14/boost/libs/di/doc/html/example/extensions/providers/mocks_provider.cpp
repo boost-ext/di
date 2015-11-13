@@ -63,6 +63,7 @@ class mocks_provider : public di::config {
         }
 
         assert(false && "not implemented");
+        return {};
       }
 
      private:
