@@ -80,16 +80,22 @@ private:                                |         pump->pump();
 [https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/include/boost/di.hpp](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/include/boost/di.hpp)
 
 ```sh
-	curl https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/include/boost/di.hpp  --create-dirs -o boost/di.hpp
+	curl https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/include/boost/di.hpp \
+		--create-dirs -o boost/di.hpp
+
 	cat << EOF > main.cpp
 	#include <boost/di.hpp>
-	namespace di = boost::di;
-	int main(){
+
+	int main() {
+		namespace di = boost::di;
+
 		auto injector = di::make_injector(
 			di::bind<int>().to(42)
 		);
+
 		return injector.create<int>();
 	}
+
     $CXX -std=c++14 -I. -fno-exceptions \
 			  		    -fno-rtti \
 						-nostdinc \
