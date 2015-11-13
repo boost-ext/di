@@ -16,7 +16,7 @@
 //<-
 namespace boost {
 namespace di {
-inline namespace v1 {
+inline namespace v0_9_0 {
 namespace wrappers {
 
 template <class T, class TDeleter>
