@@ -15,7 +15,7 @@ namespace di = boost::di;
 
 using Pointer = int;
 
-auto module(Pointer* ptr) { return di::bind<Pointer>.to(*ptr); }
+auto module(Pointer* ptr) { return di::bind<Pointer>().to(*ptr); }
 
 struct app {
   app(Pointer& ptr) { assert(42 == ptr); }
