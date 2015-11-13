@@ -79,38 +79,18 @@ private:                                |         pump->pump();
 
 [https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/include/boost/di.hpp](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/include/boost/di.hpp)
 
-*
 ```sh
 curl https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/include/boost/di.hpp --create-dirs -o boost/di.hpp
 ```
 
-*
 ```sh
 cat << EOF > main.cpp
 #include <boost/di.hpp>
-
-int main() {
-	namespace di = boost::di;
-
-	auto injector = di::make_injector(
-		di::bind<int>().to(42)
-	);
-
-	return injector.create<int>();
-}
+int main() { }
 ```
 
-*
 ```sh
-$CXX -std=c++14 -I. -fno-exceptions \
-					-fno-rtti \
-					-nostdinc \
-					-nostdinc++ \
-					-pedantic \
-					-pedantic-errors \
-					-Wall \
-					-Wextra \
-					-Werror main.cpp
+$CXX -std=c++14 -I. -fno-exceptions -fno-rtti -nostdinc -nostdinc++ -pedantic -pedantic-errors -Wall -Wextra -Werror main.cpp
 ```
 
 > To get and test Boost.DI library:
