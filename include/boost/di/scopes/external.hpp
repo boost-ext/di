@@ -45,9 +45,7 @@ BOOST_DI_HAS_TYPE(has_result_type, result_type);
 template <class TGiven, class TProvider, class... Ts>
 struct is_expr
     : aux::integral_constant<
-          bool, aux::is_callable_with<TGiven,
-                                      no_implicit_conversions<aux::remove_qualifiers_t<typename TProvider::injector_t>>,
-                                      Ts...>::value &&
+          bool, aux::is_callable_with<TGiven, no_implicit_conversions<typename TProvider::injector_t>, Ts...>::value &&
                     !has_result_type<TGiven>::value> {};
 
 }  // detail

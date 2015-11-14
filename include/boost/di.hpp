@@ -914,9 +914,7 @@ struct has_result_type<T, ::boost::di::v0_9_0::aux::valid_t<typename T::result_t
 template <class TGiven, class TProvider, class... Ts>
 struct is_expr
     : aux::integral_constant<
-          bool, aux::is_callable_with<TGiven,
-                                      no_implicit_conversions<aux::remove_qualifiers_t<typename TProvider::injector_t>>,
-                                      Ts...>::value &&
+          bool, aux::is_callable_with<TGiven, no_implicit_conversions<typename TProvider::injector_t>, Ts...>::value &&
                     !has_result_type<TGiven>::value> {};
 }
 class external {
@@ -2815,5 +2813,4 @@ BOOST_DI_NAMESPACE_END
 #pragma GCC diagnostic pop
 #pragma GCC diagnostic error "-Wdeprecated-declarations"
 #elif defined(_MSC_VER)
-#pragma warning(pop)
 #endif
