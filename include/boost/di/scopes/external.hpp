@@ -131,6 +131,11 @@ class external {
 
     explicit scope(const TGiven& object) : object_(object) {}
 
+#if defined(_MSC_VER)  // __pph__
+    template <class T, class TProvider>
+    static T try_create(const TProvider&) noexcept;
+#else   // __pph__
+
     template <class, class TProvider,
               BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable<TGiven>::value &&
                                 aux::is_callable<TExpected>::value) = 0>
@@ -152,6 +157,7 @@ class external {
     static detail::wrapper_traits_t<decltype(aux::declval<TGiven>()(aux::declval<typename TProvider::injector_t>(),
                                                                     aux::declval<detail::arg<T, TExpected, TGiven>>()))>
     try_create(const TProvider&) noexcept;
+#endif  // __pph__
 
     template <class, class TProvider,
               BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable<TGiven>::value &&

@@ -341,6 +341,15 @@ test scopes_external_lambda_injector = [] {
   }
 };
 
+test scopes_external_lambda_injector_mix = [] {
+  auto injector = di::make_injector(
+      di::bind<short>().to([] { return 42; }), di::bind<long>().to(87l),
+      di::bind<int>().to([](const auto& injector) { return static_cast<int>(injector.template create<long>()); }));
+
+  expect(42 == injector.create<short>());
+  expect(87 == injector.create<int>());
+};
+
 test externals_ref_cref = [] {
   auto i = 42;
   const auto d = 87.0;

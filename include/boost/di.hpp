@@ -47,8 +47,8 @@ BOOST_DI_CFG_FWD
 #pragma warning(disable : 4503)
 #pragma warning(disable : 4822)
 #pragma warning(disable : 4505)
-#pragma warning(error : 4506)
-#pragma warning(error : 4996)
+//#pragma warning(error : 4506)
+//#pragma warning(error : 4996)
 #define __has_include(...) 0
 #define BOOST_DI_UNUSED
 #define BOOST_DI_DEPRECATED(...) __declspec(deprecated(__VA_ARGS__))
@@ -976,6 +976,10 @@ class external {
     template <class>
     using is_referable = aux::false_type;
     explicit scope(const TGiven& object) : object_(object) {}
+#if defined(_MSC_VER)
+    template <class T, class TProvider>
+    static T try_create(const TProvider&) noexcept;
+#else
     template <class, class TProvider,
               BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable<TGiven>::value &&
                                 aux::is_callable<TExpected>::value) = 0>
@@ -994,6 +998,7 @@ class external {
     static detail::wrapper_traits_t<decltype(aux::declval<TGiven>()(aux::declval<typename TProvider::injector_t>(),
                                                                     aux::declval<detail::arg<T, TExpected, TGiven>>()))>
     try_create(const TProvider&) noexcept;
+#endif
     template <class, class TProvider,
               BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable<TGiven>::value &&
                                 aux::is_callable<TExpected>::value) = 0>

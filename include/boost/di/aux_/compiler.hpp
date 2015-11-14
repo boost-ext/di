@@ -24,8 +24,8 @@
 #pragma warning(disable : 4503)  // decorated name length exceeded, name was truncated
 #pragma warning(disable : 4822)  // local class member function does not have a body
 #pragma warning(disable : 4505)  // unreferenced local function has been removed
-#pragma warning(error : 4506)    // no definition for inline function
-#pragma warning(error : 4996)    // deprecated
+//#pragma warning(error : 4506)    // no definition for inline function
+//#pragma warning(error : 4996)  // deprecated
 #define __has_include(...) 0
 #define BOOST_DI_UNUSED
 #define BOOST_DI_DEPRECATED(...) \
