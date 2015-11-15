@@ -32,6 +32,12 @@ struct ctor_conv_explicit {
   explicit ctor_conv_explicit(T&&);
 };
 
+template <class T, class TInitialization, class... Ts>
+void test_ctor_traits() {
+  static_expect(std::is_same<aux::pair<T, aux::pair<TInitialization, aux::type_list<Ts...>>>,
+                             typename ctor_traits__<T, T>::type>::value);
+}
+
 test ctors = [] {
   struct empty {
     BOOST_DI_INJECT_TRAITS();
@@ -85,55 +91,39 @@ test ctors = [] {
     explicit vaarg(int, ...) {}
   };
 
-  static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<empty>::type>{});
-  static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<traits>::type>{});
-  static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<empty>::type>{});
-  static_expect(std::is_same<aux::pair<direct, aux::type_list<int, double>>, ctor_traits__<int_double>::type>{});
-  static_expect(std::is_same<aux::pair<direct, aux::type_list<char*, const int&>>, ctor_traits__<extensions>::type>{});
-  static_expect(
-      std::is_same<
-          aux::pair<direct, aux::type_list<core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>,
-                                           core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>,
-                                           core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>,
-                                           core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>>>,
-          ctor_traits__<ctor_complex>::type>{});
-  static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<e>::type>{});
-  static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<ec>::type>{});
-  static_expect(std::is_same<aux::pair<uniform, aux::type_list<>>, ctor_traits__<conv>::type>{});
-  static_expect(std::is_same<
-                aux::pair<direct, aux::type_list<core::any_type_fwd<conv_explicit>, core::any_type_fwd<conv_explicit>>>,
-                ctor_traits__<conv_explicit>::type>{});
-  static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>,
-                                                              core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>,
-                                                              core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>,
-                                                              core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>,
-                                                              core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>>>,
-                             ctor_traits__<vaarg>::type>{});
-  static_expect(
-      std::is_same<aux::pair<direct, aux::type_list<core::any_type_1st_fwd<ctor1>>>, ctor_traits__<ctor1>::type>{});
-  static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_1st_fwd<ctor_unique_ptr>>>,
-                             ctor_traits__<ctor_unique_ptr>::type>{});
-  static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_1st_fwd<ctor_conv>>>,
-                             ctor_traits__<ctor_conv>::type>{});
+  test_ctor_traits<empty, direct>();
+  test_ctor_traits<traits, direct>();
+  test_ctor_traits<empty, direct>();
+  test_ctor_traits<int_double, direct, int, double>();
+  test_ctor_traits<extensions, direct, char*, const int&>();
+  test_ctor_traits<ctor_complex, direct, core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>,
+                   core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>,
+                   core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>,
+                   core::any_type_ref_fwd<ctor_complex>, core::any_type_ref_fwd<ctor_complex>>();
+  test_ctor_traits<e, direct>();
+  test_ctor_traits<ec, direct>();
+  test_ctor_traits<conv, uniform>();
+  test_ctor_traits<conv_explicit, direct, core::any_type_fwd<conv_explicit>, core::any_type_fwd<conv_explicit>>();
+  test_ctor_traits<vaarg, direct, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>,
+                   core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>,
+                   core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>,
+                   core::any_type_fwd<vaarg>>();
+  test_ctor_traits<ctor1, direct, core::any_type_1st_fwd<ctor1>>();
+  test_ctor_traits<ctor_unique_ptr, direct, core::any_type_1st_fwd<ctor_unique_ptr>>();
+  test_ctor_traits<ctor_conv, direct, core::any_type_1st_fwd<ctor_conv>>();
 
 #if defined(_MSC_VER)
-  static_expect(
-      std::is_same<aux::pair<direct, aux::type_list<core::any_type_1st_fwd<func>>>, ctor_traits__<func>::type>{});
+  test_ctor_traits<func, direct, core::any_type_1st_fwd<func>>();
 #else
-  static_expect(
-      std::is_same<aux::pair<direct, aux::type_list<core::any_type_1st_ref_fwd<func>>>, ctor_traits__<func>::type>{});
+  test_ctor_traits<func, direct, core::any_type_1st_ref_fwd<func>>();
 #endif
 
-  static_expect(
-      std::is_same<aux::pair<direct, aux::type_list<core::any_type_ref_fwd<ctor2>, core::any_type_ref_fwd<ctor2>>>,
-                   ctor_traits__<ctor2>::type>{});
+  test_ctor_traits<ctor2, direct, core::any_type_ref_fwd<ctor2>, core::any_type_ref_fwd<ctor2>>();
 
 #if defined(__GNUC__) && !defined(__clang__)
-  static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_1st_ref_fwd<rvalue>>>,
-                             ctor_traits__<rvalue>::type>{});
+  test_ctor_traits<rvalue, direct, core::any_type_1st_ref_fwd<rvalue>>();
 #else
-  static_expect(
-      std::is_same<aux::pair<direct, aux::type_list<core::any_type_1st_fwd<rvalue>>>, ctor_traits__<rvalue>::type>{});
+  test_ctor_traits<rvalue, direct, core::any_type_1st_fwd<rvalue>>();
 #endif
 };
 
@@ -146,13 +136,10 @@ test uniforms = [] {
     std::unique_ptr<int> ptr;
     int& i;
   };
-  static_expect(std::is_same<aux::pair<uniform, aux::type_list<>>, ctor_traits__<empty>::type>{});
+  test_ctor_traits<empty, uniform>();
 
 #if !defined(_MSC_VER)
-  static_expect(
-      std::is_same<
-          aux::pair<uniform, aux::type_list<core::any_type_ref_fwd<ctor2_ref>, core::any_type_ref_fwd<ctor2_ref>>>,
-          ctor_traits__<ctor2_ref>::type>{});
+  test_ctor_traits<ctor2_ref, uniform, core::any_type_ref_fwd<ctor2_ref>, core::any_type_ref_fwd<ctor2_ref>>();
 #endif
 };
 
@@ -164,10 +151,8 @@ test inheriting_ctors = [] {
     using c0::c0;
   };
 
-  static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<c0>, core::any_type_fwd<c0>>>,
-                             ctor_traits__<c0>::type>{});
-  static_expect(std::is_same<aux::pair<direct, aux::type_list<core::any_type_fwd<c1>, core::any_type_fwd<c1>>>,
-                             ctor_traits__<c1>::type>{});
+  test_ctor_traits<c0, direct, core::any_type_fwd<c0>, core::any_type_fwd<c0>>();
+  test_ctor_traits<c1, direct, core::any_type_fwd<c1>, core::any_type_fwd<c1>>();
 };
 
 test inheriting_ctors_inject = [] {
@@ -183,15 +168,15 @@ test inheriting_ctors_inject = [] {
     BOOST_DI_INJECT_TRAITS();
   };
 
-  static_expect(std::is_same<aux::pair<direct, aux::type_list<int, double>>, ctor_traits__<c0>::type>{});
-  static_expect(std::is_same<aux::pair<direct, aux::type_list<int, double>>, ctor_traits__<c1>::type>{});
-  static_expect(std::is_same<aux::pair<direct, aux::type_list<int, double>>, ctor_traits__<c2>::type>{});
-  static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<c3>::type>{});
+  test_ctor_traits<c0, direct, int, double>();
+  test_ctor_traits<c1, direct, int, double>();
+  test_ctor_traits<c2, direct, int, double>();
+  test_ctor_traits<c3, direct>();
 };
 
 test special_std_types = [] {
-  static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<std::string>::type>{});
-  static_expect(std::is_same<aux::pair<direct, aux::type_list<>>, ctor_traits__<std::initializer_list<int>>::type>{});
+  test_ctor_traits<std::string, direct>();
+  test_ctor_traits<std::initializer_list<int>, direct>();
 };
 
 }  // type_traits

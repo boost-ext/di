@@ -97,7 +97,6 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
     expect(false);
   }
 }
-
 }
 
 #define expect_compile_fail(defines, error, ...) compail_fail(__LINE__, defines, error, #__VA_ARGS__)
@@ -245,7 +244,7 @@ test bind_is_abstract_type_with_missing_error = [] {
 #else
                         "type_<.*impl>::is_abstract", "pure.*impl", "virtual void dummy().*=.*0"
 #endif
-  );
+                        );
 
   expect_compile_fail("-DBOOST_DI_CFG_DIAGNOSTICS_LEVEL=2", errors_,
                       struct i {
@@ -672,12 +671,12 @@ int main() { di::make_injector<test_config>(); }
 #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
           "creatable constraint not satisfied",
 #endif
-          "abstract_type<.*>::is_not_bound"
+          "abstract_type<.*>::is_not_bound",
 #if defined(__GNUC__) && !defined(__clang__)
-          ,
           "creating<.*>.*c", "creating<.*>.*c1", "creating<.*>.*c2"
+#elif defined(_MSC_VER)
+          "creating<.*>", "=.*c", "creating<.*>", "=.*c1", "creating<.*>", "=.*c2"
 #else
-          ,
           "creating<c>", "creating<c1>", "creating<c2>"
 #endif
 #if !defined(_MSC_VER)
@@ -686,7 +685,6 @@ int main() { di::make_injector<test_config>(); }
 #endif
           );
 
-#if !defined(_MSC_VER) // TODO
       expect_compile_fail("-DBOOST_DI_CFG_DIAGNOSTICS_LEVEL=2", errors_,
                           struct i {
                             virtual ~i() noexcept = default;
@@ -694,7 +692,6 @@ int main() { di::make_injector<test_config>(); }
                           };
                           struct c2{c2(i*){}}; struct c1{c1(int, double, const c2&){}}; struct c{c(int, c1){}};
                           int main() { di::make_injector().create<c>(); });
-#endif
     };
 
     // ---------------------------------------------------------------------------
