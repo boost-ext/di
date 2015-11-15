@@ -23,17 +23,17 @@ struct creating {
 };
 #endif  // __pph__
 
-template <class, class, class, class>
+template <class, class, class>
 struct try_provider;
 
 template <class T, class TInjector, class TProvider, class TInitialization, class... TCtor>
-struct try_provider<T, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector, TProvider> {
+struct try_provider<aux::pair<T, aux::pair<TInitialization, aux::type_list<TCtor...>>>, TInjector, TProvider> {
   using injector_t = TInjector;
 
-  template <class TMemory>
+  template <class>
   struct is_creatable {
     static constexpr auto value =
-        TProvider::template is_creatable<TInitialization, TMemory, T,
+        TProvider::template is_creatable<TInitialization, T,
                                          typename injector__<TInjector>::template try_create<TCtor>::type...>::value;
   };
 
@@ -43,17 +43,17 @@ struct try_provider<T, aux::pair<TInitialization, aux::type_list<TCtor...>>, TIn
       aux::conditional_t<aux::is_same<TMemory, type_traits::stack>::value, T, aux::remove_reference_t<T>*>>;
 };
 
-template <class, class, class, class>
+template <class, class, class>
 struct provider;
 
 template <class T, class TName, class TInjector, class TInitialization, class... TCtor>
-struct provider<T, TName, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
+struct provider<TName, aux::pair<T, aux::pair<TInitialization, aux::type_list<TCtor...>>>, TInjector> {
   using provider_t = decltype(TInjector::config::provider(aux::declval<TInjector>()));
   using injector_t = TInjector;
 
-  template <class TMemory, class... TArgs>
+  template <class, class... TArgs>
   struct is_creatable {
-    static constexpr auto value = provider_t::template is_creatable<TInitialization, TMemory, T, TArgs...>::value;
+    static constexpr auto value = provider_t::template is_creatable<TInitialization, T, TArgs...>::value;
   };
 
   template <class TMemory = type_traits::heap>
@@ -85,11 +85,11 @@ struct provider<T, TName, aux::pair<TInitialization, aux::type_list<TCtor...>>, 
 
 namespace successful {
 
-template <class, class, class>
+template <class, class>
 struct provider;
 
 template <class T, class TInjector, class TInitialization, class... TCtor>
-struct provider<T, aux::pair<TInitialization, aux::type_list<TCtor...>>, TInjector> {
+struct provider<aux::pair<T, aux::pair<TInitialization, aux::type_list<TCtor...>>>, TInjector> {
   using injector_t = TInjector;
 
   template <class TMemory = type_traits::heap>

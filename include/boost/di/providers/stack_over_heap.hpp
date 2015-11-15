@@ -15,7 +15,7 @@ namespace providers {
 
 class stack_over_heap {
  public:
-  template <class TInitialization, class TMemory, class T, class... TArgs>
+  template <class TInitialization, class T, class... TArgs>
   struct is_creatable {
     static constexpr auto value = concepts::creatable<TInitialization, T, TArgs...>::value;
   };

@@ -69,23 +69,28 @@ struct ctor<T, aux::type_list<>> : aux::pair<uniform, ctor_impl_t<aux::is_braces
 template <class T, class... TArgs>
 struct ctor<T, aux::type_list<TArgs...>> : aux::pair<direct, aux::type_list<TArgs...>> {};
 
-template <class T, class = typename is_injectable<T>::type>
+template <class, class T, class = typename is_injectable<T>::type>
 struct ctor_traits__;
 
-template <class T, class = typename is_injectable<ctor_traits<T>>::type>
+template <class X, class T, class = typename is_injectable<ctor_traits<T>>::type>
 struct ctor_traits_impl;
 
-template <class T>
-struct ctor_traits__<T, aux::true_type> : aux::pair<direct, typename T::boost_di_inject__::type> {};
+template <class X, class T>
+struct ctor_traits__<X, T, aux::true_type> : aux::pair<T, aux::pair<direct, typename T::boost_di_inject__::type>> {};
 
-template <class T>
-struct ctor_traits__<T, aux::false_type> : ctor_traits_impl<T> {};
+template <class X, class T>
+struct ctor_traits__<X, T, aux::false_type> : ctor_traits_impl<X, T> {};
 
-template <class T>
-struct ctor_traits_impl<T, aux::true_type> : aux::pair<direct, typename ctor_traits<T>::boost_di_inject__::type> {};
+template <class X, class U, class... Ts>
+struct ctor_traits__<X, core::array<U[], Ts...>, aux::false_type>
+    : aux::pair<core::array<X, Ts...>, aux::pair<direct, aux::type_list<Ts...>>> {};
 
-template <class T>
-struct ctor_traits_impl<T, aux::false_type> : ctor_traits<T> {};
+template <class X, class T>
+struct ctor_traits_impl<X, T, aux::true_type>
+    : aux::pair<T, aux::pair<direct, typename ctor_traits<T>::boost_di_inject__::type>> {};
+
+template <class X, class T>
+struct ctor_traits_impl<X, T, aux::false_type> : aux::pair<T, typename ctor_traits<T>::type> {};
 
 }  // type_traits
 
