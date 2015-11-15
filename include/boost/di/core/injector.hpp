@@ -105,7 +105,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
         T>::value
         BOOST_DI_CORE_INJECTOR_POLICY(
             &&policy::template try_call<arg_wrapper<referable_t<T, dependency__<dependency_t>>, TName, TIsRoot, pool_t>,
-                                        TPolicies, dependency_t, ctor_t>::value)();
+                                        TPolicies, dependency_t, typename ctor_t::second>::value)();
   };
 
  public:
@@ -256,7 +256,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     using wrapper_t =
         decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this}));
     BOOST_DI_CORE_INJECTOR_POLICY(policy::template call<arg_wrapper<T, TName, TIsRoot, pool_t>>(
-                                      TConfig::policies(*this), dependency, ctor_t{});)() return wrapper<T, wrapper_t>{
+                                      TConfig::policies(*this), dependency, typename ctor_t::second{});)() return wrapper<T, wrapper_t>{
         static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this})};
   }
 
@@ -271,7 +271,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     using create_t = referable_t<T, dependency__<dependency_t>>;
     BOOST_DI_CORE_INJECTOR_POLICY(
         policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>(
-            TConfig::policies(*this), dependency, ctor_t{});)() return successful::wrapper<create_t, wrapper_t>{
+            TConfig::policies(*this), dependency, typename ctor_t::second{});)() return successful::wrapper<create_t, wrapper_t>{
         static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this})};
   }
 };

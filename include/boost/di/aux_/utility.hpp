@@ -57,9 +57,11 @@ struct bool_list {
   using type = bool_list;
 };
 
-template <class, class>
+template <class T1, class T2>
 struct pair {
   using type = pair;
+  using first = T1;
+  using second = T2;
 };
 
 template <class... Ts>

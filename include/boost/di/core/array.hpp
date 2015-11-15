@@ -37,6 +37,7 @@ struct array : array_impl<typename T::value_type, sizeof...(Ts)>, T {
   using value_type = typename T::value_type;
   using array_t = array_impl<value_type, sizeof...(Ts)>;
   using array_t::array_;
+  using boost_di_inject__ = aux::type_list<type_traits::rebind_traits_t<value_type, Ts>...>;
 
   template <BOOST_DI_REQUIRES(
                 aux::is_constructible<T, std::move_iterator<value_type*>, std::move_iterator<value_type*>>::value) = 0>
@@ -46,7 +47,9 @@ struct array : array_impl<typename T::value_type, sizeof...(Ts)>, T {
 };
 
 template <class T>
-struct array<T> : T {};
+struct array<T> : T {
+  using boost_di_inject__ = aux::type_list<>;
+};
 
 template <class T>
 struct array<T* []> {};

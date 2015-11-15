@@ -127,9 +127,11 @@ template <bool...>
 struct bool_list {
   using type = bool_list;
 };
-template <class, class>
+template <class T1, class T2>
 struct pair {
   using type = pair;
+  using first = T1;
+  using second = T2;
 };
 template <class... Ts>
 struct inherit : Ts... {
@@ -346,12 +348,10 @@ struct deref_type<std::weak_ptr<T>> {
 template <class T, class TAllocator>
 struct deref_type<std::vector<T, TAllocator>> {
   using type = core::array<remove_qualifiers_t<typename deref_type<T>::type>* []>;
-  using value_type = std::vector<T, TAllocator>;
 };
 template <class TKey, class TCompare, class TAllocator>
 struct deref_type<std::set<TKey, TCompare, TAllocator>> {
   using type = core::array<remove_qualifiers_t<typename deref_type<TKey>::type>* []>;
-  using value_type = std::set<TKey, TCompare, TAllocator>;
 };
 template <class T>
 using decay_t = typename deref_type<remove_qualifiers_t<T>>::type;
@@ -551,6 +551,7 @@ struct array : array_impl<typename T::value_type, sizeof...(Ts)>, T {
   using value_type = typename T::value_type;
   using array_t = array_impl<value_type, sizeof...(Ts)>;
   using array_t::array_;
+  using boost_di_inject__ = aux::type_list<type_traits::rebind_traits_t<value_type, Ts>...>;
   template <BOOST_DI_REQUIRES(
                 aux::is_constructible<T, std::move_iterator<value_type*>, std::move_iterator<value_type*>>::value) = 0>
   explicit array(remove_named_t<type_traits::rebind_traits_t<value_type, Ts>>... args)
@@ -558,7 +559,9 @@ struct array : array_impl<typename T::value_type, sizeof...(Ts)>, T {
         T(std::move_iterator<value_type*>(array_), std::move_iterator<value_type*>(array_ + sizeof...(Ts))) {}
 };
 template <class T>
-struct array<T> : T {};
+struct array<T> : T {
+  using boost_di_inject__ = aux::type_list<>;
+};
 template <class T>
 struct array<T* []> {};
 template <class T, class... Ts>
@@ -1287,9 +1290,27 @@ template <class X, class T>
 struct ctor_traits__<X, T, aux::true_type> : aux::pair<T, aux::pair<direct, typename T::boost_di_inject__::type>> {};
 template <class X, class T>
 struct ctor_traits__<X, T, aux::false_type> : ctor_traits_impl<X, T> {};
+template <class T>
+struct value_type {
+  using type = T;
+};
+template <class T>
+struct value_type<T&> {
+  using type = T;
+};
+template <class T>
+struct value_type<const T&> {
+  using type = T;
+};
+template <class T>
+struct value_type<std::shared_ptr<T>> {
+  using type = T;
+};
 template <class X, class U, class... Ts>
 struct ctor_traits__<X, core::array<U[], Ts...>, aux::false_type>
-    : aux::pair<core::array<X, Ts...>, aux::pair<direct, aux::type_list<Ts...>>> {};
+    : aux::pair<core::array<typename value_type<X>::type, Ts...>,
+                aux::pair<direct, typename core::array<typename value_type<X>::type, Ts...>::boost_di_inject__::type>> {
+};
 template <class X, class T>
 struct ctor_traits_impl<X, T, aux::true_type>
     : aux::pair<T, aux::pair<direct, typename ctor_traits<T>::boost_di_inject__::type>> {};
@@ -2069,7 +2090,7 @@ class injector : pool<bindings_t<TDeps...>> {
                 try_provider<ctor_t, injector, decltype(TConfig::provider(aux::declval<injector>()))>{})),
             T>::value &&
         policy::template try_call<arg_wrapper<referable_t<T, dependency__<dependency_t>>, TName, TIsRoot, pool_t>,
-                                  TPolicies, dependency_t, ctor_t>::value;
+                                  TPolicies, dependency_t, typename ctor_t::second>::value;
   };
 
  public:
@@ -2196,7 +2217,8 @@ class injector : pool<bindings_t<TDeps...>> {
     using provider_t = core::provider<TName, ctor_t, injector>;
     using wrapper_t =
         decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this}));
-    policy::template call<arg_wrapper<T, TName, TIsRoot, pool_t>>(TConfig::policies(*this), dependency, ctor_t{});
+    policy::template call<arg_wrapper<T, TName, TIsRoot, pool_t>>(TConfig::policies(*this), dependency,
+                                                                  typename ctor_t::second{});
     return wrapper<T, wrapper_t>{
         static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this})};
   }
@@ -2210,7 +2232,7 @@ class injector : pool<bindings_t<TDeps...>> {
         decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this}));
     using create_t = referable_t<T, dependency__<dependency_t>>;
     policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>(TConfig::policies(*this), dependency,
-                                                                         ctor_t{});
+                                                                         typename ctor_t::second{});
     return successful::wrapper<create_t, wrapper_t>{
         static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this})};
   }
