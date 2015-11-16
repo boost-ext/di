@@ -61,8 +61,6 @@ class instance;
 namespace concepts {
 template <class...>
 struct boundable__;
-template <class... Ts>
-using boundable = typename boundable__<Ts...>::type;
 template <class...>
 struct any_of;
 }  // concepts

@@ -231,8 +231,6 @@ class instance;
 namespace concepts {
 template <class...>
 struct boundable__;
-template <class... Ts>
-using boundable = typename boundable__<Ts...>::type;
 template <class...>
 struct any_of;
 }
@@ -1079,6 +1077,8 @@ template <class T>
 using scopable = typename scopable__<T>::type;
 }
 namespace core {
+template <class... Ts>
+using boundable = typename concepts::boundable__<Ts...>::type;
 template <class, class = int>
 struct is_injector : ::boost::di::v1_0_0::aux::false_type {};
 template <class T>
@@ -1158,8 +1158,7 @@ class dependency : dependency_base,
   auto in(const T&) noexcept {
     return dependency<T, TExpected, TGiven, TName, TPriority>{};
   }
-  template <class T, BOOST_DI_REQUIRES(!specific<T>::value) = 0,
-            BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, T>) = 0>
+  template <class T, BOOST_DI_REQUIRES(!specific<T>::value) = 0, BOOST_DI_REQUIRES_MSG(boundable<TExpected, T>) = 0>
   auto to() noexcept {
     return dependency<TScope, TExpected, T, TName, TPriority>{};
   }
@@ -1168,14 +1167,14 @@ class dependency : dependency_base,
     return dependency<TScope, array<array_type_t<TExpected>>, array<array_type_t<TExpected>, Ts...>, TName,
                       TPriority>{};
   }
-  template <class T, BOOST_DI_REQUIRES_MSG(concepts::boundable<array_type_t<TExpected>, T>) = 0>
+  template <class T, BOOST_DI_REQUIRES_MSG(boundable<array_type_t<TExpected>, T>) = 0>
   auto to(std::initializer_list<T>&& object) noexcept {
     using dependency =
         dependency<scopes::instance, array<array_type_t<TExpected>>, std::initializer_list<T>, TName, TPriority>;
     return dependency{object};
   }
-  template <class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value) = 0,
-            BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, aux::decay_t<T>>) = 0>
+  template <class T, BOOST_DI_REQUIRES(externable<T>::value) = 0,
+            BOOST_DI_REQUIRES_MSG(boundable<TExpected, aux::decay_t<T>>) = 0>
   auto to(T&& object) noexcept {
     using dependency = dependency<scopes::instance, TExpected, typename ref_traits<T>::type, TName, TPriority>;
     return dependency{static_cast<T&&>(object)};
@@ -1625,18 +1624,20 @@ auto boundable_impl(any_of<T, Ts...> && ) -> aux::conditional_t<aux::is_same<T, 
                                                                 typename type_<T>::has_disallowed_qualifiers>;
 template <class I, class T>
 auto boundable_impl(I&&, T && ) -> aux::conditional_t<
-    !aux::is_same<T, aux::decay_t<T>>::value, typename type_<T>::has_disallowed_qualifiers,
+    aux::is_same<T, aux::decay_t<T>>::value,
     aux::conditional_t<is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value,
                        aux::conditional_t<is_abstract<aux::is_complete<T>::value, T>::value,
                                           typename type_<T>::is_abstract, aux::true_type>,
-                       typename type_<T>::template is_not_related_to<I>>>;
+                       typename type_<T>::template is_not_related_to<I>>,
+    typename type_<T>::has_disallowed_qualifiers>;
 template <class I, class T>
 auto boundable_impl(I* [], T && ) -> aux::conditional_t<
-    !aux::is_same<I, aux::decay_t<I>>::value, typename type_<I>::has_disallowed_qualifiers,
+    aux::is_same<I, aux::decay_t<I>>::value,
     aux::conditional_t<is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value,
                        aux::conditional_t<is_abstract<aux::is_complete<T>::value, T>::value,
                                           typename type_<T>::is_abstract, aux::true_type>,
-                       typename type_<T>::template is_not_related_to<I>>>;
+                       typename type_<T>::template is_not_related_to<I>>,
+    typename type_<I>::has_disallowed_qualifiers>;
 template <class... TDeps>
 auto boundable_impl(aux::type_list<TDeps...> && ) -> get_bindings_error<TDeps...>;
 template <class T, class... Ts>
