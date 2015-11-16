@@ -1045,7 +1045,7 @@ class instance {
 }
 namespace concepts {
 template <class...>
-struct scope_ {
+struct scope {
   struct is_referable {};
   struct try_create {};
   struct create {};
@@ -1062,8 +1062,8 @@ struct provider__ {
   }
 };
 template <class T>
-typename scope_<T>::template requires_<typename scope_<_, _>::is_referable, typename scope_<_, _>::try_create,
-                                       typename scope_<_, _>::create> scopable_impl(...);
+typename scope<T>::template requires_<typename scope<_, _>::is_referable, typename scope<_, _>::try_create,
+                                      typename scope<_, _>::create> scopable_impl(...);
 template <class T>
 auto scopable_impl(T && ) -> aux::is_valid_expr<
     typename T::template scope<_, _>::template is_referable<_>,
@@ -1369,7 +1369,7 @@ struct abstract_type {
   };
 };
 template <class TScope, class T>
-struct scope {
+struct scoped {
   template <class To>
   struct is_not_convertible_to {
     operator To() const {
@@ -1378,12 +1378,12 @@ struct scope {
     }
     // clang-format off
     static inline To
- error(_ = "scoped value is not convertible to the requested type, did you mistake the scope: 'di::bind<T>.in(scope)'?");
+ error(_ = "scoped object is not convertible to the requested type, did you mistake the scope: 'di::bind<T>.in(scope)'?");
     // clang-format on
   };
 };
 template <class T>
-struct scope<scopes::instance, T> {
+struct scoped<scopes::instance, T> {
   template <class To>
   struct is_not_convertible_to {
     operator To() const {
@@ -2053,7 +2053,7 @@ template <class T, template <class...> class TWrapper, class TScope, class T_, c
 struct wrapper_impl<T, TWrapper<TScope, T_, Ts...>,
                     BOOST_DI_REQUIRES(!aux::is_convertible<TWrapper<TScope, T_, Ts...>, T>::value)> {
   inline operator T() noexcept {
-    return typename concepts::scope<TScope, aux::remove_qualifiers_t<T_>>::template is_not_convertible_to<T>{};
+    return typename concepts::scoped<TScope, aux::remove_qualifiers_t<T_>>::template is_not_convertible_to<T>{};
   }
   TWrapper<TScope, T_, Ts...> wrapper_;
 };

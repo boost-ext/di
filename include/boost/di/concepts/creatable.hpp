@@ -47,7 +47,7 @@ struct abstract_type {
 };
 
 template <class TScope, class T>
-struct scope {
+struct scoped {
   template <class To>
   struct is_not_convertible_to {
     operator To() const {
@@ -57,13 +57,13 @@ struct scope {
 
     // clang-format off
     static inline To
-	error(_ = "scoped value is not convertible to the requested type, did you mistake the scope: 'di::bind<T>.in(scope)'?");
+	error(_ = "scoped object is not convertible to the requested type, did you mistake the scope: 'di::bind<T>.in(scope)'?");
     // clang-format on
   };
 };
 
 template <class T>
-struct scope<scopes::instance, T> {
+struct scoped<scopes::instance, T> {
   template <class To>
   struct is_not_convertible_to {
     operator To() const {

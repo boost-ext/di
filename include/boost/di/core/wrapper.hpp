@@ -33,7 +33,7 @@ template <class T, template <class...> class TWrapper, class TScope, class T_, c
 struct wrapper_impl<T, TWrapper<TScope, T_, Ts...>,
                     BOOST_DI_REQUIRES(!aux::is_convertible<TWrapper<TScope, T_, Ts...>, T>::value)> {
   inline operator T() noexcept {
-    return typename concepts::scope<TScope, aux::remove_qualifiers_t<T_>>::template is_not_convertible_to<T>{};
+    return typename concepts::scoped<TScope, aux::remove_qualifiers_t<T_>>::template is_not_convertible_to<T>{};
   }
   TWrapper<TScope, T_, Ts...> wrapper_;
 };
