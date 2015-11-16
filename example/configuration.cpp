@@ -15,12 +15,12 @@
 namespace di = boost::di;
 
 int main() {
-  //#if (BOOST_DI_VERSION >= 1'0'0)
-  // std::cout << "stable";
-  //#else
-  // std::cout << "unstable";
-  //#endif
-  // std::cout << " version of boost.di [" << BOOST_DI_VERSION << "]" << std::endl;
+#if (BOOST_DI_VERSION >= 1'0'0)
+  std::cout << "stable";
+#else
+  std::cout << "unstable";
+#endif
+  std::cout << " version of boost.di [" << BOOST_DI_VERSION << "]" << std::endl;
 }
 
 //]

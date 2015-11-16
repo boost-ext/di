@@ -130,7 +130,7 @@ decltype(auto) generic_cast(const T& arg) {
 }
 
 struct generics_provider {
-  template <class TInitialization, class TMemory, class T, class... TArgs>
+  template <class TInitialization, class T, class... TArgs>
   struct is_creatable {
     static constexpr auto value = true;
   };
