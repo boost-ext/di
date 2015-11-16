@@ -207,6 +207,8 @@ test bind_not_compatible_narrowed_types = [] {
   auto errors_ = errors("constraint not satisfied",
 #if defined(_MSC_VER)
                         "type_<.*>::is_not_related_to<int>", "=.*long"
+#elif defined(__clang__)
+                        "type_<.*long>::is_not_related_to<int>"
 #else
                         "type_<.*long.*int>::is_not_related_to<int>"
 #endif
