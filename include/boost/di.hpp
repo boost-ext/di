@@ -1174,7 +1174,7 @@ class dependency : dependency_base,
     return dependency{object};
   }
   template <class T, BOOST_DI_REQUIRES(externable<T>::value) = 0,
-            BOOST_DI_REQUIRES_MSG(boundable<TExpected, aux::decay_t<T>>) = 0>
+            BOOST_DI_REQUIRES_MSG(boundable<TExpected, aux::decay_t<T>*>) = 0>
   auto to(T&& object) noexcept {
     using dependency = dependency<scopes::instance, TExpected, typename ref_traits<T>::type, TName, TPriority>;
     return dependency{static_cast<T&&>(object)};
@@ -1630,6 +1630,12 @@ auto boundable_impl(I&&, T && ) -> aux::conditional_t<
                                           typename type_<T>::is_abstract, aux::true_type>,
                        typename type_<T>::template is_not_related_to<I>>,
     typename type_<T>::has_disallowed_qualifiers>;
+template <class I, class T>
+auto boundable_impl(I&&, T*)
+    -> aux::conditional_t<is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value,
+                          aux::conditional_t<is_abstract<aux::is_complete<T>::value, T>::value,
+                                             typename type_<T>::is_abstract, aux::true_type>,
+                          typename type_<T>::template is_not_related_to<I>>;
 template <class I, class T>
 auto boundable_impl(I* [], T && ) -> aux::conditional_t<
     aux::is_same<I, aux::decay_t<I>>::value,
