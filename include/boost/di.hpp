@@ -1964,7 +1964,7 @@ struct try_provider<aux::pair<T, aux::pair<TInitialization, aux::type_list<TCtor
 template <class, class, class>
 struct provider;
 template <class T, class TName, class TInjector, class TInitialization, class... TCtor>
-struct provider<TName, aux::pair<T, aux::pair<TInitialization, aux::type_list<TCtor...>>>, TInjector> {
+struct provider<aux::pair<T, aux::pair<TInitialization, aux::type_list<TCtor...>>>, TName, TInjector> {
   using provider_t = decltype(TInjector::config::provider(aux::declval<TInjector>()));
   using injector_t = TInjector;
   template <class, class... TArgs>
@@ -2214,7 +2214,7 @@ class injector : pool<bindings_t<TDeps...>> {
     auto&& dependency = binder::resolve<T, TName>((injector*)this);
     using dependency_t = aux::remove_reference_t<decltype(dependency)>;
     using ctor_t = typename type_traits::ctor_traits__<T, typename dependency_t::given>::type;
-    using provider_t = core::provider<TName, ctor_t, injector>;
+    using provider_t = core::provider<ctor_t, TName, injector>;
     using wrapper_t =
         decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this}));
     policy::template call<arg_wrapper<T, TName, TIsRoot, pool_t>>(TConfig::policies(*this), dependency,
@@ -2376,7 +2376,7 @@ class injector<TConfig, pool<>, TDeps...> : pool<bindings_t<TDeps...>> {
     auto&& dependency = binder::resolve<T, TName>((injector*)this);
     using dependency_t = aux::remove_reference_t<decltype(dependency)>;
     using ctor_t = typename type_traits::ctor_traits__<T, typename dependency_t::given>::type;
-    using provider_t = core::provider<TName, ctor_t, injector>;
+    using provider_t = core::provider<ctor_t, TName, injector>;
     using wrapper_t =
         decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this}));
     return wrapper<T, wrapper_t>{

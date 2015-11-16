@@ -47,7 +47,7 @@ template <class, class, class>
 struct provider;
 
 template <class T, class TName, class TInjector, class TInitialization, class... TCtor>
-struct provider<TName, aux::pair<T, aux::pair<TInitialization, aux::type_list<TCtor...>>>, TInjector> {
+struct provider<aux::pair<T, aux::pair<TInitialization, aux::type_list<TCtor...>>>, TName, TInjector> {
   using provider_t = decltype(TInjector::config::provider(aux::declval<TInjector>()));
   using injector_t = TInjector;
 

@@ -252,7 +252,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     auto&& dependency = binder::resolve<T, TName>((injector*)this);
     using dependency_t = aux::remove_reference_t<decltype(dependency)>;
     using ctor_t = typename type_traits::ctor_traits__<T, typename dependency_t::given>::type;
-    using provider_t = core::provider<TName, ctor_t, injector>;
+    using provider_t = core::provider<ctor_t, TName, injector>;
     using wrapper_t =
         decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this}));
     BOOST_DI_CORE_INJECTOR_POLICY(policy::template call<arg_wrapper<T, TName, TIsRoot, pool_t>>(
