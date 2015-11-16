@@ -206,7 +206,7 @@ test bind_not_compatible_instance = [] {
 test bind_not_compatible_narrowed_types = [] {
   auto errors_ = errors("constraint not satisfied",
 #if defined(_MSC_VER)
-                        "type_<.*>::is_not_related_to<int>", "=.*long.*int"
+                        "type_<.*>::is_not_related_to<int>", "=.*long"
 #else
                         "type_<.*long.*int>::is_not_related_to<int>"
 #endif
