@@ -15,8 +15,10 @@
 
 //<-
 BOOST_DI_NAMESPACE_BEGIN namespace wrappers {
-  template <class T, class TDeleter>
-  struct unique<std::unique_ptr<T, TDeleter>> {
+  template <class TScope, class T, class TDeleter>
+  struct unique<TScope, std::unique_ptr<T, TDeleter>> {
+    using scope = TScope;
+
     template <class I>
     inline operator I() const noexcept {
       return *object;

@@ -27,18 +27,18 @@ class shared_scope {
   class scope {
    public:
     template <class T_>
-    using is_referable = typename di::wrappers::shared<T>::template is_referable<T_>;
+    using is_referable = typename di::wrappers::shared<shared_scope, T>::template is_referable<T_>;
 
     template <class, class TProvider>
     static auto try_create(const TProvider& provider)
-        -> decltype(di::wrappers::shared<T>{std::shared_ptr<T>{provider.get()}});
+        -> decltype(di::wrappers::shared<shared_scope, T>{std::shared_ptr<T>{provider.get()}});
 
     template <class, class TProvider>
     auto create(const TProvider& provider) {
       if (!object_) {
         object_ = std::shared_ptr<T>{provider.get()};
       }
-      return di::wrappers::shared<T>{object_};
+      return di::wrappers::shared<shared_scope, T>{object_};
     }
 
    private:

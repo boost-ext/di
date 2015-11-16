@@ -119,8 +119,8 @@ struct generic_traits<const std::weak_ptr<di::_>&, T> {
 template <class T, class U>
 using generic_traits_t = typename generic_traits<T, U>::type;
 
-template <template <class...> class TWrapper, class T, class... Ts, template <class> class X, class Y>
-auto generic_cast(const TWrapper<T, X<Y>>& arg) {
+template <template <class...> class TWrapper, class T, class... Ts, template <class...> class X, class TScope, class Y>
+auto generic_cast(const TWrapper<T, X<TScope, Y>>& arg) {
   return arg.wrapper_.operator generic_traits_t<T, di::aux::remove_qualifiers_t<Y>>();
 }
 
