@@ -145,7 +145,7 @@ auto boundable_impl(I&&, T && )
                           boundable_impl__<I, T>, typename type_<T>::has_disallowed_qualifiers>;
 
 template <class I, class T>  // expected -> given
-auto boundable_impl(I&&, T*) -> boundable_impl__<I, T>;
+auto boundable_impl(I&&, T&&, aux::valid<> && ) -> boundable_impl__<I, T>;
 
 template <class I, class T>  // array[]
 auto boundable_impl(I* [], T && ) -> aux::conditional_t<aux::is_same<I, aux::decay_t<I>>::value, boundable_impl__<I, T>,

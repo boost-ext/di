@@ -137,7 +137,7 @@ class dependency : dependency_base,
   }
 
   template <class T, BOOST_DI_REQUIRES(externable<T>::value) = 0,
-            BOOST_DI_REQUIRES_MSG(boundable<TExpected, aux::decay_t<T>*>) = 0>
+            BOOST_DI_REQUIRES_MSG(boundable<TExpected, aux::decay_t<T>, aux::valid<>>) = 0>
   auto to(T&& object) noexcept {
     using dependency = dependency<scopes::instance, TExpected, typename ref_traits<T>::type, TName, TPriority>;
     return dependency{static_cast<T&&>(object)};
