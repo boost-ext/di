@@ -13,8 +13,10 @@
 
 namespace wrappers {
 
-template <class T, class TObject = std::shared_ptr<T>>
+template <class TScope, class T, class TObject = std::shared_ptr<T>>
 struct shared {
+  using scope = TScope;
+
   template <class>
   struct is_referable_impl : aux::true_type {};
 
@@ -55,8 +57,10 @@ struct shared {
   TObject object;
 };
 
-template <class T>
-struct shared<T&> {
+template <class TScope, class T>
+struct shared<TScope, T&> {
+  using scope = TScope;
+
   template <class>
   struct is_referable : aux::true_type {};
 

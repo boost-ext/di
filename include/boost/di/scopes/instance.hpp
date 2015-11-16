@@ -9,6 +9,7 @@
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/wrappers/shared.hpp"
 #include "boost/di/wrappers/unique.hpp"
+#include "boost/di/fwd.hpp"
 
 namespace scopes {
 
@@ -23,12 +24,12 @@ struct arg {
 
 template <class T>
 struct wrapper_traits {
-  using type = wrappers::unique<T>;
+  using type = wrappers::unique<instance, T>;
 };
 
 template <class T>
 struct wrapper_traits<std::shared_ptr<T>> {
-  using type = wrappers::shared<T>;
+  using type = wrappers::shared<instance, T>;
 };
 
 template <class T>
@@ -60,11 +61,11 @@ class instance {
     explicit scope(const TGiven& object) : object_{object} {}
 
     template <class, class TProvider>
-    static wrappers::unique<TGiven> try_create(const TProvider&);
+    static wrappers::unique<instance, TGiven> try_create(const TProvider&);
 
     template <class, class TProvider>
     auto create(const TProvider&) const noexcept {
-      return wrappers::unique<TGiven>{object_};
+      return wrappers::unique<instance, TGiven>{object_};
     }
 
     TGiven object_;
@@ -73,16 +74,17 @@ class instance {
   template <class TExpected, class TGiven>
   struct scope<TExpected, std::shared_ptr<TGiven>> {
     template <class T>
-    using is_referable = typename wrappers::shared<TGiven>::template is_referable<aux::remove_qualifiers_t<T>>;
+    using is_referable =
+        typename wrappers::shared<instance, TGiven>::template is_referable<aux::remove_qualifiers_t<T>>;
 
     explicit scope(const std::shared_ptr<TGiven>& object) : object_{object} {}
 
     template <class, class TProvider>
-    static wrappers::shared<TGiven> try_create(const TProvider&);
+    static wrappers::shared<instance, TGiven> try_create(const TProvider&);
 
     template <class, class TProvider>
     auto create(const TProvider&) const noexcept {
-      return wrappers::shared<TGiven>{object_};
+      return wrappers::shared<instance, TGiven>{object_};
     }
 
     std::shared_ptr<TGiven> object_;
@@ -100,7 +102,7 @@ class instance {
 
     template <class, class TProvider>
     auto create(const TProvider&) const noexcept {
-      return wrappers::unique<std::initializer_list<TGiven>>{object_};
+      return wrappers::unique<instance, std::initializer_list<TGiven>>{object_};
     }
 
     std::initializer_list<TGiven> object_;
@@ -114,14 +116,14 @@ class instance {
     explicit scope(TGiven& object) : object_{object} {}
 
     template <class, class TProvider>
-    static wrappers::shared<TGiven&> try_create(const TProvider&);
+    static wrappers::shared<instance, TGiven&> try_create(const TProvider&);
 
     template <class, class TProvider>
     auto create(const TProvider&) const noexcept {
       return object_;
     }
 
-    wrappers::shared<TGiven&> object_;
+    wrappers::shared<instance, TGiven&> object_;
   };
 
   template <class TExpected, class TGiven>
@@ -139,7 +141,7 @@ class instance {
     template <class, class TProvider,
               BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable<TGiven>::value &&
                                 aux::is_callable<TExpected>::value) = 0>
-    static wrappers::unique<TExpected> try_create(const TProvider&) noexcept;
+    static wrappers::unique<instance, TExpected> try_create(const TProvider&) noexcept;
 
     template <class T, class TProvider,
               BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable_with<TGiven>::value &&
@@ -163,7 +165,7 @@ class instance {
               BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable<TGiven>::value &&
                                 aux::is_callable<TExpected>::value) = 0>
     auto create(const TProvider&) const noexcept {
-      return wrappers::unique<TExpected>{object_};
+      return wrappers::unique<instance, TExpected>{object_};
     }
 
     template <class T, class TProvider,

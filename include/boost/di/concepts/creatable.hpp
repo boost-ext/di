@@ -46,8 +46,8 @@ struct abstract_type {
   };
 };
 
-template <class T>
-struct type {
+template <class TScope, class T>
+struct scope {
   template <class To>
   struct is_not_convertible_to {
     operator To() const {
@@ -57,10 +57,29 @@ struct type {
 
     // clang-format off
     static inline To
-	error(_ = "scope is not convertible to the requested type, did you mistake it by using: 'di::bind<T>.in(scope)'?");
+	error(_ = "scoped value is not convertible to the requested type, did you mistake the scope: 'di::bind<T>.in(scope)'?");
     // clang-format on
   };
+};
 
+template <class T>
+struct scope<scopes::instance, T> {
+  template <class To>
+  struct is_not_convertible_to {
+    operator To() const {
+      using constraint_not_satisfied = is_not_convertible_to;
+      return constraint_not_satisfied{}.error();
+    }
+
+    // clang-format off
+    static inline To
+	error(_ = "instance is not convertible to the requested type, verify binding: 'di::bind<T>.to(value)'?");
+    // clang-format on
+  };
+};
+
+template <class T>
+struct type {
   struct has_ambiguous_number_of_constructor_parameters {
     template <int Given>
     struct given {

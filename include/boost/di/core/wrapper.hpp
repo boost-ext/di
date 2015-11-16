@@ -29,10 +29,13 @@ struct wrapper_impl {
   TWrapper wrapper_;
 };
 
-template <class T, class TWrapper>
-struct wrapper_impl<T, TWrapper, BOOST_DI_REQUIRES(!aux::is_convertible<TWrapper, T>::value)> {
-  inline operator T() noexcept { return typename concepts::type<TWrapper>::template is_not_convertible_to<T>{}; }
-  TWrapper wrapper_;
+template <class T, template <class...> class TWrapper, class TScope, class T_, class... Ts>
+struct wrapper_impl<T, TWrapper<TScope, T_, Ts...>,
+                    BOOST_DI_REQUIRES(!aux::is_convertible<TWrapper<TScope, T_, Ts...>, T>::value)> {
+  inline operator T() noexcept {
+    return typename concepts::scope<TScope, aux::remove_qualifiers_t<T_>>::template is_not_convertible_to<T>{};
+  }
+  TWrapper<TScope, T_, Ts...> wrapper_;
 };
 
 template <class T, class TWrapper>

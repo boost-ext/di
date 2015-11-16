@@ -124,14 +124,14 @@ test bind_instance_with_given_value = [] {
 };
 
 test bind_in_not_scopable_type = [] {
-  auto errors_ =
-      errors("constraint not satisfied",
+  auto errors_ = errors(
+      "constraint not satisfied",
 #if defined(_MSC_VER)
-             "scope<.*>::requires_<.*scope<.*>::is_referable,.*scope<.*>::try_create,.*scope<.*>::create>", "=.*dummy"
+      "scope_<.*>::requires_<.*scope_<.*>::is_referable,.*scope_<.*>::try_create,.*scope_<.*>::create>", "=.*dummy"
 #else
-             "scope<.*dummy>::requires_<.*scope<.*>::is_referable,.*scope<.*>::try_create,.*scope<.*>::create>"
+      "scope_<.*dummy>::requires_<.*scope_<.*>::is_referable,.*scope_<.*>::try_create,.*scope_<.*>::create>"
 #endif
-             );
+      );
 
   expect_compile_fail("", errors_, struct dummy{};
                       int main() { auto injector = di::make_injector(di::bind<int>().in(dummy{})); });
@@ -554,15 +554,22 @@ int main() { di::make_injector<test_config>(); }
                           });
     };
 
-    test injector_shared_by_copy = [] {
+    test injector_singleton_by_copy = [] {
       auto errors_ = errors(
 #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
           "creatable constraint not satisfied",
 #endif
-          "type<.*>::is_not_convertible_to<.*>"
+
+#if defined(__GNUC__) && !defined(__clang__)
+          "scope<.*>::is_not_convertible_to<.*>", "To.*=.*int.*\\*", "TScope.*=.*singleton", "T.*=.*int"
+#else
+          "scope<.*singleton,.*int>::is_not_convertible_to<.*int.*\\*>"
+#endif
+
 #if !defined(_MSC_VER)
           ,
-          "scope is not convertible to the requested type, did you mistake it by using: 'di::bind<T>.in\\(scope\\)'?"
+          "scoped value is not convertible to the requested type, did you mistake the scope: "
+          "'di::bind<T>.in\\(scope\\)'?"
 #endif
           );
 
@@ -572,15 +579,21 @@ int main() { di::make_injector<test_config>(); }
       });
     };
 
-    test bind_wrapper_not_convertible = [] {
+    test bind_instance_not_convertible = [] {
       auto errors_ = errors(
 #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
           "creatable constraint not satisfied",
 #endif
-          "type<.*>::is_not_convertible_to<.*>"
+
+#if defined(__GNUC__) && !defined(__clang__)
+          "scope<.*instance.*>::is_not_convertible_to<.*>", "To.*=.*int.*\\*", "T.*=.*int"
+#else
+          "scope<.*instance,.*int>::is_not_convertible_to<.*int.*\\*>"
+#endif
+
 #if !defined(_MSC_VER)
           ,
-          "scope is not convertible to the requested type, did you mistake it by using: 'di::bind<T>.in\\(scope\\)'?"
+          "instance is not convertible to the requested type, verify binding: 'di::bind<T>.to\\(value\\)'?"
 #endif
           );
 
@@ -590,15 +603,21 @@ int main() { di::make_injector<test_config>(); }
       });
     };
 
-    test scope_traits_instance_not_referable = [] {
+    test bind_instance_not_referable = [] {
       auto errors_ = errors(
 #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
           "creatable constraint not satisfied",
 #endif
-          "type<.*>::is_not_convertible_to<.*>"
+
+#if defined(__GNUC__) && !defined(__clang__)
+          "scope<.*instance.*>::is_not_convertible_to<.*>", "To.*=.*int.*&", "T.*=.*int"
+#else
+          "scope<.*instance,.*int>::is_not_convertible_to<.*int.*&>"
+#endif
+
 #if !defined(_MSC_VER)
           ,
-          "scope is not convertible to the requested type, did you mistake it by using: 'di::bind<T>.in\\(scope\\)'?"
+          "instance is not convertible to the requested type, verify binding: 'di::bind<T>.to\\(value\\)'?"
 #endif
           );
 
@@ -609,15 +628,21 @@ int main() { di::make_injector<test_config>(); }
       });
     };
 
-    test scope_traits_instance_not_referable_named = [] {
+    test bind_instance_not_referable_named = [] {
       auto errors_ = errors(
 #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
           "creatable constraint not satisfied",
 #endif
-          "type<.*>::is_not_convertible_to<.*>"
+
+#if defined(__GNUC__) && !defined(__clang__)
+          "scope<.*instance.*>::is_not_convertible_to<.*>", "To.*=.*int.*&", "T.*=.*int"
+#else
+          "scope<.*instance,.*int>::is_not_convertible_to<.*int.*&>"
+#endif
+
 #if !defined(_MSC_VER)
           ,
-          "scope is not convertible to the requested type, did you mistake it by using: 'di::bind<T>.in\\(scope\\)'?"
+          "instance is not convertible to the requested type, verify binding: 'di::bind<T>.to\\(value\\)'?"
 #endif
           );
 

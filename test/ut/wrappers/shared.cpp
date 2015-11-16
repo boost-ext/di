@@ -10,19 +10,20 @@
 #if __has_include(<boost / shared_ptr.hpp>)
 #include <boost/shared_ptr.hpp>
 #endif
+#include "common/fakes/fake_scope.hpp"
 
 namespace wrappers {
 
 test to_shared_ptr = [] {
   auto i = std::make_shared<int>(42);
-  auto object = static_cast<const std::shared_ptr<int>&>(shared<int>{i});
+  auto object = static_cast<const std::shared_ptr<int>&>(shared<fake_scope<>, int>{i});
   expect(i == object);
 };
 
 #if __has_include(<boost / shared_ptr.hpp>)
 test to_other_shared_ptr = [] {
   auto i = std::make_shared<int>(42);
-  auto object = static_cast<boost::shared_ptr<int>>(shared<int>{i});
+  auto object = static_cast<boost::shared_ptr<int>>(shared<fake_scope<>, int>{i});
   expect(i.get() == object.get());
 };
 #endif
@@ -32,7 +33,7 @@ test to_weak_ptr = [] {
 
   {
     auto i = std::make_shared<int>(42);
-    object = static_cast<std::weak_ptr<int>>(shared<int>{i});
+    object = static_cast<std::weak_ptr<int>>(shared<fake_scope<>, int>{i});
     auto object_ = object.lock();
     expect(i == object_);
   }

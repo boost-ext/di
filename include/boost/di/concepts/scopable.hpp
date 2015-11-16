@@ -13,7 +13,7 @@
 namespace concepts {
 
 template <class...>
-struct scope {
+struct scope_ {
   struct is_referable {};
   struct try_create {};
   struct create {};
@@ -34,8 +34,8 @@ struct provider__ {
 };
 
 template <class T>
-typename scope<T>::template requires_<typename scope<_, _>::is_referable, typename scope<_, _>::try_create,
-                                      typename scope<_, _>::create> scopable_impl(...);
+typename scope_<T>::template requires_<typename scope_<_, _>::is_referable, typename scope_<_, _>::try_create,
+                                       typename scope_<_, _>::create> scopable_impl(...);
 
 template <class T>
 auto scopable_impl(T && ) -> aux::is_valid_expr<

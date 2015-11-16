@@ -24,10 +24,10 @@ class singleton {
   class scope {
    public:
     template <class T_>
-    using is_referable = typename wrappers::shared<T&>::template is_referable<T_>;
+    using is_referable = typename wrappers::shared<singleton, T&>::template is_referable<T_>;
 
     template <class, class TProvider>
-    static decltype(wrappers::shared<T&>{aux::declval<TProvider>().get(type_traits::stack{})}) try_create(
+    static decltype(wrappers::shared<singleton, T&>{aux::declval<TProvider>().get(type_traits::stack{})}) try_create(
         const TProvider&);
 
     template <class, class TProvider>
@@ -39,7 +39,7 @@ class singleton {
     template <class TProvider>
     auto create_impl(const TProvider& provider) {
       static T object(provider.get(type_traits::stack{}));
-      return wrappers::shared<T&>(object);
+      return wrappers::shared<singleton, T&>(object);
     }
   };
 
@@ -47,10 +47,11 @@ class singleton {
   class scope<_, T, aux::true_type> {
    public:
     template <class T_>
-    using is_referable = typename wrappers::shared<T>::template is_referable<T_>;
+    using is_referable = typename wrappers::shared<singleton, T>::template is_referable<T_>;
 
     template <class, class TProvider, class T_ = aux::decay_t<decltype(aux::declval<TProvider>().get())>>
-    static decltype(wrappers::shared<T_>{std::shared_ptr<T_>{std::shared_ptr<T_>{aux::declval<TProvider>().get()}}})
+    static decltype(wrappers::shared<singleton, T_>{
+        std::shared_ptr<T_>{std::shared_ptr<T_>{aux::declval<TProvider>().get()}}})
     try_create(const TProvider&);
 
     template <class T_, class TProvider>
@@ -62,7 +63,7 @@ class singleton {
     template <class T_, class TProvider>
     auto create_impl(const TProvider& provider) {
       static std::shared_ptr<T_> object{provider.get()};
-      return wrappers::shared<T_, std::shared_ptr<T_>&>{object};
+      return wrappers::shared<singleton, T_, std::shared_ptr<T_>&>{object};
     }
   };
 };

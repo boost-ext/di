@@ -54,6 +54,10 @@ struct array;
 
 }  // core
 
+namespace scopes {
+class instance;
+}  // scopes
+
 // TODO remove
 namespace concepts {
 template <class...>

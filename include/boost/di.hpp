@@ -225,6 +225,9 @@ struct injector__ : T {
 template <class, class...>
 struct array;
 }
+namespace scopes {
+class instance;
+}
 namespace concepts {
 template <class...>
 struct boundable__;
@@ -568,8 +571,9 @@ template <class T, class... Ts>
 struct array<T* [], Ts...> {};
 }
 namespace wrappers {
-template <class T>
+template <class TScope, class T>
 struct unique {
+  using scope = TScope;
   template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
   inline operator I() const noexcept {
     return object;
@@ -577,8 +581,9 @@ struct unique {
   inline operator T &&() noexcept { return static_cast<T&&>(object); }
   T object;
 };
-template <class T>
-struct unique<T*> {
+template <class TScope, class T>
+struct unique<TScope, T*> {
+  using scope = TScope;
 #if defined(_MSC_VER)
   explicit unique(T* object) : object(object) {}
 #endif
@@ -660,21 +665,23 @@ class unique {
     template <class>
     using is_referable = aux::false_type;
     template <class T, class TProvider>
-    static decltype(wrappers::unique<decltype(aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{}))>{
-        aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{})})
+    static decltype(
+        wrappers::unique<unique, decltype(aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{}))>{
+            aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{})})
     try_create(const TProvider&);
     template <class T, class TProvider>
     auto create(const TProvider& provider) const {
       using memory = type_traits::memory_traits_t<T>;
-      using wrapper = wrappers::unique<decltype(provider.get(memory{}))>;
+      using wrapper = wrappers::unique<unique, decltype(provider.get(memory{}))>;
       return wrapper{provider.get(memory{})};
     }
   };
 };
 }
 namespace wrappers {
-template <class T, class TObject = std::shared_ptr<T>>
+template <class TScope, class T, class TObject = std::shared_ptr<T>>
 struct shared {
+  using scope = TScope;
   template <class>
   struct is_referable_impl : aux::true_type {};
   template <class I>
@@ -704,8 +711,9 @@ struct shared {
   inline operator const T&() const noexcept { return *object; }
   TObject object;
 };
-template <class T>
-struct shared<T&> {
+template <class TScope, class T>
+struct shared<TScope, T&> {
+  using scope = TScope;
   template <class>
   struct is_referable : aux::true_type {};
   explicit shared(T& object) : object(&object) {}
@@ -728,9 +736,9 @@ class singleton {
   class scope {
    public:
     template <class T_>
-    using is_referable = typename wrappers::shared<T&>::template is_referable<T_>;
+    using is_referable = typename wrappers::shared<singleton, T&>::template is_referable<T_>;
     template <class, class TProvider>
-    static decltype(wrappers::shared<T&>{aux::declval<TProvider>().get(type_traits::stack{})}) try_create(
+    static decltype(wrappers::shared<singleton, T&>{aux::declval<TProvider>().get(type_traits::stack{})}) try_create(
         const TProvider&);
     template <class, class TProvider>
     auto create(const TProvider& provider) {
@@ -741,16 +749,17 @@ class singleton {
     template <class TProvider>
     auto create_impl(const TProvider& provider) {
       static T object(provider.get(type_traits::stack{}));
-      return wrappers::shared<T&>(object);
+      return wrappers::shared<singleton, T&>(object);
     }
   };
   template <class _, class T>
   class scope<_, T, aux::true_type> {
    public:
     template <class T_>
-    using is_referable = typename wrappers::shared<T>::template is_referable<T_>;
+    using is_referable = typename wrappers::shared<singleton, T>::template is_referable<T_>;
     template <class, class TProvider, class T_ = aux::decay_t<decltype(aux::declval<TProvider>().get())>>
-    static decltype(wrappers::shared<T_>{std::shared_ptr<T_>{std::shared_ptr<T_>{aux::declval<TProvider>().get()}}})
+    static decltype(wrappers::shared<singleton, T_>{
+        std::shared_ptr<T_>{std::shared_ptr<T_>{aux::declval<TProvider>().get()}}})
     try_create(const TProvider&);
     template <class T_, class TProvider>
     auto create(const TProvider& provider) {
@@ -761,7 +770,7 @@ class singleton {
     template <class T_, class TProvider>
     auto create_impl(const TProvider& provider) {
       static std::shared_ptr<T_> object{provider.get()};
-      return wrappers::shared<T_, std::shared_ptr<T_>&>{object};
+      return wrappers::shared<singleton, T_, std::shared_ptr<T_>&>{object};
     }
   };
 };
@@ -897,11 +906,11 @@ struct arg {
 };
 template <class T>
 struct wrapper_traits {
-  using type = wrappers::unique<T>;
+  using type = wrappers::unique<instance, T>;
 };
 template <class T>
 struct wrapper_traits<std::shared_ptr<T>> {
-  using type = wrappers::shared<T>;
+  using type = wrappers::shared<instance, T>;
 };
 template <class T>
 using wrapper_traits_t = typename wrapper_traits<T>::type;
@@ -929,23 +938,24 @@ class instance {
     using is_referable = aux::false_type;
     explicit scope(const TGiven& object) : object_{object} {}
     template <class, class TProvider>
-    static wrappers::unique<TGiven> try_create(const TProvider&);
+    static wrappers::unique<instance, TGiven> try_create(const TProvider&);
     template <class, class TProvider>
     auto create(const TProvider&) const noexcept {
-      return wrappers::unique<TGiven>{object_};
+      return wrappers::unique<instance, TGiven>{object_};
     }
     TGiven object_;
   };
   template <class TExpected, class TGiven>
   struct scope<TExpected, std::shared_ptr<TGiven>> {
     template <class T>
-    using is_referable = typename wrappers::shared<TGiven>::template is_referable<aux::remove_qualifiers_t<T>>;
+    using is_referable =
+        typename wrappers::shared<instance, TGiven>::template is_referable<aux::remove_qualifiers_t<T>>;
     explicit scope(const std::shared_ptr<TGiven>& object) : object_{object} {}
     template <class, class TProvider>
-    static wrappers::shared<TGiven> try_create(const TProvider&);
+    static wrappers::shared<instance, TGiven> try_create(const TProvider&);
     template <class, class TProvider>
     auto create(const TProvider&) const noexcept {
-      return wrappers::shared<TGiven>{object_};
+      return wrappers::shared<instance, TGiven>{object_};
     }
     std::shared_ptr<TGiven> object_;
   };
@@ -958,7 +968,7 @@ class instance {
     static std::initializer_list<TGiven> try_create(const TProvider&);
     template <class, class TProvider>
     auto create(const TProvider&) const noexcept {
-      return wrappers::unique<std::initializer_list<TGiven>>{object_};
+      return wrappers::unique<instance, std::initializer_list<TGiven>>{object_};
     }
     std::initializer_list<TGiven> object_;
   };
@@ -968,12 +978,12 @@ class instance {
     using is_referable = aux::true_type;
     explicit scope(TGiven& object) : object_{object} {}
     template <class, class TProvider>
-    static wrappers::shared<TGiven&> try_create(const TProvider&);
+    static wrappers::shared<instance, TGiven&> try_create(const TProvider&);
     template <class, class TProvider>
     auto create(const TProvider&) const noexcept {
       return object_;
     }
-    wrappers::shared<TGiven&> object_;
+    wrappers::shared<instance, TGiven&> object_;
   };
   template <class TExpected, class TGiven>
   struct scope<TExpected, TGiven, BOOST_DI_REQUIRES(aux::is_callable<TGiven>::value)> {
@@ -987,7 +997,7 @@ class instance {
     template <class, class TProvider,
               BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable<TGiven>::value &&
                                 aux::is_callable<TExpected>::value) = 0>
-    static wrappers::unique<TExpected> try_create(const TProvider&) noexcept;
+    static wrappers::unique<instance, TExpected> try_create(const TProvider&) noexcept;
     template <class T, class TProvider,
               BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable_with<TGiven>::value &&
                                 !aux::is_callable<TExpected>::value) = 0>
@@ -1007,7 +1017,7 @@ class instance {
               BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable<TGiven>::value &&
                                 aux::is_callable<TExpected>::value) = 0>
     auto create(const TProvider&) const noexcept {
-      return wrappers::unique<TExpected>{object_};
+      return wrappers::unique<instance, TExpected>{object_};
     }
     template <class T, class TProvider,
               BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable_with<TGiven>::value &&
@@ -1035,7 +1045,7 @@ class instance {
 }
 namespace concepts {
 template <class...>
-struct scope {
+struct scope_ {
   struct is_referable {};
   struct try_create {};
   struct create {};
@@ -1052,8 +1062,8 @@ struct provider__ {
   }
 };
 template <class T>
-typename scope<T>::template requires_<typename scope<_, _>::is_referable, typename scope<_, _>::try_create,
-                                      typename scope<_, _>::create> scopable_impl(...);
+typename scope_<T>::template requires_<typename scope_<_, _>::is_referable, typename scope_<_, _>::try_create,
+                                       typename scope_<_, _>::create> scopable_impl(...);
 template <class T>
 auto scopable_impl(T && ) -> aux::is_valid_expr<
     typename T::template scope<_, _>::template is_referable<_>,
@@ -1358,8 +1368,8 @@ struct abstract_type {
     };
   };
 };
-template <class T>
-struct type {
+template <class TScope, class T>
+struct scope {
   template <class To>
   struct is_not_convertible_to {
     operator To() const {
@@ -1368,9 +1378,26 @@ struct type {
     }
     // clang-format off
     static inline To
- error(_ = "scope is not convertible to the requested type, did you mistake it by using: 'di::bind<T>.in(scope)'?");
+ error(_ = "scoped value is not convertible to the requested type, did you mistake the scope: 'di::bind<T>.in(scope)'?");
     // clang-format on
   };
+};
+template <class T>
+struct scope<scopes::instance, T> {
+  template <class To>
+  struct is_not_convertible_to {
+    operator To() const {
+      using constraint_not_satisfied = is_not_convertible_to;
+      return constraint_not_satisfied{}.error();
+    }
+    // clang-format off
+    static inline To
+ error(_ = "instance is not convertible to the requested type, verify binding: 'di::bind<T>.to(value)'?");
+    // clang-format on
+  };
+};
+template <class T>
+struct type {
   struct has_ambiguous_number_of_constructor_parameters {
     template <int Given>
     struct given {
@@ -2022,10 +2049,13 @@ struct wrapper_impl {
   inline operator T() noexcept { return wrapper_; }
   TWrapper wrapper_;
 };
-template <class T, class TWrapper>
-struct wrapper_impl<T, TWrapper, BOOST_DI_REQUIRES(!aux::is_convertible<TWrapper, T>::value)> {
-  inline operator T() noexcept { return typename concepts::type<TWrapper>::template is_not_convertible_to<T>{}; }
-  TWrapper wrapper_;
+template <class T, template <class...> class TWrapper, class TScope, class T_, class... Ts>
+struct wrapper_impl<T, TWrapper<TScope, T_, Ts...>,
+                    BOOST_DI_REQUIRES(!aux::is_convertible<TWrapper<TScope, T_, Ts...>, T>::value)> {
+  inline operator T() noexcept {
+    return typename concepts::scope<TScope, aux::remove_qualifiers_t<T_>>::template is_not_convertible_to<T>{};
+  }
+  TWrapper<TScope, T_, Ts...> wrapper_;
 };
 template <class T, class TWrapper>
 using wrapper = wrapper_impl<T, TWrapper>;

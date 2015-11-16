@@ -13,8 +13,10 @@
 
 namespace wrappers {
 
-template <class T>
+template <class TScope, class T>
 struct unique {
+  using scope = TScope;
+
   template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
   inline operator I() const noexcept {
     return object;
@@ -25,8 +27,10 @@ struct unique {
   T object;
 };
 
-template <class T>
-struct unique<T*> {
+template <class TScope, class T>
+struct unique<TScope, T*> {
+  using scope = TScope;
+
 #if defined(_MSC_VER)  // __pph__
   explicit unique(T* object) : object(object) {}
 #endif  // __pph__
