@@ -51,6 +51,7 @@ test-suite example :
     [ example automatic_injection.cpp ]
     [ example bind_non_owning_ptr.cpp ]
     [ example bindings.cpp ]
+    [ example configuration.cpp ]
     [ example constructor_injection.cpp ]
     [ example constructor_signature.cpp ]
     [ example custom_policy.cpp ]
