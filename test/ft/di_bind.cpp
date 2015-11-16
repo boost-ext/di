@@ -287,7 +287,7 @@ test bind_shared_ptr_interface = [] {
   injector.create<c>();
 };
 
-test scopes_external_shared = [] {
+test scopes_instance_shared = [] {
   auto i = std::make_shared<int>(42);
 
   auto injector = di::make_injector(di::bind<int>().to(i));
@@ -305,7 +305,7 @@ test scopes_external_shared = [] {
   }
 };
 
-test scopes_external_lambda = [] {
+test scopes_instance_lambda = [] {
   auto i = std::make_shared<int>(42);
 
   auto injector = di::make_injector(di::bind<int>().to([&i] { return i; }));
@@ -323,7 +323,7 @@ test scopes_external_lambda = [] {
   }
 };
 
-test scopes_external_lambda_injector = [] {
+test scopes_instance_lambda_injector = [] {
   auto i = std::make_shared<int>(42);
 
   auto injector = di::make_injector(di::bind<int>().to([&i](const auto&) { return i; }));
@@ -341,7 +341,7 @@ test scopes_external_lambda_injector = [] {
   }
 };
 
-test scopes_external_lambda_injector_mix = [] {
+test scopes_instance_lambda_injector_mix = [] {
   auto injector = di::make_injector(
       di::bind<short>().to([] { return 42; }), di::bind<long>().to(87l),
       di::bind<int>().to([](const auto& injector) { return static_cast<int>(injector.template create<long>()); }));
@@ -350,7 +350,7 @@ test scopes_external_lambda_injector_mix = [] {
   expect(87 == injector.create<int>());
 };
 
-test externals_ref_cref = [] {
+test instances_ref_cref = [] {
   auto i = 42;
   const auto d = 87.0;
 

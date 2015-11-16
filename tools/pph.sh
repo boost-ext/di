@@ -49,7 +49,7 @@ pph() {
         #include "boost/di/injector.hpp"
         #include "boost/di/make_injector.hpp"
         #include "boost/di/scopes/deduce.hpp"
-        #include "boost/di/scopes/external.hpp"
+        #include "boost/di/scopes/instance.hpp"
         #include "boost/di/scopes/exposed.hpp"
         #include "boost/di/scopes/singleton.hpp"
         #include "boost/di/scopes/unique.hpp"

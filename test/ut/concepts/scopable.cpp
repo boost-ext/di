@@ -8,7 +8,7 @@
 #include "boost/di/concepts/scopable.hpp"
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/exposed.hpp"
-#include "boost/di/scopes/external.hpp"
+#include "boost/di/scopes/instance.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/unique.hpp"
 
@@ -112,7 +112,7 @@ test missing_is_referable = [] {
 test scopable_scopes = [] {
   static_expect(scopable<scopes::deduce>::value);
   static_expect(scopable<scopes::exposed<>>::value);
-  static_expect(scopable<scopes::external>::value);
+  static_expect(scopable<scopes::instance>::value);
   static_expect(scopable<scopes::singleton>::value);
   static_expect(scopable<scopes::unique>::value);
 };

@@ -162,7 +162,7 @@ test exposed_many = [] {
   }
 };
 
-test exposed_with_external = [] {
+test exposed_with_instance = [] {
   constexpr auto i = 42;
 
   di::injector<int> injector = di::make_injector(di::bind<int>().to(i));

@@ -103,11 +103,11 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
 
 // ---------------------------------------------------------------------------
 
-test bind_external_with_given_scope = [] {
+test bind_instance_with_given_scope = [] {
   expect_compile_fail("", errors(), di::make_injector(di::bind<int>().in(di::unique).to(42)););
 };
 
-test bind_external_with_given_type = [] {
+test bind_instance_with_given_type = [] {
   expect_compile_fail("", errors(), struct i{}; struct impl
                       : i{};
                       int main() { di::make_injector(di::bind<i>().to(impl{}).to<impl>()); });
@@ -118,7 +118,7 @@ test bind_named_to_named = [] {
                       int main() { di::make_injector(di::bind<int>().named(a{}).named(b{})); });
 };
 
-test bind_external_with_given_value = [] {
+test bind_instance_with_given_value = [] {
   expect_compile_fail("", errors(),
                       int main() { di::make_injector(di::bind<int>().to<std::integral_constant<int>>(0)); });
 };
@@ -162,7 +162,7 @@ test bind_has_disallowed_qualifiers_given_complex = [] {
                       int main() { di::make_injector(di::bind<int, std::shared_ptr<int>>()); });
 };
 
-test bind_external_repeated = [] {
+test bind_instance_repeated = [] {
   auto errors_ = errors("constraint not satisfied", "type_<.*int>::is_bound_more_than_once");
 
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>().to(42), di::bind<int>().to(87)); });
@@ -590,7 +590,7 @@ int main() { di::make_injector<test_config>(); }
       });
     };
 
-    test scope_traits_external_not_referable = [] {
+    test scope_traits_instance_not_referable = [] {
       auto errors_ = errors(
 #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
           "creatable constraint not satisfied",
@@ -609,7 +609,7 @@ int main() { di::make_injector<test_config>(); }
       });
     };
 
-    test scope_traits_external_not_referable_named = [] {
+    test scope_traits_instance_not_referable_named = [] {
       auto errors_ = errors(
 #if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
           "creatable constraint not satisfied",

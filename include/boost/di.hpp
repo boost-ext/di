@@ -921,7 +921,7 @@ struct is_expr
           bool, aux::is_callable_with<TGiven, no_implicit_conversions<typename TProvider::injector_t>, Ts...>::value &&
                     !has_result_type<TGiven>::value> {};
 }
-class external {
+class instance {
  public:
   template <class, class TGiven, class = int>
   struct scope {
@@ -1156,7 +1156,7 @@ class dependency : dependency_base,
   }
   template <class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value) = 0>
   auto to(T&& object) const noexcept {
-    using dependency = dependency<scopes::external, TExpected, typename ref_traits<T>::type, TName, TPriority>;
+    using dependency = dependency<scopes::instance, TExpected, typename ref_traits<T>::type, TName, TPriority>;
     return dependency{static_cast<T&&>(object)};
   }
   template <class T, BOOST_DI_REQUIRES(is_injector<T>::value) = 0>
@@ -1167,7 +1167,7 @@ class dependency : dependency_base,
   template <class T>
   auto to(std::initializer_list<T>&& object) const noexcept {
     using dependency =
-        dependency<scopes::external, array<array_type_t<TExpected>>, std::initializer_list<T>, TName, TPriority>;
+        dependency<scopes::instance, array<array_type_t<TExpected>>, std::initializer_list<T>, TName, TPriority>;
     return dependency{object};
   }
   template <

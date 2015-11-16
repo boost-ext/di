@@ -10,7 +10,7 @@
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/core/array.hpp"
 #include "boost/di/scopes/exposed.hpp"
-#include "boost/di/scopes/external.hpp"
+#include "boost/di/scopes/instance.hpp"
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/concepts/scopable.hpp"
 #include "boost/di/fwd.hpp"
@@ -127,7 +127,7 @@ class dependency : dependency_base,
 
   template <class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value) = 0>
   auto to(T&& object) const noexcept {
-    using dependency = dependency<scopes::external, TExpected, typename ref_traits<T>::type, TName, TPriority>;
+    using dependency = dependency<scopes::instance, TExpected, typename ref_traits<T>::type, TName, TPriority>;
     return dependency{static_cast<T&&>(object)};
   }
 
@@ -140,7 +140,7 @@ class dependency : dependency_base,
   template <class T>
   auto to(std::initializer_list<T>&& object) const noexcept {
     using dependency =
-        dependency<scopes::external, array<array_type_t<TExpected>>, std::initializer_list<T>, TName, TPriority>;
+        dependency<scopes::instance, array<array_type_t<TExpected>>, std::initializer_list<T>, TName, TPriority>;
     return dependency{object};
   }
 

@@ -75,7 +75,7 @@ test-suite ut :
     [ test ut/providers/stack_over_heap.cpp ]
     [ test ut/scopes/deduce.cpp ]
     [ test ut/scopes/exposed.cpp ]
-    [ test ut/scopes/external.cpp ]
+    [ test ut/scopes/instance.cpp ]
     [ test ut/scopes/singleton.cpp ]
     [ test ut/scopes/unique.cpp ]
     [ test ut/type_traits/ctor_traits.cpp ]

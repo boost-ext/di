@@ -59,11 +59,11 @@ test to = [] {
   expect(std::is_same<scopes::deduce, typename dep1::scope>::value);
 
   using dep2 = decltype(dep1{}.to(42));
-  expect(std::is_same<scopes::external, typename dep2::scope>::value);
+  expect(std::is_same<scopes::instance, typename dep2::scope>::value);
   expect(std::is_same<int, typename dep2::expected>::value);
   expect(std::is_same<int, typename dep2::given>::value);
 
-  expect(std::is_same<scopes::external, typename dep2::scope>::value);
+  expect(std::is_same<scopes::instance, typename dep2::scope>::value);
   expect(std::is_same<int, typename dep2::expected>::value);
   expect(std::is_same<int, typename dep2::given>::value);
 };
