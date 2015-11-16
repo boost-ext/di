@@ -369,13 +369,11 @@ test instances_ref_cref = [] {
   expect(d == object.d_);
 };
 
-#if !defined(_MSC_VER)  // TODO
 test bind_chars_to_string = [] {
   auto injector = di::make_injector(di::bind<std::string>().to("str"));
 
   expect("str" == injector.create<std::string>());
 };
-#endif
 
 test dynamic_binding_using_polymorphic_lambdas_with_dependend_interfaces = [] {
   auto test = [&](bool debug_property) {
