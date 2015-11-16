@@ -13,6 +13,8 @@
 
 namespace scopes {
 
+class instance;
+
 namespace detail {
 
 template <class T, class TExpected, class TGiven>

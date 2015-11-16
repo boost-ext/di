@@ -12,10 +12,10 @@
 namespace core {
 
 test is_dependency_types = [] {
-  expect(!is_dependency<void>::value);
-  expect(!is_dependency<int>::value);
-  expect(is_dependency<dependency<scopes::deduce, int>>::value);
-  expect(is_dependency<dependency<scopes::deduce, double, double>>::value);
+  expect(!aux::is_base_of<dependency_base, void>::value);
+  expect(!aux::is_base_of<dependency_base, int>::value);
+  expect(aux::is_base_of<dependency_base, dependency<scopes::deduce, int>>::value);
+  expect(aux::is_base_of<dependency_base, dependency<scopes::deduce, double, double>>::value);
 };
 
 struct name {};

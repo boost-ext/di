@@ -333,6 +333,8 @@ struct function_traits<R (T::*)(TArgs...) const> {
 template <class T>
 using function_traits_t = typename function_traits<T>::args;
 
+BOOST_DI_HAS_TYPE(is_injector, deps);
+
 }  // aux
 
 #endif

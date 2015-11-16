@@ -52,17 +52,19 @@ struct injector__ : T {
 template <class, class...>
 struct array;
 
+struct dependency_base;
+template <class TScope, class TExpected, class TGiven = TExpected, class TName = no_name, class TPriority = void>
+class dependency;
+
 }  // core
 
 namespace scopes {
+class deduce;
+template <class = deduce>
+class exposed;
 class instance;
+class singleton;
+class unique;
 }  // scopes
-
-namespace concepts {
-template <class...>
-struct boundable__;
-template <class...>
-struct any_of;
-}  // concepts
 
 #endif

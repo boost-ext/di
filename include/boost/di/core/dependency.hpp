@@ -7,20 +7,17 @@
 #ifndef BOOST_DI_CORE_DEPENDENCY_HPP
 #define BOOST_DI_CORE_DEPENDENCY_HPP
 
+#include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/core/array.hpp"
 #include "boost/di/scopes/exposed.hpp"
 #include "boost/di/scopes/instance.hpp"
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/concepts/scopable.hpp"
+#include "boost/di/concepts/boundable.hpp"
 #include "boost/di/fwd.hpp"
 
 namespace core {
-
-template <class... Ts>
-using boundable = typename concepts::boundable__<Ts...>::type;  // TODO
-
-BOOST_DI_HAS_TYPE(is_injector, deps);
 
 template <class T>
 struct array_type {
@@ -54,8 +51,7 @@ struct override {};
 
 struct dependency_base {};
 
-template <class TScope, class TExpected, class TGiven = TExpected, class TName = no_name,
-          class TPriority = aux::none_type>
+template <class TScope, class TExpected, class TGiven, class TName, class TPriority>
 class dependency : dependency_base,
                    TScope::template scope<TExpected, TGiven>,
                    public dependency_impl<dependency_concept<TExpected, TName>,
@@ -65,12 +61,12 @@ class dependency : dependency_base,
   using scope_t = typename TScope::template scope<TExpected, TGiven>;
 
   template <class T>
-  using externable = aux::integral_constant<bool, !is_injector<aux::remove_reference_t<T>>::value &&
+  using externable = aux::integral_constant<bool, !aux::is_injector<aux::remove_reference_t<T>>::value &&
                                                       aux::is_same<TScope, scopes::deduce>::value &&
                                                       aux::is_same<TExpected, TGiven>::value>;
 
   template <class T>
-  using specific = aux::integral_constant<bool, is_injector<T>::value || aux::is_array<TExpected, T>::value>;
+  using specific = aux::integral_constant<bool, aux::is_injector<T>::value || aux::is_array<TExpected, T>::value>;
 
   template <class T>
   struct ref_traits {
@@ -118,7 +114,8 @@ class dependency : dependency_base,
     return dependency<T, TExpected, TGiven, TName, TPriority>{};
   }
 
-  template <class T, BOOST_DI_REQUIRES(!specific<T>::value) = 0, BOOST_DI_REQUIRES_MSG(boundable<TExpected, T>) = 0>
+  template <class T, BOOST_DI_REQUIRES(!specific<T>::value) = 0,
+            BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, T>) = 0>
   auto to() noexcept {
     return dependency<TScope, TExpected, T, TName, TPriority>{};
   }
@@ -129,7 +126,7 @@ class dependency : dependency_base,
                       TPriority>{};
   }
 
-  template <class T, BOOST_DI_REQUIRES_MSG(boundable<array_type_t<TExpected>, T>) = 0>
+  template <class T, BOOST_DI_REQUIRES_MSG(concepts::boundable<array_type_t<TExpected>, T>) = 0>
   auto to(std::initializer_list<T>&& object) noexcept {
     using dependency =
         dependency<scopes::instance, array<array_type_t<TExpected>>, std::initializer_list<T>, TName, TPriority>;
@@ -137,13 +134,13 @@ class dependency : dependency_base,
   }
 
   template <class T, BOOST_DI_REQUIRES(externable<T>::value) = 0,
-            BOOST_DI_REQUIRES_MSG(boundable<TExpected, aux::decay_t<T>, aux::valid<>>) = 0>
+            BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, aux::decay_t<T>, aux::valid<>>) = 0>
   auto to(T&& object) noexcept {
     using dependency = dependency<scopes::instance, TExpected, typename ref_traits<T>::type, TName, TPriority>;
     return dependency{static_cast<T&&>(object)};
   }
 
-  template <class T, BOOST_DI_REQUIRES(is_injector<T>::value) = 0>
+  template <class T, BOOST_DI_REQUIRES(aux::is_injector<T>::value) = 0>
   auto to(const T& object = {}) noexcept {
     using dependency = dependency<scopes::exposed<TScope>, TExpected, T, TName, TPriority>;
     return dependency{object};
@@ -165,9 +162,6 @@ class dependency : dependency_base,
   template <class>
   static void try_create(...);
 };
-
-template <class T>
-struct is_dependency : aux::is_base_of<dependency_base, T> {};
 
 }  // core
 

@@ -9,12 +9,12 @@
 
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
-#include "boost/di/core/dependency.hpp"
-#include "boost/di/scopes/exposed.hpp"
+#include "boost/di/fwd.hpp"
 
 namespace core {
 
-template <class T, class = typename is_injector<T>::type, class = typename is_dependency<T>::type>
+template <class T, class = typename aux::is_injector<T>::type,
+          class = typename aux::is_base_of<dependency_base, T>::type>
 struct bindings_impl;
 
 template <class T, class TAny>

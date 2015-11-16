@@ -7,14 +7,13 @@
 #ifndef BOOST_DI_SCOPES_EXPOSED_HPP
 #define BOOST_DI_SCOPES_EXPOSED_HPP
 
-#include "boost/di/scopes/deduce.hpp"
+#include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/type_traits/memory_traits.hpp"
 #include "boost/di/fwd.hpp"
 
 namespace scopes {
 
-BOOST_DI_HAS_TYPE(has_deps, deps);
-
-template <class TScope = scopes::deduce>
+template <class TScope>
 class exposed {
  public:
   template <class TExpected, class TGiven>
@@ -79,7 +78,7 @@ class exposed {
     template <class>
     using is_referable = aux::false_type;
 
-    template <class TInjector, BOOST_DI_REQUIRES(has_deps<TInjector>::value) = 0>
+    template <class TInjector, BOOST_DI_REQUIRES(aux::is_injector<TInjector>::value) = 0>
     explicit scope(const TInjector& injector) noexcept {
       static auto provider = provider_impl<TInjector>{injector};
       provider.injector = injector;
