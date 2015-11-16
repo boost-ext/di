@@ -19,8 +19,10 @@ namespace core {
 
 BOOST_DI_HAS_TYPE(is_injector, deps);
 
-template <class>
-struct array_type;
+template <class T>
+struct array_type {
+  using type = T;
+};
 
 template <class T>
 struct array_type<T* []> {
@@ -99,62 +101,59 @@ class dependency : dependency_base,
       : scope_t(other) {}
 
   template <class T, BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
-  auto named() const noexcept {
+  auto named() noexcept {
     return dependency<TScope, TExpected, TGiven, T, TPriority>{*this};
   }
 
   template <class T, BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
-  auto named(const T&) const noexcept {
+  auto named(const T&) noexcept {
     return dependency<TScope, TExpected, TGiven, T, TPriority>{*this};
   }
 
   template <class T, BOOST_DI_REQUIRES_MSG(concepts::scopable<T>) = 0>
-  auto in(const T&) const noexcept {
+  auto in(const T&) noexcept {
     return dependency<T, TExpected, TGiven, TName, TPriority>{};
   }
 
   template <class T, BOOST_DI_REQUIRES(!specific<T>::value) = 0,
-            BOOST_DI_REQUIRES_MSG(typename concepts::boundable__<TExpected, T>::type) = 0>
-  auto to() const noexcept {
+            BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, T>) = 0>
+  auto to() noexcept {
     return dependency<TScope, TExpected, T, TName, TPriority>{};
   }
 
   template <class... Ts, BOOST_DI_REQUIRES(aux::is_array<TExpected, Ts...>::value) = 0>
-  auto to() const noexcept {
+  auto to() noexcept {
     return dependency<TScope, array<array_type_t<TExpected>>, array<array_type_t<TExpected>, Ts...>, TName,
                       TPriority>{};
   }
 
-  template <class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value) = 0>
-  auto to(T&& object) const noexcept {
-    using dependency = dependency<scopes::instance, TExpected, typename ref_traits<T>::type, TName, TPriority>;
-    return dependency{static_cast<T&&>(object)};
-  }
-
-  template <class T, BOOST_DI_REQUIRES(is_injector<T>::value) = 0>
-  auto to(const T& object = {}) const noexcept {
-    using dependency = dependency<scopes::exposed<TScope>, TExpected, T, TName, TPriority>;
-    return dependency{object};
-  }
-
-  template <class T>
-  auto to(std::initializer_list<T>&& object) const noexcept {
+  template <class T, BOOST_DI_REQUIRES_MSG(concepts::boundable<array_type_t<TExpected>, T>) = 0>
+  auto to(std::initializer_list<T>&& object) noexcept {
     using dependency =
         dependency<scopes::instance, array<array_type_t<TExpected>>, std::initializer_list<T>, TName, TPriority>;
     return dependency{object};
   }
 
-  template <
-      class T, class...,
-      BOOST_DI_REQUIRES(!aux::is_same<aux::true_type, typename concepts::boundable__<TExpected, T>::type>::value) = 0>
-  dependency to(...) const noexcept;
-
-  auto operator[](const override&) const noexcept {
-    return dependency<TScope, TExpected, TGiven, TName, override>{*this};
+  template <class T, BOOST_DI_REQUIRES(externable<T>::value && !aux::is_narrowed<TExpected, T>::value) = 0,
+            BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, aux::decay_t<T>>) = 0>
+  auto to(T&& object) noexcept {
+    using dependency = dependency<scopes::instance, TExpected, typename ref_traits<T>::type, TName, TPriority>;
+    return dependency{static_cast<T&&>(object)};
   }
 
+  template <class T, BOOST_DI_REQUIRES(is_injector<T>::value) = 0>
+  auto to(const T& object = {}) noexcept {
+    using dependency = dependency<scopes::exposed<TScope>, TExpected, T, TName, TPriority>;
+    return dependency{object};
+  }
+
+  template <class...>
+  dependency& to(...) const noexcept;
+
+  auto operator[](const override&) noexcept { return dependency<TScope, TExpected, TGiven, TName, override>{*this}; }
+
 #if defined(__cpp_variable_templates)  // __pph__
-  const dependency& operator()() const noexcept { return *this; }
+  dependency& operator()() noexcept { return *this; }
 #endif  // __pph__
 
  protected:

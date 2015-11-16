@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include "boost/di/core/dependency.hpp"
+#include "boost/di/concepts/boundable.hpp"
 #include "common/fakes/fake_injector.hpp"
 #include "common/fakes/fake_scope.hpp"
 
@@ -59,10 +60,6 @@ test to = [] {
   expect(std::is_same<scopes::deduce, typename dep1::scope>::value);
 
   using dep2 = decltype(dep1{}.to(42));
-  expect(std::is_same<scopes::instance, typename dep2::scope>::value);
-  expect(std::is_same<int, typename dep2::expected>::value);
-  expect(std::is_same<int, typename dep2::given>::value);
-
   expect(std::is_same<scopes::instance, typename dep2::scope>::value);
   expect(std::is_same<int, typename dep2::expected>::value);
   expect(std::is_same<int, typename dep2::given>::value);

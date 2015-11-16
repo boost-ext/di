@@ -110,7 +110,8 @@ struct is_related {
 template <class I, class T>
 struct is_related<true, I, T> {
   static constexpr auto value =
-      aux::is_base_of<I, T>::value || (aux::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value);
+      aux::is_callable<T>::value ||
+      (aux::is_base_of<I, T>::value || (aux::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value));
 };
 
 template <bool, class>
@@ -141,7 +142,12 @@ auto boundable_impl(I&&, T && ) -> aux::conditional_t<
                        typename type_<T>::template is_not_related_to<I>>>;
 
 template <class I, class T>  // array[]
-auto boundable_impl(I[], T && ) -> aux::true_type;
+auto boundable_impl(I* [], T && ) -> aux::conditional_t<
+    !aux::is_same<I, aux::decay_t<I>>::value, typename type_<I>::has_disallowed_qualifiers,
+    aux::conditional_t<is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value,
+                       aux::conditional_t<is_abstract<aux::is_complete<T>::value, T>::value,
+                                          typename type_<T>::is_abstract, aux::true_type>,
+                       typename type_<T>::template is_not_related_to<I>>>;
 
 template <class... TDeps>  // bindings
 auto boundable_impl(aux::type_list<TDeps...> && ) -> get_bindings_error<TDeps...>;
