@@ -90,6 +90,17 @@ template <class T>
 using remove_reference_t = typename remove_reference<T>::type;
 
 template <class T>
+struct remove_pointer {
+  using type = T;
+};
+template <class T>
+struct remove_pointer<T*> {
+  using type = T;
+};
+template <class T>
+using remove_pointer_t = typename remove_pointer<T>::type;
+
+template <class T>
 struct remove_smart_ptr {
   using type = T;
 };
@@ -156,6 +167,17 @@ template <class T>
 using remove_qualifiers_t = typename remove_qualifiers<T>::type;
 
 template <class T>
+struct remove_extent {
+  using type = T;
+};
+template <class T>
+struct remove_extent<T[]> {
+  using type = T;
+};
+template <class T>
+using remove_extent_t = typename remove_extent<T>::type;
+
+template <class T>
 struct deref_type {
   using type = T;
 };
@@ -182,12 +204,12 @@ struct deref_type<std::weak_ptr<T>> {
 
 template <class T, class TAllocator>
 struct deref_type<std::vector<T, TAllocator>> {
-  using type = core::array<remove_qualifiers_t<typename deref_type<T>::type>* []>;
+  using type = core::array<remove_qualifiers_t<typename deref_type<T>::type>>;
 };
 
 template <class TKey, class TCompare, class TAllocator>
 struct deref_type<std::set<TKey, TCompare, TAllocator>> {
-  using type = core::array<remove_qualifiers_t<typename deref_type<TKey>::type>* []>;
+  using type = core::array<remove_qualifiers_t<typename deref_type<TKey>::type>>;
 };
 
 template <class T>

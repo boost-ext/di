@@ -20,27 +20,27 @@ struct i {
 };
 
 test traits = [] {
-  static_expect(std::is_same<stack, memory_traits<int>::type>{});
-  static_expect(std::is_same<stack, memory_traits<c>::type>{});
-  static_expect(std::is_same<stack, memory_traits<const int&>::type>{});
-  static_expect(std::is_same<heap, memory_traits<int*>::type>{});
-  static_expect(std::is_same<heap, memory_traits<const int*>::type>{});
-  static_expect(std::is_same<heap, memory_traits<std::shared_ptr<int>>::type>{});
-  static_expect(std::is_same<heap, memory_traits<const std::shared_ptr<int>&>::type>{});
-  static_expect(std::is_same<heap, memory_traits<std::weak_ptr<int>>::type>{});
-  static_expect(std::is_same<heap, memory_traits<const std::weak_ptr<int>&>::type>{});
-  static_expect(std::is_same<stack, memory_traits<int&>::type>{});
-  static_expect(std::is_same<heap, memory_traits<std::unique_ptr<int>>::type>{});
-  static_expect(std::is_same<heap, memory_traits<std::unique_ptr<int, deleter<int>>>::type>{});
-  static_expect(std::is_same<heap, memory_traits<std::shared_ptr<int>>::type>{});
-  static_expect(std::is_same<heap, memory_traits<std::weak_ptr<int>>::type>{});
-  static_expect(std::is_same<stack, memory_traits<int&&>::type>{});
-  static_expect(std::is_same<stack, memory_traits<const int&&>::type>{});
-  static_expect(std::is_same<heap, memory_traits<i>::type>{});
+  static_expect(std::is_same<stack, memory_traits_t<int>>{});
+  static_expect(std::is_same<stack, memory_traits_t<c>>{});
+  static_expect(std::is_same<stack, memory_traits_t<const int&>>{});
+  static_expect(std::is_same<heap, memory_traits_t<int*>>{});
+  static_expect(std::is_same<heap, memory_traits_t<const int*>>{});
+  static_expect(std::is_same<heap, memory_traits_t<std::shared_ptr<int>>>{});
+  static_expect(std::is_same<heap, memory_traits_t<const std::shared_ptr<int>&>>{});
+  static_expect(std::is_same<heap, memory_traits_t<std::weak_ptr<int>>>{});
+  static_expect(std::is_same<heap, memory_traits_t<const std::weak_ptr<int>&>>{});
+  static_expect(std::is_same<stack, memory_traits_t<int&>>{});
+  static_expect(std::is_same<heap, memory_traits_t<std::unique_ptr<int>>>{});
+  static_expect(std::is_same<heap, memory_traits_t<std::unique_ptr<int, deleter<int>>>>{});
+  static_expect(std::is_same<heap, memory_traits_t<std::shared_ptr<int>>>{});
+  static_expect(std::is_same<heap, memory_traits_t<std::weak_ptr<int>>>{});
+  static_expect(std::is_same<stack, memory_traits_t<int&&>>{});
+  static_expect(std::is_same<stack, memory_traits_t<const int&&>>{});
+  static_expect(std::is_same<heap, memory_traits_t<i>>{});
 
 #if __has_include(<boost / shared_ptr.hpp>)
-  static_expect(std::is_same<heap, memory_traits<boost::shared_ptr<int>>::type>{});
-  static_expect(std::is_same<heap, memory_traits<const boost::shared_ptr<int>&>::type>{});
+  static_expect(std::is_same<heap, memory_traits_t<boost::shared_ptr<int>>>{});
+  static_expect(std::is_same<heap, memory_traits_t<const boost::shared_ptr<int>&>>{});
 #endif
 };
 

@@ -21,7 +21,7 @@ struct array_impl {
 };
 
 template <class C, class... Ts>
-struct array : array_impl<typename C::value_type, sizeof...(Ts)>, C {
+struct array<C(), Ts...> : array_impl<typename C::value_type, sizeof...(Ts)>, C {
   using value_type = typename C::value_type;
   using array_t = array_impl<value_type, sizeof...(Ts)>;
   using array_t::array_;
@@ -46,24 +46,16 @@ struct array : array_impl<typename C::value_type, sizeof...(Ts)>, C {
 };
 
 template <class C>
-struct array<C> : C {
+struct array<C()> : C {
   using boost_di_inject__ = aux::type_list<>;
 };
-
-template <class C>
-struct array<C* []> {};
-
-template <class C, class... Ts>
-struct array<C* [], Ts...> {};
 
 }  // core
 
 namespace type_traits {
-
 template <class _, class T, class... Ts>
-struct ctor_traits__<_, core::array<T[], Ts...>, aux::false_type>
-    : type_traits::ctor_traits__<void, core::array<aux::remove_smart_ptr_t<aux::remove_qualifiers_t<_>>, Ts...>> {};
-
+struct ctor_traits__<core::array<_, Ts...>, T, aux::false_type>
+    : type_traits::ctor_traits__<core::array<aux::remove_smart_ptr_t<aux::remove_qualifiers_t<T>>(), Ts...>> {};
 }  // type_traits
 
 #endif

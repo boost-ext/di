@@ -110,6 +110,32 @@ test is_narrowed_types = [] {
   static_expect(!is_narrowed<int, c>::value);
 };
 
+test remove_reference_types = [] {
+  static_expect(std::is_same<int, remove_reference_t<int>>::value);
+  static_expect(std::is_same<int, remove_reference_t<int&>>::value);
+  static_expect(std::is_same<int, remove_reference_t<int&&>>::value);
+  static_expect(std::is_same<const int, remove_reference_t<const int&>>::value);
+};
+
+test remove_pointer_types = [] {
+  static_expect(std::is_same<int, remove_pointer_t<int>>::value);
+  static_expect(std::is_same<int, remove_pointer_t<int*>>::value);
+  static_expect(std::is_same<const int, remove_pointer_t<const int*>>::value);
+};
+
+test remove_extent_types = [] {
+  static_expect(std::is_same<int, remove_extent_t<int>>::value);
+  static_expect(std::is_same<int, remove_extent_t<int[]>>::value);
+};
+
+test remove_smart_ptr_types = [] {
+  static_expect(std::is_same<int, remove_smart_ptr_t<int>>::value);
+  static_expect(std::is_same<int, remove_smart_ptr_t<std::unique_ptr<int>>>::value);
+  static_expect(std::is_same<int, remove_smart_ptr_t<std::shared_ptr<int>>>::value);
+  static_expect(std::is_same<int, remove_smart_ptr_t<boost::shared_ptr<int>>>::value);
+  static_expect(std::is_same<int, remove_smart_ptr_t<std::weak_ptr<int>>>::value);
+};
+
 test remove_qualifiers_types = [] {
   static_expect(std::is_same<int, remove_qualifiers_t<int>>::value);
   static_expect(std::is_same<int, remove_qualifiers_t<int&>>::value);
@@ -143,10 +169,10 @@ test decay_types = [] {
     static_expect(std::is_same<T, decay_t<std::shared_ptr<T>&>>::value);
     static_expect(std::is_same<T, decay_t<boost::shared_ptr<T>&>>::value);
     static_expect(std::is_same<T, decay_t<T&&>>::value);
-    static_expect(std::is_same<core::array<T* []>, decay_t<std::vector<std::shared_ptr<T>>>>::value);
-    static_expect(std::is_same<core::array<T* []>, decay_t<std::shared_ptr<std::vector<std::shared_ptr<T>>>>>::value);
-    static_expect(std::is_same<core::array<T* []>, decay_t<std::set<std::shared_ptr<T>>>>::value);
-    static_expect(std::is_same<core::array<T* []>, decay_t<std::shared_ptr<std::set<std::shared_ptr<T>>>>>::value);
+    static_expect(std::is_same<core::array<T>, decay_t<std::vector<std::shared_ptr<T>>>>::value);
+    static_expect(std::is_same<core::array<T>, decay_t<std::shared_ptr<std::vector<std::shared_ptr<T>>>>>::value);
+    static_expect(std::is_same<core::array<T>, decay_t<std::set<std::shared_ptr<T>>>>::value);
+    static_expect(std::is_same<core::array<T>, decay_t<std::shared_ptr<std::set<std::shared_ptr<T>>>>>::value);
   };
 
   struct c {};
@@ -227,6 +253,12 @@ test is_unique_types = [] {
   static_expect(!is_unique<int, double, double, int, int>::value);
   static_expect(std::is_same<not_unique<int>, is_unique<int, int>::type>::value);
   static_expect(std::is_same<not_unique<int>, is_unique<float, int, double, int>::type>::value);
+};
+
+test is_array_types = [] {
+  static_expect(!is_array<int>::value);
+  static_expect(is_array<int[]>::value);
+  static_expect(is_array<int* []>::value);
 };
 
 }  // aux

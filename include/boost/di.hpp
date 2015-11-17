@@ -289,6 +289,16 @@ struct remove_reference<T&&> {
 template <class T>
 using remove_reference_t = typename remove_reference<T>::type;
 template <class T>
+struct remove_pointer {
+  using type = T;
+};
+template <class T>
+struct remove_pointer<T*> {
+  using type = T;
+};
+template <class T>
+using remove_pointer_t = typename remove_pointer<T>::type;
+template <class T>
 struct remove_smart_ptr {
   using type = T;
 };
@@ -353,6 +363,16 @@ struct remove_qualifiers<T&&> {
 template <class T>
 using remove_qualifiers_t = typename remove_qualifiers<T>::type;
 template <class T>
+struct remove_extent {
+  using type = T;
+};
+template <class T>
+struct remove_extent<T[]> {
+  using type = T;
+};
+template <class T>
+using remove_extent_t = typename remove_extent<T>::type;
+template <class T>
 struct deref_type {
   using type = T;
 };
@@ -374,11 +394,11 @@ struct deref_type<std::weak_ptr<T>> {
 };
 template <class T, class TAllocator>
 struct deref_type<std::vector<T, TAllocator>> {
-  using type = core::array<remove_qualifiers_t<typename deref_type<T>::type>* []>;
+  using type = core::array<remove_qualifiers_t<typename deref_type<T>::type>>;
 };
 template <class TKey, class TCompare, class TAllocator>
 struct deref_type<std::set<TKey, TCompare, TAllocator>> {
-  using type = core::array<remove_qualifiers_t<typename deref_type<TKey>::type>* []>;
+  using type = core::array<remove_qualifiers_t<typename deref_type<TKey>::type>>;
 };
 template <class T>
 using decay_t = typename deref_type<remove_qualifiers_t<T>>::type;
@@ -535,13 +555,21 @@ struct pool<aux::type_list<TArgs...>> : TArgs... {
 };
 }
 namespace type_traits {
-template <class T, class U>
+template <class, class T>
 struct rebind_traits {
-  using type = U;
+  using type = T;
 };
 template <class T, class U>
 struct rebind_traits<T, named<U>> {
   using type = named<U, T>;
+};
+template <class T, template <class> class TDeleter, class D, class U>
+struct rebind_traits<std::unique_ptr<T, TDeleter<D>>, U> {
+  using type = std::unique_ptr<U, TDeleter<U>>;
+};
+template <class T, template <class> class TDeleter, class D, class U>
+struct rebind_traits<std::unique_ptr<T, TDeleter<D>>, named<U>> {
+  using type = named<U, std::unique_ptr<U, TDeleter<U>>>;
 };
 template <class T, class U>
 struct rebind_traits<std::shared_ptr<T>, U> {
@@ -551,13 +579,21 @@ template <class T, class U>
 struct rebind_traits<std::shared_ptr<T>, named<U>> {
   using type = named<U, std::shared_ptr<T>>;
 };
-template <class T, class D, class U>
-struct rebind_traits<std::unique_ptr<T, D>, U> {
-  using type = std::unique_ptr<U, D>;
+template <class T, class U>
+struct rebind_traits<std::weak_ptr<T>, U> {
+  using type = std::weak_ptr<U>;
 };
-template <class T, class D, class U>
-struct rebind_traits<std::unique_ptr<T, D>, named<U>> {
-  using type = named<U, std::unique_ptr<T, D>>;
+template <class T, class U>
+struct rebind_traits<std::weak_ptr<T>, named<U>> {
+  using type = named<U, std::weak_ptr<T>>;
+};
+template <class T, class U>
+struct rebind_traits<boost::shared_ptr<T>, U> {
+  using type = boost::shared_ptr<U>;
+};
+template <class T, class U>
+struct rebind_traits<boost::shared_ptr<T>, named<U>> {
+  using type = named<U, boost::shared_ptr<T>>;
 };
 template <class T, class U>
 using rebind_traits_t = typename rebind_traits<T, U>::type;
@@ -609,19 +645,19 @@ template <class T>
 struct ctor<T, aux::type_list<>> : aux::pair<uniform, ctor_impl_t<aux::is_braces_constructible, T>> {};
 template <class T, class... TArgs>
 struct ctor<T, aux::type_list<TArgs...>> : aux::pair<direct, aux::type_list<TArgs...>> {};
-template <class, class T, class = typename is_injectable<T>::type>
+template <class T, class = void, class = typename is_injectable<T>::type>
 struct ctor_traits__;
-template <class X, class T, class = typename is_injectable<ctor_traits<T>>::type>
+template <class T, class, class = typename is_injectable<ctor_traits<T>>::type>
 struct ctor_traits_impl;
-template <class X, class T>
-struct ctor_traits__<X, T, aux::true_type> : aux::pair<T, aux::pair<direct, typename T::boost_di_inject__::type>> {};
-template <class X, class T>
-struct ctor_traits__<X, T, aux::false_type> : ctor_traits_impl<X, T> {};
-template <class X, class T>
-struct ctor_traits_impl<X, T, aux::true_type>
+template <class T, class _>
+struct ctor_traits__<T, _, aux::true_type> : aux::pair<T, aux::pair<direct, typename T::boost_di_inject__::type>> {};
+template <class T, class _>
+struct ctor_traits__<T, _, aux::false_type> : ctor_traits_impl<T, _> {};
+template <class T, class _>
+struct ctor_traits_impl<T, _, aux::true_type>
     : aux::pair<T, aux::pair<direct, typename ctor_traits<T>::boost_di_inject__::type>> {};
-template <class X, class T>
-struct ctor_traits_impl<X, T, aux::false_type> : aux::pair<T, typename ctor_traits<T>::type> {};
+template <class T, class _>
+struct ctor_traits_impl<T, _, aux::false_type> : aux::pair<T, typename ctor_traits<T>::type> {};
 }
 template <class T, class>
 struct ctor_traits : type_traits::ctor<T, type_traits::ctor_impl_t<aux::is_constructible, T>> {};
@@ -643,7 +679,7 @@ struct array_impl {
   T array_[N];
 };
 template <class C, class... Ts>
-struct array : array_impl<typename C::value_type, sizeof...(Ts)>, C {
+struct array<C(), Ts...> : array_impl<typename C::value_type, sizeof...(Ts)>, C {
   using value_type = typename C::value_type;
   using array_t = array_impl<value_type, sizeof...(Ts)>;
   using array_t::array_;
@@ -665,18 +701,14 @@ struct array : array_impl<typename C::value_type, sizeof...(Ts)>, C {
         C(std::move_iterator<value_type*>(array_), std::move_iterator<value_type*>(array_ + sizeof...(Ts))) {}
 };
 template <class C>
-struct array<C> : C {
+struct array<C()> : C {
   using boost_di_inject__ = aux::type_list<>;
 };
-template <class C>
-struct array<C* []> {};
-template <class C, class... Ts>
-struct array<C* [], Ts...> {};
 }
 namespace type_traits {
 template <class _, class T, class... Ts>
-struct ctor_traits__<_, core::array<T[], Ts...>, aux::false_type>
-    : type_traits::ctor_traits__<void, core::array<aux::remove_smart_ptr_t<aux::remove_qualifiers_t<_>>, Ts...>> {};
+struct ctor_traits__<core::array<_, Ts...>, T, aux::false_type>
+    : type_traits::ctor_traits__<core::array<aux::remove_smart_ptr_t<aux::remove_qualifiers_t<T>>(), Ts...>> {};
 }
 namespace type_traits {
 struct stack {};
@@ -1319,6 +1351,9 @@ auto boundable_impl(I&&, T&&, aux::valid<> && ) -> boundable_impl__<I, T>;
 template <class I, class T>
 auto boundable_impl(I* [], T && ) -> aux::conditional_t<aux::is_same<I, aux::decay_t<I>>::value, boundable_impl__<I, T>,
                                                         typename type_<I>::has_disallowed_qualifiers>;
+template <class I, class T>
+auto boundable_impl(I[], T && ) -> aux::conditional_t<aux::is_same<I, aux::decay_t<I>>::value, boundable_impl__<I, T>,
+                                                      typename type_<I>::has_disallowed_qualifiers>;
 template <class... TDeps>
 auto boundable_impl(aux::type_list<TDeps...> && ) -> get_bindings_error<TDeps...>;
 template <class T, class... Ts>
@@ -1336,20 +1371,6 @@ template <class... Ts>
 using boundable = typename boundable__<Ts...>::type;
 }
 namespace core {
-template <class T>
-struct array_type {
-  using type = T;
-};
-template <class T>
-struct array_type<T* []> {
-  using type = T* [];
-};
-template <class T>
-struct array_type<T[]> {
-  using type = T* [];
-};
-template <class T>
-using array_type_t = typename array_type<T>::type;
 template <class, class>
 struct dependency_concept {};
 template <class T, class TDependency>
@@ -1417,13 +1438,13 @@ class dependency : dependency_base,
   }
   template <class... Ts, BOOST_DI_REQUIRES(aux::is_array<TExpected, Ts...>::value) = 0>
   auto to() noexcept {
-    return dependency<TScope, array<array_type_t<TExpected>>, array<array_type_t<TExpected>, Ts...>, TName,
-                      TPriority>{};
+    using type = aux::remove_pointer_t<aux::remove_extent_t<TExpected>>;
+    return dependency<TScope, array<type>, array<type, Ts...>, TName, TPriority>{};
   }
-  template <class T, BOOST_DI_REQUIRES_MSG(concepts::boundable<array_type_t<TExpected>, T>) = 0>
+  template <class T, BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, T>) = 0>
   auto to(std::initializer_list<T>&& object) noexcept {
-    using dependency =
-        dependency<scopes::instance, array<array_type_t<TExpected>>, std::initializer_list<T>, TName, TPriority>;
+    using type = aux::remove_pointer_t<aux::remove_extent_t<TExpected>>;
+    using dependency = dependency<scopes::instance, array<type>, std::initializer_list<T>, TName, TPriority>;
     return dependency{object};
   }
   template <class T, BOOST_DI_REQUIRES(externable<T>::value) = 0,
@@ -2124,7 +2145,7 @@ class injector : pool<bindings_t<TDeps...>> {
   template <class T, class TName = no_name, class TIsRoot = aux::false_type>
   struct is_creatable {
     using dependency_t = binder::resolve_t<injector, T, TName>;
-    using ctor_t = typename type_traits::ctor_traits__<T, typename dependency_t::given>::type;
+    using ctor_t = typename type_traits::ctor_traits__<typename dependency_t::given, T>::type;
     static constexpr auto value =
         aux::is_convertible<
             decltype(dependency__<dependency_t>::template try_create<T>(
@@ -2254,7 +2275,7 @@ class injector : pool<bindings_t<TDeps...>> {
   auto create_impl__() const {
     auto&& dependency = binder::resolve<T, TName>((injector*)this);
     using dependency_t = aux::remove_reference_t<decltype(dependency)>;
-    using ctor_t = typename type_traits::ctor_traits__<T, typename dependency_t::given>::type;
+    using ctor_t = typename type_traits::ctor_traits__<typename dependency_t::given, T>::type;
     using provider_t = core::provider<ctor_t, TName, injector>;
     using wrapper_t =
         decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this}));
@@ -2267,7 +2288,7 @@ class injector : pool<bindings_t<TDeps...>> {
   auto create_successful_impl__() const {
     auto&& dependency = binder::resolve<T, TName>((injector*)this);
     using dependency_t = aux::remove_reference_t<decltype(dependency)>;
-    using ctor_t = typename type_traits::ctor_traits__<T, typename dependency_t::given>::type;
+    using ctor_t = typename type_traits::ctor_traits__<typename dependency_t::given, T>::type;
     using provider_t = successful::provider<ctor_t, injector>;
     using wrapper_t =
         decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this}));
@@ -2289,7 +2310,7 @@ class injector<TConfig, pool<>, TDeps...> : pool<bindings_t<TDeps...>> {
   template <class T, class TName = no_name, class TIsRoot = aux::false_type>
   struct is_creatable {
     using dependency_t = binder::resolve_t<injector, T, TName>;
-    using ctor_t = typename type_traits::ctor_traits__<T, typename dependency_t::given>::type;
+    using ctor_t = typename type_traits::ctor_traits__<typename dependency_t::given, T>::type;
     static constexpr auto value = aux::is_convertible<
         decltype(dependency__<dependency_t>::template try_create<T>(
             try_provider<ctor_t, injector, decltype(TConfig::provider(aux::declval<injector>()))>{})),
@@ -2416,7 +2437,7 @@ class injector<TConfig, pool<>, TDeps...> : pool<bindings_t<TDeps...>> {
   auto create_impl__() const {
     auto&& dependency = binder::resolve<T, TName>((injector*)this);
     using dependency_t = aux::remove_reference_t<decltype(dependency)>;
-    using ctor_t = typename type_traits::ctor_traits__<T, typename dependency_t::given>::type;
+    using ctor_t = typename type_traits::ctor_traits__<typename dependency_t::given, T>::type;
     using provider_t = core::provider<ctor_t, TName, injector>;
     using wrapper_t =
         decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this}));
@@ -2427,7 +2448,7 @@ class injector<TConfig, pool<>, TDeps...> : pool<bindings_t<TDeps...>> {
   auto create_successful_impl__() const {
     auto&& dependency = binder::resolve<T, TName>((injector*)this);
     using dependency_t = aux::remove_reference_t<decltype(dependency)>;
-    using ctor_t = typename type_traits::ctor_traits__<T, typename dependency_t::given>::type;
+    using ctor_t = typename type_traits::ctor_traits__<typename dependency_t::given, T>::type;
     using provider_t = successful::provider<ctor_t, injector>;
     using wrapper_t =
         decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{*this}));

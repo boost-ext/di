@@ -32,7 +32,7 @@ class assisted_injection_impl {
   template <class TInjector>
   auto operator()(const TInjector& injector) const {
     return [&](auto&&... args) {
-      using ctor = typename di::type_traits::ctor_traits__<T, T>::type;
+      using ctor = typename di::type_traits::ctor_traits__<T>::type;
       return this->create(injector, typename ctor::second{}, std::forward<decltype(args)>(args)...);
     };
   }
@@ -59,7 +59,7 @@ class assisted_injection_impl {
   template <std::size_t N, class TInjector, class TArg, class... TArgs>
   decltype(auto) create_impl(const TInjector&, const di::aux::type<di::named<di::no_name, TArg>>&,
                              TArgs&&... args) const {
-    constexpr auto value = get_assisted_ctor_nr(N, typename di::type_traits::ctor_traits__<T, T>::type::second{});
+    constexpr auto value = get_assisted_ctor_nr(N, typename di::type_traits::ctor_traits__<T>::type::second{});
     return get<TArg>(std::integral_constant<std::size_t, value>{}, args...);
   }
 

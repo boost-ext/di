@@ -19,24 +19,6 @@
 
 namespace core {
 
-template <class T>
-struct array_type {
-  using type = T;
-};
-
-template <class T>
-struct array_type<T* []> {
-  using type = T* [];
-};
-
-template <class T>
-struct array_type<T[]> {
-  using type = T* [];
-};
-
-template <class T>
-using array_type_t = typename array_type<T>::type;
-
 template <class, class>
 struct dependency_concept {};
 
@@ -122,14 +104,14 @@ class dependency : dependency_base,
 
   template <class... Ts, BOOST_DI_REQUIRES(aux::is_array<TExpected, Ts...>::value) = 0>
   auto to() noexcept {
-    return dependency<TScope, array<array_type_t<TExpected>>, array<array_type_t<TExpected>, Ts...>, TName,
-                      TPriority>{};
+    using type = aux::remove_pointer_t<aux::remove_extent_t<TExpected>>;
+    return dependency<TScope, array<type>, array<type, Ts...>, TName, TPriority>{};
   }
 
-  template <class T, BOOST_DI_REQUIRES_MSG(concepts::boundable<array_type_t<TExpected>, T>) = 0>
+  template <class T, BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, T>) = 0>
   auto to(std::initializer_list<T>&& object) noexcept {
-    using dependency =
-        dependency<scopes::instance, array<array_type_t<TExpected>>, std::initializer_list<T>, TName, TPriority>;
+    using type = aux::remove_pointer_t<aux::remove_extent_t<TExpected>>;
+    using dependency = dependency<scopes::instance, array<type>, std::initializer_list<T>, TName, TPriority>;
     return dependency{object};
   }
 
