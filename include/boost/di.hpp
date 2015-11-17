@@ -563,13 +563,13 @@ template <class T, class U>
 struct rebind_traits<T, named<U>> {
   using type = named<U, T>;
 };
-template <class T, template <class> class TDeleter, class D, class U>
-struct rebind_traits<std::unique_ptr<T, TDeleter<D>>, U> {
-  using type = std::unique_ptr<U, TDeleter<U>>;
+template <class T, class D, class U>
+struct rebind_traits<std::unique_ptr<T, D>, U> {
+  using type = std::unique_ptr<U, D>;
 };
-template <class T, template <class> class TDeleter, class D, class U>
-struct rebind_traits<std::unique_ptr<T, TDeleter<D>>, named<U>> {
-  using type = named<U, std::unique_ptr<U, TDeleter<U>>>;
+template <class T, class D, class U>
+struct rebind_traits<std::unique_ptr<T, D>, named<U>> {
+  using type = named<U, std::unique_ptr<T, D>>;
 };
 template <class T, class U>
 struct rebind_traits<std::shared_ptr<T>, U> {
