@@ -90,6 +90,29 @@ template <class T>
 using remove_reference_t = typename remove_reference<T>::type;
 
 template <class T>
+struct remove_smart_ptr {
+  using type = T;
+};
+template <class T, class TDeleter>
+struct remove_smart_ptr<std::unique_ptr<T, TDeleter>> {
+  using type = T;
+};
+template <class T>
+struct remove_smart_ptr<std::shared_ptr<T>> {
+  using type = T;
+};
+template <class T>
+struct remove_smart_ptr<std::weak_ptr<T>> {
+  using type = T;
+};
+template <class T>
+struct remove_smart_ptr<boost::shared_ptr<T>> {
+  using type = T;
+};
+template <class T>
+using remove_smart_ptr_t = typename remove_smart_ptr<T>::type;
+
+template <class T>
 struct remove_qualifiers {
   using type = T;
 };

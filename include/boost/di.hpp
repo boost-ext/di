@@ -289,6 +289,28 @@ struct remove_reference<T&&> {
 template <class T>
 using remove_reference_t = typename remove_reference<T>::type;
 template <class T>
+struct remove_smart_ptr {
+  using type = T;
+};
+template <class T, class TDeleter>
+struct remove_smart_ptr<std::unique_ptr<T, TDeleter>> {
+  using type = T;
+};
+template <class T>
+struct remove_smart_ptr<std::shared_ptr<T>> {
+  using type = T;
+};
+template <class T>
+struct remove_smart_ptr<std::weak_ptr<T>> {
+  using type = T;
+};
+template <class T>
+struct remove_smart_ptr<boost::shared_ptr<T>> {
+  using type = T;
+};
+template <class T>
+using remove_smart_ptr_t = typename remove_smart_ptr<T>::type;
+template <class T>
 struct remove_qualifiers {
   using type = T;
 };
@@ -540,41 +562,121 @@ struct rebind_traits<std::unique_ptr<T, D>, named<U>> {
 template <class T, class U>
 using rebind_traits_t = typename rebind_traits<T, U>::type;
 }
+#if !defined(BOOST_DI_CFG_CTOR_LIMIT_SIZE)
+#define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
+#endif
+namespace type_traits {
+template <class, class = int>
+struct is_injectable : ::boost::di::v1_0_0::aux::false_type {};
+template <class T>
+struct is_injectable<T, ::boost::di::v1_0_0::aux::valid_t<typename T::boost_di_inject__>>
+    : ::boost::di::v1_0_0::aux::true_type {};
+struct direct {};
+struct uniform {};
+template <class T, int>
+using get = T;
+template <template <class...> class, class, class, class = int>
+struct ctor_impl;
+template <template <class...> class TIsConstructible, class T>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<>> : aux::type_list<> {};
+template <template <class...> class TIsConstructible, class T>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<1>,
+                 BOOST_DI_REQUIRES(TIsConstructible<T, core::any_type_1st_fwd<T>>::value)>
+    : aux::type_list<core::any_type_1st_fwd<T>> {};
+template <template <class...> class TIsConstructible, class T>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<1>,
+                 BOOST_DI_REQUIRES(!TIsConstructible<T, core::any_type_1st_fwd<T>>::value)>
+    : aux::conditional_t<TIsConstructible<T, core::any_type_1st_ref_fwd<T>>::value,
+                         aux::type_list<core::any_type_1st_ref_fwd<T>>, aux::type_list<>> {};
+template <template <class...> class TIsConstructible, class T, int... TArgs>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>,
+                 BOOST_DI_REQUIRES((sizeof...(TArgs) > 1) &&
+                                   TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
+    : aux::type_list<get<core::any_type_fwd<T>, TArgs>...> {};
+template <template <class...> class TIsConstructible, class T, int... TArgs>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>,
+                 BOOST_DI_REQUIRES((sizeof...(TArgs) > 1) &&
+                                   !TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
+    : aux::conditional<TIsConstructible<T, get<core::any_type_ref_fwd<T>, TArgs>...>::value,
+                       aux::type_list<get<core::any_type_ref_fwd<T>, TArgs>...>,
+                       typename ctor_impl<TIsConstructible, T, aux::make_index_sequence<sizeof...(TArgs)-1>>::type> {};
+template <template <class...> class TIsConstructible, class T>
+using ctor_impl_t =
+    typename ctor_impl<TIsConstructible, T, aux::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE>>::type;
+template <class...>
+struct ctor;
+template <class T>
+struct ctor<T, aux::type_list<>> : aux::pair<uniform, ctor_impl_t<aux::is_braces_constructible, T>> {};
+template <class T, class... TArgs>
+struct ctor<T, aux::type_list<TArgs...>> : aux::pair<direct, aux::type_list<TArgs...>> {};
+template <class, class T, class = typename is_injectable<T>::type>
+struct ctor_traits__;
+template <class X, class T, class = typename is_injectable<ctor_traits<T>>::type>
+struct ctor_traits_impl;
+template <class X, class T>
+struct ctor_traits__<X, T, aux::true_type> : aux::pair<T, aux::pair<direct, typename T::boost_di_inject__::type>> {};
+template <class X, class T>
+struct ctor_traits__<X, T, aux::false_type> : ctor_traits_impl<X, T> {};
+template <class X, class T>
+struct ctor_traits_impl<X, T, aux::true_type>
+    : aux::pair<T, aux::pair<direct, typename ctor_traits<T>::boost_di_inject__::type>> {};
+template <class X, class T>
+struct ctor_traits_impl<X, T, aux::false_type> : aux::pair<T, typename ctor_traits<T>::type> {};
+}
+template <class T, class>
+struct ctor_traits : type_traits::ctor<T, type_traits::ctor_impl_t<aux::is_constructible, T>> {};
+template <class T>
+struct ctor_traits<std::initializer_list<T>> {
+  using boost_di_inject__ = aux::type_list<>;
+};
+template <class T>
+struct ctor_traits<T, BOOST_DI_REQUIRES(aux::is_same<std::char_traits<char>, typename T::traits_type>::value)> {
+  using boost_di_inject__ = aux::type_list<>;
+};
+template <class T>
+struct ctor_traits<T, BOOST_DI_REQUIRES(!aux::is_class<T>::value)> {
+  using boost_di_inject__ = aux::type_list<>;
+};
 namespace core {
-template <class T>
-struct remove_named {
-  using type = T;
-};
-template <class TName, class T>
-struct remove_named<named<TName, T>> {
-  using type = T;
-};
-template <class T>
-using remove_named_t = typename remove_named<T>::type;
 template <class T, int N>
 struct array_impl {
   T array_[N];
 };
-template <class T, class... Ts>
-struct array : array_impl<typename T::value_type, sizeof...(Ts)>, T {
-  using value_type = typename T::value_type;
+template <class C, class... Ts>
+struct array : array_impl<typename C::value_type, sizeof...(Ts)>, C {
+  using value_type = typename C::value_type;
   using array_t = array_impl<value_type, sizeof...(Ts)>;
   using array_t::array_;
   using boost_di_inject__ = aux::type_list<type_traits::rebind_traits_t<value_type, Ts>...>;
+  template <class T>
+  struct remove_named {
+    using type = T;
+  };
+  template <class TName, class T>
+  struct remove_named<named<TName, T>> {
+    using type = T;
+  };
+  template <class T>
+  using remove_named_t = typename remove_named<T>::type;
   template <BOOST_DI_REQUIRES(
-                aux::is_constructible<T, std::move_iterator<value_type*>, std::move_iterator<value_type*>>::value) = 0>
+                aux::is_constructible<C, std::move_iterator<value_type*>, std::move_iterator<value_type*>>::value) = 0>
   explicit array(remove_named_t<type_traits::rebind_traits_t<value_type, Ts>>... args)
       : array_t{{static_cast<remove_named_t<type_traits::rebind_traits_t<value_type, Ts>>&&>(args)...}},
-        T(std::move_iterator<value_type*>(array_), std::move_iterator<value_type*>(array_ + sizeof...(Ts))) {}
+        C(std::move_iterator<value_type*>(array_), std::move_iterator<value_type*>(array_ + sizeof...(Ts))) {}
 };
-template <class T>
-struct array<T> : T {
+template <class C>
+struct array<C> : C {
   using boost_di_inject__ = aux::type_list<>;
 };
-template <class T>
-struct array<T* []> {};
-template <class T, class... Ts>
-struct array<T* [], Ts...> {};
+template <class C>
+struct array<C* []> {};
+template <class C, class... Ts>
+struct array<C* [], Ts...> {};
+}
+namespace type_traits {
+template <class _, class T, class... Ts>
+struct ctor_traits__<_, core::array<T[], Ts...>, aux::false_type>
+    : type_traits::ctor_traits__<void, core::array<aux::remove_smart_ptr_t<aux::remove_qualifiers_t<_>>, Ts...>> {};
 }
 namespace type_traits {
 struct stack {};
@@ -1394,102 +1496,6 @@ struct is_callable<void> {
 template <class... Ts>
 using callable = typename is_callable<Ts...>::type;
 }
-#if !defined(BOOST_DI_CFG_CTOR_LIMIT_SIZE)
-#define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
-#endif
-namespace type_traits {
-template <class, class = int>
-struct is_injectable : ::boost::di::v1_0_0::aux::false_type {};
-template <class T>
-struct is_injectable<T, ::boost::di::v1_0_0::aux::valid_t<typename T::boost_di_inject__>>
-    : ::boost::di::v1_0_0::aux::true_type {};
-struct direct {};
-struct uniform {};
-template <class T, int>
-using get = T;
-template <template <class...> class, class, class, class = int>
-struct ctor_impl;
-template <template <class...> class TIsConstructible, class T>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<>> : aux::type_list<> {};
-template <template <class...> class TIsConstructible, class T>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<1>,
-                 BOOST_DI_REQUIRES(TIsConstructible<T, core::any_type_1st_fwd<T>>::value)>
-    : aux::type_list<core::any_type_1st_fwd<T>> {};
-template <template <class...> class TIsConstructible, class T>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<1>,
-                 BOOST_DI_REQUIRES(!TIsConstructible<T, core::any_type_1st_fwd<T>>::value)>
-    : aux::conditional_t<TIsConstructible<T, core::any_type_1st_ref_fwd<T>>::value,
-                         aux::type_list<core::any_type_1st_ref_fwd<T>>, aux::type_list<>> {};
-template <template <class...> class TIsConstructible, class T, int... TArgs>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>,
-                 BOOST_DI_REQUIRES((sizeof...(TArgs) > 1) &&
-                                   TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
-    : aux::type_list<get<core::any_type_fwd<T>, TArgs>...> {};
-template <template <class...> class TIsConstructible, class T, int... TArgs>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>,
-                 BOOST_DI_REQUIRES((sizeof...(TArgs) > 1) &&
-                                   !TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
-    : aux::conditional<TIsConstructible<T, get<core::any_type_ref_fwd<T>, TArgs>...>::value,
-                       aux::type_list<get<core::any_type_ref_fwd<T>, TArgs>...>,
-                       typename ctor_impl<TIsConstructible, T, aux::make_index_sequence<sizeof...(TArgs)-1>>::type> {};
-template <template <class...> class TIsConstructible, class T>
-using ctor_impl_t =
-    typename ctor_impl<TIsConstructible, T, aux::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE>>::type;
-template <class...>
-struct ctor;
-template <class T>
-struct ctor<T, aux::type_list<>> : aux::pair<uniform, ctor_impl_t<aux::is_braces_constructible, T>> {};
-template <class T, class... TArgs>
-struct ctor<T, aux::type_list<TArgs...>> : aux::pair<direct, aux::type_list<TArgs...>> {};
-template <class, class T, class = typename is_injectable<T>::type>
-struct ctor_traits__;
-template <class X, class T, class = typename is_injectable<ctor_traits<T>>::type>
-struct ctor_traits_impl;
-template <class X, class T>
-struct ctor_traits__<X, T, aux::true_type> : aux::pair<T, aux::pair<direct, typename T::boost_di_inject__::type>> {};
-template <class X, class T>
-struct ctor_traits__<X, T, aux::false_type> : ctor_traits_impl<X, T> {};
-template <class T>
-struct value_type {
-  using type = T;
-};
-template <class T>
-struct value_type<T&> {
-  using type = T;
-};
-template <class T>
-struct value_type<const T&> {
-  using type = T;
-};
-template <class T>
-struct value_type<std::shared_ptr<T>> {
-  using type = T;
-};
-template <class X, class U, class... Ts>
-struct ctor_traits__<X, core::array<U[], Ts...>, aux::false_type>
-    : aux::pair<core::array<typename value_type<X>::type, Ts...>,
-                aux::pair<direct, typename core::array<typename value_type<X>::type, Ts...>::boost_di_inject__::type>> {
-};
-template <class X, class T>
-struct ctor_traits_impl<X, T, aux::true_type>
-    : aux::pair<T, aux::pair<direct, typename ctor_traits<T>::boost_di_inject__::type>> {};
-template <class X, class T>
-struct ctor_traits_impl<X, T, aux::false_type> : aux::pair<T, typename ctor_traits<T>::type> {};
-}
-template <class T, class>
-struct ctor_traits : type_traits::ctor<T, type_traits::ctor_impl_t<aux::is_constructible, T>> {};
-template <class T>
-struct ctor_traits<std::initializer_list<T>> {
-  using boost_di_inject__ = aux::type_list<>;
-};
-template <class T>
-struct ctor_traits<T, BOOST_DI_REQUIRES(aux::is_same<std::char_traits<char>, typename T::traits_type>::value)> {
-  using boost_di_inject__ = aux::type_list<>;
-};
-template <class T>
-struct ctor_traits<T, BOOST_DI_REQUIRES(!aux::is_class<T>::value)> {
-  using boost_di_inject__ = aux::type_list<>;
-};
 namespace concepts {
 template <class T>
 struct abstract_type {

@@ -9,7 +9,6 @@
 
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
-#include "boost/di/core/array.hpp"
 #include "boost/di/fwd.hpp"
 
 #if !defined(BOOST_DI_CFG_CTOR_LIMIT_SIZE)  // __pph__
@@ -81,32 +80,6 @@ struct ctor_traits__<X, T, aux::true_type> : aux::pair<T, aux::pair<direct, type
 
 template <class X, class T>
 struct ctor_traits__<X, T, aux::false_type> : ctor_traits_impl<X, T> {};
-
-template <class T>
-struct value_type {
-  using type = T;
-};
-
-template <class T>
-struct value_type<T&> {
-  using type = T;
-};
-
-template <class T>
-struct value_type<const T&> {
-  using type = T;
-};
-
-template <class T>
-struct value_type<std::shared_ptr<T>> {
-  using type = T;
-};
-
-template <class X, class U, class... Ts>
-struct ctor_traits__<X, core::array<U[], Ts...>, aux::false_type>
-    : aux::pair<core::array<typename value_type<X>::type, Ts...>,
-                aux::pair<direct, typename core::array<typename value_type<X>::type, Ts...>::boost_di_inject__::type>> {
-};
 
 template <class X, class T>
 struct ctor_traits_impl<X, T, aux::true_type>
