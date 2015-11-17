@@ -6,6 +6,7 @@
 //
 #include <memory>
 #include "boost/di/scopes/exposed.hpp"
+#include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/unique.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "common/fakes/fake_injector.hpp"
