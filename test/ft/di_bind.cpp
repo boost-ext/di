@@ -58,9 +58,7 @@ struct name_ {
 
 test forward_decl = [] {
   di::make_injector(di::bind<class InterfaceFwd>().to<class ImplementationFwd>());
-
   di::make_injector(di::bind<class InterfaceFwd>().to<impl1>());
-
   di::make_injector(di::bind<i1>().to<class Impl>());
 };
 
@@ -613,7 +611,7 @@ test multi_bindings_share_object_between_list_and_parameter = [] {
 
 test multi_bindings_smart_ptrs = [] {
   struct c {
-    c(std::unique_ptr<std::vector<std::shared_ptr<i1>>> v1, std::shared_ptr<std::vector<std::shared_ptr<i1>>> v2) {
+    c(std::unique_ptr<std::vector<std::shared_ptr<i1>>> v1, std::shared_ptr<std::vector<std::unique_ptr<i1>>> v2) {
       expect(v1->size() == 1);
       expect(dynamic_cast<impl1*>((*v1)[0].get()));
       expect(v2->size() == 1);

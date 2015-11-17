@@ -56,13 +56,9 @@ test modules_mix_make_injector = [] {
   const std::string s = "string";
 
   auto injector_string = make_injector(di::bind<std::string>().to(s));
-
   auto empty = [] { return di::make_injector(); };
-
   auto module1 = []() -> di::injector<i1> { return di::make_injector(di::bind<i1>().to<impl1>()); };
-
   auto module2 = [](const int& i) -> di::injector<int> { return di::make_injector(di::bind<int>().to(i)); };
-
   auto injector = di::make_injector(empty(), di::bind<double>().to(d), module1(),
                                     make_injector(di::bind<float>().to(f)), injector_string, module2(i));
 
