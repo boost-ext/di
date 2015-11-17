@@ -18,9 +18,8 @@ test traits = [] {
   static_expect(std::is_same<int, rebind_traits_t<_, int>>{});
   static_expect(std::is_same<c, rebind_traits_t<_, c>>{});
   static_expect(std::is_same<named<void, int>, rebind_traits_t<int, named<void>>>{});
-  // static_expect(std::is_same<std::unique_ptr<int>, rebind_traits_t<std::unique_ptr<_>, int>>{});
-  // static_expect(std::is_same<std::unique_ptr<int, deleter<int>>, rebind_traits_t<std::unique_ptr<_, deleter<_>>,
-  // int>>{});
+  static_expect(
+      std::is_same<std::unique_ptr<int, deleter<int>>, rebind_traits_t<std::unique_ptr<_, deleter<int>>, int>>{});
   static_expect(std::is_same<std::shared_ptr<int>, rebind_traits_t<std::shared_ptr<_>, int>>{});
   static_expect(std::is_same<named<void, std::shared_ptr<int>>, rebind_traits_t<std::shared_ptr<int>, named<void>>>{});
   static_expect(std::is_same<boost::shared_ptr<int>, rebind_traits_t<boost::shared_ptr<_>, int>>{});

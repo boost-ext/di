@@ -15,38 +15,38 @@
 
 namespace core {
 
-template <class T, int N>
+template <class T>
+struct remove_named {
+  using type = T;
+};
+template <class TName, class T>
+struct remove_named<named<TName, T>> {
+  using type = T;
+};
+template <class T>
+using remove_named_t = typename remove_named<T>::type;
+
+template <class T, class... Ts>
 struct array_impl {
-  T array_[N];
+  using boost_di_inject__ = aux::type_list<Ts...>;
+  explicit array_impl(remove_named_t<Ts>&&... args) : array{static_cast<remove_named_t<Ts>&&>(args)...} {}
+  T array[sizeof...(Ts)];
 };
 
-template <class C, class... Ts>
-struct array<C(), Ts...> : array_impl<typename C::value_type, sizeof...(Ts)>, C {
-  using value_type = typename C::value_type;
-  using array_t = array_impl<value_type, sizeof...(Ts)>;
-  using array_t::array_;
-  using boost_di_inject__ = aux::type_list<type_traits::rebind_traits_t<value_type, Ts>...>;
-
-  template <class T>
-  struct remove_named {
-    using type = T;
-  };
-  template <class TName, class T>
-  struct remove_named<named<TName, T>> {
-    using type = T;
-  };
-  template <class T>
-  using remove_named_t = typename remove_named<T>::type;
+template <class T, class... Ts>
+struct array<T(), Ts...> : T {
+  using value_type = typename T::value_type;
+  using array_t = array_impl<value_type, type_traits::rebind_traits_t<value_type, Ts>...>;
+  using boost_di_inject__ = aux::type_list<array_t&&>;
 
   template <BOOST_DI_REQUIRES(
-                aux::is_constructible<C, std::move_iterator<value_type*>, std::move_iterator<value_type*>>::value) = 0>
-  explicit array(remove_named_t<type_traits::rebind_traits_t<value_type, Ts>>... args)
-      : array_t{{static_cast<remove_named_t<type_traits::rebind_traits_t<value_type, Ts>>&&>(args)...}},
-        C(std::move_iterator<value_type*>(array_), std::move_iterator<value_type*>(array_ + sizeof...(Ts))) {}
+                aux::is_constructible<T, std::move_iterator<value_type*>, std::move_iterator<value_type*>>::value) = 0>
+  explicit array(array_t&& a)
+      : T(std::move_iterator<value_type*>(a.array), std::move_iterator<value_type*>(a.array + sizeof...(Ts))) {}
 };
 
-template <class C>
-struct array<C()> : C {
+template <class T>
+struct array<T()> : T {
   using boost_di_inject__ = aux::type_list<>;
 };
 
