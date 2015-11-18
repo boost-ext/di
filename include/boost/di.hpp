@@ -188,11 +188,11 @@ struct make_index_sequence_impl<10> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9, 
 template <int N>
 using make_index_sequence = typename make_index_sequence_impl<N>::type;
 }
+template <class, class = void>
+struct named {};
 struct no_name {
   constexpr auto operator()() const noexcept { return ""; }
 };
-template <class, class = void>
-struct named {};
 template <class, class = int>
 struct ctor_traits;
 namespace core {
@@ -225,7 +225,7 @@ struct injector__ : T {
 template <class, class...>
 struct array;
 struct dependency_base;
-template <class TScope, class TExpected, class TGiven = TExpected, class TName = no_name, class TPriority = void>
+template <class, class TExpected, class = TExpected, class = no_name, class = void>
 class dependency;
 }
 namespace scopes {
@@ -2098,6 +2098,8 @@ struct from_deps {};
 struct init {};
 struct with_error {};
 template <class>
+struct self {};
+template <class>
 struct copyable;
 template <class T>
 struct copyable_impl
@@ -2156,6 +2158,7 @@ class injector : pool<bindings_t<TDeps...>> {
   };
 
  public:
+  using boost_di_inject__ = aux::type_list<core::self<injector>>;
   using deps = bindings_t<TDeps...>;
   using config = TConfig;
   template <class... TArgs>
@@ -2206,6 +2209,10 @@ class injector : pool<bindings_t<TDeps...>> {
   struct try_create<::boost::di::v1_0_0::named<TName, T>> {
     using type = aux::conditional_t<is_creatable<T, TName>::value, T, void>;
   };
+  template <class T>
+  struct try_create<self<T>> {
+    using type = injector;
+  };
   template <class TIsRoot = aux::false_type, class T>
   auto create_impl(const aux::type<T>&) const {
     return create_impl__<TIsRoot, T>();
@@ -2253,6 +2260,10 @@ class injector : pool<bindings_t<TDeps...>> {
   template <class TIsRoot = aux::false_type, class T, class TName>
   auto create_successful_impl(const aux::type<::boost::di::v1_0_0::named<TName, T>>&) const {
     return create_successful_impl__<TIsRoot, T, TName>();
+  }
+  template <class TIsRoot = aux::false_type, class T>
+  auto create_successful_impl(const aux::type<self<T>>&) const {
+    return *this;
   }
 
  private:
@@ -2318,6 +2329,7 @@ class injector<TConfig, pool<>, TDeps...> : pool<bindings_t<TDeps...>> {
   };
 
  public:
+  using boost_di_inject__ = aux::type_list<core::self<injector>>;
   using deps = bindings_t<TDeps...>;
   using config = TConfig;
   template <class... TArgs>
@@ -2368,6 +2380,10 @@ class injector<TConfig, pool<>, TDeps...> : pool<bindings_t<TDeps...>> {
   struct try_create<::boost::di::v1_0_0::named<TName, T>> {
     using type = aux::conditional_t<is_creatable<T, TName>::value, T, void>;
   };
+  template <class T>
+  struct try_create<self<T>> {
+    using type = injector;
+  };
   template <class TIsRoot = aux::false_type, class T>
   auto create_impl(const aux::type<T>&) const {
     return create_impl__<TIsRoot, T>();
@@ -2415,6 +2431,10 @@ class injector<TConfig, pool<>, TDeps...> : pool<bindings_t<TDeps...>> {
   template <class TIsRoot = aux::false_type, class T, class TName>
   auto create_successful_impl(const aux::type<::boost::di::v1_0_0::named<TName, T>>&) const {
     return create_successful_impl__<TIsRoot, T, TName>();
+  }
+  template <class TIsRoot = aux::false_type, class T>
+  auto create_successful_impl(const aux::type<self<T>>&) const {
+    return *this;
   }
 
  private:

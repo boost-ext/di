@@ -9,12 +9,11 @@
 
 #include "boost/di/fwd_ext.hpp"
 
+template <class, class = void>
+struct named {};
 struct no_name {
   constexpr auto operator()() const noexcept { return ""; }
 };
-
-template <class, class = void>
-struct named {};
 template <class, class = int>
 struct ctor_traits;
 
@@ -53,9 +52,8 @@ template <class, class...>
 struct array;
 
 struct dependency_base;
-template <class TScope, class TExpected, class TGiven = TExpected, class TName = no_name, class TPriority = void>
+template <class, class TExpected, class = TExpected, class = no_name, class = void>
 class dependency;
-
 }  // core
 
 namespace scopes {

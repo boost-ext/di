@@ -670,6 +670,78 @@ test multi_bindings_with_initializer_list_with_ptr_type = [] {
   test(injector.create<std::set<int>>());
 };
 
+test bind_self_lazy = [] {
+  struct c {
+    explicit c(di::injector<int> i) { expect(42 == i.create<int>()); }
+  };
+
+  struct c_inject {
+    BOOST_DI_INJECT(explicit c_inject, di::injector<int> i) { expect(42 == i.create<int>()); }
+  };
+
+  auto injector = di::make_injector(di::bind<int>().to(42));
+
+  injector.create<c>();
+  injector.create<c_inject>();
+};
+
+test bind_self_lazy_const_ref = [] {
+  struct c {
+    c(const di::injector<int>& i) {  // non explicit
+      expect(42 == i.create<int>());
+    }
+  };
+
+  struct c_inject {
+    BOOST_DI_INJECT(c_inject, const di::injector<int>& i) {  // non explicit
+      expect(42 == i.create<int>());
+    }
+  };
+
+  auto injector = di::make_injector(di::bind<int>().to(42));
+
+  injector.create<c>();
+  injector.create<c_inject>();
+};
+
+test bind_self_lazy_ref = [] {
+  struct c {
+    explicit c(di::injector<int>& i) { expect(42 == i.create<int>()); }
+  };
+
+  struct c_inject {
+    BOOST_DI_INJECT(explicit c_inject, di::injector<int>& i) { expect(42 == i.create<int>()); }
+  };
+
+  auto injector = di::make_injector(di::bind<int>().to(42));
+
+  injector.create<c>();
+  injector.create<c_inject>();
+};
+
+test bind_self_lazy_interface_mix = [] {
+  struct c {
+    c(di::injector<int> i1_, const di::injector<i1>& i2_) {
+      expect(42 == i1_.create<int>());
+      auto object = i2_.create<std::unique_ptr<i1>>();
+      expect(dynamic_cast<impl1*>(object.get()));
+    }
+  };
+
+  struct c_inject {
+    BOOST_DI_INJECT(c_inject, di::injector<int> i1_, const di::injector<i1>& i2_) {
+      expect(42 == i1_.create<int>());
+      auto object = i2_.create<std::unique_ptr<i1>>();
+      expect(dynamic_cast<impl1*>(object.get()));
+    }
+  };
+
+  auto injector = di::make_injector(di::bind<int>().to(42), di::bind<i1>().to<impl1>());
+
+  injector.create<c>();
+  injector.create<c_inject>();
+};
+
 #if defined(__cpp_variable_templates)
 test bind_mix = [] {
   constexpr auto i = 42;
