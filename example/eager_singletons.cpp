@@ -12,9 +12,6 @@
 //->
 #include <boost/di.hpp>
 
-#include <iostream>
-#include <typeinfo>
-
 namespace di = boost::di;
 
 class interface {
@@ -34,14 +31,19 @@ class implementation : public interface {
   }
 };
 
-auto configuration = [] { return di::make_injector(di::bind<interface>().to<implementation>().in(di::singleton)); };
+auto configuration = [] {
+  return di::make_injector(di::bind<interface>().to<implementation>().in(di::singleton), di::bind<int>().to(42));
+};
 
-template <class TDependency, class TInjector>
+template <class TDependency, class TInjector,
+          BOOST_DI_REQUIRES(std::is_same<typename TDependency::scope, di::scopes::singleton>::value) = 0>
 void create_singletons_eagerly_impl(const di::aux::type<TDependency>&, const TInjector& injector) {
-  if (std::is_same<typename TDependency::scope, di::scopes::singleton>::value) {
-    injector.template create<std::shared_ptr<typename TDependency::expected>>();
-  }
+  injector.template create<std::shared_ptr<typename TDependency::expected>>();
 }
+
+template <class TDependency, class TInjector,
+          BOOST_DI_REQUIRES(!std::is_same<typename TDependency::scope, di::scopes::singleton>::value) = 0>
+void create_singletons_eagerly_impl(const di::aux::type<TDependency>&, const TInjector&) {}
 
 template <class... TDeps, class TInjector>
 void create_singletons_eagerly(const di::aux::type_list<TDeps...>&, const TInjector& injector) {
@@ -54,7 +56,10 @@ void eager_singletons(const TInjector& injector) {
 }
 
 struct example {
-  example(int&, std::shared_ptr<interface>, double) {}
+  example(int i, std::shared_ptr<interface> object) {
+    assert(42 == i);
+    assert(dynamic_cast<implementation*>(object.get()));
+  }
 };
 
 int main() {
