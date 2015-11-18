@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[provider
+//[lazy
 //<-
 #include <cassert>
 #include <memory>
@@ -14,39 +14,32 @@
 
 namespace di = boost::di;
 
-template <typename T>
-class provider {
- public:
-  virtual ~provider() noexcept = default;
-  virtual T get() const = 0;
+struct interface {
+  virtual ~interface() noexcept = default;
+  virtual void dummy1() = 0;
+};
+struct expensive_to_create : interface {
+  void dummy1() override {}
 };
 
-/*<<`transaction` provider>>*/
-struct transaction : provider<int> {
-  /*<<implementation of `provider` requirement >>*/
-  int get() const override { return next(); }
+/*<<simple lazy wrapper>>*/
+template <class T>
+using lazy = di::injector<T>;
 
-  static int& next() {
-    static int i = 0;
-    return ++i;
-  }
-};
-
-/*<<example `usage ` class>>*/
-struct usage {
-  usage(int i, std::unique_ptr<provider<int>> p) {
-    assert(i == 0);
-    assert(p->get() == 1);
-    assert(p->get() == 2);
+/*<<example `example` class>>*/
+struct example {
+  explicit example(const lazy<interface>& l) {
+    auto object = l.create<std::unique_ptr<interface>>();
+    assert(dynamic_cast<expensive_to_create*>(object.get()));
   }
 };
 
 int main() {
   /*<<define injector>>*/
-  auto injector = di::make_injector(di::bind<provider<int>>().to<transaction>());
+  auto injector = di::make_injector(di::bind<interface>().to<expensive_to_create>());
 
-  /*<<create `usage`>>*/
-  injector.create<usage>();
+  /*<<create `example`>>*/
+  injector.create<example>();
 }
 
 //]
