@@ -79,12 +79,12 @@ class dependency : dependency_base,
 
   template <class T, BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
   auto named() noexcept {
-    return dependency<TScope, TExpected, TGiven, T, TPriority>{*this};
+    return dependency<TScope, TExpected, TGiven, T, TPriority>{static_cast<dependency&&>(*this)};
   }
 
   template <class T, BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
   auto named(const T&) noexcept {
-    return dependency<TScope, TExpected, TGiven, T, TPriority>{*this};
+    return dependency<TScope, TExpected, TGiven, T, TPriority>{static_cast<dependency&&>(*this)};
   }
 
   template <class T, BOOST_DI_REQUIRES_MSG(concepts::scopable<T>) = 0>
@@ -127,7 +127,9 @@ class dependency : dependency_base,
   template <class...>
   dependency& to(...) const noexcept;
 
-  auto operator[](const override&) noexcept { return dependency<TScope, TExpected, TGiven, TName, override>{*this}; }
+  auto operator[](const override&) noexcept {
+    return dependency<TScope, TExpected, TGiven, TName, override>{static_cast<dependency&&>(*this)};
+  }
 
 #if defined(__cpp_variable_templates)  // __pph__
   dependency& operator()() noexcept { return *this; }

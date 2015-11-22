@@ -814,6 +814,7 @@ class exposed {
       provider_ = (iprovider*)new provider_impl<TInjector>{static_cast<TInjector&&>(injector)};
     }
     scope(scope&& other) : provider_(other.provider_), scope_(other.scope_) { other.provider_ = nullptr; }
+    ~scope() noexcept { delete provider_; }
     template <class T, class TProvider>
     static T try_create(const TProvider&);
     template <class T, class TProvider>
@@ -1426,11 +1427,11 @@ class dependency : dependency_base,
   explicit dependency(T&& object) noexcept : scope_t(static_cast<T&&>(object)) {}
   template <class T, BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
   auto named() noexcept {
-    return dependency<TScope, TExpected, TGiven, T, TPriority>{*this};
+    return dependency<TScope, TExpected, TGiven, T, TPriority>{static_cast<dependency&&>(*this)};
   }
   template <class T, BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
   auto named(const T&) noexcept {
-    return dependency<TScope, TExpected, TGiven, T, TPriority>{*this};
+    return dependency<TScope, TExpected, TGiven, T, TPriority>{static_cast<dependency&&>(*this)};
   }
   template <class T, BOOST_DI_REQUIRES_MSG(concepts::scopable<T>) = 0>
   auto in(const T&) noexcept {
@@ -1465,7 +1466,9 @@ class dependency : dependency_base,
   }
   template <class...>
   dependency& to(...) const noexcept;
-  auto operator[](const override&) noexcept { return dependency<TScope, TExpected, TGiven, TName, override>{*this}; }
+  auto operator[](const override&) noexcept {
+    return dependency<TScope, TExpected, TGiven, TName, override>{static_cast<dependency&&>(*this)};
+  }
 #if defined(__cpp_variable_templates)
   dependency& operator()() noexcept { return *this; }
 #endif
@@ -1670,8 +1673,8 @@ class stack_over_heap {
 #define BOOST_DI_CFG ::boost::di::v1_0_0::config
 #endif
 template <class... TPolicies, BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>) = 0>
-inline auto make_policies(const TPolicies&... args) noexcept {
-  return core::pool_t<TPolicies...>(args...);
+inline auto make_policies(TPolicies... args) noexcept {
+  return core::pool_t<TPolicies...>(static_cast<TPolicies&&>(args)...);
 }
 struct config {
   template <class T>

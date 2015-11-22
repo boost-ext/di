@@ -18,8 +18,8 @@
 #endif                                           // __pph__
 
 template <class... TPolicies, BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>) = 0>
-inline auto make_policies(const TPolicies&... args) noexcept {
-  return core::pool_t<TPolicies...>(args...);
+inline auto make_policies(TPolicies... args) noexcept {
+  return core::pool_t<TPolicies...>(static_cast<TPolicies&&>(args)...);
 }
 
 struct config {
