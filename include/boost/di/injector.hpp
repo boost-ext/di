@@ -31,8 +31,8 @@ struct injector;
 template <class TConfig, class... T>
 struct injector<TConfig, int, T...> : core::injector<TConfig, core::pool<>, T...> {
   template <class... Ts>
-  injector(const core::injector<Ts...>& injector) noexcept  // non explicit
-      : core::injector<TConfig, core::pool<>, T...>(injector) {
+  injector(core::injector<Ts...>&& injector) noexcept  // non explicit
+      : core::injector<TConfig, core::pool<>, T...>(static_cast<core::injector<Ts...>&&>(injector)) {
     using injector_t = core::injector<Ts...>;
     int _[]{0,
             // clang-format off

@@ -690,7 +690,8 @@ int main() { di::make_injector<test_config>(); }
     expect_compile_fail("", errors_,
         class config : public di::config {
         public:
-            static auto policies(...) noexcept {
+        template<class T>
+            static auto policies(const T&) noexcept {
                 using namespace di::policies;
                 return di::make_policies(constructible(is_bound<di::_>{}));
     }

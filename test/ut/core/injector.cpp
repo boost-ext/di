@@ -87,7 +87,7 @@ test ctor = [] {
 
 test ctor_injector = [] {
   injector<config> injector1{core::init{}};
-  injector<config> injector2{injector1};
+  injector<config> injector2{static_cast<injector<config>&&>(injector1)};
   (void)injector2;
 };
 

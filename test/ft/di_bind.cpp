@@ -580,13 +580,12 @@ test multi_bindings_ctor_with_exposed_module = [] {
     }
   };
 
-  di::injector<i1> module = di::make_injector(di::bind<i1>().to<impl1>());
-
-  di::injector<i1> module2 = di::make_injector(di::bind<i1>().to<impl1_int>());
+  auto module = []() -> di::injector<i1> { return di::make_injector(di::bind<i1>().to<impl1>()); };
+  auto module2 = []() -> di::injector<i1> { return di::make_injector(di::bind<i1>().to<impl1_int>()); };
 
   auto injector =
       di::make_injector(di::bind<i1* []>().to<impl1, impl1_2, impl1_2, i1 /*via module*/, di::named<class ExposedI1>>(),
-                        module, di::bind<i1>().named<class ExposedI1>().to(module2));
+                        module(), di::bind<i1>().named<class ExposedI1>().to(module2()));
 
   injector.create<c>();
 };

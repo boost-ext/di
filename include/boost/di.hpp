@@ -547,9 +547,9 @@ using pool_t = pool<aux::type_list<TArgs...>>;
 template <class... TArgs>
 struct pool<aux::type_list<TArgs...>> : TArgs... {
   template <class... Ts>
-  explicit pool(const Ts&... args) noexcept : Ts(args)... {}
+  explicit pool(Ts... args) noexcept : Ts(static_cast<Ts&&>(args))... {}
   template <class... Ts, class TPool>
-  pool(const aux::type_list<Ts...>&, const TPool& p) noexcept : pool(static_cast<const Ts&>(p)...) {
+  pool(const aux::type_list<Ts...>&, TPool p) noexcept : pool(static_cast<Ts&&>(p)...) {
     (void)p;
   }
 };
@@ -762,6 +762,8 @@ class exposed {
     struct iprovider {
       TExpected* (*heap)(const iprovider*) = nullptr;
       type (*stack)(const iprovider*) = nullptr;
+      void (*dtor)(iprovider*) = nullptr;
+      ~iprovider() { ((iprovider*)(this))->dtor(this); }
       auto get(const type_traits::heap& = {}) const noexcept { return ((iprovider*)(this))->heap(this); }
       auto get(const type_traits::stack&) const noexcept { return ((iprovider*)(this))->stack(this); }
     };
@@ -769,6 +771,8 @@ class exposed {
     struct provider_impl {
       TExpected* (*heap)(const provider_impl*) = nullptr;
       type (*stack)(const provider_impl*) = nullptr;
+      void (*dtor)(provider_impl*) = nullptr;
+      static void destructor(provider_impl* object) { object->~provider_impl(); }
       template <class T>
       static T create(const provider_impl* object) noexcept {
         return static_cast<const core::injector__<TInjector>&>(object->injector).create_impl(aux::type<T>{});
@@ -777,23 +781,28 @@ class exposed {
       static T create_successful(const provider_impl* object) noexcept {
         return static_cast<const core::injector__<TInjector>&>(object->injector).create_successful_impl(aux::type<T>{});
       }
-      explicit provider_impl(const TInjector& injector) noexcept
+      explicit provider_impl(TInjector&& injector) noexcept
           : provider_impl(
-                injector,
+                static_cast<TInjector&&>(injector),
                 aux::integral_constant<bool, core::injector__<TInjector>::template is_creatable<TExpected*>::value>{},
                 aux::integral_constant<bool, core::injector__<TInjector>::template is_creatable<TExpected>::value>{}) {}
-      provider_impl(const TInjector& injector, const aux::true_type&, const aux::true_type&) noexcept
+      provider_impl(TInjector&& injector, const aux::true_type&, const aux::true_type&) noexcept
           : heap(&provider_impl::template create_successful<TExpected*>),
             stack(&provider_impl::template create_successful<type>),
-            injector(injector) {}
-      provider_impl(const TInjector& injector, const aux::false_type&, const aux::true_type&) noexcept
+            dtor(&provider_impl::destructor),
+            injector(static_cast<TInjector&&>(injector)) {}
+      provider_impl(TInjector&& injector, const aux::false_type&, const aux::true_type&) noexcept
           : stack(&provider_impl::template create_successful<type>),
-            injector(injector) {}
-      provider_impl(const TInjector& injector, const aux::true_type&, const aux::false_type&) noexcept
+            dtor(&provider_impl::destructor),
+            injector(static_cast<TInjector&&>(injector)) {}
+      provider_impl(TInjector&& injector, const aux::true_type&, const aux::false_type&) noexcept
           : heap(&provider_impl::template create_successful<TExpected*>),
-            injector(injector) {}
-      provider_impl(const TInjector& injector, const aux::false_type&, const aux::false_type&)
-          : heap(&provider_impl::template create<TExpected*>), injector(injector) {}
+            dtor(&provider_impl::destructor),
+            injector(static_cast<TInjector&&>(injector)) {}
+      provider_impl(TInjector&& injector, const aux::false_type&, const aux::false_type&)
+          : heap(&provider_impl::template create<TExpected*>),
+            dtor(&provider_impl::destructor),
+            injector(static_cast<TInjector&&>(injector)) {}
       TInjector injector;
     };
 
@@ -801,11 +810,11 @@ class exposed {
     template <class>
     using is_referable = aux::false_type;
     template <class TInjector, BOOST_DI_REQUIRES(aux::is_injector<TInjector>::value) = 0>
-    explicit scope(const TInjector& injector) noexcept {
-      static auto provider = provider_impl<TInjector>{injector};
-      provider.injector = injector;
-      provider_ = (iprovider*)&provider;
+    explicit scope(TInjector&& injector) noexcept {
+      provider_ = (iprovider*)new provider_impl<TInjector>{static_cast<TInjector&&>(injector)};
     }
+    scope(scope&& other) : provider_(other.provider_), scope_(other.scope_) { other.provider_ = nullptr; }
+    ~scope() noexcept { delete provider_; }
     template <class T, class TProvider>
     static T try_create(const TProvider&);
     template <class T, class TProvider>
@@ -1416,9 +1425,6 @@ class dependency : dependency_base,
   dependency() noexcept {}
   template <class T>
   explicit dependency(T&& object) noexcept : scope_t(static_cast<T&&>(object)) {}
-  template <class TScope_, class TExpected_, class TGiven_, class TName_, class TPriority_>
-  explicit dependency(const dependency<TScope_, TExpected_, TGiven_, TName_, TPriority_>& other) noexcept
-      : scope_t(other) {}
   template <class T, BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
   auto named() noexcept {
     return dependency<TScope, TExpected, TGiven, T, TPriority>{*this};
@@ -1454,9 +1460,9 @@ class dependency : dependency_base,
     return dependency{static_cast<T&&>(object)};
   }
   template <class T, BOOST_DI_REQUIRES(aux::is_injector<T>::value) = 0>
-  auto to(const T& object = {}) noexcept {
+  auto to(T&& object = {}) noexcept {
     using dependency = dependency<scopes::exposed<TScope>, TExpected, T, TName, TPriority>;
-    return dependency{object};
+    return dependency{static_cast<T&&>(object)};
   }
   template <class...>
   dependency& to(...) const noexcept;
@@ -2131,10 +2137,7 @@ struct referable<T&&, TDependency> {
 template <class T, class TDependency>
 using referable_t = typename referable<T, TDependency>::type;
 #if defined(_MSC_VER)
-template <class T, class TInjector>
-inline auto build(const TInjector& injector) noexcept {
-  return T{injector};
-}
+inline auto build(TInjector&& injector) noexcept { return T{static_cast<TInjector&&>(injector)}; }
 #endif
 template <class TConfig, class TPolicies = pool<>, class... TDeps>
 class injector : pool<bindings_t<TDeps...>> {
@@ -2161,11 +2164,12 @@ class injector : pool<bindings_t<TDeps...>> {
   using boost_di_inject__ = aux::type_list<core::self<injector>>;
   using deps = bindings_t<TDeps...>;
   using config = TConfig;
+  injector(injector&&) = default;
   template <class... TArgs>
-  explicit injector(const init&, const TArgs&... args) noexcept : injector{from_deps{}, args...} {}
+  explicit injector(const init&, TArgs... args) noexcept : injector{from_deps{}, static_cast<TArgs&&>(args)...} {}
   template <class TConfig_, class TPolicies_, class... TDeps_>
-  explicit injector(const injector<TConfig_, TPolicies_, TDeps_...>& other) noexcept
-      : injector{from_injector{}, other, deps{}} {}
+  explicit injector(injector<TConfig_, TPolicies_, TDeps_...>&& other) noexcept
+      : injector{from_injector{}, static_cast<injector<TConfig_, TPolicies_, TDeps_...>&&>(other), deps{}} {}
   template <class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, aux::true_type>::value) = 0>
   T create() const {
     return BOOST_DI_TYPE_WKND(T) create_successful_impl<aux::true_type>(aux::type<T>{});
@@ -2262,23 +2266,23 @@ class injector : pool<bindings_t<TDeps...>> {
     return create_successful_impl__<TIsRoot, T, TName>();
   }
   template <class TIsRoot = aux::false_type, class T>
-  auto create_successful_impl(const aux::type<self<T>>&) const {
-    return *this;
+  decltype(auto) create_successful_impl(const aux::type<self<T>>&) const {
+    return static_cast<injector&&>(const_cast<injector&>(*this));
   }
 
  private:
   template <class... TArgs>
-  explicit injector(const from_deps&, const TArgs&... args) noexcept
-      : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{args...}} {}
+  explicit injector(const from_deps&, TArgs... args) noexcept
+      : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{static_cast<TArgs&&>(args)...}} {}
   template <class TInjector, class... TArgs>
-  explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
+  explicit injector(const from_injector&, TInjector&& injector, const aux::type_list<TArgs...>&) noexcept
 #if defined(_MSC_VER)
       : pool_t {
-    copyable_t<deps>{}, pool_t { build<TArgs>(injector)... }
+    copyable_t<deps>{}, pool_t { build<TArgs>(static_cast<TInjector&&>(injector))... }
   }
 #else
       : pool_t {
-    copyable_t<deps>{}, pool_t { TArgs{injector}... }
+    copyable_t<deps>{}, pool_t { TArgs{static_cast<TInjector&&>(injector)}... }
   }
 #endif
   {}
@@ -2332,11 +2336,12 @@ class injector<TConfig, pool<>, TDeps...> : pool<bindings_t<TDeps...>> {
   using boost_di_inject__ = aux::type_list<core::self<injector>>;
   using deps = bindings_t<TDeps...>;
   using config = TConfig;
+  injector(injector&&) = default;
   template <class... TArgs>
-  explicit injector(const init&, const TArgs&... args) noexcept : injector{from_deps{}, args...} {}
+  explicit injector(const init&, TArgs... args) noexcept : injector{from_deps{}, static_cast<TArgs&&>(args)...} {}
   template <class TConfig_, class TPolicies_, class... TDeps_>
-  explicit injector(const injector<TConfig_, TPolicies_, TDeps_...>& other) noexcept
-      : injector{from_injector{}, other, deps{}} {}
+  explicit injector(injector<TConfig_, TPolicies_, TDeps_...>&& other) noexcept
+      : injector{from_injector{}, static_cast<injector<TConfig_, TPolicies_, TDeps_...>&&>(other), deps{}} {}
   template <class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, aux::true_type>::value) = 0>
   T create() const {
     return BOOST_DI_TYPE_WKND(T) create_successful_impl<aux::true_type>(aux::type<T>{});
@@ -2433,23 +2438,23 @@ class injector<TConfig, pool<>, TDeps...> : pool<bindings_t<TDeps...>> {
     return create_successful_impl__<TIsRoot, T, TName>();
   }
   template <class TIsRoot = aux::false_type, class T>
-  auto create_successful_impl(const aux::type<self<T>>&) const {
-    return *this;
+  decltype(auto) create_successful_impl(const aux::type<self<T>>&) const {
+    return static_cast<injector&&>(const_cast<injector&>(*this));
   }
 
  private:
   template <class... TArgs>
-  explicit injector(const from_deps&, const TArgs&... args) noexcept
-      : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{args...}} {}
+  explicit injector(const from_deps&, TArgs... args) noexcept
+      : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{static_cast<TArgs&&>(args)...}} {}
   template <class TInjector, class... TArgs>
-  explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&) noexcept
+  explicit injector(const from_injector&, TInjector&& injector, const aux::type_list<TArgs...>&) noexcept
 #if defined(_MSC_VER)
       : pool_t {
-    copyable_t<deps>{}, pool_t { build<TArgs>(injector)... }
+    copyable_t<deps>{}, pool_t { build<TArgs>(static_cast<TInjector&&>(injector))... }
   }
 #else
       : pool_t {
-    copyable_t<deps>{}, pool_t { TArgs{injector}... }
+    copyable_t<deps>{}, pool_t { TArgs{static_cast<TInjector&&>(injector)}... }
   }
 #endif
   {}
@@ -2565,7 +2570,8 @@ struct injector;
 template <class TConfig, class... T>
 struct injector<TConfig, int, T...> : core::injector<TConfig, core::pool<>, T...> {
   template <class... Ts>
-  injector(const core::injector<Ts...>& injector) noexcept : core::injector<TConfig, core::pool<>, T...>(injector) {
+  injector(core::injector<Ts...>&& injector) noexcept
+      : core::injector<TConfig, core::pool<>, T...>(static_cast<core::injector<Ts...>&&>(injector)) {
     using injector_t = core::injector<Ts...>;
     int _[]{0,
             // clang-format off
@@ -2584,8 +2590,9 @@ using injector = detail::injector<BOOST_DI_CFG, BOOST_DI_REQUIRES_MSG(concepts::
 template <class TConfig = BOOST_DI_CFG, class... TDeps,
           BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type_list<TDeps...>>) = 0,
           BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>) = 0>
-inline auto make_injector(const TDeps&... args) noexcept {
-  return core::injector<TConfig, decltype(((TConfig*)0)->policies(0)), TDeps...>{core::init{}, args...};
+inline auto make_injector(TDeps... args) noexcept {
+  return core::injector<TConfig, decltype(((TConfig*)0)->policies(0)), TDeps...>{core::init{},
+                                                                                 static_cast<TDeps&&>(args)...};
 }
 namespace policies {
 namespace detail {

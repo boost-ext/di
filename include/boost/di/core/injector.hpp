@@ -75,10 +75,7 @@ template <class T, class TDependency>
 using referable_t = typename referable<T, TDependency>::type;
 
 #if defined(_MSC_VER)  // __pph__
-template <class T, class TInjector>
-inline auto build(const TInjector& injector) noexcept {
-  return T{injector};
-}
+inline auto build(TInjector&& injector) noexcept { return T{static_cast<TInjector&&>(injector)}; }
 #endif  // __pph__
 
 #define BOOST_DI_CORE_INJECTOR_POLICY(...) __VA_ARGS__ BOOST_DI_CORE_INJECTOR_POLICY_ELSE
@@ -115,12 +112,14 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
   using deps = bindings_t<TDeps...>;
   using config = TConfig;
 
+  injector(injector && ) = default;
+
   template <class... TArgs>
-  explicit injector(const init&, const TArgs&... args) noexcept : injector{from_deps{}, args...} {}
+  explicit injector(const init&, TArgs... args) noexcept : injector{from_deps{}, static_cast<TArgs&&>(args)...} {}
 
   template <class TConfig_, class TPolicies_, class... TDeps_>
-  explicit injector(const injector<TConfig_, TPolicies_, TDeps_...>& other) noexcept
-      : injector{from_injector{}, other, deps{}} {}
+  explicit injector(injector<TConfig_, TPolicies_, TDeps_...> && other) noexcept
+      : injector{from_injector{}, static_cast<injector<TConfig_, TPolicies_, TDeps_...>&&>(other), deps{}} {}
 
   template <class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, aux::true_type>::value) = 0>
   T create() const {
@@ -238,24 +237,24 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
   }
 
   template <class TIsRoot = aux::false_type, class T>
-  auto create_successful_impl(const aux::type<self<T>>&)const {
-    return *this;
+  decltype(auto) create_successful_impl(const aux::type<self<T>>&)const {
+    return static_cast<injector&&>(const_cast<injector&>(*this));  // TODO
   }
 
  private:
   template <class... TArgs>
-  explicit injector(const from_deps&, const TArgs&... args) noexcept
-      : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{args...}} {}
+  explicit injector(const from_deps&, TArgs... args) noexcept
+      : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{static_cast<TArgs&&>(args)...}} {}
 
   template <class TInjector, class... TArgs>
-  explicit injector(const from_injector&, const TInjector& injector, const aux::type_list<TArgs...>&)noexcept
+  explicit injector(const from_injector&, TInjector&& injector, const aux::type_list<TArgs...>&)noexcept
 #if defined(_MSC_VER)  // __pph__
       : pool_t {
-    copyable_t<deps>{}, pool_t { build<TArgs>(injector)... }
+    copyable_t<deps>{}, pool_t { build<TArgs>(static_cast<TInjector&&>(injector))... }
   }
 #else   // __pph__
       : pool_t {
-    copyable_t<deps>{}, pool_t { TArgs{injector}... }
+    copyable_t<deps>{}, pool_t { TArgs{static_cast<TInjector&&>(injector)}... }
   }
 #endif  // __pph__
   {}

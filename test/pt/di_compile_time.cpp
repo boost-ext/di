@@ -172,8 +172,9 @@ class generator {
         }
         source_code_ << "\t);\n";
         source_code_ << "\tusing injector_t = decltype(i);\n";
-        source_code_ << "\tstruct module : injector_t { module(const injector_t& object) : injector_t(object){} };\n";
-        source_code_ << "\treturn module{i};\n";
+        source_code_ << "\tstruct module : injector_t { module(injector_t&& object) : "
+                        "injector_t(static_cast<injector_t&&>(object)){} };\n";
+        source_code_ << "\treturn module{static_cast<injector_t&&>(i)};\n";
         source_code_ << "\n};\n";
       }
     }

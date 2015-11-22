@@ -77,10 +77,6 @@ class dependency : dependency_base,
   template <class T>
   explicit dependency(T&& object) noexcept : scope_t(static_cast<T&&>(object)) {}
 
-  template <class TScope_, class TExpected_, class TGiven_, class TName_, class TPriority_>
-  explicit dependency(const dependency<TScope_, TExpected_, TGiven_, TName_, TPriority_>& other) noexcept
-      : scope_t(other) {}
-
   template <class T, BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
   auto named() noexcept {
     return dependency<TScope, TExpected, TGiven, T, TPriority>{*this};
@@ -123,9 +119,9 @@ class dependency : dependency_base,
   }
 
   template <class T, BOOST_DI_REQUIRES(aux::is_injector<T>::value) = 0>
-  auto to(const T& object = {}) noexcept {
+  auto to(T&& object = {}) noexcept {
     using dependency = dependency<scopes::exposed<TScope>, TExpected, T, TName, TPriority>;
-    return dependency{object};
+    return dependency{static_cast<T&&>(object)};
   }
 
   template <class...>

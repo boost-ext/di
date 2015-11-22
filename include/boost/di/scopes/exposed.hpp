@@ -27,7 +27,9 @@ class exposed {
     struct iprovider {
       TExpected* (*heap)(const iprovider*) = nullptr;
       type (*stack)(const iprovider*) = nullptr;
+      void (*dtor)(iprovider*) = nullptr;
 
+      ~iprovider() { ((iprovider*)(this))->dtor(this); }
       auto get(const type_traits::heap& = {}) const noexcept { return ((iprovider*)(this))->heap(this); }
       auto get(const type_traits::stack&) const noexcept { return ((iprovider*)(this))->stack(this); }
     };
@@ -36,6 +38,9 @@ class exposed {
     struct provider_impl {
       TExpected* (*heap)(const provider_impl*) = nullptr;
       type (*stack)(const provider_impl*) = nullptr;
+      void (*dtor)(provider_impl*) = nullptr;
+
+      static void destructor(provider_impl* object) { object->~provider_impl(); }
 
       template <class T>
       static T create(const provider_impl* object) noexcept {
@@ -47,29 +52,33 @@ class exposed {
         return static_cast<const core::injector__<TInjector>&>(object->injector).create_successful_impl(aux::type<T>{});
       }
 
-      explicit provider_impl(const TInjector& injector) noexcept
+      explicit provider_impl(TInjector&& injector) noexcept
           : provider_impl(
-                injector,
+                static_cast<TInjector&&>(injector),
                 aux::integral_constant<bool, core::injector__<TInjector>::template is_creatable<TExpected*>::value>{},
                 aux::integral_constant<bool, core::injector__<TInjector>::template is_creatable<TExpected>::value>{}) {}
 
-      provider_impl(const TInjector& injector, const aux::true_type&, const aux::true_type&) noexcept
+      provider_impl(TInjector&& injector, const aux::true_type&, const aux::true_type&) noexcept
           : heap(&provider_impl::template create_successful<TExpected*>),
             stack(&provider_impl::template create_successful<type>),
-            injector(injector) {}
+            dtor(&provider_impl::destructor),
+            injector(static_cast<TInjector&&>(injector)) {}
 
-      provider_impl(const TInjector& injector, const aux::false_type&, const aux::true_type&) noexcept
+      provider_impl(TInjector&& injector, const aux::false_type&, const aux::true_type&) noexcept
           : stack(&provider_impl::template create_successful<type>),
-            injector(injector) {}
+            dtor(&provider_impl::destructor),
+            injector(static_cast<TInjector&&>(injector)) {}
 
-      provider_impl(const TInjector& injector, const aux::true_type&, const aux::false_type&) noexcept
+      provider_impl(TInjector&& injector, const aux::true_type&, const aux::false_type&) noexcept
           : heap(&provider_impl::template create_successful<TExpected*>),
-            injector(injector) {}
+            dtor(&provider_impl::destructor),
+            injector(static_cast<TInjector&&>(injector)) {}
 
-      provider_impl(const TInjector& injector, const aux::false_type&, const aux::false_type&)
+      provider_impl(TInjector&& injector, const aux::false_type&, const aux::false_type&)
           : heap(&provider_impl::template create<TExpected*>)  // creatable constraint not satisfied
             ,
-            injector(injector) {}
+            dtor(&provider_impl::destructor),
+            injector(static_cast<TInjector&&>(injector)) {}
 
       TInjector injector;
     };
@@ -79,11 +88,12 @@ class exposed {
     using is_referable = aux::false_type;
 
     template <class TInjector, BOOST_DI_REQUIRES(aux::is_injector<TInjector>::value) = 0>
-    explicit scope(const TInjector& injector) noexcept {
-      static auto provider = provider_impl<TInjector>{injector};
-      provider.injector = injector;
-      provider_ = (iprovider*)&provider;
+    explicit scope(TInjector&& injector) noexcept {
+      provider_ = (iprovider*)new provider_impl<TInjector>{static_cast<TInjector&&>(injector)};
     }
+
+    scope(scope&& other) : provider_(other.provider_), scope_(other.scope_) { other.provider_ = nullptr; }
+    ~scope() noexcept { delete provider_; }
 
     template <class T, class TProvider>
     static T try_create(const TProvider&);

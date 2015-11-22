@@ -55,12 +55,12 @@ test modules_mix_make_injector = [] {
   constexpr auto f = 123.0f;
   const std::string s = "string";
 
-  auto injector_string = make_injector(di::bind<std::string>().to(s));
+  auto injector_string = [&] { return make_injector(di::bind<std::string>().to(s)); };
   auto empty = [] { return di::make_injector(); };
   auto module1 = []() -> di::injector<i1> { return di::make_injector(di::bind<i1>().to<impl1>()); };
   auto module2 = [](const int& i) -> di::injector<int> { return di::make_injector(di::bind<int>().to(i)); };
   auto injector = di::make_injector(empty(), di::bind<double>().to(d), module1(),
-                                    make_injector(di::bind<float>().to(f)), injector_string, module2(i));
+                                    make_injector(di::bind<float>().to(f)), injector_string(), module2(i));
 
   expect(dynamic_cast<impl1*>(injector.create<std::unique_ptr<i1>>().get()));
   expect(i == injector.create<int>());
@@ -71,49 +71,38 @@ test modules_mix_make_injector = [] {
 
 test empty_exposed_module = [] {
   auto empty = []() -> di::injector<> { return di::make_injector(); };
-
   auto injector = di::make_injector(empty());
   expect(0 == injector.create<int>());
 };
 
 test exposed_type = [] {
   di::injector<complex1> injector = di::make_injector(di::bind<i1>().to<impl1>());
-
   auto object = injector.create<std::shared_ptr<complex1>>();
   expect(dynamic_cast<i1*>(object->i1_.get()));
 };
 
 test exposed_type_by_injector = [] {
   constexpr auto i = 42;
-
-  di::injector<complex1> injector1 = di::make_injector(di::bind<i1>().to<impl1>());
-
-  auto injector = di::make_injector(injector1, di::bind<int>().to(i));
-
+  auto injector1 = []() -> di::injector<complex1> { return di::make_injector(di::bind<i1>().to<impl1>()); };
+  auto injector = di::make_injector(injector1(), di::bind<int>().to(i));
   auto object = injector.create<std::shared_ptr<complex2>>();
   expect(dynamic_cast<i1*>(object->c1.i1_.get()));
   expect(i == object->i);
 };
 
 test exposed_type_by_module = [] {
-  auto module = []() -> di::injector<complex1> { return di::make_injector(di::bind<i1>().to<impl1>()); };
-
   constexpr auto i = 42;
-
+  auto module = []() -> di::injector<complex1> { return di::make_injector(di::bind<i1>().to<impl1>()); };
   auto injector = di::make_injector(module(), di::bind<int>().to(i));
-
   auto object = injector.create<std::shared_ptr<complex2>>();
   expect(dynamic_cast<i1*>(object->c1.i1_.get()));
   expect(i == object->i);
 };
 
 test exposed_type_by_module_twice = [] {
-  auto module = []() -> di::injector<complex1> { return di::make_injector(di::bind<i1>().to<impl1>()); };
-
   constexpr auto i = 42;
-
+  auto module = []() -> di::injector<complex1> { return di::make_injector(di::bind<i1>().to<impl1>()); };
   di::injector<complex2> injector = di::make_injector(module(), di::bind<int>().to(i));
-
   auto object = injector.create<std::shared_ptr<complex2>>();
   expect(dynamic_cast<i1*>(object->c1.i1_.get()));
   expect(i == object->i);
@@ -121,11 +110,8 @@ test exposed_type_by_module_twice = [] {
 
 test exposed_type_by_module_mix = [] {
   static constexpr auto i = 42;
-
   auto module1 = []() -> di::injector<complex1> { return di::make_injector(di::bind<i1>().to<impl1>()); };
-
   auto module2 = [&module1]() -> di::injector<complex2> { return di::make_injector(di::bind<int>().to(i), module1()); };
-
   auto injector = di::make_injector(module2());
 
   {
@@ -141,10 +127,8 @@ test exposed_type_by_module_mix = [] {
 
 test exposed_many = [] {
   constexpr auto i = 42;
-
-  di::injector<complex1, i1> injector1 = di::make_injector(di::bind<i1>().to<impl1>());
-
-  auto injector = di::make_injector(injector1, di::bind<int>().to(i));
+  auto injector1 = []() -> di::injector<complex1, i1> { return di::make_injector(di::bind<i1>().to<impl1>()); };
+  auto injector = di::make_injector(injector1(), di::bind<int>().to(i));
 
   {
     auto object = injector.create<std::shared_ptr<complex2>>();
@@ -160,17 +144,13 @@ test exposed_many = [] {
 
 test exposed_with_instance = [] {
   constexpr auto i = 42;
-
   di::injector<int> injector = di::make_injector(di::bind<int>().to(i));
-
   expect(i == injector.create<int>());
 };
 
 test exposed_bind_deduced = [] {
   static constexpr auto i = 42;
-
   auto module = []() -> di::injector<int> { return di::make_injector(di::bind<int>().to(i)); };
-
   auto injector = di::make_injector(di::bind<int>().to(module()));
 
   expect(i == injector.create<int>());
@@ -181,14 +161,11 @@ test exposed_bind = [] {
 
   struct c {
     BOOST_DI_INJECT(explicit c, (named = name) int i) : i(i) {}
-
     int i = 0;
   };
 
   auto module = []() -> di::injector<int> { return di::make_injector(di::bind<int>().to(i)); };
-
   auto injector = di::make_injector(di::bind<int>().named(name).in(di::unique).to(module()));
-
   auto object = injector.create<c>();
 
   expect(i == object.i);
@@ -197,22 +174,19 @@ test exposed_bind = [] {
 test exposed_bind_interface = [] {
   struct c {
     BOOST_DI_INJECT(c, (named = name)std::unique_ptr<i1> i) : i(std::move(i)) {}
-
     std::unique_ptr<i1> i;
   };
 
-  di::injector<i1> module = di::make_injector(di::bind<i1>().to<impl1>());
+  auto module = []() -> di::injector<i1> { return di::make_injector(di::bind<i1>().to<impl1>()); };
+
+  /*  {*/
+  // auto injector = di::make_injector(di::bind<i1>().to(module()).named(name));
+  // auto object = injector.create<std::unique_ptr<c>>();
+  // expect(dynamic_cast<impl1*>(object->i.get()));
+  /*}*/
 
   {
-    auto injector = di::make_injector(di::bind<i1>().to(module).named(name));
-
-    auto object = injector.create<std::unique_ptr<c>>();
-    expect(dynamic_cast<impl1*>(object->i.get()));
-  }
-
-  {
-    auto injector = di::make_injector(di::bind<i1>().named(name).to(module));
-
+    auto injector = di::make_injector(di::bind<i1>().named(name).to(module()));
     auto object = injector.create<std::unique_ptr<c>>();
     expect(dynamic_cast<impl1*>(object->i.get()));
   }
@@ -221,14 +195,11 @@ test exposed_bind_interface = [] {
 test exposed_bind_interface_module = [] {
   struct c {
     BOOST_DI_INJECT(explicit c, (named = name)std::unique_ptr<i1> i) : i(std::move(i)) {}
-
     std::unique_ptr<i1> i;
   };
 
   auto module = []() -> di::injector<i1> { return di::make_injector(di::bind<i1>().to<impl1>()); };
-
   auto injector = di::make_injector(di::bind<i1>().named(name).to(module()));
-
   auto object = injector.create<std::unique_ptr<c>>();
 
   expect(dynamic_cast<impl1*>(object->i.get()));
@@ -237,7 +208,6 @@ test exposed_bind_interface_module = [] {
 test exposed_module_with_unique_ptr = [] {
   struct c {
     c(std::unique_ptr<i1> i1, std::unique_ptr<i2> i2, int i) : i1_(std::move(i1)), i2_(std::move(i2)), i(i) {}
-
     std::unique_ptr<i1> i1_;
     std::unique_ptr<i2> i2_;
     int i = 0;
@@ -248,8 +218,8 @@ test exposed_module_with_unique_ptr = [] {
   };
 
   auto injector = di::make_injector(module(42));
-
   auto object = injector.create<std::unique_ptr<c>>();
+
   expect(dynamic_cast<impl1*>(object->i1_.get()));
   expect(dynamic_cast<impl2*>(object->i2_.get()));
   expect(42 == object->i);
