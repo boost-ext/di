@@ -1,3 +1,4 @@
+<a href="http://www.boost.org/LICENSE_1_0.txt" target="_blank">![Boost Licence](http://img.shields.io/badge/license-boost-blue.svg)</a>
 <a href="https://github.com/krzysztof-jusiak/di/releases" target="_blank">![Version](https://badge.fury.io/gh/krzysztof-jusiak%2Fdi.svg)</a>
 <a href="https://github.com/krzysztof-jusiak/di/releases/latest" target="_blank">![Github Release](http://img.shields.io/github/release/krzysztof-jusiak/di.svg)</a>
 <a href="https://www.biicode.com/krzysztofjusiak/di" target="_blank">![Bii](https://webapi.biicode.com/v1/badges/krzysztofjusiak/krzysztofjusiak/di/master)</a>
