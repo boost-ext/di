@@ -2137,7 +2137,7 @@ struct referable<T&&, TDependency> {
 template <class T, class TDependency>
 using referable_t = typename referable<T, TDependency>::type;
 #if defined(_MSC_VER)
-template <class TInjector>
+template <class T, class TInjector>
 inline auto build(TInjector&& injector) noexcept {
   return T{static_cast<TInjector&&>(injector)};
 }
