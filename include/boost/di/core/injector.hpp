@@ -75,7 +75,10 @@ template <class T, class TDependency>
 using referable_t = typename referable<T, TDependency>::type;
 
 #if defined(_MSC_VER)  // __pph__
-inline auto build(TInjector&& injector) noexcept { return T{static_cast<TInjector&&>(injector)}; }
+template <class TInjector>
+inline auto build(TInjector&& injector) noexcept {
+  return T{static_cast<TInjector&&>(injector)};
+}
 #endif  // __pph__
 
 #define BOOST_DI_CORE_INJECTOR_POLICY(...) __VA_ARGS__ BOOST_DI_CORE_INJECTOR_POLICY_ELSE
