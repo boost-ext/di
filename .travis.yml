@@ -12,7 +12,7 @@ env:
   - secure: "S1svDigJfTlkxkkp14OOiWje6nT1j06k3cAAvbnI6lNGbf1VxQlJ/Q5SAxEV8ITYvDnJGy/yaoT/tipa5pgFVJ2qpAx/zo8oWGfDAyBSk8LWzuocU5rShvq3eJDJW4199RSdGalXtS1C+7hohJNSy9QP4iODvQA5j90+fbCPdh0=" # BII_PASSWORD
   - secure: "eTBgFApNEFiNdpyV8wmGR0VQG8UgGOWBARyuGl7HPkz7A1pAMlUJM+U/kVSwSNqTroNThc223FSbQc6WM3DGXk+QPrOR7fdpKZSzlBAbbAN9BtpqDDbevTO22988t9rSzeyJhjVeUOpggww2GgyQqLiVdoGnLJzS7GWlYmhbtcM=" # COVERALLS_REPO_TOKEN
   - BII_USER=krzysztofjusiak
-  - VALGRIND='--memcheck="valgrind --leak-check=full --error-exitcode=1"'
+  - VALGRIND="--memcheck=\"valgrind --leak-check=full --error-exitcode=1\""
 
 branches:
   except:
