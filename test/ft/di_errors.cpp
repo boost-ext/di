@@ -626,6 +626,8 @@ test bind_in_not_scopable_v = [] {
 };
 #endif
 
+// ---------------------------------------------------------------------------
+
 test make_injector_wrong_arg = [] {
   auto errors_ = errors("constraint not satisfied",
 #if defined(_MSC_VER)
@@ -636,6 +638,20 @@ test make_injector_wrong_arg = [] {
                         );
 
   expect_compile_fail("", errors_, struct dummy{}; int main() { di::make_injector(dummy{}); });
+};
+
+test make_injector_with_from_not_movable = [] {
+  expect_compile_fail("", errors(), struct c{}; int main() {
+    auto module = di::make_injector();
+    auto injector = di::make_injector(module);
+  });
+};
+
+test make_injector_with_from_not_movable_exposed = [] {
+  expect_compile_fail("", errors(), struct c{}; int main() {
+    auto module = di::make_injector();
+    di::injector<> injector = di::make_injector(module);
+  });
 };
 
 test exposed_multiple_times = [] {
