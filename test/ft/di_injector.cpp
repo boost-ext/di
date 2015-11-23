@@ -63,7 +63,6 @@ test create_ptr = [] {
   };
 
   auto injector = di::make_injector(di::bind<i1>().to<impl1>());
-
   injector.create<c>();
 };
 
@@ -74,7 +73,6 @@ test create_interface_when_impl_with_one_arg_ctor = [] {
   };
 
   auto injector = di::make_injector(di::bind<i1>().to<impl>());
-
   auto object = injector.create<std::unique_ptr<i1>>();
   expect(object.get());
 };
@@ -85,10 +83,8 @@ test injectors_mix = [] {
   expect(object->i1_.get());
 };
 
-/*test injector_ctor = [] {*/
-// auto injector = di::make_injector(di::bind<int>.to([] { return 42; }));
-// di::injector<int> i = di::make_injector(injector);
-// auto b = i;
-// auto c((b));
-//(void)c;
-/*};*/
+test injector_move_ctor = [] {
+  di::injector<int> i = di::make_injector(di::make_injector(di::bind<int>.to([] { return 42; })));
+  auto c((static_cast<di::injector<int>&&>(i)));
+  (void)c;
+};
