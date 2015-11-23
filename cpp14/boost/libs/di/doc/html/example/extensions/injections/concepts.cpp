@@ -153,7 +153,10 @@ struct generics_provider {
 /*<override `di` provider configuration>*/
 class generics_provider_config : public di::config {
  public:
-  static auto provider(...) noexcept { return generics_provider{}; }
+  template <class T>
+  static auto provider(const T&) noexcept {
+    return generics_provider{};
+  }
 };
 
 template <typename T>
