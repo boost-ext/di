@@ -84,7 +84,7 @@ test injectors_mix = [] {
 };
 
 test injector_move_ctor = [] {
-  di::injector<int> i = di::make_injector(di::make_injector(di::bind<int>.to([] { return 42; })));
+  di::injector<int> i = di::make_injector(di::make_injector(di::bind<int>().to([] { return 42; })));
   auto c((static_cast<di::injector<int>&&>(i)));
   (void)c;
 };
