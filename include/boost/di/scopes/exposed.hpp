@@ -88,15 +88,11 @@ class exposed {
     using is_referable = aux::false_type;
 
     template <class TInjector, BOOST_DI_REQUIRES(aux::is_injector<TInjector>::value) = 0>
-    explicit scope(TInjector&& injector) noexcept {
-      static auto provider = provider_impl<TInjector>{static_cast<TInjector&&>(injector)};
-      provider_ = (iprovider*)&provider;
-      // provider_.injector = static_cast<TInjector&&>(injector);
-      // provider_ = (iprovider*)new provider_impl<TInjector>{static_cast<TInjector&&>(injector)};
-    }
+    explicit scope(TInjector&& injector) noexcept
+        : provider_((iprovider*) new provider_impl<TInjector>{static_cast<TInjector&&>(injector)}) {}
 
-    // scope(scope&& other) : provider_(other.provider_), scope_(other.scope_) { other.provider_ = nullptr; }
-    //~scope() noexcept { delete provider_; }
+    scope(scope&& other) : provider_(other.provider_), scope_(other.scope_) { other.provider_ = nullptr; }
+    ~scope() noexcept { delete provider_; }
 
     template <class T, class TProvider>
     static T try_create(const TProvider&);
@@ -107,7 +103,7 @@ class exposed {
     }
 
    private:
-    iprovider* provider_ = nullptr;
+    iprovider* provider_;
     typename TScope::template scope<TExpected, TGiven> scope_;
   };
 };

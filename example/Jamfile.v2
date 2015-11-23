@@ -39,14 +39,14 @@ rule example ( src + : cxxflags * : property * ) {
 }
 
 test-suite example :
-    #[ example modules/model.cpp
-              #modules/module_model.cpp
-              #modules/view.cpp
-              #modules/module_view.cpp
-              #modules/controller.cpp
-              #modules/main.cpp
-      #: -Imodules -DBOOST_DI_CFG_FWD="\"class config;\"" -DBOOST_DI_CFG=config
-    #]
+	[ example modules/model.cpp
+			  modules/module_model.cpp
+			  modules/view.cpp
+			  modules/module_view.cpp
+			  modules/controller.cpp
+			  modules/main.cpp
+	  : -Imodules -DBOOST_DI_CFG_FWD="\"class config;\"" -DBOOST_DI_CFG=config
+	]
     [ example annotations.cpp ]
     [ example automatic_injection.cpp ]
     [ example bind_non_owning_ptr.cpp ]
