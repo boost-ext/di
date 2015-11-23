@@ -15,7 +15,7 @@ Boost.DI: C++ Dependency Injection
 
 > "Don't call us, we'll call you", Hollywood principle
 
-**[http://www.youtube.com/watch?v=IKD2-MAkXyQ](Dependency Injection) (DI)** involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state.
+**[Dependency Injection](http://www.youtube.com/watch?v=IKD2-MAkXyQ) (DI)** involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state.
 It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.
 
 > **"Let's make some coffee!"**
