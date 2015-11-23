@@ -668,9 +668,46 @@ test exposed_multiple_times = [] {
 
 // ---------------------------------------------------------------------------
 
-test dummy_config = [] {
+test not_configurable_config = [] {
   expect_compile_fail("", errors(), struct dummy_config{}; int main() { di::make_injector<dummy_config>(); });
 };
+
+test make_policies_with_non_const_policy = [] {
+  auto errors_ = errors("constraint not satisfied",
+#if defined(_MSC_VER)
+                        "policy<.*>::requires_<.*call_operator>", "=.*non_const_policy"
+#else
+                        "policy<.*non_const_policy>::requires_<.*call_operator>"
+#endif
+                        );
+
+    expect_compile_fail("", errors_,
+	struct non_const_policy {
+		template<class T>
+		void operator()(const T&) {}
+	};
+    struct test_config : di::config {
+    static auto policies(...) { return di::make_policies(non_const_policy{});
+}
+}
+;);
+}
+;
+
+test make_policies_with_non_movable_policy = [] {
+    expect_compile_fail("", errors(),
+	struct non_movable_policy {
+    template <class T>
+    void operator()(const T&) {}
+    non_movable_policy(non_movable_policy && ) = delete;
+	};
+    struct test_config : di::config {
+    static auto policies(...) { return di::make_policies(non_movable_policy{});
+}
+}
+;);
+}
+;
 
 test config_wrong_policy = [] {
   auto errors_ = errors("constraint not satisfied",

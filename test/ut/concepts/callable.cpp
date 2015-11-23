@@ -21,7 +21,7 @@ struct non_match_callable_type_specific {
 
 struct callable_type {
   template <class T>
-  void operator()(const T&);
+  void operator()(const T&) const;
 };
 
 struct callable_type_return {

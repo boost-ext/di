@@ -9,12 +9,12 @@
 
 struct policy1 {
   template <class T>
-  void operator()(T);
+  void operator()(T) const;
 };
 
 struct policy2 {
   template <class T>
-  void operator()(T);
+  void operator()(T) const;
 };
 
 test make_policies_types = [] {
