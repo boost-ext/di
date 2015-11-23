@@ -1698,17 +1698,16 @@ struct bind<int, TScope, T> {
 };
 }
 template <class... Ts>
-#if !defined(__cpp_variable_templates)
-struct bind :
-#else
+#if defined(__cpp_variable_templates)
 typename
+#else
+struct bind :
 #endif
     detail::bind<BOOST_DI_REQUIRES_MSG(concepts::boundable<concepts::any_of<Ts...>>), scopes::deduce, Ts...>::type
 #if defined(__cpp_variable_templates)
         bind
 #endif
-{
-};
+{};
 static constexpr BOOST_DI_UNUSED core::override override{};
 static constexpr BOOST_DI_UNUSED scopes::deduce deduce{};
 static constexpr BOOST_DI_UNUSED scopes::unique unique{};

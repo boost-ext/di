@@ -108,21 +108,49 @@ test bind_instance_with_given_scope = [] {
   expect_compile_fail("", errors(), di::make_injector(di::bind<int>().in(di::unique).to(42)););
 };
 
+#if defined(__cpp_variable_templates)
+test bind_instance_with_given_scope_v = [] {
+  expect_compile_fail("", errors(), di::make_injector(di::bind<int>.in(di::unique).to(42)););
+};
+#endif
+
 test bind_instance_with_given_type = [] {
   expect_compile_fail("", errors(), struct i{}; struct impl
                       : i{};
                       int main() { di::make_injector(di::bind<i>().to(impl{}).to<impl>()); });
 };
 
+#if defined(__cpp_variable_templates)
+test bind_instance_with_given_type_v = [] {
+  expect_compile_fail("", errors(), struct i{}; struct impl
+                      : i{};
+                      int main() { di::make_injector(di::bind<i>.to(impl{}).to<impl>()); });
+};
+#endif
+
 test bind_named_to_named = [] {
   expect_compile_fail("", errors(), struct a{}; struct b{};
                       int main() { di::make_injector(di::bind<int>().named(a{}).named(b{})); });
 };
 
+#if defined(__cpp_variable_templates)
+test bind_named_to_named_v = [] {
+  expect_compile_fail("", errors(), struct a{}; struct b{};
+                      int main() { di::make_injector(di::bind<int>.named(a{}).named(b{})); });
+};
+#endif
+
 test bind_instance_with_given_value = [] {
   expect_compile_fail("", errors(),
                       int main() { di::make_injector(di::bind<int>().to<std::integral_constant<int>>(0)); });
 };
+
+#if defined(__cpp_variable_templates)
+test bind_instance_with_given_value_v = [] {
+  expect_compile_fail("", errors(),
+                      int main() { di::make_injector(di::bind<int>.to<std::integral_constant<int>>(0)); });
+};
+#endif
 
 test bind_in_not_scopable_type = [] {
   auto errors_ =
@@ -138,30 +166,71 @@ test bind_in_not_scopable_type = [] {
                       int main() { auto injector = di::make_injector(di::bind<int>().in(dummy{})); });
 };
 
+#if defined(__cpp_variable_templates)
+test bind_in_not_scopable_type_v = [] {
+  auto errors_ =
+      errors("constraint not satisfied",
+#if defined(_MSC_VER)
+             "scope<.*>::requires_<.*scope<.*>::is_referable,.*scope<.*>::try_create,.*scope<.*>::create>", "=.*dummy"
+#else
+             "scope<.*dummy>::requires_<.*scope<.*>::is_referable,.*scope<.*>::try_create,.*scope<.*>::create>"
+#endif
+             );
+
+  expect_compile_fail("", errors_, struct dummy{};
+                      int main() { auto injector = di::make_injector(di::bind<int>.in(dummy{})); });
+};
+#endif
+
 test bind_has_disallowed_qualifiers_expected = [] {
   auto errors_ = errors("constraint not satisfied", "type_<.*int.*\\*>::has_disallowed_qualifiers");
-
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int*>()); });
 };
 
+#if defined(__cpp_variable_templates)
+test bind_has_disallowed_qualifiers_expected_v = [] {
+  auto errors_ = errors("constraint not satisfied", "type_<.*int.*\\*>::has_disallowed_qualifiers");
+  expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int*>); });
+};
+#endif
+
 test bind_has_disallowed_qualifiers_given = [] {
   auto errors_ = errors("constraint not satisfied", "type_<const.*int.*&>::has_disallowed_qualifiers");
-
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>().to<const int&>()); });
 };
 
+#if defined(__cpp_variable_templates)
+test bind_has_disallowed_qualifiers_given_v = [] {
+  auto errors_ = errors("constraint not satisfied", "type_<const.*int.*&>::has_disallowed_qualifiers");
+  expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>.to<const int&>()); });
+};
+#endif
+
 test bind_has_disallowed_qualifiers_expected_complex = [] {
   auto errors_ = errors("constraint not satisfied", "type_<.*shared_ptr.*int.*>::has_disallowed_qualifiers");
-
   expect_compile_fail("<include> memory", errors_, int main() { di::make_injector(di::bind<std::shared_ptr<int>>()); });
 };
 
+#if defined(__cpp_variable_templates)
+test bind_has_disallowed_qualifiers_expected_complex_v = [] {
+  auto errors_ = errors("constraint not satisfied", "type_<.*shared_ptr.*int.*>::has_disallowed_qualifiers");
+  expect_compile_fail("<include> memory", errors_, int main() { di::make_injector(di::bind<std::shared_ptr<int>>); });
+};
+#endif
+
 test bind_has_disallowed_qualifiers_given_complex = [] {
   auto errors_ = errors("constraint not satisfied", "type_<.*shared_ptr.*int.*>::has_disallowed_qualifiers");
-
   expect_compile_fail("<include> memory", errors_,
                       int main() { di::make_injector(di::bind<int, std::shared_ptr<int>>()); });
 };
+
+#if defined(__cpp_variable_templates)
+test bind_has_disallowed_qualifiers_given_complex_v = [] {
+  auto errors_ = errors("constraint not satisfied", "type_<.*shared_ptr.*int.*>::has_disallowed_qualifiers");
+  expect_compile_fail("<include> memory", errors_,
+                      int main() { di::make_injector(di::bind<int, std::shared_ptr<int>>); });
+};
+#endif
 
 test bind_narrowed_type = [] {
   auto errors_ = errors("constraint not satisfied",
@@ -174,6 +243,20 @@ test bind_narrowed_type = [] {
 
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>().to<double>()); });
 };
+
+#if defined(__cpp_variable_templates)
+test bind_narrowed_type_v = [] {
+  auto errors_ = errors("constraint not satisfied",
+#if defined(_MSC_VER)
+                        "type_<.*>::is_not_related_to<int>", "=.*double"
+#else
+                        "type_<.*double>::is_not_related_to<int>"
+#endif
+                        );
+
+  expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>.to<double>()); });
+};
+#endif
 
 test bind_not_compatible_types = [] {
   auto errors_ = errors("constraint not satisfied",
@@ -189,6 +272,22 @@ test bind_not_compatible_types = [] {
                       int main() { di::make_injector(di::bind<int>().to<impl>()); });
 };
 
+#if defined(__cpp_variable_templates)
+test bind_not_compatible_types_v = [] {
+  auto errors_ = errors("constraint not satisfied",
+#if defined(_MSC_VER)
+                        "type_<.*>::is_not_related_to<int>", "=.*impl"
+#else
+                        "type_<.*impl>::is_not_related_to<int>"
+#endif
+                        );
+
+  expect_compile_fail("", errors_, struct i{}; struct impl
+                      : i{};
+                      int main() { di::make_injector(di::bind<int>.to<impl>()); });
+};
+#endif
+
 test bind_not_compatible_instance = [] {
   auto errors_ = errors("constraint not satisfied",
 #if defined(_MSC_VER)
@@ -202,6 +301,22 @@ test bind_not_compatible_instance = [] {
                       : i{};
                       int main() { di::make_injector(di::bind<int>().to(impl{})); });
 };
+
+#if defined(__cpp_variable_templates)
+test bind_not_compatible_instance_v = [] {
+  auto errors_ = errors("constraint not satisfied",
+#if defined(_MSC_VER)
+                        "type_<.*>::is_not_related_to<int>", "=.*impl"
+#else
+                        "type_<.*impl>::is_not_related_to<int>"
+#endif
+                        );
+
+  expect_compile_fail("", errors_, struct i{}; struct impl
+                      : i{};
+                      int main() { di::make_injector(di::bind<int>.to(impl{})); });
+};
+#endif
 
 test bind_not_compatible_narrowed_types = [] {
   auto errors_ = errors("constraint not satisfied",
@@ -217,6 +332,22 @@ test bind_not_compatible_narrowed_types = [] {
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>().to(42l)); });
 };
 
+#if defined(__cpp_variable_templates)
+test bind_not_compatible_narrowed_types_v = [] {
+  auto errors_ = errors("constraint not satisfied",
+#if defined(_MSC_VER)
+                        "type_<.*>::is_not_related_to<int>", "=.*long"
+#elif defined(__clang__)
+                        "type_<.*long>::is_not_related_to<int>"
+#else
+                        "type_<.*long.*int>::is_not_related_to<int>"
+#endif
+                        );
+
+  expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>.to(42l)); });
+};
+#endif
+
 test bind_not_compatible_initializer_list = [] {
   auto errors_ = errors("constraint not satisfied",
 #if defined(_MSC_VER)
@@ -228,6 +359,20 @@ test bind_not_compatible_initializer_list = [] {
 
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int[]>().to({"a", "b"})); });
 };
+
+#if defined(__cpp_variable_templates)
+test bind_not_compatible_initializer_list_v = [] {
+  auto errors_ = errors("constraint not satisfied",
+#if defined(_MSC_VER)
+                        "type_<.*>::is_not_related_to<int>", "=.*const.*char.*\\*"
+#else
+                        "type_<const.*char.*\\*>::is_not_related_to<int>"
+#endif
+                        );
+
+  expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int[]>.to({"a", "b"})); });
+};
+#endif
 
 test bind_any_of_not_related = [] {
   auto errors_ = errors("constraint not satisfied",
@@ -242,6 +387,22 @@ test bind_any_of_not_related = [] {
                       : a{};
                       struct c{}; int main() { di::make_injector(di::bind<a, b>().to<c>()); });
 };
+
+#if defined(__cpp_variable_templates)
+test bind_any_of_not_related_v = [] {
+  auto errors_ = errors("constraint not satisfied",
+#if defined(_MSC_VER)
+                        "type_<.*>::is_not_related_to<.*a>.*type_<.*>::is_not_related_to<.*b>", "=.*c"
+#else
+                        "type_<.*c>::is_not_related_to<.*a>.*type_<.*c>::is_not_related_to<.*b>"
+#endif
+                        );
+
+  expect_compile_fail("", errors_, struct a{}; struct b
+                      : a{};
+                      struct c{}; int main() { di::make_injector(di::bind<a, b>.to<c>()); });
+};
+#endif
 
 test bind_is_abstract_type = [] {
   auto errors_ = errors("constraint not satisfied",
@@ -262,6 +423,27 @@ test bind_is_abstract_type = [] {
                       struct c{c(i*){}}; int main() { di::make_injector(di::bind<i>().to<impl>()); });
 };
 
+#if defined(__cpp_variable_templates)
+test bind_is_abstract_type_v = [] {
+  auto errors_ = errors("constraint not satisfied",
+#if defined(_MSC_VER)
+                        "type_<.*>::is_abstract", "=.*impl"
+#else
+                        "type_<.*impl>::is_abstract"
+#endif
+                        );
+
+  expect_compile_fail("", errors_,
+                      struct i {
+                        virtual ~i() noexcept = default;
+                        virtual void dummy() = 0;
+                      };
+                      struct impl
+                      : i{};
+                      struct c{c(i*){}}; int main() { di::make_injector(di::bind<i>.to<impl>()); });
+};
+#endif
+
 test bind_is_abstract_type_with_missing_error = [] {
   auto errors_ = errors("constraint not satisfied",
 #if defined(_MSC_VER)
@@ -280,6 +462,27 @@ test bind_is_abstract_type_with_missing_error = [] {
                       : i{};
                       struct c{c(i*){}}; int main() { di::make_injector(di::bind<i>().to<impl>()); });
 };
+
+#if defined(__cpp_variable_templates)
+test bind_is_abstract_type_with_missing_error_v = [] {
+  auto errors_ = errors("constraint not satisfied",
+#if defined(_MSC_VER)
+                        "type_<.*>::is_abstract", "=.*impl", "void i::dummy.*is abstract"
+#else
+                        "type_<.*impl>::is_abstract", "pure.*impl", "virtual void dummy().*=.*0"
+#endif
+                        );
+
+  expect_compile_fail("-DBOOST_DI_CFG_DIAGNOSTICS_LEVEL=2", errors_,
+                      struct i {
+                        virtual ~i() noexcept = default;
+                        virtual void dummy() = 0;
+                      };
+                      struct impl
+                      : i{};
+                      struct c{c(i*){}}; int main() { di::make_injector(di::bind<i>.to<impl>()); });
+};
+#endif
 
 test bind_is_abstract_type_named = [] {
   auto errors_ = errors("constraint not satisfied",
@@ -300,9 +503,29 @@ test bind_is_abstract_type_named = [] {
                       int main() { di::make_injector(di::bind<i>().named(dummy{}).to<impl>()); });
 };
 
+#if defined(__cpp_variable_templates)
+test bind_is_abstract_type_named_v = [] {
+  auto errors_ = errors("constraint not satisfied",
+#if defined(_MSC_VER)
+                        "type_<.*>::is_abstract", "=.*impl"
+#else
+                        "type_<.*impl>::is_abstract"
+#endif
+                        );
+  expect_compile_fail("", errors_,
+                      struct i {
+                        virtual ~i() noexcept = default;
+                        virtual void dummy() = 0;
+                      };
+                      struct impl
+                      : i{};
+                      struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{})i*){}};
+                      int main() { di::make_injector(di::bind<i>.named(dummy{}).to<impl>()); });
+};
+#endif
+
 test bind_repeated = [] {
   auto errors_ = errors("constraint not satisfied", "type_<.*i>::is_bound_more_than_once");
-
   expect_compile_fail("", errors_, struct i{}; struct impl1
                       : i{};
                       struct impl2
@@ -310,9 +533,30 @@ test bind_repeated = [] {
                       int main() { di::make_injector(di::bind<i>().to<impl1>(), di::bind<i>().to<impl1>()); });
 };
 
+#if defined(__cpp_variable_templates)
+test bind_repeated_v = [] {
+  auto errors_ = errors("constraint not satisfied", "type_<.*i>::is_bound_more_than_once");
+  expect_compile_fail("", errors_, struct i{}; struct impl1
+                      : i{};
+                      struct impl2
+                      : i{};
+                      int main() { di::make_injector(di::bind<i>.to<impl1>(), di::bind<i>.to<impl1>()); });
+};
+#endif
+
+#if defined(__cpp_variable_templates)
+test bind_repeated_mix_v = [] {
+  auto errors_ = errors("constraint not satisfied", "type_<.*i>::is_bound_more_than_once");
+  expect_compile_fail("", errors_, struct i{}; struct impl1
+                      : i{};
+                      struct impl2
+                      : i{};
+                      int main() { di::make_injector(di::bind<i>.to<impl1>(), di::bind<i>().to<impl1>()); });
+};
+#endif
+
 test bind_to_different_types = [] {
   auto errors_ = errors("constraint not satisfied", "type_<.*i>::is_bound_more_than_once");
-
   expect_compile_fail("", errors_, struct i{}; struct impl1
                       : i{};
                       struct impl2
@@ -320,23 +564,35 @@ test bind_to_different_types = [] {
                       int main() { di::make_injector(di::bind<i>().to<impl1>(), di::bind<i>().to<impl2>()); });
 };
 
-test exposed_multiple_times = [] {
-  auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
-                        "type_<.*>::is_bound_more_than_once", "=.*c"
-#else
-                        "type_<.*c>::is_bound_more_than_once"
-#endif
-                        );
-
-  expect_compile_fail("", errors_, struct c{}; int main() { di::injector<c, c> injector = di::make_injector(); });
+#if defined(__cpp_variable_templates)
+test bind_to_different_types_v = [] {
+  auto errors_ = errors("constraint not satisfied", "type_<.*i>::is_bound_more_than_once");
+  expect_compile_fail("", errors_, struct i{}; struct impl1
+                      : i{};
+                      struct impl2
+                      : i{};
+                      int main() { di::make_injector(di::bind<i>.to<impl1>(), di::bind<i>.to<impl2>()); });
 };
+#endif
 
 test bind_instance_repeated = [] {
   auto errors_ = errors("constraint not satisfied", "type_<.*int>::is_bound_more_than_once");
-
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>().to(42), di::bind<int>().to(87)); });
 };
+
+#if defined(__cpp_variable_templates)
+test bind_instance_repeated_v = [] {
+  auto errors_ = errors("constraint not satisfied", "type_<.*int>::is_bound_more_than_once");
+  expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>.to(42), di::bind<int>.to(87)); });
+};
+#endif
+
+#if defined(__cpp_variable_templates)
+test bind_instance_repeated_mix_v = [] {
+  auto errors_ = errors("constraint not satisfied", "type_<.*int>::is_bound_more_than_once");
+  expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>().to(42), di::bind<int>.to(87)); });
+};
+#endif
 
 test bind_multiple_times = [] {
   auto errors_ = errors("constraint not satisfied", "type_<.*i>::is_bound_more_than_once");
@@ -347,6 +603,28 @@ test bind_multiple_times = [] {
                       : i{};
                       int main() { di::make_injector(di::bind<i>().to<impl1>(), di::bind<i>().to<impl2>()); });
 };
+
+#if defined(__cpp_variable_templates)
+test bind_multiple_times_v = [] {
+  auto errors_ = errors("constraint not satisfied", "type_<.*i>::is_bound_more_than_once");
+
+  expect_compile_fail("", errors_, struct i{}; struct impl1
+                      : i{};
+                      struct impl2
+                      : i{};
+                      int main() { di::make_injector(di::bind<i>.to<impl1>(), di::bind<i>.to<impl2>()); });
+};
+#endif
+
+test bind_in_not_scopable = [] {
+  expect_compile_fail("", errors(), struct not_scopable{}; int main() { di::bind<int>().in(not_scopable{}); });
+};
+
+#if defined(__cpp_variable_templates)
+test bind_in_not_scopable_v = [] {
+  expect_compile_fail("", errors(), struct not_scopable{}; int main() { di::bind<int>.in(not_scopable{}); });
+};
+#endif
 
 test make_injector_wrong_arg = [] {
   auto errors_ = errors("constraint not satisfied",
@@ -360,8 +638,16 @@ test make_injector_wrong_arg = [] {
   expect_compile_fail("", errors_, struct dummy{}; int main() { di::make_injector(dummy{}); });
 };
 
-test bind_in_not_scopable = [] {
-  expect_compile_fail("", errors(), struct not_scopable{}; int main() { di::bind<int>().in(not_scopable{}); });
+test exposed_multiple_times = [] {
+  auto errors_ = errors("constraint not satisfied",
+#if defined(_MSC_VER)
+                        "type_<.*>::is_bound_more_than_once", "=.*c"
+#else
+                        "type_<.*c>::is_bound_more_than_once"
+#endif
+                        );
+
+  expect_compile_fail("", errors_, struct c{}; int main() { di::injector<c, c> injector = di::make_injector(); });
 };
 
 // ---------------------------------------------------------------------------

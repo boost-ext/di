@@ -33,17 +33,16 @@ struct bind<int, TScope, T> {
 }  // detail
 
 template <class... Ts>
-#if !defined(__cpp_variable_templates)  // __pph__
-struct bind :
-#else   // __pph__
+#if defined(__cpp_variable_templates)  // __pph__
 typename
+#else   // __pph__
+struct bind :
 #endif  // __pph__
     detail::bind<BOOST_DI_REQUIRES_MSG(concepts::boundable<concepts::any_of<Ts...>>), scopes::deduce, Ts...>::type
 #if defined(__cpp_variable_templates)  // __pph__
         bind
 #endif  // __pph__
-{
-};
+{};
 
 static constexpr BOOST_DI_UNUSED core::override override{};
 static constexpr BOOST_DI_UNUSED scopes::deduce deduce{};
