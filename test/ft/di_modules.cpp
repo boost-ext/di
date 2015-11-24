@@ -6,6 +6,7 @@
 //
 #include <memory>
 #include <string>
+#include <utility>
 #include "boost/di.hpp"
 
 namespace di = boost::di;
@@ -123,6 +124,15 @@ test exposed_type_by_module_mix = [] {
     auto object = injector.create<std::shared_ptr<complex3>>();
     expect(object.get());
   }
+};
+
+test exposed_move = [] {
+  constexpr auto i = 42;
+  di::injector<complex1, i1> injector1 = di::make_injector(di::bind<i1>().to<impl1>());
+  auto injector = di::make_injector(std::move(injector1), di::bind<int>().to(i));
+  auto object = injector.create<std::shared_ptr<complex2>>();
+  expect(dynamic_cast<i1*>(object->c1.i1_.get()));
+  expect(i == object->i);
 };
 
 test exposed_many = [] {

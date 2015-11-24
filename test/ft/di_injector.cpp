@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <memory>
+#include <utility>
 #include "boost/di.hpp"
 
 namespace di = boost::di;
@@ -25,6 +26,12 @@ struct complex1 {
 
 test empty_injector = [] {
   auto injector = di::make_injector();
+  expect(0 == injector.create<int>());
+};
+
+test move_injector = [] {
+  auto module = di::make_injector();
+  auto injector = di::make_injector(std::move(module));
   expect(0 == injector.create<int>());
 };
 
