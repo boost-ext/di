@@ -12,15 +12,9 @@
 
 template <class = void>
 struct fake_config {
-  template <class T>
-  static auto policies(const T&) noexcept {
-    return aux::type_list<>{};
-  }
+  static auto policies(...) noexcept { return aux::type_list<>{}; }
 
-  template <class T>
-  static auto provider(const T&) noexcept {
-    return providers::heap{};
-  }
+  static auto provider(...) noexcept { return providers::heap{}; }
 };
 
 #endif

@@ -27,7 +27,7 @@ struct fake_provider {
     return calls;
   }
 
-  fake_injector<T> injector_;
+  fake_injector<T>* injector_ = nullptr;
   using injector_t = fake_injector<T>;
 };
 

@@ -120,7 +120,7 @@ class mocks_provider : public di::config {
 
  public:
   template <class TInjector>
-  static auto provider(const TInjector&) noexcept {
+  static auto provider(const TInjector*) noexcept {
     return mock_provider<TInjector>{get_expectations()};
   }
 

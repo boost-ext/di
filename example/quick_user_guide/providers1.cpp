@@ -32,10 +32,7 @@ class heap_no_throw {
 
 class my_provider : public di::config {
  public:
-  template <class T>
-  static auto provider(const T&) noexcept {
-    return heap_no_throw{};
-  }
+  static auto provider(...) noexcept { return heap_no_throw{}; }
 };
 
 int main() {

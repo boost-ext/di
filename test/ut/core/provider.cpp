@@ -14,7 +14,7 @@ namespace core {
 test get_default = [] {
   fake_injector<int> injector;
   provider<aux::pair<int, aux::pair<type_traits::direct, aux::type_list<>>>, no_name, decltype(injector)> provider{
-      injector};
+      &injector};
   std::unique_ptr<int> ptr{provider.get()};
   expect(ptr.get());
 };
@@ -22,7 +22,7 @@ test get_default = [] {
 test get_stack = [] {
   fake_injector<int> injector;
   provider<aux::pair<int, aux::pair<type_traits::direct, aux::type_list<>>>, no_name, decltype(injector)> provider{
-      injector};
+      &injector};
   std::unique_ptr<int> ptr{provider.get(type_traits::stack{})};
   expect(ptr.get());
 };
@@ -30,7 +30,7 @@ test get_stack = [] {
 test get_heap = [] {
   fake_injector<int> injector;
   provider<aux::pair<int, aux::pair<type_traits::direct, aux::type_list<>>>, no_name, decltype(injector)> provider{
-      injector};
+      &injector};
   std::unique_ptr<int> ptr{provider.get(type_traits::heap{})};
   expect(ptr.get());
 };

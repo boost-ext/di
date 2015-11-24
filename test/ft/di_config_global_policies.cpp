@@ -29,18 +29,12 @@ struct global_policy {
 
 class custom_policies : public di::config {
  public:
-  template <class T>
-  static auto policies(const T&) noexcept {
-    return di::make_policies(custom_policy{});
-  }
+  static auto policies(...) noexcept { return di::make_policies(custom_policy{}); }
 };
 
 class global_policies : public di::config {
  public:
-  template <class T>
-  static auto policies(const T&) noexcept {
-    return di::make_policies(global_policy{});
-  }
+  static auto policies(...) noexcept { return di::make_policies(global_policy{}); }
 };
 
 test call_policies_via_global_config = [] {

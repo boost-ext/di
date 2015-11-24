@@ -21,8 +21,7 @@ static auto called = 0;
 
 class config : public di::config {
  public:
-  template <class T>
-  static auto policies(const T&) noexcept {
+  static auto policies(...) noexcept {
     return di::make_policies([](auto) { ++called; });
   }
 };
@@ -36,8 +35,7 @@ test call_policy_lambda = [] {
 
 class config_provider : public di::config {
  public:
-  template <class T>
-  static auto provider(const T&) noexcept {
+  static auto provider(...) noexcept {
     ++called;
     return di::providers::heap{};
   }
@@ -52,8 +50,7 @@ test call_provider = [] {
 
 class must_be_bound : public di::config {
  public:
-  template <class T>
-  static auto policies(const T&) noexcept {
+  static auto policies(...) noexcept {
     using namespace di::policies;
     using namespace di::policies::operators;
     return di::make_policies(constructible(std::is_same<di::_, double>{} || is_bound<di::_>{}));
@@ -73,8 +70,7 @@ test constructible_policy_must_be_bound = [] {
 
 class disallow_raw_pointers : public di::config {
  public:
-  template <class T>
-  static auto policies(const T&) noexcept {
+  static auto policies(...) noexcept {
     using namespace di::policies;
     using namespace di::policies::operators;
     return di::make_policies(constructible(!std::is_pointer<di::_>{}));
@@ -99,8 +95,7 @@ test constructible_policy_disallow_raw_pointers = [] {
 
 class must_be_injected : public di::config {
  public:
-  template <class T>
-  static auto policies(const T&) noexcept {
+  static auto policies(...) noexcept {
     using namespace di::policies;
     using namespace di::policies::operators;
     return di::make_policies(constructible(is_injected<di::_>{}));
@@ -140,8 +135,7 @@ struct policy {
 
 class custom_policies : public di::config {
  public:
-  template <class T>
-  static auto policies(const T&) noexcept {
+  static auto policies(...) noexcept {
     return di::make_policies(policy{}, [](auto) { ++policy::called(); },
                              [](BOOST_DI_UNUSED auto type, BOOST_DI_UNUSED auto dependency,
                                 BOOST_DI_UNUSED auto... ctor) { ++policy::called(); });

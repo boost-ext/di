@@ -19,10 +19,7 @@ test none = [] {
 
 class config_just_policies {
  public:
-  template <class T>
-  static auto policies(const T&) noexcept {
-    return make_policies();
-  }
+  static auto policies(...) noexcept { return make_policies(); }
 };
 
 test just_policies = [] {
@@ -33,10 +30,7 @@ test just_policies = [] {
 
 class config_just_provider {
  public:
-  template <class T>
-  static auto provider(const T&) noexcept {
-    return providers::heap{};
-  }
+  static auto provider(...) noexcept { return providers::heap{}; }
 };
 
 test just_provider = [] {
@@ -47,15 +41,8 @@ test just_provider = [] {
 
 class config_private_access {
  private:
-  template <class T>
-  static auto policies(const T&) noexcept {
-    return make_policies();
-  }
-
-  template <class T>
-  static auto provider(const T&) noexcept {
-    return providers::heap{};
-  }
+  static auto policies(...) noexcept { return make_policies(); }
+  static auto provider(...) noexcept { return providers::heap{}; }
 };
 
 #if !defined(_MSC_VER)
@@ -68,15 +55,8 @@ test private_access = [] {
 
 class config_inheritance_impl {
  public:
-  template <class T>
-  static auto policies(const T&) noexcept {
-    return make_policies();
-  }
-
-  template <class T>
-  static auto provider(const T&) noexcept {
-    return providers::heap{};
-  }
+  static auto policies(...) noexcept { return make_policies(); }
+  static auto provider(...) noexcept { return providers::heap{}; }
 };
 
 class config_inheritance : public config_inheritance_impl {};
@@ -84,6 +64,14 @@ class config_inheritance : public config_inheritance_impl {};
 test inheritance = [] { expect(configurable<config_inheritance>::value); };
 
 class config_okay {
+ public:
+  static auto policies(...) noexcept { return make_policies(); }
+  static auto provider(...) noexcept { return providers::heap{}; }
+};
+
+test okay = [] { expect(configurable<config_okay>::value); };
+
+class config_okay_type {
  public:
   template <class T>
   static auto policies(const T&) noexcept {
@@ -96,6 +84,6 @@ class config_okay {
   }
 };
 
-test okay = [] { expect(configurable<config_okay>::value); };
+test okay_type = [] { expect(configurable<config_okay_type>::value); };
 
 }  // concepts

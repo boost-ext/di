@@ -14,11 +14,9 @@ namespace di = boost::di;
 
 class all_must_be_bound_unless_int : public di::config {
  public:
-  template <class T>
-  static auto policies(const T&) noexcept {
+  static auto policies(...) noexcept {
     using namespace di::policies;
     using namespace di::policies::operators;
-
     return di::make_policies(constructible(std::is_same<di::_, int>{} || is_bound<di::_>{}));
   }
 };
