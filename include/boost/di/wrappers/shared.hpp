@@ -51,7 +51,6 @@ struct shared {
   }
 
   inline operator T&() noexcept { return *object; }
-
   inline operator const T&() const noexcept { return *object; }
 
   TObject object;
@@ -65,8 +64,7 @@ struct shared<TScope, T&> {
   struct is_referable : aux::true_type {};
 
   explicit shared(T& object) : object(&object) {}
-
-  explicit shared(T&&);  // compilation clean
+  shared(T&&);  // compilation clean
 
   template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
   inline operator I() const noexcept {
