@@ -34,10 +34,9 @@ class lazy {
   using boost_di_inject__ = di::inject<di::self<T>>;
 
   template <class TInjector>
-  explicit lazy(const TInjector &i)
-      : injector_((void *)&i), f(create<TInjector>) {}
+  explicit lazy(const TInjector &i) noexcept : injector_((void *) & i), f(create<TInjector>) {}
 
-  T get() const { return (*f)(injector_); }
+  T get() const noexcept { return (*f)(injector_); }
 
  private:
   const void *injector_ = nullptr;

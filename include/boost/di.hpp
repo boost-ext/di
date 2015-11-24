@@ -768,7 +768,7 @@ class exposed {
       TExpected* (*heap)(const iprovider*) = nullptr;
       type (*stack)(const iprovider*) = nullptr;
       void (*dtor)(iprovider*) = nullptr;
-      ~iprovider() { ((iprovider*)(this))->dtor(this); }
+      ~iprovider() noexcept { ((iprovider*)(this))->dtor(this); }
       auto get(const type_traits::heap& = {}) const noexcept { return ((iprovider*)(this))->heap(this); }
       auto get(const type_traits::stack&) const noexcept { return ((iprovider*)(this))->stack(this); }
     };
@@ -817,7 +817,7 @@ class exposed {
     template <class TInjector, BOOST_DI_REQUIRES(aux::is_a<core::injector_base, TInjector>::value) = 0>
     explicit scope(TInjector&& injector) noexcept
         : provider_((iprovider*) new provider_impl<TInjector>{static_cast<TInjector&&>(injector)}) {}
-    scope(scope&& other) : provider_(other.provider_), scope_(other.scope_) { other.provider_ = nullptr; }
+    scope(scope&& other) noexcept : provider_(other.provider_), scope_(other.scope_) { other.provider_ = nullptr; }
     ~scope() noexcept { delete provider_; }
     template <class T, class TProvider>
     static T try_create(const TProvider&);
@@ -2161,7 +2161,7 @@ class injector : injector_base, pool<bindings_t<TDeps...>> {
  public:
   using deps = bindings_t<TDeps...>;
   using config = TConfig;
-  injector(injector&&) = default;
+  injector(injector&&) noexcept = default;
   template <class... TArgs>
   explicit injector(const init&, TArgs... args) noexcept : injector{from_deps{}, static_cast<TArgs&&>(args)...} {}
   template <class TConfig_, class TPolicies_, class... TDeps_>
@@ -2332,7 +2332,7 @@ class injector<TConfig, pool<>, TDeps...> : injector_base, pool<bindings_t<TDeps
  public:
   using deps = bindings_t<TDeps...>;
   using config = TConfig;
-  injector(injector&&) = default;
+  injector(injector&&) noexcept = default;
   template <class... TArgs>
   explicit injector(const init&, TArgs... args) noexcept : injector{from_deps{}, static_cast<TArgs&&>(args)...} {}
   template <class TConfig_, class TPolicies_, class... TDeps_>

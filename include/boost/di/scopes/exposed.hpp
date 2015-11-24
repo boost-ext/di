@@ -29,7 +29,7 @@ class exposed {
       type (*stack)(const iprovider*) = nullptr;
       void (*dtor)(iprovider*) = nullptr;
 
-      ~iprovider() { ((iprovider*)(this))->dtor(this); }
+      ~iprovider() noexcept { ((iprovider*)(this))->dtor(this); }
       auto get(const type_traits::heap& = {}) const noexcept { return ((iprovider*)(this))->heap(this); }
       auto get(const type_traits::stack&) const noexcept { return ((iprovider*)(this))->stack(this); }
     };
@@ -91,7 +91,7 @@ class exposed {
     explicit scope(TInjector&& injector) noexcept
         : provider_((iprovider*) new provider_impl<TInjector>{static_cast<TInjector&&>(injector)}) {}
 
-    scope(scope&& other) : provider_(other.provider_), scope_(other.scope_) { other.provider_ = nullptr; }
+    scope(scope&& other) noexcept : provider_(other.provider_), scope_(other.scope_) { other.provider_ = nullptr; }
     ~scope() noexcept { delete provider_; }
 
     template <class T, class TProvider>
