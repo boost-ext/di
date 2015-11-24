@@ -17,6 +17,9 @@ struct no_name {
 template <class, class = int>
 struct ctor_traits;
 
+template <class>
+struct self {};
+
 namespace core {
 template <class>
 struct any_type_fwd;

@@ -7,13 +7,9 @@
 #include "boost/di/core/bindings.hpp"
 #include "boost/di/scopes/exposed.hpp"
 #include "common/fakes/fake_dependency.hpp"
+#include "common/fakes/fake_injector.hpp"
 
 namespace core {
-
-template <class... TDeps>
-struct fake_injector {
-  using deps = aux::type_list<TDeps...>;
-};
 
 test bindings_deps = [] {
   static_expect(std::is_same<aux::type_list<>, bindings_t<>>::value);

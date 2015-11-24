@@ -31,8 +31,6 @@ struct from_injector {};
 struct from_deps {};
 struct init {};
 struct with_error {};
-template <class>
-struct self {};
 
 template <class>
 struct copyable;
@@ -111,7 +109,6 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
   };
 
  public:
-  using boost_di_inject__ = aux::type_list<core::self<injector>>;
   using deps = bindings_t<TDeps...>;
   using config = TConfig;
 
@@ -241,7 +238,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
 
   template <class TIsRoot = aux::false_type, class T>
   decltype(auto) create_successful_impl(const aux::type<self<T>>&)const {
-    return static_cast<injector&&>(const_cast<injector&>(*this));  // TODO
+    return *this;
   }
 
  private:

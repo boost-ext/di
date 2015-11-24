@@ -92,7 +92,7 @@ test named_polymorphic = [] {
 
   auto object = injector.create<c>();
 
-  expect(dynamic_cast<impl1*>(object.sp.get()));
+  expect(dynamic_cast<impl1 *>(object.sp.get()));
 };
 
 struct c {
@@ -114,7 +114,7 @@ test named_with_ctor_def_decl = [] {
 
 test named_parameters_with_shared_scope = [] {
   struct c {
-    BOOST_DI_INJECT(c, (named = a) const std::shared_ptr<i1>& n1, (named = b)std::shared_ptr<i1> n2) : n1(n1), n2(n2) {}
+    BOOST_DI_INJECT(c, (named = a) const std::shared_ptr<i1> &n1, (named = b)std::shared_ptr<i1> n2) : n1(n1), n2(n2) {}
 
     std::shared_ptr<i1> n1;
     std::shared_ptr<i1> n2;
@@ -132,9 +132,9 @@ test any_of = [] {
   auto injector = di::make_injector(di::bind<impl1_2>());
 
   auto object = injector.create<std::unique_ptr<impl1_2>>();
-  expect(dynamic_cast<i1*>(object.get()));
-  expect(dynamic_cast<i2*>(object.get()));
-  expect(!dynamic_cast<i3*>(object.get()));
+  expect(dynamic_cast<i1 *>(object.get()));
+  expect(dynamic_cast<i2 *>(object.get()));
+  expect(!dynamic_cast<i3 *>(object.get()));
 };
 
 test any_of_with_scope = [] {
@@ -149,7 +149,7 @@ test any_of_with_scope = [] {
 
     std::shared_ptr<i1> object_1 = injector;
     std::shared_ptr<i1> object_2 = injector;
-    auto result = dynamic_cast<impl1_2*>(object_1.get()) == dynamic_cast<impl1_2*>(object_2.get());
+    auto result = dynamic_cast<impl1_2 *>(object_1.get()) == dynamic_cast<impl1_2 *>(object_2.get());
     expect(result == same);
   };
 
@@ -169,7 +169,7 @@ test any_of_with_scope_split = [] {
 
     std::shared_ptr<i1> object_1 = injector;
     std::shared_ptr<i2> object_2 = injector;
-    auto result = dynamic_cast<impl1_2*>(object_1.get()) == dynamic_cast<impl1_2*>(object_2.get());
+    auto result = dynamic_cast<impl1_2 *>(object_1.get()) == dynamic_cast<impl1_2 *>(object_2.get());
     expect(result == same);
   };
 
@@ -182,7 +182,7 @@ test any_of_unique = [] {
 
   auto object_1 = injector.create<std::shared_ptr<i1>>();
   auto object_2 = injector.create<std::shared_ptr<i2>>();
-  expect(dynamic_cast<impl1_2*>(object_1.get()) != dynamic_cast<impl1_2*>(object_2.get()));
+  expect(dynamic_cast<impl1_2 *>(object_1.get()) != dynamic_cast<impl1_2 *>(object_2.get()));
 };
 
 test bind_int_to_static_value = [] {
@@ -213,7 +213,7 @@ test override_priority_interface = [] {
   auto injector = di::make_injector(di::bind<i1>().to<impl1>(), di::bind<i1>().to<impl1_int>()[di::override]);
 
   auto object = injector.create<std::unique_ptr<i1>>();
-  expect(dynamic_cast<impl1_int*>(object.get()));
+  expect(dynamic_cast<impl1_int *>(object.get()));
 };
 
 test override_priority_interface_module = [] {
@@ -222,7 +222,7 @@ test override_priority_interface_module = [] {
   auto injector = di::make_injector(module(), di::bind<i1>().to<impl1>()[di::override]);
 
   auto object = injector.create<std::unique_ptr<i1>>();
-  expect(dynamic_cast<impl1*>(object.get()));
+  expect(dynamic_cast<impl1 *>(object.get()));
 };
 
 test bind_non_interface_in_singleton_scope = [] {
@@ -243,7 +243,7 @@ test bind_interface_implementation_in_singleton_scope = [] {
 
 test bind_interface_implementation_ref_in_singleton_scope = [] {
   struct c {
-    c(const std::shared_ptr<i1>& sp1, const std::shared_ptr<impl1>& sp2) { expect(sp1 == sp2); }
+    c(const std::shared_ptr<i1> &sp1, const std::shared_ptr<impl1> &sp2) { expect(sp1 == sp2); }
   };
   auto injector = di::make_injector(di::bind<i1, impl1>().to<impl1>().in(di::singleton));
   injector.create<c>();
@@ -251,11 +251,11 @@ test bind_interface_implementation_ref_in_singleton_scope = [] {
 
 test bind_const_ref_type_in_singleton_scope = [] {
   struct c_inject {
-    BOOST_DI_INJECT(c_inject, const int& i1, const int& i2) { expect(&i1 == &i2); }
+    BOOST_DI_INJECT(c_inject, const int &i1, const int &i2) { expect(&i1 == &i2); }
   };
 
   struct c {
-    c(const int& i1, const int& i2) { expect(&i1 == &i2); }
+    c(const int &i1, const int &i2) { expect(&i1 == &i2); }
   };
 
   auto injector = di::make_injector(di::bind<int>().in(di::singleton));
@@ -269,7 +269,7 @@ test bind_const_ref_type_in_singleton_scope = [] {
 
 test bind_shared_ptr_ref = [] {
   struct c {
-    c(std::shared_ptr<int>& sp1, std::shared_ptr<int>& sp2) { expect(sp1 == sp2); }
+    c(std::shared_ptr<int> &sp1, std::shared_ptr<int> &sp2) { expect(sp1 == sp2); }
   };
 
   di::make_injector().create<c>();
@@ -277,7 +277,7 @@ test bind_shared_ptr_ref = [] {
 
 test bind_shared_ptr_interface = [] {
   struct c {
-    c(std::shared_ptr<i1> sp1, i1& sp2) { expect(sp1.get() == &sp2); }
+    c(std::shared_ptr<i1> sp1, i1 &sp2) { expect(sp1.get() == &sp2); }
   };
 
   auto injector = di::make_injector(di::bind<i1>().to<impl1>());
@@ -324,7 +324,7 @@ test scopes_instance_lambda = [] {
 test scopes_instance_lambda_injector = [] {
   auto i = std::make_shared<int>(42);
 
-  auto injector = di::make_injector(di::bind<int>().to([&i](const auto&) { return i; }));
+  auto injector = di::make_injector(di::bind<int>().to([&i](const auto &) { return i; }));
 
   {
     auto object = injector.create<std::shared_ptr<int>>();
@@ -342,7 +342,7 @@ test scopes_instance_lambda_injector = [] {
 test scopes_instance_lambda_injector_mix = [] {
   auto injector = di::make_injector(
       di::bind<short>().to([] { return 42; }), di::bind<long>().to(87l),
-      di::bind<int>().to([](const auto& injector) { return static_cast<int>(injector.template create<long>()); }));
+      di::bind<int>().to([](const auto &injector) { return static_cast<int>(injector.template create<long>()); }));
 
   expect(42 == injector.create<short>());
   expect(87 == injector.create<int>());
@@ -353,10 +353,10 @@ test instances_ref_cref = [] {
   const auto d = 87.0;
 
   struct refs {
-    BOOST_DI_INJECT(refs, int& i, const double& d) : i_(i), d_(d) {}
+    BOOST_DI_INJECT(refs, int &i, const double &d) : i_(i), d_(d) {}
 
-    int& i_;
-    const double& d_;
+    int &i_;
+    const double &d_;
   };
 
   auto injector = make_injector(di::bind<int>().to(i), di::bind<double>().to(d));
@@ -375,7 +375,7 @@ test bind_chars_to_string = [] {
 
 test dynamic_binding_using_polymorphic_lambdas_with_dependend_interfaces = [] {
   auto test = [&](bool debug_property) {
-    auto injector = make_injector(di::bind<i1>().to([&](const auto& injector) -> std::shared_ptr<i1> {
+    auto injector = make_injector(di::bind<i1>().to([&](const auto &injector) -> std::shared_ptr<i1> {
       if (debug_property) {
         return std::make_shared<impl1>();
       }
@@ -389,13 +389,13 @@ test dynamic_binding_using_polymorphic_lambdas_with_dependend_interfaces = [] {
 
   {
     auto object = test(false);
-    expect(dynamic_cast<impl1_with_i2*>(object.get()));
-    expect(dynamic_cast<impl2*>(dynamic_cast<impl1_with_i2*>(object.get())->i2_.get()));
+    expect(dynamic_cast<impl1_with_i2 *>(object.get()));
+    expect(dynamic_cast<impl2 *>(dynamic_cast<impl1_with_i2 *>(object.get())->i2_.get()));
   }
 
   {
     auto object = test(true);
-    expect(dynamic_cast<impl1*>(object.get()));
+    expect(dynamic_cast<impl1 *>(object.get()));
   }
 };
 
@@ -406,7 +406,7 @@ test bind_to_function_ptr = [] {
   constexpr auto d = 87.0;
 
   struct functions {
-    BOOST_DI_INJECT(functions, const std::function<int()>& fi, std::function<double()> fd) : fi(fi), fd(fd) {}
+    BOOST_DI_INJECT(functions, const std::function<int()> &fi, std::function<double()> fd) : fi(fi), fd(fd) {}
 
     std::function<int()> fi;
     std::function<double()> fd;
@@ -426,7 +426,7 @@ test runtime_factory_impl = [] {
 
   auto test = [&](bool debug_property) {
     auto injector =
-        make_injector(di::bind<int>().to(i), di::bind<i1>().to([&](const auto& injector) -> std::shared_ptr<i1> {
+        make_injector(di::bind<int>().to(i), di::bind<i1>().to([&](const auto &injector) -> std::shared_ptr<i1> {
           if (debug_property) {
             return std::make_shared<impl1>();
           }
@@ -439,21 +439,21 @@ test runtime_factory_impl = [] {
 
   {
     auto object = test(false);
-    expect(dynamic_cast<impl1_int*>(object.get()));
-    expect(i == dynamic_cast<impl1_int*>(object.get())->i);
+    expect(dynamic_cast<impl1_int *>(object.get()));
+    expect(i == dynamic_cast<impl1_int *>(object.get())->i);
   }
 
   {
     auto object = test(true);
-    expect(dynamic_cast<impl1*>(object.get()));
+    expect(dynamic_cast<impl1 *>(object.get()));
   }
 };
 
 struct call_operator {
-  bool& b;
+  bool &b;
 
   template <class TInjector>
-  std::shared_ptr<i1> operator()(const TInjector& injector) const {
+  std::shared_ptr<i1> operator()(const TInjector &injector) const {
     if (b) {
       return injector.template create<std::shared_ptr<impl1>>();
     }
@@ -473,19 +473,19 @@ test runtime_factory_call_operator_impl = [] {
 
   {
     auto object = test(false);
-    expect(dynamic_cast<impl1_int*>(object.get()));
-    expect(i == dynamic_cast<impl1_int*>(object.get())->i);
+    expect(dynamic_cast<impl1_int *>(object.get()));
+    expect(i == dynamic_cast<impl1_int *>(object.get())->i);
   }
 
   {
     auto object = test(true);
-    expect(dynamic_cast<impl1*>(object.get()));
+    expect(dynamic_cast<impl1 *>(object.get()));
   }
 };
 
 test scopes_injector_lambda_injector = [] {
   constexpr double d = 42.0;
-  auto injector = di::make_injector(di::bind<double>().to(d), di::bind<int>().to([](const auto& injector) {
+  auto injector = di::make_injector(di::bind<double>().to(d), di::bind<int>().to([](const auto &injector) {
     return static_cast<int>(injector.template create<double>());
   }));
 
@@ -494,11 +494,11 @@ test scopes_injector_lambda_injector = [] {
 
 test bind_function_to_callable = [] {
   struct functions {
-    BOOST_DI_INJECT(explicit functions, const std::function<int(int)>& f) { expect(f(42) == 42); }
+    BOOST_DI_INJECT(explicit functions, const std::function<int(int)> &f) { expect(f(42) == 42); }
   };
 
   auto injector =
-      di::make_injector(di::bind<std::function<int(int)>>().to([](const auto&) { return [](int i) { return i; }; }));
+      di::make_injector(di::bind<std::function<int(int)>>().to([](const auto &) { return [](int i) { return i; }; }));
 
   injector.create<functions>();
 };
@@ -507,10 +507,10 @@ test bind_non_owning_ptr = [] {
   using Pointer = int;
   constexpr auto i = 42;
   struct c {
-    c(Pointer& ptr) { expect(i == ptr); }
+    c(Pointer &ptr) { expect(i == ptr); }
   };
-  auto module = [](Pointer* ptr) { return di::bind<Pointer>().to(*ptr); };
-  di::aux::owner<Pointer*> ptr{new Pointer{i}};
+  auto module = [](Pointer *ptr) { return di::bind<Pointer>().to(*ptr); };
+  di::aux::owner<Pointer *> ptr{new Pointer{i}};
   auto injector = di::make_injector(module(ptr));
 
   injector.create<c>();
@@ -520,7 +520,7 @@ test bind_non_owning_ptr = [] {
 
 test multi_bindings_empty = [] {
   struct c {
-    c(std::vector<int> v, const std::set<std::unique_ptr<i1>>& s) {
+    c(std::vector<int> v, const std::set<std::unique_ptr<i1>> &s) {
       expect(v.empty());
       expect(s.empty());
     }
@@ -548,21 +548,21 @@ test multi_bindings_containers = [] {
 
 test multi_bindings_inject_named = [] {
   struct c {
-    BOOST_DI_INJECT(c, (named = a) const std::vector<std::shared_ptr<i1>>& v1,
+    BOOST_DI_INJECT(c, (named = a) const std::vector<std::shared_ptr<i1>> &v1,
                     (named = b)std::vector<std::unique_ptr<i1>> v2) {
       expect(v1.size() == 2);
-      expect(dynamic_cast<impl1*>(v1[0].get()));
-      expect(dynamic_cast<impl1_2*>(v1[1].get()));
+      expect(dynamic_cast<impl1 *>(v1[0].get()));
+      expect(dynamic_cast<impl1_2 *>(v1[1].get()));
 
       expect(v2.size() == 1);
-      expect(dynamic_cast<impl1*>(v2[0].get()));
+      expect(dynamic_cast<impl1 *>(v2[0].get()));
     }
   };
 
   auto injector =
-      di::make_injector(di::bind<i1* []>().to<impl1, di::named<decltype(a)>>(),
-                        di::bind<i1* []>().named(a).to<i1, di::named<class Impl2>>(),
-                        di::bind<i1* []>().named(b).to<impl1>(), di::bind<i1>().to<impl1>(),
+      di::make_injector(di::bind<i1 *[]>().to<impl1, di::named<decltype(a)>>(),
+                        di::bind<i1 *[]>().named(a).to<i1, di::named<class Impl2>>(),
+                        di::bind<i1 *[]>().named(b).to<impl1>(), di::bind<i1>().to<impl1>(),
                         di::bind<i1>().to<impl1_2>().named<class Impl2>(), di::bind<i1>().to<impl1_2>().named(a));
 
   injector.create<c>();
@@ -572,11 +572,11 @@ test multi_bindings_ctor_with_exposed_module = [] {
   struct c {
     explicit c(std::vector<std::unique_ptr<i1>> v) {
       expect(v.size() == 5);
-      expect(dynamic_cast<impl1*>(v[0].get()));
-      expect(dynamic_cast<impl1_2*>(v[1].get()));
-      expect(dynamic_cast<impl1_2*>(v[2].get()));
-      expect(dynamic_cast<impl1*>(v[3].get()));
-      expect(dynamic_cast<impl1_int*>(v[4].get()));
+      expect(dynamic_cast<impl1 *>(v[0].get()));
+      expect(dynamic_cast<impl1_2 *>(v[1].get()));
+      expect(dynamic_cast<impl1_2 *>(v[2].get()));
+      expect(dynamic_cast<impl1 *>(v[3].get()));
+      expect(dynamic_cast<impl1_int *>(v[4].get()));
     }
   };
 
@@ -584,7 +584,7 @@ test multi_bindings_ctor_with_exposed_module = [] {
   auto module2 = []() -> di::injector<i1> { return di::make_injector(di::bind<i1>().to<impl1_int>()); };
 
   auto injector =
-      di::make_injector(di::bind<i1* []>().to<impl1, impl1_2, impl1_2, i1 /*via module*/, di::named<class ExposedI1>>(),
+      di::make_injector(di::bind<i1 *[]>().to<impl1, impl1_2, impl1_2, i1 /*via module*/, di::named<class ExposedI1>>(),
                         module(), di::bind<i1>().named<class ExposedI1>().to(module2()));
 
   injector.create<c>();
@@ -594,13 +594,13 @@ test multi_bindings_share_object_between_list_and_parameter = [] {
   struct c {
     c(std::vector<std::shared_ptr<i1>> v, std::shared_ptr<i1> i) {
       expect(v.size() == 2);
-      expect(dynamic_cast<impl1*>(v[0].get()));
-      expect(dynamic_cast<impl1_2*>(v[1].get()));
+      expect(dynamic_cast<impl1 *>(v[0].get()));
+      expect(dynamic_cast<impl1_2 *>(v[1].get()));
       expect(i == v[0]);
     }
   };
 
-  auto injector = di::make_injector(di::bind<i1* []>().to<i1, di::named<class Impl1_2>>(),
+  auto injector = di::make_injector(di::bind<i1 *[]>().to<i1, di::named<class Impl1_2>>(),
                                     di::bind<i1>().to<impl1>().in(di::singleton) /*deduced as singleton as well*/
                                     ,
                                     di::bind<i1>().to<impl1_2>().named<class Impl1_2>());
@@ -612,13 +612,13 @@ test multi_bindings_smart_ptrs = [] {
   struct c {
     c(std::unique_ptr<std::vector<std::shared_ptr<i1>>> v1, std::shared_ptr<std::vector<std::unique_ptr<i1>>> v2) {
       expect(v1->size() == 1);
-      expect(dynamic_cast<impl1*>((*v1)[0].get()));
+      expect(dynamic_cast<impl1 *>((*v1)[0].get()));
       expect(v2->size() == 1);
-      expect(dynamic_cast<impl1*>((*v2)[0].get()));
+      expect(dynamic_cast<impl1 *>((*v2)[0].get()));
     }
   };
 
-  auto injector = di::make_injector(di::bind<i1* []>().to<impl1>());
+  auto injector = di::make_injector(di::bind<i1 *[]>().to<impl1>());
 
   injector.create<c>();
 };
@@ -626,13 +626,13 @@ test multi_bindings_smart_ptrs = [] {
 test multi_bindings_with_scope = [] {
   struct c {
     c(std::shared_ptr<std::vector<std::shared_ptr<i1>>> v1, std::shared_ptr<std::vector<std::shared_ptr<i1>>> v2,
-      std::vector<std::shared_ptr<i1>>& v3) {
+      std::vector<std::shared_ptr<i1>> &v3) {
       expect(v1 == v2);
       expect(*v2 == v3);
     }
   };
 
-  auto injector = di::make_injector(di::bind<i1* []>().to<impl1>());
+  auto injector = di::make_injector(di::bind<i1 *[]>().to<impl1>());
 
   injector.create<c>();
 };
@@ -663,19 +663,40 @@ test multi_bindings_with_initializer_list_with_ptr_type = [] {
     expect(*(std::next(it, 3)) == 4);
   };
 
-  auto injector = di::make_injector(di::bind<int* []>().to({1, 2, 3, 4}));
+  auto injector = di::make_injector(di::bind<int *[]>().to({1, 2, 3, 4}));
 
   test(injector.create<std::vector<int>>());
   test(injector.create<std::set<int>>());
 };
 
+template <class T>
+class lazy {
+  template <class TInjector>
+  static auto create(const void *injector) {
+    return ((TInjector *)injector)->template create<T>();
+  }
+
+ public:
+  using boost_di_inject__ = di::inject<di::self<T>>;
+
+  template <class TInjector>
+  explicit lazy(const TInjector &i)
+      : injector_((void *)&i), f(create<TInjector>) {}
+
+  T get() const { return (*f)(injector_); }
+
+ private:
+  const void *injector_ = nullptr;
+  T (*f)(const void *) = nullptr;
+};
+
 test bind_self_lazy = [] {
   struct c {
-    explicit c(di::injector<int> i) { expect(42 == i.create<int>()); }
+    explicit c(lazy<int> i) { expect(42 == i.get()); }
   };
 
   struct c_inject {
-    BOOST_DI_INJECT(explicit c_inject, di::injector<int> i) { expect(42 == i.create<int>()); }
+    BOOST_DI_INJECT(explicit c_inject, lazy<int> i) { expect(42 == i.get()); }
   };
 
   auto injector = di::make_injector(di::bind<int>().to(42));
@@ -686,14 +707,14 @@ test bind_self_lazy = [] {
 
 test bind_self_lazy_const_ref = [] {
   struct c {
-    c(const di::injector<int>& i) {  // non explicit
-      expect(42 == i.create<int>());
+    c(const lazy<int> &i) {  // non explicit
+      expect(42 == i.get());
     }
   };
 
   struct c_inject {
-    BOOST_DI_INJECT(c_inject, const di::injector<int>& i) {  // non explicit
-      expect(42 == i.create<int>());
+    BOOST_DI_INJECT(c_inject, const lazy<int> &i) {  // non explicit
+      expect(42 == i.get());
     }
   };
 
@@ -705,11 +726,11 @@ test bind_self_lazy_const_ref = [] {
 
 test bind_self_lazy_ref = [] {
   struct c {
-    explicit c(di::injector<int>& i) { expect(42 == i.create<int>()); }
+    explicit c(lazy<int> &i) { expect(42 == i.get()); }
   };
 
   struct c_inject {
-    BOOST_DI_INJECT(explicit c_inject, di::injector<int>& i) { expect(42 == i.create<int>()); }
+    BOOST_DI_INJECT(explicit c_inject, lazy<int> &i) { expect(42 == i.get()); }
   };
 
   auto injector = di::make_injector(di::bind<int>().to(42));
@@ -720,25 +741,58 @@ test bind_self_lazy_ref = [] {
 
 test bind_self_lazy_interface_mix = [] {
   struct c {
-    c(di::injector<int> i1_, const di::injector<i1>& i2_) {
-      expect(42 == i1_.create<int>());
-      auto object = i2_.create<std::unique_ptr<i1>>();
-      expect(dynamic_cast<impl1*>(object.get()));
+    c(lazy<int> i1_, const lazy<std::unique_ptr<i1>> &i2_) : i1_(i1_), i2_(i2_) {}
+
+    void initialize() {
+      expect(42 == i1_.get());
+      auto object = i2_.get();
+      expect(dynamic_cast<impl1 *>(object.get()));
     }
+
+    lazy<int> i1_;
+    lazy<std::unique_ptr<i1>> i2_;
   };
 
   struct c_inject {
-    BOOST_DI_INJECT(c_inject, di::injector<int> i1_, const di::injector<i1>& i2_) {
-      expect(42 == i1_.create<int>());
-      auto object = i2_.create<std::unique_ptr<i1>>();
-      expect(dynamic_cast<impl1*>(object.get()));
+    BOOST_DI_INJECT(c_inject, lazy<int> i1_, const lazy<std::unique_ptr<i1>> &i2_) : i1_(i1_), i2_(i2_) {}
+
+    void initialize() {
+      expect(42 == i1_.get());
+      auto object = i2_.get();
+      expect(dynamic_cast<impl1 *>(object.get()));
+    }
+
+    lazy<int> i1_;
+    lazy<std::unique_ptr<i1>> i2_;
+  };
+
+  struct c_uniform {
+    lazy<int> i1_;
+    lazy<std::unique_ptr<i1>> i2_;
+
+    void initialize() {
+      expect(42 == i1_.get());
+      auto object = i2_.get();
+      expect(dynamic_cast<impl1 *>(object.get()));
     }
   };
 
   auto injector = di::make_injector(di::bind<int>().to(42), di::bind<i1>().to<impl1>());
 
-  injector.create<c>();
-  injector.create<c_inject>();
+  {
+    auto object = injector.create<c>();
+    object.initialize();
+  }
+
+  {
+    auto object = injector.create<c_inject>();
+    object.initialize();
+  }
+
+  {
+    auto object = injector.create<c_uniform>();
+    object.initialize();
+  }
 };
 
 #if defined(__cpp_variable_templates)
@@ -761,7 +815,7 @@ test bind_mix = [] {
 
   auto object = injector.create<c>();
   expect(i == object.i_);
-  expect(dynamic_cast<impl1*>(object.i1_.get()));
-  expect(dynamic_cast<impl2*>(object.i2_.get()));
+  expect(dynamic_cast<impl1 *>(object.i1_.get()));
+  expect(dynamic_cast<impl2 *>(object.i2_.get()));
 };
 #endif

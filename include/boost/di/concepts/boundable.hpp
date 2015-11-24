@@ -42,8 +42,9 @@ struct any_of : aux::false_type {};
 
 template <class... TDeps>
 struct is_supported : aux::is_same<aux::bool_list<aux::always<TDeps>::value...>,
-                                   aux::bool_list<(aux::is_a<core::injector_base, TDeps>::value ||
-                                                   aux::is_a<core::dependency_base, TDeps>::value)...>> {};
+                                   aux::bool_list<(aux::is_constructible<TDeps, TDeps&&>::value &&
+                                                   (aux::is_a<core::injector_base, TDeps>::value ||
+                                                    aux::is_a<core::dependency_base, TDeps>::value))...>> {};
 
 template <class...>
 struct get_not_supported;

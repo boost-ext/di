@@ -7,7 +7,9 @@
 #ifndef BOOST_DI_FAKE_POOL_HPP
 #define BOOST_DI_FAKE_POOL_HPP
 
+#include "boost/di/aux_/utility.hpp"
+
 template <class... Ts>
-struct fake_pool : Ts... {};
+using fake_pool = aux::type_list<Ts...>;
 
 #endif

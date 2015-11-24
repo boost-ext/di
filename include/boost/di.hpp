@@ -195,6 +195,8 @@ struct no_name {
 };
 template <class, class = int>
 struct ctor_traits;
+template <class>
+struct self {};
 namespace core {
 template <class>
 struct any_type_fwd;
@@ -1277,8 +1279,9 @@ template <class...>
 struct any_of : aux::false_type {};
 template <class... TDeps>
 struct is_supported : aux::is_same<aux::bool_list<aux::always<TDeps>::value...>,
-                                   aux::bool_list<(aux::is_a<core::injector_base, TDeps>::value ||
-                                                   aux::is_a<core::dependency_base, TDeps>::value)...>> {};
+                                   aux::bool_list<(aux::is_constructible<TDeps, TDeps&&>::value &&
+                                                   (aux::is_a<core::injector_base, TDeps>::value ||
+                                                    aux::is_a<core::dependency_base, TDeps>::value))...>> {};
 template <class...>
 struct get_not_supported;
 template <class T>
@@ -2105,8 +2108,6 @@ struct from_deps {};
 struct init {};
 struct with_error {};
 template <class>
-struct self {};
-template <class>
 struct copyable;
 template <class T>
 struct copyable_impl
@@ -2165,7 +2166,6 @@ class injector : injector_base, pool<bindings_t<TDeps...>> {
   };
 
  public:
-  using boost_di_inject__ = aux::type_list<core::self<injector>>;
   using deps = bindings_t<TDeps...>;
   using config = TConfig;
   injector(injector&&) = default;
@@ -2271,7 +2271,7 @@ class injector : injector_base, pool<bindings_t<TDeps...>> {
   }
   template <class TIsRoot = aux::false_type, class T>
   decltype(auto) create_successful_impl(const aux::type<self<T>>&) const {
-    return static_cast<injector&&>(const_cast<injector&>(*this));
+    return *this;
   }
 
  private:
@@ -2337,7 +2337,6 @@ class injector<TConfig, pool<>, TDeps...> : injector_base, pool<bindings_t<TDeps
   };
 
  public:
-  using boost_di_inject__ = aux::type_list<core::self<injector>>;
   using deps = bindings_t<TDeps...>;
   using config = TConfig;
   injector(injector&&) = default;
@@ -2443,7 +2442,7 @@ class injector<TConfig, pool<>, TDeps...> : injector_base, pool<bindings_t<TDeps
   }
   template <class TIsRoot = aux::false_type, class T>
   decltype(auto) create_successful_impl(const aux::type<self<T>>&) const {
-    return static_cast<injector&&>(const_cast<injector&>(*this));
+    return *this;
   }
 
  private:

@@ -9,12 +9,13 @@
 
 #include <type_traits>
 #include "boost/di/aux_/utility.hpp"
+#include "boost/di/fwd.hpp"
 #include "common/fakes/fake_config.hpp"
 #include "common/fakes/fake_pool.hpp"
 
-template <class TExpected = void>
-struct fake_injector {
-  using deps = fake_pool<>;
+template <class... TDeps>
+struct fake_injector : core::injector_base {
+  using deps = fake_pool<TDeps...>;
   using config = fake_config<>;
 
   template <class T>
