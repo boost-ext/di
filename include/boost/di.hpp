@@ -204,6 +204,8 @@ template <class>
 struct any_type_1st_fwd;
 template <class>
 struct any_type_1st_ref_fwd;
+struct dependency_base {};
+struct injector_base {};
 template <class T>
 struct dependency__ : T {
   using T::try_create;
@@ -224,7 +226,6 @@ struct injector__ : T {
 };
 template <class, class...>
 struct array;
-struct dependency_base;
 template <class, class TExpected, class = TExpected, class = no_name, class = void>
 class dependency;
 }
@@ -475,6 +476,12 @@ template <class T>
 false_type is_complete_impl(...);
 template <class T>
 struct is_complete : decltype(is_complete_impl<T>(0)) {};
+template <class T, class U, class = decltype(sizeof(U))>
+is_base_of<T, U> is_a_impl(int);
+template <class T, class U>
+false_type is_a_impl(...);
+template <class T, class U>
+struct is_a : decltype(is_a_impl<T, U>(0)) {};
 template <class, class...>
 struct is_unique_impl;
 template <class...>
@@ -534,10 +541,6 @@ struct function_traits<R (T::*)(TArgs...) const> {
 };
 template <class T>
 using function_traits_t = typename function_traits<T>::args;
-template <class, class = int>
-struct is_injector : ::boost::di::v1_0_0::aux::false_type {};
-template <class T>
-struct is_injector<T, ::boost::di::v1_0_0::aux::valid_t<typename T::deps>> : ::boost::di::v1_0_0::aux::true_type {};
 }
 namespace core {
 template <class = aux::type_list<>>
@@ -809,7 +812,7 @@ class exposed {
    public:
     template <class>
     using is_referable = aux::false_type;
-    template <class TInjector, BOOST_DI_REQUIRES(aux::is_injector<TInjector>::value) = 0>
+    template <class TInjector, BOOST_DI_REQUIRES(aux::is_a<core::injector_base, TInjector>::value) = 0>
     explicit scope(TInjector&& injector) noexcept
         : provider_((iprovider*) new provider_impl<TInjector>{static_cast<TInjector&&>(injector)}) {}
     scope(scope&& other) : provider_(other.provider_), scope_(other.scope_) { other.provider_ = nullptr; }
@@ -1222,8 +1225,8 @@ template <class T>
 using scopable = typename scopable__<T>::type;
 }
 namespace core {
-template <class T, class = typename aux::is_injector<T>::type,
-          class = typename aux::is_base_of<dependency_base, T>::type>
+template <class T, class = typename aux::is_a<injector_base, T>::type,
+          class = typename aux::is_a<dependency_base, T>::type>
 struct bindings_impl;
 template <class T, class TAny>
 struct bindings_impl<T, aux::true_type, TAny> {
@@ -1273,11 +1276,9 @@ struct type_ {
 template <class...>
 struct any_of : aux::false_type {};
 template <class... TDeps>
-struct is_supported
-    : aux::is_same<
-          aux::bool_list<aux::always<TDeps>::value...>,
-          aux::bool_list<(aux::is_injector<TDeps>::value || aux::is_base_of<core::dependency_base, TDeps>::value)...>> {
-};
+struct is_supported : aux::is_same<aux::bool_list<aux::always<TDeps>::value...>,
+                                   aux::bool_list<(aux::is_a<core::injector_base, TDeps>::value ||
+                                                   aux::is_a<core::dependency_base, TDeps>::value)...>> {};
 template <class...>
 struct get_not_supported;
 template <class T>
@@ -1286,7 +1287,7 @@ struct get_not_supported<T> {
 };
 template <class T, class... TDeps>
 struct get_not_supported<T, TDeps...>
-    : aux::conditional<aux::is_injector<T>::value || aux::is_base_of<core::dependency_base, T>::value,
+    : aux::conditional<aux::is_a<core::injector_base, T>::value || aux::is_a<core::dependency_base, T>::value,
                        typename get_not_supported<TDeps...>::type, T> {};
 template <class>
 struct is_unique;
@@ -1387,7 +1388,6 @@ template <class... Ts, class TName, class TDependency>
 struct dependency_impl<dependency_concept<concepts::any_of<Ts...>, TName>, TDependency>
     : aux::pair<dependency_concept<Ts, TName>, TDependency>... {};
 struct override {};
-struct dependency_base {};
 template <class TScope, class TExpected, class TGiven, class TName, class TPriority>
 class dependency : dependency_base,
                    TScope::template scope<TExpected, TGiven>,
@@ -1397,11 +1397,12 @@ class dependency : dependency_base,
   friend class dependency;
   using scope_t = typename TScope::template scope<TExpected, TGiven>;
   template <class T>
-  using externable = aux::integral_constant<bool, !aux::is_injector<aux::remove_reference_t<T>>::value &&
+  using externable = aux::integral_constant<bool, !aux::is_a<injector_base, aux::remove_reference_t<T>>::value &&
                                                       aux::is_same<TScope, scopes::deduce>::value &&
                                                       aux::is_same<TExpected, TGiven>::value>;
   template <class T>
-  using specific = aux::integral_constant<bool, aux::is_injector<T>::value || aux::is_array<TExpected, T>::value>;
+  using specific =
+      aux::integral_constant<bool, aux::is_a<injector_base, T>::value || aux::is_array<TExpected, T>::value>;
   template <class T>
   struct ref_traits {
     using type = T;
@@ -1458,7 +1459,7 @@ class dependency : dependency_base,
     using dependency = dependency<scopes::instance, TExpected, typename ref_traits<T>::type, TName, TPriority>;
     return dependency{static_cast<T&&>(object)};
   }
-  template <class T, BOOST_DI_REQUIRES(aux::is_injector<T>::value) = 0>
+  template <class T, BOOST_DI_REQUIRES(aux::is_a<injector_base, T>::value) = 0>
   auto to(T&& object = {}) noexcept {
     using dependency = dependency<scopes::exposed<TScope>, TExpected, T, TName, TPriority>;
     return dependency{static_cast<T&&>(object)};
@@ -2143,7 +2144,7 @@ inline auto build(TInjector&& injector) noexcept {
 }
 #endif
 template <class TConfig, class TPolicies = pool<>, class... TDeps>
-class injector : pool<bindings_t<TDeps...>> {
+class injector : injector_base, pool<bindings_t<TDeps...>> {
   friend class binder;
   template <class>
   friend struct pool;
@@ -2186,7 +2187,7 @@ class injector : pool<bindings_t<TDeps...>> {
       () const {
     return BOOST_DI_TYPE_WKND(T) create_impl<aux::true_type>(aux::type<T>{});
   }
-  template <class T, BOOST_DI_REQUIRES(!aux::is_injector<T>::value) = 0>
+  template <class T, BOOST_DI_REQUIRES(!aux::is_a<injector_base, T>::value) = 0>
   operator T() const {
     return create<T>();
   }
@@ -2318,7 +2319,7 @@ class injector : pool<bindings_t<TDeps...>> {
   }
 };
 template <class TConfig, class... TDeps>
-class injector<TConfig, pool<>, TDeps...> : pool<bindings_t<TDeps...>> {
+class injector<TConfig, pool<>, TDeps...> : injector_base, pool<bindings_t<TDeps...>> {
   friend class binder;
   template <class>
   friend struct pool;
@@ -2358,7 +2359,7 @@ class injector<TConfig, pool<>, TDeps...> : pool<bindings_t<TDeps...>> {
       () const {
     return BOOST_DI_TYPE_WKND(T) create_impl<aux::true_type>(aux::type<T>{});
   }
-  template <class T, BOOST_DI_REQUIRES(!aux::is_injector<T>::value) = 0>
+  template <class T, BOOST_DI_REQUIRES(!aux::is_a<injector_base, T>::value) = 0>
   operator T() const {
     return create<T>();
   }

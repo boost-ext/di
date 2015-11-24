@@ -87,7 +87,7 @@ class exposed {
     template <class>
     using is_referable = aux::false_type;
 
-    template <class TInjector, BOOST_DI_REQUIRES(aux::is_injector<TInjector>::value) = 0>
+    template <class TInjector, BOOST_DI_REQUIRES(aux::is_a<core::injector_base, TInjector>::value) = 0>
     explicit scope(TInjector&& injector) noexcept
         : provider_((iprovider*) new provider_impl<TInjector>{static_cast<TInjector&&>(injector)}) {}
 

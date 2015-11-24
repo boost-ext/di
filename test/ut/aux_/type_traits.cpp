@@ -244,6 +244,16 @@ test is_complete_types = [] {
   static_expect(is_complete<int>::value);
 };
 
+test is_a_types = [] {
+  struct c;
+  struct i {};
+  struct complete : i {};
+  static_expect(!is_a<c, int>::value);
+  static_expect(!is_a<int, int>::value);
+  static_expect(!is_a<int, complete>::value);
+  static_expect(is_a<i, complete>::value);
+};
+
 test is_unique_types = [] {
   static_expect(is_unique<>::value);
   static_expect(is_unique<int>::value);

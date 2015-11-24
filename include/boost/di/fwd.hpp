@@ -27,6 +27,9 @@ struct any_type_1st_fwd;
 template <class>
 struct any_type_1st_ref_fwd;
 
+struct dependency_base {};
+struct injector_base {};
+
 template <class T>
 struct dependency__ : T {
   using T::try_create;
@@ -51,7 +54,6 @@ struct injector__ : T {
 template <class, class...>
 struct array;
 
-struct dependency_base;
 template <class, class TExpected, class = TExpected, class = no_name, class = void>
 class dependency;
 }  // core

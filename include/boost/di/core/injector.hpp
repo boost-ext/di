@@ -89,7 +89,7 @@ inline auto build(TInjector&& injector) noexcept {
 
 template <class TConfig BOOST_DI_CORE_INJECTOR_POLICY(, class TPolicies = pool<>)(), class... TDeps>
 class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
-    : pool<bindings_t<TDeps...>> {
+    : injector_base, pool<bindings_t<TDeps...>> {
   friend class binder;
   template <class>
   friend struct pool;
@@ -138,7 +138,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     return BOOST_DI_TYPE_WKND(T) create_impl<aux::true_type>(aux::type<T>{});
   }
 
-  template <class T, BOOST_DI_REQUIRES(!aux::is_injector<T>::value) = 0>
+  template <class T, BOOST_DI_REQUIRES(!aux::is_a<injector_base, T>::value) = 0>
   operator T() const {
     return create<T>();
   }

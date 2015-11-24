@@ -41,11 +41,9 @@ template <class...>
 struct any_of : aux::false_type {};
 
 template <class... TDeps>
-struct is_supported
-    : aux::is_same<
-          aux::bool_list<aux::always<TDeps>::value...>,
-          aux::bool_list<(aux::is_injector<TDeps>::value || aux::is_base_of<core::dependency_base, TDeps>::value)...>> {
-};
+struct is_supported : aux::is_same<aux::bool_list<aux::always<TDeps>::value...>,
+                                   aux::bool_list<(aux::is_a<core::injector_base, TDeps>::value ||
+                                                   aux::is_a<core::dependency_base, TDeps>::value)...>> {};
 
 template <class...>
 struct get_not_supported;
@@ -57,7 +55,7 @@ struct get_not_supported<T> {
 
 template <class T, class... TDeps>
 struct get_not_supported<T, TDeps...>
-    : aux::conditional<aux::is_injector<T>::value || aux::is_base_of<core::dependency_base, T>::value,
+    : aux::conditional<aux::is_a<core::injector_base, T>::value || aux::is_a<core::dependency_base, T>::value,
                        typename get_not_supported<TDeps...>::type, T> {};
 
 template <class>

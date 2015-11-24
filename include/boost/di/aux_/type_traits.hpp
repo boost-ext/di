@@ -309,6 +309,15 @@ false_type is_complete_impl(...);
 template <class T>
 struct is_complete : decltype(is_complete_impl<T>(0)) {};
 
+template <class T, class U, class = decltype(sizeof(U))>
+is_base_of<T, U> is_a_impl(int);
+
+template <class T, class U>
+false_type is_a_impl(...);
+
+template <class T, class U>
+struct is_a : decltype(is_a_impl<T, U>(0)) {};
+
 template <class, class...>
 struct is_unique_impl;
 
@@ -377,8 +386,6 @@ struct function_traits<R (T::*)(TArgs...) const> {
 
 template <class T>
 using function_traits_t = typename function_traits<T>::args;
-
-BOOST_DI_HAS_TYPE(is_injector, deps);
 
 }  // aux
 

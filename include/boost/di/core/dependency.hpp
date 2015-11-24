@@ -31,8 +31,6 @@ struct dependency_impl<dependency_concept<concepts::any_of<Ts...>, TName>, TDepe
 
 struct override {};
 
-struct dependency_base {};
-
 template <class TScope, class TExpected, class TGiven, class TName, class TPriority>
 class dependency : dependency_base,
                    TScope::template scope<TExpected, TGiven>,
@@ -43,12 +41,13 @@ class dependency : dependency_base,
   using scope_t = typename TScope::template scope<TExpected, TGiven>;
 
   template <class T>
-  using externable = aux::integral_constant<bool, !aux::is_injector<aux::remove_reference_t<T>>::value &&
+  using externable = aux::integral_constant<bool, !aux::is_a<injector_base, aux::remove_reference_t<T>>::value &&
                                                       aux::is_same<TScope, scopes::deduce>::value &&
                                                       aux::is_same<TExpected, TGiven>::value>;
 
   template <class T>
-  using specific = aux::integral_constant<bool, aux::is_injector<T>::value || aux::is_array<TExpected, T>::value>;
+  using specific =
+      aux::integral_constant<bool, aux::is_a<injector_base, T>::value || aux::is_array<TExpected, T>::value>;
 
   template <class T>
   struct ref_traits {
@@ -118,7 +117,7 @@ class dependency : dependency_base,
     return dependency{static_cast<T&&>(object)};
   }
 
-  template <class T, BOOST_DI_REQUIRES(aux::is_injector<T>::value) = 0>
+  template <class T, BOOST_DI_REQUIRES(aux::is_a<injector_base, T>::value) = 0>
   auto to(T&& object = {}) noexcept {
     using dependency = dependency<scopes::exposed<TScope>, TExpected, T, TName, TPriority>;
     return dependency{static_cast<T&&>(object)};

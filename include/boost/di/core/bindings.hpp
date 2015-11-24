@@ -13,8 +13,8 @@
 
 namespace core {
 
-template <class T, class = typename aux::is_injector<T>::type,
-          class = typename aux::is_base_of<dependency_base, T>::type>
+template <class T, class = typename aux::is_a<injector_base, T>::type,
+          class = typename aux::is_a<dependency_base, T>::type>
 struct bindings_impl;
 
 template <class T, class TAny>
