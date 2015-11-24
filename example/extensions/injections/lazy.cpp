@@ -63,7 +63,8 @@ int main() {
   auto injector = di::make_injector(di::bind<interface>().to<type_expensive_to_create>());
 
   /*<<create `example`>>*/
-  injector.create<example>();
+  auto object = injector.create<example>();
+  object.initialize();
 }
 
 //]
