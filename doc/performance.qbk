@@ -208,32 +208,37 @@ $example_begin example/performance/create_bound_interface_via_exposed_module.cpp
         ]
         [
             [teletype] ```
-            push   %rbx
-            mov    0x2007e9(%rip),%al
-            test   %al,%al
-            jne    0x4009be <main+46>
-            mov    $0x601180,%edi
-            callq  0x4007e0 <__cxa_guard_acquire@plt>
-            test   %eax,%eax
-            je     0x4009be <main+46>
-            movq   $0x400a00,0x2007b4(%rip
-            mov    $0x601180,%edi
-            callq  0x400820 <__cxa_guard_release@plt>
-            mov    0x2007a3(%rip),%rax
-            mov    $0x601168,%edi
-            callq  *%rax
-            test   %rax,%rax
-            setne  %cl
-            movzbl %cl,%ebx
-            je     0x4009e0 <main+80>
-            mov    (%rax),%rcx
-            mov    %rax,%rdi
-            callq  *0x8(%rcx)
-            mov    %ebx,%eax
-            pop    %rbx
-            retq
-            mov    %rax,%rdi
-            callq  0x4009f0 <__clang_call_terminate>
+			push   %r14
+			push   %rbx
+			push   %rax
+			mov    %rdi,%r14
+			mov    $0x20,%edi
+			callq  0x400aa0 <_Znwm@plt>
+			mov    %rax,%rbx
+			mov    $0x400ea0,%eax
+			movq   %rax,%xmm0
+			movups %xmm0,(%rbx)
+			movq   $0x400ec0,0x10(%rbx)
+			mov    $0x8,%edi
+			callq  0x400aa0 <_Znwm@plt>
+			movq   $0x400fc8,(%rax)
+			mov    %rax,(%r14)
+			mov    0x10(%rbx),%rax
+			mov    %rbx,%rdi
+			callq  *%rax
+			mov    %rbx,%rdi
+			callq  0x400a10 <_ZdlPv@plt>
+			mov    %r14,%rax
+			add    $0x8,%rsp
+			pop    %rbx
+			pop    %r14
+			retq
+			mov    %rax,%rdi
+			callq  0x400e90 <__clang_call_terminate>
+			mov    %rax,%rdi
+			callq  0x400e90 <__clang_call_terminate>
+			mov    %rax,%rdi
+			callq  0x400e90 <__clang_call_terminate>
             ```
         ]
     ]
