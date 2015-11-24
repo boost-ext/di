@@ -2161,7 +2161,7 @@ class injector : injector_base, pool<bindings_t<TDeps...>> {
  public:
   using deps = bindings_t<TDeps...>;
   using config = TConfig;
-  injector(injector&&) noexcept = default;
+  injector(injector&&) = default;
   template <class... TArgs>
   explicit injector(const init&, TArgs... args) noexcept : injector{from_deps{}, static_cast<TArgs&&>(args)...} {}
   template <class TConfig_, class TPolicies_, class... TDeps_>
@@ -2332,7 +2332,7 @@ class injector<TConfig, pool<>, TDeps...> : injector_base, pool<bindings_t<TDeps
  public:
   using deps = bindings_t<TDeps...>;
   using config = TConfig;
-  injector(injector&&) noexcept = default;
+  injector(injector&&) = default;
   template <class... TArgs>
   explicit injector(const init&, TArgs... args) noexcept : injector{from_deps{}, static_cast<TArgs&&>(args)...} {}
   template <class TConfig_, class TPolicies_, class... TDeps_>

@@ -112,7 +112,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
   using deps = bindings_t<TDeps...>;
   using config = TConfig;
 
-  injector(injector && ) noexcept = default;
+  injector(injector && ) = default;
 
   template <class... TArgs>
   explicit injector(const init&, TArgs... args) noexcept : injector{from_deps{}, static_cast<TArgs&&>(args)...} {}
