@@ -527,32 +527,37 @@ retq
 </pre>
               </td>
 <td>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">push   %rbx
-mov    0x2007e9(%rip),%al
-test   %al,%al
-jne    0x4009be &lt;main+46&gt;
-mov    $0x601180,%edi
-callq  0x4007e0 &lt;__cxa_guard_acquire@plt&gt;
-test   %eax,%eax
-je     0x4009be &lt;main+46&gt;
-movq   $0x400a00,0x2007b4(%rip
-mov    $0x601180,%edi
-callq  0x400820 &lt;__cxa_guard_release@plt&gt;
-mov    0x2007a3(%rip),%rax
-mov    $0x601168,%edi
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">push   %r14
+push   %rbx
+push   %rax
+mov    %rdi,%r14
+mov    $0x20,%edi
+callq  0x400aa0 &lt;_Znwm@plt&gt;
+mov    %rax,%rbx
+mov    $0x400ea0,%eax
+movq   %rax,%xmm0
+movups %xmm0,(%rbx)
+movq   $0x400ec0,0x10(%rbx)
+mov    $0x8,%edi
+callq  0x400aa0 &lt;_Znwm@plt&gt;
+movq   $0x400fc8,(%rax)
+mov    %rax,(%r14)
+mov    0x10(%rbx),%rax
+mov    %rbx,%rdi
 callq  *%rax
-test   %rax,%rax
-setne  %cl
-movzbl %cl,%ebx
-je     0x4009e0 &lt;main+80&gt;
-mov    (%rax),%rcx
-mov    %rax,%rdi
-callq  *0x8(%rcx)
-mov    %ebx,%eax
+mov    %rbx,%rdi
+callq  0x400a10 &lt;_ZdlPv@plt&gt;
+mov    %r14,%rax
+add    $0x8,%rsp
 pop    %rbx
+pop    %r14
 retq
 mov    %rax,%rdi
-callq  0x4009f0 &lt;__clang_call_terminate&gt;
+callq  0x400e90 &lt;__clang_call_terminate&gt;
+mov    %rax,%rdi
+callq  0x400e90 &lt;__clang_call_terminate&gt;
+mov    %rax,%rdi
+callq  0x400e90 &lt;__clang_call_terminate&gt;
 </pre>
               </td>
 </tr></tbody>
