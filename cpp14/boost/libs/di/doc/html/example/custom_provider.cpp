@@ -54,10 +54,7 @@ struct custom_provider {
 /*<override `di` provider configuration>*/
 class config : public di::config {
  public:
-  template <class T>
-  static auto provider(const T&) noexcept {
-    return custom_provider{};
-  }
+  static auto provider(...) noexcept { return custom_provider{}; }
 };
 
 int main() {

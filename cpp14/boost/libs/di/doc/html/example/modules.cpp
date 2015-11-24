@@ -34,10 +34,11 @@ struct data {
 };
 
 struct app {
-  app(std::unique_ptr<interface> up, int i, const data& data) {
+  app(std::unique_ptr<interface> up, int i, double d, const data& data) {
     assert(dynamic_cast<implementation1*>(up.get()));
-    assert(dynamic_cast<implementation2*>(data.sp.get()));
     assert(i == 42);
+    assert(d == 87.0);
+    assert(dynamic_cast<implementation2*>(data.sp.get()));
   }
 };
 
@@ -54,9 +55,13 @@ auto exposed_module = []() -> di::injector<data> {
 
 int main() {
   constexpr auto i = 42;
+  constexpr auto d = 87.0;
+
+  /*<<module configuration with movable injector>>*/
+  auto movable_injector = di::make_injector(di::bind<double>().to(d));
 
   /*<<create injector and pass `module1`, `module2` and `exposed_module`>>*/
-  auto injector = di::make_injector(module1(), module2(i), exposed_module());
+  auto injector = di::make_injector(module1(), module2(i), exposed_module(), std::move(movable_injector));
 
   /*<<create `app`>>*/
   injector.create<app>();

@@ -259,10 +259,7 @@ function toggleNextRow() {
 <a class="co" name="di.examples.custom_provider.c4" href="custom_provider.html#di.examples.custom_provider.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a>
 <span class="keyword">class</span> <span class="identifier">config</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">config</span> <span class="special">{</span>
  <span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-  <span class="keyword">static</span> <span class="keyword">auto</span> <span class="identifier">provider</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;)</span> <span class="keyword">noexcept</span> <span class="special">{</span>
-    <span class="keyword">return</span> <span class="identifier">custom_provider</span><span class="special">{};</span>
-  <span class="special">}</span>
+  <span class="keyword">static</span> <span class="keyword">auto</span> <span class="identifier">provider</span><span class="special">(...)</span> <span class="keyword">noexcept</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">custom_provider</span><span class="special">{};</span> <span class="special">}</span>
 <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>

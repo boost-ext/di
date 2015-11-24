@@ -45,11 +45,9 @@ int i = 1;
 class uml_dumper : public di::config {
  public:
   uml_dumper() { std::cout << "@startuml uml_dumper.png" << std::endl; }
-
   ~uml_dumper() { std::cout << "@enduml" << std::endl; }
 
-  template <class _>
-  static auto policies(const _&) noexcept {
+  static auto policies(...) noexcept {
     /*<<define `uml dumper` directly in policies configuration>>*/
     return di::make_policies([&](auto type, auto dependency, BOOST_DI_UNUSED auto... ctor) {
       using T = decltype(type);

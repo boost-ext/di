@@ -231,10 +231,11 @@ function toggleNextRow() {
 <span class="special">};</span>
 
 <span class="keyword">struct</span> <span class="identifier">app</span> <span class="special">{</span>
-  <span class="identifier">app</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;</span> <span class="identifier">up</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">data</span><span class="special">&amp;</span> <span class="identifier">data</span><span class="special">)</span> <span class="special">{</span>
+  <span class="identifier">app</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;</span> <span class="identifier">up</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">d</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">data</span><span class="special">&amp;</span> <span class="identifier">data</span><span class="special">)</span> <span class="special">{</span>
     <span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">implementation1</span><span class="special">*&gt;(</span><span class="identifier">up</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
-    <span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">implementation2</span><span class="special">*&gt;(</span><span class="identifier">data</span><span class="special">.</span><span class="identifier">sp</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
     <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i</span> <span class="special">==</span> <span class="number">42</span><span class="special">);</span>
+    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">d</span> <span class="special">==</span> <span class="number">87.0</span><span class="special">);</span>
+    <span class="identifier">assert</span><span class="special">(</span><span class="keyword">dynamic_cast</span><span class="special">&lt;</span><span class="identifier">implementation2</span><span class="special">*&gt;(</span><span class="identifier">data</span><span class="special">.</span><span class="identifier">sp</span><span class="special">.</span><span class="identifier">get</span><span class="special">()));</span>
   <span class="special">}</span>
 <span class="special">};</span>
 
@@ -248,10 +249,13 @@ function toggleNextRow() {
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
   <span class="keyword">constexpr</span> <span class="keyword">auto</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">42</span><span class="special">;</span>
+  <span class="keyword">constexpr</span> <span class="keyword">auto</span> <span class="identifier">d</span> <span class="special">=</span> <span class="number">87.0</span><span class="special">;</span>
 
-  <a class="co" name="di.examples.modules.c6" href="modules.html#di.examples.modules.c7"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">module1</span><span class="special">(),</span> <span class="identifier">module2</span><span class="special">(</span><span class="identifier">i</span><span class="special">),</span> <span class="identifier">exposed_module</span><span class="special">());</span>
+  <a class="co" name="di.examples.modules.c6" href="modules.html#di.examples.modules.c7"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="keyword">auto</span> <span class="identifier">movable_injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">d</span><span class="special">));</span>
 
-  <a class="co" name="di.examples.modules.c8" href="modules.html#di.examples.modules.c9"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;();</span>
+  <a class="co" name="di.examples.modules.c8" href="modules.html#di.examples.modules.c9"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a><span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span><span class="identifier">module1</span><span class="special">(),</span> <span class="identifier">module2</span><span class="special">(</span><span class="identifier">i</span><span class="special">),</span> <span class="identifier">exposed_module</span><span class="special">(),</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">move</span><span class="special">(</span><span class="identifier">movable_injector</span><span class="special">));</span>
+
+  <a class="co" name="di.examples.modules.c10" href="modules.html#di.examples.modules.c11"><img src="../../../../../../doc/src/images/callouts/6.png" alt="6" border="0"></a><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">app</span><span class="special">&gt;();</span>
 <span class="special">}</span>
 </pre>
 <div class="calloutlist"><table border="0" summary="Callout list">
@@ -276,12 +280,18 @@ function toggleNextRow() {
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="di.examples.modules.c7"></a><a href="#di.examples.modules.c6"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
+            module configuration with movable injector
+          </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="di.examples.modules.c9"></a><a href="#di.examples.modules.c8"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
             create injector and pass <code class="computeroutput"><span class="identifier">module1</span></code>,
             <code class="computeroutput"><span class="identifier">module2</span></code> and <code class="computeroutput"><span class="identifier">exposed_module</span></code>
           </p></td>
 </tr>
 <tr>
-<td width="5%" valign="top" align="left"><p><a name="di.examples.modules.c9"></a><a href="#di.examples.modules.c8"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a> </p></td>
+<td width="5%" valign="top" align="left"><p><a name="di.examples.modules.c11"></a><a href="#di.examples.modules.c10"><img src="../../../../../../doc/src/images/callouts/6.png" alt="6" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             create <code class="computeroutput"><span class="identifier">app</span></code>
           </p></td>
