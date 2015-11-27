@@ -50,7 +50,6 @@ BOOST_DI_CFG_FWD
 #pragma GCC diagnostic error "-Werror"
 #endif
 #elif defined(__MSVC__)
-#pragma warning(push)
 #pragma warning(disable : 4503)
 #pragma warning(disable : 4822)
 #pragma warning(disable : 4505)
@@ -2892,13 +2891,12 @@ BOOST_DI_NAMESPACE_END
 #endif
 #if defined(__CLANG__)
 #pragma clang diagnostic pop
-#if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL > 0)
-#pragma clang diagnostic warning "-Wdeprecated-declarations"
-#else
+#if (!BOOST_DI_CFG_DIAGNOSTICS_LEVEL)
 #pragma clang diagnostic error "-Wdeprecated-declarations"
+#else
+#pragma clang diagnostic warning "-Wdeprecated-declarations"
 #endif
 #elif defined(__GCC__)
 #pragma GCC diagnostic pop
 #pragma GCC diagnostic error "-Wdeprecated-declarations"
-#elif defined(__MSVC__)
 #endif

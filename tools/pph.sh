@@ -27,13 +27,11 @@ pph() {
     echo "#if defined(BOOST_DI_CFG_FWD)"
     echo "BOOST_DI_CFG_FWD"
     echo "#endif"
-
     rm -rf tmp && mkdir tmp && cp -r boost tmp && cd tmp
     find . -iname "*.hpp" | xargs sed -i "s/BOOST_DI_NAMESPACE/::boost::di::v${version}_${revision}_${patch}/g"
     find . -iname "*.hpp" | xargs sed -i "s/\(.*\)__pph__/\/\/\/\/\1/g"
     find . -iname "*.hpp" | xargs sed -i "s/.*\(clang-format.*\)/\/\/\/\/\1/g"
     tail -n +10 "boost/di/aux_/compiler.hpp" | head -n -2 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g" | sed "s/\/\/\/\///"
-
     echo "#if defined(__CLANG__)"
     echo "#pragma clang diagnostic push"
 	echo "#pragma clang diagnostic error \"-Wundefined-inline\""
@@ -44,12 +42,10 @@ pph() {
 	echo "#pragma GCC diagnostic error \"-Werror\""
 	echo "#endif"
     echo "#elif defined(__MSVC__)"
-    echo "#pragma warning(push)"
 	echo "#pragma warning(disable : 4503)"
 	echo "#pragma warning(disable : 4822)"
 	echo "#pragma warning(disable : 4505)"
     echo "#endif"
-
     echo '
         #include "boost/di/fwd_ext.hpp"
 		BOOST_DI_NAMESPACE_BEGIN
@@ -66,7 +62,6 @@ pph() {
         #include "boost/di/policies/constructible.hpp"
         #include "boost/di/providers/heap.hpp"
         #include "boost/di/providers/stack_over_heap.hpp"' > tmp.hpp
-
     g++ -std=c++1y -C -P -nostdinc -nostdinc++ -E -I. \
         -DBOOST_DI_AUX_COMPILER_HPP \
         -DBOOST_DI_AUX_PREPROCESSOR_HPP \
@@ -78,21 +73,19 @@ pph() {
             sed "s/^##define/#define/g"
     tail -n +10 "boost/di/aux_/preprocessor.hpp" | head -n -2 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
     tail -n +15 "boost/di/inject.hpp" | head -n -2 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
-    echo "BOOST_DI_NAMESPACE_END"
     cd .. && rm -rf tmp
+    echo "BOOST_DI_NAMESPACE_END"
     echo "#endif"
     echo "#if defined(__CLANG__)"
     echo "#pragma clang diagnostic pop"
-    echo "#if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL > 0)"
-    echo "#pragma clang diagnostic warning \"-Wdeprecated-declarations\""
-    echo "#else"
+    echo "#if (!BOOST_DI_CFG_DIAGNOSTICS_LEVEL)"
     echo "#pragma clang diagnostic error \"-Wdeprecated-declarations\""
+    echo "#else"
+    echo "#pragma clang diagnostic warning \"-Wdeprecated-declarations\""
     echo "#endif"
     echo "#elif defined(__GCC__)"
     echo "#pragma GCC diagnostic pop"
     echo "#pragma GCC diagnostic error \"-Wdeprecated-declarations\""
-    echo "#elif defined(__MSVC__)"
-	#echo "#pragma warning(pop)"
     echo "#endif"
     echo
 }
