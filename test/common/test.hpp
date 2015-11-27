@@ -7,10 +7,11 @@
 #ifndef BOOST_DI_TEST_HPP
 #define BOOST_DI_TEST_HPP
 
+#include "boost/di/aux_/compiler.hpp"
 #include <cstdio>
 #include <cstdlib>
 
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
 #define __has_include(...) 0
 #endif
 

@@ -9,6 +9,7 @@
 #include <initializer_list>
 #include <string>
 #include <functional>
+#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/core/any_type.hpp"
 #include "boost/di/inject.hpp"
@@ -112,7 +113,7 @@ test ctors = [] {
   test_ctor_traits<ctor_unique_ptr, direct, core::any_type_1st_fwd<ctor_unique_ptr>>();
   test_ctor_traits<ctor_conv, direct, core::any_type_1st_fwd<ctor_conv>>();
 
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
   test_ctor_traits<func, direct, core::any_type_1st_fwd<func>>();
 #else
   test_ctor_traits<func, direct, core::any_type_1st_ref_fwd<func>>();
@@ -120,7 +121,7 @@ test ctors = [] {
 
   test_ctor_traits<ctor2, direct, core::any_type_ref_fwd<ctor2>, core::any_type_ref_fwd<ctor2>>();
 
-#if defined(__GNUC__) && !defined(__clang__)
+#if defined(__GCC__)
   test_ctor_traits<rvalue, direct, core::any_type_1st_ref_fwd<rvalue>>();
 #else
   test_ctor_traits<rvalue, direct, core::any_type_1st_fwd<rvalue>>();
@@ -138,7 +139,7 @@ test uniforms = [] {
   };
   test_ctor_traits<empty, uniform>();
 
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
   test_ctor_traits<ctor2_ref, uniform, core::any_type_ref_fwd<ctor2_ref>, core::any_type_ref_fwd<ctor2_ref>>();
 #endif
 };

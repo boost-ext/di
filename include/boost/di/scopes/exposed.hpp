@@ -18,7 +18,7 @@ class exposed {
  public:
   template <class TExpected, class TGiven>
   class scope {
-#if defined(__GNUC__) || defined(_MSC_VER)  // __pph__
+#if defined(__GCC__) || defined(__MSVC__)  // __pph__
     using type = aux::conditional_t<aux::is_copy_constructible<TExpected>::value, TExpected, TExpected*>;
 #else   // __pph__
     using type = TExpected;

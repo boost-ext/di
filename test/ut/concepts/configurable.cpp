@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <type_traits>
+#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/concepts/configurable.hpp"
 #include "boost/di/providers/heap.hpp"
 #include "boost/di/config.hpp"
@@ -45,7 +46,7 @@ class config_private_access {
   static auto provider(...) noexcept { return providers::heap{}; }
 };
 
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
 test private_access = [] {
   expect(std::is_same<
          config<config_private_access>::requires_<provider<providable_type(...)>, policies<callable_type(...)>>,

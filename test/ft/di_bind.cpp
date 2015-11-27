@@ -140,7 +140,7 @@ test any_of = [] {
 test any_of_with_scope = [] {
   auto test = [](auto scope, auto same) {
     auto injector = di::make_injector(
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
         di::bind<i2, i1>().in(scope).to<impl1_2>()
 #else
         di::bind<i2, i1>().in(scope).template to<impl1_2>()
@@ -160,7 +160,7 @@ test any_of_with_scope = [] {
 test any_of_with_scope_split = [] {
   auto test = [](auto scope, auto same) {
     auto injector = di::make_injector(
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
         di::bind<i1>().in(scope).to<impl1_2>(), di::bind<i2>().in(scope).to<impl1_2>()
 #else
         di::bind<i1>().in(scope).template to<impl1_2>(), di::bind<i2>().in(scope).template to<impl1_2>()

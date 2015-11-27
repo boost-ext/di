@@ -20,39 +20,40 @@
 #if !defined(BOOST_DI_CFG_DIAGNOSTICS_LEVEL)
 #define BOOST_DI_CFG_DIAGNOSTICS_LEVEL 1
 #endif
-#if defined(__clang__)
-#pragma clang diagnostic push
-#elif defined(__GNUC__)
-#pragma GCC diagnostic push
-#elif defined(_MSC_VER)
-#pragma warning(push)
-#endif
 #if defined(BOOST_DI_CFG_FWD)
 BOOST_DI_CFG_FWD
 #endif
 #if defined(__clang__)
-#pragma clang diagnostic error "-Wundefined-inline"
-#pragma clang diagnostic error "-Wundefined-internal"
+#define __CLANG__
 #define BOOST_DI_UNUSED __attribute__((unused))
 #define BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
 #define BOOST_DI_TYPE_WKND(T)
 #elif defined(__GNUC__)
-#if (__GNUC__ < 6)
-#pragma GCC diagnostic error "-Werror"
-#endif
+#define __GCC__
 #define BOOST_DI_UNUSED __attribute__((unused))
 #define BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
 #define BOOST_DI_TYPE_WKND(T)
 #elif defined(_MSC_VER)
-#pragma warning(disable : 4503)
-#pragma warning(disable : 4822)
-#pragma warning(disable : 4505)
-//#pragma warning(error : 4506)
-//#pragma warning(error : 4996)
+#define __MSVC__
 #define __has_include(...) 0
 #define BOOST_DI_UNUSED
 #define BOOST_DI_DEPRECATED(...) __declspec(deprecated(__VA_ARGS__))
 #define BOOST_DI_TYPE_WKND(T) (T && )
+#endif
+#if defined(__CLANG__)
+#pragma clang diagnostic push
+#pragma clang diagnostic error "-Wundefined-inline"
+#pragma clang diagnostic error "-Wundefined-internal"
+#elif defined(__GCC__)
+#pragma GCC diagnostic push
+#if (__GNUC__ < 6)
+#pragma GCC diagnostic error "-Werror"
+#endif
+#elif defined(__MSVC__)
+#pragma warning(push)
+#pragma warning(disable : 4503)
+#pragma warning(disable : 4822)
+#pragma warning(disable : 4505)
 #endif
 #if __has_include(<__config>)
 #include <__config>
@@ -219,7 +220,7 @@ struct injector__ : T {
   using T::try_create;
   using T::create_impl;
   using T::create_successful_impl;
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
   template <class... Ts>
   using is_creatable = typename T::template is_creatable<Ts...>;
 #else
@@ -423,7 +424,7 @@ template <class T, class... TArgs>
 decltype(void(T(declval<TArgs>()...)), true_type{}) test_is_constructible(int);
 template <class, class...>
 false_type test_is_constructible(...);
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
 template <class T, class... TArgs>
 struct is_constructible : decltype(test_is_constructible<T, TArgs...>(0)) {};
 #else
@@ -440,7 +441,7 @@ template <class T, class... TArgs>
 using is_braces_constructible = decltype(test_is_braces_constructible<T, TArgs...>(0));
 template <class T, class... TArgs>
 using is_braces_constructible_t = typename is_braces_constructible<T, TArgs...>::type;
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
 template <class T>
 struct is_copy_constructible : integral_constant<bool, __is_constructible(T, const T&)> {};
 template <class T>
@@ -451,7 +452,7 @@ using is_copy_constructible = is_constructible<T, const T&>;
 template <class T>
 using is_default_constructible = is_constructible<T>;
 #endif
-#if defined(__clang__) || defined(_MSC_VER)
+#if defined(__CLANG__) || defined(__MSVC__)
 template <class T, class U>
 struct is_convertible : integral_constant<bool, __is_convertible_to(T, U)> {};
 #else
@@ -759,7 +760,7 @@ class exposed {
  public:
   template <class TExpected, class TGiven>
   class scope {
-#if defined(__GNUC__) || defined(_MSC_VER)
+#if defined(__GCC__) || defined(__MSVC__)
     using type = aux::conditional_t<aux::is_copy_constructible<TExpected>::value, TExpected, TExpected*>;
 #else
     using type = TExpected;
@@ -894,7 +895,7 @@ struct unique {
 template <class TScope, class T>
 struct unique<TScope, T*> {
   using scope = TScope;
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
   explicit unique(T* object) : object(object) {}
 #endif
   template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
@@ -1023,7 +1024,7 @@ class instance {
     template <class>
     using is_referable = aux::false_type;
     explicit scope(const TGiven& object) : object_(object) {}
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
     template <class T, class TProvider>
     static T try_create(const TProvider&) noexcept;
 #else
@@ -1242,7 +1243,7 @@ template <class T>
 struct bindings_impl<T, aux::false_type, aux::false_type> {
   using type = aux::type_list<dependency<scopes::exposed<>, T>>;
 };
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
 template <class... Ts>
 struct bindings : aux::join_t<typename bindings_impl<Ts>::type...> {};
 template <class... Ts>
@@ -1772,7 +1773,7 @@ struct any_type_ref {
   operator T() {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T>{});
   }
-#if defined(__GNUC__) && !defined(__clang__)
+#if defined(__GCC__)
   template <class T, class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector, TRefError>::value),
             class = BOOST_DI_REQUIRES(is_creatable__<T&&, TInjector, TError>::value)>
   operator T &&() const {
@@ -1807,7 +1808,7 @@ struct any_type_1st_ref {
   operator T() {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T>{});
   }
-#if defined(__GNUC__) && !defined(__clang__)
+#if defined(__GCC__)
   template <class T, class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value),
             class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector, TRefError>::value),
             class = BOOST_DI_REQUIRES(is_creatable__<T&&, TInjector, TError>::value)>
@@ -1844,7 +1845,7 @@ struct any_type_ref {
   operator T() {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
   }
-#if defined(__GNUC__) && !defined(__clang__)
+#if defined(__GCC__)
   template <class T, class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector>::value)>
   operator T &&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T&&>{});
@@ -1874,7 +1875,7 @@ struct any_type_1st_ref {
   operator T() {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
   }
-#if defined(__GNUC__) && !defined(__clang__)
+#if defined(__GCC__)
   template <class T, class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value),
             class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector>::value)>
   operator T &&() const {
@@ -1909,7 +1910,7 @@ struct any_type_ref_fwd {
   operator T();
   template <class T>
   operator T&() const;
-#if defined(__GNUC__) && !defined(__clang__)
+#if defined(__GCC__)
   template <class T>
   operator T &&() const;
 #endif
@@ -1931,7 +1932,7 @@ struct any_type_1st_ref_fwd {
   operator T();
   template <class T, class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)>
   operator T&() const;
-#if defined(__GNUC__) && !defined(__clang__)
+#if defined(__GCC__)
   template <class T, class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)>
   operator T &&() const;
 #endif
@@ -2124,7 +2125,7 @@ template <class T, class TDependency>
 struct referable<const T&, TDependency> {
   using type = aux::conditional_t<TDependency::template is_referable<const T&>::value, const T&, T>;
 };
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
 template <class T, class TDependency>
 struct referable<T&&, TDependency> {
   using type = aux::conditional_t<TDependency::template is_referable<T&&>::value, T&&, T>;
@@ -2132,7 +2133,7 @@ struct referable<T&&, TDependency> {
 #endif
 template <class T, class TDependency>
 using referable_t = typename referable<T, TDependency>::type;
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
 template <class T, class TInjector>
 inline auto build(TInjector&& injector) noexcept {
   return T{static_cast<TInjector&&>(injector)};
@@ -2273,7 +2274,7 @@ class injector : injector_base, pool<bindings_t<TDeps...>> {
       : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{static_cast<TArgs&&>(args)...}} {}
   template <class TInjector, class... TArgs>
   explicit injector(const from_injector&, TInjector&& injector, const aux::type_list<TArgs...>&) noexcept
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
       : pool_t {
     copyable_t<deps>{}, pool_t { build<TArgs>(static_cast<TInjector&&>(injector))... }
   }
@@ -2444,7 +2445,7 @@ class injector<TConfig, pool<>, TDeps...> : injector_base, pool<bindings_t<TDeps
       : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{static_cast<TArgs&&>(args)...}} {}
   template <class TInjector, class... TArgs>
   explicit injector(const from_injector&, TInjector&& injector, const aux::type_list<TArgs...>&) noexcept
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
       : pool_t {
     copyable_t<deps>{}, pool_t { build<TArgs>(static_cast<TInjector&&>(injector))... }
   }
@@ -2721,6 +2722,7 @@ class heap {
   }
 };
 }
+#include "boost/di/aux_/compiler.hpp"
 #define BOOST_DI_IF(cond, t, f) BOOST_DI_IF_I(cond, t, f)
 #define BOOST_DI_REPEAT(i, m, ...) BOOST_DI_REPEAT_N(i, m, __VA_ARGS__)
 #define BOOST_DI_CAT(a, ...) BOOST_DI_PRIMITIVE_CAT(a, __VA_ARGS__)
@@ -2781,7 +2783,7 @@ class heap {
 #define BOOST_DI_REPEAT_10(m, ...)                                                                            \
   m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) \
       m(6, __VA_ARGS__) m(7, __VA_ARGS__) m(8, __VA_ARGS__) m(9, __VA_ARGS__)
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
 #define BOOST_DI_VD_IBP_CAT(a, b) BOOST_DI_VD_IBP_CAT_I(a, b)
 #define BOOST_DI_VD_IBP_CAT_I(a, b) BOOST_DI_VD_IBP_CAT_II(a##b)
 #define BOOST_DI_VD_IBP_CAT_II(res) res
@@ -2888,15 +2890,16 @@ using inject = aux::type_list<Ts...>;
   T(BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__))
 BOOST_DI_NAMESPACE_END
 #endif
-#if defined(__clang__)
+#if defined(__CLANG__)
 #pragma clang diagnostic pop
 #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL > 0)
 #pragma clang diagnostic warning "-Wdeprecated-declarations"
 #else
 #pragma clang diagnostic error "-Wdeprecated-declarations"
 #endif
-#elif defined(__GNUC__)
+#elif defined(__GCC__)
 #pragma GCC diagnostic pop
 #pragma GCC diagnostic error "-Wdeprecated-declarations"
-#elif defined(_MSC_VER)
+#elif defined(__MSVC__)
+#pragma warning(pop)
 #endif

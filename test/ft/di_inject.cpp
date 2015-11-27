@@ -167,7 +167,7 @@ test ctor_refs = [] {
 
   struct c_inject {
     c_inject(const std::shared_ptr<i1>& sp, int& i, const double& d, const std::string& str
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
              ,
              function<int()> f
 #else
@@ -220,13 +220,13 @@ test ctor_refs = [] {
 
   test(di::aux::type<c>{}, di::bind<i1>().to<impl1>());
   test(di::aux::type<c_inject>{}, di::bind<i1>().to<impl1>());
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
   test(di::aux::type<c_aggregate>{}, di::bind<i1>().to<impl1>());
 #endif
 
   test(di::aux::type<c>{}, di::bind<i1>().to(std::make_shared<impl1>()));
   test(di::aux::type<c_inject>{}, di::bind<i1>().to(std::make_shared<impl1>()));
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
   test(di::aux::type<c_aggregate>{}, di::bind<i1>().to(std::make_shared<impl1>()));
 #endif
 };

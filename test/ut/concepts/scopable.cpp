@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <type_traits>
+#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/concepts/scopable.hpp"
 #include "boost/di/scopes/deduce.hpp"
 #include "boost/di/scopes/exposed.hpp"
@@ -51,7 +52,7 @@ class scope_private_access {
   };
 };
 
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
 test private_access = [] {
   static_expect(!scopable<scope_private_access>::value);
   static_expect(std::is_same<scopable_error<scope_private_access>, scopable<scope_private_access>>::value);

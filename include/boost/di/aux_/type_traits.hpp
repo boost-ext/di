@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_AUX_TYPE_TRAITS_HPP
 #define BOOST_DI_AUX_TYPE_TRAITS_HPP
 
+#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/fwd.hpp"
 
@@ -238,7 +239,7 @@ decltype(void(T(declval<TArgs>()...)), true_type{}) test_is_constructible(int);
 template <class, class...>
 false_type test_is_constructible(...);
 
-#if defined(_MSC_VER)  // __pph__
+#if defined(__MSVC__)  // __pph__
 template <class T, class... TArgs>
 struct is_constructible : decltype(test_is_constructible<T, TArgs...>(0)) {};
 #else  // __pph__
@@ -261,7 +262,7 @@ using is_braces_constructible = decltype(test_is_braces_constructible<T, TArgs..
 template <class T, class... TArgs>
 using is_braces_constructible_t = typename is_braces_constructible<T, TArgs...>::type;
 
-#if defined(_MSC_VER)  // __pph__
+#if defined(__MSVC__)  // __pph__
 template <class T>
 struct is_copy_constructible : integral_constant<bool, __is_constructible(T, const T&)> {};
 template <class T>
@@ -273,7 +274,7 @@ template <class T>
 using is_default_constructible = is_constructible<T>;
 #endif  // __pph__
 
-#if defined(__clang__) || defined(_MSC_VER)  // __pph__
+#if defined(__CLANG__) || defined(__MSVC__)  // __pph__
 template <class T, class U>
 struct is_convertible : integral_constant<bool, __is_convertible_to(T, U)> {};
 #else   // __pph__

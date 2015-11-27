@@ -135,7 +135,7 @@ class instance {
 
     explicit scope(const TGiven& object) : object_(object) {}
 
-#if defined(_MSC_VER)  // __pph__
+#if defined(__MSVC__)  // __pph__
     template <class T, class TProvider>
     static T try_create(const TProvider&) noexcept;
 #else   // __pph__

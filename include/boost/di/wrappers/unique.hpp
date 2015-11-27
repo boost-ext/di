@@ -31,7 +31,7 @@ template <class TScope, class T>
 struct unique<TScope, T*> {
   using scope = TScope;
 
-#if defined(_MSC_VER)  // __pph__
+#if defined(__MSVC__)  // __pph__
   explicit unique(T* object) : object(object) {}
 #endif  // __pph__
 

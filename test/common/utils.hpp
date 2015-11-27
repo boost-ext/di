@@ -18,6 +18,7 @@
 #elif defined(_WIN32) || defined(_WIN64)
 #include <Windows.h>
 #endif
+#include "boost/di/aux_/compiler.hpp"
 
 template <class TFStream = std::ofstream>
 struct file : std::string, TFStream {
@@ -31,12 +32,16 @@ std::string cxx() {
     return cpp;
   }
 
-#if defined(__clang__)
+#if defined(__CLANG__)
   return "clang++";
-#elif defined(__GNUC__) && !defined(__clang__)
+#elif defined(__GCC__)
   return "g++";
-#elif defined(_MSC_VER)
+#elif defined(__MSVC__)
+#if defined(__clang__)
+  return "clang-cl";
+#else
   return "cl";
+#endif
 #endif
 }
 
@@ -46,11 +51,11 @@ std::string cxxflags(bool internal = false) {
   if (internal) {
     cppflags += "-I../include -I../../include ";  // bjam, cmake
 
-#if defined(__clang__)
+#if defined(__CLANG__)
     cppflags += "-std=c++1y";
-#elif defined(__GNUC__) && !defined(__clang__)
+#elif defined(__GCC__)
     cppflags += "-std=c++1y";
-#elif defined(_MSC_VER)
+#elif defined(__MSVC__)
     cppflags += "";
 #endif
   }

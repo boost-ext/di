@@ -46,7 +46,7 @@ struct injector__ : T {
   using T::create_impl;
   using T::create_successful_impl;
 
-#if defined(_MSC_VER)  // __pph__
+#if defined(__MSVC__)  // __pph__
   template <class... Ts>
   using is_creatable = typename T::template is_creatable<Ts...>;
 #else   // __pph__

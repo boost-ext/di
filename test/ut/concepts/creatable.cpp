@@ -4,6 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/concepts/creatable.hpp"
 
 namespace concepts {
@@ -28,7 +29,7 @@ test is_creatable = [] {
   expect(creatable<type_traits::uniform, u>::value);
   expect(!creatable<type_traits::uniform, u, float, short>::value);
 
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
   expect(creatable<type_traits::uniform, u, int, double>::value);
   expect(creatable<type_traits::uniform, u, int>::value);
 #endif

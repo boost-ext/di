@@ -14,6 +14,7 @@
 #include <sstream>
 #include <iostream>
 #include <initializer_list>
+#include "boost/di/aux_/compiler.hpp"
 #include "common/utils.hpp"
 
 namespace {
@@ -33,24 +34,24 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
 
     std::stringstream errors;
 
-#if defined(__clang__)
+#if defined(__CLANG__)
     errors << "-c -Wno-all -Werror -Wno-error=deprecated-declarations";
-#elif defined(__GNUC__) && !defined(__clang__)
+#elif defined(__GCC__)
     errors << "-c -Werror ";
-#elif defined(_MSC_VER)
+#elif defined(__MSVC__)
     errors << "/c /EHsc /W3 /WX";
 #endif
 
     auto include_rgx = std::regex{"<include>"};
 
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
     auto include = std::regex_replace(defines, include_rgx, "/FI");
 #else
     auto include = std::regex_replace(defines, include_rgx, "-include");
 #endif
 
     command << cxx() << " " << cxxflags(true) << " " << include << " " << errors.str() << " " << source_code
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
             << " >"
 #else
             << " 2>"
@@ -78,7 +79,7 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
   }
 
   if (!errors.empty()) {
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
     constexpr auto MAX_ERROR_LINES_COUNT = 128;
 #else
     constexpr auto MAX_ERROR_LINES_COUNT = 64;
@@ -155,7 +156,7 @@ test bind_instance_with_given_value_v = [] {
 test bind_in_not_scopable_type = [] {
   auto errors_ =
       errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
              "scope<.*>::requires_<.*scope<.*>::is_referable,.*scope<.*>::try_create,.*scope<.*>::create>", "=.*dummy"
 #else
              "scope<.*dummy>::requires_<.*scope<.*>::is_referable,.*scope<.*>::try_create,.*scope<.*>::create>"
@@ -170,7 +171,7 @@ test bind_in_not_scopable_type = [] {
 test bind_in_not_scopable_type_v = [] {
   auto errors_ =
       errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
              "scope<.*>::requires_<.*scope<.*>::is_referable,.*scope<.*>::try_create,.*scope<.*>::create>", "=.*dummy"
 #else
              "scope<.*dummy>::requires_<.*scope<.*>::is_referable,.*scope<.*>::try_create,.*scope<.*>::create>"
@@ -234,7 +235,7 @@ test bind_has_disallowed_qualifiers_given_complex_v = [] {
 
 test bind_narrowed_type = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "type_<.*>::is_not_related_to<int>", "=.*double"
 #else
                         "type_<.*double>::is_not_related_to<int>"
@@ -247,7 +248,7 @@ test bind_narrowed_type = [] {
 #if defined(__cpp_variable_templates)
 test bind_narrowed_type_v = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "type_<.*>::is_not_related_to<int>", "=.*double"
 #else
                         "type_<.*double>::is_not_related_to<int>"
@@ -260,7 +261,7 @@ test bind_narrowed_type_v = [] {
 
 test bind_not_compatible_types = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "type_<.*>::is_not_related_to<int>", "=.*impl"
 #else
                         "type_<.*impl>::is_not_related_to<int>"
@@ -275,7 +276,7 @@ test bind_not_compatible_types = [] {
 #if defined(__cpp_variable_templates)
 test bind_not_compatible_types_v = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "type_<.*>::is_not_related_to<int>", "=.*impl"
 #else
                         "type_<.*impl>::is_not_related_to<int>"
@@ -290,7 +291,7 @@ test bind_not_compatible_types_v = [] {
 
 test bind_not_compatible_instance = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "type_<.*>::is_not_related_to<int>", "=.*impl"
 #else
                         "type_<.*impl>::is_not_related_to<int>"
@@ -305,7 +306,7 @@ test bind_not_compatible_instance = [] {
 #if defined(__cpp_variable_templates)
 test bind_not_compatible_instance_v = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "type_<.*>::is_not_related_to<int>", "=.*impl"
 #else
                         "type_<.*impl>::is_not_related_to<int>"
@@ -320,9 +321,9 @@ test bind_not_compatible_instance_v = [] {
 
 test bind_not_compatible_narrowed_types = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "type_<.*>::is_not_related_to<int>", "=.*long"
-#elif defined(__clang__)
+#elif defined(__CLANG__)
                         "type_<.*long>::is_not_related_to<int>"
 #else
                         "type_<.*long.*int>::is_not_related_to<int>"
@@ -335,9 +336,9 @@ test bind_not_compatible_narrowed_types = [] {
 #if defined(__cpp_variable_templates)
 test bind_not_compatible_narrowed_types_v = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "type_<.*>::is_not_related_to<int>", "=.*long"
-#elif defined(__clang__)
+#elif defined(__CLANG__)
                         "type_<.*long>::is_not_related_to<int>"
 #else
                         "type_<.*long.*int>::is_not_related_to<int>"
@@ -350,7 +351,7 @@ test bind_not_compatible_narrowed_types_v = [] {
 
 test bind_not_compatible_initializer_list = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "type_<.*>::is_not_related_to<int>", "=.*const.*char.*\\*"
 #else
                         "type_<const.*char.*\\*>::is_not_related_to<int>"
@@ -363,7 +364,7 @@ test bind_not_compatible_initializer_list = [] {
 #if defined(__cpp_variable_templates)
 test bind_not_compatible_initializer_list_v = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "type_<.*>::is_not_related_to<int>", "=.*const.*char.*\\*"
 #else
                         "type_<const.*char.*\\*>::is_not_related_to<int>"
@@ -376,7 +377,7 @@ test bind_not_compatible_initializer_list_v = [] {
 
 test bind_any_of_not_related = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "type_<.*>::is_not_related_to<.*a>.*type_<.*>::is_not_related_to<.*b>", "=.*c"
 #else
                         "type_<.*c>::is_not_related_to<.*a>.*type_<.*c>::is_not_related_to<.*b>"
@@ -391,7 +392,7 @@ test bind_any_of_not_related = [] {
 #if defined(__cpp_variable_templates)
 test bind_any_of_not_related_v = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "type_<.*>::is_not_related_to<.*a>.*type_<.*>::is_not_related_to<.*b>", "=.*c"
 #else
                         "type_<.*c>::is_not_related_to<.*a>.*type_<.*c>::is_not_related_to<.*b>"
@@ -406,7 +407,7 @@ test bind_any_of_not_related_v = [] {
 
 test bind_is_abstract_type = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "type_<.*>::is_abstract", "=.*impl"
 #else
                         "type_<.*impl>::is_abstract"
@@ -426,7 +427,7 @@ test bind_is_abstract_type = [] {
 #if defined(__cpp_variable_templates)
 test bind_is_abstract_type_v = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "type_<.*>::is_abstract", "=.*impl"
 #else
                         "type_<.*impl>::is_abstract"
@@ -446,7 +447,7 @@ test bind_is_abstract_type_v = [] {
 
 test bind_is_abstract_type_with_missing_error = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "type_<.*>::is_abstract", "=.*impl", "void i::dummy.*is abstract"
 #else
                         "type_<.*impl>::is_abstract", "pure.*impl", "virtual void dummy().*=.*0"
@@ -466,7 +467,7 @@ test bind_is_abstract_type_with_missing_error = [] {
 #if defined(__cpp_variable_templates)
 test bind_is_abstract_type_with_missing_error_v = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "type_<.*>::is_abstract", "=.*impl", "void i::dummy.*is abstract"
 #else
                         "type_<.*impl>::is_abstract", "pure.*impl", "virtual void dummy().*=.*0"
@@ -486,7 +487,7 @@ test bind_is_abstract_type_with_missing_error_v = [] {
 
 test bind_is_abstract_type_named = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "type_<.*>::is_abstract", "=.*impl"
 #else
                         "type_<.*impl>::is_abstract"
@@ -506,7 +507,7 @@ test bind_is_abstract_type_named = [] {
 #if defined(__cpp_variable_templates)
 test bind_is_abstract_type_named_v = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "type_<.*>::is_abstract", "=.*impl"
 #else
                         "type_<.*impl>::is_abstract"
@@ -630,7 +631,7 @@ test bind_in_not_scopable_v = [] {
 
 test make_injector_wrong_arg = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "type_<.*>::is_neither_a_dependency_nor_an_injector", "=.*dummy"
 #else
                         "type_<.*dummy>::is_neither_a_dependency_nor_an_injector"
@@ -656,7 +657,7 @@ test make_injector_with_from_not_movable_exposed = [] {
 
 test exposed_multiple_times = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "type_<.*>::is_bound_more_than_once", "=.*c"
 #else
                         "type_<.*c>::is_bound_more_than_once"
@@ -674,7 +675,7 @@ test not_configurable_config = [] {
 
 test make_policies_with_non_const_policy = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "policy<.*>::requires_<.*call_operator>", "=.*non_const_policy"
 #else
                         "policy<.*non_const_policy>::requires_<.*call_operator>"
@@ -711,7 +712,7 @@ test make_policies_with_non_movable_policy = [] {
 
 test config_wrong_policy = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                         "policy<.*>::requires_<.*call_operator>", "=.*int"
 #else
                         "policy<.*int>::requires_<.*call_operator>"
@@ -731,7 +732,7 @@ int main() { di::make_injector<test_config>(); }
 
     test config_policy_not_callable = [] {
       auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                             "policy<.*>::requires_<.*call_operator>", "=.*dummy"
 #else
                             "policy<.*dummy>::requires_<.*call_operator>"
@@ -751,7 +752,7 @@ int main() { di::make_injector<test_config>(); }
 
     test config_not_providable = [] {
       auto errors_ = errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                             "provider<.*>::requires_<.*get,.*is_creatable>", "=.*dummy"
 #else
                             "provider<.*dummy>::requires_<.*get,.*is_creatable>"
@@ -772,7 +773,7 @@ int main() { di::make_injector<test_config>(); }
     test config_wrong_provider = [] {
       auto errors_ =
           errors("constraint not satisfied",
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
                  "config<.*>::requires_<.*provider<.*providable_type.*(...)>.*policies<.*callable_type.*(...)>",
                  "=.*test_config"
 #else
@@ -807,11 +808,11 @@ int main() { di::make_injector<test_config>(); }
 
     test create_polymorphic_type_without_binding = [] {
       auto errors_ = errors(
-#if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+#if (__clang_major__ == 3) && (__clang_minor__ > 4) || defined(__GCC___) || defined(__MSVC__)
           "creatable constraint not satisfied",
 #endif
           "abstract_type<.*>::is_not_bound"
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
           ,
           "create<c>()", "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?"
 #endif
@@ -825,11 +826,11 @@ int main() { di::make_injector<test_config>(); }
 
     test create_polymorphic_type_without_binding_using_multi_bindings = [] {
       auto errors_ = errors(
-#if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+#if (__clang_major__ == 3) && (__clang_minor__ > 4) || defined(__GCC___) || defined(__MSVC__)
           "creatable constraint not satisfied",
 #endif
           "abstract_type<.*>::is_not_bound"
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
           ,
           "create<c>()", "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?"
 #endif
@@ -848,11 +849,11 @@ int main() { di::make_injector<test_config>(); }
 
     test create_polymorphic_type_without_binding_using_multi_bindings_named = [] {
       auto errors_ = errors(
-#if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+#if (__clang_major__ == 3) && (__clang_minor__ > 4) || defined(__GCC___) || defined(__MSVC__)
           "creatable constraint not satisfied",
 #endif
           "abstract_type<.*>::named<.*>::is_not_bound"
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
           ,
           "create<c>()",
           "type is not bound, did you forget to add: 'di::bind<interface>.named\\(name\\).to<implementation>()'?"
@@ -875,11 +876,11 @@ int main() { di::make_injector<test_config>(); }
 
     test create_polymorphic_type_without_binding_named = [] {
       auto errors_ = errors(
-#if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+#if (__clang_major__ == 3) && (__clang_minor__ > 4) || defined(__GCC___) || defined(__MSVC__)
           "creatable constraint not satisfied",
 #endif
           "abstract_type<.*>::named<.*>::is_not_bound"
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
           ,
           "type is not bound, did you forget to add: 'di::bind<interface>.named\\(name\\).to<implementation>()'?"
 #endif
@@ -896,11 +897,11 @@ int main() { di::make_injector<test_config>(); }
 
     test exposed_not_creatable = [] {
       auto errors_ = errors(
-#if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+#if (__clang_major__ == 3) && (__clang_minor__ > 4) || defined(__GCC___) || defined(__MSVC__)
           "creatable constraint not satisfied",
 #endif
           "abstract_type<.*>::is_not_bound"
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
           ,
           "create<T>", "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?"
 #endif
@@ -914,11 +915,11 @@ int main() { di::make_injector<test_config>(); }
 
     test exposed_polymorphic_type_without_binding = [] {
       auto errors_ = errors(
-#if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+#if (__clang_major__ == 3) && (__clang_minor__ > 4) || defined(__GCC___) || defined(__MSVC__)
           "creatable constraint not satisfied",
 #endif
           "abstract_type<.*>::is_not_bound"
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
           ,
           "create<T>", "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?"
 #endif
@@ -936,11 +937,11 @@ int main() { di::make_injector<test_config>(); }
 
     test injector_singleton_by_copy = [] {
       auto errors_ = errors(
-#if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+#if (__clang_major__ == 3) && (__clang_minor__ > 4) || defined(__GCC___) || defined(__MSVC__)
           "creatable constraint not satisfied",
 #endif
           "scoped<.*>::is_not_convertible_to<.*>", "singleton", "int", "int.*\\*"
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
           ,
           "scoped object is not convertible to the requested type, did you mistake the scope: "
           "'di::bind<T>.in\\(scope\\)'?"
@@ -955,11 +956,11 @@ int main() { di::make_injector<test_config>(); }
 
     test bind_instance_not_convertible = [] {
       auto errors_ = errors(
-#if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+#if (__clang_major__ == 3) && (__clang_minor__ > 4) || defined(__GCC___) || defined(__MSVC__)
           "creatable constraint not satisfied",
 #endif
           "scoped<.*>::is_not_convertible_to<.*>", "instance", "int", "int.*\\*"
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
           ,
           "instance is not convertible to the requested type, verify binding: 'di::bind<T>.to\\(value\\)'?"
 #endif
@@ -973,11 +974,11 @@ int main() { di::make_injector<test_config>(); }
 
     test bind_instance_not_referable = [] {
       auto errors_ = errors(
-#if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+#if (__clang_major__ == 3) && (__clang_minor__ > 4) || defined(__GCC___) || defined(__MSVC__)
           "creatable constraint not satisfied",
 #endif
           "scoped<.*>::is_not_convertible_to<.*>", "instance", "int", "int.*&"
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
           ,
           "instance is not convertible to the requested type, verify binding: 'di::bind<T>.to\\(value\\)'?"
 #endif
@@ -992,11 +993,11 @@ int main() { di::make_injector<test_config>(); }
 
     test bind_instance_not_referable_named = [] {
       auto errors_ = errors(
-#if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+#if (__clang_major__ == 3) && (__clang_minor__ > 4) || defined(__GCC___) || defined(__MSVC__)
           "creatable constraint not satisfied",
 #endif
           "scoped<.*>::is_not_convertible_to<.*>", "instance", "int", "int.*&"
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
           ,
           "instance is not convertible to the requested type, verify binding: 'di::bind<T>.to\\(value\\)'?"
 #endif
@@ -1013,13 +1014,13 @@ int main() { di::make_injector<test_config>(); }
 
     test policy_constructible = [] {
       auto errors_ = errors(
-#if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+#if (__clang_major__ == 3) && (__clang_minor__ > 4) || defined(__GCC___) || defined(__MSVC__)
           "creatable constraint not satisfied",
 #endif
-#if defined(__GNUC__) || defined(__clang__)
+#if defined(__GCC__) || defined(__CLANG__)
           "type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>",
 #endif
-#if defined(__GNUC__) && !defined(__clang__)
+#if defined(__GCC__)
           "type<.*>::not_allowed_by.*int", "type<.*>::not_allowed_by.*double", "type<.*>::not_allowed_by.*float"
 #else
           "type<int>::not_allowed_by", "type<double>::not_allowed_by", "type<float>::not_allowed_by"
@@ -1049,18 +1050,18 @@ int main() { di::make_injector<test_config>(); }
 
     test create_error_with_call_stack = [] {
       auto errors_ = errors(
-#if (__clang_major__ == 3) && (__clang_minor__ > 4) || (defined(__GNUC___) && !defined(__clang__)) || defined(_MSC_VER)
+#if (__clang_major__ == 3) && (__clang_minor__ > 4) || defined(__GCC___) || defined(__MSVC__)
           "creatable constraint not satisfied",
 #endif
           "abstract_type<.*>::is_not_bound",
-#if defined(__GNUC__) && !defined(__clang__)
+#if defined(__GCC__)
           "creating<.*>.*c", "creating<.*>.*c1", "creating<.*>.*c2"
-#elif defined(_MSC_VER)
+#elif defined(__MSVC__)
           "creating<.*>", "=.*c", "creating<.*>", "=.*c1", "creating<.*>", "=.*c2"
 #else
           "creating<c>", "creating<c1>", "creating<c2>"
 #endif
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
           ,
           "create<c>()", "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?"
 #endif
@@ -1089,9 +1090,9 @@ int main() { di::make_injector<test_config>(); }
 
     test ctor_limit_out_of_range = [] {
       auto errors_ = errors(
-#if defined(__GNUC__) && !defined(__clang__)
+#if defined(__GCC__)
           "type<.*>::has_to_many_constructor_parameters::max<.*>.*= 3.*=.*c"
-#elif defined(_MSC_VER)
+#elif defined(__MSVC__)
           "type<.*>::has_to_many_constructor_parameters::max<3>", "T=.*c"
 #else
           "type<.*c>::has_to_many_constructor_parameters::max<3>"
@@ -1106,9 +1107,9 @@ int main() { di::make_injector<test_config>(); }
 
     test injector_ctor_ambiguous = [] {
       auto errors_ = errors(
-#if defined(__GNUC__) && !defined(__clang__)
+#if defined(__GCC__)
           "type<.*>::has_to_many_constructor_parameters::max<.*>.*= 10.*=.*ctor"
-#elif defined(_MSC_VER)
+#elif defined(__MSVC__)
           "type<.*>::has_to_many_constructor_parameters::max<10>", "T=.*ctor"
 #else
           "type<.*ctor>::has_to_many_constructor_parameters::max<10>"
@@ -1121,9 +1122,9 @@ int main() { di::make_injector<test_config>(); }
 
     test ctor_number_of_args_is_not_equal = [] {
       auto errors_ = errors(
-#if defined(__GNUC__) && !defined(__clang__)
+#if defined(__GCC__)
           "type<.*>::has_ambiguous_number_of_constructor_parameters::given<.*>::expected<.*>.*= 4.*= 2.*=.*c"
-#elif defined(_MSC_VER)
+#elif defined(__MSVC__)
           "type<.*>::has_ambiguous_number_of_constructor_parameters::given<2>::expected<4>", "T=.*c"
 #else
           "type<.*c>::has_ambiguous_number_of_constructor_parameters::given<2>::expected<4>"
@@ -1229,7 +1230,7 @@ int main() { di::make_injector<test_config>(); }
       expect_compile_fail("", errors(), struct provider{}; int main() { di::bind<int>().create<int>(provider{}); });
     };
 
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
     test access_dependency_is_referable = [] {
       expect_compile_fail("<include> type_traits", errors(), int main() {
         using type = std::remove_reference_t<decltype(di::bind<int>())>::is_referable<int>;

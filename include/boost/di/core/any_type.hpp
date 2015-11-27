@@ -50,7 +50,7 @@ struct any_type_ref {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T>{});
   }
 
-#if defined(__GNUC__) && !defined(__clang__)  // __pph__
+#if defined(__GCC__)  // __pph__
   template <class T, class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector, TRefError>::value),
             class = BOOST_DI_REQUIRES(is_creatable__<T&&, TInjector, TError>::value)>
   operator T &&() const {
@@ -92,7 +92,7 @@ struct any_type_1st_ref {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T>{});
   }
 
-#if defined(__GNUC__) && !defined(__clang__)  // __pph__
+#if defined(__GCC__)  // __pph__
   template <class T, class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value),
             class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector, TRefError>::value),
             class = BOOST_DI_REQUIRES(is_creatable__<T&&, TInjector, TError>::value)>
@@ -137,7 +137,7 @@ struct any_type_ref {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
   }
 
-#if defined(__GNUC__) && !defined(__clang__)  // __pph__
+#if defined(__GCC__)  // __pph__
   template <class T, class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector>::value)>
   operator T &&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T&&>{});
@@ -174,7 +174,7 @@ struct any_type_1st_ref {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
   }
 
-#if defined(__GNUC__) && !defined(__clang__)  // __pph__
+#if defined(__GCC__)  // __pph__
   template <class T, class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value),
             class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector>::value)>
   operator T &&() const {
@@ -217,7 +217,7 @@ struct any_type_ref_fwd {
   template <class T>
   operator T&() const;
 
-#if defined(__GNUC__) && !defined(__clang__)  // __pph__
+#if defined(__GCC__)  // __pph__
   template <class T>
   operator T &&() const;
 #endif  // __pph__
@@ -244,7 +244,7 @@ struct any_type_1st_ref_fwd {
   template <class T, class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)>
   operator T&() const;
 
-#if defined(__GNUC__) && !defined(__clang__)  // __pph__
+#if defined(__GCC__)  // __pph__
   template <class T, class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)>
   operator T &&() const;
 #endif  // __pph__

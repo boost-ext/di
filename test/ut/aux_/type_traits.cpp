@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <set>
+#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/fwd.hpp"
 #include "common/common.hpp"
@@ -89,7 +90,7 @@ test is_braces_constructible_types = [] {
   static_expect(is_braces_constructible<agg1>::value);
 
   static_expect(!is_braces_constructible<agg1, int, double>::value);
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
   static_expect(is_braces_constructible<agg1, int>::value);
   static_expect(is_braces_constructible<agg2, int&>::value);
   static_expect(is_braces_constructible<agg2, int&, double>::value);

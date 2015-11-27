@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include <type_traits>
+#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/concepts/providable.hpp"
 #include "boost/di/providers/heap.hpp"
 #include "boost/di/providers/stack_over_heap.hpp"
@@ -29,7 +30,7 @@ class provider_private_access {
   }
 };
 
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
 test private_access = [] {
   static_expect(std::is_same<provider<provider_private_access>::requires_<get, is_creatable>,
                              providable<provider_private_access>>::value);

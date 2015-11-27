@@ -62,7 +62,7 @@ struct referable<const T&, TDependency> {
   using type = aux::conditional_t<TDependency::template is_referable<const T&>::value, const T&, T>;
 };
 
-#if defined(_MSC_VER)  // __pph__
+#if defined(__MSVC__)  // __pph__
 template <class T, class TDependency>
 struct referable<T&&, TDependency> {
   using type = aux::conditional_t<TDependency::template is_referable<T&&>::value, T&&, T>;
@@ -72,7 +72,7 @@ struct referable<T&&, TDependency> {
 template <class T, class TDependency>
 using referable_t = typename referable<T, TDependency>::type;
 
-#if defined(_MSC_VER)  // __pph__
+#if defined(__MSVC__)  // __pph__
 template <class T, class TInjector>
 inline auto build(TInjector&& injector) noexcept {
   return T{static_cast<TInjector&&>(injector)};
@@ -248,7 +248,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
 
   template <class TInjector, class... TArgs>
   explicit injector(const from_injector&, TInjector&& injector, const aux::type_list<TArgs...>&)noexcept
-#if defined(_MSC_VER)  // __pph__
+#if defined(__MSVC__)  // __pph__
       : pool_t {
     copyable_t<deps>{}, pool_t { build<TArgs>(static_cast<TInjector&&>(injector))... }
   }

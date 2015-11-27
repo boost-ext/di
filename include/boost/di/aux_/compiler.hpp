@@ -7,25 +7,18 @@
 #ifndef BOOST_DI_AUX_COMPILER_HPP
 #define BOOST_DI_AUX_COMPILER_HPP
 
-#if defined(__clang__)
-#pragma clang diagnostic error "-Wundefined-inline"
-#pragma clang diagnostic error "-Wundefined-internal"
+#if defined(__clang__)  // clang, clang-cl
+#define __CLANG__
 #define BOOST_DI_UNUSED __attribute__((unused))
 #define BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
 #define BOOST_DI_TYPE_WKND(T)
-#elif defined(__GNUC__)
-#if (__GNUC__ < 6)  // __pph__
-#pragma GCC diagnostic error "-Werror"
-#endif  // __pph__
+#elif defined(__GNUC__)  // gcc
+#define __GCC__
 #define BOOST_DI_UNUSED __attribute__((unused))
 #define BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
 #define BOOST_DI_TYPE_WKND(T)
-#elif defined(_MSC_VER)
-#pragma warning(disable : 4503)  // decorated name length exceeded, name was truncated
-#pragma warning(disable : 4822)  // local class member function does not have a body
-#pragma warning(disable : 4505)  // unreferenced local function has been removed
-//#pragma warning(error : 4506)    // no definition for inline function
-//#pragma warning(error : 4996)  // deprecated
+#elif defined(_MSC_VER)  // msvc
+#define __MSVC__
 #define __has_include(...) 0
 #define BOOST_DI_UNUSED
 #define BOOST_DI_DEPRECATED(...) \
