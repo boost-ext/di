@@ -15,10 +15,10 @@
 namespace di = boost::di;
 
 //<-
-#if defined(_MSC_VER)
+#if defined(__MSVC__)
 int main() {}
 #else
-#if defined(__clang__)
+#if defined(__CLANG__)
 #pragma clang diagnostic ignored "-Wgnu-string-literal-operator-template"
 #pragma clang diagnostic ignored "-Wdollar-in-identifier-extension"
 
@@ -27,7 +27,7 @@ int main() {}
 #else
 #pragma clang diagnostic ignored "-Wattributes"
 #endif
-#elif defined(__GNUC__)
+#elif defined(__GCC__)
 #pragma GCC diagnostic ignored "-Wattributes"
 #endif
 

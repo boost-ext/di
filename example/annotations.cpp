@@ -50,8 +50,8 @@ annotations2::annotations2(int i1, int i2, int i3) {
 }
 
 //<-
-#if !defined(_MSC_VER)
-#if defined(__clang__)
+#if !defined(__MSVC__)
+#if defined(__CLANG__)
 #pragma clang diagnostic ignored "-Wgnu-string-literal-operator-template"
 #endif
 
@@ -66,7 +66,7 @@ constexpr auto operator""_s() {
 //->
 
 //<-
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
 //->
 class annotations3 {
  public:
@@ -98,7 +98,7 @@ int main() {
   }
 
 //<-
-#if !defined(_MSC_VER)
+#if !defined(__MSVC__)
   //->
   {
     /*<<make injector and bind named parameters>>*/
