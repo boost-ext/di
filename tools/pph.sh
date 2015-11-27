@@ -71,7 +71,7 @@ pph() {
             g++ -P -E -I. -fpreprocessed - 2>/dev/null | \
 			sed "s/clang-format\(.*\)/\/\/ clang-format\1/g" | \
             sed "s/^##define/#define/g"
-    tail -n +10 "boost/di/aux_/preprocessor.hpp" | head -n -2 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
+    tail -n +11 "boost/di/aux_/preprocessor.hpp" | head -n -2 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
     tail -n +15 "boost/di/inject.hpp" | head -n -2 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g"
     cd .. && rm -rf tmp
     echo "BOOST_DI_NAMESPACE_END"

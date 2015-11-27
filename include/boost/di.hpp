@@ -2721,7 +2721,6 @@ class heap {
   }
 };
 }
-#include "boost/di/aux_/compiler.hpp"
 #define BOOST_DI_IF(cond, t, f) BOOST_DI_IF_I(cond, t, f)
 #define BOOST_DI_REPEAT(i, m, ...) BOOST_DI_REPEAT_N(i, m, __VA_ARGS__)
 #define BOOST_DI_CAT(a, ...) BOOST_DI_PRIMITIVE_CAT(a, __VA_ARGS__)
