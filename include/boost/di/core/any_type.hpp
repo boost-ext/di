@@ -206,7 +206,7 @@ struct any_type_fwd {
 
  private:
   template <class T>
-  operator const T&() const = delete;
+  operator const T&() const;
 };
 
 template <class TParent>
@@ -233,7 +233,7 @@ struct any_type_1st_fwd {
 
  private:
   template <class T, class = BOOST_DI_REQUIRES(!aux::is_convertible<TParent, T>::value)>
-  operator const T&() const = delete;
+  operator const T&() const;
 };
 
 template <class TParent>
