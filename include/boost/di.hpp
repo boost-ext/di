@@ -2901,5 +2901,4 @@ BOOST_DI_NAMESPACE_END
 #pragma GCC diagnostic pop
 #pragma GCC diagnostic error "-Wdeprecated-declarations"
 #elif defined(__MSVC__)
-#pragma warning(pop)
 #endif

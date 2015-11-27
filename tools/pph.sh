@@ -92,7 +92,7 @@ pph() {
     echo "#pragma GCC diagnostic pop"
     echo "#pragma GCC diagnostic error \"-Wdeprecated-declarations\""
     echo "#elif defined(__MSVC__)"
-	echo "#pragma warning(pop)"
+	#echo "#pragma warning(pop)"
     echo "#endif"
     echo
 }
