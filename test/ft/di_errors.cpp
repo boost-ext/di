@@ -405,6 +405,32 @@ test bind_any_of_not_related_v = [] {
 };
 #endif
 
+test bind_deduced_not_related = [] {
+  auto errors_ = errors("constraint not satisfied",
+#if defined(__MSVC__)
+                        "type_<.*>::is_not_related_to<a>", "=.*deduced"
+#else
+                        "type_<.*a>::is_not_related_to<.*deduced>"
+#endif
+                        );
+
+  expect_compile_fail("", errors_, struct a{}; int main() { di::make_injector(di::bind<>().to<a>()); });
+};
+
+#if defined(__cpp_variable_templates)
+test bind_deduced_not_related_v = [] {
+  auto errors_ = errors("constraint not satisfied",
+#if defined(__MSVC__)
+                        "type_<.*>::is_not_related_to<a>", "=.*deduced"
+#else
+                        "type_<.*a>::is_not_related_to<.*deduced>"
+#endif
+                        );
+
+  expect_compile_fail("", errors_, struct a{}; int main() { di::make_injector(di::bind<>.to<a>()); });
+};
+#endif
+
 test bind_is_abstract_type = [] {
   auto errors_ = errors("constraint not satisfied",
 #if defined(__MSVC__)

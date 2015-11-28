@@ -65,17 +65,17 @@ class dependency : dependency_base,
   };
 
   template <class T, class>
-  struct deduce_type {
+  struct deduce_traits {
     using type = T;
   };
 
   template <class T>
-  struct deduce_type<void, T> {
+  struct deduce_traits<deduced, T> {
     using type = aux::decay_t<T>;
   };
 
   template <class T, class U>
-  using deduce_type_t = typename deduce_type<T, U>::type;
+  using deduce_traits_t = typename deduce_traits<T, U>::type;
 
  public:
   using scope = TScope;
@@ -123,11 +123,12 @@ class dependency : dependency_base,
     return dependency{object};
   }
 
-  template <class T, BOOST_DI_REQUIRES(externable<T>::value) = 0,
-            BOOST_DI_REQUIRES_MSG(concepts::boundable<deduce_type_t<TExpected, T>, aux::decay_t<T>, aux::valid<>>) = 0>
+  template <
+      class T, BOOST_DI_REQUIRES(externable<T>::value) = 0,
+      BOOST_DI_REQUIRES_MSG(concepts::boundable<deduce_traits_t<TExpected, T>, aux::decay_t<T>, aux::valid<>>) = 0>
   auto to(T&& object) noexcept {
     using dependency =
-        dependency<scopes::instance, deduce_type_t<TExpected, T>, typename ref_traits<T>::type, TName, TPriority>;
+        dependency<scopes::instance, deduce_traits_t<TExpected, T>, typename ref_traits<T>::type, TName, TPriority>;
     return dependency{static_cast<T&&>(object)};
   }
 

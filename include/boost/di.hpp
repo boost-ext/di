@@ -228,7 +228,8 @@ struct injector__ : T {
 };
 template <class, class...>
 struct array;
-template <class, class TExpected = void, class = TExpected, class = no_name, class = void>
+struct deduced {};
+template <class, class TExpected = deduced, class = TExpected, class = no_name, class = void>
 class dependency;
 }
 namespace scopes {
@@ -1419,15 +1420,15 @@ class dependency : dependency_base,
     using type = std::shared_ptr<T>;
   };
   template <class T, class>
-  struct deduce_type {
+  struct deduce_traits {
     using type = T;
   };
   template <class T>
-  struct deduce_type<void, T> {
+  struct deduce_traits<deduced, T> {
     using type = aux::decay_t<T>;
   };
   template <class T, class U>
-  using deduce_type_t = typename deduce_type<T, U>::type;
+  using deduce_traits_t = typename deduce_traits<T, U>::type;
 
  public:
   using scope = TScope;
@@ -1466,11 +1467,12 @@ class dependency : dependency_base,
     using dependency = dependency<scopes::instance, array<type>, std::initializer_list<T>, TName, TPriority>;
     return dependency{object};
   }
-  template <class T, BOOST_DI_REQUIRES(externable<T>::value) = 0,
-            BOOST_DI_REQUIRES_MSG(concepts::boundable<deduce_type_t<TExpected, T>, aux::decay_t<T>, aux::valid<>>) = 0>
+  template <
+      class T, BOOST_DI_REQUIRES(externable<T>::value) = 0,
+      BOOST_DI_REQUIRES_MSG(concepts::boundable<deduce_traits_t<TExpected, T>, aux::decay_t<T>, aux::valid<>>) = 0>
   auto to(T&& object) noexcept {
     using dependency =
-        dependency<scopes::instance, deduce_type_t<TExpected, T>, typename ref_traits<T>::type, TName, TPriority>;
+        dependency<scopes::instance, deduce_traits_t<TExpected, T>, typename ref_traits<T>::type, TName, TPriority>;
     return dependency{static_cast<T&&>(object)};
   }
   template <class T, BOOST_DI_REQUIRES(aux::is_a<injector_base, T>::value) = 0>
