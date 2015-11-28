@@ -408,7 +408,7 @@ test bind_any_of_not_related_v = [] {
 test bind_deduced_not_related = [] {
   auto errors_ = errors("constraint not satisfied",
 #if defined(__MSVC__)
-                        "type_<.*>::is_not_related_to<a>", "=.*deduced"
+                        "type_<.*>::is_not_related_to<.*deduced>", "=.*a"
 #else
                         "type_<.*a>::is_not_related_to<.*deduced>"
 #endif
@@ -421,7 +421,7 @@ test bind_deduced_not_related = [] {
 test bind_deduced_not_related_v = [] {
   auto errors_ = errors("constraint not satisfied",
 #if defined(__MSVC__)
-                        "type_<.*>::is_not_related_to<a>", "=.*deduced"
+                        "type_<.*>::is_not_related_to<.*deduced>", "=.*a"
 #else
                         "type_<.*a>::is_not_related_to<.*deduced>"
 #endif
