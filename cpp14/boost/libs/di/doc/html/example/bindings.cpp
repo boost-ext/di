@@ -72,7 +72,7 @@ int main() {
   auto config = [] { return di::make_injector(di::bind<interface1>().to<implementation1>()); };
 
   /*<<create injector with configuration>>*/
-  auto injector = di::make_injector(di::bind<interface2>().to<implementation2>(), di::bind<int>().to(42),
+  auto injector = di::make_injector(di::bind<interface2>().to<implementation2>(), di::bind<>().to(42),
                                     di::bind<std::string>().named(some_name).to("some_name"), di::bind<float>().to(f),
                                     di::bind<double>().to(d), di::bind<std::function<int()>>().to([] { return 87; }),
                                     di::bind<int>().named(int_name).to(123), config(),
