@@ -57,7 +57,7 @@ struct injector__ : T {
 template <class, class...>
 struct array;
 
-template <class, class TExpected, class = TExpected, class = no_name, class = void>
+template <class, class TExpected = void, class = TExpected, class = no_name, class = void>
 class dependency;
 }  // core
 

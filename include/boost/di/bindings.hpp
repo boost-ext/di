@@ -20,14 +20,19 @@ namespace detail {
 template <class...>
 struct bind;
 
-template <class TScope, class... Ts>
-struct bind<int, TScope, Ts...> {
-  using type = core::dependency<TScope, concepts::any_of<Ts...>>;
+template <class TScope>
+struct bind<int, TScope> {
+  using type = core::dependency<TScope>;
 };
 
 template <class TScope, class T>
 struct bind<int, TScope, T> {
   using type = core::dependency<TScope, T>;
+};
+
+template <class TScope, class... Ts>
+struct bind<int, TScope, Ts...> {
+  using type = core::dependency<TScope, concepts::any_of<Ts...>>;
 };
 
 }  // detail

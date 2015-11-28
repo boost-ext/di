@@ -228,7 +228,7 @@ struct injector__ : T {
 };
 template <class, class...>
 struct array;
-template <class, class TExpected, class = TExpected, class = no_name, class = void>
+template <class, class TExpected = void, class = TExpected, class = no_name, class = void>
 class dependency;
 }
 namespace scopes {
@@ -1418,6 +1418,8 @@ class dependency : dependency_base,
   struct ref_traits<std::shared_ptr<T>&> {
     using type = std::shared_ptr<T>;
   };
+  template <class T, class U>
+  using get_deduced = aux::conditional_t<aux::is_same<T, void>::value, aux::decay_t<U>, T>;
 
  public:
   using scope = TScope;
@@ -1457,9 +1459,10 @@ class dependency : dependency_base,
     return dependency{object};
   }
   template <class T, BOOST_DI_REQUIRES(externable<T>::value) = 0,
-            BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, aux::decay_t<T>, aux::valid<>>) = 0>
+            BOOST_DI_REQUIRES_MSG(concepts::boundable<get_deduced<TExpected, T>, aux::decay_t<T>, aux::valid<>>) = 0>
   auto to(T&& object) noexcept {
-    using dependency = dependency<scopes::instance, TExpected, typename ref_traits<T>::type, TName, TPriority>;
+    using dependency =
+        dependency<scopes::instance, get_deduced<TExpected, T>, typename ref_traits<T>::type, TName, TPriority>;
     return dependency{static_cast<T&&>(object)};
   }
   template <class T, BOOST_DI_REQUIRES(aux::is_a<injector_base, T>::value) = 0>
@@ -1686,13 +1689,17 @@ struct config {
 namespace detail {
 template <class...>
 struct bind;
-template <class TScope, class... Ts>
-struct bind<int, TScope, Ts...> {
-  using type = core::dependency<TScope, concepts::any_of<Ts...>>;
+template <class TScope>
+struct bind<int, TScope> {
+  using type = core::dependency<TScope>;
 };
 template <class TScope, class T>
 struct bind<int, TScope, T> {
   using type = core::dependency<TScope, T>;
+};
+template <class TScope, class... Ts>
+struct bind<int, TScope, Ts...> {
+  using type = core::dependency<TScope, concepts::any_of<Ts...>>;
 };
 }
 template <class... Ts>

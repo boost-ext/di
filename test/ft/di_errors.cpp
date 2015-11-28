@@ -35,11 +35,11 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
     std::stringstream errors;
 
 #if defined(__CLANG__)
-    errors << "-c -Wno-all -Werror -Wno-error=deprecated-declarations";
+    errors << "-Werror";
 #elif defined(__GCC__)
-    errors << "-c -Werror ";
+    errors << "-Werror ";
 #elif defined(__MSVC__)
-    errors << "/c /EHsc /W3 /WX";
+    errors << "/EHsc /W3 /WX";
 #endif
 
     auto include_rgx = std::regex{"<include>"};
@@ -522,6 +522,30 @@ test bind_is_abstract_type_named_v = [] {
                       : i{};
                       struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{})i*){}};
                       int main() { di::make_injector(di::bind<i>.named(dummy{}).to<impl>()); });
+};
+#endif
+
+test bind_deduced_instance_repeated = [] {
+  auto errors_ = errors("constraint not satisfied", "type_<.*int>::is_bound_more_than_once");
+  expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<>().to(42), di::bind<>().to(42)); });
+};
+
+#if defined(__cpp_variable_templates)
+test bind_deduced_instance_repeated_v = [] {
+  auto errors_ = errors("constraint not satisfied", "type_<.*int>::is_bound_more_than_once");
+  expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<>.to(42), di::bind<>.to(42)); });
+};
+#endif
+
+test bind_deduced_instance_repeated_mix = [] {
+  auto errors_ = errors("constraint not satisfied", "type_<.*int>::is_bound_more_than_once");
+  expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>().to(42), di::bind<>().to(42)); });
+};
+
+#if defined(__cpp_variable_templates)
+test bind_deduced_instance_repeated_mix_v = [] {
+  auto errors_ = errors("constraint not satisfied", "type_<.*int>::is_bound_more_than_once");
+  expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>().to(42), di::bind<>.to(42)); });
 };
 #endif
 

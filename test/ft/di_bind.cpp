@@ -45,7 +45,6 @@ struct impl4 : impl1_2 {};
 
 struct impl1_with_i2 : i1 {
   explicit impl1_with_i2(std::shared_ptr<i2> i2) : i2_(i2) {}
-
   void dummy1() override {}
 
   std::shared_ptr<i2> i2_;
@@ -62,6 +61,12 @@ test forward_decl = [] {
   di::make_injector(di::bind<i1>().to<class Impl>());
 };
 
+test bind_to = [] {
+  auto injector = di::make_injector(di::bind<int>().to(42), di::bind<>().to(87l));
+  expect(42 == injector.create<int>());
+  expect(87l == injector.create<long>());
+};
+
 test named_to = [] {
   constexpr auto i = 42;
   constexpr auto d = 87.0;
@@ -74,7 +79,24 @@ test named_to = [] {
   };
 
   auto injector = di::make_injector(di::bind<int>().named(a).to(i), di::bind<double>().to(d).named(b));
+  auto object = injector.create<c>();
 
+  expect(i == object.i_);
+  expect(d == object.d_);
+};
+
+test deduced_named_to = [] {
+  constexpr auto i = 42;
+  constexpr auto d = 87.0;
+
+  struct c {
+    BOOST_DI_INJECT(c, (named = a) int i, (named = b) double d) : i_(i), d_(d) {}
+
+    int i_ = 0;
+    double d_ = 0.0;
+  };
+
+  auto injector = di::make_injector(di::bind<>().named(a).to(i), di::bind<>().to(d).named(b));
   auto object = injector.create<c>();
 
   expect(i == object.i_);
@@ -84,12 +106,10 @@ test named_to = [] {
 test named_polymorphic = [] {
   struct c {
     BOOST_DI_INJECT(explicit c, (named = name)std::shared_ptr<i1> sp) : sp(sp) {}
-
     std::shared_ptr<i1> sp;
   };
 
   auto injector = di::make_injector(di::bind<i1>().named(name).to<impl1>());
-
   auto object = injector.create<c>();
 
   expect(dynamic_cast<impl1 *>(object.sp.get()));
@@ -187,9 +207,7 @@ test any_of_unique = [] {
 
 test bind_int_to_static_value = [] {
   auto injector = di::make_injector(di::bind<int>().to<std::integral_constant<int, 42>>());
-
   auto object = injector.create<int>();
-
   expect(42 == object);
 };
 
@@ -211,25 +229,20 @@ test override_priority_order = [] {
 
 test override_priority_interface = [] {
   auto injector = di::make_injector(di::bind<i1>().to<impl1>(), di::bind<i1>().to<impl1_int>()[di::override]);
-
   auto object = injector.create<std::unique_ptr<i1>>();
   expect(dynamic_cast<impl1_int *>(object.get()));
 };
 
 test override_priority_interface_module = [] {
   auto module = [] { return di::make_injector(di::bind<i1>().to<impl1_int>()); };
-
   auto injector = di::make_injector(module(), di::bind<i1>().to<impl1>()[di::override]);
-
   auto object = injector.create<std::unique_ptr<i1>>();
   expect(dynamic_cast<impl1 *>(object.get()));
 };
 
 test bind_non_interface_in_singleton_scope = [] {
   struct c {};
-
   auto injector = di::make_injector(di::bind<c>().in(di::singleton));
-
   expect(injector.create<std::shared_ptr<c>>() == injector.create<std::shared_ptr<c>>());
 };
 
@@ -323,7 +336,6 @@ test scopes_instance_lambda = [] {
 
 test scopes_instance_lambda_injector = [] {
   auto i = std::make_shared<int>(42);
-
   auto injector = di::make_injector(di::bind<int>().to([&i](const auto &) { return i; }));
 
   {
@@ -346,7 +358,20 @@ test scopes_instance_lambda_injector_mix = [] {
 
   expect(42 == injector.create<short>());
   expect(87 == injector.create<int>());
+  expect(87l == injector.create<long>());
 };
+
+#if 0
+test scopes_instance_deduced_lambda_injector_mix = [] {
+auto injector = di::make_injector(
+di::bind<>().to([] { return short{42}; }), di::bind<>().to(87l),
+di::bind<>().to([](const auto &injector) { return static_cast<int>(injector.template create<long>()); }));
+
+expect(42 == injector.create<short>());
+expect(87 == injector.create<int>());
+expect(87l == injector.create<long>());
+};
+#endif
 
 test instances_ref_cref = [] {
   auto i = 42;
@@ -360,7 +385,6 @@ test instances_ref_cref = [] {
   };
 
   auto injector = make_injector(di::bind<int>().to(i), di::bind<double>().to(d));
-
   auto object = injector.create<refs>();
 
   expect(i == object.i_);
@@ -539,7 +563,7 @@ test multi_bindings_containers = [] {
   };
 
   auto injector = di::make_injector(di::bind<int[]>().to<int, di::named<class Int42>>(), di::bind<int>().to(11),
-                                    di::bind<int>().to(42).named<class Int42>(),
+                                    di::bind<>().to(42).named<class Int42>(),
                                     di::bind<int>().to(87).named<class Int42>()[di::override]);
 
   test(injector.create<std::vector<int>>());

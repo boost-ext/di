@@ -64,6 +64,9 @@ class dependency : dependency_base,
     using type = std::shared_ptr<T>;
   };
 
+  template <class T, class U>
+  using get_deduced = aux::conditional_t<aux::is_same<T, void>::value, aux::decay_t<U>, T>;
+
  public:
   using scope = TScope;
   using expected = TExpected;
@@ -111,9 +114,10 @@ class dependency : dependency_base,
   }
 
   template <class T, BOOST_DI_REQUIRES(externable<T>::value) = 0,
-            BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, aux::decay_t<T>, aux::valid<>>) = 0>
+            BOOST_DI_REQUIRES_MSG(concepts::boundable<get_deduced<TExpected, T>, aux::decay_t<T>, aux::valid<>>) = 0>
   auto to(T&& object) noexcept {
-    using dependency = dependency<scopes::instance, TExpected, typename ref_traits<T>::type, TName, TPriority>;
+    using dependency =
+        dependency<scopes::instance, get_deduced<TExpected, T>, typename ref_traits<T>::type, TName, TPriority>;
     return dependency{static_cast<T&&>(object)};
   }
 
