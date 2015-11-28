@@ -1418,8 +1418,16 @@ class dependency : dependency_base,
   struct ref_traits<std::shared_ptr<T>&> {
     using type = std::shared_ptr<T>;
   };
+  template <class T, class>
+  struct deduce_type {
+    using type = T;
+  };
+  template <class T>
+  struct deduce_type<void, T> {
+    using type = aux::decay_t<T>;
+  };
   template <class T, class U>
-  using get_deduced = aux::conditional_t<aux::is_same<T, void>::value, aux::decay_t<U>, T>;
+  using deduce_type_t = typename deduce_type<T, U>::type;
 
  public:
   using scope = TScope;
@@ -1459,10 +1467,10 @@ class dependency : dependency_base,
     return dependency{object};
   }
   template <class T, BOOST_DI_REQUIRES(externable<T>::value) = 0,
-            BOOST_DI_REQUIRES_MSG(concepts::boundable<get_deduced<TExpected, T>, aux::decay_t<T>, aux::valid<>>) = 0>
+            BOOST_DI_REQUIRES_MSG(concepts::boundable<deduce_type_t<TExpected, T>, aux::decay_t<T>, aux::valid<>>) = 0>
   auto to(T&& object) noexcept {
     using dependency =
-        dependency<scopes::instance, get_deduced<TExpected, T>, typename ref_traits<T>::type, TName, TPriority>;
+        dependency<scopes::instance, deduce_type_t<TExpected, T>, typename ref_traits<T>::type, TName, TPriority>;
     return dependency{static_cast<T&&>(object)};
   }
   template <class T, BOOST_DI_REQUIRES(aux::is_a<injector_base, T>::value) = 0>

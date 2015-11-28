@@ -35,9 +35,9 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
     std::stringstream errors;
 
 #if defined(__CLANG__)
-    errors << "-Werror";
+    errors << "";
 #elif defined(__GCC__)
-    errors << "-Werror ";
+    errors << "-Werror";
 #elif defined(__MSVC__)
     errors << "/EHsc /W3 /WX";
 #endif
@@ -526,25 +526,49 @@ test bind_is_abstract_type_named_v = [] {
 #endif
 
 test bind_deduced_instance_repeated = [] {
-  auto errors_ = errors("constraint not satisfied", "type_<.*int>::is_bound_more_than_once");
+  auto errors_ = errors("constraint not satisfied",
+#if defined(__MSVC__)
+                        "type_<.*>::is_bound_more_than_once", "=.*int"
+#else
+                        "type_<.*int>::is_bound_more_than_once"
+#endif
+                        );
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<>().to(42), di::bind<>().to(42)); });
 };
 
 #if defined(__cpp_variable_templates)
 test bind_deduced_instance_repeated_v = [] {
-  auto errors_ = errors("constraint not satisfied", "type_<.*int>::is_bound_more_than_once");
+  auto errors_ = errors("constraint not satisfied",
+#if defined(__MSVC__)
+                        "type_<.*>::is_bound_more_than_once", "=.*int"
+#else
+                        "type_<.*int>::is_bound_more_than_once"
+#endif
+                        );
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<>.to(42), di::bind<>.to(42)); });
 };
 #endif
 
 test bind_deduced_instance_repeated_mix = [] {
-  auto errors_ = errors("constraint not satisfied", "type_<.*int>::is_bound_more_than_once");
+  auto errors_ = errors("constraint not satisfied",
+#if defined(__MSVC__)
+                        "type_<.*>::is_bound_more_than_once", "=.*int"
+#else
+                        "type_<.*int>::is_bound_more_than_once"
+#endif
+                        );
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>().to(42), di::bind<>().to(42)); });
 };
 
 #if defined(__cpp_variable_templates)
 test bind_deduced_instance_repeated_mix_v = [] {
-  auto errors_ = errors("constraint not satisfied", "type_<.*int>::is_bound_more_than_once");
+  auto errors_ = errors("constraint not satisfied",
+#if defined(__MSVC__)
+                        "type_<.*>::is_bound_more_than_once", "=.*int"
+#else
+                        "type_<.*int>::is_bound_more_than_once"
+#endif
+                        );
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>().to(42), di::bind<>.to(42)); });
 };
 #endif

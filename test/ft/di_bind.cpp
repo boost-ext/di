@@ -361,17 +361,12 @@ test scopes_instance_lambda_injector_mix = [] {
   expect(87l == injector.create<long>());
 };
 
-#if 0
-test scopes_instance_deduced_lambda_injector_mix = [] {
-auto injector = di::make_injector(
-di::bind<>().to([] { return short{42}; }), di::bind<>().to(87l),
-di::bind<>().to([](const auto &injector) { return static_cast<int>(injector.template create<long>()); }));
-
-expect(42 == injector.create<short>());
-expect(87 == injector.create<int>());
-expect(87l == injector.create<long>());
+test scopes_instance_deduced = [] {
+  auto injector = di::make_injector(di::bind<>().to(short{42}), di::bind<>().to(87l), di::bind<>().to(123));
+  expect(42 == injector.create<short>());
+  expect(123 == injector.create<int>());
+  expect(87l == injector.create<long>());
 };
-#endif
 
 test instances_ref_cref = [] {
   auto i = 42;
