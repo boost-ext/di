@@ -576,25 +576,13 @@ test bind_deduced_instance_repeated_v = [] {
 #endif
 
 test bind_deduced_instance_repeated_mix = [] {
-  auto errors_ = errors("constraint not satisfied",
-#if defined(__MSVC__)
-                        "type_<.*>::is_bound_more_than_once", "=.*int"
-#else
-                        "type_<.*int>::is_bound_more_than_once"
-#endif
-                        );
+  auto errors_ = errors("constraint not satisfied", "type_<.*int>::is_bound_more_than_once");
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>().to(42), di::bind<>().to(42)); });
 };
 
 #if defined(__cpp_variable_templates)
 test bind_deduced_instance_repeated_mix_v = [] {
-  auto errors_ = errors("constraint not satisfied",
-#if defined(__MSVC__)
-                        "type_<.*>::is_bound_more_than_once", "=.*int"
-#else
-                        "type_<.*int>::is_bound_more_than_once"
-#endif
-                        );
+  auto errors_ = errors("constraint not satisfied", "type_<.*int>::is_bound_more_than_once");
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>().to(42), di::bind<>.to(42)); });
 };
 #endif
