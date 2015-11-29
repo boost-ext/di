@@ -105,6 +105,7 @@ test-suite quick_user_guide :
     [ example quick_user_guide/bindings3.cpp ]
     [ example quick_user_guide/bindings4.cpp ]
     [ example quick_user_guide/bindings5.cpp ]
+    [ example quick_user_guide/bindings6.cpp ]
     [ example quick_user_guide/injections1.cpp ]
     [ example quick_user_guide/injections2.cpp ]
     [ example quick_user_guide/injections3.cpp ]
