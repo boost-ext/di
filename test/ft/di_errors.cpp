@@ -35,7 +35,7 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
     std::stringstream errors;
 
 #if defined(__CLANG__)
-    errors << "";
+    errors << "-Werror";
 #elif defined(__GCC__)
     errors << "-Werror";
 #elif defined(__MSVC__)

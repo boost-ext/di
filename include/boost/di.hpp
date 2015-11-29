@@ -41,10 +41,16 @@ BOOST_DI_CFG_FWD
 #define BOOST_DI_TYPE_WKND(T) (T && )
 #endif
 #if defined(__CLANG__)
+#if (!BOOST_DI_CFG_DIAGNOSTICS_LEVEL)
+#pragma clang diagnostic error "-Wdeprecated-declarations"
+#else
+#pragma clang diagnostic warning "-Wdeprecated-declarations"
+#endif
 #pragma clang diagnostic push
 #pragma clang diagnostic error "-Wundefined-inline"
 #pragma clang diagnostic error "-Wundefined-internal"
 #elif defined(__GCC__)
+#pragma GCC diagnostic error "-Wdeprecated-declarations"
 #pragma GCC diagnostic push
 #if (__GNUC__ < 6)
 #pragma GCC diagnostic error "-Werror"
@@ -2907,12 +2913,6 @@ BOOST_DI_NAMESPACE_END
 #endif
 #if defined(__CLANG__)
 #pragma clang diagnostic pop
-#if (!BOOST_DI_CFG_DIAGNOSTICS_LEVEL)
-#pragma clang diagnostic error "-Wdeprecated-declarations"
-#else
-#pragma clang diagnostic warning "-Wdeprecated-declarations"
-#endif
 #elif defined(__GCC__)
 #pragma GCC diagnostic pop
-#pragma GCC diagnostic error "-Wdeprecated-declarations"
 #endif

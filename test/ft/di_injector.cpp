@@ -12,7 +12,6 @@
 namespace di = boost::di;
 
 struct empty {};
-
 struct i1 {
   virtual ~i1() noexcept = default;
   virtual void dummy1() = 0;
@@ -27,18 +26,14 @@ struct impl1 : i1 {
 struct impl2 : i2 {
   void dummy2() override {}
 };
-
 struct complex1 {
   explicit complex1(const std::shared_ptr<i1>& i1) : i1_(i1) {}
-
   std::shared_ptr<i1> i1_;
 };
-
 struct complex2 {
   int i;
   complex1 c1;
 };
-
 struct complex3 {
   complex2 c2;
 };
