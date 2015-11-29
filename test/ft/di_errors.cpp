@@ -997,6 +997,37 @@ int main() { di::make_injector<test_config>(); }
                           });
     };
 
+    test exposed_type_injector_conversions_fail = [] {
+      auto errors_ = errors(
+#if (__clang_major__ == 3) && (__clang_minor__ > 4) || defined(__GCC___) || defined(__MSVC__)
+          "creatable constraint not satisfied",
+#endif
+          "abstract_type<.*>::is_not_bound"
+#if !defined(__MSVC__)
+          ,
+          "create<T>", "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?"
+#endif
+          );
+
+      expect_compile_fail("<include> memory", errors_,
+                          struct i1 {
+                            virtual ~i1() noexcept = default;
+                            virtual void dummy() = 0;
+                          };
+                          struct impl1
+                          : i1{void dummy() override{}};
+                          struct i2 {
+                            virtual ~i2() noexcept = default;
+                            virtual void dummy() = 0;
+                          };
+                          int main() {
+                            auto module = []() -> di::injector<i1> {
+                              return di::make_injector(di::bind<i1>().to<impl1>());
+                            };
+                            di::injector<i2> injector = di::make_injector(module());
+                          });
+    };
+
     test injector_singleton_by_copy = [] {
       auto errors_ = errors(
 #if (__clang_major__ == 3) && (__clang_minor__ > 4) || defined(__GCC___) || defined(__MSVC__)
