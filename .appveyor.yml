@@ -31,5 +31,5 @@ install:
   - set PATH=%PATH%;mingw64\bin
 
 build_script:
-  - mingw32-make BS=cmake GENERATOR="MinGW Makefiles" all
+  - mingw32-make all
 

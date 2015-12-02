@@ -20,7 +20,7 @@ all_bjam:
 
 all_cmake:
 	@-mkdir build
-	@cd build && cmake -G "$(GENERATOR)" .. && cmake --build . && ctest --output-on-failure
+	@cd build && cmake .. && cmake --build . && ctest --output-on-failure
 
 clean: clean_$(BS)
 
