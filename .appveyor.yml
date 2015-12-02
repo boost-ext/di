@@ -7,14 +7,6 @@
 os:
   - Visual Studio 2015
 
-platform:
-  - x86
-  - x64
-
-configuration:
-  - Debug
-  - Release
-
 branches:
   except:
     - gh-pages
@@ -22,27 +14,22 @@ branches:
 
 environment:
   fast_finish: true
-  global:
-    DRMEMORY: "drmemory -light -batch -exit_code_if_errors 1"
 
   matrix:
-  - CFG: cmake
-  - CFG: bjam
-  - CFG: BENCHMARK
+  #- CFG: BS=cmake TOOLSET=msvc-14.0 MEMCHECK=DRMEMORY VARIANT=analyze
+  #- CFG: BS=cmake GENERATOR="Visual Studio 14 2015" MEMCHECK=DRMEMORY VARIANT=analyze
+  - CFG: BS=cmake GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY
 
 matrix:
   fast_finish: true
 
 install:
   - cinst drmemory
+  - appveyor DownloadFile http://downloads.sourceforge.net/mingw-w64/x86_64-5.2.0-release-posix-seh-rt_v4-rev1.7z
+  - 7z x x86_64-5.2.0-release-posix-seh-rt_v4-rev1.7z > nul
   - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat
-  - git submodule update --init --recursive
-  - IF %CFG%==bjam cd build && bootstrap.bat --with-toolset=msvc-14.0
-  - set PATH=C:\Program Files (x86)\Dr. Memory\bin;%PATH%
+  - set PATH=%PATH%;mingw64\bin
 
 build_script:
-  - IF %CFG%==bjam pushd . && cd test && ..\build\b2 -sBOOST_ROOT=..\build -j2 -q --toolset=msvc-14.0 analyze --memcheck="%DRMEMORY%" && popd
-  - IF %CFG%==bjam pushd . && cd example && ..\build\b2 -sBOOST_ROOT=..\build -j2 -q --toolset=msvc-14.0 --memcheck="%DRMEMORY%" && popd
-  - IF %CFG%==cmake pushd . && cd build && cmake .. && cmake --build . && ctest --output-on-failure
-  - IF %CFG%==BENCHMARK pushd . && cd build && cmake .. && cmake --build . && set BENCHMARK=ON && ctest --output-on-failure
+  - mingw32-make BS=cmake GENERATOR="MinGW Makefiles" all
 

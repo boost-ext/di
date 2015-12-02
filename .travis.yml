@@ -6,13 +6,14 @@
 #
 language: cpp
 sudo: false
+dist: precise
+group: edge
 env:
   global:
   - secure: "A27gNApbElRr3fqZXifVPKkB+xbxMYDFINGk2RDqul1X1Zg51M7e+ohHO9BwhEYiOGmCnFfbsVUP11XyFIH6kzWmxw9mhy8YDglbYfeyu6grxtU3mHElz8W7wO5OCPFPWXQf23sVYE8AWyjj6M+t3oyLJhPXCcYI7uMHEQm10CQ=" # GH_TOKEN
   - secure: "S1svDigJfTlkxkkp14OOiWje6nT1j06k3cAAvbnI6lNGbf1VxQlJ/Q5SAxEV8ITYvDnJGy/yaoT/tipa5pgFVJ2qpAx/zo8oWGfDAyBSk8LWzuocU5rShvq3eJDJW4199RSdGalXtS1C+7hohJNSy9QP4iODvQA5j90+fbCPdh0=" # BII_PASSWORD
   - secure: "eTBgFApNEFiNdpyV8wmGR0VQG8UgGOWBARyuGl7HPkz7A1pAMlUJM+U/kVSwSNqTroNThc223FSbQc6WM3DGXk+QPrOR7fdpKZSzlBAbbAN9BtpqDDbevTO22988t9rSzeyJhjVeUOpggww2GgyQqLiVdoGnLJzS7GWlYmhbtcM=" # COVERALLS_REPO_TOKEN
   - BII_USER=krzysztofjusiak
-  - VALGRIND=--memcheck="valgrind --leak-check=full --error-exitcode=1"
 
 branches:
   except:
@@ -29,9 +30,9 @@ matrix:
         packages:
         - xsltproc
   - os: linux
-    env: STYLE_CHECK=ON
+    env: CHECK=ON
   - os: linux
-    env: BJAM=clang MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=/usr/local/clang-3.4/bin/clang++
+    env: BS=bjam TOOLSET=clang MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=/usr/local/clang-3.4/bin/clang++
     addons:
       apt:
         packages:
@@ -44,7 +45,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.4
   - os: linux
-    env: BJAM=clang MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=/usr/local/clang-3.4/bin/clang++
+    env: BS=bjam TOOLSET=clang MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=/usr/local/clang-3.4/bin/clang++
     addons:
       apt:
         packages:
@@ -57,7 +58,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.4
   - os: linux
-    env: BJAM=clang VARIANT=analyze COMPILER=/usr/local/clang-3.4/bin/clang++
+    env: BS=bjam TOOLSET=clang VARIANT=analyze COMPILER=/usr/local/clang-3.4/bin/clang++
     addons:
       apt:
         packages:
@@ -70,7 +71,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.4
   - os: linux
-    env: BJAM=clang MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.5
+    env: BS=bjam TOOLSET=clang MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.5
     addons:
       apt:
         packages:
@@ -83,7 +84,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.5
   - os: linux
-    env: BJAM=clang MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.5
+    env: BS=bjam TOOLSET=clang MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.5
     addons:
       apt:
         packages:
@@ -95,7 +96,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.5
   - os: linux
-    env: BJAM=clang MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.6
+    env: B=bjam TOOLSET=clang MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.6
     addons:
       apt:
         packages:
@@ -108,7 +109,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.6
   - os: linux
-    env: BJAM=clang MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.6
+    env: BS=bjam TOOLSET=clang MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.6
     addons:
       apt:
         packages:
@@ -120,7 +121,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.6
   - os: linux
-    env: BJAM=clang MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.7
+    env: BS=bjam TOOLSET=clang MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.7
     addons:
       apt:
         packages:
@@ -133,7 +134,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.7
   - os: linux
-    env: BJAM=clang MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.7
+    env: BS=bjam TOOLSET=clang MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.7
     addons:
       apt:
         packages:
@@ -145,7 +146,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.7
   - os: linux
-    env: CMAKE=ON COMPILER=clang++-3.7
+    env: BS=cmake COMPILER=clang++-3.7
     addons:
       apt:
         packages:
@@ -157,7 +158,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.7
   - os: linux
-    env: BJAM=clang MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.8
+    env: BS=bjam TOOLSET=clang MEMCHECK=${VALGRIND} BENCHMARK=QUICK COMPILER=clang++-3.8
     addons:
       apt:
         packages:
@@ -170,7 +171,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise
   - os: linux
-    env: BJAM=clang MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.8
+    env: BS=bjam TOOLSET=clang MEMCHECK=${VALGRIND} LIBCXX=ON COMPILER=clang++-3.8
     addons:
       apt:
         packages:
@@ -182,7 +183,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise
   - os: linux
-    env: CMAKE=ON COMPILER=clang++-3.8
+    env: BS=cmake COMPILER=clang++-3.8
     addons:
       apt:
         packages:
@@ -194,7 +195,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise
   - os: linux
-    env: BJAM=gcc GCOV=gcov-5 VARIANT=coverage MEMCHECK=${VALGRIND} BIICODE=ON COMPILER=g++-5
+    env: BS=bjam TOOLSET=gcc GCOV=gcov-5 VARIANT=coverage MEMCHECK=${VALGRIND} BIICODE=ON COMPILER=g++-5
     addons:
       apt:
         packages:
@@ -205,7 +206,7 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
   - os: linux
-    env: BJAM=gcc VARIANT=analyze COMPILER=g++-5
+    env: BS=bjam TOOLSET=gcc VARIANT=analyze COMPILER=g++-5
     addons:
       apt:
         packages:
@@ -215,7 +216,7 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
   - os: linux
-    env: BJAM=gcc BENCHMARK=QUICK COMPILER=g++-5
+    env: BS=bjam TOOLSET=gcc BENCHMARK=QUICK COMPILER=g++-5
     addons:
       apt:
         packages:
@@ -226,7 +227,7 @@ matrix:
         sources:
         - ubuntu-toolchain-r-test
   - os: linux
-    env: CMAKE=ON BENCHMARK=ON COMPILER=g++-5
+    env: BS=cmake BENCHMARK=ON COMPILER=g++-5
     addons:
       apt:
         packages:
@@ -238,40 +239,39 @@ matrix:
         - ubuntu-toolchain-r-test
   - os: osx
     osx_image: xcode6.1
-    env: BJAM=clang COMPILER=clang++
+    env: BS=bjam TOOLSET=clang COMPILER=clang++
   - os: osx
     osx_image: xcode6.1
-    env: CMAKE=ON COMPILER=clang++
+    env: BS=bjam COMPILER=clang++
   #- os: osx
     #osx_image: xcode6.4
-    #env: BJAM=clang COMPILER=clang++
+    #env: BS=bjam TOOLSET=clang COMPILER=clang++
   #- os: osx
     #osx_image: xcode6.4
-    #env: CMAKE=ON COMPILER=clang++
+    #env: BS=cmake COMPILER=clang++
   - os: osx
     osx_image: xcode7
-    env: BJAM=clang COMPILER=clang++
+    env: BS=bjam TOOLSET=clang COMPILER=clang++
   - os: osx
     osx_image: xcode7
-    env: CMAKE=ON COMPILER=clang++
+    env: BS=cmake COMPILER=clang++
   - os: osx
     osx_image: xcode7.1
-    env: BJAM=clang COMPILER=clang++
+    env: BS=bjam TOOLSET=clang COMPILER=clang++
   - os: osx
     osx_image: xcode7.1
-    env: CMAKE=ON BENCHMARK=ON COMPILER=clang++
+    env: BS=bjam BENCHMARK=ON COMPILER=clang++
   - os: osx
     osx_image: xcode7.2b1
-    env: BJAM=clang COMPILER=clang++
+    env: BS=bjam TOOLSET=clang COMPILER=clang++
   - os: osx
     osx_image: xcode7.2b1
-    env: CMAKE=ON BENCHMARK=ON COMPILER=clang++
+    env: BS=cmake BENCHMARK=ON COMPILER=clang++
 
 before_script:
 - git config --global user.name "Travis-CI"
 - git config --global user.email "travis@ci.net"
 - git config --global push.default simple
-- (cd build && ./bootstrap.sh)
 
 before_install:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then (brew install cmake); fi
@@ -285,18 +285,10 @@ install:
   && export LD_LIBRARY_PATH="${TRAVIS_BUILD_DIR}/libcxx/lib:$LD_LIBRARY_PATH"; fi
 
 script:
-- if [ "${BJAM}" != "" ]; then (cd test && ../build/b2 -sBOOST_ROOT=../build -j2 -q
-  --toolset=${BJAM} --user-config=../user-config.jam debug-symbols=off
-  ${VARIANT} ${MEMCHECK} cxxflags=" $CXXFLAGS" linkflags=" $LDFLAGS"); fi
-- if [ "${BJAM}" != "" ]; then (cd example && ../build/b2 -sBOOST_ROOT=../build -j2 -q
-  --toolset=${BJAM} --user-config=../user-config.jam debug-symbols=off
-  ${MEMCHECK} cxxflags=" $CXXFLAGS" linkflags=" $LDFLAGS"); fi
-- if [ "${CMAKE}" != "" ]; then (cd build && cmake
-  .. && cmake --build . && travis_wait ctest --output-on-failure); fi
-- if [ "${STYLE_CHECK}" != "" ]; then (find include example test -iname "*.hpp" -or -iname "*.cpp" |
-  xargs clang-format - && exit `git ls-files -m | wc -l`); fi
-- if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (git
-  clone --quiet --recursive --depth=1 --single-branch https://github.com/boostorg/boost.git
+  travis_wait make all
+- if [ "${CHECK}" != "" ]; then (make check); fi
+- if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (
+  make doc && git clone --quiet --recursive --depth=1 --single-branch https://github.com/boostorg/boost.git
   && cd boost && ./bootstrap.sh && ./b2 headers && mkdir libs/di && cp -r ../build ../doc ../example ../include libs/di
   && cd libs/di/doc && ../build/b2 -sBOOST_ROOT=../build && TRY_IT_ONLINE=ON scripts/update_html.sh
   && git clone https://github.com/krzysztof-jusiak/di.git
