@@ -83,12 +83,12 @@ struct wrapper_impl<T, di::aux::type_list<X, Ts...>, BOOST_DI_REQUIRES(!di::aux:
 
  private:
   template <class TEvent, class... Tx, BOOST_DI_REQUIRES(di::aux::is_callable_with<T, TEvent, Ts...>::value) = 0>
-  auto operator()(const TEvent &event, const std::tuple<Ts...> &args) const {
+  auto operator()(const TEvent &event, const std::tuple<Ts...> &args) const noexcept {
     return reinterpret_cast<const T &> (*this)(event, std::get<Ts>(args)...);
   }
 
   template <class TEvent, class... Tx, BOOST_DI_REQUIRES(!di::aux::is_callable_with<T, TEvent, Ts...>::value) = 0>
-  bool operator()(const TEvent &, const std::tuple<Ts...> &) const {
+  bool operator()(const TEvent &, const std::tuple<Ts...> &) const noexcept {
     return typename guard_action<T>::template is_not_callable<TEvent, Ts...>{};
   }
 
@@ -179,20 +179,20 @@ template <class...>
 struct transition {
   using type = transition;
   template <class T>
-  auto operator/(const T &) {
+  auto operator/(const T &) const noexcept {
     return merge_transition_t<transition, get_transition_t<T>>{};
   }
 };
 
 struct always {
   template <class TEvent>
-  auto operator()(const TEvent &) const {
+  auto operator()(const TEvent &) const noexcept {
     return true;
   }
 };
 struct none {
   template <class TEvent>
-  void operator()(const TEvent &) const {}
+  void operator()(const TEvent &) const noexcept {}
 };
 
 template <class T>
@@ -200,7 +200,7 @@ struct not_ : type_op {
   not_() = default;
   explicit not_(wrapper<T> t) noexcept : t_(t) {}
   template <class TEvent>
-  auto operator()(const TEvent &event) const {
+  auto operator()(const TEvent &event) const noexcept {
     return !t_(event);
   }
 
@@ -214,7 +214,7 @@ struct and_ : type_op {
   explicit and_(wrapper<Ts>... ts) noexcept : args_(ts...) {}
 
   template <class TEvent>
-  auto operator()(const TEvent &event) const {
+  auto operator()(const TEvent &event) const noexcept {
     std::array<bool, sizeof...(Ts)> a = {{std::get<wrapper<Ts>>(args_)(event)...}};
     return std::accumulate(a.begin(), a.end(), true, std::bit_and<>());
   }
@@ -229,7 +229,7 @@ struct or_ : type_op {
   explicit or_(wrapper<Ts>... ts) noexcept : args_(ts...) {}
 
   template <class TEvent>
-  auto operator()(const TEvent &event) const {
+  auto operator()(const TEvent &event) const noexcept {
     std::array<bool, sizeof...(Ts)> a = {{std::get<wrapper<Ts>>(args_)(event)...}};
     return std::accumulate(a.begin(), a.end(), false, std::bit_or<>());
   }
@@ -244,7 +244,7 @@ struct seq_ : type_op {
   explicit seq_(wrapper<Ts>... ts) noexcept : args_(ts...) {}
 
   template <class TEvent>
-  void operator()(const TEvent &event) const {
+  void operator()(const TEvent &event) const noexcept {
     int _[]{0, (std::get<wrapper<Ts>>(args_)(event), 0)...};
     (void)_;
   }
@@ -254,19 +254,19 @@ struct seq_ : type_op {
 };
 
 template <class T1, class T2>
-auto operator&&(T1, T2) {
+auto operator&&(T1, T2) noexcept {
   return and_<T1, T2>{};
 }
 template <class T1, class T2>
-auto operator||(T1, T2) {
+auto operator||(T1, T2) noexcept {
   return or_<T1, T2>{};
 }
 template <class T>
-auto operator!(const T &) {
+auto operator!(const T &)noexcept {
   return not_<T>{};
 }
 template <class T1, class T2>
-auto operator, (T1, T2) {
+auto operator, (T1, T2) noexcept {
   return seq_<T1, T2>{};
 }
 
@@ -274,15 +274,15 @@ template <class E>
 struct event_impl {
   using type = E;
   template <class T>
-  auto operator[](const T &) {
+  auto operator[](const T &) const noexcept {
     return transition<E, T>{};
   }
   template <class T>
-  auto operator/(const T &) {
+  auto operator/(const T &) const noexcept {
     return transition<E, always, T>{};
   }
 #if defined(__cpp_variable_templates)
-  auto operator()() const { return *this; }
+  auto operator()() const noexcept { return *this; }
 #endif
 };
 
@@ -302,19 +302,19 @@ struct state_impl<TState<N>> {
   static constexpr auto id = N;
 
   template <class T>
-  auto operator==(const T &) {
+  auto operator==(const T &) const noexcept {
     return merge_transition_t<transition<TState<N>>, get_transition_t<T>>{};
   }
   template <class T>
-  auto operator+(const T &) {
+  auto operator+(const T &) const noexcept {
     return merge_transition_t<transition<TState<N>>, get_transition_t<typename T::type>>{};
   }
   template <class T>
-  auto operator[](const T &) {
+  auto operator[](const T &) const noexcept {
     return merge_transition_t<transition<TState<N>>, transition<anonymous>, get_transition_t<T>>{};
   }
   template <class T>
-  auto operator/(const T &) {
+  auto operator/(const T &) const noexcept {
     return merge_transition_t<transition<TState<N>>, transition<anonymous>, transition<always>, get_transition_t<T>>{};
   }
 };
@@ -391,7 +391,7 @@ struct config {
   static auto get_event(void *) noexcept {}
 };
 
-template <class T>
+template <class TConfig>
 auto controller() {
   using namespace msm;
   auto idle = init_state<__COUNTER__>{};
@@ -400,7 +400,7 @@ auto controller() {
   auto s2 = state<__COUNTER__>{};
 
   // clang-format off
-  return make_transition_table<T>(
+  return make_transition_table<TConfig>(
    // +-----------------------------------------------------------------+
       idle    == s1 + event<e1> [guard and guard] / (action, action, action)
    // +-----------------------------------------------------------------+
