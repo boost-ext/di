@@ -1,31 +1,55 @@
-//
-// Copyright (c) 2012-2015 Krzysztof Jusiak (krzysztof at jusiak dot net)
-//
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-//
+#pragma once
 
-//[msm
-//<-
-#include <cassert>
-#include <iostream>
-#include <algorithm>
 #include <memory>
 #include <array>
-#include <string>
-#include <tuple>
 #include <vector>
-#include <array>
-//->
-#include <boost/di.hpp>
+#include <algorithm>
+#include "boost/di.hpp"
 
 namespace di = boost::di;
 
 namespace msm {
-struct anonymous {};
+struct anonymous {
+  static constexpr auto id = -1;
+  anonymous(...) {}
+};
 struct state_base {};
 struct state_base_init {};
 struct type_op {};
+
+template <class T>
+struct opaque {
+  opaque() noexcept = default;
+  opaque(T t) noexcept : object(t) {}
+  decltype(auto) get() const noexcept { return object; }
+
+ private:
+  T object;
+};
+
+template <class T>
+struct opaque<T &> {
+  opaque() noexcept = default;
+  opaque(T &t) noexcept : object(&t) {}
+  decltype(auto) get() noexcept { return *object; }
+
+ private:
+  T *object = nullptr;
+};
+
+template <class... Ts>
+struct pool : opaque<Ts>... {
+  pool() = default;
+  explicit pool(Ts... args) noexcept : opaque<Ts>(args)... {}
+};
+
+template <>
+struct pool<> {};
+
+template <class T, class TPool>
+decltype(auto) get(const TPool &p) noexcept {
+  return static_cast<opaque<T>>(p).get();
+}
 
 template <class...>
 struct transition;
@@ -83,16 +107,16 @@ struct wrapper_impl<T, di::aux::type_list<X, Ts...>, BOOST_DI_REQUIRES(!di::aux:
 
  private:
   template <class TEvent, class... Tx, BOOST_DI_REQUIRES(di::aux::is_callable_with<T, TEvent, Ts...>::value) = 0>
-  auto operator()(const TEvent &event, const std::tuple<Ts...> &args) const noexcept {
-    return reinterpret_cast<const T &> (*this)(event, std::get<Ts>(args)...);
+  auto operator()(const TEvent &event, const pool<Ts...> &args) const noexcept {
+    return reinterpret_cast<const T &> (*this)(event, get<Ts>(args)...);
   }
 
   template <class TEvent, class... Tx, BOOST_DI_REQUIRES(!di::aux::is_callable_with<T, TEvent, Ts...>::value) = 0>
-  bool operator()(const TEvent &, const std::tuple<Ts...> &) const noexcept {
+  bool operator()(const TEvent &, const pool<Ts...> &) const noexcept {
     return typename guard_action<T>::template is_not_callable<TEvent, Ts...>{};
   }
 
-  std::tuple<Ts...> args_;
+  pool<Ts...> args_;
 };
 
 template <class T, class X>
@@ -113,21 +137,15 @@ using wrapper = wrapper_impl<T>;
 
 template <class S1, class S2, class E, class G, class A>
 struct transition<S1, S2, E, G, A> {
+  using event = E;
+
   transition() = default;
   transition(wrapper<G> g, wrapper<A> a) : guard(g), action(a) {}
 
-  template <class TEvent>
-  void handle_event(bool &handled, int &current_state, const TEvent &event) const noexcept {
-    if (!handled && current_state == S1::id && di::aux::is_base_of<TEvent, E>::value && guard(event)) {
-      action(event);
-      current_state = S2::id;
-      handled = true;
-    }
-  }
-
   void init_state(std::vector<int> &current_states) const noexcept {
-    if (di::aux::is_base_of<state_base_init, S1>::value) {
-      const auto id = S1::id;
+    const auto id = S1::id;
+    if (di::aux::is_base_of<state_base_init, S1>::value &&
+        std::find(current_states.begin(), current_states.end(), id) == current_states.end()) {
       current_states.push_back(id);
     }
   }
@@ -142,6 +160,15 @@ struct transition<S1, S2, E, G, A> {
     if (!visited && S2::id == state) {
       visitor(S2{});
       visited = true;
+    }
+  }
+
+  template <class TEvent>
+  void handle_event(bool &handled, int &current_state, const TEvent &event) const noexcept {
+    if (!handled && current_state == S1::id && di::aux::is_base_of<TEvent, E>::value && guard(event)) {
+      action(event);
+      current_state = S2::id;
+      handled = true;
     }
   }
 
@@ -215,12 +242,12 @@ struct and_ : type_op {
 
   template <class TEvent>
   auto operator()(const TEvent &event) const noexcept {
-    std::array<bool, sizeof...(Ts)> a = {{std::get<wrapper<Ts>>(args_)(event)...}};
+    std::array<bool, sizeof...(Ts)> a = {{get<wrapper<Ts>>(args_)(event)...}};
     return std::accumulate(a.begin(), a.end(), true, std::bit_and<>());
   }
 
  private:
-  std::tuple<wrapper<Ts>...> args_;
+  pool<wrapper<Ts>...> args_;
 };
 
 template <class... Ts>
@@ -230,12 +257,12 @@ struct or_ : type_op {
 
   template <class TEvent>
   auto operator()(const TEvent &event) const noexcept {
-    std::array<bool, sizeof...(Ts)> a = {{std::get<wrapper<Ts>>(args_)(event)...}};
+    std::array<bool, sizeof...(Ts)> a = {{get<wrapper<Ts>>(args_)(event)...}};
     return std::accumulate(a.begin(), a.end(), false, std::bit_or<>());
   }
 
  private:
-  std::tuple<wrapper<Ts>...> args_;
+  pool<wrapper<Ts>...> args_;
 };
 
 template <class... Ts>
@@ -245,12 +272,12 @@ struct seq_ : type_op {
 
   template <class TEvent>
   void operator()(const TEvent &event) const noexcept {
-    int _[]{0, (std::get<wrapper<Ts>>(args_)(event), 0)...};
+    int _[]{0, (get<wrapper<Ts>>(args_)(event), 0)...};
     (void)_;
   }
 
  private:
-  std::tuple<wrapper<Ts>...> args_;
+  pool<wrapper<Ts>...> args_;
 };
 
 template <class T1, class T2>
@@ -265,7 +292,7 @@ template <class T>
 auto operator!(const T &)noexcept {
   return not_<T>{};
 }
-template <class T1, class T2>
+template <class T1, class T2, BOOST_DI_REQUIRES(di::aux::is_callable<T1>::value &&di::aux::is_callable<T2>::value) = 0>
 auto operator, (T1, T2) noexcept {
   return seq_<T1, T2>{};
 }
@@ -325,30 +352,34 @@ struct state : state_impl<state<N>>, state_base {};
 template <int N>
 struct init_state : state_impl<init_state<N>>, state_base_init {};
 
-struct imsm {
-  virtual ~imsm() noexcept = default;
-  virtual void process_event(void *) noexcept = 0;
-};
-
 struct config {
   static void no_transition() noexcept {}
-  static auto get_event(void *) noexcept { return 42; }
 };
 
 template <class TConfig, class... Ts>
-class sm : public imsm, Ts... {
+class sm : public Ts... {
+  template <class T>
+  struct get_event {
+    using type = typename T::event;
+  };
+
  public:
+  using events = di::aux::type_list<typename get_event<Ts>::type...>;
+
   explicit sm(Ts... ts) : Ts(ts)... {
     [](...) {}((static_cast<Ts &>(*this).init_state(current_states_), 0)...);
+    process_event(anonymous{});
   }
-
-  void process_event(void *) noexcept override {}
 
   template <class T>
   void process_event(const T &event) noexcept {
     bool handled = false;
     for (auto &state : current_states_) {
       [](...) {}((static_cast<Ts &>(*this).handle_event(handled, state, event), 0)...);
+    }
+
+    for (auto &state : current_states_) {
+      std::cout << state << std::endl;
     }
 
     if (!handled) {
@@ -373,54 +404,56 @@ template <class TConfig = config, class... Ts>
 auto make_transition_table(Ts... ts) {
   return sm<TConfig, Ts...>(ts...);
 }
+
+template <class TEvent>
+struct idispatcher {
+  virtual ~idispatcher() noexcept = default;
+  virtual void dispatch_event(TEvent) noexcept = 0;
+};
+
+template <class TEvent, class TConfig>
+struct dispatcher : idispatcher<TEvent> {
+  struct idispatch_table {
+    virtual ~idispatch_table() noexcept = default;
+    virtual void dispatch_event(TEvent) = 0;
+  };
+
+  template <class T, class E>
+  struct dispatch_table : idispatch_table {
+    void dispatch_event(TEvent event) {
+      if (TConfig::template get_id<E>() == TConfig::get_id(event)) {
+        sm.process_event(TConfig::template get_event<E>(event));
+      }
+    }
+
+    explicit dispatch_table(const T &sm) : sm(sm) {}
+
+   private:
+    T sm;
+  };
+
+  template <class T>
+  void register_handler(const T &sm) noexcept {
+    register_handler_impl(sm, typename T::events{});
+  }
+
+  void dispatch_event(TEvent event) noexcept override {
+    for (auto &handler : handlers_) {
+      handler->dispatch_event(event);
+    }
+  }
+
+ private:
+  template <class T, class E, class... Ts>
+  void register_handler_impl(const T &sm, const di::aux::type_list<E, Ts...> &) noexcept {
+    handlers_.push_back(std::make_shared<dispatch_table<T, E>>(sm));
+    register_handler_impl(sm, di::aux::type_list<Ts...>{});
+  }
+
+  template <class T>
+  void register_handler_impl(const T &, const di::aux::type_list<> &) noexcept {}
+
+  std::vector<std::shared_ptr<idispatch_table>> handlers_;
+};
+
 }  // msm
-
-struct e1 {};
-struct e2 {};
-struct e3 {};
-
-auto guard = [](auto, int i) {
-  assert(42 == i);
-  return true;
-};
-
-auto action = [](auto) {};
-
-struct config {
-  static void no_transition() noexcept {}
-  static auto get_event(void *) noexcept {}
-};
-
-template <class TConfig>
-auto controller() {
-  using namespace msm;
-  auto idle = init_state<__COUNTER__>{};
-  auto idle2 = init_state<__COUNTER__>{};
-  auto s1 = state<__COUNTER__>{};
-  auto s2 = state<__COUNTER__>{};
-
-  // clang-format off
-  return make_transition_table<TConfig>(
-   // +-----------------------------------------------------------------+
-      idle    == s1 + event<e1> [guard and guard] / (action, action, action)
-   // +-----------------------------------------------------------------+
-	, idle2   == s2 + event<e2> [guard] / action
-   // +-----------------------------------------------------------------+
-  );
-  // clang-format on
-}
-
-int main() {
-  auto injector = di::make_injector(di::bind<int>().to(42));
-  auto sm = injector.create<decltype(controller<config>())>();
-
-  sm.visit_current_states([](auto s) { std::cout << "\t" << typeid(s).name() << std::endl; });
-  sm.process_event(e2{});
-  sm.visit_current_states([](auto s) { std::cout << "\t" << typeid(s).name() << std::endl; });
-  sm.process_event(e2{});
-  sm.visit_current_states([](auto s) { std::cout << "\t" << typeid(s).name() << std::endl; });
-  sm.process_event(e3{});
-  sm.visit_current_states([](auto s) { std::cout << "\t" << typeid(s).name() << std::endl; });
-}
-
-//]

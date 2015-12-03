@@ -96,7 +96,7 @@ test-suite performance :
 ;
 
 test-suite projects :
-    [ example projects/msm.cpp ]
+    [ example projects/msm/msm.cpp : -Iprojects/msm ]
 ;
 
 test-suite quick_user_guide :
