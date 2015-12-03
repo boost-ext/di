@@ -14,6 +14,7 @@
 #include <array>
 #include <string>
 #include <tuple>
+#include <vector>
 #include <array>
 //->
 #include <boost/di.hpp>
@@ -96,9 +97,10 @@ struct transition<S1, S2, E, G, A> {
     }
   }
 
-  void init_state(int &current_state) {
+  void init_state(std::vector<int> &current_states) {
     if (di::aux::is_base_of<state_base_init, S1>::value) {
-      current_state = S1::id;
+      const auto id = S1::id;
+      current_states.push_back(id);
     }
   }
 
@@ -280,14 +282,16 @@ template <class TConfig, class... Ts>
 class sm : public imsm, Ts... {
  public:
   explicit sm(Ts... ts) : Ts(ts)... {
-    [](...) {}((static_cast<Ts &>(*this).init_state(current_state_), 0)...);
+    [](...) {}((static_cast<Ts &>(*this).init_state(current_states_), 0)...);
   }
 
   void process_event(void *) noexcept override {}
   template <class T>
   void process_event(const T &event) noexcept {
     bool handled = false;
-    [](...) {}((static_cast<Ts &>(*this).handle_event(handled, current_state_, event), 0)...);
+    for (auto &state : current_states_) {
+      [](...) {}((static_cast<Ts &>(*this).handle_event(handled, state, event), 0)...);
+    }
 
     if (!handled) {
       TConfig::no_transition();
@@ -295,10 +299,10 @@ class sm : public imsm, Ts... {
   }
 
   // todo remove
-  auto get_current_state() const { return current_state_; }
+  auto get_current_state() const { return current_states_[0]; }
 
  private:
-  int current_state_ = 0;
+  std::vector<int> current_states_;
 };
 
 template <class TConfig = config, class... Ts>
