@@ -435,55 +435,24 @@ auto make_transition_table(Ts... ts) {
   return sm<TConfig, Ts...>(ts...);
 }
 
-template <class TEvent>
-struct idispatcher {
-  virtual ~idispatcher() noexcept = default;
-  virtual void dispatch_event(TEvent) noexcept = 0;
-};
-
 template <class TEvent, class TConfig>
-struct dispatcher : idispatcher<TEvent> {
-  struct idispatch_table {
-    virtual ~idispatch_table() noexcept = default;
-    virtual void dispatch_event(TEvent) = 0;
-  };
-
-  template <class T, class E>
-  struct dispatch_table : idispatch_table {
-    void dispatch_event(TEvent event) {
-      if (TConfig::template get_id<E>() == TConfig::get_id(event)) {
-        sm.process_event(TConfig::template get_event<E>(event));
-      }
-    }
-
-    explicit dispatch_table(const T &sm) : sm(sm) {}
-
-   private:
-    T sm;
-  };
-
+struct dispatcher {
   template <class T>
-  void register_handler(const T &sm) noexcept {
-    register_handler_impl(sm, typename T::events{});
-  }
-
-  void dispatch_event(TEvent event) noexcept override {
-    for (auto &handler : handlers_) {
-      handler->dispatch_event(event);
-    }
+  void dispatch_event(const TEvent &e, T &sm) noexcept {
+    dispatch_event_impl(e, sm, typename T::events{});
   }
 
  private:
   template <class T, class E, class... Ts>
-  void register_handler_impl(const T &sm, const di::aux::type_list<E, Ts...> &) noexcept {
-    handlers_.push_back(std::make_shared<dispatch_table<T, E>>(sm));
-    register_handler_impl(sm, di::aux::type_list<Ts...>{});
+  void dispatch_event_impl(const TEvent &event, T &sm, const di::aux::type_list<E, Ts...> &) noexcept {
+    if (TConfig::template get_id<E>() == TConfig::get_id(event)) {
+      sm.process_event(TConfig::template get_event<E>(event));
+    }
+    dispatch_event_impl(event, sm, di::aux::type_list<Ts...>{});
   }
 
   template <class T>
-  void register_handler_impl(const T &, const di::aux::type_list<> &) noexcept {}
-
-  std::vector<std::shared_ptr<idispatch_table>> handlers_;
+  void dispatch_event_impl(const TEvent &, T &, const di::aux::type_list<> &) noexcept {}
 };
 
 }  // msm

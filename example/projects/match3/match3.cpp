@@ -35,8 +35,6 @@ class iclient {
   virtual void run() = 0;
 };
 
-using idispatcher = msm::idispatcher<SDL_Event>;
-
 #if __has_include(<SDL.h>)&&__has_include(<SDL_image.h>)
 class sdl_canvas : public icanvas {
   const int RENDER_DRIVER = -1;
@@ -171,21 +169,35 @@ auto controller__() noexcept {
 
 using controller = decltype(controller__());
 
+struct sdl_event_dispatcher {
+  static auto get_id(SDL_Event event) noexcept { return event.type; }
+  template <class T>
+  static auto get_id() noexcept {
+    return T::id;
+  }
+  template <class T>
+  static auto get_event(SDL_Event event) noexcept {
+    return T(event);
+  }
+};
+
+using dispatcher = msm::dispatcher<SDL_Event, sdl_event_dispatcher>;
+
 #if __has_include(<SDL.h>)&&__has_include(<SDL_image.h>)
 struct sdl_user : iclient {
-  explicit sdl_user(idispatcher& d, controller& c) : dispatcher_(d), controller_(c) {}
+  explicit sdl_user(dispatcher& d, controller& c) : dispatcher_(d), controller_(c) {}
 
   void run() override {
     SDL_Event event = {};
     while (!controller_.is_in_state<is_game_over>()) {
       while (SDL_PollEvent(&event)) {
-        dispatcher_.dispatch_event(event);
+        dispatcher_.dispatch_event(event, controller_);
       }
     }
   }
 
  private:
-  idispatcher& dispatcher_;
+  dispatcher& dispatcher_;
   controller& controller_;
 };
 #endif
@@ -203,30 +215,8 @@ class game {
   controller& controller_;
 };
 
-struct sdl_event_dispatcher {
-  static auto get_id(SDL_Event event) noexcept { return event.type; }
-  template <class T>
-  static auto get_id() noexcept {
-    return T::id;
-  }
-  template <class T>
-  static auto get_event(SDL_Event event) noexcept {
-    return T(event);
-  }
-};
-
-class sdl_dispatcher : public idispatcher {
- public:
-  sdl_dispatcher(controller& c) { dispatcher.register_handler(c); }
-  void dispatch_event(SDL_Event event) noexcept override { dispatcher.dispatch_event(event); }
-
- private:
-  msm::dispatcher<SDL_Event, sdl_event_dispatcher> dispatcher;
-};
-
 auto configuration = [] {
-  return di::make_injector(di::bind<icanvas>.to<sdl_canvas>(), di::bind<iclient>.to<sdl_user>(),
-                           di::bind<idispatcher>.to<sdl_dispatcher>());
+  return di::make_injector(di::bind<icanvas>.to<sdl_canvas>(), di::bind<iclient>.to<sdl_user>());
 };
 
 }  // match3
