@@ -95,6 +95,10 @@ test-suite performance :
     [ example performance/create_type_without_bindings.cpp ]
 ;
 
+test-suite projects :
+    [ example projects/msm.cpp ]
+;
+
 test-suite quick_user_guide :
     [ example quick_user_guide/annotations1.cpp ]
     [ example quick_user_guide/annotations2.cpp ]
