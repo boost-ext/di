@@ -1,5 +1,5 @@
 // clang-format off
-// clang++ match3.cpp -DBOOST_DI_CFG_DIAGNOSTICS_LEVEL=2 -I boost/libs/di/include/ -std=c++1y -I match3/externals/SDL2/ -lSDL2 -lSDL2_image -L. && LD_LIBRARY_PATH=. ./a.out
+// clang++ match3.cpp -I ../../../include -I../msm -ISDL2 -std=c++1y  -lSDL2 -lSDL2_image -L. && LD_LIBRARY_PATH=. ./a.out
 // emcc match3.cpp -I . -I SDL2 -std=c++1y -s USE_SDL=2 -s USE_SDL_IMAGE=2 -o match3.html
 // clang-format on
 
@@ -35,7 +35,7 @@ class iclient {
   virtual void run() = 0;
 };
 
-using icontroller = msm::idispatcher<SDL_Event>;
+using idispatcher = msm::idispatcher<SDL_Event>;
 
 #if __has_include(<SDL.h>)&&__has_include(<SDL_image.h>)
 class sdl_canvas : public icanvas {
@@ -90,28 +90,10 @@ class sdl_canvas : public icanvas {
 };
 #endif
 
-#if __has_include(<SDL.h>)&&__has_include(<SDL_image.h>)
-struct sdl_user : iclient {
-  explicit sdl_user(icontroller& c) : controller_(c) {}
-
-  void run() override {
-    SDL_Event event = {};
-    while (true) {
-      while (SDL_PollEvent(&event)) {
-        controller_.dispatch_event(event);
-      }
-    }
-  }
-
- private:
-  icontroller& controller_;
-};
-#endif
-
 class view {
  public:
   view(icanvas& c) : canvas_(c) {
-    canvas_.draw(canvas_.load_image("background.png"), 0, 0);
+    canvas_.draw(canvas_.load_image("background.png"), 0, 0, 0);
 
     for (int i = 1; i <= 5; ++i) {
       grids[i - 1] = canvas_.load_image(std::to_string(i) + ".png");
@@ -121,7 +103,7 @@ class view {
   }
 
   void show_grid(int x, int y, int c) {
-    canvas_.draw(grids[c], x * 38 + y * 38);
+    canvas_.draw(grids[c], x * 38 + y * 38, 1);
     canvas_.render();
   }
 
@@ -131,27 +113,28 @@ class view {
 
 class board {};
 
-class game {
- public:
-  game(icontroller& c, iclient& cl) : controller_(c), client_(cl) {}
-
-  void play() { client_.run(); }
-
-  iclient& client_;
-  icontroller& controller_;
-};
+struct is_game_over {};
 
 struct button_clicked {
-  explicit button_clicked(SDL_Event) {}
+  explicit button_clicked(const SDL_Event& e) : x(e.button.x), y(e.button.y) {}
   static constexpr auto id = SDL_MOUSEBUTTONUP;
+  int x = 0;
+  int y = 0;
+};
+
+struct key_pressed {
+  static constexpr auto id = SDL_KEYDOWN;
+  explicit key_pressed(const SDL_Event& event) : key(event.key.keysym.sym) {}
+  int key = 0;
 };
 
 struct window_closed {
-  explicit window_closed(SDL_Event) {}
+  explicit window_closed(const SDL_Event&) {}
   static constexpr auto id = SDL_QUIT;
 };
 
 auto guard = [](auto) { return true; };
+auto is_key = [](int key) { return [](auto e) { return true; }; };
 
 auto init_board = [](auto, view& v) {
   for (int i = 0; i < 3; ++i) {
@@ -160,6 +143,65 @@ auto init_board = [](auto, view& v) {
 };
 
 auto print = [](auto) { std::cout << "clicked" << std::endl; };
+
+auto controller__() noexcept {
+  struct config {
+    static void no_transition() noexcept {}
+  };
+
+  using namespace msm;
+  auto idle = init_state<__COUNTER__>{};
+  auto wait_for_client = init_state<__COUNTER__>{};
+  auto game_over = state<__COUNTER__, is_game_over>{};
+  auto s1 = state<__COUNTER__>{};
+  auto s2 = state<__COUNTER__>{};
+
+  // clang-format off
+  return make_transition_table<config>(
+   // +-----------------------------------------------------------------+
+      idle    		   == idle / init_board
+	, idle     		   == s1 + event<button_clicked> / print
+   // +-----------------------------------------------------------------+
+	, wait_for_client  == game_over + event<window_closed>
+	, wait_for_client  == game_over + event<key_pressed> [is_key(SDLK_ESCAPE)] / [] (auto) {std::cout << "exit" << std::endl; }
+   // +-----------------------------------------------------------------+
+  );
+  // clang-format on
+}
+
+using controller = decltype(controller__());
+
+#if __has_include(<SDL.h>)&&__has_include(<SDL_image.h>)
+struct sdl_user : iclient {
+  explicit sdl_user(idispatcher& d, controller& c) : dispatcher_(d), controller_(c) {}
+
+  void run() override {
+    SDL_Event event = {};
+    while (!controller_.is_in_state<is_game_over>()) {
+      while (SDL_PollEvent(&event)) {
+        dispatcher_.dispatch_event(event);
+      }
+    }
+  }
+
+ private:
+  idispatcher& dispatcher_;
+  controller& controller_;
+};
+#endif
+
+class game {
+ public:
+  game(controller& c, iclient& cl) : controller_(c), client_(cl) {}
+
+  void play() {
+    controller_.start();
+    client_.run();
+  }
+
+  iclient& client_;
+  controller& controller_;
+};
 
 struct sdl_event_dispatcher {
   static auto get_id(SDL_Event event) noexcept { return event.type; }
@@ -173,46 +215,18 @@ struct sdl_event_dispatcher {
   }
 };
 
-struct sdl_config {
-  static void no_transition() noexcept {}
-};
-
-template <class TConfig>
-auto controller() noexcept {
-  using namespace msm;
-  auto idle = init_state<__COUNTER__>{};
-  auto wait_for_client = init_state<__COUNTER__>{};
-  auto game_over = state<__COUNTER__>{};
-  auto s1 = state<__COUNTER__>{};
-  auto s2 = state<__COUNTER__>{};
-
-  // clang-format off
-  return make_transition_table<TConfig>(
-   // +-----------------------------------------------------------------+
-      idle    		   == idle / init_board
-	, idle     		   == s1 + event<button_clicked> / print
-   // +-----------------------------------------------------------------+
-	, wait_for_client  == game_over + event<window_closed> / print
-   // +-----------------------------------------------------------------+
-  );
-  // clang-format on
-}
-
-struct sdl_controller : icontroller {
-  using boost_di_inject__ = di::inject<di::self<sdl_controller>>;
-  template <class T>
-  sdl_controller(const T& injector) {
-    dispatcher.register_handler(injector.template create<decltype(controller<sdl_config>())>());
-  }
-
+class sdl_dispatcher : public idispatcher {
+ public:
+  sdl_dispatcher(controller& c) { dispatcher.register_handler(c); }
   void dispatch_event(SDL_Event event) noexcept override { dispatcher.dispatch_event(event); }
 
+ private:
   msm::dispatcher<SDL_Event, sdl_event_dispatcher> dispatcher;
 };
 
 auto configuration = [] {
   return di::make_injector(di::bind<icanvas>.to<sdl_canvas>(), di::bind<iclient>.to<sdl_user>(),
-                           di::bind<icontroller>.to<sdl_controller>());
+                           di::bind<idispatcher>.to<sdl_dispatcher>());
 };
 
 }  // match3

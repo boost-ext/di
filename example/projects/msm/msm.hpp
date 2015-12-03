@@ -9,13 +9,23 @@
 namespace di = boost::di;
 
 namespace msm {
+struct state_base {};
+struct state_base_init {};
+struct type_op {};
 struct anonymous {
   static constexpr auto id = -1;
   anonymous(...) {}
 };
-struct state_base {};
-struct state_base_init {};
-struct type_op {};
+struct always {
+  template <class TEvent>
+  auto operator()(const TEvent &) const noexcept {
+    return true;
+  }
+};
+struct none {
+  template <class TEvent>
+  void operator()(const TEvent &) const noexcept {}
+};
 
 template <class T>
 struct opaque {
@@ -50,20 +60,6 @@ template <class T, class TPool>
 decltype(auto) get(const TPool &p) noexcept {
   return static_cast<opaque<T>>(p).get();
 }
-
-template <class...>
-struct transition;
-template <class T>
-struct get_transition {
-  using type = transition<T>;
-};
-template <class... Ts>
-struct get_transition<transition<Ts...>> {
-  using type = transition<Ts...>;
-};
-
-template <class T>
-using get_transition_t = typename get_transition<T>::type;
 
 template <class T>
 auto args__(int) -> di::aux::function_traits_t<decltype(&T::template operator() < anonymous > )>;
@@ -135,6 +131,9 @@ struct wrapper_impl<T, X, BOOST_DI_REQUIRES(di::aux::is_base_of<type_op, T>::val
 template <class T>
 using wrapper = wrapper_impl<T>;
 
+template <class...>
+struct transition;
+
 template <class S1, class S2, class E, class G, class A>
 struct transition<S1, S2, E, G, A> {
   using event = E;
@@ -177,6 +176,18 @@ struct transition<S1, S2, E, G, A> {
   wrapper<A> action;
 };
 
+template <class T>
+struct get_transition {
+  using type = transition<T>;
+};
+template <class... Ts>
+struct get_transition<transition<Ts...>> {
+  using type = transition<Ts...>;
+};
+
+template <class T>
+using get_transition_t = typename get_transition<T>::type;
+
 template <class...>
 struct merge_transition;
 template <>
@@ -202,7 +213,7 @@ struct merge_transition<transition<TArgs1...>, transition<TArgs2...>, Ts...> {
 template <class... TArgs>
 using merge_transition_t = typename merge_transition<TArgs...>::type;
 
-template <class...>
+template <class... Ts>
 struct transition {
   using type = transition;
   template <class T>
@@ -211,15 +222,22 @@ struct transition {
   }
 };
 
-struct always {
-  template <class TEvent>
-  auto operator()(const TEvent &) const noexcept {
-    return true;
+template <class S1, class S2, class E>
+struct transition<S1, S2, E> : transition<S1, S2, E, always, none> {
+  using type = transition;
+  template <class T>
+  auto operator/(const T &) const noexcept {
+    return merge_transition_t<transition, get_transition_t<T>>{};
   }
 };
-struct none {
-  template <class TEvent>
-  void operator()(const TEvent &) const noexcept {}
+
+template <class S1, class S2, class E, class G>
+struct transition<S1, S2, E, G> : transition<S1, S2, E, G, none> {
+  using type = transition;
+  template <class T>
+  auto operator/(const T &) const noexcept {
+    return merge_transition_t<transition, get_transition_t<T>>{};
+  }
 };
 
 template <class T>
@@ -324,8 +342,8 @@ struct event : event_impl<T> {};
 template <class>
 struct state_impl;
 
-template <template <int> class TState, int N>
-struct state_impl<TState<N>> {
+template <template <int, class... Ts> class TState, int N, class... Ts>
+struct state_impl<TState<N, Ts...>> {
   static constexpr auto id = N;
 
   template <class T>
@@ -346,11 +364,11 @@ struct state_impl<TState<N>> {
   }
 };
 
-template <int N>
-struct state : state_impl<state<N>>, state_base {};
+template <int N, class... Ts>
+struct state : state_impl<state<N, Ts...>>, state_base, Ts... {};
 
-template <int N>
-struct init_state : state_impl<init_state<N>>, state_base_init {};
+template <int N, class... Ts>
+struct init_state : state_impl<init_state<N, Ts...>>, state_base_init, Ts... {};
 
 struct config {
   static void no_transition() noexcept {}
@@ -368,12 +386,13 @@ class sm : public Ts... {
 
   explicit sm(Ts... ts) : Ts(ts)... {
     [](...) {}((static_cast<Ts &>(*this).init_state(current_states_), 0)...);
-    process_event(anonymous{});
   }
+
+  void start() noexcept { process_event(anonymous{}); }
 
   template <class T>
   void process_event(const T &event) noexcept {
-    bool handled = false;
+    auto handled = false;
     for (auto &state : current_states_) {
       [](...) {}((static_cast<Ts &>(*this).handle_event(handled, state, event), 0)...);
     }
@@ -388,12 +407,23 @@ class sm : public Ts... {
   }
 
   template <class T>
-  void visit_current_states(const T &visitor) noexcept {
+  void visit_current_states(const T &visitor) const noexcept {
     for (auto &state : current_states_) {
-      bool visited = false;
-      int _[]{0, (static_cast<Ts &>(*this).visit_state(visited, state, visitor), 0)...};
+      auto visited = false;
+      int _[]{0, (static_cast<const Ts &>(*this).visit_state(visited, state, visitor), 0)...};
       (void)_;
     }
+  }
+
+  template <class T>
+  bool is_in_state() const noexcept {
+    auto result = false;
+    visit_current_states([&](auto state) {
+      if (di::aux::is_base_of<T, decltype(state)>::value) {
+        result = true;
+      }
+    });
+    return result;
   }
 
  private:
