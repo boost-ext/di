@@ -379,15 +379,15 @@ struct e1 {};
 struct e2 {};
 struct e3 {};
 
-auto guard = [](auto e, int i, double) {
-  std::cout << "guard: " << i << typeid(e).name() << std::endl;
+auto guard = [](auto, int i) {
+  assert(42 == i);
   return true;
 };
 
-auto action = [](auto) { std::cout << "action" << std::endl; };
+auto action = [](auto) {};
 
 struct config {
-  static void no_transition() noexcept { std::cout << "no transition" << std::endl; }
+  static void no_transition() noexcept {}
   static auto get_event(void *) noexcept {}
 };
 
@@ -421,8 +421,6 @@ int main() {
   sm.visit_current_states([](auto s) { std::cout << "\t" << typeid(s).name() << std::endl; });
   sm.process_event(e3{});
   sm.visit_current_states([](auto s) { std::cout << "\t" << typeid(s).name() << std::endl; });
-
-  assert(false);
 }
 
 //]
