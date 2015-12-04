@@ -16,6 +16,8 @@
 #include <boost/di.hpp>
 #include "msm.hpp"
 
+#include <boost/units/detail/utility.hpp>
+
 class SDL_Texture;
 
 namespace match3 {
@@ -111,7 +113,7 @@ class view {
 
 class board {};
 
-struct is_game_over {};
+struct game_over_flag {};
 
 struct button_clicked {
   explicit button_clicked(const SDL_Event& e) : x(e.button.x), y(e.button.y) {}
@@ -142,11 +144,11 @@ auto init_board = [](auto, view& v) {
 
 auto print = [](auto) { std::cout << "clicked" << std::endl; };
 
-auto controller__() noexcept {
+auto controller__ = [] {
   using namespace msm;
   auto idle = init_state<__COUNTER__>{};
   auto wait_for_client = init_state<__COUNTER__>{};
-  auto game_over = state<__COUNTER__, is_game_over>{};
+  auto game_over = state<__COUNTER__, game_over_flag>{};
   auto s1 = state<__COUNTER__>{};
   auto s2 = state<__COUNTER__>{};
 
@@ -161,29 +163,40 @@ auto controller__() noexcept {
    // +-----------------------------------------------------------------+
   );
   // clang-format on
-}
+};
 
 using controller = decltype(controller__());
 
-struct sdl_event_dispatcher {
-  static auto get_id(const SDL_Event& event) noexcept { return event.type; }
-  template <class T>
-  static auto get_id() noexcept {
-    return T::id;
-  }
-  template <class T>
-  static auto get_event(const SDL_Event& event) noexcept {
-    return T(event);
-  }
-};
-
 #if __has_include(<SDL.h>)&&__has_include(<SDL_image.h>)
-struct sdl_user : iclient {
-  explicit sdl_user(controller& c) : controller_(c) {}
+class sdl_user_input : public iclient {
+  struct sdl_event_dispatcher {
+    static auto get_id(const SDL_Event& event) noexcept { return event.type; }
+    template <class T>
+    static auto get_id() noexcept {
+      return T::id;
+    }
+    template <class T>
+    static auto get_event(const SDL_Event& event) noexcept {
+      return T(event);
+    }
+  };
+
+ public:
+  explicit sdl_user_input(controller& c) : controller_(c) {}
 
   void run() override {
     SDL_Event event = {};
-    while (!controller_.is_in_state<is_game_over>()) {
+    auto is_game_over = [&] {
+      auto result = false;
+      controller_.visit_current_states([&](auto state) {
+        if (di::aux::is_base_of<game_over_flag, decltype(state)>::value) {
+          result = true;
+        }
+      });
+      return result;
+    };
+
+    while (!is_game_over()) {
       while (SDL_PollEvent(&event)) {
         msm::dispatcher<SDL_Event, sdl_event_dispatcher>::dispatch_event(event, controller_);
       }
@@ -209,7 +222,7 @@ class game {
 };
 
 auto configuration = [] {
-  return di::make_injector(di::bind<icanvas>.to<sdl_canvas>(), di::bind<iclient>.to<sdl_user>());
+  return di::make_injector(di::bind<icanvas>.to<sdl_canvas>(), di::bind<iclient>.to<sdl_user_input>());
 };
 
 }  // match3

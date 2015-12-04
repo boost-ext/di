@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include <array>
 #include <vector>
 #include <algorithm>
@@ -15,6 +14,10 @@ struct type_op {};
 struct anonymous {
   static constexpr auto id = -1;
   anonymous(...) {}
+};
+struct otherwise {
+  static constexpr auto id = -2;
+  otherwise(...) {}
 };
 struct always {
   template <class TEvent>
@@ -348,19 +351,19 @@ struct state_impl<TState<N, Ts...>> {
 
   template <class T>
   auto operator==(const T &) const noexcept {
-    return merge_transition_t<transition<TState<N>>, get_transition_t<T>>{};
+    return merge_transition_t<transition<TState<N, Ts...>>, get_transition_t<T>>{};
   }
   template <class T>
   auto operator+(const T &) const noexcept {
-    return merge_transition_t<transition<TState<N>>, get_transition_t<typename T::type>>{};
+    return merge_transition_t<transition<TState<N, Ts...>>, get_transition_t<typename T::type>>{};
   }
   template <class T>
   auto operator[](const T &) const noexcept {
-    return merge_transition_t<transition<TState<N>>, transition<anonymous>, get_transition_t<T>>{};
+    return merge_transition_t<transition<TState<N, Ts...>>, transition<anonymous>, get_transition_t<T>>{};
   }
   template <class T>
   auto operator/(const T &) const noexcept {
-    return merge_transition_t<transition<TState<N>>, transition<anonymous>, transition<always>, get_transition_t<T>>{};
+    return merge_transition_t<transition<TState<N, Ts...>>, transition<anonymous>, transition<always>, get_transition_t<T>>{};
   }
 };
 
@@ -381,26 +384,16 @@ class sm : public Ts... {
   using events = di::aux::type_list<typename get_event<Ts>::type...>;
 
   sm() = delete;
-
   explicit sm(Ts... ts) : Ts(ts)... {
     [](...) {}((static_cast<Ts &>(*this).init_state(current_states_), 0)...);
   }
 
-  void start() noexcept { process_event(anonymous{}); }
+  void start() noexcept { process_event_impl(anonymous{}); }
 
   template <class T>
   void process_event(const T &event) noexcept {
-    auto handled = false;
-    for (auto &state : current_states_) {
-      [](...) {}((static_cast<Ts &>(*this).handle_event(handled, state, event), 0)...);
-    }
-
-    for (auto &state : current_states_) {
-      std::cout << state << std::endl;
-    }
-
-    if (!handled) {
-      // TConfig::no_transition();
+    if (!process_event_impl(event)) {
+      process_event_impl(otherwise{});
     }
   }
 
@@ -413,18 +406,16 @@ class sm : public Ts... {
     }
   }
 
+ private:
   template <class T>
-  bool is_in_state() const noexcept {
-    auto result = false;
-    visit_current_states([&](auto state) {
-      if (di::aux::is_base_of<T, decltype(state)>::value) {
-        result = true;
-      }
-    });
-    return result;
+  bool process_event_impl(const T &event) noexcept {
+    auto handled = false;
+    for (auto &state : current_states_) {
+      [](...) {}((static_cast<Ts &>(*this).handle_event(handled, state, event), 0)...);
+    }
+    return handled;
   }
 
- private:
   std::vector<int> current_states_;
 };
 
