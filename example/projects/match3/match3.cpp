@@ -159,7 +159,7 @@ auto controller__ = [] {
 	, idle     		   == s1 + event<button_clicked> / print
    // +-----------------------------------------------------------------+
 	, wait_for_client  == game_over + event<window_closed>
-	, wait_for_client  == game_over + event<key_pressed> [is_key(SDLK_ESCAPE)] / [] (auto) {std::cout << "exit" << std::endl; }
+	, wait_for_client  == game_over + event<key_pressed> [is_key(SDLK_ESCAPE)]
    // +-----------------------------------------------------------------+
   );
   // clang-format on

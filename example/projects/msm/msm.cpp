@@ -40,7 +40,7 @@ auto controller() noexcept {
    // +-----------------------------------------------------------------+
       idle    == s1 + event<e1> [guard1] / (action1, action2)
    // +-----------------------------------------------------------------+
-	, idle2   == s2 + event<e2> [guard1 && guard2] / action1
+	, idle2   == s2 + event<e2> [guard1 && guard2] / (action1, [](auto) {std::cout << "action2" << std::endl; })
    // +-----------------------------------------------------------------+
   );
   // clang-format on

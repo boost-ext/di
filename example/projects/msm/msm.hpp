@@ -302,11 +302,11 @@ struct seq_ : type_op {
 };
 
 template <class T1, class T2>
-auto operator&&(T1, T2) noexcept {
+auto operator&&(const T1 &, const T2 &) noexcept {
   return and_<T1, T2>{};
 }
 template <class T1, class T2>
-auto operator||(T1, T2) noexcept {
+auto operator||(const T1 &, const T2 &) noexcept {
   return or_<T1, T2>{};
 }
 template <class T>
@@ -314,7 +314,7 @@ auto operator!(const T &)noexcept {
   return not_<T>{};
 }
 template <class T1, class T2, BOOST_DI_REQUIRES(di::aux::is_callable<T1>::value &&di::aux::is_callable<T2>::value) = 0>
-auto operator, (T1, T2) noexcept {
+auto operator, (const T1 &, const T2 &) noexcept {
   return seq_<T1, T2>{};
 }
 
@@ -363,7 +363,8 @@ struct state_impl<TState<N, Ts...>> {
   }
   template <class T>
   auto operator/(const T &) const noexcept {
-    return merge_transition_t<transition<TState<N, Ts...>>, transition<anonymous>, transition<always>, get_transition_t<T>>{};
+    return merge_transition_t<transition<TState<N, Ts...>>, transition<anonymous>, transition<always>,
+                              get_transition_t<T>>{};
   }
 };
 
