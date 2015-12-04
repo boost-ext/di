@@ -9,38 +9,36 @@
 //<-
 #include <cassert>
 #include <iostream>
+#include <typeinfo>
 #include "msm.hpp"
 
 //->
-struct e1 {};
-struct e2 {};
-struct e3 {};
+auto e1 = msm::event<int, __LINE__>{};
+auto e2 = msm::event<int, __LINE__>{};
+auto e3 = msm::event<int, __LINE__>{};
 
 auto guard1 = [](auto, int i) {
   assert(42 == i);
   return true;
 };
+
 auto guard2 = [](auto) { return true; };
 auto action1 = [](auto) {};
 auto action2 = [](auto) {};
 
 auto controller() noexcept {
-  struct config {
-    static void no_transition() noexcept {}
-  };
-
   using namespace msm;
-  auto idle = init_state<__COUNTER__>{};
-  auto idle2 = init_state<__COUNTER__>{};
-  auto s1 = state<__COUNTER__>{};
-  auto s2 = state<__COUNTER__>{};
+  auto idle = init_state<__LINE__>{};
+  auto idle2 = init_state<__LINE__>{};
+  auto s1 = state<__LINE__>{};
+  auto s2 = state<__LINE__>{};
 
   // clang-format off
-  return make_transition_table<config>(
+  return make_transition_table(
    // +-----------------------------------------------------------------+
-      idle    == s1 + event<e1> [guard1] / (action1, action2)
+      idle    == s1 + e1 [guard1] / (action1, action2)
    // +-----------------------------------------------------------------+
-	, idle2   == s2 + event<e2> [guard1 && guard2] / (action1, [](auto) {std::cout << "action2" << std::endl; })
+	, idle2   == s2 + e2 [guard1 && guard2] / (action1, [](auto) {std::cout << "action2" << std::endl; })
    // +-----------------------------------------------------------------+
   );
   // clang-format on
@@ -51,11 +49,11 @@ int main() {
   auto sm = injector.create<decltype(controller())>();
 
   sm.visit_current_states([](auto s) { std::cout << "\t" << typeid(s).name() << std::endl; });
-  sm.process_event(e2{});
+  sm.process_event(e1);
   sm.visit_current_states([](auto s) { std::cout << "\t" << typeid(s).name() << std::endl; });
-  sm.process_event(e2{});
+  sm.process_event(e2);
   sm.visit_current_states([](auto s) { std::cout << "\t" << typeid(s).name() << std::endl; });
-  sm.process_event(e3{});
+  sm.process_event(e3);
   sm.visit_current_states([](auto s) { std::cout << "\t" << typeid(s).name() << std::endl; });
 }
 

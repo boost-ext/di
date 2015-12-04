@@ -114,24 +114,9 @@ class view {
 class board {};
 
 struct game_over_flag {};
-
-struct button_clicked {
-  explicit button_clicked(const SDL_Event& e) : x(e.button.x), y(e.button.y) {}
-  static constexpr auto id = SDL_MOUSEBUTTONUP;
-  int x = 0;
-  int y = 0;
-};
-
-struct key_pressed {
-  static constexpr auto id = SDL_KEYDOWN;
-  explicit key_pressed(const SDL_Event& event) : key(event.key.keysym.sym) {}
-  int key = 0;
-};
-
-struct window_closed {
-  explicit window_closed(const SDL_Event&) {}
-  static constexpr auto id = SDL_QUIT;
-};
+auto button_clicked = msm::event<SDL_Event, SDL_MOUSEBUTTONUP>{};
+auto key_pressed = msm::event<SDL_Event, SDL_KEYDOWN>{};
+auto window_closed = msm::event<SDL_Event, SDL_QUIT>{};
 
 auto guard = [](auto) { return true; };
 auto is_key = [](int key) { return [](auto e) { return true; }; };
@@ -156,10 +141,10 @@ auto controller__ = [] {
   return make_transition_table(
    // +-----------------------------------------------------------------+
       idle    		   == idle / init_board
-	, idle     		   == s1 + event<button_clicked> / print
+	, idle     		   == s1 + button_clicked / print
    // +-----------------------------------------------------------------+
-	, wait_for_client  == game_over + event<window_closed>
-	, wait_for_client  == game_over + event<key_pressed> [is_key(SDLK_ESCAPE)]
+	, wait_for_client  == game_over + window_closed
+	, wait_for_client  == game_over + key_pressed [is_key(SDLK_ESCAPE)]
    // +-----------------------------------------------------------------+
   );
   // clang-format on

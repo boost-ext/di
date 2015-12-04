@@ -318,29 +318,24 @@ auto operator, (const T1 &, const T2 &) noexcept {
   return seq_<T1, T2>{};
 }
 
-template <class E>
-struct event_impl {
-  using type = E;
+template <class TEvent, int Id>
+struct event {
+  static constexpr auto id = Id;
+
+  event() noexcept = default;
+  explicit event(const TEvent &event) : data(event) {}
+
   template <class T>
   auto operator[](const T &) const noexcept {
-    return transition<E, T>{};
+    return transition<event, T>{};
   }
   template <class T>
   auto operator/(const T &) const noexcept {
-    return transition<E, always, T>{};
+    return transition<event, always, T>{};
   }
-#if defined(__cpp_variable_templates)
-  auto operator()() const noexcept { return *this; }
-#endif
-};
 
-#if defined(__cpp_variable_templates)
-template <class T>
-event_impl<T> event{};
-#else
-template <class T>
-struct event : event_impl<T> {};
-#endif
+  TEvent data;
+};
 
 template <class>
 struct state_impl;
@@ -355,7 +350,7 @@ struct state_impl<TState<N, Ts...>> {
   }
   template <class T>
   auto operator+(const T &) const noexcept {
-    return merge_transition_t<transition<TState<N, Ts...>>, get_transition_t<typename T::type>>{};
+    return merge_transition_t<transition<TState<N, Ts...>>, get_transition_t<T>>{};
   }
   template <class T>
   auto operator[](const T &) const noexcept {
