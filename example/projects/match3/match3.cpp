@@ -13,6 +13,7 @@
 #include <string>
 #include <array>
 #include <map>
+#include <random>
 #include <boost/di.hpp>
 #include "msm.hpp"
 
@@ -91,6 +92,13 @@ class sdl_canvas : public icanvas {
 #endif
 
 class view {
+  static constexpr auto grid_size = 38;
+  static constexpr auto grid_offset = grid_size + 5;
+  static constexpr auto grids_offset_x = 328;
+  static constexpr auto grids_offset_y = 100;
+
+  enum class Layer { background_layer, board_layer };
+
  public:
   view(icanvas& c) : canvas_(c) {
     canvas_.draw(canvas_.load_image("background.png"), 0, 0, 0);
@@ -103,7 +111,7 @@ class view {
   }
 
   void show_grid(int x, int y, int c) {
-    canvas_.draw(grids[c], x * 38 + y * 38, 1);
+    canvas_.draw(grids[c - 1], grids_offset_x + (x * grid_size), grids_offset_y + (y * grid_size), 1);
     canvas_.render();
   }
 
@@ -122,8 +130,13 @@ auto guard = [](auto) { return true; };
 auto is_key = [](int key) { return [](auto e) { return true; }; };
 
 auto init_board = [](auto, view& v) {
-  for (int i = 0; i < 3; ++i) {
-    v.show_grid(i, i, 2);
+  std::random_device rd;
+  std::mt19937 eng(rd());
+  std::uniform_int_distribution<> rand(1, 5);
+  for (auto i = 0; i < 9; ++i) {
+    for (auto j = 0; j < 9; ++j) {
+      v.show_grid(i, j, rand(eng));
+    }
   }
 };
 
