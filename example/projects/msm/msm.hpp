@@ -370,11 +370,7 @@ struct state : state_impl<state<N, Ts...>>, state_base, Ts... {};
 template <int N, class... Ts>
 struct init_state : state_impl<init_state<N, Ts...>>, state_base_init, Ts... {};
 
-struct config {
-  static void no_transition() noexcept {}
-};
-
-template <class TConfig, class... Ts>
+template <class... Ts>
 class sm : public Ts... {
   template <class T>
   struct get_event {
@@ -383,6 +379,8 @@ class sm : public Ts... {
 
  public:
   using events = di::aux::type_list<typename get_event<Ts>::type...>;
+
+  sm() = delete;
 
   explicit sm(Ts... ts) : Ts(ts)... {
     [](...) {}((static_cast<Ts &>(*this).init_state(current_states_), 0)...);
@@ -402,7 +400,7 @@ class sm : public Ts... {
     }
 
     if (!handled) {
-      TConfig::no_transition();
+      // TConfig::no_transition();
     }
   }
 
@@ -430,21 +428,21 @@ class sm : public Ts... {
   std::vector<int> current_states_;
 };
 
-template <class TConfig = config, class... Ts>
+template <class... Ts>
 auto make_transition_table(Ts... ts) {
-  return sm<TConfig, Ts...>(ts...);
+  return sm<Ts...>(ts...);
 }
 
 template <class TEvent, class TConfig>
 struct dispatcher {
   template <class T>
-  void dispatch_event(const TEvent &e, T &sm) noexcept {
+  static void dispatch_event(const TEvent &e, T &sm) noexcept {
     dispatch_event_impl(e, sm, typename T::events{});
   }
 
  private:
   template <class T, class E, class... Ts>
-  void dispatch_event_impl(const TEvent &event, T &sm, const di::aux::type_list<E, Ts...> &) noexcept {
+  static void dispatch_event_impl(const TEvent &event, T &sm, const di::aux::type_list<E, Ts...> &) noexcept {
     if (TConfig::template get_id<E>() == TConfig::get_id(event)) {
       sm.process_event(TConfig::template get_event<E>(event));
     }
@@ -452,7 +450,7 @@ struct dispatcher {
   }
 
   template <class T>
-  void dispatch_event_impl(const TEvent &, T &, const di::aux::type_list<> &) noexcept {}
+  static void dispatch_event_impl(const TEvent &, T &, const di::aux::type_list<> &) noexcept {}
 };
 
 }  // msm

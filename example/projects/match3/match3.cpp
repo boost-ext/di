@@ -143,10 +143,6 @@ auto init_board = [](auto, view& v) {
 auto print = [](auto) { std::cout << "clicked" << std::endl; };
 
 auto controller__() noexcept {
-  struct config {
-    static void no_transition() noexcept {}
-  };
-
   using namespace msm;
   auto idle = init_state<__COUNTER__>{};
   auto wait_for_client = init_state<__COUNTER__>{};
@@ -155,7 +151,7 @@ auto controller__() noexcept {
   auto s2 = state<__COUNTER__>{};
 
   // clang-format off
-  return make_transition_table<config>(
+  return make_transition_table(
    // +-----------------------------------------------------------------+
       idle    		   == idle / init_board
 	, idle     		   == s1 + event<button_clicked> / print
@@ -170,34 +166,31 @@ auto controller__() noexcept {
 using controller = decltype(controller__());
 
 struct sdl_event_dispatcher {
-  static auto get_id(SDL_Event event) noexcept { return event.type; }
+  static auto get_id(const SDL_Event& event) noexcept { return event.type; }
   template <class T>
   static auto get_id() noexcept {
     return T::id;
   }
   template <class T>
-  static auto get_event(SDL_Event event) noexcept {
+  static auto get_event(const SDL_Event& event) noexcept {
     return T(event);
   }
 };
 
-using dispatcher = msm::dispatcher<SDL_Event, sdl_event_dispatcher>;
-
 #if __has_include(<SDL.h>)&&__has_include(<SDL_image.h>)
 struct sdl_user : iclient {
-  explicit sdl_user(dispatcher& d, controller& c) : dispatcher_(d), controller_(c) {}
+  explicit sdl_user(controller& c) : controller_(c) {}
 
   void run() override {
     SDL_Event event = {};
     while (!controller_.is_in_state<is_game_over>()) {
       while (SDL_PollEvent(&event)) {
-        dispatcher_.dispatch_event(event, controller_);
+        msm::dispatcher<SDL_Event, sdl_event_dispatcher>::dispatch_event(event, controller_);
       }
     }
   }
 
  private:
-  dispatcher& dispatcher_;
   controller& controller_;
 };
 #endif
