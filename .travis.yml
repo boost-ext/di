@@ -274,6 +274,8 @@ before_script:
   - git config --global push.default simple
 
 before_install:
+  - (wget https://github.com/boostorg/build/archive/boost-1.59.0.tar.gz
+     && tar zxf boost-1.59.0.tar.gz && cd boost-1.59.0 && ./bootstrap.sh && export PATH="$PATH:$PWD")
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then (brew install cmake); fi
 
 install:
