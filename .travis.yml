@@ -4,10 +4,7 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
-language: cpp
 sudo: false
-dist: precise
-group: edge
 env:
   global:
   - secure: "A27gNApbElRr3fqZXifVPKkB+xbxMYDFINGk2RDqul1X1Zg51M7e+ohHO9BwhEYiOGmCnFfbsVUP11XyFIH6kzWmxw9mhy8YDglbYfeyu6grxtU3mHElz8W7wO5OCPFPWXQf23sVYE8AWyjj6M+t3oyLJhPXCcYI7uMHEQm10CQ=" # GH_TOKEN
@@ -286,7 +283,7 @@ install:
     && export LD_LIBRARY_PATH="${TRAVIS_BUILD_DIR}/libcxx/lib:$LD_LIBRARY_PATH"; fi
 
 script:
-  - travis_wait make all
+  - travis_wait make -e all
   - if [ "${CHECK}" != "" ]; then (make check); fi
   - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (
     make doc && git clone --quiet --recursive --depth=1 --single-branch https://github.com/boostorg/boost.git
