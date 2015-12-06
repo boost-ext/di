@@ -78,6 +78,7 @@ test-suite extensions :
     [ example extensions/policies/types_dumper.cpp ]
     [ example extensions/policies/uml_dumper.cpp ]
     [ example extensions/providers/mocks_provider.cpp ]
+    [ example extensions/scopes/scoped_scope.cpp ]
     [ example extensions/scopes/session_scope.cpp ]
     [ example extensions/scopes/shared_scope.cpp ]
 ;

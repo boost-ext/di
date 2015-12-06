@@ -12,13 +12,6 @@
 //->
 #include <boost/di.hpp>
 
-//<-
-struct interface1 {
-  virtual ~interface1() noexcept = default;
-};
-struct implementation1 : interface1 {};
-//->
-
 namespace di = boost::di;
 
 class shared_scope {
@@ -47,6 +40,13 @@ class shared_scope {
 };
 
 static constexpr shared_scope shared{};
+
+//<-
+struct interface1 {
+  virtual ~interface1() noexcept = default;
+};
+struct implementation1 : interface1 {};
+//->
 
 class example {
  public:
