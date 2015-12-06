@@ -283,7 +283,7 @@ install:
     && export LD_LIBRARY_PATH="${TRAVIS_BUILD_DIR}/libcxx/lib:$LD_LIBRARY_PATH"; fi
 
 script:
-  - travis_wait make -e all
+  - travis_wait make all
   - if [ "${CHECK}" != "" ]; then (make check); fi
   - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (
     make doc && git clone --quiet --recursive --depth=1 --single-branch https://github.com/boostorg/boost.git
