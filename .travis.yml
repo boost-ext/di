@@ -273,7 +273,8 @@ before_script:
 before_install:
   - if [ "${BS}" == "bjam" ]; then (wget https://github.com/boostorg/build/archive/boost-1.59.0.tar.gz
      && tar zxf boost-1.59.0.tar.gz && cd build-boost-1.59.0 && ./bootstrap.sh)
-     && export PATH="$PATH:$PWD/build-boost-1.59.0"; fi
+     && export BOOST_ROOT="$PWD/build-boost-1.59.0"
+     && export PATH="$PATH:$BOOST_ROOT"; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "${BS}" == "cmake" ]; then (brew install cmake); fi
 
 install:
