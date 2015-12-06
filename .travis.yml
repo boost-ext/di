@@ -269,49 +269,49 @@ matrix:
     env: BS=cmake BENCHMARK=ON COMPILER=clang++
 
 before_script:
-- git config --global user.name "Travis-CI"
-- git config --global user.email "travis@ci.net"
-- git config --global push.default simple
+  - git config --global user.name "Travis-CI"
+  - git config --global user.email "travis@ci.net"
+  - git config --global push.default simple
 
 before_install:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then (brew install cmake); fi
 
 install:
-- export CXX="${COMPILER}"
-- if [ "${LIBCXX}" != "" ]; then (svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx
-  && cd libcxx/lib && ./buildit && ln -f -s libc++.so.1.0 libc++.so.1)
-  && export CXXFLAGS="-stdlib=libc++ -I${TRAVIS_BUILD_DIR}/libcxx/include"
-  && export LDFLAGS="-L${TRAVIS_BUILD_DIR}/libcxx/lib -lc++"
-  && export LD_LIBRARY_PATH="${TRAVIS_BUILD_DIR}/libcxx/lib:$LD_LIBRARY_PATH"; fi
+  - export CXX="${COMPILER}"
+  - if [ "${LIBCXX}" != "" ]; then (svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx
+    && cd libcxx/lib && ./buildit && ln -f -s libc++.so.1.0 libc++.so.1)
+    && export CXXFLAGS="-stdlib=libc++ -I${TRAVIS_BUILD_DIR}/libcxx/include"
+    && export LDFLAGS="-L${TRAVIS_BUILD_DIR}/libcxx/lib -lc++"
+    && export LD_LIBRARY_PATH="${TRAVIS_BUILD_DIR}/libcxx/lib:$LD_LIBRARY_PATH"; fi
 
 script:
-  travis_wait make all
-- if [ "${CHECK}" != "" ]; then (make check); fi
-- if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (
-  make doc && git clone --quiet --recursive --depth=1 --single-branch https://github.com/boostorg/boost.git
-  && cd boost && ./bootstrap.sh && ./b2 headers && mkdir libs/di && cp -r ../build ../doc ../example ../include libs/di
-  && cd libs/di/doc && ../build/b2 -sBOOST_ROOT=../build && TRY_IT_ONLINE=ON scripts/update_html.sh
-  && git clone https://github.com/krzysztof-jusiak/di.git
-  && cd di && git checkout -b gh-pages -t origin/gh-pages && git reset --hard
-  && rm -rf cpp14/boost/libs/di/doc/html && cp -r ../html cpp14/boost/libs/di/doc
-  && git add -A . && git commit -am "update" && git push --force --quiet
-  "https://${GH_TOKEN}@github.com/krzysztof-jusiak/di"); fi
+  - travis_wait make all
+  - if [ "${CHECK}" != "" ]; then (make check); fi
+  - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (
+    make doc && git clone --quiet --recursive --depth=1 --single-branch https://github.com/boostorg/boost.git
+    && cd boost && ./bootstrap.sh && ./b2 headers && mkdir libs/di && cp -r ../build ../doc ../example ../include libs/di
+    && cd libs/di/doc && ../build/b2 -sBOOST_ROOT=../build && TRY_IT_ONLINE=ON scripts/update_html.sh
+    && git clone https://github.com/krzysztof-jusiak/di.git
+    && cd di && git checkout -b gh-pages -t origin/gh-pages && git reset --hard
+    && rm -rf cpp14/boost/libs/di/doc/html && cp -r ../html cpp14/boost/libs/di/doc
+    && git add -A . && git commit -am "update" && git push --force --quiet
+    "https://${GH_TOKEN}@github.com/krzysztof-jusiak/di"); fi
 
 after_success:
-- if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${VARIANT}" == "coverage" ]; then (pip
-  install --user travis requests[security] cpp-coveralls && coveralls -r . -b test/ --gcov /usr/bin/${GCOV}
-  --repo-token "${COVERALLS_REPO_TOKEN}"); fi
-- if [ "${BENCHMARK}" != "" ]; then (git
-  clone https://github.com/krzysztof-jusiak/di.git benchmarks
-  && cd benchmarks && git checkout -b benchmarks -t origin/benchmarks
-  && find ../build/test ../test -iname "*.json" | xargs -I% cp % . && git add -A . && git commit -am "update"
-  && git push --force --quiet "https://${GH_TOKEN}@github.com/krzysztof-jusiak/di"); fi
-- if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${BIICODE}" != "" ]; then (mkdir biicode && cd biicode
-  && wget https://s3.amazonaws.com/biibinaries/release/3.3/bii-ubuntu-64_3_3.deb
-  && dpkg -x bii-ubuntu-64_3_3.deb . && export PATH=$PWD/opt/biicode:$PATH && bii init di
-  && cd di && bii new krzysztofjusiak/di && cd blocks/krzysztofjusiak/di
-  && git clone https://github.com/krzysztof-jusiak/di.git .
-  && bii user "${BII_USER}" -p "${BII_PASSWORD}" && bii publish -r); fi
+  - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${VARIANT}" == "coverage" ]; then (pip
+    install --user travis requests[security] cpp-coveralls && coveralls -r . -b test/ --gcov /usr/bin/${GCOV}
+    --repo-token "${COVERALLS_REPO_TOKEN}"); fi
+  - if [ "${BENCHMARK}" != "" ]; then (git
+    clone https://github.com/krzysztof-jusiak/di.git benchmarks
+    && cd benchmarks && git checkout -b benchmarks -t origin/benchmarks
+    && find ../build/test ../test -iname "*.json" | xargs -I% cp % . && git add -A . && git commit -am "update"
+    && git push --force --quiet "https://${GH_TOKEN}@github.com/krzysztof-jusiak/di"); fi
+  - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${BIICODE}" != "" ]; then (mkdir biicode && cd biicode
+    && wget https://s3.amazonaws.com/biibinaries/release/3.3/bii-ubuntu-64_3_3.deb
+    && dpkg -x bii-ubuntu-64_3_3.deb . && export PATH=$PWD/opt/biicode:$PATH && bii init di
+    && cd di && bii new krzysztofjusiak/di && cd blocks/krzysztofjusiak/di
+    && git clone https://github.com/krzysztof-jusiak/di.git .
+    && bii user "${BII_USER}" -p "${BII_PASSWORD}" && bii publish -r); fi
 
 notifications:
   webhooks:
