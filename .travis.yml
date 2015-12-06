@@ -274,9 +274,9 @@ before_script:
   - git config --global push.default simple
 
 before_install:
-  - (wget https://github.com/boostorg/build/archive/boost-1.59.0.tar.gz
-     && tar zxf boost-1.59.0.tar.gz && cd build-boost-1.59.0 && ./bootstrap.sh && export PATH="$PATH:$PWD")
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then (brew install cmake); fi
+  - if [ "${BS}" == "bjam" ]; then (wget https://github.com/boostorg/build/archive/boost-1.59.0.tar.gz
+     && tar zxf boost-1.59.0.tar.gz && cd build-boost-1.59.0 && ./bootstrap.sh && export PATH="$PATH:$PWD"); fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "${BS}" == "cmake" ]; then (brew install cmake); fi
 
 install:
   - export CXX="${COMPILER}"
@@ -287,7 +287,7 @@ install:
     && export LD_LIBRARY_PATH="${TRAVIS_BUILD_DIR}/libcxx/lib:$LD_LIBRARY_PATH"; fi
 
 script:
-  - travis_wait make all
+  - travis_wait make all BS=${BS} TOOLSET=${TOOLSET}
   - if [ "${CHECK}" != "" ]; then (make check); fi
   - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (
     make doc && git clone --quiet --recursive --depth=1 --single-branch https://github.com/boostorg/boost.git
