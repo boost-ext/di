@@ -29,7 +29,7 @@ matrix:
   - os: linux
     env: CHECK=ON
   - os: linux
-    env: BS=bjam TOOLSET=clang MEMCHECK=${VALGRIND} BENCHMARK=QUICK CXX=/usr/local/clang-3.4/bin/clang++
+    env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND BENCHMARK=QUICK CXX=/usr/local/clang-3.4/bin/clang++
     addons:
       apt:
         packages:
@@ -42,7 +42,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.4
   - os: linux
-    env: BS=bjam TOOLSET=clang MEMCHECK=${VALGRIND} LIBCXX=ON CXX=/usr/local/clang-3.4/bin/clang++
+    env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND LIBCXX=ON CXX=/usr/local/clang-3.4/bin/clang++
     addons:
       apt:
         packages:
@@ -68,7 +68,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.4
   - os: linux
-    env: BS=bjam TOOLSET=clang MEMCHECK=${VALGRIND} BENCHMARK=QUICK CXX=clang++-3.5
+    env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND BENCHMARK=QUICK CXX=clang++-3.5
     addons:
       apt:
         packages:
@@ -81,7 +81,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.5
   - os: linux
-    env: BS=bjam TOOLSET=clang MEMCHECK=${VALGRIND} LIBCXX=ON CXX=clang++-3.5
+    env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND LIBCXX=ON CXX=clang++-3.5
     addons:
       apt:
         packages:
@@ -93,7 +93,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.5
   - os: linux
-    env: B=bjam TOOLSET=clang MEMCHECK=${VALGRIND} BENCHMARK=QUICK CXX=clang++-3.6
+    env: B=bjam TOOLSET=clang MEMCHECK=VALGRIND BENCHMARK=QUICK CXX=clang++-3.6
     addons:
       apt:
         packages:
@@ -106,7 +106,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.6
   - os: linux
-    env: BS=bjam TOOLSET=clang MEMCHECK=${VALGRIND} LIBCXX=ON CXX=clang++-3.6
+    env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND LIBCXX=ON CXX=clang++-3.6
     addons:
       apt:
         packages:
@@ -118,7 +118,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.6
   - os: linux
-    env: BS=bjam TOOLSET=clang MEMCHECK=${VALGRIND} BENCHMARK=QUICK CXX=clang++-3.7
+    env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND BENCHMARK=QUICK CXX=clang++-3.7
     addons:
       apt:
         packages:
@@ -131,7 +131,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.7
   - os: linux
-    env: BS=bjam TOOLSET=clang MEMCHECK=${VALGRIND} LIBCXX=ON CXX=clang++-3.7
+    env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND LIBCXX=ON CXX=clang++-3.7
     addons:
       apt:
         packages:
@@ -155,7 +155,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.7
   - os: linux
-    env: BS=bjam TOOLSET=clang MEMCHECK=${VALGRIND} BENCHMARK=QUICK CXX=clang++-3.8
+    env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND BENCHMARK=QUICK CXX=clang++-3.8
     addons:
       apt:
         packages:
@@ -168,7 +168,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise
   - os: linux
-    env: BS=bjam TOOLSET=clang MEMCHECK=${VALGRIND} LIBCXX=ON CXX=clang++-3.8
+    env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND LIBCXX=ON CXX=clang++-3.8
     addons:
       apt:
         packages:
@@ -192,7 +192,7 @@ matrix:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise
   - os: linux
-    env: BS=bjam TOOLSET=gcc GCOV=gcov-5 VARIANT=coverage MEMCHECK=${VALGRIND} BIICODE=ON CXX=g++-5
+    env: BS=bjam TOOLSET=gcc GCOV=gcov-5 VARIANT=coverage MEMCHECK=VALGRIND BIICODE=ON CXX=g++-5
     addons:
       apt:
         packages:
