@@ -28,6 +28,13 @@ matrix:
         - xsltproc
   - os: linux
     env: CHECK=ON
+    addons:
+      apt:
+        packages:
+        - clang-3.8
+        sources:
+        - ubuntu-toolchain-r-test
+        - llvm-toolchain-precise
   - os: linux
     env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND BENCHMARK=QUICK CXX=/usr/local/clang-3.4/bin/clang++
     addons:
@@ -274,8 +281,7 @@ install:
   - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "${BS}" == "cmake" ]; then (brew install cmake); fi
   - if [ "${BS}" == "bjam" ]; then (wget https://github.com/boostorg/build/archive/boost-1.59.0.tar.gz
     && tar zxf boost-1.59.0.tar.gz && cd build-boost-1.59.0 && ./bootstrap.sh)
-    && touch Jamroot
-    && export BOOST_ROOT="$PWD/build-boost-1.59.0"
+    && touch Jamroot && export BOOST_ROOT="$PWD/build-boost-1.59.0"
     && export PATH="$PATH:$BOOST_ROOT"; fi
   - if [ "${LIBCXX}" != "" ]; then (svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx
     && cd libcxx/lib && ./buildit && ln -f -s libc++.so.1.0 libc++.so.1)
@@ -284,8 +290,8 @@ install:
     && export LD_LIBRARY_PATH="${TRAVIS_BUILD_DIR}/libcxx/lib:$LD_LIBRARY_PATH"; fi
 
 script:
-  - travis_wait make all
-  - if [ "${CHECK}" != "" ]; then (make check); fi
+  - if [ "${BS}" != "" ]; then (travis_wait make all); fi
+  - if [ "${CHECK}" != "" ]; then (travis_wait make check); fi
   - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (
     make doc && git clone --quiet --recursive --depth=1 --single-branch https://github.com/boostorg/boost.git
     && cd boost && ./bootstrap.sh && ./b2 headers && mkdir libs/di && cp -r ../build ../doc ../example ../include libs/di
