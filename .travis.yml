@@ -294,7 +294,7 @@ script:
   - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (
     git clone --quiet --recursive --depth=1 --single-branch https://github.com/boostorg/boost.git
     && cd boost && ./bootstrap.sh && ./b2 headers && mkdir libs/di && cp -r Makefile ../doc ../example ../include libs/di
-    && cd libs/di/doc && make doc && && git clone https://github.com/krzysztof-jusiak/di.git
+    && cd libs/di && make doc && cd doc && git clone https://github.com/krzysztof-jusiak/di.git
     && cd di && git checkout -b gh-pages -t origin/gh-pages && git reset --hard
     && rm -rf cpp14/boost/libs/di/doc/html && cp -r ../html cpp14/boost/libs/di/doc
     && git add -A . && git commit -am "update" && git push --force --quiet
