@@ -78,6 +78,7 @@ test-suite extensions :
     [ example extensions/policies/types_dumper.cpp ]
     [ example extensions/policies/uml_dumper.cpp ]
     [ example extensions/providers/mocks_provider.cpp ]
+    [ example extensions/scopes/scoped_scope.cpp ]
     [ example extensions/scopes/session_scope.cpp ]
     [ example extensions/scopes/shared_scope.cpp ]
 ;
@@ -93,6 +94,10 @@ test-suite performance :
     [ example performance/create_named_type.cpp ]
     [ example performance/create_type_with_bound_instance.cpp ]
     [ example performance/create_type_without_bindings.cpp ]
+;
+
+test-suite projects :
+    #[ example projects/msm/msm.cpp : -Iprojects/msm ]
 ;
 
 test-suite quick_user_guide :

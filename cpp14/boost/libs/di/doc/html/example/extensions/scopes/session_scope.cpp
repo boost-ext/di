@@ -12,13 +12,6 @@
 //->
 #include <boost/di.hpp>
 
-//<-
-struct interface1 {
-  virtual ~interface1() noexcept = default;
-};
-struct implementation1 : interface1 {};
-//->
-
 namespace di = boost::di;
 
 template <class TName, class TScope>
@@ -68,6 +61,13 @@ template <class TName, class TScope = di::scopes::singleton>
 auto session(const TName&, const TScope& = {}) {
   return session_scope<TName, TScope>{};
 }
+
+//<-
+struct interface1 {
+  virtual ~interface1() noexcept = default;
+};
+struct implementation1 : interface1 {};
+//->
 
 auto my_session = [] {};
 

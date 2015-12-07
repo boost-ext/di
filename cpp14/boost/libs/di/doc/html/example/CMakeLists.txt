@@ -47,6 +47,7 @@ example(extensions/injections/xml_injection)
 example(extensions/policies/types_dumper)
 example(extensions/policies/uml_dumper)
 example(extensions/providers/mocks_provider)
+example(extensions/scopes/scoped_scope)
 example(extensions/scopes/session_scope)
 example(extensions/scopes/shared_scope)
 
