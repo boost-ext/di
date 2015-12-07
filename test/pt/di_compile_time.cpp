@@ -228,7 +228,8 @@ class json {
 
  public:
   explicit json(const std::string& name) : file_{name + "_" + cxx() + ".json"} {
-    file_ << std::regex_replace(header, std::regex{"%title%"}, name + " complexity | " + cxx() + " " + cxxflags());
+    file_ << std::regex_replace(std::string{header}, std::regex{"%title%"},
+                                name + " complexity | " + cxx() + " " + cxxflags());
   }
 
   ~json() { file_ << footer; }
@@ -261,7 +262,6 @@ class json {
 class series {
  public:
   series(json& data, const std::string& name) : data_(data) { data_.series_start(name); }
-
   ~series() { data_.series_end(); }
 
  private:
