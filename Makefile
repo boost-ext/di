@@ -8,6 +8,8 @@ VALGRIND:=--memcheck="valgrind --leak-check=full --error-exitcode=1"
 DRMEMORY:=--memcheck="drmemory -light -batch -exit_code_if_errors 1"
 BS?=cmake
 TOOLSET?=clang
+CLANG_FORMAT?=clang-format
+CLANG_TIDY?=clang-tidy
 GENERATOR?="Unix Makefiles"
 
 .PHONY: all clean doc
@@ -39,10 +41,10 @@ check_pph: pph
 	@git diff --quiet include/boost/di.hpp
 
 check_style:
-	@find include example test -iname "*.hpp" -or -iname "*.cpp" | xargs clang-format -i && exit `git ls-files -m | wc -l`
+	@find include example test -iname "*.hpp" -or -iname "*.cpp" | xargs $(CLANG_FORMAT) -i && exit `git ls-files -m | wc -l`
 
 check_static:
-	clang-tidy -header-filter='boost/di' `find -type f -iname "*.cpp"` -- -std=c++1y -I ../include -I . -include common/test.hpp | sort -u
+	$(CLANG_TIDY) -header-filter='boost/di' `find -type f -iname "*.cpp"` -- -std=c++1y -I ../include -I . -include common/test.hpp | sort -u
 
 doc:
 	@cd doc && bjam -j2 -q && TRY_IT_ONLINE=ON scripts/update_html.sh
