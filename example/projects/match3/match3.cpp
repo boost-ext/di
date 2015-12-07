@@ -1,6 +1,6 @@
 // clang-format off
 // clang++ match3.cpp -I ../../../include -I../msm -ISDL2 -std=c++1y  -lSDL2 -lSDL2_image -L. && LD_LIBRARY_PATH=. ./a.out
-// emcc match3.cpp -I . -I SDL2 -std=c++1y -s USE_SDL=2 -s USE_SDL_IMAGE=2 -o match3.html
+// EMCC_DEBUG=1 em++ -Wwarn-absolute-paths -O2 match3.cpp -s SAFE_HEAP=1 -s ASSERTIONS=2 -I ../msm -I../../../include -std=c++1y -s USE_SDL=2 -s USE_SDL_IMAGE=2 -DDEBUG_IMGLIB -o match3.html --preload-file images --use-preload-plugins -Wwarn-absolute-paths && ~/Downloads/chrome/opt/google/chrome/chrome --disable-web-security match3.html
 // clang-format on
 
 #if __has_include(<SDL.h>)&&__has_include(<SDL_image.h>)
@@ -15,9 +15,10 @@
 #include <map>
 #include <random>
 #include <boost/di.hpp>
+#if defined(EMSCRIPTEN)
+#include "emscripten.h"
+#endif
 #include "msm.hpp"
-
-#include <boost/units/detail/utility.hpp>
 
 class SDL_Texture;
 
@@ -25,6 +26,7 @@ namespace match3 {
 
 class icanvas {
  public:
+  // TODO sprite
   virtual ~icanvas() noexcept = default;
   virtual std::shared_ptr<SDL_Texture> load_image(const std::string&) const = 0;
   virtual void draw(std::shared_ptr<SDL_Texture>, int x = 0, int y = 0, int layer = 0) = 0;
@@ -101,10 +103,10 @@ class view {
 
  public:
   view(icanvas& c) : canvas_(c) {
-    canvas_.draw(canvas_.load_image("background.png"), 0, 0, 0);
+    canvas_.draw(canvas_.load_image("images/background.png"), 0, 0, 0);
 
     for (int i = 1; i <= 5; ++i) {
-      grids[i - 1] = canvas_.load_image(std::to_string(i) + ".png");
+      grids[i - 1] = canvas_.load_image("images/" + std::to_string(i) + ".png");
     };
 
     canvas_.render();
@@ -194,11 +196,15 @@ class sdl_user_input : public iclient {
       return result;
     };
 
+#if !defined(EMSCRIPTEN)
     while (!is_game_over()) {
+#endif
       while (SDL_PollEvent(&event)) {
         msm::dispatcher<SDL_Event, sdl_event_dispatcher>::dispatch_event(event, controller_);
       }
+#if !defined(EMSCRIPTEN)
     }
+#endif
   }
 
  private:
@@ -225,7 +231,15 @@ auto configuration = [] {
 
 }  // match3
 
-int main() {
+void play() {
   auto injector = di::make_injector(match3::configuration());
   injector.create<match3::game>().play();
+}
+
+int main() {
+#if defined(EMSCRIPTEN)
+  emscripten_set_main_loop(play, 0, 0);
+#else
+  play();
+#endif
 }
