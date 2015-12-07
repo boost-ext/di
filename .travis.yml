@@ -265,19 +265,18 @@ matrix:
     osx_image: xcode7.2b1
     env: BS=cmake BENCHMARK=ON CXX=clang++
 
-before_script:
+before_install:
   - git config --global user.name "Travis-CI"
   - git config --global user.email "travis@ci.net"
   - git config --global push.default simple
 
-before_install:
+install:
+  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "${BS}" == "cmake" ]; then (brew install cmake); fi
   - if [ "${BS}" == "bjam" ]; then (wget https://github.com/boostorg/build/archive/boost-1.59.0.tar.gz
     && tar zxf boost-1.59.0.tar.gz && cd build-boost-1.59.0 && ./bootstrap.sh)
+    && touch Jamroot
     && export BOOST_ROOT="$PWD/build-boost-1.59.0"
     && export PATH="$PATH:$BOOST_ROOT"; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "${BS}" == "cmake" ]; then (brew install cmake); fi
-
-install:
   - if [ "${LIBCXX}" != "" ]; then (svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx
     && cd libcxx/lib && ./buildit && ln -f -s libc++.so.1.0 libc++.so.1)
     && export CXXFLAGS="-stdlib=libc++ -I${TRAVIS_BUILD_DIR}/libcxx/include"
