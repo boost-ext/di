@@ -124,12 +124,22 @@ class view {
 class board {};
 
 struct game_over_flag {};
-auto button_clicked = msm::event<SDL_Event, SDL_MOUSEBUTTONUP>{};
-auto key_pressed = msm::event<SDL_Event, SDL_KEYDOWN>{};
-auto window_closed = msm::event<SDL_Event, SDL_QUIT>{};
+struct button_clicked {
+  static constexpr auto id = SDL_MOUSEBUTTONUP;
+  button_clicked(...) {}
+};
+struct key_pressed {
+  static constexpr auto id = SDL_KEYDOWN;
+  key_pressed(...) {}
+};
+struct window_closed {
+  static constexpr auto id = SDL_QUIT;
+  window_closed(...) {}
+};
 
-auto guard = [](auto) { return true; };
-auto is_key = [](int key) { return [](auto e) { return true; }; };
+auto guard = [] { return true; };
+template <int Key>
+auto is_key = [](auto e) { return true; };
 
 auto init_board = [](auto, view& v) {
   std::random_device rd;
@@ -156,10 +166,10 @@ auto controller__ = [] {
   return make_transition_table(
    // +-----------------------------------------------------------------+
       idle    		   == idle / init_board
-	, idle     		   == s1 + button_clicked / print
+	, idle     		   == s1 + event<button_clicked> / print
    // +-----------------------------------------------------------------+
-	, wait_for_client  == game_over + window_closed
-	, wait_for_client  == game_over + key_pressed [is_key(SDLK_ESCAPE)]
+	, wait_for_client  == game_over + event<window_closed>
+	, wait_for_client  == game_over + event<key_pressed> [is_key<SDLK_ESCAPE>]
    // +-----------------------------------------------------------------+
   );
   // clang-format on
@@ -185,7 +195,16 @@ class sdl_user_input : public iclient {
   explicit sdl_user_input(controller& c) : controller_(c) {}
 
   void run() override {
-    SDL_Event event = {};
+#if defined(EMSCRIPTEN)
+    emscripten_set_main_loop_arg(run_impl, (void*)&controller_, 0, 0);
+#else
+    run_impl((void*)&controller_);
+#endif
+  }
+
+  static void run_impl(void* c) {
+    auto& controller_ = (controller&)*c;
+#if !defined(EMSCRIPTEN)
     auto is_game_over = [&] {
       auto result = false;
       controller_.visit_current_states([&](auto state) {
@@ -196,9 +215,9 @@ class sdl_user_input : public iclient {
       return result;
     };
 
-#if !defined(EMSCRIPTEN)
     while (!is_game_over()) {
 #endif
+      SDL_Event event = {};
       while (SDL_PollEvent(&event)) {
         msm::dispatcher<SDL_Event, sdl_event_dispatcher>::dispatch_event(event, controller_);
       }
@@ -231,15 +250,7 @@ auto configuration = [] {
 
 }  // match3
 
-void play() {
+int main() {
   auto injector = di::make_injector(match3::configuration());
   injector.create<match3::game>().play();
-}
-
-int main() {
-#if defined(EMSCRIPTEN)
-  emscripten_set_main_loop(play, 0, 0);
-#else
-  play();
-#endif
 }
