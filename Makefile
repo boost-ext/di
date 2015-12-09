@@ -38,10 +38,13 @@ pph:
 check: check_pph check_style
 
 check_pph: pph
+	@git diff include/boost/di.hpp
 	@git diff --quiet include/boost/di.hpp
 
 check_style:
-	@find include example test -iname "*.hpp" -or -iname "*.cpp" | xargs $(CLANG_FORMAT) -i && exit `git ls-files -m | wc -l`
+	@find include example test -iname "*.hpp" -or -iname "*.cpp" | xargs $(CLANG_FORMAT) -i
+	@git diff include example test
+	@exit `git ls-files -m include example test | wc -l`
 
 check_static:
 	@$(CLANG_TIDY) -header-filter='boost/di' `find -type f -iname "*.cpp"` -- -std=c++1y -I ../include -I . -include common/test.hpp | sort -u
