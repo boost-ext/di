@@ -129,8 +129,8 @@ class generator {
       for (auto j = 0; j < MAX_COMPLEX_TYPES; ++j) {
         source_code_ << (j || create_ == config_create::INJECT ? ", " : "") << (interfaces_ ? "std::unique_ptr<" : "")
                      << (interfaces_ ? ((i * MAX_COMPLEX_TYPES) + j < modules_ * MAX_COMPLEX_TYPES ? "i" : "impl")
-                                     : "x")
-                     << std::setfill('0') << std::setw(2) << (i * MAX_COMPLEX_TYPES) + j << (interfaces_ ? ">" : "");
+                                     : "x") << std::setfill('0') << std::setw(2) << (i * MAX_COMPLEX_TYPES) + j
+                     << (interfaces_ ? ">" : "");
       }
       source_code_ << ") { } };\n";
     }

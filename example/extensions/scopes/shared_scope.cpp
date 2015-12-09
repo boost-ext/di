@@ -23,8 +23,8 @@ class shared_scope {
     using is_referable = typename di::wrappers::shared<shared_scope, T>::template is_referable<T_>;
 
     template <class, class TProvider>
-    static auto try_create(const TProvider& provider)
-        -> decltype(di::wrappers::shared<shared_scope, T>{std::shared_ptr<T>{provider.get()}});
+    static auto try_create(const TProvider& provider) -> decltype(di::wrappers::shared<shared_scope, T>{
+        std::shared_ptr<T>{provider.get()}});
 
     template <class, class TProvider>
     auto create(const TProvider& provider) {

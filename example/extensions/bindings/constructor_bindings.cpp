@@ -28,9 +28,8 @@ struct implementation : interface {
 /*<<to constructor extension>>*/
 template <class... TCtor>
 struct constructor_impl {
-  template <class TInjector, class T,
-            BOOST_DI_REQUIRES(boost::di::concepts::creatable<boost::di::type_traits::direct, typename T::expected,
-                                                             TCtor...>::value) = 0>
+  template <class TInjector, class T, BOOST_DI_REQUIRES(boost::di::concepts::creatable<
+                                          boost::di::type_traits::direct, typename T::expected, TCtor...>::value) = 0>
   auto operator()(const TInjector& injector, const T&) const {
     return new typename T::expected{injector.template create<TCtor>()...};
   }

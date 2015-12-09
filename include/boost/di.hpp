@@ -1046,9 +1046,8 @@ class instance {
     template <class, class TProvider, BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider>::value) = 0>
     static detail::wrapper_traits_t<decltype(aux::declval<TGiven>()(aux::declval<typename TProvider::injector_t>()))>
     try_create(const TProvider&) noexcept;
-    template <
-        class T, class TProvider,
-        BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
+    template <class T, class TProvider, BOOST_DI_REQUIRES(detail::is_expr<
+                                            TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
     static detail::wrapper_traits_t<decltype(aux::declval<TGiven>()(aux::declval<typename TProvider::injector_t>(),
                                                                     aux::declval<detail::arg<T, TExpected, TGiven>>()))>
     try_create(const TProvider&) noexcept;
@@ -1071,9 +1070,8 @@ class instance {
       using wrapper = detail::wrapper_traits_t<decltype((object_)(*provider.injector_))>;
       return wrapper{(object_)(*provider.injector_)};
     }
-    template <
-        class T, class TProvider,
-        BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
+    template <class T, class TProvider, BOOST_DI_REQUIRES(detail::is_expr<
+                                            TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
     auto create(const TProvider& provider) noexcept {
       using wrapper =
           detail::wrapper_traits_t<decltype((object_)(*provider.injector_, detail::arg<T, TExpected, TGiven>{}))>;
@@ -1523,8 +1521,8 @@ aux::false_type callable_impl(...);
 template <class T, class TArg>
 auto callable_impl(const T&& t, TArg&& arg) -> aux::is_valid_expr<decltype(t(arg))>;
 template <class T, class TArg, class TDependency, class... TCtor>
-auto callable_impl(const T&& t, TArg&& arg, TDependency&& dep, TCtor&&... ctor)
-    -> aux::is_valid_expr<decltype(t(arg, dep, ctor...))>;
+auto callable_impl(const T&& t, TArg&& arg, TDependency&& dep,
+                   TCtor&&... ctor) -> aux::is_valid_expr<decltype(t(arg, dep, ctor...))>;
 template <class...>
 struct is_callable_impl;
 template <class T, class... Ts>
@@ -1730,7 +1728,7 @@ struct bind :
 #if defined(__cpp_variable_templates)
         bind
 #endif
-{};
+    {};
 static constexpr BOOST_DI_UNUSED core::override override{};
 static constexpr BOOST_DI_UNUSED scopes::deduce deduce{};
 static constexpr BOOST_DI_UNUSED scopes::unique unique{};
@@ -2197,8 +2195,7 @@ class injector : injector_base, pool<bindings_t<TDeps...>> {
     return BOOST_DI_TYPE_WKND(T) create_successful_impl<aux::true_type>(aux::type<T>{});
   }
   template <class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, aux::true_type>::value) = 0>
-  BOOST_DI_DEPRECATED("creatable constraint not satisfied")
-  T
+  BOOST_DI_DEPRECATED("creatable constraint not satisfied") T
       // clang-format off
   create
       // clang-format on
@@ -2368,8 +2365,7 @@ class injector<TConfig, pool<>, TDeps...> : injector_base, pool<bindings_t<TDeps
     return BOOST_DI_TYPE_WKND(T) create_successful_impl<aux::true_type>(aux::type<T>{});
   }
   template <class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, aux::true_type>::value) = 0>
-  BOOST_DI_DEPRECATED("creatable constraint not satisfied")
-  T
+  BOOST_DI_DEPRECATED("creatable constraint not satisfied") T
       // clang-format off
   create
       // clang-format on
@@ -2756,8 +2752,9 @@ class heap {
 #define BOOST_DI_SIZE(...) BOOST_DI_CAT(BOOST_DI_VARIADIC_SIZE_I(__VA_ARGS__, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, ), )
 #define BOOST_DI_PRIMITIVE_CAT(a, ...) a##__VA_ARGS__
 #define BOOST_DI_ELEM(n, ...) BOOST_DI_ELEM_I(n, __VA_ARGS__)
-#define BOOST_DI_IS_EMPTY(...) \
-  BOOST_DI_DETAIL_IS_EMPTY_IIF(BOOST_DI_IBP(__VA_ARGS__))(BOOST_DI_DETAIL_IS_EMPTY_GEN_ZERO, BOOST_DI_DETAIL_IS_EMPTY_PROCESS)(__VA_ARGS__)
+#define BOOST_DI_IS_EMPTY(...)                                                               \
+  BOOST_DI_DETAIL_IS_EMPTY_IIF(BOOST_DI_IBP(__VA_ARGS__))(BOOST_DI_DETAIL_IS_EMPTY_GEN_ZERO, \
+                                                          BOOST_DI_DETAIL_IS_EMPTY_PROCESS)(__VA_ARGS__)
 #define BOOST_DI_DETAIL_IS_EMPTY_PRIMITIVE_CAT(a, b) a##b
 #define BOOST_DI_DETAIL_IS_EMPTY_IIF(bit) BOOST_DI_DETAIL_IS_EMPTY_PRIMITIVE_CAT(BOOST_DI_DETAIL_IS_EMPTY_IIF_, bit)
 #define BOOST_DI_DETAIL_IS_EMPTY_NON_FUNCTION_C(...) ()
@@ -2879,9 +2876,9 @@ using inject = aux::type_list<Ts...>;
 #define BOOST_DI_GEN_ARG_NAME(p) BOOST_DI_GEN_ARG_NAME_IMPL p )
 #define BOOST_DI_GEN_NONE_TYPE(p) ::boost::di::v1_0_0::aux::none_type
 #define BOOST_DI_GEN_ARG_NAME_IMPL(p) decltype(::boost::di::v1_0_0::detail::p) BOOST_DI_EAT(
-#define BOOST_DI_GEN_NAME_IMPL(p, i) \
+#define BOOST_DI_GEN_NAME_IMPL(p, i)             \
   BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
-    BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_GEN_ARG_NAME, BOOST_DI_GEN_NONE_TYPE)(p)
+      BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_GEN_ARG_NAME, BOOST_DI_GEN_NONE_TYPE)(p)
 #define BOOST_DI_GEN_NAME(i, ...) BOOST_DI_GEN_NAME_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__, ), i)
 #define BOOST_DI_INJECT_TRAITS_IMPL_0(...)                                                       \
   static void ctor(BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__)); \
@@ -2894,20 +2891,15 @@ using inject = aux::type_list<Ts...>;
                                              ::boost::di::v1_0_0::aux::function_traits_t<decltype(name)>>;
 #define BOOST_DI_INJECT_TRAITS_EMPTY_IMPL(...) \
   using boost_di_inject__ BOOST_DI_UNUSED = ::boost::di::v1_0_0::aux::type_list<>
-#define BOOST_DI_INJECT_TRAITS_IMPL(...)                                                                                                                                                                                                                                                                       \
-  struct boost_di_inject__ {                                                                                                                                                                                                                                                                                   \
-    BOOST_DI_CAT(BOOST_DI_INJECT_TRAITS_IMPL_, BOOST_DI_HAS_NAMES(__VA_ARGS__))(__VA_ARGS__) \
-        static_assert( \
-            BOOST_DI_SIZE(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE \
-          , "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE" \
-        ); \
+#define BOOST_DI_INJECT_TRAITS_IMPL(...)                                                                    \
+  struct boost_di_inject__ {                                                                                \
+    BOOST_DI_CAT(BOOST_DI_INJECT_TRAITS_IMPL_, BOOST_DI_HAS_NAMES(__VA_ARGS__))(__VA_ARGS__) static_assert( \
+        BOOST_DI_SIZE(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE,                                         \
+        "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE");              \
   }
-#define BOOST_DI_INJECT_TRAITS(...) \
-  BOOST_DI_IF( \
-        BOOST_DI_IS_EMPTY(__VA_ARGS__) \
-      , BOOST_DI_INJECT_TRAITS_EMPTY_IMPL \
-      , BOOST_DI_INJECT_TRAITS_IMPL \
-    )(__VA_ARGS__)
+#define BOOST_DI_INJECT_TRAITS(...)                                              \
+  BOOST_DI_IF(BOOST_DI_IS_EMPTY(__VA_ARGS__), BOOST_DI_INJECT_TRAITS_EMPTY_IMPL, \
+              BOOST_DI_INJECT_TRAITS_IMPL)(__VA_ARGS__)
 #define BOOST_DI_INJECT(T, ...)        \
   BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
   T(BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__))

@@ -40,8 +40,8 @@ template <class T, class TArg>
 auto callable_impl(const T&& t, TArg&& arg) -> aux::is_valid_expr<decltype(t(arg))>;
 
 template <class T, class TArg, class TDependency, class... TCtor>
-auto callable_impl(const T&& t, TArg&& arg, TDependency&& dep, TCtor&&... ctor)
-    -> aux::is_valid_expr<decltype(t(arg, dep, ctor...))>;
+auto callable_impl(const T&& t, TArg&& arg, TDependency&& dep,
+                   TCtor&&... ctor) -> aux::is_valid_expr<decltype(t(arg, dep, ctor...))>;
 
 template <class...>
 struct is_callable_impl;

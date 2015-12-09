@@ -47,7 +47,7 @@ struct bind :
 #if defined(__cpp_variable_templates)  // __pph__
         bind
 #endif  // __pph__
-{};
+    {};
 
 static constexpr BOOST_DI_UNUSED core::override override{};
 static constexpr BOOST_DI_UNUSED scopes::deduce deduce{};

@@ -244,9 +244,8 @@ class game {
   msm::sm<controller>& controller_;
 };
 
-auto configuration = [] {
-  return di::make_injector(di::bind<icanvas>.to<sdl_canvas>(), di::bind<iclient>.to<sdl_user_input>());
-};
+auto configuration =
+    [] { return di::make_injector(di::bind<icanvas>.to<sdl_canvas>(), di::bind<iclient>.to<sdl_user_input>()); };
 
 }  // match3
 

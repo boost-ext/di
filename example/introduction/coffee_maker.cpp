@@ -47,7 +47,7 @@ void no_di() {
     std::shared_ptr<iheater> heater = std::make_shared<electric_heater>();
     std::unique_ptr<ipump> pump = std::make_unique<heat_pump>(heater);
 
-  public:
+   public:
     void brew() {
       heater->on();
       pump->pump();
@@ -61,10 +61,9 @@ void no_di() {
 
 void manual_di() {
   class coffee_maker {
-  public:
+   public:
     coffee_maker(const std::shared_ptr<iheater>& heater, std::unique_ptr<ipump> pump)
-        : heater(heater), pump(std::move(pump))
-    { }
+        : heater(heater), pump(std::move(pump)) {}
 
     void brew() {
       heater->on();
@@ -72,7 +71,7 @@ void manual_di() {
       heater->off();
     }
 
-  private:
+   private:
     std::shared_ptr<iheater> heater;
     std::unique_ptr<ipump> pump;
   };
@@ -89,10 +88,9 @@ void manual_di() {
 
 void automatic_di() {
   struct coffee_maker {
-  public:
+   public:
     coffee_maker(const std::shared_ptr<iheater>& heater, std::unique_ptr<ipump> pump)
-        : heater(heater), pump(std::move(pump))
-    { }
+        : heater(heater), pump(std::move(pump)) {}
 
     void brew() {
       heater->on();
@@ -100,7 +98,7 @@ void automatic_di() {
       heater->off();
     }
 
-  private:
+   private:
     std::shared_ptr<iheater> heater;
     std::unique_ptr<ipump> pump;
   };

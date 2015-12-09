@@ -25,9 +25,8 @@ struct impl2 : i2 {
   void dummy2() override {}
 };
 
-auto module = []() -> di::injector<i1, i2> {
-  return di::make_injector(di::bind<i1>().to<impl1>(), di::bind<i2>().to<impl2>());
-};
+auto module =
+    []() -> di::injector<i1, i2> { return di::make_injector(di::bind<i1>().to<impl1>(), di::bind<i2>().to<impl2>()); };
 
 int main() {
   auto injector = di::make_injector(module());

@@ -155,9 +155,8 @@ class instance {
     static detail::wrapper_traits_t<decltype(aux::declval<TGiven>()(aux::declval<typename TProvider::injector_t>()))>
     try_create(const TProvider&) noexcept;
 
-    template <
-        class T, class TProvider,
-        BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
+    template <class T, class TProvider, BOOST_DI_REQUIRES(detail::is_expr<
+                                            TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
     static detail::wrapper_traits_t<decltype(aux::declval<TGiven>()(aux::declval<typename TProvider::injector_t>(),
                                                                     aux::declval<detail::arg<T, TExpected, TGiven>>()))>
     try_create(const TProvider&) noexcept;
@@ -184,9 +183,8 @@ class instance {
       return wrapper{(object_)(*provider.injector_)};
     }
 
-    template <
-        class T, class TProvider,
-        BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
+    template <class T, class TProvider, BOOST_DI_REQUIRES(detail::is_expr<
+                                            TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
     auto create(const TProvider& provider) noexcept {
       using wrapper =
           detail::wrapper_traits_t<decltype((object_)(*provider.injector_, detail::arg<T, TExpected, TGiven>{}))>;

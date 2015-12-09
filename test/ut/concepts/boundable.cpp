@@ -42,15 +42,13 @@ test bind_deps = [] {
   static_expect(boundable<aux::type_list<fake_dependency<int>>>::value);
   static_expect(std::is_same<type_<int>::is_bound_more_than_once,
                              boundable<aux::type_list<fake_dependency<int>, fake_dependency<int>>>>::value);
-  static_expect(
-      std::is_same<
-          type_<double>::is_bound_more_than_once,
-          boundable<aux::type_list<fake_dependency<double>, fake_dependency<int>, fake_dependency<double>>>>::value);
-  static_expect(
-      std::is_same<
-          type_<double>::named<a>::is_bound_more_than_once,
-          boundable<aux::type_list<fake_dependency<double, fake_scope<>, std::false_type, a>, fake_dependency<int>,
-                                   fake_dependency<double, fake_scope<>, std::false_type, a>>>>::value);
+  static_expect(std::is_same<
+      type_<double>::is_bound_more_than_once,
+      boundable<aux::type_list<fake_dependency<double>, fake_dependency<int>, fake_dependency<double>>>>::value);
+  static_expect(std::is_same<
+      type_<double>::named<a>::is_bound_more_than_once,
+      boundable<aux::type_list<fake_dependency<double, fake_scope<>, std::false_type, a>, fake_dependency<int>,
+                               fake_dependency<double, fake_scope<>, std::false_type, a>>>>::value);
   static_expect(
       std::is_same<type_<int>::is_neither_a_dependency_nor_an_injector, boundable<aux::type_list<int>>>::value);
 };
@@ -58,8 +56,8 @@ test bind_deps = [] {
 test bind_any_of = [] {
   static_expect(boundable<any_of<a, c>, c>::value);
   static_expect(std::is_same<
-                any_of<type_<d>::is_not_related_to<a>, type_<d>::is_not_related_to<b>, type_<d>::is_not_related_to<c>>,
-                boundable<any_of<a, b, c>, d>>::value);
+      any_of<type_<d>::is_not_related_to<a>, type_<d>::is_not_related_to<b>, type_<d>::is_not_related_to<c>>,
+      boundable<any_of<a, b, c>, d>>::value);
 };
 
 test bind_injector = [] {
