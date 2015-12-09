@@ -6,7 +6,7 @@
 #
 os:
   - Visual Studio 2015
-  - Visual Studio 2015 Update 1
+  #- Visual Studio 2015 Update 1
 
 branches:
   except:
