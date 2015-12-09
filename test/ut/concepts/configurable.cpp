@@ -14,8 +14,9 @@ namespace concepts {
 
 test none = [] {
   class test_config {};
-  expect(std::is_same<config<test_config>::requires_<provider<providable_type(...)>, policies<callable_type(...)>>,
-                      configurable<test_config>>::value);
+  static_expect(
+      std::is_same<config<test_config>::requires_<provider<providable_type(...)>, policies<callable_type(...)>>,
+                   configurable<test_config>>::value);
 };
 
 class config_just_policies {
@@ -24,9 +25,9 @@ class config_just_policies {
 };
 
 test just_policies = [] {
-  expect(std::is_same<
-         config<config_just_policies>::requires_<provider<providable_type(...)>, policies<callable_type(...)>>,
-         configurable<config_just_policies>>::value);
+  static_expect(std::is_same<
+                config<config_just_policies>::requires_<provider<providable_type(...)>, policies<callable_type(...)>>,
+                configurable<config_just_policies>>::value);
 };
 
 class config_just_provider {
@@ -35,9 +36,9 @@ class config_just_provider {
 };
 
 test just_provider = [] {
-  expect(std::is_same<
-         config<config_just_provider>::requires_<provider<providable_type(...)>, policies<callable_type(...)>>,
-         configurable<config_just_provider>>::value);
+  static_expect(std::is_same<
+                config<config_just_provider>::requires_<provider<providable_type(...)>, policies<callable_type(...)>>,
+                configurable<config_just_provider>>::value);
 };
 
 class config_private_access {
@@ -48,9 +49,9 @@ class config_private_access {
 
 #if !defined(__MSVC__)
 test private_access = [] {
-  expect(std::is_same<
-         config<config_private_access>::requires_<provider<providable_type(...)>, policies<callable_type(...)>>,
-         configurable<config_private_access>>::value);
+  static_expect(std::is_same<
+                config<config_private_access>::requires_<provider<providable_type(...)>, policies<callable_type(...)>>,
+                configurable<config_private_access>>::value);
 };
 #endif
 
@@ -62,7 +63,7 @@ class config_inheritance_impl {
 
 class config_inheritance : public config_inheritance_impl {};
 
-test inheritance = [] { expect(configurable<config_inheritance>::value); };
+test inheritance = [] { static_expect(configurable<config_inheritance>::value); };
 
 class config_okay {
  public:
@@ -70,7 +71,7 @@ class config_okay {
   static auto provider(...) noexcept { return providers::heap{}; }
 };
 
-test okay = [] { expect(configurable<config_okay>::value); };
+test okay = [] { static_expect(configurable<config_okay>::value); };
 
 class config_okay_type {
  public:
@@ -85,6 +86,6 @@ class config_okay_type {
   }
 };
 
-test okay_type = [] { expect(configurable<config_okay_type>::value); };
+test okay_type = [] { static_expect(configurable<config_okay_type>::value); };
 
 }  // concepts

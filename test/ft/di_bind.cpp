@@ -294,13 +294,26 @@ test bind_shared_ptr_interface = [] {
   };
 
   auto injector = di::make_injector(di::bind<i1>().to<impl1>());
-
   injector.create<c>();
+};
+
+test scopes_instance_interface_ptr = [] {
+  std::unique_ptr<i1> object = std::make_unique<impl1>();
+  auto injector = di::make_injector(di::bind<i1>().to(*object));
+  injector.create<const i1 &>();
+  injector.create<i1 &>();
+};
+
+test scopes_instance_interface_shared = [] {
+  std::shared_ptr<i1> object = std::make_shared<impl1>();
+  auto injector = di::make_injector(di::bind<i1>().to(object));
+  injector.create<std::shared_ptr<i1>>();
+  injector.create<const i1 &>();
+  injector.create<i1 &>();
 };
 
 test scopes_instance_shared = [] {
   auto i = std::make_shared<int>(42);
-
   auto injector = di::make_injector(di::bind<int>().to(i));
 
   {
@@ -318,7 +331,6 @@ test scopes_instance_shared = [] {
 
 test scopes_instance_lambda = [] {
   auto i = std::make_shared<int>(42);
-
   auto injector = di::make_injector(di::bind<int>().to([&i] { return i; }));
 
   {

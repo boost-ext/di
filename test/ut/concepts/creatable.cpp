@@ -19,19 +19,19 @@ struct u {
 };
 
 test is_creatable = [] {
-  expect(creatable<type_traits::direct, int>::value);
-  expect(creatable<type_traits::uniform, int>::value);
-  expect(creatable<type_traits::direct, d, int, double>::value);
-  expect(!creatable<type_traits::direct, d, int>::value);
-  expect(creatable<type_traits::uniform, d, int, double>::value);
-  expect(!creatable<type_traits::uniform, d, int>::value);
-  expect(!creatable<type_traits::direct, u, int, double>::value);
-  expect(creatable<type_traits::uniform, u>::value);
-  expect(!creatable<type_traits::uniform, u, float, short>::value);
+  static_expect(creatable<type_traits::direct, int>::value);
+  static_expect(creatable<type_traits::uniform, int>::value);
+  static_expect(creatable<type_traits::direct, d, int, double>::value);
+  static_expect(!creatable<type_traits::direct, d, int>::value);
+  static_expect(creatable<type_traits::uniform, d, int, double>::value);
+  static_expect(!creatable<type_traits::uniform, d, int>::value);
+  static_expect(!creatable<type_traits::direct, u, int, double>::value);
+  static_expect(creatable<type_traits::uniform, u>::value);
+  static_expect(!creatable<type_traits::uniform, u, float, short>::value);
 
 #if !defined(__MSVC__)
-  expect(creatable<type_traits::uniform, u, int, double>::value);
-  expect(creatable<type_traits::uniform, u, int>::value);
+  static_expect(creatable<type_traits::uniform, u, int, double>::value);
+  static_expect(creatable<type_traits::uniform, u, int>::value);
 #endif
 };
 
