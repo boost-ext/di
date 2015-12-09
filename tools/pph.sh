@@ -90,6 +90,13 @@ pph() {
     echo
 }
 
+set -e
+cpp --version >/dev/null
+xargs --version >/dev/null
+sed --version >/dev/null
+head --version >/dev/null
+tail --version >/dev/null
+
 cd ${0%/*}/../include && pph `head -1 ../CHANGELOG.md  | sed "s/.*\[\(.*\)\].*/\1/" | tr '.' ' '` > "boost/di.hpp"
 ${CLANG_FORMAT:=clang-format} -i "boost/di.hpp"
 
