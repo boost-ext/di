@@ -33,7 +33,7 @@ clean_cmake:
 	@rm -rf build
 
 pph:
-	#@tools/pph.sh
+	@tools/pph.sh
 
 check: check_pph check_style
 
@@ -44,7 +44,7 @@ check_style:
 	@find include example test -iname "*.hpp" -or -iname "*.cpp" | xargs $(CLANG_FORMAT) -i && exit `git ls-files -m | wc -l`
 
 check_static:
-	$(CLANG_TIDY) -header-filter='boost/di' `find -type f -iname "*.cpp"` -- -std=c++1y -I ../include -I . -include common/test.hpp | sort -u
+	@$(CLANG_TIDY) -header-filter='boost/di' `find -type f -iname "*.cpp"` -- -std=c++1y -I ../include -I . -include common/test.hpp | sort -u
 
 doc:
 	@cd doc && bjam -j2 -q && TRY_IT_ONLINE=ON scripts/update_html.sh
