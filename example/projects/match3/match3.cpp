@@ -154,28 +154,28 @@ auto init_board = [](auto, view& v) {
 
 auto print = [](auto) { std::cout << "clicked" << std::endl; };
 
-auto controller__ = [] {
-  using namespace msm;
-  auto idle = init_state<__COUNTER__>{};
-  auto wait_for_client = init_state<__COUNTER__>{};
-  auto game_over = state<__COUNTER__, game_over_flag>{};
-  auto s1 = state<__COUNTER__>{};
-  auto s2 = state<__COUNTER__>{};
+struct controller {
+  auto configure() noexcept {
+    using namespace msm;
+    auto idle = init_state<__COUNTER__>{};
+    auto wait_for_client = init_state<__COUNTER__>{};
+    auto game_over = state<__COUNTER__, game_over_flag>{};
+    auto s1 = state<__COUNTER__>{};
+    auto s2 = state<__COUNTER__>{};
 
-  // clang-format off
-  return make_transition_table(
-   // +-----------------------------------------------------------------+
-      idle    		   == idle / init_board
-	, idle     		   == s1 + event<button_clicked> / print
-   // +-----------------------------------------------------------------+
-	, wait_for_client  == game_over + event<window_closed>
-	, wait_for_client  == game_over + event<key_pressed> [is_key<SDLK_ESCAPE>]
-   // +-----------------------------------------------------------------+
-  );
-  // clang-format on
+    // clang-format off
+    return make_transition_table(
+     // +-----------------------------------------------------------------+
+        idle    		   == idle / init_board
+      , idle     		   == s1 + event<button_clicked> / print
+     // +-----------------------------------------------------------------+
+      , wait_for_client  == game_over + event<window_closed>
+      , wait_for_client  == game_over + event<key_pressed> [is_key<SDLK_ESCAPE>]
+     // +-----------------------------------------------------------------+
+    );
+    // clang-format on
+  }
 };
-
-using controller = decltype(controller__());
 
 #if __has_include(<SDL.h>)&&__has_include(<SDL_image.h>)
 class sdl_user_input : public iclient {
@@ -192,7 +192,7 @@ class sdl_user_input : public iclient {
   };
 
  public:
-  explicit sdl_user_input(controller& c) : controller_(c) {}
+  explicit sdl_user_input(msm::sm<controller>& c) : controller_(c) {}
 
   void run() override {
 #if defined(EMSCRIPTEN)
@@ -203,7 +203,7 @@ class sdl_user_input : public iclient {
   }
 
   static void run_impl(void* c) {
-    auto& controller_ = (controller&)*c;
+    auto& controller_ = (msm::sm<controller>&)*c;
 #if !defined(EMSCRIPTEN)
     auto is_game_over = [&] {
       auto result = false;
@@ -227,13 +227,13 @@ class sdl_user_input : public iclient {
   }
 
  private:
-  controller& controller_;
+  msm::sm<controller>& controller_;
 };
 #endif
 
 class game {
  public:
-  game(controller& c, iclient& cl) : controller_(c), client_(cl) {}
+  game(msm::sm<controller>& c, iclient& cl) : controller_(c), client_(cl) {}
 
   void play() {
     controller_.start();
@@ -241,7 +241,7 @@ class game {
   }
 
   iclient& client_;
-  controller& controller_;
+  msm::sm<controller>& controller_;
 };
 
 auto configuration = [] {
