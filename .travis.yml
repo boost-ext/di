@@ -24,14 +24,12 @@ matrix:
     env: BS=bjam DOCUMENTATION=ON
     addons:
       apt:
-        packages:
-        - xsltproc
+        packages: ["xsltproc"]
   - os: linux
     env: CHECK=ON CLANG_FORMAT=clang-format-3.8 CLANG_TIDY=clang-tidy-3.8
     addons:
       apt:
-        packages:
-        - clang-3.8
+        packages: ["clang-3.8", "clang-format-3.8", "clang-tidy-3.8"]
         sources:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise
@@ -39,12 +37,7 @@ matrix:
     env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND BENCHMARK=QUICK CXX=/usr/local/clang-3.4/bin/clang++
     addons:
       apt:
-        packages:
-        - clang-3.4
-        - libstdc++-5-dev
-        - valgrind
-        - gdb
-        - bc
+        packages: ["clang-3.4", "libstdc++-5-dev", "valgrind", "gdb", "bc"]
         sources:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.4
@@ -52,12 +45,7 @@ matrix:
     env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND LIBCXX=ON CXX=/usr/local/clang-3.4/bin/clang++
     addons:
       apt:
-        packages:
-        - clang-3.4
-        - libstdc++-5-dev
-        - valgrind
-        - gdb
-        - bc
+        packages: ["clang-3.4", "libstdc++-5-dev", "valgrind", "gdb", "bc"]
         sources:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.4
@@ -65,12 +53,7 @@ matrix:
     env: BS=bjam TOOLSET=clang VARIANT=analyze CXX=/usr/local/clang-3.4/bin/clang++
     addons:
       apt:
-        packages:
-        - clang-3.4
-        - libstdc++-5-dev
-        - valgrind
-        - gdb
-        - bc
+        packages: ["clang-3.4", "libstdc++-5-dev", "valgrind", "gdb", "bc"]
         sources:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.4
@@ -78,12 +61,7 @@ matrix:
     env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND BENCHMARK=QUICK CXX=clang++-3.5
     addons:
       apt:
-        packages:
-        - clang-3.5
-        - libstdc++-5-dev
-        - valgrind
-        - gdb
-        - bc
+        packages: ["clang-3.5", "libstdc++-5-dev", "valgrind", "gdb", "bc"]
         sources:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.5
@@ -91,11 +69,7 @@ matrix:
     env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND LIBCXX=ON CXX=clang++-3.5
     addons:
       apt:
-        packages:
-        - clang-3.5
-        - valgrind
-        - gdb
-        - bc
+        packages: ["clang-3.5", "libstdc++-5-dev", "valgrind", "gdb", "bc"]
         sources:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.5
@@ -103,12 +77,7 @@ matrix:
     env: B=bjam TOOLSET=clang MEMCHECK=VALGRIND BENCHMARK=QUICK CXX=clang++-3.6
     addons:
       apt:
-        packages:
-        - clang-3.6
-        - libstdc++-5-dev
-        - valgrind
-        - gdb
-        - bc
+        packages: ["clang-3.6", "libstdc++-5-dev", "valgrind", "gdb", "bc"]
         sources:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.6
@@ -116,11 +85,7 @@ matrix:
     env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND LIBCXX=ON CXX=clang++-3.6
     addons:
       apt:
-        packages:
-        - clang-3.6
-        - valgrind
-        - gdb
-        - bc
+        packages: ["clang-3.6", "libstdc++-5-dev", "valgrind", "gdb", "bc"]
         sources:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.6
@@ -128,12 +93,7 @@ matrix:
     env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND BENCHMARK=QUICK CXX=clang++-3.7
     addons:
       apt:
-        packages:
-        - clang-3.7
-        - libstdc++-5-dev
-        - valgrind
-        - gdb
-        - bc
+        packages: ["clang-3.7", "libstdc++-5-dev", "valgrind", "gdb", "bc"]
         sources:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.7
@@ -141,11 +101,7 @@ matrix:
     env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND LIBCXX=ON CXX=clang++-3.7
     addons:
       apt:
-        packages:
-        - clang-3.7
-        - valgrind
-        - gdb
-        - bc
+        packages: ["clang-3.7", "libstdc++-5-dev", "valgrind", "gdb", "bc"]
         sources:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.7
@@ -153,11 +109,7 @@ matrix:
     env: BS=cmake CXX=clang++-3.7
     addons:
       apt:
-        packages:
-        - clang-3.7
-        - libstdc++-5-dev
-        - gdb
-        - bc
+        packages: ["clang-3.7", "libstdc++-5-dev", "gdb", "bc"]
         sources:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise-3.7
@@ -165,12 +117,7 @@ matrix:
     env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND BENCHMARK=QUICK CXX=clang++-3.8
     addons:
       apt:
-        packages:
-        - clang-3.8
-        - libstdc++-5-dev
-        - valgrind
-        - gdb
-        - bc
+        packages: ["clang-3.8", "libstdc++-5-dev", "valgrind", "gdb", "bc"]
         sources:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise
@@ -178,11 +125,7 @@ matrix:
     env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND LIBCXX=ON CXX=clang++-3.8
     addons:
       apt:
-        packages:
-        - clang-3.8
-        - valgrind
-        - gdb
-        - bc
+        packages: ["clang-3.8", "libstdc++-5-dev", "valgrind", "gdb", "bc"]
         sources:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise
@@ -190,11 +133,7 @@ matrix:
     env: BS=cmake CXX=clang++-3.8
     addons:
       apt:
-        packages:
-        - clang-3.8
-        - libstdc++-5-dev
-        - gdb
-        - bc
+        packages: ["clang-3.8", "libstdc++-5-dev", "gdb", "bc"]
         sources:
         - ubuntu-toolchain-r-test
         - llvm-toolchain-precise
@@ -202,43 +141,28 @@ matrix:
     env: BS=bjam TOOLSET=gcc GCOV=gcov-5 VARIANT=coverage MEMCHECK=VALGRIND BIICODE=ON CXX=g++-5
     addons:
       apt:
-        packages:
-        - g++-5
-        - libstdc++-5-dev
-        - valgrind
-        - gdb
+        packages: ["g++-5", "libstdc++-5-dev", "valgrind", "gdb"]
         sources:
         - ubuntu-toolchain-r-test
   - os: linux
     env: BS=bjam TOOLSET=gcc VARIANT=analyze CXX=g++-5
     addons:
       apt:
-        packages:
-        - g++-5
-        - libstdc++-5-dev
-        - gdb
+        packages: ["g++-5", "libstdc++-5-dev", "gdb"]
         sources:
         - ubuntu-toolchain-r-test
   - os: linux
     env: BS=bjam TOOLSET=gcc BENCHMARK=QUICK CXX=g++-5
     addons:
       apt:
-        packages:
-        - g++-5
-        - libstdc++-5-dev
-        - gdb
-        - bc
+        packages: ["g++-5", "libstdc++-5-dev", "gdb", "bc"]
         sources:
         - ubuntu-toolchain-r-test
   - os: linux
     env: BS=cmake BENCHMARK=ON CXX=g++-5
     addons:
       apt:
-        packages:
-        - g++-5
-        - libstdc++-5-dev
-        - gdb
-        - bc
+        packages: ["g++-5", "libstdc++-5-dev", "gdb", "bc"]
         sources:
         - ubuntu-toolchain-r-test
   - os: osx
