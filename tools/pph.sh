@@ -91,5 +91,5 @@ pph() {
 }
 
 cd "`readlink -f \`dirname $0\``/../include" && pph `head -1 ../CHANGELOG.md  | sed "s/.*\[\(.*\)\].*/\1/" | tr '.' ' '` > "boost/di.hpp"
-clang-format -i "boost/di.hpp"
+${CLANG_FORMAT:=clang-format} -i "boost/di.hpp"
 

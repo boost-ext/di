@@ -1269,7 +1269,7 @@ struct type_ {
   struct has_disallowed_qualifiers : aux::false_type {};
   struct is_abstract :
 #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL >= 2)
-      // clang-format off
+// clang-format off
       decltype(
     T{}
    ),
