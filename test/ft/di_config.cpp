@@ -151,9 +151,7 @@ test call_custom_policies = [] {
 
 test call_custom_policies_with_exposed_injector = [] {
   policy::called() = 0;
-
-  di::injector<i1> injector = di::make_injector<custom_policies>(di::bind<i1>().to<impl1>());
-
+  di::injector<std::unique_ptr<i1>> injector = di::make_injector<custom_policies>(di::bind<i1>().to<impl1>());
   auto object = injector.create<std::unique_ptr<i1>>();
   expect(dynamic_cast<i1*>(object.get()));
   expect(3 == policy::called());

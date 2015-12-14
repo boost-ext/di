@@ -6,23 +6,17 @@
 //
 #include <type_traits>
 #include "boost/di/injector.hpp"
-#include "boost/di/core/injector.hpp"
-#include "common/fakes/fake_dependency.hpp"
-
-test injector_empty = [] {
-  using injector_t = injector<>;
-  expect(std::is_same<aux::type_list<>, injector_t::deps>{});
-};
+#include "boost/di/scopes/instance.hpp"
 
 test injector_exposed = [] {
   using injector_t = injector<int>;
-  using dep = core::dependency<scopes::exposed<scopes::deduce>, int>;
-  expect(std::is_same<aux::type_list<dep>, injector_t::deps>{});
+  using dep = core::dependency<scopes::instance, aux::type_list<int>, aux::type_list<named<no_name, int>>>;
+  static_expect(std::is_same<aux::type_list<dep>, injector_t::deps>{});
 };
 
-test injector_with_injector = [] {
-  using injector_t = injector<injector<int, double>>;
-  using dep1 = core::dependency<scopes::exposed<scopes::deduce>, int>;
-  using dep2 = core::dependency<scopes::exposed<scopes::deduce>, double>;
-  expect(std::is_same<aux::type_list<dep1, dep2>, injector_t::deps>{});
+test injector_exposed_many = [] {
+  using injector_t = injector<int, double>;
+  using dep = core::dependency<scopes::instance, aux::type_list<int, double>,
+                               aux::type_list<named<no_name, int>, named<no_name, double>>>;
+  static_expect(std::is_same<aux::type_list<dep>, injector_t::deps>{});
 };

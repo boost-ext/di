@@ -65,8 +65,6 @@ class dependency;
 
 namespace scopes {
 class deduce;
-template <class = deduce>
-class exposed;
 class instance;
 class singleton;
 class unique;

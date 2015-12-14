@@ -39,11 +39,11 @@ class custom_scope {
     template <class>
     using is_referable = std::false_type;
 
-    template <class, class TProvider>
+    template <class, class, class TProvider>
     static custom_wrapper try_create(const TProvider&);
 
     /*<<create shared_ptr when in scope out of provider pointer>>*/
-    template <class, class TProvider>
+    template <class, class, class TProvider>
     custom_wrapper create(const TProvider& provider) const noexcept {
       return std::shared_ptr<T>{provider.get()};
     }
@@ -52,14 +52,12 @@ class custom_scope {
 
 struct example {
   explicit example(const std::shared_ptr<int>& sp) : sp_(sp) {}
-
   std::shared_ptr<int> sp_;
 };
 
 int main() {
   /*<<create injector with `int` in `custom scope`>>*/
   auto injector = di::make_injector(di::bind<int>().in(custom_scope{}));
-
   assert(injector.create<example>().sp_);
 }
 

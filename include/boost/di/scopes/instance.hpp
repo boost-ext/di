@@ -9,6 +9,7 @@
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/wrappers/shared.hpp"
 #include "boost/di/wrappers/unique.hpp"
+#include "boost/di/concepts/creatable.hpp"
 #include "boost/di/fwd.hpp"
 
 namespace scopes {
@@ -62,10 +63,10 @@ class instance {
 
     explicit scope(const TGiven& object) : object_{object} {}
 
-    template <class, class TProvider>
+    template <class, class, class TProvider>
     static wrappers::unique<instance, TGiven> try_create(const TProvider&);
 
-    template <class, class TProvider>
+    template <class, class, class TProvider>
     auto create(const TProvider&) const noexcept {
       return wrappers::unique<instance, TGiven>{object_};
     }
@@ -81,10 +82,10 @@ class instance {
 
     explicit scope(const std::shared_ptr<TGiven>& object) : object_{object} {}
 
-    template <class, class TProvider>
+    template <class, class, class TProvider>
     static wrappers::shared<instance, TGiven> try_create(const TProvider&);
 
-    template <class, class TProvider>
+    template <class, class, class TProvider>
     auto create(const TProvider&) const noexcept {
       return wrappers::shared<instance, TGiven>{object_};
     }
@@ -99,10 +100,10 @@ class instance {
 
     scope(const std::initializer_list<TGiven>& object) : object_(object) {}
 
-    template <class, class TProvider>
+    template <class, class, class TProvider>
     static std::initializer_list<TGiven> try_create(const TProvider&);
 
-    template <class, class TProvider>
+    template <class, class, class TProvider>
     auto create(const TProvider&) const noexcept {
       return wrappers::unique<instance, std::initializer_list<TGiven>>{object_};
     }
@@ -117,10 +118,10 @@ class instance {
 
     explicit scope(TGiven& object) : object_{object} {}
 
-    template <class, class TProvider>
+    template <class, class, class TProvider>
     static wrappers::shared<instance, TGiven&> try_create(const TProvider&);
 
-    template <class, class TProvider>
+    template <class, class, class TProvider>
     auto create(const TProvider&) const noexcept {
       return object_;
     }
@@ -136,40 +137,41 @@ class instance {
     explicit scope(const TGiven& object) : object_(object) {}
 
 #if defined(__MSVC__)  // __pph__
-    template <class T, class TProvider>
+    template <class T, class, class TProvider>
     static T try_create(const TProvider&) noexcept;
 #else   // __pph__
 
-    template <class, class TProvider,
+    template <class, class, class TProvider,
               BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable<TGiven>::value &&
                                 aux::is_callable<TExpected>::value) = 0>
     static wrappers::unique<instance, TExpected> try_create(const TProvider&) noexcept;
 
-    template <class T, class TProvider,
+    template <class T, class, class TProvider,
               BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable_with<TGiven>::value &&
                                 !aux::is_callable<TExpected>::value) = 0>
     static auto try_create(const TProvider&) noexcept
         -> detail::wrapper_traits_t<decltype(aux::declval<typename aux::identity<TGiven, T>::type>()())>;
 
-    template <class, class TProvider, BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider>::value) = 0>
+    template <class, class, class TProvider, BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider>::value) = 0>
     static detail::wrapper_traits_t<decltype(aux::declval<TGiven>()(aux::declval<typename TProvider::injector_t>()))>
     try_create(const TProvider&) noexcept;
 
-    template <class T, class TProvider, BOOST_DI_REQUIRES(detail::is_expr<
-                                            TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
+    template <
+        class T, class, class TProvider,
+        BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
     static detail::wrapper_traits_t<decltype(aux::declval<TGiven>()(aux::declval<typename TProvider::injector_t>(),
                                                                     aux::declval<detail::arg<T, TExpected, TGiven>>()))>
     try_create(const TProvider&) noexcept;
 #endif  // __pph__
 
-    template <class, class TProvider,
+    template <class, class, class TProvider,
               BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable<TGiven>::value &&
                                 aux::is_callable<TExpected>::value) = 0>
     auto create(const TProvider&) const noexcept {
       return wrappers::unique<instance, TExpected>{object_};
     }
 
-    template <class T, class TProvider,
+    template <class T, class, class TProvider,
               BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable_with<TGiven>::value &&
                                 !aux::is_callable<TExpected>::value) = 0>
     auto create(const TProvider&) const noexcept {
@@ -177,14 +179,15 @@ class instance {
       return wrapper{object_()};
     }
 
-    template <class, class TProvider, BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider>::value) = 0>
+    template <class, class, class TProvider, BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider>::value) = 0>
     auto create(const TProvider& provider) noexcept {
       using wrapper = detail::wrapper_traits_t<decltype((object_)(*provider.injector_))>;
       return wrapper{(object_)(*provider.injector_)};
     }
 
-    template <class T, class TProvider, BOOST_DI_REQUIRES(detail::is_expr<
-                                            TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
+    template <
+        class T, class, class TProvider,
+        BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
     auto create(const TProvider& provider) noexcept {
       using wrapper =
           detail::wrapper_traits_t<decltype((object_)(*provider.injector_, detail::arg<T, TExpected, TGiven>{}))>;
@@ -192,6 +195,111 @@ class instance {
     }
 
     TGiven object_;
+  };
+
+  template <class _, class... Ts>
+  class scope<_, aux::type_list<Ts...>> {
+    template <class>
+    struct injector__;
+
+    template <class TName, class T>
+    struct injector__<named<TName, T>> {
+      T (*f)(const injector__*) = nullptr;
+    };
+
+    struct injector : injector__<Ts>... {
+      void (*dtor)(injector*) = nullptr;
+      ~injector() noexcept { static_cast<injector*>(this)->dtor(this); }
+
+      template <class TName, class T>
+      T create(named<TName, T>&&, aux::true_type&&) const noexcept {
+        return static_cast<const injector__<named<TName, T>>*>(this)
+            ->f(static_cast<const injector__<named<TName, T>>*>(this));
+      }
+
+      template <class T>
+      T create(named<no_name, T>&&, aux::false_type&&) const noexcept {
+        return typename concepts::type<T>::is_not_exposed{};
+      }
+
+      template <class TName, class T>
+      T create(named<TName, T>&&, aux::false_type&&) const noexcept {
+        return typename concepts::type<T>::template named<TName>::is_not_exposed{};
+      }
+    };
+
+    template <class TInjector>
+    class injector_impl : injector__<Ts>... {
+      void (*dtor)(injector_impl*) = nullptr;
+      static void dtor_impl(injector_impl* object) { object->~injector_impl(); }
+
+      template <class, class>
+      struct create;
+
+      template <class TName, class T>
+      struct create<named<TName, T>, aux::true_type> {
+        static T impl(const injector__<named<TName, T>>* object) noexcept {
+          using type = aux::type<aux::conditional_t<aux::is_same<TName, no_name>::value, T, named<TName, T>>>;
+          return static_cast<const core::injector__<TInjector>&>(static_cast<const injector_impl*>(object)->injector_)
+              .create_successful_impl(type{});
+        }
+      };
+
+      template <class TName, class T>
+      struct create<named<TName, T>, aux::false_type> {
+        static T impl(const injector__<named<TName, T>>* object) noexcept {
+          using type = aux::type<aux::conditional_t<aux::is_same<TName, no_name>::value, T, named<TName, T>>>;
+          return static_cast<const core::injector__<TInjector>&>(static_cast<const injector_impl*>(object)->injector_)
+              .create_impl(type{});
+        }
+      };
+
+      template <class T>
+      struct is_creatable : aux::integral_constant<bool, core::injector__<TInjector>::template is_creatable<T>::value> {
+      };
+
+      template <class TName, class T>
+      struct is_creatable<named<TName, T>>
+          : aux::integral_constant<bool, core::injector__<TInjector>::template is_creatable<T, TName>::value> {};
+
+     public:
+      explicit injector_impl(TInjector&& injector) noexcept
+          : injector__<Ts>{&injector_impl::template create<Ts, typename is_creatable<Ts>::type>::impl}...,
+            dtor(&injector_impl::dtor_impl),
+            injector_(static_cast<TInjector&&>(injector)) {}
+
+     private:
+      TInjector injector_;
+    };
+
+   public:
+    template <class T>
+    using is_referable = aux::true_type;
+
+    template <class TInjector, BOOST_DI_REQUIRES(aux::is_a<core::injector_base, TInjector>::value) = 0>
+    explicit scope(TInjector&& i) noexcept
+        : injector_((injector*) new injector_impl<TInjector>{static_cast<TInjector&&>(i)}) {}
+
+    scope(scope&& other) noexcept : injector_(other.injector_) { other.injector_ = nullptr; }
+    ~scope() noexcept { delete injector_; }
+
+    template <class T, class TName, class TProvider>
+    static aux::conditional_t<aux::is_base_of<injector__<named<TName, T>>, injector>::value, T, void> try_create(
+        const TProvider&);
+
+    template <class T>
+    struct wrapper {
+      inline operator T() noexcept { return static_cast<T&&>(object); }
+      T object;
+    };
+
+    template <class T, class TName, class TProvider>
+    auto create(const TProvider&) {
+      return wrapper<T>{injector_->create(named<TName, T>{}, aux::is_base_of<injector__<named<TName, T>>, injector>{})};
+    }
+
+   private:
+    injector* injector_;
   };
 };
 

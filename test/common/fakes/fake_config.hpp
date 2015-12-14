@@ -13,7 +13,6 @@
 template <class = void>
 struct fake_config {
   static auto policies(...) noexcept { return aux::type_list<>{}; }
-
   static auto provider(...) noexcept { return providers::heap{}; }
 };
 

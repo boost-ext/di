@@ -19,7 +19,6 @@
 #include "boost/di/core/provider.hpp"
 #include "boost/di/core/bindings.hpp"
 #include "boost/di/core/wrapper.hpp"
-#include "boost/di/scopes/exposed.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/concepts/creatable.hpp"
 #include "boost/di/config.hpp"
@@ -100,7 +99,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     using ctor_t = typename type_traits::ctor_traits__<typename dependency_t::given, T>::type;
 
     static constexpr auto value = aux::is_convertible<
-        decltype(dependency__<dependency_t>::template try_create<T>(
+        decltype(dependency__<dependency_t>::template try_create<T, TName>(
             try_provider<ctor_t, injector, decltype(TConfig::provider((injector*)0))>{})),
         T>::value
         BOOST_DI_CORE_INJECTOR_POLICY(
@@ -243,11 +242,11 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
 
  private:
   template <class... TArgs>
-  explicit injector(const from_deps&, TArgs... args) noexcept
+  explicit injector(from_deps&&, TArgs... args) noexcept
       : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{static_cast<TArgs&&>(args)...}} {}
 
   template <class TInjector, class... TArgs>
-  explicit injector(const from_injector&, TInjector&& injector, const aux::type_list<TArgs...>&)noexcept
+  explicit injector(from_injector&&, TInjector && injector, const aux::type_list<TArgs...>&)noexcept
 #if defined(__MSVC__)  // __pph__
       : pool_t {
     copyable_t<deps>{}, pool_t { build<TArgs>(static_cast<TInjector&&>(injector))... }
@@ -266,11 +265,11 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     using ctor_t = typename type_traits::ctor_traits__<typename dependency_t::given, T>::type;
     using provider_t = core::provider<ctor_t, TName, injector>;
     using wrapper_t =
-        decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{this}));
+        decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T, TName>(provider_t{this}));
     BOOST_DI_CORE_INJECTOR_POLICY(
         policy::template call<arg_wrapper<T, TName, TIsRoot, pool_t>>(
             TConfig::policies(this), dependency, typename ctor_t::second{});)() return wrapper<T, wrapper_t>{
-        static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{this})};
+        static_cast<dependency__<dependency_t>&&>(dependency).template create<T, TName>(provider_t{this})};
   }
 
   template <class TIsRoot = aux::false_type, class T, class TName = no_name>
@@ -280,12 +279,12 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     using ctor_t = typename type_traits::ctor_traits__<typename dependency_t::given, T>::type;
     using provider_t = successful::provider<ctor_t, injector>;
     using wrapper_t =
-        decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{this}));
+        decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T, TName>(provider_t{this}));
     using create_t = referable_t<T, dependency__<dependency_t>>;
     BOOST_DI_CORE_INJECTOR_POLICY(policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>(
                                       TConfig::policies(this), dependency,
                                       typename ctor_t::second{});)() return successful::wrapper<create_t, wrapper_t>{
-        static_cast<dependency__<dependency_t>&&>(dependency).template create<T>(provider_t{this})};
+        static_cast<dependency__<dependency_t>&&>(dependency).template create<T, TName>(provider_t{this})};
   }
 };
 

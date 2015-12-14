@@ -49,8 +49,9 @@ auto module1 = [] { return di::make_injector(di::bind<interface>().to<implementa
 auto module2(const int& i) { return di::make_injector(di::bind<int>().to(i)); }
 
 /*<<module configuration with exposed `data`>>*/
-auto exposed_module =
-    []() -> di::injector<data> { return di::make_injector(di::bind<interface>().to<implementation2>()); };
+auto exposed_module = []() -> di::injector<const data&> {
+  return di::make_injector(di::bind<interface>().to<implementation2>());
+};
 
 int main() {
   constexpr auto i = 42;

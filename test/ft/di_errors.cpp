@@ -105,12 +105,14 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
 
 // ---------------------------------------------------------------------------
 
-test bind_instance_with_given_scope =
-    [] { expect_compile_fail("", errors(), di::make_injector(di::bind<int>().in(di::unique).to(42));); };
+test bind_instance_with_given_scope = [] {
+  expect_compile_fail("", errors(), di::make_injector(di::bind<int>().in(di::unique).to(42)););
+};
 
 #if defined(__cpp_variable_templates)
-test bind_instance_with_given_scope_v =
-    [] { expect_compile_fail("", errors(), di::make_injector(di::bind<int>.in(di::unique).to(42));); };
+test bind_instance_with_given_scope_v = [] {
+  expect_compile_fail("", errors(), di::make_injector(di::bind<int>.in(di::unique).to(42)););
+};
 #endif
 
 test bind_instance_with_given_type = [] {
@@ -682,8 +684,9 @@ test bind_in_not_scopable = [] {
 };
 
 #if defined(__cpp_variable_templates)
-test bind_in_not_scopable_v =
-    [] { expect_compile_fail("", errors(), struct not_scopable{}; int main() { di::bind<int>.in(not_scopable{}); }); };
+test bind_in_not_scopable_v = [] {
+  expect_compile_fail("", errors(), struct not_scopable{}; int main() { di::bind<int>.in(not_scopable{}); });
+};
 #endif
 
 // ---------------------------------------------------------------------------
@@ -728,8 +731,9 @@ test exposed_multiple_times = [] {
 
 // ---------------------------------------------------------------------------
 
-test not_configurable_config =
-    [] { expect_compile_fail("", errors(), struct dummy_config{}; int main() { di::make_injector<dummy_config>(); }); };
+test not_configurable_config = [] {
+  expect_compile_fail("", errors(), struct dummy_config{}; int main() { di::make_injector<dummy_config>(); });
+};
 
 test make_policies_with_non_const_policy = [] {
   auto errors_ = errors("constraint not satisfied",
@@ -965,10 +969,13 @@ int main() { di::make_injector<test_config>(); }
 #endif
           );
 
-      expect_compile_fail("<include> memory", errors_, struct i {
-        virtual ~i() noexcept = default;
-        virtual void dummy() = 0;
-      }; struct c{c(int, std::unique_ptr<i>){}}; int main() { di::injector<i> injector = di::make_injector(); });
+      expect_compile_fail("<include> memory", errors_,
+                          struct i {
+                            virtual ~i() noexcept = default;
+                            virtual void dummy() = 0;
+                          };
+                          struct c{c(int, std::unique_ptr<i>){}};
+                          int main() { di::injector<std::unique_ptr<i>> injector = di::make_injector(); });
     };
 
     test exposed_polymorphic_type_without_binding = [] {
@@ -1017,9 +1024,10 @@ int main() { di::make_injector<test_config>(); }
                             virtual void dummy() = 0;
                           };
                           int main() {
-                            auto module =
-                                []() -> di::injector<i1> { return di::make_injector(di::bind<i1>().to<impl1>()); };
-                            di::injector<i2> injector = di::make_injector(module());
+                            auto module = []() -> di::injector<std::unique_ptr<i1>> {
+                              return di::make_injector(di::bind<i1>().to<impl1>());
+                            };
+                            di::injector<std::unique_ptr<i2>> injector = di::make_injector(module());
                           });
     };
 
@@ -1310,8 +1318,9 @@ int main() { di::make_injector<test_config>(); }
       });
     };
 
-    test access_dependency_try_create =
-        [] { expect_compile_fail("", errors(), int main() { di::bind<int>().try_create<int>(); }); };
+    test access_dependency_try_create = [] {
+      expect_compile_fail("", errors(), int main() { di::bind<int>().try_create<int>(); });
+    };
 
     test access_dependency_create = [] {
       expect_compile_fail("", errors(), struct provider{}; int main() { di::bind<int>().create<int>(provider{}); });

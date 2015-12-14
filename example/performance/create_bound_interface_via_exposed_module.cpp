@@ -19,7 +19,9 @@ struct implementation : interface {
   void dummy() override {}
 };
 
-auto module = []() -> di::injector<interface> { return di::make_injector(di::bind<interface>().to<implementation>()); };
+auto module = []() -> di::injector<std::unique_ptr<interface>> {
+  return di::make_injector(di::bind<interface>().to<implementation>());
+};
 
 auto test() {
   auto injector = di::make_injector(module());

@@ -112,6 +112,33 @@ struct type {
       // clang-format on
     };
   };
+
+  struct is_not_exposed {
+    operator T() const {
+      using constraint_not_satisfied = is_not_exposed;
+      return constraint_not_satisfied{}.error();
+    }
+
+    // clang-format off
+      static inline T
+	  error(_ = "type is not exposed, did you forget to add: 'di::injector<T>'?");
+    // clang-format on
+  };
+
+  template <class TName>
+  struct named {
+    struct is_not_exposed {
+      operator T() const {
+        using constraint_not_satisfied = is_not_exposed;
+        return constraint_not_satisfied{}.error();
+      }
+
+      // clang-format off
+      static inline T
+	  error(_ = "type is not exposed, did you forget to add: 'di::injector<BOOST_DI_EXPOSE((named = name)T)>'?");
+      // clang-format on
+    };
+  };
 };
 
 template <class>

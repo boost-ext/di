@@ -21,10 +21,10 @@ struct fake_scope {
 
     explicit scope(const TExpected& = {}) { ++ctor_calls(); }
 
-    template <class T, class TProvider>
+    template <class T, class, class TProvider>
     static T try_create(const TProvider&);
 
-    template <class T, class TProvider>
+    template <class T, class, class TProvider>
     auto create(const TProvider&) const noexcept {
       ++calls();
       return T{};

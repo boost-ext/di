@@ -19,16 +19,16 @@ class deduce {
     using is_referable =
         typename type_traits::scope_traits_t<T>::template scope<TExpected, TGiven>::template is_referable<T>;
 
-    template <class T, class TProvider>
-    static decltype(typename type_traits::scope_traits_t<T>::template scope<TExpected, TGiven>{}.template try_create<T>(
-        aux::declval<TProvider>()))
+    template <class T, class TName, class TProvider>
+    static decltype(typename type_traits::scope_traits_t<T>::template scope<TExpected, TGiven>{}
+                        .template try_create<T, TName>(aux::declval<TProvider>()))
     try_create(const TProvider&);
 
-    template <class T, class TProvider>
+    template <class T, class TName, class TProvider>
     auto create(const TProvider& provider) {
       using scope_traits = type_traits::scope_traits_t<T>;
       using scope = typename scope_traits::template scope<TExpected, TGiven>;
-      return scope{}.template create<T>(provider);
+      return scope{}.template create<T, TName>(provider);
     }
   };
 };

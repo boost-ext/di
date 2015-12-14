@@ -62,8 +62,12 @@ struct get_not_supported<T, TDeps...>
 template <class>
 struct is_unique;
 
+template <class T, class = int>
+struct unique_dependency : aux::type<T> {};
+
 template <class T>
-struct unique_dependency : aux::pair<aux::pair<typename T::expected, typename T::name>, typename T::priority> {};
+struct unique_dependency<T, BOOST_DI_REQUIRES(aux::is_a<core::dependency_base, T>::value)>
+    : aux::pair<aux::pair<typename T::expected, typename T::name>, typename T::priority> {};
 
 template <class... TDeps>
 struct is_unique<aux::type_list<TDeps...>> : aux::is_unique<typename unique_dependency<TDeps>::type...> {};
@@ -94,7 +98,7 @@ struct get_is_unique_error<aux::type_list<TDeps...>>
     : get_is_unique_error_impl<typename aux::is_unique<typename unique_dependency<TDeps>::type...>::type> {};
 
 template <class... TDeps>
-using get_bindings_error = aux::conditional_t<
+using boundable_bindings = aux::conditional_t<
     is_supported<TDeps...>::value, typename get_is_unique_error<core::bindings_t<TDeps...>>::type,
     typename type_<typename get_not_supported<TDeps...>::type>::is_neither_a_dependency_nor_an_injector>;
 
@@ -160,7 +164,7 @@ auto boundable_impl(I[], T && ) -> aux::conditional_t<aux::is_same<I, aux::decay
                                                       typename type_<I>::has_disallowed_qualifiers>;
 
 template <class... TDeps>  // bindings
-auto boundable_impl(aux::type_list<TDeps...> && ) -> get_bindings_error<TDeps...>;
+auto boundable_impl(aux::type_list<TDeps...> && ) -> boundable_bindings<TDeps...>;
 
 template <class T, class... Ts>  // any_of
 auto boundable_impl(concepts::any_of<Ts...>&&, T && )

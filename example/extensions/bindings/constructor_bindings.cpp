@@ -28,8 +28,9 @@ struct implementation : interface {
 /*<<to constructor extension>>*/
 template <class... TCtor>
 struct constructor_impl {
-  template <class TInjector, class T, BOOST_DI_REQUIRES(boost::di::concepts::creatable<
-                                          boost::di::type_traits::direct, typename T::expected, TCtor...>::value) = 0>
+  template <class TInjector, class T,
+            BOOST_DI_REQUIRES(boost::di::concepts::creatable<boost::di::type_traits::direct, typename T::expected,
+                                                             TCtor...>::value) = 0>
   auto operator()(const TInjector& injector, const T&) const {
     return new typename T::expected{injector.template create<TCtor>()...};
   }
@@ -49,6 +50,19 @@ struct ctor {
   }
 };
 
+/*<<ambiguous constructor>>*/
+struct ambiguous_ctor {
+  ambiguous_ctor(int i, std::string s) {
+    assert(i == 2);
+    assert(s == "hello");
+  }
+
+  ambiguous_ctor(std::string s, int i) {
+    assert(s == "hello");
+    assert(i == 2);
+  }
+};
+
 /*<<variadic constructor - has to be `explicit`>>*/
 struct variadic {
   template <class... Ts>
@@ -64,15 +78,16 @@ struct variadic {
 int main() {
   auto injector = di::make_injector(
       /*<<define constructor types>>*/
+      di::bind<ctor>().to(constructor<int, std::string, std::unique_ptr<interface>>()),
+      di::bind<ambiguous_ctor>().to(constructor<int, std::string>()),
       di::bind<variadic>().to(constructor<int, std::string, std::unique_ptr<interface>>()),
-      di::bind<ctor>().to(constructor<int, std::string, std::unique_ptr<interface>>())
 
       /*<<additional bindings>>*/
-      ,
       di::bind<interface>().to<implementation>(), di::bind<int>().to(2), di::bind<std::string>().to("hello"));
 
   /*<<create types using defined constructors>>*/
   injector.create<ctor>();
+  injector.create<ambiguous_ctor>();
   injector.create<variadic>();
 }
 

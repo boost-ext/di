@@ -14,12 +14,11 @@
 
 namespace di = boost::di;
 
-template <class TName, class TScope>
+template <class, class TScope>
 class session_scope {
   class session_guard {
    public:
     explicit session_guard(bool& guard) : guard_(guard) { guard = true; }
-
     ~session_guard() { guard_ = false; }
 
    private:
@@ -35,13 +34,13 @@ class session_scope {
     template <class T>
     using is_referable = typename scope_type::template is_referable<T>;
 
-    template <class T, class TProvider>
-    static auto try_create(const TProvider& provider) -> decltype(scope_type{}.template try_create<T>(provider));
+    template <class T, class TName, class TProvider>
+    static auto try_create(const TProvider& provider) -> decltype(scope_type{}.template try_create<T, TName>(provider));
 
-    template <class T, class TProvider>
+    template <class T, class TName, class TProvider>
     auto create(const TProvider& provider) {
       static std::shared_ptr<TGiven> null{nullptr};
-      return get_session() ? scope_.template create<T>(provider) : null;
+      return get_session() ? scope_.template create<T, TName>(provider) : null;
     }
 
    private:
@@ -65,21 +64,23 @@ auto session(const TName&, const TScope& = {}) {
 //<-
 struct interface1 {
   virtual ~interface1() noexcept = default;
+  virtual void dummy() = 0;
 };
-struct implementation1 : interface1 {};
+struct implementation1 : interface1 {
+  void dummy() override {}
+};
 //->
 
 auto my_session = [] {};
 
 int main() {
   auto injector = di::make_injector(di::bind<interface1>().to<implementation1>().in(session(my_session)));
-
   assert(!injector.create<std::shared_ptr<interface1>>());
 
   {
     auto ms = session(my_session)();
     assert(injector.create<std::shared_ptr<interface1>>());
-  }
+  }  // end of my_session
 
   assert(!injector.create<std::shared_ptr<interface1>>());
 }

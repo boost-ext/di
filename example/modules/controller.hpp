@@ -16,13 +16,12 @@
 //->
 
 struct controller {
-  controller(const std::shared_ptr<view>& view, const std::shared_ptr<model>& model) : view_(view), model_(model) {}
-
+  controller(view& view, model& model) : view_(view), model_(model) {}
   int run();
 
  private:
-  std::shared_ptr<view> view_;
-  std::shared_ptr<model> model_;
+  view& view_;
+  model& model_;
 };
 
 //<-

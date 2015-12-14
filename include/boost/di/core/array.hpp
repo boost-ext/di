@@ -9,27 +9,18 @@
 
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
-#include "boost/di/type_traits/rebind_traits.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
+#include "boost/di/type_traits/named_traits.hpp"
+#include "boost/di/type_traits/rebind_traits.hpp"
 #include "boost/di/fwd.hpp"
 
 namespace core {
 
-template <class T>
-struct remove_named {
-  using type = T;
-};
-template <class TName, class T>
-struct remove_named<named<TName, T>> {
-  using type = T;
-};
-template <class T>
-using remove_named_t = typename remove_named<T>::type;
-
 template <class T, class... Ts>
 struct array_impl {
   using boost_di_inject__ = aux::type_list<Ts...>;
-  explicit array_impl(remove_named_t<Ts>&&... args) : array{static_cast<remove_named_t<Ts>&&>(args)...} {}
+  explicit array_impl(type_traits::remove_named_t<Ts>&&... args)
+      : array{static_cast<type_traits::remove_named_t<Ts>&&>(args)...} {}
   T array[sizeof...(Ts)];
 };
 

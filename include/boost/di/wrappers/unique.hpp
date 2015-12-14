@@ -24,6 +24,10 @@ struct unique {
 
   inline operator T &&() noexcept { return static_cast<T&&>(object); }
 
+  // private:
+  // template <class I>
+  // inline operator I&() const noexcept;
+
   T object;
 };
 

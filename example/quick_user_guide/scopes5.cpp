@@ -24,10 +24,10 @@ struct custom_scope {
     template <class>
     using is_referable = std::false_type;
 
-    template <class T, class TProvider>
+    template <class T, class, class TProvider>
     static auto try_create(const TProvider& provider) -> decltype(std::shared_ptr<TExpected>{provider.get()});
 
-    template <class T, class TProvider>
+    template <class T, class, class TProvider>
     auto create(const TProvider& provider) {
       return std::shared_ptr<TExpected>{provider.get()};
     }
@@ -36,6 +36,5 @@ struct custom_scope {
 
 int main() {
   auto injector = di::make_injector(di::bind<i1>().in(custom_scope{}).to<impl1>());
-
   assert(injector.create<std::shared_ptr<i1>>() != injector.create<std::shared_ptr<i1>>());
 }

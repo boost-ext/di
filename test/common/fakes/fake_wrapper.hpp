@@ -9,7 +9,7 @@
 
 struct fake_wrapper {
   template <class T>
-  operator T() const {
+  inline operator T() const {
     return {};
   }
 };

@@ -20,13 +20,13 @@ class unique {
     template <class>
     using is_referable = aux::false_type;
 
-    template <class T, class TProvider>
+    template <class T, class, class TProvider>
     static decltype(
         wrappers::unique<unique, decltype(aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{}))>{
             aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{})})
     try_create(const TProvider&);
 
-    template <class T, class TProvider>
+    template <class T, class, class TProvider>
     auto create(const TProvider& provider) const {
       using memory = type_traits::memory_traits_t<T>;
       using wrapper = wrappers::unique<unique, decltype(provider.get(memory{}))>;

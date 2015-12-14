@@ -26,8 +26,10 @@ struct c {
 };
 
 int main() {
-  auto module = []() -> di::injector<i1> { return di::make_injector(di::bind<i1>().to<impl1>()); };
-  auto injector = di::make_injector(di::bind<i1>().named(my).to(module()));
+  auto module = []() -> di::injector<BOOST_DI_EXPOSE((named = my)std::unique_ptr<i1>)> {
+    return di::make_injector(di::bind<i1>().named(my).to<impl1>());
+  };
+  auto injector = di::make_injector(module());
   auto object = injector.create<std::unique_ptr<c>>();
   assert(dynamic_cast<impl1*>(object->up.get()));
 }

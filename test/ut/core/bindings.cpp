@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include "boost/di/core/bindings.hpp"
-#include "boost/di/scopes/exposed.hpp"
+#include "boost/di/scopes/instance.hpp"
 #include "common/fakes/fake_dependency.hpp"
 #include "common/fakes/fake_injector.hpp"
 
@@ -16,11 +16,6 @@ test bindings_deps = [] {
   static_expect(std::is_same<aux::type_list<fake_dependency<int>>, bindings_t<fake_dependency<int>>>::value);
   static_expect(std::is_same<aux::type_list<fake_dependency<int>, fake_dependency<double>>,
                              bindings_t<fake_dependency<int>, fake_dependency<double>>>::value);
-  static_expect(std::is_same<aux::type_list<fake_dependency<int>, dependency<scopes::exposed<>, int>>,
-                             bindings_t<fake_dependency<int>, int>>::value);
-  static_expect(
-      std::is_same<aux::type_list<fake_dependency<int>, fake_dependency<double>, dependency<scopes::exposed<>, int>>,
-                   bindings_t<fake_injector<fake_dependency<int>, fake_dependency<double>>, int>>::value);
 };
 
 }  // core

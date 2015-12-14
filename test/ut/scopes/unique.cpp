@@ -12,15 +12,15 @@ namespace scopes {
 
 test create_unique = [] {
   unique::scope<int, int> unique;
-  std::unique_ptr<int> object1 = unique.create<std::unique_ptr<int>>(fake_provider<int>{});
-  std::unique_ptr<int> object2 = unique.create<std::unique_ptr<int>>(fake_provider<int>{});
+  std::unique_ptr<int> object1 = unique.create<std::unique_ptr<int>, no_name>(fake_provider<int>{});
+  std::unique_ptr<int> object2 = unique.create<std::unique_ptr<int>, no_name>(fake_provider<int>{});
   expect(object1 != object2);
 };
 
 test create_shared_but_unique = [] {
   unique::scope<int, int> unique;
-  std::shared_ptr<int> object1 = unique.create<std::shared_ptr<int>>(fake_provider<int>{});
-  std::shared_ptr<int> object2 = unique.create<std::shared_ptr<int>>(fake_provider<int>{});
+  std::shared_ptr<int> object1 = unique.create<std::shared_ptr<int>, no_name>(fake_provider<int>{});
+  std::shared_ptr<int> object2 = unique.create<std::shared_ptr<int>, no_name>(fake_provider<int>{});
   expect(object1 != object2);
 };
 

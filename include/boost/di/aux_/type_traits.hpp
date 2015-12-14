@@ -226,10 +226,13 @@ struct is_base_of : integral_constant<bool, __is_base_of(T, U)> {};
 
 template <class T>
 struct is_class : integral_constant<bool, __is_class(T)> {};
+
 template <class T>
 struct is_abstract : integral_constant<bool, __is_abstract(T)> {};
+
 template <class T>
 struct is_polymorphic : integral_constant<bool, __is_polymorphic(T)> {};
+
 template <class...>
 using is_valid_expr = true_type;
 
@@ -341,6 +344,26 @@ struct is_unique_impl<T1, T2, Ts...>
 
 template <class... Ts>
 using is_unique = is_unique_impl<none_type, Ts...>;
+
+template <class, class...>
+struct unique_impl;
+
+template <class T1, class T2, class... Rs, class... Ts>
+struct unique_impl<type<T1, Rs...>, T2, Ts...>
+    : conditional_t<is_base_of<type<T2>, T1>::value, unique_impl<type<type<T2>, Rs...>, Ts...>,
+                    unique_impl<type<inherit<T1, type<T2>>, Rs..., T2>, Ts...>> {};
+
+template <class T1, class... Rs>
+struct unique_impl<type<T1, Rs...>> : type_list<Rs...> {};
+
+template <class... Ts>
+struct unique : unique_impl<type<none_type>, Ts...> {};
+
+template <class T>
+struct unique<T> : type_list<T> {};
+
+template <class... Ts>
+using unique_t = typename unique<Ts...>::type;
 
 BOOST_DI_HAS_METHOD(is_callable_with, operator());
 
