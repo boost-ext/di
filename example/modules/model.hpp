@@ -23,6 +23,7 @@ static auto colls = [] {};
 class model {
  public:
   BOOST_DI_INJECT(model, (named = rows) int, (named = colls) int, std::unique_ptr<iboard>);
+  void update() {}
 };
 
 //<-

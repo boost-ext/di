@@ -10,6 +10,10 @@
 #include "controller.hpp"
 //->
 
-int controller::run() { return 0; }
+int controller::run() {
+  model_.update();
+  view_.render();
+  return 0;
+}
 
 //]
