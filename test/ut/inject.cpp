@@ -6,12 +6,6 @@
 //
 #include "boost/di/inject.hpp"
 
-#if defined(__MSVC__)
-#pragma warning(disable : 4503)
-#pragma warning(disable : 4822)
-#pragma warning(disable : 4505)
-#endif
-
 test empty_ctor = [] {
   struct c {
     BOOST_DI_INJECT(c, ) {}
