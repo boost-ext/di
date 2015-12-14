@@ -17,7 +17,7 @@ namespace di = boost::di;
 
 class model;
 
-di::injector<model> module_model() noexcept;
+di::injector<model&> module_model() noexcept;
 
 //<-
 #endif

@@ -23,12 +23,12 @@ class scoped_scope {
     template <class T_>
     using is_referable = typename di::wrappers::shared<scoped_scope, T>::template is_referable<T_>;
 
-    template <class, class TProvider, class T_ = di::aux::decay_t<decltype(di::aux::declval<TProvider>().get())>>
+    template <class, class, class TProvider, class T_ = di::aux::decay_t<decltype(di::aux::declval<TProvider>().get())>>
     static decltype(di::wrappers::shared<scoped_scope, T_>{
         std::shared_ptr<T_>{std::shared_ptr<T_>{di::aux::declval<TProvider>().get()}}})
     try_create(const TProvider &);
 
-    template <class T_, class TProvider>
+    template <class T_, class, class TProvider>
     auto create(const TProvider &provider) {
       return create_impl<di::aux::decay_t<decltype(provider.get())>>(provider);
     }
@@ -55,6 +55,7 @@ static constexpr scoped_scope scoped{};
 //<-
 struct interface1 {
   virtual ~interface1() noexcept = default;
+  virtual void dummy() = 0;
 };
 struct implementation1 : interface1 {
   static auto &ctor_calls() {
@@ -67,6 +68,7 @@ struct implementation1 : interface1 {
   }
   implementation1() { ctor_calls()++; }
   ~implementation1() { dtor_calls()++; }
+  void dummy() override {}
 };
 
 struct interface2 {

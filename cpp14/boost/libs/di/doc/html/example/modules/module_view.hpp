@@ -17,7 +17,7 @@ namespace di = boost::di;
 
 class view;
 
-di::injector<view> module_view() noexcept;
+di::injector<view&> module_view() noexcept;
 
 //<-
 #endif

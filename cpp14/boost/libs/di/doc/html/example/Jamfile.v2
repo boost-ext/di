@@ -39,7 +39,7 @@ rule example ( src + : cxxflags * : property * ) {
 }
 
 test-suite example :
-	[ example modules/model.cpp
+    [ example modules/model.cpp
 			  modules/module_model.cpp
 			  modules/view.cpp
 			  modules/module_view.cpp

@@ -234,7 +234,19 @@ function toggleNextRow() {
   <span class="special">}</span>
 <span class="special">};</span>
 
-<a class="co" name="di.extensions.constructor_bindings.c2" href="constructor_bindings.html#di.extensions.constructor_bindings.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="keyword">struct</span> <span class="identifier">variadic</span> <span class="special">{</span>
+<a class="co" name="di.extensions.constructor_bindings.c2" href="constructor_bindings.html#di.extensions.constructor_bindings.c3"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a><span class="keyword">struct</span> <span class="identifier">ambiguous_ctor</span> <span class="special">{</span>
+  <span class="identifier">ambiguous_ctor</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">s</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i</span> <span class="special">==</span> <span class="number">2</span><span class="special">);</span>
+    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">s</span> <span class="special">==</span> <span class="string">"hello"</span><span class="special">);</span>
+  <span class="special">}</span>
+
+  <span class="identifier">ambiguous_ctor</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">s</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">s</span> <span class="special">==</span> <span class="string">"hello"</span><span class="special">);</span>
+    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">i</span> <span class="special">==</span> <span class="number">2</span><span class="special">);</span>
+  <span class="special">}</span>
+<span class="special">};</span>
+
+<a class="co" name="di.extensions.constructor_bindings.c4" href="constructor_bindings.html#di.extensions.constructor_bindings.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="keyword">struct</span> <span class="identifier">variadic</span> <span class="special">{</span>
   <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span><span class="special">...</span> <span class="identifier">Ts</span><span class="special">&gt;</span>
   <span class="keyword">explicit</span> <span class="identifier">variadic</span><span class="special">(</span><span class="identifier">Ts</span><span class="special">&amp;&amp;...</span> <span class="identifier">args</span><span class="special">)</span> <span class="special">{</span>  <span class="comment">// has to be explicit</span>
     <span class="identifier">assert</span><span class="special">(</span><span class="keyword">sizeof</span><span class="special">...(</span><span class="identifier">Ts</span><span class="special">)</span> <span class="special">==</span> <span class="number">3</span><span class="special">);</span>
@@ -247,13 +259,14 @@ function toggleNextRow() {
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
   <span class="keyword">auto</span> <span class="identifier">injector</span> <span class="special">=</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">make_injector</span><span class="special">(</span>
-      <a class="co" name="di.extensions.constructor_bindings.c4" href="constructor_bindings.html#di.extensions.constructor_bindings.c5"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">variadic</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">constructor</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;&gt;()),</span>
-      <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ctor</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">constructor</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;&gt;())</span>
+      <a class="co" name="di.extensions.constructor_bindings.c6" href="constructor_bindings.html#di.extensions.constructor_bindings.c7"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ctor</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">constructor</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;&gt;()),</span>
+      <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">ambiguous_ctor</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">constructor</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;()),</span>
+      <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">variadic</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="identifier">constructor</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">unique_ptr</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;&gt;()),</span>
 
-      <a class="co" name="di.extensions.constructor_bindings.c6" href="constructor_bindings.html#di.extensions.constructor_bindings.c7"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a><span class="special">,</span>
-      <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;(),</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="number">2</span><span class="special">),</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="string">"hello"</span><span class="special">));</span>
+      <a class="co" name="di.extensions.constructor_bindings.c8" href="constructor_bindings.html#di.extensions.constructor_bindings.c9"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a><span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">interface</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">&lt;</span><span class="identifier">implementation</span><span class="special">&gt;(),</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="number">2</span><span class="special">),</span> <span class="identifier">di</span><span class="special">::</span><span class="identifier">bind</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;().</span><span class="identifier">to</span><span class="special">(</span><span class="string">"hello"</span><span class="special">));</span>
 
-  <a class="co" name="di.extensions.constructor_bindings.c8" href="constructor_bindings.html#di.extensions.constructor_bindings.c9"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">ctor</span><span class="special">&gt;();</span>
+  <a class="co" name="di.extensions.constructor_bindings.c10" href="constructor_bindings.html#di.extensions.constructor_bindings.c11"><img src="../../../../../../doc/src/images/callouts/6.png" alt="6" border="0"></a><span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">ctor</span><span class="special">&gt;();</span>
+  <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">ambiguous_ctor</span><span class="special">&gt;();</span>
   <span class="identifier">injector</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">variadic</span><span class="special">&gt;();</span>
 <span class="special">}</span>
 </pre>
@@ -267,23 +280,29 @@ function toggleNextRow() {
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="di.extensions.constructor_bindings.c3"></a><a href="#di.extensions.constructor_bindings.c2"><img src="../../../../../../doc/src/images/callouts/2.png" alt="2" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
-            variadic constructor - has to be <code class="computeroutput"><span class="keyword">explicit</span></code>
+            ambiguous constructor
           </p></td>
 </tr>
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="di.extensions.constructor_bindings.c5"></a><a href="#di.extensions.constructor_bindings.c4"><img src="../../../../../../doc/src/images/callouts/3.png" alt="3" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
-            define constructor types
+            variadic constructor - has to be <code class="computeroutput"><span class="keyword">explicit</span></code>
           </p></td>
 </tr>
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="di.extensions.constructor_bindings.c7"></a><a href="#di.extensions.constructor_bindings.c6"><img src="../../../../../../doc/src/images/callouts/4.png" alt="4" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
-            additional bindings
+            define constructor types
           </p></td>
 </tr>
 <tr>
 <td width="5%" valign="top" align="left"><p><a name="di.extensions.constructor_bindings.c9"></a><a href="#di.extensions.constructor_bindings.c8"><img src="../../../../../../doc/src/images/callouts/5.png" alt="5" border="0"></a> </p></td>
+<td valign="top" align="left"><p>
+            additional bindings
+          </p></td>
+</tr>
+<tr>
+<td width="5%" valign="top" align="left"><p><a name="di.extensions.constructor_bindings.c11"></a><a href="#di.extensions.constructor_bindings.c10"><img src="../../../../../../doc/src/images/callouts/6.png" alt="6" border="0"></a> </p></td>
 <td valign="top" align="left"><p>
             create types using defined constructors
           </p></td>
