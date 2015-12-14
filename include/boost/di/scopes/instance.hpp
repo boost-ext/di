@@ -205,6 +205,7 @@ class instance {
     template <class TName, class T>
     struct injector__<named<TName, T>> {
       T (*f)(const injector__*) = nullptr;
+      explicit injector__(const decltype(f)& ptr) : f(ptr) {}
     };
 
     struct injector : injector__<Ts>... {
@@ -264,7 +265,7 @@ class instance {
 
      public:
       explicit injector_impl(TInjector&& injector) noexcept
-          : injector__<Ts>{&injector_impl::template create<Ts, typename is_creatable<Ts>::type>::impl}...,
+          : injector__<Ts>(&injector_impl::template create<Ts, typename is_creatable<Ts>::type>::impl)...,
             dtor(&injector_impl::dtor_impl),
             injector_(static_cast<TInjector&&>(injector)) {}
 
@@ -273,7 +274,7 @@ class instance {
     };
 
    public:
-    template <class T>
+    template <class>
     using is_referable = aux::true_type;
 
     template <class TInjector, BOOST_DI_REQUIRES(aux::is_a<core::injector_base, TInjector>::value) = 0>

@@ -6,6 +6,12 @@
 //
 #include "boost/di/inject.hpp"
 
+#if defined(__MSVC__)
+#pragma warning(disable : 4503)
+#pragma warning(disable : 4822)
+#pragma warning(disable : 4505)
+#endif
+
 test empty_ctor = [] {
   struct c {
     BOOST_DI_INJECT(c, ) {}
@@ -76,32 +82,12 @@ test traits = [] {
   expect(d == c_.d);
 };
 
-test function = [] {
-  constexpr auto i = 1;
-  constexpr auto d = 2.0;
-
-  struct c {
-    static void BOOST_DI_INJECTOR(int i, double d);
-
-    c(int i, double d) : i(i), d(d) {}
-
-    int i = 0;
-    double d = 0.0;
-  };
-
-  c c_(i, d);
-
-  expect(i == c_.i);
-  expect(d == c_.d);
-};
-
 test inheriting_ctors = [] {
   constexpr auto i = 1;
   constexpr auto d = 2.0;
 
   struct c0 {
     BOOST_DI_INJECT(c0, int i, double d) : i(i), d(d) {}
-
     int i = 0;
     double d = 0.0;
   };
@@ -134,7 +120,6 @@ test named_param = [] {
 
   struct c {
     BOOST_DI_INJECT(explicit c, (named = named_int) int i) : i(i) {}
-
     int i = 0;
   };
 
@@ -144,7 +129,6 @@ test named_param = [] {
 struct c_def_named {
   static constexpr auto N = 42;
   BOOST_DI_INJECT(explicit c_def_named, (named = named_int) int i1 = N, int i2 = N) : i1(i1), i2(i2) {}
-
   int i1 = 0;
   int i2 = 0;
 };
@@ -157,7 +141,6 @@ test named_def_param = [] {
 struct c_def_named_without_def {
   static constexpr auto N = 42;
   BOOST_DI_INJECT(explicit c_def_named_without_def, int i1 = N, (named = named_int) int i2 = N) : i1(i1), i2(i2) {}
-
   int i1 = 0;
   int i2 = 0;
 };
