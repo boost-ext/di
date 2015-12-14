@@ -7,12 +7,8 @@
 
 //[shared_scope
 //<-
-//#include <boost/units/detail/utility.hpp>
 #include <cassert>
 #include <memory>
-#include <vector>
-#include <set>
-#include <iostream>
 //->
 #include <boost/di.hpp>
 

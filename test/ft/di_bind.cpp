@@ -9,6 +9,7 @@
 #include <memory>
 #include <string>
 #include <functional>
+#include <iterator>
 #include <vector>
 #include <set>
 

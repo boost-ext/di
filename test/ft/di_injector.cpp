@@ -7,6 +7,9 @@
 #include <memory>
 #include <utility>
 #include <string>
+#include <set>
+#include <vector>
+#include <iterator>
 #include "boost/di.hpp"
 
 namespace di = boost::di;
@@ -25,6 +28,9 @@ struct impl1 : i1 {
 };
 struct impl2 : i2 {
   void dummy2() override {}
+};
+struct impl1_2 : i1 {
+  void dummy1() override {}
 };
 struct complex1 {
   explicit complex1(std::shared_ptr<i1> i1) : i1_(i1) {}
@@ -107,8 +113,9 @@ test injectors_mix = [] {
 };
 
 test injector_move_ctor = [] {
-  di::injector<int> i = di::make_injector(di::make_injector(di::bind<int>().to([] { return 42; })));
-  auto c((static_cast<di::injector<int>&&>(i)));
+  di::injector<int> injector = di::make_injector(di::make_injector(di::bind<int>().to([] { return 42; })));
+  expect(42 == injector.create<int>());
+  auto c((static_cast<di::injector<int>&&>(injector)));
   (void)c;
 };
 
@@ -314,6 +321,85 @@ test exposed_module_with_unique_ptr = [] {
   expect(dynamic_cast<impl1*>(object->i1_.get()));
   expect(dynamic_cast<impl2*>(object->i2_.get()));
   expect(42 == object->i);
+};
+
+test exposed_smart_ptrs = [] {
+  di::injector<std::unique_ptr<i1>, std::shared_ptr<i1>> injector = di::make_injector(di::bind<i1>().to<impl1>());
+
+  {
+    auto object = injector.create<std::unique_ptr<i1>>();
+    expect(dynamic_cast<impl1*>(object.get()));
+  }
+
+  {
+    auto object = injector.create<std::shared_ptr<i1>>();
+    expect(dynamic_cast<impl1*>(object.get()));
+  }
+};
+
+test exposed_by_deduced_singleton = [] {
+  di::injector<std::shared_ptr<i1>> injector = di::make_injector(di::bind<i1>().to<impl1>());
+  auto o1 = injector.create<std::shared_ptr<i1>>();
+  auto o2 = injector.create<std::shared_ptr<i1>>();
+  expect(o1 == o2);
+  expect(dynamic_cast<impl1*>(o1.get()));
+};
+
+test exposed_by_singleton = [] {
+  di::injector<std::shared_ptr<i1>> injector = di::make_injector(di::bind<i1>().to<impl1>().in(di::singleton));
+  auto o1 = injector.create<std::shared_ptr<i1>>();
+  auto o2 = injector.create<std::shared_ptr<i1>>();
+  expect(o1 == o2);
+  expect(dynamic_cast<impl1*>(o1.get()));
+};
+
+test exposed_named = [] {
+  struct c {
+    BOOST_DI_INJECT(c, std::shared_ptr<i1> sp1, (named = name)std::shared_ptr<i1> sp2) {
+      expect(dynamic_cast<impl1*>(sp1.get()));
+      expect(dynamic_cast<impl1_2*>(sp2.get()));
+      expect(sp1 != sp2);
+    }
+  };
+  di::injector<BOOST_DI_EXPOSE((named = name)std::shared_ptr<i1>), std::shared_ptr<i1>> injector =
+      di::make_injector(di::bind<i1>().to<impl1>(), di::bind<i1>().named(name).to<impl1_2>());
+  injector.create<c>();
+};
+
+test exposed_named_ref = [] {
+  struct c {
+    BOOST_DI_INJECT(c, i1& o1, (named = name)i1& o2) {
+      expect(dynamic_cast<impl1*>(&o1));
+      expect(dynamic_cast<impl1_2*>(&o2));
+      expect(&o1 != &o2);
+    }
+  };
+  di::injector<BOOST_DI_EXPOSE((named = name)i1&), i1&> injector =
+      di::make_injector(di::bind<i1>().to<impl1>(), di::bind<i1>().named(name).to<impl1_2>());
+  injector.create<c>();
+};
+
+test exposed_multi_bindings = [] {
+  di::injector<std::set<int>, std::vector<int>> injector = di::make_injector(di::bind<int[]>().to({1, 2, 3}));
+  auto v = injector.create<std::vector<int>>();
+  expect(3 == v.size());
+  expect(1 == v[0]);
+  expect(2 == v[1]);
+  expect(3 == v[2]);
+
+  auto s = injector.create<std::set<int>>();
+  expect(3 == s.size());
+  auto it = s.begin();
+  expect(1 == *(std::next(it, 0)));
+  expect(2 == *(std::next(it, 1)));
+  expect(3 == *(std::next(it, 2)));
+};
+
+test exposed_multi_bindings_expose = [] {
+  di::injector<BOOST_DI_EXPOSE(std::set<int>), BOOST_DI_EXPOSE(std::vector<int>)> injector =
+      di::make_injector(di::bind<int[]>().to({1, 2, 3}));
+  expect(3 == injector.create<std::vector<int>>().size());
+  expect(3 == injector.create<std::set<int>>().size());
 };
 
 di::injector<di::aux::owner<i1*>> m2() noexcept { return di::make_injector(di::bind<i1>().to<impl1>()); }
