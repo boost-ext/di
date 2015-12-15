@@ -5,8 +5,8 @@
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
 os:
-  - Visual Studio 2015
-  #- Visual Studio 2015 Update 1
+  - Previous Visual Studio 2015
+  - Visual Studio 2015 # Update 1
 
 branches:
   except:
