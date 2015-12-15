@@ -1030,6 +1030,11 @@ struct is_expr
           bool, aux::is_callable_with<TGiven, no_implicit_conversions<typename TProvider::injector_t>, Ts...>::value &&
                     !has_result_type<TGiven>::value> {};
 }
+template <class T>
+struct wrapper {
+  inline operator T() noexcept { return static_cast<T&&>(object); }
+  T object;
+};
 class instance {
  public:
   template <class, class TGiven, class = int>
@@ -1217,11 +1222,6 @@ class instance {
     template <class T, class TName, class TProvider>
     static aux::conditional_t<aux::is_base_of<injector__<named<TName, T>>, injector>::value, T, void> try_create(
         const TProvider&);
-    template <class T>
-    struct wrapper {
-      inline operator T() noexcept { return static_cast<T&&>(object); }
-      T object;
-    };
     template <class T, class TName, class TProvider>
     auto create(const TProvider&) {
       return wrapper<T>{injector_->create(named<TName, T>{}, aux::is_base_of<injector__<named<TName, T>>, injector>{})};
