@@ -118,4 +118,16 @@ test from_function_expr_with_injector = [] {
   expect(0 == static_cast<int>(instance.create<void, no_name>(fake_provider<int>{})));
 };
 
+test exposed = [] {
+  instance::scope<void, aux::type_list<named<no_name, int>>> instance{fake_injector<>{}};
+  expect(0 == static_cast<int>(instance.create<int, no_name>(fake_provider<int>{})));
+};
+
+test exposed_many = [] {
+  struct name {};
+  instance::scope<void, aux::type_list<named<name, double>, named<no_name, int>>> instance{fake_injector<>{}};
+  expect(0 == static_cast<int>(instance.create<int, no_name>(fake_provider<int>{})));
+  expect(0.0 == static_cast<double>(instance.create<double, name>(fake_provider<int>{})));
+};
+
 }  // scopes

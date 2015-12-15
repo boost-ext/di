@@ -266,6 +266,17 @@ test is_unique_types = [] {
   static_expect(std::is_same<not_unique<int>, is_unique<float, int, double, int>::type>::value);
 };
 
+test unique_types = [] {
+  static_expect(std::is_same<type_list<>, unique_t<>>::value);
+  static_expect(std::is_same<type_list<int>, unique_t<int>>::value);
+  static_expect(std::is_same<type_list<int>, unique_t<int, int>>::value);
+  static_expect(std::is_same<type_list<int>, unique_t<int, int, int>>::value);
+  static_expect(std::is_same<type_list<int, double>, unique_t<int, double, int, int>>::value);
+  static_expect(std::is_same<type_list<double, int, float>, unique_t<double, int, int, int, float>>::value);
+  static_expect(
+      std::is_same<type_list<double, int, float>, unique_t<double, int, int, int, float, double, int>>::value);
+};
+
 test is_array_types = [] {
   static_expect(!is_array<int>::value);
   static_expect(is_array<int[]>::value);

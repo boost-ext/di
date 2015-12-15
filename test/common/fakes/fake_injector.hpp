@@ -27,7 +27,7 @@ struct fake_injector : core::injector_base {
   template <class, class = no_name, class = std::false_type>
   struct is_creatable : std::true_type {};
 
-  template <class T>
+  template <class, class>
   struct try_create {
     using type = void;
   };
@@ -37,8 +37,18 @@ struct fake_injector : core::injector_base {
     return T{};
   }
 
+  template <class TName, class T>
+  auto create_impl(const aux::type<named<TName, T>>&) const noexcept {
+    return T{};
+  }
+
   template <class T>
   auto create_successful_impl(const aux::type<T>&) const noexcept {
+    return T{};
+  }
+
+  template <class TName, class T>
+  auto create_successful_impl(const aux::type<named<TName, T>>&) const noexcept {
     return T{};
   }
 };

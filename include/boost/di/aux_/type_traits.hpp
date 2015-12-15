@@ -350,7 +350,7 @@ struct unique_impl;
 
 template <class T1, class T2, class... Rs, class... Ts>
 struct unique_impl<type<T1, Rs...>, T2, Ts...>
-    : conditional_t<is_base_of<type<T2>, T1>::value, unique_impl<type<type<T2>, Rs...>, Ts...>,
+    : conditional_t<is_base_of<type<T2>, T1>::value, unique_impl<type<inherit<T1>, Rs...>, Ts...>,
                     unique_impl<type<inherit<T1, type<T2>>, Rs..., T2>, Ts...>> {};
 
 template <class T1, class... Rs>

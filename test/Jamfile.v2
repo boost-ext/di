@@ -80,6 +80,7 @@ test-suite ut :
     [ test ut/scopes/unique.cpp ]
     [ test ut/type_traits/ctor_traits.cpp ]
     [ test ut/type_traits/memory_traits.cpp ]
+    [ test ut/type_traits/named_traits.cpp ]
     [ test ut/type_traits/rebind_traits.cpp ]
     [ test ut/type_traits/scope_traits.cpp ]
     [ test ut/wrappers/unique.cpp : unique_wrapper ]
