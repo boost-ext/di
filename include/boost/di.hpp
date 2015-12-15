@@ -1988,7 +1988,7 @@ struct any_type_1st_ref {
   const TInjector& injector_;
 };
 }
-template <class TParent>
+template <class>
 struct any_type_fwd {
   template <class T>
   operator T();
@@ -1997,7 +1997,7 @@ struct any_type_fwd {
   template <class T>
   operator const T&() const;
 };
-template <class TParent>
+template <class>
 struct any_type_ref_fwd {
   template <class T>
   operator T();

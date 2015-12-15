@@ -74,15 +74,30 @@ struct implementation1 : interface1 {
 auto my_session = [] {};
 
 int main() {
-  auto injector = di::make_injector(di::bind<interface1>().to<implementation1>().in(session(my_session)));
-  assert(!injector.create<std::shared_ptr<interface1>>());
+  {
+    auto injector = di::make_injector(di::bind<interface1>().to<implementation1>().in(session(my_session)));
+    assert(!injector.create<std::shared_ptr<interface1>>());
+
+    {
+      auto ms = session(my_session)();
+      assert(injector.create<std::shared_ptr<interface1>>());
+    }  // end of my_session
+
+    assert(!injector.create<std::shared_ptr<interface1>>());
+  }
 
   {
-    auto ms = session(my_session)();
-    assert(injector.create<std::shared_ptr<interface1>>());
-  }  // end of my_session
+    di::injector<std::shared_ptr<interface1>> injector =
+        di::make_injector(di::bind<interface1>().to<implementation1>().in(session(my_session)));
+    assert(!injector.create<std::shared_ptr<interface1>>());
 
-  assert(!injector.create<std::shared_ptr<interface1>>());
+    {
+      auto ms = session(my_session)();
+      assert(injector.create<std::shared_ptr<interface1>>());
+    }  // end of my_session
+
+    assert(!injector.create<std::shared_ptr<interface1>>());
+  }
 }
 
 //]

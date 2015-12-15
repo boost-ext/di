@@ -199,7 +199,7 @@ struct any_type_1st_ref {
 
 }  // successful
 
-template <class TParent>
+template <class>
 struct any_type_fwd {
   template <class T>
   operator T();
@@ -209,7 +209,7 @@ struct any_type_fwd {
   operator const T&() const;
 };
 
-template <class TParent>
+template <class>
 struct any_type_ref_fwd {
   template <class T>
   operator T();
