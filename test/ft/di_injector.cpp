@@ -37,10 +37,16 @@ struct complex1 {
   std::shared_ptr<i1> i1_;
 };
 struct complex2 {
+#if defined(__MSVC__)
+  complex2(int i, complex1 c1) : i(i), c1(c1) {}
+#endif
   int i;
   complex1 c1;
 };
 struct complex3 {
+#if defined(__MSVC__)
+  complex3(complex2 c2) : c2(c2) {}
+#endif
   complex2 c2;
 };
 
@@ -140,7 +146,7 @@ test injector_conversions = [] {
 
   di::injector<complex1> injector = di::make_injector(injector3());
   auto object = injector.create<complex1>();
-  expect(dynamic_cast<i1*>(object.i1_.get()));
+  expect(dynamic_cast<impl1*>(object.i1_.get()));
 };
 
 test empty_module = [] {
@@ -172,7 +178,7 @@ test modules_mix_make_injector = [] {
 test exposed_type = [] {
   di::injector<complex1> injector = di::make_injector(di::bind<i1>().to<impl1>());
   auto object = injector.create<complex1>();
-  expect(dynamic_cast<i1*>(object.i1_.get()));
+  expect(dynamic_cast<impl1*>(object.i1_.get()));
 };
 
 test exposed_type_by_injector = [] {
@@ -180,7 +186,7 @@ test exposed_type_by_injector = [] {
   auto injector1 = []() -> di::injector<complex1> { return di::make_injector(di::bind<i1>().to<impl1>()); };
   auto injector = di::make_injector(injector1(), di::bind<int>().to(i));
   auto object = injector.create<complex2>();
-  expect(dynamic_cast<i1*>(object.c1.i1_.get()));
+  expect(dynamic_cast<impl1*>(object.c1.i1_.get()));
   expect(i == object.i);
 };
 
@@ -189,7 +195,7 @@ test exposed_type_by_module = [] {
   auto module = []() -> di::injector<complex1> { return di::make_injector(di::bind<i1>().to<impl1>()); };
   auto injector = di::make_injector(module(), di::bind<int>().to(i));
   auto object = injector.create<std::shared_ptr<complex2>>();
-  expect(dynamic_cast<i1*>(object->c1.i1_.get()));
+  expect(dynamic_cast<impl1*>(object->c1.i1_.get()));
   expect(i == object->i);
 };
 
@@ -198,7 +204,7 @@ test exposed_type_by_module_twice = [] {
   auto module = []() -> di::injector<complex1> { return di::make_injector(di::bind<i1>().to<impl1>()); };
   di::injector<std::shared_ptr<complex2>> injector = di::make_injector(module(), di::bind<int>().to(i));
   auto object = injector.create<std::shared_ptr<complex2>>();
-  expect(dynamic_cast<i1*>(object->c1.i1_.get()));
+  expect(dynamic_cast<impl1*>(object->c1.i1_.get()));
   expect(i == object->i);
 };
 
@@ -226,7 +232,7 @@ test exposed_move = [] {
   di::injector<complex1, std::shared_ptr<i1>> injector1 = di::make_injector(di::bind<i1>().to<impl1>());
   auto injector = di::make_injector(std::move(injector1), di::bind<int>().to(i));
   auto object = injector.create<std::shared_ptr<complex2>>();
-  expect(dynamic_cast<i1*>(object->c1.i1_.get()));
+  expect(dynamic_cast<impl1*>(object->c1.i1_.get()));
   expect(i == object->i);
 };
 
@@ -239,7 +245,7 @@ test exposed_many = [] {
 
   {
     auto object = injector.create<std::shared_ptr<complex2>>();
-    expect(dynamic_cast<i1*>(object->c1.i1_.get()));
+    expect(dynamic_cast<impl1*>(object->c1.i1_.get()));
     expect(i == object->i);
   }
 
