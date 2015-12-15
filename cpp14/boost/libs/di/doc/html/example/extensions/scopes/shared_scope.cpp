@@ -69,6 +69,13 @@ class example {
 
 int main() {
   {
+    auto injector =
+        di::make_injector(di::bind<interface1>().to<implementation1>().in(shared),  // di::unique will fail (sp1 == sp2)
+                          di::bind<interface1>().to<implementation2>().named(name).in(shared));
+    injector.create<example>();
+  }
+
+  {
     di::injector<std::shared_ptr<interface1>> injector =
         di::make_injector(di::bind<interface1>().to<implementation1>().in(shared));
 
