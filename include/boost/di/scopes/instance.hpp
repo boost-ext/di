@@ -219,18 +219,18 @@ class instance {
       ~injector() noexcept { static_cast<injector*>(this)->dtor(this); }
 
       template <class TName, class T>
-      T create(named<TName, T>&&, aux::true_type&&) const noexcept {
+      T create(const named<TName, T>&, const aux::true_type&) const noexcept {
         return static_cast<const injector__<named<TName, T>>*>(this)
             ->f(static_cast<const injector__<named<TName, T>>*>(this));
       }
 
       template <class T>
-      T create(named<no_name, T>&&, aux::false_type&&) const noexcept {
+      T create(const named<no_name, T>&, const aux::false_type&) const noexcept {
         return typename concepts::type<T>::is_not_exposed{};
       }
 
       template <class TName, class T>
-      T create(named<TName, T>&&, aux::false_type&&) const noexcept {
+      T create(const named<TName, T>&, const aux::false_type&) const noexcept {
         return typename concepts::type<T>::template named<TName>::is_not_exposed{};
       }
     };

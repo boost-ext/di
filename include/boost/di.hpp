@@ -1159,16 +1159,16 @@ class instance {
       void (*dtor)(injector*) = nullptr;
       ~injector() noexcept { static_cast<injector*>(this)->dtor(this); }
       template <class TName, class T>
-      T create(named<TName, T>&&, aux::true_type&&) const noexcept {
+      T create(const named<TName, T>&, const aux::true_type&) const noexcept {
         return static_cast<const injector__<named<TName, T>>*>(this)
             ->f(static_cast<const injector__<named<TName, T>>*>(this));
       }
       template <class T>
-      T create(named<no_name, T>&&, aux::false_type&&) const noexcept {
+      T create(const named<no_name, T>&, const aux::false_type&) const noexcept {
         return typename concepts::type<T>::is_not_exposed{};
       }
       template <class TName, class T>
-      T create(named<TName, T>&&, aux::false_type&&) const noexcept {
+      T create(const named<TName, T>&, const aux::false_type&) const noexcept {
         return typename concepts::type<T>::template named<TName>::is_not_exposed{};
       }
     };
@@ -2363,10 +2363,10 @@ class injector : injector_base, pool<bindings_t<TDeps...>> {
 
  private:
   template <class... TArgs>
-  explicit injector(from_deps&&, TArgs... args) noexcept
+  explicit injector(const from_deps&, TArgs... args) noexcept
       : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{static_cast<TArgs&&>(args)...}} {}
   template <class TInjector, class... TArgs>
-  explicit injector(from_injector&&, TInjector&& injector, const aux::type_list<TArgs...>&) noexcept
+  explicit injector(const from_injector&, TInjector&& injector, const aux::type_list<TArgs...>&) noexcept
 #if defined(__MSVC__)
       : pool_t {
     copyable_t<deps>{}, pool_t { build<TArgs>(static_cast<TInjector&&>(injector))... }
@@ -2534,10 +2534,10 @@ class injector<TConfig, pool<>, TDeps...> : injector_base, pool<bindings_t<TDeps
 
  private:
   template <class... TArgs>
-  explicit injector(from_deps&&, TArgs... args) noexcept
+  explicit injector(const from_deps&, TArgs... args) noexcept
       : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{static_cast<TArgs&&>(args)...}} {}
   template <class TInjector, class... TArgs>
-  explicit injector(from_injector&&, TInjector&& injector, const aux::type_list<TArgs...>&) noexcept
+  explicit injector(const from_injector&, TInjector&& injector, const aux::type_list<TArgs...>&) noexcept
 #if defined(__MSVC__)
       : pool_t {
     copyable_t<deps>{}, pool_t { build<TArgs>(static_cast<TInjector&&>(injector))... }
