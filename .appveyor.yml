@@ -4,10 +4,6 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
-os:
-  - Previous Visual Studio 2015
-  - Visual Studio 2015 # Update 1
-
 branches:
   except:
     - gh-pages
@@ -20,6 +16,10 @@ environment:
   #- CFG: BS=cmake TOOLSET=msvc-14.0 MEMCHECK=DRMEMORY VARIANT=analyze
   #- CFG: BS=cmake GENERATOR="Visual Studio 14 2015" MEMCHECK=DRMEMORY VARIANT=analyze
   - CFG: BS=cmake GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY
+    os: Previous Visual Studio 2015
+
+  - CFG: BS=cmake GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY
+    os: Visual Studio 2015
 
 matrix:
   fast_finish: true
