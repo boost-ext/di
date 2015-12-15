@@ -15,11 +15,11 @@ environment:
   matrix:
   - platform: x64
     os: Previous Visual Studio 2015
-    CFG: BS=cmake GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY
+    env: BS=cmake GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY
 
   - platform: x64
     os: Visual Studio 2015
-    CFG: BS=cmake GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY
+    env: BS=cmake GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY
 
 matrix:
   fast_finish: true
