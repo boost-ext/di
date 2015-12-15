@@ -13,13 +13,13 @@ environment:
   fast_finish: true
 
   matrix:
-  #- CFG: BS=cmake TOOLSET=msvc-14.0 MEMCHECK=DRMEMORY VARIANT=analyze
-  #- CFG: BS=cmake GENERATOR="Visual Studio 14 2015" MEMCHECK=DRMEMORY VARIANT=analyze
-  - CFG: BS=cmake GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY
+  - platform: x64
     os: Previous Visual Studio 2015
+    CFG: BS=cmake GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY
 
-  - CFG: BS=cmake GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY
+  - platform: x64
     os: Visual Studio 2015
+    CFG: BS=cmake GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY
 
 matrix:
   fast_finish: true
