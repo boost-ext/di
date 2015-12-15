@@ -12,6 +12,9 @@
 #include <cstdlib>
 
 #if defined(__MSVC__)
+#pragma warning(disable : 4503)
+#pragma warning(disable : 4822)
+#pragma warning(disable : 4505)
 #define __has_include(...) 0
 #endif
 
