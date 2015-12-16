@@ -53,7 +53,6 @@ class mocks_provider : public di::config {
     class mock {
      public:
       explicit mock(const expectations& exp) : expectations_(exp) {}
-
       virtual ~mock() noexcept = default;
 
       virtual int _1() {
