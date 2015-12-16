@@ -92,19 +92,14 @@ test inject = [] {
 
   struct c {
     c(std::initializer_list<int>) {}
-
     c(int, double, float) {}
-
     BOOST_DI_INJECT(c, int i, double d) : i(i), d(d) {}
-
     int i = 0;
     double d = 0.0;
   };
 
   auto injector = di::make_injector(di::bind<int>().to(i));
-
   auto object = injector.create<c>();
-
   expect(i == object.i);
   expect(0.0 == object.d);
 };
@@ -114,15 +109,12 @@ test automatic_inject = [] {
 
   struct c {
     c(std::initializer_list<int>) {}
-
     c(int i, double d) : i(i), d(d) {}
-
     int i = 0;
     double d = 0.0;
   };
 
   auto injector = di::make_injector(di::bind<int>().to(i));
-
   auto object = injector.create<c>();
 
   expect(i == object.i);
@@ -134,13 +126,11 @@ test automatic_inject_with_initializer_list = [] {
 
   struct c {
     c(int i, std::initializer_list<int> il) : i(i), il(il) {}
-
     int i = 0;
     std::initializer_list<int> il;
   };
 
   auto injector = di::make_injector(di::bind<int>().to(i));
-
   auto object = injector.create<c>();
 
   expect(i == object.i);
@@ -327,16 +317,13 @@ test create_with_default_values = [] {
 
   struct default_values {
     BOOST_DI_INJECT_TRAITS(int);
-
     explicit default_values(int i, float f = 42.0, double d = 87.0) : i(i), f(f), d(d) {}
-
     int i = 0;
     float f = 0.0;
     double d = 0.0;
   };
 
   auto injector = make_injector(di::bind<int>().to(i));
-
   auto object = injector.create<default_values>();
 
   expect(i == object.i);
@@ -410,10 +397,9 @@ struct template_inject {
 
 test inject_inside_template = [] {
   constexpr auto i = 42;
-
   auto injector = di::make_injector(di::bind<int>().to(i));
-
   auto object = injector.create<template_inject<int>>();
+
   expect(i == object.value_);
 };
 
@@ -421,24 +407,19 @@ template <class T>
 struct template_inject_no_limits {
   using boost_di_inject__ = di::inject<T>;
   explicit template_inject_no_limits(T value) : value_(value) {}
-
   T value_;
 };
 
 test inject_inside_template_no_limits = [] {
   constexpr auto i = 42;
-
   auto injector = di::make_injector(di::bind<int>().to(i));
-
   auto object = injector.create<template_inject_no_limits<int>>();
   expect(i == object.value_);
 };
 
 test create_conversion = [] {
   constexpr auto i = 42;
-
   auto injector = di::make_injector(di::bind<i1>().to<impl1>(), di::bind<int>().to(i));
-
   expect(i == (int)injector);
   expect(dynamic_cast<impl1*>(((const std::unique_ptr<i1>&)injector).get()));
 };
@@ -450,7 +431,6 @@ test request_value_and_ptr_in_unique = [] {
   };
 
   auto injector = di::make_injector(di::bind<int>().in(di::unique));
-
   auto object = injector.create<c>();
   delete object.ptr;
 };
@@ -459,28 +439,25 @@ test request_value_and_ptr_in_unique = [] {
 test conversion_to_boost_shared_ptr_inject = [] {
   struct c {
     BOOST_DI_INJECT(explicit c, const boost::shared_ptr<int>& sp) : sp(sp) {}
-
     boost::shared_ptr<int> sp;
   };
 
   auto injector = di::make_injector(di::bind<int>().in(di::singleton));
-
   auto object = injector.create<c>();
+
   expect(object.sp.get());
 };
 
 test conversion_to_boost_shared_ctor_referable = [] {
   constexpr auto i = 42;
-
   struct c {
     c(const boost::shared_ptr<int>& sp, int& i_) : sp(sp) { expect(i_ == i); }
-
     boost::shared_ptr<int> sp;
   };
 
   auto injector = di::make_injector(di::bind<int>().to(std::make_shared<int>(i)));
-
   auto object = injector.create<c>();
+
   expect(object.sp.get());
   expect(i == *object.sp);
 };
@@ -491,8 +468,8 @@ test conversion_to_boost_shared_ptr_uniform = [] {
   };
 
   auto injector = di::make_injector(di::bind<int>().in(di::singleton));
-
   auto object = injector.create<c>();
+
   expect(object.sp.get());
 };
 #endif

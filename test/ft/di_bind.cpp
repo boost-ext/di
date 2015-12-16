@@ -600,29 +600,31 @@ test multi_bindings_inject_named = [] {
   injector.create<c>();
 };
 
-/*test multi_bindings_ctor_with_exposed_module = [] {*/
-// struct c {
-// explicit c(std::vector<std::unique_ptr<i1>> v) {
-// expect(v.size() == 5);
-// expect(dynamic_cast<impl1 *>(v[0].get()));
-// expect(dynamic_cast<impl1_2 *>(v[1].get()));
-// expect(dynamic_cast<impl1_2 *>(v[2].get()));
-// expect(dynamic_cast<impl1 *>(v[3].get()));
-// expect(dynamic_cast<impl1_int *>(v[4].get()));
-//}
-//};
+test multi_bindings_ctor_with_exposed_module = [] {
+  struct c {
+    explicit c(std::vector<std::unique_ptr<i1>> v) {
+      expect(v.size() == 5);
+      expect(dynamic_cast<impl1 *>(v[0].get()));
+      expect(dynamic_cast<impl1_2 *>(v[1].get()));
+      expect(dynamic_cast<impl1_2 *>(v[2].get()));
+      expect(dynamic_cast<impl1_int *>(v[3].get()));
+      expect(dynamic_cast<impl1 *>(v[4].get()));
+    }
+  };
 
-// auto module = []() -> di::injector<std::unique_ptr<i1>> { return di::make_injector(di::bind<i1>().to<impl1>()); };
-// auto module2 = []() -> di::injector<std::unique_ptr<i1>> {
-// return di::make_injector(di::bind<i1>().to<impl1_int>());
-//};
+  struct ExposedI1 {};
 
-// auto injector =
-// di::make_injector(di::bind<i1 *[]>().to<impl1, impl1_2, impl1_2, i1 [>via module<], di::named<class ExposedI1>>(),
-// module(), di::bind<i1>().named<class ExposedI1>().to(module2()));
+  auto module = []() -> di::injector<BOOST_DI_EXPOSE((named = ExposedI1{})std::unique_ptr<i1>)> {
+    return di::make_injector(di::bind<i1>().to<impl1>().named(ExposedI1{}));
+  };
+  auto module2 = []() -> di::injector<std::unique_ptr<i1>> {
+    return di::make_injector(di::bind<i1>().to<impl1_int>());
+  };
+  auto injector = di::make_injector(di::bind<i1 *[]>().to<impl1, impl1_2, impl1_2, i1, di::named<ExposedI1>>(),
+                                    module(), module2());
 
-// injector.create<c>();
-/*};*/
+  injector.create<c>();
+};
 
 test multi_bindings_share_object_between_list_and_parameter = [] {
   struct c {
