@@ -2691,12 +2691,21 @@ using injector = detail::injector<
 #define BOOST_DI_EXPOSE_IMPL(...) ::boost::di::v1_0_0::named<BOOST_DI_EXPOSE_IMPL__ __VA_ARGS__>
 #define BOOST_DI_EXPOSE(...) BOOST_DI_IF(BOOST_DI_IBP(__VA_ARGS__), BOOST_DI_EXPOSE_IMPL, BOOST_DI_EXPAND)(__VA_ARGS__)
 // clang-format on
+namespace detail {
+auto make_injector = [](auto injector) {
+  using injector_t = decltype(injector);
+  struct i : injector_t {
+    using injector_t::injector_t;
+  };
+  return i{static_cast<injector_t&&>(injector)};
+};
+}
 template <class TConfig = BOOST_DI_CFG, class... TDeps,
           BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type_list<TDeps...>>) = 0,
           BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>) = 0>
 inline auto make_injector(TDeps... args) noexcept {
-  return core::injector<TConfig, decltype(((TConfig*)0)->policies(0)), TDeps...>{core::init{},
-                                                                                 static_cast<TDeps&&>(args)...};
+  return detail::make_injector(core::injector<TConfig, decltype(((TConfig*)0)->policies(0)), TDeps...>{
+      core::init{}, static_cast<TDeps&&>(args)...});
 }
 namespace policies {
 namespace detail {

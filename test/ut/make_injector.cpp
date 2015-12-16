@@ -6,15 +6,26 @@
 //
 #include <type_traits>
 #include "boost/di/make_injector.hpp"
-#include "boost/di/core/dependency.hpp"
-#include "boost/di/config.hpp"
+#include "common/fakes/fake_dependency.hpp"
+#include "common/fakes/fake_config.hpp"
 
-test make_injector_types = [] {
-  using dep1 = core::dependency<scopes::deduce, int>;
-  using dep2 = core::dependency<scopes::deduce, double>;
-  expect(std::is_same<core::injector<BOOST_DI_CFG>, decltype(make_injector())>{});
-  expect(
-      std::is_same<core::injector<BOOST_DI_CFG, core::pool<>, dep1, dep2>, decltype(make_injector(dep1{}, dep2{}))>{});
-  expect(std::is_same<core::injector<config, core::pool<>, dep1, dep2>,
-                      decltype(make_injector<config>(dep1{}, dep2{}))>{});
+test make_injector_empty = [] {
+  using injector = decltype(make_injector());
+  static_expect(std::is_same<aux::type_list<>, injector::deps>{});
+  static_expect(std::is_same<BOOST_DI_CFG, injector::config>{});
+};
+
+test make_injector_deps = [] {
+  using dep1 = fake_dependency<int>;
+  using dep2 = fake_dependency<double>;
+  using injector = decltype(make_injector(dep1{}, dep2{}));
+  static_expect(std::is_same<aux::type_list<dep1, dep2>, injector::deps>{});
+  static_expect(std::is_same<BOOST_DI_CFG, injector::config>{});
+};
+
+test make_injector_config_deps = [] {
+  using dep = fake_dependency<int>;
+  using injector = decltype(make_injector<fake_config<>>(dep{}));
+  static_expect(std::is_same<aux::type_list<dep>, injector::deps>{});
+  static_expect(std::is_same<fake_config<>, injector::config>{});
 };
