@@ -17,7 +17,7 @@ namespace detail {
 auto make_injector = [](auto injector) {
   using injector_t = decltype(injector);
   struct i : injector_t {
-    using injector_t::injector_t;
+    explicit i(injector_t&& o) : injector_t(static_cast<injector_t&&>(o)) {}
   };
   return i{static_cast<injector_t&&>(injector)};
 };
