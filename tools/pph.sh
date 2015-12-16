@@ -67,7 +67,7 @@ pph() {
         #include "boost/di/policies/constructible.hpp"
         #include "boost/di/providers/heap.hpp"
         #include "boost/di/providers/stack_over_heap.hpp"' > tmp.hpp
-    cpp -std=c++1y -C -P -nostdinc -nostdinc++ -I. \
+    cpp -C -P -nostdinc -I. \
         -DBOOST_DI_AUX_COMPILER_HPP \
         -DBOOST_DI_AUX_PREPROCESSOR_HPP \
         -DBOOST_DI_INJECT_HPP tmp.hpp 2>/dev/null | \

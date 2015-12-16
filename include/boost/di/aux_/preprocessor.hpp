@@ -19,7 +19,7 @@
 #define BOOST_DI_SIZE(...) BOOST_DI_CAT(BOOST_DI_VARIADIC_SIZE_I(__VA_ARGS__, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, ), )
 #define BOOST_DI_PRIMITIVE_CAT(a, ...) a##__VA_ARGS__
 #define BOOST_DI_ELEM(n, ...) BOOST_DI_ELEM_I(n, __VA_ARGS__)
-#define BOOST_DI_IS_EMPTY(...)                                                               \
+#define BOOST_DI_IS_EMPTY(...) \
   BOOST_DI_DETAIL_IS_EMPTY_IIF(BOOST_DI_IBP(__VA_ARGS__))(BOOST_DI_DETAIL_IS_EMPTY_GEN_ZERO, \
                                                           BOOST_DI_DETAIL_IS_EMPTY_PROCESS)(__VA_ARGS__)
 
