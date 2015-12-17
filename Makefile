@@ -16,9 +16,10 @@ GENERATOR?="Unix Makefiles"
 
 all: all_$(BS)
 
-all_bjam:
-	@cd test && bjam -j2 -q --toolset=$(TOOLSET) --user-config=../user-config.jam debug-symbols=off $(VARIANT) $($(MEMCHECK)) cxxflags=" $(CXXFLAGS)" linkflags=" $(LDFLAGS)"
-	@cd example && bjam -j2 -q --toolset=$(TOOLSET) --user-config=../user-config.jam debug-symbols=off $($(MEMCHECK)) cxxflags=" $(CXXFLAGS)" linkflags=" $(LDFLAGS)"
+all_bjam: all_bjam_test all_bjam_example
+
+all_bjam_%:
+	@cd $* && bjam -j2 -q --toolset=$(TOOLSET) --user-config=../user-config.jam debug-symbols=off $(VARIANT) $($(MEMCHECK)) cxxflags=" $(CXXFLAGS)" linkflags=" $(LDFLAGS)"
 
 all_cmake:
 	@-mkdir build
@@ -46,8 +47,8 @@ check_style:
 	@git diff include example test
 	@exit `git ls-files -m include example test | wc -l`
 
-check_static:
-	@$(CLANG_TIDY) -header-filter='boost/di' `find -type f -iname "*.cpp"` -- -std=c++1y -I ../include -I . -include common/test.hpp | sort -u
+check_static_analysis:
+	@$(CLANG_TIDY) -header-filter='boost/di' `find example test -type f -iname "*.cpp"` -- -std=c++1y -I include -I test -include common/test.hpp
 
 doc:
 	@cd doc && bjam -j2 -q && TRY_IT_ONLINE=ON scripts/update_html.sh
