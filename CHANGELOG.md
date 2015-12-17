@@ -3,7 +3,6 @@
 - Support for MSVC-2015+
 - Support for GCC-5+
 - Support for CMake 2.8+
-- Support for biicode
 - Support for libc++, libstdc++
 - Support for clang-format
 

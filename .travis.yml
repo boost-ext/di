@@ -8,9 +8,7 @@ sudo: false
 env:
   global:
   - secure: "A27gNApbElRr3fqZXifVPKkB+xbxMYDFINGk2RDqul1X1Zg51M7e+ohHO9BwhEYiOGmCnFfbsVUP11XyFIH6kzWmxw9mhy8YDglbYfeyu6grxtU3mHElz8W7wO5OCPFPWXQf23sVYE8AWyjj6M+t3oyLJhPXCcYI7uMHEQm10CQ=" # GH_TOKEN
-  - secure: "S1svDigJfTlkxkkp14OOiWje6nT1j06k3cAAvbnI6lNGbf1VxQlJ/Q5SAxEV8ITYvDnJGy/yaoT/tipa5pgFVJ2qpAx/zo8oWGfDAyBSk8LWzuocU5rShvq3eJDJW4199RSdGalXtS1C+7hohJNSy9QP4iODvQA5j90+fbCPdh0=" # BII_PASSWORD
   - secure: "eTBgFApNEFiNdpyV8wmGR0VQG8UgGOWBARyuGl7HPkz7A1pAMlUJM+U/kVSwSNqTroNThc223FSbQc6WM3DGXk+QPrOR7fdpKZSzlBAbbAN9BtpqDDbevTO22988t9rSzeyJhjVeUOpggww2GgyQqLiVdoGnLJzS7GWlYmhbtcM=" # COVERALLS_REPO_TOKEN
-  - BII_USER=krzysztofjusiak
 
 branches:
   except:
@@ -110,7 +108,7 @@ matrix:
         packages: ["clang-3.8", "libstdc++-5-dev", "gdb"]
         sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise"]
   - os: linux
-    env: BS=bjam TOOLSET=gcc GCOV=gcov-5 VARIANT=coverage MEMCHECK=VALGRIND BIICODE=ON CXX=g++-5
+    env: BS=bjam TOOLSET=gcc GCOV=gcov-5 VARIANT=coverage MEMCHECK=VALGRIND CXX=g++-5
     addons:
       apt:
         packages: ["g++-5", "libstdc++-5-dev", "valgrind", "gdb"]
@@ -200,12 +198,6 @@ after_success:
   - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${VARIANT}" == "coverage" ]; then (pip
     install --user travis requests[security] cpp-coveralls && coveralls -r . -b test/ --gcov /usr/bin/${GCOV}
     --repo-token "${COVERALLS_REPO_TOKEN}"); fi
-  - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${BIICODE}" != "" ]; then (mkdir biicode && cd biicode
-    && wget https://s3.amazonaws.com/biibinaries/release/3.3/bii-ubuntu-64_3_3.deb
-    && dpkg -x bii-ubuntu-64_3_3.deb . && export PATH=$PWD/opt/biicode:$PATH && bii init di
-    && cd di && bii new krzysztofjusiak/di && cd blocks/krzysztofjusiak/di
-    && git clone https://github.com/krzysztof-jusiak/di.git .
-    && bii user "${BII_USER}" -p "${BII_PASSWORD}" && bii publish -r); fi
 
 notifications:
   webhooks:
