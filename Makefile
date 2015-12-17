@@ -16,10 +16,9 @@ GENERATOR?="Unix Makefiles"
 
 all: all_$(BS)
 
-all_bjam: all_bjam_test all_bjam_example
-
-all_bjam_%:
-	@cd $* && bjam -j2 -q --toolset=$(TOOLSET) --user-config=../user-config.jam debug-symbols=off $(VARIANT) $($(MEMCHECK)) cxxflags=" $(CXXFLAGS)" linkflags=" $(LDFLAGS)"
+all_bjam:
+	@cd test && bjam -j2 -q --toolset=$(TOOLSET) --user-config=../user-config.jam debug-symbols=off $(VARIANT) $($(MEMCHECK)) cxxflags=" $(CXXFLAGS)" linkflags=" $(LDFLAGS)"
+	@cd example && bjam -j2 -q --toolset=$(TOOLSET) --user-config=../user-config.jam debug-symbols=off $($(MEMCHECK)) cxxflags=" $(CXXFLAGS)" linkflags=" $(LDFLAGS)"
 
 all_cmake:
 	@-mkdir build
