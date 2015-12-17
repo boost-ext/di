@@ -22,6 +22,8 @@
 
 class SDL_Texture;
 
+namespace di = boost::di;
+
 namespace match3 {
 
 class icanvas {
@@ -157,11 +159,9 @@ auto print = [](auto) { std::cout << "clicked" << std::endl; };
 struct controller {
   auto configure() noexcept {
     using namespace msm;
-    auto idle = init_state<__COUNTER__>{};
-    auto wait_for_client = init_state<__COUNTER__>{};
-    auto game_over = state<__COUNTER__, game_over_flag>{};
-    auto s1 = state<__COUNTER__>{};
-    auto s2 = state<__COUNTER__>{};
+    init_state<> idle, wait_for_client;
+    state<game_over_flag> game_over;
+    state<> s1, s2;
 
     // clang-format off
     return make_transition_table(
