@@ -1001,4 +1001,3 @@ BOOST_DI_CFG                            | Global configuration allows to customi
 ---
 
 **Disclaimer** Boost.DI is not an official Boost library.
-
