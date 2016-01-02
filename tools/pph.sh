@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2012-2015 Krzysztof Jusiak (krzysztof at jusiak dot net)
+# Copyright (c) 2012-2016 Krzysztof Jusiak (krzysztof at jusiak dot net)
 #
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,7 +9,7 @@
 pph() {
 	version=$1 revision=$2 patch=$3
     echo "//"
-    echo "// Copyright (c) 2012-2015 Krzysztof Jusiak (krzysztof at jusiak dot net)"
+    echo "// Copyright (c) 2012-2016 Krzysztof Jusiak (krzysztof at jusiak dot net)"
     echo "//"
     echo "// Distributed under the Boost Software License, Version 1.0."
     echo "// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)"
