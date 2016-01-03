@@ -125,7 +125,6 @@ class view {
 
 class board {};
 
-struct game_over_flag {};
 struct button_clicked {
   static constexpr auto id = SDL_MOUSEBUTTONUP;
   button_clicked(...) {}
@@ -154,8 +153,6 @@ auto init_board = [](auto, view& v) {
   }
 };
 
-auto print = [](auto) { std::cout << "clicked" << std::endl; };
-
 struct controller {
   auto configure() const noexcept {
     using namespace msm;
@@ -164,10 +161,10 @@ struct controller {
     // clang-format off
     return make_transition_table(
      // +-----------------------------------------------------------------+
-        idle(initial)	== idle / init_board
-      , idle     		== s1 + event<button_clicked> / print
+        idle(initial) == idle / init_board
+      , idle == s1 + event<button_clicked> / [] { std::cout << "clicked" << std::endl; }
      // +-----------------------------------------------------------------+
-      , wait_for_client == game_over(terminate) + event<window_closed>
+      , wait_for_client(initial) == game_over(terminate) + event<window_closed>
       , wait_for_client == game_over(terminate) + event<key_pressed> [is_key<SDLK_ESCAPE>]
      // +-----------------------------------------------------------------+
     );
@@ -203,17 +200,7 @@ class sdl_user_input : public iclient {
   static void run_impl(void* c) {
     auto& controller_ = (msm::sm<controller>&)*c;
 #if !defined(EMSCRIPTEN)
-    auto is_game_over = [&] {
-      auto result = false;
-      controller_.visit_current_states([&](auto state) {
-        if (di::aux::is_base_of<game_over_flag, decltype(state)>::value) {
-          result = true;
-        }
-      });
-      return result;
-    };
-
-    while (!is_game_over()) {
+    while (!controller_.is(msm::terminate)) {
 #endif
       SDL_Event event = {};
       while (SDL_PollEvent(&event)) {
