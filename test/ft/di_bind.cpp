@@ -12,6 +12,7 @@
 #include <iterator>
 #include <vector>
 #include <set>
+#include <tuple>
 
 namespace di = boost::di;
 
@@ -619,9 +620,8 @@ test multi_bindings_ctor_with_exposed_module = [] {
   auto module = []() -> di::injector<BOOST_DI_EXPOSE((named = ExposedI1{})std::unique_ptr<i1>)> {
     return di::make_injector(di::bind<i1>().to<impl1>().named(ExposedI1{}));
   };
-  auto module2 = []() -> di::injector<std::unique_ptr<i1>> {
-    return di::make_injector(di::bind<i1>().to<impl1_int>());
-  };
+  auto module2 =
+      []() -> di::injector<std::unique_ptr<i1>> { return di::make_injector(di::bind<i1>().to<impl1_int>()); };
   auto module3 = [] { return di::make_injector(di::bind<i1>().to<impl1_2>().named(ExposedI1_{})); };
   auto module4 = [&]() -> di::injector<BOOST_DI_EXPOSE((named = ExposedI1_{})std::unique_ptr<i1>)> {
     return di::make_injector(module3());
@@ -710,6 +710,31 @@ test multi_bindings_with_initializer_list_with_ptr_type = [] {
 
   test(injector.create<std::vector<int>>());
   test(injector.create<std::set<int>>());
+};
+
+test bind_tuple = [] {
+  struct c {
+    c(std::tuple<>, std::tuple<int, double> t) {
+      expect(42 == std::get<0>(t));
+      expect(87.0 == std::get<1>(t));
+    }
+  };
+
+  auto injector = di::make_injector(di::bind<>.to(42), di::bind<>.to(87.0));
+  injector.create<c>();
+};
+
+test bind_tuple_ref = [] {
+  struct c {
+    c(std::tuple<int, double> &t1, std::tuple<int, double> &t2) {
+      expect(42 == std::get<0>(t1));
+      expect(87.0 == std::get<1>(t1));
+      expect(t1 == t2);
+    }
+  };
+
+  auto injector = di::make_injector(di::bind<>.to(42), di::bind<>.to(87.0));
+  injector.create<c>();
 };
 
 template <class T>
