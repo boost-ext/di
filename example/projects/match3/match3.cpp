@@ -157,20 +157,18 @@ auto init_board = [](auto, view& v) {
 auto print = [](auto) { std::cout << "clicked" << std::endl; };
 
 struct controller {
-  auto configure() noexcept {
+  auto configure() const noexcept {
     using namespace msm;
-    init_state<> idle, wait_for_client;
-    state<game_over_flag> game_over;
-    state<> s1, s2;
+    state idle, wait_for_client, s1, s2, game_over;
 
     // clang-format off
     return make_transition_table(
      // +-----------------------------------------------------------------+
-        idle    		   == idle / init_board
-      , idle     		   == s1 + event<button_clicked> / print
+        idle(initial)	== idle / init_board
+      , idle     		== s1 + event<button_clicked> / print
      // +-----------------------------------------------------------------+
-      , wait_for_client  == game_over + event<window_closed>
-      , wait_for_client  == game_over + event<key_pressed> [is_key<SDLK_ESCAPE>]
+      , wait_for_client == game_over(terminate) + event<window_closed>
+      , wait_for_client == game_over(terminate) + event<key_pressed> [is_key<SDLK_ESCAPE>]
      // +-----------------------------------------------------------------+
     );
     // clang-format on
@@ -235,10 +233,7 @@ class game {
  public:
   game(msm::sm<controller>& c, iclient& cl) : controller_(c), client_(cl) {}
 
-  void play() {
-    controller_.start();
-    client_.run();
-  }
+  void play() { client_.run(); }
 
   iclient& client_;
   msm::sm<controller>& controller_;

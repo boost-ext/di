@@ -9,14 +9,6 @@
 
 namespace aux {
 
-test join_types = [] {
-  static_expect(std::is_same<type_list<>, join_t<>>{});
-  static_expect(std::is_same<type_list<int>, join_t<type_list<int>>>{});
-  static_expect(std::is_same<type_list<int, double>, join_t<type_list<int>, type_list<double>>>{});
-  static_expect(std::is_same<type_list<int, float, double>, join_t<type_list<int>, type_list<float, double>>>{});
-  static_expect(std::is_same<type_list<float, double>, join_t<type_list<>, type_list<float, double>>>{});
-};
-
 test index_sequence_types = [] {
   static_expect(std::is_same<index_sequence<>, make_index_sequence<0>>::value);
   static_expect(std::is_same<index_sequence<1>, make_index_sequence<1>>::value);
@@ -29,6 +21,14 @@ test index_sequence_types = [] {
   static_expect(std::is_same<index_sequence<1, 2, 3, 4, 5, 6, 7, 8>, make_index_sequence<8>>::value);
   static_expect(std::is_same<index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9>, make_index_sequence<9>>::value);
   static_expect(std::is_same<index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9, 10>, make_index_sequence<10>>::value);
+};
+
+test join_types = [] {
+  static_expect(std::is_same<type_list<>, join_t<>>::value);
+  static_expect(std::is_same<type_list<int>, join_t<type_list<int>>>::value);
+  static_expect(std::is_same<type_list<int, double>, join_t<type_list<int>, type_list<double>>>::value);
+  static_expect(std::is_same<type_list<int, float, double>, join_t<type_list<int>, type_list<float, double>>>::value);
+  static_expect(std::is_same<type_list<float, double>, join_t<type_list<>, type_list<float, double>>>::value);
 };
 
 }  // aux
