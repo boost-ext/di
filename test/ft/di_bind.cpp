@@ -721,7 +721,7 @@ test bind_tuple = [] {
     }
   };
 
-  auto injector = di::make_injector(di::bind<>.to(42), di::bind<>.to(87.0));
+  auto injector = di::make_injector(di::bind<>().to(42), di::bind<>().to(87.0));
   injector.create<c>();
 };
 
@@ -734,7 +734,7 @@ test bind_tuple_ref = [] {
     }
   };
 
-  auto injector = di::make_injector(di::bind<>.to(42), di::bind<>.to(87.0));
+  auto injector = di::make_injector(di::bind<>().to(42), di::bind<>().to(87.0));
   injector.create<c>();
 };
 
