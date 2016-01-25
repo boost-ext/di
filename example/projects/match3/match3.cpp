@@ -18,11 +18,12 @@
 #if defined(EMSCRIPTEN)
 #include "emscripten.h"
 #endif
-#include "msm.hpp"
+#include "boost/msm/msm.hpp"
 
 class SDL_Texture;
 
 namespace di = boost::di;
+namespace msm = boost::msm;
 
 namespace match3 {
 
@@ -127,22 +128,19 @@ class board {};
 
 struct button_clicked {
   static constexpr auto id = SDL_MOUSEBUTTONUP;
-  button_clicked(...) {}
 };
 struct key_pressed {
   static constexpr auto id = SDL_KEYDOWN;
-  key_pressed(...) {}
 };
 struct window_closed {
   static constexpr auto id = SDL_QUIT;
-  window_closed(...) {}
 };
 
 auto guard = [] { return true; };
 template <int Key>
 auto is_key = [](auto e) { return true; };
 
-auto init_board = [](auto, view& v) {
+auto init_board = [](view& v) {
   std::random_device rd;
   std::mt19937 eng(rd());
   std::uniform_int_distribution<> rand(1, 5);
@@ -156,16 +154,14 @@ auto init_board = [](auto, view& v) {
 struct controller {
   auto configure() const noexcept {
     using namespace msm;
-    state idle, wait_for_client, s1, s2, game_over;
-
     // clang-format off
     return make_transition_table(
      // +-----------------------------------------------------------------+
-        idle(initial) == idle / init_board
-      , idle == s1 + event<button_clicked> / [] { std::cout << "clicked" << std::endl; }
+        "idle"_s(initial) / init_board
+      , "idle"_s == "s1"_s + event<button_clicked> / [] { std::cout << "clicked" << std::endl; }
      // +-----------------------------------------------------------------+
-      , wait_for_client(initial) == game_over(terminate) + event<window_closed>
-      , wait_for_client == game_over(terminate) + event<key_pressed> [is_key<SDLK_ESCAPE>]
+      , "wait_for_client"_s(initial) == terminate + event<window_closed>
+      , "wait_for_client"_s == terminate + event<key_pressed> [is_key<SDLK_ESCAPE>]
      // +-----------------------------------------------------------------+
     );
     // clang-format on
@@ -174,18 +170,6 @@ struct controller {
 
 #if __has_include(<SDL.h>)&&__has_include(<SDL_image.h>)
 class sdl_user_input : public iclient {
-  struct sdl_event_dispatcher {
-    static auto get_id(const SDL_Event& event) noexcept { return event.type; }
-    template <class T>
-    static auto get_id() noexcept {
-      return T::id;
-    }
-    template <class T>
-    static auto get_event(const SDL_Event& event) noexcept {
-      return T(event);
-    }
-  };
-
  public:
   explicit sdl_user_input(msm::sm<controller>& c) : controller_(c) {}
 
@@ -203,8 +187,9 @@ class sdl_user_input : public iclient {
     while (!controller_.is(msm::terminate)) {
 #endif
       SDL_Event event = {};
+      auto dispatch_event = msm::make_dispatch_table<SDL_Event, SDL_FIRSTEVENT, 10 /*SDL_LASTEVENT*/>(controller_);
       while (SDL_PollEvent(&event)) {
-        msm::dispatcher<SDL_Event, sdl_event_dispatcher>::dispatch_event(event, controller_);
+        dispatch_event(event, event.type);
       }
 #if !defined(EMSCRIPTEN)
     }
