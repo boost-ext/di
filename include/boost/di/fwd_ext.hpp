@@ -25,6 +25,8 @@ template <class, class>
 class unique_ptr;
 template <class>
 struct char_traits;
+template <class...>
+class tuple;
 template <class, class>
 class vector;
 template <class, class, class>

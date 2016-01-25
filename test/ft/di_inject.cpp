@@ -435,6 +435,25 @@ test request_value_and_ptr_in_unique = [] {
   delete object.ptr;
 };
 
+template <class... Ts>
+struct custom_type_list {
+  using type = custom_type_list;
+};
+
+test inject_using_custom_type_list = [] {
+  struct c {
+    c(int i, double d) {
+      expect(42 == i);
+      expect(87.0 == d);
+    }
+
+    using boost_di_inject__ = custom_type_list<int, double>;
+  };
+
+  auto injector = di::make_injector(di::bind<>().to(42), di::bind<double>().to(87.0));
+  injector.create<c>();
+};
+
 #if __has_include(<boost / shared_ptr.hpp>)
 test conversion_to_boost_shared_ptr_inject = [] {
   struct c {

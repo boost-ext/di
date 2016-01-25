@@ -620,8 +620,9 @@ test multi_bindings_ctor_with_exposed_module = [] {
   auto module = []() -> di::injector<BOOST_DI_EXPOSE((named = ExposedI1{})std::unique_ptr<i1>)> {
     return di::make_injector(di::bind<i1>().to<impl1>().named(ExposedI1{}));
   };
-  auto module2 =
-      []() -> di::injector<std::unique_ptr<i1>> { return di::make_injector(di::bind<i1>().to<impl1_int>()); };
+  auto module2 = []() -> di::injector<std::unique_ptr<i1>> {
+    return di::make_injector(di::bind<i1>().to<impl1_int>());
+  };
   auto module3 = [] { return di::make_injector(di::bind<i1>().to<impl1_2>().named(ExposedI1_{})); };
   auto module4 = [&]() -> di::injector<BOOST_DI_EXPOSE((named = ExposedI1_{})std::unique_ptr<i1>)> {
     return di::make_injector(module3());
@@ -714,7 +715,7 @@ test multi_bindings_with_initializer_list_with_ptr_type = [] {
 
 test bind_tuple = [] {
   struct c {
-    c(std::tuple<>, std::tuple<int, double> t) {
+    c(std::tuple<>, const std::tuple<int, double> &t) {
       expect(42 == std::get<0>(t));
       expect(87.0 == std::get<1>(t));
     }

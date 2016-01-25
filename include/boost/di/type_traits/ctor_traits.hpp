@@ -98,6 +98,11 @@ struct ctor_traits<std::initializer_list<T>> {
   using boost_di_inject__ = aux::type_list<>;
 };
 
+template <class... Ts>
+struct ctor_traits<std::tuple<Ts...>> {
+  using boost_di_inject__ = aux::type_list<Ts...>;
+};
+
 template <class T>
 struct ctor_traits<T, BOOST_DI_REQUIRES(aux::is_same<std::char_traits<char>, typename T::traits_type>::value)> {
   using boost_di_inject__ = aux::type_list<>;
