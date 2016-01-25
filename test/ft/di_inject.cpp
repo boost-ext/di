@@ -8,6 +8,7 @@
 #include <string>
 #include <functional>
 #include <initializer_list>
+#include <tuple>
 #if __has_include(<boost / function.hpp>)
 #include <boost/function.hpp>
 #endif
@@ -452,6 +453,22 @@ test inject_using_custom_type_list = [] {
 
   auto injector = di::make_injector(di::bind<>().to(42), di::bind<double>().to(87.0));
   injector.create<c>();
+};
+
+struct custom_type_list_variadic {
+  template <class... Ts>
+  explicit custom_type_list_variadic(Ts&&... ts) {
+    std::tuple<Ts...> args{ts...};
+    expect(42 == std::get<0>(args));
+    expect(87.0 == std::get<1>(args));
+  }
+
+  using boost_di_inject__ = custom_type_list<int, double>;
+};
+
+test inject_using_custom_type_list_variadic = [] {
+  auto injector = di::make_injector(di::bind<>().to(42), di::bind<double>().to(87.0));
+  injector.create<custom_type_list_variadic>();
 };
 
 #if __has_include(<boost / shared_ptr.hpp>)
