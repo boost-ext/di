@@ -8,6 +8,8 @@
 #include <SDL_image.h>
 #endif
 #include <iostream>
+#include <cstdio>
+#include <typeinfo>
 #include <memory>
 #include <cassert>
 #include <string>
@@ -18,7 +20,30 @@
 #if defined(EMSCRIPTEN)
 #include "emscripten.h"
 #endif
-#include "boost/msm/msm.hpp"
+
+template <class SM, class TEvent>
+void log_process_event(const TEvent&) {
+  printf("[%s][process_event] %s\n", typeid(SM).name(), typeid(TEvent).name());
+}
+
+template <class SM, class TAction, class TEvent>
+void log_guard(const TAction&, const TEvent&, bool result) {
+  printf("[%s][guard] %s %s %s\n", typeid(SM).name(), typeid(TAction).name(), typeid(TEvent).name(),
+         (result ? "[OK]" : "[Reject]"));
+}
+
+template <class SM, class TAction, class TEvent>
+void log_action(const TAction&, const TEvent&) {
+  printf("[%s][action] %s %s\n", typeid(SM).name(), typeid(TAction).name(), typeid(TEvent).name());
+}
+
+template <class SM, class TSrcState, class TDstState>
+void log_state_change(const TSrcState& src, const TDstState& dst) {
+  printf("[%s][transition] %s -> %s\n", typeid(SM).name(), src.c_str(), dst.c_str());
+}
+
+#define BOOST_MSM_LOG(T, SM, ...) log_##T<SM>(__VA_ARGS__)
+#include "boost/msm.hpp"
 
 class SDL_Texture;
 
@@ -187,7 +212,7 @@ class sdl_user_input : public iclient {
     while (!controller_.is(msm::terminate)) {
 #endif
       SDL_Event event = {};
-      auto dispatch_event = msm::make_dispatch_table<SDL_Event, SDL_FIRSTEVENT, 10 /*SDL_LASTEVENT*/>(controller_);
+      auto dispatch_event = msm::make_dispatch_table<SDL_Event, SDL_QUIT, SDL_DROPFILE>(controller_);
       while (SDL_PollEvent(&event)) {
         dispatch_event(event, event.type);
       }
