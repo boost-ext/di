@@ -53,9 +53,8 @@ class types_dumper : public di::config {
         std::clog << "    ";
       }
 
-      std::clog << "(" << typeid(arg).name()
-                << ((*(name*)(0))() ? std::string("[") + (*(name*)(0))() + std::string("]") : "") << " -> "
-                << typeid(given).name() << ")" << std::endl;
+      std::clog << "(" << typeid(arg).name() << ((*(name*)(0))() ? std::string("[") + (*(name*)(0))() + std::string("]") : "")
+                << " -> " << typeid(given).name() << ")" << std::endl;
 
       auto ctor_size = sizeof...(ctor);
       while (ctor_size--) {

@@ -18,8 +18,7 @@ namespace di = boost::di;
 
 class app {
  public:
-  app(int value, const std::string& text, std::shared_ptr<ilogger> logger)
-      : value_(value), text_(text), logger_(logger) {}
+  app(int value, const std::string& text, std::shared_ptr<ilogger> logger) : value_(value), text_(text), logger_(logger) {}
 
   void run() const {
     if (value_) {
@@ -34,8 +33,7 @@ class app {
 };
 
 di::injector<app> module(const int& i) {
-  return di::make_injector(di::bind<ilogger>().to<logger>(), di::bind<int>().to(i),
-                           di::bind<std::string>().to("hello world"));
+  return di::make_injector(di::bind<ilogger>().to<logger>(), di::bind<int>().to(i), di::bind<std::string>().to("hello world"));
 }
 
 int main(int argc, char** argv) {

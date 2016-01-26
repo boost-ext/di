@@ -48,8 +48,7 @@ class example_with_different_parameters_order {
  * configuration>*/
 class example_with_different_parameters_order_and_types {
  public:
-  example_with_different_parameters_order_and_types(std::unique_ptr<interface2> sp, const int& i, interface1* up)
-      : up_(up) {
+  example_with_different_parameters_order_and_types(std::unique_ptr<interface2> sp, const int& i, interface1* up) : up_(up) {
     assert(dynamic_cast<implementation1*>(up));
     assert(dynamic_cast<implementation2*>(sp.get()));
     assert(42 == i);
@@ -61,8 +60,8 @@ class example_with_different_parameters_order_and_types {
 
 int main() {
   /*<<make injector>>*/
-  auto injector = di::make_injector(di::bind<interface1>().to<implementation1>(),
-                                    di::bind<interface2>().to<implementation2>(), di::bind<int>().to(42));
+  auto injector = di::make_injector(di::bind<interface1>().to<implementation1>(), di::bind<interface2>().to<implementation2>(),
+                                    di::bind<int>().to(42));
 
   /*<create different examples using the same injector configuration>*/
   injector.create<example>();

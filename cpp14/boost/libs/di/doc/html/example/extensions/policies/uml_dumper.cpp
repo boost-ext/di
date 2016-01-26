@@ -57,8 +57,7 @@ class uml_dumper : public di::config {
       auto root = v[i - 1];
       if (root != &typeid(nullptr)) {
         std::cout << "\"" << root->name() << "\" .. \"" << typeid(given).name()
-                  << ((*(name*)(0))() ? std::string(" [") + (*(name*)(0))() + std::string("]") : "") << "\""
-                  << std::endl;
+                  << ((*(name*)(0))() ? std::string(" [") + (*(name*)(0))() + std::string("]") : "") << "\"" << std::endl;
       }
 
       auto ctor_size = sizeof...(ctor);

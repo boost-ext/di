@@ -27,8 +27,8 @@ class app {
 };
 
 int main(int argc, char** argv) {
-  auto injector = di::make_injector(di::bind<int>().to(argc > 1 ? std::atoi(argv[1]) : 0),
-                                    di::bind<std::string>().to("hello world"));
+  auto injector =
+      di::make_injector(di::bind<int>().to(argc > 1 ? std::atoi(argv[1]) : 0), di::bind<std::string>().to("hello world"));
 
   injector.create<app>().run();
 }
