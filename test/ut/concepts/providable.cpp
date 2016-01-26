@@ -14,8 +14,7 @@ namespace concepts {
 
 test none = [] {
   struct none_providable {};
-  static_expect(
-      std::is_same<provider<none_providable>::requires_<get, is_creatable>, providable<none_providable>>::value);
+  static_expect(std::is_same<provider<none_providable>::requires_<get, is_creatable>, providable<none_providable>>::value);
 };
 
 class provider_private_access {

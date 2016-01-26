@@ -62,8 +62,7 @@ void no_di() {
 void manual_di() {
   class coffee_maker {
    public:
-    coffee_maker(const std::shared_ptr<iheater>& heater, std::unique_ptr<ipump> pump)
-        : heater(heater), pump(std::move(pump)) {}
+    coffee_maker(const std::shared_ptr<iheater>& heater, std::unique_ptr<ipump> pump) : heater(heater), pump(std::move(pump)) {}
 
     void brew() {
       heater->on();
@@ -89,8 +88,7 @@ void manual_di() {
 void automatic_di() {
   struct coffee_maker {
    public:
-    coffee_maker(const std::shared_ptr<iheater>& heater, std::unique_ptr<ipump> pump)
-        : heater(heater), pump(std::move(pump)) {}
+    coffee_maker(const std::shared_ptr<iheater>& heater, std::unique_ptr<ipump> pump) : heater(heater), pump(std::move(pump)) {}
 
     void brew() {
       heater->on();

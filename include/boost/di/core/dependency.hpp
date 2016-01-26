@@ -45,18 +45,17 @@ struct dependency_impl<dependency_concept<aux::type_list<Ts...>, no_name>, TDepe
 struct override {};
 
 template <class TScope, class TExpected, class TGiven, class TName, class TPriority>
-class dependency : dependency_base,
-                   TScope::template scope<TExpected, TGiven>,
-                   public dependency_impl<dependency_concept<TExpected, TName>,
-                                          dependency<TScope, TExpected, TGiven, TName, TPriority>> {
+class dependency
+    : dependency_base,
+      TScope::template scope<TExpected, TGiven>,
+      public dependency_impl<dependency_concept<TExpected, TName>, dependency<TScope, TExpected, TGiven, TName, TPriority>> {
   template <class, class, class, class, class>
   friend class dependency;
   using scope_t = typename TScope::template scope<TExpected, TGiven>;
 
   template <class T>
-  using externable =
-      aux::integral_constant<bool, aux::always<T>::value && aux::is_same<TScope, scopes::deduce>::value &&
-                                       aux::is_same<TExpected, TGiven>::value>;
+  using externable = aux::integral_constant<bool, aux::always<T>::value && aux::is_same<TScope, scopes::deduce>::value &&
+                                                      aux::is_same<TExpected, TGiven>::value>;
 
   template <class T>
   struct ref_traits {
@@ -132,9 +131,8 @@ class dependency : dependency_base,
     return dependency{object};
   }
 
-  template <
-      class T, BOOST_DI_REQUIRES(externable<T>::value) = 0,
-      BOOST_DI_REQUIRES_MSG(concepts::boundable<deduce_traits_t<TExpected, T>, aux::decay_t<T>, aux::valid<>>) = 0>
+  template <class T, BOOST_DI_REQUIRES(externable<T>::value) = 0,
+            BOOST_DI_REQUIRES_MSG(concepts::boundable<deduce_traits_t<TExpected, T>, aux::decay_t<T>, aux::valid<>>) = 0>
   auto to(T&& object) noexcept {
     using dependency =
         dependency<scopes::instance, deduce_traits_t<TExpected, T>, typename ref_traits<T>::type, TName, TPriority>;

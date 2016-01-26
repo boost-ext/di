@@ -15,9 +15,8 @@
 namespace concepts {
 
 template <class T>
-using scopable_error =
-    typename scope<T>::template requires_<typename scope<_, _>::is_referable, typename scope<_, _>::try_create,
-                                          typename scope<_, _>::create>;
+using scopable_error = typename scope<T>::template requires_<typename scope<_, _>::is_referable,
+                                                             typename scope<_, _>::try_create, typename scope<_, _>::create>;
 
 test none = [] {
   struct none_scopable {};

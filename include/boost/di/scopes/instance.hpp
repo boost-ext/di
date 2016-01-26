@@ -83,8 +83,7 @@ class instance {
   template <class TExpected, class TGiven>
   struct scope<TExpected, std::shared_ptr<TGiven>> {
     template <class T>
-    using is_referable =
-        typename wrappers::shared<instance, TGiven>::template is_referable<aux::remove_qualifiers_t<T>>;
+    using is_referable = typename wrappers::shared<instance, TGiven>::template is_referable<aux::remove_qualifiers_t<T>>;
 
     explicit scope(const std::shared_ptr<TGiven>& object) : object_{object} {}
 
@@ -162,9 +161,8 @@ class instance {
     static detail::wrapper_traits_t<decltype(aux::declval<TGiven>()(aux::declval<typename TProvider::injector_t>()))>
     try_create(const TProvider&) noexcept;
 
-    template <
-        class T, class, class TProvider,
-        BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
+    template <class T, class, class TProvider,
+              BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
     static detail::wrapper_traits_t<decltype(aux::declval<TGiven>()(aux::declval<typename TProvider::injector_t>(),
                                                                     aux::declval<detail::arg<T, TExpected, TGiven>>()))>
     try_create(const TProvider&) noexcept;
@@ -191,12 +189,10 @@ class instance {
       return wrapper{(object_)(*provider.injector_)};
     }
 
-    template <
-        class T, class, class TProvider,
-        BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
+    template <class T, class, class TProvider,
+              BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
     auto create(const TProvider& provider) noexcept {
-      using wrapper =
-          detail::wrapper_traits_t<decltype((object_)(*provider.injector_, detail::arg<T, TExpected, TGiven>{}))>;
+      using wrapper = detail::wrapper_traits_t<decltype((object_)(*provider.injector_, detail::arg<T, TExpected, TGiven>{}))>;
       return wrapper{(object_)(*provider.injector_, detail::arg<T, TExpected, TGiven>{})};
     }
 
@@ -220,8 +216,7 @@ class instance {
 
       template <class TName, class T>
       T create(const named<TName, T>&, const aux::true_type&) const noexcept {
-        return static_cast<const injector__<named<TName, T>>*>(this)
-            ->f(static_cast<const injector__<named<TName, T>>*>(this));
+        return static_cast<const injector__<named<TName, T>>*>(this)->f(static_cast<const injector__<named<TName, T>>*>(this));
       }
 
       template <class T>
@@ -262,8 +257,7 @@ class instance {
       };
 
       template <class T>
-      struct is_creatable : aux::integral_constant<bool, core::injector__<TInjector>::template is_creatable<T>::value> {
-      };
+      struct is_creatable : aux::integral_constant<bool, core::injector__<TInjector>::template is_creatable<T>::value> {};
 
       template <class TName, class T>
       struct is_creatable<named<TName, T>>
@@ -284,8 +278,7 @@ class instance {
     using is_referable = aux::true_type;
 
     template <class TInjector, BOOST_DI_REQUIRES(aux::is_a<core::injector_base, TInjector>::value) = 0>
-    explicit scope(TInjector&& i) noexcept
-        : injector_((injector*) new injector_impl<TInjector>{static_cast<TInjector&&>(i)}) {}
+    explicit scope(TInjector&& i) noexcept : injector_((injector*) new injector_impl<TInjector>{static_cast<TInjector&&>(i)}) {}
 
     scope(scope&& other) noexcept : injector_(other.injector_) { other.injector_ = nullptr; }
     ~scope() noexcept { delete injector_; }

@@ -50,8 +50,8 @@ class generator {
  private:
   std::string gen_name(config_create create, config_configure configure, bool interfaces, int modules) const {
     std::stringstream name;
-    name << SOURCE_FILE << "_" << static_cast<int>(create) << "_" << static_cast<int>(configure) << "_" << interfaces
-         << "_" << modules << ".cpp";
+    name << SOURCE_FILE << "_" << static_cast<int>(create) << "_" << static_cast<int>(configure) << "_" << interfaces << "_"
+         << modules << ".cpp";
     return name.str();
   }
 
@@ -128,8 +128,7 @@ class generator {
 
       for (auto j = 0; j < MAX_COMPLEX_TYPES; ++j) {
         source_code_ << (j || create_ == config_create::INJECT ? ", " : "") << (interfaces_ ? "std::unique_ptr<" : "")
-                     << (interfaces_ ? ((i * MAX_COMPLEX_TYPES) + j < modules_ * MAX_COMPLEX_TYPES ? "i" : "impl")
-                                     : "x")
+                     << (interfaces_ ? ((i * MAX_COMPLEX_TYPES) + j < modules_ * MAX_COMPLEX_TYPES ? "i" : "impl") : "x")
                      << std::setfill('0') << std::setw(2) << (i * MAX_COMPLEX_TYPES) + j << (interfaces_ ? ">" : "");
       }
       source_code_ << ") { } };\n";
@@ -161,14 +160,14 @@ class generator {
         if (interfaces_) {
           for (auto j = 0; j < MAX_MODULES; ++j) {
             source_code_ << "\t" << (j ? ", " : "  ") << "di::bind<i" << std::setfill('0') << std::setw(2)
-                         << j + (i * MAX_MODULES) << ">().to<impl" << std::setfill('0') << std::setw(2)
-                         << j + (i * MAX_MODULES) << ">()\n";
+                         << j + (i * MAX_MODULES) << ">().to<impl" << std::setfill('0') << std::setw(2) << j + (i * MAX_MODULES)
+                         << ">()\n";
           }
         }
 
         for (auto j = 0; j < MAX_MODULES; ++j) {
-          source_code_ << "\t\t" << (j || interfaces_ ? ", " : "  ") << "di::bind<x" << std::setfill('0')
-                       << std::setw(2) << j + (i * MAX_MODULES) << ">().in(di::unique)\n";
+          source_code_ << "\t\t" << (j || interfaces_ ? ", " : "  ") << "di::bind<x" << std::setfill('0') << std::setw(2)
+                       << j + (i * MAX_MODULES) << ">().in(di::unique)\n";
         }
         source_code_ << "\t);\n";
         source_code_ << "\tusing injector_t = decltype(i);\n";
@@ -228,8 +227,7 @@ class json {
 
  public:
   explicit json(const std::string& name) : file_{name + "_" + cxx() + ".json"} {
-    file_ << std::regex_replace(std::string{header}, std::regex{"%title%"},
-                                name + " complexity | " + cxx() + " " + cxxflags());
+    file_ << std::regex_replace(std::string{header}, std::regex{"%title%"}, name + " complexity | " + cxx() + " " + cxxflags());
   }
 
   ~json() { file_ << footer; }
@@ -296,9 +294,7 @@ auto benchmark = [](const std::string& complexity, bool interfaces = false, int 
   perform(ds, "inject/exposed", generator::config_create::INJECT, generator::config_configure::EXPOSED);
 };
 
-auto is_benchmark(const std::string& name) {
-  return std::getenv("BENCHMARK") && std::string{std::getenv("BENCHMARK")} == name;
-}
+auto is_benchmark(const std::string& name) { return std::getenv("BENCHMARK") && std::string{std::getenv("BENCHMARK")} == name; }
 }
 
 test small_complexity = [] {

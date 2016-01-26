@@ -50,8 +50,7 @@ class singleton {
     using is_referable = typename wrappers::shared<singleton, T>::template is_referable<T_>;
 
     template <class, class, class TProvider, class T_ = aux::decay_t<decltype(aux::declval<TProvider>().get())>>
-    static decltype(wrappers::shared<singleton, T_>{
-        std::shared_ptr<T_>{std::shared_ptr<T_>{aux::declval<TProvider>().get()}}})
+    static decltype(wrappers::shared<singleton, T_>{std::shared_ptr<T_>{std::shared_ptr<T_>{aux::declval<TProvider>().get()}}})
     try_create(const TProvider&);
 
     template <class, class, class TProvider>

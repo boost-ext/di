@@ -36,9 +36,9 @@ struct copyable;
 
 template <class T>
 struct copyable_impl
-    : aux::conditional<aux::is_default_constructible<
-                           typename T::scope::template scope<typename T::expected, typename T::given>>::value,
-                       aux::type_list<>, aux::type_list<T>> {};
+    : aux::conditional<
+          aux::is_default_constructible<typename T::scope::template scope<typename T::expected, typename T::given>>::value,
+          aux::type_list<>, aux::type_list<T>> {};
 
 template <class... TDeps>
 struct copyable<aux::type_list<TDeps...>> : aux::join<typename copyable_impl<TDeps>::type...> {};
@@ -98,13 +98,13 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     using dependency_t = binder::resolve_t<injector, T, TName>;
     using ctor_t = typename type_traits::ctor_traits__<typename dependency_t::given, T>::type;
 
-    static constexpr auto value = aux::is_convertible<
-        decltype(dependency__<dependency_t>::template try_create<T, TName>(
-            try_provider<ctor_t, injector, decltype(TConfig::provider((injector*)0))>{})),
-        T>::value
-        BOOST_DI_CORE_INJECTOR_POLICY(
-            &&policy::template try_call<arg_wrapper<referable_t<T, dependency__<dependency_t>>, TName, TIsRoot, pool_t>,
-                                        TPolicies, dependency_t, typename ctor_t::second>::value)();
+    static constexpr auto value =
+        aux::is_convertible<decltype(dependency__<dependency_t>::template try_create<T, TName>(
+                                try_provider<ctor_t, injector, decltype(TConfig::provider((injector*)0))>{})),
+                            T>::value
+            BOOST_DI_CORE_INJECTOR_POLICY(
+                &&policy::template try_call<arg_wrapper<referable_t<T, dependency__<dependency_t>>, TName, TIsRoot, pool_t>,
+                                            TPolicies, dependency_t, typename ctor_t::second>::value)();
   };
 
  public:

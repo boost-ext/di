@@ -57,8 +57,8 @@ struct ctor_inject_traits_no_limits {
   using boost_di_inject__ =
       di::inject<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>;
 
-  ctor_inject_traits_no_limits(int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int,
-                               int, int) {}
+  ctor_inject_traits_no_limits(int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int,
+                               int) {}
 };
 
 int main() {

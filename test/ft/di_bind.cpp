@@ -458,14 +458,13 @@ test runtime_factory_impl = [] {
   constexpr auto i = 42;
 
   auto test = [&](bool debug_property) {
-    auto injector =
-        make_injector(di::bind<int>().to(i), di::bind<i1>().to([&](const auto &injector) -> std::shared_ptr<i1> {
-          if (debug_property) {
-            return std::make_shared<impl1>();
-          }
+    auto injector = make_injector(di::bind<int>().to(i), di::bind<i1>().to([&](const auto &injector) -> std::shared_ptr<i1> {
+      if (debug_property) {
+        return std::make_shared<impl1>();
+      }
 
-          return injector.template create<std::shared_ptr<impl1_int>>();
-        }));
+      return injector.template create<std::shared_ptr<impl1_int>>();
+    }));
 
     return injector.create<std::shared_ptr<i1>>();
   };
@@ -571,9 +570,9 @@ test multi_bindings_containers = [] {
     expect(*(std::next(it, 1)) == 87);
   };
 
-  auto injector = di::make_injector(di::bind<int[]>().to<int, di::named<class Int42>>(), di::bind<int>().to(11),
-                                    di::bind<>().to(42).named<class Int42>(),
-                                    di::bind<int>().to(87).named<class Int42>()[di::override]);
+  auto injector =
+      di::make_injector(di::bind<int[]>().to<int, di::named<class Int42>>(), di::bind<int>().to(11),
+                        di::bind<>().to(42).named<class Int42>(), di::bind<int>().to(87).named<class Int42>()[di::override]);
 
   test(injector.create<std::vector<int>>());
   test(injector.create<std::set<int>>());
@@ -581,8 +580,7 @@ test multi_bindings_containers = [] {
 
 test multi_bindings_inject_named = [] {
   struct c {
-    BOOST_DI_INJECT(c, (named = a) const std::vector<std::shared_ptr<i1>> &v1,
-                    (named = b)std::vector<std::unique_ptr<i1>> v2) {
+    BOOST_DI_INJECT(c, (named = a) const std::vector<std::shared_ptr<i1>> &v1, (named = b)std::vector<std::unique_ptr<i1>> v2) {
       expect(v1.size() == 2);
       expect(dynamic_cast<impl1 *>(v1[0].get()));
       expect(dynamic_cast<impl1_2 *>(v1[1].get()));
@@ -592,11 +590,10 @@ test multi_bindings_inject_named = [] {
     }
   };
 
-  auto injector =
-      di::make_injector(di::bind<i1 *[]>().to<impl1, di::named<decltype(a)>>(),
-                        di::bind<i1 *[]>().named(a).to<i1, di::named<class Impl2>>(),
-                        di::bind<i1 *[]>().named(b).to<impl1>(), di::bind<i1>().to<impl1>(),
-                        di::bind<i1>().to<impl1_2>().named<class Impl2>(), di::bind<i1>().to<impl1_2>().named(a));
+  auto injector = di::make_injector(di::bind<i1 *[]>().to<impl1, di::named<decltype(a)>>(),
+                                    di::bind<i1 *[]>().named(a).to<i1, di::named<class Impl2>>(),
+                                    di::bind<i1 *[]>().named(b).to<impl1>(), di::bind<i1>().to<impl1>(),
+                                    di::bind<i1>().to<impl1_2>().named<class Impl2>(), di::bind<i1>().to<impl1_2>().named(a));
 
   injector.create<c>();
 };
@@ -620,16 +617,14 @@ test multi_bindings_ctor_with_exposed_module = [] {
   auto module = []() -> di::injector<BOOST_DI_EXPOSE((named = ExposedI1{})std::unique_ptr<i1>)> {
     return di::make_injector(di::bind<i1>().to<impl1>().named(ExposedI1{}));
   };
-  auto module2 = []() -> di::injector<std::unique_ptr<i1>> {
-    return di::make_injector(di::bind<i1>().to<impl1_int>());
-  };
+  auto module2 = []() -> di::injector<std::unique_ptr<i1>> { return di::make_injector(di::bind<i1>().to<impl1_int>()); };
   auto module3 = [] { return di::make_injector(di::bind<i1>().to<impl1_2>().named(ExposedI1_{})); };
   auto module4 = [&]() -> di::injector<BOOST_DI_EXPOSE((named = ExposedI1_{})std::unique_ptr<i1>)> {
     return di::make_injector(module3());
   };
-  auto injector = di::make_injector(
-      di::bind<i1 *[]>().to<impl1, impl1_2, impl1_2, i1, di::named<ExposedI1>, di::named<ExposedI1_>>(), module(),
-      module2(), module4());
+  auto injector =
+      di::make_injector(di::bind<i1 *[]>().to<impl1, impl1_2, impl1_2, i1, di::named<ExposedI1>, di::named<ExposedI1_>>(),
+                        module(), module2(), module4());
 
   injector.create<c>();
 };

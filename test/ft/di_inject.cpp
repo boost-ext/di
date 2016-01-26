@@ -51,8 +51,8 @@ test inject_ctor_limit_size = [] {
 
 test ctor_limit_size = [] {
   struct c {
-    c(int /*p1*/, int /*p2*/, int /*p3*/, int /*p4*/, int /*p5*/, int /*p6*/, int /*p7*/, int /*p8*/, int /*p9*/,
-      int /*p10*/) {}
+    c(int /*p1*/, int /*p2*/, int /*p3*/, int /*p4*/, int /*p5*/, int /*p6*/, int /*p7*/, int /*p8*/, int /*p9*/, int /*p10*/) {
+    }
   };
 
   auto injector = di::make_injector();
@@ -224,8 +224,8 @@ test ctor_refs = [] {
 
 test refs_vs_copy = [] {
   struct cc {
-    BOOST_DI_INJECT(cc, (named = name) const int& i, (named = name) const std::string& s,
-                    (named = other_name) int& i_ref, int& ii)
+    BOOST_DI_INJECT(cc, (named = name) const int& i, (named = name) const std::string& s, (named = other_name) int& i_ref,
+                    int& ii)
         : str(s), i(i), i_ref(i_ref), ii(ii) {}
 
     std::string str;

@@ -14,9 +14,8 @@ namespace concepts {
 
 test none = [] {
   class test_config {};
-  static_expect(
-      std::is_same<config<test_config>::requires_<provider<providable_type(...)>, policies<callable_type(...)>>,
-                   configurable<test_config>>::value);
+  static_expect(std::is_same<config<test_config>::requires_<provider<providable_type(...)>, policies<callable_type(...)>>,
+                             configurable<test_config>>::value);
 };
 
 class config_just_policies {
@@ -25,9 +24,9 @@ class config_just_policies {
 };
 
 test just_policies = [] {
-  static_expect(std::is_same<
-                config<config_just_policies>::requires_<provider<providable_type(...)>, policies<callable_type(...)>>,
-                configurable<config_just_policies>>::value);
+  static_expect(
+      std::is_same<config<config_just_policies>::requires_<provider<providable_type(...)>, policies<callable_type(...)>>,
+                   configurable<config_just_policies>>::value);
 };
 
 class config_just_provider {
@@ -36,9 +35,9 @@ class config_just_provider {
 };
 
 test just_provider = [] {
-  static_expect(std::is_same<
-                config<config_just_provider>::requires_<provider<providable_type(...)>, policies<callable_type(...)>>,
-                configurable<config_just_provider>>::value);
+  static_expect(
+      std::is_same<config<config_just_provider>::requires_<provider<providable_type(...)>, policies<callable_type(...)>>,
+                   configurable<config_just_provider>>::value);
 };
 
 class config_private_access {
@@ -49,9 +48,9 @@ class config_private_access {
 
 #if !defined(__MSVC__)
 test private_access = [] {
-  static_expect(std::is_same<
-                config<config_private_access>::requires_<provider<providable_type(...)>, policies<callable_type(...)>>,
-                configurable<config_private_access>>::value);
+  static_expect(
+      std::is_same<config<config_private_access>::requires_<provider<providable_type(...)>, policies<callable_type(...)>>,
+                   configurable<config_private_access>>::value);
 };
 #endif
 

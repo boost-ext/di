@@ -37,8 +37,8 @@ struct callable_type_extended {
 test is_concept_callable = [] {
   static_expect(std::is_same<policy<int>::requires_<call_operator>, callable<int>>::value);
   static_expect(std::is_same<policy<non_callable_type>::requires_<call_operator>, callable<non_callable_type>>::value);
-  static_expect(std::is_same<policy<non_match_callable_type>::requires_<call_operator>,
-                             callable<non_match_callable_type>>::value);
+  static_expect(
+      std::is_same<policy<non_match_callable_type>::requires_<call_operator>, callable<non_match_callable_type>>::value);
   static_expect(std::is_same<policy<non_match_callable_type_specific>::requires_<call_operator>,
                              callable<non_match_callable_type_specific>>::value);
 

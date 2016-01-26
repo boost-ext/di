@@ -78,11 +78,10 @@ class sdl_canvas : public icanvas {
     assert(!SDL_Init(SDL_INIT_EVERYTHING & ~(SDL_INIT_TIMER | SDL_INIT_HAPTIC)) && SDL_GetError());
 
     window_ = std::shared_ptr<SDL_Window>(
-        SDL_CreateWindow("", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN),
-        SDL_DestroyWindow);
+        SDL_CreateWindow("", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN), SDL_DestroyWindow);
 
-    renderer_ = std::shared_ptr<SDL_Renderer>(SDL_CreateRenderer(window_.get(), RENDER_DRIVER, RENDER_FLAGS),
-                                              SDL_DestroyRenderer);
+    renderer_ =
+        std::shared_ptr<SDL_Renderer>(SDL_CreateRenderer(window_.get(), RENDER_DRIVER, RENDER_FLAGS), SDL_DestroyRenderer);
 
     SDL_SetRenderDrawBlendMode(renderer_.get(), SDL_BLENDMODE_BLEND);
   }

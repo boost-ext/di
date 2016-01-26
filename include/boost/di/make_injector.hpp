@@ -27,7 +27,7 @@ template <class TConfig = BOOST_DI_CFG, class... TDeps,
           BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type_list<TDeps...>>) = 0,
           BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>) = 0>
 inline auto make_injector(TDeps... args) noexcept {
-  return detail::make_injector(core::injector<TConfig, decltype(((TConfig*)0)->policies(0)), TDeps...>{
-      core::init{}, static_cast<TDeps&&>(args)...});
+  return detail::make_injector(
+      core::injector<TConfig, decltype(((TConfig*)0)->policies(0)), TDeps...>{core::init{}, static_cast<TDeps&&>(args)...});
 }
 #endif

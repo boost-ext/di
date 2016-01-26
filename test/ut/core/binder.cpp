@@ -54,9 +54,7 @@ test resolve_types_found_by_name = [] {
 
 test resolve_types_found_many = [] {
   struct not_resolved {};
-  struct deps : dependency<scopes::unique, int>,
-                dependency<scopes::unique, double>,
-                dependency<scopes::unique, float> {};
+  struct deps : dependency<scopes::unique, int>, dependency<scopes::unique, double>, dependency<scopes::unique, float> {};
 
   {
     using result = std::remove_reference_t<decltype(binder::resolve<float, no_name, not_resolved>((deps*)nullptr))>;
@@ -70,16 +68,14 @@ test resolve_types_found_many = [] {
 };
 
 test resolve_types_found_priority = [] {
-  struct deps : dependency<scopes::unique, int, int, no_name, override>,
-                dependency<scopes::unique, int, int, no_name> {};
+  struct deps : dependency<scopes::unique, int, int, no_name, override>, dependency<scopes::unique, int, int, no_name> {};
 
   using result = std::remove_reference_t<decltype(binder::resolve<int>((deps*)nullptr))>;
   expect(std::is_same<result, dependency<scopes::unique, int, int, no_name, override>>{});
 };
 
 test resolve_types_found_priority_order = [] {
-  struct deps : dependency<scopes::unique, int, int, no_name>,
-                dependency<scopes::unique, int, int, no_name, override> {};
+  struct deps : dependency<scopes::unique, int, int, no_name>, dependency<scopes::unique, int, int, no_name, override> {};
 
   using result = std::remove_reference_t<decltype(binder::resolve<int>((deps*)nullptr))>;
   expect(std::is_same<result, dependency<scopes::unique, int, int, no_name, override>>{});

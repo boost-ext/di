@@ -65,12 +65,12 @@ long constexpr const_hash(const chars<>&, ...) { return 5381; }
 constexpr pair get_name_impl(const char* input, int begin, int n = 0, int quote = 0) {
   return !*input || *input == ','
              ? pair{0, 0}
-             : (quote == 2 ? pair{begin + 1, n} : (quote == 1 && *input == '"'
-                                                       ? get_name_impl(input + 1, begin, n, quote + 1)
-                                                       : quote == 0 && *input == '"'
-                                                             ? get_name_impl(input + 1, begin, n, quote + 1)
-                                                             : get_name_impl(input + 1, quote == 0 ? begin + 1 : begin,
-                                                                             quote == 1 ? n + 1 : n, quote)));
+             : (quote == 2 ? pair{begin + 1, n}
+                           : (quote == 1 && *input == '"'
+                                  ? get_name_impl(input + 1, begin, n, quote + 1)
+                                  : quote == 0 && *input == '"' ? get_name_impl(input + 1, begin, n, quote + 1)
+                                                                : get_name_impl(input + 1, quote == 0 ? begin + 1 : begin,
+                                                                                quote == 1 ? n + 1 : n, quote)));
 }
 
 constexpr pair get_name(const char* input, int N, int Q = 0, int i = 0) {
@@ -84,9 +84,9 @@ constexpr bool has_names(const char* input) { return *input ? *input == '"' ? tr
 template <class T, class TArg, int N>
 struct parse {
   static constexpr auto name = get_name(T::str, N - 1);
-  using type = di::aux::conditional_t<
-      name.begin == name.end, TArg,
-      di::named<di::aux::integral_constant<long, const_hash(&T::str[name.begin], name.end)>, TArg>>;
+  using type =
+      di::aux::conditional_t<name.begin == name.end, TArg,
+                             di::named<di::aux::integral_constant<long, const_hash(&T::str[name.begin], name.end)>, TArg>>;
 };
 
 template <class, class, class...>

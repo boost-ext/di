@@ -35,8 +35,8 @@ struct ctor_conv_explicit {
 
 template <class T, class TInitialization, class... Ts>
 void test_ctor_traits() {
-  static_expect(std::is_same<aux::pair<T, aux::pair<TInitialization, aux::type_list<Ts...>>>,
-                             typename ctor_traits__<T, T>::type>::value);
+  static_expect(
+      std::is_same<aux::pair<T, aux::pair<TInitialization, aux::type_list<Ts...>>>, typename ctor_traits__<T, T>::type>::value);
 }
 
 test ctors = [] {
@@ -61,8 +61,7 @@ test ctors = [] {
   };
 
   struct ctor_complex {
-    ctor_complex(int, double&, std::shared_ptr<int>, float&, const char*, const std::string&, void*,
-                 std::unique_ptr<int>) {}
+    ctor_complex(int, double&, std::shared_ptr<int>, float&, const char*, const std::string&, void*, std::unique_ptr<int>) {}
   };
 
   struct ctor_unique_ptr {
@@ -106,9 +105,8 @@ test ctors = [] {
   test_ctor_traits<conv, uniform>();
   test_ctor_traits<conv_explicit, direct, core::any_type_fwd<conv_explicit>, core::any_type_fwd<conv_explicit>>();
   test_ctor_traits<vaarg, direct, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>,
-                   core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>,
-                   core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>,
-                   core::any_type_fwd<vaarg>>();
+                   core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>,
+                   core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>>();
   test_ctor_traits<ctor1, direct, core::any_type_1st_fwd<ctor1>>();
   test_ctor_traits<ctor_unique_ptr, direct, core::any_type_1st_fwd<ctor_unique_ptr>>();
   test_ctor_traits<ctor_conv, direct, core::any_type_1st_fwd<ctor_conv>>();

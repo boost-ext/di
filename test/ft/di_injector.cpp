@@ -166,8 +166,8 @@ test modules_mix_make_injector = [] {
   auto empty = [] { return di::make_injector(); };
   auto module1 = []() -> di::injector<std::unique_ptr<i1>> { return di::make_injector(di::bind<i1>().to<impl1>()); };
   auto module2 = [](const int& i) -> di::injector<int> { return di::make_injector(di::bind<int>().to(i)); };
-  auto injector = di::make_injector(empty(), di::bind<double>().to(d), module1(),
-                                    make_injector(di::bind<float>().to(f)), injector_string(), module2(i));
+  auto injector = di::make_injector(empty(), di::bind<double>().to(d), module1(), make_injector(di::bind<float>().to(f)),
+                                    injector_string(), module2(i));
 
   expect(dynamic_cast<impl1*>(injector.create<std::unique_ptr<i1>>().get()));
   expect(i == injector.create<int>());

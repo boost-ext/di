@@ -49,8 +49,8 @@ test copyable_types = [] {
   static_expect(std::is_same<aux::type_list<>, copyable_t<aux::type_list<def1>>>::value);
   static_expect(std::is_same<aux::type_list<>, copyable_t<aux::type_list<def1, def2>>>::value);
   static_expect(std::is_same<aux::type_list<def_ctor1>, copyable_t<aux::type_list<def1, def_ctor1, def2>>>::value);
-  static_expect(std::is_same<aux::type_list<def_ctor1, def_ctor2>,
-                             copyable_t<aux::type_list<def1, def_ctor1, def2, def_ctor2>>>::value);
+  static_expect(
+      std::is_same<aux::type_list<def_ctor1, def_ctor2>, copyable_t<aux::type_list<def1, def_ctor1, def2, def_ctor2>>>::value);
 };
 
 template <class T, class TIsReferable>

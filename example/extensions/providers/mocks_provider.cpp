@@ -96,15 +96,13 @@ class mocks_provider : public di::config {
     using is_resolvable = resolve<di::aux::type<T>, transform<typename TInjector::deps>>;
 
     template <class T, class TInitialization, class TMemory, class... TArgs>
-    std::enable_if_t<is_resolvable<T>::value || !std::is_polymorphic<T>::value, T*> get(const TInitialization&,
-                                                                                        const TMemory&,
+    std::enable_if_t<is_resolvable<T>::value || !std::is_polymorphic<T>::value, T*> get(const TInitialization&, const TMemory&,
                                                                                         TArgs&&... args) const {
       return new T{std::forward<TArgs>(args)...};
     }
 
     template <class T, class TInitialization, class TMemory, class... TArgs>
-    std::enable_if_t<!is_resolvable<T>::value && std::is_polymorphic<T>::value, T*> get(const TInitialization&,
-                                                                                        const TMemory&,
+    std::enable_if_t<!is_resolvable<T>::value && std::is_polymorphic<T>::value, T*> get(const TInitialization&, const TMemory&,
                                                                                         TArgs&&...) const {
       return reinterpret_cast<T*>(new mock<T>{expectations_});
     }

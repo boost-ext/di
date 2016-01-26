@@ -53,8 +53,8 @@ struct is_callable_impl<T, Ts...> {
       decltype(callable_impl(aux::declval<T>(), arg{}, core::dependency<scopes::deduce, T>{}, ctor{}));
 
   using type =
-      aux::conditional_t<callable_with_arg::value || callable_with_arg_and_dep::value,
-                         typename is_callable_impl<Ts...>::type, typename policy<T>::template requires_<call_operator>>;
+      aux::conditional_t<callable_with_arg::value || callable_with_arg_and_dep::value, typename is_callable_impl<Ts...>::type,
+                         typename policy<T>::template requires_<call_operator>>;
 };
 
 template <>

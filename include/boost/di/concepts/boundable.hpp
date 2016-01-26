@@ -98,15 +98,14 @@ struct get_is_unique_error<aux::type_list<TDeps...>>
     : get_is_unique_error_impl<typename aux::is_unique<typename unique_dependency<TDeps>::type...>::type> {};
 
 template <class... TDeps>
-using boundable_bindings = aux::conditional_t<
-    is_supported<TDeps...>::value, typename get_is_unique_error<core::bindings_t<TDeps...>>::type,
-    typename type_<typename get_not_supported<TDeps...>::type>::is_neither_a_dependency_nor_an_injector>;
+using boundable_bindings =
+    aux::conditional_t<is_supported<TDeps...>::value, typename get_is_unique_error<core::bindings_t<TDeps...>>::type,
+                       typename type_<typename get_not_supported<TDeps...>::type>::is_neither_a_dependency_nor_an_injector>;
 
 template <class... Ts>
-using get_any_of_error =
-    aux::conditional_t<aux::is_same<aux::bool_list<aux::always<Ts>::value...>,
-                                    aux::bool_list<aux::is_same<aux::true_type, Ts>::value...>>::value,
-                       aux::true_type, any_of<Ts...>>;
+using get_any_of_error = aux::conditional_t<
+    aux::is_same<aux::bool_list<aux::always<Ts>::value...>, aux::bool_list<aux::is_same<aux::true_type, Ts>::value...>>::value,
+    aux::true_type, any_of<Ts...>>;
 
 template <bool, class...>
 struct is_related {
@@ -133,27 +132,25 @@ struct is_abstract<true, T> {
 auto boundable_impl(any_of<> && ) -> aux::true_type;
 
 template <class T, class... Ts>  // expected
-auto boundable_impl(any_of<T, Ts...> && ) -> aux::conditional_t<aux::is_same<T, aux::decay_t<T>>::value,
-                                                                decltype(boundable_impl(aux::declval<any_of<Ts...>>())),
-                                                                typename type_<T>::has_disallowed_qualifiers>;
+auto boundable_impl(any_of<T, Ts...> && )
+    -> aux::conditional_t<aux::is_same<T, aux::decay_t<T>>::value, decltype(boundable_impl(aux::declval<any_of<Ts...>>())),
+                          typename type_<T>::has_disallowed_qualifiers>;
 
 template <class I, class T>
-using boundable_impl__ =
-    aux::conditional_t<is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value,
-                       aux::conditional_t<is_abstract<aux::is_complete<T>::value, T>::value,
-                                          typename type_<T>::is_abstract, aux::true_type>,
-                       typename type_<T>::template is_not_related_to<I>>;
+using boundable_impl__ = aux::conditional_t<
+    is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value,
+    aux::conditional_t<is_abstract<aux::is_complete<T>::value, T>::value, typename type_<T>::is_abstract, aux::true_type>,
+    typename type_<T>::template is_not_related_to<I>>;
 
-template <class I, class T>  // expected -> given
-auto boundable_impl(I&&, T && )
-    -> aux::conditional_t<aux::is_same<T, aux::decay_t<T>>::value  // I is already verified
-                          ,
-                          boundable_impl__<I, T>, typename type_<T>::has_disallowed_qualifiers>;
+template <class I, class T>                                                                    // expected -> given
+auto boundable_impl(I&&, T && ) -> aux::conditional_t<aux::is_same<T, aux::decay_t<T>>::value  // I is already verified
+                                                      ,
+                                                      boundable_impl__<I, T>, typename type_<T>::has_disallowed_qualifiers>;
 
 template <class I, class T>  // expected -> given
 auto boundable_impl(I&&, T&&, aux::valid<> && )
-    -> aux::conditional_t<is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value,
-                          aux::true_type, typename type_<T>::template is_not_related_to<I>>;
+    -> aux::conditional_t<is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value, aux::true_type,
+                          typename type_<T>::template is_not_related_to<I>>;
 
 template <class I, class T>  // array[]
 auto boundable_impl(I* [], T && ) -> aux::conditional_t<aux::is_same<I, aux::decay_t<I>>::value, boundable_impl__<I, T>,

@@ -60,8 +60,7 @@ using inject = aux::type_list<Ts...>;
 #define BOOST_DI_GEN_NONE_TYPE(p) BOOST_DI_NAMESPACE::aux::none_type
 #define BOOST_DI_GEN_ARG_NAME_IMPL(p) decltype(BOOST_DI_NAMESPACE::detail::p) BOOST_DI_EAT(
 #define BOOST_DI_GEN_NAME_IMPL(p, i) \
-  BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() \
-      BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_GEN_ARG_NAME, BOOST_DI_GEN_NONE_TYPE)(p)
+  BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_GEN_ARG_NAME, BOOST_DI_GEN_NONE_TYPE)(p)
 #define BOOST_DI_GEN_NAME(i, ...) BOOST_DI_GEN_NAME_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__, ), i)
 
 #define BOOST_DI_INJECT_TRAITS_IMPL_0(...)                                                       \
@@ -75,8 +74,7 @@ using inject = aux::type_list<Ts...>;
       BOOST_DI_NAMESPACE::detail::combine_t<BOOST_DI_NAMESPACE::aux::function_traits_t<decltype(ctor)>, \
                                             BOOST_DI_NAMESPACE::aux::function_traits_t<decltype(name)>>;
 
-#define BOOST_DI_INJECT_TRAITS_EMPTY_IMPL(...) \
-  using boost_di_inject__ BOOST_DI_UNUSED = BOOST_DI_NAMESPACE::aux::type_list<>
+#define BOOST_DI_INJECT_TRAITS_EMPTY_IMPL(...) using boost_di_inject__ BOOST_DI_UNUSED = BOOST_DI_NAMESPACE::aux::type_list<>
 
 #define BOOST_DI_INJECT_TRAITS_IMPL(...)                                                                                                                                                                                                                                                                                   \
   struct boost_di_inject__ {                                                                                                                                                                                                                                                                                               \
@@ -86,8 +84,7 @@ using inject = aux::type_list<Ts...>;
   }
 
 #define BOOST_DI_INJECT_TRAITS(...) \
-  BOOST_DI_IF(BOOST_DI_IS_EMPTY(__VA_ARGS__), BOOST_DI_INJECT_TRAITS_EMPTY_IMPL, \
-              BOOST_DI_INJECT_TRAITS_IMPL)(__VA_ARGS__)
+  BOOST_DI_IF(BOOST_DI_IS_EMPTY(__VA_ARGS__), BOOST_DI_INJECT_TRAITS_EMPTY_IMPL, BOOST_DI_INJECT_TRAITS_IMPL)(__VA_ARGS__)
 
 #define BOOST_DI_INJECT(T, ...)        \
   BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \

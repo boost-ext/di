@@ -142,14 +142,12 @@ test bind_named_to_named_v = [] {
 #endif
 
 test bind_instance_with_given_value = [] {
-  expect_compile_fail("", errors(),
-                      int main() { di::make_injector(di::bind<int>().to<std::integral_constant<int>>(0)); });
+  expect_compile_fail("", errors(), int main() { di::make_injector(di::bind<int>().to<std::integral_constant<int>>(0)); });
 };
 
 #if defined(__cpp_variable_templates)
 test bind_instance_with_given_value_v = [] {
-  expect_compile_fail("", errors(),
-                      int main() { di::make_injector(di::bind<int>.to<std::integral_constant<int>>(0)); });
+  expect_compile_fail("", errors(), int main() { di::make_injector(di::bind<int>.to<std::integral_constant<int>>(0)); });
 };
 #endif
 
@@ -221,15 +219,13 @@ test bind_has_disallowed_qualifiers_expected_complex_v = [] {
 
 test bind_has_disallowed_qualifiers_given_complex = [] {
   auto errors_ = errors("constraint not satisfied", "type_<.*shared_ptr.*int.*>::has_disallowed_qualifiers");
-  expect_compile_fail("<include> memory", errors_,
-                      int main() { di::make_injector(di::bind<int, std::shared_ptr<int>>()); });
+  expect_compile_fail("<include> memory", errors_, int main() { di::make_injector(di::bind<int, std::shared_ptr<int>>()); });
 };
 
 #if defined(__cpp_variable_templates)
 test bind_has_disallowed_qualifiers_given_complex_v = [] {
   auto errors_ = errors("constraint not satisfied", "type_<.*shared_ptr.*int.*>::has_disallowed_qualifiers");
-  expect_compile_fail("<include> memory", errors_,
-                      int main() { di::make_injector(di::bind<int, std::shared_ptr<int>>); });
+  expect_compile_fail("<include> memory", errors_, int main() { di::make_injector(di::bind<int, std::shared_ptr<int>>); });
 };
 #endif
 
@@ -283,9 +279,7 @@ test bind_not_compatible_types_v = [] {
 #endif
                         );
 
-  expect_compile_fail("", errors_, struct i{}; struct impl
-                      : i{};
-                      int main() { di::make_injector(di::bind<int>.to<impl>()); });
+  expect_compile_fail("", errors_, struct i{}; struct impl : i{}; int main() { di::make_injector(di::bind<int>.to<impl>()); });
 };
 #endif
 
@@ -313,9 +307,7 @@ test bind_not_compatible_instance_v = [] {
 #endif
                         );
 
-  expect_compile_fail("", errors_, struct i{}; struct impl
-                      : i{};
-                      int main() { di::make_injector(di::bind<int>.to(impl{})); });
+  expect_compile_fail("", errors_, struct i{}; struct impl : i{}; int main() { di::make_injector(di::bind<int>.to(impl{})); });
 };
 #endif
 
@@ -833,16 +825,16 @@ int main() { di::make_injector<test_config>(); }
     };
 
     test config_wrong_provider = [] {
-      auto errors_ =
-          errors("constraint not satisfied",
+      auto errors_ = errors("constraint not satisfied",
 #if defined(__MSVC__)
-                 "config<.*>::requires_<.*provider<.*providable_type.*(...)>.*policies<.*callable_type.*(...)>",
-                 "=.*test_config"
+                            "config<.*>::requires_<.*provider<.*providable_type.*(...)>.*policies<.*callable_type.*(...)>",
+                            "=.*test_config"
 #else
-                 "config<.*test_config>::requires_<.*provider<.*providable_type.*(...)>.*policies<.*callable_type.*(..."
-                 ")>"
+                            "config<.*test_config>::requires_<.*provider<.*providable_type.*(...)>.*policies<.*callable_type.*("
+                            "..."
+                            ")>"
 #endif
-                 );
+                            );
 
     expect_compile_fail("", errors_,
         struct test_config : di::config {
@@ -935,8 +927,7 @@ int main() { di::make_injector<test_config>(); }
           "abstract_type<.*>::named<.*>::is_not_bound"
 #if !defined(__MSVC__)
           ,
-          "create<c>()",
-          "type is not bound, did you forget to add: 'di::bind<interface>.named\\(name\\).to<implementation>()'?"
+          "create<c>()", "type is not bound, did you forget to add: 'di::bind<interface>.named\\(name\\).to<implementation>()'?"
 #endif
           );
 
@@ -966,13 +957,10 @@ int main() { di::make_injector<test_config>(); }
 #endif
           );
 
-      expect_compile_fail("", errors_,
-                          struct i {
-                            virtual ~i() noexcept = default;
-                            virtual void dummy() = 0;
-                          };
-                          struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{})i*){}};
-                          int main() { di::make_injector().create<c>(); });
+      expect_compile_fail("", errors_, struct i {
+        virtual ~i() noexcept = default;
+        virtual void dummy() = 0;
+      }; struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{})i*){}}; int main() { di::make_injector().create<c>(); });
     };
 
     test exposed_not_creatable = [] {
@@ -1117,13 +1105,11 @@ int main() { di::make_injector<test_config>(); }
 #endif
           );
 
-      expect_compile_fail(
-          "", errors_, struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{}) int&){}}; int main() {
-            auto injector =
-                di::make_injector(di::bind<int>().named(dummy{}).to(42)  // lvalue can't be converted to a reference
-                                  );
-            injector.create<c>();
-          });
+      expect_compile_fail("", errors_, struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{}) int&){}}; int main() {
+        auto injector = di::make_injector(di::bind<int>().named(dummy{}).to(42)  // lvalue can't be converted to a reference
+                                          );
+        injector.create<c>();
+      });
     };
 
     test policy_constructible = [] {
@@ -1257,22 +1243,19 @@ int main() { di::make_injector<test_config>(); }
     };
 
     test named_paramater_spelling = [] {
-      expect_compile_fail("", errors(), auto name = [] {}; struct c{BOOST_DI_INJECT(c, (NAMED = name) int){}};
-                          int main(){});
+      expect_compile_fail("", errors(), auto name = [] {}; struct c{BOOST_DI_INJECT(c, (NAMED = name) int){}}; int main(){});
     };
 
     test circular_dependencies_simple = [] {
-      expect_compile_fail("", errors(), struct cd2; struct cd1 { cd1(cd2*){}; }; struct cd2 { cd2(cd1*){}; };
-                          int main() {
-                            auto injector = di::make_injector();
-                            injector.create<cd1>();
-                          });
+      expect_compile_fail("", errors(), struct cd2; struct cd1 { cd1(cd2*){}; }; struct cd2 { cd2(cd1*){}; }; int main() {
+        auto injector = di::make_injector();
+        injector.create<cd1>();
+      });
     };
 
     test circular_dependencies_complex = [] {
-      expect_compile_fail("", errors(), struct cd2; struct cd5; struct cd1 { cd1(cd2*){}; };
-                          struct cd2 { cd2(cd1*){}; }; struct cd3 { cd3(cd5*){}; }; struct cd4 { cd4(cd3*){}; };
-                          struct cd5 { cd5(cd4*){}; }; int main() {
+      expect_compile_fail("", errors(), struct cd2; struct cd5; struct cd1 { cd1(cd2*){}; }; struct cd2 { cd2(cd1*){}; };
+                          struct cd3 { cd3(cd5*){}; }; struct cd4 { cd4(cd3*){}; }; struct cd5 { cd5(cd4*){}; }; int main() {
                             auto injector = di::make_injector();
                             injector.create<cd5>();
                           });
@@ -1346,9 +1329,8 @@ int main() { di::make_injector<test_config>(); }
 
 #if !defined(__MSVC__)
     test access_dependency_is_referable = [] {
-      expect_compile_fail("<include> type_traits", errors(), int main() {
-        using type = std::remove_reference_t<decltype(di::bind<int>())>::is_referable<int>;
-      });
+      expect_compile_fail("<include> type_traits", errors(),
+                          int main() { using type = std::remove_reference_t<decltype(di::bind<int>())>::is_referable<int>; });
     };
 #endif
 

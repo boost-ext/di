@@ -67,9 +67,8 @@ template <class... Ts>
 struct or_ : detail::type_op {
   template <class TArg>
   struct apply
-      : aux::integral_constant<bool,
-                               !aux::is_same<aux::bool_list<detail::apply_impl<Ts>::template apply<TArg>::value...>,
-                                             aux::bool_list<aux::never<Ts>::value...>>::value> {};
+      : aux::integral_constant<bool, !aux::is_same<aux::bool_list<detail::apply_impl<Ts>::template apply<TArg>::value...>,
+                                                   aux::bool_list<aux::never<Ts>::value...>>::value> {};
 };
 
 }  // detail
@@ -95,18 +94,17 @@ struct is_bound : detail::type_op {
   struct not_resolved {};
   template <class TArg>
   struct apply
-      : aux::integral_constant<bool,
-                               !aux::is_same<typename TArg::template resolve<
-                                                 aux::conditional_t<aux::is_same<T, _>::value, typename TArg::type, T>,
-                                                 typename TArg::name, not_resolved>,
-                                             not_resolved>::value> {};
+      : aux::integral_constant<
+            bool,
+            !aux::is_same<typename TArg::template resolve<aux::conditional_t<aux::is_same<T, _>::value, typename TArg::type, T>,
+                                                          typename TArg::name, not_resolved>,
+                          not_resolved>::value> {};
 };
 
 template <class T>
 struct is_injected : detail::type_op {
   template <class TArg, class U = aux::decay_t<aux::conditional_t<aux::is_same<T, _>::value, typename TArg::type, T>>>
-  struct apply
-      : aux::conditional_t<aux::is_class<U>::value, typename type_traits::is_injectable<U>::type, aux::true_type> {};
+  struct apply : aux::conditional_t<aux::is_class<U>::value, typename type_traits::is_injectable<U>::type, aux::true_type> {};
 };
 
 namespace operators {

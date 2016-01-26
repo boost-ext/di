@@ -245,7 +245,7 @@ false_type test_is_constructible(...);
 #if defined(__MSVC__)  // __pph__
 template <class T, class... TArgs>
 struct is_constructible : decltype(test_is_constructible<T, TArgs...>(0)) {};
-#else  // __pph__
+#else   // __pph__
 template <class T, class... TArgs>
 using is_constructible = decltype(test_is_constructible<T, TArgs...>(0));
 #endif  // __pph__

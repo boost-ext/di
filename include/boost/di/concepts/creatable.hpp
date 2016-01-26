@@ -159,11 +159,10 @@ struct creatable_error_impl
           aux::is_polymorphic<T>::value,
           aux::conditional_t<aux::is_same<TName, no_name>::value, typename abstract_type<T>::is_not_bound,
                              typename abstract_type<T>::template named<TName>::is_not_bound>,
-          aux::conditional_t<
-              ctor_size_t<T>::value == ctor_size<TCtor>::value,
-              typename type<T>::has_to_many_constructor_parameters::template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>,
-              typename type<T>::has_ambiguous_number_of_constructor_parameters::template given<
-                  ctor_size<TCtor>::value>::template expected<ctor_size_t<T>::value>>> {};
+          aux::conditional_t<ctor_size_t<T>::value == ctor_size<TCtor>::value,
+                             typename type<T>::has_to_many_constructor_parameters::template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>,
+                             typename type<T>::has_ambiguous_number_of_constructor_parameters::template given<
+                                 ctor_size<TCtor>::value>::template expected<ctor_size_t<T>::value>>> {};
 
 template <class TInit, class T, class... TArgs>
 struct creatable {

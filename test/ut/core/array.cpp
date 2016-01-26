@@ -30,8 +30,8 @@ test array_ctor_smart_ptr = [] {
 
 test array_ctor_named = [] {
   array<std::vector<std::unique_ptr<int>>(), named<int>, int> a{
-      array_impl<std::unique_ptr<int>, named<int, std::unique_ptr<int>>, std::unique_ptr<int>>{
-          std::make_unique<int>(42), std::make_unique<int>(87)}};
+      array_impl<std::unique_ptr<int>, named<int, std::unique_ptr<int>>, std::unique_ptr<int>>{std::make_unique<int>(42),
+                                                                                               std::make_unique<int>(87)}};
   expect(a.size() == 2);
   expect(*a[0] == 42);
   expect(*a[1] == 87);

@@ -30,8 +30,8 @@ struct array<T(), Ts...> : T {
   using array_t = array_impl<value_type, type_traits::rebind_traits_t<value_type, Ts>...>;
   using boost_di_inject__ = aux::type_list<array_t&&>;
 
-  template <BOOST_DI_REQUIRES(
-                aux::is_constructible<T, std::move_iterator<value_type*>, std::move_iterator<value_type*>>::value) = 0>
+  template <
+      BOOST_DI_REQUIRES(aux::is_constructible<T, std::move_iterator<value_type*>, std::move_iterator<value_type*>>::value) = 0>
   explicit array(array_t&& a)
       : T(std::move_iterator<value_type*>(a.array), std::move_iterator<value_type*>(a.array + sizeof...(Ts))) {}
 };

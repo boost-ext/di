@@ -19,9 +19,7 @@ struct scope_traits<c> {
 
 namespace scopes {
 
-test create = [] {
-  expect(0 == static_cast<int>(deduce::scope<int, int>{}.create<int, no_name>(fake_provider<int>{})));
-};
+test create = [] { expect(0 == static_cast<int>(deduce::scope<int, int>{}.create<int, no_name>(fake_provider<int>{}))); };
 
 test create_from_scope = [] {
   fake_scope<>::calls() = 0;
