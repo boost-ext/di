@@ -38,7 +38,7 @@ class singleton {
    private:
     template <class TProvider>
     auto create_impl(const TProvider& provider) {
-      static T object(provider.get(type_traits::stack{}));
+      static auto object(provider.get(type_traits::stack{}));
       return wrappers::shared<singleton, T&>(object);
     }
   };

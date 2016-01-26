@@ -886,6 +886,24 @@ int main() { di::make_injector<test_config>(); }
       }; struct c{c(i*){}}; int main() { di::make_injector().create<c>(); });
     };
 
+    test create_polymorphic_type_without_binding_ref = [] {
+      auto errors_ = errors(
+#if (__clang_major__ == 3) && (__clang_minor__ > 4) || defined(__GCC___) || defined(__MSVC__)
+          "creatable constraint not satisfied",
+#endif
+          "abstract_type<.*>::is_not_bound"
+#if !defined(__MSVC__)
+          ,
+          "create<c>()", "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?"
+#endif
+          );
+
+      expect_compile_fail("", errors_, struct i {
+        virtual ~i() noexcept = default;
+        virtual void dummy() = 0;
+      }; struct c{c(i&){}}; int main() { di::make_injector().create<c>(); });
+    };
+
     test create_polymorphic_type_without_binding_using_multi_bindings = [] {
       auto errors_ = errors(
 #if (__clang_major__ == 3) && (__clang_minor__ > 4) || defined(__GCC___) || defined(__MSVC__)
