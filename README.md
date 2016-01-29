@@ -1,16 +1,16 @@
 <a href="http://www.boost.org/LICENSE_1_0.txt" target="_blank">![Boost Licence](http://img.shields.io/badge/license-boost-blue.svg)</a>
-<a href="https://github.com/krzysztof-jusiak/di/releases" target="_blank">![Version](https://badge.fury.io/gh/krzysztof-jusiak%2Fdi.svg)</a>
-<a href="https://github.com/krzysztof-jusiak/di/releases/latest" target="_blank">![Github Release](http://img.shields.io/github/release/krzysztof-jusiak/di.svg)</a>
-<a href="http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/try_it_online.html" target="_blank">![Try Boost.DI Online](https://img.shields.io/badge/try%20boost.di-online-blue.svg)</a>
-<a href="https://gitter.im/krzysztof-jusiak/di" target="_blank">![Gitter Chat](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)</a>
+<a href="https://github.com/boost-experimental/di/releases" target="_blank">![Version](https://badge.fury.io/gh/boost-experimental%2Fdi.svg)</a>
+<a href="https://github.com/boost-experimental/di/releases/latest" target="_blank">![Github Release](http://img.shields.io/github/release/boost-experimental/di.svg)</a>
+<a href="http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/di/try_it_online.html" target="_blank">![Try Boost.DI Online](https://img.shields.io/badge/try%20boost.di-online-blue.svg)</a>
+<a href="https://gitter.im/boost-experimental/di" target="_blank">![Gitter Chat](https://img.shields.io/badge/gitter-join%20chat%20%E2%86%92-brightgreen.svg)</a>
 
 Boost.DI: C++ Dependency Injection
 ===============================================
-[![Boost Libraries](https://raw.githubusercontent.com/krzysztof-jusiak/di/gh-pages/boost/boost.png)](http://www.boost.org)
-<a href="https://travis-ci.org/krzysztof-jusiak/di" target="_blank">![Build Status](https://img.shields.io/travis/krzysztof-jusiak/di/cpp14.svg?label=linux/osx)</a>
-<a href="https://ci.appveyor.com/project/krzysztof-jusiak/di" target="_blank">![Build Status](https://img.shields.io/appveyor/ci/krzysztof-jusiak/di/cpp14.svg?label=windows)</a>
-<a href="https://coveralls.io/r/krzysztof-jusiak/di?branch=cpp14" target="_blank">![Coveralls](http://img.shields.io/coveralls/krzysztof-jusiak/di/cpp14.svg)</a>
-<a href="http://github.com/krzysztof-jusiak/di/issues" target="_blank">![Github Issues](https://img.shields.io/github/issues/krzysztof-jusiak/di.svg)</a>
+[![Boost Libraries](https://raw.githubusercontent.com/boost-experimental/di/gh-pages/boost/boost.png)](http://www.boost.org)
+<a href="https://travis-ci.org/boost-experimental/di" target="_blank">![Build Status](https://img.shields.io/travis/boost-experimental/di/cpp14.svg?label=linux/osx)</a>
+<a href="https://ci.appveyor.com/project/boost-experimental/di" target="_blank">![Build Status](https://img.shields.io/appveyor/ci/boost-experimental/di/cpp14.svg?label=windows)</a>
+<a href="https://coveralls.io/r/boost-experimental/di?branch=cpp14" target="_blank">![Coveralls](http://img.shields.io/coveralls/boost-experimental/di/cpp14.svg)</a>
+<a href="http://github.com/boost-experimental/di/issues" target="_blank">![Github Issues](https://img.shields.io/github/issues/boost-experimental/di.svg)</a>
 
 > "Don't call us, we'll call you", Hollywood principle
 
@@ -18,7 +18,7 @@ Boost.DI: C++ Dependency Injection
 It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.
 
 > **"Let's make some coffee!"**
-<p align="center"><img src="https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/coffee_maker.png" alt="coffee maker"/></p>
+<p align="center"><img src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/coffee_maker.png" alt="coffee maker"/></p>
 ```cpp
 No Dependency injection                 | Dependency Injection
 ----------------------------------------|--------------------------------------------
@@ -69,15 +69,15 @@ private:                                |         pump->pump();
 	* STL is not required (when available supports std::unique\_ptr, std::shared\_ptr, std::weak\_ptr)
 	* Boost is not required (when available supports boost::shared\_ptr)
 * [Read Quick User Guide](#quick_user_guide)
-* [Read Tutorial](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/tutorial.html)
-* [Read Documentation](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html)
+* [Read Tutorial](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/di/tutorial.html)
+* [Read Documentation](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html)
 
 > To get started the only file you need is `di.hpp`:
 
-[https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/include/boost/di.hpp](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/include/boost/di.hpp)
+[https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp](https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp)
 
 ```sh
-curl https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/include/boost/di.hpp --create-dirs -o boost/di.hpp
+curl https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp --create-dirs -o boost/di.hpp
 ```
 
 ```sh
@@ -94,13 +94,13 @@ $CXX -std=c++14 -I. -fno-exceptions -fno-rtti -nostdinc -nostdinc++ -pedantic -p
 > To get and test Boost.DI library:
 
 ```sh
-    git clone https://github.com/krzysztof-jusiak/di.git
+    git clone https://github.com/boost-experimental/di.git
     cd build && cmake ..
     make all test
 ```
 
 <a id="quick_user_guide"></a>
-**Quick User Guide** | [Examples](https://github.com/krzysztof-jusiak/di/tree/cpp14/example/quick_user_guide)
+**Quick User Guide** | [Examples](https://github.com/boost-experimental/di/tree/cpp14/example/quick_user_guide)
 
 * [Injector](#injector) | [Bindings](#bindings) | [Injections](#injections) | [Annotations](#annotations) | [Scopes](#scopes) | [Modules](#modules) | [Providers](#providers) | [Policies](#policies)
 * [Run-time performance](#run_time_performance) | [Compile-time performance](#compile_time_performance)
@@ -120,7 +120,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 
 *
 <a id="injector"></a>
-> **[Injector](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/injector.html)**
+> **[Injector](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/injector.html)**
 ```cpp
 Create empty injector                   | Test
 ----------------------------------------|-----------------------------------------
@@ -130,7 +130,7 @@ auto injector = di::make_injector();    | assert(0 == injector.create<int>());
 *
 
 <a id="bindings"></a>
-> **[Bindings](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/bindings.html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/bindings.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/dynamic_bindings.cpp)
+> **[Bindings](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/bindings.html)** | [Examples](https://github.com/boost-experimental/di/blob/cpp14/example/bindings.cpp) | [More examples](https://github.com/boost-experimental/di/blob/cpp14/example/dynamic_bindings.cpp)
 ```cpp
 Bind interface to implementation        | Test
 ----------------------------------------|-----------------------------------------
@@ -192,7 +192,7 @@ auto injector = di::make_injector(      |        injector.create<shared_ptr<i1>>
 *
 
 <a id="injections"></a>
-> **[Injections](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/injections.html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/constructor_injection.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/constructor_signature.cpp)
+> **[Injections](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/injections.html)** | [Examples](https://github.com/boost-experimental/di/blob/cpp14/example/constructor_injection.cpp) | [More examples](https://github.com/boost-experimental/di/blob/cpp14/example/constructor_signature.cpp)
 ```cpp
 Direct constructor injection            | Test
 ----------------------------------------|-----------------------------------------
@@ -306,7 +306,7 @@ auto injector = di::make_injector(      |
 *
 
 <a id="annotations"></a>
-> **[Annotations](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/annotations.html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/annotations.cpp)
+> **[Annotations](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/annotations.html)** | [Examples](https://github.com/boost-experimental/di/blob/cpp14/example/annotations.cpp)
 ```cpp
 Annotated constructor injection         | Test
 ----------------------------------------|-----------------------------------------
@@ -414,7 +414,7 @@ auto injector = di::make_injector(      |
 *
 
 <a id="scopes"></a>
-> **[Scopes](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/scopes.html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/deduce_scope.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_scope.cpp)
+> **[Scopes](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/scopes.html)** | [Examples](https://github.com/boost-experimental/di/blob/cpp14/example/deduce_scope.cpp) | [More examples](https://github.com/boost-experimental/di/blob/cpp14/example/custom_scope.cpp)
 ```cpp
 Deduce scope (default)                  | Test
 ----------------------------------------|-----------------------------------------
@@ -495,7 +495,7 @@ auto injector = di::make_injector(      |
 *
 
 <a id="modules"></a>
-> **[Modules](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/modules.html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/modules.cpp)
+> **[Modules](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/modules.html)** | [Examples](https://github.com/boost-experimental/di/blob/cpp14/example/modules.cpp)
 ```cpp
 Module                                  | Test
 ----------------------------------------|-----------------------------------------
@@ -615,9 +615,9 @@ auto injector = di::make_injector(      |
 *
 
 <a id="providers"></a>
-> **[Providers](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/providers.html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_provider.cpp)
-* [heap](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/providers/heap.html)
-* [stack\_over\_heap (default)](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/providers/stack_over_heap_default.html)
+> **[Providers](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/providers.html)** | [Examples](https://github.com/boost-experimental/di/blob/cpp14/example/custom_provider.cpp)
+* [heap](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/providers/heap.html)
+* [stack\_over\_heap (default)](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/providers/stack_over_heap_default.html)
 ```cpp
 Heap no throw provider                  | Test
 ----------------------------------------|-----------------------------------------
@@ -649,7 +649,7 @@ public:                                 |
 *
 
 <a id="policies"></a>
-> **[Policies](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/policies.html)** | [Examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/types_dumper.cpp) | [More examples](https://github.com/krzysztof-jusiak/di/blob/cpp14/example/custom_policy.cpp)
+> **[Policies](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/di/concepts/policies.html)** | [Examples](https://github.com/boost-experimental/di/blob/cpp14/example/types_dumper.cpp) | [More examples](https://github.com/boost-experimental/di/blob/cpp14/example/custom_policy.cpp)
 ```cpp
 Define policies configuration           | Test
 (dump types)                            |
@@ -744,7 +744,7 @@ public:                                 | assert(42.0 == make_injector(
 *
 
 <a id="run_time_performance"></a>
-> **[Run-time performance (-O2)](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/performance.html)**
+> **[Run-time performance (-O2)](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/di/performance.html)**
 * Environment
     * x86\_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
     * clang++3.4 -O2 / `gdb -batch -ex 'file ./a.out' -ex 'disassemble main'`
@@ -867,7 +867,7 @@ int main() {                            | movq   %rax,%xmm0
 *
 
 <a id="compile_time_performance"></a>
-> **[Compile-time performance](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/performance.html)** | [Example](https://github.com/krzysztof-jusiak/di/blob/cpp14/test/pt/di.cpp)
+> **[Compile-time performance](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/di/performance.html)** | [Example](https://github.com/boost-experimental/di/blob/cpp14/test/pt/di.cpp)
 * Environment
     * x86\_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
     * clang++3.4 -O2
@@ -884,21 +884,21 @@ Legend:
     all     = all types exposed from module: auto configure();
     exposed = one type exposed from module: di::injector<c> configure();
 ```
-[![small complexity](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/small_complexity.png)](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/small_complexity.png)
+[![small complexity](https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/small_complexity.png)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/small_complexity.png)
 ```cpp
 * 4248897537 instances created
 * 132 different types
 * 10 modules
 ```
 ---
-[![medium complexity](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/medium_complexity.png)](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/medium_complexity.png)
+[![medium complexity](https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/medium_complexity.png)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/medium_complexity.png)
 ```cpp
 * 1862039751439806464 instances created
 * 200 different types
 * 10 modules
 ```
 ---
-[![big complexity](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/big_complexity.png)](https://raw.githubusercontent.com/krzysztof-jusiak/di/cpp14/doc/images/big_complexity.png)
+[![big complexity](https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/big_complexity.png)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/big_complexity.png)
 ```cpp
 * 5874638529236910091 instances created
 * 310 different types
@@ -909,7 +909,7 @@ Legend:
 *
 
 <a id="diagnostic_messages"></a>
-> **[Diagnostic messages](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/diagnostic_messages.html)**
+> **[Diagnostic messages](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/di/diagnostic_messages.html)**
 ```cpp
 Create interface without bound          | Error message
 implementation                          |
@@ -978,7 +978,7 @@ di::make_injector().create<c>();        |
 *
 
 <a id="configuration"></a>
-> **[Configuration](http://krzysztof-jusiak.github.io/di/cpp14/boost/libs/di/doc/html/di/overview.html#di.overview.configuration)**
+> **[Configuration](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/di/overview.html#di.overview.configuration)**
 ```cpp
 Macro                                   | Description
 ----------------------------------------|-----------------------------------------
@@ -995,8 +995,8 @@ BOOST_DI_CFG                            | Global configuration allows to customi
 
 ---
 
-[![Stories in Progress](https://badge.waffle.io/krzysztof-jusiak/di.svg??label=waffle%3Ain%20progress&title=In%20Progress)](http://waffle.io/krzysztof-jusiak/di)
-[![Throughput Graph](https://graphs.waffle.io/krzysztof-jusiak/di/throughput.svg)](https://waffle.io/krzysztof-jusiak/di/metrics)
+[![Stories in Progress](https://badge.waffle.io/boost-experimental/di.svg??label=waffle%3Ain%20progress&title=In%20Progress)](http://waffle.io/boost-experimental/di)
+[![Throughput Graph](https://graphs.waffle.io/boost-experimental/di/throughput.svg)](https://waffle.io/boost-experimental/di/metrics)
 
 ---
 
