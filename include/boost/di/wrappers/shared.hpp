@@ -64,7 +64,9 @@ struct shared<TScope, T&> {
   struct is_referable : aux::true_type {};
 
   explicit shared(T& object) : object(&object) {}
-  shared(...);  // compilation clean
+
+  template <class I>
+  explicit shared(I);  // compile clean
 
   template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
   inline operator I() const noexcept {
