@@ -133,17 +133,6 @@ test-suite quick_user_guide :
     [ example quick_user_guide/scopes5.cpp ]
 ;
 
-test-suite try_it_online :
-    [ example try_it_online/main.cpp : -I../include/boost ]
-;
-
 test-suite tutorial :
-    [ example tutorial/tutorial1.cpp : -Itutorial ]
-    [ example tutorial/tutorial2.cpp : -Itutorial ]
-    [ example tutorial/tutorial3.cpp : -Itutorial ]
-    [ example tutorial/tutorial4.cpp : -Itutorial ]
-    [ example tutorial/tutorial5.cpp : -Itutorial ]
-    [ example tutorial/tutorial6.cpp : -Itutorial ]
-    [ example tutorial/tutorial7.cpp : -Itutorial ]
 ;
 

@@ -19,10 +19,7 @@ matrix:
   fast_finish: true
   include:
   - os: linux
-    env: BS=bjam DOCUMENTATION=ON
-    addons:
-      apt:
-        packages: ["xsltproc"]
+    env: DOCUMENTATION=ON
   - os: linux
     env: CHECK=ON CLANG_FORMAT=clang-format-3.7 CLANG_TIDY=clang-tidy-3.7
     addons:

@@ -1,0 +1,341 @@
+###Quick Start
+
+* Get [boost/di.hpp](https://raw.githubusercontent.com/boost-experimental/di/master/include/boost/di.hpp) header
+```sh
+    wget https://raw.githubusercontent.com/boost-experimental/di/master/include/boost/di.hpp
+```
+
+* Include the header and define `msm` namespace alias
+```cpp
+    #include "boost/di.hpp"
+    namespace di = boost::di;
+```
+
+* Compile with C++14 support
+```sh
+    $CXX -std=c++14 ...
+```
+
+* To run tests
+```sh
+    git clone https://github.com/boost-experimental/di && cd di && make test
+```
+
+###Dependencies
+
+* No external dependencies are required (neither STL nor Boost)
+
+###Supported/tested compilers
+
+* [Clang-3.4+](https://travis-ci.org/boost-experimental/di)
+* [GCC-5.2+](https://travis-ci.org/boost-experimental/di)
+
+###Configuration
+| Macro                                   | Description |
+| ----------------------------------------|------------ |
+| `BOOST_MSM_VERSION`                     | Current versoin of Boost.MSM-lite (ex. 1'0'0) |
+| [`BOOST_MSM_LOG`](user_guide.md#boost_msm_log-debugging) | Enables logging system  (see [Logging](examples.md#logging)) |
+| `BOOST_MSM_DSL_DST_STATE_FIRST`      | dst\_state == src\_state (see [eUML emulation](examples.md#euml-emulation)) |
+
+###Other Libraries
+
+###Performance
+* Run-time
+    * Environment
+        * x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
+        * clang++3.4 -O2 / `gdb -batch -ex 'file ./a.out' -ex 'disassemble main'`
+
+[[Create type without bindings][Asm x86-64 (same as `return 0`)]]
+    [
+        [
+            [c++] ```
+            int main() {
+                auto injector = di::make_injector();
+                return injector.create<int>();
+            }
+            ```
+        ]
+        [
+            [teletype] ```
+            xor %eax,%eax
+            retq
+            ```
+        ]
+    ]
+]
+$example_end$
+
+$example_begin example/performance/create_type_with_bound_instance.cpp$
+[table
+[[Create type with bound instance][Asm x86-64 (same as `return 42`)]]
+    [
+        [
+            [c++] ```
+            int main() {
+                auto injector = di::make_injector(
+                    di::bind<int>.to(42)
+                );
+
+                return injector.create<int>();
+            }
+            ```
+        ]
+        [
+            [teletype] ```
+            mov $0x2a,%eax
+            retq
+            ```
+        ]
+    ]
+]
+$example_end$
+
+$example_begin example/performance/create_named_type.cpp$
+[table
+[[Create named type][Asm x86-64 (same as `return 42`)]]
+    [
+        [
+            [c++] ```
+            auto my_int = []{};
+
+            struct c {
+                BOOST_DI_INJECT(c
+                    , (named = my_int) int i)
+                    : i(i)
+                { }
+
+                int i = 0;
+            };
+
+            int main() {
+                auto injector = di::make_injector(
+                    di::bind<int>.named(my_int).to(42)
+                );
+
+                return injector.create<c>().i;
+            }
+            ```
+        ]
+        [
+            [teletype] ```
+            mov $0x2a,%eax
+            retq
+            ```
+        ]
+    ]
+]
+$example_end$
+
+$example_begin example/performance/create_bound_interface.cpp$
+[table
+[[Create bound interface][Asm x86-64 (same as `make_unique`)]]
+    [
+        [
+            [c++] ```
+            int main() {
+                auto injector = di::make_injector(
+                    di::bind<i1, impl1>);
+
+                auto ptr = injector.create<
+                    unique_ptr<i1>
+                >();
+
+                return ptr.get() != nullptr;
+            }
+            ```
+        ]
+        [
+            [teletype] ```
+            push   %rax
+            mov    $0x8,%edi
+            callq  0x4007b0 <_Znwm@plt>
+            movq   $0x400a30,(%rax)
+            mov    $0x8,%esi
+            mov    %rax,%rdi
+            callq  0x400960 <_ZdlPvm>
+            mov    $0x1,%eax
+            pop    %rdx
+            retq
+            ```
+        ]
+    ]
+]
+$example_end$
+
+$example_begin example/performance/create_bound_interface_via_module.cpp$
+[table
+[[Create bound interface via module][Asm x86-64 (same as `make_unique`)]]
+    [
+        [
+            [c++] ```
+            struct module {
+                auto configure() const noexcept {
+                    return di::make_injector(
+                        di::bind<i1, impl1>
+                    );
+                }
+            };
+
+            int main() {
+                auto injector = di::make_injector(
+                    module{}
+                );
+
+                auto ptr = injector.create<
+                    unique_ptr<i1>
+                >();
+
+                return ptr != nullptr;
+            }
+            ```
+        ]
+        [
+            [teletype] ```
+            push   %rax
+            mov    $0x8,%edi
+            callq  0x4007b0 <_Znwm@plt>
+            movq   $0x400a10,(%rax)
+            mov    $0x8,%esi
+            mov    %rax,%rdi
+            callq  0x400960 <_ZdlPvm>
+            mov    $0x1,%eax
+            pop    %rdx
+            retq
+            ```
+        ]
+    ]
+]
+$example_end$
+
+$example_begin example/performance/create_bound_interface_via_exposed_module.cpp$
+[table
+[[Create bound interface via exposed module (cost = type erasure)][Asm x86-64]]
+    [
+        [
+            [c++] ```
+            struct module {
+                di::injector<i1> configure() const {
+                    return di::make_injector(
+                        di::bind<i1, impl1>
+                    );
+                }
+            };
+
+            int main() {
+                auto injector = di::make_injector(
+                    module{}
+                );
+
+                auto ptr = injector.create<
+                    unique_ptr<i1>
+                >();
+
+                return ptr != nullptr;
+            }
+            ```
+        ]
+        [
+            [teletype] ```
+			push   %r14
+			push   %rbx
+			push   %rax
+			mov    %rdi,%r14
+			mov    $0x20,%edi
+			callq  0x400aa0 <_Znwm@plt>
+			mov    %rax,%rbx
+			mov    $0x400ea0,%eax
+			movq   %rax,%xmm0
+			movups %xmm0,(%rbx)
+			movq   $0x400ec0,0x10(%rbx)
+			mov    $0x8,%edi
+			callq  0x400aa0 <_Znwm@plt>
+			movq   $0x400fc8,(%rax)
+			mov    %rax,(%r14)
+			mov    0x10(%rbx),%rax
+			mov    %rbx,%rdi
+			callq  *%rax
+			mov    %rbx,%rdi
+			callq  0x400a10 <_ZdlPv@plt>
+			mov    %r14,%rax
+			add    $0x8,%rsp
+			pop    %rbx
+			pop    %r14
+			retq
+			mov    %rax,%rdi
+			callq  0x400e90 <__clang_call_terminate>
+			mov    %rax,%rdi
+			callq  0x400e90 <__clang_call_terminate>
+			mov    %rax,%rdi
+			callq  0x400e90 <__clang_call_terminate>
+            ```
+        ]
+    ]
+]
+$example_end$
+
+* [h6 Compile-time]
+
+    * Environment
+        * x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
+        * clang++3.4 -O2
+[table
+[[Boost.DI header][Time [s]]]
+    [
+        [
+            [c++] ```
+            #include <boost/di.hpp>
+            int main() { }
+            ```
+        ]
+        [
+            ```
+            0.110
+            ```
+        ]
+    ]
+]
+
+```
+Legend:
+    ctor    = raw constructor: c(int i, double d);
+    inject  = inject constructor: BOOST_DI_INJECT(c, int i, double d);
+    all     = all types exposed from module: auto configure();
+    exposed = one type exposed from module: di::injector<c> configure();
+```
+
+[table
+    [[Test source code: [@test/pt/di.cpp]]]
+]
+
+[@images/small_complexity.png [$images/small_complexity.png]]
+```
+* 4248897537 instances created
+* 132 different types
+* 10 modules
+```
+
+[@images/medium_complexity.png [$images/medium_complexity.png]]
+```
+* 1862039751439806464 instances created
+* 200 different types
+* 10 modules
+```
+
+[@images/big_complexity.png [$images/big_complexity.png]]
+```
+* 5874638529236910091 instances created
+* 310 different types
+* 100 different interfaces
+* 10 modules
+```
+
+[note To run compile time performance tests go to `test/pt` directory and run `./pt.sh` script.]
+
+[heading See Also]
+* [link di.user_guide User Guide]
+* [link di.examples Examples]
+
+###Error messages
+
+***Not configurable***
+![CPP](https://raw.githubusercontent.com/boost-experimental/msm-lite/master/example/errors/not_configurable.cpp)

@@ -81,14 +81,3 @@ example(quick_user_guide/scopes2)
 example(quick_user_guide/scopes3)
 example(quick_user_guide/scopes4)
 example(quick_user_guide/scopes5)
-
-include_directories("tutorial")
-
-example(tutorial/tutorial1)
-example(tutorial/tutorial2)
-example(tutorial/tutorial3)
-example(tutorial/tutorial4)
-example(tutorial/tutorial5)
-example(tutorial/tutorial6)
-example(tutorial/tutorial7)
-
