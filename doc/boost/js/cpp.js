@@ -122,14 +122,30 @@ $(document).ready(function () {
     $('img[alt="CPP"]').each(function () {
         var file = $(this).attr('src');
         var basename = $(this).attr('src').split('/')[$(this).attr('src').split('/').length - 1];
-		var regex = "#include.*";
+		var begin = "//<-";
+		var end = "//->";
 		var example = get_cpp_file(file);
-		var i = example.lastIndexOf("#include")
-		var n = example.substring(i).indexOf('\n');
+        var lines = example.split('\n');
+        var example_result = '';
+        var ignored = false;
+        var tmp_ignored = false;
+        for(var i = 0; i < lines.length; i++){
+            var line = lines[i];
+            if (line.indexOf(begin) != -1) {
+                ignored = true;
+                tmp_ignored = true;
+            } else if (line.indexOf(end) != -1) {
+                tmp_ignored = false;
+            }
+            if (!ignored && !line.startsWith("//")) {
+                example_result += line + '\n';
+            }
+            ignored = tmp_ignored;
+        }
 		var id = gid++;
 		var compile = "\/\/ $CXX -std=c++14 " + basename;
-		example = $('<div/>').text(example.substring(i + n + 2)).html();
-        $(this).replaceWith('<button class="btn btn-neutral float-right" id="run_it_btn_' + id + '" onclick="cpp(' + id + ', \'' + file + '\', \'Run this code!\')">Run this code!</button><textarea style="display: none" id="code_' + id + '"></textarea><br /><textarea style="display: none" id="output_' + id + '"></textarea><div id="code_listing_' + id + '"><pre><code class="cpp">' + compile + '\n\n' + example + '</code></pre></div>');
+		example = $('<div/>').text(example_result.replace(/[\n]{3,}/g, "\n")).html();
+        $(this).replaceWith('<button class="btn btn-neutral float-right" id="run_it_btn_' + id + '" onclick="cpp(' + id + ', \'' + file + '\', \'Run this code!\')">Run this code!</button><textarea style="display: none" id="code_' + id + '"></textarea><br /><textarea style="display: none" id="output_' + id + '"></textarea><div id="code_listing_' + id + '"><pre><code class="cpp">' + compile + '\n' + example + '</code></pre></div>');
     });
 
     $('img[alt="CPP(BTN)"]').each(function () {

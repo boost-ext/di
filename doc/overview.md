@@ -33,21 +33,12 @@
 ###Configuration
 | Macro                                   | Description |
 | ----------------------------------------|------------ |
-| `BOOST_MSM_VERSION`                     | Current versoin of Boost.MSM-lite (ex. 1'0'0) |
-| [`BOOST_MSM_LOG`](user_guide.md#boost_msm_log-debugging) | Enables logging system  (see [Logging](examples.md#logging)) |
-| `BOOST_MSM_DSL_DST_STATE_FIRST`      | dst\_state == src\_state (see [eUML emulation](examples.md#euml-emulation)) |
-
-> **[Configuration](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/di/overview.html#di.overview.configuration)**
-```cpp
-Macro                                   | Description
-----------------------------------------|-----------------------------------------
-BOOST_DI_CFG_CTOR_LIMIT_SIZE            | Limits number of allowed consturctor
-                                        | parameters [0-10, default=10]
-----------------------------------------|-----------------------------------------
-BOOST_DI_CFG                            | Global configuration allows to customize
-                                        | provider and policies
-```
-
+| `BOOST_DI_VERSION`                      | Current version of Boost.DI (ex. 1'0'0) |
+| `BOOST_DI_CFG`                          | Global configuration allows to customize provider and policies |
+| `BOOST_DI_CFG_DIAGNOSTICS_LEVEL`        | Global configuration allows to customize provider and policies |
+| `BOOST_DI_CFG_CTOR_LIMIT_SIZE`          | Limits number of allowed consturctor parameters [0-10, default=10] |
+| `BOOST_DI_NAMESPACE_BEGIN`              | Limits number of allowed consturctor parameters [0-10, default=10] |
+| `BOOST_DI_NAMESPACE_END`                | Limits number of allowed consturctor parameters [0-10, default=10] |
 
 ###Other Libraries
 
