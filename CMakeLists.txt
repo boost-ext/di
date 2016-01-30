@@ -20,12 +20,6 @@ else()
     message(WARNING "Unsupported compiler!")
 endif()
 
-if (BIICODE)
-    ADD_BII_TARGETS()
-    target_compile_options(${BII_LIB_TARGET} INTERFACE "-std=c++1y" ${CXX_EXTRA_FLAGS})
-    return()
-endif()
-
 add_subdirectory(example)
 add_subdirectory(test)
 
