@@ -163,4 +163,43 @@ $(document).ready(function () {
 		example = $('<div/>').text(example.substring(i + n + 2)).html();
         $(this).replaceWith('<table class="float-left"><tr><td><button class="btn" id="run_it_btn_' + id + '" onclick="cpp(' + id + ', \'' + file + '\', \'' + name + '\')">' + name + '</button><textarea style="display: none" id="code_' + id + '"></textarea><br /><textarea style="display: none" id="output_' + id + '"></textarea><div style=""id="code_listing_' + id + '"></div></td></tr></table>');
     });
+
+    $('img[alt="CPP(SPLIT)"]').each(function () {
+        var file = $(this).attr('src');
+        var basename = $(this).attr('src').split('/')[$(this).attr('src').split('/').length - 1];
+        var name = basename.replace(".cpp", "");
+		var begin = "//<-";
+		var end = "//->";
+		var example = get_cpp_file(file);
+        var lines = example.split('\n');
+        var example_result = '';
+        var test_result = '';
+        var ignored = 0;
+        var tmp_ignored = 0;
+        for(var i = 0; i < lines.length; i++){
+            var line = lines[i];
+            if (line.indexOf(begin) != -1) {
+                ignored = 1;
+                tmp_ignored = 1;
+            } else if (line.indexOf(end) != -1) {
+                tmp_ignored = 0;
+            }
+            if (!ignored && line.startsWith("int main()")) {
+                tmp_ignored = 2;
+                ignored = 1;
+            }
+            if (!line.startsWith("//")) {
+                if (!ignored) {
+                    example_result += line + '\n';
+                } else if (ignored == 2 && !line.startsWith("}")) {
+                    test_result += line.trim() + '\n';
+                }
+            }
+            ignored = tmp_ignored;
+        }
+		var id = gid++;
+		example = $('<div/>').text(example_result.replace(/[\n]{3,}/g, "\n").slice(0, -1)).html();
+		test = $('<div/>').text(test_result.replace(/[\n]{3,}/g, "\n").slice(0, -1)).html();
+        $(this).replaceWith('<button class="btn btn-neutral float-right" id="run_it_btn_' + id + '" onclick="cpp(' + id + ', \'' + file + '\', \'Run this code!\')">Run this code!</button><textarea style="display: none" id="code_' + id + '"></textarea><br /><textarea style="display: none" id="output_' + id + '"></textarea><div id="code_listing_' + id + '"><table style="table-layout: fixed; border-collapse:collapse; padding:0; height: 30px; width: 100%; border: 1px;"><thead style="background: #edf0f2;"><tr><th>' + name + '</th><th>Test</th></tr></thead><tbody><tr><td><pre><code class="cpp" style="height: 400px;">' + example + '</code></pre></td><td><pre><code class="cpp" style="height: 400px;">' + test + '</code></pre></td></tr></tbody></table></div>');
+    });
 });

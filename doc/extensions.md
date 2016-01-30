@@ -23,7 +23,7 @@
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/extensions/policies/uml_dumper.cpp)
 
 ###Mocks Provider
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/extensions/policies/mocks_provider.cpp)
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/extensions/providers/mocks_provider.cpp)
 
 ###Scoped Scope
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/extensions/scopes/scoped_scope.cpp)
