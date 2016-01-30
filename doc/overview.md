@@ -2,23 +2,23 @@
 
 * Get [boost/di.hpp](https://raw.githubusercontent.com/boost-experimental/di/master/include/boost/di.hpp) header
 ```sh
-    wget https://raw.githubusercontent.com/boost-experimental/di/master/include/boost/di.hpp
+wget https://raw.githubusercontent.com/boost-experimental/di/master/include/boost/di.hpp
 ```
 
 * Include the header and define `msm` namespace alias
 ```cpp
-    #include "boost/di.hpp"
-    namespace di = boost::di;
+#include "boost/di.hpp"
+namespace di = boost::di;
 ```
 
 * Compile with C++14 support
 ```sh
-    $CXX -std=c++14 ...
+$CXX -std=c++14 ...
 ```
 
 * To run tests
 ```sh
-    git clone https://github.com/boost-experimental/di && cd di && make test
+git clone https://github.com/boost-experimental/di && cd di && make test
 ```
 
 ###Dependencies
