@@ -1,5 +1,350 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Krzysztof Jusiak">
+  
+  <title>Boost.DI</title>
+  
 
-<script>
-    window.location.replace("di/introduction.html");
-</script>
+  <link rel="shortcut icon" href="./img/favicon.ico">
 
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="./css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="./css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="./css/codemirror.css">
+  <link rel="stylesheet" href="./css/highlight.css">
+  <link rel="stylesheet" href="./css/mdn-like.css">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "None";
+    var mkdocs_page_input_path = "index.md";
+    var mkdocs_page_url = "/index.html";
+  </script>
+  
+  <script src="./js/jquery-2.1.1.min.js"></script>
+  <script src="./js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="./js/highlight.pack.js"></script>
+  <script src="./js/theme.js"></script>
+
+  <script src="./js/codemirror/codemirror.js"></script>
+  <script src="./js/codemirror/clike.js"></script>
+  <script src="./js/codemirror/active-line.js"></script>
+
+  <script src="./js/cpp.js"></script>
+  <script src="./js/gitter.js"></script>
+  <script src="./js/html.js"></script>
+  <script src="./js/youtube.js"></script> 
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+	
+	<nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+
+      <a href="http://boost.org"><img src="./img/boost.png" /></a>
+      <a href="index.html" class="icon icon-home" style="font-weight:bold;text-align:left;padding:0.809em;color:#fcfcfc;margin-bottom:0.809em"> Boost.DI</a>
+
+      <div class="wy-side-nav-search">
+		<div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 current">
+        <a class="current" href="index.html">Introduction</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#introduction">Introduction</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#what-is-a-dependency-injection">What is a Dependency Injection?</a></li>
+                
+                    <li><a class="toctree-l4" href="#why-dependency-injection">Why Dependency Injection?</a></li>
+                
+                    <li><a class="toctree-l4" href="#why-boostdi">Why Boost.DI?</a></li>
+                
+                    <li><a class="toctree-l4" href="#acknowledgements">Acknowledgements</a></li>
+                
+            
+            </ul>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="overview/index.html">Overview</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="tutorial/index.html">Tutorial</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="cheatsheet/index.html">Cheatsheet</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="quick_user_guide/index.html">Quick User Guide</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="user_guide/index.html">User Guide</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="examples/index.html">Examples</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="extensions/index.html">Extensions</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="projects/index.html">Projects</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="CHANGELOG/index.html">CHANGELOG</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="TODO/index.html">TODO</a>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Boost.DI</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Introduction</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p><a href="http://www.boost.org/LICENSE_1_0.txt" target="_blank"><img alt="Boost Licence" src="http://img.shields.io/badge/license-boost-blue.svg" /></a>
+<a href="https://github.com/boost-experimental/msm-lite/releases" target="_blank"><img alt="Version" src="https://badge.fury.io/gh/boost-experimental%2Fmsm-lite.svg" /></a>
+<a href="https://travis-ci.org/boost-experimental/msm-lite" target="_blank"><img alt="Build Status" src="https://img.shields.io/travis/boost-experimental/msm-lite/master.svg?label=linux/osx" /></a>
+<a href="https://ci.appveyor.com/project/boost-experimental/msm-lite" target="_blank"><img alt="Build Status" src="https://img.shields.io/appveyor/ci/boost-experimental/di/master.svg?label=windows" /></a>
+<a href="https://coveralls.io/r/boost-experimental/msm-lite?branch=master" target="_blank"><img alt="Coveralls" src="http://img.shields.io/coveralls/boost-experimental/msm-lite/master.svg" /></a>
+<a href="http://github.com/boost-experimental/msm-lite/issues" target="_blank"><img alt="Github Issues" src="https://img.shields.io/github/issues/boost-experimental/msm-lite.svg" /></a></p>
+<hr />
+<h1 id="introduction">Introduction</h1>
+<table>
+<thead>
+<tr>
+<th><strong>Experimental Boost.DI</strong></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Your C++14 header only dependency injection library with no dependencies (<a href="http://boost-experimental.github.io/di/examples/index.html#hello-world"><strong>Try it online!</strong></a>)</td>
+<td><a class="github-button" href="https://github.com/boost-experimental/di" data-style="mega" data-count-href="/boost-experimental/di/stargazers" data-count-api="/repos/boost-experimental/di#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star boost-experimental/di on GitHub">GitHub</a></td>
+</tr>
+</tbody>
+</table>
+<h1 id="what-is-a-dependency-injection">What is a Dependency Injection?</h1>
+<blockquote>
+<p>"Don't call us, we'll call you", Hollywood principle</p>
+</blockquote>
+<p><strong><a href="http://www.youtube.com/watch?v=IKD2-MAkXyQ">Dependency Injection</a> (DI)</strong> involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state.
+It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.</p>
+<blockquote>
+<p><strong>"Let's make some coffee!"</strong>
+<p align="center"><img src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/coffee_maker.png" alt="coffee maker"/></p></p>
+</blockquote>
+<pre><code class="cpp">No Dependency injection                 | Dependency Injection
+----------------------------------------|--------------------------------------------
+class coffee_maker {                    | class coffee_maker {
+public:                                 | public:
+    void brew() {                       |   coffee_maker(shared_ptr&lt;iheater&gt; heater
+        heater-&gt;on();                   |              , unique_ptr&lt;ipump&gt; pump)
+        pump-&gt;pump();                   |         : heater(heater), pump(move(pump))
+        clog &lt;&lt; &quot;coffee&quot;! &lt;&lt; endl;      |     { }
+        heater-&gt;off();                  |
+    }                                   |     void brew() {
+                                        |         heater-&gt;on();
+private:                                |         pump-&gt;pump();
+    shared_ptr&lt;iheater&gt; heater =        |         clog &lt;&lt; &quot;coffee!&quot; &lt;&lt; endl;
+        make_shared&lt;electric_heater&gt;(); |         heater-&gt;off();
+                                        |     }
+    unique_ptr&lt;ipump&gt; pump =            |
+        make_unique&lt;heat_pump&gt;(heater); | private:
+};                                      |     shared_ptr&lt;iheater&gt; heater;
+                                        |     unique_ptr&lt;ipump&gt; pump;
+                                        | };
+                                        |
+</code></pre>
+
+<h3 id="why-dependency-injection">Why Dependency Injection?</h3>
+<ul>
+<li>DI provides loosely coupled code (separation of business logic and object creation)</li>
+<li>DI provides easier to maintain code (different objects might be easily injected)</li>
+<li>DI provides easier to test code (fakes objects might be injected)</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><a href="http://www.youtube.com/watch?v=RlfLCWKxHJ0"><img alt="The Clean Code Talks - Don't Look For Things!" src="http://img.youtube.com/vi/RlfLCWKxHJ0/0.jpg" /></a></th>
+<th><a href="http://www.youtube.com/watch?v=oK_XtfXPkqw"><img alt="DAGGER 2 - A New Type of dependency injection" src="http://image.slidesharecdn.com/nr73mexetqiybd1qpcem-140529143342-phpapp01/95/dependency-injection-for-android-5-638.jpg?cb=1401392113" /></a></th>
+<th></th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+<h3 id="why-boostdi">Why Boost.DI?</h3>
+<ul>
+<li>Boost.DI has none or minimal run-time overhead - <a href="#run_time_performance">Run-time performance</a></li>
+<li>Boost.DI compiles fast - <a href="#compile_time_performance">Compile-time performance</a></li>
+<li>Boost.DI gives short diagnostic messages - <a href="#diagnostic_messages">Diagnostic messages</a></li>
+<li>Boost.DI is not intrusive [link to tutorial]</li>
+<li>Boost.DI reduces boilerplate code [link to tutorial]</li>
+<li>Boost.DI reduces testing effort [link to tutorial]</li>
+<li>Boost.DI gives better control of what and how is created [link to tutorial]</li>
+<li>Boost.DI gives better understanding about objects hierarchy [link to tutorial]</li>
+</ul>
+<h3 id="acknowledgements">Acknowledgements</h3>
+<ul>
+<li>Thanks to Bartosz Kalinczuk for code review and tips how to improve <code>Boost.DI</code></li>
+<li>Thanks to Sohail Somani for support and tips how to improve <code>Boost.DI</code></li>
+<li>Thanks to Rob Stewart and Robert Ramey for documentation feedback and tips how to improve it</li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="overview/index.html" class="btn btn-neutral float-right" title="Overview">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES * * */
+  var disqus_shortname = 'di';
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>Copyright &copy; 2016</p>
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+      
+        <span style="margin-left: 15px"><a href="overview/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+
+<script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
+</body>
+</html>
+
+<!--
+MkDocs version : 0.15.0
+Build Date UTC : 2016-01-31 15:21:08.338460
+-->

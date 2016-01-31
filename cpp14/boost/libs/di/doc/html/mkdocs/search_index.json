@@ -1,0 +1,359 @@
+{
+    "docs": [
+        {
+            "location": "/index.html", 
+            "text": "Introduction\n\n\n\n\n\n\n\n\nExperimental Boost.DI\n\n\n\n\n\n\n\n\n\n\n\n\nYour C++14 header only dependency injection library with no dependencies (\nTry it online!\n)\n\n\nGitHub\n\n\n\n\n\n\n\n\nWhat is a Dependency Injection?\n\n\n\n\n\"Don't call us, we'll call you\", Hollywood principle\n\n\n\n\nDependency Injection\n (DI)\n involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client\u2019s state.\nIt is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.\n\n\n\n\n\"Let's make some coffee!\"\n\n\n\n\n\n\nNo Dependency injection                 | Dependency Injection\n----------------------------------------|--------------------------------------------\nclass coffee_maker {                    | class coffee_maker {\npublic:                                 | public:\n    void brew() {                       |   coffee_maker(shared_ptr\niheater\n heater\n        heater-\non();                   |              , unique_ptr\nipump\n pump)\n        pump-\npump();                   |         : heater(heater), pump(move(pump))\n        clog \n \ncoffee\n! \n endl;      |     { }\n        heater-\noff();                  |\n    }                                   |     void brew() {\n                                        |         heater-\non();\nprivate:                                |         pump-\npump();\n    shared_ptr\niheater\n heater =        |         clog \n \ncoffee!\n \n endl;\n        make_shared\nelectric_heater\n(); |         heater-\noff();\n                                        |     }\n    unique_ptr\nipump\n pump =            |\n        make_unique\nheat_pump\n(heater); | private:\n};                                      |     shared_ptr\niheater\n heater;\n                                        |     unique_ptr\nipump\n pump;\n                                        | };\n                                        |\n\n\n\n\nWhy Dependency Injection?\n\n\n\n\nDI provides loosely coupled code (separation of business logic and object creation)\n\n\nDI provides easier to maintain code (different objects might be easily injected)\n\n\nDI provides easier to test code (fakes objects might be injected)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nWhy Boost.DI?\n\n\n\n\nBoost.DI has none or minimal run-time overhead - \nRun-time performance\n\n\nBoost.DI compiles fast - \nCompile-time performance\n\n\nBoost.DI gives short diagnostic messages - \nDiagnostic messages\n\n\nBoost.DI is not intrusive [link to tutorial]\n\n\nBoost.DI reduces boilerplate code [link to tutorial]\n\n\nBoost.DI reduces testing effort [link to tutorial]\n\n\nBoost.DI gives better control of what and how is created [link to tutorial]\n\n\nBoost.DI gives better understanding about objects hierarchy [link to tutorial]\n\n\n\n\nAcknowledgements\n\n\n\n\nThanks to Bartosz Kalinczuk for code review and tips how to improve \nBoost.DI\n\n\nThanks to Sohail Somani for support and tips how to improve \nBoost.DI\n\n\nThanks to Rob Stewart and Robert Ramey for documentation feedback and tips how to improve it", 
+            "title": "Introduction"
+        }, 
+        {
+            "location": "/index.html#introduction", 
+            "text": "Experimental Boost.DI       Your C++14 header only dependency injection library with no dependencies ( Try it online! )  GitHub", 
+            "title": "Introduction"
+        }, 
+        {
+            "location": "/index.html#what-is-a-dependency-injection", 
+            "text": "\"Don't call us, we'll call you\", Hollywood principle   Dependency Injection  (DI)  involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client\u2019s state.\nIt is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.   \"Let's make some coffee!\"    No Dependency injection                 | Dependency Injection\n----------------------------------------|--------------------------------------------\nclass coffee_maker {                    | class coffee_maker {\npublic:                                 | public:\n    void brew() {                       |   coffee_maker(shared_ptr iheater  heater\n        heater- on();                   |              , unique_ptr ipump  pump)\n        pump- pump();                   |         : heater(heater), pump(move(pump))\n        clog    coffee !   endl;      |     { }\n        heater- off();                  |\n    }                                   |     void brew() {\n                                        |         heater- on();\nprivate:                                |         pump- pump();\n    shared_ptr iheater  heater =        |         clog    coffee!    endl;\n        make_shared electric_heater (); |         heater- off();\n                                        |     }\n    unique_ptr ipump  pump =            |\n        make_unique heat_pump (heater); | private:\n};                                      |     shared_ptr iheater  heater;\n                                        |     unique_ptr ipump  pump;\n                                        | };\n                                        |", 
+            "title": "What is a Dependency Injection?"
+        }, 
+        {
+            "location": "/index.html#why-dependency-injection", 
+            "text": "DI provides loosely coupled code (separation of business logic and object creation)  DI provides easier to maintain code (different objects might be easily injected)  DI provides easier to test code (fakes objects might be injected)", 
+            "title": "Why Dependency Injection?"
+        }, 
+        {
+            "location": "/index.html#why-boostdi", 
+            "text": "Boost.DI has none or minimal run-time overhead -  Run-time performance  Boost.DI compiles fast -  Compile-time performance  Boost.DI gives short diagnostic messages -  Diagnostic messages  Boost.DI is not intrusive [link to tutorial]  Boost.DI reduces boilerplate code [link to tutorial]  Boost.DI reduces testing effort [link to tutorial]  Boost.DI gives better control of what and how is created [link to tutorial]  Boost.DI gives better understanding about objects hierarchy [link to tutorial]", 
+            "title": "Why Boost.DI?"
+        }, 
+        {
+            "location": "/index.html#acknowledgements", 
+            "text": "Thanks to Bartosz Kalinczuk for code review and tips how to improve  Boost.DI  Thanks to Sohail Somani for support and tips how to improve  Boost.DI  Thanks to Rob Stewart and Robert Ramey for documentation feedback and tips how to improve it", 
+            "title": "Acknowledgements"
+        }, 
+        {
+            "location": "/overview/index.html", 
+            "text": "Quick Start\n\n\n\n\nGet \nboost/di.hpp\n header\n\n\n\n\nwget https://raw.githubusercontent.com/boost-experimental/di/master/include/boost/di.hpp\n\n\n\n\n\n\nInclude the header and define \nmsm\n namespace alias\n\n\n\n\n#include \nboost/di.hpp\n\nnamespace di = boost::di;\n\n\n\n\n\n\nCompile with C++14 support\n\n\n\n\n$CXX -std=c++14 ...\n\n\n\n\n\n\nTo run tests\n\n\n\n\ngit clone https://github.com/boost-experimental/di \n cd di \n make test\n\n\n\n\nDependencies\n\n\n\n\nNo external dependencies are required (neither STL nor Boost)\n\n\n\n\nSupported/tested compilers\n\n\n\n\nClang-3.4+\n\n\nGCC-5.2+\n\n\n\n\nConfiguration\n\n\n\n\n\n\n\n\nMacro\n\n\nDescription\n\n\n\n\n\n\n\n\n\n\nBOOST_DI_VERSION\n\n\nCurrent version of Boost.DI (ex. 1'0'0)\n\n\n\n\n\n\nBOOST_DI_CFG\n\n\nGlobal configuration allows to customize provider and policies\n\n\n\n\n\n\nBOOST_DI_CFG_DIAGNOSTICS_LEVEL\n\n\nGlobal configuration allows to customize provider and policies\n\n\n\n\n\n\nBOOST_DI_CFG_CTOR_LIMIT_SIZE\n\n\nLimits number of allowed consturctor parameters [0-10, default=10]\n\n\n\n\n\n\nBOOST_DI_NAMESPACE_BEGIN\n\n\nLimits number of allowed consturctor parameters [0-10, default=10]\n\n\n\n\n\n\nBOOST_DI_NAMESPACE_END\n\n\nLimits number of allowed consturctor parameters [0-10, default=10]\n\n\n\n\n\n\n\n\nOther Libraries\n\n\nPerformance\n\n\n\n\n\n\nRun-time performance (-O2)\n\n* Environment\n    * x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux\n    * clang++3.4 -O2 / \ngdb -batch -ex 'file ./a.out' -ex 'disassemble main'\n\n\n\n\nCreate type wihtout bindings            | Asm x86-64 (same as `return 0`)\n----------------------------------------|-----------------------------------------\nint main() {                            | xor %eax,%eax\n    auto injector = di::make_injector();| retq\n    return injector.create\nint\n();      |\n}                                       |\n\n\n\n\nCreate type with bound instance         | Asm x86-64 (same as `return 42`)\n----------------------------------------|-----------------------------------------\nint main() {                            | mov $0x2a,%eax\n    auto injector = di::make_injector(  | retq\n        di::bind\nint\n.to(42)            |\n    );                                  |\n                                        |\n    return injector.create\nint\n();      |\n}                                       |\n\n\n\n\nCreate named type                       | Asm x86-64 (same as `return 42`)\n----------------------------------------|-----------------------------------------\nauto my_int = []{};                     | mov $0x2a,%eax\n                                        | retq\nstruct c {                              |\n    BOOST_DI_INJECT(c                   |\n        , (named = my_int) int i)       |\n        : i(i)                          |\n    { }                                 |\n                                        |\n    int i = 0;                          |\n};                                      |\n                                        |\nint main() {                            |\n  auto injector = di::make_injector(    |\n    di::bind\nint\n.named(my_int).to(42)  |\n  );                                    |\n                                        |\n  return injector.create\nc\n().i;        |\n}                                       |\n\n\n\n\nCreate bound interface                  | Asm x86-64 (same as `make_unique`)\n----------------------------------------|-----------------------------------------\nint main() {                            | push   %rax\n    auto injector = di::make_injector(  | mov    $0x8,%edi\n        di::bind\ni1\n.to\nimpl1\n()        | callq  0x4007b0 \n_Znwm@plt\n\n    );                                  | movq   $0x400a30,(%rax)\n                                        | mov    $0x8,%esi\n    auto ptr = injector.create\n         | mov    %rax,%rdi\n        unique_ptr\ni1\n                  | callq  0x400960 \n_ZdlPvm\n\n    \n();                                | mov    $0x1,%eax\n                                        | pop    %rdx\n    return ptr.get() != nullptr;        | retq\n}                                       |\n\n\n\n\nCreate bound interface via module       | Asm x86-64 (same as `make_unique`)\n----------------------------------------|-----------------------------------------\nstruct module {                         | push   %rax\n    auto configure() const noexcept {   | mov    $0x8,%edi\n        return di::make_injector(       | callq  0x4007b0 \n_Znwm@plt\n\n            di::bind\ni1\n.to\nimpl1\n()    | movq   $0x400a10,(%rax)\n        );                              | mov    $0x8,%esi\n    }                                   | mov    %rax,%rdi\n};                                      | callq  0x400960 \n_ZdlPvm\n\n                                        | mov    $0x1,%eax\nint main() {                            | pop    %rdx\n    auto injector = di::make_injector(  | retq\n        module{}                        |\n    );                                  |\n                                        |\n    auto ptr = injector.create\n         |\n        unique_ptr\ni1\n                  |\n    \n();                                |\n                                        |\n    return ptr != nullptr;              |\n}                                       |\n\n\n\n\nCreate bound interface via exposed      | Asm x86-64\nmodule                                  | cost = type erasure\n----------------------------------------|----------------------------------------------------------------------\nstruct module {                         | push   %r14\n    di::injector\ni1\n configure() const {| push   %rbx\n        return di::make_injector(       | push   %rax\n            di::bind\ni1\n.to\nimpl1\n()    | mov    %rdi,%r14\n        );                              | mov    $0x20,%edi\n    }                                   | callq  0x400aa0 \n_Znwm@plt\n\n};                                      | mov    %rax,%rbx\n                                        | mov    $0x400ea0,%eax\nint main() {                            | movq   %rax,%xmm0\n    auto injector = di::make_injector(  | movups %xmm0,(%rbx)\n        module{}                        | movq   $0x400ec0,0x10(%rbx)\n    );                                  | mov    $0x8,%edi\n                                        | callq  0x400aa0 \n_Znwm@plt\n\n    auto ptr = injector.create\n         | movq   $0x400fc8,(%rax)\n        unique_ptr\ni1\n                  | mov    %rax,(%r14)\n    \n();                                | mov    0x10(%rbx),%rax\n                                        | mov    %rbx,%rdi\n    return ptr != nullptr;              | callq  *%rax\n}                                       | mov    %rbx,%rdi\n                                        | callq  0x400a10 \n_ZdlPv@plt\n\n                                        | mov    %r14,%rax\n                                        | add    $0x8,%rsp\n                                        | pop    %rbx\n                                        | pop    %r14\n                                        | retq\n                                        | mov    %rax,%rdi\n                                        | callq  0x400e90 \n__clang_call_terminate\n\n                                        | mov    %rax,%rdi\n                                        | callq  0x400e90 \n__clang_call_terminate\n\n                                        | mov    %rax,%rdi\n                                        | callq  0x400e90 \n__clang_call_terminate\n\n\n\n\n\n*\n\n\n\n\n\n\nCompile-time performance\n | \nExample\n\n* Environment\n    * x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux\n    * clang++3.4 -O2\n\n\n\n\nBoost.DI header                         | Time [s]\n----------------------------------------|-----------------------------------------\n#include \nboost/di.hpp\n                 | 0.050\nint main() { }                          |\n\n\n\n\nLegend:\n    ctor    = raw constructor: c(int i, double d);\n    inject  = inject constructor: BOOST_DI_INJECT(c, int i, double d);\n    all     = all types exposed from module: auto configure();\n    exposed = one type exposed from module: di::injector\nc\n configure();\n\n\n\n\n\n\n* 4248897537 instances created\n* 132 different types\n* 10 modules\n\n\n\n\n\n\n\n\n* 1862039751439806464 instances created\n* 200 different types\n* 10 modules\n\n\n\n\n\n\n\n\n* 5874638529236910091 instances created\n* 310 different types\n* 100 different interfaces\n* 10 modules\n\n\n\n\nError messages\n\n\n\n\n\n\nDiagnostic messages\n\n\n\n\nCreate interface without bound          | Error message\nimplementation                          |\n----------------------------------------|[clang]--------------------------------------\nauto injector = di::make_injector();    | warning: 'create' is deprecated: creatable constraint not satisfied\ninjector.create\ni*\n();                  |     injector.create\ni*\n();\n                                        |              ^\n                                        | note: 'create\ni *, 0\n' has been explicitly marked deprecated here\n                                        |     T create() const {\n                                        |       ^\n                                        | error: inline function 'boost::di::abstract_type\ni\n::is_not_bound::error' is not defined\n                                        |     error(_ = \ntype not bound, did you forget to add: 'di::bind\ninterface\n.to\nimplementation\n()'?\n)\n                                        |     ^\n                                        | note: used here\n                                        |     constraint_not_satisfied{}.error();\n                                        |\n                                        |[gcc]----------------------------------------\n                                        | error: inline function \u2018constexpr T* boost::di::abstract_type\nT\n::is_not_bound::error(boost::di::_) const [with T = i]\u2019 used but never defined\n                                        |      error(_ = \ntype not bound, did you forget to add: 'di::bind\ninterface\n.to\nimplementation\n()'?\n)\n                                        |      ^\n                                        | error: call to \u2018boost::di::core::injector\nboost::di::config\n::create\ni*, 0\n\u2019 declared with attribute error: creatable constraint not satisfied\n                                        |      injector.create\ni*\n();\n\n\n\n\nAmbiguous binding                       | Error message\n----------------------------------------|-----------------------------------------\nauto injector = di::make_injector(      | error: base class 'pair\nint, no_name\n'\n    di::bind\nint\n.to(42)                | specified more than once as a direct\n  , di::bind\nint\n.to(87)                | base class\n);                                      |\n                                        |\ninjector.create\nint\n();                 |\n\n\n\n\nCreate not bound object with all bound  | Error message\npolicy                                  |\n----------------------------------------|-----------------------------------------\nclass all_bound : public di::config {   | error: static_assert failed\npublic:                                 | \nType T is not allowed\n\n  auto policies() const noexcept {      |\n    return di::make_policies(           |\n      constructible(is_bound\n_\n{})      |\n    );                                  |\n  }                                     |\n};                                      |\n                                        |\nauto injector =                         |\n    di::make_injector\nall_bound\n();     |\n                                        |\ninjector.create\nint\n();                 |\n\n\n\n\nWrong annotation                        | Error message\n(NAMED instead of named)                |\n----------------------------------------|-----------------------------------------\nauto name = []{};                       | error: use of undeclared identifier\n                                        | 'named'\nstruct c {                              |\n    BOOST_DI_INJECT(c                   |\n        , (NAMED = name) int) { }       |\n};                                      |\n                                        |\ndi::make_injector().create\nc\n();        |\n\n\n\n\n*\n\n\nNot configurable", 
+            "title": "Overview"
+        }, 
+        {
+            "location": "/overview/index.html#quick-start", 
+            "text": "Get  boost/di.hpp  header   wget https://raw.githubusercontent.com/boost-experimental/di/master/include/boost/di.hpp   Include the header and define  msm  namespace alias   #include  boost/di.hpp \nnamespace di = boost::di;   Compile with C++14 support   $CXX -std=c++14 ...   To run tests   git clone https://github.com/boost-experimental/di   cd di   make test", 
+            "title": "Quick Start"
+        }, 
+        {
+            "location": "/overview/index.html#dependencies", 
+            "text": "No external dependencies are required (neither STL nor Boost)", 
+            "title": "Dependencies"
+        }, 
+        {
+            "location": "/overview/index.html#supportedtested-compilers", 
+            "text": "Clang-3.4+  GCC-5.2+", 
+            "title": "Supported/tested compilers"
+        }, 
+        {
+            "location": "/overview/index.html#configuration", 
+            "text": "Macro  Description      BOOST_DI_VERSION  Current version of Boost.DI (ex. 1'0'0)    BOOST_DI_CFG  Global configuration allows to customize provider and policies    BOOST_DI_CFG_DIAGNOSTICS_LEVEL  Global configuration allows to customize provider and policies    BOOST_DI_CFG_CTOR_LIMIT_SIZE  Limits number of allowed consturctor parameters [0-10, default=10]    BOOST_DI_NAMESPACE_BEGIN  Limits number of allowed consturctor parameters [0-10, default=10]    BOOST_DI_NAMESPACE_END  Limits number of allowed consturctor parameters [0-10, default=10]", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/overview/index.html#other-libraries", 
+            "text": "", 
+            "title": "Other Libraries"
+        }, 
+        {
+            "location": "/overview/index.html#performance", 
+            "text": "Run-time performance (-O2) \n* Environment\n    * x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux\n    * clang++3.4 -O2 /  gdb -batch -ex 'file ./a.out' -ex 'disassemble main'   Create type wihtout bindings            | Asm x86-64 (same as `return 0`)\n----------------------------------------|-----------------------------------------\nint main() {                            | xor %eax,%eax\n    auto injector = di::make_injector();| retq\n    return injector.create int ();      |\n}                                       |  Create type with bound instance         | Asm x86-64 (same as `return 42`)\n----------------------------------------|-----------------------------------------\nint main() {                            | mov $0x2a,%eax\n    auto injector = di::make_injector(  | retq\n        di::bind int .to(42)            |\n    );                                  |\n                                        |\n    return injector.create int ();      |\n}                                       |  Create named type                       | Asm x86-64 (same as `return 42`)\n----------------------------------------|-----------------------------------------\nauto my_int = []{};                     | mov $0x2a,%eax\n                                        | retq\nstruct c {                              |\n    BOOST_DI_INJECT(c                   |\n        , (named = my_int) int i)       |\n        : i(i)                          |\n    { }                                 |\n                                        |\n    int i = 0;                          |\n};                                      |\n                                        |\nint main() {                            |\n  auto injector = di::make_injector(    |\n    di::bind int .named(my_int).to(42)  |\n  );                                    |\n                                        |\n  return injector.create c ().i;        |\n}                                       |  Create bound interface                  | Asm x86-64 (same as `make_unique`)\n----------------------------------------|-----------------------------------------\nint main() {                            | push   %rax\n    auto injector = di::make_injector(  | mov    $0x8,%edi\n        di::bind i1 .to impl1 ()        | callq  0x4007b0  _Znwm@plt \n    );                                  | movq   $0x400a30,(%rax)\n                                        | mov    $0x8,%esi\n    auto ptr = injector.create          | mov    %rax,%rdi\n        unique_ptr i1                   | callq  0x400960  _ZdlPvm \n     ();                                | mov    $0x1,%eax\n                                        | pop    %rdx\n    return ptr.get() != nullptr;        | retq\n}                                       |  Create bound interface via module       | Asm x86-64 (same as `make_unique`)\n----------------------------------------|-----------------------------------------\nstruct module {                         | push   %rax\n    auto configure() const noexcept {   | mov    $0x8,%edi\n        return di::make_injector(       | callq  0x4007b0  _Znwm@plt \n            di::bind i1 .to impl1 ()    | movq   $0x400a10,(%rax)\n        );                              | mov    $0x8,%esi\n    }                                   | mov    %rax,%rdi\n};                                      | callq  0x400960  _ZdlPvm \n                                        | mov    $0x1,%eax\nint main() {                            | pop    %rdx\n    auto injector = di::make_injector(  | retq\n        module{}                        |\n    );                                  |\n                                        |\n    auto ptr = injector.create          |\n        unique_ptr i1                   |\n     ();                                |\n                                        |\n    return ptr != nullptr;              |\n}                                       |  Create bound interface via exposed      | Asm x86-64\nmodule                                  | cost = type erasure\n----------------------------------------|----------------------------------------------------------------------\nstruct module {                         | push   %r14\n    di::injector i1  configure() const {| push   %rbx\n        return di::make_injector(       | push   %rax\n            di::bind i1 .to impl1 ()    | mov    %rdi,%r14\n        );                              | mov    $0x20,%edi\n    }                                   | callq  0x400aa0  _Znwm@plt \n};                                      | mov    %rax,%rbx\n                                        | mov    $0x400ea0,%eax\nint main() {                            | movq   %rax,%xmm0\n    auto injector = di::make_injector(  | movups %xmm0,(%rbx)\n        module{}                        | movq   $0x400ec0,0x10(%rbx)\n    );                                  | mov    $0x8,%edi\n                                        | callq  0x400aa0  _Znwm@plt \n    auto ptr = injector.create          | movq   $0x400fc8,(%rax)\n        unique_ptr i1                   | mov    %rax,(%r14)\n     ();                                | mov    0x10(%rbx),%rax\n                                        | mov    %rbx,%rdi\n    return ptr != nullptr;              | callq  *%rax\n}                                       | mov    %rbx,%rdi\n                                        | callq  0x400a10  _ZdlPv@plt \n                                        | mov    %r14,%rax\n                                        | add    $0x8,%rsp\n                                        | pop    %rbx\n                                        | pop    %r14\n                                        | retq\n                                        | mov    %rax,%rdi\n                                        | callq  0x400e90  __clang_call_terminate \n                                        | mov    %rax,%rdi\n                                        | callq  0x400e90  __clang_call_terminate \n                                        | mov    %rax,%rdi\n                                        | callq  0x400e90  __clang_call_terminate   *    Compile-time performance  |  Example \n* Environment\n    * x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux\n    * clang++3.4 -O2   Boost.DI header                         | Time [s]\n----------------------------------------|-----------------------------------------\n#include  boost/di.hpp                  | 0.050\nint main() { }                          |  Legend:\n    ctor    = raw constructor: c(int i, double d);\n    inject  = inject constructor: BOOST_DI_INJECT(c, int i, double d);\n    all     = all types exposed from module: auto configure();\n    exposed = one type exposed from module: di::injector c  configure();   * 4248897537 instances created\n* 132 different types\n* 10 modules    * 1862039751439806464 instances created\n* 200 different types\n* 10 modules    * 5874638529236910091 instances created\n* 310 different types\n* 100 different interfaces\n* 10 modules", 
+            "title": "Performance"
+        }, 
+        {
+            "location": "/overview/index.html#error-messages", 
+            "text": "Diagnostic messages   Create interface without bound          | Error message\nimplementation                          |\n----------------------------------------|[clang]--------------------------------------\nauto injector = di::make_injector();    | warning: 'create' is deprecated: creatable constraint not satisfied\ninjector.create i* ();                  |     injector.create i* ();\n                                        |              ^\n                                        | note: 'create i *, 0 ' has been explicitly marked deprecated here\n                                        |     T create() const {\n                                        |       ^\n                                        | error: inline function 'boost::di::abstract_type i ::is_not_bound::error' is not defined\n                                        |     error(_ =  type not bound, did you forget to add: 'di::bind interface .to implementation ()'? )\n                                        |     ^\n                                        | note: used here\n                                        |     constraint_not_satisfied{}.error();\n                                        |\n                                        |[gcc]----------------------------------------\n                                        | error: inline function \u2018constexpr T* boost::di::abstract_type T ::is_not_bound::error(boost::di::_) const [with T = i]\u2019 used but never defined\n                                        |      error(_ =  type not bound, did you forget to add: 'di::bind interface .to implementation ()'? )\n                                        |      ^\n                                        | error: call to \u2018boost::di::core::injector boost::di::config ::create i*, 0 \u2019 declared with attribute error: creatable constraint not satisfied\n                                        |      injector.create i* ();  Ambiguous binding                       | Error message\n----------------------------------------|-----------------------------------------\nauto injector = di::make_injector(      | error: base class 'pair int, no_name '\n    di::bind int .to(42)                | specified more than once as a direct\n  , di::bind int .to(87)                | base class\n);                                      |\n                                        |\ninjector.create int ();                 |  Create not bound object with all bound  | Error message\npolicy                                  |\n----------------------------------------|-----------------------------------------\nclass all_bound : public di::config {   | error: static_assert failed\npublic:                                 |  Type T is not allowed \n  auto policies() const noexcept {      |\n    return di::make_policies(           |\n      constructible(is_bound _ {})      |\n    );                                  |\n  }                                     |\n};                                      |\n                                        |\nauto injector =                         |\n    di::make_injector all_bound ();     |\n                                        |\ninjector.create int ();                 |  Wrong annotation                        | Error message\n(NAMED instead of named)                |\n----------------------------------------|-----------------------------------------\nauto name = []{};                       | error: use of undeclared identifier\n                                        | 'named'\nstruct c {                              |\n    BOOST_DI_INJECT(c                   |\n        , (NAMED = name) int) { }       |\n};                                      |\n                                        |\ndi::make_injector().create c ();        |  *  Not configurable", 
+            "title": "Error messages"
+        }, 
+        {
+            "location": "/tutorial/index.html", 
+            "text": "All code examples include \nboost/di.hpp\n as well as declare a convienent msm namespace alias.\n\n\n#include \nboost/di.hpp\n\nnamespace di = boost::di;\n\n\n\n\n1. Create events and states", 
+            "title": "Tutorial"
+        }, 
+        {
+            "location": "/tutorial/index.html#1-create-events-and-states", 
+            "text": "", 
+            "title": "1. Create events and states"
+        }, 
+        {
+            "location": "/cheatsheet/index.html", 
+            "text": "", 
+            "title": "Cheatsheet"
+        }, 
+        {
+            "location": "/quick_user_guide/index.html", 
+            "text": "Let's assume all examples below include \nboost/di.hpp\n header and define \ndi\n namespace alias.\n\n\n\n\n#include \nboost/di.hpp\n\nnamespace di = boost::di;\n//\nstruct i1 { virtual ~i1() = default; virtual void dummy1() = 0; };\nstruct i2 { virtual ~i2() = default; virtual void dummy2() = 0; };\nstruct impl1 : i1 { void dummy1() override { } };\nstruct impl2 : i2 { void dummy2() override { } };\nstruct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };\n\n\n\n\n\n\n\n\n\n\nType\n\n\nDeduced scope\n\n\n\n\n\n\n\n\n\n\nT\n\n\nunique\n\n\n\n\n\n\nT\n\n\nsingleton\n\n\n\n\n\n\nconst T\n\n\nunique (temporary)/singleton\n\n\n\n\n\n\nT*\n\n\nunique (ownership transfer)\n\n\n\n\n\n\nconst T*\n\n\nunique (ownership transfer)\n\n\n\n\n\n\nT\n\n\nunique\n\n\n\n\n\n\nunique_ptr\n\n\nunique\n\n\n\n\n\n\nshared_ptr\n\n\nsingleton\n\n\n\n\n\n\nweak_ptr\n\n\nsingleton\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nType/Scope\n\n\nunique\n\n\nsingleton\n\n\nexternal\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nT\n\n\n\u2714\n\n\n-\n\n\n\u2714\n\n\n\n\n\n\n\n\n\n\nT\n\n\n-\n\n\n\u2714\n\n\n\u2714\n\n\n\n\n\n\n\n\n\n\nconst T\n\n\n\u2714 (temporary)\n\n\n\u2714\n\n\n\u2714\n\n\n\n\n\n\n\n\n\n\nT* (transfer ownership)\n\n\n\u2714\n\n\n-\n\n\n-\n\n\n-\n\n\n\u2714\n\n\n\n\n\n\nconst T*\n\n\n\u2714\n\n\n-\n\n\n\u2714\n\n\n\n\n\n\n\n\n\n\nT\n\n\n\u2714\n\n\n-\n\n\n-\n\n\n\n\n\n\n\n\n\n\nunique_ptr\n\n\n\u2714\n\n\n-\n\n\n\u2714\n\n\n\n\n\n\n\n\n\n\nshared_ptr\n\n\n\u2714\n\n\n\u2714\n\n\n\u2714\n\n\n\n\n\n\n\n\n\n\nweak_ptr\n\n\n-\n\n\n\u2714\n\n\n\u2714", 
+            "title": "Quick User Guide"
+        }, 
+        {
+            "location": "/user_guide/index.html", 
+            "text": "Injector\n\n\nHeader\n\n\n#include \nboost/msm-lite.hpp\n\n\n\n\nDescription\n\n\nRequirements for transition.\n\n\nSynopsis\n\n\ntemplate \nclass T\n\nconcept bool transitional() {\n  return requires(T transition) {\n    typename T::src_state;\n    typename T::dst_state;\n    typename T::event;\n    typename T::deps;\n    T::has_initial;\n    { transition.execute() } -\n bool;\n  }\n}\n\n\n\nSemantics\n\n\ntransitional\nT\n\n\n\n\nExample\n\n\nusing namespace msm;\nauto transition = (\"idle\"_s == terminate);\nstatic_assert(transitional\ndecltype(transition)\n::value);\n\n\n\n\n\n\n\nBindings\n\n\nInjections\n\n\nAnnotations\n\n\nScopes\n\n\nModules\n\n\nProviders\n\n\nPolicies\n\n\nConcepts\n\n\nConfig", 
+            "title": "User Guide"
+        }, 
+        {
+            "location": "/user_guide/index.html#injector", 
+            "text": "Header  #include  boost/msm-lite.hpp   Description  Requirements for transition.  Synopsis  template  class T \nconcept bool transitional() {\n  return requires(T transition) {\n    typename T::src_state;\n    typename T::dst_state;\n    typename T::event;\n    typename T::deps;\n    T::has_initial;\n    { transition.execute() } -  bool;\n  }\n}  Semantics  transitional T   Example  using namespace msm;\nauto transition = (\"idle\"_s == terminate);\nstatic_assert(transitional decltype(transition) ::value);", 
+            "title": "Injector"
+        }, 
+        {
+            "location": "/user_guide/index.html#bindings", 
+            "text": "", 
+            "title": "Bindings"
+        }, 
+        {
+            "location": "/user_guide/index.html#injections", 
+            "text": "", 
+            "title": "Injections"
+        }, 
+        {
+            "location": "/user_guide/index.html#annotations", 
+            "text": "", 
+            "title": "Annotations"
+        }, 
+        {
+            "location": "/user_guide/index.html#scopes", 
+            "text": "", 
+            "title": "Scopes"
+        }, 
+        {
+            "location": "/user_guide/index.html#modules", 
+            "text": "", 
+            "title": "Modules"
+        }, 
+        {
+            "location": "/user_guide/index.html#providers", 
+            "text": "", 
+            "title": "Providers"
+        }, 
+        {
+            "location": "/user_guide/index.html#policies", 
+            "text": "", 
+            "title": "Policies"
+        }, 
+        {
+            "location": "/user_guide/index.html#concepts", 
+            "text": "", 
+            "title": "Concepts"
+        }, 
+        {
+            "location": "/user_guide/index.html#config", 
+            "text": "", 
+            "title": "Config"
+        }, 
+        {
+            "location": "/examples/index.html", 
+            "text": "Hello World\n\n\n\n\nBindings\n\n\n\n\nDynamic Bindings\n\n\n\n\nForward Bindings\n\n\n\n\nMultiple Bindings\n\n\n\n\nBinding Non-owning Pointer\n\n\n\n\nAutomatic Injection\n\n\n\n\nConstructor Signature\n\n\n\n\nConstructor Injection\n\n\n\n\nMultiple Interface\n\n\n\n\nAnnotations\n\n\n\n\nDeduce Scope\n\n\n\n\nCustom Scope\n\n\n\n\nEager Singletons\n\n\n\n\nModules\n\n\n\n\nModules (hpp/cpp)\n\n\nCustom Policy\n\n\n\n\nCustom Provider\n\n\n\n\nPool Provider\n\n\n\n\nConfiguration", 
+            "title": "Examples"
+        }, 
+        {
+            "location": "/examples/index.html#hello-world", 
+            "text": "", 
+            "title": "Hello World"
+        }, 
+        {
+            "location": "/examples/index.html#bindings", 
+            "text": "", 
+            "title": "Bindings"
+        }, 
+        {
+            "location": "/examples/index.html#dynamic-bindings", 
+            "text": "", 
+            "title": "Dynamic Bindings"
+        }, 
+        {
+            "location": "/examples/index.html#forward-bindings", 
+            "text": "", 
+            "title": "Forward Bindings"
+        }, 
+        {
+            "location": "/examples/index.html#multiple-bindings", 
+            "text": "", 
+            "title": "Multiple Bindings"
+        }, 
+        {
+            "location": "/examples/index.html#binding-non-owning-pointer", 
+            "text": "", 
+            "title": "Binding Non-owning Pointer"
+        }, 
+        {
+            "location": "/examples/index.html#automatic-injection", 
+            "text": "", 
+            "title": "Automatic Injection"
+        }, 
+        {
+            "location": "/examples/index.html#constructor-signature", 
+            "text": "", 
+            "title": "Constructor Signature"
+        }, 
+        {
+            "location": "/examples/index.html#constructor-injection", 
+            "text": "", 
+            "title": "Constructor Injection"
+        }, 
+        {
+            "location": "/examples/index.html#multiple-interface", 
+            "text": "", 
+            "title": "Multiple Interface"
+        }, 
+        {
+            "location": "/examples/index.html#annotations", 
+            "text": "", 
+            "title": "Annotations"
+        }, 
+        {
+            "location": "/examples/index.html#deduce-scope", 
+            "text": "", 
+            "title": "Deduce Scope"
+        }, 
+        {
+            "location": "/examples/index.html#custom-scope", 
+            "text": "", 
+            "title": "Custom Scope"
+        }, 
+        {
+            "location": "/examples/index.html#eager-singletons", 
+            "text": "", 
+            "title": "Eager Singletons"
+        }, 
+        {
+            "location": "/examples/index.html#modules", 
+            "text": "", 
+            "title": "Modules"
+        }, 
+        {
+            "location": "/examples/index.html#modules-hppcpp", 
+            "text": "", 
+            "title": "Modules (hpp/cpp)"
+        }, 
+        {
+            "location": "/examples/index.html#custom-policy", 
+            "text": "", 
+            "title": "Custom Policy"
+        }, 
+        {
+            "location": "/examples/index.html#custom-provider", 
+            "text": "", 
+            "title": "Custom Provider"
+        }, 
+        {
+            "location": "/examples/index.html#pool-provider", 
+            "text": "", 
+            "title": "Pool Provider"
+        }, 
+        {
+            "location": "/examples/index.html#configuration", 
+            "text": "", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/extensions/index.html", 
+            "text": "Constructor Bindings\n\n\n\n\nAssisted Injection\n\n\n\n\nConcepts\n\n\n\n\nLazy\n\n\n\n\nNamed Parameters\n\n\n\n\nXML Injection\n\n\n\n\nTypes Dumper\n\n\n\n\nUML Dumper\n\n\n\n\nMocks Provider\n\n\n\n\nScoped Scope\n\n\n\n\nSession Scope\n\n\n\n\nShared Scope", 
+            "title": "Extensions"
+        }, 
+        {
+            "location": "/extensions/index.html#constructor-bindings", 
+            "text": "", 
+            "title": "Constructor Bindings"
+        }, 
+        {
+            "location": "/extensions/index.html#assisted-injection", 
+            "text": "", 
+            "title": "Assisted Injection"
+        }, 
+        {
+            "location": "/extensions/index.html#concepts", 
+            "text": "", 
+            "title": "Concepts"
+        }, 
+        {
+            "location": "/extensions/index.html#lazy", 
+            "text": "", 
+            "title": "Lazy"
+        }, 
+        {
+            "location": "/extensions/index.html#named-parameters", 
+            "text": "", 
+            "title": "Named Parameters"
+        }, 
+        {
+            "location": "/extensions/index.html#xml-injection", 
+            "text": "", 
+            "title": "XML Injection"
+        }, 
+        {
+            "location": "/extensions/index.html#types-dumper", 
+            "text": "", 
+            "title": "Types Dumper"
+        }, 
+        {
+            "location": "/extensions/index.html#uml-dumper", 
+            "text": "", 
+            "title": "UML Dumper"
+        }, 
+        {
+            "location": "/extensions/index.html#mocks-provider", 
+            "text": "", 
+            "title": "Mocks Provider"
+        }, 
+        {
+            "location": "/extensions/index.html#scoped-scope", 
+            "text": "", 
+            "title": "Scoped Scope"
+        }, 
+        {
+            "location": "/extensions/index.html#session-scope", 
+            "text": "", 
+            "title": "Session Scope"
+        }, 
+        {
+            "location": "/extensions/index.html#shared-scope", 
+            "text": "", 
+            "title": "Shared Scope"
+        }, 
+        {
+            "location": "/projects/index.html", 
+            "text": "Experimental Boost.MSM-lite\n\n\nAutomatic Mocks Injector", 
+            "title": "Projects"
+        }, 
+        {
+            "location": "/projects/index.html#experimental-boostmsm-lite", 
+            "text": "", 
+            "title": "Experimental Boost.MSM-lite"
+        }, 
+        {
+            "location": "/projects/index.html#automatic-mocks-injector", 
+            "text": "", 
+            "title": "Automatic Mocks Injector"
+        }, 
+        {
+            "location": "/CHANGELOG/index.html", 
+            "text": "1.0.0\n - TBD\n\n\n\n\nSupport for MSVC-2015+\n\n\nSupport for GCC-5+\n\n\nSupport for CMake 2.8+\n\n\nSupport for libc++, libstdc++\n\n\nSupport for clang-format\n\n\n\n\n0.5.0\n - 2015-01-12\n\n\n\n\nC++14 version\n\n\nSupport for Clang3.4+\n\n\n\n\n0.1.0\n - 2014-08-15\n\n\n\n\nC++03/C++11 version\n\n\nSupport for Clang3.2+", 
+            "title": "CHANGELOG"
+        }, 
+        {
+            "location": "/CHANGELOG/index.html#100-tbd", 
+            "text": "Support for MSVC-2015+  Support for GCC-5+  Support for CMake 2.8+  Support for libc++, libstdc++  Support for clang-format", 
+            "title": "1.0.0 - TBD"
+        }, 
+        {
+            "location": "/CHANGELOG/index.html#050-2015-01-12", 
+            "text": "C++14 version  Support for Clang3.4+", 
+            "title": "0.5.0 - 2015-01-12"
+        }, 
+        {
+            "location": "/CHANGELOG/index.html#010-2014-08-15", 
+            "text": "C++03/C++11 version  Support for Clang3.2+", 
+            "title": "0.1.0 - 2014-08-15"
+        }, 
+        {
+            "location": "/TODO/index.html", 
+            "text": "", 
+            "title": "TODO"
+        }
+    ]
+}
