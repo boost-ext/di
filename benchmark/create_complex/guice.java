@@ -1,0 +1,115 @@
+import com.google.inject.*;
+
+class Module extends AbstractModule {
+    @Override
+    protected void configure() {
+        bind(I00.class).to(Impl00.class);
+        bind(I01.class).to(Impl01.class);
+        bind(I02.class).to(Impl02.class);
+        bind(I03.class).to(Impl03.class);
+        bind(I04.class).to(Impl04.class);
+        bind(I05.class).to(Impl05.class);
+        bind(I06.class).to(Impl06.class);
+        bind(I07.class).to(Impl07.class);
+        bind(I08.class).to(Impl08.class);
+        bind(I09.class).to(Impl09.class);
+        bind(I10.class).to(Impl10.class);
+        bind(I11.class).to(Impl11.class);
+        bind(I12.class).to(Impl12.class);
+        bind(I13.class).to(Impl13.class);
+        bind(I14.class).to(Impl14.class);
+        bind(I15.class).to(Impl15.class);
+        bind(I16.class).to(Impl16.class);
+        bind(I17.class).to(Impl17.class);
+        bind(I18.class).to(Impl18.class);
+        bind(I19.class).to(Impl19.class);
+        bind(I20.class).to(Impl20.class);
+        bind(I21.class).to(Impl21.class);
+        bind(I22.class).to(Impl22.class);
+        bind(I23.class).to(Impl23.class);
+        bind(I24.class).to(Impl24.class);
+        bind(I25.class).to(Impl25.class);
+        bind(I26.class).to(Impl26.class);
+        bind(I27.class).to(Impl27.class);
+        bind(I28.class).to(Impl28.class);
+        bind(I29.class).to(Impl29.class);
+        bind(I30.class).to(Impl30.class);
+        bind(I31.class).to(Impl31.class);
+        bind(I32.class).to(Impl32.class);
+        bind(I33.class).to(Impl33.class);
+        bind(I34.class).to(Impl34.class);
+        bind(I35.class).to(Impl35.class);
+        bind(I36.class).to(Impl36.class);
+        bind(I37.class).to(Impl37.class);
+        bind(I38.class).to(Impl38.class);
+        bind(I39.class).to(Impl39.class);
+        bind(I40.class).to(Impl40.class);
+        bind(I41.class).to(Impl41.class);
+        bind(I42.class).to(Impl42.class);
+        bind(I43.class).to(Impl43.class);
+        bind(I44.class).to(Impl44.class);
+        bind(I45.class).to(Impl45.class);
+        bind(I46.class).to(Impl46.class);
+        bind(I47.class).to(Impl47.class);
+        bind(I48.class).to(Impl48.class);
+        bind(I49.class).to(Impl49.class);
+        bind(I50.class).to(Impl50.class);
+        bind(I51.class).to(Impl51.class);
+        bind(I52.class).to(Impl52.class);
+        bind(I53.class).to(Impl53.class);
+        bind(I54.class).to(Impl54.class);
+        bind(I55.class).to(Impl55.class);
+        bind(I56.class).to(Impl56.class);
+        bind(I57.class).to(Impl57.class);
+        bind(I58.class).to(Impl58.class);
+        bind(I59.class).to(Impl59.class);
+        bind(I60.class).to(Impl60.class);
+        bind(I61.class).to(Impl61.class);
+        bind(I62.class).to(Impl62.class);
+        bind(I63.class).to(Impl63.class);
+        bind(I64.class).to(Impl64.class);
+        bind(I65.class).to(Impl65.class);
+        bind(I66.class).to(Impl66.class);
+        bind(I67.class).to(Impl67.class);
+        bind(I68.class).to(Impl68.class);
+        bind(I69.class).to(Impl69.class);
+        bind(I70.class).to(Impl70.class);
+        bind(I71.class).to(Impl71.class);
+        bind(I72.class).to(Impl72.class);
+        bind(I73.class).to(Impl73.class);
+        bind(I74.class).to(Impl74.class);
+        bind(I75.class).to(Impl75.class);
+        bind(I76.class).to(Impl76.class);
+        bind(I77.class).to(Impl77.class);
+        bind(I78.class).to(Impl78.class);
+        bind(I79.class).to(Impl79.class);
+        bind(I80.class).to(Impl80.class);
+        bind(I81.class).to(Impl81.class);
+        bind(I82.class).to(Impl82.class);
+        bind(I83.class).to(Impl83.class);
+        bind(I84.class).to(Impl84.class);
+        bind(I85.class).to(Impl85.class);
+        bind(I86.class).to(Impl86.class);
+        bind(I87.class).to(Impl87.class);
+        bind(I88.class).to(Impl88.class);
+        bind(I89.class).to(Impl89.class);
+        bind(I90.class).to(Impl90.class);
+        bind(I91.class).to(Impl91.class);
+        bind(I92.class).to(Impl92.class);
+        bind(I93.class).to(Impl93.class);
+        bind(I94.class).to(Impl94.class);
+        bind(I95.class).to(Impl95.class);
+        bind(I96.class).to(Impl96.class);
+        bind(I97.class).to(Impl97.class);
+        bind(I98.class).to(Impl98.class);
+        bind(I99.class).to(Impl99.class);
+    }
+}
+
+public class guice {
+    public static void main(String[] args) {
+        Injector injector = Guice.createInjector(new Module());        
+        injector.getInstance(BigComplexity.class);
+    }
+}
+

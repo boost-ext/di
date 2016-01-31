@@ -167,7 +167,8 @@ $(document).ready(function () {
     $('img[alt="CPP(SPLIT)"]').each(function () {
         var file = $(this).attr('src');
         var basename = $(this).attr('src').split('/')[$(this).attr('src').split('/').length - 1];
-        var name = basename.replace(".cpp", "");
+        var name = basename.replace(".cpp", "").replace(/_/g, " ");
+        name = name.charAt(0).toUpperCase() + name.substring(1);
 		var begin = "//<-";
 		var end = "//->";
 		var example = get_cpp_file(file);
@@ -200,6 +201,6 @@ $(document).ready(function () {
 		var id = gid++;
 		example = $('<div/>').text(example_result.replace(/[\n]{3,}/g, "\n").slice(0, -1)).html();
 		test = $('<div/>').text(test_result.replace(/[\n]{3,}/g, "\n").slice(0, -1)).html();
-        $(this).replaceWith('<button class="btn btn-neutral float-right" id="run_it_btn_' + id + '" onclick="cpp(' + id + ', \'' + file + '\', \'Run this code!\')">Run this code!</button><textarea style="display: none" id="code_' + id + '"></textarea><br /><textarea style="display: none" id="output_' + id + '"></textarea><div id="code_listing_' + id + '"><table style="table-layout: fixed; border-collapse:collapse; padding:0; height: 30px; width: 100%; border: 1px;"><thead style="background: #edf0f2;"><tr><th>' + name + '</th><th>Test</th></tr></thead><tbody><tr><td><pre><code class="cpp" style="height: 400px;">' + example + '</code></pre></td><td><pre><code class="cpp" style="height: 400px;">' + test + '</code></pre></td></tr></tbody></table></div>');
+        $(this).replaceWith('<button class="btn btn-neutral float-right" id="run_it_btn_' + id + '" onclick="cpp(' + id + ', \'' + file + '\', \'Run this code!\')">Run this code!</button><textarea style="display: none" id="code_' + id + '"></textarea><br /><textarea style="display: none" id="output_' + id + '"></textarea><div id="code_listing_' + id + '"><table style="table-layout: fixed; border-collapse:collapse; padding:0; height: 30px; width: 100%; border: 1px;"><thead><tr><th>' + name + '</th><th>Test</th></tr></thead><tbody><tr><td><pre><code class="cpp" style="height: 400px;">' + example + '</code></pre></td><td><pre><code class="cpp" style="height: 400px;">' + test + '</code></pre></td></tr></tbody></table></div>');
     });
 });
