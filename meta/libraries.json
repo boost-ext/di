@@ -1,9 +1,0 @@
-{
-    "key": "di",
-    "name": "Boost.DI",
-    "authors": [ "Krzysztof Jusiak" ],
-    "maintainers": [ "krzysztof at jusiak dot net" ],
-    "description": "Boost.DI is C++14 header only library providing compile time constructor dependency injection.",
-    "std": [ "14" ],
-    "category": [ "Design Patterns" ]
-}

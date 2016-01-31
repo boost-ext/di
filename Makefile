@@ -54,7 +54,7 @@ check_static_analysis:
 	@$(CLANG_TIDY) -header-filter='boost/di' `find example test -type f -iname "*.cpp"` -- -std=c++1y -I include -I test -include common/test.hpp
 
 doc:
-	cd doc && $(MKDOCS) build --clean && $(PYTHON) boost/scripts/update_readme_toc.py mkdocs.yml ../README.md http://boost-experimental.github.io/di
+	cd doc && $(MKDOCS) build --clean && $(PYTHON) boost/scripts/update_readme_toc.py mkdocs.yml ../README.md http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html
 
 release: all check
 
