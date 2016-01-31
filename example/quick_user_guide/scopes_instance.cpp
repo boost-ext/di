@@ -46,6 +46,7 @@ int main() {
       return b ? (const std::shared_ptr<impl2>&)injector : nullptr; })
   );
   // clang-format on
+
   assert(42 == injector.create<int>());
   assert(injector.create<std::shared_ptr<i1>>() == injector.create<std::shared_ptr<i1>>());
   assert(l == injector.create<long&>());
