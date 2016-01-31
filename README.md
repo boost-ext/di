@@ -5,10 +5,14 @@
 <a href="https://coveralls.io/r/boost-experimental/di?branch=cpp14" target="_blank">![Coveralls](http://img.shields.io/coveralls/boost-experimental/di/cpp14.svg)</a>
 <a href="http://github.com/boost-experimental/di/issues" target="_blank">![Github Issues](https://img.shields.io/github/issues/boost-experimental/di.svg)</a>
 
-Boost.DI: C++ Dependency Injection
-===============================================
+---------------------------------------
+
+#Experimental Boost.DI
+
+Your C++14 header only dependency injection library with no dependencies ([__Try it online!__](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/examples/index.html#hello-world)
 
 > **"Let's make some coffee!"**
+
 <p align="center"><img src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/coffee_maker.png" alt="coffee maker"/></p>
 ```cpp
 No Dependency injection                 | Dependency Injection
