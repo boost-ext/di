@@ -66,23 +66,8 @@ test-suite example :
     [ example multiple_bindings.cpp ]
     [ example multiple_interfaces.cpp ]
     [ example pool_provider.cpp ]
-;
 
-test-suite extensions :
-    [ example extensions/bindings/constructor_bindings.cpp ]
-    [ example extensions/injections/assisted_injection.cpp ]
-    [ example extensions/injections/concepts.cpp ]
-    [ example extensions/injections/lazy.cpp ]
-    [ example extensions/injections/named_parameters.cpp ]
-    [ example extensions/injections/xml_injection.cpp ]
-    [ example extensions/policies/types_dumper.cpp ]
-    [ example extensions/policies/uml_dumper.cpp ]
-    [ example extensions/providers/mocks_provider.cpp ]
-    [ example extensions/scopes/scoped_scope.cpp ]
-    [ example extensions/scopes/session_scope.cpp ]
-    [ example extensions/scopes/shared_scope.cpp ]
 ;
-
 test-suite introduction :
     [ example introduction/coffee_maker.cpp ]
 ;

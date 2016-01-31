@@ -46,12 +46,12 @@ check_pph: pph
 	@git diff --quiet include/boost/di.hpp
 
 check_style:
-	@find include example test -iname "*.hpp" -or -iname "*.cpp" | xargs $(CLANG_FORMAT) -i
-	@git diff include example test
-	@exit `git ls-files -m include example test | wc -l`
+	@find include example extension test tutorial -iname "*.hpp" -or -iname "*.cpp" | xargs $(CLANG_FORMAT) -i
+	@git diff include example extension test tutorial
+	@exit `git ls-files -m include example extension test tutorial | wc -l`
 
 check_static_analysis:
-	@$(CLANG_TIDY) -header-filter='boost/di' `find example test -type f -iname "*.cpp"` -- -std=c++1y -I include -I test -include common/test.hpp
+	@$(CLANG_TIDY) -header-filter='boost/di' `find example extension test tutorial -type f -iname "*.cpp"` -- -std=c++1y -I include -I test -include common/test.hpp
 
 doc:
 	cd doc && $(MKDOCS) build --clean && $(PYTHON) boost/scripts/update_readme_toc.py mkdocs.yml ../README.md http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html
