@@ -118,6 +118,19 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
     }
 }
 
+function cleanup(str) {
+    text = str.replace(/[\n]{3,}/g, "\n").slice(0, -1);
+    var lines = text.split('\n');
+    var result = '';
+    for(var i = 0; i < lines.length; i++) {
+        if (!i && !lines[i].length) {
+            continue;
+        }
+        result += lines[i] + "\n";
+    }
+    return result;
+}
+
 $(document).ready(function () {
     $('img[alt="CPP"]').each(function () {
         var file = $(this).attr('src');
@@ -186,21 +199,33 @@ $(document).ready(function () {
                 tmp_ignored = 0;
             }
             if (!ignored && line.startsWith("int main()")) {
+                if (example_result.replace(/\n/g, "") == "") {
+                    tmp_ignored = 3;
+                } else {
+                    tmp_ignored = 2;
+                }
+                ignored = 1;
+            } else if (ignored == 3 && !line.length) {
                 tmp_ignored = 2;
                 ignored = 1;
             }
-            if (!line.startsWith("//")) {
+            if (!line.trim().startsWith("//")) {
                 if (!ignored) {
                     example_result += line + '\n';
                 } else if (ignored == 2 && !line.startsWith("}")) {
-                    test_result += line.trim() + '\n';
+                    test_result += line + '\n';
+                } else if (ignored == 3) {
+                    example_result += line + '\n';
                 }
             }
             ignored = tmp_ignored;
         }
 		var id = gid++;
-		example = $('<div/>').text(example_result.replace(/[\n]{3,}/g, "\n").slice(0, -1)).html();
-		test = $('<div/>').text(test_result.replace(/[\n]{3,}/g, "\n").slice(0, -1)).html();
-        $(this).replaceWith('<button class="btn btn-neutral float-right" id="run_it_btn_' + id + '" onclick="cpp(' + id + ', \'' + file + '\', \'Run this code!\')">Run this code!</button><textarea style="display: none" id="code_' + id + '"></textarea><br /><textarea style="display: none" id="output_' + id + '"></textarea><div id="code_listing_' + id + '"><table style="table-layout: fixed; border-collapse:collapse; padding:0; height: 30px; width: 100%; border: 1px;"><thead><tr><th>' + name + '</th><th>Test</th></tr></thead><tbody><tr><td><pre><code class="cpp" style="height: 400px;">' + example + '</code></pre></td><td><pre><code class="cpp" style="height: 400px;">' + test + '</code></pre></td></tr></tbody></table></div>');
+        var ex = cleanup(example_result);
+        var ts = cleanup(test_result);
+        var height = Math.max(ex.split("\n").length, ts.split("\n").length) * 25;
+		example = $('<div/>').text(ex).html();
+		test = $('<div/>').text(ts).html();
+        $(this).replaceWith('<button class="btn btn-neutral float-right" id="run_it_btn_' + id + '" onclick="cpp(' + id + ', \'' + file + '\', \'Run this code!\')">Run this code!</button><textarea style="display: none" id="code_' + id + '"></textarea><br /><textarea style="display: none" id="output_' + id + '"></textarea><div id="code_listing_' + id + '"><table style="table-layout: fixed; border-collapse:collapse; padding:0; height: 30px; width: 100%; border: 1px;"><thead><tr><th>' + name + '</th><th>Test</th></tr></thead><tbody><tr><td><pre><code class="cpp" style="height: ' + height + 'px;">' + example + '</code></pre></td><td><pre><code class="cpp" style="height: ' + height + 'px;">' + test + '</code></pre></td></tr></tbody></table></div>');
     });
 });
