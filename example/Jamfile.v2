@@ -129,6 +129,3 @@ test-suite quick_user_guide :
     [ example quick_user_guide/scopes_unique.cpp ]
 ;
 
-test-suite tutorial :
-;
-

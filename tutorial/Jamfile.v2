@@ -1,0 +1,40 @@
+#
+# Copyright (c) 2012-2016 Krzysztof Jusiak (krzysztof at jusiak dot net)
+#
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#
+import testing ;
+import feature : extend-feature compose ;
+
+.argv = [ modules.peek : ARGV ] ;
+
+project boost.di :
+    requirements
+        <include>../include
+        <include>.
+;
+
+rule tutorial ( src + : cxxflags * : property * ) {
+    cxx_flags = "" ;
+    if $(cxxflags) {
+        cxx_flags = "$(cxxflags)" ;
+    }
+
+    toolset =
+        <toolset>gcc:<cxxflags>"-std=c++1y -fno-exceptions -Wall -Wextra -Werror $(cxx_flags)"
+        <toolset>gcc-6.0.0:<cxxflags>"-std=c++1z"
+        <toolset>clang:<cxxflags>"-std=c++1y -Wno-dollar-in-identifier-extension -fno-exceptions -pedantic -pedantic-errors -Wall -Wextra -Werror $(cxx_flags)"
+        <toolset>darwin:<cxxflags>"-std=c++1y -fno-exceptions -pedantic -pedantic-errors -Wall -Wextra -Werror $(cxx_flags)"
+        <toolset>msvc:<cxxflags>"/W3 $(cxx_flags)"
+    ;
+
+    local memcheck = [ MATCH --memcheck=(.*) : $(.argv) ] ;
+
+    if ${memcheck} {
+        toolset += <testing.launcher>$(memcheck) ;
+    }
+
+    run $(src) : : : $(toolset) : $(property) ;
+}
+

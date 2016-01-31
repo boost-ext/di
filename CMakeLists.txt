@@ -21,5 +21,7 @@ else()
 endif()
 
 add_subdirectory(example)
+add_subdirectory(extension)
+add_subdirectory(tutorial)
 add_subdirectory(test)
 

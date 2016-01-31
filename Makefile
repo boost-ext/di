@@ -19,6 +19,8 @@ all: all_$(BS)
 all_bjam:
 	@cd test && bjam -j2 -q --toolset=$(TOOLSET) --user-config=../.user-config.jam debug-symbols=off $(VARIANT) $($(MEMCHECK)) cxxflags=" $(CXXFLAGS)" linkflags=" $(LDFLAGS)"
 	@cd example && bjam -j2 -q --toolset=$(TOOLSET) --user-config=../.user-config.jam debug-symbols=off $($(MEMCHECK)) cxxflags=" $(CXXFLAGS)" linkflags=" $(LDFLAGS)"
+	@cd extension && bjam -j2 -q --toolset=$(TOOLSET) --user-config=../.user-config.jam debug-symbols=off $($(MEMCHECK)) cxxflags=" $(CXXFLAGS)" linkflags=" $(LDFLAGS)"
+	@cd tutorial && bjam -j2 -q --toolset=$(TOOLSET) --user-config=../.user-config.jam debug-symbols=off $($(MEMCHECK)) cxxflags=" $(CXXFLAGS)" linkflags=" $(LDFLAGS)"
 
 all_cmake:
 	@-mkdir build
