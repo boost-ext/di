@@ -6,7 +6,7 @@
 #
 function(example example)
     string(REPLACE "/" "_" tmp ${example})
-    add_executable(example.${tmp} ${CMAKE_CURRENT_LIST_DIR}/${example})
+    add_executable(example.${tmp} ${CMAKE_CURRENT_LIST_DIR}/${example}.cpp)
     add_test(example.${tmp} example.${tmp})
 endfunction()
 
