@@ -10,6 +10,8 @@ BS?=cmake
 TOOLSET?=clang
 CLANG_FORMAT?=clang-format
 CLANG_TIDY?=clang-tidy
+PYTHON?=python
+MKDOCS?=mkdocs
 GENERATOR?="Unix Makefiles"
 
 .PHONY: all clean doc
@@ -52,7 +54,7 @@ check_static_analysis:
 	@$(CLANG_TIDY) -header-filter='boost/di' `find example test -type f -iname "*.cpp"` -- -std=c++1y -I include -I test -include common/test.hpp
 
 doc:
-	@cd doc && bjam -j2 -q && TRY_IT_ONLINE=ON scripts/update_html.sh
+	cd doc && $(MKDOCS) build --clean && $(PYTHON) boost/scripts/update_readme_toc.py mkdocs.yml ../README.md http://boost-experimental.github.io/di
 
 release: all check
 
