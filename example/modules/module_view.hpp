@@ -4,8 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
-//[module_view_hpp
 //<-
 #ifndef MODULE_VIEW_HPP
 #define MODULE_VIEW_HPP
@@ -22,5 +20,3 @@ di::injector<view&> module_view() noexcept;
 //<-
 #endif
 //->
-
-//]

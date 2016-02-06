@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
 //<-
 #include <cassert>
 #include <memory>
@@ -13,6 +12,7 @@
 
 namespace di = boost::di;
 
+//<-
 struct interface {
   virtual ~interface() noexcept = default;
   virtual void dummy1() = 0;
@@ -41,6 +41,7 @@ class lazy {
   const void *injector_ = nullptr;
   T (*f)(const void *) = nullptr;
 };
+//->
 
 /*<<example `example` class>>*/
 class example {
@@ -58,10 +59,13 @@ class example {
 
 int main() {
   /*<<define injector>>*/
-  auto injector = di::make_injector(di::bind<interface>().to<type_expensive_to_create>());
+  // clang-format off
+  auto injector = di::make_injector(
+    di::bind<interface>().to<type_expensive_to_create>()
+  );
+  // clang-format on
 
   /*<<create `example`>>*/
   auto object = injector.create<example>();
   object.initialize();
 }
-

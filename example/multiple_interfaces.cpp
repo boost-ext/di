@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
 //<-
 #include <cassert>
 #include <memory>
@@ -34,8 +33,11 @@ class multiple_interfaces {
 
 int main() {
   /*<<create injector with binding `implementation` to `interface1` and `interface2` using `di::any_of`>>*/
-  auto injector = di::make_injector(di::bind<interface1, interface2>().to<implementation>());
+  // clang-format off
+  auto injector = di::make_injector(
+    di::bind<interface1, interface2>().to<implementation>()
+  );
+  // clang-format on
 
   injector.create<multiple_interfaces>();
 }
-

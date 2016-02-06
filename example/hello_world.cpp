@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
 //<-
 #include <cassert>
 #include <string>
@@ -59,12 +58,16 @@ class hello_world {
 
 int main() {
   /*<<make injector configuration>>*/
-  auto injector =
-      di::make_injector(di::bind<ilogger>().to<logger>(), di::bind<ilogic>().to<logic>(), di::bind<bool>().to(true));
+  // clang-format off
+  auto injector = di::make_injector(
+    di::bind<ilogger>().to<logger>()
+  , di::bind<ilogic>().to<logic>()
+  , di::bind<bool>().to(true)
+  );
+  // clang-format on
 
   /*<<create `hello_world` and run [pre
       hello world
   ]>>*/
   return injector.create<hello_world>().run();
 }
-

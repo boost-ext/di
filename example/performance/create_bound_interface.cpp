@@ -4,13 +4,16 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+//<-
 #include <cstdlib>
 #include <string>
 #include <memory>
+//->
 #include <boost/di.hpp>
 
 namespace di = boost::di;
 
+//<-
 struct interface {
   virtual ~interface() noexcept = default;
   virtual void dummy() = 0;
@@ -18,9 +21,15 @@ struct interface {
 struct implementation : interface {
   void dummy() override {}
 };
+//->
 
 auto test() {
-  auto injector = di::make_injector(di::bind<interface>().to<implementation>());
+  // clang-format off
+  auto injector = di::make_injector(
+    di::bind<interface>().to<implementation>()
+  );
+  // clang-format on
+
   return injector.create<std::unique_ptr<interface>>();
 }
 

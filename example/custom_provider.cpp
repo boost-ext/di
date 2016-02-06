@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
 //<-
 #include <cassert>
 #include <memory>
@@ -58,9 +57,13 @@ class config : public di::config {
 
 int main() {
   /*<<make injector with simple configuration>>*/
-  auto injector = di::make_injector<config>(di::bind<int>().to(42), di::bind<interface>().to<implementation>());
+  // clang-format off
+  auto injector = di::make_injector<config>(
+    di::bind<int>().to(42)
+  , di::bind<interface>().to<implementation>()
+  );
+  // clang-format on
 
   /*<<create `example` using `custom_provider`>>*/
   injector.create<example>();
 }
-

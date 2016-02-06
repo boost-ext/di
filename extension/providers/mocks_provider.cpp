@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
 //<-
 #include <cassert>
 #include <memory>
@@ -12,11 +11,11 @@
 #include <stdexcept>
 #include <typeindex>
 #include <functional>
-
 //->
 #include <boost/di.hpp>
 
 namespace di = boost::di;
+
 //<-
 struct i1 {
   virtual ~i1() noexcept = default;
@@ -170,10 +169,12 @@ test integration_test = [] {
   };
 
   /*<<create injector with `mocks_provider`>>*/
-  auto mi = di::make_injector<mocks_provider>(di::bind<int>().to(87)  // custom value
-                                              ,
-                                              di::bind<i1>().to<impl1>()  // original implementation
-                                              );
+  // clang-format off
+  auto mi = di::make_injector<mocks_provider>(
+    di::bind<int>().to(87) // custom value
+  , di::bind<i1>().to<impl1>() // original implementation
+  );
+  // clang-format on
 
   /*<<set expectations>>*/
   expect(mi, &i2::get).will_return(123);  // fake
@@ -185,4 +186,3 @@ test integration_test = [] {
 /*<<`mock_provider` is just a simple mock framework - to check out di integration with full mock support framework see:
  * [@https://github.com/krzysztof-jusiak/mocks_injector]>>*/
 int main() {}
-

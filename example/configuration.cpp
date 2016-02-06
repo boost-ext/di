@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
 //<-
 #include <cassert>
 #include <iostream>
@@ -21,4 +20,3 @@ int main() {
 #endif
   std::cout << " version of boost.di [" << BOOST_DI_VERSION << "]" << std::endl;
 }
-

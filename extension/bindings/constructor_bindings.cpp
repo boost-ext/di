@@ -4,18 +4,17 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
-
-#include <boost/di.hpp>
-
-namespace di = boost::di;
-
 //<-
 #include <cassert>
 #include <string>
 #include <memory>
 #include <tuple>
+//->
+#include <boost/di.hpp>
 
+namespace di = boost::di;
+
+//<-
 struct interface {
   virtual ~interface() noexcept = default;
   virtual void dummy() = 0;
@@ -37,7 +36,6 @@ struct constructor_impl {
 
 template <class... TCtor>
 struct constructor : constructor_impl<TCtor...> {};
-
 //->
 
 /*<<normal constructor - to_constructor binding is not needed for it>>*/
@@ -75,18 +73,21 @@ struct variadic {
 };
 
 int main() {
+  // clang-format off
+  /*<<define constructor types>>*/
   auto injector = di::make_injector(
-      /*<<define constructor types>>*/
-      di::bind<ctor>().to(constructor<int, std::string, std::unique_ptr<interface>>()),
-      di::bind<ambiguous_ctor>().to(constructor<int, std::string>()),
-      di::bind<variadic>().to(constructor<int, std::string, std::unique_ptr<interface>>()),
+    di::bind<ctor>().to(constructor<int, std::string, std::unique_ptr<interface>>())
+  , di::bind<ambiguous_ctor>().to(constructor<int, std::string>())
+  , di::bind<variadic>().to(constructor<int, std::string, std::unique_ptr<interface>>())
 
       /*<<additional bindings>>*/
-      di::bind<interface>().to<implementation>(), di::bind<int>().to(2), di::bind<std::string>().to("hello"));
+  , di::bind<interface>().to<implementation>()
+  , di::bind<int>().to(2), di::bind<std::string>().to("hello")
+  );
+  // clang-format on
 
   /*<<create types using defined constructors>>*/
   injector.create<ctor>();
   injector.create<ambiguous_ctor>();
   injector.create<variadic>();
 }
-

@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
 //<-
 #include <cassert>
 #include <memory>
@@ -74,7 +73,11 @@ auto my_session = [] {};
 
 int main() {
   {
-    auto injector = di::make_injector(di::bind<interface1>().to<implementation1>().in(session(my_session)));
+    // clang-format off
+    auto injector = di::make_injector(
+      di::bind<interface1>().to<implementation1>().in(session(my_session))
+    );
+    // clang-format on
     assert(!injector.create<std::shared_ptr<interface1>>());
 
     {
@@ -86,8 +89,12 @@ int main() {
   }
 
   {
+    // clang-format off
     di::injector<std::shared_ptr<interface1>> injector =
-        di::make_injector(di::bind<interface1>().to<implementation1>().in(session(my_session)));
+      di::make_injector(
+        di::bind<interface1>().to<implementation1>().in(session(my_session))
+      );
+    // clang-format on
     assert(!injector.create<std::shared_ptr<interface1>>());
 
     {
@@ -98,4 +105,3 @@ int main() {
     assert(!injector.create<std::shared_ptr<interface1>>());
   }
 }
-

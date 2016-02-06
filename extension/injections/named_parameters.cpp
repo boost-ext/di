@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
 //<-
 #include <cassert>
 #include <memory>
@@ -72,9 +71,9 @@ constexpr pair get_name_impl(const char* input, int begin, int n = 0, int quote 
                                                                                 quote == 1 ? n + 1 : n, quote)));
 }
 
-constexpr pair get_name(const char* input, int N, int Q = 0, int i = 0) {
-  return Q == N ? get_name_impl(input + 1, i + 1)
-                : (*input ? (*input == ',' ? get_name(input + 1, N, Q + 1, i + 1) : get_name(input + 1, N, Q, i + 1))
+constexpr pair get_name(const char* input, int N, int c = 0, int i = 0) {
+  return c == N ? get_name_impl(input + 1, i + 1)
+                : (*input ? (*input == ',' ? get_name(input + 1, N, c + 1, i + 1) : get_name(input + 1, N, c, i + 1))
                           : pair{0, 0});
 }
 
@@ -154,12 +153,18 @@ struct example {
 };
 
 int main() {
+  // clang-format off
+  /*<<bind named parameters>>*/
   auto injector = di::make_injector(
-      /*<<bind named parameters>>*/
-      di::bind<int>.to(42), di::bind<interface>.to<implementation>(), di::bind<int>.named("my_value"_s).to(87));
+    di::bind<int>.to(42)
+  , di::bind<interface>.to<implementation>()
+  , di::bind<int>.named("my_value"_s).to(87)
+  );
+  // clang-format on
 
   injector.create<example>();
 }
 
-
+//<-
 #endif
+//->

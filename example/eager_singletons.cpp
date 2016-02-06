@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
 //<-
 #include <cassert>
 #include <memory>
@@ -13,6 +12,7 @@
 
 namespace di = boost::di;
 
+//<-
 class interface {
  public:
   virtual ~interface() noexcept = default;
@@ -28,10 +28,6 @@ class implementation : public interface {
     static auto calls = 0;
     return calls;
   }
-};
-
-auto configuration = [] {
-  return di::make_injector(di::bind<interface>().to<implementation>().in(di::singleton), di::bind<int>().to(42));
 };
 
 template <class TDependency, class TInjector,
@@ -53,6 +49,16 @@ template <class TInjector>
 void eager_singletons(const TInjector& injector) {
   create_singletons_eagerly(typename TInjector::deps{}, injector);
 }
+//->
+
+auto configuration = [] {
+  // clang-format off
+  return di::make_injector(
+    di::bind<interface>().to<implementation>().in(di::singleton)
+  , di::bind<int>().to(42)
+  );
+  // clang-format on
+};
 
 struct example {
   example(int i, std::shared_ptr<interface> object) {
@@ -74,4 +80,3 @@ int main() {
   injector.create<example>();
   assert(1 == implementation::ctor_calls());
 }
-

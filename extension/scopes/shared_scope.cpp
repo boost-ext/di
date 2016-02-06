@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
 //<-
 #include <cassert>
 #include <memory>
@@ -68,27 +67,37 @@ class example {
 
 int main() {
   {
-    auto injector =
-        di::make_injector(di::bind<interface1>().to<implementation1>().in(shared),  // di::unique will fail (sp1 == sp2)
-                          di::bind<interface1>().to<implementation2>().named(name).in(shared));
+    // clang-format off
+    auto injector = di::make_injector(
+      di::bind<interface1>().to<implementation1>().in(shared)  // di::unique will fail (sp1 == sp2)
+    , di::bind<interface1>().to<implementation2>().named(name).in(shared)
+    );
+    // clang-format on
     injector.create<example>();
   }
 
   {
+    // clang-format off
     di::injector<std::shared_ptr<interface1>> injector =
-        di::make_injector(di::bind<interface1>().to<implementation1>().in(shared));
+      di::make_injector(
+        di::bind<interface1>().to<implementation1>().in(shared)
+      );
+    // clang-format on
 
     injector.create<std::shared_ptr<interface1>>();
     // injector.create<std::unique_ptr<interface1>>(); // error, std::unique_ptr<interface1> is not exposed
   }
 
   {
+    // clang-format off
     di::injector<BOOST_DI_EXPOSE((named = name)std::shared_ptr<interface1>), std::shared_ptr<interface1>> injector =
-        di::make_injector(di::bind<interface1>().to<implementation1>().in(shared).named(name),
-                          di::bind<interface1>().to<implementation2>().in(shared).named(name)[di::override],
-                          di::bind<interface1>().to<implementation1>().in(shared));
+        di::make_injector(
+          di::bind<interface1>().to<implementation1>().in(shared).named(name)
+        , di::bind<interface1>().to<implementation2>().in(shared).named(name)[di::override]
+        , di::bind<interface1>().to<implementation1>().in(shared)
+        );
+    // clang-format on
 
     injector.create<example>();
   }
 }
-

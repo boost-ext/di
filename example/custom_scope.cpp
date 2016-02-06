@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
 //<-
 #include <cassert>
 #include <memory>
@@ -56,7 +55,11 @@ struct example {
 
 int main() {
   /*<<create injector with `int` in `custom scope`>>*/
-  auto injector = di::make_injector(di::bind<int>().in(custom_scope{}));
+  // clang-format off
+  auto injector = di::make_injector(
+    di::bind<int>().in(custom_scope{})
+  );
+  // clang-format on
+
   assert(injector.create<example>().sp_);
 }
-

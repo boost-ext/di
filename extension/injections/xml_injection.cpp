@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
 //<-
 #include <memory>
 #include <cassert>
@@ -75,9 +74,21 @@ template <class... TImpl>
 struct xml : inject_from_xml<TImpl...> {};
 //->
 
-auto module = [] { return di::make_injector(di::bind<ixml_parser>().to<xml_parser_stub>()); };
+auto module = [] {
+  // clang-format off
+  return di::make_injector(
+    di::bind<ixml_parser>().to<xml_parser_stub>()
+  );
+  // clang-format on
+};
 
-auto xml_module = [] { return di::make_injector(di::bind<interface>().to(xml<implementation1, implementation2>())); };
+auto xml_module = [] {
+  // clang-format off
+  return di::make_injector(
+    di::bind<interface>().to(xml<implementation1, implementation2>())
+  );
+  // clang-format on
+};
 
 int main() {
   /*<<make injector>>*/
@@ -103,4 +114,3 @@ int main() {
     assert(!object.get());
   }
 }
-

@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
 //<-
 #include <cassert>
 //->
@@ -88,8 +87,13 @@ class annotations3 {
 int main() {
   {
     /*<<make injector and bind named parameters>>*/
-    auto injector =
-        di::make_injector(di::bind<int>().named(int_1).to(42), di::bind<int>().named(int_2).to(87), di::bind<int>().to(123));
+    // clang-format off
+    auto injector = di::make_injector(
+      di::bind<int>().named(int_1).to(42)
+    , di::bind<int>().named(int_2).to(87)
+    , di::bind<int>().to(123)
+    );
+    // clang-format on
 
     /*<<create `annotations`>>*/
     injector.create<annotations1>();
@@ -101,8 +105,13 @@ int main() {
   //->
   {
     /*<<make injector and bind named parameters>>*/
-    auto injector = di::make_injector(di::bind<int>().named("int1"_s).to(42), di::bind<int>().named("int2"_s).to(87),
-                                      di::bind<int>().to(123));
+    // clang-format off
+    auto injector = di::make_injector(
+      di::bind<int>().named("int1"_s).to(42)
+    , di::bind<int>().named("int2"_s).to(87)
+    , di::bind<int>().to(123)
+    );
+    // clang-format on
 
     /*<<create `annotations`>>*/
     injector.create<annotations3>();
@@ -111,4 +120,3 @@ int main() {
 #endif
   //->
 }
-

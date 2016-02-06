@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
 //<-
 #include <cassert>
 #include <memory>
@@ -65,17 +64,25 @@ struct app {
 
 int main() {
   float f = 0.f;
-  double d = 0.f;
+  double d = 0.0;
 
   /*<<create injector with `interface` binding to `implementation1`>>*/
   auto config = [] { return di::make_injector(di::bind<interface1>().to<implementation1>()); };
 
   /*<<create injector with configuration>>*/
-  auto injector =
-      di::make_injector(di::bind<interface2>().to<implementation2>(), di::bind<int>().to(42),
-                        di::bind<std::string>().named(some_name).to("some_name"), di::bind<>().to(f), di::bind<>().to(d),
-                        di::bind<std::function<int()>>().to([] { return 87; }), di::bind<>().named(int_name).to(123), config(),
-                        di::bind<interface1>().to(std::make_shared<implementation1_2>())[di::override]);
+  // clang-format off
+  auto injector = di::make_injector(
+    di::bind<interface2>().to<implementation2>()
+  , di::bind<int>().to(42)
+  , di::bind<std::string>().named(some_name).to("some_name")
+  , di::bind<>().to(f)
+  , di::bind<>().to(d)
+  , di::bind<std::function<int()>>().to([] { return 87; })
+  , di::bind<>().named(int_name).to(123)
+  , config()
+  , di::bind<interface1>().to(std::make_shared<implementation1_2>())[di::override]
+  );
+  // clang-format on
 
   /*<<create `service_app`>>*/
   auto service_app = injector.create<app>();
@@ -87,4 +94,3 @@ int main() {
   d = 42.f;
   assert(service_app.d == 42.f);
 }
-

@@ -4,7 +4,9 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+//<-
 #include <memory>
+//->
 #include <boost/di.hpp>
 
 namespace di = boost::di;
@@ -101,7 +103,12 @@ void automatic_di() {
     std::unique_ptr<ipump> pump;
   };
 
-  auto injector = di::make_injector(di::bind<ipump>().to<heat_pump>(), di::bind<iheater>().to<electric_heater>());
+  // clang-format off
+  auto injector = di::make_injector(
+    di::bind<ipump>().to<heat_pump>()
+  , di::bind<iheater>().to<electric_heater>()
+  );
+  // clang-format on
 
   auto cm = injector.create<coffee_maker>();
   cm.brew();

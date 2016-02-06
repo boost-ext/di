@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
 //<-
 #include <boost/di.hpp>
 #include "module_view.hpp"
@@ -19,4 +18,3 @@ int main() {
   auto injector = di::make_injector(module_view(), module_model());
   return injector.create<controller>().run();
 }
-

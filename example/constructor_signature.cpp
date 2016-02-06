@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
 //<-
 #include <cassert>
 #include <memory>
@@ -12,6 +11,7 @@
 #include <boost/di.hpp>
 
 namespace di = boost::di;
+
 //<-
 struct interface1 {
   virtual ~interface1() noexcept = default;
@@ -59,12 +59,16 @@ class example_with_different_parameters_order_and_types {
 
 int main() {
   /*<<make injector>>*/
-  auto injector = di::make_injector(di::bind<interface1>().to<implementation1>(), di::bind<interface2>().to<implementation2>(),
-                                    di::bind<int>().to(42));
+  // clang-format off
+  auto injector = di::make_injector(
+    di::bind<interface1>().to<implementation1>()
+  , di::bind<interface2>().to<implementation2>()
+  , di::bind<int>().to(42)
+  );
+  // clang-format on
 
   /*<create different examples using the same injector configuration>*/
   injector.create<example>();
   injector.create<example_with_different_parameters_order>();
   injector.create<example_with_different_parameters_order_and_types>();
 }
-

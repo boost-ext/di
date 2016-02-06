@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
 //<-
 #include <cassert>
 //->
@@ -34,7 +33,12 @@ struct example2 {
 
 int main() {
   /*<<make injector and bind named parameters>>*/
-  auto injector = di::make_injector(di::bind<int>().to(42), di::bind<double>().to(87.0));
+  // clang-format off
+  auto injector = di::make_injector(
+    di::bind<int>().to(42)
+  , di::bind<double>().to(87.0)
+  );
+  // clang-format on
 
   /*<<create `example1`>>*/
   injector.create<example1>();
@@ -42,4 +46,3 @@ int main() {
   /*<<create `example2`>>*/
   injector.create<example2>();
 }
-

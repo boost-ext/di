@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
 //<-
 #include <memory>
 #include <cassert>
@@ -42,14 +41,30 @@ struct app {
 };
 
 /*<<`module1` configuration>>*/
-auto module1 = [] { return di::make_injector(di::bind<interface>().to<implementation1>()); };
+auto module1 = [] {
+  // clang-format off
+  return di::make_injector(
+    di::bind<interface>().to<implementation1>()
+  );
+  // clang-format on
+};
 
 /*<<`module2` configuration>>*/
-auto module2(const int& i) { return di::make_injector(di::bind<int>().to(i)); }
+auto module2(const int& i) {
+  // clang-format off
+  return di::make_injector(
+    di::bind<int>().to(i)
+  );
+}
+// clang-format on
 
 /*<<module configuration with exposed `data`>>*/
 auto exposed_module = []() -> di::injector<const data&> {
-  return di::make_injector(di::bind<interface>().to<implementation2>());
+  // clang-format off
+  return di::make_injector(
+    di::bind<interface>().to<implementation2>()
+  );
+  // clang-format on
 };
 
 int main() {
@@ -57,12 +72,22 @@ int main() {
   constexpr auto d = 87.0;
 
   /*<<module configuration with movable injector>>*/
-  auto movable_injector = di::make_injector(di::bind<double>().to(d));
+  // clang-format off
+  auto movable_injector = di::make_injector(
+    di::bind<double>().to(d)
+  );
+  // clang-format on
 
   /*<<create injector and pass `module1`, `module2` and `exposed_module`>>*/
-  auto injector = di::make_injector(module1(), module2(i), exposed_module(), std::move(movable_injector));
+  // clang-format off
+  auto injector = di::make_injector(
+    module1()
+  , module2(i)
+  , exposed_module()
+  , std::move(movable_injector)
+  );
+  // clang-format on
 
   /*<<create `app`>>*/
   injector.create<app>();
 }
-

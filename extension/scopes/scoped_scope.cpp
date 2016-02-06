@@ -4,8 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
-//<-
 //<-
 #include <cassert>
 #include <memory>
@@ -87,7 +85,13 @@ struct implementation2 : interface2 {
 };
 //->
 
-auto module = [] { return di::make_injector(di::bind<interface1>().to<implementation1>()); };
+auto module = [] {
+  // clang-format off
+  return di::make_injector(
+    di::bind<interface1>().to<implementation1>()
+  );
+  // clang-format on
+};
 
 int main() {
   assert(!implementation1::ctor_calls());
@@ -101,7 +105,12 @@ int main() {
   assert(1 == implementation1::ctor_calls());
   {
     /*<<create `child_injector` with `module` and binding using scoped singleton scope>>*/
-    auto child_injector = di::make_injector(module(), di::bind<interface2>().to<implementation2>().in(scoped));
+    // clang-format off
+    auto child_injector = di::make_injector(
+      module()
+    , di::bind<interface2>().to<implementation2>().in(scoped)
+    );
+    // clang-format on
     child_injector.create<interface2 &>();
     assert(1 == implementation2::ctor_calls());
   }  // end of scoped
@@ -114,4 +123,3 @@ int main() {
   /*<<`implementation1` will die with the app (static storage)>>*/
   assert(0 == implementation1::dtor_calls());
 }
-

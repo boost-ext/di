@@ -4,7 +4,6 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-
 //<-
 #include <cassert>
 #include <type_traits>
@@ -14,6 +13,7 @@
 
 namespace di = boost::di;
 
+//<-
 #if !defined(__cpp_concepts)
 int main() {}
 #else
@@ -154,6 +154,7 @@ class generics_provider_config : public di::config {
  public:
   static auto provider(...) noexcept { return generics_provider{}; }
 };
+//->
 
 template <typename T>
 concept bool Dummy() {
@@ -179,11 +180,15 @@ struct example {
 };
 
 int main() {
-  auto injector = di::make_injector<generics_provider_config>(di::bind<int>.to(42), di::bind<di::_>.to(87),
-                                                              di::bind<di::_>().named(dummy_concept).to<DummyImpl>());
+  // clang-format off
+  auto injector = di::make_injector<generics_provider_config>(
+    di::bind<int>.to(42)
+  , di::bind<di::_>.to(87)
+  , di::bind<di::_>().named(dummy_concept).to<DummyImpl>()
+  );
+  // clang-format on
 
   injector.create<example>();
 }
 
 #endif
-

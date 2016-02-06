@@ -4,7 +4,9 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+//<-
 #include <memory>
+//->
 #include <boost/di.hpp>
 
 namespace di = boost::di;
@@ -18,4 +20,9 @@ struct example {
   explicit example(std::unique_ptr<interface>) {}
 };
 
-int main() { di::injector<example> injector = di::make_injector(); }
+int main() {
+  // clang-format off
+  di::injector<example> injector = di::make_injector();
+  (void)injector;
+  // clang-format on
+}
