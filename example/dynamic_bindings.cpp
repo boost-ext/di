@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[dynamic_bindings
 //<-
 #include <cassert>
 #include <memory>
@@ -54,4 +53,3 @@ int main() {
   (void)id;
 }
 
-//]

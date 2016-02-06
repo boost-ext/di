@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[uml_dumper
 //<-
 #include <iostream>
 #include <string>
@@ -80,4 +79,3 @@ int main() {
   /*<<output [@images/uml_dumper.png [$images/uml_dumper.png [width 75%] [height 75%] ]]>>*/
 }
 
-//]

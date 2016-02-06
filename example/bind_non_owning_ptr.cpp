@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[automatic_injection
 //<-
 #include <cassert>
 //->
@@ -30,4 +29,3 @@ int main() {
   delete ptr;
 }
 
-//]

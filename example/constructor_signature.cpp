@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[constructor_signature
 //<-
 #include <cassert>
 #include <memory>
@@ -69,4 +68,3 @@ int main() {
   injector.create<example_with_different_parameters_order_and_types>();
 }
 
-//]

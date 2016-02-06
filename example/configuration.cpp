@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[configuration
 //<-
 #include <cassert>
 #include <iostream>
@@ -23,4 +22,3 @@ int main() {
   std::cout << " version of boost.di [" << BOOST_DI_VERSION << "]" << std::endl;
 }
 
-//]

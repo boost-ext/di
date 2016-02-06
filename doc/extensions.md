@@ -14,7 +14,7 @@
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/named_parameters.cpp)
 
 ###XML Injection
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/xml_injection.cpp)
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/xml_injection.cpp)
 
 ###Types Dumper
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/types_dumper.cpp)

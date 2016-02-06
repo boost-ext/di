@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[view_cpp
 //<-
 #include <cassert>
 #include "view.hpp"
@@ -16,4 +15,3 @@ view::view(std::unique_ptr<iwindow> w, std::shared_ptr<ibutton> b) {
   assert(b.get());
 }
 
-//]

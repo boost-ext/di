@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[hello_world
 //<-
 #include <cassert>
 #include <string>
@@ -69,4 +68,3 @@ int main() {
   return injector.create<hello_world>().run();
 }
 
-//]

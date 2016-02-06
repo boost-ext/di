@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[concepts
 //<-
 #include <cassert>
 #include <type_traits>
@@ -188,4 +187,3 @@ int main() {
 
 #endif
 
-//]

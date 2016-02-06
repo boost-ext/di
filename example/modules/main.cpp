@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[main_cpp
 //<-
 #include <boost/di.hpp>
 #include "module_view.hpp"
@@ -21,4 +20,3 @@ int main() {
   return injector.create<controller>().run();
 }
 
-//]

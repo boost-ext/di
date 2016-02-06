@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[scoped_scope
 //<-
 //<-
 #include <cassert>
@@ -116,4 +115,3 @@ int main() {
   assert(0 == implementation1::dtor_calls());
 }
 
-//]

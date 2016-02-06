@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[multiple_interfaces
 //<-
 #include <cassert>
 #include <memory>
@@ -40,4 +39,3 @@ int main() {
   injector.create<multiple_interfaces>();
 }
 
-//]

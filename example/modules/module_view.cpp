@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[module_view_cpp
 //<-
 #include <boost/di.hpp>
 #include "module_view.hpp"
@@ -20,4 +19,3 @@ di::injector<view&> module_view() noexcept {
   return di::make_injector(di::bind<ibutton>().to<button>(), di::bind<iwindow>().to<window>());
 }
 
-//]

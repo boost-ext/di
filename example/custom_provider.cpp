@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[custom_provider
 //<-
 #include <cassert>
 #include <memory>
@@ -65,4 +64,3 @@ int main() {
   injector.create<example>();
 }
 
-//]

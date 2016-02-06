@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[model_cpp
 //<-
 #include <cassert>
 #include <boost/di.hpp>
@@ -18,4 +17,3 @@ model::model(int rows, int colls, std::unique_ptr<iboard> b) {
   assert(b.get());
 }
 
-//]

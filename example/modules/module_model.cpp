@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[module_model_cpp
 //<-
 #include <boost/di.hpp>
 #include "module_model.hpp"
@@ -21,4 +20,3 @@ di::injector<model&> module_model() noexcept {
                            di::bind<int>().named(colls).to(42));
 }
 
-//]

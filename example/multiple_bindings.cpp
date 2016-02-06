@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[multiple_bindings
 //<-
 #include <initializer_list>  // has to be before, due to the bug in clang < 3.7
 //->
@@ -68,4 +67,3 @@ int main() {
   assert(injector.create<std::set<std::shared_ptr<interface>>>().size() == 4);
 }
 
-//]

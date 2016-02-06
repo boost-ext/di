@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[mocks_provider
 //<-
 #include <cassert>
 #include <memory>
@@ -187,4 +186,3 @@ test integration_test = [] {
  * [@https://github.com/krzysztof-jusiak/mocks_injector]>>*/
 int main() {}
 
-//]

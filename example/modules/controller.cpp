@@ -5,7 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-//[controller_cpp
 //<-
 #include "controller.hpp"
 //->
@@ -16,4 +15,3 @@ int controller::run() {
   return 0;
 }
 
-//]
