@@ -43,7 +43,23 @@ di::injector
 
 ***Description***
 
+Injector is a component used for creating dependencies configuration using bindings and resolve requested types. Boost.DI injector might be composed by mixing bindings, modules and other injectors.
+
 ***Semantics***
+
+    template<class... TDeps>
+    class injector {
+    public:
+        using deps = TDeps...;
+
+        explicit injector(const TArgs&...);
+
+        template<class T> requires creatable<T>
+        T create() const noexcept;
+
+        template<class TAction>
+        void call(const TAction&) const noexcept;
+    };
 
 ***Example***
 
