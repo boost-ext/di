@@ -137,7 +137,7 @@
                 <li class="toctree-l3"><a href="#concepts">Concepts</a></li>
                 
             
-                <li class="toctree-l3"><a href="#config">Config</a></li>
+                <li class="toctree-l3"><a href="#configuration">Configuration</a></li>
                 
             
             </ul>
@@ -215,43 +215,337 @@
             <div class="section">
               
                 <h3 id="injector">Injector</h3>
+<pre><code class="cpp">di::injector
+</code></pre>
+
 <p><strong><em>Header</em></strong></p>
-<pre><code>#include &lt;boost/msm-lite.hpp&gt;
+<pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
-<p>Requirements for transition.</p>
-<p><strong><em>Synopsis</em></strong></p>
-<pre><code>template &lt;class T&gt;
-concept bool transitional() {
-  return requires(T transition) {
-    typename T::src_state;
-    typename T::dst_state;
-    typename T::event;
-    typename T::deps;
-    T::has_initial;
-    { transition.execute() } -&gt; bool;
-  }
-}
-</code></pre>
 <p><strong><em>Semantics</em></strong></p>
-<pre><code>transitional&lt;T&gt;
-</code></pre>
 <p><strong><em>Example</em></strong></p>
-<pre><code>using namespace msm;
-auto transition = ("idle"_s == terminate);
-static_assert(transitional&lt;decltype(transition)&gt;::value);
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
+<pre><code class="cpp">di::make_injector
 </code></pre>
-<p><img alt="CPP(BTN)" src="../Run_Transitional_Example|https://raw.githubusercontent.com/boost-experimental/msm-lite/master/example/errors/not_transitional.cpp" /></p>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
 <hr />
 <h3 id="bindings">Bindings</h3>
+<pre><code class="cpp">di::bind
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/bind_interface_to_implementation.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/bind_type_to_value.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/bind_deduce_type_to_value.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/bind_type_to_compile_time_value.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/bind_multiple_interfaces.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/bind_cross_platform.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bindings.cpp" />
+<img alt="CPP(BTN)" src="../Run_Dynamic_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/dynamic_bindings.cpp" />
+<img alt="CPP(BTN)" src="../Run_Multiple_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/multiple_bindings.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
 <h3 id="injections">Injections</h3>
+<pre><code class="cpp">automatic (default)
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_direct.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_aggregate.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
+<pre><code class="cpp">BOOST_DI_INJECT
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_multiple_constructors.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_ambigious_constructors_via_inject.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_ambigious_constructors_via_inject_traits.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
+<pre><code class="cpp">di::ctor_traits
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_ambigious_constructors_via_ctor_traits.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
 <h3 id="annotations">Annotations</h3>
+<pre><code class="cpp">(named = name)
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/annotated_constructor_injection.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/annotated_constructor_injection_with_constructor_definition.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/annotated_constructor_injection_with_ctor_traits.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/annoteded_constructor_injection_with_the_same_names.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
 <h3 id="scopes">Scopes</h3>
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_custom.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
+<pre><code class="cpp">di::deduce (default)
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_deduce_default.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
+<pre><code class="cpp">di::instance (di::bind&lt;&gt;.to(value))
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_instance.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
+<pre><code class="cpp">di::singleton
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_singleton.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
+<pre><code class="cpp">di::unique
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_unique.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
 <h3 id="modules">Modules</h3>
+<pre><code class="cpp">auto module = [] { return di::make_injector(...); };
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/module.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/module_exposed_type.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/module_exposed_many_types.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/module_exposed_annotated_type.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
 <h3 id="providers">Providers</h3>
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/providers_heap_no_throw.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
+<pre><code class="cpp">di::providers::stack_over_heap (default)
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
+<pre><code class="cpp">di::providers::heap
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
 <h3 id="policies">Policies</h3>
+<pre><code class="cpp">di::policies::constructible
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_print_types.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_print_type_extended.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_constructible_global.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
 <h3 id="concepts">Concepts</h3>
-<h3 id="config">Config</h3>
+<pre><code class="cpp">di::concepts::boundable
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
+<pre><code class="cpp">di::concepts::callable
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
+<pre><code class="cpp">di::concepts::configurable
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
+<pre><code class="cpp">di::concepts::creatable
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
+<pre><code class="cpp">di::concepts::providable
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
+<pre><code class="cpp">di::concepts::scopable
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
+<h3 id="configuration">Configuration</h3>
+<pre><code class="cpp">di::config
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Example</em></strong></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
               
             </div>
           </div>
