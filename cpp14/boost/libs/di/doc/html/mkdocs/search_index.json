@@ -317,7 +317,7 @@
         }, 
         {
             "location": "/projects/index.html", 
-            "text": "1. \nExperimental Boost.MSM-lite\n\n\n2. \nAutomatic Mocks Injector", 
+            "text": "1. \nExperimental Boost.MSM-lite\n\n\n2. \nAutomatic Mocks Injector\n\n\n3. \nMatch-3 Game", 
             "title": "Projects"
         }, 
         {
@@ -329,6 +329,11 @@
             "location": "/projects/index.html#2-automatic-mocks-injector", 
             "text": "", 
             "title": "2. Automatic Mocks Injector"
+        }, 
+        {
+            "location": "/projects/index.html#3-match-3-game", 
+            "text": "", 
+            "title": "3. Match-3 Game"
         }, 
         {
             "location": "/CHANGELOG/index.html", 
