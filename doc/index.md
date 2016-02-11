@@ -19,7 +19,7 @@ Introduction
 <a href="https://github.com/boost-experimental/di/releases" class="btn btn-success" style="margin-bottom:8px;" role="button"><span class="fa fa-download"></span>&nbsp; <b>Download</b></a> &nbsp;&nbsp;&nbsp;&nbsp; <a href="CHANGELOG/index.html" class="btn btn-info" style="margin-bottom:8px;" role="button"><span class="fa fa-reorder"></span>&nbsp; <b>Changelog</b></a> &nbsp;&nbsp;&nbsp;&nbsp; <a href="tutorial/index.html" class="btn btn-warning" style="margin-bottom:8px;" role="button"><span class="fa fa-gear"></span>&nbsp; <b>Tutorial</b></a> &nbsp;&nbsp;&nbsp;&nbsp; <a href="examples/index.html" class="btn btn-danger" style="margin-bottom:8px;" role="button"><span class="fa fa-book"></span>&nbsp; <b>Examples</b></a>
 </div>
 
-#What is a Dependency Injection?
+#What is Dependency Injection?
 > "Don't call us, we'll call you", Hollywood principle
 
 **[Dependency Injection](http://www.youtube.com/watch?v=IKD2-MAkXyQ) (DI)** involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state.
@@ -65,11 +65,11 @@ private:                                |         pump->pump();
 * Boost.DI has none or minimal run-time overhead - [Run-time performance](#run_time_performance)
 * Boost.DI compiles fast - [Compile-time performance](#compile_time_performance)
 * Boost.DI gives short diagnostic messages - [Diagnostic messages](#diagnostic_messages)
-* Boost.DI is not intrusive [link to tutorial]
-* Boost.DI reduces boilerplate code [link to tutorial]
-* Boost.DI reduces testing effort [link to tutorial]
-* Boost.DI gives better control of what and how is created [link to tutorial]
-* Boost.DI gives better understanding about objects hierarchy [link to tutorial]
+* Boost.DI is not intrusive
+* Boost.DI reduces boilerplate code
+* Boost.DI reduces testing effort
+* Boost.DI gives better control of what and how is created
+* Boost.DI gives better understanding about objects hierarchy
 
 ###Acknowledgements
 * Thanks to Bartosz Kalinczuk for code review and tips how to improve `Boost.DI`

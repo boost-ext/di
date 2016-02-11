@@ -5,5 +5,3 @@ All code examples include `boost/di.hpp` as well as declare a convienent msm nam
 namespace di = boost::di;
 ```
 
-###1. Create events and states
-

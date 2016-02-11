@@ -55,7 +55,6 @@ private:                                |         pump->pump();
     * [Performance](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/overview/index.html#performance)
     * [Error messages](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/overview/index.html#error-messages)
 * [Tutorial](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/tutorial/index.html)
-    * [1. Create events and states](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/tutorial/index.html#1-create-events-and-states)
 * [Cheatsheet](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/cheatsheet/index.html)
 * [Quick User Guide](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/quick_user_guide/index.html)
 * [User Guide](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/user_guide/index.html)
