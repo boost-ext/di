@@ -271,7 +271,22 @@
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p>Injector is a component used for creating dependencies configuration using bindings and resolve requested types. Boost.DI injector might be composed by mixing bindings, modules and other injectors.</p>
 <p><strong><em>Semantics</em></strong></p>
+<pre><code>template&lt;class... TDeps&gt;
+class injector {
+public:
+    using deps = TDeps...;
+
+    explicit injector(const TArgs&amp;...);
+
+    template&lt;class T&gt; requires creatable&lt;T&gt;
+    T create() const noexcept;
+
+    template&lt;class TAction&gt;
+    void call(const TAction&amp;) const noexcept;
+};
+</code></pre>
 <p><strong><em>Example</em></strong></p>
 <p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp" /></p>
 <p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
