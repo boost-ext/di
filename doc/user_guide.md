@@ -1,3 +1,36 @@
+* [Injector](#injector)
+    * [di::injector]()
+    * [di::make_injector]()
+* [Bindings](#bindings)
+    * [di::bind]()
+* [Injections](#injections)
+    * [automatic (default)]()
+    * [BOOST_DI_INJECT]()
+    * [di::ctor_traits]()
+* [Annotations](#annotations)
+    * [(named = name)]()
+* [Scopes](#scopes)
+    * [di::deduce (default)]()
+    * [di::instance (di::bind<>.to(value))]()
+    * [di::singleton]()
+    * [di::unique]()
+* [Modules](#modules)
+* [Providers](#providers)
+    * [di::providers::stack_over_heap (default)]()
+    * [di::providers::heap]()
+* [Policies](#policies)
+    * [di::policies::constructible]()
+* [Concepts](#concepts)
+    * [di::concepts::boundable]()
+    * [di::concepts::callable]()
+    * [di::concepts::configurable]()
+    * [di::concepts::creatable]()
+    * [di::concepts::providable]()
+    * [di::concepts::scopable]()
+* [Configuration](#configuration)
+
+---
+
 ###Injector
 
 ```cpp
