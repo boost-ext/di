@@ -68,7 +68,7 @@ private:                                |         pump->pump();
     * [Providers](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/user_guide/index.html#providers)
     * [Policies](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/user_guide/index.html#policies)
     * [Concepts](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/user_guide/index.html#concepts)
-    * [Config](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/user_guide/index.html#config)
+    * [Configuration](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/user_guide/index.html#configuration)
 * [Examples](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/examples/index.html)
     * [Hello World](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/examples/index.html#hello-world)
     * [Bindings](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/examples/index.html#bindings)
