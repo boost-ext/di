@@ -61,9 +61,9 @@ Injector is a component used for creating dependencies configuration using bindi
         void call(const TAction&) const noexcept;
     };
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp)
+***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
@@ -83,9 +83,9 @@ di::make_injector
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp)
+***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
@@ -107,14 +107,14 @@ di::bind
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/bind_interface_to_implementation.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/bind_type_to_value.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/bind_deduce_type_to_value.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/bind_type_to_compile_time_value.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/bind_multiple_interfaces.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/bind_cross_platform.cpp)
+***Example***
 
 ![CPP(BTN)](Run_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bindings.cpp)
 ![CPP(BTN)](Run_Dynamic_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/dynamic_bindings.cpp)
@@ -138,10 +138,10 @@ automatic (default)
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_direct.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_aggregate.cpp)
+***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
@@ -161,11 +161,11 @@ BOOST_DI_INJECT
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_multiple_constructors.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_ambigious_constructors_via_inject.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_ambigious_constructors_via_inject_traits.cpp)
+***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
@@ -185,9 +185,9 @@ di::ctor_traits
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_ambigious_constructors_via_ctor_traits.cpp)
+***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
@@ -209,12 +209,12 @@ di::ctor_traits
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/annotated_constructor_injection.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/annotated_constructor_injection_with_constructor_definition.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/annotated_constructor_injection_with_ctor_traits.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/annoteded_constructor_injection_with_the_same_names.cpp)
+***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
@@ -232,9 +232,9 @@ di::ctor_traits
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_custom.cpp)
+***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
@@ -254,9 +254,9 @@ di::deduce (default)
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_deduce_default.cpp)
+***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
@@ -276,9 +276,9 @@ di::instance (di::bind<>.to(value))
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_instance.cpp)
+***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
@@ -298,10 +298,10 @@ di::singleton
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_singleton.cpp)
 
+***Example***
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
 &nbsp;
@@ -320,9 +320,9 @@ di::unique
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_unique.cpp)
+***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
@@ -344,13 +344,13 @@ auto module = [] { return di::make_injector(...); };
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/module.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/module_exposed_type.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/module_exposed_many_types.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/module_exposed_annotated_type.cpp)
 
+***Example***
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
 &nbsp;
@@ -367,10 +367,10 @@ auto module = [] { return di::make_injector(...); };
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/providers_heap_no_throw.cpp)
 
+***Example***
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
 &nbsp;
@@ -389,9 +389,10 @@ di::providers::stack_over_heap (default)
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
+
+***Example***
 
 &nbsp;
 
@@ -409,9 +410,10 @@ di::providers::heap
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
+
+***Example***
 
 &nbsp;
 
@@ -431,11 +433,11 @@ di::policies::constructible
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_print_types.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_print_type_extended.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_constructible_global.cpp)
+***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
@@ -457,9 +459,9 @@ di::concepts::boundable
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp)
+***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
@@ -479,9 +481,9 @@ di::concepts::callable
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp)
+***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
@@ -501,9 +503,9 @@ di::concepts::configurable
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp)
+***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
@@ -523,9 +525,9 @@ di::concepts::creatable
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp)
+***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
@@ -545,9 +547,9 @@ di::concepts::providable
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp)
+***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
@@ -567,9 +569,9 @@ di::concepts::scopable
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp)
+***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
@@ -591,9 +593,9 @@ di::config
 
 ***Semantics***
 
-***Example***
-
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp)
+***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
