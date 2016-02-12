@@ -273,20 +273,115 @@
 <p><strong><em>Description</em></strong></p>
 <p>Injector is a component used for creating dependencies configuration using bindings and resolve requested types. Boost.DI injector might be composed by mixing bindings, modules and other injectors.</p>
 <p><strong><em>Semantics</em></strong></p>
-<pre><code>template&lt;class... TDeps&gt;
+<pre><code>template&lt;class... TDeps&gt; requires boundable&lt;TDeps...&gt;
 class injector {
 public:
-    using deps = TDeps...;
+  using deps; // list of dependencies
+  using config; // configuration
 
-    explicit injector(const TArgs&amp;...);
+  injector(injector&amp;&amp;) = default;
+  template &lt;class... Ts&gt; // no requirements
+  injector(core::injector&lt;Ts...&gt;&amp;&amp;) noexcept;
+  explicit injector(const TDeps&amp;...) noexcept;
 
-    template&lt;class T&gt; requires creatable&lt;T&gt;
-    T create() const noexcept;
+  template&lt;class T&gt; requires creatable&lt;T&gt;
+  T create() const;
 
-    template&lt;class TAction&gt;
-    void call(const TAction&amp;) const noexcept;
+  template &lt;class T&gt; requires creatable&lt;T&gt;
+  operator T() const;
 };
 </code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirement</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TDeps...</code></td>
+<td>[boundable]&lt;TDeps...></td>
+<td>[Bindings] to be used as configuration</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>create&lt;T&gt;()</code></td>
+<td>[creatable]&lt;T></td>
+<td>Creates type <code>T</code></td>
+<td><code>T</code></td>
+</tr>
+<tr>
+<td><code>operator T()</code></td>
+<td>[creatable]&lt;T></td>
+<td>Creates type <code>T</code></td>
+<td><code>T</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Type <code>T</code></th>
+<th>Is allowed?</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>T</code></td>
+<td>✔</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>T*</code></td>
+<td>✔</td>
+<td>Ownerhsip transfer!</td>
+</tr>
+<tr>
+<td><code>const T*</code></td>
+<td>✔</td>
+<td>Ownerhsip transfer!</td>
+</tr>
+<tr>
+<td><code>T&amp;</code></td>
+<td>✔</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>const T&amp;</code></td>
+<td>✔</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>T&amp;&amp;</code></td>
+<td>✔</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>std::unique_ptr&lt;T&gt;</code></td>
+<td>✔</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>std::shared_ptr&lt;T&gt;</code></td>
+<td>✔</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>std::weak_ptr&lt;T&gt;</code></td>
+<td>✔</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>boost_shared_ptr&lt;T&gt;</code></td>
+<td>✔</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp" />
 <strong><em>Example</em></strong></p>
@@ -300,7 +395,38 @@ public:
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p>Creates [injector] type.</p>
 <p><strong><em>Semantics</em></strong></p>
+<pre><code>template&lt;
+  class TConfig = di::config
+, class... TBindings
+&gt; requires boundable&lt;TBindings...&gt; &amp;&amp; configurable&lt;TConfig&gt;
+auto make_injector(const TBindings&amp;...) noexcept;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirement</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TConfig</code></td>
+<td>[configurable]&lt;TConfig></td>
+<td>[Configuration]</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>make_injector(const TBindings&amp;...)</code></td>
+<td>[boundable]&lt;TBindings...></td>
+<td>Creates [injector] with given [Bindings]</td>
+<td>[injector]</td>
+</tr>
+</tbody>
+</table>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp" />
 <strong><em>Example</em></strong></p>
@@ -308,6 +434,8 @@ public:
 <p>&nbsp;</p>
 <hr />
 <h3 id="bindings">Bindings</h3>
+<p>Bindings define dependencies configuration which basically means what types will be created
+and what values will be passed into them.</p>
 <pre><code class="cpp">di::bind
 </code></pre>
 
@@ -315,7 +443,82 @@ public:
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p>Allows to bind interface to implementation and associate value with it.</p>
 <p><strong><em>Semantics</em></strong></p>
+<pre><code>struct override; // overrides given configuration
+
+namespace detail {
+  template&lt;class... Ts&gt; requires boundable&lt;Ts...&gt;
+  struct bind {
+    bind(bind&amp;&amp;) noexcept = default;
+
+    template&lt;class T&gt; requires boundable&lt;T&gt;
+    auto to() noexcept;
+
+    template&lt;class T&gt; requires boundable&lt;T&gt;
+    auto to(T&amp;&amp;) noexcept;
+
+    template&lt;class TScope&gt; requires scopable&lt;TScope&gt;
+    auto in(const TScope&amp; = di::deduce) noexcept;
+
+    template&lt;class TName&gt; // no requirements
+    auto named(const TName&amp; = {}) noexcept;
+
+    auto operator[](const override&amp;) noexcept;
+  };
+} // detail
+
+template&lt;class... Ts&gt; requires boundable&lt;Ts...&gt;
+detail::bind&lt;Ts...&gt; bind{};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirement</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ts...</code></td>
+<td>[boundable]&lt;Ts...></td>
+<td>'Interface' types</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>to&lt;T\&gt;</code></td>
+<td>[boundable]&lt;T></td>
+<td>Binds <code>Ts...</code> to <code>T</code> type</td>
+<td>[boundable]</td>
+</tr>
+<tr>
+<td><code>to(T&amp;&amp;)</code></td>
+<td>[boundable]&lt;T></td>
+<td>Binds <code>Ts...</code> to <code>T</code> object</td>
+<td>[boundable]</td>
+</tr>
+<tr>
+<td><code>in(const TScope&amp;)</code></td>
+<td>[scopable]&lt;TScope></td>
+<td>Binds <code>Ts...</code> into <code>TScope</code></td>
+<td>[boundable]</td>
+</tr>
+<tr>
+<td><code>named(const TName&amp;)</code></td>
+<td>-</td>
+<td>Binds <code>Ts...</code> using 'Named' annotation</td>
+<td>[boundable]</td>
+</tr>
+<tr>
+<td><code>operator[](const override&amp;)</code></td>
+<td>-</td>
+<td>Overrides given binding</td>
+<td>[boundable]</td>
+</tr>
+</tbody>
+</table>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/bind_interface_to_implementation.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/bind_type_to_value.cpp" />
@@ -330,6 +533,8 @@ public:
 <p>&nbsp;</p>
 <hr />
 <h3 id="injections">Injections</h3>
+<p><em>Constructor Injection</em> is the most powerful of available injections.
+It guarantees initialized state of data members. Boost.DI constructor injection is achieved without any additional work from the user.</p>
 <pre><code class="cpp">automatic (default)
 </code></pre>
 
@@ -337,10 +542,42 @@ public:
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p>Boost.DI will deduce the best available constructor to be used for injection - unique constructor with the longest parameter list.
+If the default behavior should be changed constructor has to be explicitly marked with [BOOST_DI_INJECT] or [BOOST_DI_INJECT_TRAITS].</p>
 <p><strong><em>Semantics</em></strong></p>
+<pre><code>class constructor {
+public:
+  constructor(auto parameter1, auto parameter2, ..., auto parameterN);
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirement</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>parameter1-parameterN</code></td>
+<td>-</td>
+<td><code>N</code> constructor parameter</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<pre><code>Automatic constructor parameters deduction is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE, which by defaults is set to 10.
+</code></pre>
+
+<pre><code>Boost.DI is not able to distinguish between ambiguous constructors with the same (longest) amount of parameters.
+</code></pre>
+
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_direct.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_aggregate.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_multiple_constructors.cpp" />
 <strong><em>Example</em></strong></p>
 <p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
 <p>&nbsp;</p>
@@ -352,11 +589,126 @@ public:
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p>BOOST_DI_INJECT is a macro definition used to explicitly say Boost.DI which constructor should be used as well as in order to annotate types - see [annotations] for further reding.
+When class has more than one constructor Boost.DI will by default choose the one with the longest parameter list.
+In case of constructors ambiguity Boost.DI is not able to choose the best one.
+Then BOOST_DI_INJECT become handy to point which constructor should be used.</p>
 <p><strong><em>Semantics</em></strong></p>
+<pre><code>struct T {
+    BOOST_DI_INJECT(T, ...) { }
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirement</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>T</code></td>
+<td>-</td>
+<td>Class type</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>...</code></td>
+<td>-</td>
+<td><code>T</code> constructor parameters</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<pre><code>BOOST_DI_INJECT constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE, which by defaults is set to 10.
+</code></pre>
+
 <p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_multiple_constructors.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_ambigious_constructors_via_inject.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_ambigious_constructors_via_inject_traits.cpp" />
+<strong><em>Example</em></strong></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
+<pre><code class="cpp">BOOST_DI_INJECT_TRAITS
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p>BOOST_DI_INJECT_TRAITS is a macro definition used to define constructor traits.</p>
+<p><strong><em>Semantics</em></strong></p>
+<pre><code>struct T {
+  BOOST_DI_INJECT_TRAITS(...) { }
+  T(...) { }
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirement</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>...</code></td>
+<td>-</td>
+<td><code>T</code> constructor parameters</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<pre><code>BOOST_DI_INJECT_TRAITS constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE, which by defaults is set to 10.
+</code></pre>
+
+<p><strong><em>Test</em></strong>
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_ambigious_constructors_via_inject.cpp" />
+<strong><em>Example</em></strong></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
+<pre><code class="cpp">di::inject
+</code></pre>
+
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p>di::inject informs Boost.DI about constructor parameters. Useful for generated/generic classes as it doesn't have constructor parameters size limitations.</p>
+<p><strong><em>Semantics</em></strong></p>
+<pre><code>struct T {
+  using boost_di_inject__ = di::inject&lt;...&gt;;
+  T(...) {}
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirement</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>...</code></td>
+<td>-</td>
+<td><code>T</code> constructor parameters</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<pre><code>di::inject has no limitations if it comes to constructor parameters, however, named parameters are not allowed.
+</code></pre>
+
+<p><strong><em>Test</em></strong>
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_ambigious_constructors_via_inject.cpp" />
 <strong><em>Example</em></strong></p>
 <p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
 <p>&nbsp;</p>
@@ -376,6 +728,8 @@ public:
 <p>&nbsp;</p>
 <hr />
 <h3 id="annotations">Annotations</h3>
+<p>Annotations are intrusive, additional informations specified along with the type in order to refer to given type by the
+annotation instead of type it self. Useful, when there are more than one type of the same parameters in constructor parameters.</p>
 <pre><code class="cpp">(named = name)
 </code></pre>
 
@@ -383,7 +737,46 @@ public:
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p>Named parameters are useful when constructor has more parameters of the same type.</p>
+<pre><code>  T(int value1, int value2);
+</code></pre>
+
+<p>In order to inject proper values into <code>value1</code> and <code>value2</code> they have to be distinguished somehow.
+Boost.DI solution for that problem are annotations.</p>
+<pre><code>Annotations might be set only when constructor is selected using BOOST_DI_INJECT or BOOST_DI_INJECT_TRAITS.
+</code></pre>
+
 <p><strong><em>Semantics</em></strong></p>
+<pre><code>auto Name = []{}; // just an object
+
+struct T {
+  BOOST_DI_INJECT(T, (named = Name) type type_name [= default_value], ...);
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirement</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Name</code></td>
+<td>-</td>
+<td>Object representing named type</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Example</em></strong></p>
+<pre><code>BOOST_DI_INJECT(T, (named = value_1) int value1, (named = value_2) int value2);
+</code></pre>
+<pre><code>Implementation of constructor doesn't require annotations, which means implementation won't be affected by annotations.
+</code></pre>
+
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/annotated_constructor_injection.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/annotated_constructor_injection_with_constructor_definition.cpp" />
@@ -398,7 +791,149 @@ public:
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p>Scopes are responsible for creating and maintaining life time of dependencies.
+If no scope will be given, deduce scope will be assumed.</p>
 <p><strong><em>Semantics</em></strong></p>
+<pre><code>template &lt;class TExpected, class TGiven&gt;
+struct scope {
+  template &lt;class T&gt;
+  using is_referable;
+
+  template &lt;class T, class TName, class TProvider&gt;
+  static auto try_create(const TProvider&amp;);
+
+  template &lt;class T, class TName, class TProvider&gt;
+  auto create(const TProvider&amp;);
+};
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirement</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TExpected</code></td>
+<td>-</td>
+<td>'Interface' type</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>TGiven</code></td>
+<td>-</td>
+<td>'Implementation' type</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>is_referable&lt;T\&gt;</code></td>
+<td>-</td>
+<td>Verifies whether scope value might be converted to a reference</td>
+<td>std::true_type/std::false_type</td>
+</tr>
+<tr>
+<td><code>try_create&lt;T, TName, TProvider\&gt;</code></td>
+<td>providable&lt;TProvider></td>
+<td>Verifies whether type might be created</td>
+<td>std::true_type/std::false_type</td>
+</tr>
+<tr>
+<td><code>create&lt;T, TName, TProvider\&gt;</code></td>
+<td>providable&lt;TProvider></td>
+<td>Creates type might be created</td>
+<td><code>T</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Type/Scope</th>
+<th>unique</th>
+<th>singleton</th>
+<th>instance</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T</td>
+<td>✔</td>
+<td>-</td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>T&amp;</td>
+<td>-</td>
+<td>✔</td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>const T&amp;</td>
+<td>✔ (temporary)</td>
+<td>✔</td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>T* (transfer ownership)</td>
+<td>✔</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>✔</td>
+</tr>
+<tr>
+<td>const T*</td>
+<td>✔</td>
+<td>-</td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>T&amp;&amp;</td>
+<td>✔</td>
+<td>-</td>
+<td>-</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>unique_ptr<T></td>
+<td>✔</td>
+<td>-</td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>shared_ptr<T></td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>weak_ptr<T></td>
+<td>-</td>
+<td>✔</td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_custom.cpp" />
 <strong><em>Example</em></strong></p>
@@ -412,7 +947,114 @@ public:
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p>Default scope which will be converted to one of the scopes depending on the type.</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Deduced scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T</td>
+<td>unique</td>
+</tr>
+<tr>
+<td>T&amp;</td>
+<td>singleton</td>
+</tr>
+<tr>
+<td>const T&amp;</td>
+<td>unique (temporary)/singleton</td>
+</tr>
+<tr>
+<td>T*</td>
+<td>unique (ownership transfer)</td>
+</tr>
+<tr>
+<td>const T*</td>
+<td>unique (ownership transfer)</td>
+</tr>
+<tr>
+<td>T&amp;&amp;</td>
+<td>unique</td>
+</tr>
+<tr>
+<td>unique_ptr<T></td>
+<td>unique</td>
+</tr>
+<tr>
+<td>shared_ptr<T></td>
+<td>singleton</td>
+</tr>
+<tr>
+<td>weak_ptr<T></td>
+<td>singleton</td>
+</tr>
+</tbody>
+</table>
 <p><strong><em>Semantics</em></strong></p>
+<pre><code>namespace scopes {
+  struct deduce {
+    template &lt;class TExpected, class TGiven&gt;
+    struct scope {
+      template &lt;class T&gt;
+      using is_referable;
+
+      template &lt;class T, class TName, class TProvider&gt;
+      static auto try_create(const TProvider&amp;);
+
+      template &lt;class T, class TName, class TProvider&gt;
+      auto create(const TProvider&amp;);
+    };
+  };
+}
+
+scopes::deduce deduce;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirement</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TExpected</code></td>
+<td>-</td>
+<td>'Interface' type</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>TGiven</code></td>
+<td>-</td>
+<td>'Implementation' type</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>is_referable&lt;T\&gt;</code></td>
+<td>-</td>
+<td>Verifies whether scope value might be converted to a reference</td>
+<td>std::true_type/std::false_type</td>
+</tr>
+<tr>
+<td><code>try_create&lt;T, TName, TProvider\&gt;</code></td>
+<td>providable&lt;TProvider></td>
+<td>Verifies whether type might be created</td>
+<td>std::true_type/std::false_type</td>
+</tr>
+<tr>
+<td><code>create&lt;T, TName, TProvider\&gt;</code></td>
+<td>providable&lt;TProvider></td>
+<td>Creates type might be created</td>
+<td><code>T</code></td>
+</tr>
+</tbody>
+</table>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_deduce_default.cpp" />
 <strong><em>Example</em></strong></p>
@@ -426,7 +1068,103 @@ public:
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p>Scope representing values - passed by user. The life time of the object depends on the user.
+Boost.DI is not managing life time of passed objects, however values and strings will be copied and managed by the library.</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T</td>
+</tr>
+<tr>
+<td>T&amp;</td>
+</tr>
+<tr>
+<td>const T&amp;</td>
+</tr>
+<tr>
+<td>T* (transfer ownership)</td>
+</tr>
+<tr>
+<td>const T*</td>
+</tr>
+<tr>
+<td>T&amp;&amp;</td>
+</tr>
+<tr>
+<td>unique_ptr<T></td>
+</tr>
+<tr>
+<td>shared_ptr<T></td>
+</tr>
+<tr>
+<td>weak_ptr<T></td>
+</tr>
+</tbody>
+</table>
 <p><strong><em>Semantics</em></strong></p>
+<pre><code>namespace scopes {
+  struct instance {
+    template &lt;class TExpected, class TGiven&gt;
+    struct scope {
+      template &lt;class T&gt;
+      using is_referable;
+
+      template &lt;class T, class TName, class TProvider&gt;
+      static auto try_create(const TProvider&amp;);
+
+      template &lt;class T, class TName, class TProvider&gt;
+      auto create(const TProvider&amp;);
+    };
+  };
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirement</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TExpected</code></td>
+<td>-</td>
+<td>'Interface' type</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>TGiven</code></td>
+<td>-</td>
+<td>'Implementation' type</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>is_referable&lt;T\&gt;</code></td>
+<td>-</td>
+<td>Verifies whether scope value might be converted to a reference</td>
+<td>std::true_type/std::false_type</td>
+</tr>
+<tr>
+<td><code>try_create&lt;T, TName, TProvider\&gt;</code></td>
+<td>providable&lt;TProvider></td>
+<td>Verifies whether type might be created</td>
+<td>std::true_type/std::false_type</td>
+</tr>
+<tr>
+<td><code>create&lt;T, TName, TProvider\&gt;</code></td>
+<td>providable&lt;TProvider></td>
+<td>Creates type might be created</td>
+<td><code>T</code></td>
+</tr>
+</tbody>
+</table>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_instance.cpp" />
 <strong><em>Example</em></strong></p>
@@ -440,7 +1178,108 @@ public:
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p>Scope representing shared value between all instances and between threads.
+Singleton scope will be deduced in case of shared_ptr or weak_ptr.</p>
+<pre><code>Singleton scope will convert between std::shared_ptr and boost::shared_ptr if required.
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T</td>
+</tr>
+<tr>
+<td>T&amp;</td>
+</tr>
+<tr>
+<td>const T&amp;</td>
+</tr>
+<tr>
+<td>T* (transfer ownership)</td>
+</tr>
+<tr>
+<td>const T*</td>
+</tr>
+<tr>
+<td>T&amp;&amp;</td>
+</tr>
+<tr>
+<td>unique_ptr<T></td>
+</tr>
+<tr>
+<td>shared_ptr<T></td>
+</tr>
+<tr>
+<td>weak_ptr<T></td>
+</tr>
+</tbody>
+</table>
 <p><strong><em>Semantics</em></strong></p>
+<pre><code>namespace scopes {
+  struct singleton {
+    template &lt;class TExpected, class TGiven&gt;
+    struct scope {
+      template &lt;class T&gt;
+      using is_referable;
+
+      template &lt;class T, class TName, class TProvider&gt;
+      static auto try_create(const TProvider&amp;);
+
+      template &lt;class T, class TName, class TProvider&gt;
+      auto create(const TProvider&amp;);
+    };
+  };
+}
+
+scopes::singleton singleton;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirement</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TExpected</code></td>
+<td>-</td>
+<td>'Interface' type</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>TGiven</code></td>
+<td>-</td>
+<td>'Implementation' type</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>is_referable&lt;T\&gt;</code></td>
+<td>-</td>
+<td>Verifies whether scope value might be converted to a reference</td>
+<td>std::true_type/std::false_type</td>
+</tr>
+<tr>
+<td><code>try_create&lt;T, TName, TProvider\&gt;</code></td>
+<td>providable&lt;TProvider></td>
+<td>Verifies whether type might be created</td>
+<td>std::true_type/std::false_type</td>
+</tr>
+<tr>
+<td><code>create&lt;T, TName, TProvider\&gt;</code></td>
+<td>providable&lt;TProvider></td>
+<td>Creates type might be created</td>
+<td><code>T</code></td>
+</tr>
+</tbody>
+</table>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_singleton.cpp" /></p>
 <p><strong><em>Example</em></strong>
@@ -454,7 +1293,104 @@ public:
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p>Scope representing unique/per request value.</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T</td>
+</tr>
+<tr>
+<td>T&amp;</td>
+</tr>
+<tr>
+<td>const T&amp;</td>
+</tr>
+<tr>
+<td>T* (transfer ownership)</td>
+</tr>
+<tr>
+<td>const T*</td>
+</tr>
+<tr>
+<td>T&amp;&amp;</td>
+</tr>
+<tr>
+<td>unique_ptr<T></td>
+</tr>
+<tr>
+<td>shared_ptr<T></td>
+</tr>
+<tr>
+<td>weak_ptr<T></td>
+</tr>
+</tbody>
+</table>
 <p><strong><em>Semantics</em></strong></p>
+<pre><code>namespace scopes {
+  struct unique {
+    template &lt;class TExpected, class TGiven&gt;
+    struct scope {
+      template &lt;class T&gt;
+      using is_referable;
+
+      template &lt;class T, class TName, class TProvider&gt;
+      static auto try_create(const TProvider&amp;);
+
+      template &lt;class T, class TName, class TProvider&gt;
+      auto create(const TProvider&amp;);
+    };
+  };
+}
+
+scopes::unique unique;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirement</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TExpected</code></td>
+<td>-</td>
+<td>'Interface' type</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>TGiven</code></td>
+<td>-</td>
+<td>'Implementation' type</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>is_referable&lt;T\&gt;</code></td>
+<td>-</td>
+<td>Verifies whether scope value might be converted to a reference</td>
+<td>std::true_type/std::false_type</td>
+</tr>
+<tr>
+<td><code>try_create&lt;T, TName, TProvider\&gt;</code></td>
+<td>providable&lt;TProvider></td>
+<td>Verifies whether type might be created</td>
+<td>std::true_type/std::false_type</td>
+</tr>
+<tr>
+<td><code>create&lt;T, TName, TProvider\&gt;</code></td>
+<td>providable&lt;TProvider></td>
+<td>Creates type might be created</td>
+<td><code>T</code></td>
+</tr>
+</tbody>
+</table>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_unique.cpp" />
 <strong><em>Example</em></strong></p>
@@ -469,7 +1405,11 @@ public:
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p>Modules allow to split the configuration into smaller injectors.
+Module might be installed by passing it into [make_injector].</p>
 <p><strong><em>Semantics</em></strong></p>
+<pre><code>auto module = di::make_injector(...);
+</code></pre>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/module.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/module_exposed_type.cpp" />
@@ -484,11 +1424,58 @@ public:
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p>Providers are responsible for creating objects using given configuration.</p>
 <p><strong><em>Semantics</em></strong></p>
+<pre><code>namespace type_traits {
+  struct direct; // T(...)
+  struct uniform; // T{...}
+  struct heap; // new T
+  struct stack; // T
+}
+
+namespace providers {
+  class provider {
+    public:
+      template &lt;class T, class... TArgs&gt;
+      struct is_creatable;
+
+      template &lt;
+        class T
+      , class TInit // type_traits::direct/type_traits::uniform
+      , class TMemory // type_traits::heap/type_traits::stack
+      , class... TArgs
+      &gt; auto get(const TInit&amp;, const TMemory&amp;, TArgs&amp;&amp;... args) const;
+  };
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirement</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>is_creatable&lt;T, TArgs...\&gt;</code></td>
+<td>creatable&lt;TArgs...></td>
+<td>Verify whether <code>T</code> is creatable with <code>TArgs...</code></td>
+<td><code>T</code></td>
+</tr>
+<tr>
+<td><code>get&lt;T, TInitialization, TMemory, TArgs\&gt;(const TInitialization&amp;, const TMemory&amp;, TArgs&amp;&amp;...)</code></td>
+<td><code>TInitialization</code> is direct\</td>
+<td>uniform &amp;&amp; <code>TMemory</code> is heap\</td>
+<td>stack</td>
+</tr>
+</tbody>
+</table>
 <p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/providers_heap_no_throw.cpp" /></p>
-<p><strong><em>Example</em></strong>
-<img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/providers_heap_no_throw.cpp" />
+<strong><em>Example</em></strong></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
 <p>&nbsp;</p>
 <hr />
 <pre><code class="cpp">di::providers::stack_over_heap (default)
@@ -498,7 +1485,93 @@ public:
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p>Creates objects on the stack whenever possible, otherwise on the heap.</p>
 <p><strong><em>Semantics</em></strong></p>
+<pre><code>namespace providers {
+  class stack_over_heap {
+    public:
+      template &lt;class T, class... TArgs&gt;
+      struct is_creatable;
+
+      template &lt;
+        class T
+      , class TInit // type_traits::direct/type_traits::uniform
+      , class TMemory // type_traits::heap/type_traits::stack
+      , class... TArgs
+      &gt; auto get(const TInit&amp;, const TMemory&amp;, TArgs&amp;&amp;... args) const;
+  };
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirement</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>is_creatable&lt;T, TArgs...\&gt;</code></td>
+<td>creatable&lt;TArgs...></td>
+<td>Verify whether <code>T</code> is creatable with <code>TArgs...</code></td>
+<td><code>T</code></td>
+</tr>
+<tr>
+<td><code>get&lt;T, TInitialization, TMemory, TArgs\&gt;(const TInitialization&amp;, const TMemory&amp;, TArgs&amp;&amp;...)</code></td>
+<td><code>TInitialization</code> is direct\</td>
+<td>uniform &amp;&amp; <code>TMemory</code> is heap\</td>
+<td>stack</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th><code>TMemory</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T</td>
+<td>stack</td>
+</tr>
+<tr>
+<td>T&amp;</td>
+<td>stack</td>
+</tr>
+<tr>
+<td>const T&amp;</td>
+<td>stack</td>
+</tr>
+<tr>
+<td>T*</td>
+<td>stack</td>
+</tr>
+<tr>
+<td>const T*</td>
+<td>stack</td>
+</tr>
+<tr>
+<td>T&amp;&amp;</td>
+<td>stack</td>
+</tr>
+<tr>
+<td>unique_ptr<T></td>
+<td>stack</td>
+</tr>
+<tr>
+<td>shared_ptr<T></td>
+<td>stack</td>
+</tr>
+<tr>
+<td>weak_ptr<T></td>
+<td>stack</td>
+</tr>
+</tbody>
+</table>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
 <p><strong><em>Example</em></strong></p>
@@ -511,13 +1584,142 @@ public:
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p>Basic provider creates objects on the heap.</p>
 <p><strong><em>Semantics</em></strong></p>
+<pre><code>namespace providers {
+  class stack_over_heap {
+    public:
+      template &lt;class T, class... TArgs&gt;
+      struct is_creatable;
+
+      template &lt;
+        class T
+      , class TInit // type_traits::direct/type_traits::uniform
+      , class TMemory // type_traits::heap/type_traits::stack
+      , class... TArgs
+      &gt; auto get(const TInit&amp;, const TMemory&amp;, TArgs&amp;&amp;... args) const;
+  };
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirement</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>is_creatable&lt;T, TArgs...\&gt;</code></td>
+<td>creatable&lt;TArgs...></td>
+<td>Verify whether <code>T</code> is creatable with <code>TArgs...</code></td>
+<td><code>T</code></td>
+</tr>
+<tr>
+<td><code>get&lt;T, TInitialization, TMemory, TArgs\&gt;(const TInitialization&amp;, const TMemory&amp;, TArgs&amp;&amp;...)</code></td>
+<td><code>TInitialization</code> is direct\</td>
+<td>uniform &amp;&amp; <code>TMemory</code> is heap\</td>
+<td>stack</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th><code>TMemory</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T</td>
+<td>stack</td>
+</tr>
+<tr>
+<td>T&amp;</td>
+<td>stack</td>
+</tr>
+<tr>
+<td>const T&amp;</td>
+<td>stack</td>
+</tr>
+<tr>
+<td>T*</td>
+<td>stack</td>
+</tr>
+<tr>
+<td>const T*</td>
+<td>stack</td>
+</tr>
+<tr>
+<td>T&amp;&amp;</td>
+<td>stack</td>
+</tr>
+<tr>
+<td>unique_ptr<T></td>
+<td>stack</td>
+</tr>
+<tr>
+<td>shared_ptr<T></td>
+<td>stack</td>
+</tr>
+<tr>
+<td>weak_ptr<T></td>
+<td>stack</td>
+</tr>
+</tbody>
+</table>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
 <p><strong><em>Example</em></strong></p>
 <p>&nbsp;</p>
 <hr />
 <h3 id="policies">Policies</h3>
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p>Policies operates on dependencies in order to limit allowed behaviour or visit created types during run-time.
+Policies are set up via [di::config].</p>
+<pre><code>By default Boost.DI has no policies enabled.
+</code></pre>
+
+<p><strong><em>Semantics</em></strong></p>
+<p>template <class... TPolicies> requires callable<TPolicies...>
+  auto make_policies(TPolicies... args) noexcept;</p>
+<p>struct config : di::config {
+    static auto policies(...) noexcept { return make_policies(...); }
+  };</p>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirement</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>make_policies&lt;TPolicies...\&gt;</code></td>
+<td>[callable]&lt;TPolicies...></td>
+<td>Creates policies</td>
+<td>[callable] list</td>
+</tr>
+</tbody>
+</table>
+<pre><code>In order for injector to verify policies they have to be created using di::config and passed via `TConfig` in make_injector or set globally via BOOST_DI_CFG.
+</code></pre>
+
+<p><strong><em>Test</em></strong>
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_print_types.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_print_type_extended.cpp" />
+<strong><em>Example</em></strong></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p>&nbsp;</p>
+<hr />
 <pre><code class="cpp">di::policies::constructible
 </code></pre>
 
@@ -525,16 +1727,75 @@ public:
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p>Policy limits constructor parameters to explicitly allowed.</p>
+<pre><code>By default constructible policy disables creation of any constructor parameters.
+</code></pre>
+
 <p><strong><em>Semantics</em></strong></p>
+<pre><code>namespace policies {
+  struct _ { }; // placeholder
+
+  template&lt;class T&gt;
+  struct is_bound; // true when type is bound with 'di::bind&lt;T&gt;'
+
+  template &lt;class T&gt;
+  struct is_injected; // true when type is injected using 'BOOST_DI_INJECT' or is 'fundamental'
+
+  template&lt;class T&gt;
+  auto constructible(const T&amp;) noexcept;
+}
+
+namespace operators {
+  template&lt;class X&gt;
+  inline auto operator!(const X&amp;)
+
+  template&lt;class X, class Y&gt;
+  inline auto operator&amp;&amp;(const X&amp;, const Y&amp;);
+
+  template&lt;class X, class Y&gt;
+  inline auto operator||(const X&amp;, const Y&amp;);
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirement</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>is_bound&lt;T\&gt;</code></td>
+<td>-</td>
+<td>Verify whether type <code>T</code> is bound</td>
+<td>true_type/false_type</td>
+</tr>
+<tr>
+<td><code>is_injected&lt;T\&gt;</code></td>
+<td>-</td>
+<td>Verify whether type <code>T</code> is injected via [BOOST_DI_INJECT]</td>
+<td>true_type/false_type</td>
+</tr>
+</tbody>
+</table>
+<pre><code>In order to allow logic operators using namespace boost::di::policies::operators has to be used
+</code></pre>
+
 <p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_print_types.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_print_type_extended.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_constructible_global.cpp" />
-<strong><em>Example</em></strong></p>
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_constructible_global.cpp" /></p>
+<pre><code>STL type traits are supported and might be combined with Boost.DI traits in order to limit constructor types
+For example, std::is_same&lt;_, int&gt;{} || std::is_constructible&lt;_, int, int&gt;{} || std::is_base_of&lt;int, _&gt;{}, etc...
+</code></pre>
+
+<p><strong><em>Example</em></strong></p>
 <p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
 <p>&nbsp;</p>
 <hr />
 <h3 id="concepts">Concepts</h3>
+<p>Concepts are types constraints which ensure that only given types which are satisfied by the constraint will be allowed.
+If type doesn't satisfy the concept short and descriptive error message is provided.</p>
 <pre><code class="cpp">di::concepts::boundable
 </code></pre>
 
@@ -542,7 +1803,58 @@ public:
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p>Bindings type requirement.</p>
 <p><strong><em>Semantics</em></strong></p>
+<pre><code>template &lt;class... Ts&gt;
+using boundable;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ts...</code></td>
+<td>Bindings to be verified</td>
+<td>true_type if constraint is satisfied, <code>error</code> otherwise</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Error</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>di::make_injector(<br />&nbsp;&nbsp;di::bind<int>.to(42)<br />,&nbsp;di::bind<int>.to(87) // error<br/>);</code></td>
+<td>type<T>::is_bound_more_than_once</td>
+<td><code>T</code> is bound more than once</td>
+</tr>
+<tr>
+<td><code>di::make_injector(<br />&nbsp;&nbsp;di::bind<int>.to(42)<br />,&nbsp;di::bind<int>.to(87) // error<br/>);</code></td>
+<td>type<T>::is_neither_a_dependency_nor_an_injector</td>
+<td><code>T</code> is bound more than once</td>
+</tr>
+<tr>
+<td><code>di::make_injector(<br />&nbsp;&nbsp;di::bind<int>.to(42)<br />,&nbsp;di::bind<int>.to(87) // error<br/>);</code></td>
+<td>type<T>::is_not_base_of<Implentation></td>
+<td><code>T</code> is bound more than once</td>
+</tr>
+<tr>
+<td><code>di::make_injector(<br />&nbsp;&nbsp;di::bind<int>.to(42)<br />,&nbsp;di::bind<int>.to(87) // error<br/>);</code></td>
+<td>type<I>::is_not_convertible_to<T></td>
+<td><code>T</code> is bound more than once</td>
+</tr>
+</tbody>
+</table>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp" />
 <strong><em>Example</em></strong></p>
