@@ -149,28 +149,28 @@ Allows to bind interface to implementation and associate value with it.
 ***Semantics***
 
     struct override; // overrides given configuration
-    
+
     namespace detail {
       template<class... Ts> requires boundable<Ts...>
       struct bind {
         bind(bind&&) noexcept = default;
-    
+
         template<class T> requires boundable<T>
         auto to() noexcept;
-    
+
         template<class T> requires boundable<T>
         auto to(T&&) noexcept;
-    
+
         template<class TScope> requires scopable<TScope>
         auto in(const TScope& = di::deduce) noexcept;
-    
+
         template<class TName> // no requirements
         auto named(const TName& = {}) noexcept;
-    
+
         auto operator[](const override&) noexcept;
       };
     } // detail
-    
+
     template<class... Ts> requires boundable<Ts...>
     detail::bind<Ts...> bind{};
 
@@ -463,10 +463,10 @@ If no scope will be given, deduce scope will be assumed.
     struct scope {
       template <class T>
       using is_referable;
-  
+
       template <class T, class TName, class TProvider>
       static auto try_create(const TProvider&);
-  
+
       template <class T, class TName, class TProvider>
       auto create(const TProvider&);
     };
@@ -533,10 +533,10 @@ Default scope which will be converted to one of the scopes depending on the type
         struct scope {
           template <class T>
           using is_referable;
-      
+
           template <class T, class TName, class TProvider>
           static auto try_create(const TProvider&);
-      
+
           template <class T, class TName, class TProvider>
           auto create(const TProvider&);
         };
@@ -596,10 +596,10 @@ Boost.DI is not managing life time of passed objects, however values and strings
         struct scope {
           template <class T>
           using is_referable;
-      
+
           template <class T, class TName, class TProvider>
           static auto try_create(const TProvider&);
-      
+
           template <class T, class TName, class TProvider>
           auto create(const TProvider&);
         };
@@ -661,10 +661,10 @@ Singleton scope will convert between std::shared_ptr and boost::shared_ptr if re
         struct scope {
           template <class T>
           using is_referable;
-      
+
           template <class T, class TName, class TProvider>
           static auto try_create(const TProvider&);
-      
+
           template <class T, class TName, class TProvider>
           auto create(const TProvider&);
         };
@@ -723,10 +723,10 @@ Scope representing unique/per request value.
         struct scope {
           template <class T>
           using is_referable;
-      
+
           template <class T, class TName, class TProvider>
           static auto try_create(const TProvider&);
-      
+
           template <class T, class TName, class TProvider>
           auto create(const TProvider&);
         };
@@ -765,7 +765,7 @@ auto module = [] { return di::make_injector(...); };
 
 ***Description***
 
-Modules allow to split the configuration into smaller injectors. 
+Modules allow to split the configuration into smaller injectors.
 Module might be installed by passing it into [make_injector].
 
 ***Semantics***
@@ -979,7 +979,6 @@ In order for injector to verify policies they have to be created using di::confi
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_print_types.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_print_type_extended.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_constructible_global.cpp)
 ***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
@@ -1000,12 +999,53 @@ di::policies::constructible
 
 Policy limits constructor parameters to explicitly allowed.
 
+```
+By default constructible policy disables creation of any constructor parameters.
+```
+
 ***Semantics***
 
+    namespace policies {
+      struct _ { }; // placeholder
+
+      template<class T>
+      struct is_bound; // true when type is bound with 'di::bind<T>'
+
+      template <class T>
+      struct is_injected; // true when type is injected using 'BOOST_DI_INJECT' or is 'fundamental' 
+
+      template<class T>
+      auto constructible(const T&) noexcept;
+    }
+
+    namespace operators {
+      template<class X>
+      inline auto operator!(const X&)
+
+      template<class X, class Y>
+      inline auto operator&&(const X&, const Y&);
+
+      template<class X, class Y>
+      inline auto operator||(const X&, const Y&);
+    }
+
+| Expression | Requirement | Description | Returns |
+| ---------- | ----------- | ----------- | ------- |
+| `is_bound<T\>` | - | Verify whether type `T` is bound | true_type/false_type |
+| `is_injected<T\>` | - | Verify whether type `T` is injected via [BOOST_DI_INJECT] | true_type/false_type |
+
+```
+In order to allow logic operators using namespace boost::di::policies::operators has to be used
+```
+
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_print_types.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_print_type_extended.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_constructible_global.cpp)
+
+```
+STL type traits are supported and might be combined with Boost.DI traits in order to limit constructor types
+For example, std::is_same<_, int>{} || std::is_constructible<_, int, int>{} || std::is_base_of<int, _>{}, etc...
+```
+
 ***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
@@ -1015,6 +1055,9 @@ Policy limits constructor parameters to explicitly allowed.
 ---
 
 ###Concepts
+
+Concepts are types constraints which ensure that only given types which are satisfied by the constraint will be allowed.
+If type doesn't satisfy the concept short and descriptive error message is provided.
 
 ```cpp
 di::concepts::boundable
@@ -1026,8 +1069,26 @@ di::concepts::boundable
 
 ***Description***
 
+  Bindings type requirement.
+
 ***Semantics***
 
+    template <class... Ts>
+    using boundable;
+
+| Expression | Description | Returns |
+| ---------- | ----------- | ------- |
+| `Ts...` | Bindings to be verified | true_type if constraint is satisfied, `error` otherwise |
+
+| Expression | Error | Description |
+| ---------- | ----- | ----------- |
+| <code>di::make_injector(<br />&nbsp;&nbsp;di::bind<int>.to(42)<br />,&nbsp;di::bind<int>.to(87) // error<br/>);</code> | type<T>::is_bound_more_than_once | `T` is bound more than once |
+| <code>di::make_injector(<br />&nbsp;&nbsp;di::bind<int>.to(42)<br />,&nbsp;di::bind<int>.to(87) // error<br/>);</code> | type<T>::is_neither_a_dependency_nor_an_injector | `T` is bound more than once |
+| <code>di::make_injector(<br />&nbsp;&nbsp;di::bind<int>.to(42)<br />,&nbsp;di::bind<int>.to(87) // error<br/>);</code> | type<T>::is_not_base_of<Implentation> | `T` is bound more than once |
+| <code>di::make_injector(<br />&nbsp;&nbsp;di::bind<int>.to(42)<br />,&nbsp;di::bind<int>.to(87) // error<br/>);</code> | type<I>::is_not_convertible_to<T> | `T` is bound more than once |
+
+
+  
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp)
 ***Example***
