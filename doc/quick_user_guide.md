@@ -71,7 +71,7 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_instance.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_custom.cpp)
 
-| Type/Scope | unique | singleton | external |
+| Type/Scope | unique | singleton | instance |
 |------------|--------|--------|-----------|---------|----------|
 | T | ✔ | - | ✔ |
 | T& | - | ✔  | ✔ |

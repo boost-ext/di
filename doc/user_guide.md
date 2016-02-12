@@ -259,12 +259,102 @@ BOOST_DI_INJECT
 
 ***Description***
 
+BOOST_DI_INJECT is a macro definition used to explicitly say Boost.DI which constructor should be used as well as in order to annotate types - see [annotations] for further reding.
+When class has more than one constructor Boost.DI will by default choose the one with the longest parameter list.
+In case of constructors ambiguity Boost.DI is not able to choose the best one.
+Then BOOST_DI_INJECT become handy to point which constructor should be used.
+
 ***Semantics***
 
+    struct T {
+        BOOST_DI_INJECT(T, ...) { }
+    };
+
+| Expression | Requirement | Description | Returns |
+| ---------- | ----------- | ----------- | ------- |
+| `T` | - | Class type | - |
+| `...` | - | `T` constructor parameters | - |
+
+```
+BOOST_DI_INJECT constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE, which by defaults is set to 10.
+```
+
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_multiple_constructors.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_ambigious_constructors_via_inject.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_ambigious_constructors_via_inject_traits.cpp)
+***Example***
+
+![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
+
+&nbsp;
+
+---
+
+```cpp
+BOOST_DI_INJECT_TRAITS
+```
+
+***Header***
+
+    #include <boost/di.hpp>
+
+***Description***
+
+BOOST_DI_INJECT_TRAITS is a macro definition used to define constructor traits.
+
+***Semantics***
+
+    struct T {
+      BOOST_DI_INJECT_TRAITS(...) { }
+      T(...) { }
+    };
+
+| Expression | Requirement | Description | Returns |
+| ---------- | ----------- | ----------- | ------- |
+| `...` | - | `T` constructor parameters | - |
+
+```
+BOOST_DI_INJECT_TRAITS constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE, which by defaults is set to 10.
+```
+
+***Test***
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_ambigious_constructors_via_inject.cpp)
+***Example***
+
+![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
+
+&nbsp;
+
+---
+
+```cpp
+di::inject
+```
+
+***Header***
+
+    #include <boost/di.hpp>
+
+***Description***
+
+di::inject informs Boost.DI about constructor parameters. Useful for generated/generic classes as it doesn't have constructor parameters size limitations.
+
+***Semantics***
+
+    struct T {
+      using boost_di_inject__ = di::inject<...>;
+      T(...) {}
+    };
+
+| Expression | Requirement | Description | Returns |
+| ---------- | ----------- | ----------- | ------- |
+| `...` | - | `T` constructor parameters | - |
+
+```
+di::inject has no limitations if it comes to constructor parameters, however, named parameters are not allowed.
+```
+
+***Test***
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_ambigious_constructors_via_inject.cpp)
 ***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
@@ -297,6 +387,9 @@ di::ctor_traits
 
 ###Annotations
 
+Annotations are intrusive, additional informations specified along with the type in order to refer to given type by the
+annotation instead of type it self. Useful, when there are more than one type of the same parameters in constructor parameters.
+
 ```cpp
 (named = name)
 ```
@@ -307,7 +400,38 @@ di::ctor_traits
 
 ***Description***
 
+Named parameters are useful when constructor has more parameters of the same type.
+
+```
+  T(int value1, int value2);
+```
+
+In order to inject proper values into `value1` and `value2` they have to be distinguished somehow.
+Boost.DI solution for that problem are annotations.
+
+```
+Annotations might be set only when constructor is selected using BOOST_DI_INJECT or BOOST_DI_INJECT_TRAITS.
+```
+
 ***Semantics***
+
+    auto Name = []{}; // just an object
+
+    struct T {
+      BOOST_DI_INJECT(T, (named = Name) type type_name [= default_value], ...);
+    };
+
+| Expression | Requirement | Description | Returns |
+| ---------- | ----------- | ----------- | ------- |
+| `Name` | - | Object representing named type | - |
+
+***Example***
+
+    BOOST_DI_INJECT(T, (named = value_1) int value1, (named = value_2) int value2);
+
+```
+Implementation of constructor doesn't require annotations, which means implementation won't be affected by annotations.
+```
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/annotated_constructor_injection.cpp)
@@ -330,7 +454,42 @@ di::ctor_traits
 
 ***Description***
 
+Scopes are responsible for creating and maintaining life time of dependencies.
+If no scope will be given, deduce scope will be assumed.
+
 ***Semantics***
+
+    template <class TExpected, class TGiven>
+    struct scope {
+      template <class T>
+      using is_referable;
+  
+      template <class T, class TName, class TProvider>
+      static auto try_create(const TProvider&);
+  
+      template <class T, class TName, class TProvider>
+      auto create(const TProvider&);
+    };
+
+| Expression | Requirement | Description | Returns |
+| ---------- | ----------- | ----------- | ------- |
+| `TExpected` | - | 'Interface' type | - |
+| `TGiven` | - | 'Implementation' type | - |
+| `is_referable<T\>` | - | Verifies whether scope value might be converted to a reference | std::true_type/std::false_type |
+| `try_create<T, TName, TProvider\>` | providable<TProvider\> | Verifies whether type might be created | std::true_type/std::false_type |
+| `create<T, TName, TProvider\>` | providable<TProvider\> | Creates type might be created | `T` |
+
+| Type/Scope | unique | singleton | instance |
+|------------|--------|--------|-----------|---------|----------|
+| T | ✔ | - | ✔ |
+| T& | - | ✔  | ✔ |
+| const T& | ✔ (temporary) | ✔ | ✔ |
+| T* (transfer ownership) | ✔ | - | - | - | ✔ |
+| const T* | ✔ | - | ✔ |
+| T&& | ✔ | - | - |
+| unique\_ptr<T> | ✔ |  - | ✔ |
+| shared\_ptr<T> | ✔ | ✔ | ✔ |
+| weak\_ptr<T> | - | ✔ | ✔ |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_custom.cpp)
@@ -352,7 +511,47 @@ di::deduce (default)
 
 ***Description***
 
+Default scope which will be converted to one of the scopes depending on the type.
+
+| Type | Deduced scope |
+|------|-------|
+| T | unique |
+| T& | singleton |
+| const T& | unique (temporary)/singleton |
+| T* | unique (ownership transfer) |
+| const T* | unique (ownership transfer) |
+| T&& | unique |
+| unique\_ptr<T> | unique |
+| shared\_ptr<T> | singleton |
+| weak\_ptr<T> | singleton |
+
 ***Semantics***
+
+    namespace scopes {
+      struct deduce {
+        template <class TExpected, class TGiven>
+        struct scope {
+          template <class T>
+          using is_referable;
+      
+          template <class T, class TName, class TProvider>
+          static auto try_create(const TProvider&);
+      
+          template <class T, class TName, class TProvider>
+          auto create(const TProvider&);
+        };
+      };
+    }
+
+    scopes::deduce deduce;
+
+| Expression | Requirement | Description | Returns |
+| ---------- | ----------- | ----------- | ------- |
+| `TExpected` | - | 'Interface' type | - |
+| `TGiven` | - | 'Implementation' type | - |
+| `is_referable<T\>` | - | Verifies whether scope value might be converted to a reference | std::true_type/std::false_type |
+| `try_create<T, TName, TProvider\>` | providable<TProvider\> | Verifies whether type might be created | std::true_type/std::false_type |
+| `create<T, TName, TProvider\>` | providable<TProvider\> | Creates type might be created | `T` |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_deduce_default.cpp)
@@ -374,7 +573,46 @@ di::instance (di::bind<>.to(value))
 
 ***Description***
 
+Scope representing values - passed by user. The life time of the object depends on the user.
+Boost.DI is not managing life time of passed objects, however values and strings will be copied and managed by the library.
+
+| Type | instance |
+|------------|
+| T | ✔ |
+| T& | - |
+| const T& | ✔ (temporary) | ✔ |
+| T* (transfer ownership) | ✔ |
+| const T* | ✔ |
+| T&& | ✔ |
+| unique\_ptr<T> | ✔ |
+| shared\_ptr<T> | ✔ |
+| weak\_ptr<T> | - |
+
 ***Semantics***
+
+    namespace scopes {
+      struct instance {
+        template <class TExpected, class TGiven>
+        struct scope {
+          template <class T>
+          using is_referable;
+      
+          template <class T, class TName, class TProvider>
+          static auto try_create(const TProvider&);
+      
+          template <class T, class TName, class TProvider>
+          auto create(const TProvider&);
+        };
+      };
+    }
+
+| Expression | Requirement | Description | Returns |
+| ---------- | ----------- | ----------- | ------- |
+| `TExpected` | - | 'Interface' type | - |
+| `TGiven` | - | 'Implementation' type | - |
+| `is_referable<T\>` | - | Verifies whether scope value might be converted to a reference | std::true_type/std::false_type |
+| `try_create<T, TName, TProvider\>` | providable<TProvider\> | Verifies whether type might be created | std::true_type/std::false_type |
+| `create<T, TName, TProvider\>` | providable<TProvider\> | Creates type might be created | `T` |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_instance.cpp)
@@ -396,7 +634,52 @@ di::singleton
 
 ***Description***
 
+Scope representing shared value between all instances and between threads.
+Singleton scope will be deduced in case of shared_ptr or weak_ptr.
+
+```
+Singleton scope will convert between std::shared_ptr and boost::shared_ptr if required.
+```
+
+| Type | singleton |
+|------------|
+| T | ✔ |
+| T& | - |
+| const T& | ✔ (temporary) | ✔ |
+| T* (transfer ownership) | ✔ |
+| const T* | ✔ |
+| T&& | ✔ |
+| unique\_ptr<T> | ✔ |
+| shared\_ptr<T> | ✔ |
+| weak\_ptr<T> | - |
+
 ***Semantics***
+
+    namespace scopes {
+      struct singleton {
+        template <class TExpected, class TGiven>
+        struct scope {
+          template <class T>
+          using is_referable;
+      
+          template <class T, class TName, class TProvider>
+          static auto try_create(const TProvider&);
+      
+          template <class T, class TName, class TProvider>
+          auto create(const TProvider&);
+        };
+      };
+    }
+
+    scopes::singleton singleton;
+
+| Expression | Requirement | Description | Returns |
+| ---------- | ----------- | ----------- | ------- |
+| `TExpected` | - | 'Interface' type | - |
+| `TGiven` | - | 'Implementation' type | - |
+| `is_referable<T\>` | - | Verifies whether scope value might be converted to a reference | std::true_type/std::false_type |
+| `try_create<T, TName, TProvider\>` | providable<TProvider\> | Verifies whether type might be created | std::true_type/std::false_type |
+| `create<T, TName, TProvider\>` | providable<TProvider\> | Creates type might be created | `T` |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_singleton.cpp)
@@ -418,7 +701,47 @@ di::unique
 
 ***Description***
 
+Scope representing unique/per request value.
+
+| Type | unique |
+|------------|
+| T | ✔ |
+| T& | - |
+| const T& | ✔ (temporary) | ✔ |
+| T* (transfer ownership) | ✔ |
+| const T* | ✔ |
+| T&& | ✔ |
+| unique\_ptr<T> | ✔ |
+| shared\_ptr<T> | ✔ |
+| weak\_ptr<T> | - |
+
 ***Semantics***
+
+    namespace scopes {
+      struct unique {
+        template <class TExpected, class TGiven>
+        struct scope {
+          template <class T>
+          using is_referable;
+      
+          template <class T, class TName, class TProvider>
+          static auto try_create(const TProvider&);
+      
+          template <class T, class TName, class TProvider>
+          auto create(const TProvider&);
+        };
+      };
+    }
+
+    scopes::unique unique;
+
+| Expression | Requirement | Description | Returns |
+| ---------- | ----------- | ----------- | ------- |
+| `TExpected` | - | 'Interface' type | - |
+| `TGiven` | - | 'Implementation' type | - |
+| `is_referable<T\>` | - | Verifies whether scope value might be converted to a reference | std::true_type/std::false_type |
+| `try_create<T, TName, TProvider\>` | providable<TProvider\> | Verifies whether type might be created | std::true_type/std::false_type |
+| `create<T, TName, TProvider\>` | providable<TProvider\> | Creates type might be created | `T` |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/scopes_unique.cpp)
@@ -442,7 +765,12 @@ auto module = [] { return di::make_injector(...); };
 
 ***Description***
 
+Modules allow to split the configuration into smaller injectors. 
+Module might be installed by passing it into [make_injector].
+
 ***Semantics***
+
+    auto module = di::make_injector(...);
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/module.cpp)
@@ -465,12 +793,41 @@ auto module = [] { return di::make_injector(...); };
 
 ***Description***
 
+Providers are responsible for creating objects using given configuration.
+
 ***Semantics***
+
+    namespace type_traits {
+      struct direct; // T(...)
+      struct uniform; // T{...}
+      struct heap; // new T
+      struct stack; // T
+    }
+
+    namespace providers {
+      class provider {
+        public:
+          template <class T, class... TArgs>
+          struct is_creatable;
+
+          template <
+            class T
+          , class TInit // type_traits::direct/type_traits::uniform
+          , class TMemory // type_traits::heap/type_traits::stack
+          , class... TArgs
+          > auto get(const TInit&, const TMemory&, TArgs&&... args) const;
+      };
+    }
+
+| Expression | Requirement | Description | Returns |
+| ---------- | ----------- | ----------- | ------- |
+| `is_creatable<T, TArgs...\>` | creatable<TArgs...\> | Verify whether `T` is creatable with `TArgs...` | `T` |
+| `get<T, TInitialization, TMemory, TArgs\>(const TInitialization&, const TMemory&, TArgs&&...)` | `TInitialization` is direct\|uniform && `TMemory` is heap\|stack | Creates type `T` with `TArgs...` | `T` |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/providers_heap_no_throw.cpp)
-
 ***Example***
+
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
 &nbsp;
@@ -487,7 +844,41 @@ di::providers::stack_over_heap (default)
 
 ***Description***
 
+Creates objects on the stack whenever possible, otherwise on the heap.
+
 ***Semantics***
+
+    namespace providers {
+      class stack_over_heap {
+        public:
+          template <class T, class... TArgs>
+          struct is_creatable;
+
+          template <
+            class T
+          , class TInit // type_traits::direct/type_traits::uniform
+          , class TMemory // type_traits::heap/type_traits::stack
+          , class... TArgs
+          > auto get(const TInit&, const TMemory&, TArgs&&... args) const;
+      };
+    }
+
+| Expression | Requirement | Description | Returns |
+| ---------- | ----------- | ----------- | ------- |
+| `is_creatable<T, TArgs...\>` | creatable<TArgs...\> | Verify whether `T` is creatable with `TArgs...` | `T` |
+| `get<T, TInitialization, TMemory, TArgs\>(const TInitialization&, const TMemory&, TArgs&&...)` | `TInitialization` is direct\|uniform && `TMemory` is heap\|stack | Creates type `T` with `TArgs...` | `T` |
+
+| Type | `TMemory` |
+|------|-------|
+| T | stack |
+| T& | stack |
+| const T& | stack |
+| T* | stack |
+| const T* | stack |
+| T&& | stack |
+| unique\_ptr<T> | stack |
+| shared\_ptr<T> | stack |
+| weak\_ptr<T> | stack |
 
 ***Test***
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
@@ -508,7 +899,41 @@ di::providers::heap
 
 ***Description***
 
+Basic provider creates objects on the heap.
+
 ***Semantics***
+
+    namespace providers {
+      class stack_over_heap {
+        public:
+          template <class T, class... TArgs>
+          struct is_creatable;
+
+          template <
+            class T
+          , class TInit // type_traits::direct/type_traits::uniform
+          , class TMemory // type_traits::heap/type_traits::stack
+          , class... TArgs
+          > auto get(const TInit&, const TMemory&, TArgs&&... args) const;
+      };
+    }
+
+| Expression | Requirement | Description | Returns |
+| ---------- | ----------- | ----------- | ------- |
+| `is_creatable<T, TArgs...\>` | creatable<TArgs...\> | Verify whether `T` is creatable with `TArgs...` | `T` |
+| `get<T, TInitialization, TMemory, TArgs\>(const TInitialization&, const TMemory&, TArgs&&...)` | `TInitialization` is direct\|uniform && `TMemory` is heap\|stack | Creates type `T` with `TArgs...` | `T` |
+
+| Type | `TMemory` |
+|------|-------|
+| T | stack |
+| T& | stack |
+| const T& | stack |
+| T* | stack |
+| const T* | stack |
+| T&& | stack |
+| unique\_ptr<T> | stack |
+| shared\_ptr<T> | stack |
+| weak\_ptr<T> | stack |
 
 ***Test***
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
@@ -521,6 +946,48 @@ di::providers::heap
 
 ###Policies
 
+***Header***
+
+    #include <boost/di.hpp>
+
+***Description***
+
+Policies operates on dependencies in order to limit allowed behaviour or visit created types during run-time.
+Policies are set up via [di::config].
+
+```
+By default Boost.DI has no policies enabled.
+```
+
+***Semantics***
+
+  template <class... TPolicies> requires callable<TPolicies...>
+  auto make_policies(TPolicies... args) noexcept;
+
+  struct config : di::config {
+    static auto policies(...) noexcept { return make_policies(...); }
+  };
+
+| Expression | Requirement | Description | Returns |
+| ---------- | ----------- | ----------- | ------- |
+| `make_policies<TPolicies...\>` | [callable]<TPolicies...\> | Creates policies | [callable] list |
+
+```
+In order for injector to verify policies they have to be created using di::config and passed via `TConfig` in make_injector or set globally via BOOST_DI_CFG.
+```
+
+***Test***
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_print_types.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_print_type_extended.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_constructible_global.cpp)
+***Example***
+
+![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
+
+&nbsp;
+
+---
+
 ```cpp
 di::policies::constructible
 ```
@@ -530,6 +997,8 @@ di::policies::constructible
     #include <boost/di.hpp>
 
 ***Description***
+
+Policy limits constructor parameters to explicitly allowed.
 
 ***Semantics***
 
