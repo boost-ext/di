@@ -51,6 +51,10 @@ private:                                |         pump->pump();
                                         |
 ```
 
+###Do I need Dependency Injection?
+
+###Real Life examples?
+
 ###Why Dependency Injection?
 
 * DI provides loosely coupled code (separation of business logic and object creation)

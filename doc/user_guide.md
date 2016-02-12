@@ -1221,10 +1221,26 @@ di::config
 
 ***Description***
 
+Injector configuration.
+
 ***Semantics***
 
+    struct config {
+      static auto provider(...) noexcept;
+      static auto policies(...) noexcept;
+    };
+
+| Expression | Requirement | Description | Returns |
+| ---------- | ----------- | ----------- | ------- |
+| `provider()` | [providable] | Creates provider | [provider] |
+| `policies()` | [callable] | Creates policies | [policy] |
+
+| Expression | Description |
+| ---------- | ----------- |
+| `BOOST_DI_CFG` | Global configuration allows to customize provider and policies |
+
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_constructible_global.cpp)
 ***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
