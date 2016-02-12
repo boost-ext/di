@@ -47,19 +47,42 @@ Injector is a component used for creating dependencies configuration using bindi
 
 ***Semantics***
 
-    template<class... TDeps>
+    template<class... TDeps> requires boundable<TDeps...>
     class injector {
     public:
-        using deps = TDeps...;
+      using deps; // list of dependencies
+      using config; // configuration
 
-        explicit injector(const TArgs&...);
+      injector(injector&&) = default;
+      template <class... Ts> // no requirements
+      injector(core::injector<Ts...>&&) noexcept;
+      explicit injector(const TDeps&...) noexcept;
 
-        template<class T> requires creatable<T>
-        T create() const noexcept;
+      template<class T> requires creatable<T>
+      T create() const;
 
-        template<class TAction>
-        void call(const TAction&) const noexcept;
+      template <class T> requires creatable<T>
+      operator T() const;
     };
+
+| Expression | Requirement | Description | Returns |
+| ---------- | ----------- | ----------- | ------- |
+| `TDeps...` | [boundable]<TDeps...\> | [Bindings] to be used as configuration | - |
+| `create<T>()` | [creatable]<T\> | Creates type `T` | `T` |
+| `operator T()` | [creatable]<T\> | Creates type `T` | `T` |
+
+| Type `T` | Is allowed? | Note |
+| -------- | ----------- | ---- |
+| `T` | ✔ | - |
+| `T*` | ✔ | Ownerhsip transfer! |
+| `const T*` | ✔ | Ownerhsip transfer! |
+| `T&` | ✔ | - |
+| `const T&` | ✔ | - |
+| `T&&` | ✔ | - |
+| `std::unique_ptr<T>` | ✔ | - |
+| `std::shared_ptr<T>` | ✔ | - |
+| `std::weak_ptr<T>` | ✔ | - |
+| `boost_shared_ptr<T>` | ✔ | - |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp)
@@ -81,7 +104,20 @@ di::make_injector
 
 ***Description***
 
+Creates [injector] type.
+
 ***Semantics***
+
+    template<
+      class TConfig = di::config
+    , class... TBindings
+    > requires boundable<TBindings...> && configurable<TConfig>
+    auto make_injector(const TBindings&...) noexcept;
+
+| Expression | Requirement | Description | Returns |
+| ---------- | ----------- | ----------- | ------- |
+| `TConfig` | [configurable]<TConfig\> | [Configuration] | - |
+| `make_injector(const TBindings&...)` | [boundable]<TBindings...\> | Creates [injector] with given [Bindings] | [injector] |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/injector_empty.cpp)
@@ -95,6 +131,9 @@ di::make_injector
 
 ###Bindings
 
+Bindings define dependencies configuration which basically means what types will be created
+and what values will be passed into them.
+
 ```cpp
 di::bind
 ```
@@ -105,7 +144,44 @@ di::bind
 
 ***Description***
 
+Allows to bind interface to implementation and associate value with it.
+
 ***Semantics***
+
+    struct override; // overrides given configuration
+    
+    namespace detail {
+      template<class... Ts> requires boundable<Ts...>
+      struct bind {
+        bind(bind&&) noexcept = default;
+    
+        template<class T> requires boundable<T>
+        auto to() noexcept;
+    
+        template<class T> requires boundable<T>
+        auto to(T&&) noexcept;
+    
+        template<class TScope> requires scopable<TScope>
+        auto in(const TScope& = di::deduce) noexcept;
+    
+        template<class TName> // no requirements
+        auto named(const TName& = {}) noexcept;
+    
+        auto operator[](const override&) noexcept;
+      };
+    } // detail
+    
+    template<class... Ts> requires boundable<Ts...>
+    detail::bind<Ts...> bind{};
+
+| Expression | Requirement | Description | Returns |
+| ---------- | ----------- | ----------- | ------- |
+| `Ts...` | [boundable]<Ts...\> | 'Interface' types | - |
+| `to<T\>` | [boundable]<T\> | Binds `Ts...` to `T` type | [boundable] |
+| `to(T&&)` | [boundable]<T\> | Binds `Ts...` to `T` object | [boundable] |
+| `in(const TScope&)` | [scopable]<TScope\> | Binds `Ts...` into `TScope` | [boundable] |
+| `named(const TName&)` | - | Binds `Ts...` using 'Named' annotation | [boundable] |
+| `operator[](const override&)` | - | Overrides given binding | [boundable] |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/bind_interface_to_implementation.cpp)
@@ -126,6 +202,9 @@ di::bind
 
 ###Injections
 
+*Constructor Injection* is the most powerful of available injections.
+It guarantees initialized state of data members. Boost.DI constructor injection is achieved without any additional work from the user.
+
 ```cpp
 automatic (default)
 ```
@@ -136,11 +215,32 @@ automatic (default)
 
 ***Description***
 
+Boost.DI will deduce the best available constructor to be used for injection - unique constructor with the longest parameter list.
+If the default behavior should be changed constructor has to be explicitly marked with [BOOST_DI_INJECT] or [BOOST_DI_INJECT_TRAITS].
+
 ***Semantics***
+
+    class constructor {
+    public:
+      constructor(auto parameter1, auto parameter2, ..., auto parameterN);
+    };
+
+| Expression | Requirement | Description | Returns |
+| ---------- | ----------- | ----------- | ------- |
+| `parameter1-parameterN` | - | `N` constructor parameter | - |
+
+```
+Automatic constructor parameters deduction is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE, which by defaults is set to 10.
+```
+
+```
+Boost.DI is not able to distinguish between ambiguous constructors with the same (longest) amount of parameters.
+```
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_direct.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_aggregate.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_multiple_constructors.cpp)
 ***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
