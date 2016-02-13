@@ -43,6 +43,8 @@ private:                                |         pump->pump();
 [](GENERATE_TOC_BEGIN)
 
 * [Introduction](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/index.html)
+    * [Do I need Dependency Injection?](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/index.html#do-i-need-dependency-injection)
+    * [Real Life examples?](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/index.html#real-life-examples)
     * [Why Dependency Injection?](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/index.html#why-dependency-injection)
     * [Why Boost.DI?](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/index.html#why-boostdi)
     * [Acknowledgements](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/index.html#acknowledgements)

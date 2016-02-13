@@ -218,6 +218,11 @@ automatic (default)
 Boost.DI will deduce the best available constructor to be used for injection - unique constructor with the longest parameter list.
 If the default behavior should be changed constructor has to be explicitly marked with [BOOST_DI_INJECT] or [BOOST_DI_INJECT_TRAITS].
 
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+Automatic constructor parameters deduction is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE], which by default is set to 10.
+</div>
+
 ***Semantics***
 
     class constructor {
@@ -229,13 +234,10 @@ If the default behavior should be changed constructor has to be explicitly marke
 | ---------- | ----------- | ----------- | ------- |
 | `parameter1-parameterN` | - | `N` constructor parameter | - |
 
-```
-Automatic constructor parameters deduction is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE, which by defaults is set to 10.
-```
-
-```
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
 Boost.DI is not able to distinguish between ambiguous constructors with the same (longest) amount of parameters.
-```
+</div>
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_direct.cpp)
@@ -275,9 +277,11 @@ Then BOOST_DI_INJECT become handy to point which constructor should be used.
 | `T` | - | Class type | - |
 | `...` | - | `T` constructor parameters | - |
 
-```
+
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
 BOOST_DI_INJECT constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE, which by defaults is set to 10.
-```
+</div>
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_ambigious_constructors_via_inject.cpp)
@@ -312,9 +316,10 @@ BOOST_DI_INJECT_TRAITS is a macro definition used to define constructor traits.
 | ---------- | ----------- | ----------- | ------- |
 | `...` | - | `T` constructor parameters | - |
 
-```
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
 BOOST_DI_INJECT_TRAITS constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE, which by defaults is set to 10.
-```
+</div>
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_ambigious_constructors_via_inject.cpp)
@@ -349,9 +354,10 @@ di::inject informs Boost.DI about constructor parameters. Useful for generated/g
 | ---------- | ----------- | ----------- | ------- |
 | `...` | - | `T` constructor parameters | - |
 
-```
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
 di::inject has no limitations if it comes to constructor parameters, however, named parameters are not allowed.
-```
+</div>
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/constructor_injection_ambigious_constructors_via_inject.cpp)
@@ -409,9 +415,10 @@ Named parameters are useful when constructor has more parameters of the same typ
 In order to inject proper values into `value1` and `value2` they have to be distinguished somehow.
 Boost.DI solution for that problem are annotations.
 
-```
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
 Annotations might be set only when constructor is selected using BOOST_DI_INJECT or BOOST_DI_INJECT_TRAITS.
-```
+</div>
 
 ***Semantics***
 
@@ -429,9 +436,10 @@ Annotations might be set only when constructor is selected using BOOST_DI_INJECT
 
     BOOST_DI_INJECT(T, (named = value_1) int value1, (named = value_2) int value2);
 
-```
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
 Implementation of constructor doesn't require annotations, which means implementation won't be affected by annotations.
-```
+</div>
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/annotated_constructor_injection.cpp)
@@ -637,9 +645,10 @@ di::singleton
 Scope representing shared value between all instances and between threads.
 Singleton scope will be deduced in case of shared_ptr or weak_ptr.
 
-```
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
 Singleton scope will convert between std::shared_ptr and boost::shared_ptr if required.
-```
+</div>
 
 | Type | singleton |
 |------------|
@@ -955,9 +964,10 @@ Basic provider creates objects on the heap.
 Policies operates on dependencies in order to limit allowed behaviour or visit created types during run-time.
 Policies are set up via [di::config].
 
-```
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
 By default Boost.DI has no policies enabled.
-```
+</div>
 
 ***Semantics***
 
@@ -972,9 +982,10 @@ By default Boost.DI has no policies enabled.
 | ---------- | ----------- | ----------- | ------- |
 | `make_policies<TPolicies...\>` | [callable]<TPolicies...\> | Creates policies | [callable] list |
 
-```
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
 In order for injector to verify policies they have to be created using di::config and passed via `TConfig` in make_injector or set globally via BOOST_DI_CFG.
-```
+</div>
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_print_types.cpp)
@@ -999,9 +1010,10 @@ di::policies::constructible
 
 Policy limits constructor parameters to explicitly allowed.
 
-```
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
 By default constructible policy disables creation of any constructor parameters.
-```
+</div>
 
 ***Semantics***
 
@@ -1034,17 +1046,20 @@ By default constructible policy disables creation of any constructor parameters.
 | `is_bound<T\>` | - | Verify whether type `T` is bound | true_type/false_type |
 | `is_injected<T\>` | - | Verify whether type `T` is injected via [BOOST_DI_INJECT] | true_type/false_type |
 
-```
+
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
 In order to allow logic operators using namespace boost::di::policies::operators has to be used
-```
+</div>
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/quick_user_guide/policies_constructible_global.cpp)
 
-```
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
 STL type traits are supported and might be combined with Boost.DI traits in order to limit constructor types
 For example, std::is_same<_, int>{} || std::is_constructible<_, int, int>{} || std::is_base_of<int, _>{}, etc...
-```
+</div>
 
 ***Example***
 
@@ -1082,10 +1097,10 @@ di::concepts::boundable
 
 | Expression | Error | Description |
 | ---------- | ----- | ----------- |
-| <code>di::make_injector(<br />&nbsp;&nbsp;di::bind<int>.to(42)<br />,&nbsp;di::bind<int>.to(87) // error<br/>);</code> | type<T>::is_bound_more_than_once | `T` is bound more than once |
-| <code>di::make_injector(<br />&nbsp;&nbsp;di::bind<int>.to(42)<br />,&nbsp;di::bind<int>.to(87) // error<br/>);</code> | type<T>::is_neither_a_dependency_nor_an_injector | `T` is bound more than once |
-| <code>di::make_injector(<br />&nbsp;&nbsp;di::bind<int>.to(42)<br />,&nbsp;di::bind<int>.to(87) // error<br/>);</code> | type<T>::is_not_base_of<Implentation> | `T` is bound more than once |
-| <code>di::make_injector(<br />&nbsp;&nbsp;di::bind<int>.to(42)<br />,&nbsp;di::bind<int>.to(87) // error<br/>);</code> | type<I>::is_not_convertible_to<T> | `T` is bound more than once |
+| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/multiple_bindings.cpp) | type<T>::is_bound_more_than_once | `T` is bound more than once |
+|  | type<T>::is_neither_a_dependency_nor_an_injector | `T` is bound more than once |
+|  | type<T>::is_not_base_of<Implentation> | `T` is bound more than once |
+|  | type<I>::is_not_convertible_to<T> | `T` is bound more than once |
 
 
   
@@ -1248,3 +1263,5 @@ Injector configuration.
 &nbsp;
 
 ---
+
+[BOOST_DI_CFG_CTOR_LIMIT_SIZE]: user_guide.md
