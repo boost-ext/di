@@ -34,6 +34,7 @@ function cpp(id, file, text) {
     var compile_txt = document.createTextNode("Compile & Run (Ctrl+Enter)");
     compile_btn.setAttribute("id", "compile_and_run_" + id);
     compile_btn.setAttribute("class", "btn btn-neutral float-right");
+    compile_btn.setAttribute("style", "position: relative; top: 60px; right: 20px; z-index: 10;");
     compile_btn.appendChild(compile_txt);
     compile_btn.onclick = function() { compile_and_run(id) };
 
@@ -158,7 +159,7 @@ $(document).ready(function () {
       var id = gid++;
       var compile = "\/\/ $CXX -std=c++14 " + basename;
       example = $('<div/>').text(example_result.replace(/[\n]{3,}/g, "\n")).html();
-      $(this).replaceWith('<button class="btn btn-neutral float-right" id="run_it_btn_' + id + '" onclick="cpp(' + id + ', \'' + file + '\', \'Run this code!\')">Run this code!</button><textarea style="display: none" id="code_' + id + '"></textarea><br /><textarea style="display: none" id="output_' + id + '"></textarea><div id="code_listing_' + id + '"><pre><code class="cpp">' + compile + '\n' + example + '</code></pre></div>');
+      $(this).replaceWith('<button style="position: relative; top: 60px; right: 20px; z-index: 10;" class="btn btn-neutral float-right" id="run_it_btn_' + id + '" onclick="cpp(' + id + ', \'' + file + '\', \'Run this code!\')">Run this code!</button><textarea style="display: none" id="code_' + id + '"></textarea><br /><textarea style="display: none" id="output_' + id + '"></textarea><div id="code_listing_' + id + '"><pre><code class="cpp">' + compile + '\n' + example + '</code></pre></div>');
     });
 
     $('img[alt="CPP(BTN)"]').each(function () {
