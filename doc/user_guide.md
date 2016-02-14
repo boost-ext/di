@@ -189,6 +189,7 @@ Allows to bind interface to implementation and associate value with it.
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_deduce_type_to_value.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_type_to_compile_time_value.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_multiple_interfaces.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_type_override.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_cross_platform.cpp)
 ***Example***
 
@@ -243,6 +244,7 @@ Boost.DI is not able to distinguish between ambiguous constructors with the same
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_direct.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_aggregate.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_multiple_constructors.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambigious_constructors_via_vaargs.cpp)
 ***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
@@ -284,7 +286,7 @@ BOOST_DI_INJECT constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SI
 </div>
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambigious_constructors_via_inject.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambigious_constructors_via_BOOST_DI_INJECT.cpp)
 ***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
@@ -322,7 +324,8 @@ BOOST_DI_INJECT_TRAITS constructor parameters is limited to [BOOST_DI_CFG_CTOR_L
 </div>
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambigious_constructors_via_inject.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambigious_constructors_via_BOOST_DI_INJECT_TRAITS.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_default_values.cpp)
 ***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
@@ -361,6 +364,7 @@ di::inject has no limitations if it comes to constructor parameters, however, na
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambigious_constructors_via_inject.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_long_parameter_list.cpp)
 ***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
@@ -786,6 +790,7 @@ Module might be installed by passing it into [make_injector].
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_type.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_many_types.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_annotated_type.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_complex.cpp)
 ***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
@@ -890,9 +895,10 @@ Creates objects on the stack whenever possible, otherwise on the heap.
 | weak\_ptr<T> | stack |
 
 ***Test***
-![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
-
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/providers_stack_over_heap.cpp)
 ***Example***
+
+![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
 &nbsp;
 
@@ -945,9 +951,10 @@ Basic provider creates objects on the heap.
 | weak\_ptr<T> | stack |
 
 ***Test***
-![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
-
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/providers_heap.cpp)
 ***Example***
+
+![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
 &nbsp;
 
@@ -1024,7 +1031,7 @@ By default constructible policy disables creation of any constructor parameters.
       struct is_bound; // true when type is bound with 'di::bind<T>'
 
       template <class T>
-      struct is_injected; // true when type is injected using 'BOOST_DI_INJECT' or is 'fundamental' 
+      struct is_injected; // true when type is injected using 'BOOST_DI_INJECT' or is 'fundamental'
 
       template<class T>
       auto constructible(const T&) noexcept;
@@ -1053,6 +1060,7 @@ In order to allow logic operators using namespace boost::di::policies::operators
 </div>
 
 ***Test***
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_local.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_global.cpp)
 
 <div class="warning">
