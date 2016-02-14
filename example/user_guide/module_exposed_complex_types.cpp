@@ -35,8 +35,7 @@ struct T {
   int i;
 };
 
-struct {
-} name;
+static auto name = [] {};
 
 // clang-format off
 di::injector<T, std::unique_ptr<T>, BOOST_DI_EXPOSE((named = name)T)> module(const int& i) noexcept {
