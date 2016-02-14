@@ -40,18 +40,17 @@ class logic : public ilogic {
 /*<define `hello_world` class as usual>*/
 class hello_world {
  public:
-  hello_world(std::shared_ptr<ilogger> logger, std::shared_ptr<ilogic> logic, bool value)
-      : logger_(logger), logic_(logic), value_(value) {}
+  hello_world(ilogger& logger, std::shared_ptr<ilogic> logic, bool value) : logger_(logger), logic_(logic), value_(value) {}
 
   int run() const {
     if (value_) {
-      logger_->log("hello world");
+      logger_.log("hello world");
       logic_->do_it();
     }
     return 0;
   }
 
-  std::shared_ptr<ilogger> logger_;
+  ilogger& logger_;
   std::shared_ptr<ilogic> logic_;
   bool value_;
 };
