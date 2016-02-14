@@ -28,6 +28,7 @@ example(modules)
 example(multiple_bindings)
 example(multiple_interfaces)
 example(pool_provider)
+example(scopes)
 
 example(introduction/coffee_maker)
 

@@ -66,6 +66,7 @@ test-suite example :
     [ example multiple_bindings.cpp ]
     [ example multiple_interfaces.cpp ]
     [ example pool_provider.cpp ]
+    [ example scopes.cpp ]
 
 ;
 test-suite introduction :
