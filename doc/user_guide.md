@@ -1,5 +1,4 @@
 * [Injector](#injector)
-    * [di::injector]()
     * [di::make_injector]()
 * [Bindings](#bindings)
     * [di::bind]()
@@ -34,7 +33,7 @@
 ###Injector
 
 ```cpp
-di::injector
+di::make_injector
 ```
 
 ***Header***
@@ -43,7 +42,7 @@ di::injector
 
 ***Description***
 
-Injector is a component used for creating dependencies configuration using bindings and resolve requested types. Boost.DI injector might be composed by mixing bindings, modules and other injectors.
+Creates [injector] type.
 
 ***Semantics***
 
@@ -83,30 +82,6 @@ Injector is a component used for creating dependencies configuration using bindi
 | `std::shared_ptr<T>` | ✔ | - |
 | `std::weak_ptr<T>` | ✔ | - |
 | `boost_shared_ptr<T>` | ✔ | - |
-
-***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/injector_empty.cpp)
-***Example***
-
-![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
-
-&nbsp;
-
----
-
-```cpp
-di::make_injector
-```
-
-***Header***
-
-    #include <boost/di.hpp>
-
-***Description***
-
-Creates [injector] type.
-
-***Semantics***
 
     template<
       class TConfig = di::config
