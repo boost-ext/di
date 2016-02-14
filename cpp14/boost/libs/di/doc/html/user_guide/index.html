@@ -216,7 +216,6 @@
               
                 <ul>
 <li><a href="#injector">Injector</a><ul>
-<li><a href="">di::injector</a></li>
 <li><a href="">di::make_injector</a></li>
 </ul>
 </li>
@@ -264,14 +263,14 @@
 </ul>
 <hr />
 <h3 id="injector">Injector</h3>
-<pre><code class="cpp">di::injector
+<pre><code class="cpp">di::make_injector
 </code></pre>
 
 <p><strong><em>Header</em></strong></p>
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
-<p>Injector is a component used for creating dependencies configuration using bindings and resolve requested types. Boost.DI injector might be composed by mixing bindings, modules and other injectors.</p>
+<p>Creates [injector] type.</p>
 <p><strong><em>Semantics</em></strong></p>
 <pre><code>template&lt;class... TDeps&gt; requires boundable&lt;TDeps...&gt;
 class injector {
@@ -382,21 +381,6 @@ public:
 </tr>
 </tbody>
 </table>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/injector_empty.cpp" />
-<strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
-<p>&nbsp;</p>
-<hr />
-<pre><code class="cpp">di::make_injector
-</code></pre>
-
-<p><strong><em>Header</em></strong></p>
-<pre><code>#include &lt;boost/di.hpp&gt;
-</code></pre>
-<p><strong><em>Description</em></strong></p>
-<p>Creates [injector] type.</p>
-<p><strong><em>Semantics</em></strong></p>
 <pre><code>template&lt;
   class TConfig = di::config
 , class... TBindings
