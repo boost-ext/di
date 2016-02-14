@@ -109,7 +109,6 @@ test-suite user_guide :
     [ example user_guide/module_exposed_complex_types.cpp ]
     [ example user_guide/module_exposed_many_types.cpp ]
     [ example user_guide/module_exposed_type.cpp ]
-    [ example user_guide/policies_constructible.cpp ]
     [ example user_guide/policies_constructible_global.cpp ]
     [ example user_guide/policies_constructible_local.cpp ]
     [ example user_guide/policies_print_type_extended.cpp ]
