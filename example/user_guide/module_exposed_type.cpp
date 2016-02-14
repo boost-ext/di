@@ -27,8 +27,8 @@ struct impl2 : i2 {
 };
 //->
 
-struct c {
-  c(std::shared_ptr<i1> i1, std::shared_ptr<i2> i2, int i) : i1_(i1), i2_(i2), i(i) {}
+struct T {
+  T(std::shared_ptr<i1> i1, std::shared_ptr<i2> i2, int i) : i1_(i1), i2_(i2), i(i) {}
 
   std::shared_ptr<i1> i1_;
   std::shared_ptr<i2> i2_;
@@ -36,7 +36,7 @@ struct c {
 };
 
 // clang-format off
-di::injector<c> module(const int& i) noexcept {
+di::injector<T> module(const int& i) noexcept {
   return di::make_injector(
     di::bind<i1>().to<impl1>()
   , di::bind<i2>().to<impl2>()
@@ -47,7 +47,7 @@ di::injector<c> module(const int& i) noexcept {
 
 int main() {
   auto injector = di::make_injector(module(42));
-  auto object = injector.create<c>();
+  auto object = injector.create<T>();
   assert(dynamic_cast<impl1*>(object.i1_.get()));
   assert(dynamic_cast<impl2*>(object.i2_.get()));
   assert(42 == object.i);

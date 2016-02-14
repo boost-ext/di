@@ -28,8 +28,8 @@ struct impl2 : i2 {
 };
 //->
 
-struct c {
-  c(const std::shared_ptr<i1>& sp, std::unique_ptr<i2> up, int& i, double d) : sp(sp), up(std::move(up)), i(i), d(d) {}
+struct T {
+  T(const std::shared_ptr<i1>& sp, std::unique_ptr<i2> up, int& i, double d) : sp(sp), up(std::move(up)), i(i), d(d) {}
 
   std::shared_ptr<i1> sp; /*singleton*/
   std::unique_ptr<i2> up; /*unique*/
@@ -47,8 +47,8 @@ int main() {
   , di::bind<double>().to(87.0)
   );
   // clang-format on
-  auto object1 = injector.create<std::unique_ptr<c>>();
-  auto object2 = injector.create<std::unique_ptr<c>>();
+  auto object1 = injector.create<std::unique_ptr<T>>();
+  auto object2 = injector.create<std::unique_ptr<T>>();
   assert(object1->sp == object2->sp);
   assert(object1->up != object2->up);
   assert(42 == object1->i);

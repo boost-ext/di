@@ -11,9 +11,8 @@
 namespace di = boost::di;
 //->
 
-struct c {
-  c(double d, int a) : a(a), d(d) {}
-  BOOST_DI_INJECT(c, int a, double d) : a(a), d(d) {}
+struct T {
+  T(int a, double d) : a(a), d(d) {}
 
   int a = 0;
   double d = 0.0;
@@ -26,7 +25,7 @@ int main() {
   , di::bind<double>().to(87.0)
   );
   // clang-format on
-  auto object = injector.create<c>();
+  auto object = injector.create<T>();
   assert(42 == object.a);
   assert(87.0 == object.d);
 }

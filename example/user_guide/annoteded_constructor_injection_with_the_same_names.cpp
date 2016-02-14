@@ -15,9 +15,9 @@ namespace di = boost::di;
 auto n1 = [] {};
 auto n2 = [] {};
 
-struct c {
+struct T {
   // clang-format off
-  BOOST_DI_INJECT(c, (named = n1) int i1
+  BOOST_DI_INJECT(T, (named = n1) int i1
                    , (named = n1) int i2
                    , (named = n2) int i3
                    , int i4
@@ -39,7 +39,7 @@ int main() {
   , di::bind<std::string>().named(n1).to("str")
   );
   // clang-format on
-  auto object = injector.create<c>();
+  auto object = injector.create<T>();
   assert(42 == object.i1);
   assert(42 == object.i2);
   assert(87 == object.i3);

@@ -32,6 +32,12 @@ struct T {
 };
 
 int main() {
-  auto injector = di::make_injector<injected_and_bound>();
+  // clang-format off
+  auto injector = di::make_injector<injected_and_bound>(
+    di::bind<>().to(42)
+  , di::bind<>().to(87.0)
+  );
+  // clang-format on
+
   injector.create<T>();
 }

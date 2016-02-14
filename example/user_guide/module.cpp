@@ -27,8 +27,8 @@ struct impl2 : i2 {
 };
 //->
 
-struct c {
-  c(std::unique_ptr<i1> i1, std::unique_ptr<i2> i2, int i) : i1_(std::move(i1)), i2_(std::move(i2)), i(i) {}
+struct T {
+  T(std::unique_ptr<i1> i1, std::unique_ptr<i2> i2, int i) : i1_(std::move(i1)), i2_(std::move(i2)), i(i) {}
 
   std::unique_ptr<i1> i1_;
   std::unique_ptr<i2> i2_;
@@ -52,7 +52,7 @@ auto module2 = [] {
 
 int main() {
   auto injector = di::make_injector(module1(), module2());
-  auto object = injector.create<std::unique_ptr<c>>();
+  auto object = injector.create<std::unique_ptr<T>>();
   assert(dynamic_cast<impl1*>(object->i1_.get()));
   assert(dynamic_cast<impl2*>(object->i2_.get()));
   assert(42 == object->i);

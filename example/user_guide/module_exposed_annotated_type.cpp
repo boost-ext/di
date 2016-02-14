@@ -22,8 +22,8 @@ struct impl1 : i1 {
 
 auto my_name = [] {};
 
-struct c {
-  BOOST_DI_INJECT(c, (named = my_name)std::unique_ptr<i1> up) : up(std::move(up)) {}
+struct T {
+  BOOST_DI_INJECT(T, (named = my_name)std::unique_ptr<i1> up) : up(std::move(up)) {}
   std::unique_ptr<i1> up;
 };
 
@@ -36,6 +36,6 @@ int main() {
   };
   // clang-format on
   auto injector = di::make_injector(module());
-  auto object = injector.create<std::unique_ptr<c>>();
+  auto object = injector.create<std::unique_ptr<T>>();
   assert(dynamic_cast<impl1*>(object->up.get()));
 }

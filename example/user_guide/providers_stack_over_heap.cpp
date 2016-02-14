@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 //<-
+#include <memory>
 #include <boost/di.hpp>
 
 namespace di = boost::di;
@@ -12,12 +13,13 @@ namespace di = boost::di;
 
 class my_provider : public di::config {
  public:
-  static auto provider(...) noexcept { return providers::heap{}; }
+  // this is default in di::config
+  static auto provider(...) noexcept { return di::providers::stack_over_heap{}; }
 };
 
 int main() {
   auto injector = di::make_injector<my_provider>();
-  injector.create<int>();                           // heap
-  di::aux::owner<int> i = injector.create<int*>();  // heap
-  delete i;
+  injector.create<int>();                           // stack
+  std::unique_ptr<int> i{injector.create<int*>()};  // heap
+  (void)i;
 }

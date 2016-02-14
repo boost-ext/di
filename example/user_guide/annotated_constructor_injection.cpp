@@ -14,20 +14,11 @@ namespace di = boost::di;
 auto int1 = [] {};
 auto int2 = [] {};
 
-struct c {
-  c(int a, int b) : a(a), b(b) {}
+struct T {
+  BOOST_DI_INJECT(T, (named = int1) int a, (named = int2) int b) : a(a), b(b) {}
   int a = 0;
   int b = 0;
 };
-
-namespace boost {
-namespace di {
-template <>
-struct ctor_traits<c> {
-  BOOST_DI_INJECT_TRAITS((named = int1) int, (named = int2) int);
-};
-}
-}  // boost::di
 
 int main() {
   // clang-format off
@@ -36,7 +27,7 @@ int main() {
   , di::bind<int>().named(int2).to(87)
   );
   // clang-format on
-  auto object = injector.create<c>();
+  auto object = injector.create<T>();
   assert(42 == object.a);
   assert(87 == object.b);
 }

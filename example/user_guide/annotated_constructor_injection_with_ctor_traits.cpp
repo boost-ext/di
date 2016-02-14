@@ -11,23 +11,32 @@
 namespace di = boost::di;
 //->
 
-struct c {
-  BOOST_DI_INJECT_TRAITS(int, double);
-  c(double d, int a) : a(a), d(d) {}
-  c(int a, double d) : a(a), d(d) {}
+auto int1 = [] {};
+auto int2 = [] {};
 
+struct T {
+  T(int a, int b) : a(a), b(b) {}
   int a = 0;
-  double d = 0.0;
+  int b = 0;
 };
+
+namespace boost {
+namespace di {
+template <>
+struct ctor_traits<T> {
+  BOOST_DI_INJECT_TRAITS((named = int1) int, (named = int2) int);
+};
+}
+}  // boost::di
 
 int main() {
   // clang-format off
   auto injector = di::make_injector(
-    di::bind<int>().to(42)
-  , di::bind<double>().to(87.0)
+    di::bind<int>().named(int1).to(42)
+  , di::bind<int>().named(int2).to(87)
   );
   // clang-format on
-  auto object = injector.create<c>();
+  auto object = injector.create<T>();
   assert(42 == object.a);
-  assert(87.0 == object.d);
+  assert(87 == object.b);
 }
