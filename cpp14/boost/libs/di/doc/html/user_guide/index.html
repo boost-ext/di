@@ -529,6 +529,7 @@ detail::bind&lt;Ts...&gt; bind{};
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_cross_platform.cpp" />
 <strong><em>Example</em></strong></p>
 <p><img alt="CPP(BTN)" src="../Run_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bindings.cpp" />
+<img alt="CPP(BTN)" src="../Run_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/fwd_bindings.cpp" />
 <img alt="CPP(BTN)" src="../Run_Dynamic_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/dynamic_bindings.cpp" />
 <img alt="CPP(BTN)" src="../Run_Multiple_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/multiple_bindings.cpp" /></p>
 <p>&nbsp;</p>
@@ -585,7 +586,8 @@ Boost.DI is not able to distinguish between ambiguous constructors with the same
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_multiple_constructors.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambigious_constructors_via_vaargs.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Automatic_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/automatic_injection.cpp" />
+<img alt="CPP(BTN)" src="../Run_Constructor_Signature_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_signature.cpp" /></p>
 <p>&nbsp;</p>
 <hr />
 <pre><code class="cpp">BOOST_DI_INJECT
@@ -636,7 +638,7 @@ BOOST_DI_INJECT constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SI
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambigious_constructors_via_BOOST_DI_INJECT.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/contructor_injection.cpp" /></p>
 <p>&nbsp;</p>
 <hr />
 <pre><code class="cpp">BOOST_DI_INJECT_TRAITS
@@ -680,7 +682,7 @@ BOOST_DI_INJECT_TRAITS constructor parameters is limited to [BOOST_DI_CFG_CTOR_L
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambigious_constructors_via_BOOST_DI_INJECT_TRAITS.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_default_values.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/contructor_injection.cpp" /></p>
 <p>&nbsp;</p>
 <hr />
 <pre><code class="cpp">di::inject
@@ -724,7 +726,7 @@ di::inject has no limitations if it comes to constructor parameters, however, na
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambigious_constructors_via_inject.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_long_parameter_list.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/contructor_injection.cpp" /></p>
 <p>&nbsp;</p>
 <hr />
 <pre><code class="cpp">di::ctor_traits
@@ -738,7 +740,7 @@ di::inject has no limitations if it comes to constructor parameters, however, na
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambigious_constructors_via_ctor_traits.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/contructor_injection.cpp" /></p>
 <p>&nbsp;</p>
 <hr />
 <h3 id="annotations">Annotations</h3>
@@ -801,7 +803,7 @@ Implementation of constructor doesn't require annotations, which means implement
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/annotated_constructor_injection_with_ctor_traits.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/annoteded_constructor_injection_with_the_same_names.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Annotations_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/annotations.cpp" /></p>
 <p>&nbsp;</p>
 <hr />
 <h3 id="scopes">Scopes</h3>
@@ -955,7 +957,7 @@ struct scope {
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_custom.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Custom_Scope_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_scope.cpp" /></p>
 <p>&nbsp;</p>
 <hr />
 <pre><code class="cpp">di::deduce (default)
@@ -1076,7 +1078,8 @@ scopes::deduce deduce;
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_deduce_default.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Deduce_Scope_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/deduce_scope.cpp" />
+<img alt="CPP(BTN)" src="../Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp" /></p>
 <p>&nbsp;</p>
 <hr />
 <pre><code class="cpp">di::instance (di::bind&lt;&gt;.to(value))
@@ -1186,7 +1189,8 @@ Boost.DI is not managing life time of passed objects, however values and strings
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_instance.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bindings.cpp" />
+<img alt="CPP(BTN)" src="../Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp" /></p>
 <p>&nbsp;</p>
 <hr />
 <pre><code class="cpp">di::singleton
@@ -1303,7 +1307,8 @@ scopes::singleton singleton;
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_singleton.cpp" /></p>
 <p><strong><em>Example</em></strong>
-<img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<img alt="CPP(BTN)" src="../Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp" />
+<img alt="CPP(BTN)" src="../Run_Eager_Singletons_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/eager_singletons.cpp" /></p>
 <p>&nbsp;</p>
 <hr />
 <pre><code class="cpp">di::unique
@@ -1414,7 +1419,7 @@ scopes::unique unique;
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_unique.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp" /></p>
 <p>&nbsp;</p>
 <hr />
 <h3 id="modules">Modules</h3>
@@ -1437,7 +1442,7 @@ Module might be installed by passing it into [make_injector].</p>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_annotated_type.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_complex.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Modules_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/modules.cpp" /></p>
 <p>&nbsp;</p>
 <hr />
 <h3 id="providers">Providers</h3>
@@ -1496,7 +1501,8 @@ namespace providers {
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/providers_heap_no_throw.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp" />
+<img alt="CPP(BTN)" src="../Run_Pool_Provider_Policy|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp" /></p>
 <p>&nbsp;</p>
 <hr />
 <pre><code class="cpp">di::providers::stack_over_heap (default)
@@ -1596,7 +1602,8 @@ namespace providers {
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/providers_stack_over_heap.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp" />
+<img alt="CPP(BTN)" src="../Run_Pool_Provider_Policy|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp" /></p>
 <p>&nbsp;</p>
 <hr />
 <pre><code class="cpp">di::providers::heap
@@ -1696,7 +1703,8 @@ namespace providers {
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/providers_heap.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp" />
+<img alt="CPP(BTN)" src="../Run_Pool_Provider_Policy|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp" /></p>
 <p>&nbsp;</p>
 <hr />
 <h3 id="policies">Policies</h3>
@@ -1744,7 +1752,7 @@ In order for injector to verify policies they have to be created using di::confi
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_print_types.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_print_type_extended.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp" /></p>
 <p>&nbsp;</p>
 <hr />
 <pre><code class="cpp">di::policies::constructible
@@ -1824,7 +1832,7 @@ For example, std::is_same<_, int>{} || std::is_constructible<_, int, int>{} || s
 </div>
 
 <p><strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp" /></p>
 <p>&nbsp;</p>
 <hr />
 <h3 id="concepts">Concepts</h3>
@@ -2021,7 +2029,7 @@ using boundable;
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_global.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Configuration_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/configuration.cpp" /></p>
 <p>&nbsp;</p>
 <hr />
               
