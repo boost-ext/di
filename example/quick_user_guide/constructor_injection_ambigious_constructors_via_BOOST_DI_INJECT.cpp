@@ -13,8 +13,7 @@ namespace di = boost::di;
 
 struct c {
   c(double d, int a) : a(a), d(d) {}
-  c(int a, double d) : a(a), d(d) {}
-  using boost_di_inject__ = di::inject<int, double>;
+  BOOST_DI_INJECT(c, int a, double d) : a(a), d(d) {}
 
   int a = 0;
   double d = 0.0;
