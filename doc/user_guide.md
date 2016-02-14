@@ -198,6 +198,8 @@ Allows to bind interface to implementation and associate value with it.
 ![CPP(BTN)](Run_Dynamic_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/dynamic_bindings.cpp)
 ![CPP(BTN)](Run_Multiple_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/multiple_bindings.cpp)
 
+![CPP(BTN)](Run_Constructor_Bindings_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/bindings/constructor_bindings.cpp)
+
 &nbsp;
 
 ---
@@ -250,6 +252,11 @@ Boost.DI is not able to distinguish between ambiguous constructors with the same
 
 ![CPP(BTN)](Run_Automatic_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/automatic_injection.cpp)
 ![CPP(BTN)](Run_Constructor_Signature_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_signature.cpp)
+![CPP(BTN)](Run_Concepts_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/concepts.cpp)
+![CPP(BTN)](Run_Assisted_Injection_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/assisted_injection.cpp)
+![CPP(BTN)](Run_Lazy_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/lazy.cpp)
+![CPP(BTN)](Run_Named_Parameters_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/named_parameters.cpp)
+![CPP(BTN)](Run_XML_Injection_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/xml_injection.cpp)
 
 &nbsp;
 
@@ -510,6 +517,9 @@ If no scope will be given, deduce scope will be assumed.
 ***Example***
 
 ![CPP(BTN)](Run_Custom_Scope_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_scope.cpp)
+![CPP(BTN)](Run_Scoped_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/scopes/scoped_scope.cpp)
+![CPP(BTN)](Run_Session_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/scopes/session_scope.cpp)
+![CPP(BTN)](Run_Shared_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/scopes/shared_scope.cpp)
 
 &nbsp;
 
@@ -848,7 +858,7 @@ Providers are responsible for creating objects using given configuration.
 ***Example***
 
 ![CPP(BTN)](Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp)
-![CPP(BTN)](Run_Pool_Provider_Policy|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp)
+![CPP(BTN)](Run_Pool_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp)
 
 &nbsp;
 
@@ -905,7 +915,7 @@ Creates objects on the stack whenever possible, otherwise on the heap.
 ***Example***
 
 ![CPP(BTN)](Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp)
-![CPP(BTN)](Run_Pool_Provider_Policy|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp)
+![CPP(BTN)](Run_Pool_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp)
 
 &nbsp;
 
@@ -962,7 +972,8 @@ Basic provider creates objects on the heap.
 ***Example***
 
 ![CPP(BTN)](Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp)
-![CPP(BTN)](Run_Pool_Provider_Policy|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp)
+![CPP(BTN)](Run_Pool_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp)
+![CPP(BTN)](Run_Mocks_Provider_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/providers/mocks_provider.cpp)
 
 &nbsp;
 
@@ -1008,6 +1019,8 @@ In order for injector to verify policies they have to be created using di::confi
 ***Example***
 
 ![CPP(BTN)](Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp)
+![CPP(BTN)](Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/types_dumper.cpp)
+![CPP(BTN)](Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp)
 
 &nbsp;
 
@@ -1080,6 +1093,8 @@ For example, std::is_same<_, int>{} || std::is_constructible<_, int, int>{} || s
 ***Example***
 
 ![CPP(BTN)](Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp)
+![CPP(BTN)](Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/types_dumper.cpp)
+![CPP(BTN)](Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp)
 
 &nbsp;
 
