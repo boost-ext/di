@@ -92,6 +92,7 @@ test-suite user_guide :
     [ example user_guide/bind_multiple_interfaces.cpp ]
     [ example user_guide/bind_type_override.cpp ]
     [ example user_guide/bind_type_to_compile_time_value.cpp ]
+    [ example user_guide/bind_type_to_value.cpp ]
     [ example user_guide/constructor_injection_aggregate.cpp ]
     [ example user_guide/constructor_injection_ambigious_constructors_via_BOOST_DI_INJECT.cpp ]
     [ example user_guide/constructor_injection_ambigious_constructors_via_BOOST_DI_INJECT_TRAITS.cpp ]
