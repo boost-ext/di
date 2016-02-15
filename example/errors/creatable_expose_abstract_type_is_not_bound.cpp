@@ -7,6 +7,7 @@
 //<-
 #include <memory>
 //->
+#define BOOST_DI_CFG_DIAGNOSTICS_LEVEL 1
 #include <boost/di.hpp>
 
 namespace di = boost::di;
@@ -22,7 +23,8 @@ struct example {
 
 int main() {
   // clang-format off
-  di::injector<example> injector = di::make_injector();
-  (void)injector;
+  di::injector<example> injector = di::make_injector(); // creatable constraint not satisfied
+                                                        // abstract_type<interface>::is_not_bound
+  (void)injector;                                       // type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?
   // clang-format on
 }
