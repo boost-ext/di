@@ -161,8 +161,7 @@ test bind_in_not_scopable_type = [] {
 #endif
              );
 
-  expect_compile_fail("", errors_, struct dummy{};
-                      int main() { auto injector = di::make_injector(di::bind<int>().in(dummy{})); });
+  expect_compile_fail("", errors_, struct dummy{}; int main() { di::make_injector(di::bind<int>().in(dummy{})); });
 };
 
 #if defined(__cpp_variable_templates)
@@ -176,8 +175,7 @@ test bind_in_not_scopable_type_v = [] {
 #endif
              );
 
-  expect_compile_fail("", errors_, struct dummy{};
-                      int main() { auto injector = di::make_injector(di::bind<int>.in(dummy{})); });
+  expect_compile_fail("", errors_, struct dummy{}; int main() { di::make_injector(di::bind<int>.in(dummy{})); });
 };
 #endif
 
@@ -698,7 +696,7 @@ test make_injector_wrong_arg = [] {
 test make_injector_with_from_not_movable = [] {
   expect_compile_fail("", errors(), struct c{}; int main() {
     auto module = di::make_injector();
-    auto injector = di::make_injector(module);
+    di::make_injector(module);
   });
 };
 
