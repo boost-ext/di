@@ -1,7 +1,7 @@
 * [Injector](#injector)
     * [di::make_injector](#di_make_injector)
 * [Bindings](#bindings)
-    * [di::bind](di_bind)
+    * [di::bind](#di_bind)
 * [Injections](#injections)
     * [automatic (default)](#di_automatic)
     * [BOOST_DI_INJECT](#BOOST_DI_INJECT)
@@ -505,7 +505,7 @@ di::deduce (default)
 
 Default scope which will be converted to one of the scopes depending on the type.
 
-| Type | Deduced scope |
+| Type | deduce |
 |------|-------|
 | T | unique |
 | T& | singleton |
@@ -569,7 +569,7 @@ Scope representing values - passed by user. The life time of the object depends 
 Boost.DI is not managing life time of passed objects, however values and strings will be copied and managed by the library.
 
 | Type | instance |
-|------------|
+| ---- | -------- |
 | T | ✔ |
 | T& | - |
 | const T& | ✔ (temporary) | ✔ |
@@ -635,7 +635,7 @@ Singleton scope will convert between std::shared_ptr and boost::shared_ptr if re
 </div>
 
 | Type | singleton |
-|------------|
+| ---- | --------- |
 | T | ✔ |
 | T& | - |
 | const T& | ✔ (temporary) | ✔ |
@@ -676,8 +676,8 @@ Singleton scope will convert between std::shared_ptr and boost::shared_ptr if re
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_singleton.cpp)
-
 ***Example***
+
 ![CPP(BTN)](Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp)
 ![CPP(BTN)](Run_Eager_Singletons_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/eager_singletons.cpp)
 
@@ -697,7 +697,7 @@ di::unique
 Scope representing unique/per request value.
 
 | Type | unique |
-|------------|
+| ---- | ------ |
 | T | ✔ |
 | T& | - |
 | const T& | ✔ (temporary) | ✔ |
@@ -769,7 +769,7 @@ Module might be installed by passing it into [make_injector].
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_type.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_many_types.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_annotated_type.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_complex.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_complex_types.cpp)
 ***Example***
 
 ![CPP(BTN)](Run_Modules_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/modules.cpp)
