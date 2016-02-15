@@ -1082,6 +1082,8 @@ di::concepts::boundable
 | ---------- | ----------- | ------- |
 | `Ts...` | Bindings to be verified | true_type if constraint is satisfied, `error` otherwise |
 
+***Test***
+
 | Expression | Description | Error |
 | ---------- | ----------- | ----- |
 | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_has_disallowed_qualifiers.cpp) | type `T` has disallowed qualifiers | type<T>::has_disallowed_qualifiers |
@@ -1090,8 +1092,6 @@ di::concepts::boundable
 | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_neither_a_dependency_nor_an_injector.cpp) | type `T` is neither a dependency nor an injector | type<T>::is_neither_a_dependency_nor_an_injector |
 | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_not_related_to.cpp) | type `T` is not related to type `U` | type<T>::is_not_related_to<U> |
   
-***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/injector_empty.cpp)
 ***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
