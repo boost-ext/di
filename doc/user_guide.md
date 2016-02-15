@@ -100,9 +100,7 @@ Creates [injector] type.
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
-&nbsp;
-
----
+<br /><hr />
 
 ###Bindings
 
@@ -172,12 +170,9 @@ Allows to bind interface to implementation and associate value with it.
 ![CPP(BTN)](Run_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/fwd_bindings.cpp)
 ![CPP(BTN)](Run_Dynamic_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/dynamic_bindings.cpp)
 ![CPP(BTN)](Run_Multiple_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/multiple_bindings.cpp)
-
 ![CPP(BTN)](Run_Constructor_Bindings_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/bindings/constructor_bindings.cpp)
 
-&nbsp;
-
----
+<br /><br /><br /><hr />
 
 ###Injections
 
@@ -233,9 +228,7 @@ Boost.DI is not able to distinguish between ambiguous constructors with the same
 ![CPP(BTN)](Run_Named_Parameters_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/named_parameters.cpp)
 ![CPP(BTN)](Run_XML_Injection_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/xml_injection.cpp)
 
-&nbsp;
-
----
+<br /><br /><br /><hr />
 
 ```cpp
 BOOST_DI_INJECT
@@ -275,9 +268,7 @@ BOOST_DI_INJECT constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SI
 
 ![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/contructor_injection.cpp)
 
-&nbsp;
-
----
+<br /><hr />
 
 ```cpp
 BOOST_DI_INJECT_TRAITS
@@ -314,9 +305,7 @@ BOOST_DI_INJECT_TRAITS constructor parameters is limited to [BOOST_DI_CFG_CTOR_L
 
 ![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/contructor_injection.cpp)
 
-&nbsp;
-
----
+<br /><hr />
 
 ```cpp
 di::inject
@@ -353,9 +342,7 @@ di::inject has no limitations if it comes to constructor parameters, however, na
 
 ![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/contructor_injection.cpp)
 
-&nbsp;
-
----
+<br /><hr />
 
 ```cpp
 di::ctor_traits
@@ -375,9 +362,7 @@ di::ctor_traits
 
 ![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/contructor_injection.cpp)
 
-&nbsp;
-
----
+<br /><hr />
 
 ###Annotations
 
@@ -438,9 +423,7 @@ Implementation of constructor doesn't require annotations, which means implement
 
 ![CPP(BTN)](Run_Annotations_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/annotations.cpp)
 
-&nbsp;
-
----
+<br /><hr />
 
 ###Scopes
 
@@ -496,9 +479,7 @@ If no scope will be given, deduce scope will be assumed.
 ![CPP(BTN)](Run_Session_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/scopes/session_scope.cpp)
 ![CPP(BTN)](Run_Shared_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/scopes/shared_scope.cpp)
 
-&nbsp;
-
----
+<br /><br /><br /><hr />
 
 ```cpp
 di::deduce (default)
@@ -559,9 +540,7 @@ Default scope which will be converted to one of the scopes depending on the type
 ![CPP(BTN)](Run_Deduce_Scope_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/deduce_scope.cpp)
 ![CPP(BTN)](Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp)
 
-&nbsp;
-
----
+<br /><hr />
 
 ```cpp
 di::instance (di::bind<>.to(value))
@@ -621,9 +600,7 @@ Boost.DI is not managing life time of passed objects, however values and strings
 ![CPP(BTN)](Run_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bindings.cpp)
 ![CPP(BTN)](Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp)
 
-&nbsp;
-
----
+<br /><hr />
 
 ```cpp
 di::singleton
@@ -690,9 +667,7 @@ Singleton scope will convert between std::shared_ptr and boost::shared_ptr if re
 ![CPP(BTN)](Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp)
 ![CPP(BTN)](Run_Eager_Singletons_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/eager_singletons.cpp)
 
-&nbsp;
-
----
+<br /><hr />
 
 ```cpp
 di::unique
@@ -752,9 +727,7 @@ Scope representing unique/per request value.
 
 ![CPP(BTN)](Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp)
 
-&nbsp;
-
----
+<br /><hr />
 
 ###Modules
 
@@ -785,9 +758,7 @@ Module might be installed by passing it into [make_injector].
 
 ![CPP(BTN)](Run_Modules_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/modules.cpp)
 
-&nbsp;
-
----
+<br /><hr />
 
 ###Providers
 
@@ -835,9 +806,7 @@ Providers are responsible for creating objects using given configuration.
 ![CPP(BTN)](Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp)
 ![CPP(BTN)](Run_Pool_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp)
 
-&nbsp;
-
----
+<br /><hr />
 
 ```cpp
 di::providers::stack_over_heap (default)
@@ -892,9 +861,7 @@ Creates objects on the stack whenever possible, otherwise on the heap.
 ![CPP(BTN)](Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp)
 ![CPP(BTN)](Run_Pool_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp)
 
-&nbsp;
-
----
+<br /><hr />
 
 ```cpp
 di::providers::heap
@@ -950,9 +917,7 @@ Basic provider creates objects on the heap.
 ![CPP(BTN)](Run_Pool_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp)
 ![CPP(BTN)](Run_Mocks_Provider_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/providers/mocks_provider.cpp)
 
-&nbsp;
-
----
+<br /><br /><br /><hr />
 
 ###Policies
 
@@ -997,9 +962,7 @@ In order for injector to verify policies they have to be created using di::confi
 ![CPP(BTN)](Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/types_dumper.cpp)
 ![CPP(BTN)](Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp)
 
-&nbsp;
-
----
+<br /><br /><br /><hr />
 
 ```cpp
 di::policies::constructible
@@ -1071,9 +1034,7 @@ For example, std::is_same<_, int>{} || std::is_constructible<_, int, int>{} || s
 ![CPP(BTN)](Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/types_dumper.cpp)
 ![CPP(BTN)](Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp)
 
-&nbsp;
-
----
+<br /><br /><br /><hr />
 
 ###Concepts
 
@@ -1116,9 +1077,7 @@ di::concepts::boundable
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
-&nbsp;
-
----
+<br /><hr />
 
 ```cpp
 di::concepts::callable
@@ -1138,9 +1097,7 @@ di::concepts::callable
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
-&nbsp;
-
----
+<br /><hr />
 
 ```cpp
 di::concepts::configurable
@@ -1160,9 +1117,7 @@ di::concepts::configurable
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
-&nbsp;
-
----
+<br /><hr />
 
 ```cpp
 di::concepts::creatable
@@ -1182,9 +1137,7 @@ di::concepts::creatable
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
-&nbsp;
-
----
+<br /><hr />
 
 ```cpp
 di::concepts::providable
@@ -1204,9 +1157,7 @@ di::concepts::providable
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
-&nbsp;
-
----
+<br /><hr />
 
 ```cpp
 di::concepts::scopable
@@ -1226,9 +1177,7 @@ di::concepts::scopable
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
-&nbsp;
-
----
+<br /><hr />
 
 ###Configuration
 
@@ -1266,8 +1215,6 @@ Injector configuration.
 
 ![CPP(BTN)](Run_Configuration_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/configuration.cpp)
 
-&nbsp;
-
----
+<br /><hr />
 
 [BOOST_DI_CFG_CTOR_LIMIT_SIZE]: user_guide.md

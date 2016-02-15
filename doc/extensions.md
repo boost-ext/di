@@ -1,3 +1,18 @@
+* [Constructor Bindings](#constructor-bindings)
+* [Assisted Injection](#assisted-injection)
+* [Concepts](#concepts)
+* [Lazy](#lazy)
+* [Named Parameters](#named-parameters)
+* [XML Injection](#xml-injection)
+* [Types Dumper](#types-dumper)
+* [UML Dumper](#uml-dumper)
+* [Mocks Provider](#mocks-provider)
+* [Scoped Scope](#scoped-scope)
+* [Session Scope](#session-scope)
+* [Shared Scope](#shared-scope)
+
+---
+
 ###Constructor Bindings
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/bindings/constructor_bindings.cpp)
 
