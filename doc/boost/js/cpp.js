@@ -159,7 +159,7 @@ $(document).ready(function () {
       var id = gid++;
       var compile = "\/\/ $CXX -std=c++14 " + basename;
       example = $('<div/>').text(example_result.replace(/[\n]{3,}/g, "\n")).html();
-      $(this).replaceWith('<button style="position: relative; top: 60px; right: 20px; z-index: 10;" class="btn btn-neutral float-right" id="run_it_btn_' + id + '" onclick="cpp(' + id + ', \'' + file + '\', \'Run this code!\')">Run this code!</button><textarea style="display: none" id="code_' + id + '"></textarea><br /><textarea style="display: none" id="output_' + id + '"></textarea><div id="code_listing_' + id + '"><pre><code class="cpp">' + compile + '\n' + example + '</code></pre></div>');
+      $(this).replaceWith('<button style="position: relative; top: 60px; right: 20px; z-index: 10;" class="btn btn-neutral float-right" id="run_it_btn_' + id + '" onclick="cpp(' + id + ', \'' + file + '\', \'Run this code!\')">Run this code!</button><textarea style="display: none" id="code_' + id + '"></textarea><br /><textarea style="display: none" id="output_' + id + '"></textarea><div id="code_listing_' + id + '"><pre><code style="width: 100%" class="cpp">' + compile + '\n' + example + '</code></pre></div>');
     });
 
     $('img[alt="CPP(BTN)"]').each(function () {
