@@ -1,37 +1,41 @@
 * [Injector](#injector)
-    * [di::make_injector]()
+    * [di::make_injector](#di_make_injector)
 * [Bindings](#bindings)
-    * [di::bind]()
+    * [di::bind](di_bind)
 * [Injections](#injections)
-    * [automatic (default)]()
-    * [BOOST_DI_INJECT]()
-    * [di::ctor_traits]()
+    * [automatic (default)](#di_automatic)
+    * [BOOST_DI_INJECT](#BOOST_DI_INJECT)
+    * [BOOST_DI_INJECT_TRAITS](#BOOST_DI_INJECT_TRAITS)
+    * [di::inject](#di_inject)
+    * [di::ctor_traits](#di_ctor_traits)
 * [Annotations](#annotations)
-    * [(named = name)]()
+    * [(named = name)](#di_named)
 * [Scopes](#scopes)
-    * [di::deduce (default)]()
-    * [di::instance (di::bind<>.to(value))]()
-    * [di::singleton]()
-    * [di::unique]()
+    * [di::deduce (default)](#di_deduce)
+    * [di::instance (di::bind<>.to(value))](#di_instance)
+    * [di::singleton](#di_singleton)
+    * [di::unique](#di_unique)
 * [Modules](#modules)
 * [Providers](#providers)
-    * [di::providers::stack_over_heap (default)]()
-    * [di::providers::heap]()
+    * [di::providers::stack_over_heap (default)](#di_stack_over_heap)
+    * [di::providers::heap](#di_heap)
 * [Policies](#policies)
-    * [di::policies::constructible]()
+    * [di::policies::constructible](#di_constructible)
 * [Concepts](#concepts)
-    * [di::concepts::boundable]()
-    * [di::concepts::callable]()
-    * [di::concepts::configurable]()
-    * [di::concepts::creatable]()
-    * [di::concepts::providable]()
-    * [di::concepts::scopable]()
+    * [di::concepts::boundable](#di_boundable)
+    * [di::concepts::callable](#di_callable)
+    * [di::concepts::configurable](#di_configurable)
+    * [di::concepts::creatable](#di_creatable)
+    * [di::concepts::providable](#di_providable)
+    * [di::concepts::scopable](#di_scopable)
 * [Configuration](#configuration)
+    * [di::config](#di_config)
 
 ---
 
 ###Injector
 
+<a id="di_make_injector"></a>
 ```cpp
 di::make_injector
 ```
@@ -107,6 +111,7 @@ Creates [injector] type.
 Bindings define dependencies configuration which basically means what types will be created
 and what values will be passed into them.
 
+<a id="di_bind"></a>
 ```cpp
 di::bind
 ```
@@ -179,6 +184,7 @@ Allows to bind interface to implementation and associate value with it.
 *Constructor Injection* is the most powerful of available injections.
 It guarantees initialized state of data members. Boost.DI constructor injection is achieved without any additional work from the user.
 
+<a id="di_automatic"></a>
 ```cpp
 automatic (default)
 ```
@@ -230,6 +236,7 @@ Boost.DI is not able to distinguish between ambiguous constructors with the same
 
 <br /><br /><br /><hr />
 
+<a id="BOOST_DI_INJECT"></a>
 ```cpp
 BOOST_DI_INJECT
 ```
@@ -270,6 +277,7 @@ BOOST_DI_INJECT constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SI
 
 <br /><hr />
 
+<a id="BOOST_DI_INJECT_TRAITS"></a>
 ```cpp
 BOOST_DI_INJECT_TRAITS
 ```
@@ -307,6 +315,7 @@ BOOST_DI_INJECT_TRAITS constructor parameters is limited to [BOOST_DI_CFG_CTOR_L
 
 <br /><hr />
 
+<a id="di_inject"></a>
 ```cpp
 di::inject
 ```
@@ -344,6 +353,7 @@ di::inject has no limitations if it comes to constructor parameters, however, na
 
 <br /><hr />
 
+<a id="di_ctor_traits"></a>
 ```cpp
 di::ctor_traits
 ```
@@ -369,6 +379,7 @@ di::ctor_traits
 Annotations are intrusive, additional informations specified along with the type in order to refer to given type by the
 annotation instead of type it self. Useful, when there are more than one type of the same parameters in constructor parameters.
 
+<a id="di_named"></a>
 ```cpp
 (named = name)
 ```
@@ -481,6 +492,7 @@ If no scope will be given, deduce scope will be assumed.
 
 <br /><br /><br /><hr />
 
+<a id="di_deduce"></a>
 ```cpp
 di::deduce (default)
 ```
@@ -542,6 +554,7 @@ Default scope which will be converted to one of the scopes depending on the type
 
 <br /><hr />
 
+<a id="di_instance"></a>
 ```cpp
 di::instance (di::bind<>.to(value))
 ```
@@ -602,6 +615,7 @@ Boost.DI is not managing life time of passed objects, however values and strings
 
 <br /><hr />
 
+<a id="di_singleton"></a>
 ```cpp
 di::singleton
 ```
@@ -669,6 +683,7 @@ Singleton scope will convert between std::shared_ptr and boost::shared_ptr if re
 
 <br /><hr />
 
+<a id="di_unique"></a>
 ```cpp
 di::unique
 ```
@@ -731,6 +746,7 @@ Scope representing unique/per request value.
 
 ###Modules
 
+<a id="di_module"></a>
 ```cpp
 auto module = [] { return di::make_injector(...); };
 ```
@@ -808,6 +824,7 @@ Providers are responsible for creating objects using given configuration.
 
 <br /><hr />
 
+<a id="di_stack_over_heap"></a>
 ```cpp
 di::providers::stack_over_heap (default)
 ```
@@ -863,6 +880,7 @@ Creates objects on the stack whenever possible, otherwise on the heap.
 
 <br /><hr />
 
+<a id="di_heap"></a>
 ```cpp
 di::providers::heap
 ```
@@ -964,6 +982,7 @@ In order for injector to verify policies they have to be created using di::confi
 
 <br /><br /><br /><hr />
 
+<a id="di_constructible"></a>
 ```cpp
 di::policies::constructible
 ```
@@ -1041,6 +1060,7 @@ For example, std::is_same<_, int>{} || std::is_constructible<_, int, int>{} || s
 Concepts are types constraints which ensure that only given types which are satisfied by the constraint will be allowed.
 If type doesn't satisfy the concept short and descriptive error message is provided.
 
+<a id="di_boundable"></a>
 ```cpp
 di::concepts::boundable
 ```
@@ -1079,6 +1099,7 @@ di::concepts::boundable
 
 <br /><hr />
 
+<a id="di_callable"></a>
 ```cpp
 di::concepts::callable
 ```
@@ -1099,6 +1120,7 @@ di::concepts::callable
 
 <br /><hr />
 
+<a id="di_configurable"></a>
 ```cpp
 di::concepts::configurable
 ```
@@ -1119,6 +1141,7 @@ di::concepts::configurable
 
 <br /><hr />
 
+<a id="di_creatable"></a>
 ```cpp
 di::concepts::creatable
 ```
@@ -1139,6 +1162,7 @@ di::concepts::creatable
 
 <br /><hr />
 
+<a id="di_providable"></a>
 ```cpp
 di::concepts::providable
 ```
@@ -1159,6 +1183,7 @@ di::concepts::providable
 
 <br /><hr />
 
+<a id="di_scopable"></a>
 ```cpp
 di::concepts::scopable
 ```
@@ -1181,6 +1206,7 @@ di::concepts::scopable
 
 ###Configuration
 
+<a id="di_config"></a>
 ```cpp
 di::config
 ```
