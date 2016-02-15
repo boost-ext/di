@@ -1901,30 +1901,41 @@ using boundable;
 <thead>
 <tr>
 <th>Expression</th>
-<th>Error</th>
 <th>Description</th>
+<th>Error</th>
+<th>Suggestion</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/multiple_bindings.cpp" /></td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_has_disallowed_qualifiers.cpp" /></td>
+<td>type <code>T</code> has disallowed qualifiers</td>
+<td>type<T>::has_disallowed_qualifiers</td>
+<td>-</td>
+</tr>
+<tr>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_abstract.cpp" /></td>
+<td>type <code>T</code> is abstract</td>
+<td>type<T>::is_abstract</td>
+<td>-</td>
+</tr>
+<tr>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_bound_more_than_once.cpp" /></td>
+<td>type <code>T</code> is bound more than once</td>
 <td>type<T>::is_bound_more_than_once</td>
-<td><code>T</code> is bound more than once</td>
+<td>-</td>
 </tr>
 <tr>
-<td></td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_neither_a_dependency_nor_an_injector.cpp" /></td>
+<td>type <code>T</code> is neither a dependency nor an injector</td>
 <td>type<T>::is_neither_a_dependency_nor_an_injector</td>
-<td><code>T</code> is bound more than once</td>
+<td>-</td>
 </tr>
 <tr>
-<td></td>
-<td>type<T>::is_not_base_of<Implentation></td>
-<td><code>T</code> is bound more than once</td>
-</tr>
-<tr>
-<td></td>
-<td>type<I>::is_not_convertible_to<T></td>
-<td><code>T</code> is bound more than once</td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_not_related_to.cpp" /></td>
+<td>type <code>T</code> is not related to type <code>U</code></td>
+<td>type<T>::is_not_related_to<U></td>
+<td>-</td>
 </tr>
 </tbody>
 </table>
