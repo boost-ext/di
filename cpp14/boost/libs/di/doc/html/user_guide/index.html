@@ -220,7 +220,7 @@
 </ul>
 </li>
 <li><a href="#bindings">Bindings</a><ul>
-<li><a href="../di_bind">di::bind</a></li>
+<li><a href="#di_bind">di::bind</a></li>
 </ul>
 </li>
 <li><a href="#injections">Injections</a><ul>
@@ -970,7 +970,7 @@ struct scope {
 <thead>
 <tr>
 <th>Type</th>
-<th>Deduced scope</th>
+<th>deduce</th>
 </tr>
 </thead>
 <tbody>
@@ -1093,35 +1093,45 @@ Boost.DI is not managing life time of passed objects, however values and strings
 <thead>
 <tr>
 <th>Type</th>
+<th>instance</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>T</td>
+<td>✔</td>
 </tr>
 <tr>
 <td>T&amp;</td>
+<td>-</td>
 </tr>
 <tr>
 <td>const T&amp;</td>
+<td>✔ (temporary)</td>
 </tr>
 <tr>
 <td>T* (transfer ownership)</td>
+<td>✔</td>
 </tr>
 <tr>
 <td>const T*</td>
+<td>✔</td>
 </tr>
 <tr>
 <td>T&amp;&amp;</td>
+<td>✔</td>
 </tr>
 <tr>
 <td>unique_ptr<T></td>
+<td>✔</td>
 </tr>
 <tr>
 <td>shared_ptr<T></td>
+<td>✔</td>
 </tr>
 <tr>
 <td>weak_ptr<T></td>
+<td>-</td>
 </tr>
 </tbody>
 </table>
@@ -1209,35 +1219,45 @@ Singleton scope will convert between std::shared_ptr and boost::shared_ptr if re
 <thead>
 <tr>
 <th>Type</th>
+<th>singleton</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>T</td>
+<td>✔</td>
 </tr>
 <tr>
 <td>T&amp;</td>
+<td>-</td>
 </tr>
 <tr>
 <td>const T&amp;</td>
+<td>✔ (temporary)</td>
 </tr>
 <tr>
 <td>T* (transfer ownership)</td>
+<td>✔</td>
 </tr>
 <tr>
 <td>const T*</td>
+<td>✔</td>
 </tr>
 <tr>
 <td>T&amp;&amp;</td>
+<td>✔</td>
 </tr>
 <tr>
 <td>unique_ptr<T></td>
+<td>✔</td>
 </tr>
 <tr>
 <td>shared_ptr<T></td>
+<td>✔</td>
 </tr>
 <tr>
 <td>weak_ptr<T></td>
+<td>-</td>
 </tr>
 </tbody>
 </table>
@@ -1303,9 +1323,9 @@ scopes::singleton singleton;
 </tbody>
 </table>
 <p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_singleton.cpp" /></p>
-<p><strong><em>Example</em></strong>
-<img alt="CPP(BTN)" src="../Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_singleton.cpp" />
+<strong><em>Example</em></strong></p>
+<p><img alt="CPP(BTN)" src="../Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp" />
 <img alt="CPP(BTN)" src="../Run_Eager_Singletons_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/eager_singletons.cpp" /></p>
 <p><br /><hr /></p>
 <p><a id="di_unique"></a></p>
@@ -1321,35 +1341,45 @@ scopes::singleton singleton;
 <thead>
 <tr>
 <th>Type</th>
+<th>unique</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>T</td>
+<td>✔</td>
 </tr>
 <tr>
 <td>T&amp;</td>
+<td>-</td>
 </tr>
 <tr>
 <td>const T&amp;</td>
+<td>✔ (temporary)</td>
 </tr>
 <tr>
 <td>T* (transfer ownership)</td>
+<td>✔</td>
 </tr>
 <tr>
 <td>const T*</td>
+<td>✔</td>
 </tr>
 <tr>
 <td>T&amp;&amp;</td>
+<td>✔</td>
 </tr>
 <tr>
 <td>unique_ptr<T></td>
+<td>✔</td>
 </tr>
 <tr>
 <td>shared_ptr<T></td>
+<td>✔</td>
 </tr>
 <tr>
 <td>weak_ptr<T></td>
+<td>-</td>
 </tr>
 </tbody>
 </table>
@@ -1438,7 +1468,7 @@ Module might be installed by passing it into [make_injector].</p>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_type.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_many_types.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_annotated_type.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_complex.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_complex_types.cpp" />
 <strong><em>Example</em></strong></p>
 <p><img alt="CPP(BTN)" src="../Run_Modules_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/modules.cpp" /></p>
 <p><br /><hr /></p>
