@@ -14,6 +14,7 @@ int main() {
   };
 
   // clang-format off
-  di::make_injector<test_config>(); // config<test_config>::requires_<provider<providable_type (...)>>
+  di::make_injector<test_config>();
+  /** config<test_config>::requires_<provider<providable_type (...)>> **/
   // clang-format on
 }

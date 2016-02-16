@@ -11,7 +11,7 @@ namespace di = boost::di;
 int main() { struct dummy { };
   // clang-format off
   di::make_injector(
-    dummy{} // type<dummy>::is_neither_a_dependency_nor_an_injector
+    dummy{} /** type<dummy>::is_neither_a_dependency_nor_an_injector **/
   );
   // clang-format on
 }

@@ -19,8 +19,8 @@ struct impl : i {};
 int main() {
   // clang-format off
   di::make_injector(
-    di::bind<i>().to<impl>() // type<impl>::is_abstract
-                             // unimplemented pure virtual method 'dummy' in 'impl'
+    di::bind<i>().to<impl>() /** type<impl>::is_abstract **/
+    /** unimplemented pure virtual method 'dummy' in 'impl' **/
   );
   // clang-format on
 }

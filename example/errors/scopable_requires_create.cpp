@@ -11,7 +11,7 @@ namespace di = boost::di;
 int main() { struct dummy { };
   // clang-format off
   di::make_injector(
-    di::bind<int>().in(dummy{})); // scope<dummy>::requires_<create>
+    di::bind<int>().in(dummy{})); /** scope<dummy>::requires_<create> **/
   );
   // clang-format on
 }

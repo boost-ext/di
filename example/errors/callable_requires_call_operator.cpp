@@ -15,6 +15,7 @@ int main() {
   };
 
   // clang-format off
-  di::make_injector<test_config>(); // policy<test_config::dummy>::requires_<call_operator>
+  di::make_injector<test_config>();
+  /** policy<test_config::dummy>::requires_<call_operator> **/
   // clang-format on
 }

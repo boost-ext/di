@@ -16,8 +16,9 @@ int main() {
 
   // clang-format off
   auto injector = di::make_injector();
-  injector.create<T>(); // creatable constraint not satisfied
-                        // type<T>::has_to_many_constructor_parameters::max<2>
-                        // increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters
+  injector.create<T>(); /** creatable constraint not satisfied **/
+  /** type<T>::has_to_many_constructor_parameters::max<2>
+   *  increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters
+   */
   // clang-format on
 }

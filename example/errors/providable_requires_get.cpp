@@ -14,6 +14,6 @@ int main() {
     static auto provider(...) { return dummy{}; }
   };
   // clang-format off
-  di::make_injector<test_config>(); // provider<test_config::dummy>::requires_<get>
+  di::make_injector<test_config>(); /** provider<test_config::dummy>::requires_<get> **/
   // clang-format on
 }

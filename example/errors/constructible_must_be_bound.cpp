@@ -22,8 +22,9 @@ struct example {
 
 int main() {
   auto injector = di::make_injector<must_be_bound>(di::bind<int>().to(42));
-  injector.create<example>();  // creatable constraint not satisfied
-                               // type<float>::not_allowed_by<is_bound<_>>
-                               // type<double>::not_allowed_by<is_bound<_>>
-                               // type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>!
+  injector.create<example>(); /** creatable constraint not satisfied **/
+                              /** type<float>::not_allowed_by<is_bound<_>>
+                               *  type<double>::not_allowed_by<is_bound<_>>
+                               *  type disabled by constructible policy, added by BOOST_DI_CFG or make_injector<CONFIG>!
+                               */
 }

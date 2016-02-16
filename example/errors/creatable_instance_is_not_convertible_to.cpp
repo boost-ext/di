@@ -17,8 +17,10 @@ int main() {
     di::bind<>().to(42)
   );
 
-  injector.create<T>(); // creatable constraint not satisfied
-                        // scoped<instance>::is_not_convertible_to<int &>
-                        // instance is not convertible to the requested type, verify binding: 'di::bind<T>.to(value)'?
+  injector.create<T>(); /** creatable constraint not satisfied **/
+  /** scoped<instance>::is_not_convertible_to<int &>
+   *  instance is not convertible to the requested type,
+   *    verify binding: 'di::bind<T>.to(value)'?
+   */
   // clang-format on
 }

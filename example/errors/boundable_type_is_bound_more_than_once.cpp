@@ -11,7 +11,7 @@ namespace di = boost::di;
 int main() {
   // clang-format off
   di::make_injector(
-    di::bind<int>.to(42) // type<int>::is_bound_more_than_once
+    di::bind<int>.to(42) /** type<int>::is_bound_more_than_once **/
   , di::bind<int>.to(87) // [di::override]
   );
   // clang-format on

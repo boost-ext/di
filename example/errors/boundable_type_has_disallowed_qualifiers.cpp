@@ -11,7 +11,7 @@ namespace di = boost::di;
 int main() {
   // clang-format off
   di::make_injector(
-    di::bind<int*>().to(42) // type<int*>::has_disallowed_qualifiers
+    di::bind<int*>().to(42) /** type<int*>::has_disallowed_qualifiers **/
   );
   // clang-format on
 }

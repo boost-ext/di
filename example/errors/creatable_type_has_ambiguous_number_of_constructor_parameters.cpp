@@ -16,8 +16,9 @@ int main() {
 
   // clang-format off
   auto injector = di::make_injector();
-  injector.create<T>(); // creatable constraint not satisfied
-                        // type<T>::has_ambiguous_number_of_constructor_parameters::given<2>::expected<4>
-                        // verify BOOST_DI_INJECT_TRAITS or di::ctor_traits
+  injector.create<T>(); /** creatable constraint not satisfied **/
+  /** type<T>::has_ambiguous_number_of_constructor_parameters::given<2>::expected<4>
+   * verify BOOST_DI_INJECT_TRAITS or di::ctor_traits
+   */
   // clang-format on
 }

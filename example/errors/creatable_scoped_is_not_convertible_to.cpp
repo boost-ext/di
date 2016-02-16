@@ -17,8 +17,10 @@ int main() {
     di::bind<int>().in(di::singleton)
   );
 
-  injector.create<T>(); // creatable constraint not satisfied
-                        // scoped<singleton>::is_not_convertible_to<int *>
-                        // scoped object is not convertible to the requested type, did you mistake the scope: 'di::bind<T>.in(scope)'?
+  injector.create<T>(); /** creatable constraint not satisfied **/
+  /** scoped<singleton>::is_not_convertible_to<int *>
+   *  scoped object is not convertible to the requested type,
+   *    did you mistake the scope: 'di::bind<T>.in(scope)'?
+   */
   // clang-format on
 }

@@ -36,9 +36,8 @@
 ###Injector
 
 <a id="di_make_injector"></a>
-```cpp
-di::make_injector
-```
+
+--- ***di::make_injector*** ---
 
 ***Header***
 
@@ -112,9 +111,7 @@ Bindings define dependencies configuration which basically means what types will
 and what values will be passed into them.
 
 <a id="di_bind"></a>
-```cpp
-di::bind
-```
+--- ***di::bind*** ---
 
 ***Header***
 
@@ -185,9 +182,7 @@ Allows to bind interface to implementation and associate value with it.
 It guarantees initialized state of data members. Boost.DI constructor injection is achieved without any additional work from the user.
 
 <a id="di_automatic"></a>
-```cpp
-automatic (default)
-```
+--- ***automatic (default)*** ---
 
 ***Header***
 
@@ -237,9 +232,7 @@ Boost.DI is not able to distinguish between ambiguous constructors with the same
 <br /><br /><br /><hr />
 
 <a id="BOOST_DI_INJECT"></a>
-```cpp
-BOOST_DI_INJECT
-```
+--- ***BOOST_DI_INJECT*** ---
 
 ***Header***
 
@@ -278,9 +271,7 @@ BOOST_DI_INJECT constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SI
 <br /><hr />
 
 <a id="BOOST_DI_INJECT_TRAITS"></a>
-```cpp
-BOOST_DI_INJECT_TRAITS
-```
+--- ***BOOST_DI_INJECT_TRAITS*** ---
 
 ***Header***
 
@@ -316,9 +307,7 @@ BOOST_DI_INJECT_TRAITS constructor parameters is limited to [BOOST_DI_CFG_CTOR_L
 <br /><hr />
 
 <a id="di_inject"></a>
-```cpp
-di::inject
-```
+--- ***di::inject*** ---
 
 ***Header***
 
@@ -354,9 +343,7 @@ di::inject has no limitations if it comes to constructor parameters, however, na
 <br /><hr />
 
 <a id="di_ctor_traits"></a>
-```cpp
-di::ctor_traits
-```
+--- ***di::ctor_traits*** ---
 
 ***Header***
 
@@ -380,9 +367,7 @@ Annotations are intrusive, additional informations specified along with the type
 annotation instead of type it self. Useful, when there are more than one type of the same parameters in constructor parameters.
 
 <a id="di_named"></a>
-```cpp
-(named = name)
-```
+--- ***(named = name)*** ---
 
 ***Header***
 
@@ -392,7 +377,7 @@ annotation instead of type it self. Useful, when there are more than one type of
 
 Named parameters are useful when constructor has more parameters of the same type.
 
-```
+```cpp
   T(int value1, int value2);
 ```
 
@@ -493,9 +478,7 @@ If no scope will be given, deduce scope will be assumed.
 <br /><br /><br /><hr />
 
 <a id="di_deduce"></a>
-```cpp
-di::deduce (default)
-```
+--- ***di::deduce (default)*** ---
 
 ***Header***
 
@@ -555,9 +538,7 @@ Default scope which will be converted to one of the scopes depending on the type
 <br /><hr />
 
 <a id="di_instance"></a>
-```cpp
-di::instance (di::bind<>.to(value))
-```
+--- ***di::instance (di::bind<>.to(value))*** ---
 
 ***Header***
 
@@ -616,9 +597,7 @@ Boost.DI is not managing life time of passed objects, however values and strings
 <br /><hr />
 
 <a id="di_singleton"></a>
-```cpp
-di::singleton
-```
+--- ***di::singleton*** ---
 
 ***Header***
 
@@ -684,9 +663,7 @@ Singleton scope will convert between std::shared_ptr and boost::shared_ptr if re
 <br /><hr />
 
 <a id="di_unique"></a>
-```cpp
-di::unique
-```
+--- ***di::unique*** ---
 
 ***Header***
 
@@ -825,9 +802,7 @@ Providers are responsible for creating objects using given configuration.
 <br /><hr />
 
 <a id="di_stack_over_heap"></a>
-```cpp
-di::providers::stack_over_heap (default)
-```
+--- ***di::providers::stack_over_heap (default)*** ---
 
 ***Header***
 
@@ -881,9 +856,7 @@ Creates objects on the stack whenever possible, otherwise on the heap.
 <br /><hr />
 
 <a id="di_heap"></a>
-```cpp
-di::providers::heap
-```
+--- ***di::providers::heap*** ---
 
 ***Header***
 
@@ -983,9 +956,7 @@ In order for injector to verify policies they have to be created using di::confi
 <br /><br /><br /><hr />
 
 <a id="di_constructible"></a>
-```cpp
-di::policies::constructible
-```
+--- ***di::policies::constructible*** ---
 
 ***Header***
 
@@ -1061,9 +1032,7 @@ Concepts are types constraints which ensure that only given types which are sati
 If type doesn't satisfy the concept short and descriptive error message is provided.
 
 <a id="di_boundable"></a>
-```cpp
-di::concepts::boundable
-```
+--- ***di::concepts::boundable*** ---
 
 ***Header***
 
@@ -1076,7 +1045,19 @@ di::concepts::boundable
 ***Semantics***
 
     template <class... Ts>
-    using boundable;
+    using boundable {
+
+    is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value,
+    aux::conditional_t<is_abstract<aux::is_complete<T>::value, T>::value, typename type_<T>::is_abstract, aux::true_type>,
+    is_unique<>
+struct is_supported : aux::is_same<aux::bool_list<aux::always<TDeps>::value...>,
+                                   aux::bool_list<(aux::is_constructible<TDeps, TDeps&&>::value &&
+                                                   (aux::is_a<core::injector_base, TDeps>::value ||
+                                                    aux::is_a<core::dependency_base, TDeps>::value))...>> {};
+
+      (aux::is_base_of<I, T>::value || (aux::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value));
+    }
+
 
 | Expression | Description | Returns |
 | ---------- | ----------- | ------- |
@@ -1090,18 +1071,12 @@ di::concepts::boundable
 | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_abstract.cpp) | type `T` is abstract | type<T>::is_abstract |
 | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_bound_more_than_once.cpp) | type `T` is bound more than once | type<T>::is_bound_more_than_once |
 | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_neither_a_dependency_nor_an_injector.cpp) | type `T` is neither a dependency nor an injector | type<T>::is_neither_a_dependency_nor_an_injector |
-| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_not_related_to.cpp) | type `T` is not related to type `U` | type<T>::is_not_related_to<U> |
-  
-***Example***
-
-![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
+| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_not_related_to.cpp) | type `T` is not related to type `U` | `type<T>::is_not_related_to<U>` |
 
 <br /><hr />
 
 <a id="di_callable"></a>
-```cpp
-di::concepts::callable
-```
+--- ***di::concepts::callable*** ---
 
 ***Header***
 
@@ -1112,17 +1087,15 @@ di::concepts::callable
 ***Semantics***
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/injector_empty.cpp)
-***Example***
 
-![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
+| Expression | Description | Error |
+| ---------- | ----------- | ----- |
+| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/callable_requires_call_operator.cpp) | policy `T` requires a call operator | policy<test_config::dummy\>::requires_<call_operator\> |
 
 <br /><hr />
 
 <a id="di_configurable"></a>
-```cpp
-di::concepts::configurable
-```
+--- ***di::concepts::configurable*** ---
 
 ***Header***
 
@@ -1133,17 +1106,15 @@ di::concepts::configurable
 ***Semantics***
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/injector_empty.cpp)
-***Example***
 
-![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
+| Expression | Description | Error |
+| ---------- | ----------- | ----- |
+| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/configurable_requires_callable_and_providable.cpp) | config `T` requires only providable and callable types | config<test_config\>::requires_<provider<providable_type (...)\>\> |
 
 <br /><hr />
 
 <a id="di_creatable"></a>
-```cpp
-di::concepts::creatable
-```
+--- ***di::concepts::creatable*** ---
 
 ***Header***
 
@@ -1154,17 +1125,20 @@ di::concepts::creatable
 ***Semantics***
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/injector_empty.cpp)
-***Example***
 
-![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
+| Expression | Description | Error | Suggestion |
+| ---------- | ----------- | ----- | ---------- |
+| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_abstract_type_is_not_bound.cpp) | | abstract_type<interface\>::is_not_bound | 'type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?' |
+| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_expose_abstract_type_is_not_bound.cpp) | | | |
+| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_type_has_ambiguous_number_of_constructor_parameters.cpp) |  | | |
+| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_type_has_to_many_constructor_parameters.cpp) |  | | |
+| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_instance_is_not_convertible_to.cpp) |  | | |
+| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_scoped_is_not_convertible_to.cpp) |  | | |
 
 <br /><hr />
 
 <a id="di_providable"></a>
-```cpp
-di::concepts::providable
-```
+--- ***di::concepts::providable*** ---
 
 ***Header***
 
@@ -1175,17 +1149,15 @@ di::concepts::providable
 ***Semantics***
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/injector_empty.cpp)
-***Example***
 
-![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
+| Expression | Description | Error |
+| ---------- | ----------- | ----- |
+| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/providable_requires_get.cpp) | config `T` requires only providable and callable types | config<test_config\>::requires_<provider<providable_type (...)\>\> |
 
 <br /><hr />
 
 <a id="di_scopable"></a>
-```cpp
-di::concepts::scopable
-```
+--- ***di::concepts::scopable*** ---
 
 ***Header***
 
@@ -1196,19 +1168,17 @@ di::concepts::scopable
 ***Semantics***
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/injector_empty.cpp)
-***Example***
 
-![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
+| Expression | Description | Error |
+| ---------- | ----------- | ----- |
+| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/scopable_requires_create.cpp) | config `T` requires only providable and callable types | config<test_config\>::requires_<provider<providable_type (...)\>\> |
 
 <br /><hr />
 
 ###Configuration
 
 <a id="di_config"></a>
-```cpp
-di::config
-```
+--- ***di::config*** ---
 
 ***Header***
 

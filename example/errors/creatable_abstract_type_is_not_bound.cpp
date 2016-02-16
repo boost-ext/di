@@ -23,8 +23,10 @@ struct example {
 
 int main() {
   // clang-format off
-  di::make_injector().create<example>(); // creatable constraint not satisfied
-                                         // abstract_type<interface>::is_not_bound
-                                         // type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?
+  di::make_injector().create<example>(); /** creatable constraint not satisfied **/
+  /** abstract_type<interface>::is_not_bound
+   *  type is not bound, did you forget to add: 
+   *   'di::bind<interface>.to<implementation>()'?
+   */
   // clang-format on
 }

@@ -11,7 +11,7 @@ namespace di = boost::di;
 int main() {
   // clang-format off
   di::make_injector(
-    di::bind<int>().to<double>() // type<double>::is_not_related_to<int>
+    di::bind<int>().to<double>() /** type<double>::is_not_related_to<int> **/
   );
   // clang-format on
 }
