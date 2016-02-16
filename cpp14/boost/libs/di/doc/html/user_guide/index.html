@@ -274,7 +274,7 @@
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
-<p>Creates [injector] type.</p>
+<p>Creates <a href="#di_make_injector">injector</a> type.</p>
 <p><strong><em>Semantics</em></strong></p>
 <pre><code>template&lt;class... TDeps&gt; requires boundable&lt;TDeps...&gt;
 class injector {
@@ -306,19 +306,19 @@ public:
 <tbody>
 <tr>
 <td><code>TDeps...</code></td>
-<td>[boundable]&lt;TDeps...></td>
+<td><a href="#di_boundable">boundable</a>&lt;TDeps...></td>
 <td>[Bindings] to be used as configuration</td>
 <td>-</td>
 </tr>
 <tr>
 <td><code>create&lt;T&gt;()</code></td>
-<td>[creatable]&lt;T></td>
+<td><a href="#di_creatable">creatable</a>&lt;T></td>
 <td>Creates type <code>T</code></td>
 <td><code>T</code></td>
 </tr>
 <tr>
 <td><code>operator T()</code></td>
-<td>[creatable]&lt;T></td>
+<td><a href="#di_creatable">creatable</a>&lt;T></td>
 <td>Creates type <code>T</code></td>
 <td><code>T</code></td>
 </tr>
@@ -403,15 +403,15 @@ auto make_injector(const TBindings&amp;...) noexcept;
 <tbody>
 <tr>
 <td><code>TConfig</code></td>
-<td>[configurable]&lt;TConfig></td>
-<td>[Configuration]</td>
+<td><a href="#di_configurable">configurable</a>&lt;TConfig></td>
+<td><a href="#di_config">Configuration</a></td>
 <td>-</td>
 </tr>
 <tr>
 <td><code>make_injector(const TBindings&amp;...)</code></td>
-<td>[boundable]&lt;TBindings...></td>
-<td>Creates [injector] with given [Bindings]</td>
-<td>[injector]</td>
+<td><a href="#di_boundable">boundable</a>&lt;TBindings...></td>
+<td>Creates <a href="#di_make_injector">injector</a> with given [Bindings]</td>
+<td><a href="#di_make_injector">injector</a></td>
 </tr>
 </tbody>
 </table>
@@ -469,39 +469,39 @@ detail::bind&lt;Ts...&gt; bind{};
 <tbody>
 <tr>
 <td><code>Ts...</code></td>
-<td>[boundable]&lt;Ts...></td>
+<td><a href="#di_boundable">boundable</a>&lt;Ts...></td>
 <td>'Interface' types</td>
 <td>-</td>
 </tr>
 <tr>
 <td><code>to&lt;T\&gt;</code></td>
-<td>[boundable]&lt;T></td>
+<td><a href="#di_boundable">boundable</a>&lt;T></td>
 <td>Binds <code>Ts...</code> to <code>T</code> type</td>
-<td>[boundable]</td>
+<td><a href="#di_boundable">boundable</a></td>
 </tr>
 <tr>
 <td><code>to(T&amp;&amp;)</code></td>
-<td>[boundable]&lt;T></td>
+<td><a href="#di_boundable">boundable</a>&lt;T></td>
 <td>Binds <code>Ts...</code> to <code>T</code> object</td>
-<td>[boundable]</td>
+<td><a href="#di_boundable">boundable</a></td>
 </tr>
 <tr>
 <td><code>in(const TScope&amp;)</code></td>
-<td>[scopable]&lt;TScope></td>
+<td><a href="#di_scopable">scopable</a>&lt;TScope></td>
 <td>Binds <code>Ts...</code> into <code>TScope</code></td>
-<td>[boundable]</td>
+<td><a href="#di_boundable">boundable</a></td>
 </tr>
 <tr>
 <td><code>named(const TName&amp;)</code></td>
 <td>-</td>
 <td>Binds <code>Ts...</code> using 'Named' annotation</td>
-<td>[boundable]</td>
+<td><a href="#di_boundable">boundable</a></td>
 </tr>
 <tr>
 <td><code>operator[](const override&amp;)</code></td>
 <td>-</td>
 <td>Overrides given binding</td>
-<td>[boundable]</td>
+<td><a href="#di_boundable">boundable</a></td>
 </tr>
 </tbody>
 </table>
@@ -530,7 +530,7 @@ It guarantees initialized state of data members. Boost.DI constructor injection 
 </code></pre>
 <p><strong><em>Description</em></strong></p>
 <p>Boost.DI will deduce the best available constructor to be used for injection - unique constructor with the longest parameter list.
-If the default behavior should be changed constructor has to be explicitly marked with [BOOST_DI_INJECT] or [BOOST_DI_INJECT_TRAITS].</p>
+If the default behavior should be changed constructor has to be explicitly marked with <a href="#BOOST_DI_INJECT">BOOST_DI_INJECT</a> or <a href="#BOOST_DI_INJECT_TRAITS">BOOST_DI_INJECT_TRAITS</a>.</p>
 <div class="warning">
 <h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
 Automatic constructor parameters deduction is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE], which by default is set to 10.
@@ -620,13 +620,13 @@ Then BOOST_DI_INJECT become handy to point which constructor should be used.</p>
 </table>
 <div class="warning">
 <h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
-BOOST_DI_INJECT constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE, which by defaults is set to 10.
+BOOST_DI_INJECT constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE], which by default is set to 10.
 </div>
 
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambigious_constructors_via_BOOST_DI_INJECT.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/contructor_injection.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp" /></p>
 <p><br /><hr /></p>
 <p><a id="BOOST_DI_INJECT_TRAITS"></a>
 --- <strong><em>BOOST_DI_INJECT_TRAITS</em></strong> ---</p>
@@ -661,14 +661,14 @@ BOOST_DI_INJECT constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SI
 </table>
 <div class="warning">
 <h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
-BOOST_DI_INJECT_TRAITS constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE, which by defaults is set to 10.
+BOOST_DI_INJECT_TRAITS constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE], which by default is set to 10.
 </div>
 
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambigious_constructors_via_BOOST_DI_INJECT_TRAITS.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_default_values.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/contructor_injection.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp" /></p>
 <p><br /><hr /></p>
 <p><a id="di_inject"></a>
 --- <strong><em>di::inject</em></strong> ---</p>
@@ -710,7 +710,7 @@ di::inject has no limitations if it comes to constructor parameters, however, na
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambigious_constructors_via_inject.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_long_parameter_list.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/contructor_injection.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp" /></p>
 <p><br /><hr /></p>
 <p><a id="di_ctor_traits"></a>
 --- <strong><em>di::ctor_traits</em></strong> ---</p>
@@ -722,7 +722,7 @@ di::inject has no limitations if it comes to constructor parameters, however, na
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambigious_constructors_via_ctor_traits.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/contructor_injection.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp" /></p>
 <p><br /><hr /></p>
 <h3 id="annotations">Annotations</h3>
 <p>Annotations are intrusive, additional informations specified along with the type in order to refer to given type by the
@@ -835,13 +835,13 @@ struct scope {
 </tr>
 <tr>
 <td><code>try_create&lt;T, TName, TProvider\&gt;</code></td>
-<td>providable&lt;TProvider></td>
+<td><a href="#di_providable">providable</a>&lt;TProvider></td>
 <td>Verifies whether type might be created</td>
 <td>std::true_type/std::false_type</td>
 </tr>
 <tr>
 <td><code>create&lt;T, TName, TProvider\&gt;</code></td>
-<td>providable&lt;TProvider></td>
+<td><a href="#di_providable">providable</a>&lt;TProvider></td>
 <td>Creates type might be created</td>
 <td><code>T</code></td>
 </tr>
@@ -958,39 +958,39 @@ struct scope {
 <tbody>
 <tr>
 <td>T</td>
-<td>unique</td>
+<td><a href="#di_unique">unique</a></td>
 </tr>
 <tr>
 <td>T&amp;</td>
-<td>singleton</td>
+<td><a href="#di_singleton">singleton</a></td>
 </tr>
 <tr>
 <td>const T&amp;</td>
-<td>unique (temporary)/singleton</td>
+<td><a href="#di_unique">unique</a> (temporary)/singleton</td>
 </tr>
 <tr>
 <td>T*</td>
-<td>unique (ownership transfer)</td>
+<td><a href="#di_unique">unique</a> (ownership transfer)</td>
 </tr>
 <tr>
 <td>const T*</td>
-<td>unique (ownership transfer)</td>
+<td><a href="#di_unique">unique</a> (ownership transfer)</td>
 </tr>
 <tr>
 <td>T&amp;&amp;</td>
-<td>unique</td>
+<td><a href="#di_unique">unique</a></td>
 </tr>
 <tr>
 <td>unique_ptr<T></td>
-<td>unique</td>
+<td><a href="#di_unique">unique</a></td>
 </tr>
 <tr>
 <td>shared_ptr<T></td>
-<td>singleton</td>
+<td><a href="#di_singleton">singleton</a></td>
 </tr>
 <tr>
 <td>weak_ptr<T></td>
-<td>singleton</td>
+<td><a href="#di_singleton">singleton</a></td>
 </tr>
 </tbody>
 </table>
@@ -1043,13 +1043,13 @@ scopes::deduce deduce;
 </tr>
 <tr>
 <td><code>try_create&lt;T, TName, TProvider\&gt;</code></td>
-<td>providable&lt;TProvider></td>
+<td><a href="#di_providable">providable</a>&lt;TProvider></td>
 <td>Verifies whether type might be created</td>
 <td>std::true_type/std::false_type</td>
 </tr>
 <tr>
 <td><code>create&lt;T, TName, TProvider\&gt;</code></td>
-<td>providable&lt;TProvider></td>
+<td><a href="#di_providable">providable</a>&lt;TProvider></td>
 <td>Creates type might be created</td>
 <td><code>T</code></td>
 </tr>
@@ -1162,13 +1162,13 @@ Boost.DI is not managing life time of passed objects, however values and strings
 </tr>
 <tr>
 <td><code>try_create&lt;T, TName, TProvider\&gt;</code></td>
-<td>providable&lt;TProvider></td>
+<td><a href="#di_providable">providable</a>&lt;TProvider></td>
 <td>Verifies whether type might be created</td>
 <td>std::true_type/std::false_type</td>
 </tr>
 <tr>
 <td><code>create&lt;T, TName, TProvider\&gt;</code></td>
-<td>providable&lt;TProvider></td>
+<td><a href="#di_providable">providable</a>&lt;TProvider></td>
 <td>Creates type might be created</td>
 <td><code>T</code></td>
 </tr>
@@ -1288,13 +1288,13 @@ scopes::singleton singleton;
 </tr>
 <tr>
 <td><code>try_create&lt;T, TName, TProvider\&gt;</code></td>
-<td>providable&lt;TProvider></td>
+<td><a href="#di_providable">providable</a>&lt;TProvider></td>
 <td>Verifies whether type might be created</td>
 <td>std::true_type/std::false_type</td>
 </tr>
 <tr>
 <td><code>create&lt;T, TName, TProvider\&gt;</code></td>
-<td>providable&lt;TProvider></td>
+<td><a href="#di_providable">providable</a>&lt;TProvider></td>
 <td>Creates type might be created</td>
 <td><code>T</code></td>
 </tr>
@@ -1408,13 +1408,13 @@ scopes::unique unique;
 </tr>
 <tr>
 <td><code>try_create&lt;T, TName, TProvider\&gt;</code></td>
-<td>providable&lt;TProvider></td>
+<td><a href="#di_providable">providable</a>&lt;TProvider></td>
 <td>Verifies whether type might be created</td>
 <td>std::true_type/std::false_type</td>
 </tr>
 <tr>
 <td><code>create&lt;T, TName, TProvider\&gt;</code></td>
-<td>providable&lt;TProvider></td>
+<td><a href="#di_providable">providable</a>&lt;TProvider></td>
 <td>Creates type might be created</td>
 <td><code>T</code></td>
 </tr>
@@ -1489,7 +1489,7 @@ namespace providers {
 <tbody>
 <tr>
 <td><code>is_creatable&lt;T, TArgs...\&gt;</code></td>
-<td>creatable&lt;TArgs...></td>
+<td><a href="#di_creatable">creatable</a>&lt;TArgs...></td>
 <td>Verify whether <code>T</code> is creatable with <code>TArgs...</code></td>
 <td><code>T</code></td>
 </tr>
@@ -1542,7 +1542,7 @@ namespace providers {
 <tbody>
 <tr>
 <td><code>is_creatable&lt;T, TArgs...\&gt;</code></td>
-<td>creatable&lt;TArgs...></td>
+<td><a href="#di_creatable">creatable</a>&lt;TArgs...></td>
 <td>Verify whether <code>T</code> is creatable with <code>TArgs...</code></td>
 <td><code>T</code></td>
 </tr>
@@ -1641,7 +1641,7 @@ namespace providers {
 <tbody>
 <tr>
 <td><code>is_creatable&lt;T, TArgs...\&gt;</code></td>
-<td>creatable&lt;TArgs...></td>
+<td><a href="#di_creatable">creatable</a>&lt;TArgs...></td>
 <td>Verify whether <code>T</code> is creatable with <code>TArgs...</code></td>
 <td><code>T</code></td>
 </tr>
@@ -1736,9 +1736,9 @@ By default Boost.DI has no policies enabled.
 <tbody>
 <tr>
 <td><code>make_policies&lt;TPolicies...\&gt;</code></td>
-<td>[callable]&lt;TPolicies...></td>
+<td><a href="#di_callable">callable</a>&lt;TPolicies...></td>
 <td>Creates policies</td>
-<td>[callable] list</td>
+<td><a href="#di_callable">callable</a> list</td>
 </tr>
 </tbody>
 </table>
@@ -1811,7 +1811,7 @@ namespace operators {
 <tr>
 <td><code>is_injected&lt;T\&gt;</code></td>
 <td>-</td>
-<td>Verify whether type <code>T</code> is injected via [BOOST_DI_INJECT]</td>
+<td>Verify whether type <code>T</code> is injected via <a href="#BOOST_DI_INJECT">BOOST_DI_INJECT</a></td>
 <td>true_type/false_type</td>
 </tr>
 </tbody>
@@ -1917,7 +1917,7 @@ boundable&lt;Ts...&gt;
 </tr>
 </tbody>
 </table>
-<p><br /><hr /></p>
+<hr />
 <p><a id="di_callable"></a>
 --- <strong><em>di::concepts::callable</em></strong> ---</p>
 <p><strong><em>Header</em></strong></p>
@@ -1953,7 +1953,7 @@ concept bool callable() {
 </tr>
 </tbody>
 </table>
-<p><br /><hr /></p>
+<hr />
 <p><a id="di_configurable"></a>
 --- <strong><em>di::concepts::configurable</em></strong> ---</p>
 <p><strong><em>Header</em></strong></p>
@@ -1988,7 +1988,7 @@ concept bool configurable() {
 </tr>
 </tbody>
 </table>
-<p><br /><hr /></p>
+<hr />
 <p><a id="di_creatable"></a>
 --- <strong><em>di::concepts::creatable</em></strong> ---</p>
 <p><strong><em>Header</em></strong></p>
@@ -2054,7 +2054,7 @@ concept bool creatable() {
 </tr>
 </tbody>
 </table>
-<p><br /><hr /></p>
+<hr />
 <p><a id="di_providable"></a>
 --- <strong><em>di::concepts::providable</em></strong> ---</p>
 <p><strong><em>Header</em></strong></p>
@@ -2090,7 +2090,7 @@ concept bool providable() {
 </tr>
 </tbody>
 </table>
-<p><br /><hr /></p>
+<hr />
 <p><a id="di_scopable"></a>
 --- <strong><em>di::concepts::scopable</em></strong> ---</p>
 <p><strong><em>Header</em></strong></p>
@@ -2127,7 +2127,7 @@ concept bool scopable() {
 </tr>
 </tbody>
 </table>
-<p><br /><hr /></p>
+<hr />
 <h3 id="configuration">Configuration</h3>
 <p><a id="di_config"></a>
 --- <strong><em>di::config</em></strong> ---</p>
@@ -2154,15 +2154,15 @@ concept bool scopable() {
 <tbody>
 <tr>
 <td><code>provider()</code></td>
-<td>[providable]</td>
+<td><a href="#di_providable">providable</a></td>
 <td>Creates provider</td>
-<td>[provider]</td>
+<td><a href="#di_providable">providable</a></td>
 </tr>
 <tr>
 <td><code>policies()</code></td>
-<td>[callable]</td>
+<td><a href="#di_callable">callable</a></td>
 <td>Creates policies</td>
-<td>[policy]</td>
+<td><a href="#di_callable">callable</a></td>
 </tr>
 </tbody>
 </table>
