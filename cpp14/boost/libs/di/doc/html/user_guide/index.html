@@ -1845,20 +1845,24 @@ If type doesn't satisfy the concept short and descriptive error message is provi
 </code></pre>
 <p><strong><em>Description</em></strong></p>
 <p>Bindings type requirement.</p>
-<p><strong><em>Semantics</em></strong></p>
-<pre><code>template &lt;class... Ts&gt;
-using boundable {
-
-is_related&lt;aux::is_complete&lt;I&gt;::value &amp;&amp; aux::is_complete&lt;T&gt;::value, I, T&gt;::value,
-aux::conditional_t&lt;is_abstract&lt;aux::is_complete&lt;T&gt;::value, T&gt;::value, typename type_&lt;T&gt;::is_abstract, aux::true_type&gt;,
-is_unique&lt;&gt;
-</code></pre>
-<p>struct is_supported : aux::is_same<aux::bool_list<aux::always<TDeps>::value...&gt;,
-                                   aux::bool_list&lt;(aux::is_constructible<TDeps, TDeps&&>::value &amp;&amp;
-                                                   (aux::is_a<core::injector_base, TDeps>::value ||
-                                                    aux::is_a<core::dependency_base, TDeps>::value))...&gt;&gt; {};</p>
-<pre><code>  (aux::is_base_of&lt;I, T&gt;::value || (aux::is_convertible&lt;T, I&gt;::value &amp;&amp; !aux::is_narrowed&lt;I, T&gt;::value));
+<p><strong><em>Synopsis</em></strong></p>
+<pre><code>template &lt;class TExpected, class TGiven&gt;
+concept bool boundable() {
+  return is_complete&lt;TExpected&gt;()
+      &amp;&amp; is_complete&lt;TGiven&gt;()
+      &amp;&amp; (is_base_of&lt;TExpected, TGiven&gt;() || is_convertible&lt;TGiven, TExpected&gt;());
 }
+
+template &lt;class... Ts&gt;
+concept bool boundable() {
+  return is_supported&lt;Ts&gt;()... 
+      &amp;&amp; is_movable&lt;Ts&gt;()...
+      &amp;&amp; (is_base_of&lt;injector, Ts&gt;()... || is_base_of&lt;dependency, Ts&gt;()...);
+}
+</code></pre>
+<p><strong><em>Semantics</em></strong></p>
+<pre><code>boundable&lt;T&gt;
+boundable&lt;Ts...&gt;
 </code></pre>
 <table>
 <thead>
@@ -1920,7 +1924,18 @@ is_unique&lt;&gt;
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p>Policies type requirement.</p>
+<p><strong><em>Synopsis</em></strong></p>
+<pre><code>template &lt;class T&gt;
+concept bool callable() {
+  return requires(T object) {
+    { object(...) };
+  }
+}
+</code></pre>
 <p><strong><em>Semantics</em></strong></p>
+<pre><code>callable&lt;T&gt;
+</code></pre>
 <p><strong><em>Test</em></strong></p>
 <table>
 <thead>
@@ -1945,7 +1960,17 @@ is_unique&lt;&gt;
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p><strong><em>Synopsis</em></strong></p>
+<pre><code>template &lt;class T&gt;
+concept bool configurable() {
+  return requires(T object) {
+    return providable&lt;decltype(T::provider(...))&gt; &amp;&amp; callable&lt;decltype(T::policies(...))&gt;();
+  }
+}
+</code></pre>
 <p><strong><em>Semantics</em></strong></p>
+<pre><code>configurable&lt;T&gt;
+</code></pre>
 <p><strong><em>Test</em></strong></p>
 <table>
 <thead>
@@ -1970,7 +1995,16 @@ is_unique&lt;&gt;
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p>Type creation requirement.</p>
+<p><strong><em>Synopsis</em></strong></p>
+<pre><code>template &lt;class T, class... TBindings&gt;
+concept bool creatable() {
+  return is_recursively_constructible&lt;T, TBindings...&gt;();
+}
+</code></pre>
 <p><strong><em>Semantics</em></strong></p>
+<pre><code>creatable&lt;T, TBindings...&gt;
+</code></pre>
 <p><strong><em>Test</em></strong></p>
 <table>
 <thead>
@@ -2027,7 +2061,18 @@ is_unique&lt;&gt;
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p>Provider type requirement.</p>
+<p><strong><em>Synopsis</em></strong></p>
+<pre><code>template &lt;class T&gt;
+concept bool providable() {
+  return requires(T object) {
+    { object.template get&lt;_&gt;(direct/uniform{}, stack/heap{}, ...) };
+    { object.template is_creatable&lt;_&gt;(direct/uniform{}, stack/heap{}, ...) };
+  }
+}
+</code></pre>
 <p><strong><em>Semantics</em></strong></p>
+<p>providable<T></p>
 <p><strong><em>Test</em></strong></p>
 <table>
 <thead>
@@ -2052,7 +2097,19 @@ is_unique&lt;&gt;
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p>Scope type requirement.</p>
+<p><strong><em>Synopsis</em></strong></p>
+<pre><code>template &lt;class T&gt;
+concept bool scopable() {
+  return requires(T) {
+    typename scope&lt;_, _&gt;::is_referable;
+    { T::scope&lt;_, _&gt;{}.try_create() };
+    { T::scope&lt;_, _&gt;{}.create() };
+  }
+}
+</code></pre>
 <p><strong><em>Semantics</em></strong></p>
+<p>scopable<T></p>
 <p><strong><em>Test</em></strong></p>
 <table>
 <thead>
@@ -2079,7 +2136,7 @@ is_unique&lt;&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
 <p>Injector configuration.</p>
-<p><strong><em>Semantics</em></strong></p>
+<p><strong><em>Synopsis</em></strong></p>
 <pre><code>struct config {
   static auto provider(...) noexcept;
   static auto policies(...) noexcept;
@@ -2123,6 +2180,12 @@ is_unique&lt;&gt;
 </tr>
 </tbody>
 </table>
+<p><strong><em>Semantics</em></strong></p>
+<pre><code>di::make_injector&lt;config&gt;(...)
+// or
+#define BOOST_DI_CFG config // change default
+di::make_injector(...)
+</code></pre>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_global.cpp" />
 <strong><em>Example</em></strong></p>
