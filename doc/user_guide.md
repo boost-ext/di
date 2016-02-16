@@ -1042,22 +1042,26 @@ If type doesn't satisfy the concept short and descriptive error message is provi
 
   Bindings type requirement.
 
-***Semantics***
+***Synopsis***
 
-    template <class... Ts>
-    using boundable {
-
-    is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value,
-    aux::conditional_t<is_abstract<aux::is_complete<T>::value, T>::value, typename type_<T>::is_abstract, aux::true_type>,
-    is_unique<>
-struct is_supported : aux::is_same<aux::bool_list<aux::always<TDeps>::value...>,
-                                   aux::bool_list<(aux::is_constructible<TDeps, TDeps&&>::value &&
-                                                   (aux::is_a<core::injector_base, TDeps>::value ||
-                                                    aux::is_a<core::dependency_base, TDeps>::value))...>> {};
-
-      (aux::is_base_of<I, T>::value || (aux::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value));
+    template <class TExpected, class TGiven>
+    concept bool boundable() {
+      return is_complete<TExpected>()
+          && is_complete<TGiven>()
+          && (is_base_of<TExpected, TGiven>() || is_convertible<TGiven, TExpected>());
     }
 
+    template <class... Ts>
+    concept bool boundable() {
+      return is_supported<Ts>()... 
+          && is_movable<Ts>()...
+          && (is_base_of<injector, Ts>()... || is_base_of<dependency, Ts>()...);
+    }
+
+***Semantics***
+
+    boundable<T>
+    boundable<Ts...>
 
 | Expression | Description | Returns |
 | ---------- | ----------- | ------- |
@@ -1084,7 +1088,20 @@ struct is_supported : aux::is_same<aux::bool_list<aux::always<TDeps>::value...>,
 
 ***Description***
 
+Policies type requirement.
+
+***Synopsis***
+
+    template <class T>
+    concept bool callable() {
+      return requires(T object) {
+        { object(...) };
+      }
+    }
+
 ***Semantics***
+
+    callable<T>
 
 ***Test***
 
@@ -1103,7 +1120,18 @@ struct is_supported : aux::is_same<aux::bool_list<aux::always<TDeps>::value...>,
 
 ***Description***
 
+***Synopsis***
+
+    template <class T>
+    concept bool configurable() {
+      return requires(T object) {
+        return providable<decltype(T::provider(...))> && callable<decltype(T::policies(...))>();
+      }
+    }
+
 ***Semantics***
+
+    configurable<T>
 
 ***Test***
 
@@ -1122,7 +1150,18 @@ struct is_supported : aux::is_same<aux::bool_list<aux::always<TDeps>::value...>,
 
 ***Description***
 
+Type creation requirement.
+
+***Synopsis***
+
+    template <class T, class... TBindings>
+    concept bool creatable() {
+      return is_recursively_constructible<T, TBindings...>();
+    }
+
 ***Semantics***
+
+    creatable<T, TBindings...>
 
 ***Test***
 
@@ -1146,7 +1185,21 @@ struct is_supported : aux::is_same<aux::bool_list<aux::always<TDeps>::value...>,
 
 ***Description***
 
+Provider type requirement.
+
+***Synopsis***
+
+    template <class T>
+    concept bool providable() {
+      return requires(T object) {
+        { object.template get<_>(direct/uniform{}, stack/heap{}, ...) };
+        { object.template is_creatable<_>(direct/uniform{}, stack/heap{}, ...) };
+      }
+    }
+
 ***Semantics***
+
+   providable<T>
 
 ***Test***
 
@@ -1165,7 +1218,22 @@ struct is_supported : aux::is_same<aux::bool_list<aux::always<TDeps>::value...>,
 
 ***Description***
 
+Scope type requirement.
+
+***Synopsis***
+
+    template <class T>
+    concept bool scopable() {
+      return requires(T) {
+        typename scope<_, _>::is_referable;
+        { T::scope<_, _>{}.try_create() };
+        { T::scope<_, _>{}.create() };
+      }
+    }
+
 ***Semantics***
+
+   scopable<T>
 
 ***Test***
 
@@ -1188,7 +1256,7 @@ struct is_supported : aux::is_same<aux::bool_list<aux::always<TDeps>::value...>,
 
 Injector configuration.
 
-***Semantics***
+***Synopsis***
 
     struct config {
       static auto provider(...) noexcept;
@@ -1203,6 +1271,13 @@ Injector configuration.
 | Expression | Description |
 | ---------- | ----------- |
 | `BOOST_DI_CFG` | Global configuration allows to customize provider and policies |
+
+***Semantics***
+
+    di::make_injector<config>(...)
+    // or
+    #define BOOST_DI_CFG config // change default
+    di::make_injector(...)
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_global.cpp)
