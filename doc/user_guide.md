@@ -259,14 +259,14 @@ Then BOOST_DI_INJECT become handy to point which constructor should be used.
 
 <div class="warning">
 <h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
-BOOST_DI_INJECT constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE, which by defaults is set to 10.
+BOOST_DI_INJECT constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE], which by default is set to 10.
 </div>
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambigious_constructors_via_BOOST_DI_INJECT.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/contructor_injection.cpp)
+![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp)
 
 <br /><hr />
 
@@ -294,7 +294,7 @@ BOOST_DI_INJECT_TRAITS is a macro definition used to define constructor traits.
 
 <div class="warning">
 <h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
-BOOST_DI_INJECT_TRAITS constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE, which by defaults is set to 10.
+BOOST_DI_INJECT_TRAITS constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE], which by default is set to 10.
 </div>
 
 ***Test***
@@ -302,7 +302,7 @@ BOOST_DI_INJECT_TRAITS constructor parameters is limited to [BOOST_DI_CFG_CTOR_L
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_default_values.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/contructor_injection.cpp)
+![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp)
 
 <br /><hr />
 
@@ -338,7 +338,7 @@ di::inject has no limitations if it comes to constructor parameters, however, na
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_long_parameter_list.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/contructor_injection.cpp)
+![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp)
 
 <br /><hr />
 
@@ -357,7 +357,7 @@ di::inject has no limitations if it comes to constructor parameters, however, na
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambigious_constructors_via_ctor_traits.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/contructor_injection.cpp)
+![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp)
 
 <br /><hr />
 
@@ -451,8 +451,8 @@ If no scope will be given, deduce scope will be assumed.
 | `TExpected` | - | 'Interface' type | - |
 | `TGiven` | - | 'Implementation' type | - |
 | `is_referable<T\>` | - | Verifies whether scope value might be converted to a reference | std::true_type/std::false_type |
-| `try_create<T, TName, TProvider\>` | providable<TProvider\> | Verifies whether type might be created | std::true_type/std::false_type |
-| `create<T, TName, TProvider\>` | providable<TProvider\> | Creates type might be created | `T` |
+| `try_create<T, TName, TProvider\>` | [providable]<TProvider\> | Verifies whether type might be created | std::true_type/std::false_type |
+| `create<T, TName, TProvider\>` | [providable]<TProvider\> | Creates type might be created | `T` |
 
 | Type/Scope | unique | singleton | instance |
 |------------|--------|--------|-----------|---------|----------|
@@ -490,15 +490,15 @@ Default scope which will be converted to one of the scopes depending on the type
 
 | Type | deduce |
 |------|-------|
-| T | unique |
-| T& | singleton |
-| const T& | unique (temporary)/singleton |
-| T* | unique (ownership transfer) |
-| const T* | unique (ownership transfer) |
-| T&& | unique |
-| unique\_ptr<T> | unique |
-| shared\_ptr<T> | singleton |
-| weak\_ptr<T> | singleton |
+| T | [unique] |
+| T& | [singleton] |
+| const T& | [unique] (temporary)/singleton |
+| T* | [unique] (ownership transfer) |
+| const T* | [unique] (ownership transfer) |
+| T&& | [unique] |
+| unique\_ptr<T> | [unique] |
+| shared\_ptr<T> | [singleton] |
+| weak\_ptr<T> | [singleton] |
 
 ***Semantics***
 
@@ -525,8 +525,8 @@ Default scope which will be converted to one of the scopes depending on the type
 | `TExpected` | - | 'Interface' type | - |
 | `TGiven` | - | 'Implementation' type | - |
 | `is_referable<T\>` | - | Verifies whether scope value might be converted to a reference | std::true_type/std::false_type |
-| `try_create<T, TName, TProvider\>` | providable<TProvider\> | Verifies whether type might be created | std::true_type/std::false_type |
-| `create<T, TName, TProvider\>` | providable<TProvider\> | Creates type might be created | `T` |
+| `try_create<T, TName, TProvider\>` | [providable]<TProvider\> | Verifies whether type might be created | std::true_type/std::false_type |
+| `create<T, TName, TProvider\>` | [providable]<TProvider\> | Creates type might be created | `T` |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_deduce_default.cpp)
@@ -584,8 +584,8 @@ Boost.DI is not managing life time of passed objects, however values and strings
 | `TExpected` | - | 'Interface' type | - |
 | `TGiven` | - | 'Implementation' type | - |
 | `is_referable<T\>` | - | Verifies whether scope value might be converted to a reference | std::true_type/std::false_type |
-| `try_create<T, TName, TProvider\>` | providable<TProvider\> | Verifies whether type might be created | std::true_type/std::false_type |
-| `create<T, TName, TProvider\>` | providable<TProvider\> | Creates type might be created | `T` |
+| `try_create<T, TName, TProvider\>` | [providable]<TProvider\> | Verifies whether type might be created | std::true_type/std::false_type |
+| `create<T, TName, TProvider\>` | [providable]<TProvider\> | Creates type might be created | `T` |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_instance.cpp)
@@ -650,8 +650,8 @@ Singleton scope will convert between std::shared_ptr and boost::shared_ptr if re
 | `TExpected` | - | 'Interface' type | - |
 | `TGiven` | - | 'Implementation' type | - |
 | `is_referable<T\>` | - | Verifies whether scope value might be converted to a reference | std::true_type/std::false_type |
-| `try_create<T, TName, TProvider\>` | providable<TProvider\> | Verifies whether type might be created | std::true_type/std::false_type |
-| `create<T, TName, TProvider\>` | providable<TProvider\> | Creates type might be created | `T` |
+| `try_create<T, TName, TProvider\>` | [providable]<TProvider\> | Verifies whether type might be created | std::true_type/std::false_type |
+| `create<T, TName, TProvider\>` | [providable]<TProvider\> | Creates type might be created | `T` |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_singleton.cpp)
@@ -710,8 +710,8 @@ Scope representing unique/per request value.
 | `TExpected` | - | 'Interface' type | - |
 | `TGiven` | - | 'Implementation' type | - |
 | `is_referable<T\>` | - | Verifies whether scope value might be converted to a reference | std::true_type/std::false_type |
-| `try_create<T, TName, TProvider\>` | providable<TProvider\> | Verifies whether type might be created | std::true_type/std::false_type |
-| `create<T, TName, TProvider\>` | providable<TProvider\> | Creates type might be created | `T` |
+| `try_create<T, TName, TProvider\>` | [providable]<TProvider\> | Verifies whether type might be created | std::true_type/std::false_type |
+| `create<T, TName, TProvider\>` | [providable]<TProvider\> | Creates type might be created | `T` |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_unique.cpp)
@@ -789,7 +789,7 @@ Providers are responsible for creating objects using given configuration.
 
 | Expression | Requirement | Description | Returns |
 | ---------- | ----------- | ----------- | ------- |
-| `is_creatable<T, TArgs...\>` | creatable<TArgs...\> | Verify whether `T` is creatable with `TArgs...` | `T` |
+| `is_creatable<T, TArgs...\>` | [creatable]<TArgs...\> | Verify whether `T` is creatable with `TArgs...` | `T` |
 | `get<T, TInitialization, TMemory, TArgs\>(const TInitialization&, const TMemory&, TArgs&&...)` | `TInitialization` is direct\|uniform && `TMemory` is heap\|stack | Creates type `T` with `TArgs...` | `T` |
 
 ***Test***
@@ -831,7 +831,7 @@ Creates objects on the stack whenever possible, otherwise on the heap.
 
 | Expression | Requirement | Description | Returns |
 | ---------- | ----------- | ----------- | ------- |
-| `is_creatable<T, TArgs...\>` | creatable<TArgs...\> | Verify whether `T` is creatable with `TArgs...` | `T` |
+| `is_creatable<T, TArgs...\>` | [creatable]<TArgs...\> | Verify whether `T` is creatable with `TArgs...` | `T` |
 | `get<T, TInitialization, TMemory, TArgs\>(const TInitialization&, const TMemory&, TArgs&&...)` | `TInitialization` is direct\|uniform && `TMemory` is heap\|stack | Creates type `T` with `TArgs...` | `T` |
 
 | Type | `TMemory` |
@@ -885,7 +885,7 @@ Basic provider creates objects on the heap.
 
 | Expression | Requirement | Description | Returns |
 | ---------- | ----------- | ----------- | ------- |
-| `is_creatable<T, TArgs...\>` | creatable<TArgs...\> | Verify whether `T` is creatable with `TArgs...` | `T` |
+| `is_creatable<T, TArgs...\>` | [creatable]<TArgs...\> | Verify whether `T` is creatable with `TArgs...` | `T` |
 | `get<T, TInitialization, TMemory, TArgs\>(const TInitialization&, const TMemory&, TArgs&&...)` | `TInitialization` is direct\|uniform && `TMemory` is heap\|stack | Creates type `T` with `TArgs...` | `T` |
 
 | Type | `TMemory` |
@@ -1077,7 +1077,7 @@ If type doesn't satisfy the concept short and descriptive error message is provi
 | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_neither_a_dependency_nor_an_injector.cpp) | type `T` is neither a dependency nor an injector | type<T>::is_neither_a_dependency_nor_an_injector |
 | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_not_related_to.cpp) | type `T` is not related to type `U` | `type<T>::is_not_related_to<U>` |
 
-<br /><hr />
+---
 
 <a id="di_callable"></a>
 --- ***di::concepts::callable*** ---
@@ -1109,7 +1109,7 @@ Policies type requirement.
 | ---------- | ----------- | ----- |
 | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/callable_requires_call_operator.cpp) | policy `T` requires a call operator | policy<test_config::dummy\>::requires_<call_operator\> |
 
-<br /><hr />
+---
 
 <a id="di_configurable"></a>
 --- ***di::concepts::configurable*** ---
@@ -1139,7 +1139,7 @@ Policies type requirement.
 | ---------- | ----------- | ----- |
 | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/configurable_requires_callable_and_providable.cpp) | config `T` requires only providable and callable types | config<test_config\>::requires_<provider<providable_type (...)\>\> |
 
-<br /><hr />
+---
 
 <a id="di_creatable"></a>
 --- ***di::concepts::creatable*** ---
@@ -1174,7 +1174,7 @@ Type creation requirement.
 | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_instance_is_not_convertible_to.cpp) |  | | |
 | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_scoped_is_not_convertible_to.cpp) |  | | |
 
-<br /><hr />
+---
 
 <a id="di_providable"></a>
 --- ***di::concepts::providable*** ---
@@ -1207,7 +1207,7 @@ Provider type requirement.
 | ---------- | ----------- | ----- |
 | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/providable_requires_get.cpp) | config `T` requires only providable and callable types | config<test_config\>::requires_<provider<providable_type (...)\>\> |
 
-<br /><hr />
+---
 
 <a id="di_scopable"></a>
 --- ***di::concepts::scopable*** ---
@@ -1241,7 +1241,7 @@ Scope type requirement.
 | ---------- | ----------- | ----- |
 | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/scopable_requires_create.cpp) | config `T` requires only providable and callable types | config<test_config\>::requires_<provider<providable_type (...)\>\> |
 
-<br /><hr />
+---
 
 ###Configuration
 
@@ -1265,8 +1265,8 @@ Injector configuration.
 
 | Expression | Requirement | Description | Returns |
 | ---------- | ----------- | ----------- | ------- |
-| `provider()` | [providable] | Creates provider | [provider] |
-| `policies()` | [callable] | Creates policies | [policy] |
+| `provider()` | [providable] | Creates provider | [providable] |
+| `policies()` | [callable] | Creates policies | [callable] |
 
 | Expression | Description |
 | ---------- | ----------- |
@@ -1287,4 +1287,18 @@ Injector configuration.
 
 <br /><hr />
 
-[BOOST_DI_CFG_CTOR_LIMIT_SIZE]: user_guide.md
+[boundable]: #di_boundable
+[callable]: #di_callable
+[configurable]: #di_configurable
+[creatable]: #di_creatable
+[providable]: #di_providable
+[scopable]: #di_scopable
+[injector]: #di_make_injector
+[Configuration]: #di_config
+[deduce]: #di_deduce
+[instance]: #di_instance
+[singleton]: #di_singleton
+[unique]: #di_unique
+[BOOST_DI_INJECT]: #BOOST_DI_INJECT
+[BOOST_DI_INJECT_TRAITS]: #BOOST_DI_INJECT_TRAITS
+[BOOST_DI_CFG_CTOR_LIMIT_SIZE]: #di_config
