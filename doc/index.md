@@ -66,6 +66,8 @@ private:                                |         pump->pump();
 
 ###Why Boost.DI?
 
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/introduction/hello_world.cpp)
+
 * Boost.DI has none or minimal run-time overhead - [Run-time performance](#run_time_performance)
 * Boost.DI compiles fast - [Compile-time performance](#compile_time_performance)
 * Boost.DI gives short diagnostic messages - [Diagnostic messages](#diagnostic_messages)
