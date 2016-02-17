@@ -33,7 +33,9 @@ auto test() {
   return injector.create<std::unique_ptr<interface>>();
 }
 
-/** ASM x86-64 (same as `std::make_unique<implementation>()`)
+/**
+ * ASM x86-64 (same as `std::make_unique<implementation>()`)
+ *
  * push   %rbx
  * mov    %rdi,%rbx
  * mov    $0x8,%edi
