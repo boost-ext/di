@@ -95,5 +95,29 @@ Legend:
 
 ###Error messages
 
+| Expression | Description | Error | Suggestion |
+| ---------- | ----------- | ----- | ---------- |
+| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_abstract.cpp) | type `T` is abstract | type<T>::is_abstract | |
+| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_bound_more_than_once.cpp) | type `T` is bound more than once | type<T>::is_bound_more_than_once | |
+| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_abstract_type_is_not_bound.cpp) | | abstract_type<interface\>::is_not_bound | 'type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?' |
+| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_expose_abstract_type_is_not_bound.cpp) | | | |
+
 ###Other Libraries
 
+* C++ Dependency Injection Libraries
+
+| Library | Boost.DI | dicpp | Google Fruit |
+| ------- | -------- | ----- | ------------ |
+| Language | C++14 | C++11 | C++11 |
+| License | Boost 1.0 | Boost 1.0 | Apache 2.0|
+| Linkage | header only | header only | library |
+| Approach | compile-time | run-time | compile/run-time |
+
+* Dependency Injection Libraries
+
+| Library | Boost.DI | Google Guice | Dagger2 | Ninject |
+| ------- | -------- | ------------ | ------- | ------- |
+| Language | C++14 | Java 6 | Java | C# |
+| License | Boost 1.0 | Apache 2.0 | Apache 2.0 | Apache 2.0|
+| Linkage | header only | jar | jar | dll |
+| Approach | compile-time | run-time | compile-time (annotation processor) | run-time |
