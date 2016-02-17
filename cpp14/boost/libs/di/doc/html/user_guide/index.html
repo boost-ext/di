@@ -92,13 +92,6 @@
           
             <li>
     <li class="toctree-l1 ">
-        <a class="" href="../cheatsheet/index.html">Cheatsheet</a>
-        
-    </li>
-<li>
-          
-            <li>
-    <li class="toctree-l1 ">
         <a class="" href="../quick_user_guide/index.html">Quick User Guide</a>
         
     </li>
@@ -267,6 +260,19 @@
 </li>
 </ul>
 <hr />
+<blockquote>
+<p>Let's assume all examples below include <code>boost/di.hpp</code> header and define <code>di</code> namespace alias.</p>
+</blockquote>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+namespace di = boost::di;
+//
+struct i1 { virtual ~i1() = default; virtual void dummy1() = 0; };
+struct i2 { virtual ~i2() = default; virtual void dummy2() = 0; };
+struct impl1 : i1 { void dummy1() override { } };
+struct impl2 : i2 { void dummy2() override { } };
+struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
+</code></pre>
+
 <h3 id="injector">Injector</h3>
 <p><a id="di_make_injector"></a></p>
 <p>--- <strong><em>di::make_injector</em></strong> ---</p>
