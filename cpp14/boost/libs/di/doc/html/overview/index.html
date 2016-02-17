@@ -94,13 +94,13 @@
                 <li class="toctree-l3"><a href="#configuration">Configuration</a></li>
                 
             
-                <li class="toctree-l3"><a href="#other-libraries">Other Libraries</a></li>
-                
-            
                 <li class="toctree-l3"><a href="#performance">Performance</a></li>
                 
             
                 <li class="toctree-l3"><a href="#error-messages">Error messages</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#other-libraries">Other Libraries</a></li>
                 
             
             </ul>
@@ -213,7 +213,7 @@
 </code></pre>
 
 <ul>
-<li>Include the header and define <code>msm</code> namespace alias</li>
+<li>Include the header and define <code>di</code> namespace alias</li>
 </ul>
 <pre><code class="cpp">#include &quot;boost/di.hpp&quot;
 namespace di = boost::di;
@@ -239,6 +239,7 @@ namespace di = boost::di;
 <ul>
 <li><a href="https://travis-ci.org/boost-experimental/di">Clang-3.4+</a></li>
 <li><a href="https://travis-ci.org/boost-experimental/di">GCC-5.2+</a></li>
+<li><a href="https://ci.appveyor.com/project/boost-experimental/di">MSVC-2015+</a></li>
 </ul>
 <h3 id="configuration">Configuration</h3>
 <table>
@@ -254,12 +255,12 @@ namespace di = boost::di;
 <td>Current version of Boost.DI (ex. 1'0'0)</td>
 </tr>
 <tr>
-<td><code>BOOST_DI_CFG</code></td>
+<td><a href="../user_guide/index.html#di_config"><code>BOOST_DI_CFG</code></a></td>
 <td>Global configuration allows to customize provider and policies</td>
 </tr>
 <tr>
 <td><code>BOOST_DI_CFG_DIAGNOSTICS_LEVEL</code></td>
-<td>Global configuration allows to customize provider and policies</td>
+<td>Gives more information with error messages</td>
 </tr>
 <tr>
 <td><code>BOOST_DI_CFG_CTOR_LIMIT_SIZE</code></td>
@@ -267,152 +268,55 @@ namespace di = boost::di;
 </tr>
 <tr>
 <td><code>BOOST_DI_NAMESPACE_BEGIN</code></td>
-<td>Limits number of allowed consturctor parameters [0-10, default=10]</td>
+<td><code>namespace boost { namespace di { inline namespace v_1_0_0 {</code></td>
 </tr>
 <tr>
 <td><code>BOOST_DI_NAMESPACE_END</code></td>
-<td>Limits number of allowed consturctor parameters [0-10, default=10]</td>
+<td><code>}}}</code></td>
 </tr>
 </tbody>
 </table>
-<h3 id="other-libraries">Other Libraries</h3>
 <h3 id="performance">Performance</h3>
-<p><a id="run_time_performance"></a></p>
-<blockquote>
-<p><strong><a href="http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/di/performance.html">Run-time performance (-O2)</a></strong>
-* Environment
-    * x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
-    * clang++3.4 -O2 / <code>gdb -batch -ex 'file ./a.out' -ex 'disassemble main'</code></p>
-</blockquote>
-<pre><code class="cpp">Create type wihtout bindings            | Asm x86-64 (same as `return 0`)
-----------------------------------------|-----------------------------------------
-int main() {                            | xor %eax,%eax
-    auto injector = di::make_injector();| retq
-    return injector.create&lt;int&gt;();      |
-}                                       |
-</code></pre>
-
-<pre><code class="cpp">Create type with bound instance         | Asm x86-64 (same as `return 42`)
-----------------------------------------|-----------------------------------------
-int main() {                            | mov $0x2a,%eax
-    auto injector = di::make_injector(  | retq
-        di::bind&lt;int&gt;.to(42)            |
-    );                                  |
-                                        |
-    return injector.create&lt;int&gt;();      |
-}                                       |
-</code></pre>
-
-<pre><code class="cpp">Create named type                       | Asm x86-64 (same as `return 42`)
-----------------------------------------|-----------------------------------------
-auto my_int = []{};                     | mov $0x2a,%eax
-                                        | retq
-struct c {                              |
-    BOOST_DI_INJECT(c                   |
-        , (named = my_int) int i)       |
-        : i(i)                          |
-    { }                                 |
-                                        |
-    int i = 0;                          |
-};                                      |
-                                        |
-int main() {                            |
-  auto injector = di::make_injector(    |
-    di::bind&lt;int&gt;.named(my_int).to(42)  |
-  );                                    |
-                                        |
-  return injector.create&lt;c&gt;().i;        |
-}                                       |
-</code></pre>
-
-<pre><code class="cpp">Create bound interface                  | Asm x86-64 (same as `make_unique`)
-----------------------------------------|-----------------------------------------
-int main() {                            | push   %rax
-    auto injector = di::make_injector(  | mov    $0x8,%edi
-        di::bind&lt;i1&gt;.to&lt;impl1&gt;()        | callq  0x4007b0 &lt;_Znwm@plt&gt;
-    );                                  | movq   $0x400a30,(%rax)
-                                        | mov    $0x8,%esi
-    auto ptr = injector.create&lt;         | mov    %rax,%rdi
-        unique_ptr&lt;i1&gt;                  | callq  0x400960 &lt;_ZdlPvm&gt;
-    &gt;();                                | mov    $0x1,%eax
-                                        | pop    %rdx
-    return ptr.get() != nullptr;        | retq
-}                                       |
-</code></pre>
-
-<pre><code class="cpp">Create bound interface via module       | Asm x86-64 (same as `make_unique`)
-----------------------------------------|-----------------------------------------
-struct module {                         | push   %rax
-    auto configure() const noexcept {     | mov    $0x8,%edi
-        return di::make_injector(           | callq  0x4007b0 &lt;_Znwm@plt&gt;
-            di::bind&lt;i1&gt;.to&lt;impl1&gt;()          | movq   $0x400a10,(%rax)
-        );                                  | mov    $0x8,%esi
-    }                                     | mov    %rax,%rdi
-};                                      | callq  0x400960 &lt;_ZdlPvm&gt;
-                                        | mov    $0x1,%eax
-int main() {                            | pop    %rdx
-    auto injector = di::make_injector(    | retq
-        module{}                        |
-    );                                  |
-                                        |
-    auto ptr = injector.create&lt;         |
-        unique_ptr&lt;i1&gt;                  |
-    &gt;();                                |
-                                        |
-    return ptr != nullptr;              |
-}                                       |
-</code></pre>
-
-<pre><code class="cpp">Create bound interface via exposed      | Asm x86-64
-module                                  | cost = type erasure
-----------------------------------------|----------------------------------------------------------------------
-struct module {                         | push   %r14
-    di::injector&lt;i1&gt; configure() const {| push   %rbx
-        return di::make_injector(       | push   %rax
-            di::bind&lt;i1&gt;.to&lt;impl1&gt;()    | mov    %rdi,%r14
-        );                              | mov    $0x20,%edi
-    }                                   | callq  0x400aa0 &lt;_Znwm@plt&gt;
-};                                      | mov    %rax,%rbx
-                                        | mov    $0x400ea0,%eax
-int main() {                            | movq   %rax,%xmm0
-    auto injector = di::make_injector(  | movups %xmm0,(%rbx)
-        module{}                        | movq   $0x400ec0,0x10(%rbx)
-    );                                  | mov    $0x8,%edi
-                                        | callq  0x400aa0 &lt;_Znwm@plt&gt;
-    auto ptr = injector.create&lt;         | movq   $0x400fc8,(%rax)
-        unique_ptr&lt;i1&gt;                  | mov    %rax,(%r14)
-    &gt;();                                | mov    0x10(%rbx),%rax
-                                        | mov    %rbx,%rdi
-    return ptr != nullptr;              | callq  *%rax
-}                                       | mov    %rbx,%rdi
-                                        | callq  0x400a10 &lt;_ZdlPv@plt&gt;
-                                        | mov    %r14,%rax
-                                        | add    $0x8,%rsp
-                                        | pop    %rbx
-                                        | pop    %r14
-                                        | retq
-                                        | mov    %rax,%rdi
-                                        | callq  0x400e90 &lt;__clang_call_terminate&gt;
-                                        | mov    %rax,%rdi
-                                        | callq  0x400e90 &lt;__clang_call_terminate&gt;
-                                        | mov    %rax,%rdi
-                                        | callq  0x400e90 &lt;__clang_call_terminate&gt;
-</code></pre>
-
-<p>*</p>
-<p><a id="compile_time_performance"></a></p>
-<blockquote>
-<p><strong><a href="http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/di/performance.html">Compile-time performance</a></strong> | <a href="https://github.com/boost-experimental/di/blob/cpp14/test/pt/di.cpp">Example</a>
-* Environment
-    * x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
-    * clang++3.4 -O2</p>
-</blockquote>
-<pre><code class="cpp">Boost.DI header                         | Time [s]
-----------------------------------------|-----------------------------------------
-#include &lt;boost/di.hpp&gt;                 | 0.050
-int main() { }                          |
-</code></pre>
-
+<ul>
+<li><strong>Run-time performance</strong><ul>
+<li>Environment<ul>
+<li>x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux</li>
+<li>clang++3.4 -O2 / <code>gdb -batch -ex 'file ./a.out' -ex 'disassemble main'</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_bound_interface.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_bound_interface_via_exposed_module.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_bound_interface_via_module.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_named_type.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_type_with_bound_instance.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_type_without_bindings.cpp" /></p>
+<ul>
+<li><strong>Compile-time performance</strong><ul>
+<li>Environment<ul>
+<li>x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux</li>
+<li>clang++3.4 -O2</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Boost.DI header</th>
+<th>Time [s]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>#include &lt;boost/di.hpp&gt;</code></td>
+<td>0.050s</td>
+</tr>
+</tbody>
+</table>
 <pre><code class="cpp">Legend:
     ctor    = raw constructor: c(int i, double d);
     inject  = inject constructor: BOOST_DI_INJECT(c, int i, double d);
@@ -442,77 +346,7 @@ int main() { }                          |
 </code></pre>
 
 <h3 id="error-messages">Error messages</h3>
-<p><a id="diagnostic_messages"></a></p>
-<blockquote>
-<p><strong><a href="http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/di/diagnostic_messages.html">Diagnostic messages</a></strong></p>
-</blockquote>
-<pre><code class="cpp">Create interface without bound          | Error message
-implementation                          |
-----------------------------------------|[clang]--------------------------------------
-auto injector = di::make_injector();    | warning: 'create' is deprecated: creatable constraint not satisfied
-injector.create&lt;i*&gt;();                  |     injector.create&lt;i*&gt;();
-                                        |              ^
-                                        | note: 'create&lt;i *, 0&gt;' has been explicitly marked deprecated here
-                                        |     T create() const {
-                                        |       ^
-                                        | error: inline function 'boost::di::abstract_type&lt;i&gt;::is_not_bound::error' is not defined
-                                        |     error(_ = &quot;type not bound, did you forget to add: 'di::bind&lt;interface&gt;.to&lt;implementation&gt;()'?&quot;)
-                                        |     ^
-                                        | note: used here
-                                        |     constraint_not_satisfied{}.error();
-                                        |
-                                        |[gcc]----------------------------------------
-                                        | error: inline function ‘constexpr T* boost::di::abstract_type&lt;T&gt;::is_not_bound::error(boost::di::_) const [with T = i]’ used but never defined
-                                        |      error(_ = &quot;type not bound, did you forget to add: 'di::bind&lt;interface&gt;.to&lt;implementation&gt;()'?&quot;)
-                                        |      ^
-                                        | error: call to ‘boost::di::core::injector&lt;boost::di::config&gt;::create&lt;i*, 0&gt;’ declared with attribute error: creatable constraint not satisfied
-                                        |      injector.create&lt;i*&gt;();
-</code></pre>
-
-<pre><code class="cpp">Ambiguous binding                       | Error message
-----------------------------------------|-----------------------------------------
-auto injector = di::make_injector(      | error: base class 'pair&lt;int, no_name&gt;'
-    di::bind&lt;int&gt;.to(42)                | specified more than once as a direct
-  , di::bind&lt;int&gt;.to(87)                | base class
-);                                      |
-                                        |
-injector.create&lt;int&gt;();                 |
-</code></pre>
-
-<pre><code class="cpp">Create not bound object with all bound  | Error message
-policy                                  |
-----------------------------------------|-----------------------------------------
-class all_bound : public di::config {   | error: static_assert failed
-public:                                 | &quot;Type T is not allowed&quot;
-  auto policies() const noexcept {      |
-    return di::make_policies(           |
-      constructible(is_bound&lt;_&gt;{})      |
-    );                                  |
-  }                                     |
-};                                      |
-                                        |
-auto injector =                         |
-    di::make_injector&lt;all_bound&gt;();     |
-                                        |
-injector.create&lt;int&gt;();                 |
-</code></pre>
-
-<pre><code class="cpp">Wrong annotation                        | Error message
-(NAMED instead of named)                |
-----------------------------------------|-----------------------------------------
-auto name = []{};                       | error: use of undeclared identifier
-                                        | 'named'
-struct c {                              |
-    BOOST_DI_INJECT(c                   |
-        , (NAMED = name) int) { }       |
-};                                      |
-                                        |
-di::make_injector().create&lt;c&gt;();        |
-</code></pre>
-
-<p>*</p>
-<p><strong><em>Not configurable</em></strong>
-<img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/msm-lite/master/example/errors/not_configurable.cpp" /></p>
+<h3 id="other-libraries">Other Libraries</h3>
               
             </div>
           </div>
