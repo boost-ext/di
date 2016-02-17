@@ -200,7 +200,12 @@ $(document).ready(function () {
           tmp_ignored = 0;
         }
 
-        if (!ignored && (line.indexOf("/**") == 0 || line.indexOf("int main()") == 0)) {
+        if (!ignored && line.indexOf("/**") == 0) {
+            test_result += line + '\n';
+            tmp_ignored = 2;
+            ignored = 1;
+        }
+        else if (!ignored && line.indexOf("int main()") == 0) {
           if (example_result.replace(/\n/g, "") == "") {
             tmp_ignored = 3;
           } else {
