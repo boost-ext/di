@@ -1,4 +1,6 @@
 // clang-format off
+// <-
+#if DS
                                         +---------------------------------------+
                                         |  Boost.DI                             |
                                         |  $CXX +std=c++14 +fno+exceptions +O2  |
@@ -72,3 +74,70 @@
                                                                              <+ Short/Compile-time-error messages whentype can't be created |
                                                                               +-------------------------------------------------------------+
 
+#endif
+
+#include <memory>
+#include <cassert>
+#include <boost/shared_ptr.hpp>
+#include <boost/di.hpp>
+
+namespace di = boost::di;
+//<-
+struct interface {
+  virtual ~interface() noexcept = default;
+  virtual void dummy() = 0;
+};
+struct implementation : interface {
+  void dummy() override { }
+};
+//->
+
+// clang-format on
+
+struct uniform {
+  bool &b;
+  boost::shared_ptr<interface> sp;
+};
+
+class direct {
+ public:
+  direct(const uniform &uniform, std::shared_ptr<interface> sp) : uniform_(uniform), sp_(sp) {}
+
+  const uniform &uniform_;
+  std::shared_ptr<interface> sp_;
+};
+
+class hello_world {
+ public:
+  hello_world(std::unique_ptr<direct> d, interface &ref, int i) : i_(i) {
+    assert(false == d->uniform_.b);
+    assert(d->sp_.get() == d->uniform_.sp.get());
+    assert(&ref == d->sp_.get());
+  }
+
+  auto run() const { return i_ == 42; }
+
+ private:
+  int i_ = 0;
+};
+
+int main() {
+  auto runtime_value = false;
+
+  // clang-format off
+  auto module = [&] {
+    return di::make_injector(
+      di::bind<>().to(runtime_value)
+    );
+  };
+
+  auto injector = di::make_injector(
+    di::bind<interface>().to<implementation>()
+  , di::bind<>().to(42)
+  , module()
+  );
+  // clang-format on
+
+  auto object = injector.create<hello_world>();
+  assert(object.run());
+}

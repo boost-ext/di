@@ -109,15 +109,15 @@ int main() {                            | push   %rax
 Create bound interface via module       | Asm x86-64 (same as `make_unique`)
 ----------------------------------------|-----------------------------------------
 struct module {                         | push   %rax
-	auto configure() const noexcept {   | mov    $0x8,%edi
-		return di::make_injector(       | callq  0x4007b0 <_Znwm@plt>
-			di::bind<i1>.to<impl1>()    | movq   $0x400a10,(%rax)
-		);                              | mov    $0x8,%esi
-	}                                   | mov    %rax,%rdi
+	auto configure() const noexcept {     | mov    $0x8,%edi
+		return di::make_injector(           | callq  0x4007b0 <_Znwm@plt>
+			di::bind<i1>.to<impl1>()          | movq   $0x400a10,(%rax)
+		);                                  | mov    $0x8,%esi
+	}                                     | mov    %rax,%rdi
 };                                      | callq  0x400960 <_ZdlPvm>
                                         | mov    $0x1,%eax
 int main() {                            | pop    %rdx
-	auto injector = di::make_injector(  | retq
+	auto injector = di::make_injector(    | retq
         module{}                        |
     );                                  |
                                         |
