@@ -14,7 +14,7 @@ Your C++14 header only dependency injection library with no dependencies ([__Try
 ```cpp
 +---------------------------------------------------+
 |$CXX -std=c++14 -fno-exceptions -O2 hello_world.cpp|
-|#Compiles in 0.2s!                                 |
+|#Compiles in 0.4s!                                 |
 +-----------------------------+---------------------+
                               |
                               \
@@ -98,9 +98,9 @@ Your C++14 header only dependency injection library with no dependencies ([__Try
     * [Dependencies](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/overview/index.html#dependencies)
     * [Supported/tested compilers](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/overview/index.html#supportedtested-compilers)
     * [Configuration](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/overview/index.html#configuration)
-    * [Other Libraries](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/overview/index.html#other-libraries)
     * [Performance](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/overview/index.html#performance)
     * [Error messages](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/overview/index.html#error-messages)
+    * [Other Libraries](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/overview/index.html#other-libraries)
 * [Tutorial](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/tutorial/index.html)
     * [1. [Basic] Create objects tree](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/tutorial/index.html#1-basic-create-objects-tree)
     * [2. [Basic] First steps with bindings](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/tutorial/index.html#2-basic-first-steps-with-bindings)
