@@ -199,7 +199,8 @@ $(document).ready(function () {
         } else if (line.indexOf(end) != -1) {
           tmp_ignored = 0;
         }
-        if (!ignored && line.indexOf("int main()") == 0) {
+
+        if (!ignored && (line.indexOf("/**") == 0 || line.indexOf("int main()") == 0) {
           if (example_result.replace(/\n/g, "") == "") {
             tmp_ignored = 3;
           } else {
