@@ -24,20 +24,20 @@
  |  |and boost::shared_ptr  |     };
  |  +-----------------------+  
  |                             +-+class direct {
- |                          +--+   public:                                 +----------------------------+
- |                          |       direct(const uniform &uniform          |ASM x86-64 == `make_unique` |
- |               +----------+            , std::shared_ptr<interface> sp)  +----------------------------+
- |               |                    : uniform_(uniform)                  |push   %rax                 |
- |               |                  , sp_(sp)                              |mov    $0x8,%edi            |
- |               |                  {}                                     |callq  0x4007b0 <_Znwm@plt> |
- |               |                                                         |movq   $0x400a10,(%rax)     |
- |               |                  const uniform &uniform_;               |mov    $0x8,%esi            |
- | +-------------+----------+       std::shared_ptr<interface> sp_;        |mov    %rax,%rdi            |
- | |using T{...} or T(...)  |     };                                       |callq  0x400960 <_ZdlPvm>   |
- +-+without REFLECTION or   |                                +-------------+mov    $0x1,%eax            |
-   |any registration/changes+---+ class hello_world {        |             |pop    %rdx                 |
-   |in the code!            |      public:                   +             |retq                        |
-   +------------------------+       hello_world(std::unique_ptr<direct> d  +-------------------------+--+
+ |                          +--+   public:                                 +---------------------------+
+ |                          |       direct(const uniform &uniform          |ASM x86-64 == `make_unique`|
+ |               +----------+            , std::shared_ptr<interface> sp)  +---------------------------+
+ |               |                    : uniform_(uniform)                  |push   %rax                |
+ |               |                  , sp_(sp)                              |mov    $0x8,%edi           |
+ |               |                  {}                                     |callq  0x4007b0 <_Znwm@plt>|
+ |               |                                                         |movq   $0x400a10,(%rax)    |
+ | +-------------+----------+       const uniform &uniform_;               |mov    $0x8,%esi           |
+ | |Inject  dependencies    |       std::shared_ptr<interface> sp_;        |mov    %rax,%rdi           |
+ | |using T{...} or T(...)  |     };                                       |callq  0x400960 <_ZdlPvm>  |
+ +-+without REFLECTION or   |                                +-------------+mov    $0x1,%eax           |
+   |any changes/registration+-----+class hello_world {       |             |pop    %rdx                |
+   |in the code!            |      public:                   +             |retq                       |
+   +------------------------+       hello_world(std::unique_ptr<direct> d  +-------------------------+-+
                                    +--------+ , interface &ref                                       |
                                    |          , int i)+-------------------------------------------+  +-+
                                    |  : i_(i) {                                                   |    |
