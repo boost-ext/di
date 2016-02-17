@@ -9,7 +9,7 @@ docs_dir: .
 use_directory_urls: false
 theme_dir: boost
 disqus: boost-di
-#google_analytics: ['UA-73083568-1', 'boost-experimental.github.io/msm-lite']
+#google_analytics: ['UA-73083568-1', 'auto']
 extra_javascript: []
 extra_css: []
 
@@ -17,7 +17,6 @@ pages:
 - Introduction: index.md
 - Overview: overview.md
 - Tutorial: tutorial.md
-- Cheatsheet: cheatsheet.md
 - Quick User Guide: quick_user_guide.md
 - User Guide: user_guide.md
 - Examples: examples.md

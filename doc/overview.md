@@ -102,7 +102,7 @@ Legend:
 | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_abstract_type_is_not_bound.cpp) | | abstract_type<interface\>::is_not_bound | 'type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?' |
 | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_expose_abstract_type_is_not_bound.cpp) | | | |
 
-###Other Libraries
+###Dependency Injection Libraries
 
 * C++ Dependency Injection Libraries
 

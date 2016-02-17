@@ -33,6 +33,18 @@
 
 ---
 
+> Let's assume all examples below include `boost/di.hpp` header and define `di` namespace alias.
+```cpp
+#include <boost/di.hpp>
+namespace di = boost::di;
+//
+struct i1 { virtual ~i1() = default; virtual void dummy1() = 0; };
+struct i2 { virtual ~i2() = default; virtual void dummy2() = 0; };
+struct impl1 : i1 { void dummy1() override { } };
+struct impl2 : i2 { void dummy2() override { } };
+struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
+```
+
 ###Injector
 
 <a id="di_make_injector"></a>
