@@ -28,27 +28,27 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 > **"Let's make some coffee!"**
 <p align="center"><img src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/coffee_maker.png" alt="coffee maker"/></p>
 ```cpp
-No Dependency injection                 | Dependency Injection
-----------------------------------------|--------------------------------------------
-class coffee_maker {                    | class coffee_maker {
-public:                                 | public:
-    void brew() {                       |   coffee_maker(shared_ptr<iheater> heater
-        heater->on();                   |              , unique_ptr<ipump> pump)
-        pump->pump();                   |         : heater(heater), pump(move(pump))
-        clog << "coffee"! << endl;      |     { }
-        heater->off();                  |
-    }                                   |     void brew() {
-                                        |         heater->on();
-private:                                |         pump->pump();
-    shared_ptr<iheater> heater =        |         clog << "coffee!" << endl;
-        make_shared<electric_heater>(); |         heater->off();
-                                        |     }
-    unique_ptr<ipump> pump =            |
-        make_unique<heat_pump>(heater); | private:
-};                                      |     shared_ptr<iheater> heater;
-                                        |     unique_ptr<ipump> pump;
-                                        | };
-                                        |
+                      No Dependency injection                 | Dependency Injection
+                      ----------------------------------------|-------------------------------------------
+                      class coffee_maker {                    | class coffee_maker {
+                      public:                                 | public:
+                          void brew() {                       |   coffee_maker(shared_ptr<iheater> heater
+                              heater->on();                   |              , unique_ptr<ipump> pump)
+                              pump->pump();                   |         : heater(heater), pump(move(pump))
+                              clog << "coffee"! << endl;      |     { }
+                              heater->off();                  |
+                          }                                   |     void brew() {
+                                                              |         heater->on();
+                      private:                                |         pump->pump();
+                          shared_ptr<iheater> heater =        |         clog << "coffee!" << endl;
+                              make_shared<electric_heater>(); |         heater->off();
+                                                              |     }
+                          unique_ptr<ipump> pump =            |
+                              make_unique<heat_pump>(heater); | private:
+                      };                                      |     shared_ptr<iheater> heater;
+                                                              |     unique_ptr<ipump> pump;
+                                                              | };
+                                                              |
 ```
 
 ###Do I need Dependency Injection?

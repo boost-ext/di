@@ -5,9 +5,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // clang-format off
-// <-
+//<-
 #if defined(BOOST_DI_HELLO_WORLD)
-// ->
+//->
 +---------------------------------------------------+
 |$CXX -std=c++14 -fno-exceptions -O2 hello_world.cpp|
 |#Compiles in 0.2s!                                 |
@@ -77,7 +77,7 @@
                                                               |For example:                            |
                                                               |`abstract_type<interface>::is_not_bound`|
                                                               +----------------------------------------+
-// <-
+//<-
 #endif
 
 #include <memory>
@@ -144,4 +144,4 @@ int main() {
   auto object = injector.create<hello_world>();
   assert(object.run());
 }
-// ->
+//->
