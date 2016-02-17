@@ -12,9 +12,11 @@
 Your C++14 header only dependency injection library with no dependencies ([__Try it online!__](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/examples/index.html#hello-world))
 
 ```cpp
-+-------------------------------------------------------------------------------------------------------+
-|$CXX -std=c++14 -fno-exceptions -O2 hello_world.cpp # Compiles in 0.2s!                                |
-+-------------------------------------------------------------------------------------------------------+
+                +-----------------------------------------------------------------------+
+                |Experimental Boost.DI                                                  |
+                +-----------------------------------------------------------------------+
+                |$CXX -std=c++14 -fno-exceptions -O2 hello_world.cpp # Compiles in 0.2s!|
+                +-----------------------------------------------------------------------+
  
                                   #include <boost/di.hpp> +-----------+
  +-----------------------------+                                      |
