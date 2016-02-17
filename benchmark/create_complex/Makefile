@@ -1,3 +1,5 @@
+CXX?=$(CXX)
+
 clean_guice:
 	rm -rf guice data/*.class *.class
 
@@ -12,7 +14,7 @@ clean_di:
 	rm -f di.out
 
 build_di:
-	clang++ -std=c++1y -I ../../frameworks/boost.di/include -include data/data_inject_di.hpp di.cpp -o di.out
+	$(CXX) -std=c++1y -I ../../frameworks/boost.di/include -include data/data_inject_di.hpp -O2 di.cpp -o di.out
 
 run_di:
 	./di.out
@@ -21,7 +23,7 @@ clean_di_auto:
 	rm -f di_auto.out
 
 build_di_auto:
-	clang++ -std=c++1y -I ../../frameworks/boost.di/include -include data/data.hpp -O2 di.cpp -o di_auto.out
+	$(CXX) -std=c++1y -I ../../frameworks/boost.di/include -include data/data.hpp -O2 di.cpp -o di_auto.out
 
 run_di_auto:
 	./di_auto.out
@@ -30,7 +32,7 @@ clean_dicpp:
 	rm -f dicpp.out
 
 build_dicpp:
-	clang++ dicpp.cpp -O2 -I ../../frameworks/dicpp/include -include data/data_inject_dicpp.hpp -std=c++11 ../../frameworks/dicpp/lib/src/*.cpp ../../frameworks/dicpp/lib/src/scopes/*.cpp -pthread -lboost_system -lboost_thread -o dicpp.out
+	$(CXX) dicpp.cpp -O2 -I ../../frameworks/dicpp/include -include data/data_inject_dicpp.hpp -std=c++11 ../../frameworks/dicpp/lib/src/*.cpp ../../frameworks/dicpp/lib/src/scopes/*.cpp -pthread -lboost_system -lboost_thread -o dicpp.out
 
 run_dicpp:
 	./dicpp.out
@@ -39,7 +41,7 @@ clean_fruit:
 	rm -f fruit.out
 
 build_fruit:
-	clang++ fruit.cpp -O2 -I ../../frameworks/google.fruit/include -include data/data_inject_fruit.hpp -std=c++11 ../../frameworks/google.fruit/src/*.cpp -ftemplate-depth=2000 -o fruit.out
+	$(CXX) fruit.cpp -DFRUIT_NO_LOOP_CHECK -O2 -I ../../frameworks/google.fruit/include -include data/data_inject_fruit.hpp -std=c++11 ../../frameworks/google.fruit/src/*.cpp -ftemplate-depth=2500 -o fruit.out
 
 run_fruit:
 	./fruit.out

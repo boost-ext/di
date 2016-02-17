@@ -55,11 +55,13 @@ auto module = [] {
                         di::bind<I96>.to<Impl96>(), di::bind<I97>.to<Impl97>(),
                         di::bind<I98>.to<Impl98>(), di::bind<I99>.to<Impl99>());
 
-  using injector_t = decltype(injector);
-  struct : injector_t {
-    using injector::injector;
-  } i{static_cast<injector_t &&>(injector)};
-  return i;
+  // using injector_t = decltype(injector);
+  // struct : injector_t {
+  //   using injector::injector;
+  // } i{static_cast<injector_t &&>(injector)};
+  // return i;
+
+  return injector;
 };
 
 int main() {

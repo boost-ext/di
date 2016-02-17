@@ -1107,74 +1107,74 @@ struct Impl99 : I99 {
 };
 
 struct C0 {
-  BOOST_DI_INJECT(C0, std::unique_ptr<I00>, std::unique_ptr<I01>,
-                  std::unique_ptr<I02>, std::unique_ptr<I03>,
-                  std::unique_ptr<I04>, std::unique_ptr<I05>,
-                  std::unique_ptr<I06>, std::unique_ptr<I07>,
-                  std::unique_ptr<I08>, std::unique_ptr<I09>) {}
+  BOOST_DI_INJECT(C0, std::shared_ptr<I00>, std::shared_ptr<I01>,
+                  std::shared_ptr<I02>, std::shared_ptr<I03>,
+                  std::shared_ptr<I04>, std::shared_ptr<I05>,
+                  std::shared_ptr<I06>, std::shared_ptr<I07>,
+                  std::shared_ptr<I08>, std::shared_ptr<I09>) {}
 };
 struct C1 {
-  BOOST_DI_INJECT(C1, std::unique_ptr<I10>, std::unique_ptr<I11>,
-                  std::unique_ptr<I12>, std::unique_ptr<I13>,
-                  std::unique_ptr<I14>, std::unique_ptr<I15>,
-                  std::unique_ptr<I16>, std::unique_ptr<I17>,
-                  std::unique_ptr<I18>, std::unique_ptr<I19>) {}
+  BOOST_DI_INJECT(C1, std::shared_ptr<I10>, std::shared_ptr<I11>,
+                  std::shared_ptr<I12>, std::shared_ptr<I13>,
+                  std::shared_ptr<I14>, std::shared_ptr<I15>,
+                  std::shared_ptr<I16>, std::shared_ptr<I17>,
+                  std::shared_ptr<I18>, std::shared_ptr<I19>) {}
 };
 struct C2 {
-  BOOST_DI_INJECT(C2, std::unique_ptr<I20>, std::unique_ptr<I21>,
-                  std::unique_ptr<I22>, std::unique_ptr<I23>,
-                  std::unique_ptr<I24>, std::unique_ptr<I25>,
-                  std::unique_ptr<I26>, std::unique_ptr<I27>,
-                  std::unique_ptr<I28>, std::unique_ptr<I29>) {}
+  BOOST_DI_INJECT(C2, std::shared_ptr<I20>, std::shared_ptr<I21>,
+                  std::shared_ptr<I22>, std::shared_ptr<I23>,
+                  std::shared_ptr<I24>, std::shared_ptr<I25>,
+                  std::shared_ptr<I26>, std::shared_ptr<I27>,
+                  std::shared_ptr<I28>, std::shared_ptr<I29>) {}
 };
 struct C3 {
-  BOOST_DI_INJECT(C3, std::unique_ptr<I30>, std::unique_ptr<I31>,
-                  std::unique_ptr<I32>, std::unique_ptr<I33>,
-                  std::unique_ptr<I34>, std::unique_ptr<I35>,
-                  std::unique_ptr<I36>, std::unique_ptr<I37>,
-                  std::unique_ptr<I38>, std::unique_ptr<I39>) {}
+  BOOST_DI_INJECT(C3, std::shared_ptr<I30>, std::shared_ptr<I31>,
+                  std::shared_ptr<I32>, std::shared_ptr<I33>,
+                  std::shared_ptr<I34>, std::shared_ptr<I35>,
+                  std::shared_ptr<I36>, std::shared_ptr<I37>,
+                  std::shared_ptr<I38>, std::shared_ptr<I39>) {}
 };
 struct C4 {
-  BOOST_DI_INJECT(C4, std::unique_ptr<I40>, std::unique_ptr<I41>,
-                  std::unique_ptr<I42>, std::unique_ptr<I43>,
-                  std::unique_ptr<I44>, std::unique_ptr<I45>,
-                  std::unique_ptr<I46>, std::unique_ptr<I47>,
-                  std::unique_ptr<I48>, std::unique_ptr<I49>) {}
+  BOOST_DI_INJECT(C4, std::shared_ptr<I40>, std::shared_ptr<I41>,
+                  std::shared_ptr<I42>, std::shared_ptr<I43>,
+                  std::shared_ptr<I44>, std::shared_ptr<I45>,
+                  std::shared_ptr<I46>, std::shared_ptr<I47>,
+                  std::shared_ptr<I48>, std::shared_ptr<I49>) {}
 };
 struct C5 {
-  BOOST_DI_INJECT(C5, std::unique_ptr<I50>, std::unique_ptr<I51>,
-                  std::unique_ptr<I52>, std::unique_ptr<I53>,
-                  std::unique_ptr<I54>, std::unique_ptr<I55>,
-                  std::unique_ptr<I56>, std::unique_ptr<I57>,
-                  std::unique_ptr<I58>, std::unique_ptr<I59>) {}
+  BOOST_DI_INJECT(C5, std::shared_ptr<I50>, std::shared_ptr<I51>,
+                  std::shared_ptr<I52>, std::shared_ptr<I53>,
+                  std::shared_ptr<I54>, std::shared_ptr<I55>,
+                  std::shared_ptr<I56>, std::shared_ptr<I57>,
+                  std::shared_ptr<I58>, std::shared_ptr<I59>) {}
 };
 struct C6 {
-  BOOST_DI_INJECT(C6, std::unique_ptr<I60>, std::unique_ptr<I61>,
-                  std::unique_ptr<I62>, std::unique_ptr<I63>,
-                  std::unique_ptr<I64>, std::unique_ptr<I65>,
-                  std::unique_ptr<I66>, std::unique_ptr<I67>,
-                  std::unique_ptr<I68>, std::unique_ptr<I69>) {}
+  BOOST_DI_INJECT(C6, std::shared_ptr<I60>, std::shared_ptr<I61>,
+                  std::shared_ptr<I62>, std::shared_ptr<I63>,
+                  std::shared_ptr<I64>, std::shared_ptr<I65>,
+                  std::shared_ptr<I66>, std::shared_ptr<I67>,
+                  std::shared_ptr<I68>, std::shared_ptr<I69>) {}
 };
 struct C7 {
-  BOOST_DI_INJECT(C7, std::unique_ptr<I70>, std::unique_ptr<I71>,
-                  std::unique_ptr<I72>, std::unique_ptr<I73>,
-                  std::unique_ptr<I74>, std::unique_ptr<I75>,
-                  std::unique_ptr<I76>, std::unique_ptr<I77>,
-                  std::unique_ptr<I78>, std::unique_ptr<I79>) {}
+  BOOST_DI_INJECT(C7, std::shared_ptr<I70>, std::shared_ptr<I71>,
+                  std::shared_ptr<I72>, std::shared_ptr<I73>,
+                  std::shared_ptr<I74>, std::shared_ptr<I75>,
+                  std::shared_ptr<I76>, std::shared_ptr<I77>,
+                  std::shared_ptr<I78>, std::shared_ptr<I79>) {}
 };
 struct C8 {
-  BOOST_DI_INJECT(C8, std::unique_ptr<I80>, std::unique_ptr<I81>,
-                  std::unique_ptr<I82>, std::unique_ptr<I83>,
-                  std::unique_ptr<I84>, std::unique_ptr<I85>,
-                  std::unique_ptr<I86>, std::unique_ptr<I87>,
-                  std::unique_ptr<I88>, std::unique_ptr<I89>) {}
+  BOOST_DI_INJECT(C8, std::shared_ptr<I80>, std::shared_ptr<I81>,
+                  std::shared_ptr<I82>, std::shared_ptr<I83>,
+                  std::shared_ptr<I84>, std::shared_ptr<I85>,
+                  std::shared_ptr<I86>, std::shared_ptr<I87>,
+                  std::shared_ptr<I88>, std::shared_ptr<I89>) {}
 };
 struct C9 {
-  BOOST_DI_INJECT(C9, std::unique_ptr<I90>, std::unique_ptr<I91>,
-                  std::unique_ptr<I92>, std::unique_ptr<I93>,
-                  std::unique_ptr<I94>, std::unique_ptr<I95>,
-                  std::unique_ptr<I96>, std::unique_ptr<I97>,
-                  std::unique_ptr<I98>, std::unique_ptr<I99>) {}
+  BOOST_DI_INJECT(C9, std::shared_ptr<I90>, std::shared_ptr<I91>,
+                  std::shared_ptr<I92>, std::shared_ptr<I93>,
+                  std::shared_ptr<I94>, std::shared_ptr<I95>,
+                  std::shared_ptr<I96>, std::shared_ptr<I97>,
+                  std::shared_ptr<I98>, std::shared_ptr<I99>) {}
 };
 
 struct BigComplexity {
