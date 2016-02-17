@@ -17,7 +17,7 @@ Your C++14 header only dependency injection library with no dependencies ([__Try
 |#Compiles in 0.2s!                                 |
 +-----------------------------+---------------------+
                               |
-
+                              \
                                   #include <boost/di.hpp> +-----------+
  +-----------------------------+                                      |
  |                             |  namespace di = boost::di;     +-----+--------------------------------+
