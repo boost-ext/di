@@ -36,6 +36,35 @@ auto test() {
   return injector.create<std::unique_ptr<interface>>();
 }
 
+/**
+ * ASM x86-64 (additional cost for type erasure)
+ *
+ * push   %r14
+ * push   %rbx
+ * push   %rax
+ * mov    %rdi,%r14
+ * mov    $0x18,%edi
+ * callq  0x4008e0 <_Znwm@plt>
+ * mov    %rax,%rbx
+ * movq   $0x400bb0,(%rbx)
+ * movq   $0x400bd0,0x8(%rbx)
+ * mov    $0x8,%edi
+ * callq  0x4008e0 <_Znwm@plt>
+ * movq   $0x400cd8,(%rax)
+ * mov    %rax,(%r14)
+ * mov    %rbx,%rdi
+ * callq  *0x8(%rbx)
+ * mov    %rbx,%rdi
+ * callq  0x400880 <_ZdlPv@plt>
+ * mov    %r14,%rax
+ * add    $0x8,%rsp
+ * pop    %rbx
+ * pop    %r14
+ * retq
+ */
+
+//<-
 int main(int, char** argv) {
   std::system(("gdb -batch -ex 'file " + std::string{argv[0]} + "' -ex 'disassemble test'").c_str());
 }
+//->

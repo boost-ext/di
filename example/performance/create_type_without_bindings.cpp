@@ -17,6 +17,15 @@ auto test() {
   return injector.create<int>();
 }
 
+/**
+ * ASM x86-64 (same as `return 0`)
+ *
+ * xor %eax,%eax
+ * retq
+ */
+
+//<-
 int main(int, char** argv) {
   std::system(("gdb -batch -ex 'file " + std::string{argv[0]} + "' -ex 'disassemble test'").c_str());
 }
+//->
