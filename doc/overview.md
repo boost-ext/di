@@ -108,6 +108,7 @@ Legend:
 
 | Library | Boost.DI | dicpp | Google Fruit |
 | ------- | -------- | ----- | ------------ |
+| Version | 1.0.0 | HEAD | 1.0.2 |
 | Language | C++14 | C++11 | C++11 |
 | License | Boost 1.0 | Boost 1.0 | Apache 2.0|
 | Linkage | header only | header only | library |
