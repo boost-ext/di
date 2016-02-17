@@ -237,27 +237,27 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 <p><strong>"Let's make some coffee!"</strong>
 <p align="center"><img src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/coffee_maker.png" alt="coffee maker"/></p></p>
 </blockquote>
-<pre><code class="cpp">No Dependency injection                 | Dependency Injection
-----------------------------------------|--------------------------------------------
-class coffee_maker {                    | class coffee_maker {
-public:                                 | public:
-    void brew() {                       |   coffee_maker(shared_ptr&lt;iheater&gt; heater
-        heater-&gt;on();                   |              , unique_ptr&lt;ipump&gt; pump)
-        pump-&gt;pump();                   |         : heater(heater), pump(move(pump))
-        clog &lt;&lt; &quot;coffee&quot;! &lt;&lt; endl;      |     { }
-        heater-&gt;off();                  |
-    }                                   |     void brew() {
-                                        |         heater-&gt;on();
-private:                                |         pump-&gt;pump();
-    shared_ptr&lt;iheater&gt; heater =        |         clog &lt;&lt; &quot;coffee!&quot; &lt;&lt; endl;
-        make_shared&lt;electric_heater&gt;(); |         heater-&gt;off();
-                                        |     }
-    unique_ptr&lt;ipump&gt; pump =            |
-        make_unique&lt;heat_pump&gt;(heater); | private:
-};                                      |     shared_ptr&lt;iheater&gt; heater;
-                                        |     unique_ptr&lt;ipump&gt; pump;
-                                        | };
-                                        |
+<pre><code class="cpp">                      No Dependency injection                 | Dependency Injection
+                      ----------------------------------------|-------------------------------------------
+                      class coffee_maker {                    | class coffee_maker {
+                      public:                                 | public:
+                          void brew() {                       |   coffee_maker(shared_ptr&lt;iheater&gt; heater
+                              heater-&gt;on();                   |              , unique_ptr&lt;ipump&gt; pump)
+                              pump-&gt;pump();                   |         : heater(heater), pump(move(pump))
+                              clog &lt;&lt; &quot;coffee&quot;! &lt;&lt; endl;      |     { }
+                              heater-&gt;off();                  |
+                          }                                   |     void brew() {
+                                                              |         heater-&gt;on();
+                      private:                                |         pump-&gt;pump();
+                          shared_ptr&lt;iheater&gt; heater =        |         clog &lt;&lt; &quot;coffee!&quot; &lt;&lt; endl;
+                              make_shared&lt;electric_heater&gt;(); |         heater-&gt;off();
+                                                              |     }
+                          unique_ptr&lt;ipump&gt; pump =            |
+                              make_unique&lt;heat_pump&gt;(heater); | private:
+                      };                                      |     shared_ptr&lt;iheater&gt; heater;
+                                                              |     unique_ptr&lt;ipump&gt; pump;
+                                                              | };
+                                                              |
 </code></pre>
 
 <h3 id="do-i-need-dependency-injection">Do I need Dependency Injection?</h3>
@@ -358,5 +358,5 @@ private:                                |         pump-&gt;pump();
 
 <!--
 MkDocs version : 0.15.0
-Build Date UTC : 2016-02-17 13:25:17.284508
+Build Date UTC : 2016-02-17 13:44:03.758229
 -->
