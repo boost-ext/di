@@ -82,7 +82,9 @@
 
 #include <memory>
 #include <cassert>
+#if __has_include(<boost/shared_ptr.hpp>)
 #include <boost/shared_ptr.hpp>
+#endif
 #include <boost/di.hpp>
 
 namespace di = boost::di;
@@ -99,7 +101,11 @@ struct implementation : interface {
 
 struct uniform {
   bool &b;
+#if __has_include(<boost / shared_ptr.hpp>)
   boost::shared_ptr<interface> sp;
+#else
+  std::shared_ptr<interface> sp;
+#endif
 };
 
 class direct {
