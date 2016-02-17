@@ -30,8 +30,6 @@ example(multiple_interfaces)
 example(pool_provider)
 example(scopes)
 
-example(introduction/coffee_maker)
-
 example(performance/create_bound_interface)
 example(performance/create_bound_interface_via_exposed_module)
 example(performance/create_bound_interface_via_module)

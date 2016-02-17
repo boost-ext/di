@@ -4,69 +4,144 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-//<-
-#include <cassert>
-#include <string>
-#include <iostream>
+// clang-format off
+// <-
+#if defined(BOOST_DI_HELLO_WORLD)
+// ->
++---------------------------------------------------+
+|$CXX -std=c++14 -fno-exceptions -O2 hello_world.cpp|
+|#Compiles in 0.2s!                                 |
++-----------------------------+---------------------+
+                              |
+                              \
+                                  #include <boost/di.hpp> +-----------+
+ +-----------------------------+                                      |
+ |                             |  namespace di = boost::di;     +-----+--------------------------------+
+ |                             +-+                              |One header (3k lines, no dependencies)|
+ |  +-----------------------+    +struct uniform {              +--------------------------------------+
+ |  |Automatic conversion   |       bool &b;
+ |  |between std::shared_ptr+------+boost::shared_ptr<interface> sp;
+ |  |and boost::shared_ptr  |     };
+ |  +-----------------------+
+ |                             +-+class direct {
+ |                          +--+   public:                                 +---------------------------+
+ |                          |       direct(const uniform &uniform          |ASM x86-64 == `make_unique`|
+ |               +----------+            , std::shared_ptr<interface> sp)  +---------------------------+
+ |               |                    : uniform_(uniform)                  |push   %rax                |
+ |               |                  , sp_(sp)                              |mov    $0x8,%edi           |
+ |               |                  {}                                     |callq  0x4007b0 <_Znwm@plt>|
+ |               |                                                         |movq   $0x400a10,(%rax)    |
+ | +-------------+----------+       const uniform &uniform_;               |mov    $0x8,%esi           |
+ | |Inject  dependencies    |       std::shared_ptr<interface> sp_;        |mov    %rax,%rdi           |
+ | |using T{...} or T(...)  |     };                                       |callq  0x400960 <_ZdlPvm>  |
+ +-+without REFLECTION or   |                                +-------------+mov    $0x1,%eax           |
+   |any changes/registration+-----+class hello_world {       |             |pop    %rdx                |
+   |in the code!            |      public:                   +             |retq                       |
+   +------------------------+       hello_world(std::unique_ptr<direct> d  +-------------------------+-+
+                                   +--------+ , interface &ref                                       |
+                                   |          , int i)+-------------------------------------------+  +-+
+                                   |  : i_(i) {                                                   |    |
+                                   |  assert(false == d->uniform_.b);                             |    |
+                     +-------------+  assert(d->sp_.get() == d->uniform_.sp.get());               |    |
+                     |                assert(&ref == d->sp_.get());     +                         |    |
+    +----------------+---------+    }                         +         |                         |    |
+    |Deduce scope based on     |                              |         |                         |    |
+    |constructor parameter type|    auto run() const {        +---------+ +--------------------+  |    |
+    |T -> unique               |      return i_ == 42;                  +-+The same shared_ptr,|  |    |
+    |T& -> singleton           |    }                                     |reference provided  |  |    |
+    |shared_ptr -> singleton   |                                          +--------------------+  |    |
+    |unique_ptr |> unique      |   private:                                                       |    |
+    +--------------------------+    int i_ = 0;                                                +--+    |
+                                  };                                                           |       |
+                                                                                               |       |
+                                  int main() {                          +----------------------+--+    |
+                                    auto runtime_value = false;         |ASM x86-64 == 'return 42'|    |
+                                                                        +-------------------------+    |
+                    +-------------+ auto module = [&] {                 |mov $0x2a,%eax           |    |
+            +-------+-----------+     return di::make_injector(         |retq                     |    |
+            |Split configuration|       di::bind<>().to(runtime_value)  +----+--------------------+    |
+            |into modules       |     );                                     |                         |
+            +-------+-----------+   };                                       |                         |
+                    |         +----------------------------------------------+                         |
+                    |         |     auto injector = di::make_injector(                                 |
+                    |         |       di::bind<interface>().to<implementation>()+----------------------+
+                    |         +---+ , di::bind<>().to(42)
+                    +--------------+, module()                                     +---------------------+
+                                    );                                  +----------+Compile time creation|
+                                                                        +          |guarantee!           |
+                                    auto object = injector.create<hello_world>();  +---------------------+
+                                    assert(object.run());  +
+                                  }                        |
+                                                           |  +----------------------------------------+
+                                                           +--+Short compile time error messages!      |
+                                                              |For example:                            |
+                                                              |`abstract_type<interface>::is_not_bound`|
+                                                              +----------------------------------------+
+// <-
+#endif
+
 #include <memory>
-//->
+#include <cassert>
+#include <boost/shared_ptr.hpp>
 #include <boost/di.hpp>
 
 namespace di = boost::di;
-//<-
-class ilogger {
- public:
-  virtual ~ilogger() {}
-  virtual void log(const std::string&) = 0;
+
+struct interface {
+  virtual ~interface() noexcept = default;
+  virtual void dummy() = 0;
+};
+struct implementation : interface {
+  void dummy() override { }
 };
 
-class logger : public ilogger {
- public:
-  void log(const std::string& text) override { std::clog << text << std::endl; }
+// clang-format on
+
+struct uniform {
+  bool &b;
+  boost::shared_ptr<interface> sp;
 };
 
-class ilogic {
+class direct {
  public:
-  virtual ~ilogic() {}
-  virtual void do_it() = 0;
+  direct(const uniform &uniform, std::shared_ptr<interface> sp) : uniform_(uniform), sp_(sp) {}
+
+  const uniform &uniform_;
+  std::shared_ptr<interface> sp_;
 };
 
-class logic : public ilogic {
- public:
-  void do_it() override {}
-};
-//->
-
-/*<define `hello_world` class as usual>*/
 class hello_world {
  public:
-  hello_world(ilogger& logger, std::shared_ptr<ilogic> logic, bool value) : logger_(logger), logic_(logic), value_(value) {}
-
-  int run() const {
-    if (value_) {
-      logger_.log("hello world");
-      logic_->do_it();
-    }
-    return 0;
+  hello_world(std::unique_ptr<direct> d, interface &ref, int i) : i_(i) {
+    assert(false == d->uniform_.b);
+    assert(d->sp_.get() == d->uniform_.sp.get());
+    assert(&ref == d->sp_.get());
   }
 
-  ilogger& logger_;
-  std::shared_ptr<ilogic> logic_;
-  bool value_;
+  auto run() const { return i_ == 42; }
+
+ private:
+  int i_ = 0;
 };
 
 int main() {
-  /*<<make injector configuration>>*/
+  auto runtime_value = false;
+
   // clang-format off
+  auto module = [&] {
+    return di::make_injector(
+      di::bind<>().to(runtime_value)
+    );
+  };
+
   auto injector = di::make_injector(
-    di::bind<ilogger>().to<logger>()
-  , di::bind<ilogic>().to<logic>()
-  , di::bind<bool>().to(true)
+    di::bind<interface>().to<implementation>()
+  , di::bind<>().to(42)
+  , module()
   );
   // clang-format on
 
-  /*<<create `hello_world` and run [pre
-      hello world
-  ]>>*/
-  return injector.create<hello_world>().run();
+  auto object = injector.create<hello_world>();
+  assert(object.run());
 }
+// ->

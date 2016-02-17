@@ -69,9 +69,6 @@ test-suite example :
     [ example scopes.cpp ]
 
 ;
-test-suite introduction :
-    [ example introduction/coffee_maker.cpp ]
-;
 
 test-suite performance :
     [ example performance/create_bound_interface.cpp ]
