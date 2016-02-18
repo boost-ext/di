@@ -13,7 +13,6 @@
 
 namespace di = boost::di;
 
-//<-
 struct I {
   virtual ~I() noexcept = default;
   virtual void dummy() = 0;
@@ -22,7 +21,6 @@ struct Impl : I {
   BOOST_DI_INJECT(Impl) {}
   void dummy() override {}
 };
-//->
 
 auto module = [] {
   // clang-format off
