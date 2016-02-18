@@ -18,7 +18,6 @@ struct I {
   virtual void dummy() = 0;
 };
 struct Impl : I {
-  BOOST_DI_INJECT(Impl) {}
   void dummy() override {}
 };
 

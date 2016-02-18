@@ -35,7 +35,7 @@ std::unique_ptr<I> test() {
 }
 
 /**
- * ASM x86-64 (same as `std::make_unique<implementation>()`)
+ * ASM x86-64
  *
  *  push   %r14
  *  push   %rbx
