@@ -182,9 +182,8 @@ script:
     pip install --user travis https://github.com/mkdocs/mkdocs/archive/0.15.0.zip
     && make doc && git clone https://github.com/boost-experimental/di
     && cd di && git checkout -b gh-pages -t origin/gh-pages && git reset --hard
-    && rm -rf cpp14/boost/libs/di/doc/html/* && cp -r ../doc/site/* cpp14/boost/libs/di/doc/html
-    && git add -A . && git commit -am "doc update" && git push --force --quiet
-    "https://${GH_TOKEN}@github.com/boost-experimental/di"); fi
+    && rm -rf * && cp -r ../doc/site/* .  && git add -A . && git commit -am "doc update"
+    && git push --force --quiet "https://${GH_TOKEN}@github.com/boost-experimental/di"); fi
 
 after_success:
   - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${BENCHMARK}" != "" ]; then (
