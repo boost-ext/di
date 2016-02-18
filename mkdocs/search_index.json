@@ -102,7 +102,7 @@
         }, 
         {
             "location": "/tutorial/index.html", 
-            "text": "All code examples include \nboost/di.hpp\n as well as declare a convienent msm namespace alias.\n\n\n#include \nboost/di.hpp\n\nnamespace di = boost::di;\n\n\n\n\n0. [Pre] Refactor towards DI\n\n\n1. [Basic] Create objects tree\n\n\n2. [Basic] First steps with bindings\n\n\n3. [Basic] Decide the life-times\n\n\n4. [Basic] Annotations to the rescue\n\n\n5. [Basic] Split your configuration\n\n\n6. [Advanced] Dump/Limit your types\n\n\n7. [Advanced] Customize it\n\n\n8. [Advanced] Extend it", 
+            "text": "All code examples include \nboost/di.hpp\n as well as declare a convienent msm namespace alias.\n\n\n#include \nboost/di.hpp\n\nnamespace di = boost::di;\n\n\n\n\n0. [Pre] Refactor towards DI\n\n\n1. [Basic] Create objects tree\n\n\n2. [Basic] First steps with bindings\n\n\n3. [Basic] Decide the life times\n\n\n4. [Basic] Annotations to the rescue\n\n\n5. [Basic] Split your configuration\n\n\n6. [Advanced] Dump/Limit your types\n\n\n7. [Advanced] Customize it\n\n\n8. [Advanced] Extend it", 
             "title": "Tutorial"
         }, 
         {
@@ -123,7 +123,7 @@
         {
             "location": "/tutorial/index.html#3-basic-decide-the-life-times", 
             "text": "", 
-            "title": "3. [Basic] Decide the life-times"
+            "title": "3. [Basic] Decide the life times"
         }, 
         {
             "location": "/tutorial/index.html#4-basic-annotations-to-the-rescue", 
