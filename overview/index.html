@@ -101,9 +101,6 @@
                 <li class="toctree-l3"><a href="#supportedtested-compilers">Supported/Tested compilers</a></li>
                 
             
-                <li class="toctree-l3"><a href="#design">Design</a></li>
-                
-            
                 <li class="toctree-l3"><a href="#configuration">Configuration</a></li>
                 
             
@@ -111,6 +108,9 @@
                 
             
                 <li class="toctree-l3"><a href="#thread-safety">Thread Safety</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#design">Design</a></li>
                 
             
                 <li class="toctree-l3"><a href="#performance">Performance</a></li>
@@ -246,42 +246,6 @@ namespace di = boost::di;
 <li><a href="https://travis-ci.org/boost-experimental/di">GCC-5.2+</a></li>
 <li><a href="https://ci.appveyor.com/project/boost-experimental/di">MSVC-2015+</a></li>
 </ul>
-<h3 id="design">Design</h3>
-<p><a href="../images/di.png"><img alt="Design" src="../images/di.png" /></a></p>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="../user_guide/index.html#bindings">Bindings</a></td>
-<td>DSL to create dependencies representation which will be used by core to resolve types</td>
-</tr>
-<tr>
-<td><a href="../user_guide/index.html#scopes">Scopes</a></td>
-<td>Responsible for maintain objects life time</td>
-</tr>
-<tr>
-<td><a href="../user_guide/index.html#providers">Providers</a></td>
-<td>Responsible for providing object instance</td>
-</tr>
-<tr>
-<td><a href="../user_guide/index.html#policies">Policies</a></td>
-<td>Compile-time limitations for types / Run-time types vistor</td>
-</tr>
-<tr>
-<td>Core</td>
-<td>Responsible for resolving requested types (implementation detail)</td>
-</tr>
-<tr>
-<td>Wrappers</td>
-<td>Responsible for conversion to required type (implementation detail)</td>
-</tr>
-</tbody>
-</table>
 <h3 id="configuration">Configuration</h3>
 <table>
 <thead>
@@ -326,6 +290,42 @@ namespace di = boost::di;
 <ul>
 <li>Boost.DI is thread safe.</li>
 </ul>
+<h3 id="design">Design</h3>
+<p><a href="../images/di.png"><img alt="Design" src="../images/di.png" /></a></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../user_guide/index.html#bindings">Bindings</a></td>
+<td>DSL to create dependencies representation which will be used by core to resolve types</td>
+</tr>
+<tr>
+<td><a href="../user_guide/index.html#scopes">Scopes</a></td>
+<td>Responsible for maintain objects life time</td>
+</tr>
+<tr>
+<td><a href="../user_guide/index.html#providers">Providers</a></td>
+<td>Responsible for providing object instance</td>
+</tr>
+<tr>
+<td><a href="../user_guide/index.html#policies">Policies</a></td>
+<td>Compile-time limitations for types / Run-time types vistor</td>
+</tr>
+<tr>
+<td>Core</td>
+<td>Responsible for resolving requested types (implementation detail)</td>
+</tr>
+<tr>
+<td>Wrappers</td>
+<td>Responsible for conversion to required type (implementation detail)</td>
+</tr>
+</tbody>
+</table>
 <h3 id="performance">Performance</h3>
 <ul>
 <li><strong>Run-time performance</strong><ul>
