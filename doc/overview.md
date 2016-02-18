@@ -25,7 +25,7 @@ git clone https://github.com/boost-experimental/di && cd di && make test
 
 * No external dependencies are required (neither STL nor Boost)
 
-###Supported/tested compilers
+###Supported/Tested compilers
 
 * [Clang-3.4+](https://travis-ci.org/boost-experimental/di)
 * [GCC-5.2+](https://travis-ci.org/boost-experimental/di)
@@ -40,6 +40,15 @@ git clone https://github.com/boost-experimental/di && cd di && make test
 | `BOOST_DI_CFG_CTOR_LIMIT_SIZE`              | Limits number of allowed consturctor parameters [0-10, default=10] |
 | `BOOST_DI_NAMESPACE_BEGIN`                  | `namespace boost { namespace di { inline namespace v_1_0_0 {` |
 | `BOOST_DI_NAMESPACE_END`                    | `}}}` |
+
+###Exception Safety
+
+* Boost.DI is not using exceptions internally and therefore might be compiled with `-fno-exceptions`.
+* Check [User Guide](user_guide.md) to verify which API's are marked `noexcept`.
+
+###Thread Safety
+
+* Boost.DI is thread safe.
 
 ###Performance
 
@@ -95,12 +104,24 @@ Legend:
 
 ###Error messages
 
-| Expression | Description | Error | Suggestion |
-| ---------- | ----------- | ----- | ---------- |
-| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_abstract.cpp) | type `T` is abstract | type<T>::is_abstract | |
-| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_bound_more_than_once.cpp) | type `T` is bound more than once | type<T>::is_bound_more_than_once | |
-| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_abstract_type_is_not_bound.cpp) | | abstract_type<interface\>::is_not_bound | 'type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?' |
-| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_expose_abstract_type_is_not_bound.cpp) | | | |
+| Error | `type<T>::is_abstract` |
+| ---------- | ----------- |
+| Description | type `T` is abstract |
+| `BOOST_DI_CFG_DIAGNOSTICS_LEVEL` | 0, 1 -> no additional info, 2 -> info about why type `T` is abstract |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_abstract.cpp) |
+
+| Error | `type<T>::is_bound_more_than_once` |
+| ---------- | ----------- |
+| Description | type `T` is bound more than once |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_bound_more_than_once.cpp) |
+
+| Error | `abstract_type<T>::is_not_bound` |
+| ---------- | ----------- |
+| Description | config `T` requires only providable and callable types |
+| `BOOST_DI_CFG_DIAGNOSTICS_LEVEL` | 0 -> 'constraint not satisfied', 1 -> (0) + abstract type is not bound, 2 -> (1) + creation tree |
+| Suggestion  | 'type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?' |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_abstract_type_is_not_bound.cpp) |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_expose_abstract_type_is_not_bound.cpp) |
 
 ###Dependency Injection Libraries
 

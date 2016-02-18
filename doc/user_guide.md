@@ -1079,15 +1079,33 @@ If type doesn't satisfy the concept short and descriptive error message is provi
 | ---------- | ----------- | ------- |
 | `Ts...` | Bindings to be verified | true_type if constraint is satisfied, `error` otherwise |
 
-***Test***
+***Example***
 
-| Expression | Description | Error |
-| ---------- | ----------- | ----- |
-| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_has_disallowed_qualifiers.cpp) | type `T` has disallowed qualifiers | type<T>::has_disallowed_qualifiers |
-| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_abstract.cpp) | type `T` is abstract | type<T>::is_abstract |
-| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_bound_more_than_once.cpp) | type `T` is bound more than once | type<T>::is_bound_more_than_once |
-| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_neither_a_dependency_nor_an_injector.cpp) | type `T` is neither a dependency nor an injector | type<T>::is_neither_a_dependency_nor_an_injector |
-| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_not_related_to.cpp) | type `T` is not related to type `U` | `type<T>::is_not_related_to<U>` |
+| Error | `type<T>::has_disallowed_qualifiers` |
+| ---------- | ----------- |
+| Description | type `T` has disallowed qualifiers |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_has_disallowed_qualifiers.cpp) |
+
+| Error | `type<T>::is_abstract` |
+| ---------- | ----------- |
+| Description | type `T` is abstract |
+| `BOOST_DI_CFG_DIAGNOSTICS_LEVEL` | 0, 1 -> no additional info, 2 -> info about why type `T` is abstract |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_abstract.cpp) |
+
+| Error | `type<T>::is_not_related_to` |
+| ---------- | ----------- |
+| Description | type `T` is not related to type `U` |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_not_related_to.cpp) |
+
+| Error | `type<T>::is_bound_more_than_once` |
+| ---------- | ----------- |
+| Description | type `T` is bound more than once |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_bound_more_than_once.cpp) |
+
+| Error | `type<T>::is_neither_a_dependency_nor_an_injector` |
+| ---------- | ----------- |
+| Description | type `T` is neither a dependency nor an injector |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_neither_a_dependency_nor_an_injector.cpp) |
 
 ---
 
@@ -1115,11 +1133,12 @@ Policies type requirement.
 
     callable<T>
 
-***Test***
+***Example***
 
-| Expression | Description | Error |
-| ---------- | ----------- | ----- |
-| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/callable_requires_call_operator.cpp) | policy `T` requires a call operator | policy<test_config::dummy\>::requires_<call_operator\> |
+| Error | `policy<TPolicy>::requires_<call_operator>` |
+| ---------- | ----------- |
+| Description | policy `TPolicy` requires a call operator |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/callable_requires_call_operator.cpp) |
 
 ---
 
@@ -1145,11 +1164,12 @@ Policies type requirement.
 
     configurable<T>
 
-***Test***
+***Example***
 
-| Expression | Description | Error |
-| ---------- | ----------- | ----- |
-| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/configurable_requires_callable_and_providable.cpp) | config `T` requires only providable and callable types | config<test_config\>::requires_<provider<providable_type (...)\>\> |
+| Error | `config<TConfig>::requires_<provider<providable_type (...)>>` |
+| ---------- | ----------- |
+| Description | config `T` requires only providable and callable types |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/configurable_requires_callable_and_providable.cpp) |
 
 ---
 
@@ -1175,16 +1195,48 @@ Type creation requirement.
 
     creatable<T, TBindings...>
 
-***Test***
+***Example***
 
-| Expression | Description | Error | Suggestion |
-| ---------- | ----------- | ----- | ---------- |
-| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_abstract_type_is_not_bound.cpp) | | abstract_type<interface\>::is_not_bound | 'type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?' |
-| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_expose_abstract_type_is_not_bound.cpp) | | | |
-| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_type_has_ambiguous_number_of_constructor_parameters.cpp) |  | | |
-| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_type_has_to_many_constructor_parameters.cpp) |  | | |
-| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_instance_is_not_convertible_to.cpp) |  | | |
-| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_scoped_is_not_convertible_to.cpp) |  | | |
+| Error | `abstract_type<T>::is_not_bound` |
+| ---------- | ----------- |
+| Description | config `T` requires only providable and callable types |
+| `BOOST_DI_CFG_DIAGNOSTICS_LEVEL` | 0 -> 'constraint not satisfied', 1 -> (0) + abstract type is not bound, 2 -> (1) + creation tree |
+| Suggestion  | 'type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?' |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_abstract_type_is_not_bound.cpp) |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_expose_abstract_type_is_not_bound.cpp) |
+
+| Error | `type<T>::has_ambiguous_number_of_constructor_parameters::given<Given>::expected<Expected>` |
+| ---------- | ----------- |
+| Description | type `T` has ambiguous number of constructor parameters where `Given` were provided but `Expected` were expected |
+| `BOOST_DI_CFG_DIAGNOSTICS_LEVEL` | 0 -> 'constraint not satisfied', 1 -> (0) + abstract type is not bound, 2 -> (1) + creation tree |
+| Suggestion  | 'verify BOOST_DI_INJECT_TRAITS or di::ctor_traits' |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_type_has_ambiguous_number_of_constructor_parameters.cpp) |
+
+| Error | `type<T>::has_to_many_constructor_parameters::max<Max>` |
+| ---------- | ----------- |
+| Description | type `T` has to many constructor parameter where maximum number is `Max` |
+| `BOOST_DI_CFG_DIAGNOSTICS_LEVEL` | 0 -> 'constraint not satisfied', 1 -> (0) + abstract type is not bound, 2 -> (1) + creation tree |
+| Suggestion  | 'increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters' |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_type_has_to_many_constructor_parameters.cpp) |
+
+| Error | `scoped<TScope>::is_not_convertible_to<T>` |
+| ---------- | ----------- |
+| Description | scope `TScope` is not convertible to type `T` |
+| `BOOST_DI_CFG_DIAGNOSTICS_LEVEL` | 0 -> 'constraint not satisfied', 1 -> (0) + abstract type is not bound, 2 -> (1) + creation tree |
+| Suggestion  | 'scoped object is not convertible to the requested type, did you mistake the scope: 'di::bind<T>.in(scope)'?' |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_scoped_is_not_convertible_to.cpp) |
+
+| Error | `scoped<instance>::is_not_convertible_to<T>` |
+| ---------- | ----------- |
+| Description | instance is not convertible to type `T` |
+| `BOOST_DI_CFG_DIAGNOSTICS_LEVEL` | 0 -> 'constraint not satisfied', 1 -> (0) + abstract type is not bound, 2 -> (1) + creation tree |
+| Suggestion  | 'instance is not convertible to the requested type, verify binding: 'di::bind<T>.to(value)'?' |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_instance_is_not_convertible_to.cpp) |
+
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+Suggestions are not supported/displayed by MSVC-2015.
+</div>
 
 ---
 
@@ -1213,11 +1265,12 @@ Provider type requirement.
 
    providable<T>
 
-***Test***
+***Example***
 
-| Expression | Description | Error |
-| ---------- | ----------- | ----- |
-| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/providable_requires_get.cpp) | config `T` requires only providable and callable types | config<test_config\>::requires_<provider<providable_type (...)\>\> |
+| Error | `provider<TProvider>::requires_<get>` |
+| ---------- | ----------- |
+| Description | provider `TProvider` requires `get` method |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/providable_requires_get.cpp) |
 
 ---
 
@@ -1247,11 +1300,12 @@ Scope type requirement.
 
    scopable<T>
 
-***Test***
+***Example***
 
-| Expression | Description | Error |
-| ---------- | ----------- | ----- |
-| ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/scopable_requires_create.cpp) | config `T` requires only providable and callable types | config<test_config\>::requires_<provider<providable_type (...)\>\> |
+| Error | `scope<TScope>::requires_<create>` |
+| ---------- | ----------- |
+| Description | scope `TScope` requires `create` method |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/scopable_requires_create.cpp) |
 
 ---
 

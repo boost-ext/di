@@ -77,6 +77,8 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 * Boost.DI gives better control of what and how is created
 * Boost.DI gives better understanding about objects hierarchy
 
+###Boost.DI design goals
+
 ###Acknowledgements
 * Thanks to Bartosz Kalinczuk for code review and tips how to improve `Boost.DI`
 * Thanks to Sohail Somani for support and tips how to improve `Boost.DI`
