@@ -30,7 +30,7 @@ auto module = [] {
   // clang-format on
 };
 
-auto test() {
+std::unique_ptr<I> test() {
   auto injector = di::make_injector(module());
   return injector.create<std::unique_ptr<I>>();
 }
@@ -50,5 +50,7 @@ auto test() {
  */
 
 //<-
-int main() { std::system(("gdb -batch -ex 'file " + std::string{argv[0]} + "' -ex 'disassemble test'").c_str()); }
+int main(int argc, char** argv) {
+  std::system(("gdb -batch -ex 'file " + std::string{argv[0]} + "' -ex 'disassemble test'").c_str());
+}
 //->
