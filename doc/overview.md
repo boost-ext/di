@@ -134,6 +134,7 @@ Legend:
 | License | Boost 1.0 | Boost 1.0 | Apache 2.0|
 | Linkage | header only | header only | library |
 | Approach | compile-time | run-time | compile/run-time |
+| Errors | compile-time errors | exceptions | compile-time errors + exceptions |
 
 * Dependency Injection Libraries
 

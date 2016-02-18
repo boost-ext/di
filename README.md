@@ -97,7 +97,7 @@ Your C++14 header only dependency injection library with no dependencies ([__Try
 * [Overview](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/overview/index.html)
     * [Quick Start](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/overview/index.html#quick-start)
     * [Dependencies](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/overview/index.html#dependencies)
-    * [Supported/tested compilers](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/overview/index.html#supportedtested-compilers)
+    * [Supported/Tested compilers](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/overview/index.html#supportedtested-compilers)
     * [Configuration](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/overview/index.html#configuration)
     * [Exception Safety](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/overview/index.html#exception-safety)
     * [Thread Safety](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/overview/index.html#thread-safety)
