@@ -31,6 +31,20 @@ git clone https://github.com/boost-experimental/di && cd di && make test
 * [GCC-5.2+](https://travis-ci.org/boost-experimental/di)
 * [MSVC-2015+](https://ci.appveyor.com/project/boost-experimental/di)
 
+###Design
+
+![Design](images/di.png)
+
+| Component  | Description |
+| ---------- | ----------- |
+| [Bindings] | DSL to create dependencies representation which will be used by core to resolve types |
+| [Scopes] | Responsible for maintain objects life time |
+| [Providers] | Responsible for providing object instance |
+| [Policies] | Compile-time limitations for types / Run-time types vistor |
+| Core | Responsible for resolving requested types (implementation detail) | 
+| Wrappers | Responsible for conversion to required type (implementation detail) |
+
+
 ###Configuration
 | Macro                                       | Description |
 | --------------------------------------------|------------ |
@@ -242,3 +256,8 @@ Legend:
 [Google.Guice]: https://github.com/google/guice
 [Dagger2]: https://github.com/google/dagger
 [Ninject]: https://github.com/ninject/ninject
+
+[Bindings]: user_guide.md#bindings
+[Scopes]: user_guide.md#scopes
+[Providers]: user_guide.md#providers
+[Policies]: user_guide.md#policies
