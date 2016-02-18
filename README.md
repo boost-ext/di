@@ -109,7 +109,7 @@ Your C++14 header only dependency injection library with no dependencies ([__Try
     * [0. [Pre] Refactor towards DI](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/tutorial/index.html#0-pre-refactor-towards-di)
     * [1. [Basic] Create objects tree](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/tutorial/index.html#1-basic-create-objects-tree)
     * [2. [Basic] First steps with bindings](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/tutorial/index.html#2-basic-first-steps-with-bindings)
-    * [3. [Basic] Decide the life-times](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/tutorial/index.html#3-basic-decide-the-life-times)
+    * [3. [Basic] Decide the life times](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/tutorial/index.html#3-basic-decide-the-life-times)
     * [4. [Basic] Annotations to the rescue](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/tutorial/index.html#4-basic-annotations-to-the-rescue)
     * [5. [Basic] Split your configuration](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/tutorial/index.html#5-basic-split-your-configuration)
     * [6. [Advanced] Dump/Limit your types](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/tutorial/index.html#6-advanced-dumplimit-your-types)

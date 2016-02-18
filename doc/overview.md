@@ -33,7 +33,7 @@ git clone https://github.com/boost-experimental/di && cd di && make test
 
 ###Design
 
-![Design](images/di.png)
+[![Design](images/di.png)](images/di.png)
 
 | Component  | Description |
 | ---------- | ----------- |
