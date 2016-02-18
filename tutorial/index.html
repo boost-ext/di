@@ -213,14 +213,35 @@ namespace di = boost::di;
 </code></pre>
 
 <h3 id="0-pre-refactor-towards-di">0. [Pre] Refactor towards DI</h3>
+<p>NOT -&gt; carry dependencies</p>
 <h3 id="1-basic-create-objects-tree">1. [Basic] Create objects tree</h3>
+<p><a href="../images/uml_dumper.png"><img alt="Design" src="../images/uml_dumper.png" /></a></p>
+<p>auto injector = make_injector();
+injector.create<tree>();</p>
 <h3 id="2-basic-first-steps-with-bindings">2. [Basic] First steps with bindings</h3>
+<p>bind interface
+bind value
+dynamic bindings</p>
+<p>object creation ggurantee
+understand error messages</p>
 <h3 id="3-basic-decide-the-life-times">3. [Basic] Decide the life times</h3>
+<p>deduce scope
+unique scope
+singleton scope</p>
 <h3 id="4-basic-annotations-to-the-rescue">4. [Basic] Annotations to the rescue</h3>
+<p>ambigious constructors
+named name</p>
 <h3 id="5-basic-split-your-configuration">5. [Basic] Split your configuration</h3>
+<p>auto module = [] { ... };</p>
 <h3 id="6-advanced-dumplimit-your-types">6. [Advanced] Dump/Limit your types</h3>
+<p>uml dumper
+limit types</p>
 <h3 id="7-advanced-customize-it">7. [Advanced] Customize it</h3>
+<p>custom scope
+custom provider
+custom policies</p>
 <h3 id="8-advanced-extend-it">8. [Advanced] Extend it</h3>
+<p>extensions</p>
               
             </div>
           </div>

@@ -102,52 +102,52 @@
         }, 
         {
             "location": "/tutorial/index.html", 
-            "text": "All code examples include \nboost/di.hpp\n as well as declare a convienent msm namespace alias.\n\n\n#include \nboost/di.hpp\n\nnamespace di = boost::di;\n\n\n\n\n0. [Pre] Refactor towards DI\n\n\n1. [Basic] Create objects tree\n\n\n2. [Basic] First steps with bindings\n\n\n3. [Basic] Decide the life times\n\n\n4. [Basic] Annotations to the rescue\n\n\n5. [Basic] Split your configuration\n\n\n6. [Advanced] Dump/Limit your types\n\n\n7. [Advanced] Customize it\n\n\n8. [Advanced] Extend it", 
+            "text": "All code examples include \nboost/di.hpp\n as well as declare a convienent msm namespace alias.\n\n\n#include \nboost/di.hpp\n\nnamespace di = boost::di;\n\n\n\n\n0. [Pre] Refactor towards DI\n\n\nNOT -\n carry dependencies\n\n\n1. [Basic] Create objects tree\n\n\n\n\nauto injector = make_injector();\ninjector.create\n();\n\n\n2. [Basic] First steps with bindings\n\n\nbind interface\nbind value\ndynamic bindings\n\n\nobject creation ggurantee\nunderstand error messages\n\n\n3. [Basic] Decide the life times\n\n\ndeduce scope\nunique scope\nsingleton scope\n\n\n4. [Basic] Annotations to the rescue\n\n\nambigious constructors\nnamed name\n\n\n5. [Basic] Split your configuration\n\n\nauto module = [] { ... };\n\n\n6. [Advanced] Dump/Limit your types\n\n\numl dumper\nlimit types\n\n\n7. [Advanced] Customize it\n\n\ncustom scope\ncustom provider\ncustom policies\n\n\n8. [Advanced] Extend it\n\n\nextensions", 
             "title": "Tutorial"
         }, 
         {
             "location": "/tutorial/index.html#0-pre-refactor-towards-di", 
-            "text": "", 
+            "text": "NOT -  carry dependencies", 
             "title": "0. [Pre] Refactor towards DI"
         }, 
         {
             "location": "/tutorial/index.html#1-basic-create-objects-tree", 
-            "text": "", 
+            "text": "auto injector = make_injector();\ninjector.create ();", 
             "title": "1. [Basic] Create objects tree"
         }, 
         {
             "location": "/tutorial/index.html#2-basic-first-steps-with-bindings", 
-            "text": "", 
+            "text": "bind interface\nbind value\ndynamic bindings  object creation ggurantee\nunderstand error messages", 
             "title": "2. [Basic] First steps with bindings"
         }, 
         {
             "location": "/tutorial/index.html#3-basic-decide-the-life-times", 
-            "text": "", 
+            "text": "deduce scope\nunique scope\nsingleton scope", 
             "title": "3. [Basic] Decide the life times"
         }, 
         {
             "location": "/tutorial/index.html#4-basic-annotations-to-the-rescue", 
-            "text": "", 
+            "text": "ambigious constructors\nnamed name", 
             "title": "4. [Basic] Annotations to the rescue"
         }, 
         {
             "location": "/tutorial/index.html#5-basic-split-your-configuration", 
-            "text": "", 
+            "text": "auto module = [] { ... };", 
             "title": "5. [Basic] Split your configuration"
         }, 
         {
             "location": "/tutorial/index.html#6-advanced-dumplimit-your-types", 
-            "text": "", 
+            "text": "uml dumper\nlimit types", 
             "title": "6. [Advanced] Dump/Limit your types"
         }, 
         {
             "location": "/tutorial/index.html#7-advanced-customize-it", 
-            "text": "", 
+            "text": "custom scope\ncustom provider\ncustom policies", 
             "title": "7. [Advanced] Customize it"
         }, 
         {
             "location": "/tutorial/index.html#8-advanced-extend-it", 
-            "text": "", 
+            "text": "extensions", 
             "title": "8. [Advanced] Extend it"
         }, 
         {
