@@ -287,18 +287,26 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 <tbody></tbody>
 </table>
 <h3 id="why-boostdi">Why Boost.DI?</h3>
-<p><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
 <ul>
 <li>Boost.DI has none or minimal run-time overhead - <a href="#run_time_performance">Run-time performance</a></li>
 <li>Boost.DI compiles fast - <a href="#compile_time_performance">Compile-time performance</a></li>
-<li>Boost.DI gives short diagnostic messages - <a href="#diagnostic_messages">Diagnostic messages</a></li>
+<li>Boost.DI gives short diagnostic messages - <a href="#diagnostic_messages">Error messages</a></li>
 <li>Boost.DI is not intrusive</li>
 <li>Boost.DI reduces boilerplate code</li>
 <li>Boost.DI reduces testing effort</li>
 <li>Boost.DI gives better control of what and how is created</li>
-<li>Boost.DI gives better understanding about objects hierarchy</li>
+<li>Boost.DI gives better understanding about objects hierarchy
+<img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></li>
 </ul>
 <h3 id="boostdi-design-goals">Boost.DI design goals</h3>
+<ul>
+<li>Be as fast as possible (see <a href="overview/index.html#performance">Performance</a>)</li>
+<li>Compile as fast as possible (see <a href="overview/index.html#performance">Performance</a>)</li>
+<li>Gives short and intuitive error messages (see <a href="overview/index.html#error_messages">Error messages</a>)</li>
+<li>Guarantee object creation at compile-time (see <a href="overview/index.html#performance">Performance</a>)</li>
+<li>Be as non-intrusive as possible (see <a href="overview/index.html#performance">Performance</a>)</li>
+<li>Be easy to extend (see <a href="extensions/index.html">Extensions</a>)</li>
+</ul>
 <h3 id="acknowledgements">Acknowledgements</h3>
 <ul>
 <li>Thanks to Bartosz Kalinczuk for code review and tips how to improve <code>Boost.DI</code></li>
@@ -341,7 +349,7 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
     
   </div>
 
-  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a> | Powered by <a href="http://melpon.org/wandbox">Wandbox</a>
 </footer>
 	  
         </div>
@@ -367,5 +375,5 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 
 <!--
 MkDocs version : 0.15.0
-Build Date UTC : 2016-02-18 13:31:27.595037
+Build Date UTC : 2016-02-18 14:12:36.332750
 -->
