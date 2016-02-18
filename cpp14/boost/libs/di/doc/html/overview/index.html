@@ -88,10 +88,16 @@
                 <li class="toctree-l3"><a href="#dependencies">Dependencies</a></li>
                 
             
-                <li class="toctree-l3"><a href="#supportedtested-compilers">Supported/tested compilers</a></li>
+                <li class="toctree-l3"><a href="#supportedtested-compilers">Supported/Tested compilers</a></li>
                 
             
                 <li class="toctree-l3"><a href="#configuration">Configuration</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#exception-safety">Exception Safety</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#thread-safety">Thread Safety</a></li>
                 
             
                 <li class="toctree-l3"><a href="#performance">Performance</a></li>
@@ -228,7 +234,7 @@ namespace di = boost::di;
 <ul>
 <li>No external dependencies are required (neither STL nor Boost)</li>
 </ul>
-<h3 id="supportedtested-compilers">Supported/tested compilers</h3>
+<h3 id="supportedtested-compilers">Supported/Tested compilers</h3>
 <ul>
 <li><a href="https://travis-ci.org/boost-experimental/di">Clang-3.4+</a></li>
 <li><a href="https://travis-ci.org/boost-experimental/di">GCC-5.2+</a></li>
@@ -269,6 +275,15 @@ namespace di = boost::di;
 </tr>
 </tbody>
 </table>
+<h3 id="exception-safety">Exception Safety</h3>
+<ul>
+<li>Boost.DI is not using exceptions internally and therefore might be compiled with <code>-fno-exceptions</code>.</li>
+<li>Check <a href="../user_guide/index.html">User Guide</a> to verify which API's are marked <code>noexcept</code>.</li>
+</ul>
+<h3 id="thread-safety">Thread Safety</h3>
+<ul>
+<li>Boost.DI is thread safe.</li>
+</ul>
 <h3 id="performance">Performance</h3>
 <ul>
 <li><strong>Run-time performance</strong><ul>
@@ -342,36 +357,70 @@ namespace di = boost::di;
 <table>
 <thead>
 <tr>
-<th>Expression</th>
-<th>Description</th>
 <th>Error</th>
-<th>Suggestion</th>
+<th><code>type&lt;T&gt;::is_abstract</code></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_abstract.cpp" /></td>
+<td>Description</td>
 <td>type <code>T</code> is abstract</td>
-<td>type<T>::is_abstract</td>
-<td></td>
 </tr>
 <tr>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_bound_more_than_once.cpp" /></td>
+<td><code>BOOST_DI_CFG_DIAGNOSTICS_LEVEL</code></td>
+<td>0, 1 -&gt; no additional info, 2 -&gt; info about why type <code>T</code> is abstract</td>
+</tr>
+<tr>
+<td>Expression</td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_abstract.cpp" /></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th><code>type&lt;T&gt;::is_bound_more_than_once</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Description</td>
 <td>type <code>T</code> is bound more than once</td>
-<td>type<T>::is_bound_more_than_once</td>
-<td></td>
 </tr>
 <tr>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_abstract_type_is_not_bound.cpp" /></td>
-<td></td>
-<td>abstract_type&lt;interface>::is_not_bound</td>
+<td>Expression</td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_bound_more_than_once.cpp" /></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th><code>abstract_type&lt;T&gt;::is_not_bound</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Description</td>
+<td>config <code>T</code> requires only providable and callable types</td>
+</tr>
+<tr>
+<td><code>BOOST_DI_CFG_DIAGNOSTICS_LEVEL</code></td>
+<td>0 -&gt; 'constraint not satisfied', 1 -&gt; (0) + abstract type is not bound, 2 -&gt; (1) + creation tree</td>
+</tr>
+<tr>
+<td>Suggestion</td>
 <td>'type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?'</td>
 </tr>
 <tr>
+<td>Expression</td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_abstract_type_is_not_bound.cpp" /></td>
+</tr>
+<tr>
+<td>Expression</td>
 <td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_expose_abstract_type_is_not_bound.cpp" /></td>
-<td></td>
-<td></td>
-<td></td>
 </tr>
 </tbody>
 </table>

@@ -1886,40 +1886,98 @@ boundable&lt;Ts...&gt;
 </tr>
 </tbody>
 </table>
-<p><strong><em>Test</em></strong></p>
+<p><strong><em>Example</em></strong></p>
 <table>
 <thead>
 <tr>
-<th>Expression</th>
-<th>Description</th>
 <th>Error</th>
+<th><code>type&lt;T&gt;::has_disallowed_qualifiers</code></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_has_disallowed_qualifiers.cpp" /></td>
+<td>Description</td>
 <td>type <code>T</code> has disallowed qualifiers</td>
-<td>type<T>::has_disallowed_qualifiers</td>
 </tr>
 <tr>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_abstract.cpp" /></td>
+<td>Expression</td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_has_disallowed_qualifiers.cpp" /></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th><code>type&lt;T&gt;::is_abstract</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Description</td>
 <td>type <code>T</code> is abstract</td>
-<td>type<T>::is_abstract</td>
 </tr>
 <tr>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_bound_more_than_once.cpp" /></td>
-<td>type <code>T</code> is bound more than once</td>
-<td>type<T>::is_bound_more_than_once</td>
+<td><code>BOOST_DI_CFG_DIAGNOSTICS_LEVEL</code></td>
+<td>0, 1 -&gt; no additional info, 2 -&gt; info about why type <code>T</code> is abstract</td>
 </tr>
 <tr>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_neither_a_dependency_nor_an_injector.cpp" /></td>
-<td>type <code>T</code> is neither a dependency nor an injector</td>
-<td>type<T>::is_neither_a_dependency_nor_an_injector</td>
+<td>Expression</td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_abstract.cpp" /></td>
 </tr>
+</tbody>
+</table>
+<table>
+<thead>
 <tr>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_not_related_to.cpp" /></td>
+<th>Error</th>
+<th><code>type&lt;T&gt;::is_not_related_to</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Description</td>
 <td>type <code>T</code> is not related to type <code>U</code></td>
-<td><code>type&lt;T&gt;::is_not_related_to&lt;U&gt;</code></td>
+</tr>
+<tr>
+<td>Expression</td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_not_related_to.cpp" /></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th><code>type&lt;T&gt;::is_bound_more_than_once</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Description</td>
+<td>type <code>T</code> is bound more than once</td>
+</tr>
+<tr>
+<td>Expression</td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_bound_more_than_once.cpp" /></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th><code>type&lt;T&gt;::is_neither_a_dependency_nor_an_injector</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Description</td>
+<td>type <code>T</code> is neither a dependency nor an injector</td>
+</tr>
+<tr>
+<td>Expression</td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_neither_a_dependency_nor_an_injector.cpp" /></td>
 </tr>
 </tbody>
 </table>
@@ -1942,20 +2000,22 @@ concept bool callable() {
 <p><strong><em>Semantics</em></strong></p>
 <pre><code>callable&lt;T&gt;
 </code></pre>
-<p><strong><em>Test</em></strong></p>
+<p><strong><em>Example</em></strong></p>
 <table>
 <thead>
 <tr>
-<th>Expression</th>
-<th>Description</th>
 <th>Error</th>
+<th><code>policy&lt;TPolicy&gt;::requires_&lt;call_operator&gt;</code></th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td>Description</td>
+<td>policy <code>TPolicy</code> requires a call operator</td>
+</tr>
+<tr>
+<td>Expression</td>
 <td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/callable_requires_call_operator.cpp" /></td>
-<td>policy <code>T</code> requires a call operator</td>
-<td>policy&lt;test_config::dummy>::requires_&lt;call_operator></td>
 </tr>
 </tbody>
 </table>
@@ -1977,20 +2037,22 @@ concept bool configurable() {
 <p><strong><em>Semantics</em></strong></p>
 <pre><code>configurable&lt;T&gt;
 </code></pre>
-<p><strong><em>Test</em></strong></p>
+<p><strong><em>Example</em></strong></p>
 <table>
 <thead>
 <tr>
-<th>Expression</th>
-<th>Description</th>
 <th>Error</th>
+<th><code>config&lt;TConfig&gt;::requires_&lt;provider&lt;providable_type (...)&gt;&gt;</code></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/configurable_requires_callable_and_providable.cpp" /></td>
+<td>Description</td>
 <td>config <code>T</code> requires only providable and callable types</td>
-<td>config&lt;test_config>::requires_&lt;provider&lt;providable_type (...)>></td>
+</tr>
+<tr>
+<td>Expression</td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/configurable_requires_callable_and_providable.cpp" /></td>
 </tr>
 </tbody>
 </table>
@@ -2011,55 +2073,146 @@ concept bool creatable() {
 <p><strong><em>Semantics</em></strong></p>
 <pre><code>creatable&lt;T, TBindings...&gt;
 </code></pre>
-<p><strong><em>Test</em></strong></p>
+<p><strong><em>Example</em></strong></p>
 <table>
 <thead>
 <tr>
-<th>Expression</th>
-<th>Description</th>
 <th>Error</th>
-<th>Suggestion</th>
+<th><code>abstract_type&lt;T&gt;::is_not_bound</code></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_abstract_type_is_not_bound.cpp" /></td>
-<td></td>
-<td>abstract_type&lt;interface>::is_not_bound</td>
+<td>Description</td>
+<td>config <code>T</code> requires only providable and callable types</td>
+</tr>
+<tr>
+<td><code>BOOST_DI_CFG_DIAGNOSTICS_LEVEL</code></td>
+<td>0 -&gt; 'constraint not satisfied', 1 -&gt; (0) + abstract type is not bound, 2 -&gt; (1) + creation tree</td>
+</tr>
+<tr>
+<td>Suggestion</td>
 <td>'type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?'</td>
 </tr>
 <tr>
+<td>Expression</td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_abstract_type_is_not_bound.cpp" /></td>
+</tr>
+<tr>
+<td>Expression</td>
 <td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_expose_abstract_type_is_not_bound.cpp" /></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_type_has_ambiguous_number_of_constructor_parameters.cpp" /></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_type_has_to_many_constructor_parameters.cpp" /></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_instance_is_not_convertible_to.cpp" /></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_scoped_is_not_convertible_to.cpp" /></td>
-<td></td>
-<td></td>
-<td></td>
 </tr>
 </tbody>
 </table>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th><code>type&lt;T&gt;::has_ambiguous_number_of_constructor_parameters::given&lt;Given&gt;::expected&lt;Expected&gt;</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Description</td>
+<td>type <code>T</code> has ambiguous number of constructor parameters where <code>Given</code> were provided but <code>Expected</code> were expected</td>
+</tr>
+<tr>
+<td><code>BOOST_DI_CFG_DIAGNOSTICS_LEVEL</code></td>
+<td>0 -&gt; 'constraint not satisfied', 1 -&gt; (0) + abstract type is not bound, 2 -&gt; (1) + creation tree</td>
+</tr>
+<tr>
+<td>Suggestion</td>
+<td>'verify BOOST_DI_INJECT_TRAITS or di::ctor_traits'</td>
+</tr>
+<tr>
+<td>Expression</td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_type_has_ambiguous_number_of_constructor_parameters.cpp" /></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th><code>type&lt;T&gt;::has_to_many_constructor_parameters::max&lt;Max&gt;</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Description</td>
+<td>type <code>T</code> has to many constructor parameter where maximum number is <code>Max</code></td>
+</tr>
+<tr>
+<td><code>BOOST_DI_CFG_DIAGNOSTICS_LEVEL</code></td>
+<td>0 -&gt; 'constraint not satisfied', 1 -&gt; (0) + abstract type is not bound, 2 -&gt; (1) + creation tree</td>
+</tr>
+<tr>
+<td>Suggestion</td>
+<td>'increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters'</td>
+</tr>
+<tr>
+<td>Expression</td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_type_has_to_many_constructor_parameters.cpp" /></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th><code>scoped&lt;TScope&gt;::is_not_convertible_to&lt;T&gt;</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Description</td>
+<td>scope <code>TScope</code> is not convertible to type <code>T</code></td>
+</tr>
+<tr>
+<td><code>BOOST_DI_CFG_DIAGNOSTICS_LEVEL</code></td>
+<td>0 -&gt; 'constraint not satisfied', 1 -&gt; (0) + abstract type is not bound, 2 -&gt; (1) + creation tree</td>
+</tr>
+<tr>
+<td>Suggestion</td>
+<td>'scoped object is not convertible to the requested type, did you mistake the scope: 'di::bind<T>.in(scope)'?'</td>
+</tr>
+<tr>
+<td>Expression</td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_scoped_is_not_convertible_to.cpp" /></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th><code>scoped&lt;instance&gt;::is_not_convertible_to&lt;T&gt;</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Description</td>
+<td>instance is not convertible to type <code>T</code></td>
+</tr>
+<tr>
+<td><code>BOOST_DI_CFG_DIAGNOSTICS_LEVEL</code></td>
+<td>0 -&gt; 'constraint not satisfied', 1 -&gt; (0) + abstract type is not bound, 2 -&gt; (1) + creation tree</td>
+</tr>
+<tr>
+<td>Suggestion</td>
+<td>'instance is not convertible to the requested type, verify binding: 'di::bind<T>.to(value)'?'</td>
+</tr>
+<tr>
+<td>Expression</td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_instance_is_not_convertible_to.cpp" /></td>
+</tr>
+</tbody>
+</table>
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+Suggestions are not supported/displayed by MSVC-2015.
+</div>
+
 <hr />
 <p><a id="di_providable"></a>
 --- <strong><em>di::concepts::providable</em></strong> ---</p>
@@ -2079,20 +2232,22 @@ concept bool providable() {
 </code></pre>
 <p><strong><em>Semantics</em></strong></p>
 <p>providable<T></p>
-<p><strong><em>Test</em></strong></p>
+<p><strong><em>Example</em></strong></p>
 <table>
 <thead>
 <tr>
-<th>Expression</th>
-<th>Description</th>
 <th>Error</th>
+<th><code>provider&lt;TProvider&gt;::requires_&lt;get&gt;</code></th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td>Description</td>
+<td>provider <code>TProvider</code> requires <code>get</code> method</td>
+</tr>
+<tr>
+<td>Expression</td>
 <td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/providable_requires_get.cpp" /></td>
-<td>config <code>T</code> requires only providable and callable types</td>
-<td>config&lt;test_config>::requires_&lt;provider&lt;providable_type (...)>></td>
 </tr>
 </tbody>
 </table>
@@ -2116,20 +2271,22 @@ concept bool scopable() {
 </code></pre>
 <p><strong><em>Semantics</em></strong></p>
 <p>scopable<T></p>
-<p><strong><em>Test</em></strong></p>
+<p><strong><em>Example</em></strong></p>
 <table>
 <thead>
 <tr>
-<th>Expression</th>
-<th>Description</th>
 <th>Error</th>
+<th><code>scope&lt;TScope&gt;::requires_&lt;create&gt;</code></th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td>Description</td>
+<td>scope <code>TScope</code> requires <code>create</code> method</td>
+</tr>
+<tr>
+<td>Expression</td>
 <td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/scopable_requires_create.cpp" /></td>
-<td>config <code>T</code> requires only providable and callable types</td>
-<td>config&lt;test_config>::requires_&lt;provider&lt;providable_type (...)>></td>
 </tr>
 </tbody>
 </table>
