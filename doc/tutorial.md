@@ -5,6 +5,7 @@ All code examples include `boost/di.hpp` as well as declare a convienent msm nam
 namespace di = boost::di;
 ```
 
+###0. [Pre] Refactor towards DI
 ###1. [Basic] Create objects tree
 ###2. [Basic] First steps with bindings
 ###3. [Basic] Decide the life-times

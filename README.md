@@ -105,6 +105,7 @@ Your C++14 header only dependency injection library with no dependencies ([__Try
     * [Error messages](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/overview/index.html#error-messages)
     * [Dependency Injection Libraries](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/overview/index.html#dependency-injection-libraries)
 * [Tutorial](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/tutorial/index.html)
+    * [0. [Pre] Refactor towards DI](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/tutorial/index.html#0-pre-refactor-towards-di)
     * [1. [Basic] Create objects tree](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/tutorial/index.html#1-basic-create-objects-tree)
     * [2. [Basic] First steps with bindings](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/tutorial/index.html#2-basic-first-steps-with-bindings)
     * [3. [Basic] Decide the life-times](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/tutorial/index.html#3-basic-decide-the-life-times)
