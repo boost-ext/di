@@ -9,7 +9,7 @@
 
 #Experimental Boost.DI
 
-Your C++14 header only dependency injection library with no dependencies ([__Try it online!__](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/examples/index.html#hello-world))
+Your C++14 header only Dependency Injection library with no dependencies ([__Try it online!__](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/examples/index.html#hello-world))
 
 ```cpp
 +---------------------------------------------------+
@@ -98,10 +98,10 @@ Your C++14 header only dependency injection library with no dependencies ([__Try
     * [Quick Start](http://boost-experimental.github.io/di/overview/index.html#quick-start)
     * [Dependencies](http://boost-experimental.github.io/di/overview/index.html#dependencies)
     * [Supported/Tested compilers](http://boost-experimental.github.io/di/overview/index.html#supportedtested-compilers)
-    * [Design](http://boost-experimental.github.io/di/overview/index.html#design)
     * [Configuration](http://boost-experimental.github.io/di/overview/index.html#configuration)
     * [Exception Safety](http://boost-experimental.github.io/di/overview/index.html#exception-safety)
     * [Thread Safety](http://boost-experimental.github.io/di/overview/index.html#thread-safety)
+    * [Design](http://boost-experimental.github.io/di/overview/index.html#design)
     * [Performance](http://boost-experimental.github.io/di/overview/index.html#performance)
     * [Error messages](http://boost-experimental.github.io/di/overview/index.html#error-messages)
     * [Dependency Injection Libraries](http://boost-experimental.github.io/di/overview/index.html#dependency-injection-libraries)

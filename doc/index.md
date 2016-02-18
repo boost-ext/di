@@ -12,7 +12,7 @@ Introduction
 
 | **Experimental Boost.DI** | |
 | - | - |
-| Your C++14 header only dependency injection library with no dependencies ([__Try it online!__](http://boost-experimental.github.io/di/examples/index.html#hello-world)) | <a class="github-button" href="https://github.com/boost-experimental/di" data-style="mega" data-count-href="/boost-experimental/di/stargazers" data-count-api="/repos/boost-experimental/di#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star boost-experimental/di on GitHub">GitHub</a> |
+| Your C++14 header only Dependency Injection library with no dependencies ([__Try it online!__](http://boost-experimental.github.io/di/examples/index.html#hello-world)) | <a class="github-button" href="https://github.com/boost-experimental/di" data-style="mega" data-count-href="/boost-experimental/di/stargazers" data-count-api="/repos/boost-experimental/di#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star boost-experimental/di on GitHub">GitHub</a> |
 
 <div class="important">
 <h3 class="wy-text-neutral"><span class="fa fa-info-circle wy-text-info"></span>&nbsp; Latest Release: <b>v1.0.0</b> (February 28, 2016)</h3>
@@ -56,17 +56,17 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 ###Real Life examples?
 
 * [Match-3 Game](https://github.com/krzysztof-jusiak/match3)
-    * Simple game in C++14 using SDL2 / MVC pattern / Meta State Machine / Dependency Injection
+    * Simple game in C++14 using SDL2 / Model View Controller / Meta State Machine / Dependency Injection
 
 >
 
 * [Automatic Mocks Injector](https://github.com/krzysztof-jusiak/mocks_injector)
-    * Automatically create and inject required mocks to tested classes via type constructors
+    * Automatically create and inject required mocks to tested classes via constructors
 
 >
 
 * [Experimental Boost.MSM-lite](http://boost-experimental.github.io/msm-lite/)
-    * Your scalable C++14 header only eUML-like meta state machine library with no dependencies
+    * C++14 header only eUML-like Meta State Machine library with no dependencies
 
 ###Why Dependency Injection?
 
@@ -93,7 +93,7 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 
 * Be as fast as possible (see [Performance](overview.md#performance))
 * Compile as fast as possible (see [Performance](overview.md#performance))
-* Gives short and intuitive error messages (see [Error messages](overview.md#error_messages))
+* Give short and intuitive error messages (see [Error messages](overview.md#error_messages))
 * Guarantee object creation at compile-time (see [Performance](overview.md#performance))
 * Be as non-intrusive as possible (see [Performance](overview.md#performance))
 * Be easy to extend (see [Extensions](extensions.md))
