@@ -54,7 +54,7 @@
 	
 	<nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
 
-      <a href="http://boost.org"><img src="../img/boost.png" /></a>
+      <img src="../img/boost.png" />
       <a href="../index.html" class="icon icon-home" style="font-weight:bold;text-align:left;padding:0.809em;color:#fcfcfc;margin-bottom:0.809em"> Boost.DI</a>
 
       <div class="wy-side-nav-search">
@@ -431,10 +431,10 @@ namespace di = boost::di;
 <table>
 <thead>
 <tr>
-<th>Library</th>
+<th></th>
 <th>Boost.DI</th>
-<th>dicpp</th>
-<th>Google Fruit</th>
+<th><a href="https://bitbucket.org/cheez/dicpp/wiki/Home">dicpp</a></th>
+<th><a href="https://github.com/google/fruit">Google.Fruit</a></th>
 </tr>
 </thead>
 <tbody>
@@ -468,19 +468,206 @@ namespace di = boost::di;
 <td>run-time</td>
 <td>compile/run-time</td>
 </tr>
+<tr>
+<td>Errors</td>
+<td>compile-time errors</td>
+<td>exceptions</td>
+<td>compile-time errors + exceptions</td>
+</tr>
 </tbody>
 </table>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Bind Interface</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boost.DI</td>
+<td><img alt="CPP(RESULT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp" /></td>
+</tr>
+<tr>
+<td><a href="https://bitbucket.org/cheez/dicpp/wiki/Home">dicpp</a></td>
+<td><img alt="CPP(RESULT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/google/fruit">Google.Fruit</a></td>
+<td><img alt="CPP(RESULT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/fruit.cpp" /></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Bind Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boost.DI</td>
+<td><img alt="CPP(RESULT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp" /></td>
+</tr>
+<tr>
+<td><a href="https://bitbucket.org/cheez/dicpp/wiki/Home">dicpp</a></td>
+<td><img alt="CPP(RESULT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/google/fruit">Google.Fruit</a></td>
+<td><img alt="CPP(RESULT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/fruit.cpp" /></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Missing Binding Error</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boost.DI</td>
+<td><img alt="CPP(RESULT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/di.cpp" /></td>
+</tr>
+<tr>
+<td><a href="https://bitbucket.org/cheez/dicpp/wiki/Home">dicpp</a></td>
+<td><img alt="CPP(RESULT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/dicpp.cpp" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/google/fruit">Google.Fruit</a></td>
+<td><img alt="CPP(RESULT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/fruit.cpp" /></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>CXXFLAGS</th>
+<th>Types</th>
+<th>Instances created</th>
+<th>Modules</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="">Create Simple</a></td>
+<td>-O2 -s</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Create Simple</th>
+<th>Boost.DI</th>
+<th><a href="https://bitbucket.org/cheez/dicpp/wiki/Home">dicpp</a></th>
+<th><a href="https://github.com/google/fruit">Google.Fruit</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compilation time</td>
+<td>0.000s</td>
+<td>0.000s</td>
+<td>0.000s (-DFRUIT_NO_LOOP)</td>
+</tr>
+<tr>
+<td>Execution time</td>
+<td>0ms</td>
+<td>0ms</td>
+<td>0ms</td>
+</tr>
+<tr>
+<td>Memory usage / sizeof(injector)</td>
+<td>0b</td>
+<td>0b</td>
+<td>0b</td>
+</tr>
+<tr>
+<td>Executable size</td>
+<td>0kb</td>
+<td>0kb</td>
+<td>0kb</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>CXXFLAGS</th>
+<th>Types</th>
+<th>Instances created</th>
+<th>Modules</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="">Create Complex</a></td>
+<td>-O2 -s</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Create Complex</th>
+<th>Boost.DI</th>
+<th><a href="https://bitbucket.org/cheez/dicpp/wiki/Home">dicpp</a></th>
+<th><a href="https://github.com/google/fruit">Google.Fruit</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compilation time</td>
+<td>0.000s</td>
+<td>0.000s</td>
+<td>0.000s (-DFRUIT_NO_LOOP)</td>
+</tr>
+<tr>
+<td>Execution time</td>
+<td>0ms</td>
+<td>0ms</td>
+<td>0ms</td>
+</tr>
+<tr>
+<td>Memory usage / sizeof(injector)</td>
+<td>0b</td>
+<td>0b</td>
+<td>0b</td>
+</tr>
+<tr>
+<td>Executable size</td>
+<td>0kb</td>
+<td>0kb</td>
+<td>0kb</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <ul>
 <li>Dependency Injection Libraries</li>
 </ul>
 <table>
 <thead>
 <tr>
-<th>Library</th>
+<th></th>
 <th>Boost.DI</th>
-<th>Google Guice</th>
-<th>Dagger2</th>
-<th>Ninject</th>
+<th><a href="https://github.com/google/guice">Google.Guice</a></th>
+<th><a href="https://github.com/google/dagger">Dagger2</a></th>
+<th><a href="https://github.com/ninject/ninject">Ninject</a></th>
 </tr>
 </thead>
 <tbody>
@@ -512,8 +699,190 @@ namespace di = boost::di;
 <td>compile-time (annotation processor)</td>
 <td>run-time</td>
 </tr>
+<tr>
+<td>Errors</td>
+<td>compile-time errors</td>
+<td>exceptions</td>
+<td>compile-time errors</td>
+<td>exceptions</td>
+</tr>
 </tbody>
 </table>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Bind Interface</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boost.DI</td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/google/guice">Google.Guice</a></td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/guice.cpp" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/google/dagger">Dagger2</a></td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dagger2.cpp" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/ninject/ninject">Ninject</a></td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/Ninject.cpp" /></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Bind Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boost.DI</td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/google/guice">Google.Guice</a></td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/guice.cpp" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/google/dagger">Dagger2</a></td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dagger2.cpp" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/ninject/ninject">Ninject</a></td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/Ninject.cpp" /></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Missing Bindings Error</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boost.DI</td>
+<td><img alt="CPP(RESULT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/di.cpp" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/google/guice">Google.Guice</a></td>
+<td><img alt="CPP(RESULT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/guice.cpp" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/google/dagger">Dagger2</a></td>
+<td><img alt="CPP(RESULT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/dagger2.cpp" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/ninject/ninject">Ninject</a></td>
+<td><img alt="CPP(RESULT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/Ninject.cpp" /></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>CXXFLAGS</th>
+<th>Types</th>
+<th>Instances created</th>
+<th>Modules</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="">Create Simple</a></td>
+<td>-O2 -s</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Create Simple</th>
+<th>Boost.DI</th>
+<th><a href="https://github.com/google/guice">Google.Guice</a></th>
+<th><a href="https://github.com/google/dagger">Dagger2</a></th>
+<th><a href="https://github.com/ninject/ninject">Ninject</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compilation time</td>
+<td>0.000s</td>
+<td>0.000s</td>
+<td>0.000s</td>
+<td>0.000s</td>
+</tr>
+<tr>
+<td>Execution time</td>
+<td>0ms</td>
+<td>0ms</td>
+<td>0ms</td>
+<td>0ms</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>CXXFLAGS</th>
+<th>Types</th>
+<th>Instances created</th>
+<th>Modules</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="">Create Complex</a></td>
+<td>-O2 -s</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Create Complex</th>
+<th>Boost.DI</th>
+<th><a href="https://github.com/google/guice">Google.Guice</a></th>
+<th><a href="https://github.com/google/dagger">Dagger2</a></th>
+<th><a href="https://github.com/ninject/ninject">Ninject</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compilation time</td>
+<td>0.000s</td>
+<td>0.000s</td>
+<td>0.000s</td>
+<td>0.000s</td>
+</tr>
+<tr>
+<td>Execution time</td>
+<td>0ms</td>
+<td>0ms</td>
+<td>0ms</td>
+<td>0ms</td>
+</tr>
+</tbody>
+</table>
+<hr />
               
             </div>
           </div>

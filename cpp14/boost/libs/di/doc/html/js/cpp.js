@@ -235,4 +235,62 @@ $(document).ready(function () {
       test = $('<div/>').text(ts).html();
       $(this).replaceWith('<table style="table-layout: fixed; border-collapse:collapse; padding:0; height: 30px; width: 100%; border: 1px;"><thead><tr><th>' + name + '</th><th><button class="btn btn-neutral" id="run_it_btn_' + id + '" onclick="cpp(' + id + ', \'' + file + '\', \'Test this code!\')">Test this code!</button><div id="code_listing_' + id + '"></th></tr></thead><tbody><tr><td><pre><code class="cpp hljs" style="line-height: 12px; height: ' + height + 'px;">' + example + '</code></pre></td><td><pre><code class="cpp hljs" style="line-height: 12px; height: ' + height + 'px;">' + test + '</code></pre></td></tr></tbody></table><textarea style="display: none" id="code_' + id + '"></textarea><br /><textarea style="display: none" id="output_' + id + '"></textarea></div>');
     });
+
+    $('img[alt="CPP(RESULT)"]').each(function () {
+      var file = $(this).attr('src');
+      var basename = $(this).attr('src').split('/')[$(this).attr('src').split('/').length - 1];
+      var name = basename.replace(".cpp", "").replace(/_/g, " ");
+      name = name.charAt(0).toUpperCase() + name.substring(1);
+      var begin = "//<-";
+      var end = "//->";
+      var example = get_cpp_file(file);
+      var lines = example.split('\n');
+      var example_result = '';
+      var test_result = '';
+      var ignored = 0;
+      var tmp_ignored = 0;
+      for(var i = 0; i < lines.length; i++){
+        var line = lines[i];
+        if (line.indexOf(begin) != -1) {
+          ignored = 1;
+          tmp_ignored = 1;
+        } else if (line.indexOf(end) != -1) {
+          tmp_ignored = 0;
+        }
+
+        if (!ignored && line.indexOf("/**") == 0) {
+            test_result += line + '\n';
+            tmp_ignored = 2;
+            ignored = 1;
+        }
+        else if (!ignored && line.indexOf("int main()") == 0) {
+          if (example_result.replace(/\n/g, "") == "") {
+            tmp_ignored = 3;
+          } else {
+            tmp_ignored = 2;
+          }
+          ignored = 1;
+        } else if (ignored == 3 && !line.length) {
+          tmp_ignored = 2;
+          ignored = 1;
+        }
+        if (line.trim().indexOf("//") != 0) {
+          if (!ignored) {
+            example_result += line + '\n';
+          } else if (ignored == 2 && line.indexOf("}") != 0) {
+            test_result += line + '\n';
+          } else if (ignored == 3) {
+            example_result += line + '\n';
+          }
+        }
+        ignored = tmp_ignored;
+      }
+      var id = gid++;
+      var ex = cleanup(example_result);
+      var ts = cleanup(test_result);
+      var height = Math.max(ex.split("\n").length, ts.split("\n").length) * 13;
+      example = $('<div/>').text(ex).html();
+      test = $('<div/>').text(ts).html();
+      $(this).replaceWith('<table style="table-layout: fixed; border-collapse:collapse; padding:0; height: 30px; width: 100%; border: 1px;"><tr><td><pre><code class="cpp hljs" style="line-height: 12px; height: ' + height + 'px;">' + example + '</code></pre></td><td><pre><code class="cpp hljs" style="line-height: 12px; height: ' + height + 'px;">' + test + '</code></pre></td></tr></table>');
+    });
 });
