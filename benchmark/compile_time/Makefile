@@ -1,18 +1,26 @@
+#
+# Copyright (c) 2012-2016 Krzysztof Jusiak (krzysztof at jusiak dot net)
+#
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#
+CXXFLAGS?="-O2 -std=c++1y -I ../../include"
+
 all test:
-	CXXFLAGS="-O2 -std=c++1y -I ../boost/libs/di/include" ./di.sh
+	CXXFLAGS=$(CXXFLAGS) ./di.sh
 
 small:
-	COMPLEXITY=small CXXFLAGS="-O2 -std=c++1y -I ../boost/libs/di/include" ./di.sh
+	COMPLEXITY=small CXXFLAGS=$(CXXFLAGS) ./di.sh
 
 medium:
-	COMPLEXITY=medium CXXFLAGS="-O2 -std=c++1y -I ../boost/libs/di/include" ./di.sh
+	COMPLEXITY=medium CXXFLAGS=$(CXXFLAGS) ./di.sh
 
 big:
-	COMPLEXITY=big CXXFLAGS="-O2 -std=c++1y -I ../boost/libs/di/include" ./di.sh
+	COMPLEXITY=big CXXFLAGS=$(CXXFLAGS) ./di.sh
 
 quick:
-	COMPLEXITY=quick CXXFLAGS="-O2 -std=c++1y -I ../boost/libs/di/include" ./di.sh
+	COMPLEXITY=quick CXXFLAGS=$(CXXFLAGS) ./di.sh
 
 header:
-	$(CXX) -O2 -std=c++1y -I ../boost/libs/di/include di_header.cpp
+	$(CXX) $(CXXFLAGS) di_header.cpp
 
