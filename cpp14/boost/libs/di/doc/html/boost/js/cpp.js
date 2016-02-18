@@ -291,6 +291,6 @@ $(document).ready(function () {
       var height = Math.max(ex.split("\n").length, ts.split("\n").length) * 13;
       example = $('<div/>').text(ex).html();
       test = $('<div/>').text(ts).html();
-      $(this).replaceWith('<table style="table-layout: fixed; border-collapse:collapse; padding:0; height: 30px; width: 100%; border: 1px;"><tr><td><pre><code class="cpp hljs" style="line-height: 12px; height: ' + height + 'px;">' + example + '</code></pre></td><td><pre><code class="cpp hljs" style="line-height: 12px; height: ' + height + 'px;">' + test + '</code></pre></td></tr></table>');
+      $(this).replaceWith('<table style="table-layout: fixed; border-collapse:collapse; padding:0; height: 30px; width: 100%; border: 1px;"><tr><td><pre><code class="cpp hljs" style="font-size: 100%; line-height: 12px; height: ' + height + 'px;">' + example + '</code></pre></td><td><pre><code class="cpp hljs" style="font-size: 100%; line-height: 12px; height: ' + height + 'px;">' + test + '</code></pre></td></tr></table>');
     });
 });
