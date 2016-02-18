@@ -79,18 +79,24 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 
 ###Why Boost.DI?
 
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
-
 * Boost.DI has none or minimal run-time overhead - [Run-time performance](#run_time_performance)
 * Boost.DI compiles fast - [Compile-time performance](#compile_time_performance)
-* Boost.DI gives short diagnostic messages - [Diagnostic messages](#diagnostic_messages)
+* Boost.DI gives short diagnostic messages - [Error messages](#diagnostic_messages)
 * Boost.DI is not intrusive
 * Boost.DI reduces boilerplate code
 * Boost.DI reduces testing effort
 * Boost.DI gives better control of what and how is created
 * Boost.DI gives better understanding about objects hierarchy
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
 ###Boost.DI design goals
+
+* Be as fast as possible (see [Performance](overview.md#performance))
+* Compile as fast as possible (see [Performance](overview.md#performance))
+* Gives short and intuitive error messages (see [Error messages](overview.md#error_messages))
+* Guarantee object creation at compile-time (see [Performance](overview.md#performance))
+* Be as non-intrusive as possible (see [Performance](overview.md#performance))
+* Be easy to extend (see [Extensions](extensions.md))
 
 ###Acknowledgements
 * Thanks to Bartosz Kalinczuk for code review and tips how to improve `Boost.DI`
