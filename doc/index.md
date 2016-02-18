@@ -55,6 +55,19 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 
 ###Real Life examples?
 
+* [Match-3 Game](https://github.com/krzysztof-jusiak/match3)
+    * Simple game in C++14 using SDL2 / MVC pattern / Meta State Machine / Dependency Injection
+
+>
+
+* [Automatic Mocks Injector](https://github.com/krzysztof-jusiak/mocks_injector)
+    * Automatically create and inject required mocks to tested classes via type constructors
+
+>
+
+* [Experimental Boost.MSM-lite](http://boost-experimental.github.io/msm-lite/)
+    * Your scalable C++14 header only eUML-like meta state machine library with no dependencies
+
 ###Why Dependency Injection?
 
 * DI provides loosely coupled code (separation of business logic and object creation)
