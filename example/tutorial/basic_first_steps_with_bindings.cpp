@@ -26,7 +26,7 @@ class iview {
 
 class gui_view : public iview {
  public:
-  gui_view(std::string title, const renderer& r) { assert(42 == r.device); }
+  gui_view(std::string /*title*/, const renderer& r) { assert(42 == r.device); }
   void update() override {}
 };
 

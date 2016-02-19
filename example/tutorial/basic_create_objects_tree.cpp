@@ -17,7 +17,7 @@ struct renderer {
 
 class view {
  public:
-  view(std::string title, const renderer&) {}
+  view(std::string /*title*/, const renderer&) {}
 };
 
 class model {};

@@ -30,7 +30,7 @@ class iview {
 
 class gui_view : public iview {
  public:
-  gui_view(std::string title, const renderer& r) { assert(123 == r.device); }
+  gui_view(std::string /*title*/, const renderer& r) { assert(123 == r.device); }
   void update() override {}
 };
 
@@ -42,7 +42,7 @@ class text_view : public iview {
 
 class model {
  public:
-  model(int size, double precision) {}
+  model(int /*size*/, double /*precision*/) {}
   BOOST_DI_INJECT(model, (named = Rows) int rows, (named = Cols) int cols);
 };
 
