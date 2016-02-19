@@ -212,9 +212,9 @@ Automatic constructor parameters deduction is limited to [BOOST_DI_CFG_CTOR_LIMI
 
 ***Semantics***
 
-    class constructor {
+    class T {
     public:
-      constructor(auto parameter1, auto parameter2, ..., auto parameterN);
+      T(auto parameter1, auto parameter2, ..., auto parameterN);
     };
 
 | Expression | Requirement | Description | Returns |

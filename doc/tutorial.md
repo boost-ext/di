@@ -133,7 +133,7 @@ auto app_{make_injector().create<app>()};
 
 Moreover, changes in the constructor of created objects will be handled automatically, so in our case
 when we add a `sprite` into `view` required effort will be exactly 0. `Boost.DI` will take care of everything
-for us!
+for us! Furthermore, there is no performance penalty for using `Boost.DI` (see [Performance](overview.md#performance))!
 
 <div class="warning">
 <h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
@@ -526,7 +526,7 @@ di::injector<app> app_module(bool use_gui_view) {
 }
 ```
 
-Right now you can easily separate definition and declaration between hpp and cpp files.
+Right now you can easily separate definition and declaration between `hpp` and `cpp` files.
 
 Check it out here!
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_split_your_configuration_expose.cpp)
@@ -537,23 +537,68 @@ You can expose named parameters using `di::injector<BOOST_DI_EXPOSE((named = Row
 Different variations of the same type have to be exposed explicitly using `di::injector<model&, std::unique_ptr<model>>`.
 </div>
 
+Congrats, you have finished the basic part of the tutorial.
+Hopefully, you have noticed the potential of DI and `Boost.DI` but if are still not convinced check out the Advanced part.
+
 ###6. [Advanced] Dump/Limit your types
 
-uml dumper
-limit types
+It's often a case that we would like to generate object diagram of our application in order to see our dependencies
+more clear. Usually, it's a really hard task as we creation of objects may happen anywhere but if gave the responsibility
+to create objects to `Boost.DI` we get such functionality for free.
+The only thing we have to do is to implement how to dump our objects.
+
+![CPP](Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp)
+[![UML Dumper](images/uml_dumper.png)](images/uml_dumper.png)
+
+See also.
+![CPP(BTN)](Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp)
+![CPP(BTN)](Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/types_dumper.cpp)
+
+<br />
+
+On the other hand, it would be great to be able to limit types which might be constructed. For example, we just want to allow
+smart pointers and no raw pointers. We want to have view only with const parameters being passed, etc.
+`Boost.DI` allows you to do so by using [constructible] policy or writing a custom one.
+
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_global.cpp)
+
+See also.
+![CPP(BTN)](Run_Configuration_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/configuration.cpp)
 
 ###7. [Advanced] Customize it
 
-custom scope
-custom provider
-custom policies
+`Boost.DI` was design having extensibility in mind. You can easily customize
+* [scopes] - to have custom life time of an object
+* [providers] - to have custom way of creating objects, for example by using preallocated memory
+* [policies] - to have custom way of dumping types at run-time or limiting them at compile-time
+
+![CPP(BTN)](Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp)
+![CPP(BTN)](Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp)
+![CPP(BTN)](Run_Pool_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp)
+
+<br /><hr />
 
 ###8. [Advanced] Extend it
 
-extensions
+As mentioned before, `Boost.DI` is quite easy to extend and therefore a lot of extensions exists already.
+Please check them out and write your own!
+
+* [Constructor Bindings](extensions.md#constructor-bindings)
+* [Assisted Injection](extensions.md#assisted-injection)
+* [Concepts](extensions.md#concepts)
+* [Lazy](extensions.md#lazy)
+* [Named Parameters](extensions.md#named-parameters)
+* [XML Injection](extensions.md#xml-injection)
+* [Types Dumper](extensions.md#types-dumper)
+* [UML Dumper](extensions.md#uml-dumper)
+* [Mocks Provider](extensions.md#mocks-provider)
+* [Scoped Scope](extensions.md#scoped-scope)
+* [Session Scope](extensions.md#session-scope)
+* [Shared Scope](extensions.md#shared-scope)
 
 [bindings]: user_guide.md#bindings
 [injector]: user_guide.md#di_make_injector
+[make_injector]: user_guide.md#make_injector
 [BOOST_DI_INJECT]: user_guide.md#BOOST_DI_INJECT
 [named]: user_guide.md#di_named
 [scopes]: user_guide.md#scopes
@@ -561,5 +606,6 @@ extensions
 [instance]: user_guide.md#di_instance
 [unique]: user_guide.md#di_unique
 [singleton]: user_guide.md#di_singleton
-[make_injector]: user_guide.md#make_injector
+[policies]: user_guide.md#policies
+[constructible]: user_guide.md#di_constructible
 [Law of Demeter]: https://en.wikipedia.org/wiki/Law_of_Demeter
