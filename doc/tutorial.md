@@ -552,6 +552,7 @@ di::injector<app> app_module(bool use_gui_view) {
     })
   , di::bind<timer>().in(di::unique) // different per request
   , di::bind<iclient*[]>().to<user, timer>() // bind many clients
+  , model_module()
   );
 }
 ```
@@ -565,6 +566,7 @@ Check it out here!
 <h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
 You can expose named parameters using `di::injector<BOOST_DI_EXPOSE((named = Rows) int)>`.
 Different variations of the same type have to be exposed explicitly using `di::injector<model&, std::unique_ptr<model>>`.
+Expose uses type erasure and therefore it has small performance overhead!
 </div>
 
 Congrats, you have finished the basic part of the tutorial.

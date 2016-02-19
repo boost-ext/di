@@ -98,19 +98,13 @@ di::injector<app> app_module(bool use_gui_view) {
     })
   , di::bind<timer>().in(di::unique) // different per request
   , di::bind<iclient*[]>().to<user, timer>() // bind many clients
+  , model_module()
   );
   // clang-format on
 }
 
 int main() {
   auto use_gui_view = true;
-
-  // clang-format off
-  auto injector = di::make_injector(
-    model_module()
-  , app_module(use_gui_view)
-  );
-  // clang-format on
-
+  auto injector = app_module(use_gui_view);
   injector.create<app>();
 }
