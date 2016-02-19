@@ -292,7 +292,7 @@ namespace di = boost::di;
 <hr />
 <p>Let's move on to creating objects tree. Application, usually, consists of a number of objects
 which have to be instantiated. For example, let's consider a simplified Model View Controller code.</p>
-<p><a href="../images/create_objects_tree.png"><img alt="Create objects tree" src="../images/create_objects_tree.png" /></a></p>
+<p><a href="../images/tutorial_create_objects_tree.png"><img alt="Create objects tree" src="../images/tutorial_create_objects_tree.png" /></a></p>
 <p>The usual approach to create <code>app</code> would be following...</p>
 <pre><code class="cpp">renderer renderer_;
 view view_{&quot;&quot;, renderer_};
@@ -315,8 +315,70 @@ We just have to create <a href="../user_guide/index.html#di_make_injector">injec
 </code></pre>
 
 <p>Moreover, changes in the constructor of created objects will be handled automatically, so in our case
-when we add a <code>sprite</code> into <code>view</code> required effort will be exactly 0. <code>Boost.DI</code> will take care of everything
-for us! Furthermore, there is no performance penalty for using <code>Boost.DI</code> (see <a href="../overview/index.html#performance">Performance</a>)!</p>
+when we add a <code>window</code> to <code>view</code> or change <code>view&amp;</code> to <code>std::shared_ptr&lt;view&gt;</code> required effort will be
+exactly '0'. <code>Boost.DI</code> will take care of everything for us!</p>
+<table>
+<thead>
+<tr>
+<th>Type <code>T</code></th>
+<th>Is allowed?</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>T</code></td>
+<td>✔</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>T*</code></td>
+<td>✔</td>
+<td>Ownerhsip transfer!</td>
+</tr>
+<tr>
+<td><code>const T*</code></td>
+<td>✔</td>
+<td>Ownerhsip transfer!</td>
+</tr>
+<tr>
+<td><code>T&amp;</code></td>
+<td>✔</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>const T&amp;</code></td>
+<td>✔</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>T&amp;&amp;</code></td>
+<td>✔</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>std::unique_ptr&lt;T&gt;</code></td>
+<td>✔</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>std::shared_ptr&lt;T&gt;</code></td>
+<td>✔</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>std::weak_ptr&lt;T&gt;</code></td>
+<td>✔</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>boost_shared_ptr&lt;T&gt;</code></td>
+<td>✔</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p>Furthermore, there is no performance penalty for using <code>Boost.DI</code> (see <a href="../overview/index.html#performance">Performance</a>)!</p>
 <div class="warning">
 <h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
 Boost.DI can inject dependencies using direct initialization `T(...)` or uniform initialization `T{...}` for aggregate types.
@@ -472,8 +534,94 @@ By default there are 4 scopes</p>
 <li><a href="../user_guide/index.html#di_singleton">singleton</a> scope (shared instance)</li>
 </ul>
 <p>By default <a href="../user_guide/index.html#di_deduce">deduce</a> scope is used which means that scope is deduced based on a constructor parameter.
-For instance, reference, shared_ptr will be deduce as <a href="../user_guide/index.html#di_singleton">singleton</a> scope and pointer, unique_ptr will be deduced as <a href="../user_guide/index.html#di_unique">unique</a> scope.
-Coming back to our example, we got quite a lot <code>singletons</code> there as we just needed one instance per application life time.
+For instance, reference, shared_ptr will be deduce as <a href="../user_guide/index.html#di_singleton">singleton</a> scope and pointer, unique_ptr will be deduced as <a href="../user_guide/index.html#di_unique">unique</a> scope.</p>
+<table>
+<thead>
+<tr>
+<th>Type/Scope</th>
+<th>unique</th>
+<th>singleton</th>
+<th>instance</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T</td>
+<td>✔</td>
+<td>-</td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>T&amp;</td>
+<td>-</td>
+<td>✔</td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>const T&amp;</td>
+<td>✔ (temporary)</td>
+<td>✔</td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>T* (transfer ownership)</td>
+<td>✔</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>✔</td>
+</tr>
+<tr>
+<td>const T*</td>
+<td>✔</td>
+<td>-</td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>T&amp;&amp;</td>
+<td>✔</td>
+<td>-</td>
+<td>-</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>unique_ptr<T></td>
+<td>✔</td>
+<td>-</td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>shared_ptr<T></td>
+<td>✔</td>
+<td>✔</td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>weak_ptr<T></td>
+<td>-</td>
+<td>✔</td>
+<td>✔</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Coming back to our example, we got quite a lot <code>singletons</code> there as we just needed one instance per application life time.
 Although scope deduction is very useful, it's not always what we need and therefore <code>Boost.DI</code> allows changing the scope for given type.</p>
 <pre><code class="cpp">auto injector = di::make_injector(
   di::bind&lt;iview&gt;.to&lt;gui_view&gt;().in(di::singleton) // explicitly specify singleton scope
@@ -656,7 +804,7 @@ to create objects to <code>Boost.DI</code> we get such functionality for free.
 The only thing we have to do is to implement how to dump our objects.</p>
 <p><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp" />
 <a href="../images/uml_dumper.png"><img alt="UML Dumper" src="../images/uml_dumper.png" /></a></p>
-<p>See also.
+<p>See also.  <br /><br />
 <img alt="CPP(BTN)" src="../Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp" />
 <img alt="CPP(BTN)" src="../Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/types_dumper.cpp" /></p>
 <p><br /></p>
@@ -664,13 +812,17 @@ The only thing we have to do is to implement how to dump our objects.</p>
 smart pointers and no raw pointers. We want to have view only with const parameters being passed, etc.
 <code>Boost.DI</code> allows you to do so by using <a href="../user_guide/index.html#di_constructible">constructible</a> policy or writing a custom one.</p>
 <p><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_global.cpp" /></p>
-<p>See also.
+<p>See also.  <br /><br />
 <img alt="CPP(BTN)" src="../Run_Configuration_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/configuration.cpp" /></p>
+<p><br /></p>
+<hr />
 <h3 id="7-advanced-customize-it">7. [Advanced] Customize it</h3>
-<p><code>Boost.DI</code> was design having extensibility in mind. You can easily customize
-<em> <a href="../user_guide/index.html#scopes">scopes</a> - to have custom life time of an object
-</em> [providers] - to have custom way of creating objects, for example by using preallocated memory
-* <a href="../user_guide/index.html#policies">policies</a> - to have custom way of dumping types at run-time or limiting them at compile-time</p>
+<p><code>Boost.DI</code> was design having extensibility in mind. You can easily customize</p>
+<ul>
+<li><a href="../user_guide/index.html#scopes">scopes</a> - to have custom life time of an object</li>
+<li>[providers] - to have custom way of creating objects, for example by using preallocated memory</li>
+<li><a href="../user_guide/index.html#policies">policies</a> - to have custom way of dumping types at run-time or limiting them at compile-time</li>
+</ul>
 <p><img alt="CPP(BTN)" src="../Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp" />
 <img alt="CPP(BTN)" src="../Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp" />
 <img alt="CPP(BTN)" src="../Run_Pool_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp" /></p>
