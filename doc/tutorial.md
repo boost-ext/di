@@ -103,7 +103,7 @@ Congrats, you are now ready to check out `Boost.DI` features!
 Let's move on to creating objects tree. Application, usually, consists of a number of objects
 which have to be instantiated. For example, let's consider a simplified Model View Controller code.
 
-[![Create objects tree](images/create_objects_tree.png)](images/create_objects_tree.png)
+[![Create objects tree](images/tutorial_create_objects_tree.png)](images/tutorial_create_objects_tree.png)
 
 The usual approach to create `app` would be following...
 
@@ -133,8 +133,23 @@ auto app_{make_injector().create<app>()};
 ```
 
 Moreover, changes in the constructor of created objects will be handled automatically, so in our case
-when we add a `sprite` into `view` required effort will be exactly 0. `Boost.DI` will take care of everything
-for us! Furthermore, there is no performance penalty for using `Boost.DI` (see [Performance](overview.md#performance))!
+when we add a `window` to `view` or change `view&` to `std::shared_ptr<view>` required effort will be
+exactly '0'. `Boost.DI` will take care of everything for us!
+
+| Type `T` | Is allowed? | Note |
+| -------- | ----------- | ---- |
+| `T` | ✔ | - |
+| `T*` | ✔ | Ownerhsip transfer! |
+| `const T*` | ✔ | Ownerhsip transfer! |
+| `T&` | ✔ | - |
+| `const T&` | ✔ | - |
+| `T&&` | ✔ | - |
+| `std::unique_ptr<T>` | ✔ | - |
+| `std::shared_ptr<T>` | ✔ | - |
+| `std::weak_ptr<T>` | ✔ | - |
+| `boost_shared_ptr<T>` | ✔ | - |
+
+Furthermore, there is no performance penalty for using `Boost.DI` (see [Performance](overview.md#performance))!
 
 <div class="warning">
 <h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
@@ -322,6 +337,19 @@ By default there are 4 scopes
 
 By default [deduce] scope is used which means that scope is deduced based on a constructor parameter.
 For instance, reference, shared_ptr will be deduce as [singleton] scope and pointer, unique_ptr will be deduced as [unique] scope.
+
+| Type/Scope | unique | singleton | instance |
+|------------|--------|--------|-----------|---------|----------|
+| T | ✔ | - | ✔ |
+| T& | - | ✔  | ✔ |
+| const T& | ✔ (temporary) | ✔ | ✔ |
+| T* (transfer ownership) | ✔ | - | - | - | ✔ |
+| const T* | ✔ | - | ✔ |
+| T&& | ✔ | - | - |
+| unique\_ptr<T> | ✔ |  - | ✔ |
+| shared\_ptr<T> | ✔ | ✔ | ✔ |
+| weak\_ptr<T> | - | ✔ | ✔ |
+
 Coming back to our example, we got quite a lot `singletons` there as we just needed one instance per application life time.
 Although scope deduction is very useful, it's not always what we need and therefore `Boost.DI` allows changing the scope for given type.
 
@@ -552,7 +580,7 @@ The only thing we have to do is to implement how to dump our objects.
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp)
 [![UML Dumper](images/uml_dumper.png)](images/uml_dumper.png)
 
-See also.
+See also.  <br /><br />
 ![CPP(BTN)](Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp)
 ![CPP(BTN)](Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/types_dumper.cpp)
 
@@ -564,12 +592,17 @@ smart pointers and no raw pointers. We want to have view only with const paramet
 
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_global.cpp)
 
-See also.
+See also.  <br /><br />
 ![CPP(BTN)](Run_Configuration_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/configuration.cpp)
+
+<br />
+
+---
 
 ###7. [Advanced] Customize it
 
 `Boost.DI` was design having extensibility in mind. You can easily customize
+
 * [scopes] - to have custom life time of an object
 * [providers] - to have custom way of creating objects, for example by using preallocated memory
 * [policies] - to have custom way of dumping types at run-time or limiting them at compile-time

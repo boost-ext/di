@@ -140,6 +140,17 @@ Legend:
 
 * C++ Dependency Injection Libraries
 
+    * [https://bitbucket.org/cheez/dicpp](https://bitbucket.org/cheez/dicpp)
+    * [https://github.com/google/fruit](https://github.com/google/fruit)
+    * [https://github.com/phs/sauce](https://github.com/phs/sauce)
+    * [http://wallaroolib.sourceforge.net](http://wallaroolib.sourceforge.net)
+    * [https://github.com/ybainier/hypodermic](https://github.com/ybainier/hypodermic)
+    * [https://code.google.com/p/infectorpp](https://code.google.com/p/infectorpp)
+    * [https://github.com/vogel/injeqt](https://github.com/vogel/injeqt)
+    * [https://github.com/gracicot/kangaru](https://github.com/gracicot/kangaru)
+    * [https://github.com/admiyo/CppInject](https://github.com/admiyo/CppInject)
+    * [http://codebros.github.io/DiLite](http://codebros.github.io/DiLite)
+
 |         | Boost.DI | [dicpp] | [Google.Fruit] |
 | ------- | -------- | ----- | ------------ |
 | Version | 1.0.0 | HEAD | 1.0.2 |
