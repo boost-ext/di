@@ -54,7 +54,8 @@ is that do NOT pass an object into constructor if you don't store it ([Law of De
 ```cpp
 class app {
 public:
-  explicit app(model& m) : controller_(m) {}
+  explicit app(model& m) : controller_(m) {} // BAD
+  explicit app(controller& c) : controller_(c) {} // GOOD
 
 private:
   controller controller_;
@@ -548,7 +549,7 @@ more clear. Usually, it's a really hard task as we creation of objects may happe
 to create objects to `Boost.DI` we get such functionality for free.
 The only thing we have to do is to implement how to dump our objects.
 
-![CPP](Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp)
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp)
 [![UML Dumper](images/uml_dumper.png)](images/uml_dumper.png)
 
 See also.
