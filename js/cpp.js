@@ -164,7 +164,6 @@ $(document).ready(function () {
 
     $('img[alt="CPP(BTN)"]').each(function () {
       var text = $(this).attr('src');
-      console.log(text);
       var name = text.split("|")[0].replace(/_/g, ' ').replace(/\//g, '').replace(/\./g, '');
       var file = text.split("|")[1];
       var basename = $(this).attr('src').split('/')[$(this).attr('src').split('/').length - 1];

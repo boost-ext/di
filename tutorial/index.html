@@ -254,7 +254,8 @@ Nevertheless, please, be careful and don't 'carry' your dependencies. What I mea
 is that do NOT pass an object into constructor if you don't store it (<a href="https://en.wikipedia.org/wiki/Law_of_Demeter">Law of Demeter</a>).</p>
 <pre><code class="cpp">class app {
 public:
-  explicit app(model&amp; m) : controller_(m) {}
+  explicit app(model&amp; m) : controller_(m) {} // BAD
+  explicit app(controller&amp; c) : controller_(c) {} // GOOD
 
 private:
   controller controller_;
@@ -653,7 +654,7 @@ Hopefully, you have noticed the potential of DI and <code>Boost.DI</code> but if
 more clear. Usually, it's a really hard task as we creation of objects may happen anywhere but if gave the responsibility
 to create objects to <code>Boost.DI</code> we get such functionality for free.
 The only thing we have to do is to implement how to dump our objects.</p>
-<p><img alt="CPP" src="../Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp" />
+<p><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp" />
 <a href="../images/uml_dumper.png"><img alt="UML Dumper" src="../images/uml_dumper.png" /></a></p>
 <p>See also.
 <img alt="CPP(BTN)" src="../Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp" />
