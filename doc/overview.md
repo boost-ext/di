@@ -29,7 +29,7 @@ git clone https://github.com/boost-experimental/di && cd di && make test
 
 * [Clang-3.4+](https://travis-ci.org/boost-experimental/di)
 * [GCC-5.2+](https://travis-ci.org/boost-experimental/di)
-* [MSVC-2015+](https://ci.appveyor.com/project/boost-experimental/di)
+* [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
 
 ###Configuration
 | Macro                                       | Description |
