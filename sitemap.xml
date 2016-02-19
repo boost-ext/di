@@ -27,14 +27,6 @@
 
     
     <url>
-     <loc>http://boost-experimental.github.io/di/quick_user_guide/index.html</loc>
-     <lastmod>2016-02-19</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    
-
-    
-    <url>
      <loc>http://boost-experimental.github.io/di/user_guide/index.html</loc>
      <lastmod>2016-02-19</lastmod>
      <changefreq>daily</changefreq>
