@@ -12,6 +12,7 @@
 
 namespace di = boost::di;
 
+//<-
 struct renderer {
   int device;
 };
@@ -35,10 +36,12 @@ class text_view : public iview {
 
 class model {};
 
+//<-
 class controller {
  public:
   controller(model&, iview& v) { assert(dynamic_cast<gui_view*>(&v)); }
 };
+//->
 
 class user {};
 
@@ -46,6 +49,7 @@ class app {
  public:
   app(controller&, user&) {}
 };
+//->
 
 int main() {
   auto use_gui_view = true;

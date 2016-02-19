@@ -17,6 +17,7 @@ namespace di = boost::di;
 auto Rows = [] {};
 auto Cols = [] {};
 
+//<-
 struct renderer {
   int device;
 };
@@ -37,6 +38,7 @@ class text_view : public iview {
  public:
   void update() override {}
 };
+//->
 
 class model {
  public:
@@ -49,6 +51,7 @@ model::model(int rows, int cols) {
   assert(8 == cols);
 }
 
+//<-
 class controller {
  public:
   controller(model&, iview& v) { assert(dynamic_cast<gui_view*>(&v)); }
@@ -78,6 +81,7 @@ class app {
     assert(dynamic_cast<timer*>(v[1].get()));
   }
 };
+//->
 
 int main() {
   auto use_gui_view = true;

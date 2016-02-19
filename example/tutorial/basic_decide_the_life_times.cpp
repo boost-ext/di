@@ -14,6 +14,7 @@
 
 namespace di = boost::di;
 
+//<-
 struct renderer {
   int device;
 };
@@ -66,6 +67,7 @@ class app {
     assert(dynamic_cast<timer*>(v[1].get()));
   }
 };
+//->
 
 int main() {
   auto use_gui_view = true;

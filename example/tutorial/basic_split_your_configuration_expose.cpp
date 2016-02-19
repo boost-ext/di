@@ -17,6 +17,7 @@ namespace di = boost::di;
 auto Rows = [] {};
 auto Cols = [] {};
 
+//<-
 struct renderer {
   int device;
 };
@@ -78,6 +79,7 @@ class app {
     assert(dynamic_cast<timer*>(v[1].get()));
   }
 };
+//->
 
 di::injector<model&> model_module() {
   // clang-format off

@@ -14,6 +14,7 @@
 
 namespace di = boost::di;
 
+//<-
 auto Rows = [] {};
 auto Cols = [] {};
 
@@ -78,6 +79,7 @@ class app {
     assert(dynamic_cast<timer*>(v[1].get()));
   }
 };
+//->
 
 auto model_module = [] {
   // clang-format off

@@ -12,9 +12,11 @@
 
 namespace di = boost::di;
 
+//<-
 struct renderer {
   int device;
 };
+//->
 
 class iview {
  public:
@@ -33,6 +35,7 @@ class text_view : public iview {
   void update() override {}
 };
 
+//<-
 class model {};
 
 class controller {
@@ -46,6 +49,7 @@ class app {
  public:
   app(controller&, user&) {}
 };
+//->
 
 int main() {
   // clang-format off

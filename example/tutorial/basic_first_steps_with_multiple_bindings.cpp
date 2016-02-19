@@ -14,6 +14,7 @@
 
 namespace di = boost::di;
 
+//<-
 struct renderer {
   int device;
 };
@@ -47,6 +48,7 @@ class iclient {
   virtual ~iclient() noexcept = default;
   virtual void process() = 0;
 };
+//->
 
 class user : public iclient {
  public:
