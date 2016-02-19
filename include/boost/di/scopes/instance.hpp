@@ -137,7 +137,7 @@ class instance {
   template <class TExpected, class TGiven>
   struct scope<TExpected, TGiven, BOOST_DI_REQUIRES(aux::is_callable<TGiven>::value)> {
     template <class>
-    using is_referable = aux::false_type;
+    using is_referable = aux::true_type;
 
     explicit scope(const TGiven& object) : object_(object) {}
 

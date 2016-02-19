@@ -14,9 +14,6 @@
 
 namespace di = boost::di;
 
-auto Rows = [] {};
-auto Cols = [] {};
-
 struct renderer {
   int device;
 };
@@ -29,7 +26,7 @@ class iview {
 
 class gui_view : public iview {
  public:
-  gui_view(std::string title, const renderer& r) { assert(123 == r.device); }
+  gui_view(std::string title, const renderer& r) { assert(42 == r.device); }
   void update() override {}
 };
 
@@ -38,16 +35,7 @@ class text_view : public iview {
   void update() override {}
 };
 
-class model {
- public:
-  model(int size, double precision) {}
-  BOOST_DI_INJECT(model, (named = Rows) int rows, (named = Cols) int cols);
-};
-
-model::model(int rows, int cols) {
-  assert(6 == rows);
-  assert(8 == cols);
-}
+class model {};
 
 class controller {
  public:
@@ -72,7 +60,7 @@ class timer : public iclient {
 
 class app {
  public:
-  app(controller&, std::vector<std::shared_ptr<iclient>> v) {
+  app(controller&, std::vector<std::unique_ptr<iclient>> v) {
     assert(2 == v.size());
     assert(dynamic_cast<user*>(v[0].get()));
     assert(dynamic_cast<timer*>(v[1].get()));
@@ -87,12 +75,8 @@ int main() {
     di::bind<iview>().to([&](const auto& injector) -> iview& {
       if (use_gui_view) return (gui_view&)injector; else return (text_view&)injector;
     })
-  , di::bind<timer>().in(di::unique) // different per request
-  , di::bind<iclient*[]>().to<user, timer>() // bind many clients
   , di::bind<int>().to(42) // renderer device
-  , di::bind<int>().to(123) [di::override] // override renderer device
-  , di::bind<int>().named(Rows).to(6)
-  , di::bind<int>().named(Cols).to(8)
+  , di::bind<iclient*[]>().to<user, timer>() // bind many clients
   );
   // clang-format on
 

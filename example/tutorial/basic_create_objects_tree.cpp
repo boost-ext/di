@@ -11,14 +11,13 @@
 
 namespace di = boost::di;
 
-struct button {
-  std::string label;
-  bool status;
+struct renderer {
+  int device;
 };
 
 class view {
  public:
-  view(std::string title, const button&) {}
+  view(std::string title, const renderer&) {}
 };
 
 class model {};
@@ -37,8 +36,8 @@ class app {
 
 int main() {
   /**
-   * button button_;
-   * view view_{"", button_};
+   * renderer renderer_;
+   * view view_{"", renderer_};
    * model model_;
    * controller controller_{model_, view_};
    * user user_;

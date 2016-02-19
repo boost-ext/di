@@ -79,20 +79,34 @@ class app {
   }
 };
 
-int main() {
-  auto use_gui_view = true;
-
+di::injector<model&> model_module() {
   // clang-format off
-  auto injector = di::make_injector(
+  return di::make_injector(
+    di::bind<int>().named(Rows).to(6)
+  , di::bind<int>().named(Cols).to(8)
+  );
+  // clang-format on
+}
+
+di::injector<app> app_module(bool use_gui_view) {
+  // clang-format off
+  return di::make_injector(
     di::bind<iview>().to([&](const auto& injector) -> iview& {
       if (use_gui_view) return (gui_view&)injector; else return (text_view&)injector;
     })
   , di::bind<timer>().in(di::unique) // different per request
   , di::bind<iclient*[]>().to<user, timer>() // bind many clients
-  , di::bind<int>().to(42) // renderer device
-  , di::bind<int>().to(123) [di::override] // override renderer device
-  , di::bind<int>().named(Rows).to(6)
-  , di::bind<int>().named(Cols).to(8)
+  );
+  // clang-format on
+}
+
+int main() {
+  auto use_gui_view = true;
+
+  // clang-format off
+  auto injector = di::make_injector(
+    model_module()
+  , app_module(use_gui_view)
   );
   // clang-format on
 

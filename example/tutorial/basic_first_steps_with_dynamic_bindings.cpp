@@ -12,36 +12,32 @@
 
 namespace di = boost::di;
 
-struct button {
-  std::string label;
-  bool status;
+struct renderer {
+  int device;
 };
 
 class iview {
  public:
   virtual ~iview() noexcept = default;
-  virtual void render() = 0;
+  virtual void update() = 0;
 };
 
 class gui_view : public iview {
  public:
-  gui_view(std::string title, const button& b) {
-    assert("button name" == b.label);
-    assert(b.status);
-  }
-  void render() {}
+  gui_view(std::string title, const renderer& r) { assert(42 == r.device); }
+  void update() override {}
 };
 
 class text_view : public iview {
  public:
-  void render() {}
+  void update() override {}
 };
 
 class model {};
 
 class controller {
  public:
-  controller(model&, iview&) {}
+  controller(model&, iview& v) { assert(dynamic_cast<gui_view*>(&v)); }
 };
 
 class user {};
@@ -57,10 +53,9 @@ int main() {
   // clang-format off
   auto injector = di::make_injector(
     di::bind<iview>().to([&](const auto& injector) -> iview& {
-      return use_gui_view ? (gui_view&)injector : (text_view&)injector;
+      if (use_gui_view) return (gui_view&)injector; else return (text_view&)injector;
     })
-  , di::bind<std::string>().to("button name")
-  , di::bind<bool>().to(true)
+  , di::bind<int>().to(42) // renderer device
   );
   // clang-format on
 
