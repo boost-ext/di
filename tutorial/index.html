@@ -358,11 +358,11 @@ auto app_{make_injector().create&lt;app&gt;()};
 </code></pre>
 
 <p>COMPILE error! (See also: <a href="../overview/index.html#error-messages">Error Messages</a>)</p>
-<pre><code class="cpp">basic_first_steps_with_bindings.cpp:61:12: warning: 'create&lt;app&gt;' is deprecated: creatable constraint not satisfied
+<pre><code class="cpp">warning: 'create&lt;app&gt;' is deprecated: creatable constraint not satisfied
   injector.create&lt;app&gt;();
            ^
 boost/di.hpp:870:2: error: 'boost::di::v1_0_0::concepts::abstract_type&lt;iview&gt;::is_not_bound::error'
- error(_ = &quot;type is not bound, did you forget to add: 'di::bind&lt;interface&gt;.to&lt;implementation&gt;()'?&quot;);
+  error(_ = &quot;type is not bound, did you forget to add: 'di::bind&lt;interface&gt;.to&lt;implementation&gt;()'?&quot;);
 </code></pre>
 
 <div class="warning">
@@ -377,7 +377,7 @@ It's really simple to fix it, we just use the suggestion provided.</p>
 );
 </code></pre>
 
-<p>Let's try again. Yay! It seems to be compiling.</p>
+<p>Let's try again. Yay! It's compiling.</p>
 <p>But what about values? <code>renderer</code> requires <code>device</code>, which, by default, was zero initialized.</p>
 <pre><code class="cpp">struct renderer {
   int device;
@@ -486,10 +486,11 @@ Although scope deduction is very useful, it's not always what we need and theref
 </code></pre>
 
 <p>It's NOT compiling!</p>
-<pre><code class="cpp">  injector.create&lt;app&gt;();
+<pre><code class="cpp">warning: 'create&lt;app&gt;' is deprecated: creatable constraint not satisfied
+  injector.create&lt;app&gt;();
            ^
 boost/di.hpp:897:2: error: 'scoped&lt;scopes::unique, gui_view&gt;::is_not_convertible_to&lt;iview &amp;&gt;::error'
- error(_ = &quot;scoped object is not convertible to the requested type, did you mistake the scope: 'di::bind&lt;T&gt;.in(scope)'?&quot;);
+  error(_ = &quot;scoped object is not convertible to the requested type, did you mistake the scope: 'di::bind&lt;T&gt;.in(scope)'?&quot;);
 </code></pre>
 
 <p>Ah, reference doesn't make much sense with <a href="../user_guide/index.html#di_unique">unique</a> scope. It would be better to use <code>std::unique_ptr&lt;iview&gt;</code> here.</p>
@@ -524,11 +525,11 @@ be chosen is configurable using <a href="../user_guide/index.html#BOOST_DI_INJEC
 </code></pre>
 
 <p>Right now, as expected, we get a compile time error!</p>
-<pre><code class="cpp">
+<pre><code class="cpp">warning: 'create&lt;app&gt;' is deprecated: creatable constraint not satisfied
   injector.create&lt;app&gt;();
            ^
 boost/di.hpp:942:4: error: 'type&lt;model&gt;::has_ambiguous_number_of_constructor_parameters::error'
- error(_ = &quot;verify BOOST_DI_INJECT_TRAITS or di::ctor_traits&quot;);
+  error(_ = &quot;verify BOOST_DI_INJECT_TRAITS or di::ctor_traits&quot;);
 </code></pre>
 
 <p>Let's fixed it using <a href="../user_guide/index.html#BOOST_DI_INJECT">BOOST_DI_INJECT</a>!</p>
