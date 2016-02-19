@@ -207,41 +207,489 @@
           <div role="main">
             <div class="section">
               
-                <p>All code examples include <code>boost/di.hpp</code> as well as declare a convienent msm namespace alias.</p>
+                <h3 id="0-pre-refactor-towards-di">0. [Pre] Refactor towards DI</h3>
+<p>If you write a new application you can just skip this step and go directly into step 1.
+However, if you have a lot code which is not using DI and you wonder what can you do,
+this step is for you.</p>
+<p>Basically, there is a only one (big) step to get all benefits of Dependency Injection.
+You have to separate creation logic from business logic, which means that your code
+should be free of...</p>
+<pre><code class="cpp">class controller {
+public:
+  controller() : model_(new model{}) {}
+  ~controller() { delete model_; }
+  void run();
+
+private:
+  model* model_;
+};
+
+int main() {
+  controller controller_;
+  controller_.run();
+}
+</code></pre>
+
+<p>Instead, DI approach would look like that...</p>
+<pre><code class="cpp">class controller {
+public:
+  explicit controller(model&amp; m) : model_(m) {}
+  void run();
+
+private:
+  model&amp; model_;
+};
+
+int main() {
+  model model_;
+  controller controller_{model_};
+  controller_.run();
+}
+</code></pre>
+
+<p>So, what happened here? We just took out dependencies from inside the <code>controller</code>. In other worlds,
+we split creation logic and business logic.</p>
+<p>That's basically everything you have to remember to create applications using DI.
+Nevertheless, please, be careful and don't 'carry' your dependencies. What I mean by that,
+is that do NOT pass an object into constructor if you don't store it (<a href="https://en.wikipedia.org/wiki/Law_of_Demeter">Law of Demeter</a>).</p>
+<pre><code class="cpp">class app {
+public:
+  explicit app(model&amp; m) : controller_(m) {}
+
+private:
+  controller controller_;
+};
+class controller {
+public:
+  explicit controller(model&amp;);
+};
+
+int main() {
+  model model_;
+  app app_{model_};
+}
+</code></pre>
+
+<h3 id="1-basic-create-objects-tree">1. [Basic] Create objects tree</h3>
+<p>Before we will get into creating objects tree, let's first create a 'dummy' example.
+In order to do so, firstly, we have to include (one and only) <code>boost/di.hpp</code> header and
+declare a convenient <code>di</code> namespace alias.</p>
 <pre><code class="cpp">#include &lt;boost/di.hpp&gt;
 namespace di = boost::di;
 </code></pre>
 
-<h3 id="0-pre-refactor-towards-di">0. [Pre] Refactor towards DI</h3>
-<p>NOT -&gt; carry dependencies</p>
-<h3 id="1-basic-create-objects-tree">1. [Basic] Create objects tree</h3>
-<p><a href="../images/uml_dumper.png"><img alt="Design" src="../images/uml_dumper.png" /></a></p>
-<p>auto injector = make_injector();
-injector.create<tree>();</p>
+<p>That is enough to try out <code>Boost.DI</code>!</p>
+<p>To have a first complete working example we just have to add <code>main</code> function as usual.</p>
+<pre><code class="cpp">int main() {}
+</code></pre>
+
+<p>and compile our code using compiler supporting C++14 standard.</p>
+<pre><code>$CXX -std=c++14 example.cpp
+</code></pre>
+
+<p>Congrats, you are now ready to check out <code>Boost.DI</code> features!</p>
+<hr />
+<p>Let's move on to creating objects tree. Application, usually, consists of a number of objects
+which have to be instantiated. For example, let's consider a simplified Model View Controller code.</p>
+<p><a href="../images/create_objects_tree.png"><img alt="Create objects tree" src="../images/create_objects_tree.png" /></a></p>
+<p>The usual approach to create <code>app</code> would be following...</p>
+<pre><code class="cpp">renderer renderer_;
+view view_{&quot;&quot;, renderer_};
+model model_;
+controller controller_{model_, view_};
+user user_;
+app app_{controller_, user_};
+</code></pre>
+
+<p>Which is alright for a really small applications. However, it's really tedious to maintain.
+Just imagine, that we have to change something here. For instance, <code>view</code> may need a new object <code>sprite</code>
+or, even worse, we refactored the code and dependencies order has changed - yea ORDER of above is important!
+Any change in these classes constructors require developer input to maintain above boilerplate!
+Not fun, not fun at all :(</p>
+<p>Right now imagine that your maintain effort will be minimized almost to none. How does it sound?
+Well, that might be achieved with <code>Boost.DI</code>!</p>
+<p>The same result might be achieved with one liner. Doesn't matter how big the hierarchy will be.
+We just have to create <a href="../user_guide/index.html#di_make_injector">injector</a> using <a href="../user_guide/index.html#make_injector">make_injector</a> and create the <code>app</code>.</p>
+<pre><code class="cpp">auto app_{make_injector().create&lt;app&gt;()};
+</code></pre>
+
+<p>Moreover, changes in the constructor of created objects will be handled automatically, so in our case
+when we add a <code>sprite</code> into <code>view</code> required effort will be exactly 0. <code>Boost.DI</code> will take care of everything
+for us! Furthermore, there is no performance penalty for using <code>Boost.DI</code> (see <a href="../overview/index.html#performance">Performance</a>)!</p>
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+Boost.DI can inject dependencies using direct initialization `T(...)` or uniform initialization `T{...}` for aggregate types.
+</div>
+
+<p>Check it out yourself!
+<img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_create_objects_tree.cpp" /></p>
+<p>Check out also other examples. Please, notice that the diagram was also generated using <code>Boost.DI</code> but we will get into that a bit later.</p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" />
+<img alt="CPP(BTN)" src="../Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp" /></p>
+<p><br /><hr /></p>
 <h3 id="2-basic-first-steps-with-bindings">2. [Basic] First steps with bindings</h3>
-<p>bind interface
-bind value
-dynamic bindings</p>
-<p>object creation ggurantee
-understand error messages</p>
+<p>But objects tree is not everything. A lot of classes uses interfaces or required a value to be passed.
+<code>Boost.DI</code> solution for this demand are <a href="../user_guide/index.html#bindings">bindings</a>.</p>
+<p>For purpose of this tutorial, let's change <code>view</code> class into interface <code>iview</code> in order to support <code>text_view</code> and <code>gui_view</code>.</p>
+<pre><code class="cpp">class iview {
+public:
+  virtual ~iview() noexcept = default;
+  virtual void update() =0;
+};
+
+class gui_view: public iview {
+public:
+  gui_view(std::string title, const renderer&amp;) {}
+  void update() override {}
+};
+
+class text_view: public iview {
+public:
+  void update() override {}
+};
+```cpp
+
+Please, notice that text_view doesn't require any constructor parameters.
+
+So, what will happen right now, when we try to create an `app`?
+
+```cpp
+auto app_{make_injector().create&lt;app&gt;()};
+</code></pre>
+
+<p>COMPILE error! (See also: <a href="../overview/index.html#error-messages">Error Messages</a>)</p>
+<pre><code class="cpp">basic_first_steps_with_bindings.cpp:61:12: warning: 'create&lt;app&gt;' is deprecated: creatable constraint not satisfied
+  injector.create&lt;app&gt;();
+           ^
+boost/di.hpp:870:2: error: 'boost::di::v1_0_0::concepts::abstract_type&lt;iview&gt;::is_not_bound::error'
+ error(_ = &quot;type is not bound, did you forget to add: 'di::bind&lt;interface&gt;.to&lt;implementation&gt;()'?&quot;);
+</code></pre>
+
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+You can get more info about error by increasing BOOST_DI_CFG_DIAGNOSTICS_LEVEL [0-2] value (default=1).
+</div>
+
+<p>Ah, okay, we haven't bound <code>iview</code> which means that <code>BOOST.DI</code> can't figure out whether we want <code>text_view</code> or <code>gui_view</code>?
+It's really simple to fix it, we just use the suggestion provided.</p>
+<pre><code class="cpp">auto injector = di::make_injector(
+  di::bind&lt;iview&gt;.to&lt;gui_view&gt;()
+);
+</code></pre>
+
+<p>Let's try again. Yay! It seems to be compiling.</p>
+<p>But what about values? <code>renderer</code> requires <code>device</code>, which, by default, was zero initialized.</p>
+<pre><code class="cpp">struct renderer {
+  int device;
+};
+</code></pre>
+
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+If you want change the default behaviour and be sure that all required dependencies are bound and not zero initialized
+take a look at `constructible` policy.
+</div>
+
+<pre><code class="cpp">auto injector = di::make_injector(
+  di::bind&lt;iview&gt;.to&lt;gui_view&gt;()
+, di::bind&lt;int&gt;.to(42) // renderer device
+);
+</code></pre>
+
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+Boost.DI is a compile time beast which means that it guarantees that if your code compiles that all dependencies will be resolved
+correctly. No runtime exceptions, assert ever!
+</div>
+
+<p>Check it out yourself!
+<img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_bindings.cpp" /></p>
+<p>Great, but my code is more dynamic than that! I mean that I want to choose <code>gui_view</code> or <code>text_view</code> at runtime.
+<code>Boost.DI</code> can handle that too!</p>
+<pre><code class="cpp">auto use_gui_view = ...;
+
+auto injector = di::make_injector(
+  di::bind&lt;iview&gt;().to([&amp;](const auto&amp; injector) -&gt; iview&amp; {
+    if (use_gui_view) return (gui_view&amp;)injector; else return (text_view&amp;)injector;
+  })
+, di::bind&lt;int&gt;.to(42) // renderer device
+);
+</code></pre>
+
+<p>Notice, that <a href="../user_guide/index.html#di_make_injector">injector</a> was passed to lambda expression in order to create <code>gui_view</code> / <code>text_view</code>.
+This way <code>Boost.DI</code> can inject appropriate dependencies into chosen types. See <a href="../user_guide/index.html#bindings">bindings</a> for more details.</p>
+<p>Check it out yourself!
+<img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_dynamic_bindings.cpp" /></p>
+<p>Okay, so what about the input. We have <code>user</code>, however, in the real life, we will have more clients.
+<code>Boost.DI</code> allows multiple bindings to the same type for <code>array/vector/set</code>. Let's do it!</p>
+<pre><code class="cpp">class iclient {
+ public:
+   virtual ~iclient() noexcept = default;
+   virtual void process() = 0;
+};
+
+class user : public iclient {
+ public:
+   void process() override {};
+};
+
+class timer : public iclient {
+ public:
+   void process() override {};
+};
+
+class app {
+ public:
+  app(controller&amp;, std::vector&lt;std::unique_ptr&lt;iclient&gt;&gt;);
+};
+</code></pre>
+
+<p>And our bindings...</p>
+<pre><code class="cpp">di::bind&lt;iclient*[]&gt;.to&lt;user, client&gt;()
+</code></pre>
+
+<p>Check it out yourself!
+<img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_multiple_bindings.cpp" /></p>
+<p>The last but not least, sometimes, it's really useful to override some bindings. For example, for test purposes.
+With <code>Boost.DI</code> you can easily do that with 'override' specifier.</p>
+<pre><code class="cpp">auto injector = di::make_injector(
+  di::bind&lt;int&gt;().to(42) // renderer device
+, di::bind&lt;int&gt;().to(123) [di::override] // override renderer device
+);
+</code></pre>
+
+<p>And full example!
+<img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_bindings_override.cpp" /></p>
 <h3 id="3-basic-decide-the-life-times">3. [Basic] Decide the life times</h3>
-<p>deduce scope
-unique scope
-singleton scope</p>
+<p>So far so good but where these objects are stored?
+<code>Boost.DI</code> supports <a href="../user_guide/index.html#scopes">scopes</a> which are response for maintaining the life time of created objects.
+By default there are 4 scopes</p>
+<ul>
+<li><a href="../user_guide/index.html#di_deduce">deduce</a> scope (default)</li>
+<li><a href="../user_guide/index.html#di_instance">instance</a> scope (bind&lt;&gt;.to(value) where value is maintained by the client)</li>
+<li><a href="../user_guide/index.html#di_unique">unique</a> scope (one instance per request)</li>
+<li><a href="../user_guide/index.html#di_singleton">singleton</a> scope (shared instance)</li>
+</ul>
+<p>By default <a href="../user_guide/index.html#di_deduce">deduce</a> scope is used which means that scope is deduced based on a constructor parameter.
+For instance, reference, shared_ptr will be deduce as <a href="../user_guide/index.html#di_singleton">singleton</a> scope and pointer, unique_ptr will be deduced as <a href="../user_guide/index.html#di_unique">unique</a> scope.
+Coming back to our example, we got quite a lot <code>singletons</code> there as we just needed one instance per application life time.
+Although scope deduction is very useful, it's not always what we need and therefore <code>Boost.DI</code> allows changing the scope for given type.</p>
+<pre><code class="cpp">auto injector = di::make_injector(
+  di::bind&lt;iview&gt;.to&lt;gui_view&gt;().in(di::singleton) // explicitly specify singleton scope
+);
+</code></pre>
+
+<p>What if I want to change <code>gui_view</code> to be a different instance per each request. Let's change the scope to <a href="../user_guide/index.html#di_unique">unique</a> then.</p>
+<pre><code class="cpp">auto injector = di::make_injector(
+  di::bind&lt;iview&gt;.to&lt;gui_view&gt;().in(di::unique)
+);
+</code></pre>
+
+<p>It's NOT compiling!</p>
+<pre><code class="cpp">  injector.create&lt;app&gt;();
+           ^
+boost/di.hpp:897:2: error: 'scoped&lt;scopes::unique, gui_view&gt;::is_not_convertible_to&lt;iview &amp;&gt;::error'
+ error(_ = &quot;scoped object is not convertible to the requested type, did you mistake the scope: 'di::bind&lt;T&gt;.in(scope)'?&quot;);
+</code></pre>
+
+<p>Ah, reference doesn't make much sense with <a href="../user_guide/index.html#di_unique">unique</a> scope. It would be better to use <code>std::unique_ptr&lt;iview&gt;</code> here.</p>
+<p>Hmm, let's try something else then. We have list of unique clients, we can shared just by changing the list to use <code>shared_ptr</code> instead.</p>
+<pre><code class="cpp">class app {
+ public:
+  app(controller&amp;, std::vector&lt;std::shared_ptr&lt;iclient&gt;&gt;);
+};
+</code></pre>
+
+<p>But, it would be better if <code>timer</code> was always created per request, although it's a <code>shared_ptr</code>.
+To do so, we just need add scope when binding it, like this...</p>
+<pre><code class="cpp">auto injector = di::make_injector(
+  di::bind&lt;timer&gt;().in(di::unique) // different per request
+);
+</code></pre>
+
+<p>Check out full example here.
+<img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_decide_the_life_times.cpp" /></p>
 <h3 id="4-basic-annotations-to-the-rescue">4. [Basic] Annotations to the rescue</h3>
-<p>ambigious constructors
-named name</p>
+<p>Above example are fine and dandy, nonetheless, they don't cover one important thing.
+How <code>Boost.DI</code> knows which constructor to choose and what if they are ambiguous?</p>
+<p>Well, algorithm is very simple. The longest (most parameters), unique constructor will be chosen.
+Otherwise, <code>Boost.DI</code> will give up with compile time error. However, which constructor should
+be chosen is configurable using <a href="../user_guide/index.html#BOOST_DI_INJECT">BOOST_DI_INJECT</a>.</p>
+<p>To illustrate this, let modify <code>model</code> constructor.</p>
+<pre><code class="cpp">class model {
+ public:
+   model(int size, double precision) { }
+   model(int rows, int cols) { }
+};
+</code></pre>
+
+<p>Right now, as expected, we get a compile time error!</p>
+<pre><code class="cpp">
+  injector.create&lt;app&gt;();
+           ^
+boost/di.hpp:942:4: error: 'type&lt;model&gt;::has_ambiguous_number_of_constructor_parameters::error'
+ error(_ = &quot;verify BOOST_DI_INJECT_TRAITS or di::ctor_traits&quot;);
+</code></pre>
+
+<p>Let's fixed it using <a href="../user_guide/index.html#BOOST_DI_INJECT">BOOST_DI_INJECT</a>!</p>
+<pre><code class="cpp">class model {
+ public:
+   model(int size, double precision) { }
+   BOOST_DI_INJECT(model, int rows, int cols) { } // this constructor will be injected
+};
+</code></pre>
+
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+We can also write `model(int rows, int cols, ...)` to get the same result.
+</div>
+
+<p>Okay, right now it compiles but, wait a minute, <code>123</code> (renderer device) was injected for both <code>rows</code> and <code>cols</code>!
+Well, it wasn't even closed to what we would like to, but we can fix it easily using <a href="../user_guide/index.html#di_named">named</a> annotations.</p>
+<p>Firstly, we have to create names. That's easy as names are just unique objects.</p>
+<pre><code class="cpp">auto Rows = []{};
+auto Cols = []{};
+</code></pre>
+
+<p>Secondly, we have to inform <code>model</code> constructor about it.</p>
+<pre><code class="cpp">class model {
+ public:
+   model(int size, double precision) { }
+   BOOST_DI_INJECT(model, (named = Rows) int rows, (named = Cols) int cols); // this constructor will be injected
+};
+
+model::model(int rows, int cols) {}
+</code></pre>
+
+<p>Please, notice that we have separated <code>model</code> constructor definition and declaration to show that definition doesn't
+require named annotations.</p>
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+If you happen to use clang/gcc compiler you can use string literals instead of creating objects,
+for example (named = "Rows"_s).
+</div>
+
+<p>Finally, we have to bind our values.</p>
+<pre><code class="cpp">auto injector = di::make_injector(
+  di::bind&lt;int&gt;.named(Rows).to(6)
+, di::bind&lt;int&gt;.named(Cols).to(8)
+);
+</code></pre>
+
+<p>That's all.</p>
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+The same result might be accomplished with having different types for rows and cols.
+</div>
+
+<p>Full example here.
+<img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_annotations_to_the_rescue.cpp" /></p>
 <h3 id="5-basic-split-your-configuration">5. [Basic] Split your configuration</h3>
-<p>auto module = [] { ... };</p>
+<p>But my project has hundreds of interfaces and I would like to split my bindings into separate components.
+There is nothing simpler than that with <code>Boost.DI</code> as <a href="../user_guide/index.html#di_make_injector">injector</a> might be extended by other <a href="../user_guide/index.html#di_make_injector">injector</a>.</p>
+<p>Let's split our configuration and keep our <code>model</code> bindings separately from <code>app</code> bindings.</p>
+<pre><code class="cpp">auto model_module = [] {
+  return di::make_injector(
+    di::bind&lt;int&gt;().named(Rows).to(6)
+  , di::bind&lt;int&gt;().named(Cols).to(8)
+  );
+};
+
+auto app_module = [](bool use_gui_view) {
+  return di::make_injector(
+    di::bind&lt;iview&gt;().to([&amp;](const auto&amp; injector) -&gt; iview&amp; {
+      if (use_gui_view) return (gui_view&amp;)injector; else return (text_view&amp;)injector;
+    })
+  , di::bind&lt;timer&gt;().in(di::unique) // different per request
+  , di::bind&lt;iclient*[]&gt;().to&lt;user, timer&gt;() // bind many clients
+  );
+};
+</code></pre>
+
+<p>And glue them into one injector the same way...</p>
+<pre><code class="cpp">  auto injector = di::make_injector(
+    model_module()
+  , app_module(use_gui_view)
+  );
+</code></pre>
+
+<p>Check it out yourself!
+<img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_split_your_configuration.cpp" /></p>
+<p>But I would like to have a module in CPP file, how can I do that?
+Such design might be achieved with <code>Boost.DI</code> by <a href="../user_guide/index.html#di_make_injector">injector</a> and exposing types.
+Let's refactor it then.</p>
+<pre><code class="cpp">di::injector&lt;model&amp;&gt; model_module() {
+  return di::make_injector(
+    di::bind&lt;int&gt;().named(Rows).to(6)
+  , di::bind&lt;int&gt;().named(Cols).to(8)
+  );
+}
+
+di::injector&lt;app&gt; app_module(bool use_gui_view) {
+  return di::make_injector(
+    di::bind&lt;iview&gt;().to([&amp;](const auto&amp; injector) -&gt; iview&amp; {
+      if (use_gui_view) return (gui_view&amp;)injector; else return (text_view&amp;)injector;
+    })
+  , di::bind&lt;timer&gt;().in(di::unique) // different per request
+  , di::bind&lt;iclient*[]&gt;().to&lt;user, timer&gt;() // bind many clients
+  );
+}
+</code></pre>
+
+<p>Right now you can easily separate definition and declaration between <code>hpp</code> and <code>cpp</code> files.</p>
+<p>Check it out here!
+<img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_split_your_configuration_expose.cpp" /></p>
+<div class="warning">
+<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+You can expose named parameters using `di::injector<BOOST_DI_EXPOSE((named = Rows) int)>`.
+Different variations of the same type have to be exposed explicitly using `di::injector<model&, std::unique_ptr<model>>`.
+</div>
+
+<p>Congrats, you have finished the basic part of the tutorial.
+Hopefully, you have noticed the potential of DI and <code>Boost.DI</code> but if are still not convinced check out the Advanced part.</p>
 <h3 id="6-advanced-dumplimit-your-types">6. [Advanced] Dump/Limit your types</h3>
-<p>uml dumper
-limit types</p>
+<p>It's often a case that we would like to generate object diagram of our application in order to see our dependencies
+more clear. Usually, it's a really hard task as we creation of objects may happen anywhere but if gave the responsibility
+to create objects to <code>Boost.DI</code> we get such functionality for free.
+The only thing we have to do is to implement how to dump our objects.</p>
+<p><img alt="CPP" src="../Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp" />
+<a href="../images/uml_dumper.png"><img alt="UML Dumper" src="../images/uml_dumper.png" /></a></p>
+<p>See also.
+<img alt="CPP(BTN)" src="../Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp" />
+<img alt="CPP(BTN)" src="../Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/types_dumper.cpp" /></p>
+<p><br /></p>
+<p>On the other hand, it would be great to be able to limit types which might be constructed. For example, we just want to allow
+smart pointers and no raw pointers. We want to have view only with const parameters being passed, etc.
+<code>Boost.DI</code> allows you to do so by using <a href="../user_guide/index.html#di_constructible">constructible</a> policy or writing a custom one.</p>
+<p><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_global.cpp" /></p>
+<p>See also.
+<img alt="CPP(BTN)" src="../Run_Configuration_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/configuration.cpp" /></p>
 <h3 id="7-advanced-customize-it">7. [Advanced] Customize it</h3>
-<p>custom scope
-custom provider
-custom policies</p>
+<p><code>Boost.DI</code> was design having extensibility in mind. You can easily customize
+<em> <a href="../user_guide/index.html#scopes">scopes</a> - to have custom life time of an object
+</em> [providers] - to have custom way of creating objects, for example by using preallocated memory
+* <a href="../user_guide/index.html#policies">policies</a> - to have custom way of dumping types at run-time or limiting them at compile-time</p>
+<p><img alt="CPP(BTN)" src="../Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp" />
+<img alt="CPP(BTN)" src="../Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp" />
+<img alt="CPP(BTN)" src="../Run_Pool_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp" /></p>
+<p><br /><hr /></p>
 <h3 id="8-advanced-extend-it">8. [Advanced] Extend it</h3>
-<p>extensions</p>
+<p>As mentioned before, <code>Boost.DI</code> is quite easy to extend and therefore a lot of extensions exists already.
+Please check them out and write your own!</p>
+<ul>
+<li><a href="../extensions/index.html#constructor-bindings">Constructor Bindings</a></li>
+<li><a href="../extensions/index.html#assisted-injection">Assisted Injection</a></li>
+<li><a href="../extensions/index.html#concepts">Concepts</a></li>
+<li><a href="../extensions/index.html#lazy">Lazy</a></li>
+<li><a href="../extensions/index.html#named-parameters">Named Parameters</a></li>
+<li><a href="../extensions/index.html#xml-injection">XML Injection</a></li>
+<li><a href="../extensions/index.html#types-dumper">Types Dumper</a></li>
+<li><a href="../extensions/index.html#uml-dumper">UML Dumper</a></li>
+<li><a href="../extensions/index.html#mocks-provider">Mocks Provider</a></li>
+<li><a href="../extensions/index.html#scoped-scope">Scoped Scope</a></li>
+<li><a href="../extensions/index.html#session-scope">Session Scope</a></li>
+<li><a href="../extensions/index.html#shared-scope">Shared Scope</a></li>
+</ul>
               
             </div>
           </div>
