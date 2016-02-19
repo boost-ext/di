@@ -115,7 +115,6 @@ Your C++14 header only Dependency Injection library with no dependencies ([__Try
     * [6. [Advanced] Dump/Limit your types](http://boost-experimental.github.io/di/tutorial/index.html#6-advanced-dumplimit-your-types)
     * [7. [Advanced] Customize it](http://boost-experimental.github.io/di/tutorial/index.html#7-advanced-customize-it)
     * [8. [Advanced] Extend it](http://boost-experimental.github.io/di/tutorial/index.html#8-advanced-extend-it)
-* [Quick User Guide](http://boost-experimental.github.io/di/quick_user_guide/index.html)
 * [User Guide](http://boost-experimental.github.io/di/user_guide/index.html)
     * [Injector](http://boost-experimental.github.io/di/user_guide/index.html#injector)
     * [Bindings](http://boost-experimental.github.io/di/user_guide/index.html#bindings)
