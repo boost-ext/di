@@ -52,9 +52,13 @@ class app {
 };
 
 int main() {
+  auto use_gui_view = true;
+
   // clang-format off
   auto injector = di::make_injector(
-    di::bind<iview>().to<gui_view>()
+    di::bind<iview>().to([&](const auto& injector) -> iview& {
+      return use_gui_view ? (gui_view&)injector : (text_view&)injector;
+    })
   , di::bind<std::string>().to("button name")
   , di::bind<bool>().to(true)
   );

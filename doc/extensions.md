@@ -37,6 +37,8 @@
 ###UML Dumper
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp)
 
+[![UML Dumper](images/uml_dumper.png)](images/uml_dumper.png)
+
 ###Mocks Provider
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/providers/mocks_provider.cpp)
 
