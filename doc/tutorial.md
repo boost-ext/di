@@ -187,11 +187,11 @@ auto app_{make_injector().create<app>()};
 COMPILE error! (See also: [Error Messages](overview.md#error-messages))
 
 ```cpp
-basic_first_steps_with_bindings.cpp:61:12: warning: 'create<app>' is deprecated: creatable constraint not satisfied
+warning: 'create<app>' is deprecated: creatable constraint not satisfied
   injector.create<app>();
            ^
 boost/di.hpp:870:2: error: 'boost::di::v1_0_0::concepts::abstract_type<iview>::is_not_bound::error'
- error(_ = "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?");
+  error(_ = "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?");
 ```
 
 <div class="warning">
@@ -208,7 +208,7 @@ auto injector = di::make_injector(
 );
 ```
 
-Let's try again. Yay! It seems to be compiling.
+Let's try again. Yay! It's compiling.
 
 But what about values? `renderer` requires `device`, which, by default, was zero initialized.
 
@@ -341,10 +341,11 @@ auto injector = di::make_injector(
 It's NOT compiling!
 
 ```cpp
+warning: 'create<app>' is deprecated: creatable constraint not satisfied
   injector.create<app>();
            ^
 boost/di.hpp:897:2: error: 'scoped<scopes::unique, gui_view>::is_not_convertible_to<iview &>::error'
- error(_ = "scoped object is not convertible to the requested type, did you mistake the scope: 'di::bind<T>.in(scope)'?");
+  error(_ = "scoped object is not convertible to the requested type, did you mistake the scope: 'di::bind<T>.in(scope)'?");
 ```
 
 Ah, reference doesn't make much sense with [unique] scope. It would be better to use `std::unique_ptr<iview>` here.
@@ -392,11 +393,11 @@ class model {
 Right now, as expected, we get a compile time error!
 
 ```cpp
-
+warning: 'create<app>' is deprecated: creatable constraint not satisfied
   injector.create<app>();
            ^
 boost/di.hpp:942:4: error: 'type<model>::has_ambiguous_number_of_constructor_parameters::error'
- error(_ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits");
+  error(_ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits");
 ```
 
 Let's fixed it using [BOOST_DI_INJECT]!
