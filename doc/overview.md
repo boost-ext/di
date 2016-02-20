@@ -247,10 +247,10 @@ Legend:
 
 | Library | Missing Bindings Error |
 | ------- | ---------- |
-| Boost.DI | ![CPP(RESULT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/di.cpp) |
-| [Google.Guice] | ![CPP(RESULT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/guice.cpp) |
-| [Dagger2] | ![CPP(RESULT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/dagger2.cpp) |
-| [Ninject] | ![CPP(RESULT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/Ninject.cpp) |
+| Boost.DI | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/di.cpp) |
+| [Google.Guice] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/guice.cpp) |
+| [Dagger2] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/dagger2.cpp) |
+| [Ninject] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/Ninject.cpp) |
 
 ---
 

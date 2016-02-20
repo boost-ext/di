@@ -535,7 +535,8 @@ auto model_module = [] {
 auto app_module = [](const bool& use_gui_view) {
   return di::make_injector(
     di::bind<iview>.to([&](const auto& injector) -> iview& {
-      if (use_gui_view) return (gui_view&)injector; else return (text_view&)injector;
+      return use_gui_view ? (iview&)injector.template create<gui_view&>()
+                          : (iview&)injector.template create<text_view&>();
     })
   , di::bind<timer>.in(di::unique) // different per request
   , di::bind<iclient*[]>().to<user, timer>() // bind many clients
@@ -570,7 +571,8 @@ di::injector<model&> model_module() {
 di::injector<app> app_module(const bool& use_gui_view) {
   return di::make_injector(
     di::bind<iview>.to([&](const auto& injector) -> iview& {
-      if (use_gui_view) return (gui_view&)injector; else return (text_view&)injector;
+      return use_gui_view ? (iview&)injector.template create<gui_view&>()
+                          : (iview&)injector.template create<text_view&>();
     })
   , di::bind<timer>.in(di::unique) // different per request
   , di::bind<iclient*[]>.to<user, timer>() // bind many clients
