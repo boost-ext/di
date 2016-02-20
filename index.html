@@ -252,6 +252,14 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 </code></pre>
 
 <h3 id="do-i-need-dependency-injection">Do I need Dependency Injection?</h3>
+<pre><code class="cpp">renderer renderer_;
+view view_{&quot;&quot;, renderer_};
+model model_;
+controller controller_{model_, view_};
+user user_;
+app app_{controller_, user_};
+</code></pre>
+
 <h3 id="real-life-examples">Real Life examples?</h3>
 <ul>
 <li><a href="https://github.com/krzysztof-jusiak/match3">Match-3 Game</a><ul>
@@ -277,18 +285,14 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 <ul>
 <li>DI provides loosely coupled code (separation of business logic and object creation)</li>
 <li>DI provides easier to maintain code (different objects might be easily injected)</li>
-<li>DI provides easier to test code (fakes objects might be injected)</li>
+<li>
+<p>DI provides easier to test code (fakes objects might be injected)</p>
+<ul>
+<li><a href="http://www.youtube.com/watch?v=RlfLCWKxHJ0">The Clean Code Talks - Don't Look For Things!</a></li>
+<li><a href="http://www.youtube.com/watch?v=oK_XtfXPkqw">A New Type of dependency injection</a></li>
 </ul>
-<table>
-<thead>
-<tr>
-<th><a href="http://www.youtube.com/watch?v=RlfLCWKxHJ0"><img alt="The Clean Code Talks - Don't Look For Things!" src="http://img.youtube.com/vi/RlfLCWKxHJ0/0.jpg" /></a></th>
-<th><a href="http://www.youtube.com/watch?v=oK_XtfXPkqw"><img alt="DAGGER 2 - A New Type of dependency injection" src="http://image.slidesharecdn.com/nr73mexetqiybd1qpcem-140529143342-phpapp01/95/dependency-injection-for-android-5-638.jpg?cb=1401392113" /></a></th>
-<th></th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
+</li>
+</ul>
 <h3 id="why-boostdi">Why Boost.DI?</h3>
 <ul>
 <li>Boost.DI has none or minimal run-time overhead - <a href="#run_time_performance">Run-time performance</a></li>
@@ -378,5 +382,5 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 
 <!--
 MkDocs version : 0.15.0
-Build Date UTC : 2016-02-19 21:55:21.281243
+Build Date UTC : 2016-02-20 10:24:22.745805
 -->

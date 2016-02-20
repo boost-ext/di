@@ -531,6 +531,75 @@ For instance, reference, shared_ptr will be deduce as <a href="../user_guide/ind
 <table>
 <thead>
 <tr>
+<th>Type</th>
+<th>deduce</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T</td>
+<td><a href="../user_guide/index.html#di_unique">unique</a></td>
+</tr>
+<tr>
+<td>T&amp;</td>
+<td><a href="../user_guide/index.html#di_singleton">singleton</a></td>
+</tr>
+<tr>
+<td>const T&amp;</td>
+<td><a href="../user_guide/index.html#di_unique">unique</a> (temporary)/singleton</td>
+</tr>
+<tr>
+<td>T*</td>
+<td><a href="../user_guide/index.html#di_unique">unique</a> (ownership transfer)</td>
+</tr>
+<tr>
+<td>const T*</td>
+<td><a href="../user_guide/index.html#di_unique">unique</a> (ownership transfer)</td>
+</tr>
+<tr>
+<td>T&amp;&amp;</td>
+<td><a href="../user_guide/index.html#di_unique">unique</a></td>
+</tr>
+<tr>
+<td>unique_ptr<T></td>
+<td><a href="../user_guide/index.html#di_unique">unique</a></td>
+</tr>
+<tr>
+<td>shared_ptr<T></td>
+<td><a href="../user_guide/index.html#di_singleton">singleton</a></td>
+</tr>
+<tr>
+<td>weak_ptr<T></td>
+<td><a href="../user_guide/index.html#di_singleton">singleton</a></td>
+</tr>
+</tbody>
+</table>
+<p>Coming back to our example, we got quite a lot <code>singletons</code> there as we just needed one instance per application life time.
+Although scope deduction is very useful, it's not always what we need and therefore <code>Boost.DI</code> allows changing the scope for given type.</p>
+<pre><code class="cpp">auto injector = di::make_injector(
+  di::bind&lt;iview&gt;.to&lt;gui_view&gt;().in(di::singleton) // explicitly specify singleton scope
+);
+</code></pre>
+
+<p>What if I want to change <code>gui_view</code> to be a different instance per each request. Let's change the scope to <a href="../user_guide/index.html#di_unique">unique</a> then.</p>
+<pre><code class="cpp">auto injector = di::make_injector(
+  di::bind&lt;iview&gt;.to&lt;gui_view&gt;().in(di::unique)
+);
+</code></pre>
+
+<p>It's NOT compiling!</p>
+<pre><code class="cpp">warning: 'create&lt;app&gt;' is deprecated: creatable constraint not satisfied
+  injector.create&lt;app&gt;();
+           ^
+boost/di.hpp:897:2: error: 'scoped&lt;scopes::unique, gui_view&gt;::is_not_convertible_to&lt;iview &amp;&gt;::error'
+  error(_ = &quot;scoped object is not convertible to the requested type, did you mistake the scope: 'di::bind&lt;T&gt;.in(scope)'?&quot;);
+</code></pre>
+
+<p>Ah, reference doesn't make much sense with <a href="../user_guide/index.html#di_unique">unique</a> scope because it would mean it has to be stored somewhere.
+It would be better to use <code>std::unique_ptr&lt;iview&gt;</code> here.</p>
+<table>
+<thead>
+<tr>
 <th>Type/Scope</th>
 <th>unique</th>
 <th>singleton</th>
@@ -614,28 +683,6 @@ For instance, reference, shared_ptr will be deduce as <a href="../user_guide/ind
 </tr>
 </tbody>
 </table>
-<p>Coming back to our example, we got quite a lot <code>singletons</code> there as we just needed one instance per application life time.
-Although scope deduction is very useful, it's not always what we need and therefore <code>Boost.DI</code> allows changing the scope for given type.</p>
-<pre><code class="cpp">auto injector = di::make_injector(
-  di::bind&lt;iview&gt;.to&lt;gui_view&gt;().in(di::singleton) // explicitly specify singleton scope
-);
-</code></pre>
-
-<p>What if I want to change <code>gui_view</code> to be a different instance per each request. Let's change the scope to <a href="../user_guide/index.html#di_unique">unique</a> then.</p>
-<pre><code class="cpp">auto injector = di::make_injector(
-  di::bind&lt;iview&gt;.to&lt;gui_view&gt;().in(di::unique)
-);
-</code></pre>
-
-<p>It's NOT compiling!</p>
-<pre><code class="cpp">warning: 'create&lt;app&gt;' is deprecated: creatable constraint not satisfied
-  injector.create&lt;app&gt;();
-           ^
-boost/di.hpp:897:2: error: 'scoped&lt;scopes::unique, gui_view&gt;::is_not_convertible_to&lt;iview &amp;&gt;::error'
-  error(_ = &quot;scoped object is not convertible to the requested type, did you mistake the scope: 'di::bind&lt;T&gt;.in(scope)'?&quot;);
-</code></pre>
-
-<p>Ah, reference doesn't make much sense with <a href="../user_guide/index.html#di_unique">unique</a> scope. It would be better to use <code>std::unique_ptr&lt;iview&gt;</code> here.</p>
 <p>Hmm, let's try something else then. We have list of unique clients, we can shared just by changing the list to use <code>shared_ptr</code> instead.</p>
 <pre><code class="cpp">class app {
  public:
