@@ -291,9 +291,6 @@ public:
 
   template&lt;class T&gt; requires creatable&lt;T&gt;
   T create() const;
-
-  template &lt;class T&gt; requires creatable&lt;T&gt;
-  operator T() const;
 };
 </code></pre>
 <table>
@@ -314,12 +311,6 @@ public:
 </tr>
 <tr>
 <td><code>create&lt;T&gt;()</code></td>
-<td><a href="#di_creatable">creatable</a>&lt;T></td>
-<td>Creates type <code>T</code></td>
-<td><code>T</code></td>
-</tr>
-<tr>
-<td><code>operator T()</code></td>
 <td><a href="#di_creatable">creatable</a>&lt;T></td>
 <td>Creates type <code>T</code></td>
 <td><code>T</code></td>

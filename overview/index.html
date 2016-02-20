@@ -310,6 +310,10 @@ namespace di = boost::di;
 <td>Compile-time limitations for types / Run-time types vistor</td>
 </tr>
 <tr>
+<td><a href="../user_guide/index.html#di_config">Config</a></td>
+<td>Configuration for <a href="../user_guide/index.html#policies">Policies</a> and <a href="../user_guide/index.html#providers">Providers</a></td>
+</tr>
+<tr>
 <td>Core</td>
 <td>Responsible for resolving requested types (implementation detail)</td>
 </tr>
@@ -319,6 +323,20 @@ namespace di = boost::di;
 </tr>
 </tbody>
 </table>
+<ul>
+<li>In a nutshell</li>
+</ul>
+<pre><code class="cpp">template&lt;class TConfig, class... TBindings&gt;
+struct core::injector : TBindings... {
+  template&lt;class T&gt;
+  auto create() const noexcept {
+    TConfig::policies&lt;T&gt;()...;
+    auto dependency = core::binder&lt;TBindings...&gt;().resolve&lt;T&gt;(this);
+    return core::wrapper&lt;T&gt;{dependency.create(TConfig::provider().get&lt;T&gt;())}; // get&lt;T&gt; -&gt; create&lt;ctor_traits&lt;T&gt;...&gt;()
+  }
+};
+</code></pre>
+
 <h3 id="performance">Performance</h3>
 <ul>
 <li><strong>Run-time performance</strong><ul>
