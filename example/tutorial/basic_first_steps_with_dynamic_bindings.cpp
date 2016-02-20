@@ -57,7 +57,8 @@ int main() {
   // clang-format off
   auto injector = di::make_injector(
     di::bind<iview>().to([&](const auto& injector) -> iview& {
-      if (use_gui_view) return (gui_view&)injector; else return (text_view&)injector;
+      return use_gui_view ? (iview&)injector.template create<gui_view&>()
+                          : (iview&)injector.template create<text_view&>();
     })
   , di::bind<int>().to(42) // renderer device
   );

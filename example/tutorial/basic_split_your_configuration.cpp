@@ -90,14 +90,17 @@ auto model_module = [] {
   // clang-format on
 };
 
-auto app_module = [](bool use_gui_view) {
+auto app_module = [](const bool& use_gui_view) {
   // clang-format off
   return di::make_injector(
     di::bind<iview>().to([&](const auto& injector) -> iview& {
-      if (use_gui_view) return (gui_view&)injector; else return (text_view&)injector;
+      return use_gui_view ? (iview&)injector.template create<gui_view&>()
+                          : (iview&)injector.template create<text_view&>();
     })
   , di::bind<timer>().in(di::unique) // different per request
   , di::bind<iclient*[]>().to<user, timer>() // bind many clients
+  , di::bind<int>().to(42) // renderer device
+  , di::bind<int>().to(123) [di::override] // override renderer device
   );
   // clang-format on
 };

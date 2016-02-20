@@ -243,7 +243,7 @@ take a look at `constructible` policy.
 ```cpp
 auto injector = di::make_injector(
   di::bind<iview>.to<gui_view>()
-, di::bind<int>.to(42) // renderer device
+, di::bind<int>.to(42) // renderer device | Boost.DI can also deduce 'int' type for you -> 'di::bind<>.to(42)'
 );
 ```
 
@@ -263,10 +263,11 @@ Great, but my code is more dynamic than that! I mean that I want to choose `gui_
 auto use_gui_view = ...;
 
 auto injector = di::make_injector(
-  di::bind<iview>().to([&](const auto& injector) -> iview& {
-    if (use_gui_view) return (gui_view&)injector; else return (text_view&)injector;
+  di::bind<iview>.to([&](const auto& injector) -> iview& {
+    return use_gui_view ? (iview&)injector.template create<gui_view&>()
+                        : (iview&)injector.template create<text_view&>();
   })
-, di::bind<int>.to(42) // renderer device
+, di::bind<>.to(42) // renderer device
 );
 ```
 
@@ -312,13 +313,21 @@ Check it out yourself!
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_multiple_bindings.cpp)
 
 The last but not least, sometimes, it's really useful to override some bindings. For example, for test purposes.
-With `Boost.DI` you can easily do that with 'override' specifier.
+With `Boost.DI` you can easily do that with 'di::override' specifier.
 
 ```cpp
 auto injector = di::make_injector(
-  di::bind<int>().to(42) // renderer device
-, di::bind<int>().to(123) [di::override] // override renderer device
+  di::bind<int>.to(42) // renderer device
+, di::bind<int>.to(123) [di::override] // override renderer device
 );
+```
+
+Without the 'di::override' you will get following compilation error...
+
+```cpp
+boost/di.hpp:281:3: error: static_assert failed "constraint not satisfied"
+boost/di.hpp:2683:80: type<int>::is_bound_more_than_once
+  inline auto make_injector(TDeps... args) noexcept
 ```
 
 And full example!
@@ -406,7 +415,7 @@ To do so, we just need add scope when binding it, like this...
 
 ```cpp
 auto injector = di::make_injector(
-  di::bind<timer>().in(di::unique) // different per request
+  di::bind<timer>.in(di::unique) // different per request
 );
 ```
 
@@ -518,17 +527,17 @@ Let's split our configuration and keep our `model` bindings separately from `app
 ```cpp
 auto model_module = [] {
   return di::make_injector(
-    di::bind<int>().named(Rows).to(6)
-  , di::bind<int>().named(Cols).to(8)
+    di::bind<int>.named(Rows).to(6)
+  , di::bind<int>.named(Cols).to(8)
   );
 };
 
-auto app_module = [](bool use_gui_view) {
+auto app_module = [](const bool& use_gui_view) {
   return di::make_injector(
-    di::bind<iview>().to([&](const auto& injector) -> iview& {
+    di::bind<iview>.to([&](const auto& injector) -> iview& {
       if (use_gui_view) return (gui_view&)injector; else return (text_view&)injector;
     })
-  , di::bind<timer>().in(di::unique) // different per request
+  , di::bind<timer>.in(di::unique) // different per request
   , di::bind<iclient*[]>().to<user, timer>() // bind many clients
   );
 };
@@ -553,18 +562,18 @@ Let's refactor it then.
 ```cpp
 di::injector<model&> model_module() {
   return di::make_injector(
-    di::bind<int>().named(Rows).to(6)
-  , di::bind<int>().named(Cols).to(8)
+    di::bind<int>.named(Rows).to(6)
+  , di::bind<int>.named(Cols).to(8)
   );
 }
 
-di::injector<app> app_module(bool use_gui_view) {
+di::injector<app> app_module(const bool& use_gui_view) {
   return di::make_injector(
-    di::bind<iview>().to([&](const auto& injector) -> iview& {
+    di::bind<iview>.to([&](const auto& injector) -> iview& {
       if (use_gui_view) return (gui_view&)injector; else return (text_view&)injector;
     })
-  , di::bind<timer>().in(di::unique) // different per request
-  , di::bind<iclient*[]>().to<user, timer>() // bind many clients
+  , di::bind<timer>.in(di::unique) // different per request
+  , di::bind<iclient*[]>.to<user, timer>() // bind many clients
   , model_module()
   );
 }

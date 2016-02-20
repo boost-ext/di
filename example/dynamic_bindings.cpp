@@ -30,9 +30,9 @@ auto dynamic_bindings = [](eid& id) {
           default:
             return nullptr;
           case e1:
-            return (const std::shared_ptr<implementation1>&)injector;
+            return injector.template create<std::shared_ptr<implementation1>>();
           case e2:
-            return (const std::shared_ptr<implementation2>&)injector;
+            return injector.template create<std::shared_ptr<implementation2>>();
         }
 
         return nullptr;

@@ -125,6 +125,22 @@ class mocks_provider : public di::config {
   }
 };
 
+template <class TInjector>
+struct mocks : TInjector {
+  using TInjector::TInjector;
+  template <class T>
+  operator T() const noexcept {
+    return this->template create<T>();
+  }
+};
+
+template <class... TDeps>
+auto mocks_injector(TDeps... args) noexcept {
+  auto injector = di::make_injector<mocks_provider>(args...);
+  using type = decltype(injector);
+  return mocks<type>{static_cast<type&&>(injector)};
+}
+
 template <class TInjector, class R, class T, class... TArgs>
 expectations& expect(TInjector&, R (T::*)(TArgs...)) {
   TInjector::config::get_expectations().add(std::type_index(typeid(T)), [] {
@@ -153,7 +169,7 @@ struct c {
 /*<<define simple unit test>>*/
 test unit_test = [] {
   /*<<create injector with `mocks_provider`>>*/
-  auto mi = di::make_injector<mocks_provider>();
+  auto mi = mocks_injector();
 
   /*<<set expectations>>*/
   expect(mi, &i1::get).will_return(42);
@@ -170,7 +186,7 @@ test integration_test = [] {
 
   /*<<create injector with `mocks_provider`>>*/
   // clang-format off
-  auto mi = di::make_injector<mocks_provider>(
+  auto mi = mocks_injector(
     di::bind<int>().to(87) // custom value
   , di::bind<i1>().to<impl1>() // original implementation
   );

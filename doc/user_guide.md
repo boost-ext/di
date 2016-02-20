@@ -74,16 +74,12 @@ Creates [injector] type.
 
       template<class T> requires creatable<T>
       T create() const;
-
-      template <class T> requires creatable<T>
-      operator T() const;
     };
 
 | Expression | Requirement | Description | Returns |
 | ---------- | ----------- | ----------- | ------- |
 | `TDeps...` | [boundable]<TDeps...\> | [Bindings] to be used as configuration | - |
 | `create<T>()` | [creatable]<T\> | Creates type `T` | `T` |
-| `operator T()` | [creatable]<T\> | Creates type `T` | `T` |
 
 | Type `T` | Is allowed? | Note |
 | -------- | ----------- | ---- |

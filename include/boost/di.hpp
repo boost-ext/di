@@ -1017,20 +1017,13 @@ struct wrapper_traits<std::shared_ptr<T>> {
 };
 template <class T>
 using wrapper_traits_t = typename wrapper_traits<T>::type;
-template <class T>
-class no_implicit_conversions : public T {
-  template <class U>
-  operator U() const;
-};
 template <class, class = int>
 struct has_result_type : ::boost::di::v1_0_0::aux::false_type {};
 template <class T>
 struct has_result_type<T, ::boost::di::v1_0_0::aux::valid_t<typename T::result_type>> : ::boost::di::v1_0_0::aux::true_type {};
 template <class TGiven, class TProvider, class... Ts>
-struct is_expr
-    : aux::integral_constant<
-          bool, aux::is_callable_with<TGiven, no_implicit_conversions<typename TProvider::injector_t>, Ts...>::value &&
-                    !has_result_type<TGiven>::value> {};
+struct is_expr : aux::integral_constant<bool, aux::is_callable_with<TGiven, typename TProvider::injector_t, Ts...>::value &&
+                                                  !has_result_type<TGiven>::value> {};
 }
 template <class T>
 struct wrapper {
@@ -1094,7 +1087,7 @@ class instance {
   template <class TExpected, class TGiven>
   struct scope<TExpected, TGiven, BOOST_DI_REQUIRES(aux::is_callable<TGiven>::value)> {
     template <class>
-    using is_referable = aux::true_type;
+    using is_referable = aux::integral_constant<bool, !aux::is_callable<TExpected>::value>;
     explicit scope(const TGiven& object) : object_(object) {}
 #if defined(__MSVC__)
     template <class T, class, class TProvider>
@@ -2261,10 +2254,6 @@ class injector : injector_base, pool<bindings_t<TDeps...>> {
       () const {
     return BOOST_DI_TYPE_WKND(T) create_impl<aux::true_type>(aux::type<T>{});
   }
-  template <class T, BOOST_DI_REQUIRES(!aux::is_a<injector_base, T>::value) = 0>
-  operator T() const {
-    return create<T>();
-  }
 
  protected:
   template <class T>
@@ -2431,10 +2420,6 @@ class injector<TConfig, pool<>, TDeps...> : injector_base, pool<bindings_t<TDeps
       // clang-format on
       () const {
     return BOOST_DI_TYPE_WKND(T) create_impl<aux::true_type>(aux::type<T>{});
-  }
-  template <class T, BOOST_DI_REQUIRES(!aux::is_a<injector_base, T>::value) = 0>
-  operator T() const {
-    return create<T>();
   }
 
  protected:

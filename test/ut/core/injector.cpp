@@ -96,9 +96,4 @@ test create = [] {
   expect(0 == injector_.create<int>());
 };
 
-test conversion = [] {
-  injector<config> injector_{core::init{}};
-  expect(0 == (int)injector_);
-};
-
 }  // core

@@ -60,8 +60,23 @@ git clone https://github.com/boost-experimental/di && cd di && make test
 | [Scopes] | Responsible for maintain objects life time |
 | [Providers] | Responsible for providing object instance |
 | [Policies] | Compile-time limitations for types / Run-time types vistor |
+| [Config] | Configuration for [Policies] and [Providers] |
 | Core | Responsible for resolving requested types (implementation detail) |
 | Wrappers | Responsible for conversion to required type (implementation detail) |
+
+* In a nutshell
+
+```cpp
+template<class TConfig, class... TBindings>
+struct core::injector : TBindings... {
+  template<class T>
+  auto create() const noexcept {
+    TConfig::policies<T>()...;
+    auto dependency = core::binder<TBindings...>().resolve<T>(this);
+    return core::wrapper<T>{dependency.create(TConfig::provider().get<T>())}; // get<T> -> create<ctor_traits<T>...>()
+  }
+};
+```
 
 ###Performance
 
@@ -271,3 +286,4 @@ Legend:
 [Scopes]: user_guide.md#scopes
 [Providers]: user_guide.md#providers
 [Policies]: user_guide.md#policies
+[Config]: user_guide.md#di_config

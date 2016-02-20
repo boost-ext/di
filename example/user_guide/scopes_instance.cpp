@@ -43,7 +43,7 @@ int main() {
   , di::bind<long>().to(l)
   , di::bind<short>().to([] { return 87; })
   , di::bind<i2>().to([&](const auto& injector) -> std::shared_ptr<i2> {
-      return b ? (const std::shared_ptr<impl2>&)injector : nullptr; })
+      return b ? injector.template create<std::shared_ptr<impl2>>() : nullptr; })
   );
   // clang-format on
 

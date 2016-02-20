@@ -421,8 +421,8 @@ test inject_inside_template_no_limits = [] {
 test create_conversion = [] {
   constexpr auto i = 42;
   auto injector = di::make_injector(di::bind<i1>().to<impl1>(), di::bind<int>().to(i));
-  expect(i == (int)injector);
-  expect(dynamic_cast<impl1*>(((const std::unique_ptr<i1>&)injector).get()));
+  expect(i == injector.create<int>());
+  expect(dynamic_cast<impl1*>((injector.create<std::unique_ptr<i1>>()).get()));
 };
 
 test request_value_and_ptr_in_unique = [] {

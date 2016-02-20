@@ -38,19 +38,11 @@ struct wrapper_traits<std::shared_ptr<T>> {
 template <class T>
 using wrapper_traits_t = typename wrapper_traits<T>::type;
 
-template <class T>
-class no_implicit_conversions : public T {
-  template <class U>
-  operator U() const;
-};
-
 BOOST_DI_HAS_TYPE(has_result_type, result_type);
 
 template <class TGiven, class TProvider, class... Ts>
-struct is_expr
-    : aux::integral_constant<
-          bool, aux::is_callable_with<TGiven, no_implicit_conversions<typename TProvider::injector_t>, Ts...>::value &&
-                    !has_result_type<TGiven>::value> {};
+struct is_expr : aux::integral_constant<bool, aux::is_callable_with<TGiven, typename TProvider::injector_t, Ts...>::value &&
+                                                  !has_result_type<TGiven>::value> {};
 
 }  // detail
 
@@ -137,7 +129,7 @@ class instance {
   template <class TExpected, class TGiven>
   struct scope<TExpected, TGiven, BOOST_DI_REQUIRES(aux::is_callable<TGiven>::value)> {
     template <class>
-    using is_referable = aux::true_type;
+    using is_referable = aux::integral_constant<bool, !aux::is_callable<TExpected>::value>;
 
     explicit scope(const TGiven& object) : object_(object) {}
 
