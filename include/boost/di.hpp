@@ -49,6 +49,7 @@ BOOST_DI_CFG_FWD
 #pragma clang diagnostic push
 #pragma clang diagnostic error "-Wundefined-inline"
 #pragma clang diagnostic error "-Wundefined-internal"
+#pragma clang diagnostic ignored "-Wmissing-field-initializers"
 #elif defined(__GCC__)
 #pragma GCC diagnostic error "-Wdeprecated-declarations"
 #pragma GCC diagnostic push
