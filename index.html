@@ -92,9 +92,9 @@
                 
                     <li><a class="toctree-l4" href="#do-i-need-dependency-injection">Do I need Dependency Injection?</a></li>
                 
-                    <li><a class="toctree-l4" href="#real-life-examples">Real Life examples?</a></li>
+                    <li><a class="toctree-l4" href="#do-i-need-a-frameworklibrary">Do I need a Framework/Library?</a></li>
                 
-                    <li><a class="toctree-l4" href="#why-dependency-injection">Why Dependency Injection?</a></li>
+                    <li><a class="toctree-l4" href="#real-life-examples">Real Life examples?</a></li>
                 
                     <li><a class="toctree-l4" href="#why-boostdi">Why Boost.DI?</a></li>
                 
@@ -252,6 +252,18 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 </code></pre>
 
 <h3 id="do-i-need-dependency-injection">Do I need Dependency Injection?</h3>
+<ul>
+<li>DI provides loosely coupled code (separation of business logic and object creation)</li>
+<li>DI provides easier to maintain code (different objects might be easily injected)</li>
+<li>
+<p>DI provides easier to test code (fakes objects might be injected)</p>
+<ul>
+<li><a href="http://www.youtube.com/watch?v=RlfLCWKxHJ0">The Clean Code Talks - Don't Look For Things!</a></li>
+<li><a href="http://www.youtube.com/watch?v=oK_XtfXPkqw">A New Type of dependency injection</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="do-i-need-a-frameworklibrary">Do I need a Framework/Library?</h3>
 <pre><code class="cpp">renderer renderer_;
 view view_{&quot;&quot;, renderer_};
 model model_;
@@ -278,18 +290,6 @@ app app_{controller_, user_};
 <ul>
 <li><a href="http://boost-experimental.github.io/msm-lite/">Experimental Boost.MSM-lite</a><ul>
 <li>C++14 header only eUML-like Meta State Machine library with no dependencies</li>
-</ul>
-</li>
-</ul>
-<h3 id="why-dependency-injection">Why Dependency Injection?</h3>
-<ul>
-<li>DI provides loosely coupled code (separation of business logic and object creation)</li>
-<li>DI provides easier to maintain code (different objects might be easily injected)</li>
-<li>
-<p>DI provides easier to test code (fakes objects might be injected)</p>
-<ul>
-<li><a href="http://www.youtube.com/watch?v=RlfLCWKxHJ0">The Clean Code Talks - Don't Look For Things!</a></li>
-<li><a href="http://www.youtube.com/watch?v=oK_XtfXPkqw">A New Type of dependency injection</a></li>
 </ul>
 </li>
 </ul>
@@ -382,5 +382,5 @@ app app_{controller_, user_};
 
 <!--
 MkDocs version : 0.15.0
-Build Date UTC : 2016-02-20 10:24:22.745805
+Build Date UTC : 2016-02-20 10:40:52.620378
 -->
