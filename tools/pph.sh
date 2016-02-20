@@ -66,8 +66,7 @@ pph() {
     #include "boost/di/scopes/unique.hpp"
     #include "boost/di/policies/constructible.hpp"
     #include "boost/di/providers/heap.hpp"
-    #include "boost/di/providers/stack_over_heap.hpp"'
-  > tmp.hpp
+    #include "boost/di/providers/stack_over_heap.hpp"' > tmp.hpp
   cpp -C -P -nostdinc -I. \
     -DBOOST_DI_AUX_COMPILER_HPP \
     -DBOOST_DI_AUX_PREPROCESSOR_HPP \
@@ -91,11 +90,5 @@ pph() {
 }
 
 set -e
-cpp --version >/dev/null
-xargs --version >/dev/null
-sed --version >/dev/null
-head --version >/dev/null
-tail --version >/dev/null
-
 cd ${0%/*}/../include && pph `head -1 ../doc/CHANGELOG.md  | sed "s/.*\[\(.*\)\].*/\1/" | tr '.' ' '` > "boost/di.hpp"
 ${CLANG_FORMAT:=clang-format} -i "boost/di.hpp"
