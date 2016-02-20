@@ -5,6 +5,8 @@
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
 clone_folder: c:\di
+shallow_clone: true
+clone_depth: 1
 
 branches:
   except:
