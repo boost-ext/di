@@ -338,17 +338,17 @@ By default there are 4 scopes
 By default [deduce] scope is used which means that scope is deduced based on a constructor parameter.
 For instance, reference, shared_ptr will be deduce as [singleton] scope and pointer, unique_ptr will be deduced as [unique] scope.
 
-| Type/Scope | unique | singleton | instance |
-|------------|--------|--------|-----------|---------|----------|
-| T | ✔ | - | ✔ |
-| T& | - | ✔  | ✔ |
-| const T& | ✔ (temporary) | ✔ | ✔ |
-| T* (transfer ownership) | ✔ | - | - | - | ✔ |
-| const T* | ✔ | - | ✔ |
-| T&& | ✔ | - | - |
-| unique\_ptr<T> | ✔ |  - | ✔ |
-| shared\_ptr<T> | ✔ | ✔ | ✔ |
-| weak\_ptr<T> | - | ✔ | ✔ |
+| Type | deduce |
+|------|-------|
+| T | [unique] |
+| T& | [singleton] |
+| const T& | [unique] (temporary)/singleton |
+| T* | [unique] (ownership transfer) |
+| const T* | [unique] (ownership transfer) |
+| T&& | [unique] |
+| unique\_ptr<T> | [unique] |
+| shared\_ptr<T> | [singleton] |
+| weak\_ptr<T> | [singleton] |
 
 Coming back to our example, we got quite a lot `singletons` there as we just needed one instance per application life time.
 Although scope deduction is very useful, it's not always what we need and therefore `Boost.DI` allows changing the scope for given type.
@@ -377,7 +377,20 @@ boost/di.hpp:897:2: error: 'scoped<scopes::unique, gui_view>::is_not_convertible
   error(_ = "scoped object is not convertible to the requested type, did you mistake the scope: 'di::bind<T>.in(scope)'?");
 ```
 
-Ah, reference doesn't make much sense with [unique] scope. It would be better to use `std::unique_ptr<iview>` here.
+Ah, reference doesn't make much sense with [unique] scope because it would mean it has to be stored somewhere.
+It would be better to use `std::unique_ptr<iview>` here.
+
+| Type/Scope | unique | singleton | instance |
+|------------|--------|--------|-----------|---------|----------|
+| T | ✔ | - | ✔ |
+| T& | - | ✔  | ✔ |
+| const T& | ✔ (temporary) | ✔ | ✔ |
+| T* (transfer ownership) | ✔ | - | - | - | ✔ |
+| const T* | ✔ | - | ✔ |
+| T&& | ✔ | - | - |
+| unique\_ptr<T> | ✔ |  - | ✔ |
+| shared\_ptr<T> | ✔ | ✔ | ✔ |
+| weak\_ptr<T> | - | ✔ | ✔ |
 
 Hmm, let's try something else then. We have list of unique clients, we can shared just by changing the list to use `shared_ptr` instead.
 

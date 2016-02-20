@@ -53,6 +53,15 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 
 ###Do I need Dependency Injection?
 
+```cpp
+renderer renderer_;
+view view_{"", renderer_};
+model model_;
+controller controller_{model_, view_};
+user user_;
+app app_{controller_, user_};
+```
+
 ###Real Life examples?
 
 * [Match-3 Game](https://github.com/krzysztof-jusiak/match3)
@@ -74,8 +83,8 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 * DI provides easier to maintain code (different objects might be easily injected)
 * DI provides easier to test code (fakes objects might be injected)
 
-[![The Clean Code Talks - Don't Look For Things!](http://img.youtube.com/vi/RlfLCWKxHJ0/0.jpg)](http://www.youtube.com/watch?v=RlfLCWKxHJ0) | [![DAGGER 2 - A New Type of dependency injection](http://image.slidesharecdn.com/nr73mexetqiybd1qpcem-140529143342-phpapp01/95/dependency-injection-for-android-5-638.jpg?cb=1401392113)](http://www.youtube.com/watch?v=oK_XtfXPkqw) |
---- | --- |
+    * [The Clean Code Talks - Don't Look For Things!](http://www.youtube.com/watch?v=RlfLCWKxHJ0)
+    * [A New Type of dependency injection](http://www.youtube.com/watch?v=oK_XtfXPkqw)
 
 ###Why Boost.DI?
 

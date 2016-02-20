@@ -136,7 +136,7 @@ Legend:
 | Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_abstract_type_is_not_bound.cpp) |
 | Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_expose_abstract_type_is_not_bound.cpp) |
 
-###Dependency Injection Libraries
+###Benchmarks
 
 * C++ Dependency Injection Libraries
 
@@ -162,21 +162,21 @@ Legend:
 
 | Library | Bind Interface |
 | ------- | ---------- |
-| Boost.DI | ![CPP(RESULT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp) |
-| [dicpp] | ![CPP(RESULT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp) |
-| [Google.Fruit] | ![CPP(RESULT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/fruit.cpp) |
+| Boost.DI | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp) |
+| [dicpp] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp) |
+| [Google.Fruit] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/fruit.cpp) |
 
 | Library | Bind Value |
 | ------- | ---------- |
-| Boost.DI | ![CPP(RESULT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp) |
-| [dicpp] | ![CPP(RESULT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp) |
-| [Google.Fruit] | ![CPP(RESULT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/fruit.cpp) |
+| Boost.DI | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp) |
+| [dicpp] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp) |
+| [Google.Fruit] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/fruit.cpp) |
 
 | Library | Missing Binding Error |
 | ------- | ---------- |
-| Boost.DI | ![CPP(RESULT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/di.cpp) |
-| [dicpp] | ![CPP(RESULT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/dicpp.cpp) |
-| [Google.Fruit] | ![CPP(RESULT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/fruit.cpp) |
+| Boost.DI | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/di.cpp) |
+| [dicpp] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/dicpp.cpp) |
+| [Google.Fruit] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/fruit.cpp) |
 
 ---
 

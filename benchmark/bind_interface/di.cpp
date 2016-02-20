@@ -34,6 +34,8 @@ std::unique_ptr<I> test() {
   return injector.create<std::unique_ptr<I>>();
 }
 
+//<-
+
 /**
  * ASM x86-64 (same as `std::make_unique<implementation>()`)
  *
@@ -48,7 +50,6 @@ std::unique_ptr<I> test() {
  * ret
  */
 
-//<-
 int main(int argc, char** argv) {
   std::system(("gdb -batch -ex 'file " + std::string{argv[0]} + "' -ex 'disassemble test'").c_str());
 }

@@ -34,6 +34,8 @@ std::unique_ptr<I> test() {
   return object;
 }
 
+//<-
+
 /**
  * ASM x86-64
  *
@@ -123,7 +125,6 @@ std::unique_ptr<I> test() {
  *  callq  0x4015a0 <_Unwind_Resume@plt>
  */
 
-//<-
 int main(int argc, char** argv) {
   std::system(("gdb -batch -ex 'file " + std::string{argv[0]} + "' -ex 'disassemble test'").c_str());
 }
