@@ -795,7 +795,8 @@ There is nothing simpler than that with <code>Boost.DI</code> as <a href="../use
 auto app_module = [](const bool&amp; use_gui_view) {
   return di::make_injector(
     di::bind&lt;iview&gt;.to([&amp;](const auto&amp; injector) -&gt; iview&amp; {
-      if (use_gui_view) return (gui_view&amp;)injector; else return (text_view&amp;)injector;
+      return use_gui_view ? (iview&amp;)injector.template create&lt;gui_view&amp;&gt;()
+                          : (iview&amp;)injector.template create&lt;text_view&amp;&gt;();
     })
   , di::bind&lt;timer&gt;.in(di::unique) // different per request
   , di::bind&lt;iclient*[]&gt;().to&lt;user, timer&gt;() // bind many clients
@@ -825,7 +826,8 @@ Let's refactor it then.</p>
 di::injector&lt;app&gt; app_module(const bool&amp; use_gui_view) {
   return di::make_injector(
     di::bind&lt;iview&gt;.to([&amp;](const auto&amp; injector) -&gt; iview&amp; {
-      if (use_gui_view) return (gui_view&amp;)injector; else return (text_view&amp;)injector;
+      return use_gui_view ? (iview&amp;)injector.template create&lt;gui_view&amp;&gt;()
+                          : (iview&amp;)injector.template create&lt;text_view&amp;&gt;();
     })
   , di::bind&lt;timer&gt;.in(di::unique) // different per request
   , di::bind&lt;iclient*[]&gt;.to&lt;user, timer&gt;() // bind many clients
