@@ -264,8 +264,10 @@ auto use_gui_view = ...;
 
 auto injector = di::make_injector(
   di::bind<iview>.to([&](const auto& injector) -> iview& {
-    return use_gui_view ? (iview&)injector.template create<gui_view&>()
-                        : (iview&)injector.template create<text_view&>();
+    if (use_gui_view)
+      return injector.template create<gui_view&>();
+    else
+      return injector.template create<text_view&>();
   })
 , di::bind<>.to(42) // renderer device
 );
@@ -535,8 +537,10 @@ auto model_module = [] {
 auto app_module = [](const bool& use_gui_view) {
   return di::make_injector(
     di::bind<iview>.to([&](const auto& injector) -> iview& {
-      return use_gui_view ? (iview&)injector.template create<gui_view&>()
-                          : (iview&)injector.template create<text_view&>();
+      if (use_gui_view)
+        return injector.template create<gui_view&>();
+      else
+        return injector.template create<text_view&>();
     })
   , di::bind<timer>.in(di::unique) // different per request
   , di::bind<iclient*[]>().to<user, timer>() // bind many clients
@@ -571,8 +575,10 @@ di::injector<model&> model_module() {
 di::injector<app> app_module(const bool& use_gui_view) {
   return di::make_injector(
     di::bind<iview>.to([&](const auto& injector) -> iview& {
-      return use_gui_view ? (iview&)injector.template create<gui_view&>()
-                          : (iview&)injector.template create<text_view&>();
+      if (use_gui_view)
+        return injector.template create<gui_view&>();
+      else
+        return injector.template create<text_view&>();
     })
   , di::bind<timer>.in(di::unique) // different per request
   , di::bind<iclient*[]>.to<user, timer>() // bind many clients

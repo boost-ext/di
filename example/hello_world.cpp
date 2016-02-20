@@ -102,9 +102,9 @@ struct implementation : interface {
 struct uniform {
   bool &b;
 #if __has_include(<boost / shared_ptr.hpp>)
-  boost::shared_ptr<interface> sp = {};
+  boost::shared_ptr<interface> sp;
 #else
-  std::shared_ptr<interface> sp = {};
+  std::shared_ptr<interface> sp;
 #endif
 };
 
