@@ -53,6 +53,15 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 
 ###Do I need Dependency Injection?
 
+* DI provides loosely coupled code (separation of business logic and object creation)
+* DI provides easier to maintain code (different objects might be easily injected)
+* DI provides easier to test code (fakes objects might be injected)
+
+    * [The Clean Code Talks - Don't Look For Things!](http://www.youtube.com/watch?v=RlfLCWKxHJ0)
+    * [A New Type of dependency injection](http://www.youtube.com/watch?v=oK_XtfXPkqw)
+
+###Do I need a Framework/Library?
+
 ```cpp
 renderer renderer_;
 view view_{"", renderer_};
@@ -76,15 +85,6 @@ app app_{controller_, user_};
 
 * [Experimental Boost.MSM-lite](http://boost-experimental.github.io/msm-lite/)
     * C++14 header only eUML-like Meta State Machine library with no dependencies
-
-###Why Dependency Injection?
-
-* DI provides loosely coupled code (separation of business logic and object creation)
-* DI provides easier to maintain code (different objects might be easily injected)
-* DI provides easier to test code (fakes objects might be injected)
-
-    * [The Clean Code Talks - Don't Look For Things!](http://www.youtube.com/watch?v=RlfLCWKxHJ0)
-    * [A New Type of dependency injection](http://www.youtube.com/watch?v=oK_XtfXPkqw)
 
 ###Why Boost.DI?
 

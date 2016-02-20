@@ -656,6 +656,7 @@ Please check them out and write your own!
 [instance]: user_guide.md#di_instance
 [unique]: user_guide.md#di_unique
 [singleton]: user_guide.md#di_singleton
+[providers]: user_guide.md#providers
 [policies]: user_guide.md#policies
 [constructible]: user_guide.md#di_constructible
 [Law of Demeter]: https://en.wikipedia.org/wiki/Law_of_Demeter

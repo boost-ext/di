@@ -89,8 +89,8 @@ Your C++14 header only Dependency Injection library with no dependencies ([__Try
 
 * [Introduction](http://boost-experimental.github.io/di/index.html)
     * [Do I need Dependency Injection?](http://boost-experimental.github.io/di/index.html#do-i-need-dependency-injection)
+    * [Do I need a Framework/Library?](http://boost-experimental.github.io/di/index.html#do-i-need-a-frameworklibrary)
     * [Real Life examples?](http://boost-experimental.github.io/di/index.html#real-life-examples)
-    * [Why Dependency Injection?](http://boost-experimental.github.io/di/index.html#why-dependency-injection)
     * [Why Boost.DI?](http://boost-experimental.github.io/di/index.html#why-boostdi)
     * [Boost.DI design goals](http://boost-experimental.github.io/di/index.html#boostdi-design-goals)
     * [Acknowledgements](http://boost-experimental.github.io/di/index.html#acknowledgements)
