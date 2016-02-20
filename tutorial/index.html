@@ -466,8 +466,10 @@ correctly. No runtime exceptions, assert ever!
 
 auto injector = di::make_injector(
   di::bind&lt;iview&gt;.to([&amp;](const auto&amp; injector) -&gt; iview&amp; {
-    return use_gui_view ? (iview&amp;)injector.template create&lt;gui_view&amp;&gt;()
-                        : (iview&amp;)injector.template create&lt;text_view&amp;&gt;();
+    if (use_gui_view)
+      return injector.template create&lt;gui_view&amp;&gt;();
+    else
+      return injector.template create&lt;text_view&amp;&gt;();
   })
 , di::bind&lt;&gt;.to(42) // renderer device
 );
@@ -795,8 +797,10 @@ There is nothing simpler than that with <code>Boost.DI</code> as <a href="../use
 auto app_module = [](const bool&amp; use_gui_view) {
   return di::make_injector(
     di::bind&lt;iview&gt;.to([&amp;](const auto&amp; injector) -&gt; iview&amp; {
-      return use_gui_view ? (iview&amp;)injector.template create&lt;gui_view&amp;&gt;()
-                          : (iview&amp;)injector.template create&lt;text_view&amp;&gt;();
+      if (use_gui_view)
+        return injector.template create&lt;gui_view&amp;&gt;();
+      else
+        return injector.template create&lt;text_view&amp;&gt;();
     })
   , di::bind&lt;timer&gt;.in(di::unique) // different per request
   , di::bind&lt;iclient*[]&gt;().to&lt;user, timer&gt;() // bind many clients
@@ -826,8 +830,10 @@ Let's refactor it then.</p>
 di::injector&lt;app&gt; app_module(const bool&amp; use_gui_view) {
   return di::make_injector(
     di::bind&lt;iview&gt;.to([&amp;](const auto&amp; injector) -&gt; iview&amp; {
-      return use_gui_view ? (iview&amp;)injector.template create&lt;gui_view&amp;&gt;()
-                          : (iview&amp;)injector.template create&lt;text_view&amp;&gt;();
+      if (use_gui_view)
+        return injector.template create&lt;gui_view&amp;&gt;();
+      else
+        return injector.template create&lt;text_view&amp;&gt;();
     })
   , di::bind&lt;timer&gt;.in(di::unique) // different per request
   , di::bind&lt;iclient*[]&gt;.to&lt;user, timer&gt;() // bind many clients
