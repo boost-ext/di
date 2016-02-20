@@ -478,7 +478,7 @@ auto Rows = []{};
 auto Cols = []{};
 ```
 
-Secondly, we have to inform `model` constructor about it.
+Secondly, we have to tell `model` constructor about it.
 
 ```cpp
 class model {

@@ -63,6 +63,7 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 ###Do I need a Framework/Library?
 
 ```cpp
+logger l
 renderer renderer_;
 view view_{"", renderer_};
 model model_;
