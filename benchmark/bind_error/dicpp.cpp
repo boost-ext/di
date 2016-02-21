@@ -30,5 +30,6 @@ int main() {
 
 /**
  * terminate called after throwing an instance of 'std::runtime_error'
- * what():  Requested type without corresponding provider: di::type_key<I*, void>. Double check if the type is abstract
+ * what():  Requested type without corresponding provider: di::type_key<I*, void>.
+ * Double check if the type is abstract
  */

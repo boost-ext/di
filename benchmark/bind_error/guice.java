@@ -31,7 +31,8 @@ public class guice {
 }
 
 /**
-  * Exception in thread "main" com.google.inject.ConfigurationException: Guice configuration errors:
+  * Exception in thread "main" com.google.inject.ConfigurationException:
+  * Guice configuration errors:
   *
   * 1) No implementation for I was bound.
   * while locating I
