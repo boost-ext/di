@@ -162,6 +162,34 @@ $(document).ready(function () {
       $(this).replaceWith('<button style="position: relative; top: 60px; right: 20px; z-index: 10;" class="btn btn-neutral float-right" id="run_it_btn_' + id + '" onclick="cpp(' + id + ', \'' + file + '\', \'Run this code!\')">Run this code!</button><textarea style="display: none" id="code_' + id + '"></textarea><br /><textarea style="display: none" id="output_' + id + '"></textarea><div id="code_listing_' + id + '"><pre><code style="line-height: 12px; width: 100%" class="cpp hljs">' + compile + '\n' + example + '</code></pre></div>');
     });
 
+    $('img[alt="CPP(SHOW)"]').each(function () {
+      var file = $(this).attr('src');
+      var basename = $(this).attr('src').split('/')[$(this).attr('src').split('/').length - 1];
+      var begin = "//<-";
+      var end = "//->";
+      var example = get_cpp_file(file);
+      var lines = example.split('\n');
+      var example_result = '';
+      var ignored = false;
+      var tmp_ignored = false;
+      for(var i = 0; i < lines.length; ++i){
+        var line = lines[i];
+        if (line.indexOf(begin) != -1) {
+          ignored = true;
+          tmp_ignored = true;
+        } else if (line.indexOf(end) != -1) {
+          tmp_ignored = false;
+        }
+        if (!ignored && line.trim().indexOf("//") != 0) {
+          example_result += line + '\n';
+        }
+        ignored = tmp_ignored;
+      }
+      var id = gid++;
+      example = $('<div/>').text(example_result.replace(/[\n]{3,}/g, "\n")).html();
+      $(this).replaceWith('<pre><code style="line-height: 12px; font-size: 90%; width: 100%" class="cpp hljs">' + example + '</code></pre>');
+    });
+
     $('img[alt="CPP(BTN)"]').each(function () {
       var text = $(this).attr('src');
       var name = text.split("|")[0].replace(/_/g, ' ').replace(/\//g, '').replace(/\./g, '');
