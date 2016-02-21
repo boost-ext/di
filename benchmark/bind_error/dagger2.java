@@ -33,11 +33,9 @@ public class dagger2 {
    }
 }
 
-//<-
 /**
  * dagger2.java:13: error: I cannot be provided without an @Provides-annotated method.
  * I build();
  *   ^
  * 1 error
  */
-//->

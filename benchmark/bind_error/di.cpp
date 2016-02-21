@@ -33,7 +33,6 @@ int main() {
   object->dummy();
 }
 
-//<-
 // clang-format off
 /**
  *
@@ -46,6 +45,5 @@ int main() {
  * ../../include/boost/di.hpp:871:2: error: inline function 'boost::di::v1_0_0::concepts::abstract_type<I>::is_not_bound::error' is not defined [-Werror,-Wundefined-inline]
  *  error(_ = "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?");
  *  ^
- *  */
+ */
 // clang-format on
-//->

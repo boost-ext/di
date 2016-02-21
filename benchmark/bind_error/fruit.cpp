@@ -26,7 +26,6 @@ int main() {
   object->dummy();
 }
 
-//<-
 // clang-format off
 /**
   *  In file included from fruit.cpp:1:
@@ -44,4 +43,3 @@ int main() {
   *  return fruit::createComponent();
   */
 // clang-format on
-//->

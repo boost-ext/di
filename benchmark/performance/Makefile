@@ -22,5 +22,5 @@ quick:
 	COMPLEXITY=quick CXXFLAGS=$(CXXFLAGS) ./di.sh
 
 header:
-	$(CXX) $(CXXFLAGS) di_header.cpp
+	$(CXX) $(CXXFLAGS) header.cpp
 

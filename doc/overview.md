@@ -176,16 +176,16 @@ Legend:
 | Errors | compile-time errors | exceptions | compile-time errors + exceptions |
 
 | Library | Bind Interface | ASM x86-64 |
-| ------- | -------------- | ----------------------- |
+| ------- | -------------- | ---------- |
 | Boost.DI | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp) | [8 instructions](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp) |
 | [dicpp] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp) | [50 instructions](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp) |
 | [Google.Fruit] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/fruit.cpp) | [82 instructions](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp) |
 
-| Library | Bind Value |
-| ------- | ---------- |
-| Boost.DI | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp) |
-| [dicpp] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp) |
-| [Google.Fruit] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/fruit.cpp) |
+| Library | Bind Value | ASM x86-64 |
+| ------- | ---------- | ---------- |
+| Boost.DI | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp) | [8 instructions](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp) |
+| [dicpp] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp) | [50 instructions](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp) |
+| [Google.Fruit] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/fruit.cpp) | [82 instructions](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp) |
 
 | Library | Missing Binding Error |
 | ------- | ---------- |
@@ -212,12 +212,12 @@ Legend:
 | ---- | -------- | ----- | ----------------- | ------- |
 |[Create Complex]() | -O2 -s | 0 | 0 | 0 | 0 |
 
-| Create Complex                  | Boost.DI | [dicpp] | [Google.Fruit] |
-| ------------------------------- | -------- | ------- | -------------- |
-| Compilation time                | 0.000s   | 0.000s  | 0.000s (-DFRUIT_NO_LOOP) |
-| Execution time                  | 0ms      | 0ms     | 0ms    |
-| Memory usage / sizeof(injector) | 0b       | 0b      | 0b     |
-| Executable size                 | 0kb      | 0kb     | 0kb    |
+| Create Complex            | Boost.DI | [dicpp] | [Google.Fruit] |
+| ------------------------- | -------- | ------- | -------------- |
+| Compilation time          | 0.000s   | 0.000s  | 0.000s (-DFRUIT_NO_LOOP) |
+| Execution time            | 0ms      | 0ms     | 0ms    |
+| Memory usage (stack/heap) | 0b       | 0b      | 0b     |
+| Executable size           | 0kb      | 0kb     | 0kb    |
 
 ---
 
@@ -234,23 +234,23 @@ Legend:
 | Library | Bind Interface |
 | ------- | ---------- |
 | Boost.DI | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp) |
-| [Google.Guice] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/guice.cpp) |
-| [Dagger2] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dagger2.cpp) |
-| [Ninject] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/Ninject.cpp) |
+| [Google.Guice] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/guice.java) |
+| [Dagger2] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dagger2.java) |
+| [Ninject] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/ninject.cs) |
 
 | Library | Bind Value |
 | ------- | ---------- |
 | Boost.DI | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp) |
-| [Google.Guice] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/guice.cpp) |
-| [Dagger2] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dagger2.cpp) |
-| [Ninject] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/Ninject.cpp) |
+| [Google.Guice] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/guice.java) |
+| [Dagger2] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dagger2.java) |
+| [Ninject] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/ninject.cs) |
 
 | Library | Missing Bindings Error |
 | ------- | ---------- |
 | Boost.DI | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/di.cpp) |
-| [Google.Guice] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/guice.cpp) |
-| [Dagger2] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/dagger2.cpp) |
-| [Ninject] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/Ninject.cpp) |
+| [Google.Guice] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/guice.java) |
+| [Dagger2] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/dagger2.java) |
+| [Ninject] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/ninject.cs) |
 
 ---
 
@@ -269,10 +269,10 @@ Legend:
 | ---- | -------- | ----- | ----------------- | ------- |
 |[Create Complex]() | -O2 -s | 0 | 0 | 0 | 0 |
 
-| Create Complex                  | Boost.DI | [Google.Guice] | [Dagger2] | [Ninject] |
-| ------------------------------- | -------- | -------------- | --------- | --------- |
-| Compilation time                | 0.000s   | 0.000s         | 0.000s    | 0.000s    |
-| Execution time                  | 0ms      | 0ms            | 0ms       | 0ms       |
+| Create Complex    | Boost.DI | [Google.Guice] | [Dagger2] | [Ninject] |
+| ----------------- | -------- | -------------- | --------- | --------- |
+| Compilation time  | 0.000s   | 0.000s         | 0.000s    | 0.000s    |
+| Execution time    | 0ms      | 0ms            | 0ms       | 0ms       |
 
 ---
 

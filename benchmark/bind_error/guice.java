@@ -30,7 +30,6 @@ public class guice {
   }
 }
 
-//<-
 /**
   * Exception in thread "main" com.google.inject.ConfigurationException: Guice configuration errors:
   *
@@ -44,4 +43,3 @@ public class guice {
   * at guice.main(guice.java:15)
   *
  */
-//->
