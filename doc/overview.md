@@ -166,15 +166,15 @@ Legend:
     * [https://github.com/admiyo/CppInject](https://github.com/admiyo/CppInject)
     * [http://codebros.github.io/DiLite](http://codebros.github.io/DiLite)
 
-|         | Boost.DI | [dicpp] | [Google.Fruit] |
-| ------- | -------- | ----- | ------------ |
-| Version | 1.0.0 | HEAD | (pre) 1.1.0 |
-| Language | C++14 | C++11 | C++11 |
-| License | Boost 1.0 | Boost 1.0 | Apache 2.0|
-| Linkage | header only | header only | library |
-| Dependencies | - | boost system/boost thread | - |
-| Approach | compile-time | run-time | compile/run-time |
-| Errors | compile-time errors | exceptions | compile-time errors + exceptions |
+| **Library** | Boost.DI | [dicpp] | [Google.Fruit] |
+| ----------- | -------- | ----- | ------------ |
+| Version     | 1.0.0 | HEAD | (pre) 1.1.0 |
+| Language    | C++14 | C++11 | C++11 |
+| License     | Boost 1.0 | Boost 1.0 | Apache 2.0|
+| Linkage     | header only | header only | library |
+| Dependencies| - | boost system/boost thread | - |
+| Approach    | compile-time | run-time | compile/run-time |
+| Errors      | compile-time errors | exceptions | compile-time errors + exceptions |
 
 | Library | Bind Interface | ASM x86-64 |
 | ------- | -------------- | ---------- |
@@ -196,11 +196,11 @@ Legend:
 
 ---
 
-| Test | CXXFLAGS | Types | Interfaces | Modules | Instances |
-| ---- | -------- | ----- | ---------- | ------- | --------- |
-| [Create Simple](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/create_simple) | -O2 | 101 | 0 | 1 | 699150338 |
+| Test | Types | Interfaces | Modules | Instances |
+| ---- | ----- | ---------- | ------- | --------- |
+| [Create Simple](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/create_simple) | 101 | 0 | 1 | 699150338 |
 
-| Create Simple             | Boost.DI | [dicpp] | [Google.Fruit] |
+| Clang-3.7 -O2             | Boost.DI | [dicpp] | [Google.Fruit] |
 | ------------------------- | -------- | ------- | -------------- |
 | Compilation time          | 0.707s   | 8.226s  | 6.724s (-DFRUIT_NO_LOOP_CHECK) |
 | Execution time            | 0.002s   | -       | -      |
@@ -209,11 +209,11 @@ Legend:
 
 ---
 
-| Test              | CXXFLAGS | Types | Interfaces | Modules | Instances | 
-| ----------------- | -------- | ----- | ---------- | ------- | --------- |
-| [Create Complex](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/create_complex) | -O2      | 211   | 100        | 1       | 5874638529236910091 |
+| Test              | Types | Interfaces | Modules | Instances | 
+| ----------------- | ----- | ---------- | ------- | --------- |
+| [Create Complex](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/create_complex) | 211 | 100 | 1 | 5874638529236910091 |
 
-| Clang-3.7                 | Boost.DI | [dicpp]    | [Google.Fruit] |
+| Clang-3.7 -O2             | Boost.DI | [dicpp]    | [Google.Fruit] |
 | ------------------------- | -------- | ---------- | -------------- |
 | Compilation time          | 3.082s   | 1m14.080s  | 34.461s (-DFRUIT_NO_LOOP_CHECK) |
 | Execution time            | 0.002s   | -          | -    |
@@ -224,14 +224,14 @@ Legend:
 
 * Dependency Injection Libraries
 
-|          | Boost.DI | [Google.Guice] | [Dagger2] | [Ninject] |
-| -------  | -------- | ------------ | ------- | ------- |
-| Language | C++14    | Java 6 | Java | C# |
-| Version  | 1.0.0    | 4.0 | 2.0.2 | 3.0.2 |
-| License  | Boost 1.0 | Apache 2.0 | Apache 2.0 | Apache 2.0|
-| Linkage  | header only | jar | jar | dll |
-| Approach | compile-time | run-time | compile-time (annotation processor) | run-time |
-| Errors   | compile-time errors | exceptions | compile-time errors | exceptions |
+| **Library** | Boost.DI | [Google.Guice] | [Dagger2] | [Ninject] |
+| ----------  | -------- | ------------ | ------- | ------- |
+| Language    | C++14    | Java 6 | Java | C# |
+| Version     | 1.0.0    | 4.0 | 2.0.2 | 3.0.2 |
+| License     | Boost 1.0 | Apache 2.0 | Apache 2.0 | Apache 2.0|
+| Linkage     | header only | jar | jar | dll |
+| Approach    | compile-time | run-time | compile-time (annotation processor) | run-time |
+| Errors      | compile-time errors | exceptions | compile-time errors | exceptions |
 
 | Library | Bind Interface |
 | ------- | ---------- |
@@ -256,25 +256,25 @@ Legend:
 
 ---
 
-| Test | CXXFLAGS | Types | Instances created | Modules |
-| ---- | -------- | ----- | ----------------- | ------- |
-|[Create Simple](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/create_simple) | -O2 | 0 | 0 | 0 | 0 |
+| Test | Types | Interfaces | Modules | Instances |
+| ---- | ----- | ---------- | ------- | --------- |
+| [Create Simple](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/create_simple) | 101 | 0 | 1 | 699150338 |
 
-| Create Simple     | Boost.DI | [Google.Guice] | [Dagger2] | [Ninject] |
-| ----------------- | -------- | -------------- | --------- | --------- |
-| Compilation time  | 0.707s   | 0.625s         | 2.445s    | 0.140s    |
-| Execution time    | 0.002s   | -              | -         | -         |
+| Clang-3.7 -O2/Java8/Mono4.2 | Boost.DI | [Google.Guice] | [Dagger2] | [Ninject] |
+| --------------------------- | -------- | -------------- | --------- | --------- |
+| Compilation time            | 0.707s   | 0.625s         | 2.445s    | 0.140s    |
+| Execution time              | 0.002s   | -              | -         | -         |
 
 ---
 
-| Test | CXXFLAGS | Types | Instances created | Modules |
-| ---- | -------- | ----- | ----------------- | ------- |
-|[Create Complex](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/create_complex) | -O2 | 0 | 0 | 0 | 0 |
+| Test              | Types | Interfaces | Modules | Instances | 
+| ----------------- | ----- | ---------- | ------- | --------- |
+| [Create Complex](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/create_complex) | 211 | 100 | 1 | 5874638529236910091 |
 
-| Create Complex    | Boost.DI | [Google.Guice] | [Dagger2] | [Ninject] |
-| ----------------- | -------- | -------------- | --------- | --------- |
-| Compilation time  | 3.082s   | 0.925s         | 4.283s    | 0.164s    |
-| Execution time    | 0.002s   | -              | -         | -         |
+| Clang-3.7 -O2/Java8/Mono4.2 | Boost.DI | [Google.Guice] | [Dagger2] | [Ninject] |
+| --------------------------- | -------- | -------------- | --------- | --------- |
+| Compilation time            | 3.082s   | 0.925s         | 4.283s    | 0.164s    |
+| Execution time              | 0.002s   | -              | -         | -         |
 
 ---
 
