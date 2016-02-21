@@ -4,14 +4,13 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
+version: 1.0.{build}
 clone_folder: c:\di
-shallow_clone: true
-clone_depth: 1
 
 branches:
   except:
-    - gh-pages
-    - benchmarks
+  - benchmarks
+  - gh-pages
 
 environment:
   fast_finish: true
