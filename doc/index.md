@@ -48,7 +48,6 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
                       };                                      |     shared_ptr<iheater> heater;
                                                               |     unique_ptr<ipump> pump;
                                                               | };
-                                                              |
 ```
 
 ###Do I need Dependency Injection?
@@ -62,15 +61,25 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 
 ###Do I need a Framework/Library?
 
+Depending on a project and its scale you may put up with or without a DI library, however, in any project
+a DI framework may **free you** from maintaining a following (boilerplate) code...
+
 ```cpp
-logger l
+logger logger_;
 renderer renderer_;
-view view_{"", renderer_};
-model model_;
-controller controller_{model_, view_};
-user user_;
+view view_{renderer_, logger_};
+model model_{logger_};
+controller controller_{model_, view_, logger_};
+user user_{loger_};
 app app_{controller_, user_};
 ```
+Notice that **ORDER** in which above dependencies are created is **IMPORTANT** as well as that
+*ANY* change in **ANY** of the objects constructor will **REQUIRE** a change in this code!
+
+DI library, not only let you forget about maintaining above code (See [Create Objects Tree](tutorial.md#1-basic-create-objects-tree)),
+but also can help you with *testing* it (See [Mocks Provider](extensions.md#mocks-provider)), understanding your
+dependencies (See [UML Dumper](extensions.md#uml-dumper)) and even restrict what types
+and how they should be created (See [Constructible Policy](user_guide.md#di_constructible)).
 
 ###Real Life examples?
 
@@ -89,24 +98,24 @@ app app_{controller_, user_};
 
 ###Why Boost.DI?
 
-* Boost.DI has none or minimal run-time overhead - [Run-time performance](#run_time_performance)
-* Boost.DI compiles fast - [Compile-time performance](#compile_time_performance)
-* Boost.DI gives short diagnostic messages - [Error messages](#diagnostic_messages)
-* Boost.DI is not intrusive
-* Boost.DI reduces boilerplate code
-* Boost.DI reduces testing effort
-* Boost.DI gives better control of what and how is created
-* Boost.DI gives better understanding about objects hierarchy
+* Boost.DI has none or minimal run-time overhead (See [Performance](overview.md#performance))
+* Boost.DI compiles fast (See [Performance](overview.md#performance))
+* Boost.DI gives short diagnostic messages (See [Error messages](overview.md#error-messages))
+* Boost.DI is non-intrusive (See [Injections](user_guide.md#injections))
+* Boost.DI reduces boilerplate code (See [Create Objects Tree](tutorial.md#1-basic-create-objects-tree))
+* Boost.DI reduces testing effort (See [Mocks Provider](extensions.md#mocks-provider))
+* Boost.DI gives better control of what and how is created (See [Constructible Policy](user_guide.md#di_constructible))
+* Boost.DI gives better understanding about objects hierarchy (See [UML Dumper](extensions.md#uml-dumper))
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
 
 ###Boost.DI design goals
 
-* Be as fast as possible (see [Performance](overview.md#performance))
-* Compile as fast as possible (see [Performance](overview.md#performance))
-* Give short and intuitive error messages (see [Error messages](overview.md#error_messages))
-* Guarantee object creation at compile-time (see [Performance](overview.md#performance))
-* Be as non-intrusive as possible (see [Performance](overview.md#performance))
-* Be easy to extend (see [Extensions](extensions.md))
+* Be as fast as possible (See [Performance](overview.md#performance))
+* Compile as fast as possible (See [Performance](overview.md#performance))
+* Give short and intuitive error messages (See [Error messages](overview.md#error-messages))
+* Guarantee object creation at compile-time (See [Create Objects Tree](tutorial.md#1-basic-create-objects-tree))
+* Be as non-intrusive as possible (See [Injections](user_guide.md#injections))
+* Be easy to extend (See [Extensions](extensions.md))
 
 ###Acknowledgements
 * Thanks to Bartosz Kalinczuk for code review and tips how to improve `Boost.DI`

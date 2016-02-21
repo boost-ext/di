@@ -32,14 +32,14 @@ git clone https://github.com/boost-experimental/di && cd di && make test
 * [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
 
 ###Configuration
-| Macro                                       | Description |
-| --------------------------------------------|------------ |
-| `BOOST_DI_VERSION`                          | Current version of Boost.DI (ex. 1'0'0) |
-| [`BOOST_DI_CFG`](user_guide.md#di_config)   | Global configuration allows to customize provider and policies |
-| `BOOST_DI_CFG_DIAGNOSTICS_LEVEL`            | Gives more information with error messages |
-| `BOOST_DI_CFG_CTOR_LIMIT_SIZE`              | Limits number of allowed consturctor parameters [0-10, default=10] |
-| `BOOST_DI_NAMESPACE_BEGIN`                  | `namespace boost { namespace di { inline namespace v_1_0_0 {` |
-| `BOOST_DI_NAMESPACE_END`                    | `}}}` |
+| Macro                             | Description |
+| --------------------------------- | ----------- |
+| `BOOST_DI_VERSION`                | Current version of Boost.DI (ex. 1'0'0) |
+| `BOOST_DI_CFG`                    | Global configuration allows to customize provider and policies (See [Config](user_guide.md#di_config)) |
+| `BOOST_DI_CFG_DIAGNOSTICS_LEVEL`  | Gives more information with error messages (See [Error messages](#error-messages)) |
+| `BOOST_DI_CFG_CTOR_LIMIT_SIZE`    | Limits number of allowed consturctor parameters [0-10, default=10] (See [Injections](user_guide.md#injections)) |
+| `BOOST_DI_NAMESPACE_BEGIN`        | `namespace boost { namespace di { inline namespace v_1_0_0 {` |
+| `BOOST_DI_NAMESPACE_END`          | `}}}` |
 
 ###Exception Safety
 
