@@ -226,7 +226,7 @@ Legend:
 
 | **Library** | Boost.DI | [Google.Guice] | [Dagger2] | [Ninject] |
 | ----------  | -------- | ------------ | ------- | ------- |
-| Language    | C++14    | Java 6 | Java | C# |
+| Language    | C++14    | Java | Java | C# |
 | Version     | 1.0.0    | 4.0 | 2.0.2 | 3.0.2 |
 | License     | Boost 1.0 | Apache 2.0 | Apache 2.0 | Apache 2.0|
 | Linkage     | header only | jar | jar | dll |
