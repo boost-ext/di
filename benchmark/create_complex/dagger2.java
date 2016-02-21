@@ -4,10 +4,10 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-import com.google.inject.Inject;
+import javax.inject.Inject;
 import dagger.*;
 
-class X00 { X00() { } }
+class X00 { @Inject X00() { } }
 class X01 { @Inject X01(X00 p1) { } }
 class X02 { @Inject X02(X00 p1, X01 p2) { } }
 class X03 { @Inject X03(X00 p1, X01 p2, X02 p3) { } }

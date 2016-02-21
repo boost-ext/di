@@ -6,6 +6,7 @@
 //
 #include <di/registry.hpp>
 #include <di/injector.hpp>
+#include <di/constructor.hpp>
 
 // clang-format off
 struct X00 { DI_CONSTRUCTOR(X00, ()) { } };

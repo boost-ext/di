@@ -114,7 +114,7 @@ class Module : Ninject.Modules.NinjectModule {
 
 class ninject {
   static void Main(string[] args) {
-    Ninject.IKernel kernel = new StandardKernel(new Module());
+    var kernel = new Ninject.StandardKernel(new Module());
     kernel.Get<Simple>();
   }
 }

@@ -168,10 +168,11 @@ Legend:
 
 |         | Boost.DI | [dicpp] | [Google.Fruit] |
 | ------- | -------- | ----- | ------------ |
-| Version | 1.0.0 | HEAD | 1.0.2 |
+| Version | 1.0.0 | HEAD | (pre) 1.1.0 |
 | Language | C++14 | C++11 | C++11 |
 | License | Boost 1.0 | Boost 1.0 | Apache 2.0|
 | Linkage | header only | header only | library |
+| Dependencies | - | boost system/boost thread | - |
 | Approach | compile-time | run-time | compile/run-time |
 | Errors | compile-time errors | exceptions | compile-time errors + exceptions |
 
@@ -195,29 +196,29 @@ Legend:
 
 ---
 
-| Test | CXXFLAGS | Types | Instances created | Modules |
-| ---- | -------- | ----- | ----------------- | ------- |
-|[Create Simple]() | -O2 -s | 0 | 0 | 0 | 0 |
+| Test | CXXFLAGS | Types | Interfaces | Modules | Instances |
+| ---- | -------- | ----- | ---------- | ------- | --------- |
+| [Create Simple](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/create_simple) | -O2 | 101 | 0 | 1 | 699150338 |
 
-| Create Simple                   | Boost.DI | [dicpp] | [Google.Fruit] |
-| ------------------------------- | -------- | ------- | -------------- |
-| Compilation time                | 0.000s   | 0.000s  | 0.000s (-DFRUIT_NO_LOOP) |
-| Execution time                  | 0ms      | 0ms     | 0ms    |
-| Memory usage / sizeof(injector) | 0b       | 0b      | 0b     |
-| Executable size                 | 0kb      | 0kb     | 0kb    |
+| Create Simple             | Boost.DI | [dicpp] | [Google.Fruit] |
+| ------------------------- | -------- | ------- | -------------- |
+| Compilation time          | 0.707s   | 8.226s  | 6.724s (-DFRUIT_NO_LOOP_CHECK) |
+| Execution time            | 0.002s   | -       | -      |
+| Memory usage (stack/heap) | 1b/0b    | -       | -      |
+| Executable size           | 4.2K     | 119K    | 892kb  |
 
 ---
 
-| Test | CXXFLAGS | Types | Instances created | Modules |
-| ---- | -------- | ----- | ----------------- | ------- |
-|[Create Complex]() | -O2 -s | 0 | 0 | 0 | 0 |
+| Test              | CXXFLAGS | Types | Interfaces | Modules | Instances | 
+| ----------------- | -------- | ----- | ---------- | ------- | --------- |
+| [Create Complex](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/create_complex) | -O2      | 211   | 100        | 1       | 5874638529236910091 |
 
-| Create Complex            | Boost.DI | [dicpp] | [Google.Fruit] |
-| ------------------------- | -------- | ------- | -------------- |
-| Compilation time          | 0.000s   | 0.000s  | 0.000s (-DFRUIT_NO_LOOP) |
-| Execution time            | 0ms      | 0ms     | 0ms    |
-| Memory usage (stack/heap) | 0b       | 0b      | 0b     |
-| Executable size           | 0kb      | 0kb     | 0kb    |
+| Clang-3.7                 | Boost.DI | [dicpp]    | [Google.Fruit] |
+| ------------------------- | -------- | ---------- | -------------- |
+| Compilation time          | 3.082s   | 1m14.080s  | 34.461s (-DFRUIT_NO_LOOP_CHECK) |
+| Execution time            | 0.002s   | -          | -    |
+| Memory usage (stack/heap) | 1b/0b    | -          | -    |
+| Executable size           | 72kb     | 4.4M       | 5.1M |
 
 ---
 
@@ -225,7 +226,8 @@ Legend:
 
 |          | Boost.DI | [Google.Guice] | [Dagger2] | [Ninject] |
 | -------  | -------- | ------------ | ------- | ------- |
-| Language | C++14 | Java 6 | Java | C# |
+| Language | C++14    | Java 6 | Java | C# |
+| Version  | 1.0.0    | 4.0 | 2.0.2 | 3.0.2 |
 | License  | Boost 1.0 | Apache 2.0 | Apache 2.0 | Apache 2.0|
 | Linkage  | header only | jar | jar | dll |
 | Approach | compile-time | run-time | compile-time (annotation processor) | run-time |
@@ -260,8 +262,8 @@ Legend:
 
 | Create Simple     | Boost.DI | [Google.Guice] | [Dagger2] | [Ninject] |
 | ----------------- | -------- | -------------- | --------- | --------- |
-| Compilation time  | 0.000s   | 0.000s         | 0.000s    | 0.000s    |
-| Execution time    | 0ms      | 0ms            | 0ms       | 0ms       |
+| Compilation time  | 0.707s   | 0.625s         | 2.445s    | 0.140s    |
+| Execution time    | 0.002s   | -              | -         | -         |
 
 ---
 
@@ -271,8 +273,8 @@ Legend:
 
 | Create Complex    | Boost.DI | [Google.Guice] | [Dagger2] | [Ninject] |
 | ----------------- | -------- | -------------- | --------- | --------- |
-| Compilation time  | 0.000s   | 0.000s         | 0.000s    | 0.000s    |
-| Execution time    | 0ms      | 0ms            | 0ms       | 0ms       |
+| Compilation time  | 3.082s   | 0.925s         | 4.283s    | 0.164s    |
+| Execution time    | 0.002s   | -              | -         | -         |
 
 ---
 

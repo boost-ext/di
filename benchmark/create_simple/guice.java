@@ -106,7 +106,7 @@ class X96 { @Inject X96(X86 p1, X87 p2, X88 p3, X89 p4, X90 p5, X91 p6, X92 p7, 
 class X97 { @Inject X97(X87 p1, X88 p2, X89 p3, X90 p4, X91 p5, X92 p6, X93 p7, X94 p8, X95 p9, X96 p10) { } }
 class X98 { @Inject X98(X88 p1, X89 p2, X90 p3, X91 p4, X92 p5, X93 p6, X94 p7, X95 p8, X96 p9, X97 p10) { } }
 class X99 { @Inject X99(X89 p1, X90 p2, X91 p3, X92 p4, X93 p5, X94 p6, X95 p7, X96 p8, X97 p9, X98 p10) { } }
-class Simple { @Inject Complex(X99 x99, X89 x89, X79 x79, X69 x69, X59 x59, X49 x49, X39 x39, X29 x29, X19 x19, X09 x09) { } }
+class Simple { @Inject Simple(X99 x99, X89 x89, X79 x79, X69 x69, X59 x59, X49 x49, X39 x39, X29 x29, X19 x19, X09 x09) { } }
 
 class Module extends AbstractModule {
   @Override

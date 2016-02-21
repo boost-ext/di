@@ -4,6 +4,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#include <memory>
 #include <boost/di.hpp>
 
 namespace di = boost::di;
@@ -224,7 +225,7 @@ struct Complex { BOOST_DI_INJECT(Complex, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9
 
 auto module = [] {
   // clang-format off
-  auto injector = di::make_injector(
+  auto i = di::make_injector(
     di::bind<I00>.to<Impl00>()
   , di::bind<I01>.to<Impl01>()
   , di::bind<I02>.to<Impl02>()
@@ -328,11 +329,11 @@ auto module = [] {
   );
   // clang-format off
 
-  using injector_t = decltype(injector);
+  using injector_t = decltype(i);
   struct m : injector_t {
-    using injector_t::injector;
-  } i{static_cast<injector_t &&>(injector)};
-  return i;
+    using injector_t::injector_t;
+  } injector{static_cast<injector_t &&>(i)};
+  return injector;
 };
 
 int main() {
