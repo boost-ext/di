@@ -248,7 +248,6 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
                       };                                      |     shared_ptr&lt;iheater&gt; heater;
                                                               |     unique_ptr&lt;ipump&gt; pump;
                                                               | };
-                                                              |
 </code></pre>
 
 <h3 id="do-i-need-dependency-injection">Do I need Dependency Injection?</h3>
@@ -264,15 +263,23 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 </li>
 </ul>
 <h3 id="do-i-need-a-frameworklibrary">Do I need a Framework/Library?</h3>
-<pre><code class="cpp">logger l
+<p>Depending on a project and its scale you may put up with or without a DI library, however, in any project
+a DI framework may <strong>free you</strong> from maintaining a following (boilerplate) code...</p>
+<pre><code class="cpp">logger logger_;
 renderer renderer_;
-view view_{&quot;&quot;, renderer_};
-model model_;
-controller controller_{model_, view_};
-user user_;
+view view_{renderer_, logger_};
+model model_{logger_};
+controller controller_{model_, view_, logger_};
+user user_{loger_};
 app app_{controller_, user_};
 </code></pre>
 
+<p>Notice that <strong>ORDER</strong> in which above dependencies are created is <strong>IMPORTANT</strong> as well as that
+<em>ANY</em> change in <strong>ANY</strong> of the objects constructor will <strong>REQUIRE</strong> a change in this code!</p>
+<p>DI library, not only let you forget about maintaining above code (See <a href="tutorial/index.html#1-basic-create-objects-tree">Create Objects Tree</a>),
+but also can help you with <em>testing</em> it (See <a href="extensions/index.html#mocks-provider">Mocks Provider</a>), understanding your
+dependencies (See <a href="extensions/index.html#uml-dumper">UML Dumper</a>) and even restrict what types
+and how they should be created (See <a href="user_guide/index.html#di_constructible">Constructible Policy</a>).</p>
 <h3 id="real-life-examples">Real Life examples?</h3>
 <ul>
 <li><a href="https://github.com/krzysztof-jusiak/match3">Match-3 Game</a><ul>
@@ -296,24 +303,24 @@ app app_{controller_, user_};
 </ul>
 <h3 id="why-boostdi">Why Boost.DI?</h3>
 <ul>
-<li>Boost.DI has none or minimal run-time overhead - <a href="#run_time_performance">Run-time performance</a></li>
-<li>Boost.DI compiles fast - <a href="#compile_time_performance">Compile-time performance</a></li>
-<li>Boost.DI gives short diagnostic messages - <a href="#diagnostic_messages">Error messages</a></li>
-<li>Boost.DI is not intrusive</li>
-<li>Boost.DI reduces boilerplate code</li>
-<li>Boost.DI reduces testing effort</li>
-<li>Boost.DI gives better control of what and how is created</li>
-<li>Boost.DI gives better understanding about objects hierarchy
+<li>Boost.DI has none or minimal run-time overhead (See <a href="overview/index.html#performance">Performance</a>)</li>
+<li>Boost.DI compiles fast (See <a href="overview/index.html#performance">Performance</a>)</li>
+<li>Boost.DI gives short diagnostic messages (See <a href="overview/index.html#error-messages">Error messages</a>)</li>
+<li>Boost.DI is non-intrusive (See <a href="user_guide/index.html#injections">Injections</a>)</li>
+<li>Boost.DI reduces boilerplate code (See <a href="tutorial/index.html#1-basic-create-objects-tree">Create Objects Tree</a>)</li>
+<li>Boost.DI reduces testing effort (See <a href="extensions/index.html#mocks-provider">Mocks Provider</a>)</li>
+<li>Boost.DI gives better control of what and how is created (See <a href="user_guide/index.html#di_constructible">Constructible Policy</a>)</li>
+<li>Boost.DI gives better understanding about objects hierarchy (See <a href="extensions/index.html#uml-dumper">UML Dumper</a>)
 <img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></li>
 </ul>
 <h3 id="boostdi-design-goals">Boost.DI design goals</h3>
 <ul>
-<li>Be as fast as possible (see <a href="overview/index.html#performance">Performance</a>)</li>
-<li>Compile as fast as possible (see <a href="overview/index.html#performance">Performance</a>)</li>
-<li>Give short and intuitive error messages (see <a href="overview/index.html#error_messages">Error messages</a>)</li>
-<li>Guarantee object creation at compile-time (see <a href="overview/index.html#performance">Performance</a>)</li>
-<li>Be as non-intrusive as possible (see <a href="overview/index.html#performance">Performance</a>)</li>
-<li>Be easy to extend (see <a href="extensions/index.html">Extensions</a>)</li>
+<li>Be as fast as possible (See <a href="overview/index.html#performance">Performance</a>)</li>
+<li>Compile as fast as possible (See <a href="overview/index.html#performance">Performance</a>)</li>
+<li>Give short and intuitive error messages (See <a href="overview/index.html#error-messages">Error messages</a>)</li>
+<li>Guarantee object creation at compile-time (See <a href="tutorial/index.html#1-basic-create-objects-tree">Create Objects Tree</a>)</li>
+<li>Be as non-intrusive as possible (See <a href="user_guide/index.html#injections">Injections</a>)</li>
+<li>Be easy to extend (See <a href="extensions/index.html">Extensions</a>)</li>
 </ul>
 <h3 id="acknowledgements">Acknowledgements</h3>
 <ul>
@@ -383,5 +390,5 @@ app app_{controller_, user_};
 
 <!--
 MkDocs version : 0.15.0
-Build Date UTC : 2016-02-21 11:30:34.275101
+Build Date UTC : 2016-02-21 12:57:55.574103
 -->
