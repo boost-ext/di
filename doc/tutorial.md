@@ -622,8 +622,8 @@ Check it out here!
 
 <div class="warning">
 <h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
-You can also expose named parameters using 'di::injector<BOOST_DI_EXPOSE((named = Rows) int)>'.
-Different variations of the same type have to be exposed explicitly using `di::injector<model&, std::unique_ptr<model>>`.
+You can also expose named parameters using 'di::injector&lt;BOOST_DI_EXPOSE((named = Rows) int)&gt;'.
+Different variations of the same type have to be exposed explicitly using `di::injector&lt;model&, std::unique_ptr&lt;model&gt;&gt;`.
 Expose uses type erasure and therefore it has small performance overhead!
 </div>
 
