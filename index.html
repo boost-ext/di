@@ -92,7 +92,7 @@
                 
                     <li><a class="toctree-l4" href="#do-i-need-dependency-injection">Do I need Dependency Injection?</a></li>
                 
-                    <li><a class="toctree-l4" href="#do-i-need-a-frameworklibrary">Do I need a Framework/Library?</a></li>
+                    <li><a class="toctree-l4" href="#do-i-need-a-di-frameworklibrary">Do I need a DI Framework/Library?</a></li>
                 
                     <li><a class="toctree-l4" href="#real-life-examples">Real Life examples?</a></li>
                 
@@ -262,7 +262,7 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
 </ul>
 </li>
 </ul>
-<h3 id="do-i-need-a-frameworklibrary">Do I need a Framework/Library?</h3>
+<h3 id="do-i-need-a-di-frameworklibrary">Do I need a DI Framework/Library?</h3>
 <p>Depending on a project and its scale you may put up with or without a DI library, however, in any project
 a DI framework may <strong>free you</strong> from maintaining a following (boilerplate) code...</p>
 <pre><code class="cpp">logger logger_;
@@ -277,9 +277,12 @@ app app_{controller_, user_};
 <p>Notice that <strong>ORDER</strong> in which above dependencies are created is <strong>IMPORTANT</strong> as well as that
 <em>ANY</em> change in <strong>ANY</strong> of the objects constructor will <strong>REQUIRE</strong> a change in this code!</p>
 <p>DI library, not only let you forget about maintaining above code (See <a href="tutorial/index.html#1-basic-create-objects-tree">Create Objects Tree</a>),
-but also can help you with <em>testing</em> it (See <a href="extensions/index.html#mocks-provider">Mocks Provider</a>), understanding your
-dependencies (See <a href="extensions/index.html#uml-dumper">UML Dumper</a>) and even restrict what types
-and how they should be created (See <a href="user_guide/index.html#di_constructible">Constructible Policy</a>).</p>
+but also can help you with...</p>
+<ul>
+<li>Testing it (See <a href="extensions/index.html#mocks-provider">Mocks Provider</a>)</li>
+<li>Understanding your dependencies (See <a href="extensions/index.html#uml-dumper">UML Dumper</a>)</li>
+<li>And even restrict what types and how they should be created (See <a href="user_guide/index.html#di_constructible">Constructible Policy</a>)</li>
+</ul>
 <h3 id="real-life-examples">Real Life examples?</h3>
 <ul>
 <li><a href="https://github.com/krzysztof-jusiak/match3">Match-3 Game</a><ul>
@@ -390,5 +393,5 @@ and how they should be created (See <a href="user_guide/index.html#di_constructi
 
 <!--
 MkDocs version : 0.15.0
-Build Date UTC : 2016-02-21 12:57:55.574103
+Build Date UTC : 2016-02-21 13:12:47.840002
 -->
