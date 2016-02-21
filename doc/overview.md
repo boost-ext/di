@@ -223,13 +223,13 @@ Legend:
 
 * Dependency Injection Libraries
 
-|         | Boost.DI | [Google.Guice] | [Dagger2] | [Ninject] |
-| ------- | -------- | ------------ | ------- | ------- |
+|          | Boost.DI | [Google.Guice] | [Dagger2] | [Ninject] |
+| -------  | -------- | ------------ | ------- | ------- |
 | Language | C++14 | Java 6 | Java | C# |
-| License | Boost 1.0 | Apache 2.0 | Apache 2.0 | Apache 2.0|
-| Linkage | header only | jar | jar | dll |
+| License  | Boost 1.0 | Apache 2.0 | Apache 2.0 | Apache 2.0|
+| Linkage  | header only | jar | jar | dll |
 | Approach | compile-time | run-time | compile-time (annotation processor) | run-time |
-| Errors | compile-time errors | exceptions | compile-time errors | exceptions |
+| Errors   | compile-time errors | exceptions | compile-time errors | exceptions |
 
 | Library | Bind Interface |
 | ------- | ---------- |
@@ -256,18 +256,18 @@ Legend:
 
 | Test | CXXFLAGS | Types | Instances created | Modules |
 | ---- | -------- | ----- | ----------------- | ------- |
-|[Create Simple]() | -O2 -s | 0 | 0 | 0 | 0 |
+|[Create Simple](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/create_simple) | -O2 | 0 | 0 | 0 | 0 |
 
-| Create Simple                   | Boost.DI | [Google.Guice] | [Dagger2] | [Ninject] |
-| ------------------------------- | -------- | -------------- | --------- | --------- |
-| Compilation time                | 0.000s   | 0.000s         | 0.000s    | 0.000s    |
-| Execution time                  | 0ms      | 0ms            | 0ms       | 0ms       |
+| Create Simple     | Boost.DI | [Google.Guice] | [Dagger2] | [Ninject] |
+| ----------------- | -------- | -------------- | --------- | --------- |
+| Compilation time  | 0.000s   | 0.000s         | 0.000s    | 0.000s    |
+| Execution time    | 0ms      | 0ms            | 0ms       | 0ms       |
 
 ---
 
 | Test | CXXFLAGS | Types | Instances created | Modules |
 | ---- | -------- | ----- | ----------------- | ------- |
-|[Create Complex]() | -O2 -s | 0 | 0 | 0 | 0 |
+|[Create Complex](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/create_complex) | -O2 | 0 | 0 | 0 | 0 |
 
 | Create Complex    | Boost.DI | [Google.Guice] | [Dagger2] | [Ninject] |
 | ----------------- | -------- | -------------- | --------- | --------- |

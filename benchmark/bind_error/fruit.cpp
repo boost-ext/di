@@ -30,7 +30,8 @@ int main() {
 /**
   *  In file included from fruit.cpp:1:
   *  In file included from ../../frameworks/google.fruit/include/fruit/fruit.h:25:
-  * ../../frameworks/google.fruit/include/fruit/impl/injection_errors.h:33:3: error: static_assert failed "No explicit binding nor C::Inject definition was found for T."
+  * ../../frameworks/google.fruit/include/fruit/impl/injection_errors.h:33:3: error: static_assert failed
+  * "No explicit binding nor C::Inject definition was found for T."
   *  static_assert(AlwaysFalse<T>::value,
   * ^             ~~~~~~~~~~~~~~~~~~~~~
   * ../../frameworks/google.fruit/include/fruit/impl/component.defn.h:41:9: note: in instantiation of template class
