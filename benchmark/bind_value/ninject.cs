@@ -11,6 +11,6 @@ class ninject {
         Ninject.IKernel kernel = new StandardKernel(new Module());
         kernel.Get<int>();
     }
-} 
+}
 
 
