@@ -415,7 +415,7 @@ test dynamic_binding_ref = [] {
         return injector.template create<impl1_int &>();
       }
     }),
-                                      di::bind<>.to(42));
+                                      di::bind<>().to(42));
 
     return injector.create<i1 &>();
   };
@@ -441,7 +441,7 @@ test dynamic_binding_expose_ref = [] {
         return injector.template create<impl1_int &>();
       }
     }),
-                                                    di::bind<>.to(42));
+                                                    di::bind<>().to(42));
 
     return injector.create<i1 &>();
   };
