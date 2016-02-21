@@ -406,6 +406,58 @@ test bind_chars_to_string = [] {
   expect("str" == injector.create<std::string>());
 };
 
+test dynamic_binding_ref = [] {
+  auto test = [](bool runtime_value) -> i1 & {
+    auto injector = di::make_injector(di::bind<i1>().to([&](const auto &injector) -> i1 & {
+      if (runtime_value) {
+        return injector.template create<impl1 &>();
+      } else {
+        return injector.template create<impl1_int &>();
+      }
+    }),
+                                      di::bind<>.to(42));
+
+    return injector.create<i1 &>();
+  };
+
+  {
+    auto &&object = test(true);
+    expect(dynamic_cast<impl1 *>(&object));
+  }
+
+  {
+    auto &&object = test(false);
+    expect(dynamic_cast<impl1_int *>(&object));
+    expect(42 == dynamic_cast<impl1_int &>(object).i);
+  }
+};
+
+test dynamic_binding_expose_ref = [] {
+  auto test = [](bool runtime_value) -> i1 & {
+    di::injector<i1 &> injector = di::make_injector(di::bind<i1>().to([&](const auto &injector) -> i1 & {
+      if (runtime_value) {
+        return injector.template create<impl1 &>();
+      } else {
+        return injector.template create<impl1_int &>();
+      }
+    }),
+                                                    di::bind<>.to(42));
+
+    return injector.create<i1 &>();
+  };
+
+  {
+    auto &&object = test(true);
+    expect(dynamic_cast<impl1 *>(&object));
+  }
+
+  {
+    auto &&object = test(false);
+    expect(dynamic_cast<impl1_int *>(&object));
+    expect(42 == dynamic_cast<impl1_int &>(object).i);
+  }
+};
+
 test dynamic_binding_using_polymorphic_lambdas_with_dependend_interfaces = [] {
   auto test = [&](bool debug_property) {
     auto injector = make_injector(di::bind<i1>().to([&](const auto &injector) -> std::shared_ptr<i1> {
