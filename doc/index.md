@@ -59,7 +59,7 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
     * [The Clean Code Talks - Don't Look For Things!](http://www.youtube.com/watch?v=RlfLCWKxHJ0)
     * [A New Type of dependency injection](http://www.youtube.com/watch?v=oK_XtfXPkqw)
 
-###Do I need a Framework/Library?
+###Do I need a DI Framework/Library?
 
 Depending on a project and its scale you may put up with or without a DI library, however, in any project
 a DI framework may **free you** from maintaining a following (boilerplate) code...
@@ -77,9 +77,11 @@ Notice that **ORDER** in which above dependencies are created is **IMPORTANT** a
 *ANY* change in **ANY** of the objects constructor will **REQUIRE** a change in this code!
 
 DI library, not only let you forget about maintaining above code (See [Create Objects Tree](tutorial.md#1-basic-create-objects-tree)),
-but also can help you with *testing* it (See [Mocks Provider](extensions.md#mocks-provider)), understanding your
-dependencies (See [UML Dumper](extensions.md#uml-dumper)) and even restrict what types
-and how they should be created (See [Constructible Policy](user_guide.md#di_constructible)).
+but also can help you with...
+
+* Testing it (See [Mocks Provider](extensions.md#mocks-provider))
+* Understanding your dependencies (See [UML Dumper](extensions.md#uml-dumper))
+* And even restrict what types and how they should be created (See [Constructible Policy](user_guide.md#di_constructible))
 
 ###Real Life examples?
 
