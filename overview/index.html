@@ -509,7 +509,7 @@ struct core::injector : TBindings... {
 <td>Version</td>
 <td>1.0.0</td>
 <td>HEAD</td>
-<td>1.0.2</td>
+<td>(pre) 1.1.0</td>
 </tr>
 <tr>
 <td>Language</td>
@@ -528,6 +528,12 @@ struct core::injector : TBindings... {
 <td>header only</td>
 <td>header only</td>
 <td>library</td>
+</tr>
+<tr>
+<td>Dependencies</td>
+<td>-</td>
+<td>boost system/boost thread</td>
+<td>-</td>
 </tr>
 <tr>
 <td>Approach</td>
@@ -624,17 +630,19 @@ struct core::injector : TBindings... {
 <th>Test</th>
 <th>CXXFLAGS</th>
 <th>Types</th>
-<th>Instances created</th>
+<th>Interfaces</th>
 <th>Modules</th>
+<th>Instances</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><a href="">Create Simple</a></td>
-<td>-O2 -s</td>
+<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/create_simple">Create Simple</a></td>
+<td>-O2</td>
+<td>101</td>
 <td>0</td>
-<td>0</td>
-<td>0</td>
+<td>1</td>
+<td>699150338</td>
 </tr>
 </tbody>
 </table>
@@ -650,27 +658,27 @@ struct core::injector : TBindings... {
 <tbody>
 <tr>
 <td>Compilation time</td>
-<td>0.000s</td>
-<td>0.000s</td>
-<td>0.000s (-DFRUIT_NO_LOOP)</td>
+<td>0.707s</td>
+<td>8.226s</td>
+<td>6.724s (-DFRUIT_NO_LOOP_CHECK)</td>
 </tr>
 <tr>
 <td>Execution time</td>
-<td>0ms</td>
-<td>0ms</td>
-<td>0ms</td>
+<td>0.002s</td>
+<td>-</td>
+<td>-</td>
 </tr>
 <tr>
-<td>Memory usage / sizeof(injector)</td>
-<td>0b</td>
-<td>0b</td>
-<td>0b</td>
+<td>Memory usage (stack/heap)</td>
+<td>1b/0b</td>
+<td>-</td>
+<td>-</td>
 </tr>
 <tr>
 <td>Executable size</td>
-<td>0kb</td>
-<td>0kb</td>
-<td>0kb</td>
+<td>4.2K</td>
+<td>119K</td>
+<td>892kb</td>
 </tr>
 </tbody>
 </table>
@@ -681,24 +689,26 @@ struct core::injector : TBindings... {
 <th>Test</th>
 <th>CXXFLAGS</th>
 <th>Types</th>
-<th>Instances created</th>
+<th>Interfaces</th>
 <th>Modules</th>
+<th>Instances</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><a href="">Create Complex</a></td>
-<td>-O2 -s</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
+<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/create_complex">Create Complex</a></td>
+<td>-O2</td>
+<td>211</td>
+<td>100</td>
+<td>1</td>
+<td>5874638529236910091</td>
 </tr>
 </tbody>
 </table>
 <table>
 <thead>
 <tr>
-<th>Create Complex</th>
+<th>Clang-3.7</th>
 <th>Boost.DI</th>
 <th><a href="https://bitbucket.org/cheez/dicpp/wiki/Home">dicpp</a></th>
 <th><a href="https://github.com/google/fruit">Google.Fruit</a></th>
@@ -707,27 +717,27 @@ struct core::injector : TBindings... {
 <tbody>
 <tr>
 <td>Compilation time</td>
-<td>0.000s</td>
-<td>0.000s</td>
-<td>0.000s (-DFRUIT_NO_LOOP)</td>
+<td>3.082s</td>
+<td>1m14.080s</td>
+<td>34.461s (-DFRUIT_NO_LOOP_CHECK)</td>
 </tr>
 <tr>
 <td>Execution time</td>
-<td>0ms</td>
-<td>0ms</td>
-<td>0ms</td>
+<td>0.002s</td>
+<td>-</td>
+<td>-</td>
 </tr>
 <tr>
 <td>Memory usage (stack/heap)</td>
-<td>0b</td>
-<td>0b</td>
-<td>0b</td>
+<td>1b/0b</td>
+<td>-</td>
+<td>-</td>
 </tr>
 <tr>
 <td>Executable size</td>
-<td>0kb</td>
-<td>0kb</td>
-<td>0kb</td>
+<td>72kb</td>
+<td>4.4M</td>
+<td>5.1M</td>
 </tr>
 </tbody>
 </table>
@@ -752,6 +762,13 @@ struct core::injector : TBindings... {
 <td>Java 6</td>
 <td>Java</td>
 <td>C#</td>
+</tr>
+<tr>
+<td>Version</td>
+<td>1.0.0</td>
+<td>4.0</td>
+<td>2.0.2</td>
+<td>3.0.2</td>
 </tr>
 <tr>
 <td>License</td>
@@ -895,17 +912,17 @@ struct core::injector : TBindings... {
 <tbody>
 <tr>
 <td>Compilation time</td>
-<td>0.000s</td>
-<td>0.000s</td>
-<td>0.000s</td>
-<td>0.000s</td>
+<td>0.707s</td>
+<td>0.625s</td>
+<td>2.445s</td>
+<td>0.140s</td>
 </tr>
 <tr>
 <td>Execution time</td>
-<td>0ms</td>
-<td>0ms</td>
-<td>0ms</td>
-<td>0ms</td>
+<td>0.002s</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
 </tr>
 </tbody>
 </table>
@@ -943,17 +960,17 @@ struct core::injector : TBindings... {
 <tbody>
 <tr>
 <td>Compilation time</td>
-<td>0.000s</td>
-<td>0.000s</td>
-<td>0.000s</td>
-<td>0.000s</td>
+<td>3.082s</td>
+<td>0.925s</td>
+<td>4.283s</td>
+<td>0.164s</td>
 </tr>
 <tr>
 <td>Execution time</td>
-<td>0ms</td>
-<td>0ms</td>
-<td>0ms</td>
-<td>0ms</td>
+<td>0.002s</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
 </tr>
 </tbody>
 </table>
