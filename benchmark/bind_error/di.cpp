@@ -1,4 +1,12 @@
+//
+// Copyright (c) 2012-2016 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+//<-
 #include <memory>
+//->
 #include <boost/di.hpp>
 
 namespace di = boost::di;
@@ -8,14 +16,15 @@ struct I {
   virtual void dummy() = 0;
 };
 struct Impl : I {
-  BOOST_DI_INJECT(Impl) {}
   void dummy() override {}
 };
 
 auto module = [] {
+  // clang-format off
   return di::make_injector(
-      // di::bind<I>.to<Impl>()
-      );
+    // di::bind<I>.to<Impl>()
+  );
+  // clang-format on
 };
 
 int main() {
@@ -24,19 +33,19 @@ int main() {
   object->dummy();
 }
 
-// di.cpp:23:38: warning: 'create<I *, 0>' is deprecated: creatable constraint
-// not satisfied [-Wdeprecated-declarations]
-// std::unique_ptr<I> object{injector.create<I *>()};
-//^
-//../../frameworks/boost.di/include/boost/di.hpp:2372:3: note: 'create<I *, 0>'
-//has been explicitly marked deprecated here
-// create
-//^
-//../../frameworks/boost.di/include/boost/di.hpp:1560:2: error: inline function
-//'boost::di::v1_0_0::concepts::abstract_type<I>::is_not_bound::error' is not
-//defined [-Werror,-Wundefined-inline]
-// error(_ = "type is not bound, did you forget to add:
-// 'di::bind<interface>.to<implementation>()'?");
-//^
-//../../frameworks/boost.di/include/boost/di.hpp:1556:41: note: used here
-// return constraint_not_satisfied{}.error();
+//<-
+// clang-format off
+/**
+ *
+ * di.cpp:32:38: warning: 'create<I *, 0>' is deprecated: creatable constraint not satisfied [-Wdeprecated-declarations]
+ *   std::unique_ptr<I> object{injector.create<I *>()};
+ *                                      ^
+ * ../../include/boost/di.hpp:2420:3: note: 'create<I *, 0>' has been explicitly marked deprecated here
+ *   create
+ *   ^
+ * ../../include/boost/di.hpp:871:2: error: inline function 'boost::di::v1_0_0::concepts::abstract_type<I>::is_not_bound::error' is not defined [-Werror,-Wundefined-inline]
+ *  error(_ = "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?");
+ *  ^
+ *  */
+// clang-format on
+//->

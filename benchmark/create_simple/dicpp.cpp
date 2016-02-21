@@ -7,6 +7,7 @@
 #include <di/registry.hpp>
 #include <di/injector.hpp>
 
+// clang-format off
 struct X00 { DI_CONSTRUCTOR(X00, ()) { } };
 struct X01 { DI_CONSTRUCTOR(X01, (X00)) { } };
 struct X02 { DI_CONSTRUCTOR(X02, (X00, X01)) { } };
@@ -107,15 +108,13 @@ struct X96 { DI_CONSTRUCTOR(X96, (X86, X87, X88, X89, X90, X91, X92, X93, X94, X
 struct X97 { DI_CONSTRUCTOR(X97, (X87, X88, X89, X90, X91, X92, X93, X94, X95, X96)) { } };
 struct X98 { DI_CONSTRUCTOR(X98, (X88, X89, X90, X91, X92, X93, X94, X95, X96, X97)) { } };
 struct X99 { DI_CONSTRUCTOR(X99, (X89, X90, X91, X92, X93, X94, X95, X96, X97, X98)) { } };
-
 struct Simple { DI_CONSTRUCTOR(Simple, (X99, X89, X79, X69, X59, X49, X39, X29, X19, X09)) { } };
+// clang-format on
 
-void module(di::registry&) { }
+void module(di::registry&) {}
 
 int main() {
   di::injector injector;
   injector.install(module);
-  for (auto i =0 ; i < 1'000'000; ++i) {
-    injector.construct<Simple>();
-  }
+  injector.construct<Simple>();
 }

@@ -1,3 +1,11 @@
+//
+// Copyright (c) 2012-2016 Krzysztof Jusiak (krzysztof at jusiak dot net)
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+using Ninject;
+
 class X00 { public X00() { } }
 class X01 { public X01(X00 p1) { } }
 class X02 { public X02(X00 p1, X01 p2) { } }
@@ -98,7 +106,6 @@ class X96 { public X96(X86 p1, X87 p2, X88 p3, X89 p4, X90 p5, X91 p6, X92 p7, X
 class X97 { public X97(X87 p1, X88 p2, X89 p3, X90 p4, X91 p5, X92 p6, X93 p7, X94 p8, X95 p9, X96 p10) { } }
 class X98 { public X98(X88 p1, X89 p2, X90 p3, X91 p4, X92 p5, X93 p6, X94 p7, X95 p8, X96 p9, X97 p10) { } }
 class X99 { public X99(X89 p1, X90 p2, X91 p3, X92 p4, X93 p5, X94 p6, X95 p7, X96 p8, X97 p9, X98 p10) { } }
-
 interface I00 { void dummy(); }; class Impl00 : I00 { public Impl00(X00 p1, X01 p2, X02 p3, X03 p4, X04 p5, X05 p6, X06 p7, X07 p8, X08 p9, X09 p10) { } void I00.dummy() { } }
 interface I01 { void dummy(); }; class Impl01 : I01 { public Impl01(X01 p1, X02 p2, X03 p3, X04 p4, X05 p5, X06 p6, X07 p7, X08 p8, X09 p9, X10 p10) { } void I01.dummy() { } }
 interface I02 { void dummy(); }; class Impl02 : I02 { public Impl02(X02 p1, X03 p2, X04 p3, X05 p4, X06 p5, X07 p6, X08 p7, X09 p8, X10 p9, X11 p10) { } void I02.dummy() { } }
@@ -199,7 +206,6 @@ interface I96 { void dummy(); }; class Impl96 : I96 { public Impl96(X96 p1, X97 
 interface I97 { void dummy(); }; class Impl97 : I97 { public Impl97(X97 p1, X98 p2, X99 p3, X00 p4, X01 p5, X02 p6, X03 p7, X04 p8, X05 p9, X06 p10) { } void I97.dummy() { } }
 interface I98 { void dummy(); }; class Impl98 : I98 { public Impl98(X98 p1, X99 p2, X00 p3, X01 p4, X02 p5, X03 p6, X04 p7, X05 p8, X06 p9, X07 p10) { } void I98.dummy() { } }
 interface I99 { void dummy(); }; class Impl99 : I99 { public Impl99(X99 p1, X00 p2, X01 p3, X02 p4, X03 p5, X04 p6, X05 p7, X06 p8, X07 p9, X08 p10) { } void I99.dummy() { } }
-
 class C0 { public C0(I00 p1, I01 p2, I02 p3, I03 p4, I04 p5, I05 p6, I06 p7, I07 p8, I08 p9, I09 p10) { } }
 class C1 { public C1(I10 p1, I11 p2, I12 p3, I13 p4, I14 p5, I15 p6, I16 p7, I17 p8, I18 p9, I19 p10) { } }
 class C2 { public C2(I20 p1, I21 p2, I22 p3, I23 p4, I24 p5, I25 p6, I26 p7, I27 p8, I28 p9, I29 p10) { } }
@@ -210,7 +216,116 @@ class C6 { public C6(I60 p1, I61 p2, I62 p3, I63 p4, I64 p5, I65 p6, I66 p7, I67
 class C7 { public C7(I70 p1, I71 p2, I72 p3, I73 p4, I74 p5, I75 p6, I76 p7, I77 p8, I78 p9, I79 p10) { } }
 class C8 { public C8(I80 p1, I81 p2, I82 p3, I83 p4, I84 p5, I85 p6, I86 p7, I87 p8, I88 p9, I89 p10) { } }
 class C9 { public C9(I90 p1, I91 p2, I92 p3, I93 p4, I94 p5, I95 p6, I96 p7, I97 p8, I98 p9, I99 p10) { } }
+class Complex { public Complex(C0 p1, C1 p2, C2 p3, C3 p4, C4 p5, C5 p6, C6 p7, C7 p8, C8 p9, C9 p10) { } }
 
-class BigComplexity { public BigComplexity(C0 p1, C1 p2, C2 p3, C3 p4, C4 p5, C5 p6, C6 p7, C7 p8, C8 p9, C9 p10) { } }
+class Module : Ninject.Modules.NinjectModule {
+  public override void Load() {
+    Bind<I00>().To<Impl00>();
+    Bind<I01>().To<Impl01>();
+    Bind<I02>().To<Impl02>();
+    Bind<I03>().To<Impl03>();
+    Bind<I04>().To<Impl04>();
+    Bind<I05>().To<Impl05>();
+    Bind<I06>().To<Impl06>();
+    Bind<I07>().To<Impl07>();
+    Bind<I08>().To<Impl08>();
+    Bind<I09>().To<Impl09>();
+    Bind<I10>().To<Impl10>();
+    Bind<I11>().To<Impl11>();
+    Bind<I12>().To<Impl12>();
+    Bind<I13>().To<Impl13>();
+    Bind<I14>().To<Impl14>();
+    Bind<I15>().To<Impl15>();
+    Bind<I16>().To<Impl16>();
+    Bind<I17>().To<Impl17>();
+    Bind<I18>().To<Impl18>();
+    Bind<I19>().To<Impl19>();
+    Bind<I20>().To<Impl20>();
+    Bind<I21>().To<Impl21>();
+    Bind<I22>().To<Impl22>();
+    Bind<I23>().To<Impl23>();
+    Bind<I24>().To<Impl24>();
+    Bind<I25>().To<Impl25>();
+    Bind<I26>().To<Impl26>();
+    Bind<I27>().To<Impl27>();
+    Bind<I28>().To<Impl28>();
+    Bind<I29>().To<Impl29>();
+    Bind<I30>().To<Impl30>();
+    Bind<I31>().To<Impl31>();
+    Bind<I32>().To<Impl32>();
+    Bind<I33>().To<Impl33>();
+    Bind<I34>().To<Impl34>();
+    Bind<I35>().To<Impl35>();
+    Bind<I36>().To<Impl36>();
+    Bind<I37>().To<Impl37>();
+    Bind<I38>().To<Impl38>();
+    Bind<I39>().To<Impl39>();
+    Bind<I40>().To<Impl40>();
+    Bind<I41>().To<Impl41>();
+    Bind<I42>().To<Impl42>();
+    Bind<I43>().To<Impl43>();
+    Bind<I44>().To<Impl44>();
+    Bind<I45>().To<Impl45>();
+    Bind<I46>().To<Impl46>();
+    Bind<I47>().To<Impl47>();
+    Bind<I48>().To<Impl48>();
+    Bind<I49>().To<Impl49>();
+    Bind<I50>().To<Impl50>();
+    Bind<I51>().To<Impl51>();
+    Bind<I52>().To<Impl52>();
+    Bind<I53>().To<Impl53>();
+    Bind<I54>().To<Impl54>();
+    Bind<I55>().To<Impl55>();
+    Bind<I56>().To<Impl56>();
+    Bind<I57>().To<Impl57>();
+    Bind<I58>().To<Impl58>();
+    Bind<I59>().To<Impl59>();
+    Bind<I60>().To<Impl60>();
+    Bind<I61>().To<Impl61>();
+    Bind<I62>().To<Impl62>();
+    Bind<I63>().To<Impl63>();
+    Bind<I64>().To<Impl64>();
+    Bind<I65>().To<Impl65>();
+    Bind<I66>().To<Impl66>();
+    Bind<I67>().To<Impl67>();
+    Bind<I68>().To<Impl68>();
+    Bind<I69>().To<Impl69>();
+    Bind<I70>().To<Impl70>();
+    Bind<I71>().To<Impl71>();
+    Bind<I72>().To<Impl72>();
+    Bind<I73>().To<Impl73>();
+    Bind<I74>().To<Impl74>();
+    Bind<I75>().To<Impl75>();
+    Bind<I76>().To<Impl76>();
+    Bind<I77>().To<Impl77>();
+    Bind<I78>().To<Impl78>();
+    Bind<I79>().To<Impl79>();
+    Bind<I80>().To<Impl80>();
+    Bind<I81>().To<Impl81>();
+    Bind<I82>().To<Impl82>();
+    Bind<I83>().To<Impl83>();
+    Bind<I84>().To<Impl84>();
+    Bind<I85>().To<Impl85>();
+    Bind<I86>().To<Impl86>();
+    Bind<I87>().To<Impl87>();
+    Bind<I88>().To<Impl88>();
+    Bind<I89>().To<Impl89>();
+    Bind<I90>().To<Impl90>();
+    Bind<I91>().To<Impl91>();
+    Bind<I92>().To<Impl92>();
+    Bind<I93>().To<Impl93>();
+    Bind<I94>().To<Impl94>();
+    Bind<I95>().To<Impl95>();
+    Bind<I96>().To<Impl96>();
+    Bind<I97>().To<Impl97>();
+    Bind<I98>().To<Impl98>();
+    Bind<I99>().To<Impl99>();
+  }
+}
 
-
+class ninject {
+  static void Main(string[] args) {
+    Ninject.IKernel kernel = new StandardKernel(new Module());
+    kernel.Get<Complex>();
+  }
+}

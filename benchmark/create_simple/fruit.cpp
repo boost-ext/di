@@ -6,6 +6,7 @@
 //
 #include <fruit/fruit.h>
 
+// clang-format off
 struct X00 { INJECT(X00()) { } };
 struct X01 { INJECT(X01(X00)) { } };
 struct X02 { INJECT(X02(X00, X01)) { } };
@@ -106,16 +107,12 @@ struct X96 { INJECT(X96(X86, X87, X88, X89, X90, X91, X92, X93, X94, X95)) { } }
 struct X97 { INJECT(X97(X87, X88, X89, X90, X91, X92, X93, X94, X95, X96)) { } };
 struct X98 { INJECT(X98(X88, X89, X90, X91, X92, X93, X94, X95, X96, X97)) { } };
 struct X99 { INJECT(X99(X89, X90, X91, X92, X93, X94, X95, X96, X97, X98)) { } };
-
 struct Simple { INJECT(Simple(X99, X89, X79, X69, X59, X49, X39, X29, X19, X09)) { } };
+// clang-format on
 
-fruit::Component<Simple> module() {
-  return fruit::createComponent();
-}
+fruit::Component<Simple> module() { return fruit::createComponent(); }
 
 int main() {
   fruit::Injector<Simple> injector{module()};
-  for (auto i =0 ; i < 1'000'000; ++i) {
-      injector.get<Simple>();
-  }
+  injector.get<Simple>();
 }

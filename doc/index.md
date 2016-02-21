@@ -101,7 +101,7 @@ but also can help you with...
 ###Why Boost.DI?
 
 * Boost.DI has none or minimal run-time overhead (See [Performance](overview.md#performance))
-* Boost.DI compiles fast (See [Performance](overview.md#performance))
+* Boost.DI compiles fast (See [Benchmarks](overview.md#benchmarks))
 * Boost.DI gives short diagnostic messages (See [Error messages](overview.md#error-messages))
 * Boost.DI is non-intrusive (See [Injections](user_guide.md#injections))
 * Boost.DI reduces boilerplate code (See [Create Objects Tree](tutorial.md#1-basic-create-objects-tree))
@@ -113,7 +113,7 @@ but also can help you with...
 ###Boost.DI design goals
 
 * Be as fast as possible (See [Performance](overview.md#performance))
-* Compile as fast as possible (See [Performance](overview.md#performance))
+* Compile as fast as possible (See [Benchmarks](overview.md#benchmarks))
 * Give short and intuitive error messages (See [Error messages](overview.md#error-messages))
 * Guarantee object creation at compile-time (See [Create Objects Tree](tutorial.md#1-basic-create-objects-tree))
 * Be as non-intrusive as possible (See [Injections](user_guide.md#injections))

@@ -175,11 +175,11 @@ Legend:
 | Approach | compile-time | run-time | compile/run-time |
 | Errors | compile-time errors | exceptions | compile-time errors + exceptions |
 
-| Library | Bind Interface |
-| ------- | ---------- |
-| Boost.DI | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp) |
-| [dicpp] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp) |
-| [Google.Fruit] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/fruit.cpp) |
+| Library | Bind Interface | ASM x86-64 |
+| ------- | -------------- | ----------------------- |
+| Boost.DI | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp) | [8 instructions](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp) |
+| [dicpp] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp) | [50 instructions](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp) |
+| [Google.Fruit] | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/fruit.cpp) | [82 instructions](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp) |
 
 | Library | Bind Value |
 | ------- | ---------- |

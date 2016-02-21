@@ -9,6 +9,7 @@
 #include <di/injector.hpp>
 #include <di/constructor.hpp>
 
+// clang-format off
 struct X00 { DI_CONSTRUCTOR(X00, ()) { } };
 struct X01 { DI_CONSTRUCTOR(X01, (X00)) { } };
 struct X02 { DI_CONSTRUCTOR(X02, (X00, X01)) { } };
@@ -109,7 +110,6 @@ struct X96 { DI_CONSTRUCTOR(X96, (X86, X87, X88, X89, X90, X91, X92, X93, X94, X
 struct X97 { DI_CONSTRUCTOR(X97, (X87, X88, X89, X90, X91, X92, X93, X94, X95, X96)) { } };
 struct X98 { DI_CONSTRUCTOR(X98, (X88, X89, X90, X91, X92, X93, X94, X95, X96, X97)) { } };
 struct X99 { DI_CONSTRUCTOR(X99, (X89, X90, X91, X92, X93, X94, X95, X96, X97, X98)) { } };
-
 struct I00 { virtual ~I00() noexcept = default; virtual void dummy() = 0; }; struct Impl00 : I00 { DI_CONSTRUCTOR(Impl00, (X00, X01, X02, X03, X04, X05, X06, X07, X08, X09)) { } void dummy() override { } };
 struct I01 { virtual ~I01() noexcept = default; virtual void dummy() = 0; }; struct Impl01 : I01 { DI_CONSTRUCTOR(Impl01, (X01, X02, X03, X04, X05, X06, X07, X08, X09, X10)) { } void dummy() override { } };
 struct I02 { virtual ~I02() noexcept = default; virtual void dummy() = 0; }; struct Impl02 : I02 { DI_CONSTRUCTOR(Impl02, (X02, X03, X04, X05, X06, X07, X08, X09, X10, X11)) { } void dummy() override { } };
@@ -210,7 +210,6 @@ struct I96 { virtual ~I96() noexcept = default; virtual void dummy() = 0; }; str
 struct I97 { virtual ~I97() noexcept = default; virtual void dummy() = 0; }; struct Impl97 : I97 { DI_CONSTRUCTOR(Impl97, (X97, X98, X99, X00, X01, X02, X03, X04, X05, X06)) { } void dummy() override { } };
 struct I98 { virtual ~I98() noexcept = default; virtual void dummy() = 0; }; struct Impl98 : I98 { DI_CONSTRUCTOR(Impl98, (X98, X99, X00, X01, X02, X03, X04, X05, X06, X07)) { } void dummy() override { } };
 struct I99 { virtual ~I99() noexcept = default; virtual void dummy() = 0; }; struct Impl99 : I99 { DI_CONSTRUCTOR(Impl99, (X99, X00, X01, X02, X03, X04, X05, X06, X07, X08)) { } void dummy() override { } };
-
 struct C0 { DI_CONSTRUCTOR(C0, (std::unique_ptr<I00>, std::unique_ptr<I01>, std::unique_ptr<I02>, std::unique_ptr<I03>, std::unique_ptr<I04>, std::unique_ptr<I05>, std::unique_ptr<I06>, std::unique_ptr<I07>, std::unique_ptr<I08>, std::unique_ptr<I09>)) { } };
 struct C1 { DI_CONSTRUCTOR(C1, (std::unique_ptr<I10>, std::unique_ptr<I11>, std::unique_ptr<I12>, std::unique_ptr<I13>, std::unique_ptr<I14>, std::unique_ptr<I15>, std::unique_ptr<I16>, std::unique_ptr<I17>, std::unique_ptr<I18>, std::unique_ptr<I19>)) { } };
 struct C2 { DI_CONSTRUCTOR(C2, (std::unique_ptr<I20>, std::unique_ptr<I21>, std::unique_ptr<I22>, std::unique_ptr<I23>, std::unique_ptr<I24>, std::unique_ptr<I25>, std::unique_ptr<I26>, std::unique_ptr<I27>, std::unique_ptr<I28>, std::unique_ptr<I29>)) { } };
@@ -221,8 +220,8 @@ struct C6 { DI_CONSTRUCTOR(C6, (std::unique_ptr<I60>, std::unique_ptr<I61>, std:
 struct C7 { DI_CONSTRUCTOR(C7, (std::unique_ptr<I70>, std::unique_ptr<I71>, std::unique_ptr<I72>, std::unique_ptr<I73>, std::unique_ptr<I74>, std::unique_ptr<I75>, std::unique_ptr<I76>, std::unique_ptr<I77>, std::unique_ptr<I78>, std::unique_ptr<I79>)) { } };
 struct C8 { DI_CONSTRUCTOR(C8, (std::unique_ptr<I80>, std::unique_ptr<I81>, std::unique_ptr<I82>, std::unique_ptr<I83>, std::unique_ptr<I84>, std::unique_ptr<I85>, std::unique_ptr<I86>, std::unique_ptr<I87>, std::unique_ptr<I88>, std::unique_ptr<I89>)) { } };
 struct C9 { DI_CONSTRUCTOR(C9, (std::unique_ptr<I90>, std::unique_ptr<I91>, std::unique_ptr<I92>, std::unique_ptr<I93>, std::unique_ptr<I94>, std::unique_ptr<I95>, std::unique_ptr<I96>, std::unique_ptr<I97>, std::unique_ptr<I98>, std::unique_ptr<I99>)) { } };
-
-struct BigComplexity { DI_CONSTRUCTOR(BigComplexity, (C0, C1, C2, C3, C4, C5, C6, C7, C8, C9)) { } };
+struct Complex { DI_CONSTRUCTOR(Complex, (C0, C1, C2, C3, C4, C5, C6, C7, C8, C9)) { } };
+// clang-format on
 
 void module(di::registry& r) {
   r.add(r.type<I00>().implementation<Impl00>());
@@ -330,5 +329,5 @@ void module(di::registry& r) {
 int main() {
   di::injector injector;
   injector.install(module);
-  injector.construct<BigComplexity>();
+  injector.construct<Complex>();
 }

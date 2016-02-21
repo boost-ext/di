@@ -8,6 +8,7 @@
 
 namespace di = boost::di;
 
+// clang-format off
 struct X00 { BOOST_DI_INJECT(X00) { } };
 struct X01 { BOOST_DI_INJECT(X01, X00) { } };
 struct X02 { BOOST_DI_INJECT(X02, X00, X01) { } };
@@ -108,17 +109,12 @@ struct X96 { BOOST_DI_INJECT(X96, X86, X87, X88, X89, X90, X91, X92, X93, X94, X
 struct X97 { BOOST_DI_INJECT(X97, X87, X88, X89, X90, X91, X92, X93, X94, X95, X96) { } };
 struct X98 { BOOST_DI_INJECT(X98, X88, X89, X90, X91, X92, X93, X94, X95, X96, X97) { } };
 struct X99 { BOOST_DI_INJECT(X99, X89, X90, X91, X92, X93, X94, X95, X96, X97, X98) { } };
-
 struct Simple { BOOST_DI_INJECT(Simple, X99, X89, X79, X69, X59, X49, X39, X29, X19, X09) { } };
+// clang-format on
 
-auto module = [] {
-  return di::make_injector();
-};
+auto module = [] { return di::make_injector(); };
 
 int main() {
   auto injector = module();
-  for (auto i =0 ; i < 1'000'000; ++i) {
-    injector.create<Simple>();
-  }
+  injector.create<Simple>();
 }
-

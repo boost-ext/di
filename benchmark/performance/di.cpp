@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012-2015 Krzysztof Jusiak (krzysztof at jusiak dot net)
+// Copyright (c) 2012-2016 Krzysztof Jusiak (krzysztof at jusiak dot net)
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -1417,11 +1417,8 @@ struct c0 {
   BOOST_DI_INJECT(c0
 #if !defined(NO_CTOR_INTERFACES1)
                   ,
-                  std::unique_ptr<i00>, std::unique_ptr<i01>,
-                  std::unique_ptr<i02>, std::unique_ptr<i03>,
-                  std::unique_ptr<i04>, std::unique_ptr<i05>,
-                  std::unique_ptr<i06>, std::unique_ptr<i07>,
-                  std::unique_ptr<i08>, std::unique_ptr<i09>
+                  std::unique_ptr<i00>, std::unique_ptr<i01>, std::unique_ptr<i02>, std::unique_ptr<i03>, std::unique_ptr<i04>,
+                  std::unique_ptr<i05>, std::unique_ptr<i06>, std::unique_ptr<i07>, std::unique_ptr<i08>, std::unique_ptr<i09>
 #endif
                   ) {
   }
@@ -1431,11 +1428,8 @@ struct c1 {
   BOOST_DI_INJECT(c1
 #if !defined(NO_CTOR_INTERFACES2)
                   ,
-                  std::unique_ptr<i10>, std::unique_ptr<i11>,
-                  std::unique_ptr<i12>, std::unique_ptr<i13>,
-                  std::unique_ptr<i14>, std::unique_ptr<i15>,
-                  std::unique_ptr<i16>, std::unique_ptr<i17>,
-                  std::unique_ptr<i18>, std::unique_ptr<i19>
+                  std::unique_ptr<i10>, std::unique_ptr<i11>, std::unique_ptr<i12>, std::unique_ptr<i13>, std::unique_ptr<i14>,
+                  std::unique_ptr<i15>, std::unique_ptr<i16>, std::unique_ptr<i17>, std::unique_ptr<i18>, std::unique_ptr<i19>
 #endif
                   ) {
   }
@@ -1445,11 +1439,8 @@ struct c2 {
   BOOST_DI_INJECT(c2
 #if !defined(NO_CTOR_INTERFACES3)
                   ,
-                  std::unique_ptr<i20>, std::unique_ptr<i21>,
-                  std::unique_ptr<i22>, std::unique_ptr<i23>,
-                  std::unique_ptr<i24>, std::unique_ptr<i25>,
-                  std::unique_ptr<i26>, std::unique_ptr<i27>,
-                  std::unique_ptr<i28>, std::unique_ptr<i29>
+                  std::unique_ptr<i20>, std::unique_ptr<i21>, std::unique_ptr<i22>, std::unique_ptr<i23>, std::unique_ptr<i24>,
+                  std::unique_ptr<i25>, std::unique_ptr<i26>, std::unique_ptr<i27>, std::unique_ptr<i28>, std::unique_ptr<i29>
 #endif
                   ) {
   }
@@ -1459,11 +1450,8 @@ struct c3 {
   BOOST_DI_INJECT(c3
 #if !defined(NO_CTOR_INTERFACES4)
                   ,
-                  std::unique_ptr<i30>, std::unique_ptr<i31>,
-                  std::unique_ptr<i32>, std::unique_ptr<i33>,
-                  std::unique_ptr<i34>, std::unique_ptr<i35>,
-                  std::unique_ptr<i36>, std::unique_ptr<i37>,
-                  std::unique_ptr<i38>, std::unique_ptr<i39>
+                  std::unique_ptr<i30>, std::unique_ptr<i31>, std::unique_ptr<i32>, std::unique_ptr<i33>, std::unique_ptr<i34>,
+                  std::unique_ptr<i35>, std::unique_ptr<i36>, std::unique_ptr<i37>, std::unique_ptr<i38>, std::unique_ptr<i39>
 #endif
                   ) {
   }
@@ -1473,11 +1461,8 @@ struct c4 {
   BOOST_DI_INJECT(c4
 #if !defined(NO_CTOR_INTERFACES5)
                   ,
-                  std::unique_ptr<i40>, std::unique_ptr<i41>,
-                  std::unique_ptr<i42>, std::unique_ptr<i43>,
-                  std::unique_ptr<i44>, std::unique_ptr<i45>,
-                  std::unique_ptr<i46>, std::unique_ptr<i47>,
-                  std::unique_ptr<i48>, std::unique_ptr<i49>
+                  std::unique_ptr<i40>, std::unique_ptr<i41>, std::unique_ptr<i42>, std::unique_ptr<i43>, std::unique_ptr<i44>,
+                  std::unique_ptr<i45>, std::unique_ptr<i46>, std::unique_ptr<i47>, std::unique_ptr<i48>, std::unique_ptr<i49>
 #endif
                   ) {
   }
@@ -1487,11 +1472,8 @@ struct c5 {
   BOOST_DI_INJECT(c5
 #if !defined(NO_CTOR_INTERFACES6)
                   ,
-                  std::unique_ptr<i50>, std::unique_ptr<i51>,
-                  std::unique_ptr<i52>, std::unique_ptr<i53>,
-                  std::unique_ptr<i54>, std::unique_ptr<i55>,
-                  std::unique_ptr<i56>, std::unique_ptr<i57>,
-                  std::unique_ptr<i58>, std::unique_ptr<i59>
+                  std::unique_ptr<i50>, std::unique_ptr<i51>, std::unique_ptr<i52>, std::unique_ptr<i53>, std::unique_ptr<i54>,
+                  std::unique_ptr<i55>, std::unique_ptr<i56>, std::unique_ptr<i57>, std::unique_ptr<i58>, std::unique_ptr<i59>
 #endif
                   ) {
   }
@@ -1501,11 +1483,8 @@ struct c6 {
   BOOST_DI_INJECT(c6
 #if !defined(NO_CTOR_INTERFACES7)
                   ,
-                  std::unique_ptr<i60>, std::unique_ptr<i61>,
-                  std::unique_ptr<i62>, std::unique_ptr<i63>,
-                  std::unique_ptr<i64>, std::unique_ptr<i65>,
-                  std::unique_ptr<i66>, std::unique_ptr<i67>,
-                  std::unique_ptr<i68>, std::unique_ptr<i69>
+                  std::unique_ptr<i60>, std::unique_ptr<i61>, std::unique_ptr<i62>, std::unique_ptr<i63>, std::unique_ptr<i64>,
+                  std::unique_ptr<i65>, std::unique_ptr<i66>, std::unique_ptr<i67>, std::unique_ptr<i68>, std::unique_ptr<i69>
 #endif
                   ) {
   }
@@ -1515,11 +1494,8 @@ struct c7 {
   BOOST_DI_INJECT(c7
 #if !defined(NO_CTOR_INTERFACES8)
                   ,
-                  std::unique_ptr<i70>, std::unique_ptr<i71>,
-                  std::unique_ptr<i72>, std::unique_ptr<i73>,
-                  std::unique_ptr<i74>, std::unique_ptr<i75>,
-                  std::unique_ptr<i76>, std::unique_ptr<i77>,
-                  std::unique_ptr<i78>, std::unique_ptr<i79>
+                  std::unique_ptr<i70>, std::unique_ptr<i71>, std::unique_ptr<i72>, std::unique_ptr<i73>, std::unique_ptr<i74>,
+                  std::unique_ptr<i75>, std::unique_ptr<i76>, std::unique_ptr<i77>, std::unique_ptr<i78>, std::unique_ptr<i79>
 #endif
                   ) {
   }
@@ -1529,11 +1505,8 @@ struct c8 {
   BOOST_DI_INJECT(c8
 #if !defined(NO_CTOR_INTERFACES9)
                   ,
-                  std::unique_ptr<i80>, std::unique_ptr<i81>,
-                  std::unique_ptr<i82>, std::unique_ptr<i83>,
-                  std::unique_ptr<i84>, std::unique_ptr<i85>,
-                  std::unique_ptr<i86>, std::unique_ptr<i87>,
-                  std::unique_ptr<i88>, std::unique_ptr<i89>
+                  std::unique_ptr<i80>, std::unique_ptr<i81>, std::unique_ptr<i82>, std::unique_ptr<i83>, std::unique_ptr<i84>,
+                  std::unique_ptr<i85>, std::unique_ptr<i86>, std::unique_ptr<i87>, std::unique_ptr<i88>, std::unique_ptr<i89>
 #endif
                   ) {
   }
@@ -1543,11 +1516,8 @@ struct c9 {
   BOOST_DI_INJECT(c9
 #if !defined(NO_CTOR_INTERFACES10)
                   ,
-                  std::unique_ptr<i90>, std::unique_ptr<i91>,
-                  std::unique_ptr<i92>, std::unique_ptr<i93>,
-                  std::unique_ptr<i94>, std::unique_ptr<i95>,
-                  std::unique_ptr<i96>, std::unique_ptr<i97>,
-                  std::unique_ptr<i98>, std::unique_ptr<i99>
+                  std::unique_ptr<i90>, std::unique_ptr<i91>, std::unique_ptr<i92>, std::unique_ptr<i93>, std::unique_ptr<i94>,
+                  std::unique_ptr<i95>, std::unique_ptr<i96>, std::unique_ptr<i97>, std::unique_ptr<i98>, std::unique_ptr<i99>
 #endif
                   ) {
   }
@@ -1563,241 +1533,181 @@ struct big_complexity {
   BOOST_DI_INJECT(big_complexity, c0, c1, c2, c3, c4, c5, c6, c7, c8, c9) {}
 };
 
-#define RETURN(...)                                                            \
-  auto m = __VA_ARGS__;                                                        \
-  using t = decltype(m);                                                       \
-  struct i : t {                                                               \
-    using t::t;                                                                \
-  };                                                                           \
+#define RETURN(...)      \
+  auto m = __VA_ARGS__;  \
+  using t = decltype(m); \
+  struct i : t {         \
+    using t::t;          \
+  };                     \
   return i { static_cast<t &&>(m) }
 
 #if defined(MODULE1)
 EXPOSED_OR_AUTO(di::injector<c0>, auto) module1() noexcept {
   RETURN(di::make_injector(
-      BIND_INTERFACES1(
-          di::bind<i00>().to<impl00>(), di::bind<i01>().to<impl01>(),
-          di::bind<i02>().to<impl02>(), di::bind<i03>().to<impl03>(),
-          di::bind<i04>().to<impl04>(), di::bind<i05>().to<impl05>(),
-          di::bind<i06>().to<impl06>(), di::bind<i07>().to<impl07>(),
-          di::bind<i08>().to<impl08>(), di::bind<i09>().to<impl09>())
-          BIND_OTHERS1(
-              di::bind<x00>.in(di::unique), di::bind<x01>.in(di::unique),
-              di::bind<x02>.in(di::unique), di::bind<x03>.in(di::unique),
-              di::bind<x04>.in(di::unique), di::bind<x05>.in(di::unique),
-              di::bind<x06>.in(di::unique), di::bind<x07>.in(di::unique),
-              di::bind<x08>.in(di::unique), di::bind<x09>.in(di::unique),
-              di::bind<y00>.in(di::unique), di::bind<y01>.in(di::unique),
-              di::bind<y02>.in(di::unique), di::bind<y03>.in(di::unique),
-              di::bind<y04>.in(di::unique), di::bind<y05>.in(di::unique),
-              di::bind<y06>.in(di::unique), di::bind<y07>.in(di::unique),
-              di::bind<y08>.in(di::unique), di::bind<y09>.in(di::unique))));
+      BIND_INTERFACES1(di::bind<i00>().to<impl00>(), di::bind<i01>().to<impl01>(), di::bind<i02>().to<impl02>(),
+                       di::bind<i03>().to<impl03>(), di::bind<i04>().to<impl04>(), di::bind<i05>().to<impl05>(),
+                       di::bind<i06>().to<impl06>(), di::bind<i07>().to<impl07>(), di::bind<i08>().to<impl08>(),
+                       di::bind<i09>().to<impl09>())
+          BIND_OTHERS1(di::bind<x00>.in(di::unique), di::bind<x01>.in(di::unique), di::bind<x02>.in(di::unique),
+                       di::bind<x03>.in(di::unique), di::bind<x04>.in(di::unique), di::bind<x05>.in(di::unique),
+                       di::bind<x06>.in(di::unique), di::bind<x07>.in(di::unique), di::bind<x08>.in(di::unique),
+                       di::bind<x09>.in(di::unique), di::bind<y00>.in(di::unique), di::bind<y01>.in(di::unique),
+                       di::bind<y02>.in(di::unique), di::bind<y03>.in(di::unique), di::bind<y04>.in(di::unique),
+                       di::bind<y05>.in(di::unique), di::bind<y06>.in(di::unique), di::bind<y07>.in(di::unique),
+                       di::bind<y08>.in(di::unique), di::bind<y09>.in(di::unique))));
 };
 #endif
 
 #if defined(MODULE2)
 EXPOSED_OR_AUTO(di::injector<c1>, auto) module2() noexcept {
   RETURN(di::make_injector(
-      BIND_INTERFACES2(
-          di::bind<i10>().to<impl10>(), di::bind<i11>().to<impl11>(),
-          di::bind<i12>().to<impl12>(), di::bind<i13>().to<impl13>(),
-          di::bind<i14>().to<impl14>(), di::bind<i15>().to<impl15>(),
-          di::bind<i16>().to<impl16>(), di::bind<i17>().to<impl17>(),
-          di::bind<i18>().to<impl18>(), di::bind<i19>().to<impl19>())
-          BIND_OTHERS2(
-              di::bind<x10>.in(di::unique), di::bind<x11>.in(di::unique),
-              di::bind<x12>.in(di::unique), di::bind<x13>.in(di::unique),
-              di::bind<x14>.in(di::unique), di::bind<x15>.in(di::unique),
-              di::bind<x16>.in(di::unique), di::bind<x17>.in(di::unique),
-              di::bind<x18>.in(di::unique), di::bind<x19>.in(di::unique),
-              di::bind<y10>.in(di::unique), di::bind<y11>.in(di::unique),
-              di::bind<y12>.in(di::unique), di::bind<y13>.in(di::unique),
-              di::bind<y14>.in(di::unique), di::bind<y15>.in(di::unique),
-              di::bind<y16>.in(di::unique), di::bind<y17>.in(di::unique),
-              di::bind<y18>.in(di::unique), di::bind<y19>.in(di::unique))));
+      BIND_INTERFACES2(di::bind<i10>().to<impl10>(), di::bind<i11>().to<impl11>(), di::bind<i12>().to<impl12>(),
+                       di::bind<i13>().to<impl13>(), di::bind<i14>().to<impl14>(), di::bind<i15>().to<impl15>(),
+                       di::bind<i16>().to<impl16>(), di::bind<i17>().to<impl17>(), di::bind<i18>().to<impl18>(),
+                       di::bind<i19>().to<impl19>())
+          BIND_OTHERS2(di::bind<x10>.in(di::unique), di::bind<x11>.in(di::unique), di::bind<x12>.in(di::unique),
+                       di::bind<x13>.in(di::unique), di::bind<x14>.in(di::unique), di::bind<x15>.in(di::unique),
+                       di::bind<x16>.in(di::unique), di::bind<x17>.in(di::unique), di::bind<x18>.in(di::unique),
+                       di::bind<x19>.in(di::unique), di::bind<y10>.in(di::unique), di::bind<y11>.in(di::unique),
+                       di::bind<y12>.in(di::unique), di::bind<y13>.in(di::unique), di::bind<y14>.in(di::unique),
+                       di::bind<y15>.in(di::unique), di::bind<y16>.in(di::unique), di::bind<y17>.in(di::unique),
+                       di::bind<y18>.in(di::unique), di::bind<y19>.in(di::unique))));
 };
 #endif
 
 #if defined(MODULE3)
 EXPOSED_OR_AUTO(di::injector<c2>, auto) module3() noexcept {
   RETURN(di::make_injector(
-      BIND_INTERFACES3(
-          di::bind<i20>().to<impl20>(), di::bind<i21>().to<impl21>(),
-          di::bind<i22>().to<impl22>(), di::bind<i23>().to<impl23>(),
-          di::bind<i24>().to<impl24>(), di::bind<i25>().to<impl25>(),
-          di::bind<i26>().to<impl26>(), di::bind<i27>().to<impl27>(),
-          di::bind<i28>().to<impl28>(), di::bind<i29>().to<impl29>())
-          BIND_OTHERS3(
-              di::bind<x20>.in(di::unique), di::bind<x21>.in(di::unique),
-              di::bind<x22>.in(di::unique), di::bind<x23>.in(di::unique),
-              di::bind<x24>.in(di::unique), di::bind<x25>.in(di::unique),
-              di::bind<x26>.in(di::unique), di::bind<x27>.in(di::unique),
-              di::bind<x28>.in(di::unique), di::bind<x29>.in(di::unique),
-              di::bind<y20>.in(di::unique), di::bind<y21>.in(di::unique),
-              di::bind<y22>.in(di::unique), di::bind<y23>.in(di::unique),
-              di::bind<y24>.in(di::unique), di::bind<y25>.in(di::unique),
-              di::bind<y26>.in(di::unique), di::bind<y27>.in(di::unique),
-              di::bind<y28>.in(di::unique), di::bind<y29>.in(di::unique))));
+      BIND_INTERFACES3(di::bind<i20>().to<impl20>(), di::bind<i21>().to<impl21>(), di::bind<i22>().to<impl22>(),
+                       di::bind<i23>().to<impl23>(), di::bind<i24>().to<impl24>(), di::bind<i25>().to<impl25>(),
+                       di::bind<i26>().to<impl26>(), di::bind<i27>().to<impl27>(), di::bind<i28>().to<impl28>(),
+                       di::bind<i29>().to<impl29>())
+          BIND_OTHERS3(di::bind<x20>.in(di::unique), di::bind<x21>.in(di::unique), di::bind<x22>.in(di::unique),
+                       di::bind<x23>.in(di::unique), di::bind<x24>.in(di::unique), di::bind<x25>.in(di::unique),
+                       di::bind<x26>.in(di::unique), di::bind<x27>.in(di::unique), di::bind<x28>.in(di::unique),
+                       di::bind<x29>.in(di::unique), di::bind<y20>.in(di::unique), di::bind<y21>.in(di::unique),
+                       di::bind<y22>.in(di::unique), di::bind<y23>.in(di::unique), di::bind<y24>.in(di::unique),
+                       di::bind<y25>.in(di::unique), di::bind<y26>.in(di::unique), di::bind<y27>.in(di::unique),
+                       di::bind<y28>.in(di::unique), di::bind<y29>.in(di::unique))));
 };
 #endif
 
 #if defined(MODULE4)
 EXPOSED_OR_AUTO(di::injector<c3>, auto) module4() noexcept {
   RETURN(di::make_injector(
-      BIND_INTERFACES4(
-          di::bind<i30>().to<impl30>(), di::bind<i31>().to<impl31>(),
-          di::bind<i32>().to<impl32>(), di::bind<i33>().to<impl33>(),
-          di::bind<i34>().to<impl34>(), di::bind<i35>().to<impl35>(),
-          di::bind<i36>().to<impl36>(), di::bind<i37>().to<impl37>(),
-          di::bind<i38>().to<impl38>(), di::bind<i39>().to<impl39>())
-          BIND_OTHERS4(
-              di::bind<x30>.in(di::unique), di::bind<x31>.in(di::unique),
-              di::bind<x32>.in(di::unique), di::bind<x33>.in(di::unique),
-              di::bind<x34>.in(di::unique), di::bind<x35>.in(di::unique),
-              di::bind<x36>.in(di::unique), di::bind<x37>.in(di::unique),
-              di::bind<x38>.in(di::unique), di::bind<x39>.in(di::unique),
-              di::bind<y30>.in(di::unique), di::bind<y31>.in(di::unique),
-              di::bind<y32>.in(di::unique), di::bind<y33>.in(di::unique),
-              di::bind<y34>.in(di::unique), di::bind<y35>.in(di::unique),
-              di::bind<y36>.in(di::unique), di::bind<y37>.in(di::unique),
-              di::bind<y38>.in(di::unique), di::bind<y39>.in(di::unique))));
+      BIND_INTERFACES4(di::bind<i30>().to<impl30>(), di::bind<i31>().to<impl31>(), di::bind<i32>().to<impl32>(),
+                       di::bind<i33>().to<impl33>(), di::bind<i34>().to<impl34>(), di::bind<i35>().to<impl35>(),
+                       di::bind<i36>().to<impl36>(), di::bind<i37>().to<impl37>(), di::bind<i38>().to<impl38>(),
+                       di::bind<i39>().to<impl39>())
+          BIND_OTHERS4(di::bind<x30>.in(di::unique), di::bind<x31>.in(di::unique), di::bind<x32>.in(di::unique),
+                       di::bind<x33>.in(di::unique), di::bind<x34>.in(di::unique), di::bind<x35>.in(di::unique),
+                       di::bind<x36>.in(di::unique), di::bind<x37>.in(di::unique), di::bind<x38>.in(di::unique),
+                       di::bind<x39>.in(di::unique), di::bind<y30>.in(di::unique), di::bind<y31>.in(di::unique),
+                       di::bind<y32>.in(di::unique), di::bind<y33>.in(di::unique), di::bind<y34>.in(di::unique),
+                       di::bind<y35>.in(di::unique), di::bind<y36>.in(di::unique), di::bind<y37>.in(di::unique),
+                       di::bind<y38>.in(di::unique), di::bind<y39>.in(di::unique))));
 };
 #endif
 
 #if defined(MODULE5)
 EXPOSED_OR_AUTO(di::injector<c4>, auto) module5() noexcept {
   RETURN(di::make_injector(
-      BIND_INTERFACES5(
-          di::bind<i40>().to<impl40>(), di::bind<i41>().to<impl41>(),
-          di::bind<i42>().to<impl42>(), di::bind<i43>().to<impl43>(),
-          di::bind<i44>().to<impl44>(), di::bind<i45>().to<impl45>(),
-          di::bind<i46>().to<impl46>(), di::bind<i47>().to<impl47>(),
-          di::bind<i48>().to<impl48>(), di::bind<i49>().to<impl49>())
-          BIND_OTHERS5(
-              di::bind<x40>.in(di::unique), di::bind<x41>.in(di::unique),
-              di::bind<x42>.in(di::unique), di::bind<x43>.in(di::unique),
-              di::bind<x44>.in(di::unique), di::bind<x45>.in(di::unique),
-              di::bind<x46>.in(di::unique), di::bind<x47>.in(di::unique),
-              di::bind<x48>.in(di::unique), di::bind<x49>.in(di::unique),
-              di::bind<y40>.in(di::unique), di::bind<y41>.in(di::unique),
-              di::bind<y42>.in(di::unique), di::bind<y43>.in(di::unique),
-              di::bind<y44>.in(di::unique), di::bind<y45>.in(di::unique),
-              di::bind<y46>.in(di::unique), di::bind<y47>.in(di::unique),
-              di::bind<y48>.in(di::unique), di::bind<y49>.in(di::unique))));
+      BIND_INTERFACES5(di::bind<i40>().to<impl40>(), di::bind<i41>().to<impl41>(), di::bind<i42>().to<impl42>(),
+                       di::bind<i43>().to<impl43>(), di::bind<i44>().to<impl44>(), di::bind<i45>().to<impl45>(),
+                       di::bind<i46>().to<impl46>(), di::bind<i47>().to<impl47>(), di::bind<i48>().to<impl48>(),
+                       di::bind<i49>().to<impl49>())
+          BIND_OTHERS5(di::bind<x40>.in(di::unique), di::bind<x41>.in(di::unique), di::bind<x42>.in(di::unique),
+                       di::bind<x43>.in(di::unique), di::bind<x44>.in(di::unique), di::bind<x45>.in(di::unique),
+                       di::bind<x46>.in(di::unique), di::bind<x47>.in(di::unique), di::bind<x48>.in(di::unique),
+                       di::bind<x49>.in(di::unique), di::bind<y40>.in(di::unique), di::bind<y41>.in(di::unique),
+                       di::bind<y42>.in(di::unique), di::bind<y43>.in(di::unique), di::bind<y44>.in(di::unique),
+                       di::bind<y45>.in(di::unique), di::bind<y46>.in(di::unique), di::bind<y47>.in(di::unique),
+                       di::bind<y48>.in(di::unique), di::bind<y49>.in(di::unique))));
 };
 #endif
 
 #if defined(MODULE6)
 EXPOSED_OR_AUTO(di::injector<c5>, auto) module6() noexcept {
   RETURN(di::make_injector(
-      BIND_INTERFACES6(
-          di::bind<i50>().to<impl50>(), di::bind<i51>().to<impl51>(),
-          di::bind<i52>().to<impl52>(), di::bind<i53>().to<impl53>(),
-          di::bind<i54>().to<impl54>(), di::bind<i55>().to<impl55>(),
-          di::bind<i56>().to<impl56>(), di::bind<i57>().to<impl57>(),
-          di::bind<i58>().to<impl58>(), di::bind<i59>().to<impl59>())
-          BIND_OTHERS6(
-              di::bind<x50>.in(di::unique), di::bind<x51>.in(di::unique),
-              di::bind<x52>.in(di::unique), di::bind<x53>.in(di::unique),
-              di::bind<x54>.in(di::unique), di::bind<x55>.in(di::unique),
-              di::bind<x56>.in(di::unique), di::bind<x57>.in(di::unique),
-              di::bind<x58>.in(di::unique), di::bind<x59>.in(di::unique),
-              di::bind<y50>.in(di::unique), di::bind<y51>.in(di::unique),
-              di::bind<y52>.in(di::unique), di::bind<y53>.in(di::unique),
-              di::bind<y54>.in(di::unique), di::bind<y55>.in(di::unique),
-              di::bind<y56>.in(di::unique), di::bind<y57>.in(di::unique),
-              di::bind<y58>.in(di::unique), di::bind<y59>.in(di::unique))));
+      BIND_INTERFACES6(di::bind<i50>().to<impl50>(), di::bind<i51>().to<impl51>(), di::bind<i52>().to<impl52>(),
+                       di::bind<i53>().to<impl53>(), di::bind<i54>().to<impl54>(), di::bind<i55>().to<impl55>(),
+                       di::bind<i56>().to<impl56>(), di::bind<i57>().to<impl57>(), di::bind<i58>().to<impl58>(),
+                       di::bind<i59>().to<impl59>())
+          BIND_OTHERS6(di::bind<x50>.in(di::unique), di::bind<x51>.in(di::unique), di::bind<x52>.in(di::unique),
+                       di::bind<x53>.in(di::unique), di::bind<x54>.in(di::unique), di::bind<x55>.in(di::unique),
+                       di::bind<x56>.in(di::unique), di::bind<x57>.in(di::unique), di::bind<x58>.in(di::unique),
+                       di::bind<x59>.in(di::unique), di::bind<y50>.in(di::unique), di::bind<y51>.in(di::unique),
+                       di::bind<y52>.in(di::unique), di::bind<y53>.in(di::unique), di::bind<y54>.in(di::unique),
+                       di::bind<y55>.in(di::unique), di::bind<y56>.in(di::unique), di::bind<y57>.in(di::unique),
+                       di::bind<y58>.in(di::unique), di::bind<y59>.in(di::unique))));
 };
 #endif
 
 #if defined(MODULE7)
 EXPOSED_OR_AUTO(di::injector<c6>, auto) module7() noexcept {
   RETURN(di::make_injector(
-      BIND_INTERFACES7(
-          di::bind<i60>().to<impl60>(), di::bind<i61>().to<impl61>(),
-          di::bind<i62>().to<impl62>(), di::bind<i63>().to<impl63>(),
-          di::bind<i64>().to<impl64>(), di::bind<i65>().to<impl65>(),
-          di::bind<i66>().to<impl66>(), di::bind<i67>().to<impl67>(),
-          di::bind<i68>().to<impl68>(), di::bind<i69>().to<impl69>())
-          BIND_OTHERS7(
-              di::bind<x60>.in(di::unique), di::bind<x61>.in(di::unique),
-              di::bind<x62>.in(di::unique), di::bind<x63>.in(di::unique),
-              di::bind<x64>.in(di::unique), di::bind<x65>.in(di::unique),
-              di::bind<x66>.in(di::unique), di::bind<x67>.in(di::unique),
-              di::bind<x68>.in(di::unique), di::bind<x69>.in(di::unique),
-              di::bind<y60>.in(di::unique), di::bind<y61>.in(di::unique),
-              di::bind<y62>.in(di::unique), di::bind<y63>.in(di::unique),
-              di::bind<y64>.in(di::unique), di::bind<y65>.in(di::unique),
-              di::bind<y66>.in(di::unique), di::bind<y67>.in(di::unique),
-              di::bind<y68>.in(di::unique), di::bind<y69>.in(di::unique))));
+      BIND_INTERFACES7(di::bind<i60>().to<impl60>(), di::bind<i61>().to<impl61>(), di::bind<i62>().to<impl62>(),
+                       di::bind<i63>().to<impl63>(), di::bind<i64>().to<impl64>(), di::bind<i65>().to<impl65>(),
+                       di::bind<i66>().to<impl66>(), di::bind<i67>().to<impl67>(), di::bind<i68>().to<impl68>(),
+                       di::bind<i69>().to<impl69>())
+          BIND_OTHERS7(di::bind<x60>.in(di::unique), di::bind<x61>.in(di::unique), di::bind<x62>.in(di::unique),
+                       di::bind<x63>.in(di::unique), di::bind<x64>.in(di::unique), di::bind<x65>.in(di::unique),
+                       di::bind<x66>.in(di::unique), di::bind<x67>.in(di::unique), di::bind<x68>.in(di::unique),
+                       di::bind<x69>.in(di::unique), di::bind<y60>.in(di::unique), di::bind<y61>.in(di::unique),
+                       di::bind<y62>.in(di::unique), di::bind<y63>.in(di::unique), di::bind<y64>.in(di::unique),
+                       di::bind<y65>.in(di::unique), di::bind<y66>.in(di::unique), di::bind<y67>.in(di::unique),
+                       di::bind<y68>.in(di::unique), di::bind<y69>.in(di::unique))));
 };
 #endif
 
 #if defined(MODULE8)
 EXPOSED_OR_AUTO(di::injector<c7>, auto) module8() noexcept {
   RETURN(di::make_injector(
-      BIND_INTERFACES8(
-          di::bind<i70>().to<impl70>(), di::bind<i71>().to<impl71>(),
-          di::bind<i72>().to<impl72>(), di::bind<i73>().to<impl73>(),
-          di::bind<i74>().to<impl74>(), di::bind<i75>().to<impl75>(),
-          di::bind<i76>().to<impl76>(), di::bind<i77>().to<impl77>(),
-          di::bind<i78>().to<impl78>(), di::bind<i79>().to<impl79>())
-          BIND_OTHERS8(
-              di::bind<x70>.in(di::unique), di::bind<x71>.in(di::unique),
-              di::bind<x72>.in(di::unique), di::bind<x73>.in(di::unique),
-              di::bind<x74>.in(di::unique), di::bind<x75>.in(di::unique),
-              di::bind<x76>.in(di::unique), di::bind<x77>.in(di::unique),
-              di::bind<x78>.in(di::unique), di::bind<x79>.in(di::unique),
-              di::bind<y70>.in(di::unique), di::bind<y71>.in(di::unique),
-              di::bind<y72>.in(di::unique), di::bind<y73>.in(di::unique),
-              di::bind<y74>.in(di::unique), di::bind<y75>.in(di::unique),
-              di::bind<y76>.in(di::unique), di::bind<y77>.in(di::unique),
-              di::bind<y78>.in(di::unique), di::bind<y79>.in(di::unique))));
+      BIND_INTERFACES8(di::bind<i70>().to<impl70>(), di::bind<i71>().to<impl71>(), di::bind<i72>().to<impl72>(),
+                       di::bind<i73>().to<impl73>(), di::bind<i74>().to<impl74>(), di::bind<i75>().to<impl75>(),
+                       di::bind<i76>().to<impl76>(), di::bind<i77>().to<impl77>(), di::bind<i78>().to<impl78>(),
+                       di::bind<i79>().to<impl79>())
+          BIND_OTHERS8(di::bind<x70>.in(di::unique), di::bind<x71>.in(di::unique), di::bind<x72>.in(di::unique),
+                       di::bind<x73>.in(di::unique), di::bind<x74>.in(di::unique), di::bind<x75>.in(di::unique),
+                       di::bind<x76>.in(di::unique), di::bind<x77>.in(di::unique), di::bind<x78>.in(di::unique),
+                       di::bind<x79>.in(di::unique), di::bind<y70>.in(di::unique), di::bind<y71>.in(di::unique),
+                       di::bind<y72>.in(di::unique), di::bind<y73>.in(di::unique), di::bind<y74>.in(di::unique),
+                       di::bind<y75>.in(di::unique), di::bind<y76>.in(di::unique), di::bind<y77>.in(di::unique),
+                       di::bind<y78>.in(di::unique), di::bind<y79>.in(di::unique))));
 };
 #endif
 
 #if defined(MODULE9)
 EXPOSED_OR_AUTO(di::injector<c8>, auto) module9() noexcept {
   RETURN(di::make_injector(
-      BIND_INTERFACES9(
-          di::bind<i80>().to<impl80>(), di::bind<i81>().to<impl81>(),
-          di::bind<i82>().to<impl82>(), di::bind<i83>().to<impl83>(),
-          di::bind<i84>().to<impl84>(), di::bind<i85>().to<impl85>(),
-          di::bind<i86>().to<impl86>(), di::bind<i87>().to<impl87>(),
-          di::bind<i88>().to<impl88>(), di::bind<i89>().to<impl89>())
-          BIND_OTHERS9(
-              di::bind<x80>.in(di::unique), di::bind<x81>.in(di::unique),
-              di::bind<x82>.in(di::unique), di::bind<x83>.in(di::unique),
-              di::bind<x84>.in(di::unique), di::bind<x85>.in(di::unique),
-              di::bind<x86>.in(di::unique), di::bind<x87>.in(di::unique),
-              di::bind<x88>.in(di::unique), di::bind<x89>.in(di::unique),
-              di::bind<y80>.in(di::unique), di::bind<y81>.in(di::unique),
-              di::bind<y82>.in(di::unique), di::bind<y83>.in(di::unique),
-              di::bind<y84>.in(di::unique), di::bind<y85>.in(di::unique),
-              di::bind<y86>.in(di::unique), di::bind<y87>.in(di::unique),
-              di::bind<y88>.in(di::unique), di::bind<y89>.in(di::unique))));
+      BIND_INTERFACES9(di::bind<i80>().to<impl80>(), di::bind<i81>().to<impl81>(), di::bind<i82>().to<impl82>(),
+                       di::bind<i83>().to<impl83>(), di::bind<i84>().to<impl84>(), di::bind<i85>().to<impl85>(),
+                       di::bind<i86>().to<impl86>(), di::bind<i87>().to<impl87>(), di::bind<i88>().to<impl88>(),
+                       di::bind<i89>().to<impl89>())
+          BIND_OTHERS9(di::bind<x80>.in(di::unique), di::bind<x81>.in(di::unique), di::bind<x82>.in(di::unique),
+                       di::bind<x83>.in(di::unique), di::bind<x84>.in(di::unique), di::bind<x85>.in(di::unique),
+                       di::bind<x86>.in(di::unique), di::bind<x87>.in(di::unique), di::bind<x88>.in(di::unique),
+                       di::bind<x89>.in(di::unique), di::bind<y80>.in(di::unique), di::bind<y81>.in(di::unique),
+                       di::bind<y82>.in(di::unique), di::bind<y83>.in(di::unique), di::bind<y84>.in(di::unique),
+                       di::bind<y85>.in(di::unique), di::bind<y86>.in(di::unique), di::bind<y87>.in(di::unique),
+                       di::bind<y88>.in(di::unique), di::bind<y89>.in(di::unique))));
 };
 #endif
 
 #if defined(MODULE10)
 EXPOSED_OR_AUTO(di::injector<c9>, auto) module10() noexcept {
   RETURN(di::make_injector(
-      BIND_INTERFACES10(
-          di::bind<i90>().to<impl90>(), di::bind<i91>().to<impl91>(),
-          di::bind<i92>().to<impl92>(), di::bind<i93>().to<impl93>(),
-          di::bind<i94>().to<impl94>(), di::bind<i95>().to<impl95>(),
-          di::bind<i96>().to<impl96>(), di::bind<i97>().to<impl97>(),
-          di::bind<i98>().to<impl98>(), di::bind<i99>().to<impl99>())
-          BIND_OTHERS10(
-              di::bind<x90>.in(di::unique), di::bind<x91>.in(di::unique),
-              di::bind<x92>.in(di::unique), di::bind<x93>.in(di::unique),
-              di::bind<x94>.in(di::unique), di::bind<x95>.in(di::unique),
-              di::bind<x96>.in(di::unique), di::bind<x97>.in(di::unique),
-              di::bind<x98>.in(di::unique), di::bind<x99>.in(di::unique),
-              di::bind<y90>.in(di::unique), di::bind<y91>.in(di::unique),
-              di::bind<y92>.in(di::unique), di::bind<y93>.in(di::unique),
-              di::bind<y94>.in(di::unique), di::bind<y95>.in(di::unique),
-              di::bind<y96>.in(di::unique), di::bind<y97>.in(di::unique),
-              di::bind<y98>.in(di::unique), di::bind<y99>.in(di::unique))));
+      BIND_INTERFACES10(di::bind<i90>().to<impl90>(), di::bind<i91>().to<impl91>(), di::bind<i92>().to<impl92>(),
+                        di::bind<i93>().to<impl93>(), di::bind<i94>().to<impl94>(), di::bind<i95>().to<impl95>(),
+                        di::bind<i96>().to<impl96>(), di::bind<i97>().to<impl97>(), di::bind<i98>().to<impl98>(),
+                        di::bind<i99>().to<impl99>())
+          BIND_OTHERS10(di::bind<x90>.in(di::unique), di::bind<x91>.in(di::unique), di::bind<x92>.in(di::unique),
+                        di::bind<x93>.in(di::unique), di::bind<x94>.in(di::unique), di::bind<x95>.in(di::unique),
+                        di::bind<x96>.in(di::unique), di::bind<x97>.in(di::unique), di::bind<x98>.in(di::unique),
+                        di::bind<x99>.in(di::unique), di::bind<y90>.in(di::unique), di::bind<y91>.in(di::unique),
+                        di::bind<y92>.in(di::unique), di::bind<y93>.in(di::unique), di::bind<y94>.in(di::unique),
+                        di::bind<y95>.in(di::unique), di::bind<y96>.in(di::unique), di::bind<y97>.in(di::unique),
+                        di::bind<y98>.in(di::unique), di::bind<y99>.in(di::unique))));
 };
 #endif
 
