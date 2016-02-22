@@ -777,22 +777,23 @@ namespace di {
 <p><img alt="CPP(BTN)" src="../Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp" /></p>
 <p><br /><hr /></p>
 <h3 id="annotations">Annotations</h3>
-<p>Annotations are intrusive, additional informations, specified along with the type in order to refer to given type by the
-annotation instead of type it self. Useful, when there are more than one type of the same parameters in constructor parameters.</p>
+<p>Annotations are type properties specified in order to refer to a type by the name instead of the type it self.
+They are useful when constructor has more than one parameter of the same type.
+For example, <code>T(int, int)</code>.</p>
 <p><a id="di_named"></a>
 --- <strong><em>(named = name)</em></strong> ---</p>
 <p><strong><em>Header</em></strong></p>
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
-<p>Named parameters are useful when constructor has more parameters of the same type.</p>
+<p>Named parameters are handy to distinguish different constructor parameters of the same type.</p>
 <pre><code class="cpp">  T(int value1, int value2);
 </code></pre>
 
-<p>In order to inject proper values into <code>value1</code> and <code>value2</code> they have to be distinguished somehow.
-Boost.DI solution for that problem are annotations.</p>
+<p>In order to inject proper values into <code>value1</code> and <code>value2</code> they have to be differentiate somehow.
+Boost.DI solution for this problem are annotations.</p>
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
-Annotations might be set only when constructor is selected using <a href="#BOOST_DI_INJECT">BOOST_DI_INJECT</a> or <a href="#BOOST_DI_INJECT_TRAITS">BOOST_DI_INJECT_TRAITS</a>.
+Annotations might be set only when constructor is marked using <a href="#BOOST_DI_INJECT">BOOST_DI_INJECT</a> or <a href="#BOOST_DI_INJECT_TRAITS">BOOST_DI_INJECT_TRAITS</a>.
 </span></p>
 <p><strong><em>Semantics</em></strong></p>
 <pre><code>auto Name = []{}; // just an object
@@ -823,7 +824,7 @@ struct T {
 <pre><code>BOOST_DI_INJECT(T, (named = value_1) int value1, (named = value_2) int value2);
 </code></pre>
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
-Implementation of constructor doesn't require annotations, which means implementation won't be affected by it.
+Implementation of constructor doesn't require annotations, only constructor definition requires them.
 </span></p>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/annotated_constructor_injection.cpp" />
@@ -841,7 +842,7 @@ Implementation of constructor doesn't require annotations, which means implement
 </code></pre>
 <p><strong><em>Description</em></strong></p>
 <p>Scopes are responsible for creating and maintaining life time of dependencies.
-If no scope will be given, deduce scope will be assumed.</p>
+If no scope will be given, <a href="#di_deduce">deduce</a> scope will be assumed.</p>
 <p><strong><em>Semantics</em></strong></p>
 <pre><code>template &lt;class TExpected, class TGiven&gt;
 struct scope {
@@ -878,21 +879,21 @@ struct scope {
 <td>-</td>
 </tr>
 <tr>
-<td><code>is_referable&lt;T\&gt;</code></td>
+<td><code>is_referable&lt;T&gt;</code></td>
 <td>-</td>
 <td>Verifies whether scope value might be converted to a reference</td>
-<td>std::true_type/std::false_type</td>
+<td>true_type/false_type</td>
 </tr>
 <tr>
-<td><code>try_create&lt;T, TName, TProvider\&gt;</code></td>
+<td><code>try_create&lt;T, TName, TProvider&gt;</code></td>
 <td><a href="#di_providable">providable</a>&lt;TProvider></td>
-<td>Verifies whether type might be created</td>
-<td>std::true_type/std::false_type</td>
+<td>Verifies whether type <code>T</code> might be created</td>
+<td>true_type/false_type</td>
 </tr>
 <tr>
-<td><code>create&lt;T, TName, TProvider\&gt;</code></td>
+<td><code>create&lt;T, TName, TProvider&gt;</code></td>
 <td><a href="#di_providable">providable</a>&lt;TProvider></td>
-<td>Creates type might be created</td>
+<td>Creates type <code>T</code></td>
 <td><code>T</code></td>
 </tr>
 </tbody>
@@ -901,9 +902,9 @@ struct scope {
 <thead>
 <tr>
 <th>Type/Scope</th>
-<th>unique</th>
-<th>singleton</th>
-<th>instance</th>
+<th><a href="#di_unique">unique</a></th>
+<th><a href="#di_singleton">singleton</a></th>
+<th><a href="#di_instance">instance</a></th>
 <th></th>
 <th></th>
 </tr>
@@ -1002,7 +1003,7 @@ struct scope {
 <thead>
 <tr>
 <th>Type</th>
-<th>deduce</th>
+<th>Scope</th>
 </tr>
 </thead>
 <tbody>
@@ -1016,7 +1017,7 @@ struct scope {
 </tr>
 <tr>
 <td>const T&amp;</td>
-<td><a href="#di_unique">unique</a> (temporary)/singleton</td>
+<td><a href="#di_unique">unique</a> (temporary)/<a href="#di_singleton">singleton</a></td>
 </tr>
 <tr>
 <td>T*</td>
@@ -1086,21 +1087,21 @@ scopes::deduce deduce;
 <td>-</td>
 </tr>
 <tr>
-<td><code>is_referable&lt;T\&gt;</code></td>
+<td><code>is_referable&lt;T&gt;</code></td>
 <td>-</td>
 <td>Verifies whether scope value might be converted to a reference</td>
-<td>std::true_type/std::false_type</td>
+<td>true_type/false_type</td>
 </tr>
 <tr>
-<td><code>try_create&lt;T, TName, TProvider\&gt;</code></td>
+<td><code>try_create&lt;T, TName, TProvider&gt;</code></td>
 <td><a href="#di_providable">providable</a>&lt;TProvider></td>
-<td>Verifies whether type might be created</td>
-<td>std::true_type/std::false_type</td>
+<td>Verifies whether type <code>T</code> might be created</td>
+<td>true_type/false_type</td>
 </tr>
 <tr>
-<td><code>create&lt;T, TName, TProvider\&gt;</code></td>
+<td><code>create&lt;T, TName, TProvider&gt;</code></td>
 <td><a href="#di_providable">providable</a>&lt;TProvider></td>
-<td>Creates type might be created</td>
+<td>Creates type <code>T</code></td>
 <td><code>T</code></td>
 </tr>
 </tbody>
@@ -1117,8 +1118,8 @@ scopes::deduce deduce;
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
-<p>Scope representing values - passed by user. The life time of the object depends on the user.
-Boost.DI is not managing life time of passed objects, however values and strings will be copied and managed by the library.</p>
+<p>Scope representing values - passed externally. The life time of the object depends on the user.
+Boost.DI is not maintaining the life time of these objects, however, values and strings will be copied and managed by the library.</p>
 <table>
 <thead>
 <tr>
@@ -1205,21 +1206,21 @@ Boost.DI is not managing life time of passed objects, however values and strings
 <td>-</td>
 </tr>
 <tr>
-<td><code>is_referable&lt;T\&gt;</code></td>
+<td><code>is_referable&lt;T&gt;</code></td>
 <td>-</td>
 <td>Verifies whether scope value might be converted to a reference</td>
-<td>std::true_type/std::false_type</td>
+<td>true_type/false_type</td>
 </tr>
 <tr>
-<td><code>try_create&lt;T, TName, TProvider\&gt;</code></td>
+<td><code>try_create&lt;T, TName, TProvider&gt;</code></td>
 <td><a href="#di_providable">providable</a>&lt;TProvider></td>
-<td>Verifies whether type might be created</td>
-<td>std::true_type/std::false_type</td>
+<td>Verifies whether type <code>T</code> might be created</td>
+<td>true_type/false_type</td>
 </tr>
 <tr>
-<td><code>create&lt;T, TName, TProvider\&gt;</code></td>
+<td><code>create&lt;T, TName, TProvider&gt;</code></td>
 <td><a href="#di_providable">providable</a>&lt;TProvider></td>
-<td>Creates type might be created</td>
+<td>Creates type <code>T</code></td>
 <td><code>T</code></td>
 </tr>
 </tbody>
@@ -1236,10 +1237,10 @@ Boost.DI is not managing life time of passed objects, however values and strings
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
-<p>Scope representing shared value between all instances and between threads.
-Singleton scope will be deduced in case of shared_ptr or weak_ptr.</p>
+<p>Scope representing shared value between all instances as well as threads.
+Singleton scope will be deduced in case of reference, <code>std::shared_ptr</code>, <code>boost::shared_ptr</code> or <code>std::weak_ptr</code>.</p>
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
-Singleton scope will convert between <code>std::shared_ptr</code> and <code>boost::shared_ptr</code> if required.
+Singleton scope will convert automatically between <code>std::shared_ptr</code> and <code>boost::shared_ptr</code> if required.
 </span></p>
 <table>
 <thead>
@@ -1329,21 +1330,21 @@ scopes::singleton singleton;
 <td>-</td>
 </tr>
 <tr>
-<td><code>is_referable&lt;T\&gt;</code></td>
+<td><code>is_referable&lt;T&gt;</code></td>
 <td>-</td>
 <td>Verifies whether scope value might be converted to a reference</td>
-<td>std::true_type/std::false_type</td>
+<td>true_type/false_type</td>
 </tr>
 <tr>
-<td><code>try_create&lt;T, TName, TProvider\&gt;</code></td>
+<td><code>try_create&lt;T, TName, TProvider&gt;</code></td>
 <td><a href="#di_providable">providable</a>&lt;TProvider></td>
-<td>Verifies whether type might be created</td>
-<td>std::true_type/std::false_type</td>
+<td>Verifies whether type <code>T</code> might be created</td>
+<td>true_type/false_type</td>
 </tr>
 <tr>
-<td><code>create&lt;T, TName, TProvider\&gt;</code></td>
+<td><code>create&lt;T, TName, TProvider&gt;</code></td>
 <td><a href="#di_providable">providable</a>&lt;TProvider></td>
-<td>Creates type might be created</td>
+<td>Creates type <code>T</code></td>
 <td><code>T</code></td>
 </tr>
 </tbody>
@@ -1360,7 +1361,7 @@ scopes::singleton singleton;
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
-<p>Scope representing unique/per request value.</p>
+<p>Scope representing unique/per request value. A new instance will be provided each time type will be requested.</p>
 <table>
 <thead>
 <tr>
@@ -1449,21 +1450,21 @@ scopes::unique unique;
 <td>-</td>
 </tr>
 <tr>
-<td><code>is_referable&lt;T\&gt;</code></td>
+<td><code>is_referable&lt;T&gt;</code></td>
 <td>-</td>
 <td>Verifies whether scope value might be converted to a reference</td>
-<td>std::true_type/std::false_type</td>
+<td>true_type/false_type</td>
 </tr>
 <tr>
-<td><code>try_create&lt;T, TName, TProvider\&gt;</code></td>
+<td><code>try_create&lt;T, TName, TProvider&gt;</code></td>
 <td><a href="#di_providable">providable</a>&lt;TProvider></td>
-<td>Verifies whether type might be created</td>
-<td>std::true_type/std::false_type</td>
+<td>Verifies whether type <code>T</code> might be created</td>
+<td>true_type/false_type</td>
 </tr>
 <tr>
-<td><code>create&lt;T, TName, TProvider\&gt;</code></td>
+<td><code>create&lt;T, TName, TProvider&gt;</code></td>
 <td><a href="#di_providable">providable</a>&lt;TProvider></td>
-<td>Creates type might be created</td>
+<td>Creates type <code>T</code></td>
 <td><code>T</code></td>
 </tr>
 </tbody>
