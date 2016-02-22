@@ -161,7 +161,7 @@ Your C++14 header only Dependency Injection library with no dependencies ([__Try
     * [Session Scope](http://boost-experimental.github.io/di/extensions/index.html#session-scope)
     * [Shared Scope](http://boost-experimental.github.io/di/extensions/index.html#shared-scope)
 * [CHANGELOG](http://boost-experimental.github.io/di/CHANGELOG/index.html)
-    * [ [1.0.0] - TBD](http://boost-experimental.github.io/di/CHANGELOG/index.html#-100-tbd)
+    * [ [1.0.0] - 2015-02-22](http://boost-experimental.github.io/di/CHANGELOG/index.html#-100-2015-02-22)
     * [ [0.5.0] - 2015-01-12](http://boost-experimental.github.io/di/CHANGELOG/index.html#-050-2015-01-12)
     * [ [0.1.0] - 2014-08-15](http://boost-experimental.github.io/di/CHANGELOG/index.html#-010-2014-08-15)
 * [TODO](http://boost-experimental.github.io/di/TODO/index.html)
