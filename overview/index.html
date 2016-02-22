@@ -379,10 +379,10 @@ struct core::injector : TBindings... {
 </tbody>
 </table>
 <pre><code class="cpp">Legend:
-    ctor    = raw constructor: c(int i, double d);
-    inject  = inject constructor: BOOST_DI_INJECT(c, int i, double d);
+    ctor    = raw constructor: T(int i, double d);
+    inject  = inject constructor: BOOST_DI_INJECT(T, int i, double d);
     all     = all types exposed from module: auto configure();
-    exposed = one type exposed from module: di::injector&lt;c&gt; configure();
+    exposed = one type exposed from module: di::injector&lt;T&gt; configure();
 </code></pre>
 
 <p><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/small_complexity.png"><img alt="small complexity" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/small_complexity.png" /></a></p>
@@ -581,7 +581,7 @@ struct core::injector : TBindings... {
 <td>Errors</td>
 <td>compile-time errors</td>
 <td>exceptions</td>
-<td>compile-time errors + exceptions</td>
+<td>compile-time errors/exceptions</td>
 </tr>
 </tbody>
 </table>

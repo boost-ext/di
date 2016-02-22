@@ -905,8 +905,6 @@ struct scope {
 <th><a href="#di_unique">unique</a></th>
 <th><a href="#di_singleton">singleton</a></th>
 <th><a href="#di_instance">instance</a></th>
-<th></th>
-<th></th>
 </tr>
 </thead>
 <tbody>
@@ -915,72 +913,60 @@ struct scope {
 <td>✔</td>
 <td>-</td>
 <td>✔</td>
-<td></td>
-<td></td>
 </tr>
 <tr>
 <td>T&amp;</td>
 <td>-</td>
 <td>✔</td>
 <td>✔</td>
-<td></td>
-<td></td>
 </tr>
 <tr>
 <td>const T&amp;</td>
 <td>✔ (temporary)</td>
 <td>✔</td>
 <td>✔</td>
-<td></td>
-<td></td>
 </tr>
 <tr>
 <td>T* (transfer ownership)</td>
 <td>✔</td>
 <td>-</td>
 <td>-</td>
-<td>-</td>
-<td>✔</td>
 </tr>
 <tr>
 <td>const T*</td>
 <td>✔</td>
 <td>-</td>
-<td>✔</td>
-<td></td>
-<td></td>
+<td>-</td>
 </tr>
 <tr>
 <td>T&amp;&amp;</td>
 <td>✔</td>
 <td>-</td>
-<td>-</td>
-<td></td>
-<td></td>
+<td>✔</td>
 </tr>
 <tr>
-<td>unique_ptr<T></td>
+<td>std::unique_ptr<T></td>
 <td>✔</td>
 <td>-</td>
-<td>✔</td>
-<td></td>
-<td></td>
+<td>-</td>
 </tr>
 <tr>
-<td>shared_ptr<T></td>
+<td>std::shared_ptr<T></td>
 <td>✔</td>
 <td>✔</td>
 <td>✔</td>
-<td></td>
-<td></td>
 </tr>
 <tr>
-<td>weak_ptr<T></td>
+<td>boost::shared_ptr<T></td>
+<td>✔</td>
+<td>✔</td>
+<td>- / ✔ converted to</td>
+</tr>
+<tr>
+<td>std::weak_ptr<T></td>
 <td>-</td>
 <td>✔</td>
-<td>✔</td>
-<td></td>
-<td></td>
+<td>- / ✔ converted to</td>
 </tr>
 </tbody>
 </table>
@@ -1017,7 +1003,7 @@ struct scope {
 </tr>
 <tr>
 <td>const T&amp;</td>
-<td><a href="#di_unique">unique</a> (temporary)/<a href="#di_singleton">singleton</a></td>
+<td><a href="#di_unique">unique</a> (temporary) / <a href="#di_singleton">singleton</a></td>
 </tr>
 <tr>
 <td>T*</td>
@@ -1032,15 +1018,19 @@ struct scope {
 <td><a href="#di_unique">unique</a></td>
 </tr>
 <tr>
-<td>unique_ptr<T></td>
+<td>std::unique_ptr<T></td>
 <td><a href="#di_unique">unique</a></td>
 </tr>
 <tr>
-<td>shared_ptr<T></td>
+<td>std::shared_ptr<T></td>
 <td><a href="#di_singleton">singleton</a></td>
 </tr>
 <tr>
-<td>weak_ptr<T></td>
+<td>boost::shared_ptr<T></td>
+<td><a href="#di_singleton">singleton</a></td>
+</tr>
+<tr>
+<td>std::weak_ptr<T></td>
 <td><a href="#di_singleton">singleton</a></td>
 </tr>
 </tbody>
@@ -1124,45 +1114,60 @@ Boost.DI is not maintaining the life time of these objects, however, values and 
 <thead>
 <tr>
 <th>Type</th>
-<th>instance</th>
+<th>instance[in] (<code>bind&lt;&gt;.to(in)</code>)</th>
+<th>instance[out] (<code>injector.create&lt;out&gt;()</code>)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>T</td>
 <td>✔</td>
+<td>✔</td>
 </tr>
 <tr>
 <td>T&amp;</td>
-<td>-</td>
+<td>✔</td>
+<td>✔</td>
 </tr>
 <tr>
 <td>const T&amp;</td>
-<td>✔ (temporary)</td>
+<td>✔</td>
+<td>✔</td>
 </tr>
 <tr>
-<td>T* (transfer ownership)</td>
-<td>✔</td>
+<td>T*</td>
+<td>-</td>
+<td>-</td>
 </tr>
 <tr>
 <td>const T*</td>
-<td>✔</td>
+<td>-</td>
+<td>-</td>
 </tr>
 <tr>
 <td>T&amp;&amp;</td>
 <td>✔</td>
-</tr>
-<tr>
-<td>unique_ptr<T></td>
 <td>✔</td>
 </tr>
 <tr>
-<td>shared_ptr<T></td>
-<td>✔</td>
-</tr>
-<tr>
-<td>weak_ptr<T></td>
+<td>std::unique_ptr<T></td>
 <td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>std::shared_ptr<T></td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td>boost::shared_ptr<T></td>
+<td>-</td>
+<td>✔</td>
+</tr>
+<tr>
+<td>std::weak_ptr<T></td>
+<td>-</td>
+<td>✔</td>
 </tr>
 </tbody>
 </table>
@@ -1228,8 +1233,8 @@ Boost.DI is not maintaining the life time of these objects, however, values and 
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_instance.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bindings.cpp" />
-<img alt="CPP(BTN)" src="../Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp" />
+<img alt="CPP(BTN)" src="../Run_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bindings.cpp" /></p>
 <p><br /><hr /></p>
 <p><a id="di_singleton"></a>
 --- <strong><em>di::singleton</em></strong> ---</p>
@@ -1252,39 +1257,43 @@ Singleton scope will convert automatically between <code>std::shared_ptr</code> 
 <tbody>
 <tr>
 <td>T</td>
-<td>✔</td>
+<td>-</td>
 </tr>
 <tr>
 <td>T&amp;</td>
-<td>-</td>
+<td>✔</td>
 </tr>
 <tr>
 <td>const T&amp;</td>
-<td>✔ (temporary)</td>
+<td>✔</td>
 </tr>
 <tr>
-<td>T* (transfer ownership)</td>
-<td>✔</td>
+<td>T*</td>
+<td>-</td>
 </tr>
 <tr>
 <td>const T*</td>
-<td>✔</td>
+<td>-</td>
 </tr>
 <tr>
 <td>T&amp;&amp;</td>
-<td>✔</td>
-</tr>
-<tr>
-<td>unique_ptr<T></td>
-<td>✔</td>
-</tr>
-<tr>
-<td>shared_ptr<T></td>
-<td>✔</td>
-</tr>
-<tr>
-<td>weak_ptr<T></td>
 <td>-</td>
+</tr>
+<tr>
+<td>std::unique_ptr<T></td>
+<td>-</td>
+</tr>
+<tr>
+<td>std::shared_ptr<T></td>
+<td>✔</td>
+</tr>
+<tr>
+<td>boost::shared_ptr<T></td>
+<td>✔</td>
+</tr>
+<tr>
+<td>std::weak_ptr<T></td>
+<td>✔</td>
 </tr>
 </tbody>
 </table>
@@ -1383,27 +1392,31 @@ scopes::singleton singleton;
 <td>✔ (temporary)</td>
 </tr>
 <tr>
-<td>T* (transfer ownership)</td>
-<td>✔</td>
+<td>T*</td>
+<td>✔ (ownership transfer)</td>
 </tr>
 <tr>
 <td>const T*</td>
-<td>✔</td>
+<td>✔ (ownership transfer)</td>
 </tr>
 <tr>
 <td>T&amp;&amp;</td>
 <td>✔</td>
 </tr>
 <tr>
-<td>unique_ptr<T></td>
+<td>std::unique_ptr<T></td>
 <td>✔</td>
 </tr>
 <tr>
-<td>shared_ptr<T></td>
+<td>std::shared_ptr<T></td>
 <td>✔</td>
 </tr>
 <tr>
-<td>weak_ptr<T></td>
+<td>boost::shared_ptr<T></td>
+<td>✔</td>
+</tr>
+<tr>
+<td>std::weak_ptr<T></td>
 <td>-</td>
 </tr>
 </tbody>
@@ -1484,8 +1497,29 @@ scopes::unique unique;
 Module might be installed by passing it into <a href="#di_make_injector">make_injector</a>.</p>
 <p><strong><em>Semantics</em></strong></p>
 <pre><code>auto module = di::make_injector(...);
-di::injector&lt;...&gt; module = di::make_injector(...);
+di::injector&lt;Ts...&gt; module = di::make_injector(...);
 </code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Description</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>auto module = di::make_injector(...)</code></td>
+<td>All types are exposed from <code>module</code></td>
+<td><code>module.create&lt;T&gt;()</code> is allowed for any <code>T</code></td>
+</tr>
+<tr>
+<td><code>di::injector&lt;Ts...&gt; module = di::make_injector(...)</code></td>
+<td>Only <code>Ts...</code> types are exposed from <code>module</code></td>
+<td><code>module.create&lt;T&gt;()</code> is allowed only for <code>T</code> &lt;= <code>Ts...</code></td>
+</tr>
+</tbody>
+</table>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_type.cpp" />
