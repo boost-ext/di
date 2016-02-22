@@ -256,12 +256,11 @@
 </li>
 </ul>
 <hr />
-<blockquote>
-<p>Let's assume all examples below include <code>boost/di.hpp</code> header and define a convenient <code>di</code> namespace alias.</p>
-</blockquote>
+<p>Let's assume all examples below include <code>boost/di.hpp</code> header and define a convenient <code>di</code>
+namespace alias as well as some basic interfaces and types.</p>
 <pre><code class="cpp">#include &lt;boost/di.hpp&gt;
 namespace di = boost::di;
-//
+
 struct i1 { virtual ~i1() = default; virtual void dummy1() = 0; };
 struct i2 { virtual ~i2() = default; virtual void dummy2() = 0; };
 struct impl1 : i1 { void dummy1() override { } };
@@ -306,7 +305,7 @@ public:
 <tr>
 <td><code>TDeps...</code></td>
 <td><a href="#di_boundable">boundable</a>&lt;TDeps...></td>
-<td>[Bindings] to be used as configuration</td>
+<td><a href="#bindings">Bindings</a> to be used as configuration</td>
 <td>-</td>
 </tr>
 <tr>
@@ -334,12 +333,12 @@ public:
 <tr>
 <td><code>T*</code></td>
 <td>✔</td>
-<td>Ownerhsip transfer!</td>
+<td>Ownership transfer!</td>
 </tr>
 <tr>
 <td><code>const T*</code></td>
 <td>✔</td>
-<td>Ownerhsip transfer!</td>
+<td>Ownership transfer!</td>
 </tr>
 <tr>
 <td><code>T&amp;</code></td>
@@ -349,7 +348,7 @@ public:
 <tr>
 <td><code>const T&amp;</code></td>
 <td>✔</td>
-<td>-</td>
+<td>Reference with <a href="#di_singleton">singleton</a> / Temporary with <a href="#di_unique">unique</a></td>
 </tr>
 <tr>
 <td><code>T&amp;&amp;</code></td>
@@ -381,7 +380,7 @@ public:
 <pre><code>template&lt;
   class TConfig = di::config
 , class... TBindings
-&gt; requires boundable&lt;TBindings...&gt; &amp;&amp; configurable&lt;TConfig&gt;
+&gt; requires configurable&lt;TConfig&gt; &amp;&amp; boundable&lt;TBindings...&gt;
 auto make_injector(const TBindings&amp;...) noexcept;
 </code></pre>
 <table>
@@ -397,13 +396,13 @@ auto make_injector(const TBindings&amp;...) noexcept;
 <tr>
 <td><code>TConfig</code></td>
 <td><a href="#di_configurable">configurable</a>&lt;TConfig></td>
-<td><a href="#di_config">Configuration</a></td>
+<td><a href="#di_config">Configuration</a> per <a href="#di_make_injector">injector</a></td>
 <td>-</td>
 </tr>
 <tr>
 <td><code>make_injector(const TBindings&amp;...)</code></td>
 <td><a href="#di_boundable">boundable</a>&lt;TBindings...></td>
-<td>Creates <a href="#di_make_injector">injector</a> with given [Bindings]</td>
+<td>Creates <a href="#di_make_injector">injector</a> with given <a href="#bindings">Bindings</a></td>
 <td><a href="#di_make_injector">injector</a></td>
 </tr>
 </tbody>
@@ -411,10 +410,11 @@ auto make_injector(const TBindings&amp;...) noexcept;
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/injector_empty.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" />
+<img alt="CPP(BTN)" src="../Run_Create_Objects_Tree_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_create_objects_tree.cpp" /></p>
 <p><br /><hr /></p>
 <h3 id="bindings">Bindings</h3>
-<p>Bindings define dependencies configuration which basically means what types will be created
+<p>Bindings define dependencies configuration describing what types will be created
 and what values will be passed into them.</p>
 <p><a id="di_bind"></a>
 --- <strong><em>di::bind</em></strong> ---</p>
@@ -427,14 +427,17 @@ and what values will be passed into them.</p>
 <pre><code>struct override; // overrides given configuration
 
 namespace detail {
-  template&lt;class... Ts&gt; requires boundable&lt;Ts...&gt;
+  template&lt;class I, class... Is/*any_of*/&gt; requires boundable&lt;I, Is...&gt;
   struct bind {
     bind(bind&amp;&amp;) noexcept = default;
 
-    template&lt;class T&gt; requires boundable&lt;T&gt;
+    template &lt;class T&gt; requires !is_array&lt;I&gt; &amp;&amp; boundable&lt;I, T&gt;
     auto to() noexcept;
 
-    template&lt;class T&gt; requires boundable&lt;T&gt;
+    template &lt;class... Ts&gt; requires is_array&lt;I&gt; &amp;&amp; boundable&lt;Ts...&gt;
+    auto to() noexcept;
+
+    template&lt;class T&gt; requires boundable&lt;I, T&gt;
     auto to(T&amp;&amp;) noexcept;
 
     template&lt;class TScope&gt; requires scopable&lt;TScope&gt;
@@ -461,33 +464,39 @@ detail::bind&lt;Ts...&gt; bind{};
 </thead>
 <tbody>
 <tr>
-<td><code>Ts...</code></td>
-<td><a href="#di_boundable">boundable</a>&lt;Ts...></td>
+<td><code>I</code>, <code>Is...</code></td>
+<td><a href="#di_boundable">boundable</a>&lt;I, Is...></td>
 <td>'Interface' types</td>
 <td>-</td>
 </tr>
 <tr>
-<td><code>to&lt;T\&gt;</code></td>
+<td><code>to&lt;T&gt;</code></td>
 <td><a href="#di_boundable">boundable</a>&lt;T></td>
-<td>Binds <code>Ts...</code> to <code>T</code> type</td>
+<td>Binds <code>I, Is...</code> to <code>T</code> type</td>
+<td><a href="#di_boundable">boundable</a></td>
+</tr>
+<tr>
+<td><code>to&lt;Ts...&gt;</code></td>
+<td><a href="#di_boundable">boundable</a>&lt;Ts...></td>
+<td>Binds <code>I, Is...</code> to <code>Ts...</code> type</td>
 <td><a href="#di_boundable">boundable</a></td>
 </tr>
 <tr>
 <td><code>to(T&amp;&amp;)</code></td>
 <td><a href="#di_boundable">boundable</a>&lt;T></td>
-<td>Binds <code>Ts...</code> to <code>T</code> object</td>
+<td>Binds <code>I, Is...</code> to <code>T</code> object</td>
 <td><a href="#di_boundable">boundable</a></td>
 </tr>
 <tr>
 <td><code>in(const TScope&amp;)</code></td>
 <td><a href="#di_scopable">scopable</a>&lt;TScope></td>
-<td>Binds <code>Ts...</code> into <code>TScope</code></td>
+<td>Binds <code>I, Is...</code> in TScope`</td>
 <td><a href="#di_boundable">boundable</a></td>
 </tr>
 <tr>
 <td><code>named(const TName&amp;)</code></td>
 <td>-</td>
-<td>Binds <code>Ts...</code> using 'Named' annotation</td>
+<td>Binds <code>I, Is...</code> using <a href="#di_named">named</a> annotation</td>
 <td><a href="#di_boundable">boundable</a></td>
 </tr>
 <tr>
@@ -498,12 +507,56 @@ detail::bind&lt;Ts...&gt; bind{};
 </tr>
 </tbody>
 </table>
+<p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
+Check out also <a href="#di_instance">instance</a> scope to read more about binding to values: <code>di::bind&lt;&gt;.to(value)</code>.
+</span></p>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Multiple Interfaces</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><code>di::bind&lt;Interface1, Interface2, ...&gt;.to&lt;Implementation&gt;()</code></td>
+<td>Binds <code>Interface1, Interface2, ...</code> to <code>Implementation</code> using one object</td>
+</tr>
+<tr>
+<td><strong>Multiple Bindings</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><code>di::bind&lt;int[]&gt;.to({1, 2, ...})</code></td>
+<td>Binds <code>int</code> to values <code>1, 2, ...</code></td>
+</tr>
+<tr>
+<td><code>di::bind&lt;Interface*[]&gt;.to&lt;Implementation1, Implementation2, ...&gt;()</code></td>
+<td>Binds <code>Interface</code> to <code>Implementation1, Implementation2, ...</code></td>
+</tr>
+<tr>
+<td><strong>Dynamic Bindings</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><code>di::bind&lt;Interface&gt;.to([](const auto&amp; injector)</code><br /><code>{ return injector.template create&lt;Implementation&gt;()})</code></td>
+<td>Allows to bind <code>Interface</code> depending on a run-time condition</td>
+</tr>
+</tbody>
+</table>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_interface_to_implementation.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_type_to_value.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_deduce_type_to_value.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_type_to_compile_time_value.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_multiple_interfaces.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_dynamic_bindings.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_multiple_bindings.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_multiple_bindings_initializer_list.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_type_override.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_cross_platform.cpp" />
 <strong><em>Example</em></strong></p>
@@ -552,7 +605,7 @@ public:
 </tbody>
 </table>
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
-Boost.DI is not able to distinguish between ambiguous constructors with the same (longest) amount of parameters.
+Boost.DI is not able to distinguish between ambiguous constructors with the same (longest) number of parameters.
 </span></p>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_direct.cpp" />
@@ -574,7 +627,7 @@ Boost.DI is not able to distinguish between ambiguous constructors with the same
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
-<p>BOOST_DI_INJECT is a macro definition used to explicitly say Boost.DI which constructor should be used as well as in order to annotate types - see [annotations] for further reding.
+<p>BOOST_DI_INJECT is a macro definition used to explicitly say Boost.DI which constructor should be used as well as in order to annotate types - see <a href="#annotations">annotations</a> for further reding.
 When class has more than one constructor Boost.DI will by default choose the one with the longest parameter list.
 In case of constructors ambiguity Boost.DI is not able to choose the best one.
 Then BOOST_DI_INJECT become handy to point which constructor should be used.</p>
@@ -1822,7 +1875,7 @@ concept bool boundable() {
 
 template &lt;class... Ts&gt;
 concept bool boundable() {
-  return is_supported&lt;Ts&gt;()... 
+  return is_supported&lt;Ts&gt;()...
       &amp;&amp; is_movable&lt;Ts&gt;()...
       &amp;&amp; (is_base_of&lt;injector, Ts&gt;()... || is_base_of&lt;dependency, Ts&gt;()...);
 }
