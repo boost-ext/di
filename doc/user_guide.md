@@ -51,6 +51,8 @@ struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 
 <a id="di_make_injector"></a>
 
+Injector is a core component providing types creation functionality using [bindings].
+
 --- ***di::make_injector*** ---
 
 ***Header***
@@ -1451,6 +1453,7 @@ Suggestions are not supported/displayed by MSVC-2015.
 <br /><hr />
 
 [Bindings]: #bindings
+[bindings]: #bindings
 [annotations]: #annotations
 [boundable]: #di_boundable
 [callable]: #di_callable

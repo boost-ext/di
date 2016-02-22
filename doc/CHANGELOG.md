@@ -1,4 +1,4 @@
-## [1.0.0] - TBD
+## [1.0.0] - 2015-02-22
 - Support for MSVC-2015+
 - Support for GCC-5+
 - Support for CMake 2.8+
