@@ -3,7 +3,7 @@
 - Support for GCC-5+
 - Support for CMake 2.8+
 - Support for libc++, libstdc++
-- Support for clang-format
+- Support for Mac OS
 
 ## [0.5.0] - 2015-01-12
 - C++14 version

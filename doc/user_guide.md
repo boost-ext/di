@@ -33,11 +33,12 @@
 
 ---
 
-> Let's assume all examples below include `boost/di.hpp` header and define a convenient `di` namespace alias.
+Let's assume all examples below include `boost/di.hpp` header and define a convenient `di`
+namespace alias as well as some basic interfaces and types.
 ```cpp
 #include <boost/di.hpp>
 namespace di = boost::di;
-//
+
 struct i1 { virtual ~i1() = default; virtual void dummy1() = 0; };
 struct i2 { virtual ~i2() = default; virtual void dummy2() = 0; };
 struct impl1 : i1 { void dummy1() override { } };
@@ -84,10 +85,10 @@ Creates [injector] type.
 | Type `T` | Is allowed? | Note |
 | -------- | ----------- | ---- |
 | `T` | ✔ | - |
-| `T*` | ✔ | Ownerhsip transfer! |
-| `const T*` | ✔ | Ownerhsip transfer! |
+| `T*` | ✔ | Ownership transfer! |
+| `const T*` | ✔ | Ownership transfer! |
 | `T&` | ✔ | - |
-| `const T&` | ✔ | - |
+| `const T&` | ✔ | Reference with [singleton] / Temporary with [unique] |
 | `T&&` | ✔ | - |
 | `std::unique_ptr<T>` | ✔ | - |
 | `std::shared_ptr<T>` | ✔ | - |
@@ -97,12 +98,12 @@ Creates [injector] type.
     template<
       class TConfig = di::config
     , class... TBindings
-    > requires boundable<TBindings...> && configurable<TConfig>
+    > requires configurable<TConfig> && boundable<TBindings...>
     auto make_injector(const TBindings&...) noexcept;
 
 | Expression | Requirement | Description | Returns |
 | ---------- | ----------- | ----------- | ------- |
-| `TConfig` | [configurable]<TConfig\> | [Configuration] | - |
+| `TConfig` | [configurable]<TConfig\> | [Configuration] per [injector] | - |
 | `make_injector(const TBindings&...)` | [boundable]<TBindings...\> | Creates [injector] with given [Bindings] | [injector] |
 
 ***Test***
@@ -110,12 +111,13 @@ Creates [injector] type.
 ***Example***
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
+![CPP(BTN)](Run_Create_Objects_Tree_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_create_objects_tree.cpp)
 
 <br /><hr />
 
 ###Bindings
 
-Bindings define dependencies configuration which basically means what types will be created
+Bindings define dependencies configuration describing what types will be created
 and what values will be passed into them.
 
 <a id="di_bind"></a>
@@ -134,14 +136,17 @@ Allows to bind interface to implementation and associate value with it.
     struct override; // overrides given configuration
 
     namespace detail {
-      template<class... Ts> requires boundable<Ts...>
+      template<class I, class... Is/*any_of*/> requires boundable<I, Is...>
       struct bind {
         bind(bind&&) noexcept = default;
 
-        template<class T> requires boundable<T>
+        template <class T> requires !is_array<I> && boundable<I, T>
         auto to() noexcept;
 
-        template<class T> requires boundable<T>
+        template <class... Ts> requires is_array<I> && boundable<Ts...>
+        auto to() noexcept;
+
+        template<class T> requires boundable<I, T>
         auto to(T&&) noexcept;
 
         template<class TScope> requires scopable<TScope>
@@ -159,12 +164,27 @@ Allows to bind interface to implementation and associate value with it.
 
 | Expression | Requirement | Description | Returns |
 | ---------- | ----------- | ----------- | ------- |
-| `Ts...` | [boundable]<Ts...\> | 'Interface' types | - |
-| `to<T\>` | [boundable]<T\> | Binds `Ts...` to `T` type | [boundable] |
-| `to(T&&)` | [boundable]<T\> | Binds `Ts...` to `T` object | [boundable] |
-| `in(const TScope&)` | [scopable]<TScope\> | Binds `Ts...` into `TScope` | [boundable] |
-| `named(const TName&)` | - | Binds `Ts...` using 'Named' annotation | [boundable] |
+| `I`, `Is...` | [boundable]<I, Is...\> | 'Interface' types | - |
+| `to<T>` | [boundable]<T\> | Binds `I, Is...` to `T` type | [boundable] |
+| `to<Ts...>` | [boundable]<Ts...\> | Binds `I, Is...` to `Ts...` type | [boundable] |
+| `to(T&&)` | [boundable]<T\> | Binds `I, Is...` to `T` object | [boundable] |
+| `in(const TScope&)` | [scopable]<TScope\> | Binds `I, Is...` in TScope` | [boundable] |
+| `named(const TName&)` | - | Binds `I, Is...` using [named] annotation | [boundable] |
 | `operator[](const override&)` | - | Overrides given binding | [boundable] |
+
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
+Check out also [instance] scope to read more about binding to values: `di::bind<>.to(value)`.
+</span>
+
+| Expression | Description |
+| ---------- | ----------- |
+| **Multiple Interfaces** | |
+| `di::bind<Interface1, Interface2, ...>.to<Implementation>()` | Binds `Interface1, Interface2, ...` to `Implementation` using one object |
+| **Multiple Bindings** | |
+| `di::bind<int[]>.to({1, 2, ...})` | Binds `int` to values `1, 2, ...` |
+| `di::bind<Interface*[]>.to<Implementation1, Implementation2, ...>()` | Binds `Interface` to `Implementation1, Implementation2, ...` |
+| **Dynamic Bindings** | |
+| `di::bind<Interface>.to([](const auto& injector)`<br />`  { return injector.template create<Implementation>()})` | Allows to bind `Interface` depending on a run-time condition |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_interface_to_implementation.cpp)
@@ -172,6 +192,9 @@ Allows to bind interface to implementation and associate value with it.
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_deduce_type_to_value.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_type_to_compile_time_value.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_multiple_interfaces.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_dynamic_bindings.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_multiple_bindings.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_multiple_bindings_initializer_list.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_type_override.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_cross_platform.cpp)
 ***Example***
@@ -217,7 +240,7 @@ Automatic constructor parameters deduction is limited to [BOOST_DI_CFG_CTOR_LIMI
 | `parameter1-parameterN` | - | `N` constructor parameter | - |
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
-Boost.DI is not able to distinguish between ambiguous constructors with the same (longest) amount of parameters.
+Boost.DI is not able to distinguish between ambiguous constructors with the same (longest) number of parameters.
 </span>
 
 ***Test***
@@ -1048,7 +1071,7 @@ If type doesn't satisfy the concept short and descriptive error message is provi
 
     template <class... Ts>
     concept bool boundable() {
-      return is_supported<Ts>()... 
+      return is_supported<Ts>()...
           && is_movable<Ts>()...
           && (is_base_of<injector, Ts>()... || is_base_of<dependency, Ts>()...);
     }
@@ -1335,6 +1358,8 @@ Injector configuration.
 
 <br /><hr />
 
+[Bindings]: #bindings
+[annotations]: #annotations
 [boundable]: #di_boundable
 [callable]: #di_callable
 [configurable]: #di_configurable

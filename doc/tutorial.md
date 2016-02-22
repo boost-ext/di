@@ -139,10 +139,10 @@ exactly '0'. `Boost.DI` will take care of everything for us!
 | Type `T` | Is allowed? | Note |
 | -------- | ----------- | ---- |
 | `T` | ✔ | - |
-| `T*` | ✔ | Ownerhsip transfer! |
-| `const T*` | ✔ | Ownerhsip transfer! |
+| `T*` | ✔ | Ownership transfer! |
+| `const T*` | ✔ | Ownership transfer! |
 | `T&` | ✔ | - |
-| `const T&` | ✔ | - |
+| `const T&` | ✔ | Reference with [singleton] / Temporary with [unique] |
 | `T&&` | ✔ | - |
 | `std::unique_ptr<T>` | ✔ | - |
 | `std::shared_ptr<T>` | ✔ | - |
