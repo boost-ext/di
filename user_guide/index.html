@@ -231,7 +231,10 @@
 <li><a href="#di_unique">di::unique</a></li>
 </ul>
 </li>
-<li><a href="#modules">Modules</a></li>
+<li><a href="#modules">Modules</a><ul>
+<li><a href="#BOOST_DI_EXPOSE">BOOST_DI_EXPOSE</a></li>
+</ul>
+</li>
 <li><a href="#providers">Providers</a><ul>
 <li><a href="#di_stack_over_heap">di::providers::stack_over_heap (default)</a></li>
 <li><a href="#di_heap">di::providers::heap</a></li>
@@ -527,7 +530,7 @@ Check out also <a href="#di_instance">instance</a> scope to read more about bind
 <td>Binds <code>Interface1, Interface2, ...</code> to <code>Implementation</code> using one object</td>
 </tr>
 <tr>
-<td><strong>Multiple Bindings</strong></td>
+<td><strong>Multiple Bindings</strong> (std::array, std::vector, std::set)</td>
 <td></td>
 </tr>
 <tr>
@@ -1464,15 +1467,54 @@ scopes::unique unique;
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
-<p>Modules allow to split the configuration into smaller injectors.
+<p>Modules allow to split <a href="#bindings">bindings</a> configuration into smaller <a href="#injector">injectors</a>.
 Module might be installed by passing it into <a href="#di_make_injector">make_injector</a>.</p>
 <p><strong><em>Semantics</em></strong></p>
 <pre><code>auto module = di::make_injector(...);
+di::injector&lt;...&gt; module = di::make_injector(...);
 </code></pre>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_type.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_many_types.cpp" />
+<strong><em>Example</em></strong></p>
+<p><img alt="CPP(BTN)" src="../Run_Modules_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/modules.cpp" /></p>
+<p><br /><hr /></p>
+<p><a id="BOOST_DI_EXPOSE"></a>
+--- <strong><em>BOOST_DI_EXPOSE</em></strong> ---</p>
+<p><strong><em>Header</em></strong></p>
+<pre><code>#include &lt;boost/di.hpp&gt;
+</code></pre>
+<p><strong><em>Description</em></strong></p>
+<p>BOOST_DI_EXPOSE is a macro definition allowing to expose <a href="#di_named">named</a> parameters via module/<a href="#di_make_injector">injector</a>.</p>
+<p><strong><em>Semantics</em></strong></p>
+<pre><code>di::injector&lt;BOOST_DI_EXPOSE((named = Name) T), ...&gt;;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Requirement</th>
+<th>Description</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Name</code></td>
+<td>-</td>
+<td>Named object</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>...</code></td>
+<td>-</td>
+<td>More types to be exposed</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_annotated_type.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_complex_types.cpp" />
 <strong><em>Example</em></strong></p>
@@ -1483,7 +1525,7 @@ Module might be installed by passing it into <a href="#di_make_injector">make_in
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
-<p>Providers are responsible for creating objects using given configuration.</p>
+<p>Providers are responsible for creating objects using given <a href="#di_config">Configuration</a>.</p>
 <p><strong><em>Semantics</em></strong></p>
 <pre><code>namespace type_traits {
   struct direct; // T(...)
@@ -1506,6 +1548,11 @@ namespace providers {
       &gt; auto get(const TInit&amp;, const TMemory&amp;, TArgs&amp;&amp;... args) const;
   };
 }
+
+struct config : di::config {
+  template&lt;class TInjector&gt;
+  static auto provider(const TInjector&amp;) noexcept { return providers::stack_over_heap{}; }
+};
 </code></pre>
 <table>
 <thead>
@@ -1518,19 +1565,28 @@ namespace providers {
 </thead>
 <tbody>
 <tr>
-<td><code>is_creatable&lt;T, TArgs...\&gt;</code></td>
-<td><a href="#di_creatable">creatable</a>&lt;TArgs...></td>
-<td>Verify whether <code>T</code> is creatable with <code>TArgs...</code></td>
-<td><code>T</code></td>
+<td><code>TInjector</code></td>
+<td>-</td>
+<td><a href="#di_make_injector">injector</a></td>
+<td>-</td>
 </tr>
 <tr>
-<td><code>get&lt;T, TInitialization, TMemory, TArgs\&gt;(const TInitialization&amp;, const TMemory&amp;, TArgs&amp;&amp;...)</code></td>
-<td><code>TInitialization</code> is direct\</td>
-<td>uniform &amp;&amp; <code>TMemory</code> is heap\</td>
-<td>stack</td>
+<td><code>is_creatable&lt;T, TArgs...&gt;</code></td>
+<td><a href="#di_creatable">creatable</a>&lt;TArgs...></td>
+<td>Verify whether <code>T</code> is creatable with <code>TArgs...</code></td>
+<td>true_type/false_type</td>
+</tr>
+<tr>
+<td><code>get(const TInit&amp;, const TMemory&amp;, TArgs&amp;&amp;...)</code></td>
+<td><code>TInit</code> -&gt; direct/uniform, <code>TMemory</code> -&gt; heap/stack</td>
+<td>Creates type <code>T</code> with <code>TArgs...</code></td>
+<td><code>T</code></td>
 </tr>
 </tbody>
 </table>
+<p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
+Provider used by <a href="#di_make_injector">injector</a> might changed locally via <a href="#di_make_injector">make_injector</a> or globally via <a href="#di_config">BOOST_DI_CFG</a>.
+</span></p>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/providers_heap_no_throw.cpp" />
 <strong><em>Example</em></strong></p>
@@ -1571,16 +1627,16 @@ namespace providers {
 </thead>
 <tbody>
 <tr>
-<td><code>is_creatable&lt;T, TArgs...\&gt;</code></td>
+<td><code>is_creatable&lt;T, TArgs...&gt;</code></td>
 <td><a href="#di_creatable">creatable</a>&lt;TArgs...></td>
 <td>Verify whether <code>T</code> is creatable with <code>TArgs...</code></td>
-<td><code>T</code></td>
+<td>true_type/false_type</td>
 </tr>
 <tr>
-<td><code>get&lt;T, TInitialization, TMemory, TArgs\&gt;(const TInitialization&amp;, const TMemory&amp;, TArgs&amp;&amp;...)</code></td>
-<td><code>TInitialization</code> is direct\</td>
-<td>uniform &amp;&amp; <code>TMemory</code> is heap\</td>
-<td>stack</td>
+<td><code>get(const TInit&amp;, const TMemory&amp;, TArgs&amp;&amp;...)</code></td>
+<td><code>TInit</code> -&gt; direct/uniform, <code>TMemory</code> -&gt; heap/stack</td>
+<td>Creates type <code>T</code> with <code>TArgs...</code></td>
+<td><code>T</code></td>
 </tr>
 </tbody>
 </table>
@@ -1605,28 +1661,36 @@ namespace providers {
 <td>stack</td>
 </tr>
 <tr>
-<td>T*</td>
-<td>stack</td>
-</tr>
-<tr>
-<td>const T*</td>
-<td>stack</td>
-</tr>
-<tr>
 <td>T&amp;&amp;</td>
 <td>stack</td>
 </tr>
 <tr>
-<td>unique_ptr<T></td>
-<td>stack</td>
+<td>T*</td>
+<td>heap</td>
 </tr>
 <tr>
-<td>shared_ptr<T></td>
-<td>stack</td>
+<td>const T*</td>
+<td>heap</td>
 </tr>
 <tr>
-<td>weak_ptr<T></td>
-<td>stack</td>
+<td>std::unique_ptr<T></td>
+<td>heap</td>
+</tr>
+<tr>
+<td>std::shared_ptr<T></td>
+<td>heap</td>
+</tr>
+<tr>
+<td>std::weak_ptr<T></td>
+<td>heap</td>
+</tr>
+<tr>
+<td>boost::shared_ptr<T></td>
+<td>heap</td>
+</tr>
+<tr>
+<td><code>is_polymorphic&lt;T&gt;</code></td>
+<td>heap</td>
 </tr>
 </tbody>
 </table>
@@ -1642,10 +1706,10 @@ namespace providers {
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
-<p>Basic provider creates objects on the heap.</p>
+<p>Basic provider creates objects on the heap (always).</p>
 <p><strong><em>Semantics</em></strong></p>
 <pre><code>namespace providers {
-  class stack_over_heap {
+  class heap {
     public:
       template &lt;class T, class... TArgs&gt;
       struct is_creatable;
@@ -1670,62 +1734,16 @@ namespace providers {
 </thead>
 <tbody>
 <tr>
-<td><code>is_creatable&lt;T, TArgs...\&gt;</code></td>
+<td><code>is_creatable&lt;T, TArgs...&gt;</code></td>
 <td><a href="#di_creatable">creatable</a>&lt;TArgs...></td>
 <td>Verify whether <code>T</code> is creatable with <code>TArgs...</code></td>
+<td>true_type/false_type</td>
+</tr>
+<tr>
+<td><code>get(const TInit&amp;, const TMemory&amp;, TArgs&amp;&amp;...)</code></td>
+<td><code>TInit</code> -&gt; direct/uniform, <code>TMemory</code> -&gt; heap/stack</td>
+<td>Creates type <code>T</code> with <code>TArgs...</code></td>
 <td><code>T</code></td>
-</tr>
-<tr>
-<td><code>get&lt;T, TInitialization, TMemory, TArgs\&gt;(const TInitialization&amp;, const TMemory&amp;, TArgs&amp;&amp;...)</code></td>
-<td><code>TInitialization</code> is direct\</td>
-<td>uniform &amp;&amp; <code>TMemory</code> is heap\</td>
-<td>stack</td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th><code>TMemory</code></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>T</td>
-<td>stack</td>
-</tr>
-<tr>
-<td>T&amp;</td>
-<td>stack</td>
-</tr>
-<tr>
-<td>const T&amp;</td>
-<td>stack</td>
-</tr>
-<tr>
-<td>T*</td>
-<td>stack</td>
-</tr>
-<tr>
-<td>const T*</td>
-<td>stack</td>
-</tr>
-<tr>
-<td>T&amp;&amp;</td>
-<td>stack</td>
-</tr>
-<tr>
-<td>unique_ptr<T></td>
-<td>stack</td>
-</tr>
-<tr>
-<td>shared_ptr<T></td>
-<td>stack</td>
-</tr>
-<tr>
-<td>weak_ptr<T></td>
-<td>stack</td>
 </tr>
 </tbody>
 </table>
@@ -1742,16 +1760,23 @@ namespace providers {
 </code></pre>
 <p><strong><em>Description</em></strong></p>
 <p>Policies operates on dependencies in order to limit allowed behaviour or visit created types during run-time.
-Policies are set up via [di::config].</p>
+Policies are set up via <a href="#di_config">Configuration</a>.</p>
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
 By default Boost.DI has no policies enabled.
 </span></p>
 <p><strong><em>Semantics</em></strong></p>
-<p>template <class... TPolicies> requires callable<TPolicies...>
-  auto make_policies(TPolicies... args) noexcept;</p>
-<p>struct config : di::config {
-    static auto policies(...) noexcept { return make_policies(...); }
-  };</p>
+<pre><code>template &lt;class... TPolicies&gt; requires callable&lt;TPolicies...&gt;
+auto make_policies(TPolicies...) noexcept;
+
+struct config : di::config {
+  template&lt;class TInjector&gt;
+  static auto policies(const TInjector&amp;) noexcept { return make_policies(...); }
+};                                                                        |
+                                                                          |
+// policy                                                                 /
+template&lt;class T, class TDependency, class.. TCtor&gt;        &lt;--------------
+void operator()(const T&amp;, const TDependency&amp;, const TCtor&amp;...);
+</code></pre>
 <table>
 <thead>
 <tr>
@@ -1763,15 +1788,80 @@ By default Boost.DI has no policies enabled.
 </thead>
 <tbody>
 <tr>
-<td><code>make_policies&lt;TPolicies...\&gt;</code></td>
+<td><code>TInjector</code></td>
+<td>-</td>
+<td><a href="#di_make_injector">injector</a></td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>make_policies&lt;TPolicies...&gt;</code></td>
 <td><a href="#di_callable">callable</a>&lt;TPolicies...></td>
 <td>Creates policies</td>
 <td><a href="#di_callable">callable</a> list</td>
 </tr>
+<tr>
+<td><code>TCtor...</code></td>
+<td>-</td>
+<td>Constructor parameters</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><code>T</code></th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>T::type</code></td>
+<td>Type to be created</td>
+<td><code>std::shared_ptr&lt;int&gt;</code></td>
+</tr>
+<tr>
+<td><code>T::name</code></td>
+<td>Annotation given</td>
+<td><code>my_name</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><code>TDependency</code></th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TDependency::expected</code></td>
+<td>Decayed 'Interface' type</td>
+<td><code>interface</code></td>
+</tr>
+<tr>
+<td><code>TDependency::given</code></td>
+<td>Decayed 'Given' type</td>
+<td><code>implementatoin</code></td>
+</tr>
+<tr>
+<td><code>TDependency::name</code></td>
+<td>Annotation expected</td>
+<td><code>my_name</code></td>
+</tr>
+<tr>
+<td><code>TDependency::scope</code></td>
+<td><a href="#scopes">scope</a></td>
+<td><a href="#di_singleton">singleton</a></td>
+</tr>
 </tbody>
 </table>
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
-In order for injector to verify policies they have to be created using <a href="#di_config">config</a> and passed via <code>TConfig</code> in <a href="#di_make_injector">make_injector</a> or set globally via <a href="#di_config">BOOST_DI_CFG</a>.
+In order for injector to verify policies they have to be created using <a href="#di_config">config</a> and passed via <code>TConfig</code> in <a href="#di_make_injector">make_injector</a>
+or set it globally via <a href="#di_config">BOOST_DI_CFG</a>.
 </span></p>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_print_types.cpp" />
@@ -1787,7 +1877,7 @@ In order for injector to verify policies they have to be created using <a href="
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
-<p>Policy limits constructor parameters to explicitly allowed.</p>
+<p>Constructible policy limits constructor parameters to explicitly allowed.</p>
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
 By default constructible policy disables creation of any constructor parameters.
 </span></p>
@@ -1827,13 +1917,13 @@ namespace operators {
 </thead>
 <tbody>
 <tr>
-<td><code>is_bound&lt;T\&gt;</code></td>
+<td><code>is_bound&lt;T&gt;</code></td>
 <td>-</td>
 <td>Verify whether type <code>T</code> is bound</td>
 <td>true_type/false_type</td>
 </tr>
 <tr>
-<td><code>is_injected&lt;T\&gt;</code></td>
+<td><code>is_injected&lt;T&gt;</code></td>
 <td>-</td>
 <td>Verify whether type <code>T</code> is injected via <a href="#BOOST_DI_INJECT">BOOST_DI_INJECT</a></td>
 <td>true_type/false_type</td>
