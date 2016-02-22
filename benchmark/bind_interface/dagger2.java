@@ -29,6 +29,5 @@ interface AppComponent {
 public class dagger2 {
   public static void main(String[] args) {
     I object = Dagger_AppComponent.create().build();
-    object.dummy();
    }
 }

@@ -26,6 +26,5 @@ public class guice {
   public static void main(String[] args) {
     Injector injector = Guice.createInjector(new Module());
     I object = injector.getInstance(I.class);
-    object.dummy();
   }
 }

@@ -16,6 +16,6 @@ class Module extends AbstractModule {
 public class guice {
   public static void main(String[] args) {
     Injector injector = Guice.createInjector(new Module());
-    System.exit(injector.getInstance(int.class) != 42 ? 1 : 0);
+    injector.getInstance(int.class);
   }
 }

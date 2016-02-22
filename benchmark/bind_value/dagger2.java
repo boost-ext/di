@@ -18,6 +18,6 @@ interface AppComponent {
 
 public class dagger2 {
   public static void main(String[] args) {
-    System.exit(Dagger_AppComponent.create().build() != 42 ? 1 : 0);
-   }
+    Dagger_AppComponent.create().build();
+  }
 }

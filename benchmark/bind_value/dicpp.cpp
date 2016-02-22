@@ -13,8 +13,16 @@ void module(di::registry& r) {
   // clang-format on
 }
 
-int main() {
+auto test() {
   di::injector injector;
   injector.install(module);
-  return injector.construct<int>() != 42;
+  return injector.construct<int>();
 }
+
+//<-
+int main() {}
+/**
+ * ASM x86-64
+ *
+ */
+//->

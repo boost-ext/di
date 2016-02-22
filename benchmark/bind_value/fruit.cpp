@@ -14,7 +14,15 @@ fruit::Component<int> module() {
   // clang-format on
 }
 
-int main() {
+auto test() {
   fruit::Injector<int> injector{module()};
-  return injector.get<int>() != 42;
+  return injector.get<int>();
 }
+
+//<-
+int main() {}
+/**
+ * ASM x86-64
+ *
+ */
+//->

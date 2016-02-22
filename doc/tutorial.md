@@ -356,17 +356,18 @@ By default there are 4 scopes
 By default [deduce] scope is used which means that scope is deduced based on a constructor parameter.
 For instance, reference, shared_ptr will be deduced as [singleton] scope and pointer, unique_ptr will be deduced as [unique] scope.
 
-| Type | deduce |
+| Type | Scope |
 |------|-------|
 | T | [unique] |
 | T& | [singleton] |
-| const T& | [unique] (temporary)/singleton |
+| const T& | [unique] (temporary) / [singleton] |
 | T* | [unique] (ownership transfer) |
 | const T* | [unique] (ownership transfer) |
 | T&& | [unique] |
-| unique\_ptr<T> | [unique] |
-| shared\_ptr<T> | [singleton] |
-| weak\_ptr<T> | [singleton] |
+| std::unique_ptr<T> | [unique] |
+| std::shared_ptr<T> | [singleton] |
+| boost::shared_ptr<T> | [singleton] |
+| std::weak_ptr<T> | [singleton] |
 
 Coming back to our example, we got quite a lot `singletons` there as we just needed one instance per application life time.
 Although scope deduction is very useful, it's not always what we need and therefore `Boost.DI` allows changing the scope for given type.
@@ -398,17 +399,18 @@ boost/di.hpp:897:2: error: 'scoped<scopes::unique, gui_view>::is_not_convertible
 Ah, reference doesn't make much sense with [unique] scope because it would mean that it has to be stored somewhere.
 It would be better to use `std::unique_ptr<iview>` instead.
 
-| Type/Scope | unique | singleton | instance |
-|------------|--------|--------|-----------|---------|----------|
+| Type/Scope | [unique] | [singleton] | [instance] |
+|------------|----------|-------------|------------|
 | T | ✔ | - | ✔ |
 | T& | - | ✔  | ✔ |
 | const T& | ✔ (temporary) | ✔ | ✔ |
-| T* (transfer ownership) | ✔ | - | - | - | ✔ |
-| const T* | ✔ | - | ✔ |
-| T&& | ✔ | - | - |
-| unique\_ptr<T> | ✔ |  - | ✔ |
-| shared\_ptr<T> | ✔ | ✔ | ✔ |
-| weak\_ptr<T> | - | ✔ | ✔ |
+| T* (transfer ownership) | ✔ | - | - |
+| const T* | ✔ | - | - |
+| T&& | ✔ | - | ✔ |
+| std::unique_ptr<T> | ✔ | - | - |
+| std::shared_ptr<T> | ✔ | ✔ | ✔ |
+| boost::shared_ptr<T> | ✔ | ✔ | - / ✔ converted to |
+| std::weak_ptr<T> | - | ✔ |  - / ✔ converted to |
 
 Hmm, let's try something else then. We have list of unique clients, we can share objects just by changing the list to
 use `std::shared_ptr` instead.

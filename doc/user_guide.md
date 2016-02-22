@@ -496,16 +496,17 @@ If no scope will be given, [deduce] scope will be assumed.
 | `create<T, TName, TProvider>` | [providable]<TProvider\> | Creates type `T` | `T` |
 
 | Type/Scope | [unique] | [singleton] | [instance] |
-|------------|--------|--------|-----------|---------|----------|
+|------------|----------|-------------|------------|
 | T | ✔ | - | ✔ |
 | T& | - | ✔  | ✔ |
 | const T& | ✔ (temporary) | ✔ | ✔ |
-| T* (transfer ownership) | ✔ | - | - | - | ✔ |
-| const T* | ✔ | - | ✔ |
-| T&& | ✔ | - | - |
-| unique\_ptr<T> | ✔ |  - | ✔ |
-| shared\_ptr<T> | ✔ | ✔ | ✔ |
-| weak\_ptr<T> | - | ✔ | ✔ |
+| T* (transfer ownership) | ✔ | - | - |
+| const T* | ✔ | - | - |
+| T&& | ✔ | - | ✔ |
+| std::unique_ptr<T> | ✔ | - | - |
+| std::shared_ptr<T> | ✔ | ✔ | ✔ |
+| boost::shared_ptr<T> | ✔ | ✔ | - / ✔ converted to |
+| std::weak_ptr<T> | - | ✔ |  - / ✔ converted to |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_custom.cpp)
@@ -533,13 +534,14 @@ Default scope which will be converted to one of the scopes depending on the type
 |------|-------|
 | T | [unique] |
 | T& | [singleton] |
-| const T& | [unique] (temporary)/[singleton] |
+| const T& | [unique] (temporary) / [singleton] |
 | T* | [unique] (ownership transfer) |
 | const T* | [unique] (ownership transfer) |
 | T&& | [unique] |
-| unique\_ptr<T> | [unique] |
-| shared\_ptr<T> | [singleton] |
-| weak\_ptr<T> | [singleton] |
+| std::unique_ptr<T> | [unique] |
+| std::shared_ptr<T> | [singleton] |
+| boost::shared_ptr<T> | [singleton] |
+| std::weak_ptr<T> | [singleton] |
 
 ***Semantics***
 
@@ -590,17 +592,18 @@ Default scope which will be converted to one of the scopes depending on the type
 Scope representing values - passed externally. The life time of the object depends on the user.
 Boost.DI is not maintaining the life time of these objects, however, values and strings will be copied and managed by the library.
 
-| Type | instance |
-| ---- | -------- |
-| T | ✔ |
-| T& | - |
-| const T& | ✔ (temporary) | ✔ |
-| T* (transfer ownership) | ✔ |
-| const T* | ✔ |
-| T&& | ✔ |
-| unique\_ptr<T> | ✔ |
-| shared\_ptr<T> | ✔ |
-| weak\_ptr<T> | - |
+| Type | instance[in] (`bind<>.to(in)`) | instance[out] (`injector.create<out>()`) |
+| ---- | ------------ | ------------- |
+| T | ✔ | ✔ |
+| T& | ✔ | ✔ |
+| const T& | ✔ | ✔ |
+| T* | - | - |
+| const T* | - | - |
+| T&& | ✔ | ✔ |
+| std::unique_ptr<T> | - | - |
+| std::shared_ptr<T> | ✔ | ✔ |
+| boost::shared_ptr<T> | - | ✔ |
+| std::weak_ptr<T> | - | ✔ |
 
 ***Semantics***
 
@@ -632,8 +635,8 @@ Boost.DI is not maintaining the life time of these objects, however, values and 
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_instance.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bindings.cpp)
 ![CPP(BTN)](Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp)
+![CPP(BTN)](Run_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bindings.cpp)
 
 <br /><hr />
 
@@ -655,15 +658,16 @@ Singleton scope will convert automatically between `std::shared_ptr` and `boost:
 
 | Type | singleton |
 | ---- | --------- |
-| T | ✔ |
-| T& | - |
-| const T& | ✔ (temporary) | ✔ |
-| T* (transfer ownership) | ✔ |
-| const T* | ✔ |
-| T&& | ✔ |
-| unique\_ptr<T> | ✔ |
-| shared\_ptr<T> | ✔ |
-| weak\_ptr<T> | - |
+| T | - |
+| T& | ✔ |
+| const T& | ✔ |
+| T* | - |
+| const T* | - |
+| T&& | - |
+| std::unique_ptr<T> | - |
+| std::shared_ptr<T> | ✔ |
+| boost::shared_ptr<T> | ✔ |
+| std::weak_ptr<T> | ✔ |
 
 ***Semantics***
 
@@ -717,13 +721,14 @@ Scope representing unique/per request value. A new instance will be provided eac
 | ---- | ------ |
 | T | ✔ |
 | T& | - |
-| const T& | ✔ (temporary) | ✔ |
-| T* (transfer ownership) | ✔ |
-| const T* | ✔ |
+| const T& | ✔ (temporary) |
+| T* | ✔ (ownership transfer) |
+| const T* | ✔ (ownership transfer) |
 | T&& | ✔ |
-| unique\_ptr<T> | ✔ |
-| shared\_ptr<T> | ✔ |
-| weak\_ptr<T> | - |
+| std::unique_ptr<T> | ✔ |
+| std::shared_ptr<T> | ✔ |
+| boost::shared_ptr<T> | ✔ |
+| std::weak_ptr<T> | - |
 
 ***Semantics***
 
@@ -777,7 +782,12 @@ Module might be installed by passing it into [make_injector].
 ***Semantics***
 
     auto module = di::make_injector(...);
-    di::injector<...> module = di::make_injector(...);
+    di::injector<Ts...> module = di::make_injector(...);
+
+| Expression | Description | Note |
+| ---------- | ----------- | ---- |
+| `auto module = di::make_injector(...)` | All types are exposed from `module` | `module.create<T>()` is allowed for any `T` |
+| `di::injector<Ts...> module = di::make_injector(...)` | Only `Ts...` types are exposed from `module` | `module.create<T>()` is allowed only for `T` <= `Ts...` |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module.cpp)

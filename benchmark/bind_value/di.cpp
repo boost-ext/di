@@ -16,7 +16,17 @@ auto module = [] {
   // clang-format on
 };
 
-int main() {
+auto test() {
   auto injector = di::make_injector(module());
-  return injector.create<int>() != 42;
+  return injector.create<int>();
 }
+
+//<-
+int main() {}
+/**
+ * ASM x86-64 (same as `return 42`)
+ *
+ * xor 0x2a,%eax
+ * retq
+ */
+//->

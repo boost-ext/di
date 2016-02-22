@@ -25,6 +25,5 @@ class ninject {
   static void Main(string[] args) {
     Ninject.IKernel kernel = new StandardKernel(new Module());
     I object = kernel.Get<I>();
-    object->dummy();
   }
 }

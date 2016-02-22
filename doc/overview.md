@@ -103,10 +103,10 @@ Boost.DI header           | Time [s]
 
 ```cpp
 Legend:
-    ctor    = raw constructor: c(int i, double d);
-    inject  = inject constructor: BOOST_DI_INJECT(c, int i, double d);
+    ctor    = raw constructor: T(int i, double d);
+    inject  = inject constructor: BOOST_DI_INJECT(T, int i, double d);
     all     = all types exposed from module: auto configure();
-    exposed = one type exposed from module: di::injector<c> configure();
+    exposed = one type exposed from module: di::injector<T> configure();
 ```
 [![small complexity](https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/small_complexity.png)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/small_complexity.png)
 ```cpp
@@ -176,7 +176,7 @@ Legend:
 | Linkage     | header only | header only | library |
 | Dependencies| - | boost system/boost thread | - |
 | Approach    | compile-time | run-time | compile/run-time |
-| Errors      | compile-time errors | exceptions | compile-time errors + exceptions |
+| Errors      | compile-time errors | exceptions | compile-time errors/exceptions |
 
 | Library | Bind Interface | Performance |
 | ------- | -------------- | ----------- |

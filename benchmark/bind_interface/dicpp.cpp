@@ -6,8 +6,6 @@
 //
 //<-
 #include <memory>
-#include <cstdlib>
-#include <string>
 //->
 #include <di/registry.hpp>
 #include <di/injector.hpp>
@@ -36,7 +34,7 @@ std::unique_ptr<I> test() {
 }
 
 //<-
-
+int main() {}
 /**
  * ASM x86-64
  *
@@ -93,8 +91,4 @@ std::unique_ptr<I> test() {
  * mov    %rax,%rdi
  * callq  0x405890 <__clang_call_terminate>
  */
-
-int main(int argc, char** argv) {
-  std::system(("gdb -batch -ex 'file " + std::string{argv[0]} + "' -ex 'disassemble test'").c_str());
-}
 //->
