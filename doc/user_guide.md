@@ -33,7 +33,7 @@
 
 ---
 
-> Let's assume all examples below include `boost/di.hpp` header and define `di` namespace alias.
+> Let's assume all examples below include `boost/di.hpp` header and define a convenient `di` namespace alias.
 ```cpp
 #include <boost/di.hpp>
 namespace di = boost::di;
@@ -201,10 +201,9 @@ It guarantees initialized state of data members. Boost.DI constructor injection 
 Boost.DI will deduce the best available constructor to be used for injection - unique constructor with the longest parameter list.
 If the default behavior should be changed constructor has to be explicitly marked with [BOOST_DI_INJECT] or [BOOST_DI_INJECT_TRAITS].
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 Automatic constructor parameters deduction is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE], which by default is set to 10.
-</div>
+</span>
 
 ***Semantics***
 
@@ -217,10 +216,9 @@ Automatic constructor parameters deduction is limited to [BOOST_DI_CFG_CTOR_LIMI
 | ---------- | ----------- | ----------- | ------- |
 | `parameter1-parameterN` | - | `N` constructor parameter | - |
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 Boost.DI is not able to distinguish between ambiguous constructors with the same (longest) amount of parameters.
-</div>
+</span>
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_direct.cpp)
@@ -265,10 +263,9 @@ Then BOOST_DI_INJECT become handy to point which constructor should be used.
 | `...` | - | `T` constructor parameters | - |
 
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 BOOST_DI_INJECT constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE], which by default is set to 10.
-</div>
+</span>
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_BOOST_DI_INJECT.cpp)
@@ -300,10 +297,9 @@ BOOST_DI_INJECT_TRAITS is a macro definition used to define constructor traits.
 | ---------- | ----------- | ----------- | ------- |
 | `...` | - | `T` constructor parameters | - |
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 BOOST_DI_INJECT_TRAITS constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE], which by default is set to 10.
-</div>
+</span>
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_BOOST_DI_INJECT_TRAITS.cpp)
@@ -336,10 +332,9 @@ di::inject informs Boost.DI about constructor parameters. Useful for generated/g
 | ---------- | ----------- | ----------- | ------- |
 | `...` | - | `T` constructor parameters | - |
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
-di::inject has no limitations if it comes to constructor parameters, however, named parameters are not allowed.
-</div>
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
+di::inject has no limitations if it comes to constructor parameters, however, [named] parameters are not allowed.
+</span>
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_inject.cpp)
@@ -392,10 +387,9 @@ Named parameters are useful when constructor has more parameters of the same typ
 In order to inject proper values into `value1` and `value2` they have to be distinguished somehow.
 Boost.DI solution for that problem are annotations.
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
-Annotations might be set only when constructor is selected using BOOST_DI_INJECT or BOOST_DI_INJECT_TRAITS.
-</div>
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
+Annotations might be set only when constructor is selected using [BOOST_DI_INJECT] or [BOOST_DI_INJECT_TRAITS].
+</span>
 
 ***Semantics***
 
@@ -413,10 +407,9 @@ Annotations might be set only when constructor is selected using BOOST_DI_INJECT
 
     BOOST_DI_INJECT(T, (named = value_1) int value1, (named = value_2) int value2);
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
-Implementation of constructor doesn't require annotations, which means implementation won't be affected by annotations.
-</div>
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
+Implementation of constructor doesn't require annotations, which means implementation won't be affected by it.
+</span>
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/annotated_constructor_injection.cpp)
@@ -616,10 +609,9 @@ Boost.DI is not managing life time of passed objects, however values and strings
 Scope representing shared value between all instances and between threads.
 Singleton scope will be deduced in case of shared_ptr or weak_ptr.
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
-Singleton scope will convert between std::shared_ptr and boost::shared_ptr if required.
-</div>
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
+Singleton scope will convert between `std::shared_ptr` and `boost::shared_ptr` if required.
+</span>
 
 | Type | singleton |
 | ---- | --------- |
@@ -929,10 +921,9 @@ Basic provider creates objects on the heap.
 Policies operates on dependencies in order to limit allowed behaviour or visit created types during run-time.
 Policies are set up via [di::config].
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 By default Boost.DI has no policies enabled.
-</div>
+</span>
 
 ***Semantics***
 
@@ -947,10 +938,9 @@ By default Boost.DI has no policies enabled.
 | ---------- | ----------- | ----------- | ------- |
 | `make_policies<TPolicies...\>` | [callable]<TPolicies...\> | Creates policies | [callable] list |
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
-In order for injector to verify policies they have to be created using di::config and passed via `TConfig` in make_injector or set globally via BOOST_DI_CFG.
-</div>
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
+In order for injector to verify policies they have to be created using [config] and passed via `TConfig` in [make_injector] or set globally via [BOOST_DI_CFG].
+</span>
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_print_types.cpp)
@@ -974,10 +964,9 @@ In order for injector to verify policies they have to be created using di::confi
 
 Policy limits constructor parameters to explicitly allowed.
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 By default constructible policy disables creation of any constructor parameters.
-</div>
+</span>
 
 ***Semantics***
 
@@ -1011,20 +1000,18 @@ By default constructible policy disables creation of any constructor parameters.
 | `is_injected<T\>` | - | Verify whether type `T` is injected via [BOOST_DI_INJECT] | true_type/false_type |
 
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
-In order to allow logic operators using namespace boost::di::policies::operators has to be used
-</div>
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
+In order to allow logic operators using namespace `boost::di::policies::operators` has to be used.
+</span>
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_local.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_global.cpp)
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 STL type traits are supported and might be combined with Boost.DI traits in order to limit constructor types
-For example, std::is_same<_, int>{} || std::is_constructible<_, int, int>{} || std::is_base_of<int, _>{}, etc...
-</div>
+For example, `std::is_same<_, int>{} || std::is_constructible<_, int, int>{} || std::is_base_of<int, _>{}`, etc...
+</span>
 
 ***Example***
 
@@ -1229,10 +1216,9 @@ Type creation requirement.
 | Suggestion  | 'instance is not convertible to the requested type, verify binding: 'di::bind<T>.to(value)'?' |
 | Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_instance_is_not_convertible_to.cpp) |
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 Suggestions are not supported/displayed by MSVC-2015.
-</div>
+</span>
 
 ---
 
@@ -1356,11 +1342,16 @@ Injector configuration.
 [providable]: #di_providable
 [scopable]: #di_scopable
 [injector]: #di_make_injector
+[make_injector]: #di_make_injector
 [Configuration]: #di_config
 [deduce]: #di_deduce
 [instance]: #di_instance
 [singleton]: #di_singleton
 [unique]: #di_unique
+[named]: #di_named
+[config]: #di_config
+[BOOST_DI_CFG]: #di_config
 [BOOST_DI_INJECT]: #BOOST_DI_INJECT
 [BOOST_DI_INJECT_TRAITS]: #BOOST_DI_INJECT_TRAITS
 [BOOST_DI_CFG_CTOR_LIMIT_SIZE]: #di_config
+[BOOST_DI_CFG_DIAGNOSTICS_LEVEL]: overview.md#configuration

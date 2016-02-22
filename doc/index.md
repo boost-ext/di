@@ -74,7 +74,7 @@ user user_{loger_};
 app app_{controller_, user_};
 ```
 Notice that **ORDER** in which above dependencies are created is **IMPORTANT** as well as that
-*ANY* change in **ANY** of the objects constructor will **REQUIRE** a change in this code!
+**ANY** change in **ANY** of the objects constructor will **REQUIRE** a change in this code!
 
 DI library, not only let you forget about maintaining above code (See [Create Objects Tree](tutorial.md#1-basic-create-objects-tree)),
 but also can help you with...
@@ -109,6 +109,12 @@ but also can help you with...
 * Boost.DI gives better control of what and how is created (See [Constructible Policy](user_guide.md#di_constructible))
 * Boost.DI gives better understanding about objects hierarchy (See [UML Dumper](extensions.md#uml-dumper))
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
+
+![CPP(BTN)](Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp)
+![CPP(BTN)](Run_XML_Injection_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/xml_injection.cpp)
+![CPP(BTN)](Run_Constructible_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_local.cpp)
+
+<br /><br />
 
 ###Boost.DI design goals
 

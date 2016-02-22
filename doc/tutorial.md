@@ -151,10 +151,9 @@ exactly '0'. `Boost.DI` will take care of everything for us!
 
 Furthermore, there is no performance penalty for using `Boost.DI` (see [Performance](overview.md#performance))!
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
-Boost.DI can inject dependencies using direct initialization `T(...)` or uniform initialization `T{...}` for aggregate types.
-</div>
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
+Boost.DI can [inject] dependencies using direct initialization `T(...)` or uniform initialization `T{...}` for aggregate types.
+</span>
 
 Check it out yourself!
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_create_objects_tree.cpp)
@@ -211,10 +210,9 @@ boost/di.hpp:870:2: error: 'boost::di::v1_0_0::concepts::abstract_type<iview>::i
   error(_ = "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?");
 ```
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
-You can get more info about error by increasing BOOST_DI_CFG_DIAGNOSTICS_LEVEL [0-2] value (default=1).
-</div>
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
+You can get more info about error by increasing [BOOST_DI_CFG_DIAGNOSTICS_LEVEL] [0-2] value (default=1).
+</span>
 
 Ah, okay, we haven't bound `iview` which means that `BOOST.DI` can't figure out whether we want `text_view` or `gui_view`?
 Well, it's really simple to fix it, we just follow suggestion provided.
@@ -235,11 +233,10 @@ struct renderer {
 };
 ```
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 If you want change the default behaviour and be sure that all required dependencies are bound and not zero initialized
-take a look at `constructible` policy.
-</div>
+take a look at [constructible] policy.
+</span>
 
 ```cpp
 auto injector = di::make_injector(
@@ -248,11 +245,10 @@ auto injector = di::make_injector(
 );
 ```
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 Boost.DI is a compile time beast which means that it guarantees that if your code compiles, all dependencies will be resolved
 correctly. No runtime exceptions or runtime asserts, EVER!
-</div>
+</span>
 
 Check it out yourself!
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_bindings.cpp)
@@ -483,10 +479,9 @@ class model {
 };
 ```
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
-We can also write 'model(int rows, int cols, ...)' to get the same result.
-</div>
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
+We can also write `model(int rows, int cols, ...)` to get the same result.
+</span>
 
 Okay, right now it compiles but, wait a minute, `123` (renderer device) was injected for both `rows` and `cols`!
 Well, it wasn't even closed to what we would like to, but we can fix it easily using [named] annotations.
@@ -513,12 +508,10 @@ model::model(int rows, int cols) {}
 Please, notice that we have separated `model` constructor definition and declaration to show that definition doesn't
 require named annotations.
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 If you happen to use clang/gcc compiler you can use string literals instead of creating objects,
-for example (named = "Rows"_s).
-</div>
-
+for example `(named = "Rows"_s)`.
+</span>
 
 Finally, we have to bind our values.
 
@@ -531,10 +524,9 @@ auto injector = di::make_injector(
 
 That's all.
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 The same result might be accomplished with having different types for rows and cols.
-</div>
+</span>
 
 Full example here.
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_annotations_to_the_rescue.cpp)
@@ -620,12 +612,11 @@ Right now you can easily separate definition and declaration between `hpp` and `
 Check it out here!
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_split_your_configuration_expose.cpp)
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
-You can also expose named parameters using 'di::injector&lt;BOOST_DI_EXPOSE((named = Rows) int)&gt;'.
-Different variations of the same type have to be exposed explicitly using `di::injector&lt;model&, std::unique_ptr&lt;model&gt;&gt;`.
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
+You can also expose named parameters using `di::injector<BOOST_DI_EXPOSE((named = Rows) int)>`.
+Different variations of the same type have to be exposed explicitly using `di::injector<model&, std::unique_ptr<model>>`.
 Expose uses type erasure and therefore it has small performance overhead!
-</div>
+</span>
 
 More examples.
 
@@ -705,6 +696,7 @@ Please check them out and write your own!
 [make_injector]: user_guide.md#make_injector
 [BOOST_DI_INJECT]: user_guide.md#BOOST_DI_INJECT
 [override]: user_guide.md#di_bind
+[inject]: user_guide.md#di_automatic
 [named]: user_guide.md#di_named
 [scopes]: user_guide.md#scopes
 [deduce]: user_guide.md#di_deduce
@@ -716,3 +708,5 @@ Please check them out and write your own!
 [policies]: user_guide.md#policies
 [constructible]: user_guide.md#di_constructible
 [Law of Demeter]: https://en.wikipedia.org/wiki/Law_of_Demeter
+[BOOST_DI_CFG_CTOR_LIMIT_SIZE]: overview.md#configuration
+[BOOST_DI_CFG_DIAGNOSTICS_LEVEL]: overview.md#configuration

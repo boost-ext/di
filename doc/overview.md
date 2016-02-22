@@ -36,8 +36,8 @@ git clone https://github.com/boost-experimental/di && cd di && make test
 | --------------------------------- | ----------- |
 | `BOOST_DI_VERSION`                | Current version of Boost.DI (ex. 1'0'0) |
 | `BOOST_DI_CFG`                    | Global configuration allows to customize provider and policies (See [Config](user_guide.md#di_config)) |
-| `BOOST_DI_CFG_DIAGNOSTICS_LEVEL`  | Gives more information with error messages (See [Error messages](#error-messages)) |
 | `BOOST_DI_CFG_CTOR_LIMIT_SIZE`    | Limits number of allowed consturctor parameters [0-10, default=10] (See [Injections](user_guide.md#injections)) |
+| `BOOST_DI_CFG_DIAGNOSTICS_LEVEL`  | Gives more information with error messages (See [Error messages](#error-messages)) |
 | `BOOST_DI_NAMESPACE_BEGIN`        | `namespace boost { namespace di { inline namespace v_1_0_0 {` |
 | `BOOST_DI_NAMESPACE_END`          | `}}}` |
 
@@ -153,18 +153,20 @@ Legend:
 
 ###Benchmarks
 
-* C++ Dependency Injection Libraries
+* **C++ Dependency Injection Libraries**
 
-    * [https://bitbucket.org/cheez/dicpp](https://bitbucket.org/cheez/dicpp)
-    * [https://github.com/google/fruit](https://github.com/google/fruit)
-    * [https://github.com/phs/sauce](https://github.com/phs/sauce)
-    * [http://wallaroolib.sourceforge.net](http://wallaroolib.sourceforge.net)
-    * [https://github.com/ybainier/hypodermic](https://github.com/ybainier/hypodermic)
-    * [https://code.google.com/p/infectorpp](https://code.google.com/p/infectorpp)
-    * [https://github.com/vogel/injeqt](https://github.com/vogel/injeqt)
-    * [https://github.com/gracicot/kangaru](https://github.com/gracicot/kangaru)
-    * [https://github.com/admiyo/CppInject](https://github.com/admiyo/CppInject)
-    * [http://codebros.github.io/DiLite](http://codebros.github.io/DiLite)
+| Library | Link |
+| ------- | ---- |
+| dicpp | [https://bitbucket.org/cheez/dicpp](https://bitbucket.org/cheez/dicpp) |
+| Fruit | [https://github.com/google/fruit](https://github.com/google/fruit) |
+| Sauce | [https://github.com/phs/sauce](https://github.com/phs/sauce) |
+| Wallaroo | [http://wallaroolib.sourceforge.net](http://wallaroolib.sourceforge.net) |
+| Hypodermic | [https://github.com/ybainier/hypodermic](https://github.com/ybainier/hypodermic) |
+| Infectorpp | [https://code.google.com/p/infectorpp](https://code.google.com/p/infectorpp) |
+| Injeqt | [https://github.com/vogel/injeqt](https://github.com/vogel/injeqt) |
+| Kangaru | [https://github.com/gracicot/kangaru](https://github.com/gracicot/kangaru) |
+| CppInject | [https://github.com/admiyo/CppInject](https://github.com/admiyo/CppInject) |
+| DiLite | [http://codebros.github.io/DiLite](http://codebros.github.io/DiLite) |
 
 | **Library** | Boost.DI | [dicpp] | [Google.Fruit] |
 | ----------- | -------- | ----- | ------------ |
@@ -176,17 +178,17 @@ Legend:
 | Approach    | compile-time | run-time | compile/run-time |
 | Errors      | compile-time errors | exceptions | compile-time errors + exceptions |
 
-| Library | Bind Interface | ASM x86-64 |
-| ------- | -------------- | ---------- |
-| Boost.DI | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp) | [8 instructions](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp) |
-| [dicpp] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp) | [50 instructions](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp) |
-| [Google.Fruit] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/fruit.cpp) | [82 instructions](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp) |
+| Library | Bind Interface | Performance |
+| ------- | -------------- | ----------- |
+| Boost.DI | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp) |
+| [dicpp] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp) |
+| [Google.Fruit] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/fruit.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp) |
 
-| Library | Bind Value | ASM x86-64 |
-| ------- | ---------- | ---------- |
-| Boost.DI | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp) | [8 instructions](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp) |
-| [dicpp] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp) | [50 instructions](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp) |
-| [Google.Fruit] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/fruit.cpp) | [82 instructions](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp) |
+| Library | Bind Value | Performance |
+| ------- | ---------- | ----------- |
+| Boost.DI | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp) |
+| [dicpp] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp) |
+| [Google.Fruit] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/fruit.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp) |
 
 | Library | Missing Binding Error |
 | ------- | ---------- |
@@ -209,7 +211,7 @@ Legend:
 
 ---
 
-| Test              | Types | Interfaces | Modules | Instances | 
+| Test              | Types | Interfaces | Modules | Instances |
 | ----------------- | ----- | ---------- | ------- | --------- |
 | [Create Complex](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/create_complex) | 211 | 100 | 1 | 5874638529236910091 |
 
@@ -220,9 +222,13 @@ Legend:
 | Memory usage (stack/heap) | 1b/0b    | -          | -    |
 | Executable size           | 72kb     | 4.4M       | 5.1M |
 
+* To run benchmarks
+```sh
+cd benchmark && make
+```
 ---
 
-* Dependency Injection Libraries
+* **Dependency Injection Libraries**
 
 | **Library** | Boost.DI | [Google.Guice] | [Dagger2] | [Ninject] |
 | ----------  | -------- | ------------ | ------- | ------- |
@@ -267,7 +273,7 @@ Legend:
 
 ---
 
-| Test              | Types | Interfaces | Modules | Instances | 
+| Test              | Types | Interfaces | Modules | Instances |
 | ----------------- | ----- | ---------- | ------- | --------- |
 | [Create Complex](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/create_complex) | 211 | 100 | 1 | 5874638529236910091 |
 
@@ -275,6 +281,11 @@ Legend:
 | --------------------------- | -------- | -------------- | --------- | --------- |
 | Compilation time            | 3.082s   | 0.925s         | 4.283s    | 0.164s    |
 | Execution time              | 0.002s   | -              | -         | -         |
+
+* To run benchmarks
+```sh
+cd benchmark && make
+```
 
 ---
 
