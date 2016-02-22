@@ -223,7 +223,8 @@ It guarantees initialized state of data members. Boost.DI constructor injection 
 ***Description***
 
 Boost.DI will deduce the best available constructor to be used for injection - unique constructor with the longest parameter list.
-If the default behavior should be changed constructor has to be explicitly marked with [BOOST_DI_INJECT] or [BOOST_DI_INJECT_TRAITS].
+If the default behavior should be changed constructor has to be explicitly marked with
+[BOOST_DI_INJECT] or [BOOST_DI_INJECT_TRAITS] or di::ctor_traits] or [di::inject].
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 Automatic constructor parameters deduction is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE], which by default is set to 10.
@@ -241,7 +242,8 @@ Automatic constructor parameters deduction is limited to [BOOST_DI_CFG_CTOR_LIMI
 | `parameter1-parameterN` | - | `N` constructor parameter | - |
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
-Boost.DI is not able to distinguish between ambiguous constructors with the same (longest) number of parameters.
+Boost.DI is not able to automatically distinguish between ambiguous constructors with the same (longest) number of parameters.
+Use [BOOST_DI_INJECT] or [BOOST_DI_INJECT_TRAITS] or [di::ctor_traits] or [di::inject] to explicitly mark constructor to be injected.
 </span>
 
 ***Test***
@@ -253,10 +255,7 @@ Boost.DI is not able to distinguish between ambiguous constructors with the same
 
 ![CPP(BTN)](Run_Automatic_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/automatic_injection.cpp)
 ![CPP(BTN)](Run_Constructor_Signature_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_signature.cpp)
-![CPP(BTN)](Run_Concepts_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/concepts.cpp)
-![CPP(BTN)](Run_Assisted_Injection_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/assisted_injection.cpp)
 ![CPP(BTN)](Run_Lazy_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/lazy.cpp)
-![CPP(BTN)](Run_Named_Parameters_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/named_parameters.cpp)
 ![CPP(BTN)](Run_XML_Injection_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/xml_injection.cpp)
 
 <br /><br /><br /><hr />
@@ -270,10 +269,10 @@ Boost.DI is not able to distinguish between ambiguous constructors with the same
 
 ***Description***
 
-BOOST_DI_INJECT is a macro definition used to explicitly say Boost.DI which constructor should be used as well as in order to annotate types - see [annotations] for further reding.
+BOOST_DI_INJECT is a macro definition used to explicitly say Boost.DI which constructor should be used as well as to annotate types - see [annotations] for further reding.
 When class has more than one constructor Boost.DI will by default choose the one with the longest parameter list.
-In case of constructors ambiguity Boost.DI is not able to choose the best one.
-Then BOOST_DI_INJECT become handy to point which constructor should be used.
+In case of constructors ambiguity, Boost.DI is not able to choose the best one.
+Then BOOST_DI_INJECT becomes handy to point which constructor should be used.
 
 ***Semantics***
 
@@ -283,9 +282,8 @@ Then BOOST_DI_INJECT become handy to point which constructor should be used.
 
 | Expression | Requirement | Description | Returns |
 | ---------- | ----------- | ----------- | ------- |
-| `T` | - | Class type | - |
+| `T` | - | Class/Struct name | - |
 | `...` | - | `T` constructor parameters | - |
-
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 BOOST_DI_INJECT constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SIZE], which by default is set to 10.
@@ -296,6 +294,7 @@ BOOST_DI_INJECT constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SI
 ***Example***
 
 ![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp)
+![CPP(BTN)](Run_Concepts_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/concepts.cpp)
 
 <br /><hr />
 
@@ -343,7 +342,8 @@ BOOST_DI_INJECT_TRAITS constructor parameters is limited to [BOOST_DI_CFG_CTOR_L
 
 ***Description***
 
-di::inject informs Boost.DI about constructor parameters. Useful for generated/generic classes as it doesn't have constructor parameters size limitations.
+`di::inject` informs Boost.DI about constructor parameters.
+It's useful for generated/generic classes as it doesn't have constructor parameters size limitations.
 
 ***Semantics***
 
@@ -357,7 +357,9 @@ di::inject informs Boost.DI about constructor parameters. Useful for generated/g
 | `...` | - | `T` constructor parameters | - |
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
-di::inject has no limitations if it comes to constructor parameters, however, [named] parameters are not allowed.
+`di::inject` has no limitations if it comes to constructor parameters, however, [named] parameters are not allowed.
+Moreover, you can replace `di::inject` with any variadic type list type to remove dependency to Boost.DI.
+For example, `template<class...> struct type_list{};` `using boost_di_inject__ = type_list<...>;`
 </span>
 
 ***Test***
@@ -378,7 +380,18 @@ di::inject has no limitations if it comes to constructor parameters, however, [n
 
 ***Description***
 
+`di::ctor_traits` is a trait in which constructor parameters for type `T` might be specified.
+It's useful for third party classes you don't have access to and which can't be created using [automatic] injection.
+
 ***Semantics***
+
+    namespace boost {
+    namespace di {
+      template <>
+      struct ctor_traits<T> {
+        BOOST_DI_INJECT_TRAITS(...); // or using type = di::inject<...>;
+      };
+    }}
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_ctor_traits.cpp)
@@ -390,7 +403,7 @@ di::inject has no limitations if it comes to constructor parameters, however, [n
 
 ###Annotations
 
-Annotations are intrusive, additional informations specified along with the type in order to refer to given type by the
+Annotations are intrusive, additional informations, specified along with the type in order to refer to given type by the
 annotation instead of type it self. Useful, when there are more than one type of the same parameters in constructor parameters.
 
 <a id="di_named"></a>
@@ -443,6 +456,8 @@ Implementation of constructor doesn't require annotations, which means implement
 ***Example***
 
 ![CPP(BTN)](Run_Annotations_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/annotations.cpp)
+![CPP(BTN)](Run_Named_Parameters_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/named_parameters.cpp)
+![CPP(BTN)](Run_Assisted_Injection_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/assisted_injection.cpp)
 
 <br /><hr />
 
@@ -748,9 +763,6 @@ Scope representing unique/per request value.
 ###Modules
 
 <a id="di_module"></a>
-```cpp
-auto module = [] { return di::make_injector(...); };
-```
 
 ***Header***
 
@@ -982,7 +994,7 @@ By default Boost.DI has no policies enabled.
 
     template <class... TPolicies> requires callable<TPolicies...>
     auto make_policies(TPolicies...) noexcept;
-  
+
     struct config : di::config {
       template<class TInjector>
       static auto policies(const TInjector&) noexcept { return make_policies(...); }
@@ -999,12 +1011,12 @@ By default Boost.DI has no policies enabled.
 | `TCtor...` | - | Constructor parameters | - |
 
 | `T` | Description | Example |
-| --- | ----------- | ------- | 
+| --- | ----------- | ------- |
 | `T::type` | Type to be created | `std::shared_ptr<int>` |
 | `T::name` | Annotation given | `my_name` |
 
 | `TDependency` | Description | Example |
-| ------------- | ----------- | ------- | 
+| ------------- | ----------- | ------- |
 | `TDependency::expected` | Decayed 'Interface' type | `interface` |
 | `TDependency::given` | Decayed 'Given' type | `implementatoin` |
 | `TDependency::name` | Annotation expected | `my_name` |
@@ -1108,7 +1120,7 @@ If type doesn't satisfy the concept short and descriptive error message is provi
 
 ***Description***
 
-  Bindings type requirement.
+[Bindings] type requirement.
 
 ***Synopsis***
 
@@ -1133,7 +1145,7 @@ If type doesn't satisfy the concept short and descriptive error message is provi
 
 | Expression | Description | Returns |
 | ---------- | ----------- | ------- |
-| `Ts...` | Bindings to be verified | true_type if constraint is satisfied, `error` otherwise |
+| `Ts...` | Bindings to be verified | true_type if constraint is satisfied, `Error` otherwise |
 
 ***Example***
 
@@ -1174,7 +1186,7 @@ If type doesn't satisfy the concept short and descriptive error message is provi
 
 ***Description***
 
-Policies type requirement.
+[Policy] type requirement.
 
 ***Synopsis***
 
@@ -1207,6 +1219,8 @@ Policies type requirement.
 
 ***Description***
 
+[Configuration] type requirement.
+
 ***Synopsis***
 
     template <class T>
@@ -1238,24 +1252,30 @@ Policies type requirement.
 
 ***Description***
 
-Type creation requirement.
+Requirement for type `T` which is going to be created via [injector]`.create<T>()`
 
 ***Synopsis***
 
-    template <class T, class... TBindings>
+    namespace type_traits {
+      template<class T>
+      using ctor_traits; // returns list of constructor parameters
+    }
+
+    template <class T, class... TArgs>
     concept bool creatable() {
-      return is_recursively_constructible<T, TBindings...>();
+      return is_constructible<T, TArgs...>() &&
+             is_constructible<TArgs, type_traits::ctor_traits<TArgs>...>();
     }
 
 ***Semantics***
 
-    creatable<T, TBindings...>
+    creatable<T, TArgs...>
 
 ***Example***
 
 | Error | `abstract_type<T>::is_not_bound` |
 | ---------- | ----------- |
-| Description | config `T` requires only providable and callable types |
+| Description | abstract type `T` is not bound |
 | `BOOST_DI_CFG_DIAGNOSTICS_LEVEL` | 0 -> 'constraint not satisfied', 1 -> (0) + abstract type is not bound, 2 -> (1) + creation tree |
 | Suggestion  | 'type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?' |
 | Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_abstract_type_is_not_bound.cpp) |
@@ -1304,21 +1324,28 @@ Suggestions are not supported/displayed by MSVC-2015.
 
 ***Description***
 
-Provider type requirement.
+[Provider] type requirement.
 
 ***Synopsis***
+
+    namespace type_traits {
+      struct direct;
+      struct uniform;
+      struct stack;
+      struct heap;
+    }
 
     template <class T>
     concept bool providable() {
       return requires(T object) {
-        { object.template get<_>(direct/uniform{}, stack/heap{}, ...) };
-        { object.template is_creatable<_>(direct/uniform{}, stack/heap{}, ...) };
+        { object.template get<_>(type_traits::direct/type_traits::uniform{}, type_traits::stack/type_traits::heap{}, ...) };
+        { object.template is_creatable<_>(type_traits::direct/type_traits::uniform{}, type_traits::stack/type_traits::heap{}, ...) };
       }
     }
 
 ***Semantics***
 
-   providable<T>
+    providable<T>
 
 ***Example***
 
@@ -1338,9 +1365,11 @@ Provider type requirement.
 
 ***Description***
 
-Scope type requirement.
+[Scope] type requirement.
 
 ***Synopsis***
+
+    struct _ {}; // any type
 
     template <class T>
     concept bool scopable() {
@@ -1353,7 +1382,7 @@ Scope type requirement.
 
 ***Semantics***
 
-   scopable<T>
+    scopable<T>
 
 ***Example***
 
@@ -1375,7 +1404,7 @@ Scope type requirement.
 
 ***Description***
 
-Injector configuration.
+[Injector] configuration.
 
 ***Synopsis***
 
@@ -1405,6 +1434,8 @@ Injector configuration.
 ***Example***
 
 ![CPP(BTN)](Run_Configuration_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/configuration.cpp)
+![CPP(BTN)](Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp)
+![CPP(BTN)](Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp)
 
 <br /><hr />
 
@@ -1416,9 +1447,16 @@ Injector configuration.
 [creatable]: #di_creatable
 [providable]: #di_providable
 [scopable]: #di_scopable
+[automatic]: #di_automatic
+[di::inject]: #di_inject
+[di::ctor_traits]: #di_ctor_traits
 [injector]: #di_make_injector
+[Injector]: #di_make_injector
 [make_injector]: #di_make_injector
 [Configuration]: #di_config
+[Policy]: #policies
+[Provider]: #providers
+[Scope]: #scopes
 [deduce]: #di_deduce
 [instance]: #di_instance
 [singleton]: #di_singleton
@@ -1428,5 +1466,5 @@ Injector configuration.
 [BOOST_DI_CFG]: #di_config
 [BOOST_DI_INJECT]: #BOOST_DI_INJECT
 [BOOST_DI_INJECT_TRAITS]: #BOOST_DI_INJECT_TRAITS
-[BOOST_DI_CFG_CTOR_LIMIT_SIZE]: #di_config
+[BOOST_DI_CFG_CTOR_LIMIT_SIZE]: overview.md#configuration
 [BOOST_DI_CFG_DIAGNOSTICS_LEVEL]: overview.md#configuration

@@ -12,7 +12,7 @@ namespace di = boost::di;
 //->
 
 struct T {
-  int a;     // = 0; MSVC_2015 doesn't support defaults
+  int a;     // = 0;
   double d;  // = 0.0;
 };
 
