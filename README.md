@@ -9,7 +9,7 @@
 
 #Experimental Boost.DI
 
-Your C++14 header only Dependency Injection library with no dependencies ([__Try it online!__](http://boost-experimental.github.io/di/cpp14/boost/libs/di/doc/html/examples/index.html#hello-world))
+Your C++14 header only Dependency Injection library with no dependencies ([__Try it online!__](http://boost-experimental.github.io/di/examples/index.html#hello-world))
 
 ```cpp
 +---------------------------------------------------+
