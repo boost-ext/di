@@ -25,7 +25,7 @@ int main() {
 #if defined(__cpp_variable_templates)
       di::bind<i1>.to<impl1>()
 #else
-      di::bind<i1>().to<impl1>()  // cross platform `bind`, MSVC 2015 doesn't support variable templates
+      di::bind<i1>().to<impl1>()  // no variable templates
 #endif
           );
 
