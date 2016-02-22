@@ -27,14 +27,15 @@ struct T {
   std::unique_ptr<i1> up;
 };
 
-int main() {
+auto module = []() -> di::injector<BOOST_DI_EXPOSE((named = my_name)std::unique_ptr<i1>)> {
   // clang-format off
-  auto module = []() -> di::injector<BOOST_DI_EXPOSE((named = my_name)std::unique_ptr<i1>)> {
-    return di::make_injector(
-      di::bind<i1>().named(my_name).to<impl1>()
-    );
-  };
+  return di::make_injector(
+    di::bind<i1>().named(my_name).to<impl1>()
+  );
   // clang-format on
+};
+
+int main() {
   auto injector = di::make_injector(module());
   auto object = injector.create<std::unique_ptr<T>>();
   assert(dynamic_cast<impl1*>(object->up.get()));

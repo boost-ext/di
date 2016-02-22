@@ -16,6 +16,7 @@
     * [di::singleton](#di_singleton)
     * [di::unique](#di_unique)
 * [Modules](#modules)
+    * [BOOST_DI_EXPOSE](#BOOST_DI_EXPOSE)
 * [Providers](#providers)
     * [di::providers::stack_over_heap (default)](#di_stack_over_heap)
     * [di::providers::heap](#di_heap)
@@ -180,7 +181,7 @@ Check out also [instance] scope to read more about binding to values: `di::bind<
 | ---------- | ----------- |
 | **Multiple Interfaces** | |
 | `di::bind<Interface1, Interface2, ...>.to<Implementation>()` | Binds `Interface1, Interface2, ...` to `Implementation` using one object |
-| **Multiple Bindings** | |
+| **Multiple Bindings** (std::array, std::vector, std::set) | |
 | `di::bind<int[]>.to({1, 2, ...})` | Binds `int` to values `1, 2, ...` |
 | `di::bind<Interface*[]>.to<Implementation1, Implementation2, ...>()` | Binds `Interface` to `Implementation1, Implementation2, ...` |
 | **Dynamic Bindings** | |
@@ -757,17 +758,45 @@ auto module = [] { return di::make_injector(...); };
 
 ***Description***
 
-Modules allow to split the configuration into smaller injectors.
+Modules allow to split [bindings] configuration into smaller [injectors](#injector).
 Module might be installed by passing it into [make_injector].
 
 ***Semantics***
 
     auto module = di::make_injector(...);
+    di::injector<...> module = di::make_injector(...);
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_type.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_many_types.cpp)
+***Example***
+
+![CPP(BTN)](Run_Modules_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/modules.cpp)
+
+<br /><hr />
+
+<a id="BOOST_DI_EXPOSE"></a>
+--- ***BOOST_DI_EXPOSE*** ---
+
+***Header***
+
+    #include <boost/di.hpp>
+
+***Description***
+
+BOOST_DI_EXPOSE is a macro definition allowing to expose [named] parameters via module/[injector].
+
+***Semantics***
+
+    di::injector<BOOST_DI_EXPOSE((named = Name) T), ...>;
+
+| Expression | Requirement | Description | Returns |
+| ---------- | ----------- | ----------- | ------- |
+| `Name` | - | Named object | - |
+| `...` | - | More types to be exposed | - |
+
+***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_annotated_type.cpp)
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_complex_types.cpp)
 ***Example***
@@ -775,6 +804,7 @@ Module might be installed by passing it into [make_injector].
 ![CPP(BTN)](Run_Modules_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/modules.cpp)
 
 <br /><hr />
+
 
 ###Providers
 
@@ -784,7 +814,7 @@ Module might be installed by passing it into [make_injector].
 
 ***Description***
 
-Providers are responsible for creating objects using given configuration.
+Providers are responsible for creating objects using given [Configuration].
 
 ***Semantics***
 
@@ -810,10 +840,20 @@ Providers are responsible for creating objects using given configuration.
       };
     }
 
+    struct config : di::config {
+      template<class TInjector>
+      static auto provider(const TInjector&) noexcept { return providers::stack_over_heap{}; }
+    };
+
 | Expression | Requirement | Description | Returns |
 | ---------- | ----------- | ----------- | ------- |
-| `is_creatable<T, TArgs...\>` | [creatable]<TArgs...\> | Verify whether `T` is creatable with `TArgs...` | `T` |
-| `get<T, TInitialization, TMemory, TArgs\>(const TInitialization&, const TMemory&, TArgs&&...)` | `TInitialization` is direct\|uniform && `TMemory` is heap\|stack | Creates type `T` with `TArgs...` | `T` |
+| `TInjector` | - | [injector] | - |
+| `is_creatable<T, TArgs...>` | [creatable]<TArgs...\> | Verify whether `T` is creatable with `TArgs...` | true_type/false_type |
+| `get(const TInit&, const TMemory&, TArgs&&...)` | `TInit` -> direct/uniform, `TMemory` -> heap/stack | Creates type `T` with `TArgs...` | `T` |
+
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
+Provider used by [injector] might changed locally via [make_injector] or globally via [BOOST_DI_CFG].
+</span>
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/providers_heap_no_throw.cpp)
@@ -854,20 +894,22 @@ Creates objects on the stack whenever possible, otherwise on the heap.
 
 | Expression | Requirement | Description | Returns |
 | ---------- | ----------- | ----------- | ------- |
-| `is_creatable<T, TArgs...\>` | [creatable]<TArgs...\> | Verify whether `T` is creatable with `TArgs...` | `T` |
-| `get<T, TInitialization, TMemory, TArgs\>(const TInitialization&, const TMemory&, TArgs&&...)` | `TInitialization` is direct\|uniform && `TMemory` is heap\|stack | Creates type `T` with `TArgs...` | `T` |
+| `is_creatable<T, TArgs...>` | [creatable]<TArgs...\> | Verify whether `T` is creatable with `TArgs...` | true_type/false_type |
+| `get(const TInit&, const TMemory&, TArgs&&...)` | `TInit` -> direct/uniform, `TMemory` -> heap/stack | Creates type `T` with `TArgs...` | `T` |
 
 | Type | `TMemory` |
 |------|-------|
 | T | stack |
 | T& | stack |
 | const T& | stack |
-| T* | stack |
-| const T* | stack |
 | T&& | stack |
-| unique\_ptr<T> | stack |
-| shared\_ptr<T> | stack |
-| weak\_ptr<T> | stack |
+| T* | heap |
+| const T* | heap |
+| std::unique\_ptr<T> | heap |
+| std::shared\_ptr<T> | heap |
+| std::weak\_ptr<T> | heap |
+| boost::shared\_ptr<T> | heap |
+| `is_polymorphic<T>` | heap |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/providers_stack_over_heap.cpp)
@@ -887,12 +929,12 @@ Creates objects on the stack whenever possible, otherwise on the heap.
 
 ***Description***
 
-Basic provider creates objects on the heap.
+Basic provider creates objects on the heap (always).
 
 ***Semantics***
 
     namespace providers {
-      class stack_over_heap {
+      class heap {
         public:
           template <class T, class... TArgs>
           struct is_creatable;
@@ -908,20 +950,8 @@ Basic provider creates objects on the heap.
 
 | Expression | Requirement | Description | Returns |
 | ---------- | ----------- | ----------- | ------- |
-| `is_creatable<T, TArgs...\>` | [creatable]<TArgs...\> | Verify whether `T` is creatable with `TArgs...` | `T` |
-| `get<T, TInitialization, TMemory, TArgs\>(const TInitialization&, const TMemory&, TArgs&&...)` | `TInitialization` is direct\|uniform && `TMemory` is heap\|stack | Creates type `T` with `TArgs...` | `T` |
-
-| Type | `TMemory` |
-|------|-------|
-| T | stack |
-| T& | stack |
-| const T& | stack |
-| T* | stack |
-| const T* | stack |
-| T&& | stack |
-| unique\_ptr<T> | stack |
-| shared\_ptr<T> | stack |
-| weak\_ptr<T> | stack |
+| `is_creatable<T, TArgs...>` | [creatable]<TArgs...\> | Verify whether `T` is creatable with `TArgs...` | true_type/false_type |
+| `get(const TInit&, const TMemory&, TArgs&&...)` | `TInit` -> direct/uniform, `TMemory` -> heap/stack | Creates type `T` with `TArgs...` | `T` |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/providers_heap.cpp)
@@ -942,7 +972,7 @@ Basic provider creates objects on the heap.
 ***Description***
 
 Policies operates on dependencies in order to limit allowed behaviour or visit created types during run-time.
-Policies are set up via [di::config].
+Policies are set up via [Configuration].
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 By default Boost.DI has no policies enabled.
@@ -950,19 +980,39 @@ By default Boost.DI has no policies enabled.
 
 ***Semantics***
 
-  template <class... TPolicies> requires callable<TPolicies...>
-  auto make_policies(TPolicies... args) noexcept;
-
-  struct config : di::config {
-    static auto policies(...) noexcept { return make_policies(...); }
-  };
+    template <class... TPolicies> requires callable<TPolicies...>
+    auto make_policies(TPolicies...) noexcept;
+  
+    struct config : di::config {
+      template<class TInjector>
+      static auto policies(const TInjector&) noexcept { return make_policies(...); }
+    };                                                                        |
+                                                                              |
+    // policy                                                                 /
+    template<class T, class TDependency, class.. TCtor>        <--------------
+    void operator()(const T&, const TDependency&, const TCtor&...);
 
 | Expression | Requirement | Description | Returns |
 | ---------- | ----------- | ----------- | ------- |
-| `make_policies<TPolicies...\>` | [callable]<TPolicies...\> | Creates policies | [callable] list |
+| `TInjector` | - | [injector] | - |
+| `make_policies<TPolicies...>` | [callable]<TPolicies...\> | Creates policies | [callable] list |
+| `TCtor...` | - | Constructor parameters | - |
+
+| `T` | Description | Example |
+| --- | ----------- | ------- | 
+| `T::type` | Type to be created | `std::shared_ptr<int>` |
+| `T::name` | Annotation given | `my_name` |
+
+| `TDependency` | Description | Example |
+| ------------- | ----------- | ------- | 
+| `TDependency::expected` | Decayed 'Interface' type | `interface` |
+| `TDependency::given` | Decayed 'Given' type | `implementatoin` |
+| `TDependency::name` | Annotation expected | `my_name` |
+| `TDependency::scope` | [scope](#scopes) | [singleton] |
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
-In order for injector to verify policies they have to be created using [config] and passed via `TConfig` in [make_injector] or set globally via [BOOST_DI_CFG].
+In order for injector to verify policies they have to be created using [config] and passed via `TConfig` in [make_injector]
+or set it globally via [BOOST_DI_CFG].
 </span>
 
 ***Test***
@@ -985,7 +1035,7 @@ In order for injector to verify policies they have to be created using [config] 
 
 ***Description***
 
-Policy limits constructor parameters to explicitly allowed.
+Constructible policy limits constructor parameters to explicitly allowed.
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 By default constructible policy disables creation of any constructor parameters.
@@ -1019,8 +1069,8 @@ By default constructible policy disables creation of any constructor parameters.
 
 | Expression | Requirement | Description | Returns |
 | ---------- | ----------- | ----------- | ------- |
-| `is_bound<T\>` | - | Verify whether type `T` is bound | true_type/false_type |
-| `is_injected<T\>` | - | Verify whether type `T` is injected via [BOOST_DI_INJECT] | true_type/false_type |
+| `is_bound<T>` | - | Verify whether type `T` is bound | true_type/false_type |
+| `is_injected<T>` | - | Verify whether type `T` is injected via [BOOST_DI_INJECT] | true_type/false_type |
 
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>

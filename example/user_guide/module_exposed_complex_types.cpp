@@ -37,15 +37,15 @@ struct T {
 
 BOOST_DI_UNUSED auto name = [] {};
 
-// clang-format off
 di::injector<T, std::unique_ptr<T>, BOOST_DI_EXPOSE((named = name)T)> module(const int& i) noexcept {
+  // clang-format off
   return di::make_injector(
     di::bind<i1>().to<impl1>()
   , di::bind<i2>().to<impl2>()
   , di::bind<int>().to(i)
   );
+  // clang-format on
 }
-// clang-format on
 
 int main() {
   auto injector = di::make_injector(module(42));
