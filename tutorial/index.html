@@ -41,7 +41,7 @@
 
   <script src="../js/cpp.js"></script>
   <script src="../js/gitter.js"></script>
-  <script src="../js/html.js"></script>
+  <script src="../js/utility.js"></script>
   <script src="../js/youtube.js"></script> 
 
   
@@ -372,11 +372,9 @@ exactly '0'. <code>Boost.DI</code> will take care of everything for us!</p>
 </tbody>
 </table>
 <p>Furthermore, there is no performance penalty for using <code>Boost.DI</code> (see <a href="../overview/index.html#performance">Performance</a>)!</p>
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
-Boost.DI can inject dependencies using direct initialization `T(...)` or uniform initialization `T{...}` for aggregate types.
-</div>
-
+<p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
+Boost.DI can <a href="../user_guide/index.html#di_automatic">inject</a> dependencies using direct initialization <code>T(...)</code> or uniform initialization <code>T{...}</code> for aggregate types.
+</span></p>
 <p>Check it out yourself!
 <img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_create_objects_tree.cpp" /></p>
 <p>Check out also other examples. Please, notice that the diagram was also generated using <code>Boost.DI</code> but we will get into that a bit later.</p>
@@ -419,11 +417,9 @@ boost/di.hpp:870:2: error: 'boost::di::v1_0_0::concepts::abstract_type&lt;iview&
   error(_ = &quot;type is not bound, did you forget to add: 'di::bind&lt;interface&gt;.to&lt;implementation&gt;()'?&quot;);
 </code></pre>
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
-You can get more info about error by increasing BOOST_DI_CFG_DIAGNOSTICS_LEVEL [0-2] value (default=1).
-</div>
-
+<p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
+You can get more info about error by increasing <a href="../overview/index.html#configuration">BOOST_DI_CFG_DIAGNOSTICS_LEVEL</a> [0-2] value (default=1).
+</span></p>
 <p>Ah, okay, we haven't bound <code>iview</code> which means that <code>BOOST.DI</code> can't figure out whether we want <code>text_view</code> or <code>gui_view</code>?
 Well, it's really simple to fix it, we just follow suggestion provided.</p>
 <pre><code class="cpp">auto injector = di::make_injector(
@@ -438,24 +434,20 @@ Well, it's really simple to fix it, we just follow suggestion provided.</p>
 };
 </code></pre>
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+<p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
 If you want change the default behaviour and be sure that all required dependencies are bound and not zero initialized
-take a look at `constructible` policy.
-</div>
-
+take a look at <a href="../user_guide/index.html#di_constructible">constructible</a> policy.
+</span></p>
 <pre><code class="cpp">auto injector = di::make_injector(
   di::bind&lt;iview&gt;.to&lt;gui_view&gt;()
 , di::bind&lt;int&gt;.to(42) // renderer device | Boost.DI can also deduce 'int' type for you -&gt; 'di::bind&lt;&gt;.to(42)'
 );
 </code></pre>
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+<p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
 Boost.DI is a compile time beast which means that it guarantees that if your code compiles, all dependencies will be resolved
 correctly. No runtime exceptions or runtime asserts, EVER!
-</div>
-
+</span></p>
 <p>Check it out yourself!
 <img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_bindings.cpp" /></p>
 <p>Great, but my code is more dynamic than that! I mean that I want to choose <code>gui_view</code> or <code>text_view</code> at runtime.
@@ -749,11 +741,9 @@ boost/di.hpp:942:4: error: 'type&lt;model&gt;::has_ambiguous_number_of_construct
 };
 </code></pre>
 
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
-We can also write 'model(int rows, int cols, ...)' to get the same result.
-</div>
-
+<p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
+We can also write <code>model(int rows, int cols, ...)</code> to get the same result.
+</span></p>
 <p>Okay, right now it compiles but, wait a minute, <code>123</code> (renderer device) was injected for both <code>rows</code> and <code>cols</code>!
 Well, it wasn't even closed to what we would like to, but we can fix it easily using <a href="../user_guide/index.html#di_named">named</a> annotations.</p>
 <p>Firstly, we have to create names. That's easy as names are just unique objects.</p>
@@ -773,12 +763,10 @@ model::model(int rows, int cols) {}
 
 <p>Please, notice that we have separated <code>model</code> constructor definition and declaration to show that definition doesn't
 require named annotations.</p>
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+<p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
 If you happen to use clang/gcc compiler you can use string literals instead of creating objects,
-for example (named = "Rows"_s).
-</div>
-
+for example <code>(named = "Rows"_s)</code>.
+</span></p>
 <p>Finally, we have to bind our values.</p>
 <pre><code class="cpp">auto injector = di::make_injector(
   di::bind&lt;int&gt;.named(Rows).to(6)
@@ -787,11 +775,9 @@ for example (named = "Rows"_s).
 </code></pre>
 
 <p>That's all.</p>
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
+<p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
 The same result might be accomplished with having different types for rows and cols.
-</div>
-
+</span></p>
 <p>Full example here.
 <img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_annotations_to_the_rescue.cpp" /></p>
 <p>Check out also.</p>
@@ -861,13 +847,11 @@ di::injector&lt;app&gt; app_module(const bool&amp; use_gui_view) {
 <p>Right now you can easily separate definition and declaration between <code>hpp</code> and <code>cpp</code> files.</p>
 <p>Check it out here!
 <img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_split_your_configuration_expose.cpp" /></p>
-<div class="warning">
-<h3><span class="fa fa-eye wy-text-neutral"></span>&nbsp; Note</h3>
-You can also expose named parameters using 'di::injector&lt;BOOST_DI_EXPOSE((named = Rows) int)&gt;'.
-Different variations of the same type have to be exposed explicitly using `di::injector&lt;model&, std::unique_ptr&lt;model&gt;&gt;`.
+<p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
+You can also expose named parameters using <code>di::injector&lt;BOOST_DI_EXPOSE((named = Rows) int)&gt;</code>.
+Different variations of the same type have to be exposed explicitly using <code>di::injector&lt;model&amp;, std::unique_ptr&lt;model&gt;&gt;</code>.
 Expose uses type erasure and therefore it has small performance overhead!
-</div>
-
+</span></p>
 <p>More examples.</p>
 <p><img alt="CPP(BTN)" src="../Run_Modules_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/modules.cpp" />
 <img alt="CPP(BTN)" src="../Run_Exposed_Annotated_Type_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_annotated_type.cpp" />

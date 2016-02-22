@@ -41,7 +41,7 @@
 
   <script src="../js/cpp.js"></script>
   <script src="../js/gitter.js"></script>
-  <script src="../js/html.js"></script>
+  <script src="../js/utility.js"></script>
   <script src="../js/youtube.js"></script> 
 
   
@@ -257,12 +257,12 @@ namespace di = boost::di;
 <td>Global configuration allows to customize provider and policies (See <a href="../user_guide/index.html#di_config">Config</a>)</td>
 </tr>
 <tr>
-<td><code>BOOST_DI_CFG_DIAGNOSTICS_LEVEL</code></td>
-<td>Gives more information with error messages (See <a href="#error-messages">Error messages</a>)</td>
-</tr>
-<tr>
 <td><code>BOOST_DI_CFG_CTOR_LIMIT_SIZE</code></td>
 <td>Limits number of allowed consturctor parameters [0-10, default=10] (See <a href="../user_guide/index.html#injections">Injections</a>)</td>
+</tr>
+<tr>
+<td><code>BOOST_DI_CFG_DIAGNOSTICS_LEVEL</code></td>
+<td>Gives more information with error messages (See <a href="#error-messages">Error messages</a>)</td>
 </tr>
 <tr>
 <td><code>BOOST_DI_NAMESPACE_BEGIN</code></td>
@@ -479,22 +479,58 @@ struct core::injector : TBindings... {
 </table>
 <h3 id="benchmarks">Benchmarks</h3>
 <ul>
-<li>
-<p>C++ Dependency Injection Libraries</p>
-<ul>
-<li><a href="https://bitbucket.org/cheez/dicpp">https://bitbucket.org/cheez/dicpp</a></li>
-<li><a href="https://github.com/google/fruit">https://github.com/google/fruit</a></li>
-<li><a href="https://github.com/phs/sauce">https://github.com/phs/sauce</a></li>
-<li><a href="http://wallaroolib.sourceforge.net">http://wallaroolib.sourceforge.net</a></li>
-<li><a href="https://github.com/ybainier/hypodermic">https://github.com/ybainier/hypodermic</a></li>
-<li><a href="https://code.google.com/p/infectorpp">https://code.google.com/p/infectorpp</a></li>
-<li><a href="https://github.com/vogel/injeqt">https://github.com/vogel/injeqt</a></li>
-<li><a href="https://github.com/gracicot/kangaru">https://github.com/gracicot/kangaru</a></li>
-<li><a href="https://github.com/admiyo/CppInject">https://github.com/admiyo/CppInject</a></li>
-<li><a href="http://codebros.github.io/DiLite">http://codebros.github.io/DiLite</a></li>
+<li><strong>C++ Dependency Injection Libraries</strong></li>
 </ul>
-</li>
-</ul>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dicpp</td>
+<td><a href="https://bitbucket.org/cheez/dicpp">https://bitbucket.org/cheez/dicpp</a></td>
+</tr>
+<tr>
+<td>Fruit</td>
+<td><a href="https://github.com/google/fruit">https://github.com/google/fruit</a></td>
+</tr>
+<tr>
+<td>Sauce</td>
+<td><a href="https://github.com/phs/sauce">https://github.com/phs/sauce</a></td>
+</tr>
+<tr>
+<td>Wallaroo</td>
+<td><a href="http://wallaroolib.sourceforge.net">http://wallaroolib.sourceforge.net</a></td>
+</tr>
+<tr>
+<td>Hypodermic</td>
+<td><a href="https://github.com/ybainier/hypodermic">https://github.com/ybainier/hypodermic</a></td>
+</tr>
+<tr>
+<td>Infectorpp</td>
+<td><a href="https://code.google.com/p/infectorpp">https://code.google.com/p/infectorpp</a></td>
+</tr>
+<tr>
+<td>Injeqt</td>
+<td><a href="https://github.com/vogel/injeqt">https://github.com/vogel/injeqt</a></td>
+</tr>
+<tr>
+<td>Kangaru</td>
+<td><a href="https://github.com/gracicot/kangaru">https://github.com/gracicot/kangaru</a></td>
+</tr>
+<tr>
+<td>CppInject</td>
+<td><a href="https://github.com/admiyo/CppInject">https://github.com/admiyo/CppInject</a></td>
+</tr>
+<tr>
+<td>DiLite</td>
+<td><a href="http://codebros.github.io/DiLite">http://codebros.github.io/DiLite</a></td>
+</tr>
+</tbody>
+</table>
 <table>
 <thead>
 <tr>
@@ -554,24 +590,24 @@ struct core::injector : TBindings... {
 <tr>
 <th>Library</th>
 <th>Bind Interface</th>
-<th>ASM x86-64</th>
+<th>Performance</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Boost.DI</td>
 <td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp" /></td>
-<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp">8 instructions</a></td>
+<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp">ASM x86-64</a></td>
 </tr>
 <tr>
 <td><a href="https://bitbucket.org/cheez/dicpp/wiki/Home">dicpp</a></td>
 <td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp" /></td>
-<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp">50 instructions</a></td>
+<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp">ASM x86-64</a></td>
 </tr>
 <tr>
 <td><a href="https://github.com/google/fruit">Google.Fruit</a></td>
 <td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/fruit.cpp" /></td>
-<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp">82 instructions</a></td>
+<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp">ASM x86-64</a></td>
 </tr>
 </tbody>
 </table>
@@ -580,24 +616,24 @@ struct core::injector : TBindings... {
 <tr>
 <th>Library</th>
 <th>Bind Value</th>
-<th>ASM x86-64</th>
+<th>Performance</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Boost.DI</td>
 <td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp" /></td>
-<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp">8 instructions</a></td>
+<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp">ASM x86-64</a></td>
 </tr>
 <tr>
 <td><a href="https://bitbucket.org/cheez/dicpp/wiki/Home">dicpp</a></td>
 <td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp" /></td>
-<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp">50 instructions</a></td>
+<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp">ASM x86-64</a></td>
 </tr>
 <tr>
 <td><a href="https://github.com/google/fruit">Google.Fruit</a></td>
 <td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/fruit.cpp" /></td>
-<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp">82 instructions</a></td>
+<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp">ASM x86-64</a></td>
 </tr>
 </tbody>
 </table>
@@ -737,9 +773,15 @@ struct core::injector : TBindings... {
 </tr>
 </tbody>
 </table>
+<ul>
+<li>To run benchmarks</li>
+</ul>
+<pre><code class="sh">cd benchmark &amp;&amp; make
+</code></pre>
+
 <hr />
 <ul>
-<li>Dependency Injection Libraries</li>
+<li><strong>Dependency Injection Libraries</strong></li>
 </ul>
 <table>
 <thead>
@@ -970,6 +1012,12 @@ struct core::injector : TBindings... {
 </tr>
 </tbody>
 </table>
+<ul>
+<li>To run benchmarks</li>
+</ul>
+<pre><code class="sh">cd benchmark &amp;&amp; make
+</code></pre>
+
 <hr />
               
             </div>
