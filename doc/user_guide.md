@@ -403,8 +403,9 @@ It's useful for third party classes you don't have access to and which can't be 
 
 ###Annotations
 
-Annotations are intrusive, additional informations, specified along with the type in order to refer to given type by the
-annotation instead of type it self. Useful, when there are more than one type of the same parameters in constructor parameters.
+Annotations are type properties specified in order to refer to a type by the name instead of the type it self.
+They are useful when constructor has more than one parameter of the same type.
+For example, `T(int, int)`.
 
 <a id="di_named"></a>
 --- ***(named = name)*** ---
@@ -415,17 +416,17 @@ annotation instead of type it self. Useful, when there are more than one type of
 
 ***Description***
 
-Named parameters are useful when constructor has more parameters of the same type.
+Named parameters are handy to distinguish different constructor parameters of the same type.
 
 ```cpp
   T(int value1, int value2);
 ```
 
-In order to inject proper values into `value1` and `value2` they have to be distinguished somehow.
-Boost.DI solution for that problem are annotations.
+In order to inject proper values into `value1` and `value2` they have to be differentiate somehow.
+Boost.DI solution for this problem are annotations.
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
-Annotations might be set only when constructor is selected using [BOOST_DI_INJECT] or [BOOST_DI_INJECT_TRAITS].
+Annotations might be set only when constructor is marked using [BOOST_DI_INJECT] or [BOOST_DI_INJECT_TRAITS].
 </span>
 
 ***Semantics***
@@ -445,7 +446,7 @@ Annotations might be set only when constructor is selected using [BOOST_DI_INJEC
     BOOST_DI_INJECT(T, (named = value_1) int value1, (named = value_2) int value2);
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
-Implementation of constructor doesn't require annotations, which means implementation won't be affected by it.
+Implementation of constructor doesn't require annotations, only constructor definition requires them.
 </span>
 
 ***Test***
@@ -470,7 +471,7 @@ Implementation of constructor doesn't require annotations, which means implement
 ***Description***
 
 Scopes are responsible for creating and maintaining life time of dependencies.
-If no scope will be given, deduce scope will be assumed.
+If no scope will be given, [deduce] scope will be assumed.
 
 ***Semantics***
 
@@ -490,11 +491,11 @@ If no scope will be given, deduce scope will be assumed.
 | ---------- | ----------- | ----------- | ------- |
 | `TExpected` | - | 'Interface' type | - |
 | `TGiven` | - | 'Implementation' type | - |
-| `is_referable<T\>` | - | Verifies whether scope value might be converted to a reference | std::true_type/std::false_type |
-| `try_create<T, TName, TProvider\>` | [providable]<TProvider\> | Verifies whether type might be created | std::true_type/std::false_type |
-| `create<T, TName, TProvider\>` | [providable]<TProvider\> | Creates type might be created | `T` |
+| `is_referable<T>` | - | Verifies whether scope value might be converted to a reference | true_type/false_type |
+| `try_create<T, TName, TProvider>` | [providable]<TProvider\> | Verifies whether type `T` might be created | true_type/false_type |
+| `create<T, TName, TProvider>` | [providable]<TProvider\> | Creates type `T` | `T` |
 
-| Type/Scope | unique | singleton | instance |
+| Type/Scope | [unique] | [singleton] | [instance] |
 |------------|--------|--------|-----------|---------|----------|
 | T | ✔ | - | ✔ |
 | T& | - | ✔  | ✔ |
@@ -528,11 +529,11 @@ If no scope will be given, deduce scope will be assumed.
 
 Default scope which will be converted to one of the scopes depending on the type.
 
-| Type | deduce |
+| Type | Scope |
 |------|-------|
 | T | [unique] |
 | T& | [singleton] |
-| const T& | [unique] (temporary)/singleton |
+| const T& | [unique] (temporary)/[singleton] |
 | T* | [unique] (ownership transfer) |
 | const T* | [unique] (ownership transfer) |
 | T&& | [unique] |
@@ -564,9 +565,9 @@ Default scope which will be converted to one of the scopes depending on the type
 | ---------- | ----------- | ----------- | ------- |
 | `TExpected` | - | 'Interface' type | - |
 | `TGiven` | - | 'Implementation' type | - |
-| `is_referable<T\>` | - | Verifies whether scope value might be converted to a reference | std::true_type/std::false_type |
-| `try_create<T, TName, TProvider\>` | [providable]<TProvider\> | Verifies whether type might be created | std::true_type/std::false_type |
-| `create<T, TName, TProvider\>` | [providable]<TProvider\> | Creates type might be created | `T` |
+| `is_referable<T>` | - | Verifies whether scope value might be converted to a reference | true_type/false_type |
+| `try_create<T, TName, TProvider>` | [providable]<TProvider\> | Verifies whether type `T` might be created | true_type/false_type |
+| `create<T, TName, TProvider>` | [providable]<TProvider\> | Creates type `T` | `T` |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_deduce_default.cpp)
@@ -586,8 +587,8 @@ Default scope which will be converted to one of the scopes depending on the type
 
 ***Description***
 
-Scope representing values - passed by user. The life time of the object depends on the user.
-Boost.DI is not managing life time of passed objects, however values and strings will be copied and managed by the library.
+Scope representing values - passed externally. The life time of the object depends on the user.
+Boost.DI is not maintaining the life time of these objects, however, values and strings will be copied and managed by the library.
 
 | Type | instance |
 | ---- | -------- |
@@ -623,9 +624,9 @@ Boost.DI is not managing life time of passed objects, however values and strings
 | ---------- | ----------- | ----------- | ------- |
 | `TExpected` | - | 'Interface' type | - |
 | `TGiven` | - | 'Implementation' type | - |
-| `is_referable<T\>` | - | Verifies whether scope value might be converted to a reference | std::true_type/std::false_type |
-| `try_create<T, TName, TProvider\>` | [providable]<TProvider\> | Verifies whether type might be created | std::true_type/std::false_type |
-| `create<T, TName, TProvider\>` | [providable]<TProvider\> | Creates type might be created | `T` |
+| `is_referable<T>` | - | Verifies whether scope value might be converted to a reference | true_type/false_type |
+| `try_create<T, TName, TProvider>` | [providable]<TProvider\> | Verifies whether type `T` might be created | true_type/false_type |
+| `create<T, TName, TProvider>` | [providable]<TProvider\> | Creates type `T` | `T` |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_instance.cpp)
@@ -645,11 +646,11 @@ Boost.DI is not managing life time of passed objects, however values and strings
 
 ***Description***
 
-Scope representing shared value between all instances and between threads.
-Singleton scope will be deduced in case of shared_ptr or weak_ptr.
+Scope representing shared value between all instances as well as threads.
+Singleton scope will be deduced in case of reference, `std::shared_ptr`, `boost::shared_ptr` or `std::weak_ptr`.
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
-Singleton scope will convert between `std::shared_ptr` and `boost::shared_ptr` if required.
+Singleton scope will convert automatically between `std::shared_ptr` and `boost::shared_ptr` if required.
 </span>
 
 | Type | singleton |
@@ -688,9 +689,9 @@ Singleton scope will convert between `std::shared_ptr` and `boost::shared_ptr` i
 | ---------- | ----------- | ----------- | ------- |
 | `TExpected` | - | 'Interface' type | - |
 | `TGiven` | - | 'Implementation' type | - |
-| `is_referable<T\>` | - | Verifies whether scope value might be converted to a reference | std::true_type/std::false_type |
-| `try_create<T, TName, TProvider\>` | [providable]<TProvider\> | Verifies whether type might be created | std::true_type/std::false_type |
-| `create<T, TName, TProvider\>` | [providable]<TProvider\> | Creates type might be created | `T` |
+| `is_referable<T>` | - | Verifies whether scope value might be converted to a reference | true_type/false_type |
+| `try_create<T, TName, TProvider>` | [providable]<TProvider\> | Verifies whether type `T` might be created | true_type/false_type |
+| `create<T, TName, TProvider>` | [providable]<TProvider\> | Creates type `T` | `T` |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_singleton.cpp)
@@ -710,7 +711,7 @@ Singleton scope will convert between `std::shared_ptr` and `boost::shared_ptr` i
 
 ***Description***
 
-Scope representing unique/per request value.
+Scope representing unique/per request value. A new instance will be provided each time type will be requested.
 
 | Type | unique |
 | ---- | ------ |
@@ -748,9 +749,9 @@ Scope representing unique/per request value.
 | ---------- | ----------- | ----------- | ------- |
 | `TExpected` | - | 'Interface' type | - |
 | `TGiven` | - | 'Implementation' type | - |
-| `is_referable<T\>` | - | Verifies whether scope value might be converted to a reference | std::true_type/std::false_type |
-| `try_create<T, TName, TProvider\>` | [providable]<TProvider\> | Verifies whether type might be created | std::true_type/std::false_type |
-| `create<T, TName, TProvider\>` | [providable]<TProvider\> | Creates type might be created | `T` |
+| `is_referable<T>` | - | Verifies whether scope value might be converted to a reference | true_type/false_type |
+| `try_create<T, TName, TProvider>` | [providable]<TProvider\> | Verifies whether type `T` might be created | true_type/false_type |
+| `create<T, TName, TProvider>` | [providable]<TProvider\> | Creates type `T` | `T` |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_unique.cpp)
