@@ -579,9 +579,10 @@ It guarantees initialized state of data members. Boost.DI constructor injection 
 </code></pre>
 <p><strong><em>Description</em></strong></p>
 <p>Boost.DI will deduce the best available constructor to be used for injection - unique constructor with the longest parameter list.
-If the default behavior should be changed constructor has to be explicitly marked with <a href="#BOOST_DI_INJECT">BOOST_DI_INJECT</a> or <a href="#BOOST_DI_INJECT_TRAITS">BOOST_DI_INJECT_TRAITS</a>.</p>
+If the default behavior should be changed constructor has to be explicitly marked with
+<a href="#BOOST_DI_INJECT">BOOST_DI_INJECT</a> or <a href="#BOOST_DI_INJECT_TRAITS">BOOST_DI_INJECT_TRAITS</a> or di::ctor_traits] or <a href="#di_inject">di::inject</a>.</p>
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
-Automatic constructor parameters deduction is limited to <a href="#di_config">BOOST_DI_CFG_CTOR_LIMIT_SIZE</a>, which by default is set to 10.
+Automatic constructor parameters deduction is limited to <a href="../overview/index.html#configuration">BOOST_DI_CFG_CTOR_LIMIT_SIZE</a>, which by default is set to 10.
 </span></p>
 <p><strong><em>Semantics</em></strong></p>
 <pre><code>class T {
@@ -608,7 +609,8 @@ public:
 </tbody>
 </table>
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
-Boost.DI is not able to distinguish between ambiguous constructors with the same (longest) number of parameters.
+Boost.DI is not able to automatically distinguish between ambiguous constructors with the same (longest) number of parameters.
+Use <a href="#BOOST_DI_INJECT">BOOST_DI_INJECT</a> or <a href="#BOOST_DI_INJECT_TRAITS">BOOST_DI_INJECT_TRAITS</a> or <a href="#di_ctor_traits">di::ctor_traits</a> or <a href="#di_inject">di::inject</a> to explicitly mark constructor to be injected.
 </span></p>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_direct.cpp" />
@@ -618,10 +620,7 @@ Boost.DI is not able to distinguish between ambiguous constructors with the same
 <strong><em>Example</em></strong></p>
 <p><img alt="CPP(BTN)" src="../Run_Automatic_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/automatic_injection.cpp" />
 <img alt="CPP(BTN)" src="../Run_Constructor_Signature_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_signature.cpp" />
-<img alt="CPP(BTN)" src="../Run_Concepts_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/concepts.cpp" />
-<img alt="CPP(BTN)" src="../Run_Assisted_Injection_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/assisted_injection.cpp" />
 <img alt="CPP(BTN)" src="../Run_Lazy_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/lazy.cpp" />
-<img alt="CPP(BTN)" src="../Run_Named_Parameters_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/named_parameters.cpp" />
 <img alt="CPP(BTN)" src="../Run_XML_Injection_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/xml_injection.cpp" /></p>
 <p><br /><br /><br /><hr /></p>
 <p><a id="BOOST_DI_INJECT"></a>
@@ -630,10 +629,10 @@ Boost.DI is not able to distinguish between ambiguous constructors with the same
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
-<p>BOOST_DI_INJECT is a macro definition used to explicitly say Boost.DI which constructor should be used as well as in order to annotate types - see <a href="#annotations">annotations</a> for further reding.
+<p>BOOST_DI_INJECT is a macro definition used to explicitly say Boost.DI which constructor should be used as well as to annotate types - see <a href="#annotations">annotations</a> for further reding.
 When class has more than one constructor Boost.DI will by default choose the one with the longest parameter list.
-In case of constructors ambiguity Boost.DI is not able to choose the best one.
-Then BOOST_DI_INJECT become handy to point which constructor should be used.</p>
+In case of constructors ambiguity, Boost.DI is not able to choose the best one.
+Then BOOST_DI_INJECT becomes handy to point which constructor should be used.</p>
 <p><strong><em>Semantics</em></strong></p>
 <pre><code>struct T {
     BOOST_DI_INJECT(T, ...) { }
@@ -652,7 +651,7 @@ Then BOOST_DI_INJECT become handy to point which constructor should be used.</p>
 <tr>
 <td><code>T</code></td>
 <td>-</td>
-<td>Class type</td>
+<td>Class/Struct name</td>
 <td>-</td>
 </tr>
 <tr>
@@ -664,12 +663,13 @@ Then BOOST_DI_INJECT become handy to point which constructor should be used.</p>
 </tbody>
 </table>
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
-BOOST_DI_INJECT constructor parameters is limited to <a href="#di_config">BOOST_DI_CFG_CTOR_LIMIT_SIZE</a>, which by default is set to 10.
+BOOST_DI_INJECT constructor parameters is limited to <a href="../overview/index.html#configuration">BOOST_DI_CFG_CTOR_LIMIT_SIZE</a>, which by default is set to 10.
 </span></p>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_BOOST_DI_INJECT.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp" />
+<img alt="CPP(BTN)" src="../Run_Concepts_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/concepts.cpp" /></p>
 <p><br /><hr /></p>
 <p><a id="BOOST_DI_INJECT_TRAITS"></a>
 --- <strong><em>BOOST_DI_INJECT_TRAITS</em></strong> ---</p>
@@ -703,7 +703,7 @@ BOOST_DI_INJECT constructor parameters is limited to <a href="#di_config">BOOST_
 </tbody>
 </table>
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
-BOOST_DI_INJECT_TRAITS constructor parameters is limited to <a href="#di_config">BOOST_DI_CFG_CTOR_LIMIT_SIZE</a>, which by default is set to 10.
+BOOST_DI_INJECT_TRAITS constructor parameters is limited to <a href="../overview/index.html#configuration">BOOST_DI_CFG_CTOR_LIMIT_SIZE</a>, which by default is set to 10.
 </span></p>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_BOOST_DI_INJECT_TRAITS.cpp" />
@@ -717,7 +717,8 @@ BOOST_DI_INJECT_TRAITS constructor parameters is limited to <a href="#di_config"
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
-<p>di::inject informs Boost.DI about constructor parameters. Useful for generated/generic classes as it doesn't have constructor parameters size limitations.</p>
+<p><code>di::inject</code> informs Boost.DI about constructor parameters.
+It's useful for generated/generic classes as it doesn't have constructor parameters size limitations.</p>
 <p><strong><em>Semantics</em></strong></p>
 <pre><code>struct T {
   using boost_di_inject__ = di::inject&lt;...&gt;;
@@ -743,7 +744,9 @@ BOOST_DI_INJECT_TRAITS constructor parameters is limited to <a href="#di_config"
 </tbody>
 </table>
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
-di::inject has no limitations if it comes to constructor parameters, however, <a href="#di_named">named</a> parameters are not allowed.
+<code>di::inject</code> has no limitations if it comes to constructor parameters, however, <a href="#di_named">named</a> parameters are not allowed.
+Moreover, you can replace <code>di::inject</code> with any variadic type list type to remove dependency to Boost.DI.
+For example, <code>template&lt;class...&gt; struct type_list{};</code> <code>using boost_di_inject__ = type_list&lt;...&gt;;</code>
 </span></p>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_inject.cpp" />
@@ -757,14 +760,24 @@ di::inject has no limitations if it comes to constructor parameters, however, <a
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p><code>di::ctor_traits</code> is a trait in which constructor parameters for type <code>T</code> might be specified.
+It's useful for third party classes you don't have access to and which can't be created using <a href="#di_automatic">automatic</a> injection.</p>
 <p><strong><em>Semantics</em></strong></p>
+<pre><code>namespace boost {
+namespace di {
+  template &lt;&gt;
+  struct ctor_traits&lt;T&gt; {
+    BOOST_DI_INJECT_TRAITS(...); // or using type = di::inject&lt;...&gt;;
+  };
+}}
+</code></pre>
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_ctor_traits.cpp" />
 <strong><em>Example</em></strong></p>
 <p><img alt="CPP(BTN)" src="../Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp" /></p>
 <p><br /><hr /></p>
 <h3 id="annotations">Annotations</h3>
-<p>Annotations are intrusive, additional informations specified along with the type in order to refer to given type by the
+<p>Annotations are intrusive, additional informations, specified along with the type in order to refer to given type by the
 annotation instead of type it self. Useful, when there are more than one type of the same parameters in constructor parameters.</p>
 <p><a id="di_named"></a>
 --- <strong><em>(named = name)</em></strong> ---</p>
@@ -818,7 +831,9 @@ Implementation of constructor doesn't require annotations, which means implement
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/annotated_constructor_injection_with_ctor_traits.cpp" />
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/annotated_constructor_injection_with_the_same_names.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Annotations_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/annotations.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Annotations_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/annotations.cpp" />
+<img alt="CPP(BTN)" src="../Run_Named_Parameters_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/named_parameters.cpp" />
+<img alt="CPP(BTN)" src="../Run_Assisted_Injection_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/assisted_injection.cpp" /></p>
 <p><br /><hr /></p>
 <h3 id="scopes">Scopes</h3>
 <p><strong><em>Header</em></strong></p>
@@ -1460,9 +1475,6 @@ scopes::unique unique;
 <p><br /><hr /></p>
 <h3 id="modules">Modules</h3>
 <p><a id="di_module"></a></p>
-<pre><code class="cpp">auto module = [] { return di::make_injector(...); };
-</code></pre>
-
 <p><strong><em>Header</em></strong></p>
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
@@ -1954,7 +1966,7 @@ If type doesn't satisfy the concept short and descriptive error message is provi
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
-<p>Bindings type requirement.</p>
+<p><a href="#bindings">Bindings</a> type requirement.</p>
 <p><strong><em>Synopsis</em></strong></p>
 <pre><code>template &lt;class TExpected, class TGiven&gt;
 concept bool boundable() {
@@ -1986,7 +1998,7 @@ boundable&lt;Ts...&gt;
 <tr>
 <td><code>Ts...</code></td>
 <td>Bindings to be verified</td>
-<td>true_type if constraint is satisfied, <code>error</code> otherwise</td>
+<td>true_type if constraint is satisfied, <code>Error</code> otherwise</td>
 </tr>
 </tbody>
 </table>
@@ -2092,7 +2104,7 @@ boundable&lt;Ts...&gt;
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
-<p>Policies type requirement.</p>
+<p><a href="#policies">Policy</a> type requirement.</p>
 <p><strong><em>Synopsis</em></strong></p>
 <pre><code>template &lt;class T&gt;
 concept bool callable() {
@@ -2130,6 +2142,7 @@ concept bool callable() {
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
+<p><a href="#di_config">Configuration</a> type requirement.</p>
 <p><strong><em>Synopsis</em></strong></p>
 <pre><code>template &lt;class T&gt;
 concept bool configurable() {
@@ -2167,15 +2180,21 @@ concept bool configurable() {
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
-<p>Type creation requirement.</p>
+<p>Requirement for type <code>T</code> which is going to be created via <a href="#di_make_injector">injector</a><code>.create&lt;T&gt;()</code></p>
 <p><strong><em>Synopsis</em></strong></p>
-<pre><code>template &lt;class T, class... TBindings&gt;
+<pre><code>namespace type_traits {
+  template&lt;class T&gt;
+  using ctor_traits; // returns list of constructor parameters
+}
+
+template &lt;class T, class... TArgs&gt;
 concept bool creatable() {
-  return is_recursively_constructible&lt;T, TBindings...&gt;();
+  return is_constructible&lt;T, TArgs...&gt;() &amp;&amp;
+         is_constructible&lt;TArgs, type_traits::ctor_traits&lt;TArgs&gt;...&gt;();
 }
 </code></pre>
 <p><strong><em>Semantics</em></strong></p>
-<pre><code>creatable&lt;T, TBindings...&gt;
+<pre><code>creatable&lt;T, TArgs...&gt;
 </code></pre>
 <p><strong><em>Example</em></strong></p>
 <table>
@@ -2188,7 +2207,7 @@ concept bool creatable() {
 <tbody>
 <tr>
 <td>Description</td>
-<td>config <code>T</code> requires only providable and callable types</td>
+<td>abstract type <code>T</code> is not bound</td>
 </tr>
 <tr>
 <td><code>BOOST_DI_CFG_DIAGNOSTICS_LEVEL</code></td>
@@ -2322,18 +2341,26 @@ Suggestions are not supported/displayed by MSVC-2015.
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
-<p>Provider type requirement.</p>
+<p><a href="#providers">Provider</a> type requirement.</p>
 <p><strong><em>Synopsis</em></strong></p>
-<pre><code>template &lt;class T&gt;
+<pre><code>namespace type_traits {
+  struct direct;
+  struct uniform;
+  struct stack;
+  struct heap;
+}
+
+template &lt;class T&gt;
 concept bool providable() {
   return requires(T object) {
-    { object.template get&lt;_&gt;(direct/uniform{}, stack/heap{}, ...) };
-    { object.template is_creatable&lt;_&gt;(direct/uniform{}, stack/heap{}, ...) };
+    { object.template get&lt;_&gt;(type_traits::direct/type_traits::uniform{}, type_traits::stack/type_traits::heap{}, ...) };
+    { object.template is_creatable&lt;_&gt;(type_traits::direct/type_traits::uniform{}, type_traits::stack/type_traits::heap{}, ...) };
   }
 }
 </code></pre>
 <p><strong><em>Semantics</em></strong></p>
-<p>providable<T></p>
+<pre><code>providable&lt;T&gt;
+</code></pre>
 <p><strong><em>Example</em></strong></p>
 <table>
 <thead>
@@ -2360,9 +2387,11 @@ concept bool providable() {
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
-<p>Scope type requirement.</p>
+<p><a href="#scopes">Scope</a> type requirement.</p>
 <p><strong><em>Synopsis</em></strong></p>
-<pre><code>template &lt;class T&gt;
+<pre><code>struct _ {}; // any type
+
+template &lt;class T&gt;
 concept bool scopable() {
   return requires(T) {
     typename scope&lt;_, _&gt;::is_referable;
@@ -2372,7 +2401,8 @@ concept bool scopable() {
 }
 </code></pre>
 <p><strong><em>Semantics</em></strong></p>
-<p>scopable<T></p>
+<pre><code>scopable&lt;T&gt;
+</code></pre>
 <p><strong><em>Example</em></strong></p>
 <table>
 <thead>
@@ -2400,7 +2430,7 @@ concept bool scopable() {
 <pre><code>#include &lt;boost/di.hpp&gt;
 </code></pre>
 <p><strong><em>Description</em></strong></p>
-<p>Injector configuration.</p>
+<p><a href="#di_make_injector">Injector</a> configuration.</p>
 <p><strong><em>Synopsis</em></strong></p>
 <pre><code>struct config {
   static auto provider(...) noexcept;
@@ -2454,7 +2484,9 @@ di::make_injector(...)
 <p><strong><em>Test</em></strong>
 <img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_global.cpp" />
 <strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Configuration_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/configuration.cpp" /></p>
+<p><img alt="CPP(BTN)" src="../Run_Configuration_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/configuration.cpp" />
+<img alt="CPP(BTN)" src="../Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp" />
+<img alt="CPP(BTN)" src="../Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp" /></p>
 <p><br /><hr /></p>
               
             </div>
