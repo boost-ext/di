@@ -46,7 +46,7 @@ function cpp(id, file, text) {
 
 function compile_and_run(id) {
     document.getElementById("compile_and_run_" + id).firstChild.data = "Compiling...";
-    cpp_output[id].setValue("");
+    cpp_output[id].setValue("Compiling...");
     var http = new XMLHttpRequest();
     http.open("POST", "http://melpon.org/wandbox/api/compile.json", true);
     http.onreadystatechange = function(){
@@ -54,14 +54,15 @@ function compile_and_run(id) {
             var output_json = JSON.parse(http.response);
             if ('status' in output_json && output_json.status == "0") {
                 if ('program_message' in output_json) {
-                    cpp_output[id].setValue(output_json.program_message);
+                    cpp_output[id].setValue("Running... [OK]");
+                    cpp_output[id].setValue(cpp_output[id].getValue() + "\n" + output_json.program_message);
                 }
-                cpp_output[id].setValue(cpp_output[id].getValue() + "\n-------\nExit: " + output_json.status);
+                cpp_output[id].setValue(cpp_output[id].getValue());
             } else if ('compiler_error' in output_json) {
-                cpp_output[id].setValue(output_json.compiler_error);
+                cpp_output[id].setValue("Compiling... [FAIL]\n" + output_json.compiler_error);
             } else if ('signal' in output_json) {
                 if ('program_message' in output_json) {
-                    cpp_output[id].setValue(output_json.program_message);
+                    cpp_output[id].setValue("Running... [FAIL]\n" + output_json.program_message);
                 }
             }
             document.getElementById("compile_and_run_" + id).firstChild.data = "Compile & Run (Ctrl+Enter)";
