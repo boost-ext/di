@@ -427,14 +427,14 @@ Well, it's really simple to fix it, we just follow suggestion provided.</p>
 </code></pre>
 
 <p>Let's try again. Yay! It's compiling.</p>
-<p>But what about values? <code>renderer</code> requires <code>device</code>, which, by default, was zero initialized.</p>
+<p>But what about values? <code>renderer</code> requires <code>device</code>, which, by default, was value initialized.</p>
 <pre><code class="cpp">struct renderer {
   int device;
 };
 </code></pre>
 
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
-If you want change the default behaviour and be sure that all required dependencies are bound and not zero initialized
+If you want change the default behaviour and be sure that all required dependencies are bound and not value initialized
 take a look at <a href="../user_guide/index.html#di_constructible">constructible</a> policy.
 </span></p>
 <pre><code class="cpp">auto injector = di::make_injector(
