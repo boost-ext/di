@@ -53,11 +53,10 @@ function compile_and_run(id) {
         if (http.readyState == 4 && http.status == 200) {
             var output_json = JSON.parse(http.response);
             if ('status' in output_json && output_json.status == "0") {
+                cpp_output[id].setValue("Running... [OK]");
                 if ('program_message' in output_json) {
-                    cpp_output[id].setValue("Running... [OK]");
                     cpp_output[id].setValue(cpp_output[id].getValue() + "\n" + output_json.program_message);
                 }
-                cpp_output[id].setValue(cpp_output[id].getValue());
             } else if ('compiler_error' in output_json) {
                 cpp_output[id].setValue("Compiling... [FAIL]\n" + output_json.compiler_error);
             } else if ('signal' in output_json) {
@@ -76,9 +75,9 @@ function compile_and_run(id) {
               "file" : "boost/di.hpp"
             , "code" : get_cpp_file("https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp")
            }]
-         , "options": "warning,cpp-pedantic-errors,optimize,boost-nothing,c++1y"
+         , "options": "warning,cpp-pedantic-errors,optimize,boost-1.60,c++1y"
          , "compiler" : "clang-head"
-         , "compiler-option-raw": "-I." + "\n" + "-I/usr/local/boost-1.60.0/include" + "\n" + "-fno-color-diagnostics"
+         , "compiler-option-raw": "-I." + "\n" + "-fno-color-diagnostics"
     }));
 }
 
