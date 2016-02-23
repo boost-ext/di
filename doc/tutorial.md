@@ -225,7 +225,7 @@ auto injector = di::make_injector(
 
 Let's try again. Yay! It's compiling.
 
-But what about values? `renderer` requires `device`, which, by default, was zero initialized.
+But what about values? `renderer` requires `device`, which, by default, was value initialized.
 
 ```cpp
 struct renderer {
@@ -234,7 +234,7 @@ struct renderer {
 ```
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
-If you want change the default behaviour and be sure that all required dependencies are bound and not zero initialized
+If you want change the default behaviour and be sure that all required dependencies are bound and not value initialized
 take a look at [constructible] policy.
 </span>
 
