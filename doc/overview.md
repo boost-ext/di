@@ -1,8 +1,8 @@
 ###Quick Start
 
-* Get [boost/di.hpp](https://raw.githubusercontent.com/boost-experimental/di/master/include/boost/di.hpp) header
+* Get [boost/di.hpp](https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp) header
 ```sh
-wget https://raw.githubusercontent.com/boost-experimental/di/master/include/boost/di.hpp
+wget https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp
 ```
 
 * Include the header and define `di` namespace alias
@@ -18,7 +18,7 @@ $CXX -std=c++14 ...
 
 * To run tests
 ```sh
-git clone https://github.com/boost-experimental/di && cd di && make test
+git clone https://github.com/boost-experimental/di && cd di && make
 ```
 
 ###Dependencies
@@ -57,12 +57,12 @@ git clone https://github.com/boost-experimental/di && cd di && make test
 | Component  | Description |
 | ---------- | ----------- |
 | [Bindings] | DSL to create dependencies representation which will be used by core to resolve types |
-| [Scopes] | Responsible for maintain objects life time |
-| [Providers] | Responsible for providing object instance |
+| [Scopes]   | Responsible for maintain objects life time |
+| [Providers]| Responsible for providing object instance |
 | [Policies] | Compile-time limitations for types / Run-time types vistor |
-| [Config] | Configuration for [Policies] and [Providers] |
-| Core | Responsible for resolving requested types (implementation detail) |
-| Wrappers | Responsible for conversion to required type (implementation detail) |
+| [Config]   | Configuration for [Policies] and [Providers] |
+| Core       | Responsible for resolving requested types (implementation detail) |
+| Wrappers   | Responsible for conversion to required type (implementation detail) |
 
 * In a nutshell
 

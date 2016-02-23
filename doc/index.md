@@ -101,7 +101,7 @@ but also can help you with...
 ###Why Boost.DI?
 
 * Boost.DI has none or minimal run-time overhead (See [Performance](overview.md#performance))
-* Boost.DI compiles fast (See [Benchmarks](overview.md#benchmarks))
+* Boost.DI compiles fast / **Faster than Java-[Dagger2]!** (See [Benchmarks](overview.md#benchmarks))
 * Boost.DI gives short diagnostic messages (See [Error messages](overview.md#error-messages))
 * Boost.DI is non-intrusive (See [Injections](user_guide.md#injections))
 * Boost.DI reduces boilerplate code (See [Create Objects Tree](tutorial.md#1-basic-create-objects-tree))
@@ -129,3 +129,5 @@ but also can help you with...
 * Thanks to Bartosz Kalinczuk for code review and tips how to improve `Boost.DI`
 * Thanks to Sohail Somani for support and tips how to improve `Boost.DI`
 * Thanks to Rob Stewart and Robert Ramey for documentation feedback and tips how to improve it
+
+[Dagger2]: https://github.com/google/dagger
