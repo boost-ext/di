@@ -446,7 +446,7 @@ template <class T>
 struct is_polymorphic : integral_constant<bool, __is_polymorphic(T)> {};
 template <class...>
 using is_valid_expr = true_type;
-#if __has_extension(is_constructible)
+#if __has_extension(is_constructible) && !((__clang_major__ == 3) && (__clang_minor__ == 5))
 template <class T, class... TArgs>
 using is_constructible = integral_constant<bool, __is_constructible(T, TArgs...)>;
 #else
