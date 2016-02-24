@@ -81,7 +81,7 @@ constexpr bool has_names(const char* input) { return *input ? *input == '"' ? tr
 
 template <class T, class TArg, int N>
 struct parse {
-  static constexpr auto name = get_name(T::str, N - 1);
+  static constexpr auto name = get_name(T::str, N);
   using type =
       di::aux::conditional_t<name.begin == name.end, TArg,
                              di::named<di::aux::integral_constant<long, const_hash(&T::str[name.begin], name.end)>, TArg>>;
