@@ -32,27 +32,27 @@ template <template <class...> class TIsConstructible, class T>
 struct ctor_impl<TIsConstructible, T, aux::index_sequence<>> : aux::type_list<> {};
 
 template <template <class...> class TIsConstructible, class T>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<1>,
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<0>,
                  BOOST_DI_REQUIRES(TIsConstructible<T, core::any_type_1st_fwd<T>>::value)>
     : aux::type_list<core::any_type_1st_fwd<T>> {};
 
 template <template <class...> class TIsConstructible, class T>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<1>,
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<0>,
                  BOOST_DI_REQUIRES(!TIsConstructible<T, core::any_type_1st_fwd<T>>::value)>
     : aux::conditional_t<TIsConstructible<T, core::any_type_1st_ref_fwd<T>>::value,
                          aux::type_list<core::any_type_1st_ref_fwd<T>>, aux::type_list<>> {};
 
-template <template <class...> class TIsConstructible, class T, int... TArgs>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>,
-                 BOOST_DI_REQUIRES((sizeof...(TArgs) > 1) && TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
-    : aux::type_list<get<core::any_type_fwd<T>, TArgs>...> {};
+template <template <class...> class TIsConstructible, class T, int... Ns>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<Ns...>,
+                 BOOST_DI_REQUIRES((sizeof...(Ns) > 1) && TIsConstructible<T, get<core::any_type_fwd<T>, Ns>...>::value)>
+    : aux::type_list<get<core::any_type_fwd<T>, Ns>...> {};
 
-template <template <class...> class TIsConstructible, class T, int... TArgs>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>,
-                 BOOST_DI_REQUIRES((sizeof...(TArgs) > 1) && !TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
-    : aux::conditional<TIsConstructible<T, get<core::any_type_ref_fwd<T>, TArgs>...>::value,
-                       aux::type_list<get<core::any_type_ref_fwd<T>, TArgs>...>,
-                       typename ctor_impl<TIsConstructible, T, aux::make_index_sequence<sizeof...(TArgs)-1>>::type> {};
+template <template <class...> class TIsConstructible, class T, int... Ns>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<Ns...>,
+                 BOOST_DI_REQUIRES((sizeof...(Ns) > 1) && !TIsConstructible<T, get<core::any_type_fwd<T>, Ns>...>::value)>
+    : aux::conditional<TIsConstructible<T, get<core::any_type_ref_fwd<T>, Ns>...>::value,
+                       aux::type_list<get<core::any_type_ref_fwd<T>, Ns>...>,
+                       typename ctor_impl<TIsConstructible, T, aux::make_index_sequence<sizeof...(Ns)-1>>::type> {};
 
 template <template <class...> class TIsConstructible, class T>
 using ctor_impl_t = typename ctor_impl<TIsConstructible, T, aux::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE>>::type;

@@ -67,16 +67,71 @@ git clone https://github.com/boost-experimental/di && cd di && make
 * In a nutshell
 
 ```cpp
-template<class TConfig, class... TBindings>
+struct direct; // T(...)
+struct uniform; // T{...}
+
+template<class T, class... TArgs> is_braces_constructible; // type T is constructible using T{...}
+template<class T, class... TArgs> is_constructible; // Type T is constructible using T(...)
+
+template<class T> is_injectable; // Type T uses BOOST_DI_INJECT or BOOST_DI_INJECT_TRAITS
+
+template<class TConfig, class... TBindings> // For Example, TBindings = { di::bind<Interface>.to<Implementation> }
 struct core::injector : TBindings... {
-  template<class T>
+  using config = TConfig;
+  using deps = TBindings...;
+
+  template<class T> // For example, T = Interface
   auto create() const noexcept {
-    TConfig::policies<T>()...;
-    auto dependency = core::binder<TBindings...>().resolve<T>(this);
-    return core::wrapper<T>{dependency.create(TConfig::provider().get<T>())}; // get<T> -> create<ctor_traits<T>...>()
+    TConfig::policies<T>()...; // verify policies
+    using Type = core::binder<TBindings...>().resolve<T>(*this); // Type = Implementation
+    return core::wrapper<T>{dependency.create(provider<TInjector>{*this}.get<Type>())};
   }
 };
+
+template<class TInjector, class TConfig>
+sturct provider {
+  template<class T> auto get() const noexcept {
+    using pair<TInitialization, TCtor...> = decltype(ctor_traits<TInjector, T>());
+    return TConfig::provider().get(TInitialization{}, TCtor...);
+  }
+  const TInjector& injector;
+};
+
+template<class TInjector>
+struct any_type {
+  template<class T>
+  operator T() const {
+    return injector.templte create<T>();
+  }
+  const TInjector& injector;
+};
+
+template<class TInjector, class T>
+auto ctor_traits() {
+  if (is_injectable<T>() {
+    return pair<direct, typename T::boost_di_inject__>{}; // BOOST_DI_INJECT(T, args...) -> T(args...)
+  }
+
+  for (auto i = BOOST_DI_CFG_CTOR_LIMIT_SIZE; i >= 0; --i) {
+    if (is_constructible<T, any_type<TInjector>()...>()) {
+      return pair<direct, any_type<TInjector>...>{}; // T(any_type...)
+    }
+  }
+
+  for (auto i = BOOST_DI_CFG_CTOR_LIMIT_SIZE; i >= 0; --i) {
+    if (is_braces_constructible<T, any_type<TInjector>()...>()) {
+      return pair<uniform, any_type<TInjector>...>{}; // T{any_type...}
+    }
+  }
+
+  return error(...);
+};
 ```
+
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
+[Automatic injection](user_guide.md#di_automatic) depends on template implicit conversion operator and therefore
+conversion constructors `template<class I> T(I)` are not supported and have to be injected using [BOOST_DI_INJECT], [BOOST_DI_INJECT_TRAITS], [di::inject] or [di::ctor_traits].
+</span>
 
 ###Performance
 
@@ -300,3 +355,7 @@ cd benchmark && make
 [Providers]: user_guide.md#providers
 [Policies]: user_guide.md#policies
 [Config]: user_guide.md#di_config
+[di::inject]: #di_inject
+[di::ctor_traits]: #di_ctor_traits
+[BOOST_DI_INJECT]: #BOOST_DI_INJECT
+[BOOST_DI_INJECT_TRAITS]: #BOOST_DI_INJECT_TRAITS

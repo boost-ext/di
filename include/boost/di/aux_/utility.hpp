@@ -100,6 +100,18 @@ struct index_sequence {
   using type = index_sequence;
 };
 
+#if __has_builtin(__make_integer_seq)  // __pph__
+template <class T, T...>
+struct integer_sequence;
+template <int... Ns>
+struct integer_sequence<int, Ns...> {
+  using type = index_sequence<Ns...>;
+};
+template <int N>
+struct make_index_sequence_impl {
+  using type = typename __make_integer_seq<integer_sequence, int, N>::type;
+};
+#else   // __pph__
 template <int>
 struct make_index_sequence_impl;
 
@@ -107,34 +119,35 @@ template <>
 struct make_index_sequence_impl<0> : index_sequence<> {};
 
 template <>
-struct make_index_sequence_impl<1> : index_sequence<1> {};
+struct make_index_sequence_impl<1> : index_sequence<0> {};
 
 template <>
-struct make_index_sequence_impl<2> : index_sequence<1, 2> {};
+struct make_index_sequence_impl<2> : index_sequence<0, 1> {};
 
 template <>
-struct make_index_sequence_impl<3> : index_sequence<1, 2, 3> {};
+struct make_index_sequence_impl<3> : index_sequence<0, 1, 2> {};
 
 template <>
-struct make_index_sequence_impl<4> : index_sequence<1, 2, 3, 4> {};
+struct make_index_sequence_impl<4> : index_sequence<0, 1, 2, 3> {};
 
 template <>
-struct make_index_sequence_impl<5> : index_sequence<1, 2, 3, 4, 5> {};
+struct make_index_sequence_impl<5> : index_sequence<0, 1, 2, 3, 4> {};
 
 template <>
-struct make_index_sequence_impl<6> : index_sequence<1, 2, 3, 4, 5, 6> {};
+struct make_index_sequence_impl<6> : index_sequence<0, 1, 2, 3, 4, 5> {};
 
 template <>
-struct make_index_sequence_impl<7> : index_sequence<1, 2, 3, 4, 5, 6, 7> {};
+struct make_index_sequence_impl<7> : index_sequence<0, 1, 2, 3, 4, 5, 6> {};
 
 template <>
-struct make_index_sequence_impl<8> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8> {};
+struct make_index_sequence_impl<8> : index_sequence<0, 1, 2, 3, 4, 5, 6, 7> {};
 
 template <>
-struct make_index_sequence_impl<9> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9> {};
+struct make_index_sequence_impl<9> : index_sequence<0, 1, 2, 3, 4, 5, 6, 7, 8> {};
 
 template <>
-struct make_index_sequence_impl<10> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9, 10> {};
+struct make_index_sequence_impl<10> : index_sequence<0, 1, 2, 3, 4, 5, 6, 7, 8, 9> {};
+#endif  // __pph__
 
 template <int N>
 using make_index_sequence = typename make_index_sequence_impl<N>::type;

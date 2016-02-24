@@ -40,6 +40,12 @@ BOOST_DI_CFG_FWD
 #define BOOST_DI_DEPRECATED(...) __declspec(deprecated(__VA_ARGS__))
 #define BOOST_DI_TYPE_WKND(T) (T && )
 #endif
+#if !defined(__has_builtin)
+#define __has_builtin(...) 0
+#endif
+#if !defined(__has_extension)
+#define __has_extension(...) 0
+#endif
 #if defined(__CLANG__)
 #if (!BOOST_DI_CFG_DIAGNOSTICS_LEVEL)
 #pragma clang diagnostic error "-Wdeprecated-declarations"
@@ -170,30 +176,43 @@ template <int...>
 struct index_sequence {
   using type = index_sequence;
 };
+#if __has_builtin(__make_integer_seq)
+template <class T, T...>
+struct integer_sequence;
+template <int... Ns>
+struct integer_sequence<int, Ns...> {
+  using type = index_sequence<Ns...>;
+};
+template <int N>
+struct make_index_sequence_impl {
+  using type = typename __make_integer_seq<integer_sequence, int, N>::type;
+};
+#else
 template <int>
 struct make_index_sequence_impl;
 template <>
 struct make_index_sequence_impl<0> : index_sequence<> {};
 template <>
-struct make_index_sequence_impl<1> : index_sequence<1> {};
+struct make_index_sequence_impl<1> : index_sequence<0> {};
 template <>
-struct make_index_sequence_impl<2> : index_sequence<1, 2> {};
+struct make_index_sequence_impl<2> : index_sequence<0, 1> {};
 template <>
-struct make_index_sequence_impl<3> : index_sequence<1, 2, 3> {};
+struct make_index_sequence_impl<3> : index_sequence<0, 1, 2> {};
 template <>
-struct make_index_sequence_impl<4> : index_sequence<1, 2, 3, 4> {};
+struct make_index_sequence_impl<4> : index_sequence<0, 1, 2, 3> {};
 template <>
-struct make_index_sequence_impl<5> : index_sequence<1, 2, 3, 4, 5> {};
+struct make_index_sequence_impl<5> : index_sequence<0, 1, 2, 3, 4> {};
 template <>
-struct make_index_sequence_impl<6> : index_sequence<1, 2, 3, 4, 5, 6> {};
+struct make_index_sequence_impl<6> : index_sequence<0, 1, 2, 3, 4, 5> {};
 template <>
-struct make_index_sequence_impl<7> : index_sequence<1, 2, 3, 4, 5, 6, 7> {};
+struct make_index_sequence_impl<7> : index_sequence<0, 1, 2, 3, 4, 5, 6> {};
 template <>
-struct make_index_sequence_impl<8> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8> {};
+struct make_index_sequence_impl<8> : index_sequence<0, 1, 2, 3, 4, 5, 6, 7> {};
 template <>
-struct make_index_sequence_impl<9> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9> {};
+struct make_index_sequence_impl<9> : index_sequence<0, 1, 2, 3, 4, 5, 6, 7, 8> {};
 template <>
-struct make_index_sequence_impl<10> : index_sequence<1, 2, 3, 4, 5, 6, 7, 8, 9, 10> {};
+struct make_index_sequence_impl<10> : index_sequence<0, 1, 2, 3, 4, 5, 6, 7, 8, 9> {};
+#endif
 template <int N>
 using make_index_sequence = typename make_index_sequence_impl<N>::type;
 }
@@ -427,16 +446,16 @@ template <class T>
 struct is_polymorphic : integral_constant<bool, __is_polymorphic(T)> {};
 template <class...>
 using is_valid_expr = true_type;
+#if __has_extension(is_constructible)
+template <class T, class... TArgs>
+using is_constructible = integral_constant<bool, __is_constructible(T, TArgs...)>;
+#else
 template <class T, class... TArgs>
 decltype(void(T(declval<TArgs>()...)), true_type{}) test_is_constructible(int);
 template <class, class...>
 false_type test_is_constructible(...);
-#if defined(__MSVC__)
 template <class T, class... TArgs>
 struct is_constructible : decltype(test_is_constructible<T, TArgs...>(0)) {};
-#else
-template <class T, class... TArgs>
-using is_constructible = decltype(test_is_constructible<T, TArgs...>(0));
 #endif
 template <class T, class... TArgs>
 using is_constructible_t = typename is_constructible<T, TArgs...>::type;
@@ -599,24 +618,24 @@ struct ctor_impl;
 template <template <class...> class TIsConstructible, class T>
 struct ctor_impl<TIsConstructible, T, aux::index_sequence<>> : aux::type_list<> {};
 template <template <class...> class TIsConstructible, class T>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<1>,
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<0>,
                  BOOST_DI_REQUIRES(TIsConstructible<T, core::any_type_1st_fwd<T>>::value)>
     : aux::type_list<core::any_type_1st_fwd<T>> {};
 template <template <class...> class TIsConstructible, class T>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<1>,
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<0>,
                  BOOST_DI_REQUIRES(!TIsConstructible<T, core::any_type_1st_fwd<T>>::value)>
     : aux::conditional_t<TIsConstructible<T, core::any_type_1st_ref_fwd<T>>::value,
                          aux::type_list<core::any_type_1st_ref_fwd<T>>, aux::type_list<>> {};
-template <template <class...> class TIsConstructible, class T, int... TArgs>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>,
-                 BOOST_DI_REQUIRES((sizeof...(TArgs) > 1) && TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
-    : aux::type_list<get<core::any_type_fwd<T>, TArgs>...> {};
-template <template <class...> class TIsConstructible, class T, int... TArgs>
-struct ctor_impl<TIsConstructible, T, aux::index_sequence<TArgs...>,
-                 BOOST_DI_REQUIRES((sizeof...(TArgs) > 1) && !TIsConstructible<T, get<core::any_type_fwd<T>, TArgs>...>::value)>
-    : aux::conditional<TIsConstructible<T, get<core::any_type_ref_fwd<T>, TArgs>...>::value,
-                       aux::type_list<get<core::any_type_ref_fwd<T>, TArgs>...>,
-                       typename ctor_impl<TIsConstructible, T, aux::make_index_sequence<sizeof...(TArgs)-1>>::type> {};
+template <template <class...> class TIsConstructible, class T, int... Ns>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<Ns...>,
+                 BOOST_DI_REQUIRES((sizeof...(Ns) > 1) && TIsConstructible<T, get<core::any_type_fwd<T>, Ns>...>::value)>
+    : aux::type_list<get<core::any_type_fwd<T>, Ns>...> {};
+template <template <class...> class TIsConstructible, class T, int... Ns>
+struct ctor_impl<TIsConstructible, T, aux::index_sequence<Ns...>,
+                 BOOST_DI_REQUIRES((sizeof...(Ns) > 1) && !TIsConstructible<T, get<core::any_type_fwd<T>, Ns>...>::value)>
+    : aux::conditional<TIsConstructible<T, get<core::any_type_ref_fwd<T>, Ns>...>::value,
+                       aux::type_list<get<core::any_type_ref_fwd<T>, Ns>...>,
+                       typename ctor_impl<TIsConstructible, T, aux::make_index_sequence<sizeof...(Ns)-1>>::type> {};
 template <template <class...> class TIsConstructible, class T>
 using ctor_impl_t = typename ctor_impl<TIsConstructible, T, aux::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE>>::type;
 template <class...>
