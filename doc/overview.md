@@ -113,13 +113,13 @@ auto ctor_traits() {
   }
 
   for (auto i = BOOST_DI_CFG_CTOR_LIMIT_SIZE; i >= 0; --i) {
-    if (is_constructible<T, any_type<TInjector>()...>()) {
+    if (is_constructible<T, any_type<TInjector>...>()) { // ... -> i times
       return pair<direct, any_type<TInjector>...>{}; // T(any_type...)
     }
   }
 
   for (auto i = BOOST_DI_CFG_CTOR_LIMIT_SIZE; i >= 0; --i) {
-    if (is_braces_constructible<T, any_type<TInjector>()...>()) {
+    if (is_braces_constructible<T, any_type<TInjector>...>()) { // ... -> i times
       return pair<uniform, any_type<TInjector>...>{}; // T{any_type...}
     }
   }
