@@ -283,11 +283,18 @@ auto make_injector(const TBindings&amp;...) noexcept;
 </tr>
 </tbody>
 </table>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/injector_empty.cpp" />
-<strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" />
-<img alt="CPP(BTN)" src="../Run_Create_Objects_Tree_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_create_objects_tree.cpp" /></p>
+<p><strong><em>Test</em></strong></p>
+<pre><code class="cpp">
+int main() {
+  auto injector = di::make_injector();
+
+  assert(0 == injector.create&lt;int&gt;());
+}
+</code></pre>
+
+<p><strong><em>Example</em></strong></p>
+<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp">Get Hello World Example</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_create_objects_tree.cpp">Get Create Objects Tree Example</a>]</p>
 <p><br /><hr /></p>
 <h3 id="bindings">Bindings</h3>
 <p>Bindings define dependencies configuration describing what types will be created
@@ -424,23 +431,136 @@ Check out also <a href="#di_instance">instance</a> scope to read more about bind
 </tr>
 </tbody>
 </table>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_interface_to_implementation.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_type_to_value.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_deduce_type_to_value.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_type_to_compile_time_value.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_multiple_interfaces.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_dynamic_bindings.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_multiple_bindings.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_multiple_bindings_initializer_list.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_type_override.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_cross_platform.cpp" />
-<strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bindings.cpp" />
-<img alt="CPP(BTN)" src="../Run_Forward_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/fwd_bindings.cpp" />
-<img alt="CPP(BTN)" src="../Run_Dynamic_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/dynamic_bindings.cpp" />
-<img alt="CPP(BTN)" src="../Run_Multiple_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/multiple_bindings.cpp" />
-<img alt="CPP(BTN)" src="../Run_Constructor_Bindings_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/bindings/constructor_bindings.cpp" /></p>
+<p><strong><em>Test</em></strong></p>
+<pre><code class="cpp">
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;i1&gt;().to&lt;impl1&gt;()
+  );
+
+  auto object = injector.create&lt;std::unique_ptr&lt;i1&gt;&gt;();
+  assert(dynamic_cast&lt;impl1*&gt;(object.get()));
+}
+</code></pre>
+
+<pre><code class="cpp">
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;int&gt;().to(42)
+  );
+
+  assert(42 == injector.create&lt;int&gt;());
+}
+</code></pre>
+
+<pre><code class="cpp">
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;&gt;().to(42)
+  );
+
+  assert(42 == injector.create&lt;int&gt;());
+}
+</code></pre>
+
+<pre><code class="cpp">
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;int&gt;().to&lt;std::integral_constant&lt;int, 42&gt;&gt;()
+  );
+
+  assert(42 == injector.create&lt;int&gt;());
+}
+</code></pre>
+
+<pre><code class="cpp">
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;i1, i2&gt;().to&lt;impl&gt;()
+  );
+
+  auto object1 = injector.create&lt;std::shared_ptr&lt;i1&gt;&gt;();
+  auto object2 = injector.create&lt;std::shared_ptr&lt;i2&gt;&gt;();
+  assert(dynamic_cast&lt;impl*&gt;(object1.get()));
+  assert(dynamic_cast&lt;impl*&gt;(object2.get()));
+}
+</code></pre>
+
+<pre><code class="cpp">
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;i1&gt;().to([&amp;](const auto&amp; injector) -&gt; i1&amp; {
+      if (true)
+        return injector.template create&lt;impl1&amp;&gt;();
+      else
+        return injector.template create&lt;impl&amp;&gt;();
+    })
+  );
+
+  auto&amp;&amp; object = injector.create&lt;i1&amp;&gt;();
+  assert(dynamic_cast&lt;impl1*&gt;(&amp;object));
+}
+</code></pre>
+
+<pre><code class="cpp">
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;i1*[]&gt;().to&lt;impl, impl1&gt;()
+  );
+
+  auto v = injector.create&lt;std::vector&lt;std::unique_ptr&lt;i1&gt;&gt;&gt;();
+  assert(2 == v.size());
+  assert(dynamic_cast&lt;impl*&gt;(v[0].get()));
+  assert(dynamic_cast&lt;impl1*&gt;(v[1].get()));
+}
+</code></pre>
+
+<pre><code class="cpp">
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;int[]&gt;().to({1, 2, 3}) // or int*[]
+  );
+
+  auto v = injector.create&lt;std::vector&lt;int&gt;&gt;();
+  assert(3 == v.size());
+  assert(1 == v[0]);
+  assert(2 == v[1]);
+  assert(3 == v[2]);
+}
+</code></pre>
+
+<pre><code class="cpp">
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;int&gt;().to(42)
+  , di::bind&lt;int&gt;().to(123) [di::override]
+  );
+
+  assert(123 == injector.create&lt;int&gt;());
+}
+</code></pre>
+
+<pre><code class="cpp">
+int main() {
+  auto injector = di::make_injector(
+#if defined(__cpp_variable_templates)
+      di::bind&lt;i1&gt;.to&lt;impl1&gt;()
+#else
+      di::bind&lt;i1&gt;().to&lt;impl1&gt;()  // no variable templates
+#endif
+          );
+
+  auto object = injector.create&lt;std::unique_ptr&lt;i1&gt;&gt;();
+  assert(dynamic_cast&lt;impl1*&gt;(object.get()));
+}
+</code></pre>
+
+<p><strong><em>Example</em></strong></p>
+<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bindings.cpp">Get Bindings Example</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/fwd_bindings.cpp">Get Forward Bindings Example</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/dynamic_bindings.cpp">Get Dynamic Bindings Example</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/multiple_bindings.cpp">Get Multiple Bindings Example</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/bindings/constructor_bindings.cpp">Get Constructor Bindings Extension</a>]</p>
 <p><br /><br /><br /><hr /></p>
 <h3 id="injections">Injections</h3>
 <p><em>Constructor Injection</em> is the most powerful of available injections.
@@ -485,16 +605,89 @@ public:
 Boost.DI is not able to automatically distinguish between ambiguous constructors with the same (longest) number of parameters.
 Use <a href="#BOOST_DI_INJECT">BOOST_DI_INJECT</a> or <a href="#BOOST_DI_INJECT_TRAITS">BOOST_DI_INJECT_TRAITS</a> or <a href="#di_ctor_traits">di::ctor_traits</a> or <a href="#di_inject">di::inject</a> to explicitly mark constructor to be injected.
 </span></p>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_direct.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_aggregate.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_multiple_constructors.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_vaargs.cpp" />
-<strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Automatic_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/automatic_injection.cpp" />
-<img alt="CPP(BTN)" src="../Run_Constructor_Signature_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_signature.cpp" />
-<img alt="CPP(BTN)" src="../Run_Lazy_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/lazy.cpp" />
-<img alt="CPP(BTN)" src="../Run_XML_Injection_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/xml_injection.cpp" /></p>
+<p><strong><em>Test</em></strong></p>
+<pre><code class="cpp">
+struct T {
+  T(int a, double d) : a(a), d(d) {}
+
+  int a = 0;
+  double d = 0.0;
+};
+
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;int&gt;().to(42)
+  , di::bind&lt;double&gt;().to(87.0)
+  );
+  auto object = injector.create&lt;T&gt;();
+  assert(42 == object.a);
+  assert(87.0 == object.d);
+}
+</code></pre>
+
+<pre><code class="cpp">
+struct T {
+  int a;     // = 0;
+  double d;  // = 0.0;
+};
+
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;int&gt;().to(42)
+  , di::bind&lt;double&gt;().to(87.0)
+  );
+  auto object = injector.create&lt;T&gt;();
+  assert(42 == object.a);
+  assert(87.0 == object.d);
+}
+</code></pre>
+
+<pre><code class="cpp">
+struct T {
+  T();
+  T(int a) : a(a) {}
+  T(int a, double d) : a(a), d(d) {}  // longest will be chosen
+
+  int a = 0;
+  double d = 0.0;
+};
+
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;int&gt;().to(42)
+  , di::bind&lt;double&gt;().to(87.0)
+  );
+  auto object = injector.create&lt;T&gt;();
+  assert(42 == object.a);
+  assert(87.0 == object.d);
+}
+</code></pre>
+
+<pre><code class="cpp">
+struct T {
+  T(double d, int a) : a(a), d(d) {}
+  T(int a, double d, ...) : a(a), d(d) {}
+
+  int a = 0;
+  double d = 0.0;
+};
+
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;int&gt;().to(42)
+  , di::bind&lt;double&gt;().to(87.0)
+  );
+  auto object = injector.create&lt;T&gt;();
+  assert(42 == object.a);
+  assert(87.0 == object.d);
+}
+</code></pre>
+
+<p><strong><em>Example</em></strong></p>
+<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/automatic_injection.cpp">Get Automatic Injection Example</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_signature.cpp">Get Constructor Signature Example</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/lazy.cpp">Get Lazy Extension</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/xml_injection.cpp">Get XML Injection Extension</a>]</p>
 <p><br /><br /><br /><hr /></p>
 <p><a id="BOOST_DI_INJECT"></a>
 --- <strong><em>BOOST_DI_INJECT</em></strong> ---</p>
@@ -538,11 +731,30 @@ Then BOOST_DI_INJECT becomes handy to point which constructor should be used.</p
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
 BOOST_DI_INJECT constructor parameters is limited to <a href="../overview/index.html#configuration">BOOST_DI_CFG_CTOR_LIMIT_SIZE</a>, which by default is set to 10.
 </span></p>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_BOOST_DI_INJECT.cpp" />
-<strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp" />
-<img alt="CPP(BTN)" src="../Run_Concepts_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/concepts.cpp" /></p>
+<p><strong><em>Test</em></strong></p>
+<pre><code class="cpp">
+struct T {
+  T(double d, int a) : a(a), d(d) {}
+  BOOST_DI_INJECT(T, int a, double d) : a(a), d(d) {}
+
+  int a = 0;
+  double d = 0.0;
+};
+
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;int&gt;().to(42)
+  , di::bind&lt;double&gt;().to(87.0)
+  );
+  auto object = injector.create&lt;T&gt;();
+  assert(42 == object.a);
+  assert(87.0 == object.d);
+}
+</code></pre>
+
+<p><strong><em>Example</em></strong></p>
+<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp">Get Constructor Injection Example</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/concepts.cpp">Get Concepts Extension</a>]</p>
 <p><br /><hr /></p>
 <p><a id="BOOST_DI_INJECT_TRAITS"></a>
 --- <strong><em>BOOST_DI_INJECT_TRAITS</em></strong> ---</p>
@@ -578,11 +790,48 @@ BOOST_DI_INJECT constructor parameters is limited to <a href="../overview/index.
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
 BOOST_DI_INJECT_TRAITS constructor parameters is limited to <a href="../overview/index.html#configuration">BOOST_DI_CFG_CTOR_LIMIT_SIZE</a>, which by default is set to 10.
 </span></p>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_BOOST_DI_INJECT_TRAITS.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_default_values.cpp" />
-<strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp" /></p>
+<p><strong><em>Test</em></strong></p>
+<pre><code class="cpp">
+struct T {
+  BOOST_DI_INJECT_TRAITS(int, double);
+  T(double d, int a) : a(a), d(d) {}
+  T(int a, double d) : a(a), d(d) {}
+
+  int a = 0;
+  double d = 0.0;
+};
+
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;int&gt;().to(42)
+  , di::bind&lt;double&gt;().to(87.0)
+  );
+  auto object = injector.create&lt;T&gt;();
+  assert(42 == object.a);
+  assert(87.0 == object.d);
+}
+</code></pre>
+
+<pre><code class="cpp">
+class example {
+ public:
+  BOOST_DI_INJECT_TRAITS(int);
+  explicit example(int i, double d = 42.0) : i(i), d(d) {}
+
+  int i = 0;
+  double d = 0.0;
+};
+
+int main() {
+  auto injector = di::make_injector();
+  auto object = injector.create&lt;example&gt;();
+  assert(0 == object.i);
+  assert(42.0 == object.d);
+}
+</code></pre>
+
+<p><strong><em>Example</em></strong></p>
+<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp">Get Constructor Injection Example</a>]</p>
 <p><br /><hr /></p>
 <p><a id="di_inject"></a>
 --- <strong><em>di::inject</em></strong> ---</p>
@@ -621,11 +870,48 @@ It's useful for generated/generic classes as it doesn't have constructor paramet
 Moreover, you can replace <code>di::inject</code> with any variadic type list type to remove dependency to Boost.DI.
 For example, <code>template&lt;class...&gt; struct type_list{};</code> <code>using boost_di_inject__ = type_list&lt;...&gt;;</code>
 </span></p>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_inject.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_long_parameter_list.cpp" />
-<strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp" /></p>
+<p><strong><em>Test</em></strong></p>
+<pre><code class="cpp">
+struct T {
+  T(double d, int a) : a(a), d(d) {}
+  T(int a, double d) : a(a), d(d) {}
+  using boost_di_inject__ = di::inject&lt;int, double&gt;;
+
+  int a = 0;
+  double d = 0.0;
+};
+
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;int&gt;().to(42)
+  , di::bind&lt;double&gt;().to(87.0)
+  );
+  auto object = injector.create&lt;T&gt;();
+  assert(42 == object.a);
+  assert(87.0 == object.d);
+}
+</code></pre>
+
+<pre><code class="cpp">
+struct T {
+  using boost_di_inject__ = di::inject&lt;
+    int, int, int, int, int, int, int, int, int, int
+  , int, int, int, int, int, int, int, int, int, int
+  , int, int, int, int, int, int, int, int, int, int&gt;;
+
+  T(int, int, int, int, int, int, int, int, int, int
+  , int, int, int, int, int, int, int, int, int, int
+  , int, int, int, int, int, int, int, int, int, int) { }
+};
+
+int main() {
+  auto injector = di::make_injector();
+  injector.create&lt;T&gt;();  // compile clean
+}
+</code></pre>
+
+<p><strong><em>Example</em></strong></p>
+<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp">Get Constructor Injection Example</a>]</p>
 <p><br /><hr /></p>
 <p><a id="di_ctor_traits"></a>
 --- <strong><em>di::ctor_traits</em></strong> ---</p>
@@ -644,10 +930,38 @@ namespace di {
   };
 }}
 </code></pre>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_ctor_traits.cpp" />
-<strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp" /></p>
+<p><strong><em>Test</em></strong></p>
+<pre><code class="cpp">
+struct T {
+  T(double d, int a) : a(a), d(d) {}
+  T(int a, double d) : a(a), d(d) {}
+
+  int a = 0;
+  double d = 0.0;
+};
+
+namespace boost {
+namespace di {
+template &lt;&gt;
+struct ctor_traits&lt;T&gt; {
+  BOOST_DI_INJECT_TRAITS(int, double);
+};
+}
+}  // boost::di
+
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;int&gt;().to(42)
+  , di::bind&lt;double&gt;().to(87.0)
+  );
+  auto object = injector.create&lt;T&gt;();
+  assert(42 == object.a);
+  assert(87.0 == object.d);
+}
+</code></pre>
+
+<p><strong><em>Example</em></strong></p>
+<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp">Get Constructor Injection Example</a>]</p>
 <p><br /><hr /></p>
 <h3 id="annotations">Annotations</h3>
 <p>Annotations are type properties specified in order to refer to a type by the name instead of the type it self.
@@ -699,15 +1013,118 @@ struct T {
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
 Implementation of constructor doesn't require annotations, only constructor definition requires them.
 </span></p>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/annotated_constructor_injection.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/annotated_constructor_injection_with_constructor_definition.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/annotated_constructor_injection_with_ctor_traits.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/annotated_constructor_injection_with_the_same_names.cpp" />
-<strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Annotations_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/annotations.cpp" />
-<img alt="CPP(BTN)" src="../Run_Named_Parameters_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/named_parameters.cpp" />
-<img alt="CPP(BTN)" src="../Run_Assisted_Injection_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/assisted_injection.cpp" /></p>
+<p><strong><em>Test</em></strong></p>
+<pre><code class="cpp">
+auto int1 = [] {};
+auto int2 = [] {};
+
+struct T {
+  BOOST_DI_INJECT(T, (named = int1) int a, (named = int2) int b) : a(a), b(b) {}
+  int a = 0;
+  int b = 0;
+};
+
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;int&gt;().named(int1).to(42)
+  , di::bind&lt;int&gt;().named(int2).to(87)
+  );
+  auto object = injector.create&lt;T&gt;();
+  assert(42 == object.a);
+  assert(87 == object.b);
+}
+</code></pre>
+
+<pre><code class="cpp">
+auto int1 = [] {};
+auto int2 = [] {};
+
+struct T {
+  BOOST_DI_INJECT(T, (named = int1) int a, (named = int2) int b);
+  int a = 0;
+  int b = 0;
+};
+
+T::T(int a, int b) : a(a), b(b) {}
+
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;int&gt;().named(int1).to(42)
+  , di::bind&lt;int&gt;().named(int2).to(87)
+  );
+  auto object = injector.create&lt;T&gt;();
+  assert(42 == object.a);
+  assert(87 == object.b);
+}
+</code></pre>
+
+<pre><code class="cpp">
+auto int1 = [] {};
+auto int2 = [] {};
+
+struct T {
+  T(int a, int b) : a(a), b(b) {}
+  int a = 0;
+  int b = 0;
+};
+
+namespace boost {
+namespace di {
+template &lt;&gt;
+struct ctor_traits&lt;T&gt; {
+  BOOST_DI_INJECT_TRAITS((named = int1) int, (named = int2) int);
+};
+}
+}  // boost::di
+
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;int&gt;().named(int1).to(42)
+  , di::bind&lt;int&gt;().named(int2).to(87)
+  );
+  auto object = injector.create&lt;T&gt;();
+  assert(42 == object.a);
+  assert(87 == object.b);
+}
+</code></pre>
+
+<pre><code class="cpp">
+auto n1 = [] {};
+auto n2 = [] {};
+
+struct T {
+  BOOST_DI_INJECT(T, (named = n1) int i1
+                   , (named = n1) int i2
+                   , (named = n2) int i3
+                   , int i4
+                   , (named = n1)std::string s)
+    : i1(i1), i2(i2), i3(i3), i4(i4), s(s) {}
+  int i1 = 0;
+  int i2 = 0;
+  int i3 = 0;
+  int i4 = 0;
+  std::string s;
+};
+
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;int&gt;().named(n1).to(42)
+  , di::bind&lt;int&gt;().named(n2).to(87)
+  , di::bind&lt;std::string&gt;().named(n1).to(&quot;str&quot;)
+  );
+  auto object = injector.create&lt;T&gt;();
+  assert(42 == object.i1);
+  assert(42 == object.i2);
+  assert(87 == object.i3);
+  assert(0 == object.i4);
+  assert(&quot;str&quot; == object.s);
+}
+</code></pre>
+
+<p><strong><em>Example</em></strong></p>
+<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/annotations.cpp">Get Annotations Example</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/named_parameters.cpp">Get Named Parameters Extension</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/assisted_injection.cpp">Get Assisted Injection Extension</a>]</p>
 <p><br /><hr /></p>
 <h3 id="scopes">Scopes</h3>
 <p><strong><em>Header</em></strong></p>
@@ -843,13 +1260,37 @@ struct scope {
 </tr>
 </tbody>
 </table>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_custom.cpp" />
-<strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Custom_Scope_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_scope.cpp" />
-<img alt="CPP(BTN)" src="../Run_Scoped_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/scopes/scoped_scope.cpp" />
-<img alt="CPP(BTN)" src="../Run_Session_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/scopes/session_scope.cpp" />
-<img alt="CPP(BTN)" src="../Run_Shared_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/scopes/shared_scope.cpp" /></p>
+<p><strong><em>Test</em></strong></p>
+<pre><code class="cpp">
+struct custom_scope {
+  template &lt;class TExpected, class&gt;
+  struct scope {
+    template &lt;class&gt;
+    using is_referable = std::false_type;
+
+    template &lt;class T, class, class TProvider&gt;
+    static auto try_create(const TProvider&amp; provider) -&gt; decltype(std::shared_ptr&lt;TExpected&gt;{provider.get()});
+
+    template &lt;class T, class, class TProvider&gt;
+    auto create(const TProvider&amp; provider) {
+      return std::shared_ptr&lt;TExpected&gt;{provider.get()};
+    }
+  };
+};
+
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;i1&gt;().in(custom_scope{}).to&lt;impl1&gt;()
+  );
+  assert(injector.create&lt;std::shared_ptr&lt;i1&gt;&gt;() != injector.create&lt;std::shared_ptr&lt;i1&gt;&gt;());
+}
+</code></pre>
+
+<p><strong><em>Example</em></strong></p>
+<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_scope.cpp">Get Custom Scope Example</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/scopes/scoped_scope.cpp">Get Scoped Scope Extension</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/scopes/session_scope.cpp">Get Session Scope Extension</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/scopes/shared_scope.cpp">Get Shared Scope Extension</a>]</p>
 <p><br /><br /><br /><hr /></p>
 <p><a id="di_deduce"></a>
 --- <strong><em>di::deduce (default)</em></strong> ---</p>
@@ -969,11 +1410,44 @@ scopes::deduce deduce;
 </tr>
 </tbody>
 </table>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_deduce_default.cpp" />
-<strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Deduce_Scope_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/deduce_scope.cpp" />
-<img alt="CPP(BTN)" src="../Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp" /></p>
+<p><strong><em>Test</em></strong></p>
+<pre><code class="cpp">
+struct T {
+  T(const std::shared_ptr&lt;i1&gt;&amp; sp, std::unique_ptr&lt;i2&gt; up, int&amp; i, double d) : sp(sp), up(std::move(up)), i(i), d(d) {}
+
+  std::shared_ptr&lt;i1&gt; sp; /*singleton*/
+  std::unique_ptr&lt;i2&gt; up; /*unique*/
+  int&amp; i;                 /*instance*/
+  double d;               /*unique*/
+};
+
+int main() {
+  auto i = 42;
+  auto injector = di::make_injector(
+    di::bind&lt;i1&gt;().to&lt;impl1&gt;()
+  , di::bind&lt;i2&gt;().to&lt;impl2&gt;()
+  , di::bind&lt;int&gt;().to(i)
+  , di::bind&lt;double&gt;().to(87.0)
+  );
+  auto object1 = injector.create&lt;std::unique_ptr&lt;T&gt;&gt;();
+  auto object2 = injector.create&lt;std::unique_ptr&lt;T&gt;&gt;();
+  assert(object1-&gt;sp == object2-&gt;sp);
+  assert(object1-&gt;up != object2-&gt;up);
+  assert(42 == object1-&gt;i);
+  assert(&amp;i == &amp;object1-&gt;i);
+  assert(42 == object2-&gt;i);
+  assert(&amp;i == &amp;object2-&gt;i);
+  assert(87.0 == object1-&gt;d);
+  assert(87.0 == object2-&gt;d);
+  i = 12;
+  assert(i == object2-&gt;i);
+  assert(&amp;i == &amp;object2-&gt;i);
+}
+</code></pre>
+
+<p><strong><em>Example</em></strong></p>
+<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/deduce_scope.cpp">Get Deduce Scope Example</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp">Get Scopes Example</a>]</p>
 <p><br /><hr /></p>
 <p><a id="di_instance"></a>
 --- <strong><em>di::instance (di::bind&lt;&gt;.to(value))</em></strong> ---</p>
@@ -1103,11 +1577,41 @@ Boost.DI is not maintaining the life time of these objects, however, values and 
 </tr>
 </tbody>
 </table>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_instance.cpp" />
-<strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp" />
-<img alt="CPP(BTN)" src="../Run_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bindings.cpp" /></p>
+<p><strong><em>Test</em></strong></p>
+<pre><code class="cpp">
+int main() {
+  auto l = 42l;
+  auto b = false;
+  auto injector = di::make_injector(
+    di::bind&lt;int&gt;().to(0)
+  , di::bind&lt;int&gt;().to(42)[di::override]
+  , di::bind&lt;i1&gt;().to(std::make_shared&lt;impl&gt;())
+  , di::bind&lt;long&gt;().to(l)
+  , di::bind&lt;short&gt;().to([] { return 87; })
+  , di::bind&lt;i2&gt;().to([&amp;](const auto&amp; injector) -&gt; std::shared_ptr&lt;i2&gt; {
+      return b ? injector.template create&lt;std::shared_ptr&lt;impl2&gt;&gt;() : nullptr; })
+  );
+
+  assert(42 == injector.create&lt;int&gt;());
+  assert(injector.create&lt;std::shared_ptr&lt;i1&gt;&gt;() == injector.create&lt;std::shared_ptr&lt;i1&gt;&gt;());
+  assert(l == injector.create&lt;long&amp;&gt;());
+  assert(&amp;l == &amp;injector.create&lt;long&amp;&gt;());
+  assert(87 == injector.create&lt;short&gt;());
+  {
+    auto object = injector.create&lt;std::shared_ptr&lt;i2&gt;&gt;();
+    assert(nullptr == object);
+  }
+  {
+    b = true;
+    auto object = injector.create&lt;std::shared_ptr&lt;i2&gt;&gt;();
+    assert(dynamic_cast&lt;impl2*&gt;(object.get()));
+  }
+}
+</code></pre>
+
+<p><strong><em>Example</em></strong></p>
+<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp">Get Scopes Example</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bindings.cpp">Get Bindings Example</a>]</p>
 <p><br /><hr /></p>
 <p><a id="di_singleton"></a>
 --- <strong><em>di::singleton</em></strong> ---</p>
@@ -1231,11 +1735,20 @@ scopes::singleton singleton;
 </tr>
 </tbody>
 </table>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_singleton.cpp" />
-<strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp" />
-<img alt="CPP(BTN)" src="../Run_Eager_Singletons_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/eager_singletons.cpp" /></p>
+<p><strong><em>Test</em></strong></p>
+<pre><code class="cpp">
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;i1&gt;().in(di::singleton).to&lt;impl1&gt;()
+  );
+
+  assert(injector.create&lt;std::shared_ptr&lt;i1&gt;&gt;() == injector.create&lt;std::shared_ptr&lt;i1&gt;&gt;());
+}
+</code></pre>
+
+<p><strong><em>Example</em></strong></p>
+<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp">Get Scopes Example</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/eager_singletons.cpp">Get Eager Singletons Example</a>]</p>
 <p><br /><hr /></p>
 <p><a id="di_unique"></a>
 --- <strong><em>di::unique</em></strong> ---</p>
@@ -1355,10 +1868,19 @@ scopes::unique unique;
 </tr>
 </tbody>
 </table>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_unique.cpp" />
-<strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp" /></p>
+<p><strong><em>Test</em></strong></p>
+<pre><code class="cpp">
+int main() {
+  auto injector = di::make_injector(
+    di::bind&lt;i1&gt;().in(di::unique).to&lt;impl1&gt;()
+  );
+
+  assert(injector.create&lt;std::shared_ptr&lt;i1&gt;&gt;() != injector.create&lt;std::shared_ptr&lt;i1&gt;&gt;());
+}
+</code></pre>
+
+<p><strong><em>Example</em></strong></p>
+<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp">Get Scopes Example</a>]</p>
 <p><br /><hr /></p>
 <h3 id="modules">Modules</h3>
 <p><a id="di_module"></a></p>
@@ -1393,12 +1915,89 @@ di::injector&lt;Ts...&gt; module = di::make_injector(...);
 </tr>
 </tbody>
 </table>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_type.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_many_types.cpp" />
-<strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Modules_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/modules.cpp" /></p>
+<p><strong><em>Test</em></strong></p>
+<pre><code class="cpp">
+struct T {
+  T(std::unique_ptr&lt;i1&gt; i1, std::unique_ptr&lt;i2&gt; i2, int i) : i1_(std::move(i1)), i2_(std::move(i2)), i(i) {}
+
+  std::unique_ptr&lt;i1&gt; i1_;
+  std::unique_ptr&lt;i2&gt; i2_;
+  int i = 0;
+};
+
+auto module1 = [] {
+  return di::make_injector(
+    di::bind&lt;i1&gt;().to&lt;impl1&gt;()
+  , di::bind&lt;int&gt;().to(42)
+  );
+};
+
+auto module2 = [] {
+  return di::make_injector(
+    di::bind&lt;i2&gt;().to&lt;impl2&gt;()
+  );
+};
+
+int main() {
+  auto injector = di::make_injector(module1(), module2());
+  auto object = injector.create&lt;std::unique_ptr&lt;T&gt;&gt;();
+  assert(dynamic_cast&lt;impl1*&gt;(object-&gt;i1_.get()));
+  assert(dynamic_cast&lt;impl2*&gt;(object-&gt;i2_.get()));
+  assert(42 == object-&gt;i);
+  auto up1 = injector.create&lt;std::unique_ptr&lt;i1&gt;&gt;();
+  assert(dynamic_cast&lt;impl1*&gt;(up1.get()));
+  auto up2 = injector.create&lt;std::unique_ptr&lt;i2&gt;&gt;();
+  assert(dynamic_cast&lt;impl2*&gt;(up2.get()));
+}
+</code></pre>
+
+<pre><code class="cpp">
+struct T {
+  T(std::shared_ptr&lt;i1&gt; i1, std::shared_ptr&lt;i2&gt; i2, int i) : i1_(i1), i2_(i2), i(i) {}
+
+  std::shared_ptr&lt;i1&gt; i1_;
+  std::shared_ptr&lt;i2&gt; i2_;
+  int i;
+};
+
+di::injector&lt;T&gt; module(const int&amp; i) noexcept {
+  return di::make_injector(
+    di::bind&lt;i1&gt;().to&lt;impl1&gt;()
+  , di::bind&lt;i2&gt;().to&lt;impl2&gt;()
+  , di::bind&lt;int&gt;().to(i)
+  );
+}
+
+int main() {
+  auto injector = di::make_injector(module(42));
+  auto object = injector.create&lt;T&gt;();
+  assert(dynamic_cast&lt;impl1*&gt;(object.i1_.get()));
+  assert(dynamic_cast&lt;impl2*&gt;(object.i2_.get()));
+  assert(42 == object.i);
+  // injector.create&lt;std::unique_ptr&lt;i1&gt;&gt;(); // compile error
+  // injector.create&lt;std::unique_ptr&lt;i2&gt;&gt;(); // compile error
+}
+</code></pre>
+
+<pre><code class="cpp">
+auto module = []() -&gt; di::injector&lt;std::unique_ptr&lt;i1&gt;, std::unique_ptr&lt;i2&gt;&gt; {
+  return di::make_injector(
+    di::bind&lt;i1&gt;().to&lt;impl1&gt;()
+  , di::bind&lt;i2&gt;().to&lt;impl2&gt;()
+  );
+};
+
+int main() {
+  auto injector = di::make_injector(module());
+  auto up1 = injector.create&lt;std::unique_ptr&lt;i1&gt;&gt;();
+  assert(dynamic_cast&lt;impl1*&gt;(up1.get()));
+  auto up2 = injector.create&lt;std::unique_ptr&lt;i2&gt;&gt;();
+  assert(dynamic_cast&lt;impl2*&gt;(up2.get()));
+}
+</code></pre>
+
+<p><strong><em>Example</em></strong></p>
+<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/modules.cpp">Get Modules Example</a>]</p>
 <p><br /><hr /></p>
 <p><a id="BOOST_DI_EXPOSE"></a>
 --- <strong><em>BOOST_DI_EXPOSE</em></strong> ---</p>
@@ -1434,11 +2033,77 @@ di::injector&lt;Ts...&gt; module = di::make_injector(...);
 </tr>
 </tbody>
 </table>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_annotated_type.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_complex_types.cpp" />
-<strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Modules_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/modules.cpp" /></p>
+<p><strong><em>Test</em></strong></p>
+<pre><code class="cpp">
+auto my_name = [] {};
+
+struct T {
+  BOOST_DI_INJECT(T, (named = my_name)std::unique_ptr&lt;i1&gt; up) : up(std::move(up)) {}
+  std::unique_ptr&lt;i1&gt; up;
+};
+
+auto module = []() -&gt; di::injector&lt;BOOST_DI_EXPOSE((named = my_name)std::unique_ptr&lt;i1&gt;)&gt; {
+  return di::make_injector(
+    di::bind&lt;i1&gt;().named(my_name).to&lt;impl1&gt;()
+  );
+};
+
+int main() {
+  auto injector = di::make_injector(module());
+  auto object = injector.create&lt;std::unique_ptr&lt;T&gt;&gt;();
+  assert(dynamic_cast&lt;impl1*&gt;(object-&gt;up.get()));
+}
+</code></pre>
+
+<pre><code class="cpp">
+struct T {
+  T(std::shared_ptr&lt;i1&gt; i1, std::shared_ptr&lt;i2&gt; i2, int i) : i1_(i1), i2_(i2), i(i) {}
+
+  std::shared_ptr&lt;i1&gt; i1_;
+  std::shared_ptr&lt;i2&gt; i2_;
+  int i;
+};
+
+BOOST_DI_UNUSED auto name = [] {};
+
+di::injector&lt;T, std::unique_ptr&lt;T&gt;, BOOST_DI_EXPOSE((named = name)T)&gt; module(const int&amp; i) noexcept {
+  return di::make_injector(
+    di::bind&lt;i1&gt;().to&lt;impl1&gt;()
+  , di::bind&lt;i2&gt;().to&lt;impl2&gt;()
+  , di::bind&lt;int&gt;().to(i)
+  );
+}
+
+int main() {
+  auto injector = di::make_injector(module(42));
+  {
+    auto object = injector.create&lt;T&gt;();
+    assert(dynamic_cast&lt;impl1*&gt;(object.i1_.get()));
+    assert(dynamic_cast&lt;impl2*&gt;(object.i2_.get()));
+    assert(42 == object.i);
+  }
+  {
+    auto object = injector.create&lt;std::unique_ptr&lt;T&gt;&gt;();
+    assert(dynamic_cast&lt;impl1*&gt;(object-&gt;i1_.get()));
+    assert(dynamic_cast&lt;impl2*&gt;(object-&gt;i2_.get()));
+    assert(42 == object-&gt;i);
+  }
+  {
+    struct example {
+      BOOST_DI_INJECT(example, (named = name)T object) : object(object) {}
+      T object;
+    };
+
+    auto object = injector.create&lt;example&gt;().object;
+    assert(dynamic_cast&lt;impl1*&gt;(object.i1_.get()));
+    assert(dynamic_cast&lt;impl2*&gt;(object.i2_.get()));
+    assert(42 == object.i);
+  }
+}
+</code></pre>
+
+<p><strong><em>Example</em></strong></p>
+<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/modules.cpp">Get Modules Example</a>]</p>
 <p><br /><hr /></p>
 <h3 id="providers">Providers</h3>
 <p><strong><em>Header</em></strong></p>
@@ -1507,11 +2172,38 @@ struct config : di::config {
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
 Provider used by <a href="#di_make_injector">injector</a> might changed locally via <a href="#di_make_injector">make_injector</a> or globally via <a href="#di_config">BOOST_DI_CFG</a>.
 </span></p>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/providers_heap_no_throw.cpp" />
-<strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp" />
-<img alt="CPP(BTN)" src="../Run_Pool_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp" /></p>
+<p><strong><em>Test</em></strong></p>
+<pre><code class="cpp">
+class heap_no_throw {
+ public:
+  template &lt;class...&gt;
+  struct is_creatable {
+    static constexpr auto value = true;
+  };
+
+  template &lt;class T         // implementation
+          , class TInit     // direct()/uniform{}
+          , class TMemory   // heap/stack
+          , class... TArgs&gt;
+  auto get(const TInit&amp;, const TMemory&amp;, TArgs&amp;&amp;... args) const noexcept {
+    return new (std::nothrow) T{std::forward&lt;TArgs&gt;(args)...};
+  }
+};
+
+class my_provider : public di::config {
+ public:
+  static auto provider(...) noexcept { return heap_no_throw{}; }
+};
+
+int main() {
+  auto injector = di::make_injector&lt;my_provider&gt;();
+  assert(0 == injector.create&lt;int&gt;());
+}
+</code></pre>
+
+<p><strong><em>Example</em></strong></p>
+<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp">Get Custom Provider Example</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp">Get Pool Provider Example</a>]</p>
 <p><br /><hr /></p>
 <p><a id="di_stack_over_heap"></a>
 --- <strong><em>di::providers::stack_over_heap (default)</em></strong> ---</p>
@@ -1614,11 +2306,25 @@ Provider used by <a href="#di_make_injector">injector</a> might changed locally 
 </tr>
 </tbody>
 </table>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/providers_stack_over_heap.cpp" />
-<strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp" />
-<img alt="CPP(BTN)" src="../Run_Pool_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp" /></p>
+<p><strong><em>Test</em></strong></p>
+<pre><code class="cpp">
+class my_provider : public di::config {
+ public:
+  // this is default in di::config
+  static auto provider(...) noexcept { return di::providers::stack_over_heap{}; }
+};
+
+int main() {
+  auto injector = di::make_injector&lt;my_provider&gt;();
+  injector.create&lt;int&gt;();                           // stack
+  std::unique_ptr&lt;int&gt; i{injector.create&lt;int*&gt;()};  // heap
+  (void)i;
+}
+</code></pre>
+
+<p><strong><em>Example</em></strong></p>
+<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp">Get Custom Provider Example</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp">Get Pool Provider Example</a>]</p>
 <p><br /><hr /></p>
 <p><a id="di_heap"></a>
 --- <strong><em>di::providers::heap</em></strong> ---</p>
@@ -1667,12 +2373,25 @@ Provider used by <a href="#di_make_injector">injector</a> might changed locally 
 </tr>
 </tbody>
 </table>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/providers_heap.cpp" />
-<strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp" />
-<img alt="CPP(BTN)" src="../Run_Pool_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp" />
-<img alt="CPP(BTN)" src="../Run_Mocks_Provider_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/providers/mocks_provider.cpp" /></p>
+<p><strong><em>Test</em></strong></p>
+<pre><code class="cpp">
+class my_provider : public di::config {
+ public:
+  static auto provider(...) noexcept { return di::providers::heap{}; }
+};
+
+int main() {
+  auto injector = di::make_injector&lt;my_provider&gt;();
+  injector.create&lt;int&gt;();                           // heap
+  std::unique_ptr&lt;int&gt; i{injector.create&lt;int*&gt;()};  // heap
+  (void)i;
+}
+</code></pre>
+
+<p><strong><em>Example</em></strong></p>
+<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp">Get Custom Provider Example</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp">Get Pool Provider Example</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/providers/mocks_provider.cpp">Get Mocks Provider Extension</a>]</p>
 <p><br /><br /><br /><hr /></p>
 <h3 id="policies">Policies</h3>
 <p><strong><em>Header</em></strong></p>
@@ -1783,13 +2502,62 @@ void operator()(const T&amp;, const TDependency&amp;, const TCtor&amp;...);
 In order for injector to verify policies they have to be created using <a href="#di_config">config</a> and passed via <code>TConfig</code> in <a href="#di_make_injector">make_injector</a>
 or set it globally via <a href="#di_config">BOOST_DI_CFG</a>.
 </span></p>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_print_types.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_print_type_extended.cpp" />
-<strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp" />
-<img alt="CPP(BTN)" src="../Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/types_dumper.cpp" />
-<img alt="CPP(BTN)" src="../Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp" /></p>
+<p><strong><em>Test</em></strong></p>
+<pre><code class="cpp">
+class print_types_policy : public di::config {
+ public:
+  static auto policies(...) noexcept {
+    return di::make_policies([](auto type) {
+      using arg = typename decltype(type)::type;
+      std::cout &lt;&lt; typeid(arg).name() &lt;&lt; std::endl;
+    });
+  }
+};
+
+int main() {
+  auto injector = di::make_injector&lt;print_types_policy&gt;();
+  injector.create&lt;int&gt;();  // output: int
+}
+</code></pre>
+
+<pre><code class="cpp">
+class print_types_info_policy : public di::config {
+ public:
+  static auto policies(...) noexcept {
+    return di::make_policies([](auto type, auto dep, BOOST_DI_UNUSED auto... ctor) {
+      using T = decltype(type);
+      using arg = typename T::type;
+      using arg_name = typename T::name;
+      using D = decltype(dep);
+      using scope = typename D::scope;
+      using expected = typename D::expected;
+      using given = typename D::given;
+      using name = typename D::name;
+      auto ctor_s = sizeof...(ctor);
+
+      std::cout &lt;&lt; ctor_s &lt;&lt; std::endl
+                &lt;&lt; typeid(arg).name() &lt;&lt; std::endl
+                &lt;&lt; typeid(arg_name).name() &lt;&lt; std::endl
+                &lt;&lt; typeid(scope).name() &lt;&lt; std::endl
+                &lt;&lt; typeid(expected).name() &lt;&lt; std::endl
+                &lt;&lt; typeid(given).name() &lt;&lt; std::endl
+                &lt;&lt; typeid(name).name() &lt;&lt; std::endl;
+    });
+  }
+};
+
+int main() {
+  auto injector = di::make_injector&lt;print_types_info_policy&gt;(
+    di::bind&lt;i1&gt;().to&lt;impl1&gt;()
+  );
+  injector.create&lt;std::unique_ptr&lt;i1&gt;&gt;();
+}
+</code></pre>
+
+<p><strong><em>Example</em></strong></p>
+<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp">Get Custom Policy Example</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/types_dumper.cpp">Get Types Dumper Extension</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp">Get UML Dumper Extension</a>]</p>
 <p><br /><br /><br /><hr /></p>
 <p><a id="di_constructible"></a>
 --- <strong><em>di::policies::constructible</em></strong> ---</p>
@@ -1853,17 +2621,64 @@ namespace operators {
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
 In order to allow logic operators using namespace <code>boost::di::policies::operators</code> has to be used.
 </span></p>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_local.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_global.cpp" /></p>
+<p><strong><em>Test</em></strong></p>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+
+class injected_and_bound : public di::config {
+ public:
+  static auto policies(...) noexcept {
+    using namespace di::policies;
+    using namespace di::policies::operators;
+    return di::make_policies(
+      constructible(is_injected&lt;di::_&gt;{} &amp;&amp; is_bound&lt;di::_&gt;{})
+    );
+  }
+};
+
+struct T {
+  BOOST_DI_INJECT(T, int, double) {}
+};
+
+int main() {
+  auto injector = di::make_injector&lt;injected_and_bound&gt;(
+    di::bind&lt;&gt;().to(42)
+  , di::bind&lt;&gt;().to(87.0)
+  );
+
+  injector.create&lt;T&gt;();
+}
+</code></pre>
+
+<pre><code class="cpp">class all_must_be_bound_unless_int;
+#define BOOST_DI_CFG all_must_be_bound_unless_int
+#include &lt;boost/di.hpp&gt;
+
+
+class all_must_be_bound_unless_int : public di::config {
+ public:
+  static auto policies(...) noexcept {
+    using namespace di::policies;
+    using namespace di::policies::operators;
+    return di::make_policies(constructible(std::is_same&lt;di::_, int&gt;{} || is_bound&lt;di::_&gt;{}));
+  }
+};
+
+int main() {
+  assert(0 == di::make_injector().create&lt;int&gt;());
+  // di::make_injector().create&lt;double&gt;(); // compile error
+  assert(42.0 == make_injector(di::bind&lt;double&gt;().to(42.0)).create&lt;double&gt;());
+}
+</code></pre>
+
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
 STL type traits are supported and might be combined with Boost.DI traits in order to limit constructor types
 For example, <code>std::is_same&lt;_, int&gt;{} || std::is_constructible&lt;_, int, int&gt;{} || std::is_base_of&lt;int, _&gt;{}</code>, etc...
 </span></p>
 <p><strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp" />
-<img alt="CPP(BTN)" src="../Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/types_dumper.cpp" />
-<img alt="CPP(BTN)" src="../Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp" /></p>
+<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp">Get Custom Policy Example</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/types_dumper.cpp">Get Types Dumper Extension</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp">Get UML Dumper Extension</a>]</p>
 <p><br /><br /><br /><hr /></p>
 <h3 id="concepts">Concepts</h3>
 <p>Concepts are types constraints which ensure that only given types which are satisfied by the constraint will be allowed.
@@ -1923,12 +2738,19 @@ boundable&lt;Ts...&gt;
 <td>Description</td>
 <td>type <code>T</code> has disallowed qualifiers</td>
 </tr>
-<tr>
-<td>Expression</td>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_has_disallowed_qualifiers.cpp" /></td>
-</tr>
 </tbody>
 </table>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+int main() {
+  di::make_injector(
+    di::bind&lt;int*&gt;().to(42) /** type&lt;int*&gt;::has_disallowed_qualifiers **/
+  );
+}
+</code></pre>
+
 <table>
 <thead>
 <tr>
@@ -1945,12 +2767,28 @@ boundable&lt;Ts...&gt;
 <td><code>BOOST_DI_CFG_DIAGNOSTICS_LEVEL</code></td>
 <td>0, 1 -&gt; no additional info, 2 -&gt; info about why type <code>T</code> is abstract</td>
 </tr>
-<tr>
-<td>Expression</td>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_abstract.cpp" /></td>
-</tr>
 </tbody>
 </table>
+<pre><code class="cpp">#define BOOST_DI_CFG_DIAGNOSTICS_LEVEL 2
+#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+struct i {
+  virtual ~i() noexcept = default;
+  virtual void dummy() = 0;
+};
+
+struct impl : i {};
+
+int main() {
+  di::make_injector(
+    di::bind&lt;i&gt;().to&lt;impl&gt;() /** type&lt;impl&gt;::is_abstract **/
+    /** unimplemented pure virtual method 'dummy' in 'impl' **/
+  );
+}
+</code></pre>
+
 <table>
 <thead>
 <tr>
@@ -1963,12 +2801,19 @@ boundable&lt;Ts...&gt;
 <td>Description</td>
 <td>type <code>T</code> is not related to type <code>U</code></td>
 </tr>
-<tr>
-<td>Expression</td>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_not_related_to.cpp" /></td>
-</tr>
 </tbody>
 </table>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+int main() {
+  di::make_injector(
+    di::bind&lt;int&gt;().to&lt;double&gt;() /** type&lt;double&gt;::is_not_related_to&lt;int&gt; **/
+  );
+}
+</code></pre>
+
 <table>
 <thead>
 <tr>
@@ -1981,12 +2826,20 @@ boundable&lt;Ts...&gt;
 <td>Description</td>
 <td>type <code>T</code> is bound more than once</td>
 </tr>
-<tr>
-<td>Expression</td>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_bound_more_than_once.cpp" /></td>
-</tr>
 </tbody>
 </table>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+int main() {
+  di::make_injector(
+    di::bind&lt;int&gt;.to(42) /** type&lt;int&gt;::is_bound_more_than_once **/
+  , di::bind&lt;int&gt;.to(87) // [di::override]
+  );
+}
+</code></pre>
+
 <table>
 <thead>
 <tr>
@@ -1999,12 +2852,19 @@ boundable&lt;Ts...&gt;
 <td>Description</td>
 <td>type <code>T</code> is neither a dependency nor an injector</td>
 </tr>
-<tr>
-<td>Expression</td>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_neither_a_dependency_nor_an_injector.cpp" /></td>
-</tr>
 </tbody>
 </table>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+int main() { struct dummy { };
+  di::make_injector(
+    dummy{} /** type&lt;dummy&gt;::is_neither_a_dependency_nor_an_injector **/
+  );
+}
+</code></pre>
+
 <hr />
 <p><a id="di_callable"></a>
 --- <strong><em>di::concepts::callable</em></strong> ---</p>
@@ -2037,12 +2897,23 @@ concept bool callable() {
 <td>Description</td>
 <td>policy <code>TPolicy</code> requires a call operator</td>
 </tr>
-<tr>
-<td>Expression</td>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/callable_requires_call_operator.cpp" /></td>
-</tr>
 </tbody>
 </table>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+int main() {
+  struct test_config : di::config {
+    struct dummy {};
+    static auto policies(...) { return di::make_policies(dummy{}); }
+  };
+
+  di::make_injector&lt;test_config&gt;();
+  /** policy&lt;test_config::dummy&gt;::requires_&lt;call_operator&gt; **/
+}
+</code></pre>
+
 <hr />
 <p><a id="di_configurable"></a>
 --- <strong><em>di::concepts::configurable</em></strong> ---</p>
@@ -2075,12 +2946,22 @@ concept bool configurable() {
 <td>Description</td>
 <td>config <code>T</code> requires only providable and callable types</td>
 </tr>
-<tr>
-<td>Expression</td>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/configurable_requires_callable_and_providable.cpp" /></td>
-</tr>
 </tbody>
 </table>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+int main() {
+  struct test_config /*: di::config*/ {
+    static auto policies(...) { return di::make_policies(); }
+  };
+
+  di::make_injector&lt;test_config&gt;();
+  /** config&lt;test_config&gt;::requires_&lt;provider&lt;providable_type (...)&gt;&gt; **/
+}
+</code></pre>
+
 <hr />
 <p><a id="di_creatable"></a>
 --- <strong><em>di::concepts::creatable</em></strong> ---</p>
@@ -2125,16 +3006,54 @@ concept bool creatable() {
 <td>Suggestion</td>
 <td>'type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?'</td>
 </tr>
-<tr>
-<td>Expression</td>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_abstract_type_is_not_bound.cpp" /></td>
-</tr>
-<tr>
-<td>Expression</td>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_expose_abstract_type_is_not_bound.cpp" /></td>
-</tr>
 </tbody>
 </table>
+<pre><code class="cpp">#define BOOST_DI_CFG_DIAGNOSTICS_LEVEL 1
+#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+struct interface {
+  virtual ~interface() noexcept = default;
+  virtual void dummy() = 0;
+};
+
+struct example {
+  explicit example(std::unique_ptr&lt;interface&gt;) {}
+};
+
+int main() {
+  di::make_injector().create&lt;example&gt;(); /** creatable constraint not satisfied **/
+  /** abstract_type&lt;interface&gt;::is_not_bound
+   *  type is not bound, did you forget to add: 
+   *   'di::bind&lt;interface&gt;.to&lt;implementation&gt;()'?
+   */
+}
+</code></pre>
+
+<pre><code class="cpp">#define BOOST_DI_CFG_DIAGNOSTICS_LEVEL 1
+#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+struct interface {
+  virtual ~interface() noexcept = default;
+  virtual void dummy() = 0;
+};
+
+struct example {
+  explicit example(std::unique_ptr&lt;interface&gt;) {}
+};
+
+int main() {
+  di::injector&lt;example&gt; injector = di::make_injector(); /** creatable constraint not satisfied **/
+  /** abstract_type&lt;interface&gt;::is_not_bound
+   *  type is not bound, did you forget to add: 'di::bind&lt;interface&gt;.to&lt;implementation&gt;()'?
+   */
+  (void)injector;
+}
+</code></pre>
+
 <table>
 <thead>
 <tr>
@@ -2155,12 +3074,26 @@ concept bool creatable() {
 <td>Suggestion</td>
 <td>'verify BOOST_DI_INJECT_TRAITS or di::ctor_traits'</td>
 </tr>
-<tr>
-<td>Expression</td>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_type_has_ambiguous_number_of_constructor_parameters.cpp" /></td>
-</tr>
 </tbody>
 </table>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+int main() {
+  struct T {
+    BOOST_DI_INJECT_TRAITS(int, int);  // 2 parameters
+    T(int, int, int, int) {}           // 4 parameters
+  };
+
+  auto injector = di::make_injector();
+  injector.create&lt;T&gt;(); /** creatable constraint not satisfied **/
+  /** type&lt;T&gt;::has_ambiguous_number_of_constructor_parameters::given&lt;2&gt;::expected&lt;4&gt;
+   * verify BOOST_DI_INJECT_TRAITS or di::ctor_traits
+   */
+}
+</code></pre>
+
 <table>
 <thead>
 <tr>
@@ -2181,12 +3114,26 @@ concept bool creatable() {
 <td>Suggestion</td>
 <td>'increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters'</td>
 </tr>
-<tr>
-<td>Expression</td>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_type_has_to_many_constructor_parameters.cpp" /></td>
-</tr>
 </tbody>
 </table>
+<pre><code class="cpp">#define BOOST_DI_CFG_CTOR_LIMIT_SIZE 2  // specify max number of constructor parameters
+#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+int main() {
+  struct T {
+    T(int, int, int) {}  // 3 parameters
+  };
+
+  auto injector = di::make_injector();
+  injector.create&lt;T&gt;(); /** creatable constraint not satisfied **/
+  /** type&lt;T&gt;::has_to_many_constructor_parameters::max&lt;2&gt;
+   *  increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters
+   */
+}
+</code></pre>
+
 <table>
 <thead>
 <tr>
@@ -2207,12 +3154,28 @@ concept bool creatable() {
 <td>Suggestion</td>
 <td>'scoped object is not convertible to the requested type, did you mistake the scope: 'di::bind<T>.in(scope)'?'</td>
 </tr>
-<tr>
-<td>Expression</td>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_scoped_is_not_convertible_to.cpp" /></td>
-</tr>
 </tbody>
 </table>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+int main() {
+  struct T {
+    T(int*) {}
+  };
+  auto injector = di::make_injector(
+    di::bind&lt;int&gt;().in(di::singleton)
+  );
+
+  injector.create&lt;T&gt;(); /** creatable constraint not satisfied **/
+  /** scoped&lt;singleton&gt;::is_not_convertible_to&lt;int *&gt;
+   *  scoped object is not convertible to the requested type,
+   *    did you mistake the scope: 'di::bind&lt;T&gt;.in(scope)'?
+   */
+}
+</code></pre>
+
 <table>
 <thead>
 <tr>
@@ -2233,12 +3196,28 @@ concept bool creatable() {
 <td>Suggestion</td>
 <td>'instance is not convertible to the requested type, verify binding: 'di::bind<T>.to(value)'?'</td>
 </tr>
-<tr>
-<td>Expression</td>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_instance_is_not_convertible_to.cpp" /></td>
-</tr>
 </tbody>
 </table>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+int main() {
+  struct T {
+    T(int&amp;) {}
+  };
+  auto injector = di::make_injector(
+    di::bind&lt;&gt;().to(42)
+  );
+
+  injector.create&lt;T&gt;(); /** creatable constraint not satisfied **/
+  /** scoped&lt;instance&gt;::is_not_convertible_to&lt;int &amp;&gt;
+   *  instance is not convertible to the requested type,
+   *    verify binding: 'di::bind&lt;T&gt;.to(value)'?
+   */
+}
+</code></pre>
+
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
 Suggestions are not supported/displayed by MSVC-2015.
 </span></p>
@@ -2282,12 +3261,21 @@ concept bool providable() {
 <td>Description</td>
 <td>provider <code>TProvider</code> requires <code>get</code> method</td>
 </tr>
-<tr>
-<td>Expression</td>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/providable_requires_get.cpp" /></td>
-</tr>
 </tbody>
 </table>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+int main() {
+  struct test_config : di::config {
+    struct dummy {};
+    static auto provider(...) { return dummy{}; }
+  };
+  di::make_injector&lt;test_config&gt;(); /** provider&lt;test_config::dummy&gt;::requires_&lt;get&gt; **/
+}
+</code></pre>
+
 <hr />
 <p><a id="di_scopable"></a>
 --- <strong><em>di::concepts::scopable</em></strong> ---</p>
@@ -2324,12 +3312,19 @@ concept bool scopable() {
 <td>Description</td>
 <td>scope <code>TScope</code> requires <code>create</code> method</td>
 </tr>
-<tr>
-<td>Expression</td>
-<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/scopable_requires_create.cpp" /></td>
-</tr>
 </tbody>
 </table>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+int main() { struct dummy { };
+  di::make_injector(
+    di::bind&lt;int&gt;().in(dummy{})); /** scope&lt;dummy&gt;::requires_&lt;create&gt; **/
+  );
+}
+</code></pre>
+
 <hr />
 <h3 id="configuration">Configuration</h3>
 <p><a id="di_config"></a>
@@ -2389,24 +3384,36 @@ concept bool scopable() {
 #define BOOST_DI_CFG config // change default
 di::make_injector(...)
 </code></pre>
-<p><strong><em>Test</em></strong>
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_global.cpp" />
-<strong><em>Example</em></strong></p>
-<p><img alt="CPP(BTN)" src="../Run_Configuration_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/configuration.cpp" />
-<img alt="CPP(BTN)" src="../Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp" />
-<img alt="CPP(BTN)" src="../Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp" /></p>
+<p><strong><em>Test</em></strong></p>
+<pre><code class="cpp">class all_must_be_bound_unless_int;
+#define BOOST_DI_CFG all_must_be_bound_unless_int
+#include &lt;boost/di.hpp&gt;
+
+
+class all_must_be_bound_unless_int : public di::config {
+ public:
+  static auto policies(...) noexcept {
+    using namespace di::policies;
+    using namespace di::policies::operators;
+    return di::make_policies(constructible(std::is_same&lt;di::_, int&gt;{} || is_bound&lt;di::_&gt;{}));
+  }
+};
+
+int main() {
+  assert(0 == di::make_injector().create&lt;int&gt;());
+  // di::make_injector().create&lt;double&gt;(); // compile error
+  assert(42.0 == make_injector(di::bind&lt;double&gt;().to(42.0)).create&lt;double&gt;());
+}
+</code></pre>
+
+<p><strong><em>Example</em></strong></p>
+<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/configuration.cpp">Get Configuration Example</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp">Get Custom Policy Example</a>]
+[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp">Get Custom Provider Example</a>]</p>
 <p><br /><hr /></p>
 </div>
 
-<script src="../js/jquery-2.1.1.min.js"></script>
 <script src="../js/highlight.pack.js"></script>
-<script src="../js/codemirror/codemirror.js"></script>
-<script src="../js/codemirror/clike.js"></script>
-<script src="../js/codemirror/active-line.js"></script>
-
-<script src="../js/cpp.js"></script>
-<script src="../js/gitter.js"></script>
-<script src="../js/utility.js"></script>
 
 <script>
 hljs.configure({languages:['cpp']});
@@ -2427,6 +3434,7 @@ hljs.initHighlightingOnLoad();
 <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
 <select onChange="window.location.href=this.value" style="position: absolute; top: 20px; right: 30px; z-index: 10;">
   <option value="https://boost-experimental.github.io/di/boost">Theme: Boost</option>
+  <option value="https://boost-experimental.github.io/di/boost-modern">Theme: Boost-Modern</option>
   <option value="https://boost-experimental.github.io/di">Theme: Boost-Experimental</option>
 </select>
 </body>
