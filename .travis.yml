@@ -180,8 +180,8 @@ script:
   - if [ "${CHECK}" != "" ]; then (travis_wait make check); fi
   - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (
     pip install --user travis https://github.com/mkdocs/mkdocs/archive/c868e74ce19af1535f6cf40003cefdcf619621f9.zip
-    && git clone https://github.com/boost-experimental/di
-    && cd di && git checkout -b gh-pages -t origin/gh-pages && git reset --hard && rm -rf * && cd ..
+    && git clone https://github.com/boost-experimental/di && cd di && rm -rf *
+    && git checkout -b gh-pages -t origin/gh-pages && git reset --hard && cd ..
     && MKDOCS_THEME=themes/boost-experimental MKDOCS_SITE=di make doc
     && MKDOCS_THEME=themes/boost MKDOCS_SITE=di/boost make doc readme
     && cd di && git add -A . && git commit -am "doc update"
