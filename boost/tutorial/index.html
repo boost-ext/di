@@ -287,10 +287,15 @@ int main() {
 }
 </code></pre>
 
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_create_objects_tree.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_create_objects_tree.cpp</a></li>
+</ul>
 <p>Check out also other examples. Please, notice that the diagram was also generated using <code>Boost.DI</code> but we will get into that a bit later.</p>
-<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp">Get Hello World Example</a>]
-[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/automatic_injection.cpp">Get Automatic Injection Example</a>]
-[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp">Get UML Dumper Extension</a>]</p>
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp"> Hello World Example</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/automatic_injection.cpp"> Automatic Injection Example</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp"> UML Dumper Extension</a></li>
+</ul>
 <p><br /><hr /></p>
 <h3 id="2-basic-first-steps-with-bindings">2. [Basic] First steps with bindings</h3>
 <p>But objects tree is not everything. A lot of classes uses interfaces or required a value to be passed.
@@ -382,6 +387,12 @@ class text_view : public iview {
 };
 
 
+class controller {
+ public:
+  controller(model&amp;, iview&amp;) {}
+};
+
+
 int main() {
   auto injector = di::make_injector(
     di::bind&lt;iview&gt;().to&lt;gui_view&gt;()
@@ -392,6 +403,9 @@ int main() {
 }
 </code></pre>
 
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_bindings.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_bindings.cpp</a></li>
+</ul>
 <p>Great, but my code is more dynamic than that! I mean that I want to choose <code>gui_view</code> or <code>text_view</code> at runtime.
 <code>Boost.DI</code> can handle that too!</p>
 <pre><code class="cpp">auto use_gui_view = ...;
@@ -439,6 +453,9 @@ int main() {
 }
 </code></pre>
 
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_dynamic_bindings.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_dynamic_bindings.cpp</a></li>
+</ul>
 <p>Okay, so what about the input. We have <code>user</code>, however, in the real life, we will have more clients.
 <code>Boost.DI</code> allows multiple bindings to the same type for <code>array/vector/set</code>. Let's do it then!</p>
 <pre><code class="cpp">class iclient {
@@ -510,6 +527,9 @@ int main() {
 }
 </code></pre>
 
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_multiple_bindings.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_multiple_bindings.cpp</a></li>
+</ul>
 <p>The last but not least, sometimes, it's really useful to override some bindings. For example, for testing purposes.
 With <code>Boost.DI</code> you can easily do that with <a href="../user_guide/index.html#di_bind">override</a> specifier.</p>
 <pre><code class="cpp">auto injector = di::make_injector(
@@ -549,12 +569,17 @@ int main() {
 }
 </code></pre>
 
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_bindings_override.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_bindings_override.cpp</a></li>
+</ul>
 <p>Check out also.</p>
-<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bindings.cpp">Get Bindings Example</a>]
-[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/fwd_bindings.cpp">Get Forward Bindings Example</a>]
-[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/dynamic_bindings.cpp">Get Dynamic Bindings Example</a>]
-[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/multiple_bindings.cpp">Get Multiple Bindings Example</a>]
-[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/bindings/constructor_bindings.cpp">Get Constructor Bindings Extension</a>]</p>
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bindings.cpp"> Bindings Example</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/fwd_bindings.cpp"> Forward Bindings Example</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/dynamic_bindings.cpp"> Dynamic Bindings Example</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/multiple_bindings.cpp"> Multiple Bindings Example</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/bindings/constructor_bindings.cpp"> Constructor Bindings Extension</a></li>
+</ul>
 <p><br /><br /><br /><hr /></p>
 <h3 id="3-basic-decide-the-life-times">3. [Basic] Decide the life times</h3>
 <p>So far so good but where these objects are stored?
@@ -754,10 +779,15 @@ int main() {
 }
 </code></pre>
 
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_decide_the_life_times.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_decide_the_life_times.cpp</a></li>
+</ul>
 <p>See also.</p>
-<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/deduce_scope.cpp">Get Deduce Scope Example</a>]
-[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp">Get Scopes Example</a>]
-[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/eager_singletons.cpp">Get Eager Singletons Example</a>]</p>
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/deduce_scope.cpp"> Deduce Scope Example</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp"> Scopes Example</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/eager_singletons.cpp"> Eager Singletons Example</a></li>
+</ul>
 <p><br /><br /><hr /></p>
 <h3 id="4-basic-annotations-to-the-rescue">4. [Basic] Annotations to the rescue</h3>
 <p>Above example are fine and dandy, nonetheless, they don't cover one important thing.
@@ -869,10 +899,15 @@ int main() {
 }
 </code></pre>
 
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_annotations_to_the_rescue.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_annotations_to_the_rescue.cpp</a></li>
+</ul>
 <p>Check out also.</p>
-<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp">Get Constructor Injection Example</a>]
-[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_signature.cpp">Get Constructor Signature Example</a>]
-[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/annotations.cpp">Get Annotations Example</a>]</p>
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp"> Constructor Injection Example</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_signature.cpp"> Constructor Signature Example</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/annotations.cpp"> Annotations Example</a></li>
+</ul>
 <p><br /><br /><hr /></p>
 <h3 id="5-basic-split-your-configuration">5. [Basic] Split your configuration</h3>
 <p>But my project has hundreds of interfaces and I would like to split my bindings into separate components.
@@ -946,6 +981,9 @@ int main() {
 }
 </code></pre>
 
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_split_your_configuration.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_split_your_configuration.cpp</a></li>
+</ul>
 <p>But I would like to have a module in <code>cpp</code> file, how can I do that?
 Such design might be achieved with <code>Boost.DI</code> using <a href="../user_guide/index.html#di_make_injector">injector</a> and exposing given types.
 Let's refactor it then.</p>
@@ -1011,15 +1049,20 @@ int main() {
 }
 </code></pre>
 
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_split_your_configuration_expose.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_split_your_configuration_expose.cpp</a></li>
+</ul>
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
 You can also expose named parameters using <code>di::injector&lt;BOOST_DI_EXPOSE((named = Rows) int)&gt;</code>.
 Different variations of the same type have to be exposed explicitly using <code>di::injector&lt;model&amp;, std::unique_ptr&lt;model&gt;&gt;</code>.
 Expose uses type erasure and therefore it has small performance overhead!
 </span></p>
 <p>More examples.</p>
-<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/modules.cpp">Get Modules Example</a>]
-[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_annotated_type.cpp">Get Exposed Annotated Type Example</a>]
-[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_complex_types.cpp">Get Exposed Complex Types Example</a>]</p>
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/modules.cpp"> Modules Example</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_annotated_type.cpp"> Exposed Annotated Type Example</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_complex_types.cpp"> Exposed Complex Types Example</a></li>
+</ul>
 <p><br /><br /></p>
 <p>Congrats! You have finished the basic part of the tutorial.
 Hopefully, you have noticed potential of DI and <code>Boost.DI</code> but if are still not convinced check out the <a href="#6-advanced-dumplimit-your-types">Advanced</a> part.</p>
@@ -1080,10 +1123,13 @@ int main() {
 }
 </code></pre>
 
-<p><a href="../images/uml_dumper.png"><img alt="UML Dumper" src="../images/uml_dumper.png" /></a></p>
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp</a>
+<a href="../images/uml_dumper.png"><img alt="UML Dumper" src="../images/uml_dumper.png" /></a></li>
+</ul>
 <p>See also.  <br /><br />
-[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp">Get Custom Policy Example</a>]
-[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/types_dumper.cpp">Get Types Dumper Extension</a>]</p>
+<em> <a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp"> Custom Policy Example</a>
+</em> <a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/types_dumper.cpp"> Types Dumper Extension</a></p>
 <p><br /></p>
 <p>On the other hand, it would be great to be able to limit types which might be constructed. For example, we just want to allow
 smart pointers and disallow raw pointers too. We may want to have a <code>view</code> only with const parameters being passed, etc.
@@ -1109,19 +1155,28 @@ int main() {
 }
 </code></pre>
 
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_global.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_global.cpp</a></li>
+</ul>
 <p>See also.</p>
-<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_local.cpp">Get Constructible Example</a>]</p>
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_local.cpp"> Constructible Example</a></li>
+</ul>
 <p><br /><hr /></p>
 <h3 id="7-advanced-customize-it">7. [Advanced] Customize it</h3>
 <p><code>Boost.DI</code> was design having extensibility in mind. You can easily customize</p>
 <ul>
 <li><a href="../user_guide/index.html#scopes">scopes</a> - to have custom life time of an object</li>
 <li><a href="../user_guide/index.html#providers">providers</a> - to have custom way of creating objects, for example by using preallocated memory</li>
-<li><a href="../user_guide/index.html#policies">policies</a> - to have custom way of dumping types at run-time or limiting them at compile-time</li>
+<li>
+<p><a href="../user_guide/index.html#policies">policies</a> - to have custom way of dumping types at run-time or limiting them at compile-time</p>
+</li>
+<li>
+<p><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp"> Custom Policy Example</a></p>
+</li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp"> Custom Provider Example</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp"> Pool Provider Example</a></li>
 </ul>
-<p>[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp">Get Custom Policy Example</a>]
-[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp">Get Custom Provider Example</a>]
-[<a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp">Get Pool Provider Example</a>]</p>
 <p><br /><hr /></p>
 <h3 id="8-advanced-extend-it">8. [Advanced] Extend it</h3>
 <p>As mentioned before, <code>Boost.DI</code> is quite easy to extend and therefore a lot of extensions exists already.
