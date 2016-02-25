@@ -179,7 +179,7 @@ script:
   - if [ "${CXX}" != "" ]; then (travis_wait make all); fi
   - if [ "${CHECK}" != "" ]; then (travis_wait make check); fi
   - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (
-    pip install --user travis https://github.com/mkdocs/mkdocs/archive/0.15.2.zip
+    pip install --user travis https://github.com/mkdocs/mkdocs/archive/0.15.3.zip
     && git clone https://github.com/boost-experimental/di
     && cd di && git checkout -b gh-pages -t origin/gh-pages && git reset --hard && rm -rf * && cd ..
     && MKDOCS_THEME=boost-experimental MKDOCS_SITE=di make doc
