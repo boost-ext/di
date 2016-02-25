@@ -179,10 +179,12 @@ script:
   - if [ "${CXX}" != "" ]; then (travis_wait make all); fi
   - if [ "${CHECK}" != "" ]; then (travis_wait make check); fi
   - if [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (
-    pip install --user travis https://github.com/mkdocs/mkdocs/archive/0.15.0.zip
-    && make doc && git clone https://github.com/boost-experimental/di
-    && cd di && git checkout -b gh-pages -t origin/gh-pages && git reset --hard
-    && rm -rf * && cp -r ../doc/site/* .  && git add -A . && git commit -am "doc update"
+    pip install --user travis https://github.com/mkdocs/mkdocs/archive/0.15.2.zip
+    && git clone https://github.com/boost-experimental/di
+    && cd di && git checkout -b gh-pages -t origin/gh-pages && git reset --hard && rm -rf * && cd ..
+    && MKDOCS_THEME=boost-experimental MKDOCS_SITE=di make doc
+    && MKDOCS_THEME=boost MKDOCS_SITE=di/boost make doc readme
+    && cd di && git add -A . && git commit -am "doc update"
     && git push --force --quiet "https://${GH_TOKEN}@github.com/boost-experimental/di"); fi
 
 after_success:
