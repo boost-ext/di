@@ -1,7 +1,39 @@
 #!/usr/bin/env python
-#update_readme_toc.py doc/mkdocs.yml README.md http://boost-experimental.github.io/msm-lite
+#update_md.py . http://boost-experimental.github.io/di/cpp14
 
-import fileinput, sys, os
+import fileinput, sys, os, glob
 
-for line in fileinput.input(sys.argv[1], inplace=True):
-  print(line)
+def print_cpp(filename):
+  print("```cpp")
+  with open(filename, 'r') as file:
+    ignore = False
+    tmp_ignore = False
+    for line in file:
+      if line.startswith("//<-"):
+        ignore = True
+        tmp_ignore = True
+      elif line.startswith("//->"):
+        tmp_ignore = False
+      if not ignore and not line.startswith("//"):
+        print line,
+      ignore = tmp_ignore
+  print("```"),
+
+
+def update_md(filename):
+  for line in fileinput.input(filename, inplace=True):
+    if line.find("[CPP]") != -1:
+      print_cpp("../" + line.split("(")[1][len(sys.argv[2])+1:].split(")")[0])
+    elif line.find("[CPP(BTN)]") != -1:
+      name = line.split("(")[2].split("|")[0].replace("_", " ")
+      href = "../" + line.split("|")[1][len(sys.argv[2])+1:].split(")")[0]
+      print "[" + name + "](" + href + ")"
+    elif line.find("[CPP(SHOW)]") != -1:
+      print_cpp("../" + line.split("(")[2][len(sys.argv[2])+1:].split(")")[0])
+    elif line.find("[CPP(SPLIT)]") != -1:
+      print_cpp("../" + line.split("(")[2][len(sys.argv[2])+1:].split(")")[0])
+    else:
+      print(line),
+
+for filename in glob.iglob(sys.argv[1] + '/*.md'):
+  update_md(filename)

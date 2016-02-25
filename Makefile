@@ -12,7 +12,7 @@ CLANG_FORMAT?=clang-format
 CLANG_TIDY?=clang-tidy
 PYTHON?=python
 MKDOCS?=mkdocs
-MKDOCS_THEME?=themes/boost-experimental
+MKDOCS_THEME?=boost-experimental
 MKDOCS_SITE?=site
 GENERATOR?="Unix Makefiles"
 
@@ -54,8 +54,13 @@ check_style:
 check_static_analysis:
 	@$(CLANG_TIDY) -header-filter='boost/di' `find example extension test -type f -iname "*.cpp"` -- -std=c++1y -I include -I test -include common/test.hpp
 
-doc:
-	cd doc && $(MKDOCS) build --clean --theme-dir $(MKDOCS_THEME) --site-dir $(MKDOCS_SITE)
+doc: doc_$(MKDOCS_THEME)
+
+doc_%:
+	cd doc && $(MKDOCS) build --clean --theme-dir themes/$* --site-dir $(MKDOCS_SITE)
+
+doc_boost:
+	echo dupa
 
 readme:
 	cd doc && $(PYTHON) scripts/update_readme_toc.py mkdocs.yml ../README.md http://boost-experimental.github.io/di
