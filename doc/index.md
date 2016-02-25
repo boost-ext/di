@@ -26,7 +26,7 @@ Introduction
 It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.
 
 > **"Let's make some coffee!"**
-<p align="center"><img src="../images/coffee_maker.png" alt="coffee maker"/></p>
+<p align="center"><img src="images/coffee_maker.png" alt="coffee maker"/></p>
 ```cpp
                       No Dependency injection                 | Dependency Injection
                       ----------------------------------------|-------------------------------------------
