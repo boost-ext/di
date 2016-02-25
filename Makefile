@@ -58,7 +58,7 @@ doc:
 	cd doc && $(MKDOCS) build --clean --theme-dir $(MKDOCS_THEME) --site-dir $(MKDOCS_SITE)
 
 readme:
-	$(PYTHON) themes/boost-experimental/scripts/update_readme_toc.py mkdocs.yml ../README.md http://boost-experimental.github.io/di
+	cd doc && $(PYTHON) themes/boost-experimental/scripts/update_readme_toc.py mkdocs.yml ../README.md http://boost-experimental.github.io/di
 
 release: all check
 
