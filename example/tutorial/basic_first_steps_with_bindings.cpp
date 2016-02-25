@@ -37,12 +37,14 @@ class text_view : public iview {
 
 //<-
 class model {};
+//->
 
 class controller {
  public:
   controller(model&, iview&) {}
 };
 
+//<-
 class user {};
 
 class app {
