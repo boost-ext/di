@@ -60,7 +60,8 @@ doc_%:
 	cd doc && $(MKDOCS) build --clean --theme-dir themes/$* --site-dir $(MKDOCS_SITE)
 
 doc_boost:
-	echo dupa
+	cd doc && python themes/boost/scripts/update_markdown.py . https://raw.githubusercontent.com/boost-experimental/di/cpp14
+	cd doc && $(MKDOCS) build --clean --theme-dir themes/boost --site-dir $(MKDOCS_SITE)
 
 readme:
 	cd doc && $(PYTHON) scripts/update_readme_toc.py mkdocs.yml ../README.md http://boost-experimental.github.io/di
