@@ -272,179 +272,12 @@ conversion constructors <code>template&lt;class I&gt; T(I)</code> are not suppor
 </ul>
 </li>
 </ul>
-<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
-
-namespace di = boost::di;
-
-auto test() {
-  auto injector = di::make_injector();
-  return injector.create&lt;int&gt;();
-}
-
-/**
- * ASM x86-64 (same as `return 0`)
- *
- * xor %eax,%eax
- * retq
- */
-
-</code></pre>
-
-<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
-
-namespace di = boost::di;
-
-auto test() {
-  auto injector = di::make_injector(
-    di::bind&lt;int&gt;().to(42)
-  );
-
-  return injector.create&lt;int&gt;();
-}
-
-/**
- * ASM x86-64 (same as `return 42`)
- *
- * mov $0x2a,%eax
- * retq
- */
-
-</code></pre>
-
-<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
-
-namespace di = boost::di;
-
-auto my_int = [] {};
-
-struct c {
-  BOOST_DI_INJECT(c, (named = my_int) int i) : i(i) {}
-  int i = 0;
-};
-
-auto test() {
-  auto injector = di::make_injector(
-    di::bind&lt;int&gt;().named(my_int).to(42)
-  );
-
-  return injector.create&lt;c&gt;().i;
-}
-
-/**
- * ASM x86-64 (same as `return 42`)
- *
- * mov $0x2a,%eax
- * retq
- */
-
-</code></pre>
-
-<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
-
-namespace di = boost::di;
-
-
-auto test() {
-  auto injector = di::make_injector(
-    di::bind&lt;interface&gt;().to&lt;implementation&gt;()
-  );
-
-  return injector.create&lt;std::unique_ptr&lt;interface&gt;&gt;();
-}
-
-/**
- * ASM x86-64 (same as `std::make_unique&lt;implementation&gt;()`)
- *
- * push   %rbx
- * mov    %rdi,%rbx
- * mov    $0x8,%edi
- * callq  0x4009f0 &lt;_Znwm@plt&gt;
- * movq   $0x400e78,(%rax)
- * mov    %rax,(%rbx)
- * mov    %rbx,%rax
- * pop    %rbx
- * retq
- */
-
-</code></pre>
-
-<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
-
-namespace di = boost::di;
-
-
-auto module = [] {
-  return di::make_injector(
-    di::bind&lt;interface&gt;().to&lt;implementation&gt;()
-  );
-};
-
-auto test() {
-  auto injector = di::make_injector(module());
-  return injector.create&lt;std::unique_ptr&lt;interface&gt;&gt;();
-}
-
-/**
- * ASM x86-64 (same as `std::make_unique&lt;implementation&gt;()`)
- *
- * push   %rbx
- * mov    %rdi,%rbx
- * mov    $0x8,%edi
- * callq  0x4008e0 &lt;_Znwm@plt&gt;
- * movq   $0x400c78,(%rax)
- * mov    %rax,(%rbx)
- * mov    %rbx,%rax
- * pop    %rbx
- * retq
- */
-
-</code></pre>
-
-<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
-
-namespace di = boost::di;
-
-
-auto module = []() -&gt; di::injector&lt;std::unique_ptr&lt;interface&gt;&gt; {
-  return di::make_injector(
-    di::bind&lt;interface&gt;().to&lt;implementation&gt;()
-  );
-};
-
-auto test() {
-  auto injector = di::make_injector(module());
-  return injector.create&lt;std::unique_ptr&lt;interface&gt;&gt;();
-}
-
-/**
- * ASM x86-64 (additional cost for type erasure)
- *
- * push   %r14
- * push   %rbx
- * push   %rax
- * mov    %rdi,%r14
- * mov    $0x18,%edi
- * callq  0x4008e0 &lt;_Znwm@plt&gt;
- * mov    %rax,%rbx
- * movq   $0x400bb0,(%rbx)
- * movq   $0x400bd0,0x8(%rbx)
- * mov    $0x8,%edi
- * callq  0x4008e0 &lt;_Znwm@plt&gt;
- * movq   $0x400cd8,(%rax)
- * mov    %rax,(%r14)
- * mov    %rbx,%rdi
- * callq  *0x8(%rbx)
- * mov    %rbx,%rdi
- * callq  0x400880 &lt;_ZdlPv@plt&gt;
- * mov    %r14,%rax
- * add    $0x8,%rsp
- * pop    %rbx
- * pop    %r14
- * retq
- */
-
-</code></pre>
-
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_type_without_bindings.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_type_with_bound_instance.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_named_type.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_bound_interface.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_bound_interface_via_module.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_bound_interface_via_exposed_module.cpp" /></p>
 <ul>
 <li><strong>Compile-time performance</strong><ul>
 <li>Environment<ul>
@@ -514,31 +347,12 @@ auto test() {
 <td><code>BOOST_DI_CFG_DIAGNOSTICS_LEVEL</code></td>
 <td>0, 1 -&gt; no additional info, 2 -&gt; info about why type <code>T</code> is abstract</td>
 </tr>
+<tr>
+<td>Expression</td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_abstract.cpp" /></td>
+</tr>
 </tbody>
 </table>
-<pre><code class="cpp">#define BOOST_DI_CFG_DIAGNOSTICS_LEVEL 2
-#include &lt;boost/di.hpp&gt;
-
-namespace di = boost::di;
-
-struct i {
-  virtual ~i() noexcept = default;
-  virtual void dummy() = 0;
-};
-
-struct impl : i {};
-
-int main() {
-  di::make_injector(
-    di::bind&lt;i&gt;().to&lt;impl&gt;() /** type&lt;impl&gt;::is_abstract **/
-    /** unimplemented pure virtual method 'dummy' in 'impl' **/
-  );
-}
-</code></pre>
-
-<ul>
-<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_abstract.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_abstract.cpp</a></li>
-</ul>
 <table>
 <thead>
 <tr>
@@ -551,23 +365,12 @@ int main() {
 <td>Description</td>
 <td>type <code>T</code> is bound more than once</td>
 </tr>
+<tr>
+<td>Expression</td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_bound_more_than_once.cpp" /></td>
+</tr>
 </tbody>
 </table>
-<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
-
-namespace di = boost::di;
-
-int main() {
-  di::make_injector(
-    di::bind&lt;int&gt;.to(42) /** type&lt;int&gt;::is_bound_more_than_once **/
-  , di::bind&lt;int&gt;.to(87) // [di::override]
-  );
-}
-</code></pre>
-
-<ul>
-<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_bound_more_than_once.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_bound_more_than_once.cpp</a></li>
-</ul>
 <table>
 <thead>
 <tr>
@@ -588,60 +391,16 @@ int main() {
 <td>Suggestion</td>
 <td>'type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?'</td>
 </tr>
+<tr>
+<td>Expression</td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_abstract_type_is_not_bound.cpp" /></td>
+</tr>
+<tr>
+<td>Expression</td>
+<td><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_expose_abstract_type_is_not_bound.cpp" /></td>
+</tr>
 </tbody>
 </table>
-<pre><code class="cpp">#define BOOST_DI_CFG_DIAGNOSTICS_LEVEL 1
-#include &lt;boost/di.hpp&gt;
-
-namespace di = boost::di;
-
-struct interface {
-  virtual ~interface() noexcept = default;
-  virtual void dummy() = 0;
-};
-
-struct example {
-  explicit example(std::unique_ptr&lt;interface&gt;) {}
-};
-
-int main() {
-  di::make_injector().create&lt;example&gt;(); /** creatable constraint not satisfied **/
-  /** abstract_type&lt;interface&gt;::is_not_bound
-   *  type is not bound, did you forget to add: 
-   *   'di::bind&lt;interface&gt;.to&lt;implementation&gt;()'?
-   */
-}
-</code></pre>
-
-<ul>
-<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_abstract_type_is_not_bound.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_abstract_type_is_not_bound.cpp</a></li>
-</ul>
-<pre><code class="cpp">#define BOOST_DI_CFG_DIAGNOSTICS_LEVEL 1
-#include &lt;boost/di.hpp&gt;
-
-namespace di = boost::di;
-
-struct interface {
-  virtual ~interface() noexcept = default;
-  virtual void dummy() = 0;
-};
-
-struct example {
-  explicit example(std::unique_ptr&lt;interface&gt;) {}
-};
-
-int main() {
-  di::injector&lt;example&gt; injector = di::make_injector(); /** creatable constraint not satisfied **/
-  /** abstract_type&lt;interface&gt;::is_not_bound
-   *  type is not bound, did you forget to add: 'di::bind&lt;interface&gt;.to&lt;implementation&gt;()'?
-   */
-  (void)injector;
-}
-</code></pre>
-
-<ul>
-<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_expose_abstract_type_is_not_bound.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_expose_abstract_type_is_not_bound.cpp</a></li>
-</ul>
 <h3 id="benchmarks">Benchmarks</h3>
 <ul>
 <li><strong>C++ Dependency Injection Libraries</strong></li>
@@ -758,84 +517,24 @@ int main() {
 <th>Performance</th>
 </tr>
 </thead>
-<tbody></tbody>
+<tbody>
+<tr>
+<td>Boost.DI</td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp" /></td>
+<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp">ASM x86-64</a></td>
+</tr>
+<tr>
+<td><a href="https://bitbucket.org/cheez/dicpp/wiki/Home">dicpp</a></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp" /></td>
+<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp">ASM x86-64</a></td>
+</tr>
+<tr>
+<td><a href="https://github.com/google/fruit">Google.Fruit</a></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/fruit.cpp" /></td>
+<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/fruit.cpp">ASM x86-64</a></td>
+</tr>
+</tbody>
 </table>
-<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
-
-namespace di = boost::di;
-
-struct I {
-  virtual ~I() noexcept = default;
-  virtual void dummy() = 0;
-};
-struct Impl : I {
-  void dummy() override {}
-};
-
-auto module = [] {
-  return di::make_injector(
-    di::bind&lt;I&gt;.to&lt;Impl&gt;()
-  );
-};
-
-auto test() {
-  auto injector = di::make_injector(module());
-  return injector.create&lt;std::unique_ptr&lt;I&gt;&gt;();
-}
-
-</code></pre>
-
-<pre><code class="cpp">#include &lt;di/registry.hpp&gt;
-#include &lt;di/injector.hpp&gt;
-#include &lt;di/constructor.hpp&gt;
-
-struct I {
-  virtual ~I() noexcept = default;
-  virtual void dummy() = 0;
-};
-struct Impl : I {
-  DI_CONSTRUCTOR(Impl, ()) {}
-  void dummy() override {}
-};
-
-void module(di::registry&amp; r) {
-  r.add(r.type&lt;I&gt;().implementation&lt;Impl&gt;());
-}
-
-std::unique_ptr&lt;I&gt; test() {
-  di::injector injector;
-  injector.install(module);
-  std::unique_ptr&lt;I&gt; object{injector.construct&lt;I*&gt;()};
-  return object;
-}
-
-</code></pre>
-
-<pre><code class="cpp">#include &lt;fruit/fruit.h&gt;
-
-struct I {
-  virtual ~I() noexcept = default;
-  virtual void dummy() = 0;
-};
-struct Impl : I {
-  INJECT(Impl()) {}
-  void dummy() override {}
-};
-
-fruit::Component&lt;I&gt; module() {
-  return fruit::createComponent()
-    .bind&lt;I, Impl&gt;();
-}
-
-std::unique_ptr&lt;I&gt; test() {
-  fruit::Injector&lt;I&gt; injector{module()};
-  // get&lt;unique_ptr&gt; is not supported
-  std::unique_ptr&lt;I&gt; object{injector.get&lt;I*&gt;()};
-  return object;
-}
-
-</code></pre>
-
 <table>
 <thead>
 <tr>
@@ -844,55 +543,24 @@ std::unique_ptr&lt;I&gt; test() {
 <th>Performance</th>
 </tr>
 </thead>
-<tbody></tbody>
+<tbody>
+<tr>
+<td>Boost.DI</td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp" /></td>
+<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp">ASM x86-64</a></td>
+</tr>
+<tr>
+<td><a href="https://bitbucket.org/cheez/dicpp/wiki/Home">dicpp</a></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp" /></td>
+<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp">ASM x86-64</a></td>
+</tr>
+<tr>
+<td><a href="https://github.com/google/fruit">Google.Fruit</a></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/fruit.cpp" /></td>
+<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/fruit.cpp">ASM x86-64</a></td>
+</tr>
+</tbody>
 </table>
-<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
-
-namespace di = boost::di;
-
-auto module = [] {
-  return di::make_injector(
-    di::bind&lt;&gt;.to(42)
-  );
-};
-
-auto test() {
-  auto injector = di::make_injector(module());
-  return injector.create&lt;int&gt;();
-}
-
-</code></pre>
-
-<pre><code class="cpp">#include &lt;di/registry.hpp&gt;
-#include &lt;di/injector.hpp&gt;
-
-void module(di::registry&amp; r) {
-  r.add(r.type&lt;int&gt;().instance(new int{42}));
-}
-
-auto test() {
-  di::injector injector;
-  injector.install(module);
-  return injector.construct&lt;int&gt;();
-}
-
-</code></pre>
-
-<pre><code class="cpp">#include &lt;fruit/fruit.h&gt;
-
-auto i = 42;  // bindInstance doesn't support l-value's
-
-fruit::Component&lt;int&gt; module() {
-  return fruit::createComponent().bindInstance(i);
-}
-
-auto test() {
-  fruit::Injector&lt;int&gt; injector{module()};
-  return injector.get&lt;int&gt;();
-}
-
-</code></pre>
-
 <table>
 <thead>
 <tr>
@@ -900,122 +568,21 @@ auto test() {
 <th>Missing Binding Error</th>
 </tr>
 </thead>
-<tbody></tbody>
+<tbody>
+<tr>
+<td>Boost.DI</td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/di.cpp" /></td>
+</tr>
+<tr>
+<td><a href="https://bitbucket.org/cheez/dicpp/wiki/Home">dicpp</a></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/dicpp.cpp" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/google/fruit">Google.Fruit</a></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/fruit.cpp" /></td>
+</tr>
+</tbody>
 </table>
-<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
-
-namespace di = boost::di;
-
-struct I {
-  virtual ~I() noexcept = default;
-  virtual void dummy() = 0;
-};
-struct Impl : I {
-  void dummy() override {}
-};
-
-auto module = [] {
-  return di::make_injector(
-    // di::bind&lt;I&gt;.to&lt;Impl&gt;()
-  );
-};
-
-int main() {
-  auto injector = di::make_injector(module());
-  std::unique_ptr&lt;I&gt; object{injector.create&lt;I *&gt;()};
-  object-&gt;dummy();
-}
-
-/**
- * di.cpp:32:38: warning: 'create&lt;I *, 0&gt;' is deprecated: creatable constraint not satisfied
- *   std::unique_ptr&lt;I&gt; object{injector.create&lt;I *&gt;()};
- *                                      ^
- * boost/di.hpp:2420:3: note: 'create&lt;I *, 0&gt;' has been explicitly marked deprecated here
- *   create
- *   ^
- * boost/di.hpp:871:2: error: 'boost::di::v1_0_0::concepts::abstract_type&lt;I&gt;::is_not_bound::error'
- *  error(_ = &quot;type is not bound, did you forget to add: 'di::bind&lt;interface&gt;.to&lt;implementation&gt;()'?&quot;);
- *  ^
- */
-</code></pre>
-
-<pre><code class="cpp">#include &lt;di/registry.hpp&gt;
-#include &lt;di/injector.hpp&gt;
-#include &lt;di/constructor.hpp&gt;
-
-struct I {
-  virtual ~I() noexcept = default;
-  virtual void dummy() = 0;
-};
-struct Impl : I {
-  DI_CONSTRUCTOR(Impl, ()) {}
-  void dummy() override {}
-};
-
-void module(di::registry&amp; r) {
-  // r.add(r.type&lt;I&gt;().implementation&lt;Impl&gt;());
-}
-
-int main() {
-  di::injector injector;
-  injector.install(module);
-  std::unique_ptr&lt;I&gt; object{injector.construct&lt;I*&gt;()};
-  object-&gt;dummy();
-}
-
-/**
- * terminate called after throwing an instance of 'std::runtime_error'
- * what():  Requested type without corresponding provider: di::type_key&lt;I*, void&gt;.
- * Double check if the type is abstract
- */
-</code></pre>
-
-<pre><code class="cpp">#include &lt;fruit/fruit.h&gt;
-
-struct I {
-  virtual ~I() noexcept = default;
-  virtual void dummy() = 0;
-};
-struct Impl : I {
-  INJECT(Impl()) {}
-  void dummy() override {}
-};
-
-fruit::Component&lt;I&gt; module() {
-  return fruit::createComponent();
-  //.bind&lt;I, Impl&gt;();
-}
-
-int main() {
-  fruit::Injector&lt;I&gt; injector{module()};
-  std::unique_ptr&lt;I&gt; object{injector.get&lt;I*&gt;()};
-  object-&gt;dummy();
-}
-
-/**
-  *  In file included from fruit.cpp:1:
-  *  In file included from .fruit/include/fruit/fruit.h:25:
-  * fruit/include/fruit/impl/injection_errors.h:33:3: error: static_assert failed
-  * &quot;No explicit binding nor C::Inject definition was found for T.&quot;
-  *  static_assert(AlwaysFalse&lt;T&gt;::value,
-  * ^             ~~~~~~~~~~~~~~~~~~~~~
-  * fruit/include/fruit/impl/component.defn.h:41:9: note: in instantiation of
-  * 'fruit::impl::NoBindingFoundError&lt;I&gt;' requested here
-  * (void)typename fruit::impl::meta::CheckIfError&lt;typename Op::Result&gt;::type();
-  * ^
-  *  fruit.cpp:6:12: note: in instantiation of function template specialization
-  *  'fruit::Component&lt;I&gt;::Component&lt;
-  *    fruit::impl::meta::ConsComp&lt;
-  *    fruit::impl::meta::Vector&lt;&gt;*,
-  *    fruit::impl::meta::Vector&lt;&gt;,
-  *    fruit::impl::meta::Vector&lt;&gt;, 
-  *    fruit::impl::meta::Vector&lt;&gt;,
-  *    fruit::impl::meta::Vector&lt;&gt;
-  *    &gt;*&gt;' requested here
-  *  return fruit::createComponent();
-  */
-</code></pre>
-
 <hr />
 <table>
 <thead>
@@ -1202,113 +769,25 @@ int main() {
 <th>Bind Interface</th>
 </tr>
 </thead>
-<tbody></tbody>
+<tbody>
+<tr>
+<td>Boost.DI</td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/google/guice">Google.Guice</a></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/guice.java" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/google/dagger">Dagger2</a></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dagger2.java" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/ninject/ninject">Ninject</a></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/ninject.cs" /></td>
+</tr>
+</tbody>
 </table>
-<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
-
-namespace di = boost::di;
-
-struct I {
-  virtual ~I() noexcept = default;
-  virtual void dummy() = 0;
-};
-struct Impl : I {
-  void dummy() override {}
-};
-
-auto module = [] {
-  return di::make_injector(
-    di::bind&lt;I&gt;.to&lt;Impl&gt;()
-  );
-};
-
-auto test() {
-  auto injector = di::make_injector(module());
-  return injector.create&lt;std::unique_ptr&lt;I&gt;&gt;();
-}
-
-</code></pre>
-
-<pre><code class="cpp">import com.google.inject.*;
-
-interface I {
-  public void dummy();
-};
-
-class Impl implements I {
-  @Inject Impl() { }
-  @Override public void dummy() { }
-}
-
-class Module extends AbstractModule {
-  @Override
-  protected void configure() {
-    bind(I.class).to(Impl.class);
-  }
-}
-
-public class guice {
-  public static void main(String[] args) {
-    Injector injector = Guice.createInjector(new Module());
-    I object = injector.getInstance(I.class);
-  }
-}
-</code></pre>
-
-<pre><code class="cpp">import dagger.*;
-import javax.inject.Inject;
-
-interface I {
-  public void dummy();
-};
-
-class Impl implements I {
-  @Inject Impl() { }
-  @Override public void dummy() { }
-}
-
-@Module
-class AppModule {
-  @Provides I provideI(Impl impl) { return impl; }
-}
-
-@Component(modules = AppModule.class)
-interface AppComponent {
-  I build();
-}
-
-public class dagger2 {
-  public static void main(String[] args) {
-    I object = Dagger_AppComponent.create().build();
-   }
-}
-</code></pre>
-
-<pre><code class="cpp">using Ninject;
-
-interface I {
-  void dummy();
-};
-
-class Impl : I {
-  public Impl() { }
-  void I.dummy() { }
-}
-
-class Module : Ninject.Modules.NinjectModule {
-  public override void Load() {
-    Bind&lt;I&gt;().To&lt;Impl&gt;();
-  }
-}
-
-class ninject {
-  static void Main(string[] args) {
-    Ninject.IKernel kernel = new StandardKernel(new Module());
-    I object = kernel.Get&lt;I&gt;();
-  }
-}
-</code></pre>
-
 <table>
 <thead>
 <tr>
@@ -1316,77 +795,25 @@ class ninject {
 <th>Bind Value</th>
 </tr>
 </thead>
-<tbody></tbody>
+<tbody>
+<tr>
+<td>Boost.DI</td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/google/guice">Google.Guice</a></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/guice.java" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/google/dagger">Dagger2</a></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dagger2.java" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/ninject/ninject">Ninject</a></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/ninject.cs" /></td>
+</tr>
+</tbody>
 </table>
-<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
-
-namespace di = boost::di;
-
-auto module = [] {
-  return di::make_injector(
-    di::bind&lt;&gt;.to(42)
-  );
-};
-
-auto test() {
-  auto injector = di::make_injector(module());
-  return injector.create&lt;int&gt;();
-}
-
-</code></pre>
-
-<pre><code class="cpp">import com.google.inject.*;
-
-class Module extends AbstractModule {
-  @Override
-  protected void configure() {
-    bind(int.class).toInstance(42);
-  }
-}
-
-public class guice {
-  public static void main(String[] args) {
-    Injector injector = Guice.createInjector(new Module());
-    injector.getInstance(int.class);
-  }
-}
-</code></pre>
-
-<pre><code class="cpp">import dagger.*;
-
-@Module
-class AppModule {
-  @Provides int provideint() { return 42; }
-}
-
-@Component(modules = AppModule.class)
-interface AppComponent {
-  int build();
-}
-
-public class dagger2 {
-  public static void main(String[] args) {
-    Dagger_AppComponent.create().build();
-  }
-}
-</code></pre>
-
-<pre><code class="cpp">using Ninject;
-
-class Module : Ninject.Modules.NinjectModule {
-  public override void Load() {
-    Bind&lt;int&gt;().To(42);
-  }
-}
-
-class ninject {
-  static void Main(string[] args) {
-    Ninject.IKernel kernel = new StandardKernel(new Module());
-    kernel.Get&lt;int&gt;();
-  }
-}
-</code></pre>
-
 <table>
 <thead>
 <tr>
@@ -1394,153 +821,25 @@ class ninject {
 <th>Missing Bindings Error</th>
 </tr>
 </thead>
-<tbody></tbody>
+<tbody>
+<tr>
+<td>Boost.DI</td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/di.cpp" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/google/guice">Google.Guice</a></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/guice.java" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/google/dagger">Dagger2</a></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/dagger2.java" /></td>
+</tr>
+<tr>
+<td><a href="https://github.com/ninject/ninject">Ninject</a></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/ninject.cs" /></td>
+</tr>
+</tbody>
 </table>
-<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
-
-namespace di = boost::di;
-
-struct I {
-  virtual ~I() noexcept = default;
-  virtual void dummy() = 0;
-};
-struct Impl : I {
-  void dummy() override {}
-};
-
-auto module = [] {
-  return di::make_injector(
-    // di::bind&lt;I&gt;.to&lt;Impl&gt;()
-  );
-};
-
-int main() {
-  auto injector = di::make_injector(module());
-  std::unique_ptr&lt;I&gt; object{injector.create&lt;I *&gt;()};
-  object-&gt;dummy();
-}
-
-/**
- * di.cpp:32:38: warning: 'create&lt;I *, 0&gt;' is deprecated: creatable constraint not satisfied
- *   std::unique_ptr&lt;I&gt; object{injector.create&lt;I *&gt;()};
- *                                      ^
- * boost/di.hpp:2420:3: note: 'create&lt;I *, 0&gt;' has been explicitly marked deprecated here
- *   create
- *   ^
- * boost/di.hpp:871:2: error: 'boost::di::v1_0_0::concepts::abstract_type&lt;I&gt;::is_not_bound::error'
- *  error(_ = &quot;type is not bound, did you forget to add: 'di::bind&lt;interface&gt;.to&lt;implementation&gt;()'?&quot;);
- *  ^
- */
-</code></pre>
-
-<pre><code class="cpp">import com.google.inject.*;
-
-interface I {
-  public void dummy();
-};
-
-class Impl implements I {
-  @Inject Impl() { }
-  @Override public void dummy() { }
-}
-
-class Module extends AbstractModule {
-  @Override
-  protected void configure() {
-    //bind(I.class).to(Impl.class);
-  }
-}
-
-public class guice {
-  public static void main(String[] args) {
-    Injector injector = Guice.createInjector(new Module());
-    I object = injector.getInstance(I.class);
-    object.dummy();
-  }
-}
-
-/**
-  * Exception in thread &quot;main&quot; com.google.inject.ConfigurationException:
-  * Guice configuration errors:
-  *
-  * 1) No implementation for I was bound.
-  * while locating I
-  *
-  * 1 error
-  * at com.google.inject.internal.InjectorImpl.getProvider(InjectorImpl.java:1042)
-  * at com.google.inject.internal.InjectorImpl.getProvider(InjectorImpl.java:1001)
-  * at com.google.inject.internal.InjectorImpl.getInstance(InjectorImpl.java:1051)
-  * at guice.main(guice.java:15)
-  *
- */
-</code></pre>
-
-<pre><code class="cpp">import dagger.*;
-import javax.inject.Inject;
-
-interface I {
-  public void dummy();
-};
-
-class Impl implements I {
-  @Inject Impl() { }
-  @Override public void dummy() { }
-}
-
-@Module
-class AppModule {
-  //@Provides I provideI(Impl impl) { return impl; }
-}
-
-@Component(modules = AppModule.class)
-interface AppComponent {
-  I build();
-}
-
-public class dagger2 {
-  public static void main(String[] args) {
-    I object = Dagger_AppComponent.create().build();
-    object.dummy();
-   }
-}
-
-/**
- * dagger2.java:13: error: I cannot be provided without an @Provides-annotated method.
- * I build();
- *   ^
- * 1 error
- */
-</code></pre>
-
-<pre><code class="cpp">using Ninject;
-
-interface I {
-  void dummy();
-};
-
-class Impl : I {
-  public Impl() { }
-  void I.dummy() { }
-}
-
-class Module : Ninject.Modules.NinjectModule {
-  public override void Load() {
-    //Bind&lt;I&gt;().To&lt;Impl&gt;();
-  }
-}
-
-class ninject {
-  static void Main(string[] args) {
-    Ninject.IKernel kernel = new StandardKernel(new Module());
-    I object = kernel.Get&lt;I&gt;();
-    object-&gt;dummy();
-  }
-}
-
-/**
- */
-</code></pre>
-
 <hr />
 <table>
 <thead>
@@ -1669,9 +968,8 @@ hljs.initHighlightingOnLoad();
 
 <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
 <select onChange="window.location.href=this.value" style="position: absolute; top: 20px; right: 30px; z-index: 10;">
-    <option value="https://boost-experimental.github.io/di">Theme: Boost-Experimental</option>
-    <option value="https://boost-experimental.github.io/di/boost-modern">Theme: Boost-Modern</option>
-    <option value="https://boost-experimental.github.io/di/boost" selected>Theme: Boost</option>
+    <option value="https://boost-experimental.github.io/di">Theme: Boost Experimental</option>
+    <option value="https://boost-experimental.github.io/di/boost" selected>Theme: Boost Classic</option>
 </select>
 </body>
 </html>
