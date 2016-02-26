@@ -50,7 +50,7 @@ struct app {
     assert(dynamic_cast<implementation1_2*>(sp.get()));  // overridden
     assert(copy.sp.get() == sp.get());
     assert(i == 42);
-    assert(str == "some_name");
+    assert(str == "my_text");
     assert(f == 0.f);
     assert(d == 0.f);
   }
@@ -74,7 +74,7 @@ int main() {
   auto injector = di::make_injector(
     di::bind<interface2>().to<implementation2>()
   , di::bind<int>().to(42)
-  , di::bind<std::string>().named(some_name).to("some_name")
+  , di::bind<std::string>().named(some_name).to("my_text")
   , di::bind<>().to(f)
   , di::bind<>().to(d)
   , di::bind<std::function<int()>>().to([] { return 87; })
