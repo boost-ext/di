@@ -18,11 +18,19 @@ environment:
   matrix:
   - platform: x64
     os: Previous Visual Studio 2015
-    env: BS=cmake GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY
+    env: BS=cmake GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY PLATFORM=amd64
 
   - platform: x64
     os: Visual Studio 2015
-    env: BS=cmake GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY
+    env: BS=cmake GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY PLATFROM=amd64
+
+  - platform: x86
+    os: Visual Studio 2015
+    env: BS=bjam GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY PLATFROM=x86
+
+  - platform: x86
+    os: Visual Studio 2015
+    env: BS=bjam GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY PLATFROM=x86
 
 matrix:
   fast_finish: true
@@ -31,7 +39,7 @@ install:
   - cinst drmemory
   - appveyor DownloadFile http://downloads.sourceforge.net/mingw-w64/x86_64-5.2.0-release-posix-seh-rt_v4-rev1.7z
   - 7z x x86_64-5.2.0-release-posix-seh-rt_v4-rev1.7z > nul
-  - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat amd64
+  - C:\"Program Files (x86)"\"Microsoft Visual Studio 14.0"\VC\vcvarsall.bat %PLATFORM%
   - set PATH=%PATH%;mingw64\bin
 
 build_script:

@@ -2683,8 +2683,11 @@ using injector = detail::injector<
 #define BOOST_DI_EXPOSE_IMPL(...) ::boost::di::v1_0_0::named<BOOST_DI_EXPOSE_IMPL__ __VA_ARGS__>
 #define BOOST_DI_EXPOSE(...) BOOST_DI_IF(BOOST_DI_IBP(__VA_ARGS__), BOOST_DI_EXPOSE_IMPL, BOOST_DI_EXPAND)(__VA_ARGS__)
 // clang-format on
+#if defined(__MSVC__)
+#define BOOST_DI_MAKE_INJECTOR(...) __VA_ARGS__
+#else
 namespace detail {
-auto make_injector = [](auto injector) {
+static auto make_injector = [](auto injector) {
   using injector_t = decltype(injector);
   struct i : injector_t {
     explicit i(injector_t&& other) : injector_t(static_cast<injector_t&&>(other)) {}
@@ -2692,13 +2695,16 @@ auto make_injector = [](auto injector) {
   return i{static_cast<injector_t&&>(injector)};
 };
 }
+#define BOOST_DI_MAKE_INJECTOR(...) detail::make_injector(__VA_ARGS__)
+#endif
 template <class TConfig = BOOST_DI_CFG, class... TDeps,
           BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type_list<TDeps...>>) = 0,
           BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>) = 0>
 inline auto make_injector(TDeps... args) noexcept {
-  return detail::make_injector(
-      core::injector<TConfig, decltype(((TConfig*)0)->policies(0)), TDeps...>{core::init{}, static_cast<TDeps&&>(args)...});
+  return BOOST_DI_MAKE_INJECTOR(
+    core::injector<TConfig, decltype(((TConfig*)0)->policies(0)), TDeps...>{core::init{}, static_cast<TDeps&&>(args)...});
 }
+#undef BOOST_DI_MAKE_INJECTOR
 namespace policies {
 namespace detail {
 struct type_op {};
