@@ -101,7 +101,7 @@ test-suite ft :
     [ test ft/di_injector.cpp ]
     [ test ft/di_no_memory_inc.cpp ]
     [ test ft/di_no_std_inc.cpp : : <define>BOOST_DI_TEST_HPP ] # -nostdinc, -nostdinc++
-    [ test ft/di_module1.cpp ft/di_module_2.cpp ft/di_module_3.cpp ]
+    [ test ft/di_module_1.cpp ft/di_module_2.cpp ft/di_module_3.cpp : : <define>BOOST_DI_TEST_HPP ]
 ;
 
 test-suite pt :

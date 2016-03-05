@@ -8,7 +8,4 @@
 
 namespace di = boost::di;
 
-di::injector<int> module3() {
-  return di::make_injector();
-};
-
+di::injector<int> module3() { return di::make_injector(); };

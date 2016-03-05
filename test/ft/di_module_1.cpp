@@ -12,4 +12,3 @@ int main() {
   auto injector = di::make_injector();
   return injector.create<int>();
 }
-
