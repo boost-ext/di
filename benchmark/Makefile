@@ -1,22 +1,79 @@
-#
-# Copyright (c) 2012-2016 Krzysztof Jusiak (krzysztof at jusiak dot net)
-#
-# Distributed under the Boost Software License, Version 1.0.
-# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-#
-BOOST_DI?=../..
-DICPP?=frameworks/dicpp
-GOOGLE_FRUIT?=frameworks/google.fruit
-GOOGLE_GUICE?=frameworks/google.guice
-DAGGER2?=frameworks/dagger2
-NINJECT?=frameworks/ninject
+FRAMEWORKS:=frameworks
 
-all: benchmark_simple benchmark_complex
+all: benchmark_unique benchmark_shared
 
-benchmark_%:
-	cd create_$* && time $(CXX) -O2 -std=c++1y -I $(BOOST_DI)/include di.cpp -o di.out && strip di.out && ls -lh di.out && time ./di.out
-	cd create_$* && time $(CXX) -O2 -std=c++11 -ftemplate-depth=512 -I $(DICPP)/include $(DICPP)/lib/src/*.cpp $(DICPP)/lib/src/scopes/*.cpp -lboost_system-mt -lboost_thread-mt dicpp.cpp -o dicpp.out && strip dicpp.out && ls -lh dicpp.out #time ./dicpp.out 
-	cd create_$* && time $(CXX) -O2 -std=c++11 -ftemplate-depth=2048 -DFRUIT_NO_LOOP_CHECK -I $(GOOGLE_FRUIT)/include -I $(GOOGLE_FRUIT)/build/include -L $(GOOGLE_FRUIT)/build/src -lfruit fruit.cpp -o fruit.out && strip fruit.out && ls -lh fruit.out #time LD_LIBRARY_PATH=$(GOOGLE_FRUIT)/build/src ./fruit.out
-	cd create_$* && rm -rf dagger2; mkdir dagger2 && time javac -d dagger2 -cp .:`ls ../../frameworks/dagger2/*.jar | xargs | tr ' ' ':'` dagger2.java && cd dagger2 && java -cp .:`ls ../$(DAGGER2)/*.jar | xargs | tr ' ' ':'` dagger2
-	cd create_$* && rm -rf guice; mkdir guice && time javac -cp .:`ls $(GOOGLE_GUICE)/*.jar | xargs | tr ' ' ':'` guice.java -d guice #&& cd guice && time java -cp .:`ls ../$(GOOGLE_GUICE)/*.jar | xargs | tr ' ' ':'` guice
-	cd create_$* &&	time mcs /r:$(NINJECT)/Ninject.dll ninject.cs #&& time mono ninject.exe
+install_fruit:
+	@-mkdir -p $(FRAMEWORKS) 2>/dev/null
+	git clone https://github.com/google/fruit.git $(FRAMEWORKS)/fruit
+	cd $(FRAMEWORKS)/fruit && mkdir build && cd build && cmake .. && cmake --build .
+
+install_di:
+	@-mkdir -p $(FRAMEWORKS) 2>/dev/null
+	git clone https://github.com/boost-experimental/di.git $(FRAMEWORKS)/di
+
+install_hypodermic:
+	@-mkdir -p $(FRAMEWORKS) 2>/dev/null
+	git clone https://github.com/ybainier/Hypodermic.git $(FRAMEWORKS)/hypodermic
+
+install: install_di install_fruit
+
+benchmark_shared:
+	@make CXX=clang++ TYPES=128 CTOR_ARGS=2 ITERATIONS=1000000 TEST=shared benchmark
+	@make CXX=g++ TYPES=128 CTOR_ARGS=2 ITERATIONS=1000000 TEST=shared benchmark
+	#@make CXX=clang++ TYPES=256 CTOR_ARGS=2 ITERATIONS=1000 TEST=shared benchmark
+	#@make CXX=g++ TYPES=256 CTOR_ARGS=2 ITERATIONS=1000 TEST=shared benchmark
+	#@make CXX=clang++ TYPES=512 CTOR_ARGS=2 ITERATIONS=1000 TEST=shared benchmark
+	#@make CXX=g++ TYPES=512 CTOR_ARGS=2 ITERATIONS=1000 TEST=shared benchmark
+	#@make CXX=clang++ TYPES=1024 CTOR_ARGS=2 ITERATIONS=1000 TEST=shared benchmark
+	#@make CXX=g++ TYPES=1024 CTOR_ARGS=2 ITERATIONS=1000 TEST=shared benchmark
+
+benchmark_unique:
+	@make CXX=clang++ TYPES=128 CTOR_ARGS=2 ITERATIONS=1000000 TEST=unique benchmark
+	@make CXX=g++ TYPES=128 CTOR_ARGS=2 ITERATIONS=1000000 TEST=unique benchmark
+	#@make CXX=clang++ TYPES=256 CTOR_ARGS=2 ITERATIONS=1000 TEST=unique benchmark
+	#@make CXX=g++ TYPES=256 CTOR_ARGS=2 ITERATIONS=1000 TEST=unique benchmark
+	#@make CXX=clang++ TYPES=512 CTOR_ARGS=2 ITERATIONS=1000 TEST=unique benchmark
+	#@make CXX=g++ TYPES=512 CTOR_ARGS=2 ITERATIONS=1000 TEST=unique benchmark
+	#@make CXX=clang++ TYPES=1024 CTOR_ARGS=2 ITERATIONS=1000 TEST=unique benchmark
+	#@make CXX=g++ TYPES=1024 CTOR_ARGS=2 ITERATIONS=1000 TEST=unique benchmark
+
+benchmark:
+	@echo "--------------"
+	@echo BENCHMARK: TYPES=$(TYPES) CTOR_ARGS=$(CTOR_ARGS) ITERATIONS=$(ITERATIONS) TEST=$(TEST)
+	@echo "--------------"
+	@-rm -rf tmp 2>/dev/null
+	@mkdir tmp && cd tmp && python ../generate_test.py
+	@make  run_hypodermic run_base run_di run_fruit -j1
+	@rm -rf tmp
+
+run_base:
+	@echo "--------------"
+	@echo base
+	@echo "--------------"
+	@cd tmp && time $(CXX) -DCHECK_COMPILE_TIME base.cpp -std=c++11 -O2 -I..
+	@cd tmp && $(CXX) base.cpp -std=c++11 -O2 -I.. -o base.out && strip base.out && ls -lh base.out && ./base.out
+
+run_di:
+	@echo "--------------"
+	@echo di
+	@echo "--------------"
+	@cd tmp && time $(CXX) -DCHECK_COMPILE_TIME di.cpp -std=c++1y -O2 -I.. -I ../$(FRAMEWORKS)/di/include
+	@cd tmp && $(CXX) di.cpp -std=c++1y -O2 -I.. -I ../$(FRAMEWORKS)/di/include -o di.out && strip di.out && ls -lh di.out && ./di.out
+
+run_fruit:
+	@echo "--------------"
+	@echo fruit
+	@echo "--------------"
+	@cd tmp && time $(CXX) -DCHECK_COMPILE_TIME -DFRUIT_NO_LOOP_CHECK fruit.cpp -std=c++11 -O2 -I.. -I ../$(FRAMEWORKS)/fruit/include -I ../$(FRAMEWORKS)/fruit/build/include -L ../$(FRAMEWORKS)/fruit/build/src -lfruit
+	@cd tmp && time $(CXX) -DFRUIT_NO_LOOP_CHECK fruit.cpp -std=c++11 -O2 -I.. -I ../$(FRAMEWORKS)/fruit/include -I ../$(FRAMEWORKS)/fruit/build/include -L ../$(FRAMEWORKS)/fruit/build/src -lfruit -o fruit.out && strip fruit.out && ls -lh fruit.out && LD_LIBRARY_PATH=../$(FRAMEWORKS)/fruit/build/src ./fruit.out
+
+run_hypodermic:
+	@echo "--------------"
+	@echo hypodermic 
+	@echo "--------------"
+	@cd tmp && time $(CXX) -DCHECK_COMPILE_TIME hypodermic.cpp -std=c++11 -O2 -I.. -I ../$(FRAMEWORKS)/hypodermic
+	@cd tmp && time $(CXX) hypodermic.cpp -std=c++11 -O2 -I.. -I ../$(FRAMEWORKS)/hypodermic -o hypodermic.out && strip hypodermic.out && ls -lh hypodermic.out && ./hypodermic.out
+
+clean:
+	@rm -rf $(FRAMEWORKS)
+
