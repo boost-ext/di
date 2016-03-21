@@ -17,6 +17,14 @@ def base_instance(output, x, b = 0, e = 0):
   o += "};"
   output.append(o)
 
+def hypodermic(output, x, b = 0, e = 0):
+  o = "struct c" + str(x) + " {"
+  o += "  c" + str(x) + "("
+  for i in range(b, e):
+    o += "const std::shared_ptr<c" + str(i) + ">&" + ("," if i < e - 1 else "")
+  o += ") { ++g; } };"
+  output.append(o)
+
 def di(output, x, b = 0, e = 0):
   o = "struct c" + str(x) + " {"
   o += "  BOOST_DI_INJECT(c" + str(x) + ","
@@ -32,7 +40,7 @@ def fruit(output, x, b = 0, e = 0):
     o += "c" + str(i) + ("," if i < e - 1 else "")
   o += ")) { ++g; } };"
   output.append(o)
- 
+
 def create_data(types, ctor_args, struct):
     output = []
     g = 1
@@ -111,7 +119,7 @@ if os.environ['TEST'] == "unique":
   , iterations = int(os.environ['ITERATIONS'])
   , expected = int(os.environ['ITERATIONS']) * (int(os.environ['TYPES']) + 1)
   , file = "hypodermic.cpp"
-  , struct = base
+  , struct = hypodermic
   , header = "#include <Hypodermic/ContainerBuilder.h>\n"
   , module = ""
   , main = "Hypodermic::ContainerBuilder builder; auto injector = builder.build();"
