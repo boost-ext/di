@@ -162,7 +162,7 @@ $(document).ready(function () {
       $(this).replaceWith('<button style="position: relative; top: 60px; right: 20px; z-index: 10;" class="btn btn-neutral float-right" id="run_it_btn_' + id + '" onclick="cpp(' + id + ', \'' + file + '\', \'Run this code!\')">Run this code!</button><textarea style="display: none" id="code_' + id + '"></textarea><br /><textarea style="display: none" id="output_' + id + '"></textarea><div id="code_listing_' + id + '"><pre><code style="line-height: 12px; width: 100%" class="cpp hljs">' + compile + '\n' + example + '</code></pre></div>');
     });
 
-    $('img[alt="CPP()"]').each(function () {
+    $('img[alt="CPP*"]').each(function () {
       var file = $(this).attr('src');
       var basename = $(this).attr('src').split('/')[$(this).attr('src').split('/').length - 1];
       var example = get_cpp_file(file);
