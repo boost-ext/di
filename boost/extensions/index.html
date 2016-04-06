@@ -32,6 +32,10 @@
     
 
     
+        <dt><span class="section"><a href="#contextual-bindings">Contextual Bindings</a></span></dt>
+    
+
+    
         <dt><span class="section"><a href="#assisted-injection">Assisted Injection</a></span></dt>
     
 
@@ -83,6 +87,7 @@
 <div class="section">
 <ul>
 <li><a href="#constructor-bindings">Constructor Bindings</a></li>
+<li><a href="#contextual-bindings">Contextual Bindings</a></li>
 <li><a href="#assisted-injection">Assisted Injection</a></li>
 <li><a href="#concepts">Concepts</a></li>
 <li><a href="#lazy">Lazy</a></li>
@@ -157,6 +162,42 @@ int main() {
 
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/bindings/constructor_bindings.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/bindings/constructor_bindings.cpp</a></li>
+</ul>
+<h3 id="contextual-bindings">Contextual Bindings</h3>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+
+struct data {
+  int i;
+};
+
+class example {
+ public:
+  example(data&amp; d, int i, float f) {
+    assert(87 == d.i);
+    assert(42 == i);
+    assert(123.f == f);
+  }
+};
+
+int main() {
+  auto injector = di::make_injector&lt;contextual_bindings&gt;(
+      di::bind&lt;&gt;.to(123.f)
+    , di::bind&lt;int&gt;.to([](const auto&amp; injector) {
+        if (context(injector) == &quot;example-&gt;data&quot;) return 87;
+        return 42;
+      })
+  );
+
+  /*&lt;&lt;create `example`&gt;&gt;*/
+  injector.create&lt;example&gt;();
+}
+</code></pre>
+
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/bindings/contextual_bindings.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/bindings/contextual_bindings.cpp</a></li>
 </ul>
 <h3 id="assisted-injection">Assisted Injection</h3>
 <pre><code class="cpp">#include &lt;boost/di.hpp&gt;

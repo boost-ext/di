@@ -1041,9 +1041,16 @@ int main() {
     di::bind&lt;int&gt;().named(int1).to(42)
   , di::bind&lt;int&gt;().named(int2).to(87)
   );
-  auto object = injector.create&lt;T&gt;();
-  assert(42 == object.a);
-  assert(87 == object.b);
+  {
+    auto object = injector.create&lt;T&gt;();
+    assert(42 == object.a);
+    assert(87 == object.b);
+  }
+  {
+    auto object = T(42, 87);
+    assert(42 == object.a);
+    assert(87 == object.b);
+  }
 }
 </code></pre>
 
