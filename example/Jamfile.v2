@@ -67,6 +67,7 @@ test-suite example :
     [ example multiple_interfaces.cpp ]
     [ example pool_provider.cpp ]
     [ example scopes.cpp ]
+    [ example try_it.cpp ]
 ;
 
 test-suite performance :

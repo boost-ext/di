@@ -21,7 +21,7 @@ def print_cpp(filename):
 
 def update_md(filename):
   for line in fileinput.input(filename, inplace=True):
-    if line.find("[CPP]") != -1:
+    if line.find("[CPP]") != -1 or line.find("[CPP()]") != -1:
       print_cpp("../" + line.split("(")[1][len(sys.argv[2])+1:].split(")")[0])
       href = line.split("(")[1].split(")")[0]
       print "* [" + href + "](" + href + ")"

@@ -1,5 +1,3 @@
-###FAQ
-
 * ### Dependency inversion vs dependency injection
 In principle Dependency Inversion might be implemented using DI or Service Locator (SL).
 The latter is more like a 'God' object. It has a lot of benefits but, probably, the same

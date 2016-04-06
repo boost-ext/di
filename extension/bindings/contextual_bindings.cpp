@@ -81,8 +81,8 @@ class example {
 int main() {
   // clang-format off
   auto injector = di::make_injector<contextual_bindings>(
-      di::bind<>.to(123.f)
-    , di::bind<int>.to([](const auto& injector) {
+      di::bind<>().to(123.f)
+    , di::bind<int>().to([](const auto& injector) {
         if (context(injector) == "example->data") return 87;
         return 42;
       })
