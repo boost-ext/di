@@ -35,6 +35,14 @@
 
     
     <url>
+     <loc>http://boost-experimental.github.io/di/try_it/index.html</loc>
+     <lastmod>2016-04-06</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+    <url>
      <loc>http://boost-experimental.github.io/di/user_guide/index.html</loc>
      <lastmod>2016-04-06</lastmod>
      <changefreq>daily</changefreq>
@@ -59,7 +67,7 @@
 
     
     <url>
-     <loc>http://boost-experimental.github.io/di/CHANGELOG/index.html</loc>
+     <loc>http://boost-experimental.github.io/di/FAQ/index.html</loc>
      <lastmod>2016-04-06</lastmod>
      <changefreq>daily</changefreq>
     </url>
@@ -67,7 +75,7 @@
 
     
     <url>
-     <loc>http://boost-experimental.github.io/di/FAQ/index.html</loc>
+     <loc>http://boost-experimental.github.io/di/CHANGELOG/index.html</loc>
      <lastmod>2016-04-06</lastmod>
      <changefreq>daily</changefreq>
     </url>

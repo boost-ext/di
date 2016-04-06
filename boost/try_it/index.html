@@ -4,8 +4,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 
 <meta name="author" content="Krzysztof Jusiak">
-<link rel="canonical" href="http://boost-experimental.github.io/di/TODO/index.html">
-<title>TODO - Boost.DI</title>
+<link rel="canonical" href="http://boost-experimental.github.io/di/try_it/index.html">
+<title>Try It! - Boost.DI</title>
 
 <link href="../css/boostbook.css" rel="stylesheet">
 <link href="../css/github.css" rel="stylesheet">
@@ -18,7 +18,7 @@
 
 <hr>
 <div class="spirit-nav">
-<a accesskey="p"  href="../CHANGELOG/index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  ><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p"  href="../tutorial/index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../user_guide/index.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 
 <div class="chapter">
@@ -33,7 +33,24 @@
 
 
 <div class="section">
-<p><a href="https://waffle.io/boost-experimental/di">https://waffle.io/boost-experimental/di</a></p>
+<pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+struct example {
+  example() { std::cout &lt;&lt; &quot;hello world!&quot; &lt;&lt; std::endl; }
+};
+
+int main() {
+  auto injector = di::make_injector();
+  injector.create&lt;example&gt;();
+}
+</code></pre>
+
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/try_it.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/try_it.cpp</a></li>
+</ul>
 </div>
 
 <script src="../js/highlight.pack.js"></script>
@@ -54,7 +71,7 @@ hljs.initHighlightingOnLoad();
 
 <hr>
 <div class="spirit-nav">
-<a accesskey="p"  href="../CHANGELOG/index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  ><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p"  href="../tutorial/index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../user_guide/index.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 
 <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
