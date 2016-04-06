@@ -24,10 +24,12 @@ struct config {
   struct requires_ : aux::false_type {};
 };
 
-template <class T>
+template <class TConfig>
 struct injector {
-  using config = T;
+  using config = TConfig;
   using deps = aux::type_list<>;
+  template <class T>
+  T create() const;
 };
 
 aux::false_type configurable_impl(...);

@@ -40,6 +40,7 @@ rule extension ( src + : cxxflags * : property * ) {
 
 test-suite extensions :
     [ extension bindings/constructor_bindings.cpp ]
+    [ extension bindings/contextual_bindings.cpp ]
     [ extension injections/assisted_injection.cpp ]
     [ extension injections/concepts.cpp ]
     [ extension injections/lazy.cpp ]

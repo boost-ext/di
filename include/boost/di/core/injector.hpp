@@ -260,11 +260,11 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     using ctor_t = typename type_traits::ctor_traits__<typename dependency_t::given, T>::type;
     using provider_t = core::provider<ctor_t, TName, injector>;
     using wrapper_t =
-        decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T, TName>(provider_t{this}));
+        decltype(static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this}));
     BOOST_DI_CORE_INJECTOR_POLICY(
         policy::template call<arg_wrapper<T, TName, TIsRoot, pool_t>>(
             TConfig::policies(this), dependency, typename ctor_t::second{});)() return wrapper<T, wrapper_t>{
-        static_cast<dependency__<dependency_t>&&>(dependency).template create<T, TName>(provider_t{this})};
+        static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this})};
   }
 
   template <class TIsRoot = aux::false_type, class T, class TName = no_name>
@@ -274,12 +274,12 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     using ctor_t = typename type_traits::ctor_traits__<typename dependency_t::given, T>::type;
     using provider_t = successful::provider<ctor_t, injector>;
     using wrapper_t =
-        decltype(static_cast<dependency__<dependency_t>&&>(dependency).template create<T, TName>(provider_t{this}));
+        decltype(static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this}));
     using create_t = referable_t<T, dependency__<dependency_t>>;
     BOOST_DI_CORE_INJECTOR_POLICY(policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>(
                                       TConfig::policies(this), dependency,
                                       typename ctor_t::second{});)() return successful::wrapper<create_t, wrapper_t>{
-        static_cast<dependency__<dependency_t>&&>(dependency).template create<T, TName>(provider_t{this})};
+        static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this})};
   }
 };
 

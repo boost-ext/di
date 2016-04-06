@@ -11,6 +11,7 @@ function(extension extension)
 endfunction()
 
 extension(bindings/constructor_bindings)
+extension(bindings/contextual_bindings)
 extension(injections/assisted_injection)
 extension(injections/lazy)
 extension(injections/named_parameters)

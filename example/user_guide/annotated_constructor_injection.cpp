@@ -27,7 +27,14 @@ int main() {
   , di::bind<int>().named(int2).to(87)
   );
   // clang-format on
-  auto object = injector.create<T>();
-  assert(42 == object.a);
-  assert(87 == object.b);
+  {
+    auto object = injector.create<T>();
+    assert(42 == object.a);
+    assert(87 == object.b);
+  }
+  {
+    auto object = T(42, 87);
+    assert(42 == object.a);
+    assert(87 == object.b);
+  }
 }

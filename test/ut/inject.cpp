@@ -105,7 +105,6 @@ test c_traits_no_limits = [] {
   c_no_limits object{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 };
 
-#if !defined(BOOST_DI_CFG_CTOR)
 struct named_int_t {
 } named_int;
 
@@ -143,4 +142,12 @@ test named_def_param_without_def = [] {
   expect(c_def_named_without_def::N == c_def_named_without_def{c_def_named_without_def::N}.i1);
   expect(c_def_named_without_def::N == c_def_named_without_def{c_def_named_without_def::N}.i2);
 };
-#endif
+
+test named_normal_ctor = [] {
+  struct c {
+    BOOST_DI_INJECT(c, (named = named_int) int i) : i(i) {}
+    int i = 0;
+  };
+
+  expect(42 == c{42}.i);
+};

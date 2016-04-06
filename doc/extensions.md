@@ -1,4 +1,5 @@
 * [Constructor Bindings](#constructor-bindings)
+* [Contextual Bindings](#contextual-bindings)
 * [Assisted Injection](#assisted-injection)
 * [Concepts](#concepts)
 * [Lazy](#lazy)
@@ -15,6 +16,9 @@
 
 ###Constructor Bindings
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/bindings/constructor_bindings.cpp)
+
+###Contextual Bindings
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/bindings/contextual_bindings.cpp)
 
 ###Assisted Injection
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/assisted_injection.cpp)

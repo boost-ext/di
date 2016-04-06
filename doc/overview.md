@@ -64,6 +64,8 @@ git clone https://github.com/boost-experimental/di && cd di && make
 | Core       | Responsible for resolving requested types (implementation detail) |
 | Wrappers   | Responsible for conversion to required type (implementation detail) |
 
+
+<a id="nutshell"></a>
 * In a nutshell
 
 ```cpp
