@@ -42,7 +42,8 @@ class contextual_bindings : public di::config {
  public:
   template <class TInjector>
   static auto policies(const TInjector* injector) noexcept {
-    return di::make_policies([&](auto type, auto, BOOST_DI_UNUSED auto... ctor) {
+    return di::make_policies([&](auto type) {
+      using T = decltype(type);
       if (std::is_same<typename decltype(type)::type, context_type&>::value ||
           std::is_same<typename decltype(type)::type, contexts_list&>::value) {
         return;
@@ -56,7 +57,7 @@ class contextual_bindings : public di::config {
         context.assign(v.back());
         v.pop_back();
       }
-      auto ctor_size = sizeof...(ctor);
+      auto ctor_size = T::arity::value;
       while (ctor_size--) {
         v.push_back(element + get_type<given>());
       }

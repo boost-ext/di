@@ -42,11 +42,11 @@ static int i = 1;
 class types_dumper : public di::config {
  public:
   static auto policies(...) noexcept {
-    return di::make_policies([](auto type, auto dependency, BOOST_DI_UNUSED auto... ctor) {
+    return di::make_policies([](auto type) {
       using T = decltype(type);
       using arg = typename T::type;
       using name = typename T::name;
-      using given = typename decltype(dependency)::given;
+      using given = typename T::given;
 
       auto tab = v[i - 1];
       while (tab--) {
@@ -56,7 +56,7 @@ class types_dumper : public di::config {
       std::clog << "(" << typeid(arg).name() << ((*(name*)(0))() ? std::string("[") + (*(name*)(0))() + std::string("]") : "")
                 << " -> " << typeid(given).name() << ")" << std::endl;
 
-      auto ctor_size = sizeof...(ctor);
+      auto ctor_size = T::arity::value;
       while (ctor_size--) {
         v.insert((v.begin() + i), v[i - 1] + 1);
       }

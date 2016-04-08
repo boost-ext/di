@@ -136,9 +136,7 @@ struct policy {
 class custom_policies : public di::config {
  public:
   static auto policies(...) noexcept {
-    return di::make_policies(
-        policy{}, [](auto) { ++policy::called(); },
-        [](BOOST_DI_UNUSED auto type, BOOST_DI_UNUSED auto dependency, BOOST_DI_UNUSED auto... ctor) { ++policy::called(); });
+    return di::make_policies(policy{}, [](auto) { ++policy::called(); }, [](BOOST_DI_UNUSED auto type) { ++policy::called(); });
   }
 };
 

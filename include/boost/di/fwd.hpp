@@ -20,6 +20,8 @@ struct ctor_traits;
 template <class>
 struct self {};
 
+struct ignore_policies {};
+
 namespace core {
 template <class>
 struct any_type_fwd;

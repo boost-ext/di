@@ -92,6 +92,8 @@ test ctors = [] {
   };
 
   test_ctor_traits<empty, direct>();
+  test_ctor_traits<empty&, direct>();
+  test_ctor_traits<const empty*, direct>();
   test_ctor_traits<traits, direct>();
   test_ctor_traits<empty, direct>();
   test_ctor_traits<int_double, direct, int, double>();

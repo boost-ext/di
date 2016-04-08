@@ -1014,26 +1014,23 @@ By default Boost.DI has no policies enabled.
     };                                                                        |
                                                                               |
     // policy                                                                 /
-    template<class T, class TDependency, class.. TCtor>        <--------------
-    void operator()(const T&, const TDependency&, const TCtor&...);
+    template<class T>   <-----------------------------------------------------
+    void operator()(const T&);
 
 | Expression | Requirement | Description | Returns |
 | ---------- | ----------- | ----------- | ------- |
 | `TInjector` | - | [injector] | - |
 | `make_policies<TPolicies...>` | [callable]<TPolicies...\> | Creates policies | [callable] list |
-| `TCtor...` | - | Constructor parameters | - |
 
 | `T` | Description | Example |
 | --- | ----------- | ------- |
 | `T::type` | Type to be created | `std::shared_ptr<int>` |
-| `T::name` | Annotation given | `my_name` |
-
-| `TDependency` | Description | Example |
-| ------------- | ----------- | ------- |
-| `TDependency::expected` | Decayed 'Interface' type | `interface` |
-| `TDependency::given` | Decayed 'Given' type | `implementatoin` |
-| `TDependency::name` | Annotation expected | `my_name` |
-| `TDependency::scope` | [scope](#scopes) | [singleton] |
+| `T::expected` | Decayed 'Interface' type | `interface` |
+| `T::given` | Decayed 'Given' type | `implementatoin` |
+| `T::name` | Annotation name | `my_name` |
+| `T::arity` | Number of constructor arguments | `integral_constant<int, 3>` |
+| `T::scope` | [scope](#scopes) | [singleton] |
+| `T::is_root` | Is the root object (a type `create` was called with) | `true_type`/`false_type` |
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 In order for injector to verify policies they have to be created using [config] and passed via `TConfig` in [make_injector]

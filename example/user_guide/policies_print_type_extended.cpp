@@ -25,24 +25,21 @@ struct impl1 : i1 {
 class print_types_info_policy : public di::config {
  public:
   static auto policies(...) noexcept {
-    return di::make_policies([](auto type, auto dep, BOOST_DI_UNUSED auto... ctor) {
-      using T = decltype(type);
-      using arg = typename T::type;
-      using arg_name = typename T::name;
-      using D = decltype(dep);
-      using scope = typename D::scope;
-      using expected = typename D::expected;
-      using given = typename D::given;
-      using name = typename D::name;
-      auto ctor_s = sizeof...(ctor);
+    return di::make_policies([](auto arg) {
+      using T = decltype(arg);
+      using type = typename T::type;
+      using name = typename T::name;
+      using expected = typename T::expected;
+      using given = typename T::given;
+      using scope = typename T::scope;
+      auto ctor_size = T::arity::value;
 
-      std::cout << ctor_s << std::endl
-                << typeid(arg).name() << std::endl
-                << typeid(arg_name).name() << std::endl
-                << typeid(scope).name() << std::endl
+      std::cout << ctor_size << std::endl
+                << typeid(type).name() << std::endl
                 << typeid(expected).name() << std::endl
                 << typeid(given).name() << std::endl
-                << typeid(name).name() << std::endl;
+                << typeid(name).name() << std::endl
+                << typeid(scope).name() << std::endl;
     });
   }
 };

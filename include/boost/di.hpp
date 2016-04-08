@@ -225,6 +225,7 @@ template <class, class = int>
 struct ctor_traits;
 template <class>
 struct self {};
+struct ignore_policies {};
 namespace core {
 template <class>
 struct any_type_fwd;
@@ -1694,36 +1695,33 @@ class dependency
 };
 }
 namespace concepts {
-struct call_operator {};
+struct call_operator_with_one_argument {};
 template <class>
 struct policy {
   template <class>
   struct requires_ : aux::false_type {};
 };
-struct arg {
-  using type = void;
+struct arg_wrapper {
+  using type = _;
+  using expected = _;
+  using given = _;
   using name = no_name;
+  using arity = aux::integral_constant<int, 0>;
+  using scope = scopes::deduce;
   using is_root = aux::false_type;
   template <class, class, class>
   struct resolve;
 };
-struct ctor {};
 aux::false_type callable_impl(...);
 template <class T, class TArg>
 auto callable_impl(const T&& t, TArg&& arg) -> aux::is_valid_expr<decltype(t(arg))>;
-template <class T, class TArg, class TDependency, class... TCtor>
-auto callable_impl(const T&& t, TArg&& arg, TDependency&& dep, TCtor&&... ctor)
-    -> aux::is_valid_expr<decltype(t(arg, dep, ctor...))>;
 template <class...>
 struct is_callable_impl;
 template <class T, class... Ts>
 struct is_callable_impl<T, Ts...> {
-  using callable_with_arg = decltype(callable_impl(aux::declval<T>(), arg{}));
-  using callable_with_arg_and_dep =
-      decltype(callable_impl(aux::declval<T>(), arg{}, core::dependency<scopes::deduce, T>{}, ctor{}));
-  using type =
-      aux::conditional_t<callable_with_arg::value || callable_with_arg_and_dep::value, typename is_callable_impl<Ts...>::type,
-                         typename policy<T>::template requires_<call_operator>>;
+  using callable_with_arg = decltype(callable_impl(aux::declval<T>(), arg_wrapper{}));
+  using type = aux::conditional_t<callable_with_arg::value, typename is_callable_impl<Ts...>::type,
+                                  typename policy<T>::template requires_<call_operator_with_one_argument>>;
 };
 template <>
 struct is_callable_impl<> : aux::true_type {};
@@ -1733,7 +1731,7 @@ template <class... Ts>
 struct is_callable<core::pool<aux::type_list<Ts...>>> : is_callable_impl<Ts...> {};
 template <>
 struct is_callable<void> {
-  using type = policy<void>::requires_<call_operator>;
+  using type = policy<void>::requires_<call_operator_with_one_argument>;
 };
 template <class... Ts>
 using callable = typename is_callable<Ts...>::type;
@@ -2035,10 +2033,16 @@ struct any_type_1st_ref_fwd {
 };
 }
 namespace core {
-template <class T, class TName, class TIsRoot, class TDeps>
-struct arg_wrapper {
+template <class...>
+struct arg_wrapper;
+template <class T, class TName, class TIsRoot, template <class...> class TList, class... TCtor, class TDependency, class TDeps>
+struct arg_wrapper<T, TName, TIsRoot, TList<TCtor...>, TDependency, TDeps> {
   using type BOOST_DI_UNUSED = T;
+  using expected BOOST_DI_UNUSED = typename TDependency::expected;
+  using given BOOST_DI_UNUSED = typename TDependency::given;
   using name BOOST_DI_UNUSED = TName;
+  using arity BOOST_DI_UNUSED = aux::integral_constant<int, sizeof...(TCtor)>;
+  using scope BOOST_DI_UNUSED = typename TDependency::scope;
   using is_root BOOST_DI_UNUSED = TIsRoot;
   template <class T_, class TName_, class TDefault_>
   using resolve = decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)0));
@@ -2048,49 +2052,22 @@ struct allow_void : T {};
 template <>
 struct allow_void<void> : aux::true_type {};
 class policy {
-  template <class TArg, class TPolicy, class TPolicies, class TDependency, class TCtor>
-  static void call_impl(const TPolicies& policies, TDependency& dependency, const TCtor& ctor) noexcept {
-    call_impl__<TArg>(static_cast<const TPolicy&>(policies), dependency, ctor);
+  template <class TArg, class TPolicy, class TPolicies>
+  static void call_impl(const TPolicies& policies) noexcept {
+    static_cast<const TPolicy&>(policies)(TArg{});
   }
-  template <class TArg, class TPolicy, class TDependency, class TCtor>
-  static void call_impl__(const TPolicy& policy, TDependency& dependency, const TCtor& ctor) noexcept {
-    call_impl_args<TArg>(policy, dependency, ctor);
-  }
-  template <class TArg, class TDependency, class TPolicy, class TInitialization, class... TCtor,
-            BOOST_DI_REQUIRES(!aux::is_callable_with<TPolicy, TArg, TDependency&, TCtor...>::value) = 0>
-  static void call_impl_args(const TPolicy& policy, TDependency&,
-                             const aux::pair<TInitialization, aux::type_list<TCtor...>>&) noexcept {
-    (policy)(TArg{});
-  }
-  template <class TArg, class TDependency, class TPolicy, class TInitialization, class... TCtor,
-            BOOST_DI_REQUIRES(aux::is_callable_with<TPolicy, TArg, TDependency&, TCtor...>::value) = 0>
-  static void call_impl_args(const TPolicy& policy, TDependency& dependency,
-                             const aux::pair<TInitialization, aux::type_list<TCtor...>>&) noexcept {
-    (policy)(TArg{}, dependency, aux::type<TCtor>{}...);
-  }
-  template <class, class, class, class, class = int>
-  struct try_call_impl;
-  template <class TArg, class TPolicy, class TDependency, class TInitialization, class... TCtor>
-  struct try_call_impl<TArg, TPolicy, TDependency, aux::pair<TInitialization, aux::type_list<TCtor...>>,
-                       BOOST_DI_REQUIRES(!aux::is_callable_with<TPolicy, TArg, TDependency, TCtor...>::value)>
-      : allow_void<decltype((aux::declval<TPolicy>())(aux::declval<TArg>()))> {};
-  template <class TArg, class TPolicy, class TDependency, class TInitialization, class... TCtor>
-  struct try_call_impl<TArg, TPolicy, TDependency, aux::pair<TInitialization, aux::type_list<TCtor...>>,
-                       BOOST_DI_REQUIRES(aux::is_callable_with<TPolicy, TArg, TDependency, TCtor...>::value)>
-      : allow_void<decltype(
-            (aux::declval<TPolicy>())(aux::declval<TArg>(), aux::declval<TDependency>(), aux::type<TCtor>{}...))> {};
+  template <class TArg, class TPolicy>
+  struct try_call_impl : allow_void<decltype((aux::declval<TPolicy>())(aux::declval<TArg>()))> {};
 
  public:
-  template <class, class, class, class>
+  template <class, class>
   struct try_call;
-  template <class TArg, class TDependency, class TCtor, class... TPolicies>
-  struct try_call<TArg, pool_t<TPolicies...>, TDependency, TCtor>
-      : aux::is_same<aux::bool_list<aux::always<TPolicies>::value...>,
-                     aux::bool_list<try_call_impl<TArg, TPolicies, TDependency, TCtor>::value...>> {};
-  template <class TArg, class TDependency, class TCtor, class... TPolicies>
-  static void call(BOOST_DI_UNUSED const pool_t<TPolicies...>& policies, BOOST_DI_UNUSED TDependency& dependency,
-                   BOOST_DI_UNUSED const TCtor& ctor) noexcept {
-    int _[]{0, (call_impl<TArg, TPolicies>(policies, dependency, ctor), 0)...};
+  template <class TArg, class... TPolicies>
+  struct try_call<TArg, pool_t<TPolicies...>> : aux::is_same<aux::bool_list<aux::always<TPolicies>::value...>,
+                                                             aux::bool_list<try_call_impl<TArg, TPolicies>::value...>> {};
+  template <class TArg, class... TPolicies>
+  static void call(BOOST_DI_UNUSED const pool_t<TPolicies...>& policies) noexcept {
+    int _[]{0, (call_impl<TArg, TPolicies>(policies), 0)...};
     (void)_;
   }
 };
@@ -2244,12 +2221,12 @@ class injector : injector_base, pool<bindings_t<TDeps...>> {
   struct is_creatable {
     using dependency_t = binder::resolve_t<injector, T, TName>;
     using ctor_t = typename type_traits::ctor_traits__<typename dependency_t::given, T>::type;
+    using ctor_args_t = typename ctor_t::second::second;
     static constexpr auto value =
         aux::is_convertible<decltype(dependency__<dependency_t>::template try_create<T, TName>(
                                 try_provider<ctor_t, injector, decltype(TConfig::provider((injector*)0))>{})),
                             T>::value &&
-        policy::template try_call<arg_wrapper<referable_t<T, dependency__<dependency_t>>, TName, TIsRoot, pool_t>, TPolicies,
-                                  dependency_t, typename ctor_t::second>::value;
+        policy::template try_call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>, TPolicies>::value;
   };
 
  public:
@@ -2381,8 +2358,8 @@ class injector : injector_base, pool<bindings_t<TDeps...>> {
     using provider_t = core::provider<ctor_t, TName, injector>;
     using wrapper_t =
         decltype(static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this}));
-    policy::template call<arg_wrapper<T, TName, TIsRoot, pool_t>>(TConfig::policies(this), dependency,
-                                                                  typename ctor_t::second{});
+    using ctor_args_t = typename ctor_t::second::second;
+    policy::template call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>>(TConfig::policies(this));
     return wrapper<T, wrapper_t>{
         static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this})};
   }
@@ -2395,8 +2372,8 @@ class injector : injector_base, pool<bindings_t<TDeps...>> {
     using wrapper_t =
         decltype(static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this}));
     using create_t = referable_t<T, dependency__<dependency_t>>;
-    policy::template call<arg_wrapper<create_t, TName, TIsRoot, pool_t>>(TConfig::policies(this), dependency,
-                                                                         typename ctor_t::second{});
+    using ctor_args_t = typename ctor_t::second::second;
+    policy::template call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>>(TConfig::policies(this));
     return successful::wrapper<create_t, wrapper_t>{
         static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this})};
   }
@@ -2413,6 +2390,7 @@ class injector<TConfig, pool<>, TDeps...> : injector_base, pool<bindings_t<TDeps
   struct is_creatable {
     using dependency_t = binder::resolve_t<injector, T, TName>;
     using ctor_t = typename type_traits::ctor_traits__<typename dependency_t::given, T>::type;
+    using ctor_args_t = typename ctor_t::second::second;
     static constexpr auto value =
         aux::is_convertible<decltype(dependency__<dependency_t>::template try_create<T, TName>(
                                 try_provider<ctor_t, injector, decltype(TConfig::provider((injector*)0))>{})),

@@ -49,10 +49,10 @@ class uml_dumper : public di::config {
 
   static auto policies(...) noexcept {
     /*<<define `uml dumper` directly in policies configuration>>*/
-    return di::make_policies([&](auto type, auto dependency, BOOST_DI_UNUSED auto... ctor) {
+    return di::make_policies([&](auto type) {
       using T = decltype(type);
       using name = typename T::name;
-      using given = typename decltype(dependency)::given;
+      using given = typename T::given;
 
       auto root = v[i - 1];
       if (root != &typeid(nullptr)) {
@@ -60,7 +60,7 @@ class uml_dumper : public di::config {
                   << ((*(name*)(0))() ? std::string(" [") + (*(name*)(0))() + std::string("]") : "") << "\"" << std::endl;
       }
 
-      auto ctor_size = sizeof...(ctor);
+      auto ctor_size = T::arity::value;
       while (ctor_size--) {
         v.insert((v.begin() + i), &typeid(given));
       }

@@ -30,21 +30,22 @@ struct callable_type_return {
 };
 
 struct callable_type_extended {
-  template <class T, class TDep, class... TCtor>
-  void operator()(T, TDep, TCtor...) const noexcept;
+  template <class T, class U>
+  void operator()(T, U) const noexcept;
 };
 
 test is_concept_callable = [] {
-  static_expect(std::is_same<policy<int>::requires_<call_operator>, callable<int>>::value);
-  static_expect(std::is_same<policy<non_callable_type>::requires_<call_operator>, callable<non_callable_type>>::value);
+  static_expect(std::is_same<policy<int>::requires_<call_operator_with_one_argument>, callable<int>>::value);
   static_expect(
-      std::is_same<policy<non_match_callable_type>::requires_<call_operator>, callable<non_match_callable_type>>::value);
-  static_expect(std::is_same<policy<non_match_callable_type_specific>::requires_<call_operator>,
+      std::is_same<policy<non_callable_type>::requires_<call_operator_with_one_argument>, callable<non_callable_type>>::value);
+  static_expect(std::is_same<policy<non_match_callable_type>::requires_<call_operator_with_one_argument>,
+                             callable<non_match_callable_type>>::value);
+  static_expect(std::is_same<policy<non_match_callable_type_specific>::requires_<call_operator_with_one_argument>,
                              callable<non_match_callable_type_specific>>::value);
 
   static_expect(callable<callable_type>::value);
   static_expect(callable<callable_type_return>::value);
-  static_expect(callable<callable_type_extended>::value);
+  static_expect(!callable<callable_type_extended>::value);
 };
 
 }  // concepts
