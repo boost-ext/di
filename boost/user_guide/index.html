@@ -2454,8 +2454,8 @@ struct config : di::config {
 };                                                                        |
                                                                           |
 // policy                                                                 /
-template&lt;class T, class TDependency, class.. TCtor&gt;        &lt;--------------
-void operator()(const T&amp;, const TDependency&amp;, const TCtor&amp;...);
+template&lt;class T&gt;   &lt;-----------------------------------------------------
+void operator()(const T&amp;);
 </code></pre>
 <table>
 <thead>
@@ -2479,12 +2479,6 @@ void operator()(const T&amp;, const TDependency&amp;, const TCtor&amp;...);
 <td>Creates policies</td>
 <td><a href="#di_callable">callable</a> list</td>
 </tr>
-<tr>
-<td><code>TCtor...</code></td>
-<td>-</td>
-<td>Constructor parameters</td>
-<td>-</td>
-</tr>
 </tbody>
 </table>
 <table>
@@ -2502,40 +2496,34 @@ void operator()(const T&amp;, const TDependency&amp;, const TCtor&amp;...);
 <td><code>std::shared_ptr&lt;int&gt;</code></td>
 </tr>
 <tr>
-<td><code>T::name</code></td>
-<td>Annotation given</td>
-<td><code>my_name</code></td>
-</tr>
-</tbody>
-</table>
-<table>
-<thead>
-<tr>
-<th><code>TDependency</code></th>
-<th>Description</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>TDependency::expected</code></td>
+<td><code>T::expected</code></td>
 <td>Decayed 'Interface' type</td>
 <td><code>interface</code></td>
 </tr>
 <tr>
-<td><code>TDependency::given</code></td>
+<td><code>T::given</code></td>
 <td>Decayed 'Given' type</td>
 <td><code>implementatoin</code></td>
 </tr>
 <tr>
-<td><code>TDependency::name</code></td>
-<td>Annotation expected</td>
+<td><code>T::name</code></td>
+<td>Annotation name</td>
 <td><code>my_name</code></td>
 </tr>
 <tr>
-<td><code>TDependency::scope</code></td>
+<td><code>T::arity</code></td>
+<td>Number of constructor arguments</td>
+<td><code>integral_constant&lt;int, 3&gt;</code></td>
+</tr>
+<tr>
+<td><code>T::scope</code></td>
 <td><a href="#scopes">scope</a></td>
 <td><a href="#di_singleton">singleton</a></td>
+</tr>
+<tr>
+<td><code>T::is_root</code></td>
+<td>Is the root object (a type <code>create</code> was called with)</td>
+<td><code>true_type</code>/<code>false_type</code></td>
 </tr>
 </tbody>
 </table>
@@ -2565,24 +2553,21 @@ int main() {
 class print_types_info_policy : public di::config {
  public:
   static auto policies(...) noexcept {
-    return di::make_policies([](auto type, auto dep, BOOST_DI_UNUSED auto... ctor) {
-      using T = decltype(type);
-      using arg = typename T::type;
-      using arg_name = typename T::name;
-      using D = decltype(dep);
-      using scope = typename D::scope;
-      using expected = typename D::expected;
-      using given = typename D::given;
-      using name = typename D::name;
-      auto ctor_s = sizeof...(ctor);
+    return di::make_policies([](auto arg) {
+      using T = decltype(arg);
+      using type = typename T::type;
+      using name = typename T::name;
+      using expected = typename T::expected;
+      using given = typename T::given;
+      using scope = typename T::scope;
+      auto ctor_size = T::arity::value;
 
-      std::cout &lt;&lt; ctor_s &lt;&lt; std::endl
-                &lt;&lt; typeid(arg).name() &lt;&lt; std::endl
-                &lt;&lt; typeid(arg_name).name() &lt;&lt; std::endl
-                &lt;&lt; typeid(scope).name() &lt;&lt; std::endl
+      std::cout &lt;&lt; ctor_size &lt;&lt; std::endl
+                &lt;&lt; typeid(type).name() &lt;&lt; std::endl
                 &lt;&lt; typeid(expected).name() &lt;&lt; std::endl
                 &lt;&lt; typeid(given).name() &lt;&lt; std::endl
-                &lt;&lt; typeid(name).name() &lt;&lt; std::endl;
+                &lt;&lt; typeid(name).name() &lt;&lt; std::endl
+                &lt;&lt; typeid(scope).name() &lt;&lt; std::endl;
     });
   }
 };
