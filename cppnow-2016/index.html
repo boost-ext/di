@@ -279,6 +279,7 @@ Version C++98 / C++11 - never released
 ----
 
 * Compiled slowly (Boost.MPL)
+* Gave enormous error messages
 * A lot of preprocessor magic (BOOST_PP)
 * A lot of workarounds for compilers (MSVC 2013)
 
@@ -643,6 +644,108 @@ auto injector = di::make_injector(
 
 ----
 
+##Short and informative error messages
+
+----
+
+* Concepts emulation
+
+```cpp
+#define BOOST_DI_REQUIRES(...) \
+  typename enable_if<__VA_ARGS__, int>::type
+
+#define BOOST_DI_REQUIRES_MSG(...) \
+  typename concept_check<__VA_ARGS__>::type
+```
+
+----
+
+```cpp
+template <class T>
+struct concept_check {
+  static_assert(T::value, "constraint not satisfied");
+};
+
+template <>
+struct concept_check<true_type> {
+  using type = int;
+};
+```
+
+----
+
+```cpp
+auto injector = di::make_injector().create<iview&>();
+```
+
+----
+
+```cpp
+warning: 'create<app>' : creatable constraint not satisfied
+  injector.create<app>();
+           ^
+boost/di.hpp:870:2: error:
+  'boost::di::v1_0_0::abstract_type<iview>::is_not_bound::error'
+  error(_ = "type is not bound, did you forget to add:
+        'di::bind<interface>.to<implementation>()'?");
+```
+
+----
+
+How?
+
+----
+
+Linking error + warning (inline function is not defined)
+
+----
+
+```cpp
+template <class T>
+struct abstract_type {
+  struct is_not_bound {
+    operator T*() const {
+      using constraint_not_satisfied = is_not_bound;
+      return constraint_not_satisfied{}.error();
+    }
+    // clang-format off
+    static inline T*
+      error(_ = "type is not bound, did you forget to add:
+          'di::bind<interface>.to<implementation>()'?");
+    // clang-format on
+  };
+```
+
+----
+
+Trigger the error
+
+----
+
+```cpp
+#pragma clang diagnostic error "-Wundefined-inline"
+```
+
+----
+
+```cpp
+  template <class T
+, BOOST_DI_REQUIRES(is_creatable<T, no_name, aux::true_type>{})>
+  T create() const {
+    return create_successful_impl<aux::true_type>(aux::type<T>{});
+  }
+
+  template <class T
+, BOOST_DI_REQUIRES(!is_creatable<T, no_name, aux::true_type>{})>
+  BOOST_DI_DEPRECATED("creatable constraint not satisfied")
+  T create() const {
+    return create_impl<aux::true_type>(aux::type<T>{});
+  }
+```
+
+
+----
+
 ##Decide the life times
 
 ----
@@ -847,193 +950,6 @@ mocks injector
 
 ==============================================================================
 
-##Quick compilation times
-
-##Always measure!
-
-* Compile time binder
-* Different flow for the success/compilation error 
-* 'Name' erasure
-* No STL/Boost dependencies
-* Eliminate compilation time checks
-
-----
-
-```cpp
-struct binder {
-  template <class TDefault, class>
-  static TDefault resolve_impl(...) noexcept {
-    return {};
-  }
-  template <class, class TConcept, class TDependency>
-  static decltype(auto)
-  resolve_impl(pair<TConcept, TDependency>* dep) noexcept {
-    return static_cast<TDependency&>(*dep);
-  }
-  template <class T, class TName, class TDefault, class TDeps>
-  static decltype(auto) resolve(TDeps* deps) noexcept {
-    using dependency = dependency_concept<decay_t<T>, TName>;
-    return resolve_impl<TDefault, dependency>(deps);
-  }
-};
-```
-
-----
-
-* Different flow for the success/compilation error 
-
-```cpp
-is_creatable<T>::value
-  returns `true_type` when type is creatable
-```
-
-```cpp
-  template <class T
-, BOOST_DI_REQUIRES(is_creatable<T, no_name, aux::true_type>{})>
-  T create() const {
-    return create_successful_impl<aux::true_type>(aux::type<T>{});
-  }
-
-  template <class T
-, BOOST_DI_REQUIRES(!is_creatable<T, no_name, aux::true_type>{})>
-  [[deprecated("creatable constraint not satisfied")]]
-  T create() const {
-    return create_impl<aux::true_type>(aux::type<T>{});
-  }
-```
-
-----
-
-```cpp
-static auto make_injector_impl = [](auto injector) {
-  using injector_t = decltype(injector);
-  struct i : injector_t {
-    explicit i(injector_t&& other)
-      : injector_t(static_cast<injector_t&&>(other)) {}
-  };
-  return i{static_cast<injector_t&&>(injector)};
-};
-```
-
-----
-
-```cpp
-template <class TConfig = BOOST_DI_CFG, class... TDeps,
-  BOOST_DI_REQUIRES_MSG(boundable<type_list<TDeps...>>)
-  BOOST_DI_REQUIRES_MSG(configurable<TConfig>)>
-auto make_injector(TDeps... args) noexcept {
-  return make_injector_impl(
-      core::injector<
-        TConfig
-      , decltype(((TConfig*)0)->policies(0))
-      , TDeps...
-      >{core::init{}, static_cast<TDeps&&>(args)...});
-}
-```
-
-----
-
-##Short and informative error messages
-
-----
-
-* Concepts emulation
-
-```cpp
-#define BOOST_DI_REQUIRES(...) \
-  typename enable_if<__VA_ARGS__, int>::type
-
-#define BOOST_DI_REQUIRES_MSG(...) \
-  typename concept_check<__VA_ARGS__>::type
-```
-
-----
-
-```cpp
-template <class T>
-struct concept_check {
-  static_assert(T::value, "constraint not satisfied");
-};
-
-template <>
-struct concept_check<true_type> {
-  using type = int;
-};
-```
-
-----
-
-```cpp
-auto injector = di::make_injector().create<iview&>();
-```
-
-----
-
-```cpp
-warning: 'create<app>' : creatable constraint not satisfied
-  injector.create<app>();
-           ^
-boost/di.hpp:870:2: error:
-  'boost::di::v1_0_0::abstract_type<iview>::is_not_bound::error'
-  error(_ = "type is not bound, did you forget to add:
-        'di::bind<interface>.to<implementation>()'?");
-```
-
-----
-
-How?
-
-----
-
-Linking error + warning (inline function is not defined)
-
-----
-
-```cpp
-template <class T>
-struct abstract_type {
-  struct is_not_bound {
-    operator T*() const {
-      using constraint_not_satisfied = is_not_bound;
-      return constraint_not_satisfied{}.error();
-    }
-    // clang-format off
-    static inline T*
-      error(_ = "type is not bound, did you forget to add:
-          'di::bind<interface>.to<implementation>()'?");
-    // clang-format on
-  };
-```
-
-----
-
-Trigger the error
-
-----
-
-```cpp
-#pragma clang diagnostic error "-Wundefined-inline"
-```
-
-----
-
-```cpp
-  template <class T
-, BOOST_DI_REQUIRES(is_creatable<T, no_name, aux::true_type>{})>
-  T create() const {
-    return create_successful_impl<aux::true_type>(aux::type<T>{});
-  }
-
-  template <class T
-, BOOST_DI_REQUIRES(!is_creatable<T, no_name, aux::true_type>{})>
-  BOOST_DI_DEPRECATED("creatable constraint not satisfied")
-  T create() const {
-    return create_impl<aux::true_type>(aux::type<T>{});
-  }
-```
-
-==============================================================================
-
 ##Performance
 
 ----
@@ -1145,6 +1061,98 @@ int main() {}
 * 132 different types
 * 10 modules
 ```
+
+----
+
+##Quick compilation times
+
+----
+
+##Always measure!
+
+----
+
+* Compile time binder
+* Different flow for the success/compilation error 
+* 'Name' erasure
+* No STL/Boost dependencies
+* Eliminate compilation time checks
+
+----
+
+```cpp
+struct binder {
+  template <class TDefault, class>
+  static TDefault resolve_impl(...) noexcept {
+    return {};
+  }
+  template <class, class TConcept, class TDependency>
+  static decltype(auto)
+  resolve_impl(pair<TConcept, TDependency>* dep) noexcept {
+    return static_cast<TDependency&>(*dep);
+  }
+  template <class T, class TName, class TDefault, class TDeps>
+  static decltype(auto) resolve(TDeps* deps) noexcept {
+    using dependency = dependency_concept<decay_t<T>, TName>;
+    return resolve_impl<TDefault, dependency>(deps);
+  }
+};
+```
+
+----
+
+* Different flow for the success/compilation error 
+
+```cpp
+is_creatable<T>::value
+  returns `true_type` when type is creatable
+```
+
+```cpp
+  template <class T
+, BOOST_DI_REQUIRES(is_creatable<T, no_name, aux::true_type>{})>
+  T create() const {
+    return create_successful_impl<aux::true_type>(aux::type<T>{});
+  }
+
+  template <class T
+, BOOST_DI_REQUIRES(!is_creatable<T, no_name, aux::true_type>{})>
+  [[deprecated("creatable constraint not satisfied")]]
+  T create() const {
+    return create_impl<aux::true_type>(aux::type<T>{});
+  }
+```
+
+----
+
+```cpp
+static auto make_injector_impl = [](auto injector) {
+  using injector_t = decltype(injector);
+  struct i : injector_t {
+    explicit i(injector_t&& other)
+      : injector_t(static_cast<injector_t&&>(other)) {}
+  };
+  return i{static_cast<injector_t&&>(injector)};
+};
+```
+
+----
+
+```cpp
+template <class TConfig = BOOST_DI_CFG, class... TDeps,
+  BOOST_DI_REQUIRES_MSG(boundable<type_list<TDeps...>>)
+  BOOST_DI_REQUIRES_MSG(configurable<TConfig>)>
+auto make_injector(TDeps... args) noexcept {
+  return make_injector_impl(
+      core::injector<
+        TConfig
+      , decltype(((TConfig*)0)->policies(0))
+      , TDeps...
+      >{core::init{}, static_cast<TDeps&&>(args)...});
+}
+```
+
+----
 
 ==============================================================================
 
