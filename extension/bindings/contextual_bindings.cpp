@@ -17,14 +17,14 @@ namespace di = boost::di;
 template <class T>
 auto get_type() {
 #if defined(_MSC_VER)
-  const auto type = std::string{&__FUNCSIG__[28]};
+  auto type = std::string{&__FUNCSIG__[28]};
   const auto i = type[0] == ' ' ? 1 : 0;
   return type.substr(i, type.length() - 7 - i);
 #elif defined(__clang__)
-  const auto type = std::string{&__PRETTY_FUNCTION__[21]};
+  auto type = std::string{&__PRETTY_FUNCTION__[21]};
   return type.substr(0, type.length() - 1);
 #elif defined(__GCC__)
-  const auto type = std::string{&__PRETTY_FUNCTION__[26]};
+  auto type = std::string{&__PRETTY_FUNCTION__[26]};
   return type.substr(0, type.length() - 1);
 #else
 #error "Platform not supported!"
