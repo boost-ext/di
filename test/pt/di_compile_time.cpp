@@ -170,10 +170,10 @@ class generator {
                        << j + (i * MAX_MODULES) << ">().in(di::unique)\n";
         }
         source_code_ << "\t);\n";
-        source_code_ << "\tusing injector_t = decltype(i);\n";
-        source_code_ << "\tstruct module : injector_t { module(injector_t&& object) : "
-                        "injector_t(static_cast<injector_t&&>(object)){} };\n";
-        source_code_ << "\treturn module{static_cast<injector_t&&>(i)};\n";
+        source_code_ << "\tusing type = decltype(i);\n";
+        source_code_ << "\tstruct module : type { module(type&& object) : "
+                        "type(static_cast<type&&>(object)){} };\n";
+        source_code_ << "\treturn module{static_cast<type&&>(i)};\n";
         source_code_ << "\n};\n";
       }
     }
