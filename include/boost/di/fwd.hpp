@@ -44,6 +44,7 @@ struct dependency__ : T {
 
 template <class T>
 struct injector__ : T {
+  using typename T::injector_t;
   using T::try_create;
   using T::create_impl;
   using T::create_successful_impl;

@@ -12,6 +12,8 @@
 
 template <class T = aux::none_type>
 struct fake_provider {
+  using injector_t = fake_injector<T>;
+
   auto get(const type_traits::heap& = {}) const noexcept {
     ++provide_calls();
     return new T{};
@@ -28,7 +30,7 @@ struct fake_provider {
   }
 
   fake_injector<T>* injector_ = nullptr;
-  using injector_t = fake_injector<T>;
+  auto injector() const noexcept { return *injector_; }
 };
 
 #endif

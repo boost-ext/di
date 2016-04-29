@@ -28,7 +28,7 @@ struct try_provider;
 
 template <class T, class TInjector, class TProvider, class TInitialization, template <class...> class TList, class... TCtor>
 struct try_provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TInjector, TProvider> {
-  using injector_t = TInjector;
+  using injector_t = typename injector__<TInjector>::injector_t;
 
   template <class>
   struct is_creatable {
@@ -49,7 +49,7 @@ struct provider;
 template <class T, class TName, class TInjector, class TInitialization, template <class...> class TList, class... TCtor>
 struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TName, TInjector> {
   using provider_t = decltype(TInjector::config::provider((TInjector*)0));
-  using injector_t = TInjector;
+  using injector_t = typename injector__<TInjector>::injector_t;
 
   template <class, class... TArgs>
   struct is_creatable {
@@ -79,6 +79,7 @@ struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TName
 #endif  // __pph__
   }
 
+  const injector_t& injector() const noexcept { return *((injector_t*)injector_); }
   const TInjector* injector_;
 };
 
@@ -89,7 +90,7 @@ struct provider;
 
 template <class T, class TInjector, class TInitialization, template <class...> class TList, class... TCtor>
 struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TInjector> {
-  using injector_t = TInjector;
+  using injector_t = typename injector__<TInjector>::injector_t;
 
   template <class TMemory = type_traits::heap>
   auto get(const TMemory& memory = {}) const {
@@ -98,6 +99,7 @@ struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TInje
                          static_cast<const injector__<TInjector>*>(injector_)->create_successful_impl(aux::type<TCtor>{})...);
   }
 
+  const injector_t& injector() const noexcept { return *((injector_t*)injector_); }
   const TInjector* injector_;
 };
 }
