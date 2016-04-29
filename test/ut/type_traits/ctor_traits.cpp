@@ -113,12 +113,7 @@ test ctors = [] {
   test_ctor_traits<ctor_unique_ptr, direct, core::any_type_1st_fwd<ctor_unique_ptr>>();
   test_ctor_traits<ctor_conv, direct, core::any_type_1st_fwd<ctor_conv>>();
 
-#if defined(__MSVC__)
-  test_ctor_traits<func, direct, core::any_type_1st_fwd<func>>();
-#else
   test_ctor_traits<func, direct, core::any_type_1st_ref_fwd<func>>();
-#endif
-
   test_ctor_traits<ctor2, direct, core::any_type_ref_fwd<ctor2>, core::any_type_ref_fwd<ctor2>>();
 
 #if defined(__GCC__)
