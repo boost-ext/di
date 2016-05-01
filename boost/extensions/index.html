@@ -56,6 +56,10 @@
     
 
     
+        <dt><span class="section"><a href="#serialize">Serialize</a></span></dt>
+    
+
+    
         <dt><span class="section"><a href="#types-dumper">Types Dumper</a></span></dt>
     
 
@@ -404,6 +408,121 @@ int main() {
 
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/xml_injection.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/xml_injection.cpp</a></li>
+</ul>
+<h3 id="serialize">Serialize</h3>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+
+struct data {
+  unsigned int ui;
+  long l;
+  float f;
+};
+
+struct even_more_data {
+  double d;
+  bool b;
+  long long ll;
+};
+
+struct more_data {
+  int i;
+  char c;
+  even_more_data d;
+  short s;
+};
+
+struct example {
+  example(data&amp; d, more_data&amp; md) : d(d), md(md) {}
+
+  void update() {
+    d.ui = 13;
+    d.l = 23l;
+    d.f = .33f;
+    md.i = 44;
+    md.c = 'c';
+    md.d.d = 55.0;
+    md.d.b = true;
+    md.d.ll = 66ll;
+    md.s = 77;
+  }
+
+  void reset() {
+    d.ui = {};
+    d.l = {};
+    d.f = {};
+    md.i = {};
+    md.c = {};
+    md.d.d = {};
+    md.d.b = {};
+    md.d.ll = {};
+    md.s = {};
+  }
+
+  data&amp; d;
+  more_data&amp; md;
+};
+
+int main() {
+  auto injector = di::make_injector&lt;serializable_policy&gt;(
+      di::bind&lt;&gt;().to(42)
+  );
+
+  /*&lt;&lt;create `example`&gt;&gt;*/
+  auto object = injector.create&lt;example&gt;();
+  {
+    assert(0 == object.d.ui);
+    assert(0 == object.d.l);
+    assert(.0f == object.d.f);
+    assert(42 == object.md.i);  // bound
+    assert(char{} == object.md.c);
+    assert(0.0 == object.md.d.d);
+    assert(false == object.md.d.b);
+    assert(0 == object.md.d.ll);
+    assert(0 == object.md.s);
+  }
+
+  /*&lt;&lt;update internal data&gt;&gt;*/
+  object.update();
+  {
+    assert(13 == object.d.ui);
+    assert(23 == object.d.l);
+    assert(.33f == object.d.f);
+    assert(44 == object.md.i);
+    assert('c' == object.md.c);
+    assert(55.0 == object.md.d.d);
+    assert(true == object.md.d.b);
+    assert(66 == object.md.d.ll);
+    assert(77 == object.md.s);
+  }
+
+  /*&lt;&lt;serialize internal data to the stream&gt;&gt;*/
+  std::stringstream str;
+  serialize(injector, str);
+
+  /*&lt;&lt;reset internal data&gt;&gt;*/
+  object.reset();
+
+  /*&lt;&lt;deserialize from the stream&gt;&gt;*/
+  deserialize(injector, str);
+  {
+    assert(13 == object.d.ui);
+    assert(23 == object.d.l);
+    assert(.33f == object.d.f);
+    assert(44 == object.md.i);
+    assert('c' == object.md.c);
+    assert(55.0 == object.md.d.d);
+    assert(true == object.md.d.b);
+    assert(66 == object.md.d.ll);
+    assert(77 == object.md.s);
+  }
+}
+</code></pre>
+
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/serialize.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/serialize.cpp</a></li>
 </ul>
 <h3 id="types-dumper">Types Dumper</h3>
 <pre><code class="cpp">#include &lt;boost/di.hpp&gt;
