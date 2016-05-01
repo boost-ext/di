@@ -19,7 +19,7 @@ namespace di = boost::di;
 template <class T>
 auto get_type() {
 #if defined(_MSC_VER)
-  auto type = std::string{&__FUNCSIG__[28]};
+  auto type = std::string{&__FUNCSIG__[22]};
   const auto i = type[0] == ' ' ? 1 : 0;
   return type.substr(i, type.length() - 7 - i);
 #elif defined(__clang__)
@@ -171,7 +171,7 @@ auto deserialize = [](const auto& injector, auto& str) {
     for (std::string line; std::getline(str, line);) {
       if (o.type == get_type<decltype(t)>()) {
         auto&& v = split(line);
-        *reinterpret_cast<decltype(t)*>(o.ptr() + std::atoi(v[2].c_str())) = std::atof(v[3].c_str());
+        *reinterpret_cast<decltype(t)*>(o.ptr() + std::atoi(v[2].c_str())) = decltype(t)(std::atof(v[3].c_str()));
         break;
       }
     }
