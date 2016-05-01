@@ -33,17 +33,34 @@
 
 
 <div class="section">
-<pre><code class="cpp">#include &lt;iostream&gt;
+<pre><code class="cpp">#include &lt;cassert&gt;
+#include &lt;iostream&gt;
+#include &lt;string&gt;
 #include &lt;boost/di.hpp&gt;
 
 namespace di = boost::di;
 
+struct iworld {
+  virtual ~iworld() noexcept = default;
+};
+struct world : iworld {
+  world() { std::cout &lt;&lt; &quot; world!&quot; &lt;&lt; std::endl; }
+};
+
+struct hello {
+  explicit hello(int i) {
+    assert(42 == i);
+    std::cout &lt;&lt; &quot;hello&quot;;
+  }
+};
+
 struct example {
-  example() { std::cout &lt;&lt; &quot;hello world!&quot; &lt;&lt; std::endl; }
+  hello h;
+  iworld&amp; w;
 };
 
 int main() {
-  auto injector = di::make_injector();
+  auto injector = di::make_injector(di::bind&lt;iworld&gt;().to&lt;world&gt;(), di::bind&lt;&gt;().to(42));
   injector.create&lt;example&gt;();
 }
 </code></pre>
