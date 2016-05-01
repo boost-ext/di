@@ -46,6 +46,7 @@ test-suite extensions :
     [ extension injections/lazy.cpp ]
     [ extension injections/named_parameters.cpp ]
     [ extension injections/xml_injection.cpp ]
+    [ extension policies/serialize.cpp ]
     [ extension policies/types_dumper.cpp ]
     [ extension policies/uml_dumper.cpp ]
     [ extension providers/mocks_provider.cpp ]

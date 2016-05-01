@@ -44,11 +44,11 @@ class contextual_bindings : public di::config {
   template <class TInjector>
   static auto policies(const TInjector* injector) noexcept {
     return di::make_policies([&](auto type) {
-      using T = decltype(type);
       if (std::is_same<typename decltype(type)::type, context_type&>::value ||
           std::is_same<typename decltype(type)::type, contexts_list&>::value) {
         return;
       }
+      using T = decltype(type);
       auto& v = injector->template create<contexts_list&>();
       using given = di::aux::decay_t<typename decltype(type)::type>;
       std::string element;
@@ -67,14 +67,20 @@ class contextual_bindings : public di::config {
 };
 //->
 
+struct more_data {
+  int i;
+};
+
 struct data {
   int i;
+  more_data md;
 };
 
 class example {
  public:
   example(data& d, int i, float f) {
     assert(87 == d.i);
+    assert(99 == d.md.i);
     assert(42 == i);
     assert(123.f == f);
   }
@@ -86,6 +92,7 @@ int main() {
       di::bind<>().to(123.f)
     , di::bind<int>().to([](const auto& injector) {
         if (context(injector) == "example->data") return 87;
+        if (context(injector) == "example->data->more_data") return 99;
         return 42;
       })
   );

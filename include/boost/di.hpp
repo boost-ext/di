@@ -248,7 +248,6 @@ struct injector__ : T {
   using T::try_create;
   using T::create_impl;
   using T::create_successful_impl;
-  using injector_t = typename T::injector_t;
 #if defined(__MSVC__)
   template <class... Ts>
   using is_creatable = typename T::template is_creatable<Ts...>;

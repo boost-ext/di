@@ -47,7 +47,6 @@ struct injector__ : T {
   using T::try_create;
   using T::create_impl;
   using T::create_successful_impl;
-  using injector_t = typename T::injector_t;
 
 #if defined(__MSVC__)  // __pph__
   template <class... Ts>
