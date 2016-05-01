@@ -45,6 +45,10 @@ class contextual_bindings : public di::config {
   static auto policies(const TInjector* injector) noexcept {
     return di::make_policies([&](auto type) {
       using T = decltype(type);
+      if (std::is_same<typename decltype(type)::type, context_type&>::value ||
+          std::is_same<typename decltype(type)::type, contexts_list&>::value) {
+        return;
+      }
       auto& v = injector->template create<contexts_list&>();
       using given = di::aux::decay_t<typename decltype(type)::type>;
       std::string element;

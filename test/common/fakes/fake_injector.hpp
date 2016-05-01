@@ -17,7 +17,6 @@ template <class... TDeps>
 struct fake_injector : core::injector_base {
   using deps = fake_pool<TDeps...>;
   using config = fake_config<>;
-  using injector_t = fake_injector;
 
   template <class T>
   auto create() const noexcept {

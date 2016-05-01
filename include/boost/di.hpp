@@ -1148,14 +1148,14 @@ class instance {
     }
     template <class, class, class TProvider, BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider>::value) = 0>
     auto create(const TProvider& provider) noexcept {
-      using wrapper = detail::wrapper_traits_t<decltype((object_)(provider.injector()))>;
-      return wrapper{(object_)(provider.injector())};
+      using wrapper = detail::wrapper_traits_t<decltype((object_)(*provider.injector_))>;
+      return wrapper{(object_)(*provider.injector_)};
     }
     template <class T, class, class TProvider,
               BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
     auto create(const TProvider& provider) noexcept {
-      using wrapper = detail::wrapper_traits_t<decltype((object_)(provider.injector(), detail::arg<T, TExpected, TGiven>{}))>;
-      return wrapper{(object_)(provider.injector(), detail::arg<T, TExpected, TGiven>{})};
+      using wrapper = detail::wrapper_traits_t<decltype((object_)(*provider.injector_, detail::arg<T, TExpected, TGiven>{}))>;
+      return wrapper{(object_)(*provider.injector_, detail::arg<T, TExpected, TGiven>{})};
     }
     TGiven object_;
   };
@@ -2085,7 +2085,7 @@ template <class, class, class>
 struct try_provider;
 template <class T, class TInjector, class TProvider, class TInitialization, template <class...> class TList, class... TCtor>
 struct try_provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TInjector, TProvider> {
-  using injector_t = typename injector__<TInjector>::injector_t;
+  using injector_t = TInjector;
   template <class>
   struct is_creatable {
     static constexpr auto value =
@@ -2102,7 +2102,7 @@ struct provider;
 template <class T, class TName, class TInjector, class TInitialization, template <class...> class TList, class... TCtor>
 struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TName, TInjector> {
   using provider_t = decltype(TInjector::config::provider((TInjector*)0));
-  using injector_t = typename injector__<TInjector>::injector_t;
+  using injector_t = TInjector;
   template <class, class... TArgs>
   struct is_creatable {
     static constexpr auto value = provider_t::template is_creatable<TInitialization, T, TArgs...>::value;
@@ -2126,7 +2126,6 @@ struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TName
     return {};
 #endif
   }
-  const injector_t& injector() const noexcept { return *((injector_t*)injector_); }
   const TInjector* injector_;
 };
 namespace successful {
@@ -2134,14 +2133,13 @@ template <class, class>
 struct provider;
 template <class T, class TInjector, class TInitialization, template <class...> class TList, class... TCtor>
 struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TInjector> {
-  using injector_t = typename injector__<TInjector>::injector_t;
+  using injector_t = TInjector;
   template <class TMemory = type_traits::heap>
   auto get(const TMemory& memory = {}) const {
     return TInjector::config::provider(injector_)
         .template get<T>(TInitialization{}, memory,
                          static_cast<const injector__<TInjector>*>(injector_)->create_successful_impl(aux::type<TCtor>{})...);
   }
-  const injector_t& injector() const noexcept { return *((injector_t*)injector_); }
   const TInjector* injector_;
 };
 }
@@ -2220,7 +2218,6 @@ class injector : injector_base, pool<bindings_t<TDeps...>> {
   using pool_t = pool<bindings_t<TDeps...>>;
 
  protected:
-  using injector_t = injector<TConfig, pool<>, TDeps...>;
   template <class T, class TName = no_name, class TIsRoot = aux::false_type>
   struct is_creatable {
     using dependency_t = binder::resolve_t<injector, T, TName>;
@@ -2363,8 +2360,7 @@ class injector : injector_base, pool<bindings_t<TDeps...>> {
     using wrapper_t =
         decltype(static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this}));
     using ctor_args_t = typename ctor_t::second::second;
-    policy::template call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>>(
-        TConfig::policies((injector_t*)this));
+    policy::template call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>>(TConfig::policies(this));
     return wrapper<T, wrapper_t>{
         static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this})};
   }
@@ -2378,8 +2374,7 @@ class injector : injector_base, pool<bindings_t<TDeps...>> {
         decltype(static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this}));
     using create_t = referable_t<T, dependency__<dependency_t>>;
     using ctor_args_t = typename ctor_t::second::second;
-    policy::template call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>>(
-        TConfig::policies((injector_t*)this));
+    policy::template call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>>(TConfig::policies(this));
     return successful::wrapper<create_t, wrapper_t>{
         static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this})};
   }
@@ -2392,7 +2387,6 @@ class injector<TConfig, pool<>, TDeps...> : injector_base, pool<bindings_t<TDeps
   using pool_t = pool<bindings_t<TDeps...>>;
 
  protected:
-  using injector_t = injector<TConfig, pool<>, TDeps...>;
   template <class T, class TName = no_name, class TIsRoot = aux::false_type>
   struct is_creatable {
     using dependency_t = binder::resolve_t<injector, T, TName>;

@@ -177,15 +177,15 @@ class instance {
 
     template <class, class, class TProvider, BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider>::value) = 0>
     auto create(const TProvider& provider) noexcept {
-      using wrapper = detail::wrapper_traits_t<decltype((object_)(provider.injector()))>;
-      return wrapper{(object_)(provider.injector())};
+      using wrapper = detail::wrapper_traits_t<decltype((object_)(*provider.injector_))>;
+      return wrapper{(object_)(*provider.injector_)};
     }
 
     template <class T, class, class TProvider,
               BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
     auto create(const TProvider& provider) noexcept {
-      using wrapper = detail::wrapper_traits_t<decltype((object_)(provider.injector(), detail::arg<T, TExpected, TGiven>{}))>;
-      return wrapper{(object_)(provider.injector(), detail::arg<T, TExpected, TGiven>{})};
+      using wrapper = detail::wrapper_traits_t<decltype((object_)(*provider.injector_, detail::arg<T, TExpected, TGiven>{}))>;
+      return wrapper{(object_)(*provider.injector_, detail::arg<T, TExpected, TGiven>{})};
     }
 
     TGiven object_;
