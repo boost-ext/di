@@ -73,20 +73,20 @@ Rob Stewart
 ##No Dependency Injection
 
 ```cpp
-class coffee_maker {           
-public:                
+class coffee_maker {
+public:
   // create dependencies in the constructor
   coffee_maker()
     : heater(std::make_shared<electric_heater>())
     , pump(std::make_unique<heat_pump>(heater))
   { }
 
-  void brew() {            
-    heater->on();          
-    pump->pump();          
-  }                  
+  void brew() {
+    heater->on();
+    pump->pump();
+  }
 
-private:                 
+private:
   std::shared_ptr<iheater> heater;
   std::unique_ptr<ipump> pump;
 };
@@ -104,7 +104,7 @@ public:
              , std::unique_ptr<ipump> pump)
     : heater(heater), pump(move(pump))
   { }
-                       
+
   void brew() {
     heater->on();
     pump->pump();
@@ -408,7 +408,7 @@ class core::injector {
     return wrapper<T>{
       dependency.create( // create in dependency scope
         TConfig::provider{}.get<decltype(dependency.impl)>(
-          create<ctor>()...)) 
+          create<ctor>()...))
     };
   }
 };
@@ -431,7 +431,7 @@ class core::injector {
 ```cpp
 struct Renderer { int device; };
 class View { public: View(std::string title, const renderer&); };
-class Model {}; 
+class Model {};
 class Controller { public: Controller(Model&, View&) {} };
 class User {};
 class App { public: App(Controller&, User&) {} };
@@ -478,7 +478,7 @@ struct any_type {
 ```cpp
 for (auto i = BOOST_DI_CFG_CTOR_LIMIT_SIZE; i >= 0; --i) {
   if (is_constructible<T, any_type...>()) { // T(...)
-    T(any_type....); 
+    T(any_type....);
  }
 }
 ```
@@ -516,7 +516,7 @@ struct T {
 ```cpp
  auto i = 42;
  auto injector = di::make_injector(
-    di::bind<int>.to(i), 
+    di::bind<int>.to(i),
     di::bind<double>.to(87.0)
  );
  injector.create<T>(); // will create T{i, 87.0};
@@ -1073,7 +1073,7 @@ int main() {}
 ----
 
 * Compile time binder
-* Different flow for the success/compilation error 
+* Different flow for the success/compilation error
 * 'Name' erasure
 * No STL/Boost dependencies
 * Eliminate compilation time checks
@@ -1101,7 +1101,7 @@ struct binder {
 
 ----
 
-* Different flow for the success/compilation error 
+* Different flow for the success/compilation error
 
 ```cpp
 is_creatable<T>::value
@@ -1169,6 +1169,68 @@ auto make_injector(TDeps... args) noexcept {
 ----
 
 TODO
+
+==============================================================================
+
+##DI vs ISO C++
+
+----
+
+###Static reflection
+
+----
+
+Deduction of constructor parameters
+
+----
+
+```cpp
+class example {
+public:
+  example(int, double);
+};
+
+static_assert(is_same<
+  tuple<int, double>
+, function_traits_t<decltype(&example::example)>::args
+>{});
+```
+
+----
+
+User defined attributes
+
+----
+
+```cpp
+class example {
+public:
+  [[inject]]
+  example(double, int); // pick me!
+
+  example(int, double);
+  example(int, double, float);
+};
+```
+
+----
+
+```cpp
+class example {
+public:
+  example([[named("int_a")]] int a, [[named("int_b")]] int b) {
+    assert(42 == a);
+    assert(87 == b);
+  }
+};
+```
+
+```cpp
+auto injector = di::make_injector(
+  di::bind<int>.named("int_a").to(42)
+, di::bind<int>.named("int_b").to(87)
+);
+```
 
 ==============================================================================
 
