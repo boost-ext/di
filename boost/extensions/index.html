@@ -169,14 +169,20 @@ int main() {
 namespace di = boost::di;
 
 
+struct more_data {
+  int i;
+};
+
 struct data {
   int i;
+  more_data md;
 };
 
 class example {
  public:
   example(data&amp; d, int i, float f) {
     assert(87 == d.i);
+    assert(99 == d.md.i);
     assert(42 == i);
     assert(123.f == f);
   }
@@ -187,6 +193,7 @@ int main() {
       di::bind&lt;&gt;().to(123.f)
     , di::bind&lt;int&gt;().to([](const auto&amp; injector) {
         if (context(injector) == &quot;example-&gt;data&quot;) return 87;
+        if (context(injector) == &quot;example-&gt;data-&gt;more_data&quot;) return 99;
         return 42;
       })
   );
