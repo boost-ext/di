@@ -35,6 +35,9 @@
 ###XML Injection
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/xml_injection.cpp)
 
+###Serialize
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/serialize.cpp)
+
 ###Types Dumper
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/types_dumper.cpp)
 

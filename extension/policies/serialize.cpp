@@ -56,7 +56,7 @@ struct policy_guard {
 template <class TGiven, class TInjector>
 std::function<char*()> get_ptr(const TInjector&, std::false_type) {
   return {};
-};
+}
 
 template <class TGiven, class TInjector>
 std::function<char*()> get_ptr(const TInjector& injector, std::true_type) {
@@ -64,7 +64,7 @@ std::function<char*()> get_ptr(const TInjector& injector, std::true_type) {
     policy_guard _;
     return reinterpret_cast<char*>(&injector.template create<TGiven&>());
   };
-};
+}
 
 class serializable_policy : public di::config {
  public:
@@ -89,7 +89,7 @@ class serializable_policy : public di::config {
           if (!T::arity::value) {
             const auto align = alignof(given);
             v.offset = ((v.offset + align - 1) / align) * align;
-            serialize.push_back({v.back().path, v.back().ptr, get_type<given>(), v.offset});
+            serialize.push_back(archive{v.back().path, v.back().ptr, get_type<given>(), v.offset});
             v.offset += sizeof(given);
           }
         }
@@ -101,7 +101,7 @@ class serializable_policy : public di::config {
 
       auto ctor_size = T::arity::value;
       while (ctor_size--) {
-        v.push_back({element + get_type<given>(), ptr, {}, 0});
+        v.push_back(archive{element + get_type<given>(), ptr, {}, 0});
       }
     });
   }
@@ -242,7 +242,7 @@ int main() {
     assert(0 == object.d.ui);
     assert(0 == object.d.l);
     assert(.0f == object.d.f);
-    assert(42 == object.md.i); // bound
+    assert(42 == object.md.i);  // bound
     assert(char{} == object.md.c);
     assert(0.0 == object.md.d.d);
     assert(false == object.md.d.b);
