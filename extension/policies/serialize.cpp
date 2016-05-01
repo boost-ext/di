@@ -37,7 +37,7 @@ struct archive {
   std::string path;
   std::function<char*()> ptr;
   std::string type;
-  int offset = 0;
+  int offset;
 };
 struct context : std::vector<archive> {
   int offset = 0;
@@ -89,7 +89,7 @@ class serializable_policy : public di::config {
           if (!T::arity::value) {
             const auto align = alignof(given);
             v.offset = ((v.offset + align - 1) / align) * align;
-            serialize.push_back(archive{v.back().path, v.back().ptr, get_type<given>(), v.offset});
+            serialize.push_back({v.back().path, v.back().ptr, get_type<given>(), v.offset});
             v.offset += sizeof(given);
           }
         }
@@ -101,7 +101,7 @@ class serializable_policy : public di::config {
 
       auto ctor_size = T::arity::value;
       while (ctor_size--) {
-        v.push_back(archive{element + get_type<given>(), ptr, {}, 0});
+        v.push_back({element + get_type<given>(), ptr, {}, 0});
       }
     });
   }
