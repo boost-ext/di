@@ -439,10 +439,10 @@ class core::injector {
     TConfig::policies<T>()...;
 
     auto&& dependency = binder{}.resolve<T>(TBindings...);
-    using ctor = ctor_traits<injector, T>(); // type_list<TCtor...>
+    using ctor = ctor_traits<injector, T>();
 
     return wrapper<T>{
-      dependency.create( // create in dependency scope
+      dependency.create( // create in a dependency scope
         TConfig::provider{}.get<decltype(dependency.impl)>(
           create<ctor>()...))
     };
@@ -508,17 +508,53 @@ And using Boost.DI...
 ```cpp
 auto app = di::make_injector().create<App>();
 ```
-----
-
-How is that possible without static reflection?
 
 ----
 
-User-defined/implicit/generic conversion operator
+###Where
 
-+
+----
 
-A bit of C++ magic
+```cpp
+template<class TConfig = di::config, class... TDeps>
+  requires configurable<TConfig>() && boundable<TDeps...>()
+auto make_injector(TDeps&&...) noexcept;
+```
+
+```cpp
+template<class... TDeps> requires boundable<TDeps...>()
+class injector {
+public:
+  injector(injector&&) = default;
+  explicit injector(TDeps&&...) noexcept;
+
+  template<class T> requires creatable<T>()
+  T create() const;
+};
+```
+
+----
+
+| Type `T` | Is allowed? | Note |
+| -------- | ----------- | ---- |
+| `T` | ✔ | - |
+| `T*` | ✔ | Ownership transfer! |
+| `const T*` | ✔ | Ownership transfer! |
+| `T&` | ✔ | - |
+| `const T&` | ✔ | Reference with [singleton] / Temporary with [unique] |
+| `T&&` | ✔ | - |
+| `std::unique_ptr<T>` | ✔ | - |
+| `std::shared_ptr<T>` | ✔ | - |
+| `std::weak_ptr<T>` | ✔ | - |
+| `boost_shared_ptr<T>` | ✔ | - |
+
+----
+
+###How is that possible without static reflection?
+
+----
+
+###User-defined/implicit/generic conversion operator
 
 ----
 
@@ -541,20 +577,28 @@ https://wandbox.com
 
 ----
 
-However, it doesn't work for constructor with one parameter!
+###Limitations
 
 ----
 
+It doesn't work for constructor with one parameter!
+
+> Copy constructor / Move constructor
+
+---
+
+> Generic converting constructor
 ```cpp
-int main() {
-  static_assert(!std::is_constructible<example, any_type>::value);
-}
+class example {
+public:
+  template<class T>
+  example(T); // non explicit
+};
 ```
-https://wandbox.com
 
 ----
 
-Easy fix, disable when convertible to the parent type
+###Let's disable the operator when type T is convertible to the parent type
 
 ----
 
@@ -579,7 +623,7 @@ https://wandbox.com
 
 ----
 
-###How many parameters?
+###Calculate the number of parameters?
 
 ----
 
@@ -626,7 +670,7 @@ https://wandbox.com
 
 ----
 
-###is_braces_constructible
+###is braces constructible
 
 ----
 
@@ -706,12 +750,11 @@ class core::injector {
     TConfig::policies<T>()...;
     auto&& dependency = binder{}.resolve<T>(TBindings...);
 
-    ///////////////////////////////////////////////////////////////
-    using ctor = ctor_traits<injector, T>(); // type_list<TCtor...>
-    ///////////////////////////////////////////////////////////////
+    using ctor = ctor_traits<injector, T>(); // -\
+     // pair<direct/uniform, TCtor...>  <--------/
 
     return wrapper<T>{
-      dependency.create( // create in dependency scope
+      dependency.create( // create in a dependency scope
         TConfig::provider{}.get<decltype(dependency.impl)>(
           create<ctor>()...))
     };
@@ -721,36 +764,13 @@ class core::injector {
 
 ----
 
-###Thanks to this approach we can create types using uniform initialization
-
-+
-
-###Serialization
-
-----
-
-```cpp
-struct T {
-  int& a;
-  double b;
-};
-```
-
-```cpp
- auto i = 42;
- auto injector = di::make_injector(
-    di::bind<int>.to(i),
-    di::bind<double>.to(87.0)
- );
- injector.create<T>(); // will create T{i, 87.0};
-```
-https://wandbox.com
-
-----
-
 ##First steps with bindings
 
-For purpose of this tutorial, let's change `view` class into interface `iview` in order to support `text_view` and `gui_view`.
+----
+
+###Interfaces...
+
+----
 
 ```cpp
 class iview {
@@ -775,33 +795,47 @@ public:
 
 ```cpp
 auto injector = di::make_injector(
-  di::bind<iview>.to<gui_view>()
+  di::bind<iview>.to<gui_view>() // bind interface to implementation
+);
+```
+
+```cpp
+assert(dynamic_cast<gui_view*>(
+  injector.create<std::unique_ptr<iview>().get())
 );
 ```
 
 ----
 
-But what about values? `renderer` requires `device`, which, by default, was value initialized.
+###Values...
+
+----
+
 ```cpp
-struct renderer {
-  int device; // assert(42 == device);
+struct T {
+  int& a;
+  double b;
 };
 ```
 
 ```cpp
-auto injector = di::make_injector(
-  di::bind<iview>.to<gui_view>()
-, di::bind<int>.to(42)
-);
+ auto i = 42;
+ auto injector = di::make_injector(
+    di::bind<int>.to(i),
+    di::bind<double>.to(87.0)
+ );
+ injector.create<T>(); // will create T{i, 87.0};
 ```
+https://wandbox.com
 
 ----
 
-Great, but my code is more dynamic than that! I mean that I want to choose `gui_view` or `text_view` at runtime.
-`Boost.DI` can handle that too!
+###Dynamic conditions....
+
+----
 
 ```cpp
-auto use_gui_view = ...;
+auto use_gui_view = true/false;
 
 auto injector = di::make_injector(
   di::bind<iview>.to([&](const auto& injector) -> iview& {
@@ -810,14 +844,24 @@ auto injector = di::make_injector(
     else
       return injector.template create<text_view&>();
   })
-, di::bind<>.to(42) // renderer device
+);
+```
+
+```cpp
+use_gui_view = true;
+assert(dynamic_cast<gui_view*>(
+  injector.create<std::unique_ptr<iview>().get())
+);
+
+use_gui_view = false;
+assert(dynamic_cast<text_view*>(
+  injector.create<std::unique_ptr<iview>().get())
 );
 ```
 
 ----
 
-Okay, so what about the input. We have `user`, however, in the real life, we will have more clients.
-`Boost.DI` allows multiple bindings to the same type for `array/vector/set`. Let's do it then!
+###Multi
 
 ----
 
@@ -848,18 +892,6 @@ And our bindings...
 
 ```cpp
 di::bind<iclient*[]>.to<user, client>()
-```
-
-----
-
-The last but not least, sometimes, it's really useful to override some bindings. For example, for testing purposes.
-With `Boost.DI` you can easily do that with [override] specifier.
-
-```cpp
-auto injector = di::make_injector(
-  di::bind<int>.to(42) // renderer device
-, di::bind<int>.to(123) [di::override] // override renderer device
-);
 ```
 
 ----
@@ -967,7 +999,7 @@ error C4506: no definition for inline function
 
 ----
 
-###BOOST_DI_CFG_DIAGNOSTICS_LEVEL
+###BOOST DI CFG DIAGNOSTICS LEVEL
 
 ----
 
@@ -979,7 +1011,7 @@ error C4506: no definition for inline function
 
 ----
 
-##BOOST_DI_CFG_DIAGNOSTICS_LEVEL=0
+##BOOST DI CFG DIAGNOSTICS LEVEL=0
 
 ----
 
@@ -989,7 +1021,7 @@ error: 'create<app>' is deprecated: creatable constraint not satisfied
 
 ----
 
-##BOOST_DI_CFG_DIAGNOSTICS_LEVEL=1
+##BOOST DI CFG DIAGNOSTICS LEVEL=1
 
 ----
 
@@ -1003,11 +1035,14 @@ error: inline function 'abstract_type<iview>::is_not_bound::error'
 ```
 ----
 
+##BOOST DI CFG DIAGNOSTICS LEVEL=2
+
+----
+
 ```cpp
 error: 'create<app>' is deprecated: creatable constraint not satisfied
 
 error: function ‘T creating<T>::type(_) [with T = app]’
-
 error: function ‘T creating<T>::type(_) [with T = controller]’
 
 error: inline function 'abstract_type<iview>::is_not_bound::error'
@@ -1074,6 +1109,19 @@ Trigger the error
 ##Decide the life times
 
 ----
+
+| Type | Scope |
+|------|-------|
+| T | [unique] |
+| T& | [singleton] |
+| const T& | [unique] (temporary) / [singleton] |
+| T* | [unique] (ownership transfer) |
+| const T* | [unique] (ownership transfer) |
+| T&& | [unique] |
+| std::unique_ptr<T> | [unique] |
+| std::shared_ptr<T> | [singleton] |
+| boost::shared_ptr<T> | [singleton] |
+| std::weak_ptr<T> | [singleton] |
 
 Well, `Boost.DI` supports scopes which are response for maintaining the life time of created objects.
 By default there are 4 scopes
@@ -1279,7 +1327,7 @@ mocks injector
 
 ----
 
-Environment
+###Environment
 
 ----
 
@@ -1619,9 +1667,7 @@ erase_long_type_name{injector}.create<T>(); // quick to compile
 
 ----
 
-###Semi automated solution
-
-####wrap it with lambda expression
+###Solution - lambda expression
 
 ----
 
