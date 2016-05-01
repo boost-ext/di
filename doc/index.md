@@ -88,8 +88,9 @@ but also can help you with...
 
 ###Real Life examples?
 
-* [Match-3 Game](https://github.com/krzysztof-jusiak/match3)
-    * Simple game in C++14 using SDL2 / Model View Controller / Meta State Machine / Dependency Injection
+* [Match-3 Game](https://github.com/modern-cpp-examples/match3)
+    * Simple web game in C++14 using SDL2 / Model View Controller / Meta State Machine / Dependency Injection / Range-V3 / Emscripten
+    * [Play it online!](http://modern-cpp-examples.github.io/match3)
 
 >
 
