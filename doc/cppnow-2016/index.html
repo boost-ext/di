@@ -388,6 +388,8 @@ https://github.com/boost-experimental/di/tree/cpp14
 
   * Boost.DI resolves types at compile-time and gives short and intuitive error messages
 
+> If it compiles it will work!
+
 ----
 
 * ###Be as non-intrusive as possible
@@ -479,9 +481,7 @@ class core::injector {
 ----
 
 ```cpp
-struct renderer {
-  int device;
-};
+struct renderer { int device; };
 class iview {
 public:
   virtual ~iview() = default;
@@ -547,25 +547,10 @@ public:
   constexpr auto create() const;
 
   template<class T> requires !creatable<T>()
-  [[deprecated("creatable constraint not satisfied")]] 
+  [[deprecated("creatable constraint not satisfied")]]
   constexpr auto create() const;
 };
 ```
-
-----
-
-| Type `T` | Is allowed? | Note |
-| -------- | ----------- | ---- |
-| `T` | ✔ | - |
-| `T*` | ✔ | Ownership transfer! |
-| `const T*` | ✔ | Ownership transfer! |
-| `T&` | ✔ | - |
-| `const T&` | ✔ | Reference with [singleton] / Temporary with [unique] |
-| `T&&` | ✔ | - |
-| `std::unique_ptr<T>` | ✔ | - |
-| `std::shared_ptr<T>` | ✔ | - |
-| `std::weak_ptr<T>` | ✔ | - |
-| `boost_shared_ptr<T>` | ✔ | - |
 
 ----
 
@@ -758,7 +743,7 @@ template<class TInjector, class T> auto ctor_traits() {
 
 ----
 
-###Coming back to the design...
+###Coming back to the design
 
 ----
 
@@ -785,9 +770,11 @@ class core::injector {
 
 ##Bindings
 
+> DI Configuration
+
 ----
 
-###Interfaces...
+###Interfaces
 
 ----
 
@@ -826,13 +813,13 @@ assert(dynamic_cast<gui_view*>(
 
 ----
 
-###Values...
+###Values
 
 ----
 
 ```cpp
-struct T {
-  int& a;
+struct T { // create using uniform initialization
+  int& a;  // might be used to serialize
   double b;
 };
 ```
@@ -849,7 +836,7 @@ https://wandbox.com
 
 ----
 
-###Dynamic conditions....
+###Dynamic conditions
 
 ----
 
@@ -879,60 +866,66 @@ assert(dynamic_cast<text_view*>(
 
 ----
 
-###Multi
+###This way XML injection might be easily achieved
+
+---
+
+[XML Injection](http://boost-experimental.github.io/di/extensions/index.html#xml-injection)
+
+----
+
+###Vectors/Lists/Arrays/...
+
+----
+
+###Using initializer list
 
 ----
 
 ```cpp
-class iclient {
- public:
-   virtual ~iclient() noexcept = default;
-   virtual void process() = 0;
-};
+auto injector = di::make_injector(
+  di::bind<int[]>().to({1, 2, 3})
+);
 
-class user : public iclient {
- public:
-   void process() override {};
-};
+auto v = injector.create<std::vector<int>>();
+  // or std::array / std::set
 
-class timer : public iclient {
- public:
-   void process() override {};
-};
-
-class app {
- public:
-  app(controller&, std::vector<std::unique_ptr<iclient>>);
-};
+assert(3 == v.size());
+assert(1 == v[0]);
+assert(2 == v[1]);
+assert(3 == v[2]);
 ```
 
-And our bindings...
+----
+
+###Using list of types
+
+----
 
 ```cpp
-di::bind<iclient*[]>.to<user, client>()
+auto injector = di::make_injector(
+  di::bind<interface*[]>().to<implementation1, implementation2>()
+);
+```
+
+```cpp
+auto v = injector.create<
+  std::vector<std::unique_ptr<interface>>>();
+    // or std::array / std::set with
+    // std::shared_ptr, raw pointer, reference, ...
+
+assert(2 == v.size());
+assert(dynamic_cast<implementation1*>(v[0].get()));
+assert(dynamic_cast<implementation2*>(v[1].get()));
 ```
 
 ----
 
-##Decide the life times
+##Scopes
+
+> Objects life time
 
 ----
-
-| Type | Scope |
-|------|-------|
-| T | [unique] |
-| T& | [singleton] |
-| const T& | [unique] (temporary) / [singleton] |
-| T* | [unique] (ownership transfer) |
-| const T* | [unique] (ownership transfer) |
-| T&& | [unique] |
-| std::unique_ptr<T> | [unique] |
-| std::shared_ptr<T> | [singleton] |
-| boost::shared_ptr<T> | [singleton] |
-| std::weak_ptr<T> | [singleton] |
-
-Well, `Boost.DI` supports scopes which are response for maintaining the life time of created objects.
-By default there are 4 scopes
 
 * deduce scope (default)
 * instance scope (bind<>.to(value) where value is maintained by the user)
@@ -941,32 +934,44 @@ By default there are 4 scopes
 
 ----
 
-| Type | Scope |
-|------|-------|
-| T, T&&, const T&, T*, std::unique_ptr<T> | unique |
-| const T&, T&, std::shared_ptr<T>, boost::shared_ptr<T>, std::weak_ptr<T> | singleton |
+```
++-------------------------------------------------+ singleton scope
+|
+|          unique scope     unique scope
+|          +---+            +------+
+|          |                |
++--+-------+----------------+---------------------> Application life time
+   |
+   |
+   +------------------------+ instance / user scope
+                             (is not controlled by DI)
+```
 
 ----
 
-Changing the scope for given type.
+###Scopes deduction
+
+----
+
+| Type | Scope |
+|------|-------|
+| `T`, `T&&`, `T*`, `const T*`, `std::unique_ptr<T>` | unique |
+| `T&`, `const T&`, `std::shared_ptr<T>`, `boost::shared_ptr<T>`, `std::weak_ptr<T>` | singleton |
+
+----
+
+###Explicit change of the scope for a given type
+
+----
 
 ```cpp
 auto injector = di::make_injector(
   di::bind<iview>.to<gui_view>().in(di::singleton) // explicitly
 );
 ```
-
-What if I want to change `gui_view` to be a different instance per each request. Let's change the scope to [unique] then.
-
-```cpp
-auto injector = di::make_injector(
-  di::bind<iview>.to<gui_view>().in(di::unique)
-);
-```
-
 ----
 
-##Annotations to the rescue
+##Injections / Annotations
 
 ----
 
@@ -978,137 +983,140 @@ class model {
 };
 ```
 
-We can't create `model` due to constructor ambiguity.
-
-```cpp
-di::make_injector().create<model>(); // compile error
-```
+> Constructor ambiguity (compilation error)
 
 ----
 
-Names...
+###Solution
+
+----
 
 ```cpp
-auto Rows = []{};
-auto Cols = []{};
+class model {
+ public:
+   model(int size, double precision) { }
+   BOOST_DI_INJECT(model, int rows, int cols); // pick me!
+};
+
+model::model(int rows, int cols) {} // implementation is not affected
 ```
+----
+
+###Distinguish rows from columns
+
+----
+
+###Annotations / Names
+
+----
 
 ```cpp
 class model {
  public:
    model(int size, double precision) { }
 
-   BOOST_DI_INJECT(model, (named = Rows) int rows
-                        , (named = Cols) int cols);
+   BOOST_DI_INJECT(model, (named = "rows"_s) int rows
+                        , (named = "cols"_s) int cols);
 };
 
-model::model(int rows, int cols) {}
+model::model(int rows, int cols) {} // implementation stays the same
 ```
-
-----
-
-Finally, we have to bind our values.
 
 ```cpp
 auto injector = di::make_injector(
-  di::bind<int>.named(Rows).to(6)
-, di::bind<int>.named(Cols).to(8)
+  di::bind<int>.named("rows"_s).to(6)
+, di::bind<int>.named("cols"_s).to(8)
 );
-
-di::make_injector().create<model>(); // OKAY
 ```
 
 ----
 
-##Split your configuration
-
-----
-
-But my project has hundreds of interfaces and I would like to split my bindings into separate components.
-
-Let's split our configuration then and keep our `model` bindings separately from `app` bindings.
+###Where
 
 ----
 
 ```cpp
+template <char...>
+struct string {};
+
+template <class T, T... Ts>
+constexpr auto operator""_s() {
+  return string<Ts...>{}
+}
+```
+
+> It's not standard!
+> For a standard solution use unique types instead
+
+----
+
+##Modules
+
+> Split DI configuration
+
+----
+
+```cpp
+auto view_module = [] {
+  return di::make_injector(
+    di::bind<icanvas>.to<sdl_canvas>()
+  , di::bind<irenderer>.to<gui_renderer>()
+  );
+};
+
 auto model_module = [] {
   return di::make_injector(
-    di::bind<int>.named(Rows).to(6)
-  , di::bind<int>.named(Cols).to(8)
+    di::bind<config>.to({6, 8})
+  , di::bind<irandom>.to<mt19937_random>()
   );
 };
 ```
 
-----
-
 ```cpp
-auto app_module = [](const bool& use_gui_view) {
-  return di::make_injector(
-    di::bind<iview>.to([&](const auto& injector) -> iview& {
-      if (use_gui_view)
-        return injector.template create<gui_view&>();
-      else
-        return injector.template create<text_view&>();
-    })
-  , di::bind<timer>.in(di::unique) // different per request
-  , di::bind<iclient*[]>().to<user, timer>() // bind many clients
-  );
-};
+auto injector = di::make_injector(
+  view_module(), model_module()
+);
+
+injector.create<app>();
 ```
 
 ----
 
-And glue them into one injector the same way...
-
-```cpp
-  auto injector = di::make_injector(
-    model_module()
-  , app_module(use_gui_view)
-  );
-```
+###Module in CPP file
 
 ----
 
-But I would like to have a module in `cpp` file, how can I do that?
+###Expose types via injector
+
+> Only exposed types will be creatable
+
+----
 
 ```cpp
-di::injector<model&> model_module() {
+di::injector<view&> view_module() { // expose view
   return di::make_injector(
-    di::bind<int>.named(Rows).to(6)
-  , di::bind<int>.named(Cols).to(8)
+    di::bind<icanvas>.to<sdl_canvas>()
+  , di::bind<irenderer>.to<gui_renderer>()
   );
 }
 ```
 
-----
-
 ```cpp
-di::injector<app> app_module(const bool& use_gui_view) {
+di::injector<model&> model_module() { // expose model
   return di::make_injector(
-    di::bind<iview>.to([&](const auto& injector) -> iview& {
-      if (use_gui_view)
-        return injector.template create<gui_view&>();
-      else
-        return injector.template create<text_view&>();
-    })
-  , di::bind<timer>.in(di::unique) // different per request
-  , di::bind<iclient*[]>.to<user, timer>() // bind many clients
-  , model_module()
+    di::bind<config>.to({6, 8})
+  , di::bind<irandom>.to<mt19937_random>()
   );
 }
 ```
 
-----
-
 ```cpp
-  auto injector = di::make_injector(
-    model_module()
-  , app_module(use_gui_view)
-  );
+auto injector = di::make_injector(
+  view_module(), model_module()
+);
 
-  injector.create<app>();
+injector.create<app>();
 ```
-
 
 ==============================================================================
 
@@ -1211,10 +1219,18 @@ struct any_type {
 ```cpp
 template <class T, class TDependency = binder::resolve_t<T>>
 using creatable = std::is_convertible<
-  TDependency::template try_create<
-    T, try_provider<ctor_traits<typename TDependency::impl>>
-  >;
+  TDependency::template try_create<T>(
+    provider<ctor_traits<typename TDependency::impl>>{}
+  );
 >;
+```
+
+```cpp
+template <class T, class TProvider>
+auto try_create(const TProvider& provider) -> wrapper<
+  unique, decltype(provider.get())> // `auto -> decltype` will disable
+                                    // function if not applicable
+try_create(const TProvider&);
 ```
 
 ----
@@ -1235,7 +1251,7 @@ constexpr auto create_impl(TArgs&&... args) {
   return T{std::forward<TArgs>(args...)};
 }
 
-template<class T, class... TArgs, 
+template<class T, class... TArgs,
   REQUIRES(!std::is_constructible<T, TArgs...>{})>
 constexpr auto create_impl(TArgs&&... args) {
   return show_the_error<T>{};
@@ -1252,14 +1268,14 @@ constexpr auto create_impl(TArgs&&... args) {
 template<class T>
 constexpr auto show_the_error() {
   return aux::is_polymorphic<T>{} ? // return the proper type
-    abstract_type<T>::is_not_bound{} : 
+    abstract_type<T>::is_not_bound{} :
     type<T>::cant_be_created{}; // simplified version
 };
 ```
 
 ----
 
-> Static inline function without implementation will show 
+> Static inline function without implementation will show
   a warning without a CALL STACK!
 
 ----
@@ -1493,15 +1509,15 @@ struct types_dumper : di::config {
 ----
 
 ```cpp
-class iview { 
+class iview {
 public:
   virtual ~iview() noexcept = default;
-  virtual void update() =0; 
+  virtual void update() =0;
 };
 struct model { std::vector<int> board; };
 class controller {
 public:
-  controller(model&, iview&) {} 
+  controller(model&, iview&) {}
 };
 struct user {};
 
@@ -1566,12 +1582,12 @@ struct serializable : di::config {
 ```cpp
 auto serialize = [](const auto& injector, auto& str) {
   serializable_call_t::apply(injector, [&](const auto& o, auto t) {
-    str << o.path << " " 
-        << o.type << " " 
+    str << o.path << " "
+        << o.type << " "
         << o.offset << " "
         << std::to_string(
              *reinterpret_cast<decltype(t)*>(o.ptr() + o.offset)
-           ) 
+           )
         << std::endl;
   });
 };
@@ -1754,15 +1770,15 @@ https://github.com/dascandy/hippomocks
 ----
 
 ```cpp
-class iview { 
+class iview {
 public:
   virtual ~iview() noexcept = default;
-  virtual void update() =0; 
+  virtual void update() =0;
 };
 struct model { std::vector<int> board; };
 class controller {
 public:
-  controller(model&, iview&) {} 
+  controller(model&, iview&) {}
 };
 struct user {};
 
@@ -1797,7 +1813,17 @@ https://github.com/modern-cpp-examples/match3
 
 ---
 
-http://boost-experimental.github.io/di/extensions
+[Constructor Bindings](http://boost-experimental.github.io/di/extensions/index.html#constructor-bindings) | [Contextual Bindings](http://boost-experimental.github.io/di/extensions/index.html#contextual-bindings)
+
+[XML Injection](http://boost-experimental.github.io/di/extensions/index.html#xml-injection) | [Assisted Injection](http://boost-experimental.github.io/di/extensions/index.html#assisted-injection)
+
+[Concepts](http://boost-experimental.github.io/di/extensions/index.html#concepts) | [Lazy](http://boost-experimental.github.io/di/extensions/index.html#lazy) | [Named Parameters](http://boost-experimental.github.io/di/extensions/index.html#named-parameters)
+
+[Types Dumper](http://boost-experimental.github.io/di/extensions/index.html#types-dumper) | [UML Dumper](http://boost-experimental.github.io/di/extensions/index.html#uml-dumper) | [Serialize](http://boost-experimental.github.io/di/extensions/index.html#serialize)
+
+[Mocks Provider](http://boost-experimental.github.io/di/extensions/index.html#mocks-provider)
+
+[Scoped Scope](http://boost-experimental.github.io/di/extensions/index.html#scoped-scope) | [Session Scope](http://boost-experimental.github.io/di/extensions/index.html#session-scope) | [Shared Scope](http://boost-experimental.github.io/di/extensions/index.html#shared-scope)
 
 ==============================================================================
 

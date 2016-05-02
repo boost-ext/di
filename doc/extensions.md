@@ -5,6 +5,7 @@
 * [Lazy](#lazy)
 * [Named Parameters](#named-parameters)
 * [XML Injection](#xml-injection)
+* [Serialize](#serialize)
 * [Types Dumper](#types-dumper)
 * [UML Dumper](#uml-dumper)
 * [Mocks Provider](#mocks-provider)
