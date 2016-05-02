@@ -28,10 +28,6 @@
 			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
 			document.getElementsByTagName( 'head' )[0].appendChild( link );
 		</script>
-
-		<!--[if lt IE 9]>
-		<script src="lib/js/html5shiv.js"></script>
-		<![endif]-->
 	</head>
 
 	<body>
@@ -102,7 +98,7 @@ public:
   // inject dependencies via constructor
   coffee_maker(std::shared_ptr<iheater> heater
              , std::unique_ptr<ipump> pump)
-    : heater(heater), pump(move(pump))
+    : heater(heater), pump(std::move(pump))
   { }
 
   void brew() {
@@ -128,16 +124,18 @@ private:
 
 ----
 
-##Depends...
+###No, but...
 
 ----
 
-* DI provides loosely coupled code
-  * separation of business logic and object creation
-* DI provides easier to maintain code
-  * different objects might be easily injected
-* DI provides easier to test code
-  * fakes objects might be injected
+* DI promote loosely coupled code
+  * Separation of business logic and object creation
+  
+* DI creates easier to maintain code
+  * Different objects might be easily injected
+
+* DI creates easy to test code
+  * Fakes objects might be injected
 
 ==============================================================================
 
@@ -145,8 +143,7 @@ private:
 
 ----
 
-Depending on a project and its scale you may put up with or without a DI library, however, in any project
-a DI framework may **free you** from maintaining a following (boilerplate) code...
+###No, but DI library will **free you** from maintaining boilerplate code
 
 ----
 
@@ -163,10 +160,13 @@ auto create() {
 }
 ```
 
+> Boilerplate code which has to be maintained
+
 ----
 
-Notice that **ORDER** in which above dependencies are created is **IMPORTANT** as well as that
-**ANY** change in **ANY** of the objects constructor will **REQUIRE** a change in the code!
+* ORDER in which above dependencies are created is **IMPORTANT** 
+
+* **ANY** change in **ANY** of the objects constructor will **REQUIRE** a change in the code
 
 ----
 
@@ -178,15 +178,18 @@ http://wandbox.com
 
 ----
 
-DI library, not only let you forget about maintaining this code,
-but also can help you with...
+###DI can also help with
 
 ----
 
 * Testing
-* Serializing
+  * Mocks injector
+* Serializing 
+  * Automatic serialization of PODs
 * Understanding dependencies
+  * Dump types relationship
 * Restricting allowed types
+  * Disallow raw pointers, etc.
 
 ----
 
@@ -239,7 +242,7 @@ http://boost-experimental.github.io/di/try_it
 
 ----
 
-###DI Libraries...
+###DI Libraries
 
 ----
 
@@ -2137,7 +2140,7 @@ constexpr T create() const {
 
 ----
 
-Long type names may increase your compilation times a LOT!
+###Long type names may increase your compilation times a LOT!
 
 ----
 
@@ -2228,7 +2231,7 @@ public:
   example(int, double);
 };
 
-static_assert(is_same<
+static_assert(std::is_same<
   std::tuple<int, double>
 , std::function_traits_t<decltype(&example::example)>::args
 >{});
