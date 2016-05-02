@@ -172,6 +172,10 @@ Notice that **ORDER** in which above dependencies are created is **IMPORTANT** a
 
 ###Showcase
 
+---
+
+http://wandbox.com
+
 ----
 
 DI library, not only let you forget about maintaining this code,
@@ -182,28 +186,27 @@ but also can help you with...
 * Testing
 * Serializing
 * Understanding dependencies
-* Restricting types
+* Restricting allowed types
 
 ----
 
-Try it yourself online!
+###Try it yourself online!
 
-----
+---
 
 http://boost-experimental.github.io/di/try_it
 
+----
+
+##Still not convinced?
 
 ----
 
-Still not convinced?
+###Real-life example?
 
 ----
 
-Real-life example?
-
-----
-
-Let's make a web match-3 game in C++14
+> Let's make a web match-3 game in C++14
 
 * Model-View-Controller
 * Dependency Injection
@@ -262,9 +265,110 @@ http://boost-experimental.github.io/di/benchmarks
 
 ##Experimental Boost.DI
 
+==============================================================================
+
+##Overview
+
 ----
 
-##Design goals
+###A bit of history
+
+----
+
+2012 - 2014
+
+---
+
+Version C++98 / C++11 - never released
+
+---
+
+https://github.com/boost-experimental/di/tree/cpp03
+
+----
+
+* Compiled slowly (Boost.MPL)
+* Enormous error messages
+* A lot of preprocessor magic (BOOST_PP)
+* A lot of workarounds for compilers (MSVC 2013)
+
+----
+
+2014 - Now
+
+---
+
+Version C++14 - v1.0.0
+
+---
+
+https://github.com/boost-experimental/di/tree/cpp14
+
+---
+
+----
+
+* One header (boost/di.hpp) / generated
+* 3k lines
+* Neither Boost nor STL is required
+* No 'if' branches
+* No 'virtual' methods
+* No 'exceptions' (-fno-exceptions)
+
+----
+
+##Tested compilers
+
+----
+
+* [Clang-3.4+](https://travis-ci.org/boost-experimental/di)
+
+* [XCode-6.1+](https://travis-ci.org/boost-experimental/di)
+
+* [GCC-5.2+](https://travis-ci.org/boost-experimental/di)
+
+* [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
+
+----
+
+##Quality (per commit)
+
+> CONTINOUS INTEGRATION
+
+----
+
+* Travis/Appveyor build on Linux/OS X/Windows (Boost-Build/CMake)
+  * Clang-3.4/3.5/3.6/3.7/3.8 (libc++ / stdlibc++)
+  * GCC-5
+  * MSVC-2015
+* Clang static analysis / Clang-tidy (static check)
+* Valgrind / Dr. Memory (dynamic memory check)
+* Clang-format (style check)
+* Deploy documentation to 'GitHub/gh-pages'
+
+----
+
+###Tests
+
+----
+
+##99% test code coverage
+
+----
+
+* Unit tests
+* Functional tests
+* Performance tests (benchmarks)
+* Compilation-error tests (validates error message)
+* Run-time generation tests (compares generated assembler opcodes)
+
+==============================================================================
+
+##Design
+
+----
+
+##Goals
 
 ----
 
@@ -298,103 +402,7 @@ http://boost-experimental.github.io/di/benchmarks
 
 ----
 
-###A bit of history
-
-----
-
-2012 - 2014
-
----
-
-Version C++98 / C++11 - never released
-
----
-
-[https://github.com/boost-experimental/di/tree/cpp03](https://github.com/boost-experimental/di/tree/cpp03)
-
-----
-
-* Compiled slowly (Boost.MPL)
-* Enormous error messages
-* A lot of preprocessor magic (BOOST_PP)
-* A lot of workarounds for compilers (MSVC 2013)
-
-----
-
-2014 - Now
-
----
-
-Version C++14 - v1.0.0
-
----
-
-[https://github.com/boost-experimental/di](https://github.com/boost-experimental/di)
-
-----
-
-##Overview
-
-----
-
-* One header (boost/di.hpp) / generated
-* 3k lines
-* Neither Boost nor STL is required
-* No 'if' branches
-* No 'virtual' methods
-* No 'exceptions' (-fno-exceptions)
-
-----
-
-##Tested compilers
-
-----
-
-* [Clang-3.4+](https://travis-ci.org/boost-experimental/di)
-
-* [XCode-6.1+](https://travis-ci.org/boost-experimental/di)
-
-* [GCC-5.2+](https://travis-ci.org/boost-experimental/di)
-
-* [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
-
-----
-
-##Quality (per commit)
-
-----
-
-* Travis/Appveyor build on Linux/OS X/Windows
-  * Clang-3.4/3.5/3.6/3.7/3.8 (libc++ / stdlibc++)
-  * GCC-5
-  * MSVC-2015
-* Clang static analysis / Clang-tidy (static check)
-* Valgrind / Dr. Memory (dynamic memory check)
-* Clang-format (style check)
-
-----
-
-* Documentation deployment to 'gh-pages'
-
-----
-
-Tests
-
-----
-
-##99% test code coverage
-
-----
-
-* Unit tests
-* Functional tests
-* Performance tests (benchmarks)
-* Compilation-error tests (validates error message)
-* Run-time generation tests (compares generated assembler)
-
-==============================================================================
-
-##Design
+###Architecture
 
 ----
 
@@ -454,6 +462,8 @@ class core::injector {
 };
 ```
 
+[https://github.com/boost-experimental/di](https://github.com/boost-experimental/di)
+
 ==============================================================================
 
 ##User Guide
@@ -469,48 +479,49 @@ class core::injector {
 ----
 
 ```cpp
-struct Renderer {
+struct renderer {
   int device;
 };
-class View {
+class iview {
 public:
-  View(std::string title, const Renderer&);
+  virtual ~iview() = default;
+  virtual void update() = 0;
 };
-class Model {};
-class Controller {
+class model {};
+class controller {
 public:
-  Controller(Model&, View&) {}
+  controller(model&, view&) {}
 };
-class User {};
-class App {
+class user {};
+class app {
 public:
-  App(Controller&, User&) {}
+  app(controller&, user&) {}
 };
 ```
 
 ----
 
-The usual approach to create `App` would be following...
+###Usual approach to create `app`
 
 ----
 
 ```cpp
-Renderer renderer;
-View view{"title", renderer};
-Model model;
-Controller controller{model, view};
-User user;
-App app{controller, user};
+renderer renderer_;
+view view_{"title", renderer_};
+model model_;
+controller controller_{model_, view_};
+user user_;
+app app_{controller_, user_};
 ```
 
 ----
 
-And using Boost.DI...
+###With Boost.DI
 
 ----
 
 ```cpp
-auto app = di::make_injector().create<App>();
+auto app = di::make_injector().create<app>();
 ```
 
 ----
@@ -533,7 +544,11 @@ public:
   explicit injector(TDeps&&...) noexcept;
 
   template<class T> requires creatable<T>()
-  T create() const;
+  constexpr auto create() const;
+
+  template<class T> requires !creatable<T>()
+  [[deprecated("creatable constraint not satisfied")]] 
+  constexpr auto create() const;
 };
 ```
 
@@ -565,7 +580,7 @@ public:
 ```cpp
 struct any_type {
   template<class T>
-  operator T(); // non explicit
+  constexpr operator T(); // non explicit
 };
 
 int main() {
@@ -602,7 +617,7 @@ public:
 
 ----
 
-###Let's disable the operator when type T is convertible to the parent type
+###Disable the operator when type T is convertible to the parent type
 
 ----
 
@@ -611,7 +626,7 @@ template<class TParent>
 struct any_type {
   template<class T, class =
     std::enable_if_t<!std::is_convertible<TParent, T>{}>
-  > operator T();
+  > constexpr operator T();
 };
 
 int main() {
@@ -712,7 +727,7 @@ template<class TInjector, class TParent>
 struct any_type {
   template<class T, class =
     std::enable_if_t<!std::is_convertible<TParent, T>{}>
-  > operator T() {
+  > constexpr operator T() {
     return injector_.template create<T>();
   }
 
@@ -768,7 +783,7 @@ class core::injector {
 
 ----
 
-##First steps with bindings
+##Bindings
 
 ----
 
@@ -843,10 +858,9 @@ auto use_gui_view = true/false;
 
 auto injector = di::make_injector(
   di::bind<iview>.to([&](const auto& injector) -> iview& {
-    if (use_gui_view)
-      return injector.template create<gui_view&>();
-    else
-      return injector.template create<text_view&>();
+    return use_gui_view ?
+      injector.template create<gui_view&>() :
+      injector.template create<text_view&>();
   })
 );
 ```
@@ -897,216 +911,6 @@ And our bindings...
 ```cpp
 di::bind<iclient*[]>.to<user, client>()
 ```
-
-----
-
-##Short and informative error messages
-
-----
-
-* Concepts emulation
-
-```cpp
-#define BOOST_DI_REQUIRES(...) \
-  typename enable_if<__VA_ARGS__, int>::type
-
-#define BOOST_DI_REQUIRES_MSG(...) \
-  typename concept_check<__VA_ARGS__>::type
-```
-
-----
-
-```cpp
-template <class T>
-struct concept_check {
-  static_assert(T::value, "constraint not satisfied");
-};
-
-template <>
-struct concept_check<true_type> {
-  using type = int;
-};
-```
-
-----
-
-```cpp
-auto injector = di::make_injector().create<iview&>();
-```
-
-----
-
-###Clang
-
-----
-
-```cpp
-error: 'create<app>' is deprecated: creatable constraint not satisfied
-  injector.create<app>();
-           ^
-note: 'create<app>' has been explicitly marked deprecated here
-  create
-  ^
-error: inline function 'abstract_type<iview>::is_not_bound::error'
- error(_ = "type is not bound, did you forget to add:
-           'di::bind<interface>.to<implementation>()'?");
-
-note: used here
-      return constraint_not_satisfied{}.error();
-```
-
-----
-
-###GCC
-
-----
-
-```cpp
-error: ‘T injector<...>::create() const [with T = app]’ is deprecated:
-  creatable constraint not satisfied
-   injector.create<app>();
-                        ^
-note declared here
-   create
-   ^
-error: inline function ‘T* abstract_type<T>::is_not_bound::error(_)
-  [with T = iview]’ used but never defined
-  error(_ = "type is not bound, did you forget to add:
-            'di::bind<interface>.to<implementation>()'?");
-```
-
-----
-
-###MSVC
-
-----
-
-```cpp
-error C4996: 'injector<...>::create': creatable constraint not
-                                      satisfied
-        with
-        [
-            TConfig=config
-        ]
-note see declaration of 'injector<...>::create'
-        with
-        [
-            TConfig=config
-        ]
-error C4506: no definition for inline function
-            'iview *abstract_type<T>::is_not_bound::error(_)'
-        with
-        [
-            T=iview
-        ]
-```
-
-----
-
-###BOOST DI CFG DIAGNOSTICS LEVEL
-
-----
-
-| Value | Description |
-| ------------------------------ | ----------- |
-| 0                              | 1 line error |
-| 1 (default)                    | as `0` + info why type couldn't be created + suggestion how to fix it |
-| 2                              | as `1` + call stack creation hierarchy |
-
-----
-
-##BOOST DI CFG DIAGNOSTICS LEVEL=0
-
-----
-
-```cpp
-error: 'create<app>' is deprecated: creatable constraint not satisfied
-```
-
-----
-
-##BOOST DI CFG DIAGNOSTICS LEVEL=1
-
-----
-
-```cpp
-error: 'create<app>' is deprecated: creatable constraint not satisfied
-  injector.create<app>();
-
-error: inline function 'abstract_type<iview>::is_not_bound::error'
- error(_ = "type is not bound, did you forget to add:
-           'di::bind<interface>.to<implementation>()'?");
-```
-----
-
-##BOOST DI CFG DIAGNOSTICS LEVEL=2
-
-----
-
-```cpp
-error: 'create<app>' is deprecated: creatable constraint not satisfied
-
-error: function ‘T creating<T>::type(_) [with T = app]’
-error: function ‘T creating<T>::type(_) [with T = controller]’
-
-error: inline function 'abstract_type<iview>::is_not_bound::error'
- error(_ = "type is not bound, did you forget to add:
-           'di::bind<interface>.to<implementation>()'?");
-```
-
-----
-
-###How?
-
-----
-
-Linking error + warning (inline function is not defined)
-
-----
-
-```cpp
-template <class T>
-struct abstract_type {
-  struct is_not_bound {
-    operator T*() const {
-      using constraint_not_satisfied = is_not_bound;
-      return constraint_not_satisfied{}.error();
-    }
-    // clang-format off
-    static inline T*
-      error(_ = "type is not bound, did you forget to add:
-          'di::bind<interface>.to<implementation>()'?");
-    // clang-format on
-  };
-```
-
-----
-
-Trigger the error
-
-----
-
-```cpp
-#pragma clang diagnostic error "-Wundefined-inline"
-```
-
-----
-
-```cpp
-  template <class T
-, BOOST_DI_REQUIRES(is_creatable<T, no_name, aux::true_type>{})>
-  T create() const {
-    return create_successful_impl<aux::true_type>(aux::type<T>{});
-  }
-
-  template <class T
-, BOOST_DI_REQUIRES(!is_creatable<T, no_name, aux::true_type>{})>
-  BOOST_DI_DEPRECATED("creatable constraint not satisfied")
-  T create() const {
-    return create_impl<aux::true_type>(aux::type<T>{});
-  }
-```
-
 
 ----
 
@@ -1305,6 +1109,356 @@ di::injector<app> app_module(const bool& use_gui_view) {
   injector.create<app>();
 ```
 
+
+==============================================================================
+
+##Error messages / Concepts
+
+----
+
+###Concepts emulation
+
+----
+
+###"Standard" way without concepts
+
+----
+
+```cpp
+#define REQUIRES(...) \
+  typename std::enable_if<__VA_ARGS__, int>::type = 0
+```
+
+----
+
+```cpp
+template <class...>
+using is_valid_expr = true_type;
+```
+
+```cpp
+template <class T>
+std::false_type providable_impl(...); // or some type error message
+
+template <class T>
+auto providable_impl(T&& t) -> is_valid_expr<
+  decltype(t.template is_creatable<T>()),
+  decltype(t.template get<T>())
+>;
+
+template <class T>
+constexpr auto providable() {
+  return decltype(providable_impl(std::declval<T>()))::value;
+}
+```
+
+----
+
+###How to get better error messages?
+
+----
+
+###Transport the substitution failures
+
+----
+
+```cpp
+#define REQUIRES(...) \
+  typename get_errors_from_types<__VA_ARGS__>::type
+```
+
+----
+
+###Problem
+
+> User-defined/implicit/generic conversion operator
+
+----
+
+```cpp
+struct any_type {
+  template<class T>
+  constexpr operator T(); // no easy way to return a failure from T
+};
+```
+
+----
+
+###Solution
+
+----
+
+###Split concepts emulation into 2 parts
+
+----
+
+###Check the predicate
+
+----
+
+###Display the error message
+
+----
+
+###How?
+
+----
+
+###Creatable
+
+----
+
+```cpp
+template <class T, class TDependency = binder::resolve_t<T>>
+using creatable = std::is_convertible<
+  TDependency::template try_create<
+    T, try_provider<ctor_traits<typename TDependency::impl>>
+  >;
+>;
+```
+
+----
+
+```cpp
+struct any_type {
+  template <class T, REQUIRES(creatable<T>())>
+  constexpr operator T(); // disabled when type is not creatable
+};
+```
+
+----
+
+```cpp
+template<class T, class... TArgs, // TArgs migth be disabled by any_type
+  REQUIRES(std::is_constructible<T, TArgs...>{})>
+constexpr auto create_impl(TArgs&&... args) {
+  return T{std::forward<TArgs>(args...)};
+}
+
+template<class T, class... TArgs, 
+  REQUIRES(!std::is_constructible<T, TArgs...>{})>
+constexpr auto create_impl(TArgs&&... args) {
+  return show_the_error<T>{};
+}
+```
+
+----
+
+###Show the error
+
+----
+
+```cpp
+template<class T>
+constexpr auto show_the_error() {
+  return aux::is_polymorphic<T>{} ? // return the proper type
+    abstract_type<T>::is_not_bound{} : 
+    type<T>::cant_be_created{}; // simplified version
+};
+```
+
+----
+
+> Static inline function without implementation will show 
+  a warning without a CALL STACK!
+
+----
+
+###Abstract type is not bound
+
+----
+
+```cpp
+template <class T>
+struct abstract_type {
+  struct is_not_bound {
+    constexpr operator T() const { return error(); }
+
+    // no implementation
+    static inline T
+      error(_ = "type is not bound, did you forget to add:
+          'di::bind<interface>.to<implementation>()'?");
+  };
+};
+```
+
+----
+
+###Change the warning into error
+
+----
+
+```cpp
+#if defined(__clang__)
+#pragma clang diagnostic error "-Wundefined-inline"
+#elif defined(__GCC__)
+#pragma GCC diagnostic error "-Werror"
+#elif defined(__MSVC__)
+#pragma warning(disable : 4822) // function does not have a body
+#endif
+```
+
+----
+
+###From top to bottom
+
+----
+
+```cpp
+template <class T, REQUIRES(creatable<T>())>
+constexpr T create() const {
+  return create_successful_impl(type<T>{}); // compilation time speed up
+}
+
+template <class T, REQUIRES(!creatable<T>())>
+[[deprecated("creatable constraint not satisfied")]]
+constexpr T create() const {
+  return create_impl(type<T>{});
+}
+```
+
+----
+
+###Example
+
+----
+
+```cpp
+struct renderer {
+  int device;
+};
+class view {
+public:
+  view(std::string title, const renderer&);
+};
+class model {};
+class controller {
+public:
+  controller(model&, view&) {}
+};
+class user {};
+class app {
+public:
+  app(controller&, user&) {}
+};
+```
+
+```cpp
+auto injector = di::make_injector(); // no bindings for iview
+injector.create<app>();
+```
+
+----
+
+###Clang
+
+----
+
+```cpp
+error: 'create<app>' is deprecated: creatable constraint not satisfied
+  injector.create<app>();
+           ^
+note 'create<app>' has been explicitly marked deprecated here
+  create
+  ^
+error: inline function 'abstract_type<iview>::is_not_bound::error'
+ error(_ = "type is not bound, did you forget to add:
+           'di::bind<interface>.to<implementation>()'?");
+```
+
+----
+
+###GCC
+
+----
+
+```cpp
+error: ‘T injector<...>::create() const [with T = app]’ is deprecated:
+  creatable constraint not satisfied
+   injector.create<app>();
+                        ^
+note declared here
+   create
+   ^
+error: inline function ‘abstract_type<T>::is_not_bound::error(_)
+  [with T = iview]’ used but never defined
+  error(_ = "type is not bound, did you forget to add:
+            'di::bind<interface>.to<implementation>()'?");
+```
+
+----
+
+###MSVC
+
+----
+
+```cpp
+error C4996: 'injector<...>::create': creatable constraint not
+                                      satisfied
+        with
+        [
+            TConfig=config
+        ]
+note see declaration of 'injector<...>::create'
+        with
+        [
+            TConfig=config
+        ]
+error C4506: no definition for inline function
+            'abstract_type<T>::is_not_bound::error(_)'
+        with
+        [
+            T=iview
+        ]
+```
+
+----
+
+###BOOST DI CFG DIAGNOSTICS LEVEL
+
+----
+
+##BOOST DI CFG DIAGNOSTICS LEVEL=0
+
+----
+
+```cpp
+error: 'create<app>' is deprecated: creatable constraint not satisfied
+```
+
+----
+
+##BOOST DI CFG DIAGNOSTICS LEVEL=1
+
+> Default
+
+----
+
+```cpp
+error: 'create<app>' is deprecated: creatable constraint not satisfied
+  injector.create<app>();
+
+error: inline function 'abstract_type<iview>::is_not_bound::error'
+ error(_ = "type is not bound, did you forget to add:
+           'di::bind<interface>.to<implementation>()'?");
+```
+----
+
+##BOOST DI CFG DIAGNOSTICS LEVEL=2
+
+----
+
+```cpp
+error: 'create<app>' is deprecated: creatable constraint not satisfied
+
+error: function ‘T creating<T>::type(_) [with T = app]’
+error: function ‘T creating<T>::type(_) [with T = controller]’
+
+error: inline function 'abstract_type<iview>::is_not_bound::error'
+ error(_ = "type is not bound, did you forget to add:
+           'di::bind<interface>.to<implementation>()'?");
+```
+
 ==============================================================================
 
 ##Extensions
@@ -1482,6 +1636,8 @@ serialize(injector, str);
 deserialize(injector, str);
 ```
 
+----
+
 ```cpp
 example->data unsigned_int 13
 example->data long 23
@@ -1500,7 +1656,7 @@ example->more_data short 77
 
 ----
 
-###Disallow types which are not PODs or are not bound
+###Let's Disallow types which are not PODs or are not bound
 
 ----
 
@@ -1632,14 +1788,12 @@ auto&& v = get_mock<iview>();
 When(Method(v, update)).AlwaysDo([]{...});
 ```
 
-----
-###Check it out...
 ---
 https://github.com/modern-cpp-examples/match3
 
 ----
 
-###More extensions...
+###More extensions
 
 ---
 
@@ -1937,18 +2091,18 @@ https://wandbox.com
 ----
 
 ```cpp
-  template <class T> requires creatable<T>()
-  T create() const {
-    // no checks for errors!
-    return create_successful_impl(type<T>{});
-  }
+template <class T> requires creatable<T>()
+constexpr T create() const {
+  // no checks for errors!
+  return create_successful_impl(type<T>{});
+}
 
-  template <class T> requires !creatable<T>()
-  [[deprecated("creatable constraint not satisfied")]]
-  T create() const {
-    // checks for errors to report it
-    return create_impl(type<T>{});
-  }
+template <class T> requires !creatable<T>()
+[[deprecated("creatable constraint not satisfied")]]
+constexpr T create() const {
+  // checks for errors to report it
+  return create_impl(type<T>{});
+}
 ```
 
 ----
