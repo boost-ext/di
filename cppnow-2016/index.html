@@ -1488,6 +1488,15 @@ error: inline function 'abstract_type<iview>::is_not_bound::error'
 
 ----
 
+* Scopes
+  * Customize object life time
+* Policies
+  * Check/Visit created objects
+* Providers
+  * Customize object creation
+
+----
+
 ###Print types / Policy
 
 ----
@@ -1838,7 +1847,7 @@ https://github.com/modern-cpp-examples/match3
 
 ----
 
-2.3 GHz Intel Core i7 / 16 GB 1600 Mhz DDR3
+###2.3 GHz Intel Core i7 / 16 GB 1600 Mhz DDR3
 
 ----
 
@@ -1886,7 +1895,7 @@ return 42;
 
 ----
 
-No run-time branches as everything is known at compile time and might be optimized!
+###No run-time branches as everything is known at compile-time and might be optimized!
 
 ----
 
@@ -2030,7 +2039,8 @@ template<class T>
 struct dependency_concept { };
 
 template<class I, class Impl>
-struct dependency : pair<dependency_concept<I>, dependency<I, Impl>> { };
+struct dependency 
+  : pair<dependency_concept<I>, dependency<I, Impl>> { };
 
 template<class... Ts>
 struct injector : Ts...  { };
@@ -2205,9 +2215,9 @@ static auto make_injector_impl = [](auto injector) {
 
 ----
 
-##More Benchmarks...
+##More Benchmarks
 
-----
+---
 
 http://boost-experimental.github.io/di/overview
 
@@ -2268,9 +2278,20 @@ public:
 
 ```cpp
 auto injector = di::make_injector(
-  di::bind<int>.named("int_a").to(42)
-, di::bind<int>.named("int_b").to(87)
+  di::bind<int>.named("int_a"_s).to(42)
+, di::bind<int>.named("int_b"_s).to(87)
 );
+```
+
+----
+
+###Compile-time string
+
+----
+
+```cpp
+template <class T, T... Ts>
+constexpr auto operator""_s();
 ```
 
 ==============================================================================
