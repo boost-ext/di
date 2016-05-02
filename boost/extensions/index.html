@@ -429,7 +429,7 @@ struct even_more_data {
 
 struct more_data {
   int i;
-  char c;
+  long double ld;
   even_more_data d;
   short s;
 };
@@ -442,7 +442,7 @@ struct example {
     d.l = 23l;
     d.f = .33f;
     md.i = 44;
-    md.c = 'c';
+    md.ld = 42.0;
     md.d.d = 55.0;
     md.d.b = true;
     md.d.ll = 66ll;
@@ -454,7 +454,7 @@ struct example {
     d.l = {};
     d.f = {};
     md.i = {};
-    md.c = {};
+    md.ld = {};
     md.d.d = {};
     md.d.b = {};
     md.d.ll = {};
@@ -477,7 +477,7 @@ int main() {
     assert(0 == object.d.l);
     assert(.0f == object.d.f);
     assert(42 == object.md.i);  // bound
-    assert(char{} == object.md.c);
+    assert(0.0 == object.md.ld);
     assert(0.0 == object.md.d.d);
     assert(false == object.md.d.b);
     assert(0 == object.md.d.ll);
@@ -491,7 +491,7 @@ int main() {
     assert(23 == object.d.l);
     assert(.33f == object.d.f);
     assert(44 == object.md.i);
-    assert('c' == object.md.c);
+    assert(42.0 == object.md.ld);
     assert(55.0 == object.md.d.d);
     assert(true == object.md.d.b);
     assert(66 == object.md.d.ll);
@@ -512,7 +512,7 @@ int main() {
     assert(23 == object.d.l);
     assert(.33f == object.d.f);
     assert(44 == object.md.i);
-    assert('c' == object.md.c);
+    assert(42.0 == object.md.ld);
     assert(55.0 == object.md.d.d);
     assert(true == object.md.d.b);
     assert(66 == object.md.d.ll);
