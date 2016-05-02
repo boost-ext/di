@@ -170,6 +170,10 @@ Notice that **ORDER** in which above dependencies are created is **IMPORTANT** a
 
 ----
 
+###Showcase
+
+----
+
 DI library, not only let you forget about maintaining this code,
 but also can help you with...
 
@@ -220,7 +224,7 @@ Let's make a web match-3 game in C++14
 
 ----
 
-Writing a DI library in C++ is not an easy task
+###Writing a DI library in C++ is not an easy task
 
 ----
 
@@ -470,7 +474,7 @@ struct Renderer {
 };
 class View {
 public:
-  View(std::string title, const renderer&);
+  View(std::string title, const Renderer&);
 };
 class Model {};
 class Controller {
@@ -1301,25 +1305,345 @@ di::injector<app> app_module(const bool& use_gui_view) {
   injector.create<app>();
 ```
 
-----
+==============================================================================
 
 ##Extensions
 
 ----
 
-serialziation
+###Provide an easy way to extend DI functionality without changing the core
 
 ----
 
-is_constructible
+###Print types / Policy
 
 ----
 
-print types/uml
+```cpp
+struct types_dumper : di::config {
+  static auto policies(...) noexcept {
+    return di::make_policies([](auto type) {
+      using T = decltype(type);
+      using ctor = typename T::type;
+      using impl = typename T::given;
+      std::cout << ... << std::endl;
+    });
+  }
+};
+```
 
 ----
 
-mocks injector
+###Example Output
+
+----
+
+```cpp
+class iview { 
+public:
+  virtual ~iview() noexcept = default;
+  virtual void update() =0; 
+};
+struct model { std::vector<int> board; };
+class controller {
+public:
+  controller(model&, iview&) {} 
+};
+struct user {};
+
+class app {
+public:
+  app(controller&, user&) {}
+};
+```
+
+----
+
+```cpp
+auto injector = di::make_injector<types_dumper>(
+  di::bind<iview>.to<gui_view>()
+);
+
+injector.create<app>();
+```
+
+* app
+    * controller
+        * model
+            * int[]
+        * iview -> gui_view
+    * user
+
+----
+
+###Serialize / Policy
+
+> PODs only
+
+----
+
+###Serializable
+
+----
+
+```cpp
+struct serializable : di::config {
+  template <class TInjector>
+  static auto policies(const TInjector& injector) noexcept {
+    return di::make_policies([&](auto type) {
+      using T = decltype(type);
+      ...
+      auto& serialize = injector.template create<serializable&>();
+      auto ptr = reinterpret_cast<char*>(&injector.template create<T&>());
+      const auto offset = calculate_offset(sizeof(T), alignof(T));
+      serialize.emplace_back({get_type<T>(), ptr, offset});
+      ...
+    }
+  }
+};
+```
+
+----
+
+###Serialize
+
+----
+
+```cpp
+auto serialize = [](const auto& injector, auto& str) {
+  serializable_call_t::apply(injector, [&](const auto& o, auto t) {
+    str << o.path << " " 
+        << o.type << " " 
+        << o.offset << " "
+        << std::to_string(
+             *reinterpret_cast<decltype(t)*>(o.ptr() + o.offset)
+           ) 
+        << std::endl;
+  });
+};
+```
+
+----
+
+###Deserialize
+
+----
+
+```cpp
+auto deserialize = [](const auto& injector, auto& str) {
+  serializable_call_t::apply(
+    injector, [&](const auto& o, auto t, auto line) {
+    std::string line, path, type;
+    decltype(t) value = {};
+    auto offset = 0;
+    std::istringstream iss{line};
+    iss >> path >> type >> offset >> value;
+    *reinterpret_cast<decltype(t)*>(o.ptr() + offset) = value;
+  });
+};
+```
+
+----
+
+###Example Output
+
+----
+
+```cpp
+struct data { unsigned int ui; long l; float f; };
+struct even_more_data { double d; bool b; long long ll; };
+struct more_data { int i; long double ld; even_more_data d; short s; };
+
+class example {
+public:
+  example(data& d, more_data& md) : d(d), md(md) {}
+
+  void update(); // change data, more_data
+
+private:
+  data& d;
+  more_data& md;
+};
+```
+
+----
+
+```cpp
+auto injector = di::make_injector<serializable>();
+injector.create<example>();
+```
+
+```cpp
+std::stringstream str;
+serialize(injector, str);
+```
+
+```cpp
+deserialize(injector, str);
+```
+
+```cpp
+example->data unsigned_int 13
+example->data long 23
+example->data float 0.330000
+example->more_data int 44
+example->more_data long_double 42.000000
+example->more_data->even_more_data double 55.000000
+example->more_data->even_more_data bool 1
+example->more_data->even_more_data long_long 66
+example->more_data short 77
+```
+
+----
+
+###Constructible / Policy
+
+----
+
+###Disallow types which are not PODs or are not bound
+
+----
+
+```cpp
+struct is_pod_or_is_bound : di::config {
+  static auto policies(...) noexcept {
+    using namespace di::policies;
+    return di::make_policies(
+      constructible(std::is_pod<_>{} || is_bound<_>{})
+    );
+  }
+};
+```
+
+----
+
+```cpp
+struct not_a_pod { virtual ~not_a_pod() = default; };
+struct example { example(not_a_pod, int, double) { } };
+```
+
+```cpp
+auto injector = di::make_injector<is_pod_or_is_bound>(
+  di::bind<>().to(42)
+, di::bind<not_a_pod>().to(not_a_pod{})
+);
+
+injector.create<example>();
+```
+
+----
+
+###Error case / compilation error
+
+----
+
+```cpp
+di::make_injector<is_pod_or_is_bound>().create<example>();
+```
+
+```cpp
+error: 'create<example>' is deprecated: creatable constraint not satisfied
+  injector.create<example>();
+           ^
+error: inline function 'type<not_a_pod>::not_allowed_by<
+  or_<std::is_pod<_>, is_bound<_>>>::error'
+
+  error(_ = "type disabled by constructible policy
+           , added by BOOST_DI_CFG or make_injector<CONFIG>!");
+```
+
+----
+
+###Mocks injector / Provider
+
+----
+
+###Automatic injection of mocks for interfaces
+
+----
+
+```cpp
+struct mocks_provider : di::config {
+  struct mock_provider {
+    template <class T, class TInit, class TMemory, class... TArgs>
+    std::enable_if_t<!std::is_polymorphic<T>::value, T*> get(
+    get(const TInit&, const TMemory&, TArgs&&... args) {
+      return new T{std::forward<TArgs>(args)...);
+    }
+
+    template <class T, class TInit, class TMemory, class... TArgs>
+    std::enable_if_t<std::is_polymorphic<T>::value, T*> get(
+      return &get_mock<T>();
+    }
+  };
+
+public:
+  static auto provider(...) noexcept { return mock_provider{}; }
+};
+```
+
+----
+
+###Get mock
+
+---
+
+> https://github.com/eranpeer/FakeIt
+https://github.com/dascandy/hippomocks
+
+----
+
+###Example
+
+----
+
+```cpp
+class iview { 
+public:
+  virtual ~iview() noexcept = default;
+  virtual void update() =0; 
+};
+struct model { std::vector<int> board; };
+class controller {
+public:
+  controller(model&, iview&) {} 
+};
+struct user {};
+
+class app {
+public:
+  app(controller&, user&) {}
+};
+```
+
+----
+
+```cpp
+auto injector = di::make_injector<mocks_provider>(
+  di::bind<int[]>.to({1, 2, 3, 4, 5, 6})
+  // we don't have to bind iview!
+);
+
+injector.create<app>();
+```
+
+```cpp
+auto&& v = get_mock<iview>();
+When(Method(v, update)).AlwaysDo([]{...});
+```
+
+----
+###Check it out...
+---
+https://github.com/modern-cpp-examples/match3
+
+----
+
+###More extensions...
+
+---
+
+http://boost-experimental.github.io/di/extensions
 
 ==============================================================================
 
