@@ -130,7 +130,7 @@ private:
 
 * DI promote loosely coupled code
   * Separation of business logic and object creation
-  
+
 * DI creates easier to maintain code
   * Different objects might be easily injected
 
@@ -164,7 +164,7 @@ auto create() {
 
 ----
 
-* ORDER in which above dependencies are created is **IMPORTANT** 
+* ORDER in which above dependencies are created is **IMPORTANT**
 
 * **ANY** change in **ANY** of the objects constructor will **REQUIRE** a change in the code
 
@@ -184,7 +184,7 @@ http://wandbox.com
 
 * Testing
   * Mocks injector
-* Serializing 
+* Serializing
   * Automatic serialization of PODs
 * Understanding dependencies
   * Dump types relationship
@@ -1971,17 +1971,28 @@ int main() {}
 
 ----
 
-![Performance](images/performance.png)
+![Performance](images/performance_small.png)
 
 ```cpp
-* 4248897537 instances created
-* 132 different types
-* 10 modules
+4248897537 instances created
+132 different types
+10 modules
 ```
 
 ----
 
-##Speed up compilation times
+![Performance](images/performance_big.png)
+
+```cpp
+5874638529236910091 instances created
+310 different types
+100 different interfaces
+10 modules
+```
+
+----
+
+##How to speed up compilation times?
 
 ----
 
@@ -2040,7 +2051,7 @@ template<class T>
 struct dependency_concept { };
 
 template<class I, class Impl>
-struct dependency 
+struct dependency
   : pair<dependency_concept<I>, dependency<I, Impl>> { };
 
 template<class... Ts>
