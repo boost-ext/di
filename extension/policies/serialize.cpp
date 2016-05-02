@@ -9,6 +9,8 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <iostream>
+#include <algorithm>
 #include <functional>
 //->
 #include <boost/di.hpp>
@@ -18,19 +20,22 @@ namespace di = boost::di;
 //<-
 template <class T>
 auto get_type() {
+  std::string result;
 #if defined(_MSC_VER)
   auto type = std::string{&__FUNCSIG__[22]};
   const auto i = type[0] == ' ' ? 1 : 0;
-  return type.substr(i, type.length() - 7 - i);
+  result = type.substr(i, type.length() - 7 - i);
 #elif defined(__clang__)
   auto type = std::string{&__PRETTY_FUNCTION__[21]};
-  return type.substr(0, type.length() - 1);
+  result = type.substr(0, type.length() - 1);
 #elif defined(__GCC__)
   auto type = std::string{&__PRETTY_FUNCTION__[26]};
-  return type.substr(0, type.length() - 1);
+  result = type.substr(0, type.length() - 1);
 #else
 #error "Platform not supported!"
 #endif
+  std::replace(result.begin(), result.end(), ' ', '_');
+  return result;
 }
 
 struct archive {
@@ -151,27 +156,22 @@ using serializable_call_t = serializable_call<
 
 auto serialize = [](const auto& injector, auto& str) {
   serializable_call_t::apply(injector, [&](const auto& o, auto t) {
-    str << o.path << ", " << o.type << ", " << o.offset << ", "
+    str << o.path << " " << o.type << " " << o.offset << " "
         << std::to_string(*reinterpret_cast<decltype(t)*>(o.ptr() + o.offset)) << std::endl;
   });
 };
 
 auto deserialize = [](const auto& injector, auto& str) {
-  auto split = [](auto&& txt) {
-    std::stringstream s;
-    s << txt;
-    std::vector<std::string> tokens;
-    for (std::string line; std::getline(s, line, ',');) {
-      tokens.push_back(line);
-    }
-    return tokens;
-  };
-
   serializable_call_t::apply(injector, [&](const auto& o, auto t) {
+    std::string line, path, type;
+    decltype(t) value = {};
+    auto offset = 0;
+
     for (std::string line; std::getline(str, line);) {
-      if (o.type == get_type<decltype(t)>()) {
-        auto&& v = split(line);
-        *reinterpret_cast<decltype(t)*>(o.ptr() + std::atoi(v[2].c_str())) = decltype(t)(std::atof(v[3].c_str()));
+      std::istringstream iss{line};
+      iss >> path >> type >> offset >> value;
+      if (type == o.type) {
+        *reinterpret_cast<decltype(t)*>(o.ptr() + offset) = value;
         break;
       }
     }
@@ -193,7 +193,7 @@ struct even_more_data {
 
 struct more_data {
   int i;
-  char c;
+  long double ld;
   even_more_data d;
   short s;
 };
@@ -206,7 +206,7 @@ struct example {
     d.l = 23l;
     d.f = .33f;
     md.i = 44;
-    md.c = 'c';
+    md.ld = 42.0;
     md.d.d = 55.0;
     md.d.b = true;
     md.d.ll = 66ll;
@@ -218,7 +218,7 @@ struct example {
     d.l = {};
     d.f = {};
     md.i = {};
-    md.c = {};
+    md.ld = {};
     md.d.d = {};
     md.d.b = {};
     md.d.ll = {};
@@ -243,7 +243,7 @@ int main() {
     assert(0 == object.d.l);
     assert(.0f == object.d.f);
     assert(42 == object.md.i);  // bound
-    assert(char{} == object.md.c);
+    assert(0.0 == object.md.ld);
     assert(0.0 == object.md.d.d);
     assert(false == object.md.d.b);
     assert(0 == object.md.d.ll);
@@ -257,7 +257,7 @@ int main() {
     assert(23 == object.d.l);
     assert(.33f == object.d.f);
     assert(44 == object.md.i);
-    assert('c' == object.md.c);
+    assert(42.0 == object.md.ld);
     assert(55.0 == object.md.d.d);
     assert(true == object.md.d.b);
     assert(66 == object.md.d.ll);
@@ -278,7 +278,7 @@ int main() {
     assert(23 == object.d.l);
     assert(.33f == object.d.f);
     assert(44 == object.md.i);
-    assert('c' == object.md.c);
+    assert(42.0 == object.md.ld);
     assert(55.0 == object.md.d.d);
     assert(true == object.md.d.b);
     assert(66 == object.md.d.ll);
