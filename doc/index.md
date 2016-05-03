@@ -78,6 +78,8 @@ app app_{controller_, user_};
 Notice that **ORDER** in which above dependencies are created is **IMPORTANT** as well as that
 **ANY** change in **ANY** of the objects constructor will **REQUIRE** a change in this code!
 
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/motivation.cpp)
+
 DI library, not only let you forget about maintaining above code (See [Create Objects Tree](tutorial.md#1-basic-create-objects-tree)),
 but also can help you with...
 
@@ -90,7 +92,7 @@ but also can help you with...
 
 * [Match-3 Game](https://github.com/modern-cpp-examples/match3)
     * Simple web game in C++14 using SDL2 / Model View Controller / Meta State Machine / Dependency Injection / Range-V3 / Emscripten
-    * [Play it online!](http://modern-cpp-examples.github.io/match3)
+        * [Play it online!](http://modern-cpp-examples.github.io/match3)
 
 >
 
