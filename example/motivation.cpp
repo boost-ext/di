@@ -46,12 +46,14 @@ int main() {
   controller controller_{model_, view_};
   user user_;
   app app_{controller_, user_};
+  (void)app_;
   }
 
   /// DEPENDENCY INJECTION
   {
   auto injector = di::make_injector();
   auto app_ = injector.create<app>();
+  (void)app_;
   }
 }
 #endif
@@ -73,12 +75,14 @@ int main() {
   controller controller_{view_, model_}; /// CHANGE
   user user_;
   app app_{controller_, user_};
+  (void)app_;
   }
 
   /// DEPENDENCY INJECTION
   {
   auto injector = di::make_injector();
   auto app_ = injector.create<app>();
+  (void)app_;
   }
 }
 #endif
@@ -101,12 +105,14 @@ int main() {
   controller controller_{view_, model_, configuration{}}; /// CHANGE
   user user_;
   app app_{controller_, user_};
+  (void)app_;
   }
 
   /// DEPENDENCY INJECTION
   {
   auto injector = di::make_injector();
   auto app_ = injector.create<app>();
+  (void)app_;
   }
 }
 #endif
