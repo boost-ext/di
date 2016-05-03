@@ -80,13 +80,15 @@ Notice that **ORDER** in which above dependencies are created is **IMPORTANT** a
 
 ![CPP(BTN)](Run_Motivation_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/motivation.cpp)
 
+<br /><br />
+
 DI library, not only let you forget about maintaining above code (See [Create Objects Tree](tutorial.md#1-basic-create-objects-tree)),
 but also can help you with...
 
-* Test it (See [Mocks Provider](extensions.md#mocks-provider))
-* Serialize it (See [Serialize](extensions.md#serialize))
-* Understand your dependencies (See [UML Dumper](extensions.md#uml-dumper))
-* And even restrict what types and how they should be created (See [Constructible Policy](user_guide.md#di_constructible))
+* Testing it (See [Mocks Provider](extensions.md#mocks-provider))
+* Serializing it (See [Serialize](extensions.md#serialize))
+* Understand code dependencies (See [UML Dumper](extensions.md#uml-dumper))
+* Restrict what types and how they should be created (See [Constructible Policy](user_guide.md#di_constructible))
 
 ###Real Life examples?
 
