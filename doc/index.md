@@ -133,6 +133,10 @@ but also can help you with...
 * Be as non-intrusive as possible (See [Injections](user_guide.md#injections))
 * Be easy to extend (See [Extensions](extensions.md))
 
+###Related materials
+
+* [CppNow-2016:](https://cppnow2016.sched.org/event/6Sfx/c14-dependency-injection-library-with-no-overhead-and-compile-time-guarantee-of-object-creation) [C++14 Dependency Injection Library with no overhead and compile time guarantee of object creation](http://boost-experimental.github.io/di/cppnow-2016)
+
 ###Acknowledgements
 * Thanks to Bartosz Kalinczuk for code review and tips how to improve `Boost.DI`
 * Thanks to Sohail Somani for support and tips how to improve `Boost.DI`
