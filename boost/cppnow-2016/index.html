@@ -170,7 +170,7 @@ auto create() {
 
 ----
 
-###Showcase
+###Showcase / Motivation
 
 ---
 
@@ -183,13 +183,13 @@ http://wandbox.com
 ----
 
 * Testing
-  * Mocks injector
+  * [Mocks provider](http://boost-experimental.github.io/di/extensions/index.html#mocks-provider)
 * Serializing
-  * Automatic serialization of PODs
+  * [Automatic serialization of PODs](http://boost-experimental.github.io/di/extensions/index.html#serialize)
 * Understanding dependencies
-  * Dump types relationship
+  * [Dump relationship between types](http://boost-experimental.github.io/di/extensions/index.html#uml-dumper)
 * Restricting allowed types
-  * Disallow raw pointers, etc.
+  * [Disallow raw pointers, etc.](http://boost-experimental.github.io/di/user_guide/index.html#di_constructible)
 
 ----
 
@@ -340,14 +340,15 @@ https://github.com/boost-experimental/di/tree/cpp14
 
 ----
 
-* Travis/Appveyor build on Linux/OS X/Windows (Boost-Build/CMake)
-  * Clang-3.4/3.5/3.6/3.7/3.8 (libc++ / stdlibc++)
+* Build with `-Wall -Wextra -Werror -pedantic -pedantic-errors`
+* Travis/Appveyor build on Linux/OS X/Windows (`Boost-Build/CMake`)
+  * Clang-3.4/3.5/3.6/3.7/3.8 (`libc++/stdlibc++`)
   * GCC-5
   * MSVC-2015
 * Clang static analysis / Clang-tidy (static check)
 * Valgrind / Dr. Memory (dynamic memory check)
 * Clang-format (style check)
-* Deploy documentation to 'GitHub/gh-pages'
+* Documentation deployment to 'GitHub/gh-pages'
 
 ----
 
@@ -580,7 +581,7 @@ int main() {
     std::is_constructible<example, any_type, any_type>::value);
 }
 ```
-https://wandbox.com
+http://melpon.org/wandbox/permlink/55bToJVYIWO4gald
 
 ----
 
@@ -588,24 +589,21 @@ https://wandbox.com
 
 ----
 
-It doesn't work for constructor with one parameter!
-
-> Copy constructor / Move constructor
-
----
-
-> Generic converting constructor
-```cpp
-class example {
-public:
-  template<class T>
-  example(T); // non explicit
-};
-```
+###Copy constructor / Move constructor
 
 ----
 
-###Disable the operator when type T is convertible to the parent type
+```cpp
+  static_assert(
+    !std::is_constructible<example, any_type>::value); // always fails
+```
+http://melpon.org/wandbox/permlink/KFYmTrdJpTjB6UEr
+
+----
+
+###Solution
+
+> Disable the operator when type T is convertible to the parent type
 
 ----
 
@@ -626,7 +624,40 @@ int main() {
     !std::is_constructible<example, any_type<example>>::value);
 }
 ```
-https://wandbox.com
+http://melpon.org/wandbox/permlink/v7OIgdzA81TtVF5a
+
+----
+
+###Generic converting constructor
+
+----
+
+```cpp
+class example {
+public:
+  template<class T>
+  example(T); // non explicit
+};
+```
+
+----
+
+###Solution
+
+> Restrict allowed types `T` / Register constructor explicitly via [inject]
+
+----
+
+```cpp
+template<typename _Res, typename... _ArgTypes>
+class function<_Res(_ArgTypes...)> {
+public:
+  ...
+  template<typename _Functor,
+	         typename = _Requires<_Callable<_Functor>, void>>
+	function(_Functor);
+};
+```
 
 ----
 
@@ -669,7 +700,7 @@ int main() {
     std::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE>{}));
 }
 ```
-https://wandbox.com
+http://melpon.org/wandbox/permlink/xoKrb40GYTi5deoJ
 
 ----
 
@@ -835,7 +866,6 @@ struct T { // create using uniform initialization
  );
  injector.create<T>(); // will create T{i, 87.0};
 ```
-https://wandbox.com
 
 ----
 
@@ -1992,7 +2022,7 @@ int main() {}
 
 ----
 
-##How to speed up compilation times?
+##How quick compilation times were achived?
 
 ----
 
@@ -2103,7 +2133,7 @@ static_assert(std::is_same<default_dependency,
   )>>{}
 );
 ```
-https://wandbox.com
+http://melpon.org/wandbox/permlink/yMIaCIIDtjBXmV0E
 
 ----
 

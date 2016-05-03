@@ -30,6 +30,7 @@ template <class T, std::size_t... Ns>
 constexpr auto ctor(std::index_sequence<Ns...>) noexcept {
   auto value = 0;
   int _[]{0, (is_constructible<T, std::make_index_sequence<Ns>>{} ? value = Ns : value)...};
+  (void)_;
   return value;
 }
 
