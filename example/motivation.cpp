@@ -40,20 +40,20 @@ class controller {
 int main() {
   /// NO DEPENDENCY INJECTION
   {
-  renderer renderer_;
-  view view_{"", renderer_};
-  model model_;
-  controller controller_{model_, view_};
-  user user_;
-  app app_{controller_, user_};
-  (void)app_;
+    renderer renderer_;
+    view view_{"", renderer_};
+    model model_;
+    controller controller_{model_, view_};
+    user user_;
+    app app_{controller_, user_};
+    (void)app_;
   }
 
   /// DEPENDENCY INJECTION
   {
-  auto injector = di::make_injector();
-  auto app_ = injector.create<app>();
-  (void)app_;
+    auto injector = di::make_injector();
+    auto app_ = injector.create<app>();
+    (void)app_;
   }
 }
 #endif
@@ -116,4 +116,3 @@ int main() {
   }
 }
 #endif
-
