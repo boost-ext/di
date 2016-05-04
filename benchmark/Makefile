@@ -23,7 +23,7 @@ $(FRAMEWORKS)/base:
 $(FRAMEWORKS)/fruit:
 	@-mkdir -p $(FRAMEWORKS) 2>/dev/null
 	git clone https://github.com/google/fruit.git $(FRAMEWORKS)/fruit
-	cd $(FRAMEWORKS)/fruit && mkdir build && cd build && cmake .. && cmake --build .
+	cd $(FRAMEWORKS)/fruit && mkdir .build && cd .build && cmake .. && cmake --build .
 
 $(FRAMEWORKS)/di:
 	@-mkdir -p $(FRAMEWORKS) 2>/dev/null
@@ -70,9 +70,9 @@ di: gen_di
 	cd .di && time ./di.out
 
 fruit: gen_fruit
-	cd .fruit && time $(CXX) -DFRUIT_NO_LOOP_CHECK fruit.cpp -std=c++11 -O2 -I.. -I ../$(FRAMEWORKS)/fruit/include -I ../$(FRAMEWORKS)/fruit/build/include -L ../$(FRAMEWORKS)/fruit/build/src -lfruit -o fruit.out
+	cd .fruit && time $(CXX) -DFRUIT_NO_LOOP_CHECK fruit.cpp -std=c++11 -O2 -I.. -I ../$(FRAMEWORKS)/fruit/include -I ../$(FRAMEWORKS)/fruit/.build/include -L ../$(FRAMEWORKS)/fruit/.build/src -lfruit -o fruit.out
 	cd .fruit strip fruit.out && ls -lh fruit.out
-	cd .fruit && time LD_LIBRARY_PATH=../$(FRAMEWORKS)/fruit/build/src ./fruit.out || exit 1
+	cd .fruit && time LD_LIBRARY_PATH=../$(FRAMEWORKS)/fruit/.build/src ./fruit.out || exit 1
 
 hypodermic: gen_hypodermic
 	cd .hypodermic && time $(CXX) hypodermic.cpp -std=c++11 -O2 -I.. -I ../$(FRAMEWORKS)/hypodermic -o hypodermic.out
