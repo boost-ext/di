@@ -12,13 +12,10 @@ JAVAC?=javac
 SC?=mcs
 
 benchmark:
-	@echo "--------------"
-	@echo BENCHMARK: TYPES=$(TYPES) CTOR_ARGS=$(CTOR_ARGS) ITERATIONS=$(ITERATIONS) TEST=$(TEST)
-	@echo "--------------"
-	@make TYPES=128 CTOR_ARGS=4 ITERATIONS=1024 TEST=unique base di fruit guice dagger2 ninject -j1
-	#@make TYPES=256 CTOR_ARGS=4 ITERATIONS=1024 TEST=unique base di fruit guice dagger2 ninject -j1
-	#@make TYPES=512 CTOR_ARGS=4 ITERATIONS=1024 TEST=unique base di fruit guice dagger2 ninject -j1
-	#@make TYPES=1024 CTOR_ARGS=4 ITERATIONS=1024 TEST=unique base di fruit guice dagger2 ninject -j1
+	make TYPES=128 CTOR_ARGS=4 ITERATIONS=1024 TEST=unique base di fruit guice dagger2 ninject -j1
+	make TYPES=256 CTOR_ARGS=4 ITERATIONS=1024 TEST=unique base di fruit guice dagger2 ninject -j1
+	make TYPES=512 CTOR_ARGS=4 ITERATIONS=1024 TEST=unique base di fruit guice dagger2 ninject -j1
+	make TYPES=1024 CTOR_ARGS=4 ITERATIONS=1024 TEST=unique base di fruit guice dagger2 ninject -j1
 
 $(FRAMEWORKS)/base:
 
