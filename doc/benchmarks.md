@@ -23,10 +23,10 @@
 | Executable size           |              | 72kb         | 4.4M           | 5.1M                            |
 | |  |  |  |
 | **GCC-5.2** |  |  |  |
-| Compilation time          |              | 3.082s       | 1m14.080s      | 34.461s / FRUIT_NO_LOOP_CHECK |
-| Execution time            |              | 0.002s       | -              | -                               |
-| Memory usage (stack/heap) |              | 1b/0b        | -              | -                               |
-| Executable size           |              | 72kb         | 4.4M           | 5.1M                            |
+| Compilation time          |              |  | | |
+| Execution time            |              |  | | |
+| Memory usage (stack/heap) |              |  | | |
+| Executable size           |              |  | | |
 
 * To run benchmarks
 ```sh
