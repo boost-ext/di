@@ -35,8 +35,10 @@ $(FRAMEWORKS)/hypodermic:
 
 $(FRAMEWORKS)/guice:
 	@-mkdir -p $(FRAMEWORKS)/guice 2>/dev/null
-	cd $(FRAMEWORKS)/guice && curl -L -O https://github.com/google/guice/releases/download/3.0/guice-3.0.zip
-	cd $(FRAMEWORKS)/guice && unzip -j guice-3.0.zip
+	cd $(FRAMEWORKS)/guice && curl -L -O http://central.maven.org/maven2/com/google/guava/guava/19.0/guava-19.0.jar
+	cd $(FRAMEWORKS)/guice && curl -L -O http://central.maven.org/maven2/javax/inject/javax.inject/1/javax.inject-1.jar
+	cd $(FRAMEWORKS)/guice && curl -L -O https://github.com/google/guice/releases/download/4.0/guice-4.0.jar
+	cd $(FRAMEWORKS)/guice && curl -L -O http://central.maven.org/maven2/aopalliance/aopalliance/1.0/aopalliance-1.0.jar
 
 $(FRAMEWORKS)/dagger2:
 	@-mkdir -p $(FRAMEWORKS)/dagger2 2>/dev/null
