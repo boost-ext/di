@@ -9,7 +9,7 @@ PYTHON:=python
 CXX?=clang++
 JAVA?=java
 JAVAC?=javac
-SC?=mcs
+SC?=dmcs
 
 benchmark:
 	make TYPES=64 CTOR_ARGS=4 ITERATIONS=1024 TEST=unique base di fruit guice dagger2 ninject
@@ -89,6 +89,7 @@ dagger2: gen_dagger2
 
 ninject: gen_ninject
 	cd .ninject && cp ../$(FRAMEWORKS)/ninject/Ninject.dll .
-	cd .ninject && time $(SC) /r:Ninject.dll ninject.cs
+	cd .ninject && time $(SC) -o+ /r:Ninject.dll ninject.cs
+	cd .ninject && time mono --aot=full ./ninject.exe
 	cd .ninject && time mono ./ninject.exe || exit 1
 
