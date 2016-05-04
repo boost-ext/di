@@ -117,7 +117,7 @@ def create_csharp_test(types, ctor_args, iterations, expected, file, struct, hea
     f.write(main)
     f.write("\nfor (int i = 0; i < " + str(iterations) + "; ++i) {\n")
     f.write(impl)
-    f.write("}\nreturn " + str(expected) + " != Global.g;")
+    f.write("}\nreturn " + str(expected) + " != Global.g ? 1 : 0;")
     f.write("\n}\n}")
 
 if os.environ['TEST'] == "unique":
