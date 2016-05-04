@@ -1,5 +1,10 @@
 #!/usr/bin/env python
-
+#
+# Copyright (c) 2012-2016 Krzysztof Jusiak (krzysztof at jusiak dot net)
+#
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#
 import os
 
 def base(output, x, b = 0, e = 0):
@@ -72,7 +77,6 @@ def create_data(types, ctor_args, struct):
 
 def create_cpp_test(types, ctor_args, iterations, expected, file, struct, header, module, main, impl):
   with open(file, 'w') as f:
-    f.write("#include <iostream>\n")
     f.write(header)
     f.write("volatile unsigned long g = 0;\n")
     for o in create_data(types, ctor_args, struct):
@@ -83,7 +87,7 @@ def create_cpp_test(types, ctor_args, iterations, expected, file, struct, header
     f.write("for (auto i = 0; i < " + str(iterations) + "; ++i) {")
     f.write(impl)
     f.write("};\n")
-    f.write("std::cout << g << std::endl;\n")
+    f.write("return " + str(expected) + " != g;\n")
     f.write("}\n")
 
 def create_java_test(types, ctor_args, iterations, expected, file, struct, header, module, main, impl):
@@ -98,7 +102,7 @@ def create_java_test(types, ctor_args, iterations, expected, file, struct, heade
     f.write(main)
     f.write("\nfor (int i = 0; i < " + str(iterations) + "; ++i) {\n")
     f.write(impl)
-    f.write("}\nSystem.out.println(Global.g);")
+    f.write("}\nSystem.exit(" + str(expected) + "!= Global.g ? 1 : 0);")
     f.write("\n}\n}")
 
 def create_csharp_test(types, ctor_args, iterations, expected, file, struct, header, module, main, impl):
@@ -109,11 +113,11 @@ def create_csharp_test(types, ctor_args, iterations, expected, file, struct, hea
       f.write(o + "\n")
     f.write("\n" + module + "\n")
     f.write("\nclass " + os.path.splitext(file)[0] + " {\n")
-    f.write("\nstatic void Main(string[] args) {\n")
+    f.write("\nstatic int Main(string[] args) {\n")
     f.write(main)
     f.write("\nfor (int i = 0; i < " + str(iterations) + "; ++i) {\n")
     f.write(impl)
-    f.write("}\nSystem.Console.Write(Global.g);")
+    f.write("}\nreturn " + str(expected) + " != Global.g;")
     f.write("\n}\n}")
 
 if os.environ['TEST'] == "unique":
