@@ -5,7 +5,7 @@
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
 cmake_minimum_required(VERSION 2.8)
-project(boost.di CXX)
+project(Boost.DI CXX)
 set(CXX_STANDARD "c++14")
 enable_testing()
 include_directories(include)

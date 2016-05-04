@@ -2,7 +2,7 @@
 
 | **Library** | Boost.DI ([See Performance](overview.md#performance)) | [dicpp] | [Google.Fruit] |
 | ----------- | -------- | ----- | ------------ |
-| Version     | 1.0.0 | HEAD | 2.0.2 |
+| Version     | 1.0.1 | HEAD | 2.0.2 |
 | Language    | C++14 | C++11 | C++11 |
 | License     | Boost 1.0 | Boost 1.0 | Apache 2.0|
 | Linkage     | header only | header only | library |
@@ -39,7 +39,7 @@ cd benchmark && make
 | **Library** | Boost.DI | [Google.Guice] | [Dagger2] | [Ninject] |
 | ----------  | -------- | ------------ | ------- | ------- |
 | Language    | C++14    | Java | Java | C# |
-| Version     | 1.0.0    | 4.0 | 2.4 | 3.2 |
+| Version     | 1.0.1    | 4.0 | 2.4 | 3.2 |
 | License     | Boost 1.0 | Apache 2.0 | Apache 2.0 | Apache 2.0|
 | Linkage     | header only | jar | jar | dll |
 | Approach    | compile-time | run-time | compile-time (annotation processor) | run-time |
