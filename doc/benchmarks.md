@@ -56,35 +56,23 @@ cd benchmark && make
 
 | Create a unique objects tree for each iteration<br /><br />`TYPES: 64`  `BINDINGS: 0`  `ITERATIONS: 1024` | 
 | ----------------------------------- | ------------ | ------------ | ------------------------------ | ------------------ | ------------- | --------------- |
-| **Clang-3.7 -O2 / Java8 / Mono4.2** | **Baseline** | **Boost.DI** | **[Google.Fruit]**             | **[Google.Guice]** | **[Dagger2]** | **[Ninject]**   |
+| **Clang-3.7 -O2 / Java8 / Mono4.2 --aot** | **Baseline** | **Boost.DI** | **[Google.Fruit]**             | **[Google.Guice]** | **[Dagger2]** | **[Ninject]**   |
 | Compilation time                    | 0.063s       | 0.376s       | 2.329s / FRUIT_NO_LOOP_CHECK   | 0.570s             | 1.411s        | 0.144s + 0.079s |
 | Executable size                     | 4.2K         | 8.5K         | 213K                           | -                  | -             | -               |
 | Execution time                      | 0.002s       | 0.002s       | 0.037s                         | 0.528s             | 0.157s        | 1.131s          |
-
-| Create a unique objects tree for each iteration<br /><br />`TYPES: 128`  `BINDINGS: 0`  `ITERATIONS: 1024` | 
-| ----------------------------------- | ------------ | ------------ | ------------------------------ | ------------------ | ------------- | --------------- |
-| **Clang-3.7 -O2 / Java8 / Mono4.2** | **Baseline** | **Boost.DI** | **[Google.Fruit]**             | **[Google.Guice]** | **[Dagger2]** | **[Ninject]**   |
+| `TYPES: 128`  `BINDINGS: 0`  `ITERATIONS: 1024` | 
 | Compilation time                    | 0.082s       | 0.706s       | 4.375s / FRUIT_NO_LOOP_CHECK   | 0.642s             | 1.903s        | 0.149s + 0.093s |
 | Executable size                     | 4.2K         | 8.5K         | 513K                           | -                  | -             | -               |
 | Execution time                      | 0.002s       | 0.002s       | 0.074s                         | 0.544s             | 0.210s        | 2.230s          |
-
-| Create a unique objects tree for each iteration<br /><br />`TYPES: 256`  `BINDINGS: 0`  `ITERATIONS: 1024` | 
-| ----------------------------------- | ------------ | ------------ | ------------------------------ | ------------------ | ------------- | --------------- |
-| **Clang-3.7 -O2 / Java8 / Mono4.2** | **Baseline** | **Boost.DI** | **[Google.Fruit]**             | **[Google.Guice]** | **[Dagger2]** | **[Ninject]**   |
+| `TYPES: 256`  `BINDINGS: 0`  `ITERATIONS: 1024` | 
 | Compilation time                    | 0.131s       | 1.328s       | 9.641s / FRUIT_NO_LOOP_CHECK   | 0.783s             | 2.814s        | 0.151s + 0.114s |
 | Executable size                     | 4.2K         | 8.7K         | 1.4M                           | -                  | -             | -               |
 | Execution time                      | 0.003s       | 0.003s       | 0.154s                         | 0.723s             | 0.323s        | 4.838s          |
-
-| Create a unique objects tree for each iteration<br /><br />`TYPES: 512`  `BINDINGS: 0`  `ITERATIONS: 1024` | 
-| ----------------------------------- | ------------ | ------------ | ------------------------------ | ------------------ | ------------- | --------------- |
-| **Clang-3.7 -O2 / Java8 / Mono4.2** | **Baseline** | **Boost.DI** | **[Google.Fruit]**             | **[Google.Guice]** | **[Dagger2]** | **[Ninject]**   |
+| `TYPES: 512`  `BINDINGS: 0`  `ITERATIONS: 1024` | 
 | Compilation time                    | 0.215s       | 2.459s       | 23.924s / FRUIT_NO_LOOP_CHECK  | 1.054s             | 4.231s        | 0.157s + 0.161  |
 | Executable size                     | 8.2K         | 13K          | 4.2M                           | -                  | -             | -               |
 | Execution time                      | 0.003s       | 0.003s       | 0.328s                         | 0.943s             | 0.547s        | 11.123s         |
-
-| Create a unique objects tree for each iteration<br /><br />`TYPES: 1024`  `BINDINGS: 0`  `ITERATIONS: 1024` | 
-| ----------------------------------- | ------------ | ------------ | ------------------------------ | ------------------ | ------------- | --------------- |
-| **Clang-3.7 -O2 / Java8 / Mono4.2** | **Baseline** | **Boost.DI** | **[Google.Fruit]**             | **[Google.Guice]** | **[Dagger2]** | **[Ninject]**   |
+| `TYPES: 1024`  `BINDINGS: 0`  `ITERATIONS: 1024` | 
 | Compilation time                    | 0.402s       | 4.911s       | 1m9.601s / FRUIT_NO_LOOP_CHECK | 1.357s             | 5.943s        | 0.167s + 0.258  |
 | Executable size                     | 12K          | 17K          | 15M                            | -                  | -             | -               |
 | Execution time                      | 0.004s       | 0.004s       | 0.765s                         | 1.334s             | 0.998s        | 21.808s         |
