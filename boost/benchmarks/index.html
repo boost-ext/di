@@ -58,9 +58,9 @@
 <tbody>
 <tr>
 <td>Version</td>
-<td>1.0.0</td>
+<td>1.0.1</td>
 <td>HEAD</td>
-<td>(pre) 1.1.0</td>
+<td>2.0.2</td>
 </tr>
 <tr>
 <td>Language</td>
@@ -110,7 +110,8 @@
 <table>
 <thead>
 <tr>
-<th>Create a unique objects tree for each iteration<br /><br /><code>TYPES: 64</code>  <code>BINDINGS: 0</code>  <code>ITERATIONS: 1000000</code></th>
+<th>Create a unique objects tree for each iteration<br /><br /><code>TYPES: 64</code>  <code>BINDINGS: 0</code>  <code>ITERATIONS: 1024</code></th>
+<th></th>
 <th></th>
 <th></th>
 <th></th>
@@ -119,35 +120,41 @@
 <tbody>
 <tr>
 <td><strong>Clang-3.7</strong></td>
+<td><strong>Baseline</strong></td>
 <td><strong>Boost.DI</strong></td>
 <td><strong><a href="https://bitbucket.org/cheez/dicpp/wiki/Home">dicpp</a></strong></td>
 <td><strong><a href="https://github.com/google/fruit">Google.Fruit</a></strong></td>
 </tr>
 <tr>
 <td>Compilation time</td>
+<td></td>
 <td>3.082s</td>
 <td>1m14.080s</td>
-<td>34.461s (-DFRUIT_NO_LOOP_CHECK)</td>
+<td>34.461s / FRUIT_NO_LOOP_CHECK</td>
 </tr>
 <tr>
 <td>Execution time</td>
+<td></td>
 <td>0.002s</td>
 <td>-</td>
 <td>-</td>
 </tr>
 <tr>
 <td>Memory usage (stack/heap)</td>
+<td></td>
 <td>1b/0b</td>
 <td>-</td>
 <td>-</td>
 </tr>
 <tr>
 <td>Executable size</td>
+<td></td>
 <td>72kb</td>
 <td>4.4M</td>
 <td>5.1M</td>
 </tr>
 <tr>
+<td></td>
 <td></td>
 <td></td>
 <td></td>
@@ -158,30 +165,35 @@
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 </tr>
 <tr>
 <td>Compilation time</td>
-<td>3.082s</td>
-<td>1m14.080s</td>
-<td>34.461s (-DFRUIT_NO_LOOP_CHECK)</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
 </tr>
 <tr>
 <td>Execution time</td>
-<td>0.002s</td>
-<td>-</td>
-<td>-</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
 </tr>
 <tr>
 <td>Memory usage (stack/heap)</td>
-<td>1b/0b</td>
-<td>-</td>
-<td>-</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
 </tr>
 <tr>
 <td>Executable size</td>
-<td>72kb</td>
-<td>4.4M</td>
-<td>5.1M</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -213,10 +225,10 @@
 </tr>
 <tr>
 <td>Version</td>
-<td>1.0.0</td>
+<td>1.0.1</td>
 <td>4.0</td>
-<td>2.0.2</td>
-<td>3.0.2</td>
+<td>2.4</td>
+<td>3.2</td>
 </tr>
 <tr>
 <td>License</td>
@@ -249,16 +261,25 @@
 </tbody>
 </table>
 <ul>
-<li>Environment<ul>
+<li><strong>Environment</strong><ul>
 <li>x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux</li>
 <li>$CXX -O2/Java8/Mono4.2</li>
+</ul>
+</li>
+</ul>
+<blockquote></blockquote>
+<ul>
+<li><strong>Baseline</strong><ul>
+<li>Manual object creation</li>
 </ul>
 </li>
 </ul>
 <table>
 <thead>
 <tr>
-<th>Create a unique objects tree for each iteration<br /><br /><code>TYPES: 64</code>  <code>BINDINGS: 0</code>  <code>ITERATIONS: 1000000</code></th>
+<th>Create a unique objects tree for each iteration<br /><br /><code>TYPES: 64</code>  <code>BINDINGS: 0</code>  <code>ITERATIONS: 1024</code></th>
+<th></th>
+<th></th>
 <th></th>
 <th></th>
 <th></th>
@@ -267,25 +288,244 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>Clang-3.7 -O2/Java8/Mono4.2</strong></td>
+<td><strong>Clang-3.7 -O2 / Java8 / Mono4.2</strong></td>
+<td><strong>Baseline</strong></td>
 <td><strong>Boost.DI</strong></td>
+<td><strong><a href="https://github.com/google/fruit">Google.Fruit</a></strong></td>
 <td><strong><a href="https://github.com/google/guice">Google.Guice</a></strong></td>
 <td><strong><a href="https://github.com/google/dagger">Dagger2</a></strong></td>
 <td><strong><a href="https://github.com/ninject/ninject">Ninject</a></strong></td>
 </tr>
 <tr>
 <td>Compilation time</td>
-<td>0.707s</td>
-<td>0.625s</td>
-<td>2.445s</td>
-<td>0.140s</td>
+<td>0.063s</td>
+<td>0.376s</td>
+<td>2.329s / FRUIT_NO_LOOP_CHECK</td>
+<td>0.570s</td>
+<td>1.411s</td>
+<td>0.144s + 0.079s</td>
+</tr>
+<tr>
+<td>Executable size</td>
+<td>4.2K</td>
+<td>8.5K</td>
+<td>213K</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
 </tr>
 <tr>
 <td>Execution time</td>
 <td>0.002s</td>
+<td>0.002s</td>
+<td>0.037s</td>
+<td>0.528s</td>
+<td>0.157s</td>
+<td>1.131s</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Create a unique objects tree for each iteration<br /><br /><code>TYPES: 128</code>  <code>BINDINGS: 0</code>  <code>ITERATIONS: 1024</code></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Clang-3.7 -O2 / Java8 / Mono4.2</strong></td>
+<td><strong>Baseline</strong></td>
+<td><strong>Boost.DI</strong></td>
+<td><strong><a href="https://github.com/google/fruit">Google.Fruit</a></strong></td>
+<td><strong><a href="https://github.com/google/guice">Google.Guice</a></strong></td>
+<td><strong><a href="https://github.com/google/dagger">Dagger2</a></strong></td>
+<td><strong><a href="https://github.com/ninject/ninject">Ninject</a></strong></td>
+</tr>
+<tr>
+<td>Compilation time</td>
+<td>0.082s</td>
+<td>0.706s</td>
+<td>4.375s / FRUIT_NO_LOOP_CHECK</td>
+<td>0.642s</td>
+<td>1.903s</td>
+<td>0.149s + 0.093s</td>
+</tr>
+<tr>
+<td>Executable size</td>
+<td>4.2K</td>
+<td>8.5K</td>
+<td>513K</td>
 <td>-</td>
 <td>-</td>
 <td>-</td>
+</tr>
+<tr>
+<td>Execution time</td>
+<td>0.002s</td>
+<td>0.002s</td>
+<td>0.074s</td>
+<td>0.544s</td>
+<td>0.210s</td>
+<td>2.230s</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Create a unique objects tree for each iteration<br /><br /><code>TYPES: 256</code>  <code>BINDINGS: 0</code>  <code>ITERATIONS: 1024</code></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Clang-3.7 -O2 / Java8 / Mono4.2</strong></td>
+<td><strong>Baseline</strong></td>
+<td><strong>Boost.DI</strong></td>
+<td><strong><a href="https://github.com/google/fruit">Google.Fruit</a></strong></td>
+<td><strong><a href="https://github.com/google/guice">Google.Guice</a></strong></td>
+<td><strong><a href="https://github.com/google/dagger">Dagger2</a></strong></td>
+<td><strong><a href="https://github.com/ninject/ninject">Ninject</a></strong></td>
+</tr>
+<tr>
+<td>Compilation time</td>
+<td>0.131s</td>
+<td>1.328s</td>
+<td>9.641s / FRUIT_NO_LOOP_CHECK</td>
+<td>0.783s</td>
+<td>2.814s</td>
+<td>0.151s + 0.114s</td>
+</tr>
+<tr>
+<td>Executable size</td>
+<td>4.2K</td>
+<td>8.7K</td>
+<td>1.4M</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Execution time</td>
+<td>0.003s</td>
+<td>0.003s</td>
+<td>0.154s</td>
+<td>0.723s</td>
+<td>0.323s</td>
+<td>4.838s</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Create a unique objects tree for each iteration<br /><br /><code>TYPES: 512</code>  <code>BINDINGS: 0</code>  <code>ITERATIONS: 1024</code></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Clang-3.7 -O2 / Java8 / Mono4.2</strong></td>
+<td><strong>Baseline</strong></td>
+<td><strong>Boost.DI</strong></td>
+<td><strong><a href="https://github.com/google/fruit">Google.Fruit</a></strong></td>
+<td><strong><a href="https://github.com/google/guice">Google.Guice</a></strong></td>
+<td><strong><a href="https://github.com/google/dagger">Dagger2</a></strong></td>
+<td><strong><a href="https://github.com/ninject/ninject">Ninject</a></strong></td>
+</tr>
+<tr>
+<td>Compilation time</td>
+<td>0.215s</td>
+<td>2.459s</td>
+<td>23.924s / FRUIT_NO_LOOP_CHECK</td>
+<td>1.054s</td>
+<td>4.231s</td>
+<td>0.157s + 0.161</td>
+</tr>
+<tr>
+<td>Executable size</td>
+<td>8.2K</td>
+<td>13K</td>
+<td>4.2M</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Execution time</td>
+<td>0.003s</td>
+<td>0.003s</td>
+<td>0.328s</td>
+<td>0.943s</td>
+<td>0.547s</td>
+<td>11.123s</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Create a unique objects tree for each iteration<br /><br /><code>TYPES: 1024</code>  <code>BINDINGS: 0</code>  <code>ITERATIONS: 1024</code></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Clang-3.7 -O2 / Java8 / Mono4.2</strong></td>
+<td><strong>Baseline</strong></td>
+<td><strong>Boost.DI</strong></td>
+<td><strong><a href="https://github.com/google/fruit">Google.Fruit</a></strong></td>
+<td><strong><a href="https://github.com/google/guice">Google.Guice</a></strong></td>
+<td><strong><a href="https://github.com/google/dagger">Dagger2</a></strong></td>
+<td><strong><a href="https://github.com/ninject/ninject">Ninject</a></strong></td>
+</tr>
+<tr>
+<td>Compilation time</td>
+<td>0.402s</td>
+<td>4.911s</td>
+<td>1m9.601s / FRUIT_NO_LOOP_CHECK</td>
+<td>1.357s</td>
+<td>5.943s</td>
+<td>0.167s + 0.258</td>
+</tr>
+<tr>
+<td>Executable size</td>
+<td>12K</td>
+<td>17K</td>
+<td>15M</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Execution time</td>
+<td>0.004s</td>
+<td>0.004s</td>
+<td>0.765s</td>
+<td>1.334s</td>
+<td>0.998s</td>
+<td>21.808s</td>
 </tr>
 </tbody>
 </table>
