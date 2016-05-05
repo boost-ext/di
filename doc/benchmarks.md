@@ -118,4 +118,3 @@ cd benchmark && make
 [Dagger2]: https://github.com/google/dagger
 [Ninject]: https://github.com/ninject/ninject
 
-
