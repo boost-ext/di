@@ -1,4 +1,4 @@
-## [1.0.1] - 2015-05-04
+## [1.0.1] - 2016-05-04
 - **Breaking Changes**
     - [Simplified interface for policies](http://boost-experimental.github.io/di/user_guide/index.html#policies)
 >
@@ -14,7 +14,7 @@
     - [Link error if di.hpp is included in two cpp-files](https://github.com/boost-experimental/di/issues/212)
     - [Creation of empty injector crashes on MSVC 2015, Update 1, x64, Debug](https://github.com/boost-experimental/di/issues/211)
 
-## [1.0.0] - 2015-02-22
+## [1.0.0] - 2016-02-22
 - Support for MSVC-2015+
 - Support for GCC-5+
 - Support for CMake 2.8+
