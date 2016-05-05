@@ -54,13 +54,13 @@ check_style:
 check_static_analysis:
 	@$(CLANG_TIDY) -header-filter='boost/di' `find example extension test -type f -iname "*.cpp"` -- -std=c++1y -I include -I test -include common/test.hpp
 
-doc: doc_$(MKDOCS_THEME)
+doc: readme doc_$(MKDOCS_THEME)
 
 doc_%:
 	cd doc && $(MKDOCS) build --clean --theme-dir themes/$* --site-dir $(MKDOCS_SITE)
 
 doc_boost-classic:
-	cd doc && python themes/boost-classic/scripts/update_markdown.py . https://raw.githubusercontent.com/boost-experimental/di/cpp14
+	cd doc && $(PYTHON) themes/boost-classic/scripts/update_markdown.py . https://raw.githubusercontent.com/boost-experimental/di/cpp14
 	cd doc && $(MKDOCS) build --clean --theme-dir themes/boost-classic --site-dir $(MKDOCS_SITE)
 
 readme:
