@@ -568,8 +568,9 @@ auto make_injector(TDeps&&...) noexcept;
 template<class... TDeps> requires boundable<TDeps...>()
 class injector {
 public:
-  injector(injector&&) = default;
   explicit injector(TDeps&&...) noexcept;
+  injector(injector&&) = default;
+  injector& operator=(injector&&) = default;
 
   template<class T> requires creatable<T>()
   constexpr auto create() const;
