@@ -442,18 +442,18 @@
         }, 
         {
             "location": "/CHANGELOG/index.html", 
-            "text": "1.0.1\n - 2015-05-04\n\n\n\n\nBreaking Changes\n\n\nSimplified interface for policies\n\n\n\n\n\n\n\n\nAdditions\n\n\nSupport for Clang-3.9\n\n\nSupport for GCC-6\n\n\n\n\nExtensions\n\n\nContextual Bindings\n\n\nSerialize\n\n\n\n\n\n\n\n\n\n\n\n\nBug Fixes\n\n\nLink error if di.hpp is included in two cpp-files\n\n\nCreation of empty injector crashes on MSVC 2015, Update 1, x64, Debug\n\n\n\n\n\n\n\n\n1.0.0\n - 2015-02-22\n\n\n\n\nSupport for MSVC-2015+\n\n\nSupport for GCC-5+\n\n\nSupport for CMake 2.8+\n\n\nSupport for libc++, libstdc++\n\n\nSupport for Mac OS\n\n\n\n\n0.5.0\n - 2015-01-12\n\n\n\n\nC++14 version\n\n\nSupport for Clang3.4+\n\n\n\n\n0.1.0\n - 2014-08-15\n\n\n\n\nC++03/C++11 version\n\n\nSupport for Clang3.2+", 
+            "text": "1.0.1\n - 2016-05-04\n\n\n\n\nBreaking Changes\n\n\nSimplified interface for policies\n\n\n\n\n\n\n\n\nAdditions\n\n\nSupport for Clang-3.9\n\n\nSupport for GCC-6\n\n\n\n\nExtensions\n\n\nContextual Bindings\n\n\nSerialize\n\n\n\n\n\n\n\n\n\n\n\n\nBug Fixes\n\n\nLink error if di.hpp is included in two cpp-files\n\n\nCreation of empty injector crashes on MSVC 2015, Update 1, x64, Debug\n\n\n\n\n\n\n\n\n1.0.0\n - 2016-02-22\n\n\n\n\nSupport for MSVC-2015+\n\n\nSupport for GCC-5+\n\n\nSupport for CMake 2.8+\n\n\nSupport for libc++, libstdc++\n\n\nSupport for Mac OS\n\n\n\n\n0.5.0\n - 2015-01-12\n\n\n\n\nC++14 version\n\n\nSupport for Clang3.4+\n\n\n\n\n0.1.0\n - 2014-08-15\n\n\n\n\nC++03/C++11 version\n\n\nSupport for Clang3.2+", 
             "title": "CHANGELOG"
         }, 
         {
-            "location": "/CHANGELOG/index.html#101-2015-05-04", 
+            "location": "/CHANGELOG/index.html#101-2016-05-04", 
             "text": "Breaking Changes  Simplified interface for policies     Additions  Support for Clang-3.9  Support for GCC-6   Extensions  Contextual Bindings  Serialize       Bug Fixes  Link error if di.hpp is included in two cpp-files  Creation of empty injector crashes on MSVC 2015, Update 1, x64, Debug", 
-            "title": "1.0.1 - 2015-05-04"
+            "title": "1.0.1 - 2016-05-04"
         }, 
         {
-            "location": "/CHANGELOG/index.html#100-2015-02-22", 
+            "location": "/CHANGELOG/index.html#100-2016-02-22", 
             "text": "Support for MSVC-2015+  Support for GCC-5+  Support for CMake 2.8+  Support for libc++, libstdc++  Support for Mac OS", 
-            "title": "1.0.0 - 2015-02-22"
+            "title": "1.0.0 - 2016-02-22"
         }, 
         {
             "location": "/CHANGELOG/index.html#050-2015-01-12", 
