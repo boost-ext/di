@@ -2489,6 +2489,8 @@ public:
 };
 ```
 
+####Bindings
+
 ```cpp
 auto injector = di::make_injector(
   di::bind<int>.named("int_a"_s).to(42)
@@ -2498,19 +2500,21 @@ auto injector = di::make_injector(
 
 ----
 
-###Compile-time string
+###Where
 
 ----
 
 ####Compile-time name
 
 ```cpp
-template <class T, T... Ts>
-constexpr auto operator""_s();
+"int_a"_s
+"int_b"_s
 ```
 
+####String-literal-operator-template
 ```cpp
-"name parameter"_s
+template <class T, T... Ts>
+constexpr auto operator""_s();
 ```
 
 ----
