@@ -391,9 +391,9 @@ https://github.com/boost-experimental/di/tree/cpp14
 
 * Unit tests
 * Functional tests
-* Performance tests / Benchmarks
-* Compilation-error tests (validates error message)
-* Run-time performance tests (compares generated assembler opcodes)
+* Performance tests / [Benchmarks](https://github.com/boost-experimental/di/tree/cpp14/benchmark)
+* Compilation-error tests ([Validates error message](https://github.com/boost-experimental/di/blob/cpp14/test/pt/di_compile_time.cpp))
+* Run-time performance tests ([Compares generated assembler opcodes](https://github.com/boost-experimental/di/blob/cpp14/test/pt/di_run_time.cpp))
 
 ==============================================================================
 
@@ -445,31 +445,31 @@ https://github.com/boost-experimental/di/tree/cpp14
 
 ----
 
-* Bindings
+* [Bindings](http://boost-experimental.github.io/di/user_guide/index.html#bindings)
 
   * DSL to create dependencies representation which will be used by core to resolve types
 
 ----
 
-* Scopes
+* [Scopes]((http://boost-experimental.github.io/di/user_guide/index.html#scopes)
 
   * Responsible for maintain objects life time
 
 ----
 
-* Providers
+* [Providers](http://boost-experimental.github.io/di/user_guide/index.html#providers)
 
   * Responsible for providing object instance
 
 ----
 
-* Policies
+* [Policies](http://boost-experimental.github.io/di/user_guide/index.html#policies)
 
   * Compile-time limitations for types / Run-time types visitor
 
 ----
 
-* Config
+* [Config](http://boost-experimental.github.io/di/user_guide/index.html#configuration)
 
   * Configuration for Policies and Providers
 
@@ -478,6 +478,8 @@ https://github.com/boost-experimental/di/tree/cpp14
 ##In a nutshell (Pseudo-code)
 
 ----
+
+####Design
 
 ```cpp
 template<class TConfig, class... TBindings>
@@ -563,12 +565,16 @@ auto app = di::make_injector().create<app>();
 
 ----
 
+####Make injector
 ```cpp
 template<class TConfig = di::config, class... TDeps>
   requires configurable<TConfig>() && boundable<TDeps...>()
 auto make_injector(TDeps&&...) noexcept;
 ```
 
+----
+
+####Injector
 ```cpp
 template<class... TDeps> requires boundable<TDeps...>()
 class injector {
@@ -578,11 +584,7 @@ public:
   injector& operator=(injector&&) = default;
 
   template<class T> requires creatable<T>()
-  constexpr auto create() const;
-
-  template<class T> requires !creatable<T>()
-  [[deprecated("creatable constraint not satisfied")]]
-  constexpr auto create() const;
+  constexpr T create() const;
 };
 ```
 
@@ -596,6 +598,7 @@ public:
 
 ----
 
+####Any Type
 ```cpp
 struct any_type {
   template<class T>
@@ -615,17 +618,12 @@ http://melpon.org/wandbox/permlink/55bToJVYIWO4gald
 
 ----
 
-###Limitations
-
-----
-
-###Copy constructor / Move constructor
-
-----
+###Problem - Copy constructor / Move constructor
 
 ```cpp
-  static_assert(
-    !std::is_constructible<example, any_type>::value); // always fails
+static_assert(
+  !std::is_constructible<example, any_type>::value;
+);
 ```
 http://melpon.org/wandbox/permlink/KFYmTrdJpTjB6UEr
 
@@ -636,6 +634,8 @@ http://melpon.org/wandbox/permlink/KFYmTrdJpTjB6UEr
 > Disable the operator when type T is convertible to the parent type
 
 ----
+
+###Any Type V2
 
 ```cpp
 template<class TParent>
@@ -658,9 +658,11 @@ http://melpon.org/wandbox/permlink/v7OIgdzA81TtVF5a
 
 ----
 
-###Generic converting constructor
+###Generic converting constructor?
 
 ----
+
+####Example
 
 ```cpp
 class example {
@@ -674,17 +676,19 @@ public:
 
 ###Solution
 
-> Restrict allowed types `T` / Register constructor explicitly via [inject]
+* Restrict allowed types `T`
+* Register constructor explicitly via [inject]
 
 ----
+
+###STD.function
 
 ```cpp
 template<typename _Res, typename... _ArgTypes>
 class function<_Res(_ArgTypes...)> {
 public:
-  ...
-  template<typename _Functor,
-	         typename = _Requires<_Callable<_Functor>, void>>
+  template<typename _Functor, typename =
+    _Requires<_Callable<_Functor>, void>> // solve the issue
 	function(_Functor);
 };
 ```
@@ -695,6 +699,7 @@ public:
 
 ----
 
+####Is constructible
 ```cpp
 constexpr auto BOOST_DI_CFG_CTOR_LIMIT_SIZE = 10;
 
@@ -712,9 +717,10 @@ struct is_constructible<T, std::index_sequence<Ns...>>
 
 ----
 
+####Number of constructor parameters
 ```cpp
 template <class T, std::size_t... Ns>
-constexpr auto ctor(std::index_sequence<Ns...>) noexcept {
+constexpr auto get_ctor_size(std::index_sequence<Ns...>) noexcept {
   auto value = 0;
   int _[]{0, (is_constructible<T, std::make_index_sequence<Ns>>{}
     ? value = Ns : value)...};
@@ -726,7 +732,7 @@ int main() {
     example(int, double, float);
   };
 
-  static_assert(3 == ctor<example>(
+  static_assert(3 == get_ctor_size<example>(
     std::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE>{}));
 }
 ```
@@ -738,10 +744,11 @@ http://melpon.org/wandbox/permlink/xoKrb40GYTi5deoJ
 
 ----
 
-###is braces constructible
+###Is braces constructible
 
 ----
 
+####Is braces constructible
 ```cpp
 template <class T, class... TArgs>
 decltype(void(T{declval<TArgs>()...}), true_type{})
@@ -771,11 +778,13 @@ static_assert(is_braces_constructible<example, any_type, any_type>{});
 
 ----
 
+####Any Type V3
 ```cpp
 template<class TInjector, class TParent>
 struct any_type {
   template<class T, class =
     std::enable_if_t<!std::is_convertible<TParent, T>{}>
+    ... // Concepts
   > constexpr operator T() {
     return injector_.template create<T>();
   }
@@ -786,6 +795,7 @@ struct any_type {
 
 ----
 
+####Constructor traits
 ```cpp
 template<class TInjector, class T> auto ctor_traits() {
   if (has_inject<T>() { // BOOST_DI_INJECT
@@ -810,6 +820,8 @@ template<class TInjector, class T> auto ctor_traits() {
 ###Coming back to the design
 
 ----
+
+####Design
 
 ```cpp
 template<class TConfig, class... TBindings>
@@ -863,6 +875,7 @@ public:
 
 ----
 
+####Bindings
 ```cpp
 auto injector = di::make_injector(
   di::bind<iview>.to<gui_view>() // bind interface to implementation
@@ -888,6 +901,8 @@ struct T { // create using uniform initialization
 };
 ```
 
+####Bindings
+
 ```cpp
  auto i = 42;
  auto injector = di::make_injector(
@@ -903,6 +918,8 @@ struct T { // create using uniform initialization
 
 ----
 
+####Bindings
+
 ```cpp
 auto use_gui_view = true/false;
 
@@ -914,6 +931,8 @@ auto injector = di::make_injector(
   })
 );
 ```
+
+####Create
 
 ```cpp
 use_gui_view = true;
@@ -945,13 +964,15 @@ assert(dynamic_cast<text_view*>(
 
 ----
 
+####Bindings
+
 ```cpp
 auto injector = di::make_injector(
   di::bind<int[]>().to({1, 2, 3})
 );
 
 auto v = injector.create<std::vector<int>>();
-  // or std::array / std::set
+         // or std::array / std::set
 
 assert(3 == v.size());
 assert(1 == v[0]);
@@ -964,6 +985,8 @@ assert(3 == v[2]);
 ###Using list of types
 
 ----
+
+####Bindings
 
 ```cpp
 auto injector = di::make_injector(
@@ -990,23 +1013,25 @@ assert(dynamic_cast<implementation2*>(v[1].get()));
 
 ----
 
-* deduce scope (default)
-* instance scope (bind<>.to(value) where value is maintained by the user)
-* unique scope (one instance per request)
-* singleton scope (shared instance)
+* [Deduce scope](http://boost-experimental.github.io//di/user_guide/index.html#di_deduce) (default)
+* [Instance scope](http://boost-experimental.github.io//di/user_guide/index.html#di_instance) (bind<>.to(value) where value is maintained by the user)
+* [Unique scope](http://boost-experimental.github.io//di/user_guide/index.html#di_unique) (one instance per request)
+* [Singleton scope](http://boost-experimental.github.io//di/user_guide/index.html#di_singleton) (shared instance)
 
 ----
 
+####Scopes life time
+
 ```
-+-------------------------------------------------+ singleton scope
++----------------------------------------------+ Singleton scope
 |
-|          unique scope     unique scope
+|          Unique scope     Unique scope
 |          +---+            +------+
 |          |                |
-+--+-------+----------------+---------------------> Application life time
++--+-------+----------------+------------------> Application life time
    |
    |
-   +------------------------+ instance / user scope
+   +------------------------+ Instance / User scope
                              (is not controlled by DI)
 ```
 
@@ -1018,8 +1043,8 @@ assert(dynamic_cast<implementation2*>(v[1].get()));
 
 | Type | Scope |
 |------|-------|
-| `T`, `T&&`, `T*`, `const T*`, `std::unique_ptr<T>` | unique |
-| `T&`, `const T&`, `std::shared_ptr<T>`, `boost::shared_ptr<T>`, `std::weak_ptr<T>` | singleton |
+| `T`, `T&&`, `T*`, `const T*`, `std::unique_ptr<T>` | [Unique scope](http://boost-experimental.github.io//di/user_guide/index.html#di_unique) |
+| `T&`, `const T&`, `std::shared_ptr<T>`, `boost::shared_ptr<T>`, `std::weak_ptr<T>` | [Singleton scope](http://boost-experimental.github.io//di/user_guide/index.html#di_singleton) |
 
 ----
 
@@ -1027,16 +1052,26 @@ assert(dynamic_cast<implementation2*>(v[1].get()));
 
 ----
 
+####Bindings
+
 ```cpp
 auto injector = di::make_injector(
   di::bind<iview>.to<gui_view>().in(di::singleton) // explicitly
 );
+```
+
+####Test
+
+```cpp
+assert(&injector.create<iview&>() == &injector.create<iview&>());
 ```
 ----
 
 ##Injections / Annotations
 
 ----
+
+####Ambiguous constructors
 
 ```cpp
 class model {
@@ -1054,14 +1089,23 @@ class model {
 
 ----
 
+####Inject
+
 ```cpp
 class model {
  public:
-   model(int size, double precision) { }
+   model(int size, double precision) { assert(false); }
    BOOST_DI_INJECT(model, int rows, int cols); // pick me!
 };
 
 model::model(int rows, int cols) {} // implementation is not affected
+```
+
+####Test
+
+```cpp
+auto injector = di::make_injector();
+injector.create<model>(); // compiles and run
 ```
 ----
 
@@ -1072,6 +1116,8 @@ model::model(int rows, int cols) {} // implementation is not affected
 ###Annotations / Names
 
 ----
+
+####Names
 
 ```cpp
 class model {
@@ -1084,6 +1130,8 @@ class model {
 
 model::model(int rows, int cols) {} // implementation stays the same
 ```
+
+####Bindings
 
 ```cpp
 auto injector = di::make_injector(
@@ -1098,6 +1146,8 @@ auto injector = di::make_injector(
 
 ----
 
+####Compile-time string
+
 ```cpp
 template <char...>
 struct string {};
@@ -1111,6 +1161,11 @@ constexpr auto operator""_s() {
 > It's not standard!
 > For a standard solution use unique types instead
 
+```cpp
+auto rows = []{}; // unique type name
+auto cols = []{}; // unique type name
+```
+
 ----
 
 ##Modules
@@ -1118,6 +1173,8 @@ constexpr auto operator""_s() {
 > Split DI configuration
 
 ----
+
+###Modules
 
 ```cpp
 auto view_module = [] {
@@ -1134,6 +1191,8 @@ auto model_module = [] {
   );
 };
 ```
+
+####Bindings
 
 ```cpp
 auto injector = di::make_injector(
@@ -1155,6 +1214,8 @@ injector.create<app>();
 
 ----
 
+####Expose Modules
+
 ```cpp
 di::injector<view&> view_module() { // expose view
   return di::make_injector(
@@ -1173,6 +1234,8 @@ di::injector<model&> model_module() { // expose model
 }
 ```
 
+####Bindings
+
 ```cpp
 auto injector = di::make_injector(
   view_module(), model_module()
@@ -1180,6 +1243,16 @@ auto injector = di::make_injector(
 
 injector.create<app>();
 ```
+
+----
+
+##More
+
+---
+
+http://boost-experimental.github.io/di/user_guide
+
+http://boost-experimental.github.io/di/tutorial
 
 ==============================================================================
 
@@ -1275,7 +1348,7 @@ struct any_type {
 
 ----
 
-###Creatable
+###Creatable / Concept
 
 ----
 
@@ -1288,6 +1361,8 @@ using creatable = std::is_convertible<
 >;
 ```
 
+####Where
+
 ```cpp
 template <class T, class TProvider>
 auto try_create(const TProvider& provider) -> wrapper<
@@ -1298,28 +1373,13 @@ try_create(const TProvider&);
 
 ----
 
+####Constructor deduction
+
 ```cpp
 struct any_type {
   template <class T, REQUIRES(creatable<T>())>
   constexpr operator T(); // disabled when type is not creatable
 };
-```
-
-----
-
-```cpp
-template<class T, class... TArgs,
-  REQUIRES(std::is_constructible<T, TArgs...>{})>
-  // TArgs migth be disabled by any_type
-constexpr auto create_impl(TArgs&&... args) {
-  return T{std::forward<TArgs>(args...)};
-}
-
-template<class T, class... TArgs,
-  REQUIRES(!std::is_constructible<T, TArgs...>{})>
-constexpr auto create_impl(TArgs&&... args) {
-  return show_the_error<T>{};
-}
 ```
 
 ----
@@ -1331,7 +1391,7 @@ constexpr auto create_impl(TArgs&&... args) {
 ```cpp
 template<class T>
 constexpr auto show_the_error() {
-  return aux::is_polymorphic<T>{} ? // return the proper type
+  return aux::is_polymorphic<T>{} ?
     abstract_type<T>::is_not_bound{} :
     type<T>::cant_be_created{}; // simplified version
 };
@@ -1384,6 +1444,8 @@ struct abstract_type {
 
 ----
 
+####Injector
+
 ```cpp
 template <class T, REQUIRES(creatable<T>())>
 constexpr T create() const {
@@ -1394,6 +1456,25 @@ template <class T, REQUIRES(!creatable<T>())>
 [[deprecated("creatable constraint not satisfied")]]
 constexpr T create() const {
   return create_impl(type<T>{});
+}
+```
+
+----
+
+####Error deduction
+
+```cpp
+template<class T, class... TArgs,
+  REQUIRES(std::is_constructible<T, TArgs...>{})>
+  // TArgs migth be disabled by any_type
+constexpr auto create_impl(TArgs&&... args) {
+  return T{std::forward<TArgs>(args...)};
+}
+
+template<class T, class... TArgs,
+  REQUIRES(!std::is_constructible<T, TArgs...>{})>
+constexpr auto create_impl(TArgs&&... args) {
+  return show_the_error<T>{};
 }
 ```
 
@@ -1549,11 +1630,13 @@ error: inline function 'abstract_type<iview>::is_not_bound::error'
 
 ----
 
-* Scopes
+* [Scopes](http://boost-experimental.github.io/di/user_guide/index.html#scopes)
   * Customize object life time
-* Policies
+
+* [Policies](http://boost-experimental.github.io/di/user_guide/index.html#policies)
   * Check/Visit created objects
-* Providers
+
+* [Providers](http://boost-experimental.github.io/di/user_guide/index.html#providers)
   * Customize object creation
 
 ----
@@ -1580,6 +1663,8 @@ struct types_dumper : di::config {
 ###Example Output
 
 ----
+
+####App
 
 ```cpp
 class iview {
@@ -1628,6 +1713,8 @@ injector.create<app>();
 ###Serializable
 
 ----
+
+####Configuration
 
 ```cpp
 struct serializable : di::config {
@@ -1688,18 +1775,20 @@ auto deserialize = [](const auto& injector, auto& str) {
 
 ----
 
-###Example Output
+###Example
 
 ----
+
+####App
 
 ```cpp
 struct data { unsigned int ui; long l; float f; };
 struct even_more_data { double d; bool b; long long ll; };
 struct more_data { int i; long double ld; even_more_data d; short s; };
 
-class example {
+class app {
 public:
-  example(data& d, more_data& md) : d(d), md(md) {}
+  app(data& d, more_data& md) : d(d), md(md) {}
 
   void update(); // change data, more_data
 
@@ -1711,32 +1800,37 @@ private:
 
 ----
 
+####Create injector
 ```cpp
 auto injector = di::make_injector<serializable>();
-injector.create<example>();
+injector.create<app>();
 ```
 
+####Serialize
 ```cpp
 std::stringstream str;
 serialize(injector, str);
 ```
 
+####Deserialize
 ```cpp
 deserialize(injector, str);
 ```
 
 ----
 
+####Example Output
+
 ```cpp
-example->data unsigned_int 13
-example->data long 23
-example->data float 0.330000
-example->more_data int 44
-example->more_data long_double 42.000000
-example->more_data->even_more_data double 55.000000
-example->more_data->even_more_data bool 1
-example->more_data->even_more_data long_long 66
-example->more_data short 77
+app->data unsigned_int 13
+app->data long 23
+app->data float 0.330000
+app->more_data int 44
+app->more_data long_double 42.000000
+app->more_data->even_more_data double 55.000000
+app->more_data->even_more_data bool 1
+app->more_data->even_more_data long_long 66
+app->more_data short 77
 ```
 
 ----
@@ -1745,10 +1839,11 @@ example->more_data short 77
 
 ----
 
-###Let's Disallow types which are not PODs or are not bound
+###let's disallow types which are not PODs or are not bound
 
 ----
 
+####Configuration
 ```cpp
 struct is_pod_or_is_bound : di::config {
   static auto policies(...) noexcept {
@@ -1762,18 +1857,21 @@ struct is_pod_or_is_bound : di::config {
 
 ----
 
+####App
+
 ```cpp
 struct not_a_pod { virtual ~not_a_pod() = default; };
-struct example { example(not_a_pod, int, double) { } };
+struct app { app(not_a_pod, int, double) { } };
 ```
 
+####Injector
 ```cpp
 auto injector = di::make_injector<is_pod_or_is_bound>(
   di::bind<>().to(42)
 , di::bind<not_a_pod>().to(not_a_pod{})
 );
 
-injector.create<example>();
+injector.create<app>();
 ```
 
 ----
@@ -1783,12 +1881,12 @@ injector.create<example>();
 ----
 
 ```cpp
-di::make_injector<is_pod_or_is_bound>().create<example>();
+di::make_injector<is_pod_or_is_bound>().create<app>();
 ```
 
 ```cpp
-error: 'create<example>' is deprecated: creatable constraint not satisfied
-  injector.create<example>();
+error: 'create<app>' is deprecated: creatable constraint not satisfied
+  injector.create<app>();
            ^
 error: inline function 'type<not_a_pod>::not_allowed_by<
   or_<std::is_pod<_>, is_bound<_>>>::error'
@@ -1806,6 +1904,8 @@ error: inline function 'type<not_a_pod>::not_allowed_by<
 ###Automatic injection of mocks for interfaces
 
 ----
+
+####Configuration
 
 ```cpp
 struct mocks_provider : di::config {
@@ -1842,6 +1942,8 @@ https://github.com/dascandy/hippomocks
 
 ----
 
+####App
+
 ```cpp
 class iview {
 public:
@@ -1863,6 +1965,8 @@ public:
 
 ----
 
+####Injector
+
 ```cpp
 auto injector = di::make_injector<mocks_provider>(
   di::bind<int[]>.to({1, 2, 3, 4, 5, 6})
@@ -1872,12 +1976,15 @@ auto injector = di::make_injector<mocks_provider>(
 injector.create<app>();
 ```
 
+####Fake it
+
 ```cpp
 auto&& v = get_mock<iview>();
 When(Method(v, update)).AlwaysDo([]{...});
 ```
 
 ---
+
 https://github.com/modern-cpp-examples/match3
 
 ----
@@ -1943,7 +2050,7 @@ mov $0x2a,%eax
 retq
 ```
 
-Same as...
+####Same as
 
 ```
 return 42;
@@ -1956,16 +2063,20 @@ return 42;
 
 ----
 
-###No run-time branches as everything is known at compile-time and might be optimized!
+###No run-time branches
+
+> Everything is known at compile-time and might be optimized
 
 ----
+
+####Create
 
 ```cpp
 injector.create<int>();  ---------------\
   create_successful_impl(type<int>());  |   mov $0x2a,%eax
-      scope.create<int>(provider);      |-  retq
-        provider.get<int>();            |
-          return 42; -------------------/
+    scope.create<int>(provider);        |-  retq
+      provider.get<int>();              |
+        return 42; ---------------------/
 ```
 
 ----
@@ -2003,7 +2114,7 @@ pop    %rbx
 retq
 ```
 
-Same as...
+####Same as
 
 ```cpp
 return std::make_unique<implementation>();
@@ -2025,9 +2136,14 @@ return std::make_unique<implementation>();
 int main() {}
 ```
 
-0.050s
+```sh
+$CXX -std=c++14 di.cpp # 0.050s
+```
+> Neither STL nor Boost is required
 
-> Nighter STL nor Boost is used
+----
+
+###Construction Benchmarks
 
 ----
 
@@ -2052,7 +2168,7 @@ int main() {}
 
 ----
 
-##How quick compilation times were achived?
+##How quick compilation times were achieved?
 
 ----
 
@@ -2080,7 +2196,7 @@ int main() {}
 
 ----
 
-###Use compiler built-ins and common tricks to gain performance
+###Take advantage of compiler built-ins (via STL) and common tricks to gain performance
 
 ```cpp
 template<bool...> struct bool_seq;
@@ -2098,13 +2214,15 @@ __make_index_seq is O(1) since Clang 3.9
 
 ----
 
-###Implementation
+###Implementation details
 
 ----
 
 ###Resolve
 
 ----
+
+####Injector Dependencies
 
 ```cpp
 template<class T>
@@ -2125,6 +2243,8 @@ auto make_injector(Ts...) {
 
 ----
 
+####Binder / Resolver
+
 ```cpp
 struct binder {
   template <class TDefault, class>
@@ -2143,6 +2263,10 @@ struct binder {
   }
 };
 ```
+
+----
+
+###Example
 
 ----
 
@@ -2167,11 +2291,11 @@ http://melpon.org/wandbox/permlink/yMIaCIIDtjBXmV0E
 
 ----
 
-###Resolve - Benchmarks
+###Resolve - Benchmark
 
 ----
 
-| Number of dependencies | Resolve time (middle dependency) |
+| Number of dependencies | Resolve dependencies (all)       |
 | ---------------------- | -------------------------------- |
 | 1                      | 0.077s                           |
 | 16                     | 0.079s                           |
@@ -2191,12 +2315,12 @@ http://melpon.org/wandbox/permlink/yMIaCIIDtjBXmV0E
 
 ```cpp
                             creatable<T>
-                           (make it lite)
                                  |
                   /--------------+-----------------\
                 Yes                                No
                  |                                 |
-        create_successful_impl                  create_impl
+        create_successful_impl                 create_impl
+        // No error checking                // Error checking
 ```
 
 ----
@@ -2218,30 +2342,34 @@ constexpr T create() const {
 
 ----
 
-###'Name' erasure
+###'Type-Name' erasure
 
 ----
 
-###Long type names may increase your compilation times a LOT!
+###Long type names may increase your compilation times by a huge factor!
 
 ----
 
+####Long Type-Name due to variadic templates
 ```cpp
 template<class... Ts> auto make_injector(Ts... args) {
-  return injector<Ts...>(args...); // may produces a long type name
+  return injector<Ts...>(args...); // may produce a long type name
 }
 
 auto injector = make_injector(...);
-injector.create<T>(); // slow to compile
-                      // a lot of long type names comparisons
+injector.create<T>(); // compiles slowly due to 
+                      // long type names comparisons
 ```
 
 ----
 
-###Solution - inheritance
+###Solution - inheritance 
+
+> Hide the long type name
 
 ----
 
+####Type-Name erasure
 ```cpp
 auto injector = di::make_injector(...);
 
@@ -2256,10 +2384,17 @@ erase_long_type_name{injector}.create<T>(); // quick to compile
 
 ----
 
+###Problem - it's not flexible
+
+> It has to be done from non long type name context
+
+----
+
 ###Solution - lambda expression
 
 ----
 
+####Type-Name erasure
 ```cpp
 static auto make_injector_impl = [](auto injector) {
   using injector_t = decltype(injector);
@@ -2275,19 +2410,19 @@ static auto make_injector_impl = [](auto injector) {
 
 ----
 
-###'Name' erasure - Benchmark
+###'Type-Name' erasure - Benchmark
 
 ----
 
 | Solution                         | Number of bindings | Time    |
 | -------------------------------- | ------------------ | ------- |
-| Long type name                   | 256                | 5.321s  |
-| Name erasure / inheritance       | 256                | 2.521s  |
-| Name erasure / lambda expression | 256                | 3.278s  |
+| Long Type-Name                   | 256                | 5.321s  |
+| Type-Name erasure / inheritance       | 256                | 2.521s  |
+| Type-Name erasure / lambda expression | 256                | 3.278s  |
 
 ----
 
-##More Results
+##More Benchmarks
 
 ---
 
@@ -2299,13 +2434,15 @@ http://boost-experimental.github.io/di/overview
 
 ----
 
+###Missing Features
+
+----
+
 ###Static reflection
 
 ----
 
-###Deduction of constructor parameters
-
-----
+####Deduction of constructor parameters
 
 ```cpp
 class example {
@@ -2325,6 +2462,8 @@ static_assert(std::is_same<
 
 ----
 
+####Select constructor
+
 ```cpp
 class example {
 public:
@@ -2337,6 +2476,8 @@ public:
 ```
 
 ----
+
+####Named parameters
 
 ```cpp
 class example {
@@ -2361,9 +2502,48 @@ auto injector = di::make_injector(
 
 ----
 
+####Compile-time name
+
 ```cpp
 template <class T, T... Ts>
 constexpr auto operator""_s();
+```
+
+```cpp
+"name parameter"_s
+```
+
+----
+
+###Retrieve a concept type
+
+----
+
+####Dummy Concept
+
+```cpp
+template <typename T>
+concept bool Dummy() {
+  return requires(T t) {
+    { t.dummy() };
+  };
+}
+
+struct DummyImpl {
+  void dummy() {}
+};
+```
+
+```cpp
+struct app {
+  app(Dummy); // => template<class T> app(T) requires Dummy<T>()
+};            // T vs Dummy?
+```
+
+####Bind concept to a type
+
+```cpp
+di::bind<Dummy>.to<DummyImpl>() // not possible
 ```
 
 ==============================================================================
