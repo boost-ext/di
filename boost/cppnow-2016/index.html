@@ -2065,7 +2065,7 @@ return 42;
 
 ###No run-time branches
 
-> Everything is known at compile-time and might be optimized
+> Everything is known at compile-time and may be optimized
 
 ----
 
@@ -2180,11 +2180,11 @@ $CXX -std=c++14 di.cpp # 0.050s
 
 ----
 
-###Avoid template instantiations
+###Limit template instantiations
 
 ----
 
-###Avoid recursive template algorithms*
+###Avoid 'naive' recursive template algorithms
 
 ----
 
@@ -2192,7 +2192,7 @@ $CXX -std=c++14 di.cpp # 0.050s
 
 ----
 
-###Avoid long type names (variadic templates)
+###Avoid long type names (Variadic templates)
 
 ----
 
