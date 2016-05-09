@@ -52,6 +52,13 @@ Kris Jusiak
 
 ##Dependency Injection
 
+note:
+1. Why DI
+2. Constructor deduction without reflection
+3. No performance overhead
+4. Quick compilation times
+5. Error messages (concepts)
+
 ----
 
 (DI) involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state. It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test
@@ -162,6 +169,13 @@ auto create() {
 ```
 
 > Boilerplate code which has to be maintained
+
+note:
+Tedious/Borking to write/maintain
+
+Devs takes shortcuts via extending types -> Legacy code
+
+Single Responsibility/Law of Demeter Principle
 
 ----
 
