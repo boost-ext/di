@@ -347,7 +347,7 @@ Version C++14 - v1.0.1
 
 https://github.com/boost-experimental/di
 
-note: 
+note:
 Experiments with Boost.Hana
 
 ----
@@ -1280,7 +1280,7 @@ http://boost-experimental.github.io/di/tutorial
 
 ----
 
-###"Standard" way without concepts
+###Common appraoch without concepts
 
 ----
 
@@ -1319,13 +1319,6 @@ constexpr auto providable() {
 ----
 
 ###Transport the substitution failures
-
-----
-
-```cpp
-#define REQUIRES(...) \
-  typename get_errors_from_types<__VA_ARGS__>::type
-```
 
 ----
 
@@ -1511,7 +1504,7 @@ public:
 class model {};
 class controller {
 public:
-  controller(model&, view&) {}
+  controller(model&, iview&) {} // iview interface
 };
 class user {};
 class app {
@@ -2373,13 +2366,13 @@ template<class... Ts> auto make_injector(Ts... args) {
 }
 
 auto injector = make_injector(...);
-injector.create<T>(); // compiles slowly due to 
+injector.create<T>(); // compiles slowly due to
                       // long type names comparisons
 ```
 
 ----
 
-###Solution - inheritance 
+###Solution - inheritance
 
 > Hide the long type name
 
@@ -2427,6 +2420,10 @@ static auto make_injector_impl = [](auto injector) {
 ----
 
 ###'Type-Name' erasure - Benchmark
+
+---
+
+http://melpon.org/wandbox/permlink/aot9ePGgtKtVKVKP
 
 ----
 
