@@ -527,10 +527,12 @@ class core::injector {
 
 ----
 
+####App
 [![Create objects tree](images/tutorial_create_objects_tree.png)](images/tutorial_create_objects_tree.png)
 
 ----
 
+####App
 ```cpp
 struct renderer { int device; };
 class iview {
@@ -556,6 +558,7 @@ public:
 
 ----
 
+####Create App
 ```cpp
 renderer renderer_;
 view view_{"title", renderer_};
@@ -571,6 +574,7 @@ app app_{controller_, user_};
 
 ----
 
+####Create App
 ```cpp
 auto app = di::make_injector().create<app>();
 ```
@@ -870,6 +874,7 @@ class core::injector {
 
 ----
 
+####Interface -> Implementations
 ```cpp
 class iview {
 public:
@@ -898,6 +903,7 @@ auto injector = di::make_injector(
 );
 ```
 
+####Test
 ```cpp
 assert(dynamic_cast<gui_view*>(
   injector.create<std::unique_ptr<iview>().get())
@@ -910,6 +916,7 @@ assert(dynamic_cast<gui_view*>(
 
 ----
 
+####Aggregate
 ```cpp
 struct T { // create using uniform initialization
   int& a;  // might be used to serialize
@@ -918,7 +925,6 @@ struct T { // create using uniform initialization
 ```
 
 ####Bindings
-
 ```cpp
  auto i = 42;
  auto injector = di::make_injector(
@@ -935,7 +941,6 @@ struct T { // create using uniform initialization
 ----
 
 ####Bindings
-
 ```cpp
 auto use_gui_view = true/false;
 
@@ -948,8 +953,7 @@ auto injector = di::make_injector(
 );
 ```
 
-####Create
-
+####Test
 ```cpp
 use_gui_view = true;
 assert(dynamic_cast<gui_view*>(
@@ -986,7 +990,10 @@ assert(dynamic_cast<text_view*>(
 auto injector = di::make_injector(
   di::bind<int[]>().to({1, 2, 3})
 );
+```
 
+####Test
+```cpp
 auto v = injector.create<std::vector<int>>();
          // or std::array / std::set
 
@@ -1010,6 +1017,7 @@ auto injector = di::make_injector(
 );
 ```
 
+####Test
 ```cpp
 auto v = injector.create<
   std::vector<std::unique_ptr<interface>>>();
@@ -1178,8 +1186,8 @@ constexpr auto operator""_s() {
 > For a standard solution use unique types instead
 
 ```cpp
-auto rows = []{}; // unique type name
-auto cols = []{}; // unique type name
+auto rows = []{}; // using r = decltype(rows);
+auto cols = []{}; // static_assert(!std::is_same<decltype(cols), r>{});
 ```
 
 ----
@@ -1493,6 +1501,7 @@ constexpr auto create_impl(TArgs&&... args) {
 
 ----
 
+####App
 ```cpp
 struct renderer {
   int device;
@@ -1517,6 +1526,10 @@ public:
 auto injector = di::make_injector(); // no bindings for iview
 injector.create<app>();
 ```
+
+----
+
+###Error message
 
 ----
 
@@ -1654,6 +1667,7 @@ error: inline function 'abstract_type<iview>::is_not_bound::error'
 
 ----
 
+####Dump types policy
 ```cpp
 struct types_dumper : di::config {
   static auto policies(...) noexcept {
@@ -1748,6 +1762,7 @@ struct serializable : di::config {
 
 ----
 
+####Serialize closure
 ```cpp
 auto serialize = [](const auto& injector, auto& str) {
   serializable_call_t::apply(injector, [&](const auto& o, auto t) {
@@ -1768,6 +1783,7 @@ auto serialize = [](const auto& injector, auto& str) {
 
 ----
 
+####Deserialize closure
 ```cpp
 auto deserialize = [](const auto& injector, auto& str) {
   serializable_call_t::apply(
@@ -1889,10 +1905,12 @@ injector.create<app>();
 
 ----
 
+####Create
 ```cpp
 di::make_injector<is_pod_or_is_bound>().create<app>();
 ```
 
+####Error message
 ```cpp
 error: 'create<app>' is deprecated: creatable constraint not satisfied
   injector.create<app>();
@@ -1903,6 +1921,8 @@ error: inline function 'type<not_a_pod>::not_allowed_by<
   error(_ = "type disabled by constructible policy
            , added by BOOST_DI_CFG or make_injector<CONFIG>!");
 ```
+
+> Error will be shown for ALL types which don't satisfy requirements
 
 ----
 
@@ -2036,6 +2056,7 @@ https://github.com/modern-cpp-examples/match3
 
 ----
 
+####Bindings
 ```cpp
 #include <boost/di.hpp>
 
@@ -2094,6 +2115,7 @@ injector.create<int>();  ---------------\
 
 ----
 
+####Bindings
 ```cpp
 #include <boost/di.hpp>
 
@@ -2139,6 +2161,7 @@ return std::make_unique<implementation>();
 
 ----
 
+####di.hpp
 ```cpp
 #include <boost/di.hpp>
 
@@ -2156,22 +2179,12 @@ $CXX -std=c++14 di.cpp # 0.050s
 
 ----
 
+####Create Benchmark
 ![Performance](images/performance_small.png)
 
 ```cpp
 4248897537 instances created
 132 different types
-10 modules
-```
-
-----
-
-![Performance](images/performance_big.png)
-
-```cpp
-5874638529236910091 instances created
-310 different types
-100 different interfaces
 10 modules
 ```
 
@@ -2279,6 +2292,7 @@ struct binder {
 
 ----
 
+####Resolve
 ```cpp
 auto injector = make_injector(dependency<i1, impl1>{});
 
@@ -2334,6 +2348,7 @@ http://melpon.org/wandbox/permlink/yMIaCIIDtjBXmV0E
 
 ----
 
+####Creatable concept
 ```cpp
 template <class T> requires creatable<T>()
 constexpr T create() const {
