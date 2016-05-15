@@ -227,14 +227,11 @@ http://boost-experimental.github.io/di/try_it
 
 > Let's make a web match-3 game in C++14
 
-* Model-View-Controller
-* Dependency Injection
-* Meta State Machine
-* Range-V3
 
----
-
-[Thursday, May 12 / 9:00am - 10:30am](https://cppnow2016.sched.org/event/6Sg4/lets-make-a-web-match-3-game-in-c14-using-dependency-injectionexperimental-boostdi-meta-state-machineexperimental-boostmsm-lite-rangev3-and-msvc-and-emscripten)
+* [Emscripten](http://emscripten.org)
+* [Ranges](https://github.com/ericniebler/range-v3)
+* [Dependency Injection](https://github.com/boost-experimental/di)
+* [Meta State Machine](https://github.com/boost-experimental/msm-lite)
 
 ---
 
@@ -456,6 +453,8 @@ Experiments with Boost.Hana
 ###Architecture
 
 ----
+
+####Design
 
 <img style="height:550px;" src="images/di.png" />
 
@@ -1288,10 +1287,11 @@ http://boost-experimental.github.io/di/tutorial
 
 ----
 
-###Common appraoch without concepts
+###Common approach without concepts
 
 ----
 
+####Requires
 ```cpp
 #define REQUIRES(...) \
   typename std::enable_if<__VA_ARGS__, int>::type = 0
@@ -1299,6 +1299,7 @@ http://boost-experimental.github.io/di/tutorial
 
 ----
 
+####Example - Providable
 ```cpp
 template <class...>
 using is_valid_expr = true_type;
@@ -1336,6 +1337,7 @@ constexpr auto providable() {
 
 ----
 
+###Any Type
 ```cpp
 struct any_type {
   template<class T>
@@ -1369,6 +1371,7 @@ struct any_type {
 
 ----
 
+####Creatable
 ```cpp
 template <class T, class TDependency = binder::resolve_t<T>>
 using creatable = std::is_convertible<
@@ -1405,12 +1408,13 @@ struct any_type {
 
 ----
 
+####Error deduction / Simplified
 ```cpp
 template<class T>
 constexpr auto show_the_error() {
   return aux::is_polymorphic<T>{} ?
     abstract_type<T>::is_not_bound{} :
-    type<T>::cant_be_created{}; // simplified version
+    type<T>::cant_be_created{};
 };
 ```
 
@@ -1425,6 +1429,7 @@ constexpr auto show_the_error() {
 
 ----
 
+####Abstract Type is not bound
 ```cpp
 template <class T>
 struct abstract_type {
@@ -1445,13 +1450,14 @@ struct abstract_type {
 
 ----
 
+####Lift warnings into errors
 ```cpp
 #if defined(__clang__)
 #pragma clang diagnostic error "-Wundefined-inline"
 #elif defined(__GCC__)
 #pragma GCC diagnostic error "-Werror"
 #elif defined(__MSVC__)
-#pragma warning(disable : 4822) // function does not have a body
+#pragma warning(disable : 4822)
 #endif
 ```
 
@@ -1535,8 +1541,6 @@ injector.create<app>();
 
 ###Clang
 
-----
-
 ```cpp
 error: 'create<app>' is deprecated: creatable constraint not satisfied
   injector.create<app>();
@@ -1552,8 +1556,6 @@ error: inline function 'abstract_type<iview>::is_not_bound::error'
 ----
 
 ###GCC
-
-----
 
 ```cpp
 error: ‘T injector<...>::create() const [with T = app]’ is deprecated:
@@ -1572,8 +1574,6 @@ error: inline function ‘abstract_type<T>::is_not_bound::error(_)
 ----
 
 ###MSVC
-
-----
 
 ```cpp
 error C4996: 'injector<...>::create': creatable constraint not
@@ -1597,13 +1597,11 @@ error C4506: no definition for inline function
 
 ----
 
-###BOOST DI CFG DIAGNOSTICS LEVEL
+##BOOST DI CFG DIAGNOSTICS LEVEL
 
 ----
 
-##BOOST DI CFG DIAGNOSTICS LEVEL=0
-
-----
+###BOOST DI CFG DIAGNOSTICS LEVEL=0
 
 ```cpp
 error: 'create<app>' is deprecated: creatable constraint not satisfied
@@ -1611,11 +1609,9 @@ error: 'create<app>' is deprecated: creatable constraint not satisfied
 
 ----
 
-##BOOST DI CFG DIAGNOSTICS LEVEL=1
+###BOOST DI CFG DIAGNOSTICS LEVEL=1
 
 > Default
-
-----
 
 ```cpp
 error: 'create<app>' is deprecated: creatable constraint not satisfied
@@ -1627,9 +1623,7 @@ error: inline function 'abstract_type<iview>::is_not_bound::error'
 ```
 ----
 
-##BOOST DI CFG DIAGNOSTICS LEVEL=2
-
-----
+###BOOST DI CFG DIAGNOSTICS LEVEL=2
 
 ```cpp
 error: 'create<app>' is deprecated: creatable constraint not satisfied
@@ -1709,6 +1703,8 @@ public:
 ```
 
 ----
+
+####Types dumper
 
 ```cpp
 auto injector = di::make_injector<types_dumper>(
@@ -2099,12 +2095,12 @@ return 42;
 
 ----
 
-####Create
+####Create (ASM x86-64)
 
 ```cpp
 injector.create<int>();  ---------------\
-  create_successful_impl(type<int>());  |   mov $0x2a,%eax
-    scope.create<int>(provider);        |-  retq
+  create_successful_impl(type<int>());  |      mov $0x2a,%eax
+    scope.create<int>(provider);        |--->  retq
       provider.get<int>();              |
         return 42; ---------------------/
 ```
@@ -2410,7 +2406,7 @@ erase_long_type_name{injector}.create<T>(); // quick to compile
 
 ###Problem - it's not flexible
 
-> It has to be done from non long type name context
+> It has to be done from 'non long type name' context -> user context
 
 ----
 
@@ -2580,10 +2576,6 @@ di::bind<Dummy>.to<DummyImpl>() // not possible
 
 ==============================================================================
 
-<img style="height: 500px; width: 350px;" src="images/review_manager.jpg" />
-
-==============================================================================
-
 ##Questions?
 
 * Documentation
@@ -2594,6 +2586,10 @@ di::bind<Dummy>.to<DummyImpl>() // not possible
 
 * Try it online
     * http://boost-experimental.github.io/di/try_it
+
+==============================================================================
+
+##Thank you
 					</script>
 				</section>
 			</div>
@@ -2670,7 +2666,7 @@ di::bind<Dummy>.to<DummyImpl>() // not possible
         previewLinks: false,
 
         // Transition style
-        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        transition: 'convex', // none/fade/slide/convex/concave/zoom
 
         // Transition speed
         transitionSpeed: 'default', // default/fast/slow
