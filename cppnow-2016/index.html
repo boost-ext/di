@@ -1530,12 +1530,12 @@ public:
 
 ```cpp
 auto injector = di::make_injector(); // no bindings for iview
-injector.create<app>();
+injector.create<app>(); // compilation error
 ```
 
 ----
 
-###Error message
+###Compilation error message
 
 ----
 
@@ -1594,6 +1594,8 @@ error C4506: no definition for inline function
             T=iview
         ]
 ```
+
+> Suggestions are not shown on MSVC
 
 ----
 
