@@ -514,8 +514,6 @@ class core::injector {
 };
 ```
 
-[https://github.com/boost-experimental/di](https://github.com/boost-experimental/di)
-
 ==============================================================================
 
 ##User Guide
@@ -1295,6 +1293,12 @@ http://boost-experimental.github.io/di/tutorial
 ```cpp
 #define REQUIRES(...) \
   typename std::enable_if<__VA_ARGS__, int>::type = 0
+```
+
+####Example
+```cpp
+template<class T, REQUIRES(std::is_same<T, int>{})>
+void call_if_int();
 ```
 
 ----
