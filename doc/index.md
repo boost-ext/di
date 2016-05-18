@@ -116,7 +116,7 @@ but also can help you with...
 * Boost.DI reduces testing effort (See [Mocks Provider](extensions.md#mocks-provider))
 * Boost.DI gives better control of what and how is created (See [Constructible Policy](user_guide.md#di_constructible))
 * Boost.DI gives better understanding about objects hierarchy (See [UML Dumper](extensions.md#uml-dumper))
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/try_it.cpp)
 
 ![CPP(BTN)](Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp)
 ![CPP(BTN)](Run_XML_Injection_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/xml_injection.cpp)
