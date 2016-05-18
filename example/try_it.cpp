@@ -6,7 +6,6 @@
 //
 #include <cassert>
 #include <iostream>
-#include <string>
 #include <boost/di.hpp>
 
 namespace di = boost::di;
@@ -32,6 +31,12 @@ struct example {
 };
 
 int main() {
-  auto injector = di::make_injector(di::bind<iworld>().to<world>(), di::bind<>().to(42));
+  // clang-format off
+  auto injector = di::make_injector(
+    di::bind<iworld>().to<world>()
+  , di::bind<>().to(42)
+  );
+  // clang-format off
+
   injector.create<example>();
 }
