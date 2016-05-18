@@ -35,7 +35,6 @@
 <div class="section">
 <pre><code class="cpp">#include &lt;cassert&gt;
 #include &lt;iostream&gt;
-#include &lt;string&gt;
 #include &lt;boost/di.hpp&gt;
 
 namespace di = boost::di;
@@ -60,7 +59,11 @@ struct example {
 };
 
 int main() {
-  auto injector = di::make_injector(di::bind&lt;iworld&gt;().to&lt;world&gt;(), di::bind&lt;&gt;().to(42));
+  auto injector = di::make_injector(
+    di::bind&lt;iworld&gt;().to&lt;world&gt;()
+  , di::bind&lt;&gt;().to(42)
+  );
+
   injector.create&lt;example&gt;();
 }
 </code></pre>

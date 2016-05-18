@@ -172,7 +172,7 @@
         }, 
         {
             "location": "/try_it/index.html", 
-            "text": "#include \ncassert\n\n#include \niostream\n\n#include \nstring\n\n#include \nboost/di.hpp\n\n\nnamespace di = boost::di;\n\nstruct iworld {\n  virtual ~iworld() noexcept = default;\n};\nstruct world : iworld {\n  world() { std::cout \n \n world!\n \n std::endl; }\n};\n\nstruct hello {\n  explicit hello(int i) {\n    assert(42 == i);\n    std::cout \n \nhello\n;\n  }\n};\n\nstruct example {\n  hello h;\n  iworld\n w;\n};\n\nint main() {\n  auto injector = di::make_injector(di::bind\niworld\n().to\nworld\n(), di::bind\n().to(42));\n  injector.create\nexample\n();\n}\n\n\n\n\n\n\nhttps://raw.githubusercontent.com/boost-experimental/di/cpp14/example/try_it.cpp", 
+            "text": "#include \ncassert\n\n#include \niostream\n\n#include \nboost/di.hpp\n\n\nnamespace di = boost::di;\n\nstruct iworld {\n  virtual ~iworld() noexcept = default;\n};\nstruct world : iworld {\n  world() { std::cout \n \n world!\n \n std::endl; }\n};\n\nstruct hello {\n  explicit hello(int i) {\n    assert(42 == i);\n    std::cout \n \nhello\n;\n  }\n};\n\nstruct example {\n  hello h;\n  iworld\n w;\n};\n\nint main() {\n  auto injector = di::make_injector(\n    di::bind\niworld\n().to\nworld\n()\n  , di::bind\n().to(42)\n  );\n\n  injector.create\nexample\n();\n}\n\n\n\n\n\n\nhttps://raw.githubusercontent.com/boost-experimental/di/cpp14/example/try_it.cpp", 
             "title": "Try It!"
         }, 
         {
