@@ -22,7 +22,7 @@
 ---
 
 ###Hello World
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/try_it.cpp)
 
 ###Bindings
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bindings.cpp)

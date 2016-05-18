@@ -13,7 +13,7 @@ Your C++14 header only Dependency Injection library with no dependencies ([__Try
 
 ```cpp
 +---------------------------------------------------+
-|$CXX -std=c++14 -fno-exceptions -O2 hello_world.cpp|
+|$CXX -std=c++14 -fno-exceptions -O2 example.cpp    |
 |#Compiles in 0.4s!                                 |
 +-----------------------------+---------------------+
                               |
@@ -39,9 +39,9 @@ Your C++14 header only Dependency Injection library with no dependencies ([__Try
  | |Inject  dependencies    |       std::shared_ptr<interface> sp_;        |mov    %rax,%rdi           |
  | |using T{...} or T(...)  |     };                                       |callq  0x400960 <_ZdlPvm>  |
  +-+without REFLECTION or   |                                +-------------+mov    $0x1,%eax           |
-   |any changes/registration+-----+class hello_world {       |             |pop    %rdx                |
+   |any changes/registration+-----+class example {           |             |pop    %rdx                |
    |in the code!            |      public:                   +             |retq                       |
-   +------------------------+       hello_world(std::unique_ptr<direct> d  +-------------------------+-+
+   +------------------------+       example(std::unique_ptr<direct> d      +-------------------------+-+
                                    +--------+ , interface &ref                                       |
                                    |          , int i)+-------------------------------------------+  +-+
                                    |  : i_(i) {                                                   |    |
@@ -73,7 +73,7 @@ Your C++14 header only Dependency Injection library with no dependencies ([__Try
                     +--------------+, module()                                     +---------------------+
                                     );                                  +----------+Compile time creation|
                                                                         +          |guarantee!           |
-                                    auto object = injector.create<hello_world>();  +---------------------+
+                                    auto object = injector.create<example>();      +---------------------+
                                     assert(object.run());  +
                                   }                        |
                                                            |  +----------------------------------------+
@@ -169,8 +169,8 @@ Your C++14 header only Dependency Injection library with no dependencies ([__Try
     * [Shared Scope](http://boost-experimental.github.io/di/extensions/index.html#shared-scope)
 * [FAQ](http://boost-experimental.github.io/di/FAQ/index.html)
 * [CHANGELOG](http://boost-experimental.github.io/di/CHANGELOG/index.html)
-    * [ [1.0.1] - 2015-05-04](http://boost-experimental.github.io/di/CHANGELOG/index.html#-101-2015-05-04)
-    * [ [1.0.0] - 2015-02-22](http://boost-experimental.github.io/di/CHANGELOG/index.html#-100-2015-02-22)
+    * [ [1.0.1] - 2016-05-04](http://boost-experimental.github.io/di/CHANGELOG/index.html#-101-2016-05-04)
+    * [ [1.0.0] - 2016-02-22](http://boost-experimental.github.io/di/CHANGELOG/index.html#-100-2016-02-22)
     * [ [0.5.0] - 2015-01-12](http://boost-experimental.github.io/di/CHANGELOG/index.html#-050-2015-01-12)
     * [ [0.1.0] - 2014-08-15](http://boost-experimental.github.io/di/CHANGELOG/index.html#-010-2014-08-15)
 * [TODO](http://boost-experimental.github.io/di/TODO/index.html)
