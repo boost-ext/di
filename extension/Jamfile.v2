@@ -43,6 +43,7 @@ test-suite extensions :
     [ extension bindings/contextual_bindings.cpp ]
     [ extension injections/assisted_injection.cpp ]
     [ extension injections/concepts.cpp ]
+    [ extension injections/factory.cpp ]
     [ extension injections/lazy.cpp ]
     [ extension injections/named_parameters.cpp ]
     [ extension injections/xml_injection.cpp ]

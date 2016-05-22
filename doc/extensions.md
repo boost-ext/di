@@ -2,6 +2,7 @@
 * [Contextual Bindings](#contextual-bindings)
 * [Assisted Injection](#assisted-injection)
 * [Concepts](#concepts)
+* [Factory](#factory)
 * [Lazy](#lazy)
 * [Named Parameters](#named-parameters)
 * [XML Injection](#xml-injection)
@@ -26,6 +27,9 @@
 
 ###Concepts
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/concepts.cpp)
+
+###Factory
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/factory.cpp)
 
 ###Lazy
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/lazy.cpp)
