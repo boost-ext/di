@@ -30,7 +30,11 @@ struct factory_impl<TInjector, T, ifactory<I, TArgs...>> : ifactory<I, TArgs...>
     // clang-format off
     auto injector = di::make_injector(
       std::move(injector_)
+#if (__clang_major__ == 3) && (__clang_minor__ > 4) || defined(__GCC___) || defined(__MSVC__)
     , di::bind<TArgs>().to(std::forward<TArgs>(args))[di::override]...
+#else // wknd for clang 3.4
+    , di::core::dependency<di::scopes::instance, TArgs, TArgs, di::no_name, di::core::override>(std::forward<TArgs>(args))...
+#endif
     );
     // clang-format on
 
