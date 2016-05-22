@@ -337,7 +337,7 @@
         }, 
         {
             "location": "/extensions/index.html", 
-            "text": "Constructor Bindings\n\n\nContextual Bindings\n\n\nAssisted Injection\n\n\nConcepts\n\n\nLazy\n\n\nNamed Parameters\n\n\nXML Injection\n\n\nSerialize\n\n\nTypes Dumper\n\n\nUML Dumper\n\n\nMocks Provider\n\n\nScoped Scope\n\n\nSession Scope\n\n\nShared Scope\n\n\n\n\n\n\nConstructor Bindings\n\n\n\n\nContextual Bindings\n\n\n\n\nAssisted Injection\n\n\n\n\nConcepts\n\n\n\n\nLazy\n\n\n\n\nNamed Parameters\n\n\n\n\nXML Injection\n\n\n\n\nSerialize\n\n\n\n\nTypes Dumper\n\n\n\n\nUML Dumper\n\n\n\n\n\n\nMocks Provider\n\n\n\n\nScoped Scope\n\n\n\n\nSession Scope\n\n\n\n\nShared Scope", 
+            "text": "Constructor Bindings\n\n\nContextual Bindings\n\n\nAssisted Injection\n\n\nConcepts\n\n\nFactory\n\n\nLazy\n\n\nNamed Parameters\n\n\nXML Injection\n\n\nSerialize\n\n\nTypes Dumper\n\n\nUML Dumper\n\n\nMocks Provider\n\n\nScoped Scope\n\n\nSession Scope\n\n\nShared Scope\n\n\n\n\n\n\nConstructor Bindings\n\n\n\n\nContextual Bindings\n\n\n\n\nAssisted Injection\n\n\n\n\nConcepts\n\n\n\n\nFactory\n\n\n\n\nLazy\n\n\n\n\nNamed Parameters\n\n\n\n\nXML Injection\n\n\n\n\nSerialize\n\n\n\n\nTypes Dumper\n\n\n\n\nUML Dumper\n\n\n\n\n\n\nMocks Provider\n\n\n\n\nScoped Scope\n\n\n\n\nSession Scope\n\n\n\n\nShared Scope", 
             "title": "Extensions"
         }, 
         {
@@ -359,6 +359,11 @@
             "location": "/extensions/index.html#concepts", 
             "text": "", 
             "title": "Concepts"
+        }, 
+        {
+            "location": "/extensions/index.html#factory", 
+            "text": "", 
+            "title": "Factory"
         }, 
         {
             "location": "/extensions/index.html#lazy", 

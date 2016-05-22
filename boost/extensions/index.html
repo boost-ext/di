@@ -44,6 +44,10 @@
     
 
     
+        <dt><span class="section"><a href="#factory">Factory</a></span></dt>
+    
+
+    
         <dt><span class="section"><a href="#lazy">Lazy</a></span></dt>
     
 
@@ -94,6 +98,7 @@
 <li><a href="#contextual-bindings">Contextual Bindings</a></li>
 <li><a href="#assisted-injection">Assisted Injection</a></li>
 <li><a href="#concepts">Concepts</a></li>
+<li><a href="#factory">Factory</a></li>
 <li><a href="#lazy">Lazy</a></li>
 <li><a href="#named-parameters">Named Parameters</a></li>
 <li><a href="#xml-injection">XML Injection</a></li>
@@ -296,6 +301,66 @@ int main() {
 
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/concepts.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/concepts.cpp</a></li>
+</ul>
+<h3 id="factory">Factory</h3>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+
+struct implementation : interface {
+  void dummy1() override {}
+};
+
+struct implementation_with_args : interface {
+  implementation_with_args(int i, double d) {
+    assert(42 == i);
+    assert(87.0 == d);
+  }
+  void dummy1() override {}
+};
+
+struct implementation_with_injected_args : interface {
+  implementation_with_injected_args(int i, double d) {
+    assert(123 == i);
+    assert(87.0 == d);
+  }
+  void dummy1() override {}
+};
+
+/*&lt;&lt;example `example` class&gt;&gt;*/
+class example {
+ public:
+  example(const ifactory&lt;interface&gt;&amp; f1, const ifactory&lt;interface, int, double&gt;&amp; f2, const ifactory&lt;interface, double&gt;&amp; f3) {
+    assert(dynamic_cast&lt;implementation*&gt;(f1.create().get()));
+    assert(dynamic_cast&lt;implementation_with_args*&gt;(f2.create(42, 87.0).get()));
+    assert(dynamic_cast&lt;implementation_with_injected_args*&gt;(f3.create(87.0).get()));
+  }
+};
+
+int main() {
+  //&lt;&lt;define injector&gt;&gt;
+  auto module = [] { return di::make_injector(di::bind&lt;&gt;().to(123)); };
+
+  auto injector = di::make_injector(module()
+
+  //&lt;&lt;bind factory interface to implementation&gt;&gt;
+  , di::bind&lt;ifactory&lt;interface&gt;&gt;().to(factory&lt;implementation&gt;{})
+
+  //&lt;&lt;bind factory interface with parameters to implementation_with_args&gt;&gt;
+  , di::bind&lt;ifactory&lt;interface, int, double&gt;&gt;().to(factory&lt;implementation_with_args&gt;{})
+
+  //&lt;&lt;bind factory interface with some parameters injected to implementation_with_injected_args&gt;&gt;
+  , di::bind&lt;ifactory&lt;interface, double&gt;&gt;().to(factory&lt;implementation_with_injected_args&gt;{})
+  );
+
+  /*&lt;&lt;create `example`&gt;&gt;*/
+  injector.create&lt;example&gt;();
+}
+</code></pre>
+
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/factory.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/factory.cpp</a></li>
 </ul>
 <h3 id="lazy">Lazy</h3>
 <pre><code class="cpp">#include &lt;boost/di.hpp&gt;
