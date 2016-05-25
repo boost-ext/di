@@ -79,14 +79,26 @@ Notice that **ORDER** in which above dependencies are created is **IMPORTANT** a
 **ANY** change in **ANY** of the objects constructor will **REQUIRE** a change in this code!
 
 ![CPP(BTN)](Run_Motivation_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/motivation.cpp)
+<br />
 
-<br /><br />
+Right now, imagine a project with hundreds or thousands of those dependencies and a critical issue
+which has to be fixed ASAP. Unfortunately, in order to fix the bug properly a new non-trivial dependency has to be
+introduced.
 
-DI library, not only let you forget about maintaining above code (See [Create Objects Tree](tutorial.md#1-basic-create-objects-tree)),
+Now, imagine that a 'smart' dev figured out that it will be much easier to extend the functionally
+of already passed object and snick a workaround/'solution' this way. Such approach will possibly break a **[single responsibility principle](https://en.wikipedia.org/wiki/Single_responsibility_principle)**
+of the changed object but no worries though, it might be refactored later on (meaning: most likely, the workaround will stay unchanged forever and that there are no tests).
+
+**If that sounds familiar**, take a look into DI library as it helps to solve developer dilemma by taking care
+of creating all required dependencies whereas dev may focus on fixing and testing the issue.
+
+---
+
+**DI library**, not only let you forget about maintaining dependencies creation (See [Create Objects Tree](tutorial.md#1-basic-create-objects-tree)),
 but also can help you with...
 
-* Testing it (See [Mocks Provider](extensions.md#mocks-provider))
-* Serializing it (See [Serialize](extensions.md#serialize))
+* Testing (See [Mocks Provider](extensions.md#mocks-provider))
+* Serializing (See [Serialize](extensions.md#serialize))
 * Understand code dependencies (See [UML Dumper](extensions.md#uml-dumper))
 * Restrict what types and how they should be created (See [Constructible Policy](user_guide.md#di_constructible))
 
@@ -116,7 +128,78 @@ but also can help you with...
 * Boost.DI reduces testing effort (See [Mocks Provider](extensions.md#mocks-provider))
 * Boost.DI gives better control of what and how is created (See [Constructible Policy](user_guide.md#di_constructible))
 * Boost.DI gives better understanding about objects hierarchy (See [UML Dumper](extensions.md#uml-dumper))
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/try_it.cpp)
+
+```cpp
++---------------------------------------------------+
+|$CXX -std=c++14 -fno-exceptions -O2 example.cpp    |
+|#Compiles in 0.4s!                                 |
++-----------------------------+---------------------+
+                              |
+                              \
+                                  #include <boost/di.hpp> +-----------+
+ +-----------------------------+                                      |
+ |                             |  namespace di = boost::di;     +-----+--------------------------------+
+ |                             +-+                              |One header (3k lines, no dependencies)|
+ |  +-----------------------+    +struct uniform {              +--------------------------------------+
+ |  |Automatic conversion   |       bool &b;
+ |  |between std::shared_ptr+------+boost::shared_ptr<interface> sp;
+ |  |and boost::shared_ptr  |     };
+ |  +-----------------------+
+ |                             +-+class direct {
+ |                          +--+   public:                                 +---------------------------+
+ |                          |       direct(const uniform &uniform          |ASM x86-64 == `make_unique`|
+ |               +----------+            , std::shared_ptr<interface> sp)  +---------------------------+
+ |               |                    : uniform_(uniform)                  |push   %rax                |
+ |               |                  , sp_(sp)                              |mov    $0x8,%edi           |
+ |               |                  {}                                     |callq  0x4007b0 <_Znwm@plt>|
+ |               |                                                         |movq   $0x400a10,(%rax)    |
+ | +-------------+----------+       const uniform &uniform_;               |mov    $0x8,%esi           |
+ | |Inject  dependencies    |       std::shared_ptr<interface> sp_;        |mov    %rax,%rdi           |
+ | |using T{...} or T(...)  |     };                                       |callq  0x400960 <_ZdlPvm>  |
+ +-+without REFLECTION or   |                                +-------------+mov    $0x1,%eax           |
+   |any changes/registration+-----+class example {           |             |pop    %rdx                |
+   |in the code!            |      public:                   +             |retq                       |
+   +------------------------+       example(std::unique_ptr<direct> d      +-------------------------+-+
+                                   +--------+ , interface &ref                                       |
+                                   |          , int i)+-------------------------------------------+  +-+
+                                   |  : i_(i) {                                                   |    |
+                                   |  assert(false == d->uniform_.b);                             |    |
+                     +-------------+  assert(d->sp_.get() == d->uniform_.sp.get());               |    |
+                     |                assert(&ref == d->sp_.get());     +                         |    |
+    +----------------+---------+    }                         +         |                         |    |
+    |Deduce scope based on     |                              |         |                         |    |
+    |constructor parameter type|    auto run() const {        +---------+ +--------------------+  |    |
+    |T -> unique               |      return i_ == 42;                  +-+The same shared_ptr,|  |    |
+    |T& -> singleton           |    }                                     |reference provided  |  |    |
+    |shared_ptr -> singleton   |                                          +--------------------+  |    |
+    |unique_ptr |> unique      |   private:                                                       |    |
+    +--------------------------+    int i_ = 0;                                                +--+    |
+                                  };                                                           |       |
+                                                                                               |       |
+                                  int main() {                          +----------------------+--+    |
+                                    auto runtime_value = false;         |ASM x86-64 == 'return 42'|    |
+                                                                        +-------------------------+    |
+                    +-------------+ auto module = [&] {                 |mov $0x2a,%eax           |    |
+            +-------+-----------+     return di::make_injector(         |retq                     |    |
+            |Split configuration|       di::bind<>().to(runtime_value)  +----+--------------------+    |
+            |into modules       |     );                                     |                         |
+            +-------+-----------+   };                                       |                         |
+                    |         +----------------------------------------------+                         |
+                    |         |     auto injector = di::make_injector(                                 |
+                    |         |       di::bind<interface>().to<implementation>()+----------------------+
+                    |         +---+ , di::bind<>().to(42)
+                    +--------------+, module()                                     +---------------------+
+                                    );                                  +----------+Compile time creation|
+                                                                        +          |guarantee!           |
+                                    auto object = injector.create<example>();      +---------------------+
+                                    assert(object.run());  +
+                                  }                        |
+                                                           |  +----------------------------------------+
+                                                           +--+Short compile time error messages!      |
+                                                              |For example:                            |
+                                                              |`abstract_type<interface>::is_not_bound`|
+                                                              +----------------------------------------+
+```
 
 ![CPP(BTN)](Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp)
 ![CPP(BTN)](Run_XML_Injection_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/xml_injection.cpp)
