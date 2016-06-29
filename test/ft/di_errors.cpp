@@ -1327,7 +1327,7 @@ int main() { di::make_injector<test_config>(); }
       expect_compile_fail("", errors(), struct provider{}; int main() { di::bind<int>().create<int>(provider{}); });
     };
 
-#if !defined(__MSVC__)
+#if !defined(__MSVC__) && (__GNUC__ < 6)
     test access_dependency_is_referable = [] {
       expect_compile_fail("<include> type_traits", errors(),
                           int main() { using type = std::remove_reference_t<decltype(di::bind<int>())>::is_referable<int>; });
