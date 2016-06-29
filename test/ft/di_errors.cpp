@@ -1268,12 +1268,14 @@ int main() { di::make_injector<test_config>(); }
       });
     };
 
+#if (__GNUC__ < 6)
     test access_injector_try_create = [] {
       expect_compile_fail("", errors(), int main() {
         auto injector = di::make_injector();
         injector.try_create<int>();
       });
     };
+#endif
 
     test access_injector_create_impl = [] {
       expect_compile_fail("", errors(), int main() {
@@ -1331,5 +1333,3 @@ int main() { di::make_injector<test_config>(); }
                           int main() { using type = std::remove_reference_t<decltype(di::bind<int>())>::is_referable<int>; });
     };
 #endif
-
-    // ---------------------------------------------------------------------------

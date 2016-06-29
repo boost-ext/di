@@ -18,7 +18,7 @@
 
 namespace {
 
-auto disassemble(const std::string& f, const std::regex& rgx) {
+inline auto disassemble(const std::string& f, const std::regex& rgx) {
   file<> commands{f + ".cmd"};
   std::stringstream command;
 
@@ -62,8 +62,14 @@ auto disassemble(const std::string& f, const std::regex& rgx) {
   return result.str();
 }
 
-bool check_opcodes(const std::string& name, const std::regex& rgx = std::regex{".*:(.*)"}) {
-  return disassemble("given_" + name, rgx) == disassemble("expected_" + name, rgx);
+inline auto check_opcodes(const std::string& name, const std::regex& rgx = std::regex{".*:(.*)"}) {
+  const auto given = disassemble("given_" + name, rgx);
+  const auto expected = disassemble("expected_" + name, rgx);
+  const auto result = given == expected;
+  if (!result) {
+    std::printf("[expected]%s\n[given]%s\n", expected.c_str(), given.c_str());
+  }
+  return result;
 }
 
 }  // namespace
