@@ -4,12 +4,12 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#include "boost/di/aux_/type_traits.hpp"
 #include <memory>
+#include <set>
 #include <string>
 #include <vector>
-#include <set>
 #include "boost/di/aux_/compiler.hpp"
-#include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/fwd.hpp"
 #include "common/common.hpp"
 

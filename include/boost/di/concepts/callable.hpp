@@ -10,8 +10,8 @@
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/core/dependency.hpp"
 #include "boost/di/core/pool.hpp"
-#include "boost/di/scopes/deduce.hpp"
 #include "boost/di/fwd.hpp"
+#include "boost/di/scopes/deduce.hpp"
 
 namespace concepts {
 

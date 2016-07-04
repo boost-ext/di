@@ -9,12 +9,12 @@
 
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
-#include "boost/di/core/array.hpp"
-#include "boost/di/scopes/instance.hpp"
-#include "boost/di/scopes/deduce.hpp"
-#include "boost/di/concepts/scopable.hpp"
 #include "boost/di/concepts/boundable.hpp"
+#include "boost/di/concepts/scopable.hpp"
+#include "boost/di/core/array.hpp"
 #include "boost/di/fwd.hpp"
+#include "boost/di/scopes/deduce.hpp"
+#include "boost/di/scopes/instance.hpp"
 
 namespace core {
 
@@ -63,7 +63,7 @@ class dependency
   };
 
   template <int N>
-  struct ref_traits<const char(&)[N]> {
+  struct ref_traits<const char (&)[N]> {
     using type = TExpected;
   };
 
@@ -108,7 +108,7 @@ class dependency
   }
 
   template <class T, BOOST_DI_REQUIRES_MSG(concepts::scopable<T>) = 0>
-  auto in(const T&) noexcept {
+  auto in(const T&)noexcept {
     return dependency<T, TExpected, TGiven, TName, TPriority>{};
   }
 

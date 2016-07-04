@@ -6,8 +6,8 @@
 //
 #include "boost/di/injector.hpp"
 #include "boost/di/core/injector.hpp"
-#include "common/fakes/fake_dependency.hpp"
 #include "common/fakes/fake_config.hpp"
+#include "common/fakes/fake_dependency.hpp"
 
 namespace core {
 

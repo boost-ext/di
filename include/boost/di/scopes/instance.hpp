@@ -7,10 +7,10 @@
 #define BOOST_DI_SCOPES_INSTANCE_HPP
 
 #include "boost/di/aux_/type_traits.hpp"
-#include "boost/di/wrappers/shared.hpp"
-#include "boost/di/wrappers/unique.hpp"
 #include "boost/di/concepts/creatable.hpp"
 #include "boost/di/fwd.hpp"
+#include "boost/di/wrappers/shared.hpp"
+#include "boost/di/wrappers/unique.hpp"
 
 namespace scopes {
 
@@ -270,7 +270,7 @@ class instance {
     using is_referable = aux::true_type;
 
     template <class TInjector, BOOST_DI_REQUIRES(aux::is_a<core::injector_base, TInjector>::value) = 0>
-    explicit scope(TInjector&& i) noexcept : injector_((injector*) new injector_impl<TInjector>{static_cast<TInjector&&>(i)}) {}
+    explicit scope(TInjector&& i) noexcept : injector_((injector*)new injector_impl<TInjector>{static_cast<TInjector&&>(i)}) {}
 
     scope(scope&& other) noexcept : injector_(other.injector_) { other.injector_ = nullptr; }
     ~scope() noexcept { delete injector_; }

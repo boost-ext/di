@@ -7,8 +7,8 @@
 #ifndef BOOST_DI_SCOPES_UNIQUE_HPP
 #define BOOST_DI_SCOPES_UNIQUE_HPP
 
-#include "boost/di/wrappers/unique.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
+#include "boost/di/wrappers/unique.hpp"
 
 namespace scopes {
 

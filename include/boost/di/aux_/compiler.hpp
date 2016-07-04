@@ -22,7 +22,7 @@
 #define __has_include(...) 0
 #define BOOST_DI_UNUSED
 #define BOOST_DI_DEPRECATED(...) __declspec(deprecated(__VA_ARGS__))  // error C2059: syntax error: '<L_ATTRIBUTE_SPECIFIER>'
-#define BOOST_DI_TYPE_WKND(T) (T && )
+#define BOOST_DI_TYPE_WKND(T) (T &&)
 #endif
 
 #if !defined(__has_builtin)

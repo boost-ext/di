@@ -9,10 +9,10 @@
 //->
 #include <boost/di.hpp>
 //<-
-#include <memory>
 #include <cassert>
-#include <vector>
+#include <memory>
 #include <set>
+#include <vector>
 //->
 
 namespace di = boost::di;

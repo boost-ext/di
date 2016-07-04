@@ -7,10 +7,10 @@
 #ifndef BOOST_DI_UTILS_HPP
 #define BOOST_DI_UTILS_HPP
 
-#include <string>
-#include <fstream>
-#include <cstdlib>
 #include <limits.h>
+#include <cstdlib>
+#include <fstream>
+#include <string>
 #if defined(__linux)
 #include <unistd.h>
 #elif defined(__APPLE__)

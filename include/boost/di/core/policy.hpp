@@ -8,8 +8,8 @@
 #define BOOST_DI_CORE_POLICY_HPP
 
 #include "boost/di/aux_/compiler.hpp"
-#include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/aux_/utility.hpp"
 #include "boost/di/core/binder.hpp"
 #include "boost/di/core/pool.hpp"
 

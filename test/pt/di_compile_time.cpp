@@ -6,11 +6,11 @@
 //
 #if !defined(COVERAGE)
 
-#include <iomanip>
-#include <sstream>
-#include <cstdlib>
 #include <chrono>
+#include <cstdlib>
+#include <iomanip>
 #include <regex>
+#include <sstream>
 #include "common/utils.hpp"
 
 namespace {

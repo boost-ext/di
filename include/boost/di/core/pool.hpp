@@ -7,8 +7,8 @@
 #ifndef BOOST_DI_CORE_POOL_HPP
 #define BOOST_DI_CORE_POOL_HPP
 
-#include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/aux_/utility.hpp"
 
 namespace core {
 

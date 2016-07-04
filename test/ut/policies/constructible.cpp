@@ -4,12 +4,12 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <type_traits>
-#include <memory>
-#include "boost/di/aux_/utility.hpp"
 #include "boost/di/policies/constructible.hpp"
-#include "boost/di/inject.hpp"
+#include <memory>
+#include <type_traits>
+#include "boost/di/aux_/utility.hpp"
 #include "boost/di/fwd.hpp"
+#include "boost/di/inject.hpp"
 #include "common/fakes/fake_policy.hpp"
 
 namespace policies {

@@ -5,11 +5,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 //<-
-#include <boost/di.hpp>
 #include "module_view.hpp"
+#include <boost/di.hpp>
 #include "common.hpp"
-#include "view.hpp"
 #include "config.hpp"
+#include "view.hpp"
 //->
 
 namespace di = boost::di;

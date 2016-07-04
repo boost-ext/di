@@ -5,9 +5,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 //<-
-#include <cassert>
-#include <boost/di.hpp>
 #include "model.hpp"
+#include <boost/di.hpp>
+#include <cassert>
 //->
 
 model::model(int rows, int colls, std::unique_ptr<iboard> b) {

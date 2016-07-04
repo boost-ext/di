@@ -4,16 +4,16 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <memory>
-#include <cstdlib>
 #include <cstdio>
+#include <cstdlib>
 #include <fstream>
-#include <regex>
-#include <vector>
-#include <string>
-#include <sstream>
-#include <iostream>
 #include <initializer_list>
+#include <iostream>
+#include <memory>
+#include <regex>
+#include <sstream>
+#include <string>
+#include <vector>
 #include "boost/di/aux_/compiler.hpp"
 #include "common/utils.hpp"
 
@@ -694,17 +694,19 @@ test make_injector_wrong_arg = [] {
 };
 
 test make_injector_with_from_not_movable = [] {
-  expect_compile_fail("", errors(), struct c{}; int main() {
-    auto module = di::make_injector();
-    di::make_injector(module);
-  });
+  expect_compile_fail(
+      "", errors(), struct c{}; int main() {
+        auto module = di::make_injector();
+        di::make_injector(module);
+      });
 };
 
 test make_injector_with_from_not_movable_exposed = [] {
-  expect_compile_fail("", errors(), struct c{}; int main() {
-    auto module = di::make_injector();
-    di::injector<> injector = di::make_injector(module);
-  });
+  expect_compile_fail(
+      "", errors(), struct c{}; int main() {
+        auto module = di::make_injector();
+        di::injector<> injector = di::make_injector(module);
+      });
 };
 
 test exposed_multiple_times = [] {
@@ -752,7 +754,7 @@ test make_policies_with_non_movable_policy = [] {
 	struct non_movable_policy {
     template <class T>
     void operator()(const T&) {}
-    non_movable_policy(non_movable_policy && ) = delete;
+    non_movable_policy(non_movable_policy &&) = delete;
 	};
     struct test_config : di::config {
     static auto policies(...) { return di::make_policies(non_movable_policy{});
@@ -870,10 +872,12 @@ int main() { di::make_injector<test_config>(); }
 #endif
           );
 
-      expect_compile_fail("", errors_, struct i {
-        virtual ~i() noexcept = default;
-        virtual void dummy() = 0;
-      }; struct c{c(i*){}}; int main() { di::make_injector().create<c>(); });
+      expect_compile_fail("", errors_,
+                          struct i {
+                            virtual ~i() noexcept = default;
+                            virtual void dummy() = 0;
+                          };
+                          struct c{c(i*){}}; int main() { di::make_injector().create<c>(); });
     };
 
     test create_polymorphic_type_without_binding_ref = [] {
@@ -888,10 +892,12 @@ int main() { di::make_injector<test_config>(); }
 #endif
           );
 
-      expect_compile_fail("", errors_, struct i {
-        virtual ~i() noexcept = default;
-        virtual void dummy() = 0;
-      }; struct c{c(i&){}}; int main() { di::make_injector().create<c>(); });
+      expect_compile_fail("", errors_,
+                          struct i {
+                            virtual ~i() noexcept = default;
+                            virtual void dummy() = 0;
+                          };
+                          struct c{c(i&){}}; int main() { di::make_injector().create<c>(); });
     };
 
     test create_polymorphic_type_without_binding_using_multi_bindings = [] {
@@ -955,10 +961,13 @@ int main() { di::make_injector<test_config>(); }
 #endif
           );
 
-      expect_compile_fail("", errors_, struct i {
-        virtual ~i() noexcept = default;
-        virtual void dummy() = 0;
-      }; struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{})i*){}}; int main() { di::make_injector().create<c>(); });
+      expect_compile_fail("", errors_,
+                          struct i {
+                            virtual ~i() noexcept = default;
+                            virtual void dummy() = 0;
+                          };
+                          struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{})i*){}};
+                          int main() { di::make_injector().create<c>(); });
     };
 
     test exposed_not_creatable = [] {
@@ -1048,10 +1057,11 @@ int main() { di::make_injector<test_config>(); }
 #endif
           );
 
-      expect_compile_fail("", errors_, struct c{c(int*){}}; int main() {
-        auto injector = di::make_injector(di::bind<int>().in(di::singleton));
-        injector.create<c>();
-      });
+      expect_compile_fail(
+          "", errors_, struct c{c(int*){}}; int main() {
+            auto injector = di::make_injector(di::bind<int>().in(di::singleton));
+            injector.create<c>();
+          });
     };
 
     test bind_instance_not_convertible = [] {
@@ -1066,10 +1076,11 @@ int main() { di::make_injector<test_config>(); }
 #endif
           );
 
-      expect_compile_fail("", errors_, struct c{c(int*){}}; int main() {
-        auto injector = di::make_injector(di::bind<int>().to(42));
-        injector.create<c>();
-      });
+      expect_compile_fail(
+          "", errors_, struct c{c(int*){}}; int main() {
+            auto injector = di::make_injector(di::bind<int>().to(42));
+            injector.create<c>();
+          });
     };
 
     test bind_instance_not_referable = [] {
@@ -1084,11 +1095,12 @@ int main() { di::make_injector<test_config>(); }
 #endif
           );
 
-      expect_compile_fail("", errors_, struct c{c(int&){}}; int main() {
-        auto injector = di::make_injector(di::bind<int>().to(42)  // lvalue can't be converted to a reference
-                                          );
-        injector.create<c>();
-      });
+      expect_compile_fail(
+          "", errors_, struct c{c(int&){}}; int main() {
+            auto injector = di::make_injector(di::bind<int>().to(42)  // lvalue can't be converted to a reference
+                                              );
+            injector.create<c>();
+          });
     };
 
     test bind_instance_not_referable_named = [] {
@@ -1177,13 +1189,14 @@ int main() { di::make_injector<test_config>(); }
     // ---------------------------------------------------------------------------
 
     test ctor_inject_limit_out_of_range = [] {
-      expect_compile_fail("-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3",
-                          errors("Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE"),
-                          struct c{BOOST_DI_INJECT(c, int, int, int, int){}};
-                          int main() {
-                            auto injector = di::make_injector();
-                            injector.create<c>();
-                          });
+      expect_compile_fail(
+          "-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3",
+          errors("Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE"),
+          struct c{BOOST_DI_INJECT(c, int, int, int, int){}};
+          int main() {
+            auto injector = di::make_injector();
+            injector.create<c>();
+          });
     };
 
     test ctor_limit_out_of_range = [] {
@@ -1197,10 +1210,11 @@ int main() { di::make_injector<test_config>(); }
 #endif
           );
 
-      expect_compile_fail("-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3", errors_, struct c{c(int, int, int, int){}}; int main() {
-        auto injector = di::make_injector();
-        injector.create<c>();
-      });
+      expect_compile_fail(
+          "-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3", errors_, struct c{c(int, int, int, int){}}; int main() {
+            auto injector = di::make_injector();
+            injector.create<c>();
+          });
     };
 
     test injector_ctor_ambiguous = [] {
@@ -1229,15 +1243,16 @@ int main() { di::make_injector<test_config>(); }
 #endif
           );
 
-      expect_compile_fail("", errors_,
-                          struct c {
-                            BOOST_DI_INJECT_TRAITS(int, int);  // 2
-                            c(int, int, int, int) {}           // 4
-                          };
-                          int main() {
-                            auto injector = di::make_injector();
-                            injector.create<c>();
-                          });
+      expect_compile_fail(
+          "", errors_,
+          struct c {
+            BOOST_DI_INJECT_TRAITS(int, int);  // 2
+            c(int, int, int, int) {}           // 4
+          };
+          int main() {
+            auto injector = di::make_injector();
+            injector.create<c>();
+          });
     };
 
     test named_paramater_spelling = [] {

@@ -4,10 +4,10 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#include "boost/di/bindings.hpp"
 #include <type_traits>
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/concepts/boundable.hpp"
-#include "boost/di/bindings.hpp"
 
 struct i {
   virtual ~i() noexcept = default;

@@ -6,8 +6,8 @@
 //
 //<-
 #include <cassert>
-#include <memory>
 #include <functional>
+#include <memory>
 #include <string>
 //->
 #include <boost/di.hpp>

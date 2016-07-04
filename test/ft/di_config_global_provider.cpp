@@ -6,8 +6,8 @@
 //
 #define BOOST_DI_CFG_FWD class global_provider;
 #define BOOST_DI_CFG global_provider
-#include <utility>
 #include <boost/di.hpp>
+#include <utility>
 
 namespace di = boost::di;
 

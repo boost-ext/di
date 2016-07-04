@@ -7,12 +7,12 @@
 #ifndef BOOST_DI_INJECTOR_HPP
 #define BOOST_DI_INJECTOR_HPP
 
-#include "boost/di/core/injector.hpp"
 #include "boost/di/concepts/boundable.hpp"
 #include "boost/di/concepts/configurable.hpp"
-#include "boost/di/type_traits/named_traits.hpp"
 #include "boost/di/config.hpp"
+#include "boost/di/core/injector.hpp"
 #include "boost/di/fwd.hpp"
+#include "boost/di/type_traits/named_traits.hpp"
 
 namespace detail {
 

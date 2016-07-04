@@ -7,8 +7,8 @@
 #ifndef BOOST_DI_WRAPPERS_SHARED_HPP
 #define BOOST_DI_WRAPPERS_SHARED_HPP
 
-#include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/aux_/utility.hpp"
 #include "boost/di/fwd.hpp"
 
 namespace wrappers {

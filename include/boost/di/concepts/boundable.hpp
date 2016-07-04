@@ -7,8 +7,8 @@
 #ifndef BOOST_DI_CONCEPTS_BOUNDABLE_HPP
 #define BOOST_DI_CONCEPTS_BOUNDABLE_HPP
 
-#include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/aux_/utility.hpp"
 #include "boost/di/core/bindings.hpp"
 #include "boost/di/fwd.hpp"
 
@@ -129,10 +129,10 @@ struct is_abstract<true, T> {
   static constexpr auto value = aux::is_abstract<T>::value;
 };
 
-auto boundable_impl(any_of<> && ) -> aux::true_type;
+auto boundable_impl(any_of<> &&) -> aux::true_type;
 
 template <class T, class... Ts>  // expected
-auto boundable_impl(any_of<T, Ts...> && )
+auto boundable_impl(any_of<T, Ts...> &&)
     -> aux::conditional_t<aux::is_same<T, aux::decay_t<T>>::value, decltype(boundable_impl(aux::declval<any_of<Ts...>>())),
                           typename type_<T>::has_disallowed_qualifiers>;
 
@@ -142,34 +142,33 @@ using boundable_impl__ = aux::conditional_t<
     aux::conditional_t<is_abstract<aux::is_complete<T>::value, T>::value, typename type_<T>::is_abstract, aux::true_type>,
     typename type_<T>::template is_not_related_to<I>>;
 
-template <class I, class T>                                                                    // expected -> given
-auto boundable_impl(I&&, T && ) -> aux::conditional_t<aux::is_same<T, aux::decay_t<T>>::value  // I is already verified
-                                                      ,
-                                                      boundable_impl__<I, T>, typename type_<T>::has_disallowed_qualifiers>;
+template <class I, class T>                                                                   // expected -> given
+auto boundable_impl(I&&, T &&) -> aux::conditional_t<aux::is_same<T, aux::decay_t<T>>::value  // I is already verified
+                                                     ,
+                                                     boundable_impl__<I, T>, typename type_<T>::has_disallowed_qualifiers>;
 
 template <class I, class T>  // expected -> given
-auto boundable_impl(I&&, T&&, aux::valid<> && )
+auto boundable_impl(I&&, T&&, aux::valid<> &&)
     -> aux::conditional_t<is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value, aux::true_type,
                           typename type_<T>::template is_not_related_to<I>>;
 
 template <class I, class T>  // array[]
-auto boundable_impl(I* [], T && ) -> aux::conditional_t<aux::is_same<I, aux::decay_t<I>>::value, boundable_impl__<I, T>,
-                                                        typename type_<I>::has_disallowed_qualifiers>;
+auto boundable_impl(I* [], T &&) -> aux::conditional_t<aux::is_same<I, aux::decay_t<I>>::value, boundable_impl__<I, T>,
+                                                       typename type_<I>::has_disallowed_qualifiers>;
 
 template <class I, class T>  // array[]
-auto boundable_impl(I[], T && ) -> aux::conditional_t<aux::is_same<I, aux::decay_t<I>>::value, boundable_impl__<I, T>,
-                                                      typename type_<I>::has_disallowed_qualifiers>;
+auto boundable_impl(I[], T &&) -> aux::conditional_t<aux::is_same<I, aux::decay_t<I>>::value, boundable_impl__<I, T>,
+                                                     typename type_<I>::has_disallowed_qualifiers>;
 
 template <class... TDeps>  // bindings
-auto boundable_impl(aux::type_list<TDeps...> && ) -> boundable_bindings<TDeps...>;
+auto boundable_impl(aux::type_list<TDeps...> &&) -> boundable_bindings<TDeps...>;
 
 template <class T, class... Ts>  // any_of
-auto boundable_impl(concepts::any_of<Ts...>&&, T && )
+auto boundable_impl(concepts::any_of<Ts...>&&, T &&)
     -> get_any_of_error<decltype(boundable_impl(aux::declval<Ts>(), aux::declval<T>()))...>;
 
 template <class... TDeps>  // make_injector
-auto boundable_impl(aux::type<TDeps...> && ) ->
-    typename get_is_unique_error_impl<typename aux::is_unique<TDeps...>::type>::type;
+auto boundable_impl(aux::type<TDeps...> &&) -> typename get_is_unique_error_impl<typename aux::is_unique<TDeps...>::type>::type;
 
 aux::true_type boundable_impl(...);
 

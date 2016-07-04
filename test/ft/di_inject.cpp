@@ -4,10 +4,10 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <memory>
-#include <string>
 #include <functional>
 #include <initializer_list>
+#include <memory>
+#include <string>
 #include <tuple>
 #if __has_include(<boost / function.hpp>)
 #include <boost/function.hpp>
@@ -15,8 +15,8 @@
 #if __has_include(<boost / shared_ptr.hpp>)
 #include <boost/shared_ptr.hpp>
 #endif
-#include "common/common.hpp"
 #include "boost/di.hpp"
+#include "common/common.hpp"
 
 namespace di = boost::di;
 

@@ -7,10 +7,10 @@
 #ifndef BOOST_DI_CONFIG_HPP
 #define BOOST_DI_CONFIG_HPP
 
-#include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
-#include "boost/di/core/pool.hpp"
+#include "boost/di/aux_/utility.hpp"
 #include "boost/di/concepts/callable.hpp"
+#include "boost/di/core/pool.hpp"
 #include "boost/di/providers/stack_over_heap.hpp"
 
 #if !defined(BOOST_DI_CFG)                       // __pph__

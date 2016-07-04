@@ -7,9 +7,9 @@
 #ifndef BOOST_DI_PROVIDERS_STACK_OVER_HEAP_HPP
 #define BOOST_DI_PROVIDERS_STACK_OVER_HEAP_HPP
 
+#include "boost/di/concepts/creatable.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"
-#include "boost/di/concepts/creatable.hpp"
 
 namespace providers {
 

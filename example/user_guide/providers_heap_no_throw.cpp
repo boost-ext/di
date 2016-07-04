@@ -5,10 +5,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 //<-
-#include <new>
-#include <cassert>
-#include <utility>
 #include <boost/di.hpp>
+#include <cassert>
+#include <new>
+#include <utility>
 
 namespace di = boost::di;
 //->

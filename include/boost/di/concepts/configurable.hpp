@@ -8,8 +8,8 @@
 #define BOOST_DI_CONCEPTS_CONFIGURABLE_HPP
 
 #include "boost/di/aux_/type_traits.hpp"
-#include "boost/di/concepts/providable.hpp"
 #include "boost/di/concepts/callable.hpp"
+#include "boost/di/concepts/providable.hpp"
 
 namespace concepts {
 
@@ -35,7 +35,7 @@ struct injector {
 aux::false_type configurable_impl(...);
 
 template <class T>
-auto configurable_impl(T && )
+auto configurable_impl(T &&)
     -> aux::is_valid_expr<decltype(T::provider((injector<T>*)0)), decltype(T::policies((injector<T>*)0))>;
 
 template <class T1, class T2>

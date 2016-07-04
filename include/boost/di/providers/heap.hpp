@@ -7,8 +7,8 @@
 #ifndef BOOST_DI_PROVIDERS_HEAP_HPP
 #define BOOST_DI_PROVIDERS_HEAP_HPP
 
-#include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/concepts/creatable.hpp"
+#include "boost/di/type_traits/ctor_traits.hpp"
 
 namespace providers {
 

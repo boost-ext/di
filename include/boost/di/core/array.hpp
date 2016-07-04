@@ -7,12 +7,12 @@
 #ifndef BOOST_DI_CORE_ARRAY_HPP
 #define BOOST_DI_CORE_ARRAY_HPP
 
-#include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
+#include "boost/di/aux_/utility.hpp"
+#include "boost/di/fwd.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 #include "boost/di/type_traits/named_traits.hpp"
 #include "boost/di/type_traits/rebind_traits.hpp"
-#include "boost/di/fwd.hpp"
 
 namespace core {
 

@@ -6,8 +6,8 @@
 //
 //<-
 #include <cassert>
-#include <string>
 #include <memory>
+#include <string>
 #include <tuple>
 //->
 #include <boost/di.hpp>

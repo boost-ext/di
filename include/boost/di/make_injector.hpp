@@ -8,10 +8,10 @@
 #define BOOST_DI_MAKE_INJECTOR_HPP
 
 #include "boost/di/aux_/type_traits.hpp"
-#include "boost/di/concepts/configurable.hpp"
 #include "boost/di/concepts/boundable.hpp"
-#include "boost/di/core/injector.hpp"
+#include "boost/di/concepts/configurable.hpp"
 #include "boost/di/config.hpp"
+#include "boost/di/core/injector.hpp"
 
 #if defined(__MSVC__)                                                   // __pph__
 #define BOOST_DI_MAKE_INJECTOR(...) __VA_ARGS__                         // __pph__

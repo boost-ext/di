@@ -5,10 +5,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 //<-
-#include <string>
-#include <vector>
 #include <cassert>
 #include <memory>
+#include <string>
+#include <vector>
 //->
 #include <boost/di.hpp>
 

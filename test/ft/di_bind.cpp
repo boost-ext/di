@@ -4,15 +4,15 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <initializer_list>  // has to be before, due to the bug in clang < 3.7
 #include "boost/di.hpp"
-#include <memory>
-#include <string>
 #include <functional>
+#include <initializer_list>  // has to be before, due to the bug in clang < 3.7
 #include <iterator>
-#include <vector>
+#include <memory>
 #include <set>
+#include <string>
 #include <tuple>
+#include <vector>
 
 namespace di = boost::di;
 
@@ -796,7 +796,7 @@ class lazy {
   using boost_di_inject__ = di::inject<di::self<T>>;
 
   template <class TInjector>
-  explicit lazy(const TInjector &i) noexcept : injector_((void *) & i), f(create<TInjector>) {}
+  explicit lazy(const TInjector &i) noexcept : injector_((void *)&i), f(create<TInjector>) {}
 
   T get() const noexcept { return (*f)(injector_); }
 

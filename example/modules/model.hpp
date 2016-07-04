@@ -8,8 +8,8 @@
 #ifndef MODEL_HPP
 #define MODEL_HPP
 
-#include <memory>
 #include <boost/di.hpp>
+#include <memory>
 #include "common.hpp"
 //->
 

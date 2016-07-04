@@ -12,17 +12,17 @@
 #include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
+#include "boost/di/concepts/creatable.hpp"
+#include "boost/di/config.hpp"
 #include "boost/di/core/any_type.hpp"
 #include "boost/di/core/binder.hpp"
+#include "boost/di/core/bindings.hpp"
 #include "boost/di/core/policy.hpp"
 #include "boost/di/core/pool.hpp"
 #include "boost/di/core/provider.hpp"
-#include "boost/di/core/bindings.hpp"
 #include "boost/di/core/wrapper.hpp"
-#include "boost/di/type_traits/ctor_traits.hpp"
-#include "boost/di/concepts/creatable.hpp"
-#include "boost/di/config.hpp"
 #include "boost/di/fwd.hpp"
+#include "boost/di/type_traits/ctor_traits.hpp"
 
 namespace core {
 
@@ -85,8 +85,7 @@ inline auto build(TInjector&& injector) noexcept {
 #endif
 
 template <class TConfig BOOST_DI_CORE_INJECTOR_POLICY(, class TPolicies = pool<>)(), class... TDeps>
-class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
-    : injector_base, pool<bindings_t<TDeps...>> {
+class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : injector_base, pool<bindings_t<TDeps...>> {
   friend class binder;
   template <class>
   friend struct pool;
@@ -112,7 +111,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
   using deps = bindings_t<TDeps...>;
   using config = TConfig;
 
-  injector(injector && ) = default;
+  injector(injector &&) = default;
 
   template <class... TArgs>
   explicit injector(const init&, TArgs... args) noexcept : injector{from_deps{}, static_cast<TArgs&&>(args)...} {}
@@ -172,67 +171,67 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
   };
 
   template <class TIsRoot = aux::false_type, class T>
-  auto create_impl(const aux::type<T>&)const {
+  auto create_impl(const aux::type<T>&) const {
     return create_impl__<TIsRoot, T>();
   }
 
   template <class TIsRoot = aux::false_type, class TParent>
-  auto create_impl(const aux::type<any_type_fwd<TParent>>&)const {
+  auto create_impl(const aux::type<any_type_fwd<TParent>>&) const {
     return any_type<TParent, injector>{*this};
   }
 
   template <class TIsRoot = aux::false_type, class TParent>
-  auto create_impl(const aux::type<any_type_ref_fwd<TParent>>&)const {
+  auto create_impl(const aux::type<any_type_ref_fwd<TParent>>&) const {
     return any_type_ref<TParent, injector, aux::false_type, aux::true_type>{*this};
   }
 
   template <class TIsRoot = aux::false_type, class TParent>
-  auto create_impl(const aux::type<any_type_1st_fwd<TParent>>&)const {
+  auto create_impl(const aux::type<any_type_1st_fwd<TParent>>&) const {
     return any_type_1st<TParent, injector>{*this};
   }
 
   template <class TIsRoot = aux::false_type, class TParent>
-  auto create_impl(const aux::type<any_type_1st_ref_fwd<TParent>>&)const {
+  auto create_impl(const aux::type<any_type_1st_ref_fwd<TParent>>&) const {
     return any_type_1st_ref<TParent, injector, aux::false_type, aux::true_type>{*this};
   }
 
   template <class TIsRoot = aux::false_type, class T, class TName>
-  auto create_impl(const aux::type<BOOST_DI_NAMESPACE::named<TName, T>>&)const {
+  auto create_impl(const aux::type<BOOST_DI_NAMESPACE::named<TName, T>>&) const {
     return create_impl__<TIsRoot, T, TName>();
   }
 
   template <class TIsRoot = aux::false_type, class T>
-  auto create_successful_impl(const aux::type<T>&)const {
+  auto create_successful_impl(const aux::type<T>&) const {
     return create_successful_impl__<TIsRoot, T>();
   }
 
   template <class TIsRoot = aux::false_type, class TParent>
-  auto create_successful_impl(const aux::type<any_type_fwd<TParent>>&)const {
+  auto create_successful_impl(const aux::type<any_type_fwd<TParent>>&) const {
     return successful::any_type<TParent, injector>{*this};
   }
 
   template <class TIsRoot = aux::false_type, class TParent>
-  auto create_successful_impl(const aux::type<any_type_ref_fwd<TParent>>&)const {
+  auto create_successful_impl(const aux::type<any_type_ref_fwd<TParent>>&) const {
     return successful::any_type_ref<TParent, injector>{*this};
   }
 
   template <class TIsRoot = aux::false_type, class TParent>
-  auto create_successful_impl(const aux::type<any_type_1st_fwd<TParent>>&)const {
+  auto create_successful_impl(const aux::type<any_type_1st_fwd<TParent>>&) const {
     return successful::any_type_1st<TParent, injector>{*this};
   }
 
   template <class TIsRoot = aux::false_type, class TParent>
-  auto create_successful_impl(const aux::type<any_type_1st_ref_fwd<TParent>>&)const {
+  auto create_successful_impl(const aux::type<any_type_1st_ref_fwd<TParent>>&) const {
     return successful::any_type_1st_ref<TParent, injector>{*this};
   }
 
   template <class TIsRoot = aux::false_type, class T, class TName>
-  auto create_successful_impl(const aux::type<BOOST_DI_NAMESPACE::named<TName, T>>&)const {
+  auto create_successful_impl(const aux::type<BOOST_DI_NAMESPACE::named<TName, T>>&) const {
     return create_successful_impl__<TIsRoot, T, TName>();
   }
 
   template <class TIsRoot = aux::false_type, class T>
-  decltype(auto) create_successful_impl(const aux::type<self<T>>&)const {
+  decltype(auto) create_successful_impl(const aux::type<self<T>>&) const {
     return *this;
   }
 
@@ -242,7 +241,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
       : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{static_cast<TArgs&&>(args)...}} {}
 
   template <class TInjector, class... TArgs>
-  explicit injector(const from_injector&, TInjector&& injector, const aux::type_list<TArgs...>&)noexcept
+  explicit injector(const from_injector&, TInjector&& injector, const aux::type_list<TArgs...>&) noexcept
 #if defined(__MSVC__)  // __pph__
       : pool_t {
     copyable_t<deps>{}, pool_t { build<TArgs>(static_cast<TInjector&&>(injector))... }
@@ -263,9 +262,10 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     using wrapper_t =
         decltype(static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this}));
     BOOST_DI_CORE_INJECTOR_POLICY(
-      using ctor_args_t = typename ctor_t::second::second;
-      policy::template call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>>(TConfig::policies(this));)()
-    return wrapper<T, wrapper_t>{static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this})};
+        using ctor_args_t = typename ctor_t::second::second;
+        policy::template call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>>(TConfig::policies(this));)
+    () return wrapper<T, wrapper_t>{
+        static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this})};
   }
 
   template <class TIsRoot = aux::false_type, class T, class TName = no_name>
@@ -278,9 +278,10 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
         decltype(static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this}));
     using create_t = referable_t<T, dependency__<dependency_t>>;
     BOOST_DI_CORE_INJECTOR_POLICY(
-      using ctor_args_t = typename ctor_t::second::second;
-        policy::template call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>>(TConfig::policies(this));)()
-    return successful::wrapper<create_t, wrapper_t>{static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this})};
+        using ctor_args_t = typename ctor_t::second::second;
+        policy::template call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>>(TConfig::policies(this));)
+    () return successful::wrapper<create_t, wrapper_t>{
+        static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this})};
   }
 };
 

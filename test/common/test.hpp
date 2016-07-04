@@ -7,9 +7,9 @@
 #ifndef BOOST_DI_TEST_HPP
 #define BOOST_DI_TEST_HPP
 
-#include "boost/di/aux_/compiler.hpp"
 #include <cstdio>
 #include <cstdlib>
+#include "boost/di/aux_/compiler.hpp"
 
 #if defined(__MSVC__)
 #pragma warning(disable : 4503)

@@ -6,10 +6,10 @@
 //
 //<-
 #include <iostream>
-#include <string>
 #include <memory>
-#include <vector>
+#include <string>
 #include <typeinfo>
+#include <vector>
 //->
 #include <boost/di.hpp>
 

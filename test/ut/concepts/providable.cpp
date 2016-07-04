@@ -4,9 +4,9 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+#include "boost/di/concepts/providable.hpp"
 #include <type_traits>
 #include "boost/di/aux_/compiler.hpp"
-#include "boost/di/concepts/providable.hpp"
 #include "boost/di/providers/heap.hpp"
 #include "boost/di/providers/stack_over_heap.hpp"
 

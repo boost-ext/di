@@ -6,15 +6,15 @@
 //
 #if !defined(COVERAGE)
 
-#include <memory>
-#include <cstdlib>
+#include "boost/di.hpp"
 #include <cstdio>
+#include <cstdlib>
 #include <fstream>
-#include <sstream>
+#include <memory>
 #include <regex>
+#include <sstream>
 #include <string>
 #include "common/utils.hpp"
-#include "boost/di.hpp"
 
 namespace {
 

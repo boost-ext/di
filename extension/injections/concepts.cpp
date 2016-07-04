@@ -6,8 +6,8 @@
 //
 //<-
 #include <cassert>
-#include <type_traits>
 #include <memory>
+#include <type_traits>
 //->
 #include <boost/di.hpp>
 
@@ -158,9 +158,7 @@ class generics_provider_config : public di::config {
 
 template <typename T>
 concept bool Dummy() {
-  return requires(T a) {
-    { a.dummy() };
-  };
+  return requires(T a) { {a.dummy()}; };
 }
 
 struct DummyImpl {

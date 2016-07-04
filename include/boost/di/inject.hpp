@@ -76,11 +76,11 @@ using inject = aux::type_list<Ts...>;
 
 #define BOOST_DI_INJECT_TRAITS_EMPTY_IMPL(...) using boost_di_inject__ BOOST_DI_UNUSED = BOOST_DI_NAMESPACE::aux::type_list<>
 
-#define BOOST_DI_INJECT_TRAITS_IMPL(...)                                                                                                                                                                                                                                                                                   \
-  struct boost_di_inject__ {                                                                                                                                                                                                                                                                                               \
-    BOOST_DI_CAT(BOOST_DI_INJECT_TRAITS_IMPL_, BOOST_DI_HAS_NAMES(__VA_ARGS__))(__VA_ARGS__) static_assert( \
-        BOOST_DI_SIZE(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE,                                         \
-        "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE"); \
+#define BOOST_DI_INJECT_TRAITS_IMPL(...)                                                                               \
+  struct boost_di_inject__ {                                                                                           \
+    BOOST_DI_CAT(BOOST_DI_INJECT_TRAITS_IMPL_, BOOST_DI_HAS_NAMES(__VA_ARGS__))                                        \
+    (__VA_ARGS__) static_assert(BOOST_DI_SIZE(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE,                            \
+                                "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE"); \
   }
 
 #define BOOST_DI_INJECT_TRAITS(...) \

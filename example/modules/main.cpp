@@ -6,10 +6,10 @@
 //
 //<-
 #include <boost/di.hpp>
-#include "module_view.hpp"
-#include "module_model.hpp"
-#include "controller.hpp"
 #include "config.hpp"
+#include "controller.hpp"
+#include "module_model.hpp"
+#include "module_view.hpp"
 //->
 
 namespace di = boost::di;

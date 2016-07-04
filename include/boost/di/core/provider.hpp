@@ -7,11 +7,11 @@
 #ifndef BOOST_DI_CORE_PROVIDER_HPP
 #define BOOST_DI_CORE_PROVIDER_HPP
 
-#include "boost/di/aux_/utility.hpp"
 #include "boost/di/aux_/type_traits.hpp"
-#include "boost/di/type_traits/memory_traits.hpp"
+#include "boost/di/aux_/utility.hpp"
 #include "boost/di/concepts/creatable.hpp"
 #include "boost/di/fwd.hpp"
+#include "boost/di/type_traits/memory_traits.hpp"
 
 namespace core {
 
@@ -93,9 +93,9 @@ struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TInje
 
   template <class TMemory = type_traits::heap>
   auto get(const TMemory& memory = {}) const {
-    return TInjector::config::provider(injector_)
-        .template get<T>(TInitialization{}, memory,
-                         static_cast<const injector__<TInjector>*>(injector_)->create_successful_impl(aux::type<TCtor>{})...);
+    return TInjector::config::provider(injector_).template get<T>(
+        TInitialization{}, memory,
+        static_cast<const injector__<TInjector>*>(injector_)->create_successful_impl(aux::type<TCtor>{})...);
   }
 
   const TInjector* injector_;

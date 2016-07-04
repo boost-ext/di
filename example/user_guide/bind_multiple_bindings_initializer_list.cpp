@@ -5,12 +5,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 //<-
-#include <initializer_list>  // has to be before, due to the bug in clang < 3.7
 #include <boost/di.hpp>
+#include <cassert>
+#include <initializer_list>  // has to be before, due to the bug in clang < 3.7
 #include <memory>
 #include <set>
 #include <vector>
-#include <cassert>
 
 namespace di = boost::di;
 

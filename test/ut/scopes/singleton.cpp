@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <memory>
 #include "boost/di/scopes/singleton.hpp"
+#include <memory>
 #include "common/fakes/fake_provider.hpp"
 
 namespace scopes {
@@ -18,7 +18,7 @@ test create_singleton = [] {
 };
 
 struct c {};
-auto has_shared_ptr__(c && ) -> std::false_type;
+auto has_shared_ptr__(c &&) -> std::false_type;
 
 test create_singleton_from_ptr_to_ptr = [] {
   singleton::scope<c, c> singleton;

@@ -7,8 +7,8 @@
 #define BOOST_DI_TYPE_TRAITS_SCOPE_TRAITS_HPP
 
 #include "boost/di/fwd.hpp"
-#include "boost/di/scopes/unique.hpp"
 #include "boost/di/scopes/singleton.hpp"
+#include "boost/di/scopes/unique.hpp"
 
 namespace type_traits {
 

@@ -6,8 +6,8 @@
 //
 //<-
 #include <cstdlib>
-#include <string>
 #include <memory>
+#include <string>
 //->
 #include <boost/di.hpp>
 

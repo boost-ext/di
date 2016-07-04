@@ -7,8 +7,8 @@
 #ifndef BOOST_DI_FAKE_DEPENDENCY_HPP
 #define BOOST_DI_FAKE_DEPENDENCY_HPP
 
-#include "boost/di/fwd.hpp"
 #include "boost/di/core/dependency.hpp"
+#include "boost/di/fwd.hpp"
 #include "common/fakes/fake_scope.hpp"
 
 template <class T, class TScope = fake_scope<>, class TIsReferable = std::false_type, class TName = no_name>

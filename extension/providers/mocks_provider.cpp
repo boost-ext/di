@@ -6,11 +6,11 @@
 //
 //<-
 #include <cassert>
-#include <memory>
+#include <functional>
 #include <map>
+#include <memory>
 #include <stdexcept>
 #include <typeindex>
-#include <functional>
 //->
 #include <boost/di.hpp>
 
