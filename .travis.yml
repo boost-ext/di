@@ -26,11 +26,11 @@ matrix:
   - os: linux
     env: DOCUMENTATION=ON
   - os: linux
-    env: CHECK=ON CLANG_FORMAT=clang-format-3.7 CLANG_TIDY=clang-tidy-3.7
+    env: CHECK=ON CLANG_FORMAT=clang-format-3.8 CLANG_TIDY=clang-tidy-3.8
     addons:
       apt:
-        packages: ["clang-format-3.7", "clang-tidy-3.7"]
-        sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.7"]
+        packages: ["clang-format-3.8", "clang-tidy-3.8"]
+        sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.8"]
   - os: linux
     env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND BENCHMARK=QUICK CXX=/usr/local/clang-3.4/bin/clang++
     addons:
